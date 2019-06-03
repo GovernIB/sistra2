@@ -66,6 +66,12 @@
 		<cxf.version>3.1.4</cxf.version>
 		<dom4j.version>1.6.1</dom4j.version>
 		<jaxen.version>1.1.6</jaxen.version>
+		<jsoup.version>1.12.1</jsoup.version>
+		<maven.properties.version>1.0.0</maven.properties.version>
+
+<!-- 	NO MODIFICAR propiedades en blanco por defecto para la generacion del commit -->
+		<git.commit.id.abbrev></git.commit.id.abbrev>
+		<prefix.revision></prefix.revision>
 	</properties>
 
 	<repositories>
@@ -88,4 +94,5 @@
 		<module>sistrages</module>
 		<module>sistrahelp</module>
   	</modules>
+
 </project>

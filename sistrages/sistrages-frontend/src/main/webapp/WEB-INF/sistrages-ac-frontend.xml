@@ -21,8 +21,9 @@
 
 	<bean id="negocioModuleConfig" class="es.caib.sistrages.frontend.model.comun.ModuleConfig">
 		<property name="entorno" value="${entorno}" />
-		<property name="version" value="0.0.1-SNAPSHOT" />
-		<property name="commit" value="23177" />
+		<property name="version" value="${sistra2.version}" />
+		<property name="commitSvn" value="${prefix.revision}" />
+		<property name="commitGit" value="${git.commit.id.abbrev}" />
 	</bean>
 
 	<!-- Scope view para spring beans usados como backbeans de JSF: @Scope(view) -->

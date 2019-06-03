@@ -49,7 +49,7 @@
 							<groupId>es.caib.sistra2</groupId>
 							<artifactId>sistrahelp-frontend</artifactId>
 							<contextRoot>/sistrahelp</contextRoot>
-							<bundleFileName>sistrahelp-frontend.war</bundleFileName>
+							<bundleFileName>sistrahelp.war</bundleFileName>
 						</webModule>
 					</modules>
 					<defaultLibBundleDir>lib/</defaultLibBundleDir>

@@ -17,13 +17,13 @@
 			<version>${spring.version}</version>
 		</dependency>
 
-	    <!-- JSR-330 -->
-	    <dependency>
-	      <groupId>javax.inject</groupId>
-	      <artifactId>javax.inject</artifactId>
-	      <version>${javax.inject.version}</version>
-		  <scope>provided</scope>
-	    </dependency>
+			<!-- JSR-330 -->
+			<dependency>
+				<groupId>javax.inject</groupId>
+				<artifactId>javax.inject</artifactId>
+				<version>${javax.inject.version}</version>
+			<scope>provided</scope>
+			</dependency>
 
 		<!-- JSF Dependencies -->
 		<dependency>
@@ -40,12 +40,12 @@
 			<scope>provided</scope>
 		</dependency>
 
-    	<dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.2.1-b03</version>
-            <scope>provided</scope>
-        </dependency>
+			<dependency>
+						<groupId>javax.servlet.jsp</groupId>
+						<artifactId>jsp-api</artifactId>
+						<version>2.2.1-b03</version>
+						<scope>provided</scope>
+				</dependency>
 
 		<dependency>
 			<groupId>com.sun.faces</groupId>
@@ -79,27 +79,27 @@
 		</dependency>
 
 		<dependency>
-	        <groupId>org.primefaces.extensions</groupId>
-	        <artifactId>primefaces-extensions</artifactId>
-	        <version>${primefacesExtensions.version}</version>
-	    </dependency>
+					<groupId>org.primefaces.extensions</groupId>
+					<artifactId>primefaces-extensions</artifactId>
+					<version>${primefacesExtensions.version}</version>
+			</dependency>
 
-	    <dependency>
-	        <groupId>org.primefaces.extensions</groupId>
-	        <artifactId>resources-codemirror</artifactId>
-	        <version>${primefacesExtensions.version}</version>
-	    </dependency>
+			<dependency>
+					<groupId>org.primefaces.extensions</groupId>
+					<artifactId>resources-codemirror</artifactId>
+					<version>${primefacesExtensions.version}</version>
+			</dependency>
 
 		<dependency>
-		    <groupId>commons-fileupload</groupId>
-		    <artifactId>commons-fileupload</artifactId>
-		    <version>${commons-fileupload}</version>
+				<groupId>commons-fileupload</groupId>
+				<artifactId>commons-fileupload</artifactId>
+				<version>${commons-fileupload}</version>
 		</dependency>
 
 		<dependency>
-		    <groupId>commons-beanutils</groupId>
-		    <artifactId>commons-beanutils</artifactId>
-		    <version>${commons-beanutils.version}</version>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>${commons-beanutils.version}</version>
 		</dependency>
 
 		<!--  TODO: Ver pq no la coge del core -->
@@ -133,6 +133,25 @@
 		<plugins>
 
 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>${maven.properties.version}</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>${project.basedir}/../../sistra.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
 				<groupId>com.google.code.maven-svn-revision-number-plugin</groupId>
 				<artifactId>svn-revision-number-maven-plugin</artifactId>
 				<version>1.13</version>
@@ -143,33 +162,45 @@
 						</goals>
 					</execution>
 				</executions>
-			    <configuration>
-			    		<entries>
-			    			<entry>
-			    				<path>${project.basedir}</path>
-			    				<prefix>prefix</prefix>
-			    			</entry>
-			    		</entries>
-			    </configuration>
+					<configuration>
+						<entries>
+							<entry>
+								<path>${project.basedir}/../../</path>
+								<prefix>prefix</prefix>
+							</entry>
+						</entries>
+					</configuration>
 				<dependencies>
-			        <dependency>
-			            <groupId>com.google.code.maven-scm-provider-svnjava</groupId>
-			            <artifactId>maven-scm-provider-svnjava</artifactId>
-			            <version>2.0.2</version>
-			        </dependency>
-			        <dependency>
-						  <groupId>org.tmatesoft.svnkit</groupId>
-						  <artifactId>svnkit</artifactId>
-						  <version>1.8.3-1</version>
-						</dependency>
-			    </dependencies>
+					<dependency>
+						<groupId>com.google.code.maven-scm-provider-svnjava</groupId>
+						<artifactId>maven-scm-provider-svnjava</artifactId>
+						<version>2.0.2</version>
+					</dependency>
+					<dependency>
+						<groupId>org.tmatesoft.svnkit</groupId>
+						<artifactId>svnkit</artifactId>
+						<version>1.8.3-1</version>
+					</dependency>
+				</dependencies>
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>${maven.war.version}</version>
 				<configuration>
 					<warName>sistrages-frontend</warName>
+					<webResources>
+						<webResource>
+							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
+							<includes>
+								<include>web.xml</include>
+								<include>sistrages-ac-frontend.xml</include>
+							</includes>
+							<targetPath>WEB-INF</targetPath>
+							<filtering>true</filtering>
+						</webResource>
+					</webResources>
 				</configuration>
 			</plugin>
 
@@ -187,73 +218,24 @@
 
 
 			<plugin>
-                <!-- Ref: https://github.com/ktoso/maven-git-commit-id-plugin#using-the-plugin -->
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-                <version>2.1.10</version>
-                <executions>
-                        <execution>
-                           <goals>
-                       		  <goal>revision</goal>
-                            </goals>
-                        </execution>
-                </executions>
-                <configuration>
-                		<skip>${svn.activo}</skip>
-                		<generateGitPropertiesFile>true</generateGitPropertiesFile>
-                        <generateGitPropertiesFilename>src/git.properties</generateGitPropertiesFilename>
-                </configuration>
-            </plugin>
+				<!-- Ref: https://github.com/ktoso/maven-git-commit-id-plugin#using-the-plugin -->
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<version>2.1.10</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<skip>${git.desactivado}</skip>
+					<generateGitPropertiesFile>true</generateGitPropertiesFile>
+					<generateGitPropertiesFilename>target/git.properties</generateGitPropertiesFilename>
+				</configuration>
+			</plugin>
 
-
-
-			<plugin>
-			    <artifactId>maven-antrun-plugin</artifactId>
-			    <version>1.7</version>
-			    <executions>
-			      <execution>
-			      	<phase>compile</phase>
-                   	<configuration>
-			      	 	<target>
-                            <property name="compile_classpath" refid="maven.compile.classpath" />
-                            <echo message="compile classpath: ${compile_classpath}" />
-                        </target>
-			          	<tasks>
-			          		<taskdef resource="net/sf/antcontrib/antcontrib.properties"
-                				  classpathref="maven.plugin.classpath" />
-			          		<copy file="${basedir}/src/main/webapp/WEB-INF/sistrages-ac-frontend.original.xml" tofile="${basedir}/src/main/webapp/WEB-INF/sistrages-ac-frontend.xml" overwrite="true"  />
-							<if>
-			          			<equals arg1="${svn.activo}" arg2="true" />
-			          			<then>
-			          				<replace dir="src/main/webapp/WEB-INF" >
-			          					<include name="**/sistrages-ac-frontend.xml"/>
-						             	<replacefilter token="SISTRA_VERSION" value="${sistra2.version}" />
-						             	<replacefilter token="SISTRA_COMMIT" value="${prefix.revision}" />
-						            </replace>
-			          			</then>
-			          			<else>
-			          				<replace dir="src/main/webapp/WEB-INF" >
-						              	<include name="**/sistrages-ac-frontend.xml"/>
-						             	<replacefilter token="SISTRA_VERSION" value="${sistra2.version}" />
-						             	<replacefilter token="SISTRA_COMMIT" value="${git.commit.id.abbrev}" />
-						            </replace>
-			          			</else>
-			          		</if>
-				        </tasks>
-			        </configuration>
-			        <goals>
-                        <goal>run</goal>
-                    </goals>
-			      </execution>
-			    </executions>
-			    <dependencies>
-		          <dependency>
-		            <groupId>ant-contrib</groupId>
-		            <artifactId>ant-contrib</artifactId>
-		            <version>20020829</version>
-		          </dependency>
-		        </dependencies>
-			  </plugin>
 		</plugins>
 		<finalName>sistrages-frontend</finalName>
 	</build>

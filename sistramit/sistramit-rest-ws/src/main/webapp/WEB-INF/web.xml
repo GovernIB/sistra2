@@ -31,7 +31,7 @@
     <filter-name>CharacterEncoding</filter-name>
     <url-pattern>*</url-pattern>
   </filter-mapping>
-  
+
   <!-- Spring servlet -->
   <servlet>
     <servlet-name>sistramit-rest</servlet-name>
@@ -42,8 +42,8 @@
 	 <servlet-name>sistramit-rest</servlet-name>
 	 <url-pattern>/rest/*</url-pattern>
  </servlet-mapping>
-  
-   <!-- Securizacion --> 
+
+   <!-- Securizacion -->
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>sistramit-restint-ws</web-resource-name>
@@ -53,7 +53,7 @@
       <role-name>STT_API_INT</role-name>
     </auth-constraint>
   </security-constraint>
-  
+
     <security-constraint>
     <web-resource-collection>
       <web-resource-name>sistramit-restext-ws</web-resource-name>
@@ -63,7 +63,7 @@
       <role-name>STT_API_EXT</role-name>
     </auth-constraint>
   </security-constraint>
-  
+
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>sistrages-rest-swagger</web-resource-name>
@@ -74,19 +74,19 @@
       <role-name>STT_API_EXT</role-name>
     </auth-constraint>
   </security-constraint>
-  
-  
+
+
   <login-config>
-    <auth-method>BASIC</auth-method>
+    <auth-method>${loginConfig.authMethod}</auth-method>
     <realm-name>Autenticacion</realm-name>
   </login-config>
-  
+
   <security-role>
     <role-name>STT_API_INT</role-name>
   </security-role>
- 
+
   <security-role>
     <role-name>STT_API_EXT</role-name>
   </security-role>
-  
+
 </web-app>

@@ -5,21 +5,18 @@ insert into STG_IDIOMA (IDI_IDENTI) VALUES ('de');
 
 insert into STG_PROCES (PROC_IDENT,PROC_INSTAN,PROC_FECHA) values ('MAESTRO','NONE', sysdate);
 
+Insert into STG_PLUGIN (PLG_CODIGO,PLG_AMBITO,PLG_CODENT,PLG_TIPO,PLG_DESCR,PLG_CLASS,PLG_PROPS,PLG_PREPRO) values (STG_PLUGIN_SEQ.nextval,'G',null,'L','Plugin login mock ','es.caib.sistra2.commons.plugins.autenticacion.mock.ComponenteAutenticacionPluginMock','[]','pluginsib.login.mock');
+Insert into STG_PLUGIN (PLG_CODIGO,PLG_AMBITO,PLG_CODENT,PLG_TIPO,PLG_DESCR,PLG_CLASS,PLG_PROPS,PLG_PREPRO) values (STG_PLUGIN_SEQ.nextval,'G',null,'M','Plugin email mock ','es.caib.sistra2.commons.plugins.email.mock.EmailPluginMock','[]','pluginsib.email.mock');
+
 insert into  STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) values (STG_CNFGLO_SEQ.NEXTVAL, 'definicionTramite.lenguajeDefecto','ca','Lenguaje por defecto si no existe el lenguaje indicado');
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistramit.url', 'http://localhost:8080/sistramitfront', 'Url Frontal sistramit');
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistramit.idiomas', 'ca,es', 'Idiomas sistramit. En caso de cambiar los idiomas, se debe reiniciar el servidor.');
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistra2.version', '0.0.1-SNAPSHOT', 'Versión Sistra2');
-INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistramit.rest.url', 'http://localhost:8080/sistramit/api/rest/interna', 'Url Rest sistramit');
+INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistramit.rest.url', 'http://localhost:8080/sistramitws/rest/interna', 'Url Rest sistramit');
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistramit.rest.user', 'api-stt', 'Usuario Rest sistramit');
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistramit.rest.pwd', '1234', 'Contraseña Rest sistramit');
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'plugins.prefix', 'es.caib.sistra2', 'Prefijo base para los plugins usados en Sistra2');
-
-
-Insert into STG_PLUGIN (PLG_CODIGO,PLG_AMBITO,PLG_CODENT,PLG_TIPO,PLG_DESCR,PLG_CLASS,PLG_PROPS,PLG_PREPRO) values (STG_PLUGIN_SEQ.nextval,'G',null,'L','Plugin login mock ','es.caib.sistra2.commons.plugins.autenticacion.mock.ComponenteAutenticacionPluginMock','[]','pluginsib.login.mock');
-Insert into STG_PLUGIN (PLG_CODIGO,PLG_AMBITO,PLG_CODENT,PLG_TIPO,PLG_DESCR,PLG_CLASS,PLG_PROPS,PLG_PREPRO) values (STG_PLUGIN_SEQ.nextval,'G',null,'M','Plugin email mock ','es.caib.sistra2.commons.plugins.email.mock.EmailPluginMock','[]','pluginsib.email.mock');
-
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistrahelp.perdidaClave.numMaxTramites', '100', 'Num. max de tramites a consultar en perdida de clave');
-
 insert into  STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) values (STG_CNFGLO_SEQ.NEXTVAL, 'sistramit.purga.erroresInternos','7','Tiempos de purgado (si algun parametro se configura con 0 no se purga), siendo Tiempo (dias) que permanecerán los errores internos (no asociados a un trámite)');
 insert into  STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) values (STG_CNFGLO_SEQ.NEXTVAL, 'sistramit.purga.formulario.fin','10','Tiempo (minutos) tras el cual seran borradas las sesiones de formularios, si la sesion de formulario esta finalizada se eliminara despues del tiempo indicado a partir de su finalizacion');
 insert into  STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) values (STG_CNFGLO_SEQ.NEXTVAL, 'sistramit.purga.formulario.nofin','60','Tiempo (minutos) tras el cual seran borradas las sesiones de formularios, si la sesion de formulario no esta finalizada se eliminara despues del tiempo indicado a partir de su inicio');
@@ -34,4 +31,6 @@ insert into  STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) values (STG
 insert into  STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) values (STG_CNFGLO_SEQ.NEXTVAL, 'sistramit.anexoSoporte.extensiones','pdf','Extensiones permitidas para el anexo del formulario de soporte (lista separada por comas).');
 insert into  STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) values (STG_CNFGLO_SEQ.NEXTVAL, 'sistramit.anexoSoporte.tamanyo','1MB','Tamaño máximo permitido para el anexo del formulario de soporte (MB).');
 insert into  STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) values (STG_CNFGLO_SEQ.NEXTVAL, 'growl.propiedades','sticky=false#life=4000','Parametro para alterar las propieades de un growl a nivel global (sticky y tiempo)');
-INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'ayuda.path', '', 'Propiedad para externalizar la ayuda en un directorio externo (se indica la ruta del directorio donde se ubicará la ayuda). Si esta propiedad no tiene valor se usará la ayuda incluida en la aplicación.');
+INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'tinymce.code', 'false', 'Indica si se puede mostrar el botón de código fuente o no en el tinymce (Solo debería habilitarse temporalmente para depuración). Valores posibles: true/false');
+INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'ayuda.sistrages.path', '', 'Propiedad para externalizar la ayuda del módulo SISTRAGES en un directorio externo (se indica la ruta del directorio donde se ubicará la ayuda). Si esta propiedad no tiene valor se usará la ayuda incluida en la aplicación.');
+INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'ayuda.sistrahelp.path', '', 'Propiedad para externalizar la ayuda del módulo SISTRAHELP en un directorio externo (se indica la ruta del directorio donde se ubicará la ayuda). Si esta propiedad no tiene valor se usará la ayuda incluida en la aplicación.');

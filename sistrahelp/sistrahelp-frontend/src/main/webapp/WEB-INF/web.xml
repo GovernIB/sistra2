@@ -81,12 +81,12 @@
     </auth-constraint>
   </security-constraint>
   <login-config>
-    <auth-method>BASIC</auth-method>
+    <auth-method>${loginConfig.authMethod}</auth-method>
     <realm-name>Autenticacion</realm-name>
   </login-config>
   <security-role>
     <role-name>STH_SUP</role-name>
-  </security-role>  
+  </security-role>
   <security-role>
     <role-name>STH_OPE</role-name>
   </security-role>

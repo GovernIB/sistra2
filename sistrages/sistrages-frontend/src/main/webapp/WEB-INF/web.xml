@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
   <display-name>sistrages-frontend</display-name>
-  
+
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
@@ -14,7 +14,7 @@
     			 /WEB-INF/sistrages-ac-frontend.xml
     </param-value>
   </context-param>
-  
+
   <filter>
     <filter-name>CharacterEncoding</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -50,7 +50,7 @@
   <servlet>
   	<servlet-name>AyudaServlet</servlet-name>
    <servlet-class>es.caib.sistrages.frontend.servlet.AyudaServlet</servlet-class>
-  </servlet>  
+  </servlet>
   <servlet-mapping>
     <servlet-name>Faces Servlet</servlet-name>
     <url-pattern>*.xhtml</url-pattern>
@@ -66,7 +66,7 @@
   <servlet-mapping>
 	   <servlet-name>AyudaServlet</servlet-name>
 	   <url-pattern>/secure/app/AyudaServlet</url-pattern>
-  </servlet-mapping>  
+  </servlet-mapping>
   <context-param>
     <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
     <param-value>.xhtml</param-value>
@@ -78,8 +78,8 @@
   <context-param>
 	<param-name>primefaces.FONT_AWESOME</param-name>
     <param-value>true</param-value>
-  </context-param>  
-  
+  </context-param>
+
    <context-param>
 	<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
 	<param-value>client</param-value>
@@ -92,7 +92,7 @@
 <!-- 		<param-name>com.sun.faces.numberOfLogicalViews</param-name> -->
 <!-- 		<param-value>50</param-value> -->
 <!-- 	</context-param> -->
-  
+
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>sistrages-frontend</web-resource-name>
@@ -105,7 +105,7 @@
     </auth-constraint>
   </security-constraint>
   <login-config>
-    <auth-method>BASIC</auth-method>
+    <auth-method>${loginConfig.authMethod}</auth-method>
     <realm-name>Autenticacion</realm-name>
   </login-config>
   <security-role>
