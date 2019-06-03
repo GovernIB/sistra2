@@ -33,6 +33,9 @@ public final class ResRegistro implements ResRegistroInt {
 	/** codigo del organo sobre el que se realiza el asiento . */
 	private String codigoOrganoDestino;
 
+	/** extracto del asiento . */
+	private String extracto;
+
 	@Override
 	public String getPluginId() {
 		return ID;
@@ -177,6 +180,26 @@ public final class ResRegistro implements ResRegistroInt {
 	@Override
 	public void setCodigoOrganoDestino(String codigoOrganoDestino) {
 		this.codigoOrganoDestino = codigoOrganoDestino;
+	}
+
+	/**
+	 * Método de acceso al extracto
+	 *
+	 * @return the extracto
+	 */
+	public String getExtracto() {
+		return extracto;
+	}
+
+	/**
+	 * Método para establecer el extracto.
+	 *
+	 * @param extracto
+	 * 			extracto a establecer
+	 */
+	@Override
+	public void setExtracto(String extracto) {
+		this.extracto = extracto;
 	}
 
 

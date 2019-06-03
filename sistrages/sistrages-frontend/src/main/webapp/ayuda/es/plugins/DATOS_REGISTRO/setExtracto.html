@@ -1,0 +1,51 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_REGISTRO.setExtracto(extracto)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REGISTRO">DATOS_REGISTRO</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REGISTRO&metodo=setExtracto">setExtracto</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setExtracto(String extracto): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite establecer un texto resumen o extracto del asiento registral. Si no se fija valor se tomará por defecto el título del trámite para el que se realiza la solicitud.</li>
+    </ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>extracto</b>: cadena de texto resumen del asiento registral.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Pongamos por caso que queremos fijar un extracto del asiento basado en la cumplimentación realizada por el ciudadano. Para ello podríamos referenciar un campo (p.ej. ASUNTO) del formulario (p.ej. FORM1) en el que el ciudadano ha cumplimentado dicho texto: </p>
+ <p class="codigoScript">
+var textoExtracto = PLUGIN_FORMULARIOS.getValor('FORM1','ASUNTO');
+DATOS_REGISTRO.setExtracto(textoExtracto);
+</p>
+</body>
+</html>

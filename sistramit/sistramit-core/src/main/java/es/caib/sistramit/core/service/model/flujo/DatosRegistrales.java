@@ -29,6 +29,9 @@ public final class DatosRegistrales implements Serializable {
 	/** codigo de la unidad sobre la que se realizara el asiento */
 	private String codigoOrganoDestino;
 
+	/** extracto del asiento */
+	private String extracto;
+
 	/**
 	 * Método de acceso a libro.
 	 *
@@ -159,6 +162,23 @@ public final class DatosRegistrales implements Serializable {
 	 */
 	public void setCodigoOrganoDestino(String codigoOrganoDestino) {
 		this.codigoOrganoDestino = codigoOrganoDestino;
+	}
+
+	/**
+	 * Método de acceso a extracto.
+	 * @return extracto
+	 */
+	public String getExtracto() {
+		return extracto;
+	}
+
+	/**
+	 * Método para establecer extracto.
+	 * @param extracto
+	 * 			  extracto a establecer
+	 */
+	public void setExtracto(String extracto) {
+		this.extracto = extracto;
 	}
 
 

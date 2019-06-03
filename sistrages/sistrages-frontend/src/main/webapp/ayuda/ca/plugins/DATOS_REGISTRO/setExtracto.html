@@ -1,0 +1,51 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_REGISTRO.setExtracto(extracto)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_REGISTRO">DATOS_REGISTRO</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_REGISTRO&metodo=setExtracto">setExtracto</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setExtracto(String extracto): void
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet establir un text resum o extracte de l'assentament registral. Si no es fixa cap valor s'agafarà per defecte el títol del tràmit al que es realitza la sol·licitud .</li>
+    </ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>textoExpone</b>: cadena de text amb els fet a exposar.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Posam per cas que estam desenvolupant una sol·licitud genèrica i volem enviar a registre el text d'exposició. Per fer-ho podriem referenciar un camp (p.ex. ASUNTO) del formulari (p.ej. FORM1) al que el ciutadà ha emplenat el text: </p>
+ <p class="codigoScript">
+var textoExtracto = PLUGIN_FORMULARIOS.getValor('FORM1','ASUNTO');
+DATOS_REGISTRO.setExtracto(textoExtracto);
+</p>
+</body>
+</html>

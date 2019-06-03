@@ -72,4 +72,12 @@ public interface ResRegistroInt extends PluginScriptRes {
 	 */
 	void setCodigoOrganoDestino(String codigoOrganoDestino);
 
+	/**
+	 * Método para establecer extracto.
+	 *
+	 * @param extracto
+	 *            extracto a establecer
+	 */
+	void setExtracto(String extracto);
+
 }
