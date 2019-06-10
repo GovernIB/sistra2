@@ -21,11 +21,11 @@ public class FormateadorFormulario extends ModelApi {
 	/** Descripcion. */
 	private String descripcion;
 
-	/** Bloquear. **/
-	private boolean porDefecto;
+	/** Genérico. **/
+	private boolean generico;
 
-	/** Bloquear. **/
-	private boolean bloquear;
+	/** Desactivar personalizacion. **/
+	private boolean desactivarPersonalizacion;
 
 	/**
 	 * Crea una nueva instancia de FormateadorFormulario.
@@ -122,33 +122,33 @@ public class FormateadorFormulario extends ModelApi {
 	}
 
 	/**
-	 * @return the bloquear
+	 * @return the desactivarPersonalizacion
 	 */
-	public boolean isBloquear() {
-		return bloquear;
+	public boolean isDesactivarPersonalizacion() {
+		return desactivarPersonalizacion;
 	}
 
 	/**
-	 * @param bloquear
-	 *            the bloquear to set
+	 * @param desactivarPersonalizacion
+	 *            the desactivarPersonalizacion to set
 	 */
-	public void setBloquear(final boolean bloquear) {
-		this.bloquear = bloquear;
+	public void setDesactivarPersonalizacion(final boolean desactivarPersonalizacion) {
+		this.desactivarPersonalizacion = desactivarPersonalizacion;
 	}
 
 	/**
-	 * @return the porDefecto
+	 * @return the generico
 	 */
-	public boolean isPorDefecto() {
-		return porDefecto;
+	public boolean isGenerico() {
+		return generico;
 	}
 
 	/**
-	 * @param porDefecto
-	 *            the porDefecto to set
+	 * @param generico
+	 *            the generico to set
 	 */
-	public void setPorDefecto(final boolean porDefecto) {
-		this.porDefecto = porDefecto;
+	public void setGenerico(final boolean generico) {
+		this.generico = generico;
 	}
 
 }

@@ -98,7 +98,7 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 			throw new NoExisteDato("No existe entidad con id " + idEntidad);
 		}
 
-		if (fmt.isPorDefecto()) {
+		if (fmt.isGenerico()) {
 			quitarPorDefecto(idEntidad, null);
 		}
 
@@ -117,7 +117,7 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 	private void quitarPorDefecto(final Long idEntidad, final Long idFmt) {
 		final StringBuilder sql = new StringBuilder();
 		sql.append(
-				"UPDATE JFormateadorFormulario FORM SET FORM.porDefecto = 0 WHERE FORM.porDefecto = 1 AND FORM.entidad.codigo = :idEntidad");
+				"UPDATE JFormateadorFormulario FORM SET FORM.generico = 0 WHERE FORM.generico = 1 AND FORM.entidad.codigo = :idEntidad");
 		if (idFmt != null) {
 			sql.append(" and FORM.codigo != :idFmt");
 		}
@@ -164,7 +164,7 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 			throw new FaltanDatosException("Falta el formateador de formulario");
 		}
 
-		if (fmt.isPorDefecto()) {
+		if (fmt.isGenerico()) {
 			quitarPorDefecto(idEntidad, fmt.getCodigo());
 		}
 
@@ -214,15 +214,16 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 	 * @return Listado de formateadores de Formulario
 	 */
 	@SuppressWarnings("unchecked")
-	private List<FormateadorFormulario> listarFmt(final long idEntidad, final String filtro, final Boolean bloqueado) {
+	private List<FormateadorFormulario> listarFmt(final long idEntidad, final String filtro,
+			final Boolean desactivarPersonalizacion) {
 		final List<FormateadorFormulario> listaFmt = new ArrayList<>();
 		String sql = "select f from JFormateadorFormulario f where f.entidad.codigo = :idEntidad";
 
 		if (StringUtils.isNotBlank(filtro)) {
 			sql += " AND (LOWER(f.identificador) LIKE :filtro OR LOWER(f.descripcion) LIKE :filtro OR LOWER(f.classname) LIKE :filtro)";
 		}
-		if (bloqueado != null) {
-			sql += " AND f.bloquear = :bloquear";
+		if (desactivarPersonalizacion != null) {
+			sql += " AND f.desactivarPersonalizacion = :desactivarPersonalizacion";
 		}
 		sql += " order by f.classname";
 
@@ -232,8 +233,8 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 		if (StringUtils.isNotBlank(filtro)) {
 			query.setParameter("filtro", "%".concat(filtro.toLowerCase()).concat("%"));
 		}
-		if (bloqueado != null) {
-			query.setParameter("bloquear", bloqueado);
+		if (desactivarPersonalizacion != null) {
+			query.setParameter("desactivarPersonalizacion", desactivarPersonalizacion);
 		}
 
 		final List<JFormateadorFormulario> results = query.getResultList();
@@ -343,7 +344,7 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 			sql.append(" f.entidad.codigoDir3 = :codigoDir3 and ");
 		}
 
-		sql.append(" f.porDefecto = true ");
+		sql.append(" f.generico = true ");
 
 		final Query query = entityManager.createQuery(sql.toString());
 

@@ -271,8 +271,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			}
 		} catch (final Exception e) {
 			LOGGER.error("Error extrayendo la info del zip.", e);
-			addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogTramiteImportar.error.fichero"));
+			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogTramiteImportar.error.fichero"));
 			setMostrarPanelInfo(false);
 			return;
 		} finally {
@@ -416,7 +415,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 						UtilJSF.getLiteral("dialogTramiteImportar.error.noexisteformateador")));
 			} else {
 
-				if (formateadorActual.isBloquear()) {
+				if (formateadorActual.isDesactivarPersonalizacion()) {
 					filasFormateador.add(new FilaImportarFormateador(formateador, formateadorActual,
 							TypeImportarAccion.NADA, TypeImportarEstado.EXISTE, TypeImportarResultado.ERROR,
 							UtilJSF.getLiteral("dialogTramiteImportar.error.existeformateadorBloqueado")));
@@ -1061,8 +1060,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		prop.load(zipPropertiesStream);
 		// Checkeamos misma versión.
 		if (!prop.getProperty("version").equals(getVersion())) {
-			addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogTramiteImportar.error.version"));
+			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogTramiteImportar.error.version"));
 			return false;
 		}
 
@@ -1083,8 +1081,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			}
 
 		} else {
-			addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogTramiteImportar.error.entorno"));
+			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogTramiteImportar.error.entorno"));
 
 			correcto = false;
 		}
@@ -1147,8 +1144,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		final boolean noCheckeado = resultado == TypeImportarResultado.WARNING
 				|| resultado == TypeImportarResultado.ERROR;
 		if (noCheckeado) {
-			addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogTramiteImportar.warning.check"));
+			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogTramiteImportar.warning.check"));
 		}
 		return noCheckeado;
 	}

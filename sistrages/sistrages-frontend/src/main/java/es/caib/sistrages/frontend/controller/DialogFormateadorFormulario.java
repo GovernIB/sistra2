@@ -47,12 +47,12 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 			setAlta(true);
 			data = new FormateadorFormulario();
 			estabaBloqueado = false;
-			data.setBloquear(false);
-			data.setPorDefecto(false);
+			data.setDesactivarPersonalizacion(false);
+			data.setGenerico(false);
 		} else {
 			setAlta(false);
 			data = fmtService.getFormateadorFormulario(new Long(id));
-			estabaBloqueado = data.isBloquear();
+			estabaBloqueado = data.isDesactivarPersonalizacion();
 		}
 	}
 
@@ -68,7 +68,7 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 		 * Comprueba si está marcado como por defecto y no tiene plantillas. Si es así,
 		 * forzamos a que primero cree plantillas y luego que guarde.
 		 **/
-		if (acceso == TypeModoAcceso.EDICION && data.isPorDefecto()) {
+		if (acceso == TypeModoAcceso.EDICION && data.isGenerico()) {
 			final List<PlantillaFormateador> plantillas = fmtService.getListaPlantillasFormateador(data.getCodigo());
 			if (plantillas == null || plantillas.isEmpty()) {
 				addMessageContext(TypeNivelGravedad.ERROR,
@@ -104,7 +104,7 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 			break;
 		case EDICION:
 			// Comprobamos si cambia a bloqueado
-			if (!estabaBloqueado && data.isBloquear()
+			if (!estabaBloqueado && data.isDesactivarPersonalizacion()
 					&& fmtService.tieneRelacionesFormateadorFormulario(data.getCodigo())) {
 				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.formateadorNoBloqueable"));
 				return;
@@ -129,9 +129,9 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * Edita la plantilla por defecto.
+	 * Edita la plantilla generico.
 	 */
-	public void editarPlantillaPorDefecto() {
+	public void editarPlantillaGenerico() {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), id);

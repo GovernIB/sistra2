@@ -81,9 +81,10 @@ public interface FormateadorFormularioDao {
 	 *            el identificador entidad
 	 * @param filtro
 	 *            filtro
+	 * @param desactivarPersonalizacion
 	 * @return la lista de Formateadores de Formulario
 	 */
-	List<FormateadorFormulario> getAllByFiltro(Long idEntidad, String filtro, final Boolean bloqueado);
+	List<FormateadorFormulario> getAllByFiltro(Long idEntidad, String filtro, final Boolean desactivarPersonalizacion);
 
 	/**
 	 * Importa un formateador formulario.
@@ -131,7 +132,7 @@ public interface FormateadorFormularioDao {
 
 	/**
 	 * Borra una plantilla formateador.
-	 * 
+	 *
 	 * @param codigo
 	 */
 	void removePlantillaFormateador(Long codigo);

@@ -38,22 +38,21 @@
 						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 				   	</p:inputText>
 
-					<p:outputLabel for="classname" value="#{msg['dialogFormateadorFormulario.classname']}" />
-					<p:inputText id="classname" value="#{dialogFormateadorFormulario.data.classname}" disabled="#{dialogFormateadorFormulario.isConsulta()}" required="true" size="40" maxlength="500"/>
+					<p:outputLabel  for="classname" value="#{msg['dialogFormateadorFormulario.classname']}" />
+					<p:inputText 	id="classname" value="#{dialogFormateadorFormulario.data.classname}" disabled="#{dialogFormateadorFormulario.isConsulta()}" required="true" size="40" maxlength="500"/>
 
-					<p:outputLabel for="descripcion" value="#{msg['dialogFormateadorFormulario.descripcion']}" />
-					<p:inputText id="descripcion" value="#{dialogFormateadorFormulario.data.descripcion}" disabled="#{dialogFormateadorFormulario.isConsulta()}" required="true" size="40" maxlength="255"/>
+					<p:outputLabel  for="descripcion" value="#{msg['dialogFormateadorFormulario.descripcion']}" />
+					<p:inputText 	id="descripcion" value="#{dialogFormateadorFormulario.data.descripcion}" disabled="#{dialogFormateadorFormulario.isConsulta()}" required="true" size="40" maxlength="255"/>
 
-					<p:outputLabel for="porDefecto" value="#{msg['dialogFormateadorFormulario.porDefecto']}" rendered="#{!dialogFormateadorFormulario.isAlta()}" />
+					<p:outputLabel for="generico" value="#{msg['dialogFormateadorFormulario.porDefecto']}" rendered="#{!dialogFormateadorFormulario.isAlta()}" />
 					<p:column rendered="#{!dialogFormateadorFormulario.isAlta()}">
-						<p:selectBooleanCheckbox id="porDefecto" value="#{dialogFormateadorFormulario.data.porDefecto}" >
-							<p:ajax event="change" global="false" process="@form:porDefecto" update="dialogFormateadorFormulario:btnPlantilla" />
+						<p:selectBooleanCheckbox id="generico" value="#{dialogFormateadorFormulario.data.generico}" >
+							<p:ajax event="change" global="false" process="@form:generico" update="dialogFormateadorFormulario:btnPlantilla" />
             			</p:selectBooleanCheckbox>
-						<p:commandButton id="btnPlantilla" value="#{msg['dialogFormateadorFormulario.botonPlantillas']}" icon="fa fa-edit" actionListener="#{dialogFormateadorFormulario.editarPlantillaPorDefecto()}" process="@form:btnPlantilla" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}" disabled="#{!dialogFormateadorFormulario.data.porDefecto}" style="margin-left:10px" />
+						<p:commandButton id="btnPlantilla" value="#{msg['dialogFormateadorFormulario.botonPlantillas']}" icon="fa fa-edit" actionListener="#{dialogFormateadorFormulario.editarPlantillaGenerico()}" process="@form:btnPlantilla" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}" disabled="#{!dialogFormateadorFormulario.data.generico}" style="margin-left:10px" />
 					</p:column>
-					<p:outputLabel for="bloqueado" value="#{msg['dialogFormateadorFormulario.bloqueado']}" />
-					<p:selectBooleanCheckbox id="bloqueado" value="#{dialogFormateadorFormulario.data.bloquear}" />
-
+					<p:outputLabel 			 for="desactivarPersonalizacion" value="#{msg['dialogFormateadorFormulario.bloqueado']}" />
+					<p:selectBooleanCheckbox id="desactivarPersonalizacion" value="#{dialogFormateadorFormulario.data.desactivarPersonalizacion}" />
 				</h:panelGrid>
 
 			</p:outputPanel>

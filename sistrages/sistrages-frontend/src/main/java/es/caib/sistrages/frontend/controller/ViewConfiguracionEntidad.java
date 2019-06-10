@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import es.caib.sistra2.commons.plugins.registro.api.IRegistroPlugin;
 import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
-import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
@@ -87,11 +86,11 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		// recupera datos entidad activa
 		setData(entidadService.loadEntidad(idEntidad));
 
-		final IRegistroPlugin iplugin = (IRegistroPlugin) componenteService.obtenerPluginEntidad(TypePlugin.REGISTRO,
-				UtilJSF.getIdEntidad());
 		try {
+			final IRegistroPlugin iplugin = (IRegistroPlugin) componenteService
+					.obtenerPluginEntidad(TypePlugin.REGISTRO, UtilJSF.getIdEntidad());
 			oficinas = iplugin.obtenerOficinasRegistro(data.getCodigoDIR3(), TypeRegistro.REGISTRO_ENTRADA);
-		} catch (final RegistroPluginException e) {
+		} catch (final Exception e) {
 			LOGGER.error("Error obteniendo informacion de registro", e);
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.registro.error"));
