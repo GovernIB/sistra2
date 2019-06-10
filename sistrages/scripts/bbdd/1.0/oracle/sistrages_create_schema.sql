@@ -557,6 +557,7 @@ create table STG_ENTIDA
    ENT_PRSINS           NUMBER(18),
    ENT_REGCEN           NUMBER(1)            default 0 not null,
    ENT_REGOFI           VARCHAR2(20 CHAR),
+   ENT_REGDOC 			NUMBER(1)            default 0 not null,
    ENT_VALTRA           NUMBER(1)            default 0 not null
 );
 
@@ -670,6 +671,9 @@ comment on column STG_ENTIDA.ENT_REGCEN is
 
 comment on column STG_ENTIDA.ENT_REGOFI is
 'Indica oficina de registro centralizada';
+
+comment on column STG_ENTIDA.ENT_REGDOC is
+'Indica si en Paso Guardar se ofrece descarga documentos';
 
 comment on column STG_ENTIDA.ENT_VALTRA is
 'Indica si en los trámites normalizados se realiza valoración del trámite al finalizar';

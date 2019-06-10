@@ -30,12 +30,6 @@ public final class DatosGuardarJustificante implements ModelApi {
 	 */
 	private String fecha;
 
-	// TODO BORRAR
-	/**
-	 * Url acceso justificante.
-	 */
-	private TypeSiNo url = TypeSiNo.NO;
-
 	/**
 	 * Tipo de descarga del justificante.
 	 */
@@ -50,6 +44,11 @@ public final class DatosGuardarJustificante implements ModelApi {
 	 * Solicitante.
 	 */
 	private Persona solicitante;
+
+	/**
+	 * Indica si se muestran los documentos para descargar.
+	 */
+	private TypeSiNo mostrarDocumentos = TypeSiNo.SI;
 
 	/**
 	 * Lista de formularios a registrar.
@@ -219,27 +218,8 @@ public final class DatosGuardarJustificante implements ModelApi {
 	}
 
 	/**
-	 * Método de acceso a url.
-	 *
-	 * @return url
-	 */
-	public TypeSiNo getUrl() {
-		return url;
-	}
-
-	/**
-	 * Método para establecer url.
-	 *
-	 * @param url
-	 *            url a establecer
-	 */
-	public void setUrl(final TypeSiNo url) {
-		this.url = url;
-	}
-
-	/**
 	 * Método de acceso a descarga.
-	 * 
+	 *
 	 * @return descarga
 	 */
 	public TypeDescargaJustificante getDescarga() {
@@ -248,12 +228,31 @@ public final class DatosGuardarJustificante implements ModelApi {
 
 	/**
 	 * Método para establecer descarga.
-	 * 
+	 *
 	 * @param descarga
 	 *            descarga a establecer
 	 */
 	public void setDescarga(final TypeDescargaJustificante descarga) {
 		this.descarga = descarga;
+	}
+
+	/**
+	 * Método de acceso a mostrarDocumentos.
+	 * 
+	 * @return mostrarDocumentos
+	 */
+	public TypeSiNo getMostrarDocumentos() {
+		return mostrarDocumentos;
+	}
+
+	/**
+	 * Método para establecer mostrarDocumentos.
+	 * 
+	 * @param mostrarDocumentos
+	 *            mostrarDocumentos a establecer
+	 */
+	public void setMostrarDocumentos(final TypeSiNo mostrarDocumentos) {
+		this.mostrarDocumentos = mostrarDocumentos;
 	}
 
 }

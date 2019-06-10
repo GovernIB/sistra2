@@ -47,6 +47,6 @@ public interface ConfiguracionComponent {
 	 *            valores propiedades
 	 * @return valor propiedad
 	 */
-	String replaceSystemPlaceholders(String valor);
+	String replacePlaceholders(String valor);
 
 }

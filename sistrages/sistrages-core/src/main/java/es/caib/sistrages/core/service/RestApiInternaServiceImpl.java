@@ -150,7 +150,7 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 		// Reemplazamos system placeholders
 		for (final Plugin plg : plugins) {
 			for (final Propiedad prop : plg.getPropiedades()) {
-				prop.setValor(configuracionComponent.replaceSystemPlaceholders(prop.getValor()));
+				prop.setValor(configuracionComponent.replacePlaceholders(prop.getValor()));
 			}
 		}
 		return plugins;

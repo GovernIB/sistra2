@@ -112,6 +112,7 @@ public class ConfiguracionEntidadAdapter {
 			}
 			rConfiguracionEntidad.setIncidenciasValoracion(rvaloraciones);
 		}
+		rConfiguracionEntidad.setRegistroOcultarDescargaDocumentos(entidad.isRegistroOcultarDescargaDocumentos());
 		return rConfiguracionEntidad;
 	}
 

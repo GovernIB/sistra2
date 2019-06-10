@@ -192,6 +192,7 @@ public final class ControladorPasoGuardar extends ControladorPasoReferenciaImpl 
 		justificante.setPagos(UtilsFlujo.obtenerDocumentosTipo(docsRegPorTipo, TypeDocumento.PAGO));
 		justificante.setDescarga(
 				registroComponent.descargaJustificantes(pDefinicionTramite.getDefinicionVersion().getIdEntidad()));
+		justificante.setMostrarDocumentos(TypeSiNo.fromBoolean(!entidadInfo.isRegistroOcultarDescargaDocumentos()));
 
 		// Generamos detalle paso
 		final DetallePasoGuardar dpds = new DetallePasoGuardar();

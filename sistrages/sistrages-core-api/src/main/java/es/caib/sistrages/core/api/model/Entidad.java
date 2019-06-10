@@ -120,6 +120,9 @@ public class Entidad extends ModelApi {
 	/** Permite valorar tramite. **/
 	private boolean valorarTramite;
 
+	/** Registro centralizado. */
+	private boolean registroOcultarDescargaDocumentos;
+
 	/**
 	 * Obtiene el valor de codigo.
 	 *
@@ -132,8 +135,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de codigo.
 	 *
-	 * @param codigo
-	 *            el nuevo valor de codigo
+	 * @param codigo el nuevo valor de codigo
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -151,8 +153,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de codigoDIR3.
 	 *
-	 * @param codigoDIR3
-	 *            el nuevo valor de codigoDIR3
+	 * @param codigoDIR3 el nuevo valor de codigoDIR3
 	 */
 	public void setCodigoDIR3(final String codigoDIR3) {
 		this.codigoDIR3 = codigoDIR3;
@@ -170,8 +171,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de nombre.
 	 *
-	 * @param nombre
-	 *            el nuevo valor de nombre
+	 * @param nombre el nuevo valor de nombre
 	 */
 	public void setNombre(final Literal nombre) {
 		this.nombre = nombre;
@@ -189,8 +189,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de activo.
 	 *
-	 * @param activo
-	 *            el nuevo valor de activo
+	 * @param activo el nuevo valor de activo
 	 */
 	public void setActivo(final boolean activo) {
 		this.activo = activo;
@@ -208,8 +207,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de rol.
 	 *
-	 * @param rol
-	 *            el nuevo valor de rol
+	 * @param rol el nuevo valor de rol
 	 */
 	public void setRol(final String rol) {
 		this.rol = rol;
@@ -227,8 +225,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de logoGestor.
 	 *
-	 * @param logoGestor
-	 *            el nuevo valor de logoGestor
+	 * @param logoGestor el nuevo valor de logoGestor
 	 */
 	public void setLogoGestor(final Fichero logoGestor) {
 		this.logoGestor = logoGestor;
@@ -246,8 +243,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de logoAsistente.
 	 *
-	 * @param logoAsistente
-	 *            el nuevo valor de logoAsistente
+	 * @param logoAsistente el nuevo valor de logoAsistente
 	 */
 	public void setLogoAsistente(final Fichero logoAsistente) {
 		this.logoAsistente = logoAsistente;
@@ -265,8 +261,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de css.
 	 *
-	 * @param css
-	 *            el nuevo valor de css
+	 * @param css el nuevo valor de css
 	 */
 	public void setCss(final Fichero css) {
 		this.css = css;
@@ -284,8 +279,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de pie.
 	 *
-	 * @param pie
-	 *            el nuevo valor de pie
+	 * @param pie el nuevo valor de pie
 	 */
 	public void setPie(final Literal pie) {
 		this.pie = pie;
@@ -303,8 +297,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de email.
 	 *
-	 * @param email
-	 *            el nuevo valor de email
+	 * @param email el nuevo valor de email
 	 */
 	public void setEmail(final String email) {
 		this.email = email;
@@ -322,8 +315,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de emailHabilitado.
 	 *
-	 * @param emailHabilitado
-	 *            el nuevo valor de emailHabilitado
+	 * @param emailHabilitado el nuevo valor de emailHabilitado
 	 */
 	public void setEmailHabilitado(final boolean emailHabilitado) {
 		this.emailHabilitado = emailHabilitado;
@@ -341,8 +333,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de telefono.
 	 *
-	 * @param telefono
-	 *            el nuevo valor de telefono
+	 * @param telefono el nuevo valor de telefono
 	 */
 	public void setTelefono(final String telefono) {
 		this.telefono = telefono;
@@ -360,8 +351,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de telefonoHabilitado.
 	 *
-	 * @param telefonoHabilitado
-	 *            el nuevo valor de telefonoHabilitado
+	 * @param telefonoHabilitado el nuevo valor de telefonoHabilitado
 	 */
 	public void setTelefonoHabilitado(final boolean telefonoHabilitado) {
 		this.telefonoHabilitado = telefonoHabilitado;
@@ -379,8 +369,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de urlSoporte.
 	 *
-	 * @param urlSoporte
-	 *            el nuevo valor de urlSoporte
+	 * @param urlSoporte el nuevo valor de urlSoporte
 	 */
 	public void setUrlSoporte(final String urlSoporte) {
 		this.urlSoporte = urlSoporte;
@@ -398,8 +387,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de urlSoporteHabilitado.
 	 *
-	 * @param urlSoporteHabilitado
-	 *            el nuevo valor de urlSoporteHabilitado
+	 * @param urlSoporteHabilitado el nuevo valor de urlSoporteHabilitado
 	 */
 	public void setUrlSoporteHabilitado(final boolean urlSoporteHabilitado) {
 		this.urlSoporteHabilitado = urlSoporteHabilitado;
@@ -417,8 +405,8 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de formularioIncidenciasHabilitado.
 	 *
-	 * @param formularioIncidenciasHabilitado
-	 *            el nuevo valor de formularioIncidenciasHabilitado
+	 * @param formularioIncidenciasHabilitado el nuevo valor de
+	 *                                        formularioIncidenciasHabilitado
 	 */
 	public void setFormularioIncidenciasHabilitado(final boolean formularioIncidenciasHabilitado) {
 		this.formularioIncidenciasHabilitado = formularioIncidenciasHabilitado;
@@ -436,8 +424,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de urlCarpetaCiudadana.
 	 *
-	 * @param urlCarpetaCiudadana
-	 *            el nuevo valor de urlCarpetaCiudadana
+	 * @param urlCarpetaCiudadana el nuevo valor de urlCarpetaCiudadana
 	 */
 	public void setUrlCarpetaCiudadana(final Literal urlCarpetaCiudadana) {
 		this.urlCarpetaCiudadana = urlCarpetaCiudadana;
@@ -455,8 +442,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de lopd.
 	 *
-	 * @param lopd
-	 *            el nuevo valor de lopd
+	 * @param lopd el nuevo valor de lopd
 	 */
 	public void setLopd(final Literal lopd) {
 		this.lopd = lopd;
@@ -474,8 +460,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * Establece el valor de diasPreregistro.
 	 *
-	 * @param diasPreregistro
-	 *            el nuevo valor de diasPreregistro
+	 * @param diasPreregistro el nuevo valor de diasPreregistro
 	 */
 	public void setDiasPreregistro(final Integer diasPreregistro) {
 		this.diasPreregistro = diasPreregistro;
@@ -553,8 +538,7 @@ public class Entidad extends ModelApi {
 	}
 
 	/**
-	 * @param lopdIntroduccion
-	 *            the lopdIntroduccion to set
+	 * @param lopdIntroduccion the lopdIntroduccion to set
 	 */
 	public final void setLopdIntroduccion(final Literal lopdIntroduccion) {
 		this.lopdIntroduccion = lopdIntroduccion;
@@ -568,8 +552,7 @@ public class Entidad extends ModelApi {
 	}
 
 	/**
-	 * @param permiteSubsanarAnexar
-	 *            the permiteSubsanarAnexar to set
+	 * @param permiteSubsanarAnexar the permiteSubsanarAnexar to set
 	 */
 	public final void setPermiteSubsanarAnexar(final boolean permiteSubsanarAnexar) {
 		this.permiteSubsanarAnexar = permiteSubsanarAnexar;
@@ -583,8 +566,7 @@ public class Entidad extends ModelApi {
 	}
 
 	/**
-	 * @param permiteSubsanarPagar
-	 *            the permiteSubsanarPagar to set
+	 * @param permiteSubsanarPagar the permiteSubsanarPagar to set
 	 */
 	public final void setPermiteSubsanarPagar(final boolean permiteSubsanarPagar) {
 		this.permiteSubsanarPagar = permiteSubsanarPagar;
@@ -598,8 +580,7 @@ public class Entidad extends ModelApi {
 	}
 
 	/**
-	 * @param permiteSubsanarRegistrar
-	 *            the permiteSubsanarRegistrar to set
+	 * @param permiteSubsanarRegistrar the permiteSubsanarRegistrar to set
 	 */
 	public final void setPermiteSubsanarRegistrar(final boolean permiteSubsanarRegistrar) {
 		this.permiteSubsanarRegistrar = permiteSubsanarRegistrar;
@@ -613,8 +594,7 @@ public class Entidad extends ModelApi {
 	}
 
 	/**
-	 * @param instruccionesSubsanacion
-	 *            the instruccionesSubsanacion to set
+	 * @param instruccionesSubsanacion the instruccionesSubsanacion to set
 	 */
 	public final void setInstruccionesSubsanacion(final Literal instruccionesSubsanacion) {
 		this.instruccionesSubsanacion = instruccionesSubsanacion;
@@ -628,8 +608,7 @@ public class Entidad extends ModelApi {
 	}
 
 	/**
-	 * @param instruccionesPresencial
-	 *            the instruccionesPresencial to set
+	 * @param instruccionesPresencial the instruccionesPresencial to set
 	 */
 	public final void setInstruccionesPresencial(final Literal instruccionesPresencial) {
 		this.instruccionesPresencial = instruccionesPresencial;
@@ -643,8 +622,7 @@ public class Entidad extends ModelApi {
 	}
 
 	/**
-	 * @param diasTramitesPresenciales
-	 *            the diasTramitesPresenciales to set
+	 * @param diasTramitesPresenciales the diasTramitesPresenciales to set
 	 */
 	public void setDiasTramitesPresenciales(final Integer diasTramitesPresenciales) {
 		this.diasTramitesPresenciales = diasTramitesPresenciales;
@@ -658,8 +636,7 @@ public class Entidad extends ModelApi {
 	}
 
 	/**
-	 * @param registroCentralizado
-	 *            the registroCentralizado to set
+	 * @param registroCentralizado the registroCentralizado to set
 	 */
 	public final void setRegistroCentralizado(final boolean registroCentralizado) {
 		this.registroCentralizado = registroCentralizado;
@@ -673,8 +650,7 @@ public class Entidad extends ModelApi {
 	}
 
 	/**
-	 * @param oficinaRegistroCentralizado
-	 *            the oficinaRegistroCentralizado to set
+	 * @param oficinaRegistroCentralizado the oficinaRegistroCentralizado to set
 	 */
 	public void setOficinaRegistroCentralizado(final String oficinaRegistroCentralizado) {
 		this.oficinaRegistroCentralizado = oficinaRegistroCentralizado;
@@ -688,11 +664,26 @@ public class Entidad extends ModelApi {
 	}
 
 	/**
-	 * @param valorarTramite
-	 *            the valorarTramite to set
+	 * @param valorarTramite the valorarTramite to set
 	 */
 	public void setValorarTramite(final boolean valorarTramite) {
 		this.valorarTramite = valorarTramite;
+	}
+
+	/**
+	 * @return the registroOcultarDescargaDocumentos
+	 */
+	public boolean isRegistroOcultarDescargaDocumentos() {
+		return registroOcultarDescargaDocumentos;
+	}
+
+	/**
+	 * @param registroOcultarDescargaDocumentos the
+	 *                                          registroOcultarDescargaDocumentos to
+	 *                                          set
+	 */
+	public void setRegistroOcultarDescargaDocumentos(final boolean registroOcultarDescargaDocumentos) {
+		this.registroOcultarDescargaDocumentos = registroOcultarDescargaDocumentos;
 	}
 
 }

@@ -195,6 +195,7 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setRegistroCentralizado(entidad.isRegistroCentralizado());
 		jEntidad.setOficinaRegistroCentralizado(entidad.getOficinaRegistroCentralizado());
 		jEntidad.setValorarTramite(entidad.isValorarTramite());
+		jEntidad.setRegistroOcultarDescargaDocumentos(entidad.isRegistroOcultarDescargaDocumentos());
 		entityManager.merge(jEntidad);
 	}
 
@@ -223,10 +224,8 @@ public class EntidadDaoImpl implements EntidadDao {
 	/**
 	 * Listar entidades.
 	 *
-	 * @param idioma
-	 *            idioma
-	 * @param filtro
-	 *            filtro
+	 * @param idioma idioma
+	 * @param filtro filtro
 	 * @return lista de entidades
 	 */
 	@SuppressWarnings("unchecked")

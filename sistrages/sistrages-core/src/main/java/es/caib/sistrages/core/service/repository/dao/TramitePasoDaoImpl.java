@@ -1092,6 +1092,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			comp.setTexto(componente.getTexto());
 		}
 		comp.setTipo(componente.getTipo());
+		comp.setOrientacion(componente.getOrientacion());
 		formularioInternoDao.updateComponente(comp);
 	}
 

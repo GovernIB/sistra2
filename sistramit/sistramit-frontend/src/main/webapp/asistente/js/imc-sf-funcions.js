@@ -25,7 +25,7 @@ $.fn.nomesText = function() {
 
 	var valor = this[0];
 
-	return $(valor).text();
+	return ($(valor).length) ? $(valor).text() : valor;
 
 }
 

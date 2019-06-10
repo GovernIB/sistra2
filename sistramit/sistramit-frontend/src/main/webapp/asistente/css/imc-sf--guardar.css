@@ -55,19 +55,27 @@
 
 .imc--guarda .imc--fi-bt a.imc-bt::before { background-image: url(imgs/icones/ico_finestra_nova.svg); background-size: auto 1em; }
 
+
+/* documentació */
+
 .imc--guarda-documentacio { margin-bottom: 3em; }
 
-.imc--guarda-documentacio > ul { margin-bottom: 1em; }
-.imc--guarda-documentacio > ul > li { padding-left: 2em; margin-bottom: .4em; }
-.imc--guarda-documentacio > ul div.imc--reg { display: grid; grid-auto-flow: column; grid-template-columns: 3em auto 4em; grid-column-gap: 0; grid-row-gap: 0; min-height: 2.5em; padding: 0; background-color: #fff; }
+.imc--guarda-documentacio .imc--documentacio { display: none; padding: 1em 2em; border: 1px solid #fff; }
 
-.imc--guarda-documentacio > ul div.imc--reg .imc--icona { display: block; background: #8c8c8c url() no-repeat center center / auto 1em; }
+.imc--guarda-documentacio .imc--documentacio > ul { margin-bottom: 1em; }
+.imc--guarda-documentacio .imc--documentacio > ul > li { padding-left: 2em; margin-bottom: .4em; }
+.imc--guarda-documentacio .imc--documentacio > ul div.imc--reg { display: grid; grid-auto-flow: column; grid-template-columns: 3em auto 4em; grid-column-gap: 0; grid-row-gap: 0; min-height: 2.5em; padding: 0; background-color: #fff; }
 
-.imc--guarda-documentacio > ul div.imc--form .imc--icona { background-image: url(imgs/icones/ico_form.svg); }
-.imc--guarda-documentacio > ul div.imc--doc .imc--icona { background-image: url(imgs/icones/ico_doc.svg); }
-.imc--guarda-documentacio > ul div.imc--pagament .imc--icona { background-image: url(imgs/icones/ico_pagar.svg); }
+.imc--guarda-documentacio .imc--documentacio > ul div.imc--reg .imc--icona { display: block; background: #8c8c8c url() no-repeat center center / auto 1em; }
 
-.imc--guarda-documentacio > ul div.imc--reg strong { align-self: center; font-size: 1.2em; font-weight: normal; padding: .2em 1em; }
+.imc--guarda-documentacio .imc--documentacio > ul div.imc--form .imc--icona { background-image: url(imgs/icones/ico_form.svg); }
+.imc--guarda-documentacio .imc--documentacio > ul div.imc--doc .imc--icona { background-image: url(imgs/icones/ico_doc.svg); }
+.imc--guarda-documentacio .imc--documentacio > ul div.imc--pagament .imc--icona { background-image: url(imgs/icones/ico_pagar.svg); }
+
+.imc--guarda-documentacio .imc--documentacio > ul div.imc--reg strong { align-self: center; font-size: 1.2em; font-weight: normal; padding: .2em 1em; }
+
+
+/* documents */
 
 .imc--guarda .imc--descarrega { background: #4dba79 url(imgs/icones/ico_descarrega.svg) no-repeat center center / auto 1em; }
 .imc--guarda .imc--descarrega span { position: absolute; top: -999em; left: -999em; }

@@ -16,6 +16,7 @@ function appPasGuardarInicia() {
 	imc_bt_tramit_surt = $("#imc-bt-tramit-surt");
 
 	imc_guarda
+		.appDocumentacioMostra()
 		.appGuarda()
 		.appSiganuraDescarrega()
 		.appValora();
@@ -30,6 +31,60 @@ function appPasGuardarInicia() {
 		.appTramitSurt();
 
 };
+
+
+// appDocumentacioMostra
+
+$.fn.appDocumentacioMostra = function(options) {
+	var settings = $.extend({
+		element: ""
+	}, options);
+	this.each(function(){
+		var element = $(this),
+			documentacio_el = element.find(".imc--documentacio:first"),
+			inicia = function() {
+
+				element
+					.off('.appDocumentacioMostra')
+					.on('click.appDocumentacioMostra', "button[data-accio='documenta']" ,activa);
+
+			},
+			activa = function(e) {
+
+				var bt = $(this)
+					,hasDeObrir = (documentacio_el.hasClass("imc--on")) ? false : true;
+
+				var bt_text = (hasDeObrir) ? txtDocumentacioAmaga : txtDocumentacioMostra
+					,acciona = (hasDeObrir) ? obri() : tanca();
+
+				bt
+					.find("span")
+						.text( bt_text );
+
+			},
+			obri = function() {
+
+				documentacio_el
+					.stop()
+					.slideDown(200)
+					.addClass("imc--on");
+
+			},
+			tanca = function() {
+
+				documentacio_el
+					.stop()
+					.slideUp(200)
+					.removeClass("imc--on");
+
+			};
+		
+		// inicia
+		inicia();
+		
+	});
+	return this;
+}
 
 
 // appGuarda
