@@ -70,6 +70,10 @@ public class SistragesMock {
 		vp.setCodigo(TypePropiedadConfiguracion.PLUGINS_PREFIJO.toString());
 		vp.setValor("es.caib.sistra2");
 		parametros.add(vp);
+		vp = new RValorParametro();
+		vp.setCodigo(TypePropiedadConfiguracion.ANEXOS_TAMANYO_TOTAL.toString());
+		vp.setValor("10");
+		parametros.add(vp);
 
 		final RListaParametros propiedades = new RListaParametros();
 		propiedades.setParametros(parametros);

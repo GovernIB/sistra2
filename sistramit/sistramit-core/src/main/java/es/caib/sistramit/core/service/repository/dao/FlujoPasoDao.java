@@ -145,5 +145,17 @@ public interface FlujoPasoDao {
 	 */
 	DocumentoPasoPersistencia obtenerDocumento(Long pIdDoc);
 
-
+	/**
+	 * Método para obtener el tamaño de todos los documentos de un paso.
+	 *
+	 * @param pIdSesionTramitacion
+	 *            Parámetro id sesion tramitacion
+	 * @param pIdPaso
+	 *            Parámetro id paso
+	 * @param pIncluirFirmas
+	 *            Parámetro que indica si en el cálculo se tienen en cuenta las
+	 *            firmas
+	 * @return Tamaño total documentos en bytes
+	 */
+	long calcularTamañoFicherosPaso(String pIdSesionTramitacion, String pIdPaso, boolean pIncluirFirmas);
 }

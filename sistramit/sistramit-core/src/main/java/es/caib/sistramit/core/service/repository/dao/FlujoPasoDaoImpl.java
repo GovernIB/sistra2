@@ -22,6 +22,7 @@ import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
 import es.caib.sistramit.core.service.model.flujo.types.TypeEstadoPaso;
 import es.caib.sistramit.core.service.repository.model.HDocumento;
 import es.caib.sistramit.core.service.repository.model.HFichero;
+import es.caib.sistramit.core.service.repository.model.HFirma;
 import es.caib.sistramit.core.service.repository.model.HPaso;
 import es.caib.sistramit.core.service.repository.model.HTramite;
 
@@ -219,6 +220,47 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 		return documento;
 	}
 
+	@Override
+	public long calcularTamañoFicherosPaso(final String pIdSesionTramitacion, final String pIdPaso,
+			final boolean pIncluirFirmas) {
+
+		// Recuperamos paso
+		final HPaso hPaso = getHPaso(pIdSesionTramitacion, pIdPaso);
+
+		// Recorremos documentos y calculamos tamaño total documentos paso
+		long total = 0L;
+		for (final HDocumento hDoc : hPaso.getDocumentos()) {
+			// - Fichero
+			if (StringUtils.isNotEmpty(hDoc.getFicheroClave())) {
+				final HFichero hFichero = getHFichero(new ReferenciaFichero(hDoc.getFichero(), hDoc.getFicheroClave()));
+				total += hFichero.getTamanyo();
+			}
+			// - Formulario
+			if (StringUtils.isNotEmpty(hDoc.getFormularioPdfClave())) {
+				final HFichero hFichero = getHFichero(
+						new ReferenciaFichero(hDoc.getFormularioPdf(), hDoc.getFormularioPdfClave()));
+				total += hFichero.getTamanyo();
+			}
+			// - Justificante pago
+			if (StringUtils.isNotEmpty(hDoc.getPagoJustificantePdfClave())) {
+				final HFichero hFichero = getHFichero(
+						new ReferenciaFichero(hDoc.getPagoJustificantePdf(), hDoc.getPagoJustificantePdfClave()));
+				total += hFichero.getTamanyo();
+			}
+			// - Firmas asociadas
+			if (pIncluirFirmas) {
+				final List<HFirma> listaHFirma = hDoc.getFirmas();
+				for (final HFirma hFirma : listaHFirma) {
+					final HFichero hFicheroFirma = getHFichero(
+							new ReferenciaFichero(hFirma.getFirma(), hFirma.getFirmaClave()));
+					total += hFicheroFirma.getTamanyo();
+				}
+			}
+		}
+
+		return total;
+	}
+
 	// ------------ FUNCIONES PRIVADAS --------------------------------------
 
 	/**
@@ -393,5 +435,26 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 		}
 		return clave.toString();
 	}
+
+	/**
+	 * Obtiene la lista de documentos de un paso.
+	 *
+	 * @param codigoPaso
+	 *            Codigo paso
+	 * @param idDocumento
+	 *            Id documento
+	 * @param instancia
+	 *            Instancia
+	 * @return Documento
+	 */
+	/*
+	 * private List<HDocumento> findHDocumentos(final Long codigoPaso) { final
+	 * String sql =
+	 * "select d from HDocumento d where d.paso.codigo = :codigoPaso order by d.instanciaTimeStamp asc"
+	 * ; final Query query = entityManager.createQuery(sql);
+	 * query.setParameter("codigoPaso", codigoPaso); final List<HDocumento> results
+	 * = query.getResultList(); return results; }
+	 *
+	 */
 
 }

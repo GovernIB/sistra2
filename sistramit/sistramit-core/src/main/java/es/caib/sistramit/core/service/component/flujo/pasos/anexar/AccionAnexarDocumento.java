@@ -25,6 +25,7 @@ import es.caib.sistramit.core.api.exception.AnexoVacioException;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ExtensionAnexoNoValidaException;
 import es.caib.sistramit.core.api.exception.ParametrosEntradaIncorrectosException;
+import es.caib.sistramit.core.api.exception.TamanyoMaximoAnexosAlcanzadoException;
 import es.caib.sistramit.core.api.exception.TransformacionPdfException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.Anexo;
@@ -35,6 +36,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
 import es.caib.sistramit.core.service.component.script.ScriptExec;
@@ -238,8 +240,8 @@ public final class AccionAnexarDocumento implements AccionPaso {
 	 * @return
 	 */
 	private void validarAnexo(final DatosInternosPasoAnexar dipa, final Anexo anexoDetalle,
-			TypePresentacion presentacion, final String nombreFichero, final byte[] datosFichero, final String titulo,
-			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo) {
+			final TypePresentacion presentacion, final String nombreFichero, final byte[] datosFichero,
+			final String titulo, final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo) {
 
 		// Verificamos que coincide el tipo de presentacion
 		if (anexoDetalle.getPresentacion() != presentacion) {
@@ -282,12 +284,35 @@ public final class AccionAnexarDocumento implements AccionPaso {
 							"El fichero debe tener extensión para anexo " + anexoDetalle.getId());
 				}
 			}
-			// - Verificar tamaño maximo
+			// - Verificar tamaño maximo individual anexo
 			if (StringUtils.isBlank(anexoDetalle.getTamMax())) {
 				throw new ErrorConfiguracionException(
 						"No se ha configurado el tamaño maximo para el anexo: " + anexoDetalle.getId());
 			}
 			UtilsFlujo.verificarTamanyoMaximo(anexoDetalle.getTamMax(), datosFichero.length);
+
+			// - Verificar tamaño máximo total anexos
+			final String tamanyoTotalAnexosProp = configuracionComponent
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ANEXOS_TAMANYO_TOTAL);
+			if (StringUtils.isNotBlank(tamanyoTotalAnexosProp)) {
+				long tamanyoMaximoAnexos;
+				try {
+					// Tamaño en MB, pasamos a bytes
+					tamanyoMaximoAnexos = (Long.parseLong(tamanyoTotalAnexosProp) * 1024L * 1024L);
+				} catch (final NumberFormatException nfe) {
+					tamanyoMaximoAnexos = 0;
+				}
+				if (tamanyoMaximoAnexos > 0) {
+					final long tamanyo = dao.calcularTamañoFicherosPaso(pVariablesFlujo.getIdSesionTramitacion(),
+							dipa.getIdPaso(), false);
+					final long tamanyoTotal = tamanyo + datosFichero.length;
+					if (tamanyoTotal > tamanyoMaximoAnexos) {
+						throw new TamanyoMaximoAnexosAlcanzadoException(
+								"Se ha sobrepasado el máximo de tamaño soportado por la plataforma para los anexos de un mismo trámite");
+					}
+				}
+			}
+
 			// - Verificar si debe anexarse firmado
 			if (anexoDetalle.getAnexarfirmado() == TypeSiNo.SI) {
 				// TODO Pendiente implementar

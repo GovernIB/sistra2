@@ -34,6 +34,9 @@ public enum TypePropiedadConfiguracion {
 	/** Anexo formulario soporte: tamaño. */
 	ANEXO_SOPORTE_TAMANYO("sistramit.anexoSoporte.tamanyo"),
 
+	/** Tamaño total anexos en paso anexar. */
+	ANEXOS_TAMANYO_TOTAL("sistramit.anexos.tamanyoMaximo"),
+
 	/**
 	 * Realiza chequeo de si los datos de persistencia del paso se corresponden con
 	 * los almacenados en BBDD (true/false). Una vez depurada la aplicacion se puede
