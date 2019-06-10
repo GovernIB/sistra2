@@ -69,7 +69,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 	@Override
 	public String replacePlaceholders(final String valor) {
 		String res = replacePlaceHolders(valor, false);
-		res = replacePlaceHolders(valor, true);
+		res = replacePlaceHolders(res, true);
 		return res;
 	}
 
@@ -98,7 +98,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 	 * Obtiene valor propiedad de configuracion global.
 	 *
 	 * @param propiedad
-	 *            propiedad
+	 *                      propiedad
 	 * @return valor
 	 */
 	private String getPropiedadGlobal(final TypePropiedadConfiguracion propiedad) {
@@ -109,7 +109,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 	 * Obtiene valor propiedad de configuracion global.
 	 *
 	 * @param propiedad
-	 *            propiedad
+	 *                      propiedad
 	 * @return valor
 	 */
 	private String getPropiedadGlobal(final String propiedad) {
@@ -125,11 +125,11 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 	 * Crea plugin.
 	 *
 	 * @param plugins
-	 *            Lista configuración plugins
+	 *                            Lista configuración plugins
 	 * @param plgTipo
-	 *            Tipo plugin
+	 *                            Tipo plugin
 	 * @param lanzarExcepcion
-	 *            Si lanza excepción
+	 *                            Si lanza excepción
 	 * @return plugin
 	 */
 	private IPlugin createPlugin(final List<Plugin> plugins, final TypePlugin plgTipo, final boolean lanzarExcepcion) {
@@ -192,9 +192,9 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 	 * (${config.propiedad).
 	 *
 	 * @param valor
-	 *            Valor
+	 *                   Valor
 	 * @param system
-	 *            Indica si es de sistema
+	 *                   Indica si es de sistema
 	 * @return Valor reemplazado.
 	 */
 	private String replacePlaceHolders(final String valor, final boolean system) {
@@ -235,10 +235,10 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 	 * Lee propiedad.
 	 *
 	 * @param propiedad
-	 *            propiedad
+	 *                       propiedad
 	 * @param forceLocal
-	 *            si fuerza solo a buscar en el properties local y no buscar en la
-	 *            configuración global del STG
+	 *                       si fuerza solo a buscar en el properties local y no
+	 *                       buscar en la configuración global del STG
 	 * @return valor propiedad (nulo si no existe)
 	 */
 	private String readPropiedad(final String propiedad, final boolean forceLocal) {
