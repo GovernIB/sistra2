@@ -118,7 +118,7 @@
 		     	<p:toolbar>
 		     		<f:facet name="left">
 		     			<p:inputText id="txtCopy" value="#{dialogTramiteVersionPrevisualizar.urlTramite}" style="display:none" />
-						<p:commandButton id="btnCopiar" value="#{msg['botones.copiar']}" icon="fa fa-copy" onclick="copiarClipboard();"></p:commandButton>
+						<p:commandButton id="btnCopiar" value="#{msg['botones.copiar']}" icon="fa fa-copy" onclick="copiarClipboard();" process="@this"/>
 						<p:commandButton id="hiddenCommandGrowl" styleClass="button" process="@this"  action="#{dialogTramiteVersionPrevisualizar.avisarGrowl()}"  style="display:none" />
 		     		</f:facet>
 					<f:facet name="right">

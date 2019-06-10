@@ -196,10 +196,10 @@
 				<p:growl id="growlDialogTraduccion" widgetVar="growlDialogTraduccion" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
 						<div class="ui-inputgroup" align="center" style="margin-top:5px;margin-bottom:5px">
-            				<p:commandButton id="btnCa" value="#{msg['ca']}" 	rendered="#{dialogTraduccionHTML.visibleCa}" oncomplete="mostrar('ca')"  />
-            				<p:commandButton id="btnEs" value="#{msg['es']}" 	rendered="#{dialogTraduccionHTML.visibleEs}" oncomplete="mostrar('es')"  />
-            				<p:commandButton id="btnEn" value="#{msg['en']}" 	rendered="#{dialogTraduccionHTML.visibleEn}" oncomplete="mostrar('en')"  />
-            				<p:commandButton id="btnDe" value="#{msg['de']}" 	rendered="#{dialogTraduccionHTML.visibleDe}" oncomplete="mostrar('de')"  />
+            				<p:commandButton id="btnCa" value="#{msg['ca']}" 	rendered="#{dialogTraduccionHTML.visibleCa}" oncomplete="mostrar('ca')" process="@this"/>
+            				<p:commandButton id="btnEs" value="#{msg['es']}" 	rendered="#{dialogTraduccionHTML.visibleEs}" oncomplete="mostrar('es')" process="@this"/>
+            				<p:commandButton id="btnEn" value="#{msg['en']}" 	rendered="#{dialogTraduccionHTML.visibleEn}" oncomplete="mostrar('en')" process="@this"/>
+            				<p:commandButton id="btnDe" value="#{msg['de']}" 	rendered="#{dialogTraduccionHTML.visibleDe}" oncomplete="mostrar('de')" process="@this"/>
         				</div>
 
         				<div style="margin:10px" rendered="#{dialogTraduccionHTML.visibleCa}" >
@@ -226,10 +226,10 @@
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
-			<p:commandButton id="btnErrorCa" actionListener="#{dialogTraduccionHTML.errorCa()}" update="growlDialogTraduccion" style="display:none" />
-			<p:commandButton id="btnErrorEs" actionListener="#{dialogTraduccionHTML.errorEs()}" update="growlDialogTraduccion" style="display:none" />
-			<p:commandButton id="btnErrorEn" actionListener="#{dialogTraduccionHTML.errorEn()}" update="growlDialogTraduccion" style="display:none" />
-			<p:commandButton id="btnErrorDe" actionListener="#{dialogTraduccionHTML.errorDe()}" update="growlDialogTraduccion" style="display:none" />
+			<p:commandButton id="btnErrorCa" actionListener="#{dialogTraduccionHTML.errorCa()}" update="growlDialogTraduccion" style="display:none" process="@this"/>
+			<p:commandButton id="btnErrorEs" actionListener="#{dialogTraduccionHTML.errorEs()}" update="growlDialogTraduccion" style="display:none" process="@this"/>
+			<p:commandButton id="btnErrorEn" actionListener="#{dialogTraduccionHTML.errorEn()}" update="growlDialogTraduccion" style="display:none" process="@this"/>
+			<p:commandButton id="btnErrorDe" actionListener="#{dialogTraduccionHTML.errorDe()}" update="growlDialogTraduccion" style="display:none" process="@this"/>
 
 	</h:form>
 </h:body>

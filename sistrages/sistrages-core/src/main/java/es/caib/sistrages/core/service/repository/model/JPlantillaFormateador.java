@@ -51,7 +51,7 @@ public class JPlantillaFormateador implements IModelApi {
 	/**
 	 * @return the codigo
 	 */
-	public final Long getCodigo() {
+	public Long getCodigo() {
 		return codigo;
 	}
 
@@ -59,14 +59,14 @@ public class JPlantillaFormateador implements IModelApi {
 	 * @param codigo
 	 *            the codigo to set
 	 */
-	public final void setCodigo(final Long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
 	/**
 	 * @return the formateador
 	 */
-	public final JFormateadorFormulario getFormateador() {
+	public JFormateadorFormulario getFormateador() {
 		return formateador;
 	}
 
@@ -74,14 +74,14 @@ public class JPlantillaFormateador implements IModelApi {
 	 * @param formateador
 	 *            the formateador to set
 	 */
-	public final void setFormateador(final JFormateadorFormulario formateador) {
+	public void setFormateador(final JFormateadorFormulario formateador) {
 		this.formateador = formateador;
 	}
 
 	/**
 	 * @return the idioma
 	 */
-	public final JIdioma getIdioma() {
+	public JIdioma getIdioma() {
 		return idioma;
 	}
 
@@ -89,14 +89,14 @@ public class JPlantillaFormateador implements IModelApi {
 	 * @param idioma
 	 *            the idioma to set
 	 */
-	public final void setIdioma(final JIdioma idioma) {
+	public void setIdioma(final JIdioma idioma) {
 		this.idioma = idioma;
 	}
 
 	/**
 	 * @return the fichero
 	 */
-	public final JFichero getFichero() {
+	public JFichero getFichero() {
 		return fichero;
 	}
 
@@ -104,7 +104,7 @@ public class JPlantillaFormateador implements IModelApi {
 	 * @param fichero
 	 *            the fichero to set
 	 */
-	public final void setFichero(final JFichero fichero) {
+	public void setFichero(final JFichero fichero) {
 		this.fichero = fichero;
 	}
 

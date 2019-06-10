@@ -61,7 +61,7 @@
 				 		<h:panelGroup rendered="#{dialogAuditoriaTramites.dato.codigoError != null and not empty dialogAuditoriaTramites.dato.codigoError}" >
 							<p:inputText id="codigoError" value="#{dialogAuditoriaTramites.dato.codigoError}" disabled="true" size="70"/>
 							<p:spacer width="5px"/>
-							<p:commandButton value="#{msg['dialogAuditoriaTramites.trazaError']}" id="trazaErrorBtn" onclick="PF('dlgTraza').show();" rendered="#{dialogAuditoriaTramites.dato.trazaError ne null}"/>
+							<p:commandButton value="#{msg['dialogAuditoriaTramites.trazaError']}" id="trazaErrorBtn" onclick="PF('dlgTraza').show();" rendered="#{dialogAuditoriaTramites.dato.trazaError ne null}" process="@this"/>
 
 							<p:dialog header="#{msg['dialogAuditoriaTramites.tituloTraza']}" widgetVar="dlgTraza"  modal="true" resizable="false" height="405" width="780">
 								<p:outputPanel styleClass="w100">
@@ -70,7 +70,7 @@
 									<p:outputPanel styleClass="confirmar_botonera w100">
 										<p:toolbar>
 											<f:facet name="right">
-												<p:commandButton value="#{msg['botones.volver']}" onclick="PF('dlgTraza').hide();"/>
+												<p:commandButton value="#{msg['botones.volver']}" onclick="PF('dlgTraza').hide();" process="@this"/>
 											</f:facet>
 										</p:toolbar>
 									</p:outputPanel>

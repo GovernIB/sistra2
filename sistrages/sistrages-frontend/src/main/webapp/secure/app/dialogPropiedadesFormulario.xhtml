@@ -142,8 +142,8 @@
 								</p:commandButton>
 
 								<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-							        <p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-							        <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+							        <p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" process="@this"/>
+							        <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" process="@this"/>
 							    </p:confirmDialog>
 
 							</p:outputPanel>
@@ -171,8 +171,8 @@
 
 			<p:confirmDialog global="true">
 				<p:outputPanel styleClass="confirmar_botonera">
-		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
-					<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" process="@this"/>
+					<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" process="@this"/>
 				</p:outputPanel>
 		    </p:confirmDialog>
 

@@ -42,10 +42,10 @@ public class JFormateadorFormulario implements IModelApi {
 	private JEntidad entidad;
 
 	@Column(name = "FMT_DEFECT", nullable = false, precision = 1, scale = 0)
-	private boolean porDefecto;
+	private boolean generico;
 
 	@Column(name = "FMT_BLOCK", nullable = false, precision = 1, scale = 0)
-	private boolean bloquear;
+	private boolean desactivarPersonalizacion;
 
 	public JEntidad getEntidad() {
 		return entidad;
@@ -91,33 +91,33 @@ public class JFormateadorFormulario implements IModelApi {
 	}
 
 	/**
-	 * @return the porDefecto
+	 * @return the generico
 	 */
-	public final boolean isPorDefecto() {
-		return porDefecto;
+	public boolean isGenerico() {
+		return generico;
 	}
 
 	/**
-	 * @param porDefecto
-	 *            the porDefecto to set
+	 * @param generico
+	 *            the generico to set
 	 */
-	public final void setPorDefecto(final boolean porDefecto) {
-		this.porDefecto = porDefecto;
+	public void setGenerico(final boolean generico) {
+		this.generico = generico;
 	}
 
 	/**
-	 * @return the bloquear
+	 * @return the desactivarPersonalizacion
 	 */
-	public final boolean isBloquear() {
-		return bloquear;
+	public boolean isDesactivarPersonalizacion() {
+		return desactivarPersonalizacion;
 	}
 
 	/**
-	 * @param bloquear
-	 *            the bloquear to set
+	 * @param desactivarPersonalizacion
+	 *            the desactivarPersonalizacion to set
 	 */
-	public final void setBloquear(final boolean bloquear) {
-		this.bloquear = bloquear;
+	public void setDesactivarPersonalizacion(final boolean desactivarPersonalizacion) {
+		this.desactivarPersonalizacion = desactivarPersonalizacion;
 	}
 
 	/**
@@ -131,8 +131,8 @@ public class JFormateadorFormulario implements IModelApi {
 		fmt.setIdentificador(identificador);
 		fmt.setClassname(classname);
 		fmt.setDescripcion(descripcion);
-		fmt.setPorDefecto(porDefecto);
-		fmt.setBloquear(bloquear);
+		fmt.setGenerico(generico);
+		fmt.setDesactivarPersonalizacion(desactivarPersonalizacion);
 		return fmt;
 	}
 
@@ -150,8 +150,8 @@ public class JFormateadorFormulario implements IModelApi {
 			jModel.setIdentificador(model.getIdentificador());
 			jModel.setClassname(model.getClassname());
 			jModel.setDescripcion(model.getDescripcion());
-			jModel.setPorDefecto(model.isPorDefecto());
-			jModel.setBloquear(model.isBloquear());
+			jModel.setGenerico(model.isGenerico());
+			jModel.setDesactivarPersonalizacion(model.isDesactivarPersonalizacion());
 		}
 		return jModel;
 	}

@@ -181,7 +181,7 @@ public class JCampoFormularioIndexado implements IModelApi {
 	/**
 	 * @return the orientacion
 	 */
-	public final String getOrientacion() {
+	public String getOrientacion() {
 		return orientacion;
 	}
 
@@ -189,7 +189,7 @@ public class JCampoFormularioIndexado implements IModelApi {
 	 * @param orientacion
 	 *            the orientacion to set
 	 */
-	public final void setOrientacion(final String orientacion) {
+	public void setOrientacion(final String orientacion) {
 		this.orientacion = orientacion;
 	}
 

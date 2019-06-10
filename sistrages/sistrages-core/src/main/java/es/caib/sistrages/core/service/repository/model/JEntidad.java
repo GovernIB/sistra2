@@ -182,6 +182,10 @@ public class JEntidad implements IModelApi {
 	@Column(name = "ENT_VALTRA", nullable = false, precision = 1, scale = 0)
 	private boolean valorarTramite;
 
+	/** Registro centralizado. */
+	@Column(name = "ENT_REGDOC", nullable = false, precision = 1, scale = 0)
+	private boolean registroOcultarDescargaDocumentos;
+
 	/**
 	 * @return the codigo
 	 */
@@ -190,8 +194,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param codigo the codigo to set
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -205,8 +208,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param nombre
-	 *            the nombre to set
+	 * @param nombre the nombre to set
 	 */
 	public void setNombre(final JLiteral nombre) {
 		this.nombre = nombre;
@@ -220,8 +222,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param codigoDir3
-	 *            the codigoDir3 to set
+	 * @param codigoDir3 the codigoDir3 to set
 	 */
 	public void setCodigoDir3(final String codigoDir3) {
 		this.codigoDir3 = codigoDir3;
@@ -235,8 +236,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param activa
-	 *            the activa to set
+	 * @param activa the activa to set
 	 */
 	public void setActiva(final boolean activa) {
 		this.activa = activa;
@@ -250,8 +250,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param roleAdministrador
-	 *            the roleAdministrador to set
+	 * @param roleAdministrador the roleAdministrador to set
 	 */
 	public void setRoleAdministrador(final String roleAdministrador) {
 		this.roleAdministrador = roleAdministrador;
@@ -265,8 +264,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param logoAsistenteTramitacion
-	 *            the logoAsistenteTramitacion to set
+	 * @param logoAsistenteTramitacion the logoAsistenteTramitacion to set
 	 */
 	public void setLogoAsistenteTramitacion(final JFichero logoAsistenteTramitacion) {
 		this.logoAsistenteTramitacion = logoAsistenteTramitacion;
@@ -280,8 +278,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param cssAsistenteTramitacion
-	 *            the cssAsistenteTramitacion to set
+	 * @param cssAsistenteTramitacion the cssAsistenteTramitacion to set
 	 */
 	public void setCssAsistenteTramitacion(final JFichero cssAsistenteTramitacion) {
 		this.cssAsistenteTramitacion = cssAsistenteTramitacion;
@@ -295,8 +292,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param logoGestorTramites
-	 *            the logoGestorTramites to set
+	 * @param logoGestorTramites the logoGestorTramites to set
 	 */
 	public void setLogoGestorTramites(final JFichero logoGestorTramites) {
 		this.logoGestorTramites = logoGestorTramites;
@@ -310,8 +306,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param piePaginaAsistenteTramitacion
-	 *            the piePaginaAsistenteTramitacion to set
+	 * @param piePaginaAsistenteTramitacion the piePaginaAsistenteTramitacion to set
 	 */
 	public void setPiePaginaAsistenteTramitacion(final JLiteral piePaginaAsistenteTramitacion) {
 		this.piePaginaAsistenteTramitacion = piePaginaAsistenteTramitacion;
@@ -325,8 +320,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param email
-	 *            the email to set
+	 * @param email the email to set
 	 */
 	public void setEmail(final String email) {
 		this.email = email;
@@ -340,8 +334,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param contactoEmail
-	 *            the contactoEmail to set
+	 * @param contactoEmail the contactoEmail to set
 	 */
 	public void setContactoEmail(final boolean contactoEmail) {
 		this.contactoEmail = contactoEmail;
@@ -355,8 +348,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param contactoTelefono
-	 *            the contactoTelefono to set
+	 * @param contactoTelefono the contactoTelefono to set
 	 */
 	public void setContactoTelefono(final boolean contactoTelefono) {
 		this.contactoTelefono = contactoTelefono;
@@ -370,8 +362,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param contactoUrl
-	 *            the contactoUrl to set
+	 * @param contactoUrl the contactoUrl to set
 	 */
 	public void setContactoUrl(final boolean contactoUrl) {
 		this.contactoUrl = contactoUrl;
@@ -385,8 +376,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param contactoFormularioIncidencias
-	 *            the contactoFormularioIncidencias to set
+	 * @param contactoFormularioIncidencias the contactoFormularioIncidencias to set
 	 */
 	public void setContactoFormularioIncidencias(final boolean contactoFormularioIncidencias) {
 		this.contactoFormularioIncidencias = contactoFormularioIncidencias;
@@ -400,8 +390,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param telefono
-	 *            the telefono to set
+	 * @param telefono the telefono to set
 	 */
 	public void setTelefono(final String telefono) {
 		this.telefono = telefono;
@@ -415,8 +404,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param urlSoporte
-	 *            the urlSoporte to set
+	 * @param urlSoporte the urlSoporte to set
 	 */
 	public void setUrlSoporte(final String urlSoporte) {
 		this.urlSoporte = urlSoporte;
@@ -430,8 +418,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param urlCarpetaCiudadana
-	 *            the urlCarpetaCiudadana to set
+	 * @param urlCarpetaCiudadana the urlCarpetaCiudadana to set
 	 */
 	public void setUrlCarpetaCiudadana(final JLiteral urlCarpetaCiudadana) {
 		this.urlCarpetaCiudadana = urlCarpetaCiudadana;
@@ -445,8 +432,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param diasPreregistro
-	 *            the diasPreregistro to set
+	 * @param diasPreregistro the diasPreregistro to set
 	 */
 	public void setDiasPreregistro(final Integer diasPreregistro) {
 		this.diasPreregistro = diasPreregistro;
@@ -460,8 +446,7 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @param lopd
-	 *            the lopd to set
+	 * @param lopd the lopd to set
 	 */
 	public void setLopd(final JLiteral lopd) {
 		this.lopd = lopd;
@@ -534,158 +519,164 @@ public class JEntidad implements IModelApi {
 	/**
 	 * @return the lopdIntroduccion
 	 */
-	public final JLiteral getLopdIntroduccion() {
+	public JLiteral getLopdIntroduccion() {
 		return lopdIntroduccion;
 	}
 
 	/**
-	 * @param lopdIntroduccion
-	 *            the lopdIntroduccion to set
+	 * @param lopdIntroduccion the lopdIntroduccion to set
 	 */
-	public final void setLopdIntroduccion(final JLiteral lopdIntroduccion) {
+	public void setLopdIntroduccion(final JLiteral lopdIntroduccion) {
 		this.lopdIntroduccion = lopdIntroduccion;
 	}
 
 	/**
 	 * @return the permiteSubsanarAnexar
 	 */
-	public final boolean isPermiteSubsanarAnexar() {
+	public boolean isPermiteSubsanarAnexar() {
 		return permiteSubsanarAnexar;
 	}
 
 	/**
-	 * @param permiteSubsanarAnexar
-	 *            the permiteSubsanarAnexar to set
+	 * @param permiteSubsanarAnexar the permiteSubsanarAnexar to set
 	 */
-	public final void setPermiteSubsanarAnexar(final boolean permiteSubsanarAnexar) {
+	public void setPermiteSubsanarAnexar(final boolean permiteSubsanarAnexar) {
 		this.permiteSubsanarAnexar = permiteSubsanarAnexar;
 	}
 
 	/**
 	 * @return the permiteSubsanarPagar
 	 */
-	public final boolean isPermiteSubsanarPagar() {
+	public boolean isPermiteSubsanarPagar() {
 		return permiteSubsanarPagar;
 	}
 
 	/**
-	 * @param permiteSubsanarPagar
-	 *            the permiteSubsanarPagar to set
+	 * @param permiteSubsanarPagar the permiteSubsanarPagar to set
 	 */
-	public final void setPermiteSubsanarPagar(final boolean permiteSubsanarPagar) {
+	public void setPermiteSubsanarPagar(final boolean permiteSubsanarPagar) {
 		this.permiteSubsanarPagar = permiteSubsanarPagar;
 	}
 
 	/**
 	 * @return the permiteSubsanarRegistrar
 	 */
-	public final boolean isPermiteSubsanarRegistrar() {
+	public boolean isPermiteSubsanarRegistrar() {
 		return permiteSubsanarRegistrar;
 	}
 
 	/**
-	 * @param permiteSubsanarRegistrar
-	 *            the permiteSubsanarRegistrar to set
+	 * @param permiteSubsanarRegistrar the permiteSubsanarRegistrar to set
 	 */
-	public final void setPermiteSubsanarRegistrar(final boolean permiteSubsanarRegistrar) {
+	public void setPermiteSubsanarRegistrar(final boolean permiteSubsanarRegistrar) {
 		this.permiteSubsanarRegistrar = permiteSubsanarRegistrar;
 	}
 
 	/**
 	 * @return the instruccionesSubsanacion
 	 */
-	public final JLiteral getInstruccionesSubsanacion() {
+	public JLiteral getInstruccionesSubsanacion() {
 		return instruccionesSubsanacion;
 	}
 
 	/**
-	 * @param instruccionesSubsanacion
-	 *            the instruccionesSubsanacion to set
+	 * @param instruccionesSubsanacion the instruccionesSubsanacion to set
 	 */
-	public final void setInstruccionesSubsanacion(final JLiteral instruccionesSubsanacion) {
+	public void setInstruccionesSubsanacion(final JLiteral instruccionesSubsanacion) {
 		this.instruccionesSubsanacion = instruccionesSubsanacion;
 	}
 
 	/**
 	 * @return the diasTramitesPresenciales
 	 */
-	public final Integer isDiasTramitesPresenciales() {
+	public Integer isDiasTramitesPresenciales() {
 		return diasTramitesPresenciales;
 	}
 
 	/**
-	 * @param diasTramitesPresenciales
-	 *            the diasTramitesPresenciales to set
+	 * @param diasTramitesPresenciales the diasTramitesPresenciales to set
 	 */
-	public final void setDiasTramitesPresenciales(final Integer diasTramitesPresenciales) {
+	public void setDiasTramitesPresenciales(final Integer diasTramitesPresenciales) {
 		this.diasTramitesPresenciales = diasTramitesPresenciales;
 	}
 
 	/**
 	 * @return the instruccionesPresencial
 	 */
-	public final JLiteral getInstruccionesPresencial() {
+	public JLiteral getInstruccionesPresencial() {
 		return instruccionesPresencial;
 	}
 
 	/**
-	 * @param instruccionesPresencial
-	 *            the instruccionesPresencial to set
+	 * @param instruccionesPresencial the instruccionesPresencial to set
 	 */
-	public final void setInstruccionesPresencial(final JLiteral instruccionesPresencial) {
+	public void setInstruccionesPresencial(final JLiteral instruccionesPresencial) {
 		this.instruccionesPresencial = instruccionesPresencial;
 	}
 
 	/**
 	 * @return the registroCentralizado
 	 */
-	public final boolean isRegistroCentralizado() {
+	public boolean isRegistroCentralizado() {
 		return registroCentralizado;
 	}
 
 	/**
-	 * @param registroCentralizado
-	 *            the registroCentralizado to set
+	 * @param registroCentralizado the registroCentralizado to set
 	 */
-	public final void setRegistroCentralizado(final boolean registroCentralizado) {
+	public void setRegistroCentralizado(final boolean registroCentralizado) {
 		this.registroCentralizado = registroCentralizado;
 	}
 
 	/**
 	 * @return the diasTramitesPresenciales
 	 */
-	public final Integer getDiasTramitesPresenciales() {
+	public Integer getDiasTramitesPresenciales() {
 		return diasTramitesPresenciales;
 	}
 
 	/**
 	 * @return the oficinaRegistroCentralizado
 	 */
-	public final String getOficinaRegistroCentralizado() {
+	public String getOficinaRegistroCentralizado() {
 		return oficinaRegistroCentralizado;
 	}
 
 	/**
-	 * @param oficinaRegistroCentralizado
-	 *            the oficinaRegistroCentralizado to set
+	 * @param oficinaRegistroCentralizado the oficinaRegistroCentralizado to set
 	 */
-	public final void setOficinaRegistroCentralizado(final String oficinaRegistroCentralizado) {
+	public void setOficinaRegistroCentralizado(final String oficinaRegistroCentralizado) {
 		this.oficinaRegistroCentralizado = oficinaRegistroCentralizado;
 	}
 
 	/**
 	 * @return the valorarTramite
 	 */
-	public final boolean isValorarTramite() {
+	public boolean isValorarTramite() {
 		return valorarTramite;
 	}
 
 	/**
-	 * @param valorarTramite
-	 *            the valorarTramite to set
+	 * @param valorarTramite the valorarTramite to set
 	 */
-	public final void setValorarTramite(final boolean valorarTramite) {
+	public void setValorarTramite(final boolean valorarTramite) {
 		this.valorarTramite = valorarTramite;
+	}
+
+	/**
+	 * @return the registroOcultarDescargaDocumentos
+	 */
+	public final boolean isRegistroOcultarDescargaDocumentos() {
+		return registroOcultarDescargaDocumentos;
+	}
+
+	/**
+	 * @param registroOcultarDescargaDocumentos the
+	 *                                          registroOcultarDescargaDocumentos to
+	 *                                          set
+	 */
+	public final void setRegistroOcultarDescargaDocumentos(final boolean registroOcultarDescargaDocumentos) {
+		this.registroOcultarDescargaDocumentos = registroOcultarDescargaDocumentos;
 	}
 
 	/**
@@ -761,6 +752,7 @@ public class JEntidad implements IModelApi {
 		entidad.setRegistroCentralizado(registroCentralizado);
 		entidad.setOficinaRegistroCentralizado(oficinaRegistroCentralizado);
 		entidad.setValorarTramite(valorarTramite);
+		entidad.setRegistroOcultarDescargaDocumentos(registroOcultarDescargaDocumentos);
 		return entidad;
 	}
 

@@ -103,7 +103,7 @@
 								    </p:column>
 
 								     <p:column  styleClass="grid-center ui-panelgrid-cell" width="8%">
-								    	<p:commandButton icon="fa fa-download" ajax="false">
+								    	<p:commandButton icon="fa fa-download" ajax="false" process="@this">
 								    		<p:fileDownload value="#{dialogInformacionPersistencia.descargarFichero(dt)}" />
 								    	</p:commandButton>
 								     </p:column>

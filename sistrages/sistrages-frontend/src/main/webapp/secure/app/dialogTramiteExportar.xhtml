@@ -102,7 +102,7 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-						<p:commandButton id="btnExportar" widgetVar="btnExportar" value="#{msg['botones.exportar']}" ajax="false" styleClass="boton-azul" rendered="#{dialogTramiteExportar.mostrarBotonExportar}" >
+						<p:commandButton id="btnExportar" widgetVar="btnExportar" value="#{msg['botones.exportar']}" ajax="false" styleClass="boton-azul" rendered="#{dialogTramiteExportar.mostrarBotonExportar}" process="@this">
 		        			<p:fileDownload value="#{dialogTramiteExportar.fichero}"></p:fileDownload>
 		        		</p:commandButton>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTramiteExportar.cancelar}" process="@this"  />

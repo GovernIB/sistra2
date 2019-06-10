@@ -95,7 +95,7 @@
 		<p:remoteCommand name="updateUI" process="@this" update="formulario-panel componente-panel bh-mover botonera" />
 
 		<!-- Dialogo confirmar cambios desde view a traves de boton oculto -->
-	    <p:commandButton value="Confirmation" id="confirmationButton" widgetVar="confirmationButton" onclick="PF('dlgConfirmar').show();" styleClass="no-display"  />
+	    <p:commandButton value="Confirmation" id="confirmationButton" widgetVar="confirmationButton" onclick="PF('dlgConfirmar').show();" styleClass="no-display" process="@this"/>
 
 	    <p:confirmDialog header="#{msg['confirm.componente.guardar.titulo']}" id="dlgConfirmar" widgetVar="dlgConfirmar" modal="true" message="#{msg['confirm.componente.guardar']}" styleClass="confirmar_ancho" closable="false">
 	    	<p:outputPanel styleClass="confirmar_botonera">
@@ -105,7 +105,7 @@
         </p:confirmDialog>
 
 		<!-- Dialogo confirmar eliminar componente desde view a traves de boton oculto -->
-	    <p:commandButton id="confirmarEliminar" widgetVar="confirmarEliminar" onclick="PF('dlgConfirmarEliminar').show();" styleClass="no-display" />
+	    <p:commandButton id="confirmarEliminar" widgetVar="confirmarEliminar" onclick="PF('dlgConfirmarEliminar').show();" styleClass="no-display" process="@this" />
 
 	    <p:confirmDialog header="#{msg['confirm.componente.eliminar.titulo']}" id="dlgConfirmarEliminar" widgetVar="dlgConfirmarEliminar" modal="true" message="#{msg['confirm.componente.eliminar']}" styleClass="confirmar_ancho">
 	    	<p:outputPanel styleClass="confirmar_botonera">

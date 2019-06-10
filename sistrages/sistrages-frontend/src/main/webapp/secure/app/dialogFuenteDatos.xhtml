@@ -96,7 +96,7 @@
 		        					</p:commandButton>
 						    	</p>
 						    	<p>
-						    		<p:commandButton ajax="false" title="#{msg['botones.exportarCSV']}" icon="fa fa-download" >
+						    		<p:commandButton ajax="false" title="#{msg['botones.exportarCSV']}" icon="fa fa-download" process="@this">
 								        <p:fileDownload value="#{dialogFuenteDatos.exportarCSV()}" />
 								    </p:commandButton>
 						    	</p>

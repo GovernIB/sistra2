@@ -39,7 +39,7 @@
 		        			<p:ajax event="dialogReturn" listener="#{viewRolesPermisos.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
 
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" actionListener="#{viewRolesPermisos.eliminar()}" icon="fa fa-trash-o"  update="growl dataTable" rendered="#{viewRolesPermisos.permiteAlta}" >
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" actionListener="#{viewRolesPermisos.eliminar()}" icon="fa fa-trash-o"  update="growl dataTable" rendered="#{viewRolesPermisos.permiteAlta}" process="@this">
 							<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono" />
 		        		</p:commandButton>
 

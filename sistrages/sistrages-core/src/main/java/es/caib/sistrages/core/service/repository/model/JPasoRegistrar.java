@@ -298,7 +298,7 @@ public class JPasoRegistrar implements IModelApi {
 	/**
 	 * @return the permiteSubsanar
 	 */
-	public final boolean isPermiteSubsanar() {
+	public boolean isPermiteSubsanar() {
 		return permiteSubsanar;
 	}
 
@@ -306,14 +306,14 @@ public class JPasoRegistrar implements IModelApi {
 	 * @param permiteSubsanar
 	 *            the permiteSubsanar to set
 	 */
-	public final void setPermiteSubsanar(final boolean permiteSubsanar) {
+	public void setPermiteSubsanar(final boolean permiteSubsanar) {
 		this.permiteSubsanar = permiteSubsanar;
 	}
 
 	/**
 	 * @return the instruccionesSubsanacion
 	 */
-	public final JLiteral getInstruccionesSubsanacion() {
+	public JLiteral getInstruccionesSubsanacion() {
 		return instruccionesSubsanacion;
 	}
 
@@ -321,7 +321,7 @@ public class JPasoRegistrar implements IModelApi {
 	 * @param instruccionesSubsanacion
 	 *            the instruccionesSubsanacion to set
 	 */
-	public final void setInstruccionesSubsanacion(final JLiteral instruccionesSubsanacion) {
+	public void setInstruccionesSubsanacion(final JLiteral instruccionesSubsanacion) {
 		this.instruccionesSubsanacion = instruccionesSubsanacion;
 	}
 

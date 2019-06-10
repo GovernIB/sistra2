@@ -48,7 +48,7 @@ public class RIncidenciaValoracion implements IModelApi {
 	/**
 	 * @return the codigo
 	 */
-	public final Long getCodigo() {
+	public Long getCodigo() {
 		return codigo;
 	}
 
@@ -56,14 +56,14 @@ public class RIncidenciaValoracion implements IModelApi {
 	 * @param codigo
 	 *            the codigo to set
 	 */
-	public final void setCodigo(final Long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
 	/**
 	 * @return the entidad
 	 */
-	public final JEntidad getEntidad() {
+	public JEntidad getEntidad() {
 		return entidad;
 	}
 
@@ -71,14 +71,14 @@ public class RIncidenciaValoracion implements IModelApi {
 	 * @param entidad
 	 *            the entidad to set
 	 */
-	public final void setEntidad(final JEntidad entidad) {
+	public void setEntidad(final JEntidad entidad) {
 		this.entidad = entidad;
 	}
 
 	/**
 	 * @return the identificador
 	 */
-	public final String getIdentificador() {
+	public String getIdentificador() {
 		return identificador;
 	}
 
@@ -86,14 +86,14 @@ public class RIncidenciaValoracion implements IModelApi {
 	 * @param identificador
 	 *            the identificador to set
 	 */
-	public final void setIdentificador(final String identificador) {
+	public void setIdentificador(final String identificador) {
 		this.identificador = identificador;
 	}
 
 	/**
 	 * @return the descripcion
 	 */
-	public final JLiteral getDescripcion() {
+	public JLiteral getDescripcion() {
 		return descripcion;
 	}
 
@@ -101,7 +101,7 @@ public class RIncidenciaValoracion implements IModelApi {
 	 * @param descripcion
 	 *            the descripcion to set
 	 */
-	public final void setDescripcion(final JLiteral descripcion) {
+	public void setDescripcion(final JLiteral descripcion) {
 		this.descripcion = descripcion;
 	}
 

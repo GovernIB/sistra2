@@ -238,7 +238,7 @@ public class JCampoFormularioTexto implements IModelApi {
 	/**
 	 * @return the identDni
 	 */
-	public final boolean isIdentDni() {
+	public boolean isIdentDni() {
 		return identDni;
 	}
 
@@ -246,14 +246,14 @@ public class JCampoFormularioTexto implements IModelApi {
 	 * @param identDni
 	 *            the identDni to set
 	 */
-	public final void setIdentDni(final boolean identDni) {
+	public void setIdentDni(final boolean identDni) {
 		this.identDni = identDni;
 	}
 
 	/**
 	 * @return the identNifOtros
 	 */
-	public final boolean isIdentNifOtros() {
+	public boolean isIdentNifOtros() {
 		return identNifOtros;
 	}
 
@@ -261,7 +261,7 @@ public class JCampoFormularioTexto implements IModelApi {
 	 * @param identNifOtros
 	 *            the identNifOtros to set
 	 */
-	public final void setIdentNifOtros(final boolean identNifOtros) {
+	public void setIdentNifOtros(final boolean identNifOtros) {
 		this.identNifOtros = identNifOtros;
 	}
 

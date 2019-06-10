@@ -52,7 +52,7 @@
 								<p:ajax event="select" listener="#{viewDefinicionVersion.onNodeSelect}" update=":workDefinicionVersion :breadDefinicionVersion" delay="500"/>
 							</p:tree>
 
-							<p:commandButton id="hiddenCommandEditar" styleClass="button no-display"  action="#{viewDefinicionVersion.rcDobleClickTree()}">
+							<p:commandButton process="@this" id="hiddenCommandEditar" styleClass="button no-display"  action="#{viewDefinicionVersion.rcDobleClickTree()}">
 				      			   <p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="@parent :workDefinicionVersion"  />
 					        </p:commandButton>
 

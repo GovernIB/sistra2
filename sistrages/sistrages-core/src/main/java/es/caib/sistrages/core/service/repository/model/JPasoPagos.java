@@ -75,7 +75,7 @@ public class JPasoPagos implements IModelApi {
 	/**
 	 * @return the permiteSubsanar
 	 */
-	public final boolean isPermiteSubsanar() {
+	public boolean isPermiteSubsanar() {
 		return permiteSubsanar;
 	}
 
@@ -83,7 +83,7 @@ public class JPasoPagos implements IModelApi {
 	 * @param permiteSubsanar
 	 *            the permiteSubsanar to set
 	 */
-	public final void setPermiteSubsanar(final boolean permiteSubsanar) {
+	public void setPermiteSubsanar(final boolean permiteSubsanar) {
 		this.permiteSubsanar = permiteSubsanar;
 	}
 
