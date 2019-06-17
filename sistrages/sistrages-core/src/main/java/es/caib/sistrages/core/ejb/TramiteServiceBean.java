@@ -1,7 +1,6 @@
 package es.caib.sistrages.core.ejb;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
@@ -30,11 +29,7 @@ import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
-import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
-import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
-import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
-import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
-import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
+import es.caib.sistrages.core.api.model.comun.FilaImportar;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.service.TramiteService;
 
@@ -439,13 +434,8 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void importar(final FilaImportarArea filaArea, final FilaImportarTramite filaTramite,
-			final FilaImportarTramiteVersion filaTramiteVersion, final List<FilaImportarDominio> filasDominios,
-			final List<FilaImportarFormateador> filasFormateador, final Long idEntidad,
-			final Map<Long, DisenyoFormulario> formularios, final Map<Long, Fichero> ficheros,
-			final Map<Long, byte[]> ficherosContent, final String usuario) throws Exception {
-		tramiteService.importar(filaArea, filaTramite, filaTramiteVersion, filasDominios, filasFormateador, idEntidad,
-				formularios, ficheros, ficherosContent, usuario);
+	public void importar(final FilaImportar filaImportar) throws Exception {
+		tramiteService.importar(filaImportar);
 	}
 
 	@Override

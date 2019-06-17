@@ -34,11 +34,9 @@ import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
-import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
+import es.caib.sistrages.core.api.model.comun.FilaImportar;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
-import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
-import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -849,8 +847,8 @@ public class TramiteServiceImpl implements TramiteService {
 	 */
 	@Override
 	@NegocioInterceptor
-	public TramiteVersion getTramiteVersionByNumVersion(final int identificador, final Long idTramite) {
-		return tramiteDao.getTramiteVersionByNumVersion(identificador, idTramite);
+	public TramiteVersion getTramiteVersionByNumVersion(final int numeroVersion, final Long idTramite) {
+		return tramiteDao.getTramiteVersionByNumVersion(numeroVersion, idTramite);
 	}
 
 	/*
@@ -944,13 +942,10 @@ public class TramiteServiceImpl implements TramiteService {
 
 	@Override
 	@NegocioInterceptor
-	public void importar(final FilaImportarArea filaArea, final FilaImportarTramite filaTramite,
-			final FilaImportarTramiteVersion filaTramiteVersion, final List<FilaImportarDominio> filasDominios,
-			final List<FilaImportarFormateador> filasFormateador, final Long idEntidad,
-			final Map<Long, DisenyoFormulario> formularios, final Map<Long, Fichero> ficheros,
-			final Map<Long, byte[]> ficherosContent, final String usuario) throws Exception {
-		final Long idArea = areaDao.importar(filaArea, idEntidad);
-		final Long idTramite = tramiteDao.importar(filaTramite, idArea);
+	public void importar(final FilaImportar filaImportar) throws Exception {
+
+		final Long idArea = areaDao.importar(filaImportar.getFilaArea(), filaImportar.getIdEntidad());
+		final Long idTramite = tramiteDao.importar(filaImportar.getFilaTramite(), idArea);
 
 		/**
 		 * IdDominios son los dominios que se relacionan con el tramite mientras que
@@ -959,37 +954,38 @@ public class TramiteServiceImpl implements TramiteService {
 		 **/
 		final Map<Long, Long> idDominiosEquivalencia = new HashMap<>();
 		final List<Long> idDominios = new ArrayList<>();
-		for (final FilaImportarDominio filaDominio : filasDominios) {
-			final Long idDominio = dominiosDao.importar(filaDominio, idEntidad, idArea);
+		for (final FilaImportarDominio filaDominio : filaImportar.getFilaDominios()) {
+			final Long idDominio = dominiosDao.importar(filaDominio, filaImportar.getIdEntidad(), idArea);
 			idDominios.add(idDominio);
 			idDominiosEquivalencia.put(idDominio, filaDominio.getDominio().getCodigo());
 		}
 
 		final Map<Long, FormateadorFormulario> formateadores = new HashMap<>();
 		final Map<Long, Long> mapFormateadores = new HashMap<>();
-		for (final FilaImportarFormateador filaFormateador : filasFormateador) {
+		for (final FilaImportarFormateador filaFormateador : filaImportar.getFilaFormateador()) {
 
-			final Long idFormateador = formateadorFormularioDao.importar(filaFormateador, idEntidad);
+			final Long idFormateador = formateadorFormularioDao.importar(filaFormateador, filaImportar.getIdEntidad());
 			final FormateadorFormulario ff = formateadorFormularioDao.getById(idFormateador);
 			formateadores.put(idFormateador, ff);
 			mapFormateadores.put(filaFormateador.getFormateadorFormulario().getCodigo(), idFormateador);
 		}
 
-		final Long idTramiteVersion = tramiteDao.importar(filaTramiteVersion, idTramite, idDominios, usuario);
+		final Long idTramiteVersion = tramiteDao.importar(filaImportar.getFilaTramiteVersion(), idTramite, idDominios,
+				filaImportar.getUsuario(), filaImportar.isModoIM());
 		int ordenPaso = 1;
-		final List<TramitePaso> pasos = filaTramiteVersion.getTramiteVersion().getListaPasos();
+		final List<TramitePaso> pasos = filaImportar.getFilaTramiteVersion().getTramiteVersion().getListaPasos();
 		Collections.sort(pasos, new Comparator<TramitePaso>() {
 			@Override
 			public int compare(final TramitePaso p1, final TramitePaso p2) {
 				return Integer.compare(p1.getOrden(), p2.getOrden());
 			}
-
 		});
 		for (final TramitePaso tramitePaso : pasos) {
 			tramitePaso.setOrden(ordenPaso);
 			reordenar(tramitePaso);
-			tramitePasoDao.importar(filaTramiteVersion, tramitePaso, idTramiteVersion, idEntidad, formularios, ficheros,
-					ficherosContent, formateadores, mapFormateadores, idDominiosEquivalencia);
+			tramitePasoDao.importar(filaImportar.getFilaTramiteRegistro(), tramitePaso, idTramiteVersion,
+					filaImportar.getIdEntidad(), filaImportar.getFormularios(), filaImportar.getFicheros(),
+					filaImportar.getFicherosContent(), formateadores, mapFormateadores, idDominiosEquivalencia);
 			ordenPaso++;
 		}
 	}

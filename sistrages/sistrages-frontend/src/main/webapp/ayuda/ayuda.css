@@ -4,12 +4,28 @@ body {
 	color: #333;
 }
 
+table {
+  font:normal 100% Arial,Helvetica,sans-serif;
+  color: #333;
+  border: 1px solid #AAA;
+  border-spacing: 0px;
+}
+
+table td, table th {
+  border: 1px solid #AAA;
+  padding-left: 0.5em
+}
+
+table thead th {
+  font-weight: bold;
+}
+
 .bodyPlugins {
 	background-color:beige;
 }
 
 h1.stgH1 {
-		 text-decoration: underline;
+		text-decoration: underline;
         font-size:1.5em;
         margin-bottom:.8em;
 }

@@ -29,8 +29,11 @@ public class FuenteDatos extends ModelApi {
 	/** Descripcion. */
 	private String descripcion;
 
-	/** Id area. **/
-	private Long idArea;
+	/** Area. **/
+	private Area area;
+
+	/** Entidad. **/
+	private Entidad entidad;
 
 	/** Campos. **/
 	private List<FuenteDatosCampo> campos = new ArrayList<>();
@@ -69,8 +72,7 @@ public class FuenteDatos extends ModelApi {
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param codigo the codigo to set
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -84,8 +86,7 @@ public class FuenteDatos extends ModelApi {
 	}
 
 	/**
-	 * @param ambito
-	 *            the ambito to set
+	 * @param ambito the ambito to set
 	 */
 	public void setAmbito(final TypeAmbito ambito) {
 		this.ambito = ambito;
@@ -99,8 +100,7 @@ public class FuenteDatos extends ModelApi {
 	}
 
 	/**
-	 * @param identificador
-	 *            the identificador to set
+	 * @param identificador the identificador to set
 	 */
 	public void setIdentificador(final String identificador) {
 		this.identificador = identificador;
@@ -114,8 +114,7 @@ public class FuenteDatos extends ModelApi {
 	}
 
 	/**
-	 * @param descripcion
-	 *            the descripcion to set
+	 * @param descripcion the descripcion to set
 	 */
 	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
@@ -129,11 +128,38 @@ public class FuenteDatos extends ModelApi {
 	}
 
 	/**
-	 * @param campos
-	 *            the campos to set
+	 * @param campos the campos to set
 	 */
 	public void setCampos(final List<FuenteDatosCampo> campos) {
 		this.campos = campos;
+	}
+
+	/**
+	 * @return the area
+	 */
+	public final Area getArea() {
+		return area;
+	}
+
+	/**
+	 * @param area the area to set
+	 */
+	public final void setArea(final Area area) {
+		this.area = area;
+	}
+
+	/**
+	 * @return the entidad
+	 */
+	public final Entidad getEntidad() {
+		return entidad;
+	}
+
+	/**
+	 * @param entidad the entidad to set
+	 */
+	public final void setEntidad(final Entidad entidad) {
+		this.entidad = entidad;
 	}
 
 	/**
@@ -172,21 +198,6 @@ public class FuenteDatos extends ModelApi {
 		if (this.campos.contains(fuenteDatosCampo)) {
 			this.campos.remove(fuenteDatosCampo);
 		}
-	}
-
-	/**
-	 * @return the idArea
-	 */
-	public Long getIdArea() {
-		return idArea;
-	}
-
-	/**
-	 * @param idArea
-	 *            the idArea to set
-	 */
-	public void setIdArea(final Long idArea) {
-		this.idArea = idArea;
 	}
 
 }

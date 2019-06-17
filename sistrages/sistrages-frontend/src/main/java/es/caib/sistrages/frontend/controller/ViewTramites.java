@@ -219,13 +219,15 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void importar() {
 		final Map<String, String> params = new HashMap<>();
-		if (TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.DESARROLLO) {
-			UtilJSF.openDialog(DialogTramiteImportar.class, TypeModoAcceso.EDICION, params, true, 800);
-		} else {
-			UtilJSF.openDialog(DialogTramiteImportar.class, TypeModoAcceso.EDICION, params, true, 800);
-			// UtilJSF.openDialog(DialogCuadernoCarga.class, TypeModoAcceso.EDICION, params,
-			// true, 800);
-		}
+		UtilJSF.openDialog(DialogTramiteImportar.class, TypeModoAcceso.EDICION, params, true, 800);
+	}
+
+	/**
+	 * Procesar Cuaderno Carga.
+	 */
+	public void procesarCC() {
+		final Map<String, String> params = new HashMap<>();
+		UtilJSF.openDialog(DialogCuadernoCarga.class, TypeModoAcceso.EDICION, params, true, 800);
 	}
 
 	/**
@@ -244,7 +246,6 @@ public class ViewTramites extends ViewControllerBase {
 
 			// Refrescamos datos
 			buscarAreas();
-			// buscarTramites();
 
 		}
 	}
@@ -290,8 +291,7 @@ public class ViewTramites extends ViewControllerBase {
 	/**
 	 * Retorno dialogo control acceso.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoControlAcceso(final SelectEvent event) {
 
@@ -320,8 +320,7 @@ public class ViewTramites extends ViewControllerBase {
 	/**
 	 * Retorno dialogo area.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoArea(final SelectEvent event) {
 
@@ -463,8 +462,7 @@ public class ViewTramites extends ViewControllerBase {
 	/**
 	 * Retorno dialogo tramite.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoTramite(final SelectEvent event) {
 
@@ -489,8 +487,7 @@ public class ViewTramites extends ViewControllerBase {
 	/**
 	 * Retorno dialogo mover tramite.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoMoverTramite(final SelectEvent event) {
 
@@ -874,8 +871,7 @@ public class ViewTramites extends ViewControllerBase {
 	/**
 	 * Retorno dialogo nueva version.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoNuevaVersion(final SelectEvent event) {
 
@@ -1066,6 +1062,20 @@ public class ViewTramites extends ViewControllerBase {
 	 * Exportar version.
 	 */
 	public void exportarVersion() {
+		exportarTramiteVersion(Constantes.IMPORTAR_TIPO_IM);
+	}
+
+	/**
+	 * Generar cuaderno carga.
+	 */
+	public void generarCuadernoCarga() {
+		exportarTramiteVersion(Constantes.IMPORTAR_TIPO_CC);
+	}
+
+	/**
+	 * Exportar version.
+	 */
+	public void exportarTramiteVersion(final String modo) {
 		if (!verificarFilaSeleccionadaVersion()) {
 			return;
 		}
@@ -1084,6 +1094,7 @@ public class ViewTramites extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
+		params.put(TypeParametroVentana.MODO_IMPORTAR.toString(), modo);
 		UtilJSF.openDialog(DialogTramiteExportar.class, TypeModoAcceso.EDICION, params, true, 900, 520);
 	}
 
@@ -1131,8 +1142,7 @@ public class ViewTramites extends ViewControllerBase {
 	/**
 	 * Retorno dialogo clonar.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoClonar(final SelectEvent event) {
 
@@ -1277,8 +1287,7 @@ public class ViewTramites extends ViewControllerBase {
 	/**
 	 * Establece el valor de filtro.
 	 *
-	 * @param filtro
-	 *            el nuevo valor de filtro
+	 * @param filtro el nuevo valor de filtro
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
@@ -1296,8 +1305,7 @@ public class ViewTramites extends ViewControllerBase {
 	/**
 	 * Establece el valor de tramiteSeleccionada.
 	 *
-	 * @param tramiteSeleccionada
-	 *            el nuevo valor de tramiteSeleccionada
+	 * @param tramiteSeleccionada el nuevo valor de tramiteSeleccionada
 	 */
 	public void setTramiteSeleccionada(final TramiteVersiones tramiteSeleccionada) {
 		this.tramiteSeleccionada = tramiteSeleccionada;
@@ -1311,8 +1319,7 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * @param idArea
-	 *            the idArea to set
+	 * @param idArea the idArea to set
 	 */
 	public void setIdArea(final String idArea) {
 		this.idArea = idArea;
@@ -1366,8 +1373,7 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * @param idTramite
-	 *            the idTramite to set
+	 * @param idTramite the idTramite to set
 	 */
 	public void setIdTramite(final String idTramite) {
 		this.idTramite = idTramite;
@@ -1381,8 +1387,7 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * @param idTramiteVersion
-	 *            the idTramiteVersion to set
+	 * @param idTramiteVersion the idTramiteVersion to set
 	 */
 	public void setIdTramiteVersion(final String idTramiteVersion) {
 		this.idTramiteVersion = idTramiteVersion;

@@ -28,8 +28,7 @@ public interface FuenteDatoDao {
 	/**
 	 * Elimina fuente datos de una entidad.
 	 *
-	 * @param idEntidad
-	 *            idEntidad
+	 * @param idEntidad idEntidad
 	 */
 	void removeByEntidad(final Long idEntidad);
 
@@ -53,7 +52,8 @@ public interface FuenteDatoDao {
 
 	ValoresDominio realizarConsultaFuenteDatos(String idDominio, List<ValorParametroDominio> parametros);
 
-	Long importarFD(FilaImportarDominio filaDominio, TypeAmbito ambito, Long idDominio) throws Exception;
+	Long importarFD(FilaImportarDominio filaDominio, TypeAmbito ambito, Long idDominio, final Long idArea)
+			throws Exception;
 
 	ValoresDominio realizarConsultaBD(String datasource, String sql, List<ValorParametroDominio> parametros);
 

@@ -297,14 +297,14 @@ public class EntidadServiceBean implements EntidadService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
-	public boolean existeCodigoDIR3(final String codigoDIR3, final Long idEntidad) {
-		return entidadService.existeCodigoDIR3(codigoDIR3, idEntidad);
+	public boolean existeIdentificadorValoracion(final String identificador, final Long idEntidad, final Long codigo) {
+		return entidadService.existeIdentificadorValoracion(identificador, idEntidad, codigo);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
-	public boolean existeIdentificadorValoracion(final String identificador, final Long idEntidad, final Long codigo) {
-		return entidadService.existeIdentificadorValoracion(identificador, idEntidad, codigo);
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public boolean existeCodigoDIR3(final String codigoDIR3, final Long idEntidad) {
+		return entidadService.existeCodigoDIR3(codigoDIR3, idEntidad);
 	}
 
 }

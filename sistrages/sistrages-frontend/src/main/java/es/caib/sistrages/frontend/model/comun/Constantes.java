@@ -34,6 +34,12 @@ public final class Constantes {
 	/** Constante importar. **/
 	public static final String CLAVE_MOCHILA_IMPORTAR = "IMPORTAR";
 
+	/** Constante importar area. **/
+	public static final String CLAVE_MOCHILA_IMPORTAR_AREA = "IMPORTAR_AREA";
+
+	/** Constante importar tramite. **/
+	public static final String CLAVE_MOCHILA_IMPORTAR_TRAMITE = "IMPORTAR_TRAMITE";
+
 	/** Constante mochila lvfcin. **/
 	public static final String CLAVE_MOCHILA_LVFCIN = "LVFCIN";
 
@@ -121,4 +127,9 @@ public final class Constantes {
 
 	public static final String USUARIO_MIGRACION = "migracion";
 
+	/** Importación trámite. **/
+	public static final String IMPORTAR_TIPO_IM = "IM";
+
+	/** Cuaderno carga. **/
+	public static final String IMPORTAR_TIPO_CC = "CC";
 }

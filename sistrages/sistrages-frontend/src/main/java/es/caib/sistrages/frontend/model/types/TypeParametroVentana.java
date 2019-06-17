@@ -112,5 +112,9 @@ public enum TypeParametroVentana {
 	/**
 	 * Indica si es opcional la entidad.
 	 */
-	ES_OPCIONAL;
+	ES_OPCIONAL,
+	/**
+	 * Modo importar (CC o IM)
+	 */
+	MODO_IMPORTAR;
 }

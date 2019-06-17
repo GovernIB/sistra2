@@ -12,6 +12,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
@@ -150,7 +151,8 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 			params.put(TypeParametroVentana.ID.toString(), dominio.getCodigo().toString());
 			params.put(TypeParametroVentana.AMBITO.toString(), dominio.getAmbito().toString());
 			if (dominio.getAreas() != null && !dominio.getAreas().isEmpty()) {
-				params.put(TypeParametroVentana.AREA.toString(), dominio.getAreas().toArray()[0].toString());
+				params.put(TypeParametroVentana.AREA.toString(),
+						((Area) dominio.getAreas().toArray()[0]).getCodigo().toString());
 			}
 			UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 700);
 		}
@@ -241,8 +243,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final FilaImportarDominio data) {
 		this.data = data;
@@ -263,8 +264,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarSql
-	 *            the mostrarSql to set
+	 * @param mostrarSql the mostrarSql to set
 	 */
 	public void setMostrarSql(final boolean mostrarSql) {
 		this.mostrarSql = mostrarSql;
@@ -285,8 +285,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarJndi
-	 *            the mostrarJndi to set
+	 * @param mostrarJndi the mostrarJndi to set
 	 */
 	public void setMostrarJndi(final boolean mostrarJndi) {
 		this.mostrarJndi = mostrarJndi;
@@ -307,8 +306,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarUrl
-	 *            the mostrarUrl to set
+	 * @param mostrarUrl the mostrarUrl to set
 	 */
 	public void setMostrarUrl(final boolean mostrarUrl) {
 		this.mostrarUrl = mostrarUrl;
@@ -329,8 +327,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarLista
-	 *            the mostrarLista to set
+	 * @param mostrarLista the mostrarLista to set
 	 */
 	public void setMostrarLista(final boolean mostrarLista) {
 		this.mostrarLista = mostrarLista;
@@ -351,8 +348,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarFD
-	 *            the mostrarFD to set
+	 * @param mostrarFD the mostrarFD to set
 	 */
 	public void setMostrarFD(final boolean mostrarFD) {
 		this.mostrarFD = mostrarFD;
@@ -366,8 +362,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarReemplazar
-	 *            the mostrarReemplazar to set
+	 * @param mostrarReemplazar the mostrarReemplazar to set
 	 */
 	public void setMostrarReemplazar(final boolean mostrarReemplazar) {
 		this.mostrarReemplazar = mostrarReemplazar;
@@ -381,8 +376,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param accion
-	 *            the accion to set
+	 * @param accion the accion to set
 	 */
 	public void setAccion(final String accion) {
 		this.accion = accion;
@@ -396,8 +390,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param parametros
-	 *            the parametros to set
+	 * @param parametros the parametros to set
 	 */
 	public void setParametros(final List<Propiedad> parametros) {
 		this.parametros = parametros;
@@ -411,8 +404,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarFDActual
-	 *            the mostrarFDActual to set
+	 * @param mostrarFDActual the mostrarFDActual to set
 	 */
 	public void setMostrarFDActual(final boolean mostrarFDActual) {
 		this.mostrarFDActual = mostrarFDActual;
@@ -426,8 +418,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarFDActualBotones
-	 *            the mostrarFDActualBotones to set
+	 * @param mostrarFDActualBotones the mostrarFDActualBotones to set
 	 */
 	public void setMostrarFDActualBotones(final boolean mostrarFDActualBotones) {
 		this.mostrarFDActualBotones = mostrarFDActualBotones;
@@ -441,8 +432,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarFDActualLiteral
-	 *            the mostrarFDActualLiteral to set
+	 * @param mostrarFDActualLiteral the mostrarFDActualLiteral to set
 	 */
 	public void setMostrarFDActualLiteral(final boolean mostrarFDActualLiteral) {
 		this.mostrarFDActualLiteral = mostrarFDActualLiteral;

@@ -44,7 +44,7 @@ import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramitePasoAnexar;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.ValorListaFija;
-import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
+import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteRegistro;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
 import es.caib.sistrages.core.service.repository.model.JFichero;
@@ -413,7 +413,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		}
 
 		// Ficheros en las plantilla de formularios.
-		final String sqlPlantillasIdiomas = "select plaIdi.fichero from JPlantillaIdiomaFormulario plaIdi where plaIdi.plantillaFormulario.formulario in (select forms.formulario from JPasoTramitacion pasot inner join pasot.pasoRellenar pasor inner join pasor.formulariosTramite forms  where pasot.versionTramite.codigo = :idTramiteVersion ) )";
+		final String sqlPlantillasIdiomas = "select plaIdi.fichero from JPlantillaIdiomaFormulario plaIdi where plaIdi.plantillaFormulario.formulario in (select forms.formulario from JPasoTramitacion pasot inner join pasot.pasoRellenar pasor inner join pasor.formulariosTramite forms  where pasot.versionTramite.codigo = :idTramiteVersion ) ";
 
 		final Query queryPlantillasIdiomas = entityManager.createQuery(sqlPlantillasIdiomas);
 		queryPlantillasIdiomas.setParameter("idTramiteVersion", idTramiteVersion);
@@ -429,7 +429,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		}
 
 		// Ficheros en las imagen de formularios.
-		final String sqlImagenFormularios = "select imagForm.fichero from JImagenFormulario imagForm where imagForm.elementoFormulario.listaElementosFormulario.paginaFormulario.formulario in (select forms.formulario from JPasoTramitacion pasot inner join pasot.pasoRellenar pasor inner join pasor.formulariosTramite forms  where pasot.versionTramite.codigo = :idTramiteVersion ) )";
+		final String sqlImagenFormularios = "select imagForm.fichero from JImagenFormulario imagForm where imagForm.elementoFormulario.listaElementosFormulario.paginaFormulario.formulario in (select forms.formulario from JPasoTramitacion pasot inner join pasot.pasoRellenar pasor inner join pasor.formulariosTramite forms  where pasot.versionTramite.codigo = :idTramiteVersion ) ";
 
 		final Query queryImagenFormularios = entityManager.createQuery(sqlImagenFormularios);
 		queryImagenFormularios.setParameter("idTramiteVersion", idTramiteVersion);
@@ -515,7 +515,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	}
 
 	@Override
-	public Long importar(final FilaImportarTramiteVersion filaTramiteVersion, final TramitePaso tramitePaso,
+	public Long importar(final FilaImportarTramiteRegistro filaTramiteVersion, final TramitePaso tramitePaso,
 			final Long idTramiteVersion, final Long idEntidad, final Map<Long, DisenyoFormulario> formularios,
 			final Map<Long, Fichero> ficheros, final Map<Long, byte[]> ficherosContent,
 			final Map<Long, FormateadorFormulario> formateadores, final Map<Long, Long> mapFormateadores,
@@ -566,9 +566,9 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		}
 
 		if (jpaso.getPasoRegistrar() != null) {
-			jpaso.getPasoRegistrar().setCodigoLibroRegistro(filaTramiteVersion.getTramiteVersionResultadoLibro());
-			jpaso.getPasoRegistrar().setCodigoOficinaRegistro(filaTramiteVersion.getTramiteVersionResultadoOficina());
-			jpaso.getPasoRegistrar().setCodigoTipoAsunto(filaTramiteVersion.getTramiteVersionResultadoTipo());
+			jpaso.getPasoRegistrar().setCodigoLibroRegistro(filaTramiteVersion.getLibro());
+			jpaso.getPasoRegistrar().setCodigoOficinaRegistro(filaTramiteVersion.getOficina());
+			jpaso.getPasoRegistrar().setCodigoTipoAsunto(filaTramiteVersion.getTipo());
 		}
 		entityManager.persist(jpaso);
 		entityManager.flush();
@@ -1038,6 +1038,8 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			}
 			comp.setAyuda(componente.getAyuda());
 		}
+		comp.setTipoListaValores(componente.getTipoListaValores());
+
 		comp.setCampoDominioCodigo(componente.getCampoDominioCodigo());
 		comp.setCampoDominioDescripcion(componente.getCampoDominioDescripcion());
 		if (componente.getCodDominio() != null) {
@@ -1047,8 +1049,8 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 					break;
 				}
 			}
-
 		}
+
 		comp.setIdComponente(componente.getIdComponente());
 		comp.setIndiceAlfabetico(componente.isIndiceAlfabetico());
 		if (componente.getListaParametrosDominio() != null) {
@@ -1081,7 +1083,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		comp.setSoloLectura(componente.isSoloLectura());
 		comp.setTipo(componente.getTipo());
 		comp.setTipoCampoIndexado(componente.getTipoCampoIndexado());
-		comp.setTipoListaValores(componente.getTipoListaValores());
+
 		if (componente.getTexto() != null) {
 			componente.getTexto().setCodigo(null);
 			if (componente.getTexto().getTraducciones() != null) {

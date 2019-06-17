@@ -48,7 +48,7 @@ public interface AreaDao {
 	 * @param pArea
 	 *            area
 	 */
-	void add(Long pIdEntidad, final Area pArea);
+	Long add(Long pIdEntidad, final Area pArea);
 
 	/**
 	 * Elimina un area.
@@ -86,7 +86,12 @@ public interface AreaDao {
 	boolean checkIdentificadorRepetido(String pIdentificador, Long pCodigo);
 
 	/**
-	 * Importa un area.
+	 * Importa un area. Hay 4 acciones posibles (TypeImportarAccion):
+	 * <ul>
+	 * <li>Crear un área (el trámite se tendrá que asociar a este área)</li>
+	 * <li>Seleccionar y Nada, implica que se selecciona el área que ya existe</li>
+	 * <li>Reemplazar el trámite con la nueva descripción</li>
+	 * </ul>
 	 *
 	 * @param filaArea
 	 * @return

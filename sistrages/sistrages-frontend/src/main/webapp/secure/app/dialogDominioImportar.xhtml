@@ -39,16 +39,16 @@
 
 				<p:outputLabel value="#{msg['dialogDominioImportar.identificador']}" style="font-weight: bold" />
 					<p:outputLabel value="#{msg['dialogDominioImportar.ambito']}" style="font-weight: bold" />
-					<p:outputLabel value="#{msg['dialogDominioImportar.estado']}" style="font-weight: bold" />
+					<p:outputLabel value="#{msg['dialogDominioImportar.existe']}" style="font-weight: bold" />
 					<p:outputLabel value="#{msg['dialogDominioImportar.dominio.accion']}" style="font-weight: bold" />
 					<p:outputLabel value="" style="font-weight: bold" />
 
 					<p:outputLabel value="#{dialogDominioImportar.data.identificador}"  />
 					<p:outputLabel value="#{dialogDominioImportar.data.ambito}"  />
-					<p:outputLabel value="#{msg['typeImportar.estado.' += dialogDominioImportar.filaDominio.estado]}"  />
+					<p:outputLabel value="#{msg['typeImportar.existe.' += dialogDominioImportar.filaDominio.existe]}"  />
 					<h:column>
 							 <f:facet name = "header"><p:outputLabel value="#{msg['dialogDominioImportar.dominio.accion']}" style="font-weight: bold" /></f:facet>
-							 <p:outputLabel  value="#{msg[dialogDominioImportar.filaDominio.mensaje]}"  rendered="#{dialogDominioImportar.filaDominio.visibleBoton == false}"/>
+							 <p:outputLabel  value="#{dialogDominioImportar.filaDominio.mensaje}"  rendered="#{dialogDominioImportar.filaDominio.visibleBoton == false}"/>
 	      					 <p:commandButton value="..." rendered="#{dialogDominioImportar.filaDominio.visibleBoton}"  actionListener="#{dialogDominioImportar.checkDominio()}" style="margin-left:5px" process="@this">
 	      							<p:ajax event="dialogReturn" listener="#{dialogDominioImportar.returnDialogoDominio}" />
 							</p:commandButton>

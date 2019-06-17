@@ -13,6 +13,7 @@ import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuModel;
 
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
@@ -243,8 +244,7 @@ public class ViewDominios extends ViewControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 
@@ -279,8 +279,7 @@ public class ViewDominios extends ViewControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoImportar(final SelectEvent event) {
 
@@ -301,8 +300,7 @@ public class ViewDominios extends ViewControllerBase {
 	/**
 	 * Retorno dialogo clonar.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoClonar(final SelectEvent event) {
 
@@ -366,7 +364,7 @@ public class ViewDominios extends ViewControllerBase {
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 
 		if (this.datoSeleccionado.getAmbito() == TypeAmbito.AREA) {
-			final Long idArea = (Long) this.datoSeleccionado.getAreas().toArray()[0];
+			final Long idArea = ((Area) datoSeleccionado.getAreas().toArray()[0]).getCodigo();
 			params.put(TypeParametroVentana.AREA.toString(), String.valueOf(idArea));
 		}
 		UtilJSF.openDialog(DialogDominioClonar.class, TypeModoAcceso.ALTA, params, true, 500, 200);
@@ -468,8 +466,7 @@ public class ViewDominios extends ViewControllerBase {
 	/**
 	 * Abre dialogo de tramites.
 	 *
-	 * @param modoAccesoDlg
-	 *            Modo acceso
+	 * @param modoAccesoDlg Modo acceso
 	 */
 	public void tramites() {
 
@@ -494,8 +491,7 @@ public class ViewDominios extends ViewControllerBase {
 	/**
 	 * Abre dialogo.
 	 *
-	 * @param modoAccesoDlg
-	 *            Modo acceso
+	 * @param modoAccesoDlg Modo acceso
 	 */
 	private void abrirDlg(final TypeModoAcceso modoAccesoDlg) {
 
@@ -541,8 +537,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param filtro
-	 *            the filtro to set
+	 * @param filtro the filtro to set
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
@@ -556,8 +551,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param listaDatos
-	 *            the listaDatos to set
+	 * @param listaDatos the listaDatos to set
 	 */
 	public void setListaDatos(final List<Dominio> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -571,8 +565,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param datoSeleccionado
-	 *            the datoSeleccionado to set
+	 * @param datoSeleccionado the datoSeleccionado to set
 	 */
 	public void setDatoSeleccionado(final Dominio datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
@@ -586,8 +579,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param ambito
-	 *            the ambito to set
+	 * @param ambito the ambito to set
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;
@@ -601,8 +593,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -616,8 +607,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param permiteEditar
-	 *            the permiteEditar to set
+	 * @param permiteEditar the permiteEditar to set
 	 */
 	public void setPermiteEditar(final Boolean permiteEditar) {
 		this.permiteEditar = permiteEditar;
@@ -631,8 +621,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param permiteConsultar
-	 *            the permiteConsultar to set
+	 * @param permiteConsultar the permiteConsultar to set
 	 */
 	public void setPermiteConsultar(final Boolean permiteConsultar) {
 		this.permiteConsultar = permiteConsultar;
@@ -646,8 +635,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param mostrarBreadcrumb
-	 *            the mostrarBreadcrumb to set
+	 * @param mostrarBreadcrumb the mostrarBreadcrumb to set
 	 */
 	public void setMostrarBreadcrumb(final boolean mostrarBreadcrumb) {
 		this.mostrarBreadcrumb = mostrarBreadcrumb;
@@ -661,8 +649,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param breadCrumb
-	 *            the breadCrumb to set
+	 * @param breadCrumb the breadCrumb to set
 	 */
 	public void setBreadCrumb(final MenuModel breadCrumb) {
 		this.breadCrumb = breadCrumb;
@@ -676,8 +663,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param area
-	 *            the area to set
+	 * @param area the area to set
 	 */
 	public void setArea(final String area) {
 		this.area = area;

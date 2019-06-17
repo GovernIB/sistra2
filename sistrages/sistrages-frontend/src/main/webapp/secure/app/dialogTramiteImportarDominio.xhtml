@@ -32,7 +32,7 @@
 
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w25 va-top, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
-					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerDominioActual']}" />
+					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerDominioActual']}:" />
 					<p:column>
 						<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerDominioActual.noexiste']}" rendered="#{dialogTramiteImportarDominio.data.dominioActual == null}" />
 						<p:commandButton value="#{msg['botones.consultar']}" actionListener="#{dialogTramiteImportarDominio.consultarDominio(dialogTramiteImportarDominio.data.dominioActual)}" process="@this" styleClass="boton-azul" rendered="#{dialogTramiteImportarDominio.data.dominioActual != null}" />
@@ -45,11 +45,18 @@
 						<h:outputText value="#{msg['dialogTramiteImportarDominio.fd.noexiste']}"  rendered="#{!dialogTramiteImportarDominio.mostrarFDActualBotones}" />
 					</p:column>
 
-					<p:outputLabel value="Acción:" />
-					<p:selectOneMenu value="#{dialogTramiteImportarDominio.accion}" valueChangeListener="#{dialogTramiteImportarDominio.eventoChangeResultado}">
-					     <f:selectItems value="#{dialogTramiteImportarDominio.data.acciones}" var="accion" itemLabel="#{msg['typeImportar.accion.' +=accion.toString()]}" itemValue="#{accion.toString()}" />
-					     <p:ajax update=":dialogTramiteImpDom"  />
-					</p:selectOneMenu>
+					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerAccion']}:" />
+					<p:column>
+						<p:selectOneMenu value="#{dialogTramiteImportarDominio.accion}" valueChangeListener="#{dialogTramiteImportarDominio.eventoChangeResultado}">
+						     <f:selectItems value="#{dialogTramiteImportarDominio.data.acciones}" var="accion" itemLabel="#{msg['typeImportar.accion.' +=accion.toString()]}" itemValue="#{accion.toString()}" />
+						     <p:ajax update=":dialogTramiteImpDom"  />
+						</p:selectOneMenu>
+
+						<p:outputLabel styleClass="outputlabel-nota-top" value="#{msg['dialogTramiteImportarDominio.reemplazar.info']}" rendered="#{dialogTramiteImportarDominio.accion == 'R'}"  />
+						<p:outputLabel styleClass="outputlabel-nota-top" value="#{msg['dialogTramiteImportarDominio.mantener.info']}" 	rendered="#{dialogTramiteImportarDominio.accion == 'M'}"  />
+						<p:outputLabel styleClass="outputlabel-nota-top" value="#{msg['dialogTramiteImportarDominio.importar.info']}" 	rendered="#{dialogTramiteImportarDominio.accion == 'X'}"  />
+
+					</p:column>
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerJNDI']}:" rendered="#{dialogTramiteImportarDominio.mostrarJndi  and dialogTramiteImportarDominio.mostrarReemplazar}" />
 					<p:inputText value="#{dialogTramiteImportarDominio.data.resultadoJndi}"   size="80" rows="5" rendered="#{dialogTramiteImportarDominio.mostrarJndi  and dialogTramiteImportarDominio.mostrarReemplazar}" />

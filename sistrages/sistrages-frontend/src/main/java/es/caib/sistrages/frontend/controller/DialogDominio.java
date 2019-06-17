@@ -13,6 +13,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
 
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.FuenteDatos;
@@ -220,7 +221,7 @@ public class DialogDominio extends DialogControllerBase {
 					res = false;
 				} else {
 					final List<TypeRolePermisos> permisos = securityService
-							.getPermisosDesarrolladorEntidadByArea((Long) data.getAreas().toArray()[0]);
+							.getPermisosDesarrolladorEntidadByArea(((Area) data.getAreas().toArray()[0]).getCodigo());
 
 					res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
 							|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA);
@@ -250,8 +251,7 @@ public class DialogDominio extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de propiedades.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -739,8 +739,7 @@ public class DialogDominio extends DialogControllerBase {
 	/**
 	 * Abre dialogo de tramites.
 	 *
-	 * @param modoAccesoDlg
-	 *            Modo acceso
+	 * @param modoAccesoDlg Modo acceso
 	 */
 	public void tramites() {
 
@@ -833,8 +832,7 @@ public class DialogDominio extends DialogControllerBase {
 		if (TypeDominio.CONSULTA_REMOTA.equals(data.getTipo()) || TypeDominio.CONSULTA_BD.equals(data.getTipo())) {
 			if (MAXLENGTH_PARAMETROS
 					- (data.getParametros() == null ? 0 : UtilJSON.toJSON(data.getParametros()).length()) < 0) {
-				addMessageContext(TypeNivelGravedad.WARNING,
-						UtilJSF.getLiteral("error.parametros.tamanyosuperado"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.parametros.tamanyosuperado"));
 				return false;
 			}
 		}
@@ -858,8 +856,7 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -873,8 +870,7 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final Dominio data) {
 		this.data = data;
@@ -889,8 +885,7 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param propiedadSeleccionada
-	 *            the propiedadSeleccionada to set
+	 * @param propiedadSeleccionada the propiedadSeleccionada to set
 	 */
 	public void setPropiedadSeleccionada(final Propiedad propiedadSeleccionada) {
 		this.propiedadSeleccionada = propiedadSeleccionada;
@@ -904,8 +899,7 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleJNDI
-	 *            the visibleJNDI to set
+	 * @param visibleJNDI the visibleJNDI to set
 	 */
 	public void setVisibleJNDI(final boolean visibleJNDI) {
 		this.visibleJNDI = visibleJNDI;
@@ -919,8 +913,7 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param valorSeleccionado
-	 *            the valorSeleccionado to set
+	 * @param valorSeleccionado the valorSeleccionado to set
 	 */
 	public void setValorSeleccionado(final Propiedad valorSeleccionado) {
 		this.valorSeleccionado = valorSeleccionado;
@@ -934,8 +927,7 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleLista
-	 *            the visibleLista to set
+	 * @param visibleLista the visibleLista to set
 	 */
 	public void setVisibleLista(final boolean visibleLista) {
 		this.visibleLista = visibleLista;
@@ -949,8 +941,7 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleRemoto
-	 *            the visibleRemoto to set
+	 * @param visibleRemoto the visibleRemoto to set
 	 */
 	public void setVisibleRemoto(final boolean visibleRemoto) {
 		this.visibleRemoto = visibleRemoto;
@@ -964,8 +955,7 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleFuente
-	 *            the visibleFuente to set
+	 * @param visibleFuente the visibleFuente to set
 	 */
 	public void setVisibleFuente(final boolean visibleFuente) {
 		this.visibleFuente = visibleFuente;
@@ -979,8 +969,7 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param fuentes
-	 *            the fuentes to set
+	 * @param fuentes the fuentes to set
 	 */
 	public void setFuentes(final List<FuenteDatos> fuentes) {
 		this.fuentes = fuentes;
@@ -994,8 +983,7 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tipos
-	 *            the tipos to set
+	 * @param tipos the tipos to set
 	 */
 	public void setTipos(final List<TypeDominio> tipos) {
 		this.tipos = tipos;
@@ -1009,8 +997,7 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param dominioService
-	 *            the dominioService to set
+	 * @param dominioService the dominioService to set
 	 */
 	public void setDominioService(final DominioService dominioService) {
 		this.dominioService = dominioService;
@@ -1024,8 +1011,7 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param ambito
-	 *            the ambito to set
+	 * @param ambito the ambito to set
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;
@@ -1039,8 +1025,7 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idArea
-	 *            the idArea to set
+	 * @param idArea the idArea to set
 	 */
 	public void setIdArea(final String idArea) {
 		this.idArea = idArea;
@@ -1054,8 +1039,7 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idEntidad
-	 *            the idEntidad to set
+	 * @param idEntidad the idEntidad to set
 	 */
 	public void setIdEntidad(final String idEntidad) {
 		this.idEntidad = idEntidad;
@@ -1069,8 +1053,7 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idFuenteDato
-	 *            the idFuenteDato to set
+	 * @param idFuenteDato the idFuenteDato to set
 	 */
 	public void setIdFuenteDato(final Long idFuenteDato) {
 		this.idFuenteDato = idFuenteDato;
@@ -1091,8 +1074,7 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarAdvertencia
-	 *            the mostrarAdvertencia to set
+	 * @param mostrarAdvertencia the mostrarAdvertencia to set
 	 */
 	public void setMostrarAdvertencia(final boolean mostrarAdvertencia) {
 		this.mostrarAdvertencia = mostrarAdvertencia;

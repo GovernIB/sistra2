@@ -1,18 +1,23 @@
-package es.caib.sistrages.core.api.util;
+package es.caib.sistrages.frontend.util;
 
 import java.util.Arrays;
 import java.util.List;
 
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
+import es.caib.sistrages.core.api.model.comun.FilaImportarEntidad;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
+import es.caib.sistrages.core.api.model.types.TypeImportarExiste;
 import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.util.UtilJSON;
 
 /**
  * Util de importación. De momento, solo para dominios.
@@ -20,33 +25,56 @@ import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
  * @author Indra
  *
  */
-public class UtilImportacion {
+public class UtilCuadernoCarga {
 
 	/**
 	 * Constructor vacio
 	 */
-	private UtilImportacion() {
+	private UtilCuadernoCarga() {
 		// Vacio
 	}
 
+	/**
+	 * Calcula el fila importar entidad.
+	 *
+	 * @param filaEntidad
+	 * @param dir3actual
+	 * @return
+	 */
+	public static FilaImportarEntidad getFilaEntidad(final FilaImportarEntidad filaEntidad, final String dir3actual) {
+		filaEntidad.setDir3Actual(dir3actual);
+		if (filaEntidad.getDir3() == null || !filaEntidad.getDir3().equals(dir3actual)) {
+			final Object[] propiedades = new Object[1];
+			propiedades[0] = dir3actual;
+			filaEntidad.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.dir3distinto", propiedades));
+			filaEntidad.setResultado(TypeImportarResultado.ERROR);
+		} else {
+			filaEntidad.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.ok.entidadcorrecta"));
+			filaEntidad.setResultado(TypeImportarResultado.INFO);
+		}
+		return filaEntidad;
+	}
+
 	public static FilaImportarDominio getFilaDominio(final Dominio iDominio, final Dominio iDominioActual,
-			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final boolean permiteEditar) {
+			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final Long idEntidad,
+			final Long idArea) {
 		final FilaImportarDominio fila = new FilaImportarDominio();
 		fila.setDominio(iDominio);
 		fila.setDominioActual(iDominioActual);
 		fila.setFuenteDatos(fd);
 		fila.setFuenteDatosContent(fdContent);
 		fila.setFuenteDatosActual(fdActual);
-		fila.setPermisosEdicion(permiteEditar);
-		UtilImportacion.checkDominios(fila);
-		UtilImportacion.rellenarDatosPorDefecto(fila);
+		fila.setIdEntidad(idEntidad);
+		fila.setIdArea(idArea);
+		UtilCuadernoCarga.checkDominios(fila);
+		UtilCuadernoCarga.rellenarDatosPorDefecto(fila);
 		return fila;
 	}
 
 	/**
 	 * Rellena los tipos por defecto. Valores seleccionados y la altura/anchura.
 	 */
-	private static void rellenarDatosPorDefecto(final FilaImportarDominio fila) {
+	private static FilaImportarDominio rellenarDatosPorDefecto(final FilaImportarDominio fila) {
 		if (fila.getDominio() != null) {
 			switch (fila.getDominio().getTipo()) {
 			case CONSULTA_BD:
@@ -71,6 +99,7 @@ public class UtilImportacion {
 			}
 
 		}
+		return fila;
 	}
 
 	/**
@@ -85,19 +114,20 @@ public class UtilImportacion {
 	 * @param fila
 	 * @return
 	 */
-	private static void checkDominios(final FilaImportarDominio fila) {
+	private static FilaImportarDominio checkDominios(final FilaImportarDominio fila) {
 
 		// Prohibido importar dominios de distintos ambitos.
 		if (fila.getDominio() != null && fila.getDominioActual() != null
 				&& fila.getDominio().getAmbito() != fila.getDominioActual().getAmbito()) {
 
-			fila.setAccion(TypeImportarAccion.ERROR);
-			fila.setEstado(TypeImportarEstado.EXISTE);
+			fila.setAccion(TypeImportarAccion.NADA);
+			fila.setExiste(TypeImportarExiste.EXISTE);
+			fila.setEstado(TypeImportarEstado.ERROR);
 			fila.setResultado(TypeImportarResultado.ERROR);
 			fila.setVisibleBoton(false);
 			fila.setMismoTipo(false);
-			fila.setMensaje("importar.error.distintosAmbitos");
-			return;
+			fila.setMensaje(UtilJSF.getLiteral("importar.error.distintosAmbitos"));
+			return fila;
 		}
 
 		// Si ambos dominios son de tipo Area, tienen que ser el mismo area (sino, es
@@ -107,21 +137,64 @@ public class UtilImportacion {
 				&& fila.getDominio().getAmbito() == TypeAmbito.AREA
 				&& isAreaErroneo(fila.getDominioActual(), fila.getDominio())) {
 
-			fila.setAccion(TypeImportarAccion.ERROR);
-			fila.setEstado(TypeImportarEstado.EXISTE);
+			fila.setAccion(TypeImportarAccion.NADA);
+			fila.setExiste(TypeImportarExiste.EXISTE);
+			fila.setEstado(TypeImportarEstado.ERROR);
 			fila.setResultado(TypeImportarResultado.ERROR);
 			fila.setVisibleBoton(false);
 			fila.setMismoTipo(false);
-			fila.setMensaje("importar.error.ambitoAreaDistintaArea");
-			return;
+			fila.setMensaje(UtilJSF.getLiteral("importar.error.ambitoAreaDistintaArea"));
+			return fila;
 		}
 
-		if (fila.isPermisosEdicion()) {
-			checkDominioModoEdicion(fila);
+		// Si ambos dominios son de tipo FD, la FD debe coincidir la entidad o area
+		if (fila.getFuenteDatos() != null && fila.getFuenteDatosActual() != null
+				&& fila.getDominioActual().getTipo() == TypeDominio.FUENTE_DATOS
+				&& isFDErroneo(fila.getFuenteDatos(), fila.getFuenteDatosActual(), fila.getIdArea())) {
+
+			fila.setAccion(TypeImportarAccion.NADA);
+			fila.setExiste(TypeImportarExiste.EXISTE);
+			fila.setEstado(TypeImportarEstado.ERROR);
+			fila.setResultado(TypeImportarResultado.ERROR);
+			fila.setVisibleBoton(false);
+			fila.setMismoTipo(false);
+			fila.setMensaje(UtilJSF.getLiteral("importar.error.ambitoFDDistintaArea"));
+			return fila;
+		}
+
+		if (checkPermisos(fila.getDominio())) {
+			return checkDominioModoEdicion(fila);
 		} else {
-			checkDominioModoActualizacion(fila);
+			return checkDominioModoActualizacion(fila);
 		}
 
+	}
+
+	/**
+	 * Se comprueba que la FD si ambas existen, tenga el mismo ámbito y pertenezcan
+	 * al mismo entidad (si es ambito entidad) o area (si es mismo area)
+	 *
+	 * @param fuenteDatos
+	 * @param fuenteDatosActual
+	 * @return
+	 */
+	private static boolean isFDErroneo(final FuenteDatos fuenteDatos, final FuenteDatos fuenteDatosActual,
+			final Long idArea) {
+		boolean erroneo;
+		if (fuenteDatos == null || fuenteDatosActual == null) {
+			erroneo = false;
+		} else {
+			if (fuenteDatos.getAmbito() != fuenteDatosActual.getAmbito()) {
+				erroneo = true;
+			} else if (fuenteDatosActual.getAmbito() == TypeAmbito.ENTIDAD) {
+				erroneo = fuenteDatosActual.getEntidad().getCodigo().compareTo(UtilJSF.getIdEntidad()) != 0;
+			} else if (fuenteDatosActual.getAmbito() == TypeAmbito.AREA && idArea != null) {
+				erroneo = fuenteDatosActual.getArea().getCodigo().compareTo(idArea) != 0;
+			} else {
+				erroneo = false;
+			}
+		}
+		return erroneo;
 	}
 
 	/**
@@ -136,9 +209,11 @@ public class UtilImportacion {
 		if (dominio.getAreas().size() != 1 || dominio2.getAreas().size() != 1) {
 			retorno = true;
 		} else {
-			final Long idArea = Long.valueOf(dominio.getAreas().toArray()[0].toString());
-			final Long idArea2 = Long.valueOf(dominio2.getAreas().toArray()[0].toString());
-			retorno = idArea.compareTo(idArea2) != 0; // Si son iguales, el valor 0 y por tanto, será false
+
+			final String identificador1 = ((Area) dominio.getAreas().toArray()[0]).getIdentificador();
+			final String identificador2 = ((Area) dominio2.getAreas().toArray()[0]).getIdentificador();
+
+			retorno = !identificador1.equals(identificador2);
 
 		}
 		return retorno;
@@ -157,31 +232,38 @@ public class UtilImportacion {
 	 * que no pierda compatibilidad y falle).
 	 *
 	 */
-	private static void checkDominioModoEdicion(final FilaImportarDominio fila) {
+	private static FilaImportarDominio checkDominioModoEdicion(final FilaImportarDominio fila) {
 
 		if (fila.getDominioActual() == null || (fila.getDominio() != null && !mismaEstructura(fila))) {
 
 			fila.setAccion(TypeImportarAccion.REEMPLAZAR);
 			if (fila.getDominioActual() == null) {
-				fila.setEstado(TypeImportarEstado.NO_EXISTE);
+				fila.setExiste(TypeImportarExiste.NO_EXISTE);
 				fila.setMismoTipo(false);
 			} else {
-				fila.setEstado(TypeImportarEstado.EXISTE);
+				fila.setExiste(TypeImportarExiste.EXISTE);
 				fila.setMismoTipo(fila.getDominio().getTipo() == fila.getDominioActual().getTipo());
 			}
 			fila.setResultado(TypeImportarResultado.WARNING);
 			fila.setVisibleBoton(true);
 			fila.setAcciones(Arrays.asList(TypeImportarAccion.REEMPLAZAR));
-			fila.setMensaje("importar.ok.soloactualizacion");
+			String mensaje;
+			if (fila.getDominioActual() == null) {
+				mensaje = UtilJSF.getLiteral("importar.ok.soloimportar");
+			} else {
+				mensaje = UtilJSF.getLiteral("importar.ok.soloreemplazar");
+			}
+
+			fila.setMensaje(mensaje);
 
 		} else {
 
 			fila.setAccion(TypeImportarAccion.REEMPLAZAR);
 			if (fila.getDominioActual() == null) {
-				fila.setEstado(TypeImportarEstado.NO_EXISTE);
+				fila.setExiste(TypeImportarExiste.NO_EXISTE);
 				fila.setAcciones(Arrays.asList(TypeImportarAccion.REEMPLAZAR));
 			} else {
-				fila.setEstado(TypeImportarEstado.EXISTE);
+				fila.setExiste(TypeImportarExiste.EXISTE);
 				fila.setAcciones(Arrays.asList(TypeImportarAccion.REEMPLAZAR, TypeImportarAccion.MANTENER));
 			}
 			fila.setResultado(TypeImportarResultado.WARNING);
@@ -189,9 +271,9 @@ public class UtilImportacion {
 			fila.setMismoTipo((fila.getDominio() != null && fila.getDominioActual() != null
 					&& fila.getDominioActual().getTipo() == fila.getDominio().getTipo()));
 
-			fila.setMensaje("importar.ok.actualizacioncompleta");
+			fila.setMensaje(UtilJSF.getLiteral("importar.ok.actualizacioncompleta"));
 		}
-
+		return fila;
 	}
 
 	/**
@@ -207,31 +289,34 @@ public class UtilImportacion {
 	 * permisos. <br />
 	 *
 	 */
-	private static void checkDominioModoActualizacion(final FilaImportarDominio fila) {
+	private static FilaImportarDominio checkDominioModoActualizacion(final FilaImportarDominio fila) {
 		if (fila.getDominioActual() != null && mismaEstructura(fila)) {
 
-			fila.setAccion(TypeImportarAccion.REVISADO);
-			fila.setEstado(TypeImportarEstado.EXISTE);
-			fila.setResultado(TypeImportarResultado.OK);
+			fila.setAccion(TypeImportarAccion.NADA);
+			fila.setEstado(TypeImportarEstado.REVISADO);
+			fila.setExiste(TypeImportarExiste.EXISTE);
+			fila.setResultado(TypeImportarResultado.INFO);
 			fila.setVisibleBoton(false);
 			fila.setMismoTipo(false);
-			fila.setMensaje("importar.ok.soloactualizacion");
+			fila.setMensaje(UtilJSF.getLiteral("importar.ok.soloseleccionar"));
 
 		} else {
 
-			fila.setAccion(TypeImportarAccion.ERROR);
+			fila.setEstado(TypeImportarEstado.ERROR);
+			fila.setAccion(TypeImportarAccion.NADA);
 			if (fila.getDominioActual() == null) {
-				fila.setEstado(TypeImportarEstado.NO_EXISTE);
-				fila.setMensaje("importar.error.sinpermisos.creacion");
+				fila.setExiste(TypeImportarExiste.NO_EXISTE);
+				fila.setMensaje(UtilJSF.getLiteral("importar.error.sinpermisos.creacion"));
 			} else {
-				fila.setEstado(TypeImportarEstado.EXISTE);
-				fila.setMensaje("importar.error.sinpermisos.actualizacion");
+				fila.setExiste(TypeImportarExiste.EXISTE);
+				fila.setMensaje(UtilJSF.getLiteral("importar.error.sinpermisos.actualizacion"));
 			}
 			fila.setResultado(TypeImportarResultado.ERROR);
 			fila.setVisibleBoton(false);
 			fila.setMismoTipo(true);
 
 		}
+		return fila;
 	}
 
 	/**
@@ -347,4 +432,36 @@ public class UtilImportacion {
 		}
 		return iguales;
 	}
+
+	/**
+	 * Metodo que comprueba si tiene permisos el usuario sobre los dominios.
+	 *
+	 * @return
+	 */
+	private static boolean checkPermisos(final Dominio dominio) {
+		boolean tienePermisosEdicion;
+
+		if (dominio == null) {
+			tienePermisosEdicion = false;
+		} else {
+			switch (dominio.getAmbito()) {
+			case AREA:
+				tienePermisosEdicion = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+						|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR);
+				break;
+			case ENTIDAD:
+				tienePermisosEdicion = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+				break;
+			case GLOBAL:
+				tienePermisosEdicion = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
+				break;
+			default:
+				tienePermisosEdicion = false;
+				break;
+			}
+		}
+
+		return tienePermisosEdicion;
+	}
+
 }

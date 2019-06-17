@@ -12,10 +12,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
+import es.caib.sistrages.core.api.exception.ImportacionError;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
-import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
 import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
 
@@ -107,7 +107,7 @@ public class AreaDaoImpl implements AreaDao {
 	 * es.caib.sistrages.core.api.model.Area)
 	 */
 	@Override
-	public void add(final Long pIdEntidad, final Area pArea) {
+	public Long add(final Long pIdEntidad, final Area pArea) {
 		if (pArea == null) {
 			throw new FaltanDatosException(FALTA_AREA);
 		}
@@ -124,6 +124,7 @@ public class AreaDaoImpl implements AreaDao {
 		final JArea jArea = JArea.fromModel(pArea);
 		jArea.setEntidad(jEntidad);
 		entityManager.persist(jArea);
+		return jArea.getCodigo();
 	}
 
 	/*
@@ -270,19 +271,31 @@ public class AreaDaoImpl implements AreaDao {
 
 	@Override
 	public Long importar(final FilaImportarArea filaArea, final Long idEntidad) {
-		JArea jarea;
-		if (filaArea.getEstado() == TypeImportarEstado.NO_EXISTE) { // Si no existe, se debe crear.
-			jarea = new JArea();
-			jarea.setDescripcion(filaArea.getAreaResultado());
-			final JEntidad entidad = entityManager.find(JEntidad.class, idEntidad);
-			jarea.setEntidad(entidad);
-			jarea.setIdentificador(filaArea.getArea().getIdentificador());
-			entityManager.persist(jarea);
-		} else {
-			jarea = entityManager.find(JArea.class, filaArea.getAreaActual().getCodigo());
+
+		Long idArea;
+		switch (filaArea.getAccion()) {
+		case CREAR:
+			final Area area = filaArea.getArea();
+			area.setDescripcion(filaArea.getDescripcion());
+			area.setIdentificador(filaArea.getIdentificador());
+			area.setCodigo(null);
+			area.setCodigoDIR3Entidad(null);
+			idArea = this.add(idEntidad, area);
+			break;
+		case NADA:
+		case SELECCIONAR:
+			idArea = filaArea.getAreaActual().getCodigo();
+			break;
+		case REEMPLAZAR:
+			final JArea jarea = entityManager.find(JArea.class, filaArea.getAreaActual().getCodigo());
 			jarea.setDescripcion(filaArea.getAreaResultado());
 			entityManager.merge(jarea);
+			idArea = jarea.getCodigo();
+			break;
+		default:
+			throw new ImportacionError("Acció no implementada en AreaDao");
 		}
-		return jarea.getCodigo();
+
+		return idArea;
 	}
 }

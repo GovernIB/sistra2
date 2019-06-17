@@ -547,6 +547,7 @@ label.ui-state-disabled {
 .confirmar_ancho {width:500px !important;}
 
 .outputlabel-nota {font-size:9pt !important;font-style: italic;}
+.outputlabel-nota-top {font-size:9pt !important;font-style: italic; position: relative; top: -8px; margin-left: 10px;}
 
 .formulario-frame {width:100%; height:590px; overflow:auto;border: none;}
 
@@ -629,4 +630,26 @@ label.ui-state-disabled {
 
 #dialogErroresValidacion {
 	width: 1050px;
+}
+.cabeceraImportar{
+	text-align:left;
+	padding-left:13px;
+	font-weight:bold;
+}
+.subTituloTablaImportarIzq {
+	border-bottom: 1px solid #CCC;
+	text-align: left;
+}
+.subTituloTablaImportarDer {
+	border-bottom: 1px solid #CCC;
+	text-align: right;
+}
+.subTituloCabecera {
+	padding-left:30px;
+	text-decoration: underline;
+	font-weight: bold;
+}
+.pTituloCabecera{
+	padding: 2px;
+	margin-top: 30px;
 }

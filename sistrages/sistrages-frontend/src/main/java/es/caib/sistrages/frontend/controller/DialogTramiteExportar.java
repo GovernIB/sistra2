@@ -35,6 +35,7 @@ import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
+import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.DominioService;
@@ -44,6 +45,7 @@ import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.CsvUtil;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeImportarTipo;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -116,7 +118,13 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	private final Map<String, Boolean> nombreFicheros = new HashMap<>();
 
 	/** Literal de terminacion. **/
-	private final static String LITERAL_SUFIJO_DATA = ".data";
+	private static final String LITERAL_SUFIJO_DATA = ".data";
+
+	/** Tipo (IM: Importar trámite o CC: CuadernoCarga) **/
+	private String modo;
+
+	/** Cabecera. **/
+	private String cabecera;
 
 	/**
 	 * Inicialización.
@@ -163,6 +171,8 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		} else {
 			mostrarBotonExportar = false;
 		}
+
+		cabecera = UtilJSF.getLiteral("dialogTramiteExportar.header." + modo);
 
 	}
 
@@ -305,8 +315,20 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	 * @return
 	 */
 	private String getNombreZip() {
-		return "TRA-" + this.tramite.getIdentificador() + GUION + this.tramiteVersion.getNumeroVersion() + GUION
-				+ this.tramiteVersion.getRelease() + GUION + UtilJSF.getEntorno();
+		String nombre = "TRA-" + this.tramite.getIdentificador() + GUION + this.tramiteVersion.getNumeroVersion()
+				+ GUION + this.tramiteVersion.getRelease() + GUION + UtilJSF.getEntorno();
+		if (this.modo.equals(Constantes.IMPORTAR_TIPO_CC)) {
+
+			// Indica en que entorno se tiene que cargar (DES --> PRE y PRE --> PRO)
+			String zipEntorno;
+			if (TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.DESARROLLO) {
+				zipEntorno = "PRE";
+			} else {
+				zipEntorno = "PRO";
+			}
+			nombre = "CC" + zipEntorno + "-" + nombre;
+		}
+		return nombre;
 	}
 
 	/**
@@ -336,6 +358,8 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		prop.setProperty("tipo", TypeImportarTipo.TRAMITE.toString());
 		final String dir3entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad()).getCodigoDIR3();
 		prop.setProperty("entidad", dir3entidad);
+		prop.setProperty("modo", modo);
+		prop.setProperty("revision", UtilJSF.getRevision());
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		prop.store(output, null);
 
@@ -371,7 +395,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	/**
 	 * @param id
 	 *
-	 *            the id to set
+	 *           the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -385,8 +409,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramiteVersion
-	 *            the tramiteVersion to set
+	 * @param tramiteVersion the tramiteVersion to set
 	 */
 	public void setTramiteVersion(final TramiteVersion data) {
 		this.tramiteVersion = data;
@@ -400,8 +423,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramite
-	 *            the tramite to set
+	 * @param tramite the tramite to set
 	 */
 	public void setTramite(final Tramite tramite) {
 		this.tramite = tramite;
@@ -415,8 +437,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param area
-	 *            the area to set
+	 * @param area the area to set
 	 */
 	public void setArea(final Area area) {
 		this.area = area;
@@ -430,8 +451,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param pasos
-	 *            the pasos to set
+	 * @param pasos the pasos to set
 	 */
 	public void setPasos(final List<TramitePaso> pasos) {
 		this.pasos = pasos;
@@ -445,8 +465,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param dominiosId
-	 *            the dominiosId to set
+	 * @param dominiosId the dominiosId to set
 	 */
 	public void setDominiosId(final List<Long> dominios) {
 		this.dominiosId = dominios;
@@ -460,8 +479,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param formateadores
-	 *            the formateadores to set
+	 * @param formateadores the formateadores to set
 	 */
 	public void setFormateadores(final List<FormateadorFormulario> formateadores) {
 		this.formateadores = formateadores;
@@ -475,8 +493,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param dominios
-	 *            the dominios to set
+	 * @param dominios the dominios to set
 	 */
 	public void setDominios(final List<Dominio> dominios) {
 		this.dominios = dominios;
@@ -490,8 +507,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param fuenteDatos
-	 *            the fuenteDatos to set
+	 * @param fuenteDatos the fuenteDatos to set
 	 */
 	public void setFuenteDatos(final List<FuenteDatos> fuenteDatos) {
 		this.fuenteDatos = fuenteDatos;
@@ -505,8 +521,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param formularios
-	 *            the formularios to set
+	 * @param formularios the formularios to set
 	 */
 	public void setFormularios(final List<DisenyoFormulario> formularios) {
 		this.formularios = formularios;
@@ -520,8 +535,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param ficheros
-	 *            the ficheros to set
+	 * @param ficheros the ficheros to set
 	 */
 	public void setFicheros(final List<Fichero> ficheros) {
 		this.ficheros = ficheros;
@@ -535,11 +549,38 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarBotonExportar
-	 *            the mostrarBotonExportar to set
+	 * @param mostrarBotonExportar the mostrarBotonExportar to set
 	 */
 	public void setMostrarBotonExportar(final boolean mostrarBotonExportar) {
 		this.mostrarBotonExportar = mostrarBotonExportar;
+	}
+
+	/**
+	 * @return the cabecera
+	 */
+	public String getCabecera() {
+		return cabecera;
+	}
+
+	/**
+	 * @param cabecera the cabecera to set
+	 */
+	public void setCabecera(final String cabecera) {
+		this.cabecera = cabecera;
+	}
+
+	/**
+	 * @return the modo
+	 */
+	public final String getModo() {
+		return modo;
+	}
+
+	/**
+	 * @param modo the modo to set
+	 */
+	public final void setModo(final String modo) {
+		this.modo = modo;
 	}
 
 }

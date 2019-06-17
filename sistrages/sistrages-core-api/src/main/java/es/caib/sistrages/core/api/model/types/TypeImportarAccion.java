@@ -12,20 +12,16 @@ public enum TypeImportarAccion {
 	NADA("N"),
 	/** CREAR. **/
 	CREAR("C"),
-	/** REVISADO. */
-	REVISADO("V"),
 	/** REEMPLAZAR. **/
 	REEMPLAZAR("R"),
 	/** REEMPLAZAR. **/
 	MANTENER("M"),
-	/** ERROR **/
-	ERROR("E"),
-	/** Pendiente. **/
-	PENDIENTE("P"),
 	/** Incrementar release (sólo para la versión de trámite) */
 	INCREMENTAR("I"),
 	/** Importar, cuando no existe el trámite (se comporta como el reemplazar) **/
-	IMPORTAR("X");
+	IMPORTAR("X"),
+	/** Seleccionar. **/
+	SELECCIONAR("S");
 
 	/** valor. **/
 	private String valor;

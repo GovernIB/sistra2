@@ -375,10 +375,8 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 	 * Verifica si tras modificar una Fuente de Datos se mantiene la constraint de
 	 * PK.
 	 *
-	 * @param fuenteDatos
-	 *            Fuente datos
-	 * @param fuenteFila
-	 *            fila adicional o modificada
+	 * @param fuenteDatos Fuente datos
+	 * @param fuenteFila  fila adicional o modificada
 	 * @return true en caso de que se cumpla FK
 	 */
 	private boolean contraintPK(final JFuenteDatos fuenteDatos, final JFilasFuenteDatos fuenteFila) {
@@ -438,8 +436,7 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 	/**
 	 * Borra fuente de datos y valores asociados.
 	 *
-	 * @param idFuenteDato
-	 *            Fuente datos
+	 * @param idFuenteDato Fuente datos
 	 */
 	private void borrarFuenteDatos(final Long idFuenteDato) {
 		// Recuperamos fuente de datos
@@ -657,8 +654,8 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 	}
 
 	@Override
-	public Long importarFD(final FilaImportarDominio filaDominio, final TypeAmbito ambito, final Long idEntidad)
-			throws Exception {
+	public Long importarFD(final FilaImportarDominio filaDominio, final TypeAmbito ambito, final Long idEntidad,
+			final Long idArea) throws Exception {
 
 		if (filaDominio.getAccion() == TypeImportarAccion.MANTENER) {
 			// No debería entrar por aquí porque por regla general, sólo se
@@ -672,41 +669,53 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 
 		} else {
 
-			// Si no existe, lo creamos.
+			// Si no existe tanto el fuente de datos como el por identificador, lo creamos.
 			if (filaDominio.getFuenteDatosActual() == null) {
-				final FuenteDatos fd = filaDominio.getFuenteDatos();
-				fd.setCodigo(null);
-				final JFuenteDatos jfuente = new JFuenteDatos();
-				jfuente.fromModel(fd);
-				final List<FuenteDatosCampo> campos = fd.getCampos();
-				final Set<JCampoFuenteDatos> jcampos = new HashSet<>();
-				jfuente.setCampos(jcampos);
-				if (ambito == TypeAmbito.ENTIDAD) {
-					final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
-					jfuente.setEntidad(jEntidad);
+
+				if (this.getByIdentificador(filaDominio.getFuenteDatos().getIdentificador()) != null) {
+					// Ha sido importado ya por otro dominio
+					return this.getByIdentificador(filaDominio.getFuenteDatos().getIdentificador()).getCodigo();
+
+				} else {
+
+					final FuenteDatos fd = filaDominio.getFuenteDatos();
+					fd.setCodigo(null);
+					final JFuenteDatos jfuente = new JFuenteDatos();
+					jfuente.fromModel(fd);
+					final List<FuenteDatosCampo> campos = fd.getCampos();
+					final Set<JCampoFuenteDatos> jcampos = new HashSet<>();
+					jfuente.setCampos(jcampos);
+					if (ambito == TypeAmbito.ENTIDAD) {
+						final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
+						jfuente.setEntidad(jEntidad);
+					}
+					if (ambito == TypeAmbito.AREA) {
+						final JArea jArea = entityManager.find(JArea.class, idArea);
+						jfuente.setArea(jArea);
+					}
+					entityManager.persist(jfuente);
+
+					for (final FuenteDatosCampo campo : campos) {
+						final JCampoFuenteDatos jcampo = new JCampoFuenteDatos();
+						jcampo.fromModel(campo);
+						jcampo.setCodigo(null);
+						jcampo.setFuenteDatos(jfuente);
+
+						jcampos.add(jcampo);
+					}
+
+					jfuente.setCampos(jcampos);
+					entityManager.merge(jfuente);
+
+					// Flusheamos los datos creados por si acaso
+					entityManager.flush();
+
+					final CsvDocumento csvDocumento = CsvUtil
+							.importar(new ByteArrayInputStream(filaDominio.getFuenteDatosContent()));
+					this.importarCSV(jfuente.getCodigo(), csvDocumento);
+
+					return jfuente.getCodigo();
 				}
-				entityManager.persist(jfuente);
-
-				for (final FuenteDatosCampo campo : campos) {
-					final JCampoFuenteDatos jcampo = new JCampoFuenteDatos();
-					jcampo.fromModel(campo);
-					jcampo.setCodigo(null);
-					jcampo.setFuenteDatos(jfuente);
-
-					jcampos.add(jcampo);
-				}
-
-				jfuente.setCampos(jcampos);
-				entityManager.merge(jfuente);
-
-				// Flusheamos los datos creados por si acaso
-				entityManager.flush();
-
-				final CsvDocumento csvDocumento = CsvUtil
-						.importar(new ByteArrayInputStream(filaDominio.getFuenteDatosContent()));
-				this.importarCSV(jfuente.getCodigo(), csvDocumento);
-
-				return jfuente.getCodigo();
 			} else {
 
 				// Borramos filas de datos de la fuente de datos
@@ -823,12 +832,9 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 	/**
 	 * Transforma [#PARAMETROSDOMINIO.CODIGO#] a :CODIGO.
 	 *
-	 * @param pTramiteDef
-	 *            Def tramite
-	 * @param pSql
-	 *            Sql
-	 * @param pParametros
-	 *            Parametros
+	 * @param pTramiteDef Def tramite
+	 * @param pSql        Sql
+	 * @param pParametros Parametros
 	 * @return Sql transformada
 	 */
 	private String transformSql(final String pSql, final List<ValorParametroDominio> pParametros) {

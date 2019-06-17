@@ -1,8 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -18,7 +17,7 @@ import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistrages.core.api.model.Entidad;
-import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
+import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteRegistro;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.EntidadService;
@@ -26,7 +25,6 @@ import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -45,7 +43,7 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	private EntidadService entidadService;
 
 	/** FilaImportar. */
-	private FilaImportarTramiteVersion data;
+	private FilaImportarTramiteRegistro data;
 
 	/** Mensaje. **/
 	private String mensaje;
@@ -69,7 +67,7 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	private List<LibroOficina> libros;
 
 	/** Tipos. **/
-	private List<TipoAsunto> tipos;
+	private List<TipoAsunto> tipos = new ArrayList<>();
 
 	/** Entidad. **/
 	private Entidad entidad;
@@ -81,29 +79,11 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	 * Inicialización.
 	 */
 	public void init() {
-		setData((FilaImportarTramiteVersion) UtilJSF.getSessionBean().getMochilaDatos()
+		setData((FilaImportarTramiteRegistro) UtilJSF.getSessionBean().getMochilaDatos()
 				.get(Constantes.CLAVE_MOCHILA_IMPORTAR));
 
 		entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
 		mostrarOficina = !entidad.isRegistroCentralizado();
-
-		if (data.getTramiteVersionActual() == null) {
-
-			setMensaje(UtilJSF.getLiteral("dialogTramiteImportarRegistro.estado.noexiste"));
-
-		} else if (data.getTramiteVersionActual().getNumeroVersion() < data.getTramiteVersion().getNumeroVersion()) {
-
-			setMensaje(UtilJSF.getLiteral("dialogTramiteImportarRegistro.estado.existemayor"));
-
-		} else if (data.getTramiteVersionActual().getNumeroVersion() == data.getTramiteVersion().getNumeroVersion()) {
-
-			setMensaje(UtilJSF.getLiteral("dialogTramiteImportarRegistro.estado.existeigual"));
-
-		} else {
-
-			setMensaje(UtilJSF.getLiteral("dialogTramiteImportarRegistro.estado.existemenor"));
-		}
-
 		cargarDatosRegistro();
 	}
 
@@ -113,20 +93,19 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	private void cargarDatosRegistro() {
 		iplugin = (IRegistroPlugin) componenteService.obtenerPluginEntidad(TypePlugin.REGISTRO, UtilJSF.getIdEntidad());
 		try {
-
 			tipos = iplugin.obtenerTiposAsunto(entidad.getCodigoDIR3());
 			if (mostrarOficina) {
 				oficinas = iplugin.obtenerOficinasRegistro(entidad.getCodigoDIR3(), TypeRegistro.REGISTRO_ENTRADA);
 
 				boolean encontradoOficina = false;
-				if (this.data.getTramiteVersionResultadoOficina() != null) {
+				if (this.data.getOficina() != null) {
 					// Es muy marciano, pero por si el cod oficina registro no existe en el listado
 					// de oficinas de la entidad, puede pasar
 					for (final OficinaRegistro ofi : oficinas) {
-						if (this.data.getTramiteVersionResultadoOficina().equals(ofi.getCodigo())) {
+						if (this.data.getOficina().equals(ofi.getCodigo())) {
 							encontradoOficina = true;
-							libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(),
-									this.data.getTramiteVersionResultadoOficina(), TypeRegistro.REGISTRO_ENTRADA);
+							libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(), this.data.getOficina(),
+									TypeRegistro.REGISTRO_ENTRADA);
 							break;
 						}
 					}
@@ -146,18 +125,6 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 		}
 	}
 
-	/** Consultar. **/
-	public void consultarTramiteVersion() {
-
-		if (this.data.getTramiteVersionActual() != null) {
-			// Muestra dialogo
-			final Map<String, String> params = new HashMap<>();
-			params.put(TypeParametroVentana.ID.toString(),
-					String.valueOf(this.data.getTramiteVersionActual().getCodigo()));
-			UtilJSF.openDialog(ViewDefinicionVersion.class, TypeModoAcceso.CONSULTA, params, true, 520, 160);
-		}
-	}
-
 	/**
 	 * Evento on change de oficina que debería de recalcular el libro.
 	 *
@@ -165,8 +132,8 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	 */
 	public void onChangeOficina() {
 		try {
-			libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(),
-					this.data.getTramiteVersionResultadoOficina(), TypeRegistro.REGISTRO_ENTRADA);
+			libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(), this.data.getOficina(),
+					TypeRegistro.REGISTRO_ENTRADA);
 		} catch (final RegistroPluginException e) {
 			LOGGER.error("Error obteniendo informacion de registro", e);
 			addMessageContext(TypeNivelGravedad.ERROR,
@@ -182,9 +149,8 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 
 		for (final TipoAsunto tipoRegistro : this.tipos) {
-			if (tipoRegistro.getCodigo() != null
-					&& tipoRegistro.getCodigo().equals(this.data.getTramiteVersionResultadoTipo())) {
-				this.data.setTramiteVersionResultadoTipoText(tipoRegistro.getNombre());
+			if (tipoRegistro.getCodigo() != null && tipoRegistro.getCodigo().equals(this.data.getTipo())) {
+				this.data.setTipoText(tipoRegistro.getNombre());
 				break;
 			}
 		}
@@ -192,10 +158,10 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 		if (mostrarOficina) {
 			guardarOficina();
 		} else {
-			this.data.setTramiteVersionResultadoOficinaText("");
-			this.data.setTramiteVersionResultadoOficina("");
-			this.data.setTramiteVersionResultadoLibroText("");
-			this.data.setTramiteVersionResultadoLibro("");
+			this.data.setOficinaText("");
+			this.data.setOficina("");
+			this.data.setLibroText("");
+			this.data.setLibro("");
 		}
 
 		UtilJSF.getSessionBean().getMochilaDatos().put(Constantes.CLAVE_MOCHILA_IMPORTAR, this.data);
@@ -212,16 +178,14 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	private void guardarOficina() {
 		// Preparamos los textos (solo se utilizan de info en el xhtml)
 		for (final OficinaRegistro oficinaRegistro : this.oficinas) {
-			if (oficinaRegistro.getCodigo() != null
-					&& oficinaRegistro.getCodigo().equals(this.data.getTramiteVersionResultadoOficina())) {
-				this.data.setTramiteVersionResultadoOficinaText(oficinaRegistro.getNombre());
+			if (oficinaRegistro.getCodigo() != null && oficinaRegistro.getCodigo().equals(this.data.getOficina())) {
+				this.data.setOficinaText(oficinaRegistro.getNombre());
 				break;
 			}
 		}
 		for (final LibroOficina libroRegistro : this.libros) {
-			if (libroRegistro.getCodigo() != null
-					&& libroRegistro.getCodigo().equals(this.data.getTramiteVersionResultadoLibro())) {
-				this.data.setTramiteVersionResultadoLibroText(libroRegistro.getNombre());
+			if (libroRegistro.getCodigo() != null && libroRegistro.getCodigo().equals(this.data.getLibro())) {
+				this.data.setLibroText(libroRegistro.getNombre());
 				break;
 			}
 		}
@@ -240,7 +204,7 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	/**
 	 * @return the data
 	 */
-	public FilaImportarTramiteVersion getData() {
+	public FilaImportarTramiteRegistro getData() {
 		return data;
 	}
 
@@ -248,7 +212,7 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(final FilaImportarTramiteVersion data) {
+	public void setData(final FilaImportarTramiteRegistro data) {
 		this.data = data;
 	}
 

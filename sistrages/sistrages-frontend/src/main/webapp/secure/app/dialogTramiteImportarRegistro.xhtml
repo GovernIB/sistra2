@@ -31,18 +31,18 @@
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w10, padding-left-18, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel   for="oficina" value="#{msg['dialogTramiteImportarRegistro.headerOficina']}:" rendered="#{dialogTramiteImportarRegistro.mostrarOficina}" />
-					<p:selectOneMenu id ="oficina" styleClass="w40" value="#{dialogTramiteImportarRegistro.data.tramiteVersionResultadoOficina}" required="#{dialogTramiteImportarRegistro.mostrarOficina}" rendered="#{dialogTramiteImportarRegistro.mostrarOficina}" style="background:white" requiredMessage="#{msg['error.obligatorio']}" >
+					<p:selectOneMenu id ="oficina" styleClass="w40" value="#{dialogTramiteImportarRegistro.data.oficina}" required="#{dialogTramiteImportarRegistro.mostrarOficina}" rendered="#{dialogTramiteImportarRegistro.mostrarOficina}" style="background:white" requiredMessage="#{msg['error.obligatorio']}" >
 						    <f:selectItems value="#{dialogTramiteImportarRegistro.oficinas}"  itemLabel="#{oficina.nombre}" itemValue="#{oficina.codigo}" var="oficina"  />
 							<p:ajax listener="#{dialogTramiteImportarRegistro.onChangeOficina}" update="@form" />
 					</p:selectOneMenu>
 
 					<p:outputLabel   for="libro" value="#{msg['dialogTramiteImportarRegistro.headerLibro']}:" rendered="#{dialogTramiteImportarRegistro.mostrarOficina}"  />
-					<p:selectOneMenu id ="libro" styleClass="w40" value="#{dialogTramiteImportarRegistro.data.tramiteVersionResultadoLibro}" required="#{dialogTramiteImportarRegistro.mostrarOficina}" rendered="#{dialogTramiteImportarRegistro.mostrarOficina}" style="background:white" requiredMessage="#{msg['error.obligatorio']}" >
+					<p:selectOneMenu id ="libro" styleClass="w40" value="#{dialogTramiteImportarRegistro.data.libro}" required="#{dialogTramiteImportarRegistro.mostrarOficina}" rendered="#{dialogTramiteImportarRegistro.mostrarOficina}" style="background:white" requiredMessage="#{msg['error.obligatorio']}" >
 						    <f:selectItems value="#{dialogTramiteImportarRegistro.libros}"  itemLabel="#{libro.nombre}" itemValue="#{libro.codigo}" var="libro" />
 					</p:selectOneMenu>
 
 					<p:outputLabel   for="tipo" value="#{msg['dialogTramiteImportarRegistro.headerTipo']}:" />
-					<p:selectOneMenu id ="tipo" styleClass="w40" value="#{dialogTramiteImportarRegistro.data.tramiteVersionResultadoTipo}" style="background:white" required="true">
+					<p:selectOneMenu id ="tipo" styleClass="w40" value="#{dialogTramiteImportarRegistro.data.tipo}" style="background:white" required="true">
 						    <f:selectItems value="#{dialogTramiteImportarRegistro.tipos}"  itemLabel="#{tipo.nombre}" itemValue="#{tipo.codigo}" var="tipo" />
 					</p:selectOneMenu>
 

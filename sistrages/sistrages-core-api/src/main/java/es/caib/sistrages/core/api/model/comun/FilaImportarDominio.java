@@ -1,7 +1,13 @@
 package es.caib.sistrages.core.api.model.comun;
 
+import java.util.Arrays;
+
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
+import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
+import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
+import es.caib.sistrages.core.api.model.types.TypeImportarExiste;
+import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
 
 /**
  * Fila dominio importar.
@@ -9,7 +15,7 @@ import es.caib.sistrages.core.api.model.FuenteDatos;
  * @author Indra
  *
  */
-public class FilaImportarDominio extends FilaImportar {
+public class FilaImportarDominio extends FilaImportarBase {
 
 	/** Dominio. **/
 	private Dominio dominio;
@@ -60,7 +66,7 @@ public class FilaImportarDominio extends FilaImportar {
 	private byte[] fuenteDatosContent;
 
 	/** Permite editar. **/
-	private boolean permisosEdicion;
+	// private boolean permisosEdicion;
 
 	/** En caso de dominio de tipo area, el idArea. **/
 	private Long idArea;
@@ -73,6 +79,45 @@ public class FilaImportarDominio extends FilaImportar {
 	 */
 	public FilaImportarDominio() {
 		super();
+	}
+
+	/**
+	 * Constructor básico.
+	 *
+	 * @param dominio
+	 * @param dominioActual
+	 * @param fd
+	 * @param fdContent
+	 * @param fdActual
+	 * @param mensaje
+	 */
+	public FilaImportarDominio(final Dominio dominio, final Dominio dominioActual, final FuenteDatos fd,
+			final byte[] fdContent, final FuenteDatos fdActual, final String mensaje) {
+		this.dominio = dominio;
+		this.dominioActual = dominioActual;
+		this.fuenteDatos = fd;
+		this.fuenteDatosContent = fdContent;
+		this.fuenteDatosActual = fdActual;
+		this.mensaje = mensaje;
+	}
+
+	/**
+	 * Constructor básico.
+	 *
+	 * @param dominio
+	 * @param dominioActual
+	 * @param fd
+	 * @param fdContent
+	 * @param fdActual
+	 */
+	public FilaImportarDominio(final Dominio dominio, final Dominio dominioActual, final FuenteDatos fd,
+			final byte[] fdContent, final FuenteDatos fdActual) {
+		this.dominio = dominio;
+		this.dominioActual = dominioActual;
+		this.fuenteDatos = fd;
+		this.fuenteDatosContent = fdContent;
+		this.fuenteDatosActual = fdActual;
+		this.mensaje = null;
 	}
 
 	/**
@@ -360,21 +405,169 @@ public class FilaImportarDominio extends FilaImportar {
 	}
 
 	/**
-	 * Is permisos edicion.
+	 * Crea un elemento FilaImportarDominio de tipo IT (Importar Tramite) cuando
+	 * tiene un error de tipo:
+	 * <ul>
+	 * <li>Ambos dominios no tienen el mismo ámbito</li>
+	 * <li>Tienen el mismo ámbito de tipo área pero no es la misma.</li>
+	 * <li>El ámbito es de tipo área pero no pertenece a la misma área seleccionada.
+	 * </li>
+	 * </ul>
 	 *
+	 * @param dominio
+	 * @param dominioActual
+	 * @param fd
+	 * @param fdContent
+	 * @param fdActual
+	 * @param literal
 	 * @return
 	 */
-	public boolean isPermisosEdicion() {
-		return permisosEdicion;
+	public static FilaImportarDominio crearITerrorAmbitoAreas(final Dominio dominio, final Dominio dominioActual,
+			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final String literal) {
+		final FilaImportarDominio fila = new FilaImportarDominio(dominio, dominioActual, fd, fdContent, fdActual,
+				literal);
+		fila.setAccion(TypeImportarAccion.NADA);
+		fila.setExiste(TypeImportarExiste.EXISTE);
+		fila.setEstado(TypeImportarEstado.ERROR);
+		fila.setResultado(TypeImportarResultado.INFO);
+		fila.setVisibleBoton(false);
+		fila.setMismoTipo(false);
+		return fila;
 	}
 
 	/**
-	 * Get permisos edicion.
+	 * Crea un elemento FilaImportarDominio de tipo IT (Importar Tramite) que sólo
+	 * permite reemplazar. Esto pasa cuando:
+	 * <ul>
+	 * <li>No existe el dominio en BBDD pero se tiene permisos para crearlo</li>
+	 * <li>Existe pero cambia la estructura y tenemos permisos para actualizarla.
+	 * </li>
+	 * </ul>
 	 *
-	 * @param permisosEdicion
+	 * @param dominio
+	 * @param dominioActual
+	 * @param fd
+	 * @param fdContent
+	 * @param fdActual
+	 * @param literal
+	 * @return
 	 */
-	public void setPermisosEdicion(final boolean permisosEdicion) {
-		this.permisosEdicion = permisosEdicion;
+	public static FilaImportarDominio crearITsoloReemplazar(final Dominio dominio, final Dominio dominioActual,
+			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final String literal) {
+		final FilaImportarDominio fila = new FilaImportarDominio(dominio, dominioActual, fd, fdContent, fdActual,
+				literal);
+		fila.setAccion(TypeImportarAccion.REEMPLAZAR);
+		if (fila.getDominioActual() == null) {
+			fila.setExiste(TypeImportarExiste.NO_EXISTE);
+			fila.setMismoTipo(false);
+		} else {
+			fila.setExiste(TypeImportarExiste.EXISTE);
+			fila.setMismoTipo(fila.getDominio().getTipo() == fila.getDominioActual().getTipo());
+		}
+		fila.setEstado(TypeImportarEstado.PENDIENTE);
+		fila.setResultado(TypeImportarResultado.WARNING);
+		fila.setVisibleBoton(true);
+		fila.setAcciones(Arrays.asList(TypeImportarAccion.REEMPLAZAR));
+
+		return fila;
+	}
+
+	/**
+	 * Crea un elemento FilaImportarDominio de tipo IT (Importar Tramite) cuando se
+	 * tiene permisos para modificar/crear el dominio (el cual, tiene la misma
+	 * estructura que el existe en BBDD). <br />
+	 * <br />
+	 * Si el dominio existe, podrás reemplazar y mantener, si NO existe sólo podrás
+	 * reemplazar.
+	 *
+	 * @param dominio
+	 * @param dominioActual
+	 * @param fd
+	 * @param fdContent
+	 * @param fdActual
+	 * @param literal
+	 * @return
+	 */
+	public static FilaImportarDominio crearITconPermisos(final Dominio dominio, final Dominio dominioActual,
+			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final String literal) {
+
+		final FilaImportarDominio fila = new FilaImportarDominio(dominio, dominioActual, fd, fdContent, fdActual,
+				literal);
+		fila.setAccion(TypeImportarAccion.REEMPLAZAR);
+		if (fila.getDominioActual() == null) {
+			fila.setExiste(TypeImportarExiste.NO_EXISTE);
+			fila.setAcciones(Arrays.asList(TypeImportarAccion.REEMPLAZAR));
+		} else {
+			fila.setExiste(TypeImportarExiste.EXISTE);
+			fila.setAcciones(Arrays.asList(TypeImportarAccion.REEMPLAZAR, TypeImportarAccion.MANTENER));
+		}
+		fila.setEstado(TypeImportarEstado.PENDIENTE);
+		fila.setResultado(TypeImportarResultado.WARNING);
+		fila.setVisibleBoton(true);
+		fila.setMismoTipo((fila.getDominio() != null && fila.getDominioActual() != null
+				&& fila.getDominioActual().getTipo() == fila.getDominio().getTipo()));
+
+		return fila;
+	}
+
+	/**
+	 * Crea un elemento FilaImportarDominio de tipo IT (Importar Tramite) cuando no
+	 * se tiene permisos de creación/modificación y sólo se puede mantener el que ya
+	 * existe.
+	 *
+	 * @param dominio
+	 * @param dominioActual
+	 * @param fd
+	 * @param fdContent
+	 * @param fdActual
+	 * @param areaSeleccionada
+	 * @param literal
+	 * @return
+	 */
+	public static FilaImportarDominio crearITsoloMantener(final Dominio dominio, final Dominio dominioActual,
+			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final String literal) {
+		final FilaImportarDominio fila = new FilaImportarDominio(dominio, dominioActual, fd, fdContent, fdActual,
+				literal);
+		fila.setAccion(TypeImportarAccion.NADA);
+		fila.setEstado(TypeImportarEstado.REVISADO);
+		fila.setExiste(TypeImportarExiste.EXISTE);
+		fila.setResultado(TypeImportarResultado.OK);
+		fila.setVisibleBoton(false);
+		fila.setMismoTipo(true);
+		return fila;
+	}
+
+	/**
+	 * Crea un elemento FilaImportarDominio de tipo IT (Importar Tramite) cuando no
+	 * se tiene permisos creación/modificación y da INFO porque hay que crearlo (no
+	 * existe el dominio) o ha cambiado la estructura y hay que cambiarlo.
+	 *
+	 * @param dominio
+	 * @param dominioActual
+	 * @param fd
+	 * @param fdContent
+	 * @param fdActual
+	 * @param areaSeleccionada
+	 * @param literal
+	 * @return
+	 */
+	public static FilaImportarDominio crearITerrorSoloMantener(final Dominio dominio, final Dominio dominioActual,
+			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final String literal) {
+		final FilaImportarDominio fila = new FilaImportarDominio(dominio, dominioActual, fd, fdContent, fdActual,
+				literal);
+		fila.setEstado(TypeImportarEstado.ERROR);
+		fila.setAccion(TypeImportarAccion.NADA);
+		if (fila.getDominioActual() == null) {
+			fila.setExiste(TypeImportarExiste.NO_EXISTE);
+			fila.setMensaje("importar.error.sinpermisos.creacion");
+		} else {
+			fila.setExiste(TypeImportarExiste.EXISTE);
+			fila.setMensaje("importar.error.sinpermisos.actualizacion");
+		}
+		fila.setResultado(TypeImportarResultado.INFO);
+		fila.setVisibleBoton(false);
+		fila.setMismoTipo(true);
+		return fila;
 	}
 
 }

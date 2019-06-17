@@ -93,38 +93,47 @@
 							<p:commandButton id="btnPrevisualizar" value="#{msg['botones.previsualizarTramite']}" icon="fa fa-eye" actionListener="#{viewTramites.previsualizar}" process="@this" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
 
 			        		<p:menuButton value="#{msg['viewTramites.mas']}" rendered="#{not(not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null))}">
-	        					<p:menuitem id="btnImportar"  value="#{msg['botones.importarTramite']}" icon="fa fa-upload"  onclick="triggerImportarTramite(); return false;"></p:menuitem>
-								<p:separator rendered="#{viewTramites.seleccionadaArea}" />
 
 								<p:menuitem id="btnMoverTramite" value="#{msg['botones.moverTramite']}" icon="fa fa-exchange" onclick="triggerMoverTramite();return false;" rendered="#{viewTramites.tienePermisosArea and viewTramites.tramiteSeleccionada ne null}"></p:menuitem>
 			        			<p:menuitem id="btnEliminarTramite" value="#{msg['botones.eliminarTramite']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarTramite}" process="@this" update="growl @form" rendered="#{viewTramites.tienePermisosTramite and viewTramites.tramiteSeleccionada ne null}">
 			        				<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 			        			</p:menuitem>
-								<p:separator rendered="#{viewTramites.tienePermisosTramite and viewTramites.tramiteSeleccionada ne null}" />
 
+								<p:separator rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
 								<p:menuitem id="btnControlAcceso" value="#{msg['botones.controlAcceso']}" icon="fa fa-edit" onclick="triggerControlAcceso();return false;" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}"></p:menuitem>
 			        			<p:menuitem id="btnHistorial" value="#{msg['botones.historial']}" icon="fa fa-history" actionListener="#{viewTramites.historialVersion}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
-								<p:separator rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}"  />
 
+								<p:separator rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}"  />
 			        			<p:menuitem id="btnEliminarVersion" value="#{msg['botones.eliminarVersion']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarVersion}" process="@this" update="growl @form" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}">
 			        				<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 			        			</p:menuitem>
 			        			<p:menuitem id="btnValidar" value="#{msg['botones.validarVersion']}" icon="fa fa-check-square-o" actionListener="#{viewTramites.validarVersion}" process="@this" update="growl"  rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
-        						<p:menuitem id="btnExportar" value="#{msg['botones.exportarVersion']}" icon="fa fa-download" actionListener="#{viewTramites.exportarVersion}" process="@this" update="growl"  rendered="#{viewTramites.versionSeleccionada ne null}" />
-	        					<p:menuitem id="btnRefrescar" value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" actionListener="#{viewTramites.refrescar}" process="@this" update="growl @form" rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.isNotDesarrollo()}" />
-					        	<p:menuitem id="btnDuplicar" value="#{msg['botones.duplicarVersion']}" icon="fa fa-copy" onclick="triggerClonarTramite(); return false;" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
-	        					<p:separator rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
+        						<p:menuitem id="btnRefrescar" value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" actionListener="#{viewTramites.refrescar}" process="@this" update="growl @form" rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.isNotDesarrollo()}" />
+					        	<p:menuitem id="btnDuplicar" value="#{msg['botones.duplicarVersion']}" icon="fa fa-copy" onclick="triggerClonarTramite(); return false;" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null and viewTramites.isDesarrollo()}" />
 
-			        			<p:menuitem id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite}" process="@this" update="growl" rendered="#{viewTramites.versionSeleccionada ne null or viewTramites.tramiteSeleccionada ne null}" />
-								<p:separator rendered="#{viewTramites.versionSeleccionada ne null or viewTramites.tramiteSeleccionada ne null}" />
+	        					<p:separator rendered="#{viewTramites.seleccionadaArea}" />
+			        			<p:menuitem id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea}" />
 
+								<p:separator rendered="#{viewTramites.seleccionadaArea}" />
 			        			<p:menuitem id="btnDominioArea" value="#{msg['botones.dominiosArea']}" icon="fa fa-database" actionListener="#{viewTramites.dominioArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}"/>
 					        	<p:menuitem id="btnDatosArea" value="#{msg['botones.datosFuenteArea']}" icon="fa fa-table" actionListener="#{viewTramites.datosArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}" />
-								<p:separator rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}" />
 
+								<p:separator />
+								<p:menuitem id="btnImportar"  				value="#{msg['botones.importarTramite']}" 	icon="fa fa-upload"  onclick="triggerImportarTramite(); return false;" 		rendered="#{viewTramites.isDesarrollo()}"></p:menuitem>
+								<p:menuitem id="btnExportar" 				value="#{msg['botones.exportarVersion']}" 	icon="fa fa-download" actionListener="#{viewTramites.exportarVersion}" 		rendered="#{viewTramites.versionSeleccionada ne null}"		 process="@this" update="growl"   />
+	        					<p:menuitem id="btnProcesarCuadernoCarga"   value="#{msg['botones.procesarCC']}" 		icon="fa fa-upload"  onclick="triggerProcesarCC(); return false;"	   		rendered="#{!viewTramites.isDesarrollo()}"></p:menuitem>
+								<p:menuitem id="btnGenerarCuadernoCarga"  	value="#{msg['botones.generarCC']}" 		icon="fa fa-download" actionListener="#{viewTramites.generarCuadernoCarga}" rendered="#{viewTramites.versionSeleccionada ne null and (viewTramites.isDesarrollo() or viewTramites.isPreproduccion())}" process="@this" update="growl" />
+
+								<p:separator  />
 			        			<p:menuitem id="btnHelp2" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewTramites.ayuda()}" process="@this" update="growl" iconPos="top"/>
 			        		</p:menuButton>
 			        	</h:panelGroup>
+			        	<p:commandButton id="btnImportarVacio"  value="#{msg['botones.importarTramite']}" icon="fa fa-upload"  process="@this" action="#{viewTramites.importar()}" rendered="#{viewTramites.isDesarrollo() and (not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null))}">
+      			   			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoImportar}" update="growl @form"  />
+	        			</p:commandButton>
+	        			<p:commandButton id="btnProcesarCuadernoCargaVacio"  value="#{msg['botones.procesarCC']}" icon="fa fa-upload"  process="@this" action="#{viewTramites.procesarCC()}" rendered="#{!viewTramites.isDesarrollo() and (not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null))}">
+      			   			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoImportar}" update="growl @form"  />
+	        			</p:commandButton>
 			        	<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewTramites.ayuda()}" process="@this" update="growl" iconPos="top" rendered="#{not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null)}"/>
 					</f:facet>
 				</p:toolbar>
@@ -142,8 +151,8 @@
 						<p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectVersionTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('T')"/>
              			<p:ajax event="rowDblselect" oncomplete="triggerDoubleClick();" update="@form:toolbarTramites"/>
 
-				       <p:column style="width:16px">
-				          <p:rowToggler />
+				       	<p:column style="width:16px">
+				        	<p:rowToggler />
 				        </p:column>
 
 						<!-- Columnas -->
@@ -165,47 +174,46 @@
 
 
 						<p:rowExpansion  >
-							<!-- Data table -->
-							<p:dataTable  id="dataTableVersiones" var="tdVersiones" value="#{td.listaVersiones}"
-										  rows="10" emptyMessage="#{msg['error.emptyRows']}"
-										  styleClass="w95 margin-left-25 margin-top-10 margin-bottom-10"
-							        	  selectionMode="single" selection="#{viewTramites.versionSeleccionada}" rowKey="#{tdVersiones.codigo}"
-										  >
+								<!-- Data table -->
+								<p:dataTable  id="dataTableVersiones" var="tdVersiones" value="#{td.listaVersiones}"
+											  rows="10" emptyMessage="#{msg['error.emptyRows']}"
+											  styleClass="w95 margin-left-25 margin-top-10 margin-bottom-10"
+								        	  selectionMode="single" selection="#{viewTramites.versionSeleccionada}" rowKey="#{tdVersiones.codigo}"
+											  >
 
-								<!-- Necesario para actualizar en controlador la fila seleccionada -->
-								<p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('V')"/>
-								<p:ajax event="rowDblselect" listener="#{viewTramites.editarVersion}"/>
+										<!-- Necesario para actualizar en controlador la fila seleccionada -->
+										<p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('V')"/>
+										<p:ajax event="rowDblselect" listener="#{viewTramites.editarVersion}"/>
 
-								<!-- Columnas -->
-							    <p:column headerText="#{msg['viewTramitesVersion.headerVersion']}">
-							        <h:outputText value="#{tdVersiones.numeroVersion}" />
-							    </p:column>
+										<!-- Columnas -->
+									    <p:column headerText="#{msg['viewTramitesVersion.headerVersion']}">
+									        <h:outputText value="#{tdVersiones.numeroVersion}" />
+									    </p:column>
 
-							    <p:column headerText="#{msg['viewTramitesVersion.headerFlujo']}">
-							     	<h:outputText value="#{msg['typeFlujo.'.concat(tdVersiones.tipoFlujo)]}" />
-							    </p:column>
+									    <p:column headerText="#{msg['viewTramitesVersion.headerFlujo']}">
+									     	<h:outputText value="#{msg['typeFlujo.'.concat(tdVersiones.tipoFlujo)]}" />
+									    </p:column>
 
-				 				<p:column headerText="#{msg['viewTramitesVersion.headerActiva']}">
-							        <p:selectBooleanCheckbox value="#{tdVersiones.activa}" disabled="true" />
-							    </p:column>
+						 				<p:column headerText="#{msg['viewTramitesVersion.headerActiva']}">
+									        <p:selectBooleanCheckbox value="#{tdVersiones.activa}" disabled="true" />
+									    </p:column>
 
-								<p:column headerText="#{msg['viewTramitesVersion.headerRelease']}">
-							        <h:outputText value="#{tdVersiones.release}" />
-							    </p:column>
+										<p:column headerText="#{msg['viewTramitesVersion.headerRelease']}">
+									        <h:outputText value="#{tdVersiones.release}" />
+									    </p:column>
 
-							    <p:column headerText="#{msg['viewTramitesVersion.headerFechaUltima']}">
-							        <h:outputText value="#{tdVersiones.fechaUltima}">
-							       		 <f:convertDateTime pattern="dd/MM/yyyy" type="date" timeZone="CET"/>
-							        </h:outputText>
-							    </p:column>
+									    <p:column headerText="#{msg['viewTramitesVersion.headerFechaUltima']}">
+									        <h:outputText value="#{tdVersiones.fechaUltima}">
+									       		 <f:convertDateTime pattern="dd/MM/yyyy" type="date" timeZone="CET"/>
+									        </h:outputText>
+									    </p:column>
 
-								<p:column headerText="#{msg['viewTramitesVersion.headerBloqueado']}">
-							        <h:outputText value="#{tdVersiones.datosUsuarioBloqueo}" />
-							    </p:column>
+										<p:column headerText="#{msg['viewTramitesVersion.headerBloqueado']}" rendered="#{viewTramites.isDesarrollo()}">
+									        <h:outputText value="#{tdVersiones.datosUsuarioBloqueo}" />
+									    </p:column>
 
-							</p:dataTable>
+								</p:dataTable>
 						</p:rowExpansion>
-
 					</p:dataTable>
 				</div>
 			</div>
@@ -213,6 +221,11 @@
 			<p:commandButton id="hiddenCommandImportar" styleClass="button"  process="@this" action="#{viewTramites.importar()}"  style="display:none">
       			   <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoImportar}" update="growl @form"  />
 	        </p:commandButton>
+
+	        <p:commandButton id="hiddenCommandProcesarCC" styleClass="button"  process="@this" action="#{viewTramites.procesarCC()}"  style="display:none">
+      			   <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoImportar}" update="growl @form"  />
+	        </p:commandButton>
+
 
 			<p:commandButton id="hiddenCommandClonar" styleClass="button"   process="@this" update="growl @form"  actionListener="#{viewTramites.duplicarVersion()}" style="display:none">
 		    		<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoClonar}" update="growl form:dataTableTramites"/>
@@ -229,6 +242,9 @@
 			<h:outputScript >
 		 		function triggerImportarTramite() {
 		        	document.getElementById("form:hiddenCommandImportar").click();
+		     	}
+		     	function triggerProcesarCC() {
+		        	document.getElementById("form:hiddenCommandProcesarCC").click();
 		     	}
 
 		     	function triggerClonarTramite() {

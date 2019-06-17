@@ -9,6 +9,7 @@
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
 <p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroVentana" var="TypeParametroDialogo"/>
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeImportarAccion" var="TypeImportarAccion"/>
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogTramiteImportarAR.titulo']}"/></title>
@@ -28,19 +29,37 @@
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
-				<p>
-					<p:outputLabel value="#{dialogTramiteImportarAR.mensaje}" styleClass="w100 padding8 margin-bottom-3" style="font-weight: bold"/>
-				</p>
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w20 va-top, padding-right-18 w80" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
+					<p:outputLabel value="#{msg['dialogTramiteImportarAR.headerAccion']}:" />
+					<p:column>
+						<p:selectOneMenu value="#{dialogTramiteImportarAR.accion}" style="margin-right:10px">>
+					       	<f:selectItems value="#{dialogTramiteImportarAR.data.acciones}" var="accion" itemLabel="#{msg['typeImportar.accion.' +=accion.toString()]}" itemValue="#{accion.toString()}" />
+					    	<p:ajax update=":dialogEntidad"  />
+					    </p:selectOneMenu>
+						<p:outputLabel styleClass="outputlabel-nota-top" value="#{msg['dialogTramiteImportarAR.seleccionar.info']}" rendered="#{dialogTramiteImportarAR.accion == TypeImportarAccion.SELECCIONAR.toString()}" />
+						<p:outputLabel styleClass="outputlabel-nota-top" value="#{msg['dialogTramiteImportarAR.crear.info']}"       rendered="#{dialogTramiteImportarAR.accion == TypeImportarAccion.CREAR.toString()}"/>
 
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 , padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+					</p:column>
+					<p:outputLabel value="#{msg['dialogTramiteImportarAR.headerArea']}:" rendered="#{dialogTramiteImportarAR.accion == TypeImportarAccion.SELECCIONAR.toString()}" />
+					<p:selectOneMenu value="#{dialogTramiteImportarAR.areaSeleccionada}" 	rendered="#{dialogTramiteImportarAR.accion == TypeImportarAccion.SELECCIONAR.toString()}" >
+						     <f:selectItems value="#{dialogTramiteImportarAR.areas}" var="area" itemLabel="#{area.identificador}" itemValue="#{area.codigo}" />
+						     <p:ajax update=":dialogEntidad"  />
+					</p:selectOneMenu>
 
-					<p:outputLabel value="#{msg['dialogTramiteImportarAR.headerDescripcion']}:" />
-					<p:inputTextarea value="#{dialogTramiteImportarAR.data.areaResultado}" required="true" rows="5" cols="70" style="background:white" requiredMessage="#{msg['error.obligatorio']}" />
+					<p:outputLabel 	value="#{msg['dialogTramiteImportarAR.headerIdentificador']}:" rendered="#{dialogTramiteImportarAR.accion == TypeImportarAccion.CREAR.toString()}" />
+					<p:inputText 	value="#{dialogTramiteImportarAR.identificador}"     		  rendered="#{dialogTramiteImportarAR.accion == TypeImportarAccion.CREAR.toString()}" style="background:white" validatorMessage="#{msg['error.validacion.identificador']}" onblur="this.value = this.value.toUpperCase();" >
+							<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
+				   		 	<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
+					</p:inputText>
+
+					<p:outputLabel value="#{msg['dialogTramiteImportarAR.headerDescripcion']}:" rendered="#{dialogTramiteImportarAR.accion == TypeImportarAccion.CREAR.toString()}"  />
+					<p:inputTextarea value="#{dialogTramiteImportarAR.descripcion}"      		rendered="#{dialogTramiteImportarAR.accion == TypeImportarAccion.CREAR.toString()}"  rows="5" cols="70" style="background:white" />
+
 
 				</h:panelGrid>
 			</p:outputPanel>
-		  	 <p:outputPanel styleClass="botonera">
+		  	<p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogTramiteImportarAR.guardar()}" process="@form" update="@form growlDialog" styleClass="boton-azul" />

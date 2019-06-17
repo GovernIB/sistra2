@@ -1,7 +1,6 @@
 package es.caib.sistrages.core.api.service;
 
 import java.util.List;
-import java.util.Map;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.AvisoEntidad;
@@ -20,11 +19,7 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
-import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
-import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
-import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
-import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
-import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
+import es.caib.sistrages.core.api.model.comun.FilaImportar;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 
 /**
@@ -202,11 +197,11 @@ public interface TramiteService {
 	/**
 	 * Obtiene una version de tramite a partir de un num version y un tramite.
 	 *
-	 * @param identificador
+	 * @param numeroVersion
 	 * @param idTramite
 	 * @return
 	 */
-	public TramiteVersion getTramiteVersionByNumVersion(final int identificador, final Long idTramite);
+	public TramiteVersion getTramiteVersionByNumVersion(final int numeroVersion, final Long idTramite);
 
 	/**
 	 * Devuelve los pasos de una versión de trámite
@@ -537,22 +532,10 @@ public interface TramiteService {
 	/**
 	 * Métod que se encarga de importar un trámite.
 	 *
-	 * @param filaArea
-	 * @param filaTramite
-	 * @param filaTramiteVersion
-	 * @param filasDominios
-	 * @param filasFormateador
-	 * @param formularios
-	 * @param ficheros
-	 * @param ficherosContent
-	 * @param usuario
+	 * @param filaImportar
 	 * @throws Exception
 	 */
-	public void importar(FilaImportarArea filaArea, FilaImportarTramite filaTramite,
-			FilaImportarTramiteVersion filaTramiteVersion, List<FilaImportarDominio> filasDominios,
-			List<FilaImportarFormateador> filasFormateador, final Long idEntidad,
-			Map<Long, DisenyoFormulario> formularios, Map<Long, Fichero> ficheros, Map<Long, byte[]> ficherosContent,
-			final String usuario) throws Exception;
+	public void importar(FilaImportar filaImportar) throws Exception;
 
 	/**
 	 * Comprueba si el identificador de formulario está repetido.

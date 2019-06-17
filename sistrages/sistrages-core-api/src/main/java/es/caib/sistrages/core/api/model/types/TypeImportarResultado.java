@@ -9,13 +9,13 @@ package es.caib.sistrages.core.api.model.types;
 public enum TypeImportarResultado {
 
 	/** OK **/
-	OK("fa fa-check fa-2x", "0, 204, 0"),
+	OK("fa fa-check fa-2x", "0, 204, 0", "typeImportar.resultado.OK"),
 	/** INFO **/
-	// INFO("fa fa-info-circle fa-2x", "69, 69, 255"),
+	INFO("fa fa-info-circle fa-2x", "0, 0, 214", "typeImportar.resultado.INFO"),
 	/** WARNING. **/
-	WARNING("fa fa-warning fa-2x", "214, 214, 0"),
+	WARNING("fa fa-warning fa-2x", "214, 214, 0", "typeImportar.resultado.WARNING"),
 	/** ERROR. **/
-	ERROR("fa fa-times fa-2x", "255, 19, 19");
+	ERROR("fa fa-times fa-2x", "255, 19, 19", "typeImportar.resultado.ERROR");
 
 	/** Css **/
 	private String css;
@@ -23,15 +23,20 @@ public enum TypeImportarResultado {
 	/** Icon. **/
 	private String icon;
 
+	/** Literal. **/
+	private String literal;
+
 	/**
 	 * Constructor
 	 *
 	 * @param iCss
 	 * @param iIcon
+	 * @param iLiteral
 	 */
-	private TypeImportarResultado(final String iIcon, final String iCss) {
+	private TypeImportarResultado(final String iIcon, final String iCss, final String iLiteral) {
 		this.css = iCss;
 		this.icon = iIcon;
+		this.literal = iLiteral;
 	}
 
 	/**
@@ -53,6 +58,20 @@ public enum TypeImportarResultado {
 	}
 
 	/**
+	 * @return the literal
+	 */
+	public String getLiteral() {
+		return literal;
+	}
+
+	/**
+	 * @param literal the literal to set
+	 */
+	public void setLiteral(final String literal) {
+		this.literal = literal;
+	}
+
+	/**
 	 * Is warning.
 	 *
 	 * @return
@@ -60,4 +79,32 @@ public enum TypeImportarResultado {
 	public boolean isWarning() {
 		return this == TypeImportarResultado.WARNING;
 	}
+
+	/**
+	 * Comprueba si es error o warning
+	 *
+	 * @return
+	 */
+	public boolean isErrorOrWarning() {
+		return this == TypeImportarResultado.ERROR || this == TypeImportarResultado.WARNING;
+	}
+
+	/**
+	 * Comprueba si es ok o warning
+	 *
+	 * @return
+	 */
+	public boolean isWarningOrOk() {
+		return this == TypeImportarResultado.OK || this == TypeImportarResultado.WARNING;
+	}
+
+	/**
+	 * Comprueba si es error
+	 *
+	 * @return
+	 */
+	public boolean isError() {
+		return this == TypeImportarResultado.ERROR;
+	}
+
 }

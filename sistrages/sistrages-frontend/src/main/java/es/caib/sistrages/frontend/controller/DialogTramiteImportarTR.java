@@ -1,16 +1,20 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
-import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
+import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
+import es.caib.sistrages.core.api.model.types.TypeImportarExiste;
+import es.caib.sistrages.core.api.service.SecurityService;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -22,26 +26,61 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class DialogTramiteImportarTR extends DialogControllerBase {
 
-	/**
-	 * Log.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteImportarTR.class);
+	@Inject
+	SecurityService securityService;
+
+	@Inject
+	TramiteService tramiteService;
 
 	/** Fila Importar. */
 	private FilaImportarTramite data;
 
-	/** Mensaje. **/
-	private String mensaje;
+	/** Fila Importar. */
+	private FilaImportarArea filaArea;
+
+	/** Tramites. **/
+	private List<Tramite> tramites;
+
+	/** Tramite. **/
+	private Long tramite;
+
+	/** Accion. **/
+	private String accion;
 
 	/**
 	 * Inicialización.
 	 */
 	public void init() {
 		data = (FilaImportarTramite) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_IMPORTAR);
-		if (data.getEstado() == TypeImportarEstado.EXISTE) {
-			setMensaje(UtilJSF.getLiteral("dialogTramiteImportarTR.estado.existedistinto"));
-		} else {
-			setMensaje(UtilJSF.getLiteral("dialogTramiteImportarTR.estado.noexiste"));
+		filaArea = (FilaImportarArea) UtilJSF.getSessionBean().getMochilaDatos()
+				.get(Constantes.CLAVE_MOCHILA_IMPORTAR_AREA);
+		cargarDatos();
+
+		if (data.getAccion() != null) {
+			accion = data.getAccion().toString();
+		}
+		if (data.getAccion() == TypeImportarAccion.SELECCIONAR
+				&& this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
+			for (final Tramite tram : tramites) {
+				if (tram.getIdentificador().equals(data.getIdentificador())) {
+					tramite = tram.getCodigo();
+					break;
+				}
+			}
+		}
+
+		if (data.getAcciones() != null && data.getAcciones().size() == 1) {
+			accion = data.getAcciones().get(0).toString();
+		}
+
+	}
+
+	/**
+	 * Permite escoger sólo los áreas del trámite.
+	 */
+	private void cargarDatos() {
+		if (this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
+			tramites = tramiteService.listTramite(this.filaArea.getArea().getCodigo(), null);
 		}
 	}
 
@@ -61,10 +100,52 @@ public class DialogTramiteImportarTR extends DialogControllerBase {
 	 */
 	public void guardar() {
 
-		if (data.getTramiteResultado().isEmpty()) {
-			addMessageContext(TypeNivelGravedad.WARNING, "Rellena el valor");
-			return;
+		data.setMensaje(null);
+		final TypeImportarAccion typeAccion = TypeImportarAccion.fromString(accion);
+		if (typeAccion == TypeImportarAccion.CREAR) {
+			if (data.getIdentificador() == null || data.getIdentificador().isEmpty() || data.getDescripcion() == null
+					|| data.getDescripcion().isEmpty()) {
+				addMessageContext(TypeNivelGravedad.WARNING,
+						UtilJSF.getLiteral("dialogTramiteImportarTR.error.datosvacios"));
+				return;
+			}
+			if (tramiteService.checkIdentificadorRepetido(this.data.getIdentificador(), null)) {
+				addMessageContext(TypeNivelGravedad.WARNING,
+						UtilJSF.getLiteral("dialogTramiteImportarTR.error.identificadorRepetido"));
+				return;
+			}
+			data.setTramiteActual(null);
+			data.setDestinoIdentificador(this.data.getIdentificador());
+			data.setDestinoDescripcion(this.data.getDescripcion());
+			this.data.setExiste(TypeImportarExiste.NO_EXISTE);
 		}
+
+		if (typeAccion == TypeImportarAccion.SELECCIONAR) {
+
+			for (final Tramite tram : tramites) {
+				if (tram.getCodigo().compareTo(tramite) == 0) {
+
+					if (filaArea.getAccion() == TypeImportarAccion.SELECCIONAR
+							&& tram.getIdArea().compareTo(filaArea.getArea().getCodigo()) != 0) {
+						data.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.cambiaareaTramite"));
+					}
+
+					if (filaArea.getAccion() == TypeImportarAccion.CREAR) {
+						data.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.cambiaareaTramite"));
+					}
+
+					data.setTramiteActual(tram);
+					data.setIdentificador(tram.getIdentificador());
+					data.setDescripcion(tram.getDescripcion());
+					data.setDestinoIdentificador(tram.getIdentificador());
+					data.setDestinoDescripcion(tram.getDescripcion());
+					break;
+				}
+			}
+			data.setExiste(TypeImportarExiste.EXISTE);
+		}
+
+		data.setAccion(typeAccion);
 
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
@@ -88,8 +169,7 @@ public class DialogTramiteImportarTR extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final FilaImportarTramite data) {
 		this.data = data;
@@ -103,17 +183,45 @@ public class DialogTramiteImportarTR extends DialogControllerBase {
 	}
 
 	/**
-	 * @return the mensaje
+	 * @return the tramites
 	 */
-	public String getMensaje() {
-		return mensaje;
+	public final List<Tramite> getTramites() {
+		return tramites;
 	}
 
 	/**
-	 * @param mensaje
-	 *            the mensaje to set
+	 * @param tramites the tramites to set
 	 */
-	public void setMensaje(final String mensaje) {
-		this.mensaje = mensaje;
+	public final void setTramites(final List<Tramite> tramites) {
+		this.tramites = tramites;
 	}
+
+	/**
+	 * @return the tramite
+	 */
+	public final Long getTramite() {
+		return tramite;
+	}
+
+	/**
+	 * @param tramite the tramite to set
+	 */
+	public final void setTramite(final Long tramite) {
+		this.tramite = tramite;
+	}
+
+	/**
+	 * @return the accion
+	 */
+	public String getAccion() {
+		return accion;
+	}
+
+	/**
+	 * @param accion the accion to set
+	 */
+	public void setAccion(final String accion) {
+		this.accion = accion;
+	}
+
 }

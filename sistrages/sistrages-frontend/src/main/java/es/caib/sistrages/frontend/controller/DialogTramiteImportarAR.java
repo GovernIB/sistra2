@@ -1,16 +1,22 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
-import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
+import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
+import es.caib.sistrages.core.api.model.types.TypeImportarExiste;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
+import es.caib.sistrages.core.api.service.SecurityService;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -22,8 +28,11 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class DialogTramiteImportarAR extends DialogControllerBase {
 
-	/** Log. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteImportarAR.class);
+	@Inject
+	private SecurityService securityService;
+
+	@Inject
+	private TramiteService tramiteService;
 
 	/** Fila importar. */
 	private FilaImportarArea data;
@@ -31,16 +40,75 @@ public class DialogTramiteImportarAR extends DialogControllerBase {
 	/** Mensaje. **/
 	private String mensaje;
 
+	/** Areas de la entidad. **/
+	private List<Area> areas = new ArrayList<>();
+
+	/** Area seleccionada. **/
+	private Long areaSeleccionada;
+
+	/** Accion. **/
+	private String accion;
+
+	/** Identificador. **/
+	private String identificador;
+
+	/** Descripcion. **/
+	private String descripcion;
+
 	/**
 	 * Inicialización.
 	 */
 	public void init() {
 		data = (FilaImportarArea) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_IMPORTAR);
-		if (data.getEstado() == TypeImportarEstado.EXISTE) {
-			setMensaje(UtilJSF.getLiteral("dialogTramiteImportarAR.estado.existedistinto"));
-		} else {
-			setMensaje(UtilJSF.getLiteral("dialogTramiteImportarAR.estado.noexiste"));
+		if (data.getAccion() == null) {
+			accion = TypeImportarAccion.SELECCIONAR.toString();
+		} else if (data.getAccion() == TypeImportarAccion.CREAR || data.getAccion() == TypeImportarAccion.SELECCIONAR) {
+			accion = data.getAccion().toString();
 		}
+
+		identificador = this.data.getIdentificador();
+		descripcion = this.data.getDescripcion();
+
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+			initAdministradorEntidad();
+		} else {
+			initDesarrolladorEntidad();
+		}
+
+		/** Seleccionamos el area con el que venga. **/
+		if (data.getArea() != null) {
+			for (final Area area : areas) {
+				if (area.getIdentificador().equals(data.getArea().getIdentificador())) {
+					areaSeleccionada = area.getCodigo();
+				}
+			}
+		}
+	}
+
+	/**
+	 * El desarrollador de entidad, sólo puede seleccionar areas que pertenezcan a
+	 * sus permisos (como adm. area o desarrollador de area).
+	 */
+	private void initDesarrolladorEntidad() {
+		final List<Area> areasEntidad = tramiteService.listArea(UtilJSF.getIdEntidad(), null);
+		for (final Area areaEntidad : areasEntidad) {
+			final List<TypeRolePermisos> permisos = securityService
+					.getPermisosDesarrolladorEntidadByArea(areaEntidad.getCodigo());
+
+			/** ¿Tiene el permiso para seleccionarla? **/
+			if (permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
+					|| permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)) {
+				areas.add(areaEntidad);
+			}
+		}
+	}
+
+	/**
+	 * El adm. de entidad puede crear area, si no existe. Además, puede seleccionar
+	 * cualquier area de la entidad.
+	 */
+	private void initAdministradorEntidad() {
+		areas = tramiteService.listArea(UtilJSF.getIdEntidad(), null);
 	}
 
 	/** Consultar. **/
@@ -59,11 +127,46 @@ public class DialogTramiteImportarAR extends DialogControllerBase {
 	 */
 	public void guardar() {
 
-		if (data.getAreaResultado().isEmpty()) {
-			addMessageContext(TypeNivelGravedad.WARNING, "Rellena el valor");
+		final TypeImportarAccion typeAccion = TypeImportarAccion.fromString(accion);
+		this.data.setAccion(typeAccion);
+		if (typeAccion == TypeImportarAccion.SELECCIONAR) {
+			if (areaSeleccionada == null) {
+				addMessageContext(TypeNivelGravedad.WARNING,
+						UtilJSF.getLiteral("dialogTramiteImportarAR.error.seleccionarArea"));
+				return;
+			} else {
+				final Area area = tramiteService.getArea(areaSeleccionada);
+				this.data.setArea(area);
+				this.data.setAreaActual(area);
+				this.data.setIdentificador(area.getIdentificador());
+				this.data.setDescripcion(area.getDescripcion());
+				this.data.setExiste(TypeImportarExiste.EXISTE);
+				this.data.setDestinoDescripcion(area.getDescripcion());
+				this.data.setDestinoIdentificador(area.getIdentificador());
+			}
+		} else if (typeAccion == TypeImportarAccion.CREAR) {
+			if (this.identificador == null || this.identificador.isEmpty() || this.descripcion == null
+					|| this.descripcion.isEmpty()) {
+				addMessageContext(TypeNivelGravedad.WARNING,
+						UtilJSF.getLiteral("dialogTramiteImportarAR.error.vaciodatos"));
+				return;
+			}
+			if (tramiteService.checkIdentificadorAreaRepetido(identificador, null)) {
+				addMessageContext(TypeNivelGravedad.WARNING,
+						UtilJSF.getLiteral("dialogTramiteImportarAR.error.identificadorrepetido"));
+				return;
+			}
+			this.data.setIdentificador(identificador);
+			this.data.setDescripcion(descripcion);
+			this.data.setExiste(TypeImportarExiste.NO_EXISTE);
+			this.data.setDestinoDescripcion(descripcion);
+			this.data.setDestinoIdentificador(identificador);
+		} else {
+			addMessageContext(TypeNivelGravedad.WARNING, "Sin implementar");
 			return;
 		}
 
+		this.data.setMensaje(null);
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
 		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, this.data);
@@ -93,8 +196,7 @@ public class DialogTramiteImportarAR extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final FilaImportarArea data) {
 		this.data = data;
@@ -108,11 +210,80 @@ public class DialogTramiteImportarAR extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mensaje
-	 *            the mensaje to set
+	 * @param mensaje the mensaje to set
 	 */
 	public void setMensaje(final String mensaje) {
 		this.mensaje = mensaje;
+	}
+
+	/**
+	 * @return the areas
+	 */
+	public List<Area> getAreas() {
+		return areas;
+	}
+
+	/**
+	 * @param areas the areas to set
+	 */
+	public void setAreas(final List<Area> areas) {
+		this.areas = areas;
+	}
+
+	/**
+	 * @return the areaSeleccionada
+	 */
+	public Long getAreaSeleccionada() {
+		return areaSeleccionada;
+	}
+
+	/**
+	 * @param areaSeleccionada the areaSeleccionada to set
+	 */
+	public void setAreaSeleccionada(final Long areaSeleccionada) {
+		this.areaSeleccionada = areaSeleccionada;
+	}
+
+	/**
+	 * @return the accion
+	 */
+	public String getAccion() {
+		return accion;
+	}
+
+	/**
+	 * @param accion the accion to set
+	 */
+	public void setAccion(final String accion) {
+		this.accion = accion;
+	}
+
+	/**
+	 * @return the identificador
+	 */
+	public final String getIdentificador() {
+		return identificador;
+	}
+
+	/**
+	 * @param identificador the identificador to set
+	 */
+	public final void setIdentificador(final String identificador) {
+		this.identificador = identificador;
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	public final String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descripcion the descripcion to set
+	 */
+	public final void setDescripcion(final String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 }

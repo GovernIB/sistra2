@@ -20,8 +20,7 @@ public interface TramiteDao {
 	/**
 	 * Obtiene el tramite.
 	 *
-	 * @param id
-	 *            identificador
+	 * @param id identificador
 	 * @return el valor del tramite
 	 */
 	Tramite getById(final Long id);
@@ -29,8 +28,7 @@ public interface TramiteDao {
 	/**
 	 * Obtiene el valor de todos los tramites.
 	 *
-	 * @param idArea
-	 *            Id entidad
+	 * @param idArea Id entidad
 	 *
 	 * @return el valor de todos los tramites
 	 */
@@ -39,10 +37,8 @@ public interface TramiteDao {
 	/**
 	 * Obtiene el valor de todos los tramites.
 	 *
-	 * @param idArea
-	 *            Id entidad
-	 * @param pFiltro
-	 *            filtro
+	 * @param idArea  Id entidad
+	 * @param pFiltro filtro
 	 * @return el valor de todos los tramites
 	 */
 	List<Tramite> getAllByFiltro(final Long idArea, final String pFiltro);
@@ -50,10 +46,8 @@ public interface TramiteDao {
 	/**
 	 * Añade tramite.
 	 *
-	 * @param idArea
-	 *            idArea
-	 * @param pTramite
-	 *            Tramite
+	 * @param idArea   idArea
+	 * @param pTramite Tramite
 	 * @return
 	 */
 	Long add(Long idArea, final Tramite pTramite);
@@ -61,16 +55,14 @@ public interface TramiteDao {
 	/**
 	 * Elimina tramite.
 	 *
-	 * @param id
-	 *            id
+	 * @param id id
 	 */
 	void remove(final Long id);
 
 	/**
 	 * Actualiza tramite.
 	 *
-	 * @param pTramite
-	 *            Tramite
+	 * @param pTramite Tramite
 	 */
 	void update(final Tramite pTramite);
 
@@ -117,8 +109,7 @@ public interface TramiteDao {
 	/**
 	 * Obtiene area tramite.
 	 *
-	 * @param idTramite
-	 *            id tramite
+	 * @param idTramite id tramite
 	 * @return
 	 */
 	Area getAreaTramite(Long idTramite);
@@ -126,10 +117,8 @@ public interface TramiteDao {
 	/**
 	 * Cambia trámite de área.
 	 *
-	 * @param idArea
-	 *            id área
-	 * @param idTramite
-	 *            id trámite
+	 * @param idArea    id área
+	 * @param idTramite id trámite
 	 */
 	void changeAreaTramite(Long idArea, Long idTramite);
 
@@ -275,9 +264,11 @@ public interface TramiteDao {
 	 * @param idTramite
 	 * @param idDominios
 	 * @param usuario
+	 * @param isModoIM
 	 * @return
 	 */
-	Long importar(FilaImportarTramiteVersion filaTramiteVersion, Long idTramite, List<Long> idDominios, String usuario);
+	Long importar(FilaImportarTramiteVersion filaTramiteVersion, Long idTramite, List<Long> idDominios, String usuario,
+			boolean isModoIM);
 
 	/**
 	 * Obtiene el tramite simplificado.
@@ -323,14 +314,13 @@ public interface TramiteDao {
 	/**
 	 * Actualiza literal.
 	 *
-	 * @param pLiteral
-	 *            literal
+	 * @param pLiteral literal
 	 */
 	void updateLiteral(Literal pLiteral);
 
 	/**
 	 * Incrementar version de una version.
-	 * 
+	 *
 	 * @param codigo
 	 */
 	void incrementarRelease(Long idTramiteVersion);

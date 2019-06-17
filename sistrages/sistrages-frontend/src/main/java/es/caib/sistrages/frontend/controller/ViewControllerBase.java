@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -50,8 +51,7 @@ public abstract class ViewControllerBase {
 	/**
 	 * Establece el valor del bean de sesion.
 	 *
-	 * @param sesion
-	 *            el nuevo valor del bean de sesion
+	 * @param sesion el nuevo valor del bean de sesion
 	 */
 	public void setSesion(final SessionBean sesion) {
 		this.sesion = sesion;
@@ -60,8 +60,7 @@ public abstract class ViewControllerBase {
 	/**
 	 * Establece el valor del titulo de la pantalla.
 	 *
-	 * @param titulo
-	 *            el nuevo valor del titulo de la pantalla.
+	 * @param titulo el nuevo valor del titulo de la pantalla.
 	 */
 	public void setLiteralTituloPantalla(final String titulo) {
 		sesion.setLiteralTituloPantalla(titulo);
@@ -79,8 +78,7 @@ public abstract class ViewControllerBase {
 	/**
 	 * Ventana principal de ayudar.
 	 *
-	 * @param event
-	 *            resultado
+	 * @param event resultado
 	 */
 	public void ayudar() {
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Ayuda");
@@ -128,8 +126,7 @@ public abstract class ViewControllerBase {
 	/**
 	 * Establece modo acceso a la ventana.
 	 *
-	 * @param modoAcceso
-	 *            modo acceso
+	 * @param modoAcceso modo acceso
 	 */
 	public void setModoAcceso(final String modoAcceso) {
 		this.modoAcceso = modoAcceso;
@@ -138,8 +135,7 @@ public abstract class ViewControllerBase {
 	/**
 	 * Normaliza filtro
 	 *
-	 * @param filtro
-	 *            Filtro
+	 * @param filtro Filtro
 	 * @return filtro
 	 */
 	protected String normalizarFiltro(String filtro) {
@@ -162,5 +158,20 @@ public abstract class ViewControllerBase {
 			className = "scriptRelleno";
 		}
 		return className;
+	}
+
+	/** Es desarrollo? **/
+	public boolean isDesarrollo() {
+		return UtilJSF.checkEntorno(TypeEntorno.DESARROLLO);
+	}
+
+	/** Es preproduccion? **/
+	public boolean isPreproduccion() {
+		return UtilJSF.checkEntorno(TypeEntorno.PREPRODUCCION);
+	}
+
+	/** Es preproduccion? **/
+	public boolean isProduccion() {
+		return UtilJSF.checkEntorno(TypeEntorno.PRODUCCION);
 	}
 }

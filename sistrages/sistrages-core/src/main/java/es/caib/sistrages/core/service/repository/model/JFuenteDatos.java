@@ -104,8 +104,7 @@ public class JFuenteDatos implements IModelApi {
 	}
 
 	/**
-	 * @param entidad
-	 *            the entidad to set
+	 * @param entidad the entidad to set
 	 */
 	public void setEntidad(final JEntidad entidad) {
 		this.entidad = entidad;
@@ -119,8 +118,7 @@ public class JFuenteDatos implements IModelApi {
 	}
 
 	/**
-	 * @param area
-	 *            the area to set
+	 * @param area the area to set
 	 */
 	public void setArea(final JArea area) {
 		this.area = area;
@@ -134,8 +132,7 @@ public class JFuenteDatos implements IModelApi {
 	}
 
 	/**
-	 * @param campos
-	 *            the campos to set
+	 * @param campos the campos to set
 	 */
 	public void setCampos(final Set<JCampoFuenteDatos> campos) {
 		this.campos = campos;
@@ -155,7 +152,10 @@ public class JFuenteDatos implements IModelApi {
 			fuenteDato.setCampos(lcampos);
 		}
 		if (this.getArea() != null) {
-			fuenteDato.setIdArea(this.getArea().getCodigo());
+			fuenteDato.setArea(this.getArea().toModel());
+		}
+		if (this.getEntidad() != null) {
+			fuenteDato.setEntidad(this.getEntidad().toModel());
 		}
 		return fuenteDato;
 	}

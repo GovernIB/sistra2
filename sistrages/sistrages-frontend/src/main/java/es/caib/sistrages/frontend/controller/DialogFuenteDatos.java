@@ -100,8 +100,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de FuenteDatosCampoes.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -131,8 +130,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 					message = UtilJSF.getLiteral("info.modificado.ok");
 				} catch (final Exception ex) {
 					if (ex.getCause() instanceof FuenteDatosPkException) {
-						addMessageContext(TypeNivelGravedad.INFO,
-								UtilJSF.getLiteral("info.importarCSV.error.pk"));
+						addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importarCSV.error.pk"));
 						return;
 					}
 				}
@@ -155,8 +153,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del upload.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoUpload(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -316,9 +313,9 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	}
 
 	/** Ayuda. */
-    public void ayuda() {
-        UtilJSF.openHelp("fuenteDatosDialog");
-    }
+	public void ayuda() {
+		UtilJSF.openHelp("fuenteDatosDialog");
+	}
 
 	/**
 	 * Obtiene el valor de permiteAlta.
@@ -345,11 +342,14 @@ public class DialogFuenteDatos extends DialogControllerBase {
 					res = true;
 				} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 
-					final List<TypeRolePermisos> permisos = securityService
-							.getPermisosDesarrolladorEntidadByArea(fuente.getIdArea());
+					if (fuente.getArea() == null) {
+						res = false;
+					} else {
+						final List<TypeRolePermisos> permisos = securityService
+								.getPermisosDesarrolladorEntidadByArea(fuente.getArea().getCodigo());
 
-					res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA);
-
+						res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA);
+					}
 				}
 
 				break;
@@ -375,8 +375,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -390,8 +389,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final FuenteDatosValores data) {
 		this.data = data;
@@ -405,8 +403,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	}
 
 	/**
-	 * @param valorSeleccionado
-	 *            the valorSeleccionado to set
+	 * @param valorSeleccionado the valorSeleccionado to set
 	 */
 	public void setValorSeleccionado(final FuenteFila valorSeleccionado) {
 		this.valorSeleccionado = valorSeleccionado;
@@ -420,8 +417,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	}
 
 	/**
-	 * @param campos
-	 *            the campos to set
+	 * @param campos the campos to set
 	 */
 	public void setCampos(final List<FuenteDatosCampo> campos) {
 		this.campos = campos;
@@ -435,8 +431,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	}
 
 	/**
-	 * @param iCampos
-	 *            the iCampos to set
+	 * @param iCampos the iCampos to set
 	 */
 	public void setiCampos(final String iCampos) {
 		this.iCampos = iCampos;

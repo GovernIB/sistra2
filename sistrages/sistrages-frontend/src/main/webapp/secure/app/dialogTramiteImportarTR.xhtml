@@ -21,18 +21,38 @@
 		<f:viewParam name="MODO_ACCESO" value="#{dialogTramiteImportarTR.modoAcceso}"/>
 		<f:viewAction action="#{dialogTramiteImportarTR.init}" />
 	</f:metadata>
-	<h:form id="dialogEntidad" styleClass="margin-top-10">
+	<h:form id="dialogImportar" styleClass="margin-top-10">
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
-			 	<p>
-					<p:outputLabel value="#{dialogTramiteImportarTR.mensaje}" styleClass="w100 padding8 margin-bottom-3" style="font-weight: bold"/>
-				</p>
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 , padding-left-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
-					<p:outputLabel value="#{msg['dialogTramiteImportarTR.headerDescripcion']}:" />
-					<p:inputTextarea value="#{dialogTramiteImportarTR.data.tramiteResultado}" required="true" rows="5" cols="70" style="background:white" requiredMessage="#{msg['error.obligatorio']}"  />
+			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w20 va-top, padding-left-18 w80" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+					<p:outputLabel value="#{msg['dialogTramiteImportarTR.headerAccion']}:" />
+					<p:column>
+						<p:selectOneMenu value="#{dialogTramiteImportarTR.accion}" style="margin-right:10px">
+						     <f:selectItems value="#{dialogTramiteImportarTR.data.acciones}" var="accion" itemLabel="#{msg['typeImportar.accion.' +=accion.toString()]}" itemValue="#{accion.toString()}" />
+						     <p:ajax update=":dialogImportar"  />
+						</p:selectOneMenu>
+
+						<p:outputLabel styleClass="outputlabel-nota-top" value="#{msg['dialogTramiteImportarTR.seleccionar.info']}" rendered="#{dialogTramiteImportarTR.accion == 'S'}" />
+ 				     	<p:outputLabel styleClass="outputlabel-nota-top" value="#{msg['dialogTramiteImportarTR.crear.info']}" rendered="#{dialogTramiteImportarTR.accion == 'C'}" />
+					</p:column>
+					<p:outputLabel value="#{msg['dialogTramiteImportarTR.headerTramite']}:" rendered="#{dialogTramiteImportarTR.accion == 'S'}" />
+					<p:selectOneMenu value="#{dialogTramiteImportarTR.tramite}" rendered="#{dialogTramiteImportarTR.accion == 'S'}" >
+					     <f:selectItems value="#{dialogTramiteImportarTR.tramites}" var="tramite" itemLabel="#{tramite.identificador}" itemValue="#{tramite.codigo}" />
+					     <p:ajax update=":dialogImportar"  />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="#{msg['dialogTramiteImportarTR.headerIdentificador']}:" rendered="#{dialogTramiteImportarTR.accion == 'C'}" />
+					<p:inputText   value="#{dialogTramiteImportarTR.data.identificador}"   size="70" rendered="#{dialogTramiteImportarTR.accion == 'C'}" validatorMessage="#{msg['error.validacion.identificador']}" onblur="this.value = this.value.toUpperCase();"  >
+							<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
+				   		 	<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
+					</p:inputText>
+
+					<p:outputLabel value="#{msg['dialogTramiteImportarTR.headerDescripcion']}:" rendered="#{dialogTramiteImportarTR.accion == 'C'}" />
+					<p:inputTextarea value="#{dialogTramiteImportarTR.data.descripcion}" rows="5" cols="70" rendered="#{dialogTramiteImportarTR.accion == 'C'}"  />
 
 				</h:panelGrid>
 			</p:outputPanel>

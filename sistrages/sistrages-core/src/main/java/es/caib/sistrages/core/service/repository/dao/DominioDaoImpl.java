@@ -195,12 +195,9 @@ public class DominioDaoImpl implements DominioDao {
 	/**
 	 * Listar dominios.
 	 *
-	 * @param ambito
-	 *            ambito
-	 * @param id
-	 *            id
-	 * @param filtro
-	 *            filtro
+	 * @param ambito ambito
+	 * @param id     id
+	 * @param filtro filtro
 	 * @return lista de dominios
 	 */
 	private List<Dominio> listarDominios(final TypeAmbito ambito, final Long id, final String filtro) {
@@ -269,12 +266,9 @@ public class DominioDaoImpl implements DominioDao {
 	/**
 	 * Lista dominios.
 	 *
-	 * @param ambito
-	 *            Ambito
-	 * @param id
-	 *            id
-	 * @param filtro
-	 *            filtro
+	 * @param ambito Ambito
+	 * @param id     id
+	 * @param filtro filtro
 	 * @return dominios
 	 */
 	@SuppressWarnings("unchecked")
@@ -385,10 +379,8 @@ public class DominioDaoImpl implements DominioDao {
 	/**
 	 * Listar dominios.
 	 *
-	 * @param idTramite
-	 *            idtramite
-	 * @param filtro
-	 *            filtro
+	 * @param idTramite idtramite
+	 * @param filtro    filtro
 	 * @return lista de dominios
 	 */
 	@SuppressWarnings("unchecked")
@@ -463,7 +455,7 @@ public class DominioDaoImpl implements DominioDao {
 			if (filaDominio.getDominio().getTipo() == TypeDominio.FUENTE_DATOS) {
 
 				final Long idFuenteDatos = fuenteDatoDao.importarFD(filaDominio, filaDominio.getDominio().getAmbito(),
-						idEntidad);
+						idEntidad, idArea);
 				final JFuenteDatos jfuenteDatos = entityManager.find(JFuenteDatos.class, idFuenteDatos);
 				dominioAlmacenar.setFuenteDatos(jfuenteDatos);
 			} else {
@@ -496,7 +488,7 @@ public class DominioDaoImpl implements DominioDao {
 			}
 
 			return dominioAlmacenar.getCodigo();
-		} else {
+		} else { // MANTENER
 			return filaDominio.getDominioActual().getCodigo();
 		}
 	}

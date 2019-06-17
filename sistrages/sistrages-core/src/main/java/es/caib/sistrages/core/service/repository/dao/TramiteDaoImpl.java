@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
+import es.caib.sistrages.core.api.exception.ImportacionError;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.exception.TramiteVersionException;
 import es.caib.sistrages.core.api.model.Area;
@@ -34,6 +35,7 @@ import es.caib.sistrages.core.api.model.comun.TramiteSimplePaso;
 import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeFlujo;
+import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
 import es.caib.sistrages.core.service.repository.model.JArea;
@@ -211,10 +213,8 @@ public class TramiteDaoImpl implements TramiteDao {
 	/**
 	 * Listar tramite.
 	 *
-	 * @param idArea
-	 *            Id area
-	 * @param pFiltro
-	 *            the filtro
+	 * @param idArea  Id area
+	 * @param pFiltro the filtro
 	 * @return lista de tramites
 	 */
 	@SuppressWarnings("unchecked")
@@ -920,32 +920,56 @@ public class TramiteDaoImpl implements TramiteDao {
 
 	@Override
 	public Long importar(final FilaImportarTramite filaTramite, final Long idArea) {
-		if (filaTramite.getTramiteActual() == null) {
+
+		Long idTramite;
+		switch (filaTramite.getAccion()) {
+		case CREAR:
 			final Tramite tramite = filaTramite.getTramite();
 			tramite.setCodigo(null);
-			return add(idArea, filaTramite.getTramite());
-		} else {
+			tramite.setIdentificador(filaTramite.getIdentificador());
+			tramite.setDescripcion(filaTramite.getDescripcion());
+			idTramite = add(idArea, tramite);
+			break;
+		case SELECCIONAR:
+			idTramite = filaTramite.getTramiteActual().getCodigo();
+			break;
+		case REEMPLAZAR:
 			final JTramite jTramite = entityManager.find(JTramite.class, filaTramite.getTramiteActual().getCodigo());
 			jTramite.setDescripcion(filaTramite.getTramiteResultado());
 			entityManager.merge(jTramite);
-			return jTramite.getCodigo();
+			idTramite = jTramite.getCodigo();
+			break;
+		default:
+			throw new ImportacionError("Acció en tràmit dao no implementada.");
 		}
+
+		return idTramite;
 	}
 
 	@Override
 	public Long importar(final FilaImportarTramiteVersion filaTramiteVersion, final Long idTramite,
-			final List<Long> idDominios, final String usuario) {
+			final List<Long> idDominios, final String usuario, final boolean isModoIM) {
 
 		JVersionTramite jTramiteVersion = null;
-		if (filaTramiteVersion.getTramiteVersionActual() == null) {
-
+		switch (filaTramiteVersion.getAccion()) {
+		case INCREMENTAR:
+		case CREAR:
 			jTramiteVersion = limpiar(JVersionTramite.fromModel(filaTramiteVersion.getTramiteVersion()));
+			if (filaTramiteVersion.getAccion() == TypeImportarAccion.INCREMENTAR) {
+				final int numeroVersion = this.getTramiteNumVersionMaximo(idTramite);
+				jTramiteVersion.setNumeroVersion(numeroVersion + 1);
+				jTramiteVersion.setRelease(1);
+			}
+			if (filaTramiteVersion.getAccion() == TypeImportarAccion.CREAR) {
+				jTramiteVersion.setNumeroVersion(Integer.parseInt(filaTramiteVersion.getNumVersion()));
+				jTramiteVersion.setRelease(1);
+			}
+
 			final JTramite jTramite = entityManager.find(JTramite.class, idTramite);
 			jTramiteVersion.setTramite(jTramite);
 			entityManager.persist(jTramiteVersion);
-
-		} else {
-
+			break;
+		case REEMPLAZAR:
 			// Obtenemos los pasos y los borramos
 			final String sql = "Select t From JPasoTramitacion t where t.versionTramite.codigo = :idTramiteVersion";
 
@@ -998,7 +1022,13 @@ public class TramiteDaoImpl implements TramiteDao {
 			jTramiteVersion.setPlazoFinDesactivacion(filaTramiteVersion.getTramiteVersion().getPlazoFinDesactivacion());
 			jTramiteVersion
 					.setPlazoInicioDesactivacion(filaTramiteVersion.getTramiteVersion().getPlazoInicioDesactivacion());
-			jTramiteVersion.setRelease(filaTramiteVersion.getTramiteVersion().getRelease());
+			if (isModoIM) {
+				// En modo importar, se incrementa la release
+				jTramiteVersion.setRelease(jTramiteVersion.getRelease() + 1);
+			} else {
+				// En modo Cuaderno Carga, se sustituye
+				jTramiteVersion.setRelease(filaTramiteVersion.getTramiteVersion().getRelease());
+			}
 			jTramiteVersion.setScriptInicializacionTramite(JScript
 					.fromModel(Script.clonar(filaTramiteVersion.getTramiteVersion().getScriptInicializacionTramite())));
 			jTramiteVersion.setScriptPersonalizacion(JScript
@@ -1008,21 +1038,28 @@ public class TramiteDaoImpl implements TramiteDao {
 			jTramiteVersion.setTipoflujo(filaTramiteVersion.getTramiteVersion().getTipoFlujo().toString());
 			entityManager.merge(jTramiteVersion);
 
-			// Actualizamos el historial
-			final String sqlHistorial = "Select t From JHistorialVersion t where t.versionTramite.codigo = :idTramiteVersion and t.release >= :release";
+			// Solo en el modo Cuaderno de Carga se puede reemplazar y eliiminar versiones
+			// antiguas (en IMP, siempre se incrementa)
+			if (!isModoIM) {
+				// Actualizamos el historial
+				final String sqlHistorial = "Select t From JHistorialVersion t where t.versionTramite.codigo = :idTramiteVersion and t.release >= :release";
 
-			final Query queryHistorial = entityManager.createQuery(sqlHistorial);
-			queryHistorial.setParameter(STRING_ID_TRAMITE_VERSION,
-					filaTramiteVersion.getTramiteVersionActual().getCodigo());
-			queryHistorial.setParameter("release", filaTramiteVersion.getTramiteVersion().getRelease());
+				final Query queryHistorial = entityManager.createQuery(sqlHistorial);
+				queryHistorial.setParameter(STRING_ID_TRAMITE_VERSION,
+						filaTramiteVersion.getTramiteVersionActual().getCodigo());
+				queryHistorial.setParameter("release", filaTramiteVersion.getTramiteVersion().getRelease());
 
-			@SuppressWarnings("unchecked")
-			final List<JHistorialVersion> historiales = queryHistorial.getResultList();
-			for (final JHistorialVersion historialFuturo : historiales) {
-				entityManager.remove(historialFuturo);
+				@SuppressWarnings("unchecked")
+				final List<JHistorialVersion> historiales = queryHistorial.getResultList();
+				for (final JHistorialVersion historialFuturo : historiales) {
+					entityManager.remove(historialFuturo);
+				}
 			}
-
+			break;
+		default:
+			throw new ImportacionError("Acció en tràmit versió dao no implementada.");
 		}
+
 		entityManager.flush();
 
 		// Creamos una nueva entrada en el historial

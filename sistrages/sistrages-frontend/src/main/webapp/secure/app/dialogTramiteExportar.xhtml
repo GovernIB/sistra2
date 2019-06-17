@@ -12,7 +12,7 @@
 
 
 <h:head>
-	<title><h:outputText value="#{msg['dialogTramiteExportar.header']}"/></title>
+	<title><h:outputText value="#{dialogTramiteExportar.cabecera}"/></title>
 </h:head>
 
 <h:body style="overflow:hidden">
@@ -28,6 +28,7 @@
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogTramiteExportar.modoAcceso}"/>
 		<f:viewParam name="ID" value="#{dialogTramiteExportar.id}"/>
+		<f:viewParam name="MODO_IMPORTAR" value="#{dialogTramiteExportar.modo}" />
 		<f:viewAction action="#{dialogTramiteExportar.init}" />
 	</f:metadata>
 

@@ -23,29 +23,31 @@
 		<f:viewParam name="MODO_ACCESO" value="#{dialogTramiteImportarTV.modoAcceso}"/>
 		<f:viewAction action="#{dialogTramiteImportarTV.init}" />
 	</f:metadata>
-	<h:form id="dialogEntidad" styleClass="margin-top-10">
+	<h:form id="dialogImportar" styleClass="margin-top-10">
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w10, padding-left-18, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w10 va-top, padding-left-18, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel  value="#{msg['dialogTramiteImportarTV.headerAcciones']}:" />
-					<p:selectOneMenu value="#{dialogTramiteImportarTV.accion}" >
-					     <f:selectItems value="#{dialogTramiteImportarTV.data.acciones}" var="accion" itemLabel="#{msg['typeImportar.accion.' +=accion.toString()]}" itemValue="#{accion.toString()}" />
+					<p:column>
+							<p:selectOneMenu value="#{dialogTramiteImportarTV.accion}" style="margin-right:10px" >
+							     <f:selectItems value="#{dialogTramiteImportarTV.data.acciones}" var="accion" itemLabel="#{msg['typeImportar.accion.' +=accion.toString()]}" itemValue="#{accion.toString()}" />
+							     <p:ajax update=":dialogImportar"  />
+							</p:selectOneMenu>
+
+							<p:outputLabel styleClass="outputlabel-nota-top" value="#{msg['dialogTramiteImportarTV.incrementar.info']}" rendered="#{dialogTramiteImportarTV.accion == 'I'}"  />
+							<p:outputLabel styleClass="outputlabel-nota-top" value="#{msg['dialogTramiteImportarTV.reemplazar.info']}"  rendered="#{dialogTramiteImportarTV.accion == 'R'}"  />
+
+					</p:column>
+
+					<p:outputLabel  value="#{msg['dialogTramiteImportarTV.headerVersion']}:" rendered="#{dialogTramiteImportarTV.accion == 'R'}" />
+					<p:selectOneMenu value="#{dialogTramiteImportarTV.version}" style="margin-right:10px" rendered="#{dialogTramiteImportarTV.accion == 'R'}" >
+						     <f:selectItems value="#{dialogTramiteImportarTV.versiones}" var="version" itemLabel="#{version.numeroVersion}" itemValue="#{version.codigo}" />
+						     <p:ajax update=":dialogImportar"  />
 					</p:selectOneMenu>
 
-					<p:outputLabel value="" />
-					<p:column>
-						<p:outputLabel styleClass="outputlabel-nota" style="font-weight:bold;" value="#{msg['dialogTramiteImportarTV.incrementar.titulo']}" />
-						<p:outputLabel styleClass="outputlabel-nota" value=":#{msg['dialogTramiteImportarTV.incrementar.info']}" />
-					</p:column>
-
-					<p:outputLabel value="" />
-					<p:column>
-						<p:outputLabel styleClass="outputlabel-nota" style="font-weight:bold;" value="#{msg['dialogTramiteImportarTV.reemplazar.titulo']}" />
-						<p:outputLabel styleClass="outputlabel-nota" value=":#{msg['dialogTramiteImportarTV.reemplazar.info']}" />
-					</p:column>
 				</h:panelGrid>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">

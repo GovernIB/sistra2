@@ -21,6 +21,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.codec.binary.Base64;
 
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -251,13 +252,15 @@ public class JDominio implements IModelApi {
 			dominio.setIdFuenteDatos(this.getFuenteDatos().getCodigo());
 		}
 		if (this.getAreas() != null) {
-			final Set<Long> idAreas = new HashSet<>();
+			final Set<Area> idAreas = new HashSet<>();
 			for (final JArea area : this.areas) {
-				idAreas.add(area.getCodigo());
+				idAreas.add(area.toModel());
 			}
 			dominio.setAreas(idAreas);
 		}
-
+		if (this.getEntidades() != null && !this.getEntidades().isEmpty()) {
+			dominio.setEntidad(((JEntidad) this.getEntidades().toArray()[0]).getCodigo());
+		}
 		return dominio;
 	}
 

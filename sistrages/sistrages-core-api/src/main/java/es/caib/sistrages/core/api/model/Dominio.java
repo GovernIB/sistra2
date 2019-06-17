@@ -67,7 +67,10 @@ public class Dominio extends ModelApi {
 	private List<Propiedad> parametros;
 
 	/** Areas. **/
-	private Set<Long> areas = new HashSet<>(0);
+	private Set<Area> areas = new HashSet<>(0);
+
+	/** Si el ambito es entidad **/
+	private Long entidad;
 
 	/**
 	 * Crea una nueva instancia de Dominio.
@@ -84,8 +87,7 @@ public class Dominio extends ModelApi {
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param codigo the codigo to set
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -99,8 +101,7 @@ public class Dominio extends ModelApi {
 	}
 
 	/**
-	 * @param ambito
-	 *            the ambito to set
+	 * @param ambito the ambito to set
 	 */
 	public void setAmbito(final TypeAmbito ambito) {
 		this.ambito = ambito;
@@ -118,8 +119,7 @@ public class Dominio extends ModelApi {
 	}
 
 	/**
-	 * @param idString
-	 *            the codigo to set
+	 * @param idString the codigo to set
 	 */
 	public void setIdString(final String idString) {
 		if (idString == null) {
@@ -137,8 +137,7 @@ public class Dominio extends ModelApi {
 	}
 
 	/**
-	 * @param identificador
-	 *            the identificador to set
+	 * @param identificador the identificador to set
 	 */
 	public void setIdentificador(final String codigo) {
 		this.identificador = codigo;
@@ -152,8 +151,7 @@ public class Dominio extends ModelApi {
 	}
 
 	/**
-	 * @param descripcion
-	 *            the descripcion to set
+	 * @param descripcion the descripcion to set
 	 */
 	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
@@ -167,8 +165,7 @@ public class Dominio extends ModelApi {
 	}
 
 	/**
-	 * @param cacheable
-	 *            the cacheable to set
+	 * @param cacheable the cacheable to set
 	 */
 	public void setCacheable(final boolean cacheable) {
 		this.cacheable = cacheable;
@@ -182,8 +179,7 @@ public class Dominio extends ModelApi {
 	}
 
 	/**
-	 * @param tipo
-	 *            the tipo to set
+	 * @param tipo the tipo to set
 	 */
 	public void setTipo(final TypeDominio tipo) {
 		this.tipo = tipo;
@@ -197,8 +193,7 @@ public class Dominio extends ModelApi {
 	}
 
 	/**
-	 * @param jndi
-	 *            the jndi to set
+	 * @param jndi the jndi to set
 	 */
 	public void setJndi(final String jndi) {
 		this.jndi = jndi;
@@ -212,8 +207,7 @@ public class Dominio extends ModelApi {
 	}
 
 	/**
-	 * @param sql
-	 *            the sql to set
+	 * @param sql the sql to set
 	 */
 	public void setSql(final String sql) {
 		this.sql = sql;
@@ -227,8 +221,7 @@ public class Dominio extends ModelApi {
 	}
 
 	/**
-	 * @param idFuenteDatos
-	 *            the idFuenteDatos to set
+	 * @param idFuenteDatos the idFuenteDatos to set
 	 */
 	public void setIdFuenteDatos(final Long fuenteDatos) {
 		this.idFuenteDatos = fuenteDatos;
@@ -242,8 +235,7 @@ public class Dominio extends ModelApi {
 	}
 
 	/**
-	 * @param listaFija
-	 *            the listaFija to set
+	 * @param listaFija the listaFija to set
 	 */
 	public void setListaFija(final List<Propiedad> listaFija) {
 		this.listaFija = listaFija;
@@ -257,8 +249,7 @@ public class Dominio extends ModelApi {
 	}
 
 	/**
-	 * @param url
-	 *            the url to set
+	 * @param url the url to set
 	 */
 	public void setUrl(final String url) {
 		this.url = url;
@@ -272,8 +263,7 @@ public class Dominio extends ModelApi {
 	}
 
 	/**
-	 * @param parametros
-	 *            the parametros to set
+	 * @param parametros the parametros to set
 	 */
 	public void setParametros(final List<Propiedad> parametros) {
 		this.parametros = parametros;
@@ -282,15 +272,14 @@ public class Dominio extends ModelApi {
 	/**
 	 * @return the areas
 	 */
-	public Set<Long> getAreas() {
+	public Set<Area> getAreas() {
 		return areas;
 	}
 
 	/**
-	 * @param areas
-	 *            the areas to set
+	 * @param areas the areas to set
 	 */
-	public void setAreas(final Set<Long> areas) {
+	public void setAreas(final Set<Area> areas) {
 		this.areas = areas;
 	}
 
@@ -298,8 +287,22 @@ public class Dominio extends ModelApi {
 		return sqlDecoded;
 	}
 
-	public void setSqlDecoded(String sqlDecoded) {
+	public void setSqlDecoded(final String sqlDecoded) {
 		this.sqlDecoded = sqlDecoded;
+	}
+
+	/**
+	 * @return the entidad
+	 */
+	public Long getEntidad() {
+		return entidad;
+	}
+
+	/**
+	 * @param entidad the entidad to set
+	 */
+	public void setEntidad(final Long entidad) {
+		this.entidad = entidad;
 	}
 
 }

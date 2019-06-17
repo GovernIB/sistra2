@@ -1,112 +1,257 @@
 package es.caib.sistrages.core.api.model.comun;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
-import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
-import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
+import es.caib.sistrages.core.api.model.Fichero;
 
 /**
- * Fila importar básico.
+ * Fila importar.
  *
  * @author Indra
  *
  */
 public class FilaImportar {
 
-	/** Accion. **/
-	protected TypeImportarAccion accion;
+	/** Fila entidad. **/
+	private FilaImportarEntidad filaEntidad;
 
-	/** Acciones que se pueden realizar. **/
-	protected List<TypeImportarAccion> acciones;
+	/** Fila area. **/
+	private FilaImportarArea filaArea;
 
-	/** Estado. **/
-	protected TypeImportarEstado estado;
+	/** Fila tramite. **/
+	private FilaImportarTramite filaTramite;
 
-	/** TypeAccion. **/
-	protected TypeImportarResultado resultado;
+	/** Fila tramite version. **/
+	private FilaImportarTramiteVersion filaTramiteVersion;
 
-	/** Mensaje. **/
-	protected String mensaje;
+	/** Fila tramite registro. **/
+	private FilaImportarTramiteRegistro filaTramiteRegistro;
 
-	/** Constructor básico. **/
-	public FilaImportar() {
-		super();
+	/** Fila dominios. **/
+	private List<FilaImportarDominio> filaDominios;
+
+	/** Fila formateadores. **/
+	private List<FilaImportarFormateador> filaFormateador;
+
+	/** Formularios internos. **/
+	private Map<Long, DisenyoFormulario> formularios = new HashMap<>();
+
+	/** Ficheros. **/
+	private Map<Long, Fichero> ficheros = new HashMap<>();
+
+	/** Ficheros content. **/
+	private Map<Long, byte[]> ficherosContent = new HashMap<>();
+
+	/** Usuario . **/
+	private String usuario;
+
+	/** Id entidad. **/
+	private Long idEntidad;
+
+	/** Modo. **/
+	private String modo;
+
+	/**
+	 * @return the filaEntidad
+	 */
+	public final FilaImportarEntidad getFilaEntidad() {
+		return filaEntidad;
 	}
 
 	/**
-	 * @return the accion
+	 * @param filaEntidad the filaEntidad to set
 	 */
-	public TypeImportarAccion getAccion() {
-		return accion;
+	public final void setFilaEntidad(final FilaImportarEntidad filaEntidad) {
+		this.filaEntidad = filaEntidad;
 	}
 
 	/**
-	 * @param accion
-	 *            the accion to set
+	 * @return the filaArea
 	 */
-	public void setAccion(final TypeImportarAccion accion) {
-		this.accion = accion;
+	public final FilaImportarArea getFilaArea() {
+		return filaArea;
 	}
 
 	/**
-	 * @return the estado
+	 * @param filaArea the filaArea to set
 	 */
-	public TypeImportarEstado getEstado() {
-		return estado;
+	public final void setFilaArea(final FilaImportarArea filaArea) {
+		this.filaArea = filaArea;
 	}
 
 	/**
-	 * @param estado
-	 *            the estado to set
+	 * @return the filaTramite
 	 */
-	public void setEstado(final TypeImportarEstado estado) {
-		this.estado = estado;
+	public final FilaImportarTramite getFilaTramite() {
+		return filaTramite;
 	}
 
 	/**
-	 * @return the resultado
+	 * @param filaTramite the filaTramite to set
 	 */
-	public TypeImportarResultado getResultado() {
-		return resultado;
+	public final void setFilaTramite(final FilaImportarTramite filaTramite) {
+		this.filaTramite = filaTramite;
 	}
 
 	/**
-	 * @param resultado
-	 *            the resultado to set
+	 * @return the filaTramiteVersion
 	 */
-	public void setResultado(final TypeImportarResultado typeAccion) {
-		this.resultado = typeAccion;
+	public final FilaImportarTramiteVersion getFilaTramiteVersion() {
+		return filaTramiteVersion;
 	}
 
 	/**
-	 * @return the acciones
+	 * @param filaTramiteVersion the filaTramiteVersion to set
 	 */
-	public List<TypeImportarAccion> getAcciones() {
-		return acciones;
+	public final void setFilaTramiteVersion(final FilaImportarTramiteVersion filaTramiteVersion) {
+		this.filaTramiteVersion = filaTramiteVersion;
 	}
 
 	/**
-	 * @param acciones
-	 *            the acciones to set
+	 * @return the filaTramiteRegistro
 	 */
-	public void setAcciones(final List<TypeImportarAccion> acciones) {
-		this.acciones = acciones;
+	public final FilaImportarTramiteRegistro getFilaTramiteRegistro() {
+		return filaTramiteRegistro;
 	}
 
 	/**
-	 * @return the mensaje
+	 * @param filaTramiteRegistro the filaTramiteRegistro to set
 	 */
-	public final String getMensaje() {
-		return mensaje;
+	public final void setFilaTramiteRegistro(final FilaImportarTramiteRegistro filaTramiteRegistro) {
+		this.filaTramiteRegistro = filaTramiteRegistro;
 	}
 
 	/**
-	 * @param mensaje
-	 *            the mensaje to set
+	 * @return the filaDominios
 	 */
-	public final void setMensaje(final String mensaje) {
-		this.mensaje = mensaje;
+	public final List<FilaImportarDominio> getFilaDominios() {
+		return filaDominios;
+	}
+
+	/**
+	 * @param filaDominios the filaDominios to set
+	 */
+	public final void setFilaDominios(final List<FilaImportarDominio> filaDominios) {
+		this.filaDominios = filaDominios;
+	}
+
+	/**
+	 * @return the filaFormateador
+	 */
+	public final List<FilaImportarFormateador> getFilaFormateador() {
+		return filaFormateador;
+	}
+
+	/**
+	 * @param filaFormateador the filaFormateador to set
+	 */
+	public final void setFilaFormateador(final List<FilaImportarFormateador> filaFormateador) {
+		this.filaFormateador = filaFormateador;
+	}
+
+	/**
+	 * @return the usuario
+	 */
+	public final String getUsuario() {
+		return usuario;
+	}
+
+	/**
+	 * @param usuario the usuario to set
+	 */
+	public final void setUsuario(final String usuario) {
+		this.usuario = usuario;
+	}
+
+	/**
+	 * @return the idEntidad
+	 */
+	public final Long getIdEntidad() {
+		return idEntidad;
+	}
+
+	/**
+	 * @param idEntidad the idEntidad to set
+	 */
+	public final void setIdEntidad(final Long idEntidad) {
+		this.idEntidad = idEntidad;
+	}
+
+	/**
+	 * @return the formularios
+	 */
+	public final Map<Long, DisenyoFormulario> getFormularios() {
+		return formularios;
+	}
+
+	/**
+	 * @return the ficheros
+	 */
+	public final Map<Long, Fichero> getFicheros() {
+		return ficheros;
+	}
+
+	/**
+	 * @return the ficherosContent
+	 */
+	public final Map<Long, byte[]> getFicherosContent() {
+		return ficherosContent;
+	}
+
+	/**
+	 * @param formularios the formularios to set
+	 */
+	public final void setFormularios(final Map<Long, DisenyoFormulario> formularios) {
+		this.formularios = formularios;
+	}
+
+	/**
+	 * @param ficheros the ficheros to set
+	 */
+	public final void setFicheros(final Map<Long, Fichero> ficheros) {
+		this.ficheros = ficheros;
+	}
+
+	/**
+	 * @param ficherosContent the ficherosContent to set
+	 */
+	public final void setFicherosContent(final Map<Long, byte[]> ficherosContent) {
+		this.ficherosContent = ficherosContent;
+	}
+
+	/**
+	 * Es modo cuaderno carga
+	 * 
+	 * @return the modo
+	 */
+	public boolean isModoCC() {
+		return modo != null && modo.equals("CC");
+	}
+
+	/**
+	 * Es modo Importar
+	 * 
+	 * @return the modo
+	 */
+	public boolean isModoIM() {
+		return modo != null && modo.equals("IM");
+	}
+
+	/**
+	 * @return the modo
+	 */
+	public String getModo() {
+		return modo;
+	}
+
+	/**
+	 * @param modo the modo to set
+	 */
+	public void setModo(final String modo) {
+		this.modo = modo;
 	}
 
 }

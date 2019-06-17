@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogCuadernoCarga.header']}"/></title>
+</h:head>
+
+<h:body>
+
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
+
+   <p:ajaxStatus id="startAjaxDialog" onstart="PF('loading').show();" oncomplete="PF('loading').hide();"/>
+   <ui:include src="../common/popups.xhtml" />
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogCuadernoCarga.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogCuadernoCarga.id}"/>
+		<f:viewAction action="#{dialogCuadernoCarga.init}" />
+	</f:metadata>
+
+	<h:form id="formTramite" styleClass="margin-top-10" enctype="multipart/form-data"  style="overflow-y: auto;height: 540">
+
+			<p:growl id="growlDialogImportar" widgetVar="growlDialogImportar"	life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+			<p:outputPanel id="panelUpload" styleClass="padding-right-8 padding-left-8" rendered="#{!dialogCuadernoCarga.mostrarPanelInfo}">
+				<p:fileUpload id="fichero" mode="advanced" fileUploadListener="#{dialogCuadernoCarga.upload}" label="#{msg['botones.explorar']}" uploadLabel="#{msg['botones.anexar']}" cancelLabel="#{msg['botones.cancelar']}"
+					update="formTramite growlDialogImportar panelUpload panelInfo botonImportar" fileLimit="1"  accept="application/zip" multiple="false" fileLimitMessage="#{msg['error.ficheros.limite']}"/>
+			</p:outputPanel>
+
+			<p:outputPanel id="panelInfo" rendered="#{dialogCuadernoCarga.mostrarPanelInfo}" >
+
+				<h3 style="margin-left:10px;margin-bottom:0px">#{msg['dialogCuadernoCarga.headerTramiteVersion']}</h3>
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="imporTramitColumnaVT w10, w20, w50,grid-center w10 padding-right-18, grid-left w10" columns = "5" cellpadding = "3" cellspacing = "0"  width="100%">
+
+						<p:outputLabel value="" />
+						<p:outputLabel value="" />
+						<p:outputLabel value="#{msg['dialogCuadernoCarga.headerEstado']}" style="font-weight: bold;" />
+						<p:outputLabel value="" />
+						<p:outputLabel value="" />
+
+						<p:outputLabel value="#{msg['dialogCuadernoCarga.headerEntidad']}:" styleClass="cabeceraImportar" />
+						<p:column>
+								<p:outputLabel value="#{dialogCuadernoCarga.filaEntidad.dir3}" />
+						</p:column>
+						<p:column>
+							<p:outputLabel  value="#{msg['typeImportar.existe.' += dialogCuadernoCarga.filaEntidad.existe]}" rendered="#{dialogCuadernoCarga.filaEntidad.mensaje == null}"  />
+							<p:outputLabel value="#{dialogCuadernoCarga.filaEntidad.mensaje}" />
+						</p:column>
+						<p:outputLabel value="" />
+						<p:column>
+							<p:tooltip for="entidadIcon" value="#{msg[dialogCuadernoCarga.filaEntidad.resultado.literal]}" style="color : red; background-color : transparent;" />
+							<p:outputLabel id="entidadIcon" value=""  >
+								<i class="#{dialogCuadernoCarga.filaEntidad.resultado.icon}" style="#{dialogCuadernoCarga.filaEntidad.resultado.css}" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:outputLabel value="#{msg['dialogCuadernoCarga.headerArea']}:" styleClass="cabeceraImportar" rendered="#{dialogCuadernoCarga.filaArea.estado != null}" />
+						<p:outputLabel value="#{dialogCuadernoCarga.area.identificador} - #{dialogCuadernoCarga.area.descripcion}" rendered="#{dialogCuadernoCarga.filaArea.estado != null}" />
+						<p:column>
+							<p:outputLabel value="#{msg['typeImportar.existe.' += dialogCuadernoCarga.filaArea.existe]}" rendered="#{dialogCuadernoCarga.filaArea.estado != null and dialogCuadernoCarga.filaArea.mensaje == null}"  />
+							<p:outputLabel value="#{dialogCuadernoCarga.filaArea.mensaje}" rendered="#{!dialogCuadernoCarga.mostrarBotonArea}"  />
+						</p:column>
+						<p:column rendered="#{dialogCuadernoCarga.filaArea.estado != null}"  >
+								<p:commandButton value="..." rendered="#{dialogCuadernoCarga.mostrarBotonArea}" process="@form" actionListener="#{dialogCuadernoCarga.checkArea()}" style="margin-left:5px" >
+									<p:ajax event="dialogReturn" listener="#{dialogCuadernoCarga.returnDialogoArea}" update="areaIcon @form:botonImportar" />
+								</p:commandButton>
+						</p:column>
+						<p:column>
+								<p:tooltip for="areaIcon" value="#{msg[dialogCuadernoCarga.filaArea.resultado.literal]}" />
+								<p:outputLabel id="areaIcon" value="" rendered="#{dialogCuadernoCarga.filaArea.estado != null}" >
+									<i class="#{dialogCuadernoCarga.filaArea.resultado.icon}" style="#{dialogCuadernoCarga.filaArea.resultado.css}" />
+								</p:outputLabel>
+						</p:column>
+
+						<p:outputLabel value="#{msg['dialogCuadernoCarga.headerTramite']}:" styleClass="cabeceraImportar" rendered="#{dialogCuadernoCarga.filaTramite.estado != null}"  />
+						<p:outputLabel value="#{dialogCuadernoCarga.tramite.identificador} - #{dialogCuadernoCarga.tramite.descripcion}" rendered="#{dialogCuadernoCarga.filaTramite.estado != null}"  />
+						<p:column>
+								<p:outputLabel value="#{msg['typeImportar.existe.' += dialogCuadernoCarga.filaTramite.existe]}" rendered="#{dialogCuadernoCarga.filaTramite.mensaje == null}"  />
+								<p:outputLabel value="#{dialogCuadernoCarga.filaTramite.mensaje}" rendered="#{!dialogCuadernoCarga.mostrarBotonTramite}"  />
+						</p:column>
+						<p:column rendered="#{dialogCuadernoCarga.filaTramite.estado != null}" >
+								<p:commandButton value="..." rendered="#{dialogCuadernoCarga.mostrarBotonTramite}" process="@form" actionListener="#{dialogCuadernoCarga.checkTramite()}" style="margin-left:5px" >
+									<p:ajax event="dialogReturn" listener="#{dialogCuadernoCarga.returnDialogoTramite}" update="tramiteIcon @form:botonImportar"/>
+								</p:commandButton>
+						</p:column>
+						<p:column>
+								<p:tooltip for="tramiteIcon" value="#{msg[dialogCuadernoCarga.filaTramite.resultado.literal]}" />
+								<p:outputLabel id="tramiteIcon" value="" rendered="#{dialogCuadernoCarga.filaTramite.estado != null}" >
+									<i class="#{dialogCuadernoCarga.filaTramite.resultado.icon}" style="#{dialogCuadernoCarga.filaTramite.resultado.css}" />
+								</p:outputLabel>
+						</p:column>
+
+						<p:outputLabel value="#{msg['dialogCuadernoCarga.headerVersion']}:" styleClass="cabeceraImportar" rendered="#{dialogCuadernoCarga.filaTramiteVersion.estado != null}"  />
+						<p:outputLabel value="#{dialogCuadernoCarga.tramiteVersion.numeroVersion} (release #{dialogCuadernoCarga.tramiteVersion.release})" rendered="#{dialogCuadernoCarga.filaTramiteVersion.estado != null}"   />
+						<p:column rendered="#{dialogCuadernoCarga.filaTramiteVersion.estado != null}"  >
+							<p:outputLabel value="#{msg['typeImportar.existe.' += dialogCuadernoCarga.filaTramiteVersion.existe]}" rendered="#{dialogCuadernoCarga.filaTramiteVersion.mensaje == null}"   />
+							<p:outputLabel value="#{dialogCuadernoCarga.filaTramiteVersion.mensaje} " rendered="#{!dialogCuadernoCarga.mostrarBotonTramiteVersion}"  />
+							<p:outputLabel value=" (#{msg['dialogCuadernoCarga.headerReleaseExistente']} #{dialogCuadernoCarga.filaTramiteVersion.tramiteVersionActual.release}) " rendered="#{dialogCuadernoCarga.filaTramiteVersion.estado.toString() == 'E'}" />
+						</p:column>
+						<p:column rendered="#{dialogCuadernoCarga.filaTramiteVersion.estado != null}"  >
+								<p:commandButton value="..." rendered="#{dialogCuadernoCarga.mostrarBotonTramiteVersion}" process="@form" actionListener="#{dialogCuadernoCarga.checkTramiteVersion()}" style="margin-left:5px" >
+									<p:ajax event="dialogReturn" listener="#{dialogCuadernoCarga.returnDialogoTramiteVersion}" update="tramiteVersionIcon @form:botonImportar"/>
+								</p:commandButton>
+						</p:column>
+						<p:column>
+								<p:tooltip for="tramiteVersionIcon" value="#{msg[dialogCuadernoCarga.filaTramiteVersion.resultado.literal]}" rendered="#{dialogCuadernoCarga.filaTramiteVersion.resultado != null}" />
+								<p:outputLabel id="tramiteVersionIcon" value="" rendered="#{dialogCuadernoCarga.filaTramiteVersion.resultado != null}"   >
+									<i class="#{dialogCuadernoCarga.filaTramiteVersion.resultado.icon}" style="#{dialogCuadernoCarga.filaTramiteVersion.resultado.css}" />
+								</p:outputLabel>
+						</p:column>
+				</h:panelGrid>
+
+				<p:column rendered="#{dialogCuadernoCarga.filaTramiteRegistro.mostrarRegistro}">
+						<p class="pTituloCabecera">
+								<p:outputLabel value="#{msg['dialogCuadernoCarga.headerTramiteRegistro']}" styleClass="subTituloCabecera"   />
+						</p>
+						<h:panelGrid columns="3" rowClasses="ui-datatable-odd, "  id="dataTableRegistro" columnClasses="padding-left-4 w80,w10 grid-right,w10 grid-center" headerClass="grid-left" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
+
+							<h:column>
+								<p:outputLabel value=" " />
+								<div style="margin-bottom:7px">
+									<b><p:outputLabel value="#{msg['dialogCuadernoCarga.headerVersionOficina']}: " rendered="#{dialogCuadernoCarga.mostrarRegistroOficina}" /></b>
+									<p:outputLabel value="#{dialogCuadernoCarga.filaTramiteRegistro.oficina} - #{dialogCuadernoCarga.filaTramiteRegistro.oficinaText}" rendered="#{dialogCuadernoCarga.mostrarRegistroOficina}" />
+								</div>
+								<div style="margin-bottom:7px">
+									<b><p:outputLabel value="#{msg['dialogCuadernoCarga.headerVersionLibro']}: " rendered="#{dialogCuadernoCarga.mostrarRegistroOficina}"  /></b>
+									<p:outputLabel value="#{dialogCuadernoCarga.filaTramiteRegistro.libro} - #{dialogCuadernoCarga.filaTramiteRegistro.libroText}" rendered="#{dialogCuadernoCarga.mostrarRegistroOficina}" />
+								</div>
+								<div style="margin-bottom:7px">
+									<b><p:outputLabel value="#{msg['dialogCuadernoCarga.headerVersionTipo']}: " /></b>
+									<p:outputLabel value="#{dialogCuadernoCarga.filaTramiteRegistro.tipo} - #{dialogCuadernoCarga.filaTramiteRegistro.tipoText}"  />
+								</div>
+								<div style="margin-bottom:7px">
+									<p:outputLabel value="#{dialogCuadernoCarga.filaTramiteRegistro.mensaje}"  />
+								</div>
+							</h:column>
+
+							<h:column>
+								<p:commandButton value="..." process="@form" actionListener="#{dialogCuadernoCarga.checkTramiteRegistro()}" style="margin-left:5px" rendered="#{dialogCuadernoCarga.isNingunError()}">
+									<p:ajax event="dialogReturn" listener="#{dialogCuadernoCarga.returnDialogoRegistro}" update="tramiteRegistro @form" />
+								</p:commandButton>
+							</h:column>
+
+							<h:column>
+									<p:tooltip for="tramiteRegistro" value="#{msg[dialogCuadernoCarga.filaTramiteRegistro.resultado.literal]}" rendered="#{dialogCuadernoCarga.filaTramiteRegistro.resultado != null}" />
+									<p:outputLabel id="tramiteRegistro" value="" >
+										<i class="#{dialogCuadernoCarga.filaTramiteRegistro.resultado.icon}" style="#{dialogCuadernoCarga.filaTramiteRegistro.resultado.css}" />
+									</p:outputLabel>
+							</h:column>
+						</h:panelGrid>
+				</p:column>
+
+
+				<p:column rendered="#{!empty dialogCuadernoCarga.filasDominios}">
+
+					<p class="pTituloCabecera">
+						<p:outputLabel value="#{msg['dialogCuadernoCarga.dominios']}"  styleClass="subTituloCabecera"  />
+					</p>
+					<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaDominios" headerClass="grid-left" value="#{dialogCuadernoCarga.filasDominios}" var="fila" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
+
+						<h:column headerClass="subTituloTablaImportarIzq">
+							 <f:facet name = "header">
+							 	<p:outputLabel value="#{msg['dialogCuadernoCarga.dominio.identificador']}" style="font-weight: bold" />
+							 </f:facet>
+	      					#{fila.dominio.identificador}
+						</h:column>
+
+						<h:column headerClass="subTituloTablaImportarIzq">
+							 <f:facet name = "header">
+							 	<p:outputLabel value="#{msg['dialogCuadernoCarga.dominio.ambito']}" style="font-weight: bold" />
+							 </f:facet>
+	      					#{msg['typeAmbito.' += fila.dominio.ambito]}
+						</h:column>
+
+						<h:column headerClass="subTituloTablaImportarIzq">
+							<f:facet name = "header">
+							 	<p:outputLabel value="#{msg['dialogCuadernoCarga.dominio.estado']}" style="font-weight: bold" />
+							 </f:facet>
+							 <p:outputLabel id="labelDominio${fila.dominioActual.codigo}" value="#{msg['typeImportar.existe.' += fila.existe]}"  rendered="#{fila.mensaje == null}" />
+							 <p:outputLabel  value="#{fila.mensaje}"  rendered="#{fila.visibleBoton == false}"/>
+						</h:column>
+
+						<h:column headerClass="subTituloTablaImportarDer">
+							 <f:facet name = "header"><p:outputLabel value="#{msg['dialogCuadernoCarga.dominio.accion']}" style="font-weight: bold" /></f:facet>
+							 <p:commandButton value="..." process="@form" rendered="#{fila.visibleBoton and dialogCuadernoCarga.isNingunError()}"  actionListener="#{dialogCuadernoCarga.checkDominio(fila.dominio.identificador)}" style="margin-left:5px" >
+	      							<p:ajax event="dialogReturn" listener="#{dialogCuadernoCarga.returnDialogoDominio}" update="@form:botonImportar" />
+							</p:commandButton>
+						</h:column>
+
+						<h:column headerClass="subTituloTablaImportarIzq">
+							 <f:facet name = "header"></f:facet>
+							 <p:tooltip for="iconoDominioLabel" value="#{msg[fila.resultado.literal]}" />
+							 <p:outputLabel id="iconoDominioLabel" value="" >
+								<i id="iconoDominio${fila.dominio.codigo}" class="#{fila.resultado.icon}" style="#{fila.resultado.css}" />
+							</p:outputLabel>
+						</h:column>
+
+					</h:dataTable>
+				</p:column>
+
+				<p:column rendered="#{!empty dialogCuadernoCarga.filasFormateador}" >
+
+					<p class="pTituloCabecera">
+						<h:outputText value="#{msg['dialogCuadernoCarga.formateadores']}" styleClass="subTituloCabecera"  />
+					</p>
+					<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w60,w10 grid-center" headerClass="grid-left" value="#{dialogCuadernoCarga.filasFormateador}" var="fila" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
+						<h:column headerClass="subTituloTablaImportarIzq">
+							 <f:facet name = "header"><p:outputLabel value="#{msg['dialogCuadernoCarga.formateador.identificador']}" /></f:facet>
+	      					#{fila.formateadorFormulario.identificador}
+						</h:column>
+
+						<h:column headerClass="subTituloTablaImportarIzq">
+							 <f:facet name = "header"><p:outputLabel value="#{msg['dialogCuadernoCarga.formateador.descripcion']}" /></f:facet>
+	      					#{fila.formateadorFormulario.descripcion}
+						</h:column>
+
+						<h:column headerClass="subTituloTablaImportarIzq">
+							 <f:facet name = "header" style="text-align: left;">
+							 	<p:outputLabel value="#{msg['dialogCuadernoCarga.formateador.estado']}" />
+							 </f:facet>
+	      					<p:outputLabel value=" #{fila.mensaje}" rendered="#{fila.mensaje != null}" />
+						</h:column>
+
+						<h:column headerClass="subTituloTablaImportarIzq">
+							 <f:facet name = "header"></f:facet>
+							 <p:tooltip for="iconoFormateadorLabel" 	value="#{msg[fila.resultado.literal]}" />
+							 <p:outputLabel id="iconoFormateadorLabel" 	value="" >
+								<i class="#{fila.resultado.icon}" style="#{fila.resultado.css}" />
+							 </p:outputLabel>
+						</h:column>
+
+					</h:dataTable>
+				</p:column>
+
+				<br />
+				<br />
+				<br />
+				<p:column >
+					<p:outputLabel value="INFO:" style="display:none" />
+					<p:outputLabel value="Revision: #{dialogCuadernoCarga.revisionZip}" style="display:none" />
+					<p:outputLabel value="Modo: #{dialogCuadernoCarga.modoZip}" style="display:none" />
+					<p:outputLabel value="dir3zip: #{dialogCuadernoCarga.dir3zip}" style="display:none" />
+					<p:outputLabel value="Fecha: #{dialogTramiteImportar.fechaZip}" style="display:none" />
+					<p:outputLabel value="Usuario: #{dialogTramiteImportar.usuarioZip}" style="display:none" />
+					<p:outputLabel value="Version: #{dialogTramiteImportar.versionZip}" style="display:none" />
+				</p:column>
+
+			</p:outputPanel>
+
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton id="botonImportar" widgetVar="botonImportarWidget" onclick="disableClick()"  oncomplete="enableClick()" value="#{msg['botones.procesar']}" actionListener="#{dialogCuadernoCarga.importar}" process="@this" styleClass="boton-azul" update="@form growlDialogImportar" disabled="#{!dialogCuadernoCarga.isTodoCorrecto()}" />
+		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogCuadernoCarga.cancelar}" process="@this" />
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+
+ 			<h:outputScript >
+
+				function getWidgetVarById(id) {
+				   for (var propertyName in PrimeFaces.widgets) {
+				     if (PrimeFaces.widgets[propertyName].id === id) {
+				       return PrimeFaces.widgets[propertyName];
+				     }
+				   }
+				}
+
+				function disableClick(){
+					var elemento = getWidgetVarById('formTramite:botonImportar');
+					elemento.disable();
+				}
+
+				function enableClick(){
+					var elemento = getWidgetVarById('formTramite:botonImportar');
+					elemento.enable();
+				}
+
+		</h:outputScript>
+	</h:form>
+
+</h:body>
+
+</f:view>
+</html>
