@@ -15,20 +15,17 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class DialogPropiedadConfiguracion extends DialogControllerBase {
 
-	/**
-	 * Servicio.
-	 */
+	/** Servicio. */
 	@Inject
 	private ConfiguracionGlobalService configuracionGlobalService;
 
-	/**
-	 * Id elemento a tratar.
-	 */
+	/** Id elemento a tratar. */
 	private String id;
 
-	/**
-	 * Datos elemento.
-	 */
+	/** Descripcion. */
+	private String descripcion;
+
+	/** Datos elemento. */
 	private ConfiguracionGlobal data;
 
 	/**
@@ -41,9 +38,17 @@ public class DialogPropiedadConfiguracion extends DialogControllerBase {
 
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new ConfiguracionGlobal();
+			descripcion = "";
 		} else {
 			if (id != null) {
 				data = configuracionGlobalService.getConfiguracionGlobal(Long.valueOf(id));
+
+				if (data.isNoModificable()) {
+					descripcion = data.getDescripcion() + " ("
+							+ UtilJSF.getLiteral("dialogPropiedadConfiguracion.noModificable") + ")";
+				} else {
+					descripcion = data.getDescripcion();
+				}
 			}
 		}
 	}
@@ -103,10 +108,24 @@ public class DialogPropiedadConfiguracion extends DialogControllerBase {
 	public void setData(final ConfiguracionGlobal data) {
 		this.data = data;
 	}
-	
+
 	/** Ayuda. */
-    public void ayuda() {
-        UtilJSF.openHelp("propiedadesConfiguracionDialog");
-    }
+	public void ayuda() {
+		UtilJSF.openHelp("propiedadesConfiguracionDialog");
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descripcion the descripcion to set
+	 */
+	public void setDescripcion(final String descripcion) {
+		this.descripcion = descripcion;
+	}
 
 }

@@ -378,7 +378,8 @@ create table STG_CNFGLO
    CFG_CODIGO           NUMBER(18)           not null,
    CFG_PROP             VARCHAR2(100 CHAR)   not null,
    CFG_VALOR            VARCHAR2(500 CHAR),
-   CFG_DESCR            VARCHAR2(255 CHAR)   not null
+   CFG_DESCR            VARCHAR2(255 CHAR)   not null,
+   CFG_NOMOD            NUMBER(1)            default 0 not null
 );
 
 comment on table STG_CNFGLO is
@@ -395,6 +396,9 @@ comment on column STG_CNFGLO.CFG_VALOR is
 
 comment on column STG_CNFGLO.CFG_DESCR is
 'Descripción propiedad';
+
+comment on column STG_CNFGLO.CFG_NOMOD is
+'No modificable';
 
 alter table STG_CNFGLO
    add constraint STG_CNFGLO_PK primary key (CFG_CODIGO);

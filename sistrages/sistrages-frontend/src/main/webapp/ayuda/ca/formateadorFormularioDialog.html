@@ -16,6 +16,8 @@
 		<li><span class="nombreCampo">Identificador:</span> codi &uacute;nic identificador del formatador</li>
 		<li><span class="nombreCampo">Classname:</span> classname de la classe Java que implementa el formatador a definir. Com a exemple podem agafar la implementaci&oacute; del formatador gen&egrave;ric, que tindr&agrave; com classname <i>es.caib.sistramit.core.service.component.formulari.intern.formateadores.impl.FormateadorGenerico</i></li>
 		<li><span class="nombreCampo">Descripci&oacute;:</span> text descriptiu de la implementaci&oacute; del formatador.</li>
+		<li><span class="nombreCampo">Genèric:</span> <i>casella de selecció</i> que permet establir el formatador com a genèric per a l'entitat. Això vol dir que si a nivell de versió de tràmit no s'estableix un formatador per a les plantilles de visualització dels formularis, s'utilitzarà el formatador establert com a genèric.</li>
+		<li><span class="nombreCampo">Desactivar personalització:</span> <i>casella de selecció</i> que deshabilita la possibilitat de sobreescriure les plantilles del formatador a nivell de versió del tràmit.</li>		
 		</ul>
 		</li>
 	</ul>
@@ -23,6 +25,7 @@
 <h2 class="stgH2">OPERATIVA</h2>
 <p>
 	<ul>
+		<li><span class="boton">Editar plantilles</span>: aquesta operativa únicament està disponible si es marca el formatador com a genèric, i permet fixar les plantilles de visualització per idioma per al formatador.</li>
 		<li><span class="boton">Desar</span>: tanca la pantalla desant els canvis.</li>
 		<li><span class="boton">Cancel&middot;lar</span>: tanca la pantalla sense desar els canvis.</li>
 	</ul>

@@ -34,6 +34,10 @@ public class JConfiguracionGlobal implements IModelApi {
 	@Column(name = "CFG_DESCR", nullable = false)
 	private String descripcion;
 
+	/** Indica si es no modificable */
+	@Column(name = "CFG_NOMOD", nullable = false, precision = 1, scale = 0)
+	private boolean noModificable;
+
 	public JConfiguracionGlobal() {
 		super();
 	}
@@ -70,12 +74,27 @@ public class JConfiguracionGlobal implements IModelApi {
 		this.descripcion = descripcion;
 	}
 
+	/**
+	 * @return the noModificable
+	 */
+	public final boolean isNoModificable() {
+		return noModificable;
+	}
+
+	/**
+	 * @param noModificable the noModificable to set
+	 */
+	public final void setNoModificable(final boolean noModificable) {
+		this.noModificable = noModificable;
+	}
+
 	public ConfiguracionGlobal toModel() {
 		final ConfiguracionGlobal model = new ConfiguracionGlobal();
 		model.setCodigo(codigo);
 		model.setPropiedad(propiedad);
 		model.setValor(valor);
 		model.setDescripcion(descripcion);
+		model.setNoModificable(noModificable);
 		return model;
 	}
 
@@ -85,6 +104,7 @@ public class JConfiguracionGlobal implements IModelApi {
 		jConfiguracionglobal.setDescripcion(model.getDescripcion());
 		jConfiguracionglobal.setPropiedad(model.getPropiedad());
 		jConfiguracionglobal.setValor(model.getValor());
+		jConfiguracionglobal.setNoModificable(model.isNoModificable());
 		return jConfiguracionglobal;
 	}
 

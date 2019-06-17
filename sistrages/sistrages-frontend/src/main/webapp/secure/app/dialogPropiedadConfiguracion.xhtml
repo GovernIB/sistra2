@@ -36,17 +36,17 @@
 				 	<p:inputText id="codigo" value="#{dialogPropiedadConfiguracion.data.propiedad}" disabled="#{!dialogPropiedadConfiguracion.alta}" required="true" size="40" />
 
 				 	<p:outputLabel for="valor" value="#{msg['dialogPropiedadConfiguracion.headerValor']}" />
-				 	<p:inputText id="valor" value="#{dialogPropiedadConfiguracion.data.valor}" disabled="#{dialogPropiedadConfiguracion.consulta}" size="40" maxlength="500"/>
+				 	<p:inputText id="valor" value="#{dialogPropiedadConfiguracion.data.valor}" disabled="#{dialogPropiedadConfiguracion.consulta}" size="40" maxlength="500" readonly="#{dialogPropiedadConfiguracion.data.noModificable}" />
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogPropiedadConfiguracion.headerDescripcion']}" />
-				 	<p:inputTextarea id="descripcion" value="#{dialogPropiedadConfiguracion.data.descripcion}" disabled="#{!dialogPropiedadConfiguracion.alta}" required="true" rows="10" cols="40"  />
+				 	<p:inputTextarea id="descripcion" value="#{dialogPropiedadConfiguracion.descripcion}" disabled="#{!dialogPropiedadConfiguracion.alta}" required="true" rows="10" cols="40"  />
 
 				</h:panelGrid>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogPropiedadConfiguracion.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogPropiedadConfiguracion.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{!dialogPropiedadConfiguracion.data.noModificable}" />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPropiedadConfiguracion.cancelar()}" process="@this"/>
 						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogPropiedadConfiguracion.ayuda()}" process="@this"/>
 					</f:facet>

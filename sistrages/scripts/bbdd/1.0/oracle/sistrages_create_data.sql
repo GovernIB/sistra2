@@ -8,10 +8,10 @@ insert into STG_PROCES (PROC_IDENT,PROC_INSTAN,PROC_FECHA) values ('MAESTRO','NO
 Insert into STG_PLUGIN (PLG_CODIGO,PLG_AMBITO,PLG_CODENT,PLG_TIPO,PLG_DESCR,PLG_CLASS,PLG_PROPS,PLG_PREPRO) values (STG_PLUGIN_SEQ.nextval,'G',null,'L','Plugin login mock ','es.caib.sistra2.commons.plugins.autenticacion.mock.ComponenteAutenticacionPluginMock','[]','pluginsib.login.mock');
 Insert into STG_PLUGIN (PLG_CODIGO,PLG_AMBITO,PLG_CODENT,PLG_TIPO,PLG_DESCR,PLG_CLASS,PLG_PROPS,PLG_PREPRO) values (STG_PLUGIN_SEQ.nextval,'G',null,'M','Plugin email mock ','es.caib.sistra2.commons.plugins.email.mock.EmailPluginMock','[]','pluginsib.email.mock');
 
+INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR, CFG_NOMOD) VALUES (STG_CNFGLO_SEQ.nextval, 'sistra2.version', '0.0.1-SNAPSHOT', 'Versión Sistra2', 1);
 insert into  STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) values (STG_CNFGLO_SEQ.NEXTVAL, 'definicionTramite.lenguajeDefecto','ca','Lenguaje por defecto si no existe el lenguaje indicado');
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistramit.url', 'http://localhost:8080/sistramitfront', 'Url Frontal sistramit');
-INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistramit.idiomas', 'ca,es', 'Idiomas sistramit. En caso de cambiar los idiomas, se debe reiniciar el servidor.');
-INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistra2.version', '0.0.1-SNAPSHOT', 'Versión Sistra2');
+INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistramit.idiomas', 'ca,es', 'Idiomas permitidos en sistramit. En caso de cambiar los idiomas, se debe reiniciar el servidor.');
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistramit.rest.url', 'http://localhost:8080/sistramitws/rest/interna', 'Url Rest sistramit');
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistramit.rest.user', 'api-stt', 'Usuario Rest sistramit');
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistramit.rest.pwd', '1234', 'Contraseña Rest sistramit');

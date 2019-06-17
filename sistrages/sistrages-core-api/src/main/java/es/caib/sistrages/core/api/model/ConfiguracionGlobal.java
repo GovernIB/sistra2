@@ -30,6 +30,11 @@ public class ConfiguracionGlobal extends ModelApi {
 	private String descripcion;
 
 	/**
+	 * Es no modificable.
+	 */
+	private boolean noModificable;
+
+	/**
 	 * Obtiene el valor de codigo.
 	 *
 	 * @return el valor de codigo
@@ -41,8 +46,7 @@ public class ConfiguracionGlobal extends ModelApi {
 	/**
 	 * Establece el valor de codigo.
 	 *
-	 * @param codigo
-	 *            el nuevo valor de codigo
+	 * @param codigo el nuevo valor de codigo
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -60,8 +64,7 @@ public class ConfiguracionGlobal extends ModelApi {
 	/**
 	 * Establece el valor de propiedad.
 	 *
-	 * @param codigo
-	 *            el nuevo valor de propiedad
+	 * @param codigo el nuevo valor de propiedad
 	 */
 	public void setPropiedad(final String codigo) {
 		this.propiedad = codigo;
@@ -79,8 +82,7 @@ public class ConfiguracionGlobal extends ModelApi {
 	/**
 	 * Establece el valor de valor.
 	 *
-	 * @param valor
-	 *            el nuevo valor de valor
+	 * @param valor el nuevo valor de valor
 	 */
 	public void setValor(final String valor) {
 		this.valor = valor;
@@ -98,11 +100,24 @@ public class ConfiguracionGlobal extends ModelApi {
 	/**
 	 * Establece el valor de descripcion.
 	 *
-	 * @param descripcion
-	 *            el nuevo valor de descripcion
+	 * @param descripcion el nuevo valor de descripcion
 	 */
 	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+	/**
+	 * @return the noModificable
+	 */
+	public boolean isNoModificable() {
+		return noModificable;
+	}
+
+	/**
+	 * @param noModificable the noModificable to set
+	 */
+	public void setNoModificable(final boolean noModificable) {
+		this.noModificable = noModificable;
 	}
 
 }
