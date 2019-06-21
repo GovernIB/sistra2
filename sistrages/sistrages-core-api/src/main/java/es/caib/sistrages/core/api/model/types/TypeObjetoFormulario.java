@@ -48,7 +48,12 @@ public enum TypeObjetoFormulario {
 	/**
 	 * pagina.
 	 */
-	PAGINA("PG");
+	PAGINA("PG"),
+
+	/**
+	 * oculto.
+	 */
+	CAMPO_OCULTO("OC");
 
 	private String valor;
 

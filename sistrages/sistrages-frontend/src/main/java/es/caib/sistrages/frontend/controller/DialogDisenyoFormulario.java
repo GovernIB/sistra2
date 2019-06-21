@@ -149,6 +149,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 **/
 	private TypeAccionFormulario accionPendiente;
 
+	private boolean mostrarOcultos;
+
 	/**
 	 * Inicializacion.
 	 **/
@@ -283,9 +285,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Abre un di&aacute;logo para previsualizar tramite.
 	 *
-	 * @param check
-	 *            Indica si tiene que comprobar si has modificado el componente
-	 *            anterior.
+	 * @param check Indica si tiene que comprobar si has modificado el componente
+	 *              anterior.
 	 */
 	public void previsualizar(final boolean check) {
 
@@ -308,9 +309,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Editar componente.
 	 *
-	 * @param check
-	 *            Indica si tiene que comprobar si has modificado el componente
-	 *            anterior.
+	 * @param check Indica si tiene que comprobar si has modificado el componente
+	 *              anterior.
 	 */
 	public void editarComponente(final boolean check) {
 
@@ -335,8 +335,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Cambiar edicion componente.
 	 *
-	 * @param idComponente
-	 *            the id componente
+	 * @param idComponente the id componente
 	 */
 	private void cambiarEdicionComponente(final String idComponente) {
 		limpiaSeleccion();
@@ -399,6 +398,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			break;
 		case CHECKBOX:
 			pagina = "/secure/app/dialogDisenyoFormularioComponente.xhtml";
+			break;
+		case CAMPO_OCULTO:
+			pagina = "/secure/app/dialogDisenyoFormularioComponenteOC.xhtml";
 			break;
 		// TODO PENDIENTE
 		default:
@@ -636,8 +638,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de traducciones.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	private void returnDialogoTraducciones(final SelectEvent event) {
 		try {
@@ -720,9 +721,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Cierra la página
 	 *
-	 * @param check
-	 *            Indica si tiene que comprobar si has modificado el componente
-	 *            anterior.
+	 * @param check Indica si tiene que comprobar si has modificado el componente
+	 *              anterior.
 	 */
 	public void cancelar(final boolean check) {
 
@@ -781,9 +781,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Abre dialogo para propiedades formulario.
 	 *
-	 * @param check
-	 *            Indica si tiene que comprobar si has modificado el componente
-	 *            anterior.
+	 * @param check Indica si tiene que comprobar si has modificado el componente
+	 *              anterior.
 	 *
 	 **/
 	public void abrirPropiedadesFormulario(final boolean check) {
@@ -822,9 +821,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Método copiar
 	 *
-	 * @param check
-	 *            Indica si tiene que comprobar si has modificado el componente
-	 *            anterior.
+	 * @param check Indica si tiene que comprobar si has modificado el componente
+	 *              anterior.
 	 */
 	public void copy(final boolean check) {
 		if (check && isModificadoSinGuardar(TypeAccionFormulario.COPIAR)) {
@@ -878,9 +876,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Método cortar
 	 *
-	 * @param check
-	 *            Indica si tiene que comprobar si has modificado el componente
-	 *            anterior.
+	 * @param check Indica si tiene que comprobar si has modificado el componente
+	 *              anterior.
 	 */
 	public void cut(final boolean check) {
 		if (check && isModificadoSinGuardar(TypeAccionFormulario.CORTAR)) {
@@ -906,9 +903,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		} else {
 			tipoObjetoCopy = ((ComponenteFormulario) objetoFormularioEdit).getTipo();
 		}
-		if (tipoObjetoCopy == TypeObjetoFormulario.CAMPO_TEXTO || tipoObjetoCopy == TypeObjetoFormulario.CHECKBOX
-				|| tipoObjetoCopy == TypeObjetoFormulario.SELECTOR || tipoObjetoCopy == TypeObjetoFormulario.SECCION
-				|| tipoObjetoCopy == TypeObjetoFormulario.ETIQUETA || tipoObjetoCopy == TypeObjetoFormulario.LINEA) {
+		if (tipoObjetoCopy == TypeObjetoFormulario.CAMPO_TEXTO || tipoObjetoCopy == TypeObjetoFormulario.CAMPO_OCULTO
+				|| tipoObjetoCopy == TypeObjetoFormulario.CHECKBOX || tipoObjetoCopy == TypeObjetoFormulario.SELECTOR
+				|| tipoObjetoCopy == TypeObjetoFormulario.SECCION || tipoObjetoCopy == TypeObjetoFormulario.ETIQUETA
+				|| tipoObjetoCopy == TypeObjetoFormulario.LINEA) {
 			seleccionable = true;
 		} else {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.noimplementado"), true);
@@ -928,9 +926,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Método paste.
 	 *
-	 * @param check
-	 *            Indica si tiene que comprobar si has modificado el componente
-	 *            anterior.
+	 * @param check Indica si tiene que comprobar si has modificado el componente
+	 *              anterior.
 	 */
 	public void paste(final boolean check) {
 
@@ -948,8 +945,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			return;
 		}
 
-		if (tipoObjetoCopy == TypeObjetoFormulario.CAMPO_TEXTO || tipoObjetoCopy == TypeObjetoFormulario.CHECKBOX
-				|| tipoObjetoCopy == TypeObjetoFormulario.SELECTOR) {
+		if (tipoObjetoCopy == TypeObjetoFormulario.CAMPO_TEXTO || tipoObjetoCopy == TypeObjetoFormulario.CAMPO_OCULTO
+				|| tipoObjetoCopy == TypeObjetoFormulario.CHECKBOX || tipoObjetoCopy == TypeObjetoFormulario.SELECTOR) {
 
 			/**
 			 * Si es de tipo texto, checkbox o selector, los pasos a seguir son:
@@ -981,7 +978,11 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				return;
 			}
 
-			orden = UtilDisenyo.ordenInsercionComponente(linea, ordenSeleccionado, posicionamiento);
+			if (TypeObjetoFormulario.CAMPO_OCULTO.equals(tipoObjetoCopy)) {
+				orden = UtilDisenyo.ordenInsercionComponenteOculto(linea, ordenSeleccionado, posicionamiento);
+			} else {
+				orden = UtilDisenyo.ordenInsercionComponente(linea, ordenSeleccionado, posicionamiento);
+			}
 			if (orden == null) {
 				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"));
 				return;
@@ -1118,9 +1119,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Mover página a la izquierda
 	 *
-	 * @param check
-	 *            Indica si tiene que comprobar si has modificado el componente
-	 *            anterior.
+	 * @param check Indica si tiene que comprobar si has modificado el componente
+	 *              anterior.
 	 */
 	public void moverPaginaIzq(final boolean check) {
 		if (check && isModificadoSinGuardar(TypeAccionFormulario.MOVER_IZQ)) {
@@ -1156,9 +1156,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Mover página a la derecha.
 	 *
-	 * @param check
-	 *            Indica si tiene que comprobar si has modificado el componente
-	 *            anterior.
+	 * @param check Indica si tiene que comprobar si has modificado el componente
+	 *              anterior.
 	 */
 	public void moverPaginaDer(final boolean check) {
 		if (check && isModificadoSinGuardar(TypeAccionFormulario.MOVER_DER)) {
@@ -1177,8 +1176,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 
@@ -1215,6 +1213,16 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			return;
 		}
 		insertaCampo(TypeObjetoFormulario.CAMPO_TEXTO);
+	}
+
+	/** Inserta un componente de tipo campo oculto. **/
+	public void insertaCampoOculto() {
+
+		if (isModificadoSinGuardar(TypeAccionFormulario.ADD_OCULTO)) {
+			return;
+		}
+		insertaCampo(TypeObjetoFormulario.CAMPO_OCULTO);
+		mostrarOcultos = true;
 	}
 
 	/** Inserta un componente de tipo checkbox. **/
@@ -1259,7 +1267,11 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				ordenSeleccionado = campo.getOrden();
 			}
 
-			orden = UtilDisenyo.ordenInsercionComponente(linea, ordenSeleccionado, posicionamiento);
+			if (TypeObjetoFormulario.CAMPO_OCULTO.equals(tipoCampo)) {
+				orden = UtilDisenyo.ordenInsercionComponenteOculto(linea, ordenSeleccionado, posicionamiento);
+			} else {
+				orden = UtilDisenyo.ordenInsercionComponente(linea, ordenSeleccionado, posicionamiento);
+			}
 
 			if (orden != null) {
 				final ObjetoFormulario componente = formIntService.addComponenteFormulario(tipoCampo, idPagina,
@@ -1503,6 +1515,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				case CHECKBOX:
 					pagina = "/secure/app/dialogDisenyoFormularioComponente.xhtml";
 					break;
+				case CAMPO_OCULTO:
+					pagina = "/secure/app/dialogDisenyoFormularioComponenteOC.xhtml";
+					break;
 				default:
 					break;
 				}
@@ -1527,9 +1542,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Mover componente a la izquierda.
 	 *
-	 * @param check
-	 *            Indica si tiene que comprobar si has modificado el componente
-	 *            anterior.
+	 * @param check Indica si tiene que comprobar si has modificado el componente
+	 *              anterior.
 	 */
 	public void moverObjetoIzq(final boolean check) {
 		if (check && isModificadoSinGuardar(TypeAccionFormulario.MOVER_IZQ)) {
@@ -1564,9 +1578,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Mover componente a la derecha
 	 *
-	 * @param check
-	 *            Indica si tiene que comprobar si has modificado el componente
-	 *            anterior.
+	 * @param check Indica si tiene que comprobar si has modificado el componente
+	 *              anterior.
 	 */
 	public void moverObjetoDer(final boolean check) {
 		if (check && isModificadoSinGuardar(TypeAccionFormulario.MOVER_DER)) {
@@ -1686,8 +1699,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	@SuppressWarnings("unchecked")
 	public void returnDialogoListaValoresFijaCIN(final SelectEvent event) {
@@ -1723,8 +1735,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoBusquedaDominio(final SelectEvent event) {
 
@@ -1851,15 +1862,14 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
-		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 700);
+		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.valueOf(modoAcceso), maps, true, 700);
 
 	}
 
 	/**
 	 * Retorno dialogo del script de personalizacion.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoScriptAutorrelleno(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -1882,8 +1892,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del script de personalizacion.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoScriptSoloLectura(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -1906,8 +1915,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del script de personalizacion.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoScriptValidacion(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -1960,9 +1968,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Abre el dialog de ver estructura.
 	 *
-	 * @param check
-	 *            Indica si tiene que comprobar si has modificado el componente
-	 *            anterior.
+	 * @param check Indica si tiene que comprobar si has modificado el componente
+	 *              anterior.
 	 */
 	public void abrirDialogoEstructura(final boolean check) {
 
@@ -2025,8 +2032,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public String getUrlIframe() {
 		final String idComponente = getIdComponente();
 
-		return urlIframe + "&id=" + id + "&page=" + paginaActual + "&lang=" + idioma
-				+ (idComponente != null ? "&idComponente=" + idComponente : "");
+		return urlIframe + "&id=" + id + "&page=" + paginaActual + "&lang=" + idioma + "&showHidden="
+				+ isMostrarOcultos() + (idComponente != null ? "&idComponente=" + idComponente : "");
 	}
 
 	public void setUrlIframe(final String urlIframe) {
@@ -2057,8 +2064,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visiblePropiedades
-	 *            the visiblePropiedades to set
+	 * @param visiblePropiedades the visiblePropiedades to set
 	 */
 	public void setVisiblePropiedades(final boolean visiblePropiedades) {
 		this.visiblePropiedades = visiblePropiedades;
@@ -2072,8 +2078,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleScripts
-	 *            the visibleScripts to set
+	 * @param visibleScripts the visibleScripts to set
 	 */
 	public void setVisibleScripts(final boolean visibleScripts) {
 		this.visibleScripts = visibleScripts;
@@ -2087,8 +2092,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleEstilos
-	 *            the visibleEstilos to set
+	 * @param visibleEstilos the visibleEstilos to set
 	 */
 	public void setVisibleEstilos(final boolean visibleEstilos) {
 		this.visibleEstilos = visibleEstilos;
@@ -2166,8 +2170,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idFormulario
-	 *            the idFormulario to set
+	 * @param idFormulario the idFormulario to set
 	 */
 	public void setIdFormulario(final String idFormulario) {
 		this.idFormulario = idFormulario;
@@ -2392,9 +2395,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
 				resultado = orden != 0 ? orden < numObjetosLinea() : false;
 			} else if (objetoFormularioEdit instanceof ComponenteFormulario) {
-				resultado = orden != 0
-						? orden < ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA && orden < numObjetosLinea()
-						: false;
+				resultado = orden != 0 ? orden < numObjetosLinea() : false;
 			}
 		}
 
@@ -2435,5 +2436,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			}
 		}
 		return numObj;
+	}
+
+	public boolean isMostrarOcultos() {
+		return mostrarOcultos;
+	}
+
+	public void setMostrarOcultos(final boolean mostrarOcultos) {
+		this.mostrarOcultos = mostrarOcultos;
 	}
 }

@@ -243,8 +243,7 @@ public class JPasoTramitacion implements IModelApi {
 	}
 
 	/**
-	 * @param tipoPaso
-	 *            the tipoPaso to set
+	 * @param tipoPaso the tipoPaso to set
 	 */
 	public void setTipoPaso(final String tipoPaso) {
 		this.tipoPaso = tipoPaso;
@@ -296,6 +295,7 @@ public class JPasoTramitacion implements IModelApi {
 		paso.setCodigoOficinaRegistro(this.getPasoRegistrar().getCodigoOficinaRegistro());
 		paso.setCodigoTipoAsunto(this.getPasoRegistrar().getCodigoTipoAsunto());
 		paso.setPermiteSubsanar(this.getPasoRegistrar().isPermiteSubsanar());
+		paso.setAvisoAlFinalizar(this.getPasoRegistrar().isAvisoAlFinalizar());
 		if (this.getPasoRegistrar().getInstruccionesSubsanacion() != null) {
 			paso.setInstruccionesSubsanacion(this.getPasoRegistrar().getInstruccionesSubsanacion().toModel());
 		}
@@ -319,7 +319,9 @@ public class JPasoTramitacion implements IModelApi {
 		if (this.getPasoRegistrar().getScriptValidarRegistrar() != null) {
 			paso.setScriptValidarRegistrar(this.getPasoRegistrar().getScriptValidarRegistrar().toModel());
 		}
-
+		if (this.getPasoRegistrar().getScriptAlFinalizar() != null) {
+			paso.setScriptAlFinalizar(this.getPasoRegistrar().getScriptAlFinalizar().toModel());
+		}
 		return paso;
 	}
 

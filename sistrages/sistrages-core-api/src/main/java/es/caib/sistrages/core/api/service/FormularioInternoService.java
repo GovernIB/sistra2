@@ -19,8 +19,7 @@ public interface FormularioInternoService {
 	/**
 	 * Obtiene el valor de un formulario.
 	 *
-	 * @param pId
-	 *            identificador de formulario
+	 * @param pId identificador de formulario
 	 * @return el valor del formulario
 	 */
 	DisenyoFormulario getFormularioInterno(Long pId);
@@ -28,8 +27,7 @@ public interface FormularioInternoService {
 	/**
 	 * Obtiene el valor de formulario y las paginas sin su contenido.
 	 *
-	 * @param pId
-	 *            identificador de formulario
+	 * @param pId identificador de formulario
 	 * @return el valor de formulario y las paginas
 	 */
 	DisenyoFormulario getFormularioInternoPaginas(Long pId);
@@ -37,8 +35,7 @@ public interface FormularioInternoService {
 	/**
 	 * Obtiene el valor de formulario y las paginas con su contenido.
 	 *
-	 * @param pId
-	 *            identificador de formulario
+	 * @param pId identificador de formulario
 	 * @return el valor de formulario y las paginas
 	 */
 	DisenyoFormulario getFormularioInternoCompleto(Long pId);
@@ -46,16 +43,14 @@ public interface FormularioInternoService {
 	/**
 	 * Actualiza un formulario.
 	 *
-	 * @param pFormInt
-	 *            formulario
+	 * @param pFormInt formulario
 	 */
 	void updateFormularioInterno(DisenyoFormulario pFormInt);
 
 	/**
 	 * Obtiene el valor de una pagina del formulario.
 	 *
-	 * @param pId
-	 *            identificador de la pagina del formulario
+	 * @param pId identificador de la pagina del formulario
 	 * @return el valor de la pagina del formulario
 	 */
 	PaginaFormulario getPaginaFormulario(Long pId);
@@ -63,8 +58,7 @@ public interface FormularioInternoService {
 	/**
 	 * Obtiene el valor del contenido de una pagina del formulario.
 	 *
-	 * @param pId
-	 *            identificador de la pagina del formulario
+	 * @param pId identificador de la pagina del formulario
 	 * @return el contenido de la pagina del formulario
 	 */
 	PaginaFormulario getContenidoPaginaFormulario(Long pId);
@@ -72,16 +66,11 @@ public interface FormularioInternoService {
 	/**
 	 * Añade un componente o linea al formulario.
 	 *
-	 * @param pTipoObjeto
-	 *            tipo de objeto a añadir
-	 * @param pIdPagina
-	 *            identificador de la pagina
-	 * @param pIdLinea
-	 *            identificador de la linea
-	 * @param pOrden
-	 *            orden
-	 * @param pPosicion
-	 *            posicion
+	 * @param pTipoObjeto tipo de objeto a añadir
+	 * @param pIdPagina   identificador de la pagina
+	 * @param pIdLinea    identificador de la linea
+	 * @param pOrden      orden
+	 * @param pPosicion   posicion
 	 * @return objeto formulario
 	 */
 	ObjetoFormulario addComponenteFormulario(TypeObjetoFormulario pTipoObjeto, Long pIdPagina, Long pIdLinea,
@@ -90,19 +79,14 @@ public interface FormularioInternoService {
 	/**
 	 * Copia un componente.
 	 *
-	 * @param pIdPagina
-	 *            identificador de la pagina
-	 * @param pIdLinea
-	 *            identificador de la linea
-	 * @param pOrden
-	 *            orden
-	 * @param pPosicion
-	 *            posicion
-	 * @param idComponenteOriginal
-	 *            Id componente original que se desea copy/cut
-	 * @param cut
-	 *            True si quiere cortar (y por tanto se borrará el original) y False
-	 *            si sólo se quiere clonar (no se borrará el original)
+	 * @param pIdPagina            identificador de la pagina
+	 * @param pIdLinea             identificador de la linea
+	 * @param pOrden               orden
+	 * @param pPosicion            posicion
+	 * @param idComponenteOriginal Id componente original que se desea copy/cut
+	 * @param cut                  True si quiere cortar (y por tanto se borrará el
+	 *                             original) y False si sólo se quiere clonar (no se
+	 *                             borrará el original)
 	 *
 	 * @return objeto formulario
 	 */
@@ -112,8 +96,7 @@ public interface FormularioInternoService {
 	/**
 	 * Actualiza un componente del formulario.
 	 *
-	 * @param pComponente
-	 *            componente
+	 * @param pComponente componente
 	 * @return objeto formulario
 	 */
 	ObjetoFormulario updateComponenteFormulario(ComponenteFormulario pComponente);
@@ -121,8 +104,7 @@ public interface FormularioInternoService {
 	/**
 	 * Obtiene el valor de un componente del formulario.
 	 *
-	 * @param pId
-	 *            identificador del componente
+	 * @param pId identificador del componente
 	 * @return el valor del componente del formulario
 	 */
 	ComponenteFormulario getComponenteFormulario(final Long pId);
@@ -130,44 +112,37 @@ public interface FormularioInternoService {
 	/**
 	 * Elimina un componente del formulario.
 	 *
-	 * @param pId
-	 *            identificador del componente
+	 * @param pId identificador del componente
 	 */
 	void removeComponenteFormulario(final Long pId);
 
 	/**
 	 * Elimina un linea del formulario.
 	 *
-	 * @param pId
-	 *            identificador de la linea
+	 * @param pId identificador de la linea
 	 */
 	void removeLineaFormulario(final Long pId);
 
 	/**
 	 * Cambia el orden de un componente del formulario.
 	 *
-	 * @param pId
-	 *            identificador del componente
-	 * @param pOrden
-	 *            orden
+	 * @param pId    identificador del componente
+	 * @param pOrden orden
 	 */
 	void updateOrdenComponenteFormulario(Long pId, Integer pOrden);
 
 	/**
 	 * Cambia el orden de la linea del formulario.
 	 *
-	 * @param pId
-	 *            identificador de la linea
-	 * @param pOrden
-	 *            orden
+	 * @param pId    identificador de la linea
+	 * @param pOrden orden
 	 */
 	void updateOrdenLineaFormulario(Long pId, Integer pOrden);
 
 	/**
 	 * Obtiene la lista de las plantillas idioma del formulario.
 	 *
-	 * @param pId
-	 *            identificador de la plantilla
+	 * @param pId identificador de la plantilla
 	 * @return el valor de la lista de plantillas idioma del formulario
 	 */
 	List<PlantillaIdiomaFormulario> getListaPlantillaIdiomaFormulario(Long pId);
@@ -175,14 +150,10 @@ public interface FormularioInternoService {
 	/**
 	 * Actualiza la plantilla idioma del formulario.
 	 *
-	 * @param idEntidad
-	 *            identificador de la entidad
-	 * @param idPlantilla
-	 *            identificador de la plantilla
-	 * @param plantilla
-	 *            plantilla idioma
-	 * @param contents
-	 *            contenido del fichero de la plantilla para el idioma
+	 * @param idEntidad   identificador de la entidad
+	 * @param idPlantilla identificador de la plantilla
+	 * @param plantilla   plantilla idioma
+	 * @param contents    contenido del fichero de la plantilla para el idioma
 	 * @return the plantilla idioma formulario
 	 */
 	PlantillaIdiomaFormulario uploadPlantillaIdiomaFormulario(Long idEntidad, final Long idPlantilla,
@@ -191,14 +162,11 @@ public interface FormularioInternoService {
 	/**
 	 * Actualiza la plantilla formateador.
 	 *
-	 * @param idEntidad
-	 *            identificador de la entidad
-	 * @param idPlantillaFormateador
-	 *            identificador de la plantilla
-	 * @param plantillaFormateador
-	 *            plantilla idioma
-	 * @param contents
-	 *            contenido del fichero de la plantilla para el idioma
+	 * @param idEntidad              identificador de la entidad
+	 * @param idPlantillaFormateador identificador de la plantilla
+	 * @param plantillaFormateador   plantilla idioma
+	 * @param contents               contenido del fichero de la plantilla para el
+	 *                               idioma
 	 * @return the plantilla idioma formulario
 	 */
 	PlantillaFormateador uploadPlantillaFormateador(Long idEntidad, Long idPlantillaFormateador,
@@ -207,8 +175,7 @@ public interface FormularioInternoService {
 	/**
 	 * Elimina la plantilla idioma del formulario.
 	 *
-	 * @param plantillaIdiomaFormulario
-	 *            plantilla idioma del formulario
+	 * @param plantillaIdiomaFormulario plantilla idioma del formulario
 	 */
 	void removePlantillaIdiomaFormulario(PlantillaIdiomaFormulario plantillaIdiomaFormulario);
 
@@ -222,10 +189,8 @@ public interface FormularioInternoService {
 	/**
 	 * Genera HTML para la página de formulario para el diseñador.
 	 *
-	 * @param pIdPagina
-	 *            id pagina
-	 * @param pLang
-	 *            idioma
+	 * @param pIdPagina id pagina
+	 * @param pLang     idioma
 	 * @return el valor HTML de una pagina del Formulario
 	 */
 	String getPaginaFormularioHTMLDisenyo(final Long pIdPagina, final String pLang);
@@ -254,29 +219,22 @@ public interface FormularioInternoService {
 	/**
 	 * Genera pagina HTML editor.
 	 *
-	 * @param pIdForm
-	 *            id form
-	 * @param pPage
-	 *            page
-	 * @param pIdComponente
-	 *            id componente
-	 * @param pLang
-	 *            lang
-	 * @param pContexto
-	 *            contexto
+	 * @param pIdForm       id form
+	 * @param pPage         page
+	 * @param pIdComponente id componente
+	 * @param pLang         lang
+	 * @param pContexto     contexto
 	 * @return pagina html
 	 */
-	String generaPaginaHTMLEditor(Long pIdForm, Long pPage, String pIdComponente, String pLang, String pContexto);
+	String generaPaginaHTMLEditor(Long pIdForm, Long pPage, String pIdComponente, String pLang, Boolean pMostrarOcultos,
+			String pContexto);
 
 	/**
 	 * Verifica si el identificador de elementoFormulario está duplicado.
 	 *
-	 * @param idFormulario
-	 *            id formulario
-	 * @param codElemento
-	 *            cod elemento
-	 * @param identificador
-	 *            identificador
+	 * @param idFormulario  id formulario
+	 * @param codElemento   cod elemento
+	 * @param identificador identificador
 	 * @return true, si el identificador de elementoFormulario es duplicado
 	 */
 	boolean isIdElementoFormularioDuplicated(Long idFormulario, Long codElemento, String identificador);
@@ -284,17 +242,13 @@ public interface FormularioInternoService {
 	/**
 	 * Copia pega una linea
 	 *
-	 * @param idPagina
-	 *            identificador de la pagina
-	 * @param idLinea
-	 *            identificador de la linea a copiar
-	 * @param orden
-	 *            orden
-	 * @param posicionamiento
-	 *            posicion
-	 * @param cut
-	 *            True si quiere cortar (y por tanto se borrará el original) y False
-	 *            si sólo se quiere clonar (no se borrará el original)
+	 * @param idPagina        identificador de la pagina
+	 * @param idLinea         identificador de la linea a copiar
+	 * @param orden           orden
+	 * @param posicionamiento posicion
+	 * @param cut             True si quiere cortar (y por tanto se borrará el
+	 *                        original) y False si sólo se quiere clonar (no se
+	 *                        borrará el original)
 	 *
 	 */
 	ObjetoFormulario copyCutLineaFormulario(Long idPagina, Long idLinea, Integer orden, String posicionamiento,

@@ -14,174 +14,167 @@ import io.swagger.annotations.ApiModelProperty;
  *
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({
-        @Type(value = RComponenteSeccion.class, name = "RComponenteSeccion"),
-        @Type(value = RComponenteAviso.class, name = "RComponenteAviso"),
-        @Type(value = RComponenteTextbox.class, name = "RComponenteTextbox"),
-        @Type(value = RComponenteSelector.class, name = "RComponenteSelector"),
-        @Type(value = RComponenteCheckbox.class, name = "RComponenteCheckbox")})
+@JsonSubTypes({ @Type(value = RComponenteSeccion.class, name = "RComponenteSeccion"),
+		@Type(value = RComponenteAviso.class, name = "RComponenteAviso"),
+		@Type(value = RComponenteTextbox.class, name = "RComponenteTextbox"),
+		@Type(value = RComponenteCampoOculto.class, name = "RComponenteCampoOculto"),
+		@Type(value = RComponenteSelector.class, name = "RComponenteSelector"),
+		@Type(value = RComponenteCheckbox.class, name = "RComponenteCheckbox") })
 @ApiModel(value = "RComponente", description = "Descripcion de RComponente")
 public abstract class RComponente {
 
-    /** Identificador. */
+	/** Identificador. */
 	@ApiModelProperty(value = "Identificador")
-    private String identificador;
+	private String identificador;
 
-    /** Tipo. */
+	/** Tipo. */
 	@ApiModelProperty(value = "Tipo")
-    private String tipo;
+	private String tipo;
 
-    /** Etiqueta. */
+	/** Etiqueta. */
 	@ApiModelProperty(value = "Etiqueta")
-    private String etiqueta;
+	private String etiqueta;
 
-    /** Mostrar etiqueta. */
+	/** Mostrar etiqueta. */
 	@ApiModelProperty(value = "Mostrar etiqueta")
-    private boolean mostrarEtiqueta;
+	private boolean mostrarEtiqueta;
 
-    /** Alineacion etiqueta: Izquierda (I), Centrada (C), Derecha (D). */
+	/** Alineacion etiqueta: Izquierda (I), Centrada (C), Derecha (D). */
 	@ApiModelProperty(value = "Alineacion etiqueta: Izquierda (I), Centrada (C), Derecha (D)")
-    private String alineacion;
+	private String alineacion;
 
-    /** Número columnas. */
+	/** Número columnas. */
 	@ApiModelProperty(value = "Número columnas")
-    private int columnas;
+	private int columnas;
 
-    /** Ayuda. */
+	/** Ayuda. */
 	@ApiModelProperty(value = "Ayuda")
-    private String ayuda;
+	private String ayuda;
 
-    /**
-     * Método de acceso a identificador.
-     *
-     * @return identificador
-     */
-    public String getIdentificador() {
-        return identificador;
-    }
+	/**
+	 * Método de acceso a identificador.
+	 *
+	 * @return identificador
+	 */
+	public String getIdentificador() {
+		return identificador;
+	}
 
-    /**
-     * Método para establecer identificador.
-     *
-     * @param identificador
-     *            identificador a establecer
-     */
-    public void setIdentificador(String identificador) {
-        this.identificador = identificador;
-    }
+	/**
+	 * Método para establecer identificador.
+	 *
+	 * @param identificador identificador a establecer
+	 */
+	public void setIdentificador(final String identificador) {
+		this.identificador = identificador;
+	}
 
-    /**
-     * Método de acceso a tipo.
-     *
-     * @return tipo
-     */
-    public String getTipo() {
-        return tipo;
-    }
+	/**
+	 * Método de acceso a tipo.
+	 *
+	 * @return tipo
+	 */
+	public String getTipo() {
+		return tipo;
+	}
 
-    /**
-     * Método para establecer tipo.
-     *
-     * @param tipo
-     *            tipo a establecer
-     */
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
+	/**
+	 * Método para establecer tipo.
+	 *
+	 * @param tipo tipo a establecer
+	 */
+	public void setTipo(final String tipo) {
+		this.tipo = tipo;
+	}
 
-    /**
-     * Método de acceso a etiqueta.
-     *
-     * @return etiqueta
-     */
-    public String getEtiqueta() {
-        return etiqueta;
-    }
+	/**
+	 * Método de acceso a etiqueta.
+	 *
+	 * @return etiqueta
+	 */
+	public String getEtiqueta() {
+		return etiqueta;
+	}
 
-    /**
-     * Método para establecer etiqueta.
-     *
-     * @param etiqueta
-     *            etiqueta a establecer
-     */
-    public void setEtiqueta(String etiqueta) {
-        this.etiqueta = etiqueta;
-    }
+	/**
+	 * Método para establecer etiqueta.
+	 *
+	 * @param etiqueta etiqueta a establecer
+	 */
+	public void setEtiqueta(final String etiqueta) {
+		this.etiqueta = etiqueta;
+	}
 
-    /**
-     * Método de acceso a mostrarEtiqueta.
-     *
-     * @return mostrarEtiqueta
-     */
-    public boolean isMostrarEtiqueta() {
-        return mostrarEtiqueta;
-    }
+	/**
+	 * Método de acceso a mostrarEtiqueta.
+	 *
+	 * @return mostrarEtiqueta
+	 */
+	public boolean isMostrarEtiqueta() {
+		return mostrarEtiqueta;
+	}
 
-    /**
-     * Método para establecer mostrarEtiqueta.
-     *
-     * @param mostrarEtiqueta
-     *            mostrarEtiqueta a establecer
-     */
-    public void setMostrarEtiqueta(boolean mostrarEtiqueta) {
-        this.mostrarEtiqueta = mostrarEtiqueta;
-    }
+	/**
+	 * Método para establecer mostrarEtiqueta.
+	 *
+	 * @param mostrarEtiqueta mostrarEtiqueta a establecer
+	 */
+	public void setMostrarEtiqueta(final boolean mostrarEtiqueta) {
+		this.mostrarEtiqueta = mostrarEtiqueta;
+	}
 
-    /**
-     * Método de acceso a alineacion.
-     *
-     * @return alineacion
-     */
-    public String getAlineacion() {
-        return alineacion;
-    }
+	/**
+	 * Método de acceso a alineacion.
+	 *
+	 * @return alineacion
+	 */
+	public String getAlineacion() {
+		return alineacion;
+	}
 
-    /**
-     * Método para establecer alineacion.
-     *
-     * @param alineacion
-     *            alineacion a establecer
-     */
-    public void setAlineacion(String alineacion) {
-        this.alineacion = alineacion;
-    }
+	/**
+	 * Método para establecer alineacion.
+	 *
+	 * @param alineacion alineacion a establecer
+	 */
+	public void setAlineacion(final String alineacion) {
+		this.alineacion = alineacion;
+	}
 
-    /**
-     * Método de acceso a columnas.
-     *
-     * @return columnas
-     */
-    public int getColumnas() {
-        return columnas;
-    }
+	/**
+	 * Método de acceso a columnas.
+	 *
+	 * @return columnas
+	 */
+	public int getColumnas() {
+		return columnas;
+	}
 
-    /**
-     * Método para establecer columnas.
-     *
-     * @param columnas
-     *            columnas a establecer
-     */
-    public void setColumnas(int columnas) {
-        this.columnas = columnas;
-    }
+	/**
+	 * Método para establecer columnas.
+	 *
+	 * @param columnas columnas a establecer
+	 */
+	public void setColumnas(final int columnas) {
+		this.columnas = columnas;
+	}
 
-    /**
-     * Método de acceso a ayuda.
-     *
-     * @return ayuda
-     */
-    public String getAyuda() {
-        return ayuda;
-    }
+	/**
+	 * Método de acceso a ayuda.
+	 *
+	 * @return ayuda
+	 */
+	public String getAyuda() {
+		return ayuda;
+	}
 
-    /**
-     * Método para establecer ayuda.
-     *
-     * @param ayuda
-     *            ayuda a establecer
-     */
-    public void setAyuda(String ayuda) {
-        this.ayuda = ayuda;
-    }
+	/**
+	 * Método para establecer ayuda.
+	 *
+	 * @param ayuda ayuda a establecer
+	 */
+	public void setAyuda(final String ayuda) {
+		this.ayuda = ayuda;
+	}
 
 }

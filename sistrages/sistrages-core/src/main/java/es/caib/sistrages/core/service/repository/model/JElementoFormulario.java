@@ -275,36 +275,45 @@ public class JElementoFormulario implements IModelApi {
 			texto.add(new Traduccion("ca", "Camp"));
 			jModel.setNumeroColumnas(1);
 			jModel.setNoMostrarTexto(false);
+			jModel.setTexto(JLiteral.fromModel(texto));
+			break;
+		case CAMPO_OCULTO:
+			jModel.setNumeroColumnas(0);
+			jModel.setNoMostrarTexto(true);
 			break;
 		case ETIQUETA:
 			texto.add(new Traduccion("es", "Mensaje"));
 			texto.add(new Traduccion("ca", "Missatge"));
 			jModel.setNumeroColumnas(ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA);
 			jModel.setNoMostrarTexto(false);
+			jModel.setTexto(JLiteral.fromModel(texto));
 			break;
 		case SECCION:
 			texto.add(new Traduccion("es", "Sección"));
 			texto.add(new Traduccion("ca", "Secció"));
 			jModel.setNumeroColumnas(ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA);
 			jModel.setNoMostrarTexto(false);
+			jModel.setTexto(JLiteral.fromModel(texto));
 			break;
 		case CHECKBOX:
 			texto.add(new Traduccion("es", "Casilla de verificación"));
 			texto.add(new Traduccion("ca", "Casella de verificació"));
 			jModel.setNumeroColumnas(1);
 			jModel.setNoMostrarTexto(false);
+			jModel.setTexto(JLiteral.fromModel(texto));
 			break;
 		case SELECTOR:
 			texto.add(new Traduccion("es", "Selector"));
 			texto.add(new Traduccion("ca", "Selector"));
 			jModel.setNumeroColumnas(1);
 			jModel.setNoMostrarTexto(false);
+			jModel.setTexto(JLiteral.fromModel(texto));
 			break;
 		default:
 			jModel.setNoMostrarTexto(true);
 			jModel.setNumeroColumnas(1);
 		}
-		jModel.setTexto(JLiteral.fromModel(texto));
+
 		return jModel;
 	}
 

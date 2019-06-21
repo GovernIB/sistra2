@@ -170,8 +170,8 @@ public class FormularioInternoServiceBean implements FormularioInternoService {
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public String generaPaginaHTMLEditor(final Long pIdForm, final Long pPage, final String pIdComponente,
-			final String pLang, final String pContexto) {
-		return formIntService.generaPaginaHTMLEditor(pIdForm, pPage, pIdComponente, pLang, pContexto);
+			final String pLang, final Boolean pMostrarOcultos, final String pContexto) {
+		return formIntService.generaPaginaHTMLEditor(pIdForm, pPage, pIdComponente, pLang, pMostrarOcultos, pContexto);
 	}
 
 	@Override

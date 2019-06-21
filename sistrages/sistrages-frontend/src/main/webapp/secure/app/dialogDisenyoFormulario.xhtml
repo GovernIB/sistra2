@@ -51,6 +51,8 @@
 		       		<p:commandButton id="btnCampoTexto" 	title="#{msg['dialogDisenyoFormulario.componente.CT']}" icon="fa fa-pencil-square-o" actionListener="#{dialogDisenyoFormulario.insertaCampoTexto}" 			process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" />
 					<p:commandButton id="btnCampoSelector" 	title="#{msg['dialogDisenyoFormulario.componente.SE']}" icon="fa fa-caret-square-o-down" actionListener="#{dialogDisenyoFormulario.insertaSelector}" 		process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario"/>
 		       		<p:commandButton id="btnCampoCheckbox" 	title="#{msg['dialogDisenyoFormulario.componente.CK']}" icon="fa fa-check-square" actionListener="#{dialogDisenyoFormulario.insertaCheckBox}" 				process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario"/>
+		       		<p:commandButton id="btnCampoOculto" 	title="#{msg['dialogDisenyoFormulario.componente.OC']}" icon="fa fa-eye-slash" actionListener="#{dialogDisenyoFormulario.insertaCampoOculto}" 				process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario"/>
+
 				</h:panelGroup>
 
 	       		<h:panelGroup class="ui-separator margin-right-10" rendered="#{dialogDisenyoFormulario.isNotConsulta()}">
@@ -133,7 +135,7 @@
 		<!-- Botonera abajo -->
 
 		<p:outputPanel styleClass="botonera" id="botonera">
-			<p:panelGrid columns="4" columnClasses="w20,w35 grid-right,w15 grid-left,w30" layout="grid" styleClass="formulario-botonera">
+			<p:panelGrid columns="4" columnClasses="w20,w25 grid-right,w30 grid-center,w25" layout="grid" styleClass="formulario-botonera">
 
 				<p:outputPanel styleClass="barra-herramientas-disenyo" id="bh-paginas">
 					<p:commandButton icon="fa fa-chevron-left"  id="izq" actionListener="#{dialogDisenyoFormulario.moverPaginaIzq}" process="@this" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnPagIzq}"  title="#{msg['dialogDisenyoFormulario.title.pagAnterior']}"/>
@@ -147,7 +149,11 @@
 				</p:outputPanel>
 
 				<p:outputPanel>
-	         		<p:selectOneMenu id="idioma" value="#{dialogDisenyoFormulario.idioma}">
+					<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.mostrarOcultos}" itemLabel="#{msg['dialogDisenyoFormulario.mostrarOcultos']}" styleClass="center-vertical">
+						<p:ajax event="change" update="formulario-panel"/>
+					</p:selectBooleanCheckbox>
+
+	         		<p:selectOneMenu id="idioma" value="#{dialogDisenyoFormulario.idioma}" styleClass="center-vertical">
 	         			<p:ajax event="blur" process="@this" />
 	         			<p:ajax event="change" update="formulario-panel"/>
 						<f:selectItems value="#{dialogDisenyoFormulario.idiomas}" var="lang" itemValue="#{lang}" itemLabel="#{msg[lang]}"/>

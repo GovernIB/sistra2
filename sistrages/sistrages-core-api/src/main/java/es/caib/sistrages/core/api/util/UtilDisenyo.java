@@ -14,12 +14,9 @@ public class UtilDisenyo {
 	/**
 	 * Orden de la linea para la insercion .
 	 *
-	 * @param pPagina
-	 *            pagina
-	 * @param pLineaSeleccionada
-	 *            linea seleccionada
-	 * @param pPosicion
-	 *            posicion
+	 * @param pPagina            pagina
+	 * @param pLineaSeleccionada linea seleccionada
+	 * @param pPosicion          posicion
 	 * @return orden
 	 */
 	public static Integer ordenInsercionLinea(final PaginaFormulario pPagina,
@@ -42,12 +39,9 @@ public class UtilDisenyo {
 	/**
 	 * Orden del componente para la insercion.
 	 *
-	 * @param pLineaSeleccionada
-	 *            linea seleccionada
-	 * @param pOrden
-	 *            orden
-	 * @param pPosicion
-	 *            posicion
+	 * @param pLineaSeleccionada linea seleccionada
+	 * @param pOrden             orden
+	 * @param pPosicion          posicion
 	 * @return orden
 	 */
 	public static Integer ordenInsercionComponente(final LineaComponentesFormulario pLineaSeleccionada,
@@ -77,14 +71,45 @@ public class UtilDisenyo {
 	}
 
 	/**
+	 * Orden del componente oculto para la insercion.
+	 *
+	 * @param pLineaSeleccionada linea seleccionada
+	 * @param pOrden             orden
+	 * @param pPosicion          posicion
+	 * @return orden
+	 */
+	public static Integer ordenInsercionComponenteOculto(final LineaComponentesFormulario pLineaSeleccionada,
+			final Integer pOrden, final String pPosicion) {
+		Integer orden = null;
+		if (pLineaSeleccionada != null) {
+			if (pLineaSeleccionada.getComponentes().isEmpty()) {
+				orden = 1;
+			} else {
+				if (pOrden == null) {
+					if (ConstantesDisenyo.POSICIONAMIENTO_PREVIO.equals(pPosicion)) {
+						orden = 1;
+					} else {
+						orden = pLineaSeleccionada.getComponentes().size() + 1;
+					}
+				} else {
+					if (ConstantesDisenyo.POSICIONAMIENTO_PREVIO.equals(pPosicion)) {
+						orden = pOrden;
+					} else {
+						orden = pOrden + 1;
+					}
+
+				}
+			}
+		}
+		return orden;
+	}
+
+	/**
 	 * Orden de la linea para moverla .
 	 *
-	 * @param pPagina
-	 *            pagina
-	 * @param pLineaSeleccionada
-	 *            linea seleccionada
-	 * @param pPosicion
-	 *            posicion
+	 * @param pPagina            pagina
+	 * @param pLineaSeleccionada linea seleccionada
+	 * @param pPosicion          posicion
 	 * @return orden
 	 */
 	public static Integer ordenMoverLinea(final PaginaFormulario pPagina, final Integer pOrden,
@@ -105,12 +130,9 @@ public class UtilDisenyo {
 	/**
 	 * Orden del componente para moverlo.
 	 *
-	 * @param pLineaSeleccionada
-	 *            linea seleccionada
-	 * @param pOrden
-	 *            orden
-	 * @param pPosicion
-	 *            posicion
+	 * @param pLineaSeleccionada linea seleccionada
+	 * @param pOrden             orden
+	 * @param pPosicion          posicion
 	 * @return orden
 	 */
 	public static Integer ordenMoverComponente(final LineaComponentesFormulario pLineaSeleccionada,

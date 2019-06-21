@@ -49,6 +49,21 @@ public enum TypeImportarResultado {
 	}
 
 	/**
+	 * Get css.
+	 *
+	 * @return
+	 */
+	public String getCssDominio() {
+		String estilo;
+		if (this == TypeImportarResultado.INFO) {
+			estilo = "color:rgb(214, 214, 0)";
+		} else {
+			estilo = "color:rgb(" + css + ")";
+		}
+		return estilo;
+	}
+
+	/**
 	 * Get icon.
 	 *
 	 * @return
@@ -58,10 +73,34 @@ public enum TypeImportarResultado {
 	}
 
 	/**
+	 * Get icon dominio.
+	 *
+	 * @return
+	 */
+	public String getIconDominio() {
+		if (this == TypeImportarResultado.INFO) {
+			return "fa fa-unlink fa-2x";
+		} else {
+			return icon;
+		}
+	}
+
+	/**
 	 * @return the literal
 	 */
 	public String getLiteral() {
 		return literal;
+	}
+
+	/**
+	 * @return the literal
+	 */
+	public String getLiteralDominio() {
+		if (this == TypeImportarResultado.INFO) {
+			return "typeImportar.resultado.INFODOMINIO";
+		} else {
+			return literal;
+		}
 	}
 
 	/**

@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeAlineacionTexto" var="TypeAlineacionTexto"/>
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFormulario" var="TypeScriptFormulario" />
+<h:body>
+
+	<h:form id="formDisenyoTextbox" styleClass="h100">
+		<h3 class="margin-top-3 margin-bottom-3">
+			<h:outputText value="#{msg['dialogDisenyoFormulario.componente.' += dialogDisenyoFormulario.objetoFormularioEdit.tipo]}" />
+		</h3>
+
+		<p:panel id="panelPropietats" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}" toggleable="true" widgetVar="panel"  collapsed="#{dialogDisenyoFormulario.visiblePropiedades}">
+
+			<p:ajax event="toggle" listener="#{dialogDisenyoFormulario.onToggle}" update="panelPropietats panelScripts" />
+
+	         <h:panelGrid columns="2" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}" columnClasses="w35,w65" styleClass="w100">
+	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.identificador']}" /></h:column>
+	         	<h:column>
+	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}" maxlength="50" disabled="#{dialogDisenyoFormulario.consulta}" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
+						<!-- <f:validateRegex pattern="^[a-zA-Z0-9_-]{1,50}$" /> -->
+	         			<p:ajax event="blur" process="@this" />
+	         		</p:inputText>
+	         	</h:column>
+
+	        </h:panelGrid>
+
+		</p:panel>
+		<p:panel id="panelScripts" header="#{msg['dialogDisenyoFormulario.componente.panelScripts']}" toggleable="true" widgetVar="panelScripts" collapsed="#{dialogDisenyoFormulario.visibleScripts}">
+
+			<p:ajax event="toggle" listener="#{dialogDisenyoFormulario.onToggle}" update="panelPropietats panelScripts" />
+
+			<h:panelGrid columns="2" header="Scripts" columnClasses="w35,w65" styleClass="w100">
+	         	<h:column><h:outputText value="#{msg['script.SCRIPT_AUTORELLENABLE.titulo']}" /></h:column>
+	         	<h:column>
+	         		<p:commandButton id="scriptAutorelleno" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_AUTORELLENABLE.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptAutorrellenable)}" process="@this"
+	         						 styleClass="#{dialogPropiedadesFormulario.getColorScript(dialogDisenyoFormulario.objetoFormularioEdit.scriptAutorrellenable)}" >
+						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoScriptAutorrelleno}" update="scriptAutorelleno" />
+					</p:commandButton>
+				</h:column>
+
+	        </h:panelGrid>
+
+	    </p:panel>
+
+
+	</h:form>
+</h:body>
+</f:view>
+</ui:composition>

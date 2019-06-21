@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoOculto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
@@ -35,17 +36,17 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 	@Override
 	public String generaPaginaHTMLEditor(final Long pIdForm, final Long pPage, final String pIdComponente,
-			final String pLang, final String pContexto) {
-		return paginaHTML(pIdForm, pPage, pIdComponente, pLang, pContexto, true);
+			final String pLang, final Boolean pMostrarOcultos, final String pContexto) {
+		return paginaHTML(pIdForm, pPage, pIdComponente, pLang, pMostrarOcultos, pContexto, true);
 	}
 
 	@Override
 	public String generaPaginaHTMLAsistente(final Long pPage, final String pLang) {
-		return paginaHTML(null, pPage, null, pLang, null, false);
+		return paginaHTML(null, pPage, null, pLang, true, null, false);
 	}
 
 	private String paginaHTML(final Long pIdForm, final Long pPage, final String pIdComponente, final String pLang,
-			final String pContexto, final boolean pModoEdicion) {
+			final boolean pMostrarOcultos, final String pContexto, final boolean pModoEdicion) {
 		final StringBuilder html = new StringBuilder();
 		DisenyoFormulario formulario = null;
 		PaginaFormulario pagina = null;
@@ -80,7 +81,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 		escribeLinea(html, "<div class=\"imc-form-contingut\">", 4);
 
-		cuerpoHTML(html, pagina, pLang, pModoEdicion);
+		cuerpoHTML(html, pagina, pLang, pModoEdicion, pMostrarOcultos);
 
 		escribeLinea(html, "</div>", 4);
 		escribeLinea(html, "</div>", 3);
@@ -132,7 +133,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	}
 
 	private void cuerpoHTML(final StringBuilder pOut, final PaginaFormulario pPagina, final String pLang,
-			final boolean pModoEdicion) {
+			final boolean pModoEdicion, final boolean pMostrarOcultos) {
 
 		if (pPagina != null) {
 			for (final LineaComponentesFormulario lc : pPagina.getLineas()) {
@@ -154,6 +155,11 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 						break;
 					case SELECTOR:
 						campoSelector(pOut, cf, pLang, pModoEdicion);
+						break;
+					case CAMPO_OCULTO:
+						if (pMostrarOcultos) {
+							campoOculto(pOut, cf, pLang, pModoEdicion);
+						}
 						break;
 					default:
 						break;
@@ -466,6 +472,35 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			escribeLinea(pOut, trataLiteral(pCF.getTexto().getTraduccion(pLang)), 6);
 		}
 		escribeLinea(pOut, "</p></div>", 5);
+	}
+
+	private void campoOculto(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang,
+			final boolean pModoEdicion) {
+		final ComponenteFormularioCampoOculto campo = (ComponenteFormularioCampoOculto) pCF;
+
+		final StringBuilder estilo = new StringBuilder();
+		final StringBuilder elemento = new StringBuilder();
+
+		String tipo = null;
+
+		if (pModoEdicion) {
+			tipo = "text";
+		} else {
+			tipo = "hidden";
+		}
+
+		elemento.append("<input id=\"").append(campo.getIdComponente()).append("\" type=\"" + tipo + "\"/>");
+
+		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente()), escribeCodigo(pCF.getCodigo(), pModoEdicion),
+				" class=\"imc-element ", estilo.toString(), "\" data-type=\"", tipo, "\">", 5);
+
+//		escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(campo.getIdComponente()),
+//				"\">", "", "</label></div>", 6);
+
+		escribeLinea(pOut, "<div class=\"imc-el-control\">", elemento.toString(), "</div>", 6);
+
+		escribeLinea(pOut, "</div>", 5);
+
 	}
 
 	private void scripts(final StringBuilder pOut, final String pIdComponente) {

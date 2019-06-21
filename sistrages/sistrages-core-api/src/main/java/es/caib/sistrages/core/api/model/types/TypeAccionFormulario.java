@@ -20,6 +20,10 @@ public enum TypeAccionFormulario {
 	ADD_ETIQUETA,
 	/** Agregar textbox **/
 	ADD_TEXTO,
+	/**
+	 * add oculto.
+	 */
+	ADD_OCULTO,
 	/** Agregar select **/
 	ADD_SELECTOR,
 	/** Agregar checbox **/

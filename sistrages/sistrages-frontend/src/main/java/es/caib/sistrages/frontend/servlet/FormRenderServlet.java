@@ -47,6 +47,7 @@ public class FormRenderServlet extends HttpServlet {
 		final String idForm = request.getParameter("id");
 		final String page = request.getParameter("page");
 		final String lang = request.getParameter("lang");
+		final String mostrarOcultos = request.getParameter("showHidden");
 		final String idComponente = request.getParameter("idComponente");
 
 		response.setContentType("text/html");
@@ -54,7 +55,7 @@ public class FormRenderServlet extends HttpServlet {
 		String html = null;
 		if (StringUtils.isNotEmpty(idForm) && StringUtils.isNotEmpty(page)) {
 			html = formIntService.generaPaginaHTMLEditor(Long.parseLong(idForm), Long.parseLong(page), idComponente,
-					lang, getContexto());
+					lang, Boolean.parseBoolean(mostrarOcultos), getContexto());
 		} else {
 			html = "";
 		}

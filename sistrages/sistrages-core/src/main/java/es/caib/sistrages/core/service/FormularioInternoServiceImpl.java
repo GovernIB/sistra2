@@ -226,8 +226,9 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	@Override
 	@NegocioInterceptor
 	public String generaPaginaHTMLEditor(final Long pIdForm, final Long pPage, final String pIdComponente,
-			final String pLang, final String pContexto) {
-		return formRenderComponent.generaPaginaHTMLEditor(pIdForm, pPage, pIdComponente, pLang, pContexto);
+			final String pLang, final Boolean pMostrarOcultos, final String pContexto) {
+		return formRenderComponent.generaPaginaHTMLEditor(pIdForm, pPage, pIdComponente, pLang, pMostrarOcultos,
+				pContexto);
 	}
 
 	@Override

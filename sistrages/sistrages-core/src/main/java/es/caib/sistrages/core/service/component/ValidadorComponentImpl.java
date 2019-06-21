@@ -148,12 +148,9 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Valida que no tenga errores una version de un tramite.
 	 *
-	 * @param pTramiteVersion
-	 *            tramiteversion
-	 * @param pIdiomasTramiteVersion
-	 *            idiomas definidos en la version
-	 * @param pIdioma
-	 *            idioma para mostrar los errores
+	 * @param pTramiteVersion        tramiteversion
+	 * @param pIdiomasTramiteVersion idiomas definidos en la version
+	 * @param pIdioma                idioma para mostrar los errores
 	 * @return lista de errores de validacion
 	 */
 	private List<ErrorValidacion> comprobarVersionTramite(final TramiteVersion pTramiteVersion,
@@ -199,12 +196,9 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Valida el apartado de propiedades.
 	 *
-	 * @param pTramiteVersion
-	 *            tramiteversion
-	 * @param pIdiomasTramiteVersion
-	 *            idiomas definidos en la version
-	 * @param pIdioma
-	 *            idioma para mostrar los errores
+	 * @param pTramiteVersion        tramiteversion
+	 * @param pIdiomasTramiteVersion idiomas definidos en la version
+	 * @param pIdioma                idioma para mostrar los errores
 	 * @return lista de errores de validacion
 	 */
 	private void comprobarPropiedades(final TramiteVersion pTramiteVersion, final List<String> pIdiomasTramiteVersion,
@@ -231,15 +225,11 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * valida el paso debe saber.
 	 *
-	 * @param pTramiteVersion
-	 *            tramiteversion
-	 * @param pIdiomasTramiteVersion
-	 *            idiomas definidos en la version
-	 * @param pIdioma
-	 *            idioma para mostrar los errores
+	 * @param pTramiteVersion        tramiteversion
+	 * @param pIdiomasTramiteVersion idiomas definidos en la version
+	 * @param pIdioma                idioma para mostrar los errores
 	 * @return lista de errores de validacion
-	 * @param pasoDebeSaber
-	 *            paso debe saber
+	 * @param pasoDebeSaber paso debe saber
 	 */
 	private void comprobarDebeSaber(final TramiteVersion pTramiteVersion, final List<String> pIdiomasTramiteVersion,
 			final String pIdioma, final List<ErrorValidacion> listaErrores, final TramitePasoDebeSaber pasoDebeSaber) {
@@ -316,15 +306,11 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Valida disenyo formulario.
 	 *
-	 * @param pTramiteVersion
-	 *            tramiteversion
-	 * @param pIdiomasTramiteVersion
-	 *            idiomas definidos en la version
-	 * @param pIdioma
-	 *            idioma para mostrar los errores
+	 * @param pTramiteVersion        tramiteversion
+	 * @param pIdiomasTramiteVersion idiomas definidos en la version
+	 * @param pIdioma                idioma para mostrar los errores
 	 * @return lista de errores de validacion
-	 * @param formulario
-	 *            formulario
+	 * @param formulario formulario
 	 */
 	private void comprobarDisenyoFormulario(final TramiteVersion pTramiteVersion,
 			final List<String> pIdiomasTramiteVersion, final String pIdioma, final List<ErrorValidacion> listaErrores,
@@ -592,15 +578,11 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Valida el paso anexar.
 	 *
-	 * @param pTramiteVersion
-	 *            tramiteversion
-	 * @param pIdiomasTramiteVersion
-	 *            idiomas definidos en la version
-	 * @param pIdioma
-	 *            idioma para mostrar los errores
+	 * @param pTramiteVersion        tramiteversion
+	 * @param pIdiomasTramiteVersion idiomas definidos en la version
+	 * @param pIdioma                idioma para mostrar los errores
 	 * @return lista de errores de validacion
-	 * @param pasoAnexar
-	 *            paso anexar
+	 * @param pasoAnexar paso anexar
 	 */
 	private void comprobarAnexar(final TramiteVersion pTramiteVersion, final List<String> pIdiomasTramiteVersion,
 			final String pIdioma, final List<ErrorValidacion> listaErrores, final TramitePasoAnexar pasoAnexar) {
@@ -657,15 +639,11 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Valida el paso tasa.
 	 *
-	 * @param pTramiteVersion
-	 *            tramiteversion
-	 * @param pIdiomasTramiteVersion
-	 *            idiomas definidos en la version
-	 * @param pIdioma
-	 *            idioma para mostrar los errores
+	 * @param pTramiteVersion        tramiteversion
+	 * @param pIdiomasTramiteVersion idiomas definidos en la version
+	 * @param pIdioma                idioma para mostrar los errores
 	 * @return lista de errores de validacion
-	 * @param pasoTasa
-	 *            paso tasa
+	 * @param pasoTasa paso tasa
 	 */
 	private void comprobarTasa(final TramiteVersion pTramiteVersion, final List<String> pIdiomasTramiteVersion,
 			final String pIdioma, final List<ErrorValidacion> listaErrores, final TramitePasoTasa pasoTasa) {
@@ -703,15 +681,11 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Valida el paso registrar formulario.
 	 *
-	 * @param pTramiteVersion
-	 *            tramiteversion
-	 * @param pIdiomasTramiteVersion
-	 *            idiomas definidos en la version
-	 * @param pIdioma
-	 *            idioma para mostrar los errores
+	 * @param pTramiteVersion        tramiteversion
+	 * @param pIdiomasTramiteVersion idiomas definidos en la version
+	 * @param pIdioma                idioma para mostrar los errores
 	 * @return lista de errores de validacion
-	 * @param pasoRegistrar
-	 *            paso registrar
+	 * @param pasoRegistrar paso registrar
 	 */
 	private void comprobarRegistrarFormulario(final TramiteVersion pTramiteVersion,
 			final List<String> pIdiomasTramiteVersion, final String pIdioma, final List<ErrorValidacion> listaErrores,
@@ -809,26 +783,16 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Valida un script.
 	 *
-	 * @param pScript
-	 *            script a validar
-	 * @param pLiteralScript
-	 *            literal del script
-	 * @param pOpciones
-	 *            localizacion del script
-	 * @param pLiteralOpcionesLiterales
-	 *            literal error
-	 * @param pLiteralOpcionesCompilar
-	 *            literal error compilar
-	 * @param pLiteralOpcionesDominios
-	 *            literal error dominios
-	 * @param pListaDominios
-	 *            lista dominios de version
-	 * @param pIdiomasTramiteVersion
-	 *            idiomas de tramite version
-	 * @param pIdioma
-	 *            idioma
-	 * @param listaErrores
-	 *            lista de errores de validacion
+	 * @param pScript                   script a validar
+	 * @param pLiteralScript            literal del script
+	 * @param pOpciones                 localizacion del script
+	 * @param pLiteralOpcionesLiterales literal error
+	 * @param pLiteralOpcionesCompilar  literal error compilar
+	 * @param pLiteralOpcionesDominios  literal error dominios
+	 * @param pListaDominios            lista dominios de version
+	 * @param pIdiomasTramiteVersion    idiomas de tramite version
+	 * @param pIdioma                   idioma
+	 * @param listaErrores              lista de errores de validacion
 	 */
 	private void comprobarScript(final Script pScript, final String pLiteralScript, final String[] pOpciones,
 			final String pLiteralOpcionesLiterales, final String pLiteralOpcionesCompilar,
@@ -850,20 +814,13 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Valida un literal.
 	 *
-	 * @param pLiteral
-	 *            literal
-	 * @param pTextoLiteral
-	 *            texto literal
-	 * @param pOpciones
-	 *            opciones
-	 * @param pLiteralOpciones
-	 *            literal opciones
-	 * @param pIdiomasTramiteVersion
-	 *            idiomas tramite version
-	 * @param pIdioma
-	 *            idioma
-	 * @param listaErrores
-	 *            lista errores
+	 * @param pLiteral               literal
+	 * @param pTextoLiteral          texto literal
+	 * @param pOpciones              opciones
+	 * @param pLiteralOpciones       literal opciones
+	 * @param pIdiomasTramiteVersion idiomas tramite version
+	 * @param pIdioma                idioma
+	 * @param listaErrores           lista errores
 	 */
 	private void comprobarLiteralAux(final Literal pLiteral, final String pTextoLiteral, final String[] pOpciones,
 			final String pLiteralOpciones, final List<String> pIdiomasTramiteVersion, final String pIdioma,
@@ -898,20 +855,13 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Valida los literales de un script.
 	 *
-	 * @param pScript
-	 *            script
-	 * @param pLiteralScript
-	 *            literal script
-	 * @param pOpciones
-	 *            opciones
-	 * @param pLiteralOpciones
-	 *            literal opciones
-	 * @param pIdiomasTramiteVersion
-	 *            idiomas tramite version
-	 * @param pIdioma
-	 *            idioma
-	 * @param listaErrores
-	 *            lista errores
+	 * @param pScript                script
+	 * @param pLiteralScript         literal script
+	 * @param pOpciones              opciones
+	 * @param pLiteralOpciones       literal opciones
+	 * @param pIdiomasTramiteVersion idiomas tramite version
+	 * @param pIdioma                idioma
+	 * @param listaErrores           lista errores
 	 */
 	private void comprobarLiteralesScript(final Script pScript, final String pLiteralScript, final String[] pOpciones,
 			final String pLiteralOpciones, final List<String> pIdiomasTramiteVersion, final String pIdioma,
@@ -938,16 +888,11 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Construye Error validacion.
 	 *
-	 * @param pElemento
-	 *            elemento
-	 * @param pLiteral
-	 *            literal
-	 * @param pOpciones
-	 *            opciones
-	 * @param pLiteralOpciones
-	 *            literal opciones
-	 * @param pIdioma
-	 *            idioma
+	 * @param pElemento        elemento
+	 * @param pLiteral         literal
+	 * @param pOpciones        opciones
+	 * @param pLiteralOpciones literal opciones
+	 * @param pIdioma          idioma
 	 * @return error validacion
 	 */
 	private ErrorValidacion errorValidacion(final String pElemento, final String pLiteral, final String[] pOpciones,
@@ -958,18 +903,12 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Construye Error validacion.
 	 *
-	 * @param pElemento
-	 *            elemento
-	 * @param pLiteral
-	 *            literal
-	 * @param pOpciones
-	 *            opciones
-	 * @param pLiteralOpciones
-	 *            literal opciones
-	 * @param pIdioma
-	 *            idioma
-	 * @param pMostrarElemento
-	 *            mostrar elemento
+	 * @param pElemento        elemento
+	 * @param pLiteral         literal
+	 * @param pOpciones        opciones
+	 * @param pLiteralOpciones literal opciones
+	 * @param pIdioma          idioma
+	 * @param pMostrarElemento mostrar elemento
 	 * @return error validacion
 	 */
 	private ErrorValidacion errorValidacion(final String pElemento, final String pLiteral, final String[] pOpciones,
@@ -1003,14 +942,10 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Construye Error validacion.
 	 *
-	 * @param pLiteral
-	 *            literal
-	 * @param pOpciones
-	 *            opciones
-	 * @param pLiteralOpciones
-	 *            literal opciones
-	 * @param pIdioma
-	 *            idioma
+	 * @param pLiteral         literal
+	 * @param pOpciones        opciones
+	 * @param pLiteralOpciones literal opciones
+	 * @param pIdioma          idioma
 	 * @return error validacion
 	 */
 	private ErrorValidacion errorValidacion(final String pLiteral, final String[] pOpciones,
@@ -1040,20 +975,13 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Valida los literales de una lista fija.
 	 *
-	 * @param listaFija
-	 *            lista fija
-	 * @param pLiteralListaFija
-	 *            literal lista fija
-	 * @param pOpciones
-	 *            opciones
-	 * @param pLiteralOpciones
-	 *            literal opciones
-	 * @param pIdiomasTramiteVersion
-	 *            idiomas tramite version
-	 * @param pIdioma
-	 *            idioma
-	 * @param listaErrores
-	 *            lista errores
+	 * @param listaFija              lista fija
+	 * @param pLiteralListaFija      literal lista fija
+	 * @param pOpciones              opciones
+	 * @param pLiteralOpciones       literal opciones
+	 * @param pIdiomasTramiteVersion idiomas tramite version
+	 * @param pIdioma                idioma
+	 * @param listaErrores           lista errores
 	 */
 	private void comprobarLiteralesListaFija(final List<ValorListaFija> listaFija, final String pLiteralListaFija,
 			final String[] pOpciones, final String pLiteralOpciones, final List<String> pIdiomasTramiteVersion,
@@ -1080,18 +1008,12 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Valida si compila correctamente un script.
 	 *
-	 * @param pScript
-	 *            script
-	 * @param pLiteralScript
-	 *            literal script
-	 * @param pOpciones
-	 *            opciones
-	 * @param pLiteralOpciones
-	 *            literal opciones
-	 * @param pIdioma
-	 *            idioma
-	 * @param listaErrores
-	 *            lista errores
+	 * @param pScript          script
+	 * @param pLiteralScript   literal script
+	 * @param pOpciones        opciones
+	 * @param pLiteralOpciones literal opciones
+	 * @param pIdioma          idioma
+	 * @param listaErrores     lista errores
 	 */
 	private void comprobarCompilarScript(final Script pScript, final String pLiteralScript, final String[] pOpciones,
 			final String pLiteralOpciones, final String pIdioma, final List<ErrorValidacion> listaErrores,
@@ -1120,8 +1042,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Compilar script.
 	 *
-	 * @param script
-	 *            script
+	 * @param script script
 	 * @return resultado compilacion
 	 */
 	private String compilarScript(final String script) {
@@ -1153,20 +1074,13 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Valida los dominios invocados en un script.
 	 *
-	 * @param pScript
-	 *            script
-	 * @param pListaDominios
-	 *            lista dominios
-	 * @param pLiteralScript
-	 *            literal script
-	 * @param pOpciones
-	 *            opciones
-	 * @param pLiteralOpciones
-	 *            literal opciones
-	 * @param pIdioma
-	 *            idioma
-	 * @param listaErrores
-	 *            lista errores
+	 * @param pScript          script
+	 * @param pListaDominios   lista dominios
+	 * @param pLiteralScript   literal script
+	 * @param pOpciones        opciones
+	 * @param pLiteralOpciones literal opciones
+	 * @param pIdioma          idioma
+	 * @param listaErrores     lista errores
 	 */
 	private void comprobarDominiosScript(final Script pScript, final List<Dominio> pListaDominios,
 			final String pLiteralScript, final String[] pOpciones, final String pLiteralOpciones, final String pIdioma,
@@ -1211,8 +1125,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Obtiene el valor de idiomas soportados para tramite version.
 	 *
-	 * @param tramiteVersion
-	 *            tramite version
+	 * @param tramiteVersion tramite version
 	 * @return idiomas soportados
 	 */
 	private List<String> getIdiomasSoportados(final TramiteVersion tramiteVersion) {
@@ -1232,8 +1145,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Recupera disenyo formularios.
 	 *
-	 * @param pTramiteVersion
-	 *            tramite version
+	 * @param pTramiteVersion tramite version
 	 */
 	private void recuperaDisenyoFormularios(final TramiteVersion pTramiteVersion) {
 		if (!pTramiteVersion.getListaPasos().isEmpty()) {
@@ -1257,18 +1169,20 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Comprueba si el literal está incompleto.
 	 *
-	 * @param literal
-	 *            literal
-	 * @param pIdiomas
-	 *            idiomas a comprobar
+	 * @param literal  literal
+	 * @param pIdiomas idiomas a comprobar
 	 * @return true, si esta incompleto
 	 */
 	private boolean literalIncompleto(final Literal literal, final List<String> pIdiomas) {
 		if (literal != null) {
-			for (final String idioma : pIdiomas) {
-				if (!literal.contains(idioma) || literal.getTraduccion(idioma).isEmpty()) {
-					return true;
+			if (literal.getTraducciones() != null) {
+				for (final String idioma : pIdiomas) {
+					if (!literal.contains(idioma) || literal.getTraduccion(idioma).isEmpty()) {
+						return true;
+					}
 				}
+			} else {
+				return true;
 			}
 		}
 		return false;
@@ -1277,8 +1191,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Buscar las invocaciones de dominios en un script.
 	 *
-	 * @param script
-	 *            script
+	 * @param script script
 	 * @return lista de dominios invocados
 	 */
 	private List<String> buscarInvocacionesDominios(final String script) {
@@ -1292,12 +1205,9 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Buscar ocurrencias en un script.
 	 *
-	 * @param deps
-	 *            deps
-	 * @param pattern
-	 *            pattern
-	 * @param script
-	 *            script
+	 * @param deps    deps
+	 * @param pattern pattern
+	 * @param script  script
 	 */
 	private void buscarOcurrencias(final List<String> deps, final Pattern pattern, final String script) {
 
@@ -1315,8 +1225,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Elimina de un script el bloque de comentarios.
 	 *
-	 * @param script
-	 *            script
+	 * @param script script
 	 * @return script
 	 */
 	private String eliminarBloqueComentarios(final String script) {
@@ -1346,10 +1255,8 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Extraer id.
 	 *
-	 * @param deps
-	 *            deps
-	 * @param matcher
-	 *            expresio
+	 * @param deps    deps
+	 * @param matcher expresio
 	 */
 	public void extraerIdsFormularios(final List<String> deps, final Matcher matcher) {
 		while (matcher.find()) {
@@ -1365,8 +1272,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Obtiene el valor del identificador del dominio.
 	 *
-	 * @param pCodDominio
-	 *            cod. dominio
+	 * @param pCodDominio cod. dominio
 	 * @return el valor del identificador
 	 */
 	public String getIdentificadorDominio(final Long pCodDominio) {
@@ -1383,10 +1289,8 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	/**
 	 * Comprueba si la plantilla esta incompleta.
 	 *
-	 * @param plantilla
-	 *            plantilla
-	 * @param pIdiomas
-	 *            idiomas de la version
+	 * @param plantilla plantilla
+	 * @param pIdiomas  idiomas de la version
 	 * @return true, si esta incompleta
 	 */
 	private boolean plantillaIncompleta(final PlantillaFormulario plantilla, final List<String> pIdiomas) {
