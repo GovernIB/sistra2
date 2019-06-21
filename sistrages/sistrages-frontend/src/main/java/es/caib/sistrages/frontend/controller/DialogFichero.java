@@ -173,8 +173,7 @@ public class DialogFichero extends DialogControllerBase {
 	/**
 	 * carga de fichero.
 	 *
-	 * @param event
-	 *            el evento
+	 * @param event el evento
 	 * @throws Exception
 	 * @throws NumberFormatException
 	 */
@@ -221,13 +220,11 @@ public class DialogFichero extends DialogControllerBase {
 					dominioService.importarCSV(Long.valueOf(id), csv);
 				} catch (final Exception ex) {
 					if (ex.getCause() instanceof FuenteDatosPkException) {
-						addMessageContext(TypeNivelGravedad.INFO,
-								UtilJSF.getLiteral("info.importarCSV.error.pk"));
+						addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importarCSV.error.pk"));
 						return;
 					}
 					if (ex.getCause() instanceof FuenteDatosCSVNoExisteCampoException) {
-						addMessageContext(TypeNivelGravedad.INFO,
-								UtilJSF.getLiteral("info.importarCSV.error.campo"));
+						addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importarCSV.error.campo"));
 						return;
 					}
 				}
@@ -316,7 +313,8 @@ public class DialogFichero extends DialogControllerBase {
 		case FUENTE_ENTIDAD_CSV:
 		case PLANTILLA_IDIOMA_FORM:
 			formIntService.removePlantillaIdiomaFormulario(plantillaIdiomaFormulario);
-			plantillaIdiomaFormulario = null;
+			plantillaIdiomaFormulario.setCodigo(null);
+			plantillaIdiomaFormulario.setFichero(null);
 			break;
 		case PLANTILLA_FORMATEADOR:
 			formIntService.removePlantillaFormateador(plantillaFormateador);
@@ -444,8 +442,7 @@ public class DialogFichero extends DialogControllerBase {
 	/**
 	 * Establece el valor de id.
 	 *
-	 * @param id
-	 *            el nuevo valor de id
+	 * @param id el nuevo valor de id
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -463,8 +460,7 @@ public class DialogFichero extends DialogControllerBase {
 	/**
 	 * Establece el valor de campoFichero.
 	 *
-	 * @param campoFichero
-	 *            el nuevo valor de campoFichero
+	 * @param campoFichero el nuevo valor de campoFichero
 	 */
 	public void setCampoFichero(final String campoFichero) {
 		this.campoFichero = campoFichero;
@@ -482,8 +478,7 @@ public class DialogFichero extends DialogControllerBase {
 	/**
 	 * Establece el valor de tipoCampoFichero.
 	 *
-	 * @param tipoCampoFichero
-	 *            el nuevo valor de tipoCampoFichero
+	 * @param tipoCampoFichero el nuevo valor de tipoCampoFichero
 	 */
 	public void setTipoCampoFichero(final TypeCampoFichero tipoCampoFichero) {
 		this.tipoCampoFichero = tipoCampoFichero;
@@ -501,8 +496,7 @@ public class DialogFichero extends DialogControllerBase {
 	/**
 	 * Establece el valor de data.
 	 *
-	 * @param data
-	 *            el nuevo valor de data
+	 * @param data el nuevo valor de data
 	 */
 	public void setData(final Entidad data) {
 		this.entidad = data;
@@ -520,8 +514,7 @@ public class DialogFichero extends DialogControllerBase {
 	/**
 	 * Establece el valor de existeFichero.
 	 *
-	 * @param existeFichero
-	 *            el nuevo valor de existeFichero
+	 * @param existeFichero el nuevo valor de existeFichero
 	 */
 	public void setExisteFichero(final boolean existeFichero) {
 		this.existeFichero = existeFichero;
@@ -539,8 +532,7 @@ public class DialogFichero extends DialogControllerBase {
 	/**
 	 * Establece el valor de extensiones.
 	 *
-	 * @param extensiones
-	 *            el nuevo valor de extensiones
+	 * @param extensiones el nuevo valor de extensiones
 	 */
 	public void setExtensiones(final String extensiones) {
 		this.extensiones = extensiones;
@@ -558,8 +550,7 @@ public class DialogFichero extends DialogControllerBase {
 	/**
 	 * Establece el valor de nombreFichero.
 	 *
-	 * @param nombreFichero
-	 *            el nuevo valor de nombreFichero
+	 * @param nombreFichero el nuevo valor de nombreFichero
 	 */
 	public void setNombreFichero(final String nombreFichero) {
 		this.nombreFichero = nombreFichero;
@@ -577,8 +568,7 @@ public class DialogFichero extends DialogControllerBase {
 	/**
 	 * Establece el valor de mostrarQuitar.
 	 *
-	 * @param tipoEntidad
-	 *            el nuevo valor de mostrarQuitar
+	 * @param tipoEntidad el nuevo valor de mostrarQuitar
 	 */
 	public void setMostrarQuitar(final boolean tipoEntidad) {
 		this.mostrarQuitar = tipoEntidad;
@@ -592,8 +582,7 @@ public class DialogFichero extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idEntidad
-	 *            the idEntidad to set
+	 * @param idEntidad the idEntidad to set
 	 */
 	public void setIdEntidad(final String idEntidad) {
 		this.idEntidad = idEntidad;

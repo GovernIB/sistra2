@@ -42,9 +42,6 @@ public final class ValidacionesTipo {
 	/** Atributo constante PATRON_EMAIL. */
 	private final Pattern patronEmail;
 
-	/** Atributo patron fecha de ValidacionesTipoImpl. */
-	private final Pattern patronFecha;
-
 	/** Atributo patron hora de ValidacionesTipoImpl. */
 	private final Pattern patronHora;
 
@@ -92,7 +89,7 @@ public final class ValidacionesTipo {
 	/** Constantes para el IBAN. **/
 	private static final int IBANNUMBER_MIN_SIZE = 15;
 	private static final int IBANNUMBER_MAX_SIZE = 34;
-	private static final BigInteger IBANNUMBER_MAGIC_NUMBER = new BigInteger("97");
+	private static final BigInteger IBANNUMBER_MAGIC_NUMBER = BigInteger.valueOf(new Long("97"));
 
 	/**
 	 * Constructor.
@@ -103,7 +100,6 @@ public final class ValidacionesTipo {
 		patronImporte = Pattern.compile("^[0-9]+(,[0-9]{1,2})?$");
 		patronEmail = Pattern.compile(
 				"^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,4}$");
-		patronFecha = Pattern.compile("(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((1|2)\\d\\d\\d)");
 		patronHora = Pattern.compile("^([01]?[0-9]|2[0-3]):[0-5][0-9]$");
 	}
 
@@ -122,10 +118,8 @@ public final class ValidacionesTipo {
 	/**
 	 * Verifica expresión regular.
 	 *
-	 * @param texto
-	 *            Texto a validar
-	 * @param pattern
-	 *            Patron que valida el texto
+	 * @param texto   Texto a validar
+	 * @param pattern Patron que valida el texto
 	 * @return boolean true Si cumple el patron false Si no cumple el patron
 	 */
 	private static boolean compruebaRegExp(final String texto, final Pattern pattern) {
@@ -247,7 +241,7 @@ public final class ValidacionesTipo {
 		final boolean codigoBancoCorrecto = banco != null && banco.length() == 4;
 		final boolean codigoPaisCorrecto = pais != null && pais.length() == 2;
 		final boolean codigoLocalidadCorrecto = localidad != null && localidad.length() == 2;
-		final boolean codigoSucursalCorrecto = sucursal == null || (sucursal != null && sucursal.length() == 3);
+		final boolean codigoSucursalCorrecto = sucursal == null || sucursal.length() == 3;
 
 		return codigoBancoCorrecto && codigoPaisCorrecto && codigoLocalidadCorrecto && codigoSucursalCorrecto;
 	}
@@ -255,14 +249,10 @@ public final class ValidacionesTipo {
 	/**
 	 * Verifica digitos cuenta.
 	 *
-	 * @param entidad
-	 *            entidad
-	 * @param sucursal
-	 *            sucursal
-	 * @param dc
-	 *            digito control
-	 * @param cuenta
-	 *            num cuenta
+	 * @param entidad  entidad
+	 * @param sucursal sucursal
+	 * @param dc       digito control
+	 * @param cuenta   num cuenta
 	 * @return true si valido
 	 */
 	private boolean verificaDigitoControlCCC(final String entidad, final String sucursal, final String dc,
@@ -325,20 +315,11 @@ public final class ValidacionesTipo {
 	/**
 	 * Valida si el parametro String es valido (No es nulo y tiene contenido).
 	 *
-	 * @param token
-	 *            String a Validar
+	 * @param token String a Validar
 	 * @return true: si valido true, false: si cadena vacia
 	 */
 	private static boolean esCadenaVacia(final String token) {
 		return (isNull(token) || (token.length() == 0));
-	}
-
-	public boolean esFecha(final String fecha) {
-		boolean res = (!esCadenaVacia(fecha) && compruebaRegExp(fecha, patronFecha));
-		if (!res) {
-			res = esFecha(fecha, FORMATO_FECHA);
-		}
-		return res;
 	}
 
 	public boolean esHora(final String hora) {
@@ -374,8 +355,7 @@ public final class ValidacionesTipo {
 	/**
 	 * Método para Es numerico de ValidacionesTipoImpl.
 	 *
-	 * @param numero
-	 *            Parámetro numero
+	 * @param numero Parámetro numero
 	 * @return true, si es satisfactorio
 	 */
 	private boolean esNumerico(final String numero) {
@@ -465,10 +445,8 @@ public final class ValidacionesTipo {
 	/**
 	 * Método para Valida fecha fin de la clase ValidacionesTipoImpl.
 	 *
-	 * @param fechaUno
-	 *            Parámetro fecha uno
-	 * @param fechaDos
-	 *            Parámetro fecha dos
+	 * @param fechaUno Parámetro fecha uno
+	 * @param fechaDos Parámetro fecha dos
 	 * @return el int
 	 */
 	private int validaFechaFin(final Date fechaUno, final Date fechaDos) {
@@ -483,54 +461,40 @@ public final class ValidacionesTipo {
 		return resultado;
 	}
 
-	public int validaFechaFin(final String fechaUno, final String fechaDos) throws ValidacionTipoException {
-		return validaFechaFinImpl(fechaUno, fechaDos, FORMATO_FECHA);
-	}
-
 	/**
 	 * Método para Valida fecha fin impl de la clase ValidacionesTipoImpl.
 	 *
-	 * @param fechaUno
-	 *            Parámetro fecha uno
-	 * @param fechaDos
-	 *            Parámetro fecha dos
-	 * @param formatoFecha2
-	 *            Parámetro formato fecha2
+	 * @param fechaUno      Parámetro fecha uno
+	 * @param fechaDos      Parámetro fecha dos
+	 * @param iformatoFecha Parámetro formato fecha
 	 * @return el int
-	 * @throws ValidacionTipoException
-	 *             Excepcion validacion
+	 * @throws ValidacionTipoException Excepcion validacion
 	 */
-	private int validaFechaFinImpl(final String fechaUno, final String fechaDos, final String formatoFecha2)
+	public int validaFechaFin(final String fechaUno, final String fechaDos, final String iformatoFecha)
 			throws ValidacionTipoException {
-		if ((fechaUno == null) || (fechaDos == null)) {
+		if (fechaUno == null || fechaDos == null) {
 			throw new ValidacionTipoException("Se está pasando una fecha vacía.");
 		}
 		try {
-			final SimpleDateFormat formatoFecha = new SimpleDateFormat(formatoFecha2);
+			final SimpleDateFormat formatoFecha = new SimpleDateFormat(iformatoFecha);
 			formatoFecha.setLenient(false);
 			final Date fUno = formatoFecha.parse(fechaUno);
 			final Date fDos = formatoFecha.parse(fechaDos);
 			return validaFechaFin(fUno, fDos);
 		} catch (final ParseException e) {
-			throw new ValidacionTipoException("El formato de fecha no es correcta. Debe ser " + formatoFecha2 + ".", e);
+			throw new ValidacionTipoException("El formato de fecha no es correcta. Debe ser " + iformatoFecha + ".", e);
 		}
-	}
-
-	public int validaFechaActual(final String fecha) throws ValidacionTipoException {
-		return validaFechaActualImpl(fecha, FORMATO_FECHA);
 	}
 
 	/**
 	 * Valida contra fecha actual.
 	 *
-	 * @param fecha
-	 *            Fecha
-	 * @param formato
-	 *            Formato fecha
+	 * @param fecha   Fecha
+	 * @param formato Formato fecha
 	 * @return entero
 	 * @throws ValidacionTipoException
 	 */
-	private int validaFechaActualImpl(final String fecha, final String formato) throws ValidacionTipoException {
+	public int validaFechaActual(final String fecha, final String formato) throws ValidacionTipoException {
 		final SimpleDateFormat formatoFecha = new SimpleDateFormat(formato);
 		formatoFecha.setLenient(false);
 		if (fecha == null) {
@@ -577,8 +541,7 @@ public final class ValidacionesTipo {
 	/**
 	 * Valida si el objeto pasado es nulo.
 	 *
-	 * @param nulo
-	 *            Objeto a Validar
+	 * @param nulo Objeto a Validar
 	 * @return true, si es null true si es valido false si no es valido
 	 */
 	private static boolean isNull(final Object nulo) {
@@ -588,8 +551,7 @@ public final class ValidacionesTipo {
 	/**
 	 * Valida si el objeto pasado no es nulo.
 	 *
-	 * @param nulo
-	 *            Objeto a Validar
+	 * @param nulo Objeto a Validar
 	 * @return true, si es not null true si es valido false si no es valido
 	 */
 	private static boolean isNotNull(final Object nulo) {
@@ -599,10 +561,8 @@ public final class ValidacionesTipo {
 	/**
 	 * Comprueba longitud.
 	 *
-	 * @param texto
-	 *            Texto
-	 * @param tamanyo
-	 *            Tamaño
+	 * @param texto   Texto
+	 * @param tamanyo Tamaño
 	 * @return 1 / -1
 	 */
 	private static int longitudJava(final String texto, final long tamanyo) {
@@ -619,12 +579,7 @@ public final class ValidacionesTipo {
 
 	public int validaFechaHoraFin(final String pFechaHoraUno, final String pFechaHoraDos, final String formato)
 			throws ValidacionTipoException {
-		return validaFechaFinImpl(pFechaHoraUno, pFechaHoraDos, formato);
-	}
-
-	public String getFechaActual() {
-		final SimpleDateFormat sdf = new SimpleDateFormat(FORMATO_FECHA);
-		return sdf.format(new Date());
+		return validaFechaFin(pFechaHoraUno, pFechaHoraDos, formato);
 	}
 
 	public String getFechaActual(final String formato) {
@@ -703,10 +658,8 @@ public final class ValidacionesTipo {
 	 * Valida los separadores usados en la conversion de double a cadena y
 	 * viceversa.
 	 *
-	 * @param pSeparadorMiles
-	 *            Separador miles
-	 * @param pSeparadorDecimales
-	 *            Separador decimales
+	 * @param pSeparadorMiles     Separador miles
+	 * @param pSeparadorDecimales Separador decimales
 	 * @throws ValidacionTipoException
 	 */
 	private void validarSeparadoresFormatearDouble(final String pSeparadorMiles, final String pSeparadorDecimales)
@@ -773,10 +726,8 @@ public final class ValidacionesTipo {
 	/**
 	 * Parsea fecha de string.
 	 *
-	 * @param fecha
-	 *            fecha
-	 * @param formato
-	 *            formato
+	 * @param fecha   fecha
+	 * @param formato formato
 	 * @return fecha
 	 * @throws ValidacionTipoException
 	 */
@@ -793,10 +744,8 @@ public final class ValidacionesTipo {
 	/**
 	 * Parsea fecha de string.
 	 *
-	 * @param fecha
-	 *            fecha
-	 * @param formato
-	 *            formato
+	 * @param fecha   fecha
+	 * @param formato formato
 	 * @return fecha
 	 * @throws ValidacionTipoException
 	 */
@@ -804,11 +753,6 @@ public final class ValidacionesTipo {
 		final SimpleDateFormat df = new SimpleDateFormat(formato);
 		df.setLenient(false);
 		return df.format(fecha);
-	}
-
-	public int distanciaDias(final Date pFecha1, final Date pFecha2) throws ValidacionTipoException {
-		return distanciaDiasImpl(formateaFecha(pFecha1, FORMATO_FECHA), formateaFecha(pFecha2, FORMATO_FECHA), false,
-				FORMATO_FECHA);
 	}
 
 	public int distanciaDias(final String pFecha1, final String pFecha2, final String formato)
@@ -824,12 +768,9 @@ public final class ValidacionesTipo {
 	/**
 	 * Calcula distancia entre dias.
 	 *
-	 * @param pFecha1
-	 *            Fecha inicio
-	 * @param pFecha2
-	 *            Fecha fin
-	 * @param pHabiles
-	 *            habiles
+	 * @param pFecha1  Fecha inicio
+	 * @param pFecha2  Fecha fin
+	 * @param pHabiles habiles
 	 * @return distancia entre dias
 	 * @throws ValidacionTipoException
 	 */
@@ -884,8 +825,7 @@ public final class ValidacionesTipo {
 	/**
 	 * Chequea codigo IBAN de una cuenta.
 	 *
-	 * @param accountNumber
-	 *            Cuenta
+	 * @param accountNumber Cuenta
 	 * @return true si OK
 	 */
 	private boolean checkIBAN(final String accountNumber) {

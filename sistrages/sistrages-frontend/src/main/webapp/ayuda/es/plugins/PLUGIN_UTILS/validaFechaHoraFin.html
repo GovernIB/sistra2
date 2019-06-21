@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_UTILS.validaFechaHoraFin(fecha1, fecha2)');
+		copiarPortapeles('PLUGIN_UTILS.validaFechaHoraFin(fecha1, fecha2, formatoFecha)');
 	}
 </script>
 <body class="bodyPlugins">
@@ -21,14 +21,14 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	validaFechaHoraFin(String fecha1, String fecha2): int
+	validaFechaHoraFin(String fecha1, String fecha2, String formatoFecha): int
 </h1>
 <p>
 	<b>DESCRIPCIÓN</b>
 </p>
 <p>
 	<ul>
-    	<li>Método que permite comparar 2 fechas. Las fechas deben tener el formato yyyy-MM-dd HH:mm:ss.</li>
+    	<li>Método que permite comparar 2 fechas. </li>
 	</ul>
 </p>
 <p>
@@ -36,8 +36,9 @@
 </p>
 <p>
 	<ul>
-	<li><b>fecha1</b>: Cadena de texto que representa la primera fecha. El formato de la cadena debe ser yyyy-MM-dd HH:mm:ss. </li>
-	<li><b>fecha2</b>: Cadena de texto que representa la segunda fecha. El formato de la cadena debe ser yyyy-MM-dd HH:mm:ss.</li>
+		<li><b>fecha1</b>: Cadena de texto que representa la primera fecha.  </li>
+		<li><b>fecha2</b>: Cadena de texto que representa la segunda fecha. </li>
+		<li><b>formatoFecha</b>: Formato de la fecha. Es opcional y el formato por defecto es yyyy-MM-dd HH:mm:ss.</li>
 	</ul>
 </p>
 <p>
@@ -57,16 +58,16 @@
 <p>
 	<b>EJEMPLOS</b>
 </p>
-<p><b>Ejemplo 1</b> Comparar las siguientes fechas '04 de junio de 2018, 10:30:12' y '11 de junio de 2018, 7:30:15'.  </p>
+<p><b>Ejemplo 1</b> Comparar las siguientes fechas '04 de junio de 2018, 10:30:12' y '11 de junio de 2018, 7:30:15' (sin formato especificado).  </p>
  <p class="codigoScript">
-var valida = PLUGIN_UTILS.validaFechaHoraFin('2018-06-04 10:30:12', '2018-06-11 7:30:15');
+var valida = PLUGIN_UTILS.validaFechaHoraFin('2018-06-04 10:30:12', '2018-06-11 7:30:15', null);
 </p>
 <p>La función validaFechaHoraFin retorna -1, ya que fecha2 es mayor que fecha1.</p>
 <br />
 
-<p><b>Ejemplo 2</b> Comparar las siguientes fechas '15 de mayo de 2018' y '12 de mayo de 2018 7:30:15'. </p>
+<p><b>Ejemplo 2</b> Comparar las siguientes fechas '15 de mayo de 2018' y '12 de mayo de 2018 7:30:15' (con el formato especificado 'dd/MM/yyyy HH:mm:ss'). </p>
  <p class="codigoScript">
-	var valida = PLUGIN_UTILS.validaFechaHoraFin('2018-05-15 10:30:12', '2018-05-12 7:30:15');
+	var valida = PLUGIN_UTILS.validaFechaHoraFin('15/05/2018 10:30:12', '12/05/2018 7:30:15', 'dd/MM/yyyy HH:mm:ss');
 </p>
 <p>La función validaFechaHoraFin retorna 1, ya que fecha1 es mayor que fecha2.</p>
 <br />

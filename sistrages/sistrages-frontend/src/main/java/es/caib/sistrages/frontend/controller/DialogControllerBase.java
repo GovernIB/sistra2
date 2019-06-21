@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -33,6 +34,11 @@ public abstract class DialogControllerBase {
 	 */
 	protected Logger getLogger() {
 		return LOGGER;
+	}
+
+	/** Es desarrollo? **/
+	public boolean isDesarrollo() {
+		return UtilJSF.checkEntorno(TypeEntorno.DESARROLLO);
 	}
 
 	/**
@@ -86,8 +92,7 @@ public abstract class DialogControllerBase {
 	/**
 	 * Establece modo acceso.
 	 *
-	 * @param modoAcceso
-	 *            modo acceso
+	 * @param modoAcceso modo acceso
 	 */
 	public void setModoAcceso(final String modoAcceso) {
 		this.modoAcceso = modoAcceso;
@@ -151,12 +156,9 @@ public abstract class DialogControllerBase {
 	 * Añade mensaje al contexto para que lo trate la aplicación (growl,
 	 * messages,...).
 	 *
-	 * @param nivel
-	 *            Nivel gravedad
-	 * @param message
-	 *            Mensaje
-	 * @param validationFailed
-	 *            añade la marca de error de validacion
+	 * @param nivel            Nivel gravedad
+	 * @param message          Mensaje
+	 * @param validationFailed añade la marca de error de validacion
 	 */
 	public void addMessageContext(final TypeNivelGravedad nivel, final String message, final boolean validationFailed) {
 		addMessageContext(nivel, message, message, validationFailed);
@@ -166,14 +168,10 @@ public abstract class DialogControllerBase {
 	 * Añade mensaje al contexto para que lo trate la aplicación (growl,
 	 * messages,...).
 	 *
-	 * @param nivel
-	 *            Nivel gravedad
-	 * @param message
-	 *            Mensaje
-	 * @param detail
-	 *            Detalle
-	 * @param validationFailed
-	 *            añade la marca de error de validacion
+	 * @param nivel            Nivel gravedad
+	 * @param message          Mensaje
+	 * @param detail           Detalle
+	 * @param validationFailed añade la marca de error de validacion
 	 */
 	public void addMessageContext(final TypeNivelGravedad nivel, final String message, final String detail,
 			final boolean validationFailed) {

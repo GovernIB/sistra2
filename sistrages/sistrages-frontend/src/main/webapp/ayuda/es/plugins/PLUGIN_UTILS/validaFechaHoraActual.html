@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_UTILS.validaFechaHoraActual(fecha)');
+		copiarPortapeles('PLUGIN_UTILS.validaFechaHoraActual(fecha, formatoFecha)');
 	}
 </script>
 <body class="bodyPlugins">
@@ -21,14 +21,14 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	validaFechaHoraActual(String fecha): int
+	validaFechaHoraActual(String fecha, String formatoFecha): int
 </h1>
 <p>
 	<b>DESCRIPCIÓN</b>
 </p>
 <p>
 	<ul>
-    	<li>Método que permite comparar, la fecha indicada con la fecha actual. La fecha debe tener el formato dd/MM/yyyy HH:mm:ss.</li>
+    	<li>Método que permite comparar, la fecha indicada con la fecha actual.</li>
 	</ul>
 </p>
 <p>
@@ -36,7 +36,8 @@
 </p>
 <p>
 	<ul>
-		<li><b>fecha</b>: Cadena de texto que representa la fecha a comparar con la fecha actual. el formato de la cadena debe ser dd/MM/yyyy HH:mm:ss </li>
+		<li><b>fecha</b>: Cadena de texto que representa la fecha a comparar con la fecha actual.</li>
+		<li><b>formatoFecha</b>: Formato de la fecha. Es opcional y el formato por defecto es yyyy-MM-dd HH:mm:ss.</li>
 	</ul>
 </p>
 <p>
@@ -56,23 +57,23 @@
 <p>
 	<b>EJEMPLOS</b>
 </p>
-<p><b>Ejemplo 1</b> Comparar la cadena de texto '09/01/2019 09:53:03' con la fecha/hora actual (suponiendo que hoy es 9 de enero de 2019  09:53:03). </p>
+<p><b>Ejemplo 1</b> Comparar la cadena de texto '2019-01-09 09:53:03' (sin formato especificado) con la fecha/hora actual (suponiendo que hoy es 9 de enero de 2019  09:53:03). </p>
  <p class="codigoScript">
-var valida = PLUGIN_UTILS.validaFechaHoraActual('09/01/2019 09:53:03');
+var valida = PLUGIN_UTILS.validaFechaHoraActual('2019-01-09 09:53:03', null);
 </p>
 <p>La función validaFechaHoraActual retorna 0, ya que la fecha indicada se corresponde con la fecha/hora actual.</p>
 <br />
 
-<p><b>Ejemplo 2</b> Comparar la cadena de texto '02/01/2019 07:43:03' con la fecha/hora actual  (suponiendo que hoy es 9 de enero de 2019).   </p>
+<p><b>Ejemplo 2</b> Comparar la cadena de texto '02/01/2019 07:43:03' (con el formato 'dd/MM/yyyy HH:mm:ss')  con la fecha/hora actual  (suponiendo que hoy es 9 de enero de 2019).   </p>
  <p class="codigoScript">
-	var valida = PLUGIN_UTILS.validaFechaHoraActual('02/01/2019 07:43:03');
+	var valida = PLUGIN_UTILS.validaFechaHoraActual('02/01/2019 07:43:03','dd/MM/yyyy HH:mm:ss');
 </p>
 <p>La función validaFechaHoraActual retorna -1, ya que la fecha indicada es menor que la fecha/hora actual.</p>
 <br />
 
-<p><b>Ejemplo 3</b> Comparar la cadena de texto '12/01/2019 19:13:03' con la fecha/hora actual  (suponiendo que hoy es 9 de enero de 2019).   </p>
+<p><b>Ejemplo 3</b> Comparar la cadena de texto '2019-01-12 19:13:03' (sin formato especificado)  con la fecha/hora actual  (suponiendo que hoy es 9 de enero de 2019).   </p>
  <p class="codigoScript">
-	var valida = PLUGIN_UTILS.validaFechaHoraActual('12/01/2019 19:13:03');
+	var valida = PLUGIN_UTILS.validaFechaHoraActual('2019-01-12 19:13:03'. null);
 </p>
 <p>La función validaFechaHoraActual retorna 1, ya que la fecha indicada es mayor que la fecha/hora actual.</p>
 <br />

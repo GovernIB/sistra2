@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_UTILS.obtenerMes(fecha)');
+		copiarPortapeles('PLUGIN_UTILS.obtenerMes(fecha, formatoFecha)');
 	}
 </script>
 <body class="bodyPlugins">
@@ -21,7 +21,7 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	obtenerMes(String fecha): int
+	obtenerMes(String fecha, String formatoFecha): int
 </h1>
 <p>
 	<b>DESCRIPCIÓ</b>
@@ -45,17 +45,24 @@
  <p>
 	<ul>
 		<li><b>int</b>: Mes de la data introduïda.</li>
+		<li><b>formatoFecha</b>: Format de la data. És opcional i el format per defecte és yyyy-MM-dd.</li>
 	</ul>
  </p>
  <p>
 	<b>EXEMPLES</b>
  </p>
 
- <p>Recuperar el mes de la data 22/06/2019. </p>
+ <p><b>Exemple 1</b> Recuperar el mes de la data 2019-06-22 (sense format especificat). </p>
  <p class="codigoScript">
-	var mes = PLUGIN_UTILS.obtenerMes('22/06/2019');
+	var anyo = PLUGIN_UTILS.obtenerMes('2019-06-22', null);
  </p>
-<p>La funció obtenerMes retorna 6.</p>
+<p> La funció obtenerMes retorna 6.</p>
+<br />
+ <p><b>Exemple 2</b> Recuperar el mes de la data 22/06/2019 (amb el format dd/MM/yyyy). </p>
+ <p class="codigoScript">
+	var anyo = PLUGIN_UTILS.obtenerMes('22/06/2019', 'dd/MM/yyyy');
+ </p>
+<p> La funció obtenerMes retorna 6.</p>
 <br />
 
 </body>

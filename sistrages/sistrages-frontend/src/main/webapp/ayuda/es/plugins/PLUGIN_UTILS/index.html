@@ -28,12 +28,12 @@
 	<div class="seccionMetodos">
 		<ul>
 			<li>
-				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.distanciaDias(fecha1, fecha2)'); return false;" />
-				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=distanciaDias">distanciaDias(fecha1, fecha2)</a> <span>: int</span>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.distanciaDias(fecha1, fecha2, formatoFecha)'); return false;" />
+				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=distanciaDias">distanciaDias(fecha1, fecha2, formatoFecha)</a> <span>: int</span>
 			</li>
 			<li>
-				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.distanciaDiasHabiles(fecha1, fecha2)'); return false;" />
-				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=distanciaDiasHabiles">distanciaDiasHabiles(fecha1, fecha2)</a> <span>: int</span>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.distanciaDiasHabiles(fecha1, fecha2, formatoFecha)'); return false;" />
+				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=distanciaDiasHabiles">distanciaDiasHabiles(fecha1, fecha2, formatoFecha)</a> <span>: int</span>
 			</li>
 			<li>
 				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.esCadenaVacia(cadena)'); return false;" />
@@ -56,8 +56,8 @@
 				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=esEntero">esEntero(entero)</a> <span>: boolean</span>
 			</li>
 			<li>
-				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.esFecha(fecha)'); return false;" />
-				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=esFecha">esFecha(fecha)</a> <span>: boolean</span>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.esFecha(fecha, formatoFecha)'); return false;" />
+				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=esFecha">esFecha(fecha, formatoFecha)</a> <span>: boolean</span>
 			</li>
 			<li>
 				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.esIgual(cadena1, cadena2)'); return false;" />
@@ -160,8 +160,8 @@
 				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=formateaNombreApellidos">formateaNombreApellidos(formato, nombre, apellido1, apellido2)</a> <span>: String</span>
 			</li>
 			<li>
-				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.getFechaActual()'); return false;" />
-				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=getFechaActual">getFechaActual()</a> <span>: String</span>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.getFechaActual(formatoFecha)'); return false;" />
+				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=getFechaActual">getFechaActual(formatoFecha)</a> <span>: String</span>
 			</li>
 			<li>
 				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.hayDistanciaAnyos(fechaIni, fechaFin, formatoFechas, distanciaAnyos)'); return false;" />
@@ -172,16 +172,16 @@
 				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=lpad">lpad(texto, longitudMinima, cadenaRelleno)</a> <span>: String</span>
 			</li>
 			<li>
-				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.obtenerAnyo(fecha)'); return false;" />
-				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=obtenerAnyo">obtenerAnyo(fecha)</a> <span>: int</span>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.obtenerAnyo(fecha, formatoFecha)'); return false;" />
+				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=obtenerAnyo">obtenerAnyo(fecha, formatoFecha)</a> <span>: int</span>
 			</li>
 			<li>
-				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.obtenerMes(fecha)'); return false;" />
-				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=obtenerMes">obtenerMes(fecha)</a> <span>: int</span>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.obtenerMes(fecha, formatoFecha)'); return false;" />
+				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=obtenerMes">obtenerMes(fecha, formatoFecha)</a> <span>: int</span>
 			</li>
 			<li>
-				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.obtenerDia(fecha)'); return false;" />
-				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=obtenerDia">obtenerDia(fecha)</a> <span>: int</span>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.obtenerDia(fecha, formatoFecha)'); return false;" />
+				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=obtenerDia">obtenerDia(fecha, formatoFecha)</a> <span>: int</span>
 			</li>
 			<li>
 				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.replace(texto, oldChar, newChar)'); return false;" />
@@ -204,24 +204,24 @@
 				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=rtrim">rtrim(cadena)</a> <span>: String</span>
 			</li>
 			<li>
-				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.sumaDias(fecha, dias)'); return false;" />
-				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=sumaDias">sumaDias(fecha, dias)</a> <span>: int</span>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.sumaDias(fecha, dias, formatoFecha)'); return false;" />
+				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=sumaDias">sumaDias(fecha, dias, formatoFecha)</a> <span>: int</span>
 			</li>
 			<li>
 				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.validaExpresionRegular(texto, expresion)'); return false;" />
 				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=validaExpresionRegular">validaExpresionRegular(texto, expresion)</a> <span>: boolean</span>
 			</li>
 			<li>
-				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.validaFechaActual(fecha)'); return false;" />
-				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=validaFechaActual">validaFechaActual(fecha)</a> <span>: boolean</span>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.validaFechaActual(fecha, formatoFecha)'); return false;" />
+				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=validaFechaActual">validaFechaActual(fecha, formatoFecha)</a> <span>: boolean</span>
 			</li>
 			<li>
-				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.validaFechaFin(fecha1, fecha2)'); return false;" />
-				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=validaFechaFin">validaFechaFin(fecha1, fecha2)</a> <span>: boolean</span>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.validaFechaFin(fecha1, fecha2, formatoFecha)'); return false;" />
+				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=validaFechaFin">validaFechaFin(fecha1, fecha2, formatoFecha)</a> <span>: boolean</span>
 			</li>
 			<li>
-				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.validaFechaHoraFin(fecha1, fecha2)'); return false;" />
-				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=validaFechaHoraFin">validaFechaHoraFin(fecha1, fecha2)</a> <span>: boolean</span>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.validaFechaHoraFin(fecha1, fecha2, formatoFecha)'); return false;" />
+				<a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=validaFechaHoraFin">validaFechaHoraFin(fecha1, fecha2, formatoFecha)</a> <span>: boolean</span>
 			</li>
 			<li>
 				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('PLUGIN_UTILS.validaRango(valor, minimo, maximo)'); return false;" />

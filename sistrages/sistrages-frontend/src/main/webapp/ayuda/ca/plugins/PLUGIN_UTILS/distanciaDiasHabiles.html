@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_UTILS.distanciaDiasHabiles(fecha1, fecha2)');
+		copiarPortapeles('PLUGIN_UTILS.distanciaDiasHabiles(fecha1, fecha2, formatoFecha)');
 	}
 </script>
 <body class="bodyPlugins">
@@ -21,7 +21,7 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	distanciaDiasHabiles(String fecha1, String fecha2): int
+	distanciaDiasHabiles(String fecha1, String fecha2, String formatoFecha): int
 </h1>
 <p>
 	<b>DESCRIPCIÓ</b>
@@ -36,8 +36,9 @@
 </p>
 <p>
 	<ul>
-		<li><b>fecha1</b>: Cadena que conté la data inicial, amb el següent format yyyy-MM-dd.</li>
-		<li><b>fecha2</b>: Cadena que conté la data final, amb el següent format yyyy-MM-dd.</li>
+		<li><b>fecha1</b>: Cadena que conté la data inicial.</li>
+		<li><b>fecha2</b>: Cadena que conté la data final.</li>
+		<li><b>formatoFecha</b>: Format de les dates. És opcional i el format per defecte és yyyy-MM-dd.</li>
 	</ul>
 </p>
 <p>
@@ -51,11 +52,15 @@
 <p>
 	<b>EXEMPLES</b>
 </p>
-<p>
-Si volem esbrinar el nombre de dies hàbils, és a dir sense comptar caps de setmana, que hi ha entre 2 dates (les dates s'han d'especificar usant el següent format yyyy-MM-dd), per exemple, entre el 23/04/2012 i 13/06/2012 podem usar la següent sentència:
+<p><b>Exemple 1</b> Si volem esbrinar el nombre de dies hàbils, és a dir sense comptar caps de setmana, que hi ha entre 2 dates (les dates s'han d'especificar usant el següent format yyyy-MM-dd), per exemple, entre el 23/04/2012 i 13/06/2012 podem usar la següent sentència:
 </p>
  <p class="codigoScript">
-var diasHabiles = PLUGIN_UTILS.distanciaDiasHabiles('2012-04-23', '2012-06-13');
+var diasHabiles = PLUGIN_UTILS.distanciaDiasHabiles('2012-04-23', '2012-06-13', null);
+</p>
+<p><b>Exemple 2</b> Si volem esbrinar el nombre de dies hàbils, és a dir sense comptar caps de setmana, que hi ha entre 2 dates (especificant el format dd/MM/yyyy), per exemple, entre el 23/04/2012 i 13/06/2012 podem usar la següent sentència:
+</p>
+ <p class="codigoScript">
+var diasHabiles = PLUGIN_UTILS.distanciaDiasHabiles('23/04/2012', '13/06/2012', 'dd/MM/yyyy');
 </p>
 </body>
 </html>

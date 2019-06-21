@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_UTILS.esFecha(fecha)');
+		copiarPortapeles('PLUGIN_UTILS.esFecha(fecha,formatoFecha)');
 	}
 </script>
 <body class="bodyPlugins">
@@ -21,14 +21,14 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	esFecha(String fecha): boolean
+	esFecha(String fecha, String formatoFecha): boolean
 </h1>
 <p>
 	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-    	<li>Valida que la data introduïda no sigui nul·la ni buida, i que estigui formada de la següent manera: yyyy-MM-dd.</li>
+    	<li>Valida que la data introduïda no sigui nul·la ni buida.</li>
 	</ul>
 </p>
 <p>
@@ -37,6 +37,7 @@
 <p>
 	<ul>
 		<li><b>fecha</b>: Data a validar.</li>
+		<li><b>formatoFecha</b>: Format de la data. És opcional i el format per defecte és yyyy-MM-dd.</li>
 	</ul>
 </p>
 <p>
@@ -52,7 +53,7 @@
 </p>
 <p><b>Exemple 1</b> Validar una cadena de caràcters buida '' </p>
  <p class="codigoScript">
-	var valido = PLUGIN_UTILS.esFecha('');
+	var valido = PLUGIN_UTILS.esFecha('', null);
 </p>
 <p>La funció esFecha retorna 'false', pel fet que el valor indicat no és una data vàlida.</p>
 <br />
@@ -60,21 +61,28 @@
 <p><b>Exemple 2</b> Validar una cadena de caràcters nul·la. </p>
  <p class="codigoScript">
 	var fecha;<br />
-	var valido = PLUGIN_UTILS.esFecha(fecha);
+	var valido = PLUGIN_UTILS.esFecha(fecha, null);
 </p>
 <p>La funció esFecha retorna 'false', pel fet que el valor indicat no és una data vàlida.</p>
 <br />
 
 <p><b>Exemple 3</b> Validar la cadena de caràcters '10/06/2012'. </p>
  <p class="codigoScript">
-	var valido = PLUGIN_UTILS.esFecha('10/06/2012');
+	var valido = PLUGIN_UTILS.esFecha('10/06/2012', null);
 </p>
 <p>La funció esFecha retorna 'false', pel fet que el valor indicat no és una data vàlida, no segueix el format yyyy-MM-dd</p>
 <br />
 
-<p><b>Exemple 4</b> Validar la cadena de caràcters '2012-12-09'. </p>
+<p><b>Exemple 4</b> Validar la cadena de caràcters '10/06/2012'. </p>
  <p class="codigoScript">
-	var valido = PLUGIN_UTILS.esFecha('2012-12-09');
+	var valido = PLUGIN_UTILS.esFecha('10/06/2012', 'dd/MM/yyyy');
+</p>
+<p>La funció esFecha retorna 'true', pel fet que el valor indicat és una data vàlida amb el format dd/MM/yyyy</p>
+<br />
+
+<p><b>Exemple 5</b> Validar la cadena de caràcters '2012-12-09'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esFecha('2012-12-09', null);
 	</p>
 <p>La funció esFecha retorna 'true', pel fet que el valor indicat és una data vàlida.</p>
 <br />

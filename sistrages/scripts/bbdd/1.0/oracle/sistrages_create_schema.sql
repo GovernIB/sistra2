@@ -2012,7 +2012,9 @@ create table STG_PASREG
    PRG_REPVAL           NUMBER(1)            default 0 not null,
    PRG_SCRREP           NUMBER(18),
    PRG_SCRVAL           NUMBER(18),
-   PRG_SUBSAN           NUMBER(1)            default 0 not null
+   PRG_SUBSAN           NUMBER(1)            default 0 not null,
+   PRG_AVIFIN           NUMBER(1)            default 0 not null,
+   PRG_AVISCR           NUMBER(18)
 );
 
 comment on table STG_PASREG is
@@ -2059,6 +2061,12 @@ comment on column STG_PASREG.PRG_SCRVAL is
 
 comment on column STG_PASREG.PRG_SUBSAN is
 'Indica si se habilita subsanación';
+
+comment on column STG_PASREG.PRG_AVIFIN is
+'Indica si se avisa al finalizar trámite';
+
+comment on column STG_PASREG.PRG_AVISCR is
+'En caso de habilitar aviso, se indica mecanismo aviso';
 
 alter table STG_PASREG
    add constraint STG_PASREG_PK primary key (PRG_CODIGO);
@@ -3030,6 +3038,10 @@ alter table STG_PASREG
 alter table STG_PASREG
    add constraint STG_PASREG_TRADUC_FK3 foreign key (PRG_INSSUB)
       references STG_TRADUC (TRA_CODIGO);
+
+alter table STG_PASREG
+   add constraint STG_PASREG_SCRIPT_FK5 foreign key (PRG_AVISCR)
+      references STG_SCRIPT (SCR_CODIGO);
 
 alter table STG_PASREL
    add constraint STG_PASREL_PRLFTR_FK foreign key (PRL_CODIGO)

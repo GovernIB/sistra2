@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_UTILS.obtenerDia(fecha)');
+		copiarPortapeles('PLUGIN_UTILS.obtenerDia(fecha,formatoFecha)');
 	}
 </script>
 <body class="bodyPlugins">
@@ -21,7 +21,7 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	obtenerDia(String fecha): int
+	obtenerDia(String fecha, String formatoFecha): int
 </h1>
 <p>
 	<b>DESCRIPCIÓ</b>
@@ -37,6 +37,7 @@
  <p>
 	<ul>
 		<li><b>fecha</b>: Cadena que conté la data.</li>
+		<li><b>formatoFecha</b>: Format de la data. És opcional i el format per defecte és yyyy-MM-dd.</li>
 	</ul>
  </p>
  <p>
@@ -51,9 +52,15 @@
 	<b>EXEMPLES</b>
  </p>
 
- <p>Recuperar el dia de la data 22/06/2019. </p>
+ <p><b>Exemple 1</b> Recuperar el dia de la data 2019-06-22 (sense format especificat). </p>
  <p class="codigoScript">
-	var dia = PLUGIN_UTILS.obtenerDia('22/06/2019');
+	var anyo = PLUGIN_UTILS.obtenerDia('2019-06-22', null);
+ </p>
+<p> La funció obtenerDia retorna 22.</p>
+<br />
+ <p><b>Exemple 2</b> Recuperar el dia de la data 22/06/2019 (amb el format dd/MM/yyyy). </p>
+ <p class="codigoScript">
+	var anyo = PLUGIN_UTILS.obtenerDia('22/06/2019', 'dd/MM/yyyy');
  </p>
 <p> La funció obtenerDia retorna 22.</p>
 <br />

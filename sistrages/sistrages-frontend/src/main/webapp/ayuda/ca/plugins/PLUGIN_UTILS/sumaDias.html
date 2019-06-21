@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_UTILS.sumaDias(fecha, dias)');
+		copiarPortapeles('PLUGIN_UTILS.sumaDias(fecha, dias, formatoFecha)');
 	}
 </script>
 <body class="bodyPlugins">
@@ -21,7 +21,7 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	sumaDias(String fecha, int dias): String
+	sumaDias(String fecha, int dias, String formatoFecha): String
 </h1>
 <p>
 	<b>DESCRIPCIÓ</b>
@@ -39,6 +39,7 @@
 	<ul>
 		<li><b>fecha</b>: Cadena que conté la data.</li>
 		<li><b>dias</b>: Nombre de dies a sumar.</li>
+		<li><b>formatoFecha</b>: Format de la data. És opcional i el format per defecte és yyyy-MM-dd.</li>
 	</ul>
 </p>
 <p>
@@ -54,7 +55,7 @@
 </p>
 <p>Sumar 3 dies a la data 23/04/2012. </p>
  <p class="codigoScript">
-	var fecha = PLUGIN_UTILS.sumaDias('23/04/2012', 3);
+	var fecha = PLUGIN_UTILS.sumaDias('23/04/2012', 3, 'dd/MM/yyyy');
 </p>
 <p>La funció sumaDias retorna la cadena '26/04/2012'.</p>
 <br />

@@ -23,8 +23,7 @@ public final class PlgUtils implements PlgUtilsInt {
 	/**
 	 * Constructor.
 	 *
-	 * @param pDebugEnabled
-	 *            Debug enabled
+	 * @param pDebugEnabled Debug enabled
 	 */
 	public PlgUtils(final boolean pDebugEnabled) {
 		super();
@@ -116,7 +115,7 @@ public final class PlgUtils implements PlgUtilsInt {
 
 	@Override
 	public boolean esFecha(final String fecha, final String formato) {
-		return ValidacionesTipo.getInstance().esFecha(fecha, formato);
+		return ValidacionesTipo.getInstance().esFecha(fecha, getFormatoFecha(formato));
 	}
 
 	@Override
@@ -164,20 +163,61 @@ public final class PlgUtils implements PlgUtilsInt {
 		return ValidacionesTipo.getInstance().esTelefonoMovil(telefono);
 	}
 
-	@Override
-	public int validaFechaFin(final String fechaUno, final String fechaDos) throws ValidacionTipoException {
-		return ValidacionesTipo.getInstance().validaFechaFin(fechaUno, fechaDos);
+	/**
+	 * Obtiene el formato fecha, si es nulo el formato internacional o sino el
+	 * parámetro de entrada.
+	 *
+	 * @param formatoFecha
+	 * @return
+	 */
+	private String getFormatoFecha(final String formatoFecha) {
+		String formato;
+		if (formatoFecha == null || formatoFecha.isEmpty()) {
+			formato = ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL;
+		} else {
+			formato = formatoFecha;
+		}
+		return formato;
+	}
+
+	/**
+	 * Obtiene el formato fecha, si es nulo el formato internacional o sino el
+	 * parámetro de entrada.
+	 *
+	 * @param formatoFecha
+	 * @return
+	 */
+	private String getFormatoFechaHora(final String formatoFecha) {
+		String formato;
+		if (formatoFecha == null || formatoFecha.isEmpty()) {
+			formato = ValidacionesTipo.FORMATO_FECHAHORA_INTERNACIONAL;
+		} else {
+			formato = formatoFecha;
+		}
+		return formato;
 	}
 
 	@Override
-	public int validaFechaActual(final String fecha) throws ValidacionTipoException {
-		return ValidacionesTipo.getInstance().validaFechaActual(fecha);
+	public int validaFechaFin(final String fechaUno, final String fechaDos, final String formatoFecha)
+			throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().validaFechaFin(fechaUno, fechaDos, getFormatoFecha(formatoFecha));
 	}
 
 	@Override
-	public int validaFechaHoraFin(final String fechaHoraUno, final String fechaHoraDos) throws ValidacionTipoException {
+	public int validaFechaActual(final String fecha, final String formatoFecha) throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().validaFechaActual(fecha, getFormatoFecha(formatoFecha));
+	}
+
+	@Override
+	public int validaFechaHoraFin(final String fechaHoraUno, final String fechaHoraDos, final String formatoFecha)
+			throws ValidacionTipoException {
 		return ValidacionesTipo.getInstance().validaFechaHoraFin(fechaHoraUno, fechaHoraDos,
-				ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
+				getFormatoFechaHora(formatoFecha));
+	}
+
+	@Override
+	public int validaFechaHoraActual(final String fecha, final String formatoFecha) throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().validaFechaActual(fecha, getFormatoFechaHora(formatoFecha));
 	}
 
 	@Override
@@ -187,8 +227,8 @@ public final class PlgUtils implements PlgUtilsInt {
 	}
 
 	@Override
-	public String getFechaActual() {
-		return ValidacionesTipo.getInstance().getFechaActual(ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
+	public String getFechaActual(final String formatoFecha) {
+		return ValidacionesTipo.getInstance().getFechaActual(getFormatoFecha(formatoFecha));
 	}
 
 	@Override
@@ -205,35 +245,36 @@ public final class PlgUtils implements PlgUtilsInt {
 	}
 
 	@Override
-	public int obtenerAnyo(final String fecha) throws ValidacionTipoException {
-		return ValidacionesTipo.getInstance().obtenerAnyo(fecha, ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
+	public int obtenerAnyo(final String fecha, final String formatoFecha) throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().obtenerAnyo(fecha, getFormatoFecha(formatoFecha));
 	}
 
 	@Override
-	public int obtenerMes(final String fecha) throws ValidacionTipoException {
-		return ValidacionesTipo.getInstance().obtenerMes(fecha, ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
+	public int obtenerMes(final String fecha, final String formatoFecha) throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().obtenerMes(fecha, getFormatoFecha(formatoFecha));
 	}
 
 	@Override
-	public int obtenerDia(final String fecha) throws ValidacionTipoException {
-		return ValidacionesTipo.getInstance().obtenerDia(fecha, ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
+	public int obtenerDia(final String fecha, final String formatoFecha) throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().obtenerDia(fecha, getFormatoFecha(formatoFecha));
 	}
 
 	@Override
-	public String sumaDias(final String fecha, final int dias) throws ValidacionTipoException {
-		return ValidacionesTipo.getInstance().sumaDias(fecha, dias, ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
+	public String sumaDias(final String fecha, final int dias, final String formatoFecha)
+			throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().sumaDias(fecha, dias, getFormatoFecha(formatoFecha));
 	}
 
 	@Override
-	public int distanciaDias(final String fecha1, final String fecha2) throws ValidacionTipoException {
-		return ValidacionesTipo.getInstance().distanciaDias(fecha1, fecha2,
-				ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
+	public int distanciaDias(final String fecha1, final String fecha2, final String formatoFecha)
+			throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().distanciaDias(fecha1, fecha2, getFormatoFecha(formatoFecha));
 	}
 
 	@Override
-	public int distanciaDiasHabiles(final String fecha1, final String fecha2) throws ValidacionTipoException {
-		return ValidacionesTipo.getInstance().distanciaDiasHabiles(fecha1, fecha2,
-				ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
+	public int distanciaDiasHabiles(final String fecha1, final String fecha2, final String formatoFecha)
+			throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().distanciaDiasHabiles(fecha1, fecha2, getFormatoFecha(formatoFecha));
 	}
 
 	@Override

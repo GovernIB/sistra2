@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_UTILS.getFechaActual()');
+		copiarPortapeles('PLUGIN_UTILS.getFechaActual(formatoFecha)');
 	}
 </script>
 <body class="bodyPlugins">
@@ -21,7 +21,7 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	getFechaActual(): String
+	getFechaActual(String formatoFecha): String
 </h1>
 <p>
 	<b>DESCRIPCIÓ</b>
@@ -31,23 +31,38 @@
 		<li>Mètode que retorna la data actual del sistema.</li>
 	</ul>
  </p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>formatoFecha</b>: Format de la data. És opcional i el format per defecte és yyyy-MM-dd.</li>
+	</ul>
+</p>
  <p>
 	<b>PARÀMETRES DE SORTIDA</b>
  </p>
  <p>
 	<ul>
-		<li><b>string</b>: Cadena de caràcters que representa la data actual del sistema, amb el format yyyy-MM-dd.</li>
+		<li><b>string</b>: Cadena de caràcters que representa la data actual del sistema, amb el format especificat (per defecte yyyy-MM-dd).</li>
 	</ul>
  </p>
  <p>
 	<b>EXEMPLES</b>
  </p>
 
- <p>Suposem que avui és 7 de gener de 2019, i desitgem recuperar la data actual del sistema </p>
+ <p><b> Exemple 1</b> Suposem que avui és 7 de gener de 2019, i desitgem recuperar la data actual del sistema (i no passem cap format) </p>
  <p class="codigoScript">
-	var hoy = PLUGIN_UTILS.getFechaActual();
+	var hoy = PLUGIN_UTILS.getFechaActual(null);
  </p>
 <p> La funció getFechaActual retornarà '2019-01-07'.</p>
+<br />
+
+ <p><b> Exemple 2</b> Suposem que avui és 7 de gener de 2019, i desitgem recuperar la data actual del sistema (en el formato 'dd/MM/yyyy')  </p>
+ <p class="codigoScript">
+	var hoy = PLUGIN_UTILS.getFechaActual('dd/MM/yyyy');
+ </p>
+<p> La funció getFechaActual retornarà '01/07/2019'.</p>
 <br />
 
 </body>

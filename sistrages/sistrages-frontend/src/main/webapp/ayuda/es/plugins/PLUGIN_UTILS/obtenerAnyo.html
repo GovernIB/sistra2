@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_UTILS.obtenerAnyo(fecha)');
+		copiarPortapeles('PLUGIN_UTILS.obtenerAnyo(fecha,formatoFecha)');
 	}
 </script>
 <body class="bodyPlugins">
@@ -21,7 +21,7 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	obtenerAnyo(String fecha): int
+	obtenerAnyo(String fecha, String formatoFecha): int
 </h1>
 <p>
 	<b>DESCRIPCIÓN</b>
@@ -37,6 +37,7 @@
  <p>
 	<ul>
 		<li><b>fecha</b>: Cadena que contiene la fecha.</li>
+		<li><b>formatoFecha</b>: Formato de la fecha. Es opcional y el formato por defecto es yyyy-MM-dd.</li>
 	</ul>
  </p>
  <p>
@@ -51,12 +52,17 @@
 	<b>EJEMPLOS</b>
  </p>
 
- <p>Recuperar el año de la fecha 22/06/2019. </p>
+ <p><b>Ejemplo 1</b> Recuperar el año de la fecha 2019-06-22 (sin formato especificado). </p>
  <p class="codigoScript">
-	var anyo = PLUGIN_UTILS.obtenerAnyo('22/06/2019');
+	var anyo = PLUGIN_UTILS.obtenerAnyo('2019-06-22', null);
  </p>
-<p> la función obtenerAnyo retorna 2019.</p>
+<p> la función obtenerAnyo devuelve 2019.</p>
 <br />
-
+ <p><b>Ejemplo 2</b> Recuperar el año de la fecha 22/06/2019 (con el formato dd/MM/yyyy). </p>
+ <p class="codigoScript">
+	var anyo = PLUGIN_UTILS.obtenerAnyo('22/06/2019', 'dd/MM/yyyy');
+ </p>
+<p> la función obtenerAnyo devuelve 2019.</p>
+<br />
 </body>
 </html>
