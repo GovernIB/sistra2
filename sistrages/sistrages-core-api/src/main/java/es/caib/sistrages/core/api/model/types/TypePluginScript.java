@@ -96,6 +96,10 @@ public enum TypePluginScript {
 	 */
 	DATOS_VARIABLEFLUJO,
 	/**
+	 * Resultado aviso en paso registro (exclusivo dentro del flujo)
+	 */
+	DATOS_AVISO,
+	/**
 	 * Plugin sesion formulario (exclusivo dentro de formulario)
 	 */
 	PLUGIN_SESIONFORMULARIO,

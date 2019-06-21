@@ -56,6 +56,14 @@ public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 	@ApiModelProperty(value = "Instrucciones subsanacion")
 	private String instruccionesSubsanacion;
 
+	/** Indica si se avisa al finalizar trámite. **/
+	@ApiModelProperty(value = "Indica si se avisa al finalizar tramite")
+	private boolean avisoAlFinalizar;
+
+	/** En caso de habilitar aviso, se indica mecanismo aviso **/
+	@ApiModelProperty(value = "En caso de habilitar aviso, se indica mecanismo aviso")
+	private RScript scriptAlFinalizar;
+
 	/**
 	 * @return the permiteSubsanar
 	 */
@@ -64,8 +72,7 @@ public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 	}
 
 	/**
-	 * @param permiteSubsanar
-	 *            the permiteSubsanar to set
+	 * @param permiteSubsanar the permiteSubsanar to set
 	 */
 	public final void setPermiteSubsanar(final boolean permiteSubsanar) {
 		this.permiteSubsanar = permiteSubsanar;
@@ -79,8 +86,7 @@ public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 	}
 
 	/**
-	 * @param instruccionesSubsanacion
-	 *            the instruccionesSubsanacion to set
+	 * @param instruccionesSubsanacion the instruccionesSubsanacion to set
 	 */
 	public final void setInstruccionesSubsanacion(final String instruccionesSubsanacion) {
 		this.instruccionesSubsanacion = instruccionesSubsanacion;
@@ -98,8 +104,7 @@ public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 	/**
 	 * Método para establecer destino.
 	 *
-	 * @param destino
-	 *            destino a establecer
+	 * @param destino destino a establecer
 	 */
 	public void setDestino(final RDestinoRegistro destino) {
 		this.destino = destino;
@@ -117,8 +122,7 @@ public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 	/**
 	 * Método para establecer scriptDestino.
 	 *
-	 * @param scriptDestino
-	 *            scriptDestino a establecer
+	 * @param scriptDestino scriptDestino a establecer
 	 */
 	public void setScriptDestino(final RScript scriptDestino) {
 		this.scriptDestino = scriptDestino;
@@ -136,8 +140,8 @@ public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 	/**
 	 * Método para establecer instruccionesPresentacionHtml.
 	 *
-	 * @param instruccionesPresentacionHtml
-	 *            instruccionesPresentacionHtml a establecer
+	 * @param instruccionesPresentacionHtml instruccionesPresentacionHtml a
+	 *                                      establecer
 	 */
 	public void setInstruccionesPresentacionHtml(final String instruccionesPresentacionHtml) {
 		this.instruccionesPresentacionHtml = instruccionesPresentacionHtml;
@@ -155,8 +159,7 @@ public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 	/**
 	 * Método para establecer instruccionesTramitacionHtml.
 	 *
-	 * @param instruccionesTramitacionHtml
-	 *            instruccionesTramitacionHtml a establecer
+	 * @param instruccionesTramitacionHtml instruccionesTramitacionHtml a establecer
 	 */
 	public void setInstruccionesTramitacionHtml(final String instruccionesTramitacionHtml) {
 		this.instruccionesTramitacionHtml = instruccionesTramitacionHtml;
@@ -174,8 +177,7 @@ public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 	/**
 	 * Método para establecer scriptPresentador.
 	 *
-	 * @param scriptPresentador
-	 *            scriptPresentador a establecer
+	 * @param scriptPresentador scriptPresentador a establecer
 	 */
 	public void setScriptPresentador(final RScript scriptPresentador) {
 		this.scriptPresentador = scriptPresentador;
@@ -193,8 +195,7 @@ public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 	/**
 	 * Método para establecer admiteRepresentacion.
 	 *
-	 * @param admiteRepresentacion
-	 *            admiteRepresentacion a establecer
+	 * @param admiteRepresentacion admiteRepresentacion a establecer
 	 */
 	public void setAdmiteRepresentacion(final boolean admiteRepresentacion) {
 		this.admiteRepresentacion = admiteRepresentacion;
@@ -212,8 +213,7 @@ public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 	/**
 	 * Método para establecer validaRepresentacion.
 	 *
-	 * @param validaRepresentacion
-	 *            validaRepresentacion a establecer
+	 * @param validaRepresentacion validaRepresentacion a establecer
 	 */
 	public void setValidaRepresentacion(final boolean validaRepresentacion) {
 		this.validaRepresentacion = validaRepresentacion;
@@ -231,8 +231,7 @@ public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 	/**
 	 * Método para establecer scriptRepresentante.
 	 *
-	 * @param scriptRepresentante
-	 *            scriptRepresentante a establecer
+	 * @param scriptRepresentante scriptRepresentante a establecer
 	 */
 	public void setScriptRepresentante(final RScript scriptRepresentante) {
 		this.scriptRepresentante = scriptRepresentante;
@@ -250,11 +249,38 @@ public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 	/**
 	 * Método para establecer scriptValidar.
 	 *
-	 * @param scriptValidar
-	 *            scriptValidar a establecer
+	 * @param scriptValidar scriptValidar a establecer
 	 */
 	public void setScriptValidar(final RScript scriptValidar) {
 		this.scriptValidar = scriptValidar;
+	}
+
+	/**
+	 * @return the avisoAlFinalizar
+	 */
+	public final boolean isAvisoAlFinalizar() {
+		return avisoAlFinalizar;
+	}
+
+	/**
+	 * @param avisoAlFinalizar the avisoAlFinalizar to set
+	 */
+	public final void setAvisoAlFinalizar(final boolean avisoAlFinalizar) {
+		this.avisoAlFinalizar = avisoAlFinalizar;
+	}
+
+	/**
+	 * @return the scriptAlFinalizar
+	 */
+	public final RScript getScriptAlFinalizar() {
+		return scriptAlFinalizar;
+	}
+
+	/**
+	 * @param scriptAlFinalizar the scriptAlFinalizar to set
+	 */
+	public final void setScriptAlFinalizar(final RScript scriptAlFinalizar) {
+		this.scriptAlFinalizar = scriptAlFinalizar;
 	}
 
 }

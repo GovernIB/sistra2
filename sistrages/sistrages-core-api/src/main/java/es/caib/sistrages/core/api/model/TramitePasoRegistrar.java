@@ -52,6 +52,12 @@ public class TramitePasoRegistrar extends TramitePaso {
 	/** Instrucciones subsanación */
 	private Literal instruccionesSubsanacion;
 
+	/** Indica si se avisa al finalizar trámite. **/
+	private boolean avisoAlFinalizar;
+
+	/** En caso de habilitar aviso, se indica mecanismo aviso **/
+	private Script scriptAlFinalizar;
+
 	/**
 	 * @return the scriptDestinoRegistro
 	 */
@@ -60,8 +66,7 @@ public class TramitePasoRegistrar extends TramitePaso {
 	}
 
 	/**
-	 * @param scriptDestinoRegistro
-	 *            the scriptDestinoRegistro to set
+	 * @param scriptDestinoRegistro the scriptDestinoRegistro to set
 	 */
 	public void setScriptDestinoRegistro(final Script scriptDestinoRegistro) {
 		this.scriptDestinoRegistro = scriptDestinoRegistro;
@@ -75,8 +80,7 @@ public class TramitePasoRegistrar extends TramitePaso {
 	}
 
 	/**
-	 * @param scriptRepresentante
-	 *            the scriptRepresentante to set
+	 * @param scriptRepresentante the scriptRepresentante to set
 	 */
 	public void setScriptRepresentante(final Script scriptRepresentante) {
 		this.scriptRepresentante = scriptRepresentante;
@@ -90,8 +94,7 @@ public class TramitePasoRegistrar extends TramitePaso {
 	}
 
 	/**
-	 * @param scriptValidarRegistrar
-	 *            the scriptValidarRegistrar to set
+	 * @param scriptValidarRegistrar the scriptValidarRegistrar to set
 	 */
 	public void setScriptValidarRegistrar(final Script scriptValidarRegistrar) {
 		this.scriptValidarRegistrar = scriptValidarRegistrar;
@@ -105,8 +108,7 @@ public class TramitePasoRegistrar extends TramitePaso {
 	}
 
 	/**
-	 * @param scriptPresentador
-	 *            the scriptPresentador to set
+	 * @param scriptPresentador the scriptPresentador to set
 	 */
 	public void setScriptPresentador(final Script scriptPresentador) {
 		this.scriptPresentador = scriptPresentador;
@@ -120,8 +122,7 @@ public class TramitePasoRegistrar extends TramitePaso {
 	}
 
 	/**
-	 * @param instruccionesFinTramitacion
-	 *            the instruccionesFinTramitacion to set
+	 * @param instruccionesFinTramitacion the instruccionesFinTramitacion to set
 	 */
 	public void setInstruccionesFinTramitacion(final Literal instruccionesFinTramitacion) {
 		this.instruccionesFinTramitacion = instruccionesFinTramitacion;
@@ -135,8 +136,7 @@ public class TramitePasoRegistrar extends TramitePaso {
 	}
 
 	/**
-	 * @param instruccionesPresentacion
-	 *            the instruccionesPresentacion to set
+	 * @param instruccionesPresentacion the instruccionesPresentacion to set
 	 */
 	public void setInstruccionesPresentacion(final Literal instruccionesPresentacion) {
 		this.instruccionesPresentacion = instruccionesPresentacion;
@@ -150,8 +150,7 @@ public class TramitePasoRegistrar extends TramitePaso {
 	}
 
 	/**
-	 * @param codigoOficinaRegistro
-	 *            the codigoOficinaRegistro to set
+	 * @param codigoOficinaRegistro the codigoOficinaRegistro to set
 	 */
 	public void setCodigoOficinaRegistro(final String codigoOficinaRegistro) {
 		this.codigoOficinaRegistro = codigoOficinaRegistro;
@@ -165,8 +164,7 @@ public class TramitePasoRegistrar extends TramitePaso {
 	}
 
 	/**
-	 * @param codigoLibroRegistro
-	 *            the codigoLibroRegistro to set
+	 * @param codigoLibroRegistro the codigoLibroRegistro to set
 	 */
 	public void setCodigoLibroRegistro(final String codigoLibroRegistro) {
 		this.codigoLibroRegistro = codigoLibroRegistro;
@@ -180,8 +178,7 @@ public class TramitePasoRegistrar extends TramitePaso {
 	}
 
 	/**
-	 * @param codigoTipoAsunto
-	 *            the codigoTipoAsunto to set
+	 * @param codigoTipoAsunto the codigoTipoAsunto to set
 	 */
 	public void setCodigoTipoAsunto(final String codigoTipoAsunto) {
 		this.codigoTipoAsunto = codigoTipoAsunto;
@@ -195,8 +192,7 @@ public class TramitePasoRegistrar extends TramitePaso {
 	}
 
 	/**
-	 * @param admiteRepresentacion
-	 *            the admiteRepresentacion to set
+	 * @param admiteRepresentacion the admiteRepresentacion to set
 	 */
 	public void setAdmiteRepresentacion(final boolean admiteRepresentacion) {
 		this.admiteRepresentacion = admiteRepresentacion;
@@ -210,8 +206,7 @@ public class TramitePasoRegistrar extends TramitePaso {
 	}
 
 	/**
-	 * @param validaRepresentacion
-	 *            the validaRepresentacion to set
+	 * @param validaRepresentacion the validaRepresentacion to set
 	 */
 	public void setValidaRepresentacion(final boolean validaRepresentacion) {
 		this.validaRepresentacion = validaRepresentacion;
@@ -225,8 +220,7 @@ public class TramitePasoRegistrar extends TramitePaso {
 	}
 
 	/**
-	 * @param permiteSubsanar
-	 *            the permiteSubsanar to set
+	 * @param permiteSubsanar the permiteSubsanar to set
 	 */
 	public final void setPermiteSubsanar(final boolean permiteSubsanar) {
 		this.permiteSubsanar = permiteSubsanar;
@@ -240,11 +234,38 @@ public class TramitePasoRegistrar extends TramitePaso {
 	}
 
 	/**
-	 * @param instruccionesSubsanacion
-	 *            the instruccionesSubsanacion to set
+	 * @param instruccionesSubsanacion the instruccionesSubsanacion to set
 	 */
 	public final void setInstruccionesSubsanacion(final Literal instruccionesSubsanacion) {
 		this.instruccionesSubsanacion = instruccionesSubsanacion;
+	}
+
+	/**
+	 * @return the avisoAlFinalizar
+	 */
+	public final boolean isAvisoAlFinalizar() {
+		return avisoAlFinalizar;
+	}
+
+	/**
+	 * @param avisoAlFinalizar the avisoAlFinalizar to set
+	 */
+	public final void setAvisoAlFinalizar(final boolean avisoAlFinalizar) {
+		this.avisoAlFinalizar = avisoAlFinalizar;
+	}
+
+	/**
+	 * @return the scriptAlFinalizar
+	 */
+	public Script getScriptAlFinalizar() {
+		return scriptAlFinalizar;
+	}
+
+	/**
+	 * @param scriptAlFinalizar the scriptAlFinalizar to set
+	 */
+	public void setScriptAlFinalizar(Script scriptAlFinalizar) {
+		this.scriptAlFinalizar = scriptAlFinalizar;
 	}
 
 }

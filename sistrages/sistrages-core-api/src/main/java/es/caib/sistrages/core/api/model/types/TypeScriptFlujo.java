@@ -88,7 +88,11 @@ public enum TypeScriptFlujo implements TypeScript {
 	/**
 	 * Script plantilla info
 	 */
-	SCRIPT_VARIABLE_FLUJO;
+	SCRIPT_VARIABLE_FLUJO,
+	/**
+	 * Script de aviso
+	 */
+	SCRIPT_AVISO;
 
 	/**
 	 * Convierte un string en enumerado.

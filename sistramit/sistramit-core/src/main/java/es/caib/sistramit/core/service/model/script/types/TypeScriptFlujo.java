@@ -65,6 +65,10 @@ public enum TypeScriptFlujo implements TypeScript {
 	 */
 	SCRIPT_PERMITIR_REGISTRO,
 	/**
+	 * Script para establecer avisos.
+	 */
+	SCRIPT_AVISO,
+	/**
 	 * Script para indicar la navegación entre pasos de un trámite personalizado.
 	 */
 	SCRIPT_NAVEGACION_PASO,

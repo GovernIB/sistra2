@@ -14,6 +14,7 @@ import es.caib.sistrages.core.api.exception.EncodeException;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoOculto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
@@ -51,6 +52,7 @@ import es.caib.sistrages.rest.api.interna.RAnexoTramiteAyuda;
 import es.caib.sistrages.rest.api.interna.RAnexoTramitePresentacionElectronica;
 import es.caib.sistrages.rest.api.interna.RComponente;
 import es.caib.sistrages.rest.api.interna.RComponenteAviso;
+import es.caib.sistrages.rest.api.interna.RComponenteCampoOculto;
 import es.caib.sistrages.rest.api.interna.RComponenteCheckbox;
 import es.caib.sistrages.rest.api.interna.RComponenteSeccion;
 import es.caib.sistrages.rest.api.interna.RComponenteSelector;
@@ -302,7 +304,8 @@ public class VersionTramiteAdapter {
 		resPaso.setPermiteSubsanar(paso.isPermiteSubsanar());
 		resPaso.setInstruccionesSubsanacion(
 				AdapterUtils.generarLiteralIdioma(paso.getInstruccionesSubsanacion(), idioma));
-
+		resPaso.setAvisoAlFinalizar(paso.isAvisoAlFinalizar());
+		resPaso.setScriptAlFinalizar(AdapterUtils.generaScript(paso.getScriptAlFinalizar(), idioma));
 		return resPaso;
 	}
 
@@ -584,6 +587,11 @@ public class VersionTramiteAdapter {
 					final RComponenteTextbox resTB = generaComponenteTextbox(ct, idioma);
 					lc.add(resTB);
 					break;
+				case CAMPO_OCULTO:
+					final ComponenteFormularioCampoOculto co = (ComponenteFormularioCampoOculto) c;
+					final RComponenteCampoOculto resCO = generaComponenteCampoOculto(co, idioma);
+					lc.add(resCO);
+					break;
 				case CHECKBOX:
 					final ComponenteFormularioCampoCheckbox cch = (ComponenteFormularioCampoCheckbox) c;
 					final RComponenteCheckbox resCH = generaComponenteCheckBox(cch, idioma);
@@ -612,6 +620,22 @@ public class VersionTramiteAdapter {
 
 		}
 		return lc;
+	}
+
+	/**
+	 * Genera componente campo oculto.
+	 *
+	 * @param cco
+	 * @param idioma idioma
+	 * @return RComponenteCampoOculto
+	 */
+	private RComponenteCampoOculto generaComponenteCampoOculto(final ComponenteFormularioCampoOculto cco,
+			final String idioma) {
+		final RComponenteCampoOculto resCO = new RComponenteCampoOculto();
+		resCO.setIdentificador(cco.getIdComponente());
+		resCO.setTipo(cco.getTipo().toString());
+		resCO.setPropiedadesCampo(generarPropiedadesCampo(cco, idioma));
+		return resCO;
 	}
 
 	/**
@@ -775,8 +799,7 @@ public class VersionTramiteAdapter {
 	/**
 	 * Genera texto teléfono.
 	 *
-	 * @param ct
-	 *            campo texto
+	 * @param ct campo texto
 	 * @return Propiedades teléfono
 	 */
 	private RPropiedadesTextoTelefono generaTextoTelefono(final ComponenteFormularioCampoTexto ct) {
@@ -848,6 +871,18 @@ public class VersionTramiteAdapter {
 			}
 		}
 		return lpd;
+	}
+
+	/**
+	 * Genera Propiedades del Campo checkbox
+	 *
+	 * @param ori
+	 * @return RPropiedadesCampo
+	 */
+	private RPropiedadesCampo generarPropiedadesCampo(final ComponenteFormularioCampoOculto ori, final String idioma) {
+		final RPropiedadesCampo res = new RPropiedadesCampo();
+		res.setScriptAutorrellenable(AdapterUtils.generaScript(ori.getScriptAutorrellenable(), idioma));
+		return res;
 	}
 
 	/**

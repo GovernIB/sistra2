@@ -206,8 +206,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	/**
 	 * Retorno dialogo de instrucciones.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoSubsanacion(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -227,8 +226,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	/**
 	 * Retorno dialogo de instrucciones.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoInstrucciones(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -248,8 +246,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	/**
 	 * Retorno dialogo de presentacion.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoPresentacion(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -269,8 +266,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	/**
 	 * Retorno dialogo del script de presentador
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoScriptPresentador(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -288,10 +284,29 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	}
 
 	/**
+	 * Retorno dialogo del script al finalizar
+	 *
+	 * @param event respuesta dialogo
+	 */
+	public void returnDialogoScriptAlFinalizar(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+			case EDICION:
+				data.setScriptAlFinalizar((Script) respuesta.getResult());
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	/**
 	 * Retorno dialogo del script de registro
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoScriptValidarRegistro(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -311,8 +326,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	/**
 	 * Retorno dialogo del script de registro
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoScriptRegistro(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -332,8 +346,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	/**
 	 * Retorno dialogo del script de registro
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoScriptRepresentante(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -376,8 +389,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -391,8 +403,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final TramitePasoRegistrar data) {
 		this.data = data;
@@ -414,8 +425,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	}
 
 	/**
-	 * @param oficinas
-	 *            the oficinas to set
+	 * @param oficinas the oficinas to set
 	 */
 	public void setOficinas(final List<OficinaRegistro> oficinas) {
 		this.oficinas = oficinas;
@@ -429,8 +439,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	}
 
 	/**
-	 * @param libros
-	 *            the libros to set
+	 * @param libros the libros to set
 	 */
 	public void setLibros(final List<LibroOficina> libros) {
 		this.libros = libros;
@@ -444,8 +453,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	}
 
 	/**
-	 * @param tipos
-	 *            the tipos to set
+	 * @param tipos the tipos to set
 	 */
 	public void setTipos(final List<TipoAsunto> tipos) {
 		this.tipos = tipos;
@@ -459,8 +467,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	}
 
 	/**
-	 * @param idiomas
-	 *            the idiomas to set
+	 * @param idiomas the idiomas to set
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;
@@ -474,8 +481,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	}
 
 	/**
-	 * @param entidad
-	 *            the entidad to set
+	 * @param entidad the entidad to set
 	 */
 	public final void setEntidad(final Entidad entidad) {
 		this.entidad = entidad;

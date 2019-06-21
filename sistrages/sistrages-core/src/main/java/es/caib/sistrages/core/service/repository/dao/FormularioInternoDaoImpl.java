@@ -18,6 +18,7 @@ import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoOculto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
@@ -354,6 +355,14 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				entityManager.merge(jLineaSeleccionada);
 				objetoResultado = jObjFormCampoTexto.toModel();
 				break;
+			case CAMPO_OCULTO:
+				nuevoOrden = creaHuecoEntreComponentes(jLineaSeleccionada, pOrden);
+				final JCampoFormulario jObjFormCampoOculto = JCampoFormulario
+						.createDefault(TypeObjetoFormulario.CAMPO_OCULTO, nuevoOrden, jLineaSeleccionada);
+				entityManager.persist(jObjFormCampoOculto);
+				entityManager.merge(jLineaSeleccionada);
+				objetoResultado = jObjFormCampoOculto.toModel(ComponenteFormularioCampoOculto.class);
+				break;
 			case CHECKBOX:
 				// creaHuecoEnComponentes(jLineaSeleccionada, pOrden);
 				nuevoOrden = creaHuecoEntreComponentes(jLineaSeleccionada, pOrden);
@@ -515,6 +524,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 			// hacemos la parte de campo
 			if (TypeObjetoFormulario.CAMPO_TEXTO.equals(pComponente.getTipo())
+					|| TypeObjetoFormulario.CAMPO_OCULTO.equals(pComponente.getTipo())
 					|| TypeObjetoFormulario.CHECKBOX.equals(pComponente.getTipo())
 					|| TypeObjetoFormulario.SELECTOR.equals(pComponente.getTipo())) {
 				final JCampoFormulario jCampo = jElemento.getCampoFormulario();
@@ -625,6 +635,11 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				jCampoTexto.setPermiteRango(campoTexto.isPermiteRango());
 				entityManager.merge(jCampoTexto);
 				objetoResultado = jCampoTexto.toModel();
+				break;
+			case CAMPO_OCULTO:
+				final JCampoFormulario jCampoOculto = jElemento.getCampoFormulario();
+				entityManager.merge(jCampoOculto);
+				objetoResultado = jCampoOculto.toModel(ComponenteFormularioCampoOculto.class);
 				break;
 			case CHECKBOX:
 				final JCampoFormularioCasillaVerificacion jCampoCheckbox = jElemento.getCampoFormulario()
@@ -867,8 +882,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	/**
 	 * pasa un componente de BD a modelo.
 	 *
-	 * @param jComponente
-	 *            componente de bd
+	 * @param jComponente componente de bd
 	 * @return componente de modelo
 	 */
 	private ComponenteFormulario componenteFormularioToModel(final JElementoFormulario jComponente) {
@@ -906,16 +920,20 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 			componente = jComponente.getCampoFormulario().getCampoFormularioIndexado().toModel();
 		}
 
+		// miramos si es campo oculto
+		if (jComponente.getCampoFormulario() != null
+				&& TypeObjetoFormulario.fromString(jComponente.getTipo()).equals(TypeObjetoFormulario.CAMPO_OCULTO)) {
+			componente = jComponente.getCampoFormulario().toModel(ComponenteFormularioCampoOculto.class);
+		}
+
 		return componente;
 	}
 
 	/**
 	 * Crea un hueco en la lista de lineas.
 	 *
-	 * @param pJPagina
-	 *            pagina que tiene la lista de lineas
-	 * @param pInicio
-	 *            inicio para el hueco
+	 * @param pJPagina pagina que tiene la lista de lineas
+	 * @param pInicio  inicio para el hueco
 	 * @return true, si tiene exito
 	 */
 	private boolean creaHuecoEnLineas(final JPaginaFormulario pJPagina, final Integer pInicio) {
@@ -974,10 +992,8 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	/**
 	 * Crea un hueco en la lista de componentes.
 	 *
-	 * @param pJLineaSeleccionada
-	 *            linea seleccionada
-	 * @param pInicio
-	 *            inicio
+	 * @param pJLineaSeleccionada linea seleccionada
+	 * @param pInicio             inicio
 	 * @return true, si tiene exito
 	 */
 	private boolean actualizaEntreComponentes(final JLineaFormulario pJLineaSeleccionada, final Integer pInicio,
@@ -1246,12 +1262,10 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	 * a un orden. La idea es que se ha pegado un elemento en una posición y tots
 	 * los de su derecha tendrían que moverse una posición para hacerle hueco.
 	 *
-	 * @param idLinea
-	 *            Id de la linea.
-	 * @param idElemento
-	 *            Id del elemento recién copiado que debe mantener su posición
-	 * @param orden
-	 *            Posición a partir del cual hay que mover al resto
+	 * @param idLinea    Id de la linea.
+	 * @param idElemento Id del elemento recién copiado que debe mantener su
+	 *                   posición
+	 * @param orden      Posición a partir del cual hay que mover al resto
 	 */
 	private void reordenar(final Long idLinea, final Long idElemento, final int orden) {
 		final JLineaFormulario jlineaFormulario = entityManager.find(JLineaFormulario.class, idLinea);
@@ -1315,6 +1329,12 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				linea.getComponentes().add(elemento.getCampoFormulario().getCampoFormularioTexto().toModel());
 			}
 
+			if (elemento.getCampoFormulario() != null
+					&& TypeObjetoFormulario.fromString(elemento.getTipo()).equals(TypeObjetoFormulario.CAMPO_OCULTO)) {
+				linea.getComponentes()
+						.add(elemento.getCampoFormulario().toModel(ComponenteFormularioCampoOculto.class));
+			}
+
 		}
 
 		return linea;
@@ -1325,12 +1345,9 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	 * un orden. La idea es que se ha pegado una linea en una posición y tots los de
 	 * abajo tendrían que moverse una posicion.
 	 *
-	 * @param idPagina
-	 *            Id de la página
-	 * @param idLinea
-	 *            Id de la linea que se ha copiado
-	 * @param orden
-	 *            Orden donde se ha copiado la linea a copiar
+	 * @param idPagina Id de la página
+	 * @param idLinea  Id de la linea que se ha copiado
+	 * @param orden    Orden donde se ha copiado la linea a copiar
 	 */
 	private void reordenarLinea(final Long idPagina, final Long idLinea, final int orden) {
 		final JPaginaFormulario jpagina = entityManager.find(JPaginaFormulario.class, idPagina);

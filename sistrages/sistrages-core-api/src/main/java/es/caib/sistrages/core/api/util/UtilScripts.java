@@ -138,6 +138,9 @@ public class UtilScripts {
 		case SCRIPT_VALIDAR_ANEXO:
 			plugins.add(TypePluginScript.PLUGIN_ANEXO);
 			break;
+		case SCRIPT_AVISO:
+			plugins.add(0, TypePluginScript.DATOS_AVISO);
+			break;
 		default:
 			break;
 		}

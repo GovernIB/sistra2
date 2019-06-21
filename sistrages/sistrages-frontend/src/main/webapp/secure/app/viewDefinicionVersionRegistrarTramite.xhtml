@@ -106,6 +106,7 @@
 						icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PERMITIR_REGISTRO.name(), viewDefinicionVersion.tramitePasoREGSeleccionado.scriptValidarRegistrar.codigo)}"
 						process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptValidarRegistrar)}"/>
 
+
 			<p:outputLabel value="#{msg['viewDefinicionVersionAnexarDocumentos.headerPermitirSubsanacion']}" />
 			<p:column>
 				<h:panelGrid id="columnaBotonSubsanar" style="margin-bottom:0px" columns="2" >
@@ -113,6 +114,15 @@
 				</h:panelGrid>
 			</p:column>
 
+			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.alfinalizar']}" />
+			<p:outputPanel styleClass="ui-inputgroup">
+	            <p:selectBooleanCheckbox id="aviso" disabled="true" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.avisoAlFinalizar}"   itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.alfinalizar.aviso']}"/>
+	            <p:spacer width="30" height="1"/>
+	           		<p:commandButton id="scriptButton5"
+	           				disabled="#{viewDefinicionVersion.tramitePasoREGSeleccionado.scriptAlFinalizar eq null}"
+							icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_AVISO.name(), viewDefinicionVersion.tramitePasoREGSeleccionado.scriptAlFinalizar.codigo)}"
+							process="@this" update="growl" value="#{msg['script.SCRIPT_AVISO.titulo']}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptAlFinalizar)}" />
+			</p:outputPanel>
 
 			<f:facet name = "footer">
 				<p:outputPanel id="toolbar" styleClass="grid-right">

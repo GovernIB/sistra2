@@ -123,10 +123,10 @@
 
 			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.representacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-            <p:selectBooleanCheckbox id="admite" value="#{dialogDefinicionVersionRegistrarTramite.data.admiteRepresentacion}"  itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.admite']}">
-            	<p:ajax event="change" global="false" process="@form:admite" update="formdialogDefinicionVersionRegistrarTramite:buttonScript3 @form:valida" />
-            </p:selectBooleanCheckbox>
-            <p:spacer width="30" height="1"/>
+	            <p:selectBooleanCheckbox id="admite" value="#{dialogDefinicionVersionRegistrarTramite.data.admiteRepresentacion}"  itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.admite']}">
+	            	<p:ajax event="change" global="false" process="@form:admite" update="formdialogDefinicionVersionRegistrarTramite:buttonScript3 @form:valida" />
+	            </p:selectBooleanCheckbox>
+	            <p:spacer width="30" height="1"/>
            		<p:commandButton id="buttonScript3" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(), dialogDefinicionVersionRegistrarTramite.data.scriptRepresentante)}"
 						process="@this" update="growl" value="#{msg['script.SCRIPT_REPRESENTADO_REGISTRO.titulo']}"
 						styleClass="#{dialogDefinicionVersionRegistrarTramite.getColorScript(dialogDefinicionVersionRegistrarTramite.data.scriptRepresentante)}"
@@ -147,6 +147,21 @@
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionAnexarDocumentos.headerPermitirSubsanacion']}" />
 			<p:selectBooleanCheckbox id="checkSubsanar" value="#{dialogDefinicionVersionRegistrarTramite.data.permiteSubsanar}" style="margin-left:5px;margin-right:20px" />
+
+			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.alfinalizar']}" />
+			<p:outputPanel styleClass="ui-inputgroup">
+	            <p:selectBooleanCheckbox id="aviso" value="#{dialogDefinicionVersionRegistrarTramite.data.avisoAlFinalizar}"  itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.alfinalizar.aviso']}">
+	            	<p:ajax event="change" global="false" process="@form:aviso" update="formdialogDefinicionVersionRegistrarTramite:buttonScript5 @form:aviso" />
+	            </p:selectBooleanCheckbox>
+	            <p:spacer width="30" height="1"/>
+	           	<p:commandButton id="buttonScript5"
+	           				disabled="#{dialogDefinicionVersionRegistrarTramite.data.avisoAlFinalizar == false}"
+							icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(TypeScriptFlujo.SCRIPT_AVISO.name(), dialogDefinicionVersionRegistrarTramite.data.scriptAlFinalizar)}"
+							process="@this" update="growl" value="#{msg['script.SCRIPT_AVISO.titulo']}" styleClass="#{dialogDefinicionVersionRegistrarTramite.getColorScript(dialogDefinicionVersionRegistrarTramite.data.scriptAlFinalizar)}"
+						 >
+					<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoScriptAlFinalizar}" update="growl buttonScript5"/>
+				</p:commandButton>
+			</p:outputPanel>
 
 
 		</h:panelGrid>

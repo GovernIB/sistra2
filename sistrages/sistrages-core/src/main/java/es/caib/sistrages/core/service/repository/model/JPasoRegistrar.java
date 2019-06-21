@@ -93,6 +93,15 @@ public class JPasoRegistrar implements IModelApi {
 	@JoinColumn(name = "PRG_INSSUB")
 	private JLiteral instruccionesSubsanacion;
 
+	/** Indica si se habilita subsanación. **/
+	@Column(name = "PRG_AVIFIN", nullable = false, precision = 1, scale = 0)
+	private boolean avisoAlFinalizar;
+
+	/** Script destino registro */
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "PRG_AVISCR")
+	private JScript scriptAlFinalizar;
+
 	/**
 	 * Constructor.
 	 */
@@ -108,8 +117,7 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param codigo the codigo to set
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -123,8 +131,7 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
-	 * @param pasoTramitacion
-	 *            the pasoTramitacion to set
+	 * @param pasoTramitacion the pasoTramitacion to set
 	 */
 	public void setPasoTramitacion(final JPasoTramitacion pasoTramitacion) {
 		this.pasoTramitacion = pasoTramitacion;
@@ -138,8 +145,7 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
-	 * @param scriptDestinoRegistro
-	 *            the scriptDestinoRegistro to set
+	 * @param scriptDestinoRegistro the scriptDestinoRegistro to set
 	 */
 	public void setScriptDestinoRegistro(final JScript scriptDestinoRegistro) {
 		this.scriptDestinoRegistro = scriptDestinoRegistro;
@@ -153,8 +159,7 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
-	 * @param scriptRepresentante
-	 *            the scriptRepresentante to set
+	 * @param scriptRepresentante the scriptRepresentante to set
 	 */
 	public void setScriptRepresentante(final JScript scriptRepresentante) {
 		this.scriptRepresentante = scriptRepresentante;
@@ -168,8 +173,7 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
-	 * @param scriptValidarRegistrar
-	 *            the scriptValidarRegistrar to set
+	 * @param scriptValidarRegistrar the scriptValidarRegistrar to set
 	 */
 	public void setScriptValidarRegistrar(final JScript scriptValidarRegistrar) {
 		this.scriptValidarRegistrar = scriptValidarRegistrar;
@@ -183,8 +187,7 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
-	 * @param scriptPresentador
-	 *            the scriptPresentador to set
+	 * @param scriptPresentador the scriptPresentador to set
 	 */
 	public void setScriptPresentador(final JScript scriptPresentador) {
 		this.scriptPresentador = scriptPresentador;
@@ -198,8 +201,7 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
-	 * @param instruccionesFinTramitacion
-	 *            the instruccionesFinTramitacion to set
+	 * @param instruccionesFinTramitacion the instruccionesFinTramitacion to set
 	 */
 	public void setInstruccionesFinTramitacion(final JLiteral instruccionesFinTramitacion) {
 		this.instruccionesFinTramitacion = instruccionesFinTramitacion;
@@ -213,8 +215,7 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
-	 * @param instruccionesPresentacion
-	 *            the instruccionesPresentacion to set
+	 * @param instruccionesPresentacion the instruccionesPresentacion to set
 	 */
 	public void setInstruccionesPresentacion(final JLiteral instruccionesPresentacion) {
 		this.instruccionesPresentacion = instruccionesPresentacion;
@@ -228,8 +229,7 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
-	 * @param codigoOficinaRegistro
-	 *            the codigoOficinaRegistro to set
+	 * @param codigoOficinaRegistro the codigoOficinaRegistro to set
 	 */
 	public void setCodigoOficinaRegistro(final String codigoOficinaRegistro) {
 		this.codigoOficinaRegistro = codigoOficinaRegistro;
@@ -243,8 +243,7 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
-	 * @param codigoLibroRegistro
-	 *            the codigoLibroRegistro to set
+	 * @param codigoLibroRegistro the codigoLibroRegistro to set
 	 */
 	public void setCodigoLibroRegistro(final String codigoLibroRegistro) {
 		this.codigoLibroRegistro = codigoLibroRegistro;
@@ -258,8 +257,7 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
-	 * @param codigoTipoAsunto
-	 *            the codigoTipoAsunto to set
+	 * @param codigoTipoAsunto the codigoTipoAsunto to set
 	 */
 	public void setCodigoTipoAsunto(final String codigoTipoAsunto) {
 		this.codigoTipoAsunto = codigoTipoAsunto;
@@ -273,8 +271,7 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
-	 * @param admiteRepresentacion
-	 *            the admiteRepresentacion to set
+	 * @param admiteRepresentacion the admiteRepresentacion to set
 	 */
 	public void setAdmiteRepresentacion(final boolean admiteRepresentacion) {
 		this.admiteRepresentacion = admiteRepresentacion;
@@ -288,8 +285,7 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
-	 * @param validaRepresentacion
-	 *            the validaRepresentacion to set
+	 * @param validaRepresentacion the validaRepresentacion to set
 	 */
 	public void setValidaRepresentacion(final boolean validaRepresentacion) {
 		this.validaRepresentacion = validaRepresentacion;
@@ -303,8 +299,7 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
-	 * @param permiteSubsanar
-	 *            the permiteSubsanar to set
+	 * @param permiteSubsanar the permiteSubsanar to set
 	 */
 	public void setPermiteSubsanar(final boolean permiteSubsanar) {
 		this.permiteSubsanar = permiteSubsanar;
@@ -318,11 +313,38 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
-	 * @param instruccionesSubsanacion
-	 *            the instruccionesSubsanacion to set
+	 * @param instruccionesSubsanacion the instruccionesSubsanacion to set
 	 */
 	public void setInstruccionesSubsanacion(final JLiteral instruccionesSubsanacion) {
 		this.instruccionesSubsanacion = instruccionesSubsanacion;
+	}
+
+	/**
+	 * @return the avisoAlFinalizar
+	 */
+	public boolean isAvisoAlFinalizar() {
+		return avisoAlFinalizar;
+	}
+
+	/**
+	 * @param avisoAlFinalizar the avisoAlFinalizar to set
+	 */
+	public void setAvisoAlFinalizar(final boolean avisoAlFinalizar) {
+		this.avisoAlFinalizar = avisoAlFinalizar;
+	}
+
+	/**
+	 * @return the scriptAlFinalizar
+	 */
+	public JScript getScriptAlFinalizar() {
+		return scriptAlFinalizar;
+	}
+
+	/**
+	 * @param scriptAlFinalizar the scriptAlFinalizar to set
+	 */
+	public void setScriptAlFinalizar(final JScript scriptAlFinalizar) {
+		this.scriptAlFinalizar = scriptAlFinalizar;
 	}
 
 	/**
@@ -349,6 +371,8 @@ public class JPasoRegistrar implements IModelApi {
 			jpaso.setScriptValidarRegistrar(JScript.fromModel(paso.getScriptValidarRegistrar()));
 			jpaso.setInstruccionesSubsanacion(JLiteral.fromModel(paso.getInstruccionesSubsanacion()));
 			jpaso.setPermiteSubsanar(paso.isPermiteSubsanar());
+			jpaso.setScriptAlFinalizar(JScript.fromModel(paso.getScriptAlFinalizar()));
+			jpaso.setAvisoAlFinalizar(paso.isAvisoAlFinalizar());
 		}
 		return jpaso;
 	}
@@ -382,6 +406,8 @@ public class JPasoRegistrar implements IModelApi {
 			jpasoRegistrar
 					.setInstruccionesSubsanacion(JLiteral.clonar(origPasoRegistrar.getInstruccionesSubsanacion()));
 			jpasoRegistrar.setPermiteSubsanar(origPasoRegistrar.isPermiteSubsanar());
+			jpasoRegistrar.setScriptAlFinalizar(JScript.clonar(origPasoRegistrar.getScriptAlFinalizar()));
+			jpasoRegistrar.setAvisoAlFinalizar(origPasoRegistrar.isAvisoAlFinalizar());
 		}
 		return jpasoRegistrar;
 	}
