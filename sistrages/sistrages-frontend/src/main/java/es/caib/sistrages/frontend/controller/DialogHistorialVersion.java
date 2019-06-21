@@ -16,46 +16,33 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class DialogHistorialVersion extends DialogControllerBase {
 
-	/**
-	 * Enlace area.
-	 */
+	/** Tramite service. */
 	@Inject
-	private TramiteService areaService;
+	private TramiteService tramiteService;
 
-	/**
-	 * Id elemento a tratar.
-	 */
+	/** Id de la version. */
 	private String id;
 
-	/**
-	 * Id entidad.
-	 */
-	private Long idEntidad;
-
-	/**
-	 * Datos elemento.
-	 */
+	/** Historial de versiones. */
 	private List<HistorialVersion> data;
 
-	/**
-	 * Dato seleccionado.
-	 */
+	/** Historial de versiones seleccionado. */
 	private HistorialVersion datoSeleccionado;
 
-	/**
-	 * Inicialización.
-	 */
+	/** Inicialización. */
 	public void init() {
-
-		idEntidad = UtilJSF.getIdEntidad();
-		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
-		data = areaService.listHistorialVersion(Long.valueOf(id), null);
-
+		data = tramiteService.listHistorialVersion(Long.valueOf(id), null);
 	}
 
 	/**
-	 * Cancelar.
-	 */
+	 * Borra el historial de versiones dejándolo a sólo 1, el de creación a hoy.
+	 **/
+	public void borradoHistorial() {
+		tramiteService.borradoHistorial(Long.valueOf(id), UtilJSF.getSessionBean().getUserName());
+		data = tramiteService.listHistorialVersion(Long.valueOf(id), null);
+	}
+
+	/** Cancelar. */
 	public void cancelar() {
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
@@ -63,9 +50,7 @@ public class DialogHistorialVersion extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
-	/**
-	 * Ayuda.
-	 */
+	/** Ayuda. */
 	public void ayuda() {
 		UtilJSF.openHelp("historialVersionDialog");
 	}
@@ -78,8 +63,7 @@ public class DialogHistorialVersion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -93,8 +77,7 @@ public class DialogHistorialVersion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final List<HistorialVersion> data) {
 		this.data = data;
@@ -108,8 +91,7 @@ public class DialogHistorialVersion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param datoSeleccionado
-	 *            the datoSeleccionado to set
+	 * @param datoSeleccionado the datoSeleccionado to set
 	 */
 	public void setDatoSeleccionado(final HistorialVersion datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;

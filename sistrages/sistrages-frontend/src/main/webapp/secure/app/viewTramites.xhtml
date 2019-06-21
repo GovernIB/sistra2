@@ -119,19 +119,19 @@
 					        	<p:menuitem id="btnDatosArea" value="#{msg['botones.datosFuenteArea']}" icon="fa fa-table" actionListener="#{viewTramites.datosArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}" />
 
 								<p:separator />
-								<p:menuitem id="btnImportar"  				value="#{msg['botones.importarTramite']}" 	icon="fa fa-upload"  onclick="triggerImportarTramite(); return false;" 		rendered="#{viewTramites.isDesarrollo()}"></p:menuitem>
-								<p:menuitem id="btnExportar" 				value="#{msg['botones.exportarVersion']}" 	icon="fa fa-download" actionListener="#{viewTramites.exportarVersion}" 		rendered="#{viewTramites.versionSeleccionada ne null}"		 process="@this" update="growl"   />
-	        					<p:menuitem id="btnProcesarCuadernoCarga"   value="#{msg['botones.procesarCC']}" 		icon="fa fa-upload"  onclick="triggerProcesarCC(); return false;"	   		rendered="#{!viewTramites.isDesarrollo()}"></p:menuitem>
-								<p:menuitem id="btnGenerarCuadernoCarga"  	value="#{msg['botones.generarCC']}" 		icon="fa fa-download" actionListener="#{viewTramites.generarCuadernoCarga}" rendered="#{viewTramites.versionSeleccionada ne null and (viewTramites.isDesarrollo() or viewTramites.isPreproduccion())}" process="@this" update="growl" />
+								<p:menuitem id="btnImportar"  				value="#{msg['botones.importarTramite']}" 	icon="fa fa-download"  onclick="triggerImportarTramite(); return false;" 		rendered="#{viewTramites.isDesarrollo()}"></p:menuitem>
+								<p:menuitem id="btnExportar" 				value="#{msg['botones.exportarVersion']}" 	icon="fa fa-upload" actionListener="#{viewTramites.exportarVersion}" 		rendered="#{viewTramites.versionSeleccionada ne null}"		 process="@this" update="growl"   />
+	        					<p:menuitem id="btnProcesarCuadernoCarga"   value="#{msg['botones.procesarCC']}" 		icon="fa fa-download fa-rotate-90"  onclick="triggerProcesarCC(); return false;"	   		rendered="#{!viewTramites.isDesarrollo()}"></p:menuitem>
+								<p:menuitem id="btnGenerarCuadernoCarga"  	value="#{msg['botones.generarCC']}" 		icon="fa fa-upload fa-rotate-270" actionListener="#{viewTramites.generarCuadernoCarga}" rendered="#{viewTramites.versionSeleccionada ne null and (viewTramites.isDesarrollo() or viewTramites.isPreproduccion())}" process="@this" update="growl" />
 
 								<p:separator  />
 			        			<p:menuitem id="btnHelp2" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewTramites.ayuda()}" process="@this" update="growl" iconPos="top"/>
 			        		</p:menuButton>
 			        	</h:panelGroup>
-			        	<p:commandButton id="btnImportarVacio"  value="#{msg['botones.importarTramite']}" icon="fa fa-upload"  process="@this" action="#{viewTramites.importar()}" rendered="#{viewTramites.isDesarrollo() and (not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null))}">
+			        	<p:commandButton id="btnImportarVacio"  value="#{msg['botones.importarTramite']}" icon="fa fa-download"  process="@this" action="#{viewTramites.importar()}" rendered="#{viewTramites.isDesarrollo() and (not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null))}">
       			   			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoImportar}" update="growl @form"  />
 	        			</p:commandButton>
-	        			<p:commandButton id="btnProcesarCuadernoCargaVacio"  value="#{msg['botones.procesarCC']}" icon="fa fa-upload"  process="@this" action="#{viewTramites.procesarCC()}" rendered="#{!viewTramites.isDesarrollo() and (not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null))}">
+	        			<p:commandButton id="btnProcesarCuadernoCargaVacio"  value="#{msg['botones.procesarCC']}" icon="fa fa-download fa-rotate-90"  process="@this" action="#{viewTramites.procesarCC()}" rendered="#{!viewTramites.isDesarrollo() and (not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null))}">
       			   			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoImportar}" update="growl @form"  />
 	        			</p:commandButton>
 			        	<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewTramites.ayuda()}" process="@this" update="growl" iconPos="top" rendered="#{not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null)}"/>

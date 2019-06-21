@@ -202,9 +202,9 @@
 
 						<h:column headerClass="subTituloTablaImportarIzq">
 							 	<f:facet name = "header"></f:facet>
-							 	<p:tooltip for="iconoDominioLabel" value="#{msg[fila.resultado.literal]}" />
+							 	<p:tooltip for="iconoDominioLabel" value="#{msg[fila.resultado.literalDominio]}" />
 							 	<p:outputLabel id="iconoDominioLabel" value="" >
-									<i id="iconoDominio${fila.dominio.codigo}" class="#{fila.resultado.icon}" style="#{fila.resultado.css}" />
+									<i id="iconoDominio${fila.dominio.codigo}" class="#{fila.resultado.iconDominio}" style="#{fila.resultado.cssDominio}" />
 								</p:outputLabel>
 						</h:column>
 

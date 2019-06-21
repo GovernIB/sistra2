@@ -615,7 +615,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			} else if (paso instanceof TramitePasoRegistrar) {
 
 				UtilJSF.openDialog(DialogDefinicionVersionRegistrarTramite.class, TypeModoAcceso.EDICION, map, true,
-						950, 450);
+						950, 490);
 
 			}
 
@@ -981,8 +981,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * Retorno dialogo de un Paso Tramite.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 ***/
 	public void returnDialogoFormularioAlta(final SelectEvent event) {
 		returnDialogoRefrescarTramite(event);
@@ -1040,8 +1039,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoScriptListaDinamica(final SelectEvent event) {
 
@@ -1225,8 +1223,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * Retorno dialogo de un Paso Tramite.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 ***/
 	public void returnDialogoDocumentoAlta(final SelectEvent event) {
 		returnDialogoRefrescarTramite(event);
@@ -1249,10 +1246,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * Activa la subsanación del paso anexar documento.
 	 *
-	 * @param idPaso
-	 *            Id del paso.
-	 * @param tipoPaso
-	 *            Tipo de paso
+	 * @param idPaso   Id del paso.
+	 * @param tipoPaso Tipo de paso
 	 **/
 	public void activarSubsanacion(final Long idPaso, final String tipoPaso) {
 
@@ -1292,10 +1287,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * Desactiva la subsanación del paso anexar documento.
 	 *
-	 * @param idPaso
-	 *            Id del paso.
-	 * @param tipoPaso
-	 *            Tipo de paso
+	 * @param idPaso   Id del paso.
+	 * @param tipoPaso Tipo de paso
 	 */
 	public void desactivarSubsanacion(final Long idPaso, final String tipoPaso) {
 
@@ -1464,8 +1457,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * Retorno dialogo de los botones de traducciones.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoTasaAlta(final SelectEvent event) {
 		returnDialogoRefrescarTramite(event);
@@ -1710,10 +1702,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * Establece la propiedad expandida en un arbol recursivamente.
 	 *
-	 * @param node
-	 *            nodo del arbol
-	 * @param expanded
-	 *            si se expande
+	 * @param node     nodo del arbol
+	 * @param expanded si se expande
 	 */
 	private void setExpandedRecursively(final TreeNode node, final boolean expanded) {
 		if (node != null) {
@@ -1728,8 +1718,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * Establece el valor de selectedNode.
 	 *
-	 * @param selectedNode
-	 *            el nuevo valor de selectedNode
+	 * @param selectedNode el nuevo valor de selectedNode
 	 */
 	public void setSelectedNode(final TreeNode selectedNode) {
 		this.selectedNode = selectedNode;
@@ -1841,8 +1830,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * Metodo que se ejecuta cuando se selecciona un nodo del arbol.
 	 *
-	 * @param event
-	 *            evento que se ha producido
+	 * @param event evento que se ha producido
 	 */
 	public void onNodeSelect(final NodeSelectEvent event) {
 		if (event != null) {
@@ -1864,10 +1852,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * Crea la ruta del arbol para el breadcrumb.
 	 *
-	 * @param miga
-	 *            breadcrumb
-	 * @param arbol
-	 *            arbol
+	 * @param miga  breadcrumb
+	 * @param arbol arbol
 	 */
 	private void creaRutaArbolBreadCrumb(final MenuModel miga, final TreeNode arbol) {
 		if (miga != null && arbol != null) {
@@ -1886,8 +1872,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * Crea un nuevo MenuModel a partir del que se pasa por par&aacute;metro.
 	 *
-	 * @param menumodel
-	 *            MenuModel a copiar
+	 * @param menumodel MenuModel a copiar
 	 * @return nuevo MenuModel
 	 */
 	private MenuModel copyMenuModel(final MenuModel menumodel) {
@@ -1913,8 +1898,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * Establece el valor de id.
 	 *
-	 * @param id
-	 *            el nuevo valor de id
+	 * @param id el nuevo valor de id
 	 */
 	public void setId(final Long id) {
 		this.id = id;
@@ -1932,8 +1916,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * Establece el valor de tramiteVersion.
 	 *
-	 * @param tramiteVersion
-	 *            el nuevo valor de tramiteVersion
+	 * @param tramiteVersion el nuevo valor de tramiteVersion
 	 */
 	public void setTramiteVersion(final TramiteVersion tramiteVersion) {
 		this.tramiteVersion = tramiteVersion;
@@ -1951,8 +1934,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * Establece el valor de opcionUrl.
 	 *
-	 * @param opcion
-	 *            el nuevo valor de opcionUrl
+	 * @param opcion el nuevo valor de opcionUrl
 	 */
 	public void setOpcionUrl(final String opcion) {
 		this.opcionUrl = opcion;
@@ -1993,8 +1975,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param formularioSeleccionado
-	 *            the formularioSeleccionado to set
+	 * @param formularioSeleccionado the formularioSeleccionado to set
 	 */
 	public void setFormularioSeleccionado(final FormularioTramite formularioSeleccionado) {
 		this.formularioSeleccionado = formularioSeleccionado;
@@ -2008,8 +1989,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param dominioSeleccionado
-	 *            the dominioSeleccionado to set
+	 * @param dominioSeleccionado the dominioSeleccionado to set
 	 */
 	public void setDominioSeleccionado(final Dominio dominioSeleccionado) {
 		this.dominioSeleccionado = dominioSeleccionado;
@@ -2070,8 +2050,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param dominios
-	 *            the dominios to set
+	 * @param dominios the dominios to set
 	 */
 	public void setDominios(final List<Dominio> dominios) {
 		this.dominios = dominios;
@@ -2085,8 +2064,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param tramite
-	 *            the tramite to set
+	 * @param tramite the tramite to set
 	 */
 	public void setTramite(final Tramite tramite) {
 		this.tramite = tramite;
@@ -2100,8 +2078,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param textoTipoAsunto
-	 *            the textoTipoAsunto to set
+	 * @param textoTipoAsunto the textoTipoAsunto to set
 	 */
 	public void setTextoTipoAsunto(final String textoTipoAsunto) {
 		this.textoTipoAsunto = textoTipoAsunto;
@@ -2115,8 +2092,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param textoLibroRegistro
-	 *            the textoLibroRegistro to set
+	 * @param textoLibroRegistro the textoLibroRegistro to set
 	 */
 	public void setTextoLibroRegistro(final String textoLibroRegistro) {
 		this.textoLibroRegistro = textoLibroRegistro;
@@ -2130,8 +2106,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param textoOficinaRegistro
-	 *            the textoOficinaRegistro to set
+	 * @param textoOficinaRegistro the textoOficinaRegistro to set
 	 */
 	public void setTextoOficinaRegistro(final String textoOficinaRegistro) {
 		this.textoOficinaRegistro = textoOficinaRegistro;
@@ -2153,8 +2128,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param idiomas
-	 *            the idiomas to set
+	 * @param idiomas the idiomas to set
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;
@@ -2168,8 +2142,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param permiteBloquear
-	 *            the permiteBloquear to set
+	 * @param permiteBloquear the permiteBloquear to set
 	 */
 	public void setPermiteBloquear(final boolean permiteBloquear) {
 		this.permiteBloquear = permiteBloquear;
@@ -2183,8 +2156,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param entidad
-	 *            the entidad to set
+	 * @param entidad the entidad to set
 	 */
 	public final void setEntidad(final Entidad entidad) {
 		this.entidad = entidad;

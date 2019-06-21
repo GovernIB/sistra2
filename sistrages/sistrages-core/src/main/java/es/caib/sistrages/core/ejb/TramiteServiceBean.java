@@ -536,4 +536,10 @@ public class TramiteServiceBean implements TramiteService {
 	public FormularioTramite createFormularioTramiteDefault() {
 		return tramiteService.createFormularioTramiteDefault();
 	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void borradoHistorial(final Long idTramiteVersion, final String username) {
+		tramiteService.borradoHistorial(idTramiteVersion, username);
+	}
 }

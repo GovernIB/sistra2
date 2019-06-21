@@ -123,10 +123,8 @@ public class HistorialVersionDaoImpl implements HistorialVersionDao {
 	/**
 	 * Listar historiales.
 	 *
-	 * @param idTramiteVersion
-	 *            Id area
-	 * @param pFiltro
-	 *            the filtro
+	 * @param idTramiteVersion Id area
+	 * @param pFiltro          the filtro
 	 * @return lista de tramites
 	 */
 	@SuppressWarnings("unchecked")
@@ -157,6 +155,24 @@ public class HistorialVersionDaoImpl implements HistorialVersionDao {
 		}
 
 		return resultado;
+	}
+
+	@Override
+	public void borradoHistorial(final Long idTramiteVersion, final String username) {
+
+		// Borramos el historial
+		final String sql = "delete From JHistorialVersion t where t.versionTramite.id = :idTramiteVersion";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idTramiteVersion", idTramiteVersion);
+		query.executeUpdate();
+
+		// Ponemos la release a 1
+		final JVersionTramite jTramiteVersion = entityManager.find(JVersionTramite.class, idTramiteVersion);
+		jTramiteVersion.setRelease(1);
+		entityManager.persist(jTramiteVersion);
+
+		// Anyadimos un historial
+		this.add(idTramiteVersion, username, TypeAccionHistorial.REINICIADO, null);
 	}
 
 }

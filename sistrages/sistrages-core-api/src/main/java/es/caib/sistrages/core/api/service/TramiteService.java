@@ -30,10 +30,8 @@ public interface TramiteService {
 	/**
 	 * Lista de areas.
 	 *
-	 * @param idEntidad
-	 *            idEntidad
-	 * @param filtro
-	 *            filtro
+	 * @param idEntidad idEntidad
+	 * @param filtro    filtro
 	 * @return lista de areas
 	 */
 	public List<Area> listArea(final Long idEntidad, String filtro);
@@ -41,8 +39,7 @@ public interface TramiteService {
 	/**
 	 * Obtiene el area.
 	 *
-	 * @param id
-	 *            identificador
+	 * @param id identificador
 	 * @return area
 	 */
 	public Area getArea(Long id);
@@ -50,8 +47,7 @@ public interface TramiteService {
 	/**
 	 * Obtiene el area de un tramite.
 	 *
-	 * @param id
-	 *            identificador tramite
+	 * @param id identificador tramite
 	 * @return area
 	 */
 	public Area getAreaTramite(Long idTramite);
@@ -59,18 +55,15 @@ public interface TramiteService {
 	/**
 	 * Añade un area.
 	 *
-	 * @param idEntidad
-	 *            idEntidad
-	 * @param area
-	 *            area
+	 * @param idEntidad idEntidad
+	 * @param area      area
 	 */
 	public void addArea(Long idEntidad, Area area);
 
 	/**
 	 * Elimina un area.
 	 *
-	 * @param id
-	 *            identificador
+	 * @param id identificador
 	 * @return true, si se realiza con exito
 	 */
 	public boolean removeArea(Long id);
@@ -78,18 +71,15 @@ public interface TramiteService {
 	/**
 	 * Actualiza un area.
 	 *
-	 * @param area
-	 *            area
+	 * @param area area
 	 */
 	public void updateArea(Area area);
 
 	/**
 	 * Lista de tramites.
 	 *
-	 * @param idArea
-	 *            idArea
-	 * @param pFiltro
-	 *            filtro
+	 * @param idArea  idArea
+	 * @param pFiltro filtro
 	 * @return lista de tramites
 	 */
 	public List<Tramite> listTramite(final Long idArea, String pFiltro);
@@ -97,8 +87,7 @@ public interface TramiteService {
 	/**
 	 * Obtiene el tramite.
 	 *
-	 * @param id
-	 *            identificador
+	 * @param id identificador
 	 * @return {@link Tramite}
 	 */
 	public Tramite getTramite(Long id);
@@ -106,32 +95,25 @@ public interface TramiteService {
 	/**
 	 * Añade un Tramite.
 	 *
-	 * @param idArea
-	 *            identificador de area
-	 * @param pTramite
-	 *            tramite
+	 * @param idArea   identificador de area
+	 * @param pTramite tramite
 	 */
 	public void addTramite(Long idArea, Tramite pTramite);
 
 	/**
 	 * Cambia un trámite de área.
 	 *
-	 * @param idArea
-	 *            id área
-	 * @param idTramite
-	 *            id trámite
-	 * @param idAreaAntigua
-	 *            id área antes asociado
-	 * @param usuario
-	 *            Nick del usuario
+	 * @param idArea        id área
+	 * @param idTramite     id trámite
+	 * @param idAreaAntigua id área antes asociado
+	 * @param usuario       Nick del usuario
 	 */
 	public void changeAreaTramite(Long idArea, Long idTramite, final Long idAreaAntigua, final String usuario);
 
 	/**
 	 * Elimina un Tramite.
 	 *
-	 * @param id
-	 *            identificador
+	 * @param id identificador
 	 * @return true, si se realiza con exito
 	 */
 	public boolean removeTramite(Long id);
@@ -139,8 +121,7 @@ public interface TramiteService {
 	/**
 	 * Actualiza un Tramite.
 	 *
-	 * @param pTramite
-	 *            tramite
+	 * @param pTramite tramite
 	 */
 	public void updateTramite(Tramite pTramite);
 
@@ -494,8 +475,7 @@ public interface TramiteService {
 	 *
 	 * @param idTramiteVersion
 	 * @param identificador
-	 * @param idTasa
-	 *            Puede ser nulo en caso de alta
+	 * @param idTasa           Puede ser nulo en caso de alta
 	 * @return
 	 */
 	public boolean checkTasaRepetida(Long idTramiteVersion, String identificador, Long idTasa);
@@ -505,8 +485,7 @@ public interface TramiteService {
 	 *
 	 * @param idTramiteVersion
 	 * @param identificador
-	 * @param idAnexo
-	 *            Puede ser nulo en caso de alta
+	 * @param idAnexo          Puede ser nulo en caso de alta
 	 * @return
 	 */
 	public boolean checkAnexoRepetido(Long idTramiteVersion, String identificador, Long idAnexo);
@@ -566,10 +545,8 @@ public interface TramiteService {
 	/**
 	 * Valida que no tenga errores una version de un tramite.
 	 *
-	 * @param pId
-	 *            id. version tramite
-	 * @param pIdioma
-	 *            idioma para mostrar los errores
+	 * @param pId     id. version tramite
+	 * @param pIdioma idioma para mostrar los errores
 	 * @return lista de errores de validacion
 	 */
 	public List<ErrorValidacion> validarVersionTramite(Long pId, String pIdioma);
@@ -577,10 +554,8 @@ public interface TramiteService {
 	/**
 	 * Valida que no tenga errores una version de un tramite.
 	 *
-	 * @param pTramiteVersion
-	 *            tramite version
-	 * @param pIdioma
-	 *            idioma para mostrar los errores
+	 * @param pTramiteVersion tramite version
+	 * @param pIdioma         idioma para mostrar los errores
 	 * @return lista de errores de validacion
 	 */
 	public List<ErrorValidacion> validarVersionTramite(TramiteVersion pTramiteVersion, String pIdioma);
@@ -588,14 +563,10 @@ public interface TramiteService {
 	/**
 	 * Valida que no tenga errores un script de un tramite.
 	 *
-	 * @param pScript
-	 *            script a validar
-	 * @param pListaDominios
-	 *            lista dominios de la version
-	 * @param pIdiomasTramiteVersion
-	 *            idiomas definidos en la version
-	 * @param pIdioma
-	 *            idioma para mostrar los errores
+	 * @param pScript                script a validar
+	 * @param pListaDominios         lista dominios de la version
+	 * @param pIdiomasTramiteVersion idiomas definidos en la version
+	 * @param pIdioma                idioma para mostrar los errores
 	 * @return lista de errores de validacion
 	 */
 	public List<ErrorValidacion> validarScript(Script pScript, List<Dominio> pListaDominios,
@@ -629,28 +600,23 @@ public interface TramiteService {
 	/**
 	 * Actualiza literal.
 	 *
-	 * @param pLiteral
-	 *            literal
+	 * @param pLiteral literal
 	 */
 	void updateLiteral(Literal pLiteral);
 
 	/**
 	 * Actualiza script.
 	 *
-	 * @param pScript
-	 *            script
+	 * @param pScript script
 	 */
 	void updateScript(Script pScript);
 
 	/**
 	 * Crea TramiteVersion por defecto.
 	 *
-	 * @param pNumVersion
-	 *            num version
-	 * @param pIdiomasSoportados
-	 *            idiomas soportados
-	 * @param pDatosUsuarioBloqueo
-	 *            datos usuario bloqueo
+	 * @param pNumVersion          num version
+	 * @param pIdiomasSoportados   idiomas soportados
+	 * @param pDatosUsuarioBloqueo datos usuario bloqueo
 	 * @return the tramite version
 	 */
 
@@ -669,5 +635,13 @@ public interface TramiteService {
 	Tasa createTasaDefault();
 
 	FormularioTramite createFormularioTramiteDefault();
+
+	/**
+	 * Borrado de historial
+	 *
+	 * @param idTramiteVersion
+	 * @param username
+	 */
+	public void borradoHistorial(Long idTramiteVersion, final String username);
 
 }

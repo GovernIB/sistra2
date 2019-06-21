@@ -130,6 +130,21 @@ public class UtilCuadernoCarga {
 			return fila;
 		}
 
+		// Si ambos dominios son de tipo Entidad, tienen que ser de la misma entidad
+		if (fila.getDominio() != null && fila.getDominioActual() != null
+				&& fila.getDominioActual().getAmbito() == TypeAmbito.ENTIDAD
+				&& isEntidadErroneo(fila.getDominioActual())) {
+
+			fila.setAccion(TypeImportarAccion.NADA);
+			fila.setExiste(TypeImportarExiste.EXISTE);
+			fila.setEstado(TypeImportarEstado.ERROR);
+			fila.setResultado(TypeImportarResultado.ERROR);
+			fila.setVisibleBoton(false);
+			fila.setMismoTipo(false);
+			fila.setMensaje(UtilJSF.getLiteral("importar.error.ambitoEntidadesDistintaEntidad"));
+			return fila;
+		}
+
 		// Si ambos dominios son de tipo Area, tienen que ser el mismo area (sino, es
 		// probable que no se vean)
 		if (fila.getDominio() != null && fila.getDominioActual() != null
@@ -168,6 +183,23 @@ public class UtilCuadernoCarga {
 			return checkDominioModoActualizacion(fila);
 		}
 
+	}
+
+	/**
+	 * Compara la entidad del dominio con el del usuario.
+	 *
+	 * @param dominio
+	 * @return
+	 */
+	private static boolean isEntidadErroneo(final Dominio dominio) {
+		boolean retorno;
+		if (dominio == null || dominio.getAmbito() != TypeAmbito.ENTIDAD || dominio.getEntidad() == null
+				|| dominio.getEntidad().compareTo(UtilJSF.getIdEntidad()) != 0) {
+			retorno = true;
+		} else {
+			retorno = false;
+		}
+		return retorno;
 	}
 
 	/**

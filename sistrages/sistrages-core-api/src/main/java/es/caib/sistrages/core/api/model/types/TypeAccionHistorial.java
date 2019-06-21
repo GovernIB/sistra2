@@ -30,7 +30,11 @@ public enum TypeAccionHistorial {
 	/**
 	 * Mover un trámite a otra área
 	 */
-	MOVER_TRAMITE("M");
+	MOVER_TRAMITE("M"),
+	/**
+	 * Reiniciado el historial de versiones
+	 */
+	REINICIADO("R");
 
 	/** Valor. **/
 	private String valor;

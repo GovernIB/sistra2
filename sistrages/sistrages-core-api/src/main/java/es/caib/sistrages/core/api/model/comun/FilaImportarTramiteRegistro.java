@@ -192,6 +192,24 @@ public class FilaImportarTramiteRegistro extends FilaImportarBase {
 	}
 
 	/**
+	 * Crea un elemento FilaImportarTramiteRegistro de tipo IM (Importar Tramite)
+	 * cuando NO tiene una acción el trámite.
+	 *
+	 *
+	 * @param tramiteVersion
+	 * @param literal
+	 * @return
+	 */
+	public static FilaImportarTramiteRegistro crearITerrorTramiteSinSeleccionar(final TramiteVersion tramiteVersion,
+			final String literal) {
+		final FilaImportarTramiteRegistro fila = new FilaImportarTramiteRegistro(TypeImportarAccion.NADA,
+				TypeImportarExiste.EXISTE, TypeImportarEstado.ERROR, TypeImportarResultado.ERROR, tramiteVersion, null,
+				true);
+		fila.setMensaje(literal);
+		return fila;
+	}
+
+	/**
 	 * Crea un elemento FilaImportarTramiteRegistro de tipo IT (Importar Tramite)
 	 * cuando existe un paso de tipo registro
 	 *

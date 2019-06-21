@@ -632,8 +632,14 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 */
 	private void prepararFlujoTramiteRegistro() {
 
-		TramitePaso pasoRegistro = null;
+		if (filaTramite.getAccion() == null || filaTramite.getResultado() == TypeImportarResultado.ERROR) {
+			// Lo dejamos a error a la espera que realice una acción con
+			filaTramiteRegistro = FilaImportarTramiteRegistro.crearITerrorTramiteSinSeleccionar(tramiteVersion,
+					UtilJSF.getLiteral("dialogTramiteImportar.error.tramitemal"));
+			return;
+		}
 
+		TramitePaso pasoRegistro = null;
 		// Paso 3.3.1 Tramite Version tiene un paso registro
 		if (filaTramiteVersion != null && filaTramiteVersion.getTramiteVersion() != null
 				&& filaTramiteVersion.getTramiteVersion().getListaPasos() != null) {

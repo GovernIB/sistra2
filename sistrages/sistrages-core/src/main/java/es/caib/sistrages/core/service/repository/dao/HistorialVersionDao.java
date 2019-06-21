@@ -13,8 +13,7 @@ public interface HistorialVersionDao {
 	/**
 	 * Obtiene el historial version.
 	 *
-	 * @param id
-	 *            identificador
+	 * @param id identificador
 	 * @return el valor del tramite
 	 */
 	HistorialVersion getById(final Long id);
@@ -22,8 +21,7 @@ public interface HistorialVersionDao {
 	/**
 	 * Obtiene el valor de todos los historial .
 	 *
-	 * @param idTramiteVersion
-	 *            Id tramite version
+	 * @param idTramiteVersion Id tramite version
 	 *
 	 * @return el valor de todos los historiales
 	 */
@@ -41,15 +39,20 @@ public interface HistorialVersionDao {
 	/**
 	 * Añade tramite.
 	 *
-	 * @param idTramiteVersion
-	 *            idTramiteVersion
-	 * @param username
-	 *            Username
-	 * @param accion
-	 *            Accion
-	 * @param detalleCambio
-	 *            Detalle del cambio
+	 * @param idTramiteVersion idTramiteVersion
+	 * @param username         Username
+	 * @param accion           Accion
+	 * @param detalleCambio    Detalle del cambio
 	 */
-	void add(Long idTramiteVersion, final String username, final TypeAccionHistorial accion, final String detalleCambio);
+	void add(Long idTramiteVersion, final String username, final TypeAccionHistorial accion,
+			final String detalleCambio);
+
+	/**
+	 * Borra el historial de versiones.
+	 *
+	 * @param idTramiteVersion La versión del trámite asociado al historial
+	 * @param username         Usuario
+	 */
+	void borradoHistorial(Long idTramiteVersion, final String username);
 
 }

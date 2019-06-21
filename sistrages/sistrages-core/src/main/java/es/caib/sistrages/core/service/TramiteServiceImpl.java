@@ -1100,4 +1100,10 @@ public class TramiteServiceImpl implements TramiteService {
 		return tramiteComponent.createFormularioTramiteDefault();
 	}
 
+	@Override
+	@NegocioInterceptor
+	public void borradoHistorial(final Long idTramiteVersion, final String username) {
+		historialVersionDao.borradoHistorial(idTramiteVersion, username);
+	}
+
 }

@@ -42,7 +42,7 @@ import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeImportarTipo;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrages.frontend.util.UtilImportacion;
+import es.caib.sistrages.frontend.util.UtilCuadernoCarga;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -202,14 +202,12 @@ public class DialogDominioImportar extends DialogControllerBase {
 			}
 		}
 
-		String identificadorArea = null;
 		Long idArea = null;
 		if (area != null) {
-			identificadorArea = area.getIdentificador();
 			idArea = area.getCodigo();
 		}
-		filaDominio = UtilImportacion.getFilaDominio(data, dominioActual, this.fuentesDatos, this.fuentesDatosContent,
-				fdActual, identificadorArea, idArea);
+		filaDominio = UtilCuadernoCarga.getFilaDominio(data, dominioActual, this.fuentesDatos, this.fuentesDatosContent,
+				fdActual, UtilJSF.getIdEntidad(), idArea);
 
 		setMostrarPanelInfo(true);
 		if (filaDominio.getResultado() != TypeImportarResultado.INFO
