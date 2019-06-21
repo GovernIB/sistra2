@@ -77,14 +77,14 @@ public class JConfiguracionGlobal implements IModelApi {
 	/**
 	 * @return the noModificable
 	 */
-	public final boolean isNoModificable() {
+	public boolean isNoModificable() {
 		return noModificable;
 	}
 
 	/**
 	 * @param noModificable the noModificable to set
 	 */
-	public final void setNoModificable(final boolean noModificable) {
+	public void setNoModificable(final boolean noModificable) {
 		this.noModificable = noModificable;
 	}
 

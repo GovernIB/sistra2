@@ -666,7 +666,7 @@ public class JEntidad implements IModelApi {
 	/**
 	 * @return the registroOcultarDescargaDocumentos
 	 */
-	public final boolean isRegistroOcultarDescargaDocumentos() {
+	public boolean isRegistroOcultarDescargaDocumentos() {
 		return registroOcultarDescargaDocumentos;
 	}
 
@@ -675,7 +675,7 @@ public class JEntidad implements IModelApi {
 	 *                                          registroOcultarDescargaDocumentos to
 	 *                                          set
 	 */
-	public final void setRegistroOcultarDescargaDocumentos(final boolean registroOcultarDescargaDocumentos) {
+	public void setRegistroOcultarDescargaDocumentos(final boolean registroOcultarDescargaDocumentos) {
 		this.registroOcultarDescargaDocumentos = registroOcultarDescargaDocumentos;
 	}
 
