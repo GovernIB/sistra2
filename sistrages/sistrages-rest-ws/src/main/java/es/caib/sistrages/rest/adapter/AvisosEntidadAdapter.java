@@ -29,8 +29,7 @@ public class AvisosEntidadAdapter {
 	/**
 	 * Conversion a modelo rest.
 	 *
-	 * @param idEntidad
-	 *            id entidad
+	 * @param idEntidad id entidad
 	 * @return modelo rest
 	 */
 	public RAvisosEntidad convertir(final String idEntidad) {
@@ -79,14 +78,16 @@ public class AvisosEntidadAdapter {
 	 */
 	private String getListaVersiones(final String listaSerializadaTramites) {
 		final StringBuilder listaVersiones = new StringBuilder();
-		final String[] trams = listaSerializadaTramites.split(";");
-		if (trams.length > 0) {
-			for (final String tram : trams) {
-				final String codigoVersion = tram.split("#")[0];
-				final String numeroVersion = tram.split("#")[1];
-				final String identificador = restApiService
-						.getIdentificadorByCodigoVersion(Long.valueOf(codigoVersion));
-				listaVersiones.append(identificador + "#" + numeroVersion);
+		if (listaSerializadaTramites != null) {
+			final String[] trams = listaSerializadaTramites.split(";");
+			if (trams.length > 0) {
+				for (final String tram : trams) {
+					final String codigoVersion = tram.split("#")[0];
+					final String numeroVersion = tram.split("#")[1];
+					final String identificador = restApiService
+							.getIdentificadorByCodigoVersion(Long.valueOf(codigoVersion));
+					listaVersiones.append(identificador + "#" + numeroVersion);
+				}
 			}
 		}
 		String resultado = listaVersiones.toString();
