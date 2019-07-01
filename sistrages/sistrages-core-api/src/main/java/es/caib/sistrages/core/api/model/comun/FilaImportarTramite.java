@@ -240,7 +240,7 @@ public class FilaImportarTramite extends FilaImportarBase {
 	public static FilaImportarTramite crearITtramiteNoExiste(final Tramite tramite, final Tramite tramiteActual,
 			final FilaImportarArea filaArea) {
 		final FilaImportarTramite fila = new FilaImportarTramite(TypeImportarAccion.CREAR, TypeImportarExiste.NO_EXISTE,
-				TypeImportarEstado.REVISADO, TypeImportarResultado.INFO, tramite, tramiteActual);
+				TypeImportarEstado.REVISADO, TypeImportarResultado.WARNING, tramite, tramiteActual);
 		final List<TypeImportarAccion> acciones = new ArrayList<>();
 		acciones.add(TypeImportarAccion.CREAR);
 		if (filaArea != null && filaArea.getAccion() != null

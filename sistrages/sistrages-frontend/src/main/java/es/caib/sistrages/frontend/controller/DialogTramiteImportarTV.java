@@ -65,11 +65,17 @@ public class DialogTramiteImportarTV extends DialogControllerBase {
 
 		final TypeImportarAccion typeAccion = TypeImportarAccion.fromString(accion);
 		if (typeAccion == TypeImportarAccion.INCREMENTAR) {
-			final int numVersion = tramiteService
-					.getTramiteNumVersionMaximo(filaTramite.getTramiteActual().getCodigo());
-			data.setNumVersion(String.valueOf(numVersion + 1));
-			data.setDestinoVersion(String.valueOf(numVersion + 1));
-			data.setDestinoRelease("1");
+			if (filaTramite.getAccion() == TypeImportarAccion.CREAR) {
+				data.setNumVersion("1");
+				data.setDestinoVersion("1");
+				data.setDestinoRelease("1");
+			} else {
+				final int numVersion = tramiteService
+						.getTramiteNumVersionMaximo(filaTramite.getTramiteActual().getCodigo());
+				data.setNumVersion(String.valueOf(numVersion + 1));
+				data.setDestinoVersion(String.valueOf(numVersion + 1));
+				data.setDestinoRelease("1");
+			}
 		}
 
 		if (typeAccion == TypeImportarAccion.REEMPLAZAR) {

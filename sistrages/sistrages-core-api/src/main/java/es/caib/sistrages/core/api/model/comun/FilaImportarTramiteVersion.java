@@ -334,8 +334,8 @@ public class FilaImportarTramiteVersion extends FilaImportarBase {
 	public static FilaImportarTramiteVersion crearITtramiteNuevo(final TramiteVersion tramiteVersion,
 			final TramiteVersion tramiteVersionActual) {
 		final FilaImportarTramiteVersion fila = new FilaImportarTramiteVersion(TypeImportarAccion.INCREMENTAR,
-				TypeImportarExiste.NO_EXISTE, TypeImportarEstado.REVISADO, TypeImportarResultado.INFO, tramiteVersion,
-				tramiteVersionActual);
+				TypeImportarExiste.NO_EXISTE, TypeImportarEstado.REVISADO, TypeImportarResultado.WARNING,
+				tramiteVersion, tramiteVersionActual);
 		final List<TypeImportarAccion> acciones = new ArrayList<>();
 		acciones.add(TypeImportarAccion.INCREMENTAR);
 		fila.setAccion(TypeImportarAccion.INCREMENTAR);
