@@ -71,8 +71,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -147,8 +146,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoDatosIniciales(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -169,8 +167,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoFirma(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -191,8 +188,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoObligatoriedad(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -213,8 +209,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoParametros(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -235,8 +230,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoRetorno(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -297,7 +291,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getCodigo()));
 		params.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.id);
 
-		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.EDICION, params, true, 1200, 680);
+		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.EDICION, params, true, 1210, 680);
 	}
 
 	/**
@@ -338,8 +332,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -353,8 +346,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final FormularioTramite data) {
 		this.data = data;
@@ -386,8 +378,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idPaso
-	 *            the idPaso to set
+	 * @param idPaso the idPaso to set
 	 */
 	public void setIdPaso(final String idPaso) {
 		this.idPaso = idPaso;
@@ -401,8 +392,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramiteVersion
-	 *            the tramiteVersion to set
+	 * @param tramiteVersion the tramiteVersion to set
 	 */
 	public final void setTramiteVersion(final TramiteVersion tramiteVersion) {
 		this.tramiteVersion = tramiteVersion;
@@ -416,8 +406,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idiomas
-	 *            the idiomas to set
+	 * @param idiomas the idiomas to set
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;

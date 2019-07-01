@@ -135,7 +135,7 @@
 		<!-- Botonera abajo -->
 
 		<p:outputPanel styleClass="botonera" id="botonera">
-			<p:panelGrid columns="4" columnClasses="w20,w25 grid-right,w30 grid-center,w25" layout="grid" styleClass="formulario-botonera">
+			<p:panelGrid columns="3" columnClasses="w20,w30 grid-center,w50" layout="grid" styleClass="formulario-botonera">
 
 				<p:outputPanel styleClass="barra-herramientas-disenyo" id="bh-paginas">
 					<p:commandButton icon="fa fa-chevron-left"  id="izq" actionListener="#{dialogDisenyoFormulario.moverPaginaIzq}" process="@this" update="growlDisenyoFormulario" disabled="#{!dialogDisenyoFormulario.habilitadoBtnPagIzq}"  title="#{msg['dialogDisenyoFormulario.title.pagAnterior']}"/>
@@ -144,26 +144,28 @@
 				</p:outputPanel>
 
 				<p:outputPanel>
-					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.aplicarCambios']}" actionListener="#{dialogDisenyoFormulario.aplicarCambios}" process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" rendered="#{dialogDisenyoFormulario.isNotConsulta()}"/>
-					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.verEstructura']}" actionListener="#{dialogDisenyoFormulario.abrirDialogoEstructura}" process="@this" update="growlDisenyoFormulario" />
-				</p:outputPanel>
 
-				<p:outputPanel>
-					<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.mostrarOcultos}" itemLabel="#{msg['dialogDisenyoFormulario.mostrarOcultos']}" styleClass="center-vertical">
-						<p:ajax event="change" update="formulario-panel"/>
-					</p:selectBooleanCheckbox>
-
-	         		<p:selectOneMenu id="idioma" value="#{dialogDisenyoFormulario.idioma}" styleClass="center-vertical">
+					<p:outputLabel for="idioma" value="Idioma" styleClass="margin-right-3"/>
+	         		<p:selectOneMenu id="idioma" value="#{dialogDisenyoFormulario.idioma}" styleClass="center-vertical" style="margin-right:16px;">
 	         			<p:ajax event="blur" process="@this" />
 	         			<p:ajax event="change" update="formulario-panel"/>
 						<f:selectItems value="#{dialogDisenyoFormulario.idiomas}" var="lang" itemValue="#{lang}" itemLabel="#{msg[lang]}"/>
 				    </p:selectOneMenu>
+
+					<p:outputLabel for="mostrarOcultos" value="#{msg['dialogDisenyoFormulario.mostrarOcultos']}" styleClass="margin-right-3"/>
+					<p:selectBooleanCheckbox id="mostrarOcultos" value="#{dialogDisenyoFormulario.mostrarOcultos}" >
+						<p:ajax event="change" update="formulario-panel"/>
+					</p:selectBooleanCheckbox>
+
 				 </p:outputPanel>
 
 				<p:outputPanel styleClass="confirmar_botonera">
+					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.aplicarCambios']}" actionListener="#{dialogDisenyoFormulario.aplicarCambios}" process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" rendered="#{dialogDisenyoFormulario.isNotConsulta()}"  style="margin-right:4px;"/>
+					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.verEstructura']}" actionListener="#{dialogDisenyoFormulario.abrirDialogoEstructura}" process="@this" update="growlDisenyoFormulario"  style="margin-right:4px;" />
+
 					<p:commandButton id="btnPrevisualizarTramite"
-									 	value="#{msg['botones.previsualizarTramite']}" icon="fa fa-eye"
-										actionListener="#{dialogDisenyoFormulario.previsualizar()}" process="@this" style="margin-right:4px;width:170px;" />
+									 	value="#{msg['botones.previsualizarTramite']}"
+										actionListener="#{dialogDisenyoFormulario.previsualizar()}" process="@this" style="margin-right:4px;" />
 					<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDisenyoFormulario.cancelar}" process="@this"/>
 				</p:outputPanel>
 			</p:panelGrid>

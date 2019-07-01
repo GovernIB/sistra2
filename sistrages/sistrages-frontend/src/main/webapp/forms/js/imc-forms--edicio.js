@@ -161,7 +161,7 @@ $.fn.appElement = function(options) {
 	}, options);
 	this.each(function(){
 		var element = $(this),
-			elements_f = element.find(".imc-element")
+			elements_f = element.find(".imc-element"),
 			inicia = function() {
 
 				elements_f
@@ -191,6 +191,10 @@ $.fn.appElement = function(options) {
 
 			},
 			selecciona = function(e) {
+
+				if (element.hasClass("imc-el-hidden") && element.attr("data-hidden") !== "visible") {
+					return;
+				}
 
 				element
 					.find(".imc--el-seleccionat:first")

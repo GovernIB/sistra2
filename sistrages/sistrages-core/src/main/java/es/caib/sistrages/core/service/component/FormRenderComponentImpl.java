@@ -136,30 +136,39 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			final boolean pModoEdicion, final boolean pMostrarOcultos) {
 
 		if (pPagina != null) {
+
+			boolean ultimoCampoEsOculto = false;
+
 			for (final LineaComponentesFormulario lc : pPagina.getLineas()) {
+
+				ultimoCampoEsOculto = false;
 
 				for (final ComponenteFormulario cf : lc.getComponentes()) {
 
 					switch (cf.getTipo()) {
 					case SECCION:
 						campoSeccion(pOut, cf, pLang, pModoEdicion);
+						ultimoCampoEsOculto = false;
 						break;
 					case CAMPO_TEXTO:
 						campoTexto(pOut, cf, pLang, pModoEdicion);
+						ultimoCampoEsOculto = false;
 						break;
 					case ETIQUETA:
 						campoEtiqueta(pOut, cf, pLang, pModoEdicion);
+						ultimoCampoEsOculto = false;
 						break;
 					case CHECKBOX:
 						campoCheckBox(pOut, cf, pLang, pModoEdicion);
+						ultimoCampoEsOculto = false;
 						break;
 					case SELECTOR:
 						campoSelector(pOut, cf, pLang, pModoEdicion);
+						ultimoCampoEsOculto = false;
 						break;
 					case CAMPO_OCULTO:
-						if (pMostrarOcultos) {
-							campoOculto(pOut, cf, pLang, pModoEdicion);
-						}
+						campoOculto(pOut, cf, pLang, pModoEdicion, pMostrarOcultos, ultimoCampoEsOculto);
+						ultimoCampoEsOculto = true;
 						break;
 					default:
 						break;
@@ -475,31 +484,29 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	}
 
 	private void campoOculto(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang,
-			final boolean pModoEdicion) {
+			final boolean pModoEdicion, final boolean pMostrarOcultos, final boolean ultimoCampoEsOculto) {
 		final ComponenteFormularioCampoOculto campo = (ComponenteFormularioCampoOculto) pCF;
 
-		final StringBuilder estilo = new StringBuilder();
 		final StringBuilder elemento = new StringBuilder();
 
-		String tipo = null;
-
-		if (pModoEdicion) {
-			tipo = "text";
+		String mostrar = null;
+		if (pMostrarOcultos) {
+			mostrar = "visible";
 		} else {
-			tipo = "hidden";
+			mostrar = "hidden";
+		}
+		String more = null;
+		if (ultimoCampoEsOculto) {
+			more = "imc-el-hidden-more";
+		} else {
+			more = "";
 		}
 
-		elemento.append("<input id=\"").append(campo.getIdComponente()).append("\" type=\"" + tipo + "\"/>");
+		elemento.append("<input id=\"").append(campo.getIdComponente()).append("\" type=\"hidden\"/>");
 
 		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente()), escribeCodigo(pCF.getCodigo(), pModoEdicion),
-				" class=\"imc-element ", estilo.toString(), "\" data-type=\"", tipo, "\">", 5);
-
-//		escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(campo.getIdComponente()),
-//				"\">", "", "</label></div>", 6);
-
-		escribeLinea(pOut, "<div class=\"imc-el-control\">", elemento.toString(), "</div>", 6);
-
-		escribeLinea(pOut, "</div>", 5);
+				" class=\"imc-element imc-el-hidden ", more, "\" data-type=\"hidden\" data-hidden=\"", mostrar, "\">",
+				elemento.toString(), "</div>", 5);
 
 	}
 
