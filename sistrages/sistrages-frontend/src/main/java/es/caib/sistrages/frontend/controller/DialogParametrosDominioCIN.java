@@ -92,7 +92,7 @@ public class DialogParametrosDominioCIN extends DialogControllerBase {
 	 * Crea nuevo valor.
 	 */
 	public void nuevoValor() {
-		UtilJSF.openDialog(DialogParametrosDominio.class, TypeModoAcceso.ALTA, null, true, 430, 170);
+		UtilJSF.openDialog(DialogParametrosDominio.class, TypeModoAcceso.ALTA, null, true, 350, 170);
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class DialogParametrosDominioCIN extends DialogControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.valorSeleccionado));
-		UtilJSF.openDialog(DialogParametrosDominio.class, TypeModoAcceso.EDICION, params, true, 430, 170);
+		UtilJSF.openDialog(DialogParametrosDominio.class, TypeModoAcceso.EDICION, params, true, 350, 170);
 	}
 
 	/**

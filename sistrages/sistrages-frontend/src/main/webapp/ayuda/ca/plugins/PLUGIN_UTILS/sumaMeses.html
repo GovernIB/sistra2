@@ -1,0 +1,64 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.sumaDias(fecha, dias, formatoFecha)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS&metodo=sumaMeses">sumaMeses</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	sumaMeses(String fecha, int meses, String formatoFecha): String
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que retorna la data resultant de sumar el nombre de mesos indicat en el paràmetre 'meses' a la data indicada en el paràmetre 'data'.</li>
+</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>fecha</b>: Cadena que conté la data.</li>
+		<li><b>meses</b>: Nombre de mesos a sumar.</li>
+		<li><b>formatoFecha</b>: Format de la data. És opcional i el format per defecte és yyyy-MM-dd.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: Cadena de caràcters que representa la data amb els mesos sumats.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Sumar 3 mesos a la data 23/04/2012. </p>
+ <p class="codigoScript">
+	var fecha = PLUGIN_UTILS.sumaMeses('23/04/2012', 3, 'dd/MM/yyyy');
+</p>
+<p>La funció sumaMeses retorna la cadena '23/07/2012'.</p>
+<br />
+
+</body>
+</html>

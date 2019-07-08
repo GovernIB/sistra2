@@ -7,7 +7,8 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
-<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeParametroDominio" var="TypeParametroDominio"/>
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeParametroDominio" var="TypeParametroDominio" />
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeParametroSesion"  var="TypeParametroSesion"  />
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogParametrosDominioCIN.titulo']}"/></title>
@@ -20,9 +21,9 @@
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
-		<f:viewParam name="MODO_ACCESO" 	value="#{dialogParametrosDominio.modoAcceso}"/>
-		<f:viewParam name="DATO" 			value="#{dialogParametrosDominio.iData}"/>
-		<f:viewAction action="#{dialogParametrosDominio.init}" />
+		<f:viewParam 	name="MODO_ACCESO" 	value="#{dialogParametrosDominio.modoAcceso}"/>
+		<f:viewParam 	name="DATO" 			value="#{dialogParametrosDominio.iData}"/>
+		<f:viewAction 	action="#{dialogParametrosDominio.init}" />
 	</f:metadata>
 
 	<h:form id="dialogParametrosDominio" styleClass="margin-top-10">
@@ -30,12 +31,12 @@
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0">
+				<h:panelGrid id="panel" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0" width="100%">
          			<h:column>
 	         			<p:outputLabel for="parametro" value="#{msg['dialogParametrosDominioCIN.parametro']}" />
 	         		</h:column>
 	         		<h:column>
-						<p:selectOneMenu id="parametro" value="#{dialogParametrosDominio.data.parametro}" styleClass="margin-right-10">
+						<p:selectOneMenu id="parametro" value="#{dialogParametrosDominio.data.parametro}" styleClass="margin-right-10 w90">
 						    <f:selectItems value="#{dialogParametrosDominio.listaParametros}" var="lista" itemLabel="#{lista.codigo}" itemValue="#{lista.codigo}"/>
 						</p:selectOneMenu>
 	         		</h:column>
@@ -44,17 +45,20 @@
 						<p:outputLabel for="valor" value="#{msg['dialogParametrosDominioCIN.valor']}"  />
 					</h:column>
 					<h:column>
-				 		<p:inputText id="valor" value="#{dialogParametrosDominio.data.valor}" disabled="#{dialogParametrosDominio.isConsulta()}" required="true" maxlength="100" size="30" />
+				 		<p:inputText id="valor" value="#{dialogParametrosDominio.data.valor}" disabled="#{dialogParametrosDominio.isConsulta()}" required="#{dialogParametrosDominio.data.tipo != TypeParametroDominio.SESION}" maxlength="100" size="30" rendered="#{dialogParametrosDominio.data.tipo != TypeParametroDominio.SESION}" styleClass="w90" />
+				 		<p:selectOneMenu id="valorSesion" value="#{dialogParametrosDominio.data.valor}" rendered="#{dialogParametrosDominio.data.tipo == TypeParametroDominio.SESION}" styleClass="w90">
+						    <f:selectItems value="#{TypeParametroSesion.ALL_VALUES}" var="tipoParametroSesion" itemLabel="#{msg['typeSesion.' += tipoParametroSesion]}" itemValue="#{tipoParametroSesion.toString()}" />
+						</p:selectOneMenu>
 					</h:column>
 
 					<h:column>
 						<p:outputLabel for="tipoParametroDominio" value="#{msg['dialogParametrosDominioCIN.tipo']}"  />
 					</h:column>
 					<h:column>
-						<p:selectOneMenu id="tipoParametroDominio" value="#{dialogParametrosDominio.data.tipo}">
+						<p:selectOneMenu id="tipoParametroDominio" value="#{dialogParametrosDominio.data.tipo}" styleClass="w90">
 						    <f:selectItems value="#{TypeParametroDominio.ALL_VALUES}" var="tipoParametroDominio" itemLabel="#{msg['typeParametroDominio.' += tipoParametroDominio]}" />
+						    <p:ajax process="@this" update="@form" />
 						</p:selectOneMenu>
-
 					</h:column>
 				</h:panelGrid>
 			</p:outputPanel>

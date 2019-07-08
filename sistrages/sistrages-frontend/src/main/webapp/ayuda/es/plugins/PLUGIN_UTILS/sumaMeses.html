@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_UTILS.sumaDias(fecha, dias, formatoFecha)');
+		copiarPortapeles('PLUGIN_UTILS.sumaMeses(fecha, meses, formatoFecha)');
 	}
 </script>
 <body class="bodyPlugins">
@@ -15,20 +15,20 @@
   	<ul>
   		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
-      	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=sumaDias">sumaDias</a></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=sumaMeses">sumaMeses</a></li>
   	</ul>
 </div>
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	sumaDias(String fecha, int dias, String formatoFecha): String
+	sumaMeses(String fecha, int meses, String formatoFecha): String
 </h1>
 <p>
 	<b>DESCRIPCIÓN</b>
 </p>
 <p>
 	<ul>
-    	<li>Método que retorna la fecha resultante de sumar el número de días indicado en el parámetro 'dias' a la fecha indicada en el parámetro 'fecha'.</li>
+    	<li>Método que retorna la fecha resultante de sumar el número de meses indicado en el parámetro 'meses' a la fecha indicada en el parámetro 'fecha'.</li>
 </li>
 	</ul>
 </p>
@@ -38,7 +38,7 @@
 <p>
 	<ul>
 		<li><b>fecha</b>: Cadena que contiene la fecha.</li>
-		<li><b>dias</b>: Número de días a sumar.</li>
+		<li><b>meses</b>: Número de meses a sumar.</li>
 		<li><b>formatoFecha</b>: Formato de la fecha. Es opcional y el formato por defecto es yyyy-MM-dd .</li>
 	</ul>
 </p>
@@ -47,17 +47,17 @@
 </p>
 <p>
 	<ul>
-		<li><b>String</b>: Cadena de caracteres que representa la fecha con los días sumados.</li>
+		<li><b>String</b>: Cadena de caracteres que representa la fecha con los meses sumados.</li>
 	</ul>
 </p>
 <p>
 	<b>EJEMPLOS</b>
 </p>
-<p>Sumar 3 días a la fecha 23/04/2012. </p>
+<p>Sumar 3 meses a la fecha 23/04/2012. </p>
  <p class="codigoScript">
-	var fecha = PLUGIN_UTILS.sumaDias('23/04/2012', 3, 'dd/MM/yyyy');
+	var fecha = PLUGIN_UTILS.sumaMeses('23/04/2012', 3, 'dd/MM/yyyy');
 </p>
-<p>La función sumaDias devuelve la cadena '26/04/2012'.</p>
+<p>La función sumaMeses devuelve la cadena '23/07/2012'.</p>
 <br />
 
 </body>

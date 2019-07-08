@@ -66,7 +66,16 @@ public final class DominiosComponentImpl implements DominiosComponent {
 
 		// Obtenemos informacion dominio
 		String cacheKey = null;
-		log.debug("Accediendo a dominio {}", idDominio);
+
+		if (UtilsSTG.isDebugEnabled(defTramite)) {
+			if (parametrosDominio != null && parametrosDominio.getParametros().size() > 0) {
+				log.debug(
+						"Accediendo a dominio " + idDominio + " con parametros [ " + parametrosDominio.print() + " ]");
+			} else {
+				log.debug("Accediendo a dominio " + idDominio + " sin parametros");
+			}
+		}
+
 		final boolean existe = UtilsSTG.existeDominioDefinicion(idDominio, defTramite);
 		if (!existe) {
 			throw new DominioNoExisteException("No existe dominio " + idDominio + " en la definición del tramite");

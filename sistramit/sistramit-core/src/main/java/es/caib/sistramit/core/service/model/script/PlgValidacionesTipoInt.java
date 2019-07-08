@@ -434,7 +434,7 @@ public interface PlgValidacionesTipoInt {
 	int obtenerDia(String fecha, String formatoFecha) throws ValidacionTipoException;
 
 	/**
-	 * Método para sumar días a una fecha (yyyy-MM-dd).
+	 * Método para sumar días a una fecha.
 	 *
 	 * @param fecha Parámetro fecha
 	 * @param dias  Parámetro dias
@@ -442,6 +442,26 @@ public interface PlgValidacionesTipoInt {
 	 * @throws ValidacionTipoException
 	 */
 	String sumaDias(String fecha, int dias, String formatoFecha) throws ValidacionTipoException;
+
+	/**
+	 * Método para sumar meses a una fecha.
+	 *
+	 * @param fecha Parámetro fecha
+	 * @param meses Parámetro meses
+	 * @return el String
+	 * @throws ValidacionTipoException
+	 */
+	String sumaMeses(String fecha, int meses, String formatoFecha) throws ValidacionTipoException;
+
+	/**
+	 * Método para sumar anyos a una fecha.
+	 *
+	 * @param fecha Parámetro fecha
+	 * @param anyos Parámetro meses
+	 * @return el String
+	 * @throws ValidacionTipoException
+	 */
+	String sumaAnyos(String fecha, int anyos, String formatoFecha) throws ValidacionTipoException;
 
 	/**
 	 * Método para sacar la diferencia de días entre 2 fechas

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.caib.sistra2.commons.utils.ConstantesNumero;
+
 /**
  * Permite especificar parametros de un dominio.
  *
@@ -22,9 +24,9 @@ public final class ParametrosDominio implements Serializable {
 	 * Añade parámetro.
 	 *
 	 * @param codigo
-	 *            codigo parametro.
+	 *                      codigo parametro.
 	 * @param parametro
-	 *            valor parametro.
+	 *                      valor parametro.
 	 */
 	public void addParametro(final String codigo, final String parametro) {
 		final ParametroDominio p = new ParametroDominio();
@@ -39,7 +41,7 @@ public final class ParametrosDominio implements Serializable {
 	 * Busca parametro con el codigo indicado.
 	 *
 	 * @param codigo
-	 *            codigo
+	 *                   codigo
 	 * @return Parametro
 	 */
 	public ParametroDominio getParametro(final String codigo) {
@@ -64,4 +66,18 @@ public final class ParametrosDominio implements Serializable {
 		return parametros;
 	}
 
+	/**
+	 * Saca parametros en formato cadena para imprimir.
+	 */
+	public String print() {
+		String res = "";
+		if (parametros != null) {
+			final StringBuffer sb = new StringBuffer(parametros.size() * ConstantesNumero.N50);
+			for (final ParametroDominio p : parametros) {
+				sb.append(p.getCodigo()).append("=").append("\"" + p.getValor() + "\"");
+			}
+			res = sb.toString();
+		}
+		return res;
+	}
 }

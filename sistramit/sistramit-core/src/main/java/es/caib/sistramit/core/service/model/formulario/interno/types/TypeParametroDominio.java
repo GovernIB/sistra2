@@ -8,12 +8,14 @@ package es.caib.sistramit.core.service.model.formulario.interno.types;
  */
 public enum TypeParametroDominio {
 
-	/** Valor constante. */
+	/** Valor que es una constante. */
 	CONSTANTE("C"),
-	/** Valor de un campo. */
+	/** Valor proveniente de un campo. */
 	CAMPO("M"),
-	/** Valor de un parámetro. */
-	PARAMETRO("P");
+	/** Valor proveniente de un parámetro. */
+	PARAMETRO("P"),
+	/** Valor proveniente de la sesión. */
+	SESION("S");
 
 	private String valor;
 

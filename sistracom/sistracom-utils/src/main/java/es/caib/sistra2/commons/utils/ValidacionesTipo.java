@@ -715,16 +715,66 @@ public final class ValidacionesTipo {
 		}
 	}
 
-	public String sumaDias(final String pFecha, final int pDias, final String formato) throws ValidacionTipoException {
-		final Date fecha = parseFecha(pFecha, formato);
+	/**
+	 * Suma dias a una fecha
+	 *
+	 * @param fecha
+	 * @param dias
+	 * @param formato
+	 * @return
+	 * @throws ValidacionTipoException
+	 */
+	public String sumaDias(final String fecha, final int dias, final String formato) throws ValidacionTipoException {
+		return suma(fecha, dias, formato, Calendar.DAY_OF_MONTH);
+	}
+
+	/**
+	 * Suma meses a una fecha
+	 *
+	 * @param fecha
+	 * @param meses
+	 * @param formato
+	 * @return
+	 * @throws ValidacionTipoException
+	 */
+	public String sumaMeses(final String fecha, final int meses, final String formato) throws ValidacionTipoException {
+		return suma(fecha, meses, formato, Calendar.MONTH);
+	}
+
+	/**
+	 * Suma anyos a una fecha
+	 *
+	 * @param fecha
+	 * @param anyos
+	 * @param formato
+	 * @return
+	 * @throws ValidacionTipoException
+	 */
+	public String sumaAnyos(final String fecha, final int anyos, final String formato) throws ValidacionTipoException {
+		return suma(fecha, anyos, formato, Calendar.YEAR);
+	}
+
+	/**
+	 * Suma dias/meses/años según el tipo a una fecha.
+	 *
+	 * @param fecha
+	 * @param valor
+	 * @param formato
+	 * @param tipo
+	 * @return
+	 * @throws ValidacionTipoException
+	 */
+	private String suma(final String fecha, final int valor, final String formato, final int tipo)
+			throws ValidacionTipoException {
+		final Date dfecha = parseFecha(fecha, formato);
 		final Calendar cal = Calendar.getInstance();
-		cal.setTime(fecha);
-		cal.add(Calendar.DAY_OF_MONTH, pDias);
+		cal.setTime(dfecha);
+		cal.add(tipo, valor);
 		return getFecha(cal.getTime(), formato);
 	}
 
 	/**
-	 * Parsea fecha de string.
+	 * Parsea fecha de string. Si es nulo, coge el formato por defecto.
 	 *
 	 * @param fecha   fecha
 	 * @param formato formato
@@ -733,7 +783,13 @@ public final class ValidacionesTipo {
 	 */
 	public Date parseFecha(final String fecha, final String formato) throws ValidacionTipoException {
 		try {
-			final SimpleDateFormat df = new SimpleDateFormat(formato);
+			String formatoFecha;
+			if (formato == null || formato.isEmpty()) {
+				formatoFecha = ValidacionesTipo.FORMATO_FECHA;
+			} else {
+				formatoFecha = formato;
+			}
+			final SimpleDateFormat df = new SimpleDateFormat(formatoFecha);
 			df.setLenient(false);
 			return df.parse(fecha);
 		} catch (final ParseException e) {

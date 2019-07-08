@@ -15,9 +15,7 @@ import es.caib.sistramit.core.service.model.script.PlgUtilsInt;
 @SuppressWarnings("serial")
 public final class PlgUtils implements PlgUtilsInt {
 
-	/**
-	 * Indica si esta habilitado debug.
-	 */
+	/** Indica si esta habilitado debug. */
 	private final boolean debugEnabled;
 
 	/**
@@ -263,6 +261,18 @@ public final class PlgUtils implements PlgUtilsInt {
 	public String sumaDias(final String fecha, final int dias, final String formatoFecha)
 			throws ValidacionTipoException {
 		return ValidacionesTipo.getInstance().sumaDias(fecha, dias, getFormatoFecha(formatoFecha));
+	}
+
+	@Override
+	public String sumaMeses(final String fecha, final int meses, final String formatoFecha)
+			throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().sumaMeses(fecha, meses, getFormatoFecha(formatoFecha));
+	}
+
+	@Override
+	public String sumaAnyos(final String fecha, final int anyos, final String formatoFecha)
+			throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().sumaAnyos(fecha, anyos, getFormatoFecha(formatoFecha));
 	}
 
 	@Override
