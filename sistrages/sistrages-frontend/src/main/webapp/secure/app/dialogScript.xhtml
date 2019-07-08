@@ -161,7 +161,7 @@
 											<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios"  />
 											<p:tree id="arbol" value="#{dialogScript.treeFormularios}" var="node" styleClass="sin-bordes w100" style="height: 350px;" selectionMode="single" selection="#{dialogScript.selectedNode}" widgetVar="arbol" >
 												<p:treeNode  styleClass="nodoComponente">
-													<h:graphicImage value="#{node.srcIcono()}" rendered="#{node.tieneIcono()}" width="35px" style="margin-right:5px" />
+													<i class="#{node.srcIcono()}" style="margin-right:4px" ></i>
 													<h:outputText value="#{node.getName()}" />
 												</p:treeNode>
 

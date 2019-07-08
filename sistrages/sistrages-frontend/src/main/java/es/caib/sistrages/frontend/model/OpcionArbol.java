@@ -149,13 +149,16 @@ public class OpcionArbol {
 		if (tipo != null) {
 			switch (tipo) {
 			case CAMPO_TEXTO:
-				src = "/resources/images/componentes/textbox.png";
+				src = "fa fa-pencil-square-o";
 				break;
 			case SELECTOR:
-				src = "/resources/images/componentes/combo.png";
+				src = "fa fa-caret-square-o-down";
 				break;
 			case CHECKBOX:
-				src = "/resources/images/componentes/check.png";
+				src = "fa fa-check-square";
+				break;
+			case CAMPO_OCULTO:
+				src = "fa fa-eye-slash";
 				break;
 			case CAPTCHA:
 			case ETIQUETA:
@@ -179,8 +182,7 @@ public class OpcionArbol {
 	}
 
 	/**
-	 * @param name
-	 *            the name to set
+	 * @param name the name to set
 	 */
 	public void setName(final String name) {
 		this.name = name;
@@ -194,8 +196,7 @@ public class OpcionArbol {
 	}
 
 	/**
-	 * @param url
-	 *            the url to set
+	 * @param url the url to set
 	 */
 	public void setUrl(final String url) {
 		this.url = url;
@@ -209,8 +210,7 @@ public class OpcionArbol {
 	}
 
 	/**
-	 * @param tramitePaso
-	 *            the tramitePaso to set
+	 * @param tramitePaso the tramitePaso to set
 	 */
 	public void setTramitePaso(final TramitePaso tramitePaso) {
 		this.tramitePaso = tramitePaso;
@@ -224,8 +224,7 @@ public class OpcionArbol {
 	}
 
 	/**
-	 * @param formulario
-	 *            the formulario to set
+	 * @param formulario the formulario to set
 	 */
 	public void setFormulario(final FormularioTramite formulario) {
 		this.formulario = formulario;
@@ -239,8 +238,7 @@ public class OpcionArbol {
 	}
 
 	/**
-	 * @param documento
-	 *            the documento to set
+	 * @param documento the documento to set
 	 */
 	public void setDocumento(final Documento documento) {
 		this.documento = documento;
@@ -254,8 +252,7 @@ public class OpcionArbol {
 	}
 
 	/**
-	 * @param tasa
-	 *            the tasa to set
+	 * @param tasa the tasa to set
 	 */
 	public void setTasa(final Tasa tasa) {
 		this.tasa = tasa;
@@ -274,8 +271,7 @@ public class OpcionArbol {
 	}
 
 	/**
-	 * @param tipo
-	 *            the tipo to set
+	 * @param tipo the tipo to set
 	 */
 	public void setTipo(final TypeObjetoFormulario tipo) {
 		this.tipo = tipo;

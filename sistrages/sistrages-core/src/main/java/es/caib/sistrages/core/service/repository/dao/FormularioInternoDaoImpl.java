@@ -359,6 +359,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				nuevoOrden = creaHuecoEntreComponentes(jLineaSeleccionada, pOrden);
 				final JCampoFormulario jObjFormCampoOculto = JCampoFormulario
 						.createDefault(TypeObjetoFormulario.CAMPO_OCULTO, nuevoOrden, jLineaSeleccionada);
+				jObjFormCampoOculto.getElementoFormulario().setCampoFormulario(jObjFormCampoOculto);
 				entityManager.persist(jObjFormCampoOculto);
 				entityManager.merge(jLineaSeleccionada);
 				objetoResultado = jObjFormCampoOculto.toModel(ComponenteFormularioCampoOculto.class);
@@ -1140,7 +1141,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 				// Filtramos por tipo (solo los que son de tipo textbox, checkbox, captcha y
 				// selector)
-				final String sqlComponentes = "select elemento.codigo, elemento.identificador, identificador.tipo from JElementoFormulario elemento where elemento.lineaFormulario.paginaFormulario.codigo = :idPagina and elemento.tipo IN ('CT','SE','CK','CP') order by elemento.lineaFormulario.orden, elemento.orden ";
+				final String sqlComponentes = "select elemento.codigo, elemento.identificador, identificador.tipo from JElementoFormulario elemento where elemento.lineaFormulario.paginaFormulario.codigo = :idPagina and elemento.tipo IN ('CT','SE','CK','CP','OC') order by elemento.lineaFormulario.orden, elemento.orden ";
 				final Query queryComponentes = entityManager.createQuery(sqlComponentes);
 				queryComponentes.setParameter("idPagina", idPagina);
 				final List<Object[]> componentes = queryComponentes.getResultList();

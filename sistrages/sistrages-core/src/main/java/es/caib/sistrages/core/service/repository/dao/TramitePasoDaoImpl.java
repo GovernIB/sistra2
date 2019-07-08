@@ -21,6 +21,7 @@ import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoOculto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
@@ -741,6 +742,9 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 							} else if (componente instanceof ComponenteFormularioCampoSelector) {
 								anyadirComponenteSelector((ComponenteFormularioCampoSelector) componente, idLinea,
 										idPagina, idDominiosEquivalencia);
+							} else if (componente instanceof ComponenteFormularioCampoOculto) {
+								anyadirComponenteCampoOculto((ComponenteFormularioCampoOculto) componente, idLinea,
+										idPagina);
 							} else if (componente instanceof ComponenteFormularioCampoTexto) {
 								anyadirComponenteCampoTexto((ComponenteFormularioCampoTexto) componente, idLinea,
 										idPagina);
@@ -937,6 +941,29 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		}
 		comp.setTipo(componente.getTipo());
 		comp.setTipoEtiqueta(componente.getTipoEtiqueta());
+		formularioInternoDao.updateComponente(comp);
+	}
+
+	/**
+	 * Añade componente campo de texto oculto.
+	 *
+	 * @param componente
+	 * @param idLinea
+	 * @param idPagina
+	 */
+	private void anyadirComponenteCampoOculto(final ComponenteFormularioCampoOculto componente, final Long idLinea,
+			final Long idPagina) {
+		final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(), idPagina, idLinea,
+				componente.getOrden(), null);
+		entityManager.flush();
+
+		final Long id = ((ComponenteFormularioCampoOculto) retorno).getCodigo();
+
+		final ComponenteFormularioCampoOculto comp = (ComponenteFormularioCampoOculto) formularioInternoDao
+				.getComponenteById(id);
+		comp.setIdComponente(componente.getIdComponente());
+		comp.setScriptAutorrellenable(Script.clonar(componente.getScriptAutorrellenable()));
+
 		formularioInternoDao.updateComponente(comp);
 	}
 

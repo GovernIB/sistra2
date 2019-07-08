@@ -49,7 +49,7 @@
 						<p:selectBooleanCheckbox id="generico" value="#{dialogFormateadorFormulario.data.generico}" >
 							<p:ajax event="change" global="false" process="@form:generico" update="dialogFormateadorFormulario:btnPlantilla" />
             			</p:selectBooleanCheckbox>
-						<p:commandButton id="btnPlantilla" value="#{msg['dialogFormateadorFormulario.desactivarPersonalizacion']}" icon="fa fa-edit" actionListener="#{dialogFormateadorFormulario.editarPlantillaGenerico()}" process="@form:btnPlantilla" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}" disabled="#{!dialogFormateadorFormulario.data.generico}" style="margin-left:10px" />
+						<p:commandButton id="btnPlantilla" value="#{msg['dialogFormateadorFormulario.botonPlantillas']}" icon="fa fa-edit" actionListener="#{dialogFormateadorFormulario.editarPlantillaGenerico()}" process="@form:btnPlantilla" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}" disabled="#{!dialogFormateadorFormulario.data.generico}" style="margin-left:10px" />
 					</p:column>
 
 					<p:outputLabel 			 for="desactivarPersonalizacion" value="#{msg['dialogFormateadorFormulario.desactivarPersonalizacion']}" />
