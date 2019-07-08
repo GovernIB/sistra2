@@ -12,6 +12,7 @@ import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistramit.core.api.exception.AccionPasoNoExisteException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.flujo.AvisoUsuario;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.DocumentosRegistroPorTipo;
@@ -168,13 +169,13 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	 * Regenera datos registrar a partir de los datos de persistencia.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                               Datos internos paso
 	 * @param pDpp
-	 *            Datos persistencia
+	 *                               Datos persistencia
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                               Definicion tramite
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 */
 	private void regenerarDatosRegistrar(final DatosInternosPasoRegistrar pDipa, final DatosPersistenciaPaso pDpp,
 			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo) {
@@ -213,11 +214,11 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	 * Regenera informacion del asiento.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                            Datos internos paso
 	 * @param pDpp
-	 *            Datos persistencia paso
+	 *                            Datos persistencia paso
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                            Variables flujo
 	 * @return Documento Paso de Asiento
 	 */
 	private DocumentoPasoPersistencia regenerarAsiento(final DatosInternosPasoRegistrar pDipa,
@@ -245,11 +246,11 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	 * Regenera informacion justificante.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                            Datos internos paso
 	 * @param pDpp
-	 *            Datos persistencia
+	 *                            Datos persistencia
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                            Variables flujo
 	 * @return Documento Paso de Justificante
 	 */
 	private DocumentoPasoPersistencia regenerarJustificante(final DatosInternosPasoRegistrar pDipa,
@@ -275,13 +276,13 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	 * Método para Calcular detalle de la clase ControladorPasoRegistrarImpl.
 	 *
 	 * @param pIdPaso
-	 *            Id paso
+	 *                               Id paso
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                               Definicion tramite
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 * @param pParamRegistro
-	 *            Parámetros registro
+	 *                               Parámetros registro
 	 * @return el detalle paso registrar
 	 */
 	private DetallePasoRegistrar calcularDetalle(final String pIdPaso, final DefinicionTramiteSTG pDefinicionTramite,
@@ -295,6 +296,10 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		final List<DocumentosRegistroPorTipo> docsRegPorTipo = UtilsFlujo.buscarDocumentosParaRegistrar(getDao(),
 				pVariablesFlujo);
 
+		// Calculamos aviso finalizar
+		final AvisoUsuario avisoFinalizar = ControladorPasoRegistrarHelper.getInstance()
+				.ejecutarScriptAvisoFinalizar(pIdPaso, pDefinicionTramite, pVariablesFlujo, getScriptFlujo());
+
 		// Creamos detalle paso
 		final DetallePasoRegistrar dpr = new DetallePasoRegistrar();
 		dpr.setCompletado(TypeSiNo.NO);
@@ -306,6 +311,7 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		dpr.setPresentador(UtilsFlujo.usuarioPersona(pParamRegistro.getDatosPresentacion().getPresentador()));
 		dpr.setRepresentado(UtilsFlujo.usuarioPersona(pParamRegistro.getDatosRepresentacion().getRepresentado()));
 		dpr.setRegistrar(TypeSiNo.fromBoolean(dpr.verificarFirmas()));
+		dpr.setAvisoFinalizar(avisoFinalizar);
 		return dpr;
 	}
 
@@ -313,11 +319,11 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	 * Calcula parámetros del paso de registro.
 	 *
 	 * @param pIdpaso
-	 *            Id paso
+	 *                               Id paso
 	 * @param pDefinicionTramite
-	 *            Definición trámite
+	 *                               Definición trámite
 	 * @param pVariablesFlujo
-	 *            Variables de flujo
+	 *                               Variables de flujo
 	 * @return Parámetros calculados para paso registro
 	 */
 	private ParametrosRegistro calculoParametrosRegistro(final String pIdpaso,
@@ -343,11 +349,11 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	 * Calcula parametros de representacion.
 	 *
 	 * @param pIdpaso
-	 *            Id paso
+	 *                               Id paso
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                               Definicion tramite
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 * @return Parametros representacion
 	 */
 	private DatosRepresentacion calcularDatosRepresentacion(final String pIdpaso,
@@ -365,11 +371,11 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	 * Calcula parametros de presentacion.
 	 *
 	 * @param pIdpaso
-	 *            Id paso
+	 *                               Id paso
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                               Definicion tramite
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 * @return Parametros presentacion
 	 */
 	private DatosPresentacion calcularDatosPresentacion(final String pIdpaso,
@@ -388,11 +394,11 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	 * dinámicos.
 	 *
 	 * @param pIdPaso
-	 *            Parámetro id paso
+	 *                               Parámetro id paso
 	 * @param pDefinicionTramite
-	 *            Definición trámite
+	 *                               Definición trámite
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 * @return datos registrales
 	 */
 	private DatosRegistrales calcularDatosRegistrales(final String pIdPaso,
@@ -464,7 +470,7 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		datosRegistrales.setTextoSolicita(resRegistro.getSolicita());
 
 		// - Extracto
-		if (StringUtils.isNotBlank(resRegistro.getExtracto())){
+		if (StringUtils.isNotBlank(resRegistro.getExtracto())) {
 			datosRegistrales.setExtracto(resRegistro.getExtracto());
 		}
 
@@ -475,7 +481,7 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	 * Obtiene marcadores estado.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso registrar
+	 *                  Datos internos paso registrar
 	 * @return Marcadores estado
 	 */
 	private EstadoMarcadores obtenerMarcadoresEstado(final DatosInternosPasoRegistrar pDipa) {
@@ -492,7 +498,7 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	 * Obtiene datos documento justificante.
 	 *
 	 * @param pDipa
-	 *            Datos interno paso
+	 *                  Datos interno paso
 	 * @return datos documento justificante
 	 */
 	private DatosDocumentoJustificante obtenerDatosDocumentoJustificante(final DatosInternosPasoRegistrar pDipa) {

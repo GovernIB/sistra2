@@ -33,6 +33,7 @@ import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgPago;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgSesionTramitacion;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgValidacionAnexo;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResAnexosDinamicos;
+import es.caib.sistramit.core.service.component.script.plugins.flujo.ResAviso;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResDatosInicialesFormulario;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResFirmantes;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResModificacionFormularios;
@@ -58,6 +59,7 @@ import es.caib.sistramit.core.service.model.script.PlgErrorInt;
 import es.caib.sistramit.core.service.model.script.PlgValidacionInt;
 import es.caib.sistramit.core.service.model.script.PluginScript;
 import es.caib.sistramit.core.service.model.script.flujo.ResAnexosDinamicosInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResAvisoInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResDatosInicialesFormularioInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResFirmantesInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResModificacionFormulariosInt;
@@ -156,15 +158,15 @@ public final class ScriptExecImpl implements ScriptExec {
 	 * Ejecutar script.
 	 *
 	 * @param pTipoScript
-	 *            Tipo script
+	 *                        Tipo script
 	 * @param idSesion
-	 *            Id sesion
+	 *                        Id sesion
 	 * @param pIdElemento
-	 *            Id elemento
+	 *                        Id elemento
 	 * @param pScript
-	 *            Script
+	 *                        Script
 	 * @param plugins
-	 *            Plugins
+	 *                        Plugins
 	 * @return Resultado script
 	 */
 	private Object ejecutarScript(final TypeScript pTipoScript, final String idSesion, final String pIdElemento,
@@ -190,15 +192,15 @@ public final class ScriptExecImpl implements ScriptExec {
 	 * Genera respuesta a partir del resultado del script.
 	 *
 	 * @param pTipoScript
-	 *            Tipo de script
+	 *                         Tipo de script
 	 * @param codigosError
-	 *            Códigos de error
+	 *                         Códigos de error
 	 * @param plugins
-	 *            Plugins
+	 *                         Plugins
 	 * @param result
-	 *            Resultado script
+	 *                         Resultado script
 	 * @param pIdElemento
-	 *            Id elemento
+	 *                         Id elemento
 	 * @return Respuesta del script
 	 */
 	private RespuestaScript generarRespuestaScriptFlujo(final TypeScriptFlujo pTipoScript,
@@ -245,9 +247,9 @@ public final class ScriptExecImpl implements ScriptExec {
 	 * Genera mensaje aviso a partir del plugin de aviso.
 	 *
 	 * @param plugins
-	 *            Plugins
+	 *                         Plugins
 	 * @param codigosError
-	 *            Codigos de error
+	 *                         Codigos de error
 	 * @return mensaje
 	 */
 	private MensajeValidacion generarMensajeAviso(final List<PluginScript> plugins,
@@ -266,11 +268,11 @@ public final class ScriptExecImpl implements ScriptExec {
 	 * Obtiene resultado segun el tipo de script.
 	 *
 	 * @param pTipoScript
-	 *            Tipo script
+	 *                        Tipo script
 	 * @param plugins
-	 *            plugins
+	 *                        plugins
 	 * @param result
-	 *            respuesta script
+	 *                        respuesta script
 	 * @return resultado script
 	 */
 	private Object obtenerResultadoScript(final TypeScriptFlujo pTipoScript, final List<PluginScript> plugins,
@@ -297,7 +299,7 @@ public final class ScriptExecImpl implements ScriptExec {
 	 * resultado.
 	 *
 	 * @param pTipoScript
-	 *            Tipo scripto flujo
+	 *                        Tipo scripto flujo
 	 * @param result
 	 * @return Id plugin resultado. Nulo si no devuelve plugin tipo resultado.
 	 */
@@ -343,6 +345,9 @@ public final class ScriptExecImpl implements ScriptExec {
 		case SCRIPT_VARIABLE_FLUJO:
 			res = ResVariableFlujoInt.ID;
 			break;
+		case SCRIPT_AVISO:
+			res = ResAvisoInt.ID;
+			break;
 		default:
 			res = null;
 		}
@@ -353,19 +358,19 @@ public final class ScriptExecImpl implements ScriptExec {
 	 * Genera los plugins accesibles desde el script.
 	 *
 	 * @param pTipoScript
-	 *            Tipo de script
+	 *                               Tipo de script
 	 * @param pIdElemento
-	 *            Id elemento
+	 *                               Id elemento
 	 * @param pVariablesFlujo
-	 *            Variables de flujo
+	 *                               Variables de flujo
 	 * @param pVariablesScript
-	 *            Variables script
+	 *                               Variables script
 	 * @param pDocumentosPaso
-	 *            Documentos completados del paso actual
+	 *                               Documentos completados del paso actual
 	 * @param pDefinicionTramite
-	 *            Definición trámite
+	 *                               Definición trámite
 	 * @param pCodigosError
-	 *            Mensajes de error
+	 *                               Mensajes de error
 	 * @return Lista de plugins
 	 */
 	private List<PluginScript> generarPluginsFlujo(final TypeScriptFlujo pTipoScript, final String pIdElemento,
@@ -443,6 +448,9 @@ public final class ScriptExecImpl implements ScriptExec {
 			final byte[] datosFichero = (byte[]) pVariablesScript.get("datosFichero");
 			plugins.add(new PlgValidacionAnexo(nomFichero, datosFichero));
 			break;
+		case SCRIPT_AVISO:
+			plugins.add(new ResAviso());
+			break;
 		default:
 			break;
 		}
@@ -455,15 +463,15 @@ public final class ScriptExecImpl implements ScriptExec {
 	 * Prepara plugins disponibles para el script de formulario.
 	 *
 	 * @param pTipoScript
-	 *            Tipo script
+	 *                                 Tipo script
 	 * @param pIdElemento
-	 *            Id elemento
+	 *                                 Id elemento
 	 * @param pVariablesFormulario
-	 *            Variables formulario
+	 *                                 Variables formulario
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                                 Definicion tramite
 	 * @param pCodigosError
-	 *            Mensajes error
+	 *                                 Mensajes error
 	 * @return Lista de plugins
 	 */
 	private List<PluginScript> generarPluginsFormulario(final TypeScriptFormulario pTipoScript,
@@ -522,9 +530,9 @@ public final class ScriptExecImpl implements ScriptExec {
 	 * Obtiene plugin de la lista.
 	 *
 	 * @param plugins
-	 *            Lista plugins
+	 *                    Lista plugins
 	 * @param name
-	 *            Nombre plugin
+	 *                    Nombre plugin
 	 * @return Plugin
 	 */
 	private PluginScript getPlugin(final List<PluginScript> plugins, final String name) {
@@ -544,13 +552,13 @@ public final class ScriptExecImpl implements ScriptExec {
 	 * Calucula mensaje a mostrar.
 	 *
 	 * @param codigoMensajeError
-	 *            Codigo mensaje
+	 *                                             Codigo mensaje
 	 * @param parametrosMensajeError
-	 *            Parametros mensaje
+	 *                                             Parametros mensaje
 	 * @param textoMensajeErrorParticularizado
-	 *            Texto particularizado
+	 *                                             Texto particularizado
 	 * @param pCodigosError
-	 *            Codigos de error
+	 *                                             Codigos de error
 	 * @return mensaje
 	 */
 	private String calcularMensaje(final String codigoMensajeError, final List<String> parametrosMensajeError,
@@ -571,9 +579,9 @@ public final class ScriptExecImpl implements ScriptExec {
 	 * Crea plugin de acceso a formularios.
 	 *
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                            Variables flujo
 	 * @param pDocumentosPaso
-	 *            Documentos rellenados en paso actual
+	 *                            Documentos rellenados en paso actual
 	 * @return Plugin de formularios
 	 */
 	private PlgFormularios crearPluginFormularios(final VariablesFlujo pVariablesFlujo,
@@ -601,13 +609,13 @@ public final class ScriptExecImpl implements ScriptExec {
 	 * Método para Generar respuesta script formulario de la clase ScriptExecImpl.
 	 *
 	 * @param pTipoScript
-	 *            Tipo de script
+	 *                          Tipo de script
 	 * @param pCodigosError
-	 *            Códigos de error
+	 *                          Códigos de error
 	 * @param pPlugins
-	 *            Plugins
+	 *                          Plugins
 	 * @param pResult
-	 *            Resultado script
+	 *                          Resultado script
 	 * @return Respuesta del script
 	 */
 	private RespuestaScript generarRespuestaScriptFormulario(final TypeScriptFormulario pTipoScript,

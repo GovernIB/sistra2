@@ -69,6 +69,11 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	private TypeSiNo subsanable = TypeSiNo.NO;
 
 	/**
+	 * Aviso al finalizar trámite.
+	 */
+	private AvisoUsuario avisoFinalizar = new AvisoUsuario();
+
+	/**
 	 * Constructor.
 	 */
 	public DetallePasoRegistrar() {
@@ -89,7 +94,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * Método para establecer presentador.
 	 *
 	 * @param pPresentador
-	 *            presentador a establecer
+	 *                         presentador a establecer
 	 */
 	public void setPresentador(final Persona pPresentador) {
 		presentador = pPresentador;
@@ -108,7 +113,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * Método para establecer representado.
 	 *
 	 * @param pRepresentado
-	 *            representado a establecer
+	 *                          representado a establecer
 	 */
 	public void setRepresentado(final Persona pRepresentado) {
 		representado = pRepresentado;
@@ -127,7 +132,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * Método para establecer reintentar.
 	 *
 	 * @param pReintentar
-	 *            reintentar a establecer
+	 *                        reintentar a establecer
 	 */
 	public void setReintentar(final TypeSiNo pReintentar) {
 		reintentar = pReintentar;
@@ -146,7 +151,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * Método para establecer registrar.
 	 *
 	 * @param registrar
-	 *            registrar a establecer
+	 *                      registrar a establecer
 	 */
 	public void setRegistrar(final TypeSiNo registrar) {
 		this.registrar = registrar;
@@ -165,7 +170,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * Método para establecer formularios.
 	 *
 	 * @param formularios
-	 *            formularios a establecer
+	 *                        formularios a establecer
 	 */
 	public void setFormularios(final List<DocumentoRegistro> formularios) {
 		this.formularios = formularios;
@@ -184,7 +189,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * Método para establecer anexos.
 	 *
 	 * @param anexos
-	 *            anexos a establecer
+	 *                   anexos a establecer
 	 */
 	public void setAnexos(final List<DocumentoRegistro> anexos) {
 		this.anexos = anexos;
@@ -203,7 +208,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * Método para establecer pagos.
 	 *
 	 * @param pagos
-	 *            pagos a establecer
+	 *                  pagos a establecer
 	 */
 	public void setPagos(final List<DocumentoRegistro> pagos) {
 		this.pagos = pagos;
@@ -222,7 +227,8 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * Método para establecer instruccionesEntregaPresencial.
 	 *
 	 * @param instruccionesEntregaPresencial
-	 *            instruccionesEntregaPresencial a establecer
+	 *                                           instruccionesEntregaPresencial a
+	 *                                           establecer
 	 */
 	public void setInstruccionesEntregaPresencial(final String instruccionesEntregaPresencial) {
 		this.instruccionesEntregaPresencial = instruccionesEntregaPresencial;
@@ -265,9 +271,9 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * Busca documento de registro en formularios, anexos, pagos,...
 	 *
 	 * @param idDocumento
-	 *            id documento
+	 *                        id documento
 	 * @param instancia
-	 *            instancia
+	 *                        instancia
 	 * @return documento registro o nulo si no lo encuentra
 	 */
 	public DocumentoRegistro buscarDocumentoRegistro(final String idDocumento, final int instancia) {
@@ -335,7 +341,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * Método para establecer contador.
 	 *
 	 * @param contador
-	 *            contador a establecer
+	 *                     contador a establecer
 	 */
 	public void setContador(final ContadorDocumentos contador) {
 		this.contador = contador;
@@ -343,7 +349,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 
 	/**
 	 * Método de acceso a subsanable.
-	 * 
+	 *
 	 * @return subsanable
 	 */
 	public TypeSiNo getSubsanable() {
@@ -352,12 +358,31 @@ public final class DetallePasoRegistrar extends DetallePaso {
 
 	/**
 	 * Método para establecer subsanable.
-	 * 
+	 *
 	 * @param subsanable
-	 *            subsanable a establecer
+	 *                       subsanable a establecer
 	 */
 	public void setSubsanable(final TypeSiNo subsanable) {
 		this.subsanable = subsanable;
+	}
+
+	/**
+	 * Método de acceso a avisoFinalizar.
+	 * 
+	 * @return avisoFinalizar
+	 */
+	public AvisoUsuario getAvisoFinalizar() {
+		return avisoFinalizar;
+	}
+
+	/**
+	 * Método para establecer avisoFinalizar.
+	 * 
+	 * @param avisoFinalizar
+	 *                           avisoFinalizar a establecer
+	 */
+	public void setAvisoFinalizar(final AvisoUsuario avisoFinalizar) {
+		this.avisoFinalizar = avisoFinalizar;
 	}
 
 }

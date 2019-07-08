@@ -4,14 +4,18 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistrages.rest.api.interna.RScript;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ErrorScriptException;
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.flujo.AvisoUsuario;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
 import es.caib.sistramit.core.service.component.script.ScriptExec;
+import es.caib.sistramit.core.service.component.script.plugins.flujo.ResAviso;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResPersona;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResRegistro;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
@@ -52,13 +56,13 @@ public final class ControladorPasoRegistrarHelper {
 	 * Ejecuta script de parametros registro.
 	 *
 	 * @param pidPaso
-	 *            Id paso
+	 *                               Id paso
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                               Definicion tramite
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 * @param scriptFlujo
-	 *            motor script flujo
+	 *                               motor script flujo
 	 * @return Devuelve resultado script. Si no existe script devuelve resultado
 	 *         script con los datos vacíos.
 	 */
@@ -89,13 +93,13 @@ public final class ControladorPasoRegistrarHelper {
 	 * Cálcula presentador del trámite teniendo en cuenta el script de presentador.
 	 *
 	 * @param idPaso
-	 *            Id paso
+	 *                               Id paso
 	 * @param pDefinicionTramite
-	 *            Definición trámite
+	 *                               Definición trámite
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 * @param scriptFlujo
-	 *            Motor script
+	 *                               Motor script
 	 * @return Presentador
 	 */
 	public DatosUsuario ejecutarScriptPresentador(final String idPaso, final DefinicionTramiteSTG pDefinicionTramite,
@@ -147,13 +151,13 @@ public final class ControladorPasoRegistrarHelper {
 	 * representado.
 	 *
 	 * @param idPaso
-	 *            Id paso
+	 *                               Id paso
 	 * @param pDefinicionTramite
-	 *            Definición trámite
+	 *                               Definición trámite
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 * @param scriptFlujo
-	 *            Motor script
+	 *                               Motor script
 	 * @return Representado (o nulo si no existe script)
 	 */
 	public DatosUsuario ejecutarScriptRepresentado(final String idPaso, final DefinicionTramiteSTG pDefinicionTramite,
@@ -213,15 +217,15 @@ public final class ControladorPasoRegistrarHelper {
 	 * Ejecuta script permitir registrar.
 	 *
 	 * @param pIdPaso
-	 *            Id paso
+	 *                               Id paso
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                               Definicion tramite
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 * @param detalleRegistrar
-	 *            Detalle paso registrar
+	 *                               Detalle paso registrar
 	 * @param scriptFlujo
-	 *            Motor script
+	 *                               Motor script
 	 * @return Respuesta script
 	 */
 	public RespuestaScript ejecutarScriptPermitirRegistrar(final String pIdPaso,
@@ -240,6 +244,53 @@ public final class ControladorPasoRegistrarHelper {
 				scriptValidar.getScript(), pVariablesFlujo, null, pVariablesFlujo.getDocumentos(),
 				codigosErrorParametros, pDefinicionTramite);
 		return rs;
+	}
+
+	/**
+	 * Ejecuta script aviso fin trámite.
+	 *
+	 * @param pIdPaso
+	 *                               Id paso
+	 * @param pDefinicionTramite
+	 *                               Definicion tramite
+	 * @param pVariablesFlujo
+	 *                               Variables flujo
+	 * @param detalleRegistrar
+	 *                               Detalle paso registrar
+	 * @param scriptFlujo
+	 *                               Motor script
+	 * @return Respuesta script
+	 */
+	public AvisoUsuario ejecutarScriptAvisoFinalizar(final String pIdPaso,
+			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo,
+			final ScriptExec scriptFlujo) {
+
+		// Obtenemos definicion paso
+		final RPasoTramitacionRegistrar defPaso = (RPasoTramitacionRegistrar) UtilsSTG.devuelveDefinicionPaso(pIdPaso,
+				pDefinicionTramite);
+
+		// Ejecutamos script si hay que avisar
+		final AvisoUsuario aviso = new AvisoUsuario();
+		if (defPaso.isAvisoAlFinalizar()) {
+			final RScript scriptValidar = defPaso.getScriptAlFinalizar();
+			final Map<String, String> codigosErrorParametros = UtilsSTG
+					.convertLiteralesToMap(scriptValidar.getLiterales());
+			final RespuestaScript rs = scriptFlujo.executeScriptFlujo(TypeScriptFlujo.SCRIPT_AVISO, pIdPaso,
+					scriptValidar.getScript(), pVariablesFlujo, null, pVariablesFlujo.getDocumentos(),
+					codigosErrorParametros, pDefinicionTramite);
+			final ResAviso resAviso = (ResAviso) rs.getResultado();
+			if (StringUtils.isNotBlank(resAviso.getEmail())) {
+				// TODO VER SI GENERAR EXCEPCION O NO GENERAR AVISO
+				if (!ValidacionesTipo.getInstance().esEmail(resAviso.getEmail())) {
+					throw new ErrorConfiguracionException(
+							"No se ha especificado email válido para aviso: " + resAviso.getEmail());
+				}
+				aviso.setAvisar(TypeSiNo.SI);
+				aviso.setEmail(resAviso.getEmail());
+			}
+		}
+
+		return aviso;
 	}
 
 }

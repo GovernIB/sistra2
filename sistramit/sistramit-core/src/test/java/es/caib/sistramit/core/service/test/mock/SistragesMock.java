@@ -20,6 +20,8 @@ import es.caib.sistrages.rest.api.interna.RListaParametros;
 import es.caib.sistrages.rest.api.interna.RLiteral;
 import es.caib.sistrages.rest.api.interna.RLiteralIdioma;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
+import es.caib.sistrages.rest.api.interna.RPlantillaFormulario;
+import es.caib.sistrages.rest.api.interna.RPlantillaIdioma;
 import es.caib.sistrages.rest.api.interna.RPlugin;
 import es.caib.sistrages.rest.api.interna.RValorParametro;
 import es.caib.sistrages.rest.api.interna.RValoresDominio;
@@ -179,6 +181,22 @@ public class SistragesMock {
 		e.setInfoLopdHTML(generarLiteral());
 		e.setValorarTramite(true);
 		e.setIncidenciasValoracion(incidenciasValoracion);
+
+		// Registro centralizado
+		e.setRegistroCentralizado(true);
+		e.setOficinaRegistroCentralizado("OF1");
+
+		// Formateadores
+		final List<RPlantillaIdioma> plantillasDefecto = new ArrayList<>();
+		final RPlantillaFormulario plantilla = new RPlantillaFormulario();
+		plantilla.setClaseFormateador(
+				"es.caib.sistramit.core.service.component.formulario.interno.formateadores.impl.FormateadorGenerico");
+		plantilla.setDefecto(true);
+		final RPlantillaIdioma plantillaIdioma = new RPlantillaIdioma();
+		plantillaIdioma.setIdioma("es");
+		plantillaIdioma.setPlantilla(plantilla);
+		plantillasDefecto.add(plantillaIdioma);
+		e.setPlantillasDefecto(plantillasDefecto);
 
 		return e;
 

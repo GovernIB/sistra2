@@ -1,10 +1,10 @@
 {
-  "timestamp": "1561561806858",
+  "timestamp": "1550730860404",
   "identificador": "TEST-JUNIT",
   "version": 1,
-  "release": 20,
-  "idEntidad": "A04003003",
-  "idArea": "AREA1",
+  "release": 12,
+  "idEntidad": "DIR3-1",
+  "idArea": "TESTS",
   "idioma": "es",
   "tipoFlujo": "N",
   "dominios": [
@@ -37,7 +37,7 @@
       "tipo": "ds",
       "pasoFinal": false,
       "scriptNavegacion": null,
-      "instruccionesInicio": "ha de saber"
+      "instruccionesInicio": ""
     },
     {
       "type": "RPasoTramitacionRellenar",
@@ -53,24 +53,32 @@
           "scriptObligatoriedad": null,
           "firmar": true,
           "scriptFirmantes": null,
+          "presentarPreregistro": false,
           "scriptParametrosApertura": null,
           "scriptDatosIniciales": {
             "script": "DATOS_VALORESINICIALES.setValor('CHK_ESTADO', 'S'); \r\nDATOS_VALORESINICIALES.setValor('TXT_CALC', 'S');\r\nDATOS_VALORESINICIALES.setValorCompuesto('SEL_CALC', '1','DS 1');",
-            "literales": []
+            "literales": null
           },
           "scriptPostguardar": {
             "script": "PLUGIN_LOG.debug(PLUGIN_FORMULARIOS.getValor('FOR-1','TXT_NORMAL'));",
-            "literales": []
+            "literales": null
           },
           "interno": true,
           "formularioInterno": {
             "mostrarTitulo": true,
-            "titulo": "Formulario 1 (título)",
-            "plantillas": [],
+            "titulo": "Formulario 1 (tÃ­tulo)",
+            "plantillas": [
+              {
+                "identificador": "PDF",
+                "claseFormateador": "es.caib.sistramit.core.service.component.formulario.interno.formateadores.impl.FormateadorGenerico",
+                "ficheroPlantilla": null,
+                "defecto": true
+              }
+            ],
             "scriptPlantillas": null,
             "paginas": [
               {
-                "htmlB64": "PCFkb2N0eXBlIGh0bWw+PGh0bWw+PGJvZHk+PGZvcm0+PGRpdiBpZD0iaW1jLWZvcm1zLWZvcm11bGFyaSIgY2xhc3M9ImltYy1mb3Jtcy1mb3JtdWxhcmkgaW1jLWZvcm0iPjxkaXYgY2xhc3M9ImltYy1mb3JtLWNvbnRpbmd1dCI+PGg0ICBkYXRhLWlkPSJJRF8xNTQ5MzQ5NjMzMDkyImNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VjY2lvIj48c3BhbiBjbGFzcz0iaW1jLXNlLW1hcmNhIj5BPC9zcGFuPjxzcGFuIGNsYXNzPSJpbWMtc2UtdGl0b2wiPlRleHRvczwvc3Bhbj48L2g0PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBkYXRhLWlkPSJMOTEzIiBpZD0iTDkxMyI+PC9kaXY+PGRpdiBkYXRhLWlkPSJUWFRfTk9STUFMIiBjbGFzcz0iaW1jLWVsZW1lbnQgIiBkYXRhLXR5cGU9InRleHQiPjxkaXYgY2xhc3M9ImltYy1lbC1ldGlxdWV0YSI+PGxhYmVsIGZvcj0iVFhUX05PUk1BTCI+VGV4dG88L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48aW5wdXQgaWQ9IlRYVF9OT1JNQUwiIHR5cGU9InRleHQiLz48L2Rpdj48L2Rpdj48ZGl2IGRhdGEtaWQ9IlRYVF9GRUNIQSIgY2xhc3M9ImltYy1lbGVtZW50ICIgZGF0YS10eXBlPSJkYXRlIj48ZGl2IGNsYXNzPSJpbWMtZWwtZXRpcXVldGEiPjxsYWJlbCBmb3I9IlRYVF9GRUNIQSI+RmVjaGE8L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48aW5wdXQgaWQ9IlRYVF9GRUNIQSIgdHlwZT0iZGF0ZSIvPjwvZGl2PjwvZGl2PjxkaXYgZGF0YS1pZD0iVFhUX0hPUkEiIGNsYXNzPSJpbWMtZWxlbWVudCAiIGRhdGEtdHlwZT0idGltZSI+PGRpdiBjbGFzcz0iaW1jLWVsLWV0aXF1ZXRhIj48bGFiZWwgZm9yPSJUWFRfSE9SQSI+SG9yYTwvbGFiZWw+PC9kaXY+PGRpdiBjbGFzcz0iaW1jLWVsLWNvbnRyb2wiPjxpbnB1dCBpZD0iVFhUX0hPUkEiIHR5cGU9InRpbWUiLz48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VwYXJhZG9yIGltYy1zZXAtc2FsdC1jYXJybyIgZGF0YS1pZD0iTDkxNCIgaWQ9Ikw5MTQiPjwvZGl2PjxoNCAgZGF0YS1pZD0iSURfMTU0OTM0OTYzMjYyMyJjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLXNlY2NpbyI+PHNwYW4gY2xhc3M9ImltYy1zZS1tYXJjYSI+Qjwvc3Bhbj48c3BhbiBjbGFzcz0iaW1jLXNlLXRpdG9sIj5TZWxlY3RvcmVzPC9zcGFuPjwvaDQ+PGRpdiBjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLXNlcGFyYWRvciBpbWMtc2VwLXNhbHQtY2Fycm8iIGRhdGEtaWQ9Ikw5MTUiIGlkPSJMOTE1Ij48L2Rpdj48ZGl2IGRhdGEtaWQ9IlNFTF9MSVNUQSIgY2xhc3M9ImltYy1lbGVtZW50IGltYy1lbC1zZWxlY3RvciBpbWMtZWwtMiIgZGF0YS10eXBlPSJzZWxlY3QiPjxkaXYgY2xhc3M9ImltYy1lbC1ldGlxdWV0YSI+PGxhYmVsIGZvcj0iU0VMX0xJU1RBIj5EZXNwbGVnYWJsZTwvbGFiZWw+PC9kaXY+PGRpdiBjbGFzcz0iaW1jLWVsLWNvbnRyb2wiPjxkaXYgY2xhc3M9ImltYy1zZWxlY3QgaW1jLW9wY2lvbnMiPjxhIGNsYXNzPSJpbWMtc2VsZWN0IiB0YWJpbmRleD0iMCIgaHJlZj0iamF2YXNjcmlwdDo7IiBzdHlsZT0iIj48L2E+PGlucHV0IGlkPSJTRUxfTElTVEEiIHR5cGU9ImhpZGRlbiI+PC9kaXY+PC9kaXY+PC9kaXY+PGZpZWxkc2V0IGRhdGEtaWQ9IlNFTF9NVUxUSVBMRSIgY2xhc3M9ImltYy1lbGVtZW50IiBkYXRhLXR5cGU9ImNoZWNrLWxpc3QiPjxsZWdlbmQgY2xhc3M9ImltYy1sYWJlbCI+TcO6bHRpcGxlPC9sZWdlbmQ+PHVsPjwvdWw+PC9maWVsZHNldD48ZmllbGRzZXQgZGF0YS1pZD0iU0VMX1VOSUNBIiBjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLWVsLWhvcml6b250YWwgaW1jLWVsLTMiIGRhdGEtdHlwZT0icmFkaW8tbGlzdCI+PGxlZ2VuZCBjbGFzcz0iaW1jLWxhYmVsIj7Dmm5pY2E8L2xlZ2VuZD48dWw+PC91bD48L2ZpZWxkc2V0PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBkYXRhLWlkPSJMOTE2IiBpZD0iTDkxNiI+PC9kaXY+PGg0ICBkYXRhLWlkPSJJRF8xNTQ5MzQ5NjMyODA0ImNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VjY2lvIj48c3BhbiBjbGFzcz0iaW1jLXNlLW1hcmNhIj5DPC9zcGFuPjxzcGFuIGNsYXNzPSJpbWMtc2UtdGl0b2wiPkV2YWx1YXIgY2FtYmlvIGNhbXBvIDwvc3Bhbj48L2g0PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBkYXRhLWlkPSJMOTE3IiBpZD0iTDkxNyI+PC9kaXY+PGRpdiBkYXRhLWlkPSJDSEtfRVNUQURPImNsYXNzPSJpbWMtZWxlbWVudCBpbWMtZWwtY2hlY2siIGRhdGEtdHlwZT0iY2hlY2siPjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48ZGl2IGNsYXNzPSJpbWMtaW5wdXQtY2hlY2siPjxpbnB1dCBpZD0iQ0hLX0VTVEFETyIgdHlwZT0iY2hlY2tib3giPjxsYWJlbCBmb3I9IkNIS19FU1RBRE8iPlNvbG8gbGVjdHVyYTwvbGFiZWw+PC9kaXY+PC9kaXY+PC9kaXY+PGRpdiBkYXRhLWlkPSJUWFRfQ0FMQyIgY2xhc3M9ImltYy1lbGVtZW50ICIgZGF0YS10eXBlPSJ0ZXh0Ij48ZGl2IGNsYXNzPSJpbWMtZWwtZXRpcXVldGEiPjxsYWJlbCBmb3I9IlRYVF9DQUxDIj5DYWxjdWxhZG88L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48aW5wdXQgaWQ9IlRYVF9DQUxDIiB0eXBlPSJ0ZXh0Ii8+PC9kaXY+PC9kaXY+PGRpdiBkYXRhLWlkPSJTRUxfQ0FMQyIgY2xhc3M9ImltYy1lbGVtZW50IGltYy1lbC1zZWxlY3RvciIgZGF0YS10eXBlPSJzZWxlY3QiPjxkaXYgY2xhc3M9ImltYy1lbC1ldGlxdWV0YSI+PGxhYmVsIGZvcj0iU0VMX0NBTEMiPlNlbGVjdG9yPC9sYWJlbD48L2Rpdj48ZGl2IGNsYXNzPSJpbWMtZWwtY29udHJvbCI+PGRpdiBjbGFzcz0iaW1jLXNlbGVjdCBpbWMtb3BjaW9ucyI+PGEgY2xhc3M9ImltYy1zZWxlY3QiIHRhYmluZGV4PSIwIiBocmVmPSJqYXZhc2NyaXB0OjsiIHN0eWxlPSIiPjwvYT48aW5wdXQgaWQ9IlNFTF9DQUxDIiB0eXBlPSJoaWRkZW4iPjwvZGl2PjwvZGl2PjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBkYXRhLWlkPSJMOTE4IiBpZD0iTDkxOCI+PC9kaXY+PGg0ICBkYXRhLWlkPSJJRF8xNTUwNDc0ODc3MTI2ImNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VjY2lvIj48c3BhbiBjbGFzcz0iaW1jLXNlLW1hcmNhIj5EPC9zcGFuPjxzcGFuIGNsYXNzPSJpbWMtc2UtdGl0b2wiPlZBTElEQUNJw5NOIENBTVBPPC9zcGFuPjwvaDQ+PGRpdiBjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLXNlcGFyYWRvciBpbWMtc2VwLXNhbHQtY2Fycm8iIGRhdGEtaWQ9Ikw5MTkiIGlkPSJMOTE5Ij48L2Rpdj48ZGl2IGRhdGEtaWQ9IlRYVF9WQUwiIGNsYXNzPSJpbWMtZWxlbWVudCAiIGRhdGEtdHlwZT0idGV4dCI+PGRpdiBjbGFzcz0iaW1jLWVsLWV0aXF1ZXRhIj48bGFiZWwgZm9yPSJUWFRfVkFMIj5DYW1wbzwvbGFiZWw+PC9kaXY+PGRpdiBjbGFzcz0iaW1jLWVsLWNvbnRyb2wiPjxpbnB1dCBpZD0iVFhUX1ZBTCIgdHlwZT0idGV4dCIvPjwvZGl2PjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBkYXRhLWlkPSJMOTIwIiBpZD0iTDkyMCI+PC9kaXY+PC9kaXY+PC9kaXY+PC9mb3JtPjwvYm9keT48L2h0bWw+",
+                "htmlB64": "PCFkb2N0eXBlIGh0bWw+PGh0bWw+PGJvZHk+PGZvcm0+PGRpdiBpZD0iaW1jLWZvcm1zLWZvcm11bGFyaSIgY2xhc3M9ImltYy1mb3Jtcy1mb3JtdWxhcmkgaW1jLWZvcm0iPjxkaXYgY2xhc3M9ImltYy1mb3JtLWNvbnRpbmd1dCI+PGg0IGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VjY2lvIj48c3BhbiBjbGFzcz0iaW1jLXNlLW1hcmNhIj5BPC9zcGFuPjxzcGFuIGNsYXNzPSJpbWMtc2UtdGl0b2wiPlRleHRvczwvc3Bhbj48L2g0PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBpZD0iTDkxMyI+PC9kaXY+PGRpdiBkYXRhLWlkPSJUWFRfTk9STUFMIiBjbGFzcz0iaW1jLWVsZW1lbnQgIiBkYXRhLXR5cGU9InRleHQiPjxkaXYgY2xhc3M9ImltYy1lbC1ldGlxdWV0YSI+PGxhYmVsIGZvcj0iVFhUX05PUk1BTCI+VGV4dG88L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48aW5wdXQgaWQ9IlRYVF9OT1JNQUwiIHR5cGU9InRleHQiLz48L2Rpdj48L2Rpdj48ZGl2IGRhdGEtaWQ9IlRYVF9GRUNIQSIgY2xhc3M9ImltYy1lbGVtZW50ICIgZGF0YS10eXBlPSJkYXRlIj48ZGl2IGNsYXNzPSJpbWMtZWwtZXRpcXVldGEiPjxsYWJlbCBmb3I9IlRYVF9GRUNIQSI+RmVjaGE8L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48aW5wdXQgaWQ9IlRYVF9GRUNIQSIgdHlwZT0iZGF0ZSIvPjwvZGl2PjwvZGl2PjxkaXYgZGF0YS1pZD0iVFhUX0hPUkEiIGNsYXNzPSJpbWMtZWxlbWVudCAiIGRhdGEtdHlwZT0idGltZSI+PGRpdiBjbGFzcz0iaW1jLWVsLWV0aXF1ZXRhIj48bGFiZWwgZm9yPSJUWFRfSE9SQSI+SG9yYTwvbGFiZWw+PC9kaXY+PGRpdiBjbGFzcz0iaW1jLWVsLWNvbnRyb2wiPjxpbnB1dCBpZD0iVFhUX0hPUkEiIHR5cGU9InRpbWUiLz48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VwYXJhZG9yIGltYy1zZXAtc2FsdC1jYXJybyIgaWQ9Ikw5MTQiPjwvZGl2PjxoNCBjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLXNlY2NpbyI+PHNwYW4gY2xhc3M9ImltYy1zZS1tYXJjYSI+Qjwvc3Bhbj48c3BhbiBjbGFzcz0iaW1jLXNlLXRpdG9sIj5TZWxlY3RvcmVzPC9zcGFuPjwvaDQ+PGRpdiBjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLXNlcGFyYWRvciBpbWMtc2VwLXNhbHQtY2Fycm8iIGlkPSJMOTE1Ij48L2Rpdj48ZGl2IGRhdGEtaWQ9IlNFTF9MSVNUQSIgY2xhc3M9ImltYy1lbGVtZW50IGltYy1lbC1zZWxlY3RvciIgZGF0YS10eXBlPSJzZWxlY3QiPjxkaXYgY2xhc3M9ImltYy1lbC1ldGlxdWV0YSI+PGxhYmVsIGZvcj0iU0VMX0xJU1RBIj5EZXNwbGVnYWJsZTwvbGFiZWw+PC9kaXY+PGRpdiBjbGFzcz0iaW1jLWVsLWNvbnRyb2wiPjxkaXYgY2xhc3M9ImltYy1zZWxlY3QgaW1jLW9wY2lvbnMiPjxhIGNsYXNzPSJpbWMtc2VsZWN0IiB0YWJpbmRleD0iMCIgaHJlZj0iamF2YXNjcmlwdDo7IiBzdHlsZT0iIj48L2E+PGlucHV0IGlkPSJTRUxfTElTVEEiIHR5cGU9ImhpZGRlbiI+PC9kaXY+PC9kaXY+PC9kaXY+PGZpZWxkc2V0IGRhdGEtaWQ9IlNFTF9NVUxUSVBMRSIgY2xhc3M9ImltYy1lbGVtZW50IiBkYXRhLXR5cGU9ImNoZWNrLWxpc3QiPjxsZWdlbmQgY2xhc3M9ImltYy1sYWJlbCI+TcO6bHRpcGxlPC9sZWdlbmQ+PHVsPjwvdWw+PC9maWVsZHNldD48ZmllbGRzZXQgZGF0YS1pZD0iU0VMX1VOSUNBIiBjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLWVsLWhvcml6b250YWwiIGRhdGEtdHlwZT0icmFkaW8tbGlzdCI+PGxlZ2VuZCBjbGFzcz0iaW1jLWxhYmVsIj7Dmm5pY2E8L2xlZ2VuZD48dWw+PC91bD48L2ZpZWxkc2V0PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBpZD0iTDkxNiI+PC9kaXY+PGg0IGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VjY2lvIj48c3BhbiBjbGFzcz0iaW1jLXNlLW1hcmNhIj5DPC9zcGFuPjxzcGFuIGNsYXNzPSJpbWMtc2UtdGl0b2wiPkV2YWx1YXIgY2FtYmlvIGNhbXBvIDwvc3Bhbj48L2g0PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBpZD0iTDkxNyI+PC9kaXY+PGRpdiBkYXRhLWlkPSJDSEtfRVNUQURPImNsYXNzPSJpbWMtZWxlbWVudCBpbWMtZWwtY2hlY2siIGRhdGEtdHlwZT0iY2hlY2siPjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48ZGl2IGNsYXNzPSJpbWMtaW5wdXQtY2hlY2siPjxpbnB1dCBpZD0iQ0hLX0VTVEFETyIgdHlwZT0iY2hlY2tib3giPjxsYWJlbCBmb3I9IkNIS19FU1RBRE8iPlNvbG8gbGVjdHVyYTwvbGFiZWw+PC9kaXY+PC9kaXY+PC9kaXY+PGRpdiBkYXRhLWlkPSJUWFRfQ0FMQyIgY2xhc3M9ImltYy1lbGVtZW50ICIgZGF0YS10eXBlPSJ0ZXh0Ij48ZGl2IGNsYXNzPSJpbWMtZWwtZXRpcXVldGEiPjxsYWJlbCBmb3I9IlRYVF9DQUxDIj5DYWxjdWxhZG88L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48aW5wdXQgaWQ9IlRYVF9DQUxDIiB0eXBlPSJ0ZXh0Ii8+PC9kaXY+PC9kaXY+PGRpdiBkYXRhLWlkPSJTRUxfQ0FMQyIgY2xhc3M9ImltYy1lbGVtZW50IGltYy1lbC1zZWxlY3RvciIgZGF0YS10eXBlPSJzZWxlY3QiPjxkaXYgY2xhc3M9ImltYy1lbC1ldGlxdWV0YSI+PGxhYmVsIGZvcj0iU0VMX0NBTEMiPlNlbGVjdG9yPC9sYWJlbD48L2Rpdj48ZGl2IGNsYXNzPSJpbWMtZWwtY29udHJvbCI+PGRpdiBjbGFzcz0iaW1jLXNlbGVjdCBpbWMtb3BjaW9ucyI+PGEgY2xhc3M9ImltYy1zZWxlY3QiIHRhYmluZGV4PSIwIiBocmVmPSJqYXZhc2NyaXB0OjsiIHN0eWxlPSIiPjwvYT48aW5wdXQgaWQ9IlNFTF9DQUxDIiB0eXBlPSJoaWRkZW4iPjwvZGl2PjwvZGl2PjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBpZD0iTDkxOCI+PC9kaXY+PGg0IGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VjY2lvIj48c3BhbiBjbGFzcz0iaW1jLXNlLW1hcmNhIj5EPC9zcGFuPjxzcGFuIGNsYXNzPSJpbWMtc2UtdGl0b2wiPlZBTElEQUNJw5NOIENBTVBPPC9zcGFuPjwvaDQ+PGRpdiBjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLXNlcGFyYWRvciBpbWMtc2VwLXNhbHQtY2Fycm8iIGlkPSJMOTE5Ij48L2Rpdj48ZGl2IGRhdGEtaWQ9IlRYVF9WQUwiIGNsYXNzPSJpbWMtZWxlbWVudCAiIGRhdGEtdHlwZT0idGV4dCI+PGRpdiBjbGFzcz0iaW1jLWVsLWV0aXF1ZXRhIj48bGFiZWwgZm9yPSJUWFRfVkFMIj5DYW1wbzwvbGFiZWw+PC9kaXY+PGRpdiBjbGFzcz0iaW1jLWVsLWNvbnRyb2wiPjxpbnB1dCBpZD0iVFhUX1ZBTCIgdHlwZT0idGV4dCIvPjwvZGl2PjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBpZD0iTDkyMCI+PC9kaXY+PC9kaXY+PC9kaXY+PC9mb3JtPjwvYm9keT48L2h0bWw+",
                 "paginaFinal": true,
                 "scriptValidacion": null,
                 "lineas": [
@@ -111,10 +119,8 @@
                         "tipoTexto": "NORMAL",
                         "textoNormal": {
                           "tamanyoMax": 50,
-                          "lineas": 1,
-                          "forzarMayusculas": false
+                          "lineas": 1
                         },
-                        "textoEmail": null,
                         "textoNumero": null,
                         "textoIdentificacion": null,
                         "textoExpRegular": null,
@@ -139,7 +145,6 @@
                         },
                         "tipoTexto": "FECHA",
                         "textoNormal": null,
-                        "textoEmail": null,
                         "textoNumero": null,
                         "textoIdentificacion": null,
                         "textoExpRegular": null,
@@ -164,7 +169,6 @@
                         },
                         "tipoTexto": "HORA",
                         "textoNormal": null,
-                        "textoEmail": null,
                         "textoNumero": null,
                         "textoIdentificacion": null,
                         "textoExpRegular": null,
@@ -196,7 +200,7 @@
                         "etiqueta": "Desplegable",
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
-                        "columnas": 2,
+                        "columnas": 1,
                         "ayuda": "Ayuda online",
                         "propiedadesCampo": {
                           "obligatorio": true,
@@ -211,30 +215,23 @@
                         "listaFija": [
                           {
                             "codigo": "V1",
-                            "descripcion": "Valor 1 es",
+                            "descripcion": "Valor 1",
                             "porDefecto": true
                           },
                           {
                             "codigo": "V2",
                             "descripcion": "Valor 2",
                             "porDefecto": false
-                          },
-                          {
-                            "codigo": "V3",
-                            "descripcion": "Valor 3",
-                            "porDefecto": false
                           }
                         ],
                         "listaDominio": null,
-                        "scriptListaValores": null,
-                        "indiceAlfabetico": true,
-                        "orientacion": "V"
+                        "scriptListaValores": null
                       },
                       {
                         "type": "RComponenteSelector",
                         "identificador": "SEL_MULTIPLE",
                         "tipo": "SE",
-                        "etiqueta": "Múltiple",
+                        "etiqueta": "MÃºltiple",
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 1,
@@ -256,18 +253,16 @@
                           "campoDescripcion": "DESCRIPCION",
                           "parametros": []
                         },
-                        "scriptListaValores": null,
-                        "indiceAlfabetico": false,
-                        "orientacion": "V"
+                        "scriptListaValores": null
                       },
                       {
                         "type": "RComponenteSelector",
                         "identificador": "SEL_UNICA",
                         "tipo": "SE",
-                        "etiqueta": "Única",
+                        "etiqueta": "Ãšnica",
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
-                        "columnas": 3,
+                        "columnas": 1,
                         "ayuda": "Ayuda online",
                         "propiedadesCampo": {
                           "obligatorio": true,
@@ -283,10 +278,8 @@
                         "listaDominio": null,
                         "scriptListaValores": {
                           "script": "DATOS_VALORESPOSIBLES.addValorPosible('S1','DS 1');\r\nDATOS_VALORESPOSIBLES.addValorPosible('S2','DS 2');",
-                          "literales": []
-                        },
-                        "indiceAlfabetico": false,
-                        "orientacion": "H"
+                          "literales": null
+                        }
                       }
                     ]
                   },
@@ -315,7 +308,7 @@
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 1,
-                        "ayuda": "En función de este campo se deben establecer como solo lectura los campos de la derecha",
+                        "ayuda": "En funciÃ³n de este campo se deben establecer como solo lectura los campos de la derecha",
                         "propiedadesCampo": {
                           "obligatorio": false,
                           "soloLectura": false,
@@ -342,21 +335,19 @@
                           "noModificable": false,
                           "scriptAutorrellenable": {
                             "script": "var data = PLUGIN_DATOSFORMULARIO.getValor('CHK_ESTADO');\r\nDATOS_VALOR.setValor(data);",
-                            "literales": []
+                            "literales": null
                           },
                           "scriptEstado": {
                             "script": "var check = PLUGIN_DATOSFORMULARIO.getValor('CHK_ESTADO');\r\nPLUGIN_LOG.debug(\"check = \" + check);\r\nvar readOnly = PLUGIN_UTILS.esIgual(check, \"S\")\r\nDATOS_ESTADO.setSoloLectura(readOnly);",
-                            "literales": []
+                            "literales": null
                           },
                           "scriptValidacion": null
                         },
                         "tipoTexto": "NORMAL",
                         "textoNormal": {
-                          "tamanyoMax": 50,
-                          "lineas": 1,
-                          "forzarMayusculas": false
+                          "tamanyoMax": 0,
+                          "lineas": 1
                         },
-                        "textoEmail": null,
                         "textoNumero": null,
                         "textoIdentificacion": null,
                         "textoExpRegular": null,
@@ -370,18 +361,18 @@
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 1,
-                        "ayuda": "Según el checkbox toma como valores posibles: DS1/DS2 ó DS3/DS4.  También se autorrellena a DS1 ó DS3.",
+                        "ayuda": "SegÃºn el checkbox toma como valores posibles: DS1/DS2 Ã³ DS3/DS4.  TambiÃ©n se autorrellena a DS1 Ã³ DS3.",
                         "propiedadesCampo": {
                           "obligatorio": false,
                           "soloLectura": false,
                           "noModificable": false,
                           "scriptAutorrellenable": {
                             "script": "var check = PLUGIN_DATOSFORMULARIO.getValor('CHK_ESTADO');\r\n\r\nif (PLUGIN_UTILS.esIgual(check, \"S\")) {\r\n  DATOS_VALOR.setValorCompuesto('1','DS 1');  \r\n} else {\r\n  DATOS_VALOR.setValorCompuesto('3','DS 3');  \r\n}",
-                            "literales": []
+                            "literales": null
                           },
                           "scriptEstado": {
                             "script": "var check = PLUGIN_DATOSFORMULARIO.getValor('CHK_ESTADO');\r\nPLUGIN_LOG.debug(\"check = \" + check);\r\nvar readOnly = PLUGIN_UTILS.esIgual(check, \"S\")\r\nDATOS_ESTADO.setSoloLectura(readOnly);",
-                            "literales": []
+                            "literales": null
                           },
                           "scriptValidacion": null
                         },
@@ -391,10 +382,8 @@
                         "listaDominio": null,
                         "scriptListaValores": {
                           "script": "var check = PLUGIN_DATOSFORMULARIO.getValor('CHK_ESTADO');\r\n\r\nif (PLUGIN_UTILS.esIgual(check, \"S\")) {\r\n  DATOS_VALORESPOSIBLES.addValorPosible('1','DS 1');\r\n  DATOS_VALORESPOSIBLES.addValorPosible('2','DS 2');\r\n} else {\r\n  DATOS_VALORESPOSIBLES.addValorPosible('3','DS 3');\r\n  DATOS_VALORESPOSIBLES.addValorPosible('4','DS 4');\r\n}",
-                          "literales": []
-                        },
-                        "indiceAlfabetico": true,
-                        "orientacion": "V"
+                          "literales": null
+                        }
                       }
                     ]
                   },
@@ -404,7 +393,7 @@
                         "type": "RComponenteSeccion",
                         "identificador": "ID_1550474877126",
                         "tipo": "SC",
-                        "etiqueta": "VALIDACIÓN CAMPO",
+                        "etiqueta": "VALIDACIÃ“N CAMPO",
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 6,
@@ -432,16 +421,14 @@
                           "scriptEstado": null,
                           "scriptValidacion": {
                             "script": "var valor = PLUGIN_DATOSFORMULARIO.getValor('TXT_VAL');\r\n\r\nif (PLUGIN_UTILS.esIgual(valor, 'PRUEBA', true)) {\r\n  \tPLUGIN_VALIDACION.setExisteAviso(true,'INFO');\r\n\tPLUGIN_VALIDACION.setTextoMensajeAviso('Se ha metido el valor: PRUEBA');\r\n} else { \r\n\tPLUGIN_VALIDACION.setExisteAviso(true,'ERROR');\r\n  \tPLUGIN_VALIDACION.setTextoMensajeAviso('Hay que meter el valor: PRUEBA');  \r\n}",
-                            "literales": []
+                            "literales": null
                           }
                         },
                         "tipoTexto": "NORMAL",
                         "textoNormal": {
-                          "tamanyoMax": 50,
-                          "lineas": 1,
-                          "forzarMayusculas": false
+                          "tamanyoMax": 0,
+                          "lineas": 1
                         },
-                        "textoEmail": null,
                         "textoNumero": null,
                         "textoIdentificacion": null,
                         "textoExpRegular": null,
@@ -470,7 +457,7 @@
           "obligatoriedad": "D",
           "scriptDependencia": {
             "script": "return 'S';",
-            "literales": []
+            "literales": null
           },
           "ayuda": {
             "fichero": null,
@@ -542,8 +529,8 @@
             "firmar": false,
             "scriptFirmantes": null,
             "scriptValidacion": {
-              "script": "var dni = PLUGIN_ANEXO.getValorXml('//xml/dni');\r\nPLUGIN_LOG.debug('VALOR XML: ' + dni);\r\nif (!PLUGIN_UTILS.esIgual(dni,'11111111H')) {\r\n PLUGIN_ERROR.setExisteError(true);\r\n PLUGIN_ERROR.setTextoMensajeError('No coincide valor XML');\t\r\n}",
-              "literales": []
+              "script": "var dni = PLUGIN_ANEXO.getValorXml('//xml/dni');\r\nPLUGIN_LOG.debug('VALOR XML: ' + dni);\r\nif (!PLUGIN_UTILS.esIgual(dni,'11111111H')) {\r\n  PLUGIN_ERROR.setExisteError(true);\r\n  PLUGIN_ERROR.setTextoMensajeError('No coincide valor XML');\t\r\n}",
+              "literales": null
             }
           }
         },
@@ -571,13 +558,12 @@
             "scriptFirmantes": null,
             "scriptValidacion": {
               "script": "var dni = PLUGIN_ANEXO.getValorPdf('SUJETOPASIVONIF');\r\nPLUGIN_LOG.debug('VALOR PDF: ' + dni);\r\nif (!PLUGIN_UTILS.esIgual(dni,'6666sq')) {\r\n  \tPLUGIN_ERROR.setExisteError(true);\r\n  \tPLUGIN_ERROR.setTextoMensajeError('No coincide valor PDF');\t\r\n}",
-              "literales": []
+              "literales": null
             }
           }
         }
       ],
-      "scriptAnexosDinamicos": null,
-      "permiteSubsanar": false
+      "scriptAnexosDinamicos": null
     },
     {
       "type": "RPasoTramitacionPagar",
@@ -590,16 +576,15 @@
           "identificador": "PAG-1",
           "descripcion": "Pago 1",
           "obligatoriedad": "S",
+          "tipo": "T",
           "scriptDependencia": null,
           "scriptPago": {
             "script": "DATOS_PAGO.setPasarela('ATIB'); \r\nDATOS_PAGO.setOrganismo('ORG1'); \r\nDATOS_PAGO.setDetallePago('046','C1','T1', 100);",
-            "literales": []
+            "literales": null
           },
           "simularPago": true
         }
-      ],
-      "permiteSubsanar": false,
-      "instruccionesSubsanacion": null
+      ]
     },
     {
       "type": "RPasoTramitacionRegistrar",
@@ -610,7 +595,7 @@
       "destino": {
         "oficinaRegistro": "codofi1",
         "libroRegistro": "codlib.codofi1.2",
-        "tipoAsunto": "OT"
+        "tipoAsunto": "codtip3"
       },
       "scriptDestino": null,
       "instruccionesPresentacionHtml": "",
@@ -619,14 +604,7 @@
       "admiteRepresentacion": false,
       "validaRepresentacion": false,
       "scriptRepresentante": null,
-      "scriptValidar": null,
-      "permiteSubsanar": false,
-      "instruccionesSubsanacion": "",
-      "avisoAlFinalizar": true,
-      "scriptAlFinalizar": {
-        "script": "DATOS_AVISO.setEmail(\"soportecaib@indra.es\");",
-        "literales": []
-      }
+      "scriptValidar": null
     }
   ]
 }

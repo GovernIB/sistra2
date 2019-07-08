@@ -23,6 +23,8 @@ drop table STT_TCKCDC cascade constraints;
 
 drop table STT_TRAPER cascade constraints;
 
+drop table STT_AVISOS cascade constraints;
+
 drop sequence STT_DOCPTR_SEQ;
 
 drop sequence STT_FICPTR_SEQ;
@@ -46,4 +48,6 @@ drop sequence STT_TCKCDC_SEQ;
 drop sequence STT_TIPEVE_SEQ;
 
 drop sequence STT_TRAPER_SEQ;
+
+drop sequence STT_AVISOS_SEQ;
 
