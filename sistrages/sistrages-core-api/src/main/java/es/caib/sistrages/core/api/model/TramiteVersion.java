@@ -110,6 +110,9 @@ public class TramiteVersion extends ModelApi {
 	 */
 	private List<Dominio> listaAuxDominios;
 
+	/** Huella. **/
+	private String huella;
+
 	/**
 	 * Obtiene el valor de codigo.
 	 *
@@ -122,8 +125,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de codigo.
 	 *
-	 * @param codigo
-	 *            el nuevo valor de codigo
+	 * @param codigo el nuevo valor de codigo
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -145,8 +147,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de codigo.
 	 *
-	 * @param codigo
-	 *            el nuevo valor de codigo
+	 * @param codigo el nuevo valor de codigo
 	 */
 	public void setIdString(final String idString) {
 		if (idString == null || idString.isEmpty()) {
@@ -168,8 +169,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de numeroVersion.
 	 *
-	 * @param numeroversion
-	 *            el nuevo valor de numeroVersion
+	 * @param numeroversion el nuevo valor de numeroVersion
 	 */
 	public void setNumeroVersion(final int numeroversion) {
 		this.numeroVersion = numeroversion;
@@ -187,8 +187,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de tipoFlujo.
 	 *
-	 * @param flujo
-	 *            el nuevo valor de tipoFlujo
+	 * @param flujo el nuevo valor de tipoFlujo
 	 */
 	public void setTipoFlujo(final TypeFlujo flujo) {
 		this.tipoFlujo = flujo;
@@ -206,8 +205,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de activa.
 	 *
-	 * @param activa
-	 *            el nuevo valor de activa
+	 * @param activa el nuevo valor de activa
 	 */
 	public void setActiva(final boolean activa) {
 		this.activa = activa;
@@ -225,8 +223,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de release.
 	 *
-	 * @param release
-	 *            el nuevo valor de release
+	 * @param release el nuevo valor de release
 	 */
 	public void setRelease(final int release) {
 		this.release = release;
@@ -244,8 +241,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de idTramite.
 	 *
-	 * @param codigotramite
-	 *            el nuevo valor de idTramite
+	 * @param codigotramite el nuevo valor de idTramite
 	 */
 	public void setIdTramite(final Long codigotramite) {
 		this.idTramite = codigotramite;
@@ -263,8 +259,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de autenticado.
 	 *
-	 * @param autenticado
-	 *            el nuevo valor de autenticado
+	 * @param autenticado el nuevo valor de autenticado
 	 */
 	public void setAutenticado(final boolean autenticado) {
 		this.autenticado = autenticado;
@@ -278,8 +273,7 @@ public class TramiteVersion extends ModelApi {
 	}
 
 	/**
-	 * @param noAutenticado
-	 *            the noAutenticado to set
+	 * @param noAutenticado the noAutenticado to set
 	 */
 	public void setNoAutenticado(final boolean noAutenticado) {
 		this.noAutenticado = noAutenticado;
@@ -297,8 +291,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de nivelQAA.
 	 *
-	 * @param nivelQAA
-	 *            el nuevo valor de nivelQAA
+	 * @param nivelQAA el nuevo valor de nivelQAA
 	 */
 	public void setNivelQAA(final int nivelQAA) {
 		this.nivelQAA = nivelQAA;
@@ -316,8 +309,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de idiomasSoportados.
 	 *
-	 * @param idiomassoportados
-	 *            el nuevo valor de idiomasSoportados
+	 * @param idiomassoportados el nuevo valor de idiomasSoportados
 	 */
 	public void setIdiomasSoportados(final String idiomassoportados) {
 		this.idiomasSoportados = idiomassoportados;
@@ -335,8 +327,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de persistencia.
 	 *
-	 * @param persistencia
-	 *            el nuevo valor de persistencia
+	 * @param persistencia el nuevo valor de persistencia
 	 */
 	public void setPersistencia(final boolean persistencia) {
 		this.persistencia = persistencia;
@@ -354,8 +345,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de persistenciaInfinita.
 	 *
-	 * @param persistenciaInfinita
-	 *            el nuevo valor de persistenciaInfinita
+	 * @param persistenciaInfinita el nuevo valor de persistenciaInfinita
 	 */
 	public void setPersistenciaInfinita(final boolean persistenciaInfinita) {
 		this.persistenciaInfinita = persistenciaInfinita;
@@ -373,8 +363,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de persistenciaDias.
 	 *
-	 * @param persistenciaDias
-	 *            el nuevo valor de persistenciaDias
+	 * @param persistenciaDias el nuevo valor de persistenciaDias
 	 */
 	public void setPersistenciaDias(final Integer persistenciaDias) {
 		this.persistenciaDias = persistenciaDias;
@@ -404,8 +393,7 @@ public class TramiteVersion extends ModelApi {
 	}
 
 	/**
-	 * @param bloqueada
-	 *            the bloqueada to set
+	 * @param bloqueada the bloqueada to set
 	 */
 	public void setBloqueada(final Boolean bloqueada) {
 		this.bloqueada = bloqueada;
@@ -423,8 +411,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de codigoUsuarioBloqueo.
 	 *
-	 * @param idUsuarioBloqueo
-	 *            el nuevo valor de codigoUsuarioBloqueo
+	 * @param idUsuarioBloqueo el nuevo valor de codigoUsuarioBloqueo
 	 */
 	public void setCodigoUsuarioBloqueo(final String idUsuarioBloqueo) {
 		this.codigoUsuarioBloqueo = idUsuarioBloqueo;
@@ -442,8 +429,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de datosUsuarioBloqueo.
 	 *
-	 * @param datosUsuarioBloqueo
-	 *            el nuevo valor de datosUsuarioBloqueo
+	 * @param datosUsuarioBloqueo el nuevo valor de datosUsuarioBloqueo
 	 */
 	public void setDatosUsuarioBloqueo(final String datosUsuarioBloqueo) {
 		this.datosUsuarioBloqueo = datosUsuarioBloqueo;
@@ -461,8 +447,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de debug.
 	 *
-	 * @param debug
-	 *            el nuevo valor de debug
+	 * @param debug el nuevo valor de debug
 	 */
 	public void setDebug(final boolean debug) {
 		this.debug = debug;
@@ -480,8 +465,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de limiteTramitacion.
 	 *
-	 * @param limiteTramitacion
-	 *            el nuevo valor de limiteTramitacion
+	 * @param limiteTramitacion el nuevo valor de limiteTramitacion
 	 */
 	public void setLimiteTramitacion(final boolean limiteTramitacion) {
 		this.limiteTramitacion = limiteTramitacion;
@@ -499,8 +483,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de numLimiteTramitacion.
 	 *
-	 * @param numLimiteTramitacion
-	 *            el nuevo valor de numLimiteTramitacion
+	 * @param numLimiteTramitacion el nuevo valor de numLimiteTramitacion
 	 */
 	public void setNumLimiteTramitacion(final Integer numLimiteTramitacion) {
 		this.numLimiteTramitacion = numLimiteTramitacion;
@@ -518,8 +501,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de intLimiteTramitacion.
 	 *
-	 * @param intLimiteTramitacion
-	 *            el nuevo valor de intLimiteTramitacion
+	 * @param intLimiteTramitacion el nuevo valor de intLimiteTramitacion
 	 */
 	public void setIntLimiteTramitacion(final Integer intLimiteTramitacion) {
 		this.intLimiteTramitacion = intLimiteTramitacion;
@@ -537,8 +519,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de desactivacion.
 	 *
-	 * @param desactivacion
-	 *            el nuevo valor de desactivacion
+	 * @param desactivacion el nuevo valor de desactivacion
 	 */
 	public void setDesactivacion(final boolean desactivacion) {
 		this.desactivacion = desactivacion;
@@ -560,8 +541,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de plazoInicioDesactivacion.
 	 *
-	 * @param plazoInicioDesactivacion
-	 *            el nuevo valor de plazoInicioDesactivacion
+	 * @param plazoInicioDesactivacion el nuevo valor de plazoInicioDesactivacion
 	 */
 	public void setPlazoInicioDesactivacion(final Date plazoInicioDesactivacion) {
 		if (plazoInicioDesactivacion == null) {
@@ -587,8 +567,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de plazoFinDesactivacion.
 	 *
-	 * @param plazoFinDesactivacion
-	 *            el nuevo valor de plazoFinDesactivacion
+	 * @param plazoFinDesactivacion el nuevo valor de plazoFinDesactivacion
 	 */
 	public void setPlazoFinDesactivacion(final Date plazoFinDesactivacion) {
 		if (plazoFinDesactivacion == null) {
@@ -610,8 +589,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de mensajeDesactivacion.
 	 *
-	 * @param mensajeDesactivacion
-	 *            el nuevo valor de mensajeDesactivacion
+	 * @param mensajeDesactivacion el nuevo valor de mensajeDesactivacion
 	 */
 	public void setMensajeDesactivacion(final Literal mensajeDesactivacion) {
 		this.mensajeDesactivacion = mensajeDesactivacion;
@@ -629,8 +607,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * Establece el valor de listaDominios.
 	 *
-	 * @param listaDominios
-	 *            el nuevo valor de listaDominios
+	 * @param listaDominios el nuevo valor de listaDominios
 	 */
 	public void setListaDominios(final List<Long> listaDominios) {
 		this.listaDominios = listaDominios;
@@ -644,8 +621,7 @@ public class TramiteVersion extends ModelApi {
 	}
 
 	/**
-	 * @param listaPasos
-	 *            the listaPasos to set
+	 * @param listaPasos the listaPasos to set
 	 */
 	public void setListaPasos(final List<TramitePaso> listaPasos) {
 		this.listaPasos = listaPasos;
@@ -734,8 +710,7 @@ public class TramiteVersion extends ModelApi {
 	}
 
 	/**
-	 * @param fechaUltima
-	 *            the fechaUltima to set
+	 * @param fechaUltima the fechaUltima to set
 	 */
 	public void setFechaUltima(final Date fechaUltima) {
 		this.fechaUltima = fechaUltima;
@@ -747,6 +722,20 @@ public class TramiteVersion extends ModelApi {
 
 	public void setListaAuxDominios(final List<Dominio> listaAuxDominios) {
 		this.listaAuxDominios = listaAuxDominios;
+	}
+
+	/**
+	 * @return the huella
+	 */
+	public String getHuella() {
+		return huella;
+	}
+
+	/**
+	 * @param huella the huella to set
+	 */
+	public void setHuella(final String huella) {
+		this.huella = huella;
 	}
 
 }

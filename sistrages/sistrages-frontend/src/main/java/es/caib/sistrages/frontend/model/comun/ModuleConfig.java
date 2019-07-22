@@ -15,9 +15,10 @@ public final class ModuleConfig {
 	/** Version. **/
 	private String version;
 
-	/** Commit. **/
+	/** Commit svn. **/
 	private String commitSvn;
 
+	/** Commit git. **/
 	private String commitGit;
 
 	/**
@@ -28,8 +29,7 @@ public final class ModuleConfig {
 	}
 
 	/**
-	 * @param entorno
-	 *            the entorno to set
+	 * @param entorno the entorno to set
 	 */
 	public void setEntorno(final String entorno) {
 		this.entorno = entorno;
@@ -43,8 +43,7 @@ public final class ModuleConfig {
 	}
 
 	/**
-	 * @param version
-	 *            the version to set
+	 * @param version the version to set
 	 */
 	public void setVersion(final String version) {
 		this.version = version;
@@ -58,8 +57,7 @@ public final class ModuleConfig {
 	}
 
 	/**
-	 * @param commit
-	 *            the commit to set
+	 * @param commit the commit to set
 	 */
 	public void setCommitSvn(final String commit_svn) {
 		this.commitSvn = commit_svn;

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -277,6 +278,7 @@ public class TramiteDaoImpl implements TramiteDao {
 				tramiteVersion.setRelease(jTramiteVersion.getRelease());
 				tramiteVersion.setIdTramite(jTramiteVersion.getTramite().getCodigo());
 				tramiteVersion.setFechaUltima(getFechaUltima(jTramiteVersion.getCodigo()));
+				tramiteVersion.setHuella(jTramiteVersion.getHuella());
 				resultado.add(tramiteVersion);
 			}
 		}
@@ -722,8 +724,29 @@ public class TramiteDaoImpl implements TramiteDao {
 			jTramiteVersion.setBloqueada(false);
 			jTramiteVersion.setUsuarioDatosBloqueo("");
 			jTramiteVersion.setRelease(jTramiteVersion.getRelease() + 1);
+			final String huella = getHuella();
+			jTramiteVersion.setHuella(huella);
 			entityManager.merge(jTramiteVersion);
 		}
+	}
+
+	/**
+	 * Genera una huella de 15 caracteres aleatorios y 5 numeros
+	 *
+	 * @return
+	 */
+	private String getHuella() {
+		final char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+		final StringBuilder sb = new StringBuilder(15);
+		final Random random = new Random();
+		for (int i = 0; i < 15; i++) {
+			final char c = chars[random.nextInt(chars.length)];
+			sb.append(c);
+		}
+		final String output = sb.toString();
+		final int numero = random.nextInt(99999);
+
+		return output + numero;
 	}
 
 	@Override
@@ -1063,7 +1086,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		entityManager.flush();
 
 		// Creamos una nueva entrada en el historial
-		historialVersionDao.add(jTramiteVersion.getCodigo(), usuario, TypeAccionHistorial.IMPORTACION, "");
+		historialVersionDao.add(jTramiteVersion.getCodigo(), usuario, TypeAccionHistorial.IMPORTACION, null);
 
 		/** Primero borramos las asociaciones y luego las volvemos a asociar. **/
 		final List<Dominio> mdominios = this.getDominioSimpleByTramiteId(jTramiteVersion.getCodigo());

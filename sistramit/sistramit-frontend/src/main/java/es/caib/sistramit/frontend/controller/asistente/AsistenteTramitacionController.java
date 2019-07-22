@@ -43,6 +43,7 @@ import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SecurityService;
 import es.caib.sistramit.core.api.service.SystemService;
+import es.caib.sistramit.frontend.ApplicationContextProvider;
 import es.caib.sistramit.frontend.controller.TramitacionController;
 import es.caib.sistramit.frontend.literales.LiteralesFront;
 import es.caib.sistramit.frontend.model.AsistenteConfig;
@@ -50,6 +51,7 @@ import es.caib.sistramit.frontend.model.AsistenteInfo;
 import es.caib.sistramit.frontend.model.MensajeAsistente;
 import es.caib.sistramit.frontend.model.MensajeUsuario;
 import es.caib.sistramit.frontend.model.RespuestaJSON;
+import es.caib.sistramit.frontend.model.comun.ModuleConfig;
 import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
 import es.caib.sistramit.frontend.security.SecurityUtils;
 import es.caib.sistramit.frontend.security.UsuarioAutenticado;
@@ -61,8 +63,8 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/** Security service. */
 	@Autowired
 	private SecurityService securityService;
-	/** Security service. */
 
+	/** System service. */
 	@Autowired
 	private SystemService systemService;
 
@@ -72,19 +74,13 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Inicia trámite.
 	 *
-	 * @param tramite
-	 *            Trámite
-	 * @param version
-	 *            Versión
-	 * @param idioma
-	 *            Idioma
-	 * @param idTramiteCatalogo
-	 *            Id trámite en catálogo de servicios
-	 * @param parametros
-	 *            Parameros de inicio del trámite. Lista separada por -_- (p.e.:
-	 *            param1-_-valor1-_-param2-_-valor2)
-	 * @param request
-	 *            request
+	 * @param tramite           Trámite
+	 * @param version           Versión
+	 * @param idioma            Idioma
+	 * @param idTramiteCatalogo Id trámite en catálogo de servicios
+	 * @param parametros        Parameros de inicio del trámite. Lista separada por
+	 *                          -_- (p.e.: param1-_-valor1-_-param2-_-valor2)
+	 * @param request           request
 	 * @return Redireccion a mostrar asistente
 	 * @throws IOException
 	 */
@@ -93,7 +89,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 			@RequestParam("version") final int version,
 			@RequestParam(value = "idioma", required = false) final String idioma,
 			@RequestParam("idTramiteCatalogo") final String idTramiteCatalogo,
-			@RequestParam(value = "servicioCatalogo", required = false, defaultValue = "false") boolean servicioCatalogo,
+			@RequestParam(value = "servicioCatalogo", required = false, defaultValue = "false") final boolean servicioCatalogo,
 			@RequestParam(value = "parametros", required = false) final String parametros,
 			final HttpServletRequest request) {
 
@@ -139,8 +135,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Carga trámite existente y redirige a la página del asistente.
 	 *
-	 * @param idSesionCifrado
-	 *            Identificador sesión de tramitación (cifrado)
+	 * @param idSesionCifrado Identificador sesión de tramitación (cifrado)
 	 * @return Vista que redirige al asistente
 	 */
 	@RequestMapping("/cargarTramite.html")
@@ -196,6 +191,15 @@ public class AsistenteTramitacionController extends TramitacionController {
 		final AsistenteInfo ai = new AsistenteInfo();
 		ai.setIdSesionTramitacion(idSesionTramitacion);
 		ai.setIdioma(detalleTramite.getTramite().getIdioma());
+		final ModuleConfig module = (ModuleConfig) ApplicationContextProvider.getApplicationContext()
+				.getBean("negocioModuleConfig");
+		ai.setVersion(module.getVersion());
+		if (module.getCommitSvn() == null || module.getCommitSvn().isEmpty()) {
+			ai.setCommit(module.getCommitGit());
+		} else {
+			ai.setCommit(module.getCommitSvn());
+		}
+
 		return new ModelAndView("asistente/asistente", "datos", ai);
 	}
 
@@ -289,8 +293,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Devuelve JSON con el paso indicado.
 	 *
-	 * @param idPaso
-	 *            Identificador del formulario.
+	 * @param idPaso Identificador del formulario.
 	 * @return Devuelve JSON con estado actual del trámite.
 	 */
 	@RequestMapping(value = "/irAPaso.json", method = RequestMethod.POST)
@@ -393,8 +396,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Retorno gestor pago externo.
 	 *
-	 * @param ticket
-	 *            ticket
+	 * @param ticket ticket
 	 * @return retorno de pago externo recargando el trámite
 	 */
 	@RequestMapping(value = "/retornoPagoExterno.html")
@@ -428,8 +430,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Retorno gestor formulario externo.
 	 *
-	 * @param ticket
-	 *            ticket
+	 * @param ticket ticket
 	 * @return retorno de formulario externo recargando el trámite
 	 */
 	@RequestMapping(value = "/retornoFormularioExterno.html")
@@ -444,8 +445,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 	 * Retorno componente de firma externo (no se gestiona con ticket, se presupone
 	 * dentro de la misma sesión).
 	 *
-	 * @param ticket
-	 *            ticket
+	 * @param ticket ticket
 	 * @return retorno de componente de firma externo recargando el trámite
 	 */
 	@RequestMapping(value = "/retornoFirmaExterno.html")
@@ -492,7 +492,8 @@ public class AsistenteTramitacionController extends TramitacionController {
 		debug("Firma verificada");
 
 		// En funcion del resultado, mostramos mensaje al usuario
-		final MensajeAsistente ma = generarMensajeErrorAsistente("atencion", mensaje, detalleError, TypeRespuestaJSON.SUCCESS);
+		final MensajeAsistente ma = generarMensajeErrorAsistente("atencion", mensaje, detalleError,
+				TypeRespuestaJSON.SUCCESS);
 		this.setMensajeAsistente(ma);
 
 		// Redirigimos a carga asistente
@@ -503,12 +504,9 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Retorno desde gestor formularios interno.
 	 *
-	 * @param idPaso
-	 *            id paso
-	 * @param idFormulario
-	 *            id formulario
-	 * @param ticket
-	 *            id sesión formulario
+	 * @param idPaso       id paso
+	 * @param idFormulario id formulario
+	 * @param ticket       id sesión formulario
 	 * @return Actualiza datos formulario y recarga asistente
 	 */
 	@RequestMapping(value = "/retornoGestorFormularioInterno.html")
@@ -561,8 +559,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Retorno desde carpeta ciudadano.
 	 *
-	 * @param ticket
-	 *            ticket
+	 * @param ticket ticket
 	 * @return carga asistente
 	 */
 	@RequestMapping(value = "/retornoCarpetaCiudadano.html")
@@ -579,20 +576,13 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Petición ayuda mediante formulario soporte.
 	 *
-	 * @param nif
-	 *            Nif
-	 * @param nombre
-	 *            Nombre
-	 * @param telefono
-	 *            Teléfono
-	 * @param email
-	 *            Email
-	 * @param problemaTipo
-	 *            Tipo problema
-	 * @param problemaDesc
-	 *            Descripción problema
-	 * @param request
-	 *            request
+	 * @param nif          Nif
+	 * @param nombre       Nombre
+	 * @param telefono     Teléfono
+	 * @param email        Email
+	 * @param problemaTipo Tipo problema
+	 * @param problemaDesc Descripción problema
+	 * @param request      request
 	 * @return
 	 */
 	@RequestMapping(value = "/formularioSoporte.json", method = RequestMethod.POST)
@@ -647,11 +637,9 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Carga el tramite y lo registra en sesion.
 	 *
-	 * @param pIdSesion
-	 *            Id sesion
-	 * @param recarga
-	 *            Indica si es una recarga dentro del flujo (formularios, pagos,..)
-	 *            o una carga del trámite desde persistencia.
+	 * @param pIdSesion Id sesion
+	 * @param recarga   Indica si es una recarga dentro del flujo (formularios,
+	 *                  pagos,..) o una carga del trámite desde persistencia.
 	 */
 	private void cargarTramiteImpl(final String pIdSesion, final boolean recarga) {
 

@@ -63,6 +63,10 @@ public class JHistorialVersion implements IModelApi {
 	@Column(name = "HVE_USER", nullable = false, length = 100)
 	private String usuario;
 
+	/** Huella. **/
+	@Column(name = "HVE_HUELLA", length = 20)
+	private String huella;
+
 	/**
 	 * Constructor.
 	 */
@@ -78,8 +82,7 @@ public class JHistorialVersion implements IModelApi {
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param codigo the codigo to set
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -93,8 +96,7 @@ public class JHistorialVersion implements IModelApi {
 	}
 
 	/**
-	 * @param versionTramite
-	 *            the versionTramite to set
+	 * @param versionTramite the versionTramite to set
 	 */
 	public void setVersionTramite(final JVersionTramite versionTramite) {
 		this.versionTramite = versionTramite;
@@ -108,8 +110,7 @@ public class JHistorialVersion implements IModelApi {
 	}
 
 	/**
-	 * @param fecha
-	 *            the fecha to set
+	 * @param fecha the fecha to set
 	 */
 	public void setFecha(final Date fecha) {
 		this.fecha = fecha;
@@ -123,8 +124,7 @@ public class JHistorialVersion implements IModelApi {
 	}
 
 	/**
-	 * @param tipoAccion
-	 *            the tipoAccion to set
+	 * @param tipoAccion the tipoAccion to set
 	 */
 	public void setTipoAccion(final String tipoAccion) {
 		this.tipoAccion = tipoAccion;
@@ -138,8 +138,7 @@ public class JHistorialVersion implements IModelApi {
 	}
 
 	/**
-	 * @param release
-	 *            the release to set
+	 * @param release the release to set
 	 */
 	public void setRelease(final int release) {
 		this.release = release;
@@ -153,8 +152,7 @@ public class JHistorialVersion implements IModelApi {
 	}
 
 	/**
-	 * @param detalleCambio
-	 *            the detalleCambio to set
+	 * @param detalleCambio the detalleCambio to set
 	 */
 	public void setDetalleCambio(final String detalleCambio) {
 		this.detalleCambio = detalleCambio;
@@ -168,11 +166,24 @@ public class JHistorialVersion implements IModelApi {
 	}
 
 	/**
-	 * @param usuario
-	 *            the usuario to set
+	 * @param usuario the usuario to set
 	 */
 	public void setUsuario(final String usuario) {
 		this.usuario = usuario;
+	}
+
+	/**
+	 * @return the huella
+	 */
+	public final String getHuella() {
+		return huella;
+	}
+
+	/**
+	 * @param huella the huella to set
+	 */
+	public final void setHuella(final String huella) {
+		this.huella = huella;
 	}
 
 	/**
@@ -188,6 +199,7 @@ public class JHistorialVersion implements IModelApi {
 		historialVersion.setRelease(this.getRelease());
 		historialVersion.setTipoAccion(TypeAccionHistorial.fromString(this.getTipoAccion()));
 		historialVersion.setUsuario(this.getUsuario());
+		historialVersion.setHuella(this.getHuella());
 		return historialVersion;
 	}
 
@@ -207,6 +219,7 @@ public class JHistorialVersion implements IModelApi {
 			jhistorialVersion.setRelease(historialVersion.getRelease());
 			jhistorialVersion.setTipoAccion(historialVersion.getTipoAccion().toString());
 			jhistorialVersion.setUsuario(historialVersion.getUsuario());
+			jhistorialVersion.setHuella(historialVersion.getHuella());
 		}
 		return jhistorialVersion;
 	}

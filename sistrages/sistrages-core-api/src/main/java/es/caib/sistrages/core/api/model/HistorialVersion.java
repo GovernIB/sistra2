@@ -36,6 +36,9 @@ public class HistorialVersion extends ModelApi {
 	/** Usuario. **/
 	private String usuario;
 
+	/** Huella. **/
+	private String huella;
+
 	/** Constructor vacio. **/
 	public HistorialVersion() {
 		// Constructor vacio.
@@ -49,8 +52,7 @@ public class HistorialVersion extends ModelApi {
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param codigo the codigo to set
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -64,8 +66,7 @@ public class HistorialVersion extends ModelApi {
 	}
 
 	/**
-	 * @param tramiteVersion
-	 *            the tramiteVersion to set
+	 * @param tramiteVersion the tramiteVersion to set
 	 */
 	public void setTramiteVersion(final TramiteVersion tramiteVersion) {
 		this.tramiteVersion = tramiteVersion;
@@ -79,8 +80,7 @@ public class HistorialVersion extends ModelApi {
 	}
 
 	/**
-	 * @param fecha
-	 *            the fecha to set
+	 * @param fecha the fecha to set
 	 */
 	public void setFecha(final Date fecha) {
 		this.fecha = fecha;
@@ -94,8 +94,7 @@ public class HistorialVersion extends ModelApi {
 	}
 
 	/**
-	 * @param tipoAccion
-	 *            the tipoAccion to set
+	 * @param tipoAccion the tipoAccion to set
 	 */
 	public void setTipoAccion(final TypeAccionHistorial tipoAccion) {
 		this.tipoAccion = tipoAccion;
@@ -109,8 +108,7 @@ public class HistorialVersion extends ModelApi {
 	}
 
 	/**
-	 * @param release
-	 *            the release to set
+	 * @param release the release to set
 	 */
 	public void setRelease(final int release) {
 		this.release = release;
@@ -124,8 +122,7 @@ public class HistorialVersion extends ModelApi {
 	}
 
 	/**
-	 * @param detalleCambio
-	 *            the detalleCambio to set
+	 * @param detalleCambio the detalleCambio to set
 	 */
 	public void setDetalleCambio(final String detalleCambio) {
 		this.detalleCambio = detalleCambio;
@@ -139,11 +136,24 @@ public class HistorialVersion extends ModelApi {
 	}
 
 	/**
-	 * @param usuario
-	 *            the usuario to set
+	 * @param usuario the usuario to set
 	 */
 	public void setUsuario(final String usuario) {
 		this.usuario = usuario;
+	}
+
+	/**
+	 * @return the huella
+	 */
+	public String getHuella() {
+		return huella;
+	}
+
+	/**
+	 * @param huella the huella to set
+	 */
+	public void setHuella(String huella) {
+		this.huella = huella;
 	}
 
 }

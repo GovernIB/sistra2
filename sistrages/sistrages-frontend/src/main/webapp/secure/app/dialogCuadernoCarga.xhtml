@@ -100,7 +100,7 @@
 						</p:column>
 
 						<p:outputLabel value="#{msg['dialogCuadernoCarga.headerVersion']}:" styleClass="cabeceraImportar" rendered="#{dialogCuadernoCarga.filaTramiteVersion.estado != null}"  />
-						<p:outputLabel value="#{dialogCuadernoCarga.tramiteVersion.numeroVersion} (release #{dialogCuadernoCarga.tramiteVersion.release})" rendered="#{dialogCuadernoCarga.filaTramiteVersion.estado != null}"   />
+						<p:outputLabel value="#{dialogCuadernoCarga.tramiteVersion.numeroVersion} (release #{dialogCuadernoCarga.tramiteVersion.release})  - #{dialogCuadernoCarga.filaTramiteVersion.tramiteVersion.huella} " rendered="#{dialogCuadernoCarga.filaTramiteVersion.estado != null}"   />
 						<p:column rendered="#{dialogCuadernoCarga.filaTramiteVersion.estado != null}"  >
 							<p:outputLabel value="#{msg['typeImportar.existe.' += dialogCuadernoCarga.filaTramiteVersion.existe]}" rendered="#{dialogCuadernoCarga.filaTramiteVersion.mensaje == null}"   />
 							<p:outputLabel value="#{dialogCuadernoCarga.filaTramiteVersion.mensaje} " rendered="#{!dialogCuadernoCarga.mostrarBotonTramiteVersion}"  />

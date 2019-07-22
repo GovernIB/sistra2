@@ -117,6 +117,7 @@ public class HistorialVersionDaoImpl implements HistorialVersionDao {
 		}
 		historial.setVersionTramite(jTramiteVersion);
 		historial.setRelease(jTramiteVersion.getRelease());
+		historial.setHuella(jTramiteVersion.getHuella());
 		entityManager.persist(historial);
 	}
 

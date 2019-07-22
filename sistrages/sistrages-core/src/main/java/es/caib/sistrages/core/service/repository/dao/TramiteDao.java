@@ -150,7 +150,6 @@ public interface TramiteDao {
 	 * Desbloquea un tramite.
 	 *
 	 * @param idTramiteVersion
-	 * @param username
 	 */
 	void desbloquearTramiteVersion(Long idTramiteVersion);
 
