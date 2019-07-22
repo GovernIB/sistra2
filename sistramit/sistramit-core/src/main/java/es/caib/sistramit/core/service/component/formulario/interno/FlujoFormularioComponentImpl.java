@@ -210,9 +210,6 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		// Almacenamos valores campos
 		datosSesion.getDatosFormulario().getPaginaActualFormulario().actualizarValoresPagina(valoresPagina);
 
-		// Recalcula campos ocultos
-		calculoDatosFormularioHelper.calcularCamposOcultosPagina(datosSesion);
-
 		// Realizamos validaciones
 		final MensajeValidacion mensaje = validarGuardarPagina(datosSesion, accionPersonalizada);
 
@@ -294,9 +291,9 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 * Inicializa configuración formulario.
 	 *
 	 * @param defForm
-	 *            Definición formulario
+	 *                              Definición formulario
 	 * @param xmlDatosIniciales
-	 *            xml datos iniciales
+	 *                              xml datos iniciales
 	 * @return Genera datos formulario interno
 	 */
 	private DatosFormularioInterno inicializarConfiguracionFormulario(final RFormularioTramite defForm,
@@ -344,15 +341,15 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 * aparecen como dependencia de otros.
 	 *
 	 * @param df
-	 *            Datos internos formulario
+	 *               Datos internos formulario
 	 */
 	private void revisarCamposEvaluables(final DatosFormularioInterno df) {
 		for (final String idCampoEvaluable : df.getCamposEvaluables()) {
 			final ConfiguracionCampo configuracionCampoEvaluable = df.getConfiguracionCampo(idCampoEvaluable);
-			if (UtilsFormularioInterno.esCampoOculto(configuracionCampoEvaluable)) {
-				throw new ErrorConfiguracionException("Un campo oculto no puede aparecer como dependencia de otros");
+			// Los ocultos no disparan evaluacion desde frontal
+			if (configuracionCampoEvaluable.getTipo() != TypeCampo.OCULTO) {
+				configuracionCampoEvaluable.setEvaluar(TypeSiNo.SI);
 			}
-			configuracionCampoEvaluable.setEvaluar(TypeSiNo.SI);
 		}
 	}
 
@@ -360,13 +357,13 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 * Inicializa página del formulario (configuración y datos).
 	 *
 	 * @param idFormulario
-	 *            id formulario
+	 *                         id formulario
 	 * @param indiceDef
-	 *            indice definición
+	 *                         indice definición
 	 * @param defForm
-	 *            definición formulario
+	 *                         definición formulario
 	 * @param valoresCampo
-	 *            valores campo
+	 *                         valores campo
 	 * @return
 	 */
 	private InicializacionPagina inicializarPagina(final String idFormulario, final int indiceDef,
@@ -422,9 +419,9 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 * Realiza validaciones al guardar la pagina.
 	 *
 	 * @param datosSesion
-	 *            Datos sesion formulario
+	 *                                Datos sesion formulario
 	 * @param accionPersonalizada
-	 *            Accion personalizada
+	 *                                Accion personalizada
 	 * @return Mensaje validación en caso de que exista
 	 */
 	private MensajeValidacion validarGuardarPagina(final DatosSesionFormularioInterno datosSesion,
@@ -462,9 +459,9 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 * Finaliza formulario.
 	 *
 	 * @param pDatosSesion
-	 *            Datos sesion
+	 *                                Datos sesion
 	 * @param accionPersonalizada
-	 *            Accion personalizada
+	 *                                Accion personalizada
 	 */
 	private void finalizarFormulario(final DatosSesionFormularioInterno pDatosSesion,
 			final String accionPersonalizada) {
@@ -490,14 +487,14 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 * Genera PDF formulario.
 	 *
 	 * @param definicionTramiteSTG
-	 *            Definición trámite
+	 *                                        Definición trámite
 	 * @param datosInicioSesionFormulario
-	 *            Datos inicio sesión
+	 *                                        Datos inicio sesión
 	 *
 	 * @param plantillaPdf
-	 *            Plantilla PDF
+	 *                                        Plantilla PDF
 	 * @param xml
-	 *            XML Formulario
+	 *                                        XML Formulario
 	 * @return PDF
 	 */
 	private byte[] generarPdfFormulario(final DefinicionTramiteSTG definicionTramiteSTG,
@@ -540,7 +537,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 * Ajusta selectores (no obligatorios, lista radios,...)
 	 *
 	 * @param pagAct
-	 *            Datos página
+	 *                   Datos página
 	 */
 	private void ajustarSelectoresPagina(final PaginaFormulario pagAct) {
 
@@ -554,11 +551,11 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 
 	/**
 	 * Ajusta selector.
-	 * 
+	 *
 	 * @param pagAct
-	 *            Datos página
+	 *                   Datos página
 	 * @param ccs
-	 *            Componente selector
+	 *                   Componente selector
 	 */
 	private void ajustarSelector(final PaginaFormulario pagAct, final ConfiguracionCampoSelector ccs) {
 		// Ajustes selector lista: si no es obligatorio se añade a valores posibles

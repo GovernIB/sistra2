@@ -42,6 +42,9 @@ import es.caib.sistramit.core.service.util.UtilsSTG;
  */
 public class FormateadorGenerico implements FormateadorPdfFormulario {
 
+	/** Formato presentación fechas. */
+	private static String FORMATO_FECHAS_PDF = "dd/MM/yyyy";
+
 	/** Propiedad plantilla que indica url logo. **/
 	public static final String PROP_LOGO_URL = "logo.url";
 
@@ -211,7 +214,7 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	 * Convierte la fecha en formato YYYY-MM-DD a DD-MM-YYYY
 	 *
 	 * @param fecha
-	 *            Fecha en formato YYYY-MM-DD
+	 *                  Fecha en formato YYYY-MM-DD
 	 * @return Fecha en formato DD-MM-YYYY
 	 * @throws Exception
 	 */
@@ -221,10 +224,10 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 			if (StringUtils.isNotBlank(fecha)) {
 				if (ValidacionesTipo.getInstance().esFecha(fecha, "yyyy-MM-dd")) {
 					final Date date = ValidacionesTipo.getInstance().parseFecha(fecha, "yyyy-MM-dd");
-					valor = ValidacionesTipo.getInstance().formateaFecha(date, "dd-MM-yyyy");
+					valor = ValidacionesTipo.getInstance().formateaFecha(date, FORMATO_FECHAS_PDF);
 				} else if (ValidacionesTipo.getInstance().esFecha(fecha, "yyyy/MM/dd")) {
 					final Date date = ValidacionesTipo.getInstance().parseFecha(fecha, "yyyy/MM/dd");
-					valor = ValidacionesTipo.getInstance().formateaFecha(date, "dd/MM/yyyy");
+					valor = ValidacionesTipo.getInstance().formateaFecha(date, FORMATO_FECHAS_PDF);
 				} else {
 					throw new FormateadorException("Fecha no valida");
 				}
@@ -249,16 +252,18 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 		for (final ValorCampo valor : xml.getValores()) {
 			if (valor.getId() != null && componente.getIdentificador().equals(valor.getId())) {
 				encontrado = true;
-				if (valor instanceof ValorCampoSimple) {
-					String valorCampoSimple = ((ValorCampoSimple) valor).getValor();
-					if (isComponenteTipoFecha(componente)) {
-						valorCampoSimple = getConversionFecha(valorCampoSimple);
+				if (UtilsSTG.traduceTipoCampo(componente.getTipo()) != TypeCampo.OCULTO) {
+					if (valor instanceof ValorCampoSimple) {
+						String valorCampoSimple = ((ValorCampoSimple) valor).getValor();
+						if (isComponenteTipoFecha(componente)) {
+							valorCampoSimple = getConversionFecha(valorCampoSimple);
+						}
+						seccion.addCampo(createPropiedad(componente.getEtiqueta(), valorCampoSimple));
+					} else if (valor instanceof ValorCampoIndexado) {
+						seccion.addCampo(getPropiedad(componente.getEtiqueta(), (ValorCampoIndexado) valor));
+					} else if (valor instanceof ValorCampoListaIndexados) {
+						seccion.addCampo(getPropiedad(componente.getEtiqueta(), (ValorCampoListaIndexados) valor));
 					}
-					seccion.addCampo(createPropiedad(componente.getEtiqueta(), valorCampoSimple));
-				} else if (valor instanceof ValorCampoIndexado) {
-					seccion.addCampo(getPropiedad(componente.getEtiqueta(), (ValorCampoIndexado) valor));
-				} else if (valor instanceof ValorCampoListaIndexados) {
-					seccion.addCampo(getPropiedad(componente.getEtiqueta(), (ValorCampoListaIndexados) valor));
 				}
 			}
 		}

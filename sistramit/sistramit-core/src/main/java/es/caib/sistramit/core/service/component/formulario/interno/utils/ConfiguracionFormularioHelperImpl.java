@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.rest.api.interna.RComponente;
+import es.caib.sistrages.rest.api.interna.RComponenteCampoOculto;
 import es.caib.sistrages.rest.api.interna.RComponenteCheckbox;
 import es.caib.sistrages.rest.api.interna.RComponenteSelector;
 import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
@@ -24,6 +25,7 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.formulario.AccionFormulario;
 import es.caib.sistramit.core.api.model.formulario.AccionFormularioNormalizada;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
+import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoOculto;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelector;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelectorDesplegable;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelectorMultiple;
@@ -36,7 +38,6 @@ import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoHora;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoId;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoNormal;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoNumero;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoOculto;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoPassword;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoTelefono;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoVerificacion;
@@ -94,6 +95,9 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 			break;
 		case SELECTOR:
 			confCampo = obtenerConfiguracionCampoSelector((RComponenteSelector) pCampoDef);
+			break;
+		case OCULTO:
+			confCampo = obtenerConfiguracionCampoOculto((RComponenteCampoOculto) pCampoDef);
 			break;
 		default:
 			throw new TipoNoControladoException("Tipo de campo no soportado: " + tipoCampo.name());
@@ -223,7 +227,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	 * Obtiene configuracion campo selector.
 	 *
 	 * @param pCampoDef
-	 *            Definicion campo
+	 *                      Definicion campo
 	 * @return configuracion campo selector.
 	 */
 	private ConfiguracionCampoSelector obtenerConfiguracionCampoSelector(final RComponenteSelector pCampoDef) {
@@ -263,7 +267,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	 * Obtiene configuracion campo verificacion.
 	 *
 	 * @param pCampoDef
-	 *            Definicion campo
+	 *                      Definicion campo
 	 * @return configuracion campo verificacion
 	 */
 	private ConfiguracionCampoVerificacion obtenerConfiguracionCampoVerificacion(final RComponenteCheckbox pCampoDef) {
@@ -279,10 +283,24 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	}
 
 	/**
+	 * Obtiene configuración campo oculto.
+	 *
+	 * @param pCampoDef
+	 *                      Definición campo
+	 * @return configuración campo oculto
+	 */
+	private ConfiguracionCampo obtenerConfiguracionCampoOculto(final RComponenteCampoOculto pCampoDef) {
+		final ConfiguracionCampoOculto confCampoOculto = new ConfiguracionCampoOculto();
+		// Establecemos propiedades generales
+		establecerPropiedadesGenerales(pCampoDef, confCampoOculto);
+		return confCampoOculto;
+	}
+
+	/**
 	 * Obtiene configuración de campo de tipo texto.
 	 *
 	 * @param pCampoDef
-	 *            Definición campo
+	 *                      Definición campo
 	 * @return configuración
 	 */
 	private ConfiguracionCampo obtenerConfiguracionCampoTexto(final RComponenteTextbox pCampoDef) {
@@ -327,9 +345,6 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		case EXPRESION_REGULAR: // Expresion regular
 			confCampo = obtenerConfCampoTextoExpreg(pCampoDef);
 			break;
-		case OCULTO: // Oculto
-			confCampo = new ConfiguracionCampoTextoOculto();
-			break;
 		case PASSWORD: // Password
 			confCampo = new ConfiguracionCampoTextoPassword();
 			break;
@@ -347,7 +362,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	 * Configuracion campo texto exp regular.
 	 *
 	 * @param pCampoDef
-	 *            Definicion campo
+	 *                      Definicion campo
 	 * @return configuracion campo
 	 */
 	private ConfiguracionCampo obtenerConfCampoTextoExpreg(final RComponenteTextbox pCampoDef) {
@@ -360,7 +375,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	 * Configuracion campo texto telefono.
 	 *
 	 * @param pCampoDef
-	 *            Definicion campo
+	 *                      Definicion campo
 	 * @return configuracion campo
 	 */
 	private ConfiguracionCampo obtenerConfCampoTextoTelefono(final RComponenteTextbox pCampoDef) {
@@ -374,7 +389,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	 * Configuracion campo texto normal.
 	 *
 	 * @param pCampoDef
-	 *            Definicion campo
+	 *                      Definicion campo
 	 * @return configuracion campo
 	 */
 	private ConfiguracionCampo obtenerConfCampoTextoNormal(final RComponenteTextbox pCampoDef) {
@@ -392,7 +407,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	 * Configuracion campo texto email.
 	 *
 	 * @param pCampoDef
-	 *            Definicion campo
+	 *                      Definicion campo
 	 * @return configuracion campo
 	 */
 	private ConfiguracionCampo obtenerConfCampoTextoEmail(final RComponenteTextbox pCampoDef) {
@@ -407,7 +422,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	 * Configuracion campo texto numero.
 	 *
 	 * @param pCampoDef
-	 *            Definicion campo
+	 *                      Definicion campo
 	 * @return configuracion campo
 	 */
 	private ConfiguracionCampo obtenerConfCampoTextoNumero(final RComponenteTextbox pCampoDef) {
@@ -437,7 +452,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	 * Configuracion campo texto identificador.
 	 *
 	 * @param pCampoDef
-	 *            Definicion campo
+	 *                      Definicion campo
 	 * @return configuracion campo
 	 */
 	private ConfiguracionCampo obtenerConfCampoTextoIdentificador(final RComponenteTextbox pCampoDef) {
@@ -454,9 +469,9 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	 * Establece propiedades generales campo.
 	 *
 	 * @param pCampoDef
-	 *            Definición campo
+	 *                      Definición campo
 	 * @param confCampo
-	 *            Configuración campo
+	 *                      Configuración campo
 	 */
 	private void establecerPropiedadesGenerales(final RComponente pCampoDef, final ConfiguracionCampo confCampo) {
 		// Establecemos props generales

@@ -135,7 +135,7 @@ $.fn.appFormsAjudaCamp = function(options) {
 						window_scroll_T = element.scrollTop(),
 						elm_T = elm.position().top,
 						elm_L = elm.position().left,
-						elm_H = elm.outerHeight(),
+						elm_H = elm.outerHeight(true),
 						elm_label = elm.find(".imc-el-etiqueta:first, legend:first"),
 						elm_label_W = elm_label.outerWidth(),
 						elm_label_H = elm_label.outerHeight(),
@@ -166,7 +166,7 @@ $.fn.appFormsAjudaCamp = function(options) {
 
 					if (window_scroll_T > ajuda_T) {
 
-						ajuda_T = elm_T + elm_H;
+						ajuda_T = elm_T + window_scroll_T + elm_H;
 						ajuda_T_inici = ajuda_T-5;
 
 						ajuda_elm
@@ -877,7 +877,7 @@ $.fn.appFormsConfiguracio = function(options) {
 
 								// amb valor
 
-								if (elm_input_tipus === "texto") {
+								if (elm_input_tipus === "texto" || elm_input_tipus === "oculto") {
 
 									elm_input
 										.val( val_valor );

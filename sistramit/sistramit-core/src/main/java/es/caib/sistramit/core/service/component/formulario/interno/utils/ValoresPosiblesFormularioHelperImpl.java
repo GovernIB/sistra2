@@ -45,8 +45,8 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 	private DominiosComponent dominiosComponent;
 
 	@Override
-	public ValoresPosiblesCampo calcularValoresPosiblesCampoSelector(DatosSesionFormularioInterno pDatosSesion,
-			RComponenteSelector pCampoDef) {
+	public ValoresPosiblesCampo calcularValoresPosiblesCampoSelector(final DatosSesionFormularioInterno pDatosSesion,
+			final RComponenteSelector pCampoDef) {
 		List<ValorIndexado> valoresPosibles = null;
 
 		// Verificamos origen lista valores
@@ -110,11 +110,12 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 	 * Verifica carácteres permitidos.
 	 *
 	 * @param pCampoDef
-	 *            Definición campo
+	 *                            Definición campo
 	 * @param valoresPosibles
-	 *            Valores posibles
+	 *                            Valores posibles
 	 */
-	private void verificarCaracteresPermitidos(RComponenteSelector pCampoDef, List<ValorIndexado> valoresPosibles) {
+	private void verificarCaracteresPermitidos(final RComponenteSelector pCampoDef,
+			final List<ValorIndexado> valoresPosibles) {
 		for (final ValorIndexado vi : valoresPosibles) {
 
 			// Verifica si valor tiene algun caracter no permitido
@@ -135,15 +136,15 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 	 * Genera valores posibles.
 	 *
 	 * @param pDatosSesion
-	 *            Datos sesion
+	 *                            Datos sesion
 	 * @param pCampoDef
-	 *            Definición campo
+	 *                            Definición campo
 	 * @param valoresPosibles
-	 *            valores posibles
+	 *                            valores posibles
 	 * @return valores posibles
 	 */
-	private ValoresPosiblesCampo generarValoresPosibles(DatosSesionFormularioInterno pDatosSesion,
-			RComponenteSelector pCampoDef, List<ValorIndexado> valoresPosibles) {
+	private ValoresPosiblesCampo generarValoresPosibles(final DatosSesionFormularioInterno pDatosSesion,
+			final RComponenteSelector pCampoDef, final List<ValorIndexado> valoresPosibles) {
 		final ValoresPosiblesCampo vpc = ValoresPosiblesCampo.createNewValoresPosiblesCampo();
 		vpc.setId(pCampoDef.getIdentificador());
 		// Revisamos que si los valores posibles tienen codigo tengan un codigo y una
@@ -170,15 +171,22 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 	 * Calcula valores posibles desde script.
 	 *
 	 * @param pDatosSesion
-	 *            Datos sessión
+	 *                         Datos sessión
 	 * @param pCampoDef
-	 *            Definición campo
+	 *                         Definición campo
 	 * @return valores posibles
 	 */
-	private List<ValorIndexado> calcularValoresPosiblesCampoDesdeScript(DatosSesionFormularioInterno pDatosSesion,
-			RComponenteSelector pCampoDef) {
+	private List<ValorIndexado> calcularValoresPosiblesCampoDesdeScript(final DatosSesionFormularioInterno pDatosSesion,
+			final RComponenteSelector pCampoDef) {
 
 		final List<ValorIndexado> valoresPosibles = new ArrayList<>();
+
+		// Verificamos que exista script
+		if (!UtilsSTG.existeScript(pCampoDef.getScriptListaValores())) {
+			throw new ErrorConfiguracionException(
+					"No se ha indicado script para el cálculo de valores posibles para el campo "
+							+ pCampoDef.getIdentificador());
+		}
 
 		// Ejecutamos script valores posibles
 		final VariablesFormulario variablesFormulario = UtilsFormularioInterno.generarVariablesFormulario(pDatosSesion,
@@ -202,13 +210,13 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 	 * Calcula valores posibles desde dominio.
 	 *
 	 * @param pDatosSesion
-	 *            Datos sessión
+	 *                         Datos sessión
 	 * @param pCampoDef
-	 *            Definición campo
+	 *                         Definición campo
 	 * @return valores posibles
 	 */
-	private List<ValorIndexado> calcularValoresPosiblesCampoDesdeDominio(DatosSesionFormularioInterno pDatosSesion,
-			RComponenteSelector pCampoDef) {
+	private List<ValorIndexado> calcularValoresPosiblesCampoDesdeDominio(
+			final DatosSesionFormularioInterno pDatosSesion, final RComponenteSelector pCampoDef) {
 		// Obtenemos parametros acceso dominio
 		final String idDominio = pCampoDef.getListaDominio().getDominio();
 		final String campoCodigo = pCampoDef.getListaDominio().getCampoCodigo();
@@ -232,10 +240,10 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 	 * Calcula valores posibles desde una lista fija.
 	 *
 	 * @param pCampoDef
-	 *            Definición campo
+	 *                      Definición campo
 	 * @return valores posibles
 	 */
-	private List<ValorIndexado> calcularValoresPosiblesCampoDesdeListaFija(RComponenteSelector pCampoDef) {
+	private List<ValorIndexado> calcularValoresPosiblesCampoDesdeListaFija(final RComponenteSelector pCampoDef) {
 		final List<ValorIndexado> valoresPosibles = new ArrayList<>();
 		for (final RValorListaFija valorFijo : pCampoDef.getListaFija()) {
 			valoresPosibles

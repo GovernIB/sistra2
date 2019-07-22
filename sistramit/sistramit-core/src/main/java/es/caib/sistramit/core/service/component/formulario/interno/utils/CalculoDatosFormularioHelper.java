@@ -21,22 +21,15 @@ public interface CalculoDatosFormularioHelper {
 	 * indica los cambios efectuados.
 	 *
 	 * @param datosSesion
-	 *            Datos sesión formulario
+	 *                          Datos sesión formulario
 	 * @param idCampo
-	 *            Identificador campo
+	 *                          Identificador campo
 	 * @param valoresPagina
-	 *            Valores pagina actuales con el campo modificado y el resto
+	 *                          Valores pagina actuales con el campo modificado y el
+	 *                          resto
 	 * @return Resultado del calculo de datos
 	 */
 	ResultadoEvaluarCambioCampo calcularDatosPaginaCambioCampo(final DatosSesionFormularioInterno datosSesion,
 			final String idCampo, final List<ValorCampo> valoresPagina);
-
-	/**
-	 * Recalcula los campos ocultos de la pagina tras guardar la pagina.
-	 *
-	 * @param datosSesion
-	 *            Datos sesion formulario
-	 */
-	void calcularCamposOcultosPagina(final DatosSesionFormularioInterno datosSesion);
 
 }

@@ -11,7 +11,6 @@ import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormularioData;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
-import es.caib.sistramit.core.service.component.formulario.interno.utils.UtilsFormularioInterno;
 
 /**
  * Datos que se mantienen en memoria para un formulario interno.
@@ -42,7 +41,7 @@ public final class DatosFormularioInterno implements Serializable {
 	 * Obtiene una página.
 	 *
 	 * @param indicePagina
-	 *            indice pagina
+	 *                         indice pagina
 	 * @return pagina
 	 */
 	public PaginaFormularioData getPaginaFormulario(final int indicePagina) {
@@ -62,7 +61,7 @@ public final class DatosFormularioInterno implements Serializable {
 	 * Añade una página.
 	 *
 	 * @param pagina
-	 *            Pagina
+	 *                   Pagina
 	 */
 	public void addPaginaFormulario(final PaginaFormularioData pagina) {
 		paginas.add(pagina);
@@ -81,7 +80,7 @@ public final class DatosFormularioInterno implements Serializable {
 	 * Método para establecer paginaActual.
 	 *
 	 * @param pPaginaActual
-	 *            paginaActual a establecer
+	 *                          paginaActual a establecer
 	 */
 	public void setIndicePaginaActual(final int pPaginaActual) {
 		indicePaginaActual = pPaginaActual;
@@ -100,7 +99,8 @@ public final class DatosFormularioInterno implements Serializable {
 	 * Indicamos que dependencia tiene un campo respecto a los demás.
 	 *
 	 * @param dependenciasCampo
-	 *            lista de id campo para los cuales tiene dependencia
+	 *                              lista de id campo para los cuales tiene
+	 *                              dependencia
 	 */
 	public void addDependenciaCampo(final DependenciaCampo dependenciasCampo) {
 		this.dependencias.put(dependenciasCampo.getIdCampo(), dependenciasCampo);
@@ -110,7 +110,7 @@ public final class DatosFormularioInterno implements Serializable {
 	 * Indicamos que dependencia tiene un campo respecto a los demás.
 	 *
 	 * @param dependenciasCampos
-	 *            Dependencias campos
+	 *                               Dependencias campos
 	 */
 	public void addDependenciasCampos(final List<DependenciaCampo> dependenciasCampos) {
 		for (final DependenciaCampo dependenciasCampo : dependenciasCampos) {
@@ -122,7 +122,7 @@ public final class DatosFormularioInterno implements Serializable {
 	 * Obtiene las dependencias de un campo.
 	 *
 	 * @param idCampo
-	 *            Id campo
+	 *                    Id campo
 	 * @return lista de id campo para los cuales tiene dependencia
 	 */
 	public DependenciaCampo getDependenciaCampo(final String idCampo) {
@@ -134,7 +134,7 @@ public final class DatosFormularioInterno implements Serializable {
 	 * la pagina actual.
 	 *
 	 * @param idCampo
-	 *            id campo
+	 *                    id campo
 	 * @return Valores de los campos.
 	 */
 	public List<ValorCampo> getValoresAccesiblesCampo(final String idCampo) {
@@ -163,7 +163,7 @@ public final class DatosFormularioInterno implements Serializable {
 	 * Obtiene la configuración de un campo.
 	 *
 	 * @param idCampo
-	 *            id campo
+	 *                    id campo
 	 * @return Configuración de un campo.
 	 */
 	public ConfiguracionCampo getConfiguracionCampo(final String idCampo) {
@@ -212,7 +212,7 @@ public final class DatosFormularioInterno implements Serializable {
 		for (final DependenciaCampo dc : dependencias.values()) {
 			final ConfiguracionCampo confCampoDependiente = getConfiguracionCampo(dc.getIdCampo());
 			final List<String> dependenciasCampo = dc.getDependencias();
-			if (!UtilsFormularioInterno.esCampoOculto(confCampoDependiente) && !dependenciasCampo.isEmpty()) {
+			if (!dependenciasCampo.isEmpty()) {
 				camposEvaluables.addAll(dependenciasCampo);
 			}
 		}

@@ -44,10 +44,6 @@ public enum TypeTexto {
 	 */
 	TELEFONO("te"),
 	/**
-	 * Texto oculto (Código String: oc).
-	 */
-	OCULTO("oc"),
-	/**
 	 * Password.
 	 */
 	PASSWORD("pw");
@@ -61,7 +57,7 @@ public enum TypeTexto {
 	 * Constructor.
 	 *
 	 * @param value
-	 *            Valor como string.
+	 *                  Valor como string.
 	 */
 	private TypeTexto(final String value) {
 		stringValueTexto = value;

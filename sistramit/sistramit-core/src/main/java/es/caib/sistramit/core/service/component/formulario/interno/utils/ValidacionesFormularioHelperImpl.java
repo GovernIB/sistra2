@@ -94,6 +94,9 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 					case VERIFICACION:
 						validacionCorrecta = validacionConfiguracionCampoVerificacion(configuracion, vc);
 						break;
+					case OCULTO:
+						// No hay comprobaciones posibles
+						break;
 					case CAPTCHA:
 						// No hay comprobaciones posibles
 						break;
@@ -188,9 +191,9 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	 * Valida campo texto en funcion de su configuracion.
 	 *
 	 * @param configuracion
-	 *            Configuracion
+	 *                          Configuracion
 	 * @param vc
-	 *            Valor campo
+	 *                          Valor campo
 	 * @return boolean
 	 */
 	private boolean validacionConfiguracionCampoTexto(final ConfiguracionCampo configuracion, final ValorCampo vc) {
@@ -204,9 +207,6 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 		case NORMAL:
 			validacionCorrecta = validacionConfiguracionCampoTextoNormal(vcs,
 					(ConfiguracionCampoTextoNormal) confTexto);
-			break;
-		case OCULTO:
-			// No existe ninguna validacion especial
 			break;
 		case CODIGO_POSTAL:
 			if (!ValidacionesTipo.getInstance().esCP(vcs.getValor(), "")) {
@@ -258,9 +258,9 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	 * Validacion campo texto numero.
 	 *
 	 * @param vcs
-	 *            Valor campo
+	 *                       Valor campo
 	 * @param confNumero
-	 *            Configuracion campo
+	 *                       Configuracion campo
 	 * @return boolean indicando si la validacion es correcta
 	 */
 	private boolean validacionConfiguracionCampoTextoNumero(final ValorCampoSimple vcs,
@@ -281,9 +281,9 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	 * Valida si el numero tiene que estar entre un rango.
 	 *
 	 * @param valorCampox
-	 *            Valor campo
+	 *                          Valor campo
 	 * @param opcionesCampo
-	 *            Opciones campo
+	 *                          Opciones campo
 	 * @return True si pasa la validacion
 	 */
 	protected boolean validarRangoNumero(final String valorCampox, final OpcionesCampoTextoNumero opcionesCampo) {
@@ -306,9 +306,9 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	 * Valida numero de enteros y numero de decimales.
 	 *
 	 * @param valorCampo
-	 *            Valor campo
+	 *                          Valor campo
 	 * @param opcionesCampo
-	 *            Opciones campo
+	 *                          Opciones campo
 	 * @return True si pasa la validacion
 	 */
 	protected boolean validarPrecisionNumero(final String valorCampo, final OpcionesCampoTextoNumero opcionesCampo) {
@@ -347,9 +347,9 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	 * Valida formato numerico.
 	 *
 	 * @param valorCampo
-	 *            Valor del campo numero
+	 *                          Valor del campo numero
 	 * @param opcionesCampo
-	 *            Opciones del campo numero
+	 *                          Opciones del campo numero
 	 * @return true si cumple el formato
 	 */
 	private boolean validarFormatoNumero(final String valorCampo, final OpcionesCampoTextoNumero opcionesCampo) {
@@ -377,9 +377,9 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	 * Normaliza numero en formato Java (. para decimales)
 	 *
 	 * @param valorCampo
-	 *            Valor campo
+	 *                          Valor campo
 	 * @param opcionesCampo
-	 *            Opciones campo
+	 *                          Opciones campo
 	 * @return valor normalizado
 	 */
 	protected String normalizarNumeroJava(final String valorCampo, final OpcionesCampoTextoNumero opcionesCampo) {
@@ -408,11 +408,12 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	 * Formatea valor en funcion del separador.
 	 *
 	 * @param valorNumerico
-	 *            Valor numerico en notacion java (decimales separados por .)
+	 *                            Valor numerico en notacion java (decimales
+	 *                            separados por .)
 	 * @param tipoSeparador
-	 *            Tipo separador
+	 *                            Tipo separador
 	 * @param numeroDecimales
-	 *            Número decimales
+	 *                            Número decimales
 	 * @return Valor formateado
 	 */
 
@@ -449,9 +450,9 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	 * Validacion campo texto identificador.
 	 *
 	 * @param vcs
-	 *            Valor campo
+	 *                 Valor campo
 	 * @param conf
-	 *            Configuracion campo
+	 *                 Configuracion campo
 	 * @return boolean indicando si la validacion es correcta
 	 */
 	private boolean validacionConfiguracionCampoTextoIdentificador(final ValorCampoSimple vcs,
@@ -485,9 +486,9 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	 * Validacion campo texto expresion regular.
 	 *
 	 * @param vcs
-	 *            Valor campo
+	 *                 Valor campo
 	 * @param conf
-	 *            Configuracion campo
+	 *                 Configuracion campo
 	 * @return boolean indicando si la validacion es correcta
 	 */
 	private boolean validacionConfiguracionCampoTextoTelefono(final ValorCampoSimple vcs,
@@ -507,9 +508,9 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	 * Validacion campo texto expresion regular.
 	 *
 	 * @param vcs
-	 *            Valor campo
+	 *                 Valor campo
 	 * @param conf
-	 *            Configuracion campo
+	 *                 Configuracion campo
 	 * @return boolean indicando si la validacion es correcta
 	 */
 	private boolean validacionConfiguracionCampoTextoExpReg(final ValorCampoSimple vcs,
@@ -526,9 +527,9 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	 * Validacion campo texto normal.
 	 *
 	 * @param vcs
-	 *            Valor campo
+	 *                            Valor campo
 	 * @param confTextoNormal
-	 *            Configuracion campo
+	 *                            Configuracion campo
 	 * @return boolean indicando si la validacion es correcta
 	 */
 	private boolean validacionConfiguracionCampoTextoNormal(final ValorCampoSimple vcs,
@@ -548,9 +549,9 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	 * Validacion campo texto email.
 	 *
 	 * @param vcs
-	 *            Valor campo
+	 *                           Valor campo
 	 * @param confTextoEmail
-	 *            Configuracion campo
+	 *                           Configuracion campo
 	 * @return boolean indicando si la validacion es correcta
 	 */
 	private boolean validacionConfiguracionCampoTextoEmail(final ValorCampoSimple vcs,
@@ -573,9 +574,9 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	 * Validacion campo texto password.
 	 *
 	 * @param vcs
-	 *            Valor campo
+	 *                              Valor campo
 	 * @param confTextoPassword
-	 *            Configuracion campo password
+	 *                              Configuracion campo password
 	 * @return boolean indicando si la validacion es correcta
 	 */
 	private boolean validacionConfiguracionCampoTextoPassword(final ValorCampoSimple vcs,
@@ -595,9 +596,9 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	 * Realiza validacion campo verificacion.
 	 *
 	 * @param configuracion
-	 *            Configuracion
+	 *                          Configuracion
 	 * @param vc
-	 *            Valor campo
+	 *                          Valor campo
 	 * @return boolean
 	 */
 	private boolean validacionConfiguracionCampoVerificacion(final ConfiguracionCampo configuracion,

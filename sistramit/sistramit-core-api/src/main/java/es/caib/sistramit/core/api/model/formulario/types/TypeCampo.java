@@ -22,7 +22,11 @@ public enum TypeCampo {
 	/**
 	 * Captcha.
 	 */
-	CAPTCHA("captcha");
+	CAPTCHA("captcha"),
+	/**
+	 * Campo oculto (Código String: oculto).
+	 */
+	OCULTO("oculto");
 
 	/**
 	 * Valor como string.
@@ -33,7 +37,7 @@ public enum TypeCampo {
 	 * Constructor.
 	 *
 	 * @param value
-	 *            Valor como string.
+	 *                  Valor como string.
 	 */
 	private TypeCampo(final String value) {
 		stringValueCampo = value;

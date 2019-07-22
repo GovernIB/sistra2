@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistrages.rest.api.interna.RComponente;
+import es.caib.sistrages.rest.api.interna.RComponenteCampoOculto;
 import es.caib.sistrages.rest.api.interna.RComponenteCheckbox;
 import es.caib.sistrages.rest.api.interna.RComponenteSelector;
 import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
@@ -23,7 +24,6 @@ import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.exception.ValorCampoFormularioNoValidoException;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTexto;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
@@ -33,7 +33,6 @@ import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
-import es.caib.sistramit.core.api.model.formulario.types.TypeTexto;
 import es.caib.sistramit.core.api.model.formulario.types.TypeValor;
 import es.caib.sistramit.core.service.model.formulario.interno.DatosSesionFormularioInterno;
 import es.caib.sistramit.core.service.model.formulario.interno.DependenciaCampo;
@@ -60,20 +59,10 @@ public class UtilsFormularioInterno {
 			.compile(PlgDatosFormularioInt.ID + "\\.get\\w*\\(['|\"](\\w*-?\\w*)*");
 
 	/**
-	 * Comprueba si es un campo oculto (tipo texto y subtipo oculto).
-	 *
-	 * @param configuracionCampo Configuracion campo
-	 * @return Indica si es campo oculto
-	 */
-	public static boolean esCampoOculto(final ConfiguracionCampo configuracionCampo) {
-		return configuracionCampo.getTipo() == TypeCampo.TEXTO
-				&& ((ConfiguracionCampoTexto) configuracionCampo).getContenido() == TypeTexto.OCULTO;
-	}
-
-	/**
 	 * Devuelve lista de campos formulario.
 	 *
-	 * @param defPagina Definición página
+	 * @param defPagina
+	 *                      Definición página
 	 * @return Lista campos
 	 */
 	public static List<RComponente> devuelveListaCampos(final RFormularioInterno defFormulario) {
@@ -87,7 +76,8 @@ public class UtilsFormularioInterno {
 	/**
 	 * Devuelve lista de campos de la página.
 	 *
-	 * @param defPagina Definición página
+	 * @param defPagina
+	 *                      Definición página
 	 * @return Lista campos
 	 */
 	public static List<RComponente> devuelveListaCampos(final RPaginaFormulario defPagina) {
@@ -105,7 +95,8 @@ public class UtilsFormularioInterno {
 	/**
 	 * Devuelve componente la página.
 	 *
-	 * @param idComponente idComponente
+	 * @param idComponente
+	 *                         idComponente
 	 * @return Campo
 	 */
 	public static RComponente devuelveComponentePagina(final RPaginaFormulario defPagina, final String idComponente) {
@@ -135,7 +126,8 @@ public class UtilsFormularioInterno {
 	/**
 	 * Crea valor vacío según tipo de campo.
 	 *
-	 * @param pCampoDef Definicion campo
+	 * @param pCampoDef
+	 *                      Definicion campo
 	 * @return Valor campo vacio
 	 */
 	public static ValorCampo crearValorVacio(final RComponente pCampoDef) {
@@ -147,7 +139,8 @@ public class UtilsFormularioInterno {
 	/**
 	 * Busca dependencias con otros campos.
 	 *
-	 * @param pCampoDef Definición campo
+	 * @param pCampoDef
+	 *                      Definición campo
 	 * @return Lista de dependencias con otros campos
 	 */
 	public static DependenciaCampo buscarDependenciasCampo(final RComponente pCampoDef) {
@@ -177,7 +170,8 @@ public class UtilsFormularioInterno {
 	/**
 	 * Obtiene propiedades generales campo datos.
 	 *
-	 * @param pCampoDef Campo
+	 * @param pCampoDef
+	 *                      Campo
 	 * @return
 	 */
 	public static RPropiedadesCampo obtenerPropiedadesCampo(final RComponente pCampoDef) {
@@ -193,6 +187,9 @@ public class UtilsFormularioInterno {
 		case VERIFICACION:
 			propsCampo = ((RComponenteCheckbox) pCampoDef).getPropiedadesCampo();
 			break;
+		case OCULTO:
+			propsCampo = ((RComponenteCampoOculto) pCampoDef).getPropiedadesCampo();
+			break;
 		default:
 			throw new TipoNoControladoException("Tipo de campo " + tipoCampo + " no controlado");
 		}
@@ -202,7 +199,8 @@ public class UtilsFormularioInterno {
 	/**
 	 * Obtiene definición página actual.
 	 *
-	 * @param pDatosSesion Datos sesión
+	 * @param pDatosSesion
+	 *                         Datos sesión
 	 * @return definición página
 	 */
 	public static RPaginaFormulario obtenerDefinicionPaginaActual(final DatosSesionFormularioInterno pDatosSesion) {
@@ -217,9 +215,11 @@ public class UtilsFormularioInterno {
 	/**
 	 * Genera variables accesibles desde el script.
 	 *
-	 * @param pDatosSesion Datos sesion formulario
-	 * @param pIdCampo     Si el script es de un campo se indicara el id campo. Si
-	 *                     es de la pagina sera null.
+	 * @param pDatosSesion
+	 *                         Datos sesion formulario
+	 * @param pIdCampo
+	 *                         Si el script es de un campo se indicara el id campo.
+	 *                         Si es de la pagina sera null.
 	 * @return Variables accesibles desde el script.
 	 */
 	public static VariablesFormulario generarVariablesFormulario(final DatosSesionFormularioInterno pDatosSesion,
@@ -244,8 +244,10 @@ public class UtilsFormularioInterno {
 	/**
 	 * Obtiene parametros dominio.
 	 *
-	 * @param pDatosSesion Datos sesion formulario
-	 * @param pCampoDef    Definicion campo selector
+	 * @param pDatosSesion
+	 *                         Datos sesion formulario
+	 * @param pCampoDef
+	 *                         Definicion campo selector
 	 * @return parametros
 	 */
 	public static ParametrosDominio obtenerParametrosDominio(final DatosSesionFormularioInterno pDatosSesion,
@@ -259,8 +261,8 @@ public class UtilsFormularioInterno {
 
 				final TypeParametroDominio tipoParametro = UtilsSTG.traduceTipoParametroDominio(parDef.getTipo());
 				if (tipoParametro == null) {
-					throw new ErrorConfiguracionException("Tipo parámetro " + tipoParametro + " no soportado en campo "
-							+ pCampoDef.getIdentificador());
+					throw new ErrorConfiguracionException("Tipo parámetro " + parDef.getTipo()
+							+ " no soportado en campo " + pCampoDef.getIdentificador());
 				}
 
 				switch (tipoParametro) {
@@ -274,6 +276,11 @@ public class UtilsFormularioInterno {
 					parametros.addParametro(parDef.getIdentificador(), parDef.getValor());
 					break;
 				case PARAMETRO:
+					if (!pDatosSesion.getDatosInicioSesion().getParametros().existeParametro(parDef.getValor())) {
+						throw new TipoNoControladoException(
+								"No existe parámetro apertura formulario usado como para parametro dominio: "
+										+ parDef.getValor());
+					}
 					final String paramForm = pDatosSesion.getDatosInicioSesion().getParametros()
 							.getParametro(parDef.getValor());
 					parametros.addParametro(parDef.getIdentificador(), paramForm);
@@ -301,7 +308,8 @@ public class UtilsFormularioInterno {
 	 * pasará la lista de códigos separadas por coma. En caso de que el valor del
 	 * campo sea nulo se devolverá la cadena vacía.
 	 *
-	 * @param valorCampo Valor campo
+	 * @param valorCampo
+	 *                       Valor campo
 	 *
 	 * @return Valor campo para pasarlo como dominio.
 	 */
@@ -345,9 +353,12 @@ public class UtilsFormularioInterno {
 	/**
 	 * Extrae los valores posibles a partir de los valores del dominio.
 	 *
-	 * @param pCampoCodigo      Campo código
-	 * @param pCampoDescripcion Campo descripción
-	 * @param pValoresDominio   Valores dominio
+	 * @param pCampoCodigo
+	 *                              Campo código
+	 * @param pCampoDescripcion
+	 *                              Campo descripción
+	 * @param pValoresDominio
+	 *                              Valores dominio
 	 * @return el list
 	 */
 	public static List<ValorIndexado> extraerValoresPosibles(final String pCampoCodigo, final String pCampoDescripcion,
@@ -366,8 +377,10 @@ public class UtilsFormularioInterno {
 	/**
 	 * Deserializa valor de un campo.
 	 *
-	 * @param idCampo               Id campo
-	 * @param valorSerializadoCampo Valor serializado campo
+	 * @param idCampo
+	 *                                  Id campo
+	 * @param valorSerializadoCampo
+	 *                                  Valor serializado campo
 	 * @return ValorCampo
 	 */
 	public static ValorCampo deserializarValorCampo(final String idCampo, final String valorCampo) {
@@ -412,8 +425,10 @@ public class UtilsFormularioInterno {
 	 * Comprueba si algún campo modificado se encuentra en la lista de campos
 	 * dependientes.
 	 *
-	 * @param pModificados       Lista de campos modificados
-	 * @param pDependenciasCampo Lista de campos dependientes
+	 * @param pModificados
+	 *                               Lista de campos modificados
+	 * @param pDependenciasCampo
+	 *                               Lista de campos dependientes
 	 * @return boolean
 	 */
 	public static boolean existeDependencia(final List<String> pModificados, final List<String> pDependenciasCampo) {
@@ -430,8 +445,10 @@ public class UtilsFormularioInterno {
 	/**
 	 * Busca valor campo.
 	 *
-	 * @param valoresCampo Lista de valores
-	 * @param idCampo      Id campo
+	 * @param valoresCampo
+	 *                         Lista de valores
+	 * @param idCampo
+	 *                         Id campo
 	 * @return Valor campo (null si no lo encuentra)
 	 */
 	public static ValorCampo buscarValorCampo(final List<ValorCampo> valoresCampo, final String idCampo) {
@@ -448,8 +465,10 @@ public class UtilsFormularioInterno {
 	/**
 	 * Busca configuración campo.
 	 *
-	 * @param configuracionesCampo Lista de valores
-	 * @param idCampo              Id campo
+	 * @param configuracionesCampo
+	 *                                 Lista de valores
+	 * @param idCampo
+	 *                                 Id campo
 	 * @return Valor campo (null si no lo encuentra)
 	 */
 	public static ConfiguracionCampo buscarConfiguracionCampo(final List<ConfiguracionCampo> configuracionesCampo,
@@ -467,8 +486,10 @@ public class UtilsFormularioInterno {
 	/**
 	 * Busca configuración campo.
 	 *
-	 * @param configuracionesCampo Lista de valores
-	 * @param idCampo              Id campo
+	 * @param configuracionesCampo
+	 *                                 Lista de valores
+	 * @param idCampo
+	 *                                 Id campo
 	 * @return Valor campo (null si no lo encuentra)
 	 */
 	public static ConfiguracionModificadaCampo buscarConfiguracionModificadaCampo(
@@ -486,8 +507,10 @@ public class UtilsFormularioInterno {
 	/**
 	 * Busca valores posibles asociados al campo.
 	 *
-	 * @param valoresPosibles valores posibles
-	 * @param idCampo         idcampo
+	 * @param valoresPosibles
+	 *                            valores posibles
+	 * @param idCampo
+	 *                            idcampo
 	 * @return valores posibles campo
 	 */
 	public static ValoresPosiblesCampo buscarValoresPosibles(final List<ValoresPosiblesCampo> valoresPosibles,
@@ -540,7 +563,8 @@ public class UtilsFormularioInterno {
 	/**
 	 * Busca dependencias con otros campos dentro de un script.
 	 *
-	 * @param script Script SCript
+	 * @param script
+	 *                   Script SCript
 	 * @return Lista de dependencias con otros campos
 	 */
 	private static List<String> buscarDependenciasScript(final RScript rScript) {
@@ -562,7 +586,8 @@ public class UtilsFormularioInterno {
 	/**
 	 * Obtiene tipo de valor de un campo.
 	 *
-	 * @param pCampoDef Definición campo
+	 * @param pCampoDef
+	 *                      Definición campo
 	 * @return Tipo valor
 	 */
 	private static TypeValor obtenerTipoValorCampo(final RComponente pCampoDef) {
@@ -570,6 +595,9 @@ public class UtilsFormularioInterno {
 		final TypeCampo tipoCampo = UtilsSTG.traduceTipoCampo(pCampoDef.getTipo());
 		switch (tipoCampo) {
 		case TEXTO:
+			tipoValor = TypeValor.SIMPLE;
+			break;
+		case OCULTO:
 			tipoValor = TypeValor.SIMPLE;
 			break;
 		case SELECTOR:
@@ -594,7 +622,8 @@ public class UtilsFormularioInterno {
 	 * Busca dependencias con otros campos dentro de la configuración de un
 	 * selector.
 	 *
-	 * @param pCampoDef Definición campo selector
+	 * @param pCampoDef
+	 *                      Definición campo selector
 	 * @return Lista de dependencias con otros campos
 	 */
 	private static List<String> buscarDependenciasSelector(final RComponenteSelector pCampoDef) {
@@ -626,9 +655,12 @@ public class UtilsFormularioInterno {
 	/**
 	 * Deserializa valor de campo simple.
 	 *
-	 * @param idCampo    Id campo
-	 * @param valorCampo Valor campo simple serializado
-	 * @param values     Lista valores deserializada
+	 * @param idCampo
+	 *                       Id campo
+	 * @param valorCampo
+	 *                       Valor campo simple serializado
+	 * @param values
+	 *                       Lista valores deserializada
 	 * @return Valor campo simple
 	 */
 	private static ValorCampo deserializarValorCampoSimple(final String idCampo, final String valorCampo,
@@ -650,9 +682,12 @@ public class UtilsFormularioInterno {
 	/**
 	 * Deserializa valor de campo indexado.
 	 *
-	 * @param idCampo    Id campo
-	 * @param valorCampo Valor campo indexado serializado
-	 * @param values     Lista valores deserializada
+	 * @param idCampo
+	 *                       Id campo
+	 * @param valorCampo
+	 *                       Valor campo indexado serializado
+	 * @param values
+	 *                       Lista valores deserializada
 	 * @return Valor campo indexado
 	 */
 	private static ValorCampo deserializarValorCampoIndexado(final String idCampo, final String valorCampo,
@@ -685,9 +720,12 @@ public class UtilsFormularioInterno {
 	/**
 	 * Deserializa valor de campo lista indexados.
 	 *
-	 * @param idCampo    Id campo
-	 * @param valorCampo Valor campo lista indexados serializado
-	 * @param values     Lista valores deserializada
+	 * @param idCampo
+	 *                       Id campo
+	 * @param valorCampo
+	 *                       Valor campo lista indexados serializado
+	 * @param values
+	 *                       Lista valores deserializada
 	 * @return Valor campo lista indexado
 	 */
 	private static ValorCampo deserializarValorCampoListaIndexados(final String idCampo, final String valorCampo,

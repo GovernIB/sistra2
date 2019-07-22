@@ -27,7 +27,7 @@ $.fn.appSerialitza = function(opcions) {
 
 				// serialitza
 
-				if (el_tipus === "texto") {
+				if (el_tipus === "texto" || el_tipus === "oculto") {
 
 					var input_el = el.find("input:first, textarea:first")
 						,input_val = input_el.val();
@@ -104,7 +104,7 @@ $.fn.appSerialitza = function(opcions) {
 
 				if (verifica) {
 
-					if (el_tipus === "texto") {
+					if (el_tipus === "texto" || el_tipus === "oculto") {
 
 						// obligatori
 

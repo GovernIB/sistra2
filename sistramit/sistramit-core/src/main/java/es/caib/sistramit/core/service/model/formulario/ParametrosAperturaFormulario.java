@@ -24,9 +24,9 @@ public final class ParametrosAperturaFormulario implements Serializable {
 	 * Añade parámetro.
 	 *
 	 * @param pCodigo
-	 *            Código
+	 *                    Código
 	 * @param pValor
-	 *            Valor
+	 *                    Valor
 	 */
 	public void addParametro(final String pCodigo, final String pValor) {
 		boolean existe = false;
@@ -46,7 +46,7 @@ public final class ParametrosAperturaFormulario implements Serializable {
 	 * Obtiene parámetros.
 	 *
 	 * @param idParametro
-	 *            id parametro
+	 *                        id parametro
 	 * @return Valor
 	 */
 	public String getParametro(final String idParametro) {
@@ -54,6 +54,24 @@ public final class ParametrosAperturaFormulario implements Serializable {
 		for (final ParametroAperturaFormulario p : parametros) {
 			if (StringUtils.equals(p.getCodigo(), idParametro)) {
 				res = p.getValor();
+				break;
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Obtiene si existe parámetro.
+	 *
+	 * @param idParametro
+	 *                        id parametro
+	 * @return boolean si existe
+	 */
+	public boolean existeParametro(final String idParametro) {
+		boolean res = false;
+		for (final ParametroAperturaFormulario p : parametros) {
+			if (StringUtils.equals(p.getCodigo(), idParametro)) {
+				res = true;
 				break;
 			}
 		}
@@ -84,9 +102,9 @@ public final class ParametrosAperturaFormulario implements Serializable {
 
 	/**
 	 * Método para establecer parametros.
-	 * 
+	 *
 	 * @param parametros
-	 *            parametros a establecer
+	 *                       parametros a establecer
 	 */
 	public void setParametros(final List<ParametroAperturaFormulario> parametros) {
 		this.parametros = parametros;

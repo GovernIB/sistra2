@@ -230,9 +230,9 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 * Test paso rellenar.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesión
+	 *                                id sesión
 	 * @param presentacion
-	 *            presentacion
+	 *                                presentacion
 	 * @throws UnsupportedEncodingException
 	 */
 	private void flujoTramitacion_rellenar(final String idSesionTramitacion) throws UnsupportedEncodingException {
@@ -285,7 +285,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		for (final ValorCampo valorInicial : valoresIniciales) {
 			final ValorCampo valorPosterior = UtilsFormularioInterno.buscarValorCampo(paginaData.getValores(),
 					valorInicial.getId());
-			Assert.isTrue(valorPosterior.esValorIgual(valorInicial),
+			Assert.isTrue(valorPosterior != null && valorInicial.esValorIgual(valorPosterior),
 					"No concuerda valor inicial campo " + valorInicial.getId());
 		}
 		// * Estado campo
@@ -302,6 +302,9 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		Assert.isTrue(
 				UtilsFormularioInterno.buscarValorCampo(resCambioCampo.getValores(), "TXT_CALC").esValorIgual(vcs),
 				"No se ha calculado valor TXT_CALC");
+		Assert.isTrue(
+				UtilsFormularioInterno.buscarValorCampo(resCambioCampo.getValores(), "OCULTO_1").esValorIgual(vcs),
+				"No se ha calculado valor OCULTO_1");
 		// * Estado (cambio estado segun CHK_ESTADO)
 		Assert.isTrue(
 				UtilsFormularioInterno.buscarConfiguracionModificadaCampo(resCambioCampo.getConfiguracion(), "TXT_CALC")
@@ -386,7 +389,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 * Test paso anexar.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesión
+	 *                                id sesión
 	 * @throws IOException
 	 */
 	private void flujoTramitacion_anexar_presencial(final String idSesionTramitacion) throws IOException {
@@ -445,7 +448,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 * Test paso anexar.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesión
+	 *                                id sesión
 	 * @throws IOException
 	 */
 	private void flujoTramitacion_anexar_electronico(final String idSesionTramitacion) throws IOException {
@@ -560,7 +563,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 * Test paso pagar.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesión
+	 *                                id sesión
 	 * @throws IOException
 	 */
 	private void flujoTramitacion_pagar_electronico(final String idSesionTramitacion,
@@ -621,7 +624,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 * Pago presencial.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesión
+	 *                                id sesión
 	 * @throws IOException
 	 */
 	private void flujoTramitacion_pagar_presencial(final String idSesionTramitacion,
@@ -668,7 +671,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 * Test paso Debe saber.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesión tramitación
+	 *                                id sesión tramitación
 	 */
 	private void flujoTramitacion_debeSaber(final String idSesionTramitacion) {
 		final DetallePasos dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
@@ -680,7 +683,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 * Inicio de un trámite.
 	 *
 	 * @param usuarioAutenticadoInfo
-	 *            id sesión tramitación
+	 *                                   id sesión tramitación
 	 */
 	private String flujoTramitacion_iniciarTramite(final UsuarioAutenticadoInfo usuarioAutenticadoInfo) {
 		final Map<String, String> parametrosInicio = new HashMap<>();
@@ -764,7 +767,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 * Lee recurso de classpath.
 	 *
 	 * @param filePath
-	 *            path file
+	 *                     path file
 	 * @return contenido fichero
 	 * @throws IOException
 	 */
@@ -779,7 +782,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 * Test paso registro.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesión
+	 *                                id sesión
 	 * @throws IOException
 	 */
 	private void flujoTramitacion_registro_electronico(final String idSesionTramitacion,

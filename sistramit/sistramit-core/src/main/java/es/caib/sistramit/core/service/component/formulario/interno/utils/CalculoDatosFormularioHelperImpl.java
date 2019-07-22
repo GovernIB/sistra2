@@ -90,33 +90,6 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 		return res;
 	}
 
-	@Override
-	public void calcularCamposOcultosPagina(final DatosSesionFormularioInterno pDatosSesion) {
-		// Actualizamos datos de la pagina actual con los nuevos datos
-		final PaginaFormularioData paginaActual = pDatosSesion.getDatosFormulario().getPaginaActualFormulario();
-
-		// Definicion pagina actual
-		final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(pDatosSesion);
-
-		// Evaluamos script de autorrellenable de los campos ocultos
-		for (final RComponente campoDefAuto : UtilsFormularioInterno.devuelveListaCampos(paginaDef)) {
-			final RPropiedadesCampo propsCampo = UtilsFormularioInterno.obtenerPropiedadesCampo(campoDefAuto);
-			if (UtilsFormularioInterno
-					.esCampoOculto(paginaActual.getConfiguracionCampo(campoDefAuto.getIdentificador()))
-					&& UtilsSTG.existeScript(propsCampo.getScriptAutorrellenable())) {
-				ValorCampo vc = ejecutarScriptAutorrellenable(pDatosSesion, campoDefAuto);
-				if (vc != null) {
-					// Si se ha reseteado campo, creamos valor vacio dependiendo del campo
-					if (vc instanceof ValorResetCampos) {
-						vc = UtilsFormularioInterno.crearValorVacio(campoDefAuto);
-					}
-					// Establecemos valor en formulario
-					paginaActual.actualizarValorCampo(vc);
-				}
-			}
-		}
-	}
-
 	// --------------------------------------------------------------------------------
 	// Funciones auxiliares
 	// --------------------------------------------------------------------------------
@@ -125,11 +98,11 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	 * Ejecuta script de validacion de un campo.
 	 *
 	 * @param datosSesion
-	 *            Datos sesion formulario
+	 *                        Datos sesion formulario
 	 * @param idCampo
-	 *            Id campo modificado
+	 *                        Id campo modificado
 	 * @param res
-	 *            Resumen de los datos y configuracion modificada
+	 *                        Resumen de los datos y configuracion modificada
 	 */
 	private void calcularDatosPaginaValidacionCampo(final DatosSesionFormularioInterno datosSesion,
 			final String idCampo, final ResultadoEvaluarCambioCampo res) {
@@ -161,11 +134,11 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	 * Solo se ejecuta tras modificar un campo que tiene dependencias.
 	 *
 	 * @param datosSesion
-	 *            Datos sesion formulario
+	 *                        Datos sesion formulario
 	 * @param idCampo
-	 *            Id campo modificado
+	 *                        Id campo modificado
 	 * @param res
-	 *            Resumen de los datos y configuracion modificada
+	 *                        Resumen de los datos y configuracion modificada
 	 */
 	private void calcularDatosPaginaAutorrellenable(final DatosSesionFormularioInterno datosSesion,
 			final String idCampo, final ResultadoEvaluarCambioCampo res) {
@@ -261,9 +234,9 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	 * Calcular valor vacío.
 	 *
 	 * @param pagAct
-	 *            Datos página
+	 *                   Datos página
 	 * @param ccs
-	 *            Componente selector
+	 *                   Componente selector
 	 */
 	private ValorCampo calcularValorVacio(final DatosSesionFormularioInterno datosSesion,
 			final RComponente campoDefAuto) {
@@ -296,9 +269,9 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	 * Ejecuta script autorrellenable.
 	 *
 	 * @param datosSesion
-	 *            Datos sesion
+	 *                        Datos sesion
 	 * @param campoDef
-	 *            Definicion campo
+	 *                        Definicion campo
 	 * @return Valor campo
 	 */
 	private ValorCampo ejecutarScriptAutorrellenable(final DatosSesionFormularioInterno datosSesion,
@@ -328,11 +301,11 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	 * Ejecuta scripts de solo lectura y actualiza datos pagina.
 	 *
 	 * @param datosSesion
-	 *            Datos sesion formulario
+	 *                        Datos sesion formulario
 	 * @param idCampo
-	 *            Id campo modificado
+	 *                        Id campo modificado
 	 * @param res
-	 *            Resumen de los datos y configuracion modificada
+	 *                        Resumen de los datos y configuracion modificada
 	 */
 	private void calcularDatosPaginaEstado(final DatosSesionFormularioInterno datosSesion, final String idCampo,
 			final ResultadoEvaluarCambioCampo res) {
@@ -372,13 +345,13 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	 * Revisa campos a modificar.
 	 *
 	 * @param datosSesion
-	 *            Datos sesion
+	 *                              Datos sesion
 	 * @param idCampo
-	 *            id campo modificado
+	 *                              id campo modificado
 	 * @param camposModificados
-	 *            Campos modificados
+	 *                              Campos modificados
 	 * @param paginaDef
-	 *            Definicion paginas
+	 *                              Definicion paginas
 	 * @return Lista de campos modificados
 	 */
 	private List<String> revisarScriptEstadoCampos(final DatosSesionFormularioInterno datosSesion, final String idCampo,
@@ -434,11 +407,11 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	 * Ejecuta scripts de valores posibles para campos selectores modificados.
 	 *
 	 * @param datosSesion
-	 *            Datos sesion formulario
+	 *                        Datos sesion formulario
 	 * @param idCampo
-	 *            Id campo modificado
+	 *                        Id campo modificado
 	 * @param res
-	 *            Resumen de los datos y configuracion modificada
+	 *                        Resumen de los datos y configuracion modificada
 	 */
 	private void calcularDatosPaginaValoresPosibles(final DatosSesionFormularioInterno datosSesion,
 			final String idCampo, final ResultadoEvaluarCambioCampo res) {
