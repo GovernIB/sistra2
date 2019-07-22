@@ -121,6 +121,59 @@
 	</profiles>
 	<build>
 		<plugins>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>${maven.properties.version}</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>${project.basedir}/../../sistra.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>com.google.code.maven-svn-revision-number-plugin</groupId>
+				<artifactId>svn-revision-number-maven-plugin</artifactId>
+				<version>1.13</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+					</execution>
+				</executions>
+					<configuration>
+						<entries>
+							<entry>
+								<path>${project.basedir}/../../</path>
+								<prefix>prefix</prefix>
+							</entry>
+						</entries>
+					</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.google.code.maven-scm-provider-svnjava</groupId>
+						<artifactId>maven-scm-provider-svnjava</artifactId>
+						<version>2.0.2</version>
+					</dependency>
+					<dependency>
+						<groupId>org.tmatesoft.svnkit</groupId>
+						<artifactId>svnkit</artifactId>
+						<version>1.8.3-1</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
@@ -132,6 +185,7 @@
 							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
 							<includes>
 								<include>web.xml</include>
+								<include>sistramit-ac-frontend-jboss.xml</include>
 							</includes>
 							<targetPath>WEB-INF</targetPath>
 							<filtering>true</filtering>
@@ -149,6 +203,25 @@
 					<target>${java.version}</target>
 					<compilerVersion>${java.version}</compilerVersion>
 					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<!-- Ref: https://github.com/ktoso/maven-git-commit-id-plugin#using-the-plugin -->
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<version>2.1.10</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<skip>${git.desactivado}</skip>
+					<generateGitPropertiesFile>true</generateGitPropertiesFile>
+					<generateGitPropertiesFilename>target/git.properties</generateGitPropertiesFilename>
 				</configuration>
 			</plugin>
 		</plugins>
