@@ -37,39 +37,40 @@ $(function(){
 // Script
 
 $.fn.appScript = function(options) {
-    var settings = $.extend({
-        id: false
-    }, options);
-    this.each(function(){
-        var element = $(this),
-            form_elms = element.find(".imc-element"),
-            inicia = function() {
+	var settings = $.extend({
+		id: false
+	}, options);
+	this.each(function(){
+		var element = $(this),
+			form_elms = element.find(".imc-element"),
+			inicia = function() {
 
-                form_elms
-                    .each(function() {
+				form_elms
+					.each(function() {
 
-                        var el = $(this)
-                            ,el_script = el.attr("data-script")
-                            ,ico_script = $("<span>").addClass("imc-el--script");
+						var el = $(this)
+							,el_script = el.attr("data-script")
+							,ico_script = $("<span>").addClass("imc-el--script");
 
-                        if (el_script && el_script === "s") {
+						if (el_script && el_script === "s") {
 
-                            el
-                                .find(".imc-el-control")
-                                    .append( ico_script )
-                                    .addClass("imc-el--relatiu");
+							var elm_onAplica = (el.hasClass("imc-el-hidden")) ? el : el.find(".imc-el-control");
 
-                        }
+							elm_onAplica
+								.append( ico_script )
+								.addClass("imc-el--relatiu");
 
-                    });
+						}
 
-            };
+					});
 
-        // inicia
-        inicia();
-
-    });
-    return this;
+			};
+		
+		// inicia
+		inicia();
+		
+	});
+	return this;
 }
 
 

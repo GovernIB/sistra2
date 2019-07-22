@@ -258,19 +258,19 @@ fieldset[data-script="s"]::before { content: ""; display: block; position: absol
 }
 
 .imc-form div.imc-element.imc-el-hidden::before {
-	content: ""; display: block; position: absolute; z-index: 2; top: -0.3em; left: -0.6em; width: 1.2em; height: 1em; background: #ff921a url(../imgs/icones/ico_invisible_fff.svg) no-repeat 50% 50% / auto .8em;
-}
-
-.imc-form div.imc-element.imc-el-hidden::after {
-	content: ""; display: block; position: absolute; top: .4em; left: -0.25em;  width: .6em; height: .6em; background-color: #ff921a; transform: rotate(45deg);
-}
-
-.imc-form div.imc-element.imc-el-hidden.imc-el-hidden-more::before {
 	content: ""; display: block; position: absolute; z-index: 2; top: -0.3em; left: -0.6em; width: 1.2em; height: 1em; background: #d86f00 url(../imgs/icones/ico_invisible_fff.svg) no-repeat 50% 50% / auto .8em;
 }
 
-.imc-form div.imc-element.imc-el-hidden.imc-el-hidden-more::after {
+.imc-form div.imc-element.imc-el-hidden::after {
 	content: ""; display: block; position: absolute; top: .4em; left: -0.25em;  width: .6em; height: .6em; background-color: #d86f00; transform: rotate(45deg);
+}
+
+.imc-form div.imc-element.imc-el-hidden-more::before {
+	background-color: #804200;
+}
+
+.imc-form div.imc-element.imc-el-hidden-more::after {
+	background-color: #804200;
 }
 
 .imc-form div.imc-element.imc-el-hidden[data-hidden="visible"] {
@@ -282,7 +282,7 @@ fieldset[data-script="s"]::before { content: ""; display: block; position: absol
 }
 
 .imc-form div.imc-element.imc-el-hidden[data-hidden="visible"]::before {
-	content: ""; display: block; position: static; width: calc(100% - 1.6em); height: 2.2em; margin: 0 auto; background: #ff921a url(../imgs/icones/ico_invisible_fff.svg) no-repeat 50% 50% / auto 1.2em;
+	content: ""; display: block; position: static; width: calc(100% - 1.6em); height: 2.2em; margin: 0 auto; background: #d86f00 url(../imgs/icones/ico_invisible_fff.svg) no-repeat 50% 50% / auto 1.2em;
 }
 
 .imc-form div.imc-element.imc-el-hidden[data-hidden="visible"]::after {
@@ -290,22 +290,45 @@ fieldset[data-script="s"]::before { content: ""; display: block; position: absol
 }
 
 .imc-form div.imc-element.imc-el-hidden.imc--el-remarca[data-hidden="visible"]::before {
-	background-color: #ff921a !important;
+	background-color: #d86f00 !important;
 	outline: 1px dashed #7f1300;
 }
 
 .imc-form div.imc-element.imc-el-hidden.imc--el-remarca[data-hidden="visible"]::after {
-	background-color: #ff921a !important;
+	background-color: #d86f00 !important;
 	outline: 1px dashed #7f1300;
 }
 
-.imc-form div.imc-element.imc-el-hidden.imc--el-seleccionat[data-hidden="visible"]::before {
-	background-color: #ff921a !important;
+.imc-form div.imc-element.imc-el-hidden.imc--el-seleccionat::before {
+	background-color: #d86f00 !important;
 	outline: 1px dashed #c00;
 }
 
-.imc-form div.imc-element.imc-el-hidden.imc--el-seleccionat[data-hidden="visible"]::after {
-	background-color: #ff921a !important;
+.imc-form div.imc-element.imc-el-hidden.imc--el-seleccionat::after {
+	background-color: #d86f00 !important;
 	outline: 1px dashed #c00;
+}
+
+.imc-form div.imc-element.imc-el-hidden.imc--el-seleccionat:not([data-hidden="visible"])::before {
+	background-color: #fff5a3 !important;
+	background-image: url(../imgs/icones/ico_invisible.svg);
+	outline: 1px dashed #c00;
+}
+
+.imc-form div.imc-element.imc-el-hidden.imc--el-seleccionat:not([data-hidden="visible"])::after {
+	background-color: #fff5a3 !important;
+	outline: 1px dashed #c00;
+}
+
+.imc-form div.imc-element.imc-el-hidden span.imc-el--script {
+	display: none;
+}
+
+.imc-form div.imc-element.imc-el-hidden[data-hidden="visible"] span.imc-el--script {
+	display: block;
+	top: 1.15em;
+	width: 1.6em;
+	height: 1.6em;
+	border: 2px solid #fff;
 }
 

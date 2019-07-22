@@ -505,8 +505,8 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		elemento.append("<input id=\"").append(campo.getIdComponente()).append("\" type=\"hidden\"/>");
 
 		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente()), escribeCodigo(pCF.getCodigo(), pModoEdicion),
-				" class=\"imc-element imc-el-hidden ", more, "\" data-type=\"hidden\" data-hidden=\"", mostrar, "\">",
-				elemento.toString(), "</div>", 5);
+				escribeTieneScripts(campo, pModoEdicion), " class=\"imc-element imc-el-hidden ", more,
+				"\" data-type=\"hidden\" data-hidden=\"", mostrar, "\">", elemento.toString(), "</div>", 5);
 
 	}
 
@@ -640,6 +640,29 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		pOut.append(pTexto8);
 		pOut.append(pTexto9);
 		pOut.append(pTexto10);
+		if (debug) {
+			pOut.append(getLineSeparator());
+		}
+	}
+
+	private void escribeLinea(final StringBuilder pOut, final String pTexto1, final String pTexto2,
+			final String pTexto3, final String pTexto4, final String pTexto5, final String pTexto6,
+			final String pTexto7, final String pTexto8, final String pTexto9, final String pTexto10,
+			final String pTexto11, final int pNtab) {
+		if (debug) {
+			pOut.append(StringUtils.leftPad("", pNtab, "\t"));
+		}
+		pOut.append(pTexto1);
+		pOut.append(pTexto2);
+		pOut.append(pTexto3);
+		pOut.append(pTexto4);
+		pOut.append(pTexto5);
+		pOut.append(pTexto6);
+		pOut.append(pTexto7);
+		pOut.append(pTexto8);
+		pOut.append(pTexto9);
+		pOut.append(pTexto10);
+		pOut.append(pTexto11);
 		if (debug) {
 			pOut.append(getLineSeparator());
 		}
