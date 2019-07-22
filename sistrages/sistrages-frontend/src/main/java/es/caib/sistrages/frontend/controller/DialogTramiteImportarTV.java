@@ -15,6 +15,7 @@ import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -82,6 +83,13 @@ public class DialogTramiteImportarTV extends DialogControllerBase {
 
 			for (final TramiteVersion tramVersion : versiones) {
 				if (tramVersion.getCodigo().compareTo(version) == 0) {
+
+					if (tramVersion.getBloqueada()) {
+						this.addMessageContext(TypeNivelGravedad.INFO,
+								UtilJSF.getLiteral("dialogTramiteImportarTV.versionbloqueada"));
+						return;
+					}
+
 					data.setNumVersion(String.valueOf(tramVersion.getNumeroVersion()));
 					data.setDestinoVersion(String.valueOf(tramVersion.getNumeroVersion()));
 					data.setDestinoRelease(String.valueOf(tramVersion.getRelease() + 1));

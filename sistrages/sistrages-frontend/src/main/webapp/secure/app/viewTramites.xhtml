@@ -63,8 +63,8 @@
 				<p:toolbar id="toolbarTramites">
 					<f:facet name="left">
 				        		<p:remoteCommand name="search" actionListener="#{viewTramites.filtrar}" update="growl @form" />
-				        		<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewTramites.filtro}" styleClass="margin-right-10" onkeypress="if (event.keyCode == 13) { search(); return false; }"/>
-		           				<p:commandButton icon="fa fa-search" actionListener="#{viewTramites.filtrar}" process="@form" update="growl @form" styleClass="va-top"/>
+				        		<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewTramites.filtro}" styleClass="margin-right-10" onkeypress="if (event.keyCode == 13) { triggerSearch(); return false; }"/>
+		           				<p:commandButton id="btnSearch" icon="fa fa-search" actionListener="#{viewTramites.filtrar}" process="@form" update="growl @form" styleClass="va-top"/>
 					</f:facet>
 			        <f:facet name="right">
 			        	 <h:panelGroup rendered="#{viewTramites.seleccionadasAreas}">
@@ -186,29 +186,33 @@
 										<p:ajax event="rowDblselect" listener="#{viewTramites.editarVersion}"/>
 
 										<!-- Columnas -->
-									    <p:column headerText="#{msg['viewTramitesVersion.headerVersion']}">
+									    <p:column headerText="#{msg['viewTramitesVersion.headerVersion']}" >
 									        <h:outputText value="#{tdVersiones.numeroVersion}" />
 									    </p:column>
 
-									    <p:column headerText="#{msg['viewTramitesVersion.headerFlujo']}">
+									    <p:column headerText="#{msg['viewTramitesVersion.headerFlujo']}"  >
 									     	<h:outputText value="#{msg['typeFlujo.'.concat(tdVersiones.tipoFlujo)]}" />
 									    </p:column>
 
-						 				<p:column headerText="#{msg['viewTramitesVersion.headerActiva']}">
+						 				<p:column headerText="#{msg['viewTramitesVersion.headerActiva']}" >
 									        <p:selectBooleanCheckbox value="#{tdVersiones.activa}" disabled="true" />
 									    </p:column>
 
-										<p:column headerText="#{msg['viewTramitesVersion.headerRelease']}">
+										<p:column headerText="#{msg['viewTramitesVersion.headerRelease']}"  >
 									        <h:outputText value="#{tdVersiones.release}" />
 									    </p:column>
 
-									    <p:column headerText="#{msg['viewTramitesVersion.headerFechaUltima']}">
+									    <p:column headerText="#{msg['viewTramitesVersion.headerFechaUltima']}" >
 									        <h:outputText value="#{tdVersiones.fechaUltima}">
 									       		 <f:convertDateTime pattern="dd/MM/yyyy" type="date" timeZone="CET"/>
 									        </h:outputText>
 									    </p:column>
 
-										<p:column headerText="#{msg['viewTramitesVersion.headerBloqueado']}" rendered="#{viewTramites.isDesarrollo()}">
+									    <p:column headerText="#{msg['viewTramitesVersion.headerHuella']}" width="16%" >
+									        <h:outputText value="#{tdVersiones.huella}" />
+									    </p:column>
+
+										<p:column headerText="#{msg['viewTramitesVersion.headerBloqueado']}" rendered="#{viewTramites.isDesarrollo()}" >
 									        <h:outputText value="#{tdVersiones.datosUsuarioBloqueo}" />
 									    </p:column>
 
@@ -240,6 +244,9 @@
 	        </p:commandButton>
 
 			<h:outputScript >
+				function triggerSearch() {
+		        	document.getElementById("form:btnSearch").click();
+		     	}
 		 		function triggerImportarTramite() {
 		        	document.getElementById("form:hiddenCommandImportar").click();
 		     	}

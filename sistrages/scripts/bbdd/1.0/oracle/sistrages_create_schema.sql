@@ -561,7 +561,7 @@ create table STG_ENTIDA
    ENT_PRSINS           NUMBER(18),
    ENT_REGCEN           NUMBER(1)            default 0 not null,
    ENT_REGOFI           VARCHAR2(20 CHAR),
-   ENT_REGDOC 			NUMBER(1)            default 0 not null,
+   ENT_REGDOC           NUMBER(1)            default 0 not null,
    ENT_VALTRA           NUMBER(1)            default 0 not null
 );
 
@@ -1082,7 +1082,7 @@ comment on column STG_FORELE.FEL_IDENTI is
 'Identificador elemento';
 
 comment on column STG_FORELE.FEL_TIPO is
-'Tipo elemento: CT (Campo de texto) / SE (Selector) / CK (Checkbox) / ET (Etiqueta) / CP (Captcha) / IM (Imagen) / Lista elementos (LE)';
+'Tipo elemento: CT (Campo de texto) / SE (Selector) / CK (Checkbox) / ET (Etiqueta) / CP (Captcha) / IM (Imagen) / Lista elementos (LE) / Oculto (OC)';
 
 comment on column STG_FORELE.FEL_ORDEN is
 'Orden';
@@ -1630,6 +1630,7 @@ create table STG_HISVER
    HVE_FECHA            DATE                 not null,
    HVE_ACCION           VARCHAR2(1 CHAR)     not null,
    HVE_RELEAS           NUMBER(8)            not null,
+   HVE_HUELLA           VARCHAR2(20 CHAR),
    HVE_CAMBIO           VARCHAR2(255 CHAR)   not null,
    HVE_USER             VARCHAR2(100 CHAR)   not null
 );
@@ -1651,6 +1652,9 @@ comment on column STG_HISVER.HVE_ACCION is
 
 comment on column STG_HISVER.HVE_RELEAS is
 'Release versión';
+
+comment on column STG_HISVER.HVE_HUELLA is
+'Huella versión';
 
 comment on column STG_HISVER.HVE_CAMBIO is
 'Detalle cambio';
@@ -1773,7 +1777,6 @@ create table STG_PAGTRA
    PAG_OBLIGA           VARCHAR2(1 CHAR)     not null,
    PAG_SCROBL           NUMBER(18),
    PAG_SCRDPG           NUMBER(18),
-   PAG_TIPO             VARCHAR2(1 CHAR)     not null,
    PAG_SIMULA           NUMBER(1)            default 0 not null
 );
 
@@ -1806,9 +1809,6 @@ comment on column STG_PAGTRA.PAG_SCROBL is
 
 comment on column STG_PAGTRA.PAG_SCRDPG is
 'Permite establecer dinámicamente los datos del pago';
-
-comment on column STG_PAGTRA.PAG_TIPO is
-'Tipo: T (Telemático) / P (Presencial) / A (Ambos). Dependerá del tipo de plugin.';
 
 comment on column STG_PAGTRA.PAG_SIMULA is
 'Indica que el pago es simulado.';
@@ -2492,6 +2492,7 @@ create table STG_VERTRA
    VTR_BLOQID           VARCHAR2(10 CHAR),
    VTR_BLOQUS           VARCHAR2(255 CHAR),
    VTR_RELEAS           NUMBER(8),
+   VTR_HUELLA           VARCHAR2(20 CHAR),
    VTR_ACTIVO           NUMBER(1)            default 0 not null,
    VTR_DEBUG            NUMBER(1)            default 0 not null,
    VTR_LIMTIP           VARCHAR2(1 char)     default 'N' not null,
@@ -2556,6 +2557,9 @@ comment on column STG_VERTRA.VTR_BLOQUS is
 
 comment on column STG_VERTRA.VTR_RELEAS is
 'Realease actual, se crea al desbloquear la versión';
+
+comment on column STG_VERTRA.VTR_HUELLA is
+'Número random que identifica versiones entre diferentes entornos';
 
 comment on column STG_VERTRA.VTR_ACTIVO is
 'Indica si la versión está activa';
@@ -3028,6 +3032,10 @@ alter table STG_PASREG
       references STG_SCRIPT (SCR_CODIGO);
 
 alter table STG_PASREG
+   add constraint STG_PASREG_SCRIPT_FK5 foreign key (PRG_AVISCR)
+      references STG_SCRIPT (SCR_CODIGO);
+
+alter table STG_PASREG
    add constraint STG_PASREG_TRADUC_FK foreign key (PRG_INSPRE)
       references STG_TRADUC (TRA_CODIGO);
 
@@ -3038,10 +3046,6 @@ alter table STG_PASREG
 alter table STG_PASREG
    add constraint STG_PASREG_TRADUC_FK3 foreign key (PRG_INSSUB)
       references STG_TRADUC (TRA_CODIGO);
-
-alter table STG_PASREG
-   add constraint STG_PASREG_SCRIPT_FK5 foreign key (PRG_AVISCR)
-      references STG_SCRIPT (SCR_CODIGO);
 
 alter table STG_PASREL
    add constraint STG_PASREL_PRLFTR_FK foreign key (PRL_CODIGO)

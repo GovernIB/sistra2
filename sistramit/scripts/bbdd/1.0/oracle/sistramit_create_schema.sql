@@ -1,3 +1,5 @@
+create sequence STT_AVISOS_SEQ;
+
 create sequence STT_DOCPTR_SEQ;
 
 create sequence STT_FICPTR_SEQ;
@@ -22,7 +24,54 @@ create sequence STT_TIPEVE_SEQ;
 
 create sequence STT_TRAPER_SEQ;
 
-create sequence STT_AVISOS_SEQ;
+/*==============================================================*/
+/* Table: STT_AVISOS                                            */
+/*==============================================================*/
+create table STT_AVISOS
+(
+   AVI_CODIGO           NUMBER(19)           not null,
+   AVI_TIPO             VARCHAR2(1 CHAR)     not null,
+   AVI_FECAVI           DATE                 not null,
+   AVI_DESTIN           VARCHAR2(1000 CHAR)  not null,
+   AVI_TITUL            VARCHAR2(1000 CHAR)  not null,
+   AVI_MENSA            VARCHAR2(4000 CHAR)  not null,
+   AVI_FECENV           DATE,
+   AVI_FECREI           DATE,
+   AVI_ERROR            VARCHAR2(4000 CHAR)
+);
+
+comment on table STT_AVISOS is
+'Avisos a ciudadanos';
+
+comment on column STT_AVISOS.AVI_CODIGO is
+'Código secuencial interno';
+
+comment on column STT_AVISOS.AVI_TIPO is
+'Tipo aviso: email (E)';
+
+comment on column STT_AVISOS.AVI_FECAVI is
+'Fecha aviso';
+
+comment on column STT_AVISOS.AVI_DESTIN is
+'Destinatario (según tipo)';
+
+comment on column STT_AVISOS.AVI_TITUL is
+'Titulo';
+
+comment on column STT_AVISOS.AVI_MENSA is
+'Mensaje';
+
+comment on column STT_AVISOS.AVI_FECENV is
+'Fecha envío';
+
+comment on column STT_AVISOS.AVI_FECREI is
+'Fecha reintento';
+
+comment on column STT_AVISOS.AVI_ERROR is
+'Error';
+
+alter table STT_AVISOS
+   add constraint STT_AVISOS_PK primary key (AVI_CODIGO);
 
 /*==============================================================*/
 /* Table: STT_DOCPTR                                            */
@@ -1020,41 +1069,3 @@ alter table STT_TRAPER
    add constraint STT_TRAPER_SESION_FK foreign key (TRP_CODSTR)
       references STT_SESION (SES_CODIGO);
 
-
-create table STT_AVISOS
-(
-   AVI_CODIGO           NUMBER(19)           not null,
-   AVI_TIPO             VARCHAR2(1 CHAR)     not null,
-   AVI_FECAVI           DATE                 not null,
-   AVI_DESTIN           VARCHAR2(1000 CHAR)  not null,
-   AVI_TITUL            VARCHAR2(1000 CHAR)  not null,
-   AVI_MENSA            VARCHAR2(4000 CHAR)  not null,
-   AVI_FECENV           DATE
-);
-
-comment on table STT_AVISOS is
-'Avisos a ciudadanos';
-
-comment on column STT_AVISOS.AVI_CODIGO is
-'Código secuencial interno';
-
-comment on column STT_AVISOS.AVI_TIPO is
-'Tipo aviso: email (E)';
-
-comment on column STT_AVISOS.AVI_FECAVI is
-'Fecha aviso';
-
-comment on column STT_AVISOS.AVI_DESTIN is
-'Destinatario (según tipo)';
-
-comment on column STT_AVISOS.AVI_TITUL is
-'Titulo';
-
-comment on column STT_AVISOS.AVI_MENSA is
-'Mensaje';
-
-comment on column STT_AVISOS.AVI_FECENV is
-'Fecha envío';
-
-alter table STT_AVISOS
-   add constraint STT_AVISOS_PK primary key (AVI_CODIGO);

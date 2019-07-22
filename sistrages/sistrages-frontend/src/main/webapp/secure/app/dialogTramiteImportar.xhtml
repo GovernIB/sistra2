@@ -105,7 +105,7 @@
 						</p:column>
 
 						<p:outputLabel value="#{msg['dialogTramiteImportar.headerVersion']}:" styleClass="cabeceraImportar" rendered="#{dialogTramiteImportar.filaTramiteVersion.estado != null}"  />
-						<p:outputLabel value="#{dialogTramiteImportar.filaTramiteVersion.origenVersion} (release #{dialogTramiteImportar.filaTramiteVersion.origenRelease})" rendered="#{dialogTramiteImportar.filaTramiteVersion.estado != null}"   />
+						<p:outputLabel value="#{dialogTramiteImportar.filaTramiteVersion.origenVersion} (release #{dialogTramiteImportar.filaTramiteVersion.origenRelease}) - #{dialogTramiteImportar.filaTramiteVersion.tramiteVersion.huella} " rendered="#{dialogTramiteImportar.filaTramiteVersion.estado != null}"   />
 						<p:outputLabel value="#{dialogTramiteImportar.filaTramiteVersion.destinoVersion} (release #{dialogTramiteImportar.filaTramiteVersion.destinoRelease})" rendered="#{dialogTramiteImportar.filaTramiteVersion.estado != null}"   />
 						<p:column rendered="#{dialogTramiteImportar.filaTramiteVersion.estado != null}"   >
 							<p:outputLabel value=" (#{msg['dialogTramiteImportar.headerReleaseExistente']} #{dialogTramiteImportar.filaTramiteVersion.tramiteVersionActual.release}) " rendered="#{dialogTramiteImportar.filaTramiteVersion.estado.toString() == 'E' and dialogTramiteImportar.filaTramiteVersion.mensaje == null}" />
