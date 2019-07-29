@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../../layout/mainLayout.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{viewMigracion.init}" />
+	</f:metadata>
+
+
+	<ui:define name="content">
+
+		<h:form id="form" styleClass="h100" prependId="false">
+
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+			<p:panel>
+				<h:panelGrid columns="5" styleClass="w100" columnClasses="grid-center,grid-center,grid-center,grid-center,grid-center">
+					<p:outputPanel>
+						<p:outputLabel value="#{msg['viewMigracion.tramite']}:" styleClass="va-middle margin-right-3" for="comboTramitesSistra"/>
+						<p:selectOneMenu id="comboTramitesSistra" value="#{viewMigracion.tramiteSistraSeleccionado}" required="true" filter="true" filterMatchMode="contains" styleClass="va-middle margin-right-10">
+ 							<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{viewMigracion.listaTramiteSistra}" var="tramiteSistra" itemLabel="#{tramiteSistra.identificador}" itemValue="#{tramiteSistra.codigo}"  />
+							<p:ajax event="change" listener="#{viewMigracion.actualizarVersion()}" process="@this" update="comboVersionesSistra"/>
+						</p:selectOneMenu>
+	
+						<p:outputLabel value="#{msg['viewMigracion.version']}:" styleClass="va-middle margin-right-3" for="comboVersionesSistra"/>
+						<p:selectOneMenu id="comboVersionesSistra" value="#{viewMigracion.versionSistraSeleccionado}" required="true" styleClass="va-middle">
+							<f:selectItem  itemLabel="" noSelectionOption="true"></f:selectItem>
+	 						<f:selectItems value="#{viewMigracion.listaTramiteVersionSistra}" var="versionSistra" itemLabel="#{versionSistra.numeroVersion}" itemValue="#{versionSistra.numeroVersion}"  /> 
+						</p:selectOneMenu>
+					</p:outputPanel>
+					
+					<i class="fa fa-fw fa-arrow-right"/>
+					
+					<p:outputPanel>
+						<p:outputLabel value="#{msg['viewMigracion.tramite']}2:" styleClass="va-middle margin-right-3" for="comboTramites"/>
+						<p:selectOneMenu id="comboTramites" value="#{viewMigracion.tramiteSeleccionado}" required="true" filter="true" filterMatchMode="contains" styleClass="va-middle margin-right-10">
+							<f:selectItem itemLabel="" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{viewMigracion.listaTramite}" var="tramite" itemLabel="#{tramite.identificador}" itemValue="#{tramite.codigo}" />
+						</p:selectOneMenu>
+						<p:outputLabel value="#{msg['viewMigracion.version']}:" styleClass="va-middle margin-right-3" for="vesion"/>
+						<p:inputText id="vesion" required="true" styleClass="wpx75 va-middle" value="#{viewMigracion.version}" maxlength="4">
+							<p:keyFilter regEx="/^[0-9]{1,4}$/" preventPaste="true"/>
+							<f:validateRegex pattern="^[0-9]{1,4}$" />
+						</p:inputText>
+					</p:outputPanel>
+					
+					<p:outputPanel>
+						<p:selectBooleanCheckbox value="#{viewMigracion.unificarPantallas}" itemLabel="#{msg['viewMigracion.unificarPantallas']}"/>
+					</p:outputPanel>
+					
+					<p:commandButton value="#{msg['botones.migrar']}" actionListener="#{viewMigracion.migrar()}" process="@form" update="@form"  styleClass="boton-azul"/>
+						
+				</h:panelGrid>
+				<p:spacer height="20px"/>
+				<p:dataTable  id="dataTable" var="dt" value="#{viewMigracion.listaErrores}"
+							emptyMessage="#{msg['error.emptyRows']}" styleClass="margin-left-25 margin-right-25"
+							scrollable="true" scrollHeight="400" rendered="#{viewMigracion.listaErrores.size() > 0}"
+							selectionMode="single" rowKey="#{dt.hashCode()}">
+					
+					<!-- Columnas -->
+						<p:column headerText="#{msg['dialogErroresValidacion.tipo']}" styleClass="grid-left" style="width:12%;" sortBy="#{dt.tipo}">
+							<h:outputText value="#{msg['typeErrorMigracion.' += dt.tipo]}"/>
+						</p:column>
+
+						<p:column headerText="#{msg['dialogErroresValidacion.item']}" styleClass="grid-left" style="width:30%;" sortBy="#{dt.elemento}">
+							<h:outputText value="#{dt.elemento}" />
+						</p:column>
+
+						<p:column headerText="#{msg['dialogErroresValidacion.descripcion']}" styleClass="grid-left" style="width:58%;" sortBy="#{dt.descripcion}">
+							<h:outputText value="#{dt.descripcion}"/>
+						</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
