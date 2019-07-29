@@ -133,7 +133,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 
 	/**
 	 * Genera aviso finalización trámite.
-	 * 
+	 *
 	 * @param pDipa
 	 *                  Datos internos paso
 	 */
@@ -580,6 +580,8 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		documentoAsientoRegistral.setNombreFichero(nombreFic);
 		documentoAsientoRegistral.setContenidoFichero(contentFic);
 		if (firmaDocumento != null) {
+			documentoAsientoRegistral.setTipoFirma(es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaDigital
+					.fromString(firmaDocumento.getTipoFirma().toString()));
 			documentoAsientoRegistral.setModoFirma(calcularTipoFirmaAsiento(firmaDocumento.getTipoFirma()));
 			if (anexarFirma) {
 				documentoAsientoRegistral.setNombreFirmaAnexada(firmaFichero.getNombre());
@@ -607,8 +609,14 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		case XADES_DETACHED:
 			res = TypeFirmaAsiento.FIRMA_DETACHED;
 			break;
+		case XADES_ENVELOPED:
+			res = TypeFirmaAsiento.FIRMA_ATTACHED;
+			break;
 		case CADES_DETACHED:
 			res = TypeFirmaAsiento.FIRMA_DETACHED;
+			break;
+		case CADES_ATTACHED:
+			res = TypeFirmaAsiento.FIRMA_ATTACHED;
 			break;
 		default:
 			throw new TipoNoControladoException("Tipo firma no controlado: " + typeFirmaDigital);

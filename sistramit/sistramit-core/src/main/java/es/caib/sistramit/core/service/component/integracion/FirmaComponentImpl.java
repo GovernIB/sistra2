@@ -77,7 +77,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 		// Añade fichero
 		final FicheroAFirmar fichero = new FicheroAFirmar();
 		fichero.setFichero(fileContent);
-		if (FilenameUtils.getExtension(fileName).toLowerCase().endsWith(".pdf")) {
+		if (FilenameUtils.getExtension(fileName).toLowerCase().endsWith("pdf")) {
 			fichero.setMimetypeFichero("application/pdf");
 		} else {
 			fichero.setMimetypeFichero("application/octet-stream");
@@ -194,8 +194,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 
 			final SignatureDetailInfo[] detalleFirmas = validateResponse.getSignatureDetailInfo();
 			firmaValida = false;
-			detalleError = literalesComponent.getLiteral(Literales.PASO_REGISTRAR, "firma.firmanteNoValido",
-					idioma);
+			detalleError = literalesComponent.getLiteral(Literales.PASO_REGISTRAR, "firma.firmanteNoValido", idioma);
 			for (int i = 0; i < detalleFirmas.length; i++) {
 				final SignatureDetailInfo detalleFirma = detalleFirmas[i];
 				final InformacioCertificat datosCertificadoFirma = detalleFirma.getCertificateInfo();

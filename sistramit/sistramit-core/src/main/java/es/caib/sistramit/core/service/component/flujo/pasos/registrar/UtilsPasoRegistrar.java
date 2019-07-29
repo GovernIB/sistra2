@@ -50,18 +50,18 @@ public final class UtilsPasoRegistrar {
 	 * Verifica si el documento se puede firmar.
 	 *
 	 * @param pDatosPaso
-	 *            Datos paso
+	 *                            Datos paso
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                            Variables flujo
 	 * @param idDocumento
-	 *            id documento
+	 *                            id documento
 	 * @param instancia
-	 *            instancia
+	 *                            instancia
 	 * @param nifFirmante
-	 *            nif firmante
+	 *                            nif firmante
 	 */
-	public void validacionesFirmaDocumento(DatosPaso pDatosPaso, VariablesFlujo pVariablesFlujo, String idDocumento,
-			int instancia, String nifFirmante) {
+	public void validacionesFirmaDocumento(final DatosPaso pDatosPaso, final VariablesFlujo pVariablesFlujo,
+			final String idDocumento, final int instancia, final String nifFirmante) {
 
 		final DatosInternosPasoRegistrar dipa = (DatosInternosPasoRegistrar) pDatosPaso.internalData();
 		final DetallePasoRegistrar dpr = (DetallePasoRegistrar) dipa.getDetallePaso();
@@ -99,13 +99,13 @@ public final class UtilsPasoRegistrar {
 	 * Obtiene datos persona firmante.
 	 *
 	 * @param pVariablesFlujo
-	 *            variables flujo
+	 *                            variables flujo
 	 * @param idDocumento
-	 *            id documento
+	 *                            id documento
 	 * @param instancia
-	 *            instancia
+	 *                            instancia
 	 * @param nifFirmante
-	 *            nif firmante
+	 *                            nif firmante
 	 * @return firmante
 	 */
 	public Persona obtieneDatosFirmante(final VariablesFlujo pVariablesFlujo, final String idDocumento,
@@ -125,11 +125,11 @@ public final class UtilsPasoRegistrar {
 	 * Obtiene referencia documento a firmar según el tipo de documento.
 	 *
 	 * @param pVariablesFlujo
-	 *            variables flujo
+	 *                            variables flujo
 	 * @param idDocumento
-	 *            id documento
+	 *                            id documento
 	 * @param instancia
-	 *            instancia
+	 *                            instancia
 	 * @return fichero a firmar
 	 */
 	public ReferenciaFichero obtenerReferenciaFicheroFirmar(final VariablesFlujo pVariablesFlujo,
@@ -155,10 +155,10 @@ public final class UtilsPasoRegistrar {
 	 * Obtiene extensión fichero según tipo firma.
 	 *
 	 * @param tipoFirma
-	 *            Tipo firma
+	 *                      Tipo firma
 	 * @return extensión
 	 */
-	public String getExtensionFirma(TypeFirmaDigital tipoFirma) {
+	public String getExtensionFirma(final TypeFirmaDigital tipoFirma) {
 		String res = null;
 		switch (tipoFirma) {
 		case PADES:
@@ -167,7 +167,13 @@ public final class UtilsPasoRegistrar {
 		case CADES_DETACHED:
 			res = "cades";
 			break;
+		case CADES_ATTACHED:
+			res = "cades";
+			break;
 		case XADES_DETACHED:
+			res = "xades";
+			break;
+		case XADES_ENVELOPED:
 			res = "xades";
 			break;
 		default:

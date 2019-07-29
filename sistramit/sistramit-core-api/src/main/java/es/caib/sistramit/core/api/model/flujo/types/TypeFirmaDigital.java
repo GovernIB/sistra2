@@ -8,20 +8,26 @@ package es.caib.sistramit.core.api.model.flujo.types;
  */
 public enum TypeFirmaDigital {
 
-	// TODO REVISAR TIPOS DE FIRMA DIGITAL, SI DESGLOSAMOS EN ATTACHED Y DETACHED
-
 	/**
-	 * PADES.
-	 */
-	PADES("TF06"),
-	/**
-	 * XADES.
+	 * XAdES internally detached signature.
 	 */
 	XADES_DETACHED("TF02"),
 	/**
-	 * CADES.
+	 * XAdES enveloped signature.
 	 */
-	CADES_DETACHED("TF04");
+	XADES_ENVELOPED("TF03"),
+	/**
+	 * CAdES detached/explicit signature.
+	 */
+	CADES_DETACHED("TF04"),
+	/**
+	 * CAdES attached/implicit signature.
+	 */
+	CADES_ATTACHED("TF05"),
+	/**
+	 * PADES.
+	 */
+	PADES("TF06");
 
 	/**
 	 * Valor como string.
@@ -32,7 +38,7 @@ public enum TypeFirmaDigital {
 	 * Constructor.
 	 *
 	 * @param value
-	 *            Valor como string.
+	 *                  Valor como string.
 	 */
 	private TypeFirmaDigital(final String value) {
 		stringValueTypeFirmaDigital = value;
@@ -47,7 +53,7 @@ public enum TypeFirmaDigital {
 	 * Método para From string de la clase TypeFirmaDigital.
 	 *
 	 * @param text
-	 *            Parámetro text
+	 *                 Parámetro text
 	 * @return el type estado paso
 	 */
 	public static TypeFirmaDigital fromString(final String text) {

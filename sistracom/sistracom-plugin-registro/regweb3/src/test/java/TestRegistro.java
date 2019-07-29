@@ -25,6 +25,7 @@ import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumental;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumentoIdentificacion;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaAsiento;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaDigital;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeInteresado;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeOrigenDocumento;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
@@ -174,6 +175,7 @@ public class TestRegistro {
 				FileUtils.copy(is2, fos2);
 				final DocumentoAsiento documento2 = new DocumentoAsiento();
 				documento2.setContenidoFichero(fos2.toByteArray());
+				documento2.setTipoFirma(TypeFirmaDigital.PADES);
 				documento2.setModoFirma(TypeFirmaAsiento.FIRMA_ATTACHED);
 				documento2.setContenidoFirma(fos2.toByteArray());
 				documento2.setNombreFirmaAnexada("Doc prueba_signed.pdf");

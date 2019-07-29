@@ -5,6 +5,7 @@ import java.util.Date;
 
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumental;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaAsiento;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaDigital;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeOrigenDocumento;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeValidez;
 
@@ -38,6 +39,9 @@ public class DocumentoAsiento implements Serializable {
 	/** fecha de captura del documento */
 	private Date fechaCaptura;
 
+	/** Tipo de firma. */
+	private TypeFirmaDigital tipoFirma;
+
 	/** modo de firma (sin firma/attached/detached) */
 	private TypeFirmaAsiento modoFirma;
 
@@ -54,7 +58,7 @@ public class DocumentoAsiento implements Serializable {
 		return contenidoFichero;
 	}
 
-	public void setContenidoFichero(byte[] contenidoFichero) {
+	public void setContenidoFichero(final byte[] contenidoFichero) {
 		this.contenidoFichero = contenidoFichero;
 	}
 
@@ -62,7 +66,7 @@ public class DocumentoAsiento implements Serializable {
 		return nombreFichero;
 	}
 
-	public void setNombreFichero(String nombreFichero) {
+	public void setNombreFichero(final String nombreFichero) {
 		this.nombreFichero = nombreFichero;
 	}
 
@@ -70,7 +74,7 @@ public class DocumentoAsiento implements Serializable {
 		return tituloDoc;
 	}
 
-	public void setTituloDoc(String tituloDoc) {
+	public void setTituloDoc(final String tituloDoc) {
 		this.tituloDoc = tituloDoc;
 	}
 
@@ -78,7 +82,7 @@ public class DocumentoAsiento implements Serializable {
 		return tipoDocumental;
 	}
 
-	public void setTipoDocumental(String tipoDocumental) {
+	public void setTipoDocumental(final String tipoDocumental) {
 		this.tipoDocumental = tipoDocumental;
 	}
 
@@ -86,7 +90,7 @@ public class DocumentoAsiento implements Serializable {
 		return validez;
 	}
 
-	public void setValidez(TypeValidez validez) {
+	public void setValidez(final TypeValidez validez) {
 		this.validez = validez;
 	}
 
@@ -94,7 +98,7 @@ public class DocumentoAsiento implements Serializable {
 		return tipoDocumento;
 	}
 
-	public void setTipoDocumento(TypeDocumental tipoDocumento) {
+	public void setTipoDocumento(final TypeDocumental tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
 	}
 
@@ -102,7 +106,7 @@ public class DocumentoAsiento implements Serializable {
 		return fechaCaptura;
 	}
 
-	public void setFechaCaptura(Date fechaCaptura) {
+	public void setFechaCaptura(final Date fechaCaptura) {
 		this.fechaCaptura = fechaCaptura;
 	}
 
@@ -110,7 +114,7 @@ public class DocumentoAsiento implements Serializable {
 		return modoFirma;
 	}
 
-	public void setModoFirma(TypeFirmaAsiento modoFirma) {
+	public void setModoFirma(final TypeFirmaAsiento modoFirma) {
 		this.modoFirma = modoFirma;
 	}
 
@@ -118,7 +122,7 @@ public class DocumentoAsiento implements Serializable {
 		return nombreFirmaAnexada;
 	}
 
-	public void setNombreFirmaAnexada(String nombreFirmaAnexada) {
+	public void setNombreFirmaAnexada(final String nombreFirmaAnexada) {
 		this.nombreFirmaAnexada = nombreFirmaAnexada;
 	}
 
@@ -126,7 +130,7 @@ public class DocumentoAsiento implements Serializable {
 		return contenidoFirma;
 	}
 
-	public void setContenidoFirma(byte[] contenidoFirma) {
+	public void setContenidoFirma(final byte[] contenidoFirma) {
 		this.contenidoFirma = contenidoFirma;
 	}
 
@@ -134,8 +138,27 @@ public class DocumentoAsiento implements Serializable {
 		return origenDocumento;
 	}
 
-	public void setOrigenDocumento(TypeOrigenDocumento origenDocumento) {
+	public void setOrigenDocumento(final TypeOrigenDocumento origenDocumento) {
 		this.origenDocumento = origenDocumento;
+	}
+
+	/**
+	 * Método de acceso a tipoFirma.
+	 * 
+	 * @return tipoFirma
+	 */
+	public TypeFirmaDigital getTipoFirma() {
+		return tipoFirma;
+	}
+
+	/**
+	 * Método para establecer tipoFirma.
+	 * 
+	 * @param tipoFirma
+	 *                      tipoFirma a establecer
+	 */
+	public void setTipoFirma(final TypeFirmaDigital tipoFirma) {
+		this.tipoFirma = tipoFirma;
 	}
 
 }

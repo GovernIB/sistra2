@@ -30,6 +30,7 @@ import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumental;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaAsiento;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaDigital;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeInteresado;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
@@ -330,7 +331,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	 * Mapea datos asiento a parametro ws.
 	 *
 	 * @param asiento
-	 *            asiento registral
+	 *                    asiento registral
 	 * @throws RegistroPluginException
 	 */
 	private AsientoRegistralWs mapearParametrosRegistro(final AsientoRegistral asiento) throws RegistroPluginException {
@@ -451,7 +452,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	 * Obtiene propiedad.
 	 *
 	 * @param propiedad
-	 *            propiedad
+	 *                      propiedad
 	 * @return valor
 	 * @throws RegistroPluginException
 	 */
@@ -486,7 +487,8 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		anexoAsiento.setTipoMIMEFicheroAnexado(MimeType.getMimeTypeForExtension(getExtension(dr.getNombreFichero())));
 
 		if (dr.getModoFirma() != TypeFirmaAsiento.SIN_FIRMA) {
-			if (dr.getModoFirma() == TypeFirmaAsiento.FIRMA_DETACHED) {
+			// Excepto para PADES adjuntamos firma
+			if (dr.getTipoFirma() != TypeFirmaDigital.PADES) {
 				anexoAsiento.setNombreFicheroAnexado(dr.getNombreFichero());
 				anexoAsiento.setFicheroAnexado(dr.getContenidoFichero());
 				anexoAsiento.setTipoMIMEFicheroAnexado(
