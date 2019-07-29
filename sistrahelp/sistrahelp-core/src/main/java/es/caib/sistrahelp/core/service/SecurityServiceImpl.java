@@ -40,15 +40,14 @@ public class SecurityServiceImpl implements SecurityService {
 
 	@Override
 	@NegocioInterceptor
-	public List<Area> obtenerAreas() {
+	public List<Area> obtenerAreas(final TypeRoleAcceso rol) {
 		final List<Area> res = new ArrayList<>();
-		if (contextService.getRoles().contains(TypeRoleAcceso.HELPDESK)
-				|| contextService.getRoles().contains(TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
+		if (contextService.getRoles().contains(rol)) {
 
 			for (final RPermisoHelpDesk permiso : sistragesApiComponent.obtenerPermisosHelpdesk()) {
 
 				if (StringUtils.isNoneEmpty(permiso.getValor())) {
-					if ("A".equals(permiso.getTipoPermiso())) {
+					if ("A".equals(permiso.getTipoPermiso()) && rol == TypeRoleAcceso.HELPDESK) {
 						if ("R".equals(permiso.getTipo().trim()) && contextService.hashRole(permiso.getValor().trim())
 								|| "U".equals(permiso.getTipo().trim())
 										&& contextService.getUsername().equals(permiso.getValor().trim())) {
@@ -59,7 +58,7 @@ public class SecurityServiceImpl implements SecurityService {
 								res.add(area);
 							}
 						}
-					} else if ("E".equals(permiso.getTipoPermiso())
+					} else if ("E".equals(permiso.getTipoPermiso()) && rol == TypeRoleAcceso.SUPERVISOR_ENTIDAD
 							&& contextService.hashRole(permiso.getValor().trim())
 							&& contextService.getRoles().contains(TypeRoleAcceso.SUPERVISOR_ENTIDAD)
 							&& permiso.getListaIdentificadorArea() != null) {

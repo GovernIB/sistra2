@@ -70,10 +70,20 @@ public class SessionBean {
 	 */
 	private Entidad entidad;
 
+	/** Lista de areas de cada perfil. **/
+	private List<Area> listaAreasHelpDesk = new ArrayList<>();
+	private List<Area> listaAreasHelpSupervisor = new ArrayList<>();
+
+	/** Lista de entidades segun cada rol. **/
+	private List<Entidad> listaEntidadesHelpDesk;
+	private List<Entidad> listaEntidadesHelpSupervisor;
+
+	/** Lista de entidades activa en ese momento. **/
 	private List<Entidad> listaEntidades;
 
-	private List<Area> listaAreas;
+	/** Lista de areas de cada rol. **/
 
+	/** Lista de areas de la entidad seleccionada. **/
 	private List<Area> listaAreasEntidad;
 
 	/**
@@ -97,6 +107,9 @@ public class SessionBean {
 
 	private Map<String, Object> mochilaDatos;
 
+	/** URL DEL USUARIO SIN ROL. **/
+	private static final String URL_ERROR_USUARIO_SIN_ROL = "/error/errorUsuarioSinRol.xhtml";
+
 	/** Inicio sesión. */
 	@PostConstruct
 	public void init() {
@@ -108,40 +121,107 @@ public class SessionBean {
 
 		rolesList = securityService.getRoles();
 
-		listaAreas = securityService.obtenerAreas();
-
-		if (rolesList.contains(TypeRoleAcceso.SUPERVISOR_ENTIDAD) && listaAreas.isEmpty()) {
-			rolesList.remove(TypeRoleAcceso.SUPERVISOR_ENTIDAD);
+		// Lista de areas según cada rol
+		if (rolesList.contains(TypeRoleAcceso.HELPDESK)) {
+			listaAreasHelpDesk = securityService.obtenerAreas(TypeRoleAcceso.HELPDESK);
+			// Si no tiene areas asociadas a helpdesk, quitar el rol
+			if (listaAreasHelpDesk.isEmpty()) {
+				rolesList.remove(TypeRoleAcceso.HELPDESK);
+			}
+		}
+		if (rolesList.contains(TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
+			listaAreasHelpSupervisor = securityService.obtenerAreas(TypeRoleAcceso.SUPERVISOR_ENTIDAD);
+			if (listaAreasHelpSupervisor.isEmpty()) {
+				rolesList.remove(TypeRoleAcceso.SUPERVISOR_ENTIDAD);
+			}
 		}
 
-		if (rolesList.contains(TypeRoleAcceso.HELPDESK) && listaAreas.isEmpty()) {
-			rolesList.remove(TypeRoleAcceso.HELPDESK);
+		// Lista de entidades según cada rol
+		if (rolesList.contains(TypeRoleAcceso.HELPDESK)) {
+			listaEntidadesHelpDesk = obtenerEntidades(this.listaAreasHelpDesk);
+		}
+		if (rolesList.contains(TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
+			listaEntidadesHelpSupervisor = obtenerEntidades(this.listaAreasHelpSupervisor);
 		}
 
+		// Limpieza de entidades (si ya están en nivel supervisor, se deben quitar del
+		// helpdesk). Si se queda sin entidades el helpDesk, se borra el permiso.
+		if (listaEntidadesHelpDesk != null && listaEntidadesHelpSupervisor != null) {
+			final List<Entidad> entidadesBorrarHelpDesk = new ArrayList<>();
+			for (final Entidad ent : listaEntidadesHelpDesk) {
+				for (final Entidad ent2 : listaEntidadesHelpSupervisor) {
+					if (ent2.getCodigoDIR3().equals(ent.getCodigoDIR3())) {
+						entidadesBorrarHelpDesk.add(ent);
+					}
+				}
+			}
+
+			if (!entidadesBorrarHelpDesk.isEmpty()) {
+				listaEntidadesHelpDesk.removeAll(entidadesBorrarHelpDesk);
+			}
+
+			if (listaEntidadesHelpDesk.isEmpty()) {
+				rolesList.remove(TypeRoleAcceso.HELPDESK);
+			}
+		}
+
+		// Por defecto, se activa el rol supervisor por defecto y luego el operador
+		// helpdesk
 		if (rolesList.contains(TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
 			activeRole = TypeRoleAcceso.SUPERVISOR_ENTIDAD;
 		} else if (rolesList.contains(TypeRoleAcceso.HELPDESK)) {
 			activeRole = TypeRoleAcceso.HELPDESK;
 		} else {
-			UtilJSF.redirectJsfPage("/error/errorUsuarioSinRol.xhtml", null);
+			UtilJSF.redirectJsfPage(URL_ERROR_USUARIO_SIN_ROL, null);
 			return;
 		}
 
-		listaEntidades = obtenerEntidades(listaAreas);
+		cargarDatos();
+
+	}
+
+	/** Método que carga las entidades ya las areas. **/
+	private void cargarDatos() {
+		if (activeRole == TypeRoleAcceso.SUPERVISOR_ENTIDAD) {
+			listaEntidades = listaEntidadesHelpSupervisor;
+		} else if (activeRole == TypeRoleAcceso.HELPDESK) {
+			listaEntidades = listaEntidadesHelpDesk;
+		} else {
+			UtilJSF.redirectJsfPage(URL_ERROR_USUARIO_SIN_ROL, null);
+			return;
+		}
 
 		if (!listaEntidades.isEmpty()) {
 			entidad = listaEntidades.get(0);
-			listaAreasEntidad = obtenerAreasEntidad(listaAreas, entidad);
+			if (activeRole == TypeRoleAcceso.SUPERVISOR_ENTIDAD) {
+				listaAreasEntidad = obtenerAreasEntidad(listaAreasHelpSupervisor, entidad);
+			} else {
+				listaAreasEntidad = obtenerAreasEntidad(listaAreasHelpDesk, entidad);
+			}
 		} else {
-			UtilJSF.redirectJsfPage("/error/errorUsuarioSinRol.xhtml", null);
+			UtilJSF.redirectJsfPage(URL_ERROR_USUARIO_SIN_ROL, null);
 			return;
 		}
 
-		// Establece logo segun role y entidad
+		// Cambia logo
 		cambiarLogo();
 
 		// inicializamos mochila
 		mochilaDatos = new HashMap<>();
+	}
+
+	/** Cambiar rol **/
+	public void cambiarRoleActivo(final String role) {
+
+		// Cambia role
+		final TypeRoleAcceso roleChange = TypeRoleAcceso.fromString(role);
+		activeRole = roleChange;
+
+		// Cargamos los datos según el rol
+		cargarDatos();
+
+		// Recarga pagina principal segun role
+		UtilJSF.redirectJsfDefaultPageRole(activeRole, obtenerIdEntidad());
 
 	}
 
@@ -222,7 +302,11 @@ public class SessionBean {
 		for (final Entidad e : listaEntidades) {
 			if (e.getCodigoDIR3().equals(idEntidad)) {
 				entidad = e;
-				listaAreasEntidad = obtenerAreasEntidad(listaAreas, entidad);
+				if (activeRole == TypeRoleAcceso.SUPERVISOR_ENTIDAD) {
+					listaAreasEntidad = obtenerAreasEntidad(listaAreasHelpSupervisor, entidad);
+				} else {
+					listaAreasEntidad = obtenerAreasEntidad(listaAreasHelpDesk, entidad);
+				}
 			}
 		}
 		// Cambio logo

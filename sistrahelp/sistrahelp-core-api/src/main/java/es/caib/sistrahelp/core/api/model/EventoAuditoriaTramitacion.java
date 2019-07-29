@@ -19,74 +19,55 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 		super();
 	}
 
-	/**
-	 * id.
-	 */
+	/** id. */
 	private Long id;
 
-	/**
-	 * id sesion tramitacion.
-	 */
+	/** id sesion tramitacion. */
 	private String idSesionTramitacion;
 
-	/**
-	 * tipo evento.
-	 */
+	/** tipo evento. */
 	private TypeEvento tipoEvento;
 
-	/**
-	 * fecha.
-	 */
+	/** fecha. */
 	private Date fecha;
 
-	/**
-	 * descripcion.
-	 */
+	/** descripcion. */
 	private String descripcion;
 
-	/**
-	 * resultado.
-	 */
+	/** resultado. */
 	private String resultado;
 
-	/**
-	 * propiedades evento.
-	 */
+	/** propiedades evento. */
 	private ListaPropiedades propiedadesEvento;
 
-	/**
-	 * codigo error.
-	 */
+	/** codigo error. */
 	private String codigoError;
 
-	/**
-	 * traza error.
-	 */
+	/** traza error. */
 	private String trazaError;
 
-	/**
-	 * nif.
-	 */
+	/** nif. */
 	private String nif;
 
-	/**
-	 * id tramite.
-	 */
+	/** Nombre. **/
+	private String nombre;
+
+	/** Apellido1. **/
+	private String apellido1;
+
+	/** Apellido2. **/
+	private String apellido2;
+
+	/** id tramite. */
 	private String idTramite;
 
-	/**
-	 * version tramite.
-	 */
+	/** version tramite. */
 	private Integer versionTramite;
 
-	/**
-	 * id procedimiento CP.
-	 */
+	/** id procedimiento CP. */
 	private String idProcedimientoCP;
 
-	/**
-	 * id procedimiento SIA.
-	 */
+	/** id procedimiento SIA. */
 	private String idProcedimientoSIA;
 
 	/**
@@ -101,8 +82,7 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	/**
 	 * Establece el valor de tipoEvento.
 	 *
-	 * @param pTipoEvento
-	 *            el nuevo valor de tipoEvento
+	 * @param pTipoEvento el nuevo valor de tipoEvento
 	 */
 	public void setTipoEvento(final TypeEvento pTipoEvento) {
 		tipoEvento = pTipoEvento;
@@ -120,8 +100,7 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	/**
 	 * Establece el valor de fecha.
 	 *
-	 * @param pFechaEventoAplicacion
-	 *            el nuevo valor de fecha
+	 * @param pFechaEventoAplicacion el nuevo valor de fecha
 	 */
 	public void setFecha(final Date pFechaEventoAplicacion) {
 		fecha = pFechaEventoAplicacion;
@@ -148,8 +127,7 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	/**
 	 * Establece el valor de descripcion.
 	 *
-	 * @param pDescripcion
-	 *            el nuevo valor de descripcion
+	 * @param pDescripcion el nuevo valor de descripcion
 	 */
 	public void setDescripcion(final String pDescripcion) {
 		descripcion = pDescripcion;
@@ -176,8 +154,7 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	/**
 	 * Establece el valor de resultado.
 	 *
-	 * @param pResultado
-	 *            el nuevo valor de resultado
+	 * @param pResultado el nuevo valor de resultado
 	 */
 	public void setResultado(final String pResultado) {
 		resultado = pResultado;
@@ -186,8 +163,7 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	/**
 	 * Establece el valor de propiedadesEvento.
 	 *
-	 * @param pPropiedadesEvento
-	 *            el nuevo valor de propiedadesEvento
+	 * @param pPropiedadesEvento el nuevo valor de propiedadesEvento
 	 */
 	public void setPropiedadesEvento(final ListaPropiedades pPropiedadesEvento) {
 		propiedadesEvento = pPropiedadesEvento;
@@ -196,8 +172,7 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	/**
 	 * Establece el valor de idSesionTramitacion.
 	 *
-	 * @param pIdSesionTramitacion
-	 *            el nuevo valor de idSesionTramitacion
+	 * @param pIdSesionTramitacion el nuevo valor de idSesionTramitacion
 	 */
 	public void setIdSesionTramitacion(final String pIdSesionTramitacion) {
 		idSesionTramitacion = pIdSesionTramitacion;
@@ -215,8 +190,7 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	/**
 	 * Establece el valor de trazaError.
 	 *
-	 * @param trazaError
-	 *            el nuevo valor de trazaError
+	 * @param trazaError el nuevo valor de trazaError
 	 */
 	public void setTrazaError(final String trazaError) {
 		this.trazaError = trazaError;
@@ -234,8 +208,7 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	/**
 	 * Establece el valor de codigoError.
 	 *
-	 * @param codigoError
-	 *            el nuevo valor de codigoError
+	 * @param codigoError el nuevo valor de codigoError
 	 */
 	public void setCodigoError(final String codigoError) {
 		this.codigoError = codigoError;
@@ -253,8 +226,7 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	/**
 	 * Establece el valor de id.
 	 *
-	 * @param id
-	 *            el nuevo valor de id
+	 * @param id el nuevo valor de id
 	 */
 	public void setId(final Long id) {
 		this.id = id;
@@ -272,8 +244,7 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	/**
 	 * Establece el valor de nif.
 	 *
-	 * @param nif
-	 *            el nuevo valor de nif
+	 * @param nif el nuevo valor de nif
 	 */
 	public void setNif(final String nif) {
 		this.nif = nif;
@@ -291,8 +262,7 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	/**
 	 * Establece el valor de idTramite.
 	 *
-	 * @param idTramite
-	 *            el nuevo valor de idTramite
+	 * @param idTramite el nuevo valor de idTramite
 	 */
 	public void setIdTramite(final String idTramite) {
 		this.idTramite = idTramite;
@@ -310,8 +280,7 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	/**
 	 * Establece el valor de versionTramite.
 	 *
-	 * @param version
-	 *            el nuevo valor de versionTramite
+	 * @param version el nuevo valor de versionTramite
 	 */
 	public void setVersionTramite(final Integer version) {
 		this.versionTramite = version;
@@ -329,8 +298,7 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	/**
 	 * Establece el valor de idProcedimientoCP.
 	 *
-	 * @param codigoProcedimiento
-	 *            el nuevo valor de idProcedimientoCP
+	 * @param codigoProcedimiento el nuevo valor de idProcedimientoCP
 	 */
 	public void setIdProcedimientoCP(final String codigoProcedimiento) {
 		this.idProcedimientoCP = codigoProcedimiento;
@@ -348,11 +316,52 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	/**
 	 * Establece el valor de idProcedimientoSIA.
 	 *
-	 * @param codigoSia
-	 *            el nuevo valor de idProcedimientoSIA
+	 * @param codigoSia el nuevo valor de idProcedimientoSIA
 	 */
 	public void setIdProcedimientoSIA(final String codigoSia) {
 		this.idProcedimientoSIA = codigoSia;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre the nombre to set
+	 */
+	public void setNombre(final String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the apellido1
+	 */
+	public String getApellido1() {
+		return apellido1;
+	}
+
+	/**
+	 * @param apellido1 the apellido1 to set
+	 */
+	public void setApellido1(final String apellido1) {
+		this.apellido1 = apellido1;
+	}
+
+	/**
+	 * @return the apellido2
+	 */
+	public String getApellido2() {
+		return apellido2;
+	}
+
+	/**
+	 * @param apellido2 the apellido2 to set
+	 */
+	public void setApellido2(final String apellido2) {
+		this.apellido2 = apellido2;
 	}
 
 }

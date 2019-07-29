@@ -30,8 +30,9 @@ public interface SecurityService {
 	/**
 	 * Obtener areas que se tiene permiso.
 	 *
+	 * @param Rol
 	 * @return lista de areas
 	 */
-	public List<Area> obtenerAreas();
+	public List<Area> obtenerAreas(TypeRoleAcceso rol);
 
 }

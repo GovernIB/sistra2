@@ -321,8 +321,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 	/**
 	 * Convierte filtro paginacion.
 	 *
-	 * @param pFiltro
-	 *            filtro
+	 * @param pFiltro filtro
 	 * @return RFiltroPaginacion
 	 */
 	private RFiltroPaginacion convierteFiltroPaginacion(final FiltroPaginacion pFiltro) {
@@ -342,8 +341,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 	/**
 	 * Convierte filtro auditoria busqueda.
 	 *
-	 * @param pFiltro
-	 *            filtro
+	 * @param pFiltro filtro
 	 * @return RFiltroEventoAuditoria
 	 */
 	private RFiltroEventoAuditoria convierteFiltroAuditoriaBusqueda(final FiltroAuditoriaTramitacion pFiltro) {
@@ -379,8 +377,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 	/**
 	 * Convierte evento auditoria.
 	 *
-	 * @param pREventoAuditoria
-	 *            evento auditoria
+	 * @param pREventoAuditoria evento auditoria
 	 * @return EventoAuditoriaTramitacion
 	 */
 	private EventoAuditoriaTramitacion convierteEventoAuditoria(final REventoAuditoria pREventoAuditoria) {
@@ -393,6 +390,9 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 			evento.setTipoEvento(TypeEvento.fromString(pREventoAuditoria.getTipoEvento()));
 			evento.setFecha(pREventoAuditoria.getFecha());
 			evento.setNif(pREventoAuditoria.getNif());
+			evento.setNombre(pREventoAuditoria.getNombre());
+			evento.setApellido1(pREventoAuditoria.getApellido1());
+			evento.setApellido2(pREventoAuditoria.getApellido2());
 			evento.setIdTramite(pREventoAuditoria.getIdTramite());
 			evento.setVersionTramite(pREventoAuditoria.getVersionTramite());
 			evento.setIdProcedimientoCP(pREventoAuditoria.getIdProcedimientoCP());
@@ -418,8 +418,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 	/**
 	 * Convierte filtro tramite busqueda.
 	 *
-	 * @param pFiltro
-	 *            filtro
+	 * @param pFiltro filtro
 	 * @return RFiltroPerdidaClave
 	 */
 	private RFiltroPerdidaClave convierteFiltroTramiteBusqueda(final FiltroPerdidaClave pFiltro) {
@@ -443,8 +442,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 	/**
 	 * Convierte perdida clave.
 	 *
-	 * @param rClave
-	 *            Clave
+	 * @param rClave Clave
 	 * @return PerdidaClave
 	 */
 	private PerdidaClave conviertePerdidaClave(final RPerdidaClave rClave) {
@@ -461,8 +459,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 	/**
 	 * Convierte filtro informacion pagos.
 	 *
-	 * @param pFiltro
-	 *            filtro
+	 * @param pFiltro filtro
 	 * @return filtro pago auditoria
 	 */
 	private RFiltroPagoAuditoria convierteFiltroInformacionPagos(final FiltroAuditoriaPago pFiltro) {

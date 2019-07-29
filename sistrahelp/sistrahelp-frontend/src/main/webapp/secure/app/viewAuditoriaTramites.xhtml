@@ -122,6 +122,9 @@
 			    <p:column headerText="#{msg['viewAuditoriaTramites.headNif']}" style="width:7% !important;" sortBy="#{dt.nif}">
 			        <h:outputText value="#{dt.nif}" />
 			    </p:column>
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headNombre']}" style="width:14% !important;" sortBy="#{dt.nombre}">
+			        <h:outputText value="#{dt.nombre.concat(' ').concat(dt.apellido1).concat(' ').concat(dt.apellido2)}" />
+			    </p:column>
 			    <p:column headerText="#{msg['viewAuditoriaTramites.headTramite']}" style="width:12% !important;" sortBy="#{dt.idTramite}">
 			        <h:outputText value="#{dt.idTramite}" />
 			    </p:column>

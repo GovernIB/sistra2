@@ -282,7 +282,8 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 			}
 
 			query.multiselect(tableE.get("id"), p.get("idSesionTramitacion"), tableE.get("tipo"), tableE.get("fecha"),
-					tableT.get("nifIniciador"), tableT.get("idTramite"), tableT.get("versionTramite"),
+					tableT.get("nifIniciador"), tableT.get("nombreIniciador"), tableT.get("apellido1Iniciador"),
+					tableT.get("apellido2Iniciador"), tableT.get("idTramite"), tableT.get("versionTramite"),
 					tableT.get("idProcedimientoCP"), tableT.get("idProcedimientoSIA"), tableE.get("codigoError"),
 					tableE.get("descripcion"), tableE.get("resultado"), tableE.get("trazaError"),
 					tableE.get("detalle"));

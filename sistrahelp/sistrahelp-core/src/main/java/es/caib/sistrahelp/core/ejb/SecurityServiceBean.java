@@ -26,26 +26,26 @@ import es.caib.sistrahelp.core.api.service.SecurityService;
 @TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
 public class SecurityServiceBean implements SecurityService {
 
-    /** Security service. */
-    @Autowired
-    SecurityService securityService;
+	/** Security service. */
+	@Autowired
+	SecurityService securityService;
 
-    @Override
-    @PermitAll
-    public List<TypeRoleAcceso> getRoles() {
-        return securityService.getRoles();
-    }
+	@Override
+	@PermitAll
+	public List<TypeRoleAcceso> getRoles() {
+		return securityService.getRoles();
+	}
 
-    @Override
-    @PermitAll
-    public String getUsername() {
-        return securityService.getUsername();
-    }
+	@Override
+	@PermitAll
+	public String getUsername() {
+		return securityService.getUsername();
+	}
 
-    @Override
-    @PermitAll
-    public List<Area> obtenerAreas() {
-        return securityService.obtenerAreas();
-    }
+	@Override
+	@PermitAll
+	public List<Area> obtenerAreas(final TypeRoleAcceso rol) {
+		return securityService.obtenerAreas(rol);
+	}
 
 }

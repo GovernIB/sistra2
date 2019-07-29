@@ -57,6 +57,24 @@ public class REventoAuditoria {
 	private String nif;
 
 	/**
+	 * nombre
+	 */
+	@ApiModelProperty(value = "Nombre")
+	private String nombre;
+
+	/**
+	 * apellido1
+	 */
+	@ApiModelProperty(value = "Apellido 1")
+	private String apellido1;
+
+	/**
+	 * apellido1
+	 */
+	@ApiModelProperty(value = "Apellido 2")
+	private String apellido2;
+	
+	/**
 	 * id tramite.
 	 */
 	@ApiModelProperty(value = "Identificador del trámite")
@@ -117,8 +135,7 @@ public class REventoAuditoria {
 	/**
 	 * Para establecer el Identificador.
 	 *
-	 * @param pId
-	 *            el nuevo valor para Identificador
+	 * @param pId el nuevo valor para Identificador
 	 */
 	public void setId(final Long pId) {
 		this.id = pId;
@@ -136,8 +153,7 @@ public class REventoAuditoria {
 	/**
 	 * Para establecer la fecha del evento.
 	 *
-	 * @param pFecha
-	 *            el nuevo valor para fecha del evento
+	 * @param pFecha el nuevo valor para fecha del evento
 	 */
 	public void setFecha(final Date pFecha) {
 		this.fecha = pFecha;
@@ -155,8 +171,7 @@ public class REventoAuditoria {
 	/**
 	 * Para establecer el atributo descripcion.
 	 *
-	 * @param pDescripcion
-	 *            el nuevo valor para descripcion
+	 * @param pDescripcion el nuevo valor para descripcion
 	 */
 	public void setDescripcion(final String pDescripcion) {
 		this.descripcion = pDescripcion;
@@ -174,8 +189,7 @@ public class REventoAuditoria {
 	/**
 	 * Para establecer el atributo resultado.
 	 *
-	 * @param pResultado
-	 *            el nuevo valor para resultado
+	 * @param pResultado el nuevo valor para resultado
 	 */
 	public void setResultado(final String pResultado) {
 		this.resultado = pResultado;
@@ -193,8 +207,7 @@ public class REventoAuditoria {
 	/**
 	 * Establece el valor de tipo evento.
 	 *
-	 * @param tipo
-	 *            el nuevo valor de tipo evento
+	 * @param tipo el nuevo valor de tipo evento
 	 */
 	public void setTipoEvento(final String tipo) {
 		this.tipoEvento = tipo;
@@ -212,8 +225,7 @@ public class REventoAuditoria {
 	/**
 	 * Establece el valor de Identificador de la sesión.
 	 *
-	 * @param idSesion
-	 *            el nuevo valor de Identificador de la sesión
+	 * @param idSesion el nuevo valor de Identificador de la sesión
 	 */
 	public void setIdSesionTramitacion(final String idSesion) {
 		this.idSesionTramitacion = idSesion;
@@ -231,8 +243,7 @@ public class REventoAuditoria {
 	/**
 	 * Establece el valor de nif.
 	 *
-	 * @param nif
-	 *            el nuevo valor de nif
+	 * @param nif el nuevo valor de nif
 	 */
 	public void setNif(final String nif) {
 		this.nif = nif;
@@ -250,8 +261,7 @@ public class REventoAuditoria {
 	/**
 	 * Establece el valor de id. tramite.
 	 *
-	 * @param idTramite
-	 *            el nuevo valor de id. tramite
+	 * @param idTramite el nuevo valor de id. tramite
 	 */
 	public void setIdTramite(final String idTramite) {
 		this.idTramite = idTramite;
@@ -269,8 +279,7 @@ public class REventoAuditoria {
 	/**
 	 * Establece el valor de version tramite.
 	 *
-	 * @param versionTramite
-	 *            el nuevo valor de version tramite
+	 * @param versionTramite el nuevo valor de version tramite
 	 */
 	public void setVersionTramite(final Integer versionTramite) {
 		this.versionTramite = versionTramite;
@@ -288,8 +297,7 @@ public class REventoAuditoria {
 	/**
 	 * Establece el valor de id. Procedimiento CP.
 	 *
-	 * @param codProcedimiento
-	 *            el nuevo valor de id. Procedimiento CP
+	 * @param codProcedimiento el nuevo valor de id. Procedimiento CP
 	 */
 	public void setIdProcedimientoCP(final String codProcedimiento) {
 		this.idProcedimientoCP = codProcedimiento;
@@ -307,8 +315,7 @@ public class REventoAuditoria {
 	/**
 	 * Establece el valor de id. Procedimiento SIA.
 	 *
-	 * @param idProcedimientoSIA
-	 *            el nuevo valor de id. Procedimiento SIA
+	 * @param idProcedimientoSIA el nuevo valor de id. Procedimiento SIA
 	 */
 	public void setIdProcedimientoSIA(final String idProcedimientoSIA) {
 		this.idProcedimientoSIA = idProcedimientoSIA;
@@ -326,8 +333,7 @@ public class REventoAuditoria {
 	/**
 	 * Establece el valor de codigo error.
 	 *
-	 * @param codigoError
-	 *            el nuevo valor de codigo error
+	 * @param codigoError el nuevo valor de codigo error
 	 */
 	public void setCodigoError(final String codigoError) {
 		this.codigoError = codigoError;
@@ -345,8 +351,7 @@ public class REventoAuditoria {
 	/**
 	 * Establece el valor de traza error.
 	 *
-	 * @param trazaError
-	 *            el nuevo valor de traza error
+	 * @param trazaError el nuevo valor de traza error
 	 */
 	public void setTrazaError(final String trazaError) {
 		this.trazaError = trazaError;
@@ -364,11 +369,52 @@ public class REventoAuditoria {
 	/**
 	 * Establece el valor de detalle.
 	 *
-	 * @param detalle
-	 *            el nuevo valor de detalle
+	 * @param detalle el nuevo valor de detalle
 	 */
 	public void setDetalle(final String detalle) {
 		this.detalle = detalle;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public final String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre the nombre to set
+	 */
+	public final void setNombre(final String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the apellido1
+	 */
+	public final String getApellido1() {
+		return apellido1;
+	}
+
+	/**
+	 * @param apellido1 the apellido1 to set
+	 */
+	public final void setApellido1(final String apellido1) {
+		this.apellido1 = apellido1;
+	}
+
+	/**
+	 * @return the apellido2
+	 */
+	public final String getApellido2() {
+		return apellido2;
+	}
+
+	/**
+	 * @param apellido2 the apellido2 to set
+	 */
+	public final void setApellido2(final String apellido2) {
+		this.apellido2 = apellido2;
 	}
 
 }
