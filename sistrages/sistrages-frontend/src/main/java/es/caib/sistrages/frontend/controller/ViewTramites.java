@@ -1059,6 +1059,20 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
+	 * Genera todos los scripts.
+	 */
+	public void generarScript() {
+
+		if (!verificarFilaSeleccionadaVersion()) {
+			return;
+		}
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
+		UtilJSF.openDialog(DialogTramiteScripts.class, TypeModoAcceso.EDICION, params, true, 1000, 520);
+	}
+
+	/**
 	 * Exportar version.
 	 */
 	public void exportarVersion() {

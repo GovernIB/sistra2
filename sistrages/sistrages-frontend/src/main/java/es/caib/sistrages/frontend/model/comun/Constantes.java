@@ -125,8 +125,6 @@ public final class Constantes {
 	 **/
 	public static final boolean GROWL_PADRE = true;
 
-	public static final String USUARIO_MIGRACION = "migracion";
-
 	/** Importación trámite. **/
 	public static final String IMPORTAR_TIPO_IM = "IM";
 

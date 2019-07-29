@@ -123,7 +123,7 @@
 								<p:menuitem id="btnExportar" 				value="#{msg['botones.exportarVersion']}" 	icon="fa fa-upload" actionListener="#{viewTramites.exportarVersion}" 		rendered="#{viewTramites.versionSeleccionada ne null}"		 process="@this" update="growl"   />
 	        					<p:menuitem id="btnProcesarCuadernoCarga"   value="#{msg['botones.procesarCC']}" 		icon="fa fa-download fa-rotate-90"  onclick="triggerProcesarCC(); return false;"	   		rendered="#{!viewTramites.isDesarrollo()}"></p:menuitem>
 								<p:menuitem id="btnGenerarCuadernoCarga"  	value="#{msg['botones.generarCC']}" 		icon="fa fa-upload fa-rotate-270" actionListener="#{viewTramites.generarCuadernoCarga}" rendered="#{viewTramites.versionSeleccionada ne null and (viewTramites.isDesarrollo() or viewTramites.isPreproduccion())}" process="@this" update="growl" />
-
+								<p:menuitem id="btnGenerarScripts"  		value="#{msg['botones.generarScripts']}" 	icon="fa fa-bolt" actionListener="#{viewTramites.generarScript}" rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.isDesarrollo()}" process="@this" update="growl" />
 								<p:separator  />
 			        			<p:menuitem id="btnHelp2" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewTramites.ayuda()}" process="@this" update="growl" iconPos="top"/>
 			        		</p:menuButton>

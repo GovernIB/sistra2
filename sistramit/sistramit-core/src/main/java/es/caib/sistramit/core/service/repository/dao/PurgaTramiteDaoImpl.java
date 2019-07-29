@@ -224,15 +224,13 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 	 * persistentes sin finalizar y caducados (aplicando los días especificados para
 	 * cada uno).
 	 *
-	 * @param pFinalizadosHasta
-	 *            Fecha tras su fecha de finalizacion tras el cual un tramite
-	 *            finalizado sera purgado.
-	 * @param pSinFinalizarHasta
-	 *            Fecha tras su fecha de ultimo acceso tras el cual seran purgados
-	 *            los tramites no persistentes no finalizados
-	 * @param pCaducadosHasta
-	 *            Fecha tras su fecha de caducidad tras el cual seran purgados los
-	 *            tramites persistentes caducados.
+	 * @param pFinalizadosHasta  Fecha tras su fecha de finalizacion tras el cual un
+	 *                           tramite finalizado sera purgado.
+	 * @param pSinFinalizarHasta Fecha tras su fecha de ultimo acceso tras el cual
+	 *                           seran purgados los tramites no persistentes no
+	 *                           finalizados
+	 * @param pCaducadosHasta    Fecha tras su fecha de caducidad tras el cual seran
+	 *                           purgados los tramites persistentes caducados.
 	 * @return Filtro sql a aplicar
 	 */
 	private String generarFiltroTramitesPendientesPurga(final Date pFinalizadosHasta, final Date pSinFinalizarHasta,
@@ -285,46 +283,44 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 	/**
 	 * Borra eventos de auditorias de sesiones de tramites purgados.
 	 *
-	 * @param pFechaLimitePurga
-	 *            Fecha limite purga
+	 * @param pFechaLimitePurga Fecha limite purga
 	 * @return Número de auditorias borradas
 	 */
 	private int borrarEventoAuditoriaTramitesPurgados(final Date pFechaLimitePurga) {
 
 		// Eliminamos sesiones por HQL
-		final String deleteTramite = "delete from HEventoAuditoria e where e.sesionTramitacion in (select s from HSesionTramitacion s where s.fecha < ? and s not in (select t.sesionTramitacion from HTramite t) )";
+		final String deleteTramite = "delete from HEventoAuditoria e where e.sesionTramitacion in (select s from HSesionTramitacion s where s.fecha < :fechaLimite and s not in (select t.sesionTramitacion from HTramite t) )";
 		final Query query = entityManager.createQuery(deleteTramite);
-		query.setParameter(1, pFechaLimitePurga);
+		query.setParameter("fechaLimite", pFechaLimitePurga);
 		return query.executeUpdate();
 	}
 
 	/**
 	 * Borra sesiones tramites purgados.
 	 *
-	 * @param pFechaLimitePurga
-	 *            Fecha limite purga
+	 * @param pFechaLimitePurga Fecha limite purga
 	 * @return Número de sesiones borradas
 	 */
 	private int borrarSesionesTramitesPurgados(final Date pFechaLimitePurga) {
 
 		// Eliminamos sesiones por HQL
-		final String deleteTramite = "delete from HSesionTramitacion s where s.fecha < ? and s not in (select t.sesionTramitacion from HTramite t)";
+		final String deleteTramite = "delete from HSesionTramitacion s where s.fecha < :fechaLimite and s not in (select t.sesionTramitacion from HTramite t)";
 		final Query query = entityManager.createQuery(deleteTramite);
-		query.setParameter(1, pFechaLimitePurga);
+		query.setParameter("fechaLimite", pFechaLimitePurga);
 		return query.executeUpdate();
 	}
 
 	/**
 	 * Borra cabecera tramite de tramites purgados.
 	 *
-	 * @param pFechaLimitePurga
-	 *            Fecha limite purga
+	 * @param pFechaLimitePurga Fecha limite purga
 	 */
 	private void borrarCabeceraTramiteTramitesPurgados(final Date pFechaLimitePurga) {
 
-		final String deleteTramite = "delete from HTramite where purgado = " + true + " and fechaPurgado < ?";
+		final String deleteTramite = "delete from HTramite where purgado = " + true
+				+ " and fechaPurgado < :fechaPurgado ";
 		final Query query = entityManager.createQuery(deleteTramite);
-		query.setParameter(1, pFechaLimitePurga);
+		query.setParameter("fechaPurgado", pFechaLimitePurga);
 		query.executeUpdate();
 	}
 
@@ -334,10 +330,10 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 	 * @return Número de trámites marcados como purgados.
 	 */
 	private int marcarTramitesPurgados() {
-		final String updateTramite = "update HTramite set purgado = " + true + ", fechaPurgado = ? "
+		final String updateTramite = "update HTramite set purgado = " + true + ", fechaPurgado = :fechaPurgado "
 				+ " where purgado = " + false + " and purgar = " + true;
 		final Query query = entityManager.createQuery(updateTramite);
-		query.setParameter(1, new Date());
+		query.setParameter("fechaPurgado", new Date());
 		return query.executeUpdate();
 
 	}

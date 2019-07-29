@@ -21,6 +21,7 @@ import org.primefaces.model.menu.MenuModel;
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Sesion;
+import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.EntidadService;
@@ -422,13 +423,15 @@ public class SessionBean {
 				model.addElement(item);
 			}
 
-		}
+			// Como es una opción del desplegable, solo se tiene que ver para adm de entidad
+			// y en entorno de desarrollo
+			if (activeRole == TypeRoleAcceso.ADMIN_ENT
+					&& UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+				item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones.migracion"));
+				item.setUrl(UtilJSF.getUrlArbolDefinicionVersion("migracion/viewMigracion"));
+				model.addElement(item);
+			}
 
-		// MIGRACION
-		if (Constantes.USUARIO_MIGRACION.equals(userName)) {
-			item = new DefaultMenuItem("Migrar de Sistra");
-			item.setUrl(UtilJSF.getUrlArbolDefinicionVersion("migracion/viewMigracion"));
-			model.addElement(item);
 		}
 
 		model.generateUniqueIds();
@@ -660,8 +663,7 @@ public class SessionBean {
 	}
 
 	/**
-	 * @param idiomas
-	 *            the idiomas to set
+	 * @param idiomas the idiomas to set
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;
@@ -675,8 +677,7 @@ public class SessionBean {
 	}
 
 	/**
-	 * @param growlLife
-	 *            the growlLife to set
+	 * @param growlLife the growlLife to set
 	 */
 	public void setGrowlLife(final Integer growlLife) {
 		this.growlLife = growlLife;
@@ -690,8 +691,7 @@ public class SessionBean {
 	}
 
 	/**
-	 * @param growlSticky
-	 *            the growlSticky to set
+	 * @param growlSticky the growlSticky to set
 	 */
 	public void setGrowlSticky(final Boolean growlSticky) {
 		this.growlSticky = growlSticky;

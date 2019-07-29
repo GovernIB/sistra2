@@ -30,6 +30,7 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.FilaImportar;
+import es.caib.sistrages.core.api.model.comun.ScriptInfo;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.service.TramiteService;
 
@@ -541,5 +542,11 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void borradoHistorial(final Long idTramiteVersion, final String username) {
 		tramiteService.borradoHistorial(idTramiteVersion, username);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<ScriptInfo> listScriptsInfo(final Long idTramiteVersion) {
+		return tramiteService.listScriptsInfo(idTramiteVersion);
 	}
 }

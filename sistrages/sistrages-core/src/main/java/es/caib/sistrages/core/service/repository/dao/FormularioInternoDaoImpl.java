@@ -34,9 +34,11 @@ import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioComponenteSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioPaginaSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
+import es.caib.sistrages.core.api.model.comun.ScriptInfo;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeListaValores;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
+import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
 import es.caib.sistrages.core.service.repository.model.JAccionPersonalizada;
 import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JCampoFormulario;
@@ -1441,5 +1443,81 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 			entityManager.merge(jpagina);
 		}
+	}
+
+	@Override
+	public List<ScriptInfo> getScriptsInfo(final Long idFormularioInterno, final FormularioTramite formulario) {
+		final List<ScriptInfo> scripts = new ArrayList<>();
+
+		// JCampoFormularioIndexado
+		final String sqlCampoFormularioIndexado = "Select distinct campo.campoFormulario.elementoFormulario.identificador, campo.campoFormulario.elementoFormulario.tipo , campo.scriptValoresPosibles.codigo  from JCampoFormularioIndexado campo where campo.campoFormulario.elementoFormulario.lineaFormulario.paginaFormulario.formulario.codigo = :idFormularioInterno and campo.scriptValoresPosibles is not null";
+		final Query queryCFI = entityManager.createQuery(sqlCampoFormularioIndexado);
+		queryCFI.setParameter("idFormularioInterno", idFormularioInterno);
+		final List<Object[]> resultadosCFI = queryCFI.getResultList();
+		if (resultadosCFI != null) {
+			for (final Object[] resultadoCFI : resultadosCFI) {
+				final String identificador = resultadoCFI[0].toString();
+				final String tipo = resultadoCFI[1].toString();
+				final Long idScript = (Long) resultadoCFI[2];
+				scripts.add(new ScriptInfo(idScript, TypeScriptFormulario.SCRIPT_VALORES_POSIBLES, formulario,
+						ScriptInfo.TYPE_COMPONENTE.SELECTOR, identificador));
+			}
+		}
+
+		// JCampoFormulario
+		final String sqlCampoFormulario = "Select distinct campo.elementoFormulario.identificador, campo.elementoFormulario.tipo , campo.scriptAutocalculado.codigo , campo.scriptSoloLectura.codigo , campo.scriptValidaciones.codigo from JCampoFormulario campo where campo.elementoFormulario.lineaFormulario.paginaFormulario.formulario.codigo = :idFormularioInterno and (campo.scriptAutocalculado is not null or campo.scriptSoloLectura is not null or campo.scriptValidaciones is not null )";
+		final Query queryCF = entityManager.createQuery(sqlCampoFormulario);
+		queryCF.setParameter("idFormularioInterno", idFormularioInterno);
+		final List<Object[]> resultadosCF = queryCF.getResultList();
+		if (resultadosCF != null) {
+			for (final Object[] resultadoCF : resultadosCF) {
+				final String identificador = resultadoCF[0].toString();
+				final String tipo = resultadoCF[1].toString();
+				final Long idScript1 = (Long) resultadoCF[2];
+				final Long idScript2 = (Long) resultadoCF[3];
+				final Long idScript3 = (Long) resultadoCF[4];
+
+				if (idScript1 != null) {
+					scripts.add(new ScriptInfo(idScript1, TypeScriptFormulario.SCRIPT_AUTORELLENABLE, formulario,
+							ScriptInfo.getEnum(tipo), identificador));
+				}
+				if (idScript2 != null) {
+					scripts.add(new ScriptInfo(idScript2, TypeScriptFormulario.SCRIPT_ESTADO, formulario,
+							ScriptInfo.getEnum(tipo), identificador));
+				}
+				if (idScript3 != null) {
+					scripts.add(new ScriptInfo(idScript3, TypeScriptFormulario.SCRIPT_VALIDACION_CAMPO, formulario,
+							ScriptInfo.getEnum(tipo), identificador));
+				}
+			}
+		}
+
+		// JPaginaFormulario
+		final String sqlPagina = "Select distinct paginaFormulario.orden, paginaFormulario.scriptValidacion.codigo from JPaginaFormulario paginaFormulario where paginaFormulario.formulario.codigo = :idFormularioInterno and paginaFormulario.scriptValidacion is not null";
+		final Query queryPAG = entityManager.createQuery(sqlPagina);
+		queryPAG.setParameter("idFormularioInterno", idFormularioInterno);
+		final List<Object[]> resultadosPAG = queryPAG.getResultList();
+		if (resultadosPAG != null) {
+			for (final Object[] resultadoPAG : resultadosPAG) {
+				final String orden = resultadoPAG[0].toString();
+				final Long idScript = (Long) resultadoPAG[1];
+				scripts.add(new ScriptInfo(idScript, TypeScriptFormulario.SCRIPT_VALIDACION_PAGINA, formulario,
+						ScriptInfo.TYPE_COMPONENTE.PAGINA, orden));
+			}
+		}
+
+		// JPaginaFormulario
+		final String sqlFormulario = "Select distinct formulario.scriptPlantilla.codigo  from JFormulario formulario where formulario.codigo = :idFormularioInterno and formulario.scriptPlantilla is not null";
+		final Query queryFORM = entityManager.createQuery(sqlFormulario);
+		queryFORM.setParameter("idFormularioInterno", idFormularioInterno);
+		final List<Long> resultadosFORM = queryFORM.getResultList();
+		if (resultadosFORM != null) {
+			for (final Long idScript : resultadosFORM) {
+				// final Long idScript = resultadoFR[0];
+				scripts.add(new ScriptInfo(idScript, TypeScriptFormulario.SCRIPT_PLANTILLA_PDF_DINAMICA, formulario,
+						ScriptInfo.TYPE_COMPONENTE.FORMULARI, ""));
+			}
+		}
+		return scripts;
 	}
 }

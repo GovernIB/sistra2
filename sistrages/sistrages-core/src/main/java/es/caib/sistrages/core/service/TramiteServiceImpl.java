@@ -30,6 +30,8 @@ import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramitePasoAnexar;
+import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
+import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
@@ -37,9 +39,12 @@ import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.FilaImportar;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
+import es.caib.sistrages.core.api.model.comun.ScriptInfo;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypePaso;
+import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.AreaComponent;
@@ -64,44 +69,30 @@ import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
 @Transactional
 public class TramiteServiceImpl implements TramiteService {
 
-	/**
-	 * log.
-	 */
+	/** LOG */
 	private final Logger log = LoggerFactory.getLogger(TramiteServiceImpl.class);
 
-	/**
-	 * DAO de historial version.
-	 */
+	/** DAO de historial version. */
 	@Autowired
 	HistorialVersionDao historialVersionDao;
 
-	/**
-	 * DAO de area.
-	 */
+	/** DAO de area. */
 	@Autowired
 	AreaDao areaDao;
 
-	/**
-	 * DAO Fichero Externo.
-	 */
+	/** DAO Fichero Externo. */
 	@Autowired
 	FicheroExternoDao ficheroExternoDao;
 
-	/**
-	 * DAO Formateador formulario
-	 */
+	/** DAO Formateador formulario */
 	@Autowired
 	FormateadorFormularioDao formateadorFormularioDao;
 
-	/**
-	 * DAO Formulario interno.
-	 */
+	/** DAO Formulario interno. */
 	@Autowired
 	FormularioInternoDao formularioInternoDao;
 
-	/**
-	 * DAO Tramite.
-	 */
+	/** DAO Tramite. */
 	@Autowired
 	TramiteDao tramiteDao;
 
@@ -109,36 +100,31 @@ public class TramiteServiceImpl implements TramiteService {
 	@Autowired
 	AvisoEntidadDao avisoEntidadDao;
 
-	/**
-	 * DAO Tramite Paso.
-	 */
+	/** DAO Tramite Paso. */
 	@Autowired
 	TramitePasoDao tramitePasoDao;
 
-	/**
-	 * DAO Dominios.
-	 */
+	/** DAO Dominios. */
 	@Autowired
 	DominioDao dominiosDao;
 
-	/**
-	 * DAO Fuente Datos.
-	 */
+	/** DAO Fuente Datos. */
 	@Autowired
 	FuenteDatoDao fuenteDatoDao;
 
-	/**
-	 * area component.
-	 */
+	/** Area component. */
 	@Autowired
 	AreaComponent areaComponent;
 
+	/** Validador component. */
 	@Autowired
 	ValidadorComponent validadorComponent;
 
+	/** DAO Script. */
 	@Autowired
 	ScriptDao scriptDao;
 
+	/** Tramite component. */
 	@Autowired
 	TramiteComponent tramiteComponent;
 
@@ -1104,6 +1090,211 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public void borradoHistorial(final Long idTramiteVersion, final String username) {
 		historialVersionDao.borradoHistorial(idTramiteVersion, username);
+	}
+
+	@Override
+	public List<ScriptInfo> listScriptsInfo(final Long idTramiteVersion) {
+		final List<ScriptInfo> scriptsInfo = new ArrayList<>();
+
+		final TramiteVersion tv = tramiteDao.getTramiteVersion(idTramiteVersion);
+		if (tv.getScriptInicializacionTramite() != null) {
+			scriptsInfo.add(new ScriptInfo(tv.getScriptInicializacionTramite().getCodigo(), null,
+					TypeScriptFlujo.SCRIPT_PARAMETROS_INICIALES));
+		}
+		if (tv.getScriptPersonalizacion() != null) {
+			scriptsInfo.add(new ScriptInfo(tv.getScriptPersonalizacion().getCodigo(), null,
+					TypeScriptFlujo.SCRIPT_PERSONALIZACION_TRAMITE));
+		}
+
+		// Primero recorremos los pasos
+		for (final TramitePaso tramitePaso : tramitePasoDao.getTramitePasos(idTramiteVersion)) {
+
+			if (tramitePaso.getScriptNavegacion() != null) {
+				scriptsInfo.add(new ScriptInfo(tramitePaso.getScriptNavegacion().getCodigo(), getTypePaso(tramitePaso),
+						TypeScriptFlujo.SCRIPT_NAVEGACION_PASO));
+			}
+
+			if (tramitePaso.getScriptVariables() != null) {
+				scriptsInfo.add(new ScriptInfo(tramitePaso.getScriptVariables().getCodigo(), getTypePaso(tramitePaso),
+						TypeScriptFlujo.SCRIPT_VARIABLE_FLUJO));
+			}
+
+			if (tramitePaso instanceof TramitePasoAnexar) {
+
+				final List<ScriptInfo> scripts = listScriptsInfo((TramitePasoAnexar) tramitePaso);
+				scriptsInfo.addAll(scripts);
+
+			} else if (tramitePaso instanceof TramitePasoRellenar) {
+
+				final List<ScriptInfo> scripts = listScriptsInfo((TramitePasoRellenar) tramitePaso);
+				scriptsInfo.addAll(scripts);
+
+			} else if (tramitePaso instanceof TramitePasoRegistrar) {
+
+				final List<ScriptInfo> scripts = listScriptsInfo((TramitePasoRegistrar) tramitePaso);
+				scriptsInfo.addAll(scripts);
+
+			} else if (tramitePaso instanceof TramitePasoTasa) {
+
+				final List<ScriptInfo> scripts = listScriptsInfo((TramitePasoTasa) tramitePaso);
+				scriptsInfo.addAll(scripts);
+
+			}
+
+		}
+		return scriptsInfo;
+	}
+
+	/**
+	 * Listscript de un paso de tipo anexar.
+	 *
+	 * @param paso
+	 * @return
+	 */
+	private List<ScriptInfo> listScriptsInfo(final TramitePasoAnexar paso) {
+		final List<ScriptInfo> scriptsInfo = new ArrayList<>();
+		if (paso.getScriptAnexosDinamicos() != null) {
+			scriptsInfo.add(new ScriptInfo(paso.getScriptAnexosDinamicos().getCodigo(), TypePaso.ANEXAR,
+					TypeScriptFlujo.SCRIPT_LISTA_DINAMICA_ANEXOS));
+		}
+
+		if (paso.getDocumentos() != null) {
+			for (final Documento doc : paso.getDocumentos()) {
+				if (doc.getScriptFirmarDigitalmente() != null) {
+					scriptsInfo.add(new ScriptInfo(doc.getScriptFirmarDigitalmente().getCodigo(), TypePaso.ANEXAR,
+							TypeScriptFlujo.SCRIPT_FIRMANTES, doc));
+				}
+				if (doc.getScriptObligatoriedad() != null) {
+					scriptsInfo.add(new ScriptInfo(doc.getScriptObligatoriedad().getCodigo(), TypePaso.ANEXAR,
+							TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO, doc));
+				}
+				if (doc.getScriptValidacion() != null) {
+					scriptsInfo.add(new ScriptInfo(doc.getScriptValidacion().getCodigo(), TypePaso.ANEXAR,
+							TypeScriptFlujo.SCRIPT_VALIDAR_ANEXO, doc));
+				}
+			}
+		}
+		return scriptsInfo;
+	}
+
+	/**
+	 * Listscript de un paso de tipo rellenar.
+	 *
+	 * @param paso
+	 * @return
+	 */
+	private List<ScriptInfo> listScriptsInfo(final TramitePasoRellenar paso) {
+		final List<ScriptInfo> scriptsInfo = new ArrayList<>();
+		if (paso.getFormulariosTramite() != null) {
+			for (final FormularioTramite formulario : paso.getFormulariosTramite()) {
+				if (formulario.getScriptDatosIniciales() != null) {
+					scriptsInfo.add(new ScriptInfo(formulario.getScriptDatosIniciales().getCodigo(), TypePaso.RELLENAR,
+							TypeScriptFlujo.SCRIPT_DATOS_INICIALES_FORMULARIO, formulario));
+				}
+				if (formulario.getScriptFirma() != null) {
+					scriptsInfo.add(new ScriptInfo(formulario.getScriptFirma().getCodigo(), TypePaso.RELLENAR,
+							TypeScriptFlujo.SCRIPT_FIRMANTES, formulario));
+				}
+				if (formulario.getScriptObligatoriedad() != null) {
+					scriptsInfo.add(new ScriptInfo(formulario.getScriptObligatoriedad().getCodigo(), TypePaso.RELLENAR,
+							TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO, formulario));
+				}
+				if (formulario.getScriptParametros() != null) {
+					scriptsInfo.add(new ScriptInfo(formulario.getScriptParametros().getCodigo(), TypePaso.RELLENAR,
+							TypeScriptFlujo.SCRIPT_PARAMETROS_FORMULARIO, formulario));
+				}
+				if (formulario.getScriptRetorno() != null) {
+					scriptsInfo.add(new ScriptInfo(formulario.getScriptRetorno().getCodigo(), TypePaso.RELLENAR,
+							TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO, formulario));
+				}
+
+				final List<ScriptInfo> scriptsComponent = formularioInternoDao
+						.getScriptsInfo(formulario.getIdFormularioInterno(), formulario);
+				scriptsInfo.addAll(scriptsComponent);
+			}
+		}
+
+		return scriptsInfo;
+	}
+
+	/**
+	 * Listscript de un paso de tipo registrar.
+	 *
+	 * @param paso
+	 * @return
+	 */
+	private List<ScriptInfo> listScriptsInfo(final TramitePasoRegistrar paso) {
+		final List<ScriptInfo> scriptsInfo = new ArrayList<>();
+		if (paso.getScriptDestinoRegistro() != null) {
+			scriptsInfo.add(new ScriptInfo(paso.getScriptDestinoRegistro().getCodigo(), TypePaso.REGISTRAR,
+					TypeScriptFlujo.SCRIPT_PARAMETROS_REGISTRO));
+		}
+		if (paso.getScriptAlFinalizar() != null) {
+			scriptsInfo.add(new ScriptInfo(paso.getScriptAlFinalizar().getCodigo(), TypePaso.REGISTRAR,
+					TypeScriptFlujo.SCRIPT_AVISO));
+		}
+		if (paso.getScriptPresentador() != null) {
+			scriptsInfo.add(new ScriptInfo(paso.getScriptPresentador().getCodigo(), TypePaso.REGISTRAR,
+					TypeScriptFlujo.SCRIPT_PRESENTADOR_REGISTRO));
+		}
+		if (paso.getScriptRepresentante() != null) {
+			scriptsInfo.add(new ScriptInfo(paso.getScriptRepresentante().getCodigo(), TypePaso.REGISTRAR,
+					TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO));
+		}
+		if (paso.getScriptValidarRegistrar() != null) {
+			scriptsInfo.add(new ScriptInfo(paso.getScriptValidarRegistrar().getCodigo(), TypePaso.REGISTRAR,
+					TypeScriptFlujo.SCRIPT_PERMITIR_REGISTRO));
+		}
+		if (paso.getScriptVariables() != null) {
+			scriptsInfo.add(new ScriptInfo(paso.getScriptVariables().getCodigo(), TypePaso.REGISTRAR,
+					TypeScriptFlujo.SCRIPT_VARIABLE_FLUJO));
+		}
+		return scriptsInfo;
+	}
+
+	/**
+	 * Listscript de un paso de tipo tasa.
+	 *
+	 * @param paso
+	 * @return
+	 */
+	private List<ScriptInfo> listScriptsInfo(final TramitePasoTasa paso) {
+		final List<ScriptInfo> scriptsInfo = new ArrayList<>();
+		if (paso.getTasas() != null) {
+			for (final Tasa tasa : paso.getTasas()) {
+				if (tasa.getScriptObligatoriedad() != null) {
+					scriptsInfo.add(new ScriptInfo(tasa.getScriptObligatoriedad().getCodigo(), TypePaso.PAGAR,
+							TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO, tasa));
+				}
+				if (tasa.getScriptPago() != null) {
+					scriptsInfo.add(new ScriptInfo(tasa.getScriptPago().getCodigo(), TypePaso.PAGAR,
+							TypeScriptFlujo.SCRIPT_DATOS_PAGO, tasa));
+				}
+			}
+		}
+		return scriptsInfo;
+	}
+
+	/**
+	 * Obtiene el literal del paso.
+	 */
+	private final TypePaso getTypePaso(final TramitePaso tramitePaso) {
+		TypePaso paso;
+		if (tramitePaso instanceof TramitePasoRellenar) {
+			paso = TypePaso.RELLENAR;
+		} else if (tramitePaso instanceof TramitePasoAnexar) {
+			paso = TypePaso.ANEXAR;
+		} else if (tramitePaso instanceof TramitePasoTasa) {
+			paso = TypePaso.PAGAR;
+		} else if (tramitePaso instanceof TramitePasoRegistrar) {
+			paso = TypePaso.REGISTRAR;
+		} else if (tramitePaso instanceof TramitePasoDebeSaber) {
+			paso = TypePaso.DEBESABER;
+		} else {
+			paso = null;
+		}
+
+		return paso;
 	}
 
 }

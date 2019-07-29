@@ -20,6 +20,7 @@ import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.FilaImportar;
+import es.caib.sistrages.core.api.model.comun.ScriptInfo;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 
 /**
@@ -643,5 +644,13 @@ public interface TramiteService {
 	 * @param username
 	 */
 	public void borradoHistorial(Long idTramiteVersion, final String username);
+
+	/**
+	 * Obtiene una lista de info de los scripts que están rellenos.
+	 * 
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	public List<ScriptInfo> listScriptsInfo(Long idTramiteVersion);
 
 }

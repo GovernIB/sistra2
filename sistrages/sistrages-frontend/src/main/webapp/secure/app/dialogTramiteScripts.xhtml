@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogTramiteScripts.titulo']}"/></title>
+</h:head>
+
+<h:body>
+    <f:facet name="last">
+    	<h:outputStylesheet library="css" name="style.css" />
+    </f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogTramiteScripts.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogTramiteScripts.id}"/>
+		<f:viewAction action="#{dialogTramiteScripts.init}" />
+	</f:metadata>
+	<h:form id="formHistorial" styleClass="margin-top-10">
+
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlHistorial" widgetVar="growlHistorial" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
+
+				<!-- Data table -->
+				<p:dataTable  id="dataTable" var="td" value="#{dialogTramiteScripts.data}"
+							 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+							 scrollable="true" scrollHeight="550px"
+							 style="width:90%;margin:auto"
+							 paginator="true" paginatorPosition="bottom"
+	                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+	                         rowsPerPageTemplate="5,10,15,30"
+				        	 >
+
+					<!-- Columnas -->
+					<p:column headerText="#{msg['dialogTramiteScripts.headerPaso']}">
+				        <h:outputText value="#{msg['typePaso.' += td.paso.toString()]}" rendered="#{not empty td.paso}" />
+				        <h:outputText value="#{msg['dialogTramiteScripts.version']}" rendered="#{empty td.paso}" />
+				    </p:column>
+
+				    <p:column headerText="#{msg['dialogTramiteScripts.headerElemento']}">
+				        <h:outputText value="#{td.elemento}" />
+				    </p:column>
+
+					<p:column headerText="#{msg['dialogTramiteScripts.headerComponente']}">
+				        <h:outputText value="#{msg['dialogTramiteScripts.typeComponente.' += td.componente]}" rendered="#{not empty td.componente}" />
+				        <h:outputText value=" : #{td.idComponente}" rendered="#{not empty td.idComponente}" />
+				        <h:outputText value="#{td.componente}" rendered="#{empty td.componente}" />
+				    </p:column>
+
+				    <p:column headerText="#{msg['dialogTramiteScripts.headerTipoScript']}">
+				    	<h:outputText value="#{msg['script.' += td.tipoScript += '.titulo']}"  rendered="#{not empty td.tipoScript}" />
+				        <h:outputText value="#{td.tipoScript}"  rendered="#{empty td.tipoScript}" />
+				    </p:column>
+
+				 	<p:column>
+					 	<p:commandButton value="#{msg['botones.consultar']}" actionListener="#{dialogTramiteScripts.consultarScript(td)}" process="@this" />
+				    </p:column>
+
+				</p:dataTable>
+
+		  	<p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+						<p:commandButton id="botonGenerar" widgetVar="btnGenerar" value="#{msg['botones.generarScripts']}" ajax="false" styleClass="boton-azul" rendered="#{dialogTramiteScripts.isDesarrollo()}" process="@this">
+		        			<p:fileDownload value="#{dialogTramiteScripts.fichero}"></p:fileDownload>
+		        		</p:commandButton>
+		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTramiteScripts.cancelar}" process="@this" />
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogTramiteScripts.ayuda()}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+
+
+	</h:form>
+</h:body>
+
+</f:view>
+</html>
