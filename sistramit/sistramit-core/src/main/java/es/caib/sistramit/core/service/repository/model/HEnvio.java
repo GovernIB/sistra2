@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.service.model.system.Envio;
+import es.caib.sistramit.core.service.model.system.types.TypeEnvio;
 
 /**
  * Mapeo tabla STT_AVISOS.
@@ -34,24 +35,32 @@ public final class HEnvio implements IModelApi {
 	private Date fechaCreacion;
 
 	/** Atributo tipo. */
-	@Column(name = "AVI_TIPO")
+	@Column(name = "AVI_TIPO", length = 1)
 	private String tipo;
 
 	/** Atributo destino. */
-	@Column(name = "AVI_DESTIN")
+	@Column(name = "AVI_DESTIN", length = 1000)
 	private String destino;
 
 	/** Atributo titulo. */
-	@Column(name = "AVI_TITUL")
+	@Column(name = "AVI_TITUL", length = 1000)
 	private String titulo;
 
 	/** Atributo mensaje. */
-	@Column(name = "AVI_MENSA")
+	@Column(name = "AVI_MENSA", length = 4000)
 	private String mensaje;
 
 	/** Atributo fecha. */
 	@Column(name = "AVI_FECENV")
 	private Date fechaEnvio;
+
+	/** Atributo fecha de reintento. */
+	@Column(name = "AVI_FECREI")
+	private Date fechaReintento;
+
+	/** Atributo mensaje de error. */
+	@Column(name = "AVI_ERROR", length = 4000)
+	private String mensajeError;
 
 	/**
 	 * Método de acceso a codigo.
@@ -65,8 +74,7 @@ public final class HEnvio implements IModelApi {
 	/**
 	 * Método para establecer codigo.
 	 *
-	 * @param codigo
-	 *                   codigo a establecer
+	 * @param codigo codigo a establecer
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -84,8 +92,7 @@ public final class HEnvio implements IModelApi {
 	/**
 	 * Método para establecer fechaCreacion.
 	 *
-	 * @param fechaCreacion
-	 *                          fechaCreacion a establecer
+	 * @param fechaCreacion fechaCreacion a establecer
 	 */
 	public void setFechaCreacion(final Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
@@ -103,8 +110,7 @@ public final class HEnvio implements IModelApi {
 	/**
 	 * Método para establecer tipo.
 	 *
-	 * @param tipo
-	 *                 tipo a establecer
+	 * @param tipo tipo a establecer
 	 */
 	public void setTipo(final String tipo) {
 		this.tipo = tipo;
@@ -122,8 +128,7 @@ public final class HEnvio implements IModelApi {
 	/**
 	 * Método para establecer destino.
 	 *
-	 * @param destino
-	 *                    destino a establecer
+	 * @param destino destino a establecer
 	 */
 	public void setDestino(final String destino) {
 		this.destino = destino;
@@ -141,8 +146,7 @@ public final class HEnvio implements IModelApi {
 	/**
 	 * Método para establecer titulo.
 	 *
-	 * @param titulo
-	 *                   titulo a establecer
+	 * @param titulo titulo a establecer
 	 */
 	public void setTitulo(final String titulo) {
 		this.titulo = titulo;
@@ -160,8 +164,7 @@ public final class HEnvio implements IModelApi {
 	/**
 	 * Método para establecer mensaje.
 	 *
-	 * @param mensaje
-	 *                    mensaje a establecer
+	 * @param mensaje mensaje a establecer
 	 */
 	public void setMensaje(final String mensaje) {
 		this.mensaje = mensaje;
@@ -179,16 +182,50 @@ public final class HEnvio implements IModelApi {
 	/**
 	 * Método para establecer fechaEnvio.
 	 *
-	 * @param fechaEnvio
-	 *                       fechaEnvio a establecer
+	 * @param fechaEnvio fechaEnvio a establecer
 	 */
 	public void setFechaEnvio(final Date fechaEnvio) {
 		this.fechaEnvio = fechaEnvio;
 	}
 
+	/**
+	 * @return the fechaReintento
+	 */
+	public final Date getFechaReintento() {
+		return fechaReintento;
+	}
+
+	/**
+	 * @param fechaReintento the fechaReintento to set
+	 */
+	public final void setFechaReintento(final Date fechaReintento) {
+		this.fechaReintento = fechaReintento;
+	}
+
+	/**
+	 * @return the mensajeError
+	 */
+	public final String getMensajeError() {
+		return mensajeError;
+	}
+
+	/**
+	 * @param mensajeError the mensajeError to set
+	 */
+	public final void setMensajeError(final String mensajeError) {
+		this.mensajeError = mensajeError;
+	}
+
+	/**
+	 * From model
+	 *
+	 * @param m
+	 * @return
+	 */
 	public static HEnvio fromModel(final Envio m) {
 		final HEnvio h = new HEnvio();
-		h.setFechaCreacion(new Date());
+		h.setCodigo(m.getCodigo());
+		h.setFechaCreacion(m.getFechaCreacion());
 		h.setTipo(m.getTipo().toString());
 		h.setDestino(m.getDestino());
 		h.setTitulo(m.getTitulo());
@@ -196,4 +233,14 @@ public final class HEnvio implements IModelApi {
 		return h;
 	}
 
+	public Envio toModel() {
+		final Envio m = new Envio();
+		m.setCodigo(this.getCodigo());
+		m.setFechaCreacion(this.getFechaCreacion());
+		m.setTipo(TypeEnvio.fromString(this.getTipo()));
+		m.setDestino(this.getDestino());
+		m.setTitulo(this.getTitulo());
+		m.setMensaje(this.getMensaje());
+		return m;
+	}
 }

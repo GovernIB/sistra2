@@ -1,23 +1,27 @@
 package es.caib.sistramit.core.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.caib.sistra2.commons.plugins.email.api.IEmailPlugin;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypeInvalidacion;
+import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
@@ -25,6 +29,8 @@ import es.caib.sistramit.core.service.component.integracion.DominiosComponent;
 import es.caib.sistramit.core.service.component.integracion.SistragesComponent;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
+import es.caib.sistramit.core.service.model.system.Envio;
+import es.caib.sistramit.core.service.repository.dao.EnvioDao;
 import es.caib.sistramit.core.service.repository.dao.InvalidacionDao;
 import es.caib.sistramit.core.service.repository.dao.ProcesoDao;
 
@@ -55,6 +61,10 @@ public class SystemServiceImpl implements SystemService {
 	/** Componente Dominios. */
 	@Autowired
 	private DominiosComponent dominiosComponent;
+
+	/** Envio DAO. */
+	@Autowired
+	private EnvioDao envioDao;
 
 	/** Fecha revision invalidaciones. */
 	private Date fcRevisionInvalidaciones;
@@ -162,6 +172,48 @@ public class SystemServiceImpl implements SystemService {
 		}
 
 		invalidacionDAO.addInvalidacion(invalidacion);
+	}
+
+	@Override
+	public void procesarEnviosInmediatos() {
+		final IEmailPlugin plgEmail = (IEmailPlugin) configuracionComponent.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
+		final List<Envio> envios = envioDao.listaInmediatos();
+		for (final Envio envio : envios) {
+			enviarMensaje(plgEmail, envio);
+		}
+	}
+
+	@Override
+	public void procesarEnviosReintentos() {
+		final IEmailPlugin plgEmail = (IEmailPlugin) configuracionComponent.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
+		final List<Envio> envios = envioDao.listaReintentos();
+		for (final Envio envio : envios) {
+			enviarMensaje(plgEmail, envio);
+		}
+	}
+
+	/**
+	 * Método encargado de realizar el envío de emails.
+	 *
+	 * @param plgEmail
+	 * @param envio
+	 */
+	private void enviarMensaje(final IEmailPlugin plgEmail, final Envio envio) {
+		try {
+			final List<String> destino = new ArrayList<>();
+			destino.add(envio.getDestino());
+
+			if (plgEmail.envioEmail(destino, envio.getTitulo(), envio.getMensaje(), null)) {
+				envioDao.guardarCorrecto(envio.getCodigo());
+			} else {
+				envioDao.errorEnvio(envio.getCodigo(), "Error enviando mail");
+			}
+
+		} catch (final Exception e) {
+			final String mensajeError = ExceptionUtils.getMessage(e);
+			log.error("Error al enviar email", e);
+			envioDao.errorEnvio(envio.getCodigo(), mensajeError);
+		}
 	}
 
 }

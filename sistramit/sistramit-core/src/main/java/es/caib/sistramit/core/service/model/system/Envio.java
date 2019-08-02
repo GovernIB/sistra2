@@ -1,5 +1,7 @@
 package es.caib.sistramit.core.service.model.system;
 
+import java.util.Date;
+
 import es.caib.sistramit.core.service.model.system.types.TypeEnvio;
 
 /**
@@ -9,6 +11,12 @@ import es.caib.sistramit.core.service.model.system.types.TypeEnvio;
  *
  */
 public class Envio {
+
+	/** Codigo. **/
+	private Long codigo;
+
+	/** Atributo fecha. */
+	private Date fechaCreacion;
 
 	/** Tipo envío. */
 	private TypeEnvio tipo;
@@ -22,6 +30,15 @@ public class Envio {
 	/** Mensaje. */
 	private String mensaje;
 
+	/** Fecha de envio. */
+	private Date fechaEnvio;
+
+	/** Fecha de reintento. */
+	private Date fechaReintento;
+
+	/** Mensaje de error. */
+	private String mensajeError;
+
 	/**
 	 * Método de acceso a tipo.
 	 *
@@ -34,8 +51,7 @@ public class Envio {
 	/**
 	 * Método para establecer tipo.
 	 *
-	 * @param tipo
-	 *                 tipo a establecer
+	 * @param tipo tipo a establecer
 	 */
 	public void setTipo(final TypeEnvio tipo) {
 		this.tipo = tipo;
@@ -53,8 +69,7 @@ public class Envio {
 	/**
 	 * Método para establecer destino.
 	 *
-	 * @param destino
-	 *                    destino a establecer
+	 * @param destino destino a establecer
 	 */
 	public void setDestino(final String destino) {
 		this.destino = destino;
@@ -72,8 +87,7 @@ public class Envio {
 	/**
 	 * Método para establecer titulo.
 	 *
-	 * @param titulo
-	 *                   titulo a establecer
+	 * @param titulo titulo a establecer
 	 */
 	public void setTitulo(final String titulo) {
 		this.titulo = titulo;
@@ -91,11 +105,80 @@ public class Envio {
 	/**
 	 * Método para establecer mensaje.
 	 *
-	 * @param mensaje
-	 *                    mensaje a establecer
+	 * @param mensaje mensaje a establecer
 	 */
 	public void setMensaje(final String mensaje) {
 		this.mensaje = mensaje;
+	}
+
+	/**
+	 * @return the codigo
+	 */
+	public final Long getCodigo() {
+		return codigo;
+	}
+
+	/**
+	 * @param codigo the codigo to set
+	 */
+	public final void setCodigo(final Long codigo) {
+		this.codigo = codigo;
+	}
+
+	/**
+	 * @return the fechaCreacion
+	 */
+	public final Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	/**
+	 * @param fechaCreacion the fechaCreacion to set
+	 */
+	public final void setFechaCreacion(final Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	/**
+	 * @return the fechaEnvio
+	 */
+	public final Date getFechaEnvio() {
+		return fechaEnvio;
+	}
+
+	/**
+	 * @param fechaEnvio the fechaEnvio to set
+	 */
+	public final void setFechaEnvio(final Date fechaEnvio) {
+		this.fechaEnvio = fechaEnvio;
+	}
+
+	/**
+	 * @return the fechaReintento
+	 */
+	public final Date getFechaReintento() {
+		return fechaReintento;
+	}
+
+	/**
+	 * @param fechaReintento the fechaReintento to set
+	 */
+	public final void setFechaReintento(final Date fechaReintento) {
+		this.fechaReintento = fechaReintento;
+	}
+
+	/**
+	 * @return the mensajeError
+	 */
+	public final String getMensajeError() {
+		return mensajeError;
+	}
+
+	/**
+	 * @param mensajeError the mensajeError to set
+	 */
+	public final void setMensajeError(final String mensajeError) {
+		this.mensajeError = mensajeError;
 	}
 
 }

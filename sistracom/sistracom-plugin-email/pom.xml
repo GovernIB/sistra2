@@ -9,6 +9,25 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+	<dependencies>
+
+		<!-- Para enviar email -->
+		<dependency>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>mail</artifactId>
+		    <version>${javax.email.version}</version>
+		</dependency>
+
+		<!-- Commons-text -->
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-text</artifactId>
+		    <version>${commons-text.version}</version>
+		</dependency>
+	</dependencies>
+
+
+
     <artifactId>sistracom-plugin-email</artifactId>
     <packaging>pom</packaging>
     <modules>

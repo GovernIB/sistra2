@@ -1,5 +1,13 @@
 package es.caib.sistramit.core.service.component.flujo.pasos.registrar;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
@@ -25,6 +33,9 @@ import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
  */
 public final class UtilsPasoRegistrar {
 
+	/** Log. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(UtilsPasoRegistrar.class);
+
 	/**
 	 * Singleton.
 	 */
@@ -49,16 +60,11 @@ public final class UtilsPasoRegistrar {
 	/**
 	 * Verifica si el documento se puede firmar.
 	 *
-	 * @param pDatosPaso
-	 *                            Datos paso
-	 * @param pVariablesFlujo
-	 *                            Variables flujo
-	 * @param idDocumento
-	 *                            id documento
-	 * @param instancia
-	 *                            instancia
-	 * @param nifFirmante
-	 *                            nif firmante
+	 * @param pDatosPaso      Datos paso
+	 * @param pVariablesFlujo Variables flujo
+	 * @param idDocumento     id documento
+	 * @param instancia       instancia
+	 * @param nifFirmante     nif firmante
 	 */
 	public void validacionesFirmaDocumento(final DatosPaso pDatosPaso, final VariablesFlujo pVariablesFlujo,
 			final String idDocumento, final int instancia, final String nifFirmante) {
@@ -98,14 +104,10 @@ public final class UtilsPasoRegistrar {
 	/**
 	 * Obtiene datos persona firmante.
 	 *
-	 * @param pVariablesFlujo
-	 *                            variables flujo
-	 * @param idDocumento
-	 *                            id documento
-	 * @param instancia
-	 *                            instancia
-	 * @param nifFirmante
-	 *                            nif firmante
+	 * @param pVariablesFlujo variables flujo
+	 * @param idDocumento     id documento
+	 * @param instancia       instancia
+	 * @param nifFirmante     nif firmante
 	 * @return firmante
 	 */
 	public Persona obtieneDatosFirmante(final VariablesFlujo pVariablesFlujo, final String idDocumento,
@@ -124,12 +126,9 @@ public final class UtilsPasoRegistrar {
 	/**
 	 * Obtiene referencia documento a firmar según el tipo de documento.
 	 *
-	 * @param pVariablesFlujo
-	 *                            variables flujo
-	 * @param idDocumento
-	 *                            id documento
-	 * @param instancia
-	 *                            instancia
+	 * @param pVariablesFlujo variables flujo
+	 * @param idDocumento     id documento
+	 * @param instancia       instancia
 	 * @return fichero a firmar
 	 */
 	public ReferenciaFichero obtenerReferenciaFicheroFirmar(final VariablesFlujo pVariablesFlujo,
@@ -154,8 +153,7 @@ public final class UtilsPasoRegistrar {
 	/**
 	 * Obtiene extensión fichero según tipo firma.
 	 *
-	 * @param tipoFirma
-	 *                      Tipo firma
+	 * @param tipoFirma Tipo firma
 	 * @return extensión
 	 */
 	public String getExtensionFirma(final TypeFirmaDigital tipoFirma) {
@@ -180,5 +178,30 @@ public final class UtilsPasoRegistrar {
 			throw new TipoNoControladoException("Tipo de firma no controlado: " + tipoFirma);
 		}
 		return res;
+	}
+
+	/**
+	 * Carga plantilla mail finalizacion registro.
+	 *
+	 * @return plantilla mail
+	 */
+	public String cargarPlantillaMailFinalizacion() {
+
+		// TODO Ver si cachear plantilla
+
+		String plantilla = null;
+		try {
+			final InputStream is = UtilsPasoRegistrar.class.getResourceAsStream("/mailFinalizarRegistro.html");
+			final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			IOUtils.copy(is, bos);
+			plantilla = new String(bos.toByteArray());
+			is.close();
+			bos.close();
+			return plantilla;
+		} catch (final IOException ex) {
+			// Error al cargar plantilla mail
+			LOGGER.error("Error cargando plantilla mail finalizar registro: " + ex.getMessage(), ex);
+		}
+		return plantilla;
 	}
 }

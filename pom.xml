@@ -68,7 +68,7 @@
 		<jaxen.version>1.1.6</jaxen.version>
 		<jsoup.version>1.12.1</jsoup.version>
 		<maven.properties.version>1.0.0</maven.properties.version>
-
+		<javax.email.version>1.4</javax.email.version>
 <!-- 	NO MODIFICAR propiedades en blanco por defecto para la generacion del commit -->
 		<git.commit.id.abbrev></git.commit.id.abbrev>
 		<prefix.revision></prefix.revision>

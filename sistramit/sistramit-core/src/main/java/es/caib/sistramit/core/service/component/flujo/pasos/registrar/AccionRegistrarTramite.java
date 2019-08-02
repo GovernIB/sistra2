@@ -22,6 +22,7 @@ import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeValidez;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistra2.commons.utils.NifUtils;
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistramit.core.api.exception.AccesoNoPermitidoException;
 import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
@@ -44,6 +45,7 @@ import es.caib.sistramit.core.service.component.integracion.RegistroComponent;
 import es.caib.sistramit.core.service.component.literales.Literales;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
 import es.caib.sistramit.core.service.component.script.ScriptExec;
+import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoFormulario;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoPago;
@@ -60,6 +62,8 @@ import es.caib.sistramit.core.service.model.flujo.ResultadoRegistro;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
 import es.caib.sistramit.core.service.model.flujo.types.TypeEstadoPaso;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
+import es.caib.sistramit.core.service.model.system.Envio;
+import es.caib.sistramit.core.service.model.system.types.TypeEnvio;
 import es.caib.sistramit.core.service.repository.dao.FlujoPasoDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
 import es.caib.sistramit.core.service.util.UtilsSTG;
@@ -90,6 +94,9 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/** Motor de ejecución de scritps. */
 	@Autowired
 	private ScriptExec scriptFlujo;
+	/** Configuración. */
+	@Autowired
+	private ConfiguracionComponent configuracion;
 
 	@Override
 	public RespuestaEjecutarAccionPaso ejecutarAccionPaso(final DatosPaso pDatosPaso, final DatosPersistenciaPaso pDpp,
@@ -121,7 +128,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		actualizarDetalleRegistrar(pDipa, pVariablesFlujo, pDpp, resReg);
 
 		// Generamos aviso finalización
-		generarAvisoFinalizacion(pDipa);
+		generarAvisoFinalizacion(pDipa, pVariablesFlujo, resReg, pDefinicionTramite);
 
 		// Devolvemos respuesta indicando resultado registro
 		final RespuestaAccionPaso rp = new RespuestaAccionPaso();
@@ -134,21 +141,53 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Genera aviso finalización trámite.
 	 *
-	 * @param pDipa
-	 *                  Datos internos paso
+	 * @param pDipa              Datos internos paso
+	 * @param resReg             Resultado registro
+	 * @param pVariablesFlujo    Variables flujo
+	 * @param pDefinicionTramite Definición trámite
 	 */
-	private void generarAvisoFinalizacion(final DatosInternosPasoRegistrar pDipa) {
+	private void generarAvisoFinalizacion(final DatosInternosPasoRegistrar pDipa, final VariablesFlujo pVariablesFlujo,
+			final ResultadoRegistrar resReg, final DefinicionTramiteSTG pDefinicionTramite) {
 
 		final DetallePasoRegistrar detallePasoRegistrar = (DetallePasoRegistrar) pDipa.getDetallePaso();
-		if (detallePasoRegistrar.getAvisoFinalizar().getAvisar() == TypeSiNo.SI) {
 
-			// TODO CORREO - GENERAR TITULO Y TEXTO CORREO
-			final String titulo = "Titulo pendiente";
-			final String mensaje = "Mensaje pendiente";
+		if (resReg != null && resReg.getResultado() == TypeResultadoRegistro.CORRECTO
+				&& detallePasoRegistrar.getAvisoFinalizar().getAvisar() == TypeSiNo.SI) {
 
-			// TODO CORREO - GENERAR REGISTRO EN TABLA AVISOS CORREO
-			// -- PENDIENTE --
-			// detallePasoRegistrar.getAvisoFinalizar().getEmail()
+			final String idEntidad = pDefinicionTramite.getDefinicionVersion().getIdEntidad();
+			final RConfiguracionEntidad entidad = configuracion.obtenerConfiguracionEntidad(idEntidad);
+
+			String titulo = this.literales.getLiteral(Literales.PASO_REGISTRAR, "mailFinalizacion.titulo",
+					pVariablesFlujo.getIdioma());
+			String mensaje = this.literales.getLiteral(Literales.PASO_REGISTRAR, "mailFinalizacion.texto",
+					new String[] { resReg.getNumeroRegistro() }, pVariablesFlujo.getIdioma());
+
+			String plantilla = UtilsPasoRegistrar.getInstance().cargarPlantillaMailFinalizacion();
+			if (plantilla != null) {
+				// Reemplazamos variables plantilla
+				titulo = this.literales.getLiteral(Literales.PASO_REGISTRAR, "mailFinalizacion.titulo",
+						pVariablesFlujo.getIdioma());
+				plantilla = StringUtils.replace(plantilla, "[#ORGANISMO.NOMBRE#]",
+						UtilsSTG.obtenerLiteral(entidad.getDescripcion(), pVariablesFlujo.getIdioma(), true));
+				// TODO No hay url logo. Debería establecerse una prop nuevo en config entidad
+				plantilla = StringUtils.replace(plantilla, "[#TEXTO.FINALIZACION#]", mensaje);
+				plantilla = StringUtils.replace(plantilla, "[#TEXTO.ACCESO_CARPETA#]", this.literales.getLiteral(
+						Literales.PASO_REGISTRAR, "mailFinalizacion.accesoCarpeta", pVariablesFlujo.getIdioma()));
+				plantilla = StringUtils.replace(plantilla, "[#TEXTO.NO_RESPONDER#]", this.literales.getLiteral(
+						Literales.PASO_REGISTRAR, "mailFinalizacion.noResponder", pVariablesFlujo.getIdioma()));
+				plantilla = StringUtils.replace(plantilla, "[#URL_ACCESO_CARPETA#]",
+						UtilsSTG.obtenerLiteral(entidad.getUrlCarpeta(), pVariablesFlujo.getIdioma(), true));
+				mensaje = plantilla;
+			}
+
+			final String email = detallePasoRegistrar.getAvisoFinalizar().getEmail();
+			final Envio envio = new Envio();
+			envio.setDestino(email);
+			envio.setFechaCreacion(new Date());
+			envio.setMensaje(mensaje);
+			envio.setTipo(TypeEnvio.EMAIL);
+			envio.setTitulo(titulo);
+			registroComponent.guardarEnvio(envio);
 
 		}
 
@@ -157,16 +196,11 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Valida si se puede registrar el trámite.
 	 *
-	 * @param pDipa
-	 *                               Datos internos paso
-	 * @param pDpp
-	 *                               Datos persistencia paso
-	 * @param pReintentar
-	 *                               Indica si se debe reintentar registro
-	 * @param pVariablesFlujo
-	 *                               Variables flujo
-	 * @param pDefinicionTramite
-	 *                               Definición trámite
+	 * @param pDipa              Datos internos paso
+	 * @param pDpp               Datos persistencia paso
+	 * @param pReintentar        Indica si se debe reintentar registro
+	 * @param pVariablesFlujo    Variables flujo
+	 * @param pDefinicionTramite Definición trámite
 	 */
 	private void validacionesRegistrar(final DatosInternosPasoRegistrar pDipa, final DatosPersistenciaPaso pDpp,
 			final boolean pReintentar, final VariablesFlujo pVariablesFlujo,
@@ -230,16 +264,11 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Registra el tramite.
 	 *
-	 * @param pDipa
-	 *                               Datos internos tramite
-	 * @param pDpp
-	 *                               Datos persistencia paso
-	 * @param reintentar
-	 *                               reintentar
-	 * @param pVariablesFlujo
-	 *                               Variables flujo
-	 * @param pDefinicionTramite
-	 *                               Definición trámite
+	 * @param pDipa              Datos internos tramite
+	 * @param pDpp               Datos persistencia paso
+	 * @param reintentar         reintentar
+	 * @param pVariablesFlujo    Variables flujo
+	 * @param pDefinicionTramite Definición trámite
 	 * @return Resultado registro
 	 */
 	private ResultadoRegistrar registrarTramite(final DatosInternosPasoRegistrar pDipa,
@@ -265,14 +294,10 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Actualizar detalle registrar.
 	 *
-	 * @param pDipa
-	 *                            Datos internos paso
-	 * @param pVariablesFlujo
-	 *                            Variables flujo
-	 * @param pDpp
-	 *                            Datos persistencia
-	 * @param resReg
-	 *                            Resultado registro
+	 * @param pDipa           Datos internos paso
+	 * @param pVariablesFlujo Variables flujo
+	 * @param pDpp            Datos persistencia
+	 * @param resReg          Resultado registro
 	 */
 	private void actualizarDetalleRegistrar(final DatosInternosPasoRegistrar pDipa,
 			final VariablesFlujo pVariablesFlujo, final DatosPersistenciaPaso pDpp, final ResultadoRegistrar resReg) {
@@ -316,14 +341,10 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Actualiza paso tras registrar.
 	 *
-	 * @param pIdSesionTramitacion
-	 *                                 Id sesion tramitacion
-	 * @param pDipa
-	 *                                 Datos internos paso
-	 * @param pDpp
-	 *                                 Datos persistencia
-	 * @param resReg
-	 *                                 Resultado registro
+	 * @param pIdSesionTramitacion Id sesion tramitacion
+	 * @param pDipa                Datos internos paso
+	 * @param pDpp                 Datos persistencia
+	 * @param resReg               Resultado registro
 	 */
 	private void actualizarPersistencia(final String pIdSesionTramitacion, final DatosInternosPasoRegistrar pDipa,
 			final DatosPersistenciaPaso pDpp, final ResultadoRegistrar resReg) {
@@ -367,12 +388,9 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Genera asiento registral.
 	 *
-	 * @param pDipa
-	 *                               Datos internos paso
-	 * @param pVariablesFlujo
-	 *                               variables flujo
-	 * @param pDefinicionTramite
-	 *                               Definición trámite
+	 * @param pDipa              Datos internos paso
+	 * @param pVariablesFlujo    variables flujo
+	 * @param pDefinicionTramite Definición trámite
 	 * @return asiento registral
 	 */
 	private AsientoRegistral generarAsiento(final DatosInternosPasoRegistrar pDipa,
@@ -390,11 +408,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 				pVariablesFlujo.getDatosTramiteCP().getProcedimiento().getIdProcedimientoSIA());
 		datosAsunto.setFechaAsunto(new Date());
 		datosAsunto.setIdiomaAsunto(pVariablesFlujo.getIdioma());
-		if (StringUtils.isNotBlank(pDipa.getParametrosRegistro().getDatosRegistrales().getExtracto())) {
-			datosAsunto.setExtractoAsunto(pDipa.getParametrosRegistro().getDatosRegistrales().getExtracto());
-		} else {
-			datosAsunto.setExtractoAsunto(pVariablesFlujo.getTituloTramite());
-		}
+		datosAsunto.setExtractoAsunto(pDipa.getParametrosRegistro().getDatosRegistrales().getExtracto());
 		datosAsunto.setTipoAsunto(pDipa.getParametrosRegistro().getDatosRegistrales().getTipoAsunto());
 		datosAsunto
 				.setCodigoOrganoDestino(pDipa.getParametrosRegistro().getDatosRegistrales().getCodigoOrganoDestino());
@@ -429,12 +443,9 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Genera documentos asiento.
 	 *
-	 * @param pDipa
-	 *                                    Datos internos paso
-	 * @param pVariablesFlujo
-	 *                                    variables flujo
-	 * @param listaDocumentosRegistro
-	 *                                    documentos registro
+	 * @param pDipa                   Datos internos paso
+	 * @param pVariablesFlujo         variables flujo
+	 * @param listaDocumentosRegistro documentos registro
 	 * @return documentos asiento
 	 */
 	private List<DocumentoAsiento> generarDocumentosRegistro(final DatosInternosPasoRegistrar pDipa,
@@ -454,12 +465,9 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Genera documento registro.
 	 *
-	 * @param pDipa
-	 *                            Datos internos paso
-	 * @param pVariablesFlujo
-	 *                            Variables flujo
-	 * @param pDocReg
-	 *                            Documento registro
+	 * @param pDipa           Datos internos paso
+	 * @param pVariablesFlujo Variables flujo
+	 * @param pDocReg         Documento registro
 	 * @return
 	 */
 	private List<DocumentoAsiento> generarDocumentosRegistro(final DatosInternosPasoRegistrar pDipa,
@@ -534,14 +542,10 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Genera documento registro.
 	 *
-	 * @param documento
-	 *                           documento
-	 * @param refFichero
-	 *                           fichero del documento
-	 * @param firmaDocumento
-	 *                           firma
-	 * @param xml
-	 *                           si es xml
+	 * @param documento      documento
+	 * @param refFichero     fichero del documento
+	 * @param firmaDocumento firma
+	 * @param xml            si es xml
 	 * @return documento registro
 	 */
 	private DocumentoAsiento generarDocumentoRegistro(final DatosDocumento documento,
@@ -595,8 +599,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Calcula tipo firma digital asiento.
 	 *
-	 * @param typeFirmaDigital
-	 *                             tipo firma digital
+	 * @param typeFirmaDigital tipo firma digital
 	 * @return tipo firma asiento
 	 */
 	private TypeFirmaAsiento calcularTipoFirmaAsiento(final TypeFirmaDigital typeFirmaDigital) {
@@ -626,10 +629,8 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Calcula tipo documento asiento.
 	 *
-	 * @param tipoDocumento
-	 *                          tipo documento flujo
-	 * @param xml
-	 *                          si es documento xml
+	 * @param tipoDocumento tipo documento flujo
+	 * @param xml           si es documento xml
 	 * @return tipo documento asiento
 	 */
 	private TypeDocumental calcularTipoDocumental(
@@ -650,8 +651,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Calcula tipo validez.
 	 *
-	 * @param tipoDocumento
-	 *                          Tipo documento
+	 * @param tipoDocumento Tipo documento
 	 * @return Tipo validez
 	 */
 	private TypeValidez calcularValidez(
@@ -676,10 +676,8 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Genera datos interesado.
 	 *
-	 * @param tipoInteresado
-	 *                           tipo
-	 * @param datosUsuario
-	 *                           datos usuario
+	 * @param tipoInteresado tipo
+	 * @param datosUsuario   datos usuario
 	 * @return interesado
 	 */
 	private Interesado generarInteresado(final TypeInteresado tipoInteresado, final DatosUsuario datosUsuario) {

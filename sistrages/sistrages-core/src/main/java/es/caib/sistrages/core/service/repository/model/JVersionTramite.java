@@ -522,7 +522,7 @@ public class JVersionTramite implements IModelApi {
 	/**
 	 * @return the huella
 	 */
-	public final String getHuella() {
+	public String getHuella() {
 		return huella;
 	}
 

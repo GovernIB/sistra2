@@ -33,6 +33,7 @@ import es.caib.sistramit.core.service.util.UtilsFormulario;
  *
  */
 public class TestFormateadorGenerico {
+
 	public static void main(final String args[]) throws Exception {
 
 		/** Para obtener el json. **/

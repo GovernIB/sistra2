@@ -56,4 +56,13 @@ public class SystemServiceBean implements SystemService {
 		return systemService.verificarMaestro(instancia);
 	}
 
+	@Override
+	public void procesarEnviosInmediatos() {
+		systemService.procesarEnviosInmediatos();
+	}
+
+	@Override
+	public void procesarEnviosReintentos() {
+		systemService.procesarEnviosReintentos();
+	}
 }

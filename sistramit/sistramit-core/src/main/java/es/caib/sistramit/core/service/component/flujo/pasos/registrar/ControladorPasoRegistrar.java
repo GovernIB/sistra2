@@ -472,6 +472,12 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		// - Extracto
 		if (StringUtils.isNotBlank(resRegistro.getExtracto())) {
 			datosRegistrales.setExtracto(resRegistro.getExtracto());
+		} else {
+			datosRegistrales.setExtracto(pVariablesFlujo.getTituloTramite());
+		}
+
+		if (pVariablesFlujo.isDebugEnabled()) {
+			debug("Calculo datos registrales: \n" + datosRegistrales.print());
 		}
 
 		return datosRegistrales;

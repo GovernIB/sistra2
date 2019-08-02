@@ -13,8 +13,7 @@ import org.fundaciobit.pluginsib.core.IPlugin;
 public interface IEmailPlugin extends IPlugin {
 
     /** Prefix. */
-    public static final String AUTENTICACION_BASE_PROPERTY = IPLUGINSIB_BASE_PROPERTIES
-            + "email.";
+    public static final String EMAIL_BASE_PROPERTY = IPLUGINSIB_BASE_PROPERTIES;
 
     /**
      * Realiza envio email.

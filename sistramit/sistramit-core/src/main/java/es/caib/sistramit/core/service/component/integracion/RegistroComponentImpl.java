@@ -20,6 +20,8 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
+import es.caib.sistramit.core.service.model.system.Envio;
+import es.caib.sistramit.core.service.repository.dao.EnvioDao;
 
 /**
  * Implementación componente registro.
@@ -40,6 +42,10 @@ public final class RegistroComponentImpl implements RegistroComponent {
 	/** Auditoria. */
 	@Autowired
 	private AuditoriaComponent auditoriaComponent;
+
+	/** Envio */
+	@Autowired
+	private EnvioDao envioDao;
 
 	@Override
 	public ResultadoRegistrar registrar(final String idSesionTramitacion, final AsientoRegistral asiento,
@@ -150,6 +156,11 @@ public final class RegistroComponentImpl implements RegistroComponent {
 			throw new RegistroJustificanteException(
 					"Error obteniendo como se descargan justificantes para entidad: " + codigoEntidad, e);
 		}
+	}
+
+	@Override
+	public void guardarEnvio(final Envio envio) {
+		envioDao.addEnvio(envio);
 	}
 
 }

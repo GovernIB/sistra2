@@ -45,9 +45,9 @@ public final class DatosRegistrales implements Serializable {
 	 * Método para establecer libro.
 	 *
 	 * @param libro
-	 *            libro a establecer
+	 *                  libro a establecer
 	 */
-	public void setLibro(String libro) {
+	public void setLibro(final String libro) {
 		this.libro = libro;
 	}
 
@@ -64,9 +64,9 @@ public final class DatosRegistrales implements Serializable {
 	 * Método para establecer tipoAsunto.
 	 *
 	 * @param tipoAsunto
-	 *            tipoAsunto a establecer
+	 *                       tipoAsunto a establecer
 	 */
-	public void setTipoAsunto(String tipoAsunto) {
+	public void setTipoAsunto(final String tipoAsunto) {
 		this.tipoAsunto = tipoAsunto;
 	}
 
@@ -83,9 +83,9 @@ public final class DatosRegistrales implements Serializable {
 	 * Método para establecer numeroExpediente.
 	 *
 	 * @param numeroExpediente
-	 *            numeroExpediente a establecer
+	 *                             numeroExpediente a establecer
 	 */
-	public void setNumeroExpediente(String numeroExpediente) {
+	public void setNumeroExpediente(final String numeroExpediente) {
 		this.numeroExpediente = numeroExpediente;
 	}
 
@@ -102,12 +102,11 @@ public final class DatosRegistrales implements Serializable {
 	 * Método para establecer oficina.
 	 *
 	 * @param oficina
-	 *            oficina a establecer
+	 *                    oficina a establecer
 	 */
-	public void setOficina(String oficina) {
+	public void setOficina(final String oficina) {
 		this.oficina = oficina;
 	}
-
 
 	/**
 	 * Método de acceso a textoExpone.
@@ -122,9 +121,9 @@ public final class DatosRegistrales implements Serializable {
 	 * Método para establecer textoExpone.
 	 *
 	 * @param textoExpone
-	 *            textoExpone a establecer
+	 *                        textoExpone a establecer
 	 */
-	public void setTextoExpone(String textoExpone) {
+	public void setTextoExpone(final String textoExpone) {
 		this.textoExpone = textoExpone;
 	}
 
@@ -141,14 +140,15 @@ public final class DatosRegistrales implements Serializable {
 	 * Método para establecer textoSolicita.
 	 *
 	 * @param textoSolicita
-	 *            textoSolicita a establecer
+	 *                          textoSolicita a establecer
 	 */
-	public void setTextoSolicita(String textoSolicita) {
+	public void setTextoSolicita(final String textoSolicita) {
 		this.textoSolicita = textoSolicita;
 	}
 
 	/**
 	 * Método de acceso a codigoOrganoDestino.
+	 * 
 	 * @return codigoOrganoDestino
 	 */
 	public String getCodigoOrganoDestino() {
@@ -157,15 +157,17 @@ public final class DatosRegistrales implements Serializable {
 
 	/**
 	 * Método para establecer codigoOrganoDestino.
+	 * 
 	 * @param codigoOrganoDestino
-	 * 			  codigoOrganoDestino a establecer
+	 *                                codigoOrganoDestino a establecer
 	 */
-	public void setCodigoOrganoDestino(String codigoOrganoDestino) {
+	public void setCodigoOrganoDestino(final String codigoOrganoDestino) {
 		this.codigoOrganoDestino = codigoOrganoDestino;
 	}
 
 	/**
 	 * Método de acceso a extracto.
+	 * 
 	 * @return extracto
 	 */
 	public String getExtracto() {
@@ -174,12 +176,30 @@ public final class DatosRegistrales implements Serializable {
 
 	/**
 	 * Método para establecer extracto.
+	 * 
 	 * @param extracto
-	 * 			  extracto a establecer
+	 *                     extracto a establecer
 	 */
-	public void setExtracto(String extracto) {
+	public void setExtracto(final String extracto) {
 		this.extracto = extracto;
 	}
 
+	/**
+	 * Imprime contenido en un String.
+	 * 
+	 * @return contenido en un String
+	 */
+	public String print() {
+		String res = "Datos registrales: ";
+		res += " - Oficina: " + this.getOficina() + "\n";
+		res += " - Libro: " + this.getLibro() + "\n";
+		res += " - Asunto: " + this.getTipoAsunto() + "\n";
+		res += " - Organo destino: " + this.getCodigoOrganoDestino() + "\n";
+		res += " - N.Expediente: " + this.getNumeroExpediente() + "\n";
+		res += " - Expone: " + this.getTextoExpone() + "\n";
+		res += " - Solicita: " + this.getTextoSolicita() + "\n";
+		res += " - Extracto: " + this.getExtracto() + "\n";
+		return res;
+	}
 
 }
