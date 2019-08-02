@@ -232,18 +232,71 @@ public final class ValidacionesTipo {
 		return (checkIBAN(pNumeroCuenta) && esNumeroCuentaValido(pNumeroCuenta.substring(ConstantesNumero.N4)));
 	}
 
+	/**
+	 * Comprueba si el codigo SWIFT valido.
+	 *
+	 * @param codigo Codigo SWIFT
+	 * @return
+	 */
 	public boolean esNumeroSwiftValido(final String codigo) {
-		return codigo != null && (codigo.length() == 8 || codigo.length() == 11);
+		boolean valido;
+		if (codigo == null || (codigo.length() != 8 && codigo.length() != 11)) {
+			valido = false;
+		} else {
+			final String banco = codigo.substring(0, 4);
+			final String pais = codigo.substring(4, 6);
+			final String localidad = codigo.substring(6, 8);
+			String sucursal = null;
+			if (codigo.length() == 11) {
+				sucursal = codigo.substring(8, 11);
+			}
+			valido = esNumeroSwiftValido(banco, pais, localidad, sucursal);
+		}
+		return valido;
 	}
 
+	/**
+	 * Comprueba si el codigo SWIFT valido.
+	 *
+	 * @param banco     Codigo Banco
+	 * @param pais      Codigo pais
+	 * @param localidad Codigo localidad
+	 * @param sucursal  Codigo sucursal (no obligatorio)
+	 * @return
+	 */
 	public boolean esNumeroSwiftValido(final String banco, final String pais, final String localidad,
 			final String sucursal) {
-		final boolean codigoBancoCorrecto = banco != null && banco.length() == 4;
-		final boolean codigoPaisCorrecto = pais != null && pais.length() == 2;
-		final boolean codigoLocalidadCorrecto = localidad != null && localidad.length() == 2;
-		final boolean codigoSucursalCorrecto = sucursal == null || sucursal.length() == 3;
+		final boolean codigoBancoCorrecto = banco != null && banco.length() == 4 && StringUtils.isAllUpperCase(banco);
+		final boolean codigoPaisCorrecto = pais != null && pais.length() == 2 && StringUtils.isAllUpperCase(pais);
+		final boolean codigoLocalidadCorrecto = localidad != null && localidad.length() == 2
+				&& (StringUtils.isNumeric(localidad) || StringUtils.isAllUpperCase(localidad));
+		final boolean codigoSucursalCorrecto = esNumeroSwiftValidoSucursal(sucursal);
 
 		return codigoBancoCorrecto && codigoPaisCorrecto && codigoLocalidadCorrecto && codigoSucursalCorrecto;
+	}
+
+	/**
+	 * Comprueba si el num. sucursal es valido (es opcional el dato). Tienen que ser
+	 * o mayúsculas o numérico (mezclado).
+	 *
+	 * @param sucursal
+	 * @return
+	 */
+	private boolean esNumeroSwiftValidoSucursal(final String sucursal) {
+		boolean validoSucursal;
+		if (sucursal == null) {
+			validoSucursal = true;
+		} else {
+			validoSucursal = true;
+			for (final char caracter : sucursal.toCharArray()) {
+				if (!StringUtils.isAllUpperCase(String.valueOf(caracter))
+						&& !StringUtils.isNumeric(String.valueOf(caracter))) {
+					validoSucursal = false;
+					break;
+				}
+			}
+		}
+		return validoSucursal;
 	}
 
 	/**
