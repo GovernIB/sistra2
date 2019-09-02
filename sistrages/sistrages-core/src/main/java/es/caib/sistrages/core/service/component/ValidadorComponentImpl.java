@@ -1233,7 +1233,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 		// Eliminamos bloques comentarios
 		int indx = scriptSearch.indexOf("/*");
 		while (indx > -1) {
-			final int indxFin = scriptSearch.indexOf("*/");
+			final int indxFin = scriptSearch.indexOf("*/", indx);
 			if (indxFin > -1) {
 				final String nuevaInicio = scriptSearch.substring(0, indx);
 				final String nuevaFin = scriptSearch.substring(indxFin + "*/".length(), scriptSearch.length());
