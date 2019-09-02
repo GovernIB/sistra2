@@ -19,7 +19,9 @@ import javax.inject.Inject;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
+import es.caib.sistrages.core.api.model.LiteralScript;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ScriptInfo;
@@ -89,6 +91,15 @@ public class DialogTramiteScripts extends DialogControllerBase {
 					" ************************************************************************************************************ ");
 			final Script script = scriptService.getScript(scriptInfo.getCodigoScript());
 			writer.println(script.getContenido());
+			if (script.getMensajes() != null && !script.getMensajes().isEmpty()) {
+				writer.println("");
+				for (final LiteralScript literalScript : script.getMensajes()) {
+					for (final Traduccion traduccion : literalScript.getLiteral().getTraducciones()) {
+						writer.println("// " + literalScript.getIdentificador() + " (" + traduccion.getIdioma() + ") : "
+								+ traduccion.getLiteral());
+					}
+				}
+			}
 			writer.println("");
 		}
 		writer.close();

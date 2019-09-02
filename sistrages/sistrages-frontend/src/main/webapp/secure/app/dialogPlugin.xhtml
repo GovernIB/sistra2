@@ -61,6 +61,10 @@
 						<!-- Necesario para actualizar en controlador la fila seleccionada -->
 						<p:ajax event="rowSelect" global="false" />
 						<p:ajax event="rowUnselect" />
+						<p:ajax event="rowDblselect"
+		                  		oncomplete="rcEditarPropiedad();"
+		                        disabled="#{dialogPlugin.isConsulta()}"
+		                        />
 
 						<!-- Columnas -->
 					    <p:column headerText="#{msg['dialogPlugin.headerParametros.codigo']}" class="ui-panelgrid-cell">
@@ -95,13 +99,13 @@
 					</p:column>
 
 				</h:panelGrid>
-				<h:outputScript rendered="#{dialogPlugin.isConsulta()}">
+				<h:outputScript rendered="#{!dialogPlugin.isConsulta()}">
 				      function rcEditarPropiedad() {
-				        document.getElementById("dialogPlugin:btnEditarPropiedad").click();
+				      	document.getElementById("dialogPlugin:btnEditarPropiedad").click();
 				      }
 
 				      function  rcBorrarPropiedad() {
-				        document.getElementById("dialogPlugin:btnEliminarPropiedad").click();
+				      	document.getElementById("dialogPlugin:btnEliminarPropiedad").click();
 				      }
 			    </h:outputScript>
 			</p:outputPanel>
