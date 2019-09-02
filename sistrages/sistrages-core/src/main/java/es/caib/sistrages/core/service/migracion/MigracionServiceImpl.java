@@ -606,76 +606,83 @@ public class MigracionServiceImpl implements MigracionService {
 		} else if ("textbox".equals(comType) && isNotOculto(componenteSistra)) {
 			// El tipo oculto se ignora
 			final ComponenteFormularioCampoTexto cTextBox = ((ComponenteFormularioCampoTexto) componente);
-			switch (componenteSistra.getComTxtipo()) {
-			case "FE":
-				cTextBox.setTipoCampoTexto(TypeCampoTexto.FECHA);
-				break;
-			case "HO":
-				cTextBox.setTipoCampoTexto(TypeCampoTexto.HORA);
-				break;
-			case "IM":
-				cTextBox.setTipoCampoTexto(TypeCampoTexto.NUMERO);
-				cTextBox.setNumeroDigitosEnteros(5);
-				cTextBox.setNumeroDigitosDecimales(2);
-				cTextBox.setNumeroSeparador(TypeSeparadorNumero.PUNTO_Y_COMA);
-
+			if (componenteSistra.getComTxtipo() == null) {
+				cTextBox.setTipoCampoTexto(TypeCampoTexto.NORMAL);
 				final ErrorMigracion error1 = errorMigracion(componente.getIdComponente(), pOpciones,
 						"elemento.formulario.disenyoFormulario.pagina.elemento.revisar", pIdioma);
 				error1.setTipo(TypeErrorMigracion.WARNING);
 				listaErrores.add(error1);
+			} else {
+				switch (componenteSistra.getComTxtipo()) {
+				case "FE":
+					cTextBox.setTipoCampoTexto(TypeCampoTexto.FECHA);
+					break;
+				case "HO":
+					cTextBox.setTipoCampoTexto(TypeCampoTexto.HORA);
+					break;
+				case "IM":
+					cTextBox.setTipoCampoTexto(TypeCampoTexto.NUMERO);
+					cTextBox.setNumeroDigitosEnteros(5);
+					cTextBox.setNumeroDigitosDecimales(2);
+					cTextBox.setNumeroSeparador(TypeSeparadorNumero.PUNTO_Y_COMA);
 
-				break;
-			case "NO":
-				if (componenteSistra.getTipoEmail() != null && componenteSistra.getTipoEmail()) {
-					cTextBox.setTipoCampoTexto(TypeCampoTexto.EMAIL);
+					final ErrorMigracion error1 = errorMigracion(componente.getIdComponente(), pOpciones,
+							"elemento.formulario.disenyoFormulario.pagina.elemento.revisar", pIdioma);
+					error1.setTipo(TypeErrorMigracion.WARNING);
+					listaErrores.add(error1);
 
-					if (componenteSistra.getMaxlength() != null) {
-						cTextBox.setNormalTamanyo(componenteSistra.getMaxlength());
+					break;
+				case "NO":
+					if (componenteSistra.getTipoEmail() != null && componenteSistra.getTipoEmail()) {
+						cTextBox.setTipoCampoTexto(TypeCampoTexto.EMAIL);
+
+						if (componenteSistra.getMaxlength() != null) {
+							cTextBox.setNormalTamanyo(componenteSistra.getMaxlength());
+						}
+					} else if (componenteSistra.getTipoExpRegular() != null && componenteSistra.getTipoExpRegular()) {
+						cTextBox.setTipoCampoTexto(TypeCampoTexto.EXPRESION);
+						cTextBox.setExpresionRegular(componenteSistra.getExpRegular());
+					} else {
+						cTextBox.setTipoCampoTexto(TypeCampoTexto.NORMAL);
+
+						cTextBox.setNormalMultilinea(UNO.equals(componenteSistra.getComMultil()));
+
+						if (cTextBox.isNormalMultilinea()) {
+							if (componenteSistra.getComFilas() != null) {
+								cTextBox.setNormalNumeroLineas(componenteSistra.getComFilas().intValue());
+							}
+							if (componenteSistra.getComColumn() != null) {
+								cTextBox.setNormalTamanyo(componenteSistra.getComColumn().intValue());
+							}
+						}
+
+						if (componenteSistra.getMaxlength() != null) {
+							cTextBox.setNormalTamanyo(componenteSistra.getMaxlength());
+						}
 					}
-				} else if (componenteSistra.getTipoExpRegular() != null && componenteSistra.getTipoExpRegular()) {
-					cTextBox.setTipoCampoTexto(TypeCampoTexto.EXPRESION);
-					cTextBox.setExpresionRegular(componenteSistra.getExpRegular());
-				} else {
+
+					if (componenteSistra.isRequired() != null) {
+						cTextBox.setObligatorio(componenteSistra.isRequired().booleanValue());
+					}
+
+					break;
+				case "NU":
+					cTextBox.setTipoCampoTexto(TypeCampoTexto.NUMERO);
+					cTextBox.setNumeroDigitosEnteros(5);
+					cTextBox.setNumeroDigitosDecimales(0);
+					cTextBox.setNumeroSeparador(TypeSeparadorNumero.PUNTO_Y_COMA);
+
+					final ErrorMigracion error2 = errorMigracion(componente.getIdComponente(), pOpciones,
+							"elemento.formulario.disenyoFormulario.pagina.elemento.revisar", pIdioma);
+					error2.setTipo(TypeErrorMigracion.WARNING);
+					listaErrores.add(error2);
+
+					break;
+				default:
 					cTextBox.setTipoCampoTexto(TypeCampoTexto.NORMAL);
-
-					cTextBox.setNormalMultilinea(UNO.equals(componenteSistra.getComMultil()));
-
-					if (cTextBox.isNormalMultilinea()) {
-						if (componenteSistra.getComFilas() != null) {
-							cTextBox.setNormalNumeroLineas(componenteSistra.getComFilas().intValue());
-						}
-						if (componenteSistra.getComColumn() != null) {
-							cTextBox.setNormalTamanyo(componenteSistra.getComColumn().intValue());
-						}
-					}
-
-					if (componenteSistra.getMaxlength() != null) {
-						cTextBox.setNormalTamanyo(componenteSistra.getMaxlength());
-					}
+					break;
 				}
-
-				if (componenteSistra.isRequired() != null) {
-					cTextBox.setObligatorio(componenteSistra.isRequired().booleanValue());
-				}
-
-				break;
-			case "NU":
-				cTextBox.setTipoCampoTexto(TypeCampoTexto.NUMERO);
-				cTextBox.setNumeroDigitosEnteros(5);
-				cTextBox.setNumeroDigitosDecimales(0);
-				cTextBox.setNumeroSeparador(TypeSeparadorNumero.PUNTO_Y_COMA);
-
-				final ErrorMigracion error2 = errorMigracion(componente.getIdComponente(), pOpciones,
-						"elemento.formulario.disenyoFormulario.pagina.elemento.revisar", pIdioma);
-				error2.setTipo(TypeErrorMigracion.WARNING);
-				listaErrores.add(error2);
-
-				break;
-			default:
-				cTextBox.setTipoCampoTexto(TypeCampoTexto.NORMAL);
-				break;
 			}
-
 		}
 
 		StringBuilder scriptAutorelleno = null;
@@ -714,8 +721,16 @@ public class MigracionServiceImpl implements MigracionService {
 				scriptValidacion.append("*/");
 
 				if (componente instanceof ComponenteFormularioCampo) {
-					((ComponenteFormularioCampo) componente)
-							.setScriptValidacion(createScript(scriptValidacion.toString()));
+					final Script scriptValidacionAux = createScript(scriptValidacion.toString());
+
+					if (scriptValidacionAux != null && componenteSistra.getMensajeValidacion() != null) {
+						final List<LiteralScript> literalScript = new ArrayList<>();
+						literalScript.add(createLiteralScript(componenteSistra.getComNomlog().toUpperCase(),
+								componenteSistra.getMensajeValidacion()));
+						scriptValidacionAux.setMensajes(literalScript);
+					}
+
+					((ComponenteFormularioCampo) componente).setScriptValidacion(scriptValidacionAux);
 				}
 			}
 
@@ -727,15 +742,8 @@ public class MigracionServiceImpl implements MigracionService {
 				scriptEstado.append("*/");
 
 				if (componente instanceof ComponenteFormularioCampo) {
-					final Script scriptEstadoAux = createScript(scriptEstado.toString());
-
-					if (scriptEstadoAux != null && componenteSistra.getMensajeValidacion() != null) {
-						final List<LiteralScript> literalScript = new ArrayList<>();
-						literalScript.add(createLiteralScript(componenteSistra.getMensajeValidacion()));
-						scriptEstadoAux.setMensajes(literalScript);
-					}
-
-					((ComponenteFormularioCampo) componente).setScriptSoloLectura(scriptEstadoAux);
+					((ComponenteFormularioCampo) componente)
+							.setScriptSoloLectura(createScript(scriptEstado.toString()));
 				}
 			}
 
@@ -1006,11 +1014,11 @@ public class MigracionServiceImpl implements MigracionService {
 	 * @param literal literal
 	 * @return literal script
 	 */
-	private LiteralScript createLiteralScript(final Literal literal) {
+	private LiteralScript createLiteralScript(final String identificador, final Literal literal) {
 		LiteralScript res = null;
 		if (literal != null) {
 			res = new LiteralScript();
-			res.setIdentificador("M1");
+			res.setIdentificador(identificador);
 			res.setLiteral(literal);
 		}
 		return res;

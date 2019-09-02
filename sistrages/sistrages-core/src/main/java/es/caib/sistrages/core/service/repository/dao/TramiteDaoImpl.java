@@ -974,6 +974,7 @@ public class TramiteDaoImpl implements TramiteDao {
 			final List<Long> idDominios, final String usuario, final boolean isModoIM) {
 
 		JVersionTramite jTramiteVersion = null;
+		Long idTramiteVersion;
 		switch (filaTramiteVersion.getAccion()) {
 		case INCREMENTAR:
 		case CREAR:
@@ -991,6 +992,7 @@ public class TramiteDaoImpl implements TramiteDao {
 			final JTramite jTramite = entityManager.find(JTramite.class, idTramite);
 			jTramiteVersion.setTramite(jTramite);
 			entityManager.persist(jTramiteVersion);
+			idTramiteVersion = jTramiteVersion.getCodigo();
 			break;
 		case REEMPLAZAR:
 			// Obtenemos los pasos y los borramos
@@ -1013,53 +1015,47 @@ public class TramiteDaoImpl implements TramiteDao {
 				}
 				entityManager.remove(paso);
 			}
-			entityManager.flush();
 
-			jTramiteVersion = entityManager.find(JVersionTramite.class,
-					filaTramiteVersion.getTramiteVersionActual().getCodigo());
-
-			// Actualizamos la version y release respecto a lo que nos pasan
-			jTramiteVersion.setActiva(filaTramiteVersion.getTramiteVersion().isActiva());
-			jTramiteVersion.setAdmitePersistencia(filaTramiteVersion.getTramiteVersion().isPersistencia());
-			jTramiteVersion.setAutenticado(filaTramiteVersion.getTramiteVersion().isAutenticado());
-			jTramiteVersion.setBloqueada(false);
-			jTramiteVersion.setDebug(filaTramiteVersion.getTramiteVersion().isDebug());
-			jTramiteVersion.setDesactivacionTemporal(filaTramiteVersion.getTramiteVersion().isDesactivacion());
-			jTramiteVersion.setIdiomasSoportados(filaTramiteVersion.getTramiteVersion().getIdiomasSoportados());
-			if (filaTramiteVersion.getTramiteVersion().isLimiteTramitacion()) {
-				jTramiteVersion.setLimiteTramitacion("S");
-			} else {
-				jTramiteVersion.setLimiteTramitacion("N");
+			idTramiteVersion = filaTramiteVersion.getTramiteVersionActual().getCodigo();
+			final TramiteVersion tv = this.getTramiteVersion(filaTramiteVersion.getTramiteVersionActual().getCodigo());
+			tv.setActiva(filaTramiteVersion.getTramiteVersion().isActiva());
+			tv.setPersistencia(filaTramiteVersion.getTramiteVersion().isPersistencia());
+			tv.setAutenticado(filaTramiteVersion.getTramiteVersion().isAutenticado());
+			tv.setBloqueada(false);
+			tv.setDebug(filaTramiteVersion.getTramiteVersion().isDebug());
+			tv.setDesactivacion(filaTramiteVersion.getTramiteVersion().isDesactivacion());
+			tv.setIdiomasSoportados(filaTramiteVersion.getTramiteVersion().getIdiomasSoportados());
+			tv.setLimiteTramitacion(filaTramiteVersion.getTramiteVersion().isLimiteTramitacion());
+			tv.setIntLimiteTramitacion(filaTramiteVersion.getTramiteVersion().getIntLimiteTramitacion());
+			tv.setNumLimiteTramitacion(filaTramiteVersion.getTramiteVersion().getNumLimiteTramitacion());
+			if (filaTramiteVersion.getTramiteVersion().getMensajeDesactivacion() != null) {
+				tv.setMensajeDesactivacion(JLiteral
+						.clonar(JLiteral.fromModel(filaTramiteVersion.getTramiteVersion().getMensajeDesactivacion()))
+						.toModel());
 			}
-			jTramiteVersion
-					.setLimiteTramitacionIntervalo(filaTramiteVersion.getTramiteVersion().getIntLimiteTramitacion());
-			jTramiteVersion
-					.setLimiteTramitacionNumero(filaTramiteVersion.getTramiteVersion().getNumLimiteTramitacion());
-			jTramiteVersion.setMensajeDesactivacion(JLiteral
-					.clonar(JLiteral.fromModel(filaTramiteVersion.getTramiteVersion().getMensajeDesactivacion())));
-			jTramiteVersion.setNivelQAA(filaTramiteVersion.getTramiteVersion().getNivelQAA());
-			jTramiteVersion.setNoAutenticado(filaTramiteVersion.getTramiteVersion().isNoAutenticado());
-			jTramiteVersion.setNumeroVersion(filaTramiteVersion.getTramiteVersion().getNumeroVersion());
-			jTramiteVersion.setPersistenciaDias(filaTramiteVersion.getTramiteVersion().getPersistenciaDias());
-			jTramiteVersion.setPersistenciaInfinita(filaTramiteVersion.getTramiteVersion().isPersistenciaInfinita());
-			jTramiteVersion.setPlazoFinDesactivacion(filaTramiteVersion.getTramiteVersion().getPlazoFinDesactivacion());
-			jTramiteVersion
-					.setPlazoInicioDesactivacion(filaTramiteVersion.getTramiteVersion().getPlazoInicioDesactivacion());
+			tv.setNivelQAA(filaTramiteVersion.getTramiteVersion().getNivelQAA());
+			tv.setNoAutenticado(filaTramiteVersion.getTramiteVersion().isNoAutenticado());
+			tv.setNumeroVersion(filaTramiteVersion.getTramiteVersion().getNumeroVersion());
+			tv.setPersistenciaDias(filaTramiteVersion.getTramiteVersion().getPersistenciaDias());
+			tv.setPersistenciaInfinita(filaTramiteVersion.getTramiteVersion().isPersistenciaInfinita());
+			tv.setPlazoFinDesactivacion(filaTramiteVersion.getTramiteVersion().getPlazoFinDesactivacion());
+			tv.setPlazoInicioDesactivacion(filaTramiteVersion.getTramiteVersion().getPlazoInicioDesactivacion());
 			if (isModoIM) {
 				// En modo importar, se incrementa la release
-				jTramiteVersion.setRelease(jTramiteVersion.getRelease() + 1);
+				tv.setRelease(tv.getRelease() + 1);
 			} else {
 				// En modo Cuaderno Carga, se sustituye
-				jTramiteVersion.setRelease(filaTramiteVersion.getTramiteVersion().getRelease());
+				tv.setRelease(filaTramiteVersion.getTramiteVersion().getRelease());
 			}
-			jTramiteVersion.setScriptInicializacionTramite(JScript
-					.fromModel(Script.clonar(filaTramiteVersion.getTramiteVersion().getScriptInicializacionTramite())));
-			jTramiteVersion.setScriptPersonalizacion(JScript
-					.fromModel(Script.clonar(filaTramiteVersion.getTramiteVersion().getScriptPersonalizacion())));
-			jTramiteVersion.setUsuarioDatosBloqueo("");
-			jTramiteVersion.setUsuarioIdBloqueo("");
-			jTramiteVersion.setTipoflujo(filaTramiteVersion.getTramiteVersion().getTipoFlujo().toString());
-			entityManager.merge(jTramiteVersion);
+			tv.setScriptInicializacionTramite(
+					Script.clonar(filaTramiteVersion.getTramiteVersion().getScriptInicializacionTramite()));
+			tv.setScriptPersonalizacion(
+					Script.clonar(filaTramiteVersion.getTramiteVersion().getScriptPersonalizacion()));
+			tv.setDatosUsuarioBloqueo("");
+			tv.setCodigoUsuarioBloqueo("");
+			tv.setTipoFlujo(filaTramiteVersion.getTramiteVersion().getTipoFlujo());
+			tv.setHuella(filaTramiteVersion.getTramiteVersion().getHuella());
+			this.updateTramiteVersion(tv);
 
 			// Solo en el modo Cuaderno de Carga se puede reemplazar y eliiminar versiones
 			// antiguas (en IMP, siempre se incrementa)
@@ -1083,24 +1079,24 @@ public class TramiteDaoImpl implements TramiteDao {
 			throw new ImportacionError("Acció en tràmit versió dao no implementada.");
 		}
 
-		entityManager.flush();
+		// entityManager.flush();
 
 		// Creamos una nueva entrada en el historial
-		historialVersionDao.add(jTramiteVersion.getCodigo(), usuario, TypeAccionHistorial.IMPORTACION, null);
+		historialVersionDao.add(idTramiteVersion, usuario, TypeAccionHistorial.IMPORTACION, null);
 
 		/** Primero borramos las asociaciones y luego las volvemos a asociar. **/
-		final List<Dominio> mdominios = this.getDominioSimpleByTramiteId(jTramiteVersion.getCodigo());
+		final List<Dominio> mdominios = this.getDominioSimpleByTramiteId(idTramiteVersion);
 		for (final Dominio mdominio : mdominios) {
-			dominioDao.removeTramiteVersion(mdominio.getCodigo(), jTramiteVersion.getCodigo());
+			dominioDao.removeTramiteVersion(mdominio.getCodigo(), idTramiteVersion);
 		}
 		entityManager.flush();
 
 		/** Id dominio. **/
 		for (final Long idDominio : idDominios) {
-			dominioDao.addTramiteVersion(idDominio, jTramiteVersion.getCodigo());
+			dominioDao.addTramiteVersion(idDominio, idTramiteVersion);
 		}
 
-		return jTramiteVersion.getCodigo();
+		return idTramiteVersion;
 	}
 
 	/**
