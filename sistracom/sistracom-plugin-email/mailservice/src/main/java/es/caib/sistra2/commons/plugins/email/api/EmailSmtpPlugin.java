@@ -56,7 +56,14 @@ public class EmailSmtpPlugin extends AbstractPluginProperties implements IEmailP
 
 			msg.setContent(contenido, "text/html; charset=utf-8");
 			msg.setHeader("X-Mailer", "JavaMailer");
-			final String mailFrom = mailSession.getProperty("mail.smtp.user");
+			String mailFrom = null;
+			if (mailSession.getProperty("mail.from") != null) {
+				mailFrom = mailSession.getProperty("mail.from");
+			} else if (mailSession.getProperty("mail.smtp.user") != null) {
+				mailFrom = mailSession.getProperty("mail.smtp.user");
+			} else {
+				throw new EmailPluginException("Error, mail from no especificado");
+			}
 			msg.setFrom(new InternetAddress(mailFrom));
 
 			Transport.send(msg);
