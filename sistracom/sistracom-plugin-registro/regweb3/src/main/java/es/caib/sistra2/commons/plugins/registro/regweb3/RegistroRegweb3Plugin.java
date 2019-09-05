@@ -364,7 +364,10 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		// Datos asunto
 		asientoWs.setResumen(asiento.getDatosAsunto().getExtractoAsunto());
 		asientoWs.setTipoDocumentacionFisicaCodigo(ConstantesRegweb3.TIPO_DOCFIS_DIGTL);
-		asientoWs.setTipoAsunto(asiento.getDatosAsunto().getTipoAsunto());
+
+		// TODO VER DE ELIMINAR TIPO ASUNTO y METER CODIGO ASUNTO
+		// asientoWs.setTipoAsunto(asiento.getDatosAsunto().getTipoAsunto());
+
 		switch (asiento.getDatosAsunto().getIdiomaAsunto()) {
 		case "es":
 			asientoWs.setIdioma(ConstantesRegweb3.IDIOMA_CASTELLANO);
