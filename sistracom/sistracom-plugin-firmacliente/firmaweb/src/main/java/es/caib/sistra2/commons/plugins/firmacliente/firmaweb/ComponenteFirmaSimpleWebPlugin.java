@@ -41,9 +41,9 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 	 * Constructor.
 	 *
 	 * @param prefijoPropiedades
-	 *            prefijo props
+	 *                               prefijo props
 	 * @param properties
-	 *            propiedades
+	 *                               propiedades
 	 */
 	public ComponenteFirmaSimpleWebPlugin(final String prefijoPropiedades, final Properties properties) {
 		super(prefijoPropiedades, properties);
@@ -56,8 +56,11 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 		try {
 			final ApiFirmaWebSimple api = generarApi();
 
+			// TODO PENDIENTE DE VER SI SE PASA SIGNEREMAIL
+			final String signerEmail = null;
 			final FirmaSimpleCommonInfo commonInfo = new FirmaSimpleCommonInfo(getPropiedad("profile"),
-					infoSesionFirma.getIdioma(), infoSesionFirma.getNombreUsuario(), infoSesionFirma.getEntidad());
+					infoSesionFirma.getIdioma(), infoSesionFirma.getNombreUsuario(), infoSesionFirma.getEntidad(),
+					signerEmail);
 
 			return api.getTransactionID(commonInfo);
 		} catch (final Exception e) {
@@ -88,8 +91,11 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 				final int signNumber = ficheroAFirmar.getSignNumber();
 				final String languageSign = ficheroAFirmar.getIdioma();
 
+				// TODO Pendiente de ver como se traslada el tipo documental
+				// Ver de quitar signerEmail y cogerlo de sesion
+				final Long tipoDocumental = 99L;
 				fileInfoSignature = new FirmaSimpleFileInfoSignature(fileToSign, signID, name, reason, location,
-						signerEmail, signNumber, languageSign);
+						signNumber, languageSign, tipoDocumental);
 			}
 
 			api = generarApi();
@@ -186,11 +192,11 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 	 * Obtiene propiedad.
 	 *
 	 * @param propiedad
-	 *            propiedad
+	 *                      propiedad
 	 * @return valor
 	 * @throws FirmaPluginException
 	 */
-	private String getPropiedad(String propiedad) throws FirmaPluginException {
+	private String getPropiedad(final String propiedad) throws FirmaPluginException {
 		final String res = getProperty(FIRMACLIENTE_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + propiedad);
 		if (res == null) {
 			throw new FirmaPluginException("No se ha especificado parametro " + propiedad + " en propiedades");
