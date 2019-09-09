@@ -81,7 +81,7 @@
 	        				<h:panelGrid styleClass="noBorders" columns="3" cellpadding="10">
 		           				<p:selectBooleanCheckbox id="checkEmail" required="true" value="#{viewConfiguracionEntidad.data.emailHabilitado}" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
 								<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.email']}" />
-							    <h:outputText value=" " />
+							    <p:inputText value="#{viewConfiguracionEntidad.data.email}" size="70"  maxlength="500" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
 
 								<p:selectBooleanCheckbox id="checkTelefonSuport"  value="#{viewConfiguracionEntidad.data.telefonoHabilitado}" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
 								<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.telSuport']}"  />
@@ -93,7 +93,7 @@
 
 								<p:selectBooleanCheckbox id="checkFormularioContacto" value="#{viewConfiguracionEntidad.data.formularioIncidenciasHabilitado}" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
 								<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.formulariCont']}" />
-							    <p:commandButton id="btnFormulariContacte" actionListener="#{viewConfiguracionEntidad.abrirFormularioSoporte}" icon="fa fa-cog" process="@this" update=":form:growl" />
+							    <p:commandButton id="btnFormulariContacte" actionListener="#{viewConfiguracionEntidad.abrirFormularioSoporte}" icon="fa fa-cog" process="@this" update=":form:growl" disabled="#{!viewConfiguracionEntidad.permiteEditar}" />
 							</h:panelGrid>
 	        			</p:tab>
 						<p:tab title="#{msg['viewConfiguracionEntidad.tabPiePagina']}">

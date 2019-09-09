@@ -54,6 +54,7 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarBase;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarEntidad;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
+import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteRegistro;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
@@ -1152,12 +1153,13 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		filaImportar.setUsuario(UtilJSF.getSessionBean().getUserName());
 		filaImportar.setIdEntidad(UtilJSF.getIdEntidad());
 		filaImportar.setModo(Constantes.IMPORTAR_TIPO_IM);
-		tramiteService.importar(filaImportar);
+		final FilaImportarResultado resultado = tramiteService.importar(filaImportar);
 
 		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(false);
+		result.setResult(resultado);
 		UtilJSF.closeDialog(result);
 	}
 

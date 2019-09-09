@@ -20,6 +20,7 @@ import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.FilaImportar;
+import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
 import es.caib.sistrages.core.api.model.comun.ScriptInfo;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 
@@ -515,7 +516,7 @@ public interface TramiteService {
 	 * @param filaImportar
 	 * @throws Exception
 	 */
-	public void importar(FilaImportar filaImportar) throws Exception;
+	public FilaImportarResultado importar(FilaImportar filaImportar) throws Exception;
 
 	/**
 	 * Comprueba si el identificador de formulario está repetido.
@@ -647,7 +648,7 @@ public interface TramiteService {
 
 	/**
 	 * Obtiene una lista de info de los scripts que están rellenos.
-	 * 
+	 *
 	 * @param idTramiteVersion
 	 * @return
 	 */

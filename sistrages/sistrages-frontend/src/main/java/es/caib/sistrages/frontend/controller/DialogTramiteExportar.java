@@ -360,7 +360,11 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		prop.setProperty("entidad", dir3entidad);
 		prop.setProperty("modo", modo);
 		prop.setProperty("revision", UtilJSF.getRevision());
-		prop.setProperty("huella", this.tramiteVersion.getHuella());
+		if (this.tramiteVersion.getHuella() == null) {
+			prop.setProperty("huella", "SIN_HUELLA");
+		} else {
+			prop.setProperty("huella", this.tramiteVersion.getHuella());
+		}
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		prop.store(output, null);
 

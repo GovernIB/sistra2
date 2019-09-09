@@ -30,6 +30,7 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.FilaImportar;
+import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
 import es.caib.sistrages.core.api.model.comun.ScriptInfo;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -435,8 +436,8 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void importar(final FilaImportar filaImportar) throws Exception {
-		tramiteService.importar(filaImportar);
+	public FilaImportarResultado importar(final FilaImportar filaImportar) throws Exception {
+		return tramiteService.importar(filaImportar);
 	}
 
 	@Override

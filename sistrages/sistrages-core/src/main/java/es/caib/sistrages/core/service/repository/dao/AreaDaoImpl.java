@@ -173,10 +173,8 @@ public class AreaDaoImpl implements AreaDao {
 	/**
 	 * Listar areas.
 	 *
-	 * @param idEntidad
-	 *            Id entidad
-	 * @param pFiltro
-	 *            the filtro
+	 * @param idEntidad Id entidad
+	 * @param pFiltro   the filtro
 	 * @return lista de areas
 	 */
 	@SuppressWarnings("unchecked")
@@ -188,7 +186,7 @@ public class AreaDaoImpl implements AreaDao {
 		if (StringUtils.isNotBlank(pFiltro)) {
 			sql += " AND a in (select t.area from JTramite t  where upper(t.identificador) like :filtro or upper(t.descripcion) like :filtro  )";
 		}
-		sql += " ORDER BY a.codigo";
+		sql += " ORDER BY a.identificador";
 
 		final Query query = entityManager.createQuery(sql);
 

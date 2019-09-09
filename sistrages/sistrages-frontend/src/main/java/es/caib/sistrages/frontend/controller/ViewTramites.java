@@ -21,6 +21,7 @@ import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
+import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
@@ -243,6 +244,11 @@ public class ViewTramites extends ViewControllerBase {
 		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
+
+			final FilaImportarResultado resultado = (FilaImportarResultado) respuesta.getResult();
+			idArea = resultado.getIdArea().toString();
+			idTramite = resultado.getIdTramite().toString();
+			idTramiteVersion = resultado.getIdTramiteVersion().toString();
 
 			// Refrescamos datos
 			buscarAreas();

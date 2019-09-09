@@ -39,6 +39,7 @@ import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.FilaImportar;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
+import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
 import es.caib.sistrages.core.api.model.comun.ScriptInfo;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
@@ -928,10 +929,14 @@ public class TramiteServiceImpl implements TramiteService {
 
 	@Override
 	@NegocioInterceptor
-	public void importar(final FilaImportar filaImportar) throws Exception {
+	public FilaImportarResultado importar(final FilaImportar filaImportar) throws Exception {
+		final FilaImportarResultado resultado = new FilaImportarResultado();
 
 		final Long idArea = areaDao.importar(filaImportar.getFilaArea(), filaImportar.getIdEntidad());
+		resultado.setIdArea(idArea);
+
 		final Long idTramite = tramiteDao.importar(filaImportar.getFilaTramite(), idArea);
+		resultado.setIdTramite(idTramite);
 
 		/**
 		 * IdDominios son los dominios que se relacionan con el tramite mientras que
@@ -958,6 +963,8 @@ public class TramiteServiceImpl implements TramiteService {
 
 		final Long idTramiteVersion = tramiteDao.importar(filaImportar.getFilaTramiteVersion(), idTramite, idDominios,
 				filaImportar.getUsuario(), filaImportar.isModoIM());
+		resultado.setIdTramiteVersion(idTramiteVersion);
+
 		int ordenPaso = 1;
 		final List<TramitePaso> pasos = filaImportar.getFilaTramiteVersion().getTramiteVersion().getListaPasos();
 		Collections.sort(pasos, new Comparator<TramitePaso>() {
@@ -974,6 +981,8 @@ public class TramiteServiceImpl implements TramiteService {
 					filaImportar.getFicherosContent(), formateadores, mapFormateadores, idDominiosEquivalencia);
 			ordenPaso++;
 		}
+
+		return resultado;
 	}
 
 	/**
