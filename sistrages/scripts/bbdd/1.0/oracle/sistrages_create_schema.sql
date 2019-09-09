@@ -975,7 +975,7 @@ comment on column STG_FORCTX.CTX_OCULTO is
 'Indica si es campo oculto';
 
 comment on column STG_FORCTX.CTX_TIPO is
-'Tipo campo de texto;
+'Tipo campo de texto:
 - NORMAL
 - NUMERO
 - EMAIL
