@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 
 import es.caib.regweb3.ws.api.v3.AnexoWs;
@@ -362,7 +363,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		}
 
 		// Datos asunto
-		asientoWs.setResumen(asiento.getDatosAsunto().getExtractoAsunto());
+		asientoWs.setResumen(StringUtils.left(asiento.getDatosAsunto().getExtractoAsunto(), 240));
 		asientoWs.setTipoDocumentacionFisicaCodigo(ConstantesRegweb3.TIPO_DOCFIS_DIGTL);
 
 		// TODO VER DE ELIMINAR TIPO ASUNTO y METER CODIGO ASUNTO
