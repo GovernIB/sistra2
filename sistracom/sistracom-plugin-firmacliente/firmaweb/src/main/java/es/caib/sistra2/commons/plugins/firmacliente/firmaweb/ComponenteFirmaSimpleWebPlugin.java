@@ -55,12 +55,9 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 		/** Crear conexion. **/
 		try {
 			final ApiFirmaWebSimple api = generarApi();
-
-			// TODO PENDIENTE DE VER SI SE PASA SIGNEREMAIL
-			final String signerEmail = null;
 			final FirmaSimpleCommonInfo commonInfo = new FirmaSimpleCommonInfo(getPropiedad("profile"),
 					infoSesionFirma.getIdioma(), infoSesionFirma.getNombreUsuario(), infoSesionFirma.getEntidad(),
-					signerEmail);
+					infoSesionFirma.getEmail());
 
 			return api.getTransactionID(commonInfo);
 		} catch (final Exception e) {
@@ -87,12 +84,10 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 				final String name = fileToSign.getNom();
 				final String reason = ficheroAFirmar.getRazon();
 				final String location = ficheroAFirmar.getLocalizacion();
-				final String signerEmail = ficheroAFirmar.getEmail();
 				final int signNumber = ficheroAFirmar.getSignNumber();
 				final String languageSign = ficheroAFirmar.getIdioma();
 
 				// TODO Pendiente de ver como se traslada el tipo documental
-				// Ver de quitar signerEmail y cogerlo de sesion
 				final Long tipoDocumental = 99L;
 				fileInfoSignature = new FirmaSimpleFileInfoSignature(fileToSign, signID, name, reason, location,
 						signNumber, languageSign, tipoDocumental);

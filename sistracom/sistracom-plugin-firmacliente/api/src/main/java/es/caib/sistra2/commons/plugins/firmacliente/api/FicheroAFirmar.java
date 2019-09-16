@@ -35,9 +35,6 @@ public class FicheroAFirmar {
 	/** Idioma. **/
 	private String idioma;
 
-	/** Email. **/
-	private String email;
-
 	/**
 	 * @return the nombreFichero
 	 */
@@ -47,7 +44,7 @@ public class FicheroAFirmar {
 
 	/**
 	 * @param nombreFichero
-	 *            the nombreFichero to set
+	 *                          the nombreFichero to set
 	 */
 	public void setNombreFichero(final String nombreFichero) {
 		this.nombreFichero = nombreFichero;
@@ -62,7 +59,7 @@ public class FicheroAFirmar {
 
 	/**
 	 * @param mimetypeFichero
-	 *            the mimetypeFichero to set
+	 *                            the mimetypeFichero to set
 	 */
 	public void setMimetypeFichero(final String mimetypeFichero) {
 		this.mimetypeFichero = mimetypeFichero;
@@ -77,7 +74,7 @@ public class FicheroAFirmar {
 
 	/**
 	 * @param sesion
-	 *            the sesion to set
+	 *                   the sesion to set
 	 */
 	public void setSesion(final String sesion) {
 		this.sesion = sesion;
@@ -92,7 +89,7 @@ public class FicheroAFirmar {
 
 	/**
 	 * @param fichero
-	 *            the fichero to set
+	 *                    the fichero to set
 	 */
 	public void setFichero(final byte[] fichero) {
 		this.fichero = fichero;
@@ -107,7 +104,7 @@ public class FicheroAFirmar {
 
 	/**
 	 * @param signID
-	 *            the signID to set
+	 *                   the signID to set
 	 */
 	public void setSignID(final String signID) {
 		this.signID = signID;
@@ -122,7 +119,7 @@ public class FicheroAFirmar {
 
 	/**
 	 * @param signNumber
-	 *            the signNumber to set
+	 *                       the signNumber to set
 	 */
 	public void setSignNumber(final int signNumber) {
 		this.signNumber = signNumber;
@@ -137,7 +134,7 @@ public class FicheroAFirmar {
 
 	/**
 	 * @param razon
-	 *            the razon to set
+	 *                  the razon to set
 	 */
 	public void setRazon(final String razon) {
 		this.razon = razon;
@@ -152,7 +149,7 @@ public class FicheroAFirmar {
 
 	/**
 	 * @param localizacion
-	 *            the localizacion to set
+	 *                         the localizacion to set
 	 */
 	public void setLocalizacion(final String localizacion) {
 		this.localizacion = localizacion;
@@ -167,25 +164,10 @@ public class FicheroAFirmar {
 
 	/**
 	 * @param idioma
-	 *            the idioma to set
+	 *                   the idioma to set
 	 */
 	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
-	}
-
-	/**
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
-
-	/**
-	 * @param email
-	 *            the email to set
-	 */
-	public void setEmail(final String email) {
-		this.email = email;
 	}
 
 }

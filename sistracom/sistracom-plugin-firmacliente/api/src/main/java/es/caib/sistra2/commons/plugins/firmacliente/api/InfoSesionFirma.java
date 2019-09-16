@@ -23,6 +23,9 @@ public class InfoSesionFirma {
 	/** Código SIA del procedimento. **/
 	private String codigoSIA;
 
+	/** Email. **/
+	private String email;
+
 	/**
 	 * @return the idioma
 	 */
@@ -32,7 +35,7 @@ public class InfoSesionFirma {
 
 	/**
 	 * @param idioma
-	 *            the idioma to set
+	 *                   the idioma to set
 	 */
 	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
@@ -47,7 +50,7 @@ public class InfoSesionFirma {
 
 	/**
 	 * @param entidad
-	 *            the entidad to set
+	 *                    the entidad to set
 	 */
 	public void setEntidad(final String entidad) {
 		this.entidad = entidad;
@@ -62,7 +65,7 @@ public class InfoSesionFirma {
 
 	/**
 	 * @param nif
-	 *            the nif to set
+	 *                the nif to set
 	 */
 	public void setNif(final String nif) {
 		this.nif = nif;
@@ -77,7 +80,7 @@ public class InfoSesionFirma {
 
 	/**
 	 * @param nombreUsuario
-	 *            the nombreUsuario to set
+	 *                          the nombreUsuario to set
 	 */
 	public void setNombreUsuario(final String nombreUsuario) {
 		this.nombreUsuario = nombreUsuario;
@@ -92,9 +95,28 @@ public class InfoSesionFirma {
 
 	/**
 	 * @param codigoSIA
-	 *            the codigoSIA to set
+	 *                      the codigoSIA to set
 	 */
 	public void setCodigoSIA(final String codigoSIA) {
 		this.codigoSIA = codigoSIA;
+	}
+
+	/**
+	 * Método de acceso a email.
+	 *
+	 * @return email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * Método para establecer email.
+	 *
+	 * @param email
+	 *                  email a establecer
+	 */
+	public void setEmail(final String email) {
+		this.email = email;
 	}
 }
