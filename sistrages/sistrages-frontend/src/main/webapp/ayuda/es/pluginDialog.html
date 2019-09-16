@@ -25,6 +25,11 @@
 		<li><span class="boton">Subir:</span> permite subir una propiedad en el orden del listado de propiedades. Para subir una propiedad previamente tendr&aacute; que haberla seleccionado en el listado de propiedades.</li>
 		<li><span class="boton">Bajar:</span> permite bajar una propiedad en el orden del listado de propiedades. Para bajar una propiedad previamente tendr&aacute; que haberla seleccionado en el listado de propiedades.</li>
 		</ul>
+		En los valores de las propiedades es posible hacer uso de placeholders para asociar valores:
+		<ul class="detalle">
+		<li><span class="boton">${system.<i>nombre_propiedad</i>}:</span> Para establecer el valor a partir de una propiedad de sistema. Por ejemplo,  ${system.rolsac.user} obtendría el valor de la propiedad de sistema rolsac.user</li>
+		<li><span class="boton">${config.<i>nombre_propiedad</i>}:</span> Para establecer el valor a partir de una propiedad del fichero de propiedades de Sistrages (sistrages.properties). Por ejemplo,  ${config.rolsac.user} obtendría el valor de la propiedad rolsac.user en el fichero sistrages.properties</li>
+		</ul>
 		</li>
 	</ul>
 </p>
