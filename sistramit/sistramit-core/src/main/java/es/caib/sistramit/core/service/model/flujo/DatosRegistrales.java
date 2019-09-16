@@ -14,9 +14,6 @@ public final class DatosRegistrales implements Serializable {
 	/** Libro. */
 	private String libro;
 
-	/** Tipo asunto. */
-	private String tipoAsunto;
-
 	/** Expediente (para tramites continuacion). */
 	private String numeroExpediente;
 
@@ -49,25 +46,6 @@ public final class DatosRegistrales implements Serializable {
 	 */
 	public void setLibro(final String libro) {
 		this.libro = libro;
-	}
-
-	/**
-	 * Método de acceso a tipoAsunto.
-	 *
-	 * @return tipoAsunto
-	 */
-	public String getTipoAsunto() {
-		return tipoAsunto;
-	}
-
-	/**
-	 * Método para establecer tipoAsunto.
-	 *
-	 * @param tipoAsunto
-	 *                       tipoAsunto a establecer
-	 */
-	public void setTipoAsunto(final String tipoAsunto) {
-		this.tipoAsunto = tipoAsunto;
 	}
 
 	/**
@@ -148,7 +126,7 @@ public final class DatosRegistrales implements Serializable {
 
 	/**
 	 * Método de acceso a codigoOrganoDestino.
-	 * 
+	 *
 	 * @return codigoOrganoDestino
 	 */
 	public String getCodigoOrganoDestino() {
@@ -157,7 +135,7 @@ public final class DatosRegistrales implements Serializable {
 
 	/**
 	 * Método para establecer codigoOrganoDestino.
-	 * 
+	 *
 	 * @param codigoOrganoDestino
 	 *                                codigoOrganoDestino a establecer
 	 */
@@ -167,7 +145,7 @@ public final class DatosRegistrales implements Serializable {
 
 	/**
 	 * Método de acceso a extracto.
-	 * 
+	 *
 	 * @return extracto
 	 */
 	public String getExtracto() {
@@ -176,7 +154,7 @@ public final class DatosRegistrales implements Serializable {
 
 	/**
 	 * Método para establecer extracto.
-	 * 
+	 *
 	 * @param extracto
 	 *                     extracto a establecer
 	 */
@@ -186,14 +164,13 @@ public final class DatosRegistrales implements Serializable {
 
 	/**
 	 * Imprime contenido en un String.
-	 * 
+	 *
 	 * @return contenido en un String
 	 */
 	public String print() {
 		String res = "Datos registrales: ";
 		res += " - Oficina: " + this.getOficina() + "\n";
 		res += " - Libro: " + this.getLibro() + "\n";
-		res += " - Asunto: " + this.getTipoAsunto() + "\n";
 		res += " - Organo destino: " + this.getCodigoOrganoDestino() + "\n";
 		res += " - N.Expediente: " + this.getNumeroExpediente() + "\n";
 		res += " - Expone: " + this.getTextoExpone() + "\n";

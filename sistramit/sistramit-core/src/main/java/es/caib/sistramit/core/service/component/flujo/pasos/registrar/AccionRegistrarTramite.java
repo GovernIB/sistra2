@@ -141,10 +141,14 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Genera aviso finalización trámite.
 	 *
-	 * @param pDipa              Datos internos paso
-	 * @param resReg             Resultado registro
-	 * @param pVariablesFlujo    Variables flujo
-	 * @param pDefinicionTramite Definición trámite
+	 * @param pDipa
+	 *                               Datos internos paso
+	 * @param resReg
+	 *                               Resultado registro
+	 * @param pVariablesFlujo
+	 *                               Variables flujo
+	 * @param pDefinicionTramite
+	 *                               Definición trámite
 	 */
 	private void generarAvisoFinalizacion(final DatosInternosPasoRegistrar pDipa, final VariablesFlujo pVariablesFlujo,
 			final ResultadoRegistrar resReg, final DefinicionTramiteSTG pDefinicionTramite) {
@@ -196,11 +200,16 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Valida si se puede registrar el trámite.
 	 *
-	 * @param pDipa              Datos internos paso
-	 * @param pDpp               Datos persistencia paso
-	 * @param pReintentar        Indica si se debe reintentar registro
-	 * @param pVariablesFlujo    Variables flujo
-	 * @param pDefinicionTramite Definición trámite
+	 * @param pDipa
+	 *                               Datos internos paso
+	 * @param pDpp
+	 *                               Datos persistencia paso
+	 * @param pReintentar
+	 *                               Indica si se debe reintentar registro
+	 * @param pVariablesFlujo
+	 *                               Variables flujo
+	 * @param pDefinicionTramite
+	 *                               Definición trámite
 	 */
 	private void validacionesRegistrar(final DatosInternosPasoRegistrar pDipa, final DatosPersistenciaPaso pDpp,
 			final boolean pReintentar, final VariablesFlujo pVariablesFlujo,
@@ -264,11 +273,16 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Registra el tramite.
 	 *
-	 * @param pDipa              Datos internos tramite
-	 * @param pDpp               Datos persistencia paso
-	 * @param reintentar         reintentar
-	 * @param pVariablesFlujo    Variables flujo
-	 * @param pDefinicionTramite Definición trámite
+	 * @param pDipa
+	 *                               Datos internos tramite
+	 * @param pDpp
+	 *                               Datos persistencia paso
+	 * @param reintentar
+	 *                               reintentar
+	 * @param pVariablesFlujo
+	 *                               Variables flujo
+	 * @param pDefinicionTramite
+	 *                               Definición trámite
 	 * @return Resultado registro
 	 */
 	private ResultadoRegistrar registrarTramite(final DatosInternosPasoRegistrar pDipa,
@@ -294,10 +308,14 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Actualizar detalle registrar.
 	 *
-	 * @param pDipa           Datos internos paso
-	 * @param pVariablesFlujo Variables flujo
-	 * @param pDpp            Datos persistencia
-	 * @param resReg          Resultado registro
+	 * @param pDipa
+	 *                            Datos internos paso
+	 * @param pVariablesFlujo
+	 *                            Variables flujo
+	 * @param pDpp
+	 *                            Datos persistencia
+	 * @param resReg
+	 *                            Resultado registro
 	 */
 	private void actualizarDetalleRegistrar(final DatosInternosPasoRegistrar pDipa,
 			final VariablesFlujo pVariablesFlujo, final DatosPersistenciaPaso pDpp, final ResultadoRegistrar resReg) {
@@ -341,10 +359,14 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Actualiza paso tras registrar.
 	 *
-	 * @param pIdSesionTramitacion Id sesion tramitacion
-	 * @param pDipa                Datos internos paso
-	 * @param pDpp                 Datos persistencia
-	 * @param resReg               Resultado registro
+	 * @param pIdSesionTramitacion
+	 *                                 Id sesion tramitacion
+	 * @param pDipa
+	 *                                 Datos internos paso
+	 * @param pDpp
+	 *                                 Datos persistencia
+	 * @param resReg
+	 *                                 Resultado registro
 	 */
 	private void actualizarPersistencia(final String pIdSesionTramitacion, final DatosInternosPasoRegistrar pDipa,
 			final DatosPersistenciaPaso pDpp, final ResultadoRegistrar resReg) {
@@ -388,9 +410,12 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Genera asiento registral.
 	 *
-	 * @param pDipa              Datos internos paso
-	 * @param pVariablesFlujo    variables flujo
-	 * @param pDefinicionTramite Definición trámite
+	 * @param pDipa
+	 *                               Datos internos paso
+	 * @param pVariablesFlujo
+	 *                               variables flujo
+	 * @param pDefinicionTramite
+	 *                               Definición trámite
 	 * @return asiento registral
 	 */
 	private AsientoRegistral generarAsiento(final DatosInternosPasoRegistrar pDipa,
@@ -409,7 +434,6 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		datosAsunto.setFechaAsunto(new Date());
 		datosAsunto.setIdiomaAsunto(pVariablesFlujo.getIdioma());
 		datosAsunto.setExtractoAsunto(pDipa.getParametrosRegistro().getDatosRegistrales().getExtracto());
-		datosAsunto.setTipoAsunto(pDipa.getParametrosRegistro().getDatosRegistrales().getTipoAsunto());
 		datosAsunto
 				.setCodigoOrganoDestino(pDipa.getParametrosRegistro().getDatosRegistrales().getCodigoOrganoDestino());
 		datosAsunto.setNumeroExpediente(pDipa.getParametrosRegistro().getDatosRegistrales().getNumeroExpediente());
@@ -443,9 +467,12 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Genera documentos asiento.
 	 *
-	 * @param pDipa                   Datos internos paso
-	 * @param pVariablesFlujo         variables flujo
-	 * @param listaDocumentosRegistro documentos registro
+	 * @param pDipa
+	 *                                    Datos internos paso
+	 * @param pVariablesFlujo
+	 *                                    variables flujo
+	 * @param listaDocumentosRegistro
+	 *                                    documentos registro
 	 * @return documentos asiento
 	 */
 	private List<DocumentoAsiento> generarDocumentosRegistro(final DatosInternosPasoRegistrar pDipa,
@@ -465,9 +492,12 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Genera documento registro.
 	 *
-	 * @param pDipa           Datos internos paso
-	 * @param pVariablesFlujo Variables flujo
-	 * @param pDocReg         Documento registro
+	 * @param pDipa
+	 *                            Datos internos paso
+	 * @param pVariablesFlujo
+	 *                            Variables flujo
+	 * @param pDocReg
+	 *                            Documento registro
 	 * @return
 	 */
 	private List<DocumentoAsiento> generarDocumentosRegistro(final DatosInternosPasoRegistrar pDipa,
@@ -542,10 +572,14 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Genera documento registro.
 	 *
-	 * @param documento      documento
-	 * @param refFichero     fichero del documento
-	 * @param firmaDocumento firma
-	 * @param xml            si es xml
+	 * @param documento
+	 *                           documento
+	 * @param refFichero
+	 *                           fichero del documento
+	 * @param firmaDocumento
+	 *                           firma
+	 * @param xml
+	 *                           si es xml
 	 * @return documento registro
 	 */
 	private DocumentoAsiento generarDocumentoRegistro(final DatosDocumento documento,
@@ -599,7 +633,8 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Calcula tipo firma digital asiento.
 	 *
-	 * @param typeFirmaDigital tipo firma digital
+	 * @param typeFirmaDigital
+	 *                             tipo firma digital
 	 * @return tipo firma asiento
 	 */
 	private TypeFirmaAsiento calcularTipoFirmaAsiento(final TypeFirmaDigital typeFirmaDigital) {
@@ -629,8 +664,10 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Calcula tipo documento asiento.
 	 *
-	 * @param tipoDocumento tipo documento flujo
-	 * @param xml           si es documento xml
+	 * @param tipoDocumento
+	 *                          tipo documento flujo
+	 * @param xml
+	 *                          si es documento xml
 	 * @return tipo documento asiento
 	 */
 	private TypeDocumental calcularTipoDocumental(
@@ -651,7 +688,8 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Calcula tipo validez.
 	 *
-	 * @param tipoDocumento Tipo documento
+	 * @param tipoDocumento
+	 *                          Tipo documento
 	 * @return Tipo validez
 	 */
 	private TypeValidez calcularValidez(
@@ -676,12 +714,13 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Genera datos interesado.
 	 *
-	 * @param tipoInteresado tipo
-	 * @param datosUsuario   datos usuario
+	 * @param tipoInteresado
+	 *                           tipo
+	 * @param datosUsuario
+	 *                           datos usuario
 	 * @return interesado
 	 */
 	private Interesado generarInteresado(final TypeInteresado tipoInteresado, final DatosUsuario datosUsuario) {
-
 		TypeDocumentoIdentificacion tipoDocumento = null;
 		if (NifUtils.esNifPersonaFisica(datosUsuario.getNif())) {
 			tipoDocumento = TypeDocumentoIdentificacion.NIF;
@@ -691,14 +730,18 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			throw new TipoNoControladoException("Tipo de identificación no controlado");
 		}
 
-		final Interesado representado = new Interesado();
-		representado.setActuaComo(tipoInteresado);
-		representado.setTipoDocumento(tipoDocumento);
-		representado.setDocIdentificacion(datosUsuario.getNif());
-		representado.setNombre(datosUsuario.getNombre());
-		representado.setApellido1(datosUsuario.getApellido1());
-		representado.setApellido2(datosUsuario.getApellido2());
-		return representado;
+		final Interesado interesado = new Interesado();
+		interesado.setActuaComo(tipoInteresado);
+		interesado.setTipoDocumento(tipoDocumento);
+		interesado.setDocIdentificacion(datosUsuario.getNif());
+		if (tipoDocumento == TypeDocumentoIdentificacion.CIF) {
+			interesado.setRazonSocial(datosUsuario.getNombre());
+		} else {
+			interesado.setNombre(datosUsuario.getNombre());
+			interesado.setApellido1(datosUsuario.getApellido1());
+			interesado.setApellido2(datosUsuario.getApellido2());
+		}
+		return interesado;
 	}
 
 }

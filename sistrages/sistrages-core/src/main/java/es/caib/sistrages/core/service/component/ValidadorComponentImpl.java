@@ -720,17 +720,6 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 			listaErrores.add(error);
 		}
 
-		if (StringUtils.isEmpty(pasoRegistrar.getCodigoTipoAsunto())) {
-			final ErrorValidacion error = errorValidacion("tramitePasoRegistrar.tipoAsunto",
-					new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },
-					"vacio.registrar", pIdioma);
-
-			// tipificamos el error
-			error.setTipo(TypeErrorValidacion.DATOS_REGISTRO);
-			error.setItem(pasoRegistrar);
-			listaErrores.add(error);
-		}
-
 		params.put("TIPO_SCRIPT_FLUJO", UtilJSON.toJSON(TypeScriptFlujo.SCRIPT_PARAMETROS_REGISTRO));
 
 		comprobarScript(pasoRegistrar.getScriptDestinoRegistro(), "tramitePasoRegistrar.scriptDestinoRegistro",

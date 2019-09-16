@@ -2002,7 +2002,6 @@ create table STG_PASREG
    PRG_CODIGO           NUMBER(18)           not null,
    PRG_REGOFI           VARCHAR2(20 CHAR),
    PRG_REGLIB           VARCHAR2(20 CHAR),
-   PRG_REGASU           VARCHAR2(20 CHAR),
    PRG_SCRREG           NUMBER(18),
    PRG_INSFIT           NUMBER(18),
    PRG_INSPRE           NUMBER(18),
@@ -2028,9 +2027,6 @@ comment on column STG_PASREG.PRG_REGOFI is
 
 comment on column STG_PASREG.PRG_REGLIB is
 'Código libro registro';
-
-comment on column STG_PASREG.PRG_REGASU is
-'Código tipo asunto';
 
 comment on column STG_PASREG.PRG_SCRREG is
 'Script destino registro';

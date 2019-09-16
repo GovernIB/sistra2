@@ -594,8 +594,7 @@
       "scriptNavegacion": null,
       "destino": {
         "oficinaRegistro": "codofi1",
-        "libroRegistro": "codlib.codofi1.2",
-        "tipoAsunto": "codtip3"
+        "libroRegistro": "codlib.codofi1.2"
       },
       "scriptDestino": null,
       "instruccionesPresentacionHtml": "",

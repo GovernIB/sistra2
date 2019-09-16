@@ -41,11 +41,6 @@
 						    <f:selectItems value="#{dialogTramiteImportarRegistro.libros}"  itemLabel="#{libro.nombre}" itemValue="#{libro.codigo}" var="libro" />
 					</p:selectOneMenu>
 
-					<p:outputLabel   for="tipo" value="#{msg['dialogTramiteImportarRegistro.headerTipo']}:" />
-					<p:selectOneMenu id ="tipo" styleClass="w40" value="#{dialogTramiteImportarRegistro.data.tipo}" style="background:white" required="true">
-						    <f:selectItems value="#{dialogTramiteImportarRegistro.tipos}"  itemLabel="#{tipo.nombre}" itemValue="#{tipo.codigo}" var="tipo" />
-					</p:selectOneMenu>
-
 				</h:panelGrid>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">

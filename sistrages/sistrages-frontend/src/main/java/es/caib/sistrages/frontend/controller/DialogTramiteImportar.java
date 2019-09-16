@@ -29,7 +29,6 @@ import es.caib.sistra2.commons.plugins.registro.api.IRegistroPlugin;
 import es.caib.sistra2.commons.plugins.registro.api.LibroOficina;
 import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
-import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
@@ -633,10 +632,14 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 */
 	private void prepararFlujoTramiteRegistro() {
 
+		final Entidad entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
 		if (filaTramite.getAccion() == null || filaTramite.getResultado() == TypeImportarResultado.ERROR) {
 			// Lo dejamos a error a la espera que realice una acción con
 			filaTramiteRegistro = FilaImportarTramiteRegistro.crearITerrorTramiteSinSeleccionar(tramiteVersion,
 					UtilJSF.getLiteral("dialogTramiteImportar.error.tramitemal"));
+			if (entidad.isRegistroCentralizado()) {
+				filaTramiteRegistro.setMostrarRegistro(false);
+			}
 			return;
 		}
 
@@ -656,14 +659,21 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			filaTramiteRegistro = FilaImportarTramiteRegistro.creaITsinPasoRegistro(tramiteVersion);
 		} else {
 			filaTramiteRegistro = FilaImportarTramiteRegistro.creaITconPasoRegistro(tramiteVersion, pasoRegistro);
-			try {
-				rellenarInfoRegistro();
-			} catch (final Exception e) {
-				LOGGER.error("Error intentando carga el plugin de registro al importar", e);
-				addMessageContext(TypeNivelGravedad.ERROR,
-						UtilJSF.getLiteral("dialogTramiteImportar.error.pluginregistro"));
-				filaTramiteRegistro.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.pluginregistro"));
-				filaTramiteRegistro.setResultado(TypeImportarResultado.ERROR);
+
+			if (entidad.isRegistroCentralizado()) {
+				filaTramiteRegistro.setResultado(TypeImportarResultado.OK);
+				filaTramiteRegistro.setAccion(TypeImportarAccion.NADA);
+				filaTramiteRegistro.setMostrarRegistro(false);
+			} else {
+				try {
+					rellenarInfoRegistro();
+				} catch (final Exception e) {
+					LOGGER.error("Error intentando carga el plugin de registro al importar", e);
+					addMessageContext(TypeNivelGravedad.ERROR,
+							UtilJSF.getLiteral("dialogTramiteImportar.error.pluginregistro"));
+					filaTramiteRegistro.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.pluginregistro"));
+					filaTramiteRegistro.setResultado(TypeImportarResultado.ERROR);
+				}
 			}
 		}
 	}
@@ -756,16 +766,6 @@ public class DialogTramiteImportar extends DialogControllerBase {
 				}
 			}
 
-		}
-
-		// Cargamos los datos del tipo
-		if (this.filaTramiteRegistro.getTipo() != null && !this.filaTramiteRegistro.getTipo().isEmpty()) {
-			final List<TipoAsunto> tipos = iplugin.obtenerTiposAsunto(entidad.getCodigoDIR3());
-			for (final TipoAsunto tipo : tipos) {
-				if (tipo.getCodigo().equals(this.filaTramiteRegistro.getTipo())) {
-					this.filaTramiteRegistro.setTipoText(tipo.getNombre());
-				}
-			}
 		}
 
 	}
@@ -1172,7 +1172,6 @@ public class DialogTramiteImportar extends DialogControllerBase {
 				if (paso instanceof TramitePasoRegistrar) {
 					((TramitePasoRegistrar) paso).setCodigoLibroRegistro(this.filaTramiteRegistro.getLibro());
 					((TramitePasoRegistrar) paso).setCodigoOficinaRegistro(this.filaTramiteRegistro.getOficina());
-					((TramitePasoRegistrar) paso).setCodigoTipoAsunto(this.filaTramiteRegistro.getTipo());
 					break;
 				}
 			}

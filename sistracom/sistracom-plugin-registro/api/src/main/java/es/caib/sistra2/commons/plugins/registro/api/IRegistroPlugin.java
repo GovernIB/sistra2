@@ -22,7 +22,7 @@ public interface IRegistroPlugin extends IPlugin {
 	 * Recupera oficinas de registro de la entidad.
 	 *
 	 * @param codigoEntidad
-	 *            codigo DIR3 de la entidad
+	 *                          codigo DIR3 de la entidad
 	 * @throws RegistroPluginException
 	 */
 	List<OficinaRegistro> obtenerOficinasRegistro(String codigoEntidad, TypeRegistro tipoRegistro)
@@ -32,11 +32,11 @@ public interface IRegistroPlugin extends IPlugin {
 	 * Recupera los libros a los que una oficina da servicio
 	 *
 	 * @param codigoEntidad
-	 *            codigo DIR3 de la entidad
+	 *                          codigo DIR3 de la entidad
 	 * @param codigoOficina
-	 *            codigo DIR3 de la oficina a consultar
+	 *                          codigo DIR3 de la oficina a consultar
 	 * @param tipoRegistro
-	 *            tipo de registro
+	 *                          tipo de registro
 	 * @throws RegistroPluginException
 	 */
 	List<LibroOficina> obtenerLibrosOficina(String codigoEntidad, String codigoOficina, TypeRegistro tipoRegistro)
@@ -46,27 +46,19 @@ public interface IRegistroPlugin extends IPlugin {
 	 * Recupera libro asociado a organismo.
 	 *
 	 * @param codigoEntidad
-	 *            codigo DIR3 entidad
+	 *                            codigo DIR3 entidad
 	 * @param codigoOrganismo
-	 *            codigo DIR3 organismo
+	 *                            codigo DIR3 organismo
 	 * @return libro asociado a organismo
 	 */
 	LibroOficina obtenerLibroOrganismo(String codigoEntidad, String codigoOrganismo) throws RegistroPluginException;
 
 	/**
-	 * Recupera los tipos de asunto de una entidad
-	 *
-	 * @param codigoEntidad
-	 *            codigo DIR3 de la entidad
-	 * @throws RegistroPluginException
-	 */
-	List<TipoAsunto> obtenerTiposAsunto(String codigoEntidad) throws RegistroPluginException;
-
-	/**
 	 * Realiza un apunte registral de entrada sobre la aplicacion de registro
 	 *
 	 * @param asientoRegistral
-	 *            asiento con los datos requeridos para el registro de entrada
+	 *                             asiento con los datos requeridos para el registro
+	 *                             de entrada
 	 * @throws RegistroPluginException
 	 */
 	ResultadoRegistro registroEntrada(AsientoRegistral asientoRegistral) throws RegistroPluginException;
@@ -75,7 +67,7 @@ public interface IRegistroPlugin extends IPlugin {
 	 * Realiza un apunte registral de salida sobre la aplicacion de registro
 	 *
 	 * @param codigoEntidad
-	 *            codigo DIR3 de la entidad
+	 *                          codigo DIR3 de la entidad
 	 * @throws RegistroPluginException
 	 */
 	ResultadoRegistro registroSalida(AsientoRegistral asientoRegistral) throws RegistroPluginException;
@@ -84,9 +76,9 @@ public interface IRegistroPlugin extends IPlugin {
 	 * Obtiene el justificante de registro correspondiente a un apunte registral
 	 *
 	 * @param codigoEntidad
-	 *            codigo DIR3 de la entidad
+	 *                           codigo DIR3 de la entidad
 	 * @param numeroRegistro
-	 *            numero de registro asignado al apunte registral
+	 *                           numero de registro asignado al apunte registral
 	 * @throws RegistroPluginException
 	 */
 	ResultadoJustificante obtenerJustificanteRegistro(String codigoEntidad, String numeroRegistro)

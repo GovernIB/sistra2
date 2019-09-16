@@ -290,7 +290,6 @@ public class VersionTramiteAdapter {
 		final RDestinoRegistro destinoRegistro = new RDestinoRegistro();
 		destinoRegistro.setOficinaRegistro(paso.getCodigoOficinaRegistro());
 		destinoRegistro.setLibroRegistro(paso.getCodigoLibroRegistro());
-		destinoRegistro.setTipoAsunto(paso.getCodigoTipoAsunto());
 		resPaso.setDestino(destinoRegistro);
 		resPaso.setInstruccionesPresentacionHtml(
 				AdapterUtils.generarLiteralIdioma(paso.getInstruccionesPresentacion(), idioma));
@@ -384,16 +383,6 @@ public class VersionTramiteAdapter {
 		}
 		return resPaso;
 
-	}
-
-	/**
-	 * Genera un tipo
-	 *
-	 * @param tipo
-	 * @return
-	 */
-	private String generaTipo(final TypeDominio tipo) {
-		return tipo.toString();
 	}
 
 	/**

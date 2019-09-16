@@ -1,11 +1,9 @@
 package es.caib.sistra2.commons.plugins.registro.regweb3;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 
 import es.caib.regweb3.ws.api.v3.AnexoWs;
@@ -18,7 +16,6 @@ import es.caib.regweb3.ws.api.v3.LibroWs;
 import es.caib.regweb3.ws.api.v3.OficinaWs;
 import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWs;
 import es.caib.regweb3.ws.api.v3.RegWebInfoWs;
-import es.caib.regweb3.ws.api.v3.TipoAsuntoWs;
 import es.caib.sistra2.commons.plugins.registro.api.AsientoRegistral;
 import es.caib.sistra2.commons.plugins.registro.api.DocumentoAsiento;
 import es.caib.sistra2.commons.plugins.registro.api.IRegistroPlugin;
@@ -28,7 +25,6 @@ import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
-import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumental;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaAsiento;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaDigital;
@@ -131,37 +127,6 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		} catch (final Exception ex) {
 			throw new RegistroPluginException(
 					"Error consultando libros de la oficina " + codigoOficina + ": " + ex.getMessage(), ex);
-		}
-
-		return res;
-	}
-
-	@Override
-	public List<TipoAsunto> obtenerTiposAsunto(final String codigoEntidad) throws RegistroPluginException {
-		final List<TipoAsunto> res = new ArrayList<>();
-
-		try {
-
-			final boolean logCalls = (getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES) != null
-					? "true".equals(getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES))
-					: false);
-
-			final RegWebInfoWs service = UtilsRegweb3.getRegistroInfoService(codigoEntidad,
-					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_INFO), getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR),
-					getPropiedad(ConstantesRegweb3.PROP_USUARIO), getPropiedad(ConstantesRegweb3.PROP_PASSWORD),
-					logCalls);
-
-			final List<TipoAsuntoWs> resWs = service.listarTipoAsunto(codigoEntidad);
-
-			for (final TipoAsuntoWs taWs : resWs) {
-				final TipoAsunto ta = new TipoAsunto();
-				ta.setCodigo(taWs.getCodigo());
-				ta.setNombre(taWs.getNombre());
-				res.add(ta);
-			}
-
-		} catch (final Exception ex) {
-			throw new RegistroPluginException("Error consultando tipos asunto: " + ex.getMessage(), ex);
 		}
 
 		return res;
@@ -363,11 +328,9 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		}
 
 		// Datos asunto
-		asientoWs.setResumen(StringUtils.left(asiento.getDatosAsunto().getExtractoAsunto(), 240));
+		asientoWs.setResumen(UtilsRegweb3.truncarTexto(asiento.getDatosAsunto().getExtractoAsunto(),
+				ConstantesRegweb3.MAX_SIZE_ASUNTO_RESUMEN));
 		asientoWs.setTipoDocumentacionFisicaCodigo(ConstantesRegweb3.TIPO_DOCFIS_DIGTL);
-
-		// TODO VER DE ELIMINAR TIPO ASUNTO y METER CODIGO ASUNTO
-		// asientoWs.setTipoAsunto(asiento.getDatosAsunto().getTipoAsunto());
 
 		switch (asiento.getDatosAsunto().getIdiomaAsunto()) {
 		case "es":
@@ -417,34 +380,14 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 			final boolean anexarInternos = "true".equals(getPropiedad(ConstantesRegweb3.PROP_INSERTADOCS_INT));
 			final boolean anexarFormateados = "true".equals(getPropiedad(ConstantesRegweb3.PROP_INSERTADOCS_FOR));
 
-			Integer origenDocumento;
-			String tipoDocumental;
-
-			if (esRegistroSalida) {
-				origenDocumento = ConstantesRegweb3.ORIGEN_DOCUMENTO_ADMINISTRACION;
-				tipoDocumental = ConstantesRegweb3.TIPO_DOCUMENTAL_NOTIFICACION;
-			} else {
-				origenDocumento = ConstantesRegweb3.ORIGEN_DOCUMENTO_CIUDADANO;
-				tipoDocumental = ConstantesRegweb3.TIPO_DOCUMENTAL_SOLICITUD;
-			}
-
 			// - Ficheros asiento
-			for (final Iterator it = asiento.getDocumentosRegistro().iterator(); it.hasNext();) {
-
+			for (final DocumentoAsiento dr : asiento.getDocumentosRegistro()) {
 				AnexoWs anexoWs = null;
-
-				final DocumentoAsiento dr = (DocumentoAsiento) it.next();
-
-				if (dr.getTipoDocumento() == TypeDocumental.FICHERO_TECNICO && anexarInternos) {
+				if ((dr.getTipoDocumento() == TypeDocumental.FICHERO_TECNICO && anexarInternos)
+						|| (dr.getTipoDocumento() != TypeDocumental.FICHERO_TECNICO && anexarFormateados)) {
 					anexoWs = generarAnexoWs(dr);
 					asientoWs.getAnexos().add(anexoWs);
 				}
-
-				if (!(dr.getTipoDocumento() == TypeDocumental.FICHERO_TECNICO) && anexarFormateados) {
-					anexoWs = generarAnexoWs(dr);
-					asientoWs.getAnexos().add(anexoWs);
-				}
-
 			}
 		}
 
@@ -480,13 +423,14 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	private AnexoWs generarAnexoWs(final DocumentoAsiento dr) throws RegistroPluginException {
 
 		final AnexoWs anexoAsiento = new AnexoWs();
-		anexoAsiento.setTitulo(dr.getTituloDoc());
+		anexoAsiento.setTitulo(UtilsRegweb3.truncarTexto(dr.getTituloDoc(), ConstantesRegweb3.MAX_SIZE_ANEXO_TITULO));
 		anexoAsiento.setTipoDocumental(dr.getTipoDocumental());
 		anexoAsiento.setTipoDocumento(dr.getTipoDocumento().toString());
 		anexoAsiento.setOrigenCiudadanoAdmin(dr.getOrigenDocumento().intValue());
 		anexoAsiento.setModoFirma(dr.getModoFirma().intValue());
 		anexoAsiento.setValidezDocumento(dr.getValidez().toString());
-		anexoAsiento.setNombreFicheroAnexado(dr.getNombreFichero());
+		anexoAsiento.setNombreFicheroAnexado(
+				UtilsRegweb3.truncarFilename(dr.getNombreFichero(), ConstantesRegweb3.MAX_SIZE_ANEXO_FILENAME));
 		anexoAsiento.setFicheroAnexado(dr.getContenidoFichero());
 		anexoAsiento.setTipoMIMEFicheroAnexado(MimeType.getMimeTypeForExtension(getExtension(dr.getNombreFichero())));
 
@@ -498,7 +442,8 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 				anexoAsiento.setTipoMIMEFicheroAnexado(
 						MimeType.getMimeTypeForExtension(getExtension(dr.getNombreFichero())));
 				anexoAsiento.setFirmaAnexada(dr.getContenidoFirma());
-				anexoAsiento.setNombreFirmaAnexada(dr.getNombreFirmaAnexada());
+				anexoAsiento.setNombreFirmaAnexada(UtilsRegweb3.truncarFilename(dr.getNombreFirmaAnexada(),
+						ConstantesRegweb3.MAX_SIZE_ANEXO_FILENAME));
 				anexoAsiento.setTipoMIMEFirmaAnexada(
 						MimeType.getMimeTypeForExtension(getExtension(dr.getNombreFirmaAnexada())));
 			}

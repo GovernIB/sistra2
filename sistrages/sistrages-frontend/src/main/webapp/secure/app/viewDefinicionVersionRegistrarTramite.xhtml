@@ -36,17 +36,6 @@
 					</p:column>
 				</p:row>
 				<p:row>
-					<p:column>
-						<p:outputLabel for="tipo"
-							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.tipo']}" />
-					</p:column>
-					<p:column>
-						<p:inputText id="tipo" disabled="true" size="7" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoTipoAsunto}" />
-						<p:inputText id="tipoTexto" disabled="true" size="15" value="#{viewDefinicionVersion.textoTipoAsunto}"  style="margin-left:4px" />
-					</p:column>
-
-				</p:row>
-				<p:row>
 					<p:column colspan="4">
 						<p:commandButton id="scriptButton1" icon="fa fa-bolt"
 							disabled="#{viewDefinicionVersion.tramitePasoREGSeleccionado.scriptDestinoRegistro eq null}"

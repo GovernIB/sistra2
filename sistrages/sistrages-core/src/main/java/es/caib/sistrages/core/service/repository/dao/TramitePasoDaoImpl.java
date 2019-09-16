@@ -569,7 +569,6 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		if (jpaso.getPasoRegistrar() != null) {
 			jpaso.getPasoRegistrar().setCodigoLibroRegistro(filaTramiteVersion.getLibro());
 			jpaso.getPasoRegistrar().setCodigoOficinaRegistro(filaTramiteVersion.getOficina());
-			jpaso.getPasoRegistrar().setCodigoTipoAsunto(filaTramiteVersion.getTipo());
 		}
 		entityManager.persist(jpaso);
 		entityManager.flush();

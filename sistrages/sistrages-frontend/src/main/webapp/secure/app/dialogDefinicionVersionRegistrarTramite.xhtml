@@ -37,7 +37,7 @@
 		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino']}" />
-			<p:panelGrid styleClass="noBorders" columnClasses="noPadding-left,,,">
+			<p:panelGrid styleClass="noBorders" columnClasses="noPadding-left,">
 				<p:row rendered="#{!dialogDefinicionVersionRegistrarTramite.entidad.registroCentralizado}">
 					<p:column>
 						<p:outputLabel for="oficina"
@@ -50,6 +50,8 @@
 							<p:ajax listener="#{dialogDefinicionVersionRegistrarTramite.onChangeOficina}" update="@form" />
 						</p:selectOneMenu>
 					</p:column>
+				</p:row>
+				<p:row rendered="#{!dialogDefinicionVersionRegistrarTramite.entidad.registroCentralizado}">
 					<p:column>
 						<p:outputLabel for="libro"
 							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.libro']}" />
@@ -62,19 +64,7 @@
 					</p:column>
 				</p:row>
 				<p:row>
-					<p:column>
-						<p:outputLabel for="tipo"
-							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.tipo']}" />
-					</p:column>
-					<p:column>
-						<p:selectOneMenu id="tipo" styleClass="w90" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoTipoAsunto}" required="true">
-						    <f:selectItem  itemLabel=""  noSelectionOption="true"></f:selectItem>
-						    <f:selectItems value="#{dialogDefinicionVersionRegistrarTramite.tipos}"  itemLabel="#{tipo.nombre}" itemValue="#{tipo.codigo}" var="tipo" />
-						</p:selectOneMenu>
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column colspan="4">
+					<p:column colspan="2">
 						<p:commandButton id="buttonScript1" icon="fa fa-bolt"
 							actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(TypeScriptFlujo.SCRIPT_PARAMETROS_REGISTRO.name(), dialogDefinicionVersionRegistrarTramite.data.scriptDestinoRegistro)}"
 							value="#{msg['script.SCRIPT_PARAMETROS_REGISTRO.titulo']}" styleClass="#{dialogDefinicionVersionRegistrarTramite.getColorScript(dialogDefinicionVersionRegistrarTramite.data.scriptDestinoRegistro)}"

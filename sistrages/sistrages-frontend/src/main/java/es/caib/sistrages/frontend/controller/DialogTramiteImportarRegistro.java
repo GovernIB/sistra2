@@ -1,6 +1,5 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -14,7 +13,6 @@ import es.caib.sistra2.commons.plugins.registro.api.IRegistroPlugin;
 import es.caib.sistra2.commons.plugins.registro.api.LibroOficina;
 import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
-import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteRegistro;
@@ -54,9 +52,6 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	/** Para el paso de registro. **/
 	private String libro;
 
-	/** Para el paso de registro. **/
-	private String tipo;
-
 	/** Plugin de registro. **/
 	private IRegistroPlugin iplugin;
 
@@ -65,9 +60,6 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 
 	/** Libros. **/
 	private List<LibroOficina> libros;
-
-	/** Tipos. **/
-	private List<TipoAsunto> tipos = new ArrayList<>();
 
 	/** Entidad. **/
 	private Entidad entidad;
@@ -93,7 +85,7 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	private void cargarDatosRegistro() {
 		iplugin = (IRegistroPlugin) componenteService.obtenerPluginEntidad(TypePlugin.REGISTRO, UtilJSF.getIdEntidad());
 		try {
-			tipos = iplugin.obtenerTiposAsunto(entidad.getCodigoDIR3());
+
 			if (mostrarOficina) {
 				oficinas = iplugin.obtenerOficinasRegistro(entidad.getCodigoDIR3(), TypeRegistro.REGISTRO_ENTRADA);
 
@@ -147,13 +139,6 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	public void guardar() {
 
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
-
-		for (final TipoAsunto tipoRegistro : this.tipos) {
-			if (tipoRegistro.getCodigo() != null && tipoRegistro.getCodigo().equals(this.data.getTipo())) {
-				this.data.setTipoText(tipoRegistro.getNombre());
-				break;
-			}
-		}
 
 		if (mostrarOficina) {
 			guardarOficina();
@@ -209,8 +194,7 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final FilaImportarTramiteRegistro data) {
 		this.data = data;
@@ -224,8 +208,7 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mensaje
-	 *            the mensaje to set
+	 * @param mensaje the mensaje to set
 	 */
 	public void setMensaje(final String mensaje) {
 		this.mensaje = mensaje;
@@ -239,8 +222,7 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	}
 
 	/**
-	 * @param oficina
-	 *            the oficina to set
+	 * @param oficina the oficina to set
 	 */
 	public void setOficina(final String oficina) {
 		this.oficina = oficina;
@@ -254,26 +236,10 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	}
 
 	/**
-	 * @param libro
-	 *            the libro to set
+	 * @param libro the libro to set
 	 */
 	public void setLibro(final String libro) {
 		this.libro = libro;
-	}
-
-	/**
-	 * @return the tipo
-	 */
-	public String getTipo() {
-		return tipo;
-	}
-
-	/**
-	 * @param tipo
-	 *            the tipo to set
-	 */
-	public void setTipo(final String tipo) {
-		this.tipo = tipo;
 	}
 
 	/**
@@ -284,8 +250,7 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	}
 
 	/**
-	 * @param oficinas
-	 *            the oficinas to set
+	 * @param oficinas the oficinas to set
 	 */
 	public void setOficinas(final List<OficinaRegistro> oficinas) {
 		this.oficinas = oficinas;
@@ -299,26 +264,10 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	}
 
 	/**
-	 * @param libros
-	 *            the libros to set
+	 * @param libros the libros to set
 	 */
 	public void setLibros(final List<LibroOficina> libros) {
 		this.libros = libros;
-	}
-
-	/**
-	 * @return the tipos
-	 */
-	public List<TipoAsunto> getTipos() {
-		return tipos;
-	}
-
-	/**
-	 * @param tipos
-	 *            the tipos to set
-	 */
-	public void setTipos(final List<TipoAsunto> tipos) {
-		this.tipos = tipos;
 	}
 
 	/**
@@ -329,8 +278,7 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarOficina
-	 *            the mostrarOficina to set
+	 * @param mostrarOficina the mostrarOficina to set
 	 */
 	public void setMostrarOficina(final boolean mostrarOficina) {
 		this.mostrarOficina = mostrarOficina;

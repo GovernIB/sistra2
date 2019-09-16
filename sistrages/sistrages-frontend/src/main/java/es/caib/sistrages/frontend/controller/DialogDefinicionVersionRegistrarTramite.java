@@ -16,7 +16,6 @@ import es.caib.sistra2.commons.plugins.registro.api.IRegistroPlugin;
 import es.caib.sistra2.commons.plugins.registro.api.LibroOficina;
 import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
-import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Literal;
@@ -83,9 +82,6 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	/** Libros. **/
 	private List<LibroOficina> libros;
 
-	/** Tipos. **/
-	private List<TipoAsunto> tipos;
-
 	/** Plugin registro. **/
 	private IRegistroPlugin iplugin;
 
@@ -110,7 +106,6 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 		entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
 		try {
 			oficinas = iplugin.obtenerOficinasRegistro(entidad.getCodigoDIR3(), TypeRegistro.REGISTRO_ENTRADA);
-			tipos = iplugin.obtenerTiposAsunto(entidad.getCodigoDIR3());
 
 			if (this.data.getCodigoOficinaRegistro() != null) {
 				// Es muy marciano, pero por si el cod oficina registro no existe en el listado
@@ -443,20 +438,6 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	 */
 	public void setLibros(final List<LibroOficina> libros) {
 		this.libros = libros;
-	}
-
-	/**
-	 * @return the tipos
-	 */
-	public List<TipoAsunto> getTipos() {
-		return tipos;
-	}
-
-	/**
-	 * @param tipos the tipos to set
-	 */
-	public void setTipos(final List<TipoAsunto> tipos) {
-		this.tipos = tipos;
 	}
 
 	/**

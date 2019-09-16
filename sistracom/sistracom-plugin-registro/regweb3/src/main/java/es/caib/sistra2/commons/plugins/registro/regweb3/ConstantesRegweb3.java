@@ -151,4 +151,13 @@ public class ConstantesRegweb3 {
 	/** Constante para indicar documentación adjunta digitalizada. */
 	public static final Long TIPO_DOCFIS_DIGTL = 3L;
 
+	/** Tamanyo max. resumen. */
+	public static final int MAX_SIZE_ASUNTO_RESUMEN = 240;
+	/** Tamanyo max. observaciones interesado. */
+	public static final int MAX_SIZE_INTERESADO_OBSERVACIONES = 160;
+	/** Tamanyo max. nombre fichero anexo. */
+	public static final int MAX_SIZE_ANEXO_FILENAME = 80;
+	/** Tamanyo max. titulo fichero anexo. */
+	public static final int MAX_SIZE_ANEXO_TITULO = 200;
+
 }

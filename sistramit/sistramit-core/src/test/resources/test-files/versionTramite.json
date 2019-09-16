@@ -65,7 +65,7 @@
           "interno": true,
           "formularioInterno": {
             "mostrarTitulo": true,
-            "titulo": "Formulario 1 (título)",
+            "titulo": "Formulario 1 (tï¿½tulo)",
             "plantillas": [],
             "scriptPlantillas": null,
             "paginas": [
@@ -234,7 +234,7 @@
                         "type": "RComponenteSelector",
                         "identificador": "SEL_MULTIPLE",
                         "tipo": "SE",
-                        "etiqueta": "Múltiple",
+                        "etiqueta": "Mï¿½ltiple",
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 1,
@@ -264,7 +264,7 @@
                         "type": "RComponenteSelector",
                         "identificador": "SEL_UNICA",
                         "tipo": "SE",
-                        "etiqueta": "Única",
+                        "etiqueta": "ï¿½nica",
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 3,
@@ -315,7 +315,7 @@
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 1,
-                        "ayuda": "En función de este campo se deben establecer como solo lectura los campos de la derecha",
+                        "ayuda": "En funciï¿½n de este campo se deben establecer como solo lectura los campos de la derecha",
                         "propiedadesCampo": {
                           "obligatorio": false,
                           "soloLectura": false,
@@ -370,7 +370,7 @@
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 1,
-                        "ayuda": "Según el checkbox toma como valores posibles: DS1/DS2 ó DS3/DS4.  También se autorrellena a DS1 ó DS3.",
+                        "ayuda": "Segï¿½n el checkbox toma como valores posibles: DS1/DS2 ï¿½ DS3/DS4.  Tambiï¿½n se autorrellena a DS1 ï¿½ DS3.",
                         "propiedadesCampo": {
                           "obligatorio": false,
                           "soloLectura": false,
@@ -425,7 +425,7 @@
                         "type": "RComponenteSeccion",
                         "identificador": "ID_1550474877126",
                         "tipo": "SC",
-                        "etiqueta": "VALIDACIÓN CAMPO",
+                        "etiqueta": "VALIDACIï¿½N CAMPO",
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 6,
@@ -630,8 +630,7 @@
       "scriptNavegacion": null,
       "destino": {
         "oficinaRegistro": "codofi1",
-        "libroRegistro": "codlib.codofi1.2",
-        "tipoAsunto": "codtip1"
+        "libroRegistro": "codlib.codofi1.2"
       },
       "scriptDestino": null,
       "instruccionesPresentacionHtml": "",

@@ -293,7 +293,6 @@ public class JPasoTramitacion implements IModelApi {
 		paso.setAdmiteRepresentacion(this.getPasoRegistrar().isAdmiteRepresentacion());
 		paso.setCodigoLibroRegistro(this.getPasoRegistrar().getCodigoLibroRegistro());
 		paso.setCodigoOficinaRegistro(this.getPasoRegistrar().getCodigoOficinaRegistro());
-		paso.setCodigoTipoAsunto(this.getPasoRegistrar().getCodigoTipoAsunto());
 		paso.setPermiteSubsanar(this.getPasoRegistrar().isPermiteSubsanar());
 		paso.setAvisoAlFinalizar(this.getPasoRegistrar().isAvisoAlFinalizar());
 		if (this.getPasoRegistrar().getInstruccionesSubsanacion() != null) {

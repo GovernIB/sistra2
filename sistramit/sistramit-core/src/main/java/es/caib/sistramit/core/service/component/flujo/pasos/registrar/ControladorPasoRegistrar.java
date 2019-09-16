@@ -454,14 +454,6 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 			}
 		}
 
-		// - Tipo asunto
-		if (StringUtils.isNotBlank(resRegistro.getTipoAsunto())) {
-			datosRegistrales.setTipoAsunto(resRegistro.getTipoAsunto());
-		} else {
-			// TODO PENDIENTE VER SI TIPO ASUNTO SE CENTRALIZA
-			datosRegistrales.setTipoAsunto(pasoRegistrar.getDestino().getTipoAsunto());
-		}
-
 		// - N. expediente
 		datosRegistrales.setNumeroExpediente(resRegistro.getNumeroExpediente());
 

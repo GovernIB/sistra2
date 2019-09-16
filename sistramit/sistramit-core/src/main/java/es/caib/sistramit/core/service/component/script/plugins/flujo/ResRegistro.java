@@ -18,9 +18,6 @@ public final class ResRegistro implements ResRegistroInt {
 	/** Libro. */
 	private String libro;
 
-	/** Tipo asunto. */
-	private String tipoAsunto;
-
 	/** Expediente (para tramites continuacion). */
 	private String numeroExpediente;
 
@@ -54,10 +51,10 @@ public final class ResRegistro implements ResRegistroInt {
 	 * Método para establecer oficina.
 	 *
 	 * @param oficina
-	 *            oficina a establecer
+	 *                    oficina a establecer
 	 */
 	@Override
-	public void setOficina(String oficina) {
+	public void setOficina(final String oficina) {
 		this.oficina = oficina;
 	}
 
@@ -74,31 +71,11 @@ public final class ResRegistro implements ResRegistroInt {
 	 * Método para establecer libro.
 	 *
 	 * @param libro
-	 *            libro a establecer
+	 *                  libro a establecer
 	 */
 	@Override
-	public void setLibro(String libro) {
+	public void setLibro(final String libro) {
 		this.libro = libro;
-	}
-
-	/**
-	 * Método de acceso a tipoAsunto.
-	 *
-	 * @return tipoAsunto
-	 */
-	public String getTipoAsunto() {
-		return tipoAsunto;
-	}
-
-	/**
-	 * Método para establecer tipoAsunto.
-	 *
-	 * @param tipoAsunto
-	 *            tipoAsunto a establecer
-	 */
-	@Override
-	public void setTipoAsunto(String tipoAsunto) {
-		this.tipoAsunto = tipoAsunto;
 	}
 
 	/**
@@ -114,10 +91,10 @@ public final class ResRegistro implements ResRegistroInt {
 	 * Método para establecer numeroExpediente.
 	 *
 	 * @param numeroExpediente
-	 *            numeroExpediente a establecer
+	 *                             numeroExpediente a establecer
 	 */
 	@Override
-	public void setNumeroExpediente(String numeroExpediente) {
+	public void setNumeroExpediente(final String numeroExpediente) {
 		this.numeroExpediente = numeroExpediente;
 	}
 
@@ -134,10 +111,10 @@ public final class ResRegistro implements ResRegistroInt {
 	 * Método para establecer textoExpone.
 	 *
 	 * @param textoExpone
-	 *            textoExpone a establecer
+	 *                        textoExpone a establecer
 	 */
 	@Override
-	public void setExpone(String textoExpone) {
+	public void setExpone(final String textoExpone) {
 		this.textoExpone = textoExpone;
 
 	}
@@ -155,10 +132,10 @@ public final class ResRegistro implements ResRegistroInt {
 	 * Método para establecer textoSolicita.
 	 *
 	 * @param textoSolicita
-	 *            textoSolicita a establecer
+	 *                          textoSolicita a establecer
 	 */
 	@Override
-	public void setSolicita(String textoSolicita) {
+	public void setSolicita(final String textoSolicita) {
 		this.textoSolicita = textoSolicita;
 	}
 
@@ -175,10 +152,10 @@ public final class ResRegistro implements ResRegistroInt {
 	 * Método para establecer codigoOrganoDestino.
 	 *
 	 * @param codigoOrganoDestino
-	 *            codigoOrganoDestino a establecer
+	 *                                codigoOrganoDestino a establecer
 	 */
 	@Override
-	public void setCodigoOrganoDestino(String codigoOrganoDestino) {
+	public void setCodigoOrganoDestino(final String codigoOrganoDestino) {
 		this.codigoOrganoDestino = codigoOrganoDestino;
 	}
 
@@ -195,13 +172,11 @@ public final class ResRegistro implements ResRegistroInt {
 	 * Método para establecer el extracto.
 	 *
 	 * @param extracto
-	 * 			extracto a establecer
+	 *                     extracto a establecer
 	 */
 	@Override
-	public void setExtracto(String extracto) {
+	public void setExtracto(final String extracto) {
 		this.extracto = extracto;
 	}
-
-
 
 }

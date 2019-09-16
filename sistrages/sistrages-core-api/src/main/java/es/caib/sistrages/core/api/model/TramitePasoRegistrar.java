@@ -37,9 +37,6 @@ public class TramitePasoRegistrar extends TramitePaso {
 	/** Código libro registro **/
 	private String codigoLibroRegistro;
 
-	/** Código tipo asunto **/
-	private String codigoTipoAsunto;
-
 	/** Indica si admite representación */
 	private boolean admiteRepresentacion;
 
@@ -171,20 +168,6 @@ public class TramitePasoRegistrar extends TramitePaso {
 	}
 
 	/**
-	 * @return the codigoTipoAsunto
-	 */
-	public String getCodigoTipoAsunto() {
-		return codigoTipoAsunto;
-	}
-
-	/**
-	 * @param codigoTipoAsunto the codigoTipoAsunto to set
-	 */
-	public void setCodigoTipoAsunto(final String codigoTipoAsunto) {
-		this.codigoTipoAsunto = codigoTipoAsunto;
-	}
-
-	/**
 	 * @return the admiteRepresentacion
 	 */
 	public boolean isAdmiteRepresentacion() {
@@ -264,7 +247,7 @@ public class TramitePasoRegistrar extends TramitePaso {
 	/**
 	 * @param scriptAlFinalizar the scriptAlFinalizar to set
 	 */
-	public void setScriptAlFinalizar(Script scriptAlFinalizar) {
+	public void setScriptAlFinalizar(final Script scriptAlFinalizar) {
 		this.scriptAlFinalizar = scriptAlFinalizar;
 	}
 

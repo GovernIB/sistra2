@@ -3,127 +3,127 @@ package es.caib.sistra2.commons.plugins.registro.regweb3;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
 
 import javax.xml.ws.BindingProvider;
 
-import es.caib.regweb3.ws.api.v3.AsientoRegistralWs;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import es.caib.regweb3.ws.api.v3.DatosInteresadoWs;
+import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWs;
+import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWsService;
 import es.caib.regweb3.ws.api.v3.RegWebInfoWs;
 import es.caib.regweb3.ws.api.v3.RegWebInfoWsService;
 import es.caib.regweb3.ws.api.v3.RegWebRegistroEntradaWs;
 import es.caib.regweb3.ws.api.v3.RegWebRegistroEntradaWsService;
 import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWs;
 import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWsService;
-import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWs;
-import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWsService;
 import es.caib.sistra2.commons.plugins.registro.api.AsientoRegistral;
 import es.caib.sistra2.commons.plugins.registro.api.Interesado;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumentoIdentificacion;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeInteresado;
-import es.caib.sistra2.commons.ws.utils.WsClientUtil;
-
-import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistra2.commons.utils.NifUtils;
-
+import es.caib.sistra2.commons.ws.utils.WsClientUtil;
 
 /**
  * Utilidades Regweb3.
+ *
  * @author Indra
  *
  */
 public class UtilsRegweb3 {
 
-
 	/**
 	 * Obtiene service registro entrada.
+	 *
 	 * @return service registro entrada
 	 * @throws Exception
 	 */
-	public static RegWebRegistroEntradaWs getRegistroEntradaService(String entidad, String endpoint, String wsdlDir,
-			String user, String pass, boolean logCalls) throws Exception  {
+	public static RegWebRegistroEntradaWs getRegistroEntradaService(final String entidad, final String endpoint,
+			final String wsdlDir, final String user, final String pass, final boolean logCalls) throws Exception {
 
-		URL wsdl = obtenerUrlWsdl(endpoint, wsdlDir, "RegWebRegistroEntrada");
-        RegWebRegistroEntradaWsService service = new RegWebRegistroEntradaWsService(wsdl);
+		final URL wsdl = obtenerUrlWsdl(endpoint, wsdlDir, "RegWebRegistroEntrada");
+		final RegWebRegistroEntradaWsService service = new RegWebRegistroEntradaWsService(wsdl);
 
-        RegWebRegistroEntradaWs api = service.getRegWebRegistroEntradaWs();
+		final RegWebRegistroEntradaWs api = service.getRegWebRegistroEntradaWs();
 
-        configurarService((BindingProvider) api, endpoint, user, pass, logCalls);
+		configurarService((BindingProvider) api, endpoint, user, pass, logCalls);
 
-       return api;
-    }
+		return api;
+	}
 
 	/**
 	 * Obtiene service registro salida.
+	 *
 	 * @return service registro salida
 	 * @throws Exception
 	 */
-	public static RegWebRegistroSalidaWs getRegistroSalidaService(String entidad, String endpoint, String wsdlDir,
-			String user, String pass, boolean logCalls) throws Exception  {
+	public static RegWebRegistroSalidaWs getRegistroSalidaService(final String entidad, final String endpoint,
+			final String wsdlDir, final String user, final String pass, final boolean logCalls) throws Exception {
 
-        URL wsdl = obtenerUrlWsdl(endpoint, wsdlDir, "RegWebRegistroSalida");
-        RegWebRegistroSalidaWsService service = new RegWebRegistroSalidaWsService(wsdl);
+		final URL wsdl = obtenerUrlWsdl(endpoint, wsdlDir, "RegWebRegistroSalida");
+		final RegWebRegistroSalidaWsService service = new RegWebRegistroSalidaWsService(wsdl);
 
-        RegWebRegistroSalidaWs api = service.getRegWebRegistroSalidaWs();
+		final RegWebRegistroSalidaWs api = service.getRegWebRegistroSalidaWs();
 
-        configurarService((BindingProvider) api, endpoint, user, pass, logCalls);
+		configurarService((BindingProvider) api, endpoint, user, pass, logCalls);
 
-       return api;
-    }
+		return api;
+	}
 
 	/**
 	 * Obtiene service asiento registral.
+	 *
 	 * @return service asiento registral
 	 * @throws Exception
 	 */
-	public static RegWebAsientoRegistralWs getAsientoRegistralService(String entidad, String endpoint, String wsdlDir,
-			String user, String pass, boolean logCalls) throws Exception  {
+	public static RegWebAsientoRegistralWs getAsientoRegistralService(final String entidad, final String endpoint,
+			final String wsdlDir, final String user, final String pass, final boolean logCalls) throws Exception {
 
-        URL wsdl = obtenerUrlWsdl(endpoint, wsdlDir, "RegWebAsientoRegistral");
-        RegWebAsientoRegistralWsService service = new RegWebAsientoRegistralWsService(wsdl);
+		final URL wsdl = obtenerUrlWsdl(endpoint, wsdlDir, "RegWebAsientoRegistral");
+		final RegWebAsientoRegistralWsService service = new RegWebAsientoRegistralWsService(wsdl);
 
-        RegWebAsientoRegistralWs api = service.getRegWebAsientoRegistralWs();
+		final RegWebAsientoRegistralWs api = service.getRegWebAsientoRegistralWs();
 
-        configurarService((BindingProvider) api, endpoint, user, pass, logCalls);
+		configurarService((BindingProvider) api, endpoint, user, pass, logCalls);
 
-       return api;
-    }
-
+		return api;
+	}
 
 	/**
 	 * Obtiene service registro info.
+	 *
 	 * @return service registro info
 	 * @throws Exception
 	 */
-	public static RegWebInfoWs getRegistroInfoService(String entidad, String endpoint, String wsdlDir,
-			String user, String pass, boolean logCalls) throws Exception  {
+	public static RegWebInfoWs getRegistroInfoService(final String entidad, final String endpoint, final String wsdlDir,
+			final String user, final String pass, final boolean logCalls) throws Exception {
 
 		// Url WSDL: local o remoto segun haya proxy
-		URL wsdl = obtenerUrlWsdl(endpoint, wsdlDir, "RegWebInfo");
-        RegWebInfoWsService service = new RegWebInfoWsService(wsdl);
+		final URL wsdl = obtenerUrlWsdl(endpoint, wsdlDir, "RegWebInfo");
+		final RegWebInfoWsService service = new RegWebInfoWsService(wsdl);
 
-        RegWebInfoWs api = service.getRegWebInfoWs();
+		final RegWebInfoWs api = service.getRegWebInfoWs();
 
-        configurarService((BindingProvider) api, endpoint, user, pass, logCalls);
+		configurarService((BindingProvider) api, endpoint, user, pass, logCalls);
 
-       return api;
-    }
+		return api;
+	}
 
 	/**
 	 * Url WSDL: local o remoto segun haya proxy
+	 *
 	 * @param endpoint
 	 * @param serviceName
 	 * @return
 	 * @throws MalformedURLException
 	 */
-	private static URL obtenerUrlWsdl(final String endpoint, String wsdlDir, String serviceName)
+	private static URL obtenerUrlWsdl(final String endpoint, final String wsdlDir, final String serviceName)
 			throws MalformedURLException {
 
 		URL wsdl = null;
 		if (StringUtils.isNotBlank(System.getProperty("http.proxyHost"))) {
-			wsdl = new URL("file://" + wsdlDir  + "/" + serviceName + ".wsdl");
+			wsdl = new URL("file://" + wsdlDir + "/" + serviceName + ".wsdl");
 		} else {
 			wsdl = new URL(endpoint + "?wsdl");
 		}
@@ -132,13 +132,18 @@ public class UtilsRegweb3 {
 
 	/**
 	 * Configura service.
-	 * @param bp Binding Provider
-	 * @param endpoint Endpoint ws
-	 * @param user usuario
-	 * @param pass password
+	 *
+	 * @param bp
+	 *                     Binding Provider
+	 * @param endpoint
+	 *                     Endpoint ws
+	 * @param user
+	 *                     usuario
+	 * @param pass
+	 *                     password
 	 */
-	private static void configurarService(BindingProvider bp, String endpoint,
-			String user, String pass, boolean logCalls) throws Exception {
+	private static void configurarService(final BindingProvider bp, final String endpoint, final String user,
+			final String pass, final boolean logCalls) throws Exception {
 
 		bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpoint);
 
@@ -148,15 +153,17 @@ public class UtilsRegweb3 {
 
 	/**
 	 * Obtiene tipo interesado.
-	 * @param documentoIdentificacion documento identicacion
+	 *
+	 * @param documentoIdentificacion
+	 *                                    documento identicacion
 	 * @return tipo interesado
 	 */
-	public static String getTipoInteresado(String documentoIdentificacion) {
+	public static String getTipoInteresado(final String documentoIdentificacion) {
 		String result = null;
 
 		if (NifUtils.esNifPersonaFisica(documentoIdentificacion)) {
 			result = ConstantesRegweb3.TIPO_INTERESADO_PERSONA_FISICA;
-		}else if (NifUtils.esNifPersonaFisica(documentoIdentificacion)) {
+		} else if (NifUtils.esNifPersonaFisica(documentoIdentificacion)) {
 			result = ConstantesRegweb3.TIPO_INTERESADO_PERSONA_JURIDICA;
 		}
 
@@ -165,10 +172,12 @@ public class UtilsRegweb3 {
 
 	/**
 	 * Obtiene tipo documento identificacion.
-	 * @param documentoIdentificacion documento identicacion
+	 *
+	 * @param documentoIdentificacion
+	 *                                    documento identicacion
 	 * @return tipo documento identificacion.
 	 */
-	public static String getTipoDocumentoIdentificacion(String documentoIdentificacion) {
+	public static String getTipoDocumentoIdentificacion(final String documentoIdentificacion) {
 		String result = null;
 
 		if (NifUtils.esDni(documentoIdentificacion) || NifUtils.esNifOtros(documentoIdentificacion)) {
@@ -184,16 +193,19 @@ public class UtilsRegweb3 {
 
 	/**
 	 * Obtener datos interesado asiento.
-	 * @param asiento asiento
-	 * @param tipoInteresado tipo interesado (RPT/RPD).
+	 *
+	 * @param asiento
+	 *                           asiento
+	 * @param tipoInteresado
+	 *                           tipo interesado (RPT/RPD).
 	 *
 	 * @return interesado
 	 */
-	public static Interesado obtenerDatosInteresadoAsiento(
-			AsientoRegistral asiento, TypeInteresado tipoInteresado) {
+	public static Interesado obtenerDatosInteresadoAsiento(final AsientoRegistral asiento,
+			final TypeInteresado tipoInteresado) {
 		Interesado result = null;
-		for (Iterator it = asiento.getInteresados().iterator(); it.hasNext();) {
-			Interesado datosInteresado = (Interesado) it.next();
+		for (final Iterator it = asiento.getInteresados().iterator(); it.hasNext();) {
+			final Interesado datosInteresado = (Interesado) it.next();
 			if (datosInteresado.getActuaComo() == tipoInteresado) {
 				result = datosInteresado;
 				break;
@@ -209,22 +221,18 @@ public class UtilsRegweb3 {
 	 * @return
 	 * @throws Exception
 	 */
-	public static DatosInteresadoWs crearInteresado(
-			Interesado interesadoAsiento) {
-		DatosInteresadoWs interesado = new DatosInteresadoWs();
+	public static DatosInteresadoWs crearInteresado(final Interesado interesadoAsiento) {
+		final DatosInteresadoWs interesado = new DatosInteresadoWs();
 
-		TypeDocumentoIdentificacion tipoDocumento = interesadoAsiento.getTipoDocumento();
+		final TypeDocumentoIdentificacion tipoDocumento = interesadoAsiento.getTipoDocumento();
 
 		if (StringUtils.isNotBlank(interesadoAsiento.getDocIdentificacion())) {
-			interesado.setTipoInteresado(new Long(UtilsRegweb3
-					.getTipoInteresado(interesadoAsiento
-							.getDocIdentificacion())));
-			interesado
-					.setDocumento(interesadoAsiento.getDocIdentificacion());
+			interesado.setTipoInteresado(
+					new Long(UtilsRegweb3.getTipoInteresado(interesadoAsiento.getDocIdentificacion())));
+			interesado.setDocumento(interesadoAsiento.getDocIdentificacion());
 			interesado.setTipoDocumentoIdentificacion(tipoDocumento.toString());
 		} else {
-			interesado.setTipoInteresado(new Long(
-					ConstantesRegweb3.TIPO_INTERESADO_PERSONA_FISICA));
+			interesado.setTipoInteresado(new Long(ConstantesRegweb3.TIPO_INTERESADO_PERSONA_FISICA));
 		}
 
 		if (interesado.getTipoInteresado().longValue() == Long
@@ -247,10 +255,51 @@ public class UtilsRegweb3 {
 		if (interesadoAsiento.getCanal() != null) {
 			interesado.setCanal(Long.parseLong(interesadoAsiento.getCanal().toString()));
 		}
-
-		interesado.setObservaciones(interesadoAsiento.getObservaciones());
+		interesado.setObservaciones(UtilsRegweb3.truncarTexto(interesadoAsiento.getObservaciones(),
+				ConstantesRegweb3.MAX_SIZE_INTERESADO_OBSERVACIONES));
 
 		return interesado;
+	}
+
+	/**
+	 * Trunca texto si se pasa del tamaño máximo.
+	 *
+	 * @param texto
+	 *                   Texto
+	 * @param tamMax
+	 *                   Tamaño máximo
+	 * @return texto truncado
+	 */
+	public static String truncarTexto(final String texto, final int tamMax) {
+		String res = texto;
+		if (texto != null && texto.length() > tamMax) {
+			res = StringUtils.left(texto, tamMax - 3) + "...";
+		}
+		return res;
+	}
+
+	/**
+	 * Trunca filename si se pasa del tamaño máximo.
+	 *
+	 * @param filename
+	 *                     filename
+	 * @param tamMax
+	 *                     Tamaño máximo
+	 * @return filename truncado
+	 */
+	public static String truncarFilename(final String filename, final int tamMax) {
+		String res = filename;
+		if (filename != null && filename.length() > tamMax) {
+			final String extension = FilenameUtils.getExtension(filename);
+			final String filenameNoExtension = FilenameUtils.removeExtension(filename);
+
+			if (StringUtils.isNotBlank(extension)) {
+				res = StringUtils.left(filenameNoExtension, tamMax - (extension.length() + 1)) + "." + extension;
+			} else {
+				res = StringUtils.left(filenameNoExtension, tamMax);
+			}
+		}
+		return res;
 	}
 
 }

@@ -21,7 +21,6 @@ import es.caib.sistra2.commons.plugins.registro.api.LibroOficina;
 import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
-import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumental;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumentoIdentificacion;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaAsiento;
@@ -58,7 +57,6 @@ public class TestRegistro {
 			final String entidad = "A04003003";
 			final String oficinaRegEnt = "O00009390";
 			final String libroOficinaRegEnt = "L99";
-			final String tipoAsuntoRegEnt = "OT";
 
 			final Properties prop = new Properties();
 			prop.put("es.caib.sistra2.pluginsib.registro.regweb3.endpoint.entrada",
@@ -92,10 +90,6 @@ public class TestRegistro {
 				System.out.println("Libro: " + libro.getCodigo() + " : " + libro.getNombre());
 			}
 
-			// Testeamos obtencion de tipos de asunto
-			final List<TipoAsunto> tiposAsunto = plugin.obtenerTiposAsunto(entidad);
-			System.out.println("tiposAsunto" + tiposAsunto.get(0).getCodigo() + " : " + tiposAsunto.get(0).getNombre());
-
 			// Paso 1. Crear Datos Origen
 			final DatosOrigen datosOrigen = new DatosOrigen();
 			datosOrigen.setCodigoEntidad(entidad);
@@ -106,7 +100,6 @@ public class TestRegistro {
 			// Paso 2. Crear Datos Asunto
 			final DatosAsunto datosAsunto = new DatosAsunto();
 			datosAsunto.setCodigoOrganoDestino("A04013511");
-			datosAsunto.setTipoAsunto(tipoAsuntoRegEnt);
 			datosAsunto.setFechaAsunto(new Date());
 			datosAsunto.setIdiomaAsunto("es");
 			datosAsunto.setExtractoAsunto("Prueba registro de entrada");

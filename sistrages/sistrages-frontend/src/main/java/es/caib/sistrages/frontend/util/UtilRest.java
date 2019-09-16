@@ -20,16 +20,11 @@ public class UtilRest {
 	/**
 	 * Refrescar.
 	 *
-	 * @param urlBase
-	 *            url base
-	 * @param usuario
-	 *            usuario
-	 * @param pwd
-	 *            pwd
-	 * @param tipo
-	 *            tipo
-	 * @param identificador
-	 *            identificador
+	 * @param urlBase       url base
+	 * @param usuario       usuario
+	 * @param pwd           pwd
+	 * @param tipo          tipo
+	 * @param identificador identificador
 	 * @return 1 si se ha ejecutado correctamente, 0 si ha habido algun error.
 	 */
 	public static ResultadoError refrescar(final String urlBase, final String usuario, final String pwd,

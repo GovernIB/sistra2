@@ -17,7 +17,6 @@ import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
-import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 
@@ -83,24 +82,6 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 		lo3.setCodigo("codlib." + codigoOficina + ".3");
 		lo3.setNombre("libro oficina (" + codigoOficina + ") 3");
 		res.add(lo3);
-		return res;
-	}
-
-	@Override
-	public List<TipoAsunto> obtenerTiposAsunto(final String codigoEntidad) throws RegistroPluginException {
-		final List<TipoAsunto> res = new ArrayList<>();
-		final TipoAsunto ta1 = new TipoAsunto();
-		ta1.setCodigo("codtip1");
-		ta1.setNombre("tipo asunto 1");
-		res.add(ta1);
-		final TipoAsunto ta2 = new TipoAsunto();
-		ta2.setCodigo("codtip2");
-		ta2.setNombre("tipo asunto 2");
-		res.add(ta2);
-		final TipoAsunto ta3 = new TipoAsunto();
-		ta3.setCodigo("codtip3");
-		ta3.setNombre("tipo asunto 3");
-		res.add(ta3);
 		return res;
 	}
 
@@ -175,7 +156,7 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 	 * Obtiene propiedad.
 	 *
 	 * @param propiedad
-	 *            propiedad
+	 *                      propiedad
 	 * @return valor
 	 * @throws RegistroPluginException
 	 */

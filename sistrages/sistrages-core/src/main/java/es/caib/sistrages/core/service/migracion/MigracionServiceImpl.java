@@ -193,10 +193,6 @@ public class MigracionServiceImpl implements MigracionService {
 
 		final TramitePasoRegistrar pasoRegistrar = tramiteVersion.getPasoRegistrar();
 		if (pasoRegistrar != null) {
-			if (traverSistra.getTrvRegast() != null) {
-				pasoRegistrar.setCodigoTipoAsunto(traverSistra.getTrvRegast());
-				modificado = true;
-			}
 
 			if (traverSistra.getScriptRepresentante() != null) {
 				final Script scriptRepresentante = new Script();

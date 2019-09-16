@@ -219,7 +219,6 @@ public class XTestJson {
         final RDestinoRegistro destino = new RDestinoRegistro();
         destino.setOficinaRegistro("OF1");
         destino.setLibroRegistro("LIB1");
-        destino.setTipoAsunto("AS1");
         pr.setDestino(destino);
         return pr;
     }

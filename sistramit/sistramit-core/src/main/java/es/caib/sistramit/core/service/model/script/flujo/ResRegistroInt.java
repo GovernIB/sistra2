@@ -20,7 +20,7 @@ public interface ResRegistroInt extends PluginScriptRes {
 	 * Método para establecer oficina.
 	 *
 	 * @param oficina
-	 *            oficina a establecer
+	 *                    oficina a establecer
 	 */
 	void setOficina(String oficina);
 
@@ -28,23 +28,15 @@ public interface ResRegistroInt extends PluginScriptRes {
 	 * Método para establecer libro.
 	 *
 	 * @param libro
-	 *            libro a establecer
+	 *                  libro a establecer
 	 */
 	void setLibro(String libro);
-
-	/**
-	 * Método para establecer tipoAsunto.
-	 *
-	 * @param tipoAsunto
-	 *            tipoAsunto a establecer
-	 */
-	void setTipoAsunto(String tipoAsunto);
 
 	/**
 	 * Método para establecer numeroExpediente.
 	 *
 	 * @param numeroExpediente
-	 *            numeroExpediente a establecer
+	 *                             numeroExpediente a establecer
 	 */
 	void setNumeroExpediente(String numeroExpediente);
 
@@ -52,7 +44,7 @@ public interface ResRegistroInt extends PluginScriptRes {
 	 * Método para establecer textoExpone.
 	 *
 	 * @param textoExpone
-	 *            textoExpone a establecer
+	 *                        textoExpone a establecer
 	 */
 	void setExpone(String textoExpone);
 
@@ -60,7 +52,7 @@ public interface ResRegistroInt extends PluginScriptRes {
 	 * Método para establecer textoSolicita.
 	 *
 	 * @param textoSolicita
-	 *            textoSolicita a establecer
+	 *                          textoSolicita a establecer
 	 */
 	void setSolicita(String textoSolicita);
 
@@ -68,7 +60,7 @@ public interface ResRegistroInt extends PluginScriptRes {
 	 * Método para establecer codigoOrganoDestino.
 	 *
 	 * @param codigoOrganoDestino
-	 *            codigoOrganoDestino a establecer
+	 *                                codigoOrganoDestino a establecer
 	 */
 	void setCodigoOrganoDestino(String codigoOrganoDestino);
 
@@ -76,7 +68,7 @@ public interface ResRegistroInt extends PluginScriptRes {
 	 * Método para establecer extracto.
 	 *
 	 * @param extracto
-	 *            extracto a establecer
+	 *                     extracto a establecer
 	 */
 	void setExtracto(String extracto);
 

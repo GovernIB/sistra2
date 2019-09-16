@@ -72,10 +72,6 @@ public class JPasoRegistrar implements IModelApi {
 	@Column(name = "PRG_REGLIB", length = 20)
 	private String codigoLibroRegistro;
 
-	/** Código tipo asunto. **/
-	@Column(name = "PRG_REGASU", length = 20)
-	private String codigoTipoAsunto;
-
 	/** Admite representacion. **/
 	@Column(name = "PRG_REPADM", nullable = false, precision = 1, scale = 0)
 	private boolean admiteRepresentacion;
@@ -250,20 +246,6 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
-	 * @return the codigoTipoAsunto
-	 */
-	public String getCodigoTipoAsunto() {
-		return codigoTipoAsunto;
-	}
-
-	/**
-	 * @param codigoTipoAsunto the codigoTipoAsunto to set
-	 */
-	public void setCodigoTipoAsunto(final String codigoTipoAsunto) {
-		this.codigoTipoAsunto = codigoTipoAsunto;
-	}
-
-	/**
 	 * @return the admiteRepresentacion
 	 */
 	public boolean isAdmiteRepresentacion() {
@@ -361,7 +343,6 @@ public class JPasoRegistrar implements IModelApi {
 			jpaso.setAdmiteRepresentacion(paso.isAdmiteRepresentacion());
 			jpaso.setCodigoLibroRegistro(paso.getCodigoLibroRegistro());
 			jpaso.setCodigoOficinaRegistro(paso.getCodigoOficinaRegistro());
-			jpaso.setCodigoTipoAsunto(paso.getCodigoTipoAsunto());
 			jpaso.setInstruccionesFinTramitacion(JLiteral.fromModel(paso.getInstruccionesFinTramitacion()));
 			jpaso.setInstruccionesPresentacion(JLiteral.fromModel(paso.getInstruccionesPresentacion()));
 			jpaso.setValidaRepresentacion(paso.isValidaRepresentacion());
@@ -393,7 +374,6 @@ public class JPasoRegistrar implements IModelApi {
 			jpasoRegistrar.setAdmiteRepresentacion(origPasoRegistrar.isAdmiteRepresentacion());
 			jpasoRegistrar.setCodigoLibroRegistro(origPasoRegistrar.getCodigoLibroRegistro());
 			jpasoRegistrar.setCodigoOficinaRegistro(origPasoRegistrar.getCodigoOficinaRegistro());
-			jpasoRegistrar.setCodigoTipoAsunto(origPasoRegistrar.getCodigoTipoAsunto());
 			jpasoRegistrar.setInstruccionesFinTramitacion(
 					JLiteral.clonar(origPasoRegistrar.getInstruccionesFinTramitacion()));
 			jpasoRegistrar

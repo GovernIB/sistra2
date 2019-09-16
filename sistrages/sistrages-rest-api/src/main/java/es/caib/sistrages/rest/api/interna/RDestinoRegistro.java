@@ -12,73 +12,48 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RDestinoRegistro", description = "Descripcion de RDestinoRegistro")
 public class RDestinoRegistro {
 
-    /** Oficina registro. */
+	/** Oficina registro. */
 	@ApiModelProperty(value = "Oficina registro")
-    private String oficinaRegistro;
+	private String oficinaRegistro;
 
-    /** Libro registro. */
+	/** Libro registro. */
 	@ApiModelProperty(value = "Libro registro")
-    private String libroRegistro;
+	private String libroRegistro;
 
-    /** Tipo asunto. */
-	@ApiModelProperty(value = "Tipo asunto")
-    private String tipoAsunto;
+	/**
+	 * Método de acceso a oficinaRegistro.
+	 *
+	 * @return oficinaRegistro
+	 */
+	public String getOficinaRegistro() {
+		return oficinaRegistro;
+	}
 
-    /**
-     * Método de acceso a oficinaRegistro.
-     *
-     * @return oficinaRegistro
-     */
-    public String getOficinaRegistro() {
-        return oficinaRegistro;
-    }
+	/**
+	 * Método para establecer oficinaRegistro.
+	 *
+	 * @param oficinaRegistro oficinaRegistro a establecer
+	 */
+	public void setOficinaRegistro(final String oficinaRegistro) {
+		this.oficinaRegistro = oficinaRegistro;
+	}
 
-    /**
-     * Método para establecer oficinaRegistro.
-     *
-     * @param oficinaRegistro
-     *            oficinaRegistro a establecer
-     */
-    public void setOficinaRegistro(String oficinaRegistro) {
-        this.oficinaRegistro = oficinaRegistro;
-    }
+	/**
+	 * Método de acceso a libroRegistro.
+	 *
+	 * @return libroRegistro
+	 */
+	public String getLibroRegistro() {
+		return libroRegistro;
+	}
 
-    /**
-     * Método de acceso a libroRegistro.
-     *
-     * @return libroRegistro
-     */
-    public String getLibroRegistro() {
-        return libroRegistro;
-    }
-
-    /**
-     * Método para establecer libroRegistro.
-     *
-     * @param libroRegistro
-     *            libroRegistro a establecer
-     */
-    public void setLibroRegistro(String libroRegistro) {
-        this.libroRegistro = libroRegistro;
-    }
-
-    /**
-     * Método de acceso a tipoAsunto.
-     *
-     * @return tipoAsunto
-     */
-    public String getTipoAsunto() {
-        return tipoAsunto;
-    }
-
-    /**
-     * Método para establecer tipoAsunto.
-     *
-     * @param tipoAsunto
-     *            tipoAsunto a establecer
-     */
-    public void setTipoAsunto(String tipoAsunto) {
-        this.tipoAsunto = tipoAsunto;
-    }
+	/**
+	 * Método para establecer libroRegistro.
+	 *
+	 * @param libroRegistro libroRegistro a establecer
+	 */
+	public void setLibroRegistro(final String libroRegistro) {
+		this.libroRegistro = libroRegistro;
+	}
 
 }

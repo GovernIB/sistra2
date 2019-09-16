@@ -14,7 +14,6 @@ public class DatosAsunto implements Serializable {
 
 	private Date fechaAsunto;
 	private String idiomaAsunto;
-	private String tipoAsunto;
 	private String extractoAsunto;
 	private String codigoOrganoDestino;
 	private String codigoSiaProcedimiento;
@@ -26,7 +25,7 @@ public class DatosAsunto implements Serializable {
 		return fechaAsunto;
 	}
 
-	public void setFechaAsunto(Date fechaAsunto) {
+	public void setFechaAsunto(final Date fechaAsunto) {
 		this.fechaAsunto = fechaAsunto;
 	}
 
@@ -34,23 +33,15 @@ public class DatosAsunto implements Serializable {
 		return idiomaAsunto;
 	}
 
-	public void setIdiomaAsunto(String idiomaAsunto) {
+	public void setIdiomaAsunto(final String idiomaAsunto) {
 		this.idiomaAsunto = idiomaAsunto;
-	}
-
-	public String getTipoAsunto() {
-		return tipoAsunto;
-	}
-
-	public void setTipoAsunto(String tipoAsunto) {
-		this.tipoAsunto = tipoAsunto;
 	}
 
 	public String getExtractoAsunto() {
 		return extractoAsunto;
 	}
 
-	public void setExtractoAsunto(String extractoAsunto) {
+	public void setExtractoAsunto(final String extractoAsunto) {
 		this.extractoAsunto = extractoAsunto;
 	}
 
@@ -58,7 +49,7 @@ public class DatosAsunto implements Serializable {
 		return codigoOrganoDestino;
 	}
 
-	public void setCodigoOrganoDestino(String codigoOrganoDestino) {
+	public void setCodigoOrganoDestino(final String codigoOrganoDestino) {
 		this.codigoOrganoDestino = codigoOrganoDestino;
 	}
 
@@ -75,9 +66,9 @@ public class DatosAsunto implements Serializable {
 	 * Método para establecer codigoSiaProcedimiento.
 	 *
 	 * @param codigoSiaProcedimiento
-	 *            codigoSiaProcedimiento a establecer
+	 *                                   codigoSiaProcedimiento a establecer
 	 */
-	public void setCodigoSiaProcedimiento(String codigoSiaProcedimiento) {
+	public void setCodigoSiaProcedimiento(final String codigoSiaProcedimiento) {
 		this.codigoSiaProcedimiento = codigoSiaProcedimiento;
 	}
 
@@ -94,9 +85,9 @@ public class DatosAsunto implements Serializable {
 	 * Método para establecer numeroExpediente.
 	 *
 	 * @param numeroExpediente
-	 *            numeroExpediente a establecer
+	 *                             numeroExpediente a establecer
 	 */
-	public void setNumeroExpediente(String numeroExpediente) {
+	public void setNumeroExpediente(final String numeroExpediente) {
 		this.numeroExpediente = numeroExpediente;
 	}
 
@@ -113,9 +104,9 @@ public class DatosAsunto implements Serializable {
 	 * Método para establecer textoExpone.
 	 *
 	 * @param textoExpone
-	 *            textoExpone a establecer
+	 *                        textoExpone a establecer
 	 */
-	public void setTextoExpone(String textoExpone) {
+	public void setTextoExpone(final String textoExpone) {
 		this.textoExpone = textoExpone;
 	}
 
@@ -132,9 +123,9 @@ public class DatosAsunto implements Serializable {
 	 * Método para establecer textoSolicita.
 	 *
 	 * @param textoSolicita
-	 *            textoSolicita a establecer
+	 *                          textoSolicita a establecer
 	 */
-	public void setTextoSolicita(String textoSolicita) {
+	public void setTextoSolicita(final String textoSolicita) {
 		this.textoSolicita = textoSolicita;
 	}
 
