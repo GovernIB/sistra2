@@ -29,7 +29,6 @@ import es.caib.sistra2.commons.plugins.registro.api.IRegistroPlugin;
 import es.caib.sistra2.commons.plugins.registro.api.LibroOficina;
 import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
-import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
@@ -49,6 +48,7 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarBase;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarEntidad;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
+import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteRegistro;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
@@ -646,14 +646,21 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			filaTramiteRegistro = FilaImportarTramiteRegistro.creaCCsinPasoRegistro(tramiteVersion);
 		} else {
 			filaTramiteRegistro = FilaImportarTramiteRegistro.creaCCconPasoRegistro(tramiteVersion, pasoRegistro);
-			try {
-				rellenarInfoRegistro();
-			} catch (final Exception e) {
-				LOGGER.error("Error intentando carga el plugin de registro al importar", e);
-				addMessageContext(TypeNivelGravedad.ERROR,
-						UtilJSF.getLiteral("dialogTramiteImportar.error.pluginregistro"));
-				filaTramiteRegistro.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.pluginregistro"));
-				filaTramiteRegistro.setResultado(TypeImportarResultado.ERROR);
+			final Entidad entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
+			if (entidad.isRegistroCentralizado()) {
+				filaTramiteRegistro.setResultado(TypeImportarResultado.OK);
+				filaTramiteRegistro.setAccion(TypeImportarAccion.NADA);
+				filaTramiteRegistro.setMostrarRegistro(false);
+			} else {
+				try {
+					rellenarInfoRegistro();
+				} catch (final Exception e) {
+					LOGGER.error("Error intentando carga el plugin de registro al importar", e);
+					addMessageContext(TypeNivelGravedad.ERROR,
+							UtilJSF.getLiteral("dialogTramiteImportar.error.pluginregistro"));
+					filaTramiteRegistro.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.pluginregistro"));
+					filaTramiteRegistro.setResultado(TypeImportarResultado.ERROR);
+				}
 			}
 		}
 	}
@@ -698,16 +705,6 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 				}
 			}
 
-		}
-
-		// Cargamos los datos del tipo
-		if (this.filaTramiteRegistro.getTipo() != null && !this.filaTramiteRegistro.getTipo().isEmpty()) {
-			final List<TipoAsunto> tipos = iplugin.obtenerTiposAsunto(entidad.getCodigoDIR3());
-			for (final TipoAsunto tipo : tipos) {
-				if (tipo.getCodigo().equals(this.filaTramiteRegistro.getTipo())) {
-					this.filaTramiteRegistro.setTipoText(tipo.getNombre());
-				}
-			}
 		}
 
 	}
@@ -1107,12 +1104,13 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 		filaImportar.setUsuario(UtilJSF.getSessionBean().getUserName());
 		filaImportar.setModo(Constantes.IMPORTAR_TIPO_CC);
 
-		tramiteService.importar(filaImportar);
+		final FilaImportarResultado resultado = tramiteService.importar(filaImportar);
 
 		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(false);
+		result.setResult(resultado);
 		UtilJSF.closeDialog(result);
 	}
 
@@ -1135,7 +1133,6 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 				if (paso instanceof TramitePasoRegistrar) {
 					((TramitePasoRegistrar) paso).setCodigoLibroRegistro(this.filaTramiteRegistro.getLibro());
 					((TramitePasoRegistrar) paso).setCodigoOficinaRegistro(this.filaTramiteRegistro.getOficina());
-					((TramitePasoRegistrar) paso).setCodigoTipoAsunto(this.filaTramiteRegistro.getTipo());
 					break;
 				}
 			}

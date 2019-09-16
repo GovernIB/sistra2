@@ -35,12 +35,6 @@ public class FilaImportarTramiteVersion extends FilaImportarBase {
 	/** Indica el codigo de libro. **/
 	private String tramiteVersionResultadoLibroText;
 
-	/** Indica el codigo de tipo. **/
-	private String tramiteVersionResultadoTipo;
-
-	/** Indica el codigo de tipo. **/
-	private String tramiteVersionResultadoTipoText;
-
 	/** Indica el numero de version cuando se selecciona crear. **/
 	private String numVersion;
 
@@ -71,7 +65,6 @@ public class FilaImportarTramiteVersion extends FilaImportarBase {
 		this.tramiteVersionActual = tramiteVersionActual;
 		this.tramiteVersionResultadoLibro = tramiteVersion.getPasoRegistrar().getCodigoLibroRegistro();
 		this.tramiteVersionResultadoOficina = tramiteVersion.getPasoRegistrar().getCodigoOficinaRegistro();
-		this.tramiteVersionResultadoTipo = tramiteVersion.getPasoRegistrar().getCodigoTipoAsunto();
 		this.numVersion = String.valueOf(tramiteVersion.getNumeroVersion());
 		this.origenVersion = String.valueOf(tramiteVersion.getNumeroVersion());
 		this.origenRelease = String.valueOf(tramiteVersion.getRelease());
@@ -139,20 +132,6 @@ public class FilaImportarTramiteVersion extends FilaImportarBase {
 	}
 
 	/**
-	 * @return the tramiteVersionResultadoTipo
-	 */
-	public String getTramiteVersionResultadoTipo() {
-		return tramiteVersionResultadoTipo;
-	}
-
-	/**
-	 * @param tramiteVersionResultadoTipo the tramiteVersionResultadoTipo to set
-	 */
-	public void setTramiteVersionResultadoTipo(final String tramiteVersionResultadoTipo) {
-		this.tramiteVersionResultadoTipo = tramiteVersionResultadoTipo;
-	}
-
-	/**
 	 * @return the tramiteVersionResultadoOficinaText
 	 */
 	public String getTramiteVersionResultadoOficinaText() {
@@ -181,21 +160,6 @@ public class FilaImportarTramiteVersion extends FilaImportarBase {
 	 */
 	public void setTramiteVersionResultadoLibroText(final String tramiteVersionResultadoLibroText) {
 		this.tramiteVersionResultadoLibroText = tramiteVersionResultadoLibroText;
-	}
-
-	/**
-	 * @return the tramiteVersionResultadoTipoText
-	 */
-	public String getTramiteVersionResultadoTipoText() {
-		return tramiteVersionResultadoTipoText;
-	}
-
-	/**
-	 * @param tramiteVersionResultadoTipoText the tramiteVersionResultadoTipoText to
-	 *                                        set
-	 */
-	public void setTramiteVersionResultadoTipoText(final String tramiteVersionResultadoTipoText) {
-		this.tramiteVersionResultadoTipoText = tramiteVersionResultadoTipoText;
 	}
 
 	/**

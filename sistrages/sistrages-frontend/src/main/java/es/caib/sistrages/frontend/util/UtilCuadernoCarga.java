@@ -163,7 +163,7 @@ public class UtilCuadernoCarga {
 		}
 
 		// Si ambos dominios son de tipo FD, la FD debe coincidir la entidad o area
-		if (fila.getFuenteDatos() != null && fila.getFuenteDatosActual() != null
+		if (fila.getFuenteDatos() != null && fila.getFuenteDatosActual() != null && fila.getDominioActual() != null
 				&& fila.getDominioActual().getTipo() == TypeDominio.FUENTE_DATOS
 				&& isFDErroneo(fila.getFuenteDatos(), fila.getFuenteDatosActual(), fila.getIdArea())) {
 

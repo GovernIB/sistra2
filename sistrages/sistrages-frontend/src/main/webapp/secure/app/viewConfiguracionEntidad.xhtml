@@ -186,6 +186,14 @@
 	        			<p:tab title="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLopdTitulo']}">
 	        				<h:panelGrid columns="2" cellpadding="5" >
 
+										<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLopdIntroduccion']}" />
+						            	<p:column>
+							            	<p:inputTextarea id="inputLopdIntroduccion" autoResize="false" scrollHeight="100" cols="70" rows="5" style="margin-right:10px;height:120px" value="#{viewConfiguracionEntidad.data.lopdIntroduccion.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+							            	<p:commandButton id="btnLopdIntroduccion" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarLopdIntroduccion}" process="@this" update=":form:growl" styleClass="va-top">
+							            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoLopdIntroduccion}" update=":form:growl inputLopdIntroduccion"/>
+							        		</p:commandButton>
+										</p:column>
+
 			        					<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLopd']}" />
 						            	<p:column>
 							            	<p:inputTextarea id="inputLopd" autoResize="false" scrollHeight="100" cols="70" rows="5" style="margin-right:10px;height:120px" value="#{viewConfiguracionEntidad.data.lopd.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
@@ -194,13 +202,6 @@
 							        		</p:commandButton>
 										</p:column>
 
-										<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLopdIntroduccion']}" />
-						            	<p:column>
-							            	<p:inputTextarea id="inputLopdIntroduccion" autoResize="false" scrollHeight="100" cols="70" rows="5" style="margin-right:10px;height:120px" value="#{viewConfiguracionEntidad.data.lopdIntroduccion.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
-							            	<p:commandButton id="btnLopdIntroduccion" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarLopdIntroduccion}" process="@this" update=":form:growl" styleClass="va-top">
-							            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoLopdIntroduccion}" update=":form:growl inputLopdIntroduccion"/>
-							        		</p:commandButton>
-										</p:column>
 							</h:panelGrid>
 	        			</p:tab>
 						<p:tab id="tabRegistro" title="#{msg['viewConfiguracionEntidad.tabRegistro']}">

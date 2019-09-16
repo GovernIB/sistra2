@@ -33,9 +33,6 @@ public class FilaImportarTramiteRegistro extends FilaImportarBase {
 	/** Indica el texto de libro. **/
 	private String libroText;
 
-	/** Indica el codigo de tipo. **/
-	private String tipo;
-
 	/** Indica el texto de tipo. **/
 	private String tipoText;
 
@@ -61,7 +58,6 @@ public class FilaImportarTramiteRegistro extends FilaImportarBase {
 		this.pasoRegistro = pasoRegistro;
 		this.libro = tramiteVersion.getPasoRegistrar().getCodigoLibroRegistro();
 		this.oficina = tramiteVersion.getPasoRegistrar().getCodigoOficinaRegistro();
-		this.tipo = tramiteVersion.getPasoRegistrar().getCodigoTipoAsunto();
 		this.mostrarRegistro = mostrarRegistro;
 	}
 
@@ -105,20 +101,6 @@ public class FilaImportarTramiteRegistro extends FilaImportarBase {
 	 */
 	public void setLibro(final String libro) {
 		this.libro = libro;
-	}
-
-	/**
-	 * @return the tipo
-	 */
-	public String getTipo() {
-		return tipo;
-	}
-
-	/**
-	 * @param tipo the tipo to set
-	 */
-	public void setTipo(final String tipo) {
-		this.tipo = tipo;
 	}
 
 	/**

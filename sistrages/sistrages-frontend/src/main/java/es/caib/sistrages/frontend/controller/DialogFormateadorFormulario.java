@@ -57,6 +57,18 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 	}
 
 	/**
+	 * Checkea si se ha activado el generico pero no está ya dado de alta (porque no
+	 * se puede hacer eso).
+	 */
+	public void checkGenerico() {
+		if (this.data.getCodigo() == null && this.data.isGenerico()) {
+			addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("dialogFormateadorFormulario.porDefecto.genericoNoAlta"));
+			this.data.setGenerico(false);
+		}
+	}
+
+	/**
 	 * Aceptar.
 	 */
 	public void aceptar() {
@@ -100,6 +112,8 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return;
 			}
+			// No puede guardarse como generico al ser alta (necesita los docs)
+			data.setGenerico(false);
 			fmtService.addFormateadorFormulario(idEntidad, data);
 			break;
 		case EDICION:
@@ -166,8 +180,7 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 	/**
 	 * Establece el valor de id.
 	 *
-	 * @param id
-	 *            el nuevo valor de id
+	 * @param id el nuevo valor de id
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -185,8 +198,7 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 	/**
 	 * Establece el valor de data.
 	 *
-	 * @param data
-	 *            el nuevo valor de data
+	 * @param data el nuevo valor de data
 	 */
 	public void setData(final FormateadorFormulario data) {
 		this.data = data;
@@ -201,8 +213,7 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param isAlta
-	 *            the isAlta to set
+	 * @param isAlta the isAlta to set
 	 */
 	public void setAlta(final boolean isAlta) {
 		this.isAlta = isAlta;

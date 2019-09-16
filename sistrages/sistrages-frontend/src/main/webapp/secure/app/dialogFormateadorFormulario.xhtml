@@ -44,10 +44,10 @@
 					<p:outputLabel  for="descripcion" value="#{msg['dialogFormateadorFormulario.descripcion']}" />
 					<p:inputText 	id="descripcion" value="#{dialogFormateadorFormulario.data.descripcion}" disabled="#{dialogFormateadorFormulario.isConsulta()}" required="true" size="40" maxlength="255"/>
 
-					<p:outputLabel for="generico" value="#{msg['dialogFormateadorFormulario.generico']}" rendered="#{!dialogFormateadorFormulario.isAlta()}" />
-					<p:column rendered="#{!dialogFormateadorFormulario.isAlta()}">
+					<p:outputLabel for="generico" value="#{msg['dialogFormateadorFormulario.generico']}"  />
+					<p:column>
 						<p:selectBooleanCheckbox id="generico" value="#{dialogFormateadorFormulario.data.generico}" >
-							<p:ajax event="change" global="false" process="@form:generico" update="dialogFormateadorFormulario:btnPlantilla" />
+							<p:ajax event="change" global="false" process="@form:generico" update="dialogFormateadorFormulario:btnPlantilla" listener="#{dialogFormateadorFormulario.checkGenerico()}"/>
             			</p:selectBooleanCheckbox>
 						<p:commandButton id="btnPlantilla" value="#{msg['dialogFormateadorFormulario.botonPlantillas']}" icon="fa fa-edit" actionListener="#{dialogFormateadorFormulario.editarPlantillaGenerico()}" process="@form:btnPlantilla" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}" disabled="#{!dialogFormateadorFormulario.data.generico}" style="margin-left:10px" />
 					</p:column>

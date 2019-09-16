@@ -168,7 +168,7 @@ public class FilaImportarFormateador extends FilaImportarBase {
 	 */
 	public static FilaImportarFormateador crearCCformateadorOk(final FormateadorFormulario formateador,
 			final FormateadorFormulario formateadorActual) {
-		return new FilaImportarFormateador(formateador, formateadorActual, TypeImportarAccion.REEMPLAZAR,
+		return new FilaImportarFormateador(formateador, formateadorActual, TypeImportarAccion.MANTENER,
 				TypeImportarExiste.EXISTE, TypeImportarEstado.REVISADO, TypeImportarResultado.INFO, null, true);
 	}
 

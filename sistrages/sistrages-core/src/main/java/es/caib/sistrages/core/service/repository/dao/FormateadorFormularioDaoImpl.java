@@ -15,6 +15,7 @@ import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
+import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
 import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFormateadorFormulario;
@@ -209,8 +210,7 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 	/**
 	 * Listar formateador de Formulario.
 	 *
-	 * @param filtro
-	 *            filtro
+	 * @param filtro filtro
 	 * @return Listado de formateadores de Formulario
 	 */
 	@SuppressWarnings("unchecked")
@@ -268,9 +268,11 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 		} else {
 			final JFormateadorFormulario jFmt = entityManager.find(JFormateadorFormulario.class,
 					filaFormateador.getFormateadorFormularioActual().getCodigo());
-			jFmt.setClassname(filaFormateador.getFormateadorFormulario().getClassname());
-			jFmt.setDescripcion(filaFormateador.getFormateadorFormulario().getDescripcion());
-			entityManager.merge(jFmt);
+			if (filaFormateador.getAccion() == TypeImportarAccion.REEMPLAZAR) {
+				jFmt.setClassname(filaFormateador.getFormateadorFormulario().getClassname());
+				jFmt.setDescripcion(filaFormateador.getFormateadorFormulario().getDescripcion());
+				entityManager.merge(jFmt);
+			}
 			return jFmt.getCodigo();
 
 		}
