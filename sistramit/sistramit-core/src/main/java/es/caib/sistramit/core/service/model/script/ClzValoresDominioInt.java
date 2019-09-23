@@ -15,9 +15,9 @@ public interface ClzValoresDominioInt extends PluginClass {
 	 * devuelve cadena vacía.
 	 *
 	 * @param numfila
-	 *            Numero de fila (empiezan desde 1)
+	 *                    Numero de fila (empiezan desde 1)
 	 * @param cod
-	 *            Nombre columna
+	 *                    Nombre columna
 	 * @return Valor columna para la fila seleccionada
 	 */
 	String getValor(final int numfila, final String cod);
@@ -30,31 +30,18 @@ public interface ClzValoresDominioInt extends PluginClass {
 	int getNumeroFilas();
 
 	/**
-	 * Método de acceso a error.
-	 *
-	 * @return error
-	 */
-	boolean isError();
-
-	/**
-	 * Método de acceso a codigo error.
+	 * Método de acceso a código retorno (opcionalmente el dominio puede devolver un
+	 * código de retorno).
 	 *
 	 * @return descripcionError
 	 */
-	String getCodigoError();
-
-	/**
-	 * Método de acceso a descripcionError.
-	 *
-	 * @return descripcionError
-	 */
-	String getDescripcionError();
+	String getCodigoRetorno();
 
 	/**
 	 * Obtiene un fichero.
 	 *
 	 * @param id
-	 *            Id fichero
+	 *               Id fichero
 	 * @return fichero
 	 */
 	ClzFicheroInt getFichero(final String id);

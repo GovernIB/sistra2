@@ -21,7 +21,7 @@ public final class RUsuarioAutenticadoInfo {
 	/**
 	 * Metodo Autenticacion.
 	 */
-	@ApiModelProperty(value = "Metodo Autenticacion")
+	@ApiModelProperty(value = "Metodo Autenticacion (ANONIMO / CLAVE_CERTIFICADO / CLAVE_PIN / CLAVE_PERMANENTE)")
 	private String metodoAutenticacion;
 
 	/**

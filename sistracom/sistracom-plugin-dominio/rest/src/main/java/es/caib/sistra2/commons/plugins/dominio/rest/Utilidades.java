@@ -30,8 +30,10 @@ public class Utilidades {
 		if (rvaloresDominio != null) {
 			valoresDominio = new ValoresDominio();
 			valoresDominio.setDatos(rvaloresDominio.getDatos());
+			valoresDominio.setCodigoRetorno(rvaloresDominio.getCodigoRetorno());
 			valoresDominio.setCodigoError(rvaloresDominio.getCodigoError());
 			valoresDominio.setError(rvaloresDominio.isError());
+			valoresDominio.setDescripcionError(rvaloresDominio.getDescripcionError());
 		}
 		return valoresDominio;
 	}

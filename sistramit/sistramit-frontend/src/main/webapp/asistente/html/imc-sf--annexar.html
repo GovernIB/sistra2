@@ -4,6 +4,14 @@
 
 	<h3><span>{{txtAnnexarTitol}}</span></h3>
 
+	{{if hiHaAnnexes|empty}}
+
+	<div class="imc--important">
+		<p>{{txtNoCalAnnexar}}</p>
+	</div>
+
+	{{else}}
+
 	<div class="imc--info">
 		{{txtAnnexarInfo}}
 	</div>
@@ -172,6 +180,7 @@
 		</ul>
 
 	</div>
+	{{/if}}
 
 	<nav class="imc--navegacio">
 
@@ -189,6 +198,7 @@
 </div>
 
 
+{{if hiHaAnnexes}}
 <!-- document -->
 <div class="imc-document" id="imc-document" aria-hidden="true">
 	<div class="imc--c">
@@ -239,10 +249,10 @@
 
 					<ul class="imc--botonera">
 						<li>
-							<button type="submit" class="imc-bt imc--ico imc--principal" data-tipus="envia"><span>{{txtEnviar}}</span></button>
+							<button type="button" class="imc-bt imc--cancela" data-tipus="cancela"><span>{{txtCancela}}</span></button>
 						</li>
 						<li>
-							<button type="button" class="imc-bt imc--cancela" data-tipus="cancela"><span>{{txtCancela}}</span></button>
+							<button type="submit" class="imc-bt imc--ico imc--principal" data-tipus="envia"><span>{{txtEnviar}}</span></button>
 						</li>
 					</ul>
 
@@ -264,10 +274,10 @@
 
 					<ul class="imc--botonera">
 						<li>
-							<button type="submit" class="imc-bt imc--ico imc--principal" data-tipus="desa"><span>{{txtDesa}}</span></button>
+							<button type="button" class="imc-bt imc--cancela" data-tipus="cancela"><span>{{txtCancela}}</span></button>
 						</li>
 						<li>
-							<button type="button" class="imc-bt imc--cancela" data-tipus="cancela"><span>{{txtCancela}}</span></button>
+							<button type="submit" class="imc-bt imc--ico imc--principal" data-tipus="desa"><span>{{txtDesa}}</span></button>
 						</li>
 					</ul>
 
@@ -300,3 +310,4 @@
 	</div>
 </div>
 <!-- /document -->
+{{/if}}

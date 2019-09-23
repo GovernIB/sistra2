@@ -48,7 +48,7 @@
 
 .imc--registre .imc--signants li::before { content: ""; display: block; width: 2em; height: 2em; background: #006300 url(imgs/icones/ico_correcte.svg) no-repeat center center / auto .9em; }
 
-.imc--registre .imc--signants li.imc--per-signar::before { background: #f00 url(imgs/icones/ico_errat.svg) no-repeat center center / auto .7em; }
+.imc--registre .imc--signants li.imc--per-signar::before { background: #d66000 url(imgs/icones/ico_signar.svg) no-repeat center center / auto 1em; }
 
 .imc--registre .imc--signants li strong { display: inline-block; padding: .3em 1em; }
 

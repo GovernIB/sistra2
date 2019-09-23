@@ -60,20 +60,19 @@ $.fn.appSerialitza = function(opcions) {
 					check_elms
 						.each(function(j) {
 
-							var ckeck_el = $(this).find("input")
-								,ckeck_val = ckeck_el.val()
-								,ckeck_text = $(this).find("label").text();
+							var check_el = $(this).find("input")
+								,check_val = check_el.val()
+								,check_text = $(this).find("label").text();
 
-							if (ckeck_el.is(":checked")) {
+							if (check_el.is(":checked")) {
 
-								valor += ckeck_val + "#-@" + ckeck_text;
-								valor += (j < checks_seleccionats-1) ? "#-@" : "";
+								valor += "#-@" + check_val + "#-@" + check_text;
 
 							}
 
 						});
 
-					form_id_i_valors[el_id] = el_valortipus + "#-@" + valor;
+					form_id_i_valors[el_id] = el_valortipus + valor;
 
 				} else if (el_tipus === "selector" && el_contingut === "u") {
 

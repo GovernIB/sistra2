@@ -33,6 +33,11 @@ public final class ValoresDominio implements Serializable {
 	private final Map<String, FicheroDominio> ficheros = new HashMap<>();
 
 	/**
+	 * Codigo retorno (en caso de que no haya error).
+	 */
+	private String codigoRetorno;
+
+	/**
 	 * Indica si ha habido error.
 	 */
 	private boolean error;
@@ -62,11 +67,11 @@ public final class ValoresDominio implements Serializable {
 	 * Establece el valor de una columna en una fila.
 	 *
 	 * @param numfila
-	 *            Numero de fila (empiezan desde 1)
+	 *                    Numero de fila (empiezan desde 1)
 	 * @param cod
-	 *            Nombre columna
+	 *                    Nombre columna
 	 * @param val
-	 *            Valor
+	 *                    Valor
 	 */
 	public void setValor(final int numfila, final String cod, final String val) {
 		final Map<String, String> fila = datos.get(numfila - ConstantesNumero.N1);
@@ -78,9 +83,9 @@ public final class ValoresDominio implements Serializable {
 	 * devuelve cadena vacía.
 	 *
 	 * @param numfila
-	 *            Numero de fila (empiezan desde 1)
+	 *                    Numero de fila (empiezan desde 1)
 	 * @param cod
-	 *            Nombre columna
+	 *                    Nombre columna
 	 * @return Valor columna para la fila seleccionada
 	 */
 	public String getValor(final int numfila, final String cod) {
@@ -115,7 +120,7 @@ public final class ValoresDominio implements Serializable {
 	 * Método para establecer error.
 	 *
 	 * @param pError
-	 *            error a establecer
+	 *                   error a establecer
 	 */
 	public void setError(final boolean pError) {
 		error = pError;
@@ -134,7 +139,7 @@ public final class ValoresDominio implements Serializable {
 	 * Método para establecer descripcionError.
 	 *
 	 * @param pDescripcionError
-	 *            descripcionError a establecer
+	 *                              descripcionError a establecer
 	 */
 	public void setDescripcionError(final String pDescripcionError) {
 		descripcionError = pDescripcionError;
@@ -144,9 +149,9 @@ public final class ValoresDominio implements Serializable {
 	 * Añade un fichero.
 	 *
 	 * @param id
-	 *            Id fichero
+	 *                    Id fichero
 	 * @param fichero
-	 *            Fichero
+	 *                    Fichero
 	 */
 	public void addFichero(final String id, final FicheroDominio fichero) {
 		ficheros.put(id, fichero);
@@ -156,7 +161,7 @@ public final class ValoresDominio implements Serializable {
 	 * Obtiene un fichero.
 	 *
 	 * @param id
-	 *            Id fichero
+	 *               Id fichero
 	 * @return fichero
 	 */
 	public FicheroDominio getFichero(final String id) {
@@ -201,7 +206,7 @@ public final class ValoresDominio implements Serializable {
 	 * Método para establecer codigoError.
 	 *
 	 * @param pCodigoError
-	 *            codigoError a establecer
+	 *                         codigoError a establecer
 	 */
 	public void setCodigoError(final String pCodigoError) {
 		codigoError = pCodigoError;
@@ -216,7 +221,7 @@ public final class ValoresDominio implements Serializable {
 
 	/**
 	 * @param fromCache
-	 *            the fromCache to set
+	 *                      the fromCache to set
 	 */
 	public void setFromCache(final boolean fromCache) {
 		this.fromCache = fromCache;
@@ -229,5 +234,24 @@ public final class ValoresDominio implements Serializable {
 	 */
 	public void setDatos(final List<Map<String, String>> datos2) {
 		this.datos = datos2;
+	}
+
+	/**
+	 * Método de acceso a codigoRetorno.
+	 * 
+	 * @return codigoRetorno
+	 */
+	public String getCodigoRetorno() {
+		return codigoRetorno;
+	}
+
+	/**
+	 * Método para establecer codigoRetorno.
+	 * 
+	 * @param codigoRetorno
+	 *                          codigoRetorno a establecer
+	 */
+	public void setCodigoRetorno(final String codigoRetorno) {
+		this.codigoRetorno = codigoRetorno;
 	}
 }

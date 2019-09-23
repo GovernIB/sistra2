@@ -159,14 +159,10 @@ public class UtilsRegweb3 {
 	 * @return tipo interesado
 	 */
 	public static String getTipoInteresado(final String documentoIdentificacion) {
-		String result = null;
-
-		if (NifUtils.esNifPersonaFisica(documentoIdentificacion)) {
-			result = ConstantesRegweb3.TIPO_INTERESADO_PERSONA_FISICA;
-		} else if (NifUtils.esNifPersonaFisica(documentoIdentificacion)) {
+		String result = ConstantesRegweb3.TIPO_INTERESADO_PERSONA_FISICA;
+		if (NifUtils.esNifPersonaJuridica(documentoIdentificacion)) {
 			result = ConstantesRegweb3.TIPO_INTERESADO_PERSONA_JURIDICA;
 		}
-
 		return result;
 	}
 

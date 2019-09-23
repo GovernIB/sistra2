@@ -630,6 +630,14 @@ public class AsistenteTramitacionController extends TramitacionController {
 
 	}
 
+	/**
+	 * Redirigimos peticiones al contexto raíz de asistente para que redirija a asistente.html.
+	 */
+	@RequestMapping(value = "/")
+	public ModelAndView index() {
+		return new ModelAndView(URL_REDIRIGIR_ASISTENTE);
+	}
+
 	// -------------------------------------------------------------------
 	// FUNCIONES PRIVADAS
 	// -------------------------------------------------------------------

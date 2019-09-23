@@ -21,29 +21,29 @@ public interface ResPersonalizacionTramiteInt extends PluginScriptRes {
 	 * Método para establecer tituloTramite.
 	 *
 	 * @param pTituloTramite
-	 *            tituloTramite a establecer
+	 *                           tituloTramite a establecer
 	 * @throws ScriptException
-	 *             Exception
+	 *                             Exception
 	 */
 	void setTituloTramite(final String pTituloTramite) throws ScriptException;
 
 	/**
-	 * Método para establecer plazoInicio.
+	 * Método para establecer plazoInicio (Formato: dd/MM/yyyy HH:mm:ss).
 	 *
 	 * @param pPlazoInicio
-	 *            plazoInicio a establecer
+	 *                         plazoInicio a establecer
 	 * @throws ScriptException
-	 *             Exception
+	 *                             Exception
 	 */
 	void setPlazoInicio(final String pPlazoInicio) throws ScriptException;
 
 	/**
-	 * Método para establecer plazoFin.
+	 * Método para establecer plazoFin (Formato: dd/MM/yyyy HH:mm:ss).
 	 *
 	 * @param pPlazoFin
-	 *            plazoFin a establecer
+	 *                      plazoFin a establecer
 	 * @throws ScriptException
-	 *             Exception
+	 *                             Exception
 	 */
 	void setPlazoFin(final String pPlazoFin) throws ScriptException;
 

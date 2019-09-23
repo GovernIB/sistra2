@@ -272,10 +272,10 @@ aside address { display: inline; }
 
 .imc-missatge .imc--text h2 { margin-bottom: .5em; margin-left: 5em; }
 .imc-missatge .imc--text h2 span { font-size: 1.4em; }
-.imc-missatge .imc--text div { margin-bottom: 2em; margin-left: 5em; }
+.imc-missatge .imc--text .imc--explicacio { margin-bottom: 2em; margin-left: 5em; }
 
-.imc-missatge .imc--text ul { text-align: right; }
-.imc-missatge .imc--text li { display: inline-block; margin: 0 .5em; }
+.imc-missatge .imc--text .imc--botonera { text-align: right; }
+.imc-missatge .imc--text .imc--botonera button { margin-left: .5em; }
 
 .imc-missatge .imc--text .imc--principal { background-color: #265d3c; }
 .imc-missatge .imc--text .imc--principal span { color: #fff; }

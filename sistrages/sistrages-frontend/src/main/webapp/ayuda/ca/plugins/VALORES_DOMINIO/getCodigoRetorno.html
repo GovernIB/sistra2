@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('VALORES_DOMINIO.getDescripcionError()');
+		copiarPortapeles('VALORES_DOMINIO.getCodigoRetorno()');
 	}
 </script>
 <body class="bodyPlugins">
@@ -17,20 +17,20 @@
        	  <li>></li>
     	  <li><a href="AyudaServlet?lang=ca&plugin=VALORES_DOMINIO">VALORES_DOMINIO</a></li>
       	  <li>></li>
-      	  <li><a href="AyudaServlet?lang=ca&plugin=VALORES_DOMINIO&metodo=getDescripcionError">getDescripcionError</a></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=VALORES_DOMINIO&metodo=getCodigoRetorno">getCodigoRetorno</a></li>
   	</ul>
 </div>
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	getDescripcionError():String
+	getCodigoRetorno():String
 </h1>
 <p>
 	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-		<li>Mètode que permet recuperar la descripció de l'error, sempre i quan es produeixi un error en la resolució del domini.</li>
+		<li>En la recuperació del domini es pot establir de forma opcional un codi de retorn, sempre que es produeixi correctament la resolució del domini</li>
 	</ul>
 </p>
 <p>
@@ -38,13 +38,13 @@
 </p>
 <p>
 	<ul>
-		<li><b>String</b>: Objecte String que modelitza la descripció de l'error produ&iuml;t.</li>
+		<li><b>String</b>: Objecte String que modelitza el codi de retorn.</li>
 	</ul>
 </p>
 <p>
 	<b>EXEMPLES</b>
 </p>
-<p>Posam per cas que es vol recuperar la descripció de l'error produ&iuml;t en invocar el domini 'DOMINIO'. Les passes a efecutar són les seg&uuml;ents:</p>
+<p>Posam per cas que es vol recuperar el codi de retorno que retorna el domini 'DOMINIO'. Les passes a efecutar són les seg&uuml;ents:</p>
 <p>
 Primer s'invoca el domini mitjan&ccedil;ant PLUGIN_DOMINIOS:
 </p>
@@ -52,11 +52,11 @@ Primer s'invoca el domini mitjan&ccedil;ant PLUGIN_DOMINIOS:
 	var valors = PLUGIN_DOMINIOS.invocarDominio('DOMINIO');
 </p>
 <p>
-i es recupera el codi d'error de la manera seg&uuml;ent:
+i es recupera el codi de retorn de la manera seg&uuml;ent:
 </p>
 
 <p class="codigoScript">
-var errDesc = valors.getDescripcionError();
+var retCode = valors.getCodigoRetorno();
 </p>
 </body>
 </html>

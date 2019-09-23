@@ -131,13 +131,14 @@ public final class DominiosResolucionComponentImpl implements DominiosResolucion
 				valoresDominio = new ValoresDominio();
 				valoresDominio.setCodigoError(rvalores.getCodigoError());
 				valoresDominio.setDatos(rvalores.getDatos());
+				valoresDominio.setCodigoRetorno(rvalores.getCodigoRetorno());
 				valoresDominio.setDescripcionError(rvalores.getDescripcionError());
 				valoresDominio.setError(rvalores.isError());
 			} catch (final DominioPluginException e) {
 				valoresDominio = new ValoresDominio();
 				valoresDominio.setError(true);
 				valoresDominio.setDescripcionError(ExceptionUtils.getMessage(e));
-				valoresDominio.setCodigoError("BD");
+				valoresDominio.setCodigoError("REMOTE.CONNECT");
 			}
 		}
 		return valoresDominio;

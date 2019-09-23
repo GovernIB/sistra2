@@ -322,7 +322,7 @@ $.fn.appMissatge = function(options) {
 				}
 
 				element
-					.find(".imc--text:first div")
+					.find(".imc--explicacio:first")
 						.html( text_txt );
 
 				element_c

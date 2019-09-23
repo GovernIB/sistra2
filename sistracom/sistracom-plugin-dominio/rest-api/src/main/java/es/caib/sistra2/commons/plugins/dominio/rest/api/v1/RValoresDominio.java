@@ -24,17 +24,23 @@ public final class RValoresDominio implements Serializable {
 	private final List<Map<String, String>> datos = new ArrayList<>();
 
 	/**
+	 * Codigo retorno (opcional, puede indicar códugo retorno en caso de que no haya
+	 * error).
+	 */
+	private String codigoRetorno;
+
+	/**
 	 * Indica si ha habido error.
 	 */
 	private boolean error;
 
 	/**
-	 * Codigo error.
+	 * Codigo error (en caso de error).
 	 */
 	private String codigoError;
 
 	/**
-	 * Texto error.
+	 * Texto error (en caso de error).
 	 */
 	private String descripcionError;
 
@@ -53,11 +59,11 @@ public final class RValoresDominio implements Serializable {
 	 * Establece el valor de una columna en una fila.
 	 *
 	 * @param numfila
-	 *            Numero de fila (empiezan desde 1)
+	 *                    Numero de fila (empiezan desde 1)
 	 * @param cod
-	 *            Nombre columna
+	 *                    Nombre columna
 	 * @param val
-	 *            Valor
+	 *                    Valor
 	 */
 	public void setValor(final int numfila, final String cod, final String val) {
 		final Map<String, String> fila = datos.get(numfila - N1);
@@ -69,9 +75,9 @@ public final class RValoresDominio implements Serializable {
 	 * devuelve cadena vacía.
 	 *
 	 * @param numfila
-	 *            Numero de fila (empiezan desde 1)
+	 *                    Numero de fila (empiezan desde 1)
 	 * @param cod
-	 *            Nombre columna
+	 *                    Nombre columna
 	 * @return Valor columna para la fila seleccionada
 	 */
 	public String getValor(final int numfila, final String cod) {
@@ -106,7 +112,7 @@ public final class RValoresDominio implements Serializable {
 	 * Método para establecer error.
 	 *
 	 * @param pError
-	 *            error a establecer
+	 *                   error a establecer
 	 */
 	public void setError(final boolean pError) {
 		error = pError;
@@ -125,7 +131,7 @@ public final class RValoresDominio implements Serializable {
 	 * Método para establecer descripcionError.
 	 *
 	 * @param pDescripcionError
-	 *            descripcionError a establecer
+	 *                              descripcionError a establecer
 	 */
 	public void setDescripcionError(final String pDescripcionError) {
 		descripcionError = pDescripcionError;
@@ -169,9 +175,28 @@ public final class RValoresDominio implements Serializable {
 	 * Método para establecer codigoError.
 	 *
 	 * @param pCodigoError
-	 *            codigoError a establecer
+	 *                         codigoError a establecer
 	 */
 	public void setCodigoError(final String pCodigoError) {
 		codigoError = pCodigoError;
+	}
+
+	/**
+	 * Método de acceso a codigoRetorno.
+	 * 
+	 * @return codigoRetorno
+	 */
+	public String getCodigoRetorno() {
+		return codigoRetorno;
+	}
+
+	/**
+	 * Método para establecer codigoRetorno.
+	 * 
+	 * @param codigoRetorno
+	 *                          codigoRetorno a establecer
+	 */
+	public void setCodigoRetorno(final String codigoRetorno) {
+		this.codigoRetorno = codigoRetorno;
 	}
 }

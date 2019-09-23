@@ -1,10 +1,13 @@
 package es.caib.sistramit.core.service.component.script.plugins.flujo;
 
+import java.util.Date;
+
 import javax.script.ScriptException;
 
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistra2.commons.utils.XssFilter;
 import es.caib.sistramit.core.service.model.script.flujo.ResPersonalizacionTramiteInt;
+import es.caib.sistramit.core.service.util.UtilsFlujo;
 
 /**
  *
@@ -22,14 +25,14 @@ public final class ResPersonalizacionTramite implements ResPersonalizacionTramit
 	private String tituloTramite;
 
 	/**
-	 * Plazo inicio (Formato: dd/MM/yyyy HH:mm:ss).
+	 * Plazo inicio.
 	 */
-	private String plazoInicio;
+	private Date plazoInicio;
 
 	/**
-	 * Plazo fin (Formato: dd/MM/yyyy HH:mm:ss).
+	 * Plazo fin.
 	 */
-	private String plazoFin;
+	private Date plazoFin;
 
 	@Override
 	public String getPluginId() {
@@ -58,17 +61,16 @@ public final class ResPersonalizacionTramite implements ResPersonalizacionTramit
 	 *
 	 * @return plazoInicio
 	 */
-	public String getPlazoInicio() {
+	public Date getPlazoInicio() {
 		return plazoInicio;
 	}
 
 	@Override
 	public void setPlazoInicio(final String pPlazoInicio) throws ScriptException {
-		if (!ValidacionesTipo.getInstance().esFecha(pPlazoInicio, ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL)) {
-			throw new ScriptException(
-					"La fecha no tiene un formato correcto: " + ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
+		if (!ValidacionesTipo.getInstance().esFecha(pPlazoInicio, ValidacionesTipo.FORMATO_FECHAHORA)) {
+			throw new ScriptException("La fecha no tiene un formato correcto: " + ValidacionesTipo.FORMATO_FECHAHORA);
 		}
-		plazoInicio = pPlazoInicio;
+		plazoInicio = UtilsFlujo.deformateaFecha(pPlazoInicio, ValidacionesTipo.FORMATO_FECHAHORA);
 	}
 
 	/**
@@ -76,17 +78,16 @@ public final class ResPersonalizacionTramite implements ResPersonalizacionTramit
 	 *
 	 * @return plazoFin
 	 */
-	public String getPlazoFin() {
+	public Date getPlazoFin() {
 		return plazoFin;
 	}
 
 	@Override
 	public void setPlazoFin(final String pPlazoFin) throws ScriptException {
-		if (!ValidacionesTipo.getInstance().esFecha(pPlazoFin, ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL)) {
-			throw new ScriptException(
-					"La fecha no tiene un formato correcto: " + ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
+		if (!ValidacionesTipo.getInstance().esFecha(pPlazoFin, ValidacionesTipo.FORMATO_FECHAHORA)) {
+			throw new ScriptException("La fecha no tiene un formato correcto: " + ValidacionesTipo.FORMATO_FECHAHORA);
 		}
-		plazoFin = pPlazoFin;
+		plazoFin = UtilsFlujo.deformateaFecha(pPlazoFin, ValidacionesTipo.FORMATO_FECHAHORA);
 	}
 
 }

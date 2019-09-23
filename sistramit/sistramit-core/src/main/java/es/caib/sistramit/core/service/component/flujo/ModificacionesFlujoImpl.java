@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
-import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
 import es.caib.sistrages.rest.api.interna.RScript;
 import es.caib.sistrages.rest.api.interna.RVersionTramitePropiedades;
@@ -207,9 +206,8 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 		}
 
 		// Personalizacion plazo
-		final Date fcInicio = UtilsFlujo.deformateaFecha(rp.getPlazoInicio(),
-				ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
-		final Date fcFin = UtilsFlujo.deformateaFecha(rp.getPlazoFin(), ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
+		final Date fcInicio = rp.getPlazoInicio();
+		final Date fcFin = rp.getPlazoFin();
 
 		if (fcInicio != null) {
 			pDatosSesion.getDatosTramite().setPlazoInicio(fcInicio);
@@ -574,9 +572,9 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 	 * Obtiene el controlador para el paso.
 	 *
 	 * @param pDatosSesion
-	 *            Datos de sesión de tramitación.
+	 *                         Datos de sesión de tramitación.
 	 * @param idPaso
-	 *            Identificador de paso
+	 *                         Identificador de paso
 	 * @return Controlador del paso
 	 */
 	private ControladorPaso getControladorPaso(final DatosSesionTramitacion pDatosSesion, final String idPaso) {
@@ -628,11 +626,11 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 	 * Ejecuta script navegacion.
 	 *
 	 * @param pDatosSesion
-	 *            Datos sesion
+	 *                          Datos sesion
 	 * @param pIdPaso
-	 *            Id paso
+	 *                          Id paso
 	 * @param defPasoActual
-	 *            Definicion paso actual
+	 *                          Definicion paso actual
 	 * @return Id siguiente paso
 	 */
 	private String ejecutarScriptNavegacion(final DatosSesionTramitacion pDatosSesion, final String pIdPaso,
@@ -688,9 +686,9 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 	 * Realiza debug.
 	 *
 	 * @param pDatosSesion
-	 *            Datos sesion tramitacion
+	 *                         Datos sesion tramitacion
 	 * @param message
-	 *            Mensaje
+	 *                         Mensaje
 	 */
 	private void debug(final DatosSesionTramitacion pDatosSesion, final String message) {
 		if (UtilsSTG.isDebugEnabled(pDatosSesion.getDefinicionTramite()) && LOGGER.isDebugEnabled()) {

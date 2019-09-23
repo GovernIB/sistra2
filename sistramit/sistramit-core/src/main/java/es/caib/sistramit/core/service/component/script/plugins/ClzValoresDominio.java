@@ -25,37 +25,27 @@ public final class ClzValoresDominio implements ClzValoresDominioInt {
 	 * Constructor.
 	 *
 	 * @param pValores
-	 *            valores dominio
+	 *                     valores dominio
 	 */
 	public ClzValoresDominio(final ValoresDominio pValores) {
 		super();
 		valores = pValores;
 	}
 
-
 	@Override
 	public String getValor(final int numfila, final String cod) {
 		return valores.getValor(numfila, cod);
 	}
-
 
 	@Override
 	public int getNumeroFilas() {
 		return valores.getNumeroFilas();
 	}
 
-
 	@Override
-	public boolean isError() {
-		return valores.isError();
+	public String getCodigoRetorno() {
+		return valores.getCodigoRetorno();
 	}
-
-
-	@Override
-	public String getDescripcionError() {
-		return valores.getDescripcionError();
-	}
-
 
 	@Override
 	public ClzFicheroInt getFichero(final String id) {
@@ -67,16 +57,9 @@ public final class ClzValoresDominio implements ClzValoresDominioInt {
 		return res;
 	}
 
-
 	@Override
 	public List<String> getNombreColumnas() {
 		return valores.getNombreColumnas();
-	}
-
-
-	@Override
-	public String getCodigoError() {
-		return valores.getCodigoError();
 	}
 
 }

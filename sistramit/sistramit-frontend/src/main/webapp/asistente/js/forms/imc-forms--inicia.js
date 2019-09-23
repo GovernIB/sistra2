@@ -1823,10 +1823,12 @@ $.fn.appFormsFormateig = function(options) {
 					var configura_data = function() {
 
 							element
-								.find(".imc-data")
+								.find("input[type=date]")
 									.addClass("imc-no-type-date")
 									.dataCompletar()
 									.datepicker({ dateFormat: "dd/mm/yy", changeMonth: true, changeYear: true });
+
+							$.datepicker.setDefaults($.datepicker.regional[APP_IDIOMA]);
 
 						};
 
@@ -1834,17 +1836,15 @@ $.fn.appFormsFormateig = function(options) {
 
 						$.when(
 
-							//$.get(APP_ + "css/ui-lightness/jquery-ui-1.10.3.custom.min.css?" + APP_VERSIO)
 							$.getScript(APP_ + "js/utils/jquery-maskedinput.min.js?" + APP_VERSIO)
 							,$.getScript(APP_ + "js/utils/jquery-ui-1.10.3.custom.min.js?" + APP_VERSIO)
+							,$.getScript(APP_ + "js/forms/literals/jquery-imc-literals-calendari-"+APP_IDIOMA+".js?" + APP_VERSIO)
 
 						).then(
 
 							function( cssPas ) {
 
 								// estils
-
-								//<link rel="stylesheet" media="screen" href="css/imc-sf.css" />
 
 								$("<link>")
 									.attr({ rel: "stylesheet", media: "screen", href: APP_ + "css/ui-lightness/jquery-ui-1.10.3.custom.min.css?" + APP_VERSIO })

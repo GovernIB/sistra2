@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.rest.api.interna.RDominio;
+import es.caib.sistramit.core.api.exception.DominioErrorException;
 import es.caib.sistramit.core.api.exception.DominioNoExisteException;
 import es.caib.sistramit.core.api.exception.DominioSinDatosException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
@@ -118,12 +119,16 @@ public final class DominiosComponentImpl implements DominiosComponent {
 		// Controlamos que el dominio devuelve datos nulos
 		if (valoresDominio == null) {
 			throw new DominioSinDatosException("Dominio " + dominio.getIdentificador() + " devuelve datos nulos");
+		} else if (valoresDominio.isError()) {
+			// Controlamos que el dominio devuelve código retorno opcional
+			throw new DominioErrorException("Dominio " + dominio.getIdentificador() + " no se puede recuperar: ["
+					+ valoresDominio.getCodigoError() + "] - " + valoresDominio.getDescripcionError());
 		} else {
 			valoresDominio.setFromCache(false);
 		}
 
-		// Comprobamos si debe cachearse (si es cacheable y no tiene error)
-		if (dominio.isCachear() && !valoresDominio.isError()) {
+		// Comprobamos si debe cachearse (si es cacheable)
+		if (dominio.isCachear()) {
 			this.saveToCache(cacheKey, valoresDominio);
 		}
 

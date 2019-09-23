@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('VALORES_DOMINIO.isError()');
+		copiarPortapeles('VALORES_DOMINIO.getCodigoRetorno()');
 	}
 </script>
 <body class="bodyPlugins">
@@ -17,20 +17,20 @@
        	  <li>></li>
     	  <li><a href="AyudaServlet?lang=es&plugin=VALORES_DOMINIO">VALORES_DOMINIO</a></li>
       	  <li>></li>
-      	  <li><a href="AyudaServlet?lang=es&plugin=VALORES_DOMINIO&metodo=isError">isError</a></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=VALORES_DOMINIO&metodo=getCodigoRetorno">getCodigoRetorno</a></li>
   	</ul>
 </div>
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	isError():boolean
+	getCodigoRetorno():String
 </h1>
 <p>
 	<b>DESCRIPCIÓN</b>
 </p>
 <p>
 	<ul>
-		<li>Método que permite comprobar si la invocación de un dominio retorna o no un error.</li>
+		<li>En la recuperación del dominio se puede establecer de forma opcional un código de retorno, siempre y cuando se produzca correctamente la resolución del dominio.</li>
 	</ul>
 </p>
 <p>
@@ -38,13 +38,13 @@
 </p>
 <p>
 	<ul>
-		<li><b>boolean</b>: Retorna verdadero (true) si la invocación del dominio retorna un error, y falso (false) si el dominio se resuelve correctamente.</li>
+		<li><b>String</b>: Objeto String que modeliza el código de retorno.</li>
 	</ul>
 </p>
 <p>
 	<b>EJEMPLOS</b>
 </p>
-<p>Pongamos por caso que se quiere comprobar si la invocación del dominio 'DOMINIO' retorna un error. Los pasos a efectuar son los siguientes:</p>
+<p>Pongamos por caso que se quiere recuperar el código de retorno que devuelve el domini 'DOMINIO'. Los pasos a efectuar son los siguientes:</p>
 <p>
 Primero se invoca el dominio mediante PLUGIN_DOMINIOS:
 </p>
@@ -52,11 +52,11 @@ Primero se invoca el dominio mediante PLUGIN_DOMINIOS:
 	var valores = PLUGIN_DOMINIOS.invocarDominio('DOMINIO');
 </p>
 <p>
-y posteriormente se comprueba si se retorna un error:
+y se recupera el código de retorno de la siguiente manera:
 </p>
 
 <p class="codigoScript">
-var hayErr = valores.isError();
+var retCode = valores.getCodigoRetorno();
 </p>
 </body>
 </html>

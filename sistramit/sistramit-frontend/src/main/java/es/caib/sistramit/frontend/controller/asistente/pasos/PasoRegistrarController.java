@@ -183,29 +183,34 @@ public final class PasoRegistrarController extends TramitacionController {
 
 		// Generamos mensaje respuesta
 		TypeRespuestaJSON estado = null;
+		String titulo = null;
 		String literal = null;
 		switch (resReg.getResultado()) {
 		case CORRECTO:
 			estado = TypeRespuestaJSON.SUCCESS;
-			literal = "registroRealizado";
+			titulo = "registroRealizado";
+			literal = "registroRealizado.literal";
 			break;
 		case ERROR:
 			estado = TypeRespuestaJSON.ERROR;
-			literal = "registroError";
+			titulo = "registroError";
+			literal = "registroError.literal";
 			break;
 		case REINTENTAR:
 			estado = TypeRespuestaJSON.WARNING;
-			literal = "registroReintentar";
+			titulo = "registroReintentar";
+			literal = "registroReintentar.literal";
 			break;
 		default:
 			estado = TypeRespuestaJSON.FATAL;
-			literal = "registroError";
+			titulo = "registroError";
+			literal = "registroError.literal";
 			break;
 		}
 
 		final RespuestaJSON respuesta = new RespuestaJSON();
 		respuesta.setEstado(estado);
-		respuesta.setMensaje(generarMensajeUsuario("atencion", literal));
+		respuesta.setMensaje(generarMensajeUsuario(titulo, literal));
 		respuesta.setUrl("asistente.html");
 		return generarJsonView(respuesta);
 	}
