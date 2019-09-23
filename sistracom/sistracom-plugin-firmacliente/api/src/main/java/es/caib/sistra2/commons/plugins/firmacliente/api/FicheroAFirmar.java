@@ -35,6 +35,9 @@ public class FicheroAFirmar {
 	/** Idioma. **/
 	private String idioma;
 
+	/** Tipo documental. */
+	private TypeTipoDocumental tipoDocumental;
+
 	/**
 	 * @return the nombreFichero
 	 */
@@ -168,6 +171,25 @@ public class FicheroAFirmar {
 	 */
 	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
+	}
+
+	/**
+	 * Método de acceso a tipoDocumental.
+	 *
+	 * @return tipoDocumental
+	 */
+	public TypeTipoDocumental getTipoDocumental() {
+		return tipoDocumental;
+	}
+
+	/**
+	 * Método para establecer tipoDocumental.
+	 *
+	 * @param tipoDocumental
+	 *                           tipoDocumental a establecer
+	 */
+	public void setTipoDocumental(final TypeTipoDocumental tipoDocumental) {
+		this.tipoDocumental = tipoDocumental;
 	}
 
 }

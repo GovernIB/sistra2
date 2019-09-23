@@ -17,33 +17,35 @@ public interface FirmaComponent {
 	 * Redirección a firma externa.
 	 *
 	 * @param idEntidad
-	 *            Entidad
+	 *                           Entidad
 	 * @param firmante
-	 *            Firmante
+	 *                           Firmante
 	 * @param fileId
-	 *            Id fichero
+	 *                           Id fichero
 	 * @param fileContent
-	 *            Contenido fichero
+	 *                           Contenido fichero
 	 * @param fileName
-	 *            Nombre fichero con extensión
+	 *                           Nombre fichero con extensión
+	 * @param tipoDocumental
+	 *                           Tipo documental
 	 * @param urlCallBack
-	 *            url callback
+	 *                           url callback
 	 * @param idioma
-	 *            idioma
+	 *                           idioma
 	 * @return Datos redirección firma
 	 */
 	RedireccionFirma redireccionFirmaExterna(String idEntidad, Persona firmante, String fileId, byte[] fileContent,
-			String fileName, String urlCallBack, String idioma);
+			String fileName, String tipoDocumental, String urlCallBack, String idioma);
 
 	/**
 	 * Recupera resultado firma externa.
 	 *
 	 * @param idEntidad
-	 *            Entidad
+	 *                        Entidad
 	 * @param sesionFirma
-	 *            Id sesión firma
+	 *                        Id sesión firma
 	 * @param fileId
-	 *            Id fichero
+	 *                        Id fichero
 	 * @return Resultado firma
 	 */
 	FirmaClienteRespuesta recuperarResultadoFirmaExterna(String idEntidad, String sesionFirma, String fileId);
@@ -52,15 +54,15 @@ public interface FirmaComponent {
 	 * Realiza validación de firma verificando si ha firmado el firmante.
 	 *
 	 * @param idEntidad
-	 *            Entidad
+	 *                           Entidad
 	 * @param idioma
-	 *            Idiona
+	 *                           Idiona
 	 * @param signedDocument
-	 *            Fichero a firmar
+	 *                           Fichero a firmar
 	 * @param signature
-	 *            Firma fichero
+	 *                           Firma fichero
 	 * @param firmante
-	 *            Nif firmante
+	 *                           Nif firmante
 	 * @return Validación firmante
 	 */
 	ValidacionFirmante validarFirmante(String idEntidad, String idioma, byte[] signedDocument, byte[] signature,

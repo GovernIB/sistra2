@@ -6,11 +6,13 @@ import org.springframework.stereotype.Component;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
 import es.caib.sistramit.core.service.component.integracion.FirmaComponent;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
+import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.DatosFicheroPersistencia;
 import es.caib.sistramit.core.service.model.flujo.DatosInternosPasoRegistrar;
 import es.caib.sistramit.core.service.model.flujo.DatosPaso;
@@ -84,17 +86,17 @@ public final class AccionIniciarFirmaDocumento implements AccionPaso {
 	 * Envia fichero a firmar
 	 *
 	 * @param pDatosPaso
-	 *            Datos paso
+	 *                               Datos paso
 	 * @param pDefinicionTramite
-	 *            Definición trámite
+	 *                               Definición trámite
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 * @param idDocumento
-	 *            id documento
+	 *                               id documento
 	 * @param instancia
-	 *            instancia
+	 *                               instancia
 	 * @param firmante
-	 *            firmante
+	 *                               firmante
 	 * @return id sesión firma y url redirección
 	 */
 	private RedireccionFirma enviarFicheroFirmar(final DatosPaso pDatosPaso,
@@ -115,10 +117,18 @@ public final class AccionIniciarFirmaDocumento implements AccionPaso {
 				+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_FIRMA_EXTERNO + "?idPaso=" + pDatosPaso.getIdPaso()
 				+ "&idDocumento=" + idDocumento + "&instancia=" + instancia + "&firmante=" + firmante.getNif();
 
+		// Asociamos tipo documental
+		// TODO Hacerlo configurable desde STG
+		final DatosDocumento dd = pVariablesFlujo.getDocumento(idDocumento, instancia);
+		String tipoDocumental = "TD99";
+		if (dd.getTipo() == TypeDocumento.FORMULARIO) {
+			tipoDocumental = "TD14";
+		}
+
 		// Invoca a componente para redirección firma
 		final RedireccionFirma redireccionFirma = firmaComponent.redireccionFirmaExterna(
 				pDefinicionTramite.getDefinicionVersion().getIdEntidad(), firmante, idDocumento + "-" + instancia,
-				fileContent, fileName, urlCallBack, pVariablesFlujo.getIdioma());
+				fileContent, fileName, tipoDocumental, urlCallBack, pVariablesFlujo.getIdioma());
 		return redireccionFirma;
 	}
 }

@@ -22,6 +22,7 @@ import es.caib.sistra2.commons.plugins.firmacliente.api.IFirmaPlugin;
 import es.caib.sistra2.commons.plugins.firmacliente.api.InfoSesionFirma;
 import es.caib.sistra2.commons.plugins.firmacliente.api.TypeEstadoFirmado;
 import es.caib.sistra2.commons.plugins.firmacliente.api.TypeFirmaDigital;
+import es.caib.sistra2.commons.plugins.firmacliente.api.TypeTipoDocumental;
 
 /**
  * Plugin mock componente firma.
@@ -86,11 +87,10 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 				final String location = ficheroAFirmar.getLocalizacion();
 				final int signNumber = ficheroAFirmar.getSignNumber();
 				final String languageSign = ficheroAFirmar.getIdioma();
+				final Long codigoTipoDocumental = convertTypeTipoDocumental(ficheroAFirmar.getTipoDocumental());
 
-				// TODO Pendiente de ver como se traslada el tipo documental
-				final Long tipoDocumental = 99L;
 				fileInfoSignature = new FirmaSimpleFileInfoSignature(fileToSign, signID, name, reason, location,
-						signNumber, languageSign, tipoDocumental);
+						signNumber, languageSign, codigoTipoDocumental);
 			}
 
 			api = generarApi();
@@ -196,6 +196,32 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 		if (res == null) {
 			throw new FirmaPluginException("No se ha especificado parametro " + propiedad + " en propiedades");
 		}
+		return res;
+	}
+
+	/**
+	 * Convierte tipo documental a código.
+	 *
+	 * @param tipoDocumental
+	 *                           Tipo documental
+	 * @return código
+	 * @throws FirmaPluginException
+	 */
+	private Long convertTypeTipoDocumental(final TypeTipoDocumental tipoDocumental) throws FirmaPluginException {
+
+		// TODO PENDIENTE DE VER TRADUCCIÓN A CÓDIGO TIPO DOCUMENTAL DE PFIB
+		Long res = null;
+		switch (tipoDocumental) {
+		case TD14_SOLICITUD:
+			res = 14L;
+			break;
+		case TD99_OTROS:
+			res = 99L;
+			break;
+		default:
+			throw new FirmaPluginException("Pendiente mapeo código para tipo documental " + tipoDocumental);
+		}
+
 		return res;
 	}
 

@@ -22,6 +22,7 @@ import es.caib.sistra2.commons.plugins.firmacliente.api.FirmaPluginException;
 import es.caib.sistra2.commons.plugins.firmacliente.api.IFirmaPlugin;
 import es.caib.sistra2.commons.plugins.firmacliente.api.InfoSesionFirma;
 import es.caib.sistra2.commons.plugins.firmacliente.api.TypeEstadoFirmado;
+import es.caib.sistra2.commons.plugins.firmacliente.api.TypeTipoDocumental;
 import es.caib.sistramit.core.api.exception.SesionFirmaClienteException;
 import es.caib.sistramit.core.api.exception.ValidacionFirmaException;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
@@ -56,7 +57,8 @@ public final class FirmaComponentImpl implements FirmaComponent {
 
 	@Override
 	public RedireccionFirma redireccionFirmaExterna(final String idEntidad, final Persona firmante, final String fileId,
-			final byte[] fileContent, final String fileName, final String urlCallBack, final String idioma) {
+			final byte[] fileContent, final String fileName, final String tipoDocumental, final String urlCallBack,
+			final String idioma) {
 
 		// Obtiene plugin
 		final IFirmaPlugin plgFirma = getPluginFirmaExterna(idEntidad);
@@ -88,6 +90,11 @@ public final class FirmaComponentImpl implements FirmaComponent {
 		fichero.setRazon(fileName);
 		fichero.setSignID(fileId);
 		fichero.setSesion(sf);
+		final TypeTipoDocumental tipoDoc = TypeTipoDocumental.fromString(tipoDocumental);
+		if (tipoDoc == null) {
+			throw new SesionFirmaClienteException("No se reconoce tipo documental: " + tipoDocumental);
+		}
+		fichero.setTipoDocumental(tipoDoc);
 		try {
 			plgFirma.anyadirFicheroAFirmar(fichero);
 		} catch (final FirmaPluginException e) {

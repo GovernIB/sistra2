@@ -13,11 +13,12 @@ import es.caib.sistra2.commons.plugins.firmacliente.api.FicheroAFirmar;
 import es.caib.sistra2.commons.plugins.firmacliente.api.FicheroFirmado;
 import es.caib.sistra2.commons.plugins.firmacliente.api.InfoSesionFirma;
 import es.caib.sistra2.commons.plugins.firmacliente.api.TypeEstadoFirmado;
+import es.caib.sistra2.commons.plugins.firmacliente.api.TypeTipoDocumental;
 import es.caib.sistra2.commons.plugins.firmacliente.firmaweb.ComponenteFirmaSimpleWebPlugin;
 
 /**
  * Para hacer pruebas con la firma
- * 
+ *
  * @author Indra
  */
 public class TestFirma {
@@ -69,6 +70,7 @@ public class TestFirma {
 				fichero.setRazon("Fichero prueba1");
 				fichero.setSignID("666");
 				fichero.setSesion(idSession);
+				fichero.setTipoDocumental(TypeTipoDocumental.TD99_OTROS);
 				plugin.anyadirFicheroAFirmar(fichero);
 			}
 
