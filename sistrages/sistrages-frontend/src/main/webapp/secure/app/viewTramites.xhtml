@@ -111,8 +111,8 @@
         						<p:menuitem id="btnRefrescar" value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" actionListener="#{viewTramites.refrescar}" process="@this" update="growl @form" rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.isNotDesarrollo()}" />
 					        	<p:menuitem id="btnDuplicar" value="#{msg['botones.duplicarVersion']}" icon="fa fa-copy" onclick="triggerClonarTramite(); return false;" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null and viewTramites.isDesarrollo()}" />
 
-	        					<p:separator rendered="#{viewTramites.seleccionadaArea}" />
-			        			<p:menuitem id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea}" />
+	        					<p:separator rendered="#{viewTramites.tramiteSeleccionada ne null}" />
+			        			<p:menuitem id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite}" process="@this" update="growl" rendered="#{viewTramites.tramiteSeleccionada ne null}" />
 
 								<p:separator rendered="#{viewTramites.seleccionadaArea}" />
 			        			<p:menuitem id="btnDominioArea" value="#{msg['botones.dominiosArea']}" icon="fa fa-database" actionListener="#{viewTramites.dominioArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}"/>

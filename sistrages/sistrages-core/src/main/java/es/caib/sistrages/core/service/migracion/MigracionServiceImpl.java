@@ -346,6 +346,13 @@ public class MigracionServiceImpl implements MigracionService {
 			// recorremos las paginas del formulario de sistra
 			for (final PantalSistra paginaSistra : formulSistra.getPaginas()) {
 
+				if (paginaSistra.getPanExpres() != null) {
+					pagina.setScriptValidacion(
+							createScript("/* TODO: Revisar script" + System.getProperty("line.separator")
+									+ paginaSistra.getPanExpres() + System.getProperty("line.separator") + "*/"));
+					formIntDao.updatePagina(pagina);
+				}
+
 				// si unificamos pantallas creamos una seccion por cada pagina
 				if (unificarPantallas) {
 					final List<ComponSistra> listaComponentesAux = createSeccionPorPagina(
@@ -466,9 +473,19 @@ public class MigracionServiceImpl implements MigracionService {
 				TypeObjetoFormulario tipo;
 				if (componenteSistra.getComOculto() != null && componenteSistra.getComOculto().compareTo(1l) == 0) {
 					tipo = TypeObjetoFormulario.CAMPO_OCULTO;
+
+					// Comprueba que no esté relleno el script de validacion
+					if (componenteSistra.getComExpval() != null) {
+						final ErrorMigracion error2 = errorMigracion(componente.getIdComponente(), pOpciones,
+								"elemento.formulario.disenyoFormulario.pagina.elemento.ocultoconscriptvalidacion",
+								pIdioma);
+						error2.setTipo(TypeErrorMigracion.WARNING);
+						listaErrores.add(error2);
+					}
 				} else {
 					tipo = TypeObjetoFormulario.CAMPO_TEXTO;
 				}
+
 				lineaComponente = createComponent(pagina, lineaComponente, componenteSistra, tipo, pIdioma, pOpciones,
 						listaErrores);
 
@@ -679,6 +696,7 @@ public class MigracionServiceImpl implements MigracionService {
 					break;
 				}
 			}
+
 		}
 
 		StringBuilder scriptAutorelleno = null;
@@ -1014,7 +1032,11 @@ public class MigracionServiceImpl implements MigracionService {
 		LiteralScript res = null;
 		if (literal != null) {
 			res = new LiteralScript();
-			res.setIdentificador(identificador);
+			if (identificador.length() > 20) {
+				res.setIdentificador(identificador.substring(0, 20));
+			} else {
+				res.setIdentificador(identificador);
+			}
 			res.setLiteral(literal);
 		}
 		return res;

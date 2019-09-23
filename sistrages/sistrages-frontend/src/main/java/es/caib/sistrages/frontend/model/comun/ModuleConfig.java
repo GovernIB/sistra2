@@ -29,6 +29,17 @@ public final class ModuleConfig {
 	}
 
 	/**
+	 * @return the entorno
+	 */
+	public String getEntornoUpper() {
+		if (entorno == null) {
+			return "";
+		} else {
+			return entorno.toUpperCase();
+		}
+	}
+
+	/**
 	 * @param entorno the entorno to set
 	 */
 	public void setEntorno(final String entorno) {
