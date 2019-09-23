@@ -34,6 +34,7 @@ import es.caib.sistramit.core.api.model.flujo.DetallePasoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFirmaDigital;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
@@ -611,7 +612,14 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		documentoAsientoRegistral.setTituloDoc(documento.getTitulo());
 		documentoAsientoRegistral.setFechaCaptura(new Date());
 		documentoAsientoRegistral.setOrigenDocumento(TypeOrigenDocumento.CIUDADANO);
-		documentoAsientoRegistral.setTipoDocumental("TD14");
+
+		// TODO Ver de establecer configuración por STG
+		if (documento.getTipo() == TypeDocumento.FORMULARIO) {
+			documentoAsientoRegistral.setTipoDocumental("TD14");
+		} else {
+			documentoAsientoRegistral.setTipoDocumental("TD99");
+		}
+
 		documentoAsientoRegistral.setTipoDocumento(calcularTipoDocumental(documento.getTipo(), xml));
 		documentoAsientoRegistral.setValidez(calcularValidez(documento.getTipo()));
 		documentoAsientoRegistral.setNombreFichero(nombreFic);
