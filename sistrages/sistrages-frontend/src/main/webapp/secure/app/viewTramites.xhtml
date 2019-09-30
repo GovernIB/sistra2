@@ -68,6 +68,7 @@
 					</f:facet>
 			        <f:facet name="right">
 			        	 <h:panelGroup rendered="#{viewTramites.seleccionadasAreas}">
+
 			        	 	<p:commandButton id="btnNuevoTramite" value="#{msg['botones.nuevoTramite']}" icon="fa fa-file" actionListener="#{viewTramites.nuevoTramite}" process="@this" update="growl"  rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea and viewTramites.versionSeleccionada eq null}">
 				     		     <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl @form"/>
 			   		        </p:commandButton>
@@ -112,7 +113,7 @@
 					        	<p:menuitem id="btnDuplicar" value="#{msg['botones.duplicarVersion']}" icon="fa fa-copy" onclick="triggerClonarTramite(); return false;" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null and viewTramites.isDesarrollo()}" />
 
 	        					<p:separator rendered="#{viewTramites.tramiteSeleccionada ne null}" />
-			        			<p:menuitem id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite}" process="@this" update="growl" rendered="#{viewTramites.tramiteSeleccionada ne null}" />
+			        			<p:menuitem id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite}" process="@this" update="growl" rendered="#{viewTramites.tramiteSeleccionada ne null or viewTramites.versionSeleccionada ne null}" />
 
 								<p:separator rendered="#{viewTramites.seleccionadaArea}" />
 			        			<p:menuitem id="btnDominioArea" value="#{msg['botones.dominiosArea']}" icon="fa fa-database" actionListener="#{viewTramites.dominioArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}"/>

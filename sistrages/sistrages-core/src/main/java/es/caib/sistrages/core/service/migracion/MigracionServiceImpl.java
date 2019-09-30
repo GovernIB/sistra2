@@ -157,12 +157,12 @@ public class MigracionServiceImpl implements MigracionService {
 
 			LOG.info("inicio: createAnexos");
 			// Guardamos anexos
-			createAnexos(traverSistra.getListaDocumSistra(), tramiteVersion);
+			createAnexos(traverSistra.getListaDocumSistra(), tramiteVersion, idioma, listaErrores);
 			LOG.info("fin: createAnexos");
 
 			LOG.info("inicio: createTasas");
 			// Guardamos tasas
-			createTasas(traverSistra.getListaDocumSistra(), tramiteVersion);
+			createTasas(traverSistra.getListaDocumSistra(), tramiteVersion, idioma, listaErrores);
 			LOG.info("fin: createTasas");
 
 			LOG.info("inicio: createFormularios");
@@ -289,7 +289,16 @@ public class MigracionServiceImpl implements MigracionService {
 				for (final DocumSistra documSistra : listaFormularios) {
 					final FormularioTramite formulario = tramiteComponent.createFormularioTramiteDefault();
 
-					formulario.setIdentificador(documSistra.getIdenti().toUpperCase());
+					if (documSistra.getIdenti().length() > 20) {
+						final ErrorMigracion error2 = errorMigracion(formulario.getIdentificador(), null,
+								"migracion.elemento.formulario.disenyoFormulario.identificador.formulario.demasiadolargo",
+								pIdioma);
+						error2.setTipo(TypeErrorMigracion.WARNING);
+						listaErrores.add(error2);
+						formulario.setIdentificador(documSistra.getIdenti().substring(0, 20).toUpperCase());
+					} else {
+						formulario.setIdentificador(documSistra.getIdenti().toUpperCase());
+					}
 					formulario.setDescripcion(documSistra.getDescripcion());
 					formulario.setTipoFormulario(TypeFormularioGestor.INTERNO);
 
@@ -739,6 +748,14 @@ public class MigracionServiceImpl implements MigracionService {
 
 					if (scriptValidacionAux != null && componenteSistra.getMensajeValidacion() != null) {
 						final List<LiteralScript> literalScript = new ArrayList<>();
+						if (componenteSistra.getComNomlog().length() > 20) {
+							final ErrorMigracion error2 = errorMigracion(componenteSistra.getComNomlog(), null,
+									"migracion.elemento.formulario.disenyoFormulario.identificador.literalscript.demasiadolargo",
+									pIdioma);
+							error2.setTipo(TypeErrorMigracion.WARNING);
+							listaErrores.add(error2);
+						}
+						// componenteSistra.getComNomlog()
 						literalScript.add(createLiteralScript(componenteSistra.getComNomlog().toUpperCase(),
 								componenteSistra.getMensajeValidacion()));
 						scriptValidacionAux.setMensajes(literalScript);
@@ -830,7 +847,8 @@ public class MigracionServiceImpl implements MigracionService {
 	 * @param listaDocumSistra lista de documtos sistra
 	 * @param tramiteVersion   tramite version
 	 */
-	private void createTasas(final List<DocumSistra> listaDocumSistra, final TramiteVersion tramiteVersion) {
+	private void createTasas(final List<DocumSistra> listaDocumSistra, final TramiteVersion tramiteVersion,
+			final String pIdioma, final List<ErrorMigracion> listaErrores) {
 		final List<DocumSistra> listaTasas = listaDocumSistra.stream()
 				.filter(tasa -> ConstantesMigracion.DOCUM_TIPO_TASA.equals(tasa.getTipo()))
 				.collect(Collectors.toList());
@@ -841,7 +859,17 @@ public class MigracionServiceImpl implements MigracionService {
 			if (pasoTasa != null) {
 				for (final DocumSistra documSistra : listaTasas) {
 					final Tasa tasa = tramiteComponent.createTasaDefault();
-					tasa.setIdentificador(documSistra.getIdenti().toUpperCase());
+					if (documSistra.getIdenti().length() > 20) {
+						final ErrorMigracion error2 = errorMigracion(documSistra.getIdenti(), null,
+								"migracion.elemento.formulario.disenyoFormulario.identificador.tasa.demasiadolargo",
+								pIdioma);
+						error2.setTipo(TypeErrorMigracion.WARNING);
+						listaErrores.add(error2);
+						tasa.setIdentificador(documSistra.getIdenti().substring(0, 20).toUpperCase());
+					} else {
+						tasa.setIdentificador(documSistra.getIdenti().toUpperCase());
+					}
+
 					tasa.setDescripcion(documSistra.getDescripcion());
 
 					tasa.setObligatoriedad(TypeFormularioObligatoriedad.fromString(documSistra.getObligatorio()));
@@ -862,7 +890,8 @@ public class MigracionServiceImpl implements MigracionService {
 	 * @param listaDocumSistra lista de documentos de sistra
 	 * @param tramiteVersion   tramite version
 	 */
-	private void createAnexos(final List<DocumSistra> listaDocumSistra, final TramiteVersion tramiteVersion) {
+	private void createAnexos(final List<DocumSistra> listaDocumSistra, final TramiteVersion tramiteVersion,
+			final String pIdioma, final List<ErrorMigracion> listaErrores) {
 		final List<DocumSistra> listaAnexos = listaDocumSistra.stream()
 				.filter(anex -> ConstantesMigracion.DOCUM_TIPO_ANEXO.equals(anex.getTipo()))
 				.collect(Collectors.toList());
@@ -873,7 +902,17 @@ public class MigracionServiceImpl implements MigracionService {
 			if (pasoAnexar != null) {
 				for (final DocumSistra documSistra : listaAnexos) {
 					final Documento documento = tramiteComponent.createDocumentoDefault();
-					documento.setIdentificador(documSistra.getIdenti().toUpperCase());
+					if (documSistra.getIdenti().length() > 20) {
+						final ErrorMigracion error2 = errorMigracion(documSistra.getIdenti(), null,
+								"migracion.elemento.formulario.disenyoFormulario.identificador.documento.demasiadolargo",
+								pIdioma);
+						error2.setTipo(TypeErrorMigracion.WARNING);
+						listaErrores.add(error2);
+						documento.setIdentificador(documSistra.getIdenti().substring(0, 20).toUpperCase());
+					} else {
+						documento.setIdentificador(documSistra.getIdenti().toUpperCase());
+					}
+
 					documento.setDescripcion(documSistra.getDescripcion());
 
 					documento.setObligatoriedad(TypeFormularioObligatoriedad.fromString(documSistra.getObligatorio()));

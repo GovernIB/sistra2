@@ -35,7 +35,7 @@ import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RSer
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RTramiteRolsac;
 
 /**
- * Plugin mock catálogo procedimientos.
+ * Plugin mock catálogo procedimientos
  *
  * @author Indra
  *
