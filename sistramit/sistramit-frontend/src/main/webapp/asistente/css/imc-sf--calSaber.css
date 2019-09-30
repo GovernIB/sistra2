@@ -6,6 +6,9 @@
 
 .imc--important p:last-child { margin-bottom: 0; }
 
+.imc--fi-termini { padding: .8em 1.5em .8em 4em; margin: 1em 0; background: transparent url(imgs/icones/ico_calendari_ff9c32.svg) no-repeat 1.2em .6em / auto 1.5em; border: 2px solid #ff9c32; }
+.imc--fi-termini p:last-child { margin-bottom: 0; }
+
 .imc--explicacio-detallada { padding: 1em 2em; background-color: #fff; }
 .imc--explicacio-detallada > p { margin-bottom: 0; }
 .imc--explicacio-detallada ul { display: none; margin-top: 1em; }

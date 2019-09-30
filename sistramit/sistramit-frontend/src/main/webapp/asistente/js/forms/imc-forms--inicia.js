@@ -624,6 +624,7 @@ $.fn.appFormsConfiguracio = function(options) {
 								}
 
 								if (conf_opcions.nie && conf_opcions.nie === "s") {
+
 									elm_input
 										.attr("data-nie", conf_opcions.nie);
 
@@ -965,11 +966,19 @@ $.fn.appFormsConfiguracio = function(options) {
 
 									var estaMarcat = elm.find("input[data-marcat='"+val_valor+"']:first").length;
 
-									if (estaMarcat) {
+									if (estaMarcat && !elm_esLectura) {
 
 										elm
 											.find("label")
 												.trigger("click");
+
+									}
+
+									if (elm_esLectura) {
+
+										elm
+											.find("input")
+												.attr("disabled", "disabled");
 
 									}
 
@@ -1038,6 +1047,14 @@ $.fn.appFormsConfiguracio = function(options) {
 									elm
 										.find("input")
 											.prop("checked", false);
+
+									if (elm_esLectura) {
+
+										elm
+											.find("input")
+												.attr("disabled", "disabled");
+
+									}
 
 								}
 
@@ -1156,7 +1173,7 @@ $.fn.appFormsConfiguracio = function(options) {
 											.find("input")
 												.attr("disabled", "disabled");
 
-									} else if (conf_tipus === "check") {
+									} else if (conf_tipus === "check" || conf_tipus === "verificacion") {
 
 										elm_input
 											.attr("disabled", "disabled");
@@ -1185,7 +1202,7 @@ $.fn.appFormsConfiguracio = function(options) {
 											.find("input")
 												.removeAttr("disabled");
 
-									} else if (conf_tipus === "check") {
+									} else if (conf_tipus === "check" || conf_tipus === "verificacion") {
 
 										elm_input
 											.removeAttr("disabled");

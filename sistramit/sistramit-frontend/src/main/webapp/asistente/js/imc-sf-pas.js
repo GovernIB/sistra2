@@ -33,6 +33,7 @@ var HTML_PAS_LITERALS = {
 			,txtRegistrarExplicacio: txtRegistrarExplicacio
 			,txtTitolLOPD: txtTitolLOPD
 			,txtSeguent: txtSeguent
+			,txtFiTermini: txtFiTermini
 		},
 		"rf": {
 			txtEmplenarTitol: txtEmplenarTitol
@@ -136,6 +137,7 @@ var HTML_PAS_LITERALS = {
 			,txtCarpetaAnarJustificant: txtCarpetaAnarJustificant
 			,txtSignatura: txtSignatura
 			,txtDocumentacioMostra: txtDocumentacioMostra
+			,txtDescarregantURL: txtDescarregantURL
 		}
 
 		
@@ -470,6 +472,7 @@ $.fn.appPas = function(options) {
 
 					HTML_PAS_LITERALS[pas_tipus]["txtCalSaberImportant"] = pas_json.datos.actual.instrucciones;
 					HTML_PAS_LITERALS[pas_tipus]["txtInfoLOPD"] = pas_json.datos.actual.infoLOPD;
+					HTML_PAS_LITERALS[pas_tipus]["jsonFiTermini"] = pas_json.datos.actual.finPlazo;
 
 				} else if (pas_tipus === "rf") {
 

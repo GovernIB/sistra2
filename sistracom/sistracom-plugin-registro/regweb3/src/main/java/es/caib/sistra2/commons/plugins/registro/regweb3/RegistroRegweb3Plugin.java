@@ -232,9 +232,12 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 						ConstantesRegweb3.REGISTRO_ENTRADA);
 				content = result.getJustificante();
 				break;
+			case CARPETA_CIUDADANA:
+				url = "/registro/detalle/" + numeroRegistro;
+				break;
 			default:
-				// Redireccion a carpeta. No debe entrar aquí.
-				throw new RegistroPluginException("Si se redirige a carpeta no debe descargarse");
+				// No debe entrar aquí.
+				throw new RegistroPluginException("Tipo justificante no soportado");
 			}
 
 		} catch (final Exception ex) {
@@ -245,6 +248,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		}
 
 		final ResultadoJustificante res = new ResultadoJustificante();
+		res.setTipo(descargaJustificantes());
 		res.setUrl(url);
 		res.setContenido(content);
 		return res;

@@ -79,6 +79,9 @@ public interface IRegistroPlugin extends IPlugin {
 	 *                           codigo DIR3 de la entidad
 	 * @param numeroRegistro
 	 *                           numero de registro asignado al apunte registral
+	 * @return Devuelve justificante según como se descarga el justificante: fichero
+	 *         (contenido), url (url externa absoluta) y carpeta (url relativa a
+	 *         carpeta).
 	 * @throws RegistroPluginException
 	 */
 	ResultadoJustificante obtenerJustificanteRegistro(String codigoEntidad, String numeroRegistro)

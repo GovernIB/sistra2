@@ -28,6 +28,9 @@ public final class DetallePasoDebeSaber extends DetallePaso {
 	/** Requisitos técnicos (HTML). */
 	private String requisitosTecnicos;
 
+	/** Fecha fin plazo. */
+	private String finPlazo;
+
 	/**
 	 * Lista de pasos con su descripcion.
 	 */
@@ -54,7 +57,7 @@ public final class DetallePasoDebeSaber extends DetallePaso {
 	 * Método para establecer descripcionPasos.
 	 *
 	 * @param pPasos
-	 *            descripcionPasos a establecer
+	 *                   descripcionPasos a establecer
 	 */
 	public void setPasos(final List<DescripcionPaso> pPasos) {
 		pasos = pPasos;
@@ -94,7 +97,7 @@ public final class DetallePasoDebeSaber extends DetallePaso {
 	 * Método para establecer instrucciones.
 	 *
 	 * @param instrucciones
-	 *            instrucciones a establecer
+	 *                          instrucciones a establecer
 	 */
 	public void setInstrucciones(final String instrucciones) {
 		this.instrucciones = instrucciones;
@@ -113,7 +116,7 @@ public final class DetallePasoDebeSaber extends DetallePaso {
 	 * Método para establecer infoLOPD.
 	 *
 	 * @param infoLOPD
-	 *            infoLOPD a establecer
+	 *                     infoLOPD a establecer
 	 */
 	public void setInfoLOPD(final String infoLOPD) {
 		this.infoLOPD = infoLOPD;
@@ -132,7 +135,7 @@ public final class DetallePasoDebeSaber extends DetallePaso {
 	 * Método para establecer infoResumenLOPD.
 	 *
 	 * @param infoResumenLOPD
-	 *            infoResumenLOPD a establecer
+	 *                            infoResumenLOPD a establecer
 	 */
 	public void setInfoResumenLOPD(final String infoResumenLOPD) {
 		this.infoResumenLOPD = infoResumenLOPD;
@@ -140,7 +143,7 @@ public final class DetallePasoDebeSaber extends DetallePaso {
 
 	/**
 	 * Método de acceso a requisitosTecnicos.
-	 * 
+	 *
 	 * @return requisitosTecnicos
 	 */
 	public String getRequisitosTecnicos() {
@@ -149,12 +152,31 @@ public final class DetallePasoDebeSaber extends DetallePaso {
 
 	/**
 	 * Método para establecer requisitosTecnicos.
-	 * 
+	 *
 	 * @param requisitosTecnicos
-	 *            requisitosTecnicos a establecer
+	 *                               requisitosTecnicos a establecer
 	 */
 	public void setRequisitosTecnicos(final String requisitosTecnicos) {
 		this.requisitosTecnicos = requisitosTecnicos;
+	}
+
+	/**
+	 * Método de acceso a finPlazo.
+	 * 
+	 * @return finPlazo
+	 */
+	public String getFinPlazo() {
+		return finPlazo;
+	}
+
+	/**
+	 * Método para establecer finPlazo.
+	 * 
+	 * @param finPlazo
+	 *                     finPlazo a establecer
+	 */
+	public void setFinPlazo(final String finPlazo) {
+		this.finPlazo = finPlazo;
 	}
 
 }

@@ -1,9 +1,8 @@
 // guardar justificant
 
-var imc_guarda,
-	imc_bt_justificant_desa,
-	imc_bt_justificant_url,
-	imc_bt_tramit_surt;
+var imc_guarda
+	,imc_justificant
+	,imc_bt_tramit_surt;
 
 
 // onReady
@@ -11,8 +10,7 @@ var imc_guarda,
 function appPasGuardarInicia() {
 	
 	imc_guarda = imc_contingut.find(".imc--guarda:first");
-	imc_bt_justificant_desa = $("#imc-bt-justificant-desa");
-	imc_bt_justificant_url = $("#imc-bt-justificant-url");
+	imc_justificant = imc_contingut.find(".imc--guarda-justificant:first");
 	imc_bt_tramit_surt = $("#imc-bt-tramit-surt");
 
 	imc_guarda
@@ -21,10 +19,8 @@ function appPasGuardarInicia() {
 		.appSiganuraDescarrega()
 		.appValora();
 
-	imc_bt_justificant_desa
-		.appJustificantDesa();
-
-	imc_bt_justificant_url
+	imc_justificant
+		.appJustificantDesa()
 		.appJustificantURL();
 
 	imc_bt_tramit_surt
@@ -135,7 +131,7 @@ $.fn.appJustificantDesa = function(options) {
 
 				element
 					.off('.appJustificantDesa')
-					.on('click.appJustificantDesa', desa);
+					.on('click.appJustificantDesa', "button[data-accio='desa']", desa);
 
 			},
 			desa = function() {
@@ -165,20 +161,23 @@ $.fn.appJustificantURL = function(options) {
 
 				element
 					.off('.appJustificantURL')
-					.on('click.appJustificantURL', envia);
+					.on('click.appJustificantURL', "button[data-accio='url'], button[data-accio='carpeta']", envia);
 
 			},
-			envia = function() {
+			envia = function(e) {
+
+				var bt = $(this)
+					,bt_accio = bt.attr("data-accio");
 
 				// missatge
 
 				imc_missatge
-					.appMissatge({ accio: "carregant", titol: "Descarregant l'adreça del justificant..." });
+					.appMissatge({ accio: "carregant", titol: txtDescarregantURL });
 
 				// envia config
 
-				var	pag_url = APP_TRAMIT_JUSTIFICANT_URL,
-					formData = new FormData();
+				var	pag_url = (bt_accio === "url") ? APP_TRAMIT_JUSTIFICANT_URL : APP_TRAMIT_JUSTIFICANT_CARPETA
+					,formData = new FormData();
 
 				// dades
 
@@ -250,7 +249,7 @@ $.fn.appJustificantURL = function(options) {
 					,titol = json.mensaje.titulo
 					,text = json.mensaje.texto;
 
-				if (titol) {
+				if (titol !== "") {
 
 					imc_missatge
 						.appMissatge({ accio: estat, titol: titol, text: text, alAcceptar: function() { obri(json); } });

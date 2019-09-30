@@ -21,7 +21,7 @@
 				</p>
 				<p>
 					{{txtCarpetaAnarJustificant}}
-					<a href="{{jsonCarpetaURL}}" class="imc-bt imc--ico imc--justificant" target="_blank"><span>{{txtCarpetaCiutadana}}</span></a>
+					<button type="button" class="imc-bt imc--ico imc--justificant" title="{{txtObriFinestra}}" data-accio="carpeta"><span>{{txtCarpetaCiutadana}}</span></button>
 				</p>
 			</div>
 			{{else}}
@@ -29,9 +29,9 @@
 			<div class="imc--fi-bt">
 				<p><span>{{txtNumeroRegistre}}:</span> <strong>{{jsonNumeroRegistre}}</strong></p>
 				{{if jsonJustificantDescarrega|equals>url}}
-				<button type="button" id="imc-bt-justificant-url" class="imc-bt imc--ico imc--justificant" title="{{txtObriFinestra}}"><span>{{txtAnarAlJustificant}}</span></button>
+				<button type="button" class="imc-bt imc--ico imc--justificant" title="{{txtObriFinestra}}" data-accio="url"><span>{{txtAnarAlJustificant}}</span></button>
 				{{else}}
-				<button type="button" id="imc-bt-justificant-desa" class="imc-bt imc--ico imc--justificant"><span>{{txtDesauJustificant}}</span></button>
+				<button type="button" class="imc-bt imc--ico imc--justificant" data-accio="desa"><span>{{txtDesauJustificant}}</span></button>
 				{{/if}}
 			</div>
 			{{/if}}

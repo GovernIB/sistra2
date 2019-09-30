@@ -78,6 +78,7 @@ var  APP_SIGNATURA_URL = APP_SERVIDOR + "rt/firmarDocumento.json"
 
 var APP_TRAMIT_JUSTIFICANT = APP_SERVIDOR + "gj/descargarJustificante.html",
 	APP_TRAMIT_JUSTIFICANT_URL = APP_SERVIDOR + "gj/redirigirJustificante.json",
+	APP_TRAMIT_JUSTIFICANT_CARPETA = APP_SERVIDOR + "gj/redirigirJustificante.json",
 	APP_GUARDA_DESCARREGA = APP_SERVIDOR + "gj/descargarDocumento.html",
 	APP_TRAMIT_SURT = APP_SERVIDOR + "gj/salirTramite.html",
 	APP_SIGNATURA_GUARDAR_DESCARREGA = APP_SERVIDOR + "gj/descargarFirma.html",

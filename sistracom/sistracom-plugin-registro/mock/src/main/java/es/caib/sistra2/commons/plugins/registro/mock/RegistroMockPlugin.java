@@ -110,6 +110,7 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 		}
 
 		final ResultadoJustificante res = new ResultadoJustificante();
+		res.setTipo(descargaJustificantes());
 
 		switch (descargaJustificantes()) {
 		case URL_EXTERNA:
@@ -126,9 +127,13 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 			}
 			res.setContenido(content);
 			break;
+		case CARPETA_CIUDADANA:
+			// Url relativa a carpeta
+			res.setUrl("/search?q=justificante");
+			break;
 		default:
-			// Redireccion a carpeta. No debe entrar aquí.
-			throw new RegistroPluginException("Si se redirige a carpeta no debe descargarse");
+			// Tipo justificante no soportado
+			throw new RegistroPluginException("Tipo justificante no soportado");
 		}
 
 		return res;

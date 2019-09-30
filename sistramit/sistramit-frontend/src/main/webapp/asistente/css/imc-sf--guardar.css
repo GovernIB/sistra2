@@ -24,13 +24,18 @@
 .imc--guarda .imc--fi-carpeta { padding: 1.2em 2em 1em 2em; margin-bottom: 1.5em; background-color: #fff; }
 .imc--guarda .imc--fi-carpeta p:last-child { margin-bottom: 0; }
 
-.imc--guarda .imc--fi-carpeta a.imc-bt { background-color: #265d3c; }
-.imc--guarda .imc--fi-carpeta a.imc-bt span { color: #fff; }
+.imc--guarda .imc--fi-carpeta a.imc-bt,
+.imc--guarda .imc--fi-carpeta button { background-color: #265d3c; }
+.imc--guarda .imc--fi-carpeta a.imc-bt span,
+.imc--guarda .imc--fi-carpeta button span { color: #fff; }
 
 .imc--guarda .imc--fi-carpeta a.imc-bt:hover,
-.imc--guarda .imc--fi-carpeta a.imc-bt:focus { background-color: #000; }
+.imc--guarda .imc--fi-carpeta a.imc-bt:focus,
+.imc--guarda .imc--fi-carpeta button:hover,
+.imc--guarda .imc--fi-carpeta button:focus { background-color: #000; }
 
-.imc--guarda .imc--fi-carpeta a.imc-bt::before { background-image: url(imgs/icones/ico_finestra_nova.svg); background-size: auto 1em; }
+.imc--guarda .imc--fi-carpeta a.imc-bt::before,
+.imc--guarda .imc--fi-carpeta button::before { background-image: url(imgs/icones/ico_finestra_nova.svg); background-size: auto 1em; }
 
 .imc--guarda .imc--fi-bt { text-align: center; margin-bottom: 2em; }
 
