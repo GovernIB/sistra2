@@ -139,7 +139,8 @@ create table STG_ANETRA
    ANE_FIRMAR           NUMBER(1)            default 0 not null,
    ANE_SCRFIR           NUMBER(18),
    ANE_FIRMAD           NUMBER(1)            default 0 not null,
-   ANE_SCRVAL           NUMBER(18)
+   ANE_SCRVAL           NUMBER(18),
+   ANE_TIPENI           VARCHAR2(10 CHAR)    default 'TD99' not null
 );
 
 comment on table STG_ANETRA is
@@ -208,6 +209,9 @@ comment on column STG_ANETRA.ANE_FIRMAD is
 
 comment on column STG_ANETRA.ANE_SCRVAL is
 'Permite establecer una validación sobre el documento anexado. En este script estará disponible un plugin que permita acceder a datos de formularios PDF.';
+
+comment on column STG_ANETRA.ANE_TIPENI is
+'Tipo documento ENI';
 
 alter table STG_ANETRA
    add constraint STG_ANETRA_PK primary key (ANE_CODIGO);
