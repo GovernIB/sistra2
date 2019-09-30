@@ -35,5 +35,6 @@ INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'ayuda.sistrages.path', '', 'Propiedad para externalizar la ayuda del módulo SISTRAGES en un directorio externo (se indica la ruta del directorio donde se ubicará la ayuda). Si esta propiedad no tiene valor se usará la ayuda incluida en la aplicación.');
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'ayuda.sistrahelp.path', '', 'Propiedad para externalizar la ayuda del módulo SISTRAHELP en un directorio externo (se indica la ruta del directorio donde se ubicará la ayuda). Si esta propiedad no tiene valor se usará la ayuda incluida en la aplicación.');
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistramit.anexos.tamanyoMaximo', '0', 'Indica tamaño máximo (MB) de los anexos en el paso de anexar. Si se indica un valor menor o igual a cero no se aplica límite.');
+INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) values (STG_CNFGLO_SEQ.NEXTVAL, 'catalogoProcedimientos.verificarTramite','true','Comprobar si los datos cruzados con el catalogo de procedimientos es correcto');
 
 UPDATE STG_CNFGLO SET CFG_NOMOD = 1 WHERE CFG_PROP = 'sistra2.version';

@@ -104,7 +104,13 @@ public enum TypePropiedadConfiguracion {
 	 * Tiempo (dias) tras su fecha de purgado tras el cual seran definitivamente
 	 * borrados los purgados.
 	 **/
-	PURGA_PURGADOS("sistramit.purga.purgados");
+	PURGA_PURGADOS("sistramit.purga.purgados"),
+	/**
+	 * Verifica si los datos pasados por la url coinciden con la información
+	 * existente en el catalogo de procedimientos (ROLSAC)
+	 */
+	VERIFICAR_TRAMITE_CATALOGO("catalogoProcedimientos.verificarTramite");
+
 	/**
 	 * Valor como string.
 	 */
@@ -113,8 +119,7 @@ public enum TypePropiedadConfiguracion {
 	/**
 	 * Constructor.
 	 *
-	 * @param valueStr
-	 *            Valor como string.
+	 * @param valueStr Valor como string.
 	 */
 	private TypePropiedadConfiguracion(final String valueStr) {
 		stringValue = valueStr;
@@ -128,8 +133,7 @@ public enum TypePropiedadConfiguracion {
 	/**
 	 * Obtiene enum desde string.
 	 *
-	 * @param text
-	 *            string
+	 * @param text string
 	 * @return TypeSiNo
 	 */
 	public static TypePropiedadConfiguracion fromString(final String text) {

@@ -62,7 +62,7 @@ public class CatalogoProcedimientosPluginMock extends AbstractPluginProperties
 	}
 
 	@Override
-	public DefinicionTramiteCP obtenerDefinicionTramite(final String idTramiteCP, boolean servicio,
+	public DefinicionTramiteCP obtenerDefinicionTramite(final String idTramiteCP, final boolean servicio,
 			final String idioma) {
 		DefinicionTramiteCP res = null;
 		for (final DefinicionTramiteCP t : tramites) {

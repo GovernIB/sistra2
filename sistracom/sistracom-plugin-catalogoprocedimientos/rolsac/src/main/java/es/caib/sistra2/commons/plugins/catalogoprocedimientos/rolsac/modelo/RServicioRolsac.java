@@ -65,6 +65,9 @@ public class RServicioRolsac {
 	/** Tasa url. **/
 	private String tasaUrl;
 
+	/** tramiteId. **/
+	private String tramiteId;
+
 	/** tramiteVersion. **/
 	private String tramiteVersion;
 
@@ -77,6 +80,15 @@ public class RServicioRolsac {
 	/** Link procedimiento. **/
 	private RLink link_organoInstructor;
 
+	/** Plataforma. **/
+	private RPlataforma plataforma;
+
+	/** Plataforma. **/
+	private Long codigoPlataforma;
+
+	/** Telematico. **/
+	private boolean telematico;
+
 	/**
 	 * @return the codigo
 	 */
@@ -85,8 +97,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param codigo the codigo to set
 	 */
 	public final void setCodigo(final long codigo) {
 		this.codigo = codigo;
@@ -100,8 +111,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param codigoServicio
-	 *            the codigoServicio to set
+	 * @param codigoServicio the codigoServicio to set
 	 */
 	public final void setCodigoServicio(final String codigoServicio) {
 		this.codigoServicio = codigoServicio;
@@ -115,8 +125,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param codigoSIA
-	 *            the codigoSIA to set
+	 * @param codigoSIA the codigoSIA to set
 	 */
 	public final void setCodigoSIA(final String codigoSIA) {
 		this.codigoSIA = codigoSIA;
@@ -130,8 +139,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param correo
-	 *            the correo to set
+	 * @param correo the correo to set
 	 */
 	public final void setCorreo(final String correo) {
 		this.correo = correo;
@@ -145,8 +153,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param destinatario
-	 *            the destinatario to set
+	 * @param destinatario the destinatario to set
 	 */
 	public final void setDestinatario(final String destinatario) {
 		this.destinatario = destinatario;
@@ -160,8 +167,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param estadoSIA
-	 *            the estadoSIA to set
+	 * @param estadoSIA the estadoSIA to set
 	 */
 	public final void setEstadoSIA(final String estadoSIA) {
 		this.estadoSIA = estadoSIA;
@@ -175,8 +181,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param fechaActualizacion
-	 *            the fechaActualizacion to set
+	 * @param fechaActualizacion the fechaActualizacion to set
 	 */
 	public final void setFechaActualizacion(final java.util.Calendar fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
@@ -190,8 +195,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param fechaDespublicacion
-	 *            the fechaDespublicacion to set
+	 * @param fechaDespublicacion the fechaDespublicacion to set
 	 */
 	public final void setFechaDespublicacion(final java.util.Calendar fechaDespublicacion) {
 		this.fechaDespublicacion = fechaDespublicacion;
@@ -205,8 +209,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param fechaPublicacion
-	 *            the fechaPublicacion to set
+	 * @param fechaPublicacion the fechaPublicacion to set
 	 */
 	public final void setFechaPublicacion(final java.util.Calendar fechaPublicacion) {
 		this.fechaPublicacion = fechaPublicacion;
@@ -220,8 +223,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param fechaSIA
-	 *            the fechaSIA to set
+	 * @param fechaSIA the fechaSIA to set
 	 */
 	public final void setFechaSIA(final java.util.Calendar fechaSIA) {
 		this.fechaSIA = fechaSIA;
@@ -235,8 +237,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public final void setId(final long id) {
 		this.id = id;
@@ -250,8 +251,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param nombre
-	 *            the nombre to set
+	 * @param nombre the nombre to set
 	 */
 	public final void setNombre(final String nombre) {
 		this.nombre = nombre;
@@ -265,8 +265,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param nombreResponsable
-	 *            the nombreResponsable to set
+	 * @param nombreResponsable the nombreResponsable to set
 	 */
 	public final void setNombreResponsable(final String nombreResponsable) {
 		this.nombreResponsable = nombreResponsable;
@@ -280,8 +279,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param objeto
-	 *            the objeto to set
+	 * @param objeto the objeto to set
 	 */
 	public final void setObjeto(final String objeto) {
 		this.objeto = objeto;
@@ -295,8 +293,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param observaciones
-	 *            the observaciones to set
+	 * @param observaciones the observaciones to set
 	 */
 	public final void setObservaciones(final String observaciones) {
 		this.observaciones = observaciones;
@@ -310,8 +307,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param requisitos
-	 *            the requisitos to set
+	 * @param requisitos the requisitos to set
 	 */
 	public final void setRequisitos(final String requisitos) {
 		this.requisitos = requisitos;
@@ -325,8 +321,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param telefono
-	 *            the telefono to set
+	 * @param telefono the telefono to set
 	 */
 	public final void setTelefono(final String telefono) {
 		this.telefono = telefono;
@@ -340,8 +335,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param tramiteUrl
-	 *            the tramiteUrl to set
+	 * @param tramiteUrl the tramiteUrl to set
 	 */
 	public final void setTramiteUrl(final String tramiteUrl) {
 		this.tramiteUrl = tramiteUrl;
@@ -355,26 +349,10 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param tasaUrl
-	 *            the tasaUrl to set
+	 * @param tasaUrl the tasaUrl to set
 	 */
 	public final void setTasaUrl(final String tasaUrl) {
 		this.tasaUrl = tasaUrl;
-	}
-
-	/**
-	 * @return the tramiteVersion
-	 */
-	public final String getTramiteVersion() {
-		return tramiteVersion;
-	}
-
-	/**
-	 * @param tramiteVersion
-	 *            the tramiteVersion to set
-	 */
-	public final void setTramiteVersion(final String tramiteVersion) {
-		this.tramiteVersion = tramiteVersion;
 	}
 
 	/**
@@ -385,8 +363,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param validacion
-	 *            the validacion to set
+	 * @param validacion the validacion to set
 	 */
 	public final void setValidacion(final Integer validacion) {
 		this.validacion = validacion;
@@ -400,8 +377,7 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param link_servicioResponsable
-	 *            the link_servicioResponsable to set
+	 * @param link_servicioResponsable the link_servicioResponsable to set
 	 */
 	public final void setLink_servicioResponsable(final RLink link_servicioResponsable) {
 		this.link_servicioResponsable = link_servicioResponsable;
@@ -415,11 +391,80 @@ public class RServicioRolsac {
 	}
 
 	/**
-	 * @param link_organoInstructor
-	 *            the link_organoInstructor to set
+	 * @param link_organoInstructor the link_organoInstructor to set
 	 */
 	public final void setLink_organoInstructor(final RLink link_organoInstructor) {
 		this.link_organoInstructor = link_organoInstructor;
+	}
+
+	/**
+	 * @return the plataforma
+	 */
+	public final RPlataforma getPlataforma() {
+		return plataforma;
+	}
+
+	/**
+	 * @param plataforma the plataforma to set
+	 */
+	public final void setPlataforma(final RPlataforma plataforma) {
+		this.plataforma = plataforma;
+	}
+
+	/**
+	 * @return the codigoPlataforma
+	 */
+	public final Long getCodigoPlataforma() {
+		return codigoPlataforma;
+	}
+
+	/**
+	 * @param codigoPlataforma the codigoPlataforma to set
+	 */
+	public final void setCodigoPlataforma(final Long codigoPlataforma) {
+		this.codigoPlataforma = codigoPlataforma;
+	}
+
+	/**
+	 * @return the telematico
+	 */
+	public final boolean isTelematico() {
+		return telematico;
+	}
+
+	/**
+	 * @param telematico the telematico to set
+	 */
+	public final void setTelematico(final boolean telematico) {
+		this.telematico = telematico;
+	}
+
+	/**
+	 * @return the tramiteId
+	 */
+	public String getTramiteId() {
+		return tramiteId;
+	}
+
+	/**
+	 * @param tramiteId the tramiteId to set
+	 */
+	public void setTramiteId(final String tramiteId) {
+		this.tramiteId = tramiteId;
+	}
+
+	/**
+	 * @return the tramiteVersion
+	 */
+	public String getTramiteVersion() {
+		return tramiteVersion;
+	}
+
+	/**
+	 * @param tramiteVersion the tramiteVersion to set
+	 */
+	public void setTramiteVersion(final String tramiteVersion) {
+		this.tramiteVersion = tramiteVersion;
 	}
 
 }

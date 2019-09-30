@@ -27,6 +27,7 @@ import es.caib.sistra2.commons.plugins.email.api.IEmailPlugin;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
 import es.caib.sistramit.core.api.exception.AutenticacionException;
+import es.caib.sistramit.core.api.exception.CatalogoProcedimientosVerificacionException;
 import es.caib.sistramit.core.api.exception.EmailException;
 import es.caib.sistramit.core.api.exception.ErrorFormularioSoporteException;
 import es.caib.sistramit.core.api.exception.FlujoInvalidoException;
@@ -271,28 +272,17 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	/**
 	 * Genera datos de sesion de tramitación.
 	 *
-	 * @param idSesionTramitacion
-	 *            id sesion tramitacion
-	 * @param estado
-	 *            estado tramite
-	 * @param pIdTramite
-	 *            id tramite
-	 * @param pVersion
-	 *            version
-	 * @param pIdioma
-	 *            idioma
-	 * @param pIdTramiteCP
-	 *            id tramite CP
-	 * @param servicioCP
-	 *            Indica si procedimiento es un servicio
-	 * @param pUrlInicio
-	 *            url inicio
-	 * @param pParametrosInicio
-	 *            parametros inicio
-	 * @param pUsuarioAutenticadoInfo
-	 *            usuario autenticado
-	 * @param pFechaCaducidad
-	 *            fecha caducidad
+	 * @param idSesionTramitacion     id sesion tramitacion
+	 * @param estado                  estado tramite
+	 * @param pIdTramite              id tramite
+	 * @param pVersion                version
+	 * @param pIdioma                 idioma
+	 * @param pIdTramiteCP            id tramite CP
+	 * @param servicioCP              Indica si procedimiento es un servicio
+	 * @param pUrlInicio              url inicio
+	 * @param pParametrosInicio       parametros inicio
+	 * @param pUsuarioAutenticadoInfo usuario autenticado
+	 * @param pFechaCaducidad         fecha caducidad
 	 * @return Datos sesion tramitacion
 	 * @throws CatalogoPluginException
 	 */
@@ -333,6 +323,55 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 			throw new TipoNoControladoException("Tipo de entorno no controlado: " + propEntorno);
 		}
 
+		// Validar correspondencia con catalogo procedimientos
+		// TODO Implementar aqui:
+		// Info STG: defTramSTG
+		// Info Rolsac: tramiteCP
+		// Debe ser parametrizable por propiedades (sistramit.properties crear prop:
+		// catalogoProcedimientos.verificarTramite = true / false)
+		// Crear nueva excepcion en core-api:
+		// CatalogoProcedimientosVerificacionException
+
+		final String verificarTramiteCatalogo = configuracionComponent
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.VERIFICAR_TRAMITE_CATALOGO);
+
+		if (verificarTramiteCatalogo == null) {
+			throw new CatalogoProcedimientosVerificacionException(
+					"La propiedad de verificacion de tramite catalogo en sistramit.properties no esta incluido.");
+		}
+
+		// Comprobamos cuando esta activo la verificación del catalogo los siguiente
+		// pasos:
+		// Paso1. El tramite es telematico
+		// Paso2. Los datos del tramiteCP coincide con el tramite actual
+		// Paso3. La plataforma coincide con SISTRA2
+		if (Boolean.valueOf(verificarTramiteCatalogo)) {
+
+			// Si el tramite del catalogo no está marcado como telematico, error!
+			if (!tramiteCP.isTelematico()) {
+				throw new CatalogoProcedimientosVerificacionException("El trámite no está marcado como telemático.");
+			}
+
+			// Si el tramite del catalogo no está marcado como telematico, error!
+			if (tramiteCP.getTramiteTelematico() == null) {
+				throw new CatalogoProcedimientosVerificacionException(
+						"La información del trámite telemático no está rellenado.");
+			}
+
+			// Si no cuadran el identificador y versión del catalogo con el de
+			// sistragesback, error!
+			if (tramiteCP.getTramiteTelematico().getTramiteVersion() == null
+					|| tramiteCP.getTramiteTelematico().getTramiteIdentificador() == null
+					|| tramiteCP.getTramiteTelematico().getTramiteIdentificador().isEmpty()
+					|| tramiteCP.getTramiteTelematico().getTramiteVersion()
+							.compareTo(defTramSTG.getDefinicionVersion().getVersion()) != 0
+					|| !tramiteCP.getTramiteTelematico().getTramiteIdentificador()
+							.equals(defTramSTG.getDefinicionVersion().getIdentificador())) {
+				throw new CatalogoProcedimientosVerificacionException("No coinciden la versión o el trámite.");
+			}
+
+		}
+
 		// Creamos sesion
 		final DatosSesionTramitacion st = new DatosSesionTramitacion(defTramSTG);
 		st.getDatosTramite().setEstadoTramite(estado);
@@ -363,8 +402,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	/**
 	 * Control limitación
 	 *
-	 * @param defTram
-	 *            Definición trámite
+	 * @param defTram Definición trámite
 	 */
 	private void controlLimitacionTramitacion(final DefinicionTramiteSTG defTram) {
 
@@ -409,10 +447,8 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	/**
 	 * Realiza carga tramite.
 	 *
-	 * @param pIdSesionTramitacion
-	 *            Id sesion tramitacion
-	 * @param recarga
-	 *            Indica si la carga se produce tras un error
+	 * @param pIdSesionTramitacion Id sesion tramitacion
+	 * @param recarga              Indica si la carga se produce tras un error
 	 */
 	private void cargarImpl(final String pIdSesionTramitacion, final boolean recarga) {
 		// Control de si el flujo es válido

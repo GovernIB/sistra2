@@ -92,6 +92,9 @@ public class RTramiteRolsac {
 	/** Procedimiento. **/
 	private java.lang.Long procedimiento;
 
+	/** Plataforma. **/
+	private RPlataforma plataforma;
+
 	/**
 	 * @return the codigo
 	 */
@@ -100,8 +103,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param codigo the codigo to set
 	 */
 	public void setCodigo(final long codigo) {
 		this.codigo = codigo;
@@ -115,8 +117,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param codiVuds
-	 *            the codiVuds to set
+	 * @param codiVuds the codiVuds to set
 	 */
 	public void setCodiVuds(final String codiVuds) {
 		this.codiVuds = codiVuds;
@@ -130,8 +131,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param dataActualitzacio
-	 *            the dataActualitzacio to set
+	 * @param dataActualitzacio the dataActualitzacio to set
 	 */
 	public void setDataActualitzacio(final java.util.Calendar dataActualitzacio) {
 		this.dataActualitzacio = dataActualitzacio;
@@ -145,8 +145,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param dataActualitzacioVuds
-	 *            the dataActualitzacioVuds to set
+	 * @param dataActualitzacioVuds the dataActualitzacioVuds to set
 	 */
 	public void setDataActualitzacioVuds(final String dataActualitzacioVuds) {
 		this.dataActualitzacioVuds = dataActualitzacioVuds;
@@ -160,8 +159,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param dataCaducitat
-	 *            the dataCaducitat to set
+	 * @param dataCaducitat the dataCaducitat to set
 	 */
 	public void setDataCaducitat(final java.util.Calendar dataCaducitat) {
 		this.dataCaducitat = dataCaducitat;
@@ -175,8 +173,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param dataPublicacio
-	 *            the dataPublicacio to set
+	 * @param dataPublicacio the dataPublicacio to set
 	 */
 	public void setDataPublicacio(final java.util.Calendar dataPublicacio) {
 		this.dataPublicacio = dataPublicacio;
@@ -190,8 +187,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param dataInici
-	 *            the dataInici to set
+	 * @param dataInici the dataInici to set
 	 */
 	public void setDataInici(final java.util.Calendar dataInici) {
 		this.dataInici = dataInici;
@@ -205,8 +201,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param dataTancament
-	 *            the dataTancament to set
+	 * @param dataTancament the dataTancament to set
 	 */
 	public void setDataTancament(final java.util.Calendar dataTancament) {
 		this.dataTancament = dataTancament;
@@ -220,8 +215,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param descCodiVuds
-	 *            the descCodiVuds to set
+	 * @param descCodiVuds the descCodiVuds to set
 	 */
 	public void setDescCodiVuds(final String descCodiVuds) {
 		this.descCodiVuds = descCodiVuds;
@@ -235,8 +229,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param documentacion
-	 *            the documentacion to set
+	 * @param documentacion the documentacion to set
 	 */
 	public void setDocumentacion(final String documentacion) {
 		this.documentacion = documentacion;
@@ -250,8 +243,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param fase
-	 *            the fase to set
+	 * @param fase the fase to set
 	 */
 	public void setFase(final Integer fase) {
 		this.fase = fase;
@@ -265,8 +257,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param idTraTel
-	 *            the idTraTel to set
+	 * @param idTraTel the idTraTel to set
 	 */
 	public void setIdTraTel(final String idTraTel) {
 		this.idTraTel = idTraTel;
@@ -280,8 +271,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param lugar
-	 *            the lugar to set
+	 * @param lugar the lugar to set
 	 */
 	public void setLugar(final String lugar) {
 		this.lugar = lugar;
@@ -295,8 +285,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param nombre
-	 *            the nombre to set
+	 * @param nombre the nombre to set
 	 */
 	public void setNombre(final String nombre) {
 		this.nombre = nombre;
@@ -310,8 +299,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param observaciones
-	 *            the observaciones to set
+	 * @param observaciones the observaciones to set
 	 */
 	public void setObservaciones(final String observaciones) {
 		this.observaciones = observaciones;
@@ -325,8 +313,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param orden
-	 *            the orden to set
+	 * @param orden the orden to set
 	 */
 	public void setOrden(final Long orden) {
 		this.orden = orden;
@@ -340,8 +327,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param plazos
-	 *            the plazos to set
+	 * @param plazos the plazos to set
 	 */
 	public void setPlazos(final String plazos) {
 		this.plazos = plazos;
@@ -355,8 +341,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param requisits
-	 *            the requisits to set
+	 * @param requisits the requisits to set
 	 */
 	public void setRequisits(final String requisits) {
 		this.requisits = requisits;
@@ -370,8 +355,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param urlExterna
-	 *            the urlExterna to set
+	 * @param urlExterna the urlExterna to set
 	 */
 	public void setUrlExterna(final String urlExterna) {
 		this.urlExterna = urlExterna;
@@ -385,8 +369,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param validacio
-	 *            the validacio to set
+	 * @param validacio the validacio to set
 	 */
 	public void setValidacio(final Long validacio) {
 		this.validacio = validacio;
@@ -400,8 +383,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param versio
-	 *            the versio to set
+	 * @param versio the versio to set
 	 */
 	public void setVersio(final Integer versio) {
 		this.versio = versio;
@@ -415,8 +397,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param tasas
-	 *            the tasas to set
+	 * @param tasas the tasas to set
 	 */
 	public void setTasas(final RTasaRolsac[] tasas) {
 		this.tasas = tasas;
@@ -430,8 +411,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param link_organCompetent
-	 *            the link_organCompetent to set
+	 * @param link_organCompetent the link_organCompetent to set
 	 */
 	public void setLink_organCompetent(final RLink link_organCompetent) {
 		this.link_organCompetent = link_organCompetent;
@@ -445,8 +425,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param link_procedimiento
-	 *            the link_procedimiento to set
+	 * @param link_procedimiento the link_procedimiento to set
 	 */
 	public void setLink_procedimiento(final RLink link_procedimiento) {
 		this.link_procedimiento = link_procedimiento;
@@ -460,8 +439,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param presencial
-	 *            the presencial to set
+	 * @param presencial the presencial to set
 	 */
 	public void setPresencial(final boolean presencial) {
 		this.presencial = presencial;
@@ -475,8 +453,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param telematico
-	 *            the telematico to set
+	 * @param telematico the telematico to set
 	 */
 	public void setTelematico(final boolean telematico) {
 		this.telematico = telematico;
@@ -490,8 +467,7 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param organCompetent
-	 *            the organCompetent to set
+	 * @param organCompetent the organCompetent to set
 	 */
 	public void setOrganCompetent(final java.lang.Long organCompetent) {
 		this.organCompetent = organCompetent;
@@ -505,11 +481,24 @@ public class RTramiteRolsac {
 	}
 
 	/**
-	 * @param procedimiento
-	 *            the procedimiento to set
+	 * @param procedimiento the procedimiento to set
 	 */
 	public void setProcedimiento(final java.lang.Long procedimiento) {
 		this.procedimiento = procedimiento;
+	}
+
+	/**
+	 * @return the plataforma
+	 */
+	public final RPlataforma getPlataforma() {
+		return plataforma;
+	}
+
+	/**
+	 * @param plataforma the plataforma to set
+	 */
+	public final void setPlataforma(final RPlataforma plataforma) {
+		this.plataforma = plataforma;
 	}
 
 }

@@ -46,6 +46,12 @@ public class DefinicionTramiteCP implements Serializable {
 	/** Tasas asociadas. */
 	private List<DefinicionTasaTramiteCP> tasas;
 
+	/** Indica si es telematico. */
+	private boolean telematico;
+
+	/** Definicion tramite telematico. **/
+	private DefinicionTramiteTelematico tramiteTelematico;
+
 	/**
 	 * Método de acceso a identificador.
 	 *
@@ -58,8 +64,7 @@ public class DefinicionTramiteCP implements Serializable {
 	/**
 	 * Método para establecer identificador.
 	 *
-	 * @param identificador
-	 *            identificador a establecer
+	 * @param identificador identificador a establecer
 	 */
 	public void setIdentificador(final String identificador) {
 		this.identificador = identificador;
@@ -77,8 +82,7 @@ public class DefinicionTramiteCP implements Serializable {
 	/**
 	 * Método para establecer descripcion.
 	 *
-	 * @param descripcion
-	 *            descripcion a establecer
+	 * @param descripcion descripcion a establecer
 	 */
 	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
@@ -96,8 +100,7 @@ public class DefinicionTramiteCP implements Serializable {
 	/**
 	 * Método para establecer procedimiento.
 	 *
-	 * @param procedimiento
-	 *            procedimiento a establecer
+	 * @param procedimiento procedimiento a establecer
 	 */
 	public void setProcedimiento(final DefinicionProcedimientoCP procedimiento) {
 		this.procedimiento = procedimiento;
@@ -115,8 +118,7 @@ public class DefinicionTramiteCP implements Serializable {
 	/**
 	 * Método para establecer vigente.
 	 *
-	 * @param vigente
-	 *            vigente a establecer
+	 * @param vigente vigente a establecer
 	 */
 	public void setVigente(final boolean vigente) {
 		this.vigente = vigente;
@@ -134,8 +136,7 @@ public class DefinicionTramiteCP implements Serializable {
 	/**
 	 * Método para establecer plazoInicio.
 	 *
-	 * @param plazoInicio
-	 *            plazoInicio a establecer
+	 * @param plazoInicio plazoInicio a establecer
 	 */
 	public void setPlazoInicio(final Date plazoInicio) {
 		this.plazoInicio = plazoInicio;
@@ -153,8 +154,7 @@ public class DefinicionTramiteCP implements Serializable {
 	/**
 	 * Método para establecer plazoFin.
 	 *
-	 * @param plazoFin
-	 *            plazoFin a establecer
+	 * @param plazoFin plazoFin a establecer
 	 */
 	public void setPlazoFin(final Date plazoFin) {
 		this.plazoFin = plazoFin;
@@ -172,8 +172,7 @@ public class DefinicionTramiteCP implements Serializable {
 	/**
 	 * Método para establecer urlInformacion.
 	 *
-	 * @param urlInformacion
-	 *            urlInformacion a establecer
+	 * @param urlInformacion urlInformacion a establecer
 	 */
 	public void setUrlInformacion(final String urlInformacion) {
 		this.urlInformacion = urlInformacion;
@@ -191,8 +190,7 @@ public class DefinicionTramiteCP implements Serializable {
 	/**
 	 * Método para establecer organoDestinoDir3.
 	 *
-	 * @param organoDestinoDir3
-	 *            organoDestinoDir3 a establecer
+	 * @param organoDestinoDir3 organoDestinoDir3 a establecer
 	 */
 	public void setOrganoDestinoDir3(final String organoDestinoDir3) {
 		this.organoDestinoDir3 = organoDestinoDir3;
@@ -210,8 +208,7 @@ public class DefinicionTramiteCP implements Serializable {
 	/**
 	 * Método para establecer documentos.
 	 *
-	 * @param documentos
-	 *            documentos a establecer
+	 * @param documentos documentos a establecer
 	 */
 	public void setDocumentos(final List<DefinicionDocumentoTramiteCP> documentos) {
 		this.documentos = documentos;
@@ -229,8 +226,7 @@ public class DefinicionTramiteCP implements Serializable {
 	/**
 	 * Método para establecer tasas.
 	 *
-	 * @param tasas
-	 *            tasas a establecer
+	 * @param tasas tasas a establecer
 	 */
 	public void setTasas(final List<DefinicionTasaTramiteCP> tasas) {
 		this.tasas = tasas;
@@ -248,11 +244,38 @@ public class DefinicionTramiteCP implements Serializable {
 	/**
 	 * Método para establecer emailSoporte.
 	 *
-	 * @param emailSoporte
-	 *            emailSoporte a establecer
+	 * @param emailSoporte emailSoporte a establecer
 	 */
 	public void setEmailSoporte(final String emailSoporte) {
 		this.emailSoporte = emailSoporte;
+	}
+
+	/**
+	 * @return the telematico
+	 */
+	public boolean isTelematico() {
+		return telematico;
+	}
+
+	/**
+	 * @param telematico the telematico to set
+	 */
+	public void setTelematico(final boolean telematico) {
+		this.telematico = telematico;
+	}
+
+	/**
+	 * @return the tramiteTelematico
+	 */
+	public DefinicionTramiteTelematico getTramiteTelematico() {
+		return tramiteTelematico;
+	}
+
+	/**
+	 * @param tramiteTelematico the tramiteTelematico to set
+	 */
+	public void setTramiteTelematico(final DefinicionTramiteTelematico tramiteTelematico) {
+		this.tramiteTelematico = tramiteTelematico;
 	}
 
 }
