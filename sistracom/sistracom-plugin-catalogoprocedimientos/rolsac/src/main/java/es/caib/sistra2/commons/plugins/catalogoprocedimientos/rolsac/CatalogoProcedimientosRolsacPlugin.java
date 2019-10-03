@@ -35,7 +35,7 @@ import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RSer
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RTramiteRolsac;
 
 /**
- * Plugin mock catálogo procedimientos
+ * Plugin mock catálogo procedimientos.
  *
  * @author Indra
  *
@@ -76,8 +76,10 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Método que calcula la definición de trámite de un servicio.
 	 *
-	 * @param idServicioCP ID Servicio
-	 * @param idioma       Idioma (es/ca/en)
+	 * @param idServicioCP
+	 *                         ID Servicio
+	 * @param idioma
+	 *                         Idioma (es/ca/en)
 	 * @return
 	 * @throws CatalogoPluginException
 	 */
@@ -140,8 +142,14 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 		// Obtener tramite.
 		final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-		final int intentosMax = getPropiedadIntentos();
-		int intentos = 0;
+
+		// Llamada a Rolsac con reintentos
+		int intentosMax = getPropiedadIntentos();
+		if (intentosMax <= 0) {
+			intentosMax = 1;
+		}
+		int intentos = 1;
+
 		while (intentos <= intentosMax) {
 
 			try {
@@ -165,7 +173,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 				return serviciosRolsac;
 			} catch (final Exception e) {
 				// No hacemos nada
-				log.warn(getWarning(intentos), e);
+				log.warn(getWarning(intentos) + ": " + e.getMessage());
 			}
 			intentos++;
 		}
@@ -176,8 +184,10 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Método privado que calcula la definicion de trámite de un procedimiento.
 	 *
-	 * @param idTramiteCP ID Trámite
-	 * @param idioma      Idioma (es/ca/en)
+	 * @param idTramiteCP
+	 *                        ID Trámite
+	 * @param idioma
+	 *                        Idioma (es/ca/en)
 	 * @return
 	 * @throws CatalogoPluginException
 	 */
@@ -251,8 +261,12 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 		final HttpEntity<MultiValueMap<String, String>> requestProc = new HttpEntity<>(map, headers);
 
-		final int intentosMax = getPropiedadIntentos();
-		int intentos = 0;
+		// Llamada a Rolsac con reintentos
+		int intentosMax = getPropiedadIntentos();
+		if (intentosMax <= 0) {
+			intentosMax = 1;
+		}
+		int intentos = 1;
 		while (intentos <= intentosMax) {
 
 			try {
@@ -271,7 +285,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 				return procedimientosRolsac[0];
 			} catch (final Exception e) {
 				// No hacemos nada
-				log.warn(getWarning(intentos), e);
+				log.warn(getWarning(intentos) + ": " + e.getMessage());
 			}
 			intentos++;
 		}
@@ -297,8 +311,13 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
 		final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-		final int intentosMax = getPropiedadIntentos();
-		int intentos = 0;
+
+		// Llamada a Rolsac con reintentos
+		int intentosMax = getPropiedadIntentos();
+		if (intentosMax <= 0) {
+			intentosMax = 1;
+		}
+		int intentos = 1;
 		while (intentos <= intentosMax) {
 
 			try {
@@ -321,7 +340,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 			} catch (final Exception e) {
 				// No hacemos nada
-				log.warn(getWarning(intentos), e);
+				log.warn(getWarning(intentos) + ": " + e.getMessage());
 			}
 			intentos++;
 		}
@@ -348,8 +367,13 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getPropiedad("usr"), getPropiedad("pwd")));
 		final HttpEntity<MultiValueMap<String, String>> requestProc = new HttpEntity<>(map, headers);
 
-		final int intentosMax = getPropiedadIntentos();
-		int intentos = 0;
+		// Llamada a Rolsac con reintentos
+		int intentosMax = getPropiedadIntentos();
+		if (intentosMax <= 0) {
+			intentosMax = 1;
+		}
+
+		int intentos = 1;
 		while (intentos <= intentosMax) {
 
 			try {
@@ -366,7 +390,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 			} catch (final Exception e) {
 				// No hacemos nada
-				log.warn(getWarning(intentos), e);
+				log.warn(getWarning(intentos) + ": " + e.getMessage());
 			}
 			intentos++;
 		}
@@ -382,7 +406,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	 * @return
 	 */
 	private String getWarning(final Integer intentos) {
-		return "Intento " + intentos + " de conectar a rolsac ";
+		return "Error al conectar a Rolsac (intento " + intentos + ")";
 	}
 
 	/**
@@ -440,7 +464,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Obtiene propiedad.
 	 *
-	 * @param propiedad propiedad
+	 * @param propiedad
+	 *                      propiedad
 	 * @return valor
 	 * @throws AutenticacionPluginException
 	 */

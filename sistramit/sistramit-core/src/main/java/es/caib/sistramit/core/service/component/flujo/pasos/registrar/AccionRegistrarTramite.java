@@ -297,8 +297,8 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		} else {
 			// Generar asiento
 			final AsientoRegistral asiento = generarAsiento(pDipa, pVariablesFlujo, pDefinicionTramite);
-			resReg = registroComponent.registrar(pVariablesFlujo.getIdSesionTramitacion(), asiento,
-					pVariablesFlujo.isDebugEnabled());
+			resReg = registroComponent.registrar(pDefinicionTramite.getDefinicionVersion().getIdEntidad(),
+					pVariablesFlujo.getIdSesionTramitacion(), asiento, pVariablesFlujo.isDebugEnabled());
 
 		}
 
@@ -424,7 +424,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		final AsientoRegistral asiento = new AsientoRegistral();
 		// - Datos origen
 		final DatosOrigen datosOrigen = new DatosOrigen();
-		datosOrigen.setCodigoEntidad(pDefinicionTramite.getDefinicionVersion().getIdEntidad());
+		datosOrigen.setCodigoEntidad(pDipa.getParametrosRegistro().getDatosRegistrales().getCodigoEntidad());
 		datosOrigen.setCodigoOficinaRegistro(pDipa.getParametrosRegistro().getDatosRegistrales().getOficina());
 		datosOrigen.setLibroOficinaRegistro(pDipa.getParametrosRegistro().getDatosRegistrales().getLibro());
 		datosOrigen.setTipoRegistro(TypeRegistro.REGISTRO_ENTRADA);

@@ -17,6 +17,22 @@ public interface ResRegistroInt extends PluginScriptRes {
 	String ID = "DATOS_REGISTRO";
 
 	/**
+	 * Establece código entidad.
+	 *
+	 * @param codigoEntidad
+	 *                          código entidad
+	 */
+	void setCodigoEntidad(String codigoEntidad);
+
+	/**
+	 * Método para establecer codigoOrganoDestino.
+	 *
+	 * @param codigoOrganoDestino
+	 *                                codigoOrganoDestino a establecer
+	 */
+	void setCodigoOrganoDestino(String codigoOrganoDestino);
+
+	/**
 	 * Método para establecer oficina.
 	 *
 	 * @param oficina
@@ -55,14 +71,6 @@ public interface ResRegistroInt extends PluginScriptRes {
 	 *                          textoSolicita a establecer
 	 */
 	void setSolicita(String textoSolicita);
-
-	/**
-	 * Método para establecer codigoOrganoDestino.
-	 *
-	 * @param codigoOrganoDestino
-	 *                                codigoOrganoDestino a establecer
-	 */
-	void setCodigoOrganoDestino(String codigoOrganoDestino);
 
 	/**
 	 * Método para establecer extracto.

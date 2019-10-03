@@ -12,6 +12,12 @@ import es.caib.sistramit.core.service.model.script.flujo.ResRegistroInt;
 @SuppressWarnings("serial")
 public final class ResRegistro implements ResRegistroInt {
 
+	/** Entidad sobre el que se realiza el asiento . */
+	private String codigoEntidad;
+
+	/** codigo del organo sobre el que se realiza el asiento . */
+	private String codigoOrganoDestino;
+
 	/** Oficina. */
 	private String oficina;
 
@@ -26,9 +32,6 @@ public final class ResRegistro implements ResRegistroInt {
 
 	/** texto relativo al solicita (solo para solicitud generica). */
 	private String textoSolicita;
-
-	/** codigo del organo sobre el que se realiza el asiento . */
-	private String codigoOrganoDestino;
 
 	/** extracto del asiento . */
 	private String extracto;
@@ -177,6 +180,26 @@ public final class ResRegistro implements ResRegistroInt {
 	@Override
 	public void setExtracto(final String extracto) {
 		this.extracto = extracto;
+	}
+
+	/**
+	 * Método de acceso a codigoEntidad.
+	 *
+	 * @return codigoEntidad
+	 */
+	public String getCodigoEntidad() {
+		return codigoEntidad;
+	}
+
+	/**
+	 * Método para establecer codigoEntidad.
+	 *
+	 * @param codigoEntidad
+	 *                          codigoEntidad a establecer
+	 */
+	@Override
+	public void setCodigoEntidad(final String codigoEntidad) {
+		this.codigoEntidad = codigoEntidad;
 	}
 
 }

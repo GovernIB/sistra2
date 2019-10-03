@@ -12,12 +12,15 @@ import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeJustificante;
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.RegistroJustificanteException;
 import es.caib.sistramit.core.api.exception.RegistroSolicitudException;
+import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDescargaJustificante;
 import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.system.Envio;
@@ -48,18 +51,30 @@ public final class RegistroComponentImpl implements RegistroComponent {
 	private EnvioDao envioDao;
 
 	@Override
-	public ResultadoRegistrar registrar(final String idSesionTramitacion, final AsientoRegistral asiento,
-			final boolean debugEnabled) {
+	public ResultadoRegistrar registrar(final String codigoEntidad, final String idSesionTramitacion,
+			final AsientoRegistral asiento, final boolean debugEnabled) {
 
 		final ResultadoRegistrar resultado = new ResultadoRegistrar();
 
 		if (debugEnabled) {
-			log.debug("Registrando tramite " + idSesionTramitacion);
+			log.debug("Registrando tramite " + idSesionTramitacion + " en entidad " + codigoEntidad
+					+ " con datos destino registro: entidad " + asiento.getDatosOrigen().getCodigoEntidad()
+					+ " / Unidad " + asiento.getDatosAsunto().getCodigoOrganoDestino() + " / Oficina "
+					+ asiento.getDatosOrigen().getCodigoOficinaRegistro() + " / Libro "
+					+ asiento.getDatosOrigen().getLibroOficinaRegistro());
+		}
+
+		// Permitir que entidad sea diferente en pruebas en entornos distintos a PRO
+		if (!codigoEntidad.equals(asiento.getDatosOrigen().getCodigoEntidad())
+				&& TypeEntorno.fromString(configuracionComponent
+						.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ENTORNO)) == TypeEntorno.PRODUCCION) {
+			throw new ErrorConfiguracionException(
+					"Solo se puede especificar una entidad distinta en los datos de registro en un entorno distinto a Producción");
 		}
 
 		ResultadoRegistro res = null;
 		final IRegistroPlugin plgRegistro = (IRegistroPlugin) configuracionComponent
-				.obtenerPluginEntidad(TypePluginEntidad.REGISTRO, asiento.getDatosOrigen().getCodigoEntidad());
+				.obtenerPluginEntidad(TypePluginEntidad.REGISTRO, codigoEntidad);
 		try {
 			res = plgRegistro.registroEntrada(asiento);
 			resultado.setResultado(TypeResultadoRegistro.CORRECTO);

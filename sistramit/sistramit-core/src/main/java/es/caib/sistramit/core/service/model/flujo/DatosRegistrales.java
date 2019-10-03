@@ -8,6 +8,12 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public final class DatosRegistrales implements Serializable {
 
+	/** Entidad. */
+	private String codigoEntidad;
+
+	/** codigo de la unidad sobre la que se realizara el asiento */
+	private String codigoOrganoDestino;
+
 	/** Oficina. */
 	private String oficina;
 
@@ -22,9 +28,6 @@ public final class DatosRegistrales implements Serializable {
 
 	/** texto Solicita (para solicitudes genericas). */
 	private String textoSolicita;
-
-	/** codigo de la unidad sobre la que se realizara el asiento */
-	private String codigoOrganoDestino;
 
 	/** extracto del asiento */
 	private String extracto;
@@ -177,6 +180,25 @@ public final class DatosRegistrales implements Serializable {
 		res += " - Solicita: " + this.getTextoSolicita() + "\n";
 		res += " - Extracto: " + this.getExtracto() + "\n";
 		return res;
+	}
+
+	/**
+	 * Método de acceso a codigoEntidad.
+	 * 
+	 * @return codigoEntidad
+	 */
+	public String getCodigoEntidad() {
+		return codigoEntidad;
+	}
+
+	/**
+	 * Método para establecer codigoEntidad.
+	 * 
+	 * @param codigoEntidad
+	 *                          codigoEntidad a establecer
+	 */
+	public void setCodigoEntidad(final String codigoEntidad) {
+		this.codigoEntidad = codigoEntidad;
 	}
 
 }

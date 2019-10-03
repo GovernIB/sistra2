@@ -418,6 +418,13 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		// Establecemos datos registro destino
 		final DatosRegistrales datosRegistrales = new DatosRegistrales();
 
+		// - Entidad
+		if (StringUtils.isNotBlank(resRegistro.getCodigoEntidad())) {
+			datosRegistrales.setCodigoEntidad(resRegistro.getCodigoEntidad());
+		} else {
+			datosRegistrales.setCodigoEntidad(pDefinicionTramite.getDefinicionVersion().getIdEntidad());
+		}
+
 		// - Organo destino
 		if (StringUtils.isNotBlank(resRegistro.getCodigoOrganoDestino())) {
 			datosRegistrales.setCodigoOrganoDestino(resRegistro.getCodigoOrganoDestino());
