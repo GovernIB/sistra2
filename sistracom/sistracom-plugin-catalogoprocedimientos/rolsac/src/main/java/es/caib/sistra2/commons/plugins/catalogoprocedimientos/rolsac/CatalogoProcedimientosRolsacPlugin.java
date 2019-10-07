@@ -76,10 +76,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Método que calcula la definición de trámite de un servicio.
 	 *
-	 * @param idServicioCP
-	 *                         ID Servicio
-	 * @param idioma
-	 *                         Idioma (es/ca/en)
+	 * @param idServicioCP ID Servicio
+	 * @param idioma       Idioma (es/ca/en)
 	 * @return
 	 * @throws CatalogoPluginException
 	 */
@@ -88,6 +86,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add(LITERAL_IDIOMA, idioma);
+		map.add(LITERAL_FILTRO, "{\"plataforma\" : \"" + getPropiedad("identificador") + "\"}");
 
 		final RServicioRolsac servicioRolsac = getRServicioRolsac(idServicioCP, map)[0];
 
@@ -184,10 +183,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Método privado que calcula la definicion de trámite de un procedimiento.
 	 *
-	 * @param idTramiteCP
-	 *                        ID Trámite
-	 * @param idioma
-	 *                        Idioma (es/ca/en)
+	 * @param idTramiteCP ID Trámite
+	 * @param idioma      Idioma (es/ca/en)
 	 * @return
 	 * @throws CatalogoPluginException
 	 */
@@ -198,6 +195,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		// Obtener tramite.
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add(LITERAL_IDIOMA, idioma);
+		map.add(LITERAL_FILTRO, "{\"plataforma\" : \"" + getPropiedad("identificador") + "\"}");
 
 		// Obtener procedimiento.
 		final RTramiteRolsac[] tramitesRolsac = getRTramiteRolsac(idTramiteCP, map);
@@ -464,8 +462,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Obtiene propiedad.
 	 *
-	 * @param propiedad
-	 *                      propiedad
+	 * @param propiedad propiedad
 	 * @return valor
 	 * @throws AutenticacionPluginException
 	 */
@@ -522,10 +519,12 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add(LITERAL_IDIOMA, idioma);
 		if (version == null) {
-			map.add(LITERAL_FILTRO, "{\"codigoTramiteTelematico\":\"" + idTramite + "\"}");
+			map.add(LITERAL_FILTRO, "{\"codigoTramiteTelematico\":\"" + idTramite + "\", \"plataforma\" : \""
+					+ getPropiedad("identificador") + "\"}");
 		} else {
-			map.add(LITERAL_FILTRO, "{\"codigoTramiteTelematico\":\"" + idTramite
-					+ "\",\"versionTramiteTelematico\" : \"" + version + "\"}");
+			map.add(LITERAL_FILTRO,
+					"{\"codigoTramiteTelematico\":\"" + idTramite + "\",\"versionTramiteTelematico\" : \"" + version
+							+ "\", \"plataforma\" : \"" + getPropiedad("identificador") + "\"}");
 		}
 
 		final RServicioRolsac[] serviciosRolsac = getRServicioRolsac("", map);
@@ -589,10 +588,12 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add(LITERAL_IDIOMA, idioma);
 		if (version == null) {
-			map.add(LITERAL_FILTRO, "{\"codigoTramiteTelematico\":\"" + idTramite + "\"}");
+			map.add(LITERAL_FILTRO, "{\"codigoTramiteTelematico\":\"" + idTramite + "\", \"plataforma\" : \""
+					+ getPropiedad("identificador") + "\"}");
 		} else {
-			map.add(LITERAL_FILTRO, "{\"codigoTramiteTelematico\":\"" + idTramite
-					+ "\",\"versionTramiteTelematico\" : \"" + version + "\"}");
+			map.add(LITERAL_FILTRO,
+					"{\"codigoTramiteTelematico\":\"" + idTramite + "\",\"versionTramiteTelematico\" : \"" + version
+							+ "\", \"plataforma\" : \"" + getPropiedad("identificador") + "\"}");
 		}
 
 		final RTramiteRolsac[] tramitesRolsac = getRTramiteRolsac("", map);
