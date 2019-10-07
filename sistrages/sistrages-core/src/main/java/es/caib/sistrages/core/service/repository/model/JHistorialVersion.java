@@ -182,7 +182,7 @@ public class JHistorialVersion implements IModelApi {
 	/**
 	 * @param huella the huella to set
 	 */
-	public final void setHuella(final String huella) {
+	public void setHuella(final String huella) {
 		this.huella = huella;
 	}
 

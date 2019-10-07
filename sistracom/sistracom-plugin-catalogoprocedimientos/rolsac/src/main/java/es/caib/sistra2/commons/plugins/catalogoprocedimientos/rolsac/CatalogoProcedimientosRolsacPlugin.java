@@ -51,7 +51,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/** Log. */
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private static final String IDENTIFICADOR_SISTRA2 = "SISTRA2";
+	/** Id plataforma Sistra2 definido en Rolsac. */
+	private static final String PROPIEDAD_IDENTIFICADOR_SISTRA2 = "identificadorPlataformaSistra2";
 
 	/** Prefix. */
 	public static final String IMPLEMENTATION_BASE_PROPERTY = "rolsac.";
@@ -88,6 +89,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add(LITERAL_IDIOMA, idioma);
+		map.add(LITERAL_FILTRO, "{\"plataforma\" : \"" + getIdentificadorPlafaformaSistra2() + "\"}");
 
 		final RServicioRolsac servicioRolsac = getRServicioRolsac(idServicioCP, map)[0];
 
@@ -111,7 +113,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		dt.setProcedimiento(dp);
 		dt.setTelematico(servicioRolsac.isTelematico());
 		if (dt.isTelematico() && servicioRolsac.getPlataforma() != null
-				&& IDENTIFICADOR_SISTRA2.equals(servicioRolsac.getPlataforma().getIdentificador())) {
+				&& getIdentificadorPlafaformaSistra2().equals(servicioRolsac.getPlataforma().getIdentificador())) {
 			final DefinicionTramiteTelematico definicion = new DefinicionTramiteTelematico();
 			definicion.setTramiteIdentificador(servicioRolsac.getTramiteId());
 			if (servicioRolsac.getTramiteVersion() != null) {
@@ -121,6 +123,16 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		}
 
 		return dt;
+	}
+
+	/**
+	 * Obtiene valor identificador S2 definido en Rolsac.
+	 *
+	 * @return valor identificador S2 definido en Rolsac.
+	 * @throws CatalogoPluginException
+	 */
+	private String getIdentificadorPlafaformaSistra2() throws CatalogoPluginException {
+		return getPropiedad(PROPIEDAD_IDENTIFICADOR_SISTRA2);
 	}
 
 	/**
@@ -198,6 +210,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		// Obtener tramite.
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add(LITERAL_IDIOMA, idioma);
+		map.add(LITERAL_FILTRO, "{\"plataforma\" : \"" + getIdentificadorPlafaformaSistra2() + "\"}");
 
 		// Obtener procedimiento.
 		final RTramiteRolsac[] tramitesRolsac = getRTramiteRolsac(idTramiteCP, map);
@@ -227,7 +240,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		dt.setTelematico(tramiteRolsac.isTelematico());
 
 		if (dt.isTelematico() && tramiteRolsac.getPlataforma() != null
-				&& IDENTIFICADOR_SISTRA2.equals(tramiteRolsac.getPlataforma().getIdentificador())) {
+				&& getIdentificadorPlafaformaSistra2().equals(tramiteRolsac.getPlataforma().getIdentificador())) {
 			final DefinicionTramiteTelematico definicion = new DefinicionTramiteTelematico();
 			definicion.setTramiteIdentificador(tramiteRolsac.getIdTraTel());
 			definicion.setTramiteVersion(tramiteRolsac.getVersio());
@@ -522,10 +535,12 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add(LITERAL_IDIOMA, idioma);
 		if (version == null) {
-			map.add(LITERAL_FILTRO, "{\"codigoTramiteTelematico\":\"" + idTramite + "\"}");
+			map.add(LITERAL_FILTRO, "{\"codigoTramiteTelematico\":\"" + idTramite + "\", \"plataforma\" : \""
+					+ getIdentificadorPlafaformaSistra2() + "\"}");
 		} else {
-			map.add(LITERAL_FILTRO, "{\"codigoTramiteTelematico\":\"" + idTramite
-					+ "\",\"versionTramiteTelematico\" : \"" + version + "\"}");
+			map.add(LITERAL_FILTRO,
+					"{\"codigoTramiteTelematico\":\"" + idTramite + "\",\"versionTramiteTelematico\" : \"" + version
+							+ "\", \"plataforma\" : \"" + getIdentificadorPlafaformaSistra2() + "\"}");
 		}
 
 		final RServicioRolsac[] serviciosRolsac = getRServicioRolsac("", map);
@@ -553,8 +568,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 				dt.setOrganoDestinoDir3(dir3organoInstructor);
 				dt.setProcedimiento(dp);
 				dt.setTelematico(servicioRolsac.isTelematico());
-				if (dt.isTelematico() && servicioRolsac.getPlataforma() != null
-						&& IDENTIFICADOR_SISTRA2.equals(servicioRolsac.getPlataforma().getIdentificador())) {
+				if (dt.isTelematico() && servicioRolsac.getPlataforma() != null && getIdentificadorPlafaformaSistra2()
+						.equals(servicioRolsac.getPlataforma().getIdentificador())) {
 					final DefinicionTramiteTelematico definicion = new DefinicionTramiteTelematico();
 					definicion.setTramiteIdentificador(servicioRolsac.getTramiteId());
 					if (servicioRolsac.getTramiteVersion() != null) {
@@ -589,10 +604,12 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add(LITERAL_IDIOMA, idioma);
 		if (version == null) {
-			map.add(LITERAL_FILTRO, "{\"codigoTramiteTelematico\":\"" + idTramite + "\"}");
+			map.add(LITERAL_FILTRO, "{\"codigoTramiteTelematico\":\"" + idTramite + "\", \"plataforma\" : \""
+					+ getIdentificadorPlafaformaSistra2() + "\"}");
 		} else {
-			map.add(LITERAL_FILTRO, "{\"codigoTramiteTelematico\":\"" + idTramite
-					+ "\",\"versionTramiteTelematico\" : \"" + version + "\"}");
+			map.add(LITERAL_FILTRO,
+					"{\"codigoTramiteTelematico\":\"" + idTramite + "\",\"versionTramiteTelematico\" : \"" + version
+							+ "\", \"plataforma\" : \"" + getIdentificadorPlafaformaSistra2() + "\"}");
 		}
 
 		final RTramiteRolsac[] tramitesRolsac = getRTramiteRolsac("", map);
@@ -633,8 +650,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 				dt.setVigente(esVigente(procRolsac, tramiteRolsac));
 				dt.setOrganoDestinoDir3(dir3organoDestinatario);
 				dt.setTelematico(tramiteRolsac.isTelematico());
-				if (dt.isTelematico() && tramiteRolsac.getPlataforma() != null
-						&& IDENTIFICADOR_SISTRA2.equals(tramiteRolsac.getPlataforma().getIdentificador())) {
+				if (dt.isTelematico() && tramiteRolsac.getPlataforma() != null && getIdentificadorPlafaformaSistra2()
+						.equals(tramiteRolsac.getPlataforma().getIdentificador())) {
 					final DefinicionTramiteTelematico definicion = new DefinicionTramiteTelematico();
 					definicion.setTramiteIdentificador(tramiteRolsac.getIdTraTel());
 					if (tramiteRolsac.getVersio() != null) {
