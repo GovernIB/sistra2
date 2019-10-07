@@ -41,7 +41,7 @@ public final class HTicketCDC implements IModelApi {
 	@Column(name = "TCC_IDESTR")
 	private String idSesionTramitacion;
 
-	/** Informacion de autenticacion serializada (para vuelta de pagos). */
+	/** Informacion de autenticacion serializada (para vuelta de login). */
 	@Lob
 	@Column(name = "TCC_INFAUT")
 	private byte[] infoAutenticacion;
@@ -67,7 +67,7 @@ public final class HTicketCDC implements IModelApi {
 	 * Método para settear el campo codigo.
 	 *
 	 * @param pCodigo
-	 *            el campo codigo a settear
+	 *                    el campo codigo a settear
 	 */
 	public void setCodigo(final Long pCodigo) {
 		codigo = pCodigo;
@@ -86,7 +86,7 @@ public final class HTicketCDC implements IModelApi {
 	 * Método para settear el campo ticket.
 	 *
 	 * @param pTicket
-	 *            el campo ticket a settear
+	 *                    el campo ticket a settear
 	 */
 	public void setTicket(final String pTicket) {
 		ticket = pTicket;
@@ -105,7 +105,7 @@ public final class HTicketCDC implements IModelApi {
 	 * Método para settear el campo fechaInicio.
 	 *
 	 * @param pFechaInicio
-	 *            el campo fechaInicio a settear
+	 *                         el campo fechaInicio a settear
 	 */
 	public void setFechaInicio(final Date pFechaInicio) {
 		fechaInicio = pFechaInicio;
@@ -124,7 +124,7 @@ public final class HTicketCDC implements IModelApi {
 	 * Método para settear el campo idSesionTramitacion.
 	 *
 	 * @param pIdSesionTramitacion
-	 *            el campo idSesionTramitacion a settear
+	 *                                 el campo idSesionTramitacion a settear
 	 */
 	public void setIdSesionTramitacion(final String pIdSesionTramitacion) {
 		idSesionTramitacion = pIdSesionTramitacion;
@@ -143,7 +143,7 @@ public final class HTicketCDC implements IModelApi {
 	 * Método para settear el campo fechaFin.
 	 *
 	 * @param pFechaFin
-	 *            el campo fechaFin a settear
+	 *                      el campo fechaFin a settear
 	 */
 	public void setFechaFin(final Date pFechaFin) {
 		fechaFin = pFechaFin;
@@ -162,7 +162,7 @@ public final class HTicketCDC implements IModelApi {
 	 * Método para establecer infoAutenticacion.
 	 *
 	 * @param pInfoAutenticacion
-	 *            infoAutenticacion a establecer
+	 *                               infoAutenticacion a establecer
 	 */
 	public void setInfoAutenticacion(final byte[] pInfoAutenticacion) {
 		infoAutenticacion = pInfoAutenticacion;
@@ -181,7 +181,7 @@ public final class HTicketCDC implements IModelApi {
 	 * Método para establecer usadoRetorno.
 	 *
 	 * @param pUsadoRetorno
-	 *            usadoRetorno a establecer
+	 *                          usadoRetorno a establecer
 	 */
 	public void setUsadoRetorno(final boolean pUsadoRetorno) {
 		usadoRetorno = pUsadoRetorno;

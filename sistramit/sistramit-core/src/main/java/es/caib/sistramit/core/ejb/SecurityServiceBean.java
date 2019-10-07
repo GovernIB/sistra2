@@ -15,6 +15,7 @@ import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
 import es.caib.sistramit.core.api.service.SecurityService;
 
@@ -35,8 +36,9 @@ public class SecurityServiceBean implements SecurityService {
 	}
 
 	@Override
-	public String iniciarSesionAutenticacion(final String entidad, final String lang, List<TypeAutenticacion> authList,
-			String qaa, final String urlCallback, final String urlCallbackError, final boolean debug) {
+	public String iniciarSesionAutenticacion(final String entidad, final String lang,
+			final List<TypeAutenticacion> authList, final TypeQAA qaa, final String urlCallback,
+			final String urlCallbackError, final boolean debug) {
 		return securityService.iniciarSesionAutenticacion(entidad, lang, authList, qaa, urlCallback, urlCallbackError,
 				debug);
 	}
@@ -68,22 +70,22 @@ public class SecurityServiceBean implements SecurityService {
 	}
 
 	@Override
-	public InfoLoginTramite obtenerInfoLoginTramiteAnonimoPersistente(String idSesionTramitacion) {
+	public InfoLoginTramite obtenerInfoLoginTramiteAnonimoPersistente(final String idSesionTramitacion) {
 		return securityService.obtenerInfoLoginTramiteAnonimoPersistente(idSesionTramitacion);
 	}
 
 	@Override
-	public UsuarioAutenticadoInfo validarUsuarioAnonimo(SesionInfo sesionInfo) {
+	public UsuarioAutenticadoInfo validarUsuarioAnonimo(final SesionInfo sesionInfo) {
 		return securityService.validarUsuarioAnonimo(sesionInfo);
 	}
 
 	@Override
-	public RetornoPago obtenerTicketPago(String ticket) {
+	public RetornoPago obtenerTicketPago(final String ticket) {
 		return securityService.obtenerTicketPago(ticket);
 	}
 
 	@Override
-	public InfoTicketAcceso obtenerTicketAccesoCDC(String ticket) {
+	public InfoTicketAcceso obtenerTicketAccesoCDC(final String ticket) {
 		return securityService.obtenerTicketAccesoCDC(ticket);
 	}
 

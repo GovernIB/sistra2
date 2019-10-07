@@ -10,6 +10,7 @@ import es.caib.sistra2.commons.plugins.autenticacion.api.DatosUsuario;
 import es.caib.sistra2.commons.plugins.autenticacion.api.IComponenteAutenticacionPlugin;
 import es.caib.sistra2.commons.plugins.autenticacion.api.TipoAutenticacion;
 import es.caib.sistra2.commons.plugins.autenticacion.api.TipoMetodoAutenticacion;
+import es.caib.sistra2.commons.plugins.autenticacion.api.TipoQAA;
 
 /**
  * Plugin mock componente autenticación.
@@ -26,6 +27,8 @@ public class ComponenteAutenticacionPluginMock extends AbstractPluginProperties
 	 */
 	private static final String PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN = "/asistente/retornoAutenticacion.html";
 
+	private static TipoQAA lastQaa;
+
 	public ComponenteAutenticacionPluginMock() {
 	}
 
@@ -34,7 +37,7 @@ public class ComponenteAutenticacionPluginMock extends AbstractPluginProperties
 
 	@Override
 	public String iniciarSesionAutenticacion(final String codigoEntidad, final String idioma,
-			final List<TipoAutenticacion> metodos, final String qaa, final String callback, final String callbackError)
+			final List<TipoAutenticacion> metodos, final TipoQAA qaa, final String callback, final String callbackError)
 			throws AutenticacionPluginException {
 		// Simulamos directamente retorno componente
 		// es.caib.sistra2.commons.plugins.autenticacion. Ponemos la
@@ -43,6 +46,7 @@ public class ComponenteAutenticacionPluginMock extends AbstractPluginProperties
 		// ese metodo.
 		String prefix;
 		prefix = metodos.get(0).toString();
+		lastQaa = qaa;
 		return PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN + "?ticket=" + prefix + "12345";
 	}
 
@@ -73,6 +77,7 @@ public class ComponenteAutenticacionPluginMock extends AbstractPluginProperties
 		final DatosUsuario ui = new DatosUsuario();
 		ui.setAutenticacion(TipoAutenticacion.AUTENTICADO);
 		ui.setMetodoAutenticacion(TipoMetodoAutenticacion.CLAVE_CERTIFICADO);
+		ui.setQaa(lastQaa);
 		ui.setNif("00000000T");
 		ui.setNombre("NOM");
 		ui.setApellido1("APE1");

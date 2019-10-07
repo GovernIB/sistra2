@@ -26,6 +26,7 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoRepresentante;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SecurityService;
@@ -97,7 +98,7 @@ public class SecurityServiceImpl implements SecurityService {
 	@Override
 	@NegocioInterceptor
 	public String iniciarSesionAutenticacion(final String idEntidad, final String lang,
-			final List<TypeAutenticacion> authList, final String qaa, final String urlCallback,
+			final List<TypeAutenticacion> authList, final TypeQAA qaa, final String urlCallback,
 			final String urlCallbackError, final boolean debug) {
 		final String urlAutenticacion = autenticacionComponent.iniciarSesionAutenticacion(idEntidad, lang, authList,
 				qaa, urlCallback, urlCallbackError, debug);
@@ -131,6 +132,7 @@ public class SecurityServiceImpl implements SecurityService {
 		u.setEmail(usuario.getEmail());
 		u.setAutenticacion(usuario.getAutenticacion());
 		u.setMetodoAutenticacion(usuario.getMetodoAutenticacion());
+		u.setQaa(usuario.getQaa());
 		u.setSesionInfo(sesionInfo);
 
 		if (usuario.getRepresentante() != null) {
@@ -261,7 +263,10 @@ public class SecurityServiceImpl implements SecurityService {
 		res.setIdioma(idioma);
 		res.setTitulo(defTramiteCP.getDescripcion());
 		res.setNiveles(niveles);
-		res.setQaa(String.valueOf(defTramite.getDefinicionVersion().getPropiedades().getNivelQAA()));
+		final int qaaTramite = defTramite.getDefinicionVersion().getPropiedades().getNivelQAA();
+		if (qaaTramite > 0) {
+			res.setQaa(TypeQAA.fromString(String.valueOf(qaaTramite)));
+		}
 		res.setEntidad(UtilsFlujo.detalleTramiteEntidad(entidad, idioma, configuracionComponent));
 		res.setAvisos(avisos);
 		res.setBloquear(avisosBloqueantes);

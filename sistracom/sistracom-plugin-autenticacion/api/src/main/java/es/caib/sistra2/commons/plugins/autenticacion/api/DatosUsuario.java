@@ -26,9 +26,10 @@ public class DatosUsuario {
 	/** Representante. */
 	private DatosRepresentante representante;
 
-	/**
-	 * Tipo es.caib.sistra2.commons.plugins.autenticacion.
-	 */
+	/** Tipo QAA. */
+	private TipoQAA qaa;
+
+	/** Tipo es.caib.sistra2.commons.plugins.autenticacion. */
 	private TipoAutenticacion autenticacion;
 
 	/** Metodo es.caib.sistra2.commons.plugins.autenticacion. */
@@ -47,7 +48,7 @@ public class DatosUsuario {
 	 * Método para establecer nif.
 	 *
 	 * @param pNif
-	 *            nif a establecer
+	 *                 nif a establecer
 	 */
 	public void setNif(final String pNif) {
 		nif = pNif;
@@ -66,7 +67,7 @@ public class DatosUsuario {
 	 * Método para establecer nombre.
 	 *
 	 * @param pNombre
-	 *            nombre a establecer
+	 *                    nombre a establecer
 	 */
 	public void setNombre(final String pNombre) {
 		nombre = pNombre;
@@ -85,7 +86,7 @@ public class DatosUsuario {
 	 * Método para establecer apellido1.
 	 *
 	 * @param pApellido1
-	 *            apellido1 a establecer
+	 *                       apellido1 a establecer
 	 */
 	public void setApellido1(final String pApellido1) {
 		apellido1 = pApellido1;
@@ -104,7 +105,7 @@ public class DatosUsuario {
 	 * Método para establecer apellido2.
 	 *
 	 * @param pApellido2
-	 *            apellido2 a establecer
+	 *                       apellido2 a establecer
 	 */
 	public void setApellido2(final String pApellido2) {
 		apellido2 = pApellido2;
@@ -123,7 +124,7 @@ public class DatosUsuario {
 	 * Método para establecer metodoAutenticacion.
 	 *
 	 * @param pMetodoAutenticacion
-	 *            metodoAutenticacion a establecer
+	 *                                 metodoAutenticacion a establecer
 	 */
 	public void setMetodoAutenticacion(final TipoMetodoAutenticacion pMetodoAutenticacion) {
 		metodoAutenticacion = pMetodoAutenticacion;
@@ -142,7 +143,7 @@ public class DatosUsuario {
 	 * Método para establecer email.
 	 *
 	 * @param email
-	 *            email a establecer
+	 *                  email a establecer
 	 */
 	public void setEmail(final String email) {
 		this.email = email;
@@ -161,7 +162,8 @@ public class DatosUsuario {
 	 * Método para establecer es.caib.sistra2.commons.plugins.autenticacion.
 	 *
 	 * @param autenticacion
-	 *            es.caib.sistra2.commons.plugins.autenticacion a establecer
+	 *                          es.caib.sistra2.commons.plugins.autenticacion a
+	 *                          establecer
 	 */
 	public void setAutenticacion(final TipoAutenticacion autenticacion) {
 		this.autenticacion = autenticacion;
@@ -180,10 +182,29 @@ public class DatosUsuario {
 	 * Método para establecer representado.
 	 *
 	 * @param representado
-	 *            representado a establecer
+	 *                         representado a establecer
 	 */
 	public void setRepresentante(final DatosRepresentante representado) {
 		this.representante = representado;
+	}
+
+	/**
+	 * Método de acceso a qaa.
+	 * 
+	 * @return qaa
+	 */
+	public TipoQAA getQaa() {
+		return qaa;
+	}
+
+	/**
+	 * Método para establecer qaa.
+	 * 
+	 * @param qaa
+	 *                qaa a establecer
+	 */
+	public void setQaa(final TipoQAA qaa) {
+		this.qaa = qaa;
 	}
 
 }

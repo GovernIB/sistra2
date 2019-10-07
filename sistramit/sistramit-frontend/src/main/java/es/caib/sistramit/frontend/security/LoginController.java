@@ -30,6 +30,7 @@ import es.caib.sistramit.core.api.exception.LoginException;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SecurityService;
 import es.caib.sistramit.core.api.service.SystemService;
@@ -93,9 +94,9 @@ public final class LoginController {
 	 * Muestra pantalla de login según el punto de entrada.
 	 *
 	 * @param request
-	 *            Request
+	 *                     Request
 	 * @param response
-	 *            Response
+	 *                     Response
 	 * @return Login
 	 */
 	@RequestMapping("/login.html")
@@ -185,7 +186,7 @@ public final class LoginController {
 	 * Redirige a componente de autenticacion.
 	 *
 	 * @param metodosAutenticacion
-	 *            metodos autenticacion (separados por ;)
+	 *                                 metodos autenticacion (separados por ;)
 	 * @return redirige a componente de autenticacion.
 	 */
 	@RequestMapping("/redirigirAutenticacionLogin.html")
@@ -207,8 +208,12 @@ public final class LoginController {
 		final String urlCallback = systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
 				+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN + "?idioma=" + lang;
 		final String urlCallbackError = sesionHttp.getUrlInicio();
-		return new ModelAndView("redirect:" + securityService.iniciarSesionAutenticacion(idEntidad, lang, authList, qaa,
-				urlCallback, urlCallbackError, debug));
+		TypeQAA tipoQAA = null;
+		if (StringUtils.isNotBlank(qaa)) {
+			tipoQAA = TypeQAA.fromString(qaa);
+		}
+		return new ModelAndView("redirect:" + securityService.iniciarSesionAutenticacion(idEntidad, lang, authList,
+				tipoQAA, urlCallback, urlCallbackError, debug));
 	}
 
 	/**
@@ -250,11 +255,11 @@ public final class LoginController {
 	 * Retorno del componente de autenticación tras logout.
 	 *
 	 * @param logout
-	 *            indica si se ha realizado logout
+	 *                     indica si se ha realizado logout
 	 * @param request
-	 *            request
+	 *                     request
 	 * @param response
-	 *            response
+	 *                     response
 	 * @return redirección cierre sesión
 	 */
 	@CrossOrigin
@@ -275,7 +280,7 @@ public final class LoginController {
 	 * Sanitiza idioma. En caso de no estar soportado generará una LoginException.
 	 *
 	 * @param pIdiomaSavedRequest
-	 *            Idioma login
+	 *                                Idioma login
 	 */
 	private String sanitizeIdioma(final String pIdiomaSavedRequest, final String idiomasSoportados) {
 		String res = pIdiomaSavedRequest;
@@ -297,11 +302,11 @@ public final class LoginController {
 	 * Autentica via ticket.
 	 *
 	 * @param pSavedRequest
-	 *            Request
+	 *                          Request
 	 * @param pTicketName
-	 *            Nombre ticket
+	 *                          Nombre ticket
 	 * @param pTicketUser
-	 *            Usuario asociado al tipo de ticket
+	 *                          Usuario asociado al tipo de ticket
 	 * @return Vista que realiza el login automáticamente
 	 */
 	private ModelAndView autenticarTicket(final SavedRequest pSavedRequest, final String pTicketUser,
@@ -325,7 +330,7 @@ public final class LoginController {
 	 * Autentica via formulario de login.
 	 *
 	 * @param savedRequest
-	 *            Request
+	 *                         Request
 	 *
 	 * @return Vista para autenticar con formulario de login
 	 */
@@ -365,7 +370,7 @@ public final class LoginController {
 	 * Autentica via formulario de login persistente anónimo.
 	 *
 	 * @param savedRequest
-	 *            Request
+	 *                         Request
 	 *
 	 * @return Vista para autenticar con formulario de login
 	 */
@@ -386,9 +391,9 @@ public final class LoginController {
 	 * Obtiene valor parametro de la request.
 	 *
 	 * @param savedRequest
-	 *            Saved request
+	 *                         Saved request
 	 * @param paramName
-	 *            Nombre parametro
+	 *                         Nombre parametro
 	 * @return Valor parametro (null si no existe)
 	 */
 	protected String getParamValue(final SavedRequest savedRequest, final String paramName) {
@@ -404,11 +409,11 @@ public final class LoginController {
 	 * Obtiene valor parametro de la request.
 	 *
 	 * @param savedRequest
-	 *            Saved request
+	 *                         Saved request
 	 * @param paramName
-	 *            Nombre parametro
+	 *                         Nombre parametro
 	 * @param defaultValue
-	 *            Valor por defecto si no existe
+	 *                         Valor por defecto si no existe
 	 * @return Valor parametro
 	 */
 	protected String getParamValue(final SavedRequest savedRequest, final String paramName, final String defaultValue) {
@@ -420,7 +425,7 @@ public final class LoginController {
 	 * Obtiene punto de entrada.
 	 *
 	 * @param urlOrg
-	 *            Url origen
+	 *                   Url origen
 	 * @return Punto de entrada
 	 */
 	private String getPuntoEntrada(final String urlOrg) {
@@ -443,9 +448,9 @@ public final class LoginController {
 	 * Comprueba si existe ticket en request.
 	 *
 	 * @param pSavedRequest
-	 *            Request
+	 *                          Request
 	 * @param pTicketName
-	 *            Ticket
+	 *                          Ticket
 	 * @return boolean
 	 */
 	private boolean existeTicket(final SavedRequest pSavedRequest, final String pTicketName) {
@@ -461,9 +466,9 @@ public final class LoginController {
 	 * Handler de excepciones de negocio.
 	 *
 	 * @param ex
-	 *            Excepción de la capa de servicio
+	 *                    Excepción de la capa de servicio
 	 * @param request
-	 *            Request
+	 *                    Request
 	 * @return Respuesta JSON indicando el mensaje producido
 	 */
 	@ExceptionHandler({ Exception.class })

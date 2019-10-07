@@ -20,6 +20,7 @@ import es.caib.sistra2.commons.plugins.autenticacion.api.DatosUsuario;
 import es.caib.sistra2.commons.plugins.autenticacion.api.IComponenteAutenticacionPlugin;
 import es.caib.sistra2.commons.plugins.autenticacion.api.TipoAutenticacion;
 import es.caib.sistra2.commons.plugins.autenticacion.api.TipoMetodoAutenticacion;
+import es.caib.sistra2.commons.plugins.autenticacion.api.TipoQAA;
 
 /**
  * Plugin componente autenticación con loginib.
@@ -39,7 +40,7 @@ public class ComponenteAutenticacionPluginLoginib extends AbstractPluginProperti
 
 	@Override
 	public String iniciarSesionAutenticacion(final String codigoEntidad, final String idioma,
-			final List<TipoAutenticacion> metodos, final String qaa, final String callback, final String callbackError)
+			final List<TipoAutenticacion> metodos, final TipoQAA qaa, final String callback, final String callbackError)
 			throws AutenticacionPluginException {
 
 		String metodo = "";
@@ -60,7 +61,9 @@ public class ComponenteAutenticacionPluginLoginib extends AbstractPluginProperti
 		param.setUrlCallbackError(callbackError);
 		param.setIdioma(idioma);
 		param.setForzarAutenticacion(false);
-		param.setQaa(Integer.parseInt(qaa));
+		if (qaa != null) {
+			param.setQaa(Integer.parseInt(qaa.toString()));
+		}
 		param.setMetodosAutenticacion(metodo);
 		param.setAplicacion("SISTRA2");
 		final RestTemplate restTemplate = new RestTemplate();
@@ -107,6 +110,7 @@ public class ComponenteAutenticacionPluginLoginib extends AbstractPluginProperti
 			datos.setAutenticacion(TipoAutenticacion.ANONIMO);
 		} else {
 			datos.setAutenticacion(TipoAutenticacion.AUTENTICADO);
+			datos.setQaa(TipoQAA.fromString(datosAutenticacion.getQaa()));
 		}
 		return datos;
 	}
@@ -140,7 +144,7 @@ public class ComponenteAutenticacionPluginLoginib extends AbstractPluginProperti
 	 * Obtiene propiedad.
 	 *
 	 * @param propiedad
-	 *            propiedad
+	 *                      propiedad
 	 * @return valor
 	 * @throws AutenticacionPluginException
 	 */

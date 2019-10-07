@@ -2,6 +2,7 @@ package es.caib.sistramit.core.service.model.integracion;
 
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 
 /**
  * Datos usario retornados por Clave.
@@ -26,6 +27,9 @@ public class DatosAutenticacionUsuario {
 	/** Email. */
 	private String email;
 
+	/** Qaa. */
+	private TypeQAA qaa;
+
 	/** Tipo autenticacion. */
 	private TypeAutenticacion autenticacion;
 
@@ -48,7 +52,7 @@ public class DatosAutenticacionUsuario {
 	 * Método para establecer nif.
 	 *
 	 * @param pNif
-	 *            nif a establecer
+	 *                 nif a establecer
 	 */
 	public void setNif(final String pNif) {
 		nif = pNif;
@@ -67,7 +71,7 @@ public class DatosAutenticacionUsuario {
 	 * Método para establecer nombre.
 	 *
 	 * @param pNombre
-	 *            nombre a establecer
+	 *                    nombre a establecer
 	 */
 	public void setNombre(final String pNombre) {
 		nombre = pNombre;
@@ -86,7 +90,7 @@ public class DatosAutenticacionUsuario {
 	 * Método para establecer apellido1.
 	 *
 	 * @param pApellido1
-	 *            apellido1 a establecer
+	 *                       apellido1 a establecer
 	 */
 	public void setApellido1(final String pApellido1) {
 		apellido1 = pApellido1;
@@ -105,7 +109,7 @@ public class DatosAutenticacionUsuario {
 	 * Método para establecer apellido2.
 	 *
 	 * @param pApellido2
-	 *            apellido2 a establecer
+	 *                       apellido2 a establecer
 	 */
 	public void setApellido2(final String pApellido2) {
 		apellido2 = pApellido2;
@@ -124,7 +128,7 @@ public class DatosAutenticacionUsuario {
 	 * Método para establecer metodoAutenticacion.
 	 *
 	 * @param pMetodoAutenticacion
-	 *            metodoAutenticacion a establecer
+	 *                                 metodoAutenticacion a establecer
 	 */
 	public void setMetodoAutenticacion(final TypeMetodoAutenticacion pMetodoAutenticacion) {
 		metodoAutenticacion = pMetodoAutenticacion;
@@ -143,7 +147,7 @@ public class DatosAutenticacionUsuario {
 	 * Método para establecer email.
 	 *
 	 * @param email
-	 *            email a establecer
+	 *                  email a establecer
 	 */
 	public void setEmail(final String email) {
 		this.email = email;
@@ -162,7 +166,7 @@ public class DatosAutenticacionUsuario {
 	 * Método para establecer autenticacion.
 	 *
 	 * @param autenticacion
-	 *            autenticacion a establecer
+	 *                          autenticacion a establecer
 	 */
 	public void setAutenticacion(final TypeAutenticacion autenticacion) {
 		this.autenticacion = autenticacion;
@@ -181,10 +185,29 @@ public class DatosAutenticacionUsuario {
 	 * Método para establecer representante.
 	 *
 	 * @param representante
-	 *            representante a establecer
+	 *                          representante a establecer
 	 */
 	public void setRepresentante(final DatosAutenticacionRepresentante representante) {
 		this.representante = representante;
+	}
+
+	/**
+	 * Método de acceso a qaa.
+	 * 
+	 * @return qaa
+	 */
+	public TypeQAA getQaa() {
+		return qaa;
+	}
+
+	/**
+	 * Método para establecer qaa.
+	 * 
+	 * @param qaa
+	 *                qaa a establecer
+	 */
+	public void setQaa(final TypeQAA qaa) {
+		this.qaa = qaa;
 	}
 
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 
 /**
  * Info usuario autenticado.
@@ -23,6 +24,11 @@ public final class UsuarioAutenticadoInfo implements Serializable {
 	 * Metodo Autenticacion.
 	 */
 	private TypeMetodoAutenticacion metodoAutenticacion;
+
+	/**
+	 * QAA (Bajo:1 / Medio: 2 / Alto: 3)
+	 */
+	private TypeQAA qaa;
 
 	/**
 	 * Código usuario.
@@ -143,13 +149,13 @@ public final class UsuarioAutenticadoInfo implements Serializable {
 	 */
 	public final String print() {
 		return "[autenticacion=" + autenticacion + ", nif=" + nif + ", nombre=" + nombre + ", apellido1=" + apellido1
-				+ ", apellido2=" + apellido2 + ", metodoAutenticacion=" + metodoAutenticacion
+				+ ", apellido2=" + apellido2 + ", metodoAutenticacion=" + metodoAutenticacion + ", qaa=" + qaa
 				+ (representante != null ? representante.print() : "") + "]";
 	}
 
 	/**
 	 * Método de acceso a representante.
-	 * 
+	 *
 	 * @return representante
 	 */
 	public UsuarioAutenticadoRepresentante getRepresentante() {
@@ -158,12 +164,31 @@ public final class UsuarioAutenticadoInfo implements Serializable {
 
 	/**
 	 * Método para establecer representante.
-	 * 
+	 *
 	 * @param representante
-	 *            representante a establecer
+	 *                          representante a establecer
 	 */
 	public void setRepresentante(final UsuarioAutenticadoRepresentante representante) {
 		this.representante = representante;
+	}
+
+	/**
+	 * Método de acceso a qaa.
+	 * 
+	 * @return qaa
+	 */
+	public TypeQAA getQaa() {
+		return qaa;
+	}
+
+	/**
+	 * Método para establecer qaa.
+	 * 
+	 * @param qaa
+	 *                qaa a establecer
+	 */
+	public void setQaa(final TypeQAA qaa) {
+		this.qaa = qaa;
 	}
 
 }

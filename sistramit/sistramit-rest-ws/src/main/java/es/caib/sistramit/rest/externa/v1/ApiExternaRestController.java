@@ -15,6 +15,7 @@ import es.caib.sistramit.core.api.exception.ErrorJsonException;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 import es.caib.sistramit.core.api.model.system.rest.externo.Evento;
 import es.caib.sistramit.core.api.model.system.rest.externo.FiltroEvento;
 import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramitePersistencia;
@@ -94,9 +95,9 @@ public class ApiExternaRestController {
 	public String obtenerTicketAcceso(@RequestBody final RInfoTicketAcceso infoTicket) {
 		String ticket = null;
 
-		final InfoTicketAcceso filtro = convierteInfoTicketAcceso(infoTicket);
+		final InfoTicketAcceso infoTicketAcceso = convierteInfoTicketAcceso(infoTicket);
 
-		ticket = restApiExternaService.obtenerTicketAcceso(filtro);
+		ticket = restApiExternaService.obtenerTicketAcceso(infoTicketAcceso);
 
 		return ticket;
 	}
@@ -105,7 +106,7 @@ public class ApiExternaRestController {
 	 * Convierte filtro ticket acceso.
 	 *
 	 * @param pRInfo
-	 *            filtro
+	 *                   filtro
 	 * @return info ticket acceso
 	 */
 	private InfoTicketAcceso convierteInfoTicketAcceso(final RInfoTicketAcceso pRInfo) {
@@ -123,13 +124,13 @@ public class ApiExternaRestController {
 				usuarioAutenticadoInfo.setApellido2(rUsuarioAutenticadoInfo.getApellido2());
 				usuarioAutenticadoInfo
 						.setAutenticacion(TypeAutenticacion.fromString(rUsuarioAutenticadoInfo.getAutenticacion()));
+				usuarioAutenticadoInfo.setQaa(TypeQAA.fromString(rUsuarioAutenticadoInfo.getQaa()));
 				usuarioAutenticadoInfo.setEmail(rUsuarioAutenticadoInfo.getEmail());
 				usuarioAutenticadoInfo.setMetodoAutenticacion(
 						TypeMetodoAutenticacion.fromString(rUsuarioAutenticadoInfo.getMetodoAutenticacion()));
 				usuarioAutenticadoInfo.setNif(rUsuarioAutenticadoInfo.getNif());
 				usuarioAutenticadoInfo.setNombre(rUsuarioAutenticadoInfo.getNombre());
 				usuarioAutenticadoInfo.setUsername(rUsuarioAutenticadoInfo.getUsername());
-
 				info.setUsuarioAutenticadoInfo(usuarioAutenticadoInfo);
 			}
 		}
@@ -141,7 +142,7 @@ public class ApiExternaRestController {
 	 * Convierte filtro evento.
 	 *
 	 * @param pRFiltro
-	 *            filtro
+	 *                     filtro
 	 * @return filtro evento
 	 */
 	private FiltroEvento convierteFiltroEvento(final RFiltroEvento pRFiltro) {
@@ -170,7 +171,7 @@ public class ApiExternaRestController {
 	 * Convierte filtro tramite persistencia.
 	 *
 	 * @param pRFiltro
-	 *            filtro
+	 *                     filtro
 	 * @return filtro tramite persistencia
 	 */
 	private FiltroTramitePersistencia convierteFiltroTramitePersistencia(final RFiltroTramitePersistencia pRFiltro) {
@@ -194,7 +195,7 @@ public class ApiExternaRestController {
 	 * Convierte eventos.
 	 *
 	 * @param pEvento
-	 *            the evento
+	 *                    the evento
 	 * @return the r evento
 	 */
 	private REvento convierteEventos(final Evento pEvento) {
@@ -237,7 +238,7 @@ public class ApiExternaRestController {
 	 * Convierte tramite persistencia.
 	 *
 	 * @param pTramite
-	 *            tramite
+	 *                     tramite
 	 * @return RTramitePersistencia
 	 */
 	private RTramitePersistencia convierteTramitePersistencia(final TramitePersistencia pTramite) {

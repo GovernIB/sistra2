@@ -57,7 +57,7 @@
 		<swagger.version>2.7.0</swagger.version>
 		<plugins-ib.version>2.0.0</plugins-ib.version>
 		<xmlbeans.version>2.6.0</xmlbeans.version>
-		<loginib.version>1.0.0</loginib.version>
+		<loginib.version>1.0.1</loginib.version>
 		<paymentib.version>1.0.0</paymentib.version>
 		<firmasimple.version>1.0</firmasimple.version>
 		<firmasimple.jersey.version>1.0.0</firmasimple.jersey.version>

@@ -19,29 +19,30 @@ public interface IComponenteAutenticacionPlugin extends IPlugin {
 	 * Inicia sesion es.caib.sistra2.commons.plugins.autenticacion.
 	 *
 	 * @param codigoEntidad
-	 *            codigo entidad
+	 *                             codigo entidad
 	 * @param idioma
-	 *            Idioma
+	 *                             Idioma
 	 * @param metodos
-	 *            metodos auth
+	 *                             metodos auth
 	 * @param qaa
-	 *            qaa
+	 *                             qaa
 	 * @param urlCallback
-	 *            url callback en caso de autenticación correcta (se pasará
-	 *            parametro 'ticket' para recuperar los datos de autenticación)
+	 *                             url callback en caso de autenticación correcta
+	 *                             (se pasará parametro 'ticket' para recuperar los
+	 *                             datos de autenticación)
 	 * @param urlCallbackError
-	 *            url callback en caso de autenticación incorrecta (no se pasará
-	 *            ningún parámetro)
+	 *                             url callback en caso de autenticación incorrecta
+	 *                             (no se pasará ningún parámetro)
 	 * @return url inicio sesion
 	 */
-	String iniciarSesionAutenticacion(String codigoEntidad, String idioma, List<TipoAutenticacion> metodos, String qaa,
+	String iniciarSesionAutenticacion(String codigoEntidad, String idioma, List<TipoAutenticacion> metodos, TipoQAA qaa,
 			String urlCallback, String urlCallbackError) throws AutenticacionPluginException;
 
 	/**
 	 * Validar ticket.
 	 *
 	 * @param ticket
-	 *            ticket
+	 *                   ticket
 	 * @return datos usuario
 	 */
 	DatosUsuario validarTicketAutenticacion(String ticket) throws AutenticacionPluginException;
@@ -50,11 +51,11 @@ public interface IComponenteAutenticacionPlugin extends IPlugin {
 	 * Iniciar sesión de logout.
 	 *
 	 * @param codigoEntidad
-	 *            codigo entidad
+	 *                          codigo entidad
 	 * @param idioma
-	 *            idioma
+	 *                          idioma
 	 * @param urlCallback
-	 *            url callback
+	 *                          url callback
 	 * @return
 	 */
 	String iniciarSesionLogout(String codigoEntidad, String idioma, String urlCallback)

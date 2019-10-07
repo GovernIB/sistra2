@@ -3,6 +3,7 @@ package es.caib.sistramit.core.service.component.integracion;
 import java.util.List;
 
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 import es.caib.sistramit.core.service.model.integracion.DatosAutenticacionUsuario;
 
 /**
@@ -17,29 +18,29 @@ public interface AutenticacionComponent {
 	 * Inicia sesion autenticacion.
 	 *
 	 * @param codigoEntidad
-	 *            codigo entidad
+	 *                          codigo entidad
 	 * @param idioma
-	 *            Idioma
+	 *                          Idioma
 	 * @param metodos
-	 *            metodos auth
+	 *                          metodos auth
 	 * @param qaa
-	 *            qaa
+	 *                          qaa
 	 * @param callback
-	 *            callback
+	 *                          callback
 	 * @param callbackError
-	 *            callback error
+	 *                          callback error
 	 * @param pDebugEnabled
-	 *            debug
+	 *                          debug
 	 * @return url inicio sesion
 	 */
-	String iniciarSesionAutenticacion(String codigoEntidad, String idioma, List<TypeAutenticacion> metodos, String qaa,
+	String iniciarSesionAutenticacion(String codigoEntidad, String idioma, List<TypeAutenticacion> metodos, TypeQAA qaa,
 			String callback, final String callbackError, final boolean pDebugEnabled);
 
 	/**
 	 * Validar ticket.
 	 *
 	 * @param pTicket
-	 *            ticket
+	 *                    ticket
 	 * @return datos usuario
 	 */
 	DatosAutenticacionUsuario validarTicketAutenticacion(String pTicket);
@@ -48,13 +49,13 @@ public interface AutenticacionComponent {
 	 * Iniciar sesión de logout.
 	 *
 	 * @param codigoEntidad
-	 *            codigo entidad
+	 *                          codigo entidad
 	 * @param pIdioma
-	 *            idioma
+	 *                          idioma
 	 * @param pCallback
-	 *            url callback
+	 *                          url callback
 	 * @param pDebugEnabled
-	 *            debug
+	 *                          debug
 	 * @return
 	 */
 	String iniciarSesionLogout(String codigoEntidad, String pIdioma, String pCallback, boolean pDebugEnabled);

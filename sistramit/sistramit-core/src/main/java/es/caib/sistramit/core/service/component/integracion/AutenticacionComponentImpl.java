@@ -10,9 +10,11 @@ import es.caib.sistra2.commons.plugins.autenticacion.api.AutenticacionPluginExce
 import es.caib.sistra2.commons.plugins.autenticacion.api.DatosUsuario;
 import es.caib.sistra2.commons.plugins.autenticacion.api.IComponenteAutenticacionPlugin;
 import es.caib.sistra2.commons.plugins.autenticacion.api.TipoAutenticacion;
+import es.caib.sistra2.commons.plugins.autenticacion.api.TipoQAA;
 import es.caib.sistramit.core.api.exception.AutenticacionException;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.integracion.DatosAutenticacionRepresentante;
@@ -33,7 +35,7 @@ public final class AutenticacionComponentImpl implements AutenticacionComponent 
 
 	@Override
 	public String iniciarSesionAutenticacion(final String codigoEntidad, final String idioma,
-			final List<TypeAutenticacion> metodos, final String qaa, final String urlCallback,
+			final List<TypeAutenticacion> metodos, final TypeQAA qaa, final String urlCallback,
 			final String urlCallbackError, final boolean pDebugEnabled) {
 
 		final IComponenteAutenticacionPlugin plgAuth = getPlugin();
@@ -43,8 +45,13 @@ public final class AutenticacionComponentImpl implements AutenticacionComponent 
 			metodosAut.add(TipoAutenticacion.fromString(t.toString()));
 		}
 
+		TipoQAA tipoQaa = null;
+		if (qaa != null) {
+			tipoQaa = TipoQAA.fromString(qaa.toString());
+		}
+
 		try {
-			return plgAuth.iniciarSesionAutenticacion(codigoEntidad, idioma, metodosAut, qaa, urlCallback,
+			return plgAuth.iniciarSesionAutenticacion(codigoEntidad, idioma, metodosAut, tipoQaa, urlCallback,
 					urlCallbackError);
 		} catch (final AutenticacionPluginException e) {
 			throw new AutenticacionException("Error al iniciar sesión de autenticación", e);
@@ -73,6 +80,12 @@ public final class AutenticacionComponentImpl implements AutenticacionComponent 
 		res.setApellido1(u.getApellido1());
 		res.setApellido2(u.getApellido2());
 		res.setEmail(u.getEmail());
+		if (res.getAutenticacion() != TypeAutenticacion.ANONIMO) {
+			if (u.getQaa() == null) {
+				throw new AutenticacionException("No se ha retornado QAA");
+			}
+			res.setQaa(TypeQAA.fromString(u.getQaa().toString()));
+		}
 
 		if (u.getRepresentante() != null) {
 			final DatosAutenticacionRepresentante representante = new DatosAutenticacionRepresentante();

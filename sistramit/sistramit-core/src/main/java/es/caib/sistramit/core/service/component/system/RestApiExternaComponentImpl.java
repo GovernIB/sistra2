@@ -80,6 +80,10 @@ public class RestApiExternaComponentImpl implements RestApiExternaComponent {
 			throw new ErrorParametroObligatorioException("El parámetro <Código usuario> es obligatorio");
 		}
 
+		if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getQaa() == null) {
+			throw new ErrorParametroObligatorioException("El parámetro <QAA> es obligatorio");
+		}
+
 		final String ticket = ticketCDCDao.generarTicketAcceso(pInfoTicketAcceso);
 
 		// - Construimos url

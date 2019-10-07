@@ -33,6 +33,7 @@ import es.caib.sistramit.core.api.exception.ErrorFormularioSoporteException;
 import es.caib.sistramit.core.api.exception.FlujoInvalidoException;
 import es.caib.sistramit.core.api.exception.GenerarPdfClaveException;
 import es.caib.sistramit.core.api.exception.LimiteTramitacionException;
+import es.caib.sistramit.core.api.exception.QaaException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.exception.TramiteNoExisteException;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
@@ -48,6 +49,8 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
+import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.integracion.CatalogoProcedimientosComponent;
@@ -272,17 +275,28 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	/**
 	 * Genera datos de sesion de tramitación.
 	 *
-	 * @param idSesionTramitacion     id sesion tramitacion
-	 * @param estado                  estado tramite
-	 * @param pIdTramite              id tramite
-	 * @param pVersion                version
-	 * @param pIdioma                 idioma
-	 * @param pIdTramiteCP            id tramite CP
-	 * @param servicioCP              Indica si procedimiento es un servicio
-	 * @param pUrlInicio              url inicio
-	 * @param pParametrosInicio       parametros inicio
-	 * @param pUsuarioAutenticadoInfo usuario autenticado
-	 * @param pFechaCaducidad         fecha caducidad
+	 * @param idSesionTramitacion
+	 *                                    id sesion tramitacion
+	 * @param estado
+	 *                                    estado tramite
+	 * @param pIdTramite
+	 *                                    id tramite
+	 * @param pVersion
+	 *                                    version
+	 * @param pIdioma
+	 *                                    idioma
+	 * @param pIdTramiteCP
+	 *                                    id tramite CP
+	 * @param servicioCP
+	 *                                    Indica si procedimiento es un servicio
+	 * @param pUrlInicio
+	 *                                    url inicio
+	 * @param pParametrosInicio
+	 *                                    parametros inicio
+	 * @param pUsuarioAutenticadoInfo
+	 *                                    usuario autenticado
+	 * @param pFechaCaducidad
+	 *                                    fecha caducidad
 	 * @return Datos sesion tramitacion
 	 * @throws CatalogoPluginException
 	 */
@@ -302,6 +316,9 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 
 		// Control limitacion de tramitacion
 		controlLimitacionTramitacion(defTramSTG);
+
+		// Control QAA
+		controlQAA(defTramSTG);
 
 		// Obtenemos las propiedades del trámite en el Catalogo de
 		// Procedimientos
@@ -400,9 +417,27 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	}
 
 	/**
+	 * Comparamos si nivel tramite es superior al del usuario autenticado.
+	 *
+	 * @param defTramSTG
+	 *                       Definición trámite
+	 */
+	private void controlQAA(final DefinicionTramiteSTG defTramSTG) {
+		if (this.usuarioAutenticadoInfo.getAutenticacion() != TypeAutenticacion.ANONIMO) {
+			final TypeQAA qaaTramite = TypeQAA
+					.fromString(defTramSTG.getDefinicionVersion().getPropiedades().getNivelQAA() + "");
+			final TypeQAA qaaUsuario = this.usuarioAutenticadoInfo.getQaa();
+			if (qaaTramite.esSuperior(qaaUsuario)) {
+				throw new QaaException();
+			}
+		}
+	}
+
+	/**
 	 * Control limitación
 	 *
-	 * @param defTram Definición trámite
+	 * @param defTram
+	 *                    Definición trámite
 	 */
 	private void controlLimitacionTramitacion(final DefinicionTramiteSTG defTram) {
 
@@ -447,8 +482,10 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	/**
 	 * Realiza carga tramite.
 	 *
-	 * @param pIdSesionTramitacion Id sesion tramitacion
-	 * @param recarga              Indica si la carga se produce tras un error
+	 * @param pIdSesionTramitacion
+	 *                                 Id sesion tramitacion
+	 * @param recarga
+	 *                                 Indica si la carga se produce tras un error
 	 */
 	private void cargarImpl(final String pIdSesionTramitacion, final boolean recarga) {
 		// Control de si el flujo es válido

@@ -7,6 +7,7 @@ import java.util.List;
 import es.caib.sistramit.core.api.model.flujo.AvisoPlataforma;
 import es.caib.sistramit.core.api.model.flujo.Entidad;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 
 /**
  * Informacion del tramite para el login.
@@ -50,7 +51,7 @@ public final class InfoLoginTramite implements Serializable {
 	/**
 	 * QAA.
 	 */
-	private String qaa;
+	private TypeQAA qaa;
 
 	/**
 	 * Debug.
@@ -75,7 +76,7 @@ public final class InfoLoginTramite implements Serializable {
 	 * Método para establecer titulo.
 	 *
 	 * @param pTitulo
-	 *            titulo a establecer
+	 *                    titulo a establecer
 	 */
 	public void setTitulo(final String pTitulo) {
 		titulo = pTitulo;
@@ -103,7 +104,7 @@ public final class InfoLoginTramite implements Serializable {
 	 * Método para establecer avisos.
 	 *
 	 * @param pAvisos
-	 *            avisos a establecer
+	 *                    avisos a establecer
 	 */
 	public void setAvisos(final List<AvisoPlataforma> pAvisos) {
 		avisos = pAvisos;
@@ -113,7 +114,7 @@ public final class InfoLoginTramite implements Serializable {
 	 * Método para establecer niveles.
 	 *
 	 * @param pNiveles
-	 *            niveles a establecer
+	 *                     niveles a establecer
 	 */
 	public void setNiveles(final List<TypeAutenticacion> pNiveles) {
 		niveles = pNiveles;
@@ -132,9 +133,9 @@ public final class InfoLoginTramite implements Serializable {
 	 * Método para establecer entidad.
 	 *
 	 * @param entidad
-	 *            entidad a establecer
+	 *                    entidad a establecer
 	 */
-	public void setEntidad(Entidad entidad) {
+	public void setEntidad(final Entidad entidad) {
 		this.entidad = entidad;
 	}
 
@@ -143,7 +144,7 @@ public final class InfoLoginTramite implements Serializable {
 	 *
 	 * @return qAA
 	 */
-	public String getQaa() {
+	public TypeQAA getQaa() {
 		return qaa;
 	}
 
@@ -151,9 +152,9 @@ public final class InfoLoginTramite implements Serializable {
 	 * Método para establecer qAA.
 	 *
 	 * @param qAA
-	 *            qAA a establecer
+	 *                qAA a establecer
 	 */
-	public void setQaa(String qAA) {
+	public void setQaa(final TypeQAA qAA) {
 		this.qaa = qAA;
 	}
 
@@ -170,9 +171,9 @@ public final class InfoLoginTramite implements Serializable {
 	 * Método para establecer idioma.
 	 *
 	 * @param idioma
-	 *            idioma a establecer
+	 *                   idioma a establecer
 	 */
-	public void setIdioma(String idioma) {
+	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
 	}
 
@@ -209,9 +210,9 @@ public final class InfoLoginTramite implements Serializable {
 	 * Método para establecer debug.
 	 *
 	 * @param debug
-	 *            debug a establecer
+	 *                  debug a establecer
 	 */
-	public void setDebug(boolean debug) {
+	public void setDebug(final boolean debug) {
 		this.debug = debug;
 	}
 
@@ -228,15 +229,15 @@ public final class InfoLoginTramite implements Serializable {
 	 * Método para establecer loginAnonimoAuto.
 	 *
 	 * @param loginAnonimoAuto
-	 *            loginAnonimoAuto a establecer
+	 *                             loginAnonimoAuto a establecer
 	 */
-	public void setLoginAnonimoAuto(boolean loginAnonimoAuto) {
+	public void setLoginAnonimoAuto(final boolean loginAnonimoAuto) {
 		this.loginAnonimoAuto = loginAnonimoAuto;
 	}
 
 	/**
 	 * Método de acceso a bloquear.
-	 * 
+	 *
 	 * @return bloquear
 	 */
 	public boolean isBloquear() {
@@ -245,12 +246,25 @@ public final class InfoLoginTramite implements Serializable {
 
 	/**
 	 * Método para establecer bloquear.
-	 * 
+	 *
 	 * @param bloquear
-	 *            bloquear a establecer
+	 *                     bloquear a establecer
 	 */
-	public void setBloquear(boolean bloquear) {
+	public void setBloquear(final boolean bloquear) {
 		this.bloquear = bloquear;
+	}
+
+	/**
+	 * Devuelve valor QAA como string.
+	 *
+	 * @return valor QAA como string.
+	 */
+	public String valueQaaString() {
+		String res = "";
+		if (this.qaa != null) {
+			res = this.qaa.toString();
+		}
+		return res;
 	}
 
 }
