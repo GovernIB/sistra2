@@ -5,6 +5,7 @@ import es.caib.sistrages.core.api.model.types.TypeFormulario;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypePresentacion;
 import es.caib.sistrages.core.api.model.types.TypeTamanyo;
+import es.caib.sistrages.core.api.model.types.TypeTipoDocumental;
 
 /**
  *
@@ -94,6 +95,9 @@ public class Documento extends ModelApi {
 	/** Fotocopia (presencial) */
 	private boolean debeFotocopiar;
 
+	/** Tipo Documental. **/
+	private TypeTipoDocumental tipoDocumental;
+
 	/**
 	 * Crea una nueva instancia de Documento.
 	 */
@@ -113,8 +117,7 @@ public class Documento extends ModelApi {
 	/**
 	 * Establece el valor de codigo.
 	 *
-	 * @param codigo
-	 *            el nuevo valor de codigo
+	 * @param codigo el nuevo valor de codigo
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -136,8 +139,7 @@ public class Documento extends ModelApi {
 	/**
 	 * Establece el valor de codigo.
 	 *
-	 * @param codigo
-	 *            el nuevo valor de codigo
+	 * @param codigo el nuevo valor de codigo
 	 */
 	public void setIdString(final String idString) {
 		if (codigo == null) {
@@ -159,8 +161,7 @@ public class Documento extends ModelApi {
 	/**
 	 * Establece el valor de identificador.
 	 *
-	 * @param identificador
-	 *            el nuevo valor de identificador
+	 * @param identificador el nuevo valor de identificador
 	 */
 	public void setIdentificador(final String codigo) {
 		this.identificador = codigo;
@@ -178,8 +179,7 @@ public class Documento extends ModelApi {
 	/**
 	 * Establece el valor de descripcion.
 	 *
-	 * @param descripcion
-	 *            el nuevo valor de descripcion
+	 * @param descripcion el nuevo valor de descripcion
 	 */
 	public void setDescripcion(final Literal descripcion) {
 		this.descripcion = descripcion;
@@ -197,8 +197,7 @@ public class Documento extends ModelApi {
 	/**
 	 * Establece el valor de tipo.
 	 *
-	 * @param tipo
-	 *            el nuevo valor de tipo
+	 * @param tipo el nuevo valor de tipo
 	 */
 	public void setTipo(final TypeFormulario tipo) {
 		this.tipo = tipo;
@@ -216,8 +215,7 @@ public class Documento extends ModelApi {
 	/**
 	 * Establece el valor de obligatoriedad.
 	 *
-	 * @param obligatoriedad
-	 *            el nuevo valor de obligatoriedad
+	 * @param obligatoriedad el nuevo valor de obligatoriedad
 	 */
 	public void setObligatoriedad(final TypeFormularioObligatoriedad obligatoriedad) {
 		this.obligatoriedad = obligatoriedad;
@@ -231,8 +229,7 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * @param ayudaTexto
-	 *            the ayudaTexto to set
+	 * @param ayudaTexto the ayudaTexto to set
 	 */
 	public void setAyudaTexto(final Literal ayudaTexto) {
 		this.ayudaTexto = ayudaTexto;
@@ -246,8 +243,7 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * @param ayudaFichero
-	 *            the ayudaFichero to set
+	 * @param ayudaFichero the ayudaFichero to set
 	 */
 	public void setAyudaFichero(final Fichero ayudaFichero) {
 		this.ayudaFichero = ayudaFichero;
@@ -261,8 +257,7 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * @param ayudaURL
-	 *            the ayudaURL to set
+	 * @param ayudaURL the ayudaURL to set
 	 */
 	public void setAyudaURL(final String ayudaURL) {
 		this.ayudaURL = ayudaURL;
@@ -276,8 +271,7 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * @param orden
-	 *            the orden to set
+	 * @param orden the orden to set
 	 */
 	public void setOrden(final int orden) {
 		this.orden = orden;
@@ -291,8 +285,7 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * @param scriptObligatoriedad
-	 *            the scriptObligatoriedad to set
+	 * @param scriptObligatoriedad the scriptObligatoriedad to set
 	 */
 	public void setScriptObligatoriedad(final Script scriptObligatoriedad) {
 		this.scriptObligatoriedad = scriptObligatoriedad;
@@ -306,8 +299,7 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * @param tipoPresentacion
-	 *            the tipoPresentacion to set
+	 * @param tipoPresentacion the tipoPresentacion to set
 	 */
 	public void setTipoPresentacion(final TypePresentacion tipoPresentacion) {
 		this.tipoPresentacion = tipoPresentacion;
@@ -321,8 +313,7 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * @param numeroInstancia
-	 *            the numeroInstancia to set
+	 * @param numeroInstancia the numeroInstancia to set
 	 */
 	public void setNumeroInstancia(final int numeroInstancia) {
 		this.numeroInstancia = numeroInstancia;
@@ -336,8 +327,7 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * @param extensiones
-	 *            the extensiones to set
+	 * @param extensiones the extensiones to set
 	 */
 	public void setExtensiones(final String extensiones) {
 		this.extensiones = extensiones;
@@ -351,8 +341,7 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * @param tamanyoMaximo
-	 *            the tamanyoMaximo to set
+	 * @param tamanyoMaximo the tamanyoMaximo to set
 	 */
 	public void setTamanyoMaximo(final int tamanyoMaximo) {
 		this.tamanyoMaximo = tamanyoMaximo;
@@ -366,8 +355,7 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * @param tipoTamanyo
-	 *            the tipoTamanyo to set
+	 * @param tipoTamanyo the tipoTamanyo to set
 	 */
 	public void setTipoTamanyo(final TypeTamanyo tipoTamanyo) {
 		this.tipoTamanyo = tipoTamanyo;
@@ -381,8 +369,7 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * @param debeConvertirPDF
-	 *            the debeConvertirPDF to set
+	 * @param debeConvertirPDF the debeConvertirPDF to set
 	 */
 	public void setDebeConvertirPDF(final boolean debeConvertirPDF) {
 		this.debeConvertirPDF = debeConvertirPDF;
@@ -396,8 +383,7 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * @param debeFirmarDigitalmente
-	 *            the debeFirmarDigitalmente to set
+	 * @param debeFirmarDigitalmente the debeFirmarDigitalmente to set
 	 */
 	public void setDebeFirmarDigitalmente(final boolean debeFirmarDigitalmente) {
 		this.debeFirmarDigitalmente = debeFirmarDigitalmente;
@@ -411,8 +397,7 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * @param scriptFirmarDigitalmente
-	 *            the scriptFirmarDigitalmente to set
+	 * @param scriptFirmarDigitalmente the scriptFirmarDigitalmente to set
 	 */
 	public void setScriptFirmarDigitalmente(final Script scriptFirmarDigitalmente) {
 		this.scriptFirmarDigitalmente = scriptFirmarDigitalmente;
@@ -426,8 +411,7 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * @param debeAnexarFirmado
-	 *            the debeAnexarFirmado to set
+	 * @param debeAnexarFirmado the debeAnexarFirmado to set
 	 */
 	public void setDebeAnexarFirmado(final boolean debeAnexarFirmado) {
 		this.debeAnexarFirmado = debeAnexarFirmado;
@@ -441,8 +425,7 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * @param scriptValidacion
-	 *            the scriptValidacion to set
+	 * @param scriptValidacion the scriptValidacion to set
 	 */
 	public void setScriptValidacion(final Script scriptValidacion) {
 		this.scriptValidacion = scriptValidacion;
@@ -456,8 +439,7 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * @param debeCompulsar
-	 *            the debeCompulsar to set
+	 * @param debeCompulsar the debeCompulsar to set
 	 */
 	public void setDebeCompulsar(final boolean debeCompulsar) {
 		this.debeCompulsar = debeCompulsar;
@@ -471,8 +453,7 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * @param debeFotocopiar
-	 *            the debeFotocopiar to set
+	 * @param debeFotocopiar the debeFotocopiar to set
 	 */
 	public void setDebeFotocopiar(final boolean debeFotocopiar) {
 		this.debeFotocopiar = debeFotocopiar;
@@ -482,8 +463,22 @@ public class Documento extends ModelApi {
 		return extensionSeleccion;
 	}
 
-	public void setExtensionSeleccion(TypeExtension extensionSeleccion) {
+	public void setExtensionSeleccion(final TypeExtension extensionSeleccion) {
 		this.extensionSeleccion = extensionSeleccion;
+	}
+
+	/**
+	 * @return the tipoDocumental
+	 */
+	public TypeTipoDocumental getTipoDocumental() {
+		return tipoDocumental;
+	}
+
+	/**
+	 * @param tipoDocumental the tipoDocumental to set
+	 */
+	public void setTipoDocumental(TypeTipoDocumental tipoDocumental) {
+		this.tipoDocumental = tipoDocumental;
 	}
 
 }

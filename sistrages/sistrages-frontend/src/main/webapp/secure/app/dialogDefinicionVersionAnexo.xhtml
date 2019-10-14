@@ -38,13 +38,14 @@
 	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypePresentacion" var="TypePresentacion" />
 	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeExtension" var="TypeExtension" />
 	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeTamanyo" var="TypeTamanyo" />
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeTipoDocumental" var="TipoDocumental" />
 
 	<h:form id="formDialogDefinicionVersionAnexo" styleClass="h100">
 
 		<!-- Growl mensajes -->
 		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-       	<h:panelGrid columns="2"  rowClasses=", ui-datatable-odd"  columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="0">
+       	<h:panelGrid columns="2"  rowClasses=", ui-datatable-odd"  columnClasses="w20 grid-left, w80 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="0">
 
             <p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionAnexo.identificador']}" />
           	<p:inputText id="identificador" required="true" styleClass="w25" value="#{dialogDefinicionVersionAnexo.data.identificador}" onblur="this.value = this.value.toUpperCase();" maxlength="20" validatorMessage="#{msg['error.validacion.identificador']}">
@@ -60,6 +61,11 @@
 						<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoDescripcion}" update="growl descripcion" />
 		        </p:commandButton>
        		</p:outputPanel>
+
+       		<p:outputLabel 	for="tipoDocumental" value="#{msg['dialogDefinicionVersionAnexo.tipoDocumental']}" />
+            <p:selectOneMenu id="tipoDocumental" layout="pageDirection" value="#{dialogDefinicionVersionAnexo.data.tipoDocumental}" style="width:150px;margin-right:10px; margin-top:7px" required="true" >
+					     <f:selectItems value="#{TipoDocumental.ALL_VALUES}" var="tipoDocumental" itemLabel="#{msg['typeTipoDocumental.' += tipoDocumental]}" itemValue="#{tipoDocumental}"  />
+			</p:selectOneMenu>
 
          	<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.obligatoriedad']}" />
          	<p:panelGrid styleClass="noBorders" columns="2" columnClasses="noPadding-left,">

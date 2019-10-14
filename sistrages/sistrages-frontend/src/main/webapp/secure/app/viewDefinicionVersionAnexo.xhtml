@@ -16,7 +16,7 @@
 		<!-- Growl mensajes -->
 		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-       	<h:panelGrid columns="2"  rowClasses=", ui-datatable-odd"  columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="0">
+       	<h:panelGrid columns="2"  rowClasses=", ui-datatable-odd"  columnClasses="w15 grid-left, w85 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="0">
 
             <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionAnexo.identificador']}" />
           	<p:inputText id="identificador" required="true" disabled="true" styleClass="w35" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.identificador}"  />
@@ -28,6 +28,9 @@
            		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.documentoTramiteSeleccionado.descripcion)}"
 						process="@this" update="growl"/>
        		</p:outputPanel>
+
+			<p:outputLabel 	for="tipoDocumental" value="#{msg['viewDefinicionVersionAnexo.tipoDocumental']}" />
+            <p:inputText 	id="tipoDocumental" required="true" disabled="true" styleClass="w35" value="#{msg['typeTipoDocumental.' += viewDefinicionVersion.documentoTramiteSeleccionado.tipoDocumental]}"  />
 
          	<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.obligatoriedad']}" />
          	<p:panelGrid styleClass="noBorders" columns="2" columnClasses="noPadding-left,">

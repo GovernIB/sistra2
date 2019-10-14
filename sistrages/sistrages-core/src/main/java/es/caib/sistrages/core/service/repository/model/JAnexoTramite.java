@@ -18,6 +18,7 @@ import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypePresentacion;
 import es.caib.sistrages.core.api.model.types.TypeTamanyo;
+import es.caib.sistrages.core.api.model.types.TypeTipoDocumental;
 
 /**
  * JAnexoTramite
@@ -97,6 +98,9 @@ public class JAnexoTramite implements IModelApi {
 
 	@Column(name = "ANE_FIRMAD", nullable = false, precision = 1, scale = 0)
 	private boolean anexarFirmado;
+
+	@Column(name = "ANE_TIPENI", nullable = false, length = 2)
+	private String tipoDocumental;
 
 	@Transient
 	private Long codigoClonado;
@@ -273,11 +277,24 @@ public class JAnexoTramite implements IModelApi {
 	}
 
 	/**
-	 * @param codigoClonado
-	 *            the codigoClonado to set
+	 * @param codigoClonado the codigoClonado to set
 	 */
 	public void setCodigoClonado(final Long codigoClonado) {
 		this.codigoClonado = codigoClonado;
+	}
+
+	/**
+	 * @return the tipoDocumental
+	 */
+	public String getTipoDocumental() {
+		return tipoDocumental;
+	}
+
+	/**
+	 * @param tipoDocumental the tipoDocumental to set
+	 */
+	public void setTipoDocumental(final String tipoDocumental) {
+		this.tipoDocumental = tipoDocumental;
 	}
 
 	public static JAnexoTramite fromModel(final Documento doc) {
@@ -313,6 +330,7 @@ public class JAnexoTramite implements IModelApi {
 			janexo.setScriptFirmantes(JScript.fromModel(doc.getScriptFirmarDigitalmente()));
 			janexo.setScriptObligatoriedad(JScript.fromModel(doc.getScriptObligatoriedad()));
 			janexo.setScriptValidacion(JScript.fromModel(doc.getScriptValidacion()));
+			janexo.setTipoDocumental(doc.getTipoDocumental().toString());
 		}
 		return janexo;
 	}
@@ -351,6 +369,7 @@ public class JAnexoTramite implements IModelApi {
 		if (this.getScriptValidacion() != null) {
 			mdoc.setScriptValidacion(this.getScriptValidacion().toModel());
 		}
+		mdoc.setTipoDocumental(TypeTipoDocumental.fromString(this.getTipoDocumental()));
 		return mdoc;
 	}
 
@@ -378,6 +397,7 @@ public class JAnexoTramite implements IModelApi {
 			janexoTramite.setScriptFirmantes(JScript.clonar(origAnexo.getScriptFirmantes()));
 			janexoTramite.setScriptObligatoriedad(JScript.clonar(origAnexo.getScriptObligatoriedad()));
 			janexoTramite.setScriptValidacion(JScript.clonar(origAnexo.getScriptValidacion()));
+			janexoTramite.setTipoDocumental(origAnexo.getTipoDocumental());
 		}
 		return janexoTramite;
 	}

@@ -1081,6 +1081,7 @@ public class VersionTramiteAdapter {
 				res.setObligatoriedad(d.getObligatoriedad().toString());
 				res.setPresentacion(d.getTipoPresentacion().toString());
 				res.setScriptDependencia(AdapterUtils.generaScript(d.getScriptObligatoriedad(), idioma));
+				res.setTipoDocumental(d.getTipoDocumental().toString());
 
 				final RAnexoTramitePresentacionElectronica resPE = new RAnexoTramitePresentacionElectronica();
 				resPE.setAnexarFirmado(d.isDebeAnexarFirmado());

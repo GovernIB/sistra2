@@ -444,7 +444,7 @@ create table STG_DOMINI
    DOM_AMBITO           VARCHAR2(1 CHAR)     not null,
    DOM_IDENTI           VARCHAR2(20 CHAR)    not null,
    DOM_DESCR            VARCHAR2(255 CHAR)   not null,
-   DOM_CACHE            NUMBER(1)            default 0 not null,
+   DOM_CACHEO           VARCHAR2(1 CHAR)     default 'I' not null,
    DOM_TIPO             VARCHAR2(1 CHAR)     not null,
    DOM_BDJNDI           VARCHAR2(500 CHAR),
    DOM_BDSQL            VARCHAR2(2000 CHAR),
@@ -469,8 +469,8 @@ comment on column STG_DOMINI.DOM_IDENTI is
 comment on column STG_DOMINI.DOM_DESCR is
 'Descripción';
 
-comment on column STG_DOMINI.DOM_CACHE is
-'Indica si se realiza cacheo dominio';
+comment on column STG_DOMINI.DOM_CACHEO is
+'Establece tipo de cacheo: explicito, implicito o sin cache';
 
 comment on column STG_DOMINI.DOM_TIPO is
 'Tipo dominio (B: Base datos / F: Fuente datos / L: Lista fija datos / R: Remota) ';
