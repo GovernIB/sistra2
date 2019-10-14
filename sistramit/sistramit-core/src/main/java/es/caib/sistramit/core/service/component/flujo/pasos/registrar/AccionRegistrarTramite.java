@@ -444,9 +444,9 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		// - Interesados
 		final List<Interesado> interesados = new ArrayList<>();
 		if (pDipa.getParametrosRegistro().getDatosRepresentacion().getRepresentado() != null) {
-			interesados.add(generarInteresado(TypeInteresado.REPRESENTANTE,
-					pDipa.getParametrosRegistro().getDatosRepresentacion().getRepresentado()));
 			interesados.add(generarInteresado(TypeInteresado.REPRESENTADO,
+					pDipa.getParametrosRegistro().getDatosRepresentacion().getRepresentado()));
+			interesados.add(generarInteresado(TypeInteresado.REPRESENTANTE,
 					pDipa.getParametrosRegistro().getDatosPresentacion().getPresentador()));
 		} else {
 			interesados.add(generarInteresado(TypeInteresado.REPRESENTANTE,
