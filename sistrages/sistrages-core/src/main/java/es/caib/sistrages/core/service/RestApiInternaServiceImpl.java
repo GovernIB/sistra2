@@ -53,9 +53,7 @@ import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
 @Transactional
 public class RestApiInternaServiceImpl implements RestApiInternaService {
 
-	/**
-	 * Constante LOG.
-	 */
+	/** Constante LOG. */
 	private static final Logger LOG = LoggerFactory.getLogger(RestApiInternaServiceImpl.class);
 
 	/** configuracion global dao. */
