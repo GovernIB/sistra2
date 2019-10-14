@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistramit.core.service.model.integracion.types.TypeCache;
 
 /**
  * Modela datos de un dominio.
@@ -20,7 +21,7 @@ public final class ValoresDominio implements Serializable {
 	/**
 	 * Detecta si se ha recuperado cacheado o no
 	 */
-	private boolean fromCache;
+	private TypeCache tipoCache = TypeCache.CACHE_NO;
 
 	/**
 	 * Filas de valores.
@@ -213,21 +214,6 @@ public final class ValoresDominio implements Serializable {
 	}
 
 	/**
-	 * @return the fromCache
-	 */
-	public boolean isFromCache() {
-		return fromCache;
-	}
-
-	/**
-	 * @param fromCache
-	 *                      the fromCache to set
-	 */
-	public void setFromCache(final boolean fromCache) {
-		this.fromCache = fromCache;
-	}
-
-	/**
 	 * Setea los datos.
 	 *
 	 * @param datos2
@@ -238,7 +224,7 @@ public final class ValoresDominio implements Serializable {
 
 	/**
 	 * Método de acceso a codigoRetorno.
-	 * 
+	 *
 	 * @return codigoRetorno
 	 */
 	public String getCodigoRetorno() {
@@ -247,11 +233,31 @@ public final class ValoresDominio implements Serializable {
 
 	/**
 	 * Método para establecer codigoRetorno.
-	 * 
+	 *
 	 * @param codigoRetorno
 	 *                          codigoRetorno a establecer
 	 */
 	public void setCodigoRetorno(final String codigoRetorno) {
 		this.codigoRetorno = codigoRetorno;
 	}
+
+	/**
+	 * Método de acceso a tipoCache.
+	 *
+	 * @return tipoCache
+	 */
+	public TypeCache getTipoCache() {
+		return tipoCache;
+	}
+
+	/**
+	 * Método para establecer tipoCache.
+	 *
+	 * @param tipoCache
+	 *                      tipoCache a establecer
+	 */
+	public void setTipoCache(final TypeCache tipoCache) {
+		this.tipoCache = tipoCache;
+	}
+
 }

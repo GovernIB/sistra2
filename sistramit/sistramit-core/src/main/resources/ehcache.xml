@@ -25,7 +25,7 @@
 	    timeToLiveSeconds="86400"
 	    memoryStoreEvictionPolicy="LRU"/>
 
-	 <!-- Cache definicion tramites: se cachea maximo 24h y entre peticiones 1h (se puede forzar mediante invalidacion)-->
+	 <!-- Cache definicion dominios: se cachea maximo 24h y entre peticiones 1h (se puede forzar mediante invalidacion)-->
 	<cache
 		name="cacheDominios"
 		maxElementsInMemory="100"
@@ -35,15 +35,24 @@
 	    timeToLiveSeconds="86400"
 	    memoryStoreEvictionPolicy="LRU"/>
 
-
  	<!-- Cache datos de dominio: se cachea maximo 24h y entre peticiones 1h (se puede forzar mediante invalidacion)-->
 	<cache
 		name="cacheDominiosDatos"
-		maxElementsInMemory="100"
+		maxElementsInMemory="1000"
 	    overflowToDisk="false"
 	    diskPersistent="false"
 	    timeToIdleSeconds="3600"
 	    timeToLiveSeconds="86400"
+	    memoryStoreEvictionPolicy="LRU"/>
+
+	<!-- Cache implicita datos de dominio: aunque no se cachee dominio, se cachean datos durante 1 minuto (rendimiento scripts formularios) -->
+	<cache
+		name="cacheImplicitaDominiosDatos"
+		maxElementsInMemory="1000"
+	    overflowToDisk="false"
+	    diskPersistent="false"
+	    timeToIdleSeconds="60"
+	    timeToLiveSeconds="60"
 	    memoryStoreEvictionPolicy="LRU"/>
 
 </ehcache>

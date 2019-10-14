@@ -25,6 +25,7 @@ import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeCache;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.util.UtilJSON;
 
@@ -56,8 +57,8 @@ public class JDominio implements IModelApi {
 	@Column(name = "DOM_DESCR", nullable = false)
 	private String descripcion;
 
-	@Column(name = "DOM_CACHE", nullable = false, precision = 1, scale = 0)
-	private boolean cacheo;
+	@Column(name = "DOM_CACHEO", nullable = false, precision = 1, scale = 0)
+	private String cacheo;
 
 	@Column(name = "DOM_TIPO", nullable = false, length = 1)
 	private String tipo;
@@ -142,11 +143,17 @@ public class JDominio implements IModelApi {
 		this.descripcion = descripcion;
 	}
 
-	public boolean isCacheo() {
-		return this.cacheo;
+	/**
+	 * @return the cacheo
+	 */
+	public String getCacheo() {
+		return cacheo;
 	}
 
-	public void setCacheo(final boolean cacheo) {
+	/**
+	 * @param cacheo the cacheo to set
+	 */
+	public void setCacheo(final String cacheo) {
 		this.cacheo = cacheo;
 	}
 
@@ -233,7 +240,7 @@ public class JDominio implements IModelApi {
 	public Dominio toModel() {
 		final Dominio dominio = new Dominio();
 		dominio.setCodigo(this.codigo);
-		dominio.setCacheable(this.cacheo);
+		dominio.setCache(TypeCache.fromString(this.cacheo));
 		dominio.setIdentificador(this.identificador);
 		dominio.setDescripcion(this.descripcion);
 
@@ -276,7 +283,7 @@ public class JDominio implements IModelApi {
 	public JDominio fromModel(final Dominio dominio) {
 		if (dominio != null) {
 			this.setCodigo(dominio.getCodigo());
-			this.setCacheo(dominio.isCacheable());
+			this.setCacheo(dominio.getCache().toString());
 			this.setIdentificador(dominio.getIdentificador());
 			this.setDescripcion(dominio.getDescripcion());
 			this.setDatasourceJndi(dominio.getJndi());
@@ -321,7 +328,7 @@ public class JDominio implements IModelApi {
 			jdominio = new JDominio();
 			jdominio.setAmbito(dominio.getAmbito());
 			jdominio.setAreas(jareas);
-			jdominio.setCacheo(dominio.isCacheo());
+			jdominio.setCacheo(dominio.getCacheo());
 			jdominio.setCamposFormularioIndexado(null);
 			jdominio.setDatasourceJndi(dominio.getDatasourceJndi());
 			jdominio.setDescripcion(dominio.getDescripcion());

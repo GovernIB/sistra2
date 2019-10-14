@@ -128,8 +128,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param altura
-	 *            the altura to set
+	 * @param altura the altura to set
 	 */
 	public void setAltura(final Integer altura) {
 		this.altura = altura;
@@ -143,8 +142,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param anchura
-	 *            the anchura to set
+	 * @param anchura the anchura to set
 	 */
 	public void setAnchura(final Integer anchura) {
 		this.anchura = anchura;
@@ -158,8 +156,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param resultadoJndi
-	 *            the resultadoJndi to set
+	 * @param resultadoJndi the resultadoJndi to set
 	 */
 	public void setResultadoJndi(final String resultadoJdni) {
 		this.resultadoJndi = resultadoJdni;
@@ -173,8 +170,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param resultadoSQL
-	 *            the resultadoSQL to set
+	 * @param resultadoSQL the resultadoSQL to set
 	 */
 	public void setResultadoSQL(final String resultadoSQL) {
 		this.resultadoSQL = resultadoSQL;
@@ -188,8 +184,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param resultadoURL
-	 *            the resultadoURL to set
+	 * @param resultadoURL the resultadoURL to set
 	 */
 	public void setResultadoURL(final String resultadoURL) {
 		this.resultadoURL = resultadoURL;
@@ -203,8 +198,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param resultadoLista
-	 *            the resultadoLista to set
+	 * @param resultadoLista the resultadoLista to set
 	 */
 	public void setResultadoLista(final String resultadoLista) {
 		this.resultadoLista = resultadoLista;
@@ -218,8 +212,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param resultadoFD
-	 *            the resultadoFD to set
+	 * @param resultadoFD the resultadoFD to set
 	 */
 	public void setResultadoFD(final String resultadoFD) {
 		this.resultadoFD = resultadoFD;
@@ -233,8 +226,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param resultadoDistinto
-	 *            the resultadoDistinto to set
+	 * @param resultadoDistinto the resultadoDistinto to set
 	 */
 	public void setResultadoDistinto(final String resultadoDistinto) {
 		this.resultadoDistinto = resultadoDistinto;
@@ -248,8 +240,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param fuenteDatos
-	 *            the fuenteDatos to set
+	 * @param fuenteDatos the fuenteDatos to set
 	 */
 	public void setFuenteDatos(final FuenteDatos fuenteDatos) {
 		this.fuenteDatos = fuenteDatos;
@@ -263,8 +254,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param fuenteDatosContent
-	 *            the fuenteDatosContent to set
+	 * @param fuenteDatosContent the fuenteDatosContent to set
 	 */
 	public void setFuenteDatosContent(final byte[] fuenteDatosContent) {
 		this.fuenteDatosContent = fuenteDatosContent;
@@ -278,8 +268,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param dominio
-	 *            the dominio to set
+	 * @param dominio the dominio to set
 	 */
 	public void setDominio(final Dominio dominio) {
 		this.dominio = dominio;
@@ -300,8 +289,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param visibleBoton
-	 *            the visibleBoton to set
+	 * @param visibleBoton the visibleBoton to set
 	 */
 	public void setVisibleBoton(final boolean visibleBoton) {
 		this.visibleBoton = visibleBoton;
@@ -315,8 +303,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param dominioActual
-	 *            the dominioActual to set
+	 * @param dominioActual the dominioActual to set
 	 */
 	public void setDominioActual(final Dominio dominioActual) {
 		this.dominioActual = dominioActual;
@@ -337,8 +324,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param mismoTipo
-	 *            the mismoTipo to set
+	 * @param mismoTipo the mismoTipo to set
 	 */
 	public void setMismoTipo(final boolean mismoTipo) {
 		this.mismoTipo = mismoTipo;
@@ -352,8 +338,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param fuenteDatosActual
-	 *            the fuenteDatosActual to set
+	 * @param fuenteDatosActual the fuenteDatosActual to set
 	 */
 	public void setFuenteDatosActual(final FuenteDatos fuenteDatosActual) {
 		this.fuenteDatosActual = fuenteDatosActual;
@@ -367,8 +352,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param idArea
-	 *            the idArea to set
+	 * @param idArea the idArea to set
 	 */
 	public void setIdArea(final Long idArea) {
 		this.idArea = idArea;
@@ -382,8 +366,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param idEntidad
-	 *            the idEntidad to set
+	 * @param idEntidad the idEntidad to set
 	 */
 	public void setIdEntidad(final Long idEntidad) {
 		this.idEntidad = idEntidad;
@@ -397,8 +380,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
-	 * @param resultadoSQLdecoded
-	 *            the resultadoSQLdecoded to set
+	 * @param resultadoSQLdecoded the resultadoSQLdecoded to set
 	 */
 	public void setResultadoSQLdecoded(final String resultadoSQLdecoded) {
 		this.resultadoSQLdecoded = resultadoSQLdecoded;
@@ -499,6 +481,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 			fila.setAcciones(Arrays.asList(TypeImportarAccion.REEMPLAZAR));
 		} else {
 			fila.setExiste(TypeImportarExiste.EXISTE);
+			fila.setAccion(TypeImportarAccion.MANTENER);
 			fila.setAcciones(Arrays.asList(TypeImportarAccion.REEMPLAZAR, TypeImportarAccion.MANTENER));
 		}
 		fila.setEstado(TypeImportarEstado.PENDIENTE);

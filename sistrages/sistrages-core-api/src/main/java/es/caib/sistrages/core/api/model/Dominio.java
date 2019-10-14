@@ -6,6 +6,7 @@ import java.util.Set;
 
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeCache;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 
 /**
@@ -33,7 +34,7 @@ public class Dominio extends ModelApi {
 	private String descripcion;
 
 	/** Indica si se realiza cacheo dominio. */
-	private boolean cacheable;
+	private TypeCache cache;
 
 	/**
 	 * Tipo dominio (B: Base datos / F: Fuente datos / L: Lista fija datos / R:
@@ -155,20 +156,6 @@ public class Dominio extends ModelApi {
 	 */
 	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
-	}
-
-	/**
-	 * @return the cacheable
-	 */
-	public boolean isCacheable() {
-		return cacheable;
-	}
-
-	/**
-	 * @param cacheable the cacheable to set
-	 */
-	public void setCacheable(final boolean cacheable) {
-		this.cacheable = cacheable;
 	}
 
 	/**
@@ -303,6 +290,20 @@ public class Dominio extends ModelApi {
 	 */
 	public void setEntidad(final Long entidad) {
 		this.entidad = entidad;
+	}
+
+	/**
+	 * @return the cache
+	 */
+	public TypeCache getCache() {
+		return cache;
+	}
+
+	/**
+	 * @param cache the cache to set
+	 */
+	public void setCache(final TypeCache cache) {
+		this.cache = cache;
 	}
 
 }

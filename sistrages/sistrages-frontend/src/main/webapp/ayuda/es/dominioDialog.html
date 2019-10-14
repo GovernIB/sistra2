@@ -15,7 +15,13 @@
 	<ul>
 		<li><span class="nombreCampo">Identificador:</span> c&oacute;digo un&iacute;voco que identifica al dominio dentro de la aplicaci&oacute;n. Este identificador se utilizar&agrave; en cualquier script de la aplicaci&oacute;n para accedir al dominio</li>
 		<li><span class="nombreCampo">Descripci&oacute;n:</span> texto descriptivo del objeto del dominio.</li>
-		<li><span class="nombreCampo">Configuraci&oacute;n cacheo:</span> el <i>checkbox</i> "Cachear dominio" permite establecer una cach&eacute; referida a la invocaci&oacute; del dominio. Si se marca este <i>checkbox</i> se cachear&aacute; el resultado de una invocaci&oacute;n durante un tiempo m&aacute;ximo de una hora, si no hay nuevas invocaciones, y se forzar&agrave; un refresco de la cach&eacute; transcurridas 24 horas desde la primera invocaci&oacute;n. En cualquier caso se puede forzar explicitamente el refresco de la cach&eacute; mediante el bot&oacute;n <span class="nombreCampo">Refrescar cach&eacute;</span></li>
+		<li><span class="nombreCampo">Configuraci&oacute;n cacheo:</span> desplegable que permite seleccionar entre 3 tipos de cacheo:
+			<ul>
+				<li>Caché habilitada:  indica que el dominio es cacheable y se mantendrán los datos durante 24 horas. En caso de querer forzar a refrescar los datos se puede invalidar la caché para el dominio.</li>
+				<li>Caché deshabilitada (cacheo implícito): indica que el domini no és cacheable però existirà un escorcoll implícit durant 1 minut per a evitar repeticions de trucada a dominis per a millorar rendiment (sobretot en càrrega de formularis en els quals s'alimenten diversos camps en funció d'un domini). Aquesta opció haurà de ser la que s'hagi d'usar per defecte quan no es vol escorcollar un domini.</li>
+				<li>Caché deshabilitada: indica que el dominio no es cacheable y en cada invocación se fuerza a invocar a un dominio. Esta opción se deberá usar cuando se quiere forzar cuando se requiere que cada llamada a dominio fuerce la invocación al mismo (p.e. dominio que realice un insert en BD).</li>
+		 	</ul>
+		</li>
 		<li><span class="nombreCampo">Tipo:</span> Tipolog&iacute;a del dominio, que puede ser Consulta BBDD, Lista Fija, Consulta Remota o Fuente Datos, esta &uacute;ltima no disponible en dominios de &aacute;mbit global. Seg&uacute;n el tipo de dominio se tendr&agrave; que configurar:
 		<ul class="detalle">
 		<li><b>Consulta BBDD:</b> dominio que consulta datos de una base de datos:

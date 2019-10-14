@@ -24,13 +24,13 @@ public class DominioAdapter {
 		RDominio rDominio = null;
 		if (dominio != null) {
 			rDominio = new RDominio();
-			rDominio.setCachear(dominio.isCacheable());
+			rDominio.setTipoCache(dominio.getCache().toString());
 			rDominio.setIdentificador(dominio.getIdentificador());
 			rDominio.setSql(dominio.getSql());
 			rDominio.setTipo(dominio.getTipo().toString());
-			if (rDominio.TIPO_CONSULTA_BD.equals(rDominio.getTipo())) {
+			if (RDominio.TIPO_CONSULTA_BD.equals(rDominio.getTipo())) {
 				rDominio.setUri(dominio.getJndi());
-			}else {
+			} else {
 				rDominio.setUri(dominio.getUrl());
 			}
 		}

@@ -10,6 +10,7 @@
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeDominio" var="TypeDominio"/>
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeCache" var="TypeCache"/>
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogDominio.titulo']}"/></title>
@@ -47,10 +48,13 @@
 				<p:inputTextarea id="descripcion" value="#{dialogDominio.data.descripcion}" disabled="#{dialogDominio.isConsulta()}" required="true" rows="4" cols="40" maxlength="255" styleClass="w95" />
 
 				<p:outputLabel for="cacheo" value="#{msg['dialogDominio.headerCachear']}" />
-				<p:column>
-					<p:selectBooleanCheckbox id="cacheo" value="#{dialogDominio.data.cacheable}" itemLabel="#{msg['dialogDominio.headerCachearCheck']}" disabled="#{dialogDominio.isConsulta()}" />
-					<p:commandButton value="#{msg['botones.refrescarCache']}" actionListener="#{dialogDominio.refrescarCache()}" icon="fa fa-refresh" process="@form" update="growlDialog" disabled="#{dialogDominio.isConsulta()}" />
-				</p:column>
+				<h:panelGrid id="panelCacheo" columns="2">
+					<p:selectOneMenu id="cacheo" layout="pageDirection" value="#{dialogDominio.data.cache}" style="width:270px;margin-right:10px;" required="true" disabled="#{dialogDominio.isConsulta()}">
+					     <f:selectItems value="#{TypeCache.ALL_VALUES}" var="cache" itemLabel="#{msg['typeCache.' += cache]}" itemValue="#{cache}"  />
+						 <p:ajax event="change" process="@form" update="panelCacheo" />
+					</p:selectOneMenu>
+					<p:commandButton id="btnCacheo" value="#{msg['botones.refrescarCache']}" actionListener="#{dialogDominio.refrescarCache()}" icon="fa fa-refresh" process="@form" update="growlDialog" disabled="#{dialogDominio.isConsulta()}" rendered="#{dialogDominio.data.cache.toString() == 'E'}" />
+				</h:panelGrid>
 
 				<p:column>
 			    	<p style="width:230px">

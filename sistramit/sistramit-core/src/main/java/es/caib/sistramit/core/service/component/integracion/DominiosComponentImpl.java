@@ -18,6 +18,7 @@ import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.model.integracion.ParametrosDominio;
 import es.caib.sistramit.core.service.model.integracion.ValoresDominio;
+import es.caib.sistramit.core.service.model.integracion.types.TypeCache;
 import es.caib.sistramit.core.service.util.UtilsSTG;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheException;
@@ -37,7 +38,10 @@ public final class DominiosComponentImpl implements DominiosComponent {
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	/** Nombre de la cache. **/
-	private static final String CACHENAME = "cacheDominiosDatos";
+	private static final String CACHE_NAME = "cacheDominiosDatos";
+
+	/** Nombre de la cache implicita. **/
+	private static final String CACHE_IMPLICITA_NAME = "cacheImplicitaDominiosDatos";
 
 	/** Separator. **/
 	private static final String SEPARATOR = "#@@#";
@@ -66,8 +70,6 @@ public final class DominiosComponentImpl implements DominiosComponent {
 			final DefinicionTramiteSTG defTramite) {
 
 		// Obtenemos informacion dominio
-		String cacheKey = null;
-
 		if (UtilsSTG.isDebugEnabled(defTramite)) {
 			if (parametrosDominio != null && parametrosDominio.getParametros().size() > 0) {
 				log.debug(
@@ -83,56 +85,73 @@ public final class DominiosComponentImpl implements DominiosComponent {
 		}
 		final RDominio dominio = configuracionComponent.recuperarDefinicionDominio(idDominio);
 
-		// Comprobamos si el dominio es cacheable y tiene los datos cacheados
-		if (dominio.isCachear()) {
-			String hashCode = "";
-			if (parametrosDominio != null) {
-				hashCode = parametrosDominio.hashCode() + "";
-			}
-			cacheKey = idDominio + SEPARATOR + hashCode;
-			final ValoresDominio cached = (ValoresDominio) getFromCache(cacheKey);
-			if (cached != null) {
-				cached.setFromCache(true);
-				return cached;
-			}
+		// Generamos key para cache
+		final String cacheKey = generateCacheKey(idDominio, parametrosDominio);
+
+		// Verificamos cache a usar
+		final TypeCache tipoCache = TypeCache.fromString(dominio.getTipoCache());
+		if (tipoCache == null) {
+			throw new TipoNoControladoException("Tipo cache no controlado " + dominio.getTipoCache());
 		}
 
-		// Accedemos a dominio
-		ValoresDominio valoresDominio = null;
-		switch (dominio.getTipo()) {
-		case RDominio.TIPO_LISTA_LISTA:
-			valoresDominio = resuelveDominioLF(dominio);
-			break;
-		case RDominio.TIPO_CONSULTA_REMOTA:
-			valoresDominio = resuelveDominioWS(dominio, parametrosDominio);
-			break;
-		case RDominio.TIPO_CONSULTA_BD:
-			valoresDominio = resuelveDominioSQL(dominio, parametrosDominio);
-			break;
-		case RDominio.TIPO_FUENTE_DATOS:
-			valoresDominio = resuelveDominioFD(dominio, parametrosDominio);
-			break;
-		default:
-			throw new TipoNoControladoException("Tipo de dominio no soportado: " + dominio.getTipo());
-		}
+		// Intentamos obtener de cache
+		ValoresDominio valoresDominio = getFromCache(cacheKey, tipoCache);
 
-		// Controlamos que el dominio devuelve datos nulos
+		// Accedemos a dominio si no se encuentra en caché
 		if (valoresDominio == null) {
-			throw new DominioSinDatosException("Dominio " + dominio.getIdentificador() + " devuelve datos nulos");
-		} else if (valoresDominio.isError()) {
-			// Controlamos que el dominio devuelve código retorno opcional
-			throw new DominioErrorException("Dominio " + dominio.getIdentificador() + " no se puede recuperar: ["
-					+ valoresDominio.getCodigoError() + "] - " + valoresDominio.getDescripcionError());
-		} else {
-			valoresDominio.setFromCache(false);
-		}
+			switch (dominio.getTipo()) {
+			case RDominio.TIPO_LISTA_LISTA:
+				valoresDominio = resuelveDominioLF(dominio);
+				break;
+			case RDominio.TIPO_CONSULTA_REMOTA:
+				valoresDominio = resuelveDominioWS(dominio, parametrosDominio);
+				break;
+			case RDominio.TIPO_CONSULTA_BD:
+				valoresDominio = resuelveDominioSQL(dominio, parametrosDominio);
+				break;
+			case RDominio.TIPO_FUENTE_DATOS:
+				valoresDominio = resuelveDominioFD(dominio, parametrosDominio);
+				break;
+			default:
+				throw new TipoNoControladoException("Tipo de dominio no soportado: " + dominio.getTipo());
+			}
 
-		// Comprobamos si debe cachearse (si es cacheable)
-		if (dominio.isCachear()) {
-			this.saveToCache(cacheKey, valoresDominio);
+			// Controlamos que el dominio devuelve datos nulos
+			if (valoresDominio == null) {
+				throw new DominioSinDatosException("Dominio " + dominio.getIdentificador() + " devuelve datos nulos");
+			} else if (valoresDominio.isError()) {
+				// Controlamos que el dominio devuelve código retorno opcional
+				throw new DominioErrorException("Dominio " + dominio.getIdentificador() + " no se puede recuperar: ["
+						+ valoresDominio.getCodigoError() + "] - " + valoresDominio.getDescripcionError());
+			}
+
+			// Guardamos en cache
+			this.saveToCache(cacheKey, valoresDominio, tipoCache);
+
 		}
 
 		return valoresDominio;
+
+	}
+
+	/**
+	 * Genera key para caché en base a id dominio y parámetros.
+	 *
+	 * @param idDominio
+	 *                              id dominio
+	 * @param parametrosDominio
+	 *                              parametros
+	 * @return key cache
+	 */
+	private String generateCacheKey(final String idDominio, final ParametrosDominio parametrosDominio) {
+		String cacheKey;
+		String hashCode = "";
+		if (parametrosDominio != null && parametrosDominio.getParametros() != null
+				&& !parametrosDominio.getParametros().isEmpty()) {
+			hashCode = parametrosDominio.hashCode() + "";
+		}
+		cacheKey = idDominio + SEPARATOR + hashCode;
+		return cacheKey;
 	}
 
 	/**
@@ -189,14 +208,17 @@ public final class DominiosComponentImpl implements DominiosComponent {
 	 * @return
 	 * @throws CacheException
 	 */
-	protected Serializable getFromCache(final Serializable key) {
-		final Cache cache = getCache();
-		final Element element = cache.get(key);
-		if (element != null && !cache.isExpired(element)) {
-			return element.getValue();
-		} else {
-			return null;
+	protected ValoresDominio getFromCache(final Serializable key, final TypeCache tipoCache) {
+		ValoresDominio res = null;
+		if (tipoCache != TypeCache.CACHE_NO) {
+			final Cache cache = getCache(tipoCache);
+			final Element element = cache.get(key);
+			if (element != null && !cache.isExpired(element)) {
+				res = (ValoresDominio) element.getObjectValue();
+				res.setTipoCache(tipoCache);
+			}
 		}
+		return res;
 	}
 
 	/**
@@ -205,13 +227,24 @@ public final class DominiosComponentImpl implements DominiosComponent {
 	 * @return
 	 * @throws CacheException
 	 */
-	private static Cache getCache() {
+	private static Cache getCache(final TypeCache tipoCache) {
+		String cachename = null;
+		switch (tipoCache) {
+		case CACHE_EXPLICITA:
+			cachename = CACHE_NAME;
+			break;
+		case CACHE_IMPLICITA:
+			cachename = CACHE_IMPLICITA_NAME;
+			break;
+		default:
+			throw new TipoNoControladoException("Tipo cache no controlado");
+		}
 		final CacheManager cacheManager = CacheManager.getInstance();
 		Cache cache;
-		if (cacheManager.cacheExists(CACHENAME)) {
-			cache = cacheManager.getCache(CACHENAME);
+		if (cacheManager.cacheExists(cachename)) {
+			cache = cacheManager.getCache(cachename);
 		} else {
-			throw new CacheException("Cache de dominio no esta definida");
+			throw new CacheException("Cache de dominio no esta definida: " + cachename);
 		}
 		return cache;
 	}
@@ -223,9 +256,11 @@ public final class DominiosComponentImpl implements DominiosComponent {
 	 * @param value
 	 * @throws CacheException
 	 */
-	protected void saveToCache(final Serializable key, final Serializable value) {
-		final Cache cache = getCache();
-		cache.put(new Element(key, value));
+	protected void saveToCache(final Serializable key, final ValoresDominio value, final TypeCache tipoCache) {
+		if (tipoCache != TypeCache.CACHE_NO) {
+			final Cache cache = getCache(tipoCache);
+			cache.put(new Element(key, value));
+		}
 	}
 
 	/**
@@ -234,8 +269,8 @@ public final class DominiosComponentImpl implements DominiosComponent {
 	public static void limpiarCache() {
 		final CacheManager cacheManager = CacheManager.getInstance();
 		Cache cache;
-		if (cacheManager.cacheExists(CACHENAME)) {
-			cache = cacheManager.getCache(CACHENAME);
+		if (cacheManager.cacheExists(CACHE_NAME)) {
+			cache = cacheManager.getCache(CACHE_NAME);
 			final List<String> keys = cache.getKeys();
 			for (final Iterator<String> it = keys.iterator(); it.hasNext();) {
 				final String key = it.next();
@@ -251,8 +286,8 @@ public final class DominiosComponentImpl implements DominiosComponent {
 	public void invalidarDominio(final String idDominio) {
 		final CacheManager cacheManager = CacheManager.getInstance();
 		Cache cache;
-		if (cacheManager.cacheExists(CACHENAME)) {
-			cache = cacheManager.getCache(CACHENAME);
+		if (cacheManager.cacheExists(CACHE_NAME)) {
+			cache = cacheManager.getCache(CACHE_NAME);
 			final List<String> keys = cache.getKeys();
 			for (final String key : keys) {
 				// La idea sería borrar sin importar los parametros dominio que

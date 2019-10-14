@@ -2,6 +2,8 @@ package es.caib.sistramit.core.service.test;
 
 import static org.junit.Assert.fail;
 
+import java.util.Date;
+
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -16,6 +18,7 @@ import es.caib.sistramit.core.service.component.integracion.SistragesComponent;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.model.integracion.ParametrosDominio;
 import es.caib.sistramit.core.service.model.integracion.ValoresDominio;
+import es.caib.sistramit.core.service.model.integracion.types.TypeCache;
 import es.caib.sistramit.core.service.test.mock.SistragesMock;
 
 /**
@@ -41,8 +44,8 @@ public class DominiosTest extends BaseDbUnit {
 	}
 
 	/**
-	 * El test es para ver que si no existe el dominio, provoca una excepcion de
-	 * tipo DominioException.
+	 * El test es para ver que si no existe el dominio en la definición del trámite,
+	 * provoca una excepcion de tipo DominioException.
 	 */
 	@Test
 	public void testDominioNoExiste() {
@@ -64,27 +67,116 @@ public class DominiosTest extends BaseDbUnit {
 	 * cacheado.
 	 */
 	@Test
-	public void testDominioRecuperacionCache() {
+	public void testDominioRecuperacionCacheExplicita() {
 		final RVersionTramite defTramite = sistragesComponent.recuperarDefinicionTramite(SistragesMock.ID_TRAMITE,
 				SistragesMock.VERSION_TRAMITE, SistragesMock.IDIOMA);
 
+		final String identificadorDominio = SistragesMock.ID_DOMINIO_CACHE_EXPLICITO;
+
 		final DefinicionTramiteSTG defTramiteSTG = new DefinicionTramiteSTG(new java.util.Date(), defTramite);
+
+		// Añadimos dominios para hacer pruebas cache
+		defTramiteSTG.getDefinicionVersion().getDominios().add(identificadorDominio);
+
 		final ParametrosDominio parametrosDominio1 = new ParametrosDominio();
 		parametrosDominio1.addParametro("COD1", "PARAM1");
 		final ParametrosDominio parametrosDominio2 = new ParametrosDominio();
 		parametrosDominio2.addParametro("COD2", "PARAM2");
 
-		final String identificadorDominio = defTramite.getDominios().get(0);
+		final ValoresDominio valores1 = dominiosComponent.recuperarDominio(identificadorDominio, parametrosDominio1,
+				defTramiteSTG);
+		Assert.isTrue(valores1.getTipoCache() == TypeCache.CACHE_NO,
+				"El dominio con parametrosDominio1 tenia que NO estar cacheado");
+		final ValoresDominio valores2 = dominiosComponent.recuperarDominio(identificadorDominio, parametrosDominio2,
+				defTramiteSTG);
+		Assert.isTrue(valores2.getTipoCache() == TypeCache.CACHE_NO,
+				"El dominio con parametrosDominio2 tenia que NO estar cacheado");
+		final ValoresDominio valores3 = dominiosComponent.recuperarDominio(identificadorDominio, parametrosDominio1,
+				defTramiteSTG);
+		Assert.isTrue(valores3.getTipoCache() == TypeCache.CACHE_EXPLICITA,
+				"El dominio con parametrosDominio1 tenia que SI estar cacheado");
+	}
+
+	/**
+	 * El test es para ver que es capaz de cachear un mismo dominio con distintos
+	 * ParametrosDominio y que cuando volvemos a pedir uno de ellos, ese Sí está ya
+	 * cacheado.
+	 */
+	@Test
+	public void testDominioRecuperacionCacheImplicita() {
+
+		final String identificadorDominio = SistragesMock.ID_DOMINIO_CACHE_IMPLICITO;
+
+		final RVersionTramite defTramite = sistragesComponent.recuperarDefinicionTramite(SistragesMock.ID_TRAMITE,
+				SistragesMock.VERSION_TRAMITE, SistragesMock.IDIOMA);
+
+		final DefinicionTramiteSTG defTramiteSTG = new DefinicionTramiteSTG(new java.util.Date(), defTramite);
+
+		// Añadimos dominios para hacer pruebas cache
+		defTramiteSTG.getDefinicionVersion().getDominios().add(identificadorDominio);
+
+		final ParametrosDominio parametrosDominio1 = new ParametrosDominio();
+		parametrosDominio1.addParametro("COD1", "PARAM1");
+		final ParametrosDominio parametrosDominio2 = new ParametrosDominio();
+		parametrosDominio2.addParametro("COD2", "PARAM2");
 
 		final ValoresDominio valores1 = dominiosComponent.recuperarDominio(identificadorDominio, parametrosDominio1,
 				defTramiteSTG);
-		Assert.isTrue(!valores1.isFromCache(), "El dominio con parametrosDominio1 tenia que NO estar cacheado");
+		Assert.isTrue(valores1.getTipoCache() == TypeCache.CACHE_NO,
+				"El dominio con parametrosDominio1 tenia que NO estar cacheado");
 		final ValoresDominio valores2 = dominiosComponent.recuperarDominio(identificadorDominio, parametrosDominio2,
 				defTramiteSTG);
-		Assert.isTrue(!valores2.isFromCache(), "El dominio con parametrosDominio2 tenia que NO estar cacheado");
+		Assert.isTrue(valores2.getTipoCache() == TypeCache.CACHE_NO,
+				"El dominio con parametrosDominio2 tenia que NO estar cacheado");
 		final ValoresDominio valores3 = dominiosComponent.recuperarDominio(identificadorDominio, parametrosDominio1,
 				defTramiteSTG);
-		Assert.isTrue(valores3.isFromCache(), "El dominio con parametrosDominio1 tenia que SI estar cacheado");
+		Assert.isTrue(valores3.getTipoCache() == TypeCache.CACHE_IMPLICITA,
+				"El dominio con parametrosDominio1 tenia que SI estar cacheado");
+
+		// Esperamos 1 min y no debe estar ya cacheado
+		logger.debug("Esperamos 1 min...");
+		final Date limit = new Date(System.currentTimeMillis() + 61000L);
+		while (limit.after(new Date())) {
+			// Esperar
+		}
+		logger.debug("Preguntamos de nuevo");
+		final ValoresDominio valores4 = dominiosComponent.recuperarDominio(identificadorDominio, parametrosDominio1,
+				defTramiteSTG);
+		Assert.isTrue(valores4.getTipoCache() == TypeCache.CACHE_NO,
+				"El dominio con parametrosDominio1 tenia que NO estar cacheado");
+
+	}
+
+	/**
+	 * El test es para ver que es capaz de cachear un mismo dominio con distintos
+	 * ParametrosDominio y que cuando volvemos a pedir uno de ellos, ese Sí está ya
+	 * cacheado.
+	 */
+	@Test
+	public void testDominioRecuperacionCacheNo() {
+
+		final String identificadorDominio = SistragesMock.ID_DOMINIO_CACHE_NO;
+
+		final RVersionTramite defTramite = sistragesComponent.recuperarDefinicionTramite(SistragesMock.ID_TRAMITE,
+				SistragesMock.VERSION_TRAMITE, SistragesMock.IDIOMA);
+
+		final DefinicionTramiteSTG defTramiteSTG = new DefinicionTramiteSTG(new java.util.Date(), defTramite);
+
+		// Añadimos dominios para hacer pruebas cache
+		defTramiteSTG.getDefinicionVersion().getDominios().add(identificadorDominio);
+
+		final ParametrosDominio parametrosDominio1 = new ParametrosDominio();
+		parametrosDominio1.addParametro("COD1", "PARAM1");
+
+		final ValoresDominio valores1 = dominiosComponent.recuperarDominio(identificadorDominio, parametrosDominio1,
+				defTramiteSTG);
+		Assert.isTrue(valores1.getTipoCache() == TypeCache.CACHE_NO,
+				"El dominio con parametrosDominio1 tenia que NO estar cacheado");
+		final ValoresDominio valores2 = dominiosComponent.recuperarDominio(identificadorDominio, parametrosDominio1,
+				defTramiteSTG);
+		Assert.isTrue(valores2.getTipoCache() == TypeCache.CACHE_NO,
+				"El dominio con parametrosDominio2 tenia que NO estar cacheado");
+
 	}
 
 	@Test
@@ -99,14 +191,14 @@ public class DominiosTest extends BaseDbUnit {
 
 		final ValoresDominio valores1 = dominiosComponent.recuperarDominio(identificadorDominio, parametrosDominio1,
 				defTramiteSTG);
-		Assert.isTrue(!valores1.isFromCache(), "El dominio tenia que NO estar cacheado");
+		Assert.isTrue(valores1.getTipoCache() != TypeCache.CACHE_EXPLICITA, "El dominio tenia que NO estar cacheado");
 		final ValoresDominio valores2 = dominiosComponent.recuperarDominio(identificadorDominio, parametrosDominio1,
 				defTramiteSTG);
-		Assert.isTrue(valores2.isFromCache(), "El dominio tenia que SÍ estar cacheado");
+		Assert.isTrue(valores2.getTipoCache() == TypeCache.CACHE_EXPLICITA, "El dominio tenia que SÍ estar cacheado");
 		dominiosComponent.invalidarDominio(identificadorDominio);
 		final ValoresDominio valores3 = dominiosComponent.recuperarDominio(identificadorDominio, parametrosDominio1,
 				defTramiteSTG);
-		Assert.isTrue(!valores3.isFromCache(), "El dominio tenia que NO estar cacheado");
+		Assert.isTrue(valores3.getTipoCache() != TypeCache.CACHE_EXPLICITA, "El dominio tenia que NO estar cacheado");
 	}
 
 }

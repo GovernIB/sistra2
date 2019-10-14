@@ -15,6 +15,14 @@
 	<ul>
 		<li><span class="nombreCampo">Identificador:</span> codi un&iacute;voc que identifica al domini dins l'aplicaci&oacute;. Aquest identificador s'emprar&agrave; a qualsevol script de l'aplicaci&oacute; per accedir al domini</li>
 		<li><span class="nombreCampo">Descripci&oacute;:</span> text descriptiu de l'objecte del domini.</li>
+		<li><span class="nombreCampo">Configuraci&oacute; desat en m. cau:</span> desplegable que permet seleccionar seleccionar entre 3 tipus de m. cau:
+			<ul>
+				<li>M. cau habilitada:  indica que el domini és cacheable i es mantindran les dades durant 24 hores. En cas de voler forçar a refrescar les dades es pot invalidar la caixet per al domini.</li>
+				<li>M. cau deshabilitada (cacheo implícit): indica que el domini no és cacheable però existirà un escorcoll implícit durant 1 minut per a evitar repeticions de trucada a dominis per a millorar rendiment (sobretot en càrrega de formularis en els quals s'alimenten diversos camps en funció d'un domini). Aquesta opció haurà de ser la que s'hagi d'usar per defecte quan no es vol escorcollar un domini.</li>
+				<li>M. cau deshabilitada: indica que el domini no és cacheable i en cada invocació es força a invocar a un domini. Aquesta opció s'haurà d'usar quan es vol forçar quan es requereix que cada anomenada a domini forci la invocació al mateix (p.e. domini que realitzi un insert en BD).</li>
+		 	</ul>
+		</li>
+
 		<li><span class="nombreCampo">Configuraci&oacute; desat en m. cau:</span> el <i>checkbox</i> "Desar domini en m. cau" permet establir una mem&ograve;ria cau referida a la invocaci&oacute; del domini. Si es marca aquest <i>checkbox</i> es guardar&agrave; en mem&ograve;ria cau el resultat d'una invocaci&oacute; durant un temps m&agrave;xim d'una hora, si no hi ha noves invocacions, i es for&ccedil;ar&agrave; un refresc de la mem&ograve;ria cau transcorregudes 24 hores de de la primera invocaci&oacute;. En qualsevol cas es pot for&ccedil;ar explicitament el refresc de la mem&ograve;ria cau mitjan&ccedil;ant el bot&oacute; <span class="nombreCampo">Refrescar m. cau;</span></li>
 		<li><span class="nombreCampo">Tipus:</span> Tipologia del domini, que pot ser Consulta BBDD, Llista Fixa, Consulta Remota o Font Dades, aquesta darrera no disponible a dominis d'&agrave;mbit global. Segons el tipus de domini s'haur&agrave; de configurar:
 			<ul class="detalle">

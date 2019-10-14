@@ -95,7 +95,7 @@
 			    </p:column>
 
 				<p:column headerText="#{msg['viewDominios.headerCacheable']}">
-			        <p:selectBooleanCheckbox value="#{td.cacheable}" disabled="true" />
+					<h:outputText value="#{msg['typeCache.' += td.cache]}" />
 			    </p:column>
 
 			</p:dataTable>

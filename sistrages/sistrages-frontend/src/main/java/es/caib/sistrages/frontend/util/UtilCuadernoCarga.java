@@ -296,6 +296,7 @@ public class UtilCuadernoCarga {
 				fila.setAcciones(Arrays.asList(TypeImportarAccion.REEMPLAZAR));
 			} else {
 				fila.setExiste(TypeImportarExiste.EXISTE);
+				fila.setAccion(TypeImportarAccion.MANTENER);
 				fila.setAcciones(Arrays.asList(TypeImportarAccion.REEMPLAZAR, TypeImportarAccion.MANTENER));
 			}
 			fila.setResultado(TypeImportarResultado.WARNING);

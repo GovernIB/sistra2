@@ -20,9 +20,9 @@ public class RDominio {
 	@ApiModelProperty(value = "Identificador")
 	private String identificador;
 
-	/** Cachear. */
-	@ApiModelProperty(value = "Cachear")
-	private boolean cachear;
+	/** Cacheo implicito. */
+	@ApiModelProperty(value = "Tipo cacheo: explícito - 24 h (E) / implícito - 1 min (I) / no cache (N)")
+	private String tipoCache;
 
 	/**
 	 * Tipo dominio: Lista fija (L),Consulta BD (B), Consulta remota (R) y Fuente
@@ -56,30 +56,10 @@ public class RDominio {
 	/**
 	 * Método para establecer identificador.
 	 *
-	 * @param identificador
-	 *            identificador a establecer
+	 * @param identificador identificador a establecer
 	 */
 	public void setIdentificador(final String identificador) {
 		this.identificador = identificador;
-	}
-
-	/**
-	 * Método de acceso a cachear.
-	 *
-	 * @return cachear
-	 */
-	public boolean isCachear() {
-		return cachear;
-	}
-
-	/**
-	 * Método para establecer cachear.
-	 *
-	 * @param cachear
-	 *            cachear a establecer
-	 */
-	public void setCachear(final boolean cachear) {
-		this.cachear = cachear;
 	}
 
 	/**
@@ -94,8 +74,7 @@ public class RDominio {
 	/**
 	 * Método para establecer tipo.
 	 *
-	 * @param tipo
-	 *            tipo a establecer
+	 * @param tipo tipo a establecer
 	 */
 	public void setTipo(final String tipo) {
 		this.tipo = tipo;
@@ -113,8 +92,7 @@ public class RDominio {
 	/**
 	 * Método para establecer uri.
 	 *
-	 * @param uri
-	 *            uri a establecer
+	 * @param uri uri a establecer
 	 */
 	public void setUri(final String uri) {
 		this.uri = uri;
@@ -132,8 +110,7 @@ public class RDominio {
 	/**
 	 * Método para establecer sql.
 	 *
-	 * @param sql
-	 *            sql a establecer
+	 * @param sql sql a establecer
 	 */
 	public void setSql(final String sql) {
 		this.sql = sql;
@@ -147,11 +124,28 @@ public class RDominio {
 	}
 
 	/**
-	 * @param timestamp
-	 *            the timestamp to set
+	 * @param timestamp the timestamp to set
 	 */
 	public void setTimestamp(final String timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	/**
+	 * Método de acceso a tipoCache.
+	 *
+	 * @return tipoCache
+	 */
+	public String getTipoCache() {
+		return tipoCache;
+	}
+
+	/**
+	 * Método para establecer tipoCache.
+	 *
+	 * @param tipoCache tipoCache a establecer
+	 */
+	public void setTipoCache(final String tipoCache) {
+		this.tipoCache = tipoCache;
 	}
 
 }

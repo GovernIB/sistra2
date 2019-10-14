@@ -29,6 +29,7 @@ import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
+import es.caib.sistramit.core.service.model.integracion.types.TypeCache;
 
 /**
  *
@@ -52,6 +53,12 @@ public class SistragesMock {
 	public final static String IDIOMA = "es";
 	/** ID Dominio. */
 	public static final String ID_DOMINIO = "DOM-JUNIT";
+	/** ID Dominio CACHE EXPLICITO. */
+	public static final String ID_DOMINIO_CACHE_EXPLICITO = "DOM-CACHE-EXPLICITO";
+	/** ID Dominio CACHE IMPLICITO. */
+	public static final String ID_DOMINIO_CACHE_IMPLICITO = "DOM-CACHE-IMPLICITO";
+	/** ID Dominio CACHE NO. */
+	public static final String ID_DOMINIO_CACHE_NO = "DOM-CACHE-NO";
 
 	public static RConfiguracionGlobal crearConfiguracionGlobal() {
 		final RConfiguracionGlobal configuracionGlobal = new RConfiguracionGlobal();
@@ -305,15 +312,19 @@ public class SistragesMock {
 
 	public static RDominio crearDominio(final String idDominio) {
 		final RDominio dom1 = new RDominio();
-		dom1.setCachear(true);
 		dom1.setIdentificador(idDominio);
 		dom1.setTimestamp(generateTimestamp());
-		if (SistragesMock.ID_DOMINIO.equals(idDominio)) {
-			dom1.setTipo(RDominio.TIPO_LISTA_LISTA);
-		} else {
-			dom1.setTipo(RDominio.TIPO_CONSULTA_BD);
-			dom1.setSql("Select 1 from dual");
+		dom1.setTipo(RDominio.TIPO_LISTA_LISTA);
+
+		// Configuracion cache
+		dom1.setTipoCache(TypeCache.CACHE_EXPLICITA.toString());
+		if (SistragesMock.ID_DOMINIO_CACHE_IMPLICITO.equals(idDominio)) {
+			dom1.setTipoCache(TypeCache.CACHE_IMPLICITA.toString());
 		}
+		if (SistragesMock.ID_DOMINIO_CACHE_NO.equals(idDominio)) {
+			dom1.setTipoCache(TypeCache.CACHE_NO.toString());
+		}
+
 		return dom1;
 	}
 

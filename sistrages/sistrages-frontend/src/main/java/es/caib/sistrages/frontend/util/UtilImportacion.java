@@ -236,20 +236,9 @@ public class UtilImportacion {
 		FilaImportarDominio fila;
 		final String mensaje = null;
 		if (dominioActual == null || (dominio != null && !mismaEstructura(dominio, dominioActual, fd, fdActual))) {
-
-			// if (dominioActual == null) {
-			// mensaje = UtilJSF.getLiteral("importar.ok.soloimportar");
-			// } else {
-			// mensaje = UtilJSF.getLiteral("importar.ok.soloreemplazar");
-			// }
-
 			fila = FilaImportarDominio.crearITsoloReemplazar(dominio, dominioActual, fd, fdContent, fdActual, mensaje);
-
 		} else {
-
-			// mensaje = UtilJSF.getLiteral("importar.ok.actualizacioncompleta");
 			fila = FilaImportarDominio.crearITconPermisos(dominio, dominioActual, fd, fdContent, fdActual, mensaje);
-
 		}
 		return fila;
 	}

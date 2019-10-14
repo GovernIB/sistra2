@@ -480,7 +480,8 @@ public class DominioDaoImpl implements DominioDao {
 			}
 			// Actualizamos los params
 			dominioAlmacenar.setParametros(UtilJSON.toJSON(filaDominio.getDominio().getParametros()));
-
+			// Actualizamos el tipo de cache
+			dominioAlmacenar.setCacheo(filaDominio.getDominio().getCache().toString());
 			if (dominioAlmacenar.getCodigo() == null) {
 				entityManager.persist(dominioAlmacenar);
 			} else {
