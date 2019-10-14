@@ -39,13 +39,14 @@ public final class UtilsPasoRellenar {
 	 * Obtiene documentos completados paso.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                               Datos internos paso
 	 * @param pDpp
-	 *            Datos persistencia paso
+	 *                               Datos persistencia paso
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                               Definicion tramite
 	 * @param pIdFormularioHasta
-	 *            Id formulario hasta que busca (si null todos los completados)
+	 *                               Id formulario hasta que busca (si null todos
+	 *                               los completados)
 	 *
 	 * @return lista documentos completados
 	 */
@@ -84,11 +85,11 @@ public final class UtilsPasoRellenar {
 	 * Crea datos documento accesibles desde los otros pasos.
 	 *
 	 * @param dpp
-	 *            Datos persistencia paso
+	 *                              Datos persistencia paso
 	 * @param detalleFormulario
-	 *            Detalle formulario
+	 *                              Detalle formulario
 	 * @param valoresFormulario
-	 *            Valores formulario
+	 *                              Valores formulario
 	 * @return DatosDocumentoFormulario
 	 */
 	public static DatosDocumentoFormulario crearDatosDocumentoFormulario(final DatosPersistenciaPaso dpp,
@@ -98,6 +99,7 @@ public final class UtilsPasoRellenar {
 		final DatosDocumentoFormulario ddf = DatosDocumentoFormulario.createNewDatosDocumentoFormulario();
 		ddf.setIdPaso(dpp.getId());
 		ddf.setId(detalleFormulario.getId());
+		ddf.setTipoENI("TD14");
 		ddf.setFormularioCaptura(false);
 		ddf.setTitulo(detalleFormulario.getTitulo());
 		ddf.setFichero(new ReferenciaFichero(docPers.getFichero().getId(), docPers.getFichero().getClave()));

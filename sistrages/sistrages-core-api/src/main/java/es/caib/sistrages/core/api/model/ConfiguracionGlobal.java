@@ -35,6 +35,32 @@ public class ConfiguracionGlobal extends ModelApi {
 	private boolean noModificable;
 
 	/**
+	 * Constructor
+	 * 
+	 * @param codigo
+	 * @param propiedad
+	 * @param valor
+	 * @param descripcion
+	 * @param noModificable
+	 */
+	public ConfiguracionGlobal(final Long codigo, final String propiedad, final String valor, final String descripcion,
+			final boolean noModificable) {
+		super();
+		this.codigo = codigo;
+		this.propiedad = propiedad;
+		this.valor = valor;
+		this.descripcion = descripcion;
+		this.noModificable = noModificable;
+	}
+
+	/**
+	 * Constructor.
+	 */
+	public ConfiguracionGlobal() {
+		super();
+	}
+
+	/**
 	 * Obtiene el valor de codigo.
 	 *
 	 * @return el valor de codigo
@@ -46,7 +72,8 @@ public class ConfiguracionGlobal extends ModelApi {
 	/**
 	 * Establece el valor de codigo.
 	 *
-	 * @param codigo el nuevo valor de codigo
+	 * @param codigo
+	 *                   el nuevo valor de codigo
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -64,7 +91,8 @@ public class ConfiguracionGlobal extends ModelApi {
 	/**
 	 * Establece el valor de propiedad.
 	 *
-	 * @param codigo el nuevo valor de propiedad
+	 * @param codigo
+	 *                   el nuevo valor de propiedad
 	 */
 	public void setPropiedad(final String codigo) {
 		this.propiedad = codigo;
@@ -82,7 +110,8 @@ public class ConfiguracionGlobal extends ModelApi {
 	/**
 	 * Establece el valor de valor.
 	 *
-	 * @param valor el nuevo valor de valor
+	 * @param valor
+	 *                  el nuevo valor de valor
 	 */
 	public void setValor(final String valor) {
 		this.valor = valor;
@@ -100,7 +129,8 @@ public class ConfiguracionGlobal extends ModelApi {
 	/**
 	 * Establece el valor de descripcion.
 	 *
-	 * @param descripcion el nuevo valor de descripcion
+	 * @param descripcion
+	 *                        el nuevo valor de descripcion
 	 */
 	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
@@ -114,7 +144,8 @@ public class ConfiguracionGlobal extends ModelApi {
 	}
 
 	/**
-	 * @param noModificable the noModificable to set
+	 * @param noModificable
+	 *                          the noModificable to set
 	 */
 	public void setNoModificable(final boolean noModificable) {
 		this.noModificable = noModificable;

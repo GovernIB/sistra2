@@ -18,6 +18,7 @@ import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.Sesion;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
+import es.caib.sistrages.core.service.component.ConfiguracionComponent;
 import es.caib.sistrages.core.service.repository.dao.ConfiguracionGlobalDao;
 import es.caib.sistrages.core.service.repository.dao.FicheroExternoDao;
 import es.caib.sistrages.core.service.repository.dao.ProcesoDao;
@@ -42,8 +43,13 @@ public class SystemServiceImpl implements SystemService {
 	@Autowired
 	ConfiguracionGlobalDao configuracionGlobalDao;
 
+	/** Sesion DAO. */
 	@Autowired
 	SesionDao sesionDao;
+
+	/** Configuracion component. */
+	@Autowired
+	ConfiguracionComponent configuracionComponent;
 
 	/** Propiedades configuración especificadas en properties. */
 	private Properties propiedadesLocales;
@@ -79,6 +85,7 @@ public class SystemServiceImpl implements SystemService {
 				prop = cg.getValor();
 			}
 		}
+		prop = configuracionComponent.replacePlaceholders(prop);
 		return prop;
 	}
 

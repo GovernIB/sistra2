@@ -73,9 +73,9 @@ public final class AccionGuardarFormulario implements AccionPaso {
 	private ScriptExec scriptFlujo;
 
 	@Override
-	public RespuestaEjecutarAccionPaso ejecutarAccionPaso(DatosPaso pDatosPaso, DatosPersistenciaPaso pDpp,
-			TypeAccionPaso pAccionPaso, ParametrosAccionPaso pParametros, DefinicionTramiteSTG pDefinicionTramite,
-			VariablesFlujo pVariablesFlujo) {
+	public RespuestaEjecutarAccionPaso ejecutarAccionPaso(final DatosPaso pDatosPaso, final DatosPersistenciaPaso pDpp,
+			final TypeAccionPaso pAccionPaso, final ParametrosAccionPaso pParametros,
+			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo) {
 
 		// Datos finalizacion formulario (cuando se guarda)
 		DatosFinalizacionFormulario dff = null;
@@ -146,13 +146,13 @@ public final class AccionGuardarFormulario implements AccionPaso {
 	 * Obtiene datos de finalizacion del gestor de formularios.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                               Datos internos paso
 	 * @param pIdFormulario
-	 *            Id formulario
+	 *                               Id formulario
 	 * @param pTicket
-	 *            Ticket de finalizacion del gestor
+	 *                               Ticket de finalizacion del gestor
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                               Definicion tramite
 	 * @return Datos finalizacion gestor formularios
 	 */
 	private DatosFinalizacionFormulario obtenerDatosFinalizacionGestor(final DatosInternosPasoRellenar pDipa,
@@ -180,9 +180,9 @@ public final class AccionGuardarFormulario implements AccionPaso {
 	 * Valida si se puede guardar formulario.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                          Datos internos paso
 	 * @param pIdFormulario
-	 *            Id formulario
+	 *                          Id formulario
 	 *
 	 */
 	private void validarGuardarFormulario(final DatosInternosPasoRellenar pDipa, final String pIdFormulario) {
@@ -201,19 +201,19 @@ public final class AccionGuardarFormulario implements AccionPaso {
 	 * Ejecuta script post guardar (si existe).
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                               Datos internos paso
 	 * @param pDpp
-	 *            Datos persistencia
+	 *                               Datos persistencia
 	 * @param pIdFormulario
-	 *            Definición formulario
+	 *                               Definición formulario
 	 * @param pDff
-	 *            Datos del formulario que se intentan guardar
+	 *                               Datos del formulario que se intentan guardar
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                               Definicion tramite
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 * @param pBorrarOpcional
-	 *            Indica si se esta borrando formulario opcional
+	 *                               Indica si se esta borrando formulario opcional
 	 * @return el respuesta script
 	 */
 	private RespuestaScript ejecutarScriptPostGuardar(final DatosInternosPasoRellenar pDipa,
@@ -242,6 +242,7 @@ public final class AccionGuardarFormulario implements AccionPaso {
 				final DatosDocumentoFormulario dFormActual = new DatosDocumentoFormulario();
 				dFormActual.setIdPaso(pDpp.getId());
 				dFormActual.setId(formularioDef.getIdentificador());
+				dFormActual.setTipoENI("TD14");
 				dFormActual.setTitulo(formularioDef.getDescripcion());
 				dFormActual.setCampos(new ValoresFormulario(pDff.getXml()));
 				dFormActual.setFichero(null);
@@ -276,15 +277,15 @@ public final class AccionGuardarFormulario implements AccionPaso {
 	 * incorrectos.
 	 *
 	 * @param pDipa
-	 *            Datos internos del paso
+	 *                            Datos internos del paso
 	 * @param pPasoDef
-	 *            Definicion paso
+	 *                            Definicion paso
 	 * @param pFormularioDef
-	 *            Definición formulario
+	 *                            Definición formulario
 	 * @param pRespModifForms
-	 *            Respuesta script modificacion formularios
+	 *                            Respuesta script modificacion formularios
 	 * @param pVariablesFlujo
-	 *            Variables de flujo
+	 *                            Variables de flujo
 	 */
 	private void verificarFormulariosIncorrectos(final DatosInternosPasoRellenar pDipa,
 			final RPasoTramitacionRellenar pPasoDef, final RFormularioTramite pFormularioDef,
@@ -314,11 +315,11 @@ public final class AccionGuardarFormulario implements AccionPaso {
 	 * guardando.
 	 *
 	 * @param pIdFormGuardar
-	 *            Id formulario a guardar
+	 *                           Id formulario a guardar
 	 * @param pIdFormModif
-	 *            Id formulario a modificar
+	 *                           Id formulario a modificar
 	 * @param pPasoDef
-	 *            Definición paso
+	 *                           Definición paso
 	 * @return Indica si es posterior (true) o anterior (false).
 	 */
 	private boolean esFormularioPosterior(final String pIdFormGuardar, final String pIdFormModif,
@@ -338,15 +339,15 @@ public final class AccionGuardarFormulario implements AccionPaso {
 	 * Verificamos que se pueden modificar los formularios que se han modificado.
 	 *
 	 * @param pDipa
-	 *            Datos internos del paso
+	 *                            Datos internos del paso
 	 * @param pPasoDef
-	 *            Definicion paso
+	 *                            Definicion paso
 	 * @param pFormularioDef
-	 *            Definición formulario
+	 *                            Definición formulario
 	 * @param pRespModifForms
-	 *            Respuesta script modificacion formularios
+	 *                            Respuesta script modificacion formularios
 	 * @param pVariablesFlujo
-	 *            Variables de flujo
+	 *                            Variables de flujo
 	 */
 	private void verificarFormulariosModificados(final DatosInternosPasoRellenar pDipa,
 			final RPasoTramitacionRellenar pPasoDef, final RFormularioTramite pFormularioDef,
@@ -384,19 +385,19 @@ public final class AccionGuardarFormulario implements AccionPaso {
 	 * de los formularios que se modifiquen en el script de postguardar.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                            Datos internos paso
 	 * @param pDpp
-	 *            Datos persistencia paso
+	 *                            Datos persistencia paso
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                            Variables flujo
 	 * @param idFormulario
-	 *            Id formulario que se guarda
+	 *                            Id formulario que se guarda
 	 * @param xml
-	 *            Xml de datos del formulario que se guarda
+	 *                            Xml de datos del formulario que se guarda
 	 * @param pdf
-	 *            Pdf de visualizacion del formulario que se guarda
+	 *                            Pdf de visualizacion del formulario que se guarda
 	 * @param rs
-	 *            Respuesta del script de postguardar formulario
+	 *                            Respuesta del script de postguardar formulario
 	 */
 	private void actualizarPersistenciaGuardar(final DatosInternosPasoRellenar pDipa, final DatosPersistenciaPaso pDpp,
 			final VariablesFlujo pVariablesFlujo, final String idFormulario, final byte[] xml, final byte[] pdf,
@@ -414,19 +415,19 @@ public final class AccionGuardarFormulario implements AccionPaso {
 	 * Actualiza en persistencia los datos del formulario actual.
 	 *
 	 * @param pDipa
-	 *            Datos interno paso
+	 *                            Datos interno paso
 	 * @param pDpp
-	 *            Datos persistencia
+	 *                            Datos persistencia
 	 * @param idFormulario
-	 *            id formulario
+	 *                            id formulario
 	 * @param xml
-	 *            XML de datos
+	 *                            XML de datos
 	 * @param pdf
-	 *            PDF de visualización
+	 *                            PDF de visualización
 	 * @param rs
-	 *            Resultado script post guardar
+	 *                            Resultado script post guardar
 	 * @param pVariablesFlujo
-	 *            Variables de flujo
+	 *                            Variables de flujo
 	 */
 	private void actualizarFormularioActual(final DatosInternosPasoRellenar pDipa, final DatosPersistenciaPaso pDpp,
 			final String idFormulario, final byte[] xml, final byte[] pdf, final RespuestaScript rs,
@@ -483,15 +484,15 @@ public final class AccionGuardarFormulario implements AccionPaso {
 	 * Actualiza formularios indicados en el script de postguardar.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                                Datos internos paso
 	 * @param pDpp
-	 *            Datos persistencia
+	 *                                Datos persistencia
 	 * @param pIdFormularioActual
-	 *            Id formulario actual
+	 *                                Id formulario actual
 	 * @param rs
-	 *            Resultado script post guardar
+	 *                                Resultado script post guardar
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                                Variables flujo
 	 */
 	private void actualizarFormulariosPostGuardar(final DatosInternosPasoRellenar pDipa,
 			final DatosPersistenciaPaso pDpp, final String pIdFormularioActual, final RespuestaScript rs,
@@ -575,9 +576,9 @@ public final class AccionGuardarFormulario implements AccionPaso {
 	 * Valida si se puede guardar formulario.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                          Datos internos paso
 	 * @param pIdFormulario
-	 *            Id formulario
+	 *                          Id formulario
 	 *
 	 */
 	private void validarCancelarFormulario(final DatosInternosPasoRellenar pDipa, final String pIdFormulario) {
@@ -599,15 +600,15 @@ public final class AccionGuardarFormulario implements AccionPaso {
 	 * Actualiza datos de persistencia en el paso de cancelar formulario opcional.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso pagar
+	 *                                        Datos internos paso pagar
 	 * @param pDpp
-	 *            Datos persistencia paso pagar
+	 *                                        Datos persistencia paso pagar
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                                        Variables flujo
 	 * @param pIdFormulario
-	 *            Id formulario opcional que se cancela
+	 *                                        Id formulario opcional que se cancela
 	 * @param pRespuestaScriptPostGuardar
-	 *            Respuesta script postguardar
+	 *                                        Respuesta script postguardar
 	 */
 	private void actualizarPersistenciaCancelarFormulario(final DatosInternosPasoRellenar pDipa,
 			final DatosPersistenciaPaso pDpp, final VariablesFlujo pVariablesFlujo, final String pIdFormulario,

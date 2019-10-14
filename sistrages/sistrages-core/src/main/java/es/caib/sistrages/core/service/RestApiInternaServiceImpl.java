@@ -139,7 +139,14 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Override
 	@NegocioInterceptor
 	public List<ConfiguracionGlobal> listConfiguracionGlobal(final String filtro) {
-		return configuracionGlobalDao.getAllByFiltro(filtro);
+		final List<ConfiguracionGlobal> config = configuracionGlobalDao.getAllByFiltro(filtro);
+		final List<ConfiguracionGlobal> res = new ArrayList<>();
+		for (final ConfiguracionGlobal c : config) {
+			final ConfiguracionGlobal c1 = new ConfiguracionGlobal(c.getCodigo(), c.getPropiedad(),
+					configuracionComponent.replacePlaceholders(c.getValor()), c.getDescripcion(), c.isNoModificable());
+			res.add(c1);
+		}
+		return res;
 	}
 
 	@Override

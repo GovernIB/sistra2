@@ -53,6 +53,11 @@ public abstract class DatosDocumento implements Serializable {
 	private List<Persona> firmantes = new ArrayList<>();
 
 	/**
+	 * Tipo documento ENI.
+	 */
+	private String tipoENI = "TD99";
+
+	/**
 	 * Método de acceso a id DatosDocumento.
 	 *
 	 * @return id
@@ -65,7 +70,7 @@ public abstract class DatosDocumento implements Serializable {
 	 * Método para establecer id DatosDocumento.
 	 *
 	 * @param pId
-	 *            id a establecer
+	 *                id a establecer
 	 */
 	public final void setId(final String pId) {
 		id = pId;
@@ -84,7 +89,7 @@ public abstract class DatosDocumento implements Serializable {
 	 * Método para establecer titulo.
 	 *
 	 * @param pTitulo
-	 *            titulo a establecer
+	 *                    titulo a establecer
 	 */
 	public final void setTitulo(final String pTitulo) {
 		titulo = pTitulo;
@@ -103,7 +108,7 @@ public abstract class DatosDocumento implements Serializable {
 	 * Método para establecer datosFichero.
 	 *
 	 * @param pDatosFichero
-	 *            datosFichero a establecer
+	 *                          datosFichero a establecer
 	 */
 	public final void setFichero(final ReferenciaFichero pDatosFichero) {
 		fichero = pDatosFichero;
@@ -122,7 +127,7 @@ public abstract class DatosDocumento implements Serializable {
 	 * Método para establecer tipo.
 	 *
 	 * @param pTipo
-	 *            tipo a establecer
+	 *                  tipo a establecer
 	 */
 	protected final void setTipo(final TypeDocumento pTipo) {
 		tipo = pTipo;
@@ -141,9 +146,9 @@ public abstract class DatosDocumento implements Serializable {
 	 * Método para establecer presentacion.
 	 *
 	 * @param presentacion
-	 *            presentacion a establecer
+	 *                         presentacion a establecer
 	 */
-	public void setPresentacion(TypePresentacion presentacion) {
+	public void setPresentacion(final TypePresentacion presentacion) {
 		this.presentacion = presentacion;
 	}
 
@@ -160,9 +165,9 @@ public abstract class DatosDocumento implements Serializable {
 	 * Método para establecer idPaso.
 	 *
 	 * @param idPaso
-	 *            idPaso a establecer
+	 *                   idPaso a establecer
 	 */
-	public void setIdPaso(String idPaso) {
+	public void setIdPaso(final String idPaso) {
 		this.idPaso = idPaso;
 	}
 
@@ -170,9 +175,9 @@ public abstract class DatosDocumento implements Serializable {
 	 * Método para establecer firmar.
 	 *
 	 * @param firmar
-	 *            firmar a establecer
+	 *                   firmar a establecer
 	 */
-	public void setFirmar(TypeSiNo firmar) {
+	public void setFirmar(final TypeSiNo firmar) {
 		this.firmar = firmar;
 	}
 
@@ -189,19 +194,38 @@ public abstract class DatosDocumento implements Serializable {
 	 * Método para establecer firmantes.
 	 *
 	 * @param firmantes
-	 *            firmantes a establecer
+	 *                      firmantes a establecer
 	 */
-	public void setFirmantes(List<Persona> firmantes) {
+	public void setFirmantes(final List<Persona> firmantes) {
 		this.firmantes = firmantes;
 	}
 
 	/**
 	 * Método de acceso a firmar.
-	 * 
+	 *
 	 * @return firmar
 	 */
 	public TypeSiNo getFirmar() {
 		return firmar;
+	}
+
+	/**
+	 * Método de acceso a tipoENI.
+	 * 
+	 * @return tipoENI
+	 */
+	public String getTipoENI() {
+		return tipoENI;
+	}
+
+	/**
+	 * Método para establecer tipoENI.
+	 * 
+	 * @param tipoENI
+	 *                    tipoENI a establecer
+	 */
+	public void setTipoENI(final String tipoENI) {
+		this.tipoENI = tipoENI;
 	}
 
 }

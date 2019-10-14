@@ -510,6 +510,7 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		final DatosDocumentoJustificante ddj = new DatosDocumentoJustificante();
 		ddj.setIdPaso(pDipa.getIdPaso());
 		ddj.setId(ConstantesFlujo.ID_JUSTIFICANTE_REGISTRO);
+		ddj.setTipoENI("TD99");
 		ddj.setTitulo(pDipa.getResultadoRegistro().getAsunto());
 		ddj.setSolicitante(new Persona(pDipa.getParametrosRegistro().getDatosPresentacion().getPresentador().getNif(),
 				pDipa.getParametrosRegistro().getDatosPresentacion().getPresentador().getNombreApellidos()));

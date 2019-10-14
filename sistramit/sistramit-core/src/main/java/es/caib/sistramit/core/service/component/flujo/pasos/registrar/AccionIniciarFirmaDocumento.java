@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
@@ -118,12 +117,8 @@ public final class AccionIniciarFirmaDocumento implements AccionPaso {
 				+ "&idDocumento=" + idDocumento + "&instancia=" + instancia + "&firmante=" + firmante.getNif();
 
 		// Asociamos tipo documental
-		// TODO Hacerlo configurable desde STG
 		final DatosDocumento dd = pVariablesFlujo.getDocumento(idDocumento, instancia);
-		String tipoDocumental = "TD99";
-		if (dd.getTipo() == TypeDocumento.FORMULARIO) {
-			tipoDocumental = "TD14";
-		}
+		final String tipoDocumental = dd.getTipoENI();
 
 		// Invoca a componente para redirección firma
 		final RedireccionFirma redireccionFirma = firmaComponent.redireccionFirmaExterna(

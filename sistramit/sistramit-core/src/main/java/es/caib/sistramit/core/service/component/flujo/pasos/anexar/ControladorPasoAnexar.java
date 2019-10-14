@@ -171,13 +171,13 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * Regenera datos paso anexar a partir de persistencia.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso anexar
+	 *                               Datos internos paso anexar
 	 * @param pDpp
-	 *            Datos persistencia paso
+	 *                               Datos persistencia paso
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                               Definicion tramite
 	 *
 	 */
 	private void regenerarDatosAnexar(final DatosInternosPasoAnexar pDipa, final DatosPersistenciaPaso pDpp,
@@ -198,13 +198,13 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * variables de flujo.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                               Datos internos paso
 	 * @param idPaso
-	 *            Id paso
+	 *                               Id paso
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                               Definicion tramite
 	 * @param pVariablesFlujo
-	 *            Variables paso
+	 *                               Variables paso
 	 * @return el detalle paso anexar
 	 */
 	private DetallePasoAnexar calcularDetalle(final DatosInternosPasoAnexar pDipa, final String idPaso,
@@ -242,9 +242,9 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * Si hay algun doc presencial, todos deberan ser presenciales.
 	 *
 	 * @param anexosFij
-	 *            Anexos fijos
+	 *                      Anexos fijos
 	 * @param anexosDin
-	 *            Anexos dinamicos
+	 *                      Anexos dinamicos
 	 */
 	private void revisarDocumentosPresenciales(final List<Anexo> anexosFij, final List<Anexo> anexosDin) {
 		if (existeDocPresencial(anexosFij) || existeDocPresencial(anexosDin)) {
@@ -257,7 +257,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * Comprueba si existe algún documento presencial.
 	 *
 	 * @param listaAnexos
-	 *            Lista anexos
+	 *                        Lista anexos
 	 * @return boolean
 	 */
 	private boolean existeDocPresencial(final List<Anexo> listaAnexos) {
@@ -277,7 +277,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * Convierte los documentos electrónicos en presenciales.
 	 *
 	 * @param listaAnexos
-	 *            Lista anexos
+	 *                        Lista anexos
 	 */
 	private void convertirDocPresencial(final List<Anexo> listaAnexos) {
 		if (listaAnexos != null) {
@@ -300,9 +300,9 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * Obtiene anexos segun obligatoriedad.
 	 *
 	 * @param pObligatorio
-	 *            Obligatoriedad
+	 *                         Obligatoriedad
 	 * @param pAnexos
-	 *            Lista anexos
+	 *                         Lista anexos
 	 * @return Lista anexos
 	 */
 	private List<Anexo> obtenerAnexos(final TypeObligatoriedad pObligatorio, final List<Anexo> pAnexos) {
@@ -322,13 +322,13 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * las variables del flujo.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                               Datos internos paso
 	 * @param defPaso
-	 *            Definición paso
+	 *                               Definición paso
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                               Definicion tramite
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 * @return Lista dinámica de anexos
 	 */
 	private List<Anexo> calcularDetalleListaDinamicaAnexos(final DatosInternosPasoAnexar pDipa,
@@ -350,6 +350,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 				final Anexo anexo = Anexo.createNewAnexo();
 				anexo.setId(anexd.getIdentificador());
 				anexo.setTitulo(anexd.getDescripcion());
+				anexo.setTipoENI("TD99");
 				anexo.setAyuda("");
 				anexo.setPresentacion(TypePresentacion.ELECTRONICA);
 				if (StringUtils.isNotBlank(anexd.getExtensiones())) {
@@ -389,11 +390,11 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * Calcula lista fija de anexos del paso.
 	 *
 	 * @param defPaso
-	 *            Parámetro def paso
+	 *                               Parámetro def paso
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                               Definicion tramite
 	 * @param pVariablesFlujo
-	 *            Variables flujo.
+	 *                               Variables flujo.
 	 * @return el list
 	 */
 	private List<Anexo> calcularDetalleListaFijaAnexos(final RPasoTramitacionAnexar defPaso,
@@ -406,6 +407,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 			final Anexo anexoDetalle = Anexo.createNewAnexo();
 			anexoDetalle.setId(anexoDef.getIdentificador());
 			anexoDetalle.setTitulo(anexoDef.getDescripcion());
+			anexoDetalle.setTipoENI(anexoDef.getTipoDocumental());
 			anexoDetalle.setPresentacion(TypePresentacion.fromString(anexoDef.getPresentacion()));
 			anexoDetalle.setAyuda(StringUtils.defaultString(anexoDef.getAyuda().getMensajeHtml()));
 			if (anexoDef.getAyuda().getFichero() != null) {
@@ -469,13 +471,14 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * Calcula los firmantes de un anexo.
 	 *
 	 * @param anexoDetalle
-	 *            Anexo para establecer la informacion de los firmantes
+	 *                               Anexo para establecer la informacion de los
+	 *                               firmantes
 	 * @param anexoDef
-	 *            Definicion del anexo
+	 *                               Definicion del anexo
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                               Definicion tramite
 	 * @param pVariablesFlujo
-	 *            Variables de flujo
+	 *                               Variables de flujo
 	 *
 	 */
 	private void calcularFirmantes(final RAnexoTramite anexoDef, final Anexo anexoDetalle,
@@ -525,11 +528,11 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * Evalua obligatoriedad anexo.
 	 *
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                               Definicion tramite
 	 * @param detalle
-	 *            Detalle anexo
+	 *                               Detalle anexo
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 * @return Obligatoriedad
 	 */
 	private TypeObligatoriedad evaluarObligatoriedad(final DefinicionTramiteSTG pDefinicionTramite,
@@ -551,11 +554,11 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * Regenera anexos que todavia no existen en persistencia.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                            Datos internos paso
 	 * @param pDpp
-	 *            Datos persistencia
+	 *                            Datos persistencia
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                            Variables flujo
 	 */
 	private void regenerarAnexosNuevos(final DatosInternosPasoAnexar pDipa, final DatosPersistenciaPaso pDpp,
 			final VariablesFlujo pVariablesFlujo) {
@@ -578,11 +581,11 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * Regenera anexos que existen en persistencia.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                            Datos internos paso
 	 * @param pDpp
-	 *            Datos persistencia
+	 *                            Datos persistencia
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                            Variables flujo
 	 */
 	private void regenerarAnexosExistentes(final DatosInternosPasoAnexar pDipa, final DatosPersistenciaPaso pDpp,
 			final VariablesFlujo pVariablesFlujo) {
@@ -610,11 +613,11 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * Elimina documento existente en persistencia.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                            Datos internos paso
 	 * @param docDpp
-	 *            Datos documento persistente
+	 *                            Datos documento persistente
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                            Variables flujo
 	 *
 	 */
 	private void eliminarDocumentoPersistencia(final DatosInternosPasoAnexar pDipa,
@@ -633,11 +636,11 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * Actualiza documento existente.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                            Datos internos paso
 	 * @param docDpp
-	 *            Datos documento persistente
+	 *                            Datos documento persistente
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                            Variables flujo
 	 */
 	private void actualizarDocumentoExistente(final DatosInternosPasoAnexar pDipa,
 			final DocumentoPasoPersistencia docDpp, final VariablesFlujo pVariablesFlujo) {
@@ -696,7 +699,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * Calcula marcadores estado.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                  Datos internos paso
 	 * @return marcadores estado
 	 */
 	private EstadoMarcadores calcularMarcadoresEstado(final DatosInternosPasoAnexar pDipa) {
@@ -735,11 +738,11 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * Añade los ficheros del anexo a la lista de documentos completados.
 	 *
 	 * @param pDpp
-	 *            Datos persistencia paso
+	 *                              Datos persistencia paso
 	 * @param pDetalleAnexo
-	 *            Detalle anexo
+	 *                              Detalle anexo
 	 * @param pListaCompletados
-	 *            Lista de documentos completados
+	 *                              Lista de documentos completados
 	 */
 	private void addFicherosAnexo(final DatosPersistenciaPaso pDpp, final Anexo pDetalleAnexo,
 			final List<DatosDocumento> pListaCompletados) {
@@ -754,7 +757,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 			ddf.setPresentacion(pDetalleAnexo.getPresentacion());
 			ddf.setFirmar(pDetalleAnexo.getFirmar());
 			ddf.setFirmantes(pDetalleAnexo.getFirmantes());
-
+			ddf.setTipoENI(pDetalleAnexo.getTipoENI());
 			if (pDetalleAnexo.getMaxInstancias() > ConstantesNumero.N1) {
 				ddf.setTitulo(fichero.getTitulo());
 			} else {
@@ -775,11 +778,11 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * Añade anexo presencial a la lista de documentos completados.
 	 *
 	 * @param pDpp
-	 *            Datos persistencia paso
+	 *                              Datos persistencia paso
 	 * @param pDetalleAnexo
-	 *            Detalle anexo
+	 *                              Detalle anexo
 	 * @param pListaCompletados
-	 *            Lista de documentos completados
+	 *                              Lista de documentos completados
 	 */
 	private void addAnexoPresencial(final DatosPersistenciaPaso pDpp, final Anexo pDetalleAnexo,
 			final List<DatosDocumento> pListaCompletados) {
@@ -791,6 +794,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 		ddf.setTitulo(pDetalleAnexo.getTitulo());
 		ddf.setFirmar(pDetalleAnexo.getFirmar());
 		ddf.setFirmantes(pDetalleAnexo.getFirmantes());
+		ddf.setTipoENI(pDetalleAnexo.getTipoENI());
 		pListaCompletados.add(ddf);
 	}
 

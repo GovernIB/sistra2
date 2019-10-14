@@ -142,13 +142,13 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 	 * Crea los datos del documento de pago accesibles desde otros pasos.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                               Datos internos paso
 	 * @param pDpp
-	 *            Datos persistencia
+	 *                               Datos persistencia
 	 * @param pDetallePago
-	 *            Detalle pago
+	 *                               Detalle pago
 	 * @param pDefinicionTramite
-	 *            Definición trámite
+	 *                               Definición trámite
 	 * @return Datos documento pago
 	 */
 	private DatosDocumentoPago crearDatosDocumentoPago(final DatosInternosPasoPagar pDipa,
@@ -160,6 +160,7 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 		final DatosDocumentoPago ddp = new DatosDocumentoPago();
 		ddp.setIdPaso(pDpp.getId());
 		ddp.setId(pDetallePago.getId());
+		ddp.setTipoENI("TD99");
 		ddp.setTitulo(pDetallePago.getTitulo());
 		ddp.setFichero(dpp.getFichero());
 		ddp.setPresentacion(pDetallePago.getPresentacion());
@@ -205,11 +206,11 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 	 * almacena sus datos del pago en los datos internos del paso.
 	 *
 	 * @param pDipa
-	 *            Datos internos del paso
+	 *                               Datos internos del paso
 	 * @param pDefinicionTramite
-	 *            Parámetro definicion tramite
+	 *                               Parámetro definicion tramite
 	 * @param pVariablesFlujo
-	 *            Parámetro variables flujo
+	 *                               Parámetro variables flujo
 	 * @return el detalle paso pagar
 	 */
 	private DetallePasoPagar calcularDetalle(final DatosInternosPasoPagar pDipa,
@@ -232,13 +233,13 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 	 * Calcula la lista fija de pagos.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                               Datos internos paso
 	 * @param pDefinicionTramite
-	 *            Definición trámite
+	 *                               Definición trámite
 	 * @param pPasoDef
-	 *            Parámetro def paso
+	 *                               Parámetro def paso
 	 * @param pVariablesFlujo
-	 *            Parámetro variables flujo
+	 *                               Parámetro variables flujo
 	 * @return Lista de pagos fijos
 	 */
 	private List<Pago> calcularDetalleListaFijaPagos(final DatosInternosPasoPagar pDipa,
@@ -294,11 +295,11 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 	 * Calcula datos pago fijo.
 	 *
 	 * @param pDefinicionTramite
-	 *            Definición trámite
+	 *                               Definición trámite
 	 * @param pPagoDef
-	 *            Definición pago
+	 *                               Definición pago
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 * @return Datos del pago
 	 */
 	private DatosCalculoPago calcularDatosPagoFijo(final DefinicionTramiteSTG pDefinicionTramite,
@@ -338,16 +339,17 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 	 * Regenera datos a partir persistencia.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso pagar
+	 *                               Datos internos paso pagar
 	 * @param pDpp
-	 *            Datos persistencia
+	 *                               Datos persistencia
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 * @param pFaseEjecucion
-	 *            Indica en que momento se actualizan los datos internos (inicio,
-	 *            carga, revisar o después de una acción).
+	 *                               Indica en que momento se actualizan los datos
+	 *                               internos (inicio, carga, revisar o después de
+	 *                               una acción).
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                               Definicion tramite
 	 */
 	private void regenerarDatosPasoPagar(final DatosInternosPasoPagar pDipa, final DatosPersistenciaPaso pDpp,
 			final VariablesFlujo pVariablesFlujo, final TypeFaseActualizacionDatosInternos pFaseEjecucion,
@@ -371,11 +373,11 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 	 * no existen en persistencia.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso pagar
+	 *                            Datos internos paso pagar
 	 * @param pDpp
-	 *            Datos persistencia
+	 *                            Datos persistencia
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                            Variables flujo
 	 */
 	private void regenerarPagosNuevos(final DatosInternosPasoPagar pDipa, final DatosPersistenciaPaso pDpp,
 			final VariablesFlujo pVariablesFlujo) {
@@ -398,14 +400,15 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 	 * Actualiza la información de los pagos existentes en persistencia.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso pagar
+	 *                            Datos internos paso pagar
 	 * @param pDpp
-	 *            Datos persistencia
+	 *                            Datos persistencia
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                            Variables flujo
 	 * @param pFaseEjecucion
-	 *            Indica en que momento se actualizan los datos internos (inicio,
-	 *            carga, revisar o después de una acción).
+	 *                            Indica en que momento se actualizan los datos
+	 *                            internos (inicio, carga, revisar o después de una
+	 *                            acción).
 	 */
 	private void regenerarPagosExistentes(final DatosInternosPasoPagar pDipa, final DatosPersistenciaPaso pDpp,
 			final VariablesFlujo pVariablesFlujo, final TypeFaseActualizacionDatosInternos pFaseEjecucion) {
@@ -430,13 +433,13 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 	 * Actualiza datos pago iniciado (completado o incorrecto).
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                                   Datos internos paso
 	 * @param pDocumentoPersistencia
-	 *            Documento persistencia
+	 *                                   Documento persistencia
 	 * @param pDetallePago
-	 *            Detalle del pago
+	 *                                   Detalle del pago
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                                   Variables flujo
 	 */
 	private void actualizarDatosPagoIniciado(final DatosInternosPasoPagar pDipa,
 			final DocumentoPasoPersistencia pDocumentoPersistencia, final Pago detallePagoPasarela,
@@ -477,11 +480,11 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 	 * Elimina pago de persistencia.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                            Datos internos paso
 	 * @param pDocDpp
-	 *            Documento persistencia
+	 *                            Documento persistencia
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                            Variables flujo
 	 */
 	private void eliminarPago(final DatosInternosPasoPagar pDipa, final DocumentoPasoPersistencia pDocDpp,
 			final VariablesFlujo pVariablesFlujo) {
@@ -507,7 +510,7 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 	 * Calcula marcadores estado pagar.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                  Datos internos paso
 	 * @return Marcadores estado
 	 */
 	private EstadoMarcadores calcularMarcadoresEstado(final DatosInternosPasoPagar pDipa) {
