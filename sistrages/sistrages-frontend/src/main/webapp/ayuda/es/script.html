@@ -5,9 +5,78 @@
 	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
 </head>
 <body>
-<h1 class="stgH1">SCRIPT</h1>
+<h1 class="stgH1">AYUDA GENERAL DE SCRIPTS</h1>
 <p>
-	En la pantalla de '<i>SCRIPT</i>' se puede generar el alta, baja y edici&oacute;n de scripts.
+	Un trámite telemático permite particularizar su comportamiento mediante la introducción de scripts.
 </p>
+<p>
+	Estos scripts se establecen mediante esta ventana, en la que se distinguen las siguientes partes:
+</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Parte superior:</span> presenta el detalle del script, indicando:</li>
+		<ul>
+			<li><span class="boton">Para qué sirve:</span> indica para qué se utiliza el script.</li>
+			<li><span class="boton">Cuándo se ejecuta:</span> indica cuándo se ejecuta el script para que se tenga en cuenta cuándo aplicará dicho comportamiento.</li>
+			<li><span class="boton">Qué devuelve:</span> indica qué debe devolver el script, contemplando básicamente estas posibilidades:
+				<ul class="detalle">
+					<li>No debe devolver nada</li>
+					<li>Debe devolver un tipo básico: cadena, booleano, etc. mediante una sentencia Javascript “return” (p.ej. return "resultado" )</li>
+					<li>Debe devolver el resultado a través de un plugin de datos (en la parte de plugins empezará por “DATOS_”)</li>
+				</ul>
+			</li>
+		</ul>
+		</li>
+		<li style="margin-top:10px"><span class="nombreCampo">Parte inferior izquierda:</span> permite introducir el contenido del script que se deberá establecer en lenguaje Javascript.</li>
+		<li style="margin-top:10px"><span class="nombreCampo">Parte inferior derecha:</span> como soporte al script, se dispone de diferentes utilidades:</li>
+		<ul>
+			<li><span class="boton">Plugins:</span> indica qué debe devolver el script, contemplando básicamente estas posibilidades:
+				<ul class="detalle">
+					<li>Retorno de resultado del script, si se devuelve a través de un plugin de datos (plugin empieza por “DATOS_”).</li>
+					<li>Plugins de utilidades: acceso a datos de sesión, dominios, logs, etc.  A continuación se listan los plugins disponibles (para mayor detalle consultar la ayuda específica de cada plugin).
+						<ul class="detalle2">
+							<li>Plugins generales: accesibles desde todos los scripts:
+								<ul>
+									<li>PLUGIN_DOMINIOS: permite el acceso a los dominios asociados a la versión del trámite.	</li>
+									<li>PLUGIN_UTILS: permite realizar diversas validaciones.	</li>
+									<li>PLUGIN_LOG: permite utilizar el log de los scripts para hacer debug de ellos, en tiempo de desarrollo.</li>
+									<li>PLUGIN_MENSAJES: permite usar literales multiidioma dentro de los scripts.</li>
+									<li>PLUGIN_ERROR: permite establecer errores en la ejecución de un script.</li>
+								</ul>
+							</li>
+							<li><span class="nombreCampo">Plugins retorno de datos:</span>: dependiendo del script se pueden devolver los datos a través de un plugin. Empezarán por “DATOS_” (p.ej. para el script que especifica firmantes se devuelven los datos a través del plugin DATOS_FIRMANTES).</li>
+							<li><span class="nombreCampo">Plugins tramitación:</span>: dependiendo del script se pueden devolver los datos a través de un plugin. Empezarán por “DATOS_” (p.ej. para el script que especifica firmantes se devuelven los datos a través del plugin DATOS_FIRMANTES).
+								<ul>
+									<li>PLUGIN_SESIONTRAMITACION: acceso a los datos de la sesión de tramitación.</li>
+									<li>PLUGIN_FORMULARIOS: acceso a datos de formularios rellenados anteriormente.</li>
+								</ul>
+							</li>
+							<li><span class="nombreCampo">Plugins formulario:</span> accesibles desde los scripts en los pasos de tramitación:
+								<ul>
+									<li>PLUGIN_SESIONFORMULARIO: acceso a los datos de la sesión de formulario.</li>
+									<li>PLUGIN_DATOSFORMULARIO: acceso a los campos del formulario previos al elemento (campo o página) sobre el que se está rellenando el script.</li>
+									<li>PLUGIN_VALIDACION: en los scripts de validación se puede establecer un resultado de validación especificando un mensaje y un nivel de validación.	</li>
+								</ul>
+							</li>
+
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li><span class="boton">Mensajes:</span> permite definir mensajes multiidioma que pueden ser empleados en los scripts (a través de PLUGIN_MENSAJE y PLUGIN_ERROR).</li>
+			<li><span class="boton">Dominios:</span> permite acceder a los dominios asociados al trámite para ver la estructura y parámetros del mismo, así como hacer un ping para ver el resultado (para que un dominio pueda usarse en un trámite debe estar asociado al mismo).</li>
+			<li><span class="boton">Formularios:</span> dependiendo del momento en el que se ejecuta el script se puede tener acceso a datos de formularios. Para scripts en los pasos de tramitación se podrá tener acceso a los formularios rellenados anteriormente y para los scripts de campos de formulario se podrá tener acceso a los campos anteriores del mismo formulario.</li>
+		</ul>
+		</li>
+	</ul>
+	</p>
+	<h2 class="stgH2">OPERATIVA</h2>
+	<p>
+		<ul>
+			<li><span class="boton">Aceptar</span>: permite guardar el script. En caso de el script este vacío, se borrará automáticamente.</li>
+			<li><span class="boton">Borrar</span>: permite eliminar el script guardado.</li>
+			<li><span class="boton">Cerrar</span>: cierra la pantalla de scripts.</li>
+		</ul>
+	</p>
 </body>
 </html>
