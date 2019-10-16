@@ -1,13 +1,85 @@
 <html>
+
 <head>
-	<meta charset=UTF-8>
-	<meta http-equiv="content-type" content="text/html; utf-8">
-	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+    <meta charset=UTF-8>
+    <meta http-equiv="content-type" content="text/html; utf-8">
+    <link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
 </head>
+
 <body>
-<h1 class="stgH1">SCRIPT</h1>
-<p>
-	En la pantalla de '<i>SCRIPT</i>' es pot gestionar l'alta, baixa i edici&oacute; d'scripts.
-</p>
+    <h1 class="stgH1">AJUDA GENERAL DE SCRIPTS</h1>
+    <p>
+        Un tràmit telemàtic permet particularitzar el seu comportament mitjançant la introducció de scripts.
+    </p>
+    <p>
+        Aquests scripts s'estableixen mitjançant aquesta finestra, en la qual es distingeixen les següents parts:
+    </p>
+    <p>
+        <ul>
+            <li><span class="nombreCampo">Part superior:</span> presenta el detall del script, indicant:</li>
+            <ul>
+                <li><span class="boton">Per a què serveix:</span> indica per a què s'utilitza el script.</li>
+                <li><span class="boton">Quan s'executa:</span> indica quan s'executa el script perquè es tingui en compte quan aplicarà aquest comportament.</li>
+                <li><span class="boton">Què retorna:</span> indica què ha de retornar el script, contemplant bàsicament aquestes possibilitats:
+                    <ul class="detalle">
+                        <li>No ha de retornar res</li>
+                        <li>Ha de retornar un tipus bàsic: cadena, booleà, etc. mitjançant una sentència Javascript “return” (p. ex. return "resultado"" )</li>
+                        <li>Ha de retornar el resultat a través d'un plugin de dades (en la part de plugins començarà per “DADES_”)</li>
+                    </ul>
+                </li>
+            </ul>
+            </li>
+            <li style="margin-top:10px"><span class="nombreCampo">Part inferior esquerra:</span> permet introduir el contingut del script que s'haurà d'establir en llenguatge Javascript.</li>
+            <li style="margin-top:10px"><span class="nombreCampo">Part inferior dreta:</span> com a suport al script, es disposa de diferents utilitats:</li>
+            <ul>
+                <li><span class="boton">Plugins:</span> indica què ha de retornar el script, contemplant bàsicament aquestes possibilitats:
+                    <ul class="detalle">
+                        <li>Retorn de resultat del script, si es retorna a través d'un plugin de dades (plugin comença per “DADES_”).</li>
+                        <li>Plugins d'utilitats: accés a dades de sessió, dominis, logs, etc. A continuació es llisten els plugins disponibles (per a major detall consultar l'ajuda específica de cada plugin).
+                            <ul class="detalle2">
+                                <li>Plugins generals: accessibles des de tots els scripts:
+                                    <ul>
+                                        <li>PLUGIN_DOMINIS: permet l'accés als dominis associats a la versió del tràmit. </li>
+                                        <li>PLUGIN_UTILS: permet realitzar diverses validacions. </li>
+                                        <li>PLUGIN_LOG: permet utilitzar el log dels scripts per a fer debug d'ells, en temps de desenvolupament.</li>
+                                        <li>PLUGIN_MISSATGES: permet usar literals multiidioma dins dels scripts.</li>
+                                        <li>PLUGIN_ERROR: permet establir errors en l'execució d'un script.</li>
+                                    </ul>
+                                </li>
+                                <li><span class="nombreCampo">Plugins retorn de dades:</span>: depenent del script es poden retornar les dades a través d'un plugin. Començaran per “DADES_” (p. ex. per al script que especifica signants es retornen les dades a través del plugin DADES_SIGNANTS).</li>
+                                <li><span class="nombreCampo">Plugins tramitació:</span>: depenent del script es poden retornar les dades a través d'un plugin. Començaran per “DADES_” (p. ex. per al script que especifica signants es retornen les dades a través del plugin DADES_SIGNANTS).
+                                    <ul>
+                                        <li>PLUGIN_SESIONTRAMITACION: accés a les dades de la sessió de tramitació.</li>
+                                        <li>PLUGIN_FORMULARIS: accés a dades de formularis emplenats anteriorment.</li>
+                                    </ul>
+                                </li>
+                                <li><span class="nombreCampo">Plugins formulari:</span> accessibles des dels scripts en els passos de tramitació:
+                                    <ul>
+                                        <li>PLUGIN_SESIONFORMULARIO: accés a les dades de la sessió de formulari.</li>
+                                        <li>PLUGIN_DATOSFORMULARIO: accés als camps del formulari previs a l'element (camp o pàgina) sobre el qual s'està emplenant el script.</li>
+                                        <li>PLUGIN_VALIDACION: en els scripts de validació es pot establir un resultat de validació especificant un missatge i un nivell de validació. </li>
+                                    </ul>
+                                </li>
+
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li><span class="boton">Missatges:</span> permet definir missatges multiidioma que poden ser emprats en els scripts (a través de PLUGIN_MISSATGE i PLUGIN_ERROR).</li>
+                <li><span class="boton">Dominis:</span> permet accedir als dominis associats al tràmit per a veure l'estructura i paràmetres d'aquest, així com fer un ping per a veure el resultat (perquè un domini pugui usar-se en un tràmit ha d'estar associat al mateix).</li>
+                <li><span class="boton">Formularis:</span> depenent del moment en el qual s'executa el script es pot tenir accés a dades de formularis. Per a scripts en els passos de tramitació es podrà tenir accés als formularis emplenats anteriorment i per als scripts de camps de formulari es podrà tenir accés als camps anteriors del mateix formulari.</li>
+            </ul>
+            </li>
+        </ul>
+    </p>
+    <h2 class="stgH2">OPERATIVA</h2>
+	<p>
+		<ul>
+			<li><span class="boton">Acceptar:</span> permet guardar el script. En cas del script aquest buit, s'esborrarà automàticament.</li>
+			<li><span class="boton">Esborrar:</span> permet eliminar el script guardat.</li>
+			<li><span class="boton">Tancar</span>: tanca la pantalla de scripts.</li>
+		</ul>
+	</p>
 </body>
+
 </html>
