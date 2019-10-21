@@ -85,10 +85,10 @@ public final class PurgaComponentImpl implements PurgaComponent {
 	}
 
 	@Override
-	public ListaPropiedades marcarPurgarTramites(final Date pFinalizadosHasta, final Date pSinFinalizarHasta,
-			final Date pCaducadosHasta, final Date pPendientePurgaPagoRealizadoHasta) {
-		return purgaDao.marcarPurgarTramites(pFinalizadosHasta, pSinFinalizarHasta, pCaducadosHasta,
-				pPendientePurgaPagoRealizadoHasta);
+	public ListaPropiedades marcarPurgarTramites(final Date pFinalizadosHasta, final Date pSinCaducidadHasta,
+			final Date pSinFinalizarHasta, final Date pCaducadosHasta, final Date pPendientePurgaPagoRealizadoHasta) {
+		return purgaDao.marcarPurgarTramites(pFinalizadosHasta, pSinCaducidadHasta, pSinFinalizarHasta,
+				pCaducadosHasta, pPendientePurgaPagoRealizadoHasta);
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public interface PurgaTramiteDao {
 	 * limite.
 	 *
 	 * @param fechaLimite
-	 *            Fecha limite
+	 *                        Fecha limite
 	 * @return Número de sesiones borradas
 	 */
 	int purgarSesionesFormularioFinalizadas(final Date fechaLimite);
@@ -28,7 +28,7 @@ public interface PurgaTramiteDao {
 	 * esta por debajo de la fecha limite.
 	 *
 	 * @param fechaLimite
-	 *            Fecha limite
+	 *                        Fecha limite
 	 * @return Número de sesiones borradas
 	 */
 	int purgarSesionesFormularioNoFinalizadas(final Date fechaLimite);
@@ -44,17 +44,22 @@ public interface PurgaTramiteDao {
 	 * Marca para purgar los trámites que se quedan en este estado.
 	 *
 	 * @param pFinalizadosHasta
-	 *            Tramites finalizados con fecha de finalizacion anterior a la fecha
-	 *            indicada
+	 *                                              Tramites finalizados con fecha
+	 *                                              de finalizacion anterior a la
+	 *                                              fecha indicada
 	 * @param pSinFinalizarHasta
-	 *            Tramites sin finalizar con fecha de acceso anterior a la fecha
-	 *            indicada.
+	 *                                              Tramites sin finalizar con fecha
+	 *                                              de acceso anterior a la fecha
+	 *                                              indicada.
 	 * @param pCaducadosHasta
-	 *            Tramites persistentes caducados con fecha de caducidad anterior a
-	 *            la fecha indicada
+	 *                                              Tramites persistentes caducados
+	 *                                              con fecha de caducidad anterior
+	 *                                              a la fecha indicada
 	 * @param pPendientePurgaPagoRealizadoHasta
-	 *            Tramites pendientes de purga por pago realizado con fecha ultima
-	 *            de acceso anterior a la fecha indicada
+	 *                                              Tramites pendientes de purga por
+	 *                                              pago realizado con fecha ultima
+	 *                                              de acceso anterior a la fecha
+	 *                                              indicada
 	 * @return Lista con las propiedades: "MARCADOS" - Número de trámites marcados
 	 *         para purgar en este proceso / "PENDIENTES" - Número de trámites
 	 *         pendientes de purgar tras el proceso / "PENDIENTEPAGOREALIZADO" -
@@ -63,8 +68,8 @@ public interface PurgaTramiteDao {
 	 *         que estaban pendiente de purga por pago realizado
 	 *
 	 */
-	ListaPropiedades marcarPurgarTramites(Date pFinalizadosHasta, Date pSinFinalizarHasta, Date pCaducadosHasta,
-			Date pPendientePurgaPagoRealizadoHasta);
+	ListaPropiedades marcarPurgarTramites(Date pFinalizadosHasta, Date pSinCaducidadHasta,
+			Date pSinFinalizarHasta, Date pCaducadosHasta, Date pPendientePurgaPagoRealizadoHasta);
 
 	/**
 	 * Realiza la purga de los trámites marcados para purgar.
@@ -79,7 +84,7 @@ public interface PurgaTramiteDao {
 	 * inferior a los días indicados.
 	 *
 	 * @param numDias
-	 *            Número de días antes de caducar que se avisará.
+	 *                    Número de días antes de caducar que se avisará.
 	 *
 	 * @return Trámites pendientes de caducar
 	 */
@@ -89,7 +94,7 @@ public interface PurgaTramiteDao {
 	 * Método que elimina definitivamente los trámites purgados.
 	 *
 	 * @param pFechaLimitePurga
-	 *            Fecha limite purga
+	 *                              Fecha limite purga
 	 *
 	 * @return número de trámites purgados eliminados
 	 */

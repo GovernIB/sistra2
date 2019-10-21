@@ -26,8 +26,8 @@ public interface PurgaComponent {
 
 	public void purgarInvalidaciones(final Date pFechaHasta);
 
-	public ListaPropiedades marcarPurgarTramites(final Date pFinalizadosHasta, final Date pSinFinalizarHasta,
-			final Date pCaducadosHasta, final Date pPendientePurgaPagoRealizadoHasta);
+	public ListaPropiedades marcarPurgarTramites(final Date pFinalizadosHasta, final Date pSinCaducidadHasta,
+			final Date pSinFinalizarHasta, final Date pCaducadosHasta, final Date pPendientePurgaPagoRealizadoHasta);
 
 	public int realizarPurgaTramitesMarcadosParaPurgar();
 

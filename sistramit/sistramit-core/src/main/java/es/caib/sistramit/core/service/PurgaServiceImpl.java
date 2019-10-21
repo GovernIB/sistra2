@@ -131,7 +131,7 @@ public class PurgaServiceImpl implements PurgaService {
 	 * Purga de tramites marcados para purgar.
 	 *
 	 * @param lp
-	 *            Lista propiedades
+	 *               Lista propiedades
 	 */
 	private void procesoPurgarTramitesPurga(final ListaPropiedades lp) {
 		final int num = this.purgaComponent.realizarPurgaTramitesMarcadosParaPurgar();
@@ -155,7 +155,7 @@ public class PurgaServiceImpl implements PurgaService {
 	 * Purga ficheros huerfanos.
 	 *
 	 * @param lp
-	 *            Lista propiedades
+	 *               Lista propiedades
 	 */
 	private void procesoPurgarFicherosHuerfanos(final ListaPropiedades lp) {
 		final int ficsBorrados = purgaComponent.purgarFicherosHuerfanos();
@@ -166,7 +166,7 @@ public class PurgaServiceImpl implements PurgaService {
 	 * Purga sesiones formulario.
 	 *
 	 * @param lp
-	 *            Lista propiedades
+	 *               Lista propiedades
 	 */
 	private void procesoPurgarSesionesFormulario(final ListaPropiedades lp) {
 		if (existeParametroPurga(config
@@ -192,7 +192,7 @@ public class PurgaServiceImpl implements PurgaService {
 	 * Purga pagos externos
 	 *
 	 * @param lp
-	 *            Lista propiedades
+	 *               Lista propiedades
 	 */
 	private void procesoPurgarPagosExternos(final ListaPropiedades lp) {
 
@@ -220,7 +220,7 @@ public class PurgaServiceImpl implements PurgaService {
 	 * Elimina definitivamente los tramites purgados anteriormente.
 	 *
 	 * @param lp
-	 *            Lista propiedades
+	 *               Lista propiedades
 	 */
 	private void procesoPurgarEliminarTramitesPurgados(final ListaPropiedades lp) {
 		if (existeParametroPurga(config.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.PURGA_PURGADOS))) {
@@ -235,7 +235,7 @@ public class PurgaServiceImpl implements PurgaService {
 	 * Marca para purgar los trámites.
 	 *
 	 * @param lp
-	 *            Lista propiedades
+	 *               Lista propiedades
 	 */
 	private void procesoPurgarMarcarTramites(final ListaPropiedades lp) {
 
@@ -243,6 +243,14 @@ public class PurgaServiceImpl implements PurgaService {
 		if (existeParametroPurga(config.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.PURGA_CADUCADOS))) {
 			fechaLimiteCaducados = this.calcularFechaLimite(
 					config.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.PURGA_CADUCADOS), 'h');
+		}
+
+		Date fechaLimitePSinCaducidad = null;
+		if (existeParametroPurga(
+				config.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.PURGA_PERSISTENTES_SIN_CADUCIDAD))) {
+			fechaLimitePSinCaducidad = this.calcularFechaLimite(
+					config.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.PURGA_PERSISTENTES_SIN_CADUCIDAD),
+					'd');
 		}
 
 		Date fechaLimiteNPSinFinalizar = null;
@@ -266,7 +274,8 @@ public class PurgaServiceImpl implements PurgaService {
 		}
 
 		final ListaPropiedades propsMarcar = this.purgaComponent.marcarPurgarTramites(fechaLimiteFinalizados,
-				fechaLimiteNPSinFinalizar, fechaLimiteCaducados, fechaLimitePendientePurgaPago);
+				fechaLimitePSinCaducidad, fechaLimiteNPSinFinalizar, fechaLimiteCaducados,
+				fechaLimitePendientePurgaPago);
 		lp.addPropiedad("Tràmits marcats per purgar", propsMarcar.getPropiedad("MARCADOS"));
 		lp.addPropiedad("Tràmits pendents purga", propsMarcar.getPropiedad("PENDIENTES"));
 		lp.addPropiedad("Tràmits pendents purga amb pagament realitzat",
@@ -279,7 +288,7 @@ public class PurgaServiceImpl implements PurgaService {
 	 * Purgado de errores internos (excepto ligados a tramites).
 	 *
 	 * @param lp
-	 *            Lista propiedades
+	 *               Lista propiedades
 	 */
 	private void procesoPurgarErroresInternos(final ListaPropiedades lp) {
 		if (existeParametroPurga(
@@ -296,9 +305,9 @@ public class PurgaServiceImpl implements PurgaService {
 	 * Convierte a fecha restando la cantidad de tiempo especificada.
 	 *
 	 * @param cantidad
-	 *            cantidad de tiempo en dias / horas / minutos
+	 *                     cantidad de tiempo en dias / horas / minutos
 	 * @param tipo
-	 *            indica si es dias (d) / horas (h) / minutos (m)
+	 *                     indica si es dias (d) / horas (h) / minutos (m)
 	 * @return fecha
 	 */
 	private Date calcularFechaLimite(final String cantidad, final char tipo) {
@@ -329,7 +338,7 @@ public class PurgaServiceImpl implements PurgaService {
 	 * Comprueba si existe el parametro de purga.
 	 *
 	 * @param param
-	 *            Parametro
+	 *                  Parametro
 	 * @return boolean
 	 */
 	private boolean existeParametroPurga(final String param) {

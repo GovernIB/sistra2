@@ -84,6 +84,12 @@ public enum TypePropiedadConfiguracion {
 	 * tramites no persistentes no finalizados.
 	 */
 	PURGA_NO_PERSISTENTES("sistramit.purga.noPersistente"),
+
+	/**
+	 * Tiempo (días) tras su fecha de ultimo acceso tras el cual seran purgados los
+	 * tramites persistentes que no tienen fecha de caducidad.
+	 */
+	PURGA_PERSISTENTES_SIN_CADUCIDAD("sistramit.purga.persistenteSinCaducidad"),
 	/**
 	 * Tiempo (horas) tras su fecha de caducidad tras el cual seran purgados los
 	 * tramites persistentes caducados.
@@ -119,7 +125,8 @@ public enum TypePropiedadConfiguracion {
 	/**
 	 * Constructor.
 	 *
-	 * @param valueStr Valor como string.
+	 * @param valueStr
+	 *                     Valor como string.
 	 */
 	private TypePropiedadConfiguracion(final String valueStr) {
 		stringValue = valueStr;
@@ -133,7 +140,8 @@ public enum TypePropiedadConfiguracion {
 	/**
 	 * Obtiene enum desde string.
 	 *
-	 * @param text string
+	 * @param text
+	 *                 string
 	 * @return TypeSiNo
 	 */
 	public static TypePropiedadConfiguracion fromString(final String text) {

@@ -42,6 +42,9 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 	/** Parametro sql fechaLimitePendientePurgaPago. */
 	private static final String PARAM_FECHA_LIMITE_PENDIENTE_PURGA_PAGO = "fechaLimitePendientePurgaPago";
 
+	/** Parametro sql fechaLimitePendientePurgaPago. */
+	private static final String PARAM_FECHA_LIMITE_SIN_CADUCIDAD = "fechaLimiteSinCaducidad";
+
 	/** Log. */
 	private static Logger log = LoggerFactory.getLogger(PurgaTramiteDaoImpl.class);
 
@@ -52,8 +55,8 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 	private EntityManager entityManager;
 
 	@Override
-	public ListaPropiedades marcarPurgarTramites(final Date pFinalizadosHasta, final Date pSinFinalizarHasta,
-			final Date pCaducadosHasta, final Date pPendientePurgaPagoRealizadoHasta) {
+	public ListaPropiedades marcarPurgarTramites(final Date pFinalizadosHasta, final Date pSinCaducidadHasta,
+			final Date pSinFinalizarHasta, final Date pCaducadosHasta, final Date pPendientePurgaPagoRealizadoHasta) {
 
 		Query sqlQuery;
 		int numRegsUpdate;
@@ -77,11 +80,12 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 
 		// Genera filtro tramites pendientes purga
 		final String sqlFiltroWherePendientesPurga = generarFiltroTramitesPendientesPurga(pFinalizadosHasta,
-				pSinFinalizarHasta, pCaducadosHasta);
+				pSinCaducidadHasta, pSinFinalizarHasta, pCaducadosHasta);
 
 		// Update marcar tramites para purgar tramites si se ha establecido
 		// alguno de los filtros
-		if (pFinalizadosHasta != null || pSinFinalizarHasta != null || pCaducadosHasta != null) {
+		if (pFinalizadosHasta != null || pSinCaducidadHasta != null || pSinFinalizarHasta != null
+				|| pCaducadosHasta != null) {
 
 			// Marcamos tramites que quedan pendiente purga por pago realizado
 			// (del filtro de los que entran para purgar se quitan los
@@ -94,6 +98,7 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 					+ sqlFiltroWherePendientesPurga + " and TRP_CODIGO in ( " + sqlSelectTramitesPagoRealizado + ")";
 			sqlQuery = entityManager.createNativeQuery(sqlUpdatePdtePurgaPago);
 			sqlQuery.setParameter(PARAM_FECHA_LIMITE_FINALIZADOS, pFinalizadosHasta);
+			sqlQuery.setParameter(PARAM_FECHA_LIMITE_SIN_CADUCIDAD, pSinCaducidadHasta);
 			sqlQuery.setParameter(PARAM_FECHA_LIMITE_SIN_FINALIZAR, pSinFinalizarHasta);
 			sqlQuery.setParameter(PARAM_FECHA_LIMITE_CADUCADOS, pCaducadosHasta);
 			numRegsUpdate = sqlQuery.executeUpdate();
@@ -103,6 +108,7 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 			final String sqlUpdate = "update STT_TRAPER set TRP_PURCHK = 1 where " + sqlFiltroWherePendientesPurga;
 			sqlQuery = entityManager.createNativeQuery(sqlUpdate);
 			sqlQuery.setParameter(PARAM_FECHA_LIMITE_FINALIZADOS, pFinalizadosHasta);
+			sqlQuery.setParameter(PARAM_FECHA_LIMITE_SIN_CADUCIDAD, pSinCaducidadHasta);
 			sqlQuery.setParameter(PARAM_FECHA_LIMITE_SIN_FINALIZAR, pSinFinalizarHasta);
 			sqlQuery.setParameter(PARAM_FECHA_LIMITE_CADUCADOS, pCaducadosHasta);
 
@@ -114,6 +120,7 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 		final String sqlPendientes = "select count(*) as count from STT_TRAPER where " + sqlFiltroWherePendientesPurga;
 		sqlQuery = entityManager.createNativeQuery(sqlPendientes);
 		sqlQuery.setParameter(PARAM_FECHA_LIMITE_FINALIZADOS, pFinalizadosHasta);
+		sqlQuery.setParameter(PARAM_FECHA_LIMITE_SIN_CADUCIDAD, pSinCaducidadHasta);
 		sqlQuery.setParameter(PARAM_FECHA_LIMITE_SIN_FINALIZAR, pSinFinalizarHasta);
 		sqlQuery.setParameter(PARAM_FECHA_LIMITE_CADUCADOS, pCaducadosHasta);
 		tramitesPendientes = sqlQuery.getSingleResult().toString();
@@ -224,18 +231,23 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 	 * persistentes sin finalizar y caducados (aplicando los días especificados para
 	 * cada uno).
 	 *
-	 * @param pFinalizadosHasta  Fecha tras su fecha de finalizacion tras el cual un
-	 *                           tramite finalizado sera purgado.
-	 * @param pSinFinalizarHasta Fecha tras su fecha de ultimo acceso tras el cual
-	 *                           seran purgados los tramites no persistentes no
-	 *                           finalizados
-	 * @param pCaducadosHasta    Fecha tras su fecha de caducidad tras el cual seran
-	 *                           purgados los tramites persistentes caducados.
+	 * @param pFinalizadosHasta
+	 *                               Fecha tras su fecha de finalizacion tras el
+	 *                               cual un tramite finalizado sera purgado.
+	 * @param pSinFinalizarHasta
+	 *                               Fecha tras su fecha de ultimo acceso tras el
+	 *                               cual seran purgados los tramites no
+	 *                               persistentes no finalizados
+	 * @param pCaducadosHasta
+	 *                               Fecha tras su fecha de caducidad tras el cual
+	 *                               seran purgados los tramites persistentes
+	 *                               caducados.
 	 * @return Filtro sql a aplicar
 	 */
-	private String generarFiltroTramitesPendientesPurga(final Date pFinalizadosHasta, final Date pSinFinalizarHasta,
-			final Date pCaducadosHasta) {
+	private String generarFiltroTramitesPendientesPurga(final Date pFinalizadosHasta, final Date pSinCaducidadHasta,
+			final Date pSinFinalizarHasta, final Date pCaducadosHasta) {
 		String filtroFinalizados = null;
+		String filtroPSinFechaCaducidad = null;
 		String filtroNPSinFinalizar = null;
 		String filtroCaducados = null;
 
@@ -243,6 +255,11 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 		if (pFinalizadosHasta != null) {
 			filtroFinalizados = " ( TRP_ESTADO = '" + TypeEstadoTramite.FINALIZADO
 					+ "' and (TRP_FECFIN < :fechaLimiteFinalizados or TRP_FECFIN is null) ) ";
+		}
+		// Filtro persistente sin finalizar y sin fecha caducidad
+		if (pSinCaducidadHasta != null) {
+			filtroPSinFechaCaducidad = " ( TRP_ESTADO <> '" + TypeEstadoTramite.FINALIZADO
+					+ "' and TRP_PERSIS=1 and TRP_FECCAD is null and TRP_FECACC < :fechaLimiteSinCaducidad )";
 		}
 		// Filtro no persistente sin finalizar
 		if (pSinFinalizarHasta != null) {
@@ -259,9 +276,11 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 		final StringBuffer sbFiltroWhere = new StringBuffer(ConstantesNumero.N500);
 		// - No este purgado, ni marcado purgar, ni pendiente purga por pago
 		sbFiltroWhere.append(" TRP_PURCHK=0 and TRP_PURGA=0 AND TRP_PURPAG=0 ");
-		if (pFinalizadosHasta != null || pSinFinalizarHasta != null || pCaducadosHasta != null) {
+		if (pFinalizadosHasta != null || pSinCaducidadHasta != null || pSinFinalizarHasta != null
+				|| pCaducadosHasta != null) {
 			sbFiltroWhere.append("and ( ");
-			final String[] filtros = new String[] { filtroFinalizados, filtroNPSinFinalizar, filtroCaducados };
+			final String[] filtros = new String[] { filtroFinalizados, filtroPSinFechaCaducidad, filtroNPSinFinalizar,
+					filtroCaducados };
 			boolean primer = false;
 			for (final String filtro : filtros) {
 				if (filtro != null) {
@@ -283,7 +302,8 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 	/**
 	 * Borra eventos de auditorias de sesiones de tramites purgados.
 	 *
-	 * @param pFechaLimitePurga Fecha limite purga
+	 * @param pFechaLimitePurga
+	 *                              Fecha limite purga
 	 * @return Número de auditorias borradas
 	 */
 	private int borrarEventoAuditoriaTramitesPurgados(final Date pFechaLimitePurga) {
@@ -298,7 +318,8 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 	/**
 	 * Borra sesiones tramites purgados.
 	 *
-	 * @param pFechaLimitePurga Fecha limite purga
+	 * @param pFechaLimitePurga
+	 *                              Fecha limite purga
 	 * @return Número de sesiones borradas
 	 */
 	private int borrarSesionesTramitesPurgados(final Date pFechaLimitePurga) {
@@ -313,7 +334,8 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 	/**
 	 * Borra cabecera tramite de tramites purgados.
 	 *
-	 * @param pFechaLimitePurga Fecha limite purga
+	 * @param pFechaLimitePurga
+	 *                              Fecha limite purga
 	 */
 	private void borrarCabeceraTramiteTramitesPurgados(final Date pFechaLimitePurga) {
 
