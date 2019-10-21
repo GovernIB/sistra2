@@ -28,7 +28,7 @@ import es.caib.sistrages.core.service.repository.dao.SesionDao;
 @Transactional
 public class SystemServiceImpl implements SystemService {
 
-	/** Log.  */
+	/** Log. */
 	private final Logger log = LoggerFactory.getLogger(SystemServiceImpl.class);
 
 	/** DAO Fichero externo. */

@@ -20,6 +20,9 @@ public class TramiteVersion extends ModelApi {
 	/** codigo tramite. */
 	private Long idTramite;
 
+	/** codigo area (No se mapea, sólo para ir mas rápidos con los permisos). */
+	private Long idArea;
+
 	/** numero version. */
 	private int numeroVersion;
 
@@ -245,6 +248,20 @@ public class TramiteVersion extends ModelApi {
 	 */
 	public void setIdTramite(final Long codigotramite) {
 		this.idTramite = codigotramite;
+	}
+
+	/**
+	 * @return the idArea
+	 */
+	public Long getIdArea() {
+		return idArea;
+	}
+
+	/**
+	 * @param idArea the idArea to set
+	 */
+	public void setIdArea(final Long idArea) {
+		this.idArea = idArea;
 	}
 
 	/**

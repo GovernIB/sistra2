@@ -78,8 +78,7 @@ public class DialogFuente extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de FuenteDatosCampoes.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -193,8 +192,7 @@ public class DialogFuente extends DialogControllerBase {
 
 				// Checkeamos si hay un campo repetido.
 				if (codigoCampos.containsKey(campo.getIdentificador())) {
-					addMessageContext(TypeNivelGravedad.WARNING,
-							UtilJSF.getLiteral("dialogFuente.error.camposRepes"));
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("dialogFuente.error.camposRepes"));
 					return;
 				} else {
 					codigoCampos.put(campo.getIdentificador(), campo);
@@ -265,9 +263,9 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	/** Ayuda. */
-    public void ayuda() {
-        UtilJSF.openHelp("fuenteDialog");
-    }
+	public void ayuda() {
+		UtilJSF.openHelp("fuenteDialog");
+	}
 
 	/**
 	 * Obtiene el valor de permiteAlta.
@@ -297,15 +295,22 @@ public class DialogFuente extends DialogControllerBase {
 				res = true;
 			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 
-				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
-					final List<TypeRolePermisos> permisos = securityService
-							.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
+				if (modo == TypeModoAcceso.EDICION && data != null && data.getArea() != null) {
+					if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+						final List<TypeRolePermisos> permisos = securityService
+								.getPermisosDesarrolladorEntidadByArea(data.getArea().getCodigo());
 
-					res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
-							|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA);
-				} else {
-					res = false;
+						res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+								|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA);
+					} else {
+						res = false;
+					}
 				}
+
+				if (modo == TypeModoAcceso.ALTA) {
+					res = true;
+				}
+
 			}
 
 			break;
@@ -339,8 +344,7 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -354,8 +358,7 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final FuenteDatos data) {
 		this.data = data;
@@ -369,8 +372,7 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	/**
-	 * @param valorSeleccionado
-	 *            the valorSeleccionado to set
+	 * @param valorSeleccionado the valorSeleccionado to set
 	 */
 	public void setValorSeleccionado(final FuenteDatosCampo valorSeleccionado) {
 		this.valorSeleccionado = valorSeleccionado;
@@ -384,8 +386,7 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idArea
-	 *            the idArea to set
+	 * @param idArea the idArea to set
 	 */
 	public void setIdArea(final String idArea) {
 		this.idArea = idArea;
@@ -399,8 +400,7 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	/**
-	 * @param ambito
-	 *            the ambito to set
+	 * @param ambito the ambito to set
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;

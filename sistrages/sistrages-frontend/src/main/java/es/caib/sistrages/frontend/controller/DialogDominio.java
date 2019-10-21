@@ -217,15 +217,23 @@ public class DialogDominio extends DialogControllerBase {
 				res = true;
 			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 
-				if (data.getAreas() == null || data.getAreas().isEmpty()) {
-					res = false;
-				} else {
-					final List<TypeRolePermisos> permisos = securityService
-							.getPermisosDesarrolladorEntidadByArea(((Area) data.getAreas().toArray()[0]).getCodigo());
+				if (modo == TypeModoAcceso.EDICION) {
 
-					res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
-							|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA);
+					if (data == null || data.getAreas() == null || data.getAreas().isEmpty()) {
+						res = false;
+					} else {
+						final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidadByArea(
+								((Area) data.getAreas().toArray()[0]).getCodigo());
+
+						res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+								|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA);
+					}
 				}
+
+				if (modo == TypeModoAcceso.ALTA) {
+					res = true;
+				}
+
 			}
 
 			break;

@@ -3,6 +3,7 @@ package es.caib.sistrages.core.api.model;
 /**
  * La clase ConfiguracionGlobal.
  */
+
 public class ConfiguracionGlobal extends ModelApi {
 
 	/** Serial version UID. **/
@@ -35,7 +36,7 @@ public class ConfiguracionGlobal extends ModelApi {
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param codigo
 	 * @param propiedad
 	 * @param valor

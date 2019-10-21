@@ -25,15 +25,14 @@
 						<h:outputText value="#{msg['viewTramites.listadoAreas']}" />
 		           	</f:facet>
 		           	<f:facet name="right">
-		           			<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosArea}">
+		           			<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosAreas}">
 			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl @form"/>
 			        		</p:commandButton>
-			        		<p:commandButton id="btnConsultarArea" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarArea}" process="@this" update="growl" rendered="#{not viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}" />
-			        		<p:commandButton id="btnEditarArea" value="#{msg['botones.editar']}" icon="fa fa-edit ui-btn-icon-bottom" actionListener="#{viewTramites.editarArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}">
+			        		<p:commandButton id="btnConsultarArea" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarArea}" process="@this" update="growl" rendered="#{not viewTramites.tienePermisosAreas and viewTramites.seleccionadaArea}" />
+			        		<p:commandButton id="btnEditarArea" value="#{msg['botones.editar']}" icon="fa fa-edit ui-btn-icon-bottom" actionListener="#{viewTramites.editarArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosAreas and viewTramites.seleccionadaArea}">
 			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl areas"/>
 			        		</p:commandButton>
-
-			        		<p:commandButton id="btnEliminarArea" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarArea}" process="@this" update="@form growl" rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}">
+			        		<p:commandButton id="btnEliminarArea" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarArea}" process="@this" update="@form growl" rendered="#{viewTramites.tienePermisosAreas and viewTramites.seleccionadaArea}">
 	        					<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 	        				</p:commandButton>
 
@@ -81,8 +80,8 @@
 			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoNuevaVersion}" update="growl @form" />
 			        		</p:commandButton>
 
-			        		<p:commandButton id="btnConsultarVersion" value="#{msg['botones.consultarVersion']}" icon="fa fa-edit" actionListener="#{viewTramites.consultarVersion}" process="@this" update="growl" rendered="#{(viewTramites.isNotDesarrollo() and viewTramites.versionSeleccionada ne null) or (not viewTramites.tienePermisosVersion and viewTramites.versionSeleccionada ne null)}" />
-							<p:commandButton id="btnEditarVersion" value="#{msg['botones.editarVersion']}" icon="fa fa-edit" actionListener="#{viewTramites.editarVersion}" process="@this" update="growl" rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
+			        		<p:commandButton id="btnConsultarVersion" value="#{msg['botones.consultarVersion']}" icon="fa fa-edit" actionListener="#{viewTramites.consultarVersion}" process="@this" update="growl" rendered="#{not viewTramites.tienePermisosVersion and viewTramites.versionSeleccionada ne null}" />
+							<p:commandButton id="btnEditarVersion" value="#{msg['botones.editarVersion']}" icon="fa fa-edit" actionListener="#{viewTramites.editarVersion}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosVersion and viewTramites.versionSeleccionada ne null}" />
 
 			        		<p:commandButton id="btnBloquear" value="#{msg['botones.bloquear']}" icon="fa fa-lock" actionListener="#{viewTramites.bloquear}" process="@this" update="growl @form"  rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null and viewTramites.permiteBloquear}">
 			        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['viewTramitesVersion.bloquear.aviso']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
@@ -95,7 +94,7 @@
 
 			        		<p:menuButton value="#{msg['viewTramites.mas']}" rendered="#{not(not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null))}">
 
-								<p:menuitem id="btnMoverTramite" value="#{msg['botones.moverTramite']}" icon="fa fa-exchange" onclick="triggerMoverTramite();return false;" rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosArea and viewTramites.tramiteSeleccionada ne null}"></p:menuitem>
+								<p:menuitem id="btnMoverTramite" value="#{msg['botones.moverTramite']}" icon="fa fa-exchange" onclick="triggerMoverTramite();return false;" rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosAreas and viewTramites.tramiteSeleccionada ne null}"></p:menuitem>
 			        			<p:menuitem id="btnEliminarTramite" value="#{msg['botones.eliminarTramite']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarTramite}" process="@this" update="growl @form" rendered="#{viewTramites.tienePermisosTramite and viewTramites.tramiteSeleccionada ne null}">
 			        				<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 			        			</p:menuitem>
@@ -272,7 +271,11 @@
 	      	  	}
 
 				function triggerDoubleClickArea() {
-	      	  		document.getElementById("form:btnEditarArea").click();
+					if (document.getElementById("form:btnEditarArea") != null) {
+	      	  			document.getElementById("form:btnEditarArea").click();
+	      	  		} else if (document.getElementById("form:btnConsultarArea") != null) {
+	      	  			document.getElementById("form:btnConsultarArea").click();
+	      	  		}
 	      	  	}
 				function deseleccionar(modo) {
 					$("#form\\:dataTableTramites").find( ".ui-state-highlight").each(function() {

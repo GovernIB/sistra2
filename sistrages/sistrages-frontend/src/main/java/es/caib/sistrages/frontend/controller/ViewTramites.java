@@ -89,6 +89,8 @@ public class ViewTramites extends ViewControllerBase {
 
 	/** Para evitar el retrase en las comprobaciones en perfil desarrollador. **/
 	private List<TypeRolePermisos> permisosCacheados = new ArrayList<>();
+	private Long idAreaCacheado = null;
+	private Long idTramiteCacheado = null;
 
 	/** Indica si se permite refrescar. **/
 	private boolean permiteRefrescar;
@@ -353,12 +355,9 @@ public class ViewTramites extends ViewControllerBase {
 	 *
 	 * @return el valor de permiteEditar
 	 */
-	public boolean getTienePermisosArea() {
+	public boolean getTienePermisosAreas() {
 		boolean retorno;
 		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
-			retorno = true;
-		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
-				&& TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.DESARROLLO) {
 			retorno = true;
 		} else {
 			retorno = false;
@@ -366,7 +365,44 @@ public class ViewTramites extends ViewControllerBase {
 		return retorno;
 	}
 
+	/**
+	 * Obtiene el valor de permiteEditarArea.
+	 *
+	 * @return el valor de permiteEditar
+	 */
+	public boolean getTienePermisosArea() {
+		boolean retorno;
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+			retorno = true;
+		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
+				&& verificarFilaSeleccionadaArea()) {
+
+			actualizarPermisosCacheados(listaAreasSeleccionadas.get(0).getCodigo());
+
+			retorno = permisosCacheados.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+					|| permisosCacheados.contains(TypeRolePermisos.DESARROLLADOR_AREA);
+
+		} else {
+			retorno = false;
+		}
+		return retorno;
+	}
+
+	/**
+	 * Actualiza los permisos si no está cacheado los permisos del area.
+	 *
+	 * @param idArea
+	 */
+	private void actualizarPermisosCacheados(final Long idArea) {
+		if (this.idAreaCacheado == null || idArea.compareTo(idAreaCacheado) != 0) {
+			permisosCacheados = securityService
+					.getPermisosDesarrolladorEntidadByArea(listaAreasSeleccionadas.get(0).getCodigo());
+			idAreaCacheado = idArea;
+		}
+	}
+
 	/** Comprueba que el entorno no es desarrollo. **/
+	@Override
 	public boolean isNotDesarrollo() {
 		return TypeEntorno.fromString(UtilJSF.getEntorno()) != TypeEntorno.DESARROLLO;
 	}
@@ -397,11 +433,9 @@ public class ViewTramites extends ViewControllerBase {
 				&& TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.DESARROLLO) {
 
 			if (tramiteSeleccionada != null) {
-				permisosCacheados = securityService
-						.getPermisosDesarrolladorEntidadByArea(tramiteSeleccionada.getTramite().getIdArea());
+				actualizarPermisosCacheados(tramiteSeleccionada.getTramite().getIdArea());
 			} else {
-				final Tramite tramite = tramiteService.getTramite(this.versionSeleccionada.getIdTramite());
-				permisosCacheados = securityService.getPermisosDesarrolladorEntidadByArea(tramite.getIdArea());
+				actualizarPermisosCacheados(this.versionSeleccionada.getIdArea());
 			}
 
 			if (permisosCacheados != null) {
@@ -421,41 +455,24 @@ public class ViewTramites extends ViewControllerBase {
 	 * Obtiene el valor de tienePermisosVersion, se tiene que cumplir que:
 	 * <ul>
 	 * <li>Tiene que haber una versión seleccionada.</li>
-	 * <li>Si eres adm. entidad ya puedes tocarlo.</li>
-	 * <li>Sino tienes que ser adminisitrador o desarrollador de área.</li>
+	 * <li>Eres el que la ha bloqueado.</li>
 	 * </ul>
 	 *
-	 * @return el valor de tienePermisosTramite
+	 * @return el valor de tienePermisosVersion
 	 */
 	public boolean getTienePermisosVersion() {
-		boolean res;
 
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionadaVersion()) {
-			res = false;
+			return false;
 		}
-		// Admin entidad
-		else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
-			res = true;
+
+		if (!this.versionSeleccionada.getBloqueada()) {
+			return false;
 		}
-		// Admin area o Desarrollador
-		else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
-				&& TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.DESARROLLO) {
 
-			final Tramite tramite = tramiteService.getTramite(this.versionSeleccionada.getIdTramite());
-			permisosCacheados = securityService.getPermisosDesarrolladorEntidadByArea(tramite.getIdArea());
+		return this.versionSeleccionada.getDatosUsuarioBloqueo().equals(UtilJSF.getSessionBean().getUserName());
 
-			if (permisosCacheados != null) {
-				res = permisosCacheados.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
-						|| permisosCacheados.contains(TypeRolePermisos.DESARROLLADOR_AREA);
-
-			} else {
-				res = false;
-			}
-		} else {
-			res = false;
-		}
-		return res;
 	}
 
 	/**
@@ -1022,46 +1039,85 @@ public class ViewTramites extends ViewControllerBase {
 	 *
 	 */
 	public boolean isPermiteBloquear() {
-		boolean resultado = true;
 
 		// Si no hay versión seleccionada o está bloqueada
 		if (this.versionSeleccionada == null || versionSeleccionada.getBloqueada()) {
-			resultado = false;
+			return false;
 		}
 
 		// Solo se puede bloquear/desbloquear en desarrollo
 		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
-			resultado = false;
+			return false;
 		}
 
-		return resultado;
+		// El ADM. ENTIDAD puede desbloquearlo
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+			return true;
+		}
+
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+			if (this.idTramiteCacheado == null
+					|| this.idTramiteCacheado.compareTo(this.versionSeleccionada.getIdTramite()) != 0) {
+				this.actualizarPermisosCacheados(this.versionSeleccionada.getIdArea());
+				this.idTramiteCacheado = this.versionSeleccionada.getIdTramite();
+			}
+
+			return permisosCacheados.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+					|| permisosCacheados.contains(TypeRolePermisos.DESARROLLADOR_AREA);
+		}
+
+		return true;
 
 	}
 
 	/**
-	 * Calcula si se puede desbloquear el tramite o no.
+	 * Calcula si se puede desbloquear el tramite o no. Se puede desblqouear si: -
+	 * Estamos en desarrollo. - Si eres ADM. ENTIDAD puedes. - Si eres
+	 * desarrollador: - Si eres adm. AREA puedes desbloquear - Si eres des. AREA
+	 * sólo puedes desbloquear si eres el que lo bloqueó.
+	 *
 	 *
 	 */
 	public boolean isPermiteDesbloquear() {
-		boolean permiteDesbloquear = true;
 
 		// Si no hay versión seleccionada o ya está desbloqueada
 		if (this.versionSeleccionada == null || !versionSeleccionada.getBloqueada()) {
-			permiteDesbloquear = false;
-		}
-
-		// Tiene que estar bloqueado por el mismo usuario
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR && this.versionSeleccionada != null
-				&& !UtilJSF.getSessionBean().getUserName().equals(this.versionSeleccionada.getDatosUsuarioBloqueo())) {
-			permiteDesbloquear = false;
+			return false;
 		}
 
 		// Solo se puede bloquear/desbloquear en desarrollo
 		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
-			permiteDesbloquear = false;
+			return false;
 		}
 
-		return permiteDesbloquear;
+		// El ADM. ENTIDAD puede desbloquearlo
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+			return true;
+		}
+
+		// Tiene que estar bloqueado por el mismo usuario
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR && this.versionSeleccionada != null) {
+
+			if (this.idTramiteCacheado == null
+					|| this.idTramiteCacheado.compareTo(this.versionSeleccionada.getIdTramite()) != 0) {
+				this.actualizarPermisosCacheados(this.versionSeleccionada.getIdArea());
+				this.idTramiteCacheado = this.versionSeleccionada.getIdTramite();
+			}
+
+			if (permisosCacheados.contains(TypeRolePermisos.ADMINISTRADOR_AREA)) {
+				return true;
+			}
+
+			if (permisosCacheados.contains(TypeRolePermisos.DESARROLLADOR_AREA) && UtilJSF.getSessionBean()
+					.getUserName().equals(this.versionSeleccionada.getDatosUsuarioBloqueo())) {
+				return true;
+			}
+
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

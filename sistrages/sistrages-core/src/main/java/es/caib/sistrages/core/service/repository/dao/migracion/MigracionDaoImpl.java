@@ -241,7 +241,7 @@ public class MigracionDaoImpl implements MigracionDao {
 						} catch (final DataAccessException e) {
 							if (e.contains(org.springframework.dao.IncorrectResultSizeDataAccessException.class)) {
 								throw new MigracionException(
-										"Hay distintos niveles que enlazan a diferentes formularios");
+										"No se permite migrar trámites que tengan diferente formulario en los niveles de autenticación");
 							}
 						}
 

@@ -279,6 +279,7 @@ public class TramiteDaoImpl implements TramiteDao {
 				tramiteVersion.setIdTramite(jTramiteVersion.getTramite().getCodigo());
 				tramiteVersion.setFechaUltima(getFechaUltima(jTramiteVersion.getCodigo()));
 				tramiteVersion.setHuella(jTramiteVersion.getHuella());
+				tramiteVersion.setIdArea(jTramiteVersion.getTramite().getArea().getCodigo());
 				resultado.add(tramiteVersion);
 			}
 		}
