@@ -137,6 +137,10 @@ public class HDocumento implements IModelApi {
 	@Column(name = "DTP_REGFEC")
 	private Date registroFechaRegistro;
 
+	/** Atributo registro id sesion registro. */
+	@Column(name = "DTP_REGSES")
+	private String registroIdSesion;
+
 	/** Atributo firmas. */
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "documentoPersistente", orphanRemoval = true)
 	@OrderBy("fecha ASC")
@@ -155,7 +159,7 @@ public class HDocumento implements IModelApi {
 	 * Asigna el atributo codigo de HDocumento.
 	 *
 	 * @param pCodigo
-	 *            el nuevo valor para codigo
+	 *                    el nuevo valor para codigo
 	 */
 	public void setCodigo(final Long pCodigo) {
 		codigo = pCodigo;
@@ -174,7 +178,7 @@ public class HDocumento implements IModelApi {
 	 * Método para settear el campo paso.
 	 *
 	 * @param pPaso
-	 *            el campo paso a settear
+	 *                  el campo paso a settear
 	 */
 	public void setPaso(final HPaso pPaso) {
 		paso = pPaso;
@@ -193,7 +197,7 @@ public class HDocumento implements IModelApi {
 	 * Método para settear el campo tipo.
 	 *
 	 * @param pTipo
-	 *            el campo tipo a settear
+	 *                  el campo tipo a settear
 	 */
 	public void setTipo(final String pTipo) {
 		tipo = pTipo;
@@ -212,7 +216,7 @@ public class HDocumento implements IModelApi {
 	 * Método para settear el campo estado.
 	 *
 	 * @param pEstado
-	 *            el campo estado a settear
+	 *                    el campo estado a settear
 	 */
 	public void setEstado(final String pEstado) {
 		estado = pEstado;
@@ -231,7 +235,7 @@ public class HDocumento implements IModelApi {
 	 * Método para settear el campo id.
 	 *
 	 * @param pId
-	 *            el campo id a settear
+	 *                el campo id a settear
 	 */
 	public void setId(final String pId) {
 		id = pId;
@@ -250,7 +254,7 @@ public class HDocumento implements IModelApi {
 	 * Método para settear el campo instanciaTimeStamp.
 	 *
 	 * @param pInstanciaTimeStamp
-	 *            el campo instanciaTimeStamp a settear
+	 *                                el campo instanciaTimeStamp a settear
 	 */
 	public void setInstanciaTimeStamp(final Timestamp pInstanciaTimeStamp) {
 		instanciaTimeStamp = pInstanciaTimeStamp;
@@ -269,7 +273,8 @@ public class HDocumento implements IModelApi {
 	 * Método para settear el campo anexoDescripcionInstancia.
 	 *
 	 * @param pAnexoDescripcionInstancia
-	 *            el campo anexoDescripcionInstancia a settear
+	 *                                       el campo anexoDescripcionInstancia a
+	 *                                       settear
 	 */
 	public void setAnexoDescripcionInstancia(final String pAnexoDescripcionInstancia) {
 		anexoDescripcionInstancia = pAnexoDescripcionInstancia;
@@ -288,7 +293,7 @@ public class HDocumento implements IModelApi {
 	 * Método para settear el campo fichero.
 	 *
 	 * @param pFichero
-	 *            el campo fichero a settear
+	 *                     el campo fichero a settear
 	 */
 	public void setFichero(final Long pFichero) {
 		fichero = pFichero;
@@ -307,7 +312,7 @@ public class HDocumento implements IModelApi {
 	 * Método para settear el campo formularioPdf.
 	 *
 	 * @param pFormularioPdf
-	 *            el campo formularioPdf a settear
+	 *                           el campo formularioPdf a settear
 	 */
 	public void setFormularioPdf(final Long pFormularioPdf) {
 		formularioPdf = pFormularioPdf;
@@ -326,7 +331,7 @@ public class HDocumento implements IModelApi {
 	 * Método para settear el campo pagoJustificantePdf.
 	 *
 	 * @param pPagoJustificantePdf
-	 *            el campo pagoJustificantePdf a settear
+	 *                                 el campo pagoJustificantePdf a settear
 	 */
 	public void setPagoJustificantePdf(final Long pPagoJustificantePdf) {
 		pagoJustificantePdf = pPagoJustificantePdf;
@@ -345,7 +350,7 @@ public class HDocumento implements IModelApi {
 	 * Método para settear el campo pagoErrorPasarela.
 	 *
 	 * @param pPagoErrorPasarela
-	 *            el campo pagoErrorPasarela a settear
+	 *                               el campo pagoErrorPasarela a settear
 	 */
 	public void setPagoErrorPasarela(final String pPagoErrorPasarela) {
 		pagoErrorPasarela = pPagoErrorPasarela;
@@ -355,7 +360,7 @@ public class HDocumento implements IModelApi {
 	 * Añade firma a lista firmas.
 	 *
 	 * @param firma
-	 *            Parámetro firma
+	 *                  Parámetro firma
 	 */
 	public void addFirma(final HFirma firma) {
 		firma.setDocumentoPersistente(this);
@@ -366,7 +371,7 @@ public class HDocumento implements IModelApi {
 	 * Elimina firma de lista firmas.
 	 *
 	 * @param firma
-	 *            Parámetro firma
+	 *                  Parámetro firma
 	 */
 	public void removeFirma(final HFirma firma) {
 		getFirmas().remove(firma);
@@ -385,7 +390,7 @@ public class HDocumento implements IModelApi {
 	 * Método para settear el campo firmas.
 	 *
 	 * @param pFirmas
-	 *            el campo firmas a settear
+	 *                    el campo firmas a settear
 	 */
 	public void setFirmas(final List<HFirma> pFirmas) {
 		firmas = pFirmas;
@@ -404,7 +409,7 @@ public class HDocumento implements IModelApi {
 	 * Método para settear el campo anexoNombreFichero.
 	 *
 	 * @param pAnexoNombreFichero
-	 *            el campo anexoNombreFichero a settear
+	 *                                el campo anexoNombreFichero a settear
 	 */
 	public void setAnexoNombreFichero(final String pAnexoNombreFichero) {
 		anexoNombreFichero = pAnexoNombreFichero;
@@ -423,7 +428,7 @@ public class HDocumento implements IModelApi {
 	 * Método para settear el campo ficheroClave.
 	 *
 	 * @param pFicheroClave
-	 *            el campo ficheroClave a settear
+	 *                          el campo ficheroClave a settear
 	 */
 	public void setFicheroClave(final String pFicheroClave) {
 		ficheroClave = pFicheroClave;
@@ -442,7 +447,7 @@ public class HDocumento implements IModelApi {
 	 * Método para settear el campo formularioPdfClave.
 	 *
 	 * @param pFormularioPdfClave
-	 *            el campo formularioPdfClave a settear
+	 *                                el campo formularioPdfClave a settear
 	 */
 	public void setFormularioPdfClave(final String pFormularioPdfClave) {
 		formularioPdfClave = pFormularioPdfClave;
@@ -461,7 +466,8 @@ public class HDocumento implements IModelApi {
 	 * Método para settear el campo pagoJustificantePdfClave.
 	 *
 	 * @param pPagoJustificantePdfClave
-	 *            el campo pagoJustificantePdfClave a settear
+	 *                                      el campo pagoJustificantePdfClave a
+	 *                                      settear
 	 */
 	public void setPagoJustificantePdfClave(final String pPagoJustificantePdfClave) {
 		pagoJustificantePdfClave = pPagoJustificantePdfClave;
@@ -480,7 +486,8 @@ public class HDocumento implements IModelApi {
 	 * Método para settear el campo pagoMensajeErrorPasarela.
 	 *
 	 * @param pPagoMensajeErrorPasarela
-	 *            el campo pagoMensajeErrorPasarela a settear
+	 *                                      el campo pagoMensajeErrorPasarela a
+	 *                                      settear
 	 */
 	public void setPagoMensajeErrorPasarela(final String pPagoMensajeErrorPasarela) {
 		pagoMensajeErrorPasarela = pPagoMensajeErrorPasarela;
@@ -499,7 +506,7 @@ public class HDocumento implements IModelApi {
 	 * Método para settear el campo pagoEstadoIncorrecto.
 	 *
 	 * @param pPagoEstadoIncorrecto
-	 *            el campo pagoEstadoIncorrecto a settear
+	 *                                  el campo pagoEstadoIncorrecto a settear
 	 */
 	public void setPagoEstadoIncorrecto(final String pPagoEstadoIncorrecto) {
 		pagoEstadoIncorrecto = pPagoEstadoIncorrecto;
@@ -518,7 +525,7 @@ public class HDocumento implements IModelApi {
 	 * Método para establecer registroPreregistro.
 	 *
 	 * @param pRegistroPreregistro
-	 *            registroPreregistro a establecer
+	 *                                 registroPreregistro a establecer
 	 */
 	public void setRegistroPreregistro(final String pRegistroPreregistro) {
 		registroPreregistro = pRegistroPreregistro;
@@ -546,7 +553,7 @@ public class HDocumento implements IModelApi {
 	 * Método para establecer registroNumeroRegistro.
 	 *
 	 * @param pRegistroNumeroRegistro
-	 *            registroNumeroRegistro a establecer
+	 *                                    registroNumeroRegistro a establecer
 	 */
 	public void setRegistroNumeroRegistro(final String pRegistroNumeroRegistro) {
 		registroNumeroRegistro = pRegistroNumeroRegistro;
@@ -565,7 +572,7 @@ public class HDocumento implements IModelApi {
 	 * Método para establecer registroFechaRegistro.
 	 *
 	 * @param pRegistroFechaRegistro
-	 *            registroFechaRegistro a establecer
+	 *                                   registroFechaRegistro a establecer
 	 */
 	public void setRegistroFechaRegistro(final Date pRegistroFechaRegistro) {
 		registroFechaRegistro = pRegistroFechaRegistro;
@@ -584,7 +591,7 @@ public class HDocumento implements IModelApi {
 	 * Método para establecer pagoNifSujetoPasivo.
 	 *
 	 * @param pPagoNifSujetoPasivo
-	 *            pagoNifSujetoPasivo a establecer
+	 *                                 pagoNifSujetoPasivo a establecer
 	 */
 	public void setPagoNifSujetoPasivo(final String pPagoNifSujetoPasivo) {
 		pagoNifSujetoPasivo = pPagoNifSujetoPasivo;
@@ -603,7 +610,7 @@ public class HDocumento implements IModelApi {
 	 * Método para establecer pagoNumAutoliquidacion.
 	 *
 	 * @param pPagoNumAutoliquidacion
-	 *            pagoNumAutoliquidacion a establecer
+	 *                                    pagoNumAutoliquidacion a establecer
 	 */
 	public void setPagoIdentificador(final String pPagoNumAutoliquidacion) {
 		pagoIdentificador = pPagoNumAutoliquidacion;
@@ -643,6 +650,7 @@ public class HDocumento implements IModelApi {
 		documento.setRegistroPreregistro(TypeSiNo.fromString(hDocumento.getRegistroPreregistro()));
 		documento.setRegistroNumeroRegistro(hDocumento.getRegistroNumeroRegistro());
 		documento.setRegistroFechaRegistro(hDocumento.getRegistroFechaRegistro());
+		documento.setRegistroIdSesion(hDocumento.getRegistroIdSesion());
 
 		return documento;
 
@@ -652,7 +660,7 @@ public class HDocumento implements IModelApi {
 	 * Crea HDocumento a partir de Documento.
 	 *
 	 * @param om
-	 *            Documento
+	 *               Documento
 	 * @return HDocumento
 	 */
 	public static HDocumento fromModel(final DocumentoPasoPersistencia om) {
@@ -665,16 +673,16 @@ public class HDocumento implements IModelApi {
 	 * Realiza merge de HDocumento a partir de Documento.
 	 *
 	 * @param oh
-	 *            HDocumento
+	 *               HDocumento
 	 * @param om
-	 *            Documento
+	 *               Documento
 	 */
-	public static void mergeFromModel(HDocumento oh, final DocumentoPasoPersistencia om) {
+	public static void mergeFromModel(final HDocumento oh, final DocumentoPasoPersistencia om) {
 		mergeCamposFromModel(om, oh);
 		mergeFirmasFromModel(om, oh);
 	}
 
-	private static void mergeFirmasFromModel(DocumentoPasoPersistencia documento, HDocumento hdocumento) {
+	private static void mergeFirmasFromModel(final DocumentoPasoPersistencia documento, final HDocumento hdocumento) {
 		// Actualizamos firmas existentes en documento persistencia
 		for (final FirmaDocumentoPersistencia fdp : documento.obtenerFirmasFicheros()) {
 			// Buscamos si existe firma, si no la creamos
@@ -721,11 +729,11 @@ public class HDocumento implements IModelApi {
 	 * Busca si existe firma para el fichero.
 	 *
 	 * @param documento
-	 *            Documento paso
+	 *                      Documento paso
 	 * @param nif
-	 *            Nif
+	 *                      Nif
 	 * @param idFichero
-	 *            Id fichero
+	 *                      Id fichero
 	 * @return FirmaDocumentoPersistencia
 	 */
 	private static FirmaDocumentoPersistencia buscarFirma(final DocumentoPasoPersistencia documento, final String nif,
@@ -744,11 +752,11 @@ public class HDocumento implements IModelApi {
 	 * Busca si existe firma para el fichero.
 	 *
 	 * @param hdocumento
-	 *            Documento hibernate
+	 *                       Documento hibernate
 	 * @param nif
-	 *            Nif
+	 *                       Nif
 	 * @param idFichero
-	 *            Id fichero
+	 *                       Id fichero
 	 * @return HFirma
 	 */
 	private static HFirma buscarHFirma(final HDocumento hdocumento, final String nif, final Long idFichero) {
@@ -810,6 +818,7 @@ public class HDocumento implements IModelApi {
 		}
 		d.setRegistroNumeroRegistro(documento.getRegistroNumeroRegistro());
 		d.setRegistroFechaRegistro(documento.getRegistroFechaRegistro());
+		d.setRegistroIdSesion(documento.getRegistroIdSesion());
 	}
 
 	/**
@@ -817,9 +826,9 @@ public class HDocumento implements IModelApi {
 	 * HModelFactory.
 	 *
 	 * @param hDocumento
-	 *            Parámetro h documento
+	 *                       Parámetro h documento
 	 * @param documento
-	 *            Parámetro documento
+	 *                       Parámetro documento
 	 */
 	public static void establecerFirmasDocumentoPasoPersistencia(final HDocumento hDocumento,
 			final DocumentoPasoPersistencia documento) {
@@ -853,9 +862,9 @@ public class HDocumento implements IModelApi {
 	 * Método para Obtener clave fichero firma de la clase HModelFactory.
 	 *
 	 * @param hDocumento
-	 *            Parámetro h documento
+	 *                       Parámetro h documento
 	 * @param firma
-	 *            Parámetro firma
+	 *                       Parámetro firma
 	 * @return el string
 	 */
 	private static String obtenerClaveFicheroFirma(final HDocumento hDocumento, final HFirma firma) {
@@ -888,10 +897,29 @@ public class HDocumento implements IModelApi {
 	 * Método para establecer registroResultado.
 	 *
 	 * @param registroResultado
-	 *            registroResultado a establecer
+	 *                              registroResultado a establecer
 	 */
-	public void setRegistroResultado(String registroResultado) {
+	public void setRegistroResultado(final String registroResultado) {
 		this.registroResultado = registroResultado;
+	}
+
+	/**
+	 * Método de acceso a registroIdSesion.
+	 *
+	 * @return registroIdSesion
+	 */
+	public String getRegistroIdSesion() {
+		return registroIdSesion;
+	}
+
+	/**
+	 * Método para establecer registroIdSesion.
+	 *
+	 * @param registroIdSesion
+	 *                             registroIdSesion a establecer
+	 */
+	public void setRegistroIdSesion(final String registroIdSesion) {
+		this.registroIdSesion = registroIdSesion;
 	}
 
 }

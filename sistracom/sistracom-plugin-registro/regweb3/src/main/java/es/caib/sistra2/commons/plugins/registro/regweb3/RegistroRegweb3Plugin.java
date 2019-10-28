@@ -1,6 +1,7 @@
 package es.caib.sistra2.commons.plugins.registro.regweb3;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -25,7 +26,9 @@ import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
+import es.caib.sistra2.commons.plugins.registro.api.VerificacionRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumental;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeEstadoRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaAsiento;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaDigital;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeInteresado;
@@ -62,7 +65,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 			final RegWebInfoWs service = UtilsRegweb3.getRegistroInfoService(codigoEntidad,
 					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_INFO), getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR),
 					getPropiedad(ConstantesRegweb3.PROP_USUARIO), getPropiedad(ConstantesRegweb3.PROP_PASSWORD),
-					logCalls);
+					getTimeoutMillis(), logCalls);
 
 			Long regType = null;
 			if (tipoRegistro == TypeRegistro.REGISTRO_ENTRADA) {
@@ -104,7 +107,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 			final RegWebInfoWs service = UtilsRegweb3.getRegistroInfoService(codigoEntidad,
 					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_INFO), getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR),
 					getPropiedad(ConstantesRegweb3.PROP_USUARIO), getPropiedad(ConstantesRegweb3.PROP_PASSWORD),
-					logCalls);
+					getTimeoutMillis(), logCalls);
 
 			Long regType = null;
 			if (tipoRegistro == TypeRegistro.REGISTRO_ENTRADA) {
@@ -133,7 +136,8 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	}
 
 	@Override
-	public ResultadoRegistro registroEntrada(final AsientoRegistral asientoRegistral) throws RegistroPluginException {
+	public ResultadoRegistro registroEntrada(final String idSesionRegistro, final AsientoRegistral asientoRegistral)
+			throws RegistroPluginException {
 
 		// Mapea parametros ws
 		final AsientoRegistralWs paramEntrada = mapearParametrosRegistro(asientoRegistral);
@@ -151,7 +155,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 					asientoRegistral.getDatosOrigen().getCodigoEntidad(),
 					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_ASIENTO),
 					getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR), getPropiedad(ConstantesRegweb3.PROP_USUARIO),
-					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), logCalls);
+					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), getTimeoutMillis(), logCalls);
 
 			// creacion de asiento registral de entrada con tipo de operacion normal
 			result = service.crearAsientoRegistral(asientoRegistral.getDatosOrigen().getCodigoEntidad(), paramEntrada,
@@ -168,7 +172,8 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	}
 
 	@Override
-	public ResultadoRegistro registroSalida(final AsientoRegistral asientoRegistral) throws RegistroPluginException {
+	public ResultadoRegistro registroSalida(final String idSesionRegistro, final AsientoRegistral asientoRegistral)
+			throws RegistroPluginException {
 
 		// Mapea parametros ws
 		final AsientoRegistralWs paramEntrada = mapearParametrosRegistro(asientoRegistral);
@@ -186,7 +191,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 					asientoRegistral.getDatosOrigen().getCodigoEntidad(),
 					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_ASIENTO),
 					getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR), getPropiedad(ConstantesRegweb3.PROP_USUARIO),
-					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), logCalls);
+					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), getTimeoutMillis(), logCalls);
 			// creacion de asiento registral de salida con tipo de operacion normal
 			result = service.crearAsientoRegistral(asientoRegistral.getDatosOrigen().getCodigoEntidad(), paramEntrada,
 					ConstantesRegweb3.OPERACION_NORMAL, false);
@@ -218,7 +223,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 			final RegWebAsientoRegistralWs service = UtilsRegweb3.getAsientoRegistralService(codigoEntidad,
 					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_ASIENTO),
 					getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR), getPropiedad(ConstantesRegweb3.PROP_USUARIO),
-					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), logCalls);
+					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), getTimeoutMillis(), logCalls);
 
 			// Devuelve justificante según método de descarga
 			switch (descargaJustificantes()) {
@@ -270,7 +275,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 			final RegWebInfoWs service = UtilsRegweb3.getRegistroInfoService(codigoEntidad,
 					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_INFO), getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR),
 					getPropiedad(ConstantesRegweb3.PROP_USUARIO), getPropiedad(ConstantesRegweb3.PROP_PASSWORD),
-					logCalls);
+					getTimeoutMillis(), logCalls);
 
 			libroWs = service.listarLibroOrganismo(codigoEntidad, codigoOrganismo);
 
@@ -412,7 +417,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		if (res == null) {
 			throw new RegistroPluginException("No se ha especificado parametro " + propiedad + " en propiedades");
 		}
-		return res;
+		return res.trim();
 	}
 
 	/**
@@ -465,6 +470,69 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		} else {
 			return "";
 		}
+	}
+
+	/**
+	 * Obtiene timeout.
+	 *
+	 * @return timeout
+	 * @throws RegistroPluginException
+	 */
+	private Long getTimeoutMillis() throws RegistroPluginException {
+		Long timeout = null;
+		final String timeoutStr = getPropiedad(ConstantesRegweb3.PROP_TIMEOUT);
+		timeout = (new Long(timeoutStr)) * 1000L;
+		return timeout;
+	}
+
+	@Override
+	public String iniciarSesionRegistroEntrada() throws RegistroPluginException {
+		// TODO ESPERAR A QUE RW3 IMPLEMENTE MECANISMO DE COMPENSACION
+		// Devolvemos tiempo actual
+		return System.currentTimeMillis() + "";
+	}
+
+	@Override
+	public String iniciarSesionRegistroSalida() throws RegistroPluginException {
+		// TODO ESPERAR A QUE RW3 IMPLEMENTE MECANISMO DE COMPENSACION
+		// Devolvemos tiempo actual
+		return System.currentTimeMillis() + "";
+	}
+
+	@Override
+	public VerificacionRegistro verificarRegistroEntrada(final String idSesionRegistro) throws RegistroPluginException {
+		return verificarPorTimeout(idSesionRegistro);
+	}
+
+	@Override
+	public VerificacionRegistro verificarRegistroSalida(final String idSesionRegistro) throws RegistroPluginException {
+		return verificarPorTimeout(idSesionRegistro);
+	}
+
+	private VerificacionRegistro verificarPorTimeout(final String idSesionRegistro) throws RegistroPluginException {
+		// TODO ESPERAR A QUE RW3 IMPLEMENTE MECANISMO DE COMPENSACION
+		// De momento recibiremos como idSesionRegistro el timestamp de cuando se inició
+		// el registro y lo que hacemos es esperar a que se cumpla el timeout (por si en
+		// una petición anterior se completa). Si se
+		// cumple el timeout y en otra petición no se ha acabado el registro lo damos
+		// como no finalizado. Esto no funcionaria si se carga el trámite en otra
+		// sesión.
+		// Si se completa el registro dentro de la misma sesión se repintaría el paso
+
+		final Long timestampInicioRegistro = new Long(idSesionRegistro);
+		final Long timeout = getTimeoutMillis();
+		TypeEstadoRegistro estado = TypeEstadoRegistro.NO_REALIZADO;
+
+		final Date limite = new Date(timestampInicioRegistro + timeout);
+		final Date ahora = new Date();
+		if (ahora.before(limite)) {
+			estado = TypeEstadoRegistro.EN_PROCESO;
+		}
+
+		final VerificacionRegistro res = new VerificacionRegistro();
+		res.setEstado(estado);
+
+		return res;
 	}
 
 }

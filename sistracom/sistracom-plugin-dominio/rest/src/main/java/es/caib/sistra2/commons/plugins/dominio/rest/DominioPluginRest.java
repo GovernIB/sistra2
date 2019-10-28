@@ -43,6 +43,7 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 	private static final QName SERVICE_NAME = new QName("urn:es:caib:sistra:ws:v2:services", "SistraFacadeService");
 	private static final String BASE_PROPERTY_USER = ".USER";
 	private static final String BASE_PROPERTY_PASS = ".PASS";
+	private static final String BASE_PROPERTY_TIMEOUT = ".TIMEOUT";
 
 	/** Constructor. **/
 	public DominioPluginRest(final String prefijoPropiedades, final Properties properties) {
@@ -53,11 +54,11 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 	 * Invoca dominio remoto.
 	 *
 	 * @param idDominio
-	 *            id dominio
+	 *                       id dominio
 	 * @param url
-	 *            url
+	 *                       url
 	 * @param parametros
-	 *            parametros
+	 *                       parametros
 	 * @return valores dominio
 	 * @throws DominioPluginException
 	 */
@@ -110,9 +111,10 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 
 		final String user = getPropiedad(idDominio, BASE_PROPERTY_USER);
 		final String pass = getPropiedad(idDominio, BASE_PROPERTY_PASS);
+		final Long timeout = getTimeoutMillis(idDominio);
 
 		try {
-			configurarService((BindingProvider) port, getEndpoint(url), user, pass, false);
+			configurarService((BindingProvider) port, getEndpoint(url), user, pass, timeout, false);
 		} catch (final Exception e1) {
 			throw new DominioPluginException("Mal configuracion del servicio", e1.getCause());
 
@@ -139,6 +141,15 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 		return valoresDominio;
 	}
 
+	private Long getTimeoutMillis(final String idDominio) throws DominioPluginException {
+		long timeout = 0L;
+		final String timeoutStr = getPropiedad(idDominio, BASE_PROPERTY_TIMEOUT);
+		if (timeoutStr == null) {
+			timeout = (new Long(timeoutStr)) * 1000L;
+		}
+		return timeout;
+	}
+
 	/**
 	 * Extrae la url
 	 *
@@ -159,19 +170,19 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 	 * Configura service.
 	 *
 	 * @param bp
-	 *            Binding Provider
+	 *                     Binding Provider
 	 * @param endpoint
-	 *            Endpoint ws
+	 *                     Endpoint ws
 	 * @param user
-	 *            usuario
+	 *                     usuario
 	 * @param pass
-	 *            password
+	 *                     password
 	 * @throws Exception
 	 */
 	private void configurarService(final BindingProvider bp, final String endpoint, final String user,
-			final String pass, final boolean logCalls) throws Exception {
+			final String pass, final Long timeout, final boolean logCalls) throws Exception {
 		bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpoint);
-		WsClientUtil.configurePort(bp, endpoint, user, pass, "BASIC", logCalls);
+		WsClientUtil.configurePort(bp, endpoint, user, pass, "BASIC", timeout, logCalls);
 	}
 
 	/**
@@ -225,13 +236,14 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 	 * Obtiene propiedad.
 	 *
 	 * @param propiedad
-	 *            propiedad
+	 *                      propiedad
 	 * @return valor
 	 * @throws AutenticacionPluginException
 	 */
 	private String getPropiedad(final String idDominio, final String propiedad) throws DominioPluginException {
 		String valor = null;
-		final String login = getProperty(DOMINIO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + "DOMINIO." + idDominio + ".LOGIN");
+		final String login = getProperty(
+				DOMINIO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + "DOMINIO." + idDominio + ".LOGIN");
 		if (login != null) {
 			valor = getProperty(DOMINIO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + "LOGIN." + login + propiedad);
 		}

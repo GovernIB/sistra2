@@ -14,6 +14,7 @@ import es.caib.sistramit.frontend.model.MensajeAsistente;
  *
  */
 @Component("sesionHttp")
+// @Scope(value = "session", proxyMode = ScopedProxyMode.INTERFACES)
 @Scope(value = "session")
 @SuppressWarnings("serial")
 public final class SesionHttpImpl implements SesionHttp, Serializable {
@@ -136,7 +137,7 @@ public final class SesionHttpImpl implements SesionHttp, Serializable {
 	}
 
 	@Override
-	public void setIdSesionFormulario(String idSesionFormulario) {
+	public void setIdSesionFormulario(final String idSesionFormulario) {
 		this.idSesionFormulario = idSesionFormulario;
 	}
 
@@ -146,7 +147,7 @@ public final class SesionHttpImpl implements SesionHttp, Serializable {
 	}
 
 	@Override
-	public void setIdTramite(String idTramite) {
+	public void setIdTramite(final String idTramite) {
 		this.idTramite = idTramite;
 	}
 
@@ -156,7 +157,7 @@ public final class SesionHttpImpl implements SesionHttp, Serializable {
 	}
 
 	@Override
-	public void setVersion(int version) {
+	public void setVersion(final int version) {
 		this.version = version;
 	}
 

@@ -1,8 +1,8 @@
 {
-  "timestamp": "1562224493946",
+  "timestamp": "1572006334566",
   "identificador": "TEST-JUNIT",
   "version": 1,
-  "release": 3,
+  "release": 4,
   "idEntidad": "A04003003",
   "idArea": "TESTS",
   "idioma": "es",
@@ -65,7 +65,7 @@
           "interno": true,
           "formularioInterno": {
             "mostrarTitulo": true,
-            "titulo": "Formulario 1 (tï¿½tulo)",
+            "titulo": "Formulario 1 (título)",
             "plantillas": [],
             "scriptPlantillas": null,
             "paginas": [
@@ -234,7 +234,7 @@
                         "type": "RComponenteSelector",
                         "identificador": "SEL_MULTIPLE",
                         "tipo": "SE",
-                        "etiqueta": "Mï¿½ltiple",
+                        "etiqueta": "Múltiple",
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 1,
@@ -264,7 +264,7 @@
                         "type": "RComponenteSelector",
                         "identificador": "SEL_UNICA",
                         "tipo": "SE",
-                        "etiqueta": "ï¿½nica",
+                        "etiqueta": "Única",
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 3,
@@ -315,7 +315,7 @@
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 1,
-                        "ayuda": "En funciï¿½n de este campo se deben establecer como solo lectura los campos de la derecha",
+                        "ayuda": "En función de este campo se deben establecer como solo lectura los campos de la derecha",
                         "propiedadesCampo": {
                           "obligatorio": false,
                           "soloLectura": false,
@@ -370,7 +370,7 @@
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 1,
-                        "ayuda": "Segï¿½n el checkbox toma como valores posibles: DS1/DS2 ï¿½ DS3/DS4.  Tambiï¿½n se autorrellena a DS1 ï¿½ DS3.",
+                        "ayuda": "Según el checkbox toma como valores posibles: DS1/DS2 ó DS3/DS4.  También se autorrellena a DS1 ó DS3.",
                         "propiedadesCampo": {
                           "obligatorio": false,
                           "soloLectura": false,
@@ -425,7 +425,7 @@
                         "type": "RComponenteSeccion",
                         "identificador": "ID_1550474877126",
                         "tipo": "SC",
-                        "etiqueta": "VALIDACIï¿½N CAMPO",
+                        "etiqueta": "VALIDACIÓN CAMPO",
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 6,
@@ -489,6 +489,7 @@
           "identificador": "ANE-1",
           "descripcion": "Anexo 1",
           "obligatoriedad": "D",
+          "tipoDocumental": "TD99",
           "scriptDependencia": {
             "script": "return 'S';",
             "literales": []
@@ -518,6 +519,7 @@
           "identificador": "ANE-2",
           "descripcion": "Anexo 2",
           "obligatoriedad": "S",
+          "tipoDocumental": "TD99",
           "scriptDependencia": null,
           "ayuda": {
             "fichero": null,
@@ -544,6 +546,7 @@
           "identificador": "ANE-XML",
           "descripcion": "Anexo XML",
           "obligatoriedad": "S",
+          "tipoDocumental": "TD99",
           "scriptDependencia": null,
           "ayuda": {
             "fichero": null,
@@ -572,6 +575,7 @@
           "identificador": "ANE-PDF",
           "descripcion": "Anexo PDF",
           "obligatoriedad": "S",
+          "tipoDocumental": "TD99",
           "scriptDependencia": null,
           "ayuda": {
             "fichero": null,

@@ -79,7 +79,8 @@ public final class UtilsFlujo {
 	/**
 	 * Formatea fecha en una cadena según la maneja el front.
 	 *
-	 * @param fecha Fecha
+	 * @param fecha
+	 *                  Fecha
 	 * @return Fecha formateada en dd/MM/yyyy hh:mm
 	 */
 	public static String formateaFechaFront(final Date fecha) {
@@ -89,8 +90,10 @@ public final class UtilsFlujo {
 	/**
 	 * Formatea fecha en una cadena
 	 *
-	 * @param fecha        Fecha
-	 * @param formatoFecha formato fecha
+	 * @param fecha
+	 *                         Fecha
+	 * @param formatoFecha
+	 *                         formato fecha
 	 * @return Fecha formateada
 	 */
 	public static String formateaFecha(final Date fecha, final String formatoFecha) {
@@ -105,7 +108,8 @@ public final class UtilsFlujo {
 	/**
 	 * Deformatea fecha pasada como una cadena según la maneja el front.
 	 *
-	 * @param fecha Fecha formateada en dd/MM/yyyy hh:mm
+	 * @param fecha
+	 *                  Fecha formateada en dd/MM/yyyy hh:mm
 	 * @return Fecha
 	 */
 	public static Date deformateaFechaFront(final String fecha) {
@@ -115,8 +119,10 @@ public final class UtilsFlujo {
 	/**
 	 * Deformatea fecha de una cadena
 	 *
-	 * @param fecha        Fecha
-	 * @param formatoFecha formato fecha
+	 * @param fecha
+	 *                         Fecha
+	 * @param formatoFecha
+	 *                         formato fecha
 	 * @return Fecha deformateada
 	 */
 	public static Date deformateaFecha(final String fecha, final String formatoFecha) {
@@ -135,9 +141,12 @@ public final class UtilsFlujo {
 	/**
 	 * Controla si la fecha esta dentro del plazo indicado.
 	 *
-	 * @param fecha       Ahora
-	 * @param plazoInicio Plazo desactivacion inicio
-	 * @param plazoFin    Plazo desactivacion fin
+	 * @param fecha
+	 *                        Ahora
+	 * @param plazoInicio
+	 *                        Plazo desactivacion inicio
+	 * @param plazoFin
+	 *                        Plazo desactivacion fin
 	 * @return Indica si la fecha esta dentro del plazo (si las fechas de plazo son
 	 *         nulas se considera dentro del plazo).
 	 */
@@ -158,7 +167,8 @@ public final class UtilsFlujo {
 	/**
 	 * Establece la hora a las 00:00:00 horas.
 	 *
-	 * @param fecha Fecha
+	 * @param fecha
+	 *                  Fecha
 	 * @return Fecha establecida a primera hora
 	 **/
 	public static Date obtenerPrimeraHora(final Date fecha) {
@@ -178,7 +188,8 @@ public final class UtilsFlujo {
 	/**
 	 * Establece la hora a las 23:59:59 horas.
 	 *
-	 * @param fecha Fecha
+	 * @param fecha
+	 *                  Fecha
 	 * @return Fecha establecida a primera hora
 	 **/
 	public static Date obtenerUltimaHora(final Date fecha) {
@@ -198,7 +209,8 @@ public final class UtilsFlujo {
 	/**
 	 * Genera datos usuario a partir info autenticación.
 	 *
-	 * @param usuInfo info autenticación
+	 * @param usuInfo
+	 *                    info autenticación
 	 * @return datos usuario
 	 */
 	public static DatosUsuario getDatosUsuario(final UsuarioAutenticadoInfo usuInfo) {
@@ -218,7 +230,8 @@ public final class UtilsFlujo {
 	/**
 	 * Genera datos representante a partir info autenticación.
 	 *
-	 * @param usuInfo info autenticación
+	 * @param usuInfo
+	 *                    info autenticación
 	 * @return datos usuario
 	 */
 	public static DatosUsuario getDatosRepresentante(final UsuarioAutenticadoInfo usuInfo) {
@@ -238,9 +251,11 @@ public final class UtilsFlujo {
 	/**
 	 * Verifica si el usuario puede cargar el tramite.
 	 *
-	 * @param datosPersistenciaTramite Datos persistencia tramite
+	 * @param datosPersistenciaTramite
+	 *                                     Datos persistencia tramite
 	 * @param usuarioAutenticadoInfo
-	 * @param recarga                  Indica si la carga viene de una recarga
+	 * @param recarga
+	 *                                     Indica si la carga viene de una recarga
 	 */
 	public static void controlCargaTramite(final DatosPersistenciaTramite datosPersistenciaTramite,
 			final UsuarioAutenticadoInfo usuarioAutenticadoInfo, final boolean recarga) {
@@ -269,9 +284,12 @@ public final class UtilsFlujo {
 	/**
 	 * Recupera datos entidad
 	 *
-	 * @param entidad                entidad
-	 * @param idioma                 idioma
-	 * @param configuracionComponent configuración component
+	 * @param entidad
+	 *                                   entidad
+	 * @param idioma
+	 *                                   idioma
+	 * @param configuracionComponent
+	 *                                   configuración component
 	 * @return entidad
 	 */
 	public static Entidad detalleTramiteEntidad(final RConfiguracionEntidad entidad, final String idioma,
@@ -282,12 +300,8 @@ public final class UtilsFlujo {
 		final Entidad e = new Entidad();
 		e.setId(entidad.getIdentificador());
 		e.setNombre(UtilsSTG.obtenerLiteral(entidad.getDescripcion(), idioma));
-		e.setLogo(urlResources + entidad.getLogo());
-		if (StringUtils.isBlank(entidad.getCss())) {
-			e.setCss("");
-		} else {
-			e.setCss(urlResources + entidad.getCss());
-		}
+		e.setLogo(obtenerUrlPublica(urlResources, entidad.getLogo()));
+		e.setCss(obtenerUrlPublica(urlResources, entidad.getCss()));
 		e.setContacto(UtilsSTG.obtenerLiteral(entidad.getContactoHTML(), idioma));
 		e.setUrlCarpeta(UtilsSTG.obtenerLiteral(entidad.getUrlCarpeta(), idioma));
 		e.setUrlMapaWeb(UtilsSTG.obtenerLiteral(entidad.getMapaWeb(), idioma));
@@ -333,7 +347,8 @@ public final class UtilsFlujo {
 	/**
 	 * Detalle tramite info.
 	 *
-	 * @param pDatosSesion datos sesion
+	 * @param pDatosSesion
+	 *                         datos sesion
 	 * @return Detalle tramite info.
 	 */
 	public static DetalleTramiteInfo detalleTramiteInfo(final DatosSesionTramitacion pDatosSesion) {
@@ -367,9 +382,12 @@ public final class UtilsFlujo {
 	/**
 	 * Genera detalle tramite.
 	 *
-	 * @param pDatosSesion           Datos sesion
-	 * @param entidadInfo            entidad info
-	 * @param configuracionComponent Configuracion component
+	 * @param pDatosSesion
+	 *                                   Datos sesion
+	 * @param entidadInfo
+	 *                                   entidad info
+	 * @param configuracionComponent
+	 *                                   Configuracion component
 	 * @return detalle tramite
 	 */
 	public static DetalleTramite detalleTramite(final DatosSesionTramitacion pDatosSesion,
@@ -390,13 +408,19 @@ public final class UtilsFlujo {
 	/**
 	 * Ejecuta script de dependencia de un documento.
 	 *
-	 * @param script                      Script
-	 * @param idDocumento                 Id documento
-	 * @param pVariablesFlujo             Variables flujo
-	 * @param pFormulariosCompletadosPaso Formularios anteriores completados en el
-	 *                                    paso actual
-	 * @param scriptFlujo                 Engine script
-	 * @param pDefinicionTramite          Definicion tramite
+	 * @param script
+	 *                                        Script
+	 * @param idDocumento
+	 *                                        Id documento
+	 * @param pVariablesFlujo
+	 *                                        Variables flujo
+	 * @param pFormulariosCompletadosPaso
+	 *                                        Formularios anteriores completados en
+	 *                                        el paso actual
+	 * @param scriptFlujo
+	 *                                        Engine script
+	 * @param pDefinicionTramite
+	 *                                        Definicion tramite
 	 *
 	 * @return Obligatoriedad
 	 */
@@ -439,9 +463,12 @@ public final class UtilsFlujo {
 	/**
 	 * Método para recuperar un parámetro de una acción de un paso.
 	 *
-	 * @param pParametros  Parametros acción
-	 * @param pParametro   Nombre parámetro
-	 * @param pObligatorio Obligatorio
+	 * @param pParametros
+	 *                         Parametros acción
+	 * @param pParametro
+	 *                         Nombre parámetro
+	 * @param pObligatorio
+	 *                         Obligatorio
 	 * @return Valor parámetro
 	 */
 	public static Object recuperaParametroAccionPaso(final ParametrosAccionPaso pParametros, final String pParametro,
@@ -456,7 +483,8 @@ public final class UtilsFlujo {
 	/**
 	 * Convierte instancia pasada como string a int.
 	 *
-	 * @param instanciaStr Instancia como string
+	 * @param instanciaStr
+	 *                         Instancia como string
 	 * @return Devuelve entero
 	 */
 	public static int instanciaStrToInt(final String instanciaStr) {
@@ -474,7 +502,8 @@ public final class UtilsFlujo {
 	/**
 	 * Indicamos si el tramite esta recien abierto (en el primer paso).
 	 *
-	 * @param pDatosSesion Datos sesion
+	 * @param pDatosSesion
+	 *                         Datos sesion
 	 * @return indica si es nuevo
 	 */
 	private static boolean esTramiteNuevo(final DatosSesionTramitacion pDatosSesion) {
@@ -499,7 +528,8 @@ public final class UtilsFlujo {
 	/**
 	 * Convierte datos usuario a persona.
 	 *
-	 * @param du datos usuario
+	 * @param du
+	 *               datos usuario
 	 * @return persona
 	 */
 	public static Persona usuarioPersona(final DatosUsuario du) {
@@ -513,8 +543,10 @@ public final class UtilsFlujo {
 	/**
 	 * Busca los documentos para registrar generados en el flujo de tramitación.
 	 *
-	 * @param flujoPasoDao    DAO paso flujo
-	 * @param pVariablesFlujo Variables flujo
+	 * @param flujoPasoDao
+	 *                            DAO paso flujo
+	 * @param pVariablesFlujo
+	 *                            Variables flujo
 	 * @return Lista de documentos que se registrarán
 	 */
 	public static List<DocumentosRegistroPorTipo> buscarDocumentosParaRegistrar(final FlujoPasoDao flujoPasoDao,
@@ -637,8 +669,10 @@ public final class UtilsFlujo {
 	/**
 	 * Obtiene documentos del tipo.
 	 *
-	 * @param docsRegPorTipo lista de documentos por tipo
-	 * @param tipoDocu       tipo documento
+	 * @param docsRegPorTipo
+	 *                           lista de documentos por tipo
+	 * @param tipoDocu
+	 *                           tipo documento
 	 * @return documentos del tipo
 	 */
 	public static List<DocumentoRegistro> obtenerDocumentosTipo(final List<DocumentosRegistroPorTipo> docsRegPorTipo,
@@ -659,8 +693,10 @@ public final class UtilsFlujo {
 	/**
 	 * Verifica el tamaño máximo. Genera una excepción en caso de que se sobrepase.
 	 *
-	 * @param tamMax   Tamaño máximo (con sufijo MB o KB)
-	 * @param numBytes Número de bytes del fichero
+	 * @param tamMax
+	 *                     Tamaño máximo (con sufijo MB o KB)
+	 * @param numBytes
+	 *                     Número de bytes del fichero
 	 */
 	public static void verificarTamanyoMaximo(final String tamMax, final int numBytes) {
 
@@ -691,5 +727,28 @@ public final class UtilsFlujo {
 			throw new TamanyoMaximoAnexoException("Se ha sobrepasado el tamaño máximo");
 		}
 
+	}
+
+	/**
+	 * Calcula url recurso publico.
+	 *
+	 * @param urlResources
+	 *                            url recurso
+	 * @param resourcePublico
+	 *                            recurso publico (empezando con / )
+	 * @return url
+	 */
+	public static String obtenerUrlPublica(final String urlResources, String resourcePublico) {
+		String url = "";
+		if (StringUtils.isNotBlank(resourcePublico)) {
+			// Eliminamos de la ruta el directorio publico
+			final String directorioPublico = "/publico/";
+			if (resourcePublico.startsWith(directorioPublico)) {
+				resourcePublico = resourcePublico.substring(directorioPublico.length() - 1);
+			}
+			// Concatenamos
+			url = urlResources + resourcePublico;
+		}
+		return url;
 	}
 }

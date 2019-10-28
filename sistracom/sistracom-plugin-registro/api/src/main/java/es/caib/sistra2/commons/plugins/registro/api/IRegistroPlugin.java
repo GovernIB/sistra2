@@ -54,14 +54,46 @@ public interface IRegistroPlugin extends IPlugin {
 	LibroOficina obtenerLibroOrganismo(String codigoEntidad, String codigoOrganismo) throws RegistroPluginException;
 
 	/**
+	 * Inicia sesión de registro. Mediante la sesión de registro se permitirá tener
+	 * la trazabilidad posterior del resultado del registro en caso de que haya
+	 * habido problemas.
+	 *
+	 * @return Id sesión registro
+	 */
+	String iniciarSesionRegistroEntrada() throws RegistroPluginException;
+
+	/**
 	 * Realiza un apunte registral de entrada sobre la aplicacion de registro
 	 *
+	 * @param idSesionRegistro
+	 *                             Identificador sesión registro
+	 *
 	 * @param asientoRegistral
-	 *                             asiento con los datos requeridos para el registro
+	 *                             Asiento con los datos requeridos para el registro
 	 *                             de entrada
 	 * @throws RegistroPluginException
 	 */
-	ResultadoRegistro registroEntrada(AsientoRegistral asientoRegistral) throws RegistroPluginException;
+	ResultadoRegistro registroEntrada(String idSesionRegistro, AsientoRegistral asientoRegistral)
+			throws RegistroPluginException;
+
+	/**
+	 * Verifica si se ha realizado registro de entrada.
+	 *
+	 * @param idSesionRegistro
+	 *                             id sesión registro
+	 * @return verificación registro
+	 * @throws RegistroPluginException
+	 */
+	VerificacionRegistro verificarRegistroEntrada(String idSesionRegistro) throws RegistroPluginException;
+
+	/**
+	 * Inicia sesión de registro. Mediante la sesión de registro se permitirá tener
+	 * la trazabilidad posterior del resultado del registro en caso de que haya
+	 * habido problemas.
+	 *
+	 * @return Id sesión registro
+	 */
+	String iniciarSesionRegistroSalida() throws RegistroPluginException;
 
 	/**
 	 * Realiza un apunte registral de salida sobre la aplicacion de registro
@@ -70,7 +102,17 @@ public interface IRegistroPlugin extends IPlugin {
 	 *                          codigo DIR3 de la entidad
 	 * @throws RegistroPluginException
 	 */
-	ResultadoRegistro registroSalida(AsientoRegistral asientoRegistral) throws RegistroPluginException;
+	ResultadoRegistro registroSalida(String idSesionRegistro, AsientoRegistral asientoRegistral)
+			throws RegistroPluginException;
+
+	/**
+	 * Verifica si se ha realizado registro de salida.
+	 *
+	 * @param idSesionRegistro
+	 *                             id sesión registro
+	 * @return verificación registro
+	 */
+	VerificacionRegistro verificarRegistroSalida(String idSesionRegistro) throws RegistroPluginException;
 
 	/**
 	 * Obtiene el justificante de registro correspondiente a un apunte registral

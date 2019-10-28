@@ -20,7 +20,6 @@
 	<context:property-placeholder location="file:#{systemProperties['es.caib.sistramit.properties.path']}"/>
 
 	<!-- Scans the classpath of this application for @Components to deploy as beans -->
-	<!--  scoped necesario para que el objeto session info pueda usarse desde controllers (otra opc seria definir exclusivamente sessioninfo como scoped -->
 	<context:component-scan base-package="es.caib.sistramit.frontend" scoped-proxy="interfaces"/>
 
 	<!-- Procesos -->
@@ -35,13 +34,45 @@
 
 
 	<!--  Configura recursos estaticos -->
+	<!--
 	<mvc:resources mapping="/resources/**" location="file:${ficherosExternos.path}/publico/" />
+	-->
 	<mvc:resources mapping="/base/**" location="/base/" />
 	<mvc:resources mapping="/asistente/**" location="/asistente/" />
 	<mvc:resources mapping="/debug/**" location="/debug/" />
 
-	<!-- MVC annotation -->
+	<!-- Spring 3
+	<mvc:default-servlet-handler/>
+	-->
+
+	<!-- MVC annotation : Sincronizacion de sesion para serializar llamadas al service -->
+
+	<!-- Para configurar setSynchronizeOnSession por fuera -->
 	<mvc:annotation-driven />
+
+	<!-- Version Spring3 : Preferencia respecto a mvc:default-servlet-handler. Si no se pone asi no hace caso del synchronizeOnSession
+    <bean id="annotationUrlMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+        <property name="order" value="0" />
+    </bean>
+    <bean id="controllerClassNameHandlerMapping" class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
+        <property name="order" value="1" />
+    </bean>
+
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="synchronizeOnSession" value="true" />
+	</bean>
+    -->
+
+    <!-- Version Spring 4
+	<bean id="annotationUrlMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+    	<property name="order" value="0" />
+    </bean>
+	<bean id="annotationMethodHandlerAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="synchronizeOnSession" value="true" />
+	</bean>
+	-->
+
 
 	<!--  Interceptores -->
 	<mvc:interceptors>

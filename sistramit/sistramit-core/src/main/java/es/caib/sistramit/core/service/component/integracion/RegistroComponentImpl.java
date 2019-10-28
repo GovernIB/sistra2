@@ -11,6 +11,7 @@ import es.caib.sistra2.commons.plugins.registro.api.LibroOficina;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
+import es.caib.sistra2.commons.plugins.registro.api.VerificacionRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeJustificante;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.RegistroJustificanteException;
@@ -52,7 +53,7 @@ public final class RegistroComponentImpl implements RegistroComponent {
 
 	@Override
 	public ResultadoRegistrar registrar(final String codigoEntidad, final String idSesionTramitacion,
-			final AsientoRegistral asiento, final boolean debugEnabled) {
+			final String idSesionRegistro, final AsientoRegistral asiento, final boolean debugEnabled) {
 
 		final ResultadoRegistrar resultado = new ResultadoRegistrar();
 
@@ -76,7 +77,7 @@ public final class RegistroComponentImpl implements RegistroComponent {
 		final IRegistroPlugin plgRegistro = (IRegistroPlugin) configuracionComponent
 				.obtenerPluginEntidad(TypePluginEntidad.REGISTRO, codigoEntidad);
 		try {
-			res = plgRegistro.registroEntrada(asiento);
+			res = plgRegistro.registroEntrada(idSesionRegistro, asiento);
 			resultado.setResultado(TypeResultadoRegistro.CORRECTO);
 			resultado.setNumeroRegistro(res.getNumeroRegistro());
 			resultado.setFechaRegistro(res.getFechaRegistro());
@@ -85,20 +86,10 @@ public final class RegistroComponentImpl implements RegistroComponent {
 			final RegistroSolicitudException rse = new RegistroSolicitudException(
 					"Excepcion al registrar. Marcamos para reintentar.", ex);
 			auditoriaComponent.auditarExcepcionNegocio(idSesionTramitacion, rse);
-
-			// TODO Si estuviese preparado se podria habilitar esquema para reintentar. De
-			// momento, lo tomamos como error.
-			// resultado.setResultado(TypeResultadoRegistro.REINTENTAR);
-			resultado.setResultado(TypeResultadoRegistro.ERROR);
+			resultado.setResultado(TypeResultadoRegistro.REINTENTAR);
 		}
 
 		return resultado;
-	}
-
-	@Override
-	public ResultadoRegistrar reintentarRegistro(final String idSesionTramitacion, final boolean debugEnabled) {
-		// TODO No esta habilitado mecanismo para registro
-		throw new RuntimeException("No esta habilitado mecanismo para registro");
 	}
 
 	@Override
@@ -176,6 +167,48 @@ public final class RegistroComponentImpl implements RegistroComponent {
 	@Override
 	public void guardarEnvio(final Envio envio) {
 		envioDao.addEnvio(envio);
+	}
+
+	@Override
+	public String iniciarSesionRegistro(final String codigoEntidad, final boolean debugEnabled) {
+		final IRegistroPlugin plgRegistro = (IRegistroPlugin) configuracionComponent
+				.obtenerPluginEntidad(TypePluginEntidad.REGISTRO, codigoEntidad);
+		try {
+			final String idSesionRegistro = plgRegistro.iniciarSesionRegistroEntrada();
+			return idSesionRegistro;
+		} catch (final RegistroPluginException e) {
+			throw new RegistroJustificanteException(
+					"Error iniciando sesión registro entrada para entidad: " + codigoEntidad, e);
+		}
+	}
+
+	@Override
+	public ResultadoRegistrar reintentarRegistro(final String codigoEntidad, final String idSesionRegistro,
+			final boolean debugEnabled) {
+		final IRegistroPlugin plgRegistro = (IRegistroPlugin) configuracionComponent
+				.obtenerPluginEntidad(TypePluginEntidad.REGISTRO, codigoEntidad);
+		try {
+			final VerificacionRegistro verificacion = plgRegistro.verificarRegistroEntrada(idSesionRegistro);
+
+			final ResultadoRegistrar res = new ResultadoRegistrar();
+			switch (verificacion.getEstado()) {
+			case REALIZADO:
+				res.setResultado(TypeResultadoRegistro.CORRECTO);
+				res.setNumeroRegistro(verificacion.getDatosRegistro().getNumeroRegistro());
+				res.setFechaRegistro(verificacion.getDatosRegistro().getFechaRegistro());
+				break;
+			case NO_REALIZADO:
+				res.setResultado(TypeResultadoRegistro.ERROR);
+				break;
+			case EN_PROCESO:
+				res.setResultado(TypeResultadoRegistro.REINTENTAR);
+				break;
+			}
+			return res;
+		} catch (final RegistroPluginException e) {
+			throw new RegistroJustificanteException(
+					"Error iniciando sesión registro entrada para entidad: " + codigoEntidad, e);
+		}
 	}
 
 }

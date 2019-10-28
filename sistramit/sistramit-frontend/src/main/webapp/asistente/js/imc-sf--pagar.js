@@ -114,6 +114,7 @@ $.fn.appPagament = function(options) {
 						data: pag_dades,
 						method: "post",
 						dataType: "json",
+						timeout: APP_TIMEOUT,
 						beforeSend: function(xhr) {
 							xhr.setRequestHeader(headerCSRF, tokenCSRF);
 						}
@@ -318,6 +319,7 @@ $.fn.appPagamentPresencial = function(options) {
 						data: pag_dades,
 						method: "post",
 						dataType: "json",
+						timeout: APP_TIMEOUT,
 						beforeSend: function(xhr) {
 							xhr.setRequestHeader(headerCSRF, tokenCSRF);
 						}
@@ -464,6 +466,7 @@ $.fn.appPagaments = function(options) {
 						data: pag_dades,
 						method: "post",
 						dataType: "json",
+						timeout: APP_TIMEOUT,
 						beforeSend: function(xhr) {
 							xhr.setRequestHeader(headerCSRF, tokenCSRF);
 						}

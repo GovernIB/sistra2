@@ -96,6 +96,11 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Para registro, indica fecha registro.
 	 */
 	private Date registroFechaRegistro;
+
+	/**
+	 * Para registro, indica id sesión registro.
+	 */
+	private String registroIdSesion;
 	/**
 	 * Lista de firmas del documento.
 	 */
@@ -124,9 +129,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer id.
 	 *
 	 * @param id
-	 *            id a establecer
+	 *               id a establecer
 	 */
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
@@ -143,9 +148,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer instancia.
 	 *
 	 * @param instancia
-	 *            instancia a establecer
+	 *                      instancia a establecer
 	 */
-	public void setInstancia(int instancia) {
+	public void setInstancia(final int instancia) {
 		this.instancia = instancia;
 	}
 
@@ -162,9 +167,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer tipo.
 	 *
 	 * @param tipo
-	 *            tipo a establecer
+	 *                 tipo a establecer
 	 */
-	public void setTipo(TypeDocumentoPersistencia tipo) {
+	public void setTipo(final TypeDocumentoPersistencia tipo) {
 		this.tipo = tipo;
 	}
 
@@ -181,9 +186,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer estado.
 	 *
 	 * @param estado
-	 *            estado a establecer
+	 *                   estado a establecer
 	 */
-	public void setEstado(TypeEstadoDocumento estado) {
+	public void setEstado(final TypeEstadoDocumento estado) {
 		this.estado = estado;
 	}
 
@@ -200,9 +205,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer fichero.
 	 *
 	 * @param fichero
-	 *            fichero a establecer
+	 *                    fichero a establecer
 	 */
-	public void setFichero(ReferenciaFichero fichero) {
+	public void setFichero(final ReferenciaFichero fichero) {
 		this.fichero = fichero;
 	}
 
@@ -219,9 +224,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer formularioPdf.
 	 *
 	 * @param formularioPdf
-	 *            formularioPdf a establecer
+	 *                          formularioPdf a establecer
 	 */
-	public void setFormularioPdf(ReferenciaFichero formularioPdf) {
+	public void setFormularioPdf(final ReferenciaFichero formularioPdf) {
 		this.formularioPdf = formularioPdf;
 	}
 
@@ -238,9 +243,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer anexoNombreFichero.
 	 *
 	 * @param anexoNombreFichero
-	 *            anexoNombreFichero a establecer
+	 *                               anexoNombreFichero a establecer
 	 */
-	public void setAnexoNombreFichero(String anexoNombreFichero) {
+	public void setAnexoNombreFichero(final String anexoNombreFichero) {
 		this.anexoNombreFichero = anexoNombreFichero;
 	}
 
@@ -257,9 +262,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer anexoDescripcionInstancia.
 	 *
 	 * @param anexoDescripcionInstancia
-	 *            anexoDescripcionInstancia a establecer
+	 *                                      anexoDescripcionInstancia a establecer
 	 */
-	public void setAnexoDescripcionInstancia(String anexoDescripcionInstancia) {
+	public void setAnexoDescripcionInstancia(final String anexoDescripcionInstancia) {
 		this.anexoDescripcionInstancia = anexoDescripcionInstancia;
 	}
 
@@ -276,9 +281,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer pagoJustificantePdf.
 	 *
 	 * @param pagoJustificantePdf
-	 *            pagoJustificantePdf a establecer
+	 *                                pagoJustificantePdf a establecer
 	 */
-	public void setPagoJustificantePdf(ReferenciaFichero pagoJustificantePdf) {
+	public void setPagoJustificantePdf(final ReferenciaFichero pagoJustificantePdf) {
 		this.pagoJustificantePdf = pagoJustificantePdf;
 	}
 
@@ -295,9 +300,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer pagoNifSujetoPasivo.
 	 *
 	 * @param pagoNifSujetoPasivo
-	 *            pagoNifSujetoPasivo a establecer
+	 *                                pagoNifSujetoPasivo a establecer
 	 */
-	public void setPagoNifSujetoPasivo(String pagoNifSujetoPasivo) {
+	public void setPagoNifSujetoPasivo(final String pagoNifSujetoPasivo) {
 		this.pagoNifSujetoPasivo = pagoNifSujetoPasivo;
 	}
 
@@ -314,9 +319,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer pagoNumeroAutoliquidacion.
 	 *
 	 * @param pagoNumeroAutoliquidacion
-	 *            pagoNumeroAutoliquidacion a establecer
+	 *                                      pagoNumeroAutoliquidacion a establecer
 	 */
-	public void setPagoIdentificador(String pagoNumeroAutoliquidacion) {
+	public void setPagoIdentificador(final String pagoNumeroAutoliquidacion) {
 		this.pagoIdentificador = pagoNumeroAutoliquidacion;
 	}
 
@@ -333,9 +338,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer pagoEstadoIncorrecto.
 	 *
 	 * @param pagoEstadoIncorrecto
-	 *            pagoEstadoIncorrecto a establecer
+	 *                                 pagoEstadoIncorrecto a establecer
 	 */
-	public void setPagoEstadoIncorrecto(TypeEstadoPagoIncorrecto pagoEstadoIncorrecto) {
+	public void setPagoEstadoIncorrecto(final TypeEstadoPagoIncorrecto pagoEstadoIncorrecto) {
 		this.pagoEstadoIncorrecto = pagoEstadoIncorrecto;
 	}
 
@@ -352,9 +357,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer pagoErrorPasarela.
 	 *
 	 * @param pagoErrorPasarela
-	 *            pagoErrorPasarela a establecer
+	 *                              pagoErrorPasarela a establecer
 	 */
-	public void setPagoErrorPasarela(String pagoErrorPasarela) {
+	public void setPagoErrorPasarela(final String pagoErrorPasarela) {
 		this.pagoErrorPasarela = pagoErrorPasarela;
 	}
 
@@ -371,9 +376,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer pagoMensajeErrorPasarela.
 	 *
 	 * @param pagoMensajeErrorPasarela
-	 *            pagoMensajeErrorPasarela a establecer
+	 *                                     pagoMensajeErrorPasarela a establecer
 	 */
-	public void setPagoMensajeErrorPasarela(String pagoMensajeErrorPasarela) {
+	public void setPagoMensajeErrorPasarela(final String pagoMensajeErrorPasarela) {
 		this.pagoMensajeErrorPasarela = pagoMensajeErrorPasarela;
 	}
 
@@ -390,9 +395,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer registroPreregistro.
 	 *
 	 * @param registroPreregistro
-	 *            registroPreregistro a establecer
+	 *                                registroPreregistro a establecer
 	 */
-	public void setRegistroPreregistro(TypeSiNo registroPreregistro) {
+	public void setRegistroPreregistro(final TypeSiNo registroPreregistro) {
 		this.registroPreregistro = registroPreregistro;
 	}
 
@@ -409,9 +414,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer registroNumeroRegistro.
 	 *
 	 * @param registroNumeroRegistro
-	 *            registroNumeroRegistro a establecer
+	 *                                   registroNumeroRegistro a establecer
 	 */
-	public void setRegistroNumeroRegistro(String registroNumeroRegistro) {
+	public void setRegistroNumeroRegistro(final String registroNumeroRegistro) {
 		this.registroNumeroRegistro = registroNumeroRegistro;
 	}
 
@@ -428,9 +433,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer registroFechaRegistro.
 	 *
 	 * @param registroFechaRegistro
-	 *            registroFechaRegistro a establecer
+	 *                                  registroFechaRegistro a establecer
 	 */
-	public void setRegistroFechaRegistro(Date registroFechaRegistro) {
+	public void setRegistroFechaRegistro(final Date registroFechaRegistro) {
 		this.registroFechaRegistro = registroFechaRegistro;
 	}
 
@@ -438,12 +443,12 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Obtiene ficheros de persistencia para el formulario: xml y pdf.
 	 *
 	 * @param pXml
-	 *            Indica si se obtiene el fichero correspondiente al xml
+	 *                    Indica si se obtiene el fichero correspondiente al xml
 	 * @param pPdf
-	 *            Indica si se obtiene el fichero correspondiente al pdf
+	 *                    Indica si se obtiene el fichero correspondiente al pdf
 	 * @param pFirmas
-	 *            Indica si se obtienen los ficheros de las firmas (de todos los
-	 *            ficheros)
+	 *                    Indica si se obtienen los ficheros de las firmas (de todos
+	 *                    los ficheros)
 	 * @return Lista de referencias de fichero
 	 */
 	public List<ReferenciaFichero> obtenerReferenciasFicherosFormulario(final boolean pXml, final boolean pPdf,
@@ -481,10 +486,10 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Obtiene ficheros de persistencia para el anexo: fichero y firmas.
 	 *
 	 * @param pFichero
-	 *            Indica si se obtiene el fichero correspondiente al anexo
+	 *                     Indica si se obtiene el fichero correspondiente al anexo
 	 * @param pFirmas
-	 *            Indica si se obtienen los ficheros de las firmas (de todos los
-	 *            ficheros)
+	 *                     Indica si se obtienen los ficheros de las firmas (de
+	 *                     todos los ficheros)
 	 * @return Lista de referencias de fichero
 	 */
 	public List<ReferenciaFichero> obtenerReferenciasFicherosAnexo(final boolean pFichero, final boolean pFirmas) {
@@ -510,7 +515,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Añade firma de fichero.
 	 *
 	 * @param fdp
-	 *            Firma
+	 *                Firma
 	 */
 	public void addFirma(final FirmaDocumentoPersistencia fdp) {
 		if (this.firmas.get(fdp.getFichero().getId()) == null) {
@@ -523,7 +528,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Elimina firmas del fichero.
 	 *
 	 * @param idFichero
-	 *            Id fichero
+	 *                      Id fichero
 	 */
 	public void removeFirmas(final Long idFichero) {
 		if (idFichero != null && this.firmas.containsKey(idFichero)) {
@@ -545,7 +550,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Elimina firma de fichero.
 	 *
 	 * @param fdp
-	 *            Firma
+	 *                Firma
 	 */
 	public void removeFirma(final FirmaDocumentoPersistencia fdp) {
 		if (this.firmas.get(fdp.getFichero().getId()) != null) {
@@ -575,12 +580,12 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método de acceso a firma de un fichero para un firmante.
 	 *
 	 * @param codigoFichero
-	 *            Parámetro codigo fichero
+	 *                          Parámetro codigo fichero
 	 * @param nif
-	 *            Parámetro nif firmante
+	 *                          Parámetro nif firmante
 	 * @return firma (nulo si no esta firmado)
 	 */
-	public FirmaDocumentoPersistencia obtenerFirmaFichero(final Long codigoFichero, String nif) {
+	public FirmaDocumentoPersistencia obtenerFirmaFichero(final Long codigoFichero, final String nif) {
 		FirmaDocumentoPersistencia res = null;
 		final List<FirmaDocumentoPersistencia> firmasFichero = obtenerFirmasFichero(codigoFichero);
 		for (final FirmaDocumentoPersistencia fdp : firmasFichero) {
@@ -596,7 +601,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método de acceso a firmas de un fichero.
 	 *
 	 * @param codigoFichero
-	 *            Parámetro codigo fichero
+	 *                          Parámetro codigo fichero
 	 * @return firmas
 	 */
 	public List<FirmaDocumentoPersistencia> obtenerFirmasFichero(final Long codigoFichero) {
@@ -639,9 +644,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Método para establecer registroResultado.
 	 *
 	 * @param registroResultado
-	 *            registroResultado a establecer
+	 *                              registroResultado a establecer
 	 */
-	public void setRegistroResultado(TypeResultadoRegistro registroResultado) {
+	public void setRegistroResultado(final TypeResultadoRegistro registroResultado) {
 		this.registroResultado = registroResultado;
 	}
 
@@ -652,6 +657,25 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 */
 	public Map<Long, List<FirmaDocumentoPersistencia>> getFirmas() {
 		return firmas;
+	}
+
+	/**
+	 * Método de acceso a registroIdSesion.
+	 * 
+	 * @return registroIdSesion
+	 */
+	public String getRegistroIdSesion() {
+		return registroIdSesion;
+	}
+
+	/**
+	 * Método para establecer registroIdSesion.
+	 * 
+	 * @param registroIdSesion
+	 *                             registroIdSesion a establecer
+	 */
+	public void setRegistroIdSesion(final String registroIdSesion) {
+		this.registroIdSesion = registroIdSesion;
 	}
 
 }

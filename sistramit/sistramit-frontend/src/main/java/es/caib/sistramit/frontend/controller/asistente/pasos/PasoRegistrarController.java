@@ -26,7 +26,7 @@ import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
  */
 @Controller
 @RequestMapping(value = "/asistente/rt")
-public final class PasoRegistrarController extends TramitacionController {
+public class PasoRegistrarController extends TramitacionController {
 
 	/** Constante parametro id paso. */
 	private static final String PARAM_ID_PASO = "idPaso";
@@ -44,11 +44,11 @@ public final class PasoRegistrarController extends TramitacionController {
 	 * Realiza download de un documento rellenado en el trámite.
 	 *
 	 * @param idPaso
-	 *            Identificador paso.
+	 *                        Identificador paso.
 	 * @param idDocumento
-	 *            Identificador documento.
+	 *                        Identificador documento.
 	 * @param instancia
-	 *            Instancia documento.
+	 *                        Instancia documento.
 	 * @return Documento para descargar.
 	 */
 	@RequestMapping("/descargarDocumento.html")
@@ -78,13 +78,13 @@ public final class PasoRegistrarController extends TramitacionController {
 	 * Realiza download de una firma de un documento.
 	 *
 	 * @param idPaso
-	 *            Identificador paso.
+	 *                        Identificador paso.
 	 * @param idDocumento
-	 *            Identificador documento.
+	 *                        Identificador documento.
 	 * @param instancia
-	 *            Instancia documento.
+	 *                        Instancia documento.
 	 * @param firmante
-	 *            Nif firmante.
+	 *                        Nif firmante.
 	 * @return Firma para descargar.
 	 */
 	@RequestMapping("/descargarFirma.html")
@@ -116,11 +116,11 @@ public final class PasoRegistrarController extends TramitacionController {
 	 * Firmar documento: redirección a componente externo de firma.
 	 *
 	 * @param idPaso
-	 *            Identificador paso.
+	 *                        Identificador paso.
 	 * @param idDocumento
-	 *            Identificador documento.
+	 *                        Identificador documento.
 	 * @param instancia
-	 *            Instancia documento.
+	 *                        Instancia documento.
 	 * @return Devuelve JSON indicando redireccion para firmar.
 	 */
 	@RequestMapping(value = "/firmarDocumento.json", method = RequestMethod.POST)
@@ -162,23 +162,56 @@ public final class PasoRegistrarController extends TramitacionController {
 	 * Registra trámite.
 	 *
 	 * @param idPaso
-	 *            Identificador paso.
+	 *                   Identificador paso.
 	 * @return Devuelve JSON con estado actual del trámite.
 	 */
 	@RequestMapping(value = "/registrarTramite.json", method = RequestMethod.POST)
 	public ModelAndView registrarTramite(@RequestParam(PARAM_ID_PASO) final String idPaso) {
-
 		debug("Registrar tramite");
+		return procesoRegistrar(idPaso, TypeSiNo.NO);
+	}
 
+	/**
+	 * Reintenta registro trámite.
+	 *
+	 * @param idPaso
+	 *                   Identificador paso.
+	 * @return Devuelve JSON con estado actual del trámite.
+	 */
+	@RequestMapping(value = "/reintentar.json", method = RequestMethod.POST)
+	public ModelAndView reintentarRegistroTramite(@RequestParam(PARAM_ID_PASO) final String idPaso) {
+		debug("Reintentar registro tramite");
+		return procesoRegistrar(idPaso, TypeSiNo.SI);
+	}
+
+	/**
+	 * Proceso registrar trámite.
+	 *
+	 * @param idPaso
+	 *                       id paso
+	 * @param reintentar
+	 *                       reintentar
+	 * @return resultado registro
+	 */
+	private ModelAndView procesoRegistrar(final String idPaso, final TypeSiNo reintentar) {
 		final String idSesionTramitacion = getIdSesionTramitacionActiva();
 
 		ParametrosAccionPaso pParametros;
+
+		// Si no es reintentar, iniciamos sesion registro
+		if (reintentar == TypeSiNo.NO) {
+			pParametros = new ParametrosAccionPaso();
+			final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
+					TypeAccionPasoRegistrar.INICIAR_SESION_REGISTRO, null);
+			final String idSesionRegistro = (String) rap.getParametroRetorno("idSesionRegistro");
+			this.debug("Sesión registro: " + idSesionRegistro);
+		}
+
+		// Registramos / reintentamos
 		pParametros = new ParametrosAccionPaso();
-		// TODO De momento no se gestionan reintentos
-		pParametros.addParametroEntrada("reintentar", TypeSiNo.NO);
+		pParametros.addParametroEntrada("reintentar", reintentar);
 		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
 				TypeAccionPasoRegistrar.REGISTRAR_TRAMITE, pParametros);
-
 		final ResultadoRegistrar resReg = (ResultadoRegistrar) rap.getParametroRetorno("resultado");
 
 		// Generamos mensaje respuesta

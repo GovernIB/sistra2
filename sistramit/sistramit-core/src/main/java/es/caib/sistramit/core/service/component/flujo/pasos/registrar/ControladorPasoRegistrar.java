@@ -74,6 +74,9 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	private AccionDescargarFirma accionDescargarFirma;
 	/** Accion registrar tramite. */
 	@Autowired
+	private AccionIniciarSesionRegistro accionIniciarSesionRegistro;
+	/** Accion registrar tramite. */
+	@Autowired
 	private AccionRegistrarTramite accionRegistrarTramite;
 	/** Componente registro. */
 	@Autowired
@@ -150,6 +153,9 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 			break;
 		case DESCARGAR_FIRMA:
 			accionPaso = accionDescargarFirma;
+			break;
+		case INICIAR_SESION_REGISTRO:
+			accionPaso = accionIniciarSesionRegistro;
 			break;
 		case REGISTRAR_TRAMITE:
 			accionPaso = accionRegistrarTramite;

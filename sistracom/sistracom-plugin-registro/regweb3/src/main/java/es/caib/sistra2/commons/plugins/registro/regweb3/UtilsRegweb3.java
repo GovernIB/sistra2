@@ -2,7 +2,6 @@ package es.caib.sistra2.commons.plugins.registro.regweb3;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 
 import javax.xml.ws.BindingProvider;
 
@@ -40,14 +39,15 @@ public class UtilsRegweb3 {
 	 * @throws Exception
 	 */
 	public static RegWebRegistroEntradaWs getRegistroEntradaService(final String entidad, final String endpoint,
-			final String wsdlDir, final String user, final String pass, final boolean logCalls) throws Exception {
+			final String wsdlDir, final String user, final String pass, final Long timeout, final boolean logCalls)
+			throws Exception {
 
 		final URL wsdl = obtenerUrlWsdl(endpoint, wsdlDir, "RegWebRegistroEntrada");
 		final RegWebRegistroEntradaWsService service = new RegWebRegistroEntradaWsService(wsdl);
 
 		final RegWebRegistroEntradaWs api = service.getRegWebRegistroEntradaWs();
 
-		configurarService((BindingProvider) api, endpoint, user, pass, logCalls);
+		configurarService((BindingProvider) api, endpoint, user, pass, timeout, logCalls);
 
 		return api;
 	}
@@ -59,14 +59,15 @@ public class UtilsRegweb3 {
 	 * @throws Exception
 	 */
 	public static RegWebRegistroSalidaWs getRegistroSalidaService(final String entidad, final String endpoint,
-			final String wsdlDir, final String user, final String pass, final boolean logCalls) throws Exception {
+			final String wsdlDir, final String user, final String pass, final Long timeout, final boolean logCalls)
+			throws Exception {
 
 		final URL wsdl = obtenerUrlWsdl(endpoint, wsdlDir, "RegWebRegistroSalida");
 		final RegWebRegistroSalidaWsService service = new RegWebRegistroSalidaWsService(wsdl);
 
 		final RegWebRegistroSalidaWs api = service.getRegWebRegistroSalidaWs();
 
-		configurarService((BindingProvider) api, endpoint, user, pass, logCalls);
+		configurarService((BindingProvider) api, endpoint, user, pass, timeout, logCalls);
 
 		return api;
 	}
@@ -78,14 +79,15 @@ public class UtilsRegweb3 {
 	 * @throws Exception
 	 */
 	public static RegWebAsientoRegistralWs getAsientoRegistralService(final String entidad, final String endpoint,
-			final String wsdlDir, final String user, final String pass, final boolean logCalls) throws Exception {
+			final String wsdlDir, final String user, final String pass, final Long timeout, final boolean logCalls)
+			throws Exception {
 
 		final URL wsdl = obtenerUrlWsdl(endpoint, wsdlDir, "RegWebAsientoRegistral");
 		final RegWebAsientoRegistralWsService service = new RegWebAsientoRegistralWsService(wsdl);
 
 		final RegWebAsientoRegistralWs api = service.getRegWebAsientoRegistralWs();
 
-		configurarService((BindingProvider) api, endpoint, user, pass, logCalls);
+		configurarService((BindingProvider) api, endpoint, user, pass, timeout, logCalls);
 
 		return api;
 	}
@@ -97,7 +99,7 @@ public class UtilsRegweb3 {
 	 * @throws Exception
 	 */
 	public static RegWebInfoWs getRegistroInfoService(final String entidad, final String endpoint, final String wsdlDir,
-			final String user, final String pass, final boolean logCalls) throws Exception {
+			final String user, final String pass, final Long timeout, final boolean logCalls) throws Exception {
 
 		// Url WSDL: local o remoto segun haya proxy
 		final URL wsdl = obtenerUrlWsdl(endpoint, wsdlDir, "RegWebInfo");
@@ -105,7 +107,7 @@ public class UtilsRegweb3 {
 
 		final RegWebInfoWs api = service.getRegWebInfoWs();
 
-		configurarService((BindingProvider) api, endpoint, user, pass, logCalls);
+		configurarService((BindingProvider) api, endpoint, user, pass, timeout, logCalls);
 
 		return api;
 	}
@@ -143,11 +145,11 @@ public class UtilsRegweb3 {
 	 *                     password
 	 */
 	private static void configurarService(final BindingProvider bp, final String endpoint, final String user,
-			final String pass, final boolean logCalls) throws Exception {
+			final String pass, final Long timeout, final boolean logCalls) throws Exception {
 
 		bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpoint);
 
-		WsClientUtil.configurePort(bp, endpoint, user, pass, "BASIC", logCalls);
+		WsClientUtil.configurePort(bp, endpoint, user, pass, "BASIC", timeout, logCalls);
 
 	}
 
@@ -200,8 +202,7 @@ public class UtilsRegweb3 {
 	public static Interesado obtenerDatosInteresadoAsiento(final AsientoRegistral asiento,
 			final TypeInteresado tipoInteresado) {
 		Interesado result = null;
-		for (final Iterator it = asiento.getInteresados().iterator(); it.hasNext();) {
-			final Interesado datosInteresado = (Interesado) it.next();
+		for (final Interesado datosInteresado : asiento.getInteresados()) {
 			if (datosInteresado.getActuaComo() == tipoInteresado) {
 				result = datosInteresado;
 				break;

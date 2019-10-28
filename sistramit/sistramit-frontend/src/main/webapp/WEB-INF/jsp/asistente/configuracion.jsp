@@ -17,6 +17,11 @@ if (headerCSRF == "") {
 
 var APP_VERSIO = "version=${configuracion.version}";
 
+// timeout
+
+var APP_TIMEOUT = ${configuracion.timeoutAjaxGeneral};
+var APP_TIMEOUT_RT = ${configuracion.timeoutAjaxRegistro};
+
 // configuració de URLs
 
 

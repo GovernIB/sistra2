@@ -32,6 +32,8 @@ public class ConstantesRegweb3 {
 	public final static String PROP_WSDL_DIR = "wsdl.dir";
 	/** Nombre de propiedad de password del usuario de conexion */
 	public final static String PROP_LOG_PETICIONES = "log.peticionesWS";
+	/** Nombre de propiedad que indica timeout registro (segundos) */
+	public final static String PROP_TIMEOUT = "timeout";
 	/**
 	 * Nombre de propiedad para indicar si los justificantes se generan como CSV
 	 * (true/false).

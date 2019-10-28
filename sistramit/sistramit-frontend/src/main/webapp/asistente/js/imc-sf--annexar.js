@@ -649,6 +649,7 @@ $.fn.appAnnexa = function(options) {
 						processData: false,
 						cache: false,
 						contentType: false,
+						timeout: APP_TIMEOUT,
 						beforeSend: function(xhr) {
 							xhr.setRequestHeader(headerCSRF, tokenCSRF);
 						}
@@ -1280,6 +1281,7 @@ $.fn.appAnnexatEsborra = function(opcions){
 					processData: false,
 					cache: false,
 					contentType: false,
+					timeout: APP_TIMEOUT,
 					beforeSend: function(xhr) {
 						xhr.setRequestHeader(headerCSRF, tokenCSRF);
 					}

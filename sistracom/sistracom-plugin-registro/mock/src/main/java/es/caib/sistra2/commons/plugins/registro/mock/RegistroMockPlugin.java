@@ -9,6 +9,8 @@ import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.caib.sistra2.commons.plugins.registro.api.AsientoRegistral;
 import es.caib.sistra2.commons.plugins.registro.api.IRegistroPlugin;
@@ -17,6 +19,8 @@ import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
+import es.caib.sistra2.commons.plugins.registro.api.VerificacionRegistro;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeEstadoRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 
@@ -28,18 +32,27 @@ import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
  */
 public class RegistroMockPlugin extends AbstractPluginProperties implements IRegistroPlugin {
 
+	/** Log. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(RegistroMockPlugin.class);
+
 	/** Prefix. */
 	public static final String IMPLEMENTATION_BASE_PROPERTY = "mock.";
 
 	/**
 	 * Nombre de propiedad para indicar como se descargan los justificantes.
 	 */
-	public final static String PROP_JUSTIFICANTE_DESCARGA = "justificanteDESCARGA";
+	public static final String PROP_JUSTIFICANTE_DESCARGA = "justificanteDESCARGA";
+
+	/**
+	 * Nombre de propiedad para indicar cuanto tiempo se espera para registrar (en
+	 * segundos).
+	 */
+	public static final String PROP_DURACION_REGISTRO = "duracionRegistro";
 
 	/**
 	 * Si genera error al consultar justificante (true/false).
 	 */
-	public final static String PROP_JUSTIFICANTE_ERROR = "justificanteERROR";
+	public static final String PROP_JUSTIFICANTE_ERROR = "justificanteERROR";
 
 	public RegistroMockPlugin(final String prefijoPropiedades, final Properties properties) {
 		super(prefijoPropiedades, properties);
@@ -86,7 +99,19 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 	}
 
 	@Override
-	public ResultadoRegistro registroEntrada(final AsientoRegistral asientoRegistral) throws RegistroPluginException {
+	public ResultadoRegistro registroEntrada(final String idSesionRegistro, final AsientoRegistral asientoRegistral)
+			throws RegistroPluginException {
+
+		// Si hay que simular tiempo registro
+		final String duracionRegistro = getPropiedad(PROP_DURACION_REGISTRO);
+		if (duracionRegistro != null) {
+			final int duracionSegundos = Integer.parseInt(duracionRegistro);
+			if (duracionSegundos > 0) {
+				retardo(duracionSegundos);
+			}
+		}
+
+		// Devolvemos simulacion registro
 		final ResultadoRegistro res = new ResultadoRegistro();
 		res.setFechaRegistro(new Date());
 		res.setNumeroRegistro("E-" + System.currentTimeMillis());
@@ -94,7 +119,8 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 	}
 
 	@Override
-	public ResultadoRegistro registroSalida(final AsientoRegistral asientoRegistral) throws RegistroPluginException {
+	public ResultadoRegistro registroSalida(final String idSesionRegistro, final AsientoRegistral asientoRegistral)
+			throws RegistroPluginException {
 		final ResultadoRegistro res = new ResultadoRegistro();
 		res.setFechaRegistro(new Date());
 		res.setNumeroRegistro("S-" + System.currentTimeMillis());
@@ -167,6 +193,74 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 	 */
 	private String getPropiedad(final String propiedad) throws RegistroPluginException {
 		final String res = getProperty(REGISTRO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + propiedad);
+		return res;
+	}
+
+	/**
+	 * Implementa retardo para testing.
+	 *
+	 * @param timeout
+	 *                    timeout en segundos
+	 */
+	private void retardo(final int pTimeout) {
+		LOGGER.debug("Simulando retardo de " + pTimeout + " segundos");
+		final long inicio = System.currentTimeMillis();
+		while (true) {
+			if ((System.currentTimeMillis() - inicio) > (pTimeout * 1000L)) {
+				break;
+			}
+		}
+		LOGGER.debug("Fin simulando retardo de " + pTimeout + " segundos");
+	}
+
+	@Override
+	public String iniciarSesionRegistroEntrada() throws RegistroPluginException {
+		// Simulamos por timeout
+		return System.currentTimeMillis() + "";
+	}
+
+	@Override
+	public String iniciarSesionRegistroSalida() throws RegistroPluginException {
+		// Simulamos por timeout
+		return System.currentTimeMillis() + "";
+	}
+
+	@Override
+	public VerificacionRegistro verificarRegistroEntrada(final String idSesionRegistro) throws RegistroPluginException {
+		return verificarPorTimeout(idSesionRegistro);
+	}
+
+	@Override
+	public VerificacionRegistro verificarRegistroSalida(final String idSesionRegistro) throws RegistroPluginException {
+		return verificarPorTimeout(idSesionRegistro);
+	}
+
+	private VerificacionRegistro verificarPorTimeout(final String idSesionRegistro) throws RegistroPluginException {
+		// TODO ESPERAR A QUE RW3 IMPLEMENTE MECANISMO DE COMPENSACION
+		// De momento recibiremos como idSesionRegistro el timestamp de cuando se inició
+		// el registro y lo que hacemos es esperar a que se cumpla el timeout (por si en
+		// una petición anterior se completa). Si se
+		// cumple el timeout y en otra petición no se ha acabado el registro lo damos
+		// como no finalizado. Esto no funcionaria si se carga el trámite en otra
+		// sesión.
+		// Si se completa el registro dentro de la misma sesión se repintaría el paso
+
+		final VerificacionRegistro res = new VerificacionRegistro();
+		res.setEstado(TypeEstadoRegistro.NO_REALIZADO);
+
+		final Long timestampInicioRegistro = new Long(idSesionRegistro);
+
+		final String duracionRegistro = getPropiedad(PROP_DURACION_REGISTRO);
+		if (duracionRegistro != null) {
+			final int duracionSegundos = Integer.parseInt(duracionRegistro);
+			final Long timeout = duracionSegundos * 1000L;
+			final Date limite = new Date(timestampInicioRegistro + timeout);
+			final Date ahora = new Date();
+			if (ahora.before(limite)) {
+				res.setEstado(TypeEstadoRegistro.EN_PROCESO);
+			}
+		}
+
 		return res;
 	}
 

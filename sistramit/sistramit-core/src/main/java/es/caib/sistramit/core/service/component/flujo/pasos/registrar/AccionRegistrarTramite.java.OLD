@@ -23,6 +23,8 @@ import es.caib.sistra2.commons.plugins.registro.api.types.TypeValidez;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistra2.commons.utils.NifUtils;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
+import es.caib.sistramit.core.api.exception.AccesoNoPermitidoException;
 import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
@@ -37,10 +39,13 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFirmaDigital;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
+import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.service.component.flujo.ConstantesFlujo;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
 import es.caib.sistramit.core.service.component.integracion.RegistroComponent;
 import es.caib.sistramit.core.service.component.literales.Literales;
+import es.caib.sistramit.core.service.component.script.RespuestaScript;
+import es.caib.sistramit.core.service.component.script.ScriptExec;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoFormulario;
@@ -87,6 +92,9 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/** Componente de registro. */
 	@Autowired
 	private RegistroComponent registroComponent;
+	/** Motor de ejecución de scritps. */
+	@Autowired
+	private ScriptExec scriptFlujo;
 	/** Configuración. */
 	@Autowired
 	private ConfiguracionComponent configuracion;
@@ -108,11 +116,11 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		final DatosInternosPasoRegistrar pDipa = (DatosInternosPasoRegistrar) pDatosPaso.internalData();
 
 		// Valida si se puede registrar el tramite
-		validacionesRegistrar(pDipa, pDpp, pVariablesFlujo, pDefinicionTramite);
+		validacionesRegistrar(pDipa, pDpp, reintentar, pVariablesFlujo, pDefinicionTramite);
 
 		// Realizamos proceso de registro
-		final ResultadoRegistrar resReg = registrarTramite(pDipa, pDpp, pVariablesFlujo, pDefinicionTramite,
-				reintentar);
+		final ResultadoRegistrar resReg = registrarTramite(pDipa, pDpp, reintentar, pVariablesFlujo,
+				pDefinicionTramite);
 
 		// Actualizamos persistencia
 		actualizarPersistencia(pVariablesFlujo.getIdSesionTramitacion(), pDipa, pDpp, resReg);
@@ -197,13 +205,16 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 *                               Datos internos paso
 	 * @param pDpp
 	 *                               Datos persistencia paso
+	 * @param pReintentar
+	 *                               Indica si se debe reintentar registro
 	 * @param pVariablesFlujo
 	 *                               Variables flujo
 	 * @param pDefinicionTramite
 	 *                               Definición trámite
 	 */
 	private void validacionesRegistrar(final DatosInternosPasoRegistrar pDipa, final DatosPersistenciaPaso pDpp,
-			final VariablesFlujo pVariablesFlujo, final DefinicionTramiteSTG pDefinicionTramite) {
+			final boolean pReintentar, final VariablesFlujo pVariablesFlujo,
+			final DefinicionTramiteSTG pDefinicionTramite) {
 
 		final DetallePasoRegistrar detallePasoRegistrar = (DetallePasoRegistrar) pDipa.getDetallePaso();
 
@@ -212,10 +223,50 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			throw new AccionPasoNoPermitidaException("El paso no esta en un estado valido para registrar");
 		}
 
-		// Como se ha iniciado sesión registro deberá estar en estado reintentar
-		if (detallePasoRegistrar.getReintentar() == TypeSiNo.NO) {
-			throw new AccionPasoNoPermitidaException(
-					" No se ha iniciado sesión registro y no está en estado reintentar");
+		// Si hay que reintentar debe estar en ese estado
+		if (pReintentar && detallePasoRegistrar.getReintentar() == TypeSiNo.NO) {
+			throw new AccionPasoNoPermitidaException(" Si hay que reintentar debe estar en ese estado");
+		}
+		if (!pReintentar && detallePasoRegistrar.getReintentar() == TypeSiNo.SI) {
+			throw new AccionPasoNoPermitidaException(" Si hay que reintentar debe estar en ese estado");
+		}
+
+		// Validaciones registro
+		if (!pReintentar) {
+			// Controlamos que no haya llegado el fin de plazo
+			if (pVariablesFlujo.getFechaFinPlazo() != null && pVariablesFlujo.getFechaFinPlazo().before(new Date())) {
+				final String mensaje = literales.getLiteral(Literales.FLUJO, "acceso.fueraPlazo",
+						pVariablesFlujo.getIdioma());
+				throw new AccesoNoPermitidoException(mensaje);
+			}
+			// Debe ser presentado por el presentador (se podra comprobar en
+			// caso de que el acceso sea autenticado)
+			if (pVariablesFlujo.getNivelAutenticacion() != TypeAutenticacion.ANONIMO && !pVariablesFlujo.getUsuario()
+					.getNif().equals(pDipa.getParametrosRegistro().getDatosPresentacion().getPresentador().getNif())) {
+				throw new AccionPasoNoPermitidaException("El trámite debe ser registrado por el presentador ("
+						+ pDipa.getParametrosRegistro().getDatosPresentacion().getPresentador().getNif() + ")");
+			}
+			// Verificar si los documentos estan firmados
+			if (!detallePasoRegistrar.verificarFirmas()) {
+				throw new AccionPasoNoPermitidaException("No están todos los documentos firmados");
+			}
+
+			// Verificamos si se permite registro
+			final RPasoTramitacionRegistrar pasoRegistrar = (RPasoTramitacionRegistrar) UtilsSTG
+					.devuelveDefinicionPaso(pDipa.getIdPaso(), pDefinicionTramite);
+
+			// Validar representacion
+			if (pasoRegistrar.isAdmiteRepresentacion() && pasoRegistrar.isValidaRepresentacion()) {
+				// TODO PENDIENTE IMPLEMENTACION
+				throw new RuntimeException("Validar representacion pendiente implementar");
+			}
+
+			// Script de permitir registrar
+			if (UtilsSTG.existeScript(pasoRegistrar.getScriptValidar())) {
+				final RespuestaScript rs = ControladorPasoRegistrarHelper.getInstance().ejecutarScriptPermitirRegistrar(
+						pDipa.getIdPaso(), pDefinicionTramite, pVariablesFlujo, scriptFlujo);
+			}
+
 		}
 
 	}
@@ -227,34 +278,32 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 *                               Datos internos tramite
 	 * @param pDpp
 	 *                               Datos persistencia paso
+	 * @param reintentar
+	 *                               reintentar
 	 * @param pVariablesFlujo
 	 *                               Variables flujo
 	 * @param pDefinicionTramite
 	 *                               Definición trámite
-	 * @param reintentar
-	 *                               Indica si reintentar
 	 * @return Resultado registro
 	 */
 	private ResultadoRegistrar registrarTramite(final DatosInternosPasoRegistrar pDipa,
-			final DatosPersistenciaPaso pDpp, final VariablesFlujo pVariablesFlujo,
-			final DefinicionTramiteSTG pDefinicionTramite, final boolean reintentar) {
-		// Obtenemos documento de asiento para obtener id sesion registro
-		final DocumentoPasoPersistencia docAsientoDpp = pDpp
-				.getDocumentoPasoPersistencia(ConstantesFlujo.ID_ASIENTO_REGISTRO, ConstantesNumero.N1);
-		final String idSesionRegistro = docAsientoDpp.getRegistroIdSesion();
-
+			final DatosPersistenciaPaso pDpp, final boolean reintentar, final VariablesFlujo pVariablesFlujo,
+			final DefinicionTramiteSTG pDefinicionTramite) {
 		ResultadoRegistrar resReg = null;
+
 		if (reintentar) {
-			resReg = registroComponent.reintentarRegistro(pDefinicionTramite.getDefinicionVersion().getIdEntidad(),
-					idSesionRegistro, pVariablesFlujo.isDebugEnabled());
+			resReg = registroComponent.reintentarRegistro(pVariablesFlujo.getIdSesionTramitacion(),
+					pVariablesFlujo.isDebugEnabled());
 		} else {
 			// Generar asiento
 			final AsientoRegistral asiento = generarAsiento(pDipa, pVariablesFlujo, pDefinicionTramite);
 			resReg = registroComponent.registrar(pDefinicionTramite.getDefinicionVersion().getIdEntidad(),
-					pVariablesFlujo.getIdSesionTramitacion(), idSesionRegistro, asiento,
-					pVariablesFlujo.isDebugEnabled());
+					pVariablesFlujo.getIdSesionTramitacion(), asiento, pVariablesFlujo.isDebugEnabled());
+
 		}
+
 		return resReg;
+
 	}
 
 	/**

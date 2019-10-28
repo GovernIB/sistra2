@@ -33,8 +33,13 @@ public enum TypeAccionPasoRegistrar implements TypeAccionPaso {
 	 */
 	DESCARGAR_FIRMA(false),
 	/**
-	 * Registrar tramite. Parámetros entrada: reintentar (TypeSiNo, opcional).
-	 * Parámetros salida: resultado (ResultadoRegistrar).
+	 * Inicia sesión registro. Parámetros entrada: idSesionRegistro. Parámetros
+	 * salida: idSesionRegistro.
+	 */
+	INICIAR_SESION_REGISTRO,
+	/**
+	 * Registrar tramite. Parámetros entrada: reintentar. Parámetros salida:
+	 * resultado (ResultadoRegistrar).
 	 */
 	REGISTRAR_TRAMITE;
 
@@ -47,7 +52,7 @@ public enum TypeAccionPasoRegistrar implements TypeAccionPaso {
 	 * Constructor.
 	 *
 	 * @param pmodificaPaso
-	 *            Indica si modifica el paso.
+	 *                          Indica si modifica el paso.
 	 */
 	private TypeAccionPasoRegistrar(final boolean pmodificaPaso) {
 		modificaPasoRegistrar = pmodificaPaso;

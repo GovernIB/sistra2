@@ -867,6 +867,9 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		// -- Registrar
 		parametros = new ParametrosAccionPaso();
 		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
+				TypeAccionPasoRegistrar.INICIAR_SESION_REGISTRO, parametros);
+		parametros = new ParametrosAccionPaso();
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
 				TypeAccionPasoRegistrar.REGISTRAR_TRAMITE, parametros);
 		Assert.isTrue(((ResultadoRegistrar) resPaso.getParametroRetorno("resultado"))
 				.getResultado() == TypeResultadoRegistro.CORRECTO, "No se podido registrar");

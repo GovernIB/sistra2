@@ -12,6 +12,17 @@ import es.caib.sistramit.core.service.model.system.Envio;
 public interface RegistroComponent {
 
 	/**
+	 * Inicia sesión registro.
+	 *
+	 * @param codigoEntidad
+	 *                          codigo entidad
+	 * @param debugEnabled
+	 *                          Indica si se debugea
+	 * @return id sesión registro
+	 */
+	String iniciarSesionRegistro(String codigoEntidad, boolean debugEnabled);
+
+	/**
 	 * Realiza registro.
 	 *
 	 * @param codigoEntidad
@@ -24,19 +35,19 @@ public interface RegistroComponent {
 	 *                                Indica si se debugea
 	 * @return Resultado registro
 	 */
-	ResultadoRegistrar registrar(String codigoEntidad, String idSesionTramitacion, AsientoRegistral asiento,
-			boolean debugEnabled);
+	ResultadoRegistrar registrar(String codigoEntidad, String idSesionTramitacion, String idSesionRegistro,
+			AsientoRegistral asiento, boolean debugEnabled);
 
 	/**
 	 * Verifica si ha finalizado proceso de registro.
 	 *
-	 * @param idSesionTramitacion
-	 *                                id sesion tramitacion
+	 * @param idSesionRegistro
+	 *                             id sesion registro
 	 * @param debugEnabled
-	 *                                Indica si se debugea
+	 *                             Indica si se debugea
 	 * @return Resultado registro
 	 */
-	ResultadoRegistrar reintentarRegistro(String idSesionTramitacion, boolean debugEnabled);
+	ResultadoRegistrar reintentarRegistro(String codigoEntidad, String idSesionRegistro, boolean debugEnabled);
 
 	/**
 	 * Obtiene justificante de registro.
