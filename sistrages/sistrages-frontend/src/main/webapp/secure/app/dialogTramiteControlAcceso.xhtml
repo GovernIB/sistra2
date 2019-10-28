@@ -136,7 +136,7 @@
 				</p:outputPanel>
 		    </p:confirmDialog>
 
-		    <p:confirmDialog widgetVar="confirmDialogGuardar" id="confirmDialogGuardar" header="#{msg['confirm.titulo']}" message="#{msg['confirm.invalidacion']}" icon="fa fa-question-circle fa-3x confirmar_icono" >
+		    <p:confirmDialog widgetVar="confirmDialogGuardar" id="confirmDialogGuardar" header="#{msg['confirm.tituloInvalidacion']}" message="#{msg['confirm.invalidacion']}" icon="fa fa-question-circle fa-3x confirmar_icono" >
 				<p:outputPanel styleClass="confirmar_botonera">
 					 <p:commandButton value="#{msg['botones.si']}" actionListener="#{dialogTramiteControlAcceso.aceptarConInvalidacion()}" process="@this" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  />
      				 <p:commandButton value="#{msg['botones.no']}" actionListener="#{dialogTramiteControlAcceso.aceptarSinInvalidacion()}" process="@this" styleClass="ui-confirmdialog-no" icon="fa fa-close"  />

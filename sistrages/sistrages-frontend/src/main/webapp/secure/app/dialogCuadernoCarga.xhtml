@@ -126,13 +126,14 @@
 					</p>
 					<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-4 w15,padding-right-18 w10, w80" columns = "3" headerClass="grid-left" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
 
+							<p:outputLabel value="#{msg['dialogCuadernoCarga.refrescarCacheTramite']}" />
+						 	<p:selectBooleanCheckbox value="#{dialogCuadernoCarga.refrescarCacheTramite}" />
+						 	<p:outputLabel value="" />
+
 						 	<p:outputLabel value="#{msg['dialogCuadernoCarga.refrescarCacheDominio']}" />
 						 	<p:selectBooleanCheckbox value="#{dialogCuadernoCarga.refrescarCacheDominio}" />
 							<p:outputLabel value="" />
 
-							<p:outputLabel value="#{msg['dialogCuadernoCarga.refrescarCacheTramite']}" />
-						 	<p:selectBooleanCheckbox value="#{dialogCuadernoCarga.refrescarCacheTramite}" />
-						 	<p:outputLabel value="" />
 					</h:panelGrid>
 				</p:column>
 

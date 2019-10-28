@@ -126,7 +126,7 @@
 		    </p:outputPanel>
 
 		    <!-- dialogo para confirmar -->
-		    <p:confirmDialog id="confirmDialogGuardar" widgetVar="confirmDialogGuardar" header="#{msg['confirm.titulo']}" message="#{msg['confirm.invalidacion']}" icon="fa fa-question-circle fa-3x confirmar_icono" >
+		    <p:confirmDialog id="confirmDialogGuardar" widgetVar="confirmDialogGuardar" header="#{msg['confirm.tituloInvalidacion']}" message="#{msg['confirm.invalidacionFD']}" icon="fa fa-question-circle fa-3x confirmar_icono" >
 				<p:outputPanel styleClass="confirmar_botonera">
 					<p:commandButton id="botonCacheSi" onclick="disableClick()"  oncomplete="enableClick()"  value="#{msg['botones.si']}" actionListener="#{dialogFuente.aceptar(true)}" process="@this" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  />
      				<p:commandButton id="botonCacheNo" onclick="disableClick()"  oncomplete="enableClick()"  value="#{msg['botones.no']}" actionListener="#{dialogFuente.aceptar(false)}" process="@this" styleClass="ui-confirmdialog-no" icon="fa fa-close"  />

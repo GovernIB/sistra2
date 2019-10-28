@@ -1,5 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -12,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
+import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -31,6 +35,10 @@ public class DialogTramiteClonar extends DialogControllerBase {
 	/** Servicio. */
 	@Inject
 	private TramiteService tramiteService;
+
+	/** Servicio. **/
+	@Inject
+	private SecurityService securityService;
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -65,7 +73,25 @@ public class DialogTramiteClonar extends DialogControllerBase {
 
 		final Tramite tramite = tramiteService.getTramite(data.getIdTramite());
 
-		areas = tramiteService.listArea(UtilJSF.getIdEntidad(), null);
+		final List<Area> listaTodasAreas = tramiteService.listArea(UtilJSF.getIdEntidad(), null);
+
+		// filtramos las areas del desarrollador
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+			areas = listaTodasAreas;
+		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+			areas = new ArrayList<>();
+			for (final Area area : listaTodasAreas) {
+				final List<TypeRolePermisos> permisos = securityService
+						.getPermisosDesarrolladorEntidadByArea(area.getCodigo());
+
+				if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+						|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)) {
+					areas.add(area);
+				}
+			}
+
+		}
+
 		areaID = tramite.getIdArea();
 
 		tramites = tramiteService.listTramite(tramite.getIdArea(), null);
@@ -128,8 +154,7 @@ public class DialogTramiteClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -143,8 +168,7 @@ public class DialogTramiteClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idArea
-	 *            the idArea to set
+	 * @param idArea the idArea to set
 	 */
 	public void setIdArea(final String idArea) {
 		this.idArea = idArea;
@@ -158,8 +182,7 @@ public class DialogTramiteClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final TramiteVersion data) {
 		this.data = data;
@@ -173,8 +196,7 @@ public class DialogTramiteClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param area
-	 *            the area to set
+	 * @param area the area to set
 	 */
 	public void setArea(final Area area) {
 		this.area = area;
@@ -188,8 +210,7 @@ public class DialogTramiteClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param areaID
-	 *            the areaID to set
+	 * @param areaID the areaID to set
 	 */
 	public void setAreaID(final Long areaID) {
 		this.areaID = areaID;
@@ -203,8 +224,7 @@ public class DialogTramiteClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param areas
-	 *            the areas to set
+	 * @param areas the areas to set
 	 */
 	public void setAreas(final List<Area> areas) {
 		this.areas = areas;
@@ -218,8 +238,7 @@ public class DialogTramiteClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramites
-	 *            the tramites to set
+	 * @param tramites the tramites to set
 	 */
 	public void setTramites(final List<Tramite> tramites) {
 		this.tramites = tramites;
@@ -233,8 +252,7 @@ public class DialogTramiteClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramiteID
-	 *            the tramiteID to set
+	 * @param tramiteID the tramiteID to set
 	 */
 	public void setTramiteID(final Long tramiteID) {
 		this.tramiteID = tramiteID;

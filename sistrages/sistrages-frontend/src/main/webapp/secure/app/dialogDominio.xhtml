@@ -296,7 +296,7 @@
 	        </p:outputPanel>
 	    </p:confirmDialog>
 
-		<p:confirmDialog widgetVar="confirmDialogCache" id="confirmDialogCache" header="#{msg['confirm.titulo']}" message="#{msg['confirm.invalidacion']}" icon="fa fa-question-circle fa-3x confirmar_icono" >
+		<p:confirmDialog widgetVar="confirmDialogCache" id="confirmDialogCache" header="#{msg['confirm.tituloInvalidacion']}" message="#{msg['confirm.invalidacion']}" icon="fa fa-question-circle fa-3x confirmar_icono" >
 				<p:outputPanel styleClass="confirmar_botonera">
 					 <p:commandButton id="botonCacheSi" widgetVar="botonWidget1" onclick="disableClick()"  oncomplete="enableClick()"  value="#{msg['botones.si']}" actionListener="#{dialogDominio.aceptarConInvalidacion()}" process="@this" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  />
      				 <p:commandButton id="botonCacheNo" widgetVar="botonWidget2" onclick="disableClick()"  oncomplete="enableClick()"  value="#{msg['botones.no']}" actionListener="#{dialogDominio.aceptarSinInvalidacion()}" process="@this" styleClass="ui-confirmdialog-no" icon="fa fa-close"  />

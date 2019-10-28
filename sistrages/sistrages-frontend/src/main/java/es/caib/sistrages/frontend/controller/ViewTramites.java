@@ -629,10 +629,21 @@ public class ViewTramites extends ViewControllerBase {
 				final List<TypeRolePermisos> permisos = securityService
 						.getPermisosDesarrolladorEntidadByArea(area.getCodigo());
 
-				if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
-						|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
-						|| permisos.contains(TypeRolePermisos.CONSULTA)) {
-					getListaAreas().add(area);
+				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+
+					if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+							|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
+							|| permisos.contains(TypeRolePermisos.CONSULTA)) {
+						getListaAreas().add(area);
+					}
+
+				} else {
+
+					if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+							|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)) {
+						getListaAreas().add(area);
+					}
+
 				}
 			}
 

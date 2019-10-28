@@ -112,6 +112,23 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
+	 * Permite importar.
+	 * 
+	 * @return
+	 */
+	public boolean getPermiteImportar() {
+		boolean permite = false;
+		if (ambito.equals(TypeAmbito.GLOBAL.toString())) {
+			permite = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
+		} else if (ambito.equals(TypeAmbito.ENTIDAD.toString())) {
+			permite = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+		} else if (ambito.equals(TypeAmbito.AREA.toString())) {
+			permite = permiteEditar;
+		}
+		return permite;
+	}
+
+	/**
 	 *
 	 * @param filtro
 	 */
