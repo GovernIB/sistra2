@@ -130,4 +130,9 @@ public final class Constantes {
 
 	/** Cuaderno carga. **/
 	public static final String IMPORTAR_TIPO_CC = "CC";
+
+	/** Para refrescar la cache según el tipo. **/
+	public static final String CACHE_DOMINIO = "D";
+	public static final String CACHE_TRAMITE = "T";
+	public static final String CACHE_ENTIDAD = "E";
 }

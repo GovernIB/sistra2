@@ -243,14 +243,14 @@ public class DominioDaoImpl implements DominioDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Dominio> getAllByFuenteDatos(final Long idFuenteDatos) {
-		final List<Dominio> result = new ArrayList<>();
-		final String sql = "SELECT d FROM JDominio d where d.fuenteDatos.codigo = :idFuenteDatos";
+	public List<String> getAllByFuenteDatos(final Long idFuenteDatos) {
+		final List<String> result = new ArrayList<>();
+		final String sql = "SELECT d.identificador FROM JDominio d where d.fuenteDatos.codigo = :idFuenteDatos";
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("idFuenteDatos", idFuenteDatos);
-		final List<JDominio> list = query.getResultList();
-		for (final JDominio d : list) {
-			result.add(d.toModel());
+		final List<String> list = query.getResultList();
+		for (final String d : list) {
+			result.add(d);
 		}
 		return result;
 	}

@@ -66,6 +66,7 @@ import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -110,6 +111,10 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	/** Servicio. */
 	@Inject
 	private ConfiguracionGlobalService configuracionGlobalService;
+
+	/** System servicio. **/
+	@Inject
+	private SystemService systemService;
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -211,6 +216,10 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	private String fechaZip;
 	/** Version del zip **/
 	private String usuarioZip;
+
+	/** Refresca cache tramite y dominio. **/
+	private boolean refrescarCacheTramite = true;
+	private boolean refrescarCacheDominio = true;
 
 	/**
 	 * Inicialización.
@@ -486,7 +495,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 				final List<TypeRolePermisos> permisos = UtilJSF.getSessionBean().getSecurityService()
 						.getPermisosDesarrolladorEntidadByArea(areaActual.getCodigo());
 
-				if (!permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)) {
+				if (!permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+						&& !permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)) {
 
 					filaArea = FilaImportarArea.crearCCerrorSinPermisos(area, areaActual,
 							UtilJSF.getLiteral("dialogTramiteImportar.error.sinpermisopromocionar"));
@@ -1106,6 +1116,28 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 
 		final FilaImportarResultado resultado = tramiteService.importar(filaImportar);
 
+		if (refrescarCacheDominio) {
+			for (final FilaImportarDominio dominio : filasDominios) {
+				if (dominio.getAccion() != TypeImportarAccion.MANTENER && dominio.getDominioActual() != null) {
+
+					final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
+					final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
+					final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+					this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_DOMINIO,
+							dominio.getDominioActual().getIdentificador());
+				}
+			}
+		}
+
+		if (refrescarCacheTramite && filaTramiteVersion.getTramiteVersionActual() != null
+				&& filaTramite.getTramiteActual() != null) {
+			final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
+			final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
+			final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+			this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_TRAMITE,
+					filaTramite.getTramiteActual().getIdentificador() + "#"
+							+ filaTramiteVersion.getTramiteVersionActual().getNumeroVersion());
+		}
 		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
@@ -1639,5 +1671,33 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	 */
 	public final void setUsuarioZip(final String usuarioZip) {
 		this.usuarioZip = usuarioZip;
+	}
+
+	/**
+	 * @return the refrescarCacheTramite
+	 */
+	public boolean isRefrescarCacheTramite() {
+		return refrescarCacheTramite;
+	}
+
+	/**
+	 * @param refrescarCacheTramite the refrescarCacheTramite to set
+	 */
+	public void setRefrescarCacheTramite(final boolean refrescarCacheTramite) {
+		this.refrescarCacheTramite = refrescarCacheTramite;
+	}
+
+	/**
+	 * @return the refrescarCacheDominio
+	 */
+	public boolean isRefrescarCacheDominio() {
+		return refrescarCacheDominio;
+	}
+
+	/**
+	 * @param refrescarCacheDominio the refrescarCacheDominio to set
+	 */
+	public void setRefrescarCacheDominio(final boolean refrescarCacheDominio) {
+		this.refrescarCacheDominio = refrescarCacheDominio;
 	}
 }

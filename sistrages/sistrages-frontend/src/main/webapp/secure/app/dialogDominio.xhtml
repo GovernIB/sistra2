@@ -260,11 +260,9 @@
 		        	</p:commandButton>
 	     		</f:facet>
 				<f:facet name="right">
-	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogDominio.permiteGuardar()}" onclick="cambioValorB64();">
-	        			<c:if test="#{dialogDominio.mostrarAdvertencia}">
-	        				<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.dominioactualizar']}" icon="fa fa-question-circle fa-3x confirmar_icono"  />
-	        			</c:if>
-	        		</p:commandButton>
+	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptarSinInvalidacion()}" process="@form"  rendered="#{dialogDominio.permiteGuardar() and dialogDominio.isAlta()}" styleClass="boton-azul"  />
+					<p:commandButton value="#{msg['botones.guardar']}"  process="@form" styleClass="boton-azul" rendered="#{dialogDominio.permiteGuardar() and dialogDominio.mostrarAdvertencia and dialogDominio.isEdicion()}"   onclick="cambioValorB64('confirmDialogGuardar');"  />
+	        		<p:commandButton value="#{msg['botones.guardar']}"  process="@form" styleClass="boton-azul" rendered="#{dialogDominio.permiteGuardar() and !dialogDominio.mostrarAdvertencia and dialogDominio.isEdicion()}"  onclick="cambioValorB64('confirmDialogCache');"  />
 					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominio.cancelar()}" process="@this" rendered="#{dialogDominio.permiteGuardar()}"/>
 					<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominio.cancelar()}" process="@this"  rendered="#{dialogDominio.permiteGuardar() == false}"/>
 					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDominio.ayuda}" process="@this"/>
@@ -289,14 +287,31 @@
 	        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
 			</p:outputPanel>
 	    </p:confirmDialog>
+
+
+	    <p:confirmDialog id="confirmDialogGuardar" widgetVar="confirmDialogGuardar"  header="#{msg['confirm.titulo']}" message="#{msg['confirm.dominioactualizar']}" icon="fa fa-question-circle fa-3x confirmar_icono"    >
+	    	<p:outputPanel styleClass="confirmar_botonera">
+	        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" 	icon="fa fa-check" process="@this" onclick="PF('confirmDialogGuardar').hide();PF('confirmDialogCache').show()" />
+	        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" 				icon="fa fa-close" process="@this" onclick="PF('confirmDialogGuardar').hide();" />
+	        </p:outputPanel>
+	    </p:confirmDialog>
+
+		<p:confirmDialog widgetVar="confirmDialogCache" id="confirmDialogCache" header="#{msg['confirm.titulo']}" message="#{msg['confirm.invalidacion']}" icon="fa fa-question-circle fa-3x confirmar_icono" >
+				<p:outputPanel styleClass="confirmar_botonera">
+					 <p:commandButton id="botonCacheSi" widgetVar="botonWidget1" onclick="disableClick()"  oncomplete="enableClick()"  value="#{msg['botones.si']}" actionListener="#{dialogDominio.aceptarConInvalidacion()}" process="@this" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  />
+     				 <p:commandButton id="botonCacheNo" widgetVar="botonWidget2" onclick="disableClick()"  oncomplete="enableClick()"  value="#{msg['botones.no']}" actionListener="#{dialogDominio.aceptarSinInvalidacion()}" process="@this" styleClass="ui-confirmdialog-no" icon="fa fa-close"  />
+
+				</p:outputPanel>
+		    </p:confirmDialog>
 	</h:form>
+
 </h:body>
 </f:view>
 
 <script type="text/javascript" language="javascript">
 
 
-    function cambioValorB64() {
+    function cambioValorB64(id) {
     	var elSql = $('#sqlDecoded')[0];
     	var elFuente = $('#fuenteQueryDecoded')[0];
 
@@ -309,7 +324,7 @@
     		var plain = $('#fuenteQueryDecoded').val().trim();
     		$('#dialogDominio\\:fuenteQuery').val(encodeBase64(plain));
     	}
-
+    	PF(id).show();
     }
 
     function ponerEventosElemento(elemento) {
@@ -361,6 +376,28 @@
 	    	ponerEventosElemento("#fuenteQueryDecoded");
 	    }
 	 }
+
+   		function getWidgetVarById(id) {
+		   for (var propertyName in PrimeFaces.widgets) {
+		     if (PrimeFaces.widgets[propertyName].id === id) {
+		       return PrimeFaces.widgets[propertyName];
+		     }
+		   }
+		}
+
+		function disableClick(){
+			var elemento = getWidgetVarById('dialogDominio:botonCacheSi');
+			elemento.disable();
+			var elemento = getWidgetVarById('dialogDominio:botonCacheNo');
+			elemento.disable();
+		}
+
+		function enableClick(){
+			var elemento = getWidgetVarById('dialogDominio:botonCacheSi');
+			elemento.enable();
+			var elemento = getWidgetVarById('dialogDominio:botonCacheNo');
+			elemento.enable();
+		}
 
     //ponerEventos();
 </script>

@@ -348,7 +348,8 @@ public class DialogFuenteDatos extends DialogControllerBase {
 						final List<TypeRolePermisos> permisos = securityService
 								.getPermisosDesarrolladorEntidadByArea(fuente.getArea().getCodigo());
 
-						res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA);
+						res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+								|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA);
 					}
 				}
 

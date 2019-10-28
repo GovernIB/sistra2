@@ -205,6 +205,12 @@
 						</h:column>
 
 					</h:dataTable>
+					<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-4 w15,padding-right-18" columns = "2" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
+
+						 	<p:outputLabel value="#{msg['dialogTramiteImportar.refrescarCacheDominio']}" />
+						 	<p:selectBooleanCheckbox value="#{dialogTramiteImportar.refrescarCacheDominio}" />
+
+					</h:panelGrid>
 				</p:column>
 
 
@@ -241,6 +247,8 @@
 
 					</h:dataTable>
 				</p:column>
+
+
 
 				<br />
 				<br />

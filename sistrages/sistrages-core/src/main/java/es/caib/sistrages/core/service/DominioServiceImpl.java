@@ -193,6 +193,12 @@ public class DominioServiceImpl implements DominioService {
 		return borrar;
 	}
 
+	@Override
+	@NegocioInterceptor
+	public List<String> listDominiosByFD(final Long idFuenteDatos) {
+		return dominioDao.getAllByFuenteDatos(idFuenteDatos);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *

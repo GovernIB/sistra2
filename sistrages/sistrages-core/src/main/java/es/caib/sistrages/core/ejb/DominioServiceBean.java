@@ -280,4 +280,10 @@ public class DominioServiceBean implements DominioService {
 		dominioService.clonar(dominioID, nuevoIdentificador, areaID, fdID, idEntidad);
 	}
 
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<String> listDominiosByFD(final Long idFuenteDatos) {
+		return dominioService.listDominiosByFD(idFuenteDatos);
+	}
+
 }

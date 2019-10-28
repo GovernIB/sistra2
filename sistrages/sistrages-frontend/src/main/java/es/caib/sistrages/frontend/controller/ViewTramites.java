@@ -29,14 +29,12 @@ import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
-import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.TramiteVersiones;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
-import es.caib.sistrages.frontend.util.UtilRest;
 
 /**
  * Mantenimiento de tramites.
@@ -969,6 +967,16 @@ public class ViewTramites extends ViewControllerBase {
 		this.tramiteService.removeTramiteVersion(this.versionSeleccionada.getCodigo(),
 				this.versionSeleccionada.getNumeroVersion());
 
+		// Invalidaciones
+		if (!UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+			final Tramite tramite = tramiteService.getTramite(this.versionSeleccionada.getIdTramite());
+			final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
+			final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
+			final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+			this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_TRAMITE,
+					tramite.getIdentificador() + "#" + this.versionSeleccionada.getNumeroVersion());
+		}
+
 		// Refrescamos datos
 		buscarTramites();
 
@@ -1186,14 +1194,8 @@ public class ViewTramites extends ViewControllerBase {
 			final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
 			final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
 
-			final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, "T",
+			this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_TRAMITE,
 					identificadorTramite + "#" + numeroVersion);
-			if (resultado.getCodigo() == 1) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
-			} else {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-						UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
-			}
 		}
 	}
 

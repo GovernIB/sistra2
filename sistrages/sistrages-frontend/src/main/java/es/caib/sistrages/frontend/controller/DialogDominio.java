@@ -19,6 +19,7 @@ import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeCache;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
@@ -29,13 +30,11 @@ import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.DialogResultMessage;
-import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
-import es.caib.sistrages.frontend.util.UtilRest;
 
 @ManagedBean
 @ViewScoped
@@ -136,6 +135,7 @@ public class DialogDominio extends DialogControllerBase {
 			data.setListaFija(new ArrayList<>());
 			data.setAmbito(TypeAmbito.fromString(ambito));
 			data.setTipo(TypeDominio.CONSULTA_BD);
+			data.setCache(TypeCache.CACHE_IMPLICITA);
 		} else {
 			data = dominioService.loadDominio(Long.valueOf(id));
 			identificadorOriginal = data.getIdentificador();
@@ -373,14 +373,7 @@ public class DialogDominio extends DialogControllerBase {
 		final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
 		final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
 
-		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, "D", data.getIdentificador());
-		if (resultado.getCodigo() == 1) {
-			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
-		} else {
-			addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
-		}
-
+		this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_DOMINIO, data.getIdentificador());
 	}
 
 	/**
@@ -559,7 +552,21 @@ public class DialogDominio extends DialogControllerBase {
 	/**
 	 * Aceptar.
 	 */
-	public void aceptar() {
+	public void aceptarConInvalidacion() {
+		aceptar(true);
+	}
+
+	/**
+	 * Aceptar.
+	 */
+	public void aceptarSinInvalidacion() {
+		aceptar(false);
+	}
+
+	/**
+	 * Aceptar.
+	 */
+	public void aceptar(final boolean invalidaciones) {
 
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
@@ -569,6 +576,14 @@ public class DialogDominio extends DialogControllerBase {
 			if (!correcto) {
 				return;
 			}
+		}
+
+		if (invalidaciones) {
+			final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
+			final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
+			final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+
+			this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_DOMINIO, data.getIdentificador(), false);
 		}
 
 		// Retornamos resultado

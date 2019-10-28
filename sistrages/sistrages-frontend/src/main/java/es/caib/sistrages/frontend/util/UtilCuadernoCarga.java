@@ -381,14 +381,20 @@ public class UtilCuadernoCarga {
 			if (fila.getFuenteDatos().getCampos().size() == fila.getFuenteDatosActual().getCampos().size()) {
 				boolean retorno = true;
 				for (final FuenteDatosCampo campo : fila.getFuenteDatos().getCampos()) {
+					boolean encontrado = false;
 					for (final FuenteDatosCampo campo2 : fila.getFuenteDatosActual().getCampos()) {
 						if (campo.getIdentificador().equals(campo2.getIdentificador())
 								&& campo.isClavePrimaria() == campo2.isClavePrimaria()) {
+							encontrado = true;
 							break;
 						}
 					}
-					// Solo llegará aquí si no entre por el if del bucle.
-					retorno = false;
+
+					if (!encontrado) {
+						// Solo llegará aquí si no entre por el if del bucle.
+						retorno = false;
+						break;
+					}
 				}
 				return retorno;
 

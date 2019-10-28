@@ -20,8 +20,10 @@ import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.SecurityService;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -38,6 +40,10 @@ public class DialogFuente extends DialogControllerBase {
 	/** Enlace servicio. */
 	@Inject
 	private DominioService dominioService;
+
+	/** System servicio. **/
+	@Inject
+	private SystemService systemService;
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -180,7 +186,7 @@ public class DialogFuente extends DialogControllerBase {
 	/**
 	 * Aceptar.
 	 */
-	public void aceptar() {
+	public void aceptar(final boolean invalidaciones) {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 		final Map<String, FuenteDatosCampo> codigoCampos = new HashMap<>();
@@ -237,6 +243,16 @@ public class DialogFuente extends DialogControllerBase {
 				if (ex.getCause() instanceof FuenteDatosPkException) {
 					addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importarCSV.error.pk"));
 					return;
+				}
+			}
+			if (invalidaciones) {
+				final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
+				final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
+				final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+
+				final List<String> identificadorDominios = this.dominioService.listDominiosByFD(data.getCodigo());
+				for (final String identificador : identificadorDominios) {
+					this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_DOMINIO, identificador);
 				}
 			}
 			break;

@@ -85,8 +85,7 @@ public abstract class DialogControllerBase {
 	/**
 	 * Establece modo acceso.
 	 *
-	 * @param modoAcceso
-	 *            modo acceso
+	 * @param modoAcceso modo acceso
 	 */
 	public void setModoAcceso(final String modoAcceso) {
 		this.modoAcceso = modoAcceso;

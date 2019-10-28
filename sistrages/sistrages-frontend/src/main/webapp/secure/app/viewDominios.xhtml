@@ -50,7 +50,7 @@
 		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnPing" value="#{msg['botones.ping']}" icon="fa fa-arrow-up" actionListener="#{viewDominios.ping()}" process="@this" update="growl dataTable"/>
-		        		<p:commandButton id="btnRefrescarCache" value="#{msg['botones.refrescarCache']}" icon="fa fa-retweet" actionListener="#{viewDominios.refrescarCache()}" process="@this" update="growl dataTable" rendered="#{viewDominios.getPermiteEditar() and viewDominios.datoSeleccionado ne null}"/>
+		        		<p:commandButton id="btnRefrescarCache" value="#{msg['botones.refrescarCache']}" icon="fa fa-retweet" actionListener="#{viewDominios.refrescarCache()}" process="@this" update="growl dataTable" disabled="#{!viewDominios.getPermiteEditar() or viewDominios.datoSeleccionado eq null or viewDominios.datoSeleccionado.cache.toString() != 'E'}"/>
 		        		<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" actionListener="#{viewDominios.tramites()}" process="@this" update="growl dataTable" rendered="#{viewDominios.getPermiteConsultar()}"/>
 		        		<p:commandButton id="btnImportar"  value="#{msg['botones.importar']}" icon="fa fa-download"  actionListener="#{viewDominios.importar()}"  process="@this" update="growl @form">
 		        			<p:ajax event="dialogReturn" listener="#{viewDominios.returnDialogoImportar}" update="growl dataTable"/>

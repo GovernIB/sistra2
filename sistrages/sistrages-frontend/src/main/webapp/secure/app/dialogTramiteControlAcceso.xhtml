@@ -51,9 +51,10 @@
 	        				</p:commandButton>
 					</p:column>
 					<p:column>
-						<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{dialogTramiteControlAcceso.eliminarAvisoEntidad()}" process="@this" update="growlDialog formDialogDefinicionVersionControlAcceso" >
-		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['dialogTramiteControlAcceso.confirm.mensajeAviso']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
-		        		</p:commandButton>
+						<p:commandButton id="btnEliminar" type="button" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="PF('confirmDialogBorrar').show()" />
+						<!--
+							<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"  onClick="PF('confirmDialogBorrar').show()" process="@this" update="growlDialog formDialogDefinicionVersionControlAcceso" />
+						 -->
 					</p:column>
 					<p:column styleClass="noPadding-left">
 							<p:outputLabel for="plazodesactivacioninicio" value="#{msg['dialogTramiteControlAcceso.plazodesactivacioninicio']}" />
@@ -111,9 +112,13 @@
 			<p:outputPanel styleClass="botonera">
 				<p:toolbar>
 					<f:facet name="right">
-						<p:commandButton value="#{msg['botones.guardar']}" styleClass="boton-azul"
-							actionListener="#{dialogTramiteControlAcceso.aceptar()}" process="@form"
-							update="@form growlDialog" />
+						<p:commandButton id="botonNoDes" type="button" value="#{msg['botones.guardar']}" styleClass="boton-azul" onclick="PF('confirmDialogGuardar').show()" rendered="#{!dialogTramiteControlAcceso.isDesarrollo()}"  />
+
+
+						<p:commandButton id="botonDes" value="#{msg['botones.guardar']}" styleClass="boton-azul"
+						 	actionListener="#{dialogTramiteControlAcceso.aceptarSinInvalidacion()}" process="@form"
+							update="@form growlDialog" rendered="#{dialogTramiteControlAcceso.isDesarrollo()}" />
+
 						<p:commandButton value="#{msg['botones.cancelar']}"
 							actionListener="#{dialogTramiteControlAcceso.cancelar()}" process="@this" />
 						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o"
@@ -124,10 +129,17 @@
 
 
 		    <!-- dialogo para confirmar -->
-		    <p:confirmDialog global="true" >
+		    <p:confirmDialog widgetVar="confirmDialogBorrar" id="confirmDialogBorrar"  header="#{msg['confirm.titulo']}" message="#{msg['dialogTramiteControlAcceso.confirm.mensajeAviso']}" icon="fa fa-question-circle fa-3x confirmar_icono" >
 				<p:outputPanel styleClass="confirmar_botonera">
-		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+				  	 <p:commandButton value="#{msg['botones.si']}" actionListener="#{dialogTramiteControlAcceso.eliminarAvisoEntidad()}" oncomplete="PF('confirmDialogBorrar').hide();"  process="@this" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check" update="@form" />
+     				 <p:commandButton value="#{msg['botones.no']}" type="button"  onclick="PF('confirmDialogBorrar').hide();"    styleClass="ui-confirmdialog-no" icon="fa fa-close" />
+				</p:outputPanel>
+		    </p:confirmDialog>
+
+		    <p:confirmDialog widgetVar="confirmDialogGuardar" id="confirmDialogGuardar" header="#{msg['confirm.titulo']}" message="#{msg['confirm.invalidacion']}" icon="fa fa-question-circle fa-3x confirmar_icono" >
+				<p:outputPanel styleClass="confirmar_botonera">
+					 <p:commandButton value="#{msg['botones.si']}" actionListener="#{dialogTramiteControlAcceso.aceptarConInvalidacion()}" process="@this" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  />
+     				 <p:commandButton value="#{msg['botones.no']}" actionListener="#{dialogTramiteControlAcceso.aceptarSinInvalidacion()}" process="@this" styleClass="ui-confirmdialog-no" icon="fa fa-close"  />
 				</p:outputPanel>
 		    </p:confirmDialog>
 		</h:form>

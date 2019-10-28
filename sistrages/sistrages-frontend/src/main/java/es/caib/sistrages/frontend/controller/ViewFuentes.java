@@ -201,8 +201,7 @@ public class ViewFuentes extends ViewControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 
@@ -265,11 +264,11 @@ public class ViewFuentes extends ViewControllerBase {
 			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
 				permiteEditar = true;
 			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
-				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
-					permiteEditar = true;
-				} else {
-					permiteConsultar = true;
-				}
+				// if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+				// permiteEditar = true;
+				// } else {
+				permiteConsultar = true;
+				// }
 			}
 			break;
 		case AREA:
@@ -367,8 +366,7 @@ public class ViewFuentes extends ViewControllerBase {
 	}
 
 	/**
-	 * @param filtro
-	 *            the filtro to set
+	 * @param filtro the filtro to set
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
@@ -382,8 +380,7 @@ public class ViewFuentes extends ViewControllerBase {
 	}
 
 	/**
-	 * @param listaDatos
-	 *            the listaDatos to set
+	 * @param listaDatos the listaDatos to set
 	 */
 	public void setListaDatos(final List<FuenteDatos> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -397,8 +394,7 @@ public class ViewFuentes extends ViewControllerBase {
 	}
 
 	/**
-	 * @param datoSeleccionado
-	 *            the datoSeleccionado to set
+	 * @param datoSeleccionado the datoSeleccionado to set
 	 */
 	public void setDatoSeleccionado(final FuenteDatos datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
@@ -412,8 +408,7 @@ public class ViewFuentes extends ViewControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -427,8 +422,7 @@ public class ViewFuentes extends ViewControllerBase {
 	}
 
 	/**
-	 * @param ambito
-	 *            the ambito to set
+	 * @param ambito the ambito to set
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;
@@ -442,8 +436,7 @@ public class ViewFuentes extends ViewControllerBase {
 	}
 
 	/**
-	 * @param permiteEditar
-	 *            the permiteEditar to set
+	 * @param permiteEditar the permiteEditar to set
 	 */
 	public void setPermiteEditar(final Boolean permiteEditar) {
 		this.permiteEditar = permiteEditar;
@@ -457,8 +450,7 @@ public class ViewFuentes extends ViewControllerBase {
 	}
 
 	/**
-	 * @param permiteConsultar
-	 *            the permiteConsultar to set
+	 * @param permiteConsultar the permiteConsultar to set
 	 */
 	public void setPermiteConsultar(final Boolean permiteConsultar) {
 		this.permiteConsultar = permiteConsultar;
@@ -472,8 +464,7 @@ public class ViewFuentes extends ViewControllerBase {
 	}
 
 	/**
-	 * @param mostrarBreadcrumb
-	 *            the mostrarBreadcrumb to set
+	 * @param mostrarBreadcrumb the mostrarBreadcrumb to set
 	 */
 	public void setMostrarBreadcrumb(final Boolean mostrarBreadcrumb) {
 		this.mostrarBreadcrumb = mostrarBreadcrumb;
@@ -487,8 +478,7 @@ public class ViewFuentes extends ViewControllerBase {
 	}
 
 	/**
-	 * @param breadCrumb
-	 *            the breadCrumb to set
+	 * @param breadCrumb the breadCrumb to set
 	 */
 	public void setBreadCrumb(final DefaultMenuModel breadCrumb) {
 		this.breadCrumb = breadCrumb;
@@ -502,8 +492,7 @@ public class ViewFuentes extends ViewControllerBase {
 	}
 
 	/**
-	 * @param area
-	 *            the area to set
+	 * @param area the area to set
 	 */
 	public void setArea(final String area) {
 		this.area = area;

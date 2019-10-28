@@ -17,8 +17,10 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeAvisoEntidad;
 import es.caib.sistrages.core.api.service.AvisoEntidadService;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -41,6 +43,10 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	/** Tramite service. */
 	@Inject
 	private TramiteService tramiteService;
+
+	/** System service. **/
+	@Inject
+	private SystemService systemService;
 
 	/** Idiomas del tramite version. **/
 	private List<String> idiomas;
@@ -93,8 +99,7 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -115,10 +120,20 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 		crearAvisoEntidad();
 	}
 
+	/** Aceptada invallidacion desde el confirmDialog. **/
+	public void aceptarConInvalidacion() {
+		aceptar(true);
+	}
+
+	/** Cancelada invallidacion desde el confirmDialog. **/
+	public void aceptarSinInvalidacion() {
+		aceptar(false);
+	}
+
 	/**
 	 * Aceptar.
 	 */
-	public void aceptar() {
+	public void aceptar(final boolean invalidacion) {
 
 		// Comprobamos que el mensaje de aviso está correcto.
 		if (!checkMensajeAviso()) {
@@ -126,6 +141,16 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 		}
 
 		tramiteService.updateTramiteVersionControlAcceso(tramiteVersion, avisoEntidad, UtilJSF.getIdEntidad());
+
+		// Invalidaciones
+		if (invalidacion) {
+
+			final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
+			final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
+			final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+			this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_TRAMITE,
+					tramite.getIdentificador() + "#" + tramiteVersion.getNumeroVersion());
+		}
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
@@ -148,8 +173,7 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 		boolean retorno;
 		if (avisoEntidad.getFechaFin() != null && avisoEntidad.getFechaInicio() != null
 				&& avisoEntidad.getFechaFin().before(avisoEntidad.getFechaInicio())) {
-			addMessageContext(TypeNivelGravedad.WARNING,
-					UtilJSF.getLiteral("dialogTramiteControlAcceso.error.fechas"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("dialogTramiteControlAcceso.error.fechas"));
 			retorno = false;
 		} else if (isVacio(avisoEntidad.getMensaje()) && (avisoEntidad.isBloqueado()
 				|| avisoEntidad.getFechaFin() != null || avisoEntidad.getFechaInicio() != null)) {
@@ -204,8 +228,7 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	/**
 	 * Establece el valor de id.
 	 *
-	 * @param id
-	 *            el nuevo valor de id
+	 * @param id el nuevo valor de id
 	 */
 	public void setId(final Long id) {
 		this.id = id;
@@ -223,8 +246,7 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	/**
 	 * Establece el valor de tramiteVersion.
 	 *
-	 * @param tramiteVersion
-	 *            el nuevo valor de tramiteVersion
+	 * @param tramiteVersion el nuevo valor de tramiteVersion
 	 */
 	public void setTramiteVersion(final TramiteVersion tramiteVersion) {
 		this.tramiteVersion = tramiteVersion;
@@ -238,8 +260,7 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param avisoEntidad
-	 *            the avisoEntidad to set
+	 * @param avisoEntidad the avisoEntidad to set
 	 */
 	public void setAvisoEntidad(final AvisoEntidad avisoEntidad) {
 		this.avisoEntidad = avisoEntidad;
@@ -253,8 +274,7 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idiomas
-	 *            the idiomas to set
+	 * @param idiomas the idiomas to set
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;

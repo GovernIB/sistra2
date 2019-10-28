@@ -73,6 +73,7 @@ import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -117,6 +118,10 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/** Servicio. */
 	@Inject
 	private ConfiguracionGlobalService configuracionGlobalService;
+
+	/** System servicio. **/
+	@Inject
+	private SystemService systemService;
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -209,6 +214,9 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/** Literales que se usan mucho. **/
 	private static final String LITERAL_GUION_BAJO = "_";
 	private static final String LITERAL_PUNTO = ".";
+
+	/** Refresca cache tramite y dominio. **/
+	private boolean refrescarCacheDominio = true;
 
 	/**
 	 * Inicialización.
@@ -1155,6 +1163,19 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		filaImportar.setModo(Constantes.IMPORTAR_TIPO_IM);
 		final FilaImportarResultado resultado = tramiteService.importar(filaImportar);
 
+		if (refrescarCacheDominio) {
+			for (final FilaImportarDominio dominio : filasDominios) {
+				if (dominio.getAccion() != TypeImportarAccion.MANTENER && dominio.getDominioActual() != null) {
+
+					final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
+					final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
+					final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+					this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_DOMINIO,
+							dominio.getDominioActual().getIdentificador());
+				}
+			}
+		}
+
 		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
@@ -1714,6 +1735,20 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 */
 	public final void setUsuarioZip(final String usuarioZip) {
 		this.usuarioZip = usuarioZip;
+	}
+
+	/**
+	 * @return the refrescarCacheDominio
+	 */
+	public boolean isRefrescarCacheDominio() {
+		return refrescarCacheDominio;
+	}
+
+	/**
+	 * @param refrescarCacheDominio the refrescarCacheDominio to set
+	 */
+	public void setRefrescarCacheDominio(final boolean refrescarCacheDominio) {
+		this.refrescarCacheDominio = refrescarCacheDominio;
 	}
 
 }

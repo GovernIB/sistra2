@@ -8,10 +8,12 @@ import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
+import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilRest;
 
 /**
  * Clase de las que heredan los Dialog.
@@ -28,12 +30,39 @@ public abstract class DialogControllerBase {
 	protected String modoAcceso;
 
 	/**
+	 *
 	 * Devuelve logger.
 	 *
 	 * @return logger
 	 */
 	protected Logger getLogger() {
 		return LOGGER;
+	}
+
+	/**
+	 * Refresca la cache
+	 */
+	public void refrescarCache(final String urlBase, final String usuario, final String pwd, final String tipo,
+			final String identificador, final boolean mensaje) {
+
+		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, tipo, identificador);
+
+		if (mensaje) {
+			if (resultado.getCodigo() == 1) {
+				addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
+			} else {
+				addMessageContext(TypeNivelGravedad.ERROR,
+						UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
+			}
+		}
+	}
+
+	/**
+	 * Refresca la cache
+	 */
+	public void refrescarCache(final String urlBase, final String usuario, final String pwd, final String tipo,
+			final String identificador) {
+		refrescarCache(urlBase, usuario, pwd, tipo, identificador, false);
 	}
 
 	/** Es desarrollo? **/

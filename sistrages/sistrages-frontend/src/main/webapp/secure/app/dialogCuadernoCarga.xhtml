@@ -119,6 +119,23 @@
 						</p:column>
 				</h:panelGrid>
 
+
+				<p:column>
+					<p class="pTituloCabecera">
+						<p:outputLabel value="#{msg['dialogCuadernoCarga.refrescarCache']}"  styleClass="subTituloCabecera"  />
+					</p>
+					<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-4 w15,padding-right-18 w10, w80" columns = "3" headerClass="grid-left" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
+
+						 	<p:outputLabel value="#{msg['dialogCuadernoCarga.refrescarCacheDominio']}" />
+						 	<p:selectBooleanCheckbox value="#{dialogCuadernoCarga.refrescarCacheDominio}" />
+							<p:outputLabel value="" />
+
+							<p:outputLabel value="#{msg['dialogCuadernoCarga.refrescarCacheTramite']}" />
+						 	<p:selectBooleanCheckbox value="#{dialogCuadernoCarga.refrescarCacheTramite}" />
+						 	<p:outputLabel value="" />
+					</h:panelGrid>
+				</p:column>
+
 				<p:column rendered="#{dialogCuadernoCarga.filaTramiteRegistro.mostrarRegistro}">
 						<p class="pTituloCabecera">
 								<p:outputLabel value="#{msg['dialogCuadernoCarga.headerTramiteRegistro']}" styleClass="subTituloCabecera"   />
@@ -161,6 +178,7 @@
 					<p class="pTituloCabecera">
 						<p:outputLabel value="#{msg['dialogCuadernoCarga.dominios']}"  styleClass="subTituloCabecera"  />
 					</p>
+
 					<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaDominios" headerClass="grid-left" value="#{dialogCuadernoCarga.filasDominios}" var="fila" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
 
 						<h:column headerClass="subTituloTablaImportarIzq">
@@ -236,6 +254,8 @@
 
 					</h:dataTable>
 				</p:column>
+
+
 
 				<br />
 				<br />

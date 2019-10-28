@@ -21,8 +21,7 @@ public interface DominioService {
 	/**
 	 * Obtener dominio.
 	 *
-	 * @param codDominio
-	 *            codigo del dominio
+	 * @param codDominio codigo del dominio
 	 * @return dominio
 	 */
 	public Dominio loadDominio(Long codDominio);
@@ -30,8 +29,7 @@ public interface DominioService {
 	/**
 	 * Obtener dominio.
 	 *
-	 * @param identificador
-	 *            identificador del dominio
+	 * @param identificador identificador del dominio
 	 * @return dominio
 	 */
 	public Dominio loadDominio(String identificador);
@@ -39,28 +37,23 @@ public interface DominioService {
 	/**
 	 * Añade dominio.
 	 *
-	 * @param dominio
-	 *            Dominio a crear.
-	 * @param idEntidad
-	 *            Id de la entidad
-	 * @param idArea
-	 *            Id del area.
+	 * @param dominio   Dominio a crear.
+	 * @param idEntidad Id de la entidad
+	 * @param idArea    Id del area.
 	 */
 	public Long addDominio(Dominio dominio, Long idEntidad, Long idArea);
 
 	/**
 	 * Actualiza dominio.
 	 *
-	 * @param dominio
-	 *            Dominio con los datos requeridos por superadministrador.
+	 * @param dominio Dominio con los datos requeridos por superadministrador.
 	 */
 	public void updateDominio(Dominio dominio);
 
 	/**
 	 * Elimina dominio.
 	 *
-	 * @param idDominio
-	 *            the id dominio
+	 * @param idDominio the id dominio
 	 * @return true, si se realiza correctamente
 	 */
 	public boolean removeDominio(Long idDominio);
@@ -68,12 +61,9 @@ public interface DominioService {
 	/**
 	 * Listar dominios.
 	 *
-	 * @param ambito
-	 *            Ambito GLOBAL(G), ENTIDAD(E) o AREA(A)
-	 * @param id
-	 *            Id de la entidad o area
-	 * @param filtro
-	 *            Filro aplicado al código o descripcion.
+	 * @param ambito Ambito GLOBAL(G), ENTIDAD(E) o AREA(A)
+	 * @param id     Id de la entidad o area
+	 * @param filtro Filro aplicado al código o descripcion.
 	 * @return lista de dominios
 	 */
 	public List<Dominio> listDominio(final TypeAmbito ambito, final Long id, String filtro);
@@ -81,10 +71,8 @@ public interface DominioService {
 	/**
 	 * Listar dominios.
 	 *
-	 * @param idTramite
-	 *            Id de la entidad o area
-	 * @param filtro
-	 *            Filro aplicado al código o descripcion.
+	 * @param idTramite Id de la entidad o area
+	 * @param filtro    Filro aplicado al código o descripcion.
 	 * @return lista de dominios
 	 */
 	public List<Dominio> listDominio(final Long idTramite, String filtro);
@@ -92,8 +80,7 @@ public interface DominioService {
 	/**
 	 * Obtener fuenteDato.
 	 *
-	 * @param idFuenteDato
-	 *            ID del fuenteDato
+	 * @param idFuenteDato ID del fuenteDato
 	 * @return fuenteDato
 	 */
 	public FuenteDatos loadFuenteDato(Long idFuenteDato);
@@ -101,8 +88,7 @@ public interface DominioService {
 	/**
 	 * Obtener fuenteDato.
 	 *
-	 * @param idFuenteDato
-	 *            ID del fuenteDato
+	 * @param idFuenteDato ID del fuenteDato
 	 * @return fuenteDato
 	 */
 	public FuenteDatos loadFuenteDato(String idFuenteDato);
@@ -110,8 +96,7 @@ public interface DominioService {
 	/**
 	 * Obtener fuenteDato.
 	 *
-	 * @param idFuenteDato
-	 *            ID del fuenteDato
+	 * @param idFuenteDato ID del fuenteDato
 	 * @return fuenteDato
 	 */
 	public FuenteDatosValores loadFuenteDatoValores(Long idFuenteDato);
@@ -119,40 +104,32 @@ public interface DominioService {
 	/**
 	 * Añade fuenteDato.
 	 *
-	 * @param fuenteDato
-	 *            FuenteDato a crear.
-	 * @param idEntidad
-	 *            Id de la entidad
-	 * @param idArea
-	 *            Id del area.
+	 * @param fuenteDato FuenteDato a crear.
+	 * @param idEntidad  Id de la entidad
+	 * @param idArea     Id del area.
 	 */
 	public void addFuenteDato(FuenteDatos fuenteDato, Long idArea);
 
 	/**
 	 * Actualiza fuenteDato.
 	 *
-	 * @param fuenteDato
-	 *            FuenteDato con los datos requeridos por superadministrador.
+	 * @param fuenteDato FuenteDato con los datos requeridos por superadministrador.
 	 */
 	public void updateFuenteDato(FuenteDatos fuenteDato);
 
 	/**
 	 * Borrar fuenteDato.
 	 *
-	 * @param idFuenteDato
-	 *            idFuenteDato
+	 * @param idFuenteDato idFuenteDato
 	 */
 	public boolean removeFuenteDato(Long idFuenteDato);
 
 	/**
 	 * Listar fuenteDatos.
 	 *
-	 * @param ambito
-	 *            Ambito GLOBAL(G), ENTIDAD(E) o AREA(A)
-	 * @param id
-	 *            Id de la entidad o area
-	 * @param filtro
-	 *            Filro aplicado al código o descripcion.
+	 * @param ambito Ambito GLOBAL(G), ENTIDAD(E) o AREA(A)
+	 * @param id     Id de la entidad o area
+	 * @param filtro Filro aplicado al código o descripcion.
 	 * @return ambito
 	 */
 	public List<FuenteDatos> listFuenteDato(final TypeAmbito ambito, final Long id, String filtro);
@@ -160,8 +137,7 @@ public interface DominioService {
 	/**
 	 * Obtiene la fuente fila.
 	 *
-	 * @param idFuenteDatoFila
-	 *            Id de la fuente fila
+	 * @param idFuenteDatoFila Id de la fuente fila
 	 * @return fila
 	 */
 	public FuenteFila loadFuenteDatoFila(Long idFuenteDatoFila);
@@ -252,5 +228,13 @@ public interface DominioService {
 	 * @param idEntidad
 	 */
 	public void clonar(String dominioID, String nuevoIdentificador, Long areaID, Long fdID, final Long idEntidad);
+
+	/**
+	 * Devuelve el identificador de los dominios con esa fuente de datos
+	 *
+	 * @param idFuenteDatos
+	 * @return
+	 */
+	List<String> listDominiosByFD(Long idFuenteDatos);
 
 }
