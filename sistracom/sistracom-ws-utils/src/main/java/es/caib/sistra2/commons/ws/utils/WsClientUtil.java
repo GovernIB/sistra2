@@ -28,7 +28,7 @@ public class WsClientUtil {
 
 		// Timeout
 		if (timeout != null) {
-			httpClientPolicy.setConnectionTimeout(timeout);
+			httpClientPolicy.setReceiveTimeout(timeout);
 		}
 
 		// Log calls
