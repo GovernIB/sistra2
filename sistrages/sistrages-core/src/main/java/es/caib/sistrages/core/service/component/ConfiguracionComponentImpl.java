@@ -10,6 +10,8 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.pluginsib.core.IPlugin;
 import org.fundaciobit.pluginsib.core.utils.PluginsManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +37,8 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 
 	/** Propiedades configuración especificadas en properties. */
 	private Properties propiedadesLocales;
+
+	final Logger log = LoggerFactory.getLogger(ConfiguracionComponentImpl.class);
 
 	@PostConstruct
 	public void init() {
@@ -213,17 +217,21 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 				final int pos2 = res.indexOf("}", pos + 1);
 				if (pos2 >= 0) {
 					final String propPlaceholder = res.substring(pos + placeholder.length(), pos2);
-					String valueReplaced = "";
+					String valuePlaceholder = "";
 					if (system) {
-						valueReplaced = System.getProperty(propPlaceholder);
+						valuePlaceholder = System.getProperty(propPlaceholder);
 					} else {
-						valueReplaced = readPropiedad(propPlaceholder, false);
+						valuePlaceholder = readPropiedad(propPlaceholder, false);
 					}
-					if (valueReplaced.indexOf(placeholder) >= 0) {
+					valuePlaceholder = StringUtils.defaultString(valuePlaceholder);
+					if (valuePlaceholder.indexOf(placeholder) >= 0) {
 						throw new ErrorNoControladoException(
-								"Valor no válido para propiedad " + propPlaceholder + ": " + valueReplaced);
+								"Valor no válido para propiedad " + propPlaceholder + ": " + valuePlaceholder);
 					}
-					res = StringUtils.replace(res, placeholder + propPlaceholder + "}", valueReplaced);
+					if (StringUtils.isBlank(valuePlaceholder)) {
+						log.warn("Placeholder " + propPlaceholder + " tiene valor vacío");
+					}
+					res = StringUtils.replace(res, placeholder + propPlaceholder + "}", valuePlaceholder);
 				}
 				pos = res.indexOf(placeholder);
 			}

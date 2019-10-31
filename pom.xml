@@ -74,6 +74,7 @@
 		<prefix.revision></prefix.revision>
 	</properties>
 
+	<!-- https://github.com/GovernIB/maven/tree/gh-pages  -->
 	<repositories>
 	    <repository>
 	      <id>governIB</id>
