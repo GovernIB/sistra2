@@ -100,7 +100,8 @@ create table STT_DOCPTR
    DTP_REGRES           VARCHAR2(1 CHAR),
    DTP_REGNUM           VARCHAR2(500 CHAR),
    DTP_REGFEC           DATE,
-   DTP_REGPRE           VARCHAR2(1 CHAR)
+   DTP_REGPRE           VARCHAR2(1 CHAR),
+   DTP_REGSES           VARCHAR2(100 CHAR)
 );
 
 comment on table STT_DOCPTR is
@@ -174,6 +175,9 @@ comment on column STT_DOCPTR.DTP_REGFEC is
 
 comment on column STT_DOCPTR.DTP_REGPRE is
 'En caso de ser un registro indica si es un preregistro';
+
+comment on column STT_DOCPTR.DTP_REGSES is
+'En caso de ser un registro indica sesión de registro';
 
 alter table STT_DOCPTR
    add constraint STT_DOCPTR_PK primary key (DTP_CODIGO);
