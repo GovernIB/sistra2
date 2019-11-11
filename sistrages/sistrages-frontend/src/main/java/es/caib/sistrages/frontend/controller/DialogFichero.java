@@ -257,7 +257,7 @@ public class DialogFichero extends DialogControllerBase {
 				fichero = plantillaFormateador.getFichero();
 				if (fichero == null) {
 					fichero = new Fichero();
-					fichero.setPublico(true);
+					fichero.setPublico(false);
 					plantillaFormateador.setFichero(fichero);
 				}
 				fichero.setNombre(file.getFileName());

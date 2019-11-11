@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -172,6 +174,17 @@ public class DialogTramiteScripts extends DialogControllerBase {
 	 */
 	public void setData(final List<ScriptInfo> data) {
 		this.data = data;
+
+		Collections.sort(data, new Comparator<ScriptInfo>() {
+			@Override
+			public int compare(final ScriptInfo u1, final ScriptInfo u2) {
+				try {
+					return u1.getResumenTXT().compareTo(u2.getResumenTXT());
+				} catch (final Exception e) {
+					return 0;
+				}
+			}
+		});
 	}
 
 }

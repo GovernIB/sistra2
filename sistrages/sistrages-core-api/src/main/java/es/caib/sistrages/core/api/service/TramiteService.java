@@ -142,7 +142,7 @@ public interface TramiteService {
 	 * @param idTramite
 	 * @param usuario
 	 */
-	public void addTramiteVersion(TramiteVersion tramiteVersion, String idTramite, String usuario);
+	public Long addTramiteVersion(TramiteVersion tramiteVersion, String idTramite, String usuario);
 
 	/**
 	 * Actualiza una versión de trámite.

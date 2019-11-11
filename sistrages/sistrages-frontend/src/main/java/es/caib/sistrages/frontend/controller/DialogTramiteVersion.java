@@ -28,6 +28,9 @@ public class DialogTramiteVersion extends DialogControllerBase {
 	/** Id elemento a tratar. */
 	private String id;
 
+	/** Id area. **/
+	private String idArea;
+
 	/** Datos elemento. */
 	private Tramite data;
 
@@ -53,8 +56,7 @@ public class DialogTramiteVersion extends DialogControllerBase {
 	 */
 	public void aceptar() {
 		if (dataVersion.getTipoFlujo() == TypeFlujo.PERSONALIZADO) {
-			addMessageContext(TypeNivelGravedad.WARNING,
-					UtilJSF.getLiteral("dialogTramiteVersion.tipoNoImplementado"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("dialogTramiteVersion.tipoNoImplementado"));
 			return;
 		} else {
 
@@ -69,10 +71,15 @@ public class DialogTramiteVersion extends DialogControllerBase {
 			this.dataVersion.setListaPasos(listaPasos);
 
 		}
-		this.tramiteService.addTramiteVersion(this.dataVersion, id, UtilJSF.getSessionBean().getUserName());
+		final Long idVersion = this.tramiteService.addTramiteVersion(this.dataVersion, id,
+				UtilJSF.getSessionBean().getUserName());
+		this.dataVersion.setCodigo(idVersion);
+		this.dataVersion.setIdTramite(Long.valueOf(id));
+		this.dataVersion.setIdArea(Long.valueOf(idArea));
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
+		result.setResult(this.dataVersion);
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		UtilJSF.closeDialog(result);
 	}
@@ -95,8 +102,7 @@ public class DialogTramiteVersion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -110,8 +116,7 @@ public class DialogTramiteVersion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final Tramite data) {
 		this.data = data;
@@ -125,11 +130,24 @@ public class DialogTramiteVersion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param dataVersion
-	 *            the dataVersion to set
+	 * @param dataVersion the dataVersion to set
 	 */
 	public void setDataVersion(final TramiteVersion dataVersion) {
 		this.dataVersion = dataVersion;
+	}
+
+	/**
+	 * @return the idArea
+	 */
+	public String getIdArea() {
+		return idArea;
+	}
+
+	/**
+	 * @param idArea the idArea to set
+	 */
+	public void setIdArea(final String idArea) {
+		this.idArea = idArea;
 	}
 
 }

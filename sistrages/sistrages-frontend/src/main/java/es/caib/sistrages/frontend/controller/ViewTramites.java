@@ -890,12 +890,16 @@ public class ViewTramites extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 
 		Long idTramiteSeleccionado = null;
+		Long idArea = null;
 		if (this.versionSeleccionada != null) {
 			idTramiteSeleccionado = this.versionSeleccionada.getIdTramite();
+			idArea = this.versionSeleccionada.getIdArea();
 		} else {
 			idTramiteSeleccionado = this.tramiteSeleccionada.getTramite().getCodigo();
+			idArea = this.tramiteSeleccionada.getTramite().getIdArea();
 		}
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(idTramiteSeleccionado));
+		params.put(TypeParametroVentana.AREA.toString(), String.valueOf(idArea));
 		UtilJSF.openDialog(DialogTramiteVersion.class, TypeModoAcceso.ALTA, params, true, 400, 150);
 
 	}
@@ -920,6 +924,11 @@ public class ViewTramites extends ViewControllerBase {
 				message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
 			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
+			final TramiteVersion resultado = (TramiteVersion) respuesta.getResult();
+			idArea = resultado.getIdArea().toString();
+			idTramite = resultado.getIdTramite().toString();
+			idTramiteVersion = resultado.getCodigo().toString();
 
 			// Refrescamos datos
 			buscarTramites();

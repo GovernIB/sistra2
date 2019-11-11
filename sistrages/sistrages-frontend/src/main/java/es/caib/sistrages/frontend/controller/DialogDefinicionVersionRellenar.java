@@ -11,6 +11,7 @@ import org.primefaces.event.SelectEvent;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -70,8 +71,7 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de propiedades.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoDescripcion(final SelectEvent event) {
 
@@ -117,6 +117,11 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 			return;
 		}
 
+		if (this.data.getTipoFormulario() == TypeFormularioGestor.EXTERNO) {
+			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.tipoFormularioExterno"));
+			return;
+		}
+
 		if (tramiteService.checkFormularioRepetido(tramiteVersion.getCodigo(), this.data.getIdentificador(),
 				this.data.getCodigo())) {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
@@ -157,8 +162,7 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final FormularioTramite data) {
 		this.data = data;
@@ -172,8 +176,7 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -187,8 +190,7 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idTramiteVersion
-	 *            the idTramiteVersion to set
+	 * @param idTramiteVersion the idTramiteVersion to set
 	 */
 	public void setIdTramiteVersion(final String idTramiteVersion) {
 		this.idTramiteVersion = idTramiteVersion;
@@ -210,8 +212,7 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idiomas
-	 *            the idiomas to set
+	 * @param idiomas the idiomas to set
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;

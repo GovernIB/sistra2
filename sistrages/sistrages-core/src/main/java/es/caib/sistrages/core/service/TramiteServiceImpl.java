@@ -308,8 +308,8 @@ public class TramiteServiceImpl implements TramiteService {
 	 */
 	@Override
 	@NegocioInterceptor
-	public void addTramiteVersion(final TramiteVersion tramiteVersion, final String idTramite, final String usuario) {
-		tramiteComponent.addTramiteVersion(tramiteVersion, idTramite, usuario);
+	public Long addTramiteVersion(final TramiteVersion tramiteVersion, final String idTramite, final String usuario) {
+		return tramiteComponent.addTramiteVersion(tramiteVersion, idTramite, usuario);
 	}
 
 	/*
@@ -1248,7 +1248,7 @@ public class TramiteServiceImpl implements TramiteService {
 		}
 		if (paso.getScriptRepresentante() != null) {
 			scriptsInfo.add(new ScriptInfo(paso.getScriptRepresentante().getCodigo(), TypePaso.REGISTRAR,
-					TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO));
+					TypeScriptFlujo.SCRIPT_REPRESENTACION_REGISTRO));
 		}
 		if (paso.getScriptValidarRegistrar() != null) {
 			scriptsInfo.add(new ScriptInfo(paso.getScriptValidarRegistrar().getCodigo(), TypePaso.REGISTRAR,
