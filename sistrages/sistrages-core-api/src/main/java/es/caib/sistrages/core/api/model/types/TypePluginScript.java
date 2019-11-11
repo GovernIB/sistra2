@@ -84,6 +84,10 @@ public enum TypePluginScript {
 	 */
 	DATOS_REGISTRO,
 	/**
+	 * Resultado script representación (exclusivo dentro del flujo)
+	 */
+	DATOS_REPRESENTACION,
+	/**
 	 * Resultado persona (exclusivo dentro del flujo)
 	 */
 	DATOS_PERSONA,

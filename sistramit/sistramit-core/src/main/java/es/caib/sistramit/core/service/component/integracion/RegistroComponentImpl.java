@@ -174,7 +174,7 @@ public final class RegistroComponentImpl implements RegistroComponent {
 		final IRegistroPlugin plgRegistro = (IRegistroPlugin) configuracionComponent
 				.obtenerPluginEntidad(TypePluginEntidad.REGISTRO, codigoEntidad);
 		try {
-			final String idSesionRegistro = plgRegistro.iniciarSesionRegistroEntrada();
+			final String idSesionRegistro = plgRegistro.iniciarSesionRegistroEntrada(codigoEntidad);
 			return idSesionRegistro;
 		} catch (final RegistroPluginException e) {
 			throw new RegistroJustificanteException(
@@ -188,7 +188,8 @@ public final class RegistroComponentImpl implements RegistroComponent {
 		final IRegistroPlugin plgRegistro = (IRegistroPlugin) configuracionComponent
 				.obtenerPluginEntidad(TypePluginEntidad.REGISTRO, codigoEntidad);
 		try {
-			final VerificacionRegistro verificacion = plgRegistro.verificarRegistroEntrada(idSesionRegistro);
+			final VerificacionRegistro verificacion = plgRegistro.verificarRegistroEntrada(codigoEntidad,
+					idSesionRegistro);
 
 			final ResultadoRegistrar res = new ResultadoRegistrar();
 			switch (verificacion.getEstado()) {

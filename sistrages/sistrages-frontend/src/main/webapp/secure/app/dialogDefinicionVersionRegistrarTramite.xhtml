@@ -117,8 +117,8 @@
 	            	<p:ajax event="change" global="false" process="@form:admite" update="formdialogDefinicionVersionRegistrarTramite:buttonScript3 @form:valida" />
 	            </p:selectBooleanCheckbox>
 	            <p:spacer width="30" height="1"/>
-           		<p:commandButton id="buttonScript3" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(), dialogDefinicionVersionRegistrarTramite.data.scriptRepresentante)}"
-						process="@this" update="growl" value="#{msg['script.SCRIPT_REPRESENTADO_REGISTRO.titulo']}"
+           		<p:commandButton id="buttonScript3" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(TypeScriptFlujo.SCRIPT_REPRESENTACION_REGISTRO.name(), dialogDefinicionVersionRegistrarTramite.data.scriptRepresentante)}"
+						process="@this" update="growl" value="#{msg['script.SCRIPT_REPRESENTACION_REGISTRO.titulo']}"
 						styleClass="#{dialogDefinicionVersionRegistrarTramite.getColorScript(dialogDefinicionVersionRegistrarTramite.data.scriptRepresentante)}"
 						disabled="#{dialogDefinicionVersionRegistrarTramite.data.admiteRepresentacion == false}"
 						>

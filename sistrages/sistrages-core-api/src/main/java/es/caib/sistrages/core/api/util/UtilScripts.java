@@ -126,8 +126,8 @@ public class UtilScripts {
 		case SCRIPT_PRESENTADOR_REGISTRO:
 			plugins.add(0, TypePluginScript.DATOS_PERSONA);
 			break;
-		case SCRIPT_REPRESENTADO_REGISTRO:
-			plugins.add(0, TypePluginScript.DATOS_PERSONA);
+		case SCRIPT_REPRESENTACION_REGISTRO:
+			plugins.add(0, TypePluginScript.DATOS_REPRESENTACION);
 			break;
 		case SCRIPT_PLANTILLA_INFO:
 			plugins.add(0, TypePluginScript.DATOS_PLANTILLA);

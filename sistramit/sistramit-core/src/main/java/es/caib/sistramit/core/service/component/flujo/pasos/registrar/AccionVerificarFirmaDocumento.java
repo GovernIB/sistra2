@@ -95,17 +95,17 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 	 * Actualiza persistencia.
 	 *
 	 * @param dipa
-	 *            Datos internos paso
+	 *                            Datos internos paso
 	 * @param idDocumento
-	 *            id documento
+	 *                            id documento
 	 * @param instancia
-	 *            instancia
+	 *                            instancia
 	 * @param nifFirmante
-	 *            nif firmante
+	 *                            nif firmante
 	 * @param resFirma
-	 *            resultado firma
+	 *                            resultado firma
 	 * @param pVariablesFlujo
-	 *            variables flujo
+	 *                            variables flujo
 	 */
 	private void actualizarPersistencia(final DatosInternosPasoRegistrar dipa, final String idDocumento,
 			final int instancia, final String nifFirmante, final FirmaClienteRespuesta resFirma,
@@ -151,15 +151,15 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 	 * Actualiza detalle paso.
 	 *
 	 * @param dipa
-	 *            Datos internos paso
+	 *                        Datos internos paso
 	 * @param idDocumento
-	 *            id documento
+	 *                        id documento
 	 * @param instancia
-	 *            instancia
+	 *                        instancia
 	 * @param nifFirmante
-	 *            nif firmante
+	 *                        nif firmante
 	 * @param resFirma
-	 *            resultado firma
+	 *                        resultado firma
 	 */
 	private void actualizarDetalle(final DatosInternosPasoRegistrar dipa, final String idDocumento, final int instancia,
 			final String nifFirmante, final FirmaClienteRespuesta resFirma) {
@@ -186,15 +186,15 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 	 * Recupera firma del componente de firma cliente.
 	 *
 	 * @param dipa
-	 *            Datos internos paso
+	 *                               Datos internos paso
 	 * @param pDefinicionTramite
-	 *            Definción trámite
+	 *                               Definción trámite
 	 * @param idDocumento
-	 *            id documento
+	 *                               id documento
 	 * @param instancia
-	 *            instancia
+	 *                               instancia
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 * @return Respuesta firma cliente
 	 */
 	private FirmaClienteRespuesta recuperarFirma(final DatosInternosPasoRegistrar dipa,
@@ -226,8 +226,9 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 		// Realiza validación de la firma
 		final String idioma = pDefinicionTramite.getDefinicionVersion().getIdioma();
 
-		// Validamos firma y verificar nif firmante concuerda
-		if (resFirma.isFinalizada()) {
+		// Si está activado la verificación de firma: validamos firma y verificar nif
+		// firmante concuerda
+		if (resFirma.isFinalizada() && resFirma.isVerificar()) {
 			final ValidacionFirmante validacionFirmante = firmaComponent.validarFirmante(idEntidad, idioma,
 					signedDocument, resFirma.getFirmaContenido(), nifFirmante);
 			resFirma.setValida(validacionFirmante.isCorrecto());

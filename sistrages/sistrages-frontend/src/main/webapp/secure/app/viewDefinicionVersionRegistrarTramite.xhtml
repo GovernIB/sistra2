@@ -83,8 +83,8 @@
 	            <p:spacer width="30" height="1"/>
 	           		<p:commandButton id="scriptButton3"
 	           				disabled="#{viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante eq null}"
-							icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(), viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante.codigo)}"
-							process="@this" update="growl" value="#{msg['script.SCRIPT_REPRESENTADO_REGISTRO.titulo']}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante)}" />
+							icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_REPRESENTACION_REGISTRO.name(), viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante.codigo)}"
+							process="@this" update="growl" value="#{msg['script.SCRIPT_REPRESENTACION_REGISTRO.titulo']}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante)}" />
 				<p:spacer width="30" height="1"/>
 				<p:selectBooleanCheckbox id="valida" disabled="true" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.validaRepresentacion}" itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.representacion.valida']}"/>
        		</p:outputPanel>

@@ -72,4 +72,9 @@ public class ComponenteFirmaPluginMock extends AbstractPluginProperties implemen
 		// Vacio
 	}
 
+	@Override
+	public boolean isVerificarFirma() throws FirmaPluginException {
+		return true;
+	}
+
 }

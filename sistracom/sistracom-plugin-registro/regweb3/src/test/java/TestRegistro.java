@@ -189,7 +189,7 @@ public class TestRegistro {
 			asiento.setInteresados(interesados);
 			asiento.setDocumentosRegistro(documentosRegistro);
 
-			final String idSesionRegistro = plugin.iniciarSesionRegistroEntrada();
+			final String idSesionRegistro = plugin.iniciarSesionRegistroEntrada(entidad);
 
 			final ResultadoRegistro resultadoRegistro = plugin.registroEntrada(idSesionRegistro, asiento);
 			System.out.println("Registro de entrada realizado correctamente");

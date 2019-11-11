@@ -44,6 +44,7 @@ import es.caib.sistramit.core.service.component.script.plugins.flujo.ResPersona;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResPersonalizacionTramite;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResPlantillaInfo;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResRegistro;
+import es.caib.sistramit.core.service.component.script.plugins.flujo.ResRepresentacion;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResVariableFlujo;
 import es.caib.sistramit.core.service.component.script.plugins.formulario.PlgDatosFormulario;
 import es.caib.sistramit.core.service.component.script.plugins.formulario.PlgSesionFormulario;
@@ -70,6 +71,7 @@ import es.caib.sistramit.core.service.model.script.flujo.ResPersonaInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResPersonalizacionTramiteInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResPlantillaInfoInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResRegistroInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResRepresentacionInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResVariableFlujoInt;
 import es.caib.sistramit.core.service.model.script.formulario.ResEstadoCampoInt;
 import es.caib.sistramit.core.service.model.script.formulario.ResValorCampoInt;
@@ -330,8 +332,8 @@ public final class ScriptExecImpl implements ScriptExec {
 		case SCRIPT_PRESENTADOR_REGISTRO:
 			res = ResPersonaInt.ID;
 			break;
-		case SCRIPT_REPRESENTADO_REGISTRO:
-			res = ResPersonaInt.ID;
+		case SCRIPT_REPRESENTACION_REGISTRO:
+			res = ResRepresentacionInt.ID;
 			break;
 		case SCRIPT_LISTA_DINAMICA_ANEXOS:
 			res = ResAnexosDinamicosInt.ID;
@@ -434,8 +436,8 @@ public final class ScriptExecImpl implements ScriptExec {
 		case SCRIPT_PRESENTADOR_REGISTRO:
 			plugins.add(new ResPersona());
 			break;
-		case SCRIPT_REPRESENTADO_REGISTRO:
-			plugins.add(new ResPersona());
+		case SCRIPT_REPRESENTACION_REGISTRO:
+			plugins.add(new ResRepresentacion());
 			break;
 		case SCRIPT_PLANTILLA_INFO:
 			plugins.add(new ResPlantillaInfo());

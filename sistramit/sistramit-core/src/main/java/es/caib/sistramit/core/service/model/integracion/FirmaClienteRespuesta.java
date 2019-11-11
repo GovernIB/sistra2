@@ -35,6 +35,9 @@ public final class FirmaClienteRespuesta implements Serializable {
 	/** En caso error, indica detalle error. */
 	private String detalleError;
 
+	/** Indica si se debe verificar (configurado en plugin firma). */
+	private boolean verificar;
+
 	/**
 	 * Método de acceso a finalizada.
 	 *
@@ -48,9 +51,9 @@ public final class FirmaClienteRespuesta implements Serializable {
 	 * Método para establecer finalizada.
 	 *
 	 * @param finalizada
-	 *            finalizada a establecer
+	 *                       finalizada a establecer
 	 */
-	public void setFinalizada(boolean finalizada) {
+	public void setFinalizada(final boolean finalizada) {
 		this.finalizada = finalizada;
 	}
 
@@ -67,9 +70,9 @@ public final class FirmaClienteRespuesta implements Serializable {
 	 * Método para establecer cancelada.
 	 *
 	 * @param cancelada
-	 *            cancelada a establecer
+	 *                      cancelada a establecer
 	 */
-	public void setCancelada(boolean cancelada) {
+	public void setCancelada(final boolean cancelada) {
 		this.cancelada = cancelada;
 	}
 
@@ -86,9 +89,9 @@ public final class FirmaClienteRespuesta implements Serializable {
 	 * Método para establecer firmaContenido.
 	 *
 	 * @param firmaContenido
-	 *            firmaContenido a establecer
+	 *                           firmaContenido a establecer
 	 */
-	public void setFirmaContenido(byte[] firmaContenido) {
+	public void setFirmaContenido(final byte[] firmaContenido) {
 		this.firmaContenido = firmaContenido;
 	}
 
@@ -105,9 +108,9 @@ public final class FirmaClienteRespuesta implements Serializable {
 	 * Método para establecer firmaTipo.
 	 *
 	 * @param firmaTipo
-	 *            firmaTipo a establecer
+	 *                      firmaTipo a establecer
 	 */
-	public void setFirmaTipo(TypeFirmaDigital firmaTipo) {
+	public void setFirmaTipo(final TypeFirmaDigital firmaTipo) {
 		this.firmaTipo = firmaTipo;
 	}
 
@@ -124,9 +127,9 @@ public final class FirmaClienteRespuesta implements Serializable {
 	 * Método para establecer fecha.
 	 *
 	 * @param fecha
-	 *            fecha a establecer
+	 *                  fecha a establecer
 	 */
-	public void setFecha(Date fecha) {
+	public void setFecha(final Date fecha) {
 		this.fecha = fecha;
 	}
 
@@ -143,15 +146,15 @@ public final class FirmaClienteRespuesta implements Serializable {
 	 * Método para establecer detalleError.
 	 *
 	 * @param detalleError
-	 *            detalleError a establecer
+	 *                         detalleError a establecer
 	 */
-	public void setDetalleError(String detalleError) {
+	public void setDetalleError(final String detalleError) {
 		this.detalleError = detalleError;
 	}
 
 	/**
 	 * Método de acceso a valida.
-	 * 
+	 *
 	 * @return valida
 	 */
 	public boolean isValida() {
@@ -160,12 +163,31 @@ public final class FirmaClienteRespuesta implements Serializable {
 
 	/**
 	 * Método para establecer valida.
-	 * 
+	 *
 	 * @param valida
-	 *            valida a establecer
+	 *                   valida a establecer
 	 */
-	public void setValida(boolean valida) {
+	public void setValida(final boolean valida) {
 		this.valida = valida;
+	}
+
+	/**
+	 * Método de acceso a verificar.
+	 * 
+	 * @return verificar
+	 */
+	public boolean isVerificar() {
+		return verificar;
+	}
+
+	/**
+	 * Método para establecer verificar.
+	 * 
+	 * @param verificar
+	 *                      verificar a establecer
+	 */
+	public void setVerificar(final boolean verificar) {
+		this.verificar = verificar;
 	}
 
 }

@@ -1,0 +1,57 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_PERSONA.setDatosContacto(pais, provincia, municipio, direccion, codigoPostal, email, telefono)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_PERSONA">DATOS_PERSONA</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_PERSONA&metodo=setDatosContacto">setDatosContacto</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setDatosContacto(pais, provincia, municipio, direccion, codigoPostal, email, telefono): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite establecer los datos de contacto de una persona que actuará como interesado en el trámite, ya sea como presentador, representante o como representado.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>pais</b>: Código país (formato SICRES).</li>
+		<li><b>provincia</b>: Código provincia (formato SICRES).</li>
+		<li><b>municipio</b>: Código municipio (formato SICRES).</li>
+		<li><b>direccion</b>: Dirección.</li>
+		<li><b>codigoPostal</b>: Código postal</li>
+		<li><b>email</b>: Email</li>
+		<li><b>telefono</b>: Teléfono</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Supongamos por caso que queremos establecer los datos de contacto del presentador de una solicitud. Para ello incluiríamos el código siguiente en el script "Establecer presentador": </p>
+ <p class="codigoScript">
+DATOS_PERSONA.setDatosContacto(108, 7, 40, "C.\ Principal 1 puerta 1", "07001", "email@dominio.es", "601234567");
+</p>
+<p>De esta manera se establecería los datos de contacto.</p>
+</body>
+</html>

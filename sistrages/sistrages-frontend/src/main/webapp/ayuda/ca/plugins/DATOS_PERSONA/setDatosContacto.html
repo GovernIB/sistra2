@@ -1,0 +1,57 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_PERSONA.setDatosContacto(pais, provincia, municipio, direccion, codigoPostal, email, telefono)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_PERSONA">DATOS_PERSONA</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_PERSONA&metodo=setDatosContacto">setDatosContacto</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setDatosContacto(pais, provincia, municipio, direccion, codigoPostal, email, telefono): void
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet establir les dades de contacte d'una persona que actuarà com a interessat en el tràmit, ja sigui com a presentador, representant o com representat.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>pais</b>: Codi país (formato SICRES).</li>
+		<li><b>provincia</b>: Codi província (formato SICRES).</li>
+		<li><b>municipio</b>: Codi municipi (formato SICRES).</li>
+		<li><b>direccion</b>: Direcció.</li>
+		<li><b>codigoPostal</b>: Codi postal</li>
+		<li><b>email</b>: Email</li>
+		<li><b>telefono</b>: Telèfon</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Suposem per cas que volem establir les dades de contacte del presentador d'una sol·licitud. Per a això inclouríem el codi següent en l'script "Establir presentador": </p>
+ <p class="codigoScript">
+DATOS_PERSONA.setDatosContacto(108, 7, 40, "C.\ Principal 1 puerta 1", "07001", "email@dominio.es", "601234567");
+</p>
+<p>D'aquesta manera s'establiria les dades de contacte.</p>
+</body>
+</html>

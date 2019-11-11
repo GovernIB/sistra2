@@ -225,4 +225,9 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 		return res;
 	}
 
+	@Override
+	public boolean isVerificarFirma() throws FirmaPluginException {
+		return new Boolean(getPropiedad("verificarFirma"));
+	}
+
 }

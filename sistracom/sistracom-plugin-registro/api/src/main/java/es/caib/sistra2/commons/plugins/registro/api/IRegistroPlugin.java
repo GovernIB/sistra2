@@ -58,9 +58,12 @@ public interface IRegistroPlugin extends IPlugin {
 	 * la trazabilidad posterior del resultado del registro en caso de que haya
 	 * habido problemas.
 	 *
+	 * @param codigoEntidad
+	 *                          Codigo Entidad
+	 *
 	 * @return Id sesión registro
 	 */
-	String iniciarSesionRegistroEntrada() throws RegistroPluginException;
+	String iniciarSesionRegistroEntrada(String codigoEntidad) throws RegistroPluginException;
 
 	/**
 	 * Realiza un apunte registral de entrada sobre la aplicacion de registro
@@ -84,16 +87,20 @@ public interface IRegistroPlugin extends IPlugin {
 	 * @return verificación registro
 	 * @throws RegistroPluginException
 	 */
-	VerificacionRegistro verificarRegistroEntrada(String idSesionRegistro) throws RegistroPluginException;
+	VerificacionRegistro verificarRegistroEntrada(String codigoEntidad, String idSesionRegistro)
+			throws RegistroPluginException;
 
 	/**
 	 * Inicia sesión de registro. Mediante la sesión de registro se permitirá tener
 	 * la trazabilidad posterior del resultado del registro en caso de que haya
 	 * habido problemas.
 	 *
+	 * @param codigoEntidad
+	 *                          Código Entidad
+	 *
 	 * @return Id sesión registro
 	 */
-	String iniciarSesionRegistroSalida() throws RegistroPluginException;
+	String iniciarSesionRegistroSalida(String codigoEntidad) throws RegistroPluginException;
 
 	/**
 	 * Realiza un apunte registral de salida sobre la aplicacion de registro
@@ -112,7 +119,8 @@ public interface IRegistroPlugin extends IPlugin {
 	 *                             id sesión registro
 	 * @return verificación registro
 	 */
-	VerificacionRegistro verificarRegistroSalida(String idSesionRegistro) throws RegistroPluginException;
+	VerificacionRegistro verificarRegistroSalida(String codigoEntidad, String idSesionRegistro)
+			throws RegistroPluginException;
 
 	/**
 	 * Obtiene el justificante de registro correspondiente a un apunte registral

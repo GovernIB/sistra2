@@ -27,7 +27,7 @@ import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
-import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
+import es.caib.sistramit.core.api.model.flujo.DatosInteresado;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
@@ -394,11 +394,11 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		asiento.setDatosAsunto(datosAsunto);
 		// - Interesados
 		final List<Interesado> interesados = new ArrayList<>();
-		if (pDipa.getParametrosRegistro().getDatosRepresentacion().getRepresentado() != null) {
+		if (pDipa.getParametrosRegistro().getDatosRepresentacion() != null) {
 			interesados.add(generarInteresado(TypeInteresado.REPRESENTADO,
 					pDipa.getParametrosRegistro().getDatosRepresentacion().getRepresentado()));
 			interesados.add(generarInteresado(TypeInteresado.REPRESENTANTE,
-					pDipa.getParametrosRegistro().getDatosPresentacion().getPresentador()));
+					pDipa.getParametrosRegistro().getDatosRepresentacion().getRepresentante()));
 		} else {
 			interesados.add(generarInteresado(TypeInteresado.REPRESENTANTE,
 					pDipa.getParametrosRegistro().getDatosPresentacion().getPresentador()));
@@ -674,16 +674,16 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 * Genera datos interesado.
 	 *
 	 * @param tipoInteresado
-	 *                           tipo
-	 * @param datosUsuario
-	 *                           datos usuario
+	 *                            tipo
+	 * @param datosInteresado
+	 *                            datos usuario
 	 * @return interesado
 	 */
-	private Interesado generarInteresado(final TypeInteresado tipoInteresado, final DatosUsuario datosUsuario) {
+	private Interesado generarInteresado(final TypeInteresado tipoInteresado, final DatosInteresado datosInteresado) {
 		TypeDocumentoIdentificacion tipoDocumento = null;
-		if (NifUtils.esNifPersonaFisica(datosUsuario.getNif())) {
+		if (NifUtils.esNifPersonaFisica(datosInteresado.getNif())) {
 			tipoDocumento = TypeDocumentoIdentificacion.NIF;
-		} else if (NifUtils.esNifPersonaJuridica(datosUsuario.getNif())) {
+		} else if (NifUtils.esNifPersonaJuridica(datosInteresado.getNif())) {
 			tipoDocumento = TypeDocumentoIdentificacion.CIF;
 		} else {
 			throw new TipoNoControladoException("Tipo de identificación no controlado");
@@ -692,14 +692,25 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		final Interesado interesado = new Interesado();
 		interesado.setActuaComo(tipoInteresado);
 		interesado.setTipoDocumento(tipoDocumento);
-		interesado.setDocIdentificacion(datosUsuario.getNif());
+		interesado.setDocIdentificacion(datosInteresado.getNif());
 		if (tipoDocumento == TypeDocumentoIdentificacion.CIF) {
-			interesado.setRazonSocial(datosUsuario.getNombre());
+			interesado.setRazonSocial(datosInteresado.getNombre());
 		} else {
-			interesado.setNombre(datosUsuario.getNombre());
-			interesado.setApellido1(datosUsuario.getApellido1());
-			interesado.setApellido2(datosUsuario.getApellido2());
+			interesado.setNombre(datosInteresado.getNombre());
+			interesado.setApellido1(datosInteresado.getApellido1());
+			interesado.setApellido2(datosInteresado.getApellido2());
 		}
+
+		if (datosInteresado.getContacto() != null) {
+			interesado.setPais(datosInteresado.getContacto().getPais());
+			interesado.setProvincia(datosInteresado.getContacto().getProvincia());
+			interesado.setMunicipio(datosInteresado.getContacto().getMunicipio());
+			interesado.setDireccion(datosInteresado.getContacto().getDireccion());
+			interesado.setCodigoPostal(datosInteresado.getContacto().getCodigoPostal());
+			interesado.setEmail(datosInteresado.getContacto().getEmail());
+			interesado.setTelefono(datosInteresado.getContacto().getTelefono());
+		}
+
 		return interesado;
 	}
 

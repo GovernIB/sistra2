@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  */
 @SuppressWarnings("serial")
-public final class DatosUsuario implements ModelApi {
+public class DatosUsuario implements ModelApi {
 
 	/**
 	 * Nombre.
@@ -40,13 +40,13 @@ public final class DatosUsuario implements ModelApi {
 	 * Constructor.
 	 *
 	 * @param pNif
-	 *            Nif
+	 *                       Nif
 	 * @param pNombre
-	 *            Nombre
+	 *                       Nombre
 	 * @param pApellido1
-	 *            Apellido 1
+	 *                       Apellido 1
 	 * @param pApellido2
-	 *            Apellido 2
+	 *                       Apellido 2
 	 */
 	public DatosUsuario(final String pNif, final String pNombre, final String pApellido1, final String pApellido2) {
 		super();
@@ -67,7 +67,7 @@ public final class DatosUsuario implements ModelApi {
 	 * Método para establecer nif.
 	 *
 	 * @param pNif
-	 *            nif a establecer
+	 *                 nif a establecer
 	 */
 	public void setNif(final String pNif) {
 		nif = pNif;
@@ -85,7 +85,7 @@ public final class DatosUsuario implements ModelApi {
 	 * Método para establecer nombre usuario.
 	 *
 	 * @param pNombre
-	 *            nombre a establecer
+	 *                    nombre a establecer
 	 */
 	public void setNombre(final String pNombre) {
 		nombre = pNombre;
@@ -95,7 +95,7 @@ public final class DatosUsuario implements ModelApi {
 	 * Método para establecer apellido1.
 	 *
 	 * @param pApellido1
-	 *            apellido1 a establecer
+	 *                       apellido1 a establecer
 	 */
 	public void setApellido1(final String pApellido1) {
 		apellido1 = pApellido1;
@@ -109,7 +109,7 @@ public final class DatosUsuario implements ModelApi {
 	 * Método para establecer apellido2.
 	 *
 	 * @param pApellido2
-	 *            apellido2 a establecer
+	 *                       apellido2 a establecer
 	 */
 	public void setApellido2(final String pApellido2) {
 		apellido2 = pApellido2;
@@ -171,7 +171,7 @@ public final class DatosUsuario implements ModelApi {
 	 * Método para establecer email.
 	 *
 	 * @param pEmail
-	 *            email a establecer
+	 *                   email a establecer
 	 */
 	public void setCorreo(final String pEmail) {
 		correo = pEmail;

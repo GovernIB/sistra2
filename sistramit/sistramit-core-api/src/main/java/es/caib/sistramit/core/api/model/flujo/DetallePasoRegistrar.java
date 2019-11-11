@@ -49,6 +49,11 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	private Persona representado;
 
 	/**
+	 * Indica si existe representante.
+	 */
+	private Persona representante;
+
+	/**
 	 * Indica si se cumplen las condiciones para registrar (docs firmados, etc.).
 	 */
 	private TypeSiNo registrar = TypeSiNo.NO;
@@ -368,7 +373,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 
 	/**
 	 * Método de acceso a avisoFinalizar.
-	 * 
+	 *
 	 * @return avisoFinalizar
 	 */
 	public AvisoUsuario getAvisoFinalizar() {
@@ -377,12 +382,31 @@ public final class DetallePasoRegistrar extends DetallePaso {
 
 	/**
 	 * Método para establecer avisoFinalizar.
-	 * 
+	 *
 	 * @param avisoFinalizar
 	 *                           avisoFinalizar a establecer
 	 */
 	public void setAvisoFinalizar(final AvisoUsuario avisoFinalizar) {
 		this.avisoFinalizar = avisoFinalizar;
+	}
+
+	/**
+	 * Método de acceso a representante.
+	 * 
+	 * @return representante
+	 */
+	public Persona getRepresentante() {
+		return representante;
+	}
+
+	/**
+	 * Método para establecer representante.
+	 * 
+	 * @param representante
+	 *                          representante a establecer
+	 */
+	public void setRepresentante(final Persona representante) {
+		this.representante = representante;
 	}
 
 }

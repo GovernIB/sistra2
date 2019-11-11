@@ -13,7 +13,7 @@ import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistramit.core.api.exception.AccionPasoNoExisteException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.AvisoUsuario;
-import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
+import es.caib.sistramit.core.api.model.flujo.DatosInteresado;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.DocumentosRegistroPorTipo;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
@@ -315,7 +315,10 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		dpr.setAnexos(UtilsFlujo.obtenerDocumentosTipo(docsRegPorTipo, TypeDocumento.ANEXO));
 		dpr.setPagos(UtilsFlujo.obtenerDocumentosTipo(docsRegPorTipo, TypeDocumento.PAGO));
 		dpr.setPresentador(UtilsFlujo.usuarioPersona(pParamRegistro.getDatosPresentacion().getPresentador()));
-		dpr.setRepresentado(UtilsFlujo.usuarioPersona(pParamRegistro.getDatosRepresentacion().getRepresentado()));
+		if (pParamRegistro.getDatosRepresentacion() != null) {
+			dpr.setRepresentado(UtilsFlujo.usuarioPersona(pParamRegistro.getDatosRepresentacion().getRepresentado()));
+			dpr.setRepresentante(UtilsFlujo.usuarioPersona(pParamRegistro.getDatosRepresentacion().getRepresentante()));
+		}
 		dpr.setRegistrar(TypeSiNo.fromBoolean(dpr.verificarFirmas()));
 		dpr.setAvisoFinalizar(avisoFinalizar);
 		return dpr;
@@ -342,7 +345,7 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 				pVariablesFlujo);
 		// Calculamos parametros representacion
 		final DatosRepresentacion datosRepresentacion = calcularDatosRepresentacion(pIdpaso, pDefinicionTramite,
-				pVariablesFlujo);
+				pVariablesFlujo, datosPresentacion);
 		// Devolvemos parametros registro
 		final ParametrosRegistro res = new ParametrosRegistro();
 		res.setDatosRegistrales(datosRegistrales);
@@ -360,16 +363,15 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	 *                               Definicion tramite
 	 * @param pVariablesFlujo
 	 *                               Variables flujo
+	 * @param datosPresentacion
+	 *                               Datos presentador
 	 * @return Parametros representacion
 	 */
 	private DatosRepresentacion calcularDatosRepresentacion(final String pIdpaso,
-			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo) {
-		// Ejecutamos script calculo representado
-		final DatosUsuario representado = ControladorPasoRegistrarHelper.getInstance()
-				.ejecutarScriptRepresentado(pIdpaso, pDefinicionTramite, pVariablesFlujo, getScriptFlujo());
-
-		final DatosRepresentacion dr = new DatosRepresentacion();
-		dr.setRepresentado(representado);
+			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo,
+			final DatosPresentacion datosPresentacion) {
+		final DatosRepresentacion dr = ControladorPasoRegistrarHelper.getInstance().ejecutarScriptRepresentacion(pIdpaso,
+				pDefinicionTramite, pVariablesFlujo, datosPresentacion, getScriptFlujo());
 		return dr;
 	}
 
@@ -387,8 +389,8 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	private DatosPresentacion calcularDatosPresentacion(final String pIdpaso,
 			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo) {
 		// Calculamos presentador
-		final DatosUsuario presentador = ControladorPasoRegistrarHelper.getInstance().ejecutarScriptPresentador(pIdpaso,
-				pDefinicionTramite, pVariablesFlujo, getScriptFlujo());
+		final DatosInteresado presentador = ControladorPasoRegistrarHelper.getInstance()
+				.ejecutarScriptPresentador(pIdpaso, pDefinicionTramite, pVariablesFlujo, getScriptFlujo());
 
 		final DatosPresentacion datosPresentacion = new DatosPresentacion();
 		datosPresentacion.setPresentador(presentador);

@@ -21,22 +21,44 @@ public interface ResPersonaInt extends PluginScriptRes {
 	 * Establece datos persona.
 	 *
 	 * @param pNif
-	 *            Nif
+	 *                       Nif
 	 * @param pNombre
-	 *            Nombre
+	 *                       Nombre
 	 * @param pApellido1
-	 *            Apellido 1
+	 *                       Apellido 1
 	 * @param pApellido2
-	 *            Apellido 2
+	 *                       Apellido 2
 	 * @throws ScriptException
-	 *             Excepcion
+	 *                             Excepcion
 	 */
 	void setDatosPersona(final String pNif, final String pNombre, final String pApellido1, final String pApellido2)
 			throws ScriptException;
 
 	/**
-	 * Indica si no se devuelven datos de persona.
+	 * Establece datos contacto
 	 * 
+	 * @param pais
+	 *                         código país (SICRES)
+	 * @param provincia
+	 *                         código provincia (SICRES)
+	 * @param municipio
+	 *                         código municipio (SICRES)
+	 * @param direccion
+	 *                         dirección
+	 * @param codigoPostal
+	 *                         código postal
+	 * @param email
+	 *                         email
+	 * @param telefono
+	 *                         teléfono
+	 * @throws ScriptException
+	 */
+	void setDatosContacto(Long pais, Long provincia, Long municipio, String direccion, String codigoPostal,
+			String email, String telefono) throws ScriptException;
+
+	/**
+	 * Indica si no se devuelven datos de persona.
+	 *
 	 * @param nulo
 	 */
 	void setNulo(boolean nulo);

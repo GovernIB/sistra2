@@ -1,0 +1,43 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_REPRESENTACION.crearRepresentante()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REPRESENTACION">DATOS_REPRESENTACION</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REPRESENTACION&metodo=crearRepresentante">crearRepresentante</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	crearRepresentante(): <a href="AyudaServlet?lang=es&plugin=DATOS_PERSONA">Persona</a>
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite indicar representante.  De forma opcional se podrá indicar el representante y de no indicarse se tomará el presentador como representante.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Por ejemplo, supongamos deseamos establecer el representante:</p>
+ <p class="codigoScript">
+var rpte = DATOS_REPRESENTACION.crearRepresentante(); <br/>
+rpte.setDatosPersona('1111111H', 'Pedro', 'Pérez', null);
+</p>
+</body>
+</html>

@@ -214,24 +214,26 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 	}
 
 	@Override
-	public String iniciarSesionRegistroEntrada() throws RegistroPluginException {
+	public String iniciarSesionRegistroEntrada(final String codigoEntidad) throws RegistroPluginException {
 		// Simulamos por timeout
 		return System.currentTimeMillis() + "";
 	}
 
 	@Override
-	public String iniciarSesionRegistroSalida() throws RegistroPluginException {
+	public String iniciarSesionRegistroSalida(final String codigoEntidad) throws RegistroPluginException {
 		// Simulamos por timeout
 		return System.currentTimeMillis() + "";
 	}
 
 	@Override
-	public VerificacionRegistro verificarRegistroEntrada(final String idSesionRegistro) throws RegistroPluginException {
+	public VerificacionRegistro verificarRegistroEntrada(final String codigoEntidad, final String idSesionRegistro)
+			throws RegistroPluginException {
 		return verificarPorTimeout(idSesionRegistro);
 	}
 
 	@Override
-	public VerificacionRegistro verificarRegistroSalida(final String idSesionRegistro) throws RegistroPluginException {
+	public VerificacionRegistro verificarRegistroSalida(final String codigoEntidad, final String idSesionRegistro)
+			throws RegistroPluginException {
 		return verificarPorTimeout(idSesionRegistro);
 	}
 

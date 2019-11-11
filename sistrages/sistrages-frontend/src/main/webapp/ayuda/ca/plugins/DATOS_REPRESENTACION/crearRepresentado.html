@@ -1,0 +1,43 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_REPRESENTACION.crearRepresentado()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REPRESENTACION">DATOS_REPRESENTACION</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REPRESENTACION&metodo=crearRepresentado">crearRepresentado</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	crearRepresentado(): <a href="AyudaServlet?lang=es&plugin=DATOS_PERSONA">Persona</a>
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permiteix indicar representat. En cas d'existir representació, caldrà establir el representat.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Per exemple, suposem desitgem establir el representant</p>
+ <p class="codigoScript">
+var rpdo = DATOS_REPRESENTACION.crearRepresentado(); <br/>
+rpdo.setDatosPersona('1111111H', 'Pedro', 'Pérez', null);
+</p>
+</body>
+</html>

@@ -1,13 +1,13 @@
 package es.caib.sistra2.commons.plugins.registro.regweb3;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 
 import es.caib.regweb3.ws.api.v3.AnexoWs;
+import es.caib.regweb3.ws.api.v3.AsientoRegistralSesionWs;
 import es.caib.regweb3.ws.api.v3.AsientoRegistralWs;
 import es.caib.regweb3.ws.api.v3.DatosInteresadoWs;
 import es.caib.regweb3.ws.api.v3.InteresadoWs;
@@ -158,8 +158,8 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), getTimeoutMillis(), logCalls);
 
 			// creacion de asiento registral de entrada con tipo de operacion normal
-			result = service.crearAsientoRegistral(asientoRegistral.getDatosOrigen().getCodigoEntidad(), paramEntrada,
-					null, true);
+			result = service.crearAsientoRegistral(Long.parseLong(idSesionRegistro),
+					asientoRegistral.getDatosOrigen().getCodigoEntidad(), paramEntrada, null, true, true);
 		} catch (final Exception ex) {
 			throw new RegistroPluginException("Error realizando registro de entrada : " + ex.getMessage(), ex);
 		}
@@ -193,8 +193,9 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 					getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR), getPropiedad(ConstantesRegweb3.PROP_USUARIO),
 					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), getTimeoutMillis(), logCalls);
 			// creacion de asiento registral de salida con tipo de operacion normal
-			result = service.crearAsientoRegistral(asientoRegistral.getDatosOrigen().getCodigoEntidad(), paramEntrada,
-					ConstantesRegweb3.OPERACION_NORMAL, false);
+			result = service.crearAsientoRegistral(Long.parseLong(idSesionRegistro),
+					asientoRegistral.getDatosOrigen().getCodigoEntidad(), paramEntrada,
+					ConstantesRegweb3.OPERACION_NORMAL, true, false);
 		} catch (final Exception ex) {
 			throw new RegistroPluginException("Error realizando registro de salida : " + ex.getMessage(), ex);
 		}
@@ -298,6 +299,28 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 			tipoJustificante = TypeJustificante.FICHERO;
 		}
 		return tipoJustificante;
+	}
+
+	@Override
+	public String iniciarSesionRegistroEntrada(final String codigoEntidad) throws RegistroPluginException {
+		return generarSesionRegweb(codigoEntidad);
+	}
+
+	@Override
+	public String iniciarSesionRegistroSalida(final String codigoEntidad) throws RegistroPluginException {
+		return generarSesionRegweb(codigoEntidad);
+	}
+
+	@Override
+	public VerificacionRegistro verificarRegistroEntrada(final String codigoEntidad, final String idSesionRegistro)
+			throws RegistroPluginException {
+		return verificarRegistroRegweb(codigoEntidad, idSesionRegistro);
+	}
+
+	@Override
+	public VerificacionRegistro verificarRegistroSalida(final String codigoEntidad, final String idSesionRegistro)
+			throws RegistroPluginException {
+		return verificarRegistroRegweb(codigoEntidad, idSesionRegistro);
 	}
 
 	// ----------- Funciones auxiliares
@@ -485,54 +508,72 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		return timeout;
 	}
 
-	@Override
-	public String iniciarSesionRegistroEntrada() throws RegistroPluginException {
-		// TODO ESPERAR A QUE RW3 IMPLEMENTE MECANISMO DE COMPENSACION
-		// Devolvemos tiempo actual
-		return System.currentTimeMillis() + "";
-	}
+	private String generarSesionRegweb(final String codigoEntidad) throws RegistroPluginException {
+		try {
+			final boolean logCalls = (getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES) != null
+					? "true".equals(getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES))
+					: false);
+			// Invoca a Regweb3
+			final RegWebAsientoRegistralWs service = UtilsRegweb3.getAsientoRegistralService(codigoEntidad,
+					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_ASIENTO),
+					getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR), getPropiedad(ConstantesRegweb3.PROP_USUARIO),
+					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), getTimeoutMillis(), logCalls);
 
-	@Override
-	public String iniciarSesionRegistroSalida() throws RegistroPluginException {
-		// TODO ESPERAR A QUE RW3 IMPLEMENTE MECANISMO DE COMPENSACION
-		// Devolvemos tiempo actual
-		return System.currentTimeMillis() + "";
-	}
-
-	@Override
-	public VerificacionRegistro verificarRegistroEntrada(final String idSesionRegistro) throws RegistroPluginException {
-		return verificarPorTimeout(idSesionRegistro);
-	}
-
-	@Override
-	public VerificacionRegistro verificarRegistroSalida(final String idSesionRegistro) throws RegistroPluginException {
-		return verificarPorTimeout(idSesionRegistro);
-	}
-
-	private VerificacionRegistro verificarPorTimeout(final String idSesionRegistro) throws RegistroPluginException {
-		// TODO ESPERAR A QUE RW3 IMPLEMENTE MECANISMO DE COMPENSACION
-		// De momento recibiremos como idSesionRegistro el timestamp de cuando se inició
-		// el registro y lo que hacemos es esperar a que se cumpla el timeout (por si en
-		// una petición anterior se completa). Si se
-		// cumple el timeout y en otra petición no se ha acabado el registro lo damos
-		// como no finalizado. Esto no funcionaria si se carga el trámite en otra
-		// sesión.
-		// Si se completa el registro dentro de la misma sesión se repintaría el paso
-
-		final Long timestampInicioRegistro = new Long(idSesionRegistro);
-		final Long timeout = getTimeoutMillis();
-		TypeEstadoRegistro estado = TypeEstadoRegistro.NO_REALIZADO;
-
-		final Date limite = new Date(timestampInicioRegistro + timeout);
-		final Date ahora = new Date();
-		if (ahora.before(limite)) {
-			estado = TypeEstadoRegistro.EN_PROCESO;
+			// creacion de asiento registral de entrada con tipo de operacion normal
+			final Long result = service.obtenerSesionRegistro(codigoEntidad);
+			return result.toString();
+		} catch (final Exception ex) {
+			throw new RegistroPluginException("Error realizando registro de entrada : " + ex.getMessage(), ex);
 		}
+	}
 
-		final VerificacionRegistro res = new VerificacionRegistro();
-		res.setEstado(estado);
+	private VerificacionRegistro verificarRegistroRegweb(final String codigoEntidad, final String idSesionRegistro)
+			throws RegistroPluginException {
+		try {
+			final boolean logCalls = (getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES) != null
+					? "true".equals(getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES))
+					: false);
+			// Invoca a Regweb3
+			final RegWebAsientoRegistralWs service = UtilsRegweb3.getAsientoRegistralService(codigoEntidad,
+					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_ASIENTO),
+					getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR), getPropiedad(ConstantesRegweb3.PROP_USUARIO),
+					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), getTimeoutMillis(), logCalls);
 
-		return res;
+			final AsientoRegistralSesionWs result = service.verificarAsientoRegistral(codigoEntidad,
+					Long.parseLong(idSesionRegistro));
+
+			ResultadoRegistro datosRegistro = null;
+			TypeEstadoRegistro estado = null;
+			switch (result.getEstado().intValue()) {
+			case 0: // Sessió no iniciada
+				estado = TypeEstadoRegistro.EN_PROCESO;
+				break;
+			case 1: // Sessió iniciada
+				estado = TypeEstadoRegistro.EN_PROCESO;
+				break;
+			case 2: // Sessió finalitzada
+				estado = TypeEstadoRegistro.REALIZADO;
+				datosRegistro = new ResultadoRegistro();
+				datosRegistro.setNumeroRegistro(result.getAsientoRegistralWs().getNumeroRegistroFormateado());
+				datosRegistro.setFechaRegistro(result.getAsientoRegistralWs().getFechaRegistro());
+				break;
+			case 3: // Sessió error
+				estado = TypeEstadoRegistro.NO_REALIZADO;
+				break;
+			default:
+				throw new RegistroPluginException("Valor estado no controlado : " + result.getEstado());
+			}
+
+			final VerificacionRegistro res = new VerificacionRegistro();
+			res.setEstado(estado);
+			res.setDatosRegistro(datosRegistro);
+			return res;
+
+		} catch (final Exception ex) {
+			throw new RegistroPluginException(
+					"Error realizando verificacion registro con id sesion " + idSesionRegistro + ": " + ex.getMessage(),
+					ex);
+		}
 	}
 
 }

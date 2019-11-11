@@ -148,6 +148,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 				resFirma.setFirmaContenido(fic.getFirmaFichero());
 				resFirma.setFirmaTipo(tipoFirma);
 				resFirma.setValida(true);
+				resFirma.setVerificar(plgFirma.isVerificarFirma());
 			} else if (estado == TypeEstadoFirmado.CANCELADO) {
 				resFirma.setCancelada(true);
 			}

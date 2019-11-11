@@ -297,7 +297,7 @@ public class VersionTramiteAdapter {
 				AdapterUtils.generarLiteralIdioma(paso.getInstruccionesFinTramitacion(), idioma));
 		resPaso.setScriptDestino(AdapterUtils.generaScript(paso.getScriptDestinoRegistro(), idioma));
 		resPaso.setScriptPresentador(AdapterUtils.generaScript(paso.getScriptPresentador(), idioma));
-		resPaso.setScriptRepresentante(AdapterUtils.generaScript(paso.getScriptRepresentante(), idioma));
+		resPaso.setScriptRepresentacion(AdapterUtils.generaScript(paso.getScriptRepresentante(), idioma));
 		resPaso.setScriptValidar(AdapterUtils.generaScript(paso.getScriptValidarRegistrar(), idioma));
 		resPaso.setValidaRepresentacion(paso.isValidaRepresentacion());
 		resPaso.setPermiteSubsanar(paso.isPermiteSubsanar());

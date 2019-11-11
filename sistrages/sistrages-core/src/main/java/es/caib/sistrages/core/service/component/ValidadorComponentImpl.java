@@ -736,7 +736,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 				pTramiteVersion.getListaAuxDominios(), pIdiomasTramiteVersion, pIdioma, listaErrores,
 				UtilJSON.toJSON(params));
 
-		params.put("TIPO_SCRIPT_FLUJO", UtilJSON.toJSON(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO));
+		params.put("TIPO_SCRIPT_FLUJO", UtilJSON.toJSON(TypeScriptFlujo.SCRIPT_REPRESENTACION_REGISTRO));
 
 		comprobarScript(pasoRegistrar.getScriptRepresentante(), "tramitePasoRegistrar.scriptRepresentante",
 				new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },

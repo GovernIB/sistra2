@@ -59,7 +59,7 @@ public enum TypeScriptFlujo implements TypeScript {
 	/**
 	 * Script para indicar si se actua en nombre de un representado.
 	 */
-	SCRIPT_REPRESENTADO_REGISTRO,
+	SCRIPT_REPRESENTACION_REGISTRO,
 	/**
 	 * Script para establecer una validación de si se permite registrar.
 	 */
