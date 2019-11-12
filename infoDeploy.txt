@@ -1,0 +1,16 @@
+Para deployar el proyecto, se debe comentar todos los módulos y dejar sólo los restapi:
+
+<modules>
+	<!-- Modulos comunes
+	<module>sistracom</module>-->
+
+	<!-- Apis entre modulos -->
+	<module>sistrages/sistrages-rest-api</module>
+	<module>sistramit/sistramit-rest-api</module>
+
+	<!-- Modulos aplicacion
+	<module>sistramit</module>
+	<module>sistrages</module>
+	<module>sistrahelp</module>-->
+</modules>
+
