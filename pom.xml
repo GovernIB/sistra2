@@ -58,7 +58,7 @@
 		<plugins-ib.version>2.0.0</plugins-ib.version>
 		<xmlbeans.version>2.6.0</xmlbeans.version>
 		<loginib.version>2.0.0</loginib.version>
-		<paymentib.version>1.0.0</paymentib.version>
+		<paymentib.version>1.0.1</paymentib.version>
 		<firmasimple.version>1.0</firmasimple.version>
 		<firmasimple.jersey.version>1.0.0</firmasimple.jersey.version>
 		<itext.version>2.1.7</itext.version>
