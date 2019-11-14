@@ -18,6 +18,14 @@
 		<li><span class="nombreCampo">Descripci&oacute;:</span> text descriptiu de l'objecte de la propietat. Aquest valor no &eacute;s modificable, es mostra com a nom&eacute;s lectura</li>
 	</ul>
 </p>
+<p>
+En els valors de les propietats és possible fer ús de placeholders per a associar valors:
+		<ul class="detalle">
+		<li><span class="boton">${system.<i>nom_propietat</i>}:</span> Per establir el valor a partir d'una propietat de sistema. Per exemple,  ${system.rolsac.user} obtindria el valor de la propietat de sistema rolsac.user</li>
+		<li><span class="boton">${config.<i>nom_propietat</i>}:</span> Per establir el valor a partir d'una propietat del fitxer de propietats de Sistrages (sistrages.properties).Per exemple,  ${config.rolsac.user} obtindria el valor de la propietat rolsac.user en el fitxer sistrages.properties</li>
+		</ul>
+		</li>
+</p>
 <h2 class="stgH2">OPERATIVA</h2>
 <p>
 	<ul>
