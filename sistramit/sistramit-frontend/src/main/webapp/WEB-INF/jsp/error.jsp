@@ -25,13 +25,14 @@
 
 	<link rel="stylesheet" media="screen" href="<c:out value="${pageContext.request.contextPath}"/>/base/css/imc-sf--general.css" />
 
+	<c:if test="${not empty error.url}">
 	<script type="text/javascript">
 
 			function redireccion() {
 				document.location="${error.url}";
 			}
-
 	</script>
+	</c:if>
 </head>
 
 <body>
@@ -44,9 +45,11 @@
 			<div>
 				<c:out value="${error.mensaje.texto}"/>
 			</div>
+			<c:if test="${not empty error.url}">
 			<div class="imc--botonera">
 				<a href="javascript:redireccion();"><span><spring:message code="error.continuar"/></span></a>
 			</div>
+			</c:if>
 		</div>
 
 </body>

@@ -74,13 +74,20 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Inicia trámite.
 	 *
-	 * @param tramite           Trámite
-	 * @param version           Versión
-	 * @param idioma            Idioma
-	 * @param idTramiteCatalogo Id trámite en catálogo de servicios
-	 * @param parametros        Parameros de inicio del trámite. Lista separada por
-	 *                          -_- (p.e.: param1-_-valor1-_-param2-_-valor2)
-	 * @param request           request
+	 * @param tramite
+	 *                              Trámite
+	 * @param version
+	 *                              Versión
+	 * @param idioma
+	 *                              Idioma
+	 * @param idTramiteCatalogo
+	 *                              Id trámite en catálogo de servicios
+	 * @param parametros
+	 *                              Parameros de inicio del trámite. Lista separada
+	 *                              por -_- (p.e.:
+	 *                              param1-_-valor1-_-param2-_-valor2)
+	 * @param request
+	 *                              request
 	 * @return Redireccion a mostrar asistente
 	 * @throws IOException
 	 */
@@ -135,7 +142,8 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Carga trámite existente y redirige a la página del asistente.
 	 *
-	 * @param idSesionCifrado Identificador sesión de tramitación (cifrado)
+	 * @param idSesionCifrado
+	 *                            Identificador sesión de tramitación (cifrado)
 	 * @return Vista que redirige al asistente
 	 */
 	@RequestMapping("/cargarTramite.html")
@@ -293,7 +301,8 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Devuelve JSON con el paso indicado.
 	 *
-	 * @param idPaso Identificador del formulario.
+	 * @param idPaso
+	 *                   Identificador del formulario.
 	 * @return Devuelve JSON con estado actual del trámite.
 	 */
 	@RequestMapping(value = "/irAPaso.json", method = RequestMethod.POST)
@@ -396,7 +405,8 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Retorno gestor pago externo.
 	 *
-	 * @param ticket ticket
+	 * @param ticket
+	 *                   ticket
 	 * @return retorno de pago externo recargando el trámite
 	 */
 	@RequestMapping(value = "/retornoPagoExterno.html")
@@ -430,7 +440,8 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Retorno gestor formulario externo.
 	 *
-	 * @param ticket ticket
+	 * @param ticket
+	 *                   ticket
 	 * @return retorno de formulario externo recargando el trámite
 	 */
 	@RequestMapping(value = "/retornoFormularioExterno.html")
@@ -445,7 +456,8 @@ public class AsistenteTramitacionController extends TramitacionController {
 	 * Retorno componente de firma externo (no se gestiona con ticket, se presupone
 	 * dentro de la misma sesión).
 	 *
-	 * @param ticket ticket
+	 * @param ticket
+	 *                   ticket
 	 * @return retorno de componente de firma externo recargando el trámite
 	 */
 	@RequestMapping(value = "/retornoFirmaExterno.html")
@@ -504,9 +516,12 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Retorno desde gestor formularios interno.
 	 *
-	 * @param idPaso       id paso
-	 * @param idFormulario id formulario
-	 * @param ticket       id sesión formulario
+	 * @param idPaso
+	 *                         id paso
+	 * @param idFormulario
+	 *                         id formulario
+	 * @param ticket
+	 *                         id sesión formulario
 	 * @return Actualiza datos formulario y recarga asistente
 	 */
 	@RequestMapping(value = "/retornoGestorFormularioInterno.html")
@@ -559,30 +574,44 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Retorno desde carpeta ciudadano.
 	 *
-	 * @param ticket ticket
+	 * @param ticket
+	 *                   ticket
 	 * @return carga asistente
 	 */
 	@RequestMapping(value = "/retornoCarpetaCiudadano.html")
-	public ModelAndView retornoCarpetaCiudadano(@RequestParam("ticket") final String ticket) {
+	public ModelAndView retornoCarpetaCiudadano(@RequestParam("ticket") final String ticket,
+			final HttpServletRequest request) {
 		// Obtenemos datos ticket
 		final InfoTicketAcceso infoTicket = securityService.obtenerTicketAccesoCDC(ticket);
-		// Cargamos tramite de persistencia
-		final String idSesionTramitacion = infoTicket.getIdSesionTramitacion();
-		this.cargarTramiteImpl(idSesionTramitacion, false);
-		// Redirigimos a carga asistente
-		return new ModelAndView(URL_REDIRIGIR_ASISTENTE);
+		try {
+			// Cargamos tramite de persistencia
+			final String idSesionTramitacion = infoTicket.getIdSesionTramitacion();
+			this.cargarTramiteImpl(idSesionTramitacion, false);
+			// Redirigimos a carga asistente
+			return new ModelAndView(URL_REDIRIGIR_ASISTENTE);
+		} catch (final Exception ex) {
+			// Capturamos error para poder redirigir a url callback
+			return generarViewForException(ex, infoTicket.getUrlCallbackError(), request);
+		}
 	}
 
 	/**
 	 * Petición ayuda mediante formulario soporte.
 	 *
-	 * @param nif          Nif
-	 * @param nombre       Nombre
-	 * @param telefono     Teléfono
-	 * @param email        Email
-	 * @param problemaTipo Tipo problema
-	 * @param problemaDesc Descripción problema
-	 * @param request      request
+	 * @param nif
+	 *                         Nif
+	 * @param nombre
+	 *                         Nombre
+	 * @param telefono
+	 *                         Teléfono
+	 * @param email
+	 *                         Email
+	 * @param problemaTipo
+	 *                         Tipo problema
+	 * @param problemaDesc
+	 *                         Descripción problema
+	 * @param request
+	 *                         request
 	 * @return
 	 */
 	@RequestMapping(value = "/formularioSoporte.json", method = RequestMethod.POST)
@@ -631,7 +660,8 @@ public class AsistenteTramitacionController extends TramitacionController {
 	}
 
 	/**
-	 * Redirigimos peticiones al contexto raíz de asistente para que redirija a asistente.html.
+	 * Redirigimos peticiones al contexto raíz de asistente para que redirija a
+	 * asistente.html.
 	 */
 	@RequestMapping(value = "/")
 	public ModelAndView index() {
@@ -645,9 +675,11 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/**
 	 * Carga el tramite y lo registra en sesion.
 	 *
-	 * @param pIdSesion Id sesion
-	 * @param recarga   Indica si es una recarga dentro del flujo (formularios,
-	 *                  pagos,..) o una carga del trámite desde persistencia.
+	 * @param pIdSesion
+	 *                      Id sesion
+	 * @param recarga
+	 *                      Indica si es una recarga dentro del flujo (formularios,
+	 *                      pagos,..) o una carga del trámite desde persistencia.
 	 */
 	private void cargarTramiteImpl(final String pIdSesion, final boolean recarga) {
 

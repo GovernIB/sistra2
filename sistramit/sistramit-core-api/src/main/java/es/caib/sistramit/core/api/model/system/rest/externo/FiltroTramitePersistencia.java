@@ -6,6 +6,8 @@ import java.util.Date;
 /**
  * Filtros para la persistencia (RestApiExternaService)
  *
+ * Busqueda por: - nif/fechaDesde/fechaHasta - idSesionTramitacion
+ *
  * @author Indra
  *
  */
@@ -15,6 +17,7 @@ public class FiltroTramitePersistencia implements Serializable {
 	private String nif;
 	private Date fechaDesde;
 	private Date fechaHasta;
+	private String idSesionTramitacion;
 
 	public FiltroTramitePersistencia() {
 		super();
@@ -42,6 +45,25 @@ public class FiltroTramitePersistencia implements Serializable {
 
 	public void setFechaHasta(final Date fechaHasta) {
 		this.fechaHasta = fechaHasta;
+	}
+
+	/**
+	 * Método de acceso a idSesionTramitacion.
+	 * 
+	 * @return idSesionTramitacion
+	 */
+	public String getIdSesionTramitacion() {
+		return idSesionTramitacion;
+	}
+
+	/**
+	 * Método para establecer idSesionTramitacion.
+	 * 
+	 * @param idSesionTramitacion
+	 *                                idSesionTramitacion a establecer
+	 */
+	public void setIdSesionTramitacion(final String idSesionTramitacion) {
+		this.idSesionTramitacion = idSesionTramitacion;
 	}
 
 }

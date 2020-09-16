@@ -72,7 +72,7 @@ public abstract class TramitacionController {
 	 * Guarda en la sesión http la referencia al flujo de tramitación.
 	 *
 	 * @param pidSesionTramitacion
-	 *            Id sesión
+	 *                                 Id sesión
 	 */
 	protected final void registraSesionTramitacion(final DetalleTramite dt) {
 		sesionHttp.setIdSesionTramitacion(dt.getTramite().getIdSesion());
@@ -87,7 +87,7 @@ public abstract class TramitacionController {
 	 * sesión en el gestor de formularios interno.
 	 *
 	 * @param pidSesionFormulario
-	 *            Sesión en el gestor de formularios interno
+	 *                                Sesión en el gestor de formularios interno
 	 */
 	protected final void registraSesionFormulario(final String pidSesionFormulario) {
 		sesionHttp.setIdSesionFormulario(pidSesionFormulario);
@@ -191,7 +191,7 @@ public abstract class TramitacionController {
 	 * Genera JsonView.
 	 *
 	 * @param res
-	 *            RepuestaJSON
+	 *                RepuestaJSON
 	 * @return JsonView
 	 */
 	protected final ModelAndView generarJsonView(final RespuestaJSON res) {
@@ -204,9 +204,9 @@ public abstract class TramitacionController {
 	 * Genera view para descarga de fichero.
 	 *
 	 * @param nomFichero
-	 *            Nombre fichero con extensión
+	 *                       Nombre fichero con extensión
 	 * @param contenido
-	 *            Contenido del fichero
+	 *                       Contenido del fichero
 	 * @return DownloadView
 	 */
 	protected final ModelAndView generarDownloadView(final String nomFichero, final byte[] contenido) {
@@ -221,7 +221,7 @@ public abstract class TramitacionController {
 	 * la función fileUploaded del html parent pasando la respuesta json.
 	 *
 	 * @param res
-	 *            RepuestaJSON
+	 *                RepuestaJSON
 	 * @return DownloadView
 	 */
 	protected final ModelAndView generarUploadView(final RespuestaJSON res) {
@@ -234,7 +234,7 @@ public abstract class TramitacionController {
 	 * Genera view para generar un html de forma dinámica.
 	 *
 	 * @param html
-	 *            Html
+	 *                 Html
 	 * @return HtmlView
 	 */
 	protected final ModelAndView generarHtmlView(final byte[] html) {
@@ -248,7 +248,7 @@ public abstract class TramitacionController {
 	 * Genera view para generar un css de forma dinámica.
 	 *
 	 * @param css
-	 *            Css
+	 *                Css
 	 * @return HtmlView
 	 */
 	protected final ModelAndView generarCssView(final byte[] css) {
@@ -262,7 +262,7 @@ public abstract class TramitacionController {
 	 * Genera view para generar un imagen de forma dinámica.
 	 *
 	 * @param imagen
-	 *            imagen
+	 *                   imagen
 	 * @return HtmlView
 	 */
 	protected final ModelAndView generarImageView(final byte[] imagen) {
@@ -285,9 +285,9 @@ public abstract class TramitacionController {
 	 * Muestra mensaje de debug.
 	 *
 	 * @param message
-	 *            Mensaje a mostrar.
+	 *                      Mensaje a mostrar.
 	 * @param exception
-	 *            Excepcion.
+	 *                      Excepcion.
 	 */
 	protected final void debug(final String message) {
 		String idSesion = null;
@@ -303,14 +303,29 @@ public abstract class TramitacionController {
 	 * Handler de excepciones de negocio.
 	 *
 	 * @param pex
-	 *            Excepción
+	 *                    Excepción
 	 * @param request
-	 *            Request
+	 *                    Request
 	 * @return Respuesta JSON indicando el mensaje producido
 	 */
 	@ExceptionHandler({ Exception.class })
 	public final ModelAndView handleServiceException(final Exception pex, final HttpServletRequest request) {
+		return generarViewForException(pex, null, request);
+	}
 
+	/**
+	 * Genera view para excepcion.
+	 *
+	 * @param pex
+	 *                              Excepcion
+	 * @param urlRedirectForced
+	 *                              Fuerza que la url de redirección sea la indicada
+	 * @param request
+	 *                              Request
+	 * @return view
+	 */
+	protected ModelAndView generarViewForException(final Exception pex, final String urlRedirectForced,
+			final HttpServletRequest request) {
 		// Si no es una excepcion de negocio ni una excepcion generada
 		// explicitamente desde front lo tomamos como una excepcion no
 		// controlada de front
@@ -325,6 +340,11 @@ public abstract class TramitacionController {
 
 		// Generamos respuesta JSON
 		final RespuestaJSON res = errores.generarRespuestaJsonExcepcion(ex, getIdioma());
+
+		// Comprobamos si se fuerza url redireccion
+		if (StringUtils.isNotBlank(urlRedirectForced)) {
+			res.setUrl(urlRedirectForced);
+		}
 
 		// Diferenciamos si es una llamada json
 		ModelAndView view;
@@ -380,7 +400,7 @@ public abstract class TramitacionController {
 	 * Establece mensaje a mostrar al cargar el asistente.
 	 *
 	 * @param mensaje
-	 *            mensaje
+	 *                    mensaje
 	 */
 	protected final void setMensajeAsistente(final MensajeAsistente mensaje) {
 		if (sesionHttp != null) {
@@ -407,15 +427,15 @@ public abstract class TramitacionController {
 	 * Genera mensaje asistente.
 	 *
 	 * @param literalTitulo
-	 *            Literal titulo
+	 *                              Literal titulo
 	 * @param literalMensaje
-	 *            Literal mensaje
+	 *                              Literal mensaje
 	 * @param mensajeIncorrecto
-	 *            Detalle mensaje error
+	 *                              Detalle mensaje error
 	 * @param tipoRespuesta
-	 *            Tipo respuesta
+	 *                              Tipo respuesta
 	 * @param recargarTramite
-	 *            Si se recarga el trámite
+	 *                              Si se recarga el trámite
 	 * @return
 	 */
 	protected final MensajeAsistente generarMensajeErrorAsistente(final String literalTitulo,
@@ -442,13 +462,13 @@ public abstract class TramitacionController {
 	 * Genera mensaje asistente.
 	 *
 	 * @param literalTitulo
-	 *            Literal titulo
+	 *                              Literal titulo
 	 * @param literalMensaje
-	 *            Literal mensaje
+	 *                              Literal mensaje
 	 * @param mensajeIncorrecto
-	 *            Detalle mensaje error
+	 *                              Detalle mensaje error
 	 * @param tipoRespuesta
-	 *            Tipo respuesta
+	 *                              Tipo respuesta
 	 * @return
 	 */
 	protected final MensajeUsuario generarMensajeUsuario(final String literalTitulo, final String literalMensaje) {
@@ -482,7 +502,7 @@ public abstract class TramitacionController {
 	 * Genera mensaje para pagos.
 	 *
 	 * @param verificacion
-	 *            verificacion pago
+	 *                         verificacion pago
 	 * @return mensaje asistente
 	 */
 	protected MensajeAsistente generarMensajeValidacionPago(final PagoVerificacion verificacion) {
@@ -523,6 +543,15 @@ public abstract class TramitacionController {
 		ma.setTipo(tipoMensaje);
 		ma.setMensaje(mensajeUsuario);
 		return ma;
+	}
+
+	/**
+	 * Método de acceso a errores.
+	 *
+	 * @return errores
+	 */
+	public Errores getErrores() {
+		return errores;
 	}
 
 }

@@ -36,6 +36,7 @@ public class TicketCDCDaoImpl implements TicketCDCDao {
 		hTck.setTicket(ticket);
 		hTck.setFechaInicio(new Date());
 		hTck.setIdSesionTramitacion(pInfoTicketAcceso.getIdSesionTramitacion());
+		hTck.setUrlCallbackError(pInfoTicketAcceso.getUrlCallbackError());
 
 		try {
 			hTck.setInfoAutenticacion(Serializador.serialize(pInfoTicketAcceso.getUsuarioAutenticadoInfo()));
@@ -49,12 +50,13 @@ public class TicketCDCDaoImpl implements TicketCDCDao {
 	}
 
 	@Override
-	public InfoTicketAcceso obtieneTicketAcceso(String ticket) {
+	public InfoTicketAcceso obtieneTicketAcceso(final String ticket) {
 		// Recuperamos ticket
 		final HTicketCDC h = recuperarTicket(ticket);
 		// Devolvemos info ticket
 		final InfoTicketAcceso infoTicket = new InfoTicketAcceso();
 		infoTicket.setIdSesionTramitacion(h.getIdSesionTramitacion());
+		infoTicket.setUrlCallbackError(h.getUrlCallbackError());
 		try {
 			infoTicket.setUsuarioAutenticadoInfo(
 					(UsuarioAutenticadoInfo) Serializador.deserialize(h.getInfoAutenticacion()));
@@ -67,7 +69,7 @@ public class TicketCDCDaoImpl implements TicketCDCDao {
 	}
 
 	@Override
-	public void consumirTicketAcceso(String ticket) {
+	public void consumirTicketAcceso(final String ticket) {
 		// Recuperamos ticket
 		final HTicketCDC h = recuperarTicket(ticket);
 		// Consumimos ticket
@@ -80,10 +82,10 @@ public class TicketCDCDaoImpl implements TicketCDCDao {
 	 * Recupera info ticket.
 	 *
 	 * @param ticket
-	 *            ticket
+	 *                   ticket
 	 * @return Info ticket
 	 */
-	private HTicketCDC recuperarTicket(String ticket) {
+	private HTicketCDC recuperarTicket(final String ticket) {
 		final String sql = "SELECT t FROM HTicketCDC t WHERE t.ticket = :ticket";
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("ticket", ticket);

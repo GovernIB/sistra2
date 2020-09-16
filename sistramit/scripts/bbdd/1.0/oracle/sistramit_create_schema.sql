@@ -783,7 +783,8 @@ create table STT_TCKCDC
    TCC_IDESTR           VARCHAR2(50 CHAR)    not null,
    TCC_INFAUT           BLOB,
    TCC_FECFIN           DATE,
-   TCC_TCKUSA           NUMBER(1)            default 0
+   TCC_TCKUSA           NUMBER(1)            default 0,
+   TCC_URLERR           VARCHAR2(200 CHAR)
 )
 TABLESPACE SISTRAMIT
    LOB (TCC_INFAUT) STORE AS STT_TCKCDC_INFAUT_LOB
@@ -813,6 +814,9 @@ comment on column STT_TCKCDC.TCC_FECFIN is
 
 comment on column STT_TCKCDC.TCC_TCKUSA is
 'Indica si el ticket se ha usado para retornar';
+
+comment on column STT_TCKCDC.TCC_URLERR is
+'Url callback error si no puede acceder al trámite';
 
 alter table STT_TCKCDC
    add constraint STT_TCKCDC_PK primary key (TCC_CODIGO);

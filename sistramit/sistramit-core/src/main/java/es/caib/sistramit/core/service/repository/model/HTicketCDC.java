@@ -54,6 +54,10 @@ public final class HTicketCDC implements IModelApi {
 	@Column(name = "TCC_TCKUSA")
 	private boolean usadoRetorno;
 
+	/** Atributo url callback error. */
+	@Column(name = "TCC_URLERR")
+	private String urlCallbackError;
+
 	/**
 	 * Método para obtener el campo codigo.
 	 *
@@ -185,6 +189,25 @@ public final class HTicketCDC implements IModelApi {
 	 */
 	public void setUsadoRetorno(final boolean pUsadoRetorno) {
 		usadoRetorno = pUsadoRetorno;
+	}
+
+	/**
+	 * Método de acceso a urlCallbackError.
+	 * 
+	 * @return urlCallbackError
+	 */
+	public String getUrlCallbackError() {
+		return urlCallbackError;
+	}
+
+	/**
+	 * Método para establecer urlCallbackError.
+	 * 
+	 * @param urlCallbackError
+	 *                             urlCallbackError a establecer
+	 */
+	public void setUrlCallbackError(final String urlCallbackError) {
+		this.urlCallbackError = urlCallbackError;
 	}
 
 }

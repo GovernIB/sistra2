@@ -3,7 +3,10 @@ package es.caib.sistramit.rest.externa.v1;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -68,7 +71,7 @@ public class ApiExternaRestController {
 		return rListaEventos;
 	}
 
-	@ApiOperation(value = "Recuperación de trámites", notes = "Solicita recuperación trámites en persistencia", response = RTramitePersistencia.class, responseContainer = "List")
+	@ApiOperation(value = "Recuperación trámites en persistencia", notes = "Recuperación trámites en persistencia", response = RTramitePersistencia.class, responseContainer = "List")
 	@RequestMapping(value = "/tramite", method = RequestMethod.POST)
 	public List<RTramitePersistencia> obtenerTramitesPersistencia(
 			@RequestBody final RFiltroTramitePersistencia pFiltro) {
@@ -88,6 +91,26 @@ public class ApiExternaRestController {
 		}
 
 		return rListaTramites;
+	}
+
+	@ApiOperation(value = "Recupera info trámite en persistencia", notes = "Recupera info trámite en persistencia", response = String.class)
+	@RequestMapping(value = "/tramite/{idSesionTramitacion}", method = RequestMethod.GET)
+	public RTramitePersistencia obtenerTramitePersistencia(
+			@PathVariable("idSesionTramitacion") final String idSesionTramitacion,
+			final HttpServletResponse servletResponse) {
+
+		final FiltroTramitePersistencia filtroBusqueda = new FiltroTramitePersistencia();
+		filtroBusqueda.setIdSesionTramitacion(idSesionTramitacion);
+		final List<TramitePersistencia> listaTramites = restApiExternaService.recuperarTramites(filtroBusqueda);
+
+		RTramitePersistencia res = null;
+		if (listaTramites != null && !listaTramites.isEmpty()) {
+			res = convierteTramitePersistencia(listaTramites.get(0));
+			return res;
+		} else {
+			servletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			return null;
+		}
 	}
 
 	@ApiOperation(value = "Obtener ticket de acceso", notes = "Obtener ticket de acceso", response = String.class)
@@ -116,6 +139,7 @@ public class ApiExternaRestController {
 			info = new InfoTicketAcceso();
 
 			info.setIdSesionTramitacion(pRInfo.getIdSesionTramitacion());
+			info.setUrlCallbackError(pRInfo.getUrlCallbackError());
 
 			final RUsuarioAutenticadoInfo rUsuarioAutenticadoInfo = pRInfo.getUsuarioAutenticadoInfo();
 			if (rUsuarioAutenticadoInfo != null) {

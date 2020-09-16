@@ -103,11 +103,11 @@ public final class ErroresImpl implements Errores {
 	 * Establece url tras excepción.
 	 *
 	 * @param pEx
-	 *            Excepción
+	 *                       Excepción
 	 * @param pIdioma
-	 *            Idioma
+	 *                       Idioma
 	 * @param pTipoError
-	 *            Tipo error
+	 *                       Tipo error
 	 * @return url tras excepción (nulo si no se establece ninguna)
 	 */
 	private String devolverUrlExcepcion(final Exception pEx, final String pIdioma, final TypeRespuestaJSON pTipoError) {
@@ -126,16 +126,22 @@ public final class ErroresImpl implements Errores {
 
 		// Si es una excepción para la que no hay que recargar, intentamos redirigir a
 		// entidad
-		if (!isExceptionServiceRecargar(pEx) && (pTipoError == TypeRespuestaJSON.FATAL) && sesionHttp != null
-				&& sesionHttp.getIdTramite() != null) {
-			try {
-				final String urlEntidad = flujoTramitacionService.obtenerUrlEntidad(sesionHttp.getIdTramite(),
-						sesionHttp.getVersion(), sesionHttp.getIdioma());
-				if (StringUtils.isNotBlank(urlEntidad)) {
-					url = urlEntidad;
+		if (!isExceptionServiceRecargar(pEx)) {
+
+			// Por defecto sin url
+			url = null;
+
+			// Info establecida en sesion (tramite en curso)
+			if (sesionHttp != null && sesionHttp.getIdTramite() != null) {
+				try {
+					final String urlEntidad = flujoTramitacionService.obtenerUrlEntidad(sesionHttp.getIdTramite(),
+							sesionHttp.getVersion(), sesionHttp.getIdioma());
+					if (StringUtils.isNotBlank(urlEntidad)) {
+						url = urlEntidad;
+					}
+				} catch (final Exception ex) {
+					// Mantenemos url defecto
 				}
-			} catch (final Exception ex) {
-				// Mantenemos url defecto
 			}
 		}
 
@@ -146,11 +152,11 @@ public final class ErroresImpl implements Errores {
 	 * Devuelte titulo excepcion.
 	 *
 	 * @param pEx
-	 *            Excepcion
+	 *                       Excepcion
 	 * @param idioma
-	 *            Idioma
+	 *                       Idioma
 	 * @param pTipoError
-	 *            Tipo error
+	 *                       Tipo error
 	 * @return Titulo excepcion
 	 */
 	private String devolverTituloExcepcion(final Exception pEx, final String idioma,
@@ -173,9 +179,9 @@ public final class ErroresImpl implements Errores {
 	 * Método para devolver mensaje error de la clase TramitacionController.
 	 *
 	 * @param ex
-	 *            Parámetro ex
+	 *                   Parámetro ex
 	 * @param idioma
-	 *            Parámetro idioma
+	 *                   Parámetro idioma
 	 * @return el string
 	 */
 	private String devolverMensajeError(final Exception ex, final String idioma) {
@@ -202,7 +208,7 @@ public final class ErroresImpl implements Errores {
 	 * Obtiene nombre excepcion.
 	 *
 	 * @param ex
-	 *            Excepcion
+	 *               Excepcion
 	 * @return nombre excepcion
 	 */
 	private String getNombreExcepcion(final Exception ex) {
@@ -227,7 +233,7 @@ public final class ErroresImpl implements Errores {
 	 * el tramite.
 	 *
 	 * @param pEx
-	 *            Exception
+	 *                Exception
 	 * @return true si se debe intentar recargar el tramite.
 	 */
 	private boolean isExceptionServiceRecargar(final Exception pEx) {

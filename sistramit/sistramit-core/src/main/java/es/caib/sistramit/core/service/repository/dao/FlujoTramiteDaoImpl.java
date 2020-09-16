@@ -354,28 +354,40 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		final Root<HSesionTramitacion> tableS = query.from(HSesionTramitacion.class);
 
 		Predicate predicate = builder.equal(tableT.get("sesionTramitacion"), tableS);
-		predicate = builder.and(predicate,
-				builder.equal(tableT.get("nifIniciador"), pFiltro.getNif().trim().toUpperCase()));
 
+		// Filtro por idSesionTramitacion o por (nif/fecha inicio/fecha fin)
+		if (StringUtils.isNotBlank(pFiltro.getIdSesionTramitacion())) {
+			predicate = builder.and(predicate, builder.equal(tableS.get("idSesionTramitacion"),
+					pFiltro.getIdSesionTramitacion().trim().toUpperCase()));
+		} else {
+			predicate = builder.and(predicate,
+					builder.equal(tableT.get("nifIniciador"), pFiltro.getNif().trim().toUpperCase()));
+
+			if (pFiltro.getFechaDesde() != null) {
+				predicate = builder.and(predicate,
+						builder.greaterThanOrEqualTo(tableT.get("fechaInicio"), pFiltro.getFechaDesde()));
+			}
+
+			if (pFiltro.getFechaHasta() != null) {
+				predicate = builder.and(predicate,
+						builder.lessThanOrEqualTo(tableT.get("fechaInicio"), pFiltro.getFechaHasta()));
+			}
+		}
+
+		// Filtro de tramite persistente no finalizado
+		// - Estado rellenando
 		predicate = builder.and(predicate,
 				builder.equal(tableT.get("estado"), TypeEstadoTramite.RELLENANDO.toString()));
+		// - Persistente, no cancelado y no purgado
+		predicate = builder.and(predicate, builder.isTrue(tableT.get("persistente")));
 		predicate = builder.and(predicate, builder.isFalse(tableT.get("cancelado")));
 		predicate = builder.and(predicate, builder.isFalse(tableT.get("purgado")));
+		predicate = builder.and(predicate, builder.isFalse(tableT.get("purgaPendientePorPagoRealizado")));
 
+		// - Sin que se haya cumplido fecha caducidad
 		Predicate predicateFechaCaducidad = builder.lessThan(tableT.get("fechaCaducidad"), builder.currentTimestamp());
 		predicateFechaCaducidad = builder.or(predicateFechaCaducidad, builder.isNull(tableT.get("fechaCaducidad")));
-
 		predicate = builder.and(predicate, predicateFechaCaducidad);
-
-		if (pFiltro.getFechaDesde() != null) {
-			predicate = builder.and(predicate,
-					builder.greaterThanOrEqualTo(tableT.get("fechaInicio"), pFiltro.getFechaDesde()));
-		}
-
-		if (pFiltro.getFechaHasta() != null) {
-			predicate = builder.and(predicate,
-					builder.lessThanOrEqualTo(tableT.get("fechaInicio"), pFiltro.getFechaHasta()));
-		}
 
 		query.where(predicate);
 		query.orderBy(builder.desc(tableT.get("fechaInicio")));
@@ -766,7 +778,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	 * Busca sesion tramitacion.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesion tramitacion
+	 *                                id sesion tramitacion
 	 * @return sesion tramitacion
 	 */
 	private HSesionTramitacion findHSesionTramitacion(final String idSesionTramitacion) {
@@ -785,7 +797,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	 * Busca tramite.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesion tramitacion
+	 *                                id sesion tramitacion
 	 * @return sesion tramitacion
 	 */
 	private HTramite findHTramite(final String idSesionTramitacion) {
@@ -804,7 +816,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	 * Busca tramite y genera excepcion si no lo encuentra.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesion tramitacion
+	 *                                id sesion tramitacion
 	 * @return sesion tramitacion
 	 */
 	private HTramite getHTramite(final String pIdSesionTramitacion) {
@@ -819,7 +831,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	 * Busca pasos tramite.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesion tramitacion
+	 *                                id sesion tramitacion
 	 * @return pasos tramite
 	 */
 	@SuppressWarnings("unchecked")
@@ -834,7 +846,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	 * Busca paso tramite.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesion tramitacion
+	 *                                id sesion tramitacion
 	 * @return paso tramite
 	 */
 	@SuppressWarnings("unchecked")
@@ -859,7 +871,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	 * Busca paso tramite y genera excepción si no lo encuentra.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesion tramitacion
+	 *                                id sesion tramitacion
 	 * @return paso tramite
 	 */
 	private HPaso getHPaso(final String idSesionTramitacion, final String idPaso) {
@@ -875,7 +887,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	 * Obtiene ficheros de las firmas de un documento.
 	 *
 	 * @param hdoc
-	 *            HDocumento
+	 *                 HDocumento
 	 * @return ficheros de las firmas de un documento.
 	 */
 	private List<ReferenciaFichero> obtenerFirmasDocumento(final HDocumento hdoc) {
@@ -894,7 +906,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	 * Obtiene ficheros deun documento.
 	 *
 	 * @param hdoc
-	 *            HDocumento
+	 *                 HDocumento
 	 * @return ficheros de un documento.
 	 */
 	private List<ReferenciaFichero> obtenerFicherosDocumento(final HDocumento hdoc) {
@@ -920,7 +932,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	 * Método para Eliminar ficheros de la clase FlujoTramiteDaoImpl.
 	 *
 	 * @param ficheros
-	 *            Parámetro ficheros
+	 *                     Parámetro ficheros
 	 */
 	private void eliminarFicheros(final List<ReferenciaFichero> ficheros) {
 		if (!ficheros.isEmpty()) {

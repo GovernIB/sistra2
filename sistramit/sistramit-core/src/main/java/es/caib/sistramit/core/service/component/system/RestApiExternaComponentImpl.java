@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistramit.core.api.exception.ErrorParametroObligatorioException;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
+import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.rest.externo.Evento;
 import es.caib.sistramit.core.api.model.system.rest.externo.FiltroEvento;
 import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramitePersistencia;
@@ -37,8 +38,8 @@ public class RestApiExternaComponentImpl implements RestApiExternaComponent {
 
 	@Override
 	public List<TramitePersistencia> recuperarTramites(final FiltroTramitePersistencia pFiltro) {
-		if (pFiltro.getNif() == null) {
-			throw new ErrorParametroObligatorioException("El parámetro <NIF> es obligatorio");
+		if (pFiltro.getNif() == null && pFiltro.getIdSesionTramitacion() == null) {
+			throw new ErrorParametroObligatorioException("El parámetro <NIF> o <idSesionTramitacion> es obligatorio");
 		}
 
 		return flujoTramiteDao.recuperarTramitesPersistencia(pFiltro);
@@ -68,20 +69,22 @@ public class RestApiExternaComponentImpl implements RestApiExternaComponent {
 			throw new ErrorParametroObligatorioException("El parámetro <Metodo Autenticacion> es obligatorio");
 		}
 
-		if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getNif() == null) {
-			throw new ErrorParametroObligatorioException("El parámetro <Nif usuario> es obligatorio");
-		}
+		if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getAutenticacion() == TypeAutenticacion.AUTENTICADO) {
+			if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getNif() == null) {
+				throw new ErrorParametroObligatorioException("El parámetro <Nif usuario> es obligatorio");
+			}
 
-		if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getNombre() == null) {
-			throw new ErrorParametroObligatorioException("El parámetro <Nombre usuario> es obligatorio");
-		}
+			if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getNombre() == null) {
+				throw new ErrorParametroObligatorioException("El parámetro <Nombre usuario> es obligatorio");
+			}
 
-		if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getUsername() == null) {
-			throw new ErrorParametroObligatorioException("El parámetro <Código usuario> es obligatorio");
-		}
+			if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getUsername() == null) {
+				throw new ErrorParametroObligatorioException("El parámetro <Código usuario> es obligatorio");
+			}
 
-		if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getQaa() == null) {
-			throw new ErrorParametroObligatorioException("El parámetro <QAA> es obligatorio");
+			if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getQaa() == null) {
+				throw new ErrorParametroObligatorioException("El parámetro <QAA> es obligatorio");
+			}
 		}
 
 		final String ticket = ticketCDCDao.generarTicketAcceso(pInfoTicketAcceso);
