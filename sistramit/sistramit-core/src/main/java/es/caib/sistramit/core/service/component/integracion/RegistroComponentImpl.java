@@ -177,7 +177,7 @@ public final class RegistroComponentImpl implements RegistroComponent {
 			final String idSesionRegistro = plgRegistro.iniciarSesionRegistroEntrada(codigoEntidad);
 			return idSesionRegistro;
 		} catch (final RegistroPluginException e) {
-			throw new RegistroJustificanteException(
+			throw new RegistroSolicitudException(
 					"Error iniciando sesión registro entrada para entidad: " + codigoEntidad, e);
 		}
 	}
@@ -207,7 +207,7 @@ public final class RegistroComponentImpl implements RegistroComponent {
 			}
 			return res;
 		} catch (final RegistroPluginException e) {
-			throw new RegistroJustificanteException(
+			throw new RegistroSolicitudException(
 					"Error iniciando sesión registro entrada para entidad: " + codigoEntidad, e);
 		}
 	}

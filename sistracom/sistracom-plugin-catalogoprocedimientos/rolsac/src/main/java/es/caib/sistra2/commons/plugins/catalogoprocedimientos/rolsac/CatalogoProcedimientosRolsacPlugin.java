@@ -44,7 +44,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		implements ICatalogoProcedimientosPlugin {
 
 	/** El literal de idioma que no para de estar repetido. **/
-	private static final String LITERAL_IDIOMA = "idioma";
+	private static final String LITERAL_IDIOMA = "lang";
 	private static final String LITERAL_ERROR_NO_CONECTAR = "No se conecta correctamente a ROLSAC";
 	private static final String LITERAL_FILTRO = "filtro";
 

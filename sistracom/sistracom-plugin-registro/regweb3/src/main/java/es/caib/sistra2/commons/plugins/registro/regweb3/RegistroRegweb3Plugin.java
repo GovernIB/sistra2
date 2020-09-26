@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Properties;
 
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.caib.regweb3.ws.api.v3.AnexoWs;
 import es.caib.regweb3.ws.api.v3.AsientoRegistralSesionWs;
@@ -46,6 +48,9 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	/** Prefix. */
 	public static final String IMPLEMENTATION_BASE_PROPERTY = "regweb3.";
 
+	/** Log. */
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 	public RegistroRegweb3Plugin(final String prefijoPropiedades, final Properties properties) {
 		super(prefijoPropiedades, properties);
 	}
@@ -58,9 +63,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 
 		try {
 
-			final boolean logCalls = (getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES) != null
-					? "true".equals(getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES))
-					: false);
+			final boolean logCalls = isDebugEnabled();
 
 			final RegWebInfoWs service = UtilsRegweb3.getRegistroInfoService(codigoEntidad,
 					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_INFO), getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR),
@@ -100,9 +103,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 
 		try {
 
-			final boolean logCalls = (getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES) != null
-					? "true".equals(getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES))
-					: false);
+			final boolean logCalls = isDebugEnabled();
 
 			final RegWebInfoWs service = UtilsRegweb3.getRegistroInfoService(codigoEntidad,
 					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_INFO), getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR),
@@ -146,9 +147,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 
 		try {
 
-			final boolean logCalls = (getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES) != null
-					? "true".equals(getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES))
-					: false);
+			final boolean logCalls = isDebugEnabled();
 
 			// Invoca a Regweb3
 			final RegWebAsientoRegistralWs service = UtilsRegweb3.getAsientoRegistralService(
@@ -182,9 +181,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 
 		try {
 
-			final boolean logCalls = (getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES) != null
-					? "true".equals(getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES))
-					: false);
+			final boolean logCalls = isDebugEnabled();
 
 			// Invoca a Regweb3
 			final RegWebAsientoRegistralWs service = UtilsRegweb3.getAsientoRegistralService(
@@ -216,9 +213,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 
 		try {
 
-			final boolean logCalls = (getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES) != null
-					? "true".equals(getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES))
-					: false);
+			final boolean logCalls = isDebugEnabled();
 
 			// Invoca a Regweb3
 			final RegWebAsientoRegistralWs service = UtilsRegweb3.getAsientoRegistralService(codigoEntidad,
@@ -269,9 +264,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 
 		try {
 
-			final boolean logCalls = (getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES) != null
-					? "true".equals(getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES))
-					: false);
+			final boolean logCalls = isDebugEnabled();
 
 			final RegWebInfoWs service = UtilsRegweb3.getRegistroInfoService(codigoEntidad,
 					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_INFO), getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR),
@@ -444,6 +437,42 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	}
 
 	/**
+	 * Obtiene propiedad y si no existe retorna valor defecto.
+	 *
+	 * @param propiedad
+	 *                      propiedad
+	 * @return valor
+	 */
+	private String getPropiedad(final String propiedad, final String defaultValue) {
+		String res = getProperty(REGISTRO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + propiedad);
+		if (res == null) {
+			res = defaultValue;
+		}
+		return res.trim();
+	}
+
+	/**
+	 * Genera mensaje debug.
+	 *
+	 * @param message
+	 *                    Mensaje
+	 */
+	private void debug(final String message) {
+		if (isDebugEnabled()) {
+			log.debug(message);
+		}
+	}
+
+	/**
+	 * Indica si se habilita debug.
+	 *
+	 * @return debug
+	 */
+	protected boolean isDebugEnabled() {
+		return "true".equals(getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES, "false"));
+	}
+
+	/**
 	 * Genera AnexoWS en funcion documento REDOSE
 	 *
 	 * @param refRDS
@@ -466,20 +495,29 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		anexoAsiento.setFicheroAnexado(dr.getContenidoFichero());
 		anexoAsiento.setTipoMIMEFicheroAnexado(MimeType.getMimeTypeForExtension(getExtension(dr.getNombreFichero())));
 
-		if (dr.getModoFirma() != TypeFirmaAsiento.SIN_FIRMA) {
-			// Excepto para PADES adjuntamos firma
-			if (dr.getTipoFirma() != TypeFirmaDigital.PADES) {
-				anexoAsiento.setNombreFicheroAnexado(dr.getNombreFichero());
-				anexoAsiento.setFicheroAnexado(dr.getContenidoFichero());
-				anexoAsiento.setTipoMIMEFicheroAnexado(
-						MimeType.getMimeTypeForExtension(getExtension(dr.getNombreFichero())));
+		// Para PADES se ha adjuntado ya directamente el PADES como fichero
+		// Para otras firmas establecemos la firma por separado
+		if (dr.getModoFirma() != TypeFirmaAsiento.SIN_FIRMA &&
+				dr.getTipoFirma() != TypeFirmaDigital.PADES) {
 				anexoAsiento.setFirmaAnexada(dr.getContenidoFirma());
 				anexoAsiento.setNombreFirmaAnexada(UtilsRegweb3.truncarFilename(dr.getNombreFirmaAnexada(),
 						ConstantesRegweb3.MAX_SIZE_ANEXO_FILENAME));
 				anexoAsiento.setTipoMIMEFirmaAnexada(
 						MimeType.getMimeTypeForExtension(getExtension(dr.getNombreFirmaAnexada())));
-			}
 		}
+
+
+		debug("RW3 Anexo: " +
+				"\n - titulo: " + anexoAsiento.getTitulo() +
+				"\n - nombreFicheroAnexado: " + anexoAsiento.getNombreFicheroAnexado() +
+				"\n - tipoMIMEFicheroAnexado: " + anexoAsiento.getTipoMIMEFicheroAnexado() +
+				"\n - tipoDocumental: " + anexoAsiento.getTipoDocumental() +
+				"\n - validezDocumento: " + anexoAsiento.getValidezDocumento() +
+				"\n - tipoDocumento: " + anexoAsiento.getTipoDocumento() +
+				"\n - origenCiudadanoAdmin: " + anexoAsiento.getOrigenCiudadanoAdmin() +
+				"\n - modoFirma: " + anexoAsiento.getModoFirma() +
+				"\n - nombreFirmaAnexada: " + anexoAsiento.getNombreFirmaAnexada() +
+				"\n - tipoMIMEFirmaAnexada: " + anexoAsiento.getTipoMIMEFirmaAnexada());
 
 		return anexoAsiento;
 	}
@@ -510,9 +548,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 
 	private String generarSesionRegweb(final String codigoEntidad) throws RegistroPluginException {
 		try {
-			final boolean logCalls = (getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES) != null
-					? "true".equals(getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES))
-					: false);
+			final boolean logCalls = isDebugEnabled();
 			// Invoca a Regweb3
 			final RegWebAsientoRegistralWs service = UtilsRegweb3.getAsientoRegistralService(codigoEntidad,
 					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_ASIENTO),
@@ -530,9 +566,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	private VerificacionRegistro verificarRegistroRegweb(final String codigoEntidad, final String idSesionRegistro)
 			throws RegistroPluginException {
 		try {
-			final boolean logCalls = (getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES) != null
-					? "true".equals(getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES))
-					: false);
+			final boolean logCalls = isDebugEnabled();
 			// Invoca a Regweb3
 			final RegWebAsientoRegistralWs service = UtilsRegweb3.getAsientoRegistralService(codigoEntidad,
 					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_ASIENTO),
