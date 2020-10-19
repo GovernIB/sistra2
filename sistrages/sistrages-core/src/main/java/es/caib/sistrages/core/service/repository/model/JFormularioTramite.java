@@ -46,7 +46,7 @@ public class JFormularioTramite implements IModelApi {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FTR_FEXGST")
-	private JGestorFormularios gestorFormulario;
+	private JGestorExternoFormularios formularioExterno;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "FTR_SCRRET")
@@ -125,14 +125,6 @@ public class JFormularioTramite implements IModelApi {
 
 	public void setFormulario(final JFormulario formulario) {
 		this.formulario = formulario;
-	}
-
-	public JGestorFormularios getGestorFormulario() {
-		return this.gestorFormulario;
-	}
-
-	public void setGestorFormulario(final JGestorFormularios gestorFormulario) {
-		this.gestorFormulario = gestorFormulario;
 	}
 
 	public JScript getScriptRetorno() {
@@ -239,6 +231,20 @@ public class JFormularioTramite implements IModelApi {
 		this.idFormularioExterno = idFormularioExterno;
 	}
 
+	/**
+	 * @return the formularioExterno
+	 */
+	public final JGestorExternoFormularios getFormularioExterno() {
+		return formularioExterno;
+	}
+
+	/**
+	 * @param formularioExterno the formularioExterno to set
+	 */
+	public final void setFormularioExterno(final JGestorExternoFormularios formularioExterno) {
+		this.formularioExterno = formularioExterno;
+	}
+
 	public Set<JPasoRellenar> getPasosRellenar() {
 		return this.pasosRellenar;
 	}
@@ -263,8 +269,7 @@ public class JFormularioTramite implements IModelApi {
 	}
 
 	/**
-	 * @param codigoClonado
-	 *            the codigoClonado to set
+	 * @param codigoClonado the codigoClonado to set
 	 */
 	public void setCodigoClonado(final Long codigoClonado) {
 		this.codigoClonado = codigoClonado;
@@ -284,7 +289,9 @@ public class JFormularioTramite implements IModelApi {
 			jformularioTramite.setDescripcion(JLiteral.fromModel(formulario.getDescripcion()));
 			jformularioTramite.setIdentificador(formulario.getIdentificador());
 			if (formulario.getFormularioGestorExterno() != null) {
-				jformularioTramite.setIdFormularioExterno(formulario.getFormularioGestorInterno().getIdentificador());
+				jformularioTramite.setIdFormularioExterno(formulario.getIdFormularioExterno());
+				jformularioTramite.setFormularioExterno(
+						JGestorExternoFormularios.fromModel(formulario.getFormularioGestorExterno()));
 			}
 			jformularioTramite.setObligatorio(formulario.getObligatoriedad().toString());
 			jformularioTramite.setOrden(formulario.getOrden());
@@ -319,10 +326,11 @@ public class JFormularioTramite implements IModelApi {
 			mformulario.setIdFormularioInterno(this.getFormulario().getCodigo());
 		}
 		mformulario.setIdentificador(this.getIdentificador());
-		if (this.getIdFormularioExterno() != null) {
-			final GestorExternoFormularios form = new GestorExternoFormularios();
-			form.setCodigo(Long.valueOf(this.getIdFormularioExterno()));
-			mformulario.setFormularioGestorInterno(form);
+		mformulario.setIdFormularioExterno(this.getIdFormularioExterno());
+
+		if (this.getFormularioExterno() != null) {
+			final GestorExternoFormularios form = this.getFormularioExterno().toModel();
+			mformulario.setFormularioGestorExterno(form);
 		}
 		mformulario.setObligatoriedad(TypeFormularioObligatoriedad.fromString(this.getObligatorio()));
 		mformulario.setOrden(this.getOrden());
@@ -374,6 +382,8 @@ public class JFormularioTramite implements IModelApi {
 			jformularioTramite.setScriptParametros(JScript.clonar(formularioTramite.getScriptParametros()));
 			jformularioTramite.setScriptRetorno(JScript.clonar(formularioTramite.getScriptRetorno()));
 			jformularioTramite.setFormulario(null);
+			jformularioTramite.setIdFormularioExterno(formularioTramite.getIdFormularioExterno());
+			jformularioTramite.setFormularioExterno(formularioTramite.getFormularioExterno());
 
 			jformularioTramite.setTipo(formularioTramite.getTipo());
 			jformularioTramite.setTipoFormulario(formularioTramite.getTipoFormulario());

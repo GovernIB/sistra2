@@ -13,7 +13,9 @@ import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistrages.rest.api.interna.RAnexoTramite;
 import es.caib.sistrages.rest.api.interna.RAviso;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RFormularioTramite;
+import es.caib.sistrages.rest.api.interna.RGestorFormularioExterno;
 import es.caib.sistrages.rest.api.interna.RLiteral;
 import es.caib.sistrages.rest.api.interna.RLiteralIdioma;
 import es.caib.sistrages.rest.api.interna.RLiteralScript;
@@ -632,6 +634,32 @@ public final class UtilsSTG {
 			res = TypeParametroDominio.SESION;
 		}
 		return res;
+	}
+
+	/**
+	 * Obtiene url gestor formulario
+	 * 
+	 * @param confEntidad
+	 *                        Configuracion entidad
+	 * @param idGFE
+	 *                        id gestor formulario
+	 * @return url gestor
+	 */
+	public static String obtenerUrlGestorFormulariosExterno(final RConfiguracionEntidad confEntidad,
+			final String idGFE) {
+		String urlGestorFormulario = null;
+		if (confEntidad.getGestoresFormulariosExternos() != null) {
+			for (final RGestorFormularioExterno gf : confEntidad.getGestoresFormulariosExternos()) {
+				if (gf.getIdentificador().equals(idGFE)) {
+					urlGestorFormulario = gf.getUrl();
+					break;
+				}
+			}
+		}
+		if (urlGestorFormulario == null) {
+			throw new ErrorConfiguracionException("No se encuentra url para gestor formularios: " + idGFE);
+		}
+		return urlGestorFormulario;
 	}
 
 }

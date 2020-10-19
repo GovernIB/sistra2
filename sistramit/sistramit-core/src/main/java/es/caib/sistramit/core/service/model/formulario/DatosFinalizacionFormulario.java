@@ -12,25 +12,20 @@ import java.util.Date;
 @SuppressWarnings("serial")
 public final class DatosFinalizacionFormulario implements Serializable {
 
-	/**
-	 * Indica fecha finalizacion sesion formulario.
-	 */
+	/** Indica fecha finalizacion sesion formulario. */
 	private Date fechaFinalizacion;
 
-	/**
-	 * Indica si el formulario se ha cancelado.
-	 */
+	/** Indica si el formulario se ha cancelado. */
 	private boolean cancelado;
 
-	/**
-	 * Xml con los datos del formulario.
-	 */
+	/** Xml con los datos del formulario. */
 	private byte[] xml;
 
-	/**
-	 * Pdf con la visualizacón del formulario.
-	 */
+	/** Pdf con la visualizacón del formulario. */
 	private byte[] pdf;
+
+	/** Ticket externo para formulario externo. */
+	private String ticketExterno;
 
 	/**
 	 * Método de acceso a xml.
@@ -45,7 +40,7 @@ public final class DatosFinalizacionFormulario implements Serializable {
 	 * Método para establecer xml.
 	 *
 	 * @param pXml
-	 *            xml a establecer
+	 *                 xml a establecer
 	 */
 	public final void setXml(final byte[] pXml) {
 		xml = pXml;
@@ -64,7 +59,7 @@ public final class DatosFinalizacionFormulario implements Serializable {
 	 * Método para establecer pdf.
 	 *
 	 * @param pPdf
-	 *            pdf a establecer
+	 *                 pdf a establecer
 	 */
 	public final void setPdf(final byte[] pPdf) {
 		pdf = pPdf;
@@ -83,7 +78,7 @@ public final class DatosFinalizacionFormulario implements Serializable {
 	 * Método para establecer cancelado.
 	 *
 	 * @param pCancelado
-	 *            cancelado a establecer
+	 *                       cancelado a establecer
 	 */
 	public final void setCancelado(final boolean pCancelado) {
 		cancelado = pCancelado;
@@ -102,10 +97,29 @@ public final class DatosFinalizacionFormulario implements Serializable {
 	 * Método para establecer fechaFinalizacion.
 	 *
 	 * @param pFechaFinalizacion
-	 *            fechaFinalizacion a establecer
+	 *                               fechaFinalizacion a establecer
 	 */
 	public final void setFechaFinalizacion(final Date pFechaFinalizacion) {
 		fechaFinalizacion = pFechaFinalizacion;
+	}
+
+	/**
+	 * Método de acceso a ticketExterno.
+	 * 
+	 * @return ticketExterno
+	 */
+	public String getTicketExterno() {
+		return ticketExterno;
+	}
+
+	/**
+	 * Método para establecer ticketExterno.
+	 * 
+	 * @param ticketExterno
+	 *                          ticketExterno a establecer
+	 */
+	public void setTicketExterno(final String ticketExterno) {
+		this.ticketExterno = ticketExterno;
 	}
 
 }

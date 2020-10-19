@@ -13,11 +13,13 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
+import es.caib.sistrages.core.api.service.FormularioExternoService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -42,6 +44,13 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	@Inject
 	private TramiteService tramiteService;
 
+	/** Formulario Externo service. */
+	@Inject
+	private FormularioExternoService gestorFormularioExternoService;
+
+	/** Gestor Formularios externos. **/
+	private List<GestorExternoFormularios> gestores;
+
 	/** Data. **/
 	private FormularioTramite data;
 
@@ -65,6 +74,8 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 
 		data = tramiteService.getFormulario(Long.valueOf(id));
 		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
+		gestores = gestorFormularioExternoService.listFormularioExterno(UtilJSF.getIdEntidad(), UtilJSF.getIdioma(),
+				null);
 		setIdiomas(UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados()));
 	}
 
@@ -410,6 +421,20 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;
+	}
+
+	/**
+	 * @return the gestores
+	 */
+	public List<GestorExternoFormularios> getGestores() {
+		return gestores;
+	}
+
+	/**
+	 * @param gestores the gestores to set
+	 */
+	public void setGestores(final List<GestorExternoFormularios> gestores) {
+		this.gestores = gestores;
 	}
 
 }

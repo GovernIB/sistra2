@@ -34,6 +34,7 @@ import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
+import es.caib.sistramit.core.api.model.flujo.RetornoFormularioExterno;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoAnexar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoGuardar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoPagar;
@@ -236,20 +237,44 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 * @throws UnsupportedEncodingException
 	 */
 	private void flujoTramitacion_rellenar(final String idSesionTramitacion) throws UnsupportedEncodingException {
-		ParametrosAccionPaso parametros;
-		ResultadoAccionPaso resPaso;
-		String nombreFichero;
-		byte[] datosFichero;
 		DetallePasos dp;
-		XmlFormulario xmlForm;
-		List<ValorCampo> valoresIniciales;
-		List<ValorCampo> valoresActuales;
-		List<ValoresPosiblesCampo> valoresPosibles;
 
+		// Pasa al paso Rellenar
 		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
 		final ResultadoIrAPaso rp = flujoTramitacionService.irAPaso(idSesionTramitacion, dp.getSiguiente());
 		Assert.isTrue(StringUtils.equals(rp.getIdPasoActual(), dp.getSiguiente()),
 				"No se ha podido pasar a siguiente paso (debe saber)");
+		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+		Assert.isTrue(dp.getActual().getTipo() == TypePaso.RELLENAR, "Paso actual no es rellenar");
+		this.logger.info("Detalle paso: " + dp.print());
+
+		// Rellenar formulario interno
+		flujoTramitacion_rellenar_formInterno(idSesionTramitacion);
+
+		// Rellenar formulario externo
+		flujoTramitacion_rellenar_formExterno(idSesionTramitacion);
+
+		// Paso terminado
+		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+		Assert.isTrue(dp.getActual().getTipo() == TypePaso.RELLENAR, "No esta en paso rellenar");
+		Assert.isTrue(dp.getActual().getCompletado() == TypeSiNo.SI, "Paso rellenar no esta completado");
+		this.logger.info("Detalle paso: " + dp.print());
+
+	}
+
+	protected void flujoTramitacion_rellenar_formInterno(final String idSesionTramitacion)
+			throws UnsupportedEncodingException {
+		ParametrosAccionPaso parametros;
+		ResultadoAccionPaso resPaso;
+		String nombreFichero;
+		byte[] datosFichero;
+		XmlFormulario xmlForm;
+		List<ValorCampo> valoresIniciales;
+		List<ValorCampo> valoresActuales;
+		List<ValoresPosiblesCampo> valoresPosibles;
+		DetallePasos dp;
+
+		// Verifica que esta en paso rellenar
 		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
 		Assert.isTrue(dp.getActual().getTipo() == TypePaso.RELLENAR, "Paso actual no es rellenar");
 		this.logger.info("Detalle paso: " + dp.print());
@@ -376,13 +401,86 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		datosFichero = (byte[]) resPaso.getParametroRetorno("datosFichero");
 		Assert.isTrue(nombreFichero.endsWith(".pdf"), "El fichero no es pdf");
 		Assert.isTrue(datosFichero.length > 0, "El fichero no tiene contenido");
+	}
 
-		// -- Paso terminado
+	protected void flujoTramitacion_rellenar_formExterno(final String idSesionTramitacion)
+			throws UnsupportedEncodingException {
+		ParametrosAccionPaso parametros;
+		ResultadoAccionPaso resPaso;
+		String nombreFichero;
+		byte[] datosFichero;
+		XmlFormulario xmlForm;
+		List<ValorCampo> valoresIniciales;
+		final List<ValorCampo> valoresActuales;
+		DetallePasos dp;
+
+		// Verifica que esta en paso rellenar
 		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
-		Assert.isTrue(dp.getActual().getTipo() == TypePaso.RELLENAR, "No esta en paso rellenar");
-		Assert.isTrue(dp.getActual().getCompletado() == TypeSiNo.SI, "Paso rellenar no esta completado");
+		Assert.isTrue(dp.getActual().getTipo() == TypePaso.RELLENAR, "Paso actual no es rellenar");
 		this.logger.info("Detalle paso: " + dp.print());
 
+		// -- Mostramos xml inicial
+		final DetallePasoRellenar dpr = (DetallePasoRellenar) dp.getActual();
+		parametros = new ParametrosAccionPaso();
+		parametros.addParametroEntrada("idFormulario", dpr.getFormularios().get(1).getId());
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, dp.getActual().getId(),
+				TypeAccionPasoRellenar.DESCARGAR_XML, parametros);
+		datosFichero = (byte[]) resPaso.getParametroRetorno("xml");
+		xmlForm = UtilsFormulario.xmlToValores(datosFichero);
+		valoresIniciales = xmlForm.getValores();
+		this.logger.info("XML formulario inicial: " + new String(datosFichero, "UTF-8"));
+
+		// -- Abrimos formulario
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, dp.getActual().getId(),
+				TypeAccionPasoRellenar.ABRIR_FORMULARIO, parametros);
+		final AbrirFormulario af = (AbrirFormulario) resPaso.getParametroRetorno("referencia");
+		Assert.isTrue(af.getTipo() == TypeFormulario.EXTERNO, "Tipo formulario no es externo");
+		Assert.isTrue(af.getUrl() != null, "No se ha devuelto url redireccion formulario");
+
+		// -- Redirigimos formulario (se plugin mock: retorna url redireccion
+		// directamente el callback)
+		final String ticketGFE = af.getUrl().substring(af.getUrl().indexOf("?ticket=") + "?ticket=".length());
+		final SesionInfo sesionInfo = new SesionInfo();
+		final UsuarioAutenticadoInfo usuInfo = securityService.validarTicketFormularioExterno(sesionInfo, ticketGFE);
+		final RetornoFormularioExterno infoTicket = securityService.obtenerTicketFormularioExterno(ticketGFE);
+		flujoTramitacionService.cargarTramite(idSesionTramitacion, infoTicket.getUsuario());
+
+		// Verifica que esta en paso rellenar
+		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+		Assert.isTrue(dp.getActual().getTipo() == TypePaso.RELLENAR, "Paso actual no es rellenar");
+		this.logger.info("Detalle paso: " + dp.print());
+
+		// Ejecutamos accion guardar formulario
+		ParametrosAccionPaso pParametros;
+		pParametros = new ParametrosAccionPaso();
+		pParametros.addParametroEntrada("idFormulario", infoTicket.getIdFormulario());
+		pParametros.addParametroEntrada("ticket", infoTicket.getTicket());
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, infoTicket.getIdPaso(),
+				TypeAccionPasoRellenar.GUARDAR_FORMULARIO, pParametros);
+		final TypeSiNo cancelado = (TypeSiNo) resPaso.getParametroRetorno("cancelado");
+		final TypeSiNo correcto = (TypeSiNo) resPaso.getParametroRetorno("correcto");
+		final String mensajeIncorrecto = (String) resPaso.getParametroRetorno("mensajeIncorrecto");
+		Assert.isTrue(cancelado == TypeSiNo.NO, "El formulario se ha cancelado");
+		Assert.isTrue(correcto == TypeSiNo.SI, "El formulario no es correcto");
+		Assert.isTrue(StringUtils.isAllBlank(mensajeIncorrecto), "Existe mensaje incorrecto");
+
+		// -- Mostramos xml tras guardar
+		parametros = new ParametrosAccionPaso();
+		parametros.addParametroEntrada("idFormulario", dpr.getFormularios().get(1).getId());
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, dp.getActual().getId(),
+				TypeAccionPasoRellenar.DESCARGAR_XML, parametros);
+		datosFichero = (byte[]) resPaso.getParametroRetorno("xml");
+		this.logger.info("XML formulario guardado: " + new String(datosFichero, "UTF-8"));
+
+		// -- Descargar pdf
+		parametros = new ParametrosAccionPaso();
+		parametros.addParametroEntrada("idFormulario", dpr.getFormularios().get(1).getId());
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, dp.getActual().getId(),
+				TypeAccionPasoRellenar.DESCARGAR_FORMULARIO, parametros);
+		nombreFichero = (String) resPaso.getParametroRetorno("nombreFichero");
+		datosFichero = (byte[]) resPaso.getParametroRetorno("datosFichero");
+		Assert.isTrue(nombreFichero.endsWith(".pdf"), "El fichero no es pdf");
+		Assert.isTrue(datosFichero.length > 0, "El fichero no tiene contenido");
 	}
 
 	/**

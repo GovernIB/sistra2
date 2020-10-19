@@ -1,9 +1,30 @@
 package es.caib.sistramit.core.service.component.formulario.externo;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.caib.sistra2.commons.plugins.formulario.api.DatosInicioFormulario;
+import es.caib.sistra2.commons.plugins.formulario.api.FormularioPluginException;
+import es.caib.sistra2.commons.plugins.formulario.api.IFormularioPlugin;
+import es.caib.sistra2.commons.plugins.formulario.api.ParametroFormulario;
+import es.caib.sistra2.commons.plugins.formulario.api.UsuarioInfo;
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistramit.core.api.exception.InicioFormularioExternoException;
+import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
+import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
+import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.formulario.DatosFinalizacionFormulario;
 import es.caib.sistramit.core.service.model.formulario.DatosInicioSesionFormulario;
+import es.caib.sistramit.core.service.model.formulario.ParametroAperturaFormulario;
+import es.caib.sistramit.core.service.repository.dao.FormularioDao;
+import es.caib.sistramit.core.service.util.UtilsSTG;
 
 /**
  * Interfaz del controlador de formularios externo.
@@ -13,22 +34,98 @@ import es.caib.sistramit.core.service.model.formulario.DatosInicioSesionFormular
  * @author Indra
  */
 @Component("controladorGestorFormulariosExterno")
-public final class ControladorGestorFormulariosExternoImpl
-        implements ControladorGestorFormulariosExterno {
+public final class ControladorGestorFormulariosExternoImpl implements ControladorGestorFormulariosExterno {
 
-    // TODO Pendiente
+	/** Log. */
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
-    @Override
-    public String iniciarSesion(DatosInicioSesionFormulario difi) {
-        // TODO Auto-generated method stub
-        throw new RuntimeException("PENDIENTE IMPLEMENTAR");
-    }
+	/** Dao para acceso a bbdd. */
+	@Autowired
+	private FormularioDao dao;
 
-    @Override
-    public DatosFinalizacionFormulario obtenerDatosFinalizacionFormulario(
-            String pTicket) {
-        // TODO Auto-generated method stub
-        throw new RuntimeException("PENDIENTE IMPLEMENTAR");
-    }
+	/** Configuracion. */
+	@Autowired
+	private ConfiguracionComponent configuracionComponent;
+
+	@Override
+	public String iniciarSesion(final DatosInicioSesionFormulario difi) {
+
+		// Almacena sesion en BBDD generando ticket
+		final String ticket = dao.crearSesionGestorFormularios(difi);
+
+		// Obtiene URL gestor formularios externos
+		final RConfiguracionEntidad confEntidad = configuracionComponent.obtenerConfiguracionEntidad(difi.getEntidad());
+		final String urlGestorFormulario = UtilsSTG.obtenerUrlGestorFormulariosExterno(confEntidad,
+				difi.getIdGestorFormulariosExterno());
+
+		// Info usuario
+		UsuarioInfo usuarioInfo = null;
+		if (difi.getInfoAutenticacion().getAutenticacion() == TypeAutenticacion.AUTENTICADO) {
+			usuarioInfo = new UsuarioInfo();
+			usuarioInfo.setNif(difi.getInfoAutenticacion().getNif());
+			usuarioInfo.setNombre(difi.getInfoAutenticacion().getNombre());
+			usuarioInfo.setApellido1(difi.getInfoAutenticacion().getApellido1());
+			usuarioInfo.setApellido2(difi.getInfoAutenticacion().getApellido2());
+		}
+
+		// Parametros apertura
+		final List<ParametroFormulario> paramsApertura = new ArrayList<>();
+		if (difi.getParametros() != null && difi.getParametros().getParametros() != null) {
+			for (final ParametroAperturaFormulario p : difi.getParametros().getParametros()) {
+				final ParametroFormulario pa = new ParametroFormulario();
+				pa.setCodigo(p.getCodigo());
+				pa.setValor(p.getValor());
+				paramsApertura.add(pa);
+			}
+		}
+
+		// Url callback
+		final String urlCallback = configuracionComponent
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
+				+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_FORMULARIO_EXTERNO;
+
+		// Datos inicio
+		final DatosInicioFormulario datosInicio = new DatosInicioFormulario();
+		datosInicio.setIdSesionFormulario(ticket);
+		datosInicio.setEntidad(difi.getEntidad());
+		datosInicio.setIdioma(difi.getIdioma());
+		datosInicio.setParametrosApertura(paramsApertura);
+		datosInicio.setUsuario(usuarioInfo);
+		datosInicio.setXmlDatosActuales(difi.getXmlDatosActuales());
+		datosInicio.setUrlCallback(urlCallback);
+
+		// Invocamos a GFE
+		final IFormularioPlugin plgFormulario = obtenerPluginFormulario(difi.getEntidad());
+		String urlRedireccion = null;
+		try {
+			urlRedireccion = plgFormulario.invocarFormulario(difi.getIdGestorFormulariosExterno(), urlGestorFormulario,
+					datosInicio);
+		} catch (final FormularioPluginException e) {
+			throw new InicioFormularioExternoException("Error iniciando formulario en Gestor Formulario "
+					+ difi.getIdGestorFormulariosExterno() + ": " + e.getMessage(), e);
+		}
+
+		// Retornamos url redireccion formulario
+		return urlRedireccion;
+	}
+
+	@Override
+	public DatosFinalizacionFormulario obtenerDatosFinalizacionFormulario(final String ticket) {
+		// Recupera datos finalizacion
+		final DatosFinalizacionFormulario dff = dao.obtenerDatosFinSesionGestorFormularios(ticket, true);
+		return dff;
+	}
+
+	/**
+	 * Obtiene plugin de formulario.
+	 *
+	 * @param entidadId
+	 *                      id entidad
+	 * @return plugin pago
+	 */
+	private IFormularioPlugin obtenerPluginFormulario(final String entidadId) {
+		return (IFormularioPlugin) configuracionComponent.obtenerPluginEntidad(TypePluginEntidad.FORMULARIOS_EXTERNOS,
+				entidadId);
+	}
 
 }

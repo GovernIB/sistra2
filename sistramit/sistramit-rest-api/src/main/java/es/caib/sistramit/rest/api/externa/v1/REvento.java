@@ -2,6 +2,8 @@ package es.caib.sistramit.rest.api.externa.v1;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -24,6 +26,7 @@ public class REvento {
 	 * Fecha del evento.
 	 */
 	@ApiModelProperty(value = "Fecha del evento")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
 	private Date fecha;
 
 	/**
@@ -112,7 +115,7 @@ public class REvento {
 	 * Para establecer la fecha del evento.
 	 *
 	 * @param pFecha
-	 *            el nuevo valor para fecha del evento
+	 *                   el nuevo valor para fecha del evento
 	 */
 	public void setFecha(final Date pFecha) {
 		this.fecha = pFecha;
@@ -131,7 +134,7 @@ public class REvento {
 	 * Para establecer el atributo descripcion.
 	 *
 	 * @param pDescripcion
-	 *            el nuevo valor para descripcion
+	 *                         el nuevo valor para descripcion
 	 */
 	public void setDescripcion(final String pDescripcion) {
 		this.descripcion = pDescripcion;
@@ -150,7 +153,7 @@ public class REvento {
 	 * Para establecer el atributo resultado.
 	 *
 	 * @param pResultado
-	 *            el nuevo valor para resultado
+	 *                       el nuevo valor para resultado
 	 */
 	public void setResultado(final String pResultado) {
 		this.resultado = pResultado;
@@ -169,7 +172,7 @@ public class REvento {
 	 * Establece el valor de tipo evento.
 	 *
 	 * @param tipo
-	 *            el nuevo valor de tipo evento
+	 *                 el nuevo valor de tipo evento
 	 */
 	public void setTipoEvento(final String tipo) {
 		this.tipoEvento = tipo;
@@ -188,7 +191,7 @@ public class REvento {
 	 * Establece el valor de Identificador de la sesión.
 	 *
 	 * @param idSesion
-	 *            el nuevo valor de Identificador de la sesión
+	 *                     el nuevo valor de Identificador de la sesión
 	 */
 	public void setIdSesionTramitacion(final String idSesion) {
 		this.idSesionTramitacion = idSesion;
@@ -207,7 +210,7 @@ public class REvento {
 	 * Establece el valor de nif.
 	 *
 	 * @param nif
-	 *            el nuevo valor de nif
+	 *                el nuevo valor de nif
 	 */
 	public void setNif(final String nif) {
 		this.nif = nif;
@@ -226,7 +229,7 @@ public class REvento {
 	 * Establece el valor de id. tramite.
 	 *
 	 * @param idTramite
-	 *            el nuevo valor de id. tramite
+	 *                      el nuevo valor de id. tramite
 	 */
 	public void setIdTramite(final String idTramite) {
 		this.idTramite = idTramite;
@@ -245,7 +248,7 @@ public class REvento {
 	 * Establece el valor de version tramite.
 	 *
 	 * @param versionTramite
-	 *            el nuevo valor de version tramite
+	 *                           el nuevo valor de version tramite
 	 */
 	public void setVersionTramite(final Integer versionTramite) {
 		this.versionTramite = versionTramite;
@@ -264,7 +267,7 @@ public class REvento {
 	 * Establece el valor de id. Procedimiento CP.
 	 *
 	 * @param codProcedimiento
-	 *            el nuevo valor de id. Procedimiento CP
+	 *                             el nuevo valor de id. Procedimiento CP
 	 */
 	public void setIdProcedimientoCP(final String codProcedimiento) {
 		this.idProcedimientoCP = codProcedimiento;
@@ -283,7 +286,7 @@ public class REvento {
 	 * Establece el valor de id. Procedimiento SIA.
 	 *
 	 * @param idProcedimientoSIA
-	 *            el nuevo valor de id. Procedimiento SIA
+	 *                               el nuevo valor de id. Procedimiento SIA
 	 */
 	public void setIdProcedimientoSIA(final String idProcedimientoSIA) {
 		this.idProcedimientoSIA = idProcedimientoSIA;
@@ -302,7 +305,7 @@ public class REvento {
 	 * Establece el valor de codigo error.
 	 *
 	 * @param codigoError
-	 *            el nuevo valor de codigo error
+	 *                        el nuevo valor de codigo error
 	 */
 	public void setCodigoError(final String codigoError) {
 		this.codigoError = codigoError;
@@ -321,7 +324,7 @@ public class REvento {
 	 * Establece el valor de traza error.
 	 *
 	 * @param trazaError
-	 *            el nuevo valor de traza error
+	 *                       el nuevo valor de traza error
 	 */
 	public void setTrazaError(final String trazaError) {
 		this.trazaError = trazaError;
@@ -340,7 +343,7 @@ public class REvento {
 	 * Establece el valor de detalle.
 	 *
 	 * @param detalle
-	 *            el nuevo valor de detalle
+	 *                    el nuevo valor de detalle
 	 */
 	public void setDetalle(final String detalle) {
 		this.detalle = detalle;

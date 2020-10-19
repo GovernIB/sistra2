@@ -9,6 +9,7 @@
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="TypeFormularioObligatoriedad" />
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioGestor" var="TypeFormularioGestor"/>
 
 <h:head>
   <title><h:outputText value="#{msg['dialogDefinicionVersionFormulario.titulo']}"/></title>
@@ -118,9 +119,21 @@
 			        </p:row>
 	      	</p:panelGrid>
 
-	        <p:outputLabel value="#{msg['dialogDefinicionVersionFormulario.disenyoformulario']}" />
-	      	<p:commandButton actionListener="#{dialogDefinicionVersionFormulario.editarDisenyo}" value="#{msg['dialogDefinicionVersionFormulario.disenyoformulario.editardisenyo']}"
+	      	<p:outputLabel value="#{msg['dialogDefinicionVersionFormulario.disenyoformulario']}" rendered="#{dialogDefinicionVersionFormulario.data.tipoFormulario == TypeFormularioGestor.INTERNO}" />
+	      	<p:commandButton actionListener="#{dialogDefinicionVersionFormulario.editarDisenyo}" value="#{msg['dialogDefinicionVersionFormulario.disenyoformulario.editardisenyo']}"  rendered="#{dialogDefinicionVersionFormulario.data.tipoFormulario == TypeFormularioGestor.INTERNO}"
 	              process="@this" update="growl"/>
+
+
+			<p:outputLabel for="gestorFormularioExterno" value="#{msg['dialogDefinicionVersionFormulario.gestorFormularioExterno']}*" rendered="#{dialogDefinicionVersionFormulario.data.tipoFormulario == TypeFormularioGestor.EXTERNO}" />
+			<p:selectOneMenu id="gestorFormularioExterno" value="#{dialogDefinicionVersionFormulario.data.formularioGestorExterno}" required="true"  converter="#{gestorConverter}"  rendered="#{dialogDefinicionVersionFormulario.data.tipoFormulario == TypeFormularioGestor.EXTERNO}">
+    					 <f:selectItems value="#{dialogDefinicionVersionFormulario.gestores}" var="gestor" itemLabel="#{gestor.identificador}" itemValue="#{gestor}" />
+			</p:selectOneMenu >
+
+            <p:outputLabel for="identificadorExt" value="#{msg['dialogDefinicionVersionFormulario.gestorFormularioExternoIDFormulario']}" rendered="#{dialogDefinicionVersionFormulario.data.tipoFormulario == TypeFormularioGestor.EXTERNO}"/>
+            <p:inputText id="identificadorExt"  styleClass="w25" value="#{dialogDefinicionVersionFormulario.data.idFormularioExterno}"  required="true" rendered="#{dialogDefinicionVersionFormulario.data.tipoFormulario == TypeFormularioGestor.EXTERNO}"/>
+
+
+
 
    	 </h:panelGrid>
      </p:outputPanel>

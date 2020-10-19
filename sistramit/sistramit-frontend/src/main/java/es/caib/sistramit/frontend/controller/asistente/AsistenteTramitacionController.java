@@ -31,6 +31,7 @@ import es.caib.sistramit.core.api.model.flujo.PagoVerificacion;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
+import es.caib.sistramit.core.api.model.flujo.RetornoFormularioExterno;
 import es.caib.sistramit.core.api.model.flujo.RetornoPago;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoPagar;
@@ -444,12 +445,56 @@ public class AsistenteTramitacionController extends TramitacionController {
 	 *                   ticket
 	 * @return retorno de formulario externo recargando el trámite
 	 */
-	@RequestMapping(value = "/retornoFormularioExterno.html")
-	public ModelAndView retornoFormularioExterno(@RequestParam("ticket") final String ticket) {
+	@RequestMapping(value = "/retornoGestorFormularioExterno.html")
+	public ModelAndView retornoGestorFormularioExterno(@RequestParam("ticket") final String ticket) {
+		// Obtenemos info ticket
+		final RetornoFormularioExterno infoTicket = securityService.obtenerTicketFormularioExterno(ticket);
+		// Cargamos tramite de persistencia
+		this.cargarTramiteImpl(infoTicket.getIdSesionTramitacion(), false);
+		// Retornamos a formulario
+		return retornoFormulario(infoTicket.getIdSesionTramitacion(), infoTicket.getIdPaso(),
+				infoTicket.getIdFormulario(), infoTicket.getTicket());
+	}
 
-		// TODO PENDIENTE
+	protected ModelAndView retornoFormulario(final String idSesionTramitacion, final String idPaso,
+			final String idFormulario, final String ticketSesionFormulario) {
+		// Obtenemos detalle tramite
+		final DetalleTramite dt = getFlujoTramitacionService().obtenerDetalleTramite(idSesionTramitacion);
 
-		return null;
+		// Ejecutamos accion paso segun tipo paso
+		ParametrosAccionPaso pParametros;
+		pParametros = new ParametrosAccionPaso();
+		pParametros.addParametroEntrada("idFormulario", idFormulario);
+		pParametros.addParametroEntrada("ticket", ticketSesionFormulario);
+
+		TypeAccionPaso accionPaso = null;
+		if (dt.getTramite().getTipoPasoActual() == TypePaso.RELLENAR) {
+			accionPaso = TypeAccionPasoRellenar.GUARDAR_FORMULARIO;
+		} else if (dt.getTramite().getTipoPasoActual() == TypePaso.CAPTURAR) {
+			throw new ErrorFrontException("PENDIENTE IMPLEMENTAR");
+		} else {
+			throw new ErrorFrontException(
+					"No se permite guardar formulario para paso " + dt.getTramite().getTipoPasoActual());
+		}
+
+		final ResultadoAccionPaso respuestaGuardarFormulario = getFlujoTramitacionService()
+				.accionPaso(idSesionTramitacion, idPaso, accionPaso, pParametros);
+
+		final TypeSiNo cancelado = (TypeSiNo) respuestaGuardarFormulario.getParametroRetorno("cancelado");
+		final TypeSiNo correcto = (TypeSiNo) respuestaGuardarFormulario.getParametroRetorno("correcto");
+		final String mensajeIncorrecto = (String) respuestaGuardarFormulario.getParametroRetorno("mensajeIncorrecto");
+
+		// Evaluamos si hay que mostrar mensaje
+		if (cancelado == TypeSiNo.NO && correcto == TypeSiNo.NO) {
+			final MensajeAsistente ma = generarMensajeErrorAsistente("atencion", "noGuardado", mensajeIncorrecto,
+					TypeRespuestaJSON.SUCCESS);
+			this.setMensajeAsistente(ma);
+		}
+
+		debug("Formulario guardado: correcto = " + correcto + " - cancelado = " + cancelado);
+
+		// Redirigimos a carga asistente
+		return new ModelAndView(URL_REDIRIGIR_ASISTENTE);
 	}
 
 	/**
@@ -527,48 +572,8 @@ public class AsistenteTramitacionController extends TramitacionController {
 	@RequestMapping(value = "/retornoGestorFormularioInterno.html")
 	public ModelAndView retornoGestorFormularioInterno(@RequestParam("idPaso") final String idPaso,
 			@RequestParam("idFormulario") final String idFormulario, @RequestParam("ticket") final String ticket) {
-
 		debug("Retorno gestor formulario interno: " + idFormulario + " - idSesionFormulario " + ticket);
-
-		// Obtenemos detalle tramite
-		final String idSesionTramitacion = getIdSesionTramitacion();
-		final DetalleTramite dt = getFlujoTramitacionService().obtenerDetalleTramite(idSesionTramitacion);
-
-		// Ejecutamos accion paso segun tipo paso
-		ParametrosAccionPaso pParametros;
-		pParametros = new ParametrosAccionPaso();
-		pParametros.addParametroEntrada("idFormulario", idFormulario);
-		pParametros.addParametroEntrada("ticket", ticket);
-
-		TypeAccionPaso accionPaso = null;
-		if (dt.getTramite().getTipoPasoActual() == TypePaso.RELLENAR) {
-			accionPaso = TypeAccionPasoRellenar.GUARDAR_FORMULARIO;
-		} else if (dt.getTramite().getTipoPasoActual() == TypePaso.CAPTURAR) {
-			throw new ErrorFrontException("PENDIENTE IMPLEMENTAR");
-		} else {
-			throw new ErrorFrontException(
-					"No se permite guardar formulario para paso " + dt.getTramite().getTipoPasoActual());
-		}
-
-		final ResultadoAccionPaso respuestaGuardarFormulario = getFlujoTramitacionService()
-				.accionPaso(idSesionTramitacion, idPaso, accionPaso, pParametros);
-
-		final TypeSiNo cancelado = (TypeSiNo) respuestaGuardarFormulario.getParametroRetorno("cancelado");
-		final TypeSiNo correcto = (TypeSiNo) respuestaGuardarFormulario.getParametroRetorno("correcto");
-		final String mensajeIncorrecto = (String) respuestaGuardarFormulario.getParametroRetorno("mensajeIncorrecto");
-
-		// Evaluamos si hay que mostrar mensaje
-		if (cancelado == TypeSiNo.NO && correcto == TypeSiNo.NO) {
-			final MensajeAsistente ma = generarMensajeErrorAsistente("atencion", "noGuardado", mensajeIncorrecto,
-					TypeRespuestaJSON.SUCCESS);
-			this.setMensajeAsistente(ma);
-		}
-
-		debug("Formulario guardado: correcto = " + correcto + " - cancelado = " + cancelado);
-
-		// Redirigimos a carga asistente
-		return new ModelAndView(URL_REDIRIGIR_ASISTENTE);
-
+		return retornoFormulario(getIdSesionTramitacion(), idPaso, idFormulario, ticket);
 	}
 
 	/**

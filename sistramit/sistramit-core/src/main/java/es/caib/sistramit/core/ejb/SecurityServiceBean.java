@@ -10,6 +10,7 @@ import javax.interceptor.Interceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import es.caib.sistramit.core.api.model.flujo.RetornoFormularioExterno;
 import es.caib.sistramit.core.api.model.flujo.RetornoPago;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
@@ -60,8 +61,13 @@ public class SecurityServiceBean implements SecurityService {
 	}
 
 	@Override
-	public UsuarioAutenticadoInfo validarTicketGestorFormularios(final SesionInfo sesionInfo, final String ticket) {
-		return securityService.validarTicketGestorFormularios(sesionInfo, ticket);
+	public UsuarioAutenticadoInfo validarTicketFormularioExterno(final SesionInfo sesionInfo, final String ticket) {
+		return securityService.validarTicketFormularioExterno(sesionInfo, ticket);
+	}
+
+	@Override
+	public RetornoFormularioExterno obtenerTicketFormularioExterno(final String ticketExterno) {
+		return securityService.obtenerTicketFormularioExterno(ticketExterno);
 	}
 
 	@Override

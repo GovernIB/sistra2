@@ -41,7 +41,6 @@ public class RestApiExternaComponentImpl implements RestApiExternaComponent {
 		if (pFiltro.getNif() == null && pFiltro.getIdSesionTramitacion() == null) {
 			throw new ErrorParametroObligatorioException("El parámetro <NIF> o <idSesionTramitacion> es obligatorio");
 		}
-
 		return flujoTramiteDao.recuperarTramitesPersistencia(pFiltro);
 	}
 
@@ -50,11 +49,6 @@ public class RestApiExternaComponentImpl implements RestApiExternaComponent {
 		if (pFiltro.getFecha() == null) {
 			throw new ErrorParametroObligatorioException("El parámetro <Fecha evento> es obligatorio");
 		}
-
-		if (pFiltro.getListaEventos() == null || pFiltro.getListaEventos().isEmpty()) {
-			throw new ErrorParametroObligatorioException("El parámetro <Tipo Evento> es obligatorio");
-		}
-
 		return auditoriaDao.recuperarEventos(pFiltro);
 	}
 

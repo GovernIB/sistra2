@@ -16,7 +16,7 @@ public interface FormularioDao {
 	 * Crea sesión de formulario.
 	 *
 	 * @param datosInicioSesion
-	 *            Datos inicio de sesión.
+	 *                              Datos inicio de sesión.
 	 * @return Devuelve ticket de sesión.
 	 */
 	String crearSesionGestorFormularios(DatosInicioSesionFormulario datosInicioSesion);
@@ -25,18 +25,20 @@ public interface FormularioDao {
 	 * Obtiene los datos pasados en el inicio de sesión.
 	 *
 	 * @param ticket
-	 *            Ticket
+	 *                    Ticket
+	 * @param interno
+	 *                    indica si busca por ticket interno o externo
 	 * @return Datos inicio sesión
 	 */
-	DatosInicioSesionFormulario obtenerDatosInicioSesionGestorFormularios(String ticket);
+	DatosInicioSesionFormulario obtenerDatosInicioSesionGestorFormularios(String ticket, boolean interno);
 
 	/**
-	 * Finaliza sesión de formulario en el gestor interno.
+	 * Finaliza sesión de formulario en el gestor.
 	 *
 	 * @param ticket
-	 *            Ticket de sesión
+	 *                           Ticket de sesión
 	 * @param datosFinSesion
-	 *            Datos de fin de sesión
+	 *                           Datos de fin de sesión
 	 */
 	void finalizarSesionGestorFormularios(String ticket, DatosFinalizacionFormulario datosFinSesion);
 
@@ -44,9 +46,11 @@ public interface FormularioDao {
 	 * Obtiene los datos pasados al finalizar la sesión.
 	 *
 	 * @param ticket
-	 *            Ticket
+	 *                    Ticket
+	 * @param interno
+	 *                    indica si es interno
 	 * @return Datos fin sesión
 	 */
-	DatosFinalizacionFormulario obtenerDatosFinSesionGestorFormularios(String ticket);
+	DatosFinalizacionFormulario obtenerDatosFinSesionGestorFormularios(String ticket, boolean interno);
 
 }

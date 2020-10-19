@@ -40,10 +40,12 @@ import es.caib.sistramit.core.service.model.flujo.RespuestaEjecutarAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.ValoresFormulario;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
 import es.caib.sistramit.core.service.model.formulario.DatosFinalizacionFormulario;
+import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFlujo;
 import es.caib.sistramit.core.service.repository.dao.FlujoPasoDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
+import es.caib.sistramit.core.service.util.UtilsFormulario;
 import es.caib.sistramit.core.service.util.UtilsSTG;
 
 /**
@@ -172,6 +174,8 @@ public final class AccionGuardarFormulario implements AccionPaso {
 			dff = controladorGestorFormulariosInterno.obtenerDatosFinalizacionFormulario(pTicket);
 		} else {
 			dff = controladorGestorFormulariosExterno.obtenerDatosFinalizacionFormulario(pTicket);
+			// Si viene de gestor externo, validamos xml retornado parseandolo
+			final XmlFormulario valores = UtilsFormulario.xmlToValores(dff.getXml());
 		}
 		return dff;
 	}

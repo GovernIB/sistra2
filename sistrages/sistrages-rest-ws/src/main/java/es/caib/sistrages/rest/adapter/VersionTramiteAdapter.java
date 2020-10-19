@@ -45,6 +45,7 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.model.comun.ConstantesDominio;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
+import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.rest.api.interna.RAnexoTramite;
@@ -402,7 +403,7 @@ public class VersionTramiteAdapter {
 				final RFormularioTramite formularioTramite = new RFormularioTramite();
 				formularioTramite.setDescripcion(AdapterUtils.generarLiteralIdioma(f.getDescripcion(), idioma));
 				formularioTramite.setFirmar(f.isDebeFirmarse());
-				formularioTramite.setInterno(f.getIdFormularioInterno() != null);
+				formularioTramite.setInterno(f.getTipoFormulario() == TypeFormularioGestor.INTERNO);
 				formularioTramite.setFormularioExterno(generaFormularioExterno(f.getFormularioGestorExterno()));
 				formularioTramite.setFormularioInterno(generaFormularioInterno(f.getIdFormularioInterno(), idioma));
 				formularioTramite.setIdentificador(f.getIdentificador());
@@ -415,6 +416,12 @@ public class VersionTramiteAdapter {
 				formularioTramite
 						.setScriptParametrosApertura(AdapterUtils.generaScript(f.getScriptParametros(), idioma));
 				formularioTramite.setScriptPostguardar(AdapterUtils.generaScript(f.getScriptRetorno(), idioma));
+				if (f.getTipoFormulario() == TypeFormularioGestor.EXTERNO) {
+					final RFormularioExterno rfe = new RFormularioExterno();
+					rfe.setIdentificadorGestorFormularios(f.getFormularioGestorExterno().getIdentificador());
+					rfe.setIdentificadorFormulario(f.getIdFormularioExterno());
+					formularioTramite.setFormularioExterno(rfe);
+				}
 				res.add(formularioTramite);
 			}
 		}
@@ -615,7 +622,8 @@ public class VersionTramiteAdapter {
 	 * Genera componente campo oculto.
 	 *
 	 * @param cco
-	 * @param idioma idioma
+	 * @param idioma
+	 *                   idioma
 	 * @return RComponenteCampoOculto
 	 */
 	private RComponenteCampoOculto generaComponenteCampoOculto(final ComponenteFormularioCampoOculto cco,
@@ -788,7 +796,8 @@ public class VersionTramiteAdapter {
 	/**
 	 * Genera texto teléfono.
 	 *
-	 * @param ct campo texto
+	 * @param ct
+	 *               campo texto
 	 * @return Propiedades teléfono
 	 */
 	private RPropiedadesTextoTelefono generaTextoTelefono(final ComponenteFormularioCampoTexto ct) {

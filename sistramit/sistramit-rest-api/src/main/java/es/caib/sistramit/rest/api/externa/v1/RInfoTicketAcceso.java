@@ -13,15 +13,15 @@ import io.swagger.annotations.ApiModelProperty;
 public class RInfoTicketAcceso {
 
 	/** Identificador de la sesión. */
-	@ApiModelProperty(value = "Identificador de la sesión")
+	@ApiModelProperty(value = "Identificador de la sesión", required = true)
 	private String idSesionTramitacion;
 
 	/** Usuario autenticado. */
-	@ApiModelProperty(value = "Información de acceso")
+	@ApiModelProperty(value = "Información de acceso", required = true)
 	private RUsuarioAutenticadoInfo usuarioAutenticadoInfo;
 
 	/** Url callback error en caso de no poder acceder. */
-	@ApiModelProperty(value = "Url callback error en caso de no poder acceder")
+	@ApiModelProperty(value = "Url callback error en caso de no poder acceder", required = true)
 	private String urlCallbackError;
 
 	public String getIdSesionTramitacion() {
@@ -42,7 +42,7 @@ public class RInfoTicketAcceso {
 
 	/**
 	 * Método de acceso a urlCallbackError.
-	 * 
+	 *
 	 * @return urlCallbackError
 	 */
 	public String getUrlCallbackError() {
@@ -51,7 +51,7 @@ public class RInfoTicketAcceso {
 
 	/**
 	 * Método para establecer urlCallbackError.
-	 * 
+	 *
 	 * @param urlCallbackError
 	 *                             urlCallbackError a establecer
 	 */

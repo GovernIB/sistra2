@@ -46,7 +46,7 @@
       "pasoFinal": false,
       "scriptNavegacion": null,
       "formularios": [
-        {
+         {
           "identificador": "FOR-1",
           "descripcion": "Formulario 1",
           "obligatoriedad": "S",
@@ -475,6 +475,23 @@
             ]
           },
           "formularioExterno": null
+        },
+        {
+          "identificador": "FOR-2",
+          "descripcion": "Formulario 2",
+          "obligatoriedad": "S",
+          "scriptObligatoriedad": null,
+          "firmar": false,
+          "scriptFirmantes": null,
+          "scriptParametrosApertura": null,
+          "scriptDatosIniciales": null,
+          "scriptPostguardar": null,
+          "interno": false,
+          "formularioInterno":null,
+          "formularioExterno": {
+          	 "identificadorGestorFormularios": "GFMOCK",
+			 "identificadorFormulario":"FE1"
+          }
         }
       ]
     },

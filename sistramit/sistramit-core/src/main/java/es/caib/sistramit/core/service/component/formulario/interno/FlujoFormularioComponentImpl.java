@@ -104,7 +104,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	public String cargarSesion(final String ticket) {
 
 		// Obtenemos datos inicio de sesión
-		final DatosInicioSesionFormulario dis = dao.obtenerDatosInicioSesionGestorFormularios(ticket);
+		final DatosInicioSesionFormulario dis = dao.obtenerDatosInicioSesionGestorFormularios(ticket, true);
 
 		// Obtenemos definición del tramite
 		final DefinicionTramiteSTG defTramite = configuracionComponent.recuperarDefinicionTramite(dis.getIdTramite(),

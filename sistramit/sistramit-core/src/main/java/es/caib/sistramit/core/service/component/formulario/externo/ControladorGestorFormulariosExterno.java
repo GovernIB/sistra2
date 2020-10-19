@@ -13,11 +13,23 @@ import es.caib.sistramit.core.service.model.formulario.DatosInicioSesionFormular
  */
 public interface ControladorGestorFormulariosExterno {
 
-    // TODO Pendiente
+	/**
+	 * Inicia sesión formulario en Gestor Formularios Externo.
+	 * 
+	 * @param difi
+	 *                 Datos inicio sesión formulario
+	 * @return url redirección a Gestor Formularios Externo
+	 */
+	String iniciarSesion(DatosInicioSesionFormulario difi);
 
-    String iniciarSesion(DatosInicioSesionFormulario difi);
-
-    DatosFinalizacionFormulario obtenerDatosFinalizacionFormulario(
-            String pTicket);
+	/**
+	 * Recupera datos del formulario finalizado del Gestor Formularios Externo a
+	 * partir de un ticket de acceso.
+	 * 
+	 * @param pTicket
+	 *                    Ticket
+	 * @return datos formulario finalizado
+	 */
+	DatosFinalizacionFormulario obtenerDatosFinalizacionFormulario(String pTicket);
 
 }

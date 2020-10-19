@@ -16,6 +16,7 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.IncidenciaValoracion;
 import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.Plugin;
@@ -116,7 +117,7 @@ public class ApiInternaRestController {
 	 * Recupera configuración entidad.
 	 *
 	 * @param codigoDIR3
-	 *            id entidad
+	 *                       id entidad
 	 * @return Entidad
 	 */
 	@ApiOperation(value = "Lista de Propiedades de configuracion de entidad", notes = "Lista de Propiedades de configuracion de entidad", response = RConfiguracionEntidad.class)
@@ -133,18 +134,21 @@ public class ApiInternaRestController {
 		if (entidad.isValorarTramite()) {
 			valoraciones = restApiService.getValoraciones(entidad.getCodigo());
 		}
-		return confEntidadAdapter.convertir(entidad, formSoporte, plantillas, valoraciones);
+		final List<GestorExternoFormularios> gestoresExternosFormularios = restApiService
+				.listGestorExternoFormularios(entidad.getCodigo());
+		return confEntidadAdapter.convertir(entidad, formSoporte, plantillas, valoraciones,
+				gestoresExternosFormularios);
 	}
 
 	/**
 	 * Recupera definición versión de trámite.
 	 *
 	 * @param idioma
-	 *            Idioma
+	 *                      Idioma
 	 * @param idtramite
-	 *            Id Trámite
+	 *                      Id Trámite
 	 * @param version
-	 *            Versión trámite
+	 *                      Versión trámite
 	 * @return versión de trámite
 	 * @throws Exception
 	 */
@@ -166,7 +170,7 @@ public class ApiInternaRestController {
 	 */
 	@ApiOperation(value = "Obtiene la definición del dominio", notes = "Obtiene la definición del dominio", response = RDominio.class)
 	@RequestMapping(value = "/dominio/{idDominio}", method = RequestMethod.GET)
-	public RDominio obtenerDefinicionVersionTramite(@PathVariable("idDominio") final String idDominio) {
+	public RDominio obtenerDefinicionDominio(@PathVariable("idDominio") final String idDominio) {
 		final Dominio dominio = restApiService.loadDominio(idDominio);
 		return dominioAdapter.convertir(dominio);
 	}
@@ -175,7 +179,7 @@ public class ApiInternaRestController {
 	 * Obtiene avisos activos entidad.
 	 *
 	 * @param idEntidad
-	 *            Id entidad
+	 *                      Id entidad
 	 * @return avisos
 	 */
 	@ApiOperation(value = "Obtiene los avisos de una entidad", notes = "Obtiene los avisos de una entidad", response = RAvisosEntidad.class)
@@ -188,9 +192,9 @@ public class ApiInternaRestController {
 	 * Recupera valores de un dominio de fuente de datos.
 	 *
 	 * @param idDominio
-	 *            id dominio
+	 *                           id dominio
 	 * @param parametrosJSON
-	 *            parametros (en formato JSON)
+	 *                           parametros (en formato JSON)
 	 * @return Valores dominio
 	 */
 	@ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores FD de un dominio", response = RValoresDominio.class)
@@ -217,9 +221,9 @@ public class ApiInternaRestController {
 	 * Recupera valores de un dominio de fuente de datos.
 	 *
 	 * @param idDominio
-	 *            id dominio
+	 *                           id dominio
 	 * @param parametrosJSON
-	 *            parametros (en formato JSON)
+	 *                           parametros (en formato JSON)
 	 * @return Valores dominio
 	 */
 	@ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores LF de un dominio", response = RValoresDominio.class)

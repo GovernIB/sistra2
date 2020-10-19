@@ -35,6 +35,9 @@ public class FormularioTramite extends ModelApi {
 	/** Formulario. **/
 	private Long idFormularioInterno;
 
+	/** Formulario. **/
+	private String idFormularioExterno;
+
 	/**
 	 * Obligatorio:
 	 * <ul>
@@ -77,9 +80,6 @@ public class FormularioTramite extends ModelApi {
 	/** Indica tipo idFormularioInterno: interno (I) / externo (E) */
 	private TypeFormularioGestor tipoFormulario;
 
-	/** Formulario gestor interno (si es interno) */
-	private GestorExternoFormularios formularioGestorInterno;
-
 	/** Formulario gestor externo (si es externo) */
 	private GestorExternoFormularios formularioGestorExterno;
 
@@ -105,7 +105,7 @@ public class FormularioTramite extends ModelApi {
 	 * Establece el valor de codigo.
 	 *
 	 * @param codigo
-	 *            el nuevo valor de codigo
+	 *                   el nuevo valor de codigo
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -128,7 +128,7 @@ public class FormularioTramite extends ModelApi {
 	 * Establece el valor de codigo.
 	 *
 	 * @param codigo
-	 *            el nuevo valor de codigo
+	 *                   el nuevo valor de codigo
 	 */
 	public void setIdString(final String id) {
 		if (id == null) {
@@ -152,7 +152,7 @@ public class FormularioTramite extends ModelApi {
 	 * Establece el valor de identificador.
 	 *
 	 * @param identificador
-	 *            el nuevo valor de identificador
+	 *                          el nuevo valor de identificador
 	 */
 	public void setIdentificador(final String codigo) {
 		this.identificador = codigo;
@@ -171,7 +171,7 @@ public class FormularioTramite extends ModelApi {
 	 * Establece el valor de descripcion.
 	 *
 	 * @param descripcion
-	 *            el nuevo valor de descripcion
+	 *                        el nuevo valor de descripcion
 	 */
 	public void setDescripcion(final Literal descripcion) {
 		this.descripcion = descripcion;
@@ -190,7 +190,7 @@ public class FormularioTramite extends ModelApi {
 	 * Establece el valor de tipo.
 	 *
 	 * @param tipo
-	 *            el nuevo valor de tipo
+	 *                 el nuevo valor de tipo
 	 */
 	public void setTipo(final TypeFormulario tipo) {
 		this.tipo = tipo;
@@ -205,7 +205,7 @@ public class FormularioTramite extends ModelApi {
 
 	/**
 	 * @param orden
-	 *            the orden to set
+	 *                  the orden to set
 	 */
 	public void setOrden(final int orden) {
 		this.orden = orden;
@@ -224,7 +224,7 @@ public class FormularioTramite extends ModelApi {
 	 * Establece el valor de obligatoriedad.
 	 *
 	 * @param obligatoriedad
-	 *            el nuevo valor de obligatoriedad
+	 *                           el nuevo valor de obligatoriedad
 	 */
 	public void setObligatoriedad(final TypeFormularioObligatoriedad obligatoriedad) {
 		this.obligatoriedad = obligatoriedad;
@@ -239,7 +239,7 @@ public class FormularioTramite extends ModelApi {
 
 	/**
 	 * @param scriptObligatoriedad
-	 *            the scriptObligatoriedad to set
+	 *                                 the scriptObligatoriedad to set
 	 */
 	public void setScriptObligatoriedad(final Script scriptObligatoriedad) {
 		this.scriptObligatoriedad = scriptObligatoriedad;
@@ -254,7 +254,7 @@ public class FormularioTramite extends ModelApi {
 
 	/**
 	 * @param debeFirmarse
-	 *            the debeFirmarse to set
+	 *                         the debeFirmarse to set
 	 */
 	public void setDebeFirmarse(final boolean debeFirmarse) {
 		this.debeFirmarse = debeFirmarse;
@@ -269,7 +269,7 @@ public class FormularioTramite extends ModelApi {
 
 	/**
 	 * @param scriptFirma
-	 *            the scriptFirma to set
+	 *                        the scriptFirma to set
 	 */
 	public void setScriptFirma(final Script scriptFirma) {
 		this.scriptFirma = scriptFirma;
@@ -284,7 +284,7 @@ public class FormularioTramite extends ModelApi {
 
 	/**
 	 * @param scriptPrerrigistro
-	 *            the scriptPrerrigistro to set
+	 *                               the scriptPrerrigistro to set
 	 */
 	public void setScriptParametros(final Script scriptPrerrigistro) {
 		this.scriptParametros = scriptPrerrigistro;
@@ -299,7 +299,7 @@ public class FormularioTramite extends ModelApi {
 
 	/**
 	 * @param scriptDatosIniciales
-	 *            the scriptDatosIniciales to set
+	 *                                 the scriptDatosIniciales to set
 	 */
 	public void setScriptDatosIniciales(final Script scriptDatosIniciales) {
 		this.scriptDatosIniciales = scriptDatosIniciales;
@@ -314,7 +314,7 @@ public class FormularioTramite extends ModelApi {
 
 	/**
 	 * @param scriptRetorno
-	 *            the scriptRetorno to set
+	 *                          the scriptRetorno to set
 	 */
 	public void setScriptRetorno(final Script scriptRetorno) {
 		this.scriptRetorno = scriptRetorno;
@@ -329,40 +329,10 @@ public class FormularioTramite extends ModelApi {
 
 	/**
 	 * @param tipoFormulario
-	 *            the tipoFormulario to set
+	 *                           the tipoFormulario to set
 	 */
 	public void setTipoFormulario(final TypeFormularioGestor tipoFormulario) {
 		this.tipoFormulario = tipoFormulario;
-	}
-
-	/**
-	 * @return the formularioGestorInterno
-	 */
-	public GestorExternoFormularios getFormularioGestorInterno() {
-		return formularioGestorInterno;
-	}
-
-	/**
-	 * @param formularioGestorInterno
-	 *            the formularioGestorInterno to set
-	 */
-	public void setFormularioGestorInterno(final GestorExternoFormularios formularioGestorInterno) {
-		this.formularioGestorInterno = formularioGestorInterno;
-	}
-
-	/**
-	 * @return the formularioGestorExterno
-	 */
-	public GestorExternoFormularios getFormularioGestorExterno() {
-		return formularioGestorExterno;
-	}
-
-	/**
-	 * @param formularioGestorExterno
-	 *            the formularioGestorExterno to set
-	 */
-	public void setFormularioGestorExterno(final GestorExternoFormularios formularioGestorExterno) {
-		this.formularioGestorExterno = formularioGestorExterno;
 	}
 
 	public Long getIdFormularioInterno() {
@@ -379,5 +349,35 @@ public class FormularioTramite extends ModelApi {
 
 	public void setDisenyoFormulario(final DisenyoFormulario disenyoFormulario) {
 		this.disenyoFormulario = disenyoFormulario;
+	}
+
+	/**
+	 * @return the idFormularioExterno
+	 */
+	public String getIdFormularioExterno() {
+		return idFormularioExterno;
+	}
+
+	/**
+	 * @param idFormularioExterno
+	 *                                the idFormularioExterno to set
+	 */
+	public void setIdFormularioExterno(final String idFormularioExterno) {
+		this.idFormularioExterno = idFormularioExterno;
+	}
+
+	/**
+	 * @return the formularioGestorExterno
+	 */
+	public GestorExternoFormularios getFormularioGestorExterno() {
+		return formularioGestorExterno;
+	}
+
+	/**
+	 * @param formularioGestorExterno
+	 *                                    the formularioGestorExterno to set
+	 */
+	public void setFormularioGestorExterno(final GestorExternoFormularios formularioGestorExterno) {
+		this.formularioGestorExterno = formularioGestorExterno;
 	}
 }

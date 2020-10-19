@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RFiltroEvento", description = "Filtro para la recuperacion de eventos")
 public class RFiltroEvento {
 
-	@ApiModelProperty(value = "Fecha evento")
+	@ApiModelProperty(value = "Fecha evento", required = true)
 	private Date fecha;
 
 	@ApiModelProperty(value = "Tipo Evento")

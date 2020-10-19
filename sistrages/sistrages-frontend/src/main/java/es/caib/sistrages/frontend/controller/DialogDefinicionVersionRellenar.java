@@ -11,7 +11,6 @@ import org.primefaces.event.SelectEvent;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramiteVersion;
-import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -117,10 +116,6 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 			return;
 		}
 
-		if (this.data.getTipoFormulario() == TypeFormularioGestor.EXTERNO) {
-			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.tipoFormularioExterno"));
-			return;
-		}
 
 		if (tramiteService.checkFormularioRepetido(tramiteVersion.getCodigo(), this.data.getIdentificador(),
 				this.data.getCodigo())) {

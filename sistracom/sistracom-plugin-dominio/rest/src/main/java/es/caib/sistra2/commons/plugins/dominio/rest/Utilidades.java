@@ -1,7 +1,6 @@
 package es.caib.sistra2.commons.plugins.dominio.rest;
 
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
-import es.caib.sistra2.commons.plugins.dominio.rest.api.v1.RValoresDominio;
 import es.caib.sistra2.commons.plugins.dominio.rest.cxf.Columna;
 import es.caib.sistra2.commons.plugins.dominio.rest.cxf.Fila;
 import es.caib.sistra2.commons.plugins.dominio.rest.cxf.Filas;

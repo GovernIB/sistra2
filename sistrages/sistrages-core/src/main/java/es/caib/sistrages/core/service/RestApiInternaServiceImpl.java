@@ -18,6 +18,7 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.IncidenciaValoracion;
 import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
@@ -41,6 +42,7 @@ import es.caib.sistrages.core.service.repository.dao.DominioDao;
 import es.caib.sistrages.core.service.repository.dao.EntidadDao;
 import es.caib.sistrages.core.service.repository.dao.FicheroExternoDao;
 import es.caib.sistrages.core.service.repository.dao.FormateadorFormularioDao;
+import es.caib.sistrages.core.service.repository.dao.FormularioExternoDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioSoporteDao;
 import es.caib.sistrages.core.service.repository.dao.IncidenciaValoracionDao;
@@ -129,6 +131,10 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	/** DAO Formateador Formulario DAO. */
 	@Autowired
 	private FormateadorFormularioDao formateadorFormularioDAO;
+
+	/** DAO Formulario externo. */
+	@Autowired
+	private FormularioExternoDao formularioExternoDao;
 
 	@Override
 	@NegocioInterceptor
@@ -353,6 +359,12 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@NegocioInterceptor
 	public List<IncidenciaValoracion> getValoraciones(final Long codigo) {
 		return avisoDao.getValoraciones(codigo);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<GestorExternoFormularios> listGestorExternoFormularios(final Long pIdEntidad) {
+		return formularioExternoDao.getAll(pIdEntidad);
 	}
 
 }

@@ -53,19 +53,16 @@ public class ApiExternaRestController {
 	@ApiOperation(value = "Recuperación de eventos", notes = "Solicita recuperación eventos", response = REvento.class, responseContainer = "List")
 	@RequestMapping(value = "/evento", method = RequestMethod.POST)
 	public List<REvento> obtenerEventos(@RequestBody final RFiltroEvento pFiltro) {
-		List<REvento> rListaEventos = null;
+		final List<REvento> rListaEventos = new ArrayList<>();
 
 		final FiltroEvento filtroBusqueda = convierteFiltroEvento(pFiltro);
 
 		final List<Evento> listaEventos = restApiExternaService.recuperarEventos(filtroBusqueda);
 
 		if (listaEventos != null && !listaEventos.isEmpty()) {
-			rListaEventos = new ArrayList<>();
-
 			for (final Evento evento : listaEventos) {
 				rListaEventos.add(convierteEventos(evento));
 			}
-
 		}
 
 		return rListaEventos;
@@ -75,19 +72,16 @@ public class ApiExternaRestController {
 	@RequestMapping(value = "/tramite", method = RequestMethod.POST)
 	public List<RTramitePersistencia> obtenerTramitesPersistencia(
 			@RequestBody final RFiltroTramitePersistencia pFiltro) {
-		List<RTramitePersistencia> rListaTramites = null;
+		final List<RTramitePersistencia> rListaTramites = new ArrayList<>();
 
 		final FiltroTramitePersistencia filtroBusqueda = convierteFiltroTramitePersistencia(pFiltro);
 
 		final List<TramitePersistencia> listaTramites = restApiExternaService.recuperarTramites(filtroBusqueda);
 
 		if (listaTramites != null && !listaTramites.isEmpty()) {
-			rListaTramites = new ArrayList<>();
-
 			for (final TramitePersistencia tramite : listaTramites) {
 				rListaTramites.add(convierteTramitePersistencia(tramite));
 			}
-
 		}
 
 		return rListaTramites;

@@ -61,9 +61,9 @@ public final class AccionAbrirFormulario implements AccionPaso {
 	private static final String PARAM_ID_FORMULARIO = "idFormulario";
 
 	@Override
-	public RespuestaEjecutarAccionPaso ejecutarAccionPaso(DatosPaso pDatosPaso, DatosPersistenciaPaso pDpp,
-			TypeAccionPaso pAccionPaso, ParametrosAccionPaso pParametros, DefinicionTramiteSTG pDefinicionTramite,
-			VariablesFlujo pVariablesFlujo) {
+	public RespuestaEjecutarAccionPaso ejecutarAccionPaso(final DatosPaso pDatosPaso, final DatosPersistenciaPaso pDpp,
+			final TypeAccionPaso pAccionPaso, final ParametrosAccionPaso pParametros,
+			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo) {
 
 		// Recogemos parametros
 		final String idFor = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, PARAM_ID_FORMULARIO, true);
@@ -109,15 +109,15 @@ public final class AccionAbrirFormulario implements AccionPaso {
 	 * parametros.
 	 *
 	 * @param pDipa
-	 *            Datos internor paso
+	 *                               Datos internor paso
 	 * @param pDpp
-	 *            Datos persistencia paso
+	 *                               Datos persistencia paso
 	 * @param pDefinicionTramite
-	 *            Definición trámite
+	 *                               Definición trámite
 	 * @param pFormularioDef
-	 *            Definicion formulario
+	 *                               Definicion formulario
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 *
 	 * @return Parametros de apertura del formulario
 	 */
@@ -148,15 +148,15 @@ public final class AccionAbrirFormulario implements AccionPaso {
 	 * Crea sesion en controlador de formularios (interno/externo).
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                                  Datos internos paso
 	 * @param pDefinicionTramite
-	 *            Definicion del tramite
+	 *                                  Definicion del tramite
 	 * @param pDefinicionFormulario
-	 *            Definicion formulario
+	 *                                  Definicion formulario
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                                  Variables flujo
 	 * @param pParametrosApertura
-	 *            Parametros apertura
+	 *                                  Parametros apertura
 	 * @return Sesion abierta en el controlador de formularios
 	 */
 	private AbrirFormulario generarSesionGestorFormulario(final DatosInternosPasoRellenar pDipa,
@@ -164,6 +164,7 @@ public final class AccionAbrirFormulario implements AccionPaso {
 			final VariablesFlujo pVariablesFlujo, final Map<String, String> pParametrosApertura) {
 
 		final DatosInicioSesionFormulario difi = new DatosInicioSesionFormulario();
+		difi.setEntidad(pDefinicionTramite.getDefinicionVersion().getIdEntidad());
 		difi.setIdioma(pVariablesFlujo.getIdioma());
 		difi.setIdTramite(pDefinicionTramite.getDefinicionVersion().getIdentificador());
 		difi.setVersionTramite(pDefinicionTramite.getDefinicionVersion().getVersion());
@@ -176,6 +177,11 @@ public final class AccionAbrirFormulario implements AccionPaso {
 		difi.setXmlDatosActuales(pDipa.getDatosFormulario(pDefinicionFormulario.getIdentificador()));
 		difi.setTituloProcedimiento(pVariablesFlujo.getDatosTramiteCP().getProcedimiento().getDescripcion());
 		final ParametrosAperturaFormulario p = new ParametrosAperturaFormulario();
+		if (!pDefinicionFormulario.isInterno()) {
+			difi.setIdGestorFormulariosExterno(
+					pDefinicionFormulario.getFormularioExterno().getIdentificadorGestorFormularios());
+			difi.setIdFormularioExterno(pDefinicionFormulario.getFormularioExterno().getIdentificadorFormulario());
+		}
 		if (pParametrosApertura != null) {
 			for (final String codigo : pParametrosApertura.keySet()) {
 				p.addParametro(codigo, pParametrosApertura.get(codigo));

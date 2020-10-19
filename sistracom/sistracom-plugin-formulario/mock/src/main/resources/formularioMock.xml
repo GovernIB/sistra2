@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urn:FORMULARIO accion="" xmlns:urn="urn:es:caib:sistra2:xml:formulario:v1:model">
+<CAMPO id="TXT_1" tipo="simple">
+	<VALOR>VALOR 1</VALOR>
+</CAMPO>
+</urn:FORMULARIO>

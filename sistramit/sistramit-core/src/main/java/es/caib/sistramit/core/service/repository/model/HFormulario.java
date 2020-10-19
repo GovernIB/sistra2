@@ -33,6 +33,10 @@ public final class HFormulario implements IModelApi {
 	@Column(name = "SFR_TICKET")
 	private String ticket;
 
+	/** Atributo entidad. */
+	@Column(name = "SFR_ENTIDA")
+	private String entidad;
+
 	/** Atributo fecha inicio. */
 	@Column(name = "SFR_FECINI")
 	private Date fechaInicio;
@@ -109,6 +113,14 @@ public final class HFormulario implements IModelApi {
 	@Column(name = "SFR_TCKUSA")
 	private boolean usadoRetorno;
 
+	/** Ticket formulario externo. */
+	@Column(name = "SFR_TCKGFE")
+	private String ticketFormularioExterno;
+
+	/** Id gestor formularios externo. */
+	@Column(name = "SFR_IDGFE")
+	private String idGestorFormulariosExterno;
+
 	/**
 	 * Método para obtener el campo codigo.
 	 *
@@ -122,7 +134,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para settear el campo codigo.
 	 *
 	 * @param pCodigo
-	 *            el campo codigo a settear
+	 *                    el campo codigo a settear
 	 */
 	public void setCodigo(final Long pCodigo) {
 		codigo = pCodigo;
@@ -141,7 +153,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para settear el campo ticket.
 	 *
 	 * @param pTicket
-	 *            el campo ticket a settear
+	 *                    el campo ticket a settear
 	 */
 	public void setTicket(final String pTicket) {
 		ticket = pTicket;
@@ -160,7 +172,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para settear el campo fechaInicio.
 	 *
 	 * @param pFechaInicio
-	 *            el campo fechaInicio a settear
+	 *                         el campo fechaInicio a settear
 	 */
 	public void setFechaInicio(final Date pFechaInicio) {
 		fechaInicio = pFechaInicio;
@@ -179,7 +191,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para settear el campo idSesionTramitacion.
 	 *
 	 * @param pIdSesionTramitacion
-	 *            el campo idSesionTramitacion a settear
+	 *                                 el campo idSesionTramitacion a settear
 	 */
 	public void setIdSesionTramitacion(final String pIdSesionTramitacion) {
 		idSesionTramitacion = pIdSesionTramitacion;
@@ -198,7 +210,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para settear el campo idPaso.
 	 *
 	 * @param pIdPaso
-	 *            el campo idPaso a settear
+	 *                    el campo idPaso a settear
 	 */
 	public void setIdPaso(final String pIdPaso) {
 		idPaso = pIdPaso;
@@ -217,7 +229,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para settear el campo idFormulario.
 	 *
 	 * @param pIdFormulario
-	 *            el campo idFormulario a settear
+	 *                          el campo idFormulario a settear
 	 */
 	public void setIdFormulario(final String pIdFormulario) {
 		idFormulario = pIdFormulario;
@@ -236,7 +248,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para settear el campo datosActuales.
 	 *
 	 * @param pDatosActuales
-	 *            el campo datosActuales a settear
+	 *                           el campo datosActuales a settear
 	 */
 	public void setDatosActuales(final byte[] pDatosActuales) {
 		datosActuales = pDatosActuales;
@@ -255,7 +267,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para settear el campo parametrosFormulario.
 	 *
 	 * @param pParametrosFormulario
-	 *            el campo parametrosFormulario a settear
+	 *                                  el campo parametrosFormulario a settear
 	 */
 	public void setParametrosFormulario(final String pParametrosFormulario) {
 		parametrosFormulario = pParametrosFormulario;
@@ -274,7 +286,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para settear el campo fechaFin.
 	 *
 	 * @param pFechaFin
-	 *            el campo fechaFin a settear
+	 *                      el campo fechaFin a settear
 	 */
 	public void setFechaFin(final Date pFechaFin) {
 		fechaFin = pFechaFin;
@@ -293,7 +305,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para settear el campo cancelado.
 	 *
 	 * @param pCancelado
-	 *            el campo cancelado a settear
+	 *                       el campo cancelado a settear
 	 */
 	public void setCancelado(final boolean pCancelado) {
 		cancelado = pCancelado;
@@ -312,7 +324,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para settear el campo xml.
 	 *
 	 * @param pXml
-	 *            el campo xml a settear
+	 *                 el campo xml a settear
 	 */
 	public void setXml(final byte[] pXml) {
 		xml = pXml;
@@ -331,7 +343,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para settear el campo pdf.
 	 *
 	 * @param pPdf
-	 *            el campo pdf a settear
+	 *                 el campo pdf a settear
 	 */
 	public void setPdf(final byte[] pPdf) {
 		pdf = pPdf;
@@ -350,7 +362,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para establecer idTramite.
 	 *
 	 * @param pIdTramite
-	 *            idTramite a establecer
+	 *                       idTramite a establecer
 	 */
 	public void setIdTramite(final String pIdTramite) {
 		idTramite = pIdTramite;
@@ -369,7 +381,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para establecer versionTramite.
 	 *
 	 * @param pVersionTramite
-	 *            versionTramite a establecer
+	 *                            versionTramite a establecer
 	 */
 	public void setVersionTramite(final int pVersionTramite) {
 		versionTramite = pVersionTramite;
@@ -388,7 +400,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para establecer releaseTramite.
 	 *
 	 * @param pReleaseTramite
-	 *            releaseTramite a establecer
+	 *                            releaseTramite a establecer
 	 */
 	public void setReleaseTramite(final int pReleaseTramite) {
 		releaseTramite = pReleaseTramite;
@@ -407,7 +419,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para establecer usadoRetorno.
 	 *
 	 * @param pUsadoRetorno
-	 *            usadoRetorno a establecer
+	 *                          usadoRetorno a establecer
 	 */
 	public void setUsadoRetorno(final boolean pUsadoRetorno) {
 		usadoRetorno = pUsadoRetorno;
@@ -426,7 +438,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para establecer interno.
 	 *
 	 * @param interno
-	 *            interno a establecer
+	 *                    interno a establecer
 	 */
 	public void setInterno(final boolean interno) {
 		this.interno = interno;
@@ -445,7 +457,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para establecer infoAutenticacion.
 	 *
 	 * @param infoAutenticacion
-	 *            infoAutenticacion a establecer
+	 *                              infoAutenticacion a establecer
 	 */
 	public void setInfoAutenticacion(final String infoAutenticacion) {
 		this.infoAutenticacion = infoAutenticacion;
@@ -464,7 +476,7 @@ public final class HFormulario implements IModelApi {
 	 * Método para establecer idioma.
 	 *
 	 * @param idioma
-	 *            idioma a establecer
+	 *                   idioma a establecer
 	 */
 	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
@@ -483,10 +495,67 @@ public final class HFormulario implements IModelApi {
 	 * Método para establecer tituloProcedimiento.
 	 *
 	 * @param tituloProcedimiento
-	 *            tituloProcedimiento a establecer
+	 *                                tituloProcedimiento a establecer
 	 */
 	public void setTituloProcedimiento(final String tituloProcedimiento) {
 		this.tituloProcedimiento = tituloProcedimiento;
+	}
+
+	/**
+	 * Método de acceso a ticketFormularioExterno.
+	 *
+	 * @return ticketFormularioExterno
+	 */
+	public String getTicketFormularioExterno() {
+		return ticketFormularioExterno;
+	}
+
+	/**
+	 * Método para establecer ticketFormularioExterno.
+	 *
+	 * @param ticketFormularioExterno
+	 *                                    ticketFormularioExterno a establecer
+	 */
+	public void setTicketFormularioExterno(final String ticketFormularioExterno) {
+		this.ticketFormularioExterno = ticketFormularioExterno;
+	}
+
+	/**
+	 * Método de acceso a entidad.
+	 *
+	 * @return entidad
+	 */
+	public String getEntidad() {
+		return entidad;
+	}
+
+	/**
+	 * Método para establecer entidad.
+	 *
+	 * @param entidad
+	 *                    entidad a establecer
+	 */
+	public void setEntidad(final String entidad) {
+		this.entidad = entidad;
+	}
+
+	/**
+	 * Método de acceso a idGestorFormulariosExterno.
+	 * 
+	 * @return idGestorFormulariosExterno
+	 */
+	public String getIdGestorFormulariosExterno() {
+		return idGestorFormulariosExterno;
+	}
+
+	/**
+	 * Método para establecer idGestorFormulariosExterno.
+	 * 
+	 * @param idGestorFormulariosExterno
+	 *                                       idGestorFormulariosExterno a establecer
+	 */
+	public void setIdGestorFormulariosExterno(final String idGestorFormulariosExterno) {
+		this.idGestorFormulariosExterno = idGestorFormulariosExterno;
 	}
 
 }

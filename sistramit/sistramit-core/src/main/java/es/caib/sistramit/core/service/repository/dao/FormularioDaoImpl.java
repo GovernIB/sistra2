@@ -35,12 +35,13 @@ public final class FormularioDaoImpl implements FormularioDao {
 	private EntityManager entityManager;
 
 	@Override
-	public String crearSesionGestorFormularios(DatosInicioSesionFormulario dis) {
+	public String crearSesionGestorFormularios(final DatosInicioSesionFormulario dis) {
 		// Generamos el ticket
 		final String ticket = GeneradorId.generarId();
 		// Establecemos datos
 		final HFormulario hFormulario = new HFormulario();
 		hFormulario.setTicket(ticket);
+		hFormulario.setEntidad(dis.getEntidad());
 		hFormulario.setFechaInicio(new Date());
 		hFormulario.setIdSesionTramitacion(dis.getIdSesionTramitacion());
 		hFormulario.setIdPaso(dis.getIdPaso());
@@ -52,6 +53,8 @@ public final class FormularioDaoImpl implements FormularioDao {
 		hFormulario.setInterno(dis.isInterno());
 		hFormulario.setDatosActuales(dis.getXmlDatosActuales());
 		hFormulario.setTituloProcedimiento(dis.getTituloProcedimiento());
+		hFormulario.setIdGestorFormulariosExterno(dis.getIdGestorFormulariosExterno());
+
 		try {
 			hFormulario.setInfoAutenticacion(Serializador.serializeJSON(dis.getInfoAutenticacion()));
 			hFormulario.setParametrosFormulario(Serializador.serializeJSON(dis.getParametros()));
@@ -65,20 +68,15 @@ public final class FormularioDaoImpl implements FormularioDao {
 	}
 
 	@Override
-	public DatosInicioSesionFormulario obtenerDatosInicioSesionGestorFormularios(String ticket) {
+	public DatosInicioSesionFormulario obtenerDatosInicioSesionGestorFormularios(final String ticket,
+			final boolean interno) {
 
 		// Busca datos inicio
-		final HFormulario h = obtenerSesionFormulario(ticket);
-
-		// Se usara solo para formularios internos
-		if (!h.isInterno()) {
-			throw new TicketFormularioException("Esta función solo está permitida para formularios internos " + ticket);
-		}
-
-		// TODO Establecer tiempo max de inicio
+		final HFormulario h = obtenerSesionFormulario(ticket, interno);
 
 		// Establecemos datos
 		final DatosInicioSesionFormulario dis = new DatosInicioSesionFormulario();
+		dis.setTicket(h.getTicket());
 		dis.setIdioma(h.getIdioma());
 		dis.setIdSesionTramitacion(h.getIdSesionTramitacion());
 		dis.setIdPaso(h.getIdPaso());
@@ -89,6 +87,8 @@ public final class FormularioDaoImpl implements FormularioDao {
 		dis.setInterno(h.isInterno());
 		dis.setXmlDatosActuales(h.getDatosActuales());
 		dis.setTituloProcedimiento(h.getTituloProcedimiento());
+		dis.setEntidad(h.getEntidad());
+		dis.setIdGestorFormulariosExterno(h.getIdGestorFormulariosExterno());
 		try {
 			dis.setInfoAutenticacion((UsuarioAutenticadoInfo) Serializador.deserializeJSON(h.getInfoAutenticacion(),
 					UsuarioAutenticadoInfo.class));
@@ -102,18 +102,24 @@ public final class FormularioDaoImpl implements FormularioDao {
 	}
 
 	@Override
-	public void finalizarSesionGestorFormularios(String ticket, DatosFinalizacionFormulario datosFinSesion) {
+	public void finalizarSesionGestorFormularios(final String ticket,
+			final DatosFinalizacionFormulario datosFinSesion) {
 		final HFormulario hFormulario = obtenerSesionFormulario(ticket);
+		if (hFormulario.getFechaFin() != null) {
+			throw new TicketFormularioException("La sesión de formulario ya se ha finalizado anteriormente: " + ticket);
+		}
 		hFormulario.setPdf(datosFinSesion.getPdf());
 		hFormulario.setXml(datosFinSesion.getXml());
 		hFormulario.setFechaFin(new Date());
 		hFormulario.setCancelado(datosFinSesion.isCancelado());
+		hFormulario.setTicketFormularioExterno(datosFinSesion.getTicketExterno());
 		entityManager.merge(hFormulario);
 	}
 
 	@Override
-	public DatosFinalizacionFormulario obtenerDatosFinSesionGestorFormularios(String ticket) {
-		final HFormulario hFormulario = obtenerSesionFormulario(ticket);
+	public DatosFinalizacionFormulario obtenerDatosFinSesionGestorFormularios(final String ticket,
+			final boolean interno) {
+		final HFormulario hFormulario = obtenerSesionFormulario(ticket, interno);
 		if (hFormulario.isUsadoRetorno()) {
 			throw new TicketFormularioException("Ya se ha usado el ticket para retornar el formulario " + ticket);
 		}
@@ -132,12 +138,28 @@ public final class FormularioDaoImpl implements FormularioDao {
 	 * Busca sesión formulario a partir ticket.
 	 *
 	 * @param ticket
-	 *            ticket
+	 *                   ticket
 	 * @return sesión formulario
 	 */
-	private HFormulario obtenerSesionFormulario(String ticket) {
+	private HFormulario obtenerSesionFormulario(final String ticket) {
+		return obtenerSesionFormulario(ticket, true);
+	}
+
+	/**
+	 * Busca sesión formulario a partir ticket.
+	 *
+	 * @param ticket
+	 *                   ticket
+	 * @return sesión formulario
+	 */
+	private HFormulario obtenerSesionFormulario(final String ticket, final boolean interno) {
 		HFormulario h = null;
-		final String sql = "SELECT t FROM HFormulario t WHERE t.ticket = :ticket";
+		String sql = null;
+		if (interno) {
+			sql = "SELECT t FROM HFormulario t WHERE t.ticket = :ticket";
+		} else {
+			sql = "SELECT t FROM HFormulario t WHERE t.ticketFormularioExterno = :ticket";
+		}
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("ticket", ticket);
 		final List results = query.getResultList();

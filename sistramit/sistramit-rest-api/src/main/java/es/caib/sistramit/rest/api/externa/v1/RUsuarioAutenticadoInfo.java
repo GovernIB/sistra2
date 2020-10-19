@@ -15,31 +15,31 @@ public final class RUsuarioAutenticadoInfo {
 	/**
 	 * Tipo autenticacion.
 	 */
-	@ApiModelProperty(value = "Tipo autenticación: Autenticado (c) / Anónimo (a).")
+	@ApiModelProperty(value = "Tipo autenticación: Autenticado (c) / Anónimo (a).", required = true)
 	private String autenticacion;
 
 	/**
 	 * Metodo Autenticacion.
 	 */
-	@ApiModelProperty(value = "Metodo Autenticacion (ANONIMO / CLAVE_CERTIFICADO / CLAVE_PIN / CLAVE_PERMANENTE)")
+	@ApiModelProperty(value = "Metodo Autenticacion (ANONIMO / CLAVE_CERTIFICADO / CLAVE_PIN / CLAVE_PERMANENTE)", required = true)
 	private String metodoAutenticacion;
 
 	/**
 	 * Código usuario.
 	 */
-	@ApiModelProperty(value = "Código usuario")
+	@ApiModelProperty(value = "Código usuario", required = true)
 	private String username;
 
 	/**
 	 * Nombre usuario / Razon social si es una empresa.
 	 */
-	@ApiModelProperty(value = "Nombre usuario / Razon social si es una empresa")
+	@ApiModelProperty(value = "Nombre usuario / Razon social si es una empresa", required = true)
 	private String nombre;
 
 	/**
 	 * Apellido 1 usuario.
 	 */
-	@ApiModelProperty(value = "Apellido 1 usuario")
+	@ApiModelProperty(value = "Apellido 1 usuario", required = true)
 	private String apellido1;
 
 	/**
@@ -51,7 +51,7 @@ public final class RUsuarioAutenticadoInfo {
 	/**
 	 * Nif usuario.
 	 */
-	@ApiModelProperty(value = "Nif usuario")
+	@ApiModelProperty(value = "Nif usuario", required = true)
 	private String nif;
 
 	/**
@@ -63,12 +63,12 @@ public final class RUsuarioAutenticadoInfo {
 	/**
 	 * QAA (Bajo:1 / Medio: 2 / Alto: 3).
 	 */
-	@ApiModelProperty(value = "QAA (Bajo:1 / Medio: 2 / Alto: 3)")
+	@ApiModelProperty(value = "QAA (Bajo:1 / Medio: 2 / Alto: 3)", required = true)
 	private String qaa;
 
 	/**
 	 * Método de acceso a autenticacion.
-	 * 
+	 *
 	 * @return autenticacion
 	 */
 	public String getAutenticacion() {
@@ -77,7 +77,7 @@ public final class RUsuarioAutenticadoInfo {
 
 	/**
 	 * Método para establecer autenticacion.
-	 * 
+	 *
 	 * @param autenticacion
 	 *                          autenticacion a establecer
 	 */
@@ -87,7 +87,7 @@ public final class RUsuarioAutenticadoInfo {
 
 	/**
 	 * Método de acceso a metodoAutenticacion.
-	 * 
+	 *
 	 * @return metodoAutenticacion
 	 */
 	public String getMetodoAutenticacion() {
@@ -96,7 +96,7 @@ public final class RUsuarioAutenticadoInfo {
 
 	/**
 	 * Método para establecer metodoAutenticacion.
-	 * 
+	 *
 	 * @param metodoAutenticacion
 	 *                                metodoAutenticacion a establecer
 	 */
@@ -106,7 +106,7 @@ public final class RUsuarioAutenticadoInfo {
 
 	/**
 	 * Método de acceso a username.
-	 * 
+	 *
 	 * @return username
 	 */
 	public String getUsername() {
@@ -115,7 +115,7 @@ public final class RUsuarioAutenticadoInfo {
 
 	/**
 	 * Método para establecer username.
-	 * 
+	 *
 	 * @param username
 	 *                     username a establecer
 	 */
@@ -125,7 +125,7 @@ public final class RUsuarioAutenticadoInfo {
 
 	/**
 	 * Método de acceso a nombre.
-	 * 
+	 *
 	 * @return nombre
 	 */
 	public String getNombre() {
@@ -134,7 +134,7 @@ public final class RUsuarioAutenticadoInfo {
 
 	/**
 	 * Método para establecer nombre.
-	 * 
+	 *
 	 * @param nombre
 	 *                   nombre a establecer
 	 */
@@ -144,7 +144,7 @@ public final class RUsuarioAutenticadoInfo {
 
 	/**
 	 * Método de acceso a apellido1.
-	 * 
+	 *
 	 * @return apellido1
 	 */
 	public String getApellido1() {
@@ -153,7 +153,7 @@ public final class RUsuarioAutenticadoInfo {
 
 	/**
 	 * Método para establecer apellido1.
-	 * 
+	 *
 	 * @param apellido1
 	 *                      apellido1 a establecer
 	 */
@@ -163,7 +163,7 @@ public final class RUsuarioAutenticadoInfo {
 
 	/**
 	 * Método de acceso a apellido2.
-	 * 
+	 *
 	 * @return apellido2
 	 */
 	public String getApellido2() {
@@ -172,7 +172,7 @@ public final class RUsuarioAutenticadoInfo {
 
 	/**
 	 * Método para establecer apellido2.
-	 * 
+	 *
 	 * @param apellido2
 	 *                      apellido2 a establecer
 	 */
@@ -182,7 +182,7 @@ public final class RUsuarioAutenticadoInfo {
 
 	/**
 	 * Método de acceso a nif.
-	 * 
+	 *
 	 * @return nif
 	 */
 	public String getNif() {
@@ -191,7 +191,7 @@ public final class RUsuarioAutenticadoInfo {
 
 	/**
 	 * Método para establecer nif.
-	 * 
+	 *
 	 * @param nif
 	 *                nif a establecer
 	 */
@@ -201,7 +201,7 @@ public final class RUsuarioAutenticadoInfo {
 
 	/**
 	 * Método de acceso a email.
-	 * 
+	 *
 	 * @return email
 	 */
 	public String getEmail() {
@@ -210,7 +210,7 @@ public final class RUsuarioAutenticadoInfo {
 
 	/**
 	 * Método para establecer email.
-	 * 
+	 *
 	 * @param email
 	 *                  email a establecer
 	 */
@@ -220,7 +220,7 @@ public final class RUsuarioAutenticadoInfo {
 
 	/**
 	 * Método de acceso a qaa.
-	 * 
+	 *
 	 * @return qaa
 	 */
 	public String getQaa() {
@@ -229,7 +229,7 @@ public final class RUsuarioAutenticadoInfo {
 
 	/**
 	 * Método para establecer qaa.
-	 * 
+	 *
 	 * @param qaa
 	 *                qaa a establecer
 	 */

@@ -6,6 +6,7 @@
 
   <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="TypeFormularioObligatoriedad" />
   <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
+  <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioGestor" var="TypeFormularioGestor"/>
 
   <h:form id="formviewDefinicionVersionFormulario" styleClass="h100">
 
@@ -85,9 +86,17 @@
         		</p:row>
            	</p:panelGrid>
 
-           	<p:outputLabel value="#{msg['viewDefinicionVersionFormulario.disenyoformulario']}" />
+           	<p:outputLabel value="#{msg['viewDefinicionVersionFormulario.disenyoformulario']}"  rendered="#{viewDefinicionVersion.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.INTERNO}" />
       		<p:commandButton actionListener="#{viewDefinicionVersion.consultarDisenyo()}" value="#{msg['viewDefinicionVersionFormulario.disenyoformulario.consultardisenyo']}"
-            	  process="@this" update="growl"/>
+            	  process="@this" update="growl" rendered="#{viewDefinicionVersion.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.INTERNO}" />
+
+			<p:outputLabel for="gestorFormularioExterno" value="#{msg['dialogDefinicionVersionFormulario.gestorFormularioExterno']}" rendered="#{viewDefinicionVersion.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.EXTERNO}" />
+			<p:inputText id="gestorFormularioExterno"  styleClass="w35" value="#{viewDefinicionVersion.formularioTramiteSeleccionado.formularioGestorExterno.identificador}" disabled="true" rendered="#{viewDefinicionVersion.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.EXTERNO}"/>
+
+            <p:outputLabel for="identificadorExt" value="#{msg['dialogDefinicionVersionFormulario.gestorFormularioExternoIDFormulario']}"  rendered="#{viewDefinicionVersion.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.EXTERNO}"/>
+            <p:inputText id="identificadorExt"  styleClass="w35" value="#{viewDefinicionVersion.formularioTramiteSeleccionado.idFormularioExterno}" disabled="true" rendered="#{viewDefinicionVersion.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.EXTERNO}"/>
+
+
 
 
       		<f:facet name = "footer">

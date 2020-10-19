@@ -2,6 +2,8 @@ package es.caib.sistramit.rest.api.externa.v1;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -25,8 +27,10 @@ public final class RTramitePersistencia {
 	@ApiModelProperty(value = "Descripcion Tramite")
 	private String descripcionTramite;
 	@ApiModelProperty(value = "Fecha Inicio")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
 	private Date fechaInicio;
 	@ApiModelProperty(value = "Fecha Ultimo Acceso")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
 	private Date fechaUltimoAcceso;
 
 	public String getIdSesionTramitacion() {

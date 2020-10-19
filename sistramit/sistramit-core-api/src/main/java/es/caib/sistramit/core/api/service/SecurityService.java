@@ -2,6 +2,7 @@ package es.caib.sistramit.core.api.service;
 
 import java.util.List;
 
+import es.caib.sistramit.core.api.model.flujo.RetornoFormularioExterno;
 import es.caib.sistramit.core.api.model.flujo.RetornoPago;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
@@ -112,12 +113,21 @@ public interface SecurityService {
 	 * Valida acceso usuario desde Gestor Formularios.
 	 *
 	 * @param sesionInfo
-	 *                       Info sesión
-	 * @param ticket
-	 *                       Ticket
+	 *                          Info sesión
+	 * @param ticketExterno
+	 *                          ticket generado por GFE
 	 * @return info usuario
 	 */
-	UsuarioAutenticadoInfo validarTicketGestorFormularios(SesionInfo sesionInfo, String ticket);
+	UsuarioAutenticadoInfo validarTicketFormularioExterno(SesionInfo sesionInfo, String ticketExterno);
+
+	/**
+	 * Obtiene información formulario.
+	 *
+	 * @param ticketExterno
+	 *                          ticket generado por GFE
+	 * @return información ticket acceso
+	 */
+	RetornoFormularioExterno obtenerTicketFormularioExterno(String ticketExterno);
 
 	/**
 	 * Valida acceso usuario desde Pasarela de Pagos.

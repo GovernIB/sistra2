@@ -13,8 +13,14 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 @SuppressWarnings("serial")
 public final class DatosInicioSesionFormulario implements Serializable {
 
+	/** Ticket sesion formulario. */
+	private String ticket;
+
 	/** Id sesión de tramitación. */
 	private String idSesionTramitacion;
+
+	/** Entidad. */
+	private String entidad;
 
 	/** Id paso en el que se encuentra el formulario. */
 	private String idPaso;
@@ -68,9 +74,9 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	 * Método para establecer idSesionTramitacion.
 	 *
 	 * @param idSesionTramitacion
-	 *            idSesionTramitacion a establecer
+	 *                                idSesionTramitacion a establecer
 	 */
-	public void setIdSesionTramitacion(String idSesionTramitacion) {
+	public void setIdSesionTramitacion(final String idSesionTramitacion) {
 		this.idSesionTramitacion = idSesionTramitacion;
 	}
 
@@ -87,9 +93,9 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	 * Método para establecer idPaso.
 	 *
 	 * @param idPaso
-	 *            idPaso a establecer
+	 *                   idPaso a establecer
 	 */
-	public void setIdPaso(String idPaso) {
+	public void setIdPaso(final String idPaso) {
 		this.idPaso = idPaso;
 	}
 
@@ -106,9 +112,9 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	 * Método para establecer idioma.
 	 *
 	 * @param idioma
-	 *            idioma a establecer
+	 *                   idioma a establecer
 	 */
-	public void setIdioma(String idioma) {
+	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
 	}
 
@@ -125,9 +131,9 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	 * Método para establecer idTramite.
 	 *
 	 * @param idTramite
-	 *            idTramite a establecer
+	 *                      idTramite a establecer
 	 */
-	public void setIdTramite(String idTramite) {
+	public void setIdTramite(final String idTramite) {
 		this.idTramite = idTramite;
 	}
 
@@ -144,9 +150,9 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	 * Método para establecer versionTramite.
 	 *
 	 * @param versionTramite
-	 *            versionTramite a establecer
+	 *                           versionTramite a establecer
 	 */
-	public void setVersionTramite(int versionTramite) {
+	public void setVersionTramite(final int versionTramite) {
 		this.versionTramite = versionTramite;
 	}
 
@@ -163,9 +169,9 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	 * Método para establecer releaseTramite.
 	 *
 	 * @param releaseTramite
-	 *            releaseTramite a establecer
+	 *                           releaseTramite a establecer
 	 */
-	public void setReleaseTramite(int releaseTramite) {
+	public void setReleaseTramite(final int releaseTramite) {
 		this.releaseTramite = releaseTramite;
 	}
 
@@ -182,9 +188,9 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	 * Método para establecer idFormulario.
 	 *
 	 * @param idFormulario
-	 *            idFormulario a establecer
+	 *                         idFormulario a establecer
 	 */
-	public void setIdFormulario(String idFormulario) {
+	public void setIdFormulario(final String idFormulario) {
 		this.idFormulario = idFormulario;
 	}
 
@@ -201,9 +207,9 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	 * Método para establecer xmlDatosActuales.
 	 *
 	 * @param xmlDatosActuales
-	 *            xmlDatosActuales a establecer
+	 *                             xmlDatosActuales a establecer
 	 */
-	public void setXmlDatosActuales(byte[] xmlDatosActuales) {
+	public void setXmlDatosActuales(final byte[] xmlDatosActuales) {
 		this.xmlDatosActuales = xmlDatosActuales;
 	}
 
@@ -220,9 +226,9 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	 * Método para establecer parametros.
 	 *
 	 * @param parametros
-	 *            parametros a establecer
+	 *                       parametros a establecer
 	 */
-	public void setParametros(ParametrosAperturaFormulario parametros) {
+	public void setParametros(final ParametrosAperturaFormulario parametros) {
 		this.parametros = parametros;
 	}
 
@@ -239,9 +245,9 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	 * Método para establecer idGestorFormulariosExterno.
 	 *
 	 * @param idGestorFormulariosExterno
-	 *            idGestorFormulariosExterno a establecer
+	 *                                       idGestorFormulariosExterno a establecer
 	 */
-	public void setIdGestorFormulariosExterno(String idGestorFormulariosExterno) {
+	public void setIdGestorFormulariosExterno(final String idGestorFormulariosExterno) {
 		this.idGestorFormulariosExterno = idGestorFormulariosExterno;
 	}
 
@@ -258,9 +264,9 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	 * Método para establecer idFormularioExterno.
 	 *
 	 * @param idFormularioExterno
-	 *            idFormularioExterno a establecer
+	 *                                idFormularioExterno a establecer
 	 */
-	public void setIdFormularioExterno(String idFormularioExterno) {
+	public void setIdFormularioExterno(final String idFormularioExterno) {
 		this.idFormularioExterno = idFormularioExterno;
 	}
 
@@ -277,9 +283,9 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	 * Método para establecer interno.
 	 *
 	 * @param interno
-	 *            interno a establecer
+	 *                    interno a establecer
 	 */
-	public void setInterno(boolean interno) {
+	public void setInterno(final boolean interno) {
 		this.interno = interno;
 	}
 
@@ -296,15 +302,15 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	 * Método para establecer infoAutenticacion.
 	 *
 	 * @param infoAutenticacion
-	 *            infoAutenticacion a establecer
+	 *                              infoAutenticacion a establecer
 	 */
-	public void setInfoAutenticacion(UsuarioAutenticadoInfo infoAutenticacion) {
+	public void setInfoAutenticacion(final UsuarioAutenticadoInfo infoAutenticacion) {
 		this.infoAutenticacion = infoAutenticacion;
 	}
 
 	/**
 	 * Método de acceso a tituloProcedimiento.
-	 * 
+	 *
 	 * @return tituloProcedimiento
 	 */
 	public String getTituloProcedimiento() {
@@ -313,12 +319,50 @@ public final class DatosInicioSesionFormulario implements Serializable {
 
 	/**
 	 * Método para establecer tituloProcedimiento.
-	 * 
+	 *
 	 * @param tituloProcedimiento
-	 *            tituloProcedimiento a establecer
+	 *                                tituloProcedimiento a establecer
 	 */
-	public void setTituloProcedimiento(String tituloProcedimiento) {
+	public void setTituloProcedimiento(final String tituloProcedimiento) {
 		this.tituloProcedimiento = tituloProcedimiento;
+	}
+
+	/**
+	 * Método de acceso a ticket.
+	 *
+	 * @return ticket
+	 */
+	public String getTicket() {
+		return ticket;
+	}
+
+	/**
+	 * Método para establecer ticket.
+	 *
+	 * @param ticket
+	 *                   ticket a establecer
+	 */
+	public void setTicket(final String ticket) {
+		this.ticket = ticket;
+	}
+
+	/**
+	 * Método de acceso a entidad.
+	 * 
+	 * @return entidad
+	 */
+	public String getEntidad() {
+		return entidad;
+	}
+
+	/**
+	 * Método para establecer entidad.
+	 * 
+	 * @param entidad
+	 *                    entidad a establecer
+	 */
+	public void setEntidad(final String entidad) {
+		this.entidad = entidad;
 	}
 
 }

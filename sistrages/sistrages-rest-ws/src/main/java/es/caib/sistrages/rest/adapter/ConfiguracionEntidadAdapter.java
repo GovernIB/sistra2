@@ -8,11 +8,13 @@ import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.IncidenciaValoracion;
 import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistrages.rest.api.interna.RGestorFormularioExterno;
 import es.caib.sistrages.rest.api.interna.RIncidenciaValoracion;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistrages.rest.api.interna.RPlantillaFormulario;
@@ -37,9 +39,11 @@ public class ConfiguracionEntidadAdapter {
 	 *
 	 * @param entidad
 	 * @param formSoporte
+	 * @param gestoresExternosFormularios
 	 */
 	public RConfiguracionEntidad convertir(final Entidad entidad, final List<FormularioSoporte> formSoporte,
-			final List<PlantillaFormateador> plantillas, final List<IncidenciaValoracion> valoraciones) {
+			final List<PlantillaFormateador> plantillas, final List<IncidenciaValoracion> valoraciones,
+			final List<GestorExternoFormularios> gestoresExternosFormularios) {
 
 		final RConfiguracionEntidad rConfiguracionEntidad = new RConfiguracionEntidad();
 		rConfiguracionEntidad.setTimestamp(System.currentTimeMillis() + "");
@@ -113,6 +117,18 @@ public class ConfiguracionEntidadAdapter {
 			rConfiguracionEntidad.setIncidenciasValoracion(rvaloraciones);
 		}
 		rConfiguracionEntidad.setRegistroOcultarDescargaDocumentos(entidad.isRegistroOcultarDescargaDocumentos());
+
+		if (gestoresExternosFormularios != null) {
+			final List<RGestorFormularioExterno> rgfes = new ArrayList<>();
+			for (final GestorExternoFormularios gfe : gestoresExternosFormularios) {
+				final RGestorFormularioExterno rgfe = new RGestorFormularioExterno();
+				rgfe.setIdentificador(gfe.getIdentificador());
+				rgfe.setUrl(gfe.getUrl());
+				rgfes.add(rgfe);
+			}
+			rConfiguracionEntidad.setGestoresFormulariosExternos(rgfes);
+		}
+
 		return rConfiguracionEntidad;
 	}
 

@@ -71,7 +71,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                 debug("Autenticacion desde Gestor Formularios: " + passwd);
                 // Validamos ticket
                 usuarioAutenticadoInfo = securityService
-                        .validarTicketGestorFormularios(sesionInfo, passwd);
+                        .validarTicketFormularioExterno(sesionInfo, passwd);
             } else if (ConstantesSeguridad.TICKET_USER_PAGO.equals(usuario)) {
                 // Autenticacion por ticket
                 debug("Autenticacion desde Pasarela Pagos: " + passwd);

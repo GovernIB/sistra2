@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RFiltroTramitePersistencia", description = "Filtros para la recuperacion de tramites en persistencia")
 public class RFiltroTramitePersistencia {
 
-	@ApiModelProperty(value = "Nif")
+	@ApiModelProperty(value = "Nif", required = true)
 	private String nif;
 
 	@ApiModelProperty(value = "Fecha desde")

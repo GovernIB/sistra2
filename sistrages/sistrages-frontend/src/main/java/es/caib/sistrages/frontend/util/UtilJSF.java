@@ -39,6 +39,7 @@ import es.caib.sistrages.frontend.controller.ViewConfiguracionEntidad;
 import es.caib.sistrages.frontend.controller.ViewDominios;
 import es.caib.sistrages.frontend.controller.ViewEntidades;
 import es.caib.sistrages.frontend.controller.ViewFormateadorFormulario;
+import es.caib.sistrages.frontend.controller.ViewFormulariosExternos;
 import es.caib.sistrages.frontend.controller.ViewFuentes;
 import es.caib.sistrages.frontend.controller.ViewMensajesAvisoEntidad;
 import es.caib.sistrages.frontend.controller.ViewPlugins;
@@ -588,6 +589,9 @@ public final class UtilJSF {
 			break;
 		case MENSAJES:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewMensajesAvisoEntidad.class) + EXTENSION_XHTML;
+			break;
+		case FORMULARIOS_EXTERNOS:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewFormulariosExternos.class) + EXTENSION_XHTML;
 			break;
 		default:
 			url = URL_SIN_IMPLEMENTAR;

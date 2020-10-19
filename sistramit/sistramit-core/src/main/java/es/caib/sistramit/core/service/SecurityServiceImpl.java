@@ -13,11 +13,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
+import es.caib.sistra2.commons.plugins.formulario.api.DatosRetornoFormulario;
+import es.caib.sistra2.commons.plugins.formulario.api.FormularioPluginException;
+import es.caib.sistra2.commons.plugins.formulario.api.IFormularioPlugin;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
-import es.caib.sistramit.core.api.exception.ErrorNoControladoException;
 import es.caib.sistramit.core.api.exception.TicketCarpetaCiudadanaException;
+import es.caib.sistramit.core.api.exception.TicketFormularioException;
 import es.caib.sistramit.core.api.model.flujo.AvisoPlataforma;
+import es.caib.sistramit.core.api.model.flujo.RetornoFormularioExterno;
 import es.caib.sistramit.core.api.model.flujo.RetornoPago;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
@@ -28,6 +32,7 @@ import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
+import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SecurityService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
@@ -35,9 +40,12 @@ import es.caib.sistramit.core.service.component.integracion.AutenticacionCompone
 import es.caib.sistramit.core.service.component.integracion.CatalogoProcedimientosComponent;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
+import es.caib.sistramit.core.service.model.formulario.DatosFinalizacionFormulario;
+import es.caib.sistramit.core.service.model.formulario.DatosInicioSesionFormulario;
 import es.caib.sistramit.core.service.model.integracion.DatosAutenticacionUsuario;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FlujoTramiteDao;
+import es.caib.sistramit.core.service.repository.dao.FormularioDao;
 import es.caib.sistramit.core.service.repository.dao.PagoExternoDao;
 import es.caib.sistramit.core.service.repository.dao.TicketCDCDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
@@ -69,6 +77,10 @@ public class SecurityServiceImpl implements SecurityService {
 	/** DAO Pago externo. */
 	@Autowired
 	private PagoExternoDao pagoExternoDao;
+
+	/** Dao Formulario Externo. */
+	@Autowired
+	private FormularioDao formularioDao;
 
 	/** DAO Ticket CDC. */
 	@Autowired
@@ -161,9 +173,63 @@ public class SecurityServiceImpl implements SecurityService {
 
 	@Override
 	@NegocioInterceptor
-	public UsuarioAutenticadoInfo validarTicketGestorFormularios(final SesionInfo sesionInfo, final String ticket) {
-		// TODO PENDIENTE
-		throw new ErrorNoControladoException("Pendiente implementar");
+	public UsuarioAutenticadoInfo validarTicketFormularioExterno(final SesionInfo sesionInfo, final String ticket) {
+
+		// El ticket debe estar compuesto por: idSesionFormulario:ticketGFE
+		final String params[] = ticket.split(":");
+		if (params.length != 2) {
+			throw new TicketFormularioException(
+					"Formato ticket formulario externo no es correcto (idSesionFormulario:ticketGFE): " + ticket);
+		}
+
+		// Id sesion formulario
+		final String idSesionFormulario = params[0];
+
+		// - Obtenemos datos sesion formulario
+		final DatosInicioSesionFormulario dif = formularioDao
+				.obtenerDatosInicioSesionGestorFormularios(idSesionFormulario, true);
+
+		// Obtenemos plugin formularios
+		final IFormularioPlugin plgFormularios = (IFormularioPlugin) configuracionComponent
+				.obtenerPluginEntidad(TypePluginEntidad.FORMULARIOS_EXTERNOS, dif.getEntidad());
+
+		final RConfiguracionEntidad confEntidad = configuracionComponent.obtenerConfiguracionEntidad(dif.getEntidad());
+		final String urlGestorFormulario = UtilsSTG.obtenerUrlGestorFormulariosExterno(confEntidad,
+				dif.getIdGestorFormulariosExterno());
+
+		// Invocamos plugin para obtener resultado
+		DatosRetornoFormulario drf = null;
+		try {
+			drf = plgFormularios.obtenerResultadoFormulario(dif.getIdGestorFormulariosExterno(), urlGestorFormulario,
+					ticket);
+		} catch (final FormularioPluginException e) {
+			throw new TicketFormularioException("Error al obtener resultado formulario: " + e.getMessage(), e);
+		}
+
+		// Almacenamos finalizacion formulario
+		final DatosFinalizacionFormulario datosFinSesion = new DatosFinalizacionFormulario();
+		datosFinSesion.setFechaFinalizacion(new Date());
+		datosFinSesion.setCancelado(drf.isCancelado());
+		datosFinSesion.setPdf(drf.getPdf());
+		datosFinSesion.setXml(drf.getXml());
+		datosFinSesion.setTicketExterno(ticket);
+		formularioDao.finalizarSesionGestorFormularios(drf.getIdSesionFormulario(), datosFinSesion);
+
+		// Retornamos autenticacion
+		return dif.getInfoAutenticacion();
+	}
+
+	@Override
+	@NegocioInterceptor
+	public RetornoFormularioExterno obtenerTicketFormularioExterno(final String ticket) {
+		final DatosInicioSesionFormulario dif = formularioDao.obtenerDatosInicioSesionGestorFormularios(ticket, false);
+		final RetornoFormularioExterno res = new RetornoFormularioExterno();
+		res.setTicket(dif.getTicket());
+		res.setIdSesionTramitacion(dif.getIdSesionTramitacion());
+		res.setIdFormulario(dif.getIdFormulario());
+		res.setIdPaso(dif.getIdPaso());
+		res.setUsuario(dif.getInfoAutenticacion());
+		return res;
 	}
 
 	@Override
@@ -174,6 +240,7 @@ public class SecurityServiceImpl implements SecurityService {
 	}
 
 	@Override
+	@NegocioInterceptor
 	public RetornoPago obtenerTicketPago(final String ticket) {
 		return pagoExternoDao.obtenerTicketPago(ticket);
 	}

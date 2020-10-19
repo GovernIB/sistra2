@@ -22,16 +22,16 @@ public final class ControladorGestorFormulariosInternoImpl implements Controlado
 	private FormularioDao dao;
 
 	@Override
-	public String iniciarSesion(DatosInicioSesionFormulario difi) {
+	public String iniciarSesion(final DatosInicioSesionFormulario difi) {
 		// Almacena sesion en BBDD generando ticket
 		final String ticket = dao.crearSesionGestorFormularios(difi);
 		return ticket;
 	}
 
 	@Override
-	public DatosFinalizacionFormulario obtenerDatosFinalizacionFormulario(String ticket) {
+	public DatosFinalizacionFormulario obtenerDatosFinalizacionFormulario(final String ticket) {
 		// Recupera datos finalizacion
-		final DatosFinalizacionFormulario dff = dao.obtenerDatosFinSesionGestorFormularios(ticket);
+		final DatosFinalizacionFormulario dff = dao.obtenerDatosFinSesionGestorFormularios(ticket, true);
 		return dff;
 	}
 
