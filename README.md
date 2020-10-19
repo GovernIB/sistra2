@@ -1,6 +1,6 @@
 # sistra2
-> - Versió Estable: -
-> - Versió Desenvolupament: __sistra2-1.0__ (branca [sistra2-1.0](https://github.com/GovernIB/sistra2/tree/sistra2-1.0))
+> - Versió Estable: __sistra2-1.0.1__ (branca [sistra2-1.0](https://github.com/GovernIB/sistra2/tree/sistra2-1.0))
+> - Versió Desenvolupament: __sistra2-1.1__ (branca [sistra2-1.1](https://github.com/GovernIB/sistra2/tree/sistra2-1.1))
 
 **Descripción funcional**
 
