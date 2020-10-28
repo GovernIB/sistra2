@@ -7,6 +7,7 @@ import java.util.List;
 import es.caib.sistramit.core.api.model.flujo.AvisoPlataforma;
 import es.caib.sistramit.core.api.model.flujo.Entidad;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 
 /**
@@ -32,6 +33,11 @@ public final class InfoLoginTramite implements Serializable {
 	 * Niveles autenticación.
 	 */
 	private List<TypeAutenticacion> niveles = new ArrayList<>();
+
+	/**
+	 * Metodos autenticación (para autenticado).
+	 */
+	private List<TypeMetodoAutenticacion> metodosAutenticado;
 
 	/**
 	 * Avisos plataforma.
@@ -198,6 +204,26 @@ public final class InfoLoginTramite implements Serializable {
 	}
 
 	/**
+	 * Convierte metodos autenticacion a string.
+	 * 
+	 * @return etodos autenticacion a string
+	 */
+	public String metodosAutenticadoToString() {
+		String res = "";
+		if (getMetodosAutenticado() != null) {
+			boolean primer = true;
+			for (final TypeMetodoAutenticacion a : getMetodosAutenticado()) {
+				if (!primer) {
+					res += ";";
+				}
+				res += a.toString();
+				primer = false;
+			}
+		}
+		return res;
+	}
+
+	/**
 	 * Método de acceso a debug.
 	 *
 	 * @return debug
@@ -265,6 +291,25 @@ public final class InfoLoginTramite implements Serializable {
 			res = this.qaa.toString();
 		}
 		return res;
+	}
+
+	/**
+	 * Método de acceso a metodosAutenticado.
+	 * 
+	 * @return metodosAutenticado
+	 */
+	public List<TypeMetodoAutenticacion> getMetodosAutenticado() {
+		return metodosAutenticado;
+	}
+
+	/**
+	 * Método para establecer metodosAutenticado.
+	 * 
+	 * @param metodosAutenticado
+	 *                               metodosAutenticado a establecer
+	 */
+	public void setMetodosAutenticado(final List<TypeMetodoAutenticacion> metodosAutenticado) {
+		this.metodosAutenticado = metodosAutenticado;
 	}
 
 }

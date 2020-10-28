@@ -1,6 +1,7 @@
 package es.caib.sistramit.core.service.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
 import es.caib.sistramit.core.api.model.formulario.types.TypeSeparador;
 import es.caib.sistramit.core.api.model.formulario.types.TypeTexto;
+import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.service.model.formulario.interno.types.TypeListaValores;
 import es.caib.sistramit.core.service.model.formulario.interno.types.TypeParametroDominio;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
@@ -638,7 +640,7 @@ public final class UtilsSTG {
 
 	/**
 	 * Obtiene url gestor formulario
-	 * 
+	 *
 	 * @param confEntidad
 	 *                        Configuracion entidad
 	 * @param idGFE
@@ -660,6 +662,30 @@ public final class UtilsSTG {
 			throw new ErrorConfiguracionException("No se encuentra url para gestor formularios: " + idGFE);
 		}
 		return urlGestorFormulario;
+	}
+
+	/**
+	 * Convierte metodos autenticado.
+	 *
+	 * @param metodosAutenticacion
+	 *                                 Metodos autenticación
+	 * @return metodos autenticado.
+	 */
+	public static List<TypeMetodoAutenticacion> convertMetodosAutenticado(final String metodosAutenticacion) {
+		final List<TypeMetodoAutenticacion> res = new ArrayList<>();
+		if (StringUtils.isNotBlank(metodosAutenticacion)) {
+			final List<String> list = Arrays.asList(metodosAutenticacion.split(";"));
+			if (list.contains("CER")) {
+				res.add(TypeMetodoAutenticacion.CLAVE_CERTIFICADO);
+			}
+			if (list.contains("PIN")) {
+				res.add(TypeMetodoAutenticacion.CLAVE_PIN);
+			}
+			if (list.contains("PER")) {
+				res.add(TypeMetodoAutenticacion.CLAVE_PERMANENTE);
+			}
+		}
+		return res;
 	}
 
 }

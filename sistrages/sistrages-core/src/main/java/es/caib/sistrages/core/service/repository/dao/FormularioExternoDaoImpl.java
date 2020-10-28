@@ -218,4 +218,20 @@ public class FormularioExternoDaoImpl implements FormularioExternoDao {
 		query.executeUpdate();
 	}
 
+	@Override
+	public boolean existeFormulario(final String identificador, final Long idCodigo) {
+		final StringBuffer sql = new StringBuffer(
+				"select count(a) from JGestorExternoFormularios as a where a.identificador like :identificador");
+		if (idCodigo != null) {
+			sql.append(" and a.codigo != :codigo");
+		}
+		final Query query = entityManager.createQuery(sql.toString());
+		query.setParameter("identificador", identificador);
+		if (idCodigo != null) {
+			query.setParameter("codigo", idCodigo);
+		}
+		final Long cuantos = (Long) query.getSingleResult();
+		return cuantos != 0l;
+	}
+
 }

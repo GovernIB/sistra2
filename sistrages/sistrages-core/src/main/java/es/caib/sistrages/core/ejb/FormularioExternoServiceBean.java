@@ -96,4 +96,10 @@ public class FormularioExternoServiceBean implements FormularioExternoService {
 		return formularioExternoService.listFormularioExterno(idEntidad, idioma, filtro);
 	}
 
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public boolean existeFormulario(final String identificador, final Long codigo) {
+		return formularioExternoService.existeFormulario(identificador, codigo);
+	}
+
 }

@@ -17,11 +17,13 @@ import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.FormularioExternoService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilRest;
 
 /**
  * Mantenimiento de mensajes de aviso entidad.
@@ -136,8 +138,15 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
 		final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
 		final Entidad entidad = entidadService.loadEntidad(idEntidad);
-		this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_ENTIDAD, entidad.getCodigoDIR3());
 
+		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, Constantes.CACHE_ENTIDAD,
+				entidad.getCodigoDIR3());
+		if (resultado.getCodigo() == 1) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
+		}
 	}
 
 	/**

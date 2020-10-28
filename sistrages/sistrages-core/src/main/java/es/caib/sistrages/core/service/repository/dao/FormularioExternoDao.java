@@ -65,4 +65,12 @@ public interface FormularioExternoDao {
 	 */
 	List<GestorExternoFormularios> getAllByFiltro(Long pIdEntidad, TypeIdioma pIdioma, String pFiltro);
 
+	/**
+	 * Existe formulario gestor externo.
+	 *
+	 * @param identificador
+	 * @return
+	 */
+	boolean existeFormulario(String identificador, final Long idCodigo);
+
 }

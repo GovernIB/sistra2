@@ -39,6 +39,7 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
@@ -46,6 +47,7 @@ import es.caib.sistrages.core.api.model.PlantillaFormulario;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
+import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.FilaImportar;
 import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
@@ -53,11 +55,13 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarBase;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarEntidad;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
+import es.caib.sistrages.core.api.model.comun.FilaImportarFormulario;
 import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteRegistro;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
+import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
 import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
@@ -72,6 +76,7 @@ import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.FormateadorFormularioService;
+import es.caib.sistrages.core.api.service.FormularioExternoService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -111,9 +116,13 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	@Inject
 	private EntidadService entidadService;
 
-	/** Componente service. */
+	/** Servicio. */
 	@Inject
 	private ComponenteService componenteService;
+
+	/** Servicio. */
+	@Inject
+	private FormularioExternoService gestorFormularioService;
 
 	/** Servicio. */
 	@Inject
@@ -185,6 +194,15 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 	/** Filas formateadores. */
 	final List<FilaImportarFormateador> filasFormateador = new ArrayList<>();
+
+	/** Filas formularios. **/
+	List<FilaImportarFormulario> filasFormulario = new ArrayList<>();
+
+	/**
+	 * Indica si se debe mostrar el registro de oficina (si entidad es de registro
+	 * centralizado o no)
+	 **/
+	private boolean mostrarFilasFormularios = false;
 
 	/** Mostrar botones formateadores. **/
 	private Integer posicionDominio;
@@ -336,10 +354,13 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		// Paso 5. Preparamos la info de registro
 		prepararFlujoTramiteRegistro();
 
-		// Paso 6. Preparamos la info a mostrar de los dominios/FD
+		// Paso 6. Preparamos la info de registro
+		prepararFlujoTramiteFormulario();
+
+		// Paso 7. Preparamos la info a mostrar de los dominios/FD
 		prepararFlujoDominioFD();
 
-		// Paso 7. Preparamos la info a mostrar de los Formateadores.
+		// Paso 8. Preparamos la info a mostrar de los Formateadores.
 		prepararFlujoFormateadores();
 
 		setMostrarPanelInfo(true);
@@ -376,6 +397,12 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			}
 		}
 
+		for (final FilaImportarFormulario fila : filasFormulario) {
+			if (fila != null && fila.isCorrecto()) {
+				return false;
+			}
+		}
+
 		return true;
 	}
 
@@ -406,6 +433,13 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 		for (final FilaImportarFormateador fila : filasFormateador) {
 			if (fila == null || fila.getResultado().isErrorOrWarning()) {
+				setTodoCorrecto(false);
+				return;
+			}
+		}
+
+		for (final FilaImportarFormulario fila : filasFormulario) {
+			if (fila != null && !fila.isCorrecto()) {
 				setTodoCorrecto(false);
 				return;
 			}
@@ -681,6 +715,53 @@ public class DialogTramiteImportar extends DialogControllerBase {
 							UtilJSF.getLiteral("dialogTramiteImportar.error.pluginregistro"));
 					filaTramiteRegistro.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.pluginregistro"));
 					filaTramiteRegistro.setResultado(TypeImportarResultado.ERROR);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Revisa si alguno de los paso Rellenar tiene formularios y es de tipo externo
+	 * y se tiene el gestor externo de formularios.
+	 **/
+	private void prepararFlujoTramiteFormulario() {
+
+		filasFormulario = new ArrayList<>();
+		mostrarFilasFormularios = false;
+
+		// Paso 3.3.1 Tramite Version tiene un paso registro
+		if (filaTramiteVersion != null && filaTramiteVersion.getTramiteVersion() != null
+				&& filaTramiteVersion.getTramiteVersion().getListaPasos() != null) {
+			for (final TramitePaso paso : tramiteVersion.getListaPasos()) {
+				if (paso instanceof TramitePasoRellenar) {
+					final TramitePasoRellenar pasoRellenar = (TramitePasoRellenar) paso;
+					if (pasoRellenar.getFormulariosTramite() != null) {
+						prepararFlujoTramiteFormulario(pasoRellenar);
+					}
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Revisa si algun formulario que tiene es externo y tiene un gestor que no
+	 * existe.
+	 **/
+	private void prepararFlujoTramiteFormulario(final TramitePasoRellenar pasoRellenar) {
+		for (final FormularioTramite form : pasoRellenar.getFormulariosTramite()) {
+			if (form.getTipoFormulario() == TypeFormularioGestor.EXTERNO && form.getFormularioGestorExterno() != null
+					&& form.getFormularioGestorExterno().getIdentificador() != null) {
+				final boolean existe = gestorFormularioService
+						.existeFormulario(form.getFormularioGestorExterno().getIdentificador(), null);
+
+				if (!existe) {
+					mostrarFilasFormularios = true;
+					final FilaImportarFormulario fila = new FilaImportarFormulario();
+					fila.setCorrecto(false);
+					fila.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.gestorExternoInexistente",
+							new String[] { form.getFormularioGestorExterno().getIdentificador() }));
+					filasFormulario.add(fila);
 				}
 			}
 		}
@@ -1749,6 +1830,34 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 */
 	public void setRefrescarCacheDominio(final boolean refrescarCacheDominio) {
 		this.refrescarCacheDominio = refrescarCacheDominio;
+	}
+
+	/**
+	 * @return the mostrarFilasFormularios
+	 */
+	public final boolean isMostrarFilasFormularios() {
+		return mostrarFilasFormularios;
+	}
+
+	/**
+	 * @param mostrarFilasFormularios the mostrarFilasFormularios to set
+	 */
+	public final void setMostrarFilasFormularios(final boolean mostrarFilasFormularios) {
+		this.mostrarFilasFormularios = mostrarFilasFormularios;
+	}
+
+	/**
+	 * @return the filasFormulario
+	 */
+	public final List<FilaImportarFormulario> getFilasFormulario() {
+		return filasFormulario;
+	}
+
+	/**
+	 * @param filasFormulario the filasFormulario to set
+	 */
+	public final void setFilasFormulario(final List<FilaImportarFormulario> filasFormulario) {
+		this.filasFormulario = filasFormulario;
 	}
 
 }

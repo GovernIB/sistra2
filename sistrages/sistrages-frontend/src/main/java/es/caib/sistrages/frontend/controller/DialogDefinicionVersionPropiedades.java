@@ -3,6 +3,7 @@
  */
 package es.caib.sistrages.frontend.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeAutenticacion;
 import es.caib.sistrages.core.api.model.types.TypeScript;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -56,6 +58,14 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	/** Idiomas. **/
 	private List<String> idiomas;
 
+	/** Tipos de autenticación **/
+	private TypeAutenticacion[] tiposAutenticacion;
+
+	/** Tipos de autenticacion **/
+	private boolean tiposAutenticacionCER;
+	private boolean tiposAutenticacionPIN;
+	private boolean tiposAutenticacionPER;
+
 	/**
 	 * Inicialización.
 	 */
@@ -73,7 +83,10 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		if (idiomas.contains("en") && UtilJSF.getSessionBean().getIdiomas().contains("en")) {
 			this.tramiteVersionIdiomaEnSoportado = true;
 		}
-
+		tiposAutenticacion = TypeAutenticacion.values();
+		tiposAutenticacionCER = tramiteVersion.tieneTipoAutenticacion(TypeAutenticacion.CERTIFICADO.toString());
+		tiposAutenticacionPIN = tramiteVersion.tieneTipoAutenticacion(TypeAutenticacion.CLAVE_PIN.toString());
+		tiposAutenticacionPER = tramiteVersion.tieneTipoAutenticacion(TypeAutenticacion.CLAVE_PERMANENTE.toString());
 	}
 
 	/**
@@ -102,6 +115,13 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 				return;
 			}
 
+			if (this.getTramiteVersion().isAutenticado() && !tiposAutenticacionCER && !tiposAutenticacionPIN
+					&& !tiposAutenticacionPER) {
+				addMessageContext(TypeNivelGravedad.WARNING,
+						UtilJSF.getLiteral("warning.tipoautenticacion.obligatorio"));
+				return;
+			}
+
 			String idiomas = "";
 			if (tramiteVersionIdiomaEsSoportado) {
 				idiomas += "es;";
@@ -115,6 +135,17 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 			idiomas = idiomas.substring(0, idiomas.length() - 1); // Quitamos el ; del final
 			tramiteVersion.setIdiomasSoportados(idiomas);
+			final List<TypeAutenticacion> tipos = new ArrayList<>();
+			if (tiposAutenticacionCER) {
+				tipos.add(TypeAutenticacion.CERTIFICADO);
+			}
+			if (tiposAutenticacionPIN) {
+				tipos.add(TypeAutenticacion.CLAVE_PIN);
+			}
+			if (tiposAutenticacionPER) {
+				tipos.add(TypeAutenticacion.CLAVE_PERMANENTE);
+			}
+			tramiteVersion.setTiposAutenticacion(tipos);
 			tramiteService.updateTramiteVersion(tramiteVersion);
 		}
 
@@ -165,8 +196,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del script params iniciales.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoParamsIniciales(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -189,8 +219,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del script de personalizacion.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoPersonalizacion(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -243,8 +272,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	/**
 	 * Establece el valor de id.
 	 *
-	 * @param id
-	 *            el nuevo valor de id
+	 * @param id el nuevo valor de id
 	 */
 	public void setId(final Long id) {
 		this.id = id;
@@ -262,8 +290,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	/**
 	 * Establece el valor de tramiteVersion.
 	 *
-	 * @param tramiteVersion
-	 *            el nuevo valor de tramiteVersion
+	 * @param tramiteVersion el nuevo valor de tramiteVersion
 	 */
 	public void setTramiteVersion(final TramiteVersion tramiteVersion) {
 		this.tramiteVersion = tramiteVersion;
@@ -281,8 +308,8 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	/**
 	 * Establece el valor de tramiteVersionIdiomaEsSoportado.
 	 *
-	 * @param tramiteVersionIdiomaEsSoportado
-	 *            el nuevo valor de tramiteVersionIdiomaEsSoportado
+	 * @param tramiteVersionIdiomaEsSoportado el nuevo valor de
+	 *                                        tramiteVersionIdiomaEsSoportado
 	 */
 	public void setTramiteVersionIdiomaEsSoportado(final boolean tramiteVersionIdiomaEsSoportado) {
 		this.tramiteVersionIdiomaEsSoportado = tramiteVersionIdiomaEsSoportado;
@@ -300,8 +327,8 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	/**
 	 * Establece el valor de tramiteVersionIdiomaCaSoportado.
 	 *
-	 * @param tramiteVersionIdiomaCaSoportado
-	 *            el nuevo valor de tramiteVersionIdiomaCaSoportado
+	 * @param tramiteVersionIdiomaCaSoportado el nuevo valor de
+	 *                                        tramiteVersionIdiomaCaSoportado
 	 */
 	public void setTramiteVersionIdiomaCaSoportado(final boolean tramiteVersionIdiomaCaSoportado) {
 		this.tramiteVersionIdiomaCaSoportado = tramiteVersionIdiomaCaSoportado;
@@ -319,8 +346,8 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	/**
 	 * Establece el valor de tramiteVersionIdiomaEnSoportado.
 	 *
-	 * @param tramiteVersionIdiomaEnSoportado
-	 *            el nuevo valor de tramiteVersionIdiomaEnSoportado
+	 * @param tramiteVersionIdiomaEnSoportado el nuevo valor de
+	 *                                        tramiteVersionIdiomaEnSoportado
 	 */
 	public void setTramiteVersionIdiomaEnSoportado(final boolean tramiteVersionIdiomaEnSoportado) {
 		this.tramiteVersionIdiomaEnSoportado = tramiteVersionIdiomaEnSoportado;
@@ -338,8 +365,8 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	/**
 	 * Establece el valor de tramiteVersionIdiomaDeSoportado.
 	 *
-	 * @param tramiteVersionIdiomaDeSoportado
-	 *            el nuevo valor de tramiteVersionIdiomaDeSoportado
+	 * @param tramiteVersionIdiomaDeSoportado el nuevo valor de
+	 *                                        tramiteVersionIdiomaDeSoportado
 	 */
 	public void setTramiteVersionIdiomaDeSoportado(final boolean tramiteVersionIdiomaDeSoportado) {
 		this.tramiteVersionIdiomaDeSoportado = tramiteVersionIdiomaDeSoportado;
@@ -353,11 +380,66 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idiomas
-	 *            the idiomas to set
+	 * @param idiomas the idiomas to set
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;
+	}
+
+	/**
+	 * @return the tiposAutenticacion
+	 */
+	public TypeAutenticacion[] getTiposAutenticacion() {
+		return tiposAutenticacion;
+	}
+
+	/**
+	 * @param tiposAutenticacion the tiposAutenticacion to set
+	 */
+	public void setTiposAutenticacion(final TypeAutenticacion[] tiposAutenticacion) {
+		this.tiposAutenticacion = tiposAutenticacion;
+	}
+
+	/**
+	 * @return the tiposAutenticacionCER
+	 */
+	public final boolean isTiposAutenticacionCER() {
+		return tiposAutenticacionCER;
+	}
+
+	/**
+	 * @param tiposAutenticacionCER the tiposAutenticacionCER to set
+	 */
+	public final void setTiposAutenticacionCER(final boolean tiposAutenticacionCER) {
+		this.tiposAutenticacionCER = tiposAutenticacionCER;
+	}
+
+	/**
+	 * @return the tiposAutenticacionPIN
+	 */
+	public final boolean isTiposAutenticacionPIN() {
+		return tiposAutenticacionPIN;
+	}
+
+	/**
+	 * @param tiposAutenticacionPIN the tiposAutenticacionPIN to set
+	 */
+	public final void setTiposAutenticacionPIN(final boolean tiposAutenticacionPIN) {
+		this.tiposAutenticacionPIN = tiposAutenticacionPIN;
+	}
+
+	/**
+	 * @return the tiposAutenticacionPER
+	 */
+	public final boolean isTiposAutenticacionPER() {
+		return tiposAutenticacionPER;
+	}
+
+	/**
+	 * @param tiposAutenticacionPER the tiposAutenticacionPER to set
+	 */
+	public final void setTiposAutenticacionPER(final boolean tiposAutenticacionPER) {
+		this.tiposAutenticacionPER = tiposAutenticacionPER;
 	}
 
 }

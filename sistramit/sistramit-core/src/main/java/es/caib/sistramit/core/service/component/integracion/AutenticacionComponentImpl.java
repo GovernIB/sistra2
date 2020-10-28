@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import es.caib.sistra2.commons.plugins.autenticacion.api.AutenticacionPluginException;
 import es.caib.sistra2.commons.plugins.autenticacion.api.DatosUsuario;
 import es.caib.sistra2.commons.plugins.autenticacion.api.IComponenteAutenticacionPlugin;
-import es.caib.sistra2.commons.plugins.autenticacion.api.TipoAutenticacion;
+import es.caib.sistra2.commons.plugins.autenticacion.api.TipoMetodoAutenticacion;
 import es.caib.sistra2.commons.plugins.autenticacion.api.TipoQAA;
 import es.caib.sistramit.core.api.exception.AutenticacionException;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
@@ -35,14 +35,14 @@ public final class AutenticacionComponentImpl implements AutenticacionComponent 
 
 	@Override
 	public String iniciarSesionAutenticacion(final String codigoEntidad, final String idioma,
-			final List<TypeAutenticacion> metodos, final TypeQAA qaa, final String urlCallback,
+			final List<TypeMetodoAutenticacion> metodos, final TypeQAA qaa, final String urlCallback,
 			final String urlCallbackError, final boolean pDebugEnabled) {
 
 		final IComponenteAutenticacionPlugin plgAuth = getPlugin();
 
-		final List<TipoAutenticacion> metodosAut = new ArrayList<>();
-		for (final TypeAutenticacion t : metodos) {
-			metodosAut.add(TipoAutenticacion.fromString(t.toString()));
+		final List<TipoMetodoAutenticacion> metodosAut = new ArrayList<>();
+		for (final TypeMetodoAutenticacion t : metodos) {
+			metodosAut.add(TipoMetodoAutenticacion.fromString(t.toString()));
 		}
 
 		TipoQAA tipoQaa = null;

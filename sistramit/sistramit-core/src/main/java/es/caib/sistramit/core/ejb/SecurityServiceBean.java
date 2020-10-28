@@ -15,7 +15,7 @@ import es.caib.sistramit.core.api.model.flujo.RetornoPago;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
-import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
 import es.caib.sistramit.core.api.service.SecurityService;
@@ -38,7 +38,7 @@ public class SecurityServiceBean implements SecurityService {
 
 	@Override
 	public String iniciarSesionAutenticacion(final String entidad, final String lang,
-			final List<TypeAutenticacion> authList, final TypeQAA qaa, final String urlCallback,
+			final List<TypeMetodoAutenticacion> authList, final TypeQAA qaa, final String urlCallback,
 			final String urlCallbackError, final boolean debug) {
 		return securityService.iniciarSesionAutenticacion(entidad, lang, authList, qaa, urlCallback, urlCallbackError,
 				debug);

@@ -110,7 +110,7 @@ public class SecurityServiceImpl implements SecurityService {
 	@Override
 	@NegocioInterceptor
 	public String iniciarSesionAutenticacion(final String idEntidad, final String lang,
-			final List<TypeAutenticacion> authList, final TypeQAA qaa, final String urlCallback,
+			final List<TypeMetodoAutenticacion> authList, final TypeQAA qaa, final String urlCallback,
 			final String urlCallbackError, final boolean debug) {
 		final String urlAutenticacion = autenticacionComponent.iniciarSesionAutenticacion(idEntidad, lang, authList,
 				qaa, urlCallback, urlCallbackError, debug);
@@ -330,6 +330,8 @@ public class SecurityServiceImpl implements SecurityService {
 		res.setIdioma(idioma);
 		res.setTitulo(defTramiteCP.getDescripcion());
 		res.setNiveles(niveles);
+		res.setMetodosAutenticado(UtilsSTG.convertMetodosAutenticado(
+				defTramite.getDefinicionVersion().getPropiedades().getMetodosAutenticacion()));
 		final int qaaTramite = defTramite.getDefinicionVersion().getPropiedades().getNivelQAA();
 		if (qaaTramite > 0) {
 			res.setQaa(TypeQAA.fromString(String.valueOf(qaaTramite)));

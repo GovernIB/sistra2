@@ -123,6 +123,22 @@
 							</p:outputLabel>
 						</p:column>
 
+
+						<p:outputLabel value="#{msg['dialogTramiteImportar.headerTramiteFormularioExterno']}:"  styleClass="cabeceraImportar" rendered="#{dialogTramiteImportar.mostrarFilasFormularios}" />
+						<p:column rendered="#{dialogTramiteImportar.mostrarFilasFormularios}" />
+						<p:column rendered="#{dialogTramiteImportar.mostrarFilasFormularios}" />
+						<p:column rendered="#{dialogTramiteImportar.mostrarFilasFormularios}">
+							<h:dataTable  value="#{dialogTramiteImportar.filasFormulario}" var="fila"   >
+								<h:column headerClass="subTituloTablaImportarIzq">
+									#{fila.mensaje}
+								</h:column>
+							</h:dataTable>
+						</p:column>
+						<p:column rendered="#{dialogTramiteImportar.mostrarFilasFormularios}" />
+						<p:column rendered="#{dialogTramiteImportar.mostrarFilasFormularios}" >
+							<i class="fa fa-times fa-2x" style="color:rgb(255, 19, 19)" />
+						</p:column>
+
 				</h:panelGrid>
 
 				<p:column rendered="#{dialogTramiteImportar.filaTramiteRegistro.mostrarRegistro}">
@@ -160,6 +176,7 @@
 							</h:column>
 						</h:panelGrid>
 				</p:column>
+
 
 				<p:column rendered="#{!empty dialogTramiteImportar.filasDominios}">
 

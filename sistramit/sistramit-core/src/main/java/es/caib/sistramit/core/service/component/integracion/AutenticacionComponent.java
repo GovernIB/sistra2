@@ -2,7 +2,7 @@ package es.caib.sistramit.core.service.component.integracion;
 
 import java.util.List;
 
-import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 import es.caib.sistramit.core.service.model.integracion.DatosAutenticacionUsuario;
 
@@ -33,8 +33,8 @@ public interface AutenticacionComponent {
 	 *                          debug
 	 * @return url inicio sesion
 	 */
-	String iniciarSesionAutenticacion(String codigoEntidad, String idioma, List<TypeAutenticacion> metodos, TypeQAA qaa,
-			String callback, final String callbackError, final boolean pDebugEnabled);
+	String iniciarSesionAutenticacion(String codigoEntidad, String idioma, List<TypeMetodoAutenticacion> metodos,
+			TypeQAA qaa, String callback, final String callbackError, final boolean pDebugEnabled);
 
 	/**
 	 * Validar ticket.

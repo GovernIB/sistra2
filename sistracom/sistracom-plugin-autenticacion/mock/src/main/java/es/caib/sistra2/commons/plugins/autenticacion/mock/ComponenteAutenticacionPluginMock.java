@@ -37,15 +37,15 @@ public class ComponenteAutenticacionPluginMock extends AbstractPluginProperties
 
 	@Override
 	public String iniciarSesionAutenticacion(final String codigoEntidad, final String idioma,
-			final List<TipoAutenticacion> metodos, final TipoQAA qaa, final String callback, final String callbackError)
-			throws AutenticacionPluginException {
+			final List<TipoMetodoAutenticacion> metodos, final TipoQAA qaa, final String callback,
+			final String callbackError) throws AutenticacionPluginException {
 		// Simulamos directamente retorno componente
-		// es.caib.sistra2.commons.plugins.autenticacion. Ponemos la
-		// primera letra del ticket el primer tipo de
-		// es.caib.sistra2.commons.plugins.autenticacion para simular
-		// ese metodo.
 		String prefix;
-		prefix = metodos.get(0).toString();
+		if (metodos.get(0) == TipoMetodoAutenticacion.ANONIMO) {
+			prefix = TipoAutenticacion.ANONIMO.toString();
+		} else {
+			prefix = TipoAutenticacion.AUTENTICADO.toString();
+		}
 		lastQaa = qaa;
 		return PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN + "?ticket=" + prefix + "12345";
 	}

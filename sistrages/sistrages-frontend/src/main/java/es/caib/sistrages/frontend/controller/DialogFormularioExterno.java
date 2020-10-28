@@ -60,7 +60,6 @@ public class DialogFormularioExterno extends DialogControllerBase {
 			if (!verificarGuardar()) {
 				return;
 			}
-
 			formularioService.addFormularioExterno(UtilJSF.getIdEntidad(), data);
 			break;
 		case EDICION:
@@ -112,6 +111,12 @@ public class DialogFormularioExterno extends DialogControllerBase {
 			return false;
 		}
 
+		final boolean existe = formularioService.existeFormulario(data.getIdentificador(), data.getCodigo());
+
+		if (existe) {
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
+			return false;
+		}
 		return true;
 	}
 

@@ -57,6 +57,7 @@ import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.api.service.FlujoFormularioInternoService;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.api.service.SecurityService;
@@ -841,9 +842,10 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 				SistragesMock.VERSION_TRAMITE, SistragesMock.ID_TRAMITE_CP, false, SistragesMock.IDIOMA, URL_INICIO);
 
 		// Inicio sesion hacia redireccion
-		final List<TypeAutenticacion> authList = new ArrayList<>();
-		authList.add(TypeAutenticacion.AUTENTICADO);
-		authList.add(TypeAutenticacion.ANONIMO);
+		// - Como se usa plugin mock, ponemos primero el metodo con el que se autentica
+		final List<TypeMetodoAutenticacion> authList = new ArrayList<>();
+		authList.add(TypeMetodoAutenticacion.CLAVE_CERTIFICADO);
+		authList.add(TypeMetodoAutenticacion.ANONIMO);
 
 		final String urlRedirect = securityService.iniciarSesionAutenticacion(
 				SistragesMock.crearEntidad().getIdentificador(), SistragesMock.IDIOMA, authList, infoLogin.getQaa(),

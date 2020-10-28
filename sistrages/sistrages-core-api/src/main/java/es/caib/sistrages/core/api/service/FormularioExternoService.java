@@ -21,7 +21,7 @@ public interface FormularioExternoService {
 	/**
 	 * Añade Formulario Externo.
 	 *
-	 * @param idEntidad         id Entidad
+	 * @param idEntidad                id Entidad
 	 * @param GestorExternoFormularios el valor de Formulario Externo
 	 */
 	void addFormularioExterno(Long idEntidad, GestorExternoFormularios formularioExterno);
@@ -50,5 +50,14 @@ public interface FormularioExternoService {
 	 * @return la lista de Formulario Externo
 	 */
 	List<GestorExternoFormularios> listFormularioExterno(Long idEntidad, TypeIdioma idioma, String filtro);
+
+	/**
+	 * Comprueba si ya existe un identificador.
+	 *
+	 * @param identificador
+	 * @para midCodigo
+	 * @return
+	 */
+	boolean existeFormulario(String identificador, Long idCodigo);
 
 }

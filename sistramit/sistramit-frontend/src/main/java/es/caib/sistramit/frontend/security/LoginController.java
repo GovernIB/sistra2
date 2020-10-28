@@ -30,6 +30,7 @@ import es.caib.sistramit.core.api.exception.LoginException;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SecurityService;
@@ -185,13 +186,14 @@ public final class LoginController {
 	/**
 	 * Redirige a componente de autenticacion.
 	 *
-	 * @param metodosAutenticacion
+	 * @param nivelesAutenticacion
 	 *                                 metodos autenticacion (separados por ;)
 	 * @return redirige a componente de autenticacion.
 	 */
 	@RequestMapping("/redirigirAutenticacionLogin.html")
 	public ModelAndView redirigirAutenticacionLogin(@RequestParam("entidad") final String idEntidad,
-			@RequestParam("metodosAutenticacion") final String metodosAutenticacion,
+			@RequestParam("nivelesAutenticacion") final String nivelesAutenticacion,
+			@RequestParam("metodosAutenticado") final String metodosAutenticado,
 			@RequestParam(name = "qaa", required = false) final String qaa,
 			@RequestParam(name = "debug", required = false) final boolean debug) {
 		String lang = sesionHttp.getIdioma();
@@ -200,9 +202,20 @@ public final class LoginController {
 		}
 
 		final List<TypeAutenticacion> authList = new ArrayList<>();
-		final String[] auths = metodosAutenticacion.split(";");
+		final String[] auths = nivelesAutenticacion.split(";");
 		for (final String a : auths) {
 			authList.add(TypeAutenticacion.fromString(a));
+		}
+
+		final List<TypeMetodoAutenticacion> metAuthList = new ArrayList<>();
+		if (authList.contains(TypeAutenticacion.ANONIMO)) {
+			metAuthList.add(TypeMetodoAutenticacion.ANONIMO);
+		}
+		if (authList.contains(TypeAutenticacion.AUTENTICADO)) {
+			final String[] mAuths = metodosAutenticado.split(";");
+			for (final String ma : mAuths) {
+				metAuthList.add(TypeMetodoAutenticacion.fromString(ma));
+			}
 		}
 
 		final String urlCallback = systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
@@ -212,7 +225,8 @@ public final class LoginController {
 		if (StringUtils.isNotBlank(qaa)) {
 			tipoQAA = TypeQAA.fromString(qaa);
 		}
-		return new ModelAndView("redirect:" + securityService.iniciarSesionAutenticacion(idEntidad, lang, authList,
+
+		return new ModelAndView("redirect:" + securityService.iniciarSesionAutenticacion(idEntidad, lang, metAuthList,
 				tipoQAA, urlCallback, urlCallbackError, debug));
 	}
 

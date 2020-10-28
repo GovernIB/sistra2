@@ -7,7 +7,7 @@ import es.caib.sistramit.core.api.model.flujo.RetornoPago;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
-import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
 
@@ -68,7 +68,7 @@ public interface SecurityService {
 	 *                             debug
 	 * @return url redireccion a Clave
 	 */
-	String iniciarSesionAutenticacion(final String idEntidad, final String lang, List<TypeAutenticacion> authList,
+	String iniciarSesionAutenticacion(final String idEntidad, final String lang, List<TypeMetodoAutenticacion> authList,
 			TypeQAA qaa, final String urlCallback, final String urlCallbackError, final boolean debug);
 
 	/**

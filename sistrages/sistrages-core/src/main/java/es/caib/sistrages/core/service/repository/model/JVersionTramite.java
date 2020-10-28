@@ -1,6 +1,8 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,6 +20,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeAutenticacion;
 import es.caib.sistrages.core.api.model.types.TypeFlujo;
 
 /**
@@ -149,6 +152,10 @@ public class JVersionTramite implements IModelApi {
 	/** Huella. **/
 	@Column(name = "VTR_HUELLA", length = 20)
 	private String huella;
+
+	/** Huella. **/
+	@Column(name = "VTR_AUTMET", length = 50)
+	private String tiposAutenticacion;
 
 	/** Constructor. **/
 	public JVersionTramite() {
@@ -534,6 +541,20 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
+	 * @return the tiposAutenticacion
+	 */
+	public String getTiposAutenticacion() {
+		return tiposAutenticacion;
+	}
+
+	/**
+	 * @param tiposAutenticacion the tiposAutenticacion to set
+	 */
+	public void setTiposAutenticacion(final String tiposAutenticacion) {
+		this.tiposAutenticacion = tiposAutenticacion;
+	}
+
+	/**
 	 * ToModel.
 	 *
 	 * @return
@@ -584,6 +605,18 @@ public class JVersionTramite implements IModelApi {
 			tramiteVersion.setTipoFlujo(TypeFlujo.fromString(this.getTipoflujo()));
 		}
 		tramiteVersion.setHuella(this.getHuella());
+		final List<TypeAutenticacion> listTiposAut = new ArrayList<>();
+		if (this.getTiposAutenticacion() != null && !this.getTiposAutenticacion().isEmpty()) {
+			final String[] tipos = this.getTiposAutenticacion().split(";");
+			for (final String tipo : tipos) {
+				final TypeAutenticacion typeAutenticacion = TypeAutenticacion.fromString(tipo);
+				if (tipo != null && !listTiposAut.contains(typeAutenticacion)) {
+					listTiposAut.add(typeAutenticacion);
+				}
+			}
+		}
+		tramiteVersion.setTiposAutenticacion(listTiposAut);
+
 		return tramiteVersion;
 	}
 
@@ -628,6 +661,24 @@ public class JVersionTramite implements IModelApi {
 			jversionTramite.setRelease(model.getRelease());
 			jversionTramite.setTipoflujo(model.getTipoFlujo().toString());
 			jversionTramite.setHuella(model.getHuella());
+
+			if (model.getTiposAutenticacion() != null) {
+				final StringBuilder tipoAut = new StringBuilder();
+				for (final TypeAutenticacion tipoAutenticacion : model.getTiposAutenticacion()) {
+					if (tipoAut != null) {
+						tipoAut.append(tipoAutenticacion.toString());
+						tipoAut.append(";");
+					}
+				}
+
+				String tipoAutString = tipoAut.toString();
+				if (tipoAutString.endsWith(";")) {
+					tipoAutString = tipoAutString.substring(0, tipoAutString.length() - 1);
+				}
+				jversionTramite.setTiposAutenticacion(tipoAutString);
+			} else {
+				jversionTramite.setTiposAutenticacion(null);
+			}
 		}
 		return jversionTramite;
 	}
@@ -668,6 +719,7 @@ public class JVersionTramite implements IModelApi {
 			jversionTramite.setPlazoInicioDesactivacion(origVersionTramite.getPlazoInicioDesactivacion());
 			jversionTramite.setTipoflujo(origVersionTramite.getTipoflujo());
 			jversionTramite.setHuella(origVersionTramite.getHuella());
+			jversionTramite.setTiposAutenticacion(origVersionTramite.getTiposAutenticacion());
 		}
 		return jversionTramite;
 	}

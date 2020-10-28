@@ -44,7 +44,7 @@
 
 					<c:if test="${not login.loginAnonimoAuto}">
 						// Redireccion componente autenticacion
-						document.location="redirigirAutenticacionLogin.html?entidad=${login.entidad.id}&metodosAutenticacion=${login.nivelesAutenticacionToString()}&qaa=${login.valueQaaString()}&debug=${login.debug}";
+						document.location="redirigirAutenticacionLogin.html?entidad=${login.entidad.id}&nivelesAutenticacion=${login.nivelesAutenticacionToString()}&metodosAutenticado=${login.metodosAutenticadoToString()}&qaa=${login.valueQaaString()}&debug=${login.debug}";
 					</c:if>
 				</c:if>
 

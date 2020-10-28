@@ -40,19 +40,14 @@ public class ComponenteAutenticacionPluginLoginib extends AbstractPluginProperti
 
 	@Override
 	public String iniciarSesionAutenticacion(final String codigoEntidad, final String idioma,
-			final List<TipoAutenticacion> metodos, final TipoQAA qaa, final String callback, final String callbackError)
-			throws AutenticacionPluginException {
+			final List<TipoMetodoAutenticacion> metodos, final TipoQAA qaa, final String callback,
+			final String callbackError) throws AutenticacionPluginException {
 
 		String metodo = "";
-		if (metodos.contains(TipoAutenticacion.ANONIMO)) {
-			metodo += "ANONIMO;";
+		for (final TipoMetodoAutenticacion m : metodos) {
+			metodo += m.toString() + ";";
 		}
-		if (metodos.contains(TipoAutenticacion.AUTENTICADO)) {
-			metodo += "CLAVE_CERTIFICADO;CLAVE_PIN;CLAVE_PERMANENTE";
-		}
-		if (metodo.endsWith(";")) {
-			metodo = metodo.substring(0, metodo.length() - 1);
-		}
+		metodo = metodo.substring(0, metodo.length() - 1);
 
 		final RLoginParams param = new RLoginParams();
 		param.setAplicacion(getPropiedad("idAplicacion"));

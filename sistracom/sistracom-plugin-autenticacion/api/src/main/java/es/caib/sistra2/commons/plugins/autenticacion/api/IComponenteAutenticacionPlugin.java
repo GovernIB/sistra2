@@ -35,8 +35,8 @@ public interface IComponenteAutenticacionPlugin extends IPlugin {
 	 *                             (no se pasará ningún parámetro)
 	 * @return url inicio sesion
 	 */
-	String iniciarSesionAutenticacion(String codigoEntidad, String idioma, List<TipoAutenticacion> metodos, TipoQAA qaa,
-			String urlCallback, String urlCallbackError) throws AutenticacionPluginException;
+	String iniciarSesionAutenticacion(String codigoEntidad, String idioma, List<TipoMetodoAutenticacion> metodos,
+			TipoQAA qaa, String urlCallback, String urlCallbackError) throws AutenticacionPluginException;
 
 	/**
 	 * Validar ticket.

@@ -44,6 +44,7 @@ import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.model.comun.ConstantesDominio;
+import es.caib.sistrages.core.api.model.types.TypeAutenticacion;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
@@ -223,6 +224,18 @@ public class VersionTramiteAdapter {
 		}
 
 		res.setNivelQAA(tv.getNivelQAA());
+
+		if (tv.getTiposAutenticacion() != null) {
+			String ma = "";
+			for (final TypeAutenticacion t : tv.getTiposAutenticacion()) {
+				ma += t.toString() + ";";
+			}
+			if (ma.endsWith(";")) {
+				ma = ma.substring(0, ma.length() - 1);
+			}
+			res.setMetodosAutenticacion(ma);
+		}
+
 		res.setNoAutenticado(tv.isNoAutenticado());
 		res.setPersistente(tv.isPersistencia());
 		res.setScriptParametrosIniciales(AdapterUtils.generaScript(tv.getScriptInicializacionTramite(), idioma));

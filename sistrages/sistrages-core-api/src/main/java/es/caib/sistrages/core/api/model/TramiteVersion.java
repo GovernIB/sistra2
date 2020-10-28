@@ -3,6 +3,7 @@ package es.caib.sistrages.core.api.model;
 import java.util.Date;
 import java.util.List;
 
+import es.caib.sistrages.core.api.model.types.TypeAutenticacion;
 import es.caib.sistrages.core.api.model.types.TypeFlujo;
 
 /**
@@ -115,6 +116,9 @@ public class TramiteVersion extends ModelApi {
 
 	/** Huella. **/
 	private String huella;
+
+	/** Tipos de autenticacion **/
+	private List<TypeAutenticacion> tiposAutenticacion;
 
 	/**
 	 * Obtiene el valor de codigo.
@@ -753,6 +757,40 @@ public class TramiteVersion extends ModelApi {
 	 */
 	public void setHuella(final String huella) {
 		this.huella = huella;
+	}
+
+	/**
+	 * @return the tiposAutenticacion
+	 */
+	public List<TypeAutenticacion> getTiposAutenticacion() {
+		return tiposAutenticacion;
+	}
+
+	/**
+	 * @param tiposAutenticacion the tiposAutenticacion to set
+	 */
+	public void setTiposAutenticacion(final List<TypeAutenticacion> tiposAutenticacion) {
+		this.tiposAutenticacion = tiposAutenticacion;
+	}
+
+	/**
+	 * Comprueba si tiene un tipo de autenticacion
+	 *
+	 * @param string
+	 * @return
+	 */
+	public boolean tieneTipoAutenticacion(final String tipo) {
+		boolean tiene = false;
+		if (tipo != null && !tipo.isEmpty() && this.getTiposAutenticacion() != null
+				&& !this.getTiposAutenticacion().isEmpty()) {
+			for (final TypeAutenticacion tipoAutenticacion : this.getTiposAutenticacion()) {
+				if (tipoAutenticacion.toString().equals(tipo)) {
+					tiene = true;
+					break;
+				}
+			}
+		}
+		return tiene;
 	}
 
 }

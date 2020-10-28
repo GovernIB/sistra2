@@ -33,6 +33,7 @@ import es.caib.sistramit.core.api.exception.ErrorFormularioSoporteException;
 import es.caib.sistramit.core.api.exception.FlujoInvalidoException;
 import es.caib.sistramit.core.api.exception.GenerarPdfClaveException;
 import es.caib.sistramit.core.api.exception.LimiteTramitacionException;
+import es.caib.sistramit.core.api.exception.MetodoAutenticacionException;
 import es.caib.sistramit.core.api.exception.QaaException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.exception.TramiteNoExisteException;
@@ -50,6 +51,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -63,6 +65,7 @@ import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FlujoTramiteDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
 import es.caib.sistramit.core.service.util.UtilsFormularioSoporte;
+import es.caib.sistramit.core.service.util.UtilsSTG;
 
 @Component("flujoTramitacionComponent")
 @Scope(value = "prototype")
@@ -424,11 +427,18 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	 */
 	private void controlQAA(final DefinicionTramiteSTG defTramSTG) {
 		if (this.usuarioAutenticadoInfo.getAutenticacion() != TypeAutenticacion.ANONIMO) {
+			// Control QAA
 			final TypeQAA qaaTramite = TypeQAA
 					.fromString(defTramSTG.getDefinicionVersion().getPropiedades().getNivelQAA() + "");
 			final TypeQAA qaaUsuario = this.usuarioAutenticadoInfo.getQaa();
 			if (qaaTramite.esSuperior(qaaUsuario)) {
 				throw new QaaException();
+			}
+			// Control metodo autenticacion
+			final List<TypeMetodoAutenticacion> metAut = UtilsSTG.convertMetodosAutenticado(
+					defTramSTG.getDefinicionVersion().getPropiedades().getMetodosAutenticacion());
+			if (!metAut.contains(this.usuarioAutenticadoInfo.getMetodoAutenticacion())) {
+				throw new MetodoAutenticacionException(this.usuarioAutenticadoInfo.getMetodoAutenticacion());
 			}
 		}
 	}

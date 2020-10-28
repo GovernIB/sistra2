@@ -24,12 +24,15 @@
 						<p:spacer width="8" height="1"/>
 						<p:inputText id="nivelQAA" disabled="true" value="#{msg['typeQAA.' += viewDefinicionVersion.tramiteVersion.nivelQAA]}"/>
 					</p:column>
+					<p:column>
+						<p:selectBooleanCheckbox itemLabel="#{msg['tiposAutenticacion.CER']}" value="#{viewDefinicionVersion.tramiteVersion.tieneTipoAutenticacion('CER')}" disabled="true" />
+						<p:selectBooleanCheckbox itemLabel="#{msg['tiposAutenticacion.PIN']}" value="#{viewDefinicionVersion.tramiteVersion.tieneTipoAutenticacion('PIN')}" disabled="true" />
+						<p:selectBooleanCheckbox itemLabel="#{msg['tiposAutenticacion.PER']}" value="#{viewDefinicionVersion.tramiteVersion.tieneTipoAutenticacion('PER')}" disabled="true" />
+					</p:column>
 				</p:row>
 				<p:row>
 					<p:column styleClass="noPadding-left">
-						<p:selectBooleanCheckbox id="sinAutenticacion" disabled="true" itemLabel="#{msg['viewDefinicionVersionPropiedades.sinautenticacion']}" value="#{viewDefinicionVersion.tramiteVersion.noAutenticado}"   />
-					</p:column>
-					<p:column>
+						<p:selectBooleanCheckbox id="sinAutenticacion" disabled="true" itemLabel="#{msg['viewDefinicionVersionPropiedades.sinautenticacion']}" value="#{viewDefinicionVersion.tramiteVersion.noAutenticado}"  style="width:170px" />
 					</p:column>
 				</p:row>
 			</p:panelGrid>

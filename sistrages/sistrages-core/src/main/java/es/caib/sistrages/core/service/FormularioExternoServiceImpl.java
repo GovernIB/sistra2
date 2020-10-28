@@ -96,4 +96,10 @@ public class FormularioExternoServiceImpl implements FormularioExternoService {
 		return formularioExternoDao.getAllByFiltro(idEntidad, idioma, filtro);
 	}
 
+	@Override
+	@NegocioInterceptor
+	public boolean existeFormulario(final String identificador, final Long idCodigo) {
+		return formularioExternoDao.existeFormulario(identificador, idCodigo);
+	}
+
 }
