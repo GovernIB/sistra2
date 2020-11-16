@@ -24,11 +24,6 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class DialogPaginaFormulario extends DialogControllerBase {
 
-	/**
-	 * Dato elemento en formato JSON.
-	 */
-	private String iData;
-
 	/** Id. formulario interno. **/
 	private String idFormulario;
 
@@ -55,9 +50,14 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new PaginaFormulario();
 		} else {
-			data = (PaginaFormulario) UtilJSON.fromJSON(iData, PaginaFormulario.class);
+			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+			final Object json = mochila.get(Constantes.CLAVE_MOCHILA_FORMULARIO);
+			if (json == null) {
+				data = new PaginaFormulario();
+			} else {
+				data = (PaginaFormulario) UtilJSON.fromJSON(json.toString(), PaginaFormulario.class);
+			}
 		}
-
 	}
 
 	/**
@@ -87,8 +87,7 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del script de personalizacion.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoScriptValidacion(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -134,21 +133,6 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @return the iData
-	 */
-	public String getiData() {
-		return iData;
-	}
-
-	/**
-	 * @param iData
-	 *            the iData to set
-	 */
-	public void setiData(final String iData) {
-		this.iData = iData;
-	}
-
-	/**
 	 * @return the data
 	 */
 	public PaginaFormulario getData() {
@@ -156,8 +140,7 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final PaginaFormulario data) {
 		this.data = data;
@@ -171,8 +154,7 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idFormulario
-	 *            the idFormulario to set
+	 * @param idFormulario the idFormulario to set
 	 */
 	public void setIdFormulario(final String idFormulario) {
 		this.idFormulario = idFormulario;
@@ -186,8 +168,7 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idTramiteversion
-	 *            the idTramiteversion to set
+	 * @param idTramiteversion the idTramiteversion to set
 	 */
 	public void setIdTramiteversion(final String idTramiteversion) {
 		this.idTramiteversion = idTramiteversion;
@@ -201,8 +182,7 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idFormularioInterno
-	 *            the idFormularioInterno to set
+	 * @param idFormularioInterno the idFormularioInterno to set
 	 */
 	public void setIdFormularioInterno(final String idFormularioInterno) {
 		this.idFormularioInterno = idFormularioInterno;

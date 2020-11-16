@@ -131,8 +131,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de traducciones.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -174,8 +173,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del script de personalizacion.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoScriptPlantilla(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -251,6 +249,10 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		}
 
 		final Map<String, String> params = new HashMap<>();
+		UtilJSF.getSessionBean().limpiaMochilaDatos();
+		UtilJSF.getSessionBean().getMochilaDatos().put(Constantes.CLAVE_MOCHILA_FORMULARIO,
+				UtilJSON.toJSON(this.paginaSeleccionada));
+
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.paginaSeleccionada));
 		params.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.idFormularioTramite);
 		params.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
@@ -262,8 +264,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	/**
 	 * Return dialogo pagina.
 	 *
-	 * @param event
-	 *            the event
+	 * @param event the event
 	 */
 	public void returnDialogoPagina(final SelectEvent event) {
 		PaginaFormulario pagina = null;
@@ -319,8 +320,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	/**
 	 * Return dialogo plantilla.
 	 *
-	 * @param event
-	 *            the event
+	 * @param event the event
 	 */
 	public void returnDialogoPlantilla(final SelectEvent event) {
 		PlantillaFormulario plantilla = null;
@@ -509,8 +509,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	/**
 	 * Establece el valor de id.
 	 *
-	 * @param pId
-	 *            el nuevo valor de id
+	 * @param pId el nuevo valor de id
 	 */
 	public void setId(final String pId) {
 		this.id = pId;
@@ -528,8 +527,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	/**
 	 * Establece el valor de data.
 	 *
-	 * @param data
-	 *            el nuevo valor de data
+	 * @param data el nuevo valor de data
 	 */
 	public void setData(final DisenyoFormulario data) {
 		this.data = data;
@@ -547,8 +545,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	/**
 	 * Establece el valor de literal.
 	 *
-	 * @param literal
-	 *            el nuevo valor de literal
+	 * @param literal el nuevo valor de literal
 	 */
 	public void setLiteral(final String literal) {
 		this.literal = literal;
@@ -594,8 +591,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idFormularioTramite
-	 *            the idFormularioTramite to set
+	 * @param idFormularioTramite the idFormularioTramite to set
 	 */
 	public void setIdFormularioTramite(final String idFormularioTramite) {
 		this.idFormularioTramite = idFormularioTramite;
@@ -609,8 +605,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idTramiteVersion
-	 *            the idTramiteVersion to set
+	 * @param idTramiteVersion the idTramiteVersion to set
 	 */
 	public void setIdTramiteVersion(final String idTramiteVersion) {
 		this.idTramiteVersion = idTramiteVersion;
