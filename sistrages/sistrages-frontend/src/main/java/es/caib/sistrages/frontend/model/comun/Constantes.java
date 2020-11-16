@@ -46,6 +46,9 @@ public final class Constantes {
 	/** Constante area. **/
 	public static final String CLAVE_MOCHILA_AREA = "AREA";
 
+	/** Constante formulario. **/
+	public static final String CLAVE_MOCHILA_FORMULARIO = "FORMULARIO";
+
 	/** Constante tramite. **/
 	public static final String CLAVE_MOCHILA_TRAMITE = "TRAM";
 
