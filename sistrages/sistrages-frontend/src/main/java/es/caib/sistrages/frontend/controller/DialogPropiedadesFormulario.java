@@ -252,11 +252,6 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		UtilJSF.getSessionBean().getMochilaDatos().put(Constantes.CLAVE_MOCHILA_FORMULARIO,
 				UtilJSON.toJSON(this.paginaSeleccionada));
-
-<<<<<<< HEAD
-=======
-		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.paginaSeleccionada));
->>>>>>> branch 'sistra2-1.1' of https://github.com/GovernIB/sistra2.git
 		params.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.idFormularioTramite);
 		params.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
