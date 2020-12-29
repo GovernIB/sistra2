@@ -142,13 +142,13 @@ public final class AccionAnexarDocumento implements AccionPaso {
 	 * Transforma anexo (en caso de que este configurado).
 	 *
 	 * @param pAnexoDetalle
-	 *            Detalle anexo
+	 *                           Detalle anexo
 	 * @param pNombreFichero
-	 *            Nombre fichero
+	 *                           Nombre fichero
 	 * @param pDatosFichero
-	 *            Datos fichero
+	 *                           Datos fichero
 	 * @param pDebugEnabled
-	 *            Debug enabled
+	 *                           Debug enabled
 	 * @return Transformacion realizada (si no se realiza transformación se
 	 *         devuelven los datos originales).
 	 */
@@ -188,11 +188,11 @@ public final class AccionAnexarDocumento implements AccionPaso {
 	 * Actualiza el detalle del anexo.
 	 *
 	 * @param anexoDetalle
-	 *            Detalle anexo
+	 *                          Detalle anexo
 	 * @param nombreFichero
-	 *            Nombre fichero
+	 *                          Nombre fichero
 	 * @param titulo
-	 *            Título (para genericos)
+	 *                          Título (para genericos)
 	 */
 	private void actualizarDetalleAnexo(final Anexo anexoDetalle, final String nombreFichero, final String titulo) {
 		// Marcamos como rellenado
@@ -221,22 +221,22 @@ public final class AccionAnexarDocumento implements AccionPaso {
 	 * Realiza las validaciones al subir el anexo.
 	 *
 	 * @param dipa
-	 *            Datos internos paso
+	 *                               Datos internos paso
 	 * @param anexoDetalle
-	 *            Detalle anexo
+	 *                               Detalle anexo
 	 * @param presentacion
 	 * @param nombreFichero
-	 *            Nombre fichero
+	 *                               Nombre fichero
 	 * @param datosFichero
-	 *            Datos fichero
+	 *                               Datos fichero
 	 * @param titulo
-	 *            Título (para genericos)
+	 *                               Título (para genericos)
 	 * @param pDefinicionTramite
-	 *            Definicion tramite
+	 *                               Definicion tramite
 	 * @param pVariablesFlujo
-	 *            Variables de flujo
+	 *                               Variables de flujo
 	 * @param presentacion
-	 *            presentacion
+	 *                               presentacion
 	 * @return
 	 */
 	private void validarAnexo(final DatosInternosPasoAnexar dipa, final Anexo anexoDetalle,
@@ -319,21 +319,24 @@ public final class AccionAnexarDocumento implements AccionPaso {
 				throw new RuntimeException("Pendiente implementar");
 			}
 
-			// - Ejecutamos script de validacion de anexo
-			final RPasoTramitacionAnexar defPaso = (RPasoTramitacionAnexar) UtilsSTG
-					.devuelveDefinicionPaso(dipa.getIdPaso(), pDefinicionTramite);
-			final RAnexoTramite defAnexo = UtilsSTG.devuelveDefinicionAnexo(defPaso, anexoDetalle.getId());
-			if (defAnexo != null
-					&& UtilsSTG.existeScript(defAnexo.getPresentacionElectronica().getScriptValidacion())) {
-				final RScript script = defAnexo.getPresentacionElectronica().getScriptValidacion();
-				final Map<String, String> codigosError = UtilsSTG.convertLiteralesToMap(script.getLiterales());
-				final Map<String, Object> variablesScript = new HashMap<String, Object>();
-				variablesScript.put("nombreFichero", nombreFichero);
-				variablesScript.put("datosFichero", datosFichero);
-				final RespuestaScript rs = this.scriptFlujo.executeScriptFlujo(TypeScriptFlujo.SCRIPT_VALIDAR_ANEXO,
-						anexoDetalle.getId(), script.getScript(), pVariablesFlujo, variablesScript, null, codigosError,
-						pDefinicionTramite);
+			// - Ejecutamos script de validacion de anexo (solo para no dinamicos)
+			if (anexoDetalle.getDinamico() == TypeSiNo.NO) {
+				final RPasoTramitacionAnexar defPaso = (RPasoTramitacionAnexar) UtilsSTG
+						.devuelveDefinicionPaso(dipa.getIdPaso(), pDefinicionTramite);
+				final RAnexoTramite defAnexo = UtilsSTG.devuelveDefinicionAnexo(defPaso, anexoDetalle.getId());
+				if (defAnexo != null
+						&& UtilsSTG.existeScript(defAnexo.getPresentacionElectronica().getScriptValidacion())) {
+					final RScript script = defAnexo.getPresentacionElectronica().getScriptValidacion();
+					final Map<String, String> codigosError = UtilsSTG.convertLiteralesToMap(script.getLiterales());
+					final Map<String, Object> variablesScript = new HashMap<String, Object>();
+					variablesScript.put("nombreFichero", nombreFichero);
+					variablesScript.put("datosFichero", datosFichero);
+					final RespuestaScript rs = this.scriptFlujo.executeScriptFlujo(TypeScriptFlujo.SCRIPT_VALIDAR_ANEXO,
+							anexoDetalle.getId(), script.getScript(), pVariablesFlujo, variablesScript, null,
+							codigosError, pDefinicionTramite);
+				}
 			}
+
 		}
 
 	}
@@ -342,19 +345,19 @@ public final class AccionAnexarDocumento implements AccionPaso {
 	 * Actualiza persistencia.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                             Datos internos paso
 	 * @param pDpp
-	 *            Datos persistencia
+	 *                             Datos persistencia
 	 * @param pAnexoDetalle
-	 *            Detalle anexo
+	 *                             Detalle anexo
 	 * @param pNombreFichero
-	 *            Nombre fichero
+	 *                             Nombre fichero
 	 * @param pDatosFichero
-	 *            Datos fichero
+	 *                             Datos fichero
 	 * @param ptituloInstancia
-	 *            titulo (para genericos)
+	 *                             titulo (para genericos)
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                             Variables flujo
 	 */
 	private void actualizarPersistencia(final DatosInternosPasoAnexar pDipa, final DatosPersistenciaPaso pDpp,
 			final Anexo pAnexoDetalle, final String pNombreFichero, final byte[] pDatosFichero,

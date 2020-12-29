@@ -32,9 +32,9 @@ import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
 import es.caib.sistramit.core.service.component.flujo.pasos.ControladorPasoReferenciaImpl;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
+import es.caib.sistramit.core.service.component.script.plugins.flujo.ClzAnexoDinamico;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResAnexosDinamicos;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResFirmantes;
-import es.caib.sistramit.core.service.model.flujo.AnexoDinamico;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoAnexo;
 import es.caib.sistramit.core.service.model.flujo.DatosInternosPasoAnexar;
@@ -346,8 +346,16 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 
 			// Evaluamos resultado
 			final ResAnexosDinamicos rsa = (ResAnexosDinamicos) rs.getResultado();
-			for (final AnexoDinamico anexd : rsa.getAnexos()) {
+			for (final ClzAnexoDinamico anexd : rsa.getAnexos()) {
+
+				if (verificarIdAnexoRepetido(anexos, anexd.getIdentificador())) {
+					throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_LISTA_DINAMICA_ANEXOS.name(),
+							pVariablesFlujo.getIdSesionTramitacion(), null,
+							"Id anexo repetido: " + anexd.getIdentificador());
+				}
+
 				final Anexo anexo = Anexo.createNewAnexo();
+				anexo.setDinamico(TypeSiNo.SI);
 				anexo.setId(anexd.getIdentificador());
 				anexo.setTitulo(anexd.getDescripcion());
 				anexo.setTipoENI("TD99");
@@ -384,6 +392,28 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 			}
 		}
 		return anexos;
+	}
+
+	/**
+	 * Verifica si id anexo esta repetido.
+	 * 
+	 * @param anexos
+	 *                          anexos
+	 * @param identificador
+	 *                          identificador
+	 * @return true si esta repetido
+	 */
+	private boolean verificarIdAnexoRepetido(final List<Anexo> anexos, final String identificador) {
+		boolean res = false;
+		if (anexos != null) {
+			for (final Anexo a : anexos) {
+				if (a.getId().equals(identificador)) {
+					res = true;
+					break;
+				}
+			}
+		}
+		return res;
 	}
 
 	/**

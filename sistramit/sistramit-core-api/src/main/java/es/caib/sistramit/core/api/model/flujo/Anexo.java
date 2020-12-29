@@ -64,6 +64,9 @@ public final class Anexo extends DocumentoFirmado {
 	 */
 	private String tipoENI;
 
+	/** Indica si es dinamico. */
+	private TypeSiNo dinamico = TypeSiNo.NO;
+
 	/**
 	 * Método de acceso a extensiones.
 	 *
@@ -235,7 +238,7 @@ public final class Anexo extends DocumentoFirmado {
 
 	/**
 	 * Método de acceso a tipoENI.
-	 * 
+	 *
 	 * @return tipoENI
 	 */
 	public String getTipoENI() {
@@ -244,12 +247,31 @@ public final class Anexo extends DocumentoFirmado {
 
 	/**
 	 * Método para establecer tipoENI.
-	 * 
+	 *
 	 * @param tipoENI
 	 *                    tipoENI a establecer
 	 */
 	public void setTipoENI(final String tipoENI) {
 		this.tipoENI = tipoENI;
+	}
+
+	/**
+	 * Método de acceso a dinamico.
+	 * 
+	 * @return dinamico
+	 */
+	public TypeSiNo getDinamico() {
+		return dinamico;
+	}
+
+	/**
+	 * Método para establecer dinamico.
+	 * 
+	 * @param dinamico
+	 *                     dinamico a establecer
+	 */
+	public void setDinamico(final TypeSiNo dinamico) {
+		this.dinamico = dinamico;
 	}
 
 }

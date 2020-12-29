@@ -647,13 +647,22 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
 				TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
 
+		// - Anexamos anexo DINAMICO
+		params = new ParametrosAccionPaso();
+		params.addParametroEntrada("idAnexo", "DIN1");
+		params.addParametroEntrada("presentacion", TypePresentacion.ELECTRONICA);
+		params.addParametroEntrada("nombreFichero", "dinamico.pdf");
+		params.addParametroEntrada("datosFichero", readResourceFromClasspath("test-files/anexoFormulario.pdf"));
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
+
 		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
 		this.logger.info("Detalle paso: " + dp.print());
 
 		// -- Paso terminado
 		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
 		Assert.isTrue(dp.getActual().getTipo() == TypePaso.ANEXAR, "No esta en paso anexar");
-		Assert.isTrue(dp.getActual().getCompletado() == TypeSiNo.SI, "Paso rellenar no esta completado");
+		Assert.isTrue(dp.getActual().getCompletado() == TypeSiNo.SI, "Paso anexar no esta completado");
 		this.logger.info("Detalle paso: " + dp.print());
 
 	}
