@@ -1,4 +1,4 @@
-package es.caib.sistramit.core.service.model.flujo;
+package es.caib.sistramit.core.service.component.script.plugins.flujo;
 
 import java.io.Serializable;
 
@@ -9,7 +9,7 @@ import java.io.Serializable;
  *
  */
 @SuppressWarnings("serial")
-public final class AnexoDinamico implements Serializable {
+public final class ClzAnexoDinamico implements Serializable {
 
     /**
      * Identificador anexo dinamico.

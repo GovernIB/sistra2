@@ -7,41 +7,42 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('DATOS_ANEXOSDINAMICOS.addAnexo(anexo)');
+		copiarPortapeles('DATOS_ANEXOSDINAMICOS.crearAnexo()');
 	}
 </script>
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_ANEXOSDINAMICOS">DATOS_ANEXOSDINAMICOS</a></li>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_ANEXOSDINAMICOS">DATOS_ANEXOSDINAMICOS</a></li>
       	  <li>></li>
-      	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_ANEXOSDINAMICOS&metodo=addAnexo">addAnexo</a></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_ANEXOSDINAMICOS&metodo=crearAnexo">crearAnexo</a></li>
   	</ul>
 </div>
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	addAnexo(<a href="AyudaServlet?lang=ca&plugin=ANEXO_DINAMICO">AnexoDinamico</a> anexo): void
+	crearAnexo(): <a href="AyudaServlet?lang=es&plugin=ANEXO_DINAMICO">AnexoDinamico</a>
 </h1>
 <p>
-	<b>DESCRIPCIÓ</b>
+	<b>DESCRIPCIÓN</b>
 </p>
 <p>
 	<ul>
-    	<li>Método que permite añadir un nuevo anexo de forma dinámica a la versión del trámite.</li>
+    	<li>Método que crea una variable de tipo Anexo Dinámico para establecer sus valores.</li>
     </ul>
 </p>
 <p>
-	<b>PARÀMETRES D'ENTRADA</b>
+	<b>PARÁMETROS DE SALIDA</b>
 </p>
 <p>
 	<ul>
-		<li><b>anexo</b>: variable de tipus Annex Dinàmic amb els valors establerts.</li>
+		<li><b>anexo</b>: variable de tipo Anexo Dinámico para establecer sus valores.</li>
 	</ul>
 </p>
 <p>
-	<b>EXEMPLES</b>
-<p>Si volem afegir un nou annex de manera dinàmica a la versió d'un tràmit, executaríem el següent:</p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Si deseamos añadir un nuevo anexo de manera dinámica a la versión de un trámite, ejecutaríamos lo siguiente: </p>
  <p class="codigoScript">
 var anex = DATOS_ANEXOSDINAMICOS.crearAnexo(); <br/>
 anex.setIdentificador('DIN1'); <br/>
@@ -51,6 +52,6 @@ anex.setTamanyoMaximo('1MB'); <br/>
 anex.setObligatorio(true); <br/>
 DATOS_ANEXOSDINAMICOS.addAnexo(anex); <br/>
 </p>
-<p>El resultat de l'execució de l'script "Llista dinàmica d'annexos" amb aquesta sentència serà un annex que és obligatori, que ha de pujar-se en format pdf, amb una mida màxima de 1MB.</p>
+<p>El resultado de la ejecución del script "Lista dinámica de anexos" con esta sentencia será un anexo que es obligatorio, que debe subirse en formato pdf, con un tamaño máximo de 1MB.</p>
 </body>
 </html>

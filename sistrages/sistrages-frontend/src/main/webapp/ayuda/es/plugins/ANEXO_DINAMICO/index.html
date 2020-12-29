@@ -1,0 +1,47 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul id="luBreadCrumb">
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_ANEXOSDINAMICOS">DATOS_ANEXOSDINAMICOS</a></li>
+       	  <li>></li>
+  		  <li><a href="AyudaServlet?lang=es&plugin=ANEXO_DINAMICO">ANEXO_DINAMICO</a></li>
+  	</ul>
+</div>
+<h1 class="cabeceraPlugin">ANEXO_DINAMICO</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Objeto que modeliza un anexo que se puede añadir de forma dinámica.</li>
+	</ul>
+</p>
+<p>
+	<b>MÉTODOS</b>
+</p>
+
+<p>
+	<div class="seccionMetodos">
+	 <ul>
+		<li><b>setIdentificador(String identificador)</b>: Identificador del anexo (Obligatorio).</li>
+		<li><b>setDescripcion(String descripcion)</b>: Descripción del anexo (Obligatorio).</li>
+		<li><b>setExtensiones(String extensiones)</b>: Extensiones permitidas para el anexo. Lista de valores separados por comas. (Obligatorio).</li>
+		<li><b>setTamanyoMax(Strint tamMax)</b>: Tamaño máximo del anexo. Es opcional. Si se indica, se debe añadir la unidad al final del mismo. Valores posibles:<br />
+					<ol><li>KB</li><li>MB</li></ol>
+		</li>
+		<li><b>setUrlPlantilla(String urlPlantilla)</b>: Url en la que se puede descargar la plantilla del anexo. Dato opcional.</li>
+		<li><b>setObligatorio(boolean obligatorio)</b>: Variable booleana que permite marcar si el anexo es obligatorio o no.</li>
+		<li><b>setConvertirPDF(boolean convertirPDF)</b>: Variable booleana que permite marcar si el anexo se debe convertir a pdf.</li>
+		<li><b>setFirmar(boolean firmar)</b>: Variable booleana que permite marcar si se debe firmar o no el anexo.</li>
+	</ul>
+	</div>
+</p>
+
+</body>
+</html>

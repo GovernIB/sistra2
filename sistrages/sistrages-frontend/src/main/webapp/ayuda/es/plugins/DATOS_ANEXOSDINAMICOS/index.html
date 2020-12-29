@@ -17,7 +17,7 @@
 </p>
 <p>
 	<ul>
-		<li>Objeto que permite establecer los anexos de forma dinámica, indicando la siguiente información por anexo: identificador, descripción, extensiones permitidas, tamaño máximo, url plantilla, obligatoriedad, convertir a PDF y firmar.</li>
+		<li>Objeto que permite establecer los anexos de forma dinámica.</li>
 	</ul>
 </p>
 <p>
@@ -27,8 +27,12 @@
 	<div class="seccionMetodos">
 		<ul>
 			<li>
-				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('DATOS_ANEXOSDINAMICOS.addAnexo(identificador, descripcion, extensiones, tamanyoMax, urlPlantilla, obligatorio, convertirPDF, firmar)'); return false;" />
-				<a href="AyudaServlet?lang=es&plugin=DATOS_ANEXOSDINAMICOS&metodo=addAnexo">addAnexo(String identificador, String descripcion, String extensiones, String tamanyoMax, String urlPlantilla, boolean obligatorio, boolean convertirPDF, boolean firmar)</a>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('DATOS_ANEXOSDINAMICOS.crearAnexo()'); return false;" />
+				<a href="AyudaServlet?lang=es&plugin=DATOS_ANEXOSDINAMICOS&metodo=crearAnexo">crearAnexo()</a>
+			</li>
+			<li>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('DATOS_ANEXOSDINAMICOS.addAnexo(anexo)'); return false;" />
+				<a href="AyudaServlet?lang=es&plugin=DATOS_ANEXOSDINAMICOS&metodo=addAnexo">addAnexo(anexo)</a>
 			</li>
 		</ul>
 	</div>

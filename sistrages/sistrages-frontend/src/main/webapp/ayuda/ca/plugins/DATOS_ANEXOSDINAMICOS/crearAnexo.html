@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('DATOS_ANEXOSDINAMICOS.addAnexo(anexo)');
+		copiarPortapeles('DATOS_ANEXOSDINAMICOS.crearAnexo()');
 	}
 </script>
 <body class="bodyPlugins">
@@ -15,28 +15,28 @@
   	<ul>
   		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_ANEXOSDINAMICOS">DATOS_ANEXOSDINAMICOS</a></li>
       	  <li>></li>
-      	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_ANEXOSDINAMICOS&metodo=addAnexo">addAnexo</a></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_ANEXOSDINAMICOS&metodo=crearAnexo">crearAnexo</a></li>
   	</ul>
 </div>
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	addAnexo(<a href="AyudaServlet?lang=ca&plugin=ANEXO_DINAMICO">AnexoDinamico</a> anexo): void
+	crearAnexo(): <a href="AyudaServlet?lang=ca&plugin=ANEXO_DINAMICO">AnexoDinamico</a>
 </h1>
 <p>
 	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-    	<li>Método que permite añadir un nuevo anexo de forma dinámica a la versión del trámite.</li>
+    	<li>Mètode que crea una variable de tipus Annex Dinàmic per establir els seus valors.</li>
     </ul>
 </p>
 <p>
-	<b>PARÀMETRES D'ENTRADA</b>
+	<b>PARÀMETRES DE SORTIDA</b>
 </p>
 <p>
 	<ul>
-		<li><b>anexo</b>: variable de tipus Annex Dinàmic amb els valors establerts.</li>
+		<li><b>anexo</b>: variable de tipus Annex Dinàmic per establir els seus valors.</li>
 	</ul>
 </p>
 <p>

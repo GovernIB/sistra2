@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('DATOS_ANEXOSDINAMICOS.addAnexo(identificador, descripcion, extensiones, tamanyoMax, urlPlantilla, obligatorio, convertirPDF, firmar)');
+		copiarPortapeles('DATOS_ANEXOSDINAMICOS.addAnexo(anexo)');
 	}
 </script>
 <body class="bodyPlugins">
@@ -21,7 +21,7 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	addAnexo(String identificador, String descripcion, String extensiones, String tamanyoMax, String urlPlantilla, boolean obligatorio, boolean convertirPDF, boolean firmar): void
+	addAnexo(<a href="AyudaServlet?lang=es&plugin=ANEXO_DINAMICO">AnexoDinamico</a> anexo): void
 </h1>
 <p>
 	<b>DESCRIPCIÓN</b>
@@ -36,25 +36,21 @@
 </p>
 <p>
 	<ul>
-		<li><b>identificador</b>: Identificador del anexo.</li>
-		<li><b>descripcion</b>: Descripción del anexo.</li>
-		<li><b>extensiones</b>: Extensiones permitidas para el anexo. Lista de valores separados por comas. Es necesario indicar al menos una extensión.</li>
-		<li><b>tamanyoMax</b>: Tamaño máximo del anexo. Es opcional. Si se indica, se debe añadir la unidad al final del mismo. Valores posibles:<br />
-					<ol><li>KB</li><li>MB</li></ol>
-		</li>
-		<li><b>urlPlantilla</b>: Url en la que se puede descargar la plantilla del anexo. Dato opcional.</li>
-		<li><b>obligatorio</b>: Variable booleana que permite marcar si el anexo es obligatorio o no.</li>
-		<li><b>convertirPDF</b>: Variable booleana que permite marcar si el anexo se debe convertir a pdf.</li>
-		<li><b>firmar</b>: Variable booleana que permite marcar si se debe firmar o no el anexo.</li>
+		<li><b>anexo</b>: variable de tipo Anexo Dinámico con los valores establecidos.</li>
 	</ul>
 </p>
 <p>
 	<b>EJEMPLOS</b>
-</p>
 <p>Si deseamos añadir un nuevo anexo de manera dinámica a la versión de un trámite, ejecutaríamos lo siguiente: </p>
  <p class="codigoScript">
-DATOS_ANEXOSDINAMICOS.addAnexo('ANE1', 'Documento de conformidad', 'doc,pdf', '1024 KB', 'http://caib.es/anexos/plantillaConformodidad.pdf', true, true, true);
+var anex = DATOS_ANEXOSDINAMICOS.crearAnexo(); <br/>
+anex.setIdentificador('DIN1'); <br/>
+anex.setDescripcion('Anexo dinamico'); <br/>
+anex.setExtensiones('pdf'); <br/>
+anex.setTamanyoMaximo('1MB'); <br/>
+anex.setObligatorio(true); <br/>
+DATOS_ANEXOSDINAMICOS.addAnexo(anex); <br/>
 </p>
-<p>El resultado de la ejecución del script "Lista dinámica de anexos" con esta sentencia será un anexo que es obligatorio, que debe subirse en formato doc/pdf, con un tamaño máximo de 1024 KB (1MB), que ha de ser firmado y que se convertirá a pdf.</p>
+<p>El resultado de la ejecución del script "Lista dinámica de anexos" con esta sentencia será un anexo que es obligatorio, que debe subirse en formato pdf, con un tamaño máximo de 1MB.</p>
 </body>
 </html>

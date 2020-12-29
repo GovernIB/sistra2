@@ -1,4 +1,4 @@
-﻿<html>
+<html>
 <head>
 	<meta charset=UTF-8>
 	<meta http-equiv="content-type" content="text/html; utf-8">
@@ -13,22 +13,26 @@
 </div>
 <h1 class="cabeceraPlugin">DATOS_ANEXOSDINAMICOS</h1>
 <p>
-	<b>DESCRIPCI&Oacute;</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-		<li>Objecte que permet establir els annexes de manera dinàmica, indicant-hi la seg&uuml;ent informaci&oacute; per annexe: identificador, descripci&oacute;, extensions permeses, mida m&agrave;xima, url plantilla, obligatorietat, convertir a PDF i signar.</li>
+		<li>Objecte que permet establir els annexos de forma dinàmica.</li>
 	</ul>
 </p>
 <p>
-	<b>M&Egrave;TODES</b>
+	<b>MÈTODES</b>
 </p>
 <p>
 	<div class="seccionMetodos">
 		<ul>
 			<li>
-				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('DATOS_ANEXOSDINAMICOS.addAnexo(identificador, descripcion, extensiones, tamanyoMax, urlPlantilla, obligatorio, convertirPDF, firmar)'); return false;" />
-				<a href="AyudaServlet?lang=ca&plugin=DATOS_ANEXOSDINAMICOS&metodo=addAnexo">addAnexo(String identificador, String descripcion, String extensiones, String tamanyoMax, String urlPlantilla, boolean obligatorio, boolean convertirPDF, boolean firmar)</a>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('DATOS_ANEXOSDINAMICOS.crearAnexo()'); return false;" />
+				<a href="AyudaServlet?lang=ca&plugin=DATOS_ANEXOSDINAMICOS&metodo=crearAnexo">crearAnexo()</a>
+			</li>
+			<li>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('DATOS_ANEXOSDINAMICOS.addAnexo(anexo)'); return false;" />
+				<a href="AyudaServlet?lang=ca&plugin=DATOS_ANEXOSDINAMICOS&metodo=addAnexo">addAnexo(anexo)</a>
 			</li>
 		</ul>
 	</div>

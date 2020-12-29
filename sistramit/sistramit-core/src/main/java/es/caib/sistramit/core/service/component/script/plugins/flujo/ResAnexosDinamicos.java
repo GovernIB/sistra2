@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistra2.commons.utils.XssFilter;
-import es.caib.sistramit.core.service.model.flujo.AnexoDinamico;
 import es.caib.sistramit.core.service.model.script.flujo.ResAnexosDinamicosInt;
 
 /**
@@ -24,7 +23,7 @@ public final class ResAnexosDinamicos implements ResAnexosDinamicosInt {
 	/**
 	 * Anexos definidos dinámicamente.
 	 */
-	private final List<AnexoDinamico> anexos = new ArrayList<>();
+	private final List<ClzAnexoDinamico> anexos = new ArrayList<>();
 
 	@Override
 	public String getPluginId() {
@@ -32,43 +31,43 @@ public final class ResAnexosDinamicos implements ResAnexosDinamicosInt {
 	}
 
 	@Override
-	public void addAnexo(final String identificador, final String descripcion, final String extensiones,
-			final String tamanyoMax, final String urlPlantilla, final boolean obligatorio, final boolean convertirPDF,
-			final boolean firmar) throws ScriptException {
-		if (!XssFilter.filtroXss(identificador) || !XssFilter.filtroXss(descripcion)) {
-			throw new ScriptException(
-					"El dato proporcionado como identificador o descripcion contiene caraceteres no permitidos");
-		}
+	public ClzAnexoDinamico crearAnexo() {
+		return new ClzAnexoDinamico();
+	}
 
-		final AnexoDinamico anexo = new AnexoDinamico();
-		anexo.setIdentificador(identificador);
-		anexo.setDescripcion(descripcion);
-		if (StringUtils.isNotBlank(tamanyoMax)) {
-			if (!tamanyoMax.endsWith("MB") && !tamanyoMax.endsWith("KB")) {
-				throw new ScriptException("Se debe indicar el tamaño maximo con el formato 'n MB / n KB' ");
+	@Override
+	public void addAnexo(final ClzAnexoDinamico anexo) throws ScriptException {
+		// Verifica datos obligatorios y formato
+		if (StringUtils.isBlank(anexo.getIdentificador())) {
+			throw new ScriptException("No se ha indicado identificador anexo");
+		}
+		if (StringUtils.isBlank(anexo.getDescripcion())) {
+			throw new ScriptException("No se ha indicado descripcion anexo " + anexo.getIdentificador());
+		}
+		if (!XssFilter.filtroXss(anexo.getIdentificador()) || !XssFilter.filtroXss(anexo.getDescripcion())) {
+			throw new ScriptException(
+					"El dato proporcionado como identificador o descripcion contiene caraceteres no permitidos para anexo "
+							+ anexo.getIdentificador());
+		}
+		if (StringUtils.isNotBlank(anexo.getTamanyoMaximo())) {
+			if (!anexo.getTamanyoMaximo().endsWith("MB") && !anexo.getTamanyoMaximo().endsWith("KB")) {
+				throw new ScriptException("Se debe indicar el tamaño maximo con el formato 'n MB / n KB' para anexo "
+						+ anexo.getIdentificador());
 			}
 			try {
-				Integer.parseInt(StringUtils
-						.trim(StringUtils.substring(tamanyoMax, 0, tamanyoMax.length() - ConstantesNumero.N2)));
+				Integer.parseInt(StringUtils.trim(StringUtils.substring(anexo.getTamanyoMaximo(), 0,
+						anexo.getTamanyoMaximo().length() - ConstantesNumero.N2)));
 			} catch (final NumberFormatException nfe) {
 				throw new ScriptException(
-						new Exception("El tamaño máximo se debe especificar con un número entero' ", nfe));
+						new Exception("El tamaño máximo se debe especificar con un número entero' para anexo "
+								+ anexo.getIdentificador(), nfe));
 			}
-			anexo.setTamanyoMaximo(tamanyoMax);
 		}
-		if (StringUtils.isBlank(extensiones)) {
-			throw new ScriptException("No se han establecido extensiones para el anexo " + identificador);
+		if (StringUtils.isBlank(anexo.getExtensiones())) {
+			throw new ScriptException("No se han establecido extensiones para el anexo " + anexo.getIdentificador());
 		}
-		anexo.setExtensiones(extensiones);
-		if (StringUtils.isNotBlank(urlPlantilla)) {
-			anexo.setUrlPlantilla(urlPlantilla);
-		}
-		anexo.setObligatorio(obligatorio);
-		anexo.setConvertirPDF(convertirPDF);
-		anexo.setFirmar(firmar);
 
 		anexos.add(anexo);
-
 	}
 
 	/**
@@ -76,7 +75,7 @@ public final class ResAnexosDinamicos implements ResAnexosDinamicosInt {
 	 *
 	 * @return anexos
 	 */
-	public List<AnexoDinamico> getAnexos() {
+	public List<ClzAnexoDinamico> getAnexos() {
 		return anexos;
 	}
 

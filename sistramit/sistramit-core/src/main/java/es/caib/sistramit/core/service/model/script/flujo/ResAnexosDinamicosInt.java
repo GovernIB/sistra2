@@ -2,6 +2,7 @@ package es.caib.sistramit.core.service.model.script.flujo;
 
 import javax.script.ScriptException;
 
+import es.caib.sistramit.core.service.component.script.plugins.flujo.ClzAnexoDinamico;
 import es.caib.sistramit.core.service.model.script.PluginScriptRes;
 
 /**
@@ -20,29 +21,20 @@ public interface ResAnexosDinamicosInt extends PluginScriptRes {
 	String ID = "DATOS_ANEXOSDINAMICOS";
 
 	/**
+	 * Crear anexo dinámico para establecer sus propiedades.
+	 * 
+	 * @return anexo
+	 */
+	ClzAnexoDinamico crearAnexo();
+
+	/**
 	 * Añade un nuevo anexo.
 	 *
-	 * @param identificador
-	 *            Identificador
-	 * @param descripcion
-	 *            Descripcion
-	 * @param extensiones
-	 *            Extensiones (lista separado por comas).
-	 * @param tamanyoMax
-	 *            Tamaño máximo (con sufijo MB / KB). Opcional.
-	 * @param urlPlantilla
-	 *            Url plantilla. Opcional.
-	 * @param obligatorio
-	 *            Obligatorio
-	 * @param convertirPDF
-	 *            Indica si se debe convertir a PDF
-	 * @param firmar
-	 *            Indica si se debe firmar
+	 * @param anexo
+	 *                  anexo dinámico
 	 * @throws ScriptException
-	 *             Excepcion
+	 *                             Excepcion
 	 */
-	void addAnexo(final String identificador, final String descripcion, final String extensiones,
-			final String tamanyoMax, final String urlPlantilla, final boolean obligatorio, final boolean convertirPDF,
-			final boolean firmar) throws ScriptException;
+	void addAnexo(final ClzAnexoDinamico anexo) throws ScriptException;
 
 }

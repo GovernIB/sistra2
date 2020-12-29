@@ -1,0 +1,47 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul id="luBreadCrumb">
+  		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_ANEXOSDINAMICOS">DATOS_ANEXOSDINAMICOS</a></li>
+       	  <li>></li>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=ANEXO_DINAMICO">ANEXO_DINAMICO</a></li>
+  	</ul>
+</div>
+<h1 class="cabeceraPlugin">ANEXO_DINAMICO</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+		<li>Objecte que modelitza un annex que es pot afegir de forma dinàmica.</li>
+	</ul>
+</p>
+<p>
+	<b>MÉTODOS</b>
+</p>
+
+<p>
+	<div class="seccionMetodos">
+	 <ul>
+		<li><b>setIdentificador(String identificador)</b>: Identificador de l'annex (Obligatori).</li>
+		<li><b>setDescripcion(String descripcion)</b>: Descripció de l'annex (Obligatori).</li>
+		<li><b>setExtensiones(String extensiones)</b>: Extensions permeses per l'annex. Llista de valors separats per comes. (Obligatori).</li>
+		<li><b>setTamanyoMax(Strint tamMax)</b>: Mida màxima de l'annex. És opcional. Si s'indica, s'ha d'afegir la unitat a la fi de la mateixa. Valors possibles:<br />
+					<ol><li>KB</li><li>MB</li></ol>
+		</li>
+		<li><b>setUrlPlantilla(String urlPlantilla)</b>: Url en la qual es pot descarregar la plantilla de l'annex. Dada opcional.</li>
+		<li><b>setObligatorio(boolean obligatorio)</b>: Variable booleana que permet marcar si l'annex és obligatori o no.</li>
+		<li><b>setConvertirPDF(boolean convertirPDF)</b>: Variable booleana que permet marcar si l'annex s'ha de convertir a pdf.</li>
+		<li><b>setFirmar(boolean firmar)</b>: Variable booleana que permet marcar si s'ha de signar o no l'annex.</li>
+	</ul>
+	</div>
+</p>
+
+</body>
+</html>
