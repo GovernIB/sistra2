@@ -7,10 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CatalogoPluginException;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionProcedimientoCP;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteTelematico;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.ICatalogoProcedimientosPlugin;
 import es.caib.sistramit.core.api.exception.CatalogoProcedimientosException;
+import es.caib.sistramit.core.api.model.comun.Constantes;
+import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
+import es.caib.sistramit.core.service.component.literales.Literales;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 
 /**
@@ -29,18 +35,28 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 	@Autowired
 	private ConfiguracionComponent configuracionComponent;
 
+	/** Literales negocio. */
+	@Autowired
+	private Literales literales;
+
 	@Override
 	public DefinicionTramiteCP obtenerDefinicionTramite(final String idEntidad, final String idTramiteCP,
 			final boolean servicio, final String idioma) {
 		DefinicionTramiteCP definicionTramite = null;
 
-		// Obtenemos definicion a traves del plugin
-		final ICatalogoProcedimientosPlugin plgCP = getPlugin(idEntidad);
-		try {
-			definicionTramite = plgCP.obtenerDefinicionTramite(idTramiteCP, servicio, idioma);
-		} catch (final CatalogoPluginException e) {
-			log.error("Error obteniendo la info del tramite", e);
-			throw new CatalogoProcedimientosException("Error obteniendo la definición de tramites", e);
+		// Obtener definicion tramite de catalogo servicios
+		if (Constantes.TRAMITE_CATALOGO_SIMULADO_ID.equals(idTramiteCP)) {
+			// Obtenemos definicion tramite simulado
+			definicionTramite = obtenerDefinicionTramiteSimulado(idioma);
+		} else {
+			// Obtenemos definicion a traves del plugin
+			final ICatalogoProcedimientosPlugin plgCP = getPlugin(idEntidad);
+			try {
+				definicionTramite = plgCP.obtenerDefinicionTramite(idTramiteCP, servicio, idioma);
+			} catch (final CatalogoPluginException e) {
+				log.error("Error obteniendo la info del tramite", e);
+				throw new CatalogoProcedimientosException("Error obteniendo la definición de tramites", e);
+			}
 		}
 
 		// Verificamos datos definicion
@@ -69,10 +85,48 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 	}
 
 	/**
+	 * Obtiene definicion tramite de forma simulada.
+	 *
+	 * @param idioma
+	 *                   idioma
+	 * @return definicion tramite de forma simulada.
+	 */
+	private DefinicionTramiteCP obtenerDefinicionTramiteSimulado(final String idioma) {
+
+		final TypeEntorno entorno = TypeEntorno
+				.fromString(configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ENTORNO));
+		if (entorno != TypeEntorno.DESARROLLO) {
+			throw new CatalogoProcedimientosException(
+					"Simulación de catálogo procedimientos sólo disponible para entorno desarrollo");
+		}
+
+		final DefinicionTramiteTelematico tt = new DefinicionTramiteTelematico();
+		tt.setTramiteIdentificador(Constantes.TRAMITE_CATALOGO_SIMULADO_ID);
+		tt.setTramiteVersion(1);
+
+		final DefinicionProcedimientoCP pr = new DefinicionProcedimientoCP();
+		pr.setDescripcion(literales.getLiteral(Literales.FLUJO, "tramiteSimuladoCP.descripcion", idioma));
+		pr.setIdentificador(Constantes.TRAMITE_CATALOGO_SIMULADO_ID);
+		pr.setIdProcedimientoSIA("SIA-SIMULADO");
+		pr.setOrganoResponsableDir3("DIR3-SIMULADO");
+
+		final DefinicionTramiteCP dt = new DefinicionTramiteCP();
+		dt.setIdentificador(Constantes.TRAMITE_CATALOGO_SIMULADO_ID);
+		dt.setDescripcion(literales.getLiteral(Literales.FLUJO, "tramiteSimuladoCP.descripcion", idioma));
+		dt.setOrganoDestinoDir3("DIR3-SIMULADO");
+		dt.setVigente(true);
+		dt.setTelematico(true);
+		dt.setProcedimiento(pr);
+		dt.setTramiteTelematico(tt);
+
+		return dt;
+	}
+
+	/**
 	 * Obtiene plugin
 	 *
 	 * @param idEntidad
-	 *            idEntidad
+	 *                      idEntidad
 	 *
 	 * @return plugin
 	 */

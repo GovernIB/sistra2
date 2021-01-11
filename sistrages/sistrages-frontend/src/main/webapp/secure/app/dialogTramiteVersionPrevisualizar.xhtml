@@ -56,8 +56,11 @@
 						<p style="line-height:20px; padding:0px; margin:0px;">
 							<p:outputLabel   styleClass="outputlabel-nota"  value="#{msg['dialogTramiteVersionPrevisualizar.infoSia']}" />
 						</p>
+						<p:selectBooleanCheckbox value="#{dialogTramiteVersionPrevisualizar.simularCatalogo}" itemLabel="#{msg['dialogTramiteVersionPrevisualizar.simularCatalogo']}">
+							<p:ajax event="change" update="dialogTramite:txtCopy" listener="#{dialogTramiteVersionPrevisualizar.recalcularURL()}" />
+						</p:selectBooleanCheckbox>
 					</p:column>
-					<p:outputLabel   value=""  />
+					<p:outputLabel   value="" />
 
 					<p:outputLabel   value="#{msg['dialogTramiteVersionPrevisualizar.parametros']}" />
                 	<p:column>
@@ -88,7 +91,7 @@
 							    </p:column>
 				 			</p:dataTable>
 						</p:column>
-						<p:column>
+					<p:column>
 								<p>
 									<p:commandButton id="btnNuevoValor" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogTramiteVersionPrevisualizar.nuevoValor()}" process="@this" update="growlDialog"  >
 		        						<p:ajax event="dialogReturn" listener="#{dialogTramiteVersionPrevisualizar.returnDialogo}" update="growlDialog datalistValores dialogTramite:txtCopy"/>

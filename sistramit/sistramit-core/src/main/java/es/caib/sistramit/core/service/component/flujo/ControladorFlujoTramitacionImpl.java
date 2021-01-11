@@ -16,11 +16,13 @@ import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
 import es.caib.sistramit.core.api.exception.AccesoNoPermitidoException;
+import es.caib.sistramit.core.api.exception.AccesoPasoRegistroCatalogoSimulado;
 import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
 import es.caib.sistramit.core.api.exception.CancelacionNoPermitidaException;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.exception.TramiteCaducadoException;
+import es.caib.sistramit.core.api.model.comun.Constantes;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.AvisoPlataforma;
@@ -199,6 +201,13 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 			if (tipoPaso == TypePaso.ACCION && pIdPaso.equals(pDatosSesion.getDatosTramite().getIdPasoActual())) {
 				throw new ErrorConfiguracionException("Un paso accion no puede volver sobre si mismo");
 			}
+
+			// Si simulamos acceso catalogo servicios no podemos ir a paso registrar
+			if (tipoPaso == TypePaso.REGISTRAR && pDatosSesion.getDatosTramite().getDefinicionTramiteCP()
+					.getIdentificador().equals(Constantes.TRAMITE_CATALOGO_SIMULADO_ID)) {
+				throw new AccesoPasoRegistroCatalogoSimulado();
+			}
+
 		}
 
 		// Obtenemos reglas del flujo
@@ -390,7 +399,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 	 *
 	 *
 	 * @param pDatosSesion
-	 *            Datos de sesión.
+	 *                         Datos de sesión.
 	 */
 	private void personalizacionTramite(final DatosSesionTramitacion pDatosSesion) {
 
@@ -410,7 +419,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 	 * AccesoNoPermitidoException.
 	 *
 	 * @param pDatosSesion
-	 *            Datos de sesión de tramitación
+	 *                         Datos de sesión de tramitación
 	 */
 	private void controlAcceso(final DatosSesionTramitacion pDatosSesion) {
 
@@ -449,7 +458,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 	 * Control bloqueo por avisos.
 	 *
 	 * @param pDatosSesion
-	 *            Datos Sesion
+	 *                         Datos Sesion
 	 */
 	private void controlBloqueosAvisosPlataforma(final DatosSesionTramitacion pDatosSesion) {
 
@@ -474,7 +483,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 	 * sesión.
 	 *
 	 * @param pDatosSesion
-	 *            Datos sesion
+	 *                         Datos sesion
 	 * @return detalles excepcion
 	 */
 	private ListaPropiedades generarDetallesExcepcionControlAcceso(final DatosSesionTramitacion pDatosSesion) {
@@ -488,11 +497,11 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 	 * Control de plazos.
 	 *
 	 * @param wa
-	 *            Definicion acceso
+	 *                         Definicion acceso
 	 * @param ahora
-	 *            Fecha actual
+	 *                         Fecha actual
 	 * @param pDatosSesion
-	 *            Datos sesion
+	 *                         Datos sesion
 	 */
 	protected void controlPlazos(final RVersionTramiteControlAcceso wa, final Date ahora,
 			final DatosSesionTramitacion pDatosSesion) {
@@ -519,7 +528,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 	 * Controla si el usuario entra con el nivel de autenticación requerido.
 	 *
 	 * @param pDatosSesion
-	 *            Datos sesión
+	 *                         Datos sesión
 	 * @return booleano
 	 */
 	private boolean controlTipoAutenticacion(final DatosSesionTramitacion pDatosSesion) {
@@ -534,9 +543,9 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 	 * Controla si el paso existe y es el actual.
 	 *
 	 * @param pDatosSesion
-	 *            Datos sesion
+	 *                         Datos sesion
 	 * @param pIdPaso
-	 *            Id paso
+	 *                         Id paso
 	 */
 	private void controlAccesoPaso(final DatosSesionTramitacion pDatosSesion, final String pIdPaso) {
 		// Obtenemos datos paso
@@ -563,7 +572,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 	 * Calcula la lista de pasos para mostrar en el front.
 	 *
 	 * @param pDatosSesion
-	 *            Datos de sesión de tramitación.
+	 *                         Datos de sesión de tramitación.
 	 * @return Lista de pasos
 	 */
 	private List<PasoLista> detalleTramiteCalcularPasosLista(final DatosSesionTramitacion pDatosSesion) {
@@ -592,7 +601,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 	 * Calcula cuales son los ids del paso anterior y siguiente.
 	 *
 	 * @param pDatosSesion
-	 *            Datos sesion
+	 *                         Datos sesion
 	 * @return Navegación permitida entre los pasos
 	 */
 	private NavegacionPaso detalleTramiteCalcularNavegacionPaso(final DatosSesionTramitacion pDatosSesion) {
@@ -627,7 +636,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 	 * Obtiene reglas para el flujo.
 	 *
 	 * @param tipoFlujo
-	 *            Tipo de flujo
+	 *                      Tipo de flujo
 	 * @return Reglas flujo
 	 */
 	private ReglasFlujo obtenerReglasFlujo(final TypeFlujoTramitacion tipoFlujo) {
@@ -653,7 +662,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 	 * Genera contexto para regla de tramitacion.
 	 *
 	 * @param pDatosSesion
-	 *            Datos sesion tramitacion
+	 *                         Datos sesion tramitacion
 	 * @return Contexto regla tramitacion
 	 */
 	private ContextoReglaTramitacion generarContextoReglaTramitacion(final DatosSesionTramitacion pDatosSesion) {
@@ -665,13 +674,13 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 	 * Ejecuta reglas de tramitación para una fase.
 	 *
 	 * @param ctx
-	 *            Contexto ejecucion reglas
+	 *                   Contexto ejecucion reglas
 	 * @param reglas
-	 *            Reglas de tramitación
+	 *                   Reglas de tramitación
 	 * @param fase
-	 *            Fase de ejecución
+	 *                   Fase de ejecución
 	 * @param vars
-	 *            Variables fase de ejecución
+	 *                   Variables fase de ejecución
 	 *
 	 * @return indica si se han ejecutado correctamente las reglas
 	 */
@@ -694,9 +703,9 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 	 * Realiza debug.
 	 *
 	 * @param pDatosSesion
-	 *            Datos sesion tramitacion
+	 *                         Datos sesion tramitacion
 	 * @param message
-	 *            Mensaje
+	 *                         Mensaje
 	 */
 	private void debug(final DatosSesionTramitacion pDatosSesion, final String message) {
 		if (UtilsSTG.isDebugEnabled(pDatosSesion.getDefinicionTramite()) && LOGGER.isDebugEnabled()) {

@@ -252,6 +252,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		UtilJSF.getSessionBean().getMochilaDatos().put(Constantes.CLAVE_MOCHILA_FORMULARIO,
 				UtilJSON.toJSON(this.paginaSeleccionada));
+
 		params.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.idFormularioTramite);
 		params.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);

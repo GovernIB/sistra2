@@ -5,6 +5,7 @@ import java.net.URL;
 
 import javax.xml.ws.BindingProvider;
 
+import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
@@ -29,6 +30,14 @@ public class WsClientUtil {
 		// Timeout
 		if (timeout != null) {
 			httpClientPolicy.setReceiveTimeout(timeout);
+		}
+
+		// Disable CN Check
+		// TODO PASAR A PLUGIN??
+		if ("true".equals(System.getProperty("deshabilitarCNCheck"))) {
+			final TLSClientParameters tlsParams = new TLSClientParameters();
+			tlsParams.setDisableCNCheck(true);
+			conduit.setTlsClientParameters(tlsParams);
 		}
 
 		// Log calls
