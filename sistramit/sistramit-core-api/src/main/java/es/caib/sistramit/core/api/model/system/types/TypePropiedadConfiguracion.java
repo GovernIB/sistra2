@@ -115,7 +115,9 @@ public enum TypePropiedadConfiguracion {
 	 * Verifica si los datos pasados por la url coinciden con la información
 	 * existente en el catalogo de procedimientos (ROLSAC)
 	 */
-	VERIFICAR_TRAMITE_CATALOGO("catalogoProcedimientos.verificarTramite");
+	VERIFICAR_TRAMITE_CATALOGO("catalogoProcedimientos.verificarTramite"),
+	/** Motor de scripting. */
+	SCRIPT_ENGINE("scriptEngine");
 
 	/**
 	 * Valor como string.

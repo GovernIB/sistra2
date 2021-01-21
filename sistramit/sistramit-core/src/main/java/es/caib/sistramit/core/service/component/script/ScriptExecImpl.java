@@ -20,6 +20,7 @@ import es.caib.sistramit.core.api.exception.RegistroNoPermitidoException;
 import es.caib.sistramit.core.api.exception.ValidacionAnexoException;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
 import es.caib.sistramit.core.api.model.formulario.MensajeValidacion;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.integracion.DominiosComponent;
 import es.caib.sistramit.core.service.component.integracion.PagoComponent;
 import es.caib.sistramit.core.service.component.script.plugins.PlgDominios;
@@ -51,6 +52,7 @@ import es.caib.sistramit.core.service.component.script.plugins.formulario.PlgSes
 import es.caib.sistramit.core.service.component.script.plugins.formulario.ResEstadoCampo;
 import es.caib.sistramit.core.service.component.script.plugins.formulario.ResValorCampo;
 import es.caib.sistramit.core.service.component.script.plugins.formulario.ResValoresPosibles;
+import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoFormulario;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
@@ -88,10 +90,12 @@ import es.caib.sistramit.core.service.model.script.types.TypeScriptFormulario;
 @Component("scriptExec")
 public final class ScriptExecImpl implements ScriptExec {
 
-	/**
-	 * Script Engine manager.
-	 */
+	/** Script Engine manager. */
 	private final ScriptEngineManager engineManager;
+
+	/** Configuración. */
+	@Autowired
+	private ConfiguracionComponent configuracion;
 
 	/** Pago component para plugin pago (calculo tasa). */
 	@Autowired
@@ -105,7 +109,7 @@ public final class ScriptExecImpl implements ScriptExec {
 	 * Constante para indicar que no devuelve nada el script. Si se establece este
 	 * valor en getPluginResultadoFlujo se devolverá null como resultado del script.
 	 */
-	private final static String SCRIPT_RETURN_NONE = "SCRIPT_RETURN_NONE";
+	private static final String SCRIPT_RETURN_NONE = "SCRIPT_RETURN_NONE";
 
 	/**
 	 * Constructor.
@@ -178,7 +182,18 @@ public final class ScriptExecImpl implements ScriptExec {
 			// Preparamos scripts para que valgan los returns
 			final StringBuilder sb = new StringBuilder(pScript.length() + ConstantesNumero.N60);
 			sb.append("function ejecutarScript() { ").append(pScript).append("\n}; ejecutarScript();");
-			final ScriptEngine jsEngine = engineManager.getEngineByName("JavaScript");
+
+			final String engineScript = configuracion
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SCRIPT_ENGINE);
+			if (StringUtils.isBlank(engineScript)) {
+				throw new ScriptException("No se ha establecido ScriptEngine");
+			}
+
+			final ScriptEngine jsEngine = engineManager.getEngineByName(engineScript);
+			if (jsEngine == null) {
+				throw new ScriptException("No se ha podido obtener ScriptEngine: " + engineScript);
+			}
+
 			for (final PluginScript plg : plugins) {
 				jsEngine.put(plg.getPluginId(), plg);
 			}
