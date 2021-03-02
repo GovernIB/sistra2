@@ -134,7 +134,7 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 	}
 
 	@Override
-	public String logoutTramite(String idSesionTramitacion) {
+	public String logoutTramite(final String idSesionTramitacion) {
 		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
 		final String url = ft.logoutTramite();
 		flujoTramitacionCache.remove(idSesionTramitacion);
@@ -142,11 +142,18 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 	}
 
 	@Override
-	public String obtenerUrlEntidad(String idTramite, int version, String idioma) {
+	public String obtenerUrlEntidad(final String idTramite, final int version, final String idioma) {
 		final DefinicionTramiteSTG defTram = configuracion.recuperarDefinicionTramite(idTramite, version, idioma);
 		final String idEntidad = defTram.getDefinicionVersion().getIdEntidad();
 		final RConfiguracionEntidad entidad = configuracion.obtenerConfiguracionEntidad(idEntidad);
 		return UtilsSTG.obtenerLiteral(entidad.getUrlCarpeta(), idioma, true);
+	}
+
+	@Override
+	public AnexoFichero descargarArchivoCP(final String idSesionTramitacion, final String referenciaArchivo) {
+		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
+		final AnexoFichero res = ft.descargarArchivoCP(referenciaArchivo);
+		return res;
 	}
 
 	// -------------------------------------------------------------------------------------------
@@ -190,7 +197,7 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 	 * Obtiene flujo de tramitación.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesión tramitación
+	 *                                id sesión tramitación
 	 * @return flujo tramitación
 	 */
 	private FlujoTramitacionComponent obtenerFlujoTramitacion(final String idSesionTramitacion) {

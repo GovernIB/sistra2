@@ -1,7 +1,5 @@
 package es.caib.sistramit.core.service.model.script;
 
-import java.util.Date;
-
 /**
  * Tramite CP.
  *
@@ -44,14 +42,14 @@ public interface ClzTramiteCPInt extends PluginClass {
 	 *
 	 * @return Fecha fin
 	 */
-	public Date getPlazoFin();
+	public String getPlazoFin();
 
 	/**
 	 * Método de acceso a la fecha de plazo inicio
 	 *
 	 * @return Fecha inicio
 	 */
-	public Date getPlazoInicio();
+	public String getPlazoInicio();
 
 	/**
 	 * Método de acceso al procedimiento.

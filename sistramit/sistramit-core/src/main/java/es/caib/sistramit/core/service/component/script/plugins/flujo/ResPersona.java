@@ -325,16 +325,17 @@ public final class ResPersona implements ResPersonaInt {
 	}
 
 	@Override
-	public void setDatosContacto(final Long pais, final Long provincia, final Long municipio, final String direccion,
-			final String codigoPostal, final String email, final String telefono) throws ScriptException {
+	public void setDatosContacto(final String pais, final String provincia, final String municipio,
+			final String direccion, final String codigoPostal, final String email, final String telefono)
+			throws ScriptException {
 		if (mayorCero(pais)) {
-			this.setPais(pais);
+			this.setPais(Long.parseLong(pais));
 		}
 		if (mayorCero(provincia)) {
-			this.setProvincia(provincia);
+			this.setProvincia(Long.parseLong(provincia));
 		}
 		if (mayorCero(municipio)) {
-			this.setMunicipio(municipio);
+			this.setMunicipio(Long.parseLong(municipio));
 		}
 		if (StringUtils.isNotBlank(direccion)) {
 			this.setDireccion(direccion);
@@ -357,13 +358,13 @@ public final class ResPersona implements ResPersonaInt {
 	 * @param numero
 	 * @return
 	 */
-	private boolean mayorCero(final Long numero) {
-		return (numero != null && numero > 0);
+	private boolean mayorCero(final String numero) {
+		return (numero != null && Long.parseLong(numero) > 0);
 	}
 
 	/**
 	 * Método de acceso a contactoNulo.
-	 * 
+	 *
 	 * @return contactoNulo
 	 */
 	public boolean isContactoNulo() {
@@ -372,7 +373,7 @@ public final class ResPersona implements ResPersonaInt {
 
 	/**
 	 * Método para establecer contactoNulo.
-	 * 
+	 *
 	 * @param contactoNulo
 	 *                         contactoNulo a establecer
 	 */

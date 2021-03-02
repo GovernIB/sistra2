@@ -19,21 +19,21 @@ public interface FlujoTramitacionComponent extends FlujoTramitacionCacheIntf {
 	 * Iniciar tramite.
 	 *
 	 * @param usuarioAutenticado
-	 *            usuario autenticado
+	 *                               usuario autenticado
 	 * @param idTramite
-	 *            id tramite
+	 *                               id tramite
 	 * @param version
-	 *            version tramite
+	 *                               version tramite
 	 * @param idioma
-	 *            idioma
+	 *                               idioma
 	 * @param idTramiteCatalogo
-	 *            id procedimiento
+	 *                               id procedimiento
 	 * @param servicioCatalogo
-	 *            indica si es servicio
+	 *                               indica si es servicio
 	 * @param urlInicio
-	 *            url inicio
+	 *                               url inicio
 	 * @param parametrosInicio
-	 *            parametros inicio
+	 *                               parametros inicio
 	 *
 	 */
 	String iniciarTramite(UsuarioAutenticadoInfo usuarioAutenticado, String idTramite, int version, String idioma,
@@ -44,9 +44,9 @@ public interface FlujoTramitacionComponent extends FlujoTramitacionCacheIntf {
 	 * Carga un trámite existente de persistencia.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesión de tramitación
+	 *                                   Id sesión de tramitación
 	 * @param usuarioAutenticadoInfo
-	 *            info usuario
+	 *                                   info usuario
 	 */
 	void cargarTramite(String idSesionTramitacion, UsuarioAutenticadoInfo usuarioAutenticado);
 
@@ -55,9 +55,9 @@ public interface FlujoTramitacionComponent extends FlujoTramitacionCacheIntf {
 	 * recuperacion errores).
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesión de tramitación
+	 *                                Id sesión de tramitación
 	 * @param userInfo
-	 *            info usuario autenticado
+	 *                                info usuario autenticado
 	 */
 	void recargarTramite(String idSesionTramitacion, UsuarioAutenticadoInfo userInfo);
 
@@ -84,7 +84,7 @@ public interface FlujoTramitacionComponent extends FlujoTramitacionCacheIntf {
 	 * Va al paso indicado.
 	 *
 	 * @param idPaso
-	 *            Identificador de paso.
+	 *                   Identificador de paso.
 	 * @return Estado pasos
 	 */
 	ResultadoIrAPaso irAPaso(String idPaso);
@@ -100,11 +100,12 @@ public interface FlujoTramitacionComponent extends FlujoTramitacionCacheIntf {
 	 * Realiza la acción indicada en el paso.
 	 *
 	 * @param idPaso
-	 *            Identificador del paso.
+	 *                       Identificador del paso.
 	 * @param accionPaso
-	 *            Acción a realizar en el paso (depende del paso y de la acción).
+	 *                       Acción a realizar en el paso (depende del paso y de la
+	 *                       acción).
 	 * @param parametros
-	 *            Parámetros del paso (depende del paso y de la acción).
+	 *                       Parámetros del paso (depende del paso y de la acción).
 	 * @return Devuelve parámetros de retorno del paso (depende del paso y de la
 	 *         acción).
 	 */
@@ -130,21 +131,21 @@ public interface FlujoTramitacionComponent extends FlujoTramitacionCacheIntf {
 	 * Envío formulario de soporte.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesión tramitación
+	 *                                id sesión tramitación
 	 * @param nif
-	 *            nif
+	 *                                nif
 	 * @param nombre
-	 *            nombre
+	 *                                nombre
 	 * @param telefono
-	 *            telefono
+	 *                                telefono
 	 * @param email
-	 *            email
+	 *                                email
 	 * @param problemaTipo
-	 *            problema tipo
+	 *                                problema tipo
 	 * @param problemaDesc
-	 *            problema descripción
+	 *                                problema descripción
 	 * @param anexo
-	 *            anexo
+	 *                                anexo
 	 */
 	void envioFormularioSoporte(String nif, String nombre, String telefono, String email, String problemaTipo,
 			String problemaDesc, AnexoFichero anexo);
@@ -164,5 +165,14 @@ public interface FlujoTramitacionComponent extends FlujoTramitacionCacheIntf {
 	 * @return Url redirección
 	 */
 	String logoutTramite();
+
+	/**
+	 * Descarga archivo del catálogo de procedimientos.
+	 * 
+	 * @param referenciaArchivo
+	 *                              referencia archivo
+	 * @return archivo
+	 */
+	AnexoFichero descargarArchivoCP(String referenciaArchivo);
 
 }

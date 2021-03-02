@@ -7,6 +7,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CampoLOPD;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionLOPD;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
@@ -16,6 +19,8 @@ import es.caib.sistramit.core.api.model.flujo.AvisoUsuario;
 import es.caib.sistramit.core.api.model.flujo.DatosInteresado;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.DocumentosRegistroPorTipo;
+import es.caib.sistramit.core.api.model.flujo.LopdCampo;
+import es.caib.sistramit.core.api.model.flujo.LopdTabla;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
@@ -23,6 +28,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.flujo.ConstantesFlujo;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
 import es.caib.sistramit.core.service.component.flujo.pasos.ControladorPasoReferenciaImpl;
@@ -321,7 +327,54 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		}
 		dpr.setRegistrar(TypeSiNo.fromBoolean(dpr.verificarFirmas()));
 		dpr.setAvisoFinalizar(avisoFinalizar);
+		dpr.setLopd(obtenerInfoLOPD(pDefinicionTramite.getDefinicionVersion().getIdEntidad(),
+				pVariablesFlujo.getDatosTramiteCP(), pVariablesFlujo.getIdioma()));
 		return dpr;
+	}
+
+	/**
+	 * Obtiene info LOPD.
+	 *
+	 * @param tramCP
+	 *                   Trámite CP
+	 * @param idioma
+	 *                   idioma
+	 * @return info LOPD
+	 */
+	private LopdTabla obtenerInfoLOPD(final String idEntidad, final DefinicionTramiteCP tramCP, final String idioma) {
+
+		// Obtiene info entidad
+		final RConfiguracionEntidad entidadInfo = getConfig().obtenerConfiguracionEntidad(idEntidad);
+
+		// Monta tabla LOPD
+		final LopdTabla lopd = new LopdTabla();
+		final DefinicionLOPD lopdProc = tramCP.getProcedimiento().getLopd();
+		if (lopdProc == null) {
+			// Si no se ha establecido información a nivel procedimiento, mostramos lopd
+			// general de entidad
+			lopd.setCabecera(UtilsSTG.obtenerLiteral(entidadInfo.getInfoLopdHTML(), idioma));
+		} else {
+			// Establecemos info lopd procedimiento
+			lopd.setCabecera(lopdProc.getTextoCabecera());
+			if (lopdProc.getCampos() != null && !lopdProc.getCampos().isEmpty()) {
+				final List<LopdCampo> campos = new ArrayList<>();
+				for (final CampoLOPD cp : lopdProc.getCampos()) {
+					final LopdCampo cl = new LopdCampo();
+					cl.setTitulo(cp.getTitulo());
+					cl.setTexto(cp.getDescripcion());
+					if (StringUtils.isNotBlank(cp.getEnlace())) {
+						cl.setEnlace(cp.getEnlace());
+					}
+					if (StringUtils.isNotBlank(cp.getReferenciaArchivo())) {
+						cl.setEnlace(getConfig().obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
+								+ "/asistente/descargarArchivoCP.html?referenciaArchivo=" + cp.getReferenciaArchivo());
+					}
+					campos.add(cl);
+				}
+				lopd.setCampos(campos);
+			}
+		}
+		return lopd;
 	}
 
 	/**
@@ -370,8 +423,8 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	private DatosRepresentacion calcularDatosRepresentacion(final String pIdpaso,
 			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo,
 			final DatosPresentacion datosPresentacion) {
-		final DatosRepresentacion dr = ControladorPasoRegistrarHelper.getInstance().ejecutarScriptRepresentacion(pIdpaso,
-				pDefinicionTramite, pVariablesFlujo, datosPresentacion, getScriptFlujo());
+		final DatosRepresentacion dr = ControladorPasoRegistrarHelper.getInstance().ejecutarScriptRepresentacion(
+				pIdpaso, pDefinicionTramite, pVariablesFlujo, datosPresentacion, getScriptFlujo());
 		return dr;
 	}
 

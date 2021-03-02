@@ -1,5 +1,6 @@
 package es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +23,18 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import es.caib.sistra2.commons.plugins.autenticacion.api.AutenticacionPluginException;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.ArchivoCP;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CampoLOPD;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CatalogoPluginException;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionLOPD;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionProcedimientoCP;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteTelematico;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.ICatalogoProcedimientosPlugin;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RArchivoRolsac;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RInfoLOPDIntf;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RProcedimientoRolsac;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RRespuestaArchivos;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RRespuestaProcedimientos;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RRespuestaServicios;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RRespuestaSimple;
@@ -57,8 +65,19 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/** Prefix. */
 	public static final String IMPLEMENTATION_BASE_PROPERTY = "rolsac.";
 
+	/** Literales campos LOPD. */
+	private Properties literalesCamposLOPD;
+
 	public CatalogoProcedimientosRolsacPlugin(final String prefijoPropiedades, final Properties properties) {
 		super(prefijoPropiedades, properties);
+
+		// Literales campos LOPD
+		try {
+			literalesCamposLOPD = new Properties();
+			literalesCamposLOPD.load(CatalogoProcedimientosRolsacPlugin.class.getResourceAsStream("lopd.properties"));
+		} catch (final IOException e) {
+			throw new RuntimeException("Error al cargar fichero literales LOPD: " + e.getMessage(), e);
+		}
 	}
 
 	@Override
@@ -104,6 +123,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		dp.setIdProcedimientoSIA(servicioRolsac.getCodigoSIA());
 		dp.setOrganoResponsableDir3(dir3servicioResponsable);
 		dp.setServicio(true);
+		dp.setLopd(generarInfoLOPD(servicioRolsac, idioma));
 
 		final DefinicionTramiteCP dt = new DefinicionTramiteCP();
 		dt.setIdentificador(String.valueOf(servicioRolsac.getCodigo()));
@@ -230,6 +250,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		dp.setIdProcedimientoSIA(procRolsac.getCodigoSIA());
 		dp.setOrganoResponsableDir3(dir3organoResponsable);
 		dp.setServicio(false);
+		dp.setLopd(generarInfoLOPD(procRolsac, idioma));
 
 		final DefinicionTramiteCP dt = new DefinicionTramiteCP();
 		dt.setIdentificador(String.valueOf(tramiteRolsac.getCodigo()));
@@ -304,6 +325,57 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		}
 
 		throw new CatalogoPluginException(LITERAL_ERROR_NO_CONECTAR);
+	}
+
+	/**
+	 * Obtiene el tramite con reintentos.
+	 *
+	 * @param idTramiteCP
+	 * @param map
+	 * @return
+	 * @throws CatalogoPluginException
+	 */
+	private RArchivoRolsac[] getRArchivoRolsac(final String referenciaArchivo) throws CatalogoPluginException {
+
+		final RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getPropiedad("usr"), getPropiedad("pwd")));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+
+		// Llamada a Rolsac con reintentos
+		int intentosMax = getPropiedadIntentos();
+		if (intentosMax <= 0) {
+			intentosMax = 1;
+		}
+		int intentos = 1;
+		while (intentos <= intentosMax) {
+
+			try {
+				final ResponseEntity<RRespuestaArchivos> responseArchivo;
+
+				responseArchivo = restTemplate.postForEntity(getPropiedad("url") + "/archivos/" + referenciaArchivo,
+						request, RRespuestaArchivos.class);
+
+				final RArchivoRolsac[] archivosRolsac = responseArchivo.getBody().getResultado();
+
+				if (archivosRolsac == null || archivosRolsac.length == 0) {
+					throw new CatalogoPluginException("No existe archivo");
+				}
+				return archivosRolsac;
+
+			} catch (final Exception e) {
+				// No hacemos nada
+				log.warn(getWarning(intentos) + ": " + e.getMessage());
+			}
+			intentos++;
+		}
+
+		throw new CatalogoPluginException(LITERAL_ERROR_NO_CONECTAR);
+
 	}
 
 	/**
@@ -560,6 +632,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 				dp.setIdProcedimientoSIA(servicioRolsac.getCodigoSIA());
 				dp.setOrganoResponsableDir3(dir3servicioResponsable);
 				dp.setServicio(true);
+				dp.setLopd(generarInfoLOPD(servicioRolsac, idioma));
 
 				final DefinicionTramiteCP dt = new DefinicionTramiteCP();
 				dt.setIdentificador(String.valueOf(servicioRolsac.getCodigo()));
@@ -642,6 +715,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 				dp.setIdProcedimientoSIA(procRolsac.getCodigoSIA());
 				dp.setOrganoResponsableDir3(dir3organoResponsable);
 				dp.setServicio(false);
+				dp.setLopd(generarInfoLOPD(procRolsac, idioma));
 
 				final DefinicionTramiteCP dt = new DefinicionTramiteCP();
 				dt.setIdentificador(String.valueOf(tramiteRolsac.getCodigo()));
@@ -667,6 +741,126 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 		return res;
 
+	}
+
+	@Override
+	public ArchivoCP descargarArchivo(final String referenciaArchivo) throws CatalogoPluginException {
+
+		// NO IMPLEMENTAMOS DESCARGA, DIRECTAMENTE DEVOLVEMOS ENLACE A SEUCAIB
+		if (true) {
+			throw new CatalogoPluginException("NO IMPLEMENTADO. SE DEVUELVE MEDIANTE ENLACE A SEUCAIB.");
+		}
+
+		// Llamada a Rolsac para obtener props archivo
+		// NO PARECE QUE HACE FALTA, SE PUEDE OBTENER FILENAME DIRECTAMENTE DEL SERVLET
+		final RArchivoRolsac[] archivos = getRArchivoRolsac(referenciaArchivo);
+
+		// Llamada a servlet para descargar archivo
+		// "/sacws-api/arxiu/apiArxiuServlet?id=";
+		// ...
+
+		return null;
+
+	}
+
+	/**
+	 * Genera info lopd.
+	 *
+	 * @param procRolsac
+	 *                       procedimiento rolsac
+	 * @param idioma
+	 *                       idioma
+	 * @return lopd
+	 * @throws CatalogoPluginException
+	 */
+	protected DefinicionLOPD generarInfoLOPD(final RInfoLOPDIntf procRolsac, final String idioma)
+			throws CatalogoPluginException {
+		DefinicionLOPD lopd = null;
+		if ("true".equals(getPropiedad("infoLOPD"))) {
+			lopd = new DefinicionLOPD();
+			// - Cabecera
+			lopd.setTextoCabecera(procRolsac.getLopdCabecera());
+			// - Campos
+			final List<CampoLOPD> campos = new ArrayList<>();
+			// - Derechos
+			if (StringUtils.isNotBlank(procRolsac.getLopdDerechos())) {
+				final CampoLOPD c = new CampoLOPD();
+				c.setTitulo(obtenTituloCampoLOPD("derechos", idioma));
+				c.setDescripcion(procRolsac.getLopdDerechos());
+				campos.add(c);
+			}
+			// - Destinatario
+			if (StringUtils.isNotBlank(procRolsac.getLopdDestinatario())) {
+				final CampoLOPD c = new CampoLOPD();
+				c.setTitulo(obtenTituloCampoLOPD("destinatario", idioma));
+				c.setDescripcion(procRolsac.getLopdDestinatario());
+				campos.add(c);
+			}
+			// - Finalidad
+			if (StringUtils.isNotBlank(procRolsac.getLopdFinalidad())) {
+				final CampoLOPD c = new CampoLOPD();
+				c.setTitulo(obtenTituloCampoLOPD("finalidad", idioma));
+				c.setDescripcion(procRolsac.getLopdFinalidad());
+				campos.add(c);
+			}
+			// - Responsable
+			if (StringUtils.isNotBlank(procRolsac.getLopdResponsable())) {
+				final CampoLOPD c = new CampoLOPD();
+				c.setTitulo(obtenTituloCampoLOPD("responsable", idioma));
+				c.setDescripcion(procRolsac.getLopdResponsable());
+				campos.add(c);
+			}
+			// - Legitimación
+			if (procRolsac.getLopdLegitimacion() != null
+					&& StringUtils.isNotBlank(procRolsac.getLopdLegitimacion().getNombre())) {
+				final CampoLOPD c = new CampoLOPD();
+				c.setTitulo(obtenTituloCampoLOPD("legitimacion", idioma));
+				c.setDescripcion(procRolsac.getLopdLegitimacion().getNombre());
+				campos.add(c);
+			}
+			// - InfoAdicional (archivo)
+			if (procRolsac.getLink_lopdInfoAdicional() != null
+					&& procRolsac.getLink_lopdInfoAdicional().getCodigo() != null) {
+				final CampoLOPD c = new CampoLOPD();
+				c.setTitulo(obtenTituloCampoLOPD("infoAdicional", idioma));
+				c.setDescripcion(obtenDescripcionCampoLOPD("infoAdicional", idioma));
+				// Devolvemos enlace seucaib
+				// c.setReferenciaArchivo(procRolsac.getLink_lopdInfoAdicional().getCodigo());
+				final String urlSeucaibDescarga = getPropiedad("urlSeucaib") + "/" + ("es".equals(idioma) ? "es" : "ca")
+						+ "/arxiuServlet?id=" + procRolsac.getLink_lopdInfoAdicional().getCodigo();
+				c.setEnlace(urlSeucaibDescarga);
+				campos.add(c);
+			}
+
+			lopd.setCampos(campos);
+		}
+		return lopd;
+	}
+
+	/**
+	 * Obtiene titulo campo LOPD.
+	 *
+	 * @param campo
+	 *                   campo
+	 * @param idioma
+	 *                   idioma
+	 * @return titulo
+	 */
+	private String obtenTituloCampoLOPD(final String campo, final String idioma) {
+		return literalesCamposLOPD.getProperty("titulo." + campo + "." + idioma);
+	}
+
+	/**
+	 * Obtiene texto campo LOPD.
+	 *
+	 * @param campo
+	 *                   campo
+	 * @param idioma
+	 *                   idioma
+	 * @return texto
+	 */
+	private String obtenDescripcionCampoLOPD(final String campo, final String idioma) {
+		return literalesCamposLOPD.getProperty("texto." + campo + "." + idioma);
 	}
 
 }

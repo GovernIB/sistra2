@@ -155,6 +155,25 @@
 		</ul>
 		{{/if}}
 
+		{{if txtLOPD}}
+		<div class="imc--lopd">
+
+			<h4><span>{{txtTitolLOPD}}</span></h4>
+
+			<div class="imc--lopd-check">
+				<label>
+					<div class="imc-check">
+						<input type="checkbox" name="imc--f-re-accepta" id="imc--f-re-accepta" />
+						<span></span>
+					</div>
+					<span>{{txtAccepteLOPD}}</span>
+				</label>.
+				<button type="button" data-accio="lopd-obri"><span>{{txtTitolLOPD}}</span></button>
+			</div>
+
+		</div>
+		{{/if}}
+
 	</div>
 
 	<nav class="imc--navegacio">
@@ -191,3 +210,41 @@
 	</div>
 </div>
 <!-- /signatura -->
+
+{{if txtLOPD}}
+<div class="imc-popup--lopd" id="imc-popup--lopd" aria-hidden="true">
+	<div class="imc--c">
+
+		<div class="imc--lopd-contingut">
+			
+			<button type="button" class="imc-bt-capa-tanca" data-accio="lopd-tanca"><span>{{txtTanca}}</span></button>
+
+			<h2><span>{{txtTitolLOPD}}</span></h2>
+
+			<p class="imc--intro">{{capLOPD}}</p>
+
+			{{if campsLOPD}}
+			<div class="imc--lopd-camps">
+				{{campsLOPD}}
+
+				<h3><span>{{titulo}}</span></h3>
+
+				{{if enlace}}
+
+				<p><a href="{{enlace}}"><span>{{texto}}</span></a></p>
+
+				{{else}}
+
+				<p>{{texto}}</p>
+
+				{{/if}}
+
+				{{/campsLOPD}}
+			</div>
+			{{/if}}
+
+		</div>
+
+	</div>
+</div>
+{{/if}}

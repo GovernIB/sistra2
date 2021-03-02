@@ -57,7 +57,7 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 		try {
 			final ApiFirmaWebSimple api = generarApi();
 			final FirmaSimpleCommonInfo commonInfo = new FirmaSimpleCommonInfo(getPropiedad("profile"),
-					infoSesionFirma.getIdioma(), infoSesionFirma.getNombreUsuario(), infoSesionFirma.getEntidad(),
+					infoSesionFirma.getIdioma(), infoSesionFirma.getNombreUsuario(), infoSesionFirma.getNif(),
 					infoSesionFirma.getEmail());
 
 			return api.getTransactionID(commonInfo);

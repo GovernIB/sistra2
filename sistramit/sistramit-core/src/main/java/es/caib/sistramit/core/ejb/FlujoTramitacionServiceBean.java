@@ -102,13 +102,18 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
 	}
 
 	@Override
-	public String logoutTramite(String idSesionTramitacion) {
+	public String logoutTramite(final String idSesionTramitacion) {
 		return flujoTramitacionService.logoutTramite(idSesionTramitacion);
 	}
 
 	@Override
-	public String obtenerUrlEntidad(String idTramite, int version, String idioma) {
+	public String obtenerUrlEntidad(final String idTramite, final int version, final String idioma) {
 		return flujoTramitacionService.obtenerUrlEntidad(idTramite, version, idioma);
+	}
+
+	@Override
+	public AnexoFichero descargarArchivoCP(final String idSesionTramitacion, final String referenciaArchivo) {
+		return flujoTramitacionService.descargarArchivoCP(idSesionTramitacion, referenciaArchivo);
 	}
 
 }

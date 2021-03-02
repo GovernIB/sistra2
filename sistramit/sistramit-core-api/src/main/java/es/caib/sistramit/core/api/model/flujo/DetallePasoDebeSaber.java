@@ -20,9 +20,11 @@ public final class DetallePasoDebeSaber extends DetallePaso {
 	private String instrucciones;
 
 	/** Info LOPD (HTML). */
+	// TODO LOPD PENDIENTE DE QUITAR
 	private String infoLOPD;
 
 	/** Info LOPD resumen (HTML). */
+	// TODO LOPD PENDIENTE DE QUITAR
 	private String infoResumenLOPD;
 
 	/** Requisitos técnicos (HTML). */
@@ -162,7 +164,7 @@ public final class DetallePasoDebeSaber extends DetallePaso {
 
 	/**
 	 * Método de acceso a finPlazo.
-	 * 
+	 *
 	 * @return finPlazo
 	 */
 	public String getFinPlazo() {
@@ -171,7 +173,7 @@ public final class DetallePasoDebeSaber extends DetallePaso {
 
 	/**
 	 * Método para establecer finPlazo.
-	 * 
+	 *
 	 * @param finPlazo
 	 *                     finPlazo a establecer
 	 */

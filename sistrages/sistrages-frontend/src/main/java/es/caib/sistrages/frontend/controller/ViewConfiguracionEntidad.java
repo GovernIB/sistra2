@@ -244,32 +244,6 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	}
 
 	/**
-	 * Abre explorar lopd introduccion.
-	 */
-	public void explorarLopdIntroduccion() {
-		TypeModoAcceso modoAccesoDlg = TypeModoAcceso.CONSULTA;
-		if (getPermiteEditar()) {
-			modoAccesoDlg = TypeModoAcceso.EDICION;
-		}
-		UtilTraducciones.openDialogTraduccionHTML(modoAccesoDlg, data.getLopdIntroduccion(),
-				UtilJSF.getSessionBean().getIdiomas(), UtilJSF.getSessionBean().getIdiomas(), true);
-
-	}
-
-	/**
-	 * Gestión de retorno lopd introduccion.
-	 *
-	 * @param event
-	 */
-	public void returnDialogoLopdIntroduccion(final SelectEvent event) {
-		final DialogResult respuesta = (DialogResult) event.getObject();
-		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
-			final Literal literales = (Literal) respuesta.getResult();
-			data.setLopdIntroduccion(literales);
-		}
-	}
-
-	/**
 	 * Abre explorar instrucciones subsanacion.
 	 */
 	public void explorarInstruccionesSubsanacion() {
@@ -384,8 +358,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	/**
 	 * Retorno dialogo fichero.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoFichero(final SelectEvent event) {
 		// recupera datos entidad activa
@@ -481,8 +454,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	/**
 	 * Establece el valor de data.
 	 *
-	 * @param data
-	 *            el nuevo valor de data
+	 * @param data el nuevo valor de data
 	 */
 	public void setData(final Entidad data) {
 		this.data = data;
@@ -496,8 +468,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	}
 
 	/**
-	 * @param oficinas
-	 *            the oficinas to set
+	 * @param oficinas the oficinas to set
 	 */
 	public void setOficinas(final List<OficinaRegistro> oficinas) {
 		this.oficinas = oficinas;

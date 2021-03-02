@@ -85,6 +85,9 @@
     background-image: url(imgs/icones/ico_electronic_000.svg);
 }
 
+.imc--registre .imc--lopd { padding-top: 1em; }
+.imc--registre .imc--lopd button { margin-left: 1em; }
+
 
 /* botonera */
 
@@ -201,3 +204,115 @@ nav.imc--navegacio .imc-bt.imc--reintentar:focus {
 
 html.imc--sense-scroll,
 body.imc--sense-scroll { overflow: hidden; }
+
+
+/* document */
+
+.imc-popup--lopd { position: fixed; z-index: -1; top: 0; left: 0; width: 100%; height: 100%; visibility: hidden; opacity: 0; }
+.imc-popup--lopd .imc--c { position: fixed; z-index: 11; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,.7); }
+
+.imc-popup--lopd.imc--on {
+    z-index: 10;
+    visibility: visible;
+    opacity: 1;
+    -webkit-transition: visibility 0 ease-out, opacity .3s ease-out;
+    -moz-transition: visibility 0 ease-out, opacity .3s ease-out;
+    -ms-transition: visibility 0 ease-out, opacity .3s ease-out;
+    -o-transition: visibility 0 ease-out, opacity .3s ease-out;
+    transition: visibility 0 ease-out, opacity .3s ease-out;
+}
+
+.imc-popup--lopd.imc--off {
+    z-index: 10;
+    opacity: 0;
+    -webkit-transition: opacity .3s ease-out;
+    -moz-transition: opacity .3s ease-out;
+    -ms-transition: opacity .3s ease-out;
+    -o-transition: opacity .3s ease-out;
+    transition: opacity .3s ease-out;
+}
+
+.imc-popup--lopd .imc--lopd-contingut { overflow: auto; position: fixed; z-index: 12; top: 50%; left: 50%; width: 100%; max-width: 50em; max-height: 80%; padding: 1.5em 2em 2em 2em; background-color: #fff; transform: translate(-50%, -50%); visibility: hidden; opacity: 0; }
+
+.imc-popup--lopd .imc--lopd-contingut.imc--on {
+    visibility: visible;
+    opacity: 1;
+    -webkit-transition: visibility 0 ease-out, opacity .3s ease-out;
+    -moz-transition: visibility 0 ease-out, opacity .3s ease-out;
+    -ms-transition: visibility 0 ease-out, opacity .3s ease-out;
+    -o-transition: visibility 0 ease-out, opacity .3s ease-out;
+    transition: visibility 0 ease-out, opacity .3s ease-out;
+}
+
+
+.imc-popup--lopd .imc--lopd-contingut h2 { margin-bottom: .6em; }
+.imc-popup--lopd .imc--lopd-contingut h2 span { font-size: 1.5em; }
+
+.imc-popup--lopd .imc-bt-capa-tanca { float: right; position: relative; top: -.4em; }
+
+.imc-popup--lopd .imc--lopd-contingut .imc--intro { margin-bottom: 1em; }
+
+.imc-popup--lopd .imc--lopd-camps { padding: .3em 0 2em 2em; border-top: 1px dashed #ccc; }
+
+.imc-popup--lopd .imc--lopd-contingut h3 { position: relative; margin-top: 1em; margin-bottom: .3em; }
+.imc-popup--lopd .imc--lopd-contingut h3 span { font-size: 1.2em; font-weight: bold; }
+
+.imc-popup--lopd .imc--lopd-contingut h3::before { content: ""; display: block; position: absolute; top: .2em; left: -1.5em; width: 1em; height: 1em; background: transparent url(imgs/icones/ico_item.svg) no-repeat 50% 50% / auto 1em; opacity: .3; }
+
+
+/* destaca privacitat */
+
+.imc--registre .imc--lopd h4 { margin-bottom: 1em; }
+
+.imc--lopd-check { padding: .5em 1em; }
+
+.imc--lopd-error .imc-check span { border-color: #c00; }
+
+.imc--lopd-destaca {
+    -moz-animation-name: parpadeig;
+    -moz-animation-duration: 1.5s;
+    -moz-animation-iteration-count: 1;
+    -moz-animation-timing-function: linear;
+    -webkit-animation-name: parpadeig;
+    -webkit-animation-duration: 1.5s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: linear;
+    -o-animation-name: parpadeig;
+    -o-animation-duration: 1.5s;
+    -o-animation-iteration-count: 1;
+    -o-animation-timing-function: linear;
+    animation-name: parpadeig;
+    animation-duration: 1.5s;
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+}
+
+@-moz-keyframes parpadeig {
+    0% { background-color: #eaeaea; }
+    20% { background-color: #ffa; }
+    40% { background-color: #eaeaea; }
+    60% { background-color: #ffa; }
+    100% { background-color: #eaeaea; }
+}
+@-webkit-keyframes parpadeig {
+    0% { background-color: #eaeaea; }
+    20% { background-color: #ffa; }
+    40% { background-color: #eaeaea; }
+    60% { background-color: #ffa; }
+    100% { background-color: #eaeaea; }
+}
+@-o-keyframes parpadeig {
+    0% { background-color: #eaeaea; }
+    20% { background-color: #ffa; }
+    40% { background-color: #eaeaea; }
+    60% { background-color: #ffa; }
+    100% { background-color: #eaeaea; }
+}
+@keyframes parpadeig {
+    0% { background-color: #eaeaea; }
+    20% { background-color: #ffa; }
+    40% { background-color: #eaeaea; }
+    60% { background-color: #ffa; }
+    100% { background-color: #eaeaea; }
+}
+

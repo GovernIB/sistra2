@@ -36,7 +36,7 @@ public interface ResPersonaInt extends PluginScriptRes {
 
 	/**
 	 * Establece datos contacto
-	 * 
+	 *
 	 * @param pais
 	 *                         código país (SICRES)
 	 * @param provincia
@@ -53,7 +53,7 @@ public interface ResPersonaInt extends PluginScriptRes {
 	 *                         teléfono
 	 * @throws ScriptException
 	 */
-	void setDatosContacto(Long pais, Long provincia, Long municipio, String direccion, String codigoPostal,
+	void setDatosContacto(String pais, String provincia, String municipio, String direccion, String codigoPostal,
 			String email, String telefono) throws ScriptException;
 
 	/**

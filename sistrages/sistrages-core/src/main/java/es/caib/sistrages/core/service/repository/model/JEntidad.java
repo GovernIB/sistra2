@@ -139,11 +139,6 @@ public class JEntidad implements IModelApi {
 	@Column(name = "ENT_ROLSUP", nullable = false, length = 100)
 	private String roleSup;
 
-	/** Texto respecto LOPD (introducción). **/
-	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
-	@JoinColumn(name = "ENT_LOPDI")
-	private JLiteral lopdIntroduccion;
-
 	/** Permite subsanación paso anexar. **/
 	@Column(name = "ENT_SUBANE", nullable = false, precision = 1, scale = 0)
 	private boolean permiteSubsanarAnexar;
@@ -517,20 +512,6 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
-	 * @return the lopdIntroduccion
-	 */
-	public JLiteral getLopdIntroduccion() {
-		return lopdIntroduccion;
-	}
-
-	/**
-	 * @param lopdIntroduccion the lopdIntroduccion to set
-	 */
-	public void setLopdIntroduccion(final JLiteral lopdIntroduccion) {
-		this.lopdIntroduccion = lopdIntroduccion;
-	}
-
-	/**
 	 * @return the permiteSubsanarAnexar
 	 */
 	public boolean isPermiteSubsanarAnexar() {
@@ -736,9 +717,6 @@ public class JEntidad implements IModelApi {
 
 		entidad.setRolSup(roleSup);
 
-		if (lopdIntroduccion != null) {
-			entidad.setLopdIntroduccion(lopdIntroduccion.toModel());
-		}
 		entidad.setPermiteSubsanarAnexar(permiteSubsanarAnexar);
 		entidad.setPermiteSubsanarPagar(permiteSubsanarPagar);
 		entidad.setPermiteSubsanarRegistrar(permiteSubsanarRegistrar);

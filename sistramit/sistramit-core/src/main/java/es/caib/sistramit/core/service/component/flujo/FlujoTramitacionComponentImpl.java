@@ -19,6 +19,7 @@ import es.caib.sistra2.commons.pdf.PDFDocument;
 import es.caib.sistra2.commons.pdf.Seccion;
 import es.caib.sistra2.commons.plugins.autenticacion.api.AutenticacionPluginException;
 import es.caib.sistra2.commons.plugins.autenticacion.api.IComponenteAutenticacionPlugin;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.ArchivoCP;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CatalogoPluginException;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
 import es.caib.sistra2.commons.plugins.email.api.AnexoEmail;
@@ -600,6 +601,19 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		invalidarFlujoTramicacion();
 
 		return urlLogout;
+	}
+
+	@Override
+	public AnexoFichero descargarArchivoCP(final String referenciaArchivo) {
+		// Recupera archivo de CP
+		final DetalleTramite detalleTramite = controladorFlujo.detalleTramite(datosSesion);
+		final ArchivoCP archivo = catalogoProcedimientosComponent.descargarArchivo(detalleTramite.getEntidad().getId(),
+				referenciaArchivo);
+		// Retorna archivo
+		final AnexoFichero res = new AnexoFichero();
+		res.setFileName(archivo.getFilename());
+		res.setFileContent(archivo.getContent());
+		return res;
 	}
 
 }

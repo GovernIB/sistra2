@@ -1,8 +1,7 @@
 package es.caib.sistramit.core.service.component.script.plugins;
 
-import java.util.Date;
-
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
+import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistramit.core.service.model.script.ClzTramiteCPInt;
 
 /**
@@ -24,7 +23,7 @@ public final class ClzTramiteCP implements ClzTramiteCPInt {
 	 * Constructor.
 	 *
 	 * @param ptramite
-	 *            usuario
+	 *                     usuario
 	 */
 	public ClzTramiteCP(final DefinicionTramiteCP ptramite) {
 		super();
@@ -52,13 +51,14 @@ public final class ClzTramiteCP implements ClzTramiteCPInt {
 	}
 
 	@Override
-	public Date getPlazoFin() {
-		return tramite.getPlazoFin();
+	public String getPlazoFin() {
+		return ValidacionesTipo.getInstance().formateaFecha(tramite.getPlazoFin(), ValidacionesTipo.FORMATO_FECHAHORA);
 	}
 
 	@Override
-	public Date getPlazoInicio() {
-		return tramite.getPlazoInicio();
+	public String getPlazoInicio() {
+		return ValidacionesTipo.getInstance().formateaFecha(tramite.getPlazoInicio(),
+				ValidacionesTipo.FORMATO_FECHAHORA);
 	}
 
 	@Override

@@ -269,6 +269,20 @@ public class AsistenteTramitacionController extends TramitacionController {
 	}
 
 	/**
+	 * Descarga archivo catálogo procedimientos.
+	 *
+	 * @return Descarga archivo catálogo procedimientos.
+	 *
+	 */
+	@RequestMapping(value = "/descargarArchivoCP.html")
+	public ModelAndView descargarArchivoCP(@RequestParam("referenciaArchivo") final String referenciaArchivo) {
+		final String idSesionTramitacion = getIdSesionTramitacionActiva();
+		final AnexoFichero fichero = getFlujoTramitacionService().descargarArchivoCP(idSesionTramitacion,
+				referenciaArchivo);
+		return generarDownloadView(fichero.getFileName(), fichero.getFileContent());
+	}
+
+	/**
 	 * Devuelve un JSON con la información inicial trámite.
 	 *
 	 * @return JSON con la información inicial trámite.

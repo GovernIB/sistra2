@@ -26,6 +26,9 @@ public class DefinicionProcedimientoCP implements Serializable {
 	/** Indica si el procedimiento es un servicio. */
 	private boolean servicio;
 
+	/** Información LOPD. */
+	private DefinicionLOPD lopd;
+
 	/**
 	 * Método de acceso a identificador.
 	 *
@@ -39,7 +42,7 @@ public class DefinicionProcedimientoCP implements Serializable {
 	 * Método para establecer identificador.
 	 *
 	 * @param identificador
-	 *            identificador a establecer
+	 *                          identificador a establecer
 	 */
 	public void setIdentificador(final String identificador) {
 		this.identificador = identificador;
@@ -58,7 +61,7 @@ public class DefinicionProcedimientoCP implements Serializable {
 	 * Método para establecer idProcedimientoSIA.
 	 *
 	 * @param idProcedimientoSIA
-	 *            idProcedimientoSIA a establecer
+	 *                               idProcedimientoSIA a establecer
 	 */
 	public void setIdProcedimientoSIA(final String idProcedimientoSIA) {
 		this.idProcedimientoSIA = idProcedimientoSIA;
@@ -77,7 +80,7 @@ public class DefinicionProcedimientoCP implements Serializable {
 	 * Método para establecer descripcion.
 	 *
 	 * @param descripcion
-	 *            descripcion a establecer
+	 *                        descripcion a establecer
 	 */
 	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
@@ -96,7 +99,7 @@ public class DefinicionProcedimientoCP implements Serializable {
 	 * Método para establecer organoResponsableDir3.
 	 *
 	 * @param organoResponsableDir3
-	 *            organoResponsableDir3 a establecer
+	 *                                  organoResponsableDir3 a establecer
 	 */
 	public void setOrganoResponsableDir3(final String organoResponsableDir3) {
 		this.organoResponsableDir3 = organoResponsableDir3;
@@ -124,10 +127,29 @@ public class DefinicionProcedimientoCP implements Serializable {
 	 * Método para establecer servicio.
 	 *
 	 * @param servicio
-	 *            servicio a establecer
+	 *                     servicio a establecer
 	 */
 	public void setServicio(final boolean servicio) {
 		this.servicio = servicio;
+	}
+
+	/**
+	 * Método de acceso a lopd.
+	 * 
+	 * @return lopd
+	 */
+	public DefinicionLOPD getLopd() {
+		return lopd;
+	}
+
+	/**
+	 * Método para establecer lopd.
+	 * 
+	 * @param lopd
+	 *                 lopd a establecer
+	 */
+	public void setLopd(final DefinicionLOPD lopd) {
+		this.lopd = lopd;
 	}
 
 }

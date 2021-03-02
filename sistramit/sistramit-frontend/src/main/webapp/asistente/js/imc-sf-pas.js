@@ -104,6 +104,10 @@ var HTML_PAS_LITERALS = {
 			,txtRegistrar: txtRegistrar
 			,txtReintentar: txtReintentar
 			,txtSignatura: txtSignatura
+			,txtTitolLOPD: txtTitolLOPD
+			,txtAccepteLOPD: txtAccepteLOPD
+			,txtTitolLOPD: txtTitolLOPD
+			,txtTanca: txtTanca
 		},
 		"gj": {
 			txtRegistratCorrectament: txtRegistratCorrectament
@@ -140,7 +144,7 @@ var HTML_PAS_LITERALS = {
 			,txtDescarregantURL: txtDescarregantURL
 		}
 
-		
+
 
 
 
@@ -214,10 +218,10 @@ $.fn.appPas = function(options) {
 				}
 
 				// missatge carregant
-				
+
 				imc_missatge
 					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtPasCarregant });
-				
+
 				// carrega
 
 				carregaJSON();
@@ -236,7 +240,7 @@ $.fn.appPas = function(options) {
 						.abort();
 
 				}
-				
+
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
@@ -248,7 +252,7 @@ $.fn.appPas = function(options) {
 						}
 					})
 					.done(function( data ) {
-						
+
 						pas_json = data;
 						JSON_PAS_ACTUAL = data;
 
@@ -276,19 +280,19 @@ $.fn.appPas = function(options) {
 								.errors({ estat: pas_json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: pas_json.url });
 
 						}
-						
+
 					})
 					.fail(function(dades, tipus, errorThrown) {
 
 						if (tipus === "abort") {
 							return false;
 						}
-						
+
 						consola("Pas: error des de FAIL");
 
 						imc_contenidor
 							.errors({ estat: "fail" });
-						
+
 					});
 
 			},
@@ -315,7 +319,7 @@ $.fn.appPas = function(options) {
 				// carrega
 
 				$.when(
-		
+
 					$.get(APP_ + "css/imc-sf--"+pas_arxius_nom+".css?" + APP_VERSIO)
 					,$.get(APP_ + "html/imc-sf--"+pas_arxius_nom+".html")
 					,$.getScript(APP_ + "js/imc-sf--"+pas_arxius_nom+".js?" + APP_VERSIO)
@@ -537,6 +541,9 @@ $.fn.appPas = function(options) {
 					HTML_PAS_LITERALS[pas_tipus]["annexes"] = pas_json.datos.actual.anexos;
 					HTML_PAS_LITERALS[pas_tipus]["pagaments"] = pas_json.datos.actual.pagos;
 					HTML_PAS_LITERALS[pas_tipus]["representado"] = pas_json.datos.actual.representado;
+					HTML_PAS_LITERALS[pas_tipus]["txtLOPD"] = pas_json.datos.actual.lopd;
+					HTML_PAS_LITERALS[pas_tipus]["capLOPD"] = pas_json.datos.actual.lopd.cabecera;
+					HTML_PAS_LITERALS[pas_tipus]["campsLOPD"] = pas_json.datos.actual.lopd.campos;
 					HTML_PAS_LITERALS[pas_tipus]["registrar"] = pas_json.datos.actual.registrar;
 					HTML_PAS_LITERALS[pas_tipus]["reintentar"] = pas_json.datos.actual.reintentar;
 					HTML_PAS_LITERALS[pas_tipus]["seguent"] = pas_json.datos.siguiente;
@@ -668,7 +675,7 @@ $.fn.appPas = function(options) {
 
 				window
 					.scrollTo(0, 0);
-				
+
 			},
 			pinta_ds = function() {
 
@@ -682,7 +689,7 @@ $.fn.appPas = function(options) {
 
 				$(cs_passes)
 					.each(function() {
-						
+
 						var el = this
 							,el_tipus = el.tipo;
 
@@ -691,7 +698,7 @@ $.fn.appPas = function(options) {
 								.addClass("imc--mostra");
 
 					});
-				
+
 				imc_cs_explicacio
 					.find("li:not(.imc--mostra)")
 						.remove();
@@ -946,7 +953,7 @@ $.fn.appPas = function(options) {
 									}
 
 									if (presentacio === "" || presentacio === "null") {
-										
+
 										if (it.find(".imc--pagament-presencial").length) {
 											esPresencial = true;
 										}
@@ -1146,10 +1153,10 @@ $.fn.appPas = function(options) {
 				}
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -1161,21 +1168,21 @@ var URL_HASH,
 	URL_PARAMETRES;
 
 function urlHash() {
-	
+
 	URL_HASH = location.hash.replace(/^.*#/, '');
 	URL_PARAMETRES = URL_HASH.split("/");
-		
+
 	return URL_HASH, URL_PARAMETRES;
-	
+
 }
 
 jQuery(window)
-	.on("hashchange", function(){ 
-		
+	.on("hashchange", function(){
+
 		urlHash();
-	
+
 	if (URL_PARAMETRES[0] === "pas" && URL_PARAMETRES.length === 2) {
-		
+
 		var pas = URL_PARAMETRES[1];
 
 		APP_TRAMIT_PAS_ID = URL_PARAMETRES[1];
@@ -1202,13 +1209,13 @@ jQuery(window)
 
 		imc_formularis
 			.appEmplenaFormulari({ form_id: form_id });
-		
+
 	} else if (URL_PARAMETRES[0] === "accessibilitat") {
 
 		imc_contingut_c
 			.appAccessibilitat();
 
 	}
-	
+
 });
 

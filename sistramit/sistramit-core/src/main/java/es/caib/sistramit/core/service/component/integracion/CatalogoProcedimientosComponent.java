@@ -1,5 +1,6 @@
 package es.caib.sistramit.core.service.component.integracion;
 
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.ArchivoCP;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CatalogoPluginException;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
 
@@ -15,15 +16,26 @@ public interface CatalogoProcedimientosComponent {
 	 * Recupera configuración trámite.
 	 *
 	 * @param idEntidad
-	 *            id entidad
+	 *                        id entidad
 	 *
 	 * @param idTramiteCP
-	 *            id trámite
+	 *                        id trámite
 	 * @param idioma
-	 *            idioma
+	 *                        idioma
 	 * @throws CatalogoPluginException
 	 */
 	DefinicionTramiteCP obtenerDefinicionTramite(String idEntidad, String idTramiteCP, final boolean servicioCP,
 			String idioma);
+
+	/**
+	 * Recupera archivo.
+	 * 
+	 * @param idEntidad
+	 *                              id entidad
+	 * @param referenciaArchivo
+	 *                              referencia archivo
+	 * @return archivo
+	 */
+	ArchivoCP descargarArchivo(String idEntidad, String referenciaArchivo);
 
 }

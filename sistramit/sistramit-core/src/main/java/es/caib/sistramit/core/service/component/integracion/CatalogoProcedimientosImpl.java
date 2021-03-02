@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.ArchivoCP;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CatalogoPluginException;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionProcedimientoCP;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
@@ -82,6 +83,18 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 		}
 
 		return definicionTramite;
+	}
+
+	@Override
+	public ArchivoCP descargarArchivo(final String idEntidad, final String referenciaArchivo) {
+		final ICatalogoProcedimientosPlugin plgCP = getPlugin(idEntidad);
+		try {
+			final ArchivoCP archivo = plgCP.descargarArchivo(referenciaArchivo);
+			return archivo;
+		} catch (final CatalogoPluginException e) {
+			log.error("Error obteniendo la info del tramite", e);
+			throw new CatalogoProcedimientosException("Error obteniendo la definición de tramites", e);
+		}
 	}
 
 	/**

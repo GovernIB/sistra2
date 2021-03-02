@@ -79,6 +79,11 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	private AvisoUsuario avisoFinalizar = new AvisoUsuario();
 
 	/**
+	 * Info LOPD.
+	 */
+	private LopdTabla lopd;
+
+	/**
 	 * Constructor.
 	 */
 	public DetallePasoRegistrar() {
@@ -392,7 +397,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 
 	/**
 	 * Método de acceso a representante.
-	 * 
+	 *
 	 * @return representante
 	 */
 	public Persona getRepresentante() {
@@ -401,12 +406,31 @@ public final class DetallePasoRegistrar extends DetallePaso {
 
 	/**
 	 * Método para establecer representante.
-	 * 
+	 *
 	 * @param representante
 	 *                          representante a establecer
 	 */
 	public void setRepresentante(final Persona representante) {
 		this.representante = representante;
+	}
+
+	/**
+	 * Método de acceso a lopd.
+	 * 
+	 * @return lopd
+	 */
+	public LopdTabla getLopd() {
+		return lopd;
+	}
+
+	/**
+	 * Método para establecer lopd.
+	 * 
+	 * @param lopd
+	 *                 lopd a establecer
+	 */
+	public void setLopd(final LopdTabla lopd) {
+		this.lopd = lopd;
 	}
 
 }

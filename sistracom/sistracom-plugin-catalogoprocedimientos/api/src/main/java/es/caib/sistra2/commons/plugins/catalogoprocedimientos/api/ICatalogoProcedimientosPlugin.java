@@ -20,9 +20,12 @@ public interface ICatalogoProcedimientosPlugin extends IPlugin {
 	/**
 	 * Recupera configuración trámite.
 	 *
-	 * @param idTramiteCP id trámite
-	 * @param servicio    indica si es un servicio
-	 * @param idioma      idioma
+	 * @param idTramiteCP
+	 *                        id trámite
+	 * @param servicio
+	 *                        indica si es un servicio
+	 * @param idioma
+	 *                        idioma
 	 * @throws ParseException
 	 */
 	DefinicionTramiteCP obtenerDefinicionTramite(String idTramiteCP, boolean servicio, String idioma)
@@ -31,11 +34,22 @@ public interface ICatalogoProcedimientosPlugin extends IPlugin {
 	/**
 	 * Recupera trámites en los que se usa un trámite de Sistra.
 	 *
-	 * @param idTramite id trámite sistra
-	 * @param idioma    idioma
+	 * @param idTramite
+	 *                      id trámite sistra
+	 * @param idioma
+	 *                      idioma
 	 * @throws CatalogoPluginException
 	 */
 	List<DefinicionTramiteCP> obtenerTramites(String idTramite, Integer version, String idioma)
 			throws CatalogoPluginException;
+
+	/**
+	 * Recupera archivo de catálogo.
+	 * 
+	 * @param referenciaArchivo
+	 *                              referencia archivo
+	 * @return archivo
+	 */
+	ArchivoCP descargarArchivo(String referenciaArchivo) throws CatalogoPluginException;
 
 }

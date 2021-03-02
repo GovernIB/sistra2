@@ -5,13 +5,16 @@ var imc_registre
 	,imc_signatura
 	,imc_signatura_c
 	,imc_signatura_bt
-	,imc_signatura_iframe;
+	,imc_signatura_iframe
+	,imc_popup_lopd
+	,imc_popup_lopd_c
+	,imc_popup_lopd_contingut;
 
 
 // onReady
 
 function appPasRegistrarInicia() {
-
+	
 	imc_registre = imc_contingut.find(".imc--registre:first");
 	imc_bt_registra = $("#imc-bt-registra");
 	imc_bt_reintenta = $("#imc-bt-reintenta")
@@ -21,10 +24,17 @@ function appPasRegistrarInicia() {
 	imc_signatura_bt = imc_signatura.find("button:first");
 	imc_signatura_iframe = imc_signatura.find("iframe:first");
 
+	imc_popup_lopd = $("#imc-popup--lopd");
+	imc_popup_lopd_c = imc_popup_lopd.find(".imc--c:first");
+	imc_popup_lopd_contingut = imc_popup_lopd.find(".imc--lopd-contingut:first");
+
 	imc_registre
 		.appRegistre()
 		.appSigna()
 		.appSiganuraDescarrega();
+
+	imc_body
+		.appLOPD();
 
 	imc_bt_registra
 		.appRegistra();
@@ -33,6 +43,88 @@ function appPasRegistrarInicia() {
 		.appRegistra();
 
 };
+
+
+// appLOPD
+
+$.fn.appLOPD = function(options) {
+	var settings = $.extend({
+		element: ""
+	}, options);
+	this.each(function(){
+		var element = $(this),
+			inicia = function() {
+
+				element
+					.off('.appLOPD')
+					.on('click.appLOPD', "button[data-accio=lopd-obri]", obri)
+					.on('click.appLOPD', "button[data-accio=lopd-tanca]", tanca);
+
+			},
+			obri = function(e) {
+
+				imc_popup_lopd
+					.addClass("imc--on");
+
+				mostra();
+
+			},
+			mostra = function() {
+
+				imc_popup_lopd_contingut
+					.addClass("imc--on");
+
+				setTimeout(
+					function() {
+
+						$("html, body")
+							.addClass("imc--sense-scroll");
+
+					}, 300);
+
+				// fons tanca
+
+				imc_popup_lopd_c
+					.off('.appLOPD')
+					.on('click.appLOPD', tancaFons);
+
+			},
+			tancaFons = function(e) {
+
+				var el_ = $(e.target);
+
+				if (!el_.closest(".imc--lopd-contingut").length) {
+					tanca();
+				}
+
+			},
+			tanca = function() {
+
+				imc_popup_lopd
+					.addClass("imc--off");
+
+				$("html, body")
+					.removeClass("imc--sense-scroll");
+
+				setTimeout(
+					function() {
+
+						imc_popup_lopd_contingut
+							.removeClass("imc--on");
+
+						imc_popup_lopd
+							.removeClass("imc--on imc--off");
+
+					}, 300);
+
+			};
+		
+		// inicia
+		inicia();
+		
+	});
+	return this;
+}
 
 
 // appSigna
@@ -122,7 +214,7 @@ $.fn.appSigna = function(options) {
 						.abort();
 
 				}
-
+				
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
@@ -168,24 +260,24 @@ $.fn.appSigna = function(options) {
 							envia_ajax = false;
 
 							consola("Formulari: error des de JSON");
-
+							
 							imc_contenidor
 								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: data.url });
 
 						}
-
+						
 					})
 					.fail(function(dades, tipus, errorThrown) {
 
 						if (tipus === "abort") {
 							return false;
 						}
-
+						
 						consola("Formulari: error des de FAIL");
-
+						
 						imc_contenidor
 							.errors({ estat: "fail" });
-
+						
 					});
 
 			},
@@ -267,10 +359,10 @@ $.fn.appSigna = function(options) {
 					}, 300);
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -303,10 +395,10 @@ $.fn.appRegistre = function(options) {
 				document.location = url + "?" + id + "=" + elm_id + "&idPaso=" + APP_TRAMIT_PAS_ID + "&instancia=" + elm_instancia;
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -340,10 +432,10 @@ $.fn.appSiganuraDescarrega = function(options) {
 				document.location = url + "?" + id + "=" + elm_id + "&idPaso=" + APP_TRAMIT_PAS_ID + "&instancia=" + elm_instancia + "&firmante=" + elm_signant;
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -368,8 +460,41 @@ $.fn.appRegistra = function(options) {
 			},
 			obri = function(e) {
 
-				var bt = $(this);
+				// revisem acceptem privacitat
 
+				if (!$("#imc--f-re-accepta").is(":checked")) {
+
+					var lopdDestaca = function() {
+
+							var lopd_check_el = imc_registre.find(".imc--lopd-check:first");
+
+							lopd_check_el
+								.removeClass("imc--lopd-destaca")
+								.addClass("imc--lopd-destaca imc--lopd-error");
+
+							setTimeout(
+								function() {
+
+									lopd_check_el
+										.removeClass("imc--lopd-destaca");
+
+								}
+								,1500
+							);
+
+						};
+
+					imc_missatge
+						.appMissatge({ accio: "error", titol: txtLOPD_errorTitol, text: txtLOPD_errorText, alTancar: function() { lopdDestaca(); } });
+
+					return;
+
+				}
+
+				// està OK
+
+				var bt = $(this);
+				
 				accio = bt.attr("data-accio");
 
 				var titol = (accio === "reintenta") ? txtReintentarAtencioTitol : txtRegistrarAtencioTitol
@@ -388,11 +513,9 @@ $.fn.appRegistra = function(options) {
 			registra = function() {
 
 				// missatge carregant
-
+				
 				imc_missatge
-					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtRegistrant, text: txtRegistrantText });
-
-				registrant();
+					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtRegistrant, text: txtRegistrantText, alMostrar: function() { registrant(); } });
 
 			},
 			registrant = function() {
@@ -408,7 +531,7 @@ $.fn.appRegistra = function(options) {
 						.abort();
 
 				}
-
+				
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
@@ -434,12 +557,12 @@ $.fn.appRegistra = function(options) {
 							envia_ajax = false;
 
 							consola("Registra: error des de JSON");
-
+							
 							imc_contenidor
 								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: data.url });
 
 						}
-
+						
 					})
 					.fail(function(dades, tipus, errorThrown) {
 
@@ -448,19 +571,19 @@ $.fn.appRegistra = function(options) {
 						if (tipus === "abort") {
 							return false;
 						}
-
+						
 						consola("Registra: error des de FAIL");
-
+						
 						imc_contenidor
 							.errors({ estat: "fail" });
-
+						
 					});
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }

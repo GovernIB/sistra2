@@ -24,21 +24,21 @@ public interface FlujoTramitacionService {
 	 * Iniciar tramite.
 	 *
 	 * @param usuarioAutenticado
-	 *            usuario autenticado
+	 *                               usuario autenticado
 	 * @param idTramite
-	 *            id tramite
+	 *                               id tramite
 	 * @param version
-	 *            version tramite
+	 *                               version tramite
 	 * @param idioma
-	 *            idioma
+	 *                               idioma
 	 * @param idTramiteCatalogo
-	 *            id procedimiento
+	 *                               id procedimiento
 	 * @param servicioCatalogo
-	 *            indica si es servicio
+	 *                               indica si es servicio
 	 * @param urlInicio
-	 *            url inicio
+	 *                               url inicio
 	 * @param parametrosInicio
-	 *            parametros inicio
+	 *                               parametros inicio
 	 *
 	 */
 	String iniciarTramite(UsuarioAutenticadoInfo usuarioAutenticado, final String idTramite, final int version,
@@ -49,9 +49,9 @@ public interface FlujoTramitacionService {
 	 * Carga un trámite existente de persistencia.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesión de tramitación
+	 *                                   Id sesión de tramitación
 	 * @param usuarioAutenticadoInfo
-	 *            info usuario
+	 *                                   info usuario
 	 */
 	void cargarTramite(String idSesionTramitacion, UsuarioAutenticadoInfo usuarioAutenticadoInfo);
 
@@ -60,9 +60,9 @@ public interface FlujoTramitacionService {
 	 * recuperacion errores).
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesión de tramitación
+	 *                                Id sesión de tramitación
 	 * @param userInfo
-	 *            info usuario autenticado
+	 *                                info usuario autenticado
 	 */
 	void recargarTramite(String idSesionTramitacion, UsuarioAutenticadoInfo userInfo);
 
@@ -70,7 +70,7 @@ public interface FlujoTramitacionService {
 	 * Obtiene detalle trámite.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesión tramitación
+	 *                                id sesión tramitación
 	 * @return detalle trámite
 	 */
 	DetalleTramite obtenerDetalleTramite(final String idSesionTramitacion);
@@ -79,7 +79,7 @@ public interface FlujoTramitacionService {
 	 * Obtiene detalle paso actual.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesión tramitación
+	 *                                id sesión tramitación
 	 * @return detalle trámite
 	 */
 	DetallePasos obtenerDetallePasos(final String idSesionTramitacion);
@@ -88,9 +88,9 @@ public interface FlujoTramitacionService {
 	 * Va al paso indicado.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesión de tramitación
+	 *                                Id sesión de tramitación
 	 * @param idPaso
-	 *            Identificador de paso.
+	 *                                Identificador de paso.
 	 * @return Estado pasos
 	 */
 	ResultadoIrAPaso irAPaso(String idSesionTramitacion, String idPaso);
@@ -99,7 +99,7 @@ public interface FlujoTramitacionService {
 	 * Ir a paso actual.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesión de tramitación
+	 *                                Id sesión de tramitación
 	 * @return Estado pasos
 	 */
 	ResultadoIrAPaso irAPasoActual(String idSesionTramitacion);
@@ -108,13 +108,15 @@ public interface FlujoTramitacionService {
 	 * Realiza la acción indicada en el paso.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesión de tramitación
+	 *                                Id sesión de tramitación
 	 * @param idPaso
-	 *            Identificador del paso.
+	 *                                Identificador del paso.
 	 * @param accionPaso
-	 *            Acción a realizar en el paso (depende del paso y de la acción).
+	 *                                Acción a realizar en el paso (depende del paso
+	 *                                y de la acción).
 	 * @param parametros
-	 *            Parámetros del paso (depende del paso y de la acción).
+	 *                                Parámetros del paso (depende del paso y de la
+	 *                                acción).
 	 * @return Devuelve parámetros de retorno del paso (depende del paso y de la
 	 *         acción).
 	 */
@@ -125,7 +127,7 @@ public interface FlujoTramitacionService {
 	 * Cancela el trámite provocando su eliminación.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesión de tramitación
+	 *                                Id sesión de tramitación
 	 * @return Url redirección tras cancelar
 	 */
 	String cancelarTramite(String idSesionTramitacion);
@@ -134,7 +136,7 @@ public interface FlujoTramitacionService {
 	 * Sale del trámite manteniendo persistencia en su caso.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesión de tramitación
+	 *                                Id sesión de tramitación
 	 * @return Url redirección tras logout
 	 */
 	String logoutTramite(String idSesionTramitacion);
@@ -143,21 +145,21 @@ public interface FlujoTramitacionService {
 	 * Envío formulario de soporte.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesión tramitación
+	 *                                id sesión tramitación
 	 * @param nif
-	 *            nif
+	 *                                nif
 	 * @param nombre
-	 *            nombre
+	 *                                nombre
 	 * @param telefono
-	 *            telefono
+	 *                                telefono
 	 * @param email
-	 *            email
+	 *                                email
 	 * @param problemaTipo
-	 *            problema tipo
+	 *                                problema tipo
 	 * @param problemaDesc
-	 *            problema descripción
+	 *                                problema descripción
 	 * @param anexo
-	 *            anexo
+	 *                                anexo
 	 */
 	void envioFormularioSoporte(String idSesionTramitacion, String nif, String nombre, String telefono, String email,
 			String problemaTipo, String problemaDesc, AnexoFichero anexo);
@@ -166,11 +168,11 @@ public interface FlujoTramitacionService {
 	 * Obtiene url redirección a entidad.
 	 *
 	 * @param idTramite
-	 *            id trámite
+	 *                      id trámite
 	 * @param version
-	 *            versión
+	 *                      versión
 	 * @param idioma
-	 *            idioma
+	 *                      idioma
 	 * @return url entidad
 	 */
 	String obtenerUrlEntidad(String idTramite, int version, String idioma);
@@ -185,7 +187,7 @@ public interface FlujoTramitacionService {
 	 * interceptor).
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesión tramitación
+	 *                                id sesión tramitación
 	 * @return detalle trámite
 	 */
 	FlujoTramitacionInfo obtenerFlujoTramitacionInfo(final String idSesionTramitacion);
@@ -196,7 +198,7 @@ public interface FlujoTramitacionService {
 	 * ser usada desde el interceptor).
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesión tramitación
+	 *                                id sesión tramitación
 	 */
 	void invalidarFlujoTramitacion(final String idSesionTramitacion);
 
@@ -204,10 +206,21 @@ public interface FlujoTramitacionService {
 	 * Función interna para obtener la clave en formato pdf.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesión tramitación
+	 *                                id sesión tramitación
 	 *
 	 * @return pdf
 	 */
 	byte[] obtenerClavePdf(String idSesionTramitacion);
+
+	/**
+	 * Descarga fichero de catálogo procedimientos.
+	 * 
+	 * @param idSesionTramitacion
+	 *                                id sesión tramitación
+	 * @param referenciaArchivo
+	 *                                referencia archivo
+	 * @return archivo
+	 */
+	AnexoFichero descargarArchivoCP(String idSesionTramitacion, String referenciaArchivo);
 
 }
