@@ -101,7 +101,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 			final ListaPropiedades lp = new ListaPropiedades();
 			lp.addPropiedad("fileId", fileId);
 			lp.addPropiedad("idSesionFirma", sf);
-			throw new SesionFirmaClienteException("Excepción al enviar fichero a firmar", lp);
+			throw new SesionFirmaClienteException("Excepción al enviar fichero a firmar: " + e.getMessage(), e, lp);
 		}
 
 		// Iniciar sesion firma
@@ -112,7 +112,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 			final ListaPropiedades lp = new ListaPropiedades();
 			lp.addPropiedad("fileId", fileId);
 			lp.addPropiedad("idSesionFirma", sf);
-			throw new SesionFirmaClienteException("Excepción al iniciar sesión firma", lp);
+			throw new SesionFirmaClienteException("Excepción al iniciar sesión firma: " + e.getMessage(), e, lp);
 		}
 
 		final RedireccionFirma res = new RedireccionFirma();
