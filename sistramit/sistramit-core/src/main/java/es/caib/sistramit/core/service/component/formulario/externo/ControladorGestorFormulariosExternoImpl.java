@@ -89,6 +89,7 @@ public final class ControladorGestorFormulariosExternoImpl implements Controlado
 		datosInicio.setIdSesionFormulario(ticket);
 		datosInicio.setEntidad(difi.getEntidad());
 		datosInicio.setIdioma(difi.getIdioma());
+		datosInicio.setIdFormularioExterno(difi.getIdFormularioExterno());
 		datosInicio.setParametrosApertura(paramsApertura);
 		datosInicio.setUsuario(usuarioInfo);
 		datosInicio.setXmlDatosActuales(difi.getXmlDatosActuales());

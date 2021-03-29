@@ -173,7 +173,7 @@ public class FormularioPluginRest extends AbstractPluginProperties implements IF
 		rdi.setEntidad(datosInicio.getEntidad());
 		rdi.setIdFormularioExterno(datosInicio.getIdFormularioExterno());
 		rdi.setIdioma(datosInicio.getIdioma());
-		rdi.setIdSesionFormulario(datosInicio.getIdioma());
+		rdi.setIdSesionFormulario(datosInicio.getIdSesionFormulario());
 		rdi.setParametrosApertura(rpa);
 		rdi.setUrlCallback(datosInicio.getUrlCallback());
 		rdi.setUsuario(rus);
