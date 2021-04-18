@@ -9,6 +9,10 @@ package es.caib.sistramit.core.api.model.system.types;
 public enum TypeParametroEvento {
 
 	/**
+	 * Autenticación.
+	 */
+	AUTENTICACION("AUT"),
+	/**
 	 * Sistema operativo.
 	 */
 	SISTEMA_OPERATIVO("SO"),
@@ -74,7 +78,7 @@ public enum TypeParametroEvento {
 	 * Constructor.
 	 *
 	 * @param value
-	 *            Valor como string.
+	 *                  Valor como string.
 	 */
 	private TypeParametroEvento(final String value) {
 		stringValueParametroEvento = value;
@@ -94,7 +98,7 @@ public enum TypeParametroEvento {
 	 * Método para From string de la clase TypeAutenticacion.
 	 *
 	 * @param text
-	 *            Parámetro text
+	 *                 Parámetro text
 	 * @return el type autenticacion
 	 */
 	public static TypeParametroEvento fromString(final String text) {

@@ -22,7 +22,7 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 	 * Carga la sesión iniciada en el gestor de formularios.
 	 *
 	 * @param ticket
-	 *            Ticket de acceso a la sesión del formulario
+	 *                   Ticket de acceso a la sesión del formulario
 	 * @return id sesion formulario
 	 */
 	String cargarSesion(String ticket);
@@ -42,18 +42,21 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 
 	/**
 	 * Pasa a página anterior.
+	 * 
+	 * @param valores
+	 *                    valores actuales pagina
 	 *
 	 */
-	PaginaFormulario cargarPaginaAnterior();
+	PaginaFormulario cargarPaginaAnterior(List<ValorCampo> valores);
 
 	/**
 	 * Evalua el cambio de una página de un formulario y calcula el valor los campos
 	 * según los scripts del formulario.
 	 *
 	 * @param idCampo
-	 *            Id campo que se esta modificando
+	 *                          Id campo que se esta modificando
 	 * @param valoresPagina
-	 *            Datos actuales de la página en el cliente
+	 *                          Datos actuales de la página en el cliente
 	 * @return Datos de la página resultantes que deben refrescarse en el cliente
 	 */
 	ResultadoEvaluarCambioCampo evaluarCambioCampoPagina(String idCampo, List<ValorCampo> valoresPagina);
@@ -62,10 +65,10 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 	 * Guarda los datos de la página.
 	 *
 	 * @param valoresPagina
-	 *            Datos de la página
+	 *                                Datos de la página
 	 * @param accionPersonalizada
-	 *            Accion personalizada (nulo en caso de que no existan acciones
-	 *            personalizadas)
+	 *                                Accion personalizada (nulo en caso de que no
+	 *                                existan acciones personalizadas)
 	 * @return Resultado de guardar la página: indica si se ha guardado bien, si no
 	 *         ha pasado la validación y se ha generado un mensaje, etc. En caso de
 	 *         llegar al fin del formulario se indicará el ticket de acceso al XML y
@@ -83,7 +86,7 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 	 * Deserializa valores devueltos por el formulario.
 	 *
 	 * @param valores
-	 *            Valores serializados (id campo, valor serializado)
+	 *                    Valores serializados (id campo, valor serializado)
 	 * @return Lista de valores campo
 	 */
 	List<ValorCampo> deserializarValoresCampos(Map<String, String> valores);

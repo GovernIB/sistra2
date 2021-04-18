@@ -30,7 +30,7 @@
 	<!-- Growl mensajes -->
 	<p:growl id="growlDisenyoFormulario" widgetVar="growlDisenyoFormulario" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-	<h:form id="dialogDisenyoFormulario" >
+	<h:form id="dialogDisenyoFormulario"  styleClass="h100, margin-top-10">
 		<!--  Toolbar -->
 		<p:toolbar>
 			<p:toolbarGroup align="left">
@@ -117,7 +117,7 @@
         </p:confirmDialog>
 
 		<!-- Workpanel: Iframe HTML + Editor campos  -->
-		<h:panelGrid columns="2" columnClasses="w70 grid-left va-top formulario-panel, w30 grid-left va-top formulario-panel" styleClass="w100">
+		<h:panelGrid columns="2" columnClasses="w70 grid-left va-top formulario-panel, w30 grid-left va-top formulario-panel" styleClass="w100" style="height:#{dialogDisenyoFormulario.height} !important">
 
 			<p:outputPanel id="formulario-panel" styleClass="w100 h100">
 				<iframe id="formulario-frame" name="formulario-frame" src="#{dialogDisenyoFormulario.urlIframe}" class="formulario-frame">
@@ -161,6 +161,9 @@
 
 				<p:outputPanel styleClass="confirmar_botonera">
 					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.aplicarCambios']}" actionListener="#{dialogDisenyoFormulario.aplicarCambios}" process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" rendered="#{dialogDisenyoFormulario.isNotConsulta()}"  style="margin-right:4px;"/>
+					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.pagina']}" actionListener="#{dialogDisenyoFormulario.editarPagina}" process="@this" update="growlDisenyoFormulario" >
+						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoPagina}" update="growlDisenyoFormulario"/>
+        			</p:commandButton>
 					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.verEstructura']}" actionListener="#{dialogDisenyoFormulario.abrirDialogoEstructura}" process="@this" update="growlDisenyoFormulario"  style="margin-right:4px;" />
 
 					<p:commandButton id="btnPrevisualizarTramite"

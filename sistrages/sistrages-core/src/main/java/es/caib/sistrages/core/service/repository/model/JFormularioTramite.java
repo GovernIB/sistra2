@@ -234,14 +234,14 @@ public class JFormularioTramite implements IModelApi {
 	/**
 	 * @return the formularioExterno
 	 */
-	public final JGestorExternoFormularios getFormularioExterno() {
+	public JGestorExternoFormularios getFormularioExterno() {
 		return formularioExterno;
 	}
 
 	/**
 	 * @param formularioExterno the formularioExterno to set
 	 */
-	public final void setFormularioExterno(final JGestorExternoFormularios formularioExterno) {
+	public void setFormularioExterno(final JGestorExternoFormularios formularioExterno) {
 		this.formularioExterno = formularioExterno;
 	}
 

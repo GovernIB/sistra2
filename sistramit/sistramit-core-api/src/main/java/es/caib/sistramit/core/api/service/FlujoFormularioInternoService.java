@@ -22,7 +22,7 @@ public interface FlujoFormularioInternoService {
 	 * Carga la sesión iniciada en el gestor de formularios.
 	 *
 	 * @param ticket
-	 *            Ticket de acceso a la sesión del formulario
+	 *                   Ticket de acceso a la sesión del formulario
 	 * @return id sesion formulario
 	 */
 	String cargarSesion(String ticket);
@@ -30,9 +30,9 @@ public interface FlujoFormularioInternoService {
 	/**
 	 * Inicializa sesión formulario (separada de la carga de sesión para poder
 	 * registrar errores en auditoría).
-	 * 
+	 *
 	 * @param idSesionFormulario
-	 *            id sesion formulario
+	 *                               id sesion formulario
 	 */
 	void inicializarSesion(String idSesionFormulario);
 
@@ -40,7 +40,7 @@ public interface FlujoFormularioInternoService {
 	 * Realiza la carga de la página actual.
 	 *
 	 * @param idSesionFormulario
-	 *            id sesion formulario
+	 *                               id sesion formulario
 	 * @return Página formulario (html, configuracion y datos)
 	 */
 	PaginaFormulario cargarPaginaActual(String idSesionFormulario);
@@ -49,20 +49,22 @@ public interface FlujoFormularioInternoService {
 	 * Pasa a página anterior.
 	 *
 	 * @param idSesionFormulario
-	 *            id sesion formulario
+	 *                               id sesion formulario
+	 * @param valores
+	 *                               valores actuales pagina
 	 */
-	PaginaFormulario cargarPaginaAnterior(String idSesionFormulario);
+	PaginaFormulario cargarPaginaAnterior(String idSesionFormulario, List<ValorCampo> valores);
 
 	/**
 	 * Evalua el cambio de una página de un formulario y calcula el valor los campos
 	 * según los scripts del formulario.
 	 *
 	 * @param idSesionFormulario
-	 *            id sesion formulario
+	 *                               id sesion formulario
 	 * @param idCampo
-	 *            Id campo que se esta modificando
+	 *                               Id campo que se esta modificando
 	 * @param valoresPagina
-	 *            Datos actuales de la página en el cliente
+	 *                               Datos actuales de la página en el cliente
 	 * @return Datos de la página resultantes que deben refrescarse en el cliente
 	 */
 	ResultadoEvaluarCambioCampo evaluarCambioCampoPagina(String idSesionFormulario, String idCampo,
@@ -72,12 +74,12 @@ public interface FlujoFormularioInternoService {
 	 * Guarda los datos de la página.
 	 *
 	 * @param idSesionFormulario
-	 *            id sesion formulario
+	 *                                id sesion formulario
 	 * @param valoresPagina
-	 *            Datos de la página
+	 *                                Datos de la página
 	 * @param accionPersonalizada
-	 *            Accion personalizada (nulo en caso de que no existan acciones
-	 *            personalizadas)
+	 *                                Accion personalizada (nulo en caso de que no
+	 *                                existan acciones personalizadas)
 	 * @return Resultado de guardar la página: indica si se ha guardado bien, si no
 	 *         ha pasado la validación y se ha generado un mensaje, etc. En caso de
 	 *         llegar al fin del formulario se indicará el ticket de acceso al XML y
@@ -90,7 +92,7 @@ public interface FlujoFormularioInternoService {
 	 * Cancela el rellenado del formulario.
 	 *
 	 * @param idSesionFormulario
-	 *            id sesion formulario
+	 *                               id sesion formulario
 	 */
 	void cancelarFormulario(String idSesionFormulario);
 
@@ -98,9 +100,10 @@ public interface FlujoFormularioInternoService {
 	 * Deserializa valores devueltos por el formulario.
 	 *
 	 * @param idSesionFormulario
-	 *            id sesion formulario
+	 *                               id sesion formulario
 	 * @param valores
-	 *            Valores serializados (id campo, valor serializado)
+	 *                               Valores serializados (id campo, valor
+	 *                               serializado)
 	 * @return Lista de valores campo
 	 */
 	List<ValorCampo> deserializarValoresCampos(String idSesionFormulario, Map<String, String> valores);
@@ -115,7 +118,7 @@ public interface FlujoFormularioInternoService {
 	 * interceptor.
 	 *
 	 * @param idSesionFormulario
-	 *            id sesion formulario
+	 *                               id sesion formulario
 	 * @return Info sesion formulario
 	 */
 	SesionFormularioInfo obtenerInformacionFormulario(final String idSesionFormulario);

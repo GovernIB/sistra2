@@ -28,7 +28,7 @@ public class FlujoFormularioInternoServiceImpl implements FlujoFormularioInterno
 
 	@Override
 	@NegocioInterceptor
-	public String cargarSesion(String ticket) {
+	public String cargarSesion(final String ticket) {
 		// Generamos flujo de tramitacion
 		final FlujoFormularioComponent ff = (FlujoFormularioComponent) ApplicationContextProvider
 				.getApplicationContext().getBean("flujoFormularioComponent");
@@ -42,51 +42,52 @@ public class FlujoFormularioInternoServiceImpl implements FlujoFormularioInterno
 
 	@Override
 	@NegocioInterceptor
-	public void inicializarSesion(String idSesionFormulario) {
+	public void inicializarSesion(final String idSesionFormulario) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
 		ff.inicializarSesion();
 	}
 
 	@Override
 	@NegocioInterceptor
-	public PaginaFormulario cargarPaginaActual(String idSesionFormulario) {
+	public PaginaFormulario cargarPaginaActual(final String idSesionFormulario) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
 		return ff.cargarPaginaActual();
 	}
 
 	@Override
 	@NegocioInterceptor
-	public PaginaFormulario cargarPaginaAnterior(String idSesionFormulario) {
+	public PaginaFormulario cargarPaginaAnterior(final String idSesionFormulario, final List<ValorCampo> valores) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
-		return ff.cargarPaginaAnterior();
+		return ff.cargarPaginaAnterior(valores);
 	}
 
 	@Override
 	@NegocioInterceptor
-	public ResultadoEvaluarCambioCampo evaluarCambioCampoPagina(String idSesionFormulario, String idCampo,
-			List<ValorCampo> valoresPagina) {
+	public ResultadoEvaluarCambioCampo evaluarCambioCampoPagina(final String idSesionFormulario, final String idCampo,
+			final List<ValorCampo> valoresPagina) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
 		return ff.evaluarCambioCampoPagina(idCampo, valoresPagina);
 	}
 
 	@Override
 	@NegocioInterceptor
-	public ResultadoGuardarPagina guardarPagina(String idSesionFormulario, List<ValorCampo> valoresPagina,
-			String accionPersonalizada) {
+	public ResultadoGuardarPagina guardarPagina(final String idSesionFormulario, final List<ValorCampo> valoresPagina,
+			final String accionPersonalizada) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
 		return ff.guardarPagina(valoresPagina, accionPersonalizada);
 	}
 
 	@Override
 	@NegocioInterceptor
-	public void cancelarFormulario(String idSesionFormulario) {
+	public void cancelarFormulario(final String idSesionFormulario) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
 		ff.cancelarFormulario();
 	}
 
 	@Override
 	@NegocioInterceptor
-	public List<ValorCampo> deserializarValoresCampos(String idSesionFormulario, Map<String, String> valores) {
+	public List<ValorCampo> deserializarValoresCampos(final String idSesionFormulario,
+			final Map<String, String> valores) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
 		return ff.deserializarValoresCampos(valores);
 	}
@@ -96,7 +97,7 @@ public class FlujoFormularioInternoServiceImpl implements FlujoFormularioInterno
 	// interceptor de auditoria.
 	// -------------------------------------------------------------------------------------------
 	@Override
-	public SesionFormularioInfo obtenerInformacionFormulario(String idSesionFormulario) {
+	public SesionFormularioInfo obtenerInformacionFormulario(final String idSesionFormulario) {
 		// ATENCION: NO DEBE PASAR POR INTERCEPTOR. SE USA DESDE EL PROPIO
 		// INTERCEPTOR.
 		SesionFormularioInfo dt = null;
@@ -120,7 +121,7 @@ public class FlujoFormularioInternoServiceImpl implements FlujoFormularioInterno
 	 * Obtiene flujo de formulario.
 	 *
 	 * @param idSesionFormulario
-	 *            id sesión formulario
+	 *                               id sesión formulario
 	 * @return flujo formulario
 	 */
 	private FlujoFormularioComponent obtenerFlujoFormulario(final String idSesionFormulario) {

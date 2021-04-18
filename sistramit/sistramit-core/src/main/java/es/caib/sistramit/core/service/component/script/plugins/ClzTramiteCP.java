@@ -2,6 +2,7 @@ package es.caib.sistramit.core.service.component.script.plugins;
 
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
+import es.caib.sistramit.core.api.model.comun.Constantes;
 import es.caib.sistramit.core.service.model.script.ClzTramiteCPInt;
 
 /**
@@ -52,13 +53,14 @@ public final class ClzTramiteCP implements ClzTramiteCPInt {
 
 	@Override
 	public String getPlazoFin() {
-		return ValidacionesTipo.getInstance().formateaFecha(tramite.getPlazoFin(), ValidacionesTipo.FORMATO_FECHAHORA);
+		return ValidacionesTipo.getInstance().formateaFecha(tramite.getPlazoFin(),
+				Constantes.FORMATO_FECHAHORA_FRONTAL);
 	}
 
 	@Override
 	public String getPlazoInicio() {
 		return ValidacionesTipo.getInstance().formateaFecha(tramite.getPlazoInicio(),
-				ValidacionesTipo.FORMATO_FECHAHORA);
+				Constantes.FORMATO_FECHAHORA_FRONTAL);
 	}
 
 	@Override

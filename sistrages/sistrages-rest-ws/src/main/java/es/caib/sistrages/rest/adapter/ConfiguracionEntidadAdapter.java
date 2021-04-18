@@ -57,6 +57,7 @@ public class ConfiguracionEntidadAdapter {
 		rConfiguracionEntidad.setEmail(entidad.getEmail());
 		rConfiguracionEntidad.setContactoHTML(AdapterUtils.generarLiteral(entidad.getPie()));
 		rConfiguracionEntidad.setUrlCarpeta(AdapterUtils.generarLiteral(entidad.getUrlCarpetaCiudadana()));
+		rConfiguracionEntidad.setUrlSede(AdapterUtils.generarLiteral(entidad.getUrlSede()));
 		rConfiguracionEntidad.setAyudaTelefono(entidad.getTelefono());
 		rConfiguracionEntidad.setAyudaUrl(entidad.getUrlSoporte());
 		rConfiguracionEntidad.setPlugins(

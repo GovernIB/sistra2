@@ -5,7 +5,17 @@
 	<h3><span>{{txtRegistrarTitol}}</span></h3>
 
 	<div class="imc--info">
-		{{txtRegistrarInfo}}
+		
+		<p>{{txtRegistrarInfo}}</p>
+		<div class="imc--important">
+			<p>{{txtRegistrarInfoImportant}}</p>
+			{{if txtInstruccions}}
+			<div class="imc--instruccions">
+				{{txtInstruccions}}
+			</div>
+			{{/if}}
+		</div>
+
 	</div>
 
 	<div class="imc--registre">

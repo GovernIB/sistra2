@@ -332,3 +332,6 @@ fieldset[data-script="s"]::before { content: ""; display: block; position: absol
 	border: 2px solid #fff;
 }
 
+.imc-form div.imc-element[data-type="captcha"] div.imc--img {
+	background-image: url(../imgs/captcha.png)
+}

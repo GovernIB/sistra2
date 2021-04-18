@@ -113,13 +113,16 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		escribeLinea(pOut, "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />", 1);
 
 		escribeLinea(pOut, urlCssIni, "imc-forms", urlCssFin, 1);
-		escribeLinea(pOut, urlCssIni, "imc-forms-select", urlCssFin, 1);
-		escribeLinea(pOut, urlCssIni, "imc-forms-taula-iframe", urlCssFin, 1);
+		escribeLinea(pOut, urlCssIni, "imc-forms--select", urlCssFin, 1);
+		escribeLinea(pOut, urlCssIni, "imc-forms--taula-iframe", urlCssFin, 1);
 		escribeLinea(pOut, urlCssIni, "imc-forms--edicio", urlCssFin, 1);
 
 		escribeLinea(pOut, urlJsIni, "utils/modernizr-imc-0.3", urlJsFin, 1);
 		escribeLinea(pOut, urlJsIni, "utils/jquery-3.3.1.min", urlJsFin, 1);
 		escribeLinea(pOut, urlJsIni, "imc-forms--edicio", urlJsFin, 1);
+
+		escribeLinea(pOut, "<script type=\"text/javascript\">var APP_CAMPO_ID = \"data-codigo\";</script>", 1);
+
 		escribeLinea(pOut, "</head>", 0);
 
 	}
@@ -250,10 +253,6 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			tipo = "text";
 		}
 
-		if (tipo != null && !"textarea".equals(tipo)) {
-			elemento.append("<input id=\"").append(campo.getIdComponente()).append("\" type=\"" + tipo + "\"/>");
-		}
-
 		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente()), escribeCodigo(pCF.getCodigo(), pModoEdicion),
 				escribeObligatorio(campo, pModoEdicion), escribeTieneScripts(campo, pModoEdicion),
 				" class=\"imc-element ", estilo.toString(), "\" data-type=\"", tipo, "\">", 5);
@@ -261,6 +260,14 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
 			escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(campo.getIdComponente()),
 					"\">", trataLiteral(campo.getTexto().getTraduccion(pLang)), "</label></div>", 6);
+		}
+
+		if (tipo != null && !"textarea".equals(tipo)) {
+			// Cambiamos en modo editor a tipo text para que no saque el calendario al hacer clic
+			if (pModoEdicion && "date".equals(tipo)) {
+				tipo = "text";
+			}
+			elemento.append("<input id=\"").append(campo.getIdComponente()).append("\" type=\"" + tipo + "\"/>");
 		}
 
 		escribeLinea(pOut, "<div class=\"imc-el-control\">", elemento.toString(), "</div>", 6);

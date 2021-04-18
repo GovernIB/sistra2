@@ -11,6 +11,15 @@
     <p>
         Un tràmit telemàtic permet particularitzar el seu comportament mitjançant la introducció de scripts.
     </p>
+    <h2 class="stgH2">CONSIDERACIONS A TENIR EN COMPTE</h2>
+	<p>
+		<ul>
+			<li>
+				No s'han de deixar comentades línies de codi, ja que poden ser avaluades en el càlcul de dependències. Només es poden introduir comentaris a manera d'anotació de funcionament de el codi.
+			</li>
+		</ul>
+	</p>
+	<h2 class="stgH2">PANTALLA</h2>
     <p>
         Aquests scripts s'estableixen mitjançant aquesta finestra, en la qual es distingeixen les següents parts:
     </p>
@@ -37,7 +46,7 @@
                         <li>Retorn de resultat del script, si es retorna a través d'un plugin de dades (plugin comença per “DADES_”).</li>
                         <li>Plugins d'utilitats: accés a dades de sessió, dominis, logs, etc. A continuació es llisten els plugins disponibles (per a major detall consultar l'ajuda específica de cada plugin).
                             <ul class="detalle2">
-                                <li>Plugins generals: accessibles des de tots els scripts:
+                                <li><span class="nombreCampo">Plugins generals:</span> accessibles des de tots els scripts:
                                     <ul>
                                         <li>PLUGIN_DOMINIS: permet l'accés als dominis associats a la versió del tràmit. </li>
                                         <li>PLUGIN_UTILS: permet realitzar diverses validacions. </li>

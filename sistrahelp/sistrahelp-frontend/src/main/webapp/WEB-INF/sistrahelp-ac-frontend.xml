@@ -19,8 +19,11 @@
 	<context:property-placeholder
 		location="file:#{systemProperties['es.caib.sistrahelp.properties.path']}" />
 
-	<bean id="negocioModuleConfig" class="es.caib.sistrahelp.frontend.model.comun.ModuleConfig">
+	<bean id="frontModuleConfig" class="es.caib.sistrahelp.frontend.ModuleConfig">
 		<property name="entorno" value="${entorno}" />
+		<property name="version" value="${sistra2.version}" />
+		<property name="commitSvn" value="${commitSvn}" />
+		<property name="commitGit" value="${commitGit}" />
 	</bean>
 
 	<!-- Scope view para spring beans usados como backbeans de JSF: @Scope(view) -->

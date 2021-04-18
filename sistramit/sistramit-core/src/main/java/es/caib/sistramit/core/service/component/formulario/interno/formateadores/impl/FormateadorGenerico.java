@@ -222,13 +222,15 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 		String valor = "";
 		try {
 			if (StringUtils.isNotBlank(fecha)) {
-				if (ValidacionesTipo.getInstance().esFecha(fecha, "yyyy-MM-dd")) {
-					final Date date = ValidacionesTipo.getInstance().parseFecha(fecha, "yyyy-MM-dd");
-					valor = ValidacionesTipo.getInstance().formateaFecha(date, FORMATO_FECHAS_PDF);
-				} else if (ValidacionesTipo.getInstance().esFecha(fecha, "yyyy/MM/dd")) {
-					final Date date = ValidacionesTipo.getInstance().parseFecha(fecha, "yyyy/MM/dd");
-					valor = ValidacionesTipo.getInstance().formateaFecha(date, FORMATO_FECHAS_PDF);
-				} else {
+				final String[] formatosFecha = { "dd/MM/yyyy", "dd-MM-yyyy", "yyyy-MM-dd", "yyyy/MM/dd" };
+				for (final String ff : formatosFecha) {
+					if (ValidacionesTipo.getInstance().esFecha(fecha, ff)) {
+						final Date date = ValidacionesTipo.getInstance().parseFecha(fecha, ff);
+						valor = ValidacionesTipo.getInstance().formateaFecha(date, FORMATO_FECHAS_PDF);
+						break;
+					}
+				}
+				if (StringUtils.isBlank(valor)) {
 					throw new FormateadorException("Fecha no valida");
 				}
 			}

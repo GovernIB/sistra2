@@ -130,6 +130,18 @@ public class SessionBean {
 	private Boolean growlSticky = false;
 	private Integer growlLife = 4000;
 
+	/** Datos que obtienen el ancho y alto de la pantalla. **/
+	private Integer height;
+	private Integer width;
+	public void submitAspect () {
+
+		String swidth = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("hiddenWidth");
+		String sheight = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("hiddenHeight");
+		if (swidth != null) { width = Integer.parseInt(swidth);}
+		if (sheight != null) { height = Integer.parseInt(sheight);}
+
+	}
+
 	private Map<String, Object> mochilaDatos;
 
 	/** Inicio sesión. */
@@ -703,6 +715,22 @@ public class SessionBean {
 
 	public void setSystemService(final SystemService systemService) {
 		this.systemService = systemService;
+	}
+
+	public Integer getHeight() {
+		return height;
+	}
+
+	public void setHeight(Integer height) {
+		this.height = height;
+	}
+
+	public Integer getWidth() {
+		return width;
+	}
+
+	public void setWidth(Integer width) {
+		this.width = width;
 	}
 
 }

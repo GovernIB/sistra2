@@ -316,6 +316,7 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		final DetallePasoRegistrar dpr = new DetallePasoRegistrar();
 		dpr.setCompletado(TypeSiNo.NO);
 		dpr.setId(pIdPaso);
+		dpr.setInstruccionesTramitacion(defPaso.getInstruccionesTramitacionHtml());
 		dpr.setInstruccionesEntregaPresencial(defPaso.getInstruccionesPresentacionHtml());
 		dpr.setFormularios(UtilsFlujo.obtenerDocumentosTipo(docsRegPorTipo, TypeDocumento.FORMULARIO));
 		dpr.setAnexos(UtilsFlujo.obtenerDocumentosTipo(docsRegPorTipo, TypeDocumento.ANEXO));

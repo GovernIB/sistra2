@@ -302,7 +302,9 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getCodigo()));
 		params.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.id);
 
-		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.EDICION, params, true, 1210, 680);
+		Integer width = UtilJSF.getSessionBean().getWidth();
+		Integer height = UtilJSF.getSessionBean().getHeight() - 60;
+		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.EDICION, params, true, width, height);
 	}
 
 	/**

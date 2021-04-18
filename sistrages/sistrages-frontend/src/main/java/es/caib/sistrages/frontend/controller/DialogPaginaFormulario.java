@@ -63,7 +63,7 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 	/**
 	 * Editar script
 	 */
-	public void editarDialogScriptValidacion(final String tipoScript, final Script script) {
+	public void editarDialogScript(final String tipoScript, final Script script) {
 		final Map<String, String> maps = new HashMap<>();
 		maps.put(TypeParametroVentana.TIPO_SCRIPT_FORMULARIO.toString(),
 				UtilJSON.toJSON(TypeScriptFormulario.fromString(tipoScript)));
@@ -105,12 +105,36 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 	}
 
 	/**
+	 * Retorno dialogo del script de personalizacion.
+	 *
+	 * @param event respuesta dialogo
+	 */
+	public void returnDialogoScriptNavegacion(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+			case EDICION:
+				data.setScriptNavegacion((Script) respuesta.getResult());
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	/**
 	 * Aceptar.
 	 */
 	public void aceptar() {
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+		// Si es página final, quitamos el script de navegación
+		if (data.isPaginaFinal()) {
+			data.setScriptNavegacion(null);
+		}
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
 	}

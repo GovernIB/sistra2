@@ -42,6 +42,10 @@ public class RConfiguracionEntidad {
 	@ApiModelProperty(value = "Url carpeta ciudadana")
 	private RLiteral urlCarpeta;
 
+	/** Url sede electrónica. */
+	@ApiModelProperty(value = "Url sede electrónica")
+	private RLiteral urlSede;
+
 	/** Info LOPD (HTML). */
 	@ApiModelProperty(value = "Info LOPD (HTML)")
 	private RLiteral infoLopdHTML;
@@ -716,7 +720,7 @@ public class RConfiguracionEntidad {
 
 	/**
 	 * Método de acceso a gestoresFormulariosExternos.
-	 * 
+	 *
 	 * @return gestoresFormulariosExternos
 	 */
 	public List<RGestorFormularioExterno> getGestoresFormulariosExternos() {
@@ -725,13 +729,32 @@ public class RConfiguracionEntidad {
 
 	/**
 	 * Método para establecer gestoresFormulariosExternos.
-	 * 
+	 *
 	 * @param gestoresFormulariosExternos
 	 *                                        gestoresFormulariosExternos a
 	 *                                        establecer
 	 */
 	public void setGestoresFormulariosExternos(final List<RGestorFormularioExterno> gestoresFormulariosExternos) {
 		this.gestoresFormulariosExternos = gestoresFormulariosExternos;
+	}
+
+	/**
+	 * Método de acceso a urlSede.
+	 * 
+	 * @return urlSede
+	 */
+	public RLiteral getUrlSede() {
+		return urlSede;
+	}
+
+	/**
+	 * Método para establecer urlSede.
+	 * 
+	 * @param urlSede
+	 *                    urlSede a establecer
+	 */
+	public void setUrlSede(final RLiteral urlSede) {
+		this.urlSede = urlSede;
 	}
 
 }

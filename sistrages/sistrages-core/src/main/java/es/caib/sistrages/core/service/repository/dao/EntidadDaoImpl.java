@@ -173,6 +173,8 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setContactoUrl(entidad.isUrlSoporteHabilitado());
 		jEntidad.setUrlSoporte(entidad.getUrlSoporte());
 		jEntidad.setContactoFormularioIncidencias(entidad.isFormularioIncidenciasHabilitado());
+		jEntidad.setUrlSede(
+				JLiteral.mergeModel(jEntidad.getUrlSede(), entidad.getUrlSede()));
 		jEntidad.setUrlCarpetaCiudadana(
 				JLiteral.mergeModel(jEntidad.getUrlCarpetaCiudadana(), entidad.getUrlCarpetaCiudadana()));
 		jEntidad.setDiasPreregistro(entidad.getDiasPreregistro());

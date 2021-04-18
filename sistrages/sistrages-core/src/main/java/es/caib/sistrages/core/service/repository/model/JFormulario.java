@@ -52,6 +52,9 @@ public class JFormulario implements IModelApi {
 	@Column(name = "FOR_ACCPER", nullable = false, precision = 1, scale = 0)
 	private boolean permitirAccionesPersonalizadas;
 
+	@Column(name = "FOR_GUARDA", nullable = false, precision = 1, scale = 0)
+	private boolean permitirGuardarSinFinalizar;
+
 	@Column(name = "FOR_CABFOR", nullable = false, precision = 1, scale = 0)
 	private boolean mostrarCabecera;
 
@@ -132,10 +135,25 @@ public class JFormulario implements IModelApi {
 		this.plantillas = plantillas;
 	}
 
+	/**
+	 * @return the permitirGuardarSinFinalizar
+	 */
+	public boolean isPermitirGuardarSinFinalizar() {
+		return permitirGuardarSinFinalizar;
+	}
+
+	/**
+	 * @param permitirGuardarSinFinalizar the permitirGuardarSinFinalizar to set
+	 */
+	public void setPermitirGuardarSinFinalizar(final boolean permitirGuardarSinFinalizar) {
+		this.permitirGuardarSinFinalizar = permitirGuardarSinFinalizar;
+	}
+
 	public DisenyoFormulario toModel() {
 		final DisenyoFormulario formulario = new DisenyoFormulario();
 		formulario.setCodigo(codigo);
 		formulario.setPermitirAccionesPersonalizadas(permitirAccionesPersonalizadas);
+		formulario.setPermitirGuardarSinFinalizar(permitirGuardarSinFinalizar);
 		if (scriptPlantilla != null) {
 			formulario.setScriptPlantilla(scriptPlantilla.toModel());
 		}
@@ -151,6 +169,7 @@ public class JFormulario implements IModelApi {
 		final DisenyoFormulario formulario = new DisenyoFormulario();
 		formulario.setCodigo(codigo);
 		formulario.setPermitirAccionesPersonalizadas(permitirAccionesPersonalizadas);
+		formulario.setPermitirGuardarSinFinalizar(permitirGuardarSinFinalizar);
 		if (scriptPlantilla != null) {
 			formulario.setScriptPlantilla(scriptPlantilla.toModel());
 		}
@@ -181,6 +200,7 @@ public class JFormulario implements IModelApi {
 			jModel = new JFormulario();
 			jModel.setCodigo(model.getCodigo());
 			jModel.setPermitirAccionesPersonalizadas(model.isPermitirAccionesPersonalizadas());
+			jModel.setPermitirGuardarSinFinalizar(model.isPermitirGuardarSinFinalizar());
 			jModel.setScriptPlantilla(JScript.fromModel(model.getScriptPlantilla()));
 			jModel.setMostrarCabecera(model.isMostrarCabecera());
 			jModel.setTextoCabecera(JLiteral.fromModel(model.getTextoCabecera()));
@@ -194,6 +214,7 @@ public class JFormulario implements IModelApi {
 		jForm.setMostrarCabecera(true);
 		jForm.setTextoCabecera(pJTextoCabecera);
 		jForm.setPermitirAccionesPersonalizadas(false);
+		jForm.setPermitirGuardarSinFinalizar(false);
 
 		return jForm;
 	}
@@ -232,11 +253,13 @@ public class JFormulario implements IModelApi {
 					final JPaginaFormulario jPagina = JPaginaFormulario.fromModel(pag);
 					jPagina.setOrden(orden);
 					jPagina.setFormulario(jFormulario);
+					jPagina.setIdentificador(pag.getIdentificador());
 					jFormulario.getPaginas().add(jPagina);
 				} else {
 					for (final JPaginaFormulario jPagForm : jFormulario.getPaginas()) {
 						if (jPagForm.getCodigo().equals(pag.getCodigo())) {
 							jPagForm.setOrden(orden);
+							jPagForm.setIdentificador(pag.getIdentificador());
 							jPagForm.setPaginaFinal(pag.isPaginaFinal());
 
 							if (pag.getScriptValidacion() == null) {
@@ -248,6 +271,18 @@ public class JFormulario implements IModelApi {
 									jPagForm.setScriptValidacion(scriptValidacion);
 								} else {
 									jPagForm.setScriptValidacion(JScript.fromModel(pag.getScriptValidacion()));
+								}
+							}
+
+							if (pag.getScriptNavegacion() == null) {
+								jPagForm.setScriptNavegacion(null);
+							} else {
+								if (pag.getScriptNavegacion().getCodigo() != null) {
+									final JScript scriptNavegacion = JScript.merge(jPagForm.getScriptNavegacion(),
+											pag.getScriptNavegacion());
+									jPagForm.setScriptNavegacion(scriptNavegacion);
+								} else {
+									jPagForm.setScriptNavegacion(JScript.fromModel(pag.getScriptNavegacion()));
 								}
 							}
 
@@ -322,6 +357,7 @@ public class JFormulario implements IModelApi {
 			jformulario.setMostrarCabecera(formulario.isMostrarCabecera());
 			jformulario.setTextoCabecera(JLiteral.clonar(formulario.getTextoCabecera()));
 			jformulario.setPermitirAccionesPersonalizadas(formulario.isPermitirAccionesPersonalizadas());
+			jformulario.setPermitirGuardarSinFinalizar(formulario.isPermitirGuardarSinFinalizar());
 
 			if (formulario.getPaginas() != null) {
 				final Set<JPaginaFormulario> paginas = new HashSet<>(0);

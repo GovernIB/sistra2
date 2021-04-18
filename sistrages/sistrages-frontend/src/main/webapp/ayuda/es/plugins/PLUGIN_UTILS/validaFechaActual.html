@@ -28,7 +28,7 @@
 </p>
 <p>
 	<ul>
-    	<li>Método para comprobar si la fecha indicada es la fecha actual. La fecha debe tener el formato yyyy-MM-dd.</li>
+    	<li>Método para comprobar si la fecha indicada es la fecha actual. La fecha debe tener el formato dd/MM/yyyy.</li>
 	</ul>
 </p>
 <p>
@@ -37,7 +37,7 @@
 <p>
 	<ul>
 		<li><b>fecha</b>: Cadena de caracteres a comparar con la fecha actual.</li>
-		<li><b>formatoFecha</b>: Formato de la fecha. Es opcional y el formato por defecto es yyyy-MM-dd.</li>
+		<li><b>formatoFecha</b>: Formato de la fecha. Es opcional y el formato por defecto es dd/MM/yyyy.</li>
 	</ul>
 </p>
 <p>
@@ -57,9 +57,9 @@
 <p>
 	<b>EJEMPLOS</b>
 </p>
-<p><b>Ejemplo 1</b> Validar si la cadena de caracteres '2019-01-09' (sin formato especificado) corresponde con la fecha actual (suponiendo que hoy es 9 de enero de 2019). </p>
+<p><b>Ejemplo 1</b> Validar si la cadena de caracteres '09/01/2019' (sin formato especificado) corresponde con la fecha actual (suponiendo que hoy es 9 de enero de 2019). </p>
  <p class="codigoScript">
-var valida = PLUGIN_UTILS.validaFechaActual('2019-01-09', null);
+var valida = PLUGIN_UTILS.validaFechaActual('09/01/2019', null);
 </p>
 <p>La función validaFechaActual retorna 0, ya que la fecha indicada corresponde con la fecha actual.</p>
 <br />
@@ -71,9 +71,9 @@ var valida = PLUGIN_UTILS.validaFechaActual('2019-01-09', null);
 <p>La función validaFechaActual retorna  -1, ya que la fecha indicada es menor que la fecha actual.</p>
 <br />
 
-<p><b>Ejemplo 3</b> Validar si la cadena de caracteres '2019-01-12' (sin formato especificado) corresponde con la fecha actual (suponiendo que hoy es 9 de enero de 2019). </p>
+<p><b>Ejemplo 3</b> Validar si la cadena de caracteres '2019-01-12' (con el formato yyyy-MM-dd) corresponde con la fecha actual (suponiendo que hoy es 9 de enero de 2019). </p>
  <p class="codigoScript">
-	var valida = PLUGIN_UTILS.validaFechaActual('2019-01-12', null);
+	var valida = PLUGIN_UTILS.validaFechaActual('2019-01-12', 'yyyy-MM-dd');
 </p>
 <p>La función validaFechaActual retorna 1, ya que la fecha indicada es mayor que la fecha actual.</p>
 <br />

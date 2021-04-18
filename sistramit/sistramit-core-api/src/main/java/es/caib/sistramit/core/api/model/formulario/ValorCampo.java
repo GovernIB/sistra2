@@ -2,6 +2,10 @@ package es.caib.sistramit.core.api.model.formulario;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import es.caib.sistramit.core.api.model.formulario.types.TypeValor;
 
 /**
@@ -10,6 +14,17 @@ import es.caib.sistramit.core.api.model.formulario.types.TypeValor;
  * @author Indra
  *
  */
+@JsonTypeInfo(
+	    use = JsonTypeInfo.Id.NAME,
+	    include = JsonTypeInfo.As.EXISTING_PROPERTY,
+	    property = "tipo",
+	    visible = true
+	    )
+	@JsonSubTypes({
+	    @Type(value = ValorCampoSimple.class, name = "s"),
+	    @Type(value = ValorCampoIndexado.class, name = "i"),
+	    @Type(value = ValorCampoListaIndexados.class, name = "l")
+	    })
 @SuppressWarnings("serial")
 public abstract class ValorCampo implements Serializable {
 

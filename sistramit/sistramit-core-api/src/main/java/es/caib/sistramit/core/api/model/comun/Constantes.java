@@ -20,4 +20,10 @@ public final class Constantes {
 	/** Id tramite CP que indica que se simulara el acceso a catalogo. */
 	public static final String TRAMITE_CATALOGO_SIMULADO_ID = "$--SIMULADO--$";
 
+	/** Formato fecha frontal. */
+	public static final String FORMATO_FECHA_FRONTAL = "dd/MM/yyyy";
+
+	/** Formato fecha hora frontal. */
+	public static final String FORMATO_FECHAHORA_FRONTAL = "dd/MM/yyyy HH:mm:ss";
+
 }

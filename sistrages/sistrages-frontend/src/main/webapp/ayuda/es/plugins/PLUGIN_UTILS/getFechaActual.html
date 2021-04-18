@@ -36,7 +36,7 @@
 </p>
 <p>
 	<ul>
-		<li><b>formatoFecha</b>: Formato de la fecha. Es opcional y el formato por defecto es yyyy-MM-dd.</li>
+		<li><b>formatoFecha</b>: Formato de la fecha. Es opcional y el formato por defecto es dd/MM/yyyy.</li>
 	</ul>
 </p>
  <p>
@@ -44,16 +44,16 @@
  </p>
  <p>
 	<ul>
-		<li><b>string</b>: Cadena de caracteres que representa la fecha actual del sistema, con el formato especificado (por defecto, yyyy-MM-dd).</li>
+		<li><b>string</b>: Cadena de caracteres que representa la fecha actual del sistema, con el formato especificado (por defecto, dd/MM/yyyy).</li>
 	</ul>
  </p>
  <p>
 	<b>EJEMPLOS</b>
  </p>
 
- <p><b>Ejemplo 1</b> Supongamos que hoy es 7 de enero de 2019, y deseamos recuperar la fecha actual del sistema (y no pasamos ningún formato) </p>
+ <p><b>Ejemplo 1</b> Supongamos que hoy es 7 de enero de 2019, y deseamos recuperar la fecha actual del sistema (en el formato 'yyyy-MM-dd') </p>
  <p class="codigoScript">
-	var hoy = PLUGIN_UTILS.getFechaActual(null);
+	var hoy = PLUGIN_UTILS.getFechaActual('yyyy-MM-dd');
  </p>
 <p> La función getFechaActual retorna '2019-01-07'.</p>
 <br />

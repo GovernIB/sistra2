@@ -7,10 +7,7 @@ package es.caib.sistramit.core.api.model.formulario.types;
  *
  */
 public enum TypeAccionFormularioNormalizado implements TypeAccionFormulario {
-	/**
-	 * Acción salir (Código String: salir).
-	 */
-	// SALIR("salir"), // LA ACCION SALIR SE AÑADE AUTOMATICAMENTE
+
 	/**
 	 * Acción finalizar (Código String: finalizar).
 	 */
@@ -33,7 +30,7 @@ public enum TypeAccionFormularioNormalizado implements TypeAccionFormulario {
 	 * Constructor.
 	 *
 	 * @param value
-	 *            Valor como string.
+	 *                  Valor como string.
 	 */
 	private TypeAccionFormularioNormalizado(final String value) {
 		stringValueCampo = value;

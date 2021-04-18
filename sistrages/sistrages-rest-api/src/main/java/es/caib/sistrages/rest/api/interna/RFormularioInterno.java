@@ -14,119 +14,132 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RFormularioInterno", description = "Descripcion de RFormularioInterno")
 public class RFormularioInterno {
 
-    /** Indica si muestra título formulario. */
+	/** Indica si muestra título formulario. */
 	@ApiModelProperty(value = "Indica si muestra título formulario")
-    private boolean mostrarTitulo;
+	private boolean mostrarTitulo;
 
-    /** Título formulario. */
+	/** Indica si muestra título formulario. */
+	@ApiModelProperty(value = "Indica si se permite guardar formulario sin acabar")
+	private boolean permitirGuardarSinFinalizar;
+
+	/** Título formulario. */
 	@ApiModelProperty(value = "Título formulario")
-    private String titulo;
+	private String titulo;
 
-    /** Plantillas. */
+	/** Plantillas. */
 	@ApiModelProperty(value = "Plantillas")
-    private List<RPlantillaFormulario> plantillas;
+	private List<RPlantillaFormulario> plantillas;
 
-    /** Script plantillas. */
+	/** Script plantillas. */
 	@ApiModelProperty(value = "Script plantillas")
-    private RScript scriptPlantillas;
+	private RScript scriptPlantillas;
 
-    /** Páginas. */
+	/** Páginas. */
 	@ApiModelProperty(value = "Páginas")
-    private List<RPaginaFormulario> paginas;
+	private List<RPaginaFormulario> paginas;
 
-    /**
-     * Método de acceso a mostrarTitulo.
-     *
-     * @return mostrarTitulo
-     */
-    public boolean isMostrarTitulo() {
-        return mostrarTitulo;
-    }
+	/**
+	 * Método de acceso a mostrarTitulo.
+	 *
+	 * @return mostrarTitulo
+	 */
+	public boolean isMostrarTitulo() {
+		return mostrarTitulo;
+	}
 
-    /**
-     * Método para establecer mostrarTitulo.
-     *
-     * @param mostrarTitulo
-     *            mostrarTitulo a establecer
-     */
-    public void setMostrarTitulo(boolean mostrarTitulo) {
-        this.mostrarTitulo = mostrarTitulo;
-    }
+	/**
+	 * Método para establecer mostrarTitulo.
+	 *
+	 * @param mostrarTitulo mostrarTitulo a establecer
+	 */
+	public void setMostrarTitulo(final boolean mostrarTitulo) {
+		this.mostrarTitulo = mostrarTitulo;
+	}
 
-    /**
-     * Método de acceso a titulo.
-     *
-     * @return titulo
-     */
-    public String getTitulo() {
-        return titulo;
-    }
+	/**
+	 * Método de acceso a titulo.
+	 *
+	 * @return titulo
+	 */
+	public String getTitulo() {
+		return titulo;
+	}
 
-    /**
-     * Método para establecer titulo.
-     *
-     * @param titulo
-     *            titulo a establecer
-     */
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
+	/**
+	 * Método para establecer titulo.
+	 *
+	 * @param titulo titulo a establecer
+	 */
+	public void setTitulo(final String titulo) {
+		this.titulo = titulo;
+	}
 
-    /**
-     * Método de acceso a plantillas.
-     *
-     * @return plantillas
-     */
-    public List<RPlantillaFormulario> getPlantillas() {
-        return plantillas;
-    }
+	/**
+	 * Método de acceso a plantillas.
+	 *
+	 * @return plantillas
+	 */
+	public List<RPlantillaFormulario> getPlantillas() {
+		return plantillas;
+	}
 
-    /**
-     * Método para establecer plantillas.
-     *
-     * @param plantillas
-     *            plantillas a establecer
-     */
-    public void setPlantillas(List<RPlantillaFormulario> plantillas) {
-        this.plantillas = plantillas;
-    }
+	/**
+	 * Método para establecer plantillas.
+	 *
+	 * @param plantillas plantillas a establecer
+	 */
+	public void setPlantillas(final List<RPlantillaFormulario> plantillas) {
+		this.plantillas = plantillas;
+	}
 
-    /**
-     * Método de acceso a scriptPlantillas.
-     *
-     * @return scriptPlantillas
-     */
-    public RScript getScriptPlantillas() {
-        return scriptPlantillas;
-    }
+	/**
+	 * @return the permitirGuardarSinFinalizar
+	 */
+	public final boolean isPermitirGuardarSinFinalizar() {
+		return permitirGuardarSinFinalizar;
+	}
 
-    /**
-     * Método para establecer scriptPlantillas.
-     *
-     * @param scriptPlantillas
-     *            scriptPlantillas a establecer
-     */
-    public void setScriptPlantillas(RScript scriptPlantillas) {
-        this.scriptPlantillas = scriptPlantillas;
-    }
+	/**
+	 * @param permitirGuardarSinFinalizar the permitirGuardarSinFinalizar to set
+	 */
+	public final void setPermitirGuardarSinFinalizar(final boolean permitirGuardarSinFinalizar) {
+		this.permitirGuardarSinFinalizar = permitirGuardarSinFinalizar;
+	}
 
-    /**
-     * Método de acceso a paginas.
-     *
-     * @return paginas
-     */
-    public List<RPaginaFormulario> getPaginas() {
-        return paginas;
-    }
+	/**
+	 * Método de acceso a scriptPlantillas.
+	 *
+	 * @return scriptPlantillas
+	 */
+	public RScript getScriptPlantillas() {
+		return scriptPlantillas;
+	}
 
-    /**
-     * Método para establecer paginas.
-     *
-     * @param paginas
-     *            paginas a establecer
-     */
-    public void setPaginas(List<RPaginaFormulario> paginas) {
-        this.paginas = paginas;
-    }
+	/**
+	 * Método para establecer scriptPlantillas.
+	 *
+	 * @param scriptPlantillas scriptPlantillas a establecer
+	 */
+	public void setScriptPlantillas(final RScript scriptPlantillas) {
+		this.scriptPlantillas = scriptPlantillas;
+	}
+
+	/**
+	 * Método de acceso a paginas.
+	 *
+	 * @return paginas
+	 */
+	public List<RPaginaFormulario> getPaginas() {
+		return paginas;
+	}
+
+	/**
+	 * Método para establecer paginas.
+	 *
+	 * @param paginas paginas a establecer
+	 */
+	public void setPaginas(final List<RPaginaFormulario> paginas) {
+		this.paginas = paginas;
+	}
 
 }

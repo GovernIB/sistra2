@@ -455,6 +455,8 @@ public class VersionTramiteAdapter {
 			if (d != null) {
 				formInterno = new RFormularioInterno();
 				formInterno.setMostrarTitulo(d.isMostrarCabecera());
+				formInterno.setPermitirGuardarSinFinalizar(d.isPermitirGuardarSinFinalizar());
+
 				// TODO: verificar que se obtienen las plantillas y páginas,
 				// parece que no llegan en el objeto
 				formInterno.setPaginas(generarPaginas(d.getPaginas(), d.getCodigo(), idioma));
@@ -550,7 +552,9 @@ public class VersionTramiteAdapter {
 				}
 				res.setLineas(generarLineas(p.getLineas(), idioma));
 				res.setPaginaFinal(p.isPaginaFinal());
+				res.setIdentificador(p.getIdentificador());
 				res.setScriptValidacion(AdapterUtils.generaScript(p.getScriptValidacion(), idioma));
+				res.setScriptNavegacion(AdapterUtils.generaScript(p.getScriptNavegacion(), idioma));
 				lpf.add(res);
 			}
 		}

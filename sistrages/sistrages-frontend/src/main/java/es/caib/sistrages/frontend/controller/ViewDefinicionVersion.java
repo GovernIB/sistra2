@@ -440,7 +440,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getCodigo()));
 		params.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(),
 				((OpcionArbol) this.selectedNode.getData()).getFormulario().getCodigo().toString());
-		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, 1210, 680);
+		Integer width = UtilJSF.getSessionBean().getWidth();
+		Integer height = UtilJSF.getSessionBean().getHeight() - 60;
+		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, width, height);
 	}
 
 	/**

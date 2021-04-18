@@ -11,7 +11,9 @@
 
 
 <h:head>
-	<title><h:outputText value="#{msg['dialogScript.titulo']}"/></title>
+	<title><h:outputText value="#{msg['dialogScript.titulo']}"/>
+		   <h:outputText value=" - #{msg['dialogScript.campo']} #{dialogScript.nombreComponente}" rendered="#{not empty dialogScript.nombreComponente}" />
+	</title>
 
   <f:facet name="last">
     <h:outputStylesheet library="css" name="style.css" />
@@ -45,6 +47,7 @@
 		<f:viewParam name="FORMULARIO_ACTUAL" value="#{dialogScript.idFormularioActual}"/>
 		<f:viewParam name="FORM_INTERNO_ACTUAL" value="#{dialogScript.idFormularioInternoActual}"/>
 		<f:viewParam name="COMPONENTE" value="#{dialogScript.idComponente}"/>
+		<f:viewParam name="COMPONENTE_NOMBRE" value="#{dialogScript.nombreComponente}"/>
 		<f:viewParam name="PAGINA" value="#{dialogScript.idPagina}"/>
 		<f:viewAction action="#{dialogScript.init}" />
 	</f:metadata>

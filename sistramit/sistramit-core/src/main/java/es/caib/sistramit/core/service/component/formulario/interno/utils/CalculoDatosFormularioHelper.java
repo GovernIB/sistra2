@@ -32,4 +32,12 @@ public interface CalculoDatosFormularioHelper {
 	ResultadoEvaluarCambioCampo calcularDatosPaginaCambioCampo(final DatosSesionFormularioInterno datosSesion,
 			final String idCampo, final List<ValorCampo> valoresPagina);
 
+	/**
+	 * Recalcula datos pagina actual (campos autorrellenables).
+	 * 
+	 * @param datosSesion
+	 *                        Datos sesión
+	 */
+	void recalcularDatosPagina(DatosSesionFormularioInterno datosSesion);
+
 }

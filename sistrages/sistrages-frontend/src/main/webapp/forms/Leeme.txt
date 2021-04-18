@@ -2,6 +2,16 @@ Hay que trasladar los css/js/imgs de la parte de frontal.
 
 Teniendo en cuenta:
 	- css:
-		hay que reemplazar "(imgs/" por "(../imgs/"
-		solo se requieren los css que aparecen. Para editor hay uno especial: imc-forms--edicio.css
+		Copiar los ficheros imc-forms.css, imc-forms--select.css y imc-forms--taula-iframe.css.
+		hay que reemplazar "(forms/imgs/" por "(../imgs/icones/"
+		Para editor hay uno especial: imc-forms--edicio.css
 	- js: solo se requieren los js que aparecen. Para editor hay uno especial: imc-forms--edicio.js
+	
+	
+Changelog
+
+01/03/2021
+	Se renombra el ficheo imc-forms-select.css por imc-forms--select.css.
+	Se renombra el fichero imc-forms-taula-iframe.css por imc-forms--taula-iframe.css
+	Se corrige bug en generacion de html en el que el navegador detecta el tipo date del input y muestra el calendario.
+ 

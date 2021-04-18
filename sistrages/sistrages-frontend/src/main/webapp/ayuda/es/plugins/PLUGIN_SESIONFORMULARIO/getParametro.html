@@ -28,7 +28,7 @@
 </p>
 <p>
 	<ul>
-		<li>Método que permite recuperar el valor de los parámetros enviados a través de la URL al iniciar el trámite. Si el parámetro no existe, devuelve una cadena vacía.</li>
+		<li>Método que permite recuperar el valor de los parámetros que se establecen en el script de parámetros de apertura.</li>
 	</ul>
 </p>
 <p>
@@ -50,12 +50,12 @@
  <p>
 	<b>EJEMPLO</b>
  </p>
-<p> Supongamos que tenemos un trámite que permite el pago de tasas, y queremos que en función del enlace desde el que se acceda se precargue una determinada tasa en un campo del formulario. En este caso podríamos usar esta función para que recupere un parámetro de la URL, en este caso el parámetro 'tasa'. Si la URL de acceso es como sigue: http://tramite.pruebas.com/sistra/tramiteEjemplo?tasa=TASA1:</p>
+<p> Si en el paso rellenar establecemos en el script de parámetros de apertura del formulario un parámetro llamado "tasa" con el valor "TASA1", luego puede recuperarse en los scripts del formulario:</p>
  <p class="codigoScript">
 	var valor = PLUGIN_SESIONFORMULARIO.getParametro('tasa');
  </p>
  <p>
-   La función getParametro retornará la cadena 'TASA1', y podremos usar ese valor para mostrarlo en un campo del formulario.
+   La función getParametro retornará la cadena 'TASA1', y podremos usar ese valor para utilizarlo en los scripts del formulario.
  </p>
 <br />
 

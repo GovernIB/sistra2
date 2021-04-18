@@ -86,6 +86,10 @@ public enum TypeParametroVentana {
 	 */
 	COMPONENTE,
 	/**
+	 * Nombre del componente
+	 */
+	COMPONENTE_NOMBRE,
+	/**
 	 * Página
 	 */
 	PAGINA,

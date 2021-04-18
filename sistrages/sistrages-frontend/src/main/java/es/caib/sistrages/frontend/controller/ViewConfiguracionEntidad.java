@@ -205,6 +205,13 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	}
 
 	/**
+	 * Abre explorar url sede.
+	 */
+	public void explorarUrlSedeElectronica() {
+		explorarLiteral(data.getUrlSede());
+	}
+
+	/**
 	 * Gestión de retorno url carpeta ciudadana.
 	 *
 	 * @param event
@@ -214,6 +221,19 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
 			final Literal literales = (Literal) respuesta.getResult();
 			data.setUrlCarpetaCiudadana(literales);
+		}
+	}
+
+	/**
+	 * Gestión de retorno url carpeta ciudadana.
+	 *
+	 * @param event
+	 */
+	public void returnDialogoUrlSedeElectronica(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Literal literales = (Literal) respuesta.getResult();
+			data.setUrlSede(literales);
 		}
 	}
 

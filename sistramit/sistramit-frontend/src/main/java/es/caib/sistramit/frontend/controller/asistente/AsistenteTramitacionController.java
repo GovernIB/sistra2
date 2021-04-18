@@ -45,6 +45,7 @@ import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SecurityService;
 import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.frontend.ApplicationContextProvider;
+import es.caib.sistramit.frontend.ModuleConfig;
 import es.caib.sistramit.frontend.controller.TramitacionController;
 import es.caib.sistramit.frontend.literales.LiteralesFront;
 import es.caib.sistramit.frontend.model.AsistenteConfig;
@@ -52,7 +53,6 @@ import es.caib.sistramit.frontend.model.AsistenteInfo;
 import es.caib.sistramit.frontend.model.MensajeAsistente;
 import es.caib.sistramit.frontend.model.MensajeUsuario;
 import es.caib.sistramit.frontend.model.RespuestaJSON;
-import es.caib.sistramit.frontend.model.comun.ModuleConfig;
 import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
 import es.caib.sistramit.frontend.security.SecurityUtils;
 import es.caib.sistramit.frontend.security.UsuarioAutenticado;
@@ -201,7 +201,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 		ai.setIdSesionTramitacion(idSesionTramitacion);
 		ai.setIdioma(detalleTramite.getTramite().getIdioma());
 		final ModuleConfig module = (ModuleConfig) ApplicationContextProvider.getApplicationContext()
-				.getBean("negocioModuleConfig");
+				.getBean("frontModuleConfig");
 		ai.setVersion(module.getVersion());
 		if (module.getCommitSvn() == null || module.getCommitSvn().isEmpty()) {
 			ai.setCommit(module.getCommitGit());

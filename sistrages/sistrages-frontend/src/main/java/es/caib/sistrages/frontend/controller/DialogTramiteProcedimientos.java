@@ -1,5 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -14,6 +15,7 @@ import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -55,13 +57,22 @@ public class DialogTramiteProcedimientos extends DialogControllerBase {
 	 */
 	public void init() throws CatalogoPluginException {
 
-		iplugin = (ICatalogoProcedimientosPlugin) componenteService
-				.obtenerPluginEntidad(TypePlugin.CATALOGO_PROCEDIMIENTOS, UtilJSF.getIdEntidad());
 		Integer intVersion = null;
 		if (this.version != null && !this.version.isEmpty()) {
 			intVersion = Integer.parseInt(this.version);
 		}
-		setTramites(iplugin.obtenerTramites(id, intVersion, UtilJSF.getIdioma().toString()));
+
+		try {
+			iplugin = (ICatalogoProcedimientosPlugin) componenteService
+				.obtenerPluginEntidad(TypePlugin.CATALOGO_PROCEDIMIENTOS, UtilJSF.getIdEntidad());
+			if (iplugin != null && intVersion != null) {
+				setTramites(iplugin.obtenerTramites(id, intVersion, UtilJSF.getIdioma().toString()));
+			}
+		} catch (final Exception ex) {
+			tramites = new ArrayList<>();
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.accesoCatalogo"));
+		}
 	}
 
 	/**

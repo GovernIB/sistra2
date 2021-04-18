@@ -85,11 +85,11 @@
 
 
 /* formulari */
+/*
+.imc-forms-contenidor { position: fixed; z-index: -1; top: 0; left: 0; width: 100%; height: 100%; visibility: hidden; opacity: 0; }
+.imc-forms-contenidor .imc--c { position: fixed; z-index: 11; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,.7); }
 
-.imc-formulari { position: fixed; z-index: -1; top: 0; left: 0; width: 100%; height: 100%; visibility: hidden; opacity: 0; }
-.imc-formulari .imc--c { position: fixed; z-index: 11; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,.7); }
-
-.imc-formulari.imc--on {
+.imc-forms-contenidor.imc--on {
 	z-index: 10;
 	visibility: visible;
 	opacity: 1;
@@ -100,7 +100,7 @@
 	transition: visibility 0 ease-out, opacity .3s ease-out;
 }
 
-.imc-formulari.imc--off {
+.imc-forms-contenidor.imc--off {
 	z-index: 10;
 	opacity: 0;
 	-webkit-transition: opacity .3s ease-out;
@@ -109,19 +109,42 @@
 	-o-transition: opacity .3s ease-out;
 	transition: opacity .3s ease-out;
 }
-
+*/
 
 /* formulari animació icona */
 
+.imc-ico-fons { position: fixed; z-index: 11; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,.7); visibility: hidden; opacity: 0; }
+
+.imc-ico-fons[aria-hidden="false"] {
+	visibility: visible;
+	opacity: 1;
+	-webkit-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-moz-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-ms-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-o-transition: visibility 0 ease-out, opacity .3s ease-out;
+	transition: visibility 0 ease-out, opacity .3s ease-out;
+}
+
+.imc-ico-fons[aria-hidden="true"] {
+	visibility: hidden;
+	opacity: 0;
+	-webkit-transition: visibility .3s ease-out, opacity .3s ease-out;
+	-moz-transition: visibility .3s ease-out, opacity .3s ease-out;
+	-ms-transition: visibility .3s ease-out, opacity .3s ease-out;
+	-o-transition: visibility .3s ease-out, opacity .3s ease-out;
+	transition: visibility .3s ease-out, opacity .3s ease-out;
+}
+
 .imc-ico-anim { position: fixed; z-index: 13; background: #8c8c8c url(imgs/icones/ico_form.svg) no-repeat center center / auto 1.7em; }
 
-.imc-ico-anim.imc--off {
+.imc-ico-anim[aria-hidden="true"] {
+	visibility: hidden;
 	opacity: 0;
-	-webkit-transition: opacity .3s ease-out;
-	-moz-transition: opacity .3s ease-out;
-	-ms-transition: opacity .3s ease-out;
-	-o-transition: opacity .3s ease-out;
-	transition: opacity .3s ease-out;
+	-webkit-transition: visibility .3s ease-out, opacity .3s ease-out;
+	-moz-transition: visibility .3s ease-out, opacity .3s ease-out;
+	-ms-transition: visibility .3s ease-out, opacity .3s ease-out;
+	-o-transition: visibility .3s ease-out, opacity .3s ease-out;
+	transition: visibility .3s ease-out, opacity .3s ease-out;
 }
 
 .imc--centra { transform: translate(-50%, -50%); }
@@ -179,60 +202,6 @@ html.imc--sense-scroll,
 body.imc--sense-scroll { overflow: hidden; }
 
 
-/* formulari contingut */
-
-.imc-formulari .imc--finestra { position: fixed; z-index: 12; top: 50%; left: 50%; width: 100%; max-width: 70em; height: 100%; max-height: 50em; background-color: #fff; transform: translate(-50%, -50%); visibility: hidden; opacity: 0; }
-
-.imc-formulari .imc--finestra.imc--on {
-	visibility: visible;
-	opacity: 1;
-	-webkit-transition: visibility 0 ease-out, opacity .3s ease-out;
-	-moz-transition: visibility 0 ease-out, opacity .3s ease-out;
-	-ms-transition: visibility 0 ease-out, opacity .3s ease-out;
-	-o-transition: visibility 0 ease-out, opacity .3s ease-out;
-	transition: visibility 0 ease-out, opacity .3s ease-out;
-}
-
-.imc-formulari .imc--marc { height: 3em; text-align: right; padding: .5em 1em; background-color: #4dba79; }
-
-.imc-formulari .imc--ajuda,
-.imc-formulari .imc--marc > button { display: inline-block; vertical-align: middle; }
-
-.imc-formulari .imc--marc > button { margin-left: 2em; }
-
-.imc-formulari .imc--marc button {
-    color: #fff;
-    background-color: #265d3c;
-}
-
-.imc-formulari .imc--marc button:hover,
-.imc-formulari .imc--marc button:focus {
-    background-color: #000;
-}
-
-.imc-formulari .imc--finestra .imc--ajuda {  }
-.imc-formulari .imc--finestra .imc--ajuda strong { font-weight: normal; color: #fff; padding-right: .7em; }
-.imc-formulari .imc--finestra .imc--ajuda strong::before {
-	content: "";
-	display: inline-block;
-	width: 2em;
-	height: 2em;
-	vertical-align: middle;
-	margin-right: .5em;
-	border-radius: 50%;
-	background: #fff url(imgs/icones/ico_info.svg) no-repeat center center / auto 1.2em;
-}
-.imc-formulari .imc--finestra .imc--ajuda button { height: 2em; }
-
-.imc-formulari .imc--finestra .imc--ajuda.imc--desactivada strong { color: #666; }
-.imc-formulari .imc--finestra .imc--ajuda.imc--desactivada strong::before { background-color: #999; }
-
-.imc-formulari .imc--finestra > h3 { height: 3.5em; padding: 1em; margin-bottom: 0; border-bottom: 1px solid #aeaeae; }
-
-.imc-formulari .imc--finestra > h3 span { display: block; overflow: hidden; font-size: 1.35em; font-weight: normal; white-space: nowrap; text-overflow: ellipsis; }
-.imc-formulari .imc--finestra > h3 span::before { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1em; height: 1em; margin-right: .8em; background: transparent url(imgs/icones/ico_formulari.svg) no-repeat center center / auto 100%; opacity: .4; }
-
-.imc-formulari .imc--contingut { overflow: auto; position: relative; min-width: 45em; height: calc(100% - 6.5em); }
 
 
 

@@ -33,6 +33,11 @@ public final class DisenyoFormulario extends ModelApi {
 	private boolean permitirAccionesPersonalizadas;
 
 	/**
+	 * Permitir guardar sin finalizar
+	 */
+	private boolean permitirGuardarSinFinalizar;
+
+	/**
 	 * mostrar cabecera.
 	 */
 	private boolean mostrarCabecera;
@@ -66,8 +71,7 @@ public final class DisenyoFormulario extends ModelApi {
 	/**
 	 * Establece el valor de codigo.
 	 *
-	 * @param codigo
-	 *            el nuevo valor de codigo
+	 * @param codigo el nuevo valor de codigo
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -94,8 +98,7 @@ public final class DisenyoFormulario extends ModelApi {
 	/**
 	 * Establece el valor de scriptPlantilla.
 	 *
-	 * @param scriptPlantilla
-	 *            el nuevo valor de scriptPlantilla
+	 * @param scriptPlantilla el nuevo valor de scriptPlantilla
 	 */
 	public void setScriptPlantilla(final Script scriptPlantilla) {
 		this.scriptPlantilla = scriptPlantilla;
@@ -113,8 +116,7 @@ public final class DisenyoFormulario extends ModelApi {
 	/**
 	 * Establece el valor de textoCabecera.
 	 *
-	 * @param textoCabecera
-	 *            el nuevo valor de textoCabecera
+	 * @param textoCabecera el nuevo valor de textoCabecera
 	 */
 	public void setTextoCabecera(final Literal textoCabecera) {
 		this.textoCabecera = textoCabecera;
@@ -132,8 +134,8 @@ public final class DisenyoFormulario extends ModelApi {
 	/**
 	 * Establece el valor de permitirAccionesPersonalizadas.
 	 *
-	 * @param permitirAccionesPersonalizadas
-	 *            el nuevo valor de permitirAccionesPersonalizadas
+	 * @param permitirAccionesPersonalizadas el nuevo valor de
+	 *                                       permitirAccionesPersonalizadas
 	 */
 	public void setPermitirAccionesPersonalizadas(final boolean permitirAccionesPersonalizadas) {
 		this.permitirAccionesPersonalizadas = permitirAccionesPersonalizadas;
@@ -151,8 +153,7 @@ public final class DisenyoFormulario extends ModelApi {
 	/**
 	 * Establece el valor de mostrarCabecera.
 	 *
-	 * @param cabeceraFormulario
-	 *            el nuevo valor de mostrarCabecera
+	 * @param cabeceraFormulario el nuevo valor de mostrarCabecera
 	 */
 	public void setMostrarCabecera(final boolean cabeceraFormulario) {
 		this.mostrarCabecera = cabeceraFormulario;
@@ -168,16 +169,14 @@ public final class DisenyoFormulario extends ModelApi {
 	}
 
 	/**
-	 * @param paginas
-	 *            the paginas to set
+	 * @param paginas the paginas to set
 	 */
 	public void setPaginas(final List<PaginaFormulario> paginas) {
 		this.paginas = paginas;
 	}
 
 	/**
-	 * @param plantillas
-	 *            the plantillas to set
+	 * @param plantillas the plantillas to set
 	 */
 	public void setPlantillas(final List<PlantillaFormulario> plantillas) {
 		this.plantillas = plantillas;
@@ -192,6 +191,20 @@ public final class DisenyoFormulario extends ModelApi {
 	public void setPagina(final PaginaFormulario pagina, final int posicion) {
 		this.paginas.remove(posicion);
 		this.paginas.add(posicion, pagina);
+	}
+
+	/**
+	 * @return the permitirGuardarSinFinalizar
+	 */
+	public boolean isPermitirGuardarSinFinalizar() {
+		return permitirGuardarSinFinalizar;
+	}
+
+	/**
+	 * @param permitirGuardarSinFinalizar the permitirGuardarSinFinalizar to set
+	 */
+	public void setPermitirGuardarSinFinalizar(final boolean permitirGuardarSinFinalizar) {
+		this.permitirGuardarSinFinalizar = permitirGuardarSinFinalizar;
 	}
 
 }

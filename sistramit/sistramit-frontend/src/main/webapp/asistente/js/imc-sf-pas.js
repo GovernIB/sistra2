@@ -47,9 +47,9 @@ var HTML_PAS_LITERALS = {
 			,txtNoCompletat: txtNoCompletat
 			,txtAnterior: txtAnterior
 			,txtSeguent: txtSeguent
-			,txtAjudaActivada: txtAjudaActivada
-			,txtDesactivar: txtDesactivar
-			,txtTancaFormulari: txtTancaFormulari
+			,txtFormDinAjudaActivada: txtFormDinAjudaActivada
+			,txtFormDinDesactivar: txtFormDinDesactivar
+			,txtFormDinTancaFormulari: txtFormDinTancaFormulari
 		},
 		"ad": {
 			txtAnnexarTitol: txtAnnexarTitol
@@ -96,6 +96,7 @@ var HTML_PAS_LITERALS = {
 		"rt": {
 			txtRegistrarTitol: txtRegistrarTitol
 			,txtRegistrarInfo: txtRegistrarInfo
+			,txtRegistrarInfoImportant: txtRegistrarInfoImportant
 			,txtInfoResum: txtInfoResum
 			,txtFormularis: txtFormularis
 			,txtAnnexes: txtAnnexes
@@ -144,7 +145,7 @@ var HTML_PAS_LITERALS = {
 			,txtDescarregantURL: txtDescarregantURL
 		}
 
-
+		
 
 
 
@@ -186,10 +187,11 @@ $.fn.appPas = function(options) {
 					.removeClass("imc--mostra-acc");
 
 				// es un pas emplenar amb un formulari obert?
+				/*
 
-				if (typeof imc_formulari !== "undefined" && imc_formulari.length && imc_formulari.css("visibility") === "visible") {
+				if (typeof imc_forms_contenidor !== "undefined" && imc_forms_contenidor.length && imc_forms_contenidor.css("visibility") === "visible") {
 
-					var potGuardar = imc_formulari.attr("data-guardar");
+					var potGuardar = imc_forms_contenidor.attr("data-guardar");
 
 					var text_avis = (potGuardar === "s") ? txtFormEixirText : txtFormEixirNoGuardaText
 						,potGuardar_class = (potGuardar === "s") ? "imc--si-pot-guardar" : "imc--no-pot-guardar";
@@ -202,9 +204,9 @@ $.fn.appPas = function(options) {
 					imc_missatge
 						.appMissatgeFormAccions();
 
-					document.location = "#pas/" + APP_TRAMIT_PAS_ID + "/formulari/" + imc_formulari.attr("data-id");
+					document.location = "#pas/" + APP_TRAMIT_PAS_ID + "/formulari/" + imc_forms_contenidor.attr("data-id");
 
-				}
+				}*/
 
 				// es el mateix pas ja carregat?
 
@@ -218,10 +220,10 @@ $.fn.appPas = function(options) {
 				}
 
 				// missatge carregant
-
+				
 				imc_missatge
 					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtPasCarregant });
-
+				
 				// carrega
 
 				carregaJSON();
@@ -240,7 +242,7 @@ $.fn.appPas = function(options) {
 						.abort();
 
 				}
-
+				
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
@@ -252,7 +254,7 @@ $.fn.appPas = function(options) {
 						}
 					})
 					.done(function( data ) {
-
+						
 						pas_json = data;
 						JSON_PAS_ACTUAL = data;
 
@@ -280,19 +282,19 @@ $.fn.appPas = function(options) {
 								.errors({ estat: pas_json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: pas_json.url });
 
 						}
-
+						
 					})
 					.fail(function(dades, tipus, errorThrown) {
 
 						if (tipus === "abort") {
 							return false;
 						}
-
+						
 						consola("Pas: error des de FAIL");
 
 						imc_contenidor
 							.errors({ estat: "fail" });
-
+						
 					});
 
 			},
@@ -319,7 +321,7 @@ $.fn.appPas = function(options) {
 				// carrega
 
 				$.when(
-
+		
 					$.get(APP_ + "css/imc-sf--"+pas_arxius_nom+".css?" + APP_VERSIO)
 					,$.get(APP_ + "html/imc-sf--"+pas_arxius_nom+".html")
 					,$.getScript(APP_ + "js/imc-sf--"+pas_arxius_nom+".js?" + APP_VERSIO)
@@ -537,6 +539,7 @@ $.fn.appPas = function(options) {
 
 				} else if (pas_tipus === "rt") {
 
+					HTML_PAS_LITERALS[pas_tipus]["txtInstruccions"] = pas_json.datos.actual.instruccionesTramitacion;
 					HTML_PAS_LITERALS[pas_tipus]["formularis"] = pas_json.datos.actual.formularios;
 					HTML_PAS_LITERALS[pas_tipus]["annexes"] = pas_json.datos.actual.anexos;
 					HTML_PAS_LITERALS[pas_tipus]["pagaments"] = pas_json.datos.actual.pagos;
@@ -675,7 +678,7 @@ $.fn.appPas = function(options) {
 
 				window
 					.scrollTo(0, 0);
-
+				
 			},
 			pinta_ds = function() {
 
@@ -689,7 +692,7 @@ $.fn.appPas = function(options) {
 
 				$(cs_passes)
 					.each(function() {
-
+						
 						var el = this
 							,el_tipus = el.tipo;
 
@@ -698,7 +701,7 @@ $.fn.appPas = function(options) {
 								.addClass("imc--mostra");
 
 					});
-
+				
 				imc_cs_explicacio
 					.find("li:not(.imc--mostra)")
 						.remove();
@@ -953,7 +956,7 @@ $.fn.appPas = function(options) {
 									}
 
 									if (presentacio === "" || presentacio === "null") {
-
+										
 										if (it.find(".imc--pagament-presencial").length) {
 											esPresencial = true;
 										}
@@ -1153,10 +1156,10 @@ $.fn.appPas = function(options) {
 				}
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -1168,21 +1171,21 @@ var URL_HASH,
 	URL_PARAMETRES;
 
 function urlHash() {
-
+	
 	URL_HASH = location.hash.replace(/^.*#/, '');
 	URL_PARAMETRES = URL_HASH.split("/");
-
+		
 	return URL_HASH, URL_PARAMETRES;
-
+	
 }
 
 jQuery(window)
-	.on("hashchange", function(){
-
+	.on("hashchange", function(){ 
+		
 		urlHash();
-
+	
 	if (URL_PARAMETRES[0] === "pas" && URL_PARAMETRES.length === 2) {
-
+		
 		var pas = URL_PARAMETRES[1];
 
 		APP_TRAMIT_PAS_ID = URL_PARAMETRES[1];
@@ -1199,7 +1202,7 @@ jQuery(window)
 
 		// està obert el formulari
 
-		if (typeof imc_formulari !== "undefined" && imc_formulari.length && imc_formulari.css("visibility") === "visible" && imc_formulari.attr("data-id") === form_id) {
+		if (typeof imc_forms_contenidor !== "undefined" && imc_forms_contenidor.length && imc_forms_contenidor.css("visibility") === "visible" && imc_forms_contenidor.attr("data-id") === form_id) {
 
 			return;
 
@@ -1209,13 +1212,13 @@ jQuery(window)
 
 		imc_formularis
 			.appEmplenaFormulari({ form_id: form_id });
-
+		
 	} else if (URL_PARAMETRES[0] === "accessibilitat") {
 
 		imc_contingut_c
 			.appAccessibilitat();
 
 	}
-
+	
 });
 

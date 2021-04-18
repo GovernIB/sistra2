@@ -610,4 +610,12 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 		this.simularCatalogo = simularCatalogo;
 	}
 
+	public Tramite getTramite() {
+		return tramite;
+	}
+
+	public void setTramite(Tramite tramite) {
+		this.tramite = tramite;
+	}
+
 }

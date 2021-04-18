@@ -64,6 +64,14 @@
 					        		</p:commandButton>
 								</p:column>
 
+								<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerUrlSedeElectronica']}" />
+				            	<p:column>
+					            	<p:inputText  id="inputUrlSedeElectronica" size="70" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.urlSede.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+					            	<p:commandButton id="btnUrlSedeElectronica" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarUrlSedeElectronica}" process="@this" update=":form:growl" styleClass="va-top">
+					            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoUrlSedeElectronica}" update=":form:growl inputUrlSedeElectronica"/>
+					        		</p:commandButton>
+								</p:column>
+
 								<p:outputLabel for="diasPreregistro" value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerDiasPreregistro']}" />
 					            <p:inputNumber  id="diasPreregistro" decimalPlaces="0" padControl="false" size="10" value="#{viewConfiguracionEntidad.data.diasPreregistro}" maxValue="999" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
 

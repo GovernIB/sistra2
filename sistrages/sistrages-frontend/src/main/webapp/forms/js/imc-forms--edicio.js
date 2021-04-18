@@ -8,31 +8,25 @@ var imc_finestra,
 
 var APP_CONTEXT = "";
 
-
-// onReady
-
-$(function(){
-
+function inicio(){
 	imc_finestra = $(window);
 	imc_contenidor = $("#imc-contenidor");
 	imc_forms_formulari = $("#imc-forms-formulari");
-
-	imc_forms_formulari
-		.appElement();
-
-	imc_forms_formulari
-		.appScript();
+	imc_forms_formulari.appElement();
+	imc_forms_formulari.appScript();
 
 	/*
 	imc_forms_formulari
 		.appOnLoad();
 	*/
+	imc_forms_formulari.appSetFocus({ id: idComponente });
+}
 
-	imc_forms_formulari
-		.appSetFocus({ id: idComponente });
+// onReady
 
+$(function(){
+	inicio();
 });
-
 
 // Script
 
@@ -65,10 +59,10 @@ $.fn.appScript = function(options) {
 					});
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -113,10 +107,17 @@ $.fn.appSetFocus = function(options) {
             ,id = settings.id
             ,referent = settings.referent
             ,inicia = function() {
-
                 if (!id) {
                     return;
                 }
+
+        var el_selec = element.find(".imc--el-seleccionat:first");
+
+        if (el_selec.length) {
+            el_selec.removeClass("imc--el-seleccionat");
+        }
+
+
 
                 var el = referent.find("[data-id='"+id+"']:first");
 
@@ -206,7 +207,7 @@ $.fn.appElement = function(options) {
 				element_f
 					.addClass("imc--el-seleccionat");
 
-				rcEditarComponente(element_f.attr('data-codigo'));
+				rcEditarComponente(element_f.attr(APP_CAMPO_ID));
 
 			},
 			mou = function(e) {
@@ -227,7 +228,7 @@ $.fn.appElement = function(options) {
 							.addClass("imc--el-seleccionat");
 
 						revisaVisibilitat(el_selec_nou);
-						rcEditarComponente(el_selec_nou.attr('data-codigo'));
+						rcEditarComponente(el_selec_nou.attr(APP_CAMPO_ID));
 
 					}
 
@@ -270,7 +271,7 @@ $.fn.appElement = function(options) {
 							.addClass("imc--el-seleccionat");
 
 						revisaVisibilitat(el_selec_nou, e_keyCode);
-						rcEditarComponente(el_selec_nou.attr('data-codigo'));
+						rcEditarComponente(el_selec_nou.attr(APP_CAMPO_ID));
 					}
 
 					e.preventDefault();

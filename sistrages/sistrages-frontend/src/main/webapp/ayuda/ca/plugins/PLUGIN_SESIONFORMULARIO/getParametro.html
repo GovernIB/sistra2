@@ -28,7 +28,7 @@
 </p>
 <p>
 	<ul>
-		<li>Mètode que permet recuperar el valor dels paràmetres enviats a través de la URL en iniciar el tràmit. Si el paràmetre no existeix, retorna una cadena buida.</li>
+		<li>Mètode que permet recuperar el valor dels paràmetres que s'estableixen en l'script de paràmetres d'obertura.</li>
 	</ul>
 </p>
 <p>
@@ -50,13 +50,15 @@
  <p>
 	<b>Exemple</b>
  </p>
-<p> Suposem que tenim un tràmit que permet el pagament de taxes, i volem que en funció de l'enllaç des del qual s'accedeix, s'empleni una determinada taxa en un camp del formulari. En aquest cas podríem usar aquesta funció perquè recuperi un paràmetre de l'URL, en aquest cas el paràmetre 'taxa'. Si l'URL d'accés és com segueix: http://tramite.pruebas.com/sistra/tramiteExemple?tasa=TASA1:</p>
+ <p> Si en el pas omplir establim en l'script de paràmetres d'obertura de l'formulari un paràmetre anomenat "tasa" amb el valor "TASA1", després pot recuperar-se en els scripts de l'formulari:</p>
  <p class="codigoScript">
 	var valor = PLUGIN_SESIONFORMULARIO.getParametro('tasa');
  </p>
  <p>
-   La funció getParametro retornarà la cadena 'TASA1', i podrem fer servir aquest valor per a mostrar-lo en un camp del formulari.
+   La funció getParametro retornarà la cadena 'TASA1', i podrem utilitzar aquest valor per utilitzar-lo en els scripts de l'formulari.
  </p>
+
+
 <br />
 
 

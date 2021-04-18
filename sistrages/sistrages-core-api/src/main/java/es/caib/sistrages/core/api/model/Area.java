@@ -22,6 +22,9 @@ public class Area extends ModelApi {
 	/** Descripción. */
 	private String descripcion;
 
+	/** Tiene permiso **/
+	private Boolean tienePermiso = true;
+
 	/**
 	 * codigo DIR 3.
 	 */
@@ -89,6 +92,14 @@ public class Area extends ModelApi {
 	 */
 	public void setCodigoDIR3Entidad(final String codigoDIR3Entidad) {
 		this.codigoDIR3Entidad = codigoDIR3Entidad;
+	}
+
+	public Boolean getTienePermiso() {
+		return tienePermiso;
+	}
+
+	public void setTienePermiso(Boolean tienePermiso) {
+		this.tienePermiso = tienePermiso;
 	}
 
 	/*

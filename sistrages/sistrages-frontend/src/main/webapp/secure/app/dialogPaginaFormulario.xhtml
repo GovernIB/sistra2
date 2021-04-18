@@ -36,18 +36,37 @@
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" styleClass="w100"  columns = "2" cellpadding = "5" cellspacing = "0">
 
+		         	<h:column>
+						<p:outputLabel for="alias" value="#{msg['dialogPaginaFormulario.alias']}"  />
+					</h:column>
+					<h:column>
+						 <p:inputText id="alias"  styleClass="w75" value="#{dialogPaginaFormulario.data.identificador}"  disabled="#{dialogPaginaFormulario.consulta}" required="true" />
+					</h:column>
+
 		         	<h:column><h:outputText value="#{msg['dialogPaginaFormulario.scriptValidacion']}" /></h:column>
 		         	<h:column>
-		         		<p:commandButton id="scriptValidacion" icon="fa fa-bolt" actionListener="#{dialogPaginaFormulario.editarDialogScriptValidacion(TypeScriptFormulario.SCRIPT_VALIDACION_PAGINA.name(), dialogPaginaFormulario.data.scriptValidacion)}" process="@this"
+		         		<p:commandButton id="scriptValidacion" icon="fa fa-bolt" actionListener="#{dialogPaginaFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_VALIDACION_PAGINA.name(), dialogPaginaFormulario.data.scriptValidacion)}" process="@this"
 		         						 styleClass="#{dialogPropiedadesFormulario.getColorScript(dialogPaginaFormulario.data.scriptValidacion)}" >
 							<p:ajax event="dialogReturn" listener="#{dialogPaginaFormulario.returnDialogoScriptValidacion}" update="scriptValidacion" />
 						</p:commandButton>
 		         	</h:column>
+
+		         	<h:column><h:outputText value="#{msg['dialogPaginaFormulario.scriptNavegacion']}" /></h:column>
+		         	<h:column>
+		         		<p:commandButton id="scriptNavegacion" icon="fa fa-bolt" actionListener="#{dialogPaginaFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_NAVEGACION_PAGINA.name(), dialogPaginaFormulario.data.scriptNavegacion)}" process="@this"
+		         						 disabled="#{dialogPaginaFormulario.data.paginaFinal}"
+		         						 styleClass="#{dialogPropiedadesFormulario.getColorScript(dialogPaginaFormulario.data.scriptNavegacion)}" >
+							<p:ajax event="dialogReturn" listener="#{dialogPaginaFormulario.returnDialogoScriptNavegacion}" update="scriptNavegacion" />
+						</p:commandButton>
+		         	</h:column>
+
 					<h:column>
 						<p:outputLabel for="paginaFinal" value="#{msg['dialogPaginaFormulario.paginaFinal']}"  />
 					</h:column>
 					<h:column>
-						<p:selectBooleanCheckbox id="paginaFinal" value="#{dialogPaginaFormulario.data.paginaFinal}" disabled="#{dialogPaginaFormulario.consulta}" />
+						<p:selectBooleanCheckbox id="paginaFinal" value="#{dialogPaginaFormulario.data.paginaFinal}" disabled="#{dialogPaginaFormulario.consulta}" >
+							<p:ajax update="scriptNavegacion" />
+						</p:selectBooleanCheckbox>
 					</h:column>
 				</h:panelGrid>
 			</p:outputPanel>

@@ -129,8 +129,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 	/**
 	 * Obtiene valor propiedad de configuracion global.
 	 *
-	 * @param propiedad
-	 *                      propiedad
+	 * @param propiedad propiedad
 	 * @return valor
 	 */
 	private String getPropiedadGlobal(final TypePropiedadConfiguracion propiedad) {
@@ -209,8 +208,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 	/**
 	 * Reemplaza propiedades con valor ${system.propiedad}
 	 *
-	 * @param valor
-	 *                  valores propiedades
+	 * @param valor valores propiedades
 	 * @return valor propiedad
 	 */
 	private String reemplazarPropsSystem(final String valor) {
@@ -238,11 +236,9 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 	/**
 	 * Lee propiedad.
 	 *
-	 * @param propiedad
-	 *                       propiedad
-	 * @param forceLocal
-	 *                       si fuerza solo a buscar en el properties local y no
-	 *                       buscar en la configuración global del STG
+	 * @param propiedad  propiedad
+	 * @param forceLocal si fuerza solo a buscar en el properties local y no buscar
+	 *                   en la configuración global del STG
 	 * @return valor propiedad (nulo si no existe)
 	 */
 	private String readPropiedad(final TypePropiedadConfiguracion propiedad, final boolean forceLocal) {

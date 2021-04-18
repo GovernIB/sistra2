@@ -41,6 +41,9 @@ public class JPaginaFormulario implements IModelApi {
 	@Column(name = "PAF_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
+	@Column(name = "PAF_IDENTI")
+	private String identificador;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PAF_CODFOR", nullable = false)
 	private JFormulario formulario;
@@ -48,6 +51,10 @@ public class JPaginaFormulario implements IModelApi {
 	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "PAF_SCRVAL")
 	private JScript scriptValidacion;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL)
+	@JoinColumn(name = "PAF_SCRNAV")
+	private JScript scriptNavegacion;
 
 	@Column(name = "PAF_ORDEN", nullable = false, precision = 2, scale = 0)
 	private int orden;
@@ -100,6 +107,34 @@ public class JPaginaFormulario implements IModelApi {
 		this.orden = orden;
 	}
 
+	/**
+	 * @return the alias
+	 */
+	public String getIdentificador() {
+		return identificador;
+	}
+
+	/**
+	 * @param alias the alias to set
+	 */
+	public void setIdentificador(final String alias) {
+		this.identificador = alias;
+	}
+
+	/**
+	 * @return the scriptNavegacion
+	 */
+	public JScript getScriptNavegacion() {
+		return scriptNavegacion;
+	}
+
+	/**
+	 * @param scriptNavegacion the scriptNavegacion to set
+	 */
+	public void setScriptNavegacion(final JScript scriptNavegacion) {
+		this.scriptNavegacion = scriptNavegacion;
+	}
+
 	public boolean isPaginaFinal() {
 		return this.paginaFinal;
 	}
@@ -148,8 +183,12 @@ public class JPaginaFormulario implements IModelApi {
 		if (scriptValidacion != null) {
 			pagina.setScriptValidacion(scriptValidacion.toModel());
 		}
+		if (scriptNavegacion != null) {
+			pagina.setScriptNavegacion(scriptNavegacion.toModel());
+		}
 		pagina.setOrden(orden);
 		pagina.setPaginaFinal(paginaFinal);
+		pagina.setIdentificador(identificador);
 
 		return pagina;
 	}
@@ -161,9 +200,10 @@ public class JPaginaFormulario implements IModelApi {
 			pagina.setScriptValidacion(scriptValidacion.toModel());
 		}
 		pagina.setOrden(orden);
+		pagina.setIdentificador(identificador);
 		pagina.setPaginaFinal(paginaFinal);
-		if (scriptValidacion != null) {
-			pagina.setScriptValidacion(scriptValidacion.toModel());
+		if (scriptNavegacion != null) {
+			pagina.setScriptNavegacion(scriptNavegacion.toModel());
 		}
 		pagina.setPaginaAsociadaListaElementos(paginaAsociadaListaElementos);
 		final List<LineaComponentesFormulario> lineas = new ArrayList<>(0);
@@ -239,6 +279,7 @@ public class JPaginaFormulario implements IModelApi {
 				jModel.setCodigo(model.getCodigo());
 			}
 			jModel.setScriptValidacion(JScript.fromModel(model.getScriptValidacion()));
+			jModel.setScriptNavegacion(JScript.fromModel(model.getScriptNavegacion()));
 			jModel.setOrden(model.getOrden());
 			jModel.setPaginaFinal(model.isPaginaFinal());
 		}
@@ -261,8 +302,10 @@ public class JPaginaFormulario implements IModelApi {
 			jpagina = new JPaginaFormulario();
 
 			jpagina.setFormulario(jformulario);
+			jpagina.setIdentificador(pagina.getIdentificador());
 			jpagina.setOrden(pagina.getOrden());
 			jpagina.setScriptValidacion(JScript.clonar(pagina.getScriptValidacion()));
+			jpagina.setScriptNavegacion(JScript.clonar(pagina.getScriptNavegacion()));
 
 			jpagina.setPaginaFinal(pagina.isPaginaFinal());
 			jpagina.setPaginaAsociadaListaElementos(pagina.isPaginaAsociadaListaElementos());

@@ -13,7 +13,7 @@
 
 <h:head>
 
-  <title><h:outputText value = "#{msg['aplicacion.titulo']} (#{negocioModuleConfig.entornoUpper})" /></title>
+  <title><h:outputText value = "#{msg['aplicacion.titulo']} (#{frontModuleConfig.entornoUpper})" /></title>
 
   <f:facet name="first">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -23,7 +23,30 @@
 
 </h:head>
 
+<script>
+	function fnAspect() {
+		jQuery("input[name=hiddenWidth]").val(window.innerWidth);
+		jQuery("input[name=hiddenHeight]").val(window.innerHeight);
+		document.getElementById("formAspect:btnAspect").click();
+
+	}
+	jQuery(document).ready(function() {
+		 setTimeout(function(){ fnAspect(); }, 5000);
+
+    });
+
+
+</script>
+
 <h:body styleClass="body-color">
+	<h:form id="formAspect" style="display:none">
+		<input type="hidden" name="hiddenWidth" value="#{sessionBean.width}" />
+  		<input type="hidden" name="hiddenHeight" value="#{sessionBean.height}" />
+  		<h:commandButton id="btnAspect" action="#{sessionBean.submitAspect}">
+  		  	<f:ajax execute="@this"  render="@this" />
+  		</h:commandButton>
+  </h:form>
+
 
   <f:facet name="last">
     <h:outputStylesheet library="css" name="style.css" />

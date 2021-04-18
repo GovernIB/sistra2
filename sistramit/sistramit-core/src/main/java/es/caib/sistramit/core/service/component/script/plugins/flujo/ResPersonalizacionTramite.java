@@ -6,6 +6,7 @@ import javax.script.ScriptException;
 
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistra2.commons.utils.XssFilter;
+import es.caib.sistramit.core.api.model.comun.Constantes;
 import es.caib.sistramit.core.service.model.script.flujo.ResPersonalizacionTramiteInt;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
 
@@ -67,10 +68,10 @@ public final class ResPersonalizacionTramite implements ResPersonalizacionTramit
 
 	@Override
 	public void setPlazoInicio(final String pPlazoInicio) throws ScriptException {
-		if (!ValidacionesTipo.getInstance().esFecha(pPlazoInicio, ValidacionesTipo.FORMATO_FECHAHORA)) {
-			throw new ScriptException("La fecha no tiene un formato correcto: " + ValidacionesTipo.FORMATO_FECHAHORA);
+		if (!ValidacionesTipo.getInstance().esFecha(pPlazoInicio, Constantes.FORMATO_FECHAHORA_FRONTAL)) {
+			throw new ScriptException("La fecha no tiene un formato correcto: " + Constantes.FORMATO_FECHAHORA_FRONTAL);
 		}
-		plazoInicio = UtilsFlujo.deformateaFecha(pPlazoInicio, ValidacionesTipo.FORMATO_FECHAHORA);
+		plazoInicio = UtilsFlujo.deformateaFecha(pPlazoInicio, Constantes.FORMATO_FECHAHORA_FRONTAL);
 	}
 
 	/**
@@ -84,10 +85,10 @@ public final class ResPersonalizacionTramite implements ResPersonalizacionTramit
 
 	@Override
 	public void setPlazoFin(final String pPlazoFin) throws ScriptException {
-		if (!ValidacionesTipo.getInstance().esFecha(pPlazoFin, ValidacionesTipo.FORMATO_FECHAHORA)) {
-			throw new ScriptException("La fecha no tiene un formato correcto: " + ValidacionesTipo.FORMATO_FECHAHORA);
+		if (!ValidacionesTipo.getInstance().esFecha(pPlazoFin, Constantes.FORMATO_FECHAHORA_FRONTAL)) {
+			throw new ScriptException("La fecha no tiene un formato correcto: " + Constantes.FORMATO_FECHAHORA_FRONTAL);
 		}
-		plazoFin = UtilsFlujo.deformateaFecha(pPlazoFin, ValidacionesTipo.FORMATO_FECHAHORA);
+		plazoFin = UtilsFlujo.deformateaFecha(pPlazoFin, Constantes.FORMATO_FECHAHORA_FRONTAL);
 	}
 
 }

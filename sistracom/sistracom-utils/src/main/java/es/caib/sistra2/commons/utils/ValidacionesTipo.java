@@ -903,6 +903,45 @@ public final class ValidacionesTipo {
 		return res;
 	}
 
+	/**
+	 * Parsea fecha de string.
+	 *
+	 * @param fecha
+	 *                    fecha
+	 * @param formato
+	 *                    formato
+	 * @return fecha
+	 * @throws ValidacionTipoException
+	 */
+	public String convierteFormatoFecha(final String fecha, final String formatoInicio, final String formatoFin)
+			throws ValidacionTipoException {
+		try {
+			String res = null;
+			if (fecha != null) {
+				final SimpleDateFormat dfi = new SimpleDateFormat(formatoInicio);
+				final Date fechaDate = dfi.parse(fecha);
+				final SimpleDateFormat dff = new SimpleDateFormat(formatoFin);
+				dff.setLenient(false);
+				res = dff.format(fechaDate);
+			}
+			return res;
+		} catch (final ParseException e) {
+			throw new ValidacionTipoException("El formato de fecha no es correcta", e);
+		}
+	}
+
+	/**
+	 * Calcula distancia dias.
+	 * 
+	 * @param pFecha1
+	 *                    Fecha inicio
+	 * @param pFecha2
+	 *                    Fecha fin
+	 * @param formato
+	 *                    Formato
+	 * @return
+	 * @throws ValidacionTipoException
+	 */
 	public int distanciaDias(final String pFecha1, final String pFecha2, final String formato)
 			throws ValidacionTipoException {
 		return distanciaDiasImpl(pFecha1, pFecha2, false, formato);

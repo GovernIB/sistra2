@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -150,6 +152,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	private TypeAccionFormulario accionPendiente;
 
 	private boolean mostrarOcultos;
+	/** Altura **/
+	private String height;
 
 	/**
 	 * Inicializacion.
@@ -176,6 +180,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		urlIframe = "FormRenderServlet?ts=" + System.currentTimeMillis();
 		paginaActual = 1;
 		posicionamiento = "D";
+		height = UtilJSF.getSessionBean().getHeight()-165 + "px";
 	}
 
 	/**
@@ -522,6 +527,16 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 						return false;
 					}
 
+					if (TypeCampoTexto.EXPRESION.equals(campo.getTipoCampoTexto())) {
+						// El tipo de expresion tiene que ser correcto
+						try {
+							Pattern.compile(campo.getExpresionRegular());
+						} catch (final PatternSyntaxException e) {
+							addMessageContext(TypeNivelGravedad.WARNING,
+									UtilJSF.getLiteral("warning.componente.expresion.incorrecta"), true);
+							return false;
+						}
+					}
 				}
 
 				if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
@@ -574,6 +589,48 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Abre la página.
+	 */
+	public void editarPagina() {
+		final Map<String, String> params = new HashMap<>();
+		UtilJSF.getSessionBean().limpiaMochilaDatos();
+
+		final PaginaFormulario paginaOriginal = formulario.getPaginas().get(paginaActual - 1);
+		final PaginaFormulario pagina = PaginaFormulario.castSimple(paginaOriginal);
+		UtilJSF.getSessionBean().getMochilaDatos().put(Constantes.CLAVE_MOCHILA_FORMULARIO, UtilJSON.toJSON(pagina));
+
+		params.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.idFormulario);
+		params.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
+
+		UtilJSF.openDialog(DialogPaginaFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 430, 190);
+	}
+
+	public void returnDialogoPagina(final SelectEvent event) {
+		PaginaFormulario pagina = null;
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+			case EDICION:
+				pagina = (PaginaFormulario) respuesta.getResult();
+				formIntService.guardarPagina(pagina);
+				formulario.getPaginas().get(paginaActual - 1).setIdentificador(pagina.getIdentificador());
+				formulario.getPaginas().get(paginaActual - 1).setCodigo(pagina.getCodigo());
+				formulario.getPaginas().get(paginaActual - 1).setPaginaFinal(pagina.isPaginaFinal());
+				formulario.getPaginas().get(paginaActual - 1).setScriptNavegacion(pagina.getScriptNavegacion());
+				formulario.getPaginas().get(paginaActual - 1).setScriptNavegacion(pagina.getScriptValidacion());
+
+				break;
+			case CONSULTA:
+				// No hay que hacer nada
+				break;
+			}
+		}
 	}
 
 	/**
@@ -808,7 +865,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO, idiomas);
 
 		UtilJSF.openDialog(DialogPropiedadesFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 950,
-				460);
+				490);
 	}
 
 	/**
@@ -1859,6 +1916,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		maps.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
 		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
 		maps.put(TypeParametroVentana.COMPONENTE.toString(), this.objetoFormularioEdit.getCodigo().toString());
+		maps.put(TypeParametroVentana.COMPONENTE_NOMBRE.toString(), getIdComponente());
 
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
@@ -2444,5 +2502,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public void setMostrarOcultos(final boolean mostrarOcultos) {
 		this.mostrarOcultos = mostrarOcultos;
+	}
+
+	public String getHeight() {
+		return height;
+	}
+
+	public void setHeight(String height) {
+		this.height = height;
 	}
 }

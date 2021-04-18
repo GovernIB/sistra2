@@ -49,7 +49,7 @@ public class RVersionTramite {
 	private RVersionTramitePropiedades propiedades;
 
 	/** Control acceso. */
-	@ApiModelProperty(value = "Lista dominios utilizados")
+	@ApiModelProperty(value = "Control de acceso")
 	private RVersionTramiteControlAcceso controlAcceso;
 
 	/** Pasos tramitación. */
@@ -69,7 +69,7 @@ public class RVersionTramite {
 	 * Método para establecer idTramite.
 	 *
 	 * @param idTramite
-	 *            idTramite a establecer
+	 *                      idTramite a establecer
 	 */
 	public void setIdentificador(final String idTramite) {
 		this.identificador = idTramite;
@@ -88,7 +88,7 @@ public class RVersionTramite {
 	 * Método para establecer version.
 	 *
 	 * @param version
-	 *            version a establecer
+	 *                    version a establecer
 	 */
 	public void setVersion(final int version) {
 		this.version = version;
@@ -107,7 +107,7 @@ public class RVersionTramite {
 	 * Método para establecer pasos.
 	 *
 	 * @param pasos
-	 *            pasos a establecer
+	 *                  pasos a establecer
 	 */
 	public void setPasos(final List<RPasoTramitacion> pasos) {
 		this.pasos = pasos;
@@ -126,7 +126,7 @@ public class RVersionTramite {
 	 * Método para establecer propiedades.
 	 *
 	 * @param propiedades
-	 *            propiedades a establecer
+	 *                        propiedades a establecer
 	 */
 	public void setPropiedades(final RVersionTramitePropiedades propiedades) {
 		this.propiedades = propiedades;
@@ -145,7 +145,7 @@ public class RVersionTramite {
 	 * Método para establecer controlAcceso.
 	 *
 	 * @param controlAcceso
-	 *            controlAcceso a establecer
+	 *                          controlAcceso a establecer
 	 */
 	public void setControlAcceso(final RVersionTramiteControlAcceso controlAcceso) {
 		this.controlAcceso = controlAcceso;
@@ -164,7 +164,7 @@ public class RVersionTramite {
 	 * Método para establecer dominios.
 	 *
 	 * @param dominios
-	 *            dominios a establecer
+	 *                     dominios a establecer
 	 */
 	public void setDominios(final List<String> dominios) {
 		this.dominios = dominios;
@@ -183,7 +183,7 @@ public class RVersionTramite {
 	 * Método para establecer idEntidad.
 	 *
 	 * @param idEntidad
-	 *            idEntidad a establecer
+	 *                      idEntidad a establecer
 	 */
 	public void setIdEntidad(final String idEntidad) {
 		this.idEntidad = idEntidad;
@@ -202,7 +202,7 @@ public class RVersionTramite {
 	 * Método para establecer idioma.
 	 *
 	 * @param idioma
-	 *            idioma a establecer
+	 *                   idioma a establecer
 	 */
 	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
@@ -221,7 +221,7 @@ public class RVersionTramite {
 	 * Método para establecer tipoFlujo.
 	 *
 	 * @param tipoFlujo
-	 *            tipoFlujo a establecer
+	 *                      tipoFlujo a establecer
 	 */
 	public void setTipoFlujo(final String tipoFlujo) {
 		this.tipoFlujo = tipoFlujo;
@@ -240,7 +240,7 @@ public class RVersionTramite {
 	 * Método para establecer timestamp.
 	 *
 	 * @param timestamp
-	 *            timestamp a establecer
+	 *                      timestamp a establecer
 	 */
 	public void setTimestamp(final String timestamp) {
 		this.timestamp = timestamp;
@@ -259,7 +259,7 @@ public class RVersionTramite {
 	 * Método para establecer release.
 	 *
 	 * @param release
-	 *            release a establecer
+	 *                    release a establecer
 	 */
 	public void setRelease(final int release) {
 		this.release = release;
@@ -278,7 +278,7 @@ public class RVersionTramite {
 	 * Método para establecer idArea.
 	 *
 	 * @param idArea
-	 *            idArea a establecer
+	 *                   idArea a establecer
 	 */
 	public void setIdArea(final String idArea) {
 		this.idArea = idArea;

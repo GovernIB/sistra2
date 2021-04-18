@@ -145,7 +145,7 @@
 						<p class="pTituloCabecera">
 								<p:outputLabel value="#{msg['dialogTramiteImportar.headerTramiteRegistro']}" styleClass="subTituloCabecera"   />
 						</p>
-						<h:panelGrid columns="3" rowClasses="ui-datatable-odd, "  id="dataTableRegistro" columnClasses="padding-left-4 w80,w10 grid-right,w10 grid-center" headerClass="grid-left"  width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
+						<h:panelGrid columns="3" rowClasses="ui-datatable-odd, "  id="dataTableRegistro" columnClasses="padding-left-4 w80,w10 grid-right,w10 grid-center" headerClass="grid-left"  width="93%" cellspacing="0" cellpadding="5"  style="margin-left:33px;">
 
 							<h:column>
 								<p:outputLabel value=" " />
@@ -183,7 +183,8 @@
 					<p class="pTituloCabecera">
 						<p:outputLabel value="#{msg['dialogTramiteImportar.dominios']}"  styleClass="subTituloCabecera"  />
 					</p>
-					<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaDominios" headerClass="grid-left" value="#{dialogTramiteImportar.filasDominios}" var="fila" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
+					<div style="height: 130px; overflow: auto;">
+						<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaDominios" headerClass="grid-left" value="#{dialogTramiteImportar.filasDominios}" var="fila" width="93%" cellspacing="0" cellpadding="5"  style="margin-left:33px;">
 
 						<h:column headerClass="subTituloTablaImportarIzq">
 							 <f:facet name = "header">
@@ -222,6 +223,7 @@
 						</h:column>
 
 					</h:dataTable>
+					</div>
 					<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-4 w15,padding-right-18" columns = "2" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
 
 						 	<p:outputLabel value="#{msg['dialogTramiteImportar.refrescarCacheDominio']}" />
@@ -236,33 +238,35 @@
 					<p class="pTituloCabecera">
 						<h:outputText value="#{msg['dialogTramiteImportar.formateadores']}" styleClass="subTituloCabecera"  />
 					</p>
-					<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w60,w10 grid-center" headerClass="grid-left" value="#{dialogTramiteImportar.filasFormateador}" var="fila" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
-						<h:column headerClass="subTituloTablaImportarIzq">
-							 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.formateador.identificador']}" /></f:facet>
-	      					#{fila.formateadorFormulario.identificador}
-						</h:column>
+					<div style="height: 100px; overflow: auto;">
+						<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w60,w10 grid-center" headerClass="grid-left" value="#{dialogTramiteImportar.filasFormateador}" var="fila" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
+							<h:column headerClass="subTituloTablaImportarIzq">
+								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.formateador.identificador']}" /></f:facet>
+		      					#{fila.formateadorFormulario.identificador}
+							</h:column>
 
-						<h:column headerClass="subTituloTablaImportarIzq">
-							 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.formateador.descripcion']}" /></f:facet>
-	      					#{fila.formateadorFormulario.descripcion}
-						</h:column>
+							<h:column headerClass="subTituloTablaImportarIzq">
+								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.formateador.descripcion']}" /></f:facet>
+		      					#{fila.formateadorFormulario.descripcion}
+							</h:column>
 
-						<h:column headerClass="subTituloTablaImportarIzq">
-							 <f:facet name = "header" style="text-align: left;">
-							 	<p:outputLabel value="#{msg['dialogTramiteImportar.headerMensaje']}" />
-							 </f:facet>
-	      					<p:outputLabel value=" #{fila.mensaje}"  />
-						</h:column>
+							<h:column headerClass="subTituloTablaImportarIzq">
+								 <f:facet name = "header" style="text-align: left;">
+								 	<p:outputLabel value="#{msg['dialogTramiteImportar.headerMensaje']}" />
+								 </f:facet>
+		      					<p:outputLabel value=" #{fila.mensaje}"  />
+							</h:column>
 
-						<h:column headerClass="subTituloTablaImportarIzq">
-							 <f:facet name = "header"></f:facet>
-							 <p:tooltip for="iconoFormateadorLabel" 	value="#{msg[fila.resultado.literal]}" />
-							 <p:outputLabel id="iconoFormateadorLabel" 	value="" >
-									<i id="iconoFormateador${fila.formateadorFormulario.codigo}" class="#{fila.resultado.icon}" style="#{fila.resultado.css}" />
-							 </p:outputLabel>
-						</h:column>
+							<h:column headerClass="subTituloTablaImportarIzq">
+								 <f:facet name = "header"></f:facet>
+								 <p:tooltip for="iconoFormateadorLabel" 	value="#{msg[fila.resultado.literal]}" />
+								 <p:outputLabel id="iconoFormateadorLabel" 	value="" >
+										<i id="iconoFormateador${fila.formateadorFormulario.codigo}" class="#{fila.resultado.icon}" style="#{fila.resultado.css}" />
+								 </p:outputLabel>
+							</h:column>
 
-					</h:dataTable>
+						</h:dataTable>
+					</div>
 				</p:column>
 
 

@@ -9,6 +9,15 @@
 <p>
 	Un trámite telemático permite particularizar su comportamiento mediante la introducción de scripts.
 </p>
+<h2 class="stgH2">CONSIDERACIONES A TENER EN CUENTA</h2>
+<p>
+	<ul>
+		<li>
+			No se deben dejar comentadas líneas de código, ya que pueden ser evaluadas en el cálculo de dependencias. Solo se pueden introducir comentarios a modo de anotación de funcionamiento del código.
+		</li>
+	</ul>
+</p>
+<h2 class="stgH2">PANTALLA</h2>
 <p>
 	Estos scripts se establecen mediante esta ventana, en la que se distinguen las siguientes partes:
 </p>
@@ -35,7 +44,7 @@
 					<li>Retorno de resultado del script, si se devuelve a través de un plugin de datos (plugin empieza por “DATOS_”).</li>
 					<li>Plugins de utilidades: acceso a datos de sesión, dominios, logs, etc.  A continuación se listan los plugins disponibles (para mayor detalle consultar la ayuda específica de cada plugin).
 						<ul class="detalle2">
-							<li>Plugins generales: accesibles desde todos los scripts:
+							<li><span class="nombreCampo">Plugins generales:</span> accesibles desde todos los scripts:
 								<ul>
 									<li>PLUGIN_DOMINIOS: permite el acceso a los dominios asociados a la versión del trámite.	</li>
 									<li>PLUGIN_UTILS: permite realizar diversas validaciones.	</li>
@@ -44,8 +53,8 @@
 									<li>PLUGIN_ERROR: permite establecer errores en la ejecución de un script.</li>
 								</ul>
 							</li>
-							<li><span class="nombreCampo">Plugins retorno de datos:</span>: dependiendo del script se pueden devolver los datos a través de un plugin. Empezarán por “DATOS_” (p.ej. para el script que especifica firmantes se devuelven los datos a través del plugin DATOS_FIRMANTES).</li>
-							<li><span class="nombreCampo">Plugins tramitación:</span>: dependiendo del script se pueden devolver los datos a través de un plugin. Empezarán por “DATOS_” (p.ej. para el script que especifica firmantes se devuelven los datos a través del plugin DATOS_FIRMANTES).
+							<li><span class="nombreCampo">Plugins retorno de datos:</span> dependiendo del script se pueden devolver los datos a través de un plugin. Empezarán por “DATOS_” (p.ej. para el script que especifica firmantes se devuelven los datos a través del plugin DATOS_FIRMANTES).</li>
+							<li><span class="nombreCampo">Plugins tramitación:</span> dependiendo del script se pueden devolver los datos a través de un plugin. Empezarán por “DATOS_” (p.ej. para el script que especifica firmantes se devuelven los datos a través del plugin DATOS_FIRMANTES).
 								<ul>
 									<li>PLUGIN_SESIONTRAMITACION: acceso a los datos de la sesión de tramitación.</li>
 									<li>PLUGIN_FORMULARIOS: acceso a datos de formularios rellenados anteriormente.</li>

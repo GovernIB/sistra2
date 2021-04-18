@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>es.caib.sistra2</groupId>
 		<artifactId>sistrahelp</artifactId>
-		<version>1.1.4</version>
+		<version>1.2.0</version>
 	</parent>
 	<artifactId>sistrahelp-frontend</artifactId>
 	<packaging>war</packaging>
@@ -144,6 +144,7 @@
 						<configuration>
 							<files>
 								<file>${project.basedir}/../../sistra.properties</file>
+								<file>${project.basedir}/../../target/sistra-commit.properties</file>
 							</files>
 						</configuration>
 					</execution>
@@ -161,6 +162,7 @@
 							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
 							<includes>
 								<include>web.xml</include>
+								<include>sistrahelp-ac-frontend.xml</include>
 							</includes>
 							<targetPath>WEB-INF</targetPath>
 							<filtering>true</filtering>
@@ -172,6 +174,7 @@
 					</webResources>
 				</configuration>
 			</plugin>
+
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

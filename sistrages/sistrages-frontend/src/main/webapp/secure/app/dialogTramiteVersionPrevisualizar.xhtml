@@ -13,7 +13,7 @@
 
 
 <h:head>
-	<title><h:outputText value="#{msg['dialogTramiteVersionPrevisualizar.header']}"/></title>
+	<title><h:outputText value="#{msg['dialogTramiteVersionPrevisualizar.header']} - #{dialogTramiteVersionPrevisualizar.tramite.identificador} #{dialogTramiteVersionPrevisualizar.data.numeroVersion} "/></title>
 </h:head>
 
 <h:body>
@@ -56,7 +56,7 @@
 						<p style="line-height:20px; padding:0px; margin:0px;">
 							<p:outputLabel   styleClass="outputlabel-nota"  value="#{msg['dialogTramiteVersionPrevisualizar.infoSia']}" />
 						</p>
-						<p:selectBooleanCheckbox value="#{dialogTramiteVersionPrevisualizar.simularCatalogo}" itemLabel="#{msg['dialogTramiteVersionPrevisualizar.simularCatalogo']}">
+						<p:selectBooleanCheckbox value="#{dialogTramiteVersionPrevisualizar.simularCatalogo}" itemLabel="#{msg['dialogTramiteVersionPrevisualizar.simularCatalogo']}" rendered="#{dialogTramiteVersionPrevisualizar.isDesarrollo()}" >
 							<p:ajax event="change" update="dialogTramite:txtCopy" listener="#{dialogTramiteVersionPrevisualizar.recalcularURL()}" />
 						</p:selectBooleanCheckbox>
 					</p:column>

@@ -14,25 +14,20 @@ import es.caib.sistrages.rest.api.interna.RPropiedadesCampo;
 import es.caib.sistramit.core.api.exception.CampoFormularioNoExisteException;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ValorCampoFormularioCaracteresNoPermitidosException;
-import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelector;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
-import es.caib.sistramit.core.api.model.formulario.PaginaFormularioData;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
-import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
-import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValorResetCampos;
 import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
-import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
 import es.caib.sistramit.core.service.component.script.ScriptExec;
 import es.caib.sistramit.core.service.component.script.plugins.formulario.ResEstadoCampo;
 import es.caib.sistramit.core.service.component.script.plugins.formulario.ResValorCampo;
 import es.caib.sistramit.core.service.model.formulario.interno.DatosSesionFormularioInterno;
 import es.caib.sistramit.core.service.model.formulario.interno.DependenciaCampo;
+import es.caib.sistramit.core.service.model.formulario.interno.PaginaFormularioData;
 import es.caib.sistramit.core.service.model.formulario.interno.VariablesFormulario;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFormulario;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
@@ -88,6 +83,33 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 
 		// Devolvemos cambios realizados
 		return res;
+	}
+
+	@Override
+	public void recalcularDatosPagina(final DatosSesionFormularioInterno datosSesion) {
+		// Recorrer todos los campos de la pagina que tienen script autorrellenable y
+		// ejecutar si son solo lectura o no tienen valor
+		final PaginaFormularioData pag = datosSesion.getDatosFormulario().getPaginaActualFormulario();
+		final RPaginaFormulario pagDef = UtilsFormularioInterno.obtenerDefinicionPagina(datosSesion,
+				pag.getIndiceDef());
+		final List<RComponente> campos = UtilsFormularioInterno.devuelveListaCampos(pagDef);
+		for (final RComponente rc : campos) {
+			final RPropiedadesCampo pc = UtilsFormularioInterno.obtenerPropiedadesCampo(rc);
+			final ValorCampo vc = pag.getValorCampo(rc.getIdentificador());
+			// Verifica si existe script y son solo lectura o no tienen valor
+			if (UtilsSTG.existeScript(pc.getScriptAutorrellenable())
+					&& (pc.isSoloLectura() || (vc == null || vc.esVacio()))) {
+				// Ejecutar script autorrellenable y actualiza valor campo
+				final ValorCampo vca = ejecutarScriptAutorrellenable(datosSesion, rc);
+				pag.actualizarValorCampo(vca);
+				// Evalua cambios a realizar tras modificar campo
+				if (!vca.esValorIgual(vc)) {
+					// Calcula cambios (actualiza valores modificados pagina)
+					final ResultadoEvaluarCambioCampo res = new ResultadoEvaluarCambioCampo();
+					calcularDatosPaginaAutorrellenable(datosSesion, rc.getIdentificador(), res);
+				}
+			}
+		}
 	}
 
 	// --------------------------------------------------------------------------------
@@ -243,24 +265,9 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 
 		final ValorCampo vc = UtilsFormularioInterno.crearValorVacio(campoDefAuto);
 
-		// Si es de tipo selector ajustamos valor vacío
-		final ConfiguracionCampo configuracionCampo = datosSesion.getDatosFormulario()
-				.getConfiguracionCampo(vc.getId());
-		if (configuracionCampo.getTipo() == TypeCampo.SELECTOR) {
-
-			// Si es de tipo lista y no es obligatorio se establece como valor no
-			// seleccionado
-			final ConfiguracionCampoSelector ccs = (ConfiguracionCampoSelector) configuracionCampo;
-			if (ccs.getContenido() == TypeSelector.LISTA && ccs.getObligatorio() == TypeSiNo.NO) {
-				final ValorIndexado valorNoSelect = UtilsFormularioInterno.crearValorIndexadoNoSelect();
-				((ValorCampoIndexado) vc).setValor(valorNoSelect);
-			}
-
-			// Ajustes selector único: si esta vacío se debería establecer la primera opción
-			// pero no tenemos acceso a los valores posibles en este punto, con lo que lo
-			// dejamos nulo
-
-		}
+		// Ajustes selector único: si esta vacío se debería establecer la primera opción
+		// pero no tenemos acceso a los valores posibles en este punto, con lo que lo
+		// dejamos nulo
 
 		return vc;
 	}
@@ -450,14 +457,6 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 				// Calculamos lista de valores posibles
 				final ValoresPosiblesCampo vpc = valoresPosiblesHelper.calcularValoresPosiblesCampoSelector(datosSesion,
 						(RComponenteSelector) campoDefSel);
-
-				// Si es selector tipo lista no obligatorio añadimos valor no seleccionado
-				final ConfiguracionCampoSelector ccs = (ConfiguracionCampoSelector) datosSesion.getDatosFormulario()
-						.getConfiguracionCampo(campoDefSel.getIdentificador());
-				if (ccs.getContenido() == TypeSelector.LISTA && ccs.getObligatorio() == TypeSiNo.NO) {
-					final ValorIndexado valorNoSelect = UtilsFormularioInterno.crearValorIndexadoNoSelect();
-					vpc.getValores().add(0, valorNoSelect);
-				}
 
 				// Marcamos que se han modificado los valores posibles para el campo
 				res.getValoresPosibles().add(vpc);

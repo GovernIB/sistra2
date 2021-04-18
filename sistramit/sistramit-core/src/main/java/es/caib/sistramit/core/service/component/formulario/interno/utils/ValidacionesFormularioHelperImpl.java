@@ -17,6 +17,7 @@ import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
 import es.caib.sistrages.rest.api.interna.RPropiedadesCampo;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
+import es.caib.sistramit.core.api.model.comun.Constantes;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTexto;
@@ -142,8 +143,7 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 					.generarVariablesFormulario(datosSesion, null);
 
 			// Id pagina
-			// TODO No existe un id pagina, será necesario para navegación entre páginas
-			final String idPagina = "P-" + datosSesion.getDatosFormulario().getPaginaActualFormulario().getIndiceDef();
+			final String idPagina = datosSesion.getDatosFormulario().getPaginaActualFormulario().getIdentificador();
 
 			final RespuestaScript rs = scriptFormulario.executeScriptFormulario(
 					TypeScriptFormulario.SCRIPT_VALIDACION_PAGINA, idPagina,
@@ -225,7 +225,7 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 					(ConfiguracionCampoTextoTelefono) confTexto);
 			break;
 		case FECHA:
-			if (!ValidacionesTipo.getInstance().esFecha(vcs.getValor(), ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL)) {
+			if (!ValidacionesTipo.getInstance().esFecha(vcs.getValor(), Constantes.FORMATO_FECHA_FRONTAL)) {
 				validacionCorrecta = false;
 			}
 			break;

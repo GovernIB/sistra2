@@ -270,6 +270,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		String nombreFichero;
 		byte[] datosFichero;
 		XmlFormulario xmlForm;
+		PaginaFormulario paginaData;
+		ResultadoGuardarPagina resGuardar;
 		List<ValorCampo> valoresIniciales;
 		List<ValorCampo> valoresActuales;
 		List<ValoresPosiblesCampo> valoresPosibles;
@@ -303,16 +305,18 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		flujoFormularioInternoService.inicializarSesion(idSesionFormulario);
 
 		// -- Cargamos pagina actual
-		final PaginaFormulario paginaData = flujoFormularioInternoService.cargarPaginaActual(idSesionFormulario);
+		paginaData = flujoFormularioInternoService.cargarPaginaActual(idSesionFormulario);
 		valoresActuales = paginaData.getValores();
 		valoresPosibles = paginaData.getValoresPosibles();
 		// Verificamos acciones carga
 		// * Dato inicial precargado
-		for (final ValorCampo valorInicial : valoresIniciales) {
-			final ValorCampo valorPosterior = UtilsFormularioInterno.buscarValorCampo(paginaData.getValores(),
-					valorInicial.getId());
-			Assert.isTrue(valorPosterior != null && valorInicial.esValorIgual(valorPosterior),
-					"No concuerda valor inicial campo " + valorInicial.getId());
+		for (final ValorCampo valorPagina : valoresActuales) {
+			final ValorCampo valorInicial = UtilsFormularioInterno.buscarValorCampo(valoresIniciales,
+					valorPagina.getId());
+			if (valorInicial != null) {
+				Assert.isTrue(valorPagina != null && valorInicial.esValorIgual(valorPagina),
+						"No concuerda valor inicial campo " + valorInicial.getId());
+			}
 		}
 		// * Estado campo
 		Assert.isTrue(paginaData.getConfiguracion("TXT_CALC").getSoloLectura() == TypeSiNo.SI,
@@ -345,12 +349,12 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 			vcActual.reemplazaValor(vcModif);
 		}
 
-		// -- Guardar pagina
+		// -- Guardar pagina 1
 		// * Metemos valores campos textos
 		((ValorCampoSimple) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_NORMAL"))
 				.setValor("Valor modificado");
 		((ValorCampoSimple) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_FECHA"))
-				.setValor("2019-02-28");
+				.setValor("28/02/2019");
 		((ValorCampoSimple) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_HORA")).setValor("23:59");
 		// * Metemos valores selectores (primero de valores posibles)
 		final ValorIndexado vci = UtilsFormularioInterno.buscarValoresPosibles(valoresPosibles, "SEL_LISTA")
@@ -366,8 +370,62 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		// * Metemos valor campo validación
 		((ValorCampoSimple) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_VAL")).setValor("PRUEBA");
 
-		final ResultadoGuardarPagina resGuardar = flujoFormularioInternoService.guardarPagina(idSesionFormulario,
-				valoresActuales, null);
+		// * Guardar pagina
+		final List<ValorCampo> valoresPagina1 = duplicarListaValores(valoresActuales);
+		resGuardar = flujoFormularioInternoService.guardarPagina(idSesionFormulario, valoresActuales, null);
+		Assert.isTrue(resGuardar.getValidacion() == null,
+				"El formulario tiene mensaje validación: " + resGuardar.getValidacion());
+		Assert.isTrue(resGuardar.getFinalizado() == TypeSiNo.NO,
+				"Se ha finalizado formulario tras guardar primera página");
+
+		// -- Cargar pagina 2
+		paginaData = flujoFormularioInternoService.cargarPaginaActual(idSesionFormulario);
+		valoresActuales = paginaData.getValores();
+		// * Verificar pagina
+		Assert.isTrue(paginaData.getIdPagina().equals("P2"), "No es la pagina 2");
+		// * Valor inicializado de valores iniciales
+		Assert.isTrue(
+				UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_VALINIP2")
+						.esValorIgual(UtilsFormularioInterno.buscarValorCampo(valoresIniciales, "TXT_VALINIP2")),
+				"No se ha calculado valor TXT_CALC");
+		// * Valor calculado a partir pagina 1 (valor = TXT_CALC y estado = SOLO
+		// LECTURA)
+		Assert.isTrue(paginaData.getConfiguracion("TXT_CALCP2").getSoloLectura() == TypeSiNo
+				.fromBoolean("S".equals(vcs.getValor())), "No se ha calculado estado TXT_CALCP1");
+		Assert.isTrue(UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_CALCP2").esValorIgual(vcs),
+				"No se ha calculado valor TXT_CALCP2");
+		// * Valor autorrellenado a partir TXT_CALCP2 tras carga (valor = TXT_CALCP2)
+		Assert.isTrue(
+				UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_AUTOP2")
+						.esValorIgual(UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_CALCP2")),
+				"No se ha calculado valor TXT_AUTOP2");
+		// * Cambiamos valor TXT_AUTOP2
+		((ValorCampoSimple) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_AUTOP2")).setValor("nuevo");
+
+		// - Volvemos a pagina 1
+		final List<ValorCampo> valoresPagina2 = duplicarListaValores(valoresActuales);
+		paginaData = flujoFormularioInternoService.cargarPaginaAnterior(idSesionFormulario, valoresActuales);
+		valoresActuales = paginaData.getValores();
+		// * Verificar pagina
+		Assert.isTrue(paginaData.getIdPagina().equals("P1"), "No es la pagina 1");
+		// * Verifica valores pagina 1
+		esIgualListaValores(valoresActuales, valoresPagina1);
+
+		// - Volvemos a pagina 2
+		resGuardar = flujoFormularioInternoService.guardarPagina(idSesionFormulario, valoresActuales, null);
+		Assert.isTrue(resGuardar.getValidacion() == null,
+				"El formulario tiene mensaje validación: " + resGuardar.getValidacion());
+		Assert.isTrue(resGuardar.getFinalizado() == TypeSiNo.NO,
+				"Se ha finalizado formulario tras guardar primera página");
+		paginaData = flujoFormularioInternoService.cargarPaginaActual(idSesionFormulario);
+		valoresActuales = paginaData.getValores();
+		// * Verificar pagina
+		Assert.isTrue(paginaData.getIdPagina().equals("P2"), "No es la pagina 2");
+		// * Verifica valores pagina 1
+		esIgualListaValores(valoresActuales, valoresPagina2);
+
+		// - Guardar pagina 2
+		resGuardar = flujoFormularioInternoService.guardarPagina(idSesionFormulario, valoresActuales, null);
 		Assert.isTrue(resGuardar.getValidacion() == null,
 				"El formulario tiene mensaje validación: " + resGuardar.getValidacion());
 		Assert.isTrue(resGuardar.getFinalizado() == TypeSiNo.SI, "No se ha finalizado formulario tras guardar página");
@@ -402,6 +460,22 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		datosFichero = (byte[]) resPaso.getParametroRetorno("datosFichero");
 		Assert.isTrue(nombreFichero.endsWith(".pdf"), "El fichero no es pdf");
 		Assert.isTrue(datosFichero.length > 0, "El fichero no tiene contenido");
+	}
+
+	protected void esIgualListaValores(final List<ValorCampo> valoresActuales, final List<ValorCampo> valoresPagina1) {
+		Assert.isTrue(valoresActuales.size() == valoresPagina1.size(), "No tienen mismo numero valores");
+		for (final ValorCampo vp : valoresPagina1) {
+			Assert.isTrue(vp.esValorIgual(UtilsFormularioInterno.buscarValorCampo(valoresActuales, vp.getId())),
+					"No es valor igual " + vp.getId());
+		}
+	}
+
+	protected List<ValorCampo> duplicarListaValores(final List<ValorCampo> valoresActuales) {
+		final List<ValorCampo> valoresPagina2 = new ArrayList<>();
+		for (final ValorCampo vcp : valoresActuales) {
+			valoresPagina2.add(vcp.duplicar());
+		}
+		return valoresPagina2;
 	}
 
 	protected void flujoTramitacion_rellenar_formExterno(final String idSesionTramitacion)

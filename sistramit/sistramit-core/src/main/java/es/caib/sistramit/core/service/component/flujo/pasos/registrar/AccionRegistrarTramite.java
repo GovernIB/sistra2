@@ -153,11 +153,13 @@ public final class AccionRegistrarTramite implements AccionPaso {
 
 			final String idEntidad = pDefinicionTramite.getDefinicionVersion().getIdEntidad();
 			final RConfiguracionEntidad entidad = configuracion.obtenerConfiguracionEntidad(idEntidad);
-
+			final String urlCarpeta = UtilsSTG.obtenerLiteral(entidad.getUrlCarpeta(), pVariablesFlujo.getIdioma(),
+					true);
+			final String urlSede = UtilsSTG.obtenerLiteral(entidad.getUrlSede(), pVariablesFlujo.getIdioma(), true);
 			String titulo = this.literales.getLiteral(Literales.PASO_REGISTRAR, "mailFinalizacion.titulo",
 					pVariablesFlujo.getIdioma());
 			String mensaje = this.literales.getLiteral(Literales.PASO_REGISTRAR, "mailFinalizacion.texto",
-					new String[] { resReg.getNumeroRegistro() }, pVariablesFlujo.getIdioma());
+					new String[] { resReg.getNumeroRegistro(), urlCarpeta, urlSede }, pVariablesFlujo.getIdioma());
 
 			String plantilla = UtilsPasoRegistrar.getInstance().cargarPlantillaMailFinalizacion();
 			if (plantilla != null) {
@@ -172,8 +174,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 						Literales.PASO_REGISTRAR, "mailFinalizacion.accesoCarpeta", pVariablesFlujo.getIdioma()));
 				plantilla = StringUtils.replace(plantilla, "[#TEXTO.NO_RESPONDER#]", this.literales.getLiteral(
 						Literales.PASO_REGISTRAR, "mailFinalizacion.noResponder", pVariablesFlujo.getIdioma()));
-				plantilla = StringUtils.replace(plantilla, "[#URL_ACCESO_CARPETA#]",
-						UtilsSTG.obtenerLiteral(entidad.getUrlCarpeta(), pVariablesFlujo.getIdioma(), true));
+				plantilla = StringUtils.replace(plantilla, "[#URL_ACCESO_CARPETA#]", urlCarpeta);
 				mensaje = plantilla;
 			}
 

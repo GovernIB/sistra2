@@ -24,6 +24,11 @@ public final class ResultadoGuardarPagina implements Serializable {
 	private TypeSiNo finalizado = TypeSiNo.NO;
 
 	/**
+	 * En caso de no estar finalizado indicamos si debe recargar la pagina.
+	 */
+	private TypeSiNo recargar = TypeSiNo.NO;
+
+	/**
 	 * En caso de que se haya finalizado el formulario se indica la url para
 	 * retornar al flujo de tramitación.
 	 */
@@ -47,9 +52,9 @@ public final class ResultadoGuardarPagina implements Serializable {
 	 * Método para establecer finalizado.
 	 *
 	 * @param finalizado
-	 *            finalizado a establecer
+	 *                       finalizado a establecer
 	 */
-	public void setFinalizado(TypeSiNo finalizado) {
+	public void setFinalizado(final TypeSiNo finalizado) {
 		this.finalizado = finalizado;
 	}
 
@@ -66,9 +71,9 @@ public final class ResultadoGuardarPagina implements Serializable {
 	 * Método para establecer mensaje.
 	 *
 	 * @param mensaje
-	 *            mensaje a establecer
+	 *                    mensaje a establecer
 	 */
-	public void setValidacion(MensajeValidacion mensaje) {
+	public void setValidacion(final MensajeValidacion mensaje) {
 		this.validacion = mensaje;
 	}
 
@@ -85,10 +90,29 @@ public final class ResultadoGuardarPagina implements Serializable {
 	 * Método para establecer url.
 	 *
 	 * @param url
-	 *            url a establecer
+	 *                url a establecer
 	 */
-	public void setUrl(String url) {
+	public void setUrl(final String url) {
 		this.url = url;
+	}
+
+	/**
+	 * Método de acceso a recargar.
+	 * 
+	 * @return recargar
+	 */
+	public TypeSiNo getRecargar() {
+		return recargar;
+	}
+
+	/**
+	 * Método para establecer recargar.
+	 * 
+	 * @param recargar
+	 *                     recargar a establecer
+	 */
+	public void setRecargar(final TypeSiNo recargar) {
+		this.recargar = recargar;
 	}
 
 }

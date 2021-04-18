@@ -175,6 +175,7 @@ public class SistragesMock {
 		e.setEmail("entidad@mail.es");
 		e.setContactoHTML(generarLiteral());
 		e.setUrlCarpeta(generarLiteralUrl());
+		e.setUrlSede(generarLiteralUrl());
 		e.setAyudaFormulario(opciones);
 		e.setAyudaTelefono("012");
 		e.setAyudaUrl("url ayuda");

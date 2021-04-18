@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
@@ -25,6 +26,7 @@ import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.exception.ValorCampoFormularioNoValidoException;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
+import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
@@ -36,6 +38,7 @@ import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
 import es.caib.sistramit.core.api.model.formulario.types.TypeValor;
 import es.caib.sistramit.core.service.model.formulario.interno.DatosSesionFormularioInterno;
 import es.caib.sistramit.core.service.model.formulario.interno.DependenciaCampo;
+import es.caib.sistramit.core.service.model.formulario.interno.PaginaFormularioData;
 import es.caib.sistramit.core.service.model.formulario.interno.VariablesFormulario;
 import es.caib.sistramit.core.service.model.formulario.interno.types.TypeListaValores;
 import es.caib.sistramit.core.service.model.formulario.interno.types.TypeParametroDominio;
@@ -124,6 +127,41 @@ public class UtilsFormularioInterno {
 	}
 
 	/**
+	 * Obtiene propiedades campo.
+	 *
+	 * @param pCampoDef
+	 *                      definición campo
+	 * @return propiedades campo
+	 */
+	public static RPropiedadesCampo obtenerPropiedadesCampo(final RComponente pCampoDef) {
+		RPropiedadesCampo res = null;
+		final TypeCampo tipoCampo = UtilsSTG.traduceTipoCampo(pCampoDef.getTipo());
+		if (tipoCampo == null) {
+			throw new ErrorConfiguracionException("Componente " + pCampoDef.getIdentificador() + " no es un campo");
+		}
+		switch (tipoCampo) {
+		case TEXTO:
+			res = ((RComponenteTextbox) pCampoDef).getPropiedadesCampo();
+			break;
+		case SELECTOR:
+			res = ((RComponenteSelector) pCampoDef).getPropiedadesCampo();
+			break;
+		case VERIFICACION:
+			res = ((RComponenteCheckbox) pCampoDef).getPropiedadesCampo();
+			break;
+		case OCULTO:
+			res = ((RComponenteCampoOculto) pCampoDef).getPropiedadesCampo();
+			break;
+		case CAPTCHA:
+			// TODO Pendiente captcha
+			throw new TipoNoControladoException("Tipo campo no controlado: " + tipoCampo);
+		default:
+			throw new TipoNoControladoException("Tipo campo no controlado: " + tipoCampo);
+		}
+		return res;
+	}
+
+	/**
 	 * Crea valor vacío según tipo de campo.
 	 *
 	 * @param pCampoDef
@@ -168,35 +206,6 @@ public class UtilsFormularioInterno {
 	}
 
 	/**
-	 * Obtiene propiedades generales campo datos.
-	 *
-	 * @param pCampoDef
-	 *                      Campo
-	 * @return
-	 */
-	public static RPropiedadesCampo obtenerPropiedadesCampo(final RComponente pCampoDef) {
-		final TypeCampo tipoCampo = UtilsSTG.traduceTipoCampo(pCampoDef.getTipo());
-		RPropiedadesCampo propsCampo = null;
-		switch (tipoCampo) {
-		case TEXTO:
-			propsCampo = ((RComponenteTextbox) pCampoDef).getPropiedadesCampo();
-			break;
-		case SELECTOR:
-			propsCampo = ((RComponenteSelector) pCampoDef).getPropiedadesCampo();
-			break;
-		case VERIFICACION:
-			propsCampo = ((RComponenteCheckbox) pCampoDef).getPropiedadesCampo();
-			break;
-		case OCULTO:
-			propsCampo = ((RComponenteCampoOculto) pCampoDef).getPropiedadesCampo();
-			break;
-		default:
-			throw new TipoNoControladoException("Tipo de campo " + tipoCampo + " no controlado");
-		}
-		return propsCampo;
-	}
-
-	/**
 	 * Obtiene definición página actual.
 	 *
 	 * @param pDatosSesion
@@ -207,9 +216,89 @@ public class UtilsFormularioInterno {
 		final RFormularioTramite defFormulario = UtilsSTG.devuelveDefinicionFormulario(
 				pDatosSesion.getDatosInicioSesion().getIdPaso(), pDatosSesion.getDatosInicioSesion().getIdFormulario(),
 				pDatosSesion.getDefinicionTramite());
-		final RPaginaFormulario paginaDef = defFormulario.getFormularioInterno().getPaginas()
-				.get(pDatosSesion.getDatosFormulario().getPaginaActualFormulario().getIndiceDef());
+		final RPaginaFormulario paginaDef = defFormulario.getFormularioInterno().getPaginas().get(
+				pDatosSesion.getDatosFormulario().getPaginaActualFormulario().getIndiceDef() - ConstantesNumero.N1);
 		return paginaDef;
+	}
+
+	/**
+	 * Obtiene definición página a partir identificador.
+	 *
+	 * @param pDatosSesion
+	 *                         Datos sesión
+	 * @return definición página
+	 */
+	public static RPaginaFormulario obtenerDefinicionPagina(final DatosSesionFormularioInterno pDatosSesion,
+			final String identificadorPagina) {
+		RPaginaFormulario res = null;
+		if (StringUtils.isNotBlank(identificadorPagina)) {
+			final RFormularioTramite defFormulario = UtilsSTG.devuelveDefinicionFormulario(
+					pDatosSesion.getDatosInicioSesion().getIdPaso(),
+					pDatosSesion.getDatosInicioSesion().getIdFormulario(), pDatosSesion.getDefinicionTramite());
+			for (final RPaginaFormulario paginaDef : defFormulario.getFormularioInterno().getPaginas()) {
+				if (identificadorPagina.equals(paginaDef.getIdentificador())) {
+					res = paginaDef;
+					break;
+				}
+			}
+		}
+		if (res == null) {
+			throw new ErrorConfiguracionException("No existe pagina con id: " + identificadorPagina);
+		}
+		return res;
+	}
+
+	/**
+	 * Obtiene indice definición página.
+	 *
+	 * @param pDatosSesion
+	 *                                Datos sesión
+	 * @param identificadorPagina
+	 *                                identificador página
+	 * @return indice definición página.
+	 */
+	public static int obtenerIndiceDefinicionPagina(final DatosSesionFormularioInterno pDatosSesion,
+			final String identificadorPagina) {
+		Integer res = null;
+		if (StringUtils.isNotBlank(identificadorPagina)) {
+			final RFormularioTramite defFormulario = UtilsSTG.devuelveDefinicionFormulario(
+					pDatosSesion.getDatosInicioSesion().getIdPaso(),
+					pDatosSesion.getDatosInicioSesion().getIdFormulario(), pDatosSesion.getDefinicionTramite());
+			int index = 0;
+			for (final RPaginaFormulario paginaDef : defFormulario.getFormularioInterno().getPaginas()) {
+				index++;
+				if (identificadorPagina.equals(paginaDef.getIdentificador())) {
+					res = index;
+					break;
+				}
+			}
+		}
+		if (res == null) {
+			throw new ErrorConfiguracionException("No existe pagina con id: " + identificadorPagina);
+		}
+		return res;
+	}
+
+	/**
+	 * Obtiene definición página a partir indice definicion.
+	 *
+	 * @param pDatosSesion
+	 *                         Datos sesión
+	 * @param indiceDef
+	 *                         indice página en la definición trámite
+	 * @return definición página
+	 */
+	public static RPaginaFormulario obtenerDefinicionPagina(final DatosSesionFormularioInterno pDatosSesion,
+			final int indiceDef) {
+		final RFormularioTramite defFormulario = UtilsSTG.devuelveDefinicionFormulario(
+				pDatosSesion.getDatosInicioSesion().getIdPaso(), pDatosSesion.getDatosInicioSesion().getIdFormulario(),
+				pDatosSesion.getDefinicionTramite());
+		if (indiceDef > defFormulario.getFormularioInterno().getPaginas().size()) {
+			throw new ErrorConfiguracionException("No existe pagina con indice: " + indiceDef);
+		}
+		final RPaginaFormulario res = defFormulario.getFormularioInterno().getPaginas()
+				.get(indiceDef - ConstantesNumero.N1);
+		return res;
 	}
 
 	/**
@@ -384,41 +473,20 @@ public class UtilsFormularioInterno {
 	 * @return ValorCampo
 	 */
 	public static ValorCampo deserializarValorCampo(final String idCampo, final String valorCampo) {
-		// Prefijo para serializar valores
-		final String prefix = "#-@";
-
 		// El valor serializado no puede estar vacio
 		if (StringUtils.isBlank(valorCampo)) {
 			throw new ValorCampoFormularioNoValidoException(idCampo, valorCampo);
 		}
 
-		// Descomponemos en lista de strings
-		final String[] values = valorCampo.split(prefix);
-		if (values.length < ConstantesNumero.N1) {
+		// Deserializamos valor
+		final ValorCampo vc = (ValorCampo) UtilsFlujo.jsonToJava(valorCampo, ValorCampo.class);
+
+		// Verificamos que concuerda id campo con el valor campo
+		if (vc == null || idCampo == null || !idCampo.equals(vc.getId())) {
 			throw new ValorCampoFormularioNoValidoException(idCampo, valorCampo);
 		}
 
-		// Deserializamos segun el tipo
-		ValorCampo res = null;
-		final TypeValor tipoValor = TypeValor.fromString(values[0]);
-		if (tipoValor == null) {
-			throw new ValorCampoFormularioNoValidoException(idCampo, valorCampo);
-		}
-		switch (tipoValor) {
-		case SIMPLE:
-			res = deserializarValorCampoSimple(idCampo, valorCampo, values);
-			break;
-		case INDEXADO:
-			res = deserializarValorCampoIndexado(idCampo, valorCampo, values);
-			break;
-		case LISTA_INDEXADOS:
-			res = deserializarValorCampoListaIndexados(idCampo, valorCampo, values);
-			break;
-		default:
-			throw new ValorCampoFormularioNoValidoException(idCampo, valorCampo);
-		}
-
-		return res;
+		return vc;
 	}
 
 	/**
@@ -526,34 +594,41 @@ public class UtilsFormularioInterno {
 	}
 
 	/**
-	 * Crea valor indexado que referencia a valor no seleccionado.
+	 * Crea PaginaFormulario.
 	 *
-	 * @return valor indexado que referencia a valor no seleccionado
+	 * @param paginaData
+	 *                       datos página
+	 * @return PaginaFormulario
 	 */
-	public static ValorIndexado crearValorIndexadoNoSelect() {
-		final ValorIndexado vpNoSelect = new ValorIndexado(ValoresPosiblesCampo.VALUE_NO_SELECT, "...");
-		return vpNoSelect;
+	public static PaginaFormulario convertToPaginaFormulario(final PaginaFormularioData pagData) {
+		// Establece datos página creando una copia para evitar modificación
+		final PaginaFormulario p = new PaginaFormulario(pagData.getIdFormulario());
+		p.setIdFormulario(pagData.getIdFormulario());
+		p.setIdPagina(pagData.getIdentificador());
+		p.setMostrarTitulo(pagData.getMostrarTitulo());
+		p.setTitulo(pagData.getTitulo());
+		for (final ConfiguracionCampo cc : pagData.getConfiguracion()) {
+			p.getConfiguracion().add(SerializationUtils.clone(cc));
+		}
+		for (final ValorCampo vc : pagData.getValores()) {
+			p.getValores().add(SerializationUtils.clone(vc));
+		}
+		p.setRecursos(SerializationUtils.clone(pagData.getRecursos()));
+		return p;
 	}
 
 	/**
-	 * Verifica si el valor referencia a valor no seleccionado de selector.
+	 * Obtener definición formulario.
 	 *
-	 * @param vc
-	 * @return si el valor referencia a valor no seleccionado de selector.
+	 * @param datosSesion
+	 *                        Datos sesión
+	 * @return definición formulario
 	 */
-	public static boolean esValorIndexadoNoSelect(final ValorCampo vc) {
-		return (vc != null && vc.getTipo() == TypeValor.INDEXADO && ((ValorCampoIndexado) vc).getValor() != null
-				&& ValoresPosiblesCampo.VALUE_NO_SELECT.equals(((ValorCampoIndexado) vc).getValor().getValor()));
-	}
-
-	/**
-	 * Verifica si el valor referencia a valor no seleccionado de selector.
-	 *
-	 * @param vc
-	 * @return si el valor referencia a valor no seleccionado de selector.
-	 */
-	public static boolean esValorIndexadoNoSelect(final ValorIndexado vc) {
-		return vc != null && (ValoresPosiblesCampo.VALUE_NO_SELECT.equals(vc.getValor()));
+	public static RFormularioTramite obtenerDefinicionFormulario(final DatosSesionFormularioInterno datosSesion) {
+		final RFormularioTramite defFormulario = UtilsSTG.devuelveDefinicionFormulario(
+				datosSesion.getDatosInicioSesion().getIdPaso(), datosSesion.getDatosInicioSesion().getIdFormulario(),
+				datosSesion.getDefinicionTramite());
+		return defFormulario;
 	}
 
 	// ---------------------------------------------------------------------------------------------------

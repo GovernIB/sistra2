@@ -37,7 +37,7 @@
 <p>
 	<ul>
 		<li><b>fecha</b>: Fecha a validar.</li>
-		<li><b>formatoFecha</b>: Formato de la fecha. Es opcional y el formato por defecto es yyyy-MM-dd .</li>
+		<li><b>formatoFecha</b>: Formato de la fecha. Es opcional y el formato por defecto es dd/MM/yyyy .</li>
 	</ul>
 </p>
 <p>
@@ -67,7 +67,7 @@
 
 <p><b>Ejemplo 3</b> Validar la cadena de caracteres '10/06/2012'. </p>
  <p class="codigoScript">
-	var valido = PLUGIN_UTILS.esFecha('10/06/2012', null);
+	var valido = PLUGIN_UTILS.esFecha('10/06/2012', 'yyyy-MM-dd');
 </p>
 <p>La función esFecha retorna 'false', debido a que el valor indicado no es una fecha válida, no sigue el formato yyyy-MM-dd.</p>
 <br />

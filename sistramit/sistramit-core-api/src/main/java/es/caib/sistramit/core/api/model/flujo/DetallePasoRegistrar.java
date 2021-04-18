@@ -64,6 +64,11 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	private TypeSiNo reintentar = TypeSiNo.NO;
 
 	/**
+	 * Instrucciones tramitacion.
+	 */
+	private String instruccionesTramitacion;
+
+	/**
 	 * Instrucciones entrega presencial.
 	 */
 	private String instruccionesEntregaPresencial;
@@ -416,7 +421,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 
 	/**
 	 * Método de acceso a lopd.
-	 * 
+	 *
 	 * @return lopd
 	 */
 	public LopdTabla getLopd() {
@@ -425,12 +430,31 @@ public final class DetallePasoRegistrar extends DetallePaso {
 
 	/**
 	 * Método para establecer lopd.
-	 * 
+	 *
 	 * @param lopd
 	 *                 lopd a establecer
 	 */
 	public void setLopd(final LopdTabla lopd) {
 		this.lopd = lopd;
+	}
+
+	/**
+	 * Método de acceso a instruccionesTramitacion.
+	 * 
+	 * @return instruccionesTramitacion
+	 */
+	public String getInstruccionesTramitacion() {
+		return instruccionesTramitacion;
+	}
+
+	/**
+	 * Método para establecer instruccionesTramitacion.
+	 * 
+	 * @param instruccionesTramitacion
+	 *                                     instruccionesTramitacion a establecer
+	 */
+	public void setInstruccionesTramitacion(final String instruccionesTramitacion) {
+		this.instruccionesTramitacion = instruccionesTramitacion;
 	}
 
 }

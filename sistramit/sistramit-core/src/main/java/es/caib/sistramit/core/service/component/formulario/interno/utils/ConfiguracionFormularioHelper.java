@@ -23,7 +23,7 @@ public interface ConfiguracionFormularioHelper {
 	 * Crea configuración del campo.
 	 *
 	 * @param pCampoDef
-	 *            Definición del campo
+	 *                      Definición del campo
 	 * @return Configuración campo
 	 */
 	ConfiguracionCampo obtenerConfiguracionCampo(final RComponente pCampoDef);
@@ -32,7 +32,7 @@ public interface ConfiguracionFormularioHelper {
 	 * Calcula el estado dinamico de los campos.
 	 *
 	 * @param pDatosSesion
-	 *            Datos sesion
+	 *                         Datos sesion
 	 * @return Configuracion dinamica de campos
 	 */
 	List<ConfiguracionModificadaCampo> evaluarEstadoCamposPagina(DatosSesionFormularioInterno pDatosSesion);
@@ -41,9 +41,9 @@ public interface ConfiguracionFormularioHelper {
 	 * Evalua estado dinamico de un campo.
 	 *
 	 * @param pDatosSesion
-	 *            Datos sesion formulario
+	 *                         Datos sesion formulario
 	 * @param campoDef
-	 *            Definicion campo
+	 *                         Definicion campo
 	 * @return Estado campo (nulo si no tiene estado dinamico)
 	 */
 	ResEstadoCampo evaluarEstadoCampo(final DatosSesionFormularioInterno pDatosSesion, final RComponente campoDef);
@@ -52,7 +52,7 @@ public interface ConfiguracionFormularioHelper {
 	 * Evalua acciones a mostrar en pagina actual.
 	 *
 	 * @param datosSesion
-	 *            Datos sesion
+	 *                        Datos sesion
 	 * @return lista acciones
 	 */
 	List<AccionFormulario> evaluarAccionesPaginaActual(DatosSesionFormularioInterno datosSesion);
@@ -61,9 +61,11 @@ public interface ConfiguracionFormularioHelper {
 	 * Obtiene plantilla PDF de visualizacion.
 	 *
 	 * @param pDatosSesion
-	 *            Datos sesion
+	 *                         Datos sesion
 	 * @return plantilla PDF de visualizacion.
 	 */
 	RPlantillaFormulario obtenerPlantillaPdfVisualizacion(DatosSesionFormularioInterno pDatosSesion);
+
+	String evaluarScriptNavegacionPaginaActual(DatosSesionFormularioInterno pDatosSesion);
 
 }

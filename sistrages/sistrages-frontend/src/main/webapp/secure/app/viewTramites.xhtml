@@ -23,6 +23,7 @@
 				<p:toolbar id="toolbarArea">
 					<f:facet name="left">
 						<h:outputText value="#{msg['viewTramites.listadoAreas']}" />
+
 		           	</f:facet>
 		           	<f:facet name="right">
 		           			<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosAreas}">
@@ -49,10 +50,26 @@
 					<p:ajax event="toggleSelect" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" />
 					<p:ajax event="rowDblselect" oncomplete="triggerDoubleClickArea();" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" />
 
-			        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+			        <p:column selectionMode="multiple" style="width:16px;text-align:center" />
+			        <p:column style="width:16px;text-align:center" >
+			        		<p:column rendered="#{!area.tienePermiso}">
+			        			<span class="fa fa-lock" title="#{msg['viewTramites.sinPermisos']}" />
+			        		</p:column>
+			        		<p:column rendered="#{area.tienePermiso}">
+			        			<span class="fa fa-unlock" title="#{msg['viewTramites.conPermisos']}" />
+			        		</p:column>
+			        </p:column>
 			        <p:column>
 			            <h:outputText value="#{area.identificador}" />
 			        </p:column>
+			        <f:facet name="footer" style="align:left">
+			        	<div align="left">
+            			<h:selectBooleanCheckbox itemLabel="Prev.Areas" value="#{viewTramites.mostrarTodasAreas}"  >
+						 		<p:ajax event="change" process="@this" update="@form" listener="#{viewTramites.calcularAreas}"  />
+						</h:selectBooleanCheckbox>
+						<h:outputText value="#{msg['viewTramites.mostrarTodasAreas']}" />
+						</div>
+        			</f:facet>
 			    </p:dataTable>
 
 		    </div>
@@ -72,7 +89,7 @@
 				     		     <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl @form"/>
 			   		        </p:commandButton>
 
-			        		<p:commandButton id="btnConsultarTramite" value="#{msg['botones.consultarTramite']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarTramite}" process="@this" update="growl" rendered="#{not viewTramites.tienePermisosTramite and viewTramites.tramiteSeleccionada ne null}" />
+			        		<p:commandButton id="btnConsultarTramite" value="#{msg['botones.consultarTramite']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarTramite}" process="@this" update="growl" rendered="#{not viewTramites.tienePermisosTramite and viewTramites.tramiteSeleccionada ne null and viewTramites.tienePermisosArea}" />
 			        		<p:commandButton id="btnEditarTramite" value="#{msg['botones.editarTramite']}" icon="fa fa-edit" actionListener="#{viewTramites.editarTramite}" process="@this" update="growl" rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosTramite and viewTramites.tramiteSeleccionada ne null}">
 			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl @form"/>
 			        		</p:commandButton>
@@ -80,7 +97,7 @@
 			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoNuevaVersion}" update="growl @form" />
 			        		</p:commandButton>
 
-			        		<p:commandButton id="btnConsultarVersion" value="#{msg['botones.consultarVersion']}" icon="fa fa-edit" actionListener="#{viewTramites.consultarVersion}" process="@this" update="growl" rendered="#{not viewTramites.tienePermisosVersion and viewTramites.versionSeleccionada ne null}" />
+			        		<p:commandButton id="btnConsultarVersion" value="#{msg['botones.consultarVersion']}" icon="fa fa-edit" actionListener="#{viewTramites.consultarVersion}" process="@this" update="growl" rendered="#{not viewTramites.tienePermisosVersion and viewTramites.versionSeleccionada ne null and viewTramites.tienePermisosArea}" />
 							<p:commandButton id="btnEditarVersion" value="#{msg['botones.editarVersion']}" icon="fa fa-edit" actionListener="#{viewTramites.editarVersion}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosVersion and viewTramites.versionSeleccionada ne null}" />
 
 			        		<p:commandButton id="btnBloquear" value="#{msg['botones.bloquear']}" icon="fa fa-lock" actionListener="#{viewTramites.bloquear}" process="@this" update="growl @form"  rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null and viewTramites.permiteBloquear}">
@@ -92,7 +109,7 @@
 
 							<p:commandButton id="btnPrevisualizar" value="#{msg['botones.previsualizarTramite']}" icon="fa fa-eye" actionListener="#{viewTramites.previsualizar}" process="@this" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
 
-			        		<p:menuButton value="#{msg['viewTramites.mas']}" rendered="#{not(not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null))}">
+			        		<p:menuButton value="#{msg['viewTramites.mas']}" rendered="#{not(not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null))  and viewTramites.tienePermisosArea }">
 
 								<p:menuitem id="btnMoverTramite" value="#{msg['botones.moverTramite']}" icon="fa fa-exchange" onclick="triggerMoverTramite();return false;" rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosAreas and viewTramites.tramiteSeleccionada ne null}"></p:menuitem>
 			        			<p:menuitem id="btnEliminarTramite" value="#{msg['botones.eliminarTramite']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarTramite}" process="@this" update="growl @form" rendered="#{viewTramites.tienePermisosTramite and viewTramites.tramiteSeleccionada ne null}">
@@ -149,6 +166,7 @@
 
 						<!-- Necesario para actualizar en controlador la fila seleccionada -->
 						<p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectVersionTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('T')"/>
+             			<!-- <p:ajax event="rowDblselect" listener="#{viewTramites.editarVersion}"/> -->
              			<p:ajax event="rowDblselect" oncomplete="triggerDoubleClick();" update="@form:toolbarTramites"/>
 
 				       	<p:column style="width:16px">
@@ -222,6 +240,11 @@
 				</div>
 			</div>
 
+
+			<p:commandButton id="btnDlbEditarTramite" actionListener="#{viewTramites.dblEditarDblTramite}" process="@this" update="growl"  style="display:none">
+       			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl @form"/>
+       		</p:commandButton>
+
 			<p:commandButton id="hiddenCommandImportar" styleClass="button"  process="@this" action="#{viewTramites.importar()}"  style="display:none">
       			   <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoImportar}" update="growl @form"  />
 	        </p:commandButton>
@@ -267,7 +290,7 @@
 	      	  	}
 
 	      	  	function triggerDoubleClick() {
-	      	  		document.getElementById("form:btnEditarTramite").click();
+	      	  		document.getElementById("form:btnDlbEditarTramite").click();
 	      	  	}
 
 				function triggerDoubleClickArea() {

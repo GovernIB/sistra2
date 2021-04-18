@@ -93,7 +93,12 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		switch (acceso) {
 		case ALTA:
 		case EDICION:
+			if (!contienePlantillaPorDefecto()) {
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.planilla.porDefecto"));
+				return;
+			}
 			formIntService.updateFormularioInterno(data);
+
 			break;
 		case CONSULTA:
 			// No hay que hacer nada
@@ -107,6 +112,22 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 
 		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO);
+	}
+
+	private boolean contienePlantillaPorDefecto() {
+		boolean contiene;
+		if (data.getPlantillas() == null || data.getPlantillas().isEmpty()) {
+			contiene = true;
+		} else {
+			contiene = false;
+			for (final PlantillaFormulario plantilla : data.getPlantillas()) {
+				if (plantilla != null && plantilla.isPorDefecto()) {
+					contiene = true;
+					break;
+				}
+			}
+		}
+		return contiene;
 	}
 
 	/**
@@ -227,6 +248,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	public void nuevaPagina() {
 		final PaginaFormulario pagina = new PaginaFormulario();
 		pagina.setOrden(data.getPaginas().size() + 1);
+		pagina.setIdentificador("P" + pagina.getOrden());
 		this.data.getPaginas().add(pagina);
 	}
 
@@ -257,7 +279,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		params.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
 
-		UtilJSF.openDialog(DialogPaginaFormulario.class, modo, params, true, 430, 130);
+		UtilJSF.openDialog(DialogPaginaFormulario.class, modo, params, true, 430, 190);
 	}
 
 	/**
@@ -283,8 +305,11 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 				final int posicion = this.data.getPaginas().indexOf(this.paginaSeleccionada);
 				this.data.getPaginas().get(posicion).setPaginaFinal(pagina.isPaginaFinal());
 				this.data.getPaginas().get(posicion).setScriptValidacion(pagina.getScriptValidacion());
+				paginaSeleccionada.setIdentificador(pagina.getIdentificador());
 				paginaSeleccionada.setPaginaFinal(pagina.isPaginaFinal());
+				paginaSeleccionada.setScriptNavegacion(pagina.getScriptNavegacion());
 				paginaSeleccionada.setScriptValidacion(pagina.getScriptValidacion());
+
 				break;
 			case CONSULTA:
 				// No hay que hacer nada

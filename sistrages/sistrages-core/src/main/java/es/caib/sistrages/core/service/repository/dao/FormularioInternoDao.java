@@ -159,10 +159,11 @@ public interface FormularioInternoDao {
 	 * @param idFormularioTramite
 	 * @param idComponente
 	 * @param idPagina
+	 * @param cargarPaginasPosteriores
 	 * @return
 	 */
 	DisenyoFormularioSimple getFormularioInternoSimple(Long idFormularioTramite, Long idFormulario, String idComponente,
-			String idPagina);
+			String idPagina, boolean cargarPaginasPosteriores);
 
 	/**
 	 * Devuelve el identificador del formulario.
@@ -233,5 +234,12 @@ public interface FormularioInternoDao {
 	 * @return
 	 */
 	List<ScriptInfo> getScriptsInfo(Long idFormularioInterno, FormularioTramite formulario);
+
+	/**
+	 * Guarda los datos simples de pagina.
+	 *
+	 * @param pagina
+	 */
+	void guardarPagina(PaginaFormulario pagina);
 
 }

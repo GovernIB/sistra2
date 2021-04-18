@@ -10,10 +10,4 @@
 
 	<import resource="classpath:sistramit-ejb-core-api.xml" />
 
-	<bean id="negocioModuleConfig" class="es.caib.sistramit.frontend.model.comun.ModuleConfig">
-		<property name="version" value="${sistra2.version}" />
-		<property name="commitSvn" value="${prefix.revision}" />
-		<property name="commitGit" value="${git.commit.id.abbrev}" />
-	</bean>
-
 </beans>

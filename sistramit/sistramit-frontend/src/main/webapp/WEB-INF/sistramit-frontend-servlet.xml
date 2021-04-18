@@ -26,6 +26,14 @@
 	<!-- Procesos -->
 	<task:annotation-driven/>
 
+	<!-- Propiedades -->
+	<bean id="frontModuleConfig" class="es.caib.sistramit.frontend.ModuleConfig">
+		<property name="version" value="${sistra2.version}" />
+		<property name="commitSvn" value="${commitSvn}" />
+		<property name="commitGit" value="${commitGit}" />
+	</bean>
+
+
 	<!--  Textos de mensajes (bean accesible desde componente Literales) -->
 	<bean id="messageSource"
 		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
@@ -70,9 +78,8 @@
 
 	<!-- Upload ficheros-->
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-		<!--
-			En caso de querer habilitar hay que capturar excepcion generada en el ExceptionHandler
-		<property name="maxUploadSize" value="100000"/> -->
+		<!-- En caso de querer habilitar hay que capturar excepcion generada en el ExceptionHandler: org.apache.commons.fileupload.FileUploadException -->
+		<property name="maxUploadSize" value="-1"/>
 	</bean>
 
 </beans>

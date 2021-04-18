@@ -30,6 +30,10 @@ public enum TypeScriptFormulario implements TypeScript {
 	/**
 	 * Script de plantilla pdf dinamica.
 	 */
-	SCRIPT_PLANTILLA_PDF_DINAMICA;
+	SCRIPT_PLANTILLA_PDF_DINAMICA,
+	/**
+	 * Script de navegación de página.
+	 */
+	SCRIPT_NAVEGACION_PAGINA;
 
 }

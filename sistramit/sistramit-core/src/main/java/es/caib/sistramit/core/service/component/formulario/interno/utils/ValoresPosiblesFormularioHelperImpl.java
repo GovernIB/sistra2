@@ -15,7 +15,6 @@ import es.caib.sistrages.rest.api.interna.RValorListaFija;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.exception.ValorCampoFormularioCaracteresNoPermitidosException;
-import es.caib.sistramit.core.api.exception.ValorPosiblePalabraReservadaException;
 import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
@@ -124,11 +123,6 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 						vi.getValor() + " - " + vi.getDescripcion());
 			}
 
-			// Valor reservado para opción no seleccionada
-			if (UtilsFormularioInterno.esValorIndexadoNoSelect(vi)) {
-				throw new ValorPosiblePalabraReservadaException(pCampoDef.getIdentificador(),
-						vi.getValor() + " - " + vi.getDescripcion());
-			}
 		}
 	}
 

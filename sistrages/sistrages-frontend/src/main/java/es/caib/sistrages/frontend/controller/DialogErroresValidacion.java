@@ -207,8 +207,7 @@ public class DialogErroresValidacion extends DialogControllerBase {
 					if (listaDominios.stream().anyMatch(d -> dominio.getCodigo().equals(d.getCodigo()))) {
 						// asociar
 						dominioService.addTramiteVersion(dominio.getCodigo(), Long.valueOf(idTramiteVersion));
-						addMessageContext(TypeNivelGravedad.INFO,
-								UtilJSF.getLiteral("info.alta.dominio.empleado"));
+						addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.alta.dominio.empleado"));
 
 					} else {
 						if (TypeAmbito.ENTIDAD.equals(dominio.getAmbito())) {
@@ -252,7 +251,7 @@ public class DialogErroresValidacion extends DialogControllerBase {
 			mochilaDatos.put(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO, idiomasObligatorios);
 
 			UtilJSF.openDialog(DialogPropiedadesFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 950,
-					460);
+					490);
 		}
 	}
 

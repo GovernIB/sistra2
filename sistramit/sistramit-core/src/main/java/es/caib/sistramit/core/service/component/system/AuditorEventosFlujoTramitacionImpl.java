@@ -62,9 +62,9 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 	 * Crea evento.
 	 *
 	 * @param tipoEvento
-	 *            Tipo evento
+	 *                                Tipo evento
 	 * @param idSesionTramitacion
-	 *            idSesionTramitacion
+	 *                                idSesionTramitacion
 	 * @return evento tramitacion
 	 */
 	private EventoAuditoria crearEvento(final TypeEvento tipoEvento, final String idSesionTramitacion) {
@@ -80,13 +80,13 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 	 * tramitacion.
 	 *
 	 * @param idSesionTramitacion
-	 *            idSesionTramitacion
+	 *                                idSesionTramitacion
 	 * @param pMetodo
-	 *            Metodo
+	 *                                Metodo
 	 * @param pArgumentos
-	 *            Argumentos
+	 *                                Argumentos
 	 * @param pResult
-	 *            Resultado
+	 *                                Resultado
 	 * @return Eventos
 	 */
 	private List<EventoAuditoria> eventoFlujoTramitacion(final String idSesionTramitacion, final String pMetodo,
@@ -101,6 +101,8 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 			final UsuarioAutenticadoInfo user = (UsuarioAutenticadoInfo) pArgumentos[0];
 			propiedadesEvento.addPropiedad(TypeParametroEvento.URL_INICIO.toString(),
 					(String) pArgumentos[ConstantesNumero.N6]);
+			propiedadesEvento.addPropiedad(TypeParametroEvento.AUTENTICACION.toString(),
+					user.getMetodoAutenticacion().toString());
 			addPropsUserAgent(propiedadesEvento, user.getSesionInfo().getUserAgent());
 			evento.setPropiedadesEvento(propiedadesEvento);
 			eventosFlujo.add(evento);
@@ -143,9 +145,9 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 	 * Añade propiedades relativas al user agent.
 	 *
 	 * @param propiedadesEvento
-	 *            propiedades evento
+	 *                              propiedades evento
 	 * @param userAgent
-	 *            user agent
+	 *                              user agent
 	 */
 	private void addPropsUserAgent(final ListaPropiedades propiedadesEvento, final String userAgent) {
 		propiedadesEvento.addPropiedad(TypeParametroEvento.SISTEMA_OPERATIVO.toString(),
@@ -161,11 +163,11 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 	 * Eventos producidos tras ejecutar un paso.
 	 *
 	 * @param idSesionTramitacion
-	 *            idSesionTramitacion
+	 *                                idSesionTramitacion
 	 * @param pArgumentos
-	 *            Argumentos
+	 *                                Argumentos
 	 * @param pResult
-	 *            Resultado
+	 *                                Resultado
 	 * @return Eventos
 	 */
 	private List<EventoAuditoria> eventoFlujoTramitacionAccionPaso(final String idSesionTramitacion,

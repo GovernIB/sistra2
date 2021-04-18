@@ -2,6 +2,8 @@
 
 /* registrar */
 
+.imc--important .imc--instruccions { font-size: 1.1em; padding-top: .5em; }
+
 .imc--registre h4 { margin-bottom: 1.5em; }
 .imc--registre h4 span { font-size: 1.2em; }
 

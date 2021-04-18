@@ -102,6 +102,10 @@ public class JEntidad implements IModelApi {
 	@JoinColumn(name = "ENT_URLCAR")
 	private JLiteral urlCarpetaCiudadana;
 
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "ENT_URLSEU")
+	private JLiteral urlSede;
+
 	/** Dias preregistro */
 	@Column(name = "ENT_PRGDIA")
 	private Integer diasPreregistro;
@@ -660,6 +664,14 @@ public class JEntidad implements IModelApi {
 		this.registroOcultarDescargaDocumentos = registroOcultarDescargaDocumentos;
 	}
 
+	public JLiteral getUrlSede() {
+		return urlSede;
+	}
+
+	public void setUrlSede(final JLiteral urlSedeElectronica) {
+		this.urlSede = urlSedeElectronica;
+	}
+
 	/**
 	 * toModel.
 	 */
@@ -690,6 +702,9 @@ public class JEntidad implements IModelApi {
 		entidad.setTelefonoHabilitado(contactoTelefono);
 		entidad.setUrlSoporte(urlSoporte);
 		entidad.setUrlSoporteHabilitado(contactoUrl);
+		if (this.getUrlSede() != null) {
+			entidad.setUrlSede(this.getUrlSede().toModel());
+		}
 		if (this.getUrlCarpetaCiudadana() != null) {
 			entidad.setUrlCarpetaCiudadana(this.getUrlCarpetaCiudadana().toModel());
 		}

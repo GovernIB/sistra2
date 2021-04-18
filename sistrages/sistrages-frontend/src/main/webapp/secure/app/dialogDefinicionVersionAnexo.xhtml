@@ -198,6 +198,7 @@
 				<p:outputPanel id="toolbar" styleClass="grid-right">
 					<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDefinicionVersionAnexo.aceptar()}" process="@form" update="@form growl"  styleClass="boton-azul" />
 					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDefinicionVersionAnexo.cancelar()}" process="@this"/>
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDefinicionVersionAnexo.ayuda()}" process="@this"/>
 				</p:outputPanel>
 			</f:facet>
 
@@ -207,8 +208,7 @@
 		<p:outputPanel styleClass="confirmar_botonera">
         	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
         	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
-        	<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDefinicionVersionAnexo.ayuda()}" process="@this"/>
-		</p:outputPanel>
+        </p:outputPanel>
     </p:confirmDialog>
 </h:body>
 </f:view>

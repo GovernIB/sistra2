@@ -60,6 +60,9 @@ public class Entidad extends ModelApi {
 	/** url carpeta ciudadana. */
 	private Literal urlCarpetaCiudadana;
 
+	/** Url sede electronica **/
+	private Literal urlSede;
+
 	/** dias preregistro. */
 	private Integer diasPreregistro;
 
@@ -89,9 +92,6 @@ public class Entidad extends ModelApi {
 
 	/** Rol. **/
 	private String rolSup;
-
-	/** Texto respecto LOPD (introducción). **/
-	private Literal lopdIntroduccion;
 
 	/** Permite subsanación paso anexar. **/
 	private boolean permiteSubsanarAnexar;
@@ -531,20 +531,6 @@ public class Entidad extends ModelApi {
 	}
 
 	/**
-	 * @return the lopdIntroduccion
-	 */
-	public final Literal getLopdIntroduccion() {
-		return lopdIntroduccion;
-	}
-
-	/**
-	 * @param lopdIntroduccion the lopdIntroduccion to set
-	 */
-	public final void setLopdIntroduccion(final Literal lopdIntroduccion) {
-		this.lopdIntroduccion = lopdIntroduccion;
-	}
-
-	/**
 	 * @return the permiteSubsanarAnexar
 	 */
 	public final boolean isPermiteSubsanarAnexar() {
@@ -684,6 +670,14 @@ public class Entidad extends ModelApi {
 	 */
 	public void setRegistroOcultarDescargaDocumentos(final boolean registroOcultarDescargaDocumentos) {
 		this.registroOcultarDescargaDocumentos = registroOcultarDescargaDocumentos;
+	}
+
+	public Literal getUrlSede() {
+		return urlSede;
+	}
+
+	public void setUrlSede(final Literal urlSedeElectronica) {
+		this.urlSede = urlSedeElectronica;
 	}
 
 }

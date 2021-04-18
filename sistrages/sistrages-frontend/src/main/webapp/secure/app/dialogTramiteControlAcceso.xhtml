@@ -112,8 +112,7 @@
 			<p:outputPanel styleClass="botonera">
 				<p:toolbar>
 					<f:facet name="right">
-						<p:commandButton id="botonNoDes" type="button" value="#{msg['botones.guardar']}" styleClass="boton-azul" onclick="PF('confirmDialogGuardar').show()" rendered="#{!dialogTramiteControlAcceso.isDesarrollo()}"  />
-
+						<p:commandButton id="botonNoDes" type="button" value="#{msg['botones.guardar']}" styleClass="boton-azul" onclick="PF('confirmDialogGuardar').show()" rendered="#{!dialogTramiteControlAcceso.isDesarrollo()}" process="@form" />
 
 						<p:commandButton id="botonDes" value="#{msg['botones.guardar']}" styleClass="boton-azul"
 						 	actionListener="#{dialogTramiteControlAcceso.aceptarSinInvalidacion()}" process="@form"
@@ -138,8 +137,8 @@
 
 		    <p:confirmDialog widgetVar="confirmDialogGuardar" id="confirmDialogGuardar" header="#{msg['confirm.tituloInvalidacion']}" message="#{msg['confirm.invalidacion']}" icon="fa fa-question-circle fa-3x confirmar_icono" >
 				<p:outputPanel styleClass="confirmar_botonera">
-					 <p:commandButton value="#{msg['botones.si']}" actionListener="#{dialogTramiteControlAcceso.aceptarConInvalidacion()}" process="@this" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  />
-     				 <p:commandButton value="#{msg['botones.no']}" actionListener="#{dialogTramiteControlAcceso.aceptarSinInvalidacion()}" process="@this" styleClass="ui-confirmdialog-no" icon="fa fa-close"  />
+					 <p:commandButton value="#{msg['botones.si']}" actionListener="#{dialogTramiteControlAcceso.aceptarConInvalidacion()}"  process="@form" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  />
+     				 <p:commandButton value="#{msg['botones.no']}" actionListener="#{dialogTramiteControlAcceso.aceptarSinInvalidacion()}"  process="@form" styleClass="ui-confirmdialog-no" icon="fa fa-close"  />
 				</p:outputPanel>
 		    </p:confirmDialog>
 		</h:form>

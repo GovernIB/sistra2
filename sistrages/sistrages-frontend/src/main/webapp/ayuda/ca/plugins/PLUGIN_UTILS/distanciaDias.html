@@ -38,7 +38,7 @@
 	<ul>
 		<li><b>fecha1</b>: Cadena que conté la data inicial.</li>
 		<li><b>fecha2</b>: Cadena que conté la data final.</li>
-		<li><b>formatoFecha</b>: Format de les dates. És opcional i el format per defecte és yyyy-MM-dd.</li>
+		<li><b>formatoFecha</b>: Format de les dates. És opcional i el format per defecte és dd/MM/yyyy.</li>
 	</ul>
 </p>
 <p>
@@ -54,7 +54,7 @@
 </p>
 <p><b>Exemple 1</b> Si volem esbrinar el nombre de dies que hi ha entre 2 dates (s'han d'especificar usant el següent format yyyy-MM-dd), per exemple, entre el 23/04/2012 i 13/06/2012 podem usar la següent sentència:</p>
 <p class="codigoScript">
-	var dias = PLUGIN_UTILS.distanciaDias('2012-04-23', '2012-06-13', null);
+	var dias = PLUGIN_UTILS.distanciaDias('2012-04-23', '2012-06-13', 'yyyy-MM-dd');
 </p>
 <p><b>Exemple 2</b> Si volem esbrinar el nombre de dies que hi ha entre 2 dates (especificant el format dd/MM/yyyy), per exemple, entre el 23/04/2012 i 13/06/2012 podem usar la següent sentència:</p>
 <p class="codigoScript">

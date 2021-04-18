@@ -546,7 +546,7 @@ public final class UtilJSF {
 	public static String getEntorno() {
 		return FacesContext
 				.getCurrentInstance().getApplication().evaluateExpressionGet(FacesContext.getCurrentInstance(),
-						"#{negocioModuleConfig}", es.caib.sistrahelp.frontend.model.comun.ModuleConfig.class)
+						"#{frontModuleConfig}", es.caib.sistrahelp.frontend.ModuleConfig.class)
 				.getEntorno();
 	}
 

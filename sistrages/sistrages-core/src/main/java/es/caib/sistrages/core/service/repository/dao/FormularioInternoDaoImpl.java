@@ -213,6 +213,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 		// Mergeamos datos
 		jForm.setPermitirAccionesPersonalizadas(pFormInt.isPermitirAccionesPersonalizadas());
+		jForm.setPermitirGuardarSinFinalizar(pFormInt.isPermitirGuardarSinFinalizar());
 
 		if (pFormInt.getScriptPlantilla() == null) {
 			jForm.setScriptPlantilla(null);
@@ -1116,14 +1117,14 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 	@Override
 	public DisenyoFormularioSimple getFormularioInternoSimple(final Long idFormularioTramite, final Long idFormulario,
-			final String idComponente, final String idPaginaActual) {
+			final String idComponente, final String idPaginaActual, final boolean cargarPaginasPosteriores) {
 		final DisenyoFormularioSimple disenyo = new DisenyoFormularioSimple();
 		final String sqlPaginas;
 
 		if (idFormularioTramite != null) {
-			sqlPaginas = "Select pagina.codigo from JPaginaFormulario pagina where pagina.formulario.codigo in (select formTra.formulario.codigo from JFormularioTramite formTra where formTra.codigo = :idFormularioTramite ) order by pagina.orden asc ";
+			sqlPaginas = "Select pagina.codigo, pagina.identificador, pagina.orden from JPaginaFormulario pagina where pagina.formulario.codigo in (select formTra.formulario.codigo from JFormularioTramite formTra where formTra.codigo = :idFormularioTramite ) order by pagina.orden asc ";
 		} else {
-			sqlPaginas = "Select pagina.codigo from JPaginaFormulario pagina where pagina.formulario.codigo = :idFormulario order by pagina.orden asc ";
+			sqlPaginas = "Select pagina.codigo, pagina.identificador, pagina.orden from JPaginaFormulario pagina where pagina.formulario.codigo = :idFormulario order by pagina.orden asc ";
 		}
 		final Query query = entityManager.createQuery(sqlPaginas);
 		if (idFormularioTramite != null) {
@@ -1131,49 +1132,72 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		} else {
 			query.setParameter("idFormulario", idFormulario);
 		}
-		final List<Long> idPaginas = query.getResultList();
+		final List<Object[]> idPaginas = query.getResultList();
 		boolean salir = false;
 
 		if (!idPaginas.isEmpty()) {
-
-			for (final long idPagina : idPaginas) {
+			boolean cargarComponentes = true;
+			for (final Object[] objectPagina : idPaginas) {
 
 				final DisenyoFormularioPaginaSimple pagina = new DisenyoFormularioPaginaSimple();
+				final Long idPagina = (Long) objectPagina[0];
 				pagina.setCodigo(idPagina);
+				if (objectPagina[1] != null) {
+					pagina.setAlias((String) objectPagina[1]);
+				}
+				if (objectPagina[2] != null) {
+					pagina.setOrden((Integer) objectPagina[2]);
+				}
 
 				// Filtramos por tipo (solo los que son de tipo textbox, checkbox, captcha y
 				// selector)
-				final String sqlComponentes = "select elemento.codigo, elemento.identificador, identificador.tipo from JElementoFormulario elemento where elemento.lineaFormulario.paginaFormulario.codigo = :idPagina and elemento.tipo IN ('CT','SE','CK','CP','OC') order by elemento.lineaFormulario.orden, elemento.orden ";
-				final Query queryComponentes = entityManager.createQuery(sqlComponentes);
-				queryComponentes.setParameter("idPagina", idPagina);
-				final List<Object[]> componentes = queryComponentes.getResultList();
-				if (!componentes.isEmpty()) {
-					for (final Object[] comp : componentes) {
+				if (cargarComponentes) {
+					final String sqlComponentes = "select elemento.codigo, elemento.identificador, identificador.tipo from JElementoFormulario elemento where elemento.lineaFormulario.paginaFormulario.codigo = :idPagina and elemento.tipo IN ('CT','SE','CK','CP','OC') order by elemento.lineaFormulario.orden, elemento.orden ";
+					final Query queryComponentes = entityManager.createQuery(sqlComponentes);
+					queryComponentes.setParameter("idPagina", idPagina);
+					final List<Object[]> componentes = queryComponentes.getResultList();
+					if (!componentes.isEmpty()) {
+						for (final Object[] comp : componentes) {
 
-						final DisenyoFormularioComponenteSimple componente = new DisenyoFormularioComponenteSimple();
+							final DisenyoFormularioComponenteSimple componente = new DisenyoFormularioComponenteSimple();
 
-						final Long codigo = Long.valueOf(comp[0].toString());
-						final String identificador = comp[1].toString();
-						final String tipo = comp[2].toString();
+							final Long codigo = Long.valueOf(comp[0].toString());
+							final String identificador = comp[1].toString();
+							final String tipo = comp[2].toString();
 
-						componente.setIdentificador(identificador);
-						componente.setTipo(TypeObjetoFormulario.fromString(tipo));
+							componente.setIdentificador(identificador);
+							componente.setTipo(TypeObjetoFormulario.fromString(tipo));
 
-						pagina.getComponentes().add(componente);
+							pagina.getComponentes().add(componente);
 
-						if (idComponente != null && codigo.equals(Long.valueOf(idComponente))) {
-							salir = true;
-							break;
+							if (idComponente != null && codigo.equals(Long.valueOf(idComponente))) {
+								salir = true;
+								break;
+							}
 						}
-					}
 
+					}
 				}
 
+				// Será la página seleccionable dependiendo si cargarComponentes esta a false
+				// (significa que no tiene y la pagina se puede seleccionar) o todo lo contrario
+				pagina.setSeleccionable(!cargarComponentes);
 				disenyo.getPaginas().add(pagina);
 
-				/** Salir por componente (salir==true) o por misma pagina. **/
-				if (salir || (idPaginaActual != null && Long.valueOf(idPaginaActual).compareTo(idPagina) == 0)) {
+				/**
+				 * Salir por componente (salir==true) o por misma pagina (y no activo lo de
+				 * cargarPaginasPosteriores).
+				 **/
+				if (salir) {
 					break;
+				}
+
+				if (idPaginaActual != null && Long.valueOf(idPaginaActual).compareTo(idPagina) == 0) {
+					if (cargarPaginasPosteriores) {
+						cargarComponentes = false;
+					} else {
+						break;
+					}
 				}
 			}
 
@@ -1519,5 +1543,15 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 			}
 		}
 		return scripts;
+	}
+
+	@Override
+	public void guardarPagina(final PaginaFormulario pagina) {
+		final JPaginaFormulario jPagina = getJPaginaById(pagina.getCodigo());
+		jPagina.setIdentificador(pagina.getIdentificador());
+		jPagina.setPaginaFinal(pagina.isPaginaFinal());
+		jPagina.setScriptNavegacion(JScript.fromModel(pagina.getScriptNavegacion()));
+		jPagina.setScriptValidacion(JScript.fromModel(pagina.getScriptValidacion()));
+		entityManager.merge(jPagina);
 	}
 }

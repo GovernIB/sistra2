@@ -38,7 +38,7 @@
 	<ul>
 		<li><b>fecha1</b>: Cadena de text que representa la primera data.  </li>
 		<li><b>fecha2</b>: Cadena de text que representa la segona data. </li>
-		<li><b>formatoFecha</b>: Format de les dates. És opcional i el format per defecte és yyyy-MM-dd HH:mm:ss.</li>
+		<li><b>formatoFecha</b>: Format de les dates. És opcional i el format per defecte és dd/MM/yyyy HH:mm:ss.</li>
 	</ul>
 </p>
 <p>
@@ -58,14 +58,14 @@
 <p>
 	<b>EXEMPLES</b>
 </p>
-<p><b>Exemple 1</b> Comparar les següents dates '04 de junio de 2018, 10:30:12' i '11 de junio de 2018, 7:30:15' (sense format especificat).  </p>
+<p><b>Exemple 1</b> Comparar les següents dates '04 de junio de 2018, 10:30:12' i '11 de junio de 2018, 7:30:15' (amb el format especificat 'yyyy-MM-dd HH:mm:ss').  </p>
  <p class="codigoScript">
-var valida = PLUGIN_UTILS.validaFechaHoraFin('2018-06-04 10:30:12', '2018-06-11 7:30:15', null);
+var valida = PLUGIN_UTILS.validaFechaHoraFin('2018-06-04 10:30:12', '2018-06-11 7:30:15', 'yyyy-MM-dd HH:mm:ss');
 </p>
 <p>La funció validaFechaHoraFin retorna -1, ja que data2 és major que data1.</p>
 <br />
 
-<p><b>Exemple 2</b> Comparar les següents dates '15 de mayo de 2018' i '12 de mayo de 2018 7:30:15' (amb el format especificat 'yyyy-MM-dd HH:mm:ss'). </p>
+<p><b>Exemple 2</b> Comparar les següents dates '15 de mayo de 2018' i '12 de mayo de 2018 7:30:15' (amb el format especificat 'dd/MM/yyyy HH:mm:ss'). </p>
  <p class="codigoScript">
 	var valida = PLUGIN_UTILS.validaFechaHoraFin('15/05/2018 10:30:12', '12/05/2018 7:30:15', 'dd/MM/yyyy HH:mm:ss');
 </p>

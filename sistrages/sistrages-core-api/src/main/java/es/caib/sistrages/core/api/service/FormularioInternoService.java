@@ -203,10 +203,13 @@ public interface FormularioInternoService {
 	 * @param idFormularioTramite
 	 * @param idComponente
 	 * @param idPagina
+	 * @param cargarPaginasPosteriores En caso de passar el idPagina, si está activo
+	 *                                 cargar páginas posteriores, se cargan sin
+	 *                                 componentes
 	 * @return
 	 */
 	DisenyoFormularioSimple getFormularioInternoSimple(Long idFormularioTramite, Long idFormulario, String idComponente,
-			String idPagina);
+			String idPagina, boolean cargarPaginasPosteriores);
 
 	/**
 	 * Devuelve el identificador del formulario
@@ -253,5 +256,12 @@ public interface FormularioInternoService {
 	 */
 	ObjetoFormulario copyCutLineaFormulario(Long idPagina, Long idLinea, Integer orden, String posicionamiento,
 			boolean cut);
+
+	/**
+	 * Guarda página simple.
+	 *
+	 * @param pagina
+	 */
+	void guardarPagina(PaginaFormulario pagina);
 
 }

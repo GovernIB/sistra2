@@ -152,9 +152,8 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	@Override
 	public RPlantillaFormulario obtenerPlantillaPdfVisualizacion(final DatosSesionFormularioInterno pDatosSesion) {
 
-		final RFormularioTramite definicionFormulario = UtilsSTG.devuelveDefinicionFormulario(
-				pDatosSesion.getDatosInicioSesion().getIdPaso(), pDatosSesion.getDatosInicioSesion().getIdFormulario(),
-				pDatosSesion.getDefinicionTramite());
+		final RFormularioTramite definicionFormulario = UtilsFormularioInterno
+				.obtenerDefinicionFormulario(pDatosSesion);
 
 		RPlantillaFormulario pf = null;
 
@@ -210,13 +209,53 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 
 	@Override
 	public List<AccionFormulario> evaluarAccionesPaginaActual(final DatosSesionFormularioInterno datosSesion) {
-		// TODO Pendiente calcular acciones (se pospone hasta implementacion multipagina
-		// y formulario personalizado)
+		// TODO PERSONALIZADO PENDIENTE ACCIONES PERSONALIZADAS
+		final int indiceDefPagina = datosSesion.getDatosFormulario().getPaginaActualFormulario().getIndiceDef();
+		final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPagina(datosSesion,
+				indiceDefPagina);
 		final List<AccionFormulario> acciones = new ArrayList<>();
-		// acciones.add(new
-		// AccionFormularioNormalizada(TypeAccionFormularioNormalizado.SALIR));
-		acciones.add(new AccionFormularioNormalizada(TypeAccionFormularioNormalizado.FINALIZAR));
+		if (datosSesion.getDatosFormulario().getIndicePaginaActual() > 1) {
+			acciones.add(new AccionFormularioNormalizada(TypeAccionFormularioNormalizado.ANTERIOR));
+		}
+		if (!paginaDef.isPaginaFinal()) {
+			acciones.add(new AccionFormularioNormalizada(TypeAccionFormularioNormalizado.SIGUIENTE));
+		}
+		if (paginaDef.isPaginaFinal()) {
+			acciones.add(new AccionFormularioNormalizada(TypeAccionFormularioNormalizado.FINALIZAR));
+		}
 		return acciones;
+	}
+
+	@Override
+	public String evaluarScriptNavegacionPaginaActual(final DatosSesionFormularioInterno pDatosSesion) {
+
+		String idPaginaDestino = null;
+
+		// - Definicion pagina actual
+		final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(pDatosSesion);
+
+		// Ejecutamos script validacion pagina
+		if (UtilsSTG.existeScript(paginaDef.getScriptNavegacion())) {
+			final Map<String, String> codigosError = UtilsSTG
+					.convertLiteralesToMap(paginaDef.getScriptNavegacion().getLiterales());
+			final VariablesFormulario variablesFormulario = UtilsFormularioInterno
+					.generarVariablesFormulario(pDatosSesion, null);
+			final String idPagina = pDatosSesion.getDatosFormulario().getPaginaActualFormulario().getIdentificador();
+			final RespuestaScript rs = scriptFormulario.executeScriptFormulario(
+					TypeScriptFormulario.SCRIPT_VALIDACION_PAGINA, idPagina,
+					paginaDef.getScriptNavegacion().getScript(), variablesFormulario, codigosError,
+					pDatosSesion.getDefinicionTramite());
+			idPaginaDestino = (String) rs.getResultado();
+		} else {
+			// Si no hay script navegacion, sera la siguiente pagina
+			final int indiceDefDestino = pDatosSesion.getDatosFormulario().getPaginaActualFormulario().getIndiceDef();
+			final RPaginaFormulario pagDestino = UtilsFormularioInterno.obtenerDefinicionPagina(pDatosSesion,
+					indiceDefDestino);
+			idPaginaDestino = pagDestino.getIdentificador();
+		}
+
+		return idPaginaDestino;
+
 	}
 
 	// -----------------------------------------------------------------------------------------------

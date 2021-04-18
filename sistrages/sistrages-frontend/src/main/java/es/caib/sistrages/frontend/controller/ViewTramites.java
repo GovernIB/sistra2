@@ -92,6 +92,7 @@ public class ViewTramites extends ViewControllerBase {
 
 	/** Indica si se permite refrescar. **/
 	private boolean permiteRefrescar;
+	private boolean mostrarTodasAreas;
 
 	/** Literal. **/
 	private static final String LITERAL_INFO_ALTA_OK = "info.alta.ok";
@@ -118,6 +119,7 @@ public class ViewTramites extends ViewControllerBase {
 				.getParameter("tramite");
 		idTramiteVersion = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest())
 				.getParameter("tramite_version");
+		mostrarTodasAreas = false;
 		buscarAreas();
 
 	}
@@ -208,10 +210,18 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * Abre dialogo para editar tramite.
+	 * Dble click. Si tiene permiso, abre dialogo para editar tramite.
 	 */
-	public void editarTramite() {
+	public void dblEditarDblTramite() {
+		if (this.getTienePermisosArea()) {
+			editarTramite();
+		}
+	}
 
+    /**
+     * Abre dialogo para editar tramite
+     */
+	public void editarTramite() {
 		abrirTramite(TypeModoAcceso.EDICION);
 	}
 
@@ -220,7 +230,7 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void importar() {
 		final Map<String, String> params = new HashMap<>();
-		UtilJSF.openDialog(DialogTramiteImportar.class, TypeModoAcceso.EDICION, params, true, 800);
+		UtilJSF.openDialog(DialogTramiteImportar.class, TypeModoAcceso.EDICION, params, true, 640);
 	}
 
 	/**
@@ -604,6 +614,11 @@ public class ViewTramites extends ViewControllerBase {
 		return filaSeleccionada;
 	}
 
+	/** Calcular areas cuando pulsas el checkbox de visualizar todas. */
+	public void calcularAreas() {
+		buscarAreas();
+	}
+
 	/** Buscar areas. */
 	private void buscarAreas() {
 		final List<Area> listaTodasAreas = tramiteService.listArea(UtilJSF.getSessionBean().getEntidad().getCodigo(),
@@ -625,34 +640,40 @@ public class ViewTramites extends ViewControllerBase {
 		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
 			setListaAreas(listaTodasAreas);
 		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
-			for (final Area area : listaTodasAreas) {
-				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidadByArea(area.getCodigo());
+					for (final Area area : listaTodasAreas) {
+					final List<TypeRolePermisos> permisos = securityService
+							.getPermisosDesarrolladorEntidadByArea(area.getCodigo());
 
-				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+					if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
 
-					if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
-							|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
-							|| permisos.contains(TypeRolePermisos.CONSULTA)) {
-						getListaAreas().add(area);
+						if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+								|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
+								|| permisos.contains(TypeRolePermisos.CONSULTA)) {
+							area.setTienePermiso(true);
+							getListaAreas().add(area);
+						} else if (mostrarTodasAreas) {
+							area.setTienePermiso(false);
+							getListaAreas().add(area);
+						}
+					} else {
+						if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+								|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)) {
+							area.setTienePermiso(true);
+							getListaAreas().add(area);
+						} else if (mostrarTodasAreas)  {
+							area.setTienePermiso(false);
+							getListaAreas().add(area);
+						}
+
 					}
-
-				} else {
-
-					if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
-							|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)) {
-						getListaAreas().add(area);
-					}
-
 				}
-			}
-
 		}
 
 		buscarAreasPreseleccionadas();
 
 		buscarTramites();
 	}
+
 
 	/**
 	 * Si hay un area marcada por url, lo marcaremos como la seleccionada. Sino,
@@ -940,8 +961,13 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void editarVersion() {
 		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionadaVersion())
+		if (!verificarFilaSeleccionadaVersion()) {
 			return;
+		}
+
+		if (!this.getTienePermisosArea()) {
+			return;
+		}
 
 		// Muestra dialogo
 		final Map<String, List<String>> params = new HashMap<>();
@@ -1507,6 +1533,14 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public boolean getSeleccionadaArea() {
 		return verificarFilaSeleccionadaArea();
+	}
+
+	public boolean isMostrarTodasAreas() {
+		return mostrarTodasAreas;
+	}
+
+	public void setMostrarTodasAreas(boolean mostrarTodasAreas) {
+		this.mostrarTodasAreas = mostrarTodasAreas;
 	}
 
 }

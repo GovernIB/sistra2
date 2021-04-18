@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
-import es.caib.sistramit.core.api.model.formulario.PaginaFormularioData;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 
 /**
@@ -22,20 +22,51 @@ import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 public final class DatosFormularioInterno implements Serializable {
 
 	/**
-	 * Indice página actual (empieza en 1).
+	 * Valores iniciales (no se modifican tras cargar formulario).
 	 */
-	private int indicePaginaActual;
+	private List<ValorCampo> valoresIniciales = new ArrayList<>();
 
 	/**
-	 * Páginas del formulario: configuración y datos.
+	 * Páginas del formulario rellenadas actual y anteriores (configuración y
+	 * datos).
 	 */
-	private final List<PaginaFormularioData> paginas = new ArrayList<>();
+	private final Stack<PaginaFormularioData> paginas = new Stack<>();
 
 	/**
-	 * Dependencias de campos. Para un campo se establece la dependencia con los
-	 * otros.
+	 * Páginas del formulario descartadas, posterior a la actual (configuración y
+	 * datos).
 	 */
-	private final Map<String, DependenciaCampo> dependencias = new HashMap<>();
+	private final Map<String, PaginaFormularioData> paginasPosteriores = new HashMap<>();
+
+	/**
+	 * Obtiene una página por identificador.
+	 *
+	 * @param identificadorPagina
+	 *                                identificadorPagina
+	 * @return pagina
+	 */
+	public PaginaFormularioData getPaginaFormulario(final String identificadorPagina) {
+		PaginaFormularioData res = null;
+		for (final PaginaFormularioData p : paginas) {
+			if (p.getIdentificador().equals(identificadorPagina)) {
+				res = p;
+				break;
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Obtiene una página por identificador de la lista de paginas posteriores.
+	 *
+	 * @param identificadorPagina
+	 *                                identificadorPagina
+	 * @return pagina
+	 */
+	public PaginaFormularioData getPaginaPosteriorFormulario(final String identificadorPagina) {
+		final PaginaFormularioData res = paginasPosteriores.get(identificadorPagina);
+		return res;
+	}
 
 	/**
 	 * Obtiene una página.
@@ -54,17 +85,30 @@ public final class DatosFormularioInterno implements Serializable {
 	 * @return paginas
 	 */
 	public PaginaFormularioData getPaginaActualFormulario() {
-		return paginas.get(this.indicePaginaActual - ConstantesNumero.N1);
+		return paginas.get(getIndicePaginaActual() - ConstantesNumero.N1);
 	}
 
 	/**
-	 * Añade una página.
+	 * Añade una página a la lista de páginas rellenadas.
 	 *
 	 * @param pagina
 	 *                   Pagina
 	 */
-	public void addPaginaFormulario(final PaginaFormularioData pagina) {
-		paginas.add(pagina);
+	public void pushPaginaFormulario(final PaginaFormularioData pagina) {
+		paginas.push(pagina);
+		if (paginasPosteriores.containsKey(pagina.getIdentificador())) {
+			paginasPosteriores.remove(pagina.getIdentificador());
+		}
+	}
+
+	/**
+	 * Elimina pagina actual de las paginas rellenadas, retrocediendo a la anterior.
+	 * Mete pagina actual a lista de paginas posteriores por si se avanza a esa
+	 * pagina luego.
+	 */
+	public void popPaginaFormulario() {
+		final PaginaFormularioData p = paginas.pop();
+		paginasPosteriores.put(p.getIdentificador(), p);
 	}
 
 	/**
@@ -73,17 +117,18 @@ public final class DatosFormularioInterno implements Serializable {
 	 * @return paginaActual
 	 */
 	public int getIndicePaginaActual() {
-		return indicePaginaActual;
+		// Ultima pagina cargada
+		return paginas.size();
 	}
 
 	/**
-	 * Método para establecer paginaActual.
+	 * Método de acceso a paginaActual.
 	 *
-	 * @param pPaginaActual
-	 *                          paginaActual a establecer
+	 * @return id paginaActual
 	 */
-	public void setIndicePaginaActual(final int pPaginaActual) {
-		indicePaginaActual = pPaginaActual;
+	public String getIdentificadorPaginaActual() {
+		final PaginaFormularioData pag = paginas.get(paginas.size() - ConstantesNumero.N1);
+		return pag.getIdentificador();
 	}
 
 	/**
@@ -96,29 +141,6 @@ public final class DatosFormularioInterno implements Serializable {
 	}
 
 	/**
-	 * Indicamos que dependencia tiene un campo respecto a los demás.
-	 *
-	 * @param dependenciasCampo
-	 *                              lista de id campo para los cuales tiene
-	 *                              dependencia
-	 */
-	public void addDependenciaCampo(final DependenciaCampo dependenciasCampo) {
-		this.dependencias.put(dependenciasCampo.getIdCampo(), dependenciasCampo);
-	}
-
-	/**
-	 * Indicamos que dependencia tiene un campo respecto a los demás.
-	 *
-	 * @param dependenciasCampos
-	 *                               Dependencias campos
-	 */
-	public void addDependenciasCampos(final List<DependenciaCampo> dependenciasCampos) {
-		for (final DependenciaCampo dependenciasCampo : dependenciasCampos) {
-			this.dependencias.put(dependenciasCampo.getIdCampo(), dependenciasCampo);
-		}
-	}
-
-	/**
 	 * Obtiene las dependencias de un campo.
 	 *
 	 * @param idCampo
@@ -126,7 +148,19 @@ public final class DatosFormularioInterno implements Serializable {
 	 * @return lista de id campo para los cuales tiene dependencia
 	 */
 	public DependenciaCampo getDependenciaCampo(final String idCampo) {
-		return this.dependencias.get(idCampo);
+		DependenciaCampo res = null;
+		for (final PaginaFormularioData pagina : paginas) {
+			for (final DependenciaCampo config : pagina.getDependencias()) {
+				if (config.getIdCampo().equals(idCampo)) {
+					res = config;
+					break;
+				}
+			}
+		}
+		if (res == null) {
+			throw new ErrorConfiguracionException("No existe campo con id: " + idCampo);
+		}
+		return res;
 	}
 
 	/**
@@ -201,21 +235,21 @@ public final class DatosFormularioInterno implements Serializable {
 	}
 
 	/**
-	 * Obtiene lista de los campos que son evaluables en el formulario, es decir,
-	 * aparecen como dependientes de otros (siempre que no aparezcan como
-	 * dependientes exclusivamente de ocultos).
+	 * Método de acceso a valoresIniciales.
 	 *
-	 * @return Lista de ids de campo
+	 * @return valoresIniciales
 	 */
-	public List<String> getCamposEvaluables() {
-		final List<String> camposEvaluables = new ArrayList<>();
-		for (final DependenciaCampo dc : dependencias.values()) {
-			final ConfiguracionCampo confCampoDependiente = getConfiguracionCampo(dc.getIdCampo());
-			final List<String> dependenciasCampo = dc.getDependencias();
-			if (!dependenciasCampo.isEmpty()) {
-				camposEvaluables.addAll(dependenciasCampo);
-			}
-		}
-		return camposEvaluables;
+	public List<ValorCampo> getValoresIniciales() {
+		return valoresIniciales;
+	}
+
+	/**
+	 * Método para establecer valoresIniciales.
+	 *
+	 * @param valoresIniciales
+	 *                             valoresIniciales a establecer
+	 */
+	public void setValoresIniciales(final List<ValorCampo> valoresIniciales) {
+		this.valoresIniciales = valoresIniciales;
 	}
 }

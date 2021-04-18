@@ -157,8 +157,9 @@ public class FormularioInternoServiceBean implements FormularioInternoService {
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public DisenyoFormularioSimple getFormularioInternoSimple(final Long idFormularioTramite, final Long idFormulario,
-			final String idComponente, final String idPagina) {
-		return formIntService.getFormularioInternoSimple(idFormularioTramite, idFormulario, idComponente, idPagina);
+			final String idComponente, final String idPagina, final boolean cargarPaginasPosteriores) {
+		return formIntService.getFormularioInternoSimple(idFormularioTramite, idFormulario, idComponente, idPagina,
+				cargarPaginasPosteriores);
 	}
 
 	@Override
@@ -208,6 +209,12 @@ public class FormularioInternoServiceBean implements FormularioInternoService {
 	public ObjetoFormulario copyCutLineaFormulario(final Long idPagina, final Long idLinea, final Integer orden,
 			final String posicionamiento, final boolean cut) {
 		return formIntService.copyCutLineaFormulario(idPagina, idLinea, orden, posicionamiento, cut);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void guardarPagina(final PaginaFormulario pagina) {
+		formIntService.guardarPagina(pagina);
 	}
 
 }

@@ -213,8 +213,9 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	@Override
 	@NegocioInterceptor
 	public DisenyoFormularioSimple getFormularioInternoSimple(final Long idFormularioTramite, final Long idFormulario,
-			final String idComponente, final String idPagina) {
-		return formIntDao.getFormularioInternoSimple(idFormularioTramite, idFormulario, idComponente, idPagina);
+			final String idComponente, final String idPagina, final boolean cargarPaginasPosteriores) {
+		return formIntDao.getFormularioInternoSimple(idFormularioTramite, idFormulario, idComponente, idPagina,
+				cargarPaginasPosteriores);
 	}
 
 	@Override
@@ -261,6 +262,12 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	public ObjetoFormulario copyCutLineaFormulario(final Long idPagina, final Long idLinea, final Integer orden,
 			final String posicionamiento, final boolean cut) {
 		return formIntDao.copyCutLineaFormulario(idPagina, idLinea, orden, posicionamiento, cut);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void guardarPagina(final PaginaFormulario pagina) {
+		formIntDao.guardarPagina(pagina);
 	}
 
 }

@@ -27,49 +27,50 @@ public class FlujoFormularioInternoServiceBean implements FlujoFormularioInterno
 	private FlujoFormularioInternoService flujoFormularioInternoService;
 
 	@Override
-	public String cargarSesion(String ticket) {
+	public String cargarSesion(final String ticket) {
 		return flujoFormularioInternoService.cargarSesion(ticket);
 	}
 
 	@Override
-	public void inicializarSesion(String idSesionFormulario) {
+	public void inicializarSesion(final String idSesionFormulario) {
 		flujoFormularioInternoService.inicializarSesion(idSesionFormulario);
 	}
 
 	@Override
-	public PaginaFormulario cargarPaginaActual(String idSesionFormulario) {
+	public PaginaFormulario cargarPaginaActual(final String idSesionFormulario) {
 		return flujoFormularioInternoService.cargarPaginaActual(idSesionFormulario);
 	}
 
 	@Override
-	public ResultadoEvaluarCambioCampo evaluarCambioCampoPagina(String idSesionFormulario, String idCampo,
-			List<ValorCampo> valoresPagina) {
+	public ResultadoEvaluarCambioCampo evaluarCambioCampoPagina(final String idSesionFormulario, final String idCampo,
+			final List<ValorCampo> valoresPagina) {
 		return flujoFormularioInternoService.evaluarCambioCampoPagina(idSesionFormulario, idCampo, valoresPagina);
 	}
 
 	@Override
-	public ResultadoGuardarPagina guardarPagina(String idSesionFormulario, List<ValorCampo> valoresPagina,
-			String accionPersonalizada) {
+	public ResultadoGuardarPagina guardarPagina(final String idSesionFormulario, final List<ValorCampo> valoresPagina,
+			final String accionPersonalizada) {
 		return flujoFormularioInternoService.guardarPagina(idSesionFormulario, valoresPagina, accionPersonalizada);
 	}
 
 	@Override
-	public void cancelarFormulario(String idSesionFormulario) {
+	public void cancelarFormulario(final String idSesionFormulario) {
 		flujoFormularioInternoService.cancelarFormulario(idSesionFormulario);
 	}
 
 	@Override
-	public List<ValorCampo> deserializarValoresCampos(String idSesionFormulario, Map<String, String> valores) {
+	public List<ValorCampo> deserializarValoresCampos(final String idSesionFormulario,
+			final Map<String, String> valores) {
 		return flujoFormularioInternoService.deserializarValoresCampos(idSesionFormulario, valores);
 	}
 
 	@Override
-	public PaginaFormulario cargarPaginaAnterior(String idSesionFormulario) {
-		return flujoFormularioInternoService.cargarPaginaAnterior(idSesionFormulario);
+	public PaginaFormulario cargarPaginaAnterior(final String idSesionFormulario, final List<ValorCampo> valores) {
+		return flujoFormularioInternoService.cargarPaginaAnterior(idSesionFormulario, valores);
 	}
 
 	@Override
-	public SesionFormularioInfo obtenerInformacionFormulario(String idSesionFormulario) {
+	public SesionFormularioInfo obtenerInformacionFormulario(final String idSesionFormulario) {
 		return flujoFormularioInternoService.obtenerInformacionFormulario(idSesionFormulario);
 	}
 

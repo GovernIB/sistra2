@@ -5,6 +5,7 @@ import java.util.Date;
 import es.caib.sistra2.commons.utils.ValidacionTipoException;
 import es.caib.sistra2.commons.utils.ValidacionesCadena;
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
+import es.caib.sistramit.core.api.model.comun.Constantes;
 import es.caib.sistramit.core.service.model.script.PlgUtilsInt;
 
 /**
@@ -21,7 +22,8 @@ public final class PlgUtils implements PlgUtilsInt {
 	/**
 	 * Constructor.
 	 *
-	 * @param pDebugEnabled Debug enabled
+	 * @param pDebugEnabled
+	 *                          Debug enabled
 	 */
 	public PlgUtils(final boolean pDebugEnabled) {
 		super();
@@ -108,7 +110,7 @@ public final class PlgUtils implements PlgUtilsInt {
 
 	@Override
 	public boolean esFecha(final String fecha) {
-		return ValidacionesTipo.getInstance().esFecha(fecha, ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
+		return ValidacionesTipo.getInstance().esFecha(fecha, Constantes.FORMATO_FECHA_FRONTAL);
 	}
 
 	@Override
@@ -171,7 +173,7 @@ public final class PlgUtils implements PlgUtilsInt {
 	private String getFormatoFecha(final String formatoFecha) {
 		String formato;
 		if (formatoFecha == null || formatoFecha.isEmpty()) {
-			formato = ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL;
+			formato = Constantes.FORMATO_FECHA_FRONTAL;
 		} else {
 			formato = formatoFecha;
 		}
@@ -362,6 +364,19 @@ public final class PlgUtils implements PlgUtilsInt {
 	@Override
 	public String extraerValorXml(final String xml, final String xpath) {
 		return ValidacionesCadena.getInstance().extraerValorXml(xml, xpath);
+	}
+
+	@Override
+	public String convierteFechaFormatoDefecto(final String fecha, final String formato)
+			throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().convierteFormatoFecha(fecha, formato, Constantes.FORMATO_FECHA_FRONTAL);
+	}
+
+	@Override
+	public String convierteFechaHoraFormatoDefecto(final String fecha, final String formato)
+			throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().convierteFormatoFecha(fecha, formato,
+				Constantes.FORMATO_FECHAHORA_FRONTAL);
 	}
 
 }

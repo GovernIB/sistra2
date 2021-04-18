@@ -8,7 +8,7 @@
 <script type="text/javascript">
 <!--
 	// Redirigimos asistente
-	document.location="${pageContext.request.contextPath}/asistente/asistente.html";
+	top.location.href = "${pageContext.request.contextPath}/asistente/asistente.html";
 -->
 </script>
 </head>

@@ -1,5 +1,6 @@
 package es.caib.sistramit.core.service.util;
 
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,6 +11,10 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
@@ -17,10 +22,12 @@ import es.caib.sistrages.rest.api.interna.RScript;
 import es.caib.sistramit.core.api.exception.ErrorNoControladoException;
 import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.exception.FormatoInvalidoFechaFrontException;
+import es.caib.sistramit.core.api.exception.JsonException;
 import es.caib.sistramit.core.api.exception.ParametrosEntradaIncorrectosException;
 import es.caib.sistramit.core.api.exception.TamanyoMaximoAnexoException;
 import es.caib.sistramit.core.api.exception.TramiteFinalizadoException;
 import es.caib.sistramit.core.api.exception.UsuarioNoPermitidoException;
+import es.caib.sistramit.core.api.model.comun.Constantes;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.comun.types.TypeValidacion;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
@@ -751,4 +758,58 @@ public final class UtilsFlujo {
 		}
 		return url;
 	}
+
+	/**
+	 * Convierte Java a JSON.
+	 * 
+	 * @param obj
+	 *                Objeto
+	 * @return JSON
+	 */
+	public static Object jsonToJava(final String json, final Class clase) {
+		try {
+			final ObjectMapper jacksonObjectMapper = new ObjectMapper();
+			jacksonObjectMapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
+			final Object obj = jacksonObjectMapper.readValue(json, clase);
+			return obj;
+		} catch (final Exception e) {
+			throw new JsonException("Error convirtiendo a JSON: " + e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Convierte Java a JSON.
+	 * 
+	 * @param obj
+	 *                Objeto
+	 * @return JSON
+	 */
+	public static Object jsonToJava(final byte[] jsonBytes, final Class clase) {
+		try {
+			final String json = new String(jsonBytes, Constantes.UTF8);
+			return jsonToJava(json, clase);
+		} catch (final UnsupportedEncodingException e) {
+			throw new JsonException("Error convirtiendo a JSON: " + e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Convierte Java a JSON.
+	 * 
+	 * @param obj
+	 *                Objeto
+	 * @return JSON
+	 */
+	public static String javaToJson(final Object obj) {
+		try {
+			final ObjectMapper jacksonObjectMapper = new ObjectMapper();
+			jacksonObjectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
+			jacksonObjectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+			final String json = jacksonObjectMapper.writeValueAsString(obj);
+			return json;
+		} catch (final Exception e) {
+			throw new JsonException("Error convirtiendo a JSON: " + e.getMessage(), e);
+		}
+	}
+
 }

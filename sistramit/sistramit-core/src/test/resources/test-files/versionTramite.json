@@ -40,14 +40,14 @@
       "scriptNavegacion": null,
       "instruccionesInicio": "ha de saber"
     },
-    {
+{
       "type": "RPasoTramitacionRellenar",
       "identificador": "rf",
       "tipo": "rf",
       "pasoFinal": false,
       "scriptNavegacion": null,
       "formularios": [
-         {
+        {
           "identificador": "FOR-1",
           "descripcion": "Formulario 1",
           "obligatoriedad": "S",
@@ -56,7 +56,7 @@
           "scriptFirmantes": null,
           "scriptParametrosApertura": null,
           "scriptDatosIniciales": {
-            "script": "DATOS_VALORESINICIALES.setValor('CHK_ESTADO', 'S'); \r\nDATOS_VALORESINICIALES.setValor('TXT_CALC', 'S');\r\nDATOS_VALORESINICIALES.setValor('OCULTO_1', 'S');\r\nDATOS_VALORESINICIALES.setValorCompuesto('SEL_CALC', '1','DS 1');",
+            "script": "DATOS_VALORESINICIALES.setValor('CHK_ESTADO', 'S'); \r\nDATOS_VALORESINICIALES.setValor('TXT_CALC', 'S');\r\nDATOS_VALORESINICIALES.setValor('OCULTO_1', 'S');\r\nDATOS_VALORESINICIALES.setValorCompuesto('SEL_CALC', '1','DS 1');\r\nDATOS_VALORESINICIALES.setValor('TXT_VALINIP2', 'valor inicial');",
             "literales": []
           },
           "scriptPostguardar": {
@@ -66,14 +66,20 @@
           "interno": true,
           "formularioInterno": {
             "mostrarTitulo": true,
+            "permitirGuardarSinFinalizar": false,
             "titulo": "Formulario 1 (título)",
             "plantillas": [],
             "scriptPlantillas": null,
             "paginas": [
               {
-                "htmlB64": "PCFkb2N0eXBlIGh0bWw+PGh0bWw+PGJvZHk+PGZvcm0+PGRpdiBpZD0iaW1jLWZvcm1zLWZvcm11bGFyaSIgY2xhc3M9ImltYy1mb3Jtcy1mb3JtdWxhcmkgaW1jLWZvcm0iPjxkaXYgY2xhc3M9ImltYy1mb3JtLWNvbnRpbmd1dCI+PGg0ICBkYXRhLWlkPSJJRF8xNTQ5MzQ5NjMzMDkyImNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VjY2lvIj48c3BhbiBjbGFzcz0iaW1jLXNlLW1hcmNhIj5BPC9zcGFuPjxzcGFuIGNsYXNzPSJpbWMtc2UtdGl0b2wiPlRleHRvczwvc3Bhbj48L2g0PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBkYXRhLWlkPSJMMzQ3IiBpZD0iTDM0NyI+PC9kaXY+PGRpdiBkYXRhLWlkPSJUWFRfTk9STUFMIiBjbGFzcz0iaW1jLWVsZW1lbnQgIiBkYXRhLXR5cGU9InRleHQiPjxkaXYgY2xhc3M9ImltYy1lbC1ldGlxdWV0YSI+PGxhYmVsIGZvcj0iVFhUX05PUk1BTCI+VGV4dG88L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48aW5wdXQgaWQ9IlRYVF9OT1JNQUwiIHR5cGU9InRleHQiLz48L2Rpdj48L2Rpdj48ZGl2IGRhdGEtaWQ9IlRYVF9GRUNIQSIgY2xhc3M9ImltYy1lbGVtZW50ICIgZGF0YS10eXBlPSJkYXRlIj48ZGl2IGNsYXNzPSJpbWMtZWwtZXRpcXVldGEiPjxsYWJlbCBmb3I9IlRYVF9GRUNIQSI+RmVjaGE8L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48aW5wdXQgaWQ9IlRYVF9GRUNIQSIgdHlwZT0iZGF0ZSIvPjwvZGl2PjwvZGl2PjxkaXYgZGF0YS1pZD0iVFhUX0hPUkEiIGNsYXNzPSJpbWMtZWxlbWVudCAiIGRhdGEtdHlwZT0idGltZSI+PGRpdiBjbGFzcz0iaW1jLWVsLWV0aXF1ZXRhIj48bGFiZWwgZm9yPSJUWFRfSE9SQSI+SG9yYTwvbGFiZWw+PC9kaXY+PGRpdiBjbGFzcz0iaW1jLWVsLWNvbnRyb2wiPjxpbnB1dCBpZD0iVFhUX0hPUkEiIHR5cGU9InRpbWUiLz48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VwYXJhZG9yIGltYy1zZXAtc2FsdC1jYXJybyIgZGF0YS1pZD0iTDM0OCIgaWQ9IkwzNDgiPjwvZGl2PjxoNCAgZGF0YS1pZD0iSURfMTU0OTM0OTYzMjYyMyJjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLXNlY2NpbyI+PHNwYW4gY2xhc3M9ImltYy1zZS1tYXJjYSI+Qjwvc3Bhbj48c3BhbiBjbGFzcz0iaW1jLXNlLXRpdG9sIj5TZWxlY3RvcmVzPC9zcGFuPjwvaDQ+PGRpdiBjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLXNlcGFyYWRvciBpbWMtc2VwLXNhbHQtY2Fycm8iIGRhdGEtaWQ9IkwzNDkiIGlkPSJMMzQ5Ij48L2Rpdj48ZGl2IGRhdGEtaWQ9IlNFTF9MSVNUQSIgY2xhc3M9ImltYy1lbGVtZW50IGltYy1lbC1zZWxlY3RvciBpbWMtZWwtMiIgZGF0YS10eXBlPSJzZWxlY3QiPjxkaXYgY2xhc3M9ImltYy1lbC1ldGlxdWV0YSI+PGxhYmVsIGZvcj0iU0VMX0xJU1RBIj5EZXNwbGVnYWJsZTwvbGFiZWw+PC9kaXY+PGRpdiBjbGFzcz0iaW1jLWVsLWNvbnRyb2wiPjxkaXYgY2xhc3M9ImltYy1zZWxlY3QgaW1jLW9wY2lvbnMiPjxhIGNsYXNzPSJpbWMtc2VsZWN0IiB0YWJpbmRleD0iMCIgaHJlZj0iamF2YXNjcmlwdDo7IiBzdHlsZT0iIj48L2E+PGlucHV0IGlkPSJTRUxfTElTVEEiIHR5cGU9ImhpZGRlbiI+PC9kaXY+PC9kaXY+PC9kaXY+PGZpZWxkc2V0IGRhdGEtaWQ9IlNFTF9NVUxUSVBMRSIgY2xhc3M9ImltYy1lbGVtZW50IiBkYXRhLXR5cGU9ImNoZWNrLWxpc3QiPjxsZWdlbmQgY2xhc3M9ImltYy1sYWJlbCI+TcO6bHRpcGxlPC9sZWdlbmQ+PHVsPjwvdWw+PC9maWVsZHNldD48ZmllbGRzZXQgZGF0YS1pZD0iU0VMX1VOSUNBIiBjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLWVsLWhvcml6b250YWwgaW1jLWVsLTMiIGRhdGEtdHlwZT0icmFkaW8tbGlzdCI+PGxlZ2VuZCBjbGFzcz0iaW1jLWxhYmVsIj7Dmm5pY2E8L2xlZ2VuZD48dWw+PC91bD48L2ZpZWxkc2V0PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBkYXRhLWlkPSJMMzUwIiBpZD0iTDM1MCI+PC9kaXY+PGg0ICBkYXRhLWlkPSJJRF8xNTQ5MzQ5NjMyODA0ImNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VjY2lvIj48c3BhbiBjbGFzcz0iaW1jLXNlLW1hcmNhIj5DPC9zcGFuPjxzcGFuIGNsYXNzPSJpbWMtc2UtdGl0b2wiPkV2YWx1YXIgY2FtYmlvIGNhbXBvIDwvc3Bhbj48L2g0PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBkYXRhLWlkPSJMMzUxIiBpZD0iTDM1MSI+PC9kaXY+PGRpdiBkYXRhLWlkPSJDSEtfRVNUQURPImNsYXNzPSJpbWMtZWxlbWVudCBpbWMtZWwtY2hlY2siIGRhdGEtdHlwZT0iY2hlY2siPjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48ZGl2IGNsYXNzPSJpbWMtaW5wdXQtY2hlY2siPjxpbnB1dCBpZD0iQ0hLX0VTVEFETyIgdHlwZT0iY2hlY2tib3giPjxsYWJlbCBmb3I9IkNIS19FU1RBRE8iPlNvbG8gbGVjdHVyYTwvbGFiZWw+PC9kaXY+PC9kaXY+PC9kaXY+PGRpdiBkYXRhLWlkPSJUWFRfQ0FMQyIgY2xhc3M9ImltYy1lbGVtZW50ICIgZGF0YS10eXBlPSJ0ZXh0Ij48ZGl2IGNsYXNzPSJpbWMtZWwtZXRpcXVldGEiPjxsYWJlbCBmb3I9IlRYVF9DQUxDIj5DYWxjdWxhZG88L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48aW5wdXQgaWQ9IlRYVF9DQUxDIiB0eXBlPSJ0ZXh0Ii8+PC9kaXY+PC9kaXY+PGRpdiBkYXRhLWlkPSJTRUxfQ0FMQyIgY2xhc3M9ImltYy1lbGVtZW50IGltYy1lbC1zZWxlY3RvciIgZGF0YS10eXBlPSJzZWxlY3QiPjxkaXYgY2xhc3M9ImltYy1lbC1ldGlxdWV0YSI+PGxhYmVsIGZvcj0iU0VMX0NBTEMiPlNlbGVjdG9yPC9sYWJlbD48L2Rpdj48ZGl2IGNsYXNzPSJpbWMtZWwtY29udHJvbCI+PGRpdiBjbGFzcz0iaW1jLXNlbGVjdCBpbWMtb3BjaW9ucyI+PGEgY2xhc3M9ImltYy1zZWxlY3QiIHRhYmluZGV4PSIwIiBocmVmPSJqYXZhc2NyaXB0OjsiIHN0eWxlPSIiPjwvYT48aW5wdXQgaWQ9IlNFTF9DQUxDIiB0eXBlPSJoaWRkZW4iPjwvZGl2PjwvZGl2PjwvZGl2PjxkaXYgZGF0YS1pZD0iT0NVTFRPXzEiIGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtZWwtaGlkZGVuICIgZGF0YS10eXBlPSJoaWRkZW4iIGRhdGEtaGlkZGVuPSJ2aXNpYmxlIj48aW5wdXQgaWQ9Ik9DVUxUT18xIiB0eXBlPSJoaWRkZW4iLz48L2Rpdj48ZGl2IGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VwYXJhZG9yIGltYy1zZXAtc2FsdC1jYXJybyIgZGF0YS1pZD0iTDM1MiIgaWQ9IkwzNTIiPjwvZGl2PjxoNCAgZGF0YS1pZD0iSURfMTU1MDQ3NDg3NzEyNiJjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLXNlY2NpbyI+PHNwYW4gY2xhc3M9ImltYy1zZS1tYXJjYSI+RDwvc3Bhbj48c3BhbiBjbGFzcz0iaW1jLXNlLXRpdG9sIj5WQUxJREFDScOTTiBDQU1QTzwvc3Bhbj48L2g0PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBkYXRhLWlkPSJMMzUzIiBpZD0iTDM1MyI+PC9kaXY+PGRpdiBkYXRhLWlkPSJUWFRfVkFMIiBjbGFzcz0iaW1jLWVsZW1lbnQgIiBkYXRhLXR5cGU9InRleHQiPjxkaXYgY2xhc3M9ImltYy1lbC1ldGlxdWV0YSI+PGxhYmVsIGZvcj0iVFhUX1ZBTCI+Q2FtcG88L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48aW5wdXQgaWQ9IlRYVF9WQUwiIHR5cGU9InRleHQiLz48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VwYXJhZG9yIGltYy1zZXAtc2FsdC1jYXJybyIgZGF0YS1pZD0iTDM1NCIgaWQ9IkwzNTQiPjwvZGl2PjwvZGl2PjwvZGl2PjwvZm9ybT48L2JvZHk+PC9odG1sPg==",
-                "paginaFinal": true,
+                "identificador": "P1",
+                "htmlB64": "PCFkb2N0eXBlIGh0bWw+PGh0bWw+PGJvZHk+PGZvcm0+PGRpdiBpZD0iaW1jLWZvcm1zLWZvcm11bGFyaSIgY2xhc3M9ImltYy1mb3Jtcy1mb3JtdWxhcmkgaW1jLWZvcm0iPjxkaXYgY2xhc3M9ImltYy1mb3JtLWNvbnRpbmd1dCI+PGg0ICBkYXRhLWlkPSJJRF8xNTQ5MzQ5NjMzMDkyImNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VjY2lvIj48c3BhbiBjbGFzcz0iaW1jLXNlLW1hcmNhIj5BPC9zcGFuPjxzcGFuIGNsYXNzPSJpbWMtc2UtdGl0b2wiPlRleHRvczwvc3Bhbj48L2g0PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBkYXRhLWlkPSJMMzk1IiBpZD0iTDM5NSI+PC9kaXY+PGRpdiBkYXRhLWlkPSJUWFRfTk9STUFMIiBjbGFzcz0iaW1jLWVsZW1lbnQgIiBkYXRhLXR5cGU9InRleHQiPjxkaXYgY2xhc3M9ImltYy1lbC1ldGlxdWV0YSI+PGxhYmVsIGZvcj0iVFhUX05PUk1BTCI+VGV4dG88L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48aW5wdXQgaWQ9IlRYVF9OT1JNQUwiIHR5cGU9InRleHQiLz48L2Rpdj48L2Rpdj48ZGl2IGRhdGEtaWQ9IlRYVF9GRUNIQSIgY2xhc3M9ImltYy1lbGVtZW50ICIgZGF0YS10eXBlPSJkYXRlIj48ZGl2IGNsYXNzPSJpbWMtZWwtZXRpcXVldGEiPjxsYWJlbCBmb3I9IlRYVF9GRUNIQSI+RmVjaGE8L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48aW5wdXQgaWQ9IlRYVF9GRUNIQSIgdHlwZT0iZGF0ZSIvPjwvZGl2PjwvZGl2PjxkaXYgZGF0YS1pZD0iVFhUX0hPUkEiIGNsYXNzPSJpbWMtZWxlbWVudCAiIGRhdGEtdHlwZT0idGltZSI+PGRpdiBjbGFzcz0iaW1jLWVsLWV0aXF1ZXRhIj48bGFiZWwgZm9yPSJUWFRfSE9SQSI+SG9yYTwvbGFiZWw+PC9kaXY+PGRpdiBjbGFzcz0iaW1jLWVsLWNvbnRyb2wiPjxpbnB1dCBpZD0iVFhUX0hPUkEiIHR5cGU9InRpbWUiLz48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VwYXJhZG9yIGltYy1zZXAtc2FsdC1jYXJybyIgZGF0YS1pZD0iTDM5NyIgaWQ9IkwzOTciPjwvZGl2PjxoNCAgZGF0YS1pZD0iSURfMTU0OTM0OTYzMjYyMyJjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLXNlY2NpbyI+PHNwYW4gY2xhc3M9ImltYy1zZS1tYXJjYSI+Qjwvc3Bhbj48c3BhbiBjbGFzcz0iaW1jLXNlLXRpdG9sIj5TZWxlY3RvcmVzPC9zcGFuPjwvaDQ+PGRpdiBjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLXNlcGFyYWRvciBpbWMtc2VwLXNhbHQtY2Fycm8iIGRhdGEtaWQ9IkwzOTYiIGlkPSJMMzk2Ij48L2Rpdj48ZGl2IGRhdGEtaWQ9IlNFTF9MSVNUQSIgY2xhc3M9ImltYy1lbGVtZW50IGltYy1lbC1zZWxlY3RvciBpbWMtZWwtMiIgZGF0YS10eXBlPSJzZWxlY3QiPjxkaXYgY2xhc3M9ImltYy1lbC1ldGlxdWV0YSI+PGxhYmVsIGZvcj0iU0VMX0xJU1RBIj5EZXNwbGVnYWJsZTwvbGFiZWw+PC9kaXY+PGRpdiBjbGFzcz0iaW1jLWVsLWNvbnRyb2wiPjxkaXYgY2xhc3M9ImltYy1zZWxlY3QgaW1jLW9wY2lvbnMiPjxhIGNsYXNzPSJpbWMtc2VsZWN0IiB0YWJpbmRleD0iMCIgaHJlZj0iamF2YXNjcmlwdDo7IiBzdHlsZT0iIj48L2E+PGlucHV0IGlkPSJTRUxfTElTVEEiIHR5cGU9ImhpZGRlbiI+PC9kaXY+PC9kaXY+PC9kaXY+PGZpZWxkc2V0IGRhdGEtaWQ9IlNFTF9NVUxUSVBMRSIgY2xhc3M9ImltYy1lbGVtZW50IiBkYXRhLXR5cGU9ImNoZWNrLWxpc3QiPjxsZWdlbmQgY2xhc3M9ImltYy1sYWJlbCI+TcO6bHRpcGxlPC9sZWdlbmQ+PHVsPjwvdWw+PC9maWVsZHNldD48ZmllbGRzZXQgZGF0YS1pZD0iU0VMX1VOSUNBIiBjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLWVsLWhvcml6b250YWwgaW1jLWVsLTMiIGRhdGEtdHlwZT0icmFkaW8tbGlzdCI+PGxlZ2VuZCBjbGFzcz0iaW1jLWxhYmVsIj7Dmm5pY2E8L2xlZ2VuZD48dWw+PC91bD48L2ZpZWxkc2V0PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBkYXRhLWlkPSJMMzk4IiBpZD0iTDM5OCI+PC9kaXY+PGg0ICBkYXRhLWlkPSJJRF8xNTQ5MzQ5NjMyODA0ImNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VjY2lvIj48c3BhbiBjbGFzcz0iaW1jLXNlLW1hcmNhIj5DPC9zcGFuPjxzcGFuIGNsYXNzPSJpbWMtc2UtdGl0b2wiPkV2YWx1YXIgY2FtYmlvIGNhbXBvIDwvc3Bhbj48L2g0PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBkYXRhLWlkPSJMMzkzIiBpZD0iTDM5MyI+PC9kaXY+PGRpdiBkYXRhLWlkPSJDSEtfRVNUQURPImNsYXNzPSJpbWMtZWxlbWVudCBpbWMtZWwtY2hlY2siIGRhdGEtdHlwZT0iY2hlY2siPjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48ZGl2IGNsYXNzPSJpbWMtaW5wdXQtY2hlY2siPjxpbnB1dCBpZD0iQ0hLX0VTVEFETyIgdHlwZT0iY2hlY2tib3giPjxsYWJlbCBmb3I9IkNIS19FU1RBRE8iPlNvbG8gbGVjdHVyYTwvbGFiZWw+PC9kaXY+PC9kaXY+PC9kaXY+PGRpdiBkYXRhLWlkPSJUWFRfQ0FMQyIgY2xhc3M9ImltYy1lbGVtZW50ICIgZGF0YS10eXBlPSJ0ZXh0Ij48ZGl2IGNsYXNzPSJpbWMtZWwtZXRpcXVldGEiPjxsYWJlbCBmb3I9IlRYVF9DQUxDIj5DYWxjdWxhZG88L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48aW5wdXQgaWQ9IlRYVF9DQUxDIiB0eXBlPSJ0ZXh0Ii8+PC9kaXY+PC9kaXY+PGRpdiBkYXRhLWlkPSJTRUxfQ0FMQyIgY2xhc3M9ImltYy1lbGVtZW50IGltYy1lbC1zZWxlY3RvciIgZGF0YS10eXBlPSJzZWxlY3QiPjxkaXYgY2xhc3M9ImltYy1lbC1ldGlxdWV0YSI+PGxhYmVsIGZvcj0iU0VMX0NBTEMiPlNlbGVjdG9yPC9sYWJlbD48L2Rpdj48ZGl2IGNsYXNzPSJpbWMtZWwtY29udHJvbCI+PGRpdiBjbGFzcz0iaW1jLXNlbGVjdCBpbWMtb3BjaW9ucyI+PGEgY2xhc3M9ImltYy1zZWxlY3QiIHRhYmluZGV4PSIwIiBocmVmPSJqYXZhc2NyaXB0OjsiIHN0eWxlPSIiPjwvYT48aW5wdXQgaWQ9IlNFTF9DQUxDIiB0eXBlPSJoaWRkZW4iPjwvZGl2PjwvZGl2PjwvZGl2PjxkaXYgZGF0YS1pZD0iT0NVTFRPXzEiIGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtZWwtaGlkZGVuICIgZGF0YS10eXBlPSJoaWRkZW4iIGRhdGEtaGlkZGVuPSJ2aXNpYmxlIj48aW5wdXQgaWQ9Ik9DVUxUT18xIiB0eXBlPSJoaWRkZW4iLz48L2Rpdj48ZGl2IGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VwYXJhZG9yIGltYy1zZXAtc2FsdC1jYXJybyIgZGF0YS1pZD0iTDM5MSIgaWQ9IkwzOTEiPjwvZGl2PjxoNCAgZGF0YS1pZD0iSURfMTU1MDQ3NDg3NzEyNiJjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLXNlY2NpbyI+PHNwYW4gY2xhc3M9ImltYy1zZS1tYXJjYSI+RDwvc3Bhbj48c3BhbiBjbGFzcz0iaW1jLXNlLXRpdG9sIj5WQUxJREFDScOTTiBDQU1QTzwvc3Bhbj48L2g0PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBkYXRhLWlkPSJMMzkyIiBpZD0iTDM5MiI+PC9kaXY+PGRpdiBkYXRhLWlkPSJUWFRfVkFMIiBjbGFzcz0iaW1jLWVsZW1lbnQgIiBkYXRhLXR5cGU9InRleHQiPjxkaXYgY2xhc3M9ImltYy1lbC1ldGlxdWV0YSI+PGxhYmVsIGZvcj0iVFhUX1ZBTCI+Q2FtcG88L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48aW5wdXQgaWQ9IlRYVF9WQUwiIHR5cGU9InRleHQiLz48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VwYXJhZG9yIGltYy1zZXAtc2FsdC1jYXJybyIgZGF0YS1pZD0iTDM5NCIgaWQ9IkwzOTQiPjwvZGl2PjwvZGl2PjwvZGl2PjwvZm9ybT48L2JvZHk+PC9odG1sPg==",
+                "paginaFinal": false,
                 "scriptValidacion": null,
+                "scriptNavegacion": {
+                  "script": "return \"P2\";",
+                  "literales": []
+                },
                 "lineas": [
                   {
                     "componentes": [
@@ -456,6 +462,115 @@
                             "script": "var valor = PLUGIN_DATOSFORMULARIO.getValor('TXT_VAL');\r\n\r\nif (PLUGIN_UTILS.esIgual(valor, 'PRUEBA', true)) {\r\n  \tPLUGIN_VALIDACION.setExisteAviso(true,'INFO');\r\n\tPLUGIN_VALIDACION.setTextoMensajeAviso('Se ha metido el valor: PRUEBA');\r\n} else { \r\n\tPLUGIN_VALIDACION.setExisteAviso(true,'ERROR');\r\n  \tPLUGIN_VALIDACION.setTextoMensajeAviso('Hay que meter el valor: PRUEBA');  \r\n}",
                             "literales": []
                           }
+                        },
+                        "tipoTexto": "NORMAL",
+                        "textoNormal": {
+                          "tamanyoMax": 50,
+                          "lineas": 1,
+                          "forzarMayusculas": false
+                        },
+                        "textoEmail": null,
+                        "textoNumero": null,
+                        "textoIdentificacion": null,
+                        "textoExpRegular": null,
+                        "textoTelefono": null
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "identificador": "P2",
+                "htmlB64": "PCFkb2N0eXBlIGh0bWw+PGh0bWw+PGJvZHk+PGZvcm0+PGRpdiBpZD0iaW1jLWZvcm1zLWZvcm11bGFyaSIgY2xhc3M9ImltYy1mb3Jtcy1mb3JtdWxhcmkgaW1jLWZvcm0iPjxkaXYgY2xhc3M9ImltYy1mb3JtLWNvbnRpbmd1dCI+PGRpdiBkYXRhLWlkPSJUWFRfVkFMSU5JUDIiIGNsYXNzPSJpbWMtZWxlbWVudCAiIGRhdGEtdHlwZT0idGV4dCI+PGRpdiBjbGFzcz0iaW1jLWVsLWV0aXF1ZXRhIj48bGFiZWwgZm9yPSJUWFRfVkFMSU5JUDIiPlZBTE9SIElOSUNJQUw8L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48aW5wdXQgaWQ9IlRYVF9WQUxJTklQMiIgdHlwZT0idGV4dCIvPjwvZGl2PjwvZGl2PjxkaXYgZGF0YS1pZD0iVFhUX0NBTENQMiIgY2xhc3M9ImltYy1lbGVtZW50ICIgZGF0YS10eXBlPSJ0ZXh0Ij48ZGl2IGNsYXNzPSJpbWMtZWwtZXRpcXVldGEiPjxsYWJlbCBmb3I9IlRYVF9DQUxDUDIiPkNBTENVTEFETyBERSBQMTwvbGFiZWw+PC9kaXY+PGRpdiBjbGFzcz0iaW1jLWVsLWNvbnRyb2wiPjxpbnB1dCBpZD0iVFhUX0NBTENQMiIgdHlwZT0idGV4dCIvPjwvZGl2PjwvZGl2PjxkaXYgZGF0YS1pZD0iVFhUX0FVVE9QMiIgY2xhc3M9ImltYy1lbGVtZW50ICIgZGF0YS10eXBlPSJ0ZXh0Ij48ZGl2IGNsYXNzPSJpbWMtZWwtZXRpcXVldGEiPjxsYWJlbCBmb3I9IlRYVF9BVVRPUDIiPkFVVE8gUDI8L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48aW5wdXQgaWQ9IlRYVF9BVVRPUDIiIHR5cGU9InRleHQiLz48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VwYXJhZG9yIGltYy1zZXAtc2FsdC1jYXJybyIgZGF0YS1pZD0iTDM5OSIgaWQ9IkwzOTkiPjwvZGl2PjwvZGl2PjwvZGl2PjwvZm9ybT48L2JvZHk+PC9odG1sPg==",
+                "paginaFinal": true,
+                "scriptValidacion": null,
+                "scriptNavegacion": null,
+                "lineas": [
+                  {
+                    "componentes": [
+                      {
+                        "type": "RComponenteTextbox",
+                        "identificador": "TXT_VALINIP2",
+                        "tipo": "CT",
+                        "etiqueta": "VALOR INICIAL",
+                        "mostrarEtiqueta": true,
+                        "alineacion": "I",
+                        "columnas": 1,
+                        "ayuda": "VALOR ESTABLECIDO DESDE DATOS INICIALES",
+                        "propiedadesCampo": {
+                          "obligatorio": false,
+                          "soloLectura": false,
+                          "noModificable": false,
+                          "scriptAutorrellenable": null,
+                          "scriptEstado": null,
+                          "scriptValidacion": null
+                        },
+                        "tipoTexto": "NORMAL",
+                        "textoNormal": {
+                          "tamanyoMax": 50,
+                          "lineas": 1,
+                          "forzarMayusculas": false
+                        },
+                        "textoEmail": null,
+                        "textoNumero": null,
+                        "textoIdentificacion": null,
+                        "textoExpRegular": null,
+                        "textoTelefono": null
+                      },
+                      {
+                        "type": "RComponenteTextbox",
+                        "identificador": "TXT_CALCP2",
+                        "tipo": "CT",
+                        "etiqueta": "CALCULADO DE P1",
+                        "mostrarEtiqueta": true,
+                        "alineacion": "I",
+                        "columnas": 1,
+                        "ayuda": "CAMPO CALCULADO DE PAGINA 1",
+                        "propiedadesCampo": {
+                          "obligatorio": false,
+                          "soloLectura": false,
+                          "noModificable": false,
+                          "scriptAutorrellenable": {
+                            "script": "var valP1 = PLUGIN_DATOSFORMULARIO.getValor(\"TXT_CALC\");\r\nDATOS_VALOR.setValor(valP1);\r\n\r\n",
+                            "literales": []
+                          },
+                          "scriptEstado": {
+                            "script": "var check = PLUGIN_DATOSFORMULARIO.getValor('TXT_CALC');\r\nPLUGIN_LOG.debug(\"TXT_CALC = \" + check);\r\nvar readOnly = PLUGIN_UTILS.esIgual(check, \"S\")\r\nDATOS_ESTADO.setSoloLectura(readOnly);",
+                            "literales": []
+                          },
+                          "scriptValidacion": null
+                        },
+                        "tipoTexto": "NORMAL",
+                        "textoNormal": {
+                          "tamanyoMax": 50,
+                          "lineas": 1,
+                          "forzarMayusculas": false
+                        },
+                        "textoEmail": null,
+                        "textoNumero": null,
+                        "textoIdentificacion": null,
+                        "textoExpRegular": null,
+                        "textoTelefono": null
+                      },
+                      {
+                        "type": "RComponenteTextbox",
+                        "identificador": "TXT_AUTOP2",
+                        "tipo": "CT",
+                        "etiqueta": "AUTO P2",
+                        "mostrarEtiqueta": true,
+                        "alineacion": "I",
+                        "columnas": 1,
+                        "ayuda": "AUTO EN P2",
+                        "propiedadesCampo": {
+                          "obligatorio": false,
+                          "soloLectura": false,
+                          "noModificable": false,
+                          "scriptAutorrellenable": {
+                            "script": "var valP2 = PLUGIN_DATOSFORMULARIO.getValor(\"TXT_CALCP2\");\r\nDATOS_VALOR.setValor(valP2);",
+                            "literales": []
+                          },
+                          "scriptEstado": null,
+                          "scriptValidacion": null
                         },
                         "tipoTexto": "NORMAL",
                         "textoNormal": {

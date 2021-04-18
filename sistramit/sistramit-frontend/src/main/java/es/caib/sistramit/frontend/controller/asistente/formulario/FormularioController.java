@@ -41,7 +41,7 @@ public final class FormularioController extends TramitacionController {
 	 * Carga la sesión iniciada en el gestor de formularios.
 	 *
 	 * @param ticket
-	 *            Ticket de acceso a la sesión del formulario
+	 *                   Ticket de acceso a la sesión del formulario
 	 * @return Datos página inicial del formulario.
 	 */
 	@RequestMapping("/cargarFormulario.json")
@@ -76,9 +76,17 @@ public final class FormularioController extends TramitacionController {
 	 * @return Datos de la página.
 	 */
 	@RequestMapping("/cargarPaginaAnterior.json")
-	public ModelAndView cargarPaginaAnterior() {
+	public ModelAndView cargarPaginaAnterior(final HttpServletRequest request) {
 		final String idSesionFormulario = getIdSesionFormuarioActiva();
-		final PaginaFormulario pagina = formService.cargarPaginaAnterior(idSesionFormulario);
+
+		// Recuperamos valores pagina
+		final Map<String, String> valoresRequest = extraerValoresCampo(request);
+
+		// Deserializamos valores
+		final List<ValorCampo> lista = formService.deserializarValoresCampos(idSesionFormulario, valoresRequest);
+
+		// Cargamos pagina anterior
+		final PaginaFormulario pagina = formService.cargarPaginaAnterior(idSesionFormulario, lista);
 		final RespuestaJSON res = new RespuestaJSON();
 		res.setDatos(pagina);
 		return generarJsonView(res);
@@ -89,9 +97,10 @@ public final class FormularioController extends TramitacionController {
 	 * según los scripts del formulario.
 	 *
 	 * @param idCampo
-	 *            Id campo que se esta modificando
+	 *                    Id campo que se esta modificando
 	 * @param request
-	 *            Request para obtener los datos actuales de la página en el cliente
+	 *                    Request para obtener los datos actuales de la página en el
+	 *                    cliente
 	 * @return Datos de la página resultantes que deben refrescarse en el cliente
 	 */
 	@RequestMapping("/evaluarCambioCampo.json")
@@ -101,15 +110,7 @@ public final class FormularioController extends TramitacionController {
 		final String idSesionFormulario = getIdSesionFormuarioActiva();
 
 		// Recuperamos valores pagina
-		final Enumeration<String> enumer = request.getParameterNames();
-		final Map<String, String> valoresRequest = new LinkedHashMap<String, String>();
-		while (enumer.hasMoreElements()) {
-			final String enumString = enumer.nextElement();
-			if (!"idCampo".equals(enumString)) {
-				final String valor = request.getParameter(enumString);
-				valoresRequest.put(enumString, valor);
-			}
-		}
+		final Map<String, String> valoresRequest = extraerValoresCampo(request);
 
 		// Deserializamos valores
 		final List<ValorCampo> lista = formService.deserializarValoresCampos(idSesionFormulario, valoresRequest);
@@ -131,7 +132,7 @@ public final class FormularioController extends TramitacionController {
 	 * Guarda los datos de la página.
 	 *
 	 * @param request
-	 *            Datos de la página
+	 *                    Datos de la página
 	 * @return Resultado de guardar la página: indica si se ha guardado bien, si se
 	 *         ha llegado al fin del formulario, si no ha pasado la validación y se
 	 *         ha generado un mensaje, etc. En caso de llegar al fin del formulario
@@ -143,16 +144,7 @@ public final class FormularioController extends TramitacionController {
 		final String idSesionFormulario = getIdSesionFormuarioActiva();
 
 		// Recuperamos valores pagina
-		final Enumeration<String> enumer = request.getParameterNames();
-		final Map<String, String> valoresRequest = new LinkedHashMap<String, String>();
-		while (enumer.hasMoreElements()) {
-			final String enumString = enumer.nextElement();
-			final String valor = request.getParameter(enumString);
-			if ("accion".equals(enumString)) {
-				continue;
-			}
-			valoresRequest.put(enumString, valor);
-		}
+		final Map<String, String> valoresRequest = extraerValoresCampo(request);
 
 		// Deserializamos valores
 		final List<ValorCampo> lista = formService.deserializarValoresCampos(idSesionFormulario, valoresRequest);
@@ -179,6 +171,27 @@ public final class FormularioController extends TramitacionController {
 		formService.cancelarFormulario(idSesionFormulario);
 		final RespuestaJSON res = new RespuestaJSON();
 		return generarJsonView(res);
+	}
+
+	/**
+	 * Extrae valores campos de la request.
+	 *
+	 * @param request
+	 *                    Request
+	 * @return valores campos
+	 */
+	private Map<String, String> extraerValoresCampo(final HttpServletRequest request) {
+		final Enumeration<String> enumer = request.getParameterNames();
+		final Map<String, String> valoresRequest = new LinkedHashMap<String, String>();
+		while (enumer.hasMoreElements()) {
+			final String enumString = enumer.nextElement();
+			if ("accion".equals(enumString) || "idCampo".equals(enumString)) {
+				continue;
+			}
+			final String valor = request.getParameter(enumString);
+			valoresRequest.put(enumString, valor);
+		}
+		return valoresRequest;
 	}
 
 }

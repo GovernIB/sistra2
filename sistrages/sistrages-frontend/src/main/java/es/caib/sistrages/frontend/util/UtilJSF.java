@@ -82,12 +82,18 @@ public final class UtilJSF {
 	/**
 	 * Abre pantalla de dialogo
 	 *
-	 * @param dialog     Clase dialogo
-	 * @param modoAcceso Modo de acceso
-	 * @param params     parametros
-	 * @param modal      si se abre en forma modal
-	 * @param width      anchura
-	 * @param heigth     altura
+	 * @param dialog
+	 *                       Clase dialogo
+	 * @param modoAcceso
+	 *                       Modo de acceso
+	 * @param params
+	 *                       parametros
+	 * @param modal
+	 *                       si se abre en forma modal
+	 * @param width
+	 *                       anchura
+	 * @param heigth
+	 *                       altura
 	 */
 	public static void openDialog(final Class<?> clase, final TypeModoAcceso modoAcceso,
 			final Map<String, String> params, final boolean modal, final int width, final int heigth) {
@@ -97,12 +103,18 @@ public final class UtilJSF {
 	/**
 	 * Abre pantalla de dialogo
 	 *
-	 * @param dialog     Nombre pantalla dialogo (dialogo.xhtml o id navegacion)
-	 * @param modoAcceso Modo de acceso
-	 * @param params     parametros
-	 * @param modal      si se abre en forma modal
-	 * @param width      anchura
-	 * @param heigth     altura
+	 * @param dialog
+	 *                       Nombre pantalla dialogo (dialogo.xhtml o id navegacion)
+	 * @param modoAcceso
+	 *                       Modo de acceso
+	 * @param params
+	 *                       parametros
+	 * @param modal
+	 *                       si se abre en forma modal
+	 * @param width
+	 *                       anchura
+	 * @param heigth
+	 *                       altura
 	 */
 	public static void openDialog(final String dialog, final TypeModoAcceso modoAcceso,
 			final Map<String, String> params, final boolean modal, final int width, final int heigth) {
@@ -114,6 +126,7 @@ public final class UtilJSF {
 		options.put("contentWidth", "100%");
 		options.put("contentHeight", "100%");
 		options.put("headerElement", "customheader");
+		options.put("id", "someId");
 
 		// Parametros
 		String idParam = "";
@@ -140,12 +153,17 @@ public final class UtilJSF {
 	/**
 	 * Abre pantalla de dialogo (siempre al 95% de width)
 	 *
-	 * @param dialog     Clase dialogo
-	 * @param modoAcceso Modo de acceso
-	 * @param params     parametros
-	 * @param modal      si se abre en forma modal
+	 * @param dialog
+	 *                       Clase dialogo
+	 * @param modoAcceso
+	 *                       Modo de acceso
+	 * @param params
+	 *                       parametros
+	 * @param modal
+	 *                       si se abre en forma modal
 	 *
-	 * @param heigth     altura
+	 * @param heigth
+	 *                       altura
 	 */
 	public static void openDialog(final Class<?> clase, final TypeModoAcceso modoAcceso,
 			final Map<String, String> params, final boolean modal, final int heigth) {
@@ -155,12 +173,18 @@ public final class UtilJSF {
 	/**
 	 * Abre pantalla de dialogo
 	 *
-	 * @param dialog     Nombre pantalla dialogo (dialogo.xhtml o id navegacion)
-	 * @param modoAcceso Modo de acceso
-	 * @param params     parametros
-	 * @param modal      si se abre en forma modal
-	 * @param width      anchura
-	 * @param height     altura
+	 * @param dialog
+	 *                       Nombre pantalla dialogo (dialogo.xhtml o id navegacion)
+	 * @param modoAcceso
+	 *                       Modo de acceso
+	 * @param params
+	 *                       parametros
+	 * @param modal
+	 *                       si se abre en forma modal
+	 * @param width
+	 *                       anchura
+	 * @param height
+	 *                       altura
 	 */
 	public static void openDialog(final String dialog, final TypeModoAcceso modoAcceso,
 			final Map<String, String> params, final boolean modal, final int height) {
@@ -198,8 +222,10 @@ public final class UtilJSF {
 	/**
 	 * Chequea que no se ha cambiado modo de acceso en apertura dialog.
 	 *
-	 * @param modoAcceso modo acceso
-	 * @param id         id
+	 * @param modoAcceso
+	 *                       modo acceso
+	 * @param id
+	 *                       id
 	 */
 	public static void checkSecOpenDialog(final TypeModoAcceso modoAcceso, final String id) {
 		// Buscamos si existe token
@@ -237,10 +263,14 @@ public final class UtilJSF {
 	 * Añade mensaje a un componente para que lo trate la aplicación (growl,
 	 * messages,...).
 	 *
-	 * @param nivel        Nivel de gravedad.
-	 * @param message      Mensaje
-	 * @param detail       Detalle
-	 * @param idComponente Si el id componente es nulo, se enviará al growl.
+	 * @param nivel
+	 *                         Nivel de gravedad.
+	 * @param message
+	 *                         Mensaje
+	 * @param detail
+	 *                         Detalle
+	 * @param idComponente
+	 *                         Si el id componente es nulo, se enviará al growl.
 	 */
 	public static void addMessageContext(final TypeNivelGravedad nivel, final String message, final String detail,
 			final String idComponente) {
@@ -253,8 +283,10 @@ public final class UtilJSF {
 	 * Añade mensaje al contexto para que lo trate la aplicación (growl,
 	 * messages,...).
 	 *
-	 * @param nivel   Nivel gravedad
-	 * @param message Mensaje
+	 * @param nivel
+	 *                    Nivel gravedad
+	 * @param message
+	 *                    Mensaje
 	 */
 	public static void addMessageContext(final TypeNivelGravedad nivel, final String message) {
 		addMessageContext(nivel, message, message, null);
@@ -264,9 +296,12 @@ public final class UtilJSF {
 	 * Añade mensaje al contexto para que lo trate la aplicación (growl,
 	 * messages,...).
 	 *
-	 * @param nivel   Nivel gravedad
-	 * @param message Mensaje
-	 * @param detail  Detalle
+	 * @param nivel
+	 *                    Nivel gravedad
+	 * @param message
+	 *                    Mensaje
+	 * @param detail
+	 *                    Detalle
 	 */
 	public static void addMessageContext(final TypeNivelGravedad nivel, final String message, final String detail) {
 		addMessageContext(nivel, message, message, null);
@@ -276,9 +311,12 @@ public final class UtilJSF {
 	 * Añade mensaje al contexto para que lo trate la aplicación (growl,
 	 * messages,...).
 	 *
-	 * @param nivel            Nivel gravedad
-	 * @param message          Mensaje
-	 * @param validationFailed añade la marca de error de validacion
+	 * @param nivel
+	 *                             Nivel gravedad
+	 * @param message
+	 *                             Mensaje
+	 * @param validationFailed
+	 *                             añade la marca de error de validacion
 	 */
 	public static void addMessageContext(final TypeNivelGravedad nivel, final String message,
 			final boolean validationFailed) {
@@ -289,9 +327,12 @@ public final class UtilJSF {
 	 * Añade mensaje al contexto para que lo trate la aplicación (growl,
 	 * messages,...).
 	 *
-	 * @param nivel            Nivel gravedad
-	 * @param message          Mensaje
-	 * @param validationFailed añade la marca de error de validacion
+	 * @param nivel
+	 *                             Nivel gravedad
+	 * @param message
+	 *                             Mensaje
+	 * @param validationFailed
+	 *                             añade la marca de error de validacion
 	 */
 	public static void addMessageContext(final TypeNivelGravedad nivel, final String message,
 			final boolean validationFailed, final String idComponente) {
@@ -302,10 +343,14 @@ public final class UtilJSF {
 	 * Añade mensaje al contexto para que lo trate la aplicación (growl,
 	 * messages,...).
 	 *
-	 * @param nivel            Nivel gravedad
-	 * @param message          Mensaje
-	 * @param detail           Detalle
-	 * @param validationFailed añade la marca de error de validacion
+	 * @param nivel
+	 *                             Nivel gravedad
+	 * @param message
+	 *                             Mensaje
+	 * @param detail
+	 *                             Detalle
+	 * @param validationFailed
+	 *                             añade la marca de error de validacion
 	 */
 	public static void addMessageContext(final TypeNivelGravedad nivel, final String message, final String detail,
 			final boolean validationFailed) {
@@ -316,10 +361,14 @@ public final class UtilJSF {
 	 * Añade mensaje al contexto para que lo trate la aplicación (growl,
 	 * messages,...).
 	 *
-	 * @param nivel            Nivel gravedad
-	 * @param message          Mensaje
-	 * @param detail           Detalle
-	 * @param validationFailed añade la marca de error de validacion
+	 * @param nivel
+	 *                             Nivel gravedad
+	 * @param message
+	 *                             Mensaje
+	 * @param detail
+	 *                             Detalle
+	 * @param validationFailed
+	 *                             añade la marca de error de validacion
 	 */
 	public static void addMessageContext(final TypeNivelGravedad nivel, final String message, final String detail,
 			final boolean validationFailed, final String idComponente) {
@@ -333,7 +382,8 @@ public final class UtilJSF {
 	/**
 	 * Obtiene literal.
 	 *
-	 * @param key key
+	 * @param key
+	 *                key
 	 * @return literal
 	 */
 	public static String getLiteral(final String key) {
@@ -344,8 +394,10 @@ public final class UtilJSF {
 	/**
 	 * Obtiene el valor de literal.
 	 *
-	 * @param key        key
-	 * @param parametros parametros para sustituir en el literal
+	 * @param key
+	 *                       key
+	 * @param parametros
+	 *                       parametros para sustituir en el literal
 	 * @return el valor de literal
 	 */
 	public static String getLiteral(final String key, final Object[] parametros) {
@@ -356,8 +408,10 @@ public final class UtilJSF {
 	/**
 	 * Obtiene el valor de literal.
 	 *
-	 * @param key  key
-	 * @param lang lang
+	 * @param key
+	 *                 key
+	 * @param lang
+	 *                 lang
 	 * @return el valor de literal
 	 */
 	public static String getLiteral(final String key, final String lang) {
@@ -446,7 +500,8 @@ public final class UtilJSF {
 	/**
 	 * Redirige pagina JSF.
 	 *
-	 * @param jsfPage path JSF page
+	 * @param jsfPage
+	 *                    path JSF page
 	 */
 	public static void redirectJsfPage(final String jsfPage) {
 		try {
@@ -462,8 +517,10 @@ public final class UtilJSF {
 	/**
 	 * Redirect jsf page.
 	 *
-	 * @param jsfPage the jsf page
-	 * @param params  the params
+	 * @param jsfPage
+	 *                    the jsf page
+	 * @param params
+	 *                    the params
 	 */
 	public static void redirectJsfPage(final String jsfPage, final Map<String, List<String>> params) {
 		try {
@@ -507,7 +564,8 @@ public final class UtilJSF {
 	/**
 	 * Devuelve view name suponiendo que se llama igual que la clase.
 	 *
-	 * @param clase clase
+	 * @param clase
+	 *                  clase
 	 * @return view name
 	 */
 	public static String getViewNameFromClass(final Class<?> clase) {
@@ -528,7 +586,8 @@ public final class UtilJSF {
 	/**
 	 * Devuelve url opcion menu super administrador.
 	 *
-	 * @param opcion opcion
+	 * @param opcion
+	 *                   opcion
 	 * @return url
 	 */
 	public static String getUrlOpcionMenuSuperadministrador(final TypeOpcionMenuSuperAdministrador opcion) {
@@ -558,7 +617,8 @@ public final class UtilJSF {
 	/**
 	 * Devuelve url opcion menu super administrador.
 	 *
-	 * @param opcion opcion
+	 * @param opcion
+	 *                   opcion
 	 * @return url
 	 */
 	public static String getUrlOpcionMenuAdmOper(final TypeOpcionMenuAdmOper opcion, final Long idEntidad) {
@@ -604,7 +664,8 @@ public final class UtilJSF {
 	/**
 	 * Devuelve opcion por defecto super administrador.
 	 *
-	 * @param opcion opcion
+	 * @param opcion
+	 *                   opcion
 	 * @return opcion
 	 */
 	public static TypeOpcionMenuAdmOper getDefaultOpcionAdmOper() {
@@ -614,7 +675,8 @@ public final class UtilJSF {
 	/**
 	 * Devuelve opcion por defecto administrador entidad/desarrollador.
 	 *
-	 * @param opcion opcion
+	 * @param opcion
+	 *                   opcion
 	 * @return opcion
 	 */
 	public static TypeOpcionMenuSuperAdministrador getDefaultOpcionSuperadministrador() {
@@ -624,7 +686,8 @@ public final class UtilJSF {
 	/**
 	 * Devuelve url por defecto segun role.
 	 *
-	 * @param role role
+	 * @param role
+	 *                 role
 	 * @return url
 	 */
 	public static String getDefaultUrlRole(final TypeRoleAcceso role, final Long idEntidad) {
@@ -653,7 +716,8 @@ public final class UtilJSF {
 	/**
 	 * Redirige pagina JSF por defecto para role.
 	 *
-	 * @param jsfPage path JSF page
+	 * @param jsfPage
+	 *                    path JSF page
 	 */
 	public static void redirectJsfDefaultPageRole(final TypeRoleAcceso role, final Long idEntidad) {
 		redirectJsfPage(getDefaultUrlRole(role, idEntidad));
@@ -726,7 +790,8 @@ public final class UtilJSF {
 	/**
 	 * Realiza el update desde ajax del componente como desde el xhtml.
 	 *
-	 * @param pIdComponente identificador del componente
+	 * @param pIdComponente
+	 *                          identificador del componente
 	 */
 	public static void doUpdateComponent(final String pIdComponente) {
 		RequestContext.getCurrentInstance().update(pIdComponente);
@@ -759,9 +824,9 @@ public final class UtilJSF {
 	 * @return
 	 */
 	public static String getEntorno() {
-		return FacesContext
-				.getCurrentInstance().getApplication().evaluateExpressionGet(FacesContext.getCurrentInstance(),
-						"#{negocioModuleConfig}", es.caib.sistrages.frontend.model.comun.ModuleConfig.class)
+		return FacesContext.getCurrentInstance().getApplication()
+				.evaluateExpressionGet(FacesContext.getCurrentInstance(), "#{frontModuleConfig}",
+						es.caib.sistrages.frontend.ModuleConfig.class)
 				.getEntorno();
 	}
 
@@ -771,9 +836,9 @@ public final class UtilJSF {
 	 * @return
 	 */
 	public static String getRevision() {
-		final es.caib.sistrages.frontend.model.comun.ModuleConfig moduleConfig = FacesContext.getCurrentInstance()
-				.getApplication().evaluateExpressionGet(FacesContext.getCurrentInstance(), "#{negocioModuleConfig}",
-						es.caib.sistrages.frontend.model.comun.ModuleConfig.class);
+		final es.caib.sistrages.frontend.ModuleConfig moduleConfig = FacesContext.getCurrentInstance().getApplication()
+				.evaluateExpressionGet(FacesContext.getCurrentInstance(), "#{frontModuleConfig}",
+						es.caib.sistrages.frontend.ModuleConfig.class);
 
 		String revision;
 		if (moduleConfig.getCommitGit() == null || moduleConfig.getCommitGit().isEmpty()) {
@@ -790,9 +855,9 @@ public final class UtilJSF {
 	 * @return
 	 */
 	public static String getVersion() {
-		return FacesContext
-				.getCurrentInstance().getApplication().evaluateExpressionGet(FacesContext.getCurrentInstance(),
-						"#{negocioModuleConfig}", es.caib.sistrages.frontend.model.comun.ModuleConfig.class)
+		return FacesContext.getCurrentInstance().getApplication()
+				.evaluateExpressionGet(FacesContext.getCurrentInstance(), "#{frontModuleConfig}",
+						es.caib.sistrages.frontend.ModuleConfig.class)
 				.getVersion();
 	}
 

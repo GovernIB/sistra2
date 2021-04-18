@@ -13,12 +13,6 @@ import java.util.List;
 public final class ValoresPosiblesCampo implements Serializable {
 
 	/**
-	 * Constante que indica valor no seleccionado para selectores desplegables no
-	 * obligatorios.
-	 */
-	public final static String VALUE_NO_SELECT = "NO-SELECT";
-
-	/**
 	 * Id campo.
 	 */
 	private String id;
@@ -41,7 +35,7 @@ public final class ValoresPosiblesCampo implements Serializable {
 	 * Método para establecer idCampo.
 	 *
 	 * @param pIdCampo
-	 *            idCampo a establecer
+	 *                     idCampo a establecer
 	 */
 	public void setId(final String pIdCampo) {
 		id = pIdCampo;
@@ -60,7 +54,7 @@ public final class ValoresPosiblesCampo implements Serializable {
 	 * Método para establecer valores.
 	 *
 	 * @param pValores
-	 *            valores a establecer
+	 *                     valores a establecer
 	 */
 	public void setValores(final List<ValorIndexado> pValores) {
 		valores = pValores;

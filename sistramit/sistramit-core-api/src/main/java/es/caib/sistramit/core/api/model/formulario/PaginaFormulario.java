@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.SerializationUtils;
-
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 
 /**
@@ -25,6 +23,11 @@ public final class PaginaFormulario implements Serializable {
 	private String idFormulario;
 
 	/**
+	 * Id pagina.
+	 */
+	private String idPagina;
+
+	/**
 	 * Título formulario.
 	 */
 	private String titulo;
@@ -37,7 +40,6 @@ public final class PaginaFormulario implements Serializable {
 	/**
 	 * Pemitir salir guardando.
 	 */
-	// TODO PENDIENTE AÑADIR FUNCIONALIDAD
 	private TypeSiNo permitirGuardar = TypeSiNo.NO;
 
 	/**
@@ -75,30 +77,10 @@ public final class PaginaFormulario implements Serializable {
 	 * Constructor.
 	 *
 	 * @param pIdFormulario
-	 *            id formulario
+	 *                          id formulario
 	 */
 	public PaginaFormulario(final String pIdFormulario) {
 		this.idFormulario = pIdFormulario;
-	}
-
-	/**
-	 * Constructor.
-	 *
-	 * @param paginaData
-	 *            datos página
-	 */
-	public PaginaFormulario(PaginaFormularioData pagData) {
-		// Establece datos página creando una copia para evitar modificación
-		this.setIdFormulario(pagData.getIdFormulario());
-		this.setMostrarTitulo(pagData.getMostrarTitulo());
-		this.setTitulo(pagData.getTitulo());
-		for (final ConfiguracionCampo cc : pagData.getConfiguracion()) {
-			configuracion.add(SerializationUtils.clone(cc));
-		}
-		for (final ValorCampo vc : pagData.getValores()) {
-			valores.add(SerializationUtils.clone(vc));
-		}
-		recursos = SerializationUtils.clone(pagData.getRecursos());
 	}
 
 	/**
@@ -114,7 +96,7 @@ public final class PaginaFormulario implements Serializable {
 	 * Método para establecer idFormulario.
 	 *
 	 * @param pIdFormulario
-	 *            idFormulario a establecer
+	 *                          idFormulario a establecer
 	 */
 	public void setIdFormulario(final String pIdFormulario) {
 		idFormulario = pIdFormulario;
@@ -133,9 +115,9 @@ public final class PaginaFormulario implements Serializable {
 	 * Método para establecer html.
 	 *
 	 * @param html
-	 *            html a establecer
+	 *                 html a establecer
 	 */
-	public void setHtml(String html) {
+	public void setHtml(final String html) {
 		this.html = html;
 	}
 
@@ -152,9 +134,9 @@ public final class PaginaFormulario implements Serializable {
 	 * Método para establecer configuracion.
 	 *
 	 * @param configuracion
-	 *            configuracion a establecer
+	 *                          configuracion a establecer
 	 */
-	public void setConfiguracion(List<ConfiguracionCampo> configuracion) {
+	public void setConfiguracion(final List<ConfiguracionCampo> configuracion) {
 		this.configuracion = configuracion;
 	}
 
@@ -171,9 +153,9 @@ public final class PaginaFormulario implements Serializable {
 	 * Método para establecer valores.
 	 *
 	 * @param valores
-	 *            valores a establecer
+	 *                    valores a establecer
 	 */
-	public void setValores(List<ValorCampo> valores) {
+	public void setValores(final List<ValorCampo> valores) {
 		this.valores = valores;
 	}
 
@@ -190,9 +172,9 @@ public final class PaginaFormulario implements Serializable {
 	 * Método para establecer valoresPosibles.
 	 *
 	 * @param valoresPosibles
-	 *            valoresPosibles a establecer
+	 *                            valoresPosibles a establecer
 	 */
-	public void setValoresPosibles(List<ValoresPosiblesCampo> valoresPosibles) {
+	public void setValoresPosibles(final List<ValoresPosiblesCampo> valoresPosibles) {
 		this.valoresPosibles = valoresPosibles;
 	}
 
@@ -209,9 +191,9 @@ public final class PaginaFormulario implements Serializable {
 	 * Método para establecer acciones.
 	 *
 	 * @param acciones
-	 *            acciones a establecer
+	 *                     acciones a establecer
 	 */
-	public void setAcciones(List<AccionFormulario> acciones) {
+	public void setAcciones(final List<AccionFormulario> acciones) {
 		this.acciones = acciones;
 	}
 
@@ -228,9 +210,9 @@ public final class PaginaFormulario implements Serializable {
 	 * Método para establecer recursos.
 	 *
 	 * @param recursos
-	 *            recursos a establecer
+	 *                     recursos a establecer
 	 */
-	public void setRecursos(RecursosFormulario recursos) {
+	public void setRecursos(final RecursosFormulario recursos) {
 		this.recursos = recursos;
 	}
 
@@ -238,7 +220,7 @@ public final class PaginaFormulario implements Serializable {
 	 * Obtiene la configuración de un campo.
 	 *
 	 * @param idCampo
-	 *            Id campo
+	 *                    Id campo
 	 * @return Configuración campo
 	 */
 	public ConfiguracionCampo getConfiguracion(final String idCampo) {
@@ -265,9 +247,9 @@ public final class PaginaFormulario implements Serializable {
 	 * Método para establecer titulo.
 	 *
 	 * @param titulo
-	 *            titulo a establecer
+	 *                   titulo a establecer
 	 */
-	public void setTitulo(String titulo) {
+	public void setTitulo(final String titulo) {
 		this.titulo = titulo;
 	}
 
@@ -284,9 +266,9 @@ public final class PaginaFormulario implements Serializable {
 	 * Método para establecer mostrarTitulo.
 	 *
 	 * @param mostrarTitulo
-	 *            mostrarTitulo a establecer
+	 *                          mostrarTitulo a establecer
 	 */
-	public void setMostrarTitulo(TypeSiNo mostrarTitulo) {
+	public void setMostrarTitulo(final TypeSiNo mostrarTitulo) {
 		this.mostrarTitulo = mostrarTitulo;
 	}
 
@@ -303,10 +285,29 @@ public final class PaginaFormulario implements Serializable {
 	 * Método para establecer permitirGuardar.
 	 *
 	 * @param permitirGuardar
-	 *            permitirGuardar a establecer
+	 *                            permitirGuardar a establecer
 	 */
-	public void setPermitirGuardar(TypeSiNo permitirGuardar) {
+	public void setPermitirGuardar(final TypeSiNo permitirGuardar) {
 		this.permitirGuardar = permitirGuardar;
+	}
+
+	/**
+	 * Método de acceso a idPagina.
+	 * 
+	 * @return idPagina
+	 */
+	public String getIdPagina() {
+		return idPagina;
+	}
+
+	/**
+	 * Método para establecer idPagina.
+	 * 
+	 * @param idPagina
+	 *                     idPagina a establecer
+	 */
+	public void setIdPagina(final String idPagina) {
+		this.idPagina = idPagina;
 	}
 
 }

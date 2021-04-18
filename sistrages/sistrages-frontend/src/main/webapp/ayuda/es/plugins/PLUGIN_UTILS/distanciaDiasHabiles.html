@@ -38,7 +38,7 @@
 	<ul>
 		<li><b>fecha1</b>: Cadena que contiene la fecha inicial.</li>
 		<li><b>fecha2</b>: Cadena que contiene la fecha final.</li>
-		<li><b>formatoFecha</b>: Formato de las fechas. Es opcional y el formato por defecto es yyyy-MM-dd.</li>
+		<li><b>formatoFecha</b>: Formato de las fechas. Es opcional y el formato por defecto es dd/MM/yyyy.</li>
 	</ul>
 </p>
 <p>
@@ -55,7 +55,7 @@
 <p><b>Ejemplo 1</b> Si queremos averiguar el número de días hábiles, es decir sin contar fines de semana, que hay entre 2 fechas (se deben especificar usando el siguiente formato yyyy-MM-dd), por ejemplo, entre el 23/04/2012 y 13/06/2012 podemos usar la siguiente sentencia:
 </p>
  <p class="codigoScript">
-var diasHabiles = PLUGIN_UTILS.distanciaDiasHabiles('2012-04-23', '2012-06-13', null);
+var diasHabiles = PLUGIN_UTILS.distanciaDiasHabiles('2012-04-23', '2012-06-13', 'yyyy-MM-dd');
 </p>
 <p><b>Ejemplo 2</b> Si queremos averiguar el número de días hábiles, es decir sin contar fines de semana, que hay entre 2 fechas (especificando el formato dd/MM/yyyy), por ejemplo, entre el 23/04/2012 y 13/06/2012 podemos usar la siguiente sentencia:
 </p>

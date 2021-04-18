@@ -70,6 +70,8 @@ public class DialogScript extends DialogControllerBase {
 	private String idPasoActual;
 	/** Id. componente. **/
 	private String idComponente;
+	/** Id. componente. **/
+	private String nombreComponente;
 	/** Id. pagina. **/
 	private String idPagina;
 	/** Id. formulario actual. **/
@@ -189,17 +191,17 @@ public class DialogScript extends DialogControllerBase {
 					final String identificadorFormulario = formularioInternoService
 							.getIdentificadorFormularioInterno(idFormularioInterno);
 					final DisenyoFormularioSimple formulario = formularioInternoService.getFormularioInternoSimple(null,
-							idFormularioInterno, null, null);
+							idFormularioInterno, null, null, obtenerCargarPaginasPosteriores());
 
 					cargarArbol(formulario, identificadorFormulario);
 				}
-
 			}
 
 			if (tipoScript instanceof TypeScriptFormulario) {
 
 				final DisenyoFormularioSimple disenyoFormulario = this.formularioInternoService
-						.getFormularioInternoSimple(Long.valueOf(idFormularioActual), null, idComponente, idPagina);
+						.getFormularioInternoSimple(Long.valueOf(idFormularioActual), null, idComponente, idPagina,
+								obtenerCargarPaginasPosteriores());
 				if (disenyoFormulario != null) {
 					cargarArbol(disenyoFormulario, disenyoFormulario.getIdentificador());
 				}
@@ -211,9 +213,22 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
+	 * Comprueba si puede cargar los script posteriores
+	 *
+	 * @return
+	 */
+	private boolean obtenerCargarPaginasPosteriores() {
+		return tipoScript == TypeScriptFormulario.SCRIPT_NAVEGACION_PAGINA;
+	}
+
+	/**
 	 * Carga el arbol.
 	 *
 	 * @param formulario
+	 * @param identificadorFormulario
+	 * @param cargarComponentesPaginasPosteriores Si está a true, las páginas que
+	 *                                            sean posteriores a la actual, se
+	 *                                            cargan
 	 */
 	private void cargarArbol(final DisenyoFormularioSimple formulario, final String identificadorFormulario) {
 
@@ -222,9 +237,11 @@ public class DialogScript extends DialogControllerBase {
 
 		int i = 1;
 		for (final DisenyoFormularioPaginaSimple pagina : formulario.getPaginas()) {
-			final DefaultTreeNode nodoPagina = new DefaultTreeNode(
-					new OpcionArbol(UtilJSF.getLiteral("dialogDisenyoFormulario.pagina") + i));
-			nodoPagina.setSelectable(false);
+			String literal;
+			literal = (pagina.getAlias() == null) ? UtilJSF.getLiteral("dialogDisenyoFormulario.pagina") + i
+					: UtilJSF.getLiteral("dialogDisenyoFormulario.pagina") + i + " - " + pagina.getAlias();
+			final DefaultTreeNode nodoPagina = new DefaultTreeNode(new OpcionArbol(literal));
+			nodoPagina.setSelectable(pagina.isSeleccionable());
 			for (final DisenyoFormularioComponenteSimple componente : pagina.getComponentes()) {
 				final DefaultTreeNode nodoComponente = new DefaultTreeNode(
 						new OpcionArbol(componente.getIdentificador(), componente.getTipo()));
@@ -553,8 +570,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleFormularios
-	 *            the visibleFormularios to set
+	 * @param visibleFormularios the visibleFormularios to set
 	 */
 	public void setVisibleFormularios(final boolean visibleFormularios) {
 		this.visibleFormularios = visibleFormularios;
@@ -568,8 +584,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleHerramientas
-	 *            the visibleHerramientas to set
+	 * @param visibleHerramientas the visibleHerramientas to set
 	 */
 	public void setVisibleHerramientas(final boolean visibleHerramientas) {
 		this.visibleHerramientas = visibleHerramientas;
@@ -583,8 +598,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleMensajes
-	 *            the visibleMensajes to set
+	 * @param visibleMensajes the visibleMensajes to set
 	 */
 	public void setVisibleMensajes(final boolean visibleMensajes) {
 		this.visibleMensajes = visibleMensajes;
@@ -598,8 +612,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleDominios
-	 *            the visibleDominios to set
+	 * @param visibleDominios the visibleDominios to set
 	 */
 	public void setVisibleDominios(final boolean visibleDominios) {
 		this.visibleDominios = visibleDominios;
@@ -620,8 +633,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final Script data) {
 		this.data = data;
@@ -635,8 +647,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param nuevoTexto
-	 *            the nuevoTexto to set
+	 * @param nuevoTexto the nuevoTexto to set
 	 */
 	public void setNuevoTexto(final String nuevoTexto) {
 		this.nuevoTexto = nuevoTexto;
@@ -650,8 +661,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarLateralAyuda
-	 *            the mostrarLateralAyuda to set
+	 * @param mostrarLateralAyuda the mostrarLateralAyuda to set
 	 */
 	public void setMostrarLateralAyuda(final boolean mostrarLateralAyuda) {
 		this.mostrarLateralAyuda = mostrarLateralAyuda;
@@ -665,8 +675,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param plugins
-	 *            the plugins to set
+	 * @param plugins the plugins to set
 	 */
 	public void setPlugins(final List<TypePluginScript> plugins) {
 		this.plugins = plugins;
@@ -680,8 +689,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param urlIframe
-	 *            the urlIframe to set
+	 * @param urlIframe the urlIframe to set
 	 */
 	public void setUrlIframe(final String urlIframe) {
 		this.urlIframe = urlIframe;
@@ -695,8 +703,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param scriptService
-	 *            the scriptService to set
+	 * @param scriptService the scriptService to set
 	 */
 	public void setScriptService(final ScriptService scriptService) {
 		this.scriptService = scriptService;
@@ -710,8 +717,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mensajeSeleccionado
-	 *            the mensajeSeleccionado to set
+	 * @param mensajeSeleccionado the mensajeSeleccionado to set
 	 */
 	public void setMensajeSeleccionado(final LiteralScript mensajeSeleccionado) {
 		this.mensajeSeleccionado = mensajeSeleccionado;
@@ -725,8 +731,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param permiteEditar
-	 *            the permiteEditar to set
+	 * @param permiteEditar the permiteEditar to set
 	 */
 	public void setPermiteEditar(final boolean permiteEditar) {
 		this.permiteEditar = permiteEditar;
@@ -740,11 +745,18 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idTramiteVersion
-	 *            the idTramiteVersion to set
+	 * @param idTramiteVersion the idTramiteVersion to set
 	 */
 	public void setIdTramiteVersion(final String idTramiteVersion) {
 		this.idTramiteVersion = idTramiteVersion;
+	}
+
+	public String getNombreComponente() {
+		return nombreComponente;
+	}
+
+	public void setNombreComponente(String nombreComponente) {
+		this.nombreComponente = nombreComponente;
 	}
 
 	/**
@@ -755,8 +767,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param dominios
-	 *            the dominios to set
+	 * @param dominios the dominios to set
 	 */
 	public void setDominios(final List<Dominio> dominios) {
 		this.dominios = dominios;
@@ -770,8 +781,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param dominioSeleccionado
-	 *            the dominioSeleccionado to set
+	 * @param dominioSeleccionado the dominioSeleccionado to set
 	 */
 	public void setDominioSeleccionado(final Dominio dominioSeleccionado) {
 		this.dominioSeleccionado = dominioSeleccionado;
@@ -785,8 +795,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param treeFormularios
-	 *            the treeFormularios to set
+	 * @param treeFormularios the treeFormularios to set
 	 */
 	public void setTreeFormularios(final TreeNode treeFormularios) {
 		this.treeFormularios = treeFormularios;
@@ -800,8 +809,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tipoScript
-	 *            the tipoScript to set
+	 * @param tipoScript the tipoScript to set
 	 */
 	public void setTipoScript(final TypeScript tipoScript) {
 		this.tipoScript = tipoScript;
@@ -815,8 +823,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tipoScriptFlujo
-	 *            the tipoScriptFlujo to set
+	 * @param tipoScriptFlujo the tipoScriptFlujo to set
 	 */
 	public void setTipoScriptFlujo(final String tipoScriptFlujo) {
 		this.tipoScriptFlujo = tipoScriptFlujo;
@@ -830,8 +837,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tipoScriptFormulario
-	 *            the tipoScriptFormulario to set
+	 * @param tipoScriptFormulario the tipoScriptFormulario to set
 	 */
 	public void setTipoScriptFormulario(final String tipoScriptFormulario) {
 		this.tipoScriptFormulario = tipoScriptFormulario;
@@ -845,8 +851,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param selectedNode
-	 *            the selectedNode to set
+	 * @param selectedNode the selectedNode to set
 	 */
 	public void setSelectedNode(final TreeNode selectedNode) {
 		this.selectedNode = selectedNode;
@@ -860,8 +865,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param textFormulario
-	 *            the textFormulario to set
+	 * @param textFormulario the textFormulario to set
 	 */
 	public void setTextFormulario(final String textFormulario) {
 		this.textFormulario = textFormulario;
@@ -875,8 +879,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idPasoActual
-	 *            the idPasoActual to set
+	 * @param idPasoActual the idPasoActual to set
 	 */
 	public void setIdPasoActual(final String idPasoActual) {
 		this.idPasoActual = idPasoActual;
@@ -890,8 +893,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idComponente
-	 *            the idComponente to set
+	 * @param idComponente the idComponente to set
 	 */
 	public void setIdComponente(final String idComponente) {
 		this.idComponente = idComponente;
@@ -905,8 +907,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idPagina
-	 *            the idPagina to set
+	 * @param idPagina the idPagina to set
 	 */
 	public void setIdPagina(final String idPagina) {
 		this.idPagina = idPagina;
@@ -920,8 +921,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idFormularioActual
-	 *            the idFormularioActual to set
+	 * @param idFormularioActual the idFormularioActual to set
 	 */
 	public void setIdFormularioActual(final String idFormularioActual) {
 		this.idFormularioActual = idFormularioActual;
@@ -935,8 +935,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idFormularioInternoActual
-	 *            the idFormularioInternoActual to set
+	 * @param idFormularioInternoActual the idFormularioInternoActual to set
 	 */
 	public void setIdFormularioInternoActual(final String idFormularioInternoActual) {
 		this.idFormularioInternoActual = idFormularioInternoActual;
@@ -950,8 +949,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idiomas
-	 *            the idiomas to set
+	 * @param idiomas the idiomas to set
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;

@@ -45,12 +45,8 @@ var	APP_TRAMIT_INFO = APP_SERVIDOR + "informacionTramite.json"
 
 var APP_FORM_URL = APP_SERVIDOR + "rf/abrirFormulario.json"
 	,APP_FORM_PDF = APP_SERVIDOR + "rf/descargarFormulario.html"
-	,APP_FORM_XML = APP_SERVIDOR + "rf/descargarXmlFormulario.html";
-
-var APP_FORM_CARREGA = APP_SERVIDOR + "fm/cargarFormulario.json"
-	,APP_FORM_GUARDA = APP_SERVIDOR + "fm/guardarPagina.json"
-	,APP_FORM_AVALUA_CAMP = APP_SERVIDOR + "fm/evaluarCambioCampo.json";
-
+	,APP_FORM_XML = APP_SERVIDOR + "rf/descargarXmlFormulario.html"
+	,APP_FORM_IMPRIMIR = APP_SERVIDOR + "<pendiente>";
 
 
 /* pas annexar */
@@ -78,7 +74,6 @@ var  APP_SIGNATURA_URL = APP_SERVIDOR + "rt/firmarDocumento.json"
 	,APP_SIGNATURA_REGISTRAR_DESCARREGA = APP_SERVIDOR + "rt/descargarFirma.html"
 	,APP_TRAMIT_REINTENTA = APP_SERVIDOR + "rt/reintentar.json";
 
-
 /* pas guardar */
 
 var APP_TRAMIT_JUSTIFICANT = APP_SERVIDOR + "gj/descargarJustificante.html",
@@ -88,3 +83,16 @@ var APP_TRAMIT_JUSTIFICANT = APP_SERVIDOR + "gj/descargarJustificante.html",
 	APP_TRAMIT_SURT = APP_SERVIDOR + "gj/salirTramite.html",
 	APP_SIGNATURA_GUARDAR_DESCARREGA = APP_SERVIDOR + "gj/descargarFirma.html",
 	APP_TRAMIT_VALORA = APP_SERVIDOR + "gj/valorarTramite.json";
+
+
+/* formulario */
+var APP_FORMS_URL_DINAMICA = "s"
+	,APP_FORM_DATA_FORMAT = "es"
+	,APP_FORM_CARREGA = APP_SERVIDOR + "fm/cargarFormulario.json"
+	,APP_FORM_GUARDA = APP_SERVIDOR + "fm/guardarPagina.json"
+	,APP_FORM_AVALUA_CAMP = APP_SERVIDOR + "fm/evaluarCambioCampo.json"
+	,APP_FORMS_CAPTCHA = APP_SERVIDOR + "fm/generarImagenCaptcha.html"
+	,APP_FORMS_CAPTCHA_REGENERA = APP_SERVIDOR + "fm/regenerarCaptcha.html"
+	,APP_FORM_PAG_ACTUAL = APP_SERVIDOR + "fm/cargarPaginaActual.json"
+	,APP_FORM_PAG_ANTERIOR = APP_SERVIDOR + "fm/cargarPaginaAnterior.json";
+
