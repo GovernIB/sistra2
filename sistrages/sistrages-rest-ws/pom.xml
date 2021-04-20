@@ -10,6 +10,15 @@
 	<packaging>war</packaging>
 	<dependencies>
 
+		<!-- Librerias -->
+		<dependency>
+			<groupId>es.caib.sistra2</groupId>
+			<artifactId>sistrages-lib</artifactId>
+			<version>${sistra2.version}</version>
+			<scope>provided</scope>
+			<type>pom</type>
+		</dependency>
+
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistrages-rest-api</artifactId>
@@ -85,23 +94,7 @@
 		</dependency>
 
 	</dependencies>
-	<profiles>
-		<profile>
-			<id>jboss</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>es.caib.sistra2</groupId>
-					<artifactId>sistrages-lib</artifactId>
-					<version>${sistra2.version}</version>
-					<scope>provided</scope>
-					<type>pom</type>
-				</dependency>
-			</dependencies>
-		</profile>
-	</profiles>
+
 	<build>
 		<plugins>
 			<plugin>

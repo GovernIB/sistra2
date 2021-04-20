@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
@@ -9,21 +10,34 @@
 	<artifactId>sistrahelp-frontend</artifactId>
 	<packaging>war</packaging>
 	<name>sistrahelp-frontend</name>
+
+
 	<dependencies>
 
+		<!-- Librerias -->
+		<dependency>
+			<groupId>es.caib.sistra2</groupId>
+			<artifactId>sistrahelp-lib</artifactId>
+			<version>${sistra2.version}</version>
+			<scope>provided</scope>
+			<type>pom</type>
+		</dependency>
+
+
+		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
 
-    <!-- JSR-330 -->
-    <dependency>
-      <groupId>javax.inject</groupId>
-      <artifactId>javax.inject</artifactId>
-      <version>${javax.inject.version}</version>
-		  <scope>provided</scope>
-    </dependency>
+		<!-- JSR-330 -->
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>${javax.inject.version}</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<!-- JSF Dependencies -->
 		<dependency>
@@ -40,12 +54,12 @@
 			<scope>provided</scope>
 		</dependency>
 
-    	<dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.2.1-b03</version>
-            <scope>provided</scope>
-        </dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.2.1-b03</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>com.sun.faces</groupId>
@@ -79,30 +93,30 @@
 		</dependency>
 
 		<dependency>
-	        <groupId>org.primefaces.extensions</groupId>
-	        <artifactId>primefaces-extensions</artifactId>
-	        <version>${primefacesExtensions.version}</version>
-	    </dependency>
-
-	    <dependency>
-	        <groupId>org.primefaces.extensions</groupId>
-	        <artifactId>resources-codemirror</artifactId>
-	        <version>${primefacesExtensions.version}</version>
-	    </dependency>
-
-		<dependency>
-		    <groupId>commons-fileupload</groupId>
-		    <artifactId>commons-fileupload</artifactId>
-		    <version>${commons-fileupload}</version>
+			<groupId>org.primefaces.extensions</groupId>
+			<artifactId>primefaces-extensions</artifactId>
+			<version>${primefacesExtensions.version}</version>
 		</dependency>
 
 		<dependency>
-		    <groupId>commons-beanutils</groupId>
-		    <artifactId>commons-beanutils</artifactId>
-		    <version>${commons-beanutils.version}</version>
+			<groupId>org.primefaces.extensions</groupId>
+			<artifactId>resources-codemirror</artifactId>
+			<version>${primefacesExtensions.version}</version>
 		</dependency>
 
-		<!--  TODO: Ver pq no la coge del core -->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>${commons-fileupload}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>${commons-beanutils.version}</version>
+		</dependency>
+
+		<!-- TODO: Ver pq no la coge del core -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -112,23 +126,6 @@
 
 	</dependencies>
 
-	<profiles>
-		<profile>
-			<id>jboss</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>es.caib.sistra2</groupId>
-					<artifactId>sistrahelp-lib</artifactId>
-					<version>${sistra2.version}</version>
-					<scope>provided</scope>
-					<type>pom</type>
-				</dependency>
-			</dependencies>
-		</profile>
-	</profiles>
 	<build>
 		<plugins>
 			<plugin>
@@ -169,7 +166,7 @@
 						</webResource>
 						<webResource>
 							<directory>src\main\jboss\${loginConfig.authMethod}</directory>
-				            <targetPath>/WEB-INF</targetPath>
+							<targetPath>/WEB-INF</targetPath>
 						</webResource>
 					</webResources>
 				</configuration>
