@@ -10,7 +10,7 @@
 
 	<properties>
 		<!-- Version aplicacion y propiedades -->
-		<sistra2.version>1.2.0</sistra2.version>
+		<sistra2.version>1.2.0-SNAPSHOT</sistra2.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<schema.generate.databaseProductName>Oracle</schema.generate.databaseProductName>
@@ -119,7 +119,8 @@
 							</execution>
 						</executions>
 						<configuration>
-							<!-- <skip>${git.desactivado}</skip> -->
+							<verbose>true</verbose>
+							<skipPoms>false</skipPoms>
 							<generateGitPropertiesFile>true</generateGitPropertiesFile>
 							<generateGitPropertiesFilename>target/git.properties</generateGitPropertiesFilename>
 						</configuration>
