@@ -113,6 +113,7 @@
 						<inherited>false</inherited>
 						<executions>
 							<execution>
+								<phase>validate</phase>
 								<goals>
 									<goal>revision</goal>
 								</goals>
