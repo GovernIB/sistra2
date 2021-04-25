@@ -83,6 +83,7 @@ div.imc-opcions ul { overflow: auto; max-height: 20em; list-style: none; margin:
 	div.imc-opcions ul a { display: block; font-size: 1em; padding: .3em .5em; }
 	div.imc-opcions ul a:hover
 	,div.imc-opcions ul a.hover { background-color: #cc073c; }
+	div.imc-opcions ul li { padding: 0; }
 	div.imc-opcions ul li.imc-select-seleccionat a { font-style: italic; color: #999; background-color: transparent; cursor: default; }
 
 div.imc-opcions .imc-select-submenu {

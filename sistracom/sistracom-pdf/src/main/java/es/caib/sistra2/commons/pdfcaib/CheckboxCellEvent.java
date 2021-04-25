@@ -1,6 +1,3 @@
-/**
- * Copyright (c) 2021 Generalitat Valenciana - Todos los derechos reservados.
- */
 package es.caib.sistra2.commons.pdfcaib;
 
 import java.awt.Color;

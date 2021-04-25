@@ -1,11 +1,7 @@
-/**
- * Copyright (c) 2020 Generalitat Valenciana - Todos los derechos reservados.
- */
 package es.caib.sistra2.commons.pdfcaib;
 
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
-import java.net.URL;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +19,6 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 
-import es.caib.sistra2.commons.pdfcaib.exceptions.CampoCheckException;
-import es.caib.sistra2.commons.pdfcaib.exceptions.CampoListaCheckException;
-import es.caib.sistra2.commons.pdfcaib.exceptions.CampoTextoException;
-import es.caib.sistra2.commons.pdfcaib.exceptions.SeccionException;
-import es.caib.sistra2.commons.pdfcaib.exceptions.TablaException;
-import es.caib.sistra2.commons.pdfcaib.exceptions.TextoException;
 import es.caib.sistra2.commons.pdfcaib.model.CampoCheck;
 import es.caib.sistra2.commons.pdfcaib.model.CampoListaCheck;
 import es.caib.sistra2.commons.pdfcaib.model.CampoTexto;
@@ -44,10 +34,18 @@ import es.caib.sistra2.commons.pdfcaib.model.Texto;
 import es.caib.sistra2.commons.pdfcaib.types.TypeFuente;
 
 /**
- * @author amontoyah at http://www.organizacion.web[ORGANIZACION]
+ * Generador PDF.
+ *
+ * @author Indra
  *
  */
 public class GeneradorPdf {
+
+	private static final int COLUMNAS_TABLA = 6;
+	private static final int TAMANIO_SECCION = 10;
+	private static final int TAMANIO_ETIQUETA = 8;
+	private static final int TAMANIO_VALOR = 8;
+	private static final int TAMANIO_TEXTO = 8;
 
 	private final Logger log = LoggerFactory.getLogger(GeneradorPdf.class);
 
@@ -55,24 +53,19 @@ public class GeneradorPdf {
 	private final Font SECCION;
 	private final Font ETIQUETA;
 	private final Font VALOR;
-	// private PersonalizacionTexto PERSONALIZACION_TEXTO_CABECERA_DEFAULT;
 	private final PersonalizacionTexto PERSONALIZACION_TEXTO_SECCION_DEFAULT;
-
 	private final Document document;
 	private PdfWriter writer;
 	private final ByteArrayOutputStream arrayBytesPdf;
 	private final PdfPTable tablaPDF;
-	private final static int COLUMNAS_TABLA = 6;
-	private final static int TAMANIO_SECCION = 10;
-	private final static int TAMANIO_ETIQUETA = 8;
-	private final static int TAMANIO_VALOR = 8;
-	private final static int TAMANIO_TEXTO = 8;
 
 	/**
 	 * Constructor en el que le añadimos propiedades constantes
+	 *
+	 * @throws PdfCaibException
 	 */
-	public GeneradorPdf() {
-		super();
+	public GeneradorPdf() throws PdfCaibException {
+
 		document = new Document(PageSize.A4, 20, 20, 130, 25);
 		arrayBytesPdf = new ByteArrayOutputStream();
 
@@ -80,23 +73,25 @@ public class GeneradorPdf {
 		tablaPDF.setWidthPercentage(100f);
 		tablaPDF.getDefaultCell().setBorder(Rectangle.NO_BORDER);
 		tablaPDF.setSpacingBefore(200f);
-		final URL font_path = Thread.currentThread().getContextClassLoader().getResource("NotoSans-Regular.ttf");
-		FontFactory.register(font_path.toString(), "fontNotoSans");
-		final URL font_path_bond = Thread.currentThread().getContextClassLoader().getResource("NotoSans-Bold.ttf");
-		FontFactory.register(font_path_bond.toString(), "fontNotoSansBold");
-		// PERSONALIZACION_TEXTO_CABECERA_DEFAULT = new PersonalizacionTexto(true,
-		// false, TypeFuente.NOTOSANSBOND, 16);
+
+		if (!FontFactory.isRegistered(TypeFuente.NOTOSANS.toString())) {
+			FontFactory.register("/fonts/NotoSans-Regular.ttf", TypeFuente.NOTOSANS.toString());
+		}
+		if (!FontFactory.isRegistered(TypeFuente.NOTOSANSBOND.toString())) {
+			FontFactory.register("/fonts/NotoSans-Bold.ttf", TypeFuente.NOTOSANSBOND.toString());
+		}
+
 		PERSONALIZACION_TEXTO_SECCION_DEFAULT = new PersonalizacionTexto(true, false, TypeFuente.NOTOSANSBOND,
 				TAMANIO_SECCION);
-		VALOR = FontFactory.getFont("fontNotoSans", TAMANIO_VALOR);
-		ETIQUETA = FontFactory.getFont("fontNotoSans", TAMANIO_ETIQUETA);
+		VALOR = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_VALOR);
+		ETIQUETA = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_ETIQUETA);
 		ETIQUETA.setStyle(Font.BOLD);
-		SECCION = FontFactory.getFont("fontNotoSans", TAMANIO_SECCION);
-		TEXTO = FontFactory.getFont("fontNotoSans", TAMANIO_TEXTO);
+		SECCION = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_SECCION);
+		TEXTO = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_TEXTO);
 		try {
 			writer = PdfWriter.getInstance(document, arrayBytesPdf);
 		} catch (final DocumentException e) {
-			log.error("Error creación de writer GeneradorPdf");
+			throw new PdfCaibException("Error creación de writer GeneradorPdf");
 		}
 	}
 
@@ -117,7 +112,7 @@ public class GeneradorPdf {
 	 * @throws Exception
 	 *
 	 */
-	public byte[] generarPdf(final FormularioPdf formularioPdf) throws Exception {
+	public byte[] generarPdf(final FormularioPdf formularioPdf) throws PdfCaibException {
 
 		document.open();
 		writer.setPageEvent(new EndPageEvent(formularioPdf.getCabecera(), formularioPdf.getPie(), true, writer));
@@ -164,18 +159,19 @@ public class GeneradorPdf {
 					completaLinea(tablaPDF, columnasLinea);
 				}
 				if (columnasLinea > COLUMNAS_TABLA) {
-					log.error(
+					throw new PdfCaibException(
 							"Una linea no puede contener mas de 6 columnas, compruebe el layoutCols de los objetos introducidos en la linea. ");
-					return "".getBytes();
 				}
 			}
 		}
 
-		document.add(tablaPDF);
-
-		document.close();
-
-		return arrayBytesPdf.toByteArray();
+		try {
+			document.add(tablaPDF);
+			document.close();
+			return arrayBytesPdf.toByteArray();
+		} catch (final DocumentException e) {
+			throw new PdfCaibException("Error al generar pdf: " + e.getMessage(), e);
+		}
 
 	}
 
@@ -185,7 +181,7 @@ public class GeneradorPdf {
 	 * @param seccion
 	 * @throws SeccionException
 	 */
-	private void writeSeccion(final Seccion seccion) throws SeccionException {
+	private void writeSeccion(final Seccion seccion) throws PdfCaibException {
 
 		final PdfPTable header = new PdfPTable(2);
 
@@ -215,8 +211,7 @@ public class GeneradorPdf {
 			tablaPDF.addCell(cell);
 
 		} catch (final DocumentException e) {
-			log.error("Error al introducir el ancho de la sección");
-			throw new SeccionException("Error al introducir el ancho de la sección", e);
+			throw new PdfCaibException("Error al introducir el ancho de la sección", e);
 		}
 
 	}
@@ -228,7 +223,7 @@ public class GeneradorPdf {
 	 * @param tablaPdf
 	 * @throws TablaException
 	 */
-	private void writeTabla(final Tabla tabla) throws TablaException {
+	private void writeTabla(final Tabla tabla) throws PdfCaibException {
 		try {
 			final int numeroColumnas = tabla.getCabecera().getColumnaTablas().size();
 			final PdfPTable table = new PdfPTable(numeroColumnas);
@@ -265,7 +260,7 @@ public class GeneradorPdf {
 			cellTable.setPadding(10f);
 			tablaPDF.addCell(cellTable);
 		} catch (final Exception e) {
-			throw new TablaException("Error en la creacion de la tabla", e);
+			throw new PdfCaibException("Error en la creacion de la tabla", e);
 		}
 
 	}
@@ -277,7 +272,7 @@ public class GeneradorPdf {
 	 * @param tablaLinea
 	 * @throws CampoTextoException
 	 */
-	private void writeCampoTexto(final CampoTexto campoTexto) throws CampoTextoException {
+	private void writeCampoTexto(final CampoTexto campoTexto) throws PdfCaibException {
 
 		try {
 			final PdfPTable table = new PdfPTable(2);
@@ -314,7 +309,7 @@ public class GeneradorPdf {
 			c2.setColspan(campoTexto.getLayoutCols());
 			tablaPDF.addCell(c2);
 		} catch (final Exception e) {
-			throw new CampoTextoException("Error en la creacion de campo texto", e);
+			throw new PdfCaibException("Error en la creacion de campo texto", e);
 		}
 
 	}
@@ -326,7 +321,7 @@ public class GeneradorPdf {
 	 * @param tablaPdf
 	 * @throws CampoListaCheckException
 	 */
-	private void writeCampoListaCheck(final CampoListaCheck campoListaCheck) throws CampoListaCheckException {
+	private void writeCampoListaCheck(final CampoListaCheck campoListaCheck) throws PdfCaibException {
 		try {
 			PdfPCell cell;
 			final PdfPTable table = new PdfPTable(1);
@@ -362,7 +357,7 @@ public class GeneradorPdf {
 			c2.setPadding(0);
 			tablaPDF.addCell(c2);
 		} catch (final Exception e) {
-			throw new CampoListaCheckException("Error en el campo lista check", e);
+			throw new PdfCaibException("Error en el campo lista check", e);
 		}
 	}
 
@@ -374,7 +369,7 @@ public class GeneradorPdf {
 	 * @param tablaPdf
 	 * @throws CampoCheckException
 	 */
-	private void writeCampoCheck(final CampoCheck campoCheck) throws CampoCheckException {
+	private void writeCampoCheck(final CampoCheck campoCheck) throws PdfCaibException {
 		try {
 			final PdfPTable table = new PdfPTable(1);
 			table.setWidthPercentage(100f);
@@ -403,7 +398,7 @@ public class GeneradorPdf {
 
 			tablaPDF.addCell(c2);
 		} catch (final Exception e) {
-			throw new CampoCheckException("Error en la creacion del campo check", e);
+			throw new PdfCaibException("Error en la creacion del campo check", e);
 		}
 
 	}
@@ -414,7 +409,7 @@ public class GeneradorPdf {
 	 * @param texto
 	 * @throws TextoException
 	 */
-	public void writeTexto(final Texto texto) throws TextoException {
+	public void writeTexto(final Texto texto) throws PdfCaibException {
 		try {
 			final Font f = getFontByPersonalizacionTexto(texto.getPersonalizacionTexto());
 
@@ -428,7 +423,7 @@ public class GeneradorPdf {
 			// se añade a la tabla principal
 			tablaPDF.addCell(cell);
 		} catch (final Exception e) {
-			throw new TextoException("Error en la creacion del campo texto", e);
+			throw new PdfCaibException("Error en la creacion del campo texto", e);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020 Generalitat Valenciana - Todos los derechos reservados.
+ * 
  */
 package es.caib.sistra2.commons.pdfcaib.model;
 

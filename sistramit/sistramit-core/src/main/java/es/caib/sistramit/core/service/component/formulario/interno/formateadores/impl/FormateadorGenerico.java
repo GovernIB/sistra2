@@ -1,16 +1,26 @@
 package es.caib.sistramit.core.service.component.formulario.interno.formateadores.impl;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import es.caib.sistra2.commons.pdf.PDFDocument;
-import es.caib.sistra2.commons.pdf.Parrafo;
-import es.caib.sistra2.commons.pdf.Propiedad;
-import es.caib.sistra2.commons.pdf.Seccion;
+import es.caib.sistra2.commons.pdfcaib.GeneradorPdf;
+import es.caib.sistra2.commons.pdfcaib.model.Cabecera;
+import es.caib.sistra2.commons.pdfcaib.model.CampoTexto;
+import es.caib.sistra2.commons.pdfcaib.model.FormularioPdf;
+import es.caib.sistra2.commons.pdfcaib.model.Linea;
+import es.caib.sistra2.commons.pdfcaib.model.PersonalizacionTexto;
+import es.caib.sistra2.commons.pdfcaib.model.Seccion;
+import es.caib.sistra2.commons.pdfcaib.model.Texto;
+import es.caib.sistra2.commons.pdfcaib.types.TypeFuente;
 import es.caib.sistra2.commons.utils.ValidacionTipoException;
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistrages.rest.api.interna.RComponente;
@@ -79,75 +89,81 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
 		inicializarValores(plantilla);
 
-		// Creamos Map de valores
-		final PDFDocument documento;
+		// Creamos formulario
+		final FormularioPdf formularioPdf = new FormularioPdf();
+
+		// Cabecera
+		final Cabecera cabecera = new Cabecera();
 		if (mostrarTituloConProcedimiento) {
-			documento = new PDFDocument(tituloProcedimiento + " - " + defFormInterno.getTitulo());
+			cabecera.setTitulo(tituloProcedimiento);
+			cabecera.setSubtitulo(defFormInterno.getTitulo());
 		} else {
-			documento = new PDFDocument(defFormInterno.getTitulo());
+			cabecera.setTitulo(tituloProcedimiento);
 		}
 		if (StringUtils.isNotBlank(urlImagen)) {
-			documento.setImagen(urlImagen);
+			try {
+				byte[] arrayBytes = null;
+				if (urlImagen.startsWith("http")) {
+					arrayBytes = IOUtils.toByteArray(new URL(urlImagen));
+				} else {
+					arrayBytes = IOUtils.toByteArray(new FileInputStream(urlImagen));
+				}
+				cabecera.setLogoByte(arrayBytes);
+			} catch (final IOException e) {
+				throw new FormateadorException("Error accediendo a url logo: " + urlImagen, e);
+			}
 		}
+		formularioPdf.setCabecera(cabecera);
 
 		// Recorremos las paginas
-		for (final RPaginaFormulario pagina : defFormInterno.getPaginas()) {
-			boolean creadaSeccion = false;
-			Seccion seccion = null;
-			for (final RLineaComponentes linea : pagina.getLineas()) {
-				for (final RComponente componente : linea.getComponentes()) {
+		final List<Linea> lineas = new ArrayList<Linea>();
+		formularioPdf.setLineas(lineas);
 
-					// Si no se ha creado una sección y el componente no es de
-					// tipo sección
-					if (!(componente instanceof RComponenteSeccion) && !creadaSeccion) {
-						seccion = crearSeccionVacia();
-						creadaSeccion = true;
-					}
+		for (final RPaginaFormulario pagina : defFormInterno.getPaginas()) {
+
+			for (final RLineaComponentes rLinea : pagina.getLineas()) {
+
+				for (final RComponente componente : rLinea.getComponentes()) {
+
+					// Una linea para cada campo
+					final Linea linea = new Linea();
+					lineas.add(linea);
 
 					// Añadir segun componente
 					if (componente instanceof RComponenteSeccion) {
-
-						// Si ya hay seccion, se cierra y se añade
-						if (seccion != null) {
-							documento.addSeccion(seccion);
-						}
+						// - Componente seccion
 						final RComponenteSeccion componenteSeccion = (RComponenteSeccion) componente;
-						seccion = new Seccion(componenteSeccion.getLetra(), componenteSeccion.getEtiqueta());
-
-						creadaSeccion = true;
-
+						linea.getObjetosLinea().add(
+								new Seccion(/* componenteSeccion.getLetra() */"", componenteSeccion.getEtiqueta()));
 					} else if (componente instanceof RComponenteAviso) {
-
-						// Sólo se muestra el aviso si está activo la variable.
+						// - Componente aviso (si está activo la variable)
 						if (mostrarAviso != null && mostrarAviso) {
-							// Si no se ha creado una sección
-							if (seccion == null) {
-								seccion = crearSeccionVacia();
-								creadaSeccion = true;
-							}
-
+							// Creamos seccion vacia para separar
+							linea.getObjetosLinea().add(new Seccion("", ""));
+							// Creamos texto aviso
 							final RComponenteAviso componenteAviso = (RComponenteAviso) componente;
-							final Parrafo campo = new Parrafo(componenteAviso.getEtiqueta());
-							seccion.addCampo(campo);
+							final PersonalizacionTexto personalizacicionTexto = new PersonalizacionTexto(false, true,
+									TypeFuente.NOTOSANS, 6);
+							final Texto texto = new Texto(personalizacicionTexto, componenteAviso.getEtiqueta(), 6);
+							linea.getObjetosLinea().add(texto);
 						}
-
 					} else {
-						if (seccion != null && xml.getValores() != null && componente.getIdentificador() != null) {
-							anyadirDato(componente, seccion, xml);
+						// - Campos
+						if (xml.getValores() != null && componente.getIdentificador() != null) {
+							anyadirDato(componente, linea, xml);
 						}
 					}
 
 				}
 			}
-			documento.addSeccion(seccion);
+
 		}
 
+		// Generar PDF
 		try {
-
-			final ByteArrayOutputStream output = new ByteArrayOutputStream();
-			documento.generate(output);
-			return output.toByteArray();
-
+			final GeneradorPdf generadorPdf = new GeneradorPdf();
+			final byte[] pdf = generadorPdf.generarPdf(formularioPdf);
+			return pdf;
 		} catch (final Exception e) {
 			throw new FormateadorException("Error convirtiendo el documento a bytes", e);
 		}
@@ -187,15 +203,6 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 				throw new FormateadorException("Error obteniendo propiedades formateador", e);
 			}
 		}
-	}
-
-	/**
-	 * Crea seccion sin cabecera.
-	 *
-	 * @return
-	 */
-	private Seccion crearSeccionVacia() {
-		return new Seccion(false);
 	}
 
 	/**
@@ -244,11 +251,11 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	 * Busca un valor y lo añade.
 	 *
 	 * @param componente
-	 * @param seccion
+	 * @param linea
 	 * @param xml
 	 * @throws Exception
 	 */
-	private void anyadirDato(final RComponente componente, final Seccion seccion, final XmlFormulario xml) {
+	private void anyadirDato(final RComponente componente, final Linea linea, final XmlFormulario xml) {
 
 		boolean encontrado = false;
 		for (final ValorCampo valor : xml.getValores()) {
@@ -260,45 +267,53 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 						if (isComponenteTipoFecha(componente)) {
 							valorCampoSimple = getConversionFecha(valorCampoSimple);
 						}
-						seccion.addCampo(createPropiedad(componente.getEtiqueta(), valorCampoSimple));
+						linea.getObjetosLinea().add(new CampoTexto(6, isMultilinea(valorCampoSimple),
+								componente.getEtiqueta(), valorCampoSimple));
 					} else if (valor instanceof ValorCampoIndexado) {
-						seccion.addCampo(getPropiedad(componente.getEtiqueta(), (ValorCampoIndexado) valor));
+						linea.getObjetosLinea().add(new CampoTexto(6, false, componente.getEtiqueta(),
+								getValorCampoIndexado((ValorCampoIndexado) valor)));
 					} else if (valor instanceof ValorCampoListaIndexados) {
-						seccion.addCampo(getPropiedad(componente.getEtiqueta(), (ValorCampoListaIndexados) valor));
+						final String valorStr = getValorCampoListaIndexados((ValorCampoListaIndexados) valor);
+						linea.getObjetosLinea()
+								.add(new CampoTexto(6, isMultilinea(valorStr), componente.getEtiqueta(), valorStr));
 					}
 				}
 			}
 		}
-
 		if (!encontrado) {
-			final Propiedad campo = new Propiedad(componente.getEtiqueta(), "");
-			seccion.addCampo(campo);
+			linea.getObjetosLinea().add(new CampoTexto(6, false, componente.getEtiqueta(), ""));
 		}
 
 	}
 
 	/**
-	 * Objeto propiedad para ValorCampoIndexado
+	 * Indica si texto es multilínea.
+	 *
+	 * @param texto
+	 *                  texto
+	 * @return boolean
+	 */
+	private boolean isMultilinea(final String texto) {
+		return (texto != null && texto.indexOf("\n") != -1);
+	}
+
+	/**
+	 * Objeto valor para ValorCampoIndexado
 	 *
 	 * @param etiqueta
 	 * @param valor
 	 * @return
 	 */
-	private Propiedad getPropiedad(final String etiqueta, final ValorCampoIndexado valor) {
-
-		String descripcion = "";
+	private String getValorCampoIndexado(final ValorCampoIndexado valor) {
 		String valorCampoIndexado = "";
-
 		if (valor != null && valor.getValor() != null) {
-			descripcion = valor.getValor().getDescripcion();
-			valorCampoIndexado = getValorCampoIndexado(valor.getValor());
+			if (visualizacionValorIndexado == TipoVisualizacionValorIndexado.DESCRIPCION) {
+				valorCampoIndexado = valor.getValor().getDescripcion();
+			} else {
+				valorCampoIndexado = getValorCampoIndexado(valor.getValor());
+			}
 		}
-
-		if (visualizacionValorIndexado == TipoVisualizacionValorIndexado.DESCRIPCION) {
-			return new Propiedad(etiqueta, descripcion);
-		} else {
-			return new Propiedad(etiqueta, valorCampoIndexado);
-		}
+		return valorCampoIndexado;
 	}
 
 	/**
@@ -308,21 +323,19 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	 * @param valor
 	 * @return
 	 */
-	private Propiedad getPropiedad(final String etiqueta, final ValorCampoListaIndexados valor) {
+	private String getValorCampoListaIndexados(final ValorCampoListaIndexados valor) {
 		final ValorCampoListaIndexados valorLista = valor;
 		final StringBuilder valorListaSimple = new StringBuilder("");
 		final String separador = "\n";
-
 		for (final ValorIndexado valorElemento : valorLista.getValor()) {
 			valorListaSimple.append(getValorCampoIndexado(valorElemento));
 			valorListaSimple.append(separador);
 		}
-
 		String linea = valorListaSimple.toString().trim();
 		if (linea != null && linea.endsWith(",")) {
 			linea = linea.substring(0, linea.length() - 1);
 		}
-		return new Propiedad(etiqueta, linea);
+		return linea;
 	}
 
 	/**
@@ -372,17 +385,6 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
 		return texto.toString();
 
-	}
-
-	/**
-	 * Objeto propiedad para ValorCampoSimple
-	 *
-	 * @param etiqueta
-	 * @param valor
-	 * @return
-	 */
-	private Propiedad createPropiedad(final String etiqueta, final String valor) {
-		return new Propiedad(etiqueta, valor);
 	}
 
 }

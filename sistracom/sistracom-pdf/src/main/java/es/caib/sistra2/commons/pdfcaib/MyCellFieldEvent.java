@@ -1,6 +1,3 @@
-/**
- * Copyright (c) 2021 Generalitat Valenciana - Todos los derechos reservados.
- */
 package es.caib.sistra2.commons.pdfcaib;
 
 import java.io.IOException;
@@ -20,6 +17,8 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPCellEvent;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.pdf.TextField;
+
+import es.caib.sistra2.commons.pdfcaib.types.TypeFuente;
 
 /**
  * @author Indra
@@ -46,7 +45,7 @@ public class MyCellFieldEvent implements PdfPCellEvent {
 		textField.setText(value);
 		textField.setAlignment(Element.ALIGN_TOP);
 		textField.setOptions(TextField.MULTILINE | TextField.READ_ONLY);
-		VALOR = FontFactory.getFont("fontNotoSans", TAMANIO_VALOR);
+		VALOR = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_VALOR);
 		textField.setFont(VALOR.getBaseFont());
 		textField.setFontSize(8);
 		try {

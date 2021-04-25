@@ -375,7 +375,7 @@ $.fn.appDestaca = function(options) {
 
 			},
 			elimina = function() {
-
+				
 				$("#imc-destacat")
 					.remove();
 
@@ -1109,7 +1109,9 @@ $.fn.appFormsConfiguracio = function(options) {
 
 										elm
 											.find("input:first")
-											.prop("checked", true);
+												.prop("checked", true);
+											//.find("label")
+											//	.trigger("click");
 
 									}
 
@@ -1654,7 +1656,7 @@ $.fn.appFormsValida = function(options) {
 
 					if (!idValid && input.attr("data-nss") === "s") {
 
-						idValid = ( appValidaIdentificador.nss(input_val) ) ? true : false;
+						idValid = ( appValidaIdentificador.nss(input_val) ) ? true : false;	
 
 					}
 
@@ -2657,7 +2659,7 @@ $.fn.appFormsAccions = function(options) {
 			actualCarrega = function() {
 
 				$.when(
-
+					
 					$.getJSON( APP_FORM_PAG_ACTUAL )
 
 				).then(
@@ -2667,7 +2669,7 @@ $.fn.appFormsAccions = function(options) {
 						FORMS_JSON = jsonForm;
 
 						if (FORMS_JSON.estado === "SUCCESS" || FORMS_JSON.estado === "WARNING") {
-
+							
 							// carregat
 
 							actualCarregat();
@@ -2682,7 +2684,7 @@ $.fn.appFormsAccions = function(options) {
 						} else {
 
 							consola("Formulari (carrega pàg. actual): error des de JSON");
-
+							
 							imc_contenidor
 								.errors({ estat: FORMS_JSON.estado, titol: FORMS_JSON.mensaje.titulo, text: FORMS_JSON.mensaje.texto, url: FORMS_JSON.url });
 
@@ -2730,7 +2732,7 @@ $.fn.appFormsAccions = function(options) {
 					,200
 				);
 
-
+				
 
 			},
 			actualMostra = function() {
@@ -2856,10 +2858,10 @@ $.fn.appMissatgeFormAccions = function(options) {
 					}, 200);
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -2885,6 +2887,6 @@ $.fn.appDataEspanyola = function(options) {
 
 	}
 
-	return data_esp;
+	return data_esp;	
 
 }

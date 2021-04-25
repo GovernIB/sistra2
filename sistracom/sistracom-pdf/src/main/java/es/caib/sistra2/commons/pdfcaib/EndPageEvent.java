@@ -1,12 +1,8 @@
-/**
- * Copyright (c) 2021 Generalitat Valenciana - Todos los derechos reservados.
- */
 package es.caib.sistra2.commons.pdfcaib;
 
 import java.awt.Color;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,14 +67,12 @@ public class EndPageEvent extends PdfPageEventHelper {
 		tplTotal = writer.getDirectContent().createTemplate(100, 100);
 		this.paginar = paginar;
 
-		final URL font_path = Thread.currentThread().getContextClassLoader().getResource("NotoSans-Regular.ttf");
-		FontFactory.register(font_path.toString(), "fontNotoSans");
 		PERSONALIZACION_TEXTO_CABECERA_DEFAULT = new PersonalizacionTexto(true, false, TypeFuente.NOTOSANS, 16);
 		PERSONALIZACION_TEXTO_SECCION_DEFAULT = new PersonalizacionTexto(true, false, TypeFuente.NOTOSANS, 16);
-		VALOR = FontFactory.getFont("fontNotoSans", 9);
-		ETIQUETA = FontFactory.getFont("fontNotoSans", 10);
-		SECCION = FontFactory.getFont("fontNotoSans", 9);
-		TEXTO = FontFactory.getFont("fontNotoSans", 9);
+		VALOR = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), 9);
+		ETIQUETA = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), 10);
+		SECCION = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), 9);
+		TEXTO = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), 9);
 
 	}
 
@@ -225,18 +219,14 @@ public class EndPageEvent extends PdfPageEventHelper {
 					image.setFixedHeight(90);
 					head.addCell(image);
 				} else if (cabecera.getLogoByte() != null) {
-
 					final Image logo = Image.getInstance(cabecera.getLogoByte());
-					System.out.println(logo.getHeight() + " + " + logo.getWidth());
 					logo.scaleToFit(120, 80);
 					logo.setAlignment(30);
-					System.out.println(logo.getHeight() + " + " + logo.getWidth());
 					final PdfPCell image = new PdfPCell();
 					image.addElement(logo);
 					image.setFixedHeight(90);
 					image.setHorizontalAlignment(1000);
 					head.addCell(image);
-
 				} else {
 					head.addCell(text);
 				}
