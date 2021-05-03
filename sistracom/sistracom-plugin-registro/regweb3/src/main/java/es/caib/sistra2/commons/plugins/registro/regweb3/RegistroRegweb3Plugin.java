@@ -484,14 +484,15 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	private AnexoWs generarAnexoWs(final DocumentoAsiento dr) throws RegistroPluginException {
 
 		final AnexoWs anexoAsiento = new AnexoWs();
-		anexoAsiento.setTitulo(UtilsRegweb3.truncarTexto(dr.getTituloDoc(), ConstantesRegweb3.MAX_SIZE_ANEXO_TITULO));
+		anexoAsiento.setTitulo(UtilsRegweb3.eliminarCaracteresNoPermitidos(
+				UtilsRegweb3.truncarTexto(dr.getTituloDoc(), ConstantesRegweb3.MAX_SIZE_ANEXO_TITULO)));
 		anexoAsiento.setTipoDocumental(dr.getTipoDocumental());
 		anexoAsiento.setTipoDocumento(dr.getTipoDocumento().toString());
 		anexoAsiento.setOrigenCiudadanoAdmin(dr.getOrigenDocumento().intValue());
 		anexoAsiento.setModoFirma(dr.getModoFirma().intValue());
 		anexoAsiento.setValidezDocumento(dr.getValidez().toString());
-		anexoAsiento.setNombreFicheroAnexado(
-				UtilsRegweb3.truncarFilename(dr.getNombreFichero(), ConstantesRegweb3.MAX_SIZE_ANEXO_FILENAME));
+		anexoAsiento.setNombreFicheroAnexado(UtilsRegweb3.eliminarCaracteresNoPermitidos(
+				UtilsRegweb3.truncarFilename(dr.getNombreFichero(), ConstantesRegweb3.MAX_SIZE_ANEXO_FILENAME)));
 		anexoAsiento.setFicheroAnexado(dr.getContenidoFichero());
 		anexoAsiento.setTipoMIMEFicheroAnexado(MimeType.getMimeTypeForExtension(getExtension(dr.getNombreFichero())));
 
@@ -500,8 +501,8 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		if (dr.getModoFirma() != TypeFirmaAsiento.SIN_FIRMA &&
 				dr.getTipoFirma() != TypeFirmaDigital.PADES) {
 				anexoAsiento.setFirmaAnexada(dr.getContenidoFirma());
-				anexoAsiento.setNombreFirmaAnexada(UtilsRegweb3.truncarFilename(dr.getNombreFirmaAnexada(),
-						ConstantesRegweb3.MAX_SIZE_ANEXO_FILENAME));
+				anexoAsiento.setNombreFirmaAnexada(UtilsRegweb3.eliminarCaracteresNoPermitidos(UtilsRegweb3.truncarFilename(dr.getNombreFirmaAnexada(),
+						ConstantesRegweb3.MAX_SIZE_ANEXO_FILENAME)));
 				anexoAsiento.setTipoMIMEFirmaAnexada(
 						MimeType.getMimeTypeForExtension(getExtension(dr.getNombreFirmaAnexada())));
 		}

@@ -681,10 +681,12 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 */
 	private Interesado generarInteresado(final TypeInteresado tipoInteresado, final DatosInteresado datosInteresado) {
 		TypeDocumentoIdentificacion tipoDocumento = null;
-		if (NifUtils.esNifPersonaFisica(datosInteresado.getNif())) {
-			tipoDocumento = TypeDocumentoIdentificacion.NIF;
+		if (NifUtils.esNie(datosInteresado.getNif())) {
+			tipoDocumento = TypeDocumentoIdentificacion.ID_EXTRANJERO;
 		} else if (NifUtils.esNifPersonaJuridica(datosInteresado.getNif())) {
 			tipoDocumento = TypeDocumentoIdentificacion.CIF;
+		} else if (NifUtils.esNifPersonaFisica(datosInteresado.getNif())) {
+			tipoDocumento = TypeDocumentoIdentificacion.NIF;
 		} else {
 			throw new TipoNoControladoException("Tipo de identificación no controlado");
 		}

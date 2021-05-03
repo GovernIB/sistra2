@@ -67,9 +67,16 @@ public final class XssFilter {
 	 * @return
 	 */
 	public static String normalizarFilename(final String nombreFichero) {
-		final String nombreFicheroNormalizado = Normalizer.normalize(nombreFichero, Normalizer.Form.NFD)
+		// Quitamos acentos y caracteres problematicos
+		String nombreFicheroNormalizado = Normalizer.normalize(nombreFichero, Normalizer.Form.NFD)
 				.replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replaceAll(" ", "_").replaceAll("%", "_")
 				.replaceAll("'", "´");
+		// Eliminamos chars no permitidos en RW3
+		final String[] charsNoPermitidos = { ">", "%", "\\*", "&", ":", ";", "¿", "\\?", "/", "\\|", "!", "<", "¡",
+				"\"" };
+		for (final String cnp : charsNoPermitidos) {
+			nombreFicheroNormalizado = nombreFicheroNormalizado.replaceAll(cnp, "_");
+		}
 		return nombreFicheroNormalizado;
 	}
 
