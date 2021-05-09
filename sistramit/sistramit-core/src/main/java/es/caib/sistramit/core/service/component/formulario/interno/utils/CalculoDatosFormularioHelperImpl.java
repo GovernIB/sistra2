@@ -230,11 +230,6 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 					vc = ejecutarScriptAutorrellenable(datosSesion, campoDefAuto);
 				}
 
-				if (vc == null) {
-					throw new ErrorConfiguracionException(
-							"No existe valor calculado para campo " + campoDefAuto.getIdentificador());
-				}
-
 				// En caso de que se haya reseteado el valor desde el script o
 				// si no tiene dependencia autorrellenable pero es un selector,
 				// reseteamos valor campo
@@ -300,6 +295,10 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 				throw new ValorCampoFormularioCaracteresNoPermitidosException(campoDef.getIdentificador(),
 						vcAuto.print());
 			}
+		}
+		if (vcAuto == null) {
+			throw new ErrorConfiguracionException(
+					"No existe valor calculado para campo " + campoDef.getIdentificador());
 		}
 		return vcAuto;
 	}

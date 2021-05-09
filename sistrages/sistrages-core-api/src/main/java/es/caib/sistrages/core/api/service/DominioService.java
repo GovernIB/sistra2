@@ -2,6 +2,7 @@ package es.caib.sistrages.core.api.service;
 
 import java.util.List;
 
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
@@ -236,5 +237,12 @@ public interface DominioService {
 	 * @return
 	 */
 	List<String> listDominiosByFD(Long idFuenteDatos);
+
+	/**
+	 * Devuelve los dominios remotos que tienen esa configuracion.
+	 * @param valueOf
+	 * @return
+	 */
+	public List<Dominio> getDominiosByConfAut(Long idConfiguracion, Long idArea);
 
 }

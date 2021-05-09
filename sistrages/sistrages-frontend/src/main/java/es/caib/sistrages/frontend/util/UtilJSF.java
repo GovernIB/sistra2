@@ -638,7 +638,7 @@ public final class UtilJSF {
 		case PLUGINS_ENTIDAD:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewPlugins.class) + EXTENSION_XHTML + ambitoEntidadURL;
 			break;
-		case FormateadorFormulario:
+		case FORMATEADORFORMULARIO:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewFormateadorFormulario.class) + EXTENSION_XHTML;
 			break;
 		case TRAMITES:
@@ -649,9 +649,6 @@ public final class UtilJSF {
 			break;
 		case MENSAJES:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewMensajesAvisoEntidad.class) + EXTENSION_XHTML;
-			break;
-		case FORMULARIOS_EXTERNOS:
-			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewFormulariosExternos.class) + EXTENSION_XHTML;
 			break;
 		default:
 			url = URL_SIN_IMPLEMENTAR;

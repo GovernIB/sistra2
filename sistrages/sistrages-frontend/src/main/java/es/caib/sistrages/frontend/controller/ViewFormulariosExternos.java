@@ -10,11 +10,14 @@ import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
+import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.FormularioExternoService;
+import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.ResultadoError;
@@ -26,7 +29,7 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilRest;
 
 /**
- * Mantenimiento de mensajes de aviso entidad.
+ * Mantenimiento de formularios externos de area.
  *
  * @author Indra
  *
@@ -39,13 +42,13 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	private FormularioExternoService formularioExternoService;
 
 	@Inject
-	private EntidadService entidadService;
-
-	@Inject
 	private SystemService systemService;
 
-	/** Id entidad. */
-	private Long idEntidad;
+	@Inject
+	private SecurityService securityService;
+
+	@Inject
+	private EntidadService entidadService;
 
 	/** Filtro (puede venir por parametro). */
 	private String filtro;
@@ -56,16 +59,34 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	/** Dato seleccionado en la lista. */
 	private GestorExternoFormularios datoSeleccionado;
 
+	/** Id. **/
+	private String id;
+
+	/** Ambito. **/
+	private String ambito;
+
+	/** Area. **/
+	private String area;
+
 	/**
 	 * Inicializacion.
 	 */
 	public void init() {
-		// Id entidad
-		idEntidad = UtilJSF.getIdEntidad();
-		// Control acceso
-		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(idEntidad);
 		// Titulo
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
+
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+			final List<TypeRolePermisos> permisos = securityService
+					.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
+			if (!permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+			   && !permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
+			   && !permisos.contains(TypeRolePermisos.CONSULTA)) {
+				throw new FrontException("No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area");
+			}
+		} else if (UtilJSF.getSessionBean().getActiveRole() != TypeRoleAcceso.ADMIN_ENT) {
+			throw new FrontException("No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area");
+		}
+
 		// Recupera datos
 		buscar();
 	}
@@ -85,7 +106,7 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	 */
 	private void buscar() {
 		// Filtra
-		listaDatos = formularioExternoService.listFormularioExterno(idEntidad, UtilJSF.getIdioma(), filtro);
+		listaDatos = formularioExternoService.listFormularioExterno(Long.valueOf(id), UtilJSF.getIdioma(), filtro);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 	}
@@ -137,8 +158,7 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
 		final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
 		final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
-		final Entidad entidad = entidadService.loadEntidad(idEntidad);
-
+		final Entidad entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
 		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, Constantes.CACHE_ENTIDAD,
 				entidad.getCodigoDIR3());
 		if (resultado.getCodigo() == 1) {
@@ -260,6 +280,30 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		this.listaDatos = listaDatos;
 	}
 
+	public String getAmbito() {
+		return ambito;
+	}
+
+	public void setAmbito(String ambito) {
+		this.ambito = ambito;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+
 	/**
 	 * @return the datoSeleccionado
 	 */
@@ -290,8 +334,8 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		if (modoAccesoDlg != TypeModoAcceso.ALTA) {
 			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		}
-
-		UtilJSF.openDialog(DialogFormularioExterno.class, modoAccesoDlg, params, true, 470, 165);
+		params.put(TypeParametroVentana.AREA.toString(), this.id);
+		UtilJSF.openDialog(DialogFormularioExterno.class, modoAccesoDlg, params, true, 490, 215);
 	}
 
 }

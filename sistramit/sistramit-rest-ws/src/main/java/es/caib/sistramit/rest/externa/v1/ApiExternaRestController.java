@@ -12,26 +12,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.caib.sistra2.commons.utils.JSONUtil;
-import es.caib.sistra2.commons.utils.JSONUtilException;
-import es.caib.sistramit.core.api.exception.ErrorJsonException;
+import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 import es.caib.sistramit.core.api.model.system.rest.externo.Evento;
 import es.caib.sistramit.core.api.model.system.rest.externo.FiltroEvento;
+import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramiteFinalizado;
 import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramitePersistencia;
 import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
+import es.caib.sistramit.core.api.model.system.rest.externo.TramiteFinalizado;
 import es.caib.sistramit.core.api.model.system.rest.externo.TramitePersistencia;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.api.service.RestApiExternaService;
 import es.caib.sistramit.rest.api.externa.v1.REvento;
 import es.caib.sistramit.rest.api.externa.v1.RFiltroEvento;
+import es.caib.sistramit.rest.api.externa.v1.RFiltroTramiteFinalizado;
 import es.caib.sistramit.rest.api.externa.v1.RFiltroTramitePersistencia;
 import es.caib.sistramit.rest.api.externa.v1.RInfoTicketAcceso;
+import es.caib.sistramit.rest.api.externa.v1.RTramiteFinalizado;
 import es.caib.sistramit.rest.api.externa.v1.RTramitePersistencia;
 import es.caib.sistramit.rest.api.externa.v1.RUsuarioAutenticadoInfo;
+import es.caib.sistramit.rest.api.util.JsonException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -119,6 +122,21 @@ public class ApiExternaRestController {
 		return ticket;
 	}
 
+	@ApiOperation(value = "Recuperación trámites finalizados", notes = "Recuperación trámites finalizados", response = RTramiteFinalizado.class, responseContainer = "List")
+	@RequestMapping(value = "/tramiteFinalizado", method = RequestMethod.POST)
+	public List<RTramiteFinalizado> obtenerTramitesFinalizados(@RequestBody final RFiltroTramiteFinalizado pFiltro) {
+		final List<RTramiteFinalizado> rListaTramites = new ArrayList<>();
+		final FiltroTramiteFinalizado filtroBusqueda = convierteFiltroTramiteFinalizado(pFiltro);
+		final List<TramiteFinalizado> listaTramites = restApiExternaService
+				.recuperarTramitesFinalizados(filtroBusqueda);
+		if (listaTramites != null && !listaTramites.isEmpty()) {
+			for (final TramiteFinalizado tramite : listaTramites) {
+				rListaTramites.add(convierteTramiteFinalizado(tramite));
+			}
+		}
+		return rListaTramites;
+	}
+
 	/**
 	 * Convierte filtro ticket acceso.
 	 *
@@ -162,27 +180,27 @@ public class ApiExternaRestController {
 	 * @param pRFiltro
 	 *                     filtro
 	 * @return filtro evento
+	 * @throws JsonException
 	 */
 	private FiltroEvento convierteFiltroEvento(final RFiltroEvento pRFiltro) {
-		FiltroEvento filtro = null;
-
+		final List<TypeEvento> eventosNoPermitidos = TypeEvento.getEventosInternos();
+		final FiltroEvento filtro = new FiltroEvento();
 		if (pRFiltro != null) {
-			filtro = new FiltroEvento();
-
 			filtro.setFecha(pRFiltro.getFecha());
-
 			if (pRFiltro.getListaEventos() != null) {
-				filtro.setListaEventos(new ArrayList<>());
-				for (final String evento : pRFiltro.getListaEventos()) {
-					if (TypeEvento.fromString(evento) != null) {
-						filtro.getListaEventos().add(TypeEvento.fromString(evento));
+				for (final String ev : pRFiltro.getListaEventos()) {
+					final TypeEvento evento = TypeEvento.fromString(ev);
+					if (evento == null) {
+						throw new ErrorFrontException("No existe evento de tipo " + ev);
 					}
+					if (eventosNoPermitidos.contains(evento)) {
+						throw new ErrorFrontException("Evento no permitido: " + ev);
+					}
+					filtro.getListaEventos().add(evento);
 				}
 			}
 		}
-
 		return filtro;
-
 	}
 
 	/**
@@ -193,20 +211,31 @@ public class ApiExternaRestController {
 	 * @return filtro tramite persistencia
 	 */
 	private FiltroTramitePersistencia convierteFiltroTramitePersistencia(final RFiltroTramitePersistencia pRFiltro) {
-		FiltroTramitePersistencia filtro = null;
-
+		final FiltroTramitePersistencia filtro = new FiltroTramitePersistencia();
 		if (pRFiltro != null) {
-
-			filtro = new FiltroTramitePersistencia();
-
 			filtro.setNif(pRFiltro.getNif());
 			filtro.setFechaDesde(pRFiltro.getFechaDesde());
 			filtro.setFechaHasta(pRFiltro.getFechaHasta());
-
 		}
-
 		return filtro;
+	}
 
+	/**
+	 * Convierte filtro tramite finalizado.
+	 *
+	 * @param pRFiltro
+	 *                     filtro
+	 * @return filtro tramite finalizado
+	 */
+	private FiltroTramiteFinalizado convierteFiltroTramiteFinalizado(final RFiltroTramiteFinalizado pRFiltro) {
+		final FiltroTramiteFinalizado filtro = new FiltroTramiteFinalizado();
+		if (pRFiltro != null) {
+			filtro.setNif(pRFiltro.getNif());
+			filtro.setFechaDesde(pRFiltro.getFechaDesde());
+			filtro.setFechaHasta(pRFiltro.getFechaHasta());
+			filtro.setIdSesionTramitacion(pRFiltro.getIdSesionTramitacion());
+		}
+		return filtro;
 	}
 
 	/**
@@ -217,38 +246,20 @@ public class ApiExternaRestController {
 	 * @return the r evento
 	 */
 	private REvento convierteEventos(final Evento pEvento) {
-
 		REvento rEvento = null;
-
 		if (pEvento != null) {
-
 			rEvento = new REvento();
-
 			rEvento.setIdSesionTramitacion(pEvento.getIdSesionTramitacion());
-
-			if (pEvento.getTipoEvento() != null) {
-				rEvento.setTipoEvento(pEvento.getTipoEvento().toString());
-			}
-
+			rEvento.setTipoEvento(pEvento.getTipoEvento().toString());
 			rEvento.setFecha(pEvento.getFecha());
-			rEvento.setNif(pEvento.getNif());
 			rEvento.setIdTramite(pEvento.getIdTramite());
 			rEvento.setVersionTramite(pEvento.getVersionTramite());
 			rEvento.setIdProcedimientoCP(pEvento.getIdProcedimientoCP());
 			rEvento.setIdProcedimientoSIA(pEvento.getIdProcedimientoSIA());
-			rEvento.setCodigoError(pEvento.getCodigoError());
-			rEvento.setDescripcion(pEvento.getDescripcion());
-			rEvento.setResultado(pEvento.getResultado());
-			rEvento.setTrazaError(pEvento.getTrazaError());
 			if (pEvento.getPropiedadesEvento() != null) {
-				try {
-					rEvento.setDetalle(JSONUtil.toJSON(pEvento.getPropiedadesEvento()));
-				} catch (final JSONUtilException e) {
-					throw new ErrorJsonException(e);
-				}
+				rEvento.setPropiedadesEvento(pEvento.getPropiedadesEvento().getPropiedades());
 			}
 		}
-
 		return rEvento;
 	}
 
@@ -273,6 +284,35 @@ public class ApiExternaRestController {
 			rTramite.setDescripcionTramite(pTramite.getDescripcionTramite());
 			rTramite.setFechaInicio(pTramite.getFechaInicio());
 			rTramite.setFechaUltimoAcceso(pTramite.getFechaUltimoAcceso());
+		}
+
+		return rTramite;
+	}
+
+	/**
+	 * Convierte tramite finalizado
+	 *
+	 * @param tramite
+	 *                    tramite
+	 * @return RTramiteFinalizado
+	 */
+	private RTramiteFinalizado convierteTramiteFinalizado(final TramiteFinalizado pTramite) {
+		RTramiteFinalizado rTramite = null;
+
+		if (pTramite != null) {
+			rTramite = new RTramiteFinalizado();
+			rTramite.setIdSesionTramitacion(pTramite.getIdSesionTramitacion());
+			rTramite.setIdioma(pTramite.getIdioma());
+			rTramite.setIdTramite(pTramite.getIdTramite());
+			rTramite.setVersionTramite(pTramite.getVersionTramite());
+			rTramite.setDescripcionTramite(pTramite.getDescripcionTramite());
+			rTramite.setFechaFin(pTramite.getFechaFin());
+			rTramite.setAutenticacion(pTramite.getAutenticacion().toString());
+			rTramite.setMetodoAutenticacion(pTramite.getMetodoAutenticacion().toString());
+			rTramite.setIdProcedimientoSIA(pTramite.getIdProcedimientoSIA());
+			rTramite.setNif(pTramite.getNif());
+			rTramite.setNombreApellidos(pTramite.getNombreApellidos());
+			rTramite.setNumeroRegistro(pTramite.getNumeroRegistro());
 		}
 
 		return rTramite;

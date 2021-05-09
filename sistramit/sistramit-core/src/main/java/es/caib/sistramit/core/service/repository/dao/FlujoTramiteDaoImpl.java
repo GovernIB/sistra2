@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,7 +29,9 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramiteFinalizado;
 import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramitePersistencia;
+import es.caib.sistramit.core.api.model.system.rest.externo.TramiteFinalizado;
 import es.caib.sistramit.core.api.model.system.rest.externo.TramitePersistencia;
 import es.caib.sistramit.core.api.model.system.rest.interno.FicheroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
@@ -49,6 +53,7 @@ import es.caib.sistramit.core.service.repository.model.HFirma;
 import es.caib.sistramit.core.service.repository.model.HPaso;
 import es.caib.sistramit.core.service.repository.model.HSesionTramitacion;
 import es.caib.sistramit.core.service.repository.model.HTramite;
+import es.caib.sistramit.core.service.repository.model.HTramiteFinalizado;
 
 /**
  * Implementación DAO Flujo Tramite.
@@ -128,12 +133,57 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	@Override
 	public void cambiaEstadoTramite(final String pIdSesionTramitacion, final TypeEstadoTramite pEstado) {
 		final HTramite hTramite = getHTramite(pIdSesionTramitacion);
+		// Actualizamos estado
 		if (pEstado == TypeEstadoTramite.FINALIZADO) {
 			hTramite.setFechaFin(new Date());
 		}
 		hTramite.setEstado(pEstado.toString());
-		// Actualizamos bbdd
 		entityManager.merge(hTramite);
+
+		// Si finalizado, persistimos en tabla de finalizados
+		if (pEstado == TypeEstadoTramite.FINALIZADO && !hTramite.isCancelado()) {
+			final HTramiteFinalizado hTramiteFin = new HTramiteFinalizado();
+			hTramiteFin.setIdSesionTramitacion(hTramite.getSesionTramitacion().getIdSesionTramitacion());
+			hTramiteFin.setFechaFinalizacion(hTramite.getFechaFin());
+			hTramiteFin.setIdTramite(hTramite.getIdTramite());
+			hTramiteFin.setVersionTramite(hTramite.getVersionTramite());
+			hTramiteFin.setDescripcionTramite(hTramite.getDescripcionTramite());
+			hTramiteFin.setIdProcedimientoSIA(hTramite.getIdProcedimientoSIA());
+			hTramiteFin.setIdioma(hTramite.getIdioma());
+			hTramiteFin.setAutenticacion(hTramite.getAutenticacion());
+			hTramiteFin.setMetodoAutenticacion(hTramite.getMetodoAutenticacion());
+			hTramiteFin.setNifIniciador(hTramite.getNifIniciador());
+			if (StringUtils.isNotBlank(hTramite.getNifIniciador())) {
+				hTramiteFin.setNombreIniciador(hTramite.getNombreIniciador()
+						+ StringUtils.defaultIfBlank(" " + hTramite.getApellido1Iniciador(), "")
+						+ StringUtils.defaultIfBlank(" " + hTramite.getApellido2Iniciador(), ""));
+			}
+			// Si existe paso registro, anotamos numero de registro y presentador
+			final List<HPaso> lstPasos = findHPasos(pIdSesionTramitacion);
+			for (final HPaso p : lstPasos) {
+				if (TypePaso.fromString(p.getTipoPaso()) == TypePaso.REGISTRAR) {
+					for (final HDocumento hdoc : p.getDocumentos()) {
+						if (TypeDocumentoPersistencia
+								.fromString(hdoc.getTipo()) == TypeDocumentoPersistencia.REGISTRO) {
+							hTramiteFin.setNumeroRegistro(hdoc.getRegistroNumeroRegistro());
+							hTramiteFin.setNifPresentador(hdoc.getRegistroNifPresentador());
+							hTramiteFin.setNombrePresentador(hdoc.getRegistroNombrePresentador());
+							break;
+						}
+					}
+					break;
+				}
+			}
+			// Si no existe paso registro, presentador será el iniciador
+			if (hTramiteFin.getNumeroRegistro() == null) {
+				hTramiteFin.setNumeroRegistro(hTramiteFin.getNifIniciador());
+				hTramiteFin.setNifPresentador(hTramiteFin.getNombreIniciador());
+			}
+
+			entityManager.persist(hTramiteFin);
+
+		}
+
 	}
 
 	@Override
@@ -341,6 +391,42 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	@Override
 	public List<TramitePersistencia> recuperarTramitesPersistencia(final FiltroTramitePersistencia pFiltro) {
 		return recuperarTramitesPersistenciaCriteria(pFiltro);
+	}
+
+	@Override
+	public List<TramiteFinalizado> recuperarTramitesFinalizados(final FiltroTramiteFinalizado pFiltro) {
+
+		final Map<String, Object> params = new LinkedHashMap<String, Object>();
+
+		String hql = "SELECT t FROM HTramiteFinalizado t WHERE ";
+		if (pFiltro.getNif() != null) {
+			hql += "t.nifPresentador = :nif ";
+			params.put("nif", pFiltro.getNif());
+		}
+		if (pFiltro.getIdSesionTramitacion() != null) {
+			hql += "t.idSesionTramitacion = :idSesionTramitacion ";
+			params.put("idSesionTramitacion", pFiltro.getIdSesionTramitacion());
+		}
+		if (pFiltro.getFechaDesde() != null) {
+			hql += " and t.fechaFinalizacion >= :fechaDesde ";
+			params.put("fechaDesde", pFiltro.getFechaDesde());
+		}
+		if (pFiltro.getFechaHasta() != null) {
+			hql += " and t.fechaFinalizacion <= :fechaHasta ";
+			params.put("fechaHasta", pFiltro.getFechaHasta());
+		}
+		final Query query = entityManager.createQuery(hql);
+		for (final String paramName : params.keySet()) {
+			query.setParameter(paramName, params.get(paramName));
+		}
+
+		final List<HTramiteFinalizado> queryResult = query.getResultList();
+
+		final List<TramiteFinalizado> result = new ArrayList<>();
+		for (final HTramiteFinalizado h : queryResult) {
+			result.add(HTramiteFinalizado.toModel(h));
+		}
+		return result;
 	}
 
 	// ------------ FUNCIONES PRIVADAS --------------------------------------

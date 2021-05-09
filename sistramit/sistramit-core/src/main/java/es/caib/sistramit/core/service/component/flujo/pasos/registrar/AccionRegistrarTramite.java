@@ -339,6 +339,10 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			docAsientoDpp.setRegistroResultado(resReg.getResultado());
 			docAsientoDpp.setRegistroNumeroRegistro(resReg.getNumeroRegistro());
 			docAsientoDpp.setRegistroFechaRegistro(resReg.getFechaRegistro());
+			docAsientoDpp.setRegistroNifPresentador(
+					pDipa.getParametrosRegistro().getDatosPresentacion().getPresentador().getNif());
+			docAsientoDpp.setRegistroNombrePresentador(
+					pDipa.getParametrosRegistro().getDatosPresentacion().getPresentador().getNombreApellidos());
 			dao.establecerDatosDocumento(pDipa.getIdSesionTramitacion(), pDipa.getIdPaso(), docAsientoDpp);
 			break;
 		case ERROR:
@@ -682,10 +686,12 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 */
 	private Interesado generarInteresado(final TypeInteresado tipoInteresado, final DatosInteresado datosInteresado) {
 		TypeDocumentoIdentificacion tipoDocumento = null;
-		if (NifUtils.esNifPersonaFisica(datosInteresado.getNif())) {
-			tipoDocumento = TypeDocumentoIdentificacion.NIF;
+		if (NifUtils.esNie(datosInteresado.getNif())) {
+			tipoDocumento = TypeDocumentoIdentificacion.ID_EXTRANJERO;
 		} else if (NifUtils.esNifPersonaJuridica(datosInteresado.getNif())) {
 			tipoDocumento = TypeDocumentoIdentificacion.CIF;
+		} else if (NifUtils.esNifPersonaFisica(datosInteresado.getNif())) {
+			tipoDocumento = TypeDocumentoIdentificacion.NIF;
 		} else {
 			throw new TipoNoControladoException("Tipo de identificación no controlado");
 		}

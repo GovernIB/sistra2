@@ -29,8 +29,12 @@ public class JGestorExternoFormularios implements IModelApi {
 	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "GFE_CODENT", nullable = false)
-	private JEntidad entidad;
+	@JoinColumn(name = "GFE_CODARE", nullable = false)
+	private JArea area;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "GFE_CODCAU", nullable = false)
+	private JConfiguracionAutenticacion configuracionAutenticacion;
 
 	@Column(name = "GFE_IDENTI", nullable = false, length = 20)
 	private String identificador;
@@ -53,13 +57,6 @@ public class JGestorExternoFormularios implements IModelApi {
 		this.codigo = codigo;
 	}
 
-	public JEntidad getEntidad() {
-		return this.entidad;
-	}
-
-	public void setEntidad(final JEntidad entidad) {
-		this.entidad = entidad;
-	}
 
 	/**
 	 * @return the identificador
@@ -103,15 +100,45 @@ public class JGestorExternoFormularios implements IModelApi {
 		this.url = url;
 	}
 
+	public JArea getArea() {
+		return area;
+	}
+
+	public void setArea(JArea area) {
+		this.area = area;
+	}
+
+	/**
+	 * @return the configuracionAutenticacion
+	 */
+	public JConfiguracionAutenticacion getConfiguracionAutenticacion() {
+		return configuracionAutenticacion;
+	}
+
+	/**
+	 * @param configuracionAutenticacion the configuracionAutenticacion to set
+	 */
+	public void setConfiguracionAutenticacion(JConfiguracionAutenticacion configuracionAutenticacion) {
+		this.configuracionAutenticacion = configuracionAutenticacion;
+	}
+
+	/** toModel **/
 	public GestorExternoFormularios toModel() {
 		final GestorExternoFormularios formExterno = new GestorExternoFormularios();
 		formExterno.setCodigo(codigo);
 		formExterno.setIdentificador(this.getIdentificador());
 		formExterno.setDescripcion(this.getDescripcion());
 		formExterno.setUrl(this.getUrl());
+		if (this.getConfiguracionAutenticacion() != null) {
+			formExterno.setConfiguracionAutenticacion(this.getConfiguracionAutenticacion().toModel());
+		}
+		if (this.getArea() != null) {
+			formExterno.setAreaIdentificador(this.getArea().getIdentificador());
+		}
 		return formExterno;
 	}
 
+	/** From model **/
 	public static JGestorExternoFormularios fromModel(final GestorExternoFormularios model) {
 		JGestorExternoFormularios jModel = null;
 		if (model != null) {
@@ -120,15 +147,21 @@ public class JGestorExternoFormularios implements IModelApi {
 			jModel.setIdentificador(model.getIdentificador());
 			jModel.setDescripcion(model.getDescripcion());
 			jModel.setUrl(model.getUrl());
+			if (model.getConfiguracionAutenticacion() != null) {
+				jModel.setConfiguracionAutenticacion(JConfiguracionAutenticacion.fromModel(model.getConfiguracionAutenticacion()));
+			}
 		}
 		return jModel;
 	}
 
 	/** Mergea **/
-	public void merge(final GestorExternoFormularios pFormularioExterno) {
-		this.setDescripcion(pFormularioExterno.getDescripcion());
-		this.setUrl(pFormularioExterno.getUrl());
-		this.setIdentificador(pFormularioExterno.getIdentificador());
+	public void merge(final GestorExternoFormularios model) {
+		this.setDescripcion(model.getDescripcion());
+		this.setUrl(model.getUrl());
+		this.setIdentificador(model.getIdentificador());
+		if (model.getConfiguracionAutenticacion() != null) {
+			this.setConfiguracionAutenticacion(JConfiguracionAutenticacion.fromModel(model.getConfiguracionAutenticacion()));
+		}
 	}
 
 }

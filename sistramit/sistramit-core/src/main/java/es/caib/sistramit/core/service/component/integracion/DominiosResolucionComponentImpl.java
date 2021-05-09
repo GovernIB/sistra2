@@ -126,8 +126,19 @@ public final class DominiosResolucionComponentImpl implements DominiosResolucion
 			try {
 				final List<es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio> parametros = new ArrayList<>();
 				parametrosDominio.getParametros();
+				String user = null;
+				String pass = null;
+				if (dominio.getConfiguracionAutenticacion() != null) {
+					user = dominio.getConfiguracionAutenticacion().getUsuario();
+					pass = dominio.getConfiguracionAutenticacion().getPassword();
+				}
+				Long timeout = dominio.getTimeout();
+				if (timeout == null) {
+					timeout = 60L;
+				}
+
 				final es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio rvalores = iplugin
-						.invocarDominio(dominio.getIdentificador(), dominio.getUri(), parametros);
+						.invocarDominio(dominio.getIdentificador(), dominio.getUri(), parametros, user, pass, timeout);
 				valoresDominio = new ValoresDominio();
 				valoresDominio.setCodigoError(rvalores.getCodigoError());
 				valoresDominio.setDatos(rvalores.getDatos());

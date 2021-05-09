@@ -33,6 +33,7 @@ import es.caib.sistrages.rest.adapter.RolesAdapter;
 import es.caib.sistrages.rest.adapter.ValoresDominioAdapter;
 import es.caib.sistrages.rest.adapter.VersionTramiteAdapter;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
+import es.caib.sistrages.rest.api.interna.RConfiguracionAutenticacion;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RDominio;
@@ -134,10 +135,7 @@ public class ApiInternaRestController {
 		if (entidad.isValorarTramite()) {
 			valoraciones = restApiService.getValoraciones(entidad.getCodigo());
 		}
-		final List<GestorExternoFormularios> gestoresExternosFormularios = restApiService
-				.listGestorExternoFormularios(entidad.getCodigo());
-		return confEntidadAdapter.convertir(entidad, formSoporte, plantillas, valoraciones,
-				gestoresExternosFormularios);
+		return confEntidadAdapter.convertir(entidad, formSoporte, plantillas, valoraciones);
 	}
 
 	/**
@@ -158,7 +156,9 @@ public class ApiInternaRestController {
 			@PathVariable("version") final int version, @PathVariable("idioma") final String idioma) {
 		final String idiomaDefecto = restApiService.getValorConfiguracionGlobal("definicionTramite.lenguajeDefecto");
 		final TramiteVersion tv = restApiService.loadTramiteVersion(idtramite, version);
-		return versionTramiteAdapter.convertir(idtramite, tv, idioma, idiomaDefecto);
+		final List<GestorExternoFormularios> gestoresExternosFormularios = restApiService
+				.listGestorExternoFormularios(tv.getIdArea());
+		return versionTramiteAdapter.convertir(idtramite, tv, idioma, idiomaDefecto, gestoresExternosFormularios);
 	}
 
 	/**

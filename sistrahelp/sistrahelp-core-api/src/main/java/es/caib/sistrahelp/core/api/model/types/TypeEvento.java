@@ -27,6 +27,14 @@ public enum TypeEvento {
 	 */
 	CARGAR_TRAMITE("TR_CAR"),
 	/**
+	 * PAGO ELECTRÓNICO.
+	 */
+	PAGO_ELECTRONICO("TR_PAE"),
+	/**
+	 * PAGO PRESENCIAL (CARTA PAGO).
+	 */
+	PAGO_PRESENCIAL("TR_PAP"),
+	/**
 	 * BORRADO DEL TRÁMITE.
 	 */
 	BORRAR_TRAMITE("TR_BOR"),
@@ -56,7 +64,7 @@ public enum TypeEvento {
 	 * Constructor.
 	 *
 	 * @param value
-	 *            Valor como string.
+	 *                  Valor como string.
 	 */
 	private TypeEvento(final String value) {
 		stringValueEvento = value;
@@ -76,7 +84,7 @@ public enum TypeEvento {
 	 * Método para From string de la clase TypeAutenticacion.
 	 *
 	 * @param text
-	 *            Parámetro text
+	 *                 Parámetro text
 	 * @return el type autenticacion
 	 */
 	public static TypeEvento fromString(final String text) {

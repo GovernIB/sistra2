@@ -141,6 +141,14 @@ public class HDocumento implements IModelApi {
 	@Column(name = "DTP_REGSES")
 	private String registroIdSesion;
 
+	/** Atributo registro nif interesado. */
+	@Column(name = "DTP_REGNIF")
+	private String registroNifPresentador;
+
+	/** Atributo registro nombre y apellidos interesado. */
+	@Column(name = "DTP_REGNOM")
+	private String registroNombrePresentador;
+
 	/** Atributo firmas. */
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "documentoPersistente", orphanRemoval = true)
 	@OrderBy("fecha ASC")
@@ -651,6 +659,8 @@ public class HDocumento implements IModelApi {
 		documento.setRegistroNumeroRegistro(hDocumento.getRegistroNumeroRegistro());
 		documento.setRegistroFechaRegistro(hDocumento.getRegistroFechaRegistro());
 		documento.setRegistroIdSesion(hDocumento.getRegistroIdSesion());
+		documento.setRegistroNifPresentador(hDocumento.getRegistroNifPresentador());
+		documento.setRegistroNombrePresentador(hDocumento.getRegistroNombrePresentador());
 
 		return documento;
 
@@ -819,6 +829,9 @@ public class HDocumento implements IModelApi {
 		d.setRegistroNumeroRegistro(documento.getRegistroNumeroRegistro());
 		d.setRegistroFechaRegistro(documento.getRegistroFechaRegistro());
 		d.setRegistroIdSesion(documento.getRegistroIdSesion());
+		d.setRegistroNifPresentador(documento.getRegistroNifPresentador());
+		d.setRegistroNombrePresentador(documento.getRegistroNombrePresentador());
+
 	}
 
 	/**
@@ -920,6 +933,44 @@ public class HDocumento implements IModelApi {
 	 */
 	public void setRegistroIdSesion(final String registroIdSesion) {
 		this.registroIdSesion = registroIdSesion;
+	}
+
+	/**
+	 * Método de acceso a registroNifPresentador.
+	 *
+	 * @return registroNifPresentador
+	 */
+	public String getRegistroNifPresentador() {
+		return registroNifPresentador;
+	}
+
+	/**
+	 * Método para establecer registroNifPresentador.
+	 *
+	 * @param registroNifPresentador
+	 *                                   registroNifPresentador a establecer
+	 */
+	public void setRegistroNifPresentador(final String registroNifPresentador) {
+		this.registroNifPresentador = registroNifPresentador;
+	}
+
+	/**
+	 * Método de acceso a registroNombrePresentador.
+	 *
+	 * @return registroNombrePresentador
+	 */
+	public String getRegistroNombrePresentador() {
+		return registroNombrePresentador;
+	}
+
+	/**
+	 * Método para establecer registroNombrePresentador.
+	 *
+	 * @param registroNombrePresentador
+	 *                                      registroNombrePresentador a establecer
+	 */
+	public void setRegistroNombrePresentador(final String registroNombrePresentador) {
+		this.registroNombrePresentador = registroNombrePresentador;
 	}
 
 }

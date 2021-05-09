@@ -10,8 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistramit.core.api.model.system.rest.externo.Evento;
 import es.caib.sistramit.core.api.model.system.rest.externo.FiltroEvento;
+import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramiteFinalizado;
 import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramitePersistencia;
 import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
+import es.caib.sistramit.core.api.model.system.rest.externo.TramiteFinalizado;
 import es.caib.sistramit.core.api.model.system.rest.externo.TramitePersistencia;
 import es.caib.sistramit.core.api.service.RestApiExternaService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
@@ -43,6 +45,12 @@ public class RestApiExternaServiceImpl implements RestApiExternaService {
 	@NegocioInterceptor
 	public String obtenerTicketAcceso(final InfoTicketAcceso pInfoTicketAcceso) {
 		return restApiExternaComponent.obtenerTicketAcceso(pInfoTicketAcceso);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<TramiteFinalizado> recuperarTramitesFinalizados(final FiltroTramiteFinalizado filtroBusqueda) {
+		return restApiExternaComponent.recuperarTramitesFinalizados(filtroBusqueda);
 	}
 
 }

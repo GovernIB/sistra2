@@ -162,6 +162,30 @@
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleRemoto}" value=""  />
 
+						<p:column id="columnaRemota2" rendered="#{dialogDominio.visibleRemoto}">
+							<h:panelGrid id="panelCongAut" columnClasses="w30, w40, w30" columns = "3"  cellspacing = "0"  width="100%">
+								<p:outputLabel for="configAut" value="#{msg['dialogDominio.headerTipo.consultaRemota.configAut']}"  style="margin-right:5px" />
+							 	<p:selectOneMenu id="configAut" value="#{dialogDominio.data.configuracionAutenticacion}"  style="width:150px" disabled="#{dialogDominio.isConsulta()}" converter="#{configuracionConverter}"   >
+									    <f:selectItems value="#{dialogDominio.configuraciones}" var="fd" itemValue="#{fd}" itemLabel="#{fd.identificador}" />
+								</p:selectOneMenu >
+								<p:commandButton id="btnNuevaConf" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogDominio.nuevaConfiguracion()}" process="@this" update="growlDialog">
+		       						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogoConf}" update="growlDialog configAut"/>
+		       					</p:commandButton>
+							</h:panelGrid>
+						</p:column>
+						<p:outputLabel rendered="#{dialogDominio.visibleRemoto}" value=""  />
+
+						<p:column id="columnaRemota3" rendered="#{dialogDominio.visibleRemoto}">
+							<h:panelGrid id="panelCongAut2" columnClasses="w30, w40, w30" columns = "3"  cellspacing = "0"  width="100%">
+
+								<p:outputLabel for="timeout" value="#{msg['dialogDominio.headerTipo.consultaRemota.timeout']}"  style="margin-right:5px"  />
+								<p:inputNumber id="timeout" value="#{dialogDominio.data.timeout}" disabled="#{dialogDominio.isConsulta()}" maxlength="4" maxValue="9999" decimalPlaces="0" />
+								<p:commandButton id="btnCrearConfig2" style="display:none">
+								</p:commandButton>
+							</h:panelGrid>
+						</p:column>
+
+
 						<p:column id="columnaFuente1" colspan="1" rendered="#{dialogDominio.visibleFuente}" >
 							<p:outputLabel for="fuente" value="#{msg['dialogDominio.headerTipo.fuente.fuente']}" style="margin-right:20px" />
 							<p:selectOneMenu id="fuente" value="#{dialogDominio.idFuenteDato}"  style="width:200px" disabled="#{dialogDominio.isConsulta()}">
@@ -260,7 +284,7 @@
 		        	</p:commandButton>
 	     		</f:facet>
 				<f:facet name="right">
-	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptarSinInvalidacion()}" process="@form"  rendered="#{dialogDominio.permiteGuardar() and dialogDominio.isAlta()}" styleClass="boton-azul"  />
+	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptarSinInvalidacion()}" process="@form" update="growlDialog"  rendered="#{dialogDominio.permiteGuardar() and dialogDominio.isAlta()}" styleClass="boton-azul"  />
 					<p:commandButton value="#{msg['botones.guardar']}"  process="@form" styleClass="boton-azul" rendered="#{dialogDominio.permiteGuardar() and dialogDominio.mostrarAdvertencia and dialogDominio.isEdicion()}"   onclick="cambioValorB64('confirmDialogGuardar');"  />
 	        		<p:commandButton value="#{msg['botones.guardar']}"  process="@form" styleClass="boton-azul" rendered="#{dialogDominio.permiteGuardar() and !dialogDominio.mostrarAdvertencia and dialogDominio.isEdicion()}"  onclick="cambioValorB64('confirmDialogCache');"  />
 					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominio.cancelar()}" process="@this" rendered="#{dialogDominio.permiteGuardar()}"/>

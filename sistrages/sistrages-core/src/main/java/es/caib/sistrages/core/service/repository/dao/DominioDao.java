@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -165,4 +166,12 @@ public interface DominioDao {
 	 * @param idArea
 	 */
 	void borrarReferencias(Long idTramite, Long idArea);
+
+	/**
+	 * Devuelve la lista de dominios que tiene esa configuracion
+	 * @param idConfiguracion
+	 * @param idArea
+	 * @return
+	 */
+	List<Dominio> getDominiosByConfAut(Long idConfiguracion, Long idArea);
 }

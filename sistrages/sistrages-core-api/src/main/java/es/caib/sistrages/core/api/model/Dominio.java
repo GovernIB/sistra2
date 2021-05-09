@@ -73,6 +73,12 @@ public class Dominio extends ModelApi {
 	/** Si el ambito es entidad **/
 	private Long entidad;
 
+	/** Timeout **/
+	private Long timeout;
+
+	/** Configuracion Autenticacion **/
+	private ConfiguracionAutenticacion configuracionAutenticacion;
+
 	/**
 	 * Crea una nueva instancia de Dominio.
 	 */
@@ -304,6 +310,34 @@ public class Dominio extends ModelApi {
 	 */
 	public void setCache(final TypeCache cache) {
 		this.cache = cache;
+	}
+
+	/**
+	 * @return the timeout
+	 */
+	public Long getTimeout() {
+		return timeout;
+	}
+
+	/**
+	 * @param timeout the timeout to set
+	 */
+	public void setTimeout(Long timeout) {
+		this.timeout = timeout;
+	}
+
+	/**
+	 * @return the configuracionAutenticacion
+	 */
+	public ConfiguracionAutenticacion getConfiguracionAutenticacion() {
+		return configuracionAutenticacion;
+	}
+
+	/**
+	 * @param configuracionAutenticacion the configuracionAutenticacion to set
+	 */
+	public void setConfiguracionAutenticacion(ConfiguracionAutenticacion configuracionAutenticacion) {
+		this.configuracionAutenticacion = configuracionAutenticacion;
 	}
 
 }

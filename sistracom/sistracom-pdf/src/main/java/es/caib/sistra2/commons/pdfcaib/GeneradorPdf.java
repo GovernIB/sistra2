@@ -43,9 +43,9 @@ public class GeneradorPdf {
 
 	private static final int COLUMNAS_TABLA = 6;
 	private static final int TAMANIO_SECCION = 10;
-	private static final int TAMANIO_ETIQUETA = 8;
-	private static final int TAMANIO_VALOR = 8;
-	private static final int TAMANIO_TEXTO = 8;
+	private static final int TAMANIO_ETIQUETA = 10;
+	private static final int TAMANIO_VALOR = 9;
+	private static final int TAMANIO_TEXTO = 9;
 
 	private final Logger log = LoggerFactory.getLogger(GeneradorPdf.class);
 

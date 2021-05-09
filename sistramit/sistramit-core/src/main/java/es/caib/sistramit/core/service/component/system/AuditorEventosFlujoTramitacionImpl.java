@@ -10,10 +10,14 @@ import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistra2.commons.utils.UserAgentUtil;
 import es.caib.sistramit.core.api.exception.ServiceException;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.flujo.DatosSesionPago;
+import es.caib.sistramit.core.api.model.flujo.PagoVerificacion;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoPagar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
@@ -193,6 +197,34 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 				propiedadesEvento.addPropiedad(TypeParametroEvento.NUMERO_REGISTRO.toString(),
 						resReg.getNumeroRegistro());
 				eventos.add(eventoRegistrarTramite);
+			}
+		}
+
+		// Evento pago
+		if (accionPaso instanceof TypeAccionPasoPagar) {
+			// Pago electronico
+			if (((TypeAccionPasoPagar) accionPaso) == TypeAccionPasoPagar.VERIFICAR_PAGO_PASARELA) {
+				final PagoVerificacion pv = (PagoVerificacion) respuestaAccionPaso.getParametroRetorno("verificacion");
+				final DatosSesionPago sp = (DatosSesionPago) respuestaAccionPaso.getParametroRetorno("sesionPago");
+				if (pv.getRealizado() == TypeSiNo.SI) {
+					final EventoAuditoria eventoPagoTramite = crearEvento(TypeEvento.PAGO_ELECTRONICO,
+							idSesionTramitacion);
+					final ListaPropiedades propiedadesEvento = new ListaPropiedades();
+					eventoPagoTramite.setPropiedadesEvento(propiedadesEvento);
+					propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_PASARELA.toString(), sp.getPasarelaId());
+					propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_IMPORTE.toString(), sp.getImporte() + "");
+					eventos.add(eventoPagoTramite);
+				}
+			}
+			// Pago presencial
+			if (((TypeAccionPasoPagar) accionPaso) == TypeAccionPasoPagar.CARTA_PAGO_PRESENCIAL) {
+				final DatosSesionPago sp = (DatosSesionPago) respuestaAccionPaso.getParametroRetorno("sesionPago");
+				final EventoAuditoria eventoPagoTramite = crearEvento(TypeEvento.PAGO_PRESENCIAL, idSesionTramitacion);
+				final ListaPropiedades propiedadesEvento = new ListaPropiedades();
+				eventoPagoTramite.setPropiedadesEvento(propiedadesEvento);
+				propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_PASARELA.toString(), sp.getPasarelaId());
+				propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_IMPORTE.toString(), sp.getImporte() + "");
+				eventos.add(eventoPagoTramite);
 			}
 		}
 

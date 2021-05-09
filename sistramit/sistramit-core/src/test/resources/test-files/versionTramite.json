@@ -10,6 +10,17 @@
   "dominios": [
     "DOM-JUNIT"
   ],
+  "gestoresFormulariosExternos": [
+  	{
+    "identificador": "GFMOCK",
+    "url": "http://GFMOCK.es",
+    "configuracionAutenticacion": {
+		    "identificador": "login1",
+		    "usuario": "usu1",
+		    "password": "pass1"
+		  	}
+  	}
+  ],
   "propiedades": {
     "autenticado": true,
     "nivelQAA": 2,

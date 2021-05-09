@@ -2,6 +2,7 @@ package es.caib.sistrages.core.api.model.comun;
 
 import java.util.Arrays;
 
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
@@ -22,6 +23,9 @@ public class FilaImportarDominio extends FilaImportarBase {
 
 	/** Dominio. **/
 	private Dominio dominioActual;
+
+	/** Configuracion Autenticacion **/
+	private ConfiguracionAutenticacion configuracionAutenticacionActual;
 
 	/** Indica si es visibleBoton o no el boton. **/
 	private boolean visibleBoton;
@@ -387,6 +391,20 @@ public class FilaImportarDominio extends FilaImportarBase {
 	}
 
 	/**
+	 * @return the configuracionAutenticacionActual
+	 */
+	public ConfiguracionAutenticacion getConfiguracionAutenticacionActual() {
+		return configuracionAutenticacionActual;
+	}
+
+	/**
+	 * @param configuracionAutenticacionActual the configuracionAutenticacionActual to set
+	 */
+	public void setConfiguracionAutenticacionActual(ConfiguracionAutenticacion configuracionAutenticacionActual) {
+		this.configuracionAutenticacionActual = configuracionAutenticacionActual;
+	}
+
+	/**
 	 * Crea un elemento FilaImportarDominio de tipo IT (Importar Tramite) cuando
 	 * tiene un error de tipo:
 	 * <ul>
@@ -405,7 +423,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	 * @return
 	 */
 	public static FilaImportarDominio crearITerrorAmbitoAreas(final Dominio dominio, final Dominio dominioActual,
-			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final String literal) {
+			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final String literal, final ConfiguracionAutenticacion configuracionAutenticacion) {
 		final FilaImportarDominio fila = new FilaImportarDominio(dominio, dominioActual, fd, fdContent, fdActual,
 				literal);
 		fila.setAccion(TypeImportarAccion.NADA);
@@ -414,6 +432,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 		fila.setResultado(TypeImportarResultado.INFO);
 		fila.setVisibleBoton(false);
 		fila.setMismoTipo(false);
+		fila.setConfiguracionAutenticacionActual(configuracionAutenticacion);
 		return fila;
 	}
 
@@ -435,7 +454,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	 * @return
 	 */
 	public static FilaImportarDominio crearITsoloReemplazar(final Dominio dominio, final Dominio dominioActual,
-			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final String literal) {
+			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final String literal, final ConfiguracionAutenticacion configuracionAutenticacion) {
 		final FilaImportarDominio fila = new FilaImportarDominio(dominio, dominioActual, fd, fdContent, fdActual,
 				literal);
 		fila.setAccion(TypeImportarAccion.REEMPLAZAR);
@@ -450,7 +469,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 		fila.setResultado(TypeImportarResultado.WARNING);
 		fila.setVisibleBoton(true);
 		fila.setAcciones(Arrays.asList(TypeImportarAccion.REEMPLAZAR));
-
+		fila.setConfiguracionAutenticacionActual(configuracionAutenticacion);
 		return fila;
 	}
 
@@ -471,7 +490,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	 * @return
 	 */
 	public static FilaImportarDominio crearITconPermisos(final Dominio dominio, final Dominio dominioActual,
-			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final String literal) {
+			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final String literal, final ConfiguracionAutenticacion configuracionAutenticacion) {
 
 		final FilaImportarDominio fila = new FilaImportarDominio(dominio, dominioActual, fd, fdContent, fdActual,
 				literal);
@@ -489,7 +508,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 		fila.setVisibleBoton(true);
 		fila.setMismoTipo((fila.getDominio() != null && fila.getDominioActual() != null
 				&& fila.getDominioActual().getTipo() == fila.getDominio().getTipo()));
-
+		fila.setConfiguracionAutenticacionActual(configuracionAutenticacion);
 		return fila;
 	}
 
@@ -508,7 +527,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	 * @return
 	 */
 	public static FilaImportarDominio crearITsoloMantener(final Dominio dominio, final Dominio dominioActual,
-			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final String literal) {
+			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final String literal, final ConfiguracionAutenticacion configuracionAutenticacion) {
 		final FilaImportarDominio fila = new FilaImportarDominio(dominio, dominioActual, fd, fdContent, fdActual,
 				literal);
 		fila.setAccion(TypeImportarAccion.NADA);
@@ -517,6 +536,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 		fila.setResultado(TypeImportarResultado.OK);
 		fila.setVisibleBoton(false);
 		fila.setMismoTipo(true);
+		fila.setConfiguracionAutenticacionActual(configuracionAutenticacion);
 		return fila;
 	}
 
@@ -535,7 +555,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 	 * @return
 	 */
 	public static FilaImportarDominio crearITerrorSoloMantener(final Dominio dominio, final Dominio dominioActual,
-			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final String literal) {
+			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final String literal, final ConfiguracionAutenticacion configuracionAutenticacion) {
 		final FilaImportarDominio fila = new FilaImportarDominio(dominio, dominioActual, fd, fdContent, fdActual,
 				literal);
 		fila.setEstado(TypeImportarEstado.ERROR);
@@ -550,6 +570,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 		fila.setResultado(TypeImportarResultado.INFO);
 		fila.setVisibleBoton(false);
 		fila.setMismoTipo(true);
+		fila.setConfiguracionAutenticacionActual(configuracionAutenticacion);
 		return fila;
 	}
 

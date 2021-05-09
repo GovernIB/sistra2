@@ -23,6 +23,7 @@ import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.FuenteDatos;
+import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
@@ -39,6 +40,7 @@ import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.FilaImportar;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
+import es.caib.sistrages.core.api.model.comun.FilaImportarGestor;
 import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
 import es.caib.sistrages.core.api.model.comun.ScriptInfo;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
@@ -56,6 +58,7 @@ import es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao;
 import es.caib.sistrages.core.service.repository.dao.DominioDao;
 import es.caib.sistrages.core.service.repository.dao.FicheroExternoDao;
 import es.caib.sistrages.core.service.repository.dao.FormateadorFormularioDao;
+import es.caib.sistrages.core.service.repository.dao.FormularioExternoDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 import es.caib.sistrages.core.service.repository.dao.FuenteDatoDao;
 import es.caib.sistrages.core.service.repository.dao.HistorialVersionDao;
@@ -88,6 +91,10 @@ public class TramiteServiceImpl implements TramiteService {
 	/** DAO Formateador formulario */
 	@Autowired
 	FormateadorFormularioDao formateadorFormularioDao;
+
+	/** DAO Externo formulario */
+	@Autowired
+	FormularioExternoDao gestorExternoDao;
 
 	/** DAO Formulario interno. */
 	@Autowired
@@ -961,6 +968,17 @@ public class TramiteServiceImpl implements TramiteService {
 			mapFormateadores.put(filaFormateador.getFormateadorFormulario().getCodigo(), idFormateador);
 		}
 
+		final Map<Long, GestorExternoFormularios> gestores = new HashMap<>();
+		final Map<Long, Long> mapGestores = new HashMap<>();
+		for (final FilaImportarGestor filaGestor : filaImportar.getFilaGestor()) {
+
+			final Long idGestor = gestorExternoDao.importar(filaGestor, idArea);
+			final GestorExternoFormularios ff = gestorExternoDao.getById(idGestor);
+			gestores.put(idGestor, ff);
+			mapGestores.put(filaGestor.getGestor().getCodigo(), idGestor);
+		}
+
+
 		final Long idTramiteVersion = tramiteDao.importar(filaImportar.getFilaTramiteVersion(), idTramite, idDominios,
 				filaImportar.getUsuario(), filaImportar.isModoIM());
 		resultado.setIdTramiteVersion(idTramiteVersion);
@@ -978,7 +996,7 @@ public class TramiteServiceImpl implements TramiteService {
 			reordenar(tramitePaso);
 			tramitePasoDao.importar(filaImportar.getFilaTramiteRegistro(), tramitePaso, idTramiteVersion,
 					filaImportar.getIdEntidad(), filaImportar.getFormularios(), filaImportar.getFicheros(),
-					filaImportar.getFicherosContent(), formateadores, mapFormateadores, idDominiosEquivalencia);
+					filaImportar.getFicherosContent(), formateadores, mapFormateadores, gestores, mapGestores, idDominiosEquivalencia);
 			ordenPaso++;
 		}
 
@@ -1304,6 +1322,12 @@ public class TramiteServiceImpl implements TramiteService {
 		}
 
 		return paso;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<GestorExternoFormularios> getGFEByTramiteVersion(Long idTramiteVersion) {
+		return tramiteDao.getGFEByTramiteVersion(idTramiteVersion);
 	}
 
 }

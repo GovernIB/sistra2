@@ -1,6 +1,7 @@
 package es.caib.sistramit.rest.api.externa.v1;
 
 import java.util.Date;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -30,28 +31,10 @@ public class REvento {
 	private Date fecha;
 
 	/**
-	 * Descripcion.
-	 */
-	@ApiModelProperty(value = "Descripcion")
-	private String descripcion;
-
-	/**
-	 * Resultado.
-	 */
-	@ApiModelProperty(value = "Resultado")
-	private String resultado;
-
-	/**
 	 * Identificador de la sesión.
 	 */
 	@ApiModelProperty(value = "Identificador de la sesión")
 	private String idSesionTramitacion;
-
-	/**
-	 * nif.
-	 */
-	@ApiModelProperty(value = "Nif")
-	private String nif;
 
 	/**
 	 * id tramite.
@@ -72,28 +55,16 @@ public class REvento {
 	private String idProcedimientoCP;
 
 	/**
-	 * id procedimiento SIA.
+	 * Id procedimiento SIA.
 	 */
 	@ApiModelProperty(value = "Código del procedimiento SIA")
 	private String idProcedimientoSIA;
 
 	/**
-	 * codigoError.
+	 * Propiedades particulares evento.
 	 */
-	@ApiModelProperty(value = "Código Error")
-	private String codigoError;
-
-	/**
-	 * traza.
-	 */
-	@ApiModelProperty(value = "Traza Error")
-	private String trazaError;
-
-	/**
-	 * detalle.
-	 */
-	@ApiModelProperty(value = "detalle")
-	private String detalle;
+	@ApiModelProperty(value = "Propiedades particulares evento")
+	private Map<String, String> propiedadesEvento;
 
 	/**
 	 * Instancia un nuevo evento
@@ -119,44 +90,6 @@ public class REvento {
 	 */
 	public void setFecha(final Date pFecha) {
 		this.fecha = pFecha;
-	}
-
-	/**
-	 * Para obtener el atributo descripcion.
-	 *
-	 * @return descripcion
-	 */
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	/**
-	 * Para establecer el atributo descripcion.
-	 *
-	 * @param pDescripcion
-	 *                         el nuevo valor para descripcion
-	 */
-	public void setDescripcion(final String pDescripcion) {
-		this.descripcion = pDescripcion;
-	}
-
-	/**
-	 * Para obtener el atributo resultado.
-	 *
-	 * @return resultado
-	 */
-	public String getResultado() {
-		return resultado;
-	}
-
-	/**
-	 * Para establecer el atributo resultado.
-	 *
-	 * @param pResultado
-	 *                       el nuevo valor para resultado
-	 */
-	public void setResultado(final String pResultado) {
-		this.resultado = pResultado;
 	}
 
 	/**
@@ -195,25 +128,6 @@ public class REvento {
 	 */
 	public void setIdSesionTramitacion(final String idSesion) {
 		this.idSesionTramitacion = idSesion;
-	}
-
-	/**
-	 * Obtiene el valor de nif.
-	 *
-	 * @return el valor de nif
-	 */
-	public String getNif() {
-		return nif;
-	}
-
-	/**
-	 * Establece el valor de nif.
-	 *
-	 * @param nif
-	 *                el nuevo valor de nif
-	 */
-	public void setNif(final String nif) {
-		this.nif = nif;
 	}
 
 	/**
@@ -293,60 +207,22 @@ public class REvento {
 	}
 
 	/**
-	 * Obtiene el valor de codigo error.
+	 * Método de acceso a propiedadesEvento.
 	 *
-	 * @return el valor de codigo error
+	 * @return propiedadesEvento
 	 */
-	public String getCodigoError() {
-		return codigoError;
+	public Map<String, String> getPropiedadesEvento() {
+		return propiedadesEvento;
 	}
 
 	/**
-	 * Establece el valor de codigo error.
+	 * Método para establecer propiedadesEvento.
 	 *
-	 * @param codigoError
-	 *                        el nuevo valor de codigo error
+	 * @param propiedadesEvento
+	 *                              propiedadesEvento a establecer
 	 */
-	public void setCodigoError(final String codigoError) {
-		this.codigoError = codigoError;
-	}
-
-	/**
-	 * Obtiene el valor de traza error.
-	 *
-	 * @return el valor de traza error
-	 */
-	public String getTrazaError() {
-		return trazaError;
-	}
-
-	/**
-	 * Establece el valor de traza error.
-	 *
-	 * @param trazaError
-	 *                       el nuevo valor de traza error
-	 */
-	public void setTrazaError(final String trazaError) {
-		this.trazaError = trazaError;
-	}
-
-	/**
-	 * Obtiene el valor de detalle.
-	 *
-	 * @return el valor de detalle
-	 */
-	public String getDetalle() {
-		return detalle;
-	}
-
-	/**
-	 * Establece el valor de detalle.
-	 *
-	 * @param detalle
-	 *                    el nuevo valor de detalle
-	 */
-	public void setDetalle(final String detalle) {
-		this.detalle = detalle;
+	public void setPropiedadesEvento(final Map<String, String> propiedadesEvento) {
+		this.propiedadesEvento = propiedadesEvento;
 	}
 
 }

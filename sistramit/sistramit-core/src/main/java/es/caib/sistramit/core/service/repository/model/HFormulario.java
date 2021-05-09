@@ -99,6 +99,10 @@ public final class HFormulario implements IModelApi {
 	@Column(name = "SFR_TITPRO")
 	private String tituloProcedimiento;
 
+	/** Atributo codigo sia procedimiento. */
+	@Column(name = "SFR_SIAPRO")
+	private String codigoSiaProcedimiento;
+
 	/** Atributo xml. */
 	@Lob
 	@Column(name = "SFR_XML")
@@ -541,7 +545,7 @@ public final class HFormulario implements IModelApi {
 
 	/**
 	 * Método de acceso a idGestorFormulariosExterno.
-	 * 
+	 *
 	 * @return idGestorFormulariosExterno
 	 */
 	public String getIdGestorFormulariosExterno() {
@@ -550,12 +554,31 @@ public final class HFormulario implements IModelApi {
 
 	/**
 	 * Método para establecer idGestorFormulariosExterno.
-	 * 
+	 *
 	 * @param idGestorFormulariosExterno
 	 *                                       idGestorFormulariosExterno a establecer
 	 */
 	public void setIdGestorFormulariosExterno(final String idGestorFormulariosExterno) {
 		this.idGestorFormulariosExterno = idGestorFormulariosExterno;
+	}
+
+	/**
+	 * Método de acceso a codigoSiaProcedimiento.
+	 * 
+	 * @return codigoSiaProcedimiento
+	 */
+	public String getCodigoSiaProcedimiento() {
+		return codigoSiaProcedimiento;
+	}
+
+	/**
+	 * Método para establecer codigoSiaProcedimiento.
+	 * 
+	 * @param codigoSiaProcedimiento
+	 *                                   codigoSiaProcedimiento a establecer
+	 */
+	public void setCodigoSiaProcedimiento(final String codigoSiaProcedimiento) {
+		this.codigoSiaProcedimiento = codigoSiaProcedimiento;
 	}
 
 }

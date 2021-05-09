@@ -1,15 +1,24 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.primefaces.event.SelectEvent;
+
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
-import es.caib.sistrages.core.api.model.types.TypePlugin;
+import es.caib.sistrages.core.api.model.types.TypeIdioma;
+import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
 import es.caib.sistrages.core.api.service.FormularioExternoService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -20,8 +29,15 @@ public class DialogFormularioExterno extends DialogControllerBase {
 	@Inject
 	private FormularioExternoService formularioService;
 
+	/** ConfiguracionAutenticacion Service **/
+	@Inject
+	private ConfiguracionAutenticacionService configuracionAutenticacionService;
+
 	/** Id elemento a tratar. */
 	private String id;
+
+	/** Id elemento a tratar. */
+	private String area;
 
 	/** Data en formato JSON. */
 	private String iData;
@@ -29,10 +45,8 @@ public class DialogFormularioExterno extends DialogControllerBase {
 	/** Datos elemento. */
 	private GestorExternoFormularios data;
 
-	/** Max long propiedades. */
-	private static final int MAXLENGTH_PROPIEDADES = 4000;
-
-	private TypePlugin tipoInicialEdicion;
+	/** Lista de configuraciones. **/
+	private List<ConfiguracionAutenticacion> configuraciones;
 
 	/**
 	 * Inicialización.
@@ -47,6 +61,12 @@ public class DialogFormularioExterno extends DialogControllerBase {
 			data = formularioService.getFormularioExterno(new Long(id));
 		}
 
+		configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(Long.valueOf(area), TypeIdioma.fromString(UtilJSF.getSessionBean().getLang()), null);
+		ConfiguracionAutenticacion configAutSinAutenticacion = new ConfiguracionAutenticacion();
+		configAutSinAutenticacion.setCodigo(null);
+		configAutSinAutenticacion.setIdentificador(UtilJSF.getLiteral("dialogDominio.sinAutenticacion"));
+		configuraciones.add(0, configAutSinAutenticacion);
+
 	}
 
 	/**
@@ -60,7 +80,7 @@ public class DialogFormularioExterno extends DialogControllerBase {
 			if (!verificarGuardar()) {
 				return;
 			}
-			formularioService.addFormularioExterno(UtilJSF.getIdEntidad(), data);
+			formularioService.addFormularioExterno(Long.valueOf(area), data);
 			break;
 		case EDICION:
 			if (!verificarGuardar()) {
@@ -88,6 +108,40 @@ public class DialogFormularioExterno extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+
+	/**
+	 * Crea nueva propiedad.
+	 */
+	public void nuevaConfiguracion() {
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.AREA.toString(), this.area);
+		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.ALTA, params, true,  550, 195);
+	}
+
+	/**
+	 * Retorno dialogo.
+	 *
+	 * @param event respuesta dialogo
+	 */
+	public void returnDialogoConf(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			// Mensaje
+			String message = UtilJSF.getLiteral("info.alta.ok");
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
+			//La ponemos por defecto
+			ConfiguracionAutenticacion conf = (ConfiguracionAutenticacion) ((DialogResult)event.getObject()).getResult();
+			this.data.setConfiguracionAutenticacion(conf);
+			this.configuraciones.add(conf);
+		}
 	}
 
 	/**
@@ -160,6 +214,28 @@ public class DialogFormularioExterno extends DialogControllerBase {
 	 */
 	public void setiData(final String iData) {
 		this.iData = iData;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+
+	/**
+	 * @return the configuraciones
+	 */
+	public List<ConfiguracionAutenticacion> getConfiguraciones() {
+		return configuraciones;
+	}
+
+	/**
+	 * @param configuraciones the configuraciones to set
+	 */
+	public void setConfiguraciones(List<ConfiguracionAutenticacion> configuraciones) {
+		this.configuraciones = configuraciones;
 	}
 
 	/** Ayuda. */

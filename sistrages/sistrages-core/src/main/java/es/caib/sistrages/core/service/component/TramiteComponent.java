@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
@@ -101,5 +102,6 @@ public interface TramiteComponent {
 	 * @return formulario tramite
 	 */
 	FormularioTramite addFormularioTramite(FormularioTramite formularioTramite, Long idTramitePaso);
+
 
 }

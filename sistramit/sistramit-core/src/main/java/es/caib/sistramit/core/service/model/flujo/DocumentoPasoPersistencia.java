@@ -101,6 +101,13 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 * Para registro, indica id sesión registro.
 	 */
 	private String registroIdSesion;
+
+	/** Para registro, indica registro nif interesado. */
+	private String registroNifPresentador;
+
+	/** Para registro, indica nombre y apellidos interesado. */
+	private String registroNombrePresentador;
+
 	/**
 	 * Lista de firmas del documento.
 	 */
@@ -661,7 +668,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
 	/**
 	 * Método de acceso a registroIdSesion.
-	 * 
+	 *
 	 * @return registroIdSesion
 	 */
 	public String getRegistroIdSesion() {
@@ -670,12 +677,50 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
 	/**
 	 * Método para establecer registroIdSesion.
-	 * 
+	 *
 	 * @param registroIdSesion
 	 *                             registroIdSesion a establecer
 	 */
 	public void setRegistroIdSesion(final String registroIdSesion) {
 		this.registroIdSesion = registroIdSesion;
+	}
+
+	/**
+	 * Método de acceso a registroNifPresentador.
+	 * 
+	 * @return registroNifPresentador
+	 */
+	public String getRegistroNifPresentador() {
+		return registroNifPresentador;
+	}
+
+	/**
+	 * Método para establecer registroNifPresentador.
+	 * 
+	 * @param registroNifPresentador
+	 *                                   registroNifPresentador a establecer
+	 */
+	public void setRegistroNifPresentador(final String registroNifPresentador) {
+		this.registroNifPresentador = registroNifPresentador;
+	}
+
+	/**
+	 * Método de acceso a registroNombrePresentador.
+	 * 
+	 * @return registroNombrePresentador
+	 */
+	public String getRegistroNombrePresentador() {
+		return registroNombrePresentador;
+	}
+
+	/**
+	 * Método para establecer registroNombrePresentador.
+	 * 
+	 * @param registroNombrePresentador
+	 *                                      registroNombrePresentador a establecer
+	 */
+	public void setRegistroNombrePresentador(final String registroNombrePresentador) {
+		this.registroNombrePresentador = registroNombrePresentador;
 	}
 
 }

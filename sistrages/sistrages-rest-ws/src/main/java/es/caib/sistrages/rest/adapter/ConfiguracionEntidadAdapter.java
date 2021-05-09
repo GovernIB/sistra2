@@ -42,8 +42,7 @@ public class ConfiguracionEntidadAdapter {
 	 * @param gestoresExternosFormularios
 	 */
 	public RConfiguracionEntidad convertir(final Entidad entidad, final List<FormularioSoporte> formSoporte,
-			final List<PlantillaFormateador> plantillas, final List<IncidenciaValoracion> valoraciones,
-			final List<GestorExternoFormularios> gestoresExternosFormularios) {
+			final List<PlantillaFormateador> plantillas, final List<IncidenciaValoracion> valoraciones) {
 
 		final RConfiguracionEntidad rConfiguracionEntidad = new RConfiguracionEntidad();
 		rConfiguracionEntidad.setTimestamp(System.currentTimeMillis() + "");
@@ -119,16 +118,6 @@ public class ConfiguracionEntidadAdapter {
 		}
 		rConfiguracionEntidad.setRegistroOcultarDescargaDocumentos(entidad.isRegistroOcultarDescargaDocumentos());
 
-		if (gestoresExternosFormularios != null) {
-			final List<RGestorFormularioExterno> rgfes = new ArrayList<>();
-			for (final GestorExternoFormularios gfe : gestoresExternosFormularios) {
-				final RGestorFormularioExterno rgfe = new RGestorFormularioExterno();
-				rgfe.setIdentificador(gfe.getIdentificador());
-				rgfe.setUrl(gfe.getUrl());
-				rgfes.add(rgfe);
-			}
-			rConfiguracionEntidad.setGestoresFormulariosExternos(rgfes);
-		}
 
 		return rConfiguracionEntidad;
 	}

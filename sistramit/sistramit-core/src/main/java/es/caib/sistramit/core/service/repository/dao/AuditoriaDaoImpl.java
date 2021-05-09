@@ -1,10 +1,8 @@
 package es.caib.sistramit.core.service.repository.dao;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,7 +16,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
@@ -27,6 +24,7 @@ import es.caib.sistramit.core.api.model.system.rest.externo.FiltroEvento;
 import es.caib.sistramit.core.api.model.system.rest.interno.EventoAuditoriaTramitacion;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroEventoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
+import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.service.repository.model.HEventoAuditoria;
 import es.caib.sistramit.core.service.repository.model.HSesionTramitacion;
 import es.caib.sistramit.core.service.repository.model.HTramite;
@@ -386,27 +384,53 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 		final Root<HEventoAuditoria> tableE = query.from(HEventoAuditoria.class);
 		final Root<HTramite> tableT = query.from(HTramite.class);
 
-		final Join<HEventoAuditoria, HSesionTramitacion> p = tableE.join("sesionTramitacion");
+		final Join<HEventoAuditoria, HSesionTramitacion> p = tableE.join("sesionTramitacion", JoinType.LEFT);
 
 		Predicate predicate = builder.equal(tableE.get("sesionTramitacion"), tableT.get("sesionTramitacion"));
 
-		final Date minDate = DateUtils.truncate(pFiltro.getFecha(), Calendar.DATE);
-		final Date maxDate = new Date(minDate.getTime() + TimeUnit.DAYS.toMillis(1) - 1);
+		/*
+		 * final Date minDate = DateUtils.truncate(pFiltro.getFecha(), Calendar.DATE);
+		 * final Date maxDate = new Date(minDate.getTime() + TimeUnit.DAYS.toMillis(1) -
+		 * 1); predicate = builder.and(predicate, builder.between(tableE.get("fecha"),
+		 * minDate, maxDate));
+		 */
 
-		predicate = builder.and(predicate, builder.between(tableE.get("fecha"), minDate, maxDate));
+		predicate = builder.and(predicate, builder.greaterThanOrEqualTo(tableE.get("fecha"), pFiltro.getFecha()));
 
 		if (pFiltro.getListaEventos() != null && !pFiltro.getListaEventos().isEmpty()) {
-			predicate = builder.and(predicate, tableE.get("tipo").in(pFiltro.getListaEventosToString()));
+			predicate = builder.and(predicate,
+					tableE.get("tipo").in(getListaEventosToString(pFiltro.getListaEventos())));
+		} else {
+			predicate = builder.and(predicate,
+					tableE.get("tipo").in(getListaEventosToString(TypeEvento.getEventosExternos())));
 		}
 
 		query.where(predicate);
-		query.orderBy(builder.desc(tableE.get("fecha")));
+		query.orderBy(builder.asc(tableE.get("fecha")));
 		query.multiselect(p.get("idSesionTramitacion"), tableE.get("tipo"), tableE.get("fecha"),
 				tableT.get("nifIniciador"), tableT.get("idTramite"), tableT.get("versionTramite"),
 				tableT.get("idProcedimientoCP"), tableT.get("idProcedimientoSIA"), tableE.get("codigoError"),
 				tableE.get("descripcion"), tableE.get("resultado"), tableE.get("trazaError"), tableE.get("detalle"));
 		final List<Evento> resultado = entityManager.createQuery(query).getResultList();
 
+		return resultado;
+	}
+
+	/**
+	 * Convierte lista eventos a lista string.
+	 *
+	 * @param listaEventos
+	 *                         lista eventos
+	 * @return lista string
+	 */
+	private List<String> getListaEventosToString(final List<TypeEvento> listaEventos) {
+		List<String> resultado = null;
+		if (listaEventos != null) {
+			resultado = new ArrayList<>();
+			for (final TypeEvento evento : listaEventos) {
+				resultado.add(evento.toString());
+			}
+		}
 		return resultado;
 	}
 

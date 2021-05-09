@@ -1,5 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,17 +8,21 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ValueChangeEvent;
+import javax.inject.Inject;
 
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
+import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -44,6 +49,9 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	/** Mostrar url. **/
 	private boolean mostrarUrl = false;
 
+	/** Mostrar url. **/
+	private boolean mostrarConfiguraciones = false;
+
 	/** Mostrar lista. **/
 	private boolean mostrarLista = false;
 
@@ -68,11 +76,22 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	/** Accion. **/
 	private String accion;
 
+	/** ID del area **/
+	private Long area;
+
+	/** La lista de parametros **/
+	private List<ConfiguracionAutenticacion> configuraciones;
+
+	/** Servicio. */
+	@Inject
+	private ConfiguracionAutenticacionService configuracionAutenticacionService;
+
 	/**
 	 * Inicialización.
 	 */
 	public void init() {
 		data = (FilaImportarDominio) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_IMPORTAR);
+		area = (Long) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.AREA);
 		checkMostrar();
 		if (data.getAccion() == null) {
 			accion = TypeImportarAccion.REEMPLAZAR.toString();
@@ -107,6 +126,16 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 			break;
 		case CONSULTA_REMOTA:
 			mostrarUrl = true;
+			setMostrarConfiguraciones(true);
+			if (area == null) {
+				configuraciones = new ArrayList<>();
+			} else {
+				configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(area, TypeIdioma.fromString(UtilJSF.getSessionBean().getLang()), null);
+			}
+			ConfiguracionAutenticacion configAutSinAutenticacion = new ConfiguracionAutenticacion();
+			configAutSinAutenticacion.setCodigo(null);
+			configAutSinAutenticacion.setIdentificador(UtilJSF.getLiteral("dialogDominio.sinAutenticacion"));
+			configuraciones.add(0, configAutSinAutenticacion);
 			break;
 		case FUENTE_DATOS:
 			mostrarFD = true;
@@ -436,6 +465,48 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	 */
 	public void setMostrarFDActualLiteral(final boolean mostrarFDActualLiteral) {
 		this.mostrarFDActualLiteral = mostrarFDActualLiteral;
+	}
+
+	/**
+	 * @return the configuraciones
+	 */
+	public List<ConfiguracionAutenticacion> getConfiguraciones() {
+		return configuraciones;
+	}
+
+	/**
+	 * @param configuraciones the configuraciones to set
+	 */
+	public void setConfiguraciones(List<ConfiguracionAutenticacion> configuraciones) {
+		this.configuraciones = configuraciones;
+	}
+
+	/**
+	 * @return the area
+	 */
+	public Long getArea() {
+		return area;
+	}
+
+	/**
+	 * @param area the area to set
+	 */
+	public void setArea(Long area) {
+		this.area = area;
+	}
+
+	/**
+	 * @return the mostrarConfiguraciones
+	 */
+	public boolean isMostrarConfiguraciones() {
+		return mostrarConfiguraciones;
+	}
+
+	/**
+	 * @param mostrarConfiguraciones the mostrarConfiguraciones to set
+	 */
+	public void setMostrarConfiguraciones(boolean mostrarConfiguraciones) {
+		this.mostrarConfiguraciones = mostrarConfiguraciones;
 	}
 
 }

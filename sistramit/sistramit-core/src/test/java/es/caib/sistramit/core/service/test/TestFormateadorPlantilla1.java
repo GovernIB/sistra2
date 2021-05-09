@@ -58,7 +58,7 @@ public class TestFormateadorPlantilla1 {
 				.getResourceAsStream("formateador/template/plantillaFormateador1.pdf"));
 		final FormateadorPlantilla formateador = new FormateadorPlantilla();
 		final byte[] resultado = formateador.formatear(UtilsFormulario.valoresToXml(formulario), plantilla, "es",
-				formularioInterno, "Tit. proced");
+				formularioInterno, "Tit. proced", "1234");
 		final Path path = Paths.get("/formateadorTemplate1.pdf");
 		Files.write(path, resultado);
 	}

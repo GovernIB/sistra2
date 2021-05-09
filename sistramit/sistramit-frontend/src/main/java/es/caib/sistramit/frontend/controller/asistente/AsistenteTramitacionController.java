@@ -432,7 +432,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 
 		// Cargamos tramite de persistencia
 		final String idSesionTramitacion = retornoPago.getIdSesionTramitacion();
-		this.cargarTramiteImpl(idSesionTramitacion, false);
+		this.cargarTramiteImpl(idSesionTramitacion, true);
 
 		// Validamos pago
 		final ParametrosAccionPaso params = new ParametrosAccionPaso();
@@ -464,7 +464,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 		// Obtenemos info ticket
 		final RetornoFormularioExterno infoTicket = securityService.obtenerTicketFormularioExterno(ticket);
 		// Cargamos tramite de persistencia
-		this.cargarTramiteImpl(infoTicket.getIdSesionTramitacion(), false);
+		this.cargarTramiteImpl(infoTicket.getIdSesionTramitacion(), true);
 		// Retornamos a formulario
 		return retornoFormulario(infoTicket.getIdSesionTramitacion(), infoTicket.getIdPaso(),
 				infoTicket.getIdFormulario(), infoTicket.getTicket());

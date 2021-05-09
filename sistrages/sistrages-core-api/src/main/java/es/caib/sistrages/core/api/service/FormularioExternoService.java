@@ -21,10 +21,10 @@ public interface FormularioExternoService {
 	/**
 	 * Añade Formulario Externo.
 	 *
-	 * @param idEntidad                id Entidad
+	 * @param idArea                id Area
 	 * @param GestorExternoFormularios el valor de Formulario Externo
 	 */
-	void addFormularioExterno(Long idEntidad, GestorExternoFormularios formularioExterno);
+	void addFormularioExterno(Long idArea, GestorExternoFormularios formularioExterno);
 
 	/**
 	 * Elimina Formulario Externo.
@@ -44,12 +44,12 @@ public interface FormularioExternoService {
 	/**
 	 * Lista de Formulario Externo.
 	 *
-	 * @param idEntidad id Entidad
+	 * @param idArea id Area
 	 * @param idioma    idioma
 	 * @param filtro    filtro busqueda
 	 * @return la lista de Formulario Externo
 	 */
-	List<GestorExternoFormularios> listFormularioExterno(Long idEntidad, TypeIdioma idioma, String filtro);
+	List<GestorExternoFormularios> listFormularioExterno(Long idArea, TypeIdioma idioma, String filtro);
 
 	/**
 	 * Comprueba si ya existe un identificador.
@@ -59,5 +59,20 @@ public interface FormularioExternoService {
 	 * @return
 	 */
 	boolean existeFormulario(String identificador, Long idCodigo);
+
+	/**
+	 * Lista de gestores externos segun configuracion
+	 * @param valueOf
+	 * @param valueOf2
+	 * @return
+	 */
+	List<GestorExternoFormularios> getGestorExternoByAutenticacion(Long id, Long idArea);
+
+	/**
+	 * Gestor externo formulario por identificador
+	 * @param identificador
+	 * @return
+	 */
+	GestorExternoFormularios getFormularioExternoByIdentificador(String identificador);
 
 }

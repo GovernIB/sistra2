@@ -78,10 +78,6 @@ public class RConfiguracionEntidad {
 	@ApiModelProperty(value = "Plugins entidad")
 	private List<RPlugin> plugins;
 
-	/** Gestores formularios externos entidad. */
-	@ApiModelProperty(value = "Gestores formularios externos entidad")
-	private List<RGestorFormularioExterno> gestoresFormulariosExternos;
-
 	/** Mapa web */
 	@ApiModelProperty(value = "Mapa web")
 	private RLiteral mapaWeb;
@@ -718,29 +714,10 @@ public class RConfiguracionEntidad {
 		this.registroOcultarDescargaDocumentos = registroOcultarDescargaDocumentos;
 	}
 
-	/**
-	 * Método de acceso a gestoresFormulariosExternos.
-	 *
-	 * @return gestoresFormulariosExternos
-	 */
-	public List<RGestorFormularioExterno> getGestoresFormulariosExternos() {
-		return gestoresFormulariosExternos;
-	}
-
-	/**
-	 * Método para establecer gestoresFormulariosExternos.
-	 *
-	 * @param gestoresFormulariosExternos
-	 *                                        gestoresFormulariosExternos a
-	 *                                        establecer
-	 */
-	public void setGestoresFormulariosExternos(final List<RGestorFormularioExterno> gestoresFormulariosExternos) {
-		this.gestoresFormulariosExternos = gestoresFormulariosExternos;
-	}
 
 	/**
 	 * Método de acceso a urlSede.
-	 * 
+	 *
 	 * @return urlSede
 	 */
 	public RLiteral getUrlSede() {
@@ -749,7 +726,7 @@ public class RConfiguracionEntidad {
 
 	/**
 	 * Método para establecer urlSede.
-	 * 
+	 *
 	 * @param urlSede
 	 *                    urlSede a establecer
 	 */

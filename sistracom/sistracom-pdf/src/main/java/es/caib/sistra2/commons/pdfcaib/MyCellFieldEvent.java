@@ -31,7 +31,8 @@ public class MyCellFieldEvent implements PdfPCellEvent {
 	protected String fieldname;
 	protected String value;
 	protected static Font VALOR;
-	private final static int TAMANIO_VALOR = 8;
+	// private final static int TAMANIO_VALOR = 8;
+	private static final int TAMANIO_TEXTO = 9;
 
 	public MyCellFieldEvent(final String fieldname, final String value) {
 		this.fieldname = fieldname;
@@ -45,9 +46,9 @@ public class MyCellFieldEvent implements PdfPCellEvent {
 		textField.setText(value);
 		textField.setAlignment(Element.ALIGN_TOP);
 		textField.setOptions(TextField.MULTILINE | TextField.READ_ONLY);
-		VALOR = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_VALOR);
+		VALOR = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_TEXTO);
 		textField.setFont(VALOR.getBaseFont());
-		textField.setFontSize(8);
+		textField.setFontSize(TAMANIO_TEXTO);
 		try {
 			final PdfFormField field = textField.getTextField();
 			writer.addAnnotation(field);

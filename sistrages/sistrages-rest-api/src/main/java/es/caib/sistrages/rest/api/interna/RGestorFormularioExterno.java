@@ -20,6 +20,10 @@ public class RGestorFormularioExterno {
 	@ApiModelProperty(value = "Url")
 	private String url;
 
+	/** Configuracion autenticacion. */
+	@ApiModelProperty(value = "Configuracion autenticacion")
+    private RConfiguracionAutenticacion configuracionAutenticacion;
+	
 	/**
 	 * Método de acceso a identificador.
 	 * 
@@ -56,6 +60,20 @@ public class RGestorFormularioExterno {
 	 */
 	public void setUrl(final String url) {
 		this.url = url;
+	}
+
+	/**
+	 * @return the configuracionAutenticacion
+	 */
+	public RConfiguracionAutenticacion getConfiguracionAutenticacion() {
+		return configuracionAutenticacion;
+	}
+
+	/**
+	 * @param configuracionAutenticacion the configuracionAutenticacion to set
+	 */
+	public void setConfiguracionAutenticacion(RConfiguracionAutenticacion configuracionAutenticacion) {
+		this.configuracionAutenticacion = configuracionAutenticacion;
 	}
 
 }

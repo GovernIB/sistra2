@@ -61,6 +61,9 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	/** Título procedimiento. */
 	private String tituloProcedimiento;
 
+	/** Código sia procedimiento. */
+	private String codigoSiaProcedimiento;
+
 	/**
 	 * Método de acceso a idSesionTramitacion.
 	 *
@@ -348,7 +351,7 @@ public final class DatosInicioSesionFormulario implements Serializable {
 
 	/**
 	 * Método de acceso a entidad.
-	 * 
+	 *
 	 * @return entidad
 	 */
 	public String getEntidad() {
@@ -357,12 +360,31 @@ public final class DatosInicioSesionFormulario implements Serializable {
 
 	/**
 	 * Método para establecer entidad.
-	 * 
+	 *
 	 * @param entidad
 	 *                    entidad a establecer
 	 */
 	public void setEntidad(final String entidad) {
 		this.entidad = entidad;
+	}
+
+	/**
+	 * Método de acceso a codigoSiaProcedimiento.
+	 * 
+	 * @return codigoSiaProcedimiento
+	 */
+	public String getCodigoSiaProcedimiento() {
+		return codigoSiaProcedimiento;
+	}
+
+	/**
+	 * Método para establecer codigoSiaProcedimiento.
+	 * 
+	 * @param codigoSiaProcedimiento
+	 *                                   codigoSiaProcedimiento a establecer
+	 */
+	public void setCodigoSiaProcedimiento(final String codigoSiaProcedimiento) {
+		this.codigoSiaProcedimiento = codigoSiaProcedimiento;
 	}
 
 }

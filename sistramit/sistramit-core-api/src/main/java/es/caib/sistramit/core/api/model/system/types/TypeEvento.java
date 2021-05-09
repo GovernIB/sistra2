@@ -1,5 +1,9 @@
 package es.caib.sistramit.core.api.model.system.types;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Tipos de evento de auditoria.
  *
@@ -20,6 +24,14 @@ public enum TypeEvento {
 	 * CARGA DEL TRÁMITE.
 	 */
 	CARGAR_TRAMITE("TR_CAR"),
+	/**
+	 * PAGO ELECTRÓNICO.
+	 */
+	PAGO_ELECTRONICO("TR_PAE"),
+	/**
+	 * PAGO PRESENCIAL (CARTA PAGO).
+	 */
+	PAGO_PRESENCIAL("TR_PAP"),
 	/**
 	 * BORRADO DEL TRÁMITE.
 	 */
@@ -54,7 +66,7 @@ public enum TypeEvento {
 	 * Constructor.
 	 *
 	 * @param value
-	 *            Valor como string.
+	 *                  Valor como string.
 	 */
 	private TypeEvento(final String value) {
 		stringValueEvento = value;
@@ -74,7 +86,7 @@ public enum TypeEvento {
 	 * Método para From string de la clase TypeAutenticacion.
 	 *
 	 * @param text
-	 *            Parámetro text
+	 *                 Parámetro text
 	 * @return el type autenticacion
 	 */
 	public static TypeEvento fromString(final String text) {
@@ -89,6 +101,31 @@ public enum TypeEvento {
 
 		}
 		return respuesta;
+	}
+
+	/**
+	 * Devuelve eventos considerados internos.
+	 *
+	 * @return eventos considerados internos
+	 */
+	public static List<TypeEvento> getEventosInternos() {
+		return Arrays.asList(TypeEvento.ERROR, TypeEvento.DEBUG_SCRIPT, TypeEvento.PROCESO_PURGA);
+	}
+
+	/**
+	 * Devuelve eventos considerados externos.
+	 *
+	 * @return eventos considerados externos
+	 */
+	public static List<TypeEvento> getEventosExternos() {
+		final List<TypeEvento> eventosExternos = new ArrayList<>();
+		final List<TypeEvento> eventosInternos = getEventosInternos();
+		for (final TypeEvento e : TypeEvento.values()) {
+			if (!eventosInternos.contains(e)) {
+				eventosExternos.add(e);
+			}
+		}
+		return eventosExternos;
 	}
 
 }

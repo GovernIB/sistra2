@@ -73,6 +73,7 @@ public final class RegistroComponentImpl implements RegistroComponent {
 					"Solo se puede especificar una entidad distinta en los datos de registro en un entorno distinto a Producción");
 		}
 
+		// Registramos
 		ResultadoRegistro res = null;
 		final IRegistroPlugin plgRegistro = (IRegistroPlugin) configuracionComponent
 				.obtenerPluginEntidad(TypePluginEntidad.REGISTRO, codigoEntidad);

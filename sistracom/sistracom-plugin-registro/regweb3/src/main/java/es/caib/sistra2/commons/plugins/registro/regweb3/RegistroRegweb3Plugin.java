@@ -339,8 +339,8 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		}
 
 		// Datos aplicacion
-		asientoWs.setAplicacionTelematica(getPropiedad(ConstantesRegweb3.PROP_APLICACION_CODIGO));
-
+		asientoWs.setAplicacionTelematica(getPropiedad(ConstantesRegweb3.PROP_APLICACION_CODIGO) + " "
+				+ getPropiedad(ConstantesRegweb3.PROP_APLICACION_VERSION));
 		asientoWs.setCodigoUsuario(getPropiedad(ConstantesRegweb3.PROP_USUARIO));
 
 		// Datos oficina registro
@@ -484,40 +484,36 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	private AnexoWs generarAnexoWs(final DocumentoAsiento dr) throws RegistroPluginException {
 
 		final AnexoWs anexoAsiento = new AnexoWs();
-		anexoAsiento.setTitulo(UtilsRegweb3.truncarTexto(dr.getTituloDoc(), ConstantesRegweb3.MAX_SIZE_ANEXO_TITULO));
+		anexoAsiento.setTitulo(UtilsRegweb3.eliminarCaracteresNoPermitidos(
+				UtilsRegweb3.truncarTexto(dr.getTituloDoc(), ConstantesRegweb3.MAX_SIZE_ANEXO_TITULO)));
 		anexoAsiento.setTipoDocumental(dr.getTipoDocumental());
 		anexoAsiento.setTipoDocumento(dr.getTipoDocumento().toString());
 		anexoAsiento.setOrigenCiudadanoAdmin(dr.getOrigenDocumento().intValue());
 		anexoAsiento.setModoFirma(dr.getModoFirma().intValue());
 		anexoAsiento.setValidezDocumento(dr.getValidez().toString());
-		anexoAsiento.setNombreFicheroAnexado(
-				UtilsRegweb3.truncarFilename(dr.getNombreFichero(), ConstantesRegweb3.MAX_SIZE_ANEXO_FILENAME));
+		anexoAsiento.setNombreFicheroAnexado(UtilsRegweb3.eliminarCaracteresNoPermitidos(
+				UtilsRegweb3.truncarFilename(dr.getNombreFichero(), ConstantesRegweb3.MAX_SIZE_ANEXO_FILENAME)));
 		anexoAsiento.setFicheroAnexado(dr.getContenidoFichero());
 		anexoAsiento.setTipoMIMEFicheroAnexado(MimeType.getMimeTypeForExtension(getExtension(dr.getNombreFichero())));
 
 		// Para PADES se ha adjuntado ya directamente el PADES como fichero
 		// Para otras firmas establecemos la firma por separado
-		if (dr.getModoFirma() != TypeFirmaAsiento.SIN_FIRMA &&
-				dr.getTipoFirma() != TypeFirmaDigital.PADES) {
-				anexoAsiento.setFirmaAnexada(dr.getContenidoFirma());
-				anexoAsiento.setNombreFirmaAnexada(UtilsRegweb3.truncarFilename(dr.getNombreFirmaAnexada(),
-						ConstantesRegweb3.MAX_SIZE_ANEXO_FILENAME));
-				anexoAsiento.setTipoMIMEFirmaAnexada(
-						MimeType.getMimeTypeForExtension(getExtension(dr.getNombreFirmaAnexada())));
+		if (dr.getModoFirma() != TypeFirmaAsiento.SIN_FIRMA && dr.getTipoFirma() != TypeFirmaDigital.PADES) {
+			anexoAsiento.setFirmaAnexada(dr.getContenidoFirma());
+			anexoAsiento.setNombreFirmaAnexada(UtilsRegweb3.eliminarCaracteresNoPermitidos(UtilsRegweb3
+					.truncarFilename(dr.getNombreFirmaAnexada(), ConstantesRegweb3.MAX_SIZE_ANEXO_FILENAME)));
+			anexoAsiento.setTipoMIMEFirmaAnexada(
+					MimeType.getMimeTypeForExtension(getExtension(dr.getNombreFirmaAnexada())));
 		}
 
-
-		debug("RW3 Anexo: " +
-				"\n - titulo: " + anexoAsiento.getTitulo() +
-				"\n - nombreFicheroAnexado: " + anexoAsiento.getNombreFicheroAnexado() +
-				"\n - tipoMIMEFicheroAnexado: " + anexoAsiento.getTipoMIMEFicheroAnexado() +
-				"\n - tipoDocumental: " + anexoAsiento.getTipoDocumental() +
-				"\n - validezDocumento: " + anexoAsiento.getValidezDocumento() +
-				"\n - tipoDocumento: " + anexoAsiento.getTipoDocumento() +
-				"\n - origenCiudadanoAdmin: " + anexoAsiento.getOrigenCiudadanoAdmin() +
-				"\n - modoFirma: " + anexoAsiento.getModoFirma() +
-				"\n - nombreFirmaAnexada: " + anexoAsiento.getNombreFirmaAnexada() +
-				"\n - tipoMIMEFirmaAnexada: " + anexoAsiento.getTipoMIMEFirmaAnexada());
+		debug("RW3 Anexo: " + "\n - titulo: " + anexoAsiento.getTitulo() + "\n - nombreFicheroAnexado: "
+				+ anexoAsiento.getNombreFicheroAnexado() + "\n - tipoMIMEFicheroAnexado: "
+				+ anexoAsiento.getTipoMIMEFicheroAnexado() + "\n - tipoDocumental: " + anexoAsiento.getTipoDocumental()
+				+ "\n - validezDocumento: " + anexoAsiento.getValidezDocumento() + "\n - tipoDocumento: "
+				+ anexoAsiento.getTipoDocumento() + "\n - origenCiudadanoAdmin: "
+				+ anexoAsiento.getOrigenCiudadanoAdmin() + "\n - modoFirma: " + anexoAsiento.getModoFirma()
+				+ "\n - nombreFirmaAnexada: " + anexoAsiento.getNombreFirmaAnexada() + "\n - tipoMIMEFirmaAnexada: "
+				+ anexoAsiento.getTipoMIMEFirmaAnexada());
 
 		return anexoAsiento;
 	}

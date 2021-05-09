@@ -37,25 +37,13 @@ public enum TypeParametroEvento {
 	 */
 	NUMERO_REGISTRO("NUMREG"),
 	/**
-	 * Valoración trámite: Código SIA procedimiento.
+	 * Pago: Pasarela pago.
 	 */
-	VALORACION_SIA("VALSIA"),
+	PAGO_PASARELA("PAGPAS"),
 	/**
-	 * Valoración trámite: Código procedimiento del Catálogo de Servicios.
+	 * Pago: Importe (cents).
 	 */
-	VALORACION_PROCEDIMIENTO("VALCPPR"),
-	/**
-	 * Valoración trámite: Código trámite del Catálogo de Servicios.
-	 */
-	VALORACION_TRAMITE("VALCPTR"),
-	/**
-	 * Valoración trámite: Indica si es servicio (true/false).
-	 */
-	VALORACION_ES_SERVICIO("VALCPSR"),
-	/**
-	 * Valoración trámite: Código trámite/versión.
-	 */
-	VALORACION_TRAMITE_ELECTRONICO("VALTRVR"),
+	PAGO_IMPORTE("PAGIMP"),
 	/**
 	 * Valoración trámite: puntuación.
 	 */

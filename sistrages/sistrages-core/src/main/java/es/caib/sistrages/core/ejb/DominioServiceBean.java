@@ -11,6 +11,7 @@ import javax.interceptor.Interceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
@@ -284,6 +285,12 @@ public class DominioServiceBean implements DominioService {
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<String> listDominiosByFD(final Long idFuenteDatos) {
 		return dominioService.listDominiosByFD(idFuenteDatos);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<Dominio> getDominiosByConfAut(Long idConfiguracion, Long idArea) {
+		return dominioService.getDominiosByConfAut(idConfiguracion,  idArea);
 	}
 
 }

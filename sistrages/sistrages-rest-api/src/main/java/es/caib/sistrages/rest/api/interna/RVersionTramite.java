@@ -56,6 +56,10 @@ public class RVersionTramite {
 	@ApiModelProperty(value = "Pasos tramitación")
 	private List<RPasoTramitacion> pasos;
 
+	/** Gestores formularios externos entidad. */
+	@ApiModelProperty(value = "Gestores formularios externos")
+	private List<RGestorFormularioExterno> gestoresFormulariosExternos;
+
 	/**
 	 * Método de acceso a idTramite.
 	 *
@@ -282,6 +286,14 @@ public class RVersionTramite {
 	 */
 	public void setIdArea(final String idArea) {
 		this.idArea = idArea;
+	}
+
+	public List<RGestorFormularioExterno> getGestoresFormulariosExternos() {
+		return gestoresFormulariosExternos;
+	}
+
+	public void setGestoresFormulariosExternos(final List<RGestorFormularioExterno> gestoresFormulariosExternos) {
+		this.gestoresFormulariosExternos = gestoresFormulariosExternos;
 	}
 
 }

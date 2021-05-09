@@ -23,6 +23,7 @@ import es.caib.sistrages.core.api.exception.TramiteVersionException;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.DominioTramite;
+import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tramite;
@@ -45,6 +46,7 @@ import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFormateadorFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormularioTramite;
+import es.caib.sistrages.core.service.repository.model.JGestorExternoFormularios;
 import es.caib.sistrages.core.service.repository.model.JHistorialVersion;
 import es.caib.sistrages.core.service.repository.model.JLiteral;
 import es.caib.sistrages.core.service.repository.model.JPasoRellenar;
@@ -1266,5 +1268,29 @@ public class TramiteDaoImpl implements TramiteDao {
 		jversion.setRelease(jversion.getRelease() + 1);
 		entityManager.merge(jversion);
 
+	}
+
+	@Override
+	public List<GestorExternoFormularios> getGFEByTramiteVersion(Long idTramiteVersion) {
+		final List<GestorExternoFormularios> resultado = new ArrayList<>();
+
+		String sql = "Select FORMS.formularioExterno From JPasoRellenar p JOIN p.formulariosTramite FORMS "
+				+ "where p.pasoTramitacion.versionTramite.codigo = :idTramiteVersion "
+				+ " and FORMS.tipoFormulario = 'E' ";
+
+		final Query query = entityManager.createQuery(sql);
+
+		query.setParameter("idTramiteVersion", idTramiteVersion);
+
+		final List<JGestorExternoFormularios> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JGestorExternoFormularios> iterator = results.iterator(); iterator.hasNext();) {
+				final JGestorExternoFormularios jFGE = iterator.next();
+				resultado.add(jFGE.toModel());
+			}
+		}
+
+		return resultado;
 	}
 }

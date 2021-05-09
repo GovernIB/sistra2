@@ -19,15 +19,21 @@ public interface IDominioPlugin extends IPlugin {
 	 * Invoca dominio remoto.
 	 *
 	 * @param idDominio
-	 *            id dominio
+	 *                       id dominio
 	 * @param url
-	 *            url
+	 *                       url
 	 * @param parametros
-	 *            parametros
+	 *                       parametros
+	 * @param user
+	 *                       Usuario
+	 * @param pass
+	 *                       Password
+	 * @param timeout
+	 *                       Timeout (segundos)
 	 * @return valores dominio
 	 * @throws DominioPluginException
 	 */
-	public ValoresDominio invocarDominio(String idDominio, String url, List<ParametroDominio> parametros)
-			throws DominioPluginException;
+	public ValoresDominio invocarDominio(String idDominio, String url, List<ParametroDominio> parametros, String user,
+			String pass, Long timeout) throws DominioPluginException;
 
 }

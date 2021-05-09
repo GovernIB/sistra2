@@ -41,7 +41,7 @@ public class TestPdfCaib {
 		cabecera.setTitulo("Solicitud de acreditaciones de entidades especializadas \r\n"
 		/* + "PARA SERVICIOS DE PREVENCIÓN AJENOS A LAS EMPRESAS" */);
 		cabecera.setSubtitulo("para servicios de prevencion ajenos a las empresas");
-
+		cabecera.setCodigoSia("2212");
 		/** Ejemplo logo cargando directamente la imagen */
 		// cabecera.setLogo(
 		// "G:\\workspace\\trunk-simac-lib-pdf\\fuentes\\java\\src\\main\\resources\\logo.png");

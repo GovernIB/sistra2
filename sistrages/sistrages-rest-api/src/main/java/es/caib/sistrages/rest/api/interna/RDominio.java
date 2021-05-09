@@ -44,6 +44,14 @@ public class RDominio {
 	@ApiModelProperty(value = "Query para BD")
 	private String sql;
 
+	/** Configuracion autenticacion. */
+	@ApiModelProperty(value = "Configuracion autenticacion")
+	private RConfiguracionAutenticacion configuracionAutenticacion;
+
+	/** Timeout (para dominios remotos). */
+	@ApiModelProperty(value = "Timeout en segundos (para dominios remotos)")
+	private Long timeout;
+
 	/**
 	 * Método de acceso a identificador.
 	 *
@@ -56,7 +64,8 @@ public class RDominio {
 	/**
 	 * Método para establecer identificador.
 	 *
-	 * @param identificador identificador a establecer
+	 * @param identificador
+	 *                          identificador a establecer
 	 */
 	public void setIdentificador(final String identificador) {
 		this.identificador = identificador;
@@ -74,7 +83,8 @@ public class RDominio {
 	/**
 	 * Método para establecer tipo.
 	 *
-	 * @param tipo tipo a establecer
+	 * @param tipo
+	 *                 tipo a establecer
 	 */
 	public void setTipo(final String tipo) {
 		this.tipo = tipo;
@@ -92,7 +102,8 @@ public class RDominio {
 	/**
 	 * Método para establecer uri.
 	 *
-	 * @param uri uri a establecer
+	 * @param uri
+	 *                uri a establecer
 	 */
 	public void setUri(final String uri) {
 		this.uri = uri;
@@ -110,7 +121,8 @@ public class RDominio {
 	/**
 	 * Método para establecer sql.
 	 *
-	 * @param sql sql a establecer
+	 * @param sql
+	 *                sql a establecer
 	 */
 	public void setSql(final String sql) {
 		this.sql = sql;
@@ -124,7 +136,8 @@ public class RDominio {
 	}
 
 	/**
-	 * @param timestamp the timestamp to set
+	 * @param timestamp
+	 *                      the timestamp to set
 	 */
 	public void setTimestamp(final String timestamp) {
 		this.timestamp = timestamp;
@@ -142,10 +155,45 @@ public class RDominio {
 	/**
 	 * Método para establecer tipoCache.
 	 *
-	 * @param tipoCache tipoCache a establecer
+	 * @param tipoCache
+	 *                      tipoCache a establecer
 	 */
 	public void setTipoCache(final String tipoCache) {
 		this.tipoCache = tipoCache;
+	}
+
+	/**
+	 * @return the configuracionAutenticacion
+	 */
+	public RConfiguracionAutenticacion getConfiguracionAutenticacion() {
+		return configuracionAutenticacion;
+	}
+
+	/**
+	 * @param configuracionAutenticacion
+	 *                                       the configuracionAutenticacion to set
+	 */
+	public void setConfiguracionAutenticacion(final RConfiguracionAutenticacion configuracionAutenticacion) {
+		this.configuracionAutenticacion = configuracionAutenticacion;
+	}
+
+	/**
+	 * Método de acceso a timeout.
+	 * 
+	 * @return timeout
+	 */
+	public Long getTimeout() {
+		return timeout;
+	}
+
+	/**
+	 * Método para establecer timeout.
+	 * 
+	 * @param timeout
+	 *                    timeout a establecer
+	 */
+	public void setTimeout(final Long timeout) {
+		this.timeout = timeout;
 	}
 
 }

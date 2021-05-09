@@ -359,7 +359,7 @@ public final class ResPersona implements ResPersonaInt {
 	 * @return
 	 */
 	private boolean mayorCero(final String numero) {
-		return (numero != null && Long.parseLong(numero) > 0);
+		return (StringUtils.isNotBlank(numero) && Long.parseLong(numero) > 0);
 	}
 
 	/**

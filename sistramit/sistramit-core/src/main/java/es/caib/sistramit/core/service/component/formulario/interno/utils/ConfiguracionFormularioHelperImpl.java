@@ -248,7 +248,8 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 			idPaginaDestino = (String) rs.getResultado();
 		} else {
 			// Si no hay script navegacion, sera la siguiente pagina
-			final int indiceDefDestino = pDatosSesion.getDatosFormulario().getPaginaActualFormulario().getIndiceDef();
+			final int indiceDefDestino = pDatosSesion.getDatosFormulario().getPaginaActualFormulario().getIndiceDef()
+					+ 1;
 			final RPaginaFormulario pagDestino = UtilsFormularioInterno.obtenerDefinicionPagina(pDatosSesion,
 					indiceDefDestino);
 			idPaginaDestino = pagDestino.getIdentificador();

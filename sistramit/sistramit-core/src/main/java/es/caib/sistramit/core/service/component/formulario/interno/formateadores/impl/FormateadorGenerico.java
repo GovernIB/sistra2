@@ -11,6 +11,7 @@ import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
 
 import es.caib.sistra2.commons.pdfcaib.GeneradorPdf;
 import es.caib.sistra2.commons.pdfcaib.model.Cabecera;
@@ -83,7 +84,7 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
 	@Override
 	public byte[] formatear(final byte[] ixml, final byte[] plantilla, final String idioma,
-			final RFormularioInterno defFormInterno, final String tituloProcedimiento) {
+			final RFormularioInterno defFormInterno, final String tituloProcedimiento, final String siaProcedimiento) {
 
 		final XmlFormulario xml = UtilsFormulario.xmlToValores(ixml);
 
@@ -100,6 +101,7 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 		} else {
 			cabecera.setTitulo(tituloProcedimiento);
 		}
+		cabecera.setCodigoSia(siaProcedimiento);
 		if (StringUtils.isNotBlank(urlImagen)) {
 			try {
 				byte[] arrayBytes = null;
@@ -138,13 +140,13 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 					} else if (componente instanceof RComponenteAviso) {
 						// - Componente aviso (si está activo la variable)
 						if (mostrarAviso != null && mostrarAviso) {
-							// Creamos seccion vacia para separar
-							linea.getObjetosLinea().add(new Seccion("", ""));
 							// Creamos texto aviso
 							final RComponenteAviso componenteAviso = (RComponenteAviso) componente;
 							final PersonalizacionTexto personalizacicionTexto = new PersonalizacionTexto(false, true,
 									TypeFuente.NOTOSANS, 6);
-							final Texto texto = new Texto(personalizacicionTexto, componenteAviso.getEtiqueta(), 6);
+							// Texto aviso puede contener html, por lo q limpiamos
+							final String textoAviso = Jsoup.parse(componenteAviso.getEtiqueta()).text();
+							final Texto texto = new Texto(personalizacicionTexto, textoAviso, 6);
 							linea.getObjetosLinea().add(texto);
 						}
 					} else {

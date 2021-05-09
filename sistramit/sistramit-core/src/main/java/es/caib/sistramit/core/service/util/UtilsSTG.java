@@ -14,7 +14,6 @@ import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistrages.rest.api.interna.RAnexoTramite;
 import es.caib.sistrages.rest.api.interna.RAviso;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
-import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RFormularioTramite;
 import es.caib.sistrages.rest.api.interna.RGestorFormularioExterno;
 import es.caib.sistrages.rest.api.interna.RLiteral;
@@ -641,27 +640,54 @@ public final class UtilsSTG {
 	/**
 	 * Obtiene url gestor formulario
 	 *
-	 * @param confEntidad
-	 *                        Configuracion entidad
+	 * @param defTramite
+	 *                       Definición trámite
 	 * @param idGFE
-	 *                        id gestor formulario
+	 *                       id gestor formulario
 	 * @return url gestor
 	 */
-	public static String obtenerUrlGestorFormulariosExterno(final RConfiguracionEntidad confEntidad,
-			final String idGFE) {
-		String urlGestorFormulario = null;
-		if (confEntidad.getGestoresFormulariosExternos() != null) {
-			for (final RGestorFormularioExterno gf : confEntidad.getGestoresFormulariosExternos()) {
-				if (gf.getIdentificador().equals(idGFE)) {
-					urlGestorFormulario = gf.getUrl();
-					break;
-				}
-			}
-		}
-		if (urlGestorFormulario == null) {
+	public static String obtenerUrlGestorFormulariosExterno(final DefinicionTramiteSTG defTramite, final String idGFE) {
+		final RGestorFormularioExterno gfe = obtenerConfGFE(defTramite, idGFE);
+		if (StringUtils.isBlank(gfe.getUrl())) {
 			throw new ErrorConfiguracionException("No se encuentra url para gestor formularios: " + idGFE);
 		}
-		return urlGestorFormulario;
+		return gfe.getUrl();
+	}
+
+	/**
+	 * Obtiene usuario gestor formulario
+	 *
+	 * @param defTramite
+	 *                       Definición trámite
+	 * @param idGFE
+	 *                       id gestor formulario
+	 * @return usuario gestor
+	 */
+	public static String obtenerUsrGestorFormulariosExterno(final DefinicionTramiteSTG defTramite, final String idGFE) {
+		final RGestorFormularioExterno gfe = obtenerConfGFE(defTramite, idGFE);
+		String user = null;
+		if (gfe.getConfiguracionAutenticacion() != null) {
+			user = gfe.getConfiguracionAutenticacion().getUsuario();
+		}
+		return user;
+	}
+
+	/**
+	 * Obtiene usuario gestor formulario
+	 *
+	 * @param defTramite
+	 *                       Definición trámite
+	 * @param idGFE
+	 *                       id gestor formulario
+	 * @return pwd gestor
+	 */
+	public static String obtenerPwdGestorFormulariosExterno(final DefinicionTramiteSTG defTramite, final String idGFE) {
+		final RGestorFormularioExterno gfe = obtenerConfGFE(defTramite, idGFE);
+		String pwd = null;
+		if (gfe.getConfiguracionAutenticacion() != null) {
+			pwd = gfe.getConfiguracionAutenticacion().getPassword();
+		}
+		return pwd;
 	}
 
 	/**
@@ -686,6 +712,32 @@ public final class UtilsSTG {
 			}
 		}
 		return res;
+	}
+
+	/**
+	 * Obtiene configuración gestor formulario.
+	 * 
+	 * @param defTramite
+	 *                       Definición trámite
+	 * @param idGFE
+	 *                       id GFE
+	 * @return configuración gestor formulario.
+	 */
+	private static RGestorFormularioExterno obtenerConfGFE(final DefinicionTramiteSTG defTramite, final String idGFE) {
+		RGestorFormularioExterno gfe = null;
+		if (defTramite.getDefinicionVersion().getGestoresFormulariosExternos() != null) {
+			for (final RGestorFormularioExterno gf : defTramite.getDefinicionVersion()
+					.getGestoresFormulariosExternos()) {
+				if (gf.getIdentificador().equals(idGFE)) {
+					gfe = gf;
+					break;
+				}
+			}
+		}
+		if (gfe == null) {
+			throw new ErrorConfiguracionException("No se encuentra gestor formularios: " + idGFE);
+		}
+		return gfe;
 	}
 
 }

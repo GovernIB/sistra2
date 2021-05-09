@@ -69,12 +69,15 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/** Idiomas. **/
 	private List<String> idiomas;
 
+	/** Area **/
+	private String area;
+
 	/** Init. **/
 	public void init() {
 
 		data = tramiteService.getFormulario(Long.valueOf(id));
 		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
-		gestores = gestorFormularioExternoService.listFormularioExterno(UtilJSF.getIdEntidad(), UtilJSF.getIdioma(),
+		gestores = gestorFormularioExternoService.listFormularioExterno(Long.valueOf(area), UtilJSF.getIdioma(),
 				null);
 		setIdiomas(UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados()));
 	}
@@ -437,6 +440,20 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 */
 	public void setGestores(final List<GestorExternoFormularios> gestores) {
 		this.gestores = gestores;
+	}
+
+	/**
+	 * @return the area
+	 */
+	public String getArea() {
+		return area;
+	}
+
+	/**
+	 * @param area the area to set
+	 */
+	public void setArea(String area) {
+		this.area = area;
 	}
 
 }

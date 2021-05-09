@@ -15,7 +15,6 @@ import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RDominio;
-import es.caib.sistrages.rest.api.interna.RGestorFormularioExterno;
 import es.caib.sistrages.rest.api.interna.RIncidenciaValoracion;
 import es.caib.sistrages.rest.api.interna.RListaParametros;
 import es.caib.sistrages.rest.api.interna.RLiteral;
@@ -187,7 +186,6 @@ public class SistragesMock {
 		e.setUrlTwitter("http://twitter");
 		e.setUrlYoutube("http://youtube");
 		e.setPlugins(crearPluginsEntidad());
-		e.setGestoresFormulariosExternos(crearGestoresFormulariosExternoEntidad());
 		e.setInfoLopdHTML(generarLiteral());
 		e.setValorarTramite(true);
 		e.setIncidenciasValoracion(incidenciasValoracion);
@@ -210,15 +208,6 @@ public class SistragesMock {
 
 		return e;
 
-	}
-
-	private static List<RGestorFormularioExterno> crearGestoresFormulariosExternoEntidad() {
-		final List<RGestorFormularioExterno> gfes = new ArrayList<>();
-		final RGestorFormularioExterno gfe = new RGestorFormularioExterno();
-		gfe.setIdentificador("GFMOCK");
-		gfe.setUrl("http://GFMOCK.es");
-		gfes.add(gfe);
-		return gfes;
 	}
 
 	private static List<RPlugin> crearPluginsEntidad() {

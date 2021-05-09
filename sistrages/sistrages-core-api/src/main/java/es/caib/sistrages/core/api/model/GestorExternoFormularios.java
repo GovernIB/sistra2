@@ -24,6 +24,12 @@ public class GestorExternoFormularios extends ModelApi {
 	/** URL **/
 	private String url;
 
+	/** Configuracion autenticacion **/
+	private ConfiguracionAutenticacion configuracionAutenticacion;
+
+	/** Area identificador **/
+	private String areaIdentificador;
+
 	public GestorExternoFormularios() {
 		super();
 	}
@@ -86,6 +92,34 @@ public class GestorExternoFormularios extends ModelApi {
 	 */
 	public final void setUrl(final String url) {
 		this.url = url;
+	}
+
+	/**
+	 * @return the configuracionAutenticacion
+	 */
+	public ConfiguracionAutenticacion getConfiguracionAutenticacion() {
+		return configuracionAutenticacion;
+	}
+
+	/**
+	 * @param configuracionAutenticacion the configuracionAutenticacion to set
+	 */
+	public void setConfiguracionAutenticacion(ConfiguracionAutenticacion configuracionAutenticacion) {
+		this.configuracionAutenticacion = configuracionAutenticacion;
+	}
+
+	/**
+	 * @return the areaIdentificador
+	 */
+	public String getAreaIdentificador() {
+		return areaIdentificador;
+	}
+
+	/**
+	 * @param areaIdentificador the areaIdentificador to set
+	 */
+	public void setAreaIdentificador(String areaIdentificador) {
+		this.areaIdentificador = areaIdentificador;
 	}
 
 	/*

@@ -12,8 +12,10 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistramit.core.api.model.system.rest.externo.Evento;
 import es.caib.sistramit.core.api.model.system.rest.externo.FiltroEvento;
+import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramiteFinalizado;
 import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramitePersistencia;
 import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
+import es.caib.sistramit.core.api.model.system.rest.externo.TramiteFinalizado;
 import es.caib.sistramit.core.api.model.system.rest.externo.TramitePersistencia;
 import es.caib.sistramit.core.api.service.RestApiExternaService;
 
@@ -38,6 +40,11 @@ public class RestApiExternaServiceBean implements RestApiExternaService {
 	@Override
 	public String obtenerTicketAcceso(final InfoTicketAcceso pInfoTicketAcceso) {
 		return restApiExternaService.obtenerTicketAcceso(pInfoTicketAcceso);
+	}
+
+	@Override
+	public List<TramiteFinalizado> recuperarTramitesFinalizados(final FiltroTramiteFinalizado filtroBusqueda) {
+		return restApiExternaService.recuperarTramitesFinalizados(filtroBusqueda);
 	}
 
 }

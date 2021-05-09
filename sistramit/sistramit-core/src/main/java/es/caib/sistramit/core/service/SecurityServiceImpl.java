@@ -189,19 +189,25 @@ public class SecurityServiceImpl implements SecurityService {
 		final DatosInicioSesionFormulario dif = formularioDao
 				.obtenerDatosInicioSesionGestorFormularios(idSesionFormulario, true);
 
+		// Obtenemos datos conexión GFE a partir versión trámite
+		final DefinicionTramiteSTG defTramite = configuracionComponent.recuperarDefinicionTramite(dif.getIdTramite(),
+				dif.getVersionTramite(), dif.getIdioma());
+		final String urlGestorFormulario = UtilsSTG.obtenerUrlGestorFormulariosExterno(defTramite,
+				dif.getIdGestorFormulariosExterno());
+		final String usrGestorFormulario = UtilsSTG.obtenerUsrGestorFormulariosExterno(defTramite,
+				dif.getIdGestorFormulariosExterno());
+		final String pwdGestorFormulario = UtilsSTG.obtenerPwdGestorFormulariosExterno(defTramite,
+				dif.getIdGestorFormulariosExterno());
+
 		// Obtenemos plugin formularios
 		final IFormularioPlugin plgFormularios = (IFormularioPlugin) configuracionComponent
 				.obtenerPluginEntidad(TypePluginEntidad.FORMULARIOS_EXTERNOS, dif.getEntidad());
-
-		final RConfiguracionEntidad confEntidad = configuracionComponent.obtenerConfiguracionEntidad(dif.getEntidad());
-		final String urlGestorFormulario = UtilsSTG.obtenerUrlGestorFormulariosExterno(confEntidad,
-				dif.getIdGestorFormulariosExterno());
 
 		// Invocamos plugin para obtener resultado
 		DatosRetornoFormulario drf = null;
 		try {
 			drf = plgFormularios.obtenerResultadoFormulario(dif.getIdGestorFormulariosExterno(), urlGestorFormulario,
-					ticket);
+					usrGestorFormulario, pwdGestorFormulario, ticket);
 		} catch (final FormularioPluginException e) {
 			throw new TicketFormularioException("Error al obtener resultado formulario: " + e.getMessage(), e);
 		}

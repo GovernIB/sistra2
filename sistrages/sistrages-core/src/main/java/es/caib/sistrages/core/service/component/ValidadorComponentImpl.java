@@ -297,8 +297,9 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 
 				// DISEÑO DEL FORMULARIO
 				// propiedades del formulario
-				comprobarDisenyoFormulario(pTramiteVersion, pIdiomasTramiteVersion, pIdioma, listaErrores, formulario);
-
+				if (formulario.getDisenyoFormulario() != null) {
+					comprobarDisenyoFormulario(pTramiteVersion, pIdiomasTramiteVersion, pIdioma, listaErrores, formulario);
+				}
 			}
 		}
 	}
@@ -1143,10 +1144,12 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 					final List<FormularioTramite> formularios = ((TramitePasoRellenar) paso).getFormulariosTramite();
 					if (formularios != null && !formularios.isEmpty()) {
 						for (final FormularioTramite formularioTramite : formularios) {
-							final DisenyoFormulario disenyoFormulario = formularioInternoDao
-									.getFormularioCompletoById(formularioTramite.getIdFormularioInterno());
-							if (disenyoFormulario != null) {
-								formularioTramite.setDisenyoFormulario(disenyoFormulario);
+							if (formularioTramite.getIdFormularioInterno() != null) {
+								final DisenyoFormulario disenyoFormulario = formularioInternoDao
+										.getFormularioCompletoById(formularioTramite.getIdFormularioInterno());
+								if (disenyoFormulario != null) {
+									formularioTramite.setDisenyoFormulario(disenyoFormulario);
+								}
 							}
 						}
 					}

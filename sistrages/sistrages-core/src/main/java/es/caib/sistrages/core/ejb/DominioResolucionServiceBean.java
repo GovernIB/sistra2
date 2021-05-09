@@ -50,8 +50,8 @@ public class DominioResolucionServiceBean implements DominioResolucionService {
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public ValoresDominio realizarConsultaRemota(final TypeAmbito ambito, final Long idEntidad, final String idDominio,
-			final String url, final List<ParametroDominio> parametros) {
-		return dominioResolucionService.realizarConsultaRemota(ambito, idEntidad, idDominio, url, parametros);
+			final String url, final String usr, final String pwd, final List<ParametroDominio> parametros) {
+		return dominioResolucionService.realizarConsultaRemota(ambito, idEntidad, idDominio, url, usr, pwd, parametros);
 	}
 
 	@Override

@@ -94,6 +94,23 @@
 
 					</p:dataTable>
 
+					<p:outputLabel value="#{msg['dialogTramiteExportar.gfe.info']}" styleClass="titulo-color" style="color:#000"  />
+
+					<p:dataTable  id="dataTableFGE" var="td" value="#{dialogTramiteExportar.gestorExternoFormularios}"
+								 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+								 scrollable="true" scrollHeight="90%" style="margin-bottom:5px">
+
+						<!-- Columnas -->
+					    <p:column headerText="#{msg['dialogTramiteExportar.form.headerCodigo']}">
+					        <h:outputText value="#{td.identificador}" />
+					    </p:column>
+
+					   <p:column headerText="#{msg['dialogTramiteExportar.form.headerDescripcion']}">
+					        <h:outputText value="#{td.descripcion}" />
+					    </p:column>
+
+					</p:dataTable>
+
 				</h:panelGrid>
 				<br />
 				<br />

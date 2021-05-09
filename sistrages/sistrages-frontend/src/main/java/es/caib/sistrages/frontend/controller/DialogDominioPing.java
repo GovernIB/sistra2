@@ -125,8 +125,14 @@ public class DialogDominioPing extends DialogControllerBase {
 	 * @param parametros
 	 */
 	private ValoresDominio pingConsultaRemota(final List<ParametroDominio> parametros) {
+		String user = null;
+		String pwd = null;
+		if (this.dominio.getConfiguracionAutenticacion() != null) {
+			user = this.dominio.getConfiguracionAutenticacion().getUsuario();
+			pwd = this.dominio.getConfiguracionAutenticacion().getPassword();
+		}
 		return dominioResolucionService.realizarConsultaRemota(this.dominio.getAmbito(), UtilJSF.getIdEntidad(),
-				this.dominio.getIdentificador(), this.dominio.getUrl(), parametros);
+				this.dominio.getIdentificador(), this.dominio.getUrl(), user, pwd, parametros);
 	}
 
 	/**
@@ -199,7 +205,7 @@ public class DialogDominioPing extends DialogControllerBase {
 
 	/**
 	 * @param id
-	 *            the id to set
+	 *               the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -214,7 +220,7 @@ public class DialogDominioPing extends DialogControllerBase {
 
 	/**
 	 * @param dominio
-	 *            the dominio to set
+	 *                    the dominio to set
 	 */
 	public void setDominio(final Dominio dominio) {
 		this.dominio = dominio;
@@ -229,7 +235,7 @@ public class DialogDominioPing extends DialogControllerBase {
 
 	/**
 	 * @param mostrarTablaParametro
-	 *            the mostrarTablaParametro to set
+	 *                                  the mostrarTablaParametro to set
 	 */
 	public void setMostrarTablaParametro(final boolean mostrarTablaParametro) {
 		this.mostrarTablaParametro = mostrarTablaParametro;
@@ -244,7 +250,7 @@ public class DialogDominioPing extends DialogControllerBase {
 
 	/**
 	 * @param mostrarTablaDatos
-	 *            the mostrarTablaDatos to set
+	 *                              the mostrarTablaDatos to set
 	 */
 	public void setMostrarTablaDatos(final boolean mostrarTablaDatos) {
 		this.mostrarTablaDatos = mostrarTablaDatos;
@@ -259,7 +265,7 @@ public class DialogDominioPing extends DialogControllerBase {
 
 	/**
 	 * @param valoresDominio
-	 *            the valoresDominio to set
+	 *                           the valoresDominio to set
 	 */
 	public void setValoresDominio(final ValoresDominio valoresDominio) {
 		this.valoresDominio = valoresDominio;
@@ -274,7 +280,7 @@ public class DialogDominioPing extends DialogControllerBase {
 
 	/**
 	 * @param mostrarTablaFicheros
-	 *            the mostrarTablaFicheros to set
+	 *                                 the mostrarTablaFicheros to set
 	 */
 	public void setMostrarTablaFicheros(final boolean mostrarTablaFicheros) {
 		this.mostrarTablaFicheros = mostrarTablaFicheros;

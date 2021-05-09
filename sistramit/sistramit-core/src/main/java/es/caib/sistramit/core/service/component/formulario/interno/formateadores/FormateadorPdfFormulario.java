@@ -14,18 +14,20 @@ public interface FormateadorPdfFormulario {
 	 * Formatea a PDF.
 	 *
 	 * @param xml
-	 *            XML datos formulario
+	 *                                XML datos formulario
 	 * @param defFormInterno
-	 *            Definición formulario interno
+	 *                                Definición formulario interno
 	 * @param plantilla
-	 *            plantilla a usar
+	 *                                plantilla a usar
 	 * @param idioma
-	 *            idioma
+	 *                                idioma
 	 * @param tituloProcedimiento
-	 *            titulo del procedimiento
+	 *                                titulo del procedimiento
+	 * @param siaProcedimiento
+	 *                                sia del procedimiento
 	 * @return PDF generado
 	 */
 	byte[] formatear(byte[] xml, byte[] plantilla, String idioma, RFormularioInterno defFormInterno,
-			String tituloProcedimiento);
+			String tituloProcedimiento, String siaProcedimiento);
 
 }

@@ -33,7 +33,7 @@ public final class XssFilter {
 	 * Filtrado de Xss para un literal que no admite html.
 	 *
 	 * @param valor
-	 *            Valor a filtrar
+	 *                  Valor a filtrar
 	 * @return Indica si pasa el filtro.
 	 */
 	public static boolean filtroXss(final String valor) {
@@ -44,9 +44,9 @@ public final class XssFilter {
 	 * Filtrado de Xss.
 	 *
 	 * @param valor
-	 *            Valor a filtrar
+	 *                  Valor a filtrar
 	 * @param html
-	 *            Indica si admite html
+	 *                  Indica si admite html
 	 * @return Indica si pasa el filtro.
 	 */
 	public static boolean filtroXss(final String valor, final boolean html) {
@@ -63,13 +63,20 @@ public final class XssFilter {
 	 * Normaliza nombre fichero.
 	 *
 	 * @param nombreFichero
-	 *            Nombre fichero
+	 *                          Nombre fichero
 	 * @return
 	 */
 	public static String normalizarFilename(final String nombreFichero) {
-		final String nombreFicheroNormalizado = Normalizer.normalize(nombreFichero, Normalizer.Form.NFD)
+		// Quitamos acentos y caracteres problematicos
+		String nombreFicheroNormalizado = Normalizer.normalize(nombreFichero, Normalizer.Form.NFD)
 				.replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replaceAll(" ", "_").replaceAll("%", "_")
 				.replaceAll("'", "´");
+		// Eliminamos chars no permitidos en RW3
+		final String[] charsNoPermitidos = { ">", "%", "\\*", "&", ":", ";", "¿", "\\?", "/", "\\|", "!", "<", "¡",
+				"\"" };
+		for (final String cnp : charsNoPermitidos) {
+			nombreFicheroNormalizado = nombreFicheroNormalizado.replaceAll(cnp, "_");
+		}
 		return nombreFicheroNormalizado;
 	}
 
@@ -77,9 +84,9 @@ public final class XssFilter {
 	 * Busca si existe algun valor no permitido en la cadena.
 	 *
 	 * @param cadena
-	 *            Cadena
+	 *                      Cadena
 	 * @param blackList
-	 *            Lista de valores no permitidos
+	 *                      Lista de valores no permitidos
 	 * @return true si no encuentra ninguno
 	 */
 	private static boolean buscarValorNoPermitido(final String cadena, final String[] blackList) {

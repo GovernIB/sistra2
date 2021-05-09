@@ -743,10 +743,28 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Editar texto componente.
 	 */
+	public void editarTraduccionesTextoOpcional() {
+		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getTexto();
+		UtilTraducciones.openDialogTraduccionOpcional(TypeModoAcceso.valueOf(modoAcceso),
+				((ComponenteFormulario) objetoFormularioEdit).getTexto(), idiomas, idiomas);
+	}
+
+	/**
+	 * Editar texto componente.
+	 */
 	public void editarTraduccionesHTML() {
 		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getTexto();
 		UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.valueOf(modoAcceso),
 				((ComponenteFormulario) objetoFormularioEdit).getTexto(), idiomas, idiomas, false);
+	}
+
+	/**
+	 * Editar texto componente.
+	 */
+	public void editarTraduccionesHTMLOpcional() {
+		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getTexto();
+		UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.valueOf(modoAcceso),
+				((ComponenteFormulario) objetoFormularioEdit).getTexto(), idiomas, idiomas, true);
 	}
 
 	/**

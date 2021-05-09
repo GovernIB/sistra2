@@ -48,6 +48,10 @@ public class JDominio implements IModelApi {
 	@JoinColumn(name = "DOM_FDIDFD")
 	private JFuenteDatos fuenteDatos;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "DOM_CODCAU")
+	private JConfiguracionAutenticacion configuracionAutenticacion;
+
 	@Column(name = "DOM_AMBITO", nullable = false, length = 1)
 	private String ambito;
 
@@ -77,6 +81,9 @@ public class JDominio implements IModelApi {
 
 	@Column(name = "DOM_PARAMS", length = 4000)
 	private String parametros;
+
+	@Column(name = "DOM_TIMEOUT")
+	private Long timeout;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "STG_DOMENT", joinColumns = {
@@ -237,12 +244,41 @@ public class JDominio implements IModelApi {
 		this.versionesTramite = versionesTramite;
 	}
 
+	/**
+	 * @return the timeout
+	 */
+	public Long getTimeout() {
+		return timeout;
+	}
+
+	/**
+	 * @param timeout the timeout to set
+	 */
+	public void setTimeout(Long timeout) {
+		this.timeout = timeout;
+	}
+
+	/**
+	 * @return the configuracionAutenticacion
+	 */
+	public JConfiguracionAutenticacion getConfiguracionAutenticacion() {
+		return configuracionAutenticacion;
+	}
+
+	/**
+	 * @param configuracionAutenticacion the configuracionAutenticacion to set
+	 */
+	public void setConfiguracionAutenticacion(JConfiguracionAutenticacion configuracionAutenticacion) {
+		this.configuracionAutenticacion = configuracionAutenticacion;
+	}
+
 	public Dominio toModel() {
 		final Dominio dominio = new Dominio();
 		dominio.setCodigo(this.codigo);
 		dominio.setCache(TypeCache.fromString(this.cacheo));
 		dominio.setIdentificador(this.identificador);
 		dominio.setDescripcion(this.descripcion);
+		dominio.setTimeout(this.timeout);
 
 		dominio.setJndi(this.datasourceJndi);
 		dominio.setListaFija((List<Propiedad>) UtilJSON.fromListJSON(this.listaFijaValores, Propiedad.class));
@@ -257,6 +293,9 @@ public class JDominio implements IModelApi {
 
 		if (this.getFuenteDatos() != null) {
 			dominio.setIdFuenteDatos(this.getFuenteDatos().getCodigo());
+		}
+		if (this.getConfiguracionAutenticacion () != null) {
+			dominio.setConfiguracionAutenticacion(this.getConfiguracionAutenticacion().toModel());
 		}
 		if (this.getAreas() != null) {
 			final Set<Area> idAreas = new HashSet<>();
@@ -287,10 +326,14 @@ public class JDominio implements IModelApi {
 			this.setIdentificador(dominio.getIdentificador());
 			this.setDescripcion(dominio.getDescripcion());
 			this.setDatasourceJndi(dominio.getJndi());
+			this.setTimeout(dominio.getTimeout());
 			this.setListaFijaValores(UtilJSON.toJSON(dominio.getListaFija()));
 			this.setParametros(UtilJSON.toJSON(dominio.getParametros()));
 			if (dominio.getSql() != null) {
 				this.setSql(decodeSql(dominio.getSql()));
+			}
+			if (dominio.getConfiguracionAutenticacion () != null) {
+				this.setConfiguracionAutenticacion(JConfiguracionAutenticacion.fromModel(dominio.getConfiguracionAutenticacion()));
 			}
 			this.setTipo(dominio.getTipo().toString());
 			this.setAmbito(dominio.getAmbito().toString());
@@ -333,6 +376,8 @@ public class JDominio implements IModelApi {
 			jdominio.setDatasourceJndi(dominio.getDatasourceJndi());
 			jdominio.setDescripcion(dominio.getDescripcion());
 			jdominio.setEntidades(new HashSet<>(0));
+			jdominio.setTimeout(dominio.timeout);
+			jdominio.setConfiguracionAutenticacion(dominio.getConfiguracionAutenticacion());
 			if (jentidad != null) {
 				jdominio.getEntidades().add(jentidad);
 			}

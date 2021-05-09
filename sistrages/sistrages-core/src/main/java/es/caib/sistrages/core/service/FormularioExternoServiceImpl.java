@@ -91,15 +91,27 @@ public class FormularioExternoServiceImpl implements FormularioExternoService {
 	 */
 	@Override
 	@NegocioInterceptor
-	public List<GestorExternoFormularios> listFormularioExterno(final Long idEntidad, final TypeIdioma idioma,
+	public List<GestorExternoFormularios> listFormularioExterno(final Long idArea, final TypeIdioma idioma,
 			final String filtro) {
-		return formularioExternoDao.getAllByFiltro(idEntidad, idioma, filtro);
+		return formularioExternoDao.getAllByFiltro(idArea, idioma, filtro);
 	}
 
 	@Override
 	@NegocioInterceptor
 	public boolean existeFormulario(final String identificador, final Long idCodigo) {
 		return formularioExternoDao.existeFormulario(identificador, idCodigo);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<GestorExternoFormularios> getGestorExternoByAutenticacion(Long id, Long idArea) {
+		return formularioExternoDao.getGestorExternoByAutenticacion(id, idArea);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public GestorExternoFormularios getFormularioExternoByIdentificador(String identificador) {
+		return formularioExternoDao.getFormularioExternoByIdentificador(identificador);
 	}
 
 }

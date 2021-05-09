@@ -12,8 +12,10 @@ import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.rest.externo.Evento;
 import es.caib.sistramit.core.api.model.system.rest.externo.FiltroEvento;
+import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramiteFinalizado;
 import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramitePersistencia;
 import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
+import es.caib.sistramit.core.api.model.system.rest.externo.TramiteFinalizado;
 import es.caib.sistramit.core.api.model.system.rest.externo.TramitePersistencia;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.repository.dao.AuditoriaDao;
@@ -89,6 +91,14 @@ public class RestApiExternaComponentImpl implements RestApiExternaComponent {
 				+ ConstantesSeguridad.TICKET_PARAM + "=" + ticket;
 
 		return urlCallback;
+	}
+
+	@Override
+	public List<TramiteFinalizado> recuperarTramitesFinalizados(final FiltroTramiteFinalizado pFiltro) {
+		if (pFiltro.getNif() == null && pFiltro.getIdSesionTramitacion() == null) {
+			throw new ErrorParametroObligatorioException("El parámetro <NIF> o <idSesionTramitacion> es obligatorio");
+		}
+		return flujoTramiteDao.recuperarTramitesFinalizados(pFiltro);
 	}
 
 }

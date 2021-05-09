@@ -94,6 +94,27 @@ public final class UtilTraducciones {
 		openDialogTraduccion(modoAcceso, traducciones, idiomas, idiomasObligatorios, false);
 	}
 
+
+	/**
+	 * Abre un dialog de tipo traduccion.
+	 *
+	 * @param modoAcceso
+	 *            Modo de acceso (ALTA, EDICION o CONSULTA)
+	 * @param traducciones
+	 *            Dato en formato json de tipo Traducciones
+	 * @param idiomas
+	 *            La lista de idiomas que se puede introducir literal. Si no se
+	 *            introduce, se supondrán que son los que tenga traducciones.
+	 * @param idiomasObligatorios
+	 *            La lista de idiomas obligatorios. Si no se introduce, se supondrán
+	 *            que son los que tenga traducciones.
+	 */
+	public static void openDialogTraduccionOpcional(final TypeModoAcceso modoAcceso, final Literal traducciones,
+			final List<String> idiomas, final List<String> idiomasObligatorios) {
+		openDialogTraduccion(modoAcceso, traducciones, idiomas, idiomasObligatorios, true);
+	}
+
+
 	/**
 	 * Abre un dialog de tipo traduccion (es el método PADRE que realmente crea el
 	 * dialog).

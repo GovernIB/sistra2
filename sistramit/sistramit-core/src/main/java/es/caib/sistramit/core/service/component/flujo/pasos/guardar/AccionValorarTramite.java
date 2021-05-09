@@ -64,28 +64,13 @@ public final class AccionValorarTramite implements AccionPaso {
 
 			// Generamos auditoria manualmente
 			final ListaPropiedades listaPropiedades = new ListaPropiedades();
-
-			// NO ASOCIAMOS A SESION PARA QUE SEA ANONIMO Y TOCA ASIGNAR DATOS TRAMITE
-			// MANUALMENTE
-			// evento.setIdSesionTramitacion(pVariablesFlujo.getIdSesionTramitacion());
-			listaPropiedades.addPropiedad(TypeParametroEvento.VALORACION_TRAMITE_ELECTRONICO.toString(),
-					pVariablesFlujo.getIdTramite() + "-" + pVariablesFlujo.getVersionTramite());
-			listaPropiedades.addPropiedad(TypeParametroEvento.VALORACION_SIA.toString(),
-					pVariablesFlujo.getDatosTramiteCP().getProcedimiento().getIdProcedimientoSIA());
-			listaPropiedades.addPropiedad(TypeParametroEvento.VALORACION_PROCEDIMIENTO.toString(),
-					pVariablesFlujo.getDatosTramiteCP().getProcedimiento().getIdentificador());
-			listaPropiedades.addPropiedad(TypeParametroEvento.VALORACION_TRAMITE.toString(),
-					pVariablesFlujo.getDatosTramiteCP().getIdentificador());
-			listaPropiedades.addPropiedad(TypeParametroEvento.VALORACION_ES_SERVICIO.toString(),
-					Boolean.toString(pVariablesFlujo.getDatosTramiteCP().getProcedimiento().isServicio()));
-
 			listaPropiedades.addPropiedad(TypeParametroEvento.VALORACION_PUNTUACION.toString(), valoracion);
 			listaPropiedades.addPropiedad(TypeParametroEvento.VALORACION_PROBLEMAS.toString(), problemas);
 			listaPropiedades.addPropiedad(TypeParametroEvento.VALORACION_OBSERVACIONES.toString(), observaciones);
 			final EventoAuditoria evento = new EventoAuditoria();
+			evento.setIdSesionTramitacion(pVariablesFlujo.getIdSesionTramitacion());
 			evento.setFecha(new Date());
 			evento.setTipoEvento(TypeEvento.VALORACION_TRAMITE);
-
 			evento.setDescripcion("Valoración trámite");
 			evento.setPropiedadesEvento(listaPropiedades);
 			auditoriaComponent.auditarEventoAplicacion(evento);

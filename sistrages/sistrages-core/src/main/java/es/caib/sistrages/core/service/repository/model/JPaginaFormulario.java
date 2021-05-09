@@ -115,7 +115,8 @@ public class JPaginaFormulario implements IModelApi {
 	}
 
 	/**
-	 * @param alias the alias to set
+	 * @param alias
+	 *                  the alias to set
 	 */
 	public void setIdentificador(final String alias) {
 		this.identificador = alias;
@@ -129,7 +130,8 @@ public class JPaginaFormulario implements IModelApi {
 	}
 
 	/**
-	 * @param scriptNavegacion the scriptNavegacion to set
+	 * @param scriptNavegacion
+	 *                             the scriptNavegacion to set
 	 */
 	public void setScriptNavegacion(final JScript scriptNavegacion) {
 		this.scriptNavegacion = scriptNavegacion;
@@ -289,6 +291,7 @@ public class JPaginaFormulario implements IModelApi {
 	public static JPaginaFormulario createDefault(final JFormulario pJFormulario) {
 		final JPaginaFormulario jPagina = new JPaginaFormulario();
 		jPagina.setOrden(1);
+		jPagina.setIdentificador("P1");
 		jPagina.setPaginaFinal(true);
 		jPagina.setPaginaAsociadaListaElementos(false);
 		jPagina.setFormulario(pJFormulario);

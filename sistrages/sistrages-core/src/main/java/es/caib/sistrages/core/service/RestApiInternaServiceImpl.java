@@ -363,8 +363,8 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 
 	@Override
 	@NegocioInterceptor
-	public List<GestorExternoFormularios> listGestorExternoFormularios(final Long pIdEntidad) {
-		return formularioExternoDao.getAll(pIdEntidad);
+	public List<GestorExternoFormularios> listGestorExternoFormularios(final Long pIdArea) {
+		return formularioExternoDao.getAll(pIdArea);
 	}
 
 }

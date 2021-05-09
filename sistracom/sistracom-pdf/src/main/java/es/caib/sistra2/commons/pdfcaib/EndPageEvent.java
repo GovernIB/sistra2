@@ -53,7 +53,7 @@ public class EndPageEvent extends PdfPageEventHelper {
 	protected static Font VALOR;
 	protected static PersonalizacionTexto PERSONALIZACION_TEXTO_CABECERA_DEFAULT;
 	protected static PersonalizacionTexto PERSONALIZACION_TEXTO_SECCION_DEFAULT;
-
+	protected static PersonalizacionTexto PERSONALIZACION_TEXTO_ETIQUETA_DEFAULT;
 	/**
 	 * Template para la paginacion
 	 */
@@ -69,6 +69,7 @@ public class EndPageEvent extends PdfPageEventHelper {
 
 		PERSONALIZACION_TEXTO_CABECERA_DEFAULT = new PersonalizacionTexto(true, false, TypeFuente.NOTOSANS, 16);
 		PERSONALIZACION_TEXTO_SECCION_DEFAULT = new PersonalizacionTexto(true, false, TypeFuente.NOTOSANS, 16);
+		PERSONALIZACION_TEXTO_ETIQUETA_DEFAULT = new PersonalizacionTexto(true, false, TypeFuente.NOTOSANS, 10);
 		VALOR = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), 9);
 		ETIQUETA = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), 10);
 		SECCION = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), 9);
@@ -114,13 +115,13 @@ public class EndPageEvent extends PdfPageEventHelper {
 					head.setWidths(new int[] { 2, 24 });
 					head.setTotalWidth(527);
 					head.getDefaultCell().setFixedHeight(40);
-					head.getDefaultCell().setBorder(Rectangle.BOTTOM);
+					head.getDefaultCell().setBorder(Rectangle.NO_BORDER);
 
 					// add text
 					final PdfPCell text = new PdfPCell();
 					text.setPaddingBottom(15);
 					text.setPaddingLeft(10);
-					text.setBorder(Rectangle.BOTTOM);
+					text.setBorder(Rectangle.NO_BORDER);
 
 					// add image
 					if (cabecera.getLogo() != null) {
@@ -205,11 +206,11 @@ public class EndPageEvent extends PdfPageEventHelper {
 				head.setTotalWidth(700);
 				head.setLockedWidth(true);
 				// head.getDefaultCell().setFixedHeight(50);
-				head.getDefaultCell().setBorder(Rectangle.BOX);
+				head.getDefaultCell().setBorder(Rectangle.NO_BORDER);
 
 				// add text
 				final PdfPCell text = new PdfPCell();
-				text.setBorder(Rectangle.BOX);
+				text.setBorder(Rectangle.NO_BORDER);
 
 				// add image
 				if (cabecera.getLogo() != null) {
@@ -226,6 +227,7 @@ public class EndPageEvent extends PdfPageEventHelper {
 					image.addElement(logo);
 					image.setFixedHeight(90);
 					image.setHorizontalAlignment(1000);
+					image.setBorder(Rectangle.NO_BORDER);
 					head.addCell(image);
 				} else {
 					head.addCell(text);
@@ -255,8 +257,24 @@ public class EndPageEvent extends PdfPageEventHelper {
 					fuenteCabecera.setColor(myColor);
 					subtitulo = new Paragraph(cabecera.getSubtitulo(), fuenteCabecera);
 				}
+
 				subtitulo.setAlignment(Element.ALIGN_CENTER);
 				text.addElement(subtitulo);
+
+				if (cabecera.getCodigoSia() != null && !cabecera.getCodigoSia().isEmpty()) {
+					final Font fuenteCabeceraCodigoSia = getFontByPersonalizacionTexto(
+							PERSONALIZACION_TEXTO_ETIQUETA_DEFAULT);
+					fuenteCabeceraCodigoSia.setColor(myColor);
+					final Font fuenteCabeceraCodigoSiaNumerico = getFontByPersonalizacionTexto(
+							PERSONALIZACION_TEXTO_ETIQUETA_DEFAULT);
+
+					final Paragraph p = new Paragraph();
+					p.add(new Chunk("CODI SIA  ", fuenteCabeceraCodigoSia));
+					p.add(new Chunk(cabecera.getCodigoSia(), fuenteCabeceraCodigoSiaNumerico));
+					p.setAlignment(Element.ALIGN_RIGHT);
+					p.setSpacingBefore(20);
+					text.addElement(p);
+				}
 
 				head.addCell(text);
 				head.setTotalWidth(page.getWidth() - document.leftMargin() - document.rightMargin());

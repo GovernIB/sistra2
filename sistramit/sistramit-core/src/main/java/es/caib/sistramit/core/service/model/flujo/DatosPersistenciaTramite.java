@@ -125,14 +125,6 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 */
 	private boolean cancelado;
 	/**
-	 * Indica el nif del presentador.
-	 */
-	private String nifPresentador;
-	/**
-	 * Indica el nombre del presentador.
-	 */
-	private String nombreCompletoPresentador;
-	/**
 	 * Indica si esta marcado para purgar.
 	 */
 	private boolean marcadoPurgar;
@@ -162,9 +154,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer idSesionTramitacion.
 	 *
 	 * @param idSesionTramitacion
-	 *            idSesionTramitacion a establecer
+	 *                                idSesionTramitacion a establecer
 	 */
-	public void setIdSesionTramitacion(String idSesionTramitacion) {
+	public void setIdSesionTramitacion(final String idSesionTramitacion) {
 		this.idSesionTramitacion = idSesionTramitacion;
 	}
 
@@ -181,9 +173,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer idTramite.
 	 *
 	 * @param idTramite
-	 *            idTramite a establecer
+	 *                      idTramite a establecer
 	 */
-	public void setIdTramite(String idTramite) {
+	public void setIdTramite(final String idTramite) {
 		this.idTramite = idTramite;
 	}
 
@@ -200,9 +192,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer versionTramite.
 	 *
 	 * @param versionTramite
-	 *            versionTramite a establecer
+	 *                           versionTramite a establecer
 	 */
-	public void setVersionTramite(int versionTramite) {
+	public void setVersionTramite(final int versionTramite) {
 		this.versionTramite = versionTramite;
 	}
 
@@ -219,9 +211,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer descripcionTramite.
 	 *
 	 * @param descripcionTramite
-	 *            descripcionTramite a establecer
+	 *                               descripcionTramite a establecer
 	 */
-	public void setDescripcionTramite(String descripcionTramite) {
+	public void setDescripcionTramite(final String descripcionTramite) {
 		this.descripcionTramite = descripcionTramite;
 	}
 
@@ -238,9 +230,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer idTramiteCP.
 	 *
 	 * @param idTramiteCP
-	 *            idTramiteCP a establecer
+	 *                        idTramiteCP a establecer
 	 */
-	public void setIdTramiteCP(String idTramiteCP) {
+	public void setIdTramiteCP(final String idTramiteCP) {
 		this.idTramiteCP = idTramiteCP;
 	}
 
@@ -257,9 +249,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer idProcedimientoCP.
 	 *
 	 * @param idProcedimientoCP
-	 *            idProcedimientoCP a establecer
+	 *                              idProcedimientoCP a establecer
 	 */
-	public void setIdProcedimientoCP(String idProcedimientoCP) {
+	public void setIdProcedimientoCP(final String idProcedimientoCP) {
 		this.idProcedimientoCP = idProcedimientoCP;
 	}
 
@@ -276,9 +268,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer idProcedimientoSIA.
 	 *
 	 * @param idProcedimientoSIA
-	 *            idProcedimientoSIA a establecer
+	 *                               idProcedimientoSIA a establecer
 	 */
-	public void setIdProcedimientoSIA(String idProcedimientoSIA) {
+	public void setIdProcedimientoSIA(final String idProcedimientoSIA) {
 		this.idProcedimientoSIA = idProcedimientoSIA;
 	}
 
@@ -295,9 +287,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer estado.
 	 *
 	 * @param estado
-	 *            estado a establecer
+	 *                   estado a establecer
 	 */
-	public void setEstado(TypeEstadoTramite estado) {
+	public void setEstado(final TypeEstadoTramite estado) {
 		this.estado = estado;
 	}
 
@@ -314,9 +306,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer autenticacion.
 	 *
 	 * @param autenticacion
-	 *            autenticacion a establecer
+	 *                          autenticacion a establecer
 	 */
-	public void setAutenticacion(TypeAutenticacion autenticacion) {
+	public void setAutenticacion(final TypeAutenticacion autenticacion) {
 		this.autenticacion = autenticacion;
 	}
 
@@ -333,9 +325,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer metodoAutenticacionInicio.
 	 *
 	 * @param metodoAutenticacionInicio
-	 *            metodoAutenticacionInicio a establecer
+	 *                                      metodoAutenticacionInicio a establecer
 	 */
-	public void setMetodoAutenticacionInicio(TypeMetodoAutenticacion metodoAutenticacionInicio) {
+	public void setMetodoAutenticacionInicio(final TypeMetodoAutenticacion metodoAutenticacionInicio) {
 		this.metodoAutenticacionInicio = metodoAutenticacionInicio;
 	}
 
@@ -352,9 +344,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer nifIniciador.
 	 *
 	 * @param nifIniciador
-	 *            nifIniciador a establecer
+	 *                         nifIniciador a establecer
 	 */
-	public void setNifIniciador(String nifIniciador) {
+	public void setNifIniciador(final String nifIniciador) {
 		this.nifIniciador = nifIniciador;
 	}
 
@@ -371,9 +363,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer nombreIniciador.
 	 *
 	 * @param nombreIniciador
-	 *            nombreIniciador a establecer
+	 *                            nombreIniciador a establecer
 	 */
-	public void setNombreIniciador(String nombreIniciador) {
+	public void setNombreIniciador(final String nombreIniciador) {
 		this.nombreIniciador = nombreIniciador;
 	}
 
@@ -390,9 +382,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer apellido1Iniciador.
 	 *
 	 * @param apellido1Iniciador
-	 *            apellido1Iniciador a establecer
+	 *                               apellido1Iniciador a establecer
 	 */
-	public void setApellido1Iniciador(String apellido1Iniciador) {
+	public void setApellido1Iniciador(final String apellido1Iniciador) {
 		this.apellido1Iniciador = apellido1Iniciador;
 	}
 
@@ -409,9 +401,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer apellido2Iniciador.
 	 *
 	 * @param apellido2Iniciador
-	 *            apellido2Iniciador a establecer
+	 *                               apellido2Iniciador a establecer
 	 */
-	public void setApellido2Iniciador(String apellido2Iniciador) {
+	public void setApellido2Iniciador(final String apellido2Iniciador) {
 		this.apellido2Iniciador = apellido2Iniciador;
 	}
 
@@ -428,9 +420,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer timestamp.
 	 *
 	 * @param timestamp
-	 *            timestamp a establecer
+	 *                      timestamp a establecer
 	 */
-	public void setTimestamp(Long timestamp) {
+	public void setTimestamp(final Long timestamp) {
 		this.timestamp = timestamp;
 	}
 
@@ -447,9 +439,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer idioma.
 	 *
 	 * @param idioma
-	 *            idioma a establecer
+	 *                   idioma a establecer
 	 */
-	public void setIdioma(String idioma) {
+	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
 	}
 
@@ -466,9 +458,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer urlInicio.
 	 *
 	 * @param urlInicio
-	 *            urlInicio a establecer
+	 *                      urlInicio a establecer
 	 */
-	public void setUrlInicio(String urlInicio) {
+	public void setUrlInicio(final String urlInicio) {
 		this.urlInicio = urlInicio;
 	}
 
@@ -485,9 +477,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer parametrosInicio.
 	 *
 	 * @param parametrosInicio
-	 *            parametrosInicio a establecer
+	 *                             parametrosInicio a establecer
 	 */
-	public void setParametrosInicio(Map<String, String> parametrosInicio) {
+	public void setParametrosInicio(final Map<String, String> parametrosInicio) {
 		this.parametrosInicio = parametrosInicio;
 	}
 
@@ -504,9 +496,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer persistente.
 	 *
 	 * @param persistente
-	 *            persistente a establecer
+	 *                        persistente a establecer
 	 */
-	public void setPersistente(boolean persistente) {
+	public void setPersistente(final boolean persistente) {
 		this.persistente = persistente;
 	}
 
@@ -523,9 +515,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer plazoDinamico.
 	 *
 	 * @param plazoDinamico
-	 *            plazoDinamico a establecer
+	 *                          plazoDinamico a establecer
 	 */
-	public void setPlazoDinamico(boolean plazoDinamico) {
+	public void setPlazoDinamico(final boolean plazoDinamico) {
 		this.plazoDinamico = plazoDinamico;
 	}
 
@@ -542,9 +534,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer fechaInicio.
 	 *
 	 * @param fechaInicio
-	 *            fechaInicio a establecer
+	 *                        fechaInicio a establecer
 	 */
-	public void setFechaInicio(Date fechaInicio) {
+	public void setFechaInicio(final Date fechaInicio) {
 		this.fechaInicio = fechaInicio;
 	}
 
@@ -561,9 +553,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer fechaUltimoAcceso.
 	 *
 	 * @param fechaUltimoAcceso
-	 *            fechaUltimoAcceso a establecer
+	 *                              fechaUltimoAcceso a establecer
 	 */
-	public void setFechaUltimoAcceso(Date fechaUltimoAcceso) {
+	public void setFechaUltimoAcceso(final Date fechaUltimoAcceso) {
 		this.fechaUltimoAcceso = fechaUltimoAcceso;
 	}
 
@@ -580,9 +572,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer fechaCaducidad.
 	 *
 	 * @param fechaCaducidad
-	 *            fechaCaducidad a establecer
+	 *                           fechaCaducidad a establecer
 	 */
-	public void setFechaCaducidad(Date fechaCaducidad) {
+	public void setFechaCaducidad(final Date fechaCaducidad) {
 		this.fechaCaducidad = fechaCaducidad;
 	}
 
@@ -599,9 +591,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer fechaFin.
 	 *
 	 * @param fechaFin
-	 *            fechaFin a establecer
+	 *                     fechaFin a establecer
 	 */
-	public void setFechaFin(Date fechaFin) {
+	public void setFechaFin(final Date fechaFin) {
 		this.fechaFin = fechaFin;
 	}
 
@@ -618,48 +610,10 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer cancelado.
 	 *
 	 * @param cancelado
-	 *            cancelado a establecer
+	 *                      cancelado a establecer
 	 */
-	public void setCancelado(boolean cancelado) {
+	public void setCancelado(final boolean cancelado) {
 		this.cancelado = cancelado;
-	}
-
-	/**
-	 * Método de acceso a nifPresentador.
-	 *
-	 * @return nifPresentador
-	 */
-	public String getNifPresentador() {
-		return nifPresentador;
-	}
-
-	/**
-	 * Método para establecer nifPresentador.
-	 *
-	 * @param nifPresentador
-	 *            nifPresentador a establecer
-	 */
-	public void setNifPresentador(String nifPresentador) {
-		this.nifPresentador = nifPresentador;
-	}
-
-	/**
-	 * Método de acceso a nombreCompletoPresentador.
-	 *
-	 * @return nombreCompletoPresentador
-	 */
-	public String getNombreCompletoPresentador() {
-		return nombreCompletoPresentador;
-	}
-
-	/**
-	 * Método para establecer nombreCompletoPresentador.
-	 *
-	 * @param nombreCompletoPresentador
-	 *            nombreCompletoPresentador a establecer
-	 */
-	public void setNombreCompletoPresentador(String nombreCompletoPresentador) {
-		this.nombreCompletoPresentador = nombreCompletoPresentador;
 	}
 
 	/**
@@ -675,9 +629,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer marcadoPurgar.
 	 *
 	 * @param marcadoPurgar
-	 *            marcadoPurgar a establecer
+	 *                          marcadoPurgar a establecer
 	 */
-	public void setMarcadoPurgar(boolean marcadoPurgar) {
+	public void setMarcadoPurgar(final boolean marcadoPurgar) {
 		this.marcadoPurgar = marcadoPurgar;
 	}
 
@@ -694,9 +648,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer purgado.
 	 *
 	 * @param purgado
-	 *            purgado a establecer
+	 *                    purgado a establecer
 	 */
-	public void setPurgado(boolean purgado) {
+	public void setPurgado(final boolean purgado) {
 		this.purgado = purgado;
 	}
 
@@ -713,9 +667,9 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer fechaPurgado.
 	 *
 	 * @param fechaPurgado
-	 *            fechaPurgado a establecer
+	 *                         fechaPurgado a establecer
 	 */
-	public void setFechaPurgado(Date fechaPurgado) {
+	public void setFechaPurgado(final Date fechaPurgado) {
 		this.fechaPurgado = fechaPurgado;
 	}
 
@@ -732,9 +686,10 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer purgaPendientePorPagoRealizado.
 	 *
 	 * @param purgaPendientePorPagoRealizado
-	 *            purgaPendientePorPagoRealizado a establecer
+	 *                                           purgaPendientePorPagoRealizado a
+	 *                                           establecer
 	 */
-	public void setPurgaPendientePorPagoRealizado(boolean purgaPendientePorPagoRealizado) {
+	public void setPurgaPendientePorPagoRealizado(final boolean purgaPendientePorPagoRealizado) {
 		this.purgaPendientePorPagoRealizado = purgaPendientePorPagoRealizado;
 	}
 
@@ -751,15 +706,15 @@ public final class DatosPersistenciaTramite implements Serializable {
 	 * Método para establecer idArea.
 	 *
 	 * @param idArea
-	 *            idArea a establecer
+	 *                   idArea a establecer
 	 */
-	public void setIdArea(String idArea) {
+	public void setIdArea(final String idArea) {
 		this.idArea = idArea;
 	}
 
 	/**
 	 * Método de acceso a servicioCP.
-	 * 
+	 *
 	 * @return servicioCP
 	 */
 	public boolean isServicioCP() {
@@ -768,11 +723,11 @@ public final class DatosPersistenciaTramite implements Serializable {
 
 	/**
 	 * Método para establecer servicioCP.
-	 * 
+	 *
 	 * @param servicioCP
-	 *            servicioCP a establecer
+	 *                       servicioCP a establecer
 	 */
-	public void setServicioCP(boolean servicioCP) {
+	public void setServicioCP(final boolean servicioCP) {
 		this.servicioCP = servicioCP;
 	}
 

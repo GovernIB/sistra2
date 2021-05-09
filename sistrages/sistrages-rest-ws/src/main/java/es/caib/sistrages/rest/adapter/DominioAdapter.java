@@ -3,6 +3,7 @@ package es.caib.sistrages.rest.adapter;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.rest.api.interna.RConfiguracionAutenticacion;
 import es.caib.sistrages.rest.api.interna.RDominio;
 
 /**
@@ -33,6 +34,14 @@ public class DominioAdapter {
 			} else {
 				rDominio.setUri(dominio.getUrl());
 			}
+			if (dominio.getConfiguracionAutenticacion() != null) {
+				final RConfiguracionAutenticacion rConfAutenticacion = new RConfiguracionAutenticacion();
+				rConfAutenticacion.setIdentificador(dominio.getConfiguracionAutenticacion().getIdentificador());
+				rConfAutenticacion.setUsuario(dominio.getConfiguracionAutenticacion().getUsuario());
+				rConfAutenticacion.setPassword(dominio.getConfiguracionAutenticacion().getPassword());
+				rDominio.setConfiguracionAutenticacion(rConfAutenticacion);
+			}
+			rDominio.setTimeout(dominio.getTimeout());
 		}
 		return rDominio;
 	}

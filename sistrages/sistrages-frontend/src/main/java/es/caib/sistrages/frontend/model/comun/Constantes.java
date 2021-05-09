@@ -32,6 +32,9 @@ public final class Constantes {
 	public static final String EXTENSIONES_FICHEROS_CSV = "text/csv";
 
 	/** Constante importar. **/
+	public static final String AREA = "AREA";
+
+	/** Constante importar. **/
 	public static final String CLAVE_MOCHILA_IMPORTAR = "IMPORTAR";
 
 	/** Constante importar area. **/

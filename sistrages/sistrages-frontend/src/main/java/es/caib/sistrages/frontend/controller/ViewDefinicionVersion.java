@@ -862,6 +862,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(formulario.getCodigo()));
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
+		params.put(TypeParametroVentana.AREA.toString(), area.getCodigo().toString());
 		params.put(TypeParametroVentana.TRAMITEPASO.toString(),
 				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionFormulario.class, TypeModoAcceso.EDICION, params, true, 1100, 420);

@@ -11,6 +11,7 @@ import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
@@ -653,5 +654,12 @@ public interface TramiteService {
 	 * @return
 	 */
 	public List<ScriptInfo> listScriptsInfo(Long idTramiteVersion);
+
+	/**
+	 * Obtiene los formularios gestores externos dependiente el idTramiteVersion
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	public List<GestorExternoFormularios> getGFEByTramiteVersion(Long idTramiteVersion);
 
 }

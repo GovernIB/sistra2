@@ -5,6 +5,7 @@ import java.util.List;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.DominioTramite;
+import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
@@ -323,4 +324,11 @@ public interface TramiteDao {
 	 * @param codigo
 	 */
 	void incrementarRelease(Long idTramiteVersion);
+
+	/**
+	 * Lista GFE segun idTramiteVersion
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	List<GestorExternoFormularios> getGFEByTramiteVersion(Long idTramiteVersion);
 }

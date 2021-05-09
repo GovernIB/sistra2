@@ -152,14 +152,6 @@ public final class HTramite implements IModelApi {
 	@Column(name = "TRP_BORRAD")
 	private boolean cancelado;
 
-	/** Atributo nif presentador. */
-	@Column(name = "TRP_NIFFIN")
-	private String nifPresentador;
-
-	/** Atributo nombre presentador. */
-	@Column(name = "TRP_NOMFIN")
-	private String nombrePresentador;
-
 	/** Indica si esta purgado. */
 	@Column(name = "TRP_PURGA")
 	private boolean purgado;
@@ -194,7 +186,7 @@ public final class HTramite implements IModelApi {
 	 * Asigna el atributo codigo de HTramite.
 	 *
 	 * @param pCodigo
-	 *            el nuevo valor para codigo
+	 *                    el nuevo valor para codigo
 	 */
 	public void setCodigo(final Long pCodigo) {
 		codigo = pCodigo;
@@ -213,7 +205,7 @@ public final class HTramite implements IModelApi {
 	 * Asigna el atributo id tramite de HTramite.
 	 *
 	 * @param pIdTramite
-	 *            el nuevo valor para id tramite
+	 *                       el nuevo valor para id tramite
 	 */
 	public void setIdTramite(final String pIdTramite) {
 		idTramite = pIdTramite;
@@ -232,7 +224,7 @@ public final class HTramite implements IModelApi {
 	 * Asigna el atributo version tramite de HTramite.
 	 *
 	 * @param pVersionTramite
-	 *            el nuevo valor para version tramite
+	 *                            el nuevo valor para version tramite
 	 */
 	public void setVersionTramite(final int pVersionTramite) {
 		versionTramite = pVersionTramite;
@@ -251,7 +243,7 @@ public final class HTramite implements IModelApi {
 	 * Asigna el atributo descripcion tramite de HTramite.
 	 *
 	 * @param pDescripcionTramite
-	 *            el nuevo valor para descripcion tramite
+	 *                                el nuevo valor para descripcion tramite
 	 */
 	public void setDescripcionTramite(final String pDescripcionTramite) {
 		descripcionTramite = pDescripcionTramite;
@@ -270,7 +262,7 @@ public final class HTramite implements IModelApi {
 	 * Asigna el atributo estado de HTramite.
 	 *
 	 * @param pEstado
-	 *            el nuevo valor para estado
+	 *                    el nuevo valor para estado
 	 */
 	public void setEstado(final String pEstado) {
 		estado = pEstado;
@@ -289,7 +281,7 @@ public final class HTramite implements IModelApi {
 	 * Método para settear el campo autenticacion.
 	 *
 	 * @param pAutenticacion
-	 *            el campo autenticacion a settear
+	 *                           el campo autenticacion a settear
 	 */
 	public void setAutenticacion(final String pAutenticacion) {
 		autenticacion = pAutenticacion;
@@ -308,7 +300,7 @@ public final class HTramite implements IModelApi {
 	 * Asigna el atributo nif iniciador de HTramite.
 	 *
 	 * @param pNifIniciador
-	 *            el nuevo valor para nif iniciador
+	 *                          el nuevo valor para nif iniciador
 	 */
 	public void setNifIniciador(final String pNifIniciador) {
 		nifIniciador = pNifIniciador;
@@ -327,7 +319,7 @@ public final class HTramite implements IModelApi {
 	 * Asigna el atributo nombre iniciador de HTramite.
 	 *
 	 * @param pNombreIniciador
-	 *            el nuevo valor para nombre iniciador
+	 *                             el nuevo valor para nombre iniciador
 	 */
 	public void setNombreIniciador(final String pNombreIniciador) {
 		nombreIniciador = pNombreIniciador;
@@ -346,7 +338,7 @@ public final class HTramite implements IModelApi {
 	 * Asigna el atributo timestamp de HTramite.
 	 *
 	 * @param pTimestamp
-	 *            el nuevo valor para timestamp
+	 *                       el nuevo valor para timestamp
 	 */
 	public void setTimestamp(final Date pTimestamp) {
 		timestamp = pTimestamp;
@@ -365,7 +357,7 @@ public final class HTramite implements IModelApi {
 	 * Asigna el atributo idioma de HTramite.
 	 *
 	 * @param pIdioma
-	 *            el nuevo valor para idioma
+	 *                    el nuevo valor para idioma
 	 */
 	public void setIdioma(final String pIdioma) {
 		idioma = pIdioma;
@@ -384,7 +376,7 @@ public final class HTramite implements IModelApi {
 	 * Asigna el atributo parametros iniciales de HTramite.
 	 *
 	 * @param pParametrosIniciales
-	 *            el nuevo valor para parametros iniciales
+	 *                                 el nuevo valor para parametros iniciales
 	 */
 	public void setParametrosInicio(final String pParametrosIniciales) {
 		parametrosInicio = pParametrosIniciales;
@@ -403,7 +395,7 @@ public final class HTramite implements IModelApi {
 	 * Asigna el atributo persistente de HTramite.
 	 *
 	 * @param pPersistente
-	 *            el nuevo valor para persistente
+	 *                         el nuevo valor para persistente
 	 */
 	public void setPersistente(final boolean pPersistente) {
 		persistente = pPersistente;
@@ -422,7 +414,7 @@ public final class HTramite implements IModelApi {
 	 * Asigna el atributo fecha inicio de HTramite.
 	 *
 	 * @param pFechaInicio
-	 *            el nuevo valor para fecha inicio
+	 *                         el nuevo valor para fecha inicio
 	 */
 	public void setFechaInicio(final Date pFechaInicio) {
 		fechaInicio = pFechaInicio;
@@ -441,7 +433,7 @@ public final class HTramite implements IModelApi {
 	 * Asigna el atributo fecha ultimo acceso de HTramite.
 	 *
 	 * @param pFechaUltimoAcceso
-	 *            el nuevo valor para fecha ultimo acceso
+	 *                               el nuevo valor para fecha ultimo acceso
 	 */
 	public void setFechaUltimoAcceso(final Date pFechaUltimoAcceso) {
 		fechaUltimoAcceso = pFechaUltimoAcceso;
@@ -460,7 +452,7 @@ public final class HTramite implements IModelApi {
 	 * Asigna el atributo fecha caducidad de HTramite.
 	 *
 	 * @param pFechaCaducidad
-	 *            el nuevo valor para fecha caducidad
+	 *                            el nuevo valor para fecha caducidad
 	 */
 	public void setFechaCaducidad(final Date pFechaCaducidad) {
 		fechaCaducidad = pFechaCaducidad;
@@ -479,7 +471,7 @@ public final class HTramite implements IModelApi {
 	 * Asigna el atributo fecha fin de HTramite.
 	 *
 	 * @param pFechaFin
-	 *            el nuevo valor para fecha fin
+	 *                      el nuevo valor para fecha fin
 	 */
 	public void setFechaFin(final Date pFechaFin) {
 		fechaFin = pFechaFin;
@@ -498,48 +490,10 @@ public final class HTramite implements IModelApi {
 	 * Asigna el atributo cancelado de HTramite.
 	 *
 	 * @param pCancelado
-	 *            el nuevo valor para cancelado
+	 *                       el nuevo valor para cancelado
 	 */
 	public void setCancelado(final boolean pCancelado) {
 		cancelado = pCancelado;
-	}
-
-	/**
-	 * Obtiene el atributo nif presentador de HTramite.
-	 *
-	 * @return el atributo nif presentador
-	 */
-	public String getNifPresentador() {
-		return nifPresentador;
-	}
-
-	/**
-	 * Asigna el atributo nif presentador de HTramite.
-	 *
-	 * @param pNifPresentador
-	 *            el nuevo valor para nif presentador
-	 */
-	public void setNifPresentador(final String pNifPresentador) {
-		nifPresentador = pNifPresentador;
-	}
-
-	/**
-	 * Obtiene el atributo nombre presentador de HTramite.
-	 *
-	 * @return el atributo nombre presentador
-	 */
-	public String getNombrePresentador() {
-		return nombrePresentador;
-	}
-
-	/**
-	 * Asigna el atributo nombre presentador de HTramite.
-	 *
-	 * @param pNombrePresentador
-	 *            el nuevo valor para nombre presentador
-	 */
-	public void setNombrePresentador(final String pNombrePresentador) {
-		nombrePresentador = pNombrePresentador;
 	}
 
 	/**
@@ -555,7 +509,7 @@ public final class HTramite implements IModelApi {
 	 * Método para settear el campo apellido1Iniciador.
 	 *
 	 * @param pApellido1Iniciador
-	 *            el campo apellido1Iniciador a settear
+	 *                                el campo apellido1Iniciador a settear
 	 */
 	public void setApellido1Iniciador(final String pApellido1Iniciador) {
 		apellido1Iniciador = pApellido1Iniciador;
@@ -574,7 +528,7 @@ public final class HTramite implements IModelApi {
 	 * Método para settear el campo apellido2Iniciador.
 	 *
 	 * @param pApellido2Iniciador
-	 *            el campo apellido2Iniciador a settear
+	 *                                el campo apellido2Iniciador a settear
 	 */
 	public void setApellido2Iniciador(final String pApellido2Iniciador) {
 		apellido2Iniciador = pApellido2Iniciador;
@@ -593,7 +547,7 @@ public final class HTramite implements IModelApi {
 	 * Método para settear el campo plazoDinamico.
 	 *
 	 * @param pPlazoDinamico
-	 *            el campo plazoDinamico a settear
+	 *                           el campo plazoDinamico a settear
 	 */
 	public void setPlazoDinamico(final boolean pPlazoDinamico) {
 		plazoDinamico = pPlazoDinamico;
@@ -612,7 +566,7 @@ public final class HTramite implements IModelApi {
 	 * Método para establecer purgado.
 	 *
 	 * @param pPurgado
-	 *            purgado a establecer
+	 *                     purgado a establecer
 	 */
 	public void setPurgado(final boolean pPurgado) {
 		purgado = pPurgado;
@@ -631,7 +585,7 @@ public final class HTramite implements IModelApi {
 	 * Método para establecer fechaPurgado.
 	 *
 	 * @param pFechaPurgado
-	 *            fechaPurgado a establecer
+	 *                          fechaPurgado a establecer
 	 */
 	public void setFechaPurgado(final Date pFechaPurgado) {
 		fechaPurgado = pFechaPurgado;
@@ -650,7 +604,7 @@ public final class HTramite implements IModelApi {
 	 * Método para establecer urlInicio.
 	 *
 	 * @param pUrlInicio
-	 *            urlInicio a establecer
+	 *                       urlInicio a establecer
 	 */
 	public void setUrlInicio(final String pUrlInicio) {
 		urlInicio = pUrlInicio;
@@ -669,7 +623,7 @@ public final class HTramite implements IModelApi {
 	 * Método para establecer sesionTramitacion.
 	 *
 	 * @param pSesionTramitacion
-	 *            sesionTramitacion a establecer
+	 *                               sesionTramitacion a establecer
 	 */
 	public void setSesionTramitacion(final HSesionTramitacion pSesionTramitacion) {
 		sesionTramitacion = pSesionTramitacion;
@@ -688,7 +642,7 @@ public final class HTramite implements IModelApi {
 	 * Método para establecer purgar.
 	 *
 	 * @param pPurgar
-	 *            purgar a establecer
+	 *                    purgar a establecer
 	 */
 	public void setPurgar(final boolean pPurgar) {
 		purgar = pPurgar;
@@ -707,7 +661,8 @@ public final class HTramite implements IModelApi {
 	 * Método para establecer purgaPendientePorPagoRealizado.
 	 *
 	 * @param pPurgaPendientePorPagoRealizado
-	 *            purgaPendientePorPagoRealizado a establecer
+	 *                                            purgaPendientePorPagoRealizado a
+	 *                                            establecer
 	 */
 	public void setPurgaPendientePorPagoRealizado(final boolean pPurgaPendientePorPagoRealizado) {
 		purgaPendientePorPagoRealizado = pPurgaPendientePorPagoRealizado;
@@ -726,7 +681,7 @@ public final class HTramite implements IModelApi {
 	 * Método para establecer metodoAutenticacion.
 	 *
 	 * @param pMetodoAutenticacion
-	 *            metodoAutenticacion a establecer
+	 *                                 metodoAutenticacion a establecer
 	 */
 	public void setMetodoAutenticacion(final String pMetodoAutenticacion) {
 		metodoAutenticacion = pMetodoAutenticacion;
@@ -736,7 +691,7 @@ public final class HTramite implements IModelApi {
 		return idTramiteCP;
 	}
 
-	public void setIdTramiteCP(String idTramiteCP) {
+	public void setIdTramiteCP(final String idTramiteCP) {
 		this.idTramiteCP = idTramiteCP;
 	}
 
@@ -753,9 +708,9 @@ public final class HTramite implements IModelApi {
 	 * Método para establecer idProcedimientoCP.
 	 *
 	 * @param idProcedimientoCP
-	 *            idProcedimientoCP a establecer
+	 *                              idProcedimientoCP a establecer
 	 */
-	public void setIdProcedimientoCP(String idProcedimientoCP) {
+	public void setIdProcedimientoCP(final String idProcedimientoCP) {
 		this.idProcedimientoCP = idProcedimientoCP;
 	}
 
@@ -772,9 +727,9 @@ public final class HTramite implements IModelApi {
 	 * Método para establecer idProcedimientoSIA.
 	 *
 	 * @param idProcedimientoSIA
-	 *            idProcedimientoSIA a establecer
+	 *                               idProcedimientoSIA a establecer
 	 */
-	public void setIdProcedimientoSIA(String idProcedimientoSIA) {
+	public void setIdProcedimientoSIA(final String idProcedimientoSIA) {
 		this.idProcedimientoSIA = idProcedimientoSIA;
 	}
 
@@ -782,10 +737,10 @@ public final class HTramite implements IModelApi {
 	 * Convierte objeto de la capa negocio a la capa de repositorio.
 	 *
 	 * @param m
-	 *            objeto modelo
+	 *              objeto modelo
 	 * @return objeto repositorio
 	 */
-	public static HTramite fromModel(DatosPersistenciaTramite m) {
+	public static HTramite fromModel(final DatosPersistenciaTramite m) {
 		final HTramite hTramite = new HTramite();
 		hTramite.setAutenticacion(m.getAutenticacion().toString());
 		hTramite.setMetodoAutenticacion(m.getMetodoAutenticacionInicio().toString());
@@ -821,9 +776,6 @@ public final class HTramite implements IModelApi {
 		hTramite.setPersistente(m.isPersistente());
 		hTramite.setPlazoDinamico(m.isPlazoDinamico());
 
-		hTramite.setNifPresentador(m.getNifPresentador());
-		hTramite.setNombrePresentador(m.getNombreCompletoPresentador());
-
 		hTramite.setPurgar(m.isMarcadoPurgar());
 		hTramite.setPurgado(m.isPurgado());
 		hTramite.setFechaPurgado(m.getFechaPurgado());
@@ -836,10 +788,10 @@ public final class HTramite implements IModelApi {
 	 * Convierte a objeto de modelo.
 	 *
 	 * @param h
-	 *            Objeto repositorio
+	 *              Objeto repositorio
 	 * @return Objeto modelo
 	 */
-	public static DatosPersistenciaTramite toModel(HTramite h) {
+	public static DatosPersistenciaTramite toModel(final HTramite h) {
 		DatosPersistenciaTramite m = null;
 		if (h != null) {
 			m = new DatosPersistenciaTramite();
@@ -884,9 +836,6 @@ public final class HTramite implements IModelApi {
 			m.setPersistente(h.isPersistente());
 			m.setPlazoDinamico(h.isPlazoDinamico());
 
-			m.setNifPresentador(h.getNifPresentador());
-			m.setNombreCompletoPresentador(h.getNombrePresentador());
-
 			m.setMarcadoPurgar(h.isPurgar());
 			m.setPurgado(h.isPurgado());
 			m.setFechaPurgado(h.getFechaPurgado());
@@ -909,9 +858,9 @@ public final class HTramite implements IModelApi {
 	 * Método para establecer idArea.
 	 *
 	 * @param idArea
-	 *            idArea a establecer
+	 *                   idArea a establecer
 	 */
-	public void setIdArea(String idArea) {
+	public void setIdArea(final String idArea) {
 		this.idArea = idArea;
 	}
 
@@ -928,9 +877,9 @@ public final class HTramite implements IModelApi {
 	 * Método para establecer servicioCP.
 	 *
 	 * @param servicioCP
-	 *            servicioCP a establecer
+	 *                       servicioCP a establecer
 	 */
-	public void setServicioCP(boolean servicioCP) {
+	public void setServicioCP(final boolean servicioCP) {
 		this.servicioCP = servicioCP;
 	}
 

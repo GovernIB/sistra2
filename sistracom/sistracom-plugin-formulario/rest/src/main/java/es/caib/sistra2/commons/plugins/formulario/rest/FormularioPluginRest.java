@@ -30,10 +30,6 @@ public class FormularioPluginRest extends AbstractPluginProperties implements IF
 	/** Prefix. */
 	public static final String IMPLEMENTATION_BASE_PROPERTY = "rest.";
 
-	/** Propiedades. */
-	private static final String BASE_PROPERTY_USER = ".USER";
-	private static final String BASE_PROPERTY_PASS = ".PASS";
-
 	/** Operaciones REST. */
 	private static final String REST_OPERACION_INVOCAR_FORMULARIO = "/formulario";
 	private static final String REST_OPERACION_RESULTADO_FORMULARIO = "/resultado";
@@ -43,11 +39,8 @@ public class FormularioPluginRest extends AbstractPluginProperties implements IF
 	}
 
 	@Override
-	public String invocarFormulario(final String idGestorFormulario, final String urlGestor,
-			final DatosInicioFormulario datosInicio) throws FormularioPluginException {
-
-		final String user = getPropiedad(idGestorFormulario, BASE_PROPERTY_USER);
-		final String pass = getPropiedad(idGestorFormulario, BASE_PROPERTY_PASS);
+	public String invocarFormulario(final String idGestorFormulario, final String urlGestor, final String user,
+			final String pass, final DatosInicioFormulario datosInicio) throws FormularioPluginException {
 
 		final RestTemplate restTemplate = new RestTemplate();
 
@@ -75,10 +68,7 @@ public class FormularioPluginRest extends AbstractPluginProperties implements IF
 
 	@Override
 	public DatosRetornoFormulario obtenerResultadoFormulario(final String idGestorFormulario, final String urlGestor,
-			final String ticket) throws FormularioPluginException {
-
-		final String user = getPropiedad(idGestorFormulario, BASE_PROPERTY_USER);
-		final String pass = getPropiedad(idGestorFormulario, BASE_PROPERTY_PASS);
+			final String user, final String pass, final String ticket) throws FormularioPluginException {
 
 		final RestTemplate restTemplate = new RestTemplate();
 
@@ -119,27 +109,11 @@ public class FormularioPluginRest extends AbstractPluginProperties implements IF
 		final DatosRetornoFormulario res = new DatosRetornoFormulario();
 		res.setIdSesionFormulario(rdr.getIdSesionFormulario());
 		res.setCancelado(rdr.isCancelado());
-		res.setXml(Base64.getDecoder().decode(rdr.getXml()));
-		res.setPdf(Base64.getDecoder().decode(rdr.getPdf()));
-		return res;
-	}
-
-	/**
-	 * Obtiene propiedad.
-	 *
-	 * @param propiedad
-	 *                      propiedad
-	 * @return valor
-	 * @throws AutenticacionPluginException
-	 */
-	private String getPropiedad(final String idGestorFormulario, final String propiedad) {
-		String valor = null;
-		final String login = getProperty(FORMULARIO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + "GESTORFORMULARIO."
-				+ idGestorFormulario + ".LOGIN");
-		if (login != null) {
-			valor = getProperty(FORMULARIO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + "LOGIN." + login + propiedad);
+		if (!rdr.isCancelado()) {
+			res.setXml(Base64.getDecoder().decode(rdr.getXml()));
+			res.setPdf(Base64.getDecoder().decode(rdr.getPdf()));
 		}
-		return valor;
+		return res;
 	}
 
 	/**

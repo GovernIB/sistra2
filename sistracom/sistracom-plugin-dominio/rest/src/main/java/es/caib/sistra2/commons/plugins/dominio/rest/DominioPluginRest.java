@@ -13,6 +13,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.support.BasicAuthorizationInterceptor;
 import org.springframework.web.client.RestTemplate;
 
@@ -38,35 +39,21 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 
 	/** Propiedades. **/
 	private static final QName SERVICE_NAME = new QName("urn:es:caib:sistra:ws:v2:services", "SistraFacadeService");
-	private static final String BASE_PROPERTY_USER = ".USER";
-	private static final String BASE_PROPERTY_PASS = ".PASS";
-	private static final String BASE_PROPERTY_TIMEOUT = ".TIMEOUT";
 
 	/** Constructor. **/
 	public DominioPluginRest(final String prefijoPropiedades, final Properties properties) {
 		super(prefijoPropiedades, properties);
 	}
 
-	/**
-	 * Invoca dominio remoto.
-	 *
-	 * @param idDominio
-	 *                       id dominio
-	 * @param url
-	 *                       url
-	 * @param parametros
-	 *                       parametros
-	 * @return valores dominio
-	 * @throws DominioPluginException
-	 */
 	@Override
 	public ValoresDominio invocarDominio(final String idDominio, final String url,
-			final List<ParametroDominio> parametros) throws DominioPluginException {
+			final List<ParametroDominio> parametros, final String user, final String pass, final Long timeout)
+			throws DominioPluginException {
 		ValoresDominio retorno;
 		if (url.endsWith("wsdl")) {
-			retorno = invocarDominioWSDL(idDominio, url, parametros);
+			retorno = invocarDominioWSDL(idDominio, url, parametros, user, pass, timeout);
 		} else {
-			retorno = invocarDominioREST(idDominio, url, parametros);
+			retorno = invocarDominioREST(idDominio, url, parametros, user, pass, timeout);
 		}
 		return retorno;
 	}
@@ -77,11 +64,13 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 	 * @param idDominio
 	 * @param url
 	 * @param parametros
+	 * @param timeout
 	 * @return
 	 * @throws DominioPluginException
 	 */
 	private ValoresDominio invocarDominioWSDL(final String idDominio, final String url,
-			final List<ParametroDominio> parametros) throws DominioPluginException {
+			final List<ParametroDominio> parametros, final String user, final String pass, final Long timeout)
+			throws DominioPluginException {
 		ValoresDominio valoresDominio = null;
 		URL wsdlURL;
 		/***
@@ -106,12 +95,8 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 		final SistraFacadeService ss = new SistraFacadeService(wsdlURL, SERVICE_NAME);
 		final SistraFacade port = ss.getSistraFacade();
 
-		final String user = getPropiedad(idDominio, BASE_PROPERTY_USER);
-		final String pass = getPropiedad(idDominio, BASE_PROPERTY_PASS);
-		final Long timeout = getTimeoutMillis(idDominio);
-
 		try {
-			configurarService((BindingProvider) port, getEndpoint(url), user, pass, timeout, false);
+			configurarService((BindingProvider) port, getEndpoint(url), user, pass, (timeout * 1000L), false);
 		} catch (final Exception e1) {
 			throw new DominioPluginException("Mal configuracion del servicio", e1.getCause());
 
@@ -136,15 +121,6 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 		}
 
 		return valoresDominio;
-	}
-
-	private Long getTimeoutMillis(final String idDominio) throws DominioPluginException {
-		long timeout = 0L;
-		final String timeoutStr = getPropiedad(idDominio, BASE_PROPERTY_TIMEOUT);
-		if (timeoutStr == null) {
-			timeout = (new Long(timeoutStr)) * 1000L;
-		}
-		return timeout;
 	}
 
 	/**
@@ -182,21 +158,11 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 		WsClientUtil.configurePort(bp, endpoint, user, pass, "BASIC", timeout, logCalls);
 	}
 
-	/**
-	 * Invoca un dominio de tipo REST (principalmente de tipo sistra2)
-	 *
-	 * @param idDominio
-	 * @param url
-	 * @param parametros
-	 * @return
-	 * @throws DominioPluginException
-	 */
 	private ValoresDominio invocarDominioREST(final String idDominio, final String url,
-			final List<ParametroDominio> parametros) throws DominioPluginException {
-		final RestTemplate restTemplate = new RestTemplate();
+			final List<ParametroDominio> parametros, final String user, final String pass, final Long timeout)
+			throws DominioPluginException {
 
-		final String user = getPropiedad(idDominio, BASE_PROPERTY_USER);
-		final String pass = getPropiedad(idDominio, BASE_PROPERTY_PASS);
+		final RestTemplate restTemplate = new RestTemplate(getClientHttpRequestFactory((int) (timeout * 1000L)));
 
 		if (user != null && pass != null) {
 			restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(user, pass));
@@ -229,21 +195,14 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 
 	}
 
-	/**
-	 * Obtiene propiedad.
-	 *
-	 * @param propiedad
-	 *                      propiedad
-	 * @return valor
-	 * @throws AutenticacionPluginException
-	 */
-	private String getPropiedad(final String idDominio, final String propiedad) throws DominioPluginException {
-		String valor = null;
-		final String login = getProperty(
-				DOMINIO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + "DOMINIO." + idDominio + ".LOGIN");
-		if (login != null) {
-			valor = getProperty(DOMINIO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + "LOGIN." + login + propiedad);
-		}
-		return valor;
+	private HttpComponentsClientHttpRequestFactory getClientHttpRequestFactory(final int timeout) {
+		final HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+		// Connect timeout
+		clientHttpRequestFactory.setConnectTimeout(timeout);
+
+		// Read timeout
+		clientHttpRequestFactory.setReadTimeout(timeout);
+		return clientHttpRequestFactory;
 	}
+
 }

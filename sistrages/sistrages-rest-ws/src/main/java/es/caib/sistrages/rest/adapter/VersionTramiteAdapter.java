@@ -59,10 +59,12 @@ import es.caib.sistrages.rest.api.interna.RComponenteCheckbox;
 import es.caib.sistrages.rest.api.interna.RComponenteSeccion;
 import es.caib.sistrages.rest.api.interna.RComponenteSelector;
 import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
+import es.caib.sistrages.rest.api.interna.RConfiguracionAutenticacion;
 import es.caib.sistrages.rest.api.interna.RDestinoRegistro;
 import es.caib.sistrages.rest.api.interna.RFormularioExterno;
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
 import es.caib.sistrages.rest.api.interna.RFormularioTramite;
+import es.caib.sistrages.rest.api.interna.RGestorFormularioExterno;
 import es.caib.sistrages.rest.api.interna.RLineaComponentes;
 import es.caib.sistrages.rest.api.interna.RListaDominio;
 import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
@@ -111,7 +113,7 @@ public class VersionTramiteAdapter {
 	 * @return RVersionTramite
 	 */
 	public RVersionTramite convertir(final String idtramite, final TramiteVersion tv, final String idioma,
-			final String idiomaDefecto) {
+			final String idiomaDefecto, final List<GestorExternoFormularios> gestoresExternosFormularios) {
 
 		RVersionTramite rVersionTramite = null;
 
@@ -160,6 +162,26 @@ public class VersionTramiteAdapter {
 			rVersionTramite.setIdEntidad(generaidEntidadfromTramite(tv.getIdTramite()));
 			rVersionTramite.setIdArea(generaidAreafromTramite(tv.getIdTramite()));
 			rVersionTramite.setPropiedades(generaPropiedades(tv, idioma));
+
+			if (gestoresExternosFormularios != null) {
+				final List<RGestorFormularioExterno> rgfes = new ArrayList<>();
+				for (final GestorExternoFormularios gfe : gestoresExternosFormularios) {
+					final RGestorFormularioExterno rgfe = new RGestorFormularioExterno();
+					rgfe.setIdentificador(gfe.getIdentificador());
+					rgfe.setUrl(gfe.getUrl());
+					if (gfe.getConfiguracionAutenticacion() != null) {
+						RConfiguracionAutenticacion rConfiguracionAutenticacion = new RConfiguracionAutenticacion();
+						rConfiguracionAutenticacion.setIdentificador(gfe.getConfiguracionAutenticacion().getIdentificador());
+						rConfiguracionAutenticacion.setUsuario(gfe.getConfiguracionAutenticacion().getUsuario());
+						rConfiguracionAutenticacion.setPassword(gfe.getConfiguracionAutenticacion().getPassword());
+						rgfe.setConfiguracionAutenticacion(rConfiguracionAutenticacion);
+					}
+					rgfes.add(rgfe);
+
+				}
+				rVersionTramite.setGestoresFormulariosExternos(rgfes);
+			}
+
 		}
 		return rVersionTramite;
 

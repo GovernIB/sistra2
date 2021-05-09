@@ -97,6 +97,10 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.planilla.porDefecto"));
 				return;
 			}
+			if (!contienePaginaFinal()) {
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.pagina.sinFinal"));
+				return;
+			}
 			formIntService.updateFormularioInterno(data);
 
 			break;
@@ -129,6 +133,23 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		}
 		return contiene;
 	}
+
+	private boolean contienePaginaFinal() {
+		boolean contiene;
+		if (data.getPaginas() == null || data.getPaginas().isEmpty()) {
+			contiene = true;
+		} else {
+			contiene = false;
+			for ( PaginaFormulario pagina : data.getPaginas()) {
+				if (pagina != null && pagina.isPaginaFinal()) {
+					contiene = true;
+					break;
+				}
+			}
+		}
+		return contiene;
+	}
+
 
 	/**
 	 * Cancelar.
@@ -297,10 +318,6 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 			case EDICION:
 				pagina = (PaginaFormulario) respuesta.getResult();
 
-				if (!paginaSeleccionada.isPaginaFinal() && pagina.isPaginaFinal()) {
-					paginaLimpiarPaginafinal();
-				}
-
 				// Muestra dialogo
 				final int posicion = this.data.getPaginas().indexOf(this.paginaSeleccionada);
 				this.data.getPaginas().get(posicion).setPaginaFinal(pagina.isPaginaFinal());
@@ -426,13 +443,6 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 		this.data.getPlantillas().remove(posicion);
 		plantillaSeleccionada = null;
-	}
-
-	private void paginaLimpiarPaginafinal() {
-		for (final PaginaFormulario pagina : data.getPaginas()) {
-			pagina.setPaginaFinal(false);
-		}
-
 	}
 
 	/**

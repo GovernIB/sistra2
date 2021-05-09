@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Traduccion;
@@ -19,6 +20,7 @@ import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
+import es.caib.sistrages.core.api.model.types.TypeAutenticacion;
 import es.caib.sistrages.core.api.model.types.TypeFlujo;
 import es.caib.sistrages.core.api.model.types.TypeFormulario;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
@@ -70,7 +72,11 @@ public class TramiteComponentImpl implements TramiteComponent {
 		tramiteVersion.setNivelQAA(2);
 		tramiteVersion.setBloqueada(true);
 		tramiteVersion.setDatosUsuarioBloqueo(pDatosUsuarioBloqueo);
-
+		List<TypeAutenticacion> tiposAutenticacion = new ArrayList<>();
+		tiposAutenticacion.add(TypeAutenticacion.CERTIFICADO);
+		tiposAutenticacion.add(TypeAutenticacion.CLAVE_PIN);
+		tiposAutenticacion.add(TypeAutenticacion.CLAVE_PERMANENTE);
+		tramiteVersion.setTiposAutenticacion(tiposAutenticacion );
 		return tramiteVersion;
 	}
 
@@ -202,4 +208,5 @@ public class TramiteComponentImpl implements TramiteComponent {
 		final Long idFormularioInterno = formularioInternoDao.addFormulario(formularioTramite);
 		return tramitePasoDao.addFormularioTramite(formularioTramite, idTramitePaso, idFormularioInterno);
 	}
+
 }

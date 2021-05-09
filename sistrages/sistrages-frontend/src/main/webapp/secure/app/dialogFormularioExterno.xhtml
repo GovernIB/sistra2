@@ -24,6 +24,7 @@
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogFormularioExterno.modoAcceso}"/>
 		<f:viewParam name="ID" value="#{dialogFormularioExterno.id}"/>
+		<f:viewParam name="AREA" value="#{dialogFormularioExterno.area}"/>
 		<f:viewAction action="#{dialogFormularioExterno.init}" />
 	</f:metadata>
 	<h:form id="dialogFormularioExterno" styleClass="margin-top-10">
@@ -49,6 +50,14 @@
 					<p:outputLabel for="url" value="#{msg['dialogFormularioExterno.headerURL']}" />
 					<p:inputText id="url" value="#{dialogFormularioExterno.data.url}" disabled="#{dialogFormularioExterno.isConsulta()}" required="true" size="40" maxlength="100"/>
 					<p:outputLabel value="" />
+
+					<p:outputLabel for="configAut" value="#{msg['dialogFormularioExterno.headerConfigAutenticacion']}"  style="margin-right:5px" />
+			 	 	<p:selectOneMenu id="configAut" value="#{dialogFormularioExterno.data.configuracionAutenticacion}"  style="width:285px" disabled="#{dialogFormularioExterno.isConsulta()}" converter="#{configuracionConverter}"   >
+						    <f:selectItems value="#{dialogFormularioExterno.configuraciones}" var="fd" itemValue="#{fd}" itemLabel="#{fd.identificador}" />
+					</p:selectOneMenu >
+					<p:commandButton id="btnNuevaConf" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogFormularioExterno.nuevaConfiguracion()}" process="@this" update="growlDialog">
+      						<p:ajax event="dialogReturn" listener="#{dialogFormularioExterno.returnDialogoConf}" update="growlDialog configAut"/>
+      				</p:commandButton>
 
 				</h:panelGrid>
 				<h:outputScript rendered="#{!dialogFormularioExterno.isConsulta()}">

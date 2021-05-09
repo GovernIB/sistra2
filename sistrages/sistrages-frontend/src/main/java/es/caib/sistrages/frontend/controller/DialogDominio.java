@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.FuenteDatos;
@@ -21,8 +22,10 @@ import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeCache;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
+import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
+import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
@@ -44,7 +47,11 @@ public class DialogDominio extends DialogControllerBase {
 	@Inject
 	private SecurityService securityService;
 
-	/** Enlace servicio. */
+	/** ConfiguracionAutenticacion Service **/
+	@Inject
+	private ConfiguracionAutenticacionService configuracionAutenticacionService;
+
+	/** Dominio service. */
 	@Inject
 	private DominioService dominioService;
 
@@ -118,6 +125,9 @@ public class DialogDominio extends DialogControllerBase {
 	/** Se utiliza para indicar si ha habido algún cambio. **/
 	private boolean identificadorCambiado;
 
+	/** Lista de configuraciones. **/
+	private List<ConfiguracionAutenticacion> configuraciones;
+
 	/**
 	 * Inicialización.
 	 */
@@ -172,6 +182,11 @@ public class DialogDominio extends DialogControllerBase {
 
 		if (typeAmbito == TypeAmbito.AREA) {
 			fuentes = dominioService.listFuenteDato(TypeAmbito.AREA, Long.valueOf(idArea), null);
+			configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(Long.valueOf(idArea), TypeIdioma.fromString(UtilJSF.getSessionBean().getLang()), null);
+			ConfiguracionAutenticacion configAutSinAutenticacion = new ConfiguracionAutenticacion();
+			configAutSinAutenticacion.setCodigo(null);
+			configAutSinAutenticacion.setIdentificador(UtilJSF.getLiteral("dialogDominio.sinAutenticacion"));
+			configuraciones.add(0, configAutSinAutenticacion);
 		}
 		if (typeAmbito == TypeAmbito.ENTIDAD) {
 			fuentes = dominioService.listFuenteDato(TypeAmbito.ENTIDAD, UtilJSF.getIdEntidad(), null);
@@ -250,7 +265,9 @@ public class DialogDominio extends DialogControllerBase {
 		tipos = new ArrayList<>();
 		tipos.add(TypeDominio.CONSULTA_BD);
 		tipos.add(TypeDominio.LISTA_FIJA);
-		tipos.add(TypeDominio.CONSULTA_REMOTA);
+		if (TypeAmbito.fromString(ambito) == TypeAmbito.AREA) {
+			tipos.add(TypeDominio.CONSULTA_REMOTA);
+		}
 		if (TypeAmbito.fromString(ambito) != TypeAmbito.GLOBAL) {
 			tipos.add(TypeDominio.FUENTE_DATOS);
 		}
@@ -385,6 +402,42 @@ public class DialogDominio extends DialogControllerBase {
 		params.put("OCULTARVALOR", "S");
 		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, params, true, 430, 120);
 	}
+
+
+	/**
+	 * Crea nueva propiedad.
+	 */
+	public void nuevaConfiguracion() {
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.AREA.toString(), this.idArea);
+		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.ALTA, params, true, 550, 195);
+	}
+
+	/**
+	 * Retorno dialogo.
+	 *
+	 * @param event respuesta dialogo
+	 */
+	public void returnDialogoConf(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			// Mensaje
+			String message = UtilJSF.getLiteral("info.alta.ok");
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
+			//La ponemos por defecto
+			ConfiguracionAutenticacion conf = (ConfiguracionAutenticacion) ((DialogResult)event.getObject()).getResult();
+			this.data.setConfiguracionAutenticacion(conf);
+			this.configuraciones.add(conf);
+		}
+	}
+
+
 
 	/**
 	 * Crea nuevo valor.
@@ -645,6 +698,15 @@ public class DialogDominio extends DialogControllerBase {
 			this.data.setIdFuenteDatos(null);
 		}
 
+//		if (this.getData().getTipo() == TypeDominio.CONSULTA_REMOTA && this.configuracion != null) {
+//			//final ConfiguracionAutenticacion configuracion = configuracionAutenticacionService.getConfiguracionAutenticacion(idConfiguracion);
+//			//this.data.setConfiguracionAutenticacion(configuracion);
+//			this.data.setConfiguracionAutenticacion(configuracion);
+//		}
+
+		if (this.getData().getTipo() == TypeDominio.CONSULTA_REMOTA && this.getData().getConfiguracionAutenticacion() != null && this.getData().getConfiguracionAutenticacion().getCodigo() == null) {
+			this.getData().setConfiguracionAutenticacion(null);
+		}
 		switch (acceso) {
 		case ALTA:
 			if (!verificarGuardar()) {
@@ -1101,6 +1163,20 @@ public class DialogDominio extends DialogControllerBase {
 	 */
 	public void setMostrarAdvertencia(final boolean mostrarAdvertencia) {
 		this.mostrarAdvertencia = mostrarAdvertencia;
+	}
+
+	/**
+	 * @return the configuraciones
+	 */
+	public List<ConfiguracionAutenticacion> getConfiguraciones() {
+		return configuraciones;
+	}
+
+	/**
+	 * @param configuraciones the configuraciones to set
+	 */
+	public void setConfiguraciones(List<ConfiguracionAutenticacion> configuraciones) {
+		this.configuraciones = configuraciones;
 	}
 
 	/** Ayuda. */

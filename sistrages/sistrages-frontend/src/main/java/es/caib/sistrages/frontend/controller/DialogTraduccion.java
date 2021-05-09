@@ -158,49 +158,57 @@ public class DialogTraduccion extends DialogControllerBase {
 	 */
 	public void aceptar() {
 
-		if (visibleCa) {
-			if (textoCa == null || textoCa.isEmpty()) {
-				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
-				return;
-			}
-			if (contieneEtiquetaHTML(textoCa)) {
-				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
-				return;
-			}
-			data.add(new Traduccion(TypeIdioma.CATALAN.toString(), textoCa));
+		boolean isAlgunLiteralRelleno = true;
+		//Si es opcional, o está to do escrito o nada.
+		if ( opcional != null && "S".equals(opcional)) {
+			isAlgunLiteralRelleno = isAlgoRelleno();
 		}
-		if (visibleEs) {
-			if (textoEs == null || textoEs.isEmpty()) {
-				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
-				return;
+
+		if (opcional == null || !"S".equals(opcional) || isAlgunLiteralRelleno) {
+			if (visibleCa) {
+				if (textoCa == null || textoCa.isEmpty()) {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
+					return;
+				}
+				if (contieneEtiquetaHTML(textoCa)) {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
+					return;
+				}
+				data.add(new Traduccion(TypeIdioma.CATALAN.toString(), textoCa));
 			}
-			if (contieneEtiquetaHTML(textoEs)) {
-				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
-				return;
+			if (visibleEs) {
+				if (textoEs == null || textoEs.isEmpty()) {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
+					return;
+				}
+				if (contieneEtiquetaHTML(textoEs)) {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
+					return;
+				}
+				data.add(new Traduccion(TypeIdioma.CASTELLANO.toString(), textoEs));
 			}
-			data.add(new Traduccion(TypeIdioma.CASTELLANO.toString(), textoEs));
-		}
-		if (visibleEn) {
-			if (textoEn == null || textoEn.isEmpty()) {
-				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
-				return;
+			if (visibleEn) {
+				if (textoEn == null || textoEn.isEmpty()) {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
+					return;
+				}
+				if (contieneEtiquetaHTML(textoEn)) {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
+					return;
+				}
+				data.add(new Traduccion(TypeIdioma.INGLES.toString(), textoEn));
 			}
-			if (contieneEtiquetaHTML(textoEn)) {
-				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
-				return;
+			if (visibleDe) {
+				if (textoDe == null || textoDe.isEmpty()) {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
+					return;
+				}
+				if (contieneEtiquetaHTML(textoDe)) {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
+					return;
+				}
+				data.add(new Traduccion(TypeIdioma.ALEMAN.toString(), textoDe));
 			}
-			data.add(new Traduccion(TypeIdioma.INGLES.toString(), textoEn));
-		}
-		if (visibleDe) {
-			if (textoDe == null || textoDe.isEmpty()) {
-				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
-				return;
-			}
-			if (contieneEtiquetaHTML(textoDe)) {
-				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
-				return;
-			}
-			data.add(new Traduccion(TypeIdioma.ALEMAN.toString(), textoDe));
 		}
 
 		// Retornamos resultado
@@ -209,6 +217,35 @@ public class DialogTraduccion extends DialogControllerBase {
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
 
+	}
+
+	/**
+	 * Comprueba si algún dato esta relleno.
+	 * @return
+	 */
+	private boolean isAlgoRelleno() {
+		boolean relleno = false;
+		if (visibleCa) {
+			if (textoCa != null &&  !textoCa.isEmpty()) {
+				relleno = true;
+			}
+		}
+		if (visibleEs) {
+			if (textoEs != null &&  !textoEs.isEmpty()) {
+				relleno = true;
+			}
+		}
+		if (visibleEn) {
+			if (textoEn != null &&  !textoEn.isEmpty()) {
+				relleno = true;
+			}
+		}
+		if (visibleDe) {
+			if (textoDe != null &&  !textoDe.isEmpty()) {
+				relleno = true;
+			}
+		}
+		return relleno;
 	}
 
 	/**

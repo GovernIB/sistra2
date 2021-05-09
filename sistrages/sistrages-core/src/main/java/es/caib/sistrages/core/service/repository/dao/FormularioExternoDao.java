@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
+import es.caib.sistrages.core.api.model.comun.FilaImportarGestor;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 
 /**
@@ -21,10 +22,10 @@ public interface FormularioExternoDao {
 	/**
 	 * Añade el formulario externo.
 	 *
-	 * @param pIdEntidad         identificador de la entidad
+	 * @param removeByArea         identificador de la area
 	 * @param pFormularioExterno formulario externo
 	 */
-	void add(final Long pIdEntidad, GestorExternoFormularios pFormularioExterno);
+	void add(final Long pIdArea, GestorExternoFormularios pFormularioExterno);
 
 	/**
 	 * Elimina el formulario externo.
@@ -36,9 +37,9 @@ public interface FormularioExternoDao {
 	/**
 	 * Elimina el formulario externo.
 	 *
-	 * @param pIdEntidad identificador de la entidad
+	 * @param pIdArea identificador del area
 	 */
-	void removeByEntidad(Long pIdEntidad);
+	void removeByArea(Long pIdArea);
 
 	/**
 	 * Actualiza el formulario externo.
@@ -48,22 +49,22 @@ public interface FormularioExternoDao {
 	void update(GestorExternoFormularios pFormularioExterno);
 
 	/**
-	 * Lista de avisos de entidad
+	 * Lista de avisos de area
 	 *
-	 * @param pIdEntidad identificador de la entidad
-	 * @return la lista de avisos de entidad
+	 * @param pIdArea identificador de la area
+	 * @return la lista form externos del area
 	 */
-	List<GestorExternoFormularios> getAll(Long pIdEntidad);
+	List<GestorExternoFormularios> getAll(Long pIdArea);
 
 	/**
-	 * Lista de avisos de entidad
+	 * Lista de avisos del area
 	 *
-	 * @param pIdEntidad identificador de la entidad
+	 * @param pIdArea identificador de la area
 	 * @param pFiltro    filtro
 	 * @param pIdioma    idioma
 	 * @return la lista de Formulario Externo
 	 */
-	List<GestorExternoFormularios> getAllByFiltro(Long pIdEntidad, TypeIdioma pIdioma, String pFiltro);
+	List<GestorExternoFormularios> getAllByFiltro(Long pIdArea, TypeIdioma pIdioma, String pFiltro);
 
 	/**
 	 * Existe formulario gestor externo.
@@ -72,5 +73,28 @@ public interface FormularioExternoDao {
 	 * @return
 	 */
 	boolean existeFormulario(String identificador, final Long idCodigo);
+
+	/**
+	 * Lista de gestores externos segun configuracion
+	 * @param id
+	 * @param idArea
+	 * @return
+	 */
+	List<GestorExternoFormularios> getGestorExternoByAutenticacion(Long id, Long idArea);
+
+	/**
+	 * Gestor externo de formulario por identificador
+	 * @param identificador
+	 * @return
+	 */
+	GestorExternoFormularios getFormularioExternoByIdentificador(String identificador);
+
+	/**
+	 * Método que importa un gestor area
+	 * @param filaGestor
+	 * @param idArea
+	 * @return
+	 */
+	Long importar(FilaImportarGestor filaGestor, Long idArea);
 
 }

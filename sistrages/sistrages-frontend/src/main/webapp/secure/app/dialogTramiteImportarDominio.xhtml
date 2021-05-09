@@ -95,6 +95,11 @@
 						<p:commandButton value="#{msg['botones.fd.datos']} " actionListener="#{dialogTramiteImportarDominio.consultarDatos()}" process="@this"/>
 					</p:column>
 
+					<p:outputLabel for="configAut" value="#{msg['dialogTramiteImportarDominio.headerConfiguracion']}:"  rendered="#{dialogTramiteImportarDominio.mostrarConfiguraciones}" />
+			 	 	<p:selectOneMenu id="configAut" value="#{dialogTramiteImportarDominio.data.configuracionAutenticacionActual}"  style="width:285px" disabled="#{dialogTramiteImportarDominio.isConsulta()}" converter="#{configuracionConverter}"   >
+						    <f:selectItems value="#{dialogTramiteImportarDominio.configuraciones}" var="fd" itemValue="#{fd}" itemLabel="#{fd.identificador}" />
+					</p:selectOneMenu >
+
 
 				</h:panelGrid>
 			</p:outputPanel>

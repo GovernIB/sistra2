@@ -21,13 +21,17 @@ public interface IFormularioPlugin extends IPlugin {
 	 *                                props plugin)
 	 * @param urlGestorFormulario
 	 *                                url gestor formulario
+	 * @param user
+	 *                                usuario
+	 * @param pwd
+	 *                                password
 	 * @param datosInicio
 	 *                                datos para iniciar formulario
 	 * @return url redirección a formulario (debe ser url basada en ticket de un
 	 *         solo uso y con timeout)
 	 * @throws FormularioPluginException
 	 */
-	public String invocarFormulario(String idGestorFormulario, String urlGestorFormulario,
+	public String invocarFormulario(String idGestorFormulario, String urlGestorFormulario, String user, String pwd,
 			DatosInicioFormulario datosInicio) throws FormularioPluginException;
 
 	/**
@@ -40,9 +44,13 @@ public interface IFormularioPlugin extends IPlugin {
 	 *                                url gestor formulario
 	 * @param ticket
 	 *                                Ticket
+	 * @param user
+	 *                                usuario
+	 * @param pwd
+	 *                                password
 	 * @return datos retorno formulario
 	 */
 	public DatosRetornoFormulario obtenerResultadoFormulario(String idGestorFormulario, String urlGestorFormulario,
-			String ticket) throws FormularioPluginException;
+			String user, String pwd, String ticket) throws FormularioPluginException;
 
 }

@@ -184,6 +184,34 @@ public class ViewTramites extends ViewControllerBase {
 	/**
 	 * Fuente datos area.
 	 */
+	public void sgeArea() {
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionadaArea()) {
+			return;
+		}
+
+		final Area area = listaAreasSeleccionadas.get(0);
+		UtilJSF.redirectJsfPage(
+				"/secure/app/viewFormulariosExternos.xhtml?ambito=A&id=" + area.getCodigo() + "&area=" + area.getIdentificador());
+	}
+
+	/**
+	 * Fuente datos area.
+	 */
+	public void confAutArea() {
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionadaArea()) {
+			return;
+		}
+
+		final Area area = listaAreasSeleccionadas.get(0);
+		UtilJSF.redirectJsfPage(
+				"/secure/app/viewConfiguracionAutenticacion.xhtml?ambito=A&id=" + area.getCodigo() + "&area=" + area.getIdentificador());
+	}
+
+	/**
+	 * Fuente datos area.
+	 */
 	public void datosArea() {
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionadaArea()) {

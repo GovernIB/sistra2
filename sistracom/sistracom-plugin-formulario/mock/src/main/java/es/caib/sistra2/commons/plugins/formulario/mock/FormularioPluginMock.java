@@ -33,8 +33,8 @@ public class FormularioPluginMock extends AbstractPluginProperties implements IF
 	}
 
 	@Override
-	public String invocarFormulario(final String idGestorFormulario, final String urlGestor,
-			final DatosInicioFormulario datosInicio) throws FormularioPluginException {
+	public String invocarFormulario(final String idGestorFormulario, final String urlGestor, final String user,
+			final String pass, final DatosInicioFormulario datosInicio) throws FormularioPluginException {
 		// Generamos ticket ficticio y almacenamos en map
 		final String ticket = datosInicio.getIdSesionFormulario() + ":" + System.currentTimeMillis();
 		sesiones.put(ticket, datosInicio);
@@ -45,7 +45,7 @@ public class FormularioPluginMock extends AbstractPluginProperties implements IF
 
 	@Override
 	public DatosRetornoFormulario obtenerResultadoFormulario(final String idGestorFormulario, final String urlGestor,
-			final String ticket) throws FormularioPluginException {
+			final String user, final String pass, final String ticket) throws FormularioPluginException {
 		// Obtenemos sesion
 		final DatosInicioFormulario dif = sesiones.get(ticket);
 		// Retornamos datos mock

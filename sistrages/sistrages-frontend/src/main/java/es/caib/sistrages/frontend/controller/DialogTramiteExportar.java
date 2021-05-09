@@ -29,6 +29,7 @@ import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
+import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.ModelApi;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -111,6 +112,9 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	/** Formularios. **/
 	List<Fichero> ficheros;
 
+	/** GestorExternoFormularios. **/
+	List<GestorExternoFormularios> gestorExternoFormularios;
+
 	/** Mostrar botón exportar. **/
 	private boolean mostrarBotonExportar;
 
@@ -146,6 +150,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		formateadores = tramiteService.getFormateadoresTramiteVersion(Long.valueOf(id));
 		formularios = tramiteService.getFormulariosTramiteVersion(Long.valueOf(id));
 		ficheros = tramiteService.getFicherosTramiteVersion(Long.valueOf(id));
+		gestorExternoFormularios=tramiteService.getGFEByTramiteVersion(Long.valueOf(id));
 
 		for (final Long dominioId : dominiosId) {
 			dominios.add(dominioService.loadDominio(dominioId));
@@ -293,6 +298,11 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		// 9. Incluir los formeateadores_ID.data
 		for (final FormateadorFormulario formateador : formateadores) {
 			incluirModelApi(zos, formateador, "formateadores_" + formateador.getCodigo() + LITERAL_SUFIJO_DATA);
+		}
+
+		// 10. Incluir los formulariosGestoresExternos_ID.data
+		for (final GestorExternoFormularios gestores : gestorExternoFormularios) {
+			incluirModelApi(zos, gestores, "gestoresExternosFormulario_" + gestores.getCodigo() + LITERAL_SUFIJO_DATA);
 		}
 
 		zos.closeEntry();
@@ -586,6 +596,20 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	 */
 	public final void setModo(final String modo) {
 		this.modo = modo;
+	}
+
+	/**
+	 * @return the gestorExternoFormularios
+	 */
+	public List<GestorExternoFormularios> getGestorExternoFormularios() {
+		return gestorExternoFormularios;
+	}
+
+	/**
+	 * @param gestorExternoFormularios the gestorExternoFormularios to set
+	 */
+	public void setGestorExternoFormularios(List<GestorExternoFormularios> gestorExternoFormularios) {
+		this.gestorExternoFormularios = gestorExternoFormularios;
 	}
 
 }

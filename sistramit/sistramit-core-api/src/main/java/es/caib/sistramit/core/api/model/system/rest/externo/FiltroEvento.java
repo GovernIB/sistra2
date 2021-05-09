@@ -15,9 +15,10 @@ import es.caib.sistramit.core.api.model.system.types.TypeEvento;
  */
 @SuppressWarnings("serial")
 public class FiltroEvento implements Serializable {
-
+	/** Fecha a partir de la cual recupera eventos. */
 	private Date fecha;
-	private List<TypeEvento> listaEventos;
+	/** Lista eventos a filtrar (opcional). */
+	private List<TypeEvento> listaEventos = new ArrayList<>();
 
 	public Date getFecha() {
 		return fecha;
@@ -33,17 +34,6 @@ public class FiltroEvento implements Serializable {
 
 	public void setListaEventos(final List<TypeEvento> listaEventos) {
 		this.listaEventos = listaEventos;
-	}
-
-	public List<String> getListaEventosToString() {
-		List<String> resultado = null;
-		if (listaEventos != null) {
-			resultado = new ArrayList<>();
-			for (final TypeEvento evento : listaEventos) {
-				resultado.add(evento.toString());
-			}
-		}
-		return resultado;
 	}
 
 }

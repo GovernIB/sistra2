@@ -5,7 +5,9 @@ import java.util.List;
 
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
+import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramiteFinalizado;
 import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramitePersistencia;
+import es.caib.sistramit.core.api.model.system.rest.externo.TramiteFinalizado;
 import es.caib.sistramit.core.api.model.system.rest.externo.TramitePersistencia;
 import es.caib.sistramit.core.api.model.system.rest.interno.FicheroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
@@ -38,7 +40,7 @@ public interface FlujoTramiteDao {
 	 * Crea un trámite en persistencia (sin los pasos).
 	 *
 	 * @param dpt
-	 *            Datos trámite persistencia.
+	 *                Datos trámite persistencia.
 	 */
 	void crearTramitePersistencia(DatosPersistenciaTramite dpt);
 
@@ -46,7 +48,7 @@ public interface FlujoTramiteDao {
 	 * Obtiene datos del trámite en persistencia.
 	 *
 	 * @param idSesionTramitacion
-	 *            Parámetro id sesion tramitacion
+	 *                                Parámetro id sesion tramitacion
 	 * @return Datos de persistencia del trámite (sin los pasos).
 	 */
 	DatosPersistenciaTramite obtenerTramitePersistencia(String idSesionTramitacion);
@@ -56,9 +58,10 @@ public interface FlujoTramiteDao {
 	 * acceso.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesión tramitación
+	 *                                Id sesión tramitación
 	 * @param fechaCaducidad
-	 *            Fecha de caducidad del trámite renovada tras el acceso.
+	 *                                Fecha de caducidad del trámite renovada tras
+	 *                                el acceso.
 	 * @return el date
 	 */
 	Date registraAccesoTramite(String idSesionTramitacion, Date fechaCaducidad);
@@ -67,9 +70,9 @@ public interface FlujoTramiteDao {
 	 * Verifica que no se haya cargado el trámite en otra sesión de tramitación.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id Sesión Tramitación
+	 *                                Id Sesión Tramitación
 	 * @param timestampFlujo
-	 *            Timestamp flujo
+	 *                                Timestamp flujo
 	 * @return true si coincide el flujo
 	 */
 	boolean verificaTimestampFlujo(String idSesionTramitacion, Date timestampFlujo);
@@ -78,9 +81,9 @@ public interface FlujoTramiteDao {
 	 * Cambia el estado de un trámite.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesión tramitación
+	 *                                Id sesión tramitación
 	 * @param estado
-	 *            Estado trámite
+	 *                                Estado trámite
 	 *
 	 */
 	void cambiaEstadoTramite(String idSesionTramitacion, TypeEstadoTramite estado);
@@ -89,13 +92,13 @@ public interface FlujoTramiteDao {
 	 * Crea un paso asociado al trámite, dejandolo como pendiente de inicializar.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesión tramitación
+	 *                                Id sesión tramitación
 	 * @param idPaso
-	 *            Id del paso.
+	 *                                Id del paso.
 	 * @param tipoPaso
-	 *            Tipo de paso.
+	 *                                Tipo de paso.
 	 * @param orden
-	 *            Parámetro orden
+	 *                                Parámetro orden
 	 */
 	void crearPaso(String idSesionTramitacion, String idPaso, TypePaso tipoPaso, int orden);
 
@@ -103,9 +106,9 @@ public interface FlujoTramiteDao {
 	 * Elimina paso asociado al trámite.
 	 *
 	 * @param idSesionTramitacion
-	 *            Parámetro id sesion tramitacion
+	 *                                Parámetro id sesion tramitacion
 	 * @param idPaso
-	 *            Id del paso.
+	 *                                Id del paso.
 	 */
 	void eliminarPaso(String idSesionTramitacion, String idPaso);
 
@@ -113,7 +116,7 @@ public interface FlujoTramiteDao {
 	 * Elimina pasos asociados al trámite.
 	 *
 	 * @param idSesionTramitacion
-	 *            Parámetro id sesion tramitacion
+	 *                                Parámetro id sesion tramitacion
 	 */
 	void eliminarPasos(String idSesionTramitacion);
 
@@ -121,7 +124,7 @@ public interface FlujoTramiteDao {
 	 * Obtiene la lista de pasos del trámite.
 	 *
 	 * @param idSesionTramitacion
-	 *            Parámetro id sesion tramitacion
+	 *                                Parámetro id sesion tramitacion
 	 * @return Lista de pasos con la info: id/tipo/estado
 	 */
 	List<EstadoPersistenciaPasoTramite> obtenerListaPasos(String idSesionTramitacion);
@@ -131,7 +134,7 @@ public interface FlujoTramiteDao {
 	 * trámite.
 	 *
 	 * @param idSesionTramitacion
-	 *            Parámetro id sesion tramitacion
+	 *                                Parámetro id sesion tramitacion
 	 */
 	void purgarTramite(String idSesionTramitacion);
 
@@ -139,7 +142,7 @@ public interface FlujoTramiteDao {
 	 * Cancela trámite. Marca el trámite como cancelado.
 	 *
 	 * @param idSesionTramitacion
-	 *            Parámetro id sesion tramitacion
+	 *                                Parámetro id sesion tramitacion
 	 */
 	void cancelarTramite(String idSesionTramitacion);
 
@@ -147,13 +150,13 @@ public interface FlujoTramiteDao {
 	 * Obtiene el número de inicios tramitación en el intervalo.
 	 *
 	 * @param idTramite
-	 *            Id tramite
+	 *                            Id tramite
 	 * @param version
-	 *            Version tramite
+	 *                            Version tramite
 	 * @param limiteIntervalo
-	 *            Intervalo (minutos)
+	 *                            Intervalo (minutos)
 	 * @param finIntervalo
-	 *            Fin intervalo
+	 *                            Fin intervalo
 	 * @return número de inicios
 	 */
 	Long contadorLimiteTramitacion(final String idTramite, final int version, int limiteIntervalo,
@@ -163,7 +166,7 @@ public interface FlujoTramiteDao {
 	 * Obtener tramites perdida clave.
 	 *
 	 * @param pFiltroBusqueda
-	 *            filtro busqueda
+	 *                            filtro busqueda
 	 * @return lista de tramites
 	 */
 	List<PerdidaClaveFichero> obtenerTramitesPerdidaClave(FiltroPerdidaClave pFiltroBusqueda);
@@ -172,7 +175,7 @@ public interface FlujoTramiteDao {
 	 * Obtener numero de tramites perdida clave.
 	 *
 	 * @param pFiltroBusqueda
-	 *            filtro busqueda
+	 *                            filtro busqueda
 	 * @return Numero de tramites
 	 */
 	Long countTramitesPerdidaClave(FiltroPerdidaClave pFiltroBusqueda);
@@ -181,7 +184,7 @@ public interface FlujoTramiteDao {
 	 * Count pagos.
 	 *
 	 * @param pFiltroBusqueda
-	 *            filtro busqueda
+	 *                            filtro busqueda
 	 * @return Numero de pagos
 	 */
 	Long countPagos(FiltroPagoAuditoria pFiltroBusqueda);
@@ -190,9 +193,9 @@ public interface FlujoTramiteDao {
 	 * Obtener pagos.
 	 *
 	 * @param pFiltroBusqueda
-	 *            filtro busqueda
+	 *                             filtro busqueda
 	 * @param filtroPaginacion
-	 *            filtro paginacion
+	 *                             filtro paginacion
 	 * @return lista de pagos
 	 */
 	List<PagoAuditoria> obtenerPagos(FiltroPagoAuditoria pFiltroBusqueda, FiltroPaginacion filtroPaginacion);
@@ -201,7 +204,7 @@ public interface FlujoTramiteDao {
 	 * Count tramites persistencia.
 	 *
 	 * @param pFiltroBusqueda
-	 *            filtro busqueda
+	 *                            filtro busqueda
 	 * @return Numero de tramites
 	 */
 	Long countTramitesPersistencia(FiltroPersistenciaAuditoria pFiltroBusqueda);
@@ -210,9 +213,9 @@ public interface FlujoTramiteDao {
 	 * Obtener tramites persistencia.
 	 *
 	 * @param pFiltroBusqueda
-	 *            filtro busqueda
+	 *                             filtro busqueda
 	 * @param filtroPaginacion
-	 *            filtro paginacion
+	 *                             filtro paginacion
 	 * @return lista de persistencia
 	 */
 	List<PersistenciaAuditoria> obtenerTramitesPersistencia(FiltroPersistenciaAuditoria pFiltroBusqueda,
@@ -222,7 +225,7 @@ public interface FlujoTramiteDao {
 	 * Recuperar persistencia ficheros.
 	 *
 	 * @param pIdTramite
-	 *            id tramite
+	 *                       id tramite
 	 * @return lista de ficheros
 	 */
 	List<FicheroPersistenciaAuditoria> recuperarPersistenciaFicheros(Long pIdTramite);
@@ -231,10 +234,18 @@ public interface FlujoTramiteDao {
 	 * Recuperar tramites persistencia.
 	 *
 	 * @param pFiltro
-	 *            filtro
+	 *                    filtro
 	 * @return lista de tramites
 	 */
 	List<TramitePersistencia> recuperarTramitesPersistencia(FiltroTramitePersistencia pFiltro);
 
+	/**
+	 * Recuperar tramites finalizados.
+	 *
+	 * @param pFiltro
+	 *                    filtro
+	 * @return lista de tramites
+	 */
+	List<TramiteFinalizado> recuperarTramitesFinalizados(FiltroTramiteFinalizado pFiltro);
 
 }

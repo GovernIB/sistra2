@@ -23,9 +23,10 @@
 	tinyMCE.init({
 		   // General options
 		    mode : "textareas",
-		    plugins: "code image link lists  ",
+		    plugins: "code image link lists paste",
 		    toolbar: "bold italic | link image | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat #{dialogTraduccionHTML.sourceCode}" ,
 		    menubar: "",
+		    paste_as_text : true,
 		    readonly : #{dialogTraduccionHTML.readonly}
 		 });
 

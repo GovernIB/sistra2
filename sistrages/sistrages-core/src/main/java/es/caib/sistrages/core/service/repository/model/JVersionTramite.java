@@ -170,7 +170,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param codigo the codigo to set
+	 * @param codigo
+	 *                   the codigo to set
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -184,7 +185,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param scriptInicializacionTramite the scriptInicializacionTramite to set
+	 * @param scriptInicializacionTramite
+	 *                                        the scriptInicializacionTramite to set
 	 */
 	public void setScriptInicializacionTramite(final JScript scriptInicializacionTramite) {
 		this.scriptInicializacionTramite = scriptInicializacionTramite;
@@ -198,7 +200,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param scriptPersonalizacion the scriptPersonalizacion to set
+	 * @param scriptPersonalizacion
+	 *                                  the scriptPersonalizacion to set
 	 */
 	public void setScriptPersonalizacion(final JScript scriptPersonalizacion) {
 		this.scriptPersonalizacion = scriptPersonalizacion;
@@ -212,7 +215,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param mensajeDesactivacion the mensajeDesactivacion to set
+	 * @param mensajeDesactivacion
+	 *                                 the mensajeDesactivacion to set
 	 */
 	public void setMensajeDesactivacion(final JLiteral mensajeDesactivacion) {
 		this.mensajeDesactivacion = mensajeDesactivacion;
@@ -226,7 +230,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param tramite the tramite to set
+	 * @param tramite
+	 *                    the tramite to set
 	 */
 	public void setTramite(final JTramite tramite) {
 		this.tramite = tramite;
@@ -240,7 +245,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param numeroVersion the numeroVersion to set
+	 * @param numeroVersion
+	 *                          the numeroVersion to set
 	 */
 	public void setNumeroVersion(final int numeroVersion) {
 		this.numeroVersion = numeroVersion;
@@ -254,7 +260,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param tipoflujo the tipoflujo to set
+	 * @param tipoflujo
+	 *                      the tipoflujo to set
 	 */
 	public void setTipoflujo(final String tipoflujo) {
 		this.tipoflujo = tipoflujo;
@@ -268,7 +275,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param autenticado the autenticado to set
+	 * @param autenticado
+	 *                        the autenticado to set
 	 */
 	public void setAutenticado(final boolean autenticado) {
 		this.autenticado = autenticado;
@@ -282,7 +290,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param nivelQAA the nivelQAA to set
+	 * @param nivelQAA
+	 *                     the nivelQAA to set
 	 */
 	public void setNivelQAA(final Integer nivelQAA) {
 		this.nivelQAA = nivelQAA;
@@ -296,7 +305,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param noAutenticado the noAutenticado to set
+	 * @param noAutenticado
+	 *                          the noAutenticado to set
 	 */
 	public void setNoAutenticado(final boolean noAutenticado) {
 		this.noAutenticado = noAutenticado;
@@ -310,7 +320,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param idiomasSoportados the idiomasSoportados to set
+	 * @param idiomasSoportados
+	 *                              the idiomasSoportados to set
 	 */
 	public void setIdiomasSoportados(final String idiomasSoportados) {
 		this.idiomasSoportados = idiomasSoportados;
@@ -324,7 +335,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param admitePersistencia the admitePersistencia to set
+	 * @param admitePersistencia
+	 *                               the admitePersistencia to set
 	 */
 	public void setAdmitePersistencia(final boolean admitePersistencia) {
 		this.admitePersistencia = admitePersistencia;
@@ -338,7 +350,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param persistenciaInfinita the persistenciaInfinita to set
+	 * @param persistenciaInfinita
+	 *                                 the persistenciaInfinita to set
 	 */
 	public void setPersistenciaInfinita(final boolean persistenciaInfinita) {
 		this.persistenciaInfinita = persistenciaInfinita;
@@ -352,7 +365,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param persistenciaDias the persistenciaDias to set
+	 * @param persistenciaDias
+	 *                             the persistenciaDias to set
 	 */
 	public void setPersistenciaDias(final Integer persistenciaDias) {
 		this.persistenciaDias = persistenciaDias;
@@ -366,7 +380,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param bloqueada the bloqueada to set
+	 * @param bloqueada
+	 *                      the bloqueada to set
 	 */
 	public void setBloqueada(final Boolean bloqueada) {
 		this.bloqueada = bloqueada;
@@ -380,7 +395,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param usuarioIdBloqueo the usuarioIdBloqueo to set
+	 * @param usuarioIdBloqueo
+	 *                             the usuarioIdBloqueo to set
 	 */
 	public void setUsuarioIdBloqueo(final String usuarioIdBloqueo) {
 		this.usuarioIdBloqueo = usuarioIdBloqueo;
@@ -394,7 +410,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param usuarioDatosBloqueo the usuarioDatosBloqueo to set
+	 * @param usuarioDatosBloqueo
+	 *                                the usuarioDatosBloqueo to set
 	 */
 	public void setUsuarioDatosBloqueo(final String usuarioDatosBloqueo) {
 		this.usuarioDatosBloqueo = usuarioDatosBloqueo;
@@ -408,7 +425,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param release the release to set
+	 * @param release
+	 *                    the release to set
 	 */
 	public void setRelease(final Integer release) {
 		this.release = release;
@@ -422,7 +440,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param activa the activa to set
+	 * @param activa
+	 *                   the activa to set
 	 */
 	public void setActiva(final boolean activa) {
 		this.activa = activa;
@@ -436,7 +455,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param debug the debug to set
+	 * @param debug
+	 *                  the debug to set
 	 */
 	public void setDebug(final boolean debug) {
 		this.debug = debug;
@@ -450,7 +470,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param limiteTramitacion the limiteTramitacion to set
+	 * @param limiteTramitacion
+	 *                              the limiteTramitacion to set
 	 */
 	public void setLimiteTramitacion(final String limiteTramitacion) {
 		this.limiteTramitacion = limiteTramitacion;
@@ -464,7 +485,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param limiteTramitacionNumero the limiteTramitacionNumero to set
+	 * @param limiteTramitacionNumero
+	 *                                    the limiteTramitacionNumero to set
 	 */
 	public void setLimiteTramitacionNumero(final Integer limiteTramitacionNumero) {
 		this.limiteTramitacionNumero = limiteTramitacionNumero;
@@ -478,7 +500,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param limiteTramitacionIntervalo the limiteTramitacionIntervalo to set
+	 * @param limiteTramitacionIntervalo
+	 *                                       the limiteTramitacionIntervalo to set
 	 */
 	public void setLimiteTramitacionIntervalo(final Integer limiteTramitacionIntervalo) {
 		this.limiteTramitacionIntervalo = limiteTramitacionIntervalo;
@@ -492,7 +515,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param desactivacionTemporal the desactivacionTemporal to set
+	 * @param desactivacionTemporal
+	 *                                  the desactivacionTemporal to set
 	 */
 	public void setDesactivacionTemporal(final boolean desactivacionTemporal) {
 		this.desactivacionTemporal = desactivacionTemporal;
@@ -506,7 +530,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param plazoInicioDesactivacion the plazoInicioDesactivacion to set
+	 * @param plazoInicioDesactivacion
+	 *                                     the plazoInicioDesactivacion to set
 	 */
 	public void setPlazoInicioDesactivacion(final Date plazoInicioDesactivacion) {
 		this.plazoInicioDesactivacion = plazoInicioDesactivacion;
@@ -520,7 +545,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param plazoFinDesactivacion the plazoFinDesactivacion to set
+	 * @param plazoFinDesactivacion
+	 *                                  the plazoFinDesactivacion to set
 	 */
 	public void setPlazoFinDesactivacion(final Date plazoFinDesactivacion) {
 		this.plazoFinDesactivacion = plazoFinDesactivacion;
@@ -534,7 +560,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param huella the huella to set
+	 * @param huella
+	 *                   the huella to set
 	 */
 	public void setHuella(final String huella) {
 		this.huella = huella;
@@ -548,7 +575,8 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
-	 * @param tiposAutenticacion the tiposAutenticacion to set
+	 * @param tiposAutenticacion
+	 *                               the tiposAutenticacion to set
 	 */
 	public void setTiposAutenticacion(final String tiposAutenticacion) {
 		this.tiposAutenticacion = tiposAutenticacion;
@@ -561,6 +589,7 @@ public class JVersionTramite implements IModelApi {
 	 */
 	public TramiteVersion toModel() {
 		final TramiteVersion tramiteVersion = new TramiteVersion();
+		tramiteVersion.setIdArea(this.tramite.getArea().getCodigo());
 		tramiteVersion.setActiva(this.isActiva());
 		tramiteVersion.setAutenticado(this.isAutenticado());
 		tramiteVersion.setNoAutenticado(this.isNoAutenticado());

@@ -27,21 +27,10 @@ public class DominioPluginMock extends AbstractPluginProperties implements IDomi
 		super(prefijoPropiedades, properties);
 	}
 
-	/**
-	 * Invoca dominio remoto.
-	 *
-	 * @param idDominio
-	 *            id dominio
-	 * @param url
-	 *            url
-	 * @param parametros
-	 *            parametros
-	 * @return valores dominio
-	 * @throws DominioPluginException
-	 */
 	@Override
 	public ValoresDominio invocarDominio(final String idDominio, final String url,
-			final List<ParametroDominio> parametros) throws DominioPluginException {
+			final List<ParametroDominio> parametros, final String user, final String pass, final Long timeout)
+			throws DominioPluginException {
 		ValoresDominio retorno;
 		if (url != null && url.toLowerCase().contains("fichero")) {
 			retorno = getValorDominioFichero(parametros);

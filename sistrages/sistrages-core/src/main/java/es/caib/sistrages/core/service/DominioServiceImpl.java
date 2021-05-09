@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
@@ -290,6 +291,12 @@ public class DominioServiceImpl implements DominioService {
 	public void clonar(final String dominioID, final String nuevoIdentificador, final Long areaID, final Long fdID,
 			final Long idEntidad) {
 		dominioDao.clonar(dominioID, nuevoIdentificador, areaID, fdID, idEntidad);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<Dominio> getDominiosByConfAut(Long idConfiguracion, Long idArea) {
+		return dominioDao.getDominiosByConfAut(idConfiguracion ,idArea);
 	}
 
 }

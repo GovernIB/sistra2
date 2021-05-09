@@ -66,7 +66,7 @@ public class RConfiguracionGlobal {
 
     /**
      * Método de acceso a timestamp.
-     * 
+     *
      * @return timestamp
      */
     public String getTimestamp() {
@@ -75,7 +75,7 @@ public class RConfiguracionGlobal {
 
     /**
      * Método para establecer timestamp.
-     * 
+     *
      * @param timestamp
      *            timestamp a establecer
      */

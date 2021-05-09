@@ -3,6 +3,7 @@ package es.caib.sistrages.frontend.util;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
@@ -59,10 +60,10 @@ public class UtilImportacion {
 
 	public static FilaImportarDominio getFilaDominio(final Dominio dominio, final Dominio dominioActual,
 			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual,
-			final String identificadorAreaSeleccionada, final Long idArea) {
+			final String identificadorAreaSeleccionada, final Long idArea, ConfiguracionAutenticacion configuracionAutenticacion) {
 
 		final FilaImportarDominio fila = UtilImportacion.checkDominios(dominio, dominioActual, fd, fdContent, fdActual,
-				identificadorAreaSeleccionada, idArea);
+				identificadorAreaSeleccionada, idArea, configuracionAutenticacion);
 		return UtilImportacion.rellenarDatosPorDefecto(fila);
 	}
 
@@ -137,13 +138,13 @@ public class UtilImportacion {
 
 	private static FilaImportarDominio checkDominios(final Dominio dominio, final Dominio dominioActual,
 			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual,
-			final String identificadorAreaSeleccionada, final Long idArea) {
+			final String identificadorAreaSeleccionada, final Long idArea, final ConfiguracionAutenticacion configuracionAutenticacion) {
 
 		// Prohibido importar dominios de distintos ambitos.
 		if (dominio != null && dominioActual != null && dominio.getAmbito() != dominioActual.getAmbito()) {
 
 			return FilaImportarDominio.crearITerrorAmbitoAreas(dominio, dominioActual, fd, fdContent, fdActual,
-					UtilJSF.getLiteral("importar.error.distintosAmbitos"));
+					UtilJSF.getLiteral("importar.error.distintosAmbitos"), configuracionAutenticacion);
 
 		}
 
@@ -153,7 +154,7 @@ public class UtilImportacion {
 				&& isAreaErroneo(dominioActual, dominio)) {
 
 			return FilaImportarDominio.crearITerrorAmbitoAreas(dominio, dominioActual, fd, fdContent, fdActual,
-					UtilJSF.getLiteral("importar.error.ambitoAreaDistintaArea"));
+					UtilJSF.getLiteral("importar.error.ambitoAreaDistintaArea"), configuracionAutenticacion);
 		}
 
 		// Si el área existe en BBDD, tiene que ser el mismo area que la seleccionada
@@ -162,7 +163,7 @@ public class UtilImportacion {
 				&& isAreaErroneo(dominioActual, identificadorAreaSeleccionada)) {
 
 			return FilaImportarDominio.crearITerrorAmbitoAreas(dominio, dominioActual, fd, fdContent, fdActual,
-					UtilJSF.getLiteral("importar.error.areaDistintaSeleccionada"));
+					UtilJSF.getLiteral("importar.error.areaDistintaSeleccionada"), configuracionAutenticacion);
 		}
 
 		// Si ambos dominios son de tipo Entidad, tienen que ser de la misma entidad
@@ -170,7 +171,7 @@ public class UtilImportacion {
 				&& isEntidadErroneo(dominioActual)) {
 
 			return FilaImportarDominio.crearITerrorAmbitoAreas(dominio, dominioActual, fd, fdContent, fdActual,
-					UtilJSF.getLiteral("importar.error.ambitoEntidadesDistintaEntidad"));
+					UtilJSF.getLiteral("importar.error.ambitoEntidadesDistintaEntidad"), configuracionAutenticacion);
 		}
 
 		// Si ambos dominios son de tipo FD, la FD debe coincidir la entidad o area
@@ -178,14 +179,14 @@ public class UtilImportacion {
 				&& dominioActual.getTipo() == TypeDominio.FUENTE_DATOS && isFDErroneo(fd, fdActual, idArea)) {
 
 			return FilaImportarDominio.crearITerrorAmbitoAreas(dominio, dominioActual, fd, fdContent, fdActual,
-					UtilJSF.getLiteral("importar.error.ambitoFDDistintaArea"));
+					UtilJSF.getLiteral("importar.error.ambitoFDDistintaArea"), configuracionAutenticacion);
 
 		}
 
 		if (checkPermisos(dominio)) {
-			return checkDominioModoEdicion(dominio, dominioActual, fd, fdContent, fdActual);
+			return checkDominioModoEdicion(dominio, dominioActual, fd, fdContent, fdActual, configuracionAutenticacion);
 		} else {
-			return checkDominioModoSoloActualizacion(dominio, dominioActual, fd, fdContent, fdActual);
+			return checkDominioModoSoloActualizacion(dominio, dominioActual, fd, fdContent, fdActual, configuracionAutenticacion);
 		}
 
 	}
@@ -231,14 +232,14 @@ public class UtilImportacion {
 	 *
 	 */
 	private static FilaImportarDominio checkDominioModoEdicion(final Dominio dominio, final Dominio dominioActual,
-			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual) {
+			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final ConfiguracionAutenticacion configuracionAutenticacion) {
 
 		FilaImportarDominio fila;
 		final String mensaje = null;
 		if (dominioActual == null || (dominio != null && !mismaEstructura(dominio, dominioActual, fd, fdActual))) {
-			fila = FilaImportarDominio.crearITsoloReemplazar(dominio, dominioActual, fd, fdContent, fdActual, mensaje);
+			fila = FilaImportarDominio.crearITsoloReemplazar(dominio, dominioActual, fd, fdContent, fdActual, mensaje, configuracionAutenticacion);
 		} else {
-			fila = FilaImportarDominio.crearITconPermisos(dominio, dominioActual, fd, fdContent, fdActual, mensaje);
+			fila = FilaImportarDominio.crearITconPermisos(dominio, dominioActual, fd, fdContent, fdActual, mensaje, configuracionAutenticacion);
 		}
 		return fila;
 	}
@@ -257,12 +258,12 @@ public class UtilImportacion {
 	 *
 	 */
 	private static FilaImportarDominio checkDominioModoSoloActualizacion(final Dominio dominio,
-			final Dominio dominioActual, final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual) {
+			final Dominio dominioActual, final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final ConfiguracionAutenticacion configuracionAutenticacion) {
 		FilaImportarDominio fila;
 		if (dominioActual != null && mismaEstructura(dominio, dominioActual, fd, fdActual)) {
 
 			// UtilJSF.getLiteral("importar.ok.soloseleccionar")
-			fila = FilaImportarDominio.crearITsoloMantener(dominio, dominioActual, fd, fdContent, fdActual, null);
+			fila = FilaImportarDominio.crearITsoloMantener(dominio, dominioActual, fd, fdContent, fdActual, null, configuracionAutenticacion);
 
 		} else {
 
@@ -274,7 +275,7 @@ public class UtilImportacion {
 			}
 			literal = "";
 			fila = FilaImportarDominio.crearITerrorSoloMantener(dominio, dominioActual, fd, fdContent, fdActual,
-					literal);
+					literal, configuracionAutenticacion);
 
 		}
 		return fila;

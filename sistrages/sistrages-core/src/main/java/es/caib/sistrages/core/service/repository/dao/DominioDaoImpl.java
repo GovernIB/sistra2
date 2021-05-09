@@ -24,6 +24,7 @@ import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.core.service.repository.model.JArea;
+import es.caib.sistrages.core.service.repository.model.JConfiguracionAutenticacion;
 import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
 import es.caib.sistrages.core.service.repository.model.JFuenteDatos;
@@ -470,6 +471,10 @@ public class DominioDaoImpl implements DominioDao {
 				break;
 			case CONSULTA_REMOTA:
 				dominioAlmacenar.setServicioRemotoUrl(filaDominio.getResultadoURL());
+				if (filaDominio.getConfiguracionAutenticacionActual() != null) {
+					JConfiguracionAutenticacion config = entityManager.find(JConfiguracionAutenticacion.class, filaDominio.getConfiguracionAutenticacionActual().getCodigo());
+					dominioAlmacenar.setConfiguracionAutenticacion(config);
+				}
 				break;
 			case FUENTE_DATOS:
 				dominioAlmacenar.setSql(JDominio.decodeSql(filaDominio.getResultadoSQL()));
@@ -576,5 +581,22 @@ public class DominioDaoImpl implements DominioDao {
 
 		return query.getResultList();
 	}
+
+	@Override
+	public List<Dominio> getDominiosByConfAut(Long idConfiguracion, Long idArea) {
+		final String sql = "select d from JDominio d LEFT JOIN d.areas areas  where d.ambito = 'A' and areas.codigo = :idArea and d.configuracionAutenticacion.codigo = :idConf ORDER BY d.identificador ";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idConf", idConfiguracion);
+		query.setParameter("idArea", idArea);
+
+		final List<JDominio> jDominios = query.getResultList();
+		final List<Dominio> dominios = new ArrayList<>();
+		for (final JDominio jdominio : jDominios) {
+			dominios.add(jdominio.toModel());
+		}
+		return dominios;
+	}
+
 
 }

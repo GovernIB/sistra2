@@ -26,7 +26,7 @@ public enum TypeOpcionMenuAdmOper implements OpcionMenu {
 	/**
 	 * Formateador formularios
 	 */
-	FormateadorFormulario,
+	FORMATEADORFORMULARIO,
 	/**
 	 * DOMINIOS ENTIDAD.
 	 */
@@ -42,10 +42,9 @@ public enum TypeOpcionMenuAdmOper implements OpcionMenu {
 	/**
 	 * ROLES PERMISOS.
 	 */
-	ROLES_PERMISOS,
+	ROLES_PERMISOS;
 	/**
 	 * FORMULARIOS EXTERNOS
-	 */
-	FORMULARIOS_EXTERNOS;
+	FORMULARIOS_EXTERNOS */
 
 }

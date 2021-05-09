@@ -18,7 +18,7 @@ public class RFiltroEvento {
 	@ApiModelProperty(value = "Fecha evento", required = true)
 	private Date fecha;
 
-	@ApiModelProperty(value = "Tipo Evento")
+	@ApiModelProperty(value = "Tipo evento: INICIAR TRÁMITE(\"TR_INI\"), CARGA DEL TRÁMITE (\"TR_CAR\"), BORRADO DEL TRÁMITE (\"TR_BOR\"), PAGO ELECTRÓNICO (\"TR_PAE\"), PAGO PRESENCIAL(\"TR_PAP\"), REGISTRO TRÁMITE (\"TR_REG\"), FIN DE TRÁMITE (\"TR_FIN\"), VALORACIÓN TRÁMITE , VALORACION_TRAMITE (\"TR_VAL\")")
 	private List<String> listaEventos;
 
 	public Date getFecha() {

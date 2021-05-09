@@ -32,6 +32,7 @@ import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
@@ -46,6 +47,7 @@ import es.caib.sistrages.core.api.model.TramitePasoAnexar;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteRegistro;
+import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
 import es.caib.sistrages.core.service.repository.model.JFichero;
@@ -520,6 +522,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			final Long idTramiteVersion, final Long idEntidad, final Map<Long, DisenyoFormulario> formularios,
 			final Map<Long, Fichero> ficheros, final Map<Long, byte[]> ficherosContent,
 			final Map<Long, FormateadorFormulario> formateadores, final Map<Long, Long> mapFormateadores,
+			final Map<Long, GestorExternoFormularios> gestores, final Map<Long, Long> mapGestores,
 			final Map<Long, Long> idDominiosEquivalencia) {
 
 		final JVersionTramite jVersionTramite = entityManager.find(JVersionTramite.class, idTramiteVersion);
@@ -530,9 +533,15 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		final Map<String, Long> formulariosId = new HashMap<>();
 		if (tramitePaso instanceof TramitePasoRellenar) {
 			for (final FormularioTramite formulario : ((TramitePasoRellenar) tramitePaso).getFormulariosTramite()) {
-				if (formulario.getIdFormularioInterno() != null) {
+				if (formulario.getTipoFormulario() == TypeFormularioGestor.INTERNO && formulario.getIdFormularioInterno() != null) {
 					formulariosId.put(formulario.getIdentificador(), formulario.getIdFormularioInterno());
 					formulario.setIdFormularioInterno(null);
+				}
+				if (formulario.getTipoFormulario() == TypeFormularioGestor.EXTERNO) {
+					Long id = formulario.getFormularioGestorExterno().getCodigo();
+					Long idGestor = mapGestores.get(id);
+					GestorExternoFormularios form = gestores.get(idGestor);
+					formulario.setFormularioGestorExterno(form);
 				}
 			}
 		}
@@ -585,47 +594,60 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 
 					// Creamos la id.
 					formulario.setDescripcion(JLiteral.clonar(formulario.getDescripcion()));
-					final Long idJFormulario = formularioInternoDao.addFormulario(formulario.toModel(), false);
+					FormularioTramite formT = formulario.toModel();
 
-					// Actualizamos el jformulario
-					final Long idFormularioInterno = formulariosId.get(formulario.getIdentificador());
-					final DisenyoFormulario formularioInterno = formularios.get(idFormularioInterno);
+					//Si es tipo externo, habra que asociarlo al formulario gestor externo
+//					if (formulario.getTipoFormulario().equals("E")) {
+//						Long id = formT.getFormularioGestorExterno().getCodigo();
+//						Long idGestor = mapGestores.get(id);
+//						GestorExternoFormularios form = gestores.get(idGestor);
+//						formT.setFormularioGestorExterno(form);
+//					} else {
+//						formT.setFormularioGestorExterno(null);
+//					}
+					final Long idJFormulario = formularioInternoDao.addFormulario(formT, false);
+					if (formulario.getTipoFormulario().equals("I")) {
 
-					final DisenyoFormulario disenyoFormularioAlmacenado = formularioInternoDao
-							.getFormularioById(idJFormulario);
-					disenyoFormularioAlmacenado.setMostrarCabecera(formularioInterno.isMostrarCabecera());
-					disenyoFormularioAlmacenado
-							.setPermitirAccionesPersonalizadas(formularioInterno.isPermitirAccionesPersonalizadas());
-					if (formularioInterno.getScriptPlantilla() != null) {
-						formularioInterno.getScriptPlantilla().setCodigo(null);
+						// Actualizamos el jformulario
+						final Long idFormularioInterno = formulariosId.get(formulario.getIdentificador());
+						final DisenyoFormulario formularioInterno = formularios.get(idFormularioInterno);
+
+						final DisenyoFormulario disenyoFormularioAlmacenado = formularioInternoDao
+								.getFormularioById(idJFormulario);
+						disenyoFormularioAlmacenado.setMostrarCabecera(formularioInterno.isMostrarCabecera());
 						disenyoFormularioAlmacenado
-								.setScriptPlantilla(Script.clonar(formularioInterno.getScriptPlantilla()));
-					}
-
-					if (formularioInterno.getTextoCabecera() != null) {
-						formularioInterno.getTextoCabecera().setCodigo(null);
-						if (formularioInterno.getTextoCabecera().getTraducciones() != null) {
-							for (final Traduccion trad : formularioInterno.getTextoCabecera().getTraducciones()) {
-								trad.setCodigo(null);
-							}
+								.setPermitirAccionesPersonalizadas(formularioInterno.isPermitirAccionesPersonalizadas());
+						if (formularioInterno.getScriptPlantilla() != null) {
+							formularioInterno.getScriptPlantilla().setCodigo(null);
+							disenyoFormularioAlmacenado
+									.setScriptPlantilla(Script.clonar(formularioInterno.getScriptPlantilla()));
 						}
-						disenyoFormularioAlmacenado.setTextoCabecera(formularioInterno.getTextoCabecera());
+
+						if (formularioInterno.getTextoCabecera() != null) {
+							formularioInterno.getTextoCabecera().setCodigo(null);
+							if (formularioInterno.getTextoCabecera().getTraducciones() != null) {
+								for (final Traduccion trad : formularioInterno.getTextoCabecera().getTraducciones()) {
+									trad.setCodigo(null);
+								}
+							}
+							disenyoFormularioAlmacenado.setTextoCabecera(formularioInterno.getTextoCabecera());
+						}
+						formularioInternoDao.updateFormulario(disenyoFormularioAlmacenado);
+
+						this.anyadirPaginas(formularioInterno.getPaginas(), idJFormulario, ficherosContent,
+								idDominiosEquivalencia, idEntidad);
+						this.anyadirPlantillas(formularioInterno.getPlantillas(), idJFormulario, formateadores,
+								mapFormateadores, ficherosContent, idEntidad);
+
+						// Refrescamos la relacion entre el formulario del paso y el formulario de
+						// diseño.
+						final JFormulario jform = entityManager.find(JFormulario.class, idJFormulario);
+						final JFormularioTramite jformNew = entityManager.find(JFormularioTramite.class,
+								formulario.getCodigo());
+						jformNew.setFormulario(jform);
+						entityManager.merge(jformNew);
+
 					}
-					formularioInternoDao.updateFormulario(disenyoFormularioAlmacenado);
-
-					this.anyadirPaginas(formularioInterno.getPaginas(), idJFormulario, ficherosContent,
-							idDominiosEquivalencia, idEntidad);
-					this.anyadirPlantillas(formularioInterno.getPlantillas(), idJFormulario, formateadores,
-							mapFormateadores, ficherosContent, idEntidad);
-
-					// Refrescamos la relacion entre el formulario del paso y el formulario de
-					// diseño.
-					final JFormulario jform = entityManager.find(JFormulario.class, idJFormulario);
-					final JFormularioTramite jformNew = entityManager.find(JFormularioTramite.class,
-							formulario.getCodigo());
-					jformNew.setFormulario(jform);
-					entityManager.merge(jformNew);
-
 				}
 			}
 		}

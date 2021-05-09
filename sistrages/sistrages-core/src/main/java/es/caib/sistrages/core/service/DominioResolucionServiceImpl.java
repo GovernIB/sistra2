@@ -75,7 +75,8 @@ public class DominioResolucionServiceImpl implements DominioResolucionService {
 
 	@Override
 	public ValoresDominio realizarConsultaRemota(final TypeAmbito ambito, final Long idEntidad, final String idDominio,
-			final String url, final List<es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio> parametros) {
+			final String url, final String usr, final String pwd,
+			final List<es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio> parametros) {
 		final IDominioPlugin iplugin = (IDominioPlugin) configuracionComponent.obtenerPlugin(TypePlugin.DOMINIO_REMOTO,
 				idEntidad);
 		ValoresDominio valoresDominio;
@@ -86,7 +87,7 @@ public class DominioResolucionServiceImpl implements DominioResolucionService {
 			valoresDominio.setDescripcionError("El plugin es nulo");
 		} else {
 			try {
-				valoresDominio = iplugin.invocarDominio(idDominio, url, parametros);
+				valoresDominio = iplugin.invocarDominio(idDominio, url, parametros, usr, pwd, 60L);
 				valoresDominio.setError(false);
 			} catch (final DominioPluginException e) {
 				valoresDominio = new ValoresDominio();
