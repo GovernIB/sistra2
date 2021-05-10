@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogTramiteImportarGestor.titulo']}"/></title>
+</h:head>
+<h:body>
+  	<f:facet name="last">
+    	<h:outputStylesheet library="css" name="style.css" />
+  	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogTramiteImportarGestor.modoAcceso}"/>
+		<f:viewParam name="AREA" value="#{dialogTramiteImportarGestor.area}"/>
+		<f:viewAction action="#{dialogTramiteImportarGestor.init}" />
+	</f:metadata>
+	<h:form id="dialogImportarGestor" styleClass="margin-top-10">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w20 va-top, padding-left-18 w80" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+					<p:outputLabel for="configAut" value="#{msg['dialogTramiteImportarDominio.headerConfiguracion']}:"   />
+			 	 	<p:selectOneMenu id="configAut" value="#{dialogTramiteImportarGestor.data.configuracionAutenticacionActual}"  style="width:285px" disabled="#{dialogTramiteImportarGestor.isConsulta()}" converter="#{configuracionConverter}"   >
+						    <f:selectItems value="#{dialogTramiteImportarGestor.configuraciones}" var="fd" itemValue="#{fd}" itemLabel="#{fd.identificador}" />
+					</p:selectOneMenu >
+
+				</h:panelGrid>
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogTramiteImportarGestor.guardar()}" process="@form" update="@form growlDialog" styleClass="boton-azul" />
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteImportarGestor.cancelar()}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

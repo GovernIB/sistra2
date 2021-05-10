@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypePlugin" var="TypePlugin"/>
+
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogConfiguracionAutenticacion.titulo']}"/></title>
+</h:head>
+
+<h:body>
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogConfiguracionAutenticacion.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogConfiguracionAutenticacion.id}"/>
+		<f:viewParam name="AREA" value="#{dialogConfiguracionAutenticacion.area}"/>
+		<f:viewAction action="#{dialogConfiguracionAutenticacion.init}" />
+	</f:metadata>
+	<h:form id="dialogFormularioExterno" styleClass="margin-top-10">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
+
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,,wpx25" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
+
+
+					<p:outputLabel for="identificador" value="#{msg['dialogConfiguracionAutenticacion.headerIdentificador']}" />
+					<p:inputText id="identificador" value="#{dialogConfiguracionAutenticacion.data.identificador}" disabled="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="20"  onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
+						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
+				   	</p:inputText>
+				   	<p:outputLabel value="" />
+
+					<p:outputLabel for="descripcion" value="#{msg['dialogConfiguracionAutenticacion.headerDescripcion']}" />
+					<p:inputText id="descripcion" value="#{dialogConfiguracionAutenticacion.data.descripcion}" disabled="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="255"/>
+					<p:outputLabel value="" />
+
+					<p:outputLabel for="usuario" value="#{msg['dialogConfiguracionAutenticacion.headerUsuario']}" />
+					<p:inputText id="usuario" value="#{dialogConfiguracionAutenticacion.data.usuario}" disabled="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="50"/>
+					<p:outputLabel value="" />
+
+					<p:outputLabel for="password" value="#{msg['dialogConfiguracionAutenticacion.headerPass']}" />
+					<p:inputText id="password" value="#{dialogConfiguracionAutenticacion.data.password}" disabled="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="50"/>
+					<p:outputLabel value="" />
+
+
+				</h:panelGrid>
+				<h:outputScript rendered="#{!dialogConfiguracionAutenticacion.isConsulta()}">
+				      function rcEditarPropiedad() {
+				      	document.getElementById("dialogFormularioExterno:btnEditarPropiedad").click();
+				      }
+
+				      function  rcBorrarPropiedad() {
+				      	document.getElementById("dialogFormularioExterno:btnEliminarPropiedad").click();
+				      }
+			    </h:outputScript>
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+		     		<f:facet name="left">
+		     			<p:commandButton id="btnDominios" value="#{msg['botones.dominios']}" icon="fa fa-level-down" actionListener="#{dialogConfiguracionAutenticacion.dominios()}" process="@this" rendered="#{dialogConfiguracionAutenticacion.data.codigo ne null}" />
+	     				<p:commandButton id="btnConfigs" value="#{msg['botones.sgeArea']}" icon="fa fa-level-down" actionListener="#{dialogConfiguracionAutenticacion.formsExternos()}" process="@this" rendered="#{dialogConfiguracionAutenticacion.data.codigo ne null}" />
+	     	 		</f:facet>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogConfiguracionAutenticacion.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogConfiguracionAutenticacion.isAlta() or dialogConfiguracionAutenticacion.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogConfiguracionAutenticacion.cancelar()}" process="@this"  rendered="#{dialogConfiguracionAutenticacion.isAlta() or dialogConfiguracionAutenticacion.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogConfiguracionAutenticacion.cancelar()}" process="@this"  rendered="#{dialogConfiguracionAutenticacion.isConsulta()}"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogConfiguracionAutenticacion.ayuda}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

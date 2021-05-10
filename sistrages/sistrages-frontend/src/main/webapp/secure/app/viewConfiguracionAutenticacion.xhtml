@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../layout/mainLayout.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{viewConfiguracionAutenticacion.init}" />
+		<f:viewParam name="ambito" value="#{viewConfiguracionAutenticacion.ambito}"/>
+		<f:viewParam name="id" value="#{viewConfiguracionAutenticacion.id}"/>
+		<f:viewParam name="area" value="#{viewConfiguracionAutenticacion.area}"/>
+	</f:metadata>
+
+
+	<ui:define name="content">
+
+		<h:form id="form" styleClass="h100">
+
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+			<!-- Toolbar -->
+			<p:toolbar id="toolbar">
+		        <f:facet name="left">
+		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
+		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
+			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewConfiguracionAutenticacion.filtro}"/>
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewConfiguracionAutenticacion.filtrar()}" process="panelFiltro" update="growl dataTable" />
+	           		</h:panelGrid>
+		        </f:facet>
+
+		        <f:facet name="right">
+		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
+		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewConfiguracionAutenticacion.nuevo()}" process="@this" update="growl" rendered="#{viewConfiguracionAutenticacion.permiteAlta}">
+		        			<p:ajax event="dialogReturn" listener="#{viewConfiguracionAutenticacion.returnDialogo}" update="growl dataTable"/>
+		        		</p:commandButton>
+		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewConfiguracionAutenticacion.consultar()}" process="@this" update="growl" rendered="#{not viewConfiguracionAutenticacion.permiteEditar and not viewConfiguracionAutenticacion.permiteAlta}" />
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewConfiguracionAutenticacion.editar()}" process="@this" update="growl"  rendered="#{viewConfiguracionAutenticacion.permiteAlta}">
+		        			<p:ajax event="dialogReturn" listener="#{viewConfiguracionAutenticacion.returnDialogo}" update="growl dataTable"/>
+		        		</p:commandButton>
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewConfiguracionAutenticacion.eliminar()}" process="@this" update="growl dataTable"  rendered="#{viewConfiguracionAutenticacion.permiteAlta}">
+	       		   			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+						</p:commandButton>
+
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewConfiguracionAutenticacion.ayuda()}" process="@this" update="growl"/>
+		        	</h:panelGrid>
+		        </f:facet>
+
+		    </p:toolbar>
+
+			<!-- Data table -->
+			<p:dataTable  id="dataTable" var="td" value="#{viewConfiguracionAutenticacion.listaDatos}"
+						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+						 scrollable="true" scrollHeight="90%"
+                         paginator="true" paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,30"
+			        	 selectionMode="single" selection="#{viewConfiguracionAutenticacion.datoSeleccionado}" rowKey="#{td.codigo}">
+
+				<!-- Necesario para actualizar en controlador la fila seleccionada -->
+				<p:ajax event="rowSelect" global="false"/>
+				<p:ajax event="rowDblselect"
+		                  		oncomplete="triggerDblClick();"
+		                        update=":form:dataTable"
+		                        />
+
+				<!-- Columnas -->
+			    <p:column headerText="#{msg['viewConfiguracionAutenticacion.identificador']}">
+			         <h:outputText value="#{td.identificador}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewConfiguracionAutenticacion.descripcion']}">
+			        <h:outputText value="#{td.descripcion}" />
+			    </p:column>
+
+			</p:dataTable>
+
+			<h:outputScript >
+		      function triggerDblClick() {
+		      		$('#form\\:btnEditarHidden').click();
+		      }
+		    </h:outputScript>
+
+			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewConfiguracionAutenticacion.rcDobleClick()}" process="@this" update="growl" style="display:none" >
+       			<p:ajax event="dialogReturn" listener="#{viewConfiguracionAutenticacion.returnDialogo}" update="growl dataTable"/>
+       		</p:commandButton>
+
+			<!-- dialogo para confirmar -->
+		    <p:confirmDialog global="true" >
+				<p:outputPanel styleClass="confirmar_botonera">
+		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+				</p:outputPanel>
+		    </p:confirmDialog>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

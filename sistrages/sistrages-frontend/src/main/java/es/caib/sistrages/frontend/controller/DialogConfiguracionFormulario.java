@@ -1,0 +1,195 @@
+package es.caib.sistrages.frontend.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
+
+import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.DominioTramite;
+import es.caib.sistrages.core.api.model.GestorExternoFormularios;
+import es.caib.sistrages.core.api.service.DominioService;
+import es.caib.sistrages.core.api.service.FormularioExternoService;
+import es.caib.sistrages.core.api.service.TramiteService;
+import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
+import es.caib.sistrages.frontend.util.UtilJSF;
+
+@ManagedBean
+@ViewScoped
+public class DialogConfiguracionFormulario extends DialogControllerBase {
+
+	/** Id elemento a tratar. */
+	private String id;
+
+	/** Id elemento a tratar. */
+	private String idArea;
+
+	/** Enlace servicio. */
+	@Inject
+	private FormularioExternoService tramiteService;
+
+	/** Datos elemento. */
+	private Dominio data;
+
+	/** Campos. **/
+	private List<GestorExternoFormularios> campos;
+
+	/** Campos en formato JSON. **/
+	private String iCampos;
+
+	/** Fila seleccionada. **/
+	private DominioTramite valorSeleccionado;
+
+	/** Ambito. **/
+	private String ambito;
+
+	/** Area **/
+	private String area;
+
+	/**
+	 * Inicialización.
+	 */
+	public void init() {
+
+		campos = tramiteService.getGestorExternoByAutenticacion(Long.valueOf(id), Long.valueOf(idArea));
+
+	}
+
+
+	/**
+	 * Aceptar.
+	 */
+	public void aceptar() {
+
+		final DialogResult result = new DialogResult();
+		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+		result.setCanceled(true);
+		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(final String id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the data
+	 */
+	public Dominio getData() {
+		return data;
+	}
+
+	/**
+	 * @param data
+	 *            the data to set
+	 */
+	public void setData(final Dominio data) {
+		this.data = data;
+	}
+
+	/**
+	 * @return the valorSeleccionado
+	 */
+	public DominioTramite getValorSeleccionado() {
+		return valorSeleccionado;
+	}
+
+	/**
+	 * @param valorSeleccionado
+	 *            the valorSeleccionado to set
+	 */
+	public void setValorSeleccionado(final DominioTramite valorSeleccionado) {
+		this.valorSeleccionado = valorSeleccionado;
+	}
+
+	/**
+	 * @return the campos
+	 */
+	public List<GestorExternoFormularios> getCampos() {
+		return campos;
+	}
+
+	/**
+	 * @param campos
+	 *            the campos to set
+	 */
+	public void setCampos(final List<GestorExternoFormularios> campos) {
+		this.campos = campos;
+	}
+
+	/**
+	 * @return the iCampos
+	 */
+	public String getiCampos() {
+		return iCampos;
+	}
+
+	/**
+	 * @param iCampos
+	 *            the iCampos to set
+	 */
+	public void setiCampos(final String iCampos) {
+		this.iCampos = iCampos;
+	}
+
+	/**
+	 * @return the ambito
+	 */
+	public String getAmbito() {
+		return ambito;
+	}
+
+	/**
+	 * @param ambito
+	 *            the ambito to set
+	 */
+	public void setAmbito(final String ambito) {
+		this.ambito = ambito;
+	}
+
+	/**
+	 * @return the area
+	 */
+	public String getArea() {
+		return area;
+	}
+
+	/**
+	 * @param area
+	 *            the area to set
+	 */
+	public void setArea(final String area) {
+		this.area = area;
+	}
+
+	/**
+	 * @return the idArea
+	 */
+	public String getIdArea() {
+		return idArea;
+	}
+
+	/**
+	 * @param idArea the idArea to set
+	 */
+	public void setIdArea(String idArea) {
+		this.idArea = idArea;
+	}
+
+}
