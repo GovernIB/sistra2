@@ -307,7 +307,7 @@ public class UtilsRegweb3 {
 	 * @return Cadena normalizada
 	 */
 	public static String eliminarCaracteresNoPermitidos(final String cadena) {
-		final String[] charsNoPermitidos = { ">", "%", "\\*", "&", ":", ";", "¿", "\\?", "/", "\\|", "!", "<", "¡",
+		final String[] charsNoPermitidos = { "\\+",">", "%", "\\*", "&", ":", ";", "¿", "\\?", "/", "\\|", "!", "<", "¡",
 				"\"" };
 		String nombreFicheroNormalizado = cadena;
 		for (final String cnp : charsNoPermitidos) {
