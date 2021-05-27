@@ -73,7 +73,7 @@ public final class XssFilter {
 				.replaceAll("'", "´");
 		// Eliminamos chars no permitidos en RW3
 		final String[] charsNoPermitidos = { "\\+",">", "%", "\\*", "&", ":", ";", "¿", "\\?", "/", "\\|", "!", "<", "¡",
-				"\"" };
+				"\"", "'" };
 		for (final String cnp : charsNoPermitidos) {
 			nombreFicheroNormalizado = nombreFicheroNormalizado.replaceAll(cnp, "_");
 		}
