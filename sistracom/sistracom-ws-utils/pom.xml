@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>es.caib.sistra2</groupId>
 		<artifactId>sistracom</artifactId>
-		<version>1.1.6</version>
+		<version>1.1.7</version>
 	</parent>
 
 	<artifactId>sistracom-ws-utils</artifactId>

@@ -2,12 +2,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>es.caib.sistra2</groupId>
   <artifactId>sistra2</artifactId>
-  <version>1.1.6</version>
+  <version>1.1.7</version>
   <packaging>pom</packaging>
   <name>Sistra2</name>
 
 	<properties>
-		<sistra2.version>1.1.6</sistra2.version>
+		<sistra2.version>1.1.7</sistra2.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<schema.generate.databaseProductName>Oracle</schema.generate.databaseProductName>
@@ -65,7 +65,7 @@
 		<regweb3-ws.version>3.1.2</regweb3-ws.version>
 		<cxf.version>3.1.4</cxf.version>
 		<dom4j.version>1.6.1</dom4j.version>
-		<jaxen.version>1.1.6</jaxen.version>
+		<jaxen.version>1.1.7</jaxen.version>
 		<jsoup.version>1.12.1</jsoup.version>
 		<maven.properties.version>1.0.0</maven.properties.version>
 		<javax.email.version>1.4</javax.email.version>
