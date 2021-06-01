@@ -687,6 +687,9 @@ public class UtilsFormularioInterno {
 		case VERIFICACION:
 			tipoValor = TypeValor.SIMPLE;
 			break;
+		case LISTA_ELEMENTOS:
+			tipoValor = TypeValor.LISTA_ELEMENTOS;
+			break;
 		default:
 			throw new TipoNoControladoException("Tipo de campo " + tipoCampo + " no controlado");
 		}

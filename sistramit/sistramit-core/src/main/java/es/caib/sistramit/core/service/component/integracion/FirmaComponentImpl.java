@@ -56,9 +56,9 @@ public final class FirmaComponentImpl implements FirmaComponent {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FirmaComponentImpl.class);
 
 	@Override
-	public RedireccionFirma redireccionFirmaExterna(final String idEntidad, final Persona firmante, final String fileId,
-			final byte[] fileContent, final String fileName, final String tipoDocumental, final String urlCallBack,
-			final String idioma) {
+	public RedireccionFirma redireccionFirmaExterna(final String idEntidad, final Persona firmante,
+			final Persona representante, final String fileId, final byte[] fileContent, final String fileName,
+			final String tipoDocumental, final String urlCallBack, final String idioma) {
 
 		// Obtiene plugin
 		final IFirmaPlugin plgFirma = getPluginFirmaExterna(idEntidad);
@@ -68,6 +68,10 @@ public final class FirmaComponentImpl implements FirmaComponent {
 		infoSesionFirma.setEntidad(idEntidad);
 		infoSesionFirma.setNif(firmante.getNif());
 		infoSesionFirma.setNombreUsuario(firmante.getNombre());
+		if (representante != null) {
+			infoSesionFirma.setNifRepresentante(representante.getNif());
+			infoSesionFirma.setNombreRepresentante(representante.getNombre());
+		}
 		infoSesionFirma.setIdioma(idioma);
 		String sf;
 		try {

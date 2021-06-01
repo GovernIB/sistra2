@@ -26,7 +26,11 @@ public enum TypeCampo {
 	/**
 	 * Campo oculto (Código String: oculto).
 	 */
-	OCULTO("oculto");
+	OCULTO("oculto"),
+	/**
+	 * Campo lista elementos (Código String: listaElementos).
+	 */
+	LISTA_ELEMENTOS("listaElementos");
 
 	/**
 	 * Valor como string.

@@ -180,7 +180,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		urlIframe = "FormRenderServlet?ts=" + System.currentTimeMillis();
 		paginaActual = 1;
 		posicionamiento = "D";
-		height = UtilJSF.getSessionBean().getHeight()-165 + "px";
+		height = UtilJSF.getSessionBean().getHeight() - 165 + "px";
 	}
 
 	/**
@@ -773,7 +773,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public void editarTraduccionesAyuda() {
 		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getAyuda();
 		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso), traduccionesEdit, idiomas, idiomas,
-				true);
+				true, codigoObjFormularioDestino, codigoObjFormularioDestino);
 	}
 
 	/**

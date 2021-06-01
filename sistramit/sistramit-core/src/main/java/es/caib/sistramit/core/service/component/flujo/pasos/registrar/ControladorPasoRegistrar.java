@@ -424,7 +424,7 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	private DatosRepresentacion calcularDatosRepresentacion(final String pIdpaso,
 			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo,
 			final DatosPresentacion datosPresentacion) {
-		final DatosRepresentacion dr = ControladorPasoRegistrarHelper.getInstance().ejecutarScriptRepresentacion(
+		final DatosRepresentacion dr = ControladorPasoRegistrarHelper.getInstance().calcularDatosRepresentacion(
 				pIdpaso, pDefinicionTramite, pVariablesFlujo, datosPresentacion, getScriptFlujo());
 		return dr;
 	}

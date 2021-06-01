@@ -101,6 +101,9 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 					case CAPTCHA:
 						// No hay comprobaciones posibles
 						break;
+					case LISTA_ELEMENTOS:
+						throw new TipoNoControladoException(
+								"Tipo de campo NO ESTA IMPLEMENTADO: " + configuracion.getTipo());
 					default:
 						// Tipo no permitido
 						throw new TipoNoControladoException("Tipo de campo no controlado: " + configuracion.getTipo());

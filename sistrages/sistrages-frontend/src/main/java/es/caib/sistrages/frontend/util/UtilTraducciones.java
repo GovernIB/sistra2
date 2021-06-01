@@ -23,6 +23,8 @@ import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
  *
  */
 public final class UtilTraducciones {
+	public static String TAMANYO_MAXIMO_REGWEB3 = "200";
+	public static String CARACTERES_NOPERMIT_REGWEB3 = ">,%,*,&,:,;,¿,?,/,|,!,<,¡,\"";
 
 	/** Constructor privado para evitar problema. */
 	private UtilTraducciones() {
@@ -33,37 +35,30 @@ public final class UtilTraducciones {
 	 * Abre un dialog de tipo traduccion, utilizando los idiomas soportados a partir
 	 * del tramite version.
 	 *
-	 * @param modoAcceso
-	 *            Modo de acceso (ALTA, EDICION o CONSULTA)
-	 * @param traducciones
-	 *            Dato en formato json de tipo Traducciones
-	 * @param tramiteVersion
-	 *            La versión del trámite
+	 * @param modoAcceso     Modo de acceso (ALTA, EDICION o CONSULTA)
+	 * @param traducciones   Dato en formato json de tipo Traducciones
+	 * @param tramiteVersion La versión del trámite
 	 */
 	public static void openDialogTraduccion(final TypeModoAcceso modoAcceso, final Literal traducciones,
 			final TramiteVersion tramiteVersion) {
 		final List<String> idiomas = UtilTraducciones.getIdiomasSoportados(tramiteVersion);
-		UtilTraducciones.openDialogTraduccion(modoAcceso, traducciones, idiomas, idiomas, false);
+		UtilTraducciones.openDialogTraduccion(modoAcceso, traducciones, idiomas, idiomas, false, null, null);
 	}
 
 	/**
 	 * Abre un dialog de tipo traduccion, utilizando los idiomas soportados a partir
 	 * del tramite version.
 	 *
-	 * @param modoAcceso
-	 *            Modo de acceso (ALTA, EDICION o CONSULTA)
-	 * @param traducciones
-	 *            Dato en formato json de tipo Traducciones
-	 * @param tramiteVersion
-	 *            La versión del trámite
-	 * @param opcional
-	 *            Indica si es opcional el literal o no (en caso de opcional, saldrá
-	 *            un botón para borrar)
+	 * @param modoAcceso     Modo de acceso (ALTA, EDICION o CONSULTA)
+	 * @param traducciones   Dato en formato json de tipo Traducciones
+	 * @param tramiteVersion La versión del trámite
+	 * @param opcional       Indica si es opcional el literal o no (en caso de
+	 *                       opcional, saldrá un botón para borrar)
 	 */
 	public static void openDialogTraduccionOpcional(final TypeModoAcceso modoAcceso, final Literal traducciones,
 			final TramiteVersion tramiteVersion) {
 		final List<String> idiomas = UtilTraducciones.getIdiomasSoportados(tramiteVersion);
-		UtilTraducciones.openDialogTraduccion(modoAcceso, traducciones, idiomas, idiomas, true);
+		UtilTraducciones.openDialogTraduccion(modoAcceso, traducciones, idiomas, idiomas, true, null, null);
 	}
 
 	/**
@@ -72,66 +67,59 @@ public final class UtilTraducciones {
 	 * @param modoAcceso
 	 */
 	public static void openDialogTraduccionAlta() {
-		openDialogTraduccion(TypeModoAcceso.ALTA, null, null, null, false);
+		openDialogTraduccion(TypeModoAcceso.ALTA, null, null, null, false, null, null);
 	}
 
 	/**
 	 * Abre un dialog de tipo traduccion.
 	 *
-	 * @param modoAcceso
-	 *            Modo de acceso (ALTA, EDICION o CONSULTA)
-	 * @param traducciones
-	 *            Dato en formato json de tipo Traducciones
-	 * @param idiomas
-	 *            La lista de idiomas que se puede introducir literal. Si no se
-	 *            introduce, se supondrán que son los que tenga traducciones.
-	 * @param idiomasObligatorios
-	 *            La lista de idiomas obligatorios. Si no se introduce, se supondrán
-	 *            que son los que tenga traducciones.
+	 * @param modoAcceso          Modo de acceso (ALTA, EDICION o CONSULTA)
+	 * @param traducciones        Dato en formato json de tipo Traducciones
+	 * @param idiomas             La lista de idiomas que se puede introducir
+	 *                            literal. Si no se introduce, se supondrán que son
+	 *                            los que tenga traducciones.
+	 * @param idiomasObligatorios La lista de idiomas obligatorios. Si no se
+	 *                            introduce, se supondrán que son los que tenga
+	 *                            traducciones.
 	 */
 	public static void openDialogTraduccion(final TypeModoAcceso modoAcceso, final Literal traducciones,
 			final List<String> idiomas, final List<String> idiomasObligatorios) {
-		openDialogTraduccion(modoAcceso, traducciones, idiomas, idiomasObligatorios, false);
+		openDialogTraduccion(modoAcceso, traducciones, idiomas, idiomasObligatorios, false, null, null);
 	}
-
 
 	/**
 	 * Abre un dialog de tipo traduccion.
 	 *
-	 * @param modoAcceso
-	 *            Modo de acceso (ALTA, EDICION o CONSULTA)
-	 * @param traducciones
-	 *            Dato en formato json de tipo Traducciones
-	 * @param idiomas
-	 *            La lista de idiomas que se puede introducir literal. Si no se
-	 *            introduce, se supondrán que son los que tenga traducciones.
-	 * @param idiomasObligatorios
-	 *            La lista de idiomas obligatorios. Si no se introduce, se supondrán
-	 *            que son los que tenga traducciones.
+	 * @param modoAcceso          Modo de acceso (ALTA, EDICION o CONSULTA)
+	 * @param traducciones        Dato en formato json de tipo Traducciones
+	 * @param idiomas             La lista de idiomas que se puede introducir
+	 *                            literal. Si no se introduce, se supondrán que son
+	 *                            los que tenga traducciones.
+	 * @param idiomasObligatorios La lista de idiomas obligatorios. Si no se
+	 *                            introduce, se supondrán que son los que tenga
+	 *                            traducciones.
 	 */
 	public static void openDialogTraduccionOpcional(final TypeModoAcceso modoAcceso, final Literal traducciones,
 			final List<String> idiomas, final List<String> idiomasObligatorios) {
-		openDialogTraduccion(modoAcceso, traducciones, idiomas, idiomasObligatorios, true);
+		openDialogTraduccion(modoAcceso, traducciones, idiomas, idiomasObligatorios);
 	}
-
 
 	/**
 	 * Abre un dialog de tipo traduccion (es el método PADRE que realmente crea el
 	 * dialog).
 	 *
-	 * @param modoAcceso
-	 *            Modo de acceso (ALTA, EDICION o CONSULTA)
-	 * @param traducciones
-	 *            Dato en formato json de tipo Traducciones
-	 * @param idiomas
-	 *            La lista de idiomas que se puede introducir literal. Si no se
-	 *            introduce, se supondrán que son los que tenga traducciones.
-	 * @param idiomasObligatorios
-	 *            La lista de idiomas obligatorios. Si no se introduce, se supondrán
-	 *            que son los que tenga traducciones.
+	 * @param modoAcceso          Modo de acceso (ALTA, EDICION o CONSULTA)
+	 * @param traducciones        Dato en formato json de tipo Traducciones
+	 * @param idiomas             La lista de idiomas que se puede introducir
+	 *                            literal. Si no se introduce, se supondrán que son
+	 *                            los que tenga traducciones.
+	 * @param idiomasObligatorios La lista de idiomas obligatorios. Si no se
+	 *                            introduce, se supondrán que son los que tenga
+	 *                            traducciones.
 	 */
 	public static void openDialogTraduccion(final TypeModoAcceso modoAcceso, final Literal traducciones,
-			final List<String> idiomas, final List<String> idiomasObligatorios, final Boolean opcional) {
+			final List<String> idiomas, final List<String> idiomasObligatorios, final Boolean opcional,
+			final String caractNoPerm, String tamanyoMax) {
 
 		final Map<String, String> params = new HashMap<>();
 		if (traducciones == null) {
@@ -146,6 +134,14 @@ public final class UtilTraducciones {
 
 		if (idiomasObligatorios != null) {
 			params.put(TypeParametroVentana.OBLIGATORIOS.toString(), UtilJSON.toJSON(idiomasObligatorios));
+		}
+
+		if (caractNoPerm != null) {
+			params.put(TypeParametroVentana.CARACT_NO_PERMITIDOS.toString(), caractNoPerm);
+		}
+
+		if (tamanyoMax != null) {
+			params.put(TypeParametroVentana.TAMANYO_MAX.toString(), tamanyoMax);
 		}
 
 		// Variable que marca que si es opcional, tiene que aparecer el botón de borrar
@@ -163,16 +159,14 @@ public final class UtilTraducciones {
 	 * Abre un dialog de tipo traduccion (es el método PADRE que realmente crea el
 	 * dialog).
 	 *
-	 * @param modoAcceso
-	 *            Modo de acceso (ALTA, EDICION o CONSULTA)
-	 * @param traducciones
-	 *            Dato en formato json de tipo Traducciones
-	 * @param idiomas
-	 *            La lista de idiomas que se puede introducir literal. Si no se
-	 *            introduce, se supondrán que son los que tenga traducciones.
-	 * @param idiomasObligatorios
-	 *            La lista de idiomas obligatorios. Si no se introduce, se supondrán
-	 *            que son los que tenga traducciones.
+	 * @param modoAcceso          Modo de acceso (ALTA, EDICION o CONSULTA)
+	 * @param traducciones        Dato en formato json de tipo Traducciones
+	 * @param idiomas             La lista de idiomas que se puede introducir
+	 *                            literal. Si no se introduce, se supondrán que son
+	 *                            los que tenga traducciones.
+	 * @param idiomasObligatorios La lista de idiomas obligatorios. Si no se
+	 *                            introduce, se supondrán que son los que tenga
+	 *                            traducciones.
 	 */
 	public static void openDialogTraduccionHTML(final TypeModoAcceso modoAcceso, final Literal traducciones,
 			final List<String> idiomas, final List<String> idiomasObligatorios, final Boolean opcional) {
@@ -282,6 +276,13 @@ public final class UtilTraducciones {
 	 */
 	public static String getIdiomasPorDefectoTramite() {
 		return TypeIdioma.CATALAN.toString() + ";" + TypeIdioma.CASTELLANO.toString();
+	}
+
+	public static void openDialogTraduccion(TypeModoAcceso modoAcceso, Literal traducciones,
+			TramiteVersion tramiteVersion, String caractNoPerm, String tamanyoMax) {
+		final List<String> idiomas = UtilTraducciones.getIdiomasSoportados(tramiteVersion);
+		UtilTraducciones.openDialogTraduccion(modoAcceso, traducciones, idiomas, idiomas, false, caractNoPerm,
+				tamanyoMax);
 	}
 
 }

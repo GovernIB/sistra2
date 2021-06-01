@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.caib.sistra2.commons.utils.JSONUtil;
@@ -58,8 +56,6 @@ import es.caib.sistramit.rest.api.interna.RPagoAuditoria;
 import es.caib.sistramit.rest.api.interna.RPerdidaClave;
 import es.caib.sistramit.rest.api.interna.RPersistenciaAuditoria;
 import es.caib.sistramit.rest.api.interna.RVerificacionPago;
-import es.caib.sistramit.rest.api.util.JsonException;
-import es.caib.sistramit.rest.api.util.JsonUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -90,23 +86,31 @@ public class ApiInternaRestController {
 	@ApiOperation(value = "Invalidación caché", notes = "Invalidación caché")
 	@RequestMapping(value = "/invalidacion", method = RequestMethod.POST)
 	public boolean invalidacion(
-			@ApiParam("{\"tipo\":\"tipo\",\"identificador\":\"id\"}") @RequestParam(name = "invalidacion") final String invalidacionJSON) {
+			@ApiParam("{\"tipo\":\"tipo\",\"identificador\":\"id\"}") @RequestBody final RInvalidacion invalidacionJSON) {
 
-		// Parseamos parametro enviado por POST
-		RInvalidacion pars = null;
-		if (StringUtils.isNotBlank(invalidacionJSON)) {
-			try {
-				pars = (RInvalidacion) JsonUtil.fromJson(invalidacionJSON, RInvalidacion.class);
-			} catch (final JsonException e) {
-				throw new ErrorJsonException(e);
-			}
-		}
+//		try {
+//			final JSONObject objetoJson = new JSONObject(invalidacionJSON);
+//			final String tipo = objetoJson.getString("tipo");
+//			final String identificador = objetoJson.getString("identificador");
+//		} catch (final JSONException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//		// Parseamos parametro enviado por POST
+//		RInvalidacion pars = null;
+//		if (StringUtils.isNotBlank(invalidacionJSON)) {
+//			try {
+//				pars = (RInvalidacion) JsonUtil.fromJson(invalidacionJSON, RInvalidacion.class);
+//			} catch (final JsonException e) {
+//				throw new ErrorJsonException(e);
+//			}
+//		}
 
 		// Añade invalidación
 		final Invalidacion invalidacion = new Invalidacion();
-		if (pars != null) {
-			invalidacion.setTipo(TypeInvalidacion.fromString(pars.getTipo()));
-			invalidacion.setIdentificador(pars.getIdentificador());
+		if (invalidacionJSON != null) {
+			invalidacion.setTipo(TypeInvalidacion.fromString(invalidacionJSON.getTipo()));
+			invalidacion.setIdentificador(invalidacionJSON.getIdentificador());
 		}
 		systemService.invalidar(invalidacion);
 

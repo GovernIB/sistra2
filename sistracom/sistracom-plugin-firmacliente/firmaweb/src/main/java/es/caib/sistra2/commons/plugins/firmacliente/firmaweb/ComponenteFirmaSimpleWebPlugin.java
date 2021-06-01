@@ -56,6 +56,23 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 		/** Crear conexion. **/
 		try {
 			final ApiFirmaWebSimple api = generarApi();
+
+			String administrationId;
+			String username;
+			String organizationId = null;
+			if (infoSesionFirma.getNifRepresentante() != null) {
+				organizationId = infoSesionFirma.getNif();
+				administrationId = infoSesionFirma.getNifRepresentante();
+				username = infoSesionFirma.getNombreRepresentante();
+			} else {
+				administrationId = infoSesionFirma.getNif();
+				username = infoSesionFirma.getNombreUsuario();
+			}
+
+			// TODO PENDIENTE DE PASAR CIF EMPRESA (organizationId)
+			// final FirmaSimpleCommonInfo commonInfo = new
+			// FirmaSimpleCommonInfo(getPropiedad("profile"), infoSesionFirma.getIdioma(),
+			// username, administrationId, infoSesionFirma.getEmail());
 			final FirmaSimpleCommonInfo commonInfo = new FirmaSimpleCommonInfo(getPropiedad("profile"),
 					infoSesionFirma.getIdioma(), infoSesionFirma.getNombreUsuario(), infoSesionFirma.getNif(),
 					infoSesionFirma.getEmail());

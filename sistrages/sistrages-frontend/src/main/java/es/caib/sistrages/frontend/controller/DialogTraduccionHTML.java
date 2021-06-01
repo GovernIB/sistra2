@@ -82,7 +82,9 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	private String idiomaInicial = "ca";
 
 	/** Literal falta literal. **/
-	private final static String ERROR_FATAL_LITERAL = "error.faltaliteral";
+	private static final String ERROR_FATAL_LITERAL = "error.faltaliteral";
+	private static final String LITERAL_ERROR_EXCEDE_LONGITUD  = "error.excedeLongitudIdiomas";
+
 
 	/** Es modo readonly. **/
 	private int readonly;
@@ -239,6 +241,16 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
+	 * Comprueba si se excede la longitud.
+	 * @param texto
+	 * @return
+	 */
+	private boolean excedeLongitud(final String texto) {
+
+		//4000 es el tamaño máximo en tradidi
+		return texto != null && texto.length() > 4000;
+	}
+	/**
 	 * Aceptar.
 	 */
 	public void aceptar() {
@@ -248,11 +260,19 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(ERROR_FATAL_LITERAL));
 				return;
 			}
+			if (excedeLongitud(textoCa)) {
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
+				return;
+			}
 			data.add(new Traduccion(TypeIdioma.CATALAN.toString(), textoCa));
 		}
 		if (visibleEs) {
 			if (textoEs == null || textoEs.isEmpty()) {
 				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(ERROR_FATAL_LITERAL));
+				return;
+			}
+			if (excedeLongitud(textoEs)) {
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
 				return;
 			}
 			data.add(new Traduccion(TypeIdioma.CASTELLANO.toString(), textoEs));
@@ -262,11 +282,19 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(ERROR_FATAL_LITERAL));
 				return;
 			}
+			if (excedeLongitud(textoEn)) {
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
+				return;
+			}
 			data.add(new Traduccion(TypeIdioma.INGLES.toString(), textoEn));
 		}
 		if (visibleDe) {
 			if (textoDe == null || textoDe.isEmpty()) {
 				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(ERROR_FATAL_LITERAL));
+				return;
+			}
+			if (excedeLongitud(textoDe)) {
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
 				return;
 			}
 			data.add(new Traduccion(TypeIdioma.ALEMAN.toString(), textoDe));

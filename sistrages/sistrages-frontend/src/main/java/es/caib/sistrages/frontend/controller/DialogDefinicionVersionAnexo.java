@@ -135,8 +135,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de traducciones.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoDescripcion(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -163,8 +162,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de traducciones.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoAyudaTexto(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -284,9 +282,11 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	 */
 	public void editarDescripcion() {
 		if (data.getDescripcion() == null) {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, null, tramiteVersion);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, null, tramiteVersion,
+					UtilTraducciones.CARACTERES_NOPERMIT_REGWEB3, UtilTraducciones.TAMANYO_MAXIMO_REGWEB3);
 		} else {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), tramiteVersion);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), tramiteVersion,
+					UtilTraducciones.CARACTERES_NOPERMIT_REGWEB3, UtilTraducciones.TAMANYO_MAXIMO_REGWEB3);
 		}
 	}
 
@@ -375,8 +375,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 			final String[] listaExtensiones = data.getExtensiones().split(Constantes.LISTAS_SEPARADOR);
 			for (final String cadena : listaExtensiones) {
 				if (!cadena.matches("^\\w{3,4}$")) {
-					addMessageContext(TypeNivelGravedad.WARNING,
-							UtilJSF.getLiteral("error.extensiones.formato"));
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.extensiones.formato"));
 					return false;
 				}
 			}
@@ -398,8 +397,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -413,8 +411,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final Documento data) {
 		this.data = data;
@@ -428,8 +425,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	}
 
 	/**
-	 * @param datoSeleccionado
-	 *            the datoSeleccionado to set
+	 * @param datoSeleccionado the datoSeleccionado to set
 	 */
 	public void setDatoSeleccionado(final Documento datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
@@ -451,8 +447,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idEntidad
-	 *            the idEntidad to set
+	 * @param idEntidad the idEntidad to set
 	 */
 	public void setIdEntidad(final String idEntidad) {
 		this.idEntidad = idEntidad;
@@ -466,8 +461,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idPaso
-	 *            the idPaso to set
+	 * @param idPaso the idPaso to set
 	 */
 	public void setIdPaso(final String idPaso) {
 		this.idPaso = idPaso;
@@ -481,8 +475,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idiomas
-	 *            the idiomas to set
+	 * @param idiomas the idiomas to set
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;

@@ -286,6 +286,7 @@ public final class UtilsFlujo {
 			throw new UsuarioNoPermitidoException("Usuario no puede acceder al tramite",
 					usuarioAutenticadoInfo.getAutenticacion(), usuarioAutenticadoInfo.getNif());
 		}
+
 	}
 
 	/**
@@ -333,7 +334,9 @@ public final class UtilsFlujo {
 		}
 
 		final EntidadSoporte soporte = new EntidadSoporte();
-		soporte.setCorreo(entidad.getEmail());
+		if (entidad.isAyudaEmail()) {
+			soporte.setCorreo(entidad.getEmail());
+		}
 		soporte.setTelefono(entidad.getAyudaTelefono());
 		soporte.setUrl(entidad.getAyudaUrl());
 		soporte.setProblemas(soporteOpciones);
@@ -761,7 +764,7 @@ public final class UtilsFlujo {
 
 	/**
 	 * Convierte Java a JSON.
-	 * 
+	 *
 	 * @param obj
 	 *                Objeto
 	 * @return JSON
@@ -779,7 +782,7 @@ public final class UtilsFlujo {
 
 	/**
 	 * Convierte Java a JSON.
-	 * 
+	 *
 	 * @param obj
 	 *                Objeto
 	 * @return JSON
@@ -795,7 +798,7 @@ public final class UtilsFlujo {
 
 	/**
 	 * Convierte Java a JSON.
-	 * 
+	 *
 	 * @param obj
 	 *                Objeto
 	 * @return JSON

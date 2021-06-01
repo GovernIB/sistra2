@@ -133,6 +133,8 @@ div.imc-el-index ul a	{
 }
 div.imc-el-index ul a.imc-alfabet-marca { color: #fff; background-color: #000; }
 
+div.imc-el-selector ul a.imc-alfabet-marca { color: #fff; background-color: #000; }
+
 /* enlaces.select -> multiple */
 
 div.imc-select-multiple { min-height: 2em; font:normal 1em Arial, Helvetica, sans-serif; color:#626A72; padding:0 0 0 .2em; background-color:#fff; border:1px solid #64A3AB; }

@@ -8,13 +8,11 @@ import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
-import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.IncidenciaValoracion;
 import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
-import es.caib.sistrages.rest.api.interna.RGestorFormularioExterno;
 import es.caib.sistrages.rest.api.interna.RIncidenciaValoracion;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistrages.rest.api.interna.RPlantillaFormulario;
@@ -53,16 +51,22 @@ public class ConfiguracionEntidadAdapter {
 				.getReferenciaFichero(entidad.getLogoGestor() != null ? entidad.getLogoGestor().getCodigo() : null));
 		rConfiguracionEntidad.setCss(
 				restApiService.getReferenciaFichero(entidad.getCss() != null ? entidad.getCss().getCodigo() : null));
-		rConfiguracionEntidad.setEmail(entidad.getEmail());
 		rConfiguracionEntidad.setContactoHTML(AdapterUtils.generarLiteral(entidad.getPie()));
 		rConfiguracionEntidad.setUrlCarpeta(AdapterUtils.generarLiteral(entidad.getUrlCarpetaCiudadana()));
 		rConfiguracionEntidad.setUrlSede(AdapterUtils.generarLiteral(entidad.getUrlSede()));
-		rConfiguracionEntidad.setAyudaTelefono(entidad.getTelefono());
-		rConfiguracionEntidad.setAyudaUrl(entidad.getUrlSoporte());
+		rConfiguracionEntidad.setEmail(entidad.getEmail());
+		rConfiguracionEntidad.setAyudaEmail(entidad.isEmailHabilitado());
+		if (entidad.isTelefonoHabilitado()) {
+			rConfiguracionEntidad.setAyudaTelefono(entidad.getTelefono());
+		}
+		if (entidad.isUrlSoporteHabilitado()) {
+			rConfiguracionEntidad.setAyudaUrl(entidad.getUrlSoporte());
+		}
+		if (entidad.isFormularioIncidenciasHabilitado()) {
+			rConfiguracionEntidad.setAyudaFormulario(generaFormularios(formSoporte));
+		}
 		rConfiguracionEntidad.setPlugins(
 				AdapterUtils.crearPlugins(restApiService.listPlugin(TypeAmbito.ENTIDAD, entidad.getCodigo(), null)));
-		rConfiguracionEntidad.setAyudaFormulario(generaFormularios(formSoporte));
-		rConfiguracionEntidad.setAyudaEmail(entidad.isEmailHabilitado());
 		rConfiguracionEntidad.setDescripcion(AdapterUtils.generarLiteral(entidad.getNombre()));
 		rConfiguracionEntidad.setDiasPreregistro(entidad.getDiasPreregistro());
 		rConfiguracionEntidad.setInfoLopdHTML(AdapterUtils.generarLiteral(entidad.getLopd()));
@@ -117,7 +121,6 @@ public class ConfiguracionEntidadAdapter {
 			rConfiguracionEntidad.setIncidenciasValoracion(rvaloraciones);
 		}
 		rConfiguracionEntidad.setRegistroOcultarDescargaDocumentos(entidad.isRegistroOcultarDescargaDocumentos());
-
 
 		return rConfiguracionEntidad;
 	}

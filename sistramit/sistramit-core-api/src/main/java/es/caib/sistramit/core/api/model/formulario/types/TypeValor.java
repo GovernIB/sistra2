@@ -19,7 +19,11 @@ public enum TypeValor {
 	/**
 	 * Lista de valores indexados para selección múltiple (Código String: l)..
 	 */
-	LISTA_INDEXADOS("l");
+	LISTA_INDEXADOS("l"),
+	/**
+	 * Lista de elementos (Código String: e).
+	 */
+	LISTA_ELEMENTOS("e");
 
 	/**
 	 * Valor como string.
@@ -30,7 +34,7 @@ public enum TypeValor {
 	 * Constructor.
 	 *
 	 * @param value
-	 *            Valor como string.
+	 *                  Valor como string.
 	 */
 	private TypeValor(final String value) {
 		stringValueValor = value;
@@ -45,7 +49,7 @@ public enum TypeValor {
 	 * Método para From string de la clase TypeValor.
 	 *
 	 * @param text
-	 *            Parámetro text
+	 *                 Parámetro text
 	 * @return el type paso
 	 */
 	public static TypeValor fromString(final String text) {

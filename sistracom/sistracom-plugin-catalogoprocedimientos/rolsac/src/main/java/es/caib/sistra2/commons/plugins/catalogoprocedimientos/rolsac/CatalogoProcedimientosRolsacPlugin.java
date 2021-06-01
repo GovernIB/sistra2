@@ -96,10 +96,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Método que calcula la definición de trámite de un servicio.
 	 *
-	 * @param idServicioCP
-	 *                         ID Servicio
-	 * @param idioma
-	 *                         Idioma (es/ca/en)
+	 * @param idServicioCP ID Servicio
+	 * @param idioma       Idioma (es/ca/en)
 	 * @return
 	 * @throws CatalogoPluginException
 	 */
@@ -216,10 +214,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Método privado que calcula la definicion de trámite de un procedimiento.
 	 *
-	 * @param idTramiteCP
-	 *                        ID Trámite
-	 * @param idioma
-	 *                        Idioma (es/ca/en)
+	 * @param idTramiteCP ID Trámite
+	 * @param idioma      Idioma (es/ca/en)
 	 * @return
 	 * @throws CatalogoPluginException
 	 */
@@ -514,7 +510,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		final boolean noCaducadoProc = (procedimiento.getFechaCaducidad() == null
 				|| procedimiento.getFechaCaducidad().after(Calendar.getInstance()));
 		final boolean noCaducado = (tramite.getDataCaducitat() == null
-				|| tramite.getDataCaducitat().after(Calendar.getInstance()));
+				|| tramite.getDataTancament().after(Calendar.getInstance()));
 		final boolean publicadoProc = (procedimiento.getFechaPublicacion() == null
 				|| procedimiento.getFechaPublicacion().before(Calendar.getInstance()));
 		final boolean publicado = (tramite.getDataPublicacio() == null
@@ -549,8 +545,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Obtiene propiedad.
 	 *
-	 * @param propiedad
-	 *                      propiedad
+	 * @param propiedad propiedad
 	 * @return valor
 	 * @throws AutenticacionPluginException
 	 */
@@ -766,10 +761,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Genera info lopd.
 	 *
-	 * @param procRolsac
-	 *                       procedimiento rolsac
-	 * @param idioma
-	 *                       idioma
+	 * @param procRolsac procedimiento rolsac
+	 * @param idioma     idioma
 	 * @return lopd
 	 * @throws CatalogoPluginException
 	 */
@@ -840,10 +833,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Obtiene titulo campo LOPD.
 	 *
-	 * @param campo
-	 *                   campo
-	 * @param idioma
-	 *                   idioma
+	 * @param campo  campo
+	 * @param idioma idioma
 	 * @return titulo
 	 */
 	private String obtenTituloCampoLOPD(final String campo, final String idioma) {
@@ -853,10 +844,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Obtiene texto campo LOPD.
 	 *
-	 * @param campo
-	 *                   campo
-	 * @param idioma
-	 *                   idioma
+	 * @param campo  campo
+	 * @param idioma idioma
 	 * @return texto
 	 */
 	private String obtenDescripcionCampoLOPD(final String campo, final String idioma) {

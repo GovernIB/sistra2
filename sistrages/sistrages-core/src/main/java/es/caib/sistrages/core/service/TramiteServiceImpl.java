@@ -22,7 +22,6 @@ import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
-import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Literal;
@@ -45,7 +44,6 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
 import es.caib.sistrages.core.api.model.comun.ScriptInfo;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
-import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -55,6 +53,7 @@ import es.caib.sistrages.core.service.component.TramiteComponent;
 import es.caib.sistrages.core.service.component.ValidadorComponent;
 import es.caib.sistrages.core.service.repository.dao.AreaDao;
 import es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao;
+import es.caib.sistrages.core.service.repository.dao.ConfiguracionAutenticacionDao;
 import es.caib.sistrages.core.service.repository.dao.DominioDao;
 import es.caib.sistrages.core.service.repository.dao.FicheroExternoDao;
 import es.caib.sistrages.core.service.repository.dao.FormateadorFormularioDao;
@@ -136,6 +135,10 @@ public class TramiteServiceImpl implements TramiteService {
 	@Autowired
 	TramiteComponent tramiteComponent;
 
+	/** Configuración component. */
+	@Autowired
+	ConfiguracionAutenticacionDao configuracionAutenticacionDao;
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -184,26 +187,38 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public boolean removeArea(final Long id) {
 
-		// Verifica dependencias
-		if (!tramiteDao.getAll(id).isEmpty()) {
-			return false;
-		}
+//		// Verifica dependencias
+//		if (!tramiteDao.getAll(id).isEmpty()) {
+//			return false;
+//		}
+//
+//		// Borrado en cascada: dominios y formateadores
+//		// dominiosDao.removeByArea(id); fuenteDatoDao.removeByArea(id);
+//
+//		// Si tiene dominio/FD, entonces no se permite borrar
+//		// porque se puede borrar sin querer
+//		final List<Dominio> doms = dominiosDao.getAllByFiltro(TypeAmbito.AREA, id, null);
+//		if (!doms.isEmpty()) {
+//			return false;
+//		}
+//
+//		final List<FuenteDatos> fuentes = fuenteDatoDao.getAllByFiltro(TypeAmbito.AREA, id, null);
+//		if (!fuentes.isEmpty()) {
+//			return false;
+//		}
 
-		// Borrado en cascada: dominios y formateadores
-		// dominiosDao.removeByArea(id); fuenteDatoDao.removeByArea(id);
-
-		// Si tiene dominio/FD, entonces no se permite borrar
-		// porque se puede borrar sin querer
-		final List<Dominio> doms = dominiosDao.getAllByFiltro(TypeAmbito.AREA, id, null);
-		if (!doms.isEmpty()) {
-			return false;
-		}
-
-		final List<FuenteDatos> fuentes = fuenteDatoDao.getAllByFiltro(TypeAmbito.AREA, id, null);
-		if (!fuentes.isEmpty()) {
-			return false;
-		}
-
+		// Borramos dominio area
+		dominiosDao.removeByArea(id);
+		// Borramos fuente datos area
+		fuenteDatoDao.removeByArea(id);
+		// Borramos versiones tramites area
+		tramiteDao.removeTramiteVersionByArea(id);
+		// Borramos tramites area
+		tramiteDao.removeByArea(id);
+		// Borramos gestor externo area
+		gestorExternoDao.removeByArea(id);
+		// Borramos configuracion autenticacion area
+		configuracionAutenticacionDao.removeByArea(id);
 		// Borramos area
 		areaDao.remove(id);
 		return true;
@@ -978,7 +993,6 @@ public class TramiteServiceImpl implements TramiteService {
 			mapGestores.put(filaGestor.getGestor().getCodigo(), idGestor);
 		}
 
-
 		final Long idTramiteVersion = tramiteDao.importar(filaImportar.getFilaTramiteVersion(), idTramite, idDominios,
 				filaImportar.getUsuario(), filaImportar.isModoIM());
 		resultado.setIdTramiteVersion(idTramiteVersion);
@@ -996,7 +1010,8 @@ public class TramiteServiceImpl implements TramiteService {
 			reordenar(tramitePaso);
 			tramitePasoDao.importar(filaImportar.getFilaTramiteRegistro(), tramitePaso, idTramiteVersion,
 					filaImportar.getIdEntidad(), filaImportar.getFormularios(), filaImportar.getFicheros(),
-					filaImportar.getFicherosContent(), formateadores, mapFormateadores, gestores, mapGestores, idDominiosEquivalencia);
+					filaImportar.getFicherosContent(), formateadores, mapFormateadores, gestores, mapGestores,
+					idDominiosEquivalencia);
 			ordenPaso++;
 		}
 
@@ -1326,7 +1341,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	@Override
 	@NegocioInterceptor
-	public List<GestorExternoFormularios> getGFEByTramiteVersion(Long idTramiteVersion) {
+	public List<GestorExternoFormularios> getGFEByTramiteVersion(final Long idTramiteVersion) {
 		return tramiteDao.getGFEByTramiteVersion(idTramiteVersion);
 	}
 

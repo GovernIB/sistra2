@@ -3,6 +3,8 @@ package es.caib.sistramit.core.service.component.flujo.pasos.registrar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.caib.sistra2.commons.utils.ValidacionesTipo;
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
@@ -120,10 +122,32 @@ public final class AccionIniciarFirmaDocumento implements AccionPaso {
 		final DatosDocumento dd = pVariablesFlujo.getDocumento(idDocumento, instancia);
 		final String tipoDocumental = dd.getTipoENI();
 
+		// Si el firmante es una empresa, debe estar autenticado con certificado de
+		// representación de esa empresa
+		// TODO PENDIENTE PODER ESTABLECER FIRMANTE Y REPRESENTANTE POR SCRIPTS
+		final String nifAutenticado = (pVariablesFlujo.getUsuarioAutenticado() != null
+				? pVariablesFlujo.getUsuarioAutenticado().getNif()
+				: null);
+		final String nifRepresentante = (pVariablesFlujo.getUsuarioAutenticado() != null
+				&& pVariablesFlujo.getUsuarioAutenticado().getRepresentante() != null
+						? pVariablesFlujo.getUsuarioAutenticado().getRepresentante().getNif()
+						: null);
+		Persona representante = null;
+		if (ValidacionesTipo.getInstance().esNifPersonaJuridica(firmante.getNif())) {
+			if (firmante.getNif().equals(nifAutenticado) && nifRepresentante != null) {
+				representante = new Persona(nifRepresentante,
+						pVariablesFlujo.getUsuarioAutenticado().getRepresentante().getNombreApellidos());
+			} else {
+				throw new ErrorConfiguracionException(
+						"No se puede establecer como firmante una persona juridica si no se autentica con certificado de representación");
+			}
+		}
+
 		// Invoca a componente para redirección firma
 		final RedireccionFirma redireccionFirma = firmaComponent.redireccionFirmaExterna(
-				pDefinicionTramite.getDefinicionVersion().getIdEntidad(), firmante, idDocumento + "-" + instancia,
-				fileContent, fileName, tipoDocumental, urlCallBack, pVariablesFlujo.getIdioma());
+				pDefinicionTramite.getDefinicionVersion().getIdEntidad(), firmante, representante,
+				idDocumento + "-" + instancia, fileContent, fileName, tipoDocumental, urlCallBack,
+				pVariablesFlujo.getIdioma());
 		return redireccionFirma;
 	}
 }

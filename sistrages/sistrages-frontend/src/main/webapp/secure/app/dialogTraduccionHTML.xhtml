@@ -220,7 +220,7 @@
 		     	<p:toolbar>
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.aceptar']}" onclick="guardar()" process="formTraduccion" styleClass="boton-azul" rendered="#{dialogTraduccionHTML.isAlta() or dialogTraduccionHTML.isEdicion()}"/>
-						<p:commandButton id="btnGuardar" value="#{msg['botones.aceptar']}" actionListener="#{dialogTraduccionHTML.aceptar()}" process="formTraduccion" update="formTraduccion growlDialogTraduccion" styleClass="boton-azul" rendered="#{dialogTraduccionHTML.isAlta() or dialogTraduccionHTML.isEdicion()}" style="display:none"/>
+						<p:commandButton id="btnGuardar" value="#{msg['botones.aceptar']}" actionListener="#{dialogTraduccionHTML.aceptar()}" process="formTraduccion" update="growlDialogTraduccion" styleClass="boton-azul" rendered="#{dialogTraduccionHTML.isAlta() or dialogTraduccionHTML.isEdicion()}" style="display:none"/>
 						<p:commandButton value="#{msg['botones.borrar']}" actionListener="#{dialogTraduccionHTML.borrar()}" process="@this" update="formTraduccion growlDialogTraduccion" styleClass="boton-rojo" rendered="#{dialogTraduccionHTML.isBorrable()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTraduccionHTML.cancelar()}" process="@this"  rendered="#{dialogTraduccionHTML.isAlta() or dialogTraduccionHTML.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTraduccionHTML.cancelar()}" process="@this"  rendered="#{dialogTraduccionHTML.isConsulta()}"/>

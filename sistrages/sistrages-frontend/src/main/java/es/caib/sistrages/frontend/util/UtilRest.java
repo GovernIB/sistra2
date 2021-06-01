@@ -35,7 +35,7 @@ public class UtilRest {
 		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(usuario, pwd));
 
 		final HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
 		final RInvalidacion inv = new RInvalidacion();
 		inv.setTipo(tipo);
@@ -48,11 +48,13 @@ public class UtilRest {
 			return resultado;
 		}
 
+		final HttpEntity<RInvalidacion> request = new HttpEntity<>(inv, headers);
+
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add("invalidacion", invJSON);
 
-		final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map,
-				headers);
+//		final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map,
+//				headers);
 
 		ResponseEntity<Boolean> response = null;
 		try {

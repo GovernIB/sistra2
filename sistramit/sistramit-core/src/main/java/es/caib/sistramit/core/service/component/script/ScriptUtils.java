@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistra2.commons.utils.NifUtils;
 import es.caib.sistra2.commons.utils.XssFilter;
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
 import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.service.component.script.plugins.ClzValorCampoCompuesto;
@@ -34,24 +35,26 @@ public final class ScriptUtils {
 	 * Calcula mensaje de error.
 	 *
 	 * @param pCodigosError
-	 *            Códigos de error y sus mensajes asociados
+	 *                                    Códigos de error y sus mensajes asociados
 	 * @param pCodigoMensajeError
-	 *            Código mensaje error a calcular
+	 *                                    Código mensaje error a calcular
 	 * @param pParametrosMensajeError
-	 *            Parámetros mensaje error
+	 *                                    Parámetros mensaje error
 	 * @return Mensaje de error
 	 */
 	public static String calculaMensajeError(final Map<String, String> pCodigosError, final String pCodigoMensajeError,
 			final List<String> pParametrosMensajeError) {
-		String res = pCodigosError.get(pCodigoMensajeError);
-		if (res == null) {
-			res = "";
-		} else {
-			if (pParametrosMensajeError != null && pParametrosMensajeError.size() > 0) {
+		String res = null;
+		if (pCodigosError != null) {
+			res = pCodigosError.get(pCodigoMensajeError);
+			if (res != null && pParametrosMensajeError != null && pParametrosMensajeError.size() > 0) {
 				for (int i = 0; i < pParametrosMensajeError.size(); i++) {
 					res = StringUtils.replace(res, "{" + i + "}", pParametrosMensajeError.get(i));
 				}
 			}
+		}
+		if (res == null) {
+			throw new ErrorConfiguracionException("No existe mensaje error con código " + pCodigoMensajeError);
 		}
 		return res;
 	}
@@ -60,15 +63,15 @@ public final class ScriptUtils {
 	 * Valida datos persona.
 	 *
 	 * @param nifNormalizado
-	 *            Nif normalizado
+	 *                           Nif normalizado
 	 * @param pNombre
-	 *            Nombre
+	 *                           Nombre
 	 * @param pApellido1
-	 *            Apellido 1
+	 *                           Apellido 1
 	 * @param pApellido2
-	 *            Apellido 2
+	 *                           Apellido 2
 	 * @throws ScriptException
-	 *             Genera excepcion si no pasa validacion
+	 *                             Genera excepcion si no pasa validacion
 	 */
 	public static void validarDatosPersona(final String nifNormalizado, final String pNombre, final String pApellido1,
 			final String pApellido2) throws ScriptException {
@@ -96,9 +99,9 @@ public final class ScriptUtils {
 	 * Crea valor lista indexados a partir de un valor multiple.
 	 *
 	 * @param campo
-	 *            Id campo
+	 *                          Id campo
 	 * @param valorMultiple
-	 *            Valor multiple
+	 *                          Valor multiple
 	 * @return Valor lista indexados
 	 */
 	public static ValorCampoListaIndexados crearValorListaIndexados(final String campo,
@@ -118,7 +121,7 @@ public final class ScriptUtils {
 	 * Genera valor compuesto a partir de un valor indexado.
 	 *
 	 * @param vi
-	 *            Valor indexado
+	 *               Valor indexado
 	 * @return valor compuesto
 	 */
 	public static ClzValorCampoCompuestoInt crearValorCompuesto(final ValorIndexado vi) {

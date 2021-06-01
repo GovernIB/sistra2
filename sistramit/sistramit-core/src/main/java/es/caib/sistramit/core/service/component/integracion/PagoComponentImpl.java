@@ -1,20 +1,31 @@
 package es.caib.sistramit.core.service.component.integracion;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.awt.Color;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.caib.sistra2.commons.pdf.ObjectStamp;
+import es.caib.sistra2.commons.pdf.TextoStamp;
+import es.caib.sistra2.commons.pdf.UtilPDF;
+import es.caib.sistra2.commons.pdfcaib.GeneradorPdf;
+import es.caib.sistra2.commons.pdfcaib.model.Cabecera;
+import es.caib.sistra2.commons.pdfcaib.model.CampoTexto;
+import es.caib.sistra2.commons.pdfcaib.model.FormularioPdf;
+import es.caib.sistra2.commons.pdfcaib.model.Linea;
 import es.caib.sistra2.commons.plugins.pago.api.DatosPago;
 import es.caib.sistra2.commons.plugins.pago.api.EstadoPago;
 import es.caib.sistra2.commons.plugins.pago.api.IComponentePagoPlugin;
 import es.caib.sistra2.commons.plugins.pago.api.PagoPluginException;
 import es.caib.sistra2.commons.plugins.pago.api.RedireccionPago;
 import es.caib.sistra2.commons.plugins.pago.api.TypeEstadoPago;
+import es.caib.sistramit.core.api.exception.FormateadorException;
 import es.caib.sistramit.core.api.exception.PagoException;
 import es.caib.sistramit.core.api.model.flujo.DatosSesionPago;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
@@ -40,7 +51,8 @@ public final class PagoComponentImpl implements PagoComponent {
 	private ConfiguracionComponent configuracionComponent;
 
 	@Override
-	public int consultaTasa(String idEntidad, String idPasarela, String idTasa, boolean debugEnabled) {
+	public int consultaTasa(final String idEntidad, final String idPasarela, final String idTasa,
+			final boolean debugEnabled) {
 		try {
 			if (debugEnabled) {
 				log.debug("Consulta tasa " + idTasa + " en pasarela " + idPasarela);
@@ -53,8 +65,8 @@ public final class PagoComponentImpl implements PagoComponent {
 	}
 
 	@Override
-	public PagoComponentRedireccion iniciarPagoElectronico(DatosSesionPago sesionPago, String urlCallback,
-			boolean debugEnabled) {
+	public PagoComponentRedireccion iniciarPagoElectronico(final DatosSesionPago sesionPago, final String urlCallback,
+			final boolean debugEnabled) {
 
 		if (debugEnabled) {
 			log.debug("Inicio sesion pago - simulado: " + sesionPago.isSimulado());
@@ -80,7 +92,8 @@ public final class PagoComponentImpl implements PagoComponent {
 	}
 
 	@Override
-	public PagoComponentVerificacion verificarPagoElectronico(DatosSesionPago sesionPago, boolean debugEnabled) {
+	public PagoComponentVerificacion verificarPagoElectronico(final DatosSesionPago sesionPago,
+			final boolean debugEnabled) {
 
 		if (sesionPago.getPresentacion() != TypePresentacion.ELECTRONICA) {
 			throw new PagoException(
@@ -98,7 +111,7 @@ public final class PagoComponentImpl implements PagoComponent {
 	}
 
 	@Override
-	public byte[] obtenerCartaPagoPresencial(DatosSesionPago sesionPago, boolean debugEnabled) {
+	public byte[] obtenerCartaPagoPresencial(final DatosSesionPago sesionPago, final boolean debugEnabled) {
 		try {
 			if (debugEnabled) {
 				log.debug("Obtener carta pago presencial en pasarela " + sesionPago.getPasarelaId());
@@ -130,10 +143,10 @@ public final class PagoComponentImpl implements PagoComponent {
 	 * Obtiene plugin de pago.
 	 *
 	 * @param entidadId
-	 *            id entidad
+	 *                      id entidad
 	 * @return plugin pago
 	 */
-	private IComponentePagoPlugin obtenerPlugin(String entidadId) {
+	private IComponentePagoPlugin obtenerPlugin(final String entidadId) {
 		return (IComponentePagoPlugin) configuracionComponent.obtenerPluginEntidad(TypePluginEntidad.PAGOS, entidadId);
 	}
 
@@ -141,12 +154,13 @@ public final class PagoComponentImpl implements PagoComponent {
 	 * Inicio pago electrónico real.
 	 *
 	 * @param sesionPago
-	 *            datos sesión pago
+	 *                        datos sesión pago
 	 * @param urlCallback
-	 *            urlCallback
+	 *                        urlCallback
 	 * @return redirección pago
 	 */
-	private PagoComponentRedireccion iniciarPagoElectronicoPasarela(DatosSesionPago sesionPago, String urlCallback) {
+	private PagoComponentRedireccion iniciarPagoElectronicoPasarela(final DatosSesionPago sesionPago,
+			final String urlCallback) {
 		try {
 			final DatosPago datosPago = crearDatosPago(sesionPago);
 			final IComponentePagoPlugin plugin = obtenerPlugin(sesionPago.getEntidadId());
@@ -164,11 +178,12 @@ public final class PagoComponentImpl implements PagoComponent {
 	 * Inicio pago electrónico de forma simulada.
 	 *
 	 * @param sesionPago
-	 *            datos sesión pago
+	 *                        datos sesión pago
 	 * @param urlCallback
 	 * @return redirección pago
 	 */
-	private PagoComponentRedireccion iniciarPagoElectronicoSimulado(DatosSesionPago sesionPago, String urlCallback) {
+	private PagoComponentRedireccion iniciarPagoElectronicoSimulado(final DatosSesionPago sesionPago,
+			final String urlCallback) {
 		final PagoComponentRedireccion res = new PagoComponentRedireccion();
 		res.setIdentificador(System.currentTimeMillis() + "");
 		res.setUrl(urlCallback);
@@ -179,10 +194,10 @@ public final class PagoComponentImpl implements PagoComponent {
 	 * Crear datos pago.
 	 *
 	 * @param sesionPago
-	 *            sesión pago
+	 *                       sesión pago
 	 * @return datos pago
 	 */
-	private DatosPago crearDatosPago(DatosSesionPago sesionPago) {
+	private DatosPago crearDatosPago(final DatosSesionPago sesionPago) {
 		final DatosPago datosPago = new DatosPago();
 		datosPago.setEntidadId(sesionPago.getEntidadId());
 		datosPago.setPasarelaId(sesionPago.getPasarelaId());
@@ -202,10 +217,10 @@ public final class PagoComponentImpl implements PagoComponent {
 	 * Verifica pago electronico contra la pasarela.
 	 *
 	 * @param sesionPago
-	 *            sesion pago
+	 *                       sesion pago
 	 * @return verificacion
 	 */
-	private PagoComponentVerificacion verificarPagoElectronicoPasarela(DatosSesionPago sesionPago) {
+	private PagoComponentVerificacion verificarPagoElectronicoPasarela(final DatosSesionPago sesionPago) {
 		try {
 			final IComponentePagoPlugin plugin = obtenerPlugin(sesionPago.getEntidadId());
 
@@ -239,10 +254,10 @@ public final class PagoComponentImpl implements PagoComponent {
 	 * Verifica pago electronico de forma simulada (indica como pagado).
 	 *
 	 * @param sesionPago
-	 *            sesion pago
+	 *                       sesion pago
 	 * @return verificacion
 	 */
-	private PagoComponentVerificacion verificarPagoElectronicoSimulado(DatosSesionPago sesionPago) {
+	private PagoComponentVerificacion verificarPagoElectronicoSimulado(final DatosSesionPago sesionPago) {
 
 		final boolean verificado = true;
 		final boolean realizado = true;
@@ -253,7 +268,7 @@ public final class PagoComponentImpl implements PagoComponent {
 
 		if (verificado && realizado) {
 			res.setLocalizador(System.currentTimeMillis() + "");
-			res.setJustificantePDF(generaPdfMock());
+			res.setJustificantePDF(generaPdfMock(sesionPago));
 		}
 
 		if (verificado && !realizado) {
@@ -267,38 +282,91 @@ public final class PagoComponentImpl implements PagoComponent {
 	/**
 	 * Genera PDF mock.
 	 *
+	 * @param sesionPago
+	 *
 	 * @return pdf
 	 */
-	private byte[] generaPdfMock() {
-		// Lee pdf mock del classpath
-		byte[] content = null;
-		try (final InputStream isFile = PagoComponentImpl.class.getClassLoader().getResourceAsStream("mock.pdf");) {
-			content = IOUtils.toByteArray(isFile);
-		} catch (final IOException e) {
-			throw new PagoException("Excepcion al recuperar justificante simulado: " + e.getMessage(), e);
+	private byte[] generaPdfMock(final DatosSesionPago sesionPago) {
+		// Genera PDF con datos pago
+		try {
+			final FormularioPdf formularioPdf = new FormularioPdf();
+			final Cabecera cabecera = new Cabecera();
+			cabecera.setTitulo("PAGAMENT SIMULAT");
+			formularioPdf.setCabecera(cabecera);
+			final List<Linea> lineas = new ArrayList<Linea>();
+			formularioPdf.setLineas(lineas);
+
+			generaPdfMockLinea(lineas, "MODEL", sesionPago.getModelo());
+			generaPdfMockLinea(lineas, "TASA", sesionPago.getTasaId());
+			generaPdfMockLinea(lineas, "CONCEPTE", sesionPago.getConcepto());
+			generaPdfMockLinea(lineas, "SUBJECTE",
+					sesionPago.getSujetoPasivo().getNif() + " - " + sesionPago.getSujetoPasivo().getNombre());
+			generaPdfMockLinea(lineas, "IMPORT (CENTS)", Integer.toString(sesionPago.getImporte()));
+
+			// Generar PDF
+			final GeneradorPdf generadorPdf = new GeneradorPdf();
+			byte[] pdf = generadorPdf.generarPdf(formularioPdf);
+
+			// Stamp "Sense validesa"
+			final ByteArrayOutputStream bos = new ByteArrayOutputStream(pdf.length + 200);
+			final ByteArrayInputStream bis = new ByteArrayInputStream(pdf);
+			final ObjectStamp[] textos = new ObjectStamp[1];
+			textos[0] = new TextoStamp();
+			((TextoStamp) textos[0]).setTexto("Sense validesa");
+			((TextoStamp) textos[0]).setFontSize(85);
+			((TextoStamp) textos[0]).setFontColor(Color.LIGHT_GRAY);
+			textos[0].setPage(0);
+			textos[0].setX(100);
+			textos[0].setY(300);
+			textos[0].setRotation(45f);
+			textos[0].setOverContent(false);
+			UtilPDF.stamp(bos, bis, textos);
+			pdf = bos.toByteArray();
+			bis.close();
+			bos.close();
+
+			return pdf;
+		} catch (final Exception e) {
+			throw new FormateadorException("Error convirtiendo el documento a bytes", e);
 		}
-		return content;
+
+	}
+
+	/**
+	 * Añade linea a pdf mock.
+	 *
+	 * @param lineas
+	 *                      Lineas
+	 * @param campoDesc
+	 *                      campo desc
+	 * @param campoVal
+	 *                      campo valor
+	 */
+	protected void generaPdfMockLinea(final List<Linea> lineas, final String campoDesc, final String campoVal) {
+		final Linea linea = new Linea();
+		lineas.add(linea);
+		linea.getObjetosLinea().add(new CampoTexto(6, false, campoDesc, campoVal));
 	}
 
 	/**
 	 * Obtiene carta pago presencial simulado.
 	 *
 	 * @param sesionPago
-	 *            sesion pago
+	 *                       sesion pago
 	 * @return carta pago
 	 */
-	private byte[] obtenerCartaPagoPresencialSimulado(DatosSesionPago sesionPago) {
-		return generaPdfMock();
+	private byte[] obtenerCartaPagoPresencialSimulado(final DatosSesionPago sesionPago) {
+		return generaPdfMock(sesionPago);
 	}
 
 	/**
 	 * Obtiene carta pago presencial.
 	 *
 	 * @param sesionPago
-	 *            sesion pago
+	 *                       sesion pago
 	 * @return carta pago
 	 */
-	private byte[] obtenerCartaPagoPresencialPasarela(DatosSesionPago sesionPago) throws PagoPluginException {
+	private byte[] obtenerCartaPagoPresencialPasarela(final DatosSesionPago sesionPago) throws PagoPluginException {
 		final IComponentePagoPlugin plugin = obtenerPlugin(sesionPago.getEntidadId());
 		final DatosPago datosPago = crearDatosPago(sesionPago);
 		return plugin.obtenerCartaPagoPresencial(datosPago);

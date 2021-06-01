@@ -1,5 +1,7 @@
 // SERIALITZA
 
+var ERROR_TEXT = false;
+
 
 $.fn.appSerialitza = function(opcions) {
 
@@ -185,7 +187,7 @@ $.fn.appSerialitza = function(opcions) {
 								//var element_json = { "elemento": [] };
 
 								var element_json = JSON.parse(tr_dades);
-								
+
 								/*
 								td_elms
 									.each(function(k) {
@@ -213,7 +215,7 @@ $.fn.appSerialitza = function(opcions) {
 					}
 
 					form_id_i_valors[el_id] = JSON.stringify( form_el_json[el_id] );
-					
+
 				}
 
 				// verifica?
@@ -225,12 +227,23 @@ $.fn.appSerialitza = function(opcions) {
 						// obligatori
 
 						esError = (input_el.is(":required") && input_val === "") ? true : false;
+						ERROR_TEXT = (esError) ? txtFormDinCampError_buit : false;
+
+						// textarea amb un màxim de línies
+
+						if (input_el.is("TEXTAREA") && input_el.attr("data-linies")) {
+
+							esError = ( !input_el.appValida({ format: "textarea", valor: input_val }) ) ? true : false;
+							ERROR_TEXT = (esError) ? txtFormDinCampError_linies + " " + input_el.attr("data-linies") +"." : false;
+
+						}
 
 						// codi postal
 
 						if (input_el.attr("data-contingut") === "codipostal" && input_val !== "") {
 
 							esError = ( !input_el.appValida({ format: "codipostal", valor: input_val }) ) ? true : false;
+							ERROR_TEXT = (esError) ? txtFormDinCampError_cp : false;
 
 						}
 
@@ -239,6 +252,7 @@ $.fn.appSerialitza = function(opcions) {
 						if (input_el.attr("data-contingut") === "correuelectronic" && input_val !== "") {
 
 							esError = ( !input_el.appValida({ format: "correuelectronic", valor: input_val }) ) ? true : false;
+							ERROR_TEXT = (esError) ? txtFormDinCampError_correu : false;
 
 						}
 
@@ -293,6 +307,7 @@ $.fn.appSerialitza = function(opcions) {
 							}
 
 							esError = !idValid;
+							ERROR_TEXT = (esError) ? txtFormDinCampError_id : false;
 
 						}
 
@@ -301,6 +316,7 @@ $.fn.appSerialitza = function(opcions) {
 						if (input_el.attr("data-contingut") === "numero" && input_val !== "") {
 
 							esError = ( !input_el.appValida({ format: "numero", valor: input_val }) ) ? true : false;
+							ERROR_TEXT = (esError) ? txtFormDinCampError_numero : false;
 
 						}
 
@@ -309,6 +325,7 @@ $.fn.appSerialitza = function(opcions) {
 						if (input_el.attr("data-contingut") === "telefon" && input_val !== "") {
 
 							esError = ( !input_el.appValida({ format: "telefon", valor: input_val }) ) ? true : false;
+							ERROR_TEXT = (esError) ? txtFormDinCampError_telf : false;
 
 						}
 
@@ -317,28 +334,34 @@ $.fn.appSerialitza = function(opcions) {
 						if (input_el.attr("data-contingut") === "data" && input_val !== "") {
 
 							esError = ( !input_el.appValida({ format: "data", valor: input_val }) ) ? true : false;
+							ERROR_TEXT = (esError) ? txtFormDinCampError_data : false;
 
 						}
 
 					} else if (el_tipus === "selector" && el_contingut === "d") {
 
 						esError = (esObligatori && input_val === "") ? true : false;
+						ERROR_TEXT = (esError) ? txtFormDinCampError_selector : false;
 
 					} else if (el_tipus === "selector" && el_contingut === "m") {
 
 						esError = (esObligatori && !checks_seleccionats) ? true : false;
+						ERROR_TEXT = (esError) ? txtFormDinCampError_selector : false;
 
 					} else if (el_tipus === "selector" && el_contingut === "u") {
 
 						esError = (esObligatori && !input_el.length) ? true : false;
+						ERROR_TEXT = (esError) ? txtFormDinCampError_selector : false;
 
 					} else if (el_tipus === "verificacion") {
 
 						esError = (esObligatori && !input_el.is(":checked")) ? true : false;
+						ERROR_TEXT = (esError) ? txtFormDinCampError_verificacio : false;
 
 					} else if (el_tipus === "captcha") {
 
 						esError = (input_el.is(":required") && input_val === "") ? true : false;
+						ERROR_TEXT = (esError) ? txtFormDinCampError_captcha : false;
 
 					}
 
@@ -349,14 +372,6 @@ $.fn.appSerialitza = function(opcions) {
 
 						el
 							.addClass("imc-el-error");
-
-						/*
-						if (el_tipus === "captcha") {
-
-							el
-								.appFormsCaptcha({ regenera: true });
-
-						}*/
 
 						return false;
 

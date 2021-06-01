@@ -14,6 +14,7 @@ import es.caib.sistramit.core.api.model.flujo.AvisoUsuario;
 import es.caib.sistramit.core.api.model.flujo.DatosContacto;
 import es.caib.sistramit.core.api.model.flujo.DatosInteresado;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
+import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoRepresentante;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
 import es.caib.sistramit.core.service.component.script.ScriptExec;
@@ -169,72 +170,50 @@ public final class ControladorPasoRegistrarHelper {
 	 *                               Motor script
 	 * @return Datos representación (o nulo si no existe script)
 	 */
-	public DatosRepresentacion ejecutarScriptRepresentacion(final String idPaso,
+	public DatosRepresentacion calcularDatosRepresentacion(final String idPaso,
 			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo,
 			final DatosPresentacion datosPresentacion, final ScriptExec scriptFlujo) {
 
 		DatosRepresentacion resultado = null;
-		final DatosInteresado presentador = datosPresentacion.getPresentador();
-		DatosInteresado representado = null;
-		DatosInteresado representante = null;
 
 		// Obtenemos definicion paso
 		final RPasoTramitacionRegistrar defPaso = (RPasoTramitacionRegistrar) UtilsSTG.devuelveDefinicionPaso(idPaso,
 				pDefinicionTramite);
 
+		// Verificamos si se ha autenticado un representante
+		final boolean autenticacionRepresentante = pVariablesFlujo.getUsuarioAutenticado() == null
+				|| pVariablesFlujo.getUsuarioAutenticado().getRepresentante() != null;
+
 		final RScript scriptRepresentante = defPaso.getScriptRepresentacion();
 
-		// Ejecutamos script representación
-		// (si existe script y admite representación)
+		// Si admite representación, evaluamos representación
 		if (defPaso.isAdmiteRepresentacion()) {
 
-			// Si admite representacion se debe indicar script
-			if (!UtilsSTG.existeScript(scriptRepresentante)) {
-				throw new ErrorConfiguracionException(
-						"Se ha indica que se admite representación pero no se ha cumplimentado script del representado");
+			// Si existe script, ejecutamos script para establecer representación
+			if (UtilsSTG.existeScript(scriptRepresentante)) {
+				resultado = ejecutarScriptRepresentacion(pDefinicionTramite, idPaso, pVariablesFlujo, datosPresentacion,
+						scriptFlujo);
+			} else {
+				// Si no existe script, si esta autenticado con cert representación establecemos
+				// datos representación por defecto
+				if (autenticacionRepresentante && datosPresentacion.getPresentador().getNif()
+						.equals(pVariablesFlujo.getUsuarioAutenticado().getNif())) {
+					final UsuarioAutenticadoRepresentante rpte = pVariablesFlujo.getUsuarioAutenticado()
+							.getRepresentante();
+					resultado = new DatosRepresentacion();
+					resultado.setRepresentante(new DatosInteresado(rpte.getNif(), rpte.getNombre(), rpte.getApellido1(),
+							rpte.getApellido2()));
+					resultado.setRepresentado(datosPresentacion.getPresentador());
+				}
 			}
 
-			// Ejecutamos script
-			final Map<String, String> codigosErrorParametros = UtilsSTG
-					.convertLiteralesToMap(scriptRepresentante.getLiterales());
-			final RespuestaScript resultadoScriptParametros = scriptFlujo.executeScriptFlujo(
-					TypeScriptFlujo.SCRIPT_REPRESENTACION_REGISTRO, idPaso, scriptRepresentante.getScript(),
-					pVariablesFlujo, null, pVariablesFlujo.getDocumentos(), codigosErrorParametros, pDefinicionTramite);
-			final ResRepresentacion resRepresentacion = (ResRepresentacion) resultadoScriptParametros.getResultado();
-			final ResPersona resRepresentado = resRepresentacion.getRepresentado();
-			final ResPersona resRepresentante = resRepresentacion.getRepresentante();
+		}
 
-			if (resRepresentacion.isActivarRepresentacion()) {
-				// Representado
-				// - Si admite representación, al menos debe indicarse representado
-				if (resRepresentado == null || resRepresentado.isNulo()) {
-					throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_REPRESENTACION_REGISTRO.name(),
-							pVariablesFlujo.getIdSesionTramitacion(), idPaso,
-							"El trámite admite representacion y no se ha especificado representado en el script");
-				}
-				representado = new DatosInteresado(resRepresentado.getNif(), resRepresentado.getNombre(),
-						resRepresentado.getApellido1(), resRepresentado.getApellido2(),
-						generarDatosContacto(resRepresentado));
-
-				// Representante
-				// - Verificamos si se indica representante en script
-				if (resRepresentante != null && !resRepresentante.isNulo()) {
-					representante = new DatosInteresado(resRepresentante.getNif(), resRepresentante.getNombre(),
-							resRepresentante.getApellido1(), resRepresentante.getApellido2(),
-							generarDatosContacto(resRepresentante));
-				}
-				// - Si no se indica representante en script, por defecto se establece el
-				// presentador
-				if (representante == null) {
-					representante = presentador;
-				}
-
-				// Retorna resultado en caso de representación
-				resultado = new DatosRepresentacion();
-				resultado.setRepresentante(representante);
-				resultado.setRepresentado(representado);
-			}
-
+		// Si el presentador es una PJ, es obligatorio que se informe la representación
+		if (ValidacionesTipo.getInstance().esNifPersonaJuridica(datosPresentacion.getPresentador().getNif())
+				&& resultado == null) {
+			throw new ErrorConfiguracionException(
+					"El nif del presentador es de persona jurídica pero el trámite no está configurado para establecer la información de representación");
 		}
 
 		return resultado;
@@ -318,6 +297,79 @@ public final class ControladorPasoRegistrarHelper {
 		}
 
 		return aviso;
+	}
+
+	/**
+	 * Ejecuta script representación.
+	 *
+	 * @param pDefinicionTramite
+	 *                               Definición trámite
+	 * @param idPaso
+	 *                               id paso
+	 * @param pVariablesFlujo
+	 *                               Variables flujo
+	 * @param datosPresentacion
+	 *                               Datos presentación
+	 * @param scriptFlujo
+	 *                               Motor script
+	 * @return Datos representación
+	 */
+	private DatosRepresentacion ejecutarScriptRepresentacion(final DefinicionTramiteSTG pDefinicionTramite,
+			final String idPaso, final VariablesFlujo pVariablesFlujo, final DatosPresentacion datosPresentacion,
+			final ScriptExec scriptFlujo) {
+
+		DatosRepresentacion resultado = null;
+
+		// Obtenemos definicion paso
+		final RPasoTramitacionRegistrar defPaso = (RPasoTramitacionRegistrar) UtilsSTG.devuelveDefinicionPaso(idPaso,
+				pDefinicionTramite);
+
+		final RScript scriptRepresentante = defPaso.getScriptRepresentacion();
+
+		final Map<String, String> codigosErrorParametros = UtilsSTG
+				.convertLiteralesToMap(scriptRepresentante.getLiterales());
+		final RespuestaScript resultadoScriptParametros = scriptFlujo.executeScriptFlujo(
+				TypeScriptFlujo.SCRIPT_REPRESENTACION_REGISTRO, idPaso, scriptRepresentante.getScript(),
+				pVariablesFlujo, null, pVariablesFlujo.getDocumentos(), codigosErrorParametros, pDefinicionTramite);
+		final ResRepresentacion resRepresentacion = (ResRepresentacion) resultadoScriptParametros.getResultado();
+		final ResPersona resRepresentado = resRepresentacion.getRepresentado();
+		final ResPersona resRepresentante = resRepresentacion.getRepresentante();
+
+		// Comprobamos si en el script se indica que existe representación
+		if (resRepresentacion.isActivarRepresentacion()) {
+			DatosInteresado representado = null;
+			DatosInteresado representante = null;
+			// Representado
+			// - Si admite representación, al menos debe indicarse representado
+			if (resRepresentado == null || resRepresentado.isNulo()) {
+				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_REPRESENTACION_REGISTRO.name(),
+						pVariablesFlujo.getIdSesionTramitacion(), idPaso,
+						"El trámite admite representacion y no se ha especificado representado en el script");
+			}
+			representado = new DatosInteresado(resRepresentado.getNif(), resRepresentado.getNombre(),
+					resRepresentado.getApellido1(), resRepresentado.getApellido2(),
+					generarDatosContacto(resRepresentado));
+
+			// Representante
+			// - Verificamos si se indica representante en script
+			if (resRepresentante != null && !resRepresentante.isNulo()) {
+				representante = new DatosInteresado(resRepresentante.getNif(), resRepresentante.getNombre(),
+						resRepresentante.getApellido1(), resRepresentante.getApellido2(),
+						generarDatosContacto(resRepresentante));
+			}
+			// - Si no se indica representante en script, por defecto se establece el
+			// presentador
+			if (representante == null) {
+				representante = datosPresentacion.getPresentador();
+			}
+
+			// Retorna resultado en caso de representación
+			resultado = new DatosRepresentacion();
+			resultado.setRepresentante(representante);
+			resultado.setRepresentado(representado);
+		}
+
+		return resultado;
 	}
 
 	/**

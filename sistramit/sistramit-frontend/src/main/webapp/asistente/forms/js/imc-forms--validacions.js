@@ -17,6 +17,12 @@ $.fn.appValida = function(opcions) {
 
 	// validacions
 
+	if (format === "textarea") {
+
+		esCorrecte = (parseInt( element.attr("data-linies"), 10) >= element.val().split("\n").length) ? true : false;
+
+	}
+
 	if (format === "codipostal") {
 
 		esCorrecte = (/^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(valor)) ? true : false;
@@ -38,15 +44,6 @@ $.fn.appValida = function(opcions) {
 	}
 
 	if (format === "numero") {
-
-		/*
-		"enteros" : 5,
-		"decimales" : 2,
-		"separador" : "pc",
-		"negativo" : "n",
-		"rangoMin" : null,
-		"rangoMax" : null
-		*/
 
 		esCorrecte =  true;
 

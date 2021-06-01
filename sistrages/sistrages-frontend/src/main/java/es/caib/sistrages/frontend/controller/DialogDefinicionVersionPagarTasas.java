@@ -67,8 +67,7 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de propiedades.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoDescripcion(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -89,9 +88,11 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 	 */
 	public void editarDescripcion() {
 		if (data.getDescripcion() == null) {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, null, tramiteVersion);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, null, tramiteVersion,
+					UtilTraducciones.CARACTERES_NOPERMIT_REGWEB3, UtilTraducciones.TAMANYO_MAXIMO_REGWEB3);
 		} else {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), tramiteVersion);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), tramiteVersion,
+					UtilTraducciones.CARACTERES_NOPERMIT_REGWEB3, UtilTraducciones.TAMANYO_MAXIMO_REGWEB3);
 		}
 	}
 
@@ -145,8 +146,7 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final Tasa data) {
 		this.data = data;
@@ -160,8 +160,7 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -191,8 +190,7 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idiomas
-	 *            the idiomas to set
+	 * @param idiomas the idiomas to set
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;

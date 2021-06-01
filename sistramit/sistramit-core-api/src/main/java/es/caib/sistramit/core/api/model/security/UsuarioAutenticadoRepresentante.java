@@ -2,6 +2,8 @@ package es.caib.sistramit.core.api.model.security;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Info usuario autenticado (representante).
  *
@@ -38,7 +40,7 @@ public final class UsuarioAutenticadoRepresentante implements Serializable {
 
 	/**
 	 * Método de acceso a nif.
-	 * 
+	 *
 	 * @return nif
 	 */
 	public String getNif() {
@@ -47,9 +49,9 @@ public final class UsuarioAutenticadoRepresentante implements Serializable {
 
 	/**
 	 * Método para establecer nif.
-	 * 
+	 *
 	 * @param nif
-	 *            nif a establecer
+	 *                nif a establecer
 	 */
 	public void setNif(final String nif) {
 		this.nif = nif;
@@ -57,7 +59,7 @@ public final class UsuarioAutenticadoRepresentante implements Serializable {
 
 	/**
 	 * Método de acceso a nombre.
-	 * 
+	 *
 	 * @return nombre
 	 */
 	public String getNombre() {
@@ -66,9 +68,9 @@ public final class UsuarioAutenticadoRepresentante implements Serializable {
 
 	/**
 	 * Método para establecer nombre.
-	 * 
+	 *
 	 * @param nombre
-	 *            nombre a establecer
+	 *                   nombre a establecer
 	 */
 	public void setNombre(final String nombre) {
 		this.nombre = nombre;
@@ -76,7 +78,7 @@ public final class UsuarioAutenticadoRepresentante implements Serializable {
 
 	/**
 	 * Método de acceso a apellido1.
-	 * 
+	 *
 	 * @return apellido1
 	 */
 	public String getApellido1() {
@@ -85,9 +87,9 @@ public final class UsuarioAutenticadoRepresentante implements Serializable {
 
 	/**
 	 * Método para establecer apellido1.
-	 * 
+	 *
 	 * @param apellido1
-	 *            apellido1 a establecer
+	 *                      apellido1 a establecer
 	 */
 	public void setApellido1(final String apellido1) {
 		this.apellido1 = apellido1;
@@ -95,7 +97,7 @@ public final class UsuarioAutenticadoRepresentante implements Serializable {
 
 	/**
 	 * Método de acceso a apellido2.
-	 * 
+	 *
 	 * @return apellido2
 	 */
 	public String getApellido2() {
@@ -104,9 +106,9 @@ public final class UsuarioAutenticadoRepresentante implements Serializable {
 
 	/**
 	 * Método para establecer apellido2.
-	 * 
+	 *
 	 * @param apellido2
-	 *            apellido2 a establecer
+	 *                      apellido2 a establecer
 	 */
 	public void setApellido2(final String apellido2) {
 		this.apellido2 = apellido2;
@@ -114,7 +116,7 @@ public final class UsuarioAutenticadoRepresentante implements Serializable {
 
 	/**
 	 * Método de acceso a email.
-	 * 
+	 *
 	 * @return email
 	 */
 	public String getEmail() {
@@ -123,9 +125,9 @@ public final class UsuarioAutenticadoRepresentante implements Serializable {
 
 	/**
 	 * Método para establecer email.
-	 * 
+	 *
 	 * @param email
-	 *            email a establecer
+	 *                  email a establecer
 	 */
 	public void setEmail(final String email) {
 		this.email = email;
@@ -138,6 +140,34 @@ public final class UsuarioAutenticadoRepresentante implements Serializable {
 	 */
 	public final String print() {
 		return "[nif=" + nif + ", nombre=" + nombre + ", apellido1=" + apellido1 + ", apellido2=" + apellido2 + "]";
+	}
+
+	public String getNombreApellidos() {
+		final StringBuffer res = new StringBuffer(100);
+		if (this.getNombre() != null) {
+			res.append(this.getNombre());
+		}
+		if (StringUtils.isNotBlank(this.getApellido1())) {
+			res.append(" ").append(this.getApellido1());
+		}
+		if (StringUtils.isNotBlank(this.getApellido2())) {
+			res.append(" ").append(this.getApellido2());
+		}
+		return res.toString();
+	}
+
+	public String getApellidosNombre() {
+		final StringBuffer res = new StringBuffer(100);
+		if (this.getApellido1() != null) {
+			res.append(this.getApellido1());
+			if (this.getApellido2() != null) {
+				res.append(" ").append(this.getApellido2());
+			}
+			res.append(", ").append(this.getNombre());
+		} else {
+			res.append(this.getNombre());
+		}
+		return res.toString();
 	}
 
 }

@@ -176,6 +176,7 @@ $.fn.submenu = function(options) {
 		submenu_a,
 		submenu_elm,
 		tancarAlClicarDins = settings.tancarAlClicarDins,
+		ultima_opcio = false,
 		onClick = function() {
 
 			if (element.find("a.imc-select:first").is(".imc-select-deshabilitat, .imc-select-lectura")) {
@@ -366,8 +367,14 @@ $.fn.submenu = function(options) {
 		},
 		onFocus = function() {
 			
-			$(document).off(".onSelectFletxa").on("keyup.onSelectFletxa", onSelectFletxa);
-		
+			$(document)
+				.off(".onSelectFletxa")
+				.on("keyup.onSelectFletxa", onSelectFletxa);
+				
+			element
+				.off(".onSelectLletra")
+				.on("keyup.onSelectLletra", onSelectLletra);
+
 		},
 		onSelectFletxa = function(e) {
 
@@ -383,8 +390,130 @@ $.fn.submenu = function(options) {
 			
 			}
 			
+		},
+		onSelectLletra = function(e) {
+
+			console.log("va: ")
+			
+			if (element.find(".imc-select-submenu:first").hasClass("imc-submenu-on")) {
+				if (!element.hasClass("imc-el-index-marcant")) {
+					
+					element.addClass("imc-el-index-marcant");
+					
+					//console.log( String.fromCharCode(e.keyCode) );
+					situa( String.fromCharCode(e.keyCode) );
+
+				}
+			}
+			
+		},
+		situa = function(elm_text) {
+		
+			var opcio_llista_trobat = false,
+				opcio_llista_posicio = 0,
+				elm_trobat = false,
+				elm_trobat_mateixa_lletra = 0,
+				elm_trobats = [];
+
+			var el_opcions_llista = element.find(".imc-select-submenu ul:first")
+				,el_opcions = el_opcions_llista.find("li");
+			
+			el_opcions
+				.each(function() {
+
+					var opcio = $(this).find("a"),
+						opcio_text = opcio.text().toUpperCase(),
+						opcio_inicial = normalize( opcio_text.charAt(0) );
+
+					if (opcio.attr("data-value") !== "") {
+
+						if (elm_text === opcio_inicial) {
+							elm_trobat_mateixa_lletra++;
+							elm_trobats.push( opcio );
+						}
+						if (!opcio_llista_trobat && elm_text === opcio_inicial) {
+							opcio_llista_trobat = true;
+							elm_trobat = opcio;
+						}
+						if (!opcio_llista_trobat) {
+							opcio_llista_posicio += opcio.outerHeight() + 2;
+						}
+
+					}
+
+				});
+
+			if (elm_trobat) {
+				
+				if (elm_trobats.length > 1) {
+					
+					if (elm_text != ultima_opcio) {
+						el_opcions_llista.find(".imc-alfabet-focus:first").removeClass("imc-alfabet-focus");
+					}
+					
+					var elm_trobats_size = elm_trobats.length,
+						elm_tro_posicio = 0,
+						elm_tro_trobat = false,
+						opcio_llista_posicio_suma = 0;
+					
+					for (var i=0; i<elm_trobats_size; i++) {
+						if (!elm_tro_trobat) {
+							opcio_llista_posicio_suma += $(elm_trobats[i]).outerHeight() + 2;
+						}
+						if ($(elm_trobats[i]).hasClass("imc-alfabet-focus")) {
+							elm_tro_posicio = i+1;
+							$(elm_trobats[i]).removeClass("imc-alfabet-focus");
+							elm_tro_trobat = true;
+							elm_tro_trobat_enCap = true;
+						}
+					}
+					
+					if (elm_tro_posicio >= elm_trobats_size) {
+						elm_tro_posicio = 0;
+					}
+					
+					if (elm_tro_trobat && elm_tro_posicio !== 0) {
+						opcio_llista_posicio += opcio_llista_posicio_suma;
+					}
+					
+					elm_trobat = $(elm_trobats[elm_tro_posicio]);
+											
+				}
+				
+				
+				el_opcions_llista
+					.animate(
+						{
+							scrollTop: opcio_llista_posicio+"px"
+						}
+						,200
+						, function() {
+							elm_trobat.addClass("imc-alfabet-marca");
+							setTimeout(
+								function() {
+									elm_trobat.removeClass("imc-alfabet-marca").addClass("imc-alfabet-focus").focus();
+									ultima_opcio = elm_text;
+									element.removeClass("imc-el-index-marcant");
+								},400
+							);
+						}
+					);
+					
+			} else {
+				
+				element.removeClass("imc-el-index-marcant");
+				
+			}
+			
 		};
-		element.off('.submenu').on('click.submenu', 'a.imc-select', onClick).on('focus.submenu', 'a.imc-select', onFocus);
+
+		// events
+
+		element
+			.off('.submenu')
+			.on('click.submenu', 'a.imc-select', onClick)
+			.on('focus.submenu', 'a.imc-select', onFocus);
+
 	});
 	return this;
 };

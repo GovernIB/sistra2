@@ -1043,6 +1043,7 @@ public class TramiteDaoImpl implements TramiteDao {
 			tv.setPersistenciaInfinita(filaTramiteVersion.getTramiteVersion().isPersistenciaInfinita());
 			tv.setPlazoFinDesactivacion(filaTramiteVersion.getTramiteVersion().getPlazoFinDesactivacion());
 			tv.setPlazoInicioDesactivacion(filaTramiteVersion.getTramiteVersion().getPlazoInicioDesactivacion());
+			tv.setTiposAutenticacion(filaTramiteVersion.getTramiteVersion().getTiposAutenticacion());
 			if (isModoIM) {
 				// En modo importar, se incrementa la release
 				tv.setRelease(tv.getRelease() + 1);
@@ -1271,10 +1272,10 @@ public class TramiteDaoImpl implements TramiteDao {
 	}
 
 	@Override
-	public List<GestorExternoFormularios> getGFEByTramiteVersion(Long idTramiteVersion) {
+	public List<GestorExternoFormularios> getGFEByTramiteVersion(final Long idTramiteVersion) {
 		final List<GestorExternoFormularios> resultado = new ArrayList<>();
 
-		String sql = "Select FORMS.formularioExterno From JPasoRellenar p JOIN p.formulariosTramite FORMS "
+		final String sql = "Select FORMS.formularioExterno From JPasoRellenar p JOIN p.formulariosTramite FORMS "
 				+ "where p.pasoTramitacion.versionTramite.codigo = :idTramiteVersion "
 				+ " and FORMS.tipoFormulario = 'E' ";
 
@@ -1293,4 +1294,33 @@ public class TramiteDaoImpl implements TramiteDao {
 
 		return resultado;
 	}
+
+	@Override
+	public void removeByArea(final Long pIdArea) {
+		if (pIdArea == null) {
+			throw new FaltanDatosException("Falta id area");
+		}
+
+		final String sql = "delete from JTramite t where t.area.codigo = :idArea";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idArea", pIdArea);
+		query.executeUpdate();
+	}
+
+	@Override
+	public void removeTramiteVersionByArea(final Long pIdArea) {
+		if (pIdArea == null) {
+			throw new FaltanDatosException("Falta id area");
+		}
+
+		// listar tramites
+		final List<Tramite> tramites = listarTramites(pIdArea, null);
+		for (final Tramite t : tramites) {
+			final String sql = "delete from JVersionTramite v  where v.tramite.codigo = :idTramite";
+			final Query query = entityManager.createQuery(sql);
+			query.setParameter("idTramite", t.getCodigo());
+			query.executeUpdate();
+		}
+	}
+
 }

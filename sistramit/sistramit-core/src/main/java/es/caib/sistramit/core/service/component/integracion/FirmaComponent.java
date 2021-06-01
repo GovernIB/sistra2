@@ -20,6 +20,10 @@ public interface FirmaComponent {
 	 *                           Entidad
 	 * @param firmante
 	 *                           Firmante
+	 * @param representante
+	 *                           En caso de estar autenticado con un certificado de
+	 *                           representación, indica el representante (quien
+	 *                           firmará con su cert de representación)
 	 * @param fileId
 	 *                           Id fichero
 	 * @param fileContent
@@ -34,8 +38,9 @@ public interface FirmaComponent {
 	 *                           idioma
 	 * @return Datos redirección firma
 	 */
-	RedireccionFirma redireccionFirmaExterna(String idEntidad, Persona firmante, String fileId, byte[] fileContent,
-			String fileName, String tipoDocumental, String urlCallBack, String idioma);
+	RedireccionFirma redireccionFirmaExterna(String idEntidad, Persona firmante, final Persona representante,
+			String fileId, byte[] fileContent, String fileName, String tipoDocumental, String urlCallBack,
+			String idioma);
 
 	/**
 	 * Recupera resultado firma externa.

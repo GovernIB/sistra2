@@ -61,6 +61,13 @@ public interface TramiteDao {
 	void remove(final Long id);
 
 	/**
+	 * Elimina tramite.
+	 *
+	 * @param pIdArea pIdArea
+	 */
+	void removeByArea(Long pIdArea);
+
+	/**
 	 * Actualiza tramite.
 	 *
 	 * @param pTramite Tramite
@@ -98,6 +105,14 @@ public interface TramiteDao {
 	 * @param idTramiteVersion
 	 */
 	void removeTramiteVersion(Long idTramiteVersion);
+
+	/**
+	 * Borra un trámite versión.
+	 *
+	 * @param pIdArea
+	 */
+
+	void removeTramiteVersionByArea(Long pIdArea);
 
 	/**
 	 * Devuelve versión de trámite.
@@ -327,6 +342,7 @@ public interface TramiteDao {
 
 	/**
 	 * Lista GFE segun idTramiteVersion
+	 *
 	 * @param idTramiteVersion
 	 * @return
 	 */

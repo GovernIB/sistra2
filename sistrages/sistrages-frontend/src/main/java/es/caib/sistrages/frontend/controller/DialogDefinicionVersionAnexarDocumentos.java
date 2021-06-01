@@ -89,9 +89,9 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 	public void editarDescripcion() {
 
 		if (data.getDescripcion() == null) {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, null, tramiteVersion);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, null, tramiteVersion, UtilTraducciones.CARACTERES_NOPERMIT_REGWEB3, UtilTraducciones.TAMANYO_MAXIMO_REGWEB3);
 		} else {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), tramiteVersion);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), tramiteVersion, UtilTraducciones.CARACTERES_NOPERMIT_REGWEB3, UtilTraducciones.TAMANYO_MAXIMO_REGWEB3);
 		}
 	}
 

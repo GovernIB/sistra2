@@ -14,6 +14,7 @@ import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
+import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
 import es.caib.sistramit.core.api.exception.AccesoNoPermitidoException;
 import es.caib.sistramit.core.api.exception.AccesoPasoRegistroCatalogoSimulado;
@@ -428,6 +429,18 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 		// Comprobamos nivel autenticacion tramite
 		if (!controlTipoAutenticacion(pDatosSesion)) {
 			mensaje = literales.getLiteral(Literales.FLUJO, "acceso.tipoAutenticacionNoPermitida",
+					pDatosSesion.getDatosTramite().getIdioma());
+			throw new AccesoNoPermitidoException(mensaje, generarDetallesExcepcionControlAcceso(pDatosSesion));
+		}
+
+		// Control representación: si se accede con certificado representación debe
+		// estar activada representación en paso registrar
+		final RPasoTramitacionRegistrar defPasoRegistrar = UtilsSTG
+				.devuelveDefinicionPasoRegistrar(pDatosSesion.getDefinicionTramite());
+		if (pDatosSesion.getDatosTramite().getUsuarioAutenticado() != null
+				&& pDatosSesion.getDatosTramite().getUsuarioAutenticado().getRepresentante() != null
+				&& defPasoRegistrar != null && !defPasoRegistrar.isAdmiteRepresentacion()) {
+			mensaje = literales.getLiteral(Literales.FLUJO, "acceso.representacionNoPermitida",
 					pDatosSesion.getDatosTramite().getIdioma());
 			throw new AccesoNoPermitidoException(mensaje, generarDetallesExcepcionControlAcceso(pDatosSesion));
 		}

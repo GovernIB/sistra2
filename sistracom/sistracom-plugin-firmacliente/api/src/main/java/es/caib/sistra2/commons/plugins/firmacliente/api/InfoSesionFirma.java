@@ -26,6 +26,12 @@ public class InfoSesionFirma {
 	/** Email. **/
 	private String email;
 
+	/** NIF representante (quien firma). **/
+	private String nifRepresentante;
+
+	/** Nombre representante (quien firma).. **/
+	private String nombreRepresentante;
+
 	/**
 	 * @return the idioma
 	 */
@@ -118,5 +124,43 @@ public class InfoSesionFirma {
 	 */
 	public void setEmail(final String email) {
 		this.email = email;
+	}
+
+	/**
+	 * Método de acceso a nifRepresentante.
+	 * 
+	 * @return nifRepresentante
+	 */
+	public String getNifRepresentante() {
+		return nifRepresentante;
+	}
+
+	/**
+	 * Método para establecer nifRepresentante.
+	 * 
+	 * @param nifRepresentante
+	 *                             nifRepresentante a establecer
+	 */
+	public void setNifRepresentante(final String nifRepresentante) {
+		this.nifRepresentante = nifRepresentante;
+	}
+
+	/**
+	 * Método de acceso a nombreRepresentante.
+	 * 
+	 * @return nombreRepresentante
+	 */
+	public String getNombreRepresentante() {
+		return nombreRepresentante;
+	}
+
+	/**
+	 * Método para establecer nombreRepresentante.
+	 * 
+	 * @param nombreRepresentante
+	 *                                nombreRepresentante a establecer
+	 */
+	public void setNombreRepresentante(final String nombreRepresentante) {
+		this.nombreRepresentante = nombreRepresentante;
 	}
 }

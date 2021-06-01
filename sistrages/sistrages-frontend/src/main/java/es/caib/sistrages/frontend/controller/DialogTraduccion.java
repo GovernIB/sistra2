@@ -51,6 +51,10 @@ public class DialogTraduccion extends DialogControllerBase {
 	/** Idiomas posibles en formato JSON. **/
 	private String iIdiomasPosibles;
 
+	private String caracteresNoPermitidos;
+
+	private String tamanyoMax;
+
 	/** Parametro de entrada. **/
 	private Literal data;
 	/**
@@ -118,28 +122,28 @@ public class DialogTraduccion extends DialogControllerBase {
 				case CATALAN:
 					textoCa = data.getTraduccion(idioma);
 					visibleCa = true;
-					if (idiomasObligatorios.contains(idioma)) {
+					if (idiomasObligatorios.contains(idioma) && (opcional == null || !"S".equals(opcional))) {
 						requiredCa = true;
 					}
 					break;
 				case CASTELLANO:
 					textoEs = data.getTraduccion(idioma);
 					visibleEs = true;
-					if (idiomasObligatorios.contains(idioma)) {
+					if (idiomasObligatorios.contains(idioma) && (opcional == null || !"S".equals(opcional))) {
 						requiredEs = true;
 					}
 					break;
 				case INGLES:
 					textoEn = data.getTraduccion(idioma);
 					visibleEn = true;
-					if (idiomasObligatorios.contains(idioma)) {
+					if (idiomasObligatorios.contains(idioma) && (opcional == null || !"S".equals(opcional))) {
 						requiredEn = true;
 					}
 					break;
 				case ALEMAN:
 					textoDe = data.getTraduccion(idioma);
 					visibleDe = true;
-					if (idiomasObligatorios.contains(idioma)) {
+					if (idiomasObligatorios.contains(idioma) && (opcional == null || !"S".equals(opcional))) {
 						requiredDe = true;
 					}
 					break;
@@ -152,6 +156,8 @@ public class DialogTraduccion extends DialogControllerBase {
 
 	private static final String LITERAL_ERROR_FALTA_LITERAL = "error.faltaliteral";
 	private static final String LITERAL_ERROR_ETIQUETA_HTML = "error.etiquetaHTML";
+	private static final String LITERAL_ERROR_EXCEDE_LONGITUD = "error.excedeLongitud";
+	private static final String LITERAL_ERROR_CONTIENE_CHAR = "error.contieneChar";
 
 	/**
 	 * Aceptar.
@@ -159,8 +165,8 @@ public class DialogTraduccion extends DialogControllerBase {
 	public void aceptar() {
 
 		boolean isAlgunLiteralRelleno = true;
-		//Si es opcional, o está to do escrito o nada.
-		if ( opcional != null && "S".equals(opcional)) {
+		// Si es opcional, o está to do escrito o nada.
+		if (opcional != null && "S".equals(opcional)) {
 			isAlgunLiteralRelleno = isAlgoRelleno();
 		}
 
@@ -174,6 +180,14 @@ public class DialogTraduccion extends DialogControllerBase {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
 					return;
 				}
+				if (excedeLongitud(textoCa)) {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
+					return;
+				}
+				if (contieneCharNoPermitido(textoCa)) {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_CONTIENE_CHAR));
+					return;
+				}
 				data.add(new Traduccion(TypeIdioma.CATALAN.toString(), textoCa));
 			}
 			if (visibleEs) {
@@ -185,6 +199,15 @@ public class DialogTraduccion extends DialogControllerBase {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
 					return;
 				}
+
+				if (excedeLongitud(textoEs)) {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
+					return;
+				}
+				if (contieneCharNoPermitido(textoEs)) {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_CONTIENE_CHAR));
+					return;
+				}
 				data.add(new Traduccion(TypeIdioma.CASTELLANO.toString(), textoEs));
 			}
 			if (visibleEn) {
@@ -192,11 +215,16 @@ public class DialogTraduccion extends DialogControllerBase {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
 					return;
 				}
-				if (contieneEtiquetaHTML(textoEn)) {
-					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
+				if (excedeLongitud(textoEn)) {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
+					return;
+				}
+				if (contieneCharNoPermitido(textoEn)) {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_CONTIENE_CHAR));
 					return;
 				}
 				data.add(new Traduccion(TypeIdioma.INGLES.toString(), textoEn));
+
 			}
 			if (visibleDe) {
 				if (textoDe == null || textoDe.isEmpty()) {
@@ -205,6 +233,14 @@ public class DialogTraduccion extends DialogControllerBase {
 				}
 				if (contieneEtiquetaHTML(textoDe)) {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
+					return;
+				}
+				if (excedeLongitud(textoDe)) {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
+					return;
+				}
+				if (contieneCharNoPermitido(textoDe)) {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_CONTIENE_CHAR));
 					return;
 				}
 				data.add(new Traduccion(TypeIdioma.ALEMAN.toString(), textoDe));
@@ -221,27 +257,28 @@ public class DialogTraduccion extends DialogControllerBase {
 
 	/**
 	 * Comprueba si algún dato esta relleno.
+	 *
 	 * @return
 	 */
 	private boolean isAlgoRelleno() {
 		boolean relleno = false;
 		if (visibleCa) {
-			if (textoCa != null &&  !textoCa.isEmpty()) {
+			if (textoCa != null && !textoCa.isEmpty()) {
 				relleno = true;
 			}
 		}
 		if (visibleEs) {
-			if (textoEs != null &&  !textoEs.isEmpty()) {
+			if (textoEs != null && !textoEs.isEmpty()) {
 				relleno = true;
 			}
 		}
 		if (visibleEn) {
-			if (textoEn != null &&  !textoEn.isEmpty()) {
+			if (textoEn != null && !textoEn.isEmpty()) {
 				relleno = true;
 			}
 		}
 		if (visibleDe) {
-			if (textoDe != null &&  !textoDe.isEmpty()) {
+			if (textoDe != null && !textoDe.isEmpty()) {
 				relleno = true;
 			}
 		}
@@ -256,6 +293,40 @@ public class DialogTraduccion extends DialogControllerBase {
 	 */
 	private boolean contieneEtiquetaHTML(final String texto) {
 		return texto.contains("<") && texto.contains(">");
+	}
+
+	/**
+	 * Comprueba si se excede la longitud.
+	 * @param texto
+	 * @return
+	 */
+	private boolean excedeLongitud(final String texto) {
+		boolean excede = false;
+		//4000 es el tamaño máximo en tradidi
+		if (tamanyoMax == null && texto.length() > 4000) {
+				excede = true;
+		} else if (tamanyoMax != null && texto.length() > Integer.parseInt(tamanyoMax)) {
+				excede = true;
+		}
+		return excede;
+	}
+
+	/**
+	 * Comprueba si tiene el caracter no permitido.
+	 * @param texto
+	 * @return
+	 */
+	private boolean contieneCharNoPermitido(final String texto) {
+		boolean contiene = false;
+		if (caracteresNoPermitidos != null) {
+			for(String caracter : caracteresNoPermitidos.split(",")) {
+				if (texto.contains(caracter)) {
+					contiene = true;
+					break;
+				}
+			}
+		}
+		return contiene;
 	}
 
 	/**
@@ -289,8 +360,7 @@ public class DialogTraduccion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param textoCa
-	 *            the textoCa to set
+	 * @param textoCa the textoCa to set
 	 */
 	public void setTextoCa(final String textoCa) {
 		this.textoCa = textoCa;
@@ -304,8 +374,7 @@ public class DialogTraduccion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param textoEs
-	 *            the textoEs to set
+	 * @param textoEs the textoEs to set
 	 */
 	public void setTextoEs(final String textoEs) {
 		this.textoEs = textoEs;
@@ -319,8 +388,7 @@ public class DialogTraduccion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param textoEn
-	 *            the textoEn to set
+	 * @param textoEn the textoEn to set
 	 */
 	public void setTextoEn(final String textoEn) {
 		this.textoEn = textoEn;
@@ -334,8 +402,7 @@ public class DialogTraduccion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param textoDe
-	 *            the textoDe to set
+	 * @param textoDe the textoDe to set
 	 */
 	public void setTextoDe(final String textoDe) {
 		this.textoDe = textoDe;
@@ -349,8 +416,7 @@ public class DialogTraduccion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleCa
-	 *            the visibleCa to set
+	 * @param visibleCa the visibleCa to set
 	 */
 	public void setVisibleCa(final boolean visibleCa) {
 		this.visibleCa = visibleCa;
@@ -364,11 +430,42 @@ public class DialogTraduccion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleEs
-	 *            the visibleEs to set
+	 * @return the caracteresNoPermitidos
+	 */
+	public final String getCaracteresNoPermitidos() {
+		return caracteresNoPermitidos;
+	}
+
+	/**
+	 * @param caracteresNoPermitidos the caracteresNoPermitidos to set
+	 */
+	public final void setCaracteresNoPermitidos(String caracteresNoPermitidos) {
+		this.caracteresNoPermitidos = caracteresNoPermitidos;
+	}
+
+	/**
+	 * @return the longitudMaxima
+	 */
+
+	/**
+	 * @param visibleEs the visibleEs to set
 	 */
 	public void setVisibleEs(final boolean visibleEs) {
 		this.visibleEs = visibleEs;
+	}
+
+	/**
+	 * @return the tamanyoMax
+	 */
+	public final String getTamanyoMax() {
+		return tamanyoMax;
+	}
+
+	/**
+	 * @param tamanyoMax the tamanyoMax to set
+	 */
+	public final void setTamanyoMax(String tamanyoMax) {
+		this.tamanyoMax = tamanyoMax;
 	}
 
 	/**
@@ -379,8 +476,7 @@ public class DialogTraduccion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleEn
-	 *            the visibleEn to set
+	 * @param visibleEn the visibleEn to set
 	 */
 	public void setVisibleEn(final boolean visibleEn) {
 		this.visibleEn = visibleEn;
@@ -394,8 +490,7 @@ public class DialogTraduccion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleDe
-	 *            the visibleDe to set
+	 * @param visibleDe the visibleDe to set
 	 */
 	public void setVisibleDe(final boolean visibleDe) {
 		this.visibleDe = visibleDe;
@@ -409,8 +504,7 @@ public class DialogTraduccion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param requiredCa
-	 *            the requiredCa to set
+	 * @param requiredCa the requiredCa to set
 	 */
 	public void setRequiredCa(final boolean requiredCa) {
 		this.requiredCa = requiredCa;
@@ -424,8 +518,7 @@ public class DialogTraduccion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param requiredEs
-	 *            the requiredEs to set
+	 * @param requiredEs the requiredEs to set
 	 */
 	public void setRequiredEs(final boolean requiredEs) {
 		this.requiredEs = requiredEs;
@@ -439,8 +532,7 @@ public class DialogTraduccion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param requiredEn
-	 *            the requiredEn to set
+	 * @param requiredEn the requiredEn to set
 	 */
 	public void setRequiredEn(final boolean requiredEn) {
 		this.requiredEn = requiredEn;
@@ -454,8 +546,7 @@ public class DialogTraduccion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param requiredDe
-	 *            the requiredDe to set
+	 * @param requiredDe the requiredDe to set
 	 */
 	public void setRequiredDe(final boolean requiredDe) {
 		this.requiredDe = requiredDe;
@@ -469,8 +560,7 @@ public class DialogTraduccion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param iIdiomasObligatorios
-	 *            the iIdiomasObligatorios to set
+	 * @param iIdiomasObligatorios the iIdiomasObligatorios to set
 	 */
 	public void setiIdiomasObligatorios(final String iIdiomasObligatorios) {
 		this.iIdiomasObligatorios = iIdiomasObligatorios;
@@ -484,8 +574,7 @@ public class DialogTraduccion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param iIdiomasPosibles
-	 *            the iIdiomasPosibles to set
+	 * @param iIdiomasPosibles the iIdiomasPosibles to set
 	 */
 	public void setiIdiomasPosibles(final String iIdiomasPosibles) {
 		this.iIdiomasPosibles = iIdiomasPosibles;
@@ -500,8 +589,7 @@ public class DialogTraduccion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param borrable
-	 *            the borrable to set
+	 * @param borrable the borrable to set
 	 */
 	public void setBorrable(final boolean borrable) {
 		this.borrable = borrable;
@@ -515,8 +603,7 @@ public class DialogTraduccion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param opcional
-	 *            the opcional to set
+	 * @param opcional the opcional to set
 	 */
 	public final void setOpcional(final String opcional) {
 		this.opcional = opcional;

@@ -520,6 +520,12 @@ $.fn.appPas = function(options) {
 							}
 						};
 
+					Mark.pipes.escapa = function (a) {
+						//alert("sense res: " + a)
+						//alert("replace: " +a.replace(/\"/g, 'xxxx'))
+						return a.replace(/\"/g, '&quot;');
+					};
+
 				} else if (pas_tipus === "pt") {
 
 					HTML_PAS_LITERALS[pas_tipus]["pagaments"] = pas_json.datos.actual.pagos;

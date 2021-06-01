@@ -28,7 +28,7 @@
 			<ul>
 				{{annexes}}
 				{{if presentacion|equals>e}}
-				<li class="imc--doc-li" data-id="{{id}}" data-omplit="{{rellenado}}" data-tipus="{{presentacion}}" data-num="{{maxInstancias}}" data-extensions="{{extensiones}}" data-mida="{{tamMax}}" data-ajuda="{{ayuda}}" data-obligatori="{{obligatorio}}">
+				<li class="imc--doc-li" data-id="{{id}}" data-omplit="{{rellenado}}" data-tipus="{{presentacion}}" data-num="{{maxInstancias}}" data-extensions="{{extensiones}}" data-mida="{{tamMax}}" data-ajuda="{{ayuda|escapa}}" data-obligatori="{{obligatorio}}">
 
 					<div class="imc--doc-fila">
 
@@ -115,7 +115,7 @@
 			<ul>
 				{{annexesPresencials}}
 				{{if presentacion|equals>p}}
-				<li class="imc--doc-li" data-id="{{id}}" data-omplit="{{rellenado}}" data-tipus="{{presentacion}}" data-num="{{maxInstancias}}" data-extensions="{{extensiones}}" data-mida="{{tamMax}}" data-ajuda="{{ayuda}}" data-obligatori="{{obligatorio}}">
+				<li class="imc--doc-li" data-id="{{id}}" data-omplit="{{rellenado}}" data-tipus="{{presentacion}}" data-num="{{maxInstancias}}" data-extensions="{{extensiones}}" data-mida="{{tamMax}}" data-ajuda="{{ayuda|escapa}}" data-obligatori="{{obligatorio}}">
 
 					<div class="imc--doc-fila">
 

@@ -72,7 +72,7 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 	 * Editar descripcion
 	 */
 	public void editarDescripcion() {
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, this.data.getDescripcion(), tramiteVersion);
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, this.data.getDescripcion(), tramiteVersion, UtilTraducciones.CARACTERES_NOPERMIT_REGWEB3, UtilTraducciones.TAMANYO_MAXIMO_REGWEB3);
 
 	}
 

@@ -120,5 +120,13 @@ public enum TypeParametroVentana {
 	/**
 	 * Modo importar (CC o IM)
 	 */
-	MODO_IMPORTAR;
+	MODO_IMPORTAR,
+	/**
+	 * Caracteres no permitidos
+	 */
+	CARACT_NO_PERMITIDOS,
+	/**
+	 * Caracteres no permitidos
+	 */
+	TAMANYO_MAX;
 }
