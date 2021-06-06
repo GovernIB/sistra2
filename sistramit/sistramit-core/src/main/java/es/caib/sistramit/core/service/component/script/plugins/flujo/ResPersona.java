@@ -358,8 +358,16 @@ public final class ResPersona implements ResPersonaInt {
 	 * @param numero
 	 * @return
 	 */
-	private boolean mayorCero(final String numero) {
-		return (numero != null && Long.parseLong(numero) > 0);
+	private boolean mayorCero(final String numero) throws ScriptException {
+		boolean res = false;
+		if (StringUtils.isNotBlank(numero)) {
+			try {
+				res = (Long.parseLong(numero) > 0);
+			} catch (final NumberFormatException nfe) {
+				throw new ScriptException("No es número: " + numero);
+			}
+		}
+		return res;
 	}
 
 	/**
