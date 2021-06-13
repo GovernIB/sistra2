@@ -72,6 +72,7 @@
 <!-- 	NO MODIFICAR propiedades en blanco por defecto para la generacion del commit -->
 		<git.commit.id.abbrev></git.commit.id.abbrev>
 		<prefix.revision></prefix.revision>
+		<httpcomponents.version>4.3.4</httpcomponents.version>
 	</properties>
 
 	<!-- https://github.com/GovernIB/maven/tree/gh-pages -->

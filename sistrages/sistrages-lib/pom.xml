@@ -171,6 +171,12 @@
 		    <version>${commons-codec.version}</version>
 		</dependency>
 
+		<dependency>
+	        <groupId>org.apache.httpcomponents</groupId>
+	        <artifactId>httpclient</artifactId>
+	        <version>${httpcomponents.version}</version>
+	    </dependency>
+
 	</dependencies>
 
 </project>
