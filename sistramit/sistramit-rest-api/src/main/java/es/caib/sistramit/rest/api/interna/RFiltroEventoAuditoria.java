@@ -24,6 +24,9 @@ public class RFiltroEventoAuditoria {
 	@ApiModelProperty(value = "Nif")
 	private String nif;
 
+	@ApiModelProperty(value = "Nombre")
+	private String nombre;
+
 	@ApiModelProperty(value = "Fecha desde")
 	private Date fechaDesde;
 
@@ -76,6 +79,14 @@ public class RFiltroEventoAuditoria {
 
 	public void setNif(final String nif) {
 		this.nif = nif;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(final String nombre) {
+		this.nombre = nombre;
 	}
 
 	public Date getFechaDesde() {

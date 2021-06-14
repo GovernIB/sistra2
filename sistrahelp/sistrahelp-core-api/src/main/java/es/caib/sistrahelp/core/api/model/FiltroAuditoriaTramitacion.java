@@ -17,6 +17,7 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 	private List<String> listaAreas;
 	private String idSesionTramitacion;
 	private String nif;
+	private String nombre;
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private TypeEvento evento;
@@ -56,6 +57,7 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 			this.listaAreas = pFiltroAuditoriaTramitacion.listaAreas;
 			this.idSesionTramitacion = pFiltroAuditoriaTramitacion.idSesionTramitacion;
 			this.nif = pFiltroAuditoriaTramitacion.nif;
+			this.nombre = pFiltroAuditoriaTramitacion.nombre;
 			this.fechaDesde = pFiltroAuditoriaTramitacion.fechaDesde;
 			this.fechaHasta = pFiltroAuditoriaTramitacion.fechaHasta;
 			this.evento = pFiltroAuditoriaTramitacion.evento;
@@ -93,6 +95,14 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 
 	public void setNif(final String nif) {
 		this.nif = nif;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(final String nombre) {
+		this.nombre = nombre;
 	}
 
 	public Date getFechaDesde() {

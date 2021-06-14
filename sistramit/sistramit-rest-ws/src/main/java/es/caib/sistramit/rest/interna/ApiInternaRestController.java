@@ -342,6 +342,7 @@ public class ApiInternaRestController {
 			filtro.setListaAreas(pRFiltro.getListaAreas());
 			filtro.setIdSesionTramitacion(pRFiltro.getIdSesionTramitacion());
 			filtro.setNif(pRFiltro.getNif());
+			filtro.setNombre(pRFiltro.getNombre());
 			filtro.setFechaDesde(pRFiltro.getFechaDesde());
 			filtro.setFechaHasta(pRFiltro.getFechaHasta());
 

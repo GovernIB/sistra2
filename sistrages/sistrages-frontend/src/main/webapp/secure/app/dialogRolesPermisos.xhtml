@@ -41,7 +41,7 @@
 					</p:selectOneMenu >
 
 					<p:outputLabel for="codigo" value="#{msg['dialogRolesPermisos.headerCodigo']}" />
-					<p:inputText id="codigo" value="#{dialogRolesPermisos.data.valor}" disabled="#{dialogRolesPermisos.consulta}" required="true" size="40" maxlength="100"/>
+					<p:inputText id="codigo" value="#{dialogRolesPermisos.data.valor}" disabled="#{dialogRolesPermisos.consulta}" required="true" size="42" maxlength="100"/>
 
 					<p:outputLabel for="area" value="#{msg['dialogRolesPermisos.headerArea']}" />
 					<p:selectOneMenu id="area" value="#{dialogRolesPermisos.data.area}" converter="#{areaConverter}" required="true" disabled="#{dialogRolesPermisos.consulta}">
@@ -49,7 +49,7 @@
         			</p:selectOneMenu>
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogRolesPermisos.headerDescripcion']}" />
-					<p:inputText id="descripcion" value="#{dialogRolesPermisos.data.descripcion}" required="true" size="40" maxlength="255" disabled="#{dialogRolesPermisos.consulta}"/>
+					<p:inputText id="descripcion" value="#{dialogRolesPermisos.data.descripcion}" required="true" size="42" maxlength="255" disabled="#{dialogRolesPermisos.consulta}"/>
 
 					<p:outputLabel value="#{msg['dialogRolesPermisos.headerPermisos']}:"/>
 					<p:outputLabel value=" " />

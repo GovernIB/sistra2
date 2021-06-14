@@ -47,6 +47,12 @@
 				 		<p:outputLabel for="fecha" value="#{msg['dialogAuditoriaTramites.fecha']}:" />
 				 		<p:calendar id="fecha" value="#{dialogAuditoriaTramites.dato.fecha}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showButtonPanel="false" disabled="true"/>
 
+						<p:outputLabel for="nombreUsu" value="#{msg['dialogAuditoriaTramites.nombreUsu']}:" />
+						<p:inputText id="nombreUsu" value="#{dialogAuditoriaTramites.dato.nombre.concat(' ').concat(dialogAuditoriaTramites.dato.apellido1).concat(' ').concat(dialogAuditoriaTramites.dato.apellido2)}" disabled="true" size="40"/>
+
+						<p:outputLabel for="nifUsu" value="#{msg['dialogAuditoriaTramites.nifUsu']}:" />
+						<p:inputText id="nifUsu" value="#{dialogAuditoriaTramites.dato.nif}" disabled="true" size="40"/>
+
 				 		<p:outputLabel for="descripcion" value="#{msg['dialogAuditoriaTramites.descripcion']}:" />
 						<p:inputTextarea id="descripcion" value="#{dialogAuditoriaTramites.dato.descripcion}" disabled="true" rows="3" cols="80"/>
 

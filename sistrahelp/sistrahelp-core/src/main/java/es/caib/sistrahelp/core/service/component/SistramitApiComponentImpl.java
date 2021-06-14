@@ -352,6 +352,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 			rFiltro.setListaAreas(pFiltro.getListaAreas());
 			rFiltro.setIdSesionTramitacion(pFiltro.getIdSesionTramitacion());
 			rFiltro.setNif(pFiltro.getNif());
+			rFiltro.setNombre(pFiltro.getNombre());
 			rFiltro.setFechaDesde(pFiltro.getFechaDesde());
 			rFiltro.setFechaHasta(pFiltro.getFechaHasta());
 

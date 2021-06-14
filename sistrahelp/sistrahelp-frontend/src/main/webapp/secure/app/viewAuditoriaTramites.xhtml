@@ -22,72 +22,70 @@
 
 			<!-- Toolbar -->
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
-        	<p:panelGrid id="panelFiltro"  styleClass="noBackground w100 h10 noBorders">
-        		<p:row>
-        			<p:column styleClass="w27 noPadding">
-		        		<h:panelGrid columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
+        	<p:panelGrid id="panelFiltro"  styleClass="noBackground w100 h10 noBorders ,showcase-text-align-center">
+        			<p:column styleClass=" noPadding ">
+		        		<h:panelGrid columns="2" styleClass="w100, noPadding" >
 			        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewAuditoriaTramites.filtroIdSesion']}:"/>
 				        	<p:inputText id="filtroIdSesion" value="#{viewAuditoriaTramites.filtros.idSesionTramitacion}" size="30" maxlength="30"/>
 			        	</h:panelGrid>
-		        	</p:column>
-		        	<p:column styleClass="w22 noPadding">
-			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
-				        	<p:outputLabel for="filtroNif" value="#{msg['viewAuditoriaTramites.filtroNif']}:"/>
-				        	<p:inputText id="filtroNif" value="#{viewAuditoriaTramites.filtros.nif}" size="12" maxlength="12" onblur="this.value = this.value.toUpperCase();"/>
+
+			        	<h:panelGrid columns="2" styleClass="w100, noPadding" >
+				        	<p:outputLabel for="filtroNombre" value="#{msg['viewAuditoriaTramites.filtroNombre']}:"/>
+				        	<p:inputText id="filtroNombre" value="#{viewAuditoriaTramites.filtros.nombre}" size="32" maxlength="12" onblur="this.value = this.value.toUpperCase();"/>
 			        	</h:panelGrid>
 		        	</p:column>
-		        	<p:column styleClass="w26 noPadding">
-			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
+		        	<p:column styleClass=" noPadding p-justify-start">
+			        	<h:panelGrid columns="2" styleClass="w100, noPadding">
+				        	<p:outputLabel for="filtroNif" value="#{msg['viewAuditoriaTramites.filtroNif']}:"/>
+				        	<p:inputText id="filtroNif" value="#{viewAuditoriaTramites.filtros.nif}" size="35" maxlength="12" onblur="this.value = this.value.toUpperCase();"/>
+			        	</h:panelGrid>
+
+			        	<h:panelGrid columns="2" styleClass="w100, noPadding">
 			        		<p:outputLabel for="filtroTramite" value="#{msg['viewAuditoriaTramites.filtroTramite']}:"/>
 			        		<h:panelGroup>
 				        		<p:inputText id="filtroTramite" value="#{viewAuditoriaTramites.filtros.idTramite}" size="16" maxlength="20" onblur="this.value = this.value.toUpperCase();">
-				        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+				        			<p:keyFilter preventPaste="false" regEx="/[a-z0-9_-]/i"/>
 				        		</p:inputText>
 				        		<p:outputLabel value=" / "/>
 				        		<p:inputText id="filtroVersion" value="#{viewAuditoriaTramites.filtros.versionTramite}" size="1" maxlength="2">
-				        			<p:keyFilter regEx="/[0-9]/i"/>
+				        			<p:keyFilter preventPaste="false" regEx="/[0-9]/i"/>
 				        		</p:inputText>
 			        		</h:panelGroup>
 			        	</h:panelGrid>
 		        	</p:column>
-		        	<p:column styleClass="w25 noPadding">
-			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w40 grid-right,w60">
+		        	<p:column styleClass=" noPadding p-justify-start">
+			        	<h:panelGrid columns="2" styleClass="w100, noPadding" >
 			        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewAuditoriaTramites.filtroProcedimiento']}:"/>
-			        		<p:inputText id="filtroProcedimiento" value="#{viewAuditoriaTramites.filtros.idProcedimientoCP}" size="20" maxlength="20">
-			        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+			        		<p:inputText id="filtroProcedimiento" value="#{viewAuditoriaTramites.filtros.idProcedimientoCP}" size="19" maxlength="20">
+			        			<p:keyFilter preventPaste="false" regEx="/[a-z0-9_-]/i"/>
 			        		</p:inputText>
 			        	</h:panelGrid>
-		        	</p:column>
-				</p:row>
-				<p:row>
-					<p:column colspan="2">
-							<p:outputLabel value="#{msg['viewAuditoriaTramites.filtroFecha']}:" styleClass="padding-right-2pct"/>
 
-			        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewAuditoriaTramites.filtroFechaInicio']}:" styleClass="padding-right-4"/>
-			        		<p:calendar id="filtroFechaInicio" value="#{viewAuditoriaTramites.filtros.fechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
-
-			        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewAuditoriaTramites.filtroFechaFin']}:" styleClass="padding-right-4"/>
-			        		<p:calendar id="filtroFechaFin" value="#{viewAuditoriaTramites.filtros.fechaHasta}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
-
-					</p:column>
-					<p:column styleClass="noPadding">
-			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
+			        	<h:panelGrid columns="2" styleClass="w100">
 			        		<p:outputLabel for="filtroEvento" value="#{msg['viewAuditoriaTramites.filtroEvento']}:"/>
 
 							<p:selectOneMenu id="filtroEvento" value="#{viewAuditoriaTramites.filtros.evento}">
 							 	<f:selectItem itemLabel="#{msg['selectItem.Todos']}" itemValue="" />
 		    					<f:selectItems value="#{viewAuditoriaTramites.tiposEventos}" var="evento" itemLabel="#{evento} - #{msg['typeEvento.' += evento]}" />
 							</p:selectOneMenu >
-
 			        	</h:panelGrid>
-		        	</p:column>
-		        	<p:column styleClass="noPadding">
-			        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="table-rightaligned">
+					</p:column>
+					<p:column styleClass=" noPadding p-justify-start">
+					<h:panelGrid columns="2" styleClass="w100, noPadding">
+						<p:outputLabel for="filtroFechaInicio" value="#{msg['viewAuditoriaTramites.filtroFechaInicio']}:"/>
+			        	<p:calendar id="filtroFechaInicio" value="#{viewAuditoriaTramites.filtros.fechaDesde}" size="26" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" />
+					</h:panelGrid>
+					<h:panelGrid columns="2" styleClass="w100, noPadding">
+			        	<p:outputLabel for="filtroFechaFin" value="#{msg['viewAuditoriaTramites.filtroFechaFin']}:"/>
+			        	<p:calendar id="filtroFechaFin" value="#{viewAuditoriaTramites.filtros.fechaHasta}" style="margin-left:15px" size="26" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+					</h:panelGrid>
+					</p:column>
+					<p:column styleClass=" noPadding p-align-start">
+			        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" >
 		          			<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
 		          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.ayuda}"/>
 						</h:panelGrid>
 					</p:column>
-				</p:row>
           	</p:panelGrid>
 
 

@@ -73,7 +73,7 @@ public class REventoAuditoria {
 	 */
 	@ApiModelProperty(value = "Apellido 2")
 	private String apellido2;
-	
+
 	/**
 	 * id tramite.
 	 */

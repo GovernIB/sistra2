@@ -194,6 +194,11 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 					builder.like(tableT.get("nifIniciador"), "%" + pFiltroBusqueda.getNif() + "%"));
 		}
 
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getNombre())) {
+			predicate = builder.and(predicate,
+					builder.like(tableT.get("nombreIniciador"), "%" + pFiltroBusqueda.getNombre() + "%"));
+		}
+
 		if (pFiltroBusqueda.getEvento() != null) {
 			predicate = builder.and(predicate,
 					builder.equal(tableE.get("tipo"), pFiltroBusqueda.getEvento().toString()));
@@ -244,6 +249,12 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 						query.orderBy(builder.asc(tableT.get("nifIniciador")));
 					} else {
 						query.orderBy(builder.desc(tableT.get("nifIniciador")));
+					}
+				} else if ("nombre".equals(pFiltroBusqueda.getSortField())) {
+					if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+						query.orderBy(builder.asc(tableT.get("nombreIniciador")));
+					} else {
+						query.orderBy(builder.desc(tableT.get("nombreIniciador")));
 					}
 				} else if ("idTramite".equals(pFiltroBusqueda.getSortField())) {
 					if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
@@ -419,8 +430,7 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 	/**
 	 * Convierte lista eventos a lista string.
 	 *
-	 * @param listaEventos
-	 *                         lista eventos
+	 * @param listaEventos lista eventos
 	 * @return lista string
 	 */
 	private List<String> getListaEventosToString(final List<TypeEvento> listaEventos) {

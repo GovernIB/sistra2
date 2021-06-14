@@ -86,6 +86,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	private void normalizarFiltro() {
 		filtros.setIdSesionTramitacion(StringUtils.trim(filtros.getIdSesionTramitacion()));
 		filtros.setNif(StringUtils.trim(filtros.getNif()));
+		filtros.setNombre(StringUtils.trim(filtros.getNombre()));
 		filtros.setIdTramite(StringUtils.trim(filtros.getIdTramite()));
 		filtros.setIdProcedimientoCP(StringUtils.trim(filtros.getIdProcedimientoCP()));
 	}
@@ -94,11 +95,29 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 * Buscar.
 	 */
 	private void buscar() {
+		sanitarFiltros();
 		// Filtra
 		final Long rowCount = helpDeskService.countAuditoriaEvento(filtros);
 		listaDatos = new EventoAuditoriaTramitacionLazyDataModel(helpDeskService, rowCount, filtros);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
+	}
+
+	private void sanitarFiltros() {
+		filtros.setIdTramite(filtrarString(filtros.getIdTramite(), "[a-zA-Z0-9_-]"));
+		filtros.setIdProcedimientoCP(filtrarString(filtros.getIdProcedimientoCP(), "[a-zA-Z0-9_-]"));
+	}
+
+	private String filtrarString(String var, String regex) {
+		String varB = "";
+		if (!var.trim().isEmpty() && var != null) {
+			for (int i = 0; i < var.length(); i++) {
+				if (Character.toString(var.charAt(i)).matches(regex)) {
+					varB += var.charAt(i);
+				}
+			}
+		}
+		return varB;
 	}
 
 	/**
@@ -187,8 +206,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	/**
 	 * Establece el valor de listaDatos.
 	 *
-	 * @param listaDatos
-	 *            el nuevo valor de listaDatos
+	 * @param listaDatos el nuevo valor de listaDatos
 	 */
 	public void setListaDatos(final LazyDataModel<EventoAuditoriaTramitacion> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -206,8 +224,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	/**
 	 * Establece el valor de datoSeleccionado.
 	 *
-	 * @param datoSeleccionado
-	 *            el nuevo valor de datoSeleccionado
+	 * @param datoSeleccionado el nuevo valor de datoSeleccionado
 	 */
 	public void setDatoSeleccionado(final EventoAuditoriaTramitacion datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
@@ -225,8 +242,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	/**
 	 * Establece el valor de filtros.
 	 *
-	 * @param filtros
-	 *            el nuevo valor de filtros
+	 * @param filtros el nuevo valor de filtros
 	 */
 	public void setFiltros(final FiltroAuditoriaTramitacion filtros) {
 		this.filtros = filtros;

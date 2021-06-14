@@ -39,7 +39,7 @@
 			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="codigo" value="#{msg['dialogDominio.headerCodigo']}" />
-				<p:inputText id="codigo" value="#{dialogDominio.data.identificador}" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+				<p:inputText id="codigo" value="#{dialogDominio.data.identificador}" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase();" styleClass="w95" validatorMessage="#{msg['error.validacion.identificador']}">
 					<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 					<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 			   	</p:inputText>

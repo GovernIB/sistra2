@@ -18,6 +18,7 @@ public class FiltroEventoAuditoria implements Serializable {
 	private List<String> listaAreas;
 	private String idSesionTramitacion;
 	private String nif;
+	private String nombre;
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private TypeEvento evento;
@@ -64,6 +65,14 @@ public class FiltroEventoAuditoria implements Serializable {
 
 	public void setNif(final String nif) {
 		this.nif = nif;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(final String nombre) {
+		this.nombre = nombre;
 	}
 
 	public Date getFechaDesde() {
