@@ -15,6 +15,7 @@ import es.caib.sistrages.rest.api.interna.RDominio;
 import es.caib.sistrages.rest.api.interna.RValoresDominio;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
+import es.caib.sistramit.core.service.model.integracion.ParametroDominio;
 import es.caib.sistramit.core.service.model.integracion.ParametrosDominio;
 import es.caib.sistramit.core.service.model.integracion.ValoresDominio;
 import es.caib.sistramit.core.service.repository.dao.DominioDao;
@@ -125,7 +126,14 @@ public final class DominiosResolucionComponentImpl implements DominiosResolucion
 		} else {
 			try {
 				final List<es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio> parametros = new ArrayList<>();
-				parametrosDominio.getParametros();
+				if (parametrosDominio != null && parametrosDominio.getParametros() != null) {
+					for (final ParametroDominio param : parametrosDominio.getParametros()) {
+						es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio params = new es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio();
+						params.setCodigo(param.getCodigo());
+						params.setValor(param.getValor());
+						parametros.add(params);
+					}
+				}
 				String user = null;
 				String pass = null;
 				if (dominio.getConfiguracionAutenticacion() != null) {
