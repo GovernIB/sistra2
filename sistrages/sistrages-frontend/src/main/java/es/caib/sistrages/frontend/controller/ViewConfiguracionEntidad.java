@@ -49,7 +49,7 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 public class ViewConfiguracionEntidad extends ViewControllerBase {
 
 	/** Log. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(DialogDefinicionVersionRegistrarTramite.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ViewConfiguracionEntidad.class);
 
 	/** Entidad service. **/
 	@Inject

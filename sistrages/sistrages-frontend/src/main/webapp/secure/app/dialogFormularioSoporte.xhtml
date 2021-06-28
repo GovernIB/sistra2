@@ -56,13 +56,14 @@
 			<p:outputLabel for="tipoDestinatario" value="#{msg['dialogFormularioSoporte.headerTipoDestinatario']}" />
 			<p:selectOneMenu id="tipoDestinatario" value="#{dialogFormularioSoporte.data.tipoDestinatario}" style="width:200px" required="true">
 			     <f:selectItems value="#{TypeFormularioSoporte.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioSoporte.' += tipo]}" />
-			</p:selectOneMenu >
+				 <p:ajax event="change" process="@form"  update="@form" />
+		    </p:selectOneMenu >
 
-			<p:outputLabel value="#{msg['dialogFormularioSoporte.headerEmails']}" />
-			<p:inputText value="#{dialogFormularioSoporte.data.listaEmails}" size="40" maxlength="4000"/>
+			<p:outputLabel id="labelEmails" value="#{msg['dialogFormularioSoporte.headerEmails']}"   rendered="#{dialogFormularioSoporte.data.tipoDestinatario.toString() == 'E'}"/>
+			<p:inputText   id="inputEmails" value="#{dialogFormularioSoporte.data.listaEmails}" size="40" maxlength="4000" rendered="#{dialogFormularioSoporte.data.tipoDestinatario.toString() == 'E'}" />
 
-			<p:spacer width="5" height="1"/>
-			<p:outputLabel styleClass="outputlabel-nota" value="#{msg['dialogFormularioSoporte.headerEmailsNota']}" />
+			<p:spacer 	   id="tabEmailsInfo" width="5" height="1"  rendered="#{dialogFormularioSoporte.data.tipoDestinatario.toString() == 'E'}" />
+			<p:outputLabel id="labelEmailsInfo"  styleClass="outputlabel-nota" value="#{msg['dialogFormularioSoporte.headerEmailsNota']}" rendered="#{dialogFormularioSoporte.data.tipoDestinatario.toString() == 'E'}" />
 
 	 	</h:panelGrid>
 

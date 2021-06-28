@@ -36,7 +36,7 @@
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="tipo" value="#{msg['dialogRolesPermisos.headerTipo']}" />
-					<p:selectOneMenu id="tipo" value="#{dialogRolesPermisos.data.tipo}" style="width:200px" required="true" disabled="#{dialogRolesPermisos.consulta}">
+					<p:selectOneMenu id="tipo" value="#{dialogRolesPermisos.data.tipo}" style="width:300px" required="true" disabled="#{dialogRolesPermisos.consulta}">
 					     <f:selectItems value="#{TypeRoleUser.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeRoleUser.' += tipo]}" />
 					</p:selectOneMenu >
 
@@ -44,7 +44,7 @@
 					<p:inputText id="codigo" value="#{dialogRolesPermisos.data.valor}" disabled="#{dialogRolesPermisos.consulta}" required="true" size="42" maxlength="100"/>
 
 					<p:outputLabel for="area" value="#{msg['dialogRolesPermisos.headerArea']}" />
-					<p:selectOneMenu id="area" value="#{dialogRolesPermisos.data.area}" converter="#{areaConverter}" required="true" disabled="#{dialogRolesPermisos.consulta}">
+					<p:selectOneMenu id="area" value="#{dialogRolesPermisos.data.area}" style="width:300px"  converter="#{areaConverter}" required="true" disabled="#{dialogRolesPermisos.consulta}">
             			<f:selectItems value="#{dialogRolesPermisos.areas}" var="area" itemLabel="#{area.identificador}" itemValue="#{area}" />
         			</p:selectOneMenu>
 

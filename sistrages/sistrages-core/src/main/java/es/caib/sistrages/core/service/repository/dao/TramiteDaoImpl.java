@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.ImportacionError;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
@@ -824,6 +825,16 @@ public class TramiteDaoImpl implements TramiteDao {
 
 	}
 
+	private List<Long> listTramiteVersion(final Long idArea) {
+
+		final String sql = "Select distinct tv.codigo From JVersionTramite tv where tv.tramite.area.codigo = :idArea order by tv.codigo ASC";
+		final Query query = entityManager.createQuery(sql);
+
+		query.setParameter("idArea", idArea);
+		return query.getResultList();
+
+	}
+
 	@Override
 	public Tramite getTramiteByIdentificador(final String identificador) {
 
@@ -1314,13 +1325,29 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 
 		// listar tramites
-		final List<Tramite> tramites = listarTramites(pIdArea, null);
-		for (final Tramite t : tramites) {
-			final String sql = "delete from JVersionTramite v  where v.tramite.codigo = :idTramite";
-			final Query query = entityManager.createQuery(sql);
-			query.setParameter("idTramite", t.getCodigo());
-			query.executeUpdate();
+//		final List<Tramite> tramites = listarTramites(pIdArea, null);
+//		for (final Tramite t : tramites) {
+//			//Borramos primeros los historiales
+//			final String sql = "delete from JHistorialVersion h inner JOIN h.versionTramite v  where v.tramite.codigo = :idTramite";
+//			final Query query = entityManager.createQuery(sql);
+//			query.setParameter("idTramite", t.getCodigo());
+//			query.executeUpdate();
+//
+//			//Borramos las versiones
+//			final String sqlVersion = "delete from JVersionTramite v  where v.tramite.codigo = :idTramite";
+//			final Query queryVersion = entityManager.createQuery(sqlVersion);
+//			queryVersion.setParameter("idTramite", t.getCodigo());
+//			queryVersion.executeUpdate();
+//		}
+//
+
+		final List<Long> tramitesVersion = listTramiteVersion(pIdArea);
+		for (final Long tv : tramitesVersion) {
+
+			//Borramos las versiones
+			removeTramiteVersion(tv);
 		}
+		this.entityManager.flush();
 	}
 
 }

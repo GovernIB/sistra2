@@ -122,10 +122,15 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	 */
 	public void aceptar() {
 
-		if (data.getTipoDestinatario() == TypeFormularioSoporte.LISTA_DE_EMAILS && data.getListaEmails().isEmpty()) {
+		if (data.getTipoDestinatario() == TypeFormularioSoporte.LISTA_DE_EMAILS && data.getListaEmails() != null && data.getListaEmails().isEmpty()) {
 			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogFormularioSoporte.error.emailVacio"));
 			return;
+		}
+
+		//Si no pone de tipo emails, se quitan los emails.
+		if (data.getTipoDestinatario() != TypeFormularioSoporte.LISTA_DE_EMAILS) {
+			data.setListaEmails("");
 		}
 
 		// Realizamos alta o update

@@ -58,7 +58,6 @@ import es.caib.sistramit.rest.api.interna.RPersistenciaAuditoria;
 import es.caib.sistramit.rest.api.interna.RVerificacionPago;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 
 /**
  * Operaciones requeridas desde el resto de módulos de Sistra2. No requieren
@@ -85,26 +84,7 @@ public class ApiInternaRestController {
 	 */
 	@ApiOperation(value = "Invalidación caché", notes = "Invalidación caché")
 	@RequestMapping(value = "/invalidacion", method = RequestMethod.POST)
-	public boolean invalidacion(
-			@ApiParam("{\"tipo\":\"tipo\",\"identificador\":\"id\"}") @RequestBody final RInvalidacion invalidacionJSON) {
-
-//		try {
-//			final JSONObject objetoJson = new JSONObject(invalidacionJSON);
-//			final String tipo = objetoJson.getString("tipo");
-//			final String identificador = objetoJson.getString("identificador");
-//		} catch (final JSONException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-//		// Parseamos parametro enviado por POST
-//		RInvalidacion pars = null;
-//		if (StringUtils.isNotBlank(invalidacionJSON)) {
-//			try {
-//				pars = (RInvalidacion) JsonUtil.fromJson(invalidacionJSON, RInvalidacion.class);
-//			} catch (final JsonException e) {
-//				throw new ErrorJsonException(e);
-//			}
-//		}
+	public boolean invalidacion(@RequestBody final RInvalidacion invalidacionJSON) {
 
 		// Añade invalidación
 		final Invalidacion invalidacion = new Invalidacion();
@@ -274,7 +254,8 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte detalle pago.
 	 *
-	 * @param pDetallePago detalle pago
+	 * @param pDetallePago
+	 *                         detalle pago
 	 * @return detalle pago auditoria
 	 */
 	private RDetallePagoAuditoria convierteDetallePago(final DetallePagoAuditoria pDetallePago) {
@@ -329,7 +310,8 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte filtro auditoria busqueda.
 	 *
-	 * @param pRFiltro filtro
+	 * @param pRFiltro
+	 *                     filtro
 	 * @return FiltroAuditoriaTramitacion
 	 */
 	private FiltroEventoAuditoria convierteFiltroEventoAuditoria(final RFiltroEventoAuditoria pRFiltro) {
@@ -369,7 +351,8 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte filtro paginacion.
 	 *
-	 * @param pRFiltro filtro
+	 * @param pRFiltro
+	 *                     filtro
 	 * @return FiltroPaginacion
 	 */
 	private FiltroPaginacion convierteFiltroPaginacion(final RFiltroPaginacion pRFiltro) {
@@ -390,7 +373,8 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte evento auditoria.
 	 *
-	 * @param pEventoAuditoria evento auditoria
+	 * @param pEventoAuditoria
+	 *                             evento auditoria
 	 * @return REventoAuditoria
 	 */
 	private REventoAuditoria convierteEventoAuditoria(final EventoAuditoriaTramitacion pEventoAuditoria) {
@@ -434,7 +418,8 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte filtro tramite busqueda.
 	 *
-	 * @param pRFiltro filtro
+	 * @param pRFiltro
+	 *                     filtro
 	 * @return FiltroPerdidaClave
 	 */
 	private FiltroPerdidaClave convierteFiltroPerdidaClave(final RFiltroPerdidaClave pRFiltro) {
@@ -458,7 +443,8 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte perdida clave.
 	 *
-	 * @param pPerdidaClave perdida clave
+	 * @param pPerdidaClave
+	 *                          perdida clave
 	 * @return RPerdidaClave
 	 */
 	private RPerdidaClave conviertePerdidaClave(final PerdidaClave pPerdidaClave) {
@@ -480,7 +466,8 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte filtro auditoria busqueda.
 	 *
-	 * @param pRFiltro filtro
+	 * @param pRFiltro
+	 *                     filtro
 	 * @return FiltroAuditoriaTramitacion
 	 */
 	private FiltroPagoAuditoria convierteFiltroPagoAuditoriaBusqueda(final RFiltroPagoAuditoria pRFiltro) {
@@ -513,7 +500,8 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte pago auditoria.
 	 *
-	 * @param pPagoAuditoria pago auditoria
+	 * @param pPagoAuditoria
+	 *                           pago auditoria
 	 * @return RPagoAuditoria
 	 */
 	private RPagoAuditoria conviertePagoAuditoria(final PagoAuditoria pPagoAuditoria) {
@@ -547,7 +535,8 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte filtro auditoria busqueda.
 	 *
-	 * @param pRFiltro filtro
+	 * @param pRFiltro
+	 *                     filtro
 	 * @return FiltroAuditoriaTramitacion
 	 */
 	private FiltroPersistenciaAuditoria convierteFiltroPersistenciaAuditoria(
@@ -587,7 +576,8 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte persistencia auditoria.
 	 *
-	 * @param pPersistenciaAuditoria persistencia auditoria
+	 * @param pPersistenciaAuditoria
+	 *                                   persistencia auditoria
 	 * @return RPersistenciaAuditoria
 	 */
 	private RPersistenciaAuditoria conviertePersistenciaAuditoria(final PersistenciaAuditoria pPersistenciaAuditoria) {
@@ -626,7 +616,8 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte fichero persistencia auditoria.
 	 *
-	 * @param pFichero fichero
+	 * @param pFichero
+	 *                     fichero
 	 * @return RFicheroPersistenciaAuditoria
 	 */
 	private RFicheroPersistenciaAuditoria convierteFicheroPersistenciaAuditoria(

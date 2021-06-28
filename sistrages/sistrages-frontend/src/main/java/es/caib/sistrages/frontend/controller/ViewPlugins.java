@@ -297,7 +297,7 @@ public class ViewPlugins extends ViewControllerBase {
 		if (modoAccesoDlg != TypeModoAcceso.ALTA) {
 			params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
 		}
-		UtilJSF.openDialog(DialogPlugin.class, modoAccesoDlg, params, true, 640, 620);
+		UtilJSF.openDialog(DialogPlugin.class, modoAccesoDlg, params, true, 660, 550);
 	}
 
 	// ------- GETTERS / SETTERS --------------------------------

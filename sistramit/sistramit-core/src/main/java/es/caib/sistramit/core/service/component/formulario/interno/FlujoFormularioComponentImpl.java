@@ -231,6 +231,14 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 				// Evaluar cual es la siguiente pagina
 				final String idPaginaSiguiente = configuracionFormularioHelper
 						.evaluarScriptNavegacionPaginaActual(datosSesion);
+				// Debe ser posterior a la actual
+				final int indiceDefSiguiente = UtilsFormularioInterno.obtenerIndiceDefinicionPagina(datosSesion,
+						idPaginaSiguiente);
+				if (indiceDefSiguiente <= datosSesion.getDatosFormulario().getPaginaActualFormulario().getIndiceDef()) {
+					throw new ErrorConfiguracionException(
+							"El script de navegación de página debe indicar una página posterior (página actual: "
+									+ paginaDef.getIdentificador() + " - página siguiente: " + idPaginaSiguiente);
+				}
 				// Si pagina siguiente ya se ha rellenado antes, la obtenemos
 				PaginaFormularioData paginaSiguiente = datosSesion.getDatosFormulario()
 						.getPaginaPosteriorFormulario(idPaginaSiguiente);
@@ -238,10 +246,8 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 					// Si no se ha rellenado todavía la inicializamos
 					final RFormularioTramite defFormulario = UtilsFormularioInterno
 							.obtenerDefinicionFormulario(datosSesion);
-					final int indiceDef = UtilsFormularioInterno.obtenerIndiceDefinicionPagina(datosSesion,
-							idPaginaSiguiente);
-					paginaSiguiente = inicializarPagina(datosSesion.getIdFormulario(), indiceDef, defFormulario,
-							datosSesion.getDatosFormulario().getValoresIniciales());
+					paginaSiguiente = inicializarPagina(datosSesion.getIdFormulario(), indiceDefSiguiente,
+							defFormulario, datosSesion.getDatosFormulario().getValoresIniciales());
 				}
 				// Establecemos como pagina actual
 				datosSesion.getDatosFormulario().pushPaginaFormulario(paginaSiguiente);
