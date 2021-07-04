@@ -1,6 +1,5 @@
 package es.caib.sistrages.core.service.repository.dao;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +40,8 @@ public interface TramitePasoDao {
 	 * @param idFormulario
 	 */
 	public void removeFormulario(Long idTramitePaso, Long idFormulario);
+
+	public void updateFormulario(Long idFormulario);
 
 	/**
 	 * Devuelve el paso.
@@ -224,8 +225,8 @@ public interface TramitePasoDao {
 	Long importar(final FilaImportarTramiteRegistro filaTramiteVersion, TramitePaso tramitePaso, Long idTramite,
 			final Long idEntidad, final Map<Long, DisenyoFormulario> formularios, final Map<Long, Fichero> ficheros,
 			final Map<Long, byte[]> ficherosContent, final Map<Long, FormateadorFormulario> idFormateadores,
-			final Map<Long, Long> mapFormateadores, final Map<Long, GestorExternoFormularios> gestores, final Map<Long, Long> mapGestores,
-			final Map<Long, Long> idDominiosEquivalencia);
+			final Map<Long, Long> mapFormateadores, final Map<Long, GestorExternoFormularios> gestores,
+			final Map<Long, Long> mapGestores, final Map<Long, Long> idDominiosEquivalencia);
 
 	/**
 	 * Comprueba si un formulario se repite.

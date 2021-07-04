@@ -1,22 +1,15 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
-import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.service.DominioService;
-import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
-import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -40,7 +33,7 @@ public class DialogConfiguracionDominio extends DialogControllerBase {
 	private String iCampos;
 
 	/** Fila seleccionada. **/
-	private DominioTramite valorSeleccionado;
+	private Dominio valorSeleccionado;
 
 	/** Ambito. **/
 	private String ambito;
@@ -84,7 +77,7 @@ public class DialogConfiguracionDominio extends DialogControllerBase {
 	/**
 	 * @return the valorSeleccionado
 	 */
-	public DominioTramite getValorSeleccionado() {
+	public Dominio  getValorSeleccionado() {
 		return valorSeleccionado;
 	}
 
@@ -92,7 +85,7 @@ public class DialogConfiguracionDominio extends DialogControllerBase {
 	 * @param valorSeleccionado
 	 *            the valorSeleccionado to set
 	 */
-	public void setValorSeleccionado(final DominioTramite valorSeleccionado) {
+	public void setValorSeleccionado(final Dominio  valorSeleccionado) {
 		this.valorSeleccionado = valorSeleccionado;
 	}
 

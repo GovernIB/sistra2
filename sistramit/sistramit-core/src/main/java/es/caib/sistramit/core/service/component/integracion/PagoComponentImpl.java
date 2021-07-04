@@ -292,12 +292,13 @@ public final class PagoComponentImpl implements PagoComponent {
 			final FormularioPdf formularioPdf = new FormularioPdf();
 			final Cabecera cabecera = new Cabecera();
 			cabecera.setTitulo("PAGAMENT SIMULAT");
+			cabecera.setSubtitulo("  ");
 			formularioPdf.setCabecera(cabecera);
 			final List<Linea> lineas = new ArrayList<Linea>();
 			formularioPdf.setLineas(lineas);
 
 			generaPdfMockLinea(lineas, "MODEL", sesionPago.getModelo());
-			generaPdfMockLinea(lineas, "TASA", sesionPago.getTasaId());
+			generaPdfMockLinea(lineas, "TAXA", sesionPago.getTasaId());
 			generaPdfMockLinea(lineas, "CONCEPTE", sesionPago.getConcepto());
 			generaPdfMockLinea(lineas, "SUBJECTE",
 					sesionPago.getSujetoPasivo().getNif() + " - " + sesionPago.getSujetoPasivo().getNombre());

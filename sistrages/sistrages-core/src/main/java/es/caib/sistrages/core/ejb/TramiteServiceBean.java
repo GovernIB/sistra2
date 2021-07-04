@@ -554,7 +554,16 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public List<GestorExternoFormularios> getGFEByTramiteVersion(Long idTramiteVersion) {
+	public List<GestorExternoFormularios> getGFEByTramiteVersion(final Long idTramiteVersion) {
 		return tramiteService.getGFEByTramiteVersion(idTramiteVersion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void borrarScriptsVersion(final Long idTramiteVersion, final boolean propiedades, final boolean rellenar,
+			final boolean anexo, final boolean tasas, final boolean registrar, final boolean propcaptura) {
+		tramiteService.borrarScriptsVersion(idTramiteVersion, propiedades, rellenar, anexo, tasas, registrar,
+				propcaptura);
+
 	}
 }

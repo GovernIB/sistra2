@@ -16,7 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.ImportacionError;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
@@ -224,8 +223,12 @@ public class TramiteDaoImpl implements TramiteDao {
 	@SuppressWarnings("unchecked")
 	private List<Tramite> listarTramites(final Long idArea, final String pFiltro) {
 		final List<Tramite> resultado = new ArrayList<>();
-
-		String sql = "Select t From JTramite t where t.area.codigo = :idArea";
+		String sql = null;
+		if (idArea == null) {
+			sql = "Select t From JTramite t where t.area.codigo is not null";
+		} else {
+			sql = "Select t From JTramite t where t.area.codigo = :idArea";
+		}
 
 		if (StringUtils.isNotBlank(pFiltro)) {
 			sql += " AND (upper(t.descripcion) like :filtro OR upper(t.identificador) like :filtro)";
@@ -233,8 +236,9 @@ public class TramiteDaoImpl implements TramiteDao {
 		sql += " ORDER BY t.codigo";
 
 		final Query query = entityManager.createQuery(sql);
-
-		query.setParameter("idArea", idArea);
+		if (idArea != null) {
+			query.setParameter("idArea", idArea);
+		}
 		if (StringUtils.isNotBlank(pFiltro)) {
 			query.setParameter("filtro", "%" + pFiltro.toUpperCase() + "%");
 		}
@@ -1344,7 +1348,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		final List<Long> tramitesVersion = listTramiteVersion(pIdArea);
 		for (final Long tv : tramitesVersion) {
 
-			//Borramos las versiones
+			// Borramos las versiones
 			removeTramiteVersion(tv);
 		}
 		this.entityManager.flush();

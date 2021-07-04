@@ -191,8 +191,8 @@ public class ViewTramites extends ViewControllerBase {
 		}
 
 		final Area area = listaAreasSeleccionadas.get(0);
-		UtilJSF.redirectJsfPage(
-				"/secure/app/viewFormulariosExternos.xhtml?ambito=A&id=" + area.getCodigo() + "&area=" + area.getIdentificador());
+		UtilJSF.redirectJsfPage("/secure/app/viewFormulariosExternos.xhtml?ambito=A&id=" + area.getCodigo() + "&area="
+				+ area.getIdentificador());
 	}
 
 	/**
@@ -205,8 +205,8 @@ public class ViewTramites extends ViewControllerBase {
 		}
 
 		final Area area = listaAreasSeleccionadas.get(0);
-		UtilJSF.redirectJsfPage(
-				"/secure/app/viewConfiguracionAutenticacion.xhtml?ambito=A&id=" + area.getCodigo() + "&area=" + area.getIdentificador());
+		UtilJSF.redirectJsfPage("/secure/app/viewConfiguracionAutenticacion.xhtml?ambito=A&id=" + area.getCodigo()
+				+ "&area=" + area.getIdentificador());
 	}
 
 	/**
@@ -246,9 +246,9 @@ public class ViewTramites extends ViewControllerBase {
 		}
 	}
 
-    /**
-     * Abre dialogo para editar tramite
-     */
+	/**
+	 * Abre dialogo para editar tramite
+	 */
 	public void editarTramite() {
 		abrirTramite(TypeModoAcceso.EDICION);
 	}
@@ -668,40 +668,39 @@ public class ViewTramites extends ViewControllerBase {
 		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
 			setListaAreas(listaTodasAreas);
 		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
-					for (final Area area : listaTodasAreas) {
-					final List<TypeRolePermisos> permisos = securityService
-							.getPermisosDesarrolladorEntidadByArea(area.getCodigo());
+			for (final Area area : listaTodasAreas) {
+				final List<TypeRolePermisos> permisos = securityService
+						.getPermisosDesarrolladorEntidadByArea(area.getCodigo());
 
-					if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
 
-						if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
-								|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
-								|| permisos.contains(TypeRolePermisos.CONSULTA)) {
-							area.setTienePermiso(true);
-							getListaAreas().add(area);
-						} else if (mostrarTodasAreas) {
-							area.setTienePermiso(false);
-							getListaAreas().add(area);
-						}
-					} else {
-						if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
-								|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)) {
-							area.setTienePermiso(true);
-							getListaAreas().add(area);
-						} else if (mostrarTodasAreas)  {
-							area.setTienePermiso(false);
-							getListaAreas().add(area);
-						}
-
+					if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+							|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
+							|| permisos.contains(TypeRolePermisos.CONSULTA)) {
+						area.setTienePermiso(true);
+						getListaAreas().add(area);
+					} else if (mostrarTodasAreas) {
+						area.setTienePermiso(false);
+						getListaAreas().add(area);
 					}
+				} else {
+					if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+							|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)) {
+						area.setTienePermiso(true);
+						getListaAreas().add(area);
+					} else if (mostrarTodasAreas) {
+						area.setTienePermiso(false);
+						getListaAreas().add(area);
+					}
+
 				}
+			}
 		}
 
 		buscarAreasPreseleccionadas();
 
 		buscarTramites();
 	}
-
 
 	/**
 	 * Si hay un area marcada por url, lo marcaremos como la seleccionada. Sino,
@@ -758,18 +757,13 @@ public class ViewTramites extends ViewControllerBase {
 
 		desmarcar();
 		// Verifica si no hay fila seleccionada
-		if (!verificarFilasSeleccionadasArea()) {
-			return;
-		}
-
-		for (final Area areaSeleccionada : listaAreasSeleccionadas) {
-
-			final List<Tramite> tramites = tramiteService.listTramite(areaSeleccionada.getCodigo(), this.filtro);
+		if (mostrarTodasAreas && filtro != null) {
+			final List<Tramite> tramites = tramiteService.listTramite(null, this.filtro);
 
 			// Obtenemos activa a los tramites que tengan alguna version activa
-			final List<Long> idTramites = tramiteService.listTramiteVersionActiva(areaSeleccionada.getCodigo());
 
 			for (final Tramite tramite : tramites) {
+				final List<Long> idTramites = tramiteService.listTramiteVersionActiva(tramite.getIdArea());
 				if (idTramites.contains(tramite.getCodigo())) {
 					tramite.setActivo(true);
 				}
@@ -783,15 +777,54 @@ public class ViewTramites extends ViewControllerBase {
 						|| StringUtils.isEmpty(filtro))
 					listaTramiteVersiones.add(new TramiteVersiones(tramite, listaVersiones));
 			}
+			if (idTramite != null && !idTramite.isEmpty()) {
+				buscarTramitesPorDefecto();
+			}
+
+			Collections.sort(listaTramiteVersiones,
+					(o1, o2) -> o1.getTramite().getIdentificador().compareTo((o2.getTramite().getIdentificador())));
+
+		} else {
+
+			if (!verificarFilasSeleccionadasArea()) {
+				return;
+			}
+
+			for (final Area areaSeleccionada : listaAreasSeleccionadas) {
+
+				final List<Tramite> tramites = tramiteService.listTramite(areaSeleccionada.getCodigo(), this.filtro);
+
+				// Obtenemos activa a los tramites que tengan alguna version activa
+				final List<Long> idTramites = tramiteService.listTramiteVersionActiva(areaSeleccionada.getCodigo());
+
+				for (final Tramite tramite : tramites) {
+					if (idTramites.contains(tramite.getCodigo())) {
+						tramite.setActivo(true);
+					}
+
+					final List<TramiteVersion> listaVersiones = tramiteService.listTramiteVersion(tramite.getCodigo(),
+							null);
+
+					if ((StringUtils.isNotEmpty(filtro)
+							&& (tramite.getIdentificador().toUpperCase().contains(filtro.toUpperCase())
+									|| tramite.getDescripcion().toUpperCase().contains(filtro.toUpperCase())))
+							|| StringUtils.isEmpty(filtro))
+						listaTramiteVersiones.add(new TramiteVersiones(tramite, listaVersiones));
+				}
+
+			}
+
+			if (idTramite != null && !idTramite.isEmpty()) {
+				buscarTramitesPorDefecto();
+			}
+
+			Collections.sort(listaTramiteVersiones,
+					(o1, o2) -> o1.getTramite().getIdentificador().compareTo((o2.getTramite().getIdentificador())));
 
 		}
+	}
 
-		if (idTramite != null && !idTramite.isEmpty()) {
-			buscarTramitesPorDefecto();
-		}
-
-		Collections.sort(listaTramiteVersiones,
-				(o1, o2) -> o1.getTramite().getIdentificador().compareTo((o2.getTramite().getIdentificador())));
+	private void buscarTramitesSort(Long idAreaSeleccionada, String filtro) {
 
 	}
 
@@ -1217,6 +1250,20 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
+	 * Borra todos los scripts.
+	 */
+	public void borrarScript() {
+
+		if (!verificarFilaSeleccionadaVersion()) {
+			return;
+		}
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
+		UtilJSF.openDialog(DialogTramiteBorrarScripts.class, TypeModoAcceso.EDICION, params, true, 1000, 520);
+	}
+
+	/**
 	 * Exportar version.
 	 */
 	public void exportarVersion() {
@@ -1567,7 +1614,7 @@ public class ViewTramites extends ViewControllerBase {
 		return mostrarTodasAreas;
 	}
 
-	public void setMostrarTodasAreas(boolean mostrarTodasAreas) {
+	public void setMostrarTodasAreas(final boolean mostrarTodasAreas) {
 		this.mostrarTodasAreas = mostrarTodasAreas;
 	}
 

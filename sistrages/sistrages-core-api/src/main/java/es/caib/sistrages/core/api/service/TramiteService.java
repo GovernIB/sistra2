@@ -656,7 +656,17 @@ public interface TramiteService {
 	public List<ScriptInfo> listScriptsInfo(Long idTramiteVersion);
 
 	/**
+	 * Borra los scrips seleccionados.
+	 *
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	public void borrarScriptsVersion(Long idTramiteVersion, boolean propiedades, boolean rellenar, boolean anexo,
+			boolean tasas, boolean registrar, boolean propcaptura);
+
+	/**
 	 * Obtiene los formularios gestores externos dependiente el idTramiteVersion
+	 * 
 	 * @param idTramiteVersion
 	 * @return
 	 */

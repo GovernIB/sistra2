@@ -353,6 +353,16 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	}
 
 	@Override
+	public void updateFormulario(Long idFormulario) {
+		final JFormulario jFormulario = entityManager.find(JFormulario.class, idFormulario);
+		if (jFormulario != null) {
+			jFormulario.setScriptPlantilla(null);
+			entityManager.merge(jFormulario);
+		}
+
+	}
+
+	@Override
 	public List<FormateadorFormulario> getFormateadoresTramiteVersion(final Long idTramiteVersion) {
 
 		final String sql = "Select distinct plan.formateadorFormulario from  JPlantillaFormulario plan inner join plan.formulario fr where fr in (select forms.formulario from JPasoTramitacion pasot inner join pasot.pasoRellenar pasor inner join pasor.formulariosTramite forms  where pasot.versionTramite.codigo = :idTramiteVersion) ";
@@ -533,7 +543,8 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		final Map<String, Long> formulariosId = new HashMap<>();
 		if (tramitePaso instanceof TramitePasoRellenar) {
 			for (final FormularioTramite formulario : ((TramitePasoRellenar) tramitePaso).getFormulariosTramite()) {
-				if (formulario.getTipoFormulario() == TypeFormularioGestor.INTERNO && formulario.getIdFormularioInterno() != null) {
+				if (formulario.getTipoFormulario() == TypeFormularioGestor.INTERNO
+						&& formulario.getIdFormularioInterno() != null) {
 					formulariosId.put(formulario.getIdentificador(), formulario.getIdFormularioInterno());
 					formulario.setIdFormularioInterno(null);
 				}
@@ -596,7 +607,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 					formulario.setDescripcion(JLiteral.clonar(formulario.getDescripcion()));
 					FormularioTramite formT = formulario.toModel();
 
-					//Si es tipo externo, habra que asociarlo al formulario gestor externo
+					// Si es tipo externo, habra que asociarlo al formulario gestor externo
 //					if (formulario.getTipoFormulario().equals("E")) {
 //						Long id = formT.getFormularioGestorExterno().getCodigo();
 //						Long idGestor = mapGestores.get(id);
@@ -615,8 +626,8 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 						final DisenyoFormulario disenyoFormularioAlmacenado = formularioInternoDao
 								.getFormularioById(idJFormulario);
 						disenyoFormularioAlmacenado.setMostrarCabecera(formularioInterno.isMostrarCabecera());
-						disenyoFormularioAlmacenado
-								.setPermitirAccionesPersonalizadas(formularioInterno.isPermitirAccionesPersonalizadas());
+						disenyoFormularioAlmacenado.setPermitirAccionesPersonalizadas(
+								formularioInterno.isPermitirAccionesPersonalizadas());
 						if (formularioInterno.getScriptPlantilla() != null) {
 							formularioInterno.getScriptPlantilla().setCodigo(null);
 							disenyoFormularioAlmacenado
@@ -1302,4 +1313,5 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		queryRegistrar.executeUpdate();
 
 	}
+
 }

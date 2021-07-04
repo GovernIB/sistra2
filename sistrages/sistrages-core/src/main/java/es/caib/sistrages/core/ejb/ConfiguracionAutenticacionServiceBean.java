@@ -50,7 +50,7 @@ public class ConfiguracionAutenticacionServiceBean implements ConfiguracionAuten
 	 * es.caib.sistrages.core.api.model.ConfiguracionAutenticacion)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	@RolesAllowed({ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public Long addConfiguracionAutenticacion(final Long idEntidad, final ConfiguracionAutenticacion configuracionAutenticacion) {
 		return configuracionAutenticacionService.addConfiguracionAutenticacion(idEntidad, configuracionAutenticacion);
 
@@ -63,7 +63,7 @@ public class ConfiguracionAutenticacionServiceBean implements ConfiguracionAuten
 	 * removeConfiguracionAutenticacion( java.lang.Long)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	@RolesAllowed({ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public boolean removeConfiguracionAutenticacion(final Long id) {
 		return configuracionAutenticacionService.removeConfiguracionAutenticacion(id);
 
@@ -76,7 +76,7 @@ public class ConfiguracionAutenticacionServiceBean implements ConfiguracionAuten
 	 * updateConfiguracionAutenticacion(es. caib.sistrages.core.api.model.ConfiguracionAutenticacion)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	@RolesAllowed({ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void updateConfiguracionAutenticacion(final ConfiguracionAutenticacion configuracionAutenticacion) {
 		configuracionAutenticacionService.updateConfiguracionAutenticacion(configuracionAutenticacion);
 

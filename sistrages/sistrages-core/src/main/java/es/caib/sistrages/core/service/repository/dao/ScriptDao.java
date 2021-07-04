@@ -21,8 +21,7 @@ public interface ScriptDao {
 	/**
 	 * Obtiene literales script.
 	 *
-	 * @param idScript
-	 *            id script
+	 * @param idScript id script
 	 * @return lista literales
 	 */
 	public List<LiteralScript> getLiterales(final Long idScript);
@@ -70,9 +69,10 @@ public interface ScriptDao {
 	/**
 	 * Actualiza script.
 	 *
-	 * @param pScript
-	 *            script
+	 * @param pScript script
 	 */
 	void updateScript(Script pScript);
+
+	void deleteScript(Long idScript);
 
 }

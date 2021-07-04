@@ -46,6 +46,7 @@ import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
 import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
+import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.AreaComponent;
@@ -1343,6 +1344,187 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public List<GestorExternoFormularios> getGFEByTramiteVersion(final Long idTramiteVersion) {
 		return tramiteDao.getGFEByTramiteVersion(idTramiteVersion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void borrarScriptsVersion(final Long idTramiteVersion, final boolean propiedades, final boolean rellenar,
+			final boolean anexo, final boolean tasas, final boolean registrar, final boolean propcaptura) {
+		// Primero recorremos los pasos
+		for (TramitePaso tramitePaso : tramitePasoDao.getTramitePasos(idTramiteVersion)) {
+
+			if (tramitePaso instanceof TramitePasoRegistrar && registrar) {
+				borrarScriptsRegistro(tramitePaso);
+			} else if (tramitePaso instanceof TramitePasoTasa && tasas) {
+				borrarScriptsPago(tramitePaso);
+			} else if (tramitePaso instanceof TramitePasoAnexar && anexo) {
+				borrarScriptsAnexo(tramitePaso);
+			} else if (tramitePaso instanceof TramitePasoRellenar && rellenar) {
+				//Comentado porque tiene un bug
+				borrarScriptsRellenar(tramitePaso);
+			}
+
+			if (propcaptura) {
+				borrarScriptsCaptura(tramitePaso);
+			}
+			if (propiedades) {
+				borrarScriptsPropiedades(tramitePaso, idTramiteVersion);
+			}
+
+		}
+	}
+
+	private void borrarScriptsPropiedades(TramitePaso tramitePaso, Long idTramiteVersion) {
+		final TramiteVersion tv = tramiteDao.getTramiteVersion(idTramiteVersion);
+		ArrayList<Long> listaScripts = new ArrayList<Long>();
+		if (tv.getScriptInicializacionTramite() != null) {
+			listaScripts.add(tv.getScriptInicializacionTramite().getCodigo());
+			tv.setScriptInicializacionTramite(null);
+
+		}
+		if (tv.getScriptPersonalizacion() != null) {
+			listaScripts.add(tv.getScriptPersonalizacion().getCodigo());
+			tv.setScriptPersonalizacion(null);
+		}
+
+		tramiteDao.updateTramiteVersion(tv);
+		for (final Long scriptInfo : listaScripts) {
+			// borrar script
+
+			scriptDao.deleteScript(scriptInfo);
+		}
+	}
+
+	private void borrarScriptsCaptura(TramitePaso tramitePaso) {
+		ArrayList<Long> listaScripts = new ArrayList<Long>();
+		if (tramitePaso.getScriptNavegacion() != null) {
+			listaScripts.add(tramitePaso.getScriptNavegacion().getCodigo());
+			tramitePaso.setScriptNavegacion(null);
+		}
+
+		if (tramitePaso.getScriptVariables() != null) {
+			listaScripts.add(tramitePaso.getScriptVariables().getCodigo());
+			tramitePaso.setScriptVariables(null);
+		}
+		tramitePasoDao.updateTramitePaso(tramitePaso);
+		for (final Long scriptInfo : listaScripts) {
+			// borrar script
+
+			scriptDao.deleteScript(scriptInfo);
+		}
+
+	}
+
+	private void borrarScriptsRellenar(TramitePaso tramitePaso) {
+		ArrayList<Long> listaScripts = new ArrayList<Long>();
+		final List<ScriptInfo> scripts = listScriptsInfo((TramitePasoRellenar) tramitePaso);
+		if (!scripts.isEmpty()) {
+			TramitePasoRellenar tramitePasoRellenar = (TramitePasoRellenar) tramitePaso;
+			if (tramitePasoRellenar.getFormulariosTramite() != null) {
+				for (FormularioTramite formulario : tramitePasoRellenar.getFormulariosTramite()) {
+					if (formulario.getScriptDatosIniciales() != null) {
+						listaScripts.add(formulario.getScriptDatosIniciales().getCodigo());
+					}
+					if (formulario.getScriptFirma() != null) {
+						listaScripts.add(formulario.getScriptFirma().getCodigo());
+					}
+					if (formulario.getScriptObligatoriedad() != null) {
+						listaScripts.add(formulario.getScriptObligatoriedad().getCodigo());
+					}
+					if (formulario.getScriptParametros() != null) {
+						listaScripts.add(formulario.getScriptParametros().getCodigo());
+					}
+					if (formulario.getScriptRetorno() != null) {
+						listaScripts.add(formulario.getScriptRetorno().getCodigo());
+					}
+					formulario.setScriptDatosIniciales(null);
+					formulario.setScriptFirma(null);
+					formulario.setScriptObligatoriedad(null);
+					formulario.setScriptParametros(null);
+					formulario.setScriptRetorno(null);
+
+				}
+			}
+
+			tramitePasoDao.updateTramitePaso(tramitePasoRellenar);
+			for (final Long scriptInfo : listaScripts) {
+				// borrar script
+
+				scriptDao.deleteScript(scriptInfo);
+			}
+			for (final ScriptInfo scriptInfo : scripts) {
+				if (scriptInfo.getTipoScript().equals(TypeScriptFormulario.SCRIPT_PLANTILLA_PDF_DINAMICA)) {
+					Long codScript = scriptInfo.getFormulario().getIdFormularioInterno();
+					tramitePasoDao.updateFormulario(codScript);
+					scriptDao.deleteScript(scriptInfo.getCodigoScript());
+
+				}
+			}
+		}
+	}
+
+	private void borrarScriptsRegistro(TramitePaso tramitePaso) {
+		final List<ScriptInfo> scripts = listScriptsInfo((TramitePasoRegistrar) tramitePaso);
+		if (!scripts.isEmpty()) {
+			TramitePasoRegistrar tramiteregistrar = (TramitePasoRegistrar) tramitePaso;
+			tramiteregistrar.setScriptPresentador(null);
+			tramiteregistrar.setScriptRepresentante(null);
+			tramiteregistrar.setScriptAlFinalizar(null);
+			tramiteregistrar.setScriptDestinoRegistro(null);
+			tramiteregistrar.setScriptValidarRegistrar(null);
+			tramitePasoDao.updateTramitePaso(tramiteregistrar);
+			for (final ScriptInfo scriptInfo : scripts) {
+				// borrar script
+
+				scriptDao.deleteScript(scriptInfo.getCodigoScript());
+			}
+
+		}
+	}
+
+	private void borrarScriptsPago(TramitePaso tramitePaso) {
+		final List<ScriptInfo> scripts = listScriptsInfo((TramitePasoTasa) tramitePaso);
+		if (!scripts.isEmpty()) {
+			TramitePasoTasa tramitePasoTasa = (TramitePasoTasa) tramitePaso;
+			if (tramitePasoTasa.getTasas() != null) {
+				for (final Tasa tasa : tramitePasoTasa.getTasas()) {
+					tasa.setScriptObligatoriedad(null);
+					tasa.setScriptPago(null);
+				}
+
+			}
+
+			tramitePasoDao.updateTramitePaso(tramitePasoTasa);
+			for (final ScriptInfo scriptInfo : scripts) {
+				// borrar script
+
+				scriptDao.deleteScript(scriptInfo.getCodigoScript());
+			}
+
+		}
+	}
+
+	private void borrarScriptsAnexo(TramitePaso tramitePaso) {
+		final List<ScriptInfo> scripts = listScriptsInfo((TramitePasoAnexar) tramitePaso);
+		if (!scripts.isEmpty()) {
+			TramitePasoAnexar tramitePasoAnexar = (TramitePasoAnexar) tramitePaso;
+			tramitePasoAnexar.setScriptAnexosDinamicos(null);
+			if (tramitePasoAnexar.getDocumentos() != null) {
+				for (final Documento doc : tramitePasoAnexar.getDocumentos()) {
+					doc.setScriptFirmarDigitalmente(null);
+					doc.setScriptObligatoriedad(null);
+					doc.setScriptValidacion(null);
+				}
+			}
+
+			tramitePasoDao.updateTramitePaso(tramitePasoAnexar);
+			for (final ScriptInfo scriptInfo : scripts) {
+				// borrar script
+
+				scriptDao.deleteScript(scriptInfo.getCodigoScript());
+			}
+
+		}
 	}
 
 }

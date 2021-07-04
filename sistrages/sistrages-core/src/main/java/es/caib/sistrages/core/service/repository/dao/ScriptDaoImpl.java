@@ -183,4 +183,19 @@ public class ScriptDaoImpl implements ScriptDao {
 		final JScript jScript = JScript.fromModel(pScript);
 		entityManager.merge(jScript);
 	}
+
+	@Override
+	public void deleteScript(Long idScript) {
+		if (idScript == null) {
+			throw new FaltanDatosException(LITERAL_FALTAIDENTIFICADOR);
+		}
+
+		final JScript jScript = entityManager.find(JScript.class, idScript);
+		if (jScript == null) {
+			throw new NoExisteDato("No existe el literal script " + idScript);
+		}
+
+		entityManager.remove(jScript);
+
+	}
 }

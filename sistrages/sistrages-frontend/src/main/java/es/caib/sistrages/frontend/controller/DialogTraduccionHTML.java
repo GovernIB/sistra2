@@ -83,8 +83,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 
 	/** Literal falta literal. **/
 	private static final String ERROR_FATAL_LITERAL = "error.faltaliteral";
-	private static final String LITERAL_ERROR_EXCEDE_LONGITUD  = "error.excedeLongitudIdiomas";
-
+	private static final String LITERAL_ERROR_EXCEDE_LONGITUD = "error.excedeLongitudIdiomas";
 
 	/** Es modo readonly. **/
 	private int readonly;
@@ -242,14 +241,17 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 
 	/**
 	 * Comprueba si se excede la longitud.
+	 *
 	 * @param texto
 	 * @return
 	 */
 	private boolean excedeLongitud(final String texto) {
 
-		//4000 es el tamaño máximo en tradidi
+		// 4000 es el tamaño máximo en tradidi
+
 		return texto != null && texto.length() > 4000;
 	}
+
 	/**
 	 * Aceptar.
 	 */
@@ -339,8 +341,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param textoCa
-	 *            the textoCa to set
+	 * @param textoCa the textoCa to set
 	 */
 	public void setTextoCa(final String textoCa) {
 		this.textoCa = textoCa;
@@ -354,8 +355,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param textoEs
-	 *            the textoEs to set
+	 * @param textoEs the textoEs to set
 	 */
 	public void setTextoEs(final String textoEs) {
 		this.textoEs = textoEs;
@@ -369,8 +369,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param textoEn
-	 *            the textoEn to set
+	 * @param textoEn the textoEn to set
 	 */
 	public void setTextoEn(final String textoEn) {
 		this.textoEn = textoEn;
@@ -384,8 +383,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param textoDe
-	 *            the textoDe to set
+	 * @param textoDe the textoDe to set
 	 */
 	public void setTextoDe(final String textoDe) {
 		this.textoDe = textoDe;
@@ -399,8 +397,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleCa
-	 *            the visibleCa to set
+	 * @param visibleCa the visibleCa to set
 	 */
 	public void setVisibleCa(final boolean visibleCa) {
 		this.visibleCa = visibleCa;
@@ -414,8 +411,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleEs
-	 *            the visibleEs to set
+	 * @param visibleEs the visibleEs to set
 	 */
 	public void setVisibleEs(final boolean visibleEs) {
 		this.visibleEs = visibleEs;
@@ -429,8 +425,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleEn
-	 *            the visibleEn to set
+	 * @param visibleEn the visibleEn to set
 	 */
 	public void setVisibleEn(final boolean visibleEn) {
 		this.visibleEn = visibleEn;
@@ -444,8 +439,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleDe
-	 *            the visibleDe to set
+	 * @param visibleDe the visibleDe to set
 	 */
 	public void setVisibleDe(final boolean visibleDe) {
 		this.visibleDe = visibleDe;
@@ -459,8 +453,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param requiredCa
-	 *            the requiredCa to set
+	 * @param requiredCa the requiredCa to set
 	 */
 	public void setRequiredCa(final boolean requiredCa) {
 		this.requiredCa = requiredCa;
@@ -474,8 +467,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param requiredEs
-	 *            the requiredEs to set
+	 * @param requiredEs the requiredEs to set
 	 */
 	public void setRequiredEs(final boolean requiredEs) {
 		this.requiredEs = requiredEs;
@@ -489,8 +481,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param requiredEn
-	 *            the requiredEn to set
+	 * @param requiredEn the requiredEn to set
 	 */
 	public void setRequiredEn(final boolean requiredEn) {
 		this.requiredEn = requiredEn;
@@ -504,8 +495,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param requiredDe
-	 *            the requiredDe to set
+	 * @param requiredDe the requiredDe to set
 	 */
 	public void setRequiredDe(final boolean requiredDe) {
 		this.requiredDe = requiredDe;
@@ -519,8 +509,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param iIdiomasObligatorios
-	 *            the iIdiomasObligatorios to set
+	 * @param iIdiomasObligatorios the iIdiomasObligatorios to set
 	 */
 	public void setiIdiomasObligatorios(final String iIdiomasObligatorios) {
 		this.iIdiomasObligatorios = iIdiomasObligatorios;
@@ -534,8 +523,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param iIdiomasPosibles
-	 *            the iIdiomasPosibles to set
+	 * @param iIdiomasPosibles the iIdiomasPosibles to set
 	 */
 	public void setiIdiomasPosibles(final String iIdiomasPosibles) {
 		this.iIdiomasPosibles = iIdiomasPosibles;
@@ -550,8 +538,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param borrable
-	 *            the borrable to set
+	 * @param borrable the borrable to set
 	 */
 	public void setBorrable(final boolean borrable) {
 		this.borrable = borrable;
@@ -565,8 +552,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param opcional
-	 *            the opcional to set
+	 * @param opcional the opcional to set
 	 */
 	public final void setOpcional(final String opcional) {
 		this.opcional = opcional;
@@ -580,8 +566,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public final void setData(final Literal data) {
 		this.data = data;
@@ -595,8 +580,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idiomasObligatorios
-	 *            the idiomasObligatorios to set
+	 * @param idiomasObligatorios the idiomasObligatorios to set
 	 */
 	public final void setIdiomasObligatorios(final List<String> idiomasObligatorios) {
 		this.idiomasObligatorios = idiomasObligatorios;
@@ -610,8 +594,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idiomasPosibles
-	 *            the idiomasPosibles to set
+	 * @param idiomasPosibles the idiomasPosibles to set
 	 */
 	public final void setIdiomasPosibles(final List<String> idiomasPosibles) {
 		this.idiomasPosibles = idiomasPosibles;
@@ -625,8 +608,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idiomaInicial
-	 *            the idiomaInicial to set
+	 * @param idiomaInicial the idiomaInicial to set
 	 */
 	public void setIdiomaInicial(final String idiomaInicial) {
 		this.idiomaInicial = idiomaInicial;
@@ -640,8 +622,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param readonly
-	 *            the readonly to set
+	 * @param readonly the readonly to set
 	 */
 	public void setReadonly(final int readonly) {
 		this.readonly = readonly;
@@ -655,8 +636,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	}
 
 	/**
-	 * @param sourceCode
-	 *            the sourceCode to set
+	 * @param sourceCode the sourceCode to set
 	 */
 	public void setSourceCode(final String sourceCode) {
 		this.sourceCode = sourceCode;
