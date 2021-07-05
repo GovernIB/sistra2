@@ -61,7 +61,7 @@
 					</h:panelGrid>
 				</p:fieldset>
 				<p:spacer height="5px"/>
-				<p:fieldset legend="#{msg['dialogAuditoriaTramites.detalle']}" styleClass="margin-left-10 margin-right-10  noPadding" rendered="#{dialogAuditoriaTramites.mostrarDetalle}">
+				<p:fieldset legend="#{msg['dialogAuditoriaTramites.detalle']}" styleClass="margin-left-10 margin-right-10 margin-bottom-25  noPadding" rendered="#{dialogAuditoriaTramites.mostrarDetalle}">
 			 		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25 grid-right,padding-right-18 w75" columns="2"  styleClass="w100">
 				 		<p:outputLabel for="codigoError" value="#{msg['dialogAuditoriaTramites.codigoError']}:" rendered="#{dialogAuditoriaTramites.dato.codigoError != null and not empty dialogAuditoriaTramites.dato.codigoError}" />
 				 		<h:panelGroup rendered="#{dialogAuditoriaTramites.dato.codigoError != null and not empty dialogAuditoriaTramites.dato.codigoError}" >
@@ -86,10 +86,11 @@
 
 						<p:outputLabel for="dataTablePropiedades" value="#{msg['dialogAuditoriaTramites.headerPropiedades']}:" />
 						<p:dataTable  id="dataTablePropiedades" var="td" value="#{dialogAuditoriaTramites.dato.propiedadesEvento.asArrayList}"
-									  emptyMessage="#{msg['error.emptyRows']}" scrollHeight="#{dialogAuditoriaTramites.dato.idSesionTramitacion ne null?110:300}"
+									  emptyMessage="#{msg['error.emptyRows']}"
 									  scrollable="true"
 			                          paginator="false"
-			                          selectionMode="single" rowKey="#{td.key}">
+			                          selectionMode="single" rowKey="#{td.key}"
+			                          >
 
 							<!-- Columnas -->
 						    <p:column headerText="#{msg['dialogAuditoriaTramites.headerPropiedades.codigo']}" class="ui-panelgrid-cell">
@@ -102,8 +103,8 @@
 
 			 			</p:dataTable>
 
-						<p:spacer height="1px"/>
-						<p:spacer height="1px"/>
+						<p:spacer height="10px"/>
+						<p:spacer height="10px"/>
 					</h:panelGrid>
 
 				</p:fieldset>

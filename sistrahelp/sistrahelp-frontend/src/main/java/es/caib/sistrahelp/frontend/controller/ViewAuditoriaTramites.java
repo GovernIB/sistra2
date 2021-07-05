@@ -133,7 +133,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		mochila.put(Constantes.CLAVE_MOCHILA_EVENTO, datoSeleccionado);
 
 		// Muestra dialogo
-		UtilJSF.openDialog(DialogAuditoriaTramites.class, TypeModoAcceso.CONSULTA, null, true, 900, 600);
+		UtilJSF.openDialog(DialogAuditoriaTramites.class, TypeModoAcceso.CONSULTA, null, true, 900, 690);
 	}
 
 	/**
