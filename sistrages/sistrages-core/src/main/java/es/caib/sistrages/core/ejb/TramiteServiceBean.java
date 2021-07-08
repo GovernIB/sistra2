@@ -561,8 +561,8 @@ public class TramiteServiceBean implements TramiteService {
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void borrarScriptsVersion(final Long idTramiteVersion, final boolean propiedades, final boolean rellenar,
-			final boolean anexo, final boolean tasas, final boolean registrar, final boolean propcaptura) {
-		tramiteService.borrarScriptsVersion(idTramiteVersion, propiedades, rellenar, anexo, tasas, registrar,
+			 final boolean anexo, final boolean tasas, final boolean registrar, final boolean propcaptura) {
+		tramiteService.borrarScriptsVersion(idTramiteVersion, propiedades, rellenar,  anexo, tasas, registrar,
 				propcaptura);
 
 	}

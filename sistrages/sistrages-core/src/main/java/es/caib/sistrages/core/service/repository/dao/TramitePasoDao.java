@@ -247,4 +247,41 @@ public interface TramitePasoDao {
 	 */
 	void permiteSubsanacion(Long idPaso, boolean activarSubsanacion);
 
+	/**
+	 * Borrar scripts registro
+	 * @param idTramiteVersion
+	 */
+	void borrarScriptsRegistro(Long idTramiteVersion);
+
+	/**
+	 * Borrar scripts pago
+	 * @param idTramiteVersion
+	 */
+	void borrarScriptsPago(Long idTramiteVersion);
+
+	/**
+	 * Borrar scripts anexo
+	 * @param idTramiteVersion
+	 */
+	void borrarScriptsAnexo(Long idTramiteVersion);
+
+	/**
+	 * Borrar scripts rellenar
+	 * @param idTramiteVersion
+	 */
+	void borrarScriptsRellenar(Long idPaso, Long idTramiteVersion);
+
+	/**
+	 * Borrar scripts captura
+	 * @param idTramiteVersion
+	 */
+	void borrarScriptsCaptura(Long idTramiteVersion);
+
+	/**
+	 * Borrar scripts propiedades
+	 * @param idTramiteVersion
+	 */
+	void borrarScriptsPropiedades(Long idTramiteVersion);
+
+
 }

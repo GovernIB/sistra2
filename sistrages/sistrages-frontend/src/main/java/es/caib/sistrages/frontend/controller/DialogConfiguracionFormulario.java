@@ -1,23 +1,16 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
-import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.FormularioExternoService;
-import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
-import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -44,7 +37,7 @@ public class DialogConfiguracionFormulario extends DialogControllerBase {
 	private String iCampos;
 
 	/** Fila seleccionada. **/
-	private DominioTramite valorSeleccionado;
+	private GestorExternoFormularios valorSeleccionado;
 
 	/** Ambito. **/
 	private String ambito;
@@ -106,7 +99,7 @@ public class DialogConfiguracionFormulario extends DialogControllerBase {
 	/**
 	 * @return the valorSeleccionado
 	 */
-	public DominioTramite getValorSeleccionado() {
+	public GestorExternoFormularios getValorSeleccionado() {
 		return valorSeleccionado;
 	}
 
@@ -114,7 +107,7 @@ public class DialogConfiguracionFormulario extends DialogControllerBase {
 	 * @param valorSeleccionado
 	 *            the valorSeleccionado to set
 	 */
-	public void setValorSeleccionado(final DominioTramite valorSeleccionado) {
+	public void setValorSeleccionado(final GestorExternoFormularios valorSeleccionado) {
 		this.valorSeleccionado = valorSeleccionado;
 	}
 

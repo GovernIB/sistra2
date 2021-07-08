@@ -88,14 +88,26 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 	 */
 	private Properties recuperarConfiguracionProperties() {
 		final String pathProperties = System.getProperty("es.caib.sistrages.properties.path");
+		final Properties props = new Properties();
 		try (FileInputStream fis = new FileInputStream(pathProperties);) {
-			final Properties props = new Properties();
 			props.load(fis);
-			return props;
 		} catch (final IOException e) {
 			throw new CargaConfiguracionException(
 					"Error al cargar la configuracion del properties '" + pathProperties + "' : " + e.getMessage(), e);
 		}
+
+
+		final String pathPropertiesSystem = System.getProperty("es.caib.sistrages.system.properties.path");
+		final Properties propSystem = new Properties();
+		try (FileInputStream fis = new FileInputStream(pathPropertiesSystem);) {
+			propSystem.load(fis);
+		} catch (final IOException e) {
+			throw new CargaConfiguracionException(
+					"Error al cargar la configuracion del properties '" + pathProperties + "' : " + e.getMessage(), e);
+		}
+
+		props.putAll(propSystem);
+		return props;
 	}
 
 	/**

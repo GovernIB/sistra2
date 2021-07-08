@@ -96,8 +96,10 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Método que calcula la definición de trámite de un servicio.
 	 *
-	 * @param idServicioCP ID Servicio
-	 * @param idioma       Idioma (es/ca/en)
+	 * @param idServicioCP
+	 *                         ID Servicio
+	 * @param idioma
+	 *                         Idioma (es/ca/en)
 	 * @return
 	 * @throws CatalogoPluginException
 	 */
@@ -110,35 +112,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 		final RServicioRolsac servicioRolsac = getRServicioRolsac(idServicioCP, map)[0];
 
-		// Codigo DIR3 responsable procedimiento
-		final String dir3organoInstructor = getCodigoDir3UA(servicioRolsac.getLink_organoInstructor().getCodigo());
-		final String dir3servicioResponsable = getCodigoDir3UA(
-				servicioRolsac.getLink_servicioResponsable().getCodigo());
-
-		final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
-		dp.setIdentificador(String.valueOf(servicioRolsac.getCodigo()));
-		dp.setDescripcion(servicioRolsac.getNombre());
-		dp.setIdProcedimientoSIA(servicioRolsac.getCodigoSIA());
-		dp.setOrganoResponsableDir3(dir3servicioResponsable);
-		dp.setServicio(true);
-		dp.setLopd(generarInfoLOPD(servicioRolsac, idioma));
-
-		final DefinicionTramiteCP dt = new DefinicionTramiteCP();
-		dt.setIdentificador(String.valueOf(servicioRolsac.getCodigo()));
-		dt.setDescripcion(servicioRolsac.getNombre());
-		dt.setVigente(esVigente(servicioRolsac));
-		dt.setOrganoDestinoDir3(dir3organoInstructor);
-		dt.setProcedimiento(dp);
-		dt.setTelematico(servicioRolsac.isTelematico());
-		if (dt.isTelematico() && servicioRolsac.getPlataforma() != null
-				&& getIdentificadorPlafaformaSistra2().equals(servicioRolsac.getPlataforma().getIdentificador())) {
-			final DefinicionTramiteTelematico definicion = new DefinicionTramiteTelematico();
-			definicion.setTramiteIdentificador(servicioRolsac.getTramiteId());
-			if (servicioRolsac.getTramiteVersion() != null) {
-				definicion.setTramiteVersion(Integer.valueOf(servicioRolsac.getTramiteVersion()));
-			}
-			dt.setTramiteTelematico(definicion);
-		}
+		// Crea definición trámite servicio
+		final DefinicionTramiteCP dt = crearDefinicionTramiteServicio(idioma, servicioRolsac);
 
 		return dt;
 	}
@@ -214,8 +189,10 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Método privado que calcula la definicion de trámite de un procedimiento.
 	 *
-	 * @param idTramiteCP ID Trámite
-	 * @param idioma      Idioma (es/ca/en)
+	 * @param idTramiteCP
+	 *                        ID Trámite
+	 * @param idioma
+	 *                        Idioma (es/ca/en)
 	 * @return
 	 * @throws CatalogoPluginException
 	 */
@@ -232,16 +209,23 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		final RTramiteRolsac[] tramitesRolsac = getRTramiteRolsac(idTramiteCP, map);
 		final RTramiteRolsac tramiteRolsac = tramitesRolsac[0];
 
-		final String codigoProc = tramiteRolsac.getLink_procedimiento().getCodigo();
-		final RProcedimientoRolsac procRolsac = getRProcedimientoRolsac(codigoProc, idioma);
+		final RProcedimientoRolsac procRolsac = getRProcedimientoRolsac(
+				tramiteRolsac.getLink_procedimiento().getCodigo(), idioma);
 
+		final DefinicionTramiteCP dt = obtenerDefinicionTramiteProcedimiento(procRolsac, tramiteRolsac, idioma);
+		return dt;
+
+	}
+
+	protected DefinicionTramiteCP obtenerDefinicionTramiteProcedimiento(final RProcedimientoRolsac procRolsac,
+			final RTramiteRolsac tramiteRolsac, final String idioma) throws CatalogoPluginException {
 		// Codigo DIR3 responsable procedimiento
 		final String dir3organoResponsable = getCodigoDir3UA(procRolsac.getLink_unidadAdministrativa().getCodigo());
 		// Codigo DIR3 destintario tramite
 		final String dir3organoDestinatario = getCodigoDir3UA(tramiteRolsac.getLink_organCompetent().getCodigo());
 
 		final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
-		dp.setIdentificador(codigoProc);
+		dp.setIdentificador(tramiteRolsac.getLink_procedimiento().getCodigo());
 		dp.setDescripcion(procRolsac.getNombre());
 		dp.setIdProcedimientoSIA(procRolsac.getCodigoSIA());
 		dp.setOrganoResponsableDir3(dir3organoResponsable);
@@ -255,6 +239,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		dt.setVigente(esVigente(procRolsac, tramiteRolsac));
 		dt.setOrganoDestinoDir3(dir3organoDestinatario);
 		dt.setTelematico(tramiteRolsac.isTelematico());
+		dt.setPlazoInicio(tramiteRolsac.getDataInici() != null ? tramiteRolsac.getDataInici().getTime() : null);
+		dt.setPlazoFin(tramiteRolsac.getDataTancament() != null ? tramiteRolsac.getDataTancament().getTime() : null);
 
 		if (dt.isTelematico() && tramiteRolsac.getPlataforma() != null
 				&& getIdentificadorPlafaformaSistra2().equals(tramiteRolsac.getPlataforma().getIdentificador())) {
@@ -265,7 +251,6 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 		}
 		return dt;
-
 	}
 
 	/**
@@ -491,61 +476,57 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	}
 
 	/**
-	 * Indica si es vigente el trámite. Se mira:<br />
-	 * <ul>
-	 * <li>Que el proc es público (validacion = 1, los otros valores 2 y 3, son
-	 * privado o interno</li>
-	 * <li>Que el proc tiene fechas correctas (está publicado del pasado y no está
-	 * caduco)</li>
-	 * <li>Que el trámite tiene fechas correctas (está publicado del pasado y no
-	 * está caduco)</li>
-	 * </ul>
+	 * Indica si es vigente el trámite.
 	 *
 	 * @param procedimiento
 	 * @param tramite
 	 * @return
 	 */
-	public boolean esVigente(final RProcedimientoRolsac procedimiento, final RTramiteRolsac tramite) {
-
-		final boolean noCaducadoProc = (procedimiento.getFechaCaducidad() == null
-				|| procedimiento.getFechaCaducidad().after(Calendar.getInstance()));
-		final boolean noCaducado = (tramite.getDataCaducitat() == null
-				|| tramite.getDataTancament().after(Calendar.getInstance()));
-		final boolean publicadoProc = (procedimiento.getFechaPublicacion() == null
-				|| procedimiento.getFechaPublicacion().before(Calendar.getInstance()));
-		final boolean publicado = (tramite.getDataPublicacio() == null
-				|| tramite.getDataPublicacio().before(Calendar.getInstance()));
-		final boolean visible = procedimiento.getValidacion() == null
+	private boolean esVigente(final RProcedimientoRolsac procedimiento, final RTramiteRolsac tramite) {
+		final Calendar ahora = Calendar.getInstance();
+		// Procedimiento caducado
+		final boolean procedimientoNoCaducado = (procedimiento.getFechaCaducidad() == null
+				|| procedimiento.getFechaCaducidad().after(ahora));
+		// Procedimiento publicado
+		final boolean procedimientoPublicado = (procedimiento.getFechaPublicacion() == null
+				|| procedimiento.getFechaPublicacion().before(ahora));
+		// Procedimiento público
+		final boolean procedimientoPublico = procedimiento.getValidacion() == null
 				|| "1".equals(procedimiento.getValidacion().toString());
-		return visible && noCaducado && publicado && noCaducadoProc && publicadoProc;
+		// Tramite abierto
+		final boolean tramitePlazoAbierto = (tramite.getDataInici() == null || tramite.getDataInici().before(ahora))
+				&& (tramite.getDataTancament() == null || tramite.getDataTancament().after(ahora));
+		// Trámite publicado
+		final boolean tramitePublicado = (tramite.getDataPublicacio() == null
+				|| tramite.getDataPublicacio().before(ahora));
+		// Vigente
+		return procedimientoPublico && procedimientoNoCaducado && procedimientoPublicado && tramitePlazoAbierto
+				&& tramitePublicado;
 	}
 
 	/**
-	 * Indica si es vigente el trámite. Se mira:<br />
-	 * <ul>
-	 * <li>Que el serv es público (validacion = 1, los otros valores 2 y 3, son
-	 * privado o interno</li>
-	 * <li>Que el serv tiene fechas correctas (está publicado del pasado y no está
-	 * caduco)</li>
-	 * </ul>
+	 * Indica si es vigente servicio.
 	 *
 	 * @param servicio
 	 * @return
 	 */
-	public boolean esVigente(final RServicioRolsac servicio) {
-
-		final boolean noCaducadoServ = (servicio.getFechaDespublicacion() == null
-				|| servicio.getFechaDespublicacion().after(Calendar.getInstance()));
-		final boolean publicadoServ = (servicio.getFechaPublicacion() == null
-				|| servicio.getFechaPublicacion().before(Calendar.getInstance()));
-		final boolean visible = servicio.getValidacion() == null || "1".equals(servicio.getValidacion().toString());
-		return visible && noCaducadoServ && publicadoServ;
+	private boolean esVigente(final RServicioRolsac servicio) {
+		final Calendar ahora = Calendar.getInstance();
+		// Servicio este publicado
+		final boolean publicado = (servicio.getFechaPublicacion() == null
+				|| servicio.getFechaPublicacion().before(ahora))
+				&& (servicio.getFechaDespublicacion() == null || servicio.getFechaDespublicacion().after(ahora));
+		// Servicio es público
+		final boolean publico = servicio.getValidacion() == null || "1".equals(servicio.getValidacion().toString());
+		// Vigente si público y publicado
+		return publico && publicado;
 	}
 
 	/**
 	 * Obtiene propiedad.
 	 *
-	 * @param propiedad propiedad
+	 * @param propiedad
+	 *                      propiedad
 	 * @return valor
 	 * @throws AutenticacionPluginException
 	 */
@@ -615,37 +596,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		if (serviciosRolsac != null) {
 			for (final RServicioRolsac servicioRolsac : serviciosRolsac) {
 
-				// Codigo DIR3 responsable procedimiento
-				final String dir3organoInstructor = getCodigoDir3UA(
-						servicioRolsac.getLink_organoInstructor().getCodigo());
-				final String dir3servicioResponsable = getCodigoDir3UA(
-						servicioRolsac.getLink_servicioResponsable().getCodigo());
-
-				final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
-				dp.setIdentificador(String.valueOf(servicioRolsac.getCodigo()));
-				dp.setDescripcion(servicioRolsac.getNombre());
-				dp.setIdProcedimientoSIA(servicioRolsac.getCodigoSIA());
-				dp.setOrganoResponsableDir3(dir3servicioResponsable);
-				dp.setServicio(true);
-				dp.setLopd(generarInfoLOPD(servicioRolsac, idioma));
-
-				final DefinicionTramiteCP dt = new DefinicionTramiteCP();
-				dt.setIdentificador(String.valueOf(servicioRolsac.getCodigo()));
-				dt.setDescripcion(servicioRolsac.getNombre());
-				dt.setVigente(esVigente(servicioRolsac));
-				dt.setOrganoDestinoDir3(dir3organoInstructor);
-				dt.setProcedimiento(dp);
-				dt.setTelematico(servicioRolsac.isTelematico());
-				if (dt.isTelematico() && servicioRolsac.getPlataforma() != null && getIdentificadorPlafaformaSistra2()
-						.equals(servicioRolsac.getPlataforma().getIdentificador())) {
-					final DefinicionTramiteTelematico definicion = new DefinicionTramiteTelematico();
-					definicion.setTramiteIdentificador(servicioRolsac.getTramiteId());
-					if (servicioRolsac.getTramiteVersion() != null) {
-						definicion.setTramiteVersion(Integer.valueOf(servicioRolsac.getTramiteVersion()));
-					}
-					dt.setTramiteTelematico(definicion);
-
-				}
+				// Crea definición trámite servicio
+				final DefinicionTramiteCP dt = crearDefinicionTramiteServicio(idioma, servicioRolsac);
 
 				res.add(dt);
 			}
@@ -697,38 +649,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 					procedimientos.put(codigoProc, procRolsac);
 				}
 
-				// Codigo DIR3 responsable procedimiento
-				final String dir3organoResponsable = getCodigoDir3UA(
-						procRolsac.getLink_unidadAdministrativa().getCodigo());
-				// Codigo DIR3 destintario tramite
-				final String dir3organoDestinatario = getCodigoDir3UA(
-						tramiteRolsac.getLink_organCompetent().getCodigo());
-
-				final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
-				dp.setIdentificador(codigoProc);
-				dp.setDescripcion(procRolsac.getNombre());
-				dp.setIdProcedimientoSIA(procRolsac.getCodigoSIA());
-				dp.setOrganoResponsableDir3(dir3organoResponsable);
-				dp.setServicio(false);
-				dp.setLopd(generarInfoLOPD(procRolsac, idioma));
-
-				final DefinicionTramiteCP dt = new DefinicionTramiteCP();
-				dt.setIdentificador(String.valueOf(tramiteRolsac.getCodigo()));
-				dt.setDescripcion(tramiteRolsac.getNombre());
-				dt.setProcedimiento(dp);
-				dt.setVigente(esVigente(procRolsac, tramiteRolsac));
-				dt.setOrganoDestinoDir3(dir3organoDestinatario);
-				dt.setTelematico(tramiteRolsac.isTelematico());
-				if (dt.isTelematico() && tramiteRolsac.getPlataforma() != null && getIdentificadorPlafaformaSistra2()
-						.equals(tramiteRolsac.getPlataforma().getIdentificador())) {
-					final DefinicionTramiteTelematico definicion = new DefinicionTramiteTelematico();
-					definicion.setTramiteIdentificador(tramiteRolsac.getIdTraTel());
-					if (tramiteRolsac.getVersio() != null) {
-						definicion.setTramiteVersion(tramiteRolsac.getVersio());
-					}
-					dt.setTramiteTelematico(definicion);
-
-				}
+				// Obtiene def tramite
+				final DefinicionTramiteCP dt = obtenerDefinicionTramiteProcedimiento(procRolsac, tramiteRolsac, idioma);
 				res.add(dt);
 
 			}
@@ -761,8 +683,10 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Genera info lopd.
 	 *
-	 * @param procRolsac procedimiento rolsac
-	 * @param idioma     idioma
+	 * @param procRolsac
+	 *                       procedimiento rolsac
+	 * @param idioma
+	 *                       idioma
 	 * @return lopd
 	 * @throws CatalogoPluginException
 	 */
@@ -833,8 +757,10 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Obtiene titulo campo LOPD.
 	 *
-	 * @param campo  campo
-	 * @param idioma idioma
+	 * @param campo
+	 *                   campo
+	 * @param idioma
+	 *                   idioma
 	 * @return titulo
 	 */
 	private String obtenTituloCampoLOPD(final String campo, final String idioma) {
@@ -844,12 +770,54 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Obtiene texto campo LOPD.
 	 *
-	 * @param campo  campo
-	 * @param idioma idioma
+	 * @param campo
+	 *                   campo
+	 * @param idioma
+	 *                   idioma
 	 * @return texto
 	 */
 	private String obtenDescripcionCampoLOPD(final String campo, final String idioma) {
 		return literalesCamposLOPD.getProperty("texto." + campo + "." + idioma);
+	}
+
+	protected DefinicionTramiteCP crearDefinicionTramiteServicio(final String idioma,
+			final RServicioRolsac servicioRolsac) throws CatalogoPluginException {
+
+		// Codigo DIR3 responsable procedimiento
+		final String dir3organoInstructor = getCodigoDir3UA(servicioRolsac.getLink_organoInstructor().getCodigo());
+		final String dir3servicioResponsable = getCodigoDir3UA(
+				servicioRolsac.getLink_servicioResponsable().getCodigo());
+
+		final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
+		dp.setIdentificador(String.valueOf(servicioRolsac.getCodigo()));
+		dp.setDescripcion(servicioRolsac.getNombre());
+		dp.setIdProcedimientoSIA(servicioRolsac.getCodigoSIA());
+		dp.setOrganoResponsableDir3(dir3servicioResponsable);
+		dp.setServicio(true);
+		dp.setLopd(generarInfoLOPD(servicioRolsac, idioma));
+
+		final DefinicionTramiteCP dt = new DefinicionTramiteCP();
+		dt.setIdentificador(String.valueOf(servicioRolsac.getCodigo()));
+		dt.setDescripcion(servicioRolsac.getNombre());
+		dt.setVigente(esVigente(servicioRolsac));
+		dt.setOrganoDestinoDir3(dir3organoInstructor);
+		dt.setProcedimiento(dp);
+		dt.setTelematico(servicioRolsac.isTelematico());
+		dt.setPlazoInicio(
+				servicioRolsac.getFechaPublicacion() != null ? servicioRolsac.getFechaPublicacion().getTime() : null);
+		dt.setPlazoFin(
+				servicioRolsac.getFechaDespublicacion() != null ? servicioRolsac.getFechaDespublicacion().getTime()
+						: null);
+		if (dt.isTelematico() && servicioRolsac.getPlataforma() != null
+				&& getIdentificadorPlafaformaSistra2().equals(servicioRolsac.getPlataforma().getIdentificador())) {
+			final DefinicionTramiteTelematico definicion = new DefinicionTramiteTelematico();
+			definicion.setTramiteIdentificador(servicioRolsac.getTramiteId());
+			if (servicioRolsac.getTramiteVersion() != null) {
+				definicion.setTramiteVersion(Integer.valueOf(servicioRolsac.getTramiteVersion()));
+			}
+			dt.setTramiteTelematico(definicion);
+		}
+		return dt;
 	}
 
 }

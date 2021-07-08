@@ -50,12 +50,20 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteRegistro;
 import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
+import es.caib.sistrages.core.service.repository.model.JElementoFormulario;
 import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFormateadorFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormularioTramite;
+import es.caib.sistrages.core.service.repository.model.JLineaFormulario;
 import es.caib.sistrages.core.service.repository.model.JLiteral;
+import es.caib.sistrages.core.service.repository.model.JPaginaFormulario;
 import es.caib.sistrages.core.service.repository.model.JPagoTramite;
+import es.caib.sistrages.core.service.repository.model.JPasoAnexar;
+import es.caib.sistrages.core.service.repository.model.JPasoCaptura;
+import es.caib.sistrages.core.service.repository.model.JPasoPagos;
+import es.caib.sistrages.core.service.repository.model.JPasoRegistrar;
+import es.caib.sistrages.core.service.repository.model.JPasoRellenar;
 import es.caib.sistrages.core.service.repository.model.JPasoTramitacion;
 import es.caib.sistrages.core.service.repository.model.JScript;
 import es.caib.sistrages.core.service.repository.model.JVersionTramite;
@@ -1312,6 +1320,121 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		queryRegistrar.setParameter("idPaso", idPaso);
 		queryRegistrar.executeUpdate();
 
+	}
+
+	@Override
+	public void borrarScriptsPropiedades(Long idTramiteVersion) {
+		final JVersionTramite jpaso = entityManager.find(JVersionTramite.class, idTramiteVersion);
+		if (jpaso != null) {
+			jpaso.setScriptInicializacionTramite(null);
+			jpaso.setScriptPersonalizacion(null);
+			entityManager.merge(jpaso);
+		}
+	}
+
+
+	@Override
+	public void borrarScriptsRellenar(final Long idPaso, final Long idTramiteVersion) {
+
+
+		final JPasoRellenar jpaso = entityManager.find(JPasoRellenar.class, idPaso);
+		if (jpaso != null && jpaso.getFormulariosTramite() != null) {
+			for( JFormularioTramite jform :  jpaso.getFormulariosTramite()) {
+				jform.setScriptDatosIniciales(null);
+				jform.setScriptFirmar(null);
+				jform.setScriptObligatoriedad(null);
+				jform.setScriptParametros(null);
+				jform.setScriptRetorno(null);
+				entityManager.merge(jform);
+			}
+		}
+
+		List<DisenyoFormulario> formularios = this.getFormulariosTramiteVersion(idTramiteVersion);
+		if (formularios != null && !formularios.isEmpty()) {
+			for (final DisenyoFormulario formulario : formularios) {
+				final JFormulario jform = entityManager.find(JFormulario.class, formulario.getCodigo());
+				jform.setScriptPlantilla(null);
+				entityManager.merge(jform);
+
+				//Paginas
+				if (formulario.getPaginas() != null && !formulario.getPaginas().isEmpty()) {
+					for( PaginaFormulario pagina : formulario.getPaginas()) {
+						final JPaginaFormulario jpag = entityManager.find(JPaginaFormulario.class, pagina.getCodigo());
+						jpag.setScriptNavegacion(null);
+						jpag.setScriptValidacion(null);
+						entityManager.merge(jpag);
+
+						//Lineas de la pagina.
+						if (jpag.getLineasFormulario() != null && !jpag.getLineasFormulario().isEmpty()) {
+							for (  JLineaFormulario jlinea : jpag.getLineasFormulario()) {
+								//Componentes de la linea
+								if (jlinea.getElementoFormulario() != null && !jlinea.getElementoFormulario().isEmpty()) {
+									 for (  JElementoFormulario componente : jlinea.getElementoFormulario()) {
+										String tipo = componente.getTipo();
+										if (componente.getCampoFormulario() != null) {
+											componente.getCampoFormulario().setScriptAutocalculado(null);
+											componente.getCampoFormulario().setScriptSoloLectura(null);
+											componente.getCampoFormulario().setScriptValidaciones(null);
+											entityManager.merge(componente.getCampoFormulario());
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public void borrarScriptsAnexo(Long idTramiteVersion) {
+		final JPasoAnexar jpaso = entityManager.find(JPasoAnexar.class, idTramiteVersion);
+		if (jpaso != null) {
+			jpaso.setScriptAnexosDinamicos(null);
+			entityManager.merge(jpaso);
+			if (jpaso.getAnexosTramite() != null) {
+				for (JAnexoTramite anexo : jpaso.getAnexosTramite()) {
+					anexo.setScriptFirmantes(null);
+					anexo.setScriptObligatoriedad(null);
+					anexo.setScriptValidacion(null);
+					entityManager.merge(anexo);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void borrarScriptsPago(Long idTramiteVersion) {
+		final JPasoPagos jpaso = entityManager.find(JPasoPagos.class, idTramiteVersion);
+		if (jpaso != null && jpaso.getPagosTramite() != null) {
+			for ( JPagoTramite pago : jpaso.getPagosTramite()) {
+				pago.setScriptDatosPago(null);
+				pago.setScriptObligatoriedad(null);
+				entityManager.merge(pago);
+			}
+		}
+	}
+
+	@Override
+	public void borrarScriptsRegistro(Long idTramiteVersion) {
+		final JPasoRegistrar jpaso = entityManager.find(JPasoRegistrar.class, idTramiteVersion);
+		if (jpaso != null) {
+			jpaso.setScriptAlFinalizar(null);
+			jpaso.setScriptDestinoRegistro(null);
+			jpaso.setScriptPresentador(null);
+			jpaso.setScriptRepresentante(null);
+			jpaso.setScriptValidarRegistrar(null);
+			entityManager.merge(jpaso);
+		}
+	}
+
+	@Override
+	public void borrarScriptsCaptura(Long idTramiteVersion) {
+		final JPasoCaptura jpaso = entityManager.find(JPasoCaptura.class, idTramiteVersion);
+		if (jpaso != null) {
+			//entityManager.merge(jpaso);
+		}
 	}
 
 }

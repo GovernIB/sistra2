@@ -1,13 +1,9 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
-import es.caib.sistrages.core.api.model.comun.ScriptInfo;
-import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.DialogResultMessage;
@@ -21,21 +17,13 @@ public class DialogTramiteBorrarScripts extends DialogControllerBase {
 
 	private boolean propiedades;
 	private boolean rellenar;
-	private boolean formularios;
 	private boolean anexo;
 	private boolean tasas;
 	private boolean registrar;
 	private boolean captura;
 
-	/** Script service. */
-	@Inject
-	private ScriptService scriptService;
-
 	@Inject
 	private TramiteService tramiteService;
-
-	/** Scripts para borrar. **/
-	private List<ScriptInfo> data;
 
 	/** Id de la version. */
 	private String id;
@@ -48,7 +36,6 @@ public class DialogTramiteBorrarScripts extends DialogControllerBase {
 		setCaptura(true);
 		setTasas(true);
 		setRegistrar(true);
-		setFormularios(true);
 	}
 
 	/** Cancelar. */
@@ -61,8 +48,6 @@ public class DialogTramiteBorrarScripts extends DialogControllerBase {
 
 	/** Cancelar. */
 	public void aceptar() {
-		// eliminar scripts propiedades
-		/** Tramite service. */
 
 		tramiteService.borrarScriptsVersion(Long.valueOf(id), propiedades, rellenar, anexo, tasas, registrar, captura);
 
@@ -77,13 +62,9 @@ public class DialogTramiteBorrarScripts extends DialogControllerBase {
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
 	}
 
-	public void addCheck() {
-
-	}
-
 	/** Ayuda. */
 	public void ayuda() {
-		UtilJSF.openHelp("tramiteScriptDialog");
+		UtilJSF.openHelp("tramiteBorrarScriptDialog");
 	}
 
 	/**
@@ -114,14 +95,6 @@ public class DialogTramiteBorrarScripts extends DialogControllerBase {
 
 	public void setRellenar(final boolean rellenar) {
 		this.rellenar = rellenar;
-	}
-
-	public boolean isFormularios() {
-		return formularios;
-	}
-
-	public void setFormularios(final boolean formularios) {
-		this.formularios = formularios;
 	}
 
 	public boolean isAnexo() {

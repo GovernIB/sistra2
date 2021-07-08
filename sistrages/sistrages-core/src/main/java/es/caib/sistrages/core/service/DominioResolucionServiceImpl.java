@@ -86,8 +86,18 @@ public class DominioResolucionServiceImpl implements DominioResolucionService {
 			valoresDominio.setCodigoError("PLG");
 			valoresDominio.setDescripcionError("El plugin es nulo");
 		} else {
+			// Reemplaza placeholders
+			String usrRev = usr;
+			if (usr != null) {
+				usrRev = configuracionComponent.replacePlaceholders(usr);
+			}
+			String pwdRev = pwd;
+			if (pwd != null) {
+				pwdRev = configuracionComponent.replacePlaceholders(pwd);
+			}
+			// Consulta dominio
 			try {
-				valoresDominio = iplugin.invocarDominio(idDominio, url, parametros, usr, pwd, 60L);
+				valoresDominio = iplugin.invocarDominio(idDominio, url, parametros, usrRev, pwdRev, 60L);
 				valoresDominio.setError(false);
 			} catch (final DominioPluginException e) {
 				valoresDominio = new ValoresDominio();

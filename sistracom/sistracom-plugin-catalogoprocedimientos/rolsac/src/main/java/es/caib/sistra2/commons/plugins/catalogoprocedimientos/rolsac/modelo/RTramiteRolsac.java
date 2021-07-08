@@ -20,9 +20,6 @@ public class RTramiteRolsac {
 	/** Fecha de actualizacion vuds **/
 	private String dataActualitzacioVuds;
 
-	/** Fecha de caducidad **/
-	private java.util.Calendar dataCaducitat;
-
 	/** Fecha de publicacion **/
 	private java.util.Calendar dataPublicacio;
 
@@ -153,21 +150,6 @@ public class RTramiteRolsac {
 	 */
 	public void setDataActualitzacioVuds(final String dataActualitzacioVuds) {
 		this.dataActualitzacioVuds = dataActualitzacioVuds;
-	}
-
-	/**
-	 * @return the dataCaducitat
-	 */
-	public java.util.Calendar getDataCaducitat() {
-		return dataCaducitat;
-	}
-
-	/**
-	 * @param dataCaducitat
-	 *                          the dataCaducitat to set
-	 */
-	public void setDataCaducitat(final java.util.Calendar dataCaducitat) {
-		this.dataCaducitat = dataCaducitat;
 	}
 
 	/**

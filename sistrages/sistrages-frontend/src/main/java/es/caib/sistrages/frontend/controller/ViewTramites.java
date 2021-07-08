@@ -1260,7 +1260,7 @@ public class ViewTramites extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
-		UtilJSF.openDialog(DialogTramiteBorrarScripts.class, TypeModoAcceso.EDICION, params, true, 1000, 520);
+		UtilJSF.openDialog(DialogTramiteBorrarScripts.class, TypeModoAcceso.EDICION, params, true, 700, 360);
 	}
 
 	/**

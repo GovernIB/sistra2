@@ -145,7 +145,9 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Override
 	@NegocioInterceptor
 	public List<ConfiguracionGlobal> listConfiguracionGlobal(final String filtro) {
+		// Recupera conf global
 		final List<ConfiguracionGlobal> config = configuracionGlobalDao.getAllByFiltro(filtro);
+		// Reemplaza placeholders
 		final List<ConfiguracionGlobal> res = new ArrayList<>();
 		for (final ConfiguracionGlobal c : config) {
 			final ConfiguracionGlobal c1 = new ConfiguracionGlobal(c.getCodigo(), c.getPropiedad(),
@@ -160,7 +162,7 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	public List<Plugin> listPlugin(final TypeAmbito ambito, final Long idEntidad, final String filtro) {
 		// Obtenemos plugins
 		final List<Plugin> plugins = pluginDao.getAllByFiltro(ambito, idEntidad, filtro);
-		// Reemplazamos system placeholders
+		// Reemplazamos placeholders
 		for (final Plugin plg : plugins) {
 			for (final Propiedad prop : plg.getPropiedades()) {
 				prop.setValor(configuracionComponent.replacePlaceholders(prop.getValor()));
@@ -234,13 +236,29 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Override
 	@NegocioInterceptor
 	public Dominio loadDominio(final String idDominio) {
-		return dominioDao.getByIdentificador(idDominio);
+		final Dominio dom = dominioDao.getByIdentificador(idDominio);
+		// Reemplaza placeholders
+		if (dom.getConfiguracionAutenticacion() != null) {
+			dom.getConfiguracionAutenticacion().setUsuario(
+					configuracionComponent.replacePlaceholders(dom.getConfiguracionAutenticacion().getUsuario()));
+			dom.getConfiguracionAutenticacion().setPassword(
+					configuracionComponent.replacePlaceholders(dom.getConfiguracionAutenticacion().getPassword()));
+		}
+		return dom;
 	}
 
 	@Override
 	@NegocioInterceptor
 	public Dominio loadDominio(final Long idDominio) {
-		return dominioDao.getByCodigo(idDominio);
+		final Dominio dom = dominioDao.getByCodigo(idDominio);
+		// Reemplaza placeholders
+		if (dom.getConfiguracionAutenticacion() != null) {
+			dom.getConfiguracionAutenticacion().setUsuario(
+					configuracionComponent.replacePlaceholders(dom.getConfiguracionAutenticacion().getUsuario()));
+			dom.getConfiguracionAutenticacion().setPassword(
+					configuracionComponent.replacePlaceholders(dom.getConfiguracionAutenticacion().getPassword()));
+		}
+		return dom;
 	}
 
 	@Override
@@ -364,7 +382,18 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Override
 	@NegocioInterceptor
 	public List<GestorExternoFormularios> listGestorExternoFormularios(final Long pIdArea) {
-		return formularioExternoDao.getAll(pIdArea);
+		// Recupera GFE
+		final List<GestorExternoFormularios> lgfe = formularioExternoDao.getAll(pIdArea);
+		// Reemplaza placeholders
+		for (final GestorExternoFormularios g : lgfe) {
+			if (g.getConfiguracionAutenticacion() != null) {
+				g.getConfiguracionAutenticacion().setUsuario(
+						configuracionComponent.replacePlaceholders(g.getConfiguracionAutenticacion().getUsuario()));
+				g.getConfiguracionAutenticacion().setPassword(
+						configuracionComponent.replacePlaceholders(g.getConfiguracionAutenticacion().getPassword()));
+			}
+		}
+		return lgfe;
 	}
 
 }
