@@ -51,17 +51,23 @@
 	<b>EJEMPLOS</b>
  </p>
 
- <p><b>Ejemplo 1</b> Supongamos que hoy es 7 de enero de 2019, y deseamos recuperar la fecha actual del sistema (en el formato 'yyyy-MM-dd') </p>
+<p><b>Ejemplo 1</b> Supongamos que hoy es 7 de enero de 2019, y deseamos recuperar la fecha actual del sistema (con el formato por defecto) </p>
+<p class="codigoScript">
+	var hoy = PLUGIN_UTILS.getFechaActual(null);
+</p>
+<p> La función getFechaActual retorna '07/01/2019'.</p>
+<br />
+ <p><b>Ejemplo 2</b> Supongamos que hoy es 7 de enero de 2019, y deseamos recuperar la fecha actual del sistema (con el formato 'yyyy-MM-dd') </p>
  <p class="codigoScript">
 	var hoy = PLUGIN_UTILS.getFechaActual('yyyy-MM-dd');
  </p>
 <p> La función getFechaActual retorna '2019-01-07'.</p>
 <br />
- <p><b>Ejemplo 2</b> Supongamos que hoy es 7 de enero de 2019, y deseamos recuperar la fecha actual del sistema (en el formato 'dd/MM/yyyy') </p>
+ <p><b>Ejemplo 3</b> Supongamos que hoy es 7 de enero de 2019, y deseamos recuperar la fecha actual del sistema (con el formato 'MM/dd/yyyy') </p>
  <p class="codigoScript">
-	var hoy = PLUGIN_UTILS.getFechaActual('dd/MM/yyyy');
+	var hoy = PLUGIN_UTILS.getFechaActual('MM/dd/yyyy');
  </p>
-<p> La función getFechaActual retorna '07/01/2019'.</p>
+<p> La función getFechaActual retorna '01/07/2019'.</p>
 <br />
 </body>
 </html>
