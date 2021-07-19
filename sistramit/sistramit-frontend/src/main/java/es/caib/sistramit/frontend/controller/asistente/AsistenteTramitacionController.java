@@ -494,19 +494,6 @@ public class AsistenteTramitacionController extends TramitacionController {
 		final ResultadoAccionPaso respuestaGuardarFormulario = getFlujoTramitacionService()
 				.accionPaso(idSesionTramitacion, idPaso, accionPaso, pParametros);
 
-		final TypeSiNo cancelado = (TypeSiNo) respuestaGuardarFormulario.getParametroRetorno("cancelado");
-		final TypeSiNo correcto = (TypeSiNo) respuestaGuardarFormulario.getParametroRetorno("correcto");
-		final String mensajeIncorrecto = (String) respuestaGuardarFormulario.getParametroRetorno("mensajeIncorrecto");
-
-		// Evaluamos si hay que mostrar mensaje
-		if (cancelado == TypeSiNo.NO && correcto == TypeSiNo.NO) {
-			final MensajeAsistente ma = generarMensajeErrorAsistente("atencion", "noGuardado", mensajeIncorrecto,
-					TypeRespuestaJSON.SUCCESS);
-			this.setMensajeAsistente(ma);
-		}
-
-		debug("Formulario guardado: correcto = " + correcto + " - cancelado = " + cancelado);
-
 		// Redirigimos a carga asistente
 		return new ModelAndView(URL_REDIRIGIR_ASISTENTE);
 	}
@@ -635,11 +622,12 @@ public class AsistenteTramitacionController extends TramitacionController {
 	 */
 	@RequestMapping(value = "/formularioSoporte.json", method = RequestMethod.POST)
 	public ModelAndView formularioSoporte(@RequestParam(value = "nif", required = false) final String nif,
-			@RequestParam(value = "nom", required = false) final String nombre,
+			@RequestParam(value = "nombre", required = false) final String nombre,
 			@RequestParam(value = "telefono", required = true) final String telefono,
 			@RequestParam(value = "email", required = true) final String email,
 			@RequestParam(value = "problemaTipo", required = true) final String problemaTipo,
 			@RequestParam(value = "problemaDesc", required = true) final String problemaDesc,
+			@RequestParam(value = "horarioContacto", required = true) final String horarioContacto,
 			final HttpServletRequest request) {
 
 		debug("Formulario soporte ");
@@ -664,7 +652,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 				}
 
 				getFlujoTramitacionService().envioFormularioSoporte(idSesionTramitacion, nif, nombre, telefono, email,
-						problemaTipo, problemaDesc, anexo);
+						problemaTipo, problemaDesc, horarioContacto, anexo);
 
 			} catch (final ErrorFormularioSoporteException | IOException efs) {
 				res.setEstado(TypeRespuestaJSON.ERROR);

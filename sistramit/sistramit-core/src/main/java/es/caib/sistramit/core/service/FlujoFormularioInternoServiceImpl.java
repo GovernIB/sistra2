@@ -79,6 +79,14 @@ public class FlujoFormularioInternoServiceImpl implements FlujoFormularioInterno
 
 	@Override
 	@NegocioInterceptor
+	public ResultadoGuardarPagina guardarSalirPagina(final String idSesionFormulario,
+			final List<ValorCampo> valoresPagina) {
+		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
+		return ff.guardarSalirPagina(valoresPagina);
+	}
+
+	@Override
+	@NegocioInterceptor
 	public void cancelarFormulario(final String idSesionFormulario) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
 		ff.cancelarFormulario();

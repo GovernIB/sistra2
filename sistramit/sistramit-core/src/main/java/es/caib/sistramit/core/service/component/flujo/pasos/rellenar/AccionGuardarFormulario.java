@@ -41,6 +41,7 @@ import es.caib.sistramit.core.service.model.flujo.ValoresFormulario;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
 import es.caib.sistramit.core.service.model.formulario.DatosFinalizacionFormulario;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
+import es.caib.sistramit.core.service.model.formulario.types.TipoFinalizacionFormulario;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFlujo;
 import es.caib.sistramit.core.service.repository.dao.FlujoPasoDao;
@@ -107,31 +108,28 @@ public final class AccionGuardarFormulario implements AccionPaso {
 			validarCancelarFormulario(dipa, idFormulario);
 		}
 
-		// Si se guarda y se ha cancelado indicamos que se ha cancelado
+		// Evaluamos finalizacion formulario
 		final RespuestaAccionPaso rp = new RespuestaAccionPaso();
-		if (dff != null && dff.isCancelado()) {
-			rp.addParametroRetorno("cancelado", TypeSiNo.SI);
-		} else {
-			// Si no se ha cancelado guardamos formulario
 
-			// Ejecutamos script post guardar
-			final RespuestaScript respuestaScriptPostGuardar = ejecutarScriptPostGuardar(dipa, pDpp, idFormulario, dff,
-					pDefinicionTramite, pVariablesFlujo, borrarOpcional);
+		if (borrarOpcional == TypeSiNo.SI || dff.getEstadoFinalizacion() != TipoFinalizacionFormulario.CANCELADO) {
+
+			// Ejecutamos script post guardar (formulario finalizado o borrado)
+			RespuestaScript respuestaScriptPostGuardar = null;
+			if (borrarOpcional == TypeSiNo.SI || dff.getEstadoFinalizacion() == TipoFinalizacionFormulario.FINALIZADO) {
+				respuestaScriptPostGuardar = ejecutarScriptPostGuardar(dipa, pDpp, idFormulario, dff,
+						pDefinicionTramite, pVariablesFlujo, borrarOpcional);
+			}
 
 			// Actualizamos persistencia para despues recalcular detalle (los datos de este
 			// formulario y los modificados en el script de postguardar).
 			if (borrarOpcional == TypeSiNo.NO) {
+				final boolean incompleto = dff.getEstadoFinalizacion() == TipoFinalizacionFormulario.SIN_FINALIZAR;
 				actualizarPersistenciaGuardar(dipa, pDpp, pVariablesFlujo, idFormulario, dff.getXml(), dff.getPdf(),
-						respuestaScriptPostGuardar);
+						respuestaScriptPostGuardar, incompleto);
 			} else {
 				actualizarPersistenciaCancelarFormulario(dipa, pDpp, pVariablesFlujo, idFormulario,
 						respuestaScriptPostGuardar);
 			}
-
-			// Devolvemos si se ha podido guardar el formulario o se ha marcado
-			// con estado incorrecto
-			rp.addParametroRetorno("cancelado", TypeSiNo.NO);
-			rp.addParametroRetorno("correcto", TypeSiNo.SI);
 
 		}
 
@@ -402,16 +400,20 @@ public final class AccionGuardarFormulario implements AccionPaso {
 	 *                            Pdf de visualizacion del formulario que se guarda
 	 * @param rs
 	 *                            Respuesta del script de postguardar formulario
+	 * @param incompleto
+	 *                            Indica si el formulario se ha rellenado a mitad
 	 */
 	private void actualizarPersistenciaGuardar(final DatosInternosPasoRellenar pDipa, final DatosPersistenciaPaso pDpp,
 			final VariablesFlujo pVariablesFlujo, final String idFormulario, final byte[] xml, final byte[] pdf,
-			final RespuestaScript rs) {
+			final RespuestaScript rs, final boolean incompleto) {
 
 		// Actualizamos datos formulario actual
-		actualizarFormularioActual(pDipa, pDpp, idFormulario, xml, pdf, rs, pVariablesFlujo);
+		actualizarFormularioActual(pDipa, pDpp, idFormulario, xml, pdf, rs, pVariablesFlujo, incompleto);
 
 		// Actualizamos formularios modificados en post guardar
-		actualizarFormulariosPostGuardar(pDipa, pDpp, idFormulario, rs, pVariablesFlujo);
+		if (!incompleto) {
+			actualizarFormulariosPostGuardar(pDipa, pDpp, idFormulario, rs, pVariablesFlujo);
+		}
 
 	}
 
@@ -432,10 +434,12 @@ public final class AccionGuardarFormulario implements AccionPaso {
 	 *                            Resultado script post guardar
 	 * @param pVariablesFlujo
 	 *                            Variables de flujo
+	 * @param incompleto
+	 *                            Indica si formulario se ha guardado a mitad
 	 */
 	private void actualizarFormularioActual(final DatosInternosPasoRellenar pDipa, final DatosPersistenciaPaso pDpp,
 			final String idFormulario, final byte[] xml, final byte[] pdf, final RespuestaScript rs,
-			final VariablesFlujo pVariablesFlujo) {
+			final VariablesFlujo pVariablesFlujo, final boolean incompleto) {
 
 		byte[] xmlFormActual = xml;
 
@@ -475,7 +479,11 @@ public final class AccionGuardarFormulario implements AccionPaso {
 		docPaso.removeFirmasFicheros();
 
 		// - Establecemos estado
-		docPaso.setEstado(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);
+		if (incompleto) {
+			docPaso.setEstado(TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE);
+		} else {
+			docPaso.setEstado(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);
+		}
 
 		// - Actualizamos datos en BBDD
 		dao.establecerDatosDocumento(pVariablesFlujo.getIdSesionTramitacion(), pDipa.getIdPaso(), docPaso);

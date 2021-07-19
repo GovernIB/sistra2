@@ -94,5 +94,6 @@ var APP_FORMS_URL_DINAMICA = "s"
 	,APP_FORMS_CAPTCHA = APP_SERVIDOR + "fm/generarImagenCaptcha.html"
 	,APP_FORMS_CAPTCHA_REGENERA = APP_SERVIDOR + "fm/regenerarCaptcha.html"
 	,APP_FORM_PAG_ACTUAL = APP_SERVIDOR + "fm/cargarPaginaActual.json"
-	,APP_FORM_PAG_ANTERIOR = APP_SERVIDOR + "fm/cargarPaginaAnterior.json";
+	,APP_FORM_PAG_ANTERIOR = APP_SERVIDOR + "fm/cargarPaginaAnterior.json"
+	,APP_FORM_DESAR_SORTIR = APP_SERVIDOR + "fm/guardarSalirPagina.json";
 

@@ -25,6 +25,7 @@ import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
+import es.caib.sistramit.core.service.component.integracion.CatalogoProcedimientosComponent;
 import es.caib.sistramit.core.service.component.integracion.DominiosComponent;
 import es.caib.sistramit.core.service.component.integracion.SistragesComponent;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
@@ -61,6 +62,10 @@ public class SystemServiceImpl implements SystemService {
 	/** Componente Dominios. */
 	@Autowired
 	private DominiosComponent dominiosComponent;
+
+	/** Catalogo procedimientos. */
+	@Autowired
+	private CatalogoProcedimientosComponent catalogoProcedimientosComponent;
 
 	/** Envio DAO. */
 	@Autowired
@@ -116,6 +121,7 @@ public class SystemServiceImpl implements SystemService {
 			case ENTIDAD:
 				sistragesComponent.evictConfiguracionEntidad(inv.getIdentificador());
 				sistragesComponent.evictAvisosEntidad(inv.getIdentificador());
+				catalogoProcedimientosComponent.evictCatalogoProcedimientosEntidad(inv.getIdentificador());
 				break;
 			case DOMINIO:
 				sistragesComponent.evictDefinicionDominio(inv.getIdentificador());

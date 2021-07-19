@@ -566,4 +566,10 @@ public class TramiteServiceBean implements TramiteService {
 				propcaptura);
 
 	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<Tramite> listTramite(Long idEntidad, List<Long> areas, String filtro) {
+		return tramiteService.listTramite(idEntidad, areas, filtro);
+	}
 }

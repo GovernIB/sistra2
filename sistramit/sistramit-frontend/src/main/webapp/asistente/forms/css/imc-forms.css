@@ -736,6 +736,8 @@
 .imc-form .imc-el-taula[data-lectura="s"] .imc-el-taula-elements table thead tr th:first-child,
 .imc-form .imc-el-taula[data-lectura="s"] .imc-el-taula-elements table tbody tr td:first-child { display: none; }
 
+.imc-form .imc-el-taula.imc-el-error div.imc-el-taula-elements { border-color: #cc073c; }
+
 
 /* taula elements */
 

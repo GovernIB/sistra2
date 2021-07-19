@@ -89,6 +89,18 @@ public interface FlujoFormularioInternoService {
 			final String accionPersonalizada);
 
 	/**
+	 * Guarda los datos de la página y sale del formulario sin finalizar.
+	 *
+	 * @param idSesionFormulario
+	 *                               id sesion formulario
+	 * @param valoresPagina
+	 *                               Datos de la página
+	 * @return Resultado de guardar la página: Se indicará el ticket de acceso al
+	 *         XML.
+	 */
+	ResultadoGuardarPagina guardarSalirPagina(final String idSesionFormulario, List<ValorCampo> valoresPagina);
+
+	/**
 	 * Cancela el rellenado del formulario.
 	 *
 	 * @param idSesionFormulario

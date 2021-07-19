@@ -16,8 +16,7 @@ public enum TypeAccionPasoRellenar implements TypeAccionPaso {
 
     /**
      * Guardar formulario. Parámetros entrada: idFormulario / ticket /
-     * borrarOpcional (TypeSiNo). Parámetros salida: cancelado (TypeSiNo) /
-     * correcto (TypeSiNo) / mensajeIncorrecto.
+     * borrarOpcional (TypeSiNo). Parámetros salida: no tiene.
      */
     GUARDAR_FORMULARIO,
 

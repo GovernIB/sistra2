@@ -45,6 +45,15 @@ public interface TramiteDao {
 	List<Tramite> getAllByFiltro(final Long idArea, final String pFiltro);
 
 	/**
+	 * Obtiene todos los trámites según el filtro, las áreas y la entidad.
+	 * @param idEntidad
+	 * @param areas
+	 * @param filtro
+	 * @return
+	 */
+	List<Tramite> getAllByFiltro(Long idEntidad, List<Long> areas, String filtro);
+
+	/**
 	 * Añade tramite.
 	 *
 	 * @param idArea   idArea
@@ -347,4 +356,6 @@ public interface TramiteDao {
 	 * @return
 	 */
 	List<GestorExternoFormularios> getGFEByTramiteVersion(Long idTramiteVersion);
+
+
 }

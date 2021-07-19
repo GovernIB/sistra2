@@ -18,6 +18,7 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.service.model.formulario.DatosFinalizacionFormulario;
 import es.caib.sistramit.core.service.model.formulario.DatosInicioSesionFormulario;
 import es.caib.sistramit.core.service.model.formulario.ParametrosAperturaFormulario;
+import es.caib.sistramit.core.service.model.formulario.types.TipoFinalizacionFormulario;
 import es.caib.sistramit.core.service.repository.model.HFormulario;
 
 /**
@@ -113,7 +114,7 @@ public final class FormularioDaoImpl implements FormularioDao {
 		hFormulario.setPdf(datosFinSesion.getPdf());
 		hFormulario.setXml(datosFinSesion.getXml());
 		hFormulario.setFechaFin(new Date());
-		hFormulario.setCancelado(datosFinSesion.isCancelado());
+		hFormulario.setEstadoFinalizacion(datosFinSesion.getEstadoFinalizacion().getValor());
 		hFormulario.setTicketFormularioExterno(datosFinSesion.getTicketExterno());
 		entityManager.merge(hFormulario);
 	}
@@ -130,7 +131,7 @@ public final class FormularioDaoImpl implements FormularioDao {
 		}
 		final DatosFinalizacionFormulario df = new DatosFinalizacionFormulario();
 		df.setFechaFinalizacion(hFormulario.getFechaFin());
-		df.setCancelado(hFormulario.isCancelado());
+		df.setEstadoFinalizacion(TipoFinalizacionFormulario.fromInt(hFormulario.getEstadoFinalizacion()));
 		df.setXml(hFormulario.getXml());
 		df.setPdf(hFormulario.getPdf());
 		return df;

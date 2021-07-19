@@ -121,9 +121,9 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 	@NegocioInterceptor
 	public void envioFormularioSoporte(final String idSesionTramitacion, final String nif, final String nombre,
 			final String telefono, final String email, final String problemaTipo, final String problemaDesc,
-			final AnexoFichero anexo) {
+			final String horarioContacto, final AnexoFichero anexo) {
 		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
-		ft.envioFormularioSoporte(nif, nombre, telefono, email, problemaTipo, problemaDesc, anexo);
+		ft.envioFormularioSoporte(nif, nombre, telefono, email, problemaTipo, problemaDesc, horarioContacto, anexo);
 	}
 
 	@Override

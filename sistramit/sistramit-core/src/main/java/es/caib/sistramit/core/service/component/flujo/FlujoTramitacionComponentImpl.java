@@ -211,7 +211,8 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 
 	@Override
 	public void envioFormularioSoporte(final String nif, final String nombre, final String telefono, final String email,
-			final String problemaTipo, final String problemaDesc, final AnexoFichero anexo) {
+			final String problemaTipo, final String problemaDesc, final String horarioContacto,
+			final AnexoFichero anexo) {
 
 		// Obtenemos entidad
 		final RConfiguracionEntidad entidad = configuracionComponent
@@ -228,6 +229,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		datosFormSoporte.setTelefono(telefono);
 		datosFormSoporte.setProblemaTipo(problemaTipo);
 		datosFormSoporte.setProblemaDesc(problemaDesc);
+		datosFormSoporte.setHorarioContacto(horarioContacto);
 
 		// Generamos destinatarios, asunto y mensaje
 		final List<String> destinatarios = UtilsFormularioSoporte
@@ -279,17 +281,28 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	/**
 	 * Genera datos de sesion de tramitación.
 	 *
-	 * @param idSesionTramitacion     id sesion tramitacion
-	 * @param estado                  estado tramite
-	 * @param pIdTramite              id tramite
-	 * @param pVersion                version
-	 * @param pIdioma                 idioma
-	 * @param pIdTramiteCP            id tramite CP
-	 * @param servicioCP              Indica si procedimiento es un servicio
-	 * @param pUrlInicio              url inicio
-	 * @param pParametrosInicio       parametros inicio
-	 * @param pUsuarioAutenticadoInfo usuario autenticado
-	 * @param pFechaCaducidad         fecha caducidad
+	 * @param idSesionTramitacion
+	 *                                    id sesion tramitacion
+	 * @param estado
+	 *                                    estado tramite
+	 * @param pIdTramite
+	 *                                    id tramite
+	 * @param pVersion
+	 *                                    version
+	 * @param pIdioma
+	 *                                    idioma
+	 * @param pIdTramiteCP
+	 *                                    id tramite CP
+	 * @param servicioCP
+	 *                                    Indica si procedimiento es un servicio
+	 * @param pUrlInicio
+	 *                                    url inicio
+	 * @param pParametrosInicio
+	 *                                    parametros inicio
+	 * @param pUsuarioAutenticadoInfo
+	 *                                    usuario autenticado
+	 * @param pFechaCaducidad
+	 *                                    fecha caducidad
 	 * @return Datos sesion tramitacion
 	 * @throws CatalogoPluginException
 	 */
@@ -412,7 +425,8 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	/**
 	 * Comparamos si nivel tramite es superior al del usuario autenticado.
 	 *
-	 * @param defTramSTG Definición trámite
+	 * @param defTramSTG
+	 *                       Definición trámite
 	 */
 	private void controlQAA(final DefinicionTramiteSTG defTramSTG) {
 		if (this.usuarioAutenticadoInfo.getAutenticacion() != TypeAutenticacion.ANONIMO) {
@@ -435,7 +449,8 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	/**
 	 * Control limitación
 	 *
-	 * @param defTram Definición trámite
+	 * @param defTram
+	 *                    Definición trámite
 	 */
 	private void controlLimitacionTramitacion(final DefinicionTramiteSTG defTram) {
 
@@ -480,8 +495,10 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	/**
 	 * Realiza carga tramite.
 	 *
-	 * @param pIdSesionTramitacion Id sesion tramitacion
-	 * @param recarga              Indica si la carga se produce tras un error
+	 * @param pIdSesionTramitacion
+	 *                                 Id sesion tramitacion
+	 * @param recarga
+	 *                                 Indica si la carga se produce tras un error
 	 */
 	private void cargarImpl(final String pIdSesionTramitacion, final boolean recarga) {
 		// Control de si el flujo es válido

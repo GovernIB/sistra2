@@ -160,6 +160,33 @@ public final class FormularioController extends TramitacionController {
 	}
 
 	/**
+	 * Guarda los datos de la página y sale del formulario sin terminar.
+	 *
+	 * @param request
+	 *                    Datos de la página
+	 * @return Resultado de guardar la página: indica redireccion para volver.
+	 */
+	@RequestMapping("/guardarSalirPagina.json")
+	public ModelAndView guardarSalirPagina(final HttpServletRequest request) {
+
+		final String idSesionFormulario = getIdSesionFormuarioActiva();
+
+		// Recuperamos valores pagina
+		final Map<String, String> valoresRequest = extraerValoresCampo(request);
+
+		// Deserializamos valores
+		final List<ValorCampo> lista = formService.deserializarValoresCampos(idSesionFormulario, valoresRequest);
+
+		// Invocamos a controlador para guardar la pagina sin terminar formulario
+		final ResultadoGuardarPagina rgp = formService.guardarSalirPagina(idSesionFormulario, lista);
+
+		// Devolvemos respuesta
+		final RespuestaJSON res = new RespuestaJSON();
+		res.setDatos(rgp);
+		return generarJsonView(res);
+	}
+
+	/**
 	 * Cancela el rellenado del formulario.
 	 *
 	 * @return No retorna ningún valor especial. Si tiene éxito se deberá recargar

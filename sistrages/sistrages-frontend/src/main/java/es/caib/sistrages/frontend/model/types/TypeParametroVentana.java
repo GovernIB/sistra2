@@ -128,5 +128,13 @@ public enum TypeParametroVentana {
 	/**
 	 * Caracteres no permitidos
 	 */
-	TAMANYO_MAX;
+	TAMANYO_MAX,
+	/**
+	 * Columnas
+	 */
+	COLS,
+	/**
+	 * Filas
+	 */
+	ROWS;
 }

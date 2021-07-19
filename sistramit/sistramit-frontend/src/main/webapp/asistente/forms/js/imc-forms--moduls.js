@@ -375,7 +375,7 @@ $.fn.appDestaca = function(options) {
 
 			},
 			elimina = function() {
-
+				
 				$("#imc-destacat")
 					.remove();
 
@@ -692,7 +692,7 @@ $.fn.appFormsConfiguracio = function(options) {
 									elm_input
 										.attr({ "data-linies": conf_opcions.lineas });
 
-								}
+								}	
 
 								// mayúscules
 
@@ -1677,7 +1677,7 @@ $.fn.appFormsValida = function(options) {
 
 					if (!idValid && input.attr("data-nss") === "s") {
 
-						idValid = ( appValidaIdentificador.nss(input_val) ) ? true : false;
+						idValid = ( appValidaIdentificador.nss(input_val) ) ? true : false;	
 
 					}
 
@@ -2467,6 +2467,7 @@ $.fn.appFormsAccions = function(options) {
 
 				var desDe = (bt.attr("data-accio") === "seguent") ? "seguent" : false;
 
+				// serialitzem i revisem errors al form
 
 				var valorsSerialitzats = imc_forms_finestra.appSerialitza();
 
@@ -2688,7 +2689,7 @@ $.fn.appFormsAccions = function(options) {
 			actualCarrega = function() {
 
 				$.when(
-
+					
 					$.getJSON( APP_FORM_PAG_ACTUAL )
 
 				).then(
@@ -2698,7 +2699,7 @@ $.fn.appFormsAccions = function(options) {
 						FORMS_JSON = jsonForm;
 
 						if (FORMS_JSON.estado === "SUCCESS" || FORMS_JSON.estado === "WARNING") {
-
+							
 							// carregat
 
 							actualCarregat();
@@ -2713,7 +2714,7 @@ $.fn.appFormsAccions = function(options) {
 						} else {
 
 							consola("Formulari (carrega pàg. actual): error des de JSON");
-
+							
 							imc_contenidor
 								.errors({ estat: FORMS_JSON.estado, titol: FORMS_JSON.mensaje.titulo, text: FORMS_JSON.mensaje.texto, url: FORMS_JSON.url });
 
@@ -2761,7 +2762,7 @@ $.fn.appFormsAccions = function(options) {
 					,200
 				);
 
-
+				
 
 			},
 			actualMostra = function() {
@@ -2812,6 +2813,7 @@ $.fn.appMissatgeFormAccions = function(options) {
 	this.each(function(){
 		var element = $(this), // imc_missatge
 			accio = settings.accio,
+			envia_ajax = false,
 			inicia = function() {
 
 				if (accio) {
@@ -2829,15 +2831,6 @@ $.fn.appMissatgeFormAccions = function(options) {
 					.on('click.appMissatgeFormAccions', "button[data-tipus=desa]", desaSurt)
 					.on('click.appMissatgeFormAccions', "button[data-tipus=surt]", surt)
 					//.on('click.appMissatgeFormAccions', "button[data-tipus=tanca]", surt);
-
-			},
-			desaSurt = function() {
-
-				imc_forms_finestra
-					.appFormsAccions({ accio: "envia" });
-
-				element
-					.off('.appMissatgeFormAccions');
 
 			},
 			surt = function() {
@@ -2886,11 +2879,117 @@ $.fn.appMissatgeFormAccions = function(options) {
 
 					}, 200);
 
-			};
+			},
+			desaSurt = function() {
 
+				element
+					.off('.appMissatgeFormAccions');
+
+				// serialitzem i revisem errors al form
+
+				var valorsSerialitzats = imc_forms_finestra.appSerialitza({ verifica: false });
+
+				imc_forms_missatge
+					.appFormsMissatge({ araAmaga: true });
+
+				setTimeout(
+					function() {
+
+						imc_forms_missatge
+							.appFormsMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtFormDinDesant, alMostrar: function() { enviament(valorsSerialitzats); } });
+
+					},
+					200
+				);
+		
+			},
+			enviament = function(valorsSerialitzats) {
+
+				var pag_url = APP_FORM_DESAR_SORTIR
+					,pag_dades = valorsSerialitzats;
+
+				// ajax
+
+				if (envia_ajax) {
+
+					envia_ajax
+						.abort();
+
+				}
+
+				envia_ajax =
+					$.ajax({
+						url: pag_url,
+						data: pag_dades,
+						method: "post",
+						dataType: "json",
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader(headerCSRF, tokenCSRF);
+						}
+					})
+					.done(function( data ) {
+
+						envia_ajax = false;
+
+						json = data;
+
+						if (json.estado === "SUCCESS" || json.estado === "WARNING") {
+
+							if (json.estado === "WARNING") {
+
+								imc_forms_missatge
+									.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { mostra(); } });
+
+								return;
+
+							}
+
+							mostra(json);
+
+						} else {
+
+							envia_ajax = false;
+
+							consola("FORMS desa i surt: error des de JSON");
+
+							imc_body
+								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: json.url });
+
+						}
+
+					})
+					.fail(function(dades, tipus, errorThrown) {
+
+						envia_ajax = false;
+
+						if (tipus === "abort") {
+							return false;
+						}
+
+						consola("FORMS desa i surt: error des de FAIL");
+
+						imc_body
+							.appFormsErrorsGeneral({ estat: "fail" });
+
+					});
+
+			},
+			mostra = function(json) {
+
+				var url = json.datos.url;
+
+				finalitza(url);
+
+			},
+			finalitza = function(url) {
+
+				document.location = url;
+
+			};
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -2916,6 +3015,6 @@ $.fn.appDataEspanyola = function(options) {
 
 	}
 
-	return data_esp;
+	return data_esp;	
 
 }

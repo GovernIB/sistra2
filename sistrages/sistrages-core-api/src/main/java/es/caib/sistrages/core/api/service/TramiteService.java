@@ -672,4 +672,13 @@ public interface TramiteService {
 	 */
 	public List<GestorExternoFormularios> getGFEByTramiteVersion(Long idTramiteVersion);
 
+	/**
+	 * Busca los trámites según el id entidad, las areas y el filtro
+	 * @param idEntidad
+	 * @param areas
+	 * @param filtro
+	 * @return
+	 */
+	public List<Tramite> listTramite(Long idEntidad, List<Long> areas, String filtro);
+
 }

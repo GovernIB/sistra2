@@ -144,11 +144,13 @@ public interface FlujoTramitacionComponent extends FlujoTramitacionCacheIntf {
 	 *                                problema tipo
 	 * @param problemaDesc
 	 *                                problema descripción
+	 * @param horarioContacto
+	 *                                horario contacto
 	 * @param anexo
 	 *                                anexo
 	 */
 	void envioFormularioSoporte(String nif, String nombre, String telefono, String email, String problemaTipo,
-			String problemaDesc, AnexoFichero anexo);
+			String problemaDesc, String horarioContacto, AnexoFichero anexo);
 
 	/**
 	 * Obtiene un pdf con la clave.
@@ -168,7 +170,7 @@ public interface FlujoTramitacionComponent extends FlujoTramitacionCacheIntf {
 
 	/**
 	 * Descarga archivo del catálogo de procedimientos.
-	 * 
+	 *
 	 * @param referenciaArchivo
 	 *                              referencia archivo
 	 * @return archivo

@@ -21,36 +21,35 @@
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogTramiteBorrarScripts.modoAcceso}"/>
 		<f:viewParam name="ID" value="#{dialogTramiteBorrarScripts.id}"/>
+		<f:viewParam name="TRAMITE" value="#{dialogTramiteBorrarScripts.tramite}"/>
+		<f:viewParam name="VERSION" value="#{dialogTramiteBorrarScripts.version}"/>
 		<f:viewAction action="#{dialogTramiteBorrarScripts.init}" />
 	</f:metadata>
 	<h:form id="formHistorial" styleClass="margin-top-10">
 
 
+		<h3 style="margin:15px">#{msg['dialogBorrarScript.descripcion']} #{dialogTramiteBorrarScripts.tramite} - #{dialogTramiteBorrarScripts.version}</h3>
 
+        <p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
+		<h:panelGrid columns="1" columnClasses="grid-left padding-left-10"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="10" cellspacing="0">
 
-        <h:panelGrid  columns="1"  style="margin:20px" cellspacing="5">
+		        <p:selectBooleanCheckbox value="#{dialogTramiteBorrarScripts.propiedades}" itemLabel="#{msg['dialogBorrarScript.propiedades']}" >
+		        </p:selectBooleanCheckbox>
 
-        <h2>#{msg['dialogBorrarScript.descripcion']}</h2>
-         <p:selectBooleanCheckbox value="#{dialogTramiteBorrarScripts.propiedades}" itemLabel="#{msg['dialogBorrarScript.propiedades']}" >
-         </p:selectBooleanCheckbox>
+		        <p:selectBooleanCheckbox value="#{dialogTramiteBorrarScripts.rellenar}" itemLabel="#{msg['dialogBorrarScript.rellenar']}" >
+		        </p:selectBooleanCheckbox>
 
-        <p:selectBooleanCheckbox value="#{dialogTramiteBorrarScripts.rellenar}" itemLabel="#{msg['dialogBorrarScript.rellenar']}" >
-         </p:selectBooleanCheckbox>
-		<p:selectBooleanCheckbox value="#{dialogTramiteBorrarScripts.formularios}" itemLabel="#{msg['dialogBorrarScript.formularios']}" >
-         </p:selectBooleanCheckbox>
+		        <p:selectBooleanCheckbox value="#{dialogTramiteBorrarScripts.anexo}" itemLabel="#{msg['dialogBorrarScript.anexo']}" >
+		        </p:selectBooleanCheckbox>
 
-        <p:selectBooleanCheckbox value="#{dialogTramiteBorrarScripts.anexo}" itemLabel="#{msg['dialogBorrarScript.anexo']}" >
-         </p:selectBooleanCheckbox>
+		        <p:selectBooleanCheckbox value="#{dialogTramiteBorrarScripts.tasas}" itemLabel="#{msg['dialogBorrarScript.tasas']}" >
+		        </p:selectBooleanCheckbox>
 
-        <p:selectBooleanCheckbox value="#{dialogTramiteBorrarScripts.tasas}" itemLabel="#{msg['dialogBorrarScript.tasas']}" >
-        </p:selectBooleanCheckbox>
+		        <p:selectBooleanCheckbox value="#{dialogTramiteBorrarScripts.registrar}" itemLabel="#{msg['dialogBorrarScript.registrar']}" >
+		        </p:selectBooleanCheckbox>
 
-        <p:selectBooleanCheckbox value="#{dialogTramiteBorrarScripts.registrar}" itemLabel="#{msg['dialogBorrarScript.registrar']}" >
-          </p:selectBooleanCheckbox>
-
-        <p:selectBooleanCheckbox value="#{dialogTramiteBorrarScripts.captura}" itemLabel="#{msg['dialogBorrarScript.captura']}" >
-
-         </p:selectBooleanCheckbox>
+		        <p:selectBooleanCheckbox value="#{dialogTramiteBorrarScripts.captura}" itemLabel="#{msg['dialogBorrarScript.captura']}" >
+		        </p:selectBooleanCheckbox>
 
         </h:panelGrid>
 
@@ -59,11 +58,11 @@
 		  	<p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-					   <p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogTramiteBorrarScripts.aceptar}" process="@form">
-					   <p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borradoScript']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
-					   </p:commandButton>
-
-		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTramiteBorrarScripts.cancelar}" process="@this" />
+					    <p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogTramiteBorrarScripts.ayuda}" process="@this"/>
+			    		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogTramiteBorrarScripts.aceptar}" process="@form" update="growlDialog" >
+					   		<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borradoScript']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+					    </p:commandButton>
+					    <p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTramiteBorrarScripts.cancelar}" process="@this" />
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

@@ -2,7 +2,7 @@ package es.caib.sistramit.core.service.model.formulario.interno;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -36,7 +36,7 @@ public final class DatosFormularioInterno implements Serializable {
 	 * Páginas del formulario descartadas, posterior a la actual (configuración y
 	 * datos).
 	 */
-	private final Map<String, PaginaFormularioData> paginasPosteriores = new HashMap<>();
+	private final Map<String, PaginaFormularioData> paginasPosteriores = new LinkedHashMap<>();
 
 	/**
 	 * Obtiene una página por identificador.
@@ -223,14 +223,24 @@ public final class DatosFormularioInterno implements Serializable {
 	 * @return Valores de los campos.
 	 */
 	public List<ValorCampo> getValoresAccesiblesPaginaActual() {
-		// TODO FASE2: VER COMO SE GESTIONA EL MUTIPAGINA, SOLO DEBERIA TENER ACCESO A
-		// LAS PAGINAS ANTERIORES QUE SE HAYAN RELLENADO.
-		// DE MOMENTO SE METEN TODAS LAS PAGINAS.
 		final List<ValorCampo> res = new ArrayList<>();
 		for (int i = ConstantesNumero.N1; i <= getIndicePaginaActual(); i++) {
 			res.addAll(getPaginaFormulario(i).getValores());
 		}
+		return res;
+	}
 
+	/**
+	 * Devuelve los valores de los campos páginas posteriores a la página actual
+	 * (páginas formulario descartadas).
+	 *
+	 * @return Valores de los campos.
+	 */
+	public List<ValorCampo> getValoresPosterioresPaginaActual() {
+		final List<ValorCampo> res = new ArrayList<>();
+		for (final String id : paginasPosteriores.keySet()) {
+			res.addAll(paginasPosteriores.get(id).getValores());
+		}
 		return res;
 	}
 

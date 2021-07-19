@@ -133,6 +133,51 @@ public class TramiteDaoImpl implements TramiteDao {
 		return listarTramites(idArea, pFiltro);
 	}
 
+	@Override
+	public List<Tramite> getAllByFiltro(Long idEntidad, List<Long> areas, String filtro) {
+		final List<Tramite> resultado = new ArrayList<>();
+		StringBuilder sql = new StringBuilder(" Select t From JTramite t where ");
+
+		if (idEntidad == null) {
+			sql.append(" t.area.entidad is not null ");
+		} else {
+			sql.append(" t.area.entidad.codigo = :idEntidad ");
+		}
+
+		if (areas == null || areas.isEmpty()) {
+			sql.append(" AND t.area.codigo is not null ");
+		} else {
+			sql.append(" AND t.area.codigo IN (:idAreas) ");
+		}
+
+		if (StringUtils.isNotBlank(filtro)) {
+			sql.append(" AND (upper(t.descripcion) like :filtro OR upper(t.identificador) like :filtro)");
+		}
+		sql.append(" ORDER BY t.codigo");
+
+		final Query query = entityManager.createQuery(sql.toString());
+		if (idEntidad != null) {
+			query.setParameter("idEntidad", idEntidad);
+		}
+		if (areas != null) {
+			query.setParameter("idAreas", areas);
+		}
+		if (StringUtils.isNotBlank(filtro)) {
+			query.setParameter("filtro", "%" + filtro.toUpperCase() + "%");
+		}
+
+		final List<JTramite> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JTramite> iterator = results.iterator(); iterator.hasNext();) {
+				final JTramite jTramite = iterator.next();
+				resultado.add(jTramite.toModel());
+			}
+		}
+
+		return resultado;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -1353,5 +1398,6 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 		this.entityManager.flush();
 	}
+
 
 }

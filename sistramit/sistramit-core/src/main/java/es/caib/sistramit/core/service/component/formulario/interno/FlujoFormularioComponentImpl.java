@@ -58,6 +58,7 @@ import es.caib.sistramit.core.service.model.formulario.interno.DatosFormularioIn
 import es.caib.sistramit.core.service.model.formulario.interno.DatosSesionFormularioInterno;
 import es.caib.sistramit.core.service.model.formulario.interno.DependenciaCampo;
 import es.caib.sistramit.core.service.model.formulario.interno.PaginaFormularioData;
+import es.caib.sistramit.core.service.model.formulario.types.TipoFinalizacionFormulario;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FormularioDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
@@ -206,78 +207,18 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	@Override
 	public ResultadoGuardarPagina guardarPagina(final List<ValorCampo> valoresPagina,
 			final String accionPersonalizada) {
+		return guardarPaginaImpl(valoresPagina, accionPersonalizada, false);
+	}
 
-		// Verificamos que no este finalizada la sesion de formulario
-		if (datosSesion.isFinalizada()) {
-			throw new FormularioFinalizadoException("No se puede guardar pagina: sesion formulario finalizada");
-		}
-
-		// Almacenamos valores campos
-		datosSesion.getDatosFormulario().getPaginaActualFormulario().actualizarValoresPagina(valoresPagina);
-
-		// Realizamos validaciones
-		final MensajeValidacion mensaje = validarGuardarPagina(datosSesion, accionPersonalizada);
-
-		// Devolvemos resultado
-		final ResultadoGuardarPagina res = new ResultadoGuardarPagina();
-		res.setFinalizado(TypeSiNo.NO);
-		res.setValidacion(mensaje);
-
-		// Si ha pasado la validacion guardamos pagina
-		if (!UtilsFlujo.isErrorValidacion(mensaje)) {
-			// Si no es pagina final, pasamos a la siguiente
-			final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
-			if (!paginaDef.isPaginaFinal()) {
-				// Evaluar cual es la siguiente pagina
-				final String idPaginaSiguiente = configuracionFormularioHelper
-						.evaluarScriptNavegacionPaginaActual(datosSesion);
-				// Debe ser posterior a la actual
-				final int indiceDefSiguiente = UtilsFormularioInterno.obtenerIndiceDefinicionPagina(datosSesion,
-						idPaginaSiguiente);
-				if (indiceDefSiguiente <= datosSesion.getDatosFormulario().getPaginaActualFormulario().getIndiceDef()) {
-					throw new ErrorConfiguracionException(
-							"El script de navegación de página debe indicar una página posterior (página actual: "
-									+ paginaDef.getIdentificador() + " - página siguiente: " + idPaginaSiguiente);
-				}
-				// Si pagina siguiente ya se ha rellenado antes, la obtenemos
-				PaginaFormularioData paginaSiguiente = datosSesion.getDatosFormulario()
-						.getPaginaPosteriorFormulario(idPaginaSiguiente);
-				if (paginaSiguiente == null) {
-					// Si no se ha rellenado todavía la inicializamos
-					final RFormularioTramite defFormulario = UtilsFormularioInterno
-							.obtenerDefinicionFormulario(datosSesion);
-					paginaSiguiente = inicializarPagina(datosSesion.getIdFormulario(), indiceDefSiguiente,
-							defFormulario, datosSesion.getDatosFormulario().getValoresIniciales());
-				}
-				// Establecemos como pagina actual
-				datosSesion.getDatosFormulario().pushPaginaFormulario(paginaSiguiente);
-				// Recalculo autorellenables pagina (actualiza valores)
-				calculoDatosFormularioHelper.recalcularDatosPagina(datosSesion);
-				// Retornamos indicando que no esta finalizado para que recargue pagina
-				res.setRecargar(TypeSiNo.SI);
-			} else {
-				// Si es la ultima pagina finalizamos formulario
-				finalizarFormulario(datosSesion, accionPersonalizada);
-				// Marcamos sesion formulario como finalizada
-				datosSesion.setFinalizada(true);
-				// Retornamos indicando que esta finalizado y url redireccion
-				res.setFinalizado(TypeSiNo.SI);
-				res.setUrl(this.configuracionComponent
-						.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
-						+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_FORMULARIO_INTERNO + "?idPaso="
-						+ datosSesion.getDatosInicioSesion().getIdPaso() + "&idFormulario="
-						+ datosSesion.getDatosInicioSesion().getIdFormulario() + "&ticket=" + datosSesion.getTicket());
-			}
-		}
-
-		return res;
-
+	@Override
+	public ResultadoGuardarPagina guardarSalirPagina(final List<ValorCampo> valoresPagina) {
+		return guardarPaginaImpl(valoresPagina, null, true);
 	}
 
 	@Override
 	public void cancelarFormulario() {
 		final DatosFinalizacionFormulario datosFinSesion = new DatosFinalizacionFormulario();
-		datosFinSesion.setCancelado(true);
+		datosFinSesion.setEstadoFinalizacion(TipoFinalizacionFormulario.CANCELADO);
 		dao.finalizarSesionGestorFormularios(datosSesion.getTicket(), datosFinSesion);
 	}
 
@@ -463,24 +404,40 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 *                                Datos sesion
 	 * @param accionPersonalizada
 	 *                                Accion personalizada
+	 * @param salirSinFinalizar
+	 *                                Indica si se sale sin finalizar
 	 */
-	private void finalizarFormulario(final DatosSesionFormularioInterno pDatosSesion,
-			final String accionPersonalizada) {
+	private void finalizarFormulario(final DatosSesionFormularioInterno pDatosSesion, final String accionPersonalizada,
+			final boolean salirSinFinalizar) {
+
 		// Obtenemos valores página
-		// TODO Cuando haya captchas, hay que eliminarlos
+		// - Valores hasta página actual (será la final si se sale finalizando)
 		final List<ValorCampo> valoresFormulario = pDatosSesion.getDatosFormulario().getValoresAccesiblesPaginaActual();
+		// - Si se sale sin finalizar cogemos también las páginas posteriores
+		if (salirSinFinalizar) {
+			valoresFormulario.addAll(pDatosSesion.getDatosFormulario().getValoresPosterioresPaginaActual());
+		}
+		// TODO Cuando haya captchas, hay que eliminarlos
 		// Generamos xml
 		final XmlFormulario formXml = new XmlFormulario(valoresFormulario, accionPersonalizada);
 		final byte[] xml = UtilsFormulario.valoresToXml(formXml);
 		// Generamos pdf
-		final RPlantillaFormulario plantillaPdf = configuracionFormularioHelper
-				.obtenerPlantillaPdfVisualizacion(pDatosSesion);
-		final byte[] pdf = generarPdfFormulario(pDatosSesion.getDefinicionTramite(),
-				pDatosSesion.getDatosInicioSesion(), plantillaPdf, xml);
+		byte[] pdf = null;
+		if (!salirSinFinalizar) {
+			final RPlantillaFormulario plantillaPdf = configuracionFormularioHelper
+					.obtenerPlantillaPdfVisualizacion(pDatosSesion);
+			pdf = generarPdfFormulario(pDatosSesion.getDefinicionTramite(), pDatosSesion.getDatosInicioSesion(),
+					plantillaPdf, xml);
+		}
 		// Retornamos al flujo de tramitacion
 		final DatosFinalizacionFormulario datosFinSesion = new DatosFinalizacionFormulario();
 		datosFinSesion.setXml(xml);
 		datosFinSesion.setPdf(pdf);
+		if (salirSinFinalizar) {
+			datosFinSesion.setEstadoFinalizacion(TipoFinalizacionFormulario.SIN_FINALIZAR);
+		} else {
+			datosFinSesion.setEstadoFinalizacion(TipoFinalizacionFormulario.FINALIZADO);
+		}
 		dao.finalizarSesionGestorFormularios(pDatosSesion.getTicket(), datosFinSesion);
 	}
 
@@ -570,6 +527,89 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Implementación guardar página.
+	 *
+	 * @param valoresPagina
+	 *                                Valores página
+	 * @param accionPersonalizada
+	 *                                Acción personalizada
+	 * @param salirSinFinalizar
+	 *                                Salir sin finalizar
+	 *
+	 * @return
+	 */
+	protected ResultadoGuardarPagina guardarPaginaImpl(final List<ValorCampo> valoresPagina,
+			final String accionPersonalizada, final boolean salirSinFinalizar) {
+		// Verificamos que no este finalizada la sesion de formulario
+		if (datosSesion.isFinalizada()) {
+			throw new FormularioFinalizadoException("No se puede guardar pagina: sesion formulario finalizada");
+		}
+
+		// Almacenamos valores campos
+		datosSesion.getDatosFormulario().getPaginaActualFormulario().actualizarValoresPagina(valoresPagina);
+
+		// Realizamos validaciones
+		MensajeValidacion mensaje = null;
+		if (!salirSinFinalizar) {
+			mensaje = validarGuardarPagina(datosSesion, accionPersonalizada);
+		}
+
+		// Devolvemos resultado
+		final ResultadoGuardarPagina res = new ResultadoGuardarPagina();
+		res.setFinalizado(TypeSiNo.NO);
+		res.setValidacion(mensaje);
+
+		// Si ha pasado la validacion guardamos pagina
+		if (!UtilsFlujo.isErrorValidacion(mensaje)) {
+			// Si no es pagina final, pasamos a la siguiente
+			final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
+			if (!salirSinFinalizar && !paginaDef.isPaginaFinal()) {
+				// Evaluar cual es la siguiente pagina
+				final String idPaginaSiguiente = configuracionFormularioHelper
+						.evaluarScriptNavegacionPaginaActual(datosSesion);
+				// Debe ser posterior a la actual
+				final int indiceDefSiguiente = UtilsFormularioInterno.obtenerIndiceDefinicionPagina(datosSesion,
+						idPaginaSiguiente);
+				if (indiceDefSiguiente <= datosSesion.getDatosFormulario().getPaginaActualFormulario().getIndiceDef()) {
+					throw new ErrorConfiguracionException(
+							"El script de navegación de página debe indicar una página posterior (página actual: "
+									+ paginaDef.getIdentificador() + " - página siguiente: " + idPaginaSiguiente);
+				}
+				// Si pagina siguiente ya se ha rellenado antes, la obtenemos
+				PaginaFormularioData paginaSiguiente = datosSesion.getDatosFormulario()
+						.getPaginaPosteriorFormulario(idPaginaSiguiente);
+				if (paginaSiguiente == null) {
+					// Si no se ha rellenado todavía la inicializamos
+					final RFormularioTramite defFormulario = UtilsFormularioInterno
+							.obtenerDefinicionFormulario(datosSesion);
+					paginaSiguiente = inicializarPagina(datosSesion.getIdFormulario(), indiceDefSiguiente,
+							defFormulario, datosSesion.getDatosFormulario().getValoresIniciales());
+				}
+				// Establecemos como pagina actual
+				datosSesion.getDatosFormulario().pushPaginaFormulario(paginaSiguiente);
+				// Recalculo autorellenables pagina (actualiza valores)
+				calculoDatosFormularioHelper.recalcularDatosPagina(datosSesion);
+				// Retornamos indicando que no esta finalizado para que recargue pagina
+				res.setRecargar(TypeSiNo.SI);
+			} else {
+				// Si es la ultima pagina o saliamos a mitad, finalizamos formulario
+				finalizarFormulario(datosSesion, accionPersonalizada, salirSinFinalizar);
+				// Marcamos sesion formulario como finalizada
+				datosSesion.setFinalizada(true);
+				// Retornamos indicando que esta finalizado y url redireccion
+				res.setFinalizado(TypeSiNo.SI);
+				res.setUrl(this.configuracionComponent
+						.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
+						+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_FORMULARIO_INTERNO + "?idPaso="
+						+ datosSesion.getDatosInicioSesion().getIdPaso() + "&idFormulario="
+						+ datosSesion.getDatosInicioSesion().getIdFormulario() + "&ticket=" + datosSesion.getTicket());
+			}
+		}
+
+		return res;
 	}
 
 }

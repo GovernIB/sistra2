@@ -42,6 +42,7 @@ import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
 import es.caib.sistramit.core.service.model.formulario.DatosFinalizacionFormulario;
 import es.caib.sistramit.core.service.model.formulario.DatosInicioSesionFormulario;
+import es.caib.sistramit.core.service.model.formulario.types.TipoFinalizacionFormulario;
 import es.caib.sistramit.core.service.model.integracion.DatosAutenticacionUsuario;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FlujoTramiteDao;
@@ -215,7 +216,7 @@ public class SecurityServiceImpl implements SecurityService {
 		// Almacenamos finalizacion formulario
 		final DatosFinalizacionFormulario datosFinSesion = new DatosFinalizacionFormulario();
 		datosFinSesion.setFechaFinalizacion(new Date());
-		datosFinSesion.setCancelado(drf.isCancelado());
+		datosFinSesion.setEstadoFinalizacion(TipoFinalizacionFormulario.fromBoolean(drf.isCancelado()));
 		datosFinSesion.setPdf(drf.getPdf());
 		datosFinSesion.setXml(drf.getXml());
 		datosFinSesion.setTicketExterno(ticket);

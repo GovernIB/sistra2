@@ -87,7 +87,7 @@
 							</c:otherwise>
 							</c:choose>
 
-							<p:inputTextarea id="sql" value="#{dialogDominio.data.sql}" autoResize="false" rows="8" cols="50" maxlength="2000" styleClass="no-display"/>
+							<p:inputTextarea id="sql" value="#{dialogDominio.data.sql}" autoResize="false" rows="8" cols="50" maxlength="2000" styleClass="no-display" />
 
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleJNDI}"  value="" />
@@ -279,9 +279,8 @@
 	     	<p:toolbar>
 	     		<f:facet name="left">
 	     			<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" actionListener="#{dialogDominio.tramites()}" process="@this" rendered="#{dialogDominio.data.codigo ne null}" />
-	     			<p:commandButton id="btnPing" value="#{msg['botones.ping']}" icon="fa fa-arrow-up" actionListener="#{dialogDominio.ping()}" process="@form" update="growlDialog @form">
-						<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.guardar']}" icon="fa fa-question-circle fa-3x confirmar_icono" disabled="#{dialogDominio.isDisabledAvisoGuardado()}" />
-		        	</p:commandButton>
+
+					<p:commandButton id="btnPing" value="#{msg['botones.ping']}"  process="@form" icon="fa fa-arrow-up" onclick="cambioValorB64('confirmDialogPing');"  />
 	     		</f:facet>
 				<f:facet name="right">
 	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptarSinInvalidacion()}" process="@form" update="growlDialog"  rendered="#{dialogDominio.permiteGuardar() and dialogDominio.isAlta()}" styleClass="boton-azul"  />
@@ -312,6 +311,12 @@
 			</p:outputPanel>
 	    </p:confirmDialog>
 
+	     <p:confirmDialog widgetVar="confirmDialogPing" id="confirmDialogPing"  header="#{msg['confirm.titulo']}" message="#{msg['confirm.guardar']}" icon="fa fa-question-circle fa-3x confirmar_icono" >
+				<p:outputPanel styleClass="confirmar_botonera">
+				  	 <p:commandButton value="#{msg['botones.si']}" actionListener="#{dialogDominio.ping()}" oncomplete="PF('confirmDialogPing').hide();"  process="@this" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check" update="@form" />
+     				 <p:commandButton value="#{msg['botones.no']}" type="button"  onclick="PF('confirmDialogPing').hide();"    styleClass="ui-confirmdialog-no" icon="fa fa-close" />
+				</p:outputPanel>
+		    </p:confirmDialog>
 
 	    <p:confirmDialog id="confirmDialogGuardar" widgetVar="confirmDialogGuardar"  header="#{msg['confirm.titulo']}" message="#{msg['confirm.dominioactualizar']}" icon="fa fa-question-circle fa-3x confirmar_icono"    >
 	    	<p:outputPanel styleClass="confirmar_botonera">
@@ -324,7 +329,6 @@
 				<p:outputPanel styleClass="confirmar_botonera">
 					 <p:commandButton id="botonCacheSi" widgetVar="botonWidget1" onclick="disableClick()"  oncomplete="enableClick()"  value="#{msg['botones.si']}" actionListener="#{dialogDominio.aceptarConInvalidacion()}" process="@this" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  />
      				 <p:commandButton id="botonCacheNo" widgetVar="botonWidget2" onclick="disableClick()"  oncomplete="enableClick()"  value="#{msg['botones.no']}" actionListener="#{dialogDominio.aceptarSinInvalidacion()}" process="@this" styleClass="ui-confirmdialog-no" icon="fa fa-close"  />
-
 				</p:outputPanel>
 		    </p:confirmDialog>
 	</h:form>

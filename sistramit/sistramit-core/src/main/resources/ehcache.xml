@@ -55,4 +55,14 @@
 	    timeToLiveSeconds="60"
 	    memoryStoreEvictionPolicy="LRU"/>
 
+	<!-- Cache catalogo procedimientos: se cachea maximo 10 min (se puede forzar mediante invalidacion entidad)-->
+	<cache
+		name="cacheCP"
+		maxElementsInMemory="100"
+	    overflowToDisk="false"
+	    diskPersistent="false"
+	    timeToIdleSeconds="600"
+	    timeToLiveSeconds="600"
+	    memoryStoreEvictionPolicy="LRU"/>
+
 </ehcache>

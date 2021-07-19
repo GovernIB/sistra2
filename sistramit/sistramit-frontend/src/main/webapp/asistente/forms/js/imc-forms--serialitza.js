@@ -187,7 +187,7 @@ $.fn.appSerialitza = function(opcions) {
 								//var element_json = { "elemento": [] };
 
 								var element_json = JSON.parse(tr_dades);
-
+								
 								/*
 								td_elms
 									.each(function(k) {
@@ -215,7 +215,7 @@ $.fn.appSerialitza = function(opcions) {
 					}
 
 					form_id_i_valors[el_id] = JSON.stringify( form_el_json[el_id] );
-
+					
 				}
 
 				// verifica?
@@ -362,6 +362,13 @@ $.fn.appSerialitza = function(opcions) {
 
 						esError = (input_el.is(":required") && input_val === "") ? true : false;
 						ERROR_TEXT = (esError) ? txtFormDinCampError_captcha : false;
+
+					} else if (el_tipus === "listaElementos") {
+
+						var th_num = el.find("tbody:first tr").length;
+
+						esError = (esObligatori && !th_num) ? true : false;
+						ERROR_TEXT = (esError) ? txtFormDinCampError_llistaElms : false;
 
 					}
 

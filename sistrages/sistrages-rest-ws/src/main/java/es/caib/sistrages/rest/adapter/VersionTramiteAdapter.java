@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.core.api.exception.EncodeException;
+import es.caib.sistrages.core.api.exception.RestException;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
@@ -46,8 +47,10 @@ import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.model.comun.ConstantesDominio;
 import es.caib.sistrages.core.api.model.types.TypeAutenticacion;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
+import es.caib.sistrages.core.api.model.types.TypeFlujo;
 import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
+import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.rest.api.interna.RAnexoTramite;
 import es.caib.sistrages.rest.api.interna.RAnexoTramiteAyuda;
@@ -137,6 +140,7 @@ public class VersionTramiteAdapter {
 				}
 			}
 
+			boolean pasoRellenar = false;
 			final List<RPasoTramitacion> pasos = new ArrayList<>();
 			final List<TramitePaso> ltp = restApiService.getTramitePasos(tv.getCodigo());
 			if (ltp != null) {
@@ -144,8 +148,16 @@ public class VersionTramiteAdapter {
 					final RPasoTramitacion pt = creaPaso(tp, idiRes);
 					if (pt != null) {
 						pasos.add(pt);
+						if (tp.getTipo() == TypePaso.RELLENAR) {
+							pasoRellenar = true;
+						}
 					}
 				}
+			}
+
+			// Si es flujo normalizado debe tener paso rellenar
+			if (tv.getTipoFlujo() == TypeFlujo.NORMAL && !pasoRellenar) {
+				throw new RestException("Trámite normalizado debe tener paso rellenar con formularios");
 			}
 
 			rVersionTramite = new RVersionTramite();
@@ -170,8 +182,9 @@ public class VersionTramiteAdapter {
 					rgfe.setIdentificador(gfe.getIdentificador());
 					rgfe.setUrl(gfe.getUrl());
 					if (gfe.getConfiguracionAutenticacion() != null) {
-						RConfiguracionAutenticacion rConfiguracionAutenticacion = new RConfiguracionAutenticacion();
-						rConfiguracionAutenticacion.setIdentificador(gfe.getConfiguracionAutenticacion().getIdentificador());
+						final RConfiguracionAutenticacion rConfiguracionAutenticacion = new RConfiguracionAutenticacion();
+						rConfiguracionAutenticacion
+								.setIdentificador(gfe.getConfiguracionAutenticacion().getIdentificador());
 						rConfiguracionAutenticacion.setUsuario(gfe.getConfiguracionAutenticacion().getUsuario());
 						rConfiguracionAutenticacion.setPassword(gfe.getConfiguracionAutenticacion().getPassword());
 						rgfe.setConfiguracionAutenticacion(rConfiguracionAutenticacion);

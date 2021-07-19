@@ -1,5 +1,9 @@
 package es.caib.sistramit.core.service.component.integracion;
 
+import java.io.Serializable;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +23,10 @@ import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.literales.Literales;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheException;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 
 /**
  * Implementación acceso catálogo procedimientos.
@@ -31,6 +39,9 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 
 	/** Log. */
 	private final Logger log = LoggerFactory.getLogger(getClass());
+
+	/** Nombre de la cache. **/
+	private static final String CACHE_NAME = "cacheCP";
 
 	/** Configuracion. */
 	@Autowired
@@ -45,19 +56,28 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 			final boolean servicio, final String idioma) {
 		DefinicionTramiteCP definicionTramite = null;
 
-		// Obtener definicion tramite de catalogo servicios
+		// Definición trámite simulado
 		if (Constantes.TRAMITE_CATALOGO_SIMULADO_ID.equals(idTramiteCP)) {
-			// Obtenemos definicion tramite simulado
 			definicionTramite = obtenerDefinicionTramiteSimulado(idioma);
 		} else {
-			// Obtenemos definicion a traves del plugin
-			final ICatalogoProcedimientosPlugin plgCP = getPlugin(idEntidad);
-			try {
-				definicionTramite = plgCP.obtenerDefinicionTramite(idTramiteCP, servicio, idioma);
-			} catch (final CatalogoPluginException e) {
-				log.error("Error obteniendo la info del tramite", e);
-				throw new CatalogoProcedimientosException("Error obteniendo la definición de tramites", e);
+			// Definición trámite a través de plugin CP
+			// - Generamos key para cache
+			final String cacheKey = getCacheKey(idEntidad, idTramiteCP, servicio, idioma);
+			// - Verifica si esta en cache
+			definicionTramite = getFromCache(cacheKey);
+			// - Obtener definicion tramite de catalogo servicios
+			if (definicionTramite == null) {
+				// Obtenemos definicion a traves del plugin
+				final ICatalogoProcedimientosPlugin plgCP = getPlugin(idEntidad);
+				try {
+					definicionTramite = plgCP.obtenerDefinicionTramite(idTramiteCP, servicio, idioma);
+				} catch (final CatalogoPluginException e) {
+					log.error("Error obteniendo la info del tramite", e);
+					throw new CatalogoProcedimientosException("Error obteniendo la definición de tramites", e);
+				}
 			}
+			// - Guarda en cache
+			saveToCache(cacheKey, definicionTramite);
 		}
 
 		// Verificamos datos definicion
@@ -94,6 +114,17 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 		} catch (final CatalogoPluginException e) {
 			log.error("Error obteniendo la info del tramite", e);
 			throw new CatalogoProcedimientosException("Error obteniendo la definición de tramites", e);
+		}
+	}
+
+	@Override
+	public void evictCatalogoProcedimientosEntidad(final String idEntidad) {
+		final Cache cache = getCache();
+		final List<String> keys = cache.getKeys();
+		for (final Iterator<String> it = keys.iterator(); it.hasNext();) {
+			final String key = it.next();
+			if (key.startsWith(idEntidad + "#"))
+				cache.remove(key);
 		}
 	}
 
@@ -146,6 +177,69 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 	private ICatalogoProcedimientosPlugin getPlugin(final String idEntidad) {
 		return (ICatalogoProcedimientosPlugin) configuracionComponent
 				.obtenerPluginEntidad(TypePluginEntidad.CATALOGO_PROCEDIMIENTOS, idEntidad);
+	}
+
+	/**
+	 * Recupera de caché.
+	 *
+	 * @param key
+	 *                key
+	 * @return DefinicionTramiteCP
+	 */
+	private DefinicionTramiteCP getFromCache(final Serializable key) {
+		DefinicionTramiteCP res = null;
+		final Cache cache = getCache();
+		final Element element = cache.get(key);
+		if (element != null && !cache.isExpired(element)) {
+			res = (DefinicionTramiteCP) element.getObjectValue();
+		}
+		return res;
+	}
+
+	/**
+	 * Salva la cache.
+	 *
+	 * @param key
+	 * @param value
+	 * @throws CacheException
+	 */
+	protected void saveToCache(final Serializable key, final DefinicionTramiteCP value) {
+		final Cache cache = getCache();
+		cache.put(new Element(key, value));
+	}
+
+	/**
+	 * Obtiene caché.
+	 *
+	 * @return caché
+	 */
+	private Cache getCache() {
+		final CacheManager cacheManager = CacheManager.getInstance();
+		Cache cache = null;
+		if (cacheManager.cacheExists(CACHE_NAME)) {
+			cache = cacheManager.getCache(CACHE_NAME);
+		} else {
+			throw new CacheException("Cache de dominio no esta definida: " + CACHE_NAME);
+		}
+		return cache;
+	}
+
+	/**
+	 * Obtiene cache key.
+	 *
+	 * @param idEntidad
+	 *                        idEntidad
+	 * @param idTramiteCP
+	 *                        idTramiteCP
+	 * @param servicio
+	 *                        servicio
+	 * @param idioma
+	 *                        idioma
+	 * @return cache key
+	 */
+	private String getCacheKey(final String idEntidad, final String idTramiteCP, final boolean servicio,
+			final String idioma) {
+		return idEntidad + "#" + idTramiteCP + "#" + servicio + "#" + idioma;
 	}
 
 }

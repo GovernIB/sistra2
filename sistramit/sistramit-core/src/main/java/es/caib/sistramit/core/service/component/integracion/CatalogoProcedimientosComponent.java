@@ -29,7 +29,7 @@ public interface CatalogoProcedimientosComponent {
 
 	/**
 	 * Recupera archivo.
-	 * 
+	 *
 	 * @param idEntidad
 	 *                              id entidad
 	 * @param referenciaArchivo
@@ -37,5 +37,13 @@ public interface CatalogoProcedimientosComponent {
 	 * @return archivo
 	 */
 	ArchivoCP descargarArchivo(String idEntidad, String referenciaArchivo);
+
+	/**
+	 * Limpiar caché procedimientos de la entidad.
+	 * 
+	 * @param idEntidad
+	 *                      Id entidad
+	 */
+	void evictCatalogoProcedimientosEntidad(String idEntidad);
 
 }

@@ -42,7 +42,7 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 
 	/**
 	 * Pasa a página anterior.
-	 * 
+	 *
 	 * @param valores
 	 *                    valores actuales pagina
 	 *
@@ -75,6 +75,16 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 	 *         PDF generados.
 	 */
 	ResultadoGuardarPagina guardarPagina(List<ValorCampo> valoresPagina, final String accionPersonalizada);
+
+	/**
+	 * Guarda los datos de la página y sale del formulario sin acabar.
+	 *
+	 * @param valoresPagina
+	 *                          Datos de la página
+	 * @return Resultado de guardar la página: se indicará el ticket de acceso al
+	 *         XML.
+	 */
+	ResultadoGuardarPagina guardarSalirPagina(List<ValorCampo> valoresPagina);
 
 	/**
 	 * Cancela el rellenado del formulario.

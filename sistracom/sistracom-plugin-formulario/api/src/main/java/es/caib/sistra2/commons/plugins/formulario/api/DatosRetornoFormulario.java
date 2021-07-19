@@ -3,7 +3,7 @@ package es.caib.sistra2.commons.plugins.formulario.api;
 import java.io.Serializable;
 
 /**
- * Datos retoron formulario.
+ * Datos retorno formulario.
  *
  * @author Indra
  *
@@ -88,7 +88,7 @@ public final class DatosRetornoFormulario implements Serializable {
 
 	/**
 	 * Método de acceso a idSesionFormulario.
-	 * 
+	 *
 	 * @return idSesionFormulario
 	 */
 	public String getIdSesionFormulario() {
@@ -97,7 +97,7 @@ public final class DatosRetornoFormulario implements Serializable {
 
 	/**
 	 * Método para establecer idSesionFormulario.
-	 * 
+	 *
 	 * @param idSesionFormulario
 	 *                               idSesionFormulario a establecer
 	 */

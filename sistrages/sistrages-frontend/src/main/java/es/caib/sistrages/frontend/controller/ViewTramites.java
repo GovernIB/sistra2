@@ -36,6 +36,7 @@ import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
+
 /**
  * Mantenimiento de tramites.
  *
@@ -80,10 +81,10 @@ public class ViewTramites extends ViewControllerBase {
 	private TramiteVersion versionSeleccionada;
 
 	/** Lista de areas. **/
-	private List<Area> listaAreas;
+	private List<Area> listaAreas = new ArrayList<>();
 
 	/** Lista de areas seleccionadas. **/
-	private List<Area> listaAreasSeleccionadas;
+	private List<Area> listaAreasSeleccionadas = new ArrayList<>();
 
 	/** Para evitar el retrase en las comprobaciones en perfil desarrollador. **/
 	private List<TypeRolePermisos> permisosCacheados = new ArrayList<>();
@@ -243,6 +244,8 @@ public class ViewTramites extends ViewControllerBase {
 	public void dblEditarDblTramite() {
 		if (this.getTienePermisosArea()) {
 			editarTramite();
+		} else {
+			consultarTramite();
 		}
 	}
 
@@ -649,20 +652,13 @@ public class ViewTramites extends ViewControllerBase {
 
 	/** Buscar areas. */
 	private void buscarAreas() {
-		final List<Area> listaTodasAreas = tramiteService.listArea(UtilJSF.getSessionBean().getEntidad().getCodigo(),
-				this.filtro);
 
-		if (listaAreasSeleccionadas == null) {
-			listaAreasSeleccionadas = new ArrayList<>();
-		} else {
-			listaAreasSeleccionadas.clear();
-		}
+		//Obtenemos todas las áreas.
+		final List<Area> listaTodasAreas = tramiteService.listArea(UtilJSF.getSessionBean().getEntidad().getCodigo(), null);
 
-		if (getListaAreas() == null) {
-			setListaAreas(new ArrayList<>());
-		} else {
-			getListaAreas().clear();
-		}
+		//Limpiamos las áreas seleccionadas y las áreas
+		listaAreasSeleccionadas.clear();
+		listaAreas.clear();
 
 		// filtramos las areas del desarrollador
 		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
@@ -756,76 +752,46 @@ public class ViewTramites extends ViewControllerBase {
 	private void buscarTramites(final String filtro) {
 
 		desmarcar();
-		// Verifica si no hay fila seleccionada
-		if (mostrarTodasAreas && filtro != null) {
-			final List<Tramite> tramites = tramiteService.listTramite(null, this.filtro);
 
-			// Obtenemos activa a los tramites que tengan alguna version activa
+		//Optimizado para que devuelva todos los trámites de las áreas seleccionadas según filtro
+		final List<Tramite> tramites = tramiteService.listTramite(UtilJSF.getSessionBean().getEntidad().getCodigo(), convertirAreas(), this.filtro);
 
-			for (final Tramite tramite : tramites) {
-				final List<Long> idTramites = tramiteService.listTramiteVersionActiva(tramite.getIdArea());
-				if (idTramites.contains(tramite.getCodigo())) {
-					tramite.setActivo(true);
-				}
+		// Obtenemos activa a los tramites que tengan alguna version activa
 
-				final List<TramiteVersion> listaVersiones = tramiteService.listTramiteVersion(tramite.getCodigo(),
-						null);
-
-				if ((StringUtils.isNotEmpty(filtro)
-						&& (tramite.getIdentificador().toUpperCase().contains(filtro.toUpperCase())
-								|| tramite.getDescripcion().toUpperCase().contains(filtro.toUpperCase())))
-						|| StringUtils.isEmpty(filtro))
-					listaTramiteVersiones.add(new TramiteVersiones(tramite, listaVersiones));
-			}
-			if (idTramite != null && !idTramite.isEmpty()) {
-				buscarTramitesPorDefecto();
+		for (final Tramite tramite : tramites) {
+			final List<Long> idTramites = tramiteService.listTramiteVersionActiva(tramite.getIdArea());
+			if (idTramites.contains(tramite.getCodigo())) {
+				tramite.setActivo(true);
 			}
 
-			Collections.sort(listaTramiteVersiones,
-					(o1, o2) -> o1.getTramite().getIdentificador().compareTo((o2.getTramite().getIdentificador())));
+			final List<TramiteVersion> listaVersiones = tramiteService.listTramiteVersion(tramite.getCodigo(), null);
 
-		} else {
-
-			if (!verificarFilasSeleccionadasArea()) {
-				return;
-			}
-
-			for (final Area areaSeleccionada : listaAreasSeleccionadas) {
-
-				final List<Tramite> tramites = tramiteService.listTramite(areaSeleccionada.getCodigo(), this.filtro);
-
-				// Obtenemos activa a los tramites que tengan alguna version activa
-				final List<Long> idTramites = tramiteService.listTramiteVersionActiva(areaSeleccionada.getCodigo());
-
-				for (final Tramite tramite : tramites) {
-					if (idTramites.contains(tramite.getCodigo())) {
-						tramite.setActivo(true);
-					}
-
-					final List<TramiteVersion> listaVersiones = tramiteService.listTramiteVersion(tramite.getCodigo(),
-							null);
-
-					if ((StringUtils.isNotEmpty(filtro)
-							&& (tramite.getIdentificador().toUpperCase().contains(filtro.toUpperCase())
-									|| tramite.getDescripcion().toUpperCase().contains(filtro.toUpperCase())))
-							|| StringUtils.isEmpty(filtro))
-						listaTramiteVersiones.add(new TramiteVersiones(tramite, listaVersiones));
-				}
-
-			}
-
-			if (idTramite != null && !idTramite.isEmpty()) {
-				buscarTramitesPorDefecto();
-			}
-
-			Collections.sort(listaTramiteVersiones,
-					(o1, o2) -> o1.getTramite().getIdentificador().compareTo((o2.getTramite().getIdentificador())));
-
+			if ((StringUtils.isNotEmpty(filtro)
+					&& (tramite.getIdentificador().toUpperCase().contains(filtro.toUpperCase())
+							|| tramite.getDescripcion().toUpperCase().contains(filtro.toUpperCase())))
+					|| StringUtils.isEmpty(filtro))
+				listaTramiteVersiones.add(new TramiteVersiones(tramite, listaVersiones));
 		}
+
+		if (idTramite != null && !idTramite.isEmpty()) {
+			buscarTramitesPorDefecto();
+		}
+
+		Collections.sort(listaTramiteVersiones,
+				(o1, o2) -> o1.getTramite().getIdentificador().compareTo((o2.getTramite().getIdentificador())));
+
+
 	}
 
-	private void buscarTramitesSort(Long idAreaSeleccionada, String filtro) {
 
+	private List<Long> convertirAreas() {
+		List<Long> areas = new ArrayList<>();
+		if (listaAreasSeleccionadas != null) {
+			for(Area area : listaAreasSeleccionadas) {
+				areas.add(area.getCodigo());
+			}
+		}
+		return areas;
 	}
 
 	/**
@@ -1260,6 +1226,9 @@ public class ViewTramites extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
+		Tramite tramite = tramiteService.getTramite(this.versionSeleccionada.getIdTramite() );
+		params.put(TypeParametroVentana.TRAMITE.toString(), tramite.getIdentificador());
+		params.put(TypeParametroVentana.VERSION.toString(), String.valueOf(this.versionSeleccionada.getNumeroVersion()) );
 		UtilJSF.openDialog(DialogTramiteBorrarScripts.class, TypeModoAcceso.EDICION, params, true, 700, 360);
 	}
 

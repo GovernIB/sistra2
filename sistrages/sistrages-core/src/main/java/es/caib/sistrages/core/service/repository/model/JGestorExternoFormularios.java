@@ -147,7 +147,9 @@ public class JGestorExternoFormularios implements IModelApi {
 			jModel.setIdentificador(model.getIdentificador());
 			jModel.setDescripcion(model.getDescripcion());
 			jModel.setUrl(model.getUrl());
-			if (model.getConfiguracionAutenticacion() != null) {
+			if (model.getConfiguracionAutenticacion() == null) {
+				jModel.setConfiguracionAutenticacion(null);
+			} else {
 				jModel.setConfiguracionAutenticacion(JConfiguracionAutenticacion.fromModel(model.getConfiguracionAutenticacion()));
 			}
 		}
@@ -159,7 +161,9 @@ public class JGestorExternoFormularios implements IModelApi {
 		this.setDescripcion(model.getDescripcion());
 		this.setUrl(model.getUrl());
 		this.setIdentificador(model.getIdentificador());
-		if (model.getConfiguracionAutenticacion() != null) {
+		if (model.getConfiguracionAutenticacion() == null) {
+			this.setConfiguracionAutenticacion(null);
+		} else {
 			this.setConfiguracionAutenticacion(JConfiguracionAutenticacion.fromModel(model.getConfiguracionAutenticacion()));
 		}
 	}

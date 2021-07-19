@@ -154,6 +154,8 @@ public final class UtilsFormularioSoporte {
 		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "nombre"), datosFormSoporte.getNombre());
 		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "telefono"), datosFormSoporte.getTelefono());
 		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "email"), datosFormSoporte.getEmail());
+		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "horarioContacto"),
+				datosFormSoporte.getHorarioContacto());
 		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "problemaTipo"),
 				UtilsSTG.obtenerLiteral(opc.getDescripcion(), idioma));
 		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "problemaDesc"),

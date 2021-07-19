@@ -55,6 +55,9 @@ public class DialogTraduccion extends DialogControllerBase {
 
 	private String tamanyoMax;
 
+	private String filas;
+	private String columnas;
+
 	/** Parametro de entrada. **/
 	private Literal data;
 	/**
@@ -106,6 +109,12 @@ public class DialogTraduccion extends DialogControllerBase {
 			borrable = true;
 		} else {
 			borrable = false;
+		}
+		if (filas == null) {
+			filas = "4";
+		}
+		if (columnas == null) {
+			columnas = "47";
 		}
 	}
 
@@ -297,29 +306,31 @@ public class DialogTraduccion extends DialogControllerBase {
 
 	/**
 	 * Comprueba si se excede la longitud.
+	 *
 	 * @param texto
 	 * @return
 	 */
 	private boolean excedeLongitud(final String texto) {
 		boolean excede = false;
-		//4000 es el tamaño máximo en tradidi
+		// 4000 es el tamaño máximo en tradidi
 		if (tamanyoMax == null && texto.length() > 4000) {
-				excede = true;
+			excede = true;
 		} else if (tamanyoMax != null && texto.length() > Integer.parseInt(tamanyoMax)) {
-				excede = true;
+			excede = true;
 		}
 		return excede;
 	}
 
 	/**
 	 * Comprueba si tiene el caracter no permitido.
+	 *
 	 * @param texto
 	 * @return
 	 */
 	private boolean contieneCharNoPermitido(final String texto) {
 		boolean contiene = false;
 		if (caracteresNoPermitidos != null) {
-			for(String caracter : caracteresNoPermitidos.split(",")) {
+			for (String caracter : caracteresNoPermitidos.split(",")) {
 				if (texto.contains(caracter)) {
 					contiene = true;
 					break;
@@ -607,6 +618,22 @@ public class DialogTraduccion extends DialogControllerBase {
 	 */
 	public final void setOpcional(final String opcional) {
 		this.opcional = opcional;
+	}
+
+	public String getFilas() {
+		return filas;
+	}
+
+	public void setFilas(String filas) {
+		this.filas = filas;
+	}
+
+	public String getColumnas() {
+		return columnas;
+	}
+
+	public void setColumnas(String columnas) {
+		this.columnas = columnas;
 	}
 
 }

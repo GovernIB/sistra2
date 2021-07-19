@@ -91,9 +91,12 @@ public final class HFormulario implements IModelApi {
 	@Column(name = "SFR_FECFIN")
 	private Date fechaFin;
 
-	/** Atributo cancelado. */
+	/**
+	 * Atributo estado: formulario se ha finalizado (0), cancelado (1) o guardado a
+	 * mitad (2)
+	 */
 	@Column(name = "SFR_CANCEL")
-	private boolean cancelado;
+	private int estadoFinalizacion;
 
 	/** Atributo titulo procedimiento. */
 	@Column(name = "SFR_TITPRO")
@@ -294,25 +297,6 @@ public final class HFormulario implements IModelApi {
 	 */
 	public void setFechaFin(final Date pFechaFin) {
 		fechaFin = pFechaFin;
-	}
-
-	/**
-	 * Método para obtener el campo cancelado.
-	 *
-	 * @return the cancelado
-	 */
-	public boolean isCancelado() {
-		return cancelado;
-	}
-
-	/**
-	 * Método para settear el campo cancelado.
-	 *
-	 * @param pCancelado
-	 *                       el campo cancelado a settear
-	 */
-	public void setCancelado(final boolean pCancelado) {
-		cancelado = pCancelado;
 	}
 
 	/**
@@ -564,7 +548,7 @@ public final class HFormulario implements IModelApi {
 
 	/**
 	 * Método de acceso a codigoSiaProcedimiento.
-	 * 
+	 *
 	 * @return codigoSiaProcedimiento
 	 */
 	public String getCodigoSiaProcedimiento() {
@@ -573,12 +557,31 @@ public final class HFormulario implements IModelApi {
 
 	/**
 	 * Método para establecer codigoSiaProcedimiento.
-	 * 
+	 *
 	 * @param codigoSiaProcedimiento
 	 *                                   codigoSiaProcedimiento a establecer
 	 */
 	public void setCodigoSiaProcedimiento(final String codigoSiaProcedimiento) {
 		this.codigoSiaProcedimiento = codigoSiaProcedimiento;
+	}
+
+	/**
+	 * Método de acceso a estado.
+	 *
+	 * @return estado
+	 */
+	public int getEstadoFinalizacion() {
+		return estadoFinalizacion;
+	}
+
+	/**
+	 * Método para establecer estado.
+	 *
+	 * @param estado
+	 *                   estado a establecer
+	 */
+	public void setEstadoFinalizacion(final int estado) {
+		this.estadoFinalizacion = estado;
 	}
 
 }

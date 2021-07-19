@@ -158,11 +158,13 @@ public interface FlujoTramitacionService {
 	 *                                problema tipo
 	 * @param problemaDesc
 	 *                                problema descripción
+	 * @param horarioContacto
+	 *                                horario contacto
 	 * @param anexo
 	 *                                anexo
 	 */
 	void envioFormularioSoporte(String idSesionTramitacion, String nif, String nombre, String telefono, String email,
-			String problemaTipo, String problemaDesc, AnexoFichero anexo);
+			String problemaTipo, String problemaDesc, String horarioContacto, AnexoFichero anexo);
 
 	/**
 	 * Obtiene url redirección a entidad.
@@ -214,7 +216,7 @@ public interface FlujoTramitacionService {
 
 	/**
 	 * Descarga fichero de catálogo procedimientos.
-	 * 
+	 *
 	 * @param idSesionTramitacion
 	 *                                id sesión tramitación
 	 * @param referenciaArchivo

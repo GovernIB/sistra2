@@ -46,7 +46,6 @@ import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
 import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
-import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.AreaComponent;
@@ -248,6 +247,12 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public List<Tramite> listTramite(final Long idArea, final String pFiltro) {
 		return tramiteDao.getAllByFiltro(idArea, pFiltro);
+	}
+
+
+	@Override
+	public List<Tramite> listTramite(Long idEntidad, List<Long> areas, String filtro) {
+		return tramiteDao.getAllByFiltro(idEntidad, areas, filtro);
 	}
 
 	@Override
@@ -1374,5 +1379,6 @@ public class TramiteServiceImpl implements TramiteService {
 
 
 	}
+
 
 }

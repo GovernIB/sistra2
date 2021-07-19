@@ -107,7 +107,7 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 	 * Calcula si el paso esta pendiente.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                  Datos internos paso
 	 * @return pendiente
 	 */
 	private boolean isPendiente(final DatosInternosPasoRellenar pDipa) {
@@ -176,13 +176,13 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 	 * Regenera datos paso en funcion de los datos de persistencia.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                               Datos internos paso
 	 * @param pDpp
-	 *            Datos persistencia
+	 *                               Datos persistencia
 	 * @param pDefinicionTramite
-	 *            Definición trámite
+	 *                               Definición trámite
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 *
 	 */
 	private void regenerarDatos(final DatosInternosPasoRellenar pDipa, final DatosPersistenciaPaso pDpp,
@@ -207,14 +207,16 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 	 * Método para calcular el detalle del paso en base a la definición del trámite.
 	 *
 	 * @param idPaso
-	 *            Parámetro id paso
+	 *                               Parámetro id paso
 	 * @param pDefinicionTramite
-	 *            Parámetro definicion tramite
+	 *                               Parámetro definicion tramite
 	 * @param pVariablesFlujo
-	 *            Variables flujo con los datos de pasos anteriores.
+	 *                               Variables flujo con los datos de pasos
+	 *                               anteriores.
 	 * @param pDpp
-	 *            Datos persistencia paso. Necesario para ir recuperando los
-	 *            formularios correctos en este paso.
+	 *                               Datos persistencia paso. Necesario para ir
+	 *                               recuperando los formularios correctos en este
+	 *                               paso.
 	 * @return el detalle paso rellenar
 	 */
 	private DetallePasoRellenar calcularDetalle(final String idPaso, final DefinicionTramiteSTG pDefinicionTramite,
@@ -228,6 +230,11 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 		final List<Formulario> formularios = calcularDetalleListaFijaFormularios(pDefinicionTramite, defPaso,
 				pVariablesFlujo, pDpp);
 
+		// Debe existir al menos 1 formulario
+		if (formularios.isEmpty()) {
+			throw new ErrorConfiguracionException("Paso rellenar debe tener al menos 1 formulario");
+		}
+
 		// Creamos detalle paso
 		final DetallePasoRellenar dpa = new DetallePasoRellenar();
 		dpa.setCompletado(TypeSiNo.NO);
@@ -240,13 +247,13 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 	 * Recalcula detalle formularios.
 	 *
 	 * @param pDefinicionTramite
-	 *            Definición trámite
+	 *                               Definición trámite
 	 * @param pPasoDef
-	 *            Parámetro paso
+	 *                               Parámetro paso
 	 * @param pVariablesFlujo
-	 *            Parámetro plugins paso
+	 *                               Parámetro plugins paso
 	 * @param pDpp
-	 *            Datos persistencia paso
+	 *                               Datos persistencia paso
 	 * @return Lista de detalles de formulario
 	 */
 	private List<Formulario> calcularDetalleListaFijaFormularios(final DefinicionTramiteSTG pDefinicionTramite,
@@ -320,13 +327,13 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 	 * Calcula el detalle de un formulario fijo.
 	 *
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                                    Variables flujo
 	 * @param pFormulariosCompletados
-	 *            Formularios completados anteriores
+	 *                                    Formularios completados anteriores
 	 * @param pDefinicionTramite
-	 *            Definición trámite
+	 *                                    Definición trámite
 	 * @param pFormularioDef
-	 *            Definición formulario
+	 *                                    Definición formulario
 	 * @return Detalle formulario
 	 */
 	private Formulario calcularDetalleFormularioFijo(final VariablesFlujo pVariablesFlujo,
@@ -356,13 +363,13 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 	 * Calcula obligatoriedad formulario fijo.
 	 *
 	 * @param pDefinicionTramite
-	 *            Def tramite
+	 *                                    Def tramite
 	 * @param pFormularioDef
-	 *            Def formulario
+	 *                                    Def formulario
 	 * @param pFormulariosCompletados
-	 *            List forms completados
+	 *                                    List forms completados
 	 * @param pVariablesFlujo
-	 *            Vbles flujo
+	 *                                    Vbles flujo
 	 * @return obligatoriedad formulario fijo
 	 */
 	private TypeObligatoriedad calcularObligatoriedadFormularioFijo(final DefinicionTramiteSTG pDefinicionTramite,
@@ -387,13 +394,14 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 	 * Ejecuta script de firmantes.
 	 *
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                                    Variables flujo
 	 * @param pDefinicionTramite
-	 *            Definición trámite
+	 *                                    Definición trámite
 	 * @param formularioDef
-	 *            Definición formulario
+	 *                                    Definición formulario
 	 * @param pFormulariosCompletados
-	 *            Formularios completados anteriormente al formulario actual
+	 *                                    Formularios completados anteriormente al
+	 *                                    formulario actual
 	 * @return el res firmantes
 	 */
 	private ResFirmantes ejecutarScriptFirmantes(final VariablesFlujo pVariablesFlujo,
@@ -421,11 +429,11 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 	 * Regenera datos de los documentos existentes en persistencia.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                            Datos internos paso
 	 * @param pDpp
-	 *            Datos persistencia
+	 *                            Datos persistencia
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                            Variables flujo
 	 */
 	private void regenerarDatosDocumentosExistentes(final DatosInternosPasoRellenar pDipa,
 			final DatosPersistenciaPaso pDpp, final VariablesFlujo pVariablesFlujo) {
@@ -455,13 +463,13 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 	 * existente.
 	 *
 	 * @param pIdPaso
-	 *            Id paso
+	 *                               Id paso
 	 * @param pDetalleFormulario
-	 *            Detalle formulario
+	 *                               Detalle formulario
 	 * @param pDocDpp
-	 *            Datos del documento en persistencia
+	 *                               Datos del documento en persistencia
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 */
 	private void regenerarDocumentoExistente(final String pIdPaso, final Formulario pDetalleFormulario,
 			final DocumentoPasoPersistencia pDocDpp, final VariablesFlujo pVariablesFlujo) {
@@ -480,9 +488,9 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 	 * persistencia y los datos recalculados.
 	 *
 	 * @param detalleForm
-	 *            Detalle formulario
+	 *                        Detalle formulario
 	 * @param pDocDpp
-	 *            Datos documento persistencia
+	 *                        Datos documento persistencia
 	 */
 	private void actualizarDetalleExistente(final Formulario detalleForm, final DocumentoPasoPersistencia pDocDpp) {
 
@@ -495,13 +503,13 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 	 * Actualiza persistencia a partir del detalle del formulario recalculado.
 	 *
 	 * @param idPaso
-	 *            Id paso
+	 *                            Id paso
 	 * @param pDocDpp
-	 *            Datos documento persistencia
+	 *                            Datos documento persistencia
 	 * @param detalleForm
-	 *            Detalle formulario
+	 *                            Detalle formulario
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                            Variables flujo
 	 */
 	private void actualizarPersistenciaExistente(final String idPaso, final DocumentoPasoPersistencia pDocDpp,
 			final Formulario detalleForm, final VariablesFlujo pVariablesFlujo) {
@@ -541,13 +549,13 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 	 * Actualiza en BD el documento.
 	 *
 	 * @param idPaso
-	 *            id paso
+	 *                                   id paso
 	 * @param pDocDpp
-	 *            datos documento persistencia
+	 *                                   datos documento persistencia
 	 * @param pVariablesFlujo
-	 *            variables flujo
+	 *                                   variables flujo
 	 * @param ficsPersistenciaBorrar
-	 *            ficheros a borrar
+	 *                                   ficheros a borrar
 	 */
 	private void updateDB(final String idPaso, final DocumentoPasoPersistencia pDocDpp,
 			final VariablesFlujo pVariablesFlujo, final List<ReferenciaFichero> ficsPersistenciaBorrar) {
@@ -562,13 +570,13 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 	 * no existen en persistencia (ocurrirá al inicializar paso).
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                               Datos internos paso
 	 * @param pDpp
-	 *            Datos persistencia
+	 *                               Datos persistencia
 	 * @param pDefinicionTramite
-	 *            Definición támite
+	 *                               Definición támite
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                               Variables flujo
 	 */
 	private void regenerarDatosDocumentosNuevos(final DatosInternosPasoRellenar pDipa, final DatosPersistenciaPaso pDpp,
 			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo) {
@@ -602,13 +610,13 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 	 * Método para Obtener datos iniciales de la clase ControladorPasoRellenarImpl.
 	 *
 	 * @param pVariablesFlujo
-	 *            Parámetro variables flujo
+	 *                               Parámetro variables flujo
 	 * @param pDefinicionTramite
-	 *            Definición trámite
+	 *                               Definición trámite
 	 * @param pasoDef
-	 *            Parámetro paso def
+	 *                               Parámetro paso def
 	 * @param formulario
-	 *            Parámetro formulario
+	 *                               Parámetro formulario
 	 * @return el byte[]
 	 */
 	private byte[] obtenerDatosIniciales(final VariablesFlujo pVariablesFlujo,

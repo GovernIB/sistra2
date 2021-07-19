@@ -15,6 +15,8 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class DialogTramiteBorrarScripts extends DialogControllerBase {
 
+	private String tramite;
+	private String version;
 	private boolean propiedades;
 	private boolean rellenar;
 	private boolean anexo;
@@ -127,6 +129,34 @@ public class DialogTramiteBorrarScripts extends DialogControllerBase {
 
 	public void setCaptura(final boolean captura) {
 		this.captura = captura;
+	}
+
+	/**
+	 * @return the tramite
+	 */
+	public String getTramite() {
+		return tramite;
+	}
+
+	/**
+	 * @param tramite the tramite to set
+	 */
+	public void setTramite(String tramite) {
+		this.tramite = tramite;
+	}
+
+	/**
+	 * @return the version
+	 */
+	public String getVersion() {
+		return version;
+	}
+
+	/**
+	 * @param version the version to set
+	 */
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 }

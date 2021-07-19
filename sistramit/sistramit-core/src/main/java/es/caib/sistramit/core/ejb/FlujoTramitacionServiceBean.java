@@ -91,9 +91,9 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
 	@Override
 	public void envioFormularioSoporte(final String idSesionTramitacion, final String nif, final String nombre,
 			final String telefono, final String email, final String problemaTipo, final String problemaDesc,
-			final AnexoFichero anexo) {
+			final String horarioContacto, final AnexoFichero anexo) {
 		flujoTramitacionService.envioFormularioSoporte(idSesionTramitacion, nif, nombre, telefono, email, problemaTipo,
-				problemaDesc, anexo);
+				problemaDesc, horarioContacto, anexo);
 	}
 
 	@Override

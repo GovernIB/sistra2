@@ -150,9 +150,20 @@ public final class UtilTraducciones {
 		}
 
 		/** Calculamos la altura según el nº de idiomas a mostrar. **/
-		final int altura = getAltura(idiomas);
+		int altura = getAltura(idiomas);
+		int ancho = 470;
 
-		UtilJSF.openDialog(DialogTraduccion.class, modoAcceso, params, true, 470, altura);
+		if (tamanyoMax != null) {
+			params.put(TypeParametroVentana.COLS.toString(), "47");
+			params.put(TypeParametroVentana.ROWS.toString(), "4");
+
+		} else {
+			params.put(TypeParametroVentana.COLS.toString(), "80");
+			params.put(TypeParametroVentana.ROWS.toString(), "8");
+			ancho = 750;
+			altura = altura + 150;
+		}
+		UtilJSF.openDialog(DialogTraduccion.class, modoAcceso, params, true, ancho, altura);
 	}
 
 	/**
@@ -214,6 +225,7 @@ public final class UtilTraducciones {
 			break;
 		case 2:
 			altura = 250;
+
 			break;
 		case 3:
 			altura = 340;

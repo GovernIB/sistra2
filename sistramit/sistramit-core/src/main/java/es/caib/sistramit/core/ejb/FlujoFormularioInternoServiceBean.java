@@ -54,6 +54,12 @@ public class FlujoFormularioInternoServiceBean implements FlujoFormularioInterno
 	}
 
 	@Override
+	public ResultadoGuardarPagina guardarSalirPagina(final String idSesionFormulario,
+			final List<ValorCampo> valoresPagina) {
+		return flujoFormularioInternoService.guardarSalirPagina(idSesionFormulario, valoresPagina);
+	}
+
+	@Override
 	public void cancelarFormulario(final String idSesionFormulario) {
 		flujoFormularioInternoService.cancelarFormulario(idSesionFormulario);
 	}

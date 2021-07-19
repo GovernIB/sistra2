@@ -319,7 +319,7 @@ public class JDominio implements IModelApi {
 		return jdominio;
 	}
 
-	public JDominio fromModel(final Dominio dominio) {
+	public void fromModel(final Dominio dominio) {
 		if (dominio != null) {
 			this.setCodigo(dominio.getCodigo());
 			this.setCacheo(dominio.getCache().toString());
@@ -332,14 +332,15 @@ public class JDominio implements IModelApi {
 			if (dominio.getSql() != null) {
 				this.setSql(decodeSql(dominio.getSql()));
 			}
-			if (dominio.getConfiguracionAutenticacion () != null) {
+			if (dominio.getConfiguracionAutenticacion () == null) {
+				this.setConfiguracionAutenticacion(null);
+			} else {
 				this.setConfiguracionAutenticacion(JConfiguracionAutenticacion.fromModel(dominio.getConfiguracionAutenticacion()));
 			}
 			this.setTipo(dominio.getTipo().toString());
 			this.setAmbito(dominio.getAmbito().toString());
 			this.setServicioRemotoUrl(dominio.getUrl());
 		}
-		return this;
 	}
 
 	public static String encodeSql(final String sqlPlain) {

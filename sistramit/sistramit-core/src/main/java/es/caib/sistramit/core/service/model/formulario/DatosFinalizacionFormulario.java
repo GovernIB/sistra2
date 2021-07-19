@@ -3,6 +3,8 @@ package es.caib.sistramit.core.service.model.formulario;
 import java.io.Serializable;
 import java.util.Date;
 
+import es.caib.sistramit.core.service.model.formulario.types.TipoFinalizacionFormulario;
+
 /**
  * Datos finalización formulario: devuelve el XML y el PDF.
  *
@@ -15,8 +17,8 @@ public final class DatosFinalizacionFormulario implements Serializable {
 	/** Indica fecha finalizacion sesion formulario. */
 	private Date fechaFinalizacion;
 
-	/** Indica si el formulario se ha cancelado. */
-	private boolean cancelado;
+	/** Indica como se ha finalizado el formulario. */
+	private TipoFinalizacionFormulario estadoFinalizacion;
 
 	/** Xml con los datos del formulario. */
 	private byte[] xml;
@@ -70,8 +72,8 @@ public final class DatosFinalizacionFormulario implements Serializable {
 	 *
 	 * @return cancelado
 	 */
-	public final boolean isCancelado() {
-		return cancelado;
+	public final TipoFinalizacionFormulario getEstadoFinalizacion() {
+		return estadoFinalizacion;
 	}
 
 	/**
@@ -80,8 +82,8 @@ public final class DatosFinalizacionFormulario implements Serializable {
 	 * @param pCancelado
 	 *                       cancelado a establecer
 	 */
-	public final void setCancelado(final boolean pCancelado) {
-		cancelado = pCancelado;
+	public final void setEstadoFinalizacion(final TipoFinalizacionFormulario pCancelado) {
+		estadoFinalizacion = pCancelado;
 	}
 
 	/**
@@ -105,7 +107,7 @@ public final class DatosFinalizacionFormulario implements Serializable {
 
 	/**
 	 * Método de acceso a ticketExterno.
-	 * 
+	 *
 	 * @return ticketExterno
 	 */
 	public String getTicketExterno() {
@@ -114,7 +116,7 @@ public final class DatosFinalizacionFormulario implements Serializable {
 
 	/**
 	 * Método para establecer ticketExterno.
-	 * 
+	 *
 	 * @param ticketExterno
 	 *                          ticketExterno a establecer
 	 */

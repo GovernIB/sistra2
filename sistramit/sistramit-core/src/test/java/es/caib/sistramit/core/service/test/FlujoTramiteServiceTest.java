@@ -436,12 +436,6 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		parametros.addParametroEntrada("ticket", idSesionFormulario);
 		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, dp.getActual().getId(),
 				TypeAccionPasoRellenar.GUARDAR_FORMULARIO, parametros);
-		final TypeSiNo cancelado = (TypeSiNo) resPaso.getParametroRetorno("cancelado");
-		final TypeSiNo correcto = (TypeSiNo) resPaso.getParametroRetorno("correcto");
-		final String mensajeIncorrecto = (String) resPaso.getParametroRetorno("mensajeIncorrecto");
-		Assert.isTrue(cancelado == TypeSiNo.NO, "El formulario se ha cancelado");
-		Assert.isTrue(correcto == TypeSiNo.SI, "El formulario no es correcto");
-		Assert.isTrue(StringUtils.isAllBlank(mensajeIncorrecto), "Existe mensaje incorrecto");
 
 		// -- Mostramos xml tras guardar
 		parametros = new ParametrosAccionPaso();
@@ -532,12 +526,6 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		pParametros.addParametroEntrada("ticket", infoTicket.getTicket());
 		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, infoTicket.getIdPaso(),
 				TypeAccionPasoRellenar.GUARDAR_FORMULARIO, pParametros);
-		final TypeSiNo cancelado = (TypeSiNo) resPaso.getParametroRetorno("cancelado");
-		final TypeSiNo correcto = (TypeSiNo) resPaso.getParametroRetorno("correcto");
-		final String mensajeIncorrecto = (String) resPaso.getParametroRetorno("mensajeIncorrecto");
-		Assert.isTrue(cancelado == TypeSiNo.NO, "El formulario se ha cancelado");
-		Assert.isTrue(correcto == TypeSiNo.SI, "El formulario no es correcto");
-		Assert.isTrue(StringUtils.isAllBlank(mensajeIncorrecto), "Existe mensaje incorrecto");
 
 		// -- Mostramos xml tras guardar
 		parametros = new ParametrosAccionPaso();
@@ -912,7 +900,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		anexo.setFileContentType("text/plain");
 		flujoTramitacionService.envioFormularioSoporte(idSesionTramitacion, usuarioAutenticadoInfo.getNif(),
 				usuarioAutenticadoInfo.getNombre(), "961234567", "usu@correo.es",
-				dt.getEntidad().getSoporte().getProblemas().get(0).getCodigo(), "Problema", anexo);
+				dt.getEntidad().getSoporte().getProblemas().get(0).getCodigo(), "Problema", "Mañana y tarde", anexo);
 
 		this.logger.info("Email enviado");
 
