@@ -151,17 +151,23 @@ public final class UtilTraducciones {
 
 		/** Calculamos la altura según el nº de idiomas a mostrar. **/
 		int altura = getAltura(idiomas);
-		int ancho = 470;
+		int ancho = getAnchura(idiomas);
 
 		if (tamanyoMax != null) {
 			params.put(TypeParametroVentana.COLS.toString(), "47");
-			params.put(TypeParametroVentana.ROWS.toString(), "4");
+			params.put(TypeParametroVentana.ROWS.toString(), "5");
 
 		} else {
 			params.put(TypeParametroVentana.COLS.toString(), "80");
-			params.put(TypeParametroVentana.ROWS.toString(), "8");
+			params.put(TypeParametroVentana.ROWS.toString(), "10");
 			ancho = 750;
-			altura = altura + 150;
+			int size;
+			if (idiomas == null) {
+				size = UtilJSF.getSessionBean().getIdiomas().size();
+			} else {
+				size = idiomas.size();
+			}
+			altura = altura + (77 * size);
 		}
 		UtilJSF.openDialog(DialogTraduccion.class, modoAcceso, params, true, ancho, altura);
 	}
@@ -224,19 +230,53 @@ public final class UtilTraducciones {
 			altura = 160;
 			break;
 		case 2:
-			altura = 250;
+			altura = 270;
 
 			break;
 		case 3:
-			altura = 340;
+			altura = 380;
 			break;
 		case 4:
-			altura = 430;
+			altura = 490;
 			break;
 		default:
 			altura = 160;
 		}
 		return altura;
+	}
+
+	/**
+	 * Calcula la altura del dialog.
+	 *
+	 * @param size
+	 * @return
+	 */
+	private static int getAnchura(final List<String> idiomas) {
+		int anchura;
+		int size;
+		if (idiomas == null) {
+			size = UtilJSF.getSessionBean().getIdiomas().size();
+		} else {
+			size = idiomas.size();
+		}
+		switch (size) {
+		case 1:
+			anchura = 495;
+			break;
+		case 2:
+			anchura = 510;
+
+			break;
+		case 3:
+			anchura = 510;
+			break;
+		case 4:
+			anchura = 510;
+			break;
+		default:
+			anchura = 495;
+		}
+		return anchura;
 	}
 
 	/**
