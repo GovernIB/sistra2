@@ -163,6 +163,18 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 			// propiedades
 			comprobarPropiedades(pTramiteVersion, pIdiomasTramiteVersion, pIdioma, listaErrores);
 
+			// formularios
+			if (!tieneFormularios(pTramiteVersion)) {
+				// final ErrorValidacion error = errorValidacion("error formulario", null, null,
+				// pIdioma);
+				final ErrorValidacion error = new ErrorValidacion(pTramiteVersion.getIdString(), "errorFormulario");
+				// tipificamos el error
+				error.setTipo(TypeErrorValidacion.DATOS_REGISTRO);
+				error.setItem(pTramiteVersion);
+
+				listaErrores.add(error);
+			}
+
 			// pasos
 			if (!pTramiteVersion.getListaPasos().isEmpty()) {
 				for (final TramitePaso paso : pTramiteVersion.getListaPasos()) {
@@ -298,7 +310,8 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 				// DISEÑO DEL FORMULARIO
 				// propiedades del formulario
 				if (formulario.getDisenyoFormulario() != null) {
-					comprobarDisenyoFormulario(pTramiteVersion, pIdiomasTramiteVersion, pIdioma, listaErrores, formulario);
+					comprobarDisenyoFormulario(pTramiteVersion, pIdiomasTramiteVersion, pIdioma, listaErrores,
+							formulario);
 				}
 			}
 		}
@@ -1156,6 +1169,26 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Comprueba si hay formularios.
+	 *
+	 * @param pTramiteVersion tramite version
+	 */
+	private boolean tieneFormularios(final TramiteVersion pTramiteVersion) {
+		if (!pTramiteVersion.getListaPasos().isEmpty()) {
+			for (final TramitePaso paso : pTramiteVersion.getListaPasos()) {
+				if (paso instanceof TramitePasoRellenar) {
+					final List<FormularioTramite> formularios = ((TramitePasoRellenar) paso).getFormulariosTramite();
+					if (formularios != null && !formularios.isEmpty()) {
+						return true;
+
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

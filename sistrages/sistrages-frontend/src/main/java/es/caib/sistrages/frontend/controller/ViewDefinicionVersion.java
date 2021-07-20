@@ -230,7 +230,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getCodigo() + "&tramite=" + tramite.getCodigo());
 		breadCrumbRoot.addElement(item);
 
-		item = new DefaultMenuItem("Version " + tramiteVersion.getNumeroVersion());
+		item = new DefaultMenuItem(UtilJSF.getLiteral("botones.version") + " " + tramiteVersion.getNumeroVersion());
 		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getCodigo() + "&tramite=" + tramite.getCodigo()
 				+ "&tramite_version=" + tramiteVersion.getCodigo());
 		breadCrumbRoot.addElement(item);

@@ -18,7 +18,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
@@ -35,7 +38,6 @@ import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
-
 
 /**
  * Mantenimiento de tramites.
@@ -653,10 +655,11 @@ public class ViewTramites extends ViewControllerBase {
 	/** Buscar areas. */
 	private void buscarAreas() {
 
-		//Obtenemos todas las áreas.
-		final List<Area> listaTodasAreas = tramiteService.listArea(UtilJSF.getSessionBean().getEntidad().getCodigo(), null);
+		// Obtenemos todas las áreas.
+		final List<Area> listaTodasAreas = tramiteService.listArea(UtilJSF.getSessionBean().getEntidad().getCodigo(),
+				null);
 
-		//Limpiamos las áreas seleccionadas y las áreas
+		// Limpiamos las áreas seleccionadas y las áreas
 		listaAreasSeleccionadas.clear();
 		listaAreas.clear();
 
@@ -753,8 +756,10 @@ public class ViewTramites extends ViewControllerBase {
 
 		desmarcar();
 
-		//Optimizado para que devuelva todos los trámites de las áreas seleccionadas según filtro
-		final List<Tramite> tramites = tramiteService.listTramite(UtilJSF.getSessionBean().getEntidad().getCodigo(), convertirAreas(), this.filtro);
+		// Optimizado para que devuelva todos los trámites de las áreas seleccionadas
+		// según filtro
+		final List<Tramite> tramites = tramiteService.listTramite(UtilJSF.getSessionBean().getEntidad().getCodigo(),
+				convertirAreas(), this.filtro);
 
 		// Obtenemos activa a los tramites que tengan alguna version activa
 
@@ -780,14 +785,12 @@ public class ViewTramites extends ViewControllerBase {
 		Collections.sort(listaTramiteVersiones,
 				(o1, o2) -> o1.getTramite().getIdentificador().compareTo((o2.getTramite().getIdentificador())));
 
-
 	}
-
 
 	private List<Long> convertirAreas() {
 		List<Long> areas = new ArrayList<>();
 		if (listaAreasSeleccionadas != null) {
-			for(Area area : listaAreasSeleccionadas) {
+			for (Area area : listaAreasSeleccionadas) {
 				areas.add(area.getCodigo());
 			}
 		}
@@ -1226,9 +1229,10 @@ public class ViewTramites extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
-		Tramite tramite = tramiteService.getTramite(this.versionSeleccionada.getIdTramite() );
+		Tramite tramite = tramiteService.getTramite(this.versionSeleccionada.getIdTramite());
 		params.put(TypeParametroVentana.TRAMITE.toString(), tramite.getIdentificador());
-		params.put(TypeParametroVentana.VERSION.toString(), String.valueOf(this.versionSeleccionada.getNumeroVersion()) );
+		params.put(TypeParametroVentana.VERSION.toString(),
+				String.valueOf(this.versionSeleccionada.getNumeroVersion()));
 		UtilJSF.openDialog(DialogTramiteBorrarScripts.class, TypeModoAcceso.EDICION, params, true, 700, 360);
 	}
 
@@ -1404,7 +1408,9 @@ public class ViewTramites extends ViewControllerBase {
 
 		// miramos si esta bloqueado o no para permitir la correccion de errores
 		if (validoTramiteVersion(!this.versionSeleccionada.getBloqueada())) {
+
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.validacion"));
+
 		}
 	}
 
@@ -1412,6 +1418,11 @@ public class ViewTramites extends ViewControllerBase {
 		final List<ErrorValidacion> listaErrores = tramiteService
 				.validarVersionTramite(this.versionSeleccionada.getCodigo(), UtilJSF.getSessionBean().getLang());
 		if (!listaErrores.isEmpty()) {
+			for (ErrorValidacion error : listaErrores) {
+				if (error.getDescripcion().equals("errorFormulario")) {
+					error.setDescripcion(UtilJSF.getLiteral("error.formulario.vacio"));
+				}
+			}
 			Map<String, String> params = null;
 			TypeModoAcceso modoAccesoErrores;
 
@@ -1441,6 +1452,26 @@ public class ViewTramites extends ViewControllerBase {
 		}
 
 		return true;
+	}
+
+	private boolean tieneFormulario() {
+		/**
+		 * Recupera disenyo formularios.
+		 *
+		 * @param pTramiteVersion tramite version
+		 */
+
+		if (!this.versionSeleccionada.getListaPasos().isEmpty()) {
+			for (final TramitePaso paso : this.versionSeleccionada.getListaPasos()) {
+				if (paso instanceof TramitePasoRellenar) {
+					final List<FormularioTramite> formularios = ((TramitePasoRellenar) paso).getFormulariosTramite();
+					if (formularios != null && !formularios.isEmpty()) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
