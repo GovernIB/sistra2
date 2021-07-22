@@ -54,10 +54,10 @@
 						<p:inputText id="nifUsu" value="#{dialogAuditoriaTramites.dato.nif}" disabled="true" size="40"/>
 
 				 		<p:outputLabel for="descripcion" value="#{msg['dialogAuditoriaTramites.descripcion']}:" />
-						<p:inputTextarea id="descripcion" value="#{dialogAuditoriaTramites.dato.descripcion}" disabled="true" rows="3" cols="80"/>
+						<p:inputTextarea id="descripcion" value="#{dialogAuditoriaTramites.dato.descripcion}" disabled="true" rows="3" cols="100"/>
 
 				 		<p:outputLabel for="resultado" value="#{msg['dialogAuditoriaTramites.resultado']}:" />
-						<p:inputText id="resultado" value="#{dialogAuditoriaTramites.dato.resultado}" disabled="true" size="80"/>
+						<p:inputText id="resultado" value="#{dialogAuditoriaTramites.dato.resultado}" disabled="true" size="100"/>
 					</h:panelGrid>
 				</p:fieldset>
 				<p:spacer height="5px"/>
@@ -69,9 +69,9 @@
 							<p:spacer width="5px"/>
 							<p:commandButton value="#{msg['dialogAuditoriaTramites.trazaError']}" id="trazaErrorBtn" onclick="PF('dlgTraza').show();" rendered="#{dialogAuditoriaTramites.dato.trazaError ne null}" process="@this"/>
 
-							<p:dialog header="#{msg['dialogAuditoriaTramites.tituloTraza']}" widgetVar="dlgTraza"  modal="true" resizable="false" height="405" width="780">
+							<p:dialog header="#{msg['dialogAuditoriaTramites.tituloTraza']}" widgetVar="dlgTraza"  modal="true" resizable="true" height="605" width="900">
 								<p:outputPanel styleClass="w100">
-							    	<p:inputTextarea value="#{dialogAuditoriaTramites.dato.trazaError}" rows="20" cols="100" autoResize="false" readonly="true"/>
+							    	<p:inputTextarea value="#{dialogAuditoriaTramites.dato.trazaError}" rows="30" cols="120"  autoResize="true" readonly="true"/>
 							    	<p:spacer height="5px"/>
 									<p:outputPanel styleClass="confirmar_botonera w100">
 										<p:toolbar>

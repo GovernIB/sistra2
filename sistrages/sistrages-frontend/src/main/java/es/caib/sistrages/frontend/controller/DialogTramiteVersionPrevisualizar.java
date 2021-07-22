@@ -133,13 +133,13 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 			}
 		}
 
-		final TramitePrevisualizacion tramitePrevisualizacion = (TramitePrevisualizacion) UtilJSF.getSessionBean()
-				.getMochilaDatos().get(Constantes.CLAVE_MOCHILA_TRAMITE + this.data.getIdTramite());
-		if (tramitePrevisualizacion != null) {
-			tramiteSeleccionado = tramitePrevisualizacion.getProcedimiento();
-			idioma = tramitePrevisualizacion.getIdioma();
-			parametros = tramitePrevisualizacion.getParametros();
-		}
+//		final TramitePrevisualizacion tramitePrevisualizacion = (TramitePrevisualizacion) UtilJSF.getSessionBean()
+//				.getMochilaDatos().get(Constantes.CLAVE_MOCHILA_TRAMITE + this.data.getIdTramite());
+//		if (tramitePrevisualizacion != null) {
+//			tramiteSeleccionado = tramitePrevisualizacion.getProcedimiento();
+//			idioma = tramitePrevisualizacion.getIdioma();
+//			parametros = tramitePrevisualizacion.getParametros();
+//		}
 
 		try {
 			iplugin = (ICatalogoProcedimientosPlugin) componenteService
@@ -156,13 +156,13 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 		}
 
 		calcularUrl(false);
+
 	}
 
 	/**
 	 * Previsualizar
 	 *
-	 * @param previsualizar
-	 *                          Si es true, se previsualizar, si es false, se copia.
+	 * @param previsualizar Si es true, se previsualizar, si es false, se copia.
 	 */
 	public void aceptar() {
 
@@ -182,9 +182,8 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	/**
 	 * Método que calcula la url.
 	 *
-	 * @param lanzarError
-	 *                        Si está a true, manda un error al copiar, si está a
-	 *                        false, pone el literal en el copy/paste
+	 * @param lanzarError Si está a true, manda un error al copiar, si está a false,
+	 *                    pone el literal en el copy/paste
 	 * @return
 	 */
 	private boolean calcularUrl(final boolean lanzarError) {
@@ -313,8 +312,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de propiedades.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -449,8 +447,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *               the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -464,8 +461,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *                 the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final TramiteVersion data) {
 		this.data = data;
@@ -479,8 +475,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idioma
-	 *                   the idioma to set
+	 * @param idioma the idioma to set
 	 */
 	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
@@ -494,8 +489,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param valorSeleccionado
-	 *                              the valorSeleccionado to set
+	 * @param valorSeleccionado the valorSeleccionado to set
 	 */
 	public void setValorSeleccionado(final Propiedad valorSeleccionado) {
 		this.valorSeleccionado = valorSeleccionado;
@@ -509,8 +503,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param parametros
-	 *                       the parametros to set
+	 * @param parametros the parametros to set
 	 */
 	public void setParametros(final List<Propiedad> parametros) {
 		this.parametros = parametros;
@@ -524,8 +517,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idiomas
-	 *                    the idiomas to set
+	 * @param idiomas the idiomas to set
 	 */
 	public void setIdiomas(final List<TypeIdioma> idiomas) {
 		this.idiomas = idiomas;
@@ -539,8 +531,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param url
-	 *                the url to set
+	 * @param url the url to set
 	 */
 	public void setUrl(final String url) {
 		this.url = url;
@@ -554,8 +545,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramites
-	 *                     the tramites to set
+	 * @param tramites the tramites to set
 	 */
 	public void setTramites(final List<DefinicionTramiteCP> tramites) {
 		this.tramites = tramites;
@@ -569,8 +559,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramiteSeleccionado
-	 *                                the tramiteSeleccionado to set
+	 * @param tramiteSeleccionado the tramiteSeleccionado to set
 	 */
 	public void setTramiteSeleccionado(final String tramiteSeleccionado) {
 		this.tramiteSeleccionado = tramiteSeleccionado;
@@ -584,8 +573,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param urlTramite
-	 *                       the urlTramite to set
+	 * @param urlTramite the urlTramite to set
 	 */
 	public final void setUrlTramite(final String urlTramite) {
 		this.urlTramite = urlTramite;
@@ -603,8 +591,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	/**
 	 * Método para establecer simularCatalogo.
 	 *
-	 * @param simularCatalogo
-	 *                            simularCatalogo a establecer
+	 * @param simularCatalogo simularCatalogo a establecer
 	 */
 	public void setSimularCatalogo(final boolean simularCatalogo) {
 		this.simularCatalogo = simularCatalogo;
