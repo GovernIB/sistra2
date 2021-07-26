@@ -70,8 +70,8 @@
 							<p:commandButton value="#{msg['dialogAuditoriaTramites.trazaError']}" id="trazaErrorBtn" onclick="PF('dlgTraza').show();" rendered="#{dialogAuditoriaTramites.dato.trazaError ne null}" process="@this"/>
 
 							<p:dialog header="#{msg['dialogAuditoriaTramites.tituloTraza']}" widgetVar="dlgTraza"  modal="true" resizable="true" height="605" width="900">
-								<p:outputPanel styleClass="w100">
-							    	<p:inputTextarea value="#{dialogAuditoriaTramites.dato.trazaError}" rows="30" cols="120"  autoResize="true" readonly="true"/>
+								<p:outputPanel styleClass="w100 h100">
+							    	<p:inputTextarea value="#{dialogAuditoriaTramites.dato.trazaError}" rows="33" cols="120"  autoResize="true" readonly="true" styleClass="w100 h90"/>
 							    	<p:spacer height="5px"/>
 									<p:outputPanel styleClass="confirmar_botonera w100">
 										<p:toolbar>

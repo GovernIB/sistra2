@@ -415,7 +415,14 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		final List<ValorCampo> valoresFormulario = pDatosSesion.getDatosFormulario().getValoresAccesiblesPaginaActual();
 		// - Si se sale sin finalizar cogemos también las páginas posteriores
 		if (salirSinFinalizar) {
+			// Resto pagina posteriores rellenadas
 			valoresFormulario.addAll(pDatosSesion.getDatosFormulario().getValoresPosterioresPaginaActual());
+			// Resto valores que aparecen en valores iniciales y no están
+			for (final ValorCampo vc : pDatosSesion.getDatosFormulario().getValoresIniciales()) {
+				if (UtilsFormularioInterno.buscarValorCampo(valoresFormulario, vc.getId()) == null) {
+					valoresFormulario.add(vc);
+				}
+			}
 		}
 		// TODO Cuando haya captchas, hay que eliminarlos
 		// Generamos xml

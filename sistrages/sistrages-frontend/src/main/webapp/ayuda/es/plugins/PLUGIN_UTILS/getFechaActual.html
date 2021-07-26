@@ -28,7 +28,8 @@
 </p>
 <p>
 	<ul>
-		<li>Método que devuelve la fecha actual del sistema.</li>
+		<li>Método que devuelve la fecha actual del sistema. Indicar que si se quiere pasar esta fecha a campos tipo 'Fecha', el formato de la fecha obtenida debe ser el que viene por defecto.
+		Por otra parte, si se quiere pasar a un campo tipo 'Texto', la fecha puede pasarse con el formato que se desee.</li>
 	</ul>
  </p>
   <p>
@@ -57,17 +58,34 @@
 </p>
 <p> La función getFechaActual retorna '07/01/2019'.</p>
 <br />
+
  <p><b>Ejemplo 2</b> Supongamos que hoy es 7 de enero de 2019, y deseamos recuperar la fecha actual del sistema (con el formato 'yyyy-MM-dd') </p>
  <p class="codigoScript">
 	var hoy = PLUGIN_UTILS.getFechaActual('yyyy-MM-dd');
  </p>
 <p> La función getFechaActual retorna '2019-01-07'.</p>
 <br />
+
  <p><b>Ejemplo 3</b> Supongamos que hoy es 7 de enero de 2019, y deseamos recuperar la fecha actual del sistema (con el formato 'MM/dd/yyyy') </p>
  <p class="codigoScript">
 	var hoy = PLUGIN_UTILS.getFechaActual('MM/dd/yyyy');
  </p>
 <p> La función getFechaActual retorna '01/07/2019'.</p>
 <br />
+
+ <p><b> Ejemplo 4</b> Supongamos que hoy es 7 de enero de 2019 a las 10:53:12, y deseamos recuperar la fecha actual del sistema (con el formato 'MM/dd/yyyy HH:mm:ss')</p>
+ <p class="codigoScript">
+	var hoy = PLUGIN_UTILS.getFechaActual('dd/MM/yyyy HH:mm:ss');
+ </p>
+<p> La función getFechaActual retorna '07/01/2019 10:53:12'.</p>
+<br />
+
+ <p><b> Exemple 5</b> Esta función también puede retornar solo la hora con la presición que se desee. Por ejemplo, si queremos obtener la hora y minutos actuales:</p>
+ <p class="codigoScript">
+	var hoy = PLUGIN_UTILS.getFechaActual('HH:mm');
+ </p>
+<p> La función getFechaActual retorna la hora y minutos actuales.</p>
+<br />
+
 </body>
 </html>
