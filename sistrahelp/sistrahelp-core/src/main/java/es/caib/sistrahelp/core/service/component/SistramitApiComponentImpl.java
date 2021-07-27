@@ -99,12 +99,19 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 		param.setFiltro(convierteFiltroAuditoriaBusqueda(pFiltroBusqueda));
 
 		final HttpEntity<RINEventoAuditoria> request = new HttpEntity<>(param, headers);
+		ResponseEntity<ROUTEventoAuditoria> response = null;
+		try {
+			response = restTemplate.postForEntity(getUrl() + "/auditoria/evento", request, ROUTEventoAuditoria.class);
+		} catch (Exception e) {
 
-		final ResponseEntity<ROUTEventoAuditoria> response = restTemplate.postForEntity(getUrl() + "/auditoria/evento",
-				request, ROUTEventoAuditoria.class);
+		}
 
 		if (response != null && response.getStatusCodeValue() == 200) {
 			rResultado = response.getBody();
+		} else {
+			rResultado = new ROUTEventoAuditoria();
+			rResultado.setListaEventos(null);
+			rResultado.setNumElementos((long) 0);
 		}
 
 		if (rResultado != null) {
@@ -117,6 +124,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 
 				if (listaREventos != null) {
 					resultado.setListaEventos(new ArrayList<>());
+					// auditoria
 					for (final REventoAuditoria rEventoAuditoria : listaREventos) {
 						resultado.getListaEventos().add(convierteEventoAuditoria(rEventoAuditoria));
 					}

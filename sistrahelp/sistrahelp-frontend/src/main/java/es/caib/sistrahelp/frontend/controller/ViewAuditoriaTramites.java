@@ -97,7 +97,13 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	private void buscar() {
 		sanitarFiltros();
 		// Filtra
-		final Long rowCount = helpDeskService.countAuditoriaEvento(filtros);
+		Long rowCount = (long) 0;
+		try {
+			rowCount = helpDeskService.countAuditoriaEvento(filtros);
+		} catch (Exception e) {
+
+		}
+
 		listaDatos = new EventoAuditoriaTramitacionLazyDataModel(helpDeskService, rowCount, filtros);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
