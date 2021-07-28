@@ -32,7 +32,7 @@ public final class EventoAuditoriaTramitacion implements Serializable {
 			final Date fecha, final String nif, final String nombre, final String apellido1, final String apellido2,
 			final String idTramite, final Integer versionTramite, final String idProcedimientoCP,
 			final String idProcedimientoSIA, final String codigoError, final String descripcion, final String resultado,
-			final String trazaError, final String detalle) {
+			final String trazaError, final String descripcionTramite, final String detalle) {
 		super();
 		this.id = id;
 		this.idSesionTramitacion = idSesionTramitacion;
@@ -50,6 +50,7 @@ public final class EventoAuditoriaTramitacion implements Serializable {
 		this.descripcion = descripcion;
 		this.resultado = resultado;
 		this.trazaError = trazaError;
+		this.descripcionTramite = descripcionTramite;
 		try {
 			this.propiedadesEvento = (ListaPropiedades) JSONUtil.fromJSON(detalle, ListaPropiedades.class);
 		} catch (final JSONUtilException e) {
@@ -94,6 +95,7 @@ public final class EventoAuditoriaTramitacion implements Serializable {
 		super();
 	}
 
+	private String descripcionTramite;
 	/**
 	 * id.
 	 */
@@ -475,6 +477,14 @@ public final class EventoAuditoriaTramitacion implements Serializable {
 	 */
 	public void setApellido2(String apellido2) {
 		this.apellido2 = apellido2;
+	}
+
+	public String getDescripcionTramite() {
+		return descripcionTramite;
+	}
+
+	public void setDescripcionTramite(String descripcionTramite) {
+		this.descripcionTramite = descripcionTramite;
 	}
 
 }

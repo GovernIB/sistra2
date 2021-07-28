@@ -295,7 +295,7 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 					tableT.get("apellido2Iniciador"), tableT.get("idTramite"), tableT.get("versionTramite"),
 					tableT.get("idProcedimientoCP"), tableT.get("idProcedimientoSIA"), tableE.get("codigoError"),
 					tableE.get("descripcion"), tableE.get("resultado"), tableE.get("trazaError"),
-					tableE.get("detalle"));
+					tableT.get("descripcionTramite"), tableE.get("detalle"));
 
 		}
 		return query;

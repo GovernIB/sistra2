@@ -32,7 +32,10 @@
 				 		<p:outputLabel for="evento" value="#{msg['dialogAuditoriaTramites.nombreEvento']}:" />
 						<p:inputText id="evento" value="#{dialogAuditoriaTramites.dato.tipoEvento}" disabled="true" size="40"/>
 
-				 		<p:outputLabel for="idTramite" value="#{msg['dialogAuditoriaTramites.idTramite']}:" />
+				 		<p:outputLabel for="nomTramite" value="#{msg['dialogAuditoriaTramites.nomTramite']}:" />
+						<p:inputText id="nomTramite" value="#{dialogAuditoriaTramites.dato.descripcionTramite}" disabled="true" size="40"/>
+
+						<p:outputLabel for="idTramite" value="#{msg['dialogAuditoriaTramites.idTramite']}:" />
 						<p:inputText id="idTramite" value="#{dialogAuditoriaTramites.dato.idTramite}" disabled="true" size="40"/>
 
 				 		<p:outputLabel for="idProcedimientoCP" value="#{msg['dialogAuditoriaTramites.idProcedimiento']}:" />

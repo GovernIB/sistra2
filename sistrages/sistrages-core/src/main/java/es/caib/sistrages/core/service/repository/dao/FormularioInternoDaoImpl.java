@@ -1064,6 +1064,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		final JPaginaFormulario jpagina = JPaginaFormulario.fromModel(paginaFormulario);
 		jpagina.setOrden(paginaFormulario.getOrden());
 		jpagina.setPaginaFinal(paginaFormulario.isPaginaFinal());
+		jpagina.setIdentificador(paginaFormulario.getIdentificador());
 		if (paginaFormulario.getScriptValidacion() != null) {
 			jpagina.setScriptValidacion(JScript.fromModel(Script.clonar(paginaFormulario.getScriptValidacion())));
 		}

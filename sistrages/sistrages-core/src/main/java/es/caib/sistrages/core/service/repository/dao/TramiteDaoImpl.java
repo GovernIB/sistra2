@@ -159,7 +159,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		if (idEntidad != null) {
 			query.setParameter("idEntidad", idEntidad);
 		}
-		if (areas != null) {
+		if (areas != null && !areas.isEmpty()) {
 			query.setParameter("idAreas", areas);
 		}
 		if (StringUtils.isNotBlank(filtro)) {
@@ -1398,6 +1398,5 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 		this.entityManager.flush();
 	}
-
 
 }

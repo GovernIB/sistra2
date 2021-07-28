@@ -113,6 +113,9 @@ public class REventoAuditoria {
 	/**
 	 * detalle.
 	 */
+	@ApiModelProperty(value = "descripcionTramite")
+	private String descripcionTramite;
+
 	@ApiModelProperty(value = "detalle")
 	private String detalle;
 
@@ -415,6 +418,14 @@ public class REventoAuditoria {
 	 */
 	public final void setApellido2(final String apellido2) {
 		this.apellido2 = apellido2;
+	}
+
+	public String getDescripcionTramite() {
+		return descripcionTramite;
+	}
+
+	public void setDescripcionTramite(String descripcionTramite) {
+		this.descripcionTramite = descripcionTramite;
 	}
 
 }

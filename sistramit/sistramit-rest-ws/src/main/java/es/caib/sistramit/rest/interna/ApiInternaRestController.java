@@ -254,8 +254,7 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte detalle pago.
 	 *
-	 * @param pDetallePago
-	 *                         detalle pago
+	 * @param pDetallePago detalle pago
 	 * @return detalle pago auditoria
 	 */
 	private RDetallePagoAuditoria convierteDetallePago(final DetallePagoAuditoria pDetallePago) {
@@ -310,8 +309,7 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte filtro auditoria busqueda.
 	 *
-	 * @param pRFiltro
-	 *                     filtro
+	 * @param pRFiltro filtro
 	 * @return FiltroAuditoriaTramitacion
 	 */
 	private FiltroEventoAuditoria convierteFiltroEventoAuditoria(final RFiltroEventoAuditoria pRFiltro) {
@@ -351,8 +349,7 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte filtro paginacion.
 	 *
-	 * @param pRFiltro
-	 *                     filtro
+	 * @param pRFiltro filtro
 	 * @return FiltroPaginacion
 	 */
 	private FiltroPaginacion convierteFiltroPaginacion(final RFiltroPaginacion pRFiltro) {
@@ -373,8 +370,7 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte evento auditoria.
 	 *
-	 * @param pEventoAuditoria
-	 *                             evento auditoria
+	 * @param pEventoAuditoria evento auditoria
 	 * @return REventoAuditoria
 	 */
 	private REventoAuditoria convierteEventoAuditoria(final EventoAuditoriaTramitacion pEventoAuditoria) {
@@ -403,6 +399,7 @@ public class ApiInternaRestController {
 			rEvento.setDescripcion(pEventoAuditoria.getDescripcion());
 			rEvento.setResultado(pEventoAuditoria.getResultado());
 			rEvento.setTrazaError(pEventoAuditoria.getTrazaError());
+			rEvento.setDescripcionTramite(pEventoAuditoria.getDescripcionTramite());
 			if (pEventoAuditoria.getPropiedadesEvento() != null) {
 				try {
 					rEvento.setDetalle(JSONUtil.toJSON(pEventoAuditoria.getPropiedadesEvento()));
@@ -418,8 +415,7 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte filtro tramite busqueda.
 	 *
-	 * @param pRFiltro
-	 *                     filtro
+	 * @param pRFiltro filtro
 	 * @return FiltroPerdidaClave
 	 */
 	private FiltroPerdidaClave convierteFiltroPerdidaClave(final RFiltroPerdidaClave pRFiltro) {
@@ -443,8 +439,7 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte perdida clave.
 	 *
-	 * @param pPerdidaClave
-	 *                          perdida clave
+	 * @param pPerdidaClave perdida clave
 	 * @return RPerdidaClave
 	 */
 	private RPerdidaClave conviertePerdidaClave(final PerdidaClave pPerdidaClave) {
@@ -466,8 +461,7 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte filtro auditoria busqueda.
 	 *
-	 * @param pRFiltro
-	 *                     filtro
+	 * @param pRFiltro filtro
 	 * @return FiltroAuditoriaTramitacion
 	 */
 	private FiltroPagoAuditoria convierteFiltroPagoAuditoriaBusqueda(final RFiltroPagoAuditoria pRFiltro) {
@@ -500,8 +494,7 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte pago auditoria.
 	 *
-	 * @param pPagoAuditoria
-	 *                           pago auditoria
+	 * @param pPagoAuditoria pago auditoria
 	 * @return RPagoAuditoria
 	 */
 	private RPagoAuditoria conviertePagoAuditoria(final PagoAuditoria pPagoAuditoria) {
@@ -535,8 +528,7 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte filtro auditoria busqueda.
 	 *
-	 * @param pRFiltro
-	 *                     filtro
+	 * @param pRFiltro filtro
 	 * @return FiltroAuditoriaTramitacion
 	 */
 	private FiltroPersistenciaAuditoria convierteFiltroPersistenciaAuditoria(
@@ -576,8 +568,7 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte persistencia auditoria.
 	 *
-	 * @param pPersistenciaAuditoria
-	 *                                   persistencia auditoria
+	 * @param pPersistenciaAuditoria persistencia auditoria
 	 * @return RPersistenciaAuditoria
 	 */
 	private RPersistenciaAuditoria conviertePersistenciaAuditoria(final PersistenciaAuditoria pPersistenciaAuditoria) {
@@ -616,8 +607,7 @@ public class ApiInternaRestController {
 	/**
 	 * Convierte fichero persistencia auditoria.
 	 *
-	 * @param pFichero
-	 *                     fichero
+	 * @param pFichero fichero
 	 * @return RFicheroPersistenciaAuditoria
 	 */
 	private RFicheroPersistenciaAuditoria convierteFicheroPersistenciaAuditoria(

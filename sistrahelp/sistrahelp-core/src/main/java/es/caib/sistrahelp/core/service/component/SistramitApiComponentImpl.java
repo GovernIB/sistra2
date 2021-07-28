@@ -410,6 +410,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 			evento.setDescripcion(pREventoAuditoria.getDescripcion());
 			evento.setResultado(pREventoAuditoria.getResultado());
 			evento.setTrazaError(pREventoAuditoria.getTrazaError());
+			evento.setDescripcionTramite(pREventoAuditoria.getDescripcionTramite());
 
 			if (pREventoAuditoria.getDetalle() != null) {
 				try {

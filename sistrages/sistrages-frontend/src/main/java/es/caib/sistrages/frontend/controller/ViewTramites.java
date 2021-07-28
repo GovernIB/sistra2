@@ -755,11 +755,13 @@ public class ViewTramites extends ViewControllerBase {
 	private void buscarTramites(final String filtro) {
 
 		desmarcar();
-
+		List<Tramite> tramites = new ArrayList<>();
 		// Optimizado para que devuelva todos los trámites de las áreas seleccionadas
 		// según filtro
-		final List<Tramite> tramites = tramiteService.listTramite(UtilJSF.getSessionBean().getEntidad().getCodigo(),
-				convertirAreas(), this.filtro);
+		if (listaAreasSeleccionadas != null && !listaAreasSeleccionadas.isEmpty()) {
+			tramites = tramiteService.listTramite(UtilJSF.getSessionBean().getEntidad().getCodigo(), convertirAreas(),
+					this.filtro);
+		}
 
 		// Obtenemos activa a los tramites que tengan alguna version activa
 

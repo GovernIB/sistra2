@@ -70,6 +70,9 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	/** id procedimiento SIA. */
 	private String idProcedimientoSIA;
 
+	/** id tramite. */
+	private String descripcionTramite;
+
 	/**
 	 * Obtiene el valor de tipoEvento.
 	 *
@@ -362,6 +365,14 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	 */
 	public void setApellido2(final String apellido2) {
 		this.apellido2 = apellido2;
+	}
+
+	public String getDescripcionTramite() {
+		return descripcionTramite;
+	}
+
+	public void setDescripcionTramite(String descripcionTramite) {
+		this.descripcionTramite = descripcionTramite;
 	}
 
 }

@@ -735,7 +735,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		for (final PaginaFormulario paginaFormulario : paginas) {
 			paginaFormulario.setOrden(ordenPagina);
 			final List<LineaComponentesFormulario> lineas = paginaFormulario.getLineas();
-
+			paginaFormulario.setIdentificador(paginaFormulario.getIdentificador());
 			paginaFormulario.setLineas(null);
 			final DisenyoFormulario formulario = formularioInternoDao.getFormularioPaginasById(idFormulario);
 			if (paginaFormulario.getScriptValidacion() != null) {
