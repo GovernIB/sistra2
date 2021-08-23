@@ -75,21 +75,21 @@
 
 				 		</p:dataTable>
 				 		<p:outputPanel styleClass="barra-herramientas-vertical" style="margin-left:5px">
-						    	<p:commandButton id="btnNuevaPagina" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{dialogPropiedadesFormulario.nuevaPagina}" process="@this" update="growlDialog dataTablePaginas" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" />
+						    	<p:commandButton id="btnNuevaPagina" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{dialogPropiedadesFormulario.nuevaPagina}" process="@this" update="growlDialog dataTablePaginas btnEditarPagina" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" />
 								<ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
-
 								<p:commandButton id="btnEditarPagina" icon="fa fa-edit" title="#{msg['botones.editar']}" actionListener="#{dialogPropiedadesFormulario.editarPagina}" process="@this" update="growlDialog" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}">
-	        						<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoPagina}" update="growlDialog dataTablePaginas"/>
+								<p:confirm  header="#{msg['warning.titulo']}"  disabled="#{dialogPropiedadesFormulario.editar}" message="#{msg['dialogPropiedadesFormulario.antesEditar']}" icon="fa fa-exclamation-triangle fa-3x confirmar_icono"/>
+									<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoPagina}" update="growlDialog dataTablePaginas btnEditarPagina"/>
 	        					</p:commandButton>
 	        					<ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
 
-						    	<p:commandButton id="btnEliminarPagina" icon="fa fa-minus"  title="#{msg['botones.eliminar']}" actionListener="#{dialogPropiedadesFormulario.eliminarPagina}" process="@this" update="growlDialog dataTablePaginas" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" />
+						    	<p:commandButton id="btnEliminarPagina" icon="fa fa-minus"  title="#{msg['botones.eliminar']}" actionListener="#{dialogPropiedadesFormulario.eliminarPagina}" process="@this" update="growlDialog dataTablePaginas btnEditarPagina" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" />
 								<ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
 
-						    	<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogPropiedadesFormulario.subirPagina}" process="@this" update="growlDialog dataTablePaginas" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" />
+						    	<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogPropiedadesFormulario.subirPagina}" process="@this" update="growlDialog dataTablePaginas btnEditarPagina" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" />
 								<ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
 
-						    	<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}" actionListener="#{dialogPropiedadesFormulario.bajarPagina}" process="@this" update="growlDialog dataTablePaginas" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" />
+						    	<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}" actionListener="#{dialogPropiedadesFormulario.bajarPagina}" process="@this" update="growlDialog dataTablePaginas btnEditarPagina" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" />
 
 						    	<p:commandButton id="btnConsultarPagina" icon="fa fa-eye" title="#{msg['botones.consultar']}" actionListener="#{dialogPropiedadesFormulario.consultarPagina}" process="@this" update="growlDialog" rendered="#{!dialogPropiedadesFormulario.alta and !dialogPropiedadesFormulario.edicion}" />
 

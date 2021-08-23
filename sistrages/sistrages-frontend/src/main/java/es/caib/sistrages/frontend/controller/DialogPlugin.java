@@ -166,7 +166,7 @@ public class DialogPlugin extends DialogControllerBase {
 	 * Crea nueva propiedad.
 	 */
 	public void nuevaPropiedad() {
-		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 430, 140);
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 405, 140);
 	}
 
 	/**
@@ -180,7 +180,7 @@ public class DialogPlugin extends DialogControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.propiedadSeleccionada));
 
-		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 430, 120);
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 405, 120);
 	}
 
 	/**
@@ -408,7 +408,7 @@ public class DialogPlugin extends DialogControllerBase {
 	public void setTipos(final List<TypePlugin> tipos) {
 		this.tipos = tipos;
 	}
-	
+
 	/** Ayuda. */
     public void ayuda() {
         UtilJSF.openHelp("pluginDialog");

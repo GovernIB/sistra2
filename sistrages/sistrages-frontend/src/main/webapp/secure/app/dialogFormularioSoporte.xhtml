@@ -32,12 +32,12 @@
   		<!-- Growl mensajes -->
 		<p:growl id="growlDialogFormularioSoporte" widgetVar="growlDialogFormularioSoporte" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 wpx50, " columns = "2" cellpadding = "5" cellspacing = "0"  style="width:100%;">
 
-			<p:outputLabel for="inputTipoIncidenciaHidden" value="#{msg['dialogFormularioSoporte.headerTipoIncidencia']}" />
+			<p:outputLabel for="inputTipoIncidenciaHidden" value="#{msg['dialogFormularioSoporte.headerTipoIncidencia']}"/>
 			<p:column>
-				<p:inputText  id="inputTipoIncidencia" value="#{dialogFormularioSoporte.tipoIncidencia}" disabled="true" required="true" size="40" styleClass="margin-right-10 #{not tipoIncidenciaComponent.valid ? 'ui-state-error' : ''}"/>
-				<p:inputText id="inputTipoIncidenciaHidden" value="#{dialogFormularioSoporte.tipoIncidencia}" type="hidden" required="true" binding="#{tipoIncidenciaComponent}"/>
+				<p:inputText  id="inputTipoIncidencia" value="#{dialogFormularioSoporte.tipoIncidencia}" disabled="true" required="true" style="width:80%;" styleClass="margin-right-10 #{not tipoIncidenciaComponent.valid ? 'ui-state-error' : ''}"/>
+				<p:inputText id="inputTipoIncidenciaHidden" value="#{dialogFormularioSoporte.tipoIncidencia}" type="hidden" required="true" binding="#{tipoIncidenciaComponent}" />
 				<p:commandButton id="btnTipoIncidencia" icon="fa fa-language" actionListener="#{dialogFormularioSoporte.editarTipoIncidencia}" process="@this" update="growlDialogFormularioSoporte" style="margin-right:5px">
             		<p:ajax event="dialogReturn" listener="#{dialogFormularioSoporte.returnDialogoTipoIncidencia}" update="growlDialogFormularioSoporte inputTipoIncidencia inputTipoIncidenciaHidden" />
         		</p:commandButton>
@@ -46,7 +46,7 @@
 
 			<p:outputLabel for="inputDescripcionHidden" value="#{msg['dialogFormularioSoporte.headerDescripcion']}" />
 			<p:column>
-				<p:inputText id="inputDescripcion"  value="#{dialogFormularioSoporte.descripcion}" disabled="true" required="true" size="40" styleClass="margin-right-10 #{not descripcionComponent.valid ? 'ui-state-error' : ''}"/>
+				<p:inputText id="inputDescripcion"  value="#{dialogFormularioSoporte.descripcion}" disabled="true" required="true" style="width:80%;" styleClass="margin-right-10 #{not descripcionComponent.valid ? 'ui-state-error' : ''}"/>
 				<p:inputText id="inputDescripcionHidden" value="#{dialogFormularioSoporte.descripcion}" type="hidden" required="true" binding="#{descripcionComponent}"/>
 				<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogFormularioSoporte.editarDescripcion}" process="@this" update="growlDialogFormularioSoporte" style="margin-right:5px">
             		<p:ajax event="dialogReturn" listener="#{dialogFormularioSoporte.returnDialogoDescripcion}" update="growlDialogFormularioSoporte inputDescripcion inputDescripcionHidden" />
@@ -54,13 +54,13 @@
 			</p:column>
 
 			<p:outputLabel for="tipoDestinatario" value="#{msg['dialogFormularioSoporte.headerTipoDestinatario']}" />
-			<p:selectOneMenu id="tipoDestinatario" value="#{dialogFormularioSoporte.data.tipoDestinatario}" style="width:200px" required="true">
+			<p:selectOneMenu id="tipoDestinatario" value="#{dialogFormularioSoporte.data.tipoDestinatario}" style="width:75%;" required="true">
 			     <f:selectItems value="#{TypeFormularioSoporte.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioSoporte.' += tipo]}" />
 				 <p:ajax event="change" process="@form"  update="@form" />
 		    </p:selectOneMenu >
 
 			<p:outputLabel id="labelEmails" value="#{msg['dialogFormularioSoporte.headerEmails']}"   rendered="#{dialogFormularioSoporte.data.tipoDestinatario.toString() == 'E'}"/>
-			<p:inputText   id="inputEmails" value="#{dialogFormularioSoporte.data.listaEmails}" size="40" maxlength="4000" rendered="#{dialogFormularioSoporte.data.tipoDestinatario.toString() == 'E'}" />
+			<p:inputText   id="inputEmails" value="#{dialogFormularioSoporte.data.listaEmails}" style="width:80%;" maxlength="4000" rendered="#{dialogFormularioSoporte.data.tipoDestinatario.toString() == 'E'}" />
 
 			<p:spacer 	   id="tabEmailsInfo" width="5" height="1"  rendered="#{dialogFormularioSoporte.data.tipoDestinatario.toString() == 'E'}" />
 			<p:outputLabel id="labelEmailsInfo"  styleClass="outputlabel-nota" value="#{msg['dialogFormularioSoporte.headerEmailsNota']}" rendered="#{dialogFormularioSoporte.data.tipoDestinatario.toString() == 'E'}" />

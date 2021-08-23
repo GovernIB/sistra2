@@ -75,9 +75,14 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	 * @return el valor de permiteEditar
 	 */
 	public boolean getPermiteEditar() {
-		return (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
-	}
-
+		if (UtilJSF.getSessionBean().getActiveRole().equals(TypeRoleAcceso.ADMIN_ENT) ||
+				UtilJSF.getSessionBean().getActiveRole().equals(TypeRoleAcceso.DESAR)){
+			return true;
+		}
+			else{
+				return false;
+			}
+		}
 	/** Init. **/
 	public void init() {
 		data = tramiteService.getDocumento(Long.valueOf(id));

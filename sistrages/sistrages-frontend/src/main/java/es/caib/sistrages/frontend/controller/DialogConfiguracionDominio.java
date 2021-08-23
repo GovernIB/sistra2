@@ -1,15 +1,19 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.ActionListener;
 import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -58,6 +62,17 @@ public class DialogConfiguracionDominio extends DialogControllerBase {
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
 	}
+
+	/**
+	 * Realiza el ping.
+	 *
+	 */
+	public void realizarPing() {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), this.valorSeleccionado.getCodigo().toString());
+		params.put(TypeParametroVentana.AMBITO.toString(), this.valorSeleccionado.getAmbito().toString());
+		UtilJSF.openDialog(DialogDominioPing.class, TypeModoAcceso.CONSULTA, params, true, 770, 600);
+		}
 
 	/**
 	 * @return the id
@@ -162,5 +177,6 @@ public class DialogConfiguracionDominio extends DialogControllerBase {
 	public void setIdArea(String idArea) {
 		this.idArea = idArea;
 	}
+
 
 }

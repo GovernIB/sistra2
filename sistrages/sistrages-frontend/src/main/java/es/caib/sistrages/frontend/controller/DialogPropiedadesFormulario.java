@@ -54,6 +54,8 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 	private List<String> idiomas;
 
+	private boolean editar;
+
 	@Inject
 	FormularioInternoService formIntService;
 
@@ -66,7 +68,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	@SuppressWarnings("unchecked")
 	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
-
+		editar = true;
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
 
 		if (!mochilaDatos.isEmpty()) {
@@ -140,7 +142,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 			contiene = true;
 		} else {
 			contiene = false;
-			for ( PaginaFormulario pagina : data.getPaginas()) {
+			for (PaginaFormulario pagina : data.getPaginas()) {
 				if (pagina != null && pagina.isPaginaFinal()) {
 					contiene = true;
 					break;
@@ -149,7 +151,6 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		}
 		return contiene;
 	}
-
 
 	/**
 	 * Cancelar.
@@ -236,10 +237,12 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	 * Baja la pagina de posición.
 	 */
 	public void bajarPagina() {
+		editar = false;
 		if (!verificarFilaSeleccionada(paginaSeleccionada))
 			return;
 
-		final int posicion = this.data.getPaginas().indexOf(this.paginaSeleccionada);
+		// final int posicion = this.data.getPaginas().indexOf(this.paginaSeleccionada);
+		final int posicion = this.paginaSeleccionada.getOrden() - 1;
 		if (posicion >= this.data.getPaginas().size() - 1) {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
 			return;
@@ -247,30 +250,46 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 		final PaginaFormulario pagina = this.data.getPaginas().remove(posicion);
 		this.data.getPaginas().add(posicion + 1, pagina);
+		this.data.getPaginas().get(posicion + 1).setOrden(this.data.getPaginas().get(posicion + 1).getOrden() + 1);
+		this.data.getPaginas().get(posicion).setOrden(this.data.getPaginas().get(posicion).getOrden() - 1);
 	}
 
 	/**
 	 * Sube la pagina de posición.
 	 */
 	public void subirPagina() {
+		editar = false;
 		if (!verificarFilaSeleccionada(paginaSeleccionada))
 			return;
 
-		final int posicion = this.data.getPaginas().indexOf(this.paginaSeleccionada);
+		// final int posicion = this.data.getPaginas().indexOf(this.paginaSeleccionada);
+		final int posicion = this.paginaSeleccionada.getOrden() - 1;
 		if (posicion <= 0) {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
 			return;
 		}
 
 		final PaginaFormulario pagina = this.data.getPaginas().remove(posicion);
+
 		this.data.getPaginas().add(posicion - 1, pagina);
+		this.data.getPaginas().get(posicion - 1).setOrden(this.data.getPaginas().get(posicion - 1).getOrden() - 1);
+		this.data.getPaginas().get(posicion).setOrden(this.data.getPaginas().get(posicion).getOrden() + 1);
+	}
+
+	private void intercambioOrden(List<PaginaFormulario> paginas, int posicion, boolean subir) {
+		if (subir) {
+
+		}
+
 	}
 
 	public void nuevaPagina() {
+		editar = false;
 		final PaginaFormulario pagina = new PaginaFormulario();
 		pagina.setOrden(data.getPaginas().size() + 1);
 		pagina.setIdentificador("P" + pagina.getOrden());
 		this.data.getPaginas().add(pagina);
+		asignaPaginaFinal(data.getPaginas());
 	}
 
 	/** Consultar pagina. **/
@@ -290,7 +309,26 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		if (!verificarFilaSeleccionada(paginaSeleccionada)) {
 			return;
 		}
-
+		if (!editar) {
+			if (!contienePlantillaPorDefecto()) {
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.planilla.porDefecto"));
+				return;
+			}
+			if (!contienePaginaFinal()) {
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.pagina.noFinal"));
+				return;
+			}
+			formIntService.updateFormularioInterno(data);
+			data = formIntService.getFormularioInternoPaginas(Long.valueOf(id));
+			editar = true;
+			if (this.paginaSeleccionada.getCodigo() == null) {
+				for (PaginaFormulario pag : data.getPaginas()) {
+					if (pag.getOrden() == paginaSeleccionada.getOrden()) {
+						paginaSeleccionada.setCodigo(pag.getCodigo());
+					}
+				}
+			}
+		}
 		final Map<String, String> params = new HashMap<>();
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		UtilJSF.getSessionBean().getMochilaDatos().put(Constantes.CLAVE_MOCHILA_FORMULARIO,
@@ -319,7 +357,8 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 				pagina = (PaginaFormulario) respuesta.getResult();
 
 				// Muestra dialogo
-				final int posicion = this.data.getPaginas().indexOf(this.paginaSeleccionada);
+				// final int posicion = this.data.getPaginas().indexOf(this.paginaSeleccionada);
+				final int posicion = this.paginaSeleccionada.getOrden() - 1;
 				this.data.getPaginas().get(posicion).setPaginaFinal(pagina.isPaginaFinal());
 				this.data.getPaginas().get(posicion).setScriptValidacion(pagina.getScriptValidacion());
 				paginaSeleccionada.setIdentificador(pagina.getIdentificador());
@@ -339,6 +378,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	 * elimina la pagina de posición.
 	 */
 	public void eliminarPagina() {
+		editar = false;
 		if (!verificarFilaSeleccionada(paginaSeleccionada))
 			return;
 
@@ -351,6 +391,11 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		final int posicion = this.data.getPaginas().indexOf(this.paginaSeleccionada);
 
 		this.data.getPaginas().remove(posicion);
+		if (!data.getPaginas().isEmpty()) {
+			asignaPaginaFinal(data.getPaginas());
+			cambiarOrdenPaginas(data.getPaginas());
+		}
+
 		paginaSeleccionada = null;
 	}
 
@@ -443,6 +488,35 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 		this.data.getPlantillas().remove(posicion);
 		plantillaSeleccionada = null;
+	}
+
+	private void asignaPaginaFinal(List<PaginaFormulario> paginas) {
+		boolean esFinal = false;
+		paginas.sort((o1, o2) -> o1.compareTo(o2));
+		for (PaginaFormulario pag : paginas) {
+			if (pag.isPaginaFinal()) {
+				esFinal = true;
+			}
+		}
+		if (!esFinal) {
+			paginas.sort((o1, o2) -> o1.compareTo(o2));
+
+			// Collections.sort(paginas, Collections.reverseOrder());
+			paginas.get(paginas.size() - 1).setPaginaFinal(true);
+			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.pagina.final"));
+		}
+
+	}
+
+	private void cambiarOrdenPaginas(List<PaginaFormulario> paginas) {
+		paginas.sort((o1, o2) -> o1.compareTo(o2));
+		int i = 1;
+		for (PaginaFormulario pag : paginas) {
+			pag.setOrden(i);
+			i++;
+		}
+		data.setPaginas(paginas);
+
 	}
 
 	/**
@@ -643,6 +717,14 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	 */
 	public void setIdTramiteVersion(final String idTramiteVersion) {
 		this.idTramiteVersion = idTramiteVersion;
+	}
+
+	public boolean isEditar() {
+		return editar;
+	}
+
+	public void setEditar(boolean editar) {
+		this.editar = editar;
 	}
 
 }

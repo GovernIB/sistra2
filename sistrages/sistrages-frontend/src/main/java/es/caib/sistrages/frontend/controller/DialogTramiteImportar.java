@@ -842,8 +842,10 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			}
 
 			ConfiguracionAutenticacion configuracionAutenticacion = null;
-			if (dominio.getTipo() == TypeDominio.CONSULTA_REMOTA && dominio.getConfiguracionAutenticacion() != null && area != null && area.getCodigo() != null) {
-				configuracionAutenticacion = configuracionAutenticacionService.getConfiguracionAutenticacion(dominio.getConfiguracionAutenticacion().getIdentificador(), area.getCodigo());
+			if (dominio.getTipo() == TypeDominio.CONSULTA_REMOTA && dominio.getConfiguracionAutenticacion() != null
+					&& idArea != null) {
+				configuracionAutenticacion = configuracionAutenticacionService.getConfiguracionAutenticacion(
+						dominio.getConfiguracionAutenticacion().getIdentificador(), idArea);
 			}
 
 			final FilaImportarDominio fila = UtilImportacion.getFilaDominio(dominio, dominioActual, fd, fdContent,
@@ -944,17 +946,16 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		}
 	}
 
-
 	/**
-	 * Flujo de gestores (FLUJO_GESTORES). Totalmente independiente de
-	 * otros flujos, depende del area.
+	 * Flujo de gestores (FLUJO_GESTORES). Totalmente independiente de otros flujos,
+	 * depende del area.
 	 *
-	 * Comprobaciones de gestores. Obtenemos el gestor (el existente en
-	 * BBDD) a partir del identificador y el area.
+	 * Comprobaciones de gestores. Obtenemos el gestor (el existente en BBDD) a
+	 * partir del identificador y el area.
 	 *
 	 * <ul>
-	 * <li>Si no existe el gestor formulario externos, marcamos como info y no permitiremos hacer
-	 * nada. Se desasignará al importar.</li>
+	 * <li>Si no existe el gestor formulario externos, marcamos como info y no
+	 * permitiremos hacer nada. Se desasignará al importar.</li>
 	 * <li>Si existe el gestor, entonces:
 	 * <ul>
 	 * <li>Si no está marcado, lo daremos por OK y se asociará al importar.</li>
@@ -970,33 +971,42 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 			final GestorExternoFormularios gestorActual = gestorExternoService
 					.getFormularioExternoByIdentificador(gestor.getIdentificador());
+
+			String identificadorArea = null;
+			Long idArea = null;
+			if (this.filaArea != null && this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
+				identificadorArea = this.filaArea.getAreaActual().getIdentificador();
+				idArea = this.filaArea.getAreaActual().getCodigo();
+			}
 			ConfiguracionAutenticacion configuracionAut = null;
-			if (area != null && gestor != null && gestor.getConfiguracionAutenticacion() != null) {
-				configuracionAut = configuracionAutenticacionService.getConfiguracionAutenticacion(gestor.getConfiguracionAutenticacion().getIdentificador(), this.area.getCodigo());
+			if (idArea != null && gestor != null && gestor.getConfiguracionAutenticacion() != null) {
+				configuracionAut = configuracionAutenticacionService.getConfiguracionAutenticacion(
+						gestor.getConfiguracionAutenticacion().getIdentificador(), idArea);
 			}
 
 			if (gestorActual == null) {
 
 				// Si no existe o está desactivado la personalización, dan info
 				String mensaje = UtilJSF.getLiteral("dialogTramiteImportar.error.noexistegestor");
-				filasGestores
-						.add(FilaImportarGestor.crearITgestor(gestor, gestorActual, mensaje, configuracionAut));
+				filasGestores.add(FilaImportarGestor.crearITgestor(gestor, gestorActual, mensaje, configuracionAut));
 
 			} else {
 				if (gestor.getConfiguracionAutenticacion() == null) {
 					filasGestores.add(FilaImportarGestor.creaITgestorExiste(gestor, gestorActual, configuracionAut));
 				} else {
-					if (!area.getIdentificador().equals(gestorActual.getAreaIdentificador())) {
+					if (!identificadorArea.equals(gestorActual.getAreaIdentificador())) {
 						// Si no existe o está desactivado la personalización, dan info
 						String mensaje = UtilJSF.getLiteral("dialogTramiteImportar.error.existegestorOtroArea");
-						filasGestores
-								.add(FilaImportarGestor.creaITgestorExisteMalConf(gestor, gestorActual, mensaje, configuracionAut));
+						filasGestores.add(FilaImportarGestor.creaITgestorExisteMalConf(gestor, gestorActual, mensaje,
+								configuracionAut));
 					} else {
 						if (configuracionAut == null) {
 							String mensaje = UtilJSF.getLiteral("dialogTramiteImportar.error.existegestorsinconfig");
-							filasGestores.add(FilaImportarGestor.creaITgestorExisteSinConfig(gestor, gestorActual, mensaje, configuracionAut));
+							filasGestores.add(FilaImportarGestor.creaITgestorExisteSinConfig(gestor, gestorActual,
+									mensaje, configuracionAut));
 						} else {
-							filasGestores.add(FilaImportarGestor.creaITgestorExiste(gestor, gestorActual, configuracionAut));
+							filasGestores
+									.add(FilaImportarGestor.creaITgestorExiste(gestor, gestorActual, configuracionAut));
 						}
 					}
 				}
@@ -1004,7 +1014,6 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 		}
 	}
-
 
 	/**
 	 * Check area.
@@ -1070,8 +1079,14 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
 			mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, fila);
-			if (area != null) {
-				mochilaDatos.put(Constantes.AREA, area.getCodigo());
+
+			Long idArea = null;
+			if (this.filaArea != null && this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
+				idArea = this.filaArea.getAreaActual().getCodigo();
+			}
+
+			if (idArea != null) {
+				mochilaDatos.put(Constantes.AREA, idArea);
 			}
 			UtilJSF.openDialog(DialogTramiteImportarDominio.class, TypeModoAcceso.EDICION, null, true,
 					fila.getAnchura(), fila.getAltura());
@@ -1188,11 +1203,16 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
 			mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, fila);
-			if (area != null) {
-				mochilaDatos.put(Constantes.AREA, area.getCodigo());
+
+			Long idArea = null;
+			if (this.filaArea != null && this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
+				idArea = this.filaArea.getAreaActual().getCodigo();
 			}
-			UtilJSF.openDialog(DialogTramiteImportarGestor.class, TypeModoAcceso.EDICION, null, true,
-					500,120);
+
+			if (idArea != null) {
+				mochilaDatos.put(Constantes.AREA, idArea);
+			}
+			UtilJSF.openDialog(DialogTramiteImportarGestor.class, TypeModoAcceso.EDICION, null, true, 500, 120);
 		}
 	}
 
@@ -1213,7 +1233,6 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			checkTodoCorrecto();
 		}
 	}
-
 
 	/**
 	 * Carga el dato donde toque.

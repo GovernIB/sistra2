@@ -165,11 +165,21 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	 * @param previsualizar Si es true, se previsualizar, si es false, se copia.
 	 */
 	public void aceptar() {
+		final List<ErrorValidacion> listaErrores = tramiteService.validarVersionTramite(data,
+				UtilJSF.getSessionBean().getLang());
+		if (!listaErrores.isEmpty()) {
+			final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
 
-		if (!calcularUrl(true)) {
-			return;
+			mochilaDatos.put(Constantes.CLAVE_MOCHILA_ERRORESVALIDACION,
+					listaErrores.stream().map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
+
+			UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, null, true, 1050, 520);
+		} else {
+			if (!calcularUrl(true)) {
+				return;
+			}
+			setUrl(urlTramite);
 		}
-		setUrl(urlTramite);
 	}
 
 	/**

@@ -33,23 +33,23 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 wpx25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="tipo" value="#{msg['dialogRolesPermisos.headerTipo']}" />
-					<p:selectOneMenu id="tipo" value="#{dialogRolesPermisos.data.tipo}" style="width:300px" required="true" disabled="#{dialogRolesPermisos.consulta}">
+					<p:selectOneMenu id="tipo" value="#{dialogRolesPermisos.data.tipo}" style="width:90%" required="true" disabled="#{dialogRolesPermisos.consulta}">
 					     <f:selectItems value="#{TypeRoleUser.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeRoleUser.' += tipo]}" />
 					</p:selectOneMenu >
 
 					<p:outputLabel for="codigo" value="#{msg['dialogRolesPermisos.headerCodigo']}" />
-					<p:inputText id="codigo" value="#{dialogRolesPermisos.data.valor}" disabled="#{dialogRolesPermisos.consulta}" required="true" size="42" maxlength="100"/>
+					<p:inputText id="codigo" value="#{dialogRolesPermisos.data.valor}" disabled="#{dialogRolesPermisos.consulta}" required="true" style="width:95%" maxlength="100"/>
 
 					<p:outputLabel for="area" value="#{msg['dialogRolesPermisos.headerArea']}" />
-					<p:selectOneMenu id="area" value="#{dialogRolesPermisos.data.area}" style="width:300px"  converter="#{areaConverter}" required="true" disabled="#{dialogRolesPermisos.consulta}">
+					<p:selectOneMenu id="area" value="#{dialogRolesPermisos.data.area}" style="width:90%"  converter="#{areaConverter}" required="true" disabled="#{dialogRolesPermisos.consulta}">
             			<f:selectItems value="#{dialogRolesPermisos.areas}" var="area" itemLabel="#{area.identificador}" itemValue="#{area}" />
         			</p:selectOneMenu>
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogRolesPermisos.headerDescripcion']}" />
-					<p:inputText id="descripcion" value="#{dialogRolesPermisos.data.descripcion}" required="true" size="42" maxlength="255" disabled="#{dialogRolesPermisos.consulta}"/>
+					<p:inputText id="descripcion" value="#{dialogRolesPermisos.data.descripcion}" required="true" style="width:95%" maxlength="255" disabled="#{dialogRolesPermisos.consulta}"/>
 
 					<p:outputLabel value="#{msg['dialogRolesPermisos.headerPermisos']}:"/>
 					<p:outputLabel value=" " />

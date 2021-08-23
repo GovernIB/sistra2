@@ -165,10 +165,12 @@
 						<p:column id="columnaRemota2" rendered="#{dialogDominio.visibleRemoto}">
 							<h:panelGrid id="panelCongAut" columnClasses="w30, w40, w30" columns = "3"  cellspacing = "0"  width="100%">
 								<p:outputLabel for="configAut" value="#{msg['dialogDominio.headerTipo.consultaRemota.configAut']}"  style="margin-right:5px" />
-							 	<p:selectOneMenu id="configAut" value="#{dialogDominio.data.configuracionAutenticacion}"  style="width:150px" disabled="#{dialogDominio.isConsulta()}" converter="#{configuracionConverter}"   >
-									    <f:selectItems value="#{dialogDominio.configuraciones}" var="fd" itemValue="#{fd}" itemLabel="#{fd.identificador}" />
+							 	<p:selectOneMenu id="configAut" value="#{dialogDominio.data.configuracionAutenticacion}"  style="width:150px" disabled="#{dialogDominio.isConsulta()}" converter="#{configuracionConverter}">
+									    <f:selectItems value="#{dialogDominio.configuraciones}" var="confAut" itemValue="#{confAut}" itemLabel="#{confAut.identificador}" />
+									<p:ajax event="change" listener="#{dialogDominio.actualizarConf()}" update="btnConsultarConf"/>
 								</p:selectOneMenu >
-								<p:commandButton id="btnNuevaConf" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogDominio.nuevaConfiguracion()}" process="@this" update="growlDialog">
+								<p:commandButton id="btnConsultarConf" title="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{dialogDominio.consultarConfiguracion()}" process="@this" update="growlDialog"
+												 disabled="#{dialogDominio.desactivarConsulta}">
 		       						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogoConf}" update="growlDialog configAut"/>
 		       					</p:commandButton>
 							</h:panelGrid>

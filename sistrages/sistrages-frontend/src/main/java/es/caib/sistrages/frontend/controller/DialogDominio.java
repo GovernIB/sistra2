@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.el.MethodExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -128,6 +129,9 @@ public class DialogDominio extends DialogControllerBase {
 	/** Lista de configuraciones. **/
 	private List<ConfiguracionAutenticacion> configuraciones;
 
+	/** Indica si es visible el botón de consultar **/
+	private Boolean desactivarConsulta = false;
+
 	/**
 	 * Inicialización.
 	 */
@@ -182,11 +186,13 @@ public class DialogDominio extends DialogControllerBase {
 
 		if (typeAmbito == TypeAmbito.AREA) {
 			fuentes = dominioService.listFuenteDato(TypeAmbito.AREA, Long.valueOf(idArea), null);
-			configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(Long.valueOf(idArea), TypeIdioma.fromString(UtilJSF.getSessionBean().getLang()), null);
+			configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(Long.valueOf(idArea),
+					TypeIdioma.fromString(UtilJSF.getSessionBean().getLang()), null);
 			ConfiguracionAutenticacion configAutSinAutenticacion = new ConfiguracionAutenticacion();
 			configAutSinAutenticacion.setCodigo(null);
 			configAutSinAutenticacion.setIdentificador(UtilJSF.getLiteral("dialogDominio.sinAutenticacion"));
 			configuraciones.add(0, configAutSinAutenticacion);
+			actualizarConf();
 		}
 		if (typeAmbito == TypeAmbito.ENTIDAD) {
 			fuentes = dominioService.listFuenteDato(TypeAmbito.ENTIDAD, UtilJSF.getIdEntidad(), null);
@@ -403,7 +409,6 @@ public class DialogDominio extends DialogControllerBase {
 		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, params, true, 430, 120);
 	}
 
-
 	/**
 	 * Crea nueva propiedad.
 	 */
@@ -413,6 +418,20 @@ public class DialogDominio extends DialogControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.AREA.toString(), this.idArea);
 		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.ALTA, params, true, 550, 195);
+	}
+
+	/**
+	 * Consultar configuración
+	 */
+	public void consultarConfiguracion() {
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.AREA.toString(), this.idArea);
+		params.put(TypeParametroVentana.ID.toString(),
+				this.data.getConfiguracionAutenticacion().getCodigo().toString());
+		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 195);
+
 	}
 
 	/**
@@ -430,14 +449,13 @@ public class DialogDominio extends DialogControllerBase {
 			String message = UtilJSF.getLiteral("info.alta.ok");
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
-			//La ponemos por defecto
-			ConfiguracionAutenticacion conf = (ConfiguracionAutenticacion) ((DialogResult)event.getObject()).getResult();
+			// La ponemos por defecto
+			ConfiguracionAutenticacion conf = (ConfiguracionAutenticacion) ((DialogResult) event.getObject())
+					.getResult();
 			this.data.setConfiguracionAutenticacion(conf);
 			this.configuraciones.add(conf);
 		}
 	}
-
-
 
 	/**
 	 * Crea nuevo valor.
@@ -704,7 +722,9 @@ public class DialogDominio extends DialogControllerBase {
 //			this.data.setConfiguracionAutenticacion(configuracion);
 //		}
 
-		if (this.getData().getTipo() == TypeDominio.CONSULTA_REMOTA && this.getData().getConfiguracionAutenticacion() != null && this.getData().getConfiguracionAutenticacion().getCodigo() == null) {
+		if (this.getData().getTipo() == TypeDominio.CONSULTA_REMOTA
+				&& this.getData().getConfiguracionAutenticacion() != null
+				&& this.getData().getConfiguracionAutenticacion().getCodigo() == null) {
 			this.getData().setConfiguracionAutenticacion(null);
 		}
 		switch (acceso) {
@@ -777,6 +797,13 @@ public class DialogDominio extends DialogControllerBase {
 		realizarPing(idDominio);
 	}
 
+	public void actualizarConf() {
+		desactivarConsulta = false;
+		if (this.data.getConfiguracionAutenticacion() == null) {
+			desactivarConsulta = true;
+		}
+	}
+
 	/**
 	 * Realiza el ping.
 	 *
@@ -786,9 +813,7 @@ public class DialogDominio extends DialogControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), idDominio);
-
 		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
-
 		UtilJSF.openDialog(DialogDominioPing.class, TypeModoAcceso.CONSULTA, params, true, 770, 600);
 	}
 
@@ -824,7 +849,6 @@ public class DialogDominio extends DialogControllerBase {
 	/**
 	 * Abre dialogo de tramites.
 	 *
-	 * @param modoAccesoDlg Modo acceso
 	 */
 	public void tramites() {
 
@@ -1184,4 +1208,11 @@ public class DialogDominio extends DialogControllerBase {
 		UtilJSF.openHelp("dominioDialog");
 	}
 
+	public Boolean getDesactivarConsulta() {
+		return desactivarConsulta;
+	}
+
+	public void setDesactivarConsulta(Boolean desactivarConsulta) {
+		this.desactivarConsulta = desactivarConsulta;
+	}
 }

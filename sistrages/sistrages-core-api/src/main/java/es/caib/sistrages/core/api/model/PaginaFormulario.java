@@ -308,4 +308,14 @@ public final class PaginaFormulario extends ModelApi {
 		pagina.setScriptValidacion(paginaOriginal.getScriptValidacion());
 		return pagina;
 	}
+
+	public int compareTo(PaginaFormulario o) {
+		if (orden < o.orden) {
+			return -1;
+		}
+		if (orden > o.orden) {
+			return 1;
+		}
+		return 0;
+	}
 }

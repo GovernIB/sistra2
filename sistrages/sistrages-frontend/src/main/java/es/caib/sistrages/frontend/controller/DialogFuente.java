@@ -121,7 +121,7 @@ public class DialogFuente extends DialogControllerBase {
 	 * Crea nueva FuenteDatosCampo.
 	 */
 	public void nuevaFuenteDatosCampo() {
-		UtilJSF.openDialog(DialogFuenteCampo.class, TypeModoAcceso.ALTA, null, true, 410, 200);
+		UtilJSF.openDialog(DialogFuenteCampo.class, TypeModoAcceso.ALTA, null, true, 325, 200);
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class DialogFuente extends DialogControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		final FuenteDatosCampo campo = this.valorSeleccionado;
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(campo));
-		UtilJSF.openDialog(DialogFuenteCampo.class, TypeModoAcceso.EDICION, params, true, 410, 200);
+		UtilJSF.openDialog(DialogFuenteCampo.class, TypeModoAcceso.EDICION, params, true, 325, 200);
 	}
 
 	/**

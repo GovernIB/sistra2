@@ -741,6 +741,9 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			if (paginaFormulario.getScriptValidacion() != null) {
 				paginaFormulario.getScriptValidacion().setCodigo(null);
 			}
+			if (paginaFormulario.getScriptNavegacion() != null) {
+				paginaFormulario.getScriptNavegacion().setCodigo(null);
+			}
 			paginaFormulario.setCodigo(null);
 
 			final Long idPagina = formularioInternoDao.addPagina(formulario.getCodigo(), paginaFormulario);

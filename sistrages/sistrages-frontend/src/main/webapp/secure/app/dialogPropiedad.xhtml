@@ -33,13 +33,13 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 				<p:focus />
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0">
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 wpx25,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0" style="width:100%;">
 
-					<p:outputLabel for="codigo" value="#{msg['dialogPropiedad.headerCodigo']}" />
-				 	<p:inputText id="codigo" value="#{dialogPropiedad.data.codigo}" disabled="#{dialogPropiedad.isConsulta()}" required="true" size="40" />
+					<p:outputLabel for="codigo" value="#{msg['dialogPropiedad.headerCodigo']}" style="max-width:20px;"/>
+				 	<p:inputText id="codigo" value="#{dialogPropiedad.data.codigo}" disabled="#{dialogPropiedad.isConsulta()}" required="true" style="width:100%;" />
 
-					<p:outputLabel for="valor" value="#{msg['dialogPropiedad.headerValor']}" rendered="#{dialogPropiedad.mostrarValor}" />
-				 	<p:inputText id="valor" value="#{dialogPropiedad.data.valor}" disabled="#{dialogPropiedad.isConsulta()}" required="#{dialogPropiedad.mostrarValor}" size="40" rendered="#{dialogPropiedad.mostrarValor}" />
+					<p:outputLabel for="valor" value="#{msg['dialogPropiedad.headerValor']}" rendered="#{dialogPropiedad.mostrarValor}"/>
+				 	<p:inputText id="valor" value="#{dialogPropiedad.data.valor}" disabled="#{dialogPropiedad.isConsulta()}" required="#{dialogPropiedad.mostrarValor}" style="width:100%;" rendered="#{dialogPropiedad.mostrarValor}" />
 
 				</h:panelGrid>
 			</p:outputPanel>

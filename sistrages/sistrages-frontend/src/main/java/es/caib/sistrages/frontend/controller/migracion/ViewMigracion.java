@@ -55,23 +55,34 @@ public class ViewMigracion extends ViewControllerBase {
 
 	private boolean unificarPantallas;
 
+	private boolean saltaExcepcion = false;
+
 	/**
 	 * Inicializacion.
 	 */
 	public void init() {
 
 		final Long idEntidad = UtilJSF.getIdEntidad();
+
 		// Control acceso
 		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(idEntidad);
 
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		setListaTramiteSistra(migracionService.getTramiteSistra());
+		try {
 
-		setListaTramite(tramiteService.listTramiteByEntidad(UtilJSF.getIdEntidad()));
+			setListaTramiteSistra(migracionService.getTramiteSistra());
 
-		Collections.sort(listaTramite, (o1, o2) -> o1.getIdentificador().compareTo(o2.getIdentificador()));
+			setListaTramite(tramiteService.listTramiteByEntidad(UtilJSF.getIdEntidad()));
+
+			Collections.sort(listaTramite, (o1, o2) -> o1.getIdentificador().compareTo(o2.getIdentificador()));
+
+		} catch (Exception ex) {
+
+			saltaExcepcion = true;
+
+		}
 
 	}
 
@@ -101,6 +112,30 @@ public class ViewMigracion extends ViewControllerBase {
 				}
 			} else {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
+			}
+		}
+	}
+	/***
+	 * Función que se encarga de retornar el contenido de la etiqueta style en funcion del tipo de elemento
+	 * para mostrar o ocultar elementos. Depende de saltaExcepcion, variable que contiene true si ocurre una
+	 * excepción con la base de datos de sistra1
+	 * 
+	 * @elemento posibles valores:
+	 *  1 hace referencia a la etiqueta que contiene el mensaje de error. Oculta por defecto.
+	 *  otros hace referencia a los elementos visibles por defecto (desplegables, botones ...)
+	 */
+	public String setVisibleExcepcion(int elemento) {
+		if(elemento == 1) {
+			if (!saltaExcepcion) {
+				return "display:none;";
+			} else {
+				return "color:red; display:flex; justify-content:center;";
+			}
+		}else {
+			if (!saltaExcepcion) {
+				return "";
+			} else {
+				return "display:none;";
 			}
 		}
 	}
