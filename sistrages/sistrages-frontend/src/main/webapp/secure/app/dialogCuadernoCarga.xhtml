@@ -256,7 +256,39 @@
 					</h:dataTable>
 				</p:column>
 
+				<p:column rendered="#{!empty dialogCuadernoCarga.filasGestores}" >
 
+					<p class="pTituloCabecera">
+						<h:outputText value="#{msg['dialogCuadernoCarga.gestores']}" styleClass="subTituloCabecera"  />
+					</p>
+					<h:dataTable  id="dataTablaGestores" rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w60,w10 grid-center" headerClass="grid-left" value="#{dialogCuadernoCarga.filasGestores}" var="fila" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
+							<h:column headerClass="subTituloTablaImportarIzq">
+								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogCuadernoCarga.gestores.identificador']}" /></f:facet>
+		      					#{fila.gestor.identificador}
+							</h:column>
+
+							<h:column headerClass="subTituloTablaImportarIzq">
+								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogCuadernoCarga.gestores.descripcion']}" /></f:facet>
+		      					#{fila.gestor.descripcion}
+							</h:column>
+
+							<h:column headerClass="subTituloTablaImportarIzq">
+								 <f:facet name = "header" style="text-align: left;">
+								 	<p:outputLabel value="#{msg['dialogCuadernoCarga.formateador.estado']}" />
+								 </f:facet>
+		      					<p:outputLabel value=" #{fila.mensaje}" rendered="#{fila.mensaje != null}" />
+							</h:column>
+
+							<h:column headerClass="subTituloTablaImportarIzq">
+								 <f:facet name = "header"></f:facet>
+								 <p:tooltip for="iconoGestorLabel" 	value="#{msg[fila.resultado.literal]}" />
+								 <p:outputLabel id="iconoGestorLabel" 	value="" >
+										<i id="iconoGestor${fila.gestor.codigo}" class="#{fila.resultado.icon}" style="#{fila.resultado.css}" />
+								 </p:outputLabel>
+							</h:column>
+
+					</h:dataTable>
+				</p:column>
 
 				<br />
 				<br />

@@ -31,16 +31,20 @@ import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.FuenteDatos;
+import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
+import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.FilaImportar;
 import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
@@ -48,11 +52,14 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarBase;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarEntidad;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
+import es.caib.sistrages.core.api.model.comun.FilaImportarFormulario;
+import es.caib.sistrages.core.api.model.comun.FilaImportarGestor;
 import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteRegistro;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
+import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
 import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
@@ -61,10 +68,12 @@ import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.ComponenteService;
+import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.FormateadorFormularioService;
+import es.caib.sistrages.core.api.service.FormularioExternoService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -116,6 +125,18 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	@Inject
 	private SystemService systemService;
 
+	/** Servicio. */
+	@Inject
+	private FormularioExternoService gestorFormularioService;
+
+	/** Servicio. */
+	@Inject
+	private FormularioExternoService gestorExternoService;
+
+	/** Servicio. */
+	@Inject
+	private ConfiguracionAutenticacionService configuracionAutenticacionService;
+
 	/** Id elemento a tratar. */
 	private String id;
 
@@ -158,6 +179,23 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	/** Formateadores. **/
 	Map<Long, FormateadorFormulario> formateadores = new HashMap<>();
 
+	/** Gestores **/
+	Map<Long, GestorExternoFormularios> gestores = new HashMap<>();
+
+	/**
+	 * @return the gestores
+	 */
+	public Map<Long, GestorExternoFormularios> getGestores() {
+		return gestores;
+	}
+
+	/**
+	 * @param gestores the gestores to set
+	 */
+	public void setGestores(Map<Long, GestorExternoFormularios> gestores) {
+		this.gestores = gestores;
+	}
+
 	/** Fila entidad. **/
 	private FilaImportarEntidad filaEntidad = new FilaImportarEntidad();
 
@@ -178,6 +216,18 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 
 	/** Filas formateadores. */
 	final List<FilaImportarFormateador> filasFormateador = new ArrayList<>();
+
+	/** Filas gestores. */
+	final List<FilaImportarGestor> filasGestores = new ArrayList<>();
+
+	/** Filas formularios. **/
+	final List<FilaImportarFormulario> filasFormulario = new ArrayList<>();
+
+	/**
+	 * Indica si se debe mostrar el registro de oficina (si entidad es de registro
+	 * centralizado o no)
+	 **/
+	private boolean mostrarFilasFormularios = false;
 
 	/** Mostrar area. **/
 	private boolean mostrarBotonArea = false;
@@ -287,7 +337,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			}
 		} catch (final Exception e) {
 			LOGGER.error("Error extrayendo la info del zip.", e);
-			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogCuadernoCarga.error.fichero"));
+			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogCuadernoCarga.error.ficheroContenido"));
 			setMostrarPanelInfo(false);
 			return;
 		} finally {
@@ -333,11 +383,17 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 		// Paso 5. Preparamos la info a mostrar de tramite
 		prepararFlujoTramiteRegistro();
 
-		// Paso 6. Preparamos la info a mostrar de los dominios/FD
+		// Paso 6. Preparamos la info de registro
+		prepararFlujoTramiteFormulario();
+
+		// Paso 7. Preparamos la info a mostrar de los dominios/FD
 		prepararFlujoDominioFD();
 
-		// Paso 7. Preparamos la info a mostrar de los Formateadores.
+		// Paso 8. Preparamos la info a mostrar de los Formateadores.
 		prepararFlujoFormateadores();
+
+		// Paso 9. preparamos la info a mostrar de los gestores
+		prepararFlujoGestores();
 
 		// Seteamos si se ven los botones de area/tramite/tramiteVersion
 		this.setMostrarBotonArea(filaArea.getResultado().isWarning() && isNingunError());
@@ -408,6 +464,20 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 
 		for (final FilaImportarFormateador fila : filasFormateador) {
 			if (fila == null || fila.getResultado().isErrorOrWarning()) {
+				setTodoCorrecto(false);
+				return;
+			}
+		}
+
+		for (final FilaImportarGestor fila : this.filasGestores) {
+			if (fila == null || fila.getResultado().isErrorOrWarning()) {
+				setTodoCorrecto(false);
+				return;
+			}
+		}
+
+		for (final FilaImportarFormulario fila : filasFormulario) {
+			if (fila != null && !fila.isCorrecto()) {
 				setTodoCorrecto(false);
 				return;
 			}
@@ -759,6 +829,122 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
+	 * Revisa si alguno de los paso Rellenar tiene formularios y es de tipo externo
+	 * y se tiene el gestor externo de formularios.
+	 **/
+	private void prepararFlujoTramiteFormulario() {
+
+		filasFormulario.clear();
+		setMostrarFilasFormularios(false);
+
+		// Paso 3.3.1 Tramite Version tiene un paso registro
+		if (filaTramiteVersion != null && filaTramiteVersion.getTramiteVersion() != null
+				&& filaTramiteVersion.getTramiteVersion().getListaPasos() != null) {
+			for (final TramitePaso paso : tramiteVersion.getListaPasos()) {
+				if (paso instanceof TramitePasoRellenar) {
+					final TramitePasoRellenar pasoRellenar = (TramitePasoRellenar) paso;
+					if (pasoRellenar.getFormulariosTramite() != null) {
+						prepararFlujoTramiteFormulario(pasoRellenar);
+					}
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Revisa si algun formulario que tiene es externo y tiene un gestor que no
+	 * existe.
+	 **/
+	private void prepararFlujoTramiteFormulario(final TramitePasoRellenar pasoRellenar) {
+		for (final FormularioTramite form : pasoRellenar.getFormulariosTramite()) {
+			if (form.getTipoFormulario() == TypeFormularioGestor.EXTERNO && form.getFormularioGestorExterno() != null
+					&& form.getFormularioGestorExterno().getIdentificador() != null) {
+				final boolean existe = gestorFormularioService
+						.existeFormulario(form.getFormularioGestorExterno().getIdentificador(), null);
+
+				if (!existe) {
+					mostrarFilasFormularios = true;
+					final FilaImportarFormulario fila = new FilaImportarFormulario();
+					fila.setCorrecto(false);
+					fila.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.gestorExternoInexistente",
+							new String[] { form.getFormularioGestorExterno().getIdentificador() }));
+					filasFormulario.add(fila);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Flujo de gestores (FLUJO_GESTORES). Totalmente independiente de otros flujos,
+	 * depende del area.
+	 *
+	 * Comprobaciones de gestores. Obtenemos el gestor (el existente en BBDD) a
+	 * partir del identificador y el area.
+	 *
+	 * <ul>
+	 * <li>Si no existe el gestor formulario externos, marcamos como info y no
+	 * permitiremos hacer nada. Se desasignará al importar.</li>
+	 * <li>Si existe el gestor, entonces:
+	 * <ul>
+	 * <li>Si no está marcado, lo daremos por OK y se asociará al importar.</li>
+	 * </ul>
+	 * </li>
+	 * </ul>
+	 *
+	 */
+	private void prepararFlujoGestores() {
+		filasGestores.clear();
+		for (final Map.Entry<Long, GestorExternoFormularios> entry : gestores.entrySet()) {
+			final GestorExternoFormularios gestor = entry.getValue();
+
+			final GestorExternoFormularios gestorActual = gestorExternoService
+					.getFormularioExternoByIdentificador(gestor.getIdentificador());
+
+			String identificadorArea = null;
+			Long idArea = null;
+			if (this.filaArea != null && this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
+				identificadorArea = this.filaArea.getAreaActual().getIdentificador();
+				idArea = this.filaArea.getAreaActual().getCodigo();
+			}
+			ConfiguracionAutenticacion configuracionAut = null;
+			if (idArea != null && gestor != null && gestor.getConfiguracionAutenticacion() != null) {
+				configuracionAut = configuracionAutenticacionService.getConfiguracionAutenticacion(
+						gestor.getConfiguracionAutenticacion().getIdentificador(), idArea);
+			}
+
+			if (gestorActual == null) {
+
+				// Si no existe o está desactivado la personalización, dan info
+				String mensaje = UtilJSF.getLiteral("dialogTramiteImportar.error.noexistegestor");
+				filasGestores.add(FilaImportarGestor.crearITgestor(gestor, gestorActual, mensaje, configuracionAut));
+
+			} else {
+				if (gestor.getConfiguracionAutenticacion() == null) {
+					filasGestores.add(FilaImportarGestor.creaITgestorExiste(gestor, gestorActual, configuracionAut));
+				} else {
+					if (!identificadorArea.equals(gestorActual.getAreaIdentificador())) {
+						// Si no existe o está desactivado la personalización, dan info
+						String mensaje = UtilJSF.getLiteral("dialogTramiteImportar.error.existegestorOtroArea");
+						filasGestores.add(FilaImportarGestor.creaITgestorExisteMalConf(gestor, gestorActual, mensaje,
+								configuracionAut));
+					} else {
+						if (configuracionAut == null) {
+							String mensaje = UtilJSF.getLiteral("dialogTramiteImportar.error.existegestorsinconfig");
+							filasGestores.add(FilaImportarGestor.creaITgestorExisteSinConfig(gestor, gestorActual,
+									mensaje, configuracionAut));
+						} else {
+							filasGestores
+									.add(FilaImportarGestor.creaITgestorExiste(gestor, gestorActual, configuracionAut));
+						}
+					}
+				}
+			}
+
+		}
+	}
+
+	/**
 	 * Recorremos los dominios del zip. <br />
 	 * Obtenemos el dominio actual a partir del identificador. <br />
 	 * Si el dominio tiene fuente de datos, cargamos la FD y sus datos del zip.
@@ -870,6 +1056,14 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
 			mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, fila);
+			Long idArea = null;
+			if (this.filaArea != null && this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
+				idArea = this.filaArea.getAreaActual().getCodigo();
+			}
+
+			if (idArea != null) {
+				mochilaDatos.put(Constantes.AREA, idArea);
+			}
 			UtilJSF.openDialog(DialogTramiteImportarDominio.class, TypeModoAcceso.EDICION, null, true,
 					fila.getAnchura(), fila.getAltura());
 		}
@@ -1004,6 +1198,11 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			final FormateadorFormulario formateador = (FormateadorFormulario) UtilCoreApi.deserialize(contenidoFile);
 			formateadores.put(codigo, formateador);
 
+		}  else if (nombreFichero.startsWith("gestoresExternosFormulario_")) {
+			final Long codigo = obtenerId(nombreFichero);
+			final GestorExternoFormularios gestor = (GestorExternoFormularios) UtilCoreApi.deserialize(contenidoFile);
+			gestores.put(codigo, gestor);
+
 		} else if (!nombreFichero.equals("info.properties")) {
 			addMessageContext(TypeNivelGravedad.ERROR, "Fichero desconocido.");
 			return false;
@@ -1108,6 +1307,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 		filaImportar.setFilaFormateador(filasFormateador);
 		filaImportar.setFilaDominios(filasDominios);
 		filaImportar.setFormularios(formularios);
+		filaImportar.setFilaGestor(filasGestores);
+
 		filaImportar.setIdEntidad(UtilJSF.getIdEntidad());
 		filaImportar.setFicheros(ficheros);
 		filaImportar.setFicherosContent(ficherosContent);
@@ -1700,4 +1901,26 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	public void setRefrescarCacheDominio(final boolean refrescarCacheDominio) {
 		this.refrescarCacheDominio = refrescarCacheDominio;
 	}
+
+	/**
+	 * @return the mostrarFilasFormularios
+	 */
+	public boolean isMostrarFilasFormularios() {
+		return mostrarFilasFormularios;
+	}
+
+	/**
+	 * @param mostrarFilasFormularios the mostrarFilasFormularios to set
+	 */
+	public void setMostrarFilasFormularios(boolean mostrarFilasFormularios) {
+		this.mostrarFilasFormularios = mostrarFilasFormularios;
+	}
+
+	/**
+	 * @return the filasGestores
+	 */
+	public List<FilaImportarGestor> getFilasGestores() {
+		return filasGestores;
+	}
+
 }

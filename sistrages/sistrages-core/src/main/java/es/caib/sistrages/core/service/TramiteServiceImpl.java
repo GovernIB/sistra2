@@ -991,12 +991,14 @@ public class TramiteServiceImpl implements TramiteService {
 
 		final Map<Long, GestorExternoFormularios> gestores = new HashMap<>();
 		final Map<Long, Long> mapGestores = new HashMap<>();
-		for (final FilaImportarGestor filaGestor : filaImportar.getFilaGestor()) {
+		if (filaImportar.getFilaGestor() != null) {
+			for (final FilaImportarGestor filaGestor : filaImportar.getFilaGestor()) {
 
-			final Long idGestor = gestorExternoDao.importar(filaGestor, idArea);
-			final GestorExternoFormularios ff = gestorExternoDao.getById(idGestor);
-			gestores.put(idGestor, ff);
-			mapGestores.put(filaGestor.getGestor().getCodigo(), idGestor);
+				final Long idGestor = gestorExternoDao.importar(filaGestor, idArea);
+				final GestorExternoFormularios ff = gestorExternoDao.getById(idGestor);
+				gestores.put(idGestor, ff);
+				mapGestores.put(filaGestor.getGestor().getCodigo(), idGestor);
+			}
 		}
 
 		final Long idTramiteVersion = tramiteDao.importar(filaImportar.getFilaTramiteVersion(), idTramite, idDominios,

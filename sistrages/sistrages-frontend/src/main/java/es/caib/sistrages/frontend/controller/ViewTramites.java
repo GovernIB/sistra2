@@ -430,6 +430,31 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
+	 * Obtiene el valor de permiteEditarArea.
+	 *
+	 * @return el valor de permiteEditar
+	 */
+	public boolean getTienePermisosAreaConsulta() {
+		boolean retorno;
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+			retorno = true;
+		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
+				&& verificarFilaSeleccionadaArea()) {
+
+			actualizarPermisosCacheados(listaAreasSeleccionadas.get(0).getCodigo());
+
+			retorno = permisosCacheados.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+					|| permisosCacheados.contains(TypeRolePermisos.DESARROLLADOR_AREA)
+					|| permisosCacheados.contains(TypeRolePermisos.CONSULTA);
+
+		} else {
+			retorno = false;
+		}
+		return retorno;
+	}
+
+
+	/**
 	 * Actualiza los permisos si no está cacheado los permisos del area.
 	 *
 	 * @param idArea
@@ -991,6 +1016,17 @@ public class ViewTramites extends ViewControllerBase {
 	/**
 	 * Abre dialogo para editar dato.
 	 */
+	public void editarVersionDblClick() {
+		if (this.getTienePermisosArea()) {
+			editarVersion();
+		} else {
+			consultarVersion();
+		}
+	}
+
+	/**
+	 * Abre dialogo para editar dato.
+	 */
 	public void editarVersion() {
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionadaVersion()) {
@@ -1017,6 +1053,10 @@ public class ViewTramites extends ViewControllerBase {
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionadaVersion())
 			return;
+
+		if (!this.getTienePermisosAreaConsulta()) {
+			return;
+		}
 
 		// Muestra dialogo
 		final Map<String, List<String>> params = new HashMap<>();

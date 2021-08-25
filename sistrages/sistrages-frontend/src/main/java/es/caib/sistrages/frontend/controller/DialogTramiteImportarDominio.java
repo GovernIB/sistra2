@@ -136,6 +136,14 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 			configAutSinAutenticacion.setCodigo(null);
 			configAutSinAutenticacion.setIdentificador(UtilJSF.getLiteral("dialogDominio.sinAutenticacion"));
 			configuraciones.add(0, configAutSinAutenticacion);
+			if (data.getConfiguracionAutenticacionActual() == null && data.getDominio() != null && data.getDominio().getConfiguracionAutenticacion() != null&& data.getDominio().getConfiguracionAutenticacion().getIdentificador() != null) {
+				for (ConfiguracionAutenticacion config : configuraciones) {
+					if (config.getIdentificador() != null && data.getDominio().getConfiguracionAutenticacion().getIdentificador().equals(config.getIdentificador())) {
+						data.setConfiguracionAutenticacionActual(config);
+						break;
+					}
+				}
+			}
 			break;
 		case FUENTE_DATOS:
 			mostrarFD = true;
