@@ -234,7 +234,8 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 				content = result.getJustificante();
 				break;
 			case CARPETA_CIUDADANA:
-				url = "/registro/detalle/" + numeroRegistro;
+				// url = "/registro/detalle/" + numeroRegistro;
+				url = "/#/moduls/registres/p/" + numeroRegistro;
 				break;
 			default:
 				// No debe entrar aquí.

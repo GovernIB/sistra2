@@ -11,6 +11,7 @@ import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 
 import org.apache.commons.codec.binary.Base64;
+import org.primefaces.event.SelectEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,7 @@ import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
@@ -130,15 +132,19 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 			if (area == null) {
 				configuraciones = new ArrayList<>();
 			} else {
-				configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(area, TypeIdioma.fromString(UtilJSF.getSessionBean().getLang()), null);
+				configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(area,
+						TypeIdioma.fromString(UtilJSF.getSessionBean().getLang()), null);
 			}
 			ConfiguracionAutenticacion configAutSinAutenticacion = new ConfiguracionAutenticacion();
 			configAutSinAutenticacion.setCodigo(null);
 			configAutSinAutenticacion.setIdentificador(UtilJSF.getLiteral("dialogDominio.sinAutenticacion"));
 			configuraciones.add(0, configAutSinAutenticacion);
-			if (data.getConfiguracionAutenticacionActual() == null && data.getDominio() != null && data.getDominio().getConfiguracionAutenticacion() != null&& data.getDominio().getConfiguracionAutenticacion().getIdentificador() != null) {
+			if (data.getConfiguracionAutenticacionActual() == null && data.getDominio() != null
+					&& data.getDominio().getConfiguracionAutenticacion() != null
+					&& data.getDominio().getConfiguracionAutenticacion().getIdentificador() != null) {
 				for (ConfiguracionAutenticacion config : configuraciones) {
-					if (config.getIdentificador() != null && data.getDominio().getConfiguracionAutenticacion().getIdentificador().equals(config.getIdentificador())) {
+					if (config.getIdentificador() != null && data.getDominio().getConfiguracionAutenticacion()
+							.getIdentificador().equals(config.getIdentificador())) {
 						data.setConfiguracionAutenticacionActual(config);
 						break;
 					}
@@ -234,6 +240,24 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	}
 
 	/**
+	 * Consultar configuración
+	 */
+	public void consultarConfiguracion() {
+
+		// Muestra dialogo
+		if (data.getConfiguracionAutenticacionActual() == null
+				|| data.getConfiguracionAutenticacionActual().getCodigo() == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+		} else {
+			final Map<String, String> params = new HashMap<>();
+			params.put(TypeParametroVentana.AREA.toString(), area.toString());
+			params.put(TypeParametroVentana.ID.toString(),
+					data.getConfiguracionAutenticacionActual().getCodigo().toString());
+			UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 195);
+		}
+	}
+
+	/**
 	 * Guardar.
 	 */
 	public void guardar() {
@@ -270,6 +294,54 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 		result.setCanceled(true);
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Abre dialogo para nuevo dato.
+	 */
+	public void nuevo() {
+		abrirDlg(TypeModoAcceso.ALTA);
+	}
+
+	/**
+	 * Abrir dialogo.
+	 *
+	 * @param modoAccesoDlg Modo acceso
+	 */
+	private void abrirDlg(final TypeModoAcceso modoAccesoDlg) {
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+
+		params.put(TypeParametroVentana.AREA.toString(), this.area.toString());
+		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, modoAccesoDlg, params, true, 550, 195);
+	}
+
+	/**
+	 * Retorno dialogo.
+	 *
+	 * @param event respuesta dialogo
+	 */
+	public void returnDialogo(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			// Mensaje
+			String message = null;
+			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
+				message = UtilJSF.getLiteral("info.alta.ok");
+			} else {
+				message = UtilJSF.getLiteral("info.modificado.ok");
+			}
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+			// Refrescamos datos
+			ConfiguracionAutenticacion confNueva = (ConfiguracionAutenticacion) respuesta.getResult();
+			configuraciones.add(confNueva);
+			data.setConfiguracionAutenticacionActual(confNueva);
+			// checkActualizar();
+		}
 	}
 
 	/**

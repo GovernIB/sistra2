@@ -109,6 +109,12 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 				} else if (ValidacionesTipo.getInstance().esFecha(fecha, "yyyy/MM/dd")) {
 					final Date date = ValidacionesTipo.getInstance().parseFecha(fecha, "yyyy/MM/dd");
 					valor = ValidacionesTipo.getInstance().formateaFecha(date, FORMATO_FECHAS_PDF);
+				} else if (ValidacionesTipo.getInstance().esFecha(fecha, "dd/MM/yyyy")) {
+					final Date date = ValidacionesTipo.getInstance().parseFecha(fecha, "dd/MM/yyyy");
+					valor = ValidacionesTipo.getInstance().formateaFecha(date, FORMATO_FECHAS_PDF);
+				} else if (ValidacionesTipo.getInstance().esFecha(fecha, "dd-MM-yyyy")) {
+					final Date date = ValidacionesTipo.getInstance().parseFecha(fecha, "dd-MM-yyyy");
+					valor = ValidacionesTipo.getInstance().formateaFecha(date, FORMATO_FECHAS_PDF);
 				} else {
 					throw new FormateadorException("Fecha no valida");
 				}

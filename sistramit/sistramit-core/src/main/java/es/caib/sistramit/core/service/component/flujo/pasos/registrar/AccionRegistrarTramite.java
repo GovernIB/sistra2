@@ -1,9 +1,12 @@
 package es.caib.sistramit.core.service.component.flujo.pasos.registrar;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,12 +26,15 @@ import es.caib.sistra2.commons.plugins.registro.api.types.TypeValidez;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistra2.commons.utils.NifUtils;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistrages.rest.api.interna.RPlantillaEntidad;
 import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
+import es.caib.sistramit.core.api.model.comun.Constantes;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.DatosInteresado;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRegistrar;
+import es.caib.sistramit.core.api.model.flujo.Entidad;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
@@ -37,6 +43,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFirmaDigital;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.flujo.ConstantesFlujo;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
 import es.caib.sistramit.core.service.component.integracion.RegistroComponent;
@@ -153,31 +160,50 @@ public final class AccionRegistrarTramite implements AccionPaso {
 
 			final String idEntidad = pDefinicionTramite.getDefinicionVersion().getIdEntidad();
 			final RConfiguracionEntidad entidad = configuracion.obtenerConfiguracionEntidad(idEntidad);
-			final String urlCarpeta = UtilsSTG.obtenerLiteral(entidad.getUrlCarpeta(), pVariablesFlujo.getIdioma(),
-					true);
-			final String urlSede = UtilsSTG.obtenerLiteral(entidad.getUrlSede(), pVariablesFlujo.getIdioma(), true);
+
+			final Entidad detalleEntidad = UtilsFlujo.detalleTramiteEntidad(entidad, pVariablesFlujo.getIdioma(),
+					configuracion);
+			final String urlCarpeta = detalleEntidad.getUrlCarpeta();
+			final String urlSede = detalleEntidad.getUrlSede();
+			final String urlLogo = detalleEntidad.getLogo();
+
 			String titulo = this.literales.getLiteral(Literales.PASO_REGISTRAR, "mailFinalizacion.titulo",
 					pVariablesFlujo.getIdioma());
 			String mensaje = this.literales.getLiteral(Literales.PASO_REGISTRAR, "mailFinalizacion.texto",
 					new String[] { resReg.getNumeroRegistro(), urlCarpeta, urlSede }, pVariablesFlujo.getIdioma());
 
-			String plantilla = UtilsPasoRegistrar.getInstance().cargarPlantillaMailFinalizacion();
+			String plantilla = null;
+
+			// Buscamos plantilla customizada por entidad
+			plantilla = obtenerPlantillaMailFinalizacion(entidad.getPlantillas(), pVariablesFlujo.getIdioma());
 			if (plantilla != null) {
-				// Reemplazamos variables plantilla
-				titulo = this.literales.getLiteral(Literales.PASO_REGISTRAR, "mailFinalizacion.titulo",
-						pVariablesFlujo.getIdioma());
-				plantilla = StringUtils.replace(plantilla, "[#ORGANISMO.NOMBRE#]",
-						UtilsSTG.obtenerLiteral(entidad.getDescripcion(), pVariablesFlujo.getIdioma(), true));
-				// TODO No hay url logo. Debería establecerse una prop nuevo en config entidad
-				plantilla = StringUtils.replace(plantilla, "[#TEXTO.FINALIZACION#]", mensaje);
-				plantilla = StringUtils.replace(plantilla, "[#TEXTO.ACCESO_CARPETA#]", this.literales.getLiteral(
-						Literales.PASO_REGISTRAR, "mailFinalizacion.accesoCarpeta", pVariablesFlujo.getIdioma()));
-				plantilla = StringUtils.replace(plantilla, "[#TEXTO.NO_RESPONDER#]", this.literales.getLiteral(
-						Literales.PASO_REGISTRAR, "mailFinalizacion.noResponder", pVariablesFlujo.getIdioma()));
-				plantilla = StringUtils.replace(plantilla, "[#URL_ACCESO_CARPETA#]", urlCarpeta);
+				// Sustituir placeholders
+				plantilla = StringUtils.replace(plantilla, "${NUMERO_REGISTRO}", resReg.getNumeroRegistro());
+				plantilla = StringUtils.replace(plantilla, "${URL_SEDE}", urlSede);
+				plantilla = StringUtils.replace(plantilla, "${URL_CARPETA}", urlCarpeta);
+				plantilla = StringUtils.replace(plantilla, "${URL_LOGO}", urlLogo);
 				mensaje = plantilla;
+			} else {
+				// Si no hay plantilla customizada por entidad, usamos generica
+				plantilla = UtilsPasoRegistrar.getInstance().cargarPlantillaMailFinalizacion();
+				if (plantilla != null) {
+					// Reemplazamos variables plantilla
+					titulo = this.literales.getLiteral(Literales.PASO_REGISTRAR, "mailFinalizacion.titulo",
+							pVariablesFlujo.getIdioma());
+					plantilla = StringUtils.replace(plantilla, "[#ORGANISMO.NOMBRE#]",
+							UtilsSTG.obtenerLiteral(entidad.getDescripcion(), pVariablesFlujo.getIdioma(), true));
+					plantilla = StringUtils.replace(plantilla, "[#URL_LOGO#]", urlLogo);
+					plantilla = StringUtils.replace(plantilla, "[#TEXTO.FINALIZACION#]", mensaje);
+					plantilla = StringUtils.replace(plantilla, "[#TEXTO.ACCESO_CARPETA#]", this.literales.getLiteral(
+							Literales.PASO_REGISTRAR, "mailFinalizacion.accesoCarpeta", pVariablesFlujo.getIdioma()));
+					plantilla = StringUtils.replace(plantilla, "[#TEXTO.NO_RESPONDER#]", this.literales.getLiteral(
+							Literales.PASO_REGISTRAR, "mailFinalizacion.noResponder", pVariablesFlujo.getIdioma()));
+					plantilla = StringUtils.replace(plantilla, "[#URL_ACCESO_CARPETA#]", urlCarpeta);
+					mensaje = plantilla;
+				}
 			}
 
+			// Enviamos mail
 			final String email = detallePasoRegistrar.getAvisoFinalizar().getEmail();
 			final Envio envio = new Envio();
 			envio.setDestino(email);
@@ -719,6 +745,40 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		}
 
 		return interesado;
+	}
+
+	/**
+	 * Recupera plantilla customizada para finalizacion registro.
+	 *
+	 * @param plantillas
+	 *                       Plantillas entidad
+	 * @param idioma
+	 *                       Idioma
+	 * @return plantilla (nulo si no existe)
+	 */
+	private String obtenerPlantillaMailFinalizacion(final List<RPlantillaEntidad> plantillas, final String idioma) {
+		// TODO VER SI CACHEAR
+		String plantilla = null;
+		if (plantillas != null) {
+			for (final RPlantillaEntidad pe : plantillas) {
+				if ("FR".equals(pe.getTipo()) && idioma.equals(pe.getIdioma())
+						&& StringUtils.isNotBlank(pe.getPath())) {
+					// Recuperamos plantilla de sistema de ficheros
+					final String pathFicherosExternos = configuracion
+							.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.PATH_FICHEROS_EXTERNOS);
+					final String pathFile = pathFicherosExternos + pe.getPath();
+					byte[] contenidoFic = null;
+					try (final FileInputStream fis = new FileInputStream(pathFile);) {
+						contenidoFic = IOUtils.toByteArray(fis);
+						plantilla = new String(contenidoFic, Constantes.UTF8);
+					} catch (final IOException e) {
+						throw new AccionPasoNoPermitidaException(
+								"Error al acceder a plantilla finalizacion registro " + pathFile, e);
+					}
+				}
+			}
+		}
+		return plantilla;
 	}
 
 }

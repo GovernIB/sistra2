@@ -413,6 +413,12 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<DominioTramite> getTramiteVersionByGfe(final Long Gfe) {
+		return tramiteService.getTramiteVersionByGfe(Gfe);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public boolean checkTasaRepetida(final Long idTramiteVersion, final String identificador, final Long idTasa) {
 		return tramiteService.checkTasaRepetida(idTramiteVersion, identificador, idTasa);
 	}
@@ -561,8 +567,8 @@ public class TramiteServiceBean implements TramiteService {
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void borrarScriptsVersion(final Long idTramiteVersion, final boolean propiedades, final boolean rellenar,
-			 final boolean anexo, final boolean tasas, final boolean registrar, final boolean propcaptura) {
-		tramiteService.borrarScriptsVersion(idTramiteVersion, propiedades, rellenar,  anexo, tasas, registrar,
+			final boolean anexo, final boolean tasas, final boolean registrar, final boolean propcaptura) {
+		tramiteService.borrarScriptsVersion(idTramiteVersion, propiedades, rellenar, anexo, tasas, registrar,
 				propcaptura);
 
 	}
@@ -571,5 +577,19 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<Tramite> listTramite(Long idEntidad, List<Long> areas, String filtro) {
 		return tramiteService.listTramite(idEntidad, areas, filtro);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<Tramite> listTramite(int first, int pageSize, String sortField, boolean asc, Long idEntidad,
+			List<Long> areas, String filtro) {
+		return tramiteService.listTramite(first, pageSize, sortField, asc, idEntidad, areas, filtro);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public int listTramiteTotal(Long idEntidad, List<Long> areas, String filtro) {
+		// TODO Auto-generated method stub
+		return tramiteService.listTramiteTotal(idEntidad, areas, filtro);
 	}
 }

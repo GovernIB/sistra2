@@ -1,6 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -11,10 +12,12 @@ import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.service.DominioService;
+import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -35,6 +38,8 @@ public class DialogDominioClonar extends DialogControllerBase {
 	@Inject
 	private DominioService dominioService;
 
+	@Inject
+	private EntidadService entidadService;
 	/** Servicio. */
 	@Inject
 	private TramiteService tramiteService;
@@ -149,10 +154,6 @@ public class DialogDominioClonar extends DialogControllerBase {
 			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral(LITERAL_ERROR_OBLIGATORIO));
 			return;
 		}
-		if (dominioService.loadDominio(nuevoIdentificador) != null) {
-			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
-			return;
-		}
 
 		Long idEntidad;
 		if (data.getAmbito() == TypeAmbito.ENTIDAD) {
@@ -160,6 +161,15 @@ public class DialogDominioClonar extends DialogControllerBase {
 		} else {
 			idEntidad = null;
 		}
+
+		if (dominioService.loadDominio(nuevoIdentificador) != null) {
+			Object[] valueHolder = new Object[2];
+			valueHolder = mensaje(nuevoIdentificador);
+			addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral((String) valueHolder[0], (Object[]) valueHolder[1]));
+			return;
+		}
+
 		dominioService.clonar(id, nuevoIdentificador, areaID, fuenteID, idEntidad);
 
 		// Retornamos resultado
@@ -180,6 +190,28 @@ public class DialogDominioClonar extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
+	public Object[] mensaje(String nuevoIdentificador) {
+		Dominio dataNuevo = dominioService.loadDominio(nuevoIdentificador);
+		Object[] propiedades = new Object[2];
+		Object[] valueHolder = new Object[2];
+		Set<Area> areas = dataNuevo.getAreas();
+		if (dataNuevo.getAmbito() == TypeAmbito.AREA && areas.iterator().next().getIdentificador() != null) {
+			Area elarea = areas.iterator().next();
+			propiedades[0] = elarea.getCodigoDIR3Entidad();
+			propiedades[1] = elarea.getIdentificador();
+			valueHolder[0] = "dialogDominio.error.duplicated.area";
+			valueHolder[1] = propiedades;
+		} else if (dataNuevo.getAmbito() == TypeAmbito.ENTIDAD && dataNuevo.getEntidad() != null) {
+			propiedades[0] = entidadService.loadEntidad(dataNuevo.getEntidad()).getCodigoDIR3();
+			valueHolder[0] = "dialogDominio.error.duplicated.entidad";
+			valueHolder[1] = propiedades;
+		} else {
+			valueHolder[0] = "dialogDominio.error.codigoRepetido";
+			valueHolder[1] = null;
+		}
+		return valueHolder;
+	}
+
 	/**
 	 * @return the id
 	 */
@@ -188,8 +220,7 @@ public class DialogDominioClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -203,8 +234,7 @@ public class DialogDominioClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final Dominio data) {
 		this.data = data;
@@ -218,8 +248,7 @@ public class DialogDominioClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param fuente
-	 *            the fuente to set
+	 * @param fuente the fuente to set
 	 */
 	public void setFuente(final FuenteDatos fuente) {
 		this.fuente = fuente;
@@ -233,8 +262,7 @@ public class DialogDominioClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param area
-	 *            the area to set
+	 * @param area the area to set
 	 */
 	public void setArea(final Area area) {
 		this.area = area;
@@ -248,8 +276,7 @@ public class DialogDominioClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param areas
-	 *            the areas to set
+	 * @param areas the areas to set
 	 */
 	public void setAreas(final List<Area> areas) {
 		this.areas = areas;
@@ -263,8 +290,7 @@ public class DialogDominioClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param fuentes
-	 *            the fuentes to set
+	 * @param fuentes the fuentes to set
 	 */
 	public void setFuentes(final List<FuenteDatos> fuentes) {
 		this.fuentes = fuentes;
@@ -278,8 +304,7 @@ public class DialogDominioClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarAreas
-	 *            the mostrarAreas to set
+	 * @param mostrarAreas the mostrarAreas to set
 	 */
 	public void setMostrarAreas(final boolean mostrarAreas) {
 		this.mostrarAreas = mostrarAreas;
@@ -293,8 +318,7 @@ public class DialogDominioClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarFDs
-	 *            the mostrarFDs to set
+	 * @param mostrarFDs the mostrarFDs to set
 	 */
 	public void setMostrarFDs(final boolean mostrarFDs) {
 		this.mostrarFDs = mostrarFDs;
@@ -308,8 +332,7 @@ public class DialogDominioClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idArea
-	 *            the idArea to set
+	 * @param idArea the idArea to set
 	 */
 	public void setIdArea(final String idArea) {
 		this.idArea = idArea;
@@ -323,8 +346,7 @@ public class DialogDominioClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param nuevoIdentificador
-	 *            the nuevoIdentificador to set
+	 * @param nuevoIdentificador the nuevoIdentificador to set
 	 */
 	public void setNuevoIdentificador(final String nuevoIdentificador) {
 		this.nuevoIdentificador = nuevoIdentificador;
@@ -338,8 +360,7 @@ public class DialogDominioClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param fuenteID
-	 *            the fuenteID to set
+	 * @param fuenteID the fuenteID to set
 	 */
 	public void setFuenteID(final Long fuenteID) {
 		this.fuenteID = fuenteID;
@@ -353,8 +374,7 @@ public class DialogDominioClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param areaID
-	 *            the areaID to set
+	 * @param areaID the areaID to set
 	 */
 	public void setAreaID(final Long areaID) {
 		this.areaID = areaID;

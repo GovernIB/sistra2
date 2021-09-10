@@ -82,7 +82,13 @@
 			<ul>
 				<li><span class="nombreCampo">Establir dades registre de forma centralitzada:</span> Permet establir oficina registre de forma centralitzada</li>
 				<li><span class="nombreCampo">Amaga documentació en Pas Desar:</span> Permet amagar la llista de documents en el Pas Desar</li>
-
+				<li><span class="nombreCampo">Plantilla per a mail fi de registre</span> Permet afegir una plantilla externa de correu que serà la que s'enviarà en el cas de que en el tràmit s'envii un correu. En cas de no tenir cap plantilla afegida, s'enviarà la plantilla genèrica de correu de fi de registre. Aquesta plantilla ha de tenir format .html i accepta els següents placeholders:</li>
+					<ul>
+						<li>Número de registre: ${NUMERO_REGISTRO}</li>
+						<li>URL Seu: ${URL_SEDE}</li>
+						<li>URL Carpeta: ${URL_CARPETA}</li>
+						<li>URL Logo: ${URL_LOGO}</li>
+					</ul>
 
 			</ul>
 		</li>

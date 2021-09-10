@@ -15,7 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.FormularioTramite;
@@ -97,10 +100,15 @@ public class ViewTramites extends ViewControllerBase {
 	private boolean permiteRefrescar;
 	private boolean mostrarTodasAreas;
 
+	/** Indica si es administrador entidad. **/
+	private boolean admEntidad;
+
 	/** Literal. **/
 	private static final String LITERAL_INFO_ALTA_OK = "info.alta.ok";
 	private static final String LITERAL_INFO_BORRADO_OK = "info.borrado.ok";
 	private static final String LITERAL_INFO_MODIFICADO_OK = "info.modificado.ok";
+
+	private LazyDataModel<TramiteVersiones> dataModel;
 
 	/**
 	 * Inicializacion.
@@ -111,6 +119,9 @@ public class ViewTramites extends ViewControllerBase {
 		final Long idEntidad = UtilJSF.getIdEntidad();
 		// Control acceso
 		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(idEntidad);
+		// comprueba si es admin entidad
+		admEntidad = UtilJSF.isAdministradorDesarrolladorEntidad(idEntidad);
+
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 		// Recupera areas
@@ -453,7 +464,6 @@ public class ViewTramites extends ViewControllerBase {
 		return retorno;
 	}
 
-
 	/**
 	 * Actualiza los permisos si no está cacheado los permisos del area.
 	 *
@@ -545,7 +555,19 @@ public class ViewTramites extends ViewControllerBase {
 	 * Método publico de filtrar
 	 */
 	public void filtrar() {
-		this.buscarTramites(filtro);
+		DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot()
+				.findComponent("form:dataTableTramites");
+		dataTable.setFirst(0);
+		this.buscarTramites(filtro, true);
+
+	}
+
+	/**
+	 * Método publico de paginar
+	 */
+	public void paginar() {
+
+		this.buscarTramites(filtro, false);
 	}
 
 	/**
@@ -756,7 +778,7 @@ public class ViewTramites extends ViewControllerBase {
 
 	/** Buscar tramites. **/
 	private void buscarTramites() {
-		buscarTramites(null);
+		buscarTramites(null, false);
 	}
 
 	/** Desmarca quitando la seleccion. **/
@@ -777,41 +799,113 @@ public class ViewTramites extends ViewControllerBase {
 	 *
 	 * @param filtro
 	 */
-	private void buscarTramites(final String filtro) {
+	private void buscarTramites(final String filtro, boolean nuevaArea) {
 
 		desmarcar();
-		List<Tramite> tramites = new ArrayList<>();
+		// List<Tramite> tramites = new ArrayList<>();
 		// Optimizado para que devuelva todos los trámites de las áreas seleccionadas
 		// según filtro
-		if (listaAreasSeleccionadas != null && !listaAreasSeleccionadas.isEmpty()) {
-			tramites = tramiteService.listTramite(UtilJSF.getSessionBean().getEntidad().getCodigo(), convertirAreas(),
-					this.filtro);
-		}
 
-		// Obtenemos activa a los tramites que tengan alguna version activa
+		this.dataModel = new LazyDataModel<TramiteVersiones>() {
 
-		for (final Tramite tramite : tramites) {
-			final List<Long> idTramites = tramiteService.listTramiteVersionActiva(tramite.getIdArea());
-			if (idTramites.contains(tramite.getCodigo())) {
-				tramite.setActivo(true);
+			private static final long serialVersionUID = 1l;
+
+			@Override
+			public List<TramiteVersiones> load(int first, int pageSize, String sortField, SortOrder sortOrder,
+					Map<String, Object> filters) {
+				setRowCount(tramiteService.listTramiteTotal(UtilJSF.getSessionBean().getEntidad().getCodigo(),
+						convertirAreas(), filtro));
+
+				List<Tramite> tramites = new ArrayList<>();
+//				List<Area> listaAreasSeleccionadasv1 = listaAreasSeleccionadas;
+//				List<TramiteVersiones> listaTramiteVersionesv1 = listaTramiteVersiones;
+
+				if (listaAreasSeleccionadas != null && !listaAreasSeleccionadas.isEmpty()) {
+					if (nuevaArea) {
+						first = 0;
+
+					}
+					tramites = tramiteService.listTramite(first, pageSize, sortField, true,
+							UtilJSF.getSessionBean().getEntidad().getCodigo(), convertirAreas(), filtro);
+				}
+
+				// Obtenemos activa a los tramites que tengan alguna version activa
+
+				for (final Tramite tramite : tramites) {
+					final List<Long> idTramites = tramiteService.listTramiteVersionActiva(tramite.getIdArea());
+					if (idTramites.contains(tramite.getCodigo())) {
+						tramite.setActivo(true);
+					}
+
+					final List<TramiteVersion> listaVersiones = tramiteService.listTramiteVersion(tramite.getCodigo(),
+							null);
+
+					if ((StringUtils.isNotEmpty(filtro)
+							&& (tramite.getIdentificador().toUpperCase().contains(filtro.toUpperCase())
+									|| tramite.getDescripcion().toUpperCase().contains(filtro.toUpperCase())))
+							|| StringUtils.isEmpty(filtro))
+						listaTramiteVersiones.add(new TramiteVersiones(tramite, listaVersiones));
+				}
+
+				if (idTramite != null && !idTramite.isEmpty()) {
+					buscarTramitesPorDefecto();
+				}
+
+				Collections.sort(listaTramiteVersiones,
+						(o1, o2) -> o1.getTramite().getIdentificador().compareTo((o2.getTramite().getIdentificador())));
+				return listaTramiteVersiones;
 			}
 
-			final List<TramiteVersion> listaVersiones = tramiteService.listTramiteVersion(tramite.getCodigo(), null);
+			@Override
+			public TramiteVersiones getRowData(String rowKey) {
 
-			if ((StringUtils.isNotEmpty(filtro)
-					&& (tramite.getIdentificador().toUpperCase().contains(filtro.toUpperCase())
-							|| tramite.getDescripcion().toUpperCase().contains(filtro.toUpperCase())))
-					|| StringUtils.isEmpty(filtro))
-				listaTramiteVersiones.add(new TramiteVersiones(tramite, listaVersiones));
-		}
+				for (TramiteVersiones tramiteVersiones : listaTramiteVersiones) {
 
-		if (idTramite != null && !idTramite.isEmpty()) {
-			buscarTramitesPorDefecto();
-		}
+					if (tramiteVersiones.getTramite().getCodigo().toString().equals(rowKey)) {
+						return tramiteVersiones;
+					}
+				}
 
-		Collections.sort(listaTramiteVersiones,
-				(o1, o2) -> o1.getTramite().getIdentificador().compareTo((o2.getTramite().getIdentificador())));
+				return null;
+			}
 
+			@Override
+			public Object getRowKey(TramiteVersiones tramiteVersiones) {
+				return tramiteVersiones.getTramite().getCodigo();
+
+			}
+		};
+//		if (listaAreasSeleccionadas != null && !listaAreasSeleccionadas.isEmpty()) {
+//			tramites = tramiteService.listTramite(UtilJSF.getSessionBean().getEntidad().getCodigo(), convertirAreas(),
+//					this.filtro);
+//		}
+//
+//		// Obtenemos activa a los tramites que tengan alguna version activa
+//
+//		for (final Tramite tramite : tramites) {
+//			final List<Long> idTramites = tramiteService.listTramiteVersionActiva(tramite.getIdArea());
+//			if (idTramites.contains(tramite.getCodigo())) {
+//				tramite.setActivo(true);
+//			}
+//
+//			final List<TramiteVersion> listaVersiones = tramiteService.listTramiteVersion(tramite.getCodigo(), null);
+//
+//			if ((StringUtils.isNotEmpty(filtro)
+//					&& (tramite.getIdentificador().toUpperCase().contains(filtro.toUpperCase())
+//							|| tramite.getDescripcion().toUpperCase().contains(filtro.toUpperCase())))
+//					|| StringUtils.isEmpty(filtro))
+//				listaTramiteVersiones.add(new TramiteVersiones(tramite, listaVersiones));
+//		}
+//
+//		if (idTramite != null && !idTramite.isEmpty()) {
+//			buscarTramitesPorDefecto();
+//		}
+//
+//		Collections.sort(listaTramiteVersiones,
+//				(o1, o2) -> o1.getTramite().getIdentificador().compareTo((o2.getTramite().getIdentificador())));
+
+		int aa = 11;
+		int bb = aa;
 	}
 
 	private List<Long> convertirAreas() {
@@ -1658,6 +1752,22 @@ public class ViewTramites extends ViewControllerBase {
 
 	public void setMostrarTodasAreas(final boolean mostrarTodasAreas) {
 		this.mostrarTodasAreas = mostrarTodasAreas;
+	}
+
+	public LazyDataModel<TramiteVersiones> getDataModel() {
+		return dataModel;
+	}
+
+	public void setDataModel(LazyDataModel<TramiteVersiones> dataModel) {
+		this.dataModel = dataModel;
+	}
+
+	public boolean isAdmEntidad() {
+		return admEntidad;
+	}
+
+	public void setAdmEntidad(boolean admEntidad) {
+		this.admEntidad = admEntidad;
 	}
 
 }

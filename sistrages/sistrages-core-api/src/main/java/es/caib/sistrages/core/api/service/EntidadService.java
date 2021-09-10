@@ -6,6 +6,7 @@ import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.IncidenciaValoracion;
+import es.caib.sistrages.core.api.model.PlantillaEntidad;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 
 /**
@@ -244,5 +245,29 @@ public interface EntidadService {
 	 * @return Devuelve true si hay ya alguna valoración con dicho identificador
 	 */
 	public boolean existeIdentificadorValoracion(String identificador, Long idEntidad, Long codigo);
+
+	/**
+	 * Obtener lista plantilla email fin
+	 * @param codEntidad
+	 * @return
+	 */
+	public List<PlantillaEntidad> getListaPlantillasEmailFin(Long codEntidad);
+
+	/**
+	 * Sube un plantilla entidad fin email registro
+	 * @param idEntidad
+	 * @param idPlantillaEntidad
+	 * @param plantillaEntidad
+	 * @param contents
+	 * @return
+	 */
+	public PlantillaEntidad uploadPlantillasEmailFin(Long idEntidad, Long idPlantillaEntidad,
+			PlantillaEntidad plantillaEntidad, byte[] contents);
+
+	/**
+	 * Borra un plantilla entidad fin email registro.
+	 * @param plantillaEntidad
+	 */
+	public void removePlantillaEmailFin(PlantillaEntidad plantillaEntidad);
 
 }

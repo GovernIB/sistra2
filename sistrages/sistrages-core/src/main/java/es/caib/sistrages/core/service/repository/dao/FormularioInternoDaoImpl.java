@@ -1466,8 +1466,12 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 			if (paginaFormulario.getScriptValidacion() != null) {
 				jpagina.setScriptValidacion(JScript.fromModel(Script.clonar(paginaFormulario.getScriptValidacion())));
 			}
+			if (paginaFormulario.getScriptNavegacion() != null) {
+				jpagina.setScriptNavegacion(JScript.fromModel(Script.clonar(paginaFormulario.getScriptNavegacion())));
+			}
 
 			entityManager.merge(jpagina);
+			entityManager.flush();
 		}
 	}
 

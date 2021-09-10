@@ -13,11 +13,16 @@ import org.springframework.stereotype.Repository;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
+import es.caib.sistrages.core.api.model.PlantillaEntidad;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
 import es.caib.sistrages.core.service.repository.model.JFichero;
+import es.caib.sistrages.core.service.repository.model.JIdioma;
 import es.caib.sistrages.core.service.repository.model.JLiteral;
+import es.caib.sistrages.core.service.repository.model.JPlantillaEntidad;
+import es.caib.sistrages.core.service.repository.model.JPlantillaFormulario;
+import es.caib.sistrages.core.service.repository.model.JPlantillaIdiomaFormulario;
 
 @Repository("entidadDao")
 public class EntidadDaoImpl implements EntidadDao {
@@ -411,5 +416,60 @@ public class EntidadDaoImpl implements EntidadDao {
 			repetido = true;
 		}
 		return repetido;
+	}
+
+	@Override
+	public List<PlantillaEntidad> getListaPlantillasEmailFin(Long codEntidad) {
+		final List<PlantillaEntidad> plantillasEntidad = new ArrayList<>();
+
+		String sql = "SELECT DISTINCT e FROM JPlantillaEntidad e where e.entidad.codigo = :codigo ";
+
+		final Query query = entityManager.createQuery(sql);
+
+		query.setParameter("codigo", codEntidad );
+
+		final List<JPlantillaEntidad> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final JPlantillaEntidad jplantillaEntidad : results) {
+				final PlantillaEntidad entidad = jplantillaEntidad.toModel();
+				plantillasEntidad.add(entidad);
+			}
+		}
+
+		return plantillasEntidad;
+	}
+
+	@Override
+	public PlantillaEntidad uploadPlantillasEmailFin(Long idPlantillaEntidad, PlantillaEntidad plantilla, final Long idEntidad) {
+		JPlantillaEntidad jPlantillaEntidad;
+
+		if (plantilla.getCodigo() != null) {
+			jPlantillaEntidad = entityManager.find(JPlantillaEntidad.class, plantilla.getCodigo());
+			if (jPlantillaEntidad.getFichero() != null) {
+				jPlantillaEntidad.getFichero().setNombre(plantilla.getFichero().getNombre());
+			} else {
+				jPlantillaEntidad.setFichero(JFichero.fromModel(plantilla.getFichero()));
+			}
+			jPlantillaEntidad.getFichero().setPublico(false); //En plantilla de email fin es privado, NO publico
+			entityManager.merge(jPlantillaEntidad);
+		} else {
+			jPlantillaEntidad = JPlantillaEntidad.fromModel(plantilla);
+			jPlantillaEntidad.setEntidad(entityManager.find(JEntidad.class, idEntidad));
+			jPlantillaEntidad.setIdioma(entityManager.find(JIdioma.class, plantilla.getIdioma()));
+			entityManager.persist(jPlantillaEntidad);
+		}
+
+		return jPlantillaEntidad.toModel();
+	}
+
+	@Override
+	public void removePlantillaEmailFin(Long plantillaEntidad) {
+		final JPlantillaEntidad jPlantillaEntidad = entityManager.find(JPlantillaEntidad.class, plantillaEntidad);
+		if (jPlantillaEntidad == null) {
+			throw new NoExisteDato("No existe plantilla " + plantillaEntidad);
+		}
+
+		entityManager.remove(jPlantillaEntidad);
 	}
 }

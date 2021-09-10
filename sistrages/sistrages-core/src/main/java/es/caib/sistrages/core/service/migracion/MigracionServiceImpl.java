@@ -358,7 +358,7 @@ public class MigracionServiceImpl implements MigracionService {
 				final PantalSistra paginaSistra = formulSistra.getPaginas().get(i);
 				pagina.setIdentificador("P"+(i+1));
 				if (paginaSistra.getPanExpres() != null) {
-					pagina.setScriptValidacion(
+					pagina.setScriptNavegacion(
 							createScript("/* TODO: Revisar script" + System.getProperty("line.separator")
 									+ paginaSistra.getPanExpres() + System.getProperty("line.separator") + "*/"));
 					formIntDao.updatePagina(pagina);
@@ -392,8 +392,8 @@ public class MigracionServiceImpl implements MigracionService {
 
 					final PaginaFormulario paginaNueva = new PaginaFormulario();
 					paginaNueva.setOrden(disenyoFormulario.getPaginas().size() + 1);
+					paginaNueva.setIdentificador("P" + "P"+(i+2));
 					paginaNueva.setCodigo(formIntDao.addPagina(idFormulario, paginaNueva));
-					paginaNueva.setIdentificador("P" + disenyoFormulario.getPaginas().size() + 1);
 					disenyoFormulario.getPaginas().add(paginaNueva);
 
 					pagina = paginaNueva;

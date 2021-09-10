@@ -164,7 +164,7 @@ public class FilaImportarGestor extends FilaImportarBase {
 	public static FilaImportarGestor creaITgestorExiste(final GestorExternoFormularios gestor,
 			final GestorExternoFormularios gestorActual, final ConfiguracionAutenticacion config) {
 		return new FilaImportarGestor(gestor, gestorActual, TypeImportarAccion.REEMPLAZAR,
-				TypeImportarExiste.EXISTE, TypeImportarEstado.REVISADO, TypeImportarResultado.INFO, null, true, config);
+				TypeImportarExiste.EXISTE, TypeImportarEstado.REVISADO, TypeImportarResultado.WARNING, null, true, config);
 	}
 
 	/**
@@ -219,7 +219,7 @@ public class FilaImportarGestor extends FilaImportarBase {
 	public static FilaImportarGestor crearCCformateadorOk(final GestorExternoFormularios gestor,
 			final GestorExternoFormularios gestorActual, final ConfiguracionAutenticacion config) {
 		return new FilaImportarGestor(gestor, gestorActual, TypeImportarAccion.MANTENER,
-				TypeImportarExiste.EXISTE, TypeImportarEstado.REVISADO, TypeImportarResultado.INFO, null, true, config);
+				TypeImportarExiste.EXISTE, TypeImportarEstado.REVISADO, TypeImportarResultado.WARNING, null, true, config);
 	}
 
 }

@@ -9,10 +9,14 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultMenuModel;
+import org.primefaces.model.menu.MenuModel;
 
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.EntidadService;
@@ -68,6 +72,12 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	/** Area. **/
 	private String area;
 
+	/** Mostrar breadcrumb. **/
+	private boolean mostrarBreadcrumb;
+
+	/** miga de pan */
+	private MenuModel breadCrumb;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -79,16 +89,33 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 			final List<TypeRolePermisos> permisos = securityService
 					.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
 			if (!permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
-			   && !permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
-			   && !permisos.contains(TypeRolePermisos.CONSULTA)) {
-				throw new FrontException("No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area");
+					&& !permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
+					&& !permisos.contains(TypeRolePermisos.CONSULTA)) {
+				throw new FrontException(
+						"No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area");
 			}
 		} else if (UtilJSF.getSessionBean().getActiveRole() != TypeRoleAcceso.ADMIN_ENT) {
-			throw new FrontException("No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area");
+			throw new FrontException(
+					"No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area");
 		}
 
 		// Recupera datos
 		buscar();
+		if (ambito.equals(TypeAmbito.AREA.toString())) {
+
+			mostrarBreadcrumb = true;
+			/* inicializa breadcrum y lo creamos */
+			breadCrumb = new DefaultMenuModel();
+
+			DefaultMenuItem item = null;
+
+			item = new DefaultMenuItem(area);
+			item.setUrl("/secure/app/viewTramites.xhtml?area=" + id);
+			breadCrumb.addElement(item);
+
+		} else {
+			mostrarBreadcrumb = false;
+		}
 	}
 
 	/**
@@ -336,6 +363,22 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		}
 		params.put(TypeParametroVentana.AREA.toString(), this.id);
 		UtilJSF.openDialog(DialogFormularioExterno.class, modoAccesoDlg, params, true, 490, 215);
+	}
+
+	public boolean isMostrarBreadcrumb() {
+		return mostrarBreadcrumb;
+	}
+
+	public void setMostrarBreadcrumb(boolean mostrarBreadcrumb) {
+		this.mostrarBreadcrumb = mostrarBreadcrumb;
+	}
+
+	public MenuModel getBreadCrumb() {
+		return breadCrumb;
+	}
+
+	public void setBreadCrumb(MenuModel breadCrumb) {
+		this.breadCrumb = breadCrumb;
 	}
 
 }

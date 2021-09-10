@@ -224,6 +224,9 @@ public class DialogDominioImportar extends DialogControllerBase {
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
 		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, this.filaDominio);
+		if (area != null) {
+			mochilaDatos.put(Constantes.AREA, area.getCodigo());
+		}
 		UtilJSF.openDialog(DialogTramiteImportarDominio.class, TypeModoAcceso.EDICION, null, true,
 				this.filaDominio.getAnchura(), this.filaDominio.getAltura());
 	}
@@ -242,6 +245,7 @@ public class DialogDominioImportar extends DialogControllerBase {
 			FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("formTramite");
 		}
 	}
+
 
 	/**
 	 * Carga el dato donde toque.

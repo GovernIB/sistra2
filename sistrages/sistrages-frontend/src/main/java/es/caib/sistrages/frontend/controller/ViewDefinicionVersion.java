@@ -3,8 +3,10 @@ package es.caib.sistrages.frontend.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -183,6 +185,11 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/** Entidad. **/
 	private Entidad entidad;
 
+	private TreeNode mpan;
+	private TreeNode mpan1;
+	private TreeNode mpan2;
+	private int conti;
+
 	/**
 	 * Crea una nueva instancia de view definicion version.
 	 */
@@ -199,6 +206,10 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * Inicializacion.
 	 */
 	public void init() {
+		conti = 0;
+		mpan = null;
+		mpan1 = null;
+		mpan2 = null;
 
 		/* titulo pantalla */
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
@@ -719,12 +730,19 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if (!verificarFilaSeleccionada()) {
 			return;
 		}
+		Long id = area.getCodigo();
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), dominioSeleccionado.getCodigo().toString());
-		params.put(TypeParametroVentana.AMBITO.toString(), TypeAmbito.ENTIDAD.toString());
+		params.put(TypeParametroVentana.AMBITO.toString(), TypeAmbito.AREA.toString());
+		params.put("AREA", id.toString());
 		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 680);
 
+	}
+
+	/** Edita documento a través del doble click. **/
+	public void consultarDominioDblClick() {
+		this.consultarDominio();
 	}
 
 	/**
@@ -1813,6 +1831,31 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
+	 * Metodo que selecciona la miga de pan
+	 */
+	public void selectBreadCrumb(TreeNode arbol) {
+		setSelectedNode(arbol);
+		selectedNode.setSelected(true);
+		inicializarArbol();
+
+		if (arbol.getParent().getData().equals("Root")) {
+			root.getChildren().get(Integer.parseInt(arbol.getRowKey())).setSelected(true);
+		}
+
+		OpcionArbol opArbol = (OpcionArbol) arbol.getData();
+		if (opArbol.getUrl() != null) {
+			opcionUrl = opArbol.getUrl();
+
+			breadCrumb = copyMenuModel(breadCrumbRoot);
+
+			if (breadCrumb != null) {
+				creaRutaArbolBreadCrumb(breadCrumb, arbol);
+				breadCrumb.generateUniqueIds();
+			}
+		}
+	}
+
+	/**
 	 * Metodo que se ejecuta cuando se selecciona un nodo del arbol.
 	 *
 	 * @param event evento que se ha producido
@@ -1841,15 +1884,40 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * @param arbol arbol
 	 */
 	private void creaRutaArbolBreadCrumb(final MenuModel miga, final TreeNode arbol) {
+
 		if (miga != null && arbol != null) {
 			if (arbol.getParent() != null) {
 				creaRutaArbolBreadCrumb(miga, arbol.getParent());
 			}
+
 			if (!"root".equals(arbol.getRowKey())) {
 				final OpcionArbol opcionArbol = (OpcionArbol) arbol.getData();
 				final DefaultMenuItem item = new DefaultMenuItem(opcionArbol.getName());
-				item.setUrl("#");
-				breadCrumb.addElement(item);
+				item.setProcess("@this");
+				item.setDelay("500");
+				item.setUpdate("@form :workDefinicionVersion :formArbol:arbol");
+
+				if (conti == 0) {
+					mpan = arbol;
+					item.setCommand("#{viewDefinicionVersion.selectBreadCrumb(viewDefinicionVersion.getMpan())}");
+
+					breadCrumb.addElement(item);
+					conti++;
+				} else if (conti == 1) {
+					mpan1 = arbol;
+					item.setCommand("#{viewDefinicionVersion.selectBreadCrumb(viewDefinicionVersion.getMpan1())}");
+
+					breadCrumb.addElement(item);
+					conti++;
+				} else {
+					mpan2 = arbol;
+					item.setCommand("#{viewDefinicionVersion.selectBreadCrumb(viewDefinicionVersion.getMpan2())}");
+
+					breadCrumb.addElement(item);
+				}
+
+			} else {
+				conti = 0;
 			}
 		}
 	}
@@ -2132,4 +2200,37 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	public final void setEntidad(final Entidad entidad) {
 		this.entidad = entidad;
 	}
+
+	public TreeNode getMpan() {
+		return mpan;
+	}
+
+	public void setMpan(TreeNode mpan) {
+		this.mpan = mpan;
+	}
+
+	public TreeNode getMpan1() {
+		return mpan1;
+	}
+
+	public void setMpan1(TreeNode mpan1) {
+		this.mpan1 = mpan1;
+	}
+
+	public TreeNode getMpan2() {
+		return mpan2;
+	}
+
+	public void setMpan2(TreeNode mpan2) {
+		this.mpan2 = mpan2;
+	}
+
+	public int getConti() {
+		return conti;
+	}
+
+	public void setConti(int conti) {
+		this.conti = conti;
+	}
+
 }

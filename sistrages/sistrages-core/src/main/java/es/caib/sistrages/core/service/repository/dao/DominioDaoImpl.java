@@ -430,6 +430,9 @@ public class DominioDaoImpl implements DominioDao {
 
 				dominioAlmacenar = JDominio.fromModelStatic(filaDominio.getDominio());
 				dominioAlmacenar.setCodigo(null);
+				dominioAlmacenar.setConfiguracionAutenticacion(null);
+				dominioAlmacenar.setAreas(null);
+				dominioAlmacenar.setEntidades(null);
 
 				if (filaDominio.getDominio().getAmbito() == TypeAmbito.AREA) {
 
@@ -471,7 +474,9 @@ public class DominioDaoImpl implements DominioDao {
 				break;
 			case CONSULTA_REMOTA:
 				dominioAlmacenar.setServicioRemotoUrl(filaDominio.getResultadoURL());
-				if (filaDominio.getConfiguracionAutenticacionActual() != null) {
+				if (filaDominio.getConfiguracionAutenticacionActual() == null) {
+					dominioAlmacenar.setConfiguracionAutenticacion(null);
+				} else {
 					JConfiguracionAutenticacion config = entityManager.find(JConfiguracionAutenticacion.class, filaDominio.getConfiguracionAutenticacionActual().getCodigo());
 					dominioAlmacenar.setConfiguracionAutenticacion(config);
 				}

@@ -239,7 +239,7 @@
 					<p class="pTituloCabecera">
 						<h:outputText value="#{msg['dialogTramiteImportar.formateadores']}" styleClass="subTituloCabecera"  />
 					</p>
-					<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w60,w10 grid-center" headerClass="grid-left" value="#{dialogTramiteImportar.filasFormateador}" var="fila" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
+					<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaFormateadores" headerClass="grid-left" value="#{dialogTramiteImportar.filasFormateador}" var="fila" width="93%" cellspacing="0" cellpadding="5"  style="margin-left:33px;">
 							<h:column headerClass="subTituloTablaImportarIzq">
 								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.formateador.identificador']}" /></f:facet>
 		      					#{fila.formateadorFormulario.identificador}
@@ -256,6 +256,12 @@
 								 </f:facet>
 		      					<p:outputLabel value=" #{fila.mensaje}"  />
 							</h:column>
+
+							<h:column headerClass="subTituloTablaImportarDer">
+								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.dominio.accion']}" style="font-weight: bold" /></f:facet>
+								 <p:outputLabel value=" "  />
+							</h:column>
+
 
 							<h:column headerClass="subTituloTablaImportarIzq">
 								 <f:facet name = "header"></f:facet>
@@ -274,7 +280,7 @@
 					<p class="pTituloCabecera">
 						<h:outputText value="#{msg['dialogTramiteImportar.gestores']}" styleClass="subTituloCabecera"  />
 					</p>
-					<h:dataTable  id="dataTablaGestores" rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w60,w10 grid-center" headerClass="grid-left" value="#{dialogTramiteImportar.filasGestores}" var="fila" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
+					<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaGestores" headerClass="grid-left" value="#{dialogTramiteImportar.filasGestores}" var="fila" width="93%" cellspacing="0" cellpadding="5"  style="margin-left:33px;">
 							<h:column headerClass="subTituloTablaImportarIzq">
 								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.gestores.identificador']}" /></f:facet>
 		      					#{fila.gestor.identificador}
@@ -294,7 +300,7 @@
 
 							<h:column headerClass="subTituloTablaImportarDer">
 								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.dominio.accion']}" style="font-weight: bold" /></f:facet>
-								 <p:commandButton value="..." rendered="#{dialogTramiteImportar.isNingunError() and fila.resultado == TypeImportarResultado.WARNING}"  actionListener="#{dialogTramiteImportar.checkGestor(fila.gestor.identificador)}" style="margin-left:5px" process="@this">
+								 <p:commandButton value="..." rendered="#{dialogTramiteImportar.isNingunError() and dialogTramiteImportar.filaArea.accion != null}" actionListener="#{dialogTramiteImportar.checkGestor(fila.gestor.identificador)}" style="margin-left:5px" process="@this">
 		      							<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoGestor}" update="@form:botonImportar" />
 								</p:commandButton>
 							</h:column>

@@ -44,7 +44,7 @@
 			    	 scrollable="true" scrollHeight="100%"
 			   		selection="#{viewTramites.listaAreasSeleccionadas}" rowKey="#{area.codigo}">
 					<p:ajax event="rowSelectCheckbox" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites"/>
-					<p:ajax event="rowSelect" global="false" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites"/>
+					<p:ajax event="rowSelect" global="false" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" onclick="myWidget.getPaginator().setPage(0)"/>
 					<p:ajax event="rowUnselect" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites"/>
 					<p:ajax event="rowUnselectCheckbox" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites"/>
 					<p:ajax event="toggleSelect" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" />
@@ -63,7 +63,7 @@
 			            <h:outputText value="#{area.identificador}" />
 			        </p:column>
 			        <f:facet name="footer" style="align:left">
-			        	<div align="left">
+			        	<div align="left" style="display:#{(viewTramites.admEntidad)?'none':'block'}">
             			<h:selectBooleanCheckbox itemLabel="Prev.Areas" value="#{viewTramites.mostrarTodasAreas}"  >
 						 		<p:ajax event="change" process="@this" update="@form" listener="#{viewTramites.calcularAreas}"  />
 						</h:selectBooleanCheckbox>
@@ -158,19 +158,20 @@
 					</f:facet>
 				</p:toolbar>
 
-				<p:dataTable id="dataTableTramites" var="td" value="#{viewTramites.listaTramiteVersiones}"
+				<p:dataTable id="dataTableTramites" var="td" value="#{viewTramites.dataModel}"
 												 rows="10" emptyMessage="#{msg['error.emptyRows']}" rowExpandMode="single"
 												 scrollable="true" scrollHeight="100%"
 						                         paginator="true" paginatorPosition="bottom"
 						                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 						                         rowsPerPageTemplate="5,10,15,30"
-												 expandedRow="#{viewTramites.expandir(td)}"
-									        	 selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}" rowKey="#{td.tramite.codigo}">
+												 expandedRow="#{viewTramites.expandir(td)}" widgetVar="myWidget"
+									        	 selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}"  lazy="true">
 
 						<!-- Necesario para actualizar en controlador la fila seleccionada -->
 						<p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectVersionTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('T')"/>
              			<!-- <p:ajax event="rowDblselect" listener="#{viewTramites.editarVersion}"/> -->
              			<p:ajax event="rowDblselect" oncomplete="triggerDoubleClick();" update="@form:toolbarTramites"/>
+             			<p:ajax event="page" listener="#{viewTramites.paginar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites"/>
 
 				       	<p:column style="width:16px">
 				        	<p:rowToggler />
@@ -197,7 +198,7 @@
 						<p:rowExpansion  >
 								<!-- Data table -->
 								<p:dataTable  id="dataTableVersiones" var="tdVersiones" value="#{td.listaVersiones}"
-											  rows="10" emptyMessage="#{msg['error.emptyRows']}"
+											  emptyMessage="#{msg['error.emptyRows']}"
 											  styleClass="w95 margin-left-25 margin-top-10 margin-bottom-10"
 								        	  selectionMode="single" selection="#{viewTramites.versionSeleccionada}" rowKey="#{tdVersiones.codigo}"
 											  >
@@ -270,6 +271,8 @@
 	        </p:commandButton>
 
 			<h:outputScript >
+
+
 				function triggerSearch() {
 		        	document.getElementById("form:btnSearch").click();
 		     	}
@@ -318,6 +321,7 @@
 				}
 
 		    </h:outputScript>
+
 
 		    <p:confirmDialog global="true" >
 				<p:outputPanel styleClass="confirmar_botonera">

@@ -157,7 +157,7 @@
 								<p:outputLabel for="urlRemoto" value="#{msg['dialogDominio.headerTipo.consultaRemota.url']}"  />
 							</p>
 							<p>
-								<p:inputText id="urlRemoto" value="#{dialogDominio.data.url}" disabled="#{dialogDominio.isConsulta()}" size="64"  maxlength="500"/>
+								<p:inputText id="urlRemoto" value="#{dialogDominio.data.url}" disabled="#{dialogDominio.isConsulta()}" size="45"  maxlength="500"/>
 							</p>
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleRemoto}" value=""  />
@@ -170,8 +170,7 @@
 									<p:ajax event="change" listener="#{dialogDominio.actualizarConf()}" update="btnConsultarConf"/>
 								</p:selectOneMenu >
 								<p:commandButton id="btnConsultarConf" title="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{dialogDominio.consultarConfiguracion()}" process="@this" update="growlDialog"
-												 disabled="#{dialogDominio.desactivarConsulta}">
-		       						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogoConf}" update="growlDialog configAut"/>
+												 disabled="#{dialogDominio.desactivarConsulta}" >
 		       					</p:commandButton>
 							</h:panelGrid>
 						</p:column>

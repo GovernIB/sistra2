@@ -249,7 +249,6 @@ public class TramiteServiceImpl implements TramiteService {
 		return tramiteDao.getAllByFiltro(idArea, pFiltro);
 	}
 
-
 	@Override
 	public List<Tramite> listTramite(Long idEntidad, List<Long> areas, String filtro) {
 		return tramiteDao.getAllByFiltro(idEntidad, areas, filtro);
@@ -908,6 +907,19 @@ public class TramiteServiceImpl implements TramiteService {
 	 * (non-Javadoc)
 	 *
 	 * @see
+	 * es.caib.sistrages.core.api.service.TramiteService#getTramiteVersionByDominio(
+	 * java.lang.Long)
+	 */
+	@Override
+	@NegocioInterceptor
+	public List<DominioTramite> getTramiteVersionByGfe(final Long idGfe) {
+		return tramiteDao.getTramiteVersionByGfe(idGfe);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#checkTasaRepetida(java.lang
 	 * .Long, java.lang.String, java.lang.Long)
 	 */
@@ -1356,7 +1368,7 @@ public class TramiteServiceImpl implements TramiteService {
 	@Override
 	@NegocioInterceptor
 	public void borrarScriptsVersion(final Long idTramiteVersion, final boolean propiedades, final boolean rellenar,
-			 final boolean anexo, final boolean tasas, final boolean registrar, final boolean propcaptura) {
+			final boolean anexo, final boolean tasas, final boolean registrar, final boolean propcaptura) {
 
 		if (propiedades) {
 			tramitePasoDao.borrarScriptsPropiedades(idTramiteVersion);
@@ -1364,23 +1376,36 @@ public class TramiteServiceImpl implements TramiteService {
 
 		for (TramitePaso tramitePaso : tramitePasoDao.getTramitePasos(idTramiteVersion)) {
 
-				if (tramitePaso instanceof TramitePasoRegistrar && registrar) {
-					tramitePasoDao.borrarScriptsRegistro(tramitePaso.getCodigo());
-				} else if (tramitePaso instanceof TramitePasoTasa && tasas) {
-					tramitePasoDao.borrarScriptsPago(tramitePaso.getCodigo());
-				} else if (tramitePaso instanceof TramitePasoAnexar && anexo) {
-					tramitePasoDao.borrarScriptsAnexo(tramitePaso.getCodigo());
-				} else if (tramitePaso instanceof TramitePasoRellenar && rellenar) {
-					tramitePasoDao.borrarScriptsRellenar(tramitePaso.getCodigo(), idTramiteVersion);
-				}
-				//TODO Aun no está creado el tramitePasoCaptura
+			if (tramitePaso instanceof TramitePasoRegistrar && registrar) {
+				tramitePasoDao.borrarScriptsRegistro(tramitePaso.getCodigo());
+			} else if (tramitePaso instanceof TramitePasoTasa && tasas) {
+				tramitePasoDao.borrarScriptsPago(tramitePaso.getCodigo());
+			} else if (tramitePaso instanceof TramitePasoAnexar && anexo) {
+				tramitePasoDao.borrarScriptsAnexo(tramitePaso.getCodigo());
+			} else if (tramitePaso instanceof TramitePasoRellenar && rellenar) {
+				tramitePasoDao.borrarScriptsRellenar(tramitePaso.getCodigo(), idTramiteVersion);
+			}
+			// TODO Aun no está creado el tramitePasoCaptura
 //				else if (tramitePaso instanceof TramitePasoCaptura && propcaptura) {
 //						tramitePasoDao.borrarScriptsCaptura(tramitePaso.getCodigo());
 //				}
 		}
 
-
 	}
 
+	@Override
+	@NegocioInterceptor
+	public int listTramiteTotal(Long idEntidad, List<Long> areas, String filtro) {
+
+		return tramiteDao.getTotalByFiltro(idEntidad, areas, filtro);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<Tramite> listTramite(int first, int pageSize, String sortField, boolean asc, Long idEntidad,
+			List<Long> areas, String filtro) {
+
+		return tramiteDao.getAllByFiltro(first, pageSize, sortField, asc, idEntidad, areas, filtro);
+	}
 
 }

@@ -31,6 +31,9 @@ public final class Constantes {
 	/** Constante para las extensiones de los ficheros de csv. */
 	public static final String EXTENSIONES_FICHEROS_CSV = "text/csv";
 
+	/** Constante para las extensiones de los ficheros de csv. */
+	public static final String EXTENSIONES_FICHEROS_HTML = ".html";
+
 	/** Constante importar. **/
 	public static final String AREA = "AREA";
 
@@ -63,6 +66,9 @@ public final class Constantes {
 
 	/** Constante plantilla formateador. **/
 	public static final String CLAVE_MOCHILA_PLANTILLA_FORMATEADOR = "PLANTILLA_FORMATEADOR";
+
+	/** Constante plantilla formateador. **/
+	public static final String CLAVE_MOCHILA_PLANTILLA_ENTIDAD = "PLANTILLA_ENTIDAD";
 
 	/** Constante procedimiento. **/
 	public static final String CLAVE_MOCHILA_CATEGORIA = "CATEGORIA";

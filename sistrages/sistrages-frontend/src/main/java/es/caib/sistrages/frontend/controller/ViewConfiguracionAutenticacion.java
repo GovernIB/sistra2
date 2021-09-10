@@ -9,14 +9,18 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultMenuModel;
+import org.primefaces.model.menu.MenuModel;
 
 import es.caib.sistrages.core.api.exception.FrontException;
-import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
+import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
-import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
+import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -71,6 +75,12 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	boolean permiteAlta = false;
 	boolean permiteEditar = false;
 
+	/** Mostrar breadcrumb. **/
+	private boolean mostrarBreadcrumb;
+
+	/** miga de pan */
+	private MenuModel breadCrumb;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -83,28 +93,46 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 					.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
 
 			if (!permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
-			   && !permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
-			   && !permisos.contains(TypeRolePermisos.CONSULTA)) {
-				throw new FrontException("No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area");
+					&& !permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
+					&& !permisos.contains(TypeRolePermisos.CONSULTA)) {
+				throw new FrontException(
+						"No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area");
 			}
 
 			if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)) {
-				//Solo el administrador de area puede editar
-				 permiteAlta = true;
-				 permiteEditar = true;
+				// Solo el administrador de area puede editar
+				permiteAlta = true;
+				permiteEditar = true;
 			} else {
-				 permiteAlta = false;
-				 permiteEditar = false;
+				permiteAlta = false;
+				permiteEditar = false;
 			}
 		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
-			 permiteAlta = true;
-			 permiteEditar = true;
+			permiteAlta = true;
+			permiteEditar = true;
 		} else {
-			throw new FrontException("No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area");
+			throw new FrontException(
+					"No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area");
 		}
 
 		// Recupera datos
 		buscar();
+
+		if (ambito.equals(TypeAmbito.AREA.toString())) {
+
+			mostrarBreadcrumb = true;
+			/* inicializa breadcrum y lo creamos */
+			breadCrumb = new DefaultMenuModel();
+
+			DefaultMenuItem item = null;
+
+			item = new DefaultMenuItem(area);
+			item.setUrl("/secure/app/viewTramites.xhtml?area=" + id);
+			breadCrumb.addElement(item);
+
+		} else {
+			mostrarBreadcrumb = false;
+		}
 	}
 
 	/**
@@ -122,7 +150,8 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	 */
 	private void buscar() {
 		// Filtra
-		listaDatos = configuracionAutenticacionService.listConfiguracionAutenticacion(Long.valueOf(id), UtilJSF.getIdioma(), filtro);
+		listaDatos = configuracionAutenticacionService.listConfiguracionAutenticacion(Long.valueOf(id),
+				UtilJSF.getIdioma(), filtro);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 	}
@@ -221,7 +250,7 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	 * @return el valor de permiteAlta
 	 */
 	public boolean getPermiteAlta() {
-		return  permiteAlta ;
+		return permiteAlta;
 	}
 
 	/**
@@ -230,7 +259,7 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	 * @return el valor de permiteEditar
 	 */
 	public boolean getPermiteEditar() {
-		return  permiteEditar;
+		return permiteEditar;
 	}
 
 	/**
@@ -362,10 +391,29 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param configuracionAutenticacionService the configuracionAutenticacionService to set
+	 * @param configuracionAutenticacionService the
+	 *                                          configuracionAutenticacionService to
+	 *                                          set
 	 */
-	public void setConfiguracionAutenticacionService(ConfiguracionAutenticacionService configuracionAutenticacionService) {
+	public void setConfiguracionAutenticacionService(
+			ConfiguracionAutenticacionService configuracionAutenticacionService) {
 		this.configuracionAutenticacionService = configuracionAutenticacionService;
+	}
+
+	public boolean isMostrarBreadcrumb() {
+		return mostrarBreadcrumb;
+	}
+
+	public void setMostrarBreadcrumb(boolean mostrarBreadcrumb) {
+		this.mostrarBreadcrumb = mostrarBreadcrumb;
+	}
+
+	public MenuModel getBreadCrumb() {
+		return breadCrumb;
+	}
+
+	public void setBreadCrumb(MenuModel breadCrumb) {
+		this.breadCrumb = breadCrumb;
 	}
 
 }

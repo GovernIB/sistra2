@@ -1,5 +1,8 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.PlantillaEntidad;
 
 /**
  * JEntidad.
@@ -184,6 +188,9 @@ public class JEntidad implements IModelApi {
 	/** Registro centralizado. */
 	@Column(name = "ENT_REGDOC", nullable = false, precision = 1, scale = 0)
 	private boolean registroOcultarDescargaDocumentos;
+
+//	@OneToMany(fetch = FetchType.LAZY, mappedBy = "entidad", orphanRemoval = true, cascade = CascadeType.ALL)
+//	private Set<JPlantillaEntidad> plantillaEntidad = new HashSet<>(0);
 
 	/**
 	 * @return the codigo
@@ -672,6 +679,7 @@ public class JEntidad implements IModelApi {
 		this.urlSede = urlSedeElectronica;
 	}
 
+
 	/**
 	 * toModel.
 	 */
@@ -746,6 +754,13 @@ public class JEntidad implements IModelApi {
 		entidad.setOficinaRegistroCentralizado(oficinaRegistroCentralizado);
 		entidad.setValorarTramite(valorarTramite);
 		entidad.setRegistroOcultarDescargaDocumentos(registroOcultarDescargaDocumentos);
+		List<PlantillaEntidad> plantillas = new ArrayList<>();
+//		if (this.getPlantillaEntidad() != null) {
+//			for(JPlantillaEntidad jplantilla : this.getPlantillaEntidad()) {
+//				plantillas.add(jplantilla.toModel());
+//			}
+//		}
+//		entidad.setPlantillas(plantillas);
 		return entidad;
 	}
 

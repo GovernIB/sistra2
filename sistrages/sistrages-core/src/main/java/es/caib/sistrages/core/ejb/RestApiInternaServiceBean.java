@@ -22,6 +22,7 @@ import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.IncidenciaValoracion;
+import es.caib.sistrages.core.api.model.PlantillaEntidad;
 import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.Plugin;
@@ -235,6 +236,12 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 	@RolesAllowed(ConstantesRolesAcceso.REST)
 	public List<GestorExternoFormularios> listGestorExternoFormularios(final Long pIdEntidad) {
 		return restApiService.listGestorExternoFormularios(pIdEntidad);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<PlantillaEntidad> getPlantillasEntidad(Long codigo) {
+		return restApiService.getPlantillasEntidad(codigo);
 	}
 
 }

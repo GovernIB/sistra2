@@ -13,6 +13,8 @@ import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.IncidenciaValoracion;
+import es.caib.sistrages.core.api.model.PlantillaEntidad;
+import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
@@ -414,5 +416,31 @@ public class EntidadServiceImpl implements EntidadService {
 	@NegocioInterceptor
 	public boolean existeIdentificadorValoracion(final String identificador, final Long idEntidad, final Long codigo) {
 		return avisoDao.existeIdentificador(identificador, idEntidad, codigo);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<PlantillaEntidad> getListaPlantillasEmailFin(Long codEntidad) {
+		return entidadDao.getListaPlantillasEmailFin(codEntidad);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public PlantillaEntidad uploadPlantillasEmailFin(Long idEntidad, Long idPlantillaEntidad,
+			PlantillaEntidad plantillaEntidad, byte[] contents) {
+
+		final PlantillaEntidad newPlantilla =  entidadDao.uploadPlantillasEmailFin(idPlantillaEntidad, plantillaEntidad, idEntidad);
+		ficheroExternoDao.guardarFichero(idEntidad, newPlantilla.getFichero(), contents);
+
+		return newPlantilla;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void removePlantillaEmailFin(PlantillaEntidad plantillaEntidad) {
+		if (plantillaEntidad != null && plantillaEntidad.getFichero() != null) {
+			ficheroExternoDao.marcarBorrar(plantillaEntidad.getFichero().getCodigo());
+			entidadDao.removePlantillaEmailFin(plantillaEntidad.getCodigo());
+		}
 	}
 }

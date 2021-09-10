@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>es.caib.sistra2</groupId>
 		<artifactId>sistrahelp</artifactId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 	<artifactId>sistrahelp-lib</artifactId>
 	<name>sistrahelp-lib</name>

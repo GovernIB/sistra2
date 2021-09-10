@@ -103,8 +103,7 @@ public class DialogDominioTramites extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -118,8 +117,7 @@ public class DialogDominioTramites extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final Dominio data) {
 		this.data = data;
@@ -133,8 +131,7 @@ public class DialogDominioTramites extends DialogControllerBase {
 	}
 
 	/**
-	 * @param valorSeleccionado
-	 *            the valorSeleccionado to set
+	 * @param valorSeleccionado the valorSeleccionado to set
 	 */
 	public void setValorSeleccionado(final DominioTramite valorSeleccionado) {
 		this.valorSeleccionado = valorSeleccionado;
@@ -148,8 +145,7 @@ public class DialogDominioTramites extends DialogControllerBase {
 	}
 
 	/**
-	 * @param campos
-	 *            the campos to set
+	 * @param campos the campos to set
 	 */
 	public void setCampos(final List<DominioTramite> campos) {
 		this.campos = campos;
@@ -163,8 +159,7 @@ public class DialogDominioTramites extends DialogControllerBase {
 	}
 
 	/**
-	 * @param iCampos
-	 *            the iCampos to set
+	 * @param iCampos the iCampos to set
 	 */
 	public void setiCampos(final String iCampos) {
 		this.iCampos = iCampos;
@@ -178,8 +173,7 @@ public class DialogDominioTramites extends DialogControllerBase {
 	}
 
 	/**
-	 * @param ambito
-	 *            the ambito to set
+	 * @param ambito the ambito to set
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;
@@ -193,8 +187,7 @@ public class DialogDominioTramites extends DialogControllerBase {
 	}
 
 	/**
-	 * @param area
-	 *            the area to set
+	 * @param area the area to set
 	 */
 	public void setArea(final String area) {
 		this.area = area;

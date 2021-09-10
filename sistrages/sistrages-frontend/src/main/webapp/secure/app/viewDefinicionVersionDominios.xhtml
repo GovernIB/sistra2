@@ -35,7 +35,6 @@
 						actionListener="#{viewDefinicionVersion.consultarDominio()}" process="@this"
 						update="growl"/>
 
-
 					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
 						icon="fa fa-question-circle-o"
 						actionListener="#{viewDefinicionVersion.ayudaDominio()}" process="@this"
@@ -56,6 +55,7 @@
 			<!-- Necesario para actualizar en controlador la fila seleccionada -->
 			<p:ajax event="rowSelect" global="false" />
 			<p:ajax event="rowUnselect" />
+			<p:ajax event="rowDblselect" oncomplete="triggerDblClick();"/>
 
 			<!-- Columnas -->
 		    <p:column headerText="#{msg['viewDefinicionVersionDominios.headerCodigo']}" sortBy="#{dominio.codigo}">
@@ -78,6 +78,19 @@
 	        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
 			</p:outputPanel>
 	    </p:confirmDialog>
+
+		<h:outputScript >
+	      function triggerDblClick() {
+	       	$('#formViewDefinicionVersionDominios\\:btnEditarDblClickHidden').click();
+	      }
+	    </h:outputScript>
+
+		<p:commandButton id="btnEditarDblClickHidden"
+			 	value="#{msg['botones.editar']}" icon="fa fa-edit"
+				actionListener="#{viewDefinicionVersion.consultarDominioDblClick()}" process="@this"
+				update="growl dataTable" style="display:none">
+				<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionDominios formViewDefinicionVersionDominios:dataTable dataTable" />
+     	</p:commandButton>
 
 	</h:form>
 

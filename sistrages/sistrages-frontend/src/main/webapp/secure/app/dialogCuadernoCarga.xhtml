@@ -261,7 +261,7 @@
 					<p class="pTituloCabecera">
 						<h:outputText value="#{msg['dialogCuadernoCarga.gestores']}" styleClass="subTituloCabecera"  />
 					</p>
-					<h:dataTable  id="dataTablaGestores" rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w60,w10 grid-center" headerClass="grid-left" value="#{dialogCuadernoCarga.filasGestores}" var="fila" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
+					<h:dataTable id="dataTablaGestores" rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" headerClass="grid-left" value="#{dialogCuadernoCarga.filasGestores}" var="fila" width="93%" style="margin-left:33px;" cellspacing="0" cellpadding="5" >
 							<h:column headerClass="subTituloTablaImportarIzq">
 								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogCuadernoCarga.gestores.identificador']}" /></f:facet>
 		      					#{fila.gestor.identificador}
@@ -273,10 +273,17 @@
 							</h:column>
 
 							<h:column headerClass="subTituloTablaImportarIzq">
-								 <f:facet name = "header" style="text-align: left;">
-								 	<p:outputLabel value="#{msg['dialogCuadernoCarga.formateador.estado']}" />
+								<f:facet name = "header">
+								 	<p:outputLabel value="#{msg['dialogCuadernoCarga.dominio.estado']}" style="font-weight: bold" />
 								 </f:facet>
-		      					<p:outputLabel value=" #{fila.mensaje}" rendered="#{fila.mensaje != null}" />
+								 <p:outputLabel  value="#{fila.mensaje}"  rendered="#{fila.mensaje != null}" />
+							</h:column>
+
+							<h:column headerClass="subTituloTablaImportarDer">
+								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogCuadernoCarga.dominio.accion']}" style="font-weight: bold" /></f:facet>
+								 <p:commandButton value="..." process="@form" rendered="#{dialogCuadernoCarga.isNingunError()}"  actionListener="#{dialogCuadernoCarga.checkGestor(fila.gestor.identificador)}" style="margin-left:5px" >
+		      							<p:ajax event="dialogReturn" listener="#{dialogCuadernoCarga.returnDialogoGestor}" update="@form:botonImportar" />
+								</p:commandButton>
 							</h:column>
 
 							<h:column headerClass="subTituloTablaImportarIzq">

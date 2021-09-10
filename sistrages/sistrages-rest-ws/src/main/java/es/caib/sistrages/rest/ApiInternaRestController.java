@@ -18,6 +18,7 @@ import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.IncidenciaValoracion;
+import es.caib.sistrages.core.api.model.PlantillaEntidad;
 import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.Rol;
@@ -131,11 +132,13 @@ public class ApiInternaRestController {
 		if (formateador != null) {
 			plantillas = restApiService.getPlantillasFormateador(formateador.getCodigo());
 		}
+		List<PlantillaEntidad> plantillasEntidad = restApiService.getPlantillasEntidad(entidad.getCodigo());
+
 		List<IncidenciaValoracion> valoraciones = null;
 		if (entidad.isValorarTramite()) {
 			valoraciones = restApiService.getValoraciones(entidad.getCodigo());
 		}
-		return confEntidadAdapter.convertir(entidad, formSoporte, plantillas, valoraciones);
+		return confEntidadAdapter.convertir(entidad, formSoporte, plantillas, valoraciones, plantillasEntidad);
 	}
 
 	/**

@@ -474,6 +474,15 @@ public interface TramiteService {
 	public List<DominioTramite> getTramiteVersionByDominio(Long idDominio);
 
 	/**
+	 * Obtiene la lista de tramite versión que tienen ese gestor de formulario
+	 * externo.
+	 *
+	 * @param idDominio
+	 * @return
+	 */
+	public List<DominioTramite> getTramiteVersionByGfe(Long idGfe);
+
+	/**
 	 * Mira si la tasa esta repetida.
 	 *
 	 * @param idTramiteVersion
@@ -661,7 +670,7 @@ public interface TramiteService {
 	 * @param idTramiteVersion
 	 * @return
 	 */
-	public void borrarScriptsVersion(Long idTramiteVersion, boolean propiedades, boolean rellenar,  boolean anexo,
+	public void borrarScriptsVersion(Long idTramiteVersion, boolean propiedades, boolean rellenar, boolean anexo,
 			boolean tasas, boolean registrar, boolean propcaptura);
 
 	/**
@@ -674,11 +683,25 @@ public interface TramiteService {
 
 	/**
 	 * Busca los trámites según el id entidad, las areas y el filtro
+	 *
 	 * @param idEntidad
 	 * @param areas
 	 * @param filtro
 	 * @return
 	 */
 	public List<Tramite> listTramite(Long idEntidad, List<Long> areas, String filtro);
+
+	public int listTramiteTotal(Long idEntidad, List<Long> areas, String filtro);
+
+	/**
+	 * Busca los trámites según paginación
+	 *
+	 * @param idEntidad
+	 * @param areas
+	 * @param filtro
+	 * @return
+	 */
+	public List<Tramite> listTramite(int first, int pageSize, String sortField, boolean asc, Long idEntidad,
+			List<Long> areas, String filtro);
 
 }

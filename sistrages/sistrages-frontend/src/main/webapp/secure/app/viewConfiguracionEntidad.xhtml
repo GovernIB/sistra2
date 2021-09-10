@@ -220,6 +220,8 @@
 										<h:outputText value="#{msg['viewConfiguracionEntidad.registro.headerOcultarDescargaDoc']}:" />
 			        					<p:selectBooleanCheckbox id="checkOcultarDescargaDocumentos" value="#{viewConfiguracionEntidad.data.registroOcultarDescargaDocumentos}" disabled="#{!viewConfiguracionEntidad.permiteEditar}" />
 
+										<h:outputText value="#{msg['viewConfiguracionEntidad.registro.plantillaMailFinRegistro']}:" />
+			        					<p:commandButton id="btnPlantillaMail" icon="fa fa-cog" actionListener="#{viewConfiguracionEntidad.explorarPlantillaMail}" process="@this" update=":form:growl" styleClass="va-top" />
 
 							</h:panelGrid>
 	        			</p:tab>

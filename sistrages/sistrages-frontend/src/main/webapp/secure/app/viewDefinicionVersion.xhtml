@@ -23,10 +23,12 @@
 				<p:layout id="mainDefinicionVersion" styleClass="h100">
 
 					<p:layoutUnit id="breadDefinicionVersionLayout" position="north" styleClass="body-color">
-						<p:outputPanel id="breadDefinicionVersion" style="display:flex;" >
+
+						<h:form id="breadDefinicionVersion" style="display:flex;" >
 							<div style="width:100vw;">
-								<p:breadCrumb homeDisplay="text" model="#{viewDefinicionVersion.breadCrumModel}" />
+								<p:breadCrumb homeDisplay="text" model="#{viewDefinicionVersion.breadCrumModel}"  />
 							</div>
+
 							<div style="padding:3px;display: inherit">
 								<p:commandButton id="btnBloquear" value="#{msg['botones.bloquear']}" icon="fa fa-lock" actionListener="#{viewDefinicionVersion.bloquear}" process="@this" update="growl"  rendered="#{viewDefinicionVersion.permiteBloquear}"  style="margin-left:4px;width:170px;" >
 			        					<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['viewTramitesVersion.bloquear.aviso']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
@@ -39,7 +41,9 @@
 									 	value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" rendered="#{viewDefinicionVersion.isPermiteRefrescar()}"
 										actionListener="#{viewTramites.refrescarCache(viewDefinicionVersion.tramite.identificador, viewDefinicionVersion.tramiteVersion.numeroVersion)}" process="@this" style="margin-left:4px;width:150px;" update="growl" />
 							</div>
-						</p:outputPanel>
+							</h:form>
+
+
 					</p:layoutUnit>
 
 					<p:layoutUnit id="indexDefinicionVersion" position="west" size="250">

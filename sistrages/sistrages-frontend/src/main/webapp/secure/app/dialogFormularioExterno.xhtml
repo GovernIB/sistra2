@@ -52,7 +52,7 @@
 					<p:outputLabel value="" />
 
 					<p:outputLabel for="configAut" value="#{msg['dialogFormularioExterno.headerConfigAutenticacion']}"  style="margin-right:5px" />
-			 	 	<p:selectOneMenu id="configAut" value="#{dialogFormularioExterno.data.configuracionAutenticacion}"  style="width:285px" disabled="#{dialogFormularioExterno.isConsulta()}" converter="#{configuracionConverter}">
+			 	 	<p:selectOneMenu id="configAut" value="#{dialogFormularioExterno.data.configuracionAutenticacion}"  style="width:285px" disabled="#{dialogFormularioExterno.isConsulta()}" converter="#{configuracionConverter}"   >
 						    <f:selectItems value="#{dialogFormularioExterno.configuraciones}" var="confAut" itemValue="#{confAut}" itemLabel="#{confAut.identificador}" />
 							<p:ajax event="change" listener="#{dialogFormularioExterno.actualizarConf()}" update="btnConsultarConf"/>
 					</p:selectOneMenu >
@@ -75,6 +75,10 @@
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
+		     	<f:facet name="left">
+	     			<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" actionListener="#{dialogFormularioExterno.tramites()}" process="@this"  />
+
+	     		</f:facet>
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogFormularioExterno.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogFormularioExterno.isAlta() or dialogFormularioExterno.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogFormularioExterno.cancelar()}" process="@this"  rendered="#{dialogFormularioExterno.isAlta() or dialogFormularioExterno.isEdicion()}"/>

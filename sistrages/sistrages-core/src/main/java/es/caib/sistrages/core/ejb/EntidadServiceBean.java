@@ -15,6 +15,7 @@ import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.IncidenciaValoracion;
+import es.caib.sistrages.core.api.model.PlantillaEntidad;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.service.EntidadService;
@@ -305,6 +306,25 @@ public class EntidadServiceBean implements EntidadService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public boolean existeCodigoDIR3(final String codigoDIR3, final Long idEntidad) {
 		return entidadService.existeCodigoDIR3(codigoDIR3, idEntidad);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<PlantillaEntidad> getListaPlantillasEmailFin(Long codEntidad) {
+		return entidadService.getListaPlantillasEmailFin(codEntidad);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
+	public PlantillaEntidad uploadPlantillasEmailFin(Long idEntidad, Long idPlantillaEntidad,
+			PlantillaEntidad plantillaEntidad, byte[] contents) {
+		return entidadService.uploadPlantillasEmailFin(idEntidad, idPlantillaEntidad , plantillaEntidad, contents);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
+	public void removePlantillaEmailFin(PlantillaEntidad plantillaEntidad) {
+		entidadService.removePlantillaEmailFin(plantillaEntidad);
 	}
 
 }

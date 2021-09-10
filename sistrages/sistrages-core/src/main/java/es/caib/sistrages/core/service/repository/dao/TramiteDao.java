@@ -46,12 +46,16 @@ public interface TramiteDao {
 
 	/**
 	 * Obtiene todos los trámites según el filtro, las áreas y la entidad.
+	 *
 	 * @param idEntidad
 	 * @param areas
 	 * @param filtro
 	 * @return
 	 */
 	List<Tramite> getAllByFiltro(Long idEntidad, List<Long> areas, String filtro);
+
+	List<Tramite> getAllByFiltro(int first, int pageSize, String sortField, boolean asc, Long idEntidad,
+			List<Long> areas, String filtro);
 
 	/**
 	 * Añade tramite.
@@ -255,6 +259,14 @@ public interface TramiteDao {
 	List<DominioTramite> getTramiteVersionByDominio(Long idDominio);
 
 	/**
+	 * Lista de tramite versión que tengan un Gfe.
+	 *
+	 * @param idDominio
+	 * @return
+	 */
+	List<DominioTramite> getTramiteVersionByGfe(Long idGfe);
+
+	/**
 	 * Comprueba si el identificador está repetido.
 	 *
 	 * @param identificador
@@ -357,5 +369,6 @@ public interface TramiteDao {
 	 */
 	List<GestorExternoFormularios> getGFEByTramiteVersion(Long idTramiteVersion);
 
+	int getTotalByFiltro(Long idEntidad, List<Long> areas, String filtro);
 
 }

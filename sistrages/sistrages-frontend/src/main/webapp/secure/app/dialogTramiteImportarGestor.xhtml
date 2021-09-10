@@ -28,12 +28,16 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w20 va-top, padding-left-18 w80" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w20 va-top, padding-left-18 w70, w10" columns = "4" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="configAut" value="#{msg['dialogTramiteImportarDominio.headerConfiguracion']}:"   />
-			 	 	<p:selectOneMenu id="configAut" value="#{dialogTramiteImportarGestor.data.configuracionAutenticacionActual}"  style="width:285px" disabled="#{dialogTramiteImportarGestor.isConsulta()}" converter="#{configuracionConverter}"   >
+			 	 	<p:selectOneMenu id="configAut" value="#{dialogTramiteImportarGestor.data.configuracionAutenticacionActual}"  style="width:240px" disabled="#{dialogTramiteImportarGestor.isConsulta()}" converter="#{configuracionConverter}"   >
 						    <f:selectItems value="#{dialogTramiteImportarGestor.configuraciones}" var="fd" itemValue="#{fd}" itemLabel="#{fd.identificador}" />
 					</p:selectOneMenu >
+					<p:commandButton id="btnConsultarConf" title="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{dialogTramiteImportarGestor.consultarConfiguracion()}"  disabled="#{dialogTramiteImportarGestor.isConsulta()}"  process="@this configAut" update="growlDialog" />
+					 <p:commandButton id="btnAñadirConf" title="#{msg['botones.anyadir']}" icon="fa fa-plus"  actionListener="#{dialogTramiteImportarGestor.nuevo()}" process="@this" update="growlDialog configAut">
+		        			<p:ajax event="dialogReturn" listener="#{dialogTramiteImportarGestor.returnDialogo}" update="growlDialog configAut"/>
+		        		</p:commandButton>
 
 				</h:panelGrid>
 			</p:outputPanel>

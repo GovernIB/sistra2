@@ -178,6 +178,92 @@ public class TramiteDaoImpl implements TramiteDao {
 		return resultado;
 	}
 
+	@Override
+	public int getTotalByFiltro(Long idEntidad, List<Long> areas, String filtro) {
+		StringBuilder sql = new StringBuilder(" Select count(t) From JTramite t where ");
+
+		if (idEntidad == null) {
+			sql.append(" t.area.entidad is not null ");
+		} else {
+			sql.append(" t.area.entidad.codigo = :idEntidad ");
+		}
+
+		if (areas == null || areas.isEmpty()) {
+			sql.append(" AND t.area.codigo is not null ");
+		} else {
+			sql.append(" AND t.area.codigo IN (:idAreas) ");
+		}
+
+		if (StringUtils.isNotBlank(filtro)) {
+			sql.append(" AND (upper(t.descripcion) like :filtro OR upper(t.identificador) like :filtro)");
+		}
+		sql.append(" ORDER BY t.codigo");
+
+		final Query query = entityManager.createQuery(sql.toString());
+		if (idEntidad != null) {
+			query.setParameter("idEntidad", idEntidad);
+		}
+		if (areas != null && !areas.isEmpty()) {
+			query.setParameter("idAreas", areas);
+		}
+		if (StringUtils.isNotBlank(filtro)) {
+			query.setParameter("filtro", "%" + filtro.toUpperCase() + "%");
+		}
+
+		Long result = (Long) query.getSingleResult();
+		return Math.toIntExact(result);
+	}
+
+	@Override
+	public List<Tramite> getAllByFiltro(int first, int pageSize, String sortField, boolean asc, Long idEntidad,
+			List<Long> areas, String filtro) {
+
+		final List<Tramite> resultado = new ArrayList<>();
+		StringBuilder sql = new StringBuilder(" Select t From JTramite t where ");
+
+		if (idEntidad == null) {
+			sql.append(" t.area.entidad is not null ");
+		} else {
+			sql.append(" t.area.entidad.codigo = :idEntidad ");
+		}
+
+		if (areas == null || areas.isEmpty()) {
+			sql.append(" AND t.area.codigo is not null ");
+		} else {
+			sql.append(" AND t.area.codigo IN (:idAreas) ");
+		}
+
+		if (StringUtils.isNotBlank(filtro)) {
+			sql.append(" AND (upper(t.descripcion) like :filtro OR upper(t.identificador) like :filtro)");
+		}
+		sql.append(" ORDER BY t.codigo");
+
+		final Query query = entityManager.createQuery(sql.toString());
+		if (idEntidad != null) {
+			query.setParameter("idEntidad", idEntidad);
+		}
+		if (areas != null && !areas.isEmpty()) {
+			query.setParameter("idAreas", areas);
+		}
+		if (StringUtils.isNotBlank(filtro)) {
+			query.setParameter("filtro", "%" + filtro.toUpperCase() + "%");
+		}
+
+		query.setFirstResult(first);
+		query.setMaxResults(pageSize);
+		final List<JTramite> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JTramite> iterator = results.iterator(); iterator.hasNext();) {
+				final JTramite jTramite = iterator.next();
+				resultado.add(jTramite.toModel());
+			}
+		}
+
+		return resultado;
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -473,14 +559,16 @@ public class TramiteDaoImpl implements TramiteDao {
 			// Después de guardar los pasos se encarga de clonar los formularios
 			if (!forms.isEmpty()) {
 				for (final Map.Entry<String, JFormulario> entry : forms.entrySet()) {
-					final JFormulario jform = JFormulario.clonar(entry.getValue(), formateadores, cambioArea);
-					entityManager.persist(jform);
-					entityManager.flush();
-					for (final JFormularioTramite formTramite : jpaso.getPasoRellenar().getFormulariosTramite()) {
-						if (formTramite.getIdentificador().equals(entry.getKey())) {
-							formTramite.setFormulario(jform);
-							entityManager.merge(jform);
-							break;
+					if (entry.getValue() != null) {
+						final JFormulario jform = JFormulario.clonar(entry.getValue(), formateadores, cambioArea);
+						entityManager.persist(jform);
+						entityManager.flush();
+						for (final JFormularioTramite formTramite : jpaso.getPasoRellenar().getFormulariosTramite()) {
+							if (formTramite.getIdentificador().equals(entry.getKey())) {
+								formTramite.setFormulario(jform);
+								entityManager.merge(jform);
+								break;
+							}
 						}
 					}
 				}
@@ -959,6 +1047,35 @@ public class TramiteDaoImpl implements TramiteDao {
 
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("idDominio", idDominio);
+
+		@SuppressWarnings("unchecked")
+		final List<JVersionTramite> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JVersionTramite> iterator = results.iterator(); iterator.hasNext();) {
+				final JVersionTramite jTramiteVersion = iterator.next();
+				final DominioTramite dominioTramite = new DominioTramite();
+				dominioTramite.setArea(jTramiteVersion.getTramite().getArea().getIdentificador());
+				dominioTramite.setEntidad(jTramiteVersion.getTramite().getArea().getEntidad().getNombre().toModel());
+				dominioTramite.setIdTramiteVersion(jTramiteVersion.getCodigo());
+				dominioTramite.setNumVersion(jTramiteVersion.getNumeroVersion());
+				dominioTramite.setRelease(jTramiteVersion.getRelease());
+				dominioTramite.setTramite(jTramiteVersion.getTramite().getDescripcion());
+				resultado.add(dominioTramite);
+			}
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public List<DominioTramite> getTramiteVersionByGfe(final Long idGfe) {
+		final List<DominioTramite> resultado = new ArrayList<>();
+
+		final String sql = "Select t From JPasoRellenar pr JOIN pr.pasoTramitacion pt JOIN pr.formulariosTramite ft JOIN pt.versionTramite t JOIN ft.formularioExterno fe where fe.codigo=:idGfe order by t.numeroVersion desc";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idGfe", idGfe);
 
 		@SuppressWarnings("unchecked")
 		final List<JVersionTramite> results = query.getResultList();

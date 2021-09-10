@@ -251,6 +251,23 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	}
 
 	/**
+	 * Abre explorar lopd.
+	 */
+	public void explorarPlantillaMail() {
+		TypeModoAcceso modoAccesoDlg = TypeModoAcceso.CONSULTA;
+		if (getPermiteEditar()) {
+			modoAccesoDlg = TypeModoAcceso.EDICION;
+		}
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.idEntidad));
+
+		UtilJSF.openDialog(DialogPlantillaEntidad.class, modoAccesoDlg, params, true, 380, 200);
+	}
+
+
+	/**
 	 * Gestión de retorno lopd.
 	 *
 	 * @param event

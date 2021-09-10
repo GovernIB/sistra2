@@ -67,8 +67,8 @@
 							<p:inputTextarea id="sql" value="#{dialogTramiteImportarDominio.data.resultadoSQL}" styleClass="no-display"/>
 					</p:column>
 
-					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerURL']}:"  rendered="#{dialogTramiteImportarDominio.mostrarUrl }" />
-					<p:inputText value="#{dialogTramiteImportarDominio.data.resultadoURL}"  size="80" rendered="#{dialogTramiteImportarDominio.mostrarUrl }" />
+					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerURL']}:"  rendered="#{dialogTramiteImportarDominio.mostrarUrl and dialogTramiteImportarDominio.mostrarReemplazar}" />
+					<p:inputText value="#{dialogTramiteImportarDominio.data.resultadoURL}"  size="80" rendered="#{dialogTramiteImportarDominio.mostrarUrl and dialogTramiteImportarDominio.mostrarReemplazar}" />
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerValores']}:"  rendered="#{dialogTramiteImportarDominio.mostrarLista and dialogTramiteImportarDominio.mostrarReemplazar}"  />
 					<p:dataTable id="datalistValores2"
@@ -94,12 +94,19 @@
 				  		<p:commandButton value="#{msg['botones.fd.estructura']}" actionListener="#{dialogTramiteImportarDominio.consultarEstructura(dialogTramiteImportarDominio.data.dominio, dialogTramiteImportarDominio.data.fuenteDatos)}" process="@this" />
 						<p:commandButton value="#{msg['botones.fd.datos']} " actionListener="#{dialogTramiteImportarDominio.consultarDatos()}" process="@this"/>
 					</p:column>
-					
-					<p:outputLabel for="configAut" value="#{msg['dialogTramiteImportarDominio.headerConfiguracion']}:"  rendered="#{dialogTramiteImportarDominio.mostrarConfiguraciones}" />
-					<p:selectOneMenu id="configAut" value="#{dialogTramiteImportarDominio.data.configuracionAutenticacionActual}"  style="width:285px" disabled="#{dialogTramiteImportarDominio.isConsulta()}" rendered="#{dialogTramiteImportarDominio.mostrarConfiguraciones}" converter="#{configuracionConverter}"   >
-						<f:selectItems value="#{dialogTramiteImportarDominio.configuraciones}" var="fd" itemValue="#{fd}" itemLabel="#{fd.identificador}" />
-					</p:selectOneMenu >
-					
+
+					<p:outputLabel for="configAut" value="#{msg['dialogTramiteImportarDominio.headerConfiguracion']}:"  rendered="#{dialogTramiteImportarDominio.mostrarConfiguraciones and dialogTramiteImportarDominio.mostrarReemplazar}" />
+					<p:column rendered="#{dialogTramiteImportarDominio.mostrarConfiguraciones and dialogTramiteImportarDominio.mostrarReemplazar}" >
+						<p:selectOneMenu id="configAut" value="#{dialogTramiteImportarDominio.data.configuracionAutenticacionActual}"  style="width:240px;margin-right:5px" disabled="#{dialogTramiteImportarDominio.isConsulta()}" converter="#{configuracionConverter}"   >
+							<f:selectItems value="#{dialogTramiteImportarDominio.configuraciones}" var="fd" itemValue="#{fd}" itemLabel="#{fd.identificador}" />
+						</p:selectOneMenu >
+
+						<p:commandButton id="btnConsultarConf" title="#{msg['botones.consultar']}" icon="fa fa-eye" style="top:-9px" actionListener="#{dialogTramiteImportarDominio.consultarConfiguracion()}"  disabled="#{dialogTramiteImportarDominio.isConsulta()}"  process="@this configAut" update="growlDialog" />
+                        <p:commandButton id="btnAñadirConf" title="#{msg['botones.anyadir']}" icon="fa fa-plus" style="top:-9px" actionListener="#{dialogTramiteImportarDominio.nuevo()}" process="@this" update="growlDialog configAut">
+		        			<p:ajax event="dialogReturn" listener="#{dialogTramiteImportarDominio.returnDialogo}" update="growlDialog configAut"/>
+		        		</p:commandButton>
+
+					</p:column>
 				</h:panelGrid>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">

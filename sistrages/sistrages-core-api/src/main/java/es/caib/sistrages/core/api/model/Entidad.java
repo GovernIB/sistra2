@@ -1,5 +1,7 @@
 package es.caib.sistrages.core.api.model;
 
+import java.util.List;
+
 /**
  * La clase Entidad.
  */
@@ -122,6 +124,9 @@ public class Entidad extends ModelApi {
 
 	/** Registro centralizado. */
 	private boolean registroOcultarDescargaDocumentos;
+
+	/** Plantillas **/
+	private List<PlantillaEntidad> plantillasMailFinRegistro ;
 
 	/**
 	 * Obtiene el valor de codigo.
@@ -678,6 +683,20 @@ public class Entidad extends ModelApi {
 
 	public void setUrlSede(final Literal urlSedeElectronica) {
 		this.urlSede = urlSedeElectronica;
+	}
+
+	/**
+	 * @return the plantillas
+	 */
+	public List<PlantillaEntidad> getPlantillasMailFinRegistro() {
+		return plantillasMailFinRegistro;
+	}
+
+	/**
+	 * @param plantillas the plantillas to set
+	 */
+	public void setPlantillasMailFinRegistro(List<PlantillaEntidad> plantillas) {
+		this.plantillasMailFinRegistro = plantillas;
 	}
 
 }

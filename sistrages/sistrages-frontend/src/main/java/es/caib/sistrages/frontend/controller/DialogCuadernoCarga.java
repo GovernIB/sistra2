@@ -223,6 +223,10 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	/** Filas formularios. **/
 	final List<FilaImportarFormulario> filasFormulario = new ArrayList<>();
 
+
+	/** Mostrar botones formateadores. **/
+	private Integer posicionGestor;
+
 	/**
 	 * Indica si se debe mostrar el registro de oficina (si entidad es de registro
 	 * centralizado o no)
@@ -434,7 +438,64 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			}
 		}
 
+		for (final FilaImportarGestor fila : filasGestores) {
+			if (fila == null || fila.getResultado().isError()) {
+				return false;
+			}
+		}
+
 		return true;
+	}
+	/**
+	 * Check dominio.
+	 *
+	 * @param idDominio
+	 */
+	public void checkGestor(final String identificador) {
+
+		posicionGestor = null;
+		for (int posicion = 0; posicion < filasGestores.size(); posicion++) {
+			if (filasGestores.get(posicion).getGestor() != null
+					&& filasGestores.get(posicion).getGestor().getIdentificador().equals(identificador)) {
+				posicionGestor = posicion;
+				break;
+			}
+		}
+
+		if (posicionGestor != null) {
+			final FilaImportarGestor fila = this.filasGestores.get(posicionGestor);
+			UtilJSF.getSessionBean().limpiaMochilaDatos();
+			final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+			mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, fila);
+
+			Long idArea = null;
+			if (this.filaArea != null && this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
+				idArea = this.filaArea.getAreaActual().getCodigo();
+			}
+
+			if (idArea != null) {
+				mochilaDatos.put(Constantes.AREA, idArea);
+			}
+			UtilJSF.openDialog(DialogTramiteImportarGestor.class, TypeModoAcceso.EDICION, null, true, 500, 120);
+		}
+	}
+
+	/**
+	 * Retorno dialogo del retorno dialogo area.
+	 *
+	 * @param event respuesta dialogo
+	 */
+	public void returnDialogoGestor(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		final FilaImportarGestor dato = (FilaImportarGestor) respuesta.getResult();
+		if (!respuesta.isCanceled()) {
+			this.filasGestores.remove(this.filasGestores.get(posicionGestor));
+			dato.setResultado(TypeImportarResultado.OK);
+			this.filasGestores.add(posicionGestor, dato);
+			FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds()
+					.add("formTramite:dataTablaGestores");
+			checkTodoCorrecto();
+		}
 	}
 
 	/**
@@ -1921,6 +1982,20 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	 */
 	public List<FilaImportarGestor> getFilasGestores() {
 		return filasGestores;
+	}
+
+	/**
+	 * @return the posicionGestor
+	 */
+	public Integer getPosicionGestor() {
+		return posicionGestor;
+	}
+
+	/**
+	 * @param posicionGestor the posicionGestor to set
+	 */
+	public void setPosicionGestor(Integer posicionGestor) {
+		this.posicionGestor = posicionGestor;
 	}
 
 }

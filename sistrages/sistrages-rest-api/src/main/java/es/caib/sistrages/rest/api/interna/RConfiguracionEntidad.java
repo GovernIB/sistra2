@@ -161,6 +161,10 @@ public class RConfiguracionEntidad {
 	/** Lista de incidencias valoraciones. */
 	private List<RIncidenciaValoracion> incidenciasValoracion;
 
+	/** Plantillas entidad. */
+	@ApiModelProperty(value = "Plantillas entidad")
+	private List<RPlantillaEntidad> plantillas;
+
 	/**
 	 * Método de acceso a logo.
 	 *
@@ -714,7 +718,6 @@ public class RConfiguracionEntidad {
 		this.registroOcultarDescargaDocumentos = registroOcultarDescargaDocumentos;
 	}
 
-
 	/**
 	 * Método de acceso a urlSede.
 	 *
@@ -732,6 +735,25 @@ public class RConfiguracionEntidad {
 	 */
 	public void setUrlSede(final RLiteral urlSede) {
 		this.urlSede = urlSede;
+	}
+
+	/**
+	 * Método de acceso a plantillas.
+	 *
+	 * @return plantillas
+	 */
+	public List<RPlantillaEntidad> getPlantillas() {
+		return plantillas;
+	}
+
+	/**
+	 * Método para establecer plantillas.
+	 *
+	 * @param plantillas
+	 *                       plantillas a establecer
+	 */
+	public void setPlantillas(final List<RPlantillaEntidad> plantillas) {
+		this.plantillas = plantillas;
 	}
 
 }

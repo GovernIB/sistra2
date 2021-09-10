@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
+import es.caib.sistrages.core.api.model.PlantillaEntidad;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 
 public interface EntidadDao {
@@ -152,5 +153,29 @@ public interface EntidadDao {
 	 * @return Devuelve true si hay ya alguna entidad con dicho código DIR3
 	 */
 	boolean existeCodigoDIR3(String codigoDIR3, Long idEntidad);
+
+	/**
+	 * Lista plantillas entidad fin registro.
+	 * @param codEntidad
+	 * @return
+	 */
+	List<PlantillaEntidad> getListaPlantillasEmailFin(Long codEntidad);
+
+	/**
+	 * Sube un fichero de plantilla fin registro
+	 * @param idEntidad
+	 * @param idPlantillaEntidad
+	 * @param plantillaEntidad
+	 * @param contents
+	 * @return
+	 */
+	PlantillaEntidad uploadPlantillasEmailFin(Long idPlantillaEntidad,
+			PlantillaEntidad plantillaEntidad, final Long idEntidad);
+
+	/**
+	 * Borra un fichero entidad de plantilla fin registro
+	 * @param plantillaEntidad
+	 */
+	void removePlantillaEmailFin(Long plantillaEntidad);
 
 }

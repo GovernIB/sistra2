@@ -12,10 +12,13 @@ import javax.inject.Inject;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
+import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
 import es.caib.sistrages.core.api.service.FormularioExternoService;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -34,6 +37,10 @@ public class DialogFormularioExterno extends DialogControllerBase {
 	@Inject
 	private ConfiguracionAutenticacionService configuracionAutenticacionService;
 
+	/** Enlace servicio. */
+	@Inject
+	private TramiteService tramiteService;
+
 	/** Id elemento a tratar. */
 	private String id;
 
@@ -51,6 +58,9 @@ public class DialogFormularioExterno extends DialogControllerBase {
 
 	/** Lista de configuraciones. */
 	private List<ConfiguracionAutenticacion> configuraciones;
+
+	/** Mostrar advertencia al guardar. **/
+	private boolean mostrarAdvertencia = false;
 
 	/** Indica si es visible el botón de consultar **/
 	private Boolean desactivarConsulta = false;
@@ -75,6 +85,15 @@ public class DialogFormularioExterno extends DialogControllerBase {
 		configAutSinAutenticacion.setIdentificador(UtilJSF.getLiteral("dialogDominio.sinAutenticacion"));
 		configuraciones.add(0, configAutSinAutenticacion);
 		actualizarConf();
+
+		if (id != null) {
+			final List<DominioTramite> tramites = tramiteService.getTramiteVersionByGfe(Long.valueOf(id));
+			if (tramites == null || tramites.isEmpty()) {
+				mostrarAdvertencia = false;
+			} else {
+				mostrarAdvertencia = true;
+			}
+		}
 
 	}
 
@@ -130,7 +149,6 @@ public class DialogFormularioExterno extends DialogControllerBase {
 				String.valueOf(this.data.getConfiguracionAutenticacion().getCodigo()));
 		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 195);
 	}
-
 	/**
 	 * Crea nueva propiedad.
 	 */
@@ -171,6 +189,30 @@ public class DialogFormularioExterno extends DialogControllerBase {
 			this.data.setConfiguracionAutenticacion(conf);
 			this.configuraciones.add(conf);
 		}
+	}
+
+	/**
+	 * Abre dialogo de tramites.
+	 *
+	 * @param modoAccesoDlg Modo acceso
+	 */
+	public void tramites() {
+
+		String ambito = "A";
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.data.getCodigo()));
+		if (ambito != null) {
+			params.put(TypeParametroVentana.AMBITO.toString(), ambito);
+			final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
+			if (typeAmbito == TypeAmbito.AREA) {
+				params.put("AREA", id);
+			}
+			if (typeAmbito == TypeAmbito.ENTIDAD) {
+				params.put("ENTIDAD", id);
+			}
+		}
+		UtilJSF.openDialog(DialogGestorExternoTramites.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
 	}
 
 	/**
