@@ -918,22 +918,22 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	 * existe.
 	 **/
 	private void prepararFlujoTramiteFormulario(final TramitePasoRellenar pasoRellenar) {
-		for (final FormularioTramite form : pasoRellenar.getFormulariosTramite()) {
-			if (form.getTipoFormulario() == TypeFormularioGestor.EXTERNO && form.getFormularioGestorExterno() != null
-					&& form.getFormularioGestorExterno().getIdentificador() != null) {
-				final boolean existe = gestorFormularioService
-						.existeFormulario(form.getFormularioGestorExterno().getIdentificador(), null);
-
-				if (!existe) {
-					mostrarFilasFormularios = true;
-					final FilaImportarFormulario fila = new FilaImportarFormulario();
-					fila.setCorrecto(false);
-					fila.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.gestorExternoInexistente",
-							new String[] { form.getFormularioGestorExterno().getIdentificador() }));
-					filasFormulario.add(fila);
-				}
-			}
-		}
+//		for (final FormularioTramite form : pasoRellenar.getFormulariosTramite()) {
+//			if (form.getTipoFormulario() == TypeFormularioGestor.EXTERNO && form.getFormularioGestorExterno() != null
+//					&& form.getFormularioGestorExterno().getIdentificador() != null) {
+//				final boolean existe = gestorFormularioService
+//						.existeFormulario(form.getFormularioGestorExterno().getIdentificador(), null);
+//
+//				if (!existe) {
+//					mostrarFilasFormularios = true;
+//					final FilaImportarFormulario fila = new FilaImportarFormulario();
+//					fila.setCorrecto(false);
+//					fila.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.gestorExternoInexistente",
+//							new String[] { form.getFormularioGestorExterno().getIdentificador() }));
+//					filasFormulario.add(fila);
+//				}
+//			}
+//		}
 	}
 
 	/**
@@ -1996,6 +1996,13 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	 */
 	public void setPosicionGestor(Integer posicionGestor) {
 		this.posicionGestor = posicionGestor;
+	}
+
+	/**
+	 * @return the filasFormulario
+	 */
+	public List<FilaImportarFormulario> getFilasFormulario() {
+		return filasFormulario;
 	}
 
 }

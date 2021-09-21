@@ -32,7 +32,7 @@
 
 					<div class="imc--doc-fila">
 
-						<a href="javascript:;" class="imc--doc-obri">
+						<a href="javascript:;" class="imc--doc-obri" aria-haspopup="true">
 							
 							<div class="imc--doc"><span></span></div>
 
@@ -89,7 +89,7 @@
 							<li>
 								<strong data-id="{{##}}" data-fitxer="{{fichero}}">{{if titulo}}{{titulo}}{{else}}{{fichero}}{{/if}}</strong>
 								<button data-id="{{##}}" type="button" class="imc-bt imc--ico imc--descarrega" title="{{txtDescarrega}}"><span>{{txtDescarrega}}</span></button>
-								<button data-id="{{##}}" type="button" class="imc-bt imc--ico imc--esborra" title="{{txtEsborra}}"><span>{{txtEsborra}}</span></button>
+								<button data-id="{{##}}" type="button" class="imc-bt imc--ico imc--esborra" title="{{txtEsborra}}" aria-haspopup="true"><span>{{txtEsborra}}</span></button>
 							</li>
 							{{/ficheros}}
 						</ul>
@@ -119,7 +119,7 @@
 
 					<div class="imc--doc-fila">
 
-						<a href="javascript:;" class="imc--doc-obri">
+						<a href="javascript:;" class="imc--doc-obri" aria-haspopup="true">
 							
 							<div class="imc--doc imc--presencial"><span></span></div>
 
@@ -200,7 +200,7 @@
 
 {{if hiHaAnnexes}}
 <!-- document -->
-<div class="imc-document" id="imc-document" aria-hidden="true">
+<div class="imc-document" id="imc-document" aria-hidden="true" tabindex="0">
 	<div class="imc--c">
 
 		<button type="button" id="imc-bt-iframe-tanca" class="imc-bt-capa-tanca"><span>{{txtTanca}}</span></button>

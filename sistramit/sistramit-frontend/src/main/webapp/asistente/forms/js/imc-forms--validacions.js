@@ -253,24 +253,33 @@ $.fn.appValida = function(opcions) {
 
 	}
 
-	if (format === "data") {
+	if (format === "data" && valor !== "") {
 
-		esCorrecte = (valor.length !== 10) ? false : true;
+		if (valor.indexOf("-") === -1)  {
 
-		var data = valor.split("/")
-			,dataDia = parseInt(data[2], 10)
-			,dataMes = parseInt(data[1], 10)
-			,dataAny = parseInt(data[1], 10);
+			var data = valor.split("/")
+				,dataDia = parseInt(data[0], 10)
+				,dataMes = parseInt(data[1], 10)
+				,dataAny = parseInt(data[2], 10);
 
-		esCorrecte = (dataAny === 0 || dataMes > 12 || dataMes === 0 || dataDia === 0 || dataDia > 31) ? false : true;
+		} else {
 
-		esCorrecte = (dataDia === 31 && (dataMes === 4 || dataMes === 6 || dataMes === 9 || dataMes === 11)) ? false : true;
+			var data = valor.split("-")
+				,dataDia = parseInt(data[2], 10)
+				,dataMes = parseInt(data[1], 10)
+				,dataAny = parseInt(data[0], 10);
 
-		esCorrecte = (dataDia === 30 && (dataMes === 1 || dataMes === 3 || dataMes === 5 || dataMes === 7 || dataMes === 8 || dataMes === 10 || dataMes === 12)) ? false : true;
+		}
 
-		var dies_febrer = (dataAny % 4 != 0) ? 28 : 29;
+		var d = new Date(dataAny, dataMes-1, dataDia);
 
-		esCorrecte = (dataMes === 2 && dataDia !== dies_febrer) ? false : true;
+		esCorrecte = (d.getFullYear() == dataAny && d.getMonth() == dataMes-1 && d.getDate() == dataDia && dataAny < 9999 && valor.length === 10) ? true : false;
+
+	}
+
+	if (format === "data" && valor === "") {
+
+		esCorrecte = (element.is(":invalid")) ? false : true;
 
 	}
 

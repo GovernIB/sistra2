@@ -105,14 +105,9 @@ $.fn.appDesconecta = function(options) {
 	}, options);
 	this.each(function(){
 		var element = $(this),
-			inicia = function() {
+			avis = function(e) {
 
-				element
-					.off('.appDesconecta')
-					.on('click.appDesconecta', avis);
-
-			},
-			avis = function() {
+				var bt = $(this);
 
 				var esPersistent = (APP_JSON_TRAMIT_T.persistente === "s") ? true : false
 					,esAnonim = (APP_JSON_TRAMIT_T.autenticacion === "a") ? true : false;
@@ -126,12 +121,15 @@ $.fn.appDesconecta = function(options) {
 				}
 
 				imc_missatge
-					.appMissatge({ boto: element, accio: "desconecta", titol: txtSortirTitol, text: txt_text, alAcceptar: function() { document.location = APP_TRAMIT_DESCONECTA; } });
+					.appMissatge({ boto: element, accio: "desconecta", titol: txtSortirTitol, text: txt_text, bt: bt, alAcceptar: function() { document.location = APP_TRAMIT_DESCONECTA; } });
 
 			};
 		
-		// inicia
-		inicia();
+		// events
+
+		element
+			.off('.appDesconecta')
+			.on('click.appDesconecta', avis);
 		
 	});
 	return this;
@@ -154,10 +152,12 @@ $.fn.appTramitacioElimina = function(options) {
 					.on('click.appTramitacioElimina', obri);
 
 			},
-			obri = function() {
+			obri = function(e) {
+
+				var bt = $(this);
 
 				imc_missatge
-					.appMissatge({ boto: element, accio: "esborra", titol: txtTramitEliminaTitol, text: txtTramitEliminaText, alAcceptar: function() { eliminant(); } });
+					.appMissatge({ boto: element, accio: "esborra", titol: txtTramitEliminaTitol, text: txtTramitEliminaText, bt: bt, alAcceptar: function() { eliminant(); } });
 
 			},
 			eliminant = function() {
@@ -259,6 +259,7 @@ $.fn.appMissatge = function(options) {
 			accio: "informa",
 			titol: "",
 			text: "",
+			bt: false,
 			araAmaga: false,
 			amagaDesdeFons: true,
 			alMostrar: function() {},
@@ -275,6 +276,7 @@ $.fn.appMissatge = function(options) {
 			element_text = element.find(".imc--text:first"),
 			titol_txt = settings.titol,
 			text_txt = settings.text,
+			bt = settings.bt,
 			araAmaga = settings.araAmaga,
 			amagaDesdeFons = settings.amagaDesdeFons,
 			alMostrar = settings.alMostrar,
@@ -401,6 +403,9 @@ $.fn.appMissatge = function(options) {
 
 				}
 
+				element
+					.appPopupTabula();
+
 			},
 			accepta = function() {
 
@@ -443,7 +448,8 @@ $.fn.appMissatge = function(options) {
 
 				element
 					.attr("aria-hidden", "true")
-					.addClass("imc--off");
+					.addClass("imc--off")
+					.appPopupTabula({ accio: "finalitza" });
 
 				setTimeout(
 					function() {
@@ -456,6 +462,28 @@ $.fn.appMissatge = function(options) {
 
 
 					}, 200);
+
+				// enfoquem al botó llançador
+
+				if (bt) {
+
+					/*var estaEnPopup = (bt.closest(".imc--popup").length) ? true : false;
+
+					if (estaEnPopup) {
+
+						bt
+							.closest(".imc--popup")
+								.appPopupTabula({ enfocaEn: bt });
+
+					} else {*/
+
+						bt
+							.focus();
+
+					//}
+
+
+				}
 
 			};
 		
@@ -1234,4 +1262,290 @@ function consola(text) {
 	if (typeof console !== "undefined") {
 		console.log(text);
 	}
+}
+
+
+// appPopupTabula
+
+$.fn.appPopupTabula = function(options) {
+
+	var settings = $.extend({
+			element: ""
+			,accio: false
+			,enfocaEn: false
+		}, options);
+
+	this.each(function(){
+		var element = $(this)
+			,accio = settings.accio
+			,enfocaEn = settings.enfocaEn
+			,el_num = 0
+			,elems_tab = []
+			,elems_tab_size = 0
+			,esMissatge = false
+			,esPopupDocument = false
+			,inicia = function() {
+
+				// finalitzem?
+
+				if (accio === "finalitza") {
+
+					element
+						.off(".appPopupTabula");
+
+					return;
+
+				}
+
+
+				// iniciem vars
+
+				el_num = 0;
+				elems_tab = [];
+				elems_tab_size = 0;
+
+
+				// es missatge?
+
+				esMissatge = (element.closest(".imc-missatge").length) ? true : false;
+
+
+				// es popup de document?
+
+				esPopupDocument = (element.closest(".imc-document").length) ? true : false;
+
+
+				// pinta
+
+				setTimeout(
+					function() {
+
+						pinta();
+
+					}
+					,100
+				);
+
+			},
+			pinta = function() {
+
+				// revisem si és una capa amb formulari o una capa missatge
+
+				if (!esMissatge) {
+
+					// és un formulari
+
+					f_elms = element.find(".imc-element");
+
+					f_elms
+						.each(function() {
+
+
+							var f_el = $(this)
+								,f_el_tipus = f_el.attr("data-tipus")
+								,f_el_contingut = f_el.attr("data-contingut");
+
+							if (f_el_tipus === "texto") {
+
+								// text
+
+								f_el
+									.find("input:first")
+										.attr("data-tabula", "si")
+										.end()
+									.find("textarea:first")
+										.attr("data-tabula", "si");
+
+							} else if (f_el_tipus === "captcha") {
+
+								// captcha
+
+								f_el
+									.find("input, button")
+										.attr("data-tabula", "si");
+
+							} else if (f_el_tipus === "check") {
+
+								// check únic
+
+								f_el
+									.find("input:first")
+										.attr("data-tabula", "si");
+
+							} else if (f_el_tipus === "verificacion") {
+
+								// check únic
+
+								f_el
+									.find("label:first")
+										.removeAttr("tabindex")
+										.end()
+									.find("input:first")
+										.attr("data-tabula", "si");
+
+							} else if (f_el_tipus === "listaElementos") {
+
+								// llista d'elements
+
+								f_el
+									.find("button")
+										.attr("data-tabula", "si")
+										.end()
+									.find("input[type=radio]")
+										.attr("data-tabula", "si");
+
+							} else if (f_el_contingut === "d") {
+
+								// selector
+
+								f_el
+									.find("a.imc-select:first")
+										.attr("data-tabula", "si")
+										.end()
+									.find("button.imc--bt-reset")
+										.attr("data-tabula", "si");
+
+							} else if (f_el_contingut === "m") {
+
+								// llista checks
+
+								f_el
+									.find("input[type=checkbox]")
+										.attr("data-tabula", "si");
+
+							} else if (f_el_contingut === "u") {
+
+								// llista checks
+
+								f_el
+									.find("input[type=radio]")
+										.attr("data-tabula", "si");
+
+							}
+
+						});
+
+				}
+
+
+				// popup document?
+
+				if (esPopupDocument) {
+
+					element
+						.find("input[type=checkbox]")
+							.attr("data-tabula", "si")
+							.end()
+						.find(".imc-bt-anexa")
+							.attr("data-tabula", "si");
+
+				}
+
+
+				// els botons finals, tant se val que siga un missatge o un formulari
+
+				element
+					.find("button")
+						.attr("data-tabula", "si");
+
+
+				// activem
+
+				activa();
+
+			},
+			activa = function() {
+
+				elems_tab = element.find("*[data-tabula=si]:visible:not(:disabled)");
+				elems_tab_size = elems_tab.length;
+
+				if (elems_tab_size) {
+
+					elems_tab
+						.each(function(i) {
+
+							var el = $(this);
+
+							el
+								.attr("data-tabpos", i+1);
+							
+						});
+
+					elems_tab
+						.splice(0, 0, element);
+
+					element
+						.off(".appPopupTabula")
+						.on("focus.appPopupTabula", "*[data-tabula]", reposiciona)
+						.on("focus.appPopupTabula", reposiciona)
+						.on("keydown.appPopupTabula", tabula)
+						.attr("data-tabpos", 0);
+
+				}
+
+				// enfoquem en algun element?
+
+				if (enfocaEn) {
+
+					enfocaEn
+						.focus();
+
+				} else {
+
+					element
+						.focus();
+
+				}
+
+			},
+			reposiciona = function(e) {
+
+				var inp_el = $(this)
+					,in_tabpos = parseInt( inp_el.attr("data-tabpos"), 10);
+
+				el_num = in_tabpos;
+
+			},
+			tabula = function(e) {
+
+				var tecla = e.keyCode
+					,esShift = !!e.shiftKey;
+
+				if ( esShift && tecla === 9) {
+
+					e.preventDefault();
+
+					el_num--;
+
+					if (el_num < 0) {
+						el_num = elems_tab_size;
+					}
+
+					elems_tab[el_num]
+						.focus();
+
+				} else if ( !esShift && tecla === 9){
+				
+					e.preventDefault();
+
+					el_num++;
+
+					if (el_num > elems_tab_size) {
+						el_num = 0;
+					}
+
+					elems_tab[el_num]
+						.focus();
+
+				}
+
+			};
+		
+		// inicia
+
+		inicia();
+		
+	});
+
+	return this;
 }

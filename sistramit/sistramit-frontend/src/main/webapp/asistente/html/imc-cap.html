@@ -31,7 +31,7 @@
 					<a href="#accessibilitat" class="imc-bt imc--ico imc--bt-accessibilitat"><span>{{txtAccessibilitat}}</span></a>
 				</li>
 				<li>
-					<button type="button" id="imc-bt-desconecta" class="imc-bt imc--ico imc--desconecta"><span>{{txtDesconecta}}</span></button>
+					<button type="button" id="imc-bt-desconecta" class="imc-bt imc--ico imc--desconecta" aria-haspopup="true"><span>{{txtDesconecta}}</span></button>
 				</li>
 			</ul>
 
@@ -46,7 +46,7 @@
 			<h2><span>{{jsonTramitTitol|nomesText}}</span></h2>
 
 			<div class="imc--elimina">
-				<button type="button" id="imc-bt-elimina" class="imc-bt imc--ico imc--elimina"><span>{{txtEliminau}}</span></button>
+				<button type="button" id="imc-bt-elimina" class="imc-bt imc--ico imc--elimina" aria-haspopup="true"><span>{{txtEliminau}}</span></button>
 			</div>
 
 		</div>
@@ -55,7 +55,7 @@
 	<!-- molla pa -->
 
 	<div class="imc-molla-pa" id="imc-molla-pa">
-		<nav aria-label="Breadcrumb" class="imc--c">
+		<nav aria-label="{{txtMollaPa}}" class="imc--c">
 
 			<ol>
 				<li data-tipus="ds">

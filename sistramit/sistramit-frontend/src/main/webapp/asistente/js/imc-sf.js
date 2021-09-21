@@ -12,6 +12,7 @@ var APP_JSON_TRAMIT
 	,APP_JSON_TRAMIT_E
 	,APP_TRAMIT_INFO
 	,APP_TRAMIT_PAS_ID
+	,APP_TRAMIT_FLUIX
 	,APP_USUARI_ID;
 
 var APP_JSON_TRAMIT_MISSATGE = false;
@@ -259,6 +260,11 @@ function carregaHTML() {
 
 			// html
 
+			APP_TRAMIT_FLUIX = APP_JSON_TRAMIT_T.tipoFlujo;
+
+			imc_body
+				.attr("data-fluix", APP_TRAMIT_FLUIX);
+
 			// cap
 
 			var jsonAutenticacio = APP_JSON_TRAMIT_T.autenticacion,
@@ -303,6 +309,7 @@ function carregaHTML() {
 					,jsonUsuari: jsonUsuari
 					,jsonClauTramitacio: APP_JSON_TRAMIT_T.idSesion
 					,jsonTramitTitol: jsonTramitTitol
+					,txtMollaPa: txtMollaPa
 					,txtCalSaber: txtCalSaber
 					,txtEmplenar: txtEmplenar
 					,txtAnnexar: txtAnnexar

@@ -14,18 +14,6 @@ function appPasCalSaberInicia() {
 	imc_cs_explicacio
 		.appExplicacioDetallada();
 
-	/*
-
-	Si no acabau el tràmit podeu utilitzar la clau QMP2TVK4-NTT9GDT8-T8NPIJQL per continuar amb la tramitació. Recordau que si no accediu al tràmit durant 60 dies s'esborrarà del nostre sistema.
-
-	Una vegada finalitzat el tràmit, aquesta clau també us permetrà seguir l'estat de la vostra sol·licitud a través de "Les meves gestions".
-
-	Pitjau el botó per desar la clau. Tot seguit es generarà un fitxer denominat Clau_data_hora.html que contindrà un enllaç per accedir al tràmit.
-	
-	"Desau la clau i continuau"
-
-	*/
-
 }
 
 
@@ -65,7 +53,9 @@ $.fn.appExplicacioDetallada = function(options) {
 
 				imc_bt_cs_explicacio
 					.find("span")
-						.text( txtExplicacioDetalladaOcultar );
+						.text( txtExplicacioDetalladaOcultar )
+						.end()
+					.attr("aria-expanded", "true");
 
 			},
 			tanca = function() {
@@ -77,7 +67,9 @@ $.fn.appExplicacioDetallada = function(options) {
 
 				imc_bt_cs_explicacio
 					.find("span")
-						.text( txtExplicacioDetalladaMirau );
+						.text( txtExplicacioDetalladaMirau )
+						.end()
+					.attr("aria-expanded", "false");
 
 			};
 		

@@ -75,6 +75,10 @@
 }
 
 
+.imc-forms--missatge .imc--text { border: .5em solid #4dba79; transition: border .2s ease-out; }
+
+.imc-forms--missatge:focus .imc--text { border-color: #000; }
+
 .imc-forms--missatge .imc--text h2 { margin-bottom: .5em; margin-left: 5em; }
 .imc-forms--missatge .imc--text h2 span { font-size: 1.4em; }
 .imc-forms--missatge .imc--text .imc--explicacio { margin-bottom: 2em; margin-left: 5em; }

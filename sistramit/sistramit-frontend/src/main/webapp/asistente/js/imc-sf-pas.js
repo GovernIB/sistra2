@@ -143,11 +143,11 @@ var HTML_PAS_LITERALS = {
 			,txtSignatura: txtSignatura
 			,txtDocumentacioMostra: txtDocumentacioMostra
 			,txtDescarregantURL: txtDescarregantURL
+		},
+		"cd": {
+		},
+		"in": {
 		}
-
-		
-
-
 
 	};
 
@@ -307,6 +307,8 @@ $.fn.appPas = function(options) {
 									: (pas_tipus === "ad") ? "annexar"
 									: (pas_tipus === "pt") ? "pagar"
 									: (pas_tipus === "rt") ? "registrar"
+									: (pas_tipus === "cd") ? "capturar"
+									: (pas_tipus === "in") ? "informar"
 									: "guardar";
 
 				// si està carregat
@@ -521,9 +523,9 @@ $.fn.appPas = function(options) {
 						};
 
 					Mark.pipes.escapa = function (a) {
-						//alert("sense res: " + a)
-						//alert("replace: " +a.replace(/\"/g, 'xxxx'))
+						
 						return a.replace(/\"/g, '&quot;');
+						
 					};
 
 				} else if (pas_tipus === "pt") {
@@ -637,6 +639,14 @@ $.fn.appPas = function(options) {
 				} else if (pas_tipus === "gj") {
 
 					pinta_gj();
+
+				} else if (pas_tipus === "cd") {
+
+					pinta_cd();
+
+				} else if (pas_tipus === "in") {
+
+					pinta_in();
 
 				}
 
@@ -1094,10 +1104,24 @@ $.fn.appPas = function(options) {
 				}
 
 			},
+			pinta_cd = function() {
+
+				appPasCapturarInicia();
+
+			},
+			pinta_in = function() {
+
+				//
+
+			},
 			mostra = function(text) {
 
-				imc_missatge
-					.appMissatge({ araAmaga: true });
+				if (APP_TRAMIT_FLUIX === "n") {
+
+					imc_missatge
+						.appMissatge({ araAmaga: true });
+
+				}
 
 				envia_ajax = false;
 
@@ -1216,8 +1240,24 @@ jQuery(window)
 
 		// obri formulari
 
-		imc_formularis
-			.appEmplenaFormulari({ form_id: form_id });
+		if (APP_TRAMIT_FLUIX === "n") {
+
+			// fluix normalitzat
+
+			imc_formularis
+				.appEmplenaFormulari({ form_id: form_id });
+
+		} else if (APP_TRAMIT_FLUIX === "p") {
+			
+			// fluix personalitzat
+
+			imc_form_captura
+				.appEmplenaFormulariCaptura({ form_id: form_id });
+
+			imc_contenidor
+				.removeClass("imc--mostra-acc");
+
+		}
 		
 	} else if (URL_PARAMETRES[0] === "accessibilitat") {
 

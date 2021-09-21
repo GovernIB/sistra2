@@ -60,6 +60,13 @@
     color: #fff;
 }
 
+.imc--ann > ul .imc--doc-fila button:hover,
+.imc--ann > ul .imc--doc-fila button:focus,
+.imc--ann > ul .imc--doc-fila a.imc--finestra-nova:hover,
+.imc--ann > ul .imc--doc-fila a.imc--finestra-nova:focus {
+	background-color: #000;
+}
+
 .imc--ann .imc--annexats { width: calc(100% - 4.5em); padding: .2em 0 .2em 0; margin-left: 4.5em; }
 .imc--ann .imc--annexats p { font-size: 1em; padding: 0 1em; }
 .imc--ann .imc--annexats ul { font-size: 1em; padding: 0 0 0 1em; }
@@ -226,6 +233,9 @@
 
 html.imc--sense-scroll,
 body.imc--sense-scroll { overflow: hidden; }
+
+.imc-document .imc-document-contingut { border: .5em solid #4dba79; transition: border .2s ease-out; }
+.imc-document:focus .imc-document-contingut { border-color: #000; }
 
 
 /* document */

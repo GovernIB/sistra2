@@ -12,7 +12,7 @@ $.fn.title = function(options) {
 		var element = $(this),
 		title_text = element.attr("title") || "",
 		onEnter = function() {
-			if ($("#title").size() === 1) {
+			if ($("#title").length) {
 				$("#title").remove();
 			}
 			$("body").append("<div id=\"title\"><p>" + element.data("title") + "</p><div class=\"cueta-baix\">&nbsp;</div></div>");
@@ -1359,3 +1359,102 @@ var normalize = (function() {
  
 })();
 // /normalize
+
+
+// appTitle
+
+$.fn.appTitle = function(options) {
+
+	var settings = $.extend({
+			element: ""
+		}, options);
+
+	this.each(function(){
+		var element = $(this)
+			,id_el = false
+			,onAplica = "button"
+			,inicia = function() {
+
+				element
+					.off(".appTooltip")
+					.on('mouseenter.appTooltip, focus.appTooltip', onAplica, pinta)
+					.on('mouseleave.appTooltip, blur.appTooltip', onAplica, amaga);
+
+			}
+			,pinta = function(e) {
+
+				// pinta
+
+				var elm_t = $(this);
+
+				if (elm_t.find("span").css("position") !== "absolute") {
+					return;
+				}
+
+				var elm_t_text = elm_t.text();
+
+				imc_body
+					.find("div[role=tooltip]")
+						.remove();
+
+				var title_el = $("<div>")
+									.attr({ "role": "tooltip", "aria-hidden": "true" })
+									.text( elm_t_text )
+									.insertBefore( imc_contenidor );
+
+				// posiciona
+
+				var finestra_W = imc_finestra.outerWidth();
+
+				var bt_T = elm_t.offset().top
+					,bt_L = elm_t.offset().left
+					,bt_H = elm_t.outerHeight()
+					,bt_W = elm_t.outerWidth(true)
+					,bt_marge_L = parseInt(elm_t.css("marginLeft"), 10) || 0;
+
+				var id_el_R = title_el.outerWidth() + bt_L;
+
+				console.log(title_el.outerWidth() +" + "+ bt_L +" > "+ finestra_W);
+
+				if (id_el_R > finestra_W) {
+
+					var pos_R = finestra_W - (bt_L + bt_W);
+
+					title_el
+						.removeAttr("style")
+						.css({ top: (bt_T + bt_H) + "px", right: (pos_R+10) + "px" })
+						.addClass("imc--dreta");
+
+				} else {
+
+					title_el
+						.removeAttr("style")
+						.css({ top: (bt_T + bt_H) + "px", left: (bt_L+bt_marge_L-10) + "px" });
+
+				}
+
+				// mostra
+
+				title_el
+					.attr("aria-hidden", "false");
+
+			}
+			,amaga = function(e) {
+
+				// pinta
+
+				var elm_t = $(this);
+
+				imc_body
+					.find("div[role=tooltip]:first")
+						.attr("aria-hidden", "true");
+
+			};
+		
+		// inicia
+		inicia();
+		
+	});
+
+	return this;
+}

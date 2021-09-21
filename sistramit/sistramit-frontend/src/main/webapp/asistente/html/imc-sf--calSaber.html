@@ -22,9 +22,9 @@
 
 	<div class="imc--explicacio-detallada imc--e-d" id="imc--explicacio-detallada">
 
-		<p>{{txtVoleuInformacio}} <button type="buttton" id="imc-bt-explicacio-detallada"><span>{{txtExplicacioDetalladaMirau}}</span></button></p>
+		<p>{{txtVoleuInformacio}} <button type="buttton" id="imc-bt-explicacio-detallada" aria-controls="imc-ul-explicacio-detalla" aria-expanded="false"><span>{{txtExplicacioDetalladaMirau}}</span></button></p>
 
-		<ul>
+		<ul id="imc-ul-explicacio-detallada" role="region" aria-labelledby="imc-bt-explicacio-detallada">
 			<li data-tipus="ds">
 
 				<span class="imc--num"></span>

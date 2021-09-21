@@ -13,7 +13,7 @@
 	<title><h:outputText value="#{msg['dialogAyuda.titulo']}"/></title>
 </h:head>
 
-<h:body>
+<h:body class="ayuda-scroll">
     <f:facet name="last">
     	<h:outputStylesheet library="css" name="style.css" />
     </f:facet>
@@ -28,6 +28,7 @@
 	<p:growl id="growlDialogAyuda" widgetVar="growlDialogAyuda" showDetail="false" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
 	<h:form id="dialogAyuda" >
+
 
 			<!-- Workpanel: Iframe HTML -->
 			<p:outputPanel id="formulario-panel" styleClass="w100 h100">

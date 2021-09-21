@@ -40,11 +40,24 @@ public class TestPdfCaib {
 		final Cabecera cabecera = new Cabecera();
 		cabecera.setTitulo("Solicitud de acreditaciones de entidades especializadas \r\n"
 		/* + "PARA SERVICIOS DE PREVENCIÓN AJENOS A LAS EMPRESAS" */);
+		final PersonalizacionTexto personalizacicionTextoTituloCabecera = new PersonalizacionTexto(true, true,
+				TypeFuente.NOTOSANS, 20);
+		final PersonalizacionTexto personalizacicionTextoSubTituloCabecera = new PersonalizacionTexto(true, true,
+				TypeFuente.NOTOSANS, 16);
+
+		final PersonalizacionTexto personalizacicionTextoCodigoSia = new PersonalizacionTexto(true, true,
+				TypeFuente.NOTOSANS, 12);
 		cabecera.setSubtitulo("para servicios de prevencion ajenos a las empresas");
 		cabecera.setCodigoSia("2212");
+		cabecera.setPersonalizacionCodigoSiaTitulo(personalizacicionTextoCodigoSia);
+		cabecera.setPersonalizacionTextoTitulo(personalizacicionTextoTituloCabecera);
+		cabecera.setPersonalizacionTextoSubtitulo(personalizacicionTextoSubTituloCabecera);
+		cabecera.setAltoLogo(140);
+		cabecera.setAnchoLogo(140);
+
 		/** Ejemplo logo cargando directamente la imagen */
 		// cabecera.setLogo(
-		// "G:\\workspace\\trunk-simac-lib-pdf\\fuentes\\java\\src\\main\\resources\\logo.png");
+		// "G:\\workspace\\trunk-simac-lib-pdjf\\fuentes\\java\\src\\main\\resources\\logo.png");
 
 		/** Ejemplo logo cargado como array de bytes */
 		final byte[] arrayBytes = IOUtils.toByteArray(TestPdfCaib.class.getResourceAsStream("/logocaib.jpg"));

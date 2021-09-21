@@ -56,6 +56,10 @@
 					<p:commandButton value="#{msg['botones.ping']}" actionListener="#{dialogDominioPing.ping()}" process="@form" update="@form growlDialog" styleClass="boton-azul" style="margin:10px" />
 
 			</p:fieldset>
+		<p:fieldset legend="#{msg['error.excepcion']}" styleClass="margin-left-10 margin-right-10 margin-botton-10 margin-top-10" rendered="#{dialogDominioPing.mostrarError}">
+			<h:outputText value="#{dialogDominioPing.mensajeError}" style="display:block;width:490px;overflow-wrap: break-word;" styleClass="margin-left-10 margin-right-10 margin-botton-10 margin-top-10"/>
+		</p:fieldset>
+
 
 
 			<p:fieldset legend="#{msg['dialogDominioPing.resultado']}" styleClass="margin-left-10 margin-right-10 margin-botton-10 margin-top-10" rendered="#{dialogDominioPing.mostrarTablaDatos or dialogDominioPing.mostrarTablaFicheros}">

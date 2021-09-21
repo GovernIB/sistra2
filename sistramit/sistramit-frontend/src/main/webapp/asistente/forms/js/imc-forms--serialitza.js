@@ -231,7 +231,7 @@ $.fn.appSerialitza = function(opcions) {
 
 						// textarea amb un màxim de línies
 
-						if (input_el.is("TEXTAREA") && input_el.attr("data-linies")) {
+						if (input_el.is("TEXTAREA") && input_el.attr("data-linies") && input_val !== "") {
 
 							esError = ( !input_el.appValida({ format: "textarea", valor: input_val }) ) ? true : false;
 							ERROR_TEXT = (esError) ? txtFormDinCampError_linies + " " + input_el.attr("data-linies") +"." : false;
@@ -330,8 +330,8 @@ $.fn.appSerialitza = function(opcions) {
 						}
 
 						// data
-
-						if (input_el.attr("data-contingut") === "data" && input_val !== "") {
+						
+						if (input_el.attr("data-contingut") === "data") {
 
 							esError = ( !input_el.appValida({ format: "data", valor: input_val }) ) ? true : false;
 							ERROR_TEXT = (esError) ? txtFormDinCampError_data : false;

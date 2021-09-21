@@ -19,7 +19,7 @@ let forms_missatge_html = ''
 		+ '</div>';
 
 $("<div>")
-	.attr({ "id": "imc-forms--missatge", "data-accio": "informa", "aria-hidden": "true", "role": "alertdialog" })
+	.attr({ "id": "imc-forms--missatge", "data-accio": "informa", "aria-hidden": "true", "role": "alertdialog", "tabindex": "0" })
 	.addClass("imc-forms--missatge")
 	.html( forms_missatge_html )
 	.appendTo("body")
@@ -55,6 +55,7 @@ $.fn.appFormsMissatge = function(options) {
 			,accio: "informa"
 			,titol: ""
 			,text: ""
+			,bt: false
 			,araAmaga: false
 			,amagaDesdeFons: true
 			,alMostrar: function() {}
@@ -72,6 +73,7 @@ $.fn.appFormsMissatge = function(options) {
 			,element_text = element.find(".imc--text:first")
 			,titol_txt = settings.titol
 			,text_txt = settings.text
+			,bt = settings.bt
 			,araAmaga = settings.araAmaga
 			,amagaDesdeFons = settings.amagaDesdeFons
 			,alMostrar = settings.alMostrar
@@ -198,6 +200,9 @@ $.fn.appFormsMissatge = function(options) {
 
 				}
 
+				element
+					.appFormsPopupTabula();
+
 			}
 			,accepta = function() {
 
@@ -240,7 +245,8 @@ $.fn.appFormsMissatge = function(options) {
 
 				element
 					.attr("aria-hidden", "true")
-					.addClass("imc--off");
+					.addClass("imc--off")
+					.appFormsPopupTabula({ accio: "finalitza" });
 
 				setTimeout(
 					function() {
@@ -253,6 +259,15 @@ $.fn.appFormsMissatge = function(options) {
 
 
 					}, 200);
+
+				// enfoquem al botó llançador
+
+				if (bt) {
+
+					bt
+						.focus();
+
+				}
 
 			};
 		

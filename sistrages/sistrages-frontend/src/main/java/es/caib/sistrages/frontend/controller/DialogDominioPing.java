@@ -1,5 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +51,12 @@ public class DialogDominioPing extends DialogControllerBase {
 
 	/** Valores dominio. **/
 	private ValoresDominio valoresDominio;
+
+	/** Mensaje de error. **/
+	private String mensajeError;
+
+	/** Muestra o no mensaje de error **/
+	private Boolean mostrarError;
 
 	/**
 	 * Inicialización.
@@ -115,7 +123,13 @@ public class DialogDominioPing extends DialogControllerBase {
 			}
 		} catch (final Exception e) {
 			getLogger().error("Error haciendo el ping del dominio:" + this.id, e);
-			addMessageContext(TypeNivelGravedad.ERROR, "Error:" + e.getLocalizedMessage());
+			StringWriter errors = new StringWriter();
+			e.printStackTrace(new PrintWriter(errors));
+			setMensajeError("Error: " + errors);
+			setMostrarError(true);
+			setMostrarTablaDatos(false);
+			setMostrarTablaFicheros(false);
+			addMessageContext(TypeNivelGravedad.ERROR, "Error");
 		}
 	}
 
@@ -286,4 +300,19 @@ public class DialogDominioPing extends DialogControllerBase {
 		this.mostrarTablaFicheros = mostrarTablaFicheros;
 	}
 
+	public String getMensajeError() {
+		return mensajeError;
+	}
+
+	public void setMensajeError(String mensajeError) {
+		this.mensajeError = mensajeError;
+	}
+
+	public Boolean getMostrarError() {
+		return mostrarError;
+	}
+
+	public void setMostrarError(Boolean mostrarError) {
+		this.mostrarError = mostrarError;
+	}
 }

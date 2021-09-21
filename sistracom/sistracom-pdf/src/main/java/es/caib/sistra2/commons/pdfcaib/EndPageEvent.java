@@ -2,26 +2,18 @@ package es.caib.sistra2.commons.pdfcaib;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
 import com.lowagie.text.ExceptionConverter;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
-import com.lowagie.text.Image;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
@@ -54,12 +46,14 @@ public class EndPageEvent extends PdfPageEventHelper {
 	protected static PersonalizacionTexto PERSONALIZACION_TEXTO_CABECERA_DEFAULT;
 	protected static PersonalizacionTexto PERSONALIZACION_TEXTO_SECCION_DEFAULT;
 	protected static PersonalizacionTexto PERSONALIZACION_TEXTO_ETIQUETA_DEFAULT;
+	protected float tableHeight;
 	/**
 	 * Template para la paginacion
 	 */
 	protected PdfTemplate tplTotal;
 
-	public EndPageEvent(final Cabecera cabecera, final Pie pie, final boolean paginar, final PdfWriter writer) {
+	public EndPageEvent(final Document document, final Cabecera cabecera, final Pie pie, final boolean paginar,
+			final PdfWriter writer) {
 		super();
 		this.cabecera = cabecera;
 		this.pie = pie;
@@ -103,196 +97,13 @@ public class EndPageEvent extends PdfPageEventHelper {
 
 	@Override
 	public void onEndPage(final PdfWriter writer, final Document document) {
-		if (paginar) {
-			onFinPagina2(writer, document);
-		} else {
-			final Rectangle page = document.getPageSize();
+		EndPagePagination(writer, document);
 
-			if (cabecera != null) {
-				final PdfPTable head = new PdfPTable(2);
-				try {
-					// set defaults
-					head.setWidths(new int[] { 2, 24 });
-					head.setTotalWidth(527);
-					head.getDefaultCell().setFixedHeight(40);
-					head.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-
-					// add text
-					final PdfPCell text = new PdfPCell();
-					text.setPaddingBottom(15);
-					text.setPaddingLeft(10);
-					text.setBorder(Rectangle.NO_BORDER);
-
-					// add image
-					if (cabecera.getLogo() != null) {
-						final Image logo = Image.getInstance(cabecera.getLogo());
-						head.addCell(logo);
-					} else if (cabecera.getLogoByte() != null) {
-						final Image logo = Image.getInstance(cabecera.getLogoByte());
-						head.addCell(logo);
-
-					} else {
-						head.addCell(text);
-					}
-
-					Paragraph titulo = new Paragraph(cabecera.getTitulo(), SECCION);
-					if (cabecera.getPersonalizacionTextoTitulo() != null) {
-						titulo = new Paragraph(cabecera.getTitulo(),
-								getFontByPersonalizacionTexto(cabecera.getPersonalizacionTextoTitulo()));
-					}
-					titulo.setAlignment(Element.ALIGN_CENTER);
-					text.addElement(titulo);
-
-					Paragraph subtitulo = new Paragraph(cabecera.getSubtitulo(), ETIQUETA);
-					if (cabecera.getPersonalizacionTextoSubtitulo() != null) {
-						subtitulo = new Paragraph(cabecera.getSubtitulo(),
-								getFontByPersonalizacionTexto(cabecera.getPersonalizacionTextoSubtitulo()));
-					}
-					subtitulo.setAlignment(Element.ALIGN_CENTER);
-					text.addElement(subtitulo);
-
-					head.setTotalWidth(page.getWidth() - document.leftMargin() - document.rightMargin());
-					head.writeSelectedRows(0, -1, document.leftMargin(),
-							page.getHeight() - document.topMargin() + head.getTotalHeight(), writer.getDirectContent());
-
-				} catch (final DocumentException de) {
-					log.error("Error en la cabecera del documento pdf");
-					throw new ExceptionConverter(de);
-				} catch (final MalformedURLException e) {
-					log.error("Error en la cabecera del documento pdf, imagen no encontrada");
-					throw new ExceptionConverter(e);
-				} catch (final IOException ioe) {
-					log.error("Error en la cabecera del documento pdf");
-					throw new ExceptionConverter(ioe);
-				}
-
-			}
-
-			// Texto de pie y código de barras
-
-			if (pie != null) {
-				final float[] widths = { 4f, 1f };
-
-				final PdfPTable foot = new PdfPTable(widths);
-				foot.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-				foot.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-
-				final PdfPCell cell = new PdfPCell(
-						new Phrase(16, "", getFontByPersonalizacionTexto(pie.getPersonalizacionTexto())));
-				cell.setMinimumHeight(15f);
-				cell.setBorder(0);
-				foot.addCell(cell);
-				foot.addCell(cell);
-
-				final Paragraph bloque = new Paragraph(
-						new Chunk(pie.getTexto(), getFontByPersonalizacionTexto(pie.getPersonalizacionTexto())));
-				foot.addCell(bloque);
-				foot.setTotalWidth(page.getWidth() - document.leftMargin() - document.rightMargin());
-				foot.writeSelectedRows(0, -1, document.leftMargin(), document.bottomMargin(),
-						writer.getDirectContent());
-			}
-		}
 	}
 
-	private void onFinPagina2(final PdfWriter writer, final Document document) {
-		final Rectangle page = document.getPageSize();
+	private void EndPagePagination(final PdfWriter writer, final Document document) {
+
 		final PdfContentByte cb = writer.getDirectContent();
-		final Color myColor = new Color(195, 0, 69);
-		if (cabecera != null) {
-			final PdfPTable head = new PdfPTable(2);
-			try {
-				// set defaults
-				head.setWidths(new int[] { 6, 20 });
-				head.setTotalWidth(700);
-				head.setLockedWidth(true);
-				// head.getDefaultCell().setFixedHeight(50);
-				head.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-
-				// add text
-				final PdfPCell text = new PdfPCell();
-				text.setBorder(Rectangle.NO_BORDER);
-
-				// add image
-				if (cabecera.getLogo() != null) {
-					final Image logo = Image.getInstance(cabecera.getLogo());
-					final PdfPCell image = new PdfPCell();
-					image.addElement(logo);
-					image.setFixedHeight(90);
-					head.addCell(image);
-				} else if (cabecera.getLogoByte() != null) {
-					final Image logo = Image.getInstance(cabecera.getLogoByte());
-					logo.scaleToFit(120, 80);
-					logo.setAlignment(30);
-					final PdfPCell image = new PdfPCell();
-					image.addElement(logo);
-					image.setFixedHeight(90);
-					image.setHorizontalAlignment(1000);
-					image.setBorder(Rectangle.NO_BORDER);
-					head.addCell(image);
-				} else {
-					head.addCell(text);
-				}
-
-				Paragraph titulo = new Paragraph(cabecera.getTitulo(), SECCION);
-				if (cabecera.getPersonalizacionTextoTitulo() != null) {
-					titulo = new Paragraph(cabecera.getTitulo(),
-							getFontByPersonalizacionTexto(cabecera.getPersonalizacionTextoTitulo()));
-				} else {
-					final Font fuenteCabecera = getFontByPersonalizacionTexto(PERSONALIZACION_TEXTO_CABECERA_DEFAULT);
-
-					fuenteCabecera.setColor(myColor);
-					titulo = new Paragraph(cabecera.getTitulo(), fuenteCabecera);
-				}
-				titulo.setAlignment(Element.ALIGN_CENTER);
-				text.addElement(titulo);
-
-				Paragraph subtitulo = new Paragraph(cabecera.getSubtitulo(), ETIQUETA);
-
-				if (cabecera.getPersonalizacionTextoSubtitulo() != null) {
-					final Font fuenteCabecera = getFontByPersonalizacionTexto(PERSONALIZACION_TEXTO_CABECERA_DEFAULT);
-					fuenteCabecera.setColor(myColor);
-					subtitulo = new Paragraph(cabecera.getSubtitulo(), fuenteCabecera);
-				} else {
-					final Font fuenteCabecera = getFontByPersonalizacionTexto(PERSONALIZACION_TEXTO_CABECERA_DEFAULT);
-					fuenteCabecera.setColor(myColor);
-					subtitulo = new Paragraph(cabecera.getSubtitulo(), fuenteCabecera);
-				}
-
-				subtitulo.setAlignment(Element.ALIGN_CENTER);
-				text.addElement(subtitulo);
-
-				if (cabecera.getCodigoSia() != null && !cabecera.getCodigoSia().isEmpty()) {
-					final Font fuenteCabeceraCodigoSia = getFontByPersonalizacionTexto(
-							PERSONALIZACION_TEXTO_ETIQUETA_DEFAULT);
-					fuenteCabeceraCodigoSia.setColor(myColor);
-					final Font fuenteCabeceraCodigoSiaNumerico = getFontByPersonalizacionTexto(
-							PERSONALIZACION_TEXTO_ETIQUETA_DEFAULT);
-
-					final Paragraph p = new Paragraph();
-					p.add(new Chunk("CODI SIA  ", fuenteCabeceraCodigoSia));
-					p.add(new Chunk(cabecera.getCodigoSia(), fuenteCabeceraCodigoSiaNumerico));
-					p.setAlignment(Element.ALIGN_RIGHT);
-					p.setSpacingBefore(20);
-					text.addElement(p);
-				}
-
-				head.addCell(text);
-				head.setTotalWidth(page.getWidth() - document.leftMargin() - document.rightMargin());
-				head.writeSelectedRows(0, -1, document.leftMargin(),
-						page.getHeight() - document.topMargin() + head.getTotalHeight(), writer.getDirectContent());
-
-			} catch (final DocumentException de) {
-				log.error("Error en la cabecera del documento pdf");
-				throw new ExceptionConverter(de);
-
-			} catch (final Exception e) {
-				log.error("Error en la cabecera del documento pdf");
-				throw new ExceptionConverter(e);
-
-			}
-
-		}
-
 		// Texto de pie y código de barras
 
 		if (pie != null) {

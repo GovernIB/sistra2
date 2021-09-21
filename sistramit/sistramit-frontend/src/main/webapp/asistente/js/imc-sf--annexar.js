@@ -341,6 +341,11 @@ $.fn.appAnnexa = function(options) {
 
 				}
 
+				// tabulador en el popup
+
+				imc_document
+					.appPopupTabula();
+
 			},
 			carrega = function() {
 
@@ -425,7 +430,8 @@ $.fn.appAnnexa = function(options) {
 							.removeClass("imc--on");
 
 						imc_document
-							.removeClass("imc--on imc--off");
+							.removeClass("imc--on imc--off")
+							.appPopupTabula({ accio: "finalitza" });
 
 
 					}, 300);
@@ -1139,6 +1145,9 @@ $.fn.appFitxerAnnexa = function(opcions){
 
 					imc_document_contingut
 						.addClass("imc--num-maxim");
+
+					imc_document
+						.appPopupTabula();
 
 				}
 				

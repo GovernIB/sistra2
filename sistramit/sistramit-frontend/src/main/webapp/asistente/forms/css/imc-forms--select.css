@@ -310,7 +310,7 @@ div.imc-select-lectura a.imc-select:focus { background: none; background-color: 
 /* input check */
 
 .imc-input-check { overflow: hidden; display: inline-block; position: relative; vertical-align: middle; }
-.imc-input-check input { position: absolute; top: 0; left: 0; visibility: hidden; opacity: 0; z-index: -22; }
+.imc-input-check input { position: absolute; top: .1em; left: .4em; border: none !important; /*visibility: hidden;*/ opacity: 0; z-index: -22; }
 .imc-input-check label { display: block; cursor: pointer; padding-right: .5em; }
 
 .imc-input-check label::before {
@@ -327,8 +327,12 @@ div.imc-select-lectura a.imc-select:focus { background: none; background-color: 
 
 .imc-input-check label:focus::before { background-color: #000 !important; }
 
+.imc-input-check input:focus ~ label::before { background-color: #000 !important; }
+
 .imc-input-check input:checked ~ label { color: #368355; }
 .imc-input-check input:checked ~ label::before { background-color: #368355 !important; background-image: url(forms/imgs/ico_input_check.svg); }
+
+.imc-input-check input:focus:checked ~ label::before { background-color: #000 !important; }
 
 .imc-input-check input:disabled ~ label { color: #999; }
 .imc-input-check input:disabled ~ label::before { background-color: #666; }
@@ -342,11 +346,14 @@ div.imc-select-lectura a.imc-select:focus { background: none; background-color: 
 .imc-el-error .imc-input-check input ~ label::before { background-color: #c00; }
 
 
+.imc-input-check label::before:focus { background-color: #000 !important; }
+
+
 
 /* input radio */
 
 .imc-input-radio { overflow: hidden; display: inline-block; position: relative; vertical-align: middle; }
-.imc-input-radio input { position: absolute; top: 0; left: 0; visibility: hidden; opacity: 0; z-index: -22; }
+.imc-input-radio input { position: absolute; top: .1em; left: .3em; border: none !important; /*visibility: hidden;*/ opacity: 0; z-index: -22; }
 .imc-input-radio label { display: block; cursor: pointer; padding-right: .5em; }
 
 .imc-input-radio label::before {
@@ -363,6 +370,8 @@ div.imc-select-lectura a.imc-select:focus { background: none; background-color: 
 } 
 
 .imc-input-radio label:focus::before { background-color: #000 !important; }
+
+.imc-input-radio input:focus ~ label::before { background-color: #000 !important; }
 
 .imc-input-radio input:checked ~ label { color: #368355; }
 .imc-input-radio input:checked ~ label::before { background-color: #368355; background-image: url(forms/imgs/ico_input_radio.svg) }

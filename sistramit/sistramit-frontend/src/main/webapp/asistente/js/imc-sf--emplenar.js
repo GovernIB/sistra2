@@ -371,6 +371,9 @@ $.fn.appEmplenaFormulari = function(options) {
 					.find(".imc--contingut:first")
 						.html( FORMS_JSON.datos.html );
 
+				$("#imc-forms-contenidor")
+					.attr("data-id", form_id)
+
 				// FORMS iniciem
 
 				appFormsInicia();
@@ -401,6 +404,9 @@ $.fn.appEmplenaFormulari = function(options) {
 
 						$("html, body")
 							.addClass("imc--sense-scroll");
+
+						$("#imc-forms-contenidor")
+							.appPopupTabula();
 
 
 					}, 300);

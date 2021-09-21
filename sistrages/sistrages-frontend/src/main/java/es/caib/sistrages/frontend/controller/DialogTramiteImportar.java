@@ -780,22 +780,22 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 * existe.
 	 **/
 	private void prepararFlujoTramiteFormulario(final TramitePasoRellenar pasoRellenar) {
-		for (final FormularioTramite form : pasoRellenar.getFormulariosTramite()) {
-			if (form.getTipoFormulario() == TypeFormularioGestor.EXTERNO && form.getFormularioGestorExterno() != null
-					&& form.getFormularioGestorExterno().getIdentificador() != null) {
-				final boolean existe = gestorFormularioService
-						.existeFormulario(form.getFormularioGestorExterno().getIdentificador(), null);
-
-				if (!existe) {
-					mostrarFilasFormularios = true;
-					final FilaImportarFormulario fila = new FilaImportarFormulario();
-					fila.setCorrecto(false);
-					fila.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.gestorExternoInexistente",
-							new String[] { form.getFormularioGestorExterno().getIdentificador() }));
-					filasFormulario.add(fila);
-				}
-			}
-		}
+//		for (final FormularioTramite form : pasoRellenar.getFormulariosTramite()) {
+//			if (form.getTipoFormulario() == TypeFormularioGestor.EXTERNO && form.getFormularioGestorExterno() != null
+//					&& form.getFormularioGestorExterno().getIdentificador() != null) {
+//				final boolean existe = gestorFormularioService
+//						.existeFormulario(form.getFormularioGestorExterno().getIdentificador(), null);
+//
+//				if (!existe) {
+//					mostrarFilasFormularios = true;
+//					final FilaImportarFormulario fila = new FilaImportarFormulario();
+//					fila.setCorrecto(false);
+//					fila.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.gestorExternoInexistente",
+//							new String[] { form.getFormularioGestorExterno().getIdentificador() }));
+//					filasFormulario.add(fila);
+//				}
+//			}
+//		}
 	}
 
 	/**

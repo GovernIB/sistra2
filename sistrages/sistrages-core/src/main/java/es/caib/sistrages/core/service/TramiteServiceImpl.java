@@ -1031,7 +1031,7 @@ public class TramiteServiceImpl implements TramiteService {
 			tramitePasoDao.importar(filaImportar.getFilaTramiteRegistro(), tramitePaso, idTramiteVersion,
 					filaImportar.getIdEntidad(), filaImportar.getFormularios(), filaImportar.getFicheros(),
 					filaImportar.getFicherosContent(), formateadores, mapFormateadores, gestores, mapGestores,
-					idDominiosEquivalencia);
+					idDominiosEquivalencia, idArea);
 			ordenPaso++;
 		}
 

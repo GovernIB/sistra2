@@ -2,6 +2,7 @@ package es.caib.sistra2.commons.pdfcaib;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ public class CheckboxCellEvent implements PdfPCellEvent {
 		final Rectangle rect = new Rectangle(x - 5, y - 5, x + 6, y + 6);
 
 		// define the check box
-		final RadioCheckField checkbox = new RadioCheckField(writer, rect, name, "Yes");
+		final RadioCheckField checkbox = new RadioCheckField(writer, rect, name + "-" + new Random().nextInt(), "Yes");
 		checkbox.setCheckType(RadioCheckField.TYPE_CHECK);
 		checkbox.setBorderWidth(BaseField.BORDER_WIDTH_THIN);
 

@@ -1,6 +1,7 @@
 package es.caib.sistra2.commons.pdfcaib;
 
 import java.io.IOException;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,6 @@ public class MyCellFieldEvent implements PdfPCellEvent {
 	protected String fieldname;
 	protected String value;
 	protected static Font VALOR;
-	// private final static int TAMANIO_VALOR = 8;
 	private static final int TAMANIO_TEXTO = 9;
 
 	public MyCellFieldEvent(final String fieldname, final String value) {
@@ -42,7 +42,7 @@ public class MyCellFieldEvent implements PdfPCellEvent {
 	@Override
 	public void cellLayout(final PdfPCell cell, final Rectangle rectangle, final PdfContentByte[] canvases) {
 		final PdfWriter writer = canvases[0].getPdfWriter();
-		final TextField textField = new TextField(writer, rectangle, fieldname);
+		final TextField textField = new TextField(writer, rectangle, fieldname + "-" + new Random().nextInt());
 		textField.setText(value);
 		textField.setAlignment(Element.ALIGN_TOP);
 		textField.setOptions(TextField.MULTILINE | TextField.READ_ONLY);

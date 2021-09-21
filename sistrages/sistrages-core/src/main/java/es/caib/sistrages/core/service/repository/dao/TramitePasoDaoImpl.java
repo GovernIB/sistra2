@@ -55,6 +55,7 @@ import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFormateadorFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormularioTramite;
+import es.caib.sistrages.core.service.repository.model.JGestorExternoFormularios;
 import es.caib.sistrages.core.service.repository.model.JLineaFormulario;
 import es.caib.sistrages.core.service.repository.model.JLiteral;
 import es.caib.sistrages.core.service.repository.model.JPaginaFormulario;
@@ -535,13 +536,35 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		return repetido;
 	}
 
+	private GestorExternoFormularios getGEF(String identificadorGFE, final Long idArea) {
+		GestorExternoFormularios gfe = null;
+		final String sql = "Select t From JGestorExternoFormularios t where t.identificador = :identificador and t.area.codigo = :idArea";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("identificador", identificadorGFE);
+		query.setParameter("idArea", idArea);
+
+		@SuppressWarnings("unchecked")
+		final List<JGestorExternoFormularios> results = query.getResultList();
+
+		 if (results != null && !results.isEmpty()) {
+			for (final Iterator<JGestorExternoFormularios> iterator = results.iterator(); iterator.hasNext() && gfe == null; ) {
+				final JGestorExternoFormularios jgestor = iterator.next();
+				gfe = jgestor.toModel();
+			}
+		}
+
+		return gfe;
+
+	}
+
 	@Override
 	public Long importar(final FilaImportarTramiteRegistro filaTramiteVersion, final TramitePaso tramitePaso,
 			final Long idTramiteVersion, final Long idEntidad, final Map<Long, DisenyoFormulario> formularios,
 			final Map<Long, Fichero> ficheros, final Map<Long, byte[]> ficherosContent,
 			final Map<Long, FormateadorFormulario> formateadores, final Map<Long, Long> mapFormateadores,
 			final Map<Long, GestorExternoFormularios> gestores, final Map<Long, Long> mapGestores,
-			final Map<Long, Long> idDominiosEquivalencia) {
+			final Map<Long, Long> idDominiosEquivalencia, final Long idArea) {
 
 		final JVersionTramite jVersionTramite = entityManager.find(JVersionTramite.class, idTramiteVersion);
 
@@ -625,6 +648,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 //						formT.setFormularioGestorExterno(null);
 //					}
 					final Long idJFormulario = formularioInternoDao.addFormulario(formT, false);
+
 					if (formulario.getTipoFormulario().equals("I")) {
 
 						// Actualizamos el jformulario

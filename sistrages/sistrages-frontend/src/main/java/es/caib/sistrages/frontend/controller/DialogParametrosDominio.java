@@ -84,8 +84,7 @@ public class DialogParametrosDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param iData
-	 *            the iData to set
+	 * @param iData the iData to set
 	 */
 	public void setiData(final String iData) {
 		this.iData = iData;
@@ -99,8 +98,7 @@ public class DialogParametrosDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final ParametroDominio data) {
 		this.data = data;

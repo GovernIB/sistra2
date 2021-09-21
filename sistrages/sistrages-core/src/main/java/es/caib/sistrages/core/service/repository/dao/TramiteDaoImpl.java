@@ -153,7 +153,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		if (StringUtils.isNotBlank(filtro)) {
 			sql.append(" AND (upper(t.descripcion) like :filtro OR upper(t.identificador) like :filtro)");
 		}
-		sql.append(" ORDER BY t.codigo");
+		sql.append(" ORDER BY t.identificador");
 
 		final Query query = entityManager.createQuery(sql.toString());
 		if (idEntidad != null) {
@@ -364,7 +364,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		if (StringUtils.isNotBlank(pFiltro)) {
 			sql += " AND (upper(t.descripcion) like :filtro OR upper(t.identificador) like :filtro)";
 		}
-		sql += " ORDER BY t.codigo";
+		sql += " ORDER BY t.identificador";
 
 		final Query query = entityManager.createQuery(sql);
 		if (idArea != null) {

@@ -602,12 +602,14 @@ $.fn.appFormsConfiguracio = function(options) {
 								if (conf_obligatori === "s") {
 
 									elm_input
-										.attr("required", "required");
+										.attr("required", "required")
+										.attr("aria-required", "true");
 
 								} else if (conf_obligatori === "n") {
 
 									elm_input
-										.removeAttr("required");
+										.removeAttr("required")
+										.removeAttr("aria-required");
 
 								}
 
@@ -1612,7 +1614,7 @@ $.fn.appFormsValida = function(options) {
 
 				// textarea amb un màxim de línies
 
-				if (input.is("TEXTAREA") && input.attr("data-linies")) {
+				if (input.is("TEXTAREA") && input.attr("data-linies") && input_val !== "") {
 
 					esError = ( !input.appValida({ format: "textarea", valor: input_val }) ) ? true : false;
 					ERROR_TEXT = (esError) ? txtFormDinCampError_linies + " " + input.attr("data-linies") +"." : false;
@@ -1712,7 +1714,7 @@ $.fn.appFormsValida = function(options) {
 
 				// data
 
-				if (input.attr("data-contingut") === "data" && input_val !== "") {
+				if (input.attr("data-contingut") === "data") {
 
 					esError = ( !input.appValida({ format: "data", valor: input_val }) ) ? true : false;
 					ERROR_TEXT = (esError) ? txtFormDinCampError_data : false;
@@ -2329,9 +2331,9 @@ $.fn.appFormsFormateig = function(options) {
 					.find(".imc-el-selector:not(.imc-el-selector-events-enlinia)")
 						.selectorIMC()
 						.end()
-					.find("*[title]")
-						.title()
-						.end()
+					//.find("*[title]")
+					//	.title()
+					//	.end()
 					.find("input[type=number]")
 						.inputNumero()
 						.end()
@@ -2829,8 +2831,7 @@ $.fn.appMissatgeFormAccions = function(options) {
 				element
 					.off('.appMissatgeFormAccions')
 					.on('click.appMissatgeFormAccions', "button[data-tipus=desa]", desaSurt)
-					.on('click.appMissatgeFormAccions', "button[data-tipus=surt]", surt)
-					//.on('click.appMissatgeFormAccions', "button[data-tipus=tanca]", surt);
+					.on('click.appMissatgeFormAccions', "button[data-tipus=surt]", surt);
 
 			},
 			surt = function() {
@@ -2841,7 +2842,8 @@ $.fn.appMissatgeFormAccions = function(options) {
 				// amaga formulari
 
 				imc_forms_contenidor
-					.attr("aria-hidden", "true");
+					.attr("aria-hidden", "true")
+					.appPopupTabula({ accio: "finalitza" });
 
 				$("html, body")
 					.removeClass("imc--sense-scroll");
@@ -2879,6 +2881,16 @@ $.fn.appMissatgeFormAccions = function(options) {
 
 					}, 200);
 
+				var form_id = imc_forms_contenidor.attr("data-id")
+					,enllas_el = $("body").find("a[data-id="+form_id+"]");
+
+				if (enllas_el.length) {
+
+					enllas_el
+						.focus();
+
+				}
+				
 			},
 			desaSurt = function() {
 
@@ -3017,4 +3029,270 @@ $.fn.appDataEspanyola = function(options) {
 
 	return data_esp;	
 
+}
+
+
+
+// appFormsPopupTabula
+
+$.fn.appFormsPopupTabula = function(options) {
+
+	var settings = $.extend({
+			element: ""
+			,accio: false
+			,enfocaEn: false
+		}, options);
+
+	this.each(function(){
+		var element = $(this)
+			,accio = settings.accio
+			,enfocaEn = settings.enfocaEn
+			,el_num = 0
+			,elems_tab = []
+			,elems_tab_size = 0
+			,esMissatge = false
+			,inicia = function() {
+
+				// finalitzem?
+
+				if (accio === "finalitza") {
+
+					element
+						.off(".appFormsPopupTabula");
+
+					return;
+
+				}
+
+
+				// iniciem vars
+
+				el_num = 0;
+				elems_tab = [];
+				elems_tab_size = 0;
+
+
+				// es missatge?
+
+				esMissatge = (element.closest(".imc-missatge").length) ? true : false;
+
+
+				// pinta
+
+				setTimeout(
+					function() {
+
+						pinta();
+
+					}
+					,100
+				);
+
+			},
+			pinta = function() {
+
+				// revisem si és una capa amb formulari o una capa missatge
+
+				if (!esMissatge) {
+
+					// és un formulari
+
+					f_elms = element.find(".imc-element");
+
+					f_elms
+						.each(function() {
+
+
+							var f_el = $(this)
+								,f_el_tipus = f_el.attr("data-tipus")
+								,f_el_contingut = f_el.attr("data-contingut");
+
+							if (f_el_tipus === "texto") {
+
+								// text
+
+								f_el
+									.find("input:first")
+										.attr("data-tabula", "si")
+										.end()
+									.find("textarea:first")
+										.attr("data-tabula", "si");
+
+							} else if (f_el_tipus === "captcha") {
+
+								// captcha
+
+								f_el
+									.find("input, button")
+										.attr("data-tabula", "si");
+
+							} else if (f_el_tipus === "check") {
+
+								// check únic
+
+								f_el
+									.find("input:first")
+										.attr("data-tabula", "si");
+
+							} else if (f_el_tipus === "verificacion") {
+
+								// check únic
+
+								f_el
+									.find("label:first")
+										.removeAttr("tabindex")
+										.end()
+									.find("input:first")
+										.attr("data-tabula", "si");
+
+							} else if (f_el_tipus === "listaElementos") {
+
+								// llista d'elements
+
+								f_el
+									.find("button")
+										.attr("data-tabula", "si")
+										.end()
+									.find("input[type=radio]")
+										.attr("data-tabula", "si");
+
+							} else if (f_el_contingut === "d") {
+
+								// selector
+
+								f_el
+									.find("a.imc-select:first")
+										.attr("data-tabula", "si")
+										.end()
+									.find("button.imc--bt-reset")
+										.attr("data-tabula", "si");
+
+							} else if (f_el_contingut === "m") {
+
+								// llista checks
+
+								f_el
+									.find("input[type=checkbox]")
+										.attr("data-tabula", "si");
+
+							} else if (f_el_contingut === "u") {
+
+								// llista checks
+
+								f_el
+									.find("input[type=radio]")
+										.attr("data-tabula", "si");
+
+							}
+
+						});
+
+				}
+
+
+				// els botons finals, tant se val que siga un missatge o un formulari
+
+				element
+					.find("button")
+						.attr("data-tabula", "si");
+
+
+				// activem
+
+				activa();
+
+			},
+			activa = function() {
+
+				elems_tab = element.find("*[data-tabula=si]:visible:not(:disabled)");
+				elems_tab_size = elems_tab.length;
+
+				if (elems_tab_size) {
+
+					elems_tab
+						.each(function(i) {
+
+							var el = $(this);
+
+							el
+								.attr("data-tabpos", i+1);
+							
+						});
+
+					elems_tab
+						.splice(0, 0, element);
+
+					element
+						.off(".appFormsPopupTabula")
+						.on("focus.appFormsPopupTabula", "*[data-tabula]", reposiciona)
+						.on("focus.appFormsPopupTabula", reposiciona)
+						.on("keydown.appFormsPopupTabula", tabula)
+						.attr("data-tabpos", 0);
+
+				}
+
+				// enfoquem en algun element?
+
+				if (enfocaEn) {
+
+					enfocaEn
+						.focus();
+
+				} else {
+
+					element
+						.focus();
+
+				}
+
+			},
+			reposiciona = function(e) {
+
+				var inp_el = $(this)
+					,in_tabpos = parseInt( inp_el.attr("data-tabpos"), 10);
+
+				el_num = in_tabpos;
+
+			},
+			tabula = function(e) {
+
+				var tecla = e.keyCode
+					,esShift = !!e.shiftKey;
+
+				if ( esShift && tecla === 9) {
+
+					e.preventDefault();
+
+					el_num--;
+
+					if (el_num < 0) {
+						el_num = elems_tab_size;
+					}
+
+					elems_tab[el_num]
+						.focus();
+
+				} else if ( !esShift && tecla === 9){
+				
+					e.preventDefault();
+
+					el_num++;
+
+					if (el_num > elems_tab_size) {
+						el_num = 0;
+					}
+
+					elems_tab[el_num]
+						.focus();
+
+				}
+
+			};
+		
+		// inicia
+		inicia();
+		
+	});
+
+	return this;
 }

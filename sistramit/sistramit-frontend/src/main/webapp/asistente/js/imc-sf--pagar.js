@@ -235,6 +235,9 @@ $.fn.appPagament = function(options) {
 					.off('.appFormulari')
 					.on('click.appFormulari', tanca);
 
+				imc_pagament
+					.focus();
+
 				envia_ajax = false;
 
 			},
@@ -258,12 +261,24 @@ $.fn.appPagament = function(options) {
 								.end()
 							.removeClass("imc--on imc--off");
 
+						// enfoquem a la taxa - elm_pagament_id
+
+						var taxa_li = $("body").find(".imc--pagaments li[data-id="+elm_pagament_id+"]:first");
+
+						if (taxa_li.length) {
+
+							taxa_li
+								.find("a:first")
+									.focus();
+
+						}
 
 					}, 300);
 
 			};
 		
 		// inicia
+		
 		inicia();
 		
 	});

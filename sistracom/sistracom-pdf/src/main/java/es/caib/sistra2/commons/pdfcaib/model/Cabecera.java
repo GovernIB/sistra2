@@ -20,10 +20,17 @@ public class Cabecera {
 	private String codigoSia;
 	/** array de bytes del logo de la cabecera */
 	private byte[] logoByte;
+
 	/** Personalizacion del texto del subtitulo */
 	private PersonalizacionTexto personalizacionTextoSubtitulo;
 	/** Personalizacion del texto del titulo */
 	private PersonalizacionTexto personalizacionTextoTitulo;
+
+	/** Personalizacion del texto del titulo */
+	private PersonalizacionTexto personalizacionCodigoSiaTitulo;
+
+	private int anchoLogo;
+	private int altoLogo;
 
 	/**
 	 * @return Devuelve logo
@@ -115,6 +122,30 @@ public class Cabecera {
 
 	public void setCodigoSia(final String codigoSiac) {
 		this.codigoSia = codigoSiac;
+	}
+
+	public PersonalizacionTexto getPersonalizacionCodigoSiaTitulo() {
+		return personalizacionCodigoSiaTitulo;
+	}
+
+	public void setPersonalizacionCodigoSiaTitulo(final PersonalizacionTexto personalizacionCodigoSiaTitulo) {
+		this.personalizacionCodigoSiaTitulo = personalizacionCodigoSiaTitulo;
+	}
+
+	public int getAnchoLogo() {
+		return anchoLogo;
+	}
+
+	public void setAnchoLogo(final int anchoLogo) {
+		this.anchoLogo = anchoLogo;
+	}
+
+	public int getAltoLogo() {
+		return altoLogo;
+	}
+
+	public void setAltoLogo(final int altoLogo) {
+		this.altoLogo = altoLogo;
 	}
 
 }

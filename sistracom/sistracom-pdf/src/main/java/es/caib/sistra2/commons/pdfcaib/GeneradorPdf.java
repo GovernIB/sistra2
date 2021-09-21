@@ -9,8 +9,11 @@ import org.slf4j.LoggerFactory;
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.ExceptionConverter;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
+import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
@@ -19,6 +22,7 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 
+import es.caib.sistra2.commons.pdfcaib.model.Cabecera;
 import es.caib.sistra2.commons.pdfcaib.model.CampoCheck;
 import es.caib.sistra2.commons.pdfcaib.model.CampoListaCheck;
 import es.caib.sistra2.commons.pdfcaib.model.CampoTexto;
@@ -46,6 +50,12 @@ public class GeneradorPdf {
 	private static final int TAMANIO_ETIQUETA = 10;
 	private static final int TAMANIO_VALOR = 9;
 	private static final int TAMANIO_TEXTO = 9;
+	protected static PersonalizacionTexto PERSONALIZACION_TEXTO_CABECERA_DEFAULT = new PersonalizacionTexto(true, false,
+			TypeFuente.NOTOSANS, 16);
+	protected static PersonalizacionTexto PERSONALIZACION_TEXTO_SECCION_DEFAULT = new PersonalizacionTexto(true, false,
+			TypeFuente.NOTOSANS, 16);
+	protected static PersonalizacionTexto PERSONALIZACION_TEXTO_ETIQUETA_DEFAULT = new PersonalizacionTexto(true, false,
+			TypeFuente.NOTOSANS, 10);
 
 	private final Logger log = LoggerFactory.getLogger(GeneradorPdf.class);
 
@@ -53,26 +63,55 @@ public class GeneradorPdf {
 	private final Font SECCION;
 	private final Font ETIQUETA;
 	private final Font VALOR;
-	private final PersonalizacionTexto PERSONALIZACION_TEXTO_SECCION_DEFAULT;
 	private final Document document;
 	private PdfWriter writer;
 	private final ByteArrayOutputStream arrayBytesPdf;
 	private final PdfPTable tablaPDF;
+	EndPageEvent event;
 
 	/**
 	 * Constructor en el que le añadimos propiedades constantes
 	 *
 	 * @throws PdfCaibException
 	 */
-	public GeneradorPdf() throws PdfCaibException {
+	public GeneradorPdf(final int margenCabecera, final int margenPie) throws PdfCaibException {
 
-		document = new Document(PageSize.A4, 20, 20, 130, 25);
+		document = new Document(PageSize.A4, 20, 20, margenCabecera, margenPie);
 		arrayBytesPdf = new ByteArrayOutputStream();
 
 		tablaPDF = new PdfPTable(COLUMNAS_TABLA);
 		tablaPDF.setWidthPercentage(100f);
 		tablaPDF.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-		tablaPDF.setSpacingBefore(200f);
+
+		if (!FontFactory.isRegistered(TypeFuente.NOTOSANS.toString())) {
+			FontFactory.register("/fonts/NotoSans-Regular.ttf", TypeFuente.NOTOSANS.toString());
+		}
+		if (!FontFactory.isRegistered(TypeFuente.NOTOSANSBOND.toString())) {
+			FontFactory.register("/fonts/NotoSans-Bold.ttf", TypeFuente.NOTOSANSBOND.toString());
+		}
+
+		PERSONALIZACION_TEXTO_SECCION_DEFAULT = new PersonalizacionTexto(true, false, TypeFuente.NOTOSANSBOND,
+				TAMANIO_SECCION);
+		VALOR = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_VALOR);
+		ETIQUETA = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_ETIQUETA);
+		ETIQUETA.setStyle(Font.BOLD);
+		SECCION = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_SECCION);
+		TEXTO = FontFactory.getFont(TypeFuente.NOTOSANS.toString(), TAMANIO_TEXTO);
+		try {
+			writer = PdfWriter.getInstance(document, arrayBytesPdf);
+		} catch (final DocumentException e) {
+			throw new PdfCaibException("Error creación de writer GeneradorPdf");
+		}
+	}
+
+	public GeneradorPdf() throws PdfCaibException {
+
+		document = new Document(PageSize.A4, 20, 20, 25, 25);
+		arrayBytesPdf = new ByteArrayOutputStream();
+
+		tablaPDF = new PdfPTable(COLUMNAS_TABLA);
+		tablaPDF.setWidthPercentage(100f);
+		tablaPDF.getDefaultCell().setBorder(Rectangle.NO_BORDER);
 
 		if (!FontFactory.isRegistered(TypeFuente.NOTOSANS.toString())) {
 			FontFactory.register("/fonts/NotoSans-Regular.ttf", TypeFuente.NOTOSANS.toString());
@@ -115,7 +154,13 @@ public class GeneradorPdf {
 	public byte[] generarPdf(final FormularioPdf formularioPdf) throws PdfCaibException {
 
 		document.open();
-		writer.setPageEvent(new EndPageEvent(formularioPdf.getCabecera(), formularioPdf.getPie(), true, writer));
+		final EndPageEvent event = new EndPageEvent(document, formularioPdf.getCabecera(), formularioPdf.getPie(), true,
+				writer);
+		writer.setPageEvent(event);
+
+		if (formularioPdf.getCabecera() != null) {
+			this.writeCabecera(formularioPdf.getCabecera());
+		}
 
 		if (formularioPdf.getLineas() != null) {
 			/** Para cada linea */
@@ -166,11 +211,139 @@ public class GeneradorPdf {
 		}
 
 		try {
+			// final float y = event.tableHeight;
+			// document.setMargins(marginLeft, marginRight, marginTop, marginBottom)
 			document.add(tablaPDF);
 			document.close();
 			return arrayBytesPdf.toByteArray();
 		} catch (final DocumentException e) {
 			throw new PdfCaibException("Error al generar pdf: " + e.getMessage(), e);
+		}
+
+	}
+
+	/**
+	 * @param cabecera
+	 */
+	private void writeCabecera(final Cabecera cabecera) {
+
+		final Color myColor = new Color(195, 0, 69);
+		final PdfPTable head;
+		if (cabecera.getLogo() != null || cabecera.getLogoByte() != null) {
+			head = new PdfPTable(2);
+			try {
+				head.setWidths(new int[] { 6, 20 });
+			} catch (final DocumentException e) {
+				e.printStackTrace();
+			}
+		} else {
+			head = new PdfPTable(1);
+		}
+
+		try {
+			// set defaults
+
+			head.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+
+			// add text
+			final PdfPCell text = new PdfPCell();
+			text.setBorder(Rectangle.NO_BORDER);
+
+			// add image
+			if (cabecera.getLogo() != null) {
+				final Image logo = Image.getInstance(cabecera.getLogo());
+				if (cabecera.getAltoLogo() != 0 && cabecera.getAnchoLogo() != 0) {
+					logo.scaleToFit(cabecera.getAnchoLogo(), cabecera.getAltoLogo());
+				} else {
+					logo.scaleToFit(100, 100);
+				}
+
+				final PdfPCell image = new PdfPCell();
+				image.addElement(logo);
+				head.addCell(image);
+			} else if (cabecera.getLogoByte() != null) {
+				final Image logo = Image.getInstance(cabecera.getLogoByte());
+				if (cabecera.getAltoLogo() != 0 && cabecera.getAnchoLogo() != 0) {
+					logo.scaleToFit(cabecera.getAnchoLogo(), cabecera.getAltoLogo());
+				} else {
+					logo.scaleToFit(100, 100);
+				}
+				final PdfPCell image = new PdfPCell();
+				image.addElement(logo);
+
+				image.setBorder(Rectangle.NO_BORDER);
+				head.addCell(image);
+			}
+			// else {
+			// head.addCell(text);
+			// }
+
+			Paragraph titulo = new Paragraph(cabecera.getTitulo(), SECCION);
+			if (cabecera.getPersonalizacionTextoTitulo() != null) {
+				final Font fuenteCabecera = getFontByPersonalizacionTexto(cabecera.getPersonalizacionTextoTitulo());
+				fuenteCabecera.setColor(myColor);
+				titulo = new Paragraph(cabecera.getTitulo(), fuenteCabecera);
+			} else {
+				final Font fuenteCabecera = getFontByPersonalizacionTexto(PERSONALIZACION_TEXTO_CABECERA_DEFAULT);
+				fuenteCabecera.setColor(myColor);
+				titulo = new Paragraph(cabecera.getTitulo(), fuenteCabecera);
+			}
+			if (cabecera.getLogo() != null || cabecera.getLogoByte() != null) {
+				titulo.setAlignment(Element.ALIGN_CENTER);
+			}
+			text.addElement(titulo);
+
+			Paragraph subtitulo = new Paragraph(cabecera.getSubtitulo(), ETIQUETA);
+
+			if (cabecera.getPersonalizacionTextoSubtitulo() != null) {
+				final Font fuenteCabecera = getFontByPersonalizacionTexto(cabecera.getPersonalizacionTextoSubtitulo());
+				fuenteCabecera.setColor(myColor);
+				subtitulo = new Paragraph(cabecera.getSubtitulo(), fuenteCabecera);
+			} else {
+				final Font fuenteCabecera = getFontByPersonalizacionTexto(PERSONALIZACION_TEXTO_CABECERA_DEFAULT);
+				fuenteCabecera.setColor(myColor);
+				subtitulo = new Paragraph(cabecera.getSubtitulo(), fuenteCabecera);
+			}
+			if (cabecera.getLogo() != null || cabecera.getLogoByte() != null) {
+				subtitulo.setAlignment(Element.ALIGN_CENTER);
+			}
+			text.addElement(subtitulo);
+			Font fuenteCabeceraCodigoSia;
+			final Font fuenteCabeceraCodigoSiaTexto;
+			if (cabecera.getCodigoSia() != null && !cabecera.getCodigoSia().isEmpty()) {
+				if (cabecera.getPersonalizacionCodigoSiaTitulo() != null) {
+					fuenteCabeceraCodigoSia = getFontByPersonalizacionTexto(
+							cabecera.getPersonalizacionCodigoSiaTitulo());
+					fuenteCabeceraCodigoSiaTexto = getFontByPersonalizacionTexto(
+							cabecera.getPersonalizacionCodigoSiaTitulo());
+
+				} else {
+					fuenteCabeceraCodigoSia = getFontByPersonalizacionTexto(PERSONALIZACION_TEXTO_ETIQUETA_DEFAULT);
+					fuenteCabeceraCodigoSiaTexto = getFontByPersonalizacionTexto(
+							PERSONALIZACION_TEXTO_ETIQUETA_DEFAULT);
+				}
+				fuenteCabeceraCodigoSia.setColor(myColor);
+
+				final Paragraph p = new Paragraph();
+				p.add(new Chunk("CODI SIA  ", fuenteCabeceraCodigoSia));
+				p.add(new Chunk(cabecera.getCodigoSia(), fuenteCabeceraCodigoSiaTexto));
+				p.setAlignment(Element.ALIGN_RIGHT);
+				p.setSpacingBefore(3);
+				text.addElement(p);
+			}
+			head.addCell(text);
+			final PdfPCell cell = new PdfPCell(head);
+			cell.setBorder(Rectangle.NO_BORDER);
+			cell.setColspan(COLUMNAS_TABLA);
+			tablaPDF.addCell(cell);
+		} catch (final DocumentException de) {
+			log.error("Error en la cabecera del documento pdf");
+			throw new ExceptionConverter(de);
+
+		} catch (final Exception e) {
+			log.error("Error en la cabecera del documento pdf");
+			throw new ExceptionConverter(e);
+
 		}
 
 	}

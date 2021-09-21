@@ -3,10 +3,8 @@ package es.caib.sistrages.frontend.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -107,6 +105,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	/** id. */
 	private Long id;
+
+	private int pagina;
 
 	/** Area del tramite. **/
 	private Area area;
@@ -238,12 +238,13 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		breadCrumbRoot.addElement(item);
 
 		item = new DefaultMenuItem(tramite.getIdentificador());
-		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getCodigo() + "&tramite=" + tramite.getCodigo());
+		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getCodigo() + "&tramite=" + tramite.getCodigo()
+				+ "&pag=" + pagina);
 		breadCrumbRoot.addElement(item);
 
 		item = new DefaultMenuItem(UtilJSF.getLiteral("botones.version") + " " + tramiteVersion.getNumeroVersion());
 		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getCodigo() + "&tramite=" + tramite.getCodigo()
-				+ "&tramite_version=" + tramiteVersion.getCodigo());
+				+ "&tramite_version=" + tramiteVersion.getCodigo() + "&pag=" + pagina);
 		breadCrumbRoot.addElement(item);
 		breadCrumbRoot.generateUniqueIds();
 		breadCrumb = copyMenuModel(breadCrumbRoot);
@@ -2231,6 +2232,14 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	public void setConti(int conti) {
 		this.conti = conti;
+	}
+
+	public int getPagina() {
+		return pagina;
+	}
+
+	public void setPagina(int pagina) {
+		this.pagina = pagina;
 	}
 
 }

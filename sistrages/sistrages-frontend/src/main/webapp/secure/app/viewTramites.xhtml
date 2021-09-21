@@ -11,14 +11,15 @@
 
 	<ui:define name="content">
 
-		<h:form id="form" style="height: 80%">
+		<h:form id="form" style="height: 95% !important">
 
 			<!-- Growl mensajes -->
 			<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-			<div class="ui-g"  style="height: 100%">
+			<div class="ui-g"  style="height: 100% !important">
 
-			<div class="ui-g-3 ui-g-nopad"  style="height: 99%">
+			<div class="ui-g-3 ui-g-nopad"  style="height: 99% ">
+
 				<!-- Toolbar -->
 				<p:toolbar id="toolbarArea">
 					<f:facet name="left">
@@ -41,7 +42,7 @@
 				</p:toolbar>
 
 			    <p:dataTable id="areas" var="area" value="#{viewTramites.listaAreas}" emptyMessage="#{msg['error.emptyRows']}"
-			    	 scrollable="true" scrollHeight="100%"
+			    	 scrollable="true" scrollHeight="#{viewTramites.height}" rows="100"  scrollRows="100" autoResize="true"
 			   		selection="#{viewTramites.listaAreasSeleccionadas}" rowKey="#{area.codigo}">
 					<p:ajax event="rowSelectCheckbox" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites"/>
 					<p:ajax event="rowSelect" global="false" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" onclick="myWidget.getPaginator().setPage(0)"/>
@@ -49,6 +50,7 @@
 					<p:ajax event="rowUnselectCheckbox" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites"/>
 					<p:ajax event="toggleSelect" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" />
 					<p:ajax event="rowDblselect" oncomplete="triggerDoubleClickArea();" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" />
+
 
 			        <p:column selectionMode="multiple" style="width:16px;text-align:center" />
 			        <p:column style="width:16px;text-align:center" >
@@ -71,8 +73,70 @@
 						</div>
         			</f:facet>
 			    </p:dataTable>
+					<h:outputScript>
+		      jQuery(document).ready(function() {
+                  var tram = #{viewTramites.idTramite!=null};
+                  var sesion = #{viewTramites.idTramiteVersion!=null};
+                  var pagTram = #{viewTramites.pag!=null};
+                  if(pagTram){
+                   var pagValor = #{viewTramites.pag};
+                   if(pagValor !=0){
+                  if(tram &amp;&amp; !sesion ){
+                 setTimeout(function(){ pageDatatableTram(); }, 100);
+                 }
+                 if(sesion &amp;&amp; tram){
+                 setTimeout(function(){ pageDatatable(); }, 100);
+                 }
+                 }
+                 }
 
-		    </div>
+
+		$(window).resize(function() {
+   		 resizeDatatable();
+   	});
+   });
+
+	var altura;
+	function almacenarHeight() {
+		altura = $('#form\\:dataTableTramites .ui-datatable-scrollable-body').height()
+	}
+
+	function refrescarHeight() {
+		$('#form\\:dataTableTramites .ui-datatable-scrollable-body').height(altura);
+	}
+
+	function resizeDatatable() {
+    document.getElementById("form:btnAspect").click();
+     }
+
+     function pageDatatable() {
+		document.getElementById("form:btnpage").click();
+	}
+	function pageDatatableTram() {
+		document.getElementById("form:btnpageTram").click();
+	}
+
+
+		    </h:outputScript>
+		    <input type="hidden" name="anchura" value="" />
+  		<input type="hidden" name="altura" value="" />
+					<h:commandButton id="btnAspect" action="#{viewTramites.onResizeTable}" style="visibility:hidden">
+						<p:ajax execute="@this" render="@this" process="@form" update=":form:areas :form:dataTableTramites" />
+					</h:commandButton>
+<!-- 					<p:commandButton value="Filter" id="btnpage" process="@this" update="@form:dataTableTramites" -->
+<!-- 						onclick="PF('myWidget').getPaginator().setPage('#{viewTramites.pag}')" /> -->
+
+							<p:commandButton value="Filter" id="btnpage" process="@this" update="@form:dataTableTramites" style="visibility:hidden"
+						onclick="PF('myWidget').getPaginator().setPage('#{viewTramites.pag}')" >
+						<p:ajax  execute="@this" listener="#{viewTramites.unSelectTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('V')"/>
+				</p:commandButton>
+				<p:commandButton value="Filter" id="btnpageTram" process="@this" update="@form:dataTableTramites" style="visibility:hidden"
+						onclick="PF('myWidget').getPaginator().setPage('#{viewTramites.pag}')" >
+						<p:ajax  execute="@this" listener="#{viewTramites.unSelectVersionTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('T')"/>
+				</p:commandButton>
+
+
+				</div>
 			<div class="ui-g-9 ui-g-nopad" style="padding-left:10px">
 
 				<!-- Toolbar -->
@@ -93,8 +157,8 @@
 			        		<p:commandButton id="btnEditarTramite" value="#{msg['botones.editarTramite']}" icon="fa fa-edit" actionListener="#{viewTramites.editarTramite}" process="@this" update="growl" rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosTramite and viewTramites.tramiteSeleccionada ne null}">
 			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl @form"/>
 			        		</p:commandButton>
-			        		<p:commandButton value="#{msg['botones.nuevaVersion']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaVersion}" process="@this" update="growl" rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosTramite and (viewTramites.tramiteSeleccionada ne null or viewTramites.versionSeleccionada ne null)}">
-			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoNuevaVersion}" update="growl @form" />
+							<p:commandButton value="#{msg['botones.nuevaVersion']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaVersion}" process="@this" update="growl" rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosTramite and (viewTramites.tramiteSeleccionada ne null or viewTramites.versionSeleccionada ne null)}">
+			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoNuevaVersion}" update="growl form:dataTableTramites" onstart="almacenarHeight();" oncomplete="refrescarHeight();" />
 			        		</p:commandButton>
 
 			        		<p:commandButton id="btnConsultarVersion" value="#{msg['botones.consultarVersion']}" icon="fa fa-edit" actionListener="#{viewTramites.consultarVersion}" process="@this" update="growl" rendered="#{not viewTramites.tienePermisosVersion and viewTramites.versionSeleccionada ne null and viewTramites.tienePermisosAreaConsulta}" />
@@ -160,7 +224,7 @@
 
 				<p:dataTable id="dataTableTramites" var="td" value="#{viewTramites.dataModel}"
 												 rows="10" emptyMessage="#{msg['error.emptyRows']}" rowExpandMode="single"
-												 scrollable="true" scrollHeight="100%"
+												 scrollable="true" scrollHeight="100%" rowIndexVar="rowIndex"
 						                         paginator="true" paginatorPosition="bottom"
 						                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 						                         rowsPerPageTemplate="5,10,15,30"

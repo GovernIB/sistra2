@@ -65,6 +65,15 @@
 }
 
 
+body[data-fluix="p"] .imc-tramitacio .imc--c { padding: 1em 15em 1em 1em; }
+body[data-fluix="p"] .imc-tramitacio h2 { line-height: 1.4em; }
+
+body[data-fluix="p"] .imc-tramitacio .imc--elimina { bottom: 0; top: 0; }
+
+
+
+
+
 /* molla pa */
 
 .imc-molla-pa { min-height: 3.2em; background-color: #fff; }
@@ -141,6 +150,11 @@
 }
 
 
+body[data-fluix="p"] .imc-molla-pa { display: none; }
+
+
+
+
 /* contingut */
 
 .imc-contingut h3 { margin-bottom: 1em; }
@@ -200,6 +214,11 @@ nav.imc--navegacio .imc-bt.imc--registrar:hover,
 nav.imc--navegacio .imc-bt.imc--registrar:focus {
 	background-color: #000;
 }
+
+
+body[data-fluix="p"] nav.imc--navegacio li:first-child { display: none; }
+
+
 
 
 /* peu */
@@ -269,6 +288,11 @@ aside address { display: inline; }
 
 
 /* missatge */
+
+
+.imc-missatge .imc--text { border: .5em solid #4dba79; transition: border .2s ease-out; }
+
+.imc-missatge:focus .imc--text { border-color: #000; }
 
 .imc-missatge .imc--text h2 { margin-bottom: .5em; margin-left: 5em; }
 .imc-missatge .imc--text h2 span { font-size: 1.4em; }
@@ -648,7 +672,7 @@ width: 100%; }
 }
 
 .imc-check input[type=checkbox] {
-	visibility: hidden;
+	/*visibility: hidden;*/
 }
 
 .imc-check span {
@@ -687,6 +711,11 @@ width: 100%; }
 .imc-check input[type=checkbox]:checked+span {
 	background-color: #265d3c;
 	border-color: #265d3c;
+}
+
+.imc-check input[type=checkbox]:focus+span {
+	background-color: #000 !important;
+	border-color: #000 !important;
 }
 
 .imc-check input[type=checkbox]:disabled+span {

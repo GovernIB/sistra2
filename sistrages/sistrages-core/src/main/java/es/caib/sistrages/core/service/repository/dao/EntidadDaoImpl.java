@@ -178,8 +178,7 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setContactoUrl(entidad.isUrlSoporteHabilitado());
 		jEntidad.setUrlSoporte(entidad.getUrlSoporte());
 		jEntidad.setContactoFormularioIncidencias(entidad.isFormularioIncidenciasHabilitado());
-		jEntidad.setUrlSede(
-				JLiteral.mergeModel(jEntidad.getUrlSede(), entidad.getUrlSede()));
+		jEntidad.setUrlSede(JLiteral.mergeModel(jEntidad.getUrlSede(), entidad.getUrlSede()));
 		jEntidad.setUrlCarpetaCiudadana(
 				JLiteral.mergeModel(jEntidad.getUrlCarpetaCiudadana(), entidad.getUrlCarpetaCiudadana()));
 		jEntidad.setDiasPreregistro(entidad.getDiasPreregistro());
@@ -243,7 +242,7 @@ public class EntidadDaoImpl implements EntidadDao {
 		if (StringUtils.isNotBlank(filtro)) {
 			sql += " LEFT JOIN e.nombre.traduccionLiterales t WHERE LOWER(e.codigoDir3) LIKE :filtro OR (t.idioma.identificador = :idioma AND LOWER(t.literal) LIKE :filtro) OR LOWER(e.roleAdministrador) LIKE :filtro";
 		}
-		sql += " ORDER BY e.codigoDir3";
+		sql += " ORDER BY e.nombre";
 
 		final Query query = entityManager.createQuery(sql);
 

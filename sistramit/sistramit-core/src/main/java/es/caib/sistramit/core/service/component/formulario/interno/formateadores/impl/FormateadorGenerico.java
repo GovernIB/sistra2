@@ -59,6 +59,12 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/** Propiedad plantilla que indica url logo. **/
 	public static final String PROP_LOGO_URL = "logo.url";
 
+	/** Propiedad plantilla que indica escalado alto logo en %. **/
+	public static final String PROP_LOGO_ALTO = "logo.escalado.alto";
+
+	/** Propiedad plantilla que indica escalado ancho logo en %. **/
+	public static final String PROP_LOGO_ANCHO = "logo.escalado.ancho";
+
 	/** Propiedad plantilla que indica visualización campos indexados. **/
 	public static final String PROP_VISUALIZACION_VALOR_INDEXADO = "campoIndexado.visualizacion";
 
@@ -67,6 +73,9 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
 	/** Propiedad plantilla que indica si se muestra título procedimiento. */
 	public static final String PROP_MOSTRAR_TITULO_PROCEDIMIENTO = "titulo.procedimiento";
+
+	/** Propiedad plantilla que indica si se muestra título en mayusculas. */
+	public static final String PROP_MOSTRAR_TITULO_MAYUSCULAS = "titulo.mayusculas";
 
 	/** Visualización campos indexados. **/
 	private TipoVisualizacionValorIndexado visualizacionValorIndexado;
@@ -77,10 +86,17 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/** Url de la imagen. **/
 	private String urlImagen;
 
-	/**
-	 * Si está activo, se mostrará procedimiento - titulo , sino solo el titulo.
-	 **/
+	/** Escalado alto imagen. */
+	private Integer escaladoAltoImagen;
+
+	/** Escalado ancho imagen. */
+	private Integer escaladoAnchoImagen;
+
+	/** Si se muestra procedimiento - titulo, sino solo el titulo. **/
 	private Boolean mostrarTituloConProcedimiento;
+
+	/** Si se muestra titulo en mayusculas. **/
+	private Boolean mostrarTituloMayusculas;
 
 	@Override
 	public byte[] formatear(final byte[] ixml, final byte[] plantilla, final String idioma,
@@ -101,7 +117,13 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 		} else {
 			cabecera.setTitulo(tituloProcedimiento);
 		}
+		// TODO PENDIENTE VERSALITAS
+		if (mostrarTituloMayusculas) {
+			cabecera.setTitulo(cabecera.getTitulo().toUpperCase());
+		}
+
 		cabecera.setCodigoSia(siaProcedimiento);
+
 		if (StringUtils.isNotBlank(urlImagen)) {
 			try {
 				byte[] arrayBytes = null;
@@ -111,6 +133,12 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 					arrayBytes = IOUtils.toByteArray(new FileInputStream(urlImagen));
 				}
 				cabecera.setLogoByte(arrayBytes);
+				if (escaladoAltoImagen != null) {
+					cabecera.setAltoLogo(escaladoAltoImagen);
+				}
+				if (escaladoAnchoImagen != null) {
+					cabecera.setAnchoLogo(escaladoAnchoImagen);
+				}
 			} catch (final IOException e) {
 				throw new FormateadorException("Error accediendo a url logo: " + urlImagen, e);
 			}
@@ -180,9 +208,13 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	private void inicializarValores(final byte[] plantilla) {
 
 		urlImagen = null;
+		escaladoAltoImagen = null;
+		escaladoAnchoImagen = null;
 		visualizacionValorIndexado = TipoVisualizacionValorIndexado.DESCRIPCION_CODIGO_CON_PARENTESIS;
 		mostrarAviso = false;
 		mostrarTituloConProcedimiento = false;
+		mostrarTituloMayusculas = false;
+
 		if (plantilla != null) {
 			try (ByteArrayInputStream bis = new ByteArrayInputStream(plantilla)) {
 
@@ -190,6 +222,12 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 				propiedades.load(bis);
 
 				urlImagen = propiedades.getProperty(PROP_LOGO_URL);
+				escaladoAltoImagen = (propiedades.getProperty(PROP_LOGO_ALTO) != null
+						? Integer.parseInt(propiedades.getProperty(PROP_LOGO_ALTO))
+						: null);
+				escaladoAnchoImagen = (propiedades.getProperty(PROP_LOGO_ANCHO) != null
+						? Integer.parseInt(propiedades.getProperty(PROP_LOGO_ANCHO))
+						: null);
 
 				if (StringUtils.isNotBlank(propiedades.getProperty(PROP_VISUALIZACION_VALOR_INDEXADO))) {
 					visualizacionValorIndexado = TipoVisualizacionValorIndexado
@@ -200,6 +238,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
 				mostrarTituloConProcedimiento = Boolean
 						.valueOf(propiedades.getProperty(PROP_MOSTRAR_TITULO_PROCEDIMIENTO));
+
+				mostrarTituloMayusculas = Boolean.valueOf(propiedades.getProperty(PROP_MOSTRAR_TITULO_MAYUSCULAS));
 
 			} catch (final Exception e) {
 				throw new FormateadorException("Error obteniendo propiedades formateador", e);

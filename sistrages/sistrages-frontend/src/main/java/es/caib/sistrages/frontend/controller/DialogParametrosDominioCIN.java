@@ -168,8 +168,7 @@ public class DialogParametrosDominioCIN extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de propiedades.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -204,6 +203,13 @@ public class DialogParametrosDominioCIN extends DialogControllerBase {
 	}
 
 	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("definicionEdicionParametrosdomini");
+	}
+
+	/**
 	 * @return the data
 	 */
 	public List<ParametroDominio> getData() {
@@ -211,8 +217,7 @@ public class DialogParametrosDominioCIN extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final List<ParametroDominio> data) {
 		this.data = data;

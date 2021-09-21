@@ -84,6 +84,8 @@
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogParametrosDominioCIN.aceptar}" process="@form" update="@form growldialogParametrosDominioCIN" styleClass="boton-azul" />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogParametrosDominioCIN.cancelar}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogParametrosDominioCIN.ayuda()}" process="@this"/>
+
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

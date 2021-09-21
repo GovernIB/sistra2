@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import javax.el.MethodExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -28,6 +28,7 @@ import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
 import es.caib.sistrages.core.api.service.DominioService;
+import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -62,6 +63,9 @@ public class DialogDominio extends DialogControllerBase {
 
 	@Inject
 	private SystemService systemService;
+
+	@Inject
+	private EntidadService entidadService;
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -743,8 +747,12 @@ public class DialogDominio extends DialogControllerBase {
 				lIdArea = Long.valueOf(idArea);
 			}
 			// Verifica unicidad codigo dominio
+			String nuevoDominio = this.data.getIdentificador();
 			if (dominioService.loadDominio(this.data.getIdentificador()) != null) {
-				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
+				Object[] valueHolder = new Object[2];
+				valueHolder = mensaje(nuevoDominio);
+				addMessageContext(TypeNivelGravedad.ERROR,
+						UtilJSF.getLiteral((String) valueHolder[0], (Object[]) valueHolder[1]));
 				return false;
 			}
 			// Alta dominio
@@ -956,6 +964,28 @@ public class DialogDominio extends DialogControllerBase {
 		}
 
 		return true;
+	}
+
+	public Object[] mensaje(String nuevoIdentificador) {
+		Dominio dataNuevo = dominioService.loadDominio(nuevoIdentificador);
+		Object[] propiedades = new Object[2];
+		Object[] valueHolder = new Object[2];
+		Set<Area> areas = dataNuevo.getAreas();
+		if (dataNuevo.getAmbito() == TypeAmbito.AREA && areas.iterator().next().getIdentificador() != null) {
+			Area elarea = areas.iterator().next();
+			propiedades[0] = elarea.getCodigoDIR3Entidad();
+			propiedades[1] = elarea.getIdentificador();
+			valueHolder[0] = "dialogDominio.error.duplicated.area";
+			valueHolder[1] = propiedades;
+		} else if (dataNuevo.getAmbito() == TypeAmbito.ENTIDAD && dataNuevo.getEntidad() != null) {
+			propiedades[0] = entidadService.loadEntidad(dataNuevo.getEntidad()).getCodigoDIR3();
+			valueHolder[0] = "dialogDominio.error.duplicated.entidad";
+			valueHolder[1] = propiedades;
+		} else {
+			valueHolder[0] = "dialogDominio.error.codigoRepetido";
+			valueHolder[1] = null;
+		}
+		return valueHolder;
 	}
 
 	/**

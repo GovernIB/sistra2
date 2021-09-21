@@ -72,6 +72,9 @@ function appFormsInicia() {
 	imc_forms_contenidor
 		.appFormsConfiguracio({ forms_json: FORMS_JSON, desDe: "inicia" });
 
+	//imc_body
+	//	.appTitle();
+
 	/*
 
 	// ajuda

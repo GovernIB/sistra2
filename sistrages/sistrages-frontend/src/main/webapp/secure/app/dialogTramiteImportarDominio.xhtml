@@ -33,9 +33,11 @@
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w25 va-top, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerDominioActual']}:" />
+
 					<p:column>
-						<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerDominioActual.noexiste']}" rendered="#{dialogTramiteImportarDominio.data.dominioActual == null}" />
-						<p:commandButton value="#{msg['botones.consultar']}" actionListener="#{dialogTramiteImportarDominio.consultarDominio(dialogTramiteImportarDominio.data.dominioActual)}" process="@this" styleClass="boton-azul" rendered="#{dialogTramiteImportarDominio.data.dominioActual != null}" />
+                       <h:outputText value="#{dialogTramiteImportarDominio.data.dominioActual.identificador}" styleClass="margin-right-20" rendered="#{dialogTramiteImportarDominio.data.dominioActual != null}" />
+                        <p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerDominioActual.noexiste']}" rendered="#{dialogTramiteImportarDominio.data.dominioActual == null}" />
+                        <p:commandButton value="#{msg['botones.consultar']}" actionListener="#{dialogTramiteImportarDominio.consultarDominio(dialogTramiteImportarDominio.data.dominioActual)}" process="@this" styleClass="boton-azul" rendered="#{dialogTramiteImportarDominio.data.dominioActual != null}" />
 					</p:column>
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerFDactual']}:"  rendered="#{dialogTramiteImportarDominio.mostrarFD and dialogTramiteImportarDominio.mostrarReemplazar and dialogTramiteImportarDominio.mostrarFDActual}" />
