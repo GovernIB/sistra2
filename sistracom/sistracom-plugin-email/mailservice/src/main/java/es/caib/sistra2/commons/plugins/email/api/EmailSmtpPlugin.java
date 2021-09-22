@@ -5,10 +5,16 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 import javax.naming.InitialContext;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -54,7 +60,6 @@ public class EmailSmtpPlugin extends AbstractPluginProperties implements IEmailP
 				contenido = StringEscapeUtils.escapeHtml4(new String(mensaje.getBytes(), ENCODING));
 			}
 
-			msg.setContent(contenido, "text/html; charset=utf-8");
 			msg.setHeader("X-Mailer", "JavaMailer");
 			String mailFrom = null;
 			if (mailSession.getProperty("mail.from") != null) {
@@ -65,6 +70,28 @@ public class EmailSmtpPlugin extends AbstractPluginProperties implements IEmailP
 				throw new EmailPluginException("Error, mail from no especificado");
 			}
 			msg.setFrom(new InternetAddress(mailFrom));
+
+			if (anexos != null && !anexos.isEmpty()) {
+				// Envio con anexos
+				final Multipart multipart = new MimeMultipart("mixed");
+				// Mensaje
+				final MimeBodyPart textPart = new MimeBodyPart();
+				textPart.setContent(contenido, "text/html; charset=utf-8");
+				multipart.addBodyPart(textPart);
+				// Anexos
+				for (final AnexoEmail a : anexos) {
+					final DataSource source = new ByteArrayDataSource(a.getContent(), a.getContentType());
+					final MimeBodyPart messageBodyPart = new MimeBodyPart();
+					messageBodyPart.setDataHandler(new DataHandler(source));
+					messageBodyPart.setFileName(a.getFileName());
+					multipart.addBodyPart(messageBodyPart);
+				}
+				// Mensaje + Anexos
+				msg.setContent(multipart);
+			} else {
+				// Envio sin anexos
+				msg.setContent(contenido, "text/html; charset=utf-8");
+			}
 
 			Transport.send(msg);
 
@@ -86,7 +113,8 @@ public class EmailSmtpPlugin extends AbstractPluginProperties implements IEmailP
 	/**
 	 * Obtiene propiedad.
 	 *
-	 * @param propiedad propiedad
+	 * @param propiedad
+	 *                      propiedad
 	 * @return valor
 	 * @throws AutenticacionPluginException
 	 */

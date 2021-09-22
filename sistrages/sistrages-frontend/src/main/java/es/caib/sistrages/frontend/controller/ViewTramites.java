@@ -41,6 +41,7 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
+import es.caib.sistrages.core.api.model.types.TypeErrorValidacion;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
@@ -164,7 +165,9 @@ public class ViewTramites extends ViewControllerBase {
 				.getParameter("tramite_version");
 		pag = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest())
 				.getParameter("pag");
-
+		if (pag == null) {
+			pag = "0";
+		}
 		mostrarTodasAreas = false;
 		buscarAreas();
 
@@ -877,11 +880,11 @@ public class ViewTramites extends ViewControllerBase {
 						first = 0;
 
 					}
-					if (pag != null) {
+					if (pag != "0") {
 						int primero = Integer.parseInt(pag);
 						first = primero * 10;
 
-						pag = null;
+						pag = "0";
 					}
 					tramites = tramiteService.listTramite(first, pageSize, sortField, true,
 							UtilJSF.getSessionBean().getEntidad().getCodigo(), convertirAreas(), filtro);
@@ -1585,22 +1588,6 @@ public class ViewTramites extends ViewControllerBase {
 		}
 	}
 
-	private void eliminarDominio(Dominio dom) {
-		int i = 0;
-		boolean eliminar = false;
-		for (Dominio domUsado : dominiosNoUtilizados) {
-			if (domUsado.equals(dom)) {
-				eliminar = true;
-				break;
-			} else {
-				i++;
-			}
-		}
-		if (eliminar) {
-			dominiosNoUtilizados.remove(i);
-		}
-	}
-
 	/**
 	 * Verificar dominio.
 	 *
@@ -1620,12 +1607,16 @@ public class ViewTramites extends ViewControllerBase {
 
 				for (ComponenteFormulario selector : linea.getComponentes()) {
 					if (selector.getTipo().equals(TypeObjetoFormulario.SELECTOR)) {
+
 						ComponenteFormularioCampoSelector campoSelector = (ComponenteFormularioCampoSelector) selector;
-						for (Dominio dom : dominios) {
+						dominioScriptSelector(campoSelector, dominios);
+						for (int i = 0; i < dominios.size(); i++) {
 
 							if (campoSelector.getCodDominio() != null
-									&& campoSelector.getCodDominio().equals(dom.getCodigo())) {
-								eliminarDominio(dom);
+									&& campoSelector.getCodDominio().equals(dominios.get(i).getCodigo())) {
+								if (dominiosNoUtilizados.contains(dominios.get(i))) {
+									dominiosNoUtilizados.remove(dominios.get(i));
+								}
 
 							}
 						}
@@ -1651,6 +1642,32 @@ public class ViewTramites extends ViewControllerBase {
 		}
 		if (pag.getScriptValidacion() != null) {
 			tieneDominio(pag.getScriptValidacion(), dominios);
+
+		}
+
+	}
+
+	/**
+	 * Dominio script.
+	 *
+	 * @param pasoForm the paso form
+	 */
+	private void dominioScriptSelector(ComponenteFormularioCampoSelector campoSelector, List<Dominio> dominios) {
+
+		if (campoSelector.getScriptAutorrellenable() != null) {
+			tieneDominio(campoSelector.getScriptAutorrellenable(), dominios);
+
+		}
+		if (campoSelector.getScriptSoloLectura() != null) {
+			tieneDominio(campoSelector.getScriptSoloLectura(), dominios);
+
+		}
+		if (campoSelector.getScriptValidacion() != null) {
+			tieneDominio(campoSelector.getScriptValidacion(), dominios);
+
+		}
+		if (campoSelector.getScriptValoresPosibles() != null) {
+			tieneDominio(campoSelector.getScriptValoresPosibles(), dominios);
 
 		}
 
@@ -1802,15 +1819,36 @@ public class ViewTramites extends ViewControllerBase {
 
 	}
 
+//	/**
+//	 * Tiene dominio.
+//	 *
+//	 * @param script the script
+//	 */
+//	private void tieneDominio(Script script, List<Dominio> dominios) {
+//		for (Dominio dom : dominios) {
+//			if (script.getContenido().contains(dom.getDescripcion())) {
+//				if (dominiosNoUtilizados.contains(dom)) {
+//					dominiosNoUtilizados.add(dom);
+//
+//				}
+//
+//			}
+//		}
+//
+//	}
+
 	/**
 	 * Tiene dominio.
 	 *
 	 * @param script the script
 	 */
 	private void tieneDominio(Script script, List<Dominio> dominios) {
-		for (Dominio dom : dominios) {
-			if (script.getContenido().contains(dom.getDescripcion())) {
-				eliminarDominio(dom);
+		for (int i = 0; i < dominios.size(); i++) {
+			if (script.getContenido().contains(dominios.get(i).getIdentificador())) {
+				if (dominiosNoUtilizados.contains(dominios.get(i))) {
+					dominiosNoUtilizados.remove(dominios.get(i));
+
+				}
 
 			}
 		}
@@ -1912,17 +1950,17 @@ public class ViewTramites extends ViewControllerBase {
 		final List<ErrorValidacion> listaErrores = tramiteService
 				.validarVersionTramite(this.versionSeleccionada.getCodigo(), UtilJSF.getSessionBean().getLang());
 
-//		contieneDominio();
-//		if (dominiosNoUtilizados != null) {
-//			for (Dominio dominioNoUtil : dominiosNoUtilizados) {
-//
-//				ErrorValidacion errorVal = new ErrorValidacion();
-//				errorVal.setDescripcion("No se esta utilizando el dominio indicado");
-//				errorVal.setElemento(dominioNoUtil.getIdentificador());
-//				errorVal.setTipo(TypeErrorValidacion.DOMINIOS);
-//				listaErrores.add(errorVal);
-//			}
-//		}
+		contieneDominio();
+		if (dominiosNoUtilizados != null) {
+			for (Dominio dominioNoUtil : dominiosNoUtilizados) {
+
+				ErrorValidacion errorVal = new ErrorValidacion();
+				errorVal.setDescripcion("No se esta utilizando el dominio indicado");
+				errorVal.setElemento(dominioNoUtil.getIdentificador());
+				errorVal.setTipo(TypeErrorValidacion.DOMINIOS);
+				listaErrores.add(errorVal);
+			}
+		}
 
 		if (!listaErrores.isEmpty()) {
 			for (ErrorValidacion error : listaErrores) {
