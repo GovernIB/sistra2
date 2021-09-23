@@ -129,7 +129,9 @@ public class DialogDominioPing extends DialogControllerBase {
 			setMostrarError(true);
 			setMostrarTablaDatos(false);
 			setMostrarTablaFicheros(false);
-			addMessageContext(TypeNivelGravedad.ERROR, "Error");
+			addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogDominioPing.error.conexion")
+					);
 		}
 	}
 
