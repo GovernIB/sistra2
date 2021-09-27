@@ -1,6 +1,7 @@
 package es.caib.sistra2.commons.utils;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -11,6 +12,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 
@@ -932,7 +934,7 @@ public final class ValidacionesTipo {
 
 	/**
 	 * Calcula distancia dias.
-	 * 
+	 *
 	 * @param pFecha1
 	 *                    Fecha inicio
 	 * @param pFecha2
@@ -1159,5 +1161,25 @@ public final class ValidacionesTipo {
 		resultado = finCalendar.before(iniCalendar); // Comparación de fechas.
 		return !resultado; // Salida de la función.
 
+	}
+
+	/**
+	 * Convierte a B64 Url safe.
+	 *
+	 * @param cadena
+	 *                   cadena
+	 * @return B64 Url safe
+	 * @throws ValidacionTipoException
+	 */
+	public String convierteBase64UrlSafe(final String cadena) throws ValidacionTipoException {
+		try {
+			String res = null;
+			if (cadena != null) {
+				res = Base64.encodeBase64URLSafeString(cadena.getBytes(StandardCharsets.UTF_8));
+			}
+			return res;
+		} catch (final Exception e) {
+			throw new ValidacionTipoException("No se puede convertir a B64 Url safe.");
+		}
 	}
 }

@@ -85,6 +85,7 @@
 				<li><span class="nombreCampo">Plantilla para mail fin de registro</span> Permite añadir una plantilla externa de correo que será la que se envie en el caso de que en el trámite se envie un correo. En caso de no tener ninguna plantilla añadida, se enviará la plantilla genérica de correo de fin de registro. Esta plantilla ha de tener formato .html y acepta los siguientes placeholders:</li>
 					<ul>
 						<li>Número de registro: ${NUMERO_REGISTRO}</li>
+						<li>Número de registro (Base64 Url Safe): ${NUMERO_REGISTRO_B64URLSAFE} (para poder ser pasado como parámetro en una URL)</li>
 						<li>URL Seu: ${URL_SEDE}</li>
 						<li>URL Carpeta: ${URL_CARPETA}</li>
 						<li>URL Logo: ${URL_LOGO}</li>

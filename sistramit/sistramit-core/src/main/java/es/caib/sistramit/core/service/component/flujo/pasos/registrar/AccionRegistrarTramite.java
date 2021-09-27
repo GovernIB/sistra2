@@ -25,6 +25,8 @@ import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeValidez;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistra2.commons.utils.NifUtils;
+import es.caib.sistra2.commons.utils.ValidacionTipoException;
+import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RPlantillaEntidad;
 import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
@@ -179,6 +181,13 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			if (plantilla != null) {
 				// Sustituir placeholders
 				plantilla = StringUtils.replace(plantilla, "${NUMERO_REGISTRO}", resReg.getNumeroRegistro());
+				try {
+					plantilla = StringUtils.replace(plantilla, "${NUMERO_REGISTRO_B64URLSAFE}",
+							ValidacionesTipo.getInstance().convierteBase64UrlSafe(resReg.getNumeroRegistro()));
+				} catch (final ValidacionTipoException e) {
+					throw new AccionPasoNoPermitidaException(
+							"No se ha podido convertir número registro a B64: " + resReg.getNumeroRegistro());
+				}
 				plantilla = StringUtils.replace(plantilla, "${URL_SEDE}", urlSede);
 				plantilla = StringUtils.replace(plantilla, "${URL_CARPETA}", urlCarpeta);
 				plantilla = StringUtils.replace(plantilla, "${URL_LOGO}", urlLogo);

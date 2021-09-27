@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,7 @@ import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaDigital;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeInteresado;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
+import es.caib.sistra2.commons.utils.ValidacionesTipo;
 
 /**
  * Implementacion REGWEB3 del plugin registro.
@@ -234,8 +236,10 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 				content = result.getJustificante();
 				break;
 			case CARPETA_CIUDADANA:
-				// url = "/registro/detalle/" + numeroRegistro;
-				url = "/#/moduls/registres/p/" + numeroRegistro;
+				url = getPropiedad(ConstantesRegweb3.PROP_JUSTITICANTE_URL);
+				url = StringUtils.replace(url, "${NUMERO_REGISTRO}", numeroRegistro);
+				url = StringUtils.replace(url, "${NUMERO_REGISTRO_B64URLSAFE}",
+						ValidacionesTipo.getInstance().convierteBase64UrlSafe(numeroRegistro));
 				break;
 			default:
 				// No debe entrar aquí.
@@ -322,8 +326,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	/**
 	 * Mapea datos asiento a parametro ws.
 	 *
-	 * @param asiento
-	 *                    asiento registral
+	 * @param asiento asiento registral
 	 * @throws RegistroPluginException
 	 */
 	private AsientoRegistralWs mapearParametrosRegistro(final AsientoRegistral asiento) throws RegistroPluginException {
@@ -424,8 +427,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	/**
 	 * Obtiene propiedad.
 	 *
-	 * @param propiedad
-	 *                      propiedad
+	 * @param propiedad propiedad
 	 * @return valor
 	 * @throws RegistroPluginException
 	 */
@@ -440,8 +442,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	/**
 	 * Obtiene propiedad y si no existe retorna valor defecto.
 	 *
-	 * @param propiedad
-	 *                      propiedad
+	 * @param propiedad propiedad
 	 * @return valor
 	 */
 	private String getPropiedad(final String propiedad, final String defaultValue) {
@@ -455,8 +456,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	/**
 	 * Genera mensaje debug.
 	 *
-	 * @param message
-	 *                    Mensaje
+	 * @param message Mensaje
 	 */
 	private void debug(final String message) {
 		if (isDebugEnabled()) {

@@ -39,6 +39,8 @@ public class ConstantesRegweb3 {
 	 * (true/false).
 	 */
 	public final static String PROP_JUSTIFICANTE_DESCARGA = "justificanteDESCARGA";
+	/** Nombre de propiedad que indica ruta */
+	public final static String PROP_JUSTITICANTE_URL = "justificanteURL";
 
 	/** Constante para indicar registro entrada. */
 	public static final Long REGISTRO_ENTRADA = 1L;
