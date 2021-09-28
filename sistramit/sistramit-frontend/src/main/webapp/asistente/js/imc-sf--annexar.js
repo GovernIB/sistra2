@@ -436,6 +436,14 @@ $.fn.appAnnexa = function(options) {
 
 					}, 300);
 
+				// foco en l'enllaç
+
+				var doc_obert_id = imc_document.attr("data-id");
+
+				imc_docs
+					.find("li[data-id="+doc_obert_id+"]:first a.imc--doc-obri")
+						.focus();
+
 			},
 			envia = function(e) {
 
@@ -610,7 +618,7 @@ $.fn.appAnnexa = function(options) {
 
 				if (doc_tipus === "e") {
 
-					var form_annexes = imc_doc_electronic_form.find("input[type=file]"),
+					var form_annexes = imc_doc_electronic_form.find(".imc--per-afegir:first input[type=file]"),
 						hiHaArxius = (form_annexes.length) ? true : false;
 
 					if (hiHaArxius) {
