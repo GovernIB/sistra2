@@ -290,12 +290,13 @@
 html.imc--sense-scroll,
 body.imc--sense-scroll { overflow: hidden; }
 
-.imc-pagament iframe { border: .5em solid #4dba79; transition: border .2s ease-out; }
-.imc-pagament:focus iframe { border-color: #000; }
+.imc-pagament iframe { outline: none; transition: outline .2s ease-out; }
+.imc-pagament:focus iframe { outline-color: #294233; }
 
 
 
-/* media 
+
+/* media
 
 @media only screen and (max-width : 850px) {
 
@@ -303,7 +304,7 @@ body.imc--sense-scroll { overflow: hidden; }
 
 	.imc--icones { padding-left: 1.5em; }
 	.imc--icones ul { font-size: .8em; }
-	
+
 }
 
 

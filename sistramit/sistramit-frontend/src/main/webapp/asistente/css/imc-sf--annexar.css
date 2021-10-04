@@ -234,8 +234,10 @@
 html.imc--sense-scroll,
 body.imc--sense-scroll { overflow: hidden; }
 
-.imc-document .imc-document-contingut { border: .5em solid #4dba79; transition: border .2s ease-out; }
-.imc-document:focus .imc-document-contingut { border-color: #000; }
+
+.imc-document .imc-document-contingut { outline: none; transition: outline .2s ease-out; }
+.imc-document:focus .imc-document-contingut { outline-color: #294233; }
+
 
 
 /* document */
@@ -484,7 +486,7 @@ border: 2px solid #ddd;
 	background: transparent url(imgs/icones/ico_error.svg) no-repeat 1.3em 50% / auto 1.5em;
 }
 
-/* media 
+/* media
 
 @media only screen and (max-width : 850px) {
 

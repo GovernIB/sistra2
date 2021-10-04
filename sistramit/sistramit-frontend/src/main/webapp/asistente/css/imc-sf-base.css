@@ -290,9 +290,8 @@ aside address { display: inline; }
 /* missatge */
 
 
-.imc-missatge .imc--text { border: .5em solid #4dba79; transition: border .2s ease-out; }
-
-.imc-missatge:focus .imc--text { border-color: #000; }
+.imc-missatge .imc--text { outline: none; transition: outline .2s ease-out; }
+.imc-missatge:focus .imc--text { outline-color: #294233; }
 
 .imc-missatge .imc--text h2 { margin-bottom: .5em; margin-left: 5em; }
 .imc-missatge .imc--text h2 span { font-size: 1.4em; }
@@ -894,7 +893,7 @@ html[data-estil="ac"] .imc-cap .imc--opcions .imc-bt {
 	.imc-bt.imc--elimina::before {
 		background-image: url(imgs/icones/ico_eliminau_fff.svg);
 	}
-	
+
 	.imc-bt.imc--ico::before {
 		margin-right: 0;
 	}
@@ -945,7 +944,7 @@ html[data-estil="ac"] .imc-cap .imc--opcions .imc-bt {
 
 
 
-/* media 
+/* media
 
 @media only screen and (max-width : 850px) {
 
@@ -1048,7 +1047,7 @@ html[data-estil="ac"] .imc-cap .imc--opcions .imc-bt {
 
 
 @media only screen and (max-width : 370px) {
-	
+
 	.imc-molla-pa li::before { margin: 0 .5em; }
 
     nav li { width: 45%; }

@@ -22,7 +22,7 @@
 , .imc-forms--missatge fieldset { font-size: 1em; list-style: none; margin: 0; padding: 0; outline: none; border: none; }
 
 .imc-forms--missatge *, .imc-forms--missatge *::before, .imc-forms--missatge *::after {
-  -webkit-box-sizing: border-box; 
+  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -75,9 +75,8 @@
 }
 
 
-.imc-forms--missatge .imc--text { border: .5em solid #4dba79; transition: border .2s ease-out; }
-
-.imc-forms--missatge:focus .imc--text { border-color: #000; }
+.imc-forms--missatge .imc--text { outline: none; transition: outline .2s ease-out; }
+.imc-forms--missatge:focus .imc--text { outline-color: #294233; }
 
 .imc-forms--missatge .imc--text h2 { margin-bottom: .5em; margin-left: 5em; }
 .imc-forms--missatge .imc--text h2 span { font-size: 1.4em; }
