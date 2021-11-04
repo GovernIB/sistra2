@@ -1233,7 +1233,13 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		final Query query = entityManager.createQuery(sqlPaginas);
 		query.setParameter("idFormulario", idFormulario);
 
-		return query.getSingleResult().toString();
+		String resultado = null;
+
+		List<String> oresultado = query.getResultList();
+		if (oresultado != null && oresultado.size() > 0) {
+			resultado = oresultado.get(0).toString();
+		}
+		return resultado;
 	}
 
 	@Override

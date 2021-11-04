@@ -15,7 +15,7 @@
   	<ul>
   		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_SESIONTRAMITACION">PLUGIN_SESIONTRAMITACION</a></li>
       	  <li>></li>
-      	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_SESIONTRAMITACION&metodo=getRepresentanteUsuario">getRepresentanteUsuario</a></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_SESIONTRAMITACION&metodo=getRepresentanteUsuario">getRepresentante</a></li>
   	</ul>
 </div>
 
@@ -28,7 +28,7 @@
 </p>
 <p>
 	<ul>
-		<li>Mètode que retorna l'objecte 'DATOS_USUARIO' amb la informació de l'representant de l'usuari autenticat (aquesta informació la retorna el sistema de connexió).
+		<li>Mètode que retorna l'objecte 'DATOS_USUARIO' amb la informació del representant de l'usuari autenticat (aquesta informació la retorna el sistema de connexió).
 		</li>
 		<li>Només és possible el seu ús en tràmits autenticats.</li>
 	</ul>
@@ -48,7 +48,7 @@
 <p class="codigoScript">
 	var autenticado = PLUGIN_SESIONTRAMITACION.isAutenticado();
 	if (autenticado == true) {
-		var usuario = PLUGIN_SESIONTRAMITACION.getRepresentanteUsuario();
+		var usuario = PLUGIN_SESIONTRAMITACION.getRepresentante();
 	}
  </p>
  <p>

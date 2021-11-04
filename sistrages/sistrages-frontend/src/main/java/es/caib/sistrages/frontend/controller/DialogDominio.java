@@ -24,6 +24,7 @@ import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeCache;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
@@ -192,7 +193,7 @@ public class DialogDominio extends DialogControllerBase {
 			fuentes = dominioService.listFuenteDato(TypeAmbito.AREA, Long.valueOf(idArea), null);
 			configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(Long.valueOf(idArea),
 					TypeIdioma.fromString(UtilJSF.getSessionBean().getLang()), null);
-			ConfiguracionAutenticacion configAutSinAutenticacion = new ConfiguracionAutenticacion();
+			final ConfiguracionAutenticacion configAutSinAutenticacion = new ConfiguracionAutenticacion();
 			configAutSinAutenticacion.setCodigo(null);
 			configAutSinAutenticacion.setIdentificador(UtilJSF.getLiteral("dialogDominio.sinAutenticacion"));
 			configuraciones.add(0, configAutSinAutenticacion);
@@ -287,7 +288,8 @@ public class DialogDominio extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de propiedades.
 	 *
-	 * @param event respuesta dialogo
+	 * @param event
+	 *                  respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -397,9 +399,12 @@ public class DialogDominio extends DialogControllerBase {
 	 */
 	public void refrescarCache() {
 
-		final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
-		final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
-		final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+		final String urlBase = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
+		final String usuario = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
+		final String pwd = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
 
 		this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_DOMINIO, data.getIdentificador());
 	}
@@ -442,7 +447,8 @@ public class DialogDominio extends DialogControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event respuesta dialogo
+	 * @param event
+	 *                  respuesta dialogo
 	 */
 	public void returnDialogoConf(final SelectEvent event) {
 
@@ -451,11 +457,11 @@ public class DialogDominio extends DialogControllerBase {
 		// Verificamos si se ha modificado
 		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 			// Mensaje
-			String message = UtilJSF.getLiteral("info.alta.ok");
+			final String message = UtilJSF.getLiteral("info.alta.ok");
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
 			// La ponemos por defecto
-			ConfiguracionAutenticacion conf = (ConfiguracionAutenticacion) ((DialogResult) event.getObject())
+			final ConfiguracionAutenticacion conf = (ConfiguracionAutenticacion) ((DialogResult) event.getObject())
 					.getResult();
 			this.data.setConfiguracionAutenticacion(conf);
 			this.configuraciones.add(conf);
@@ -655,9 +661,12 @@ public class DialogDominio extends DialogControllerBase {
 		}
 
 		if (invalidaciones) {
-			final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
-			final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
-			final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+			final String urlBase = systemService
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
+			final String usuario = systemService
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
+			final String pwd = systemService
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
 
 			this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_DOMINIO, data.getIdentificador(), false);
 		}
@@ -721,11 +730,13 @@ public class DialogDominio extends DialogControllerBase {
 			this.data.setIdFuenteDatos(null);
 		}
 
-//		if (this.getData().getTipo() == TypeDominio.CONSULTA_REMOTA && this.configuracion != null) {
-//			//final ConfiguracionAutenticacion configuracion = configuracionAutenticacionService.getConfiguracionAutenticacion(idConfiguracion);
-//			//this.data.setConfiguracionAutenticacion(configuracion);
-//			this.data.setConfiguracionAutenticacion(configuracion);
-//		}
+		// if (this.getData().getTipo() == TypeDominio.CONSULTA_REMOTA &&
+		// this.configuracion != null) {
+		// //final ConfiguracionAutenticacion configuracion =
+		// configuracionAutenticacionService.getConfiguracionAutenticacion(idConfiguracion);
+		// //this.data.setConfiguracionAutenticacion(configuracion);
+		// this.data.setConfiguracionAutenticacion(configuracion);
+		// }
 
 		if (this.getData().getTipo() == TypeDominio.CONSULTA_REMOTA
 				&& this.getData().getConfiguracionAutenticacion() != null
@@ -747,7 +758,7 @@ public class DialogDominio extends DialogControllerBase {
 				lIdArea = Long.valueOf(idArea);
 			}
 			// Verifica unicidad codigo dominio
-			String nuevoDominio = this.data.getIdentificador();
+			final String nuevoDominio = this.data.getIdentificador();
 			if (dominioService.loadDominio(this.data.getIdentificador()) != null) {
 				Object[] valueHolder = new Object[2];
 				valueHolder = mensaje(nuevoDominio);
@@ -966,13 +977,13 @@ public class DialogDominio extends DialogControllerBase {
 		return true;
 	}
 
-	public Object[] mensaje(String nuevoIdentificador) {
-		Dominio dataNuevo = dominioService.loadDominio(nuevoIdentificador);
-		Object[] propiedades = new Object[2];
-		Object[] valueHolder = new Object[2];
-		Set<Area> areas = dataNuevo.getAreas();
+	public Object[] mensaje(final String nuevoIdentificador) {
+		final Dominio dataNuevo = dominioService.loadDominio(nuevoIdentificador);
+		final Object[] propiedades = new Object[2];
+		final Object[] valueHolder = new Object[2];
+		final Set<Area> areas = dataNuevo.getAreas();
 		if (dataNuevo.getAmbito() == TypeAmbito.AREA && areas.iterator().next().getIdentificador() != null) {
-			Area elarea = areas.iterator().next();
+			final Area elarea = areas.iterator().next();
 			propiedades[0] = elarea.getCodigoDIR3Entidad();
 			propiedades[1] = elarea.getIdentificador();
 			valueHolder[0] = "dialogDominio.error.duplicated.area";
@@ -996,7 +1007,8 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *               the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -1010,7 +1022,8 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data the data to set
+	 * @param data
+	 *                 the data to set
 	 */
 	public void setData(final Dominio data) {
 		this.data = data;
@@ -1025,7 +1038,8 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param propiedadSeleccionada the propiedadSeleccionada to set
+	 * @param propiedadSeleccionada
+	 *                                  the propiedadSeleccionada to set
 	 */
 	public void setPropiedadSeleccionada(final Propiedad propiedadSeleccionada) {
 		this.propiedadSeleccionada = propiedadSeleccionada;
@@ -1039,7 +1053,8 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleJNDI the visibleJNDI to set
+	 * @param visibleJNDI
+	 *                        the visibleJNDI to set
 	 */
 	public void setVisibleJNDI(final boolean visibleJNDI) {
 		this.visibleJNDI = visibleJNDI;
@@ -1053,7 +1068,8 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param valorSeleccionado the valorSeleccionado to set
+	 * @param valorSeleccionado
+	 *                              the valorSeleccionado to set
 	 */
 	public void setValorSeleccionado(final Propiedad valorSeleccionado) {
 		this.valorSeleccionado = valorSeleccionado;
@@ -1067,7 +1083,8 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleLista the visibleLista to set
+	 * @param visibleLista
+	 *                         the visibleLista to set
 	 */
 	public void setVisibleLista(final boolean visibleLista) {
 		this.visibleLista = visibleLista;
@@ -1081,7 +1098,8 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleRemoto the visibleRemoto to set
+	 * @param visibleRemoto
+	 *                          the visibleRemoto to set
 	 */
 	public void setVisibleRemoto(final boolean visibleRemoto) {
 		this.visibleRemoto = visibleRemoto;
@@ -1095,7 +1113,8 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param visibleFuente the visibleFuente to set
+	 * @param visibleFuente
+	 *                          the visibleFuente to set
 	 */
 	public void setVisibleFuente(final boolean visibleFuente) {
 		this.visibleFuente = visibleFuente;
@@ -1109,7 +1128,8 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param fuentes the fuentes to set
+	 * @param fuentes
+	 *                    the fuentes to set
 	 */
 	public void setFuentes(final List<FuenteDatos> fuentes) {
 		this.fuentes = fuentes;
@@ -1123,7 +1143,8 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tipos the tipos to set
+	 * @param tipos
+	 *                  the tipos to set
 	 */
 	public void setTipos(final List<TypeDominio> tipos) {
 		this.tipos = tipos;
@@ -1137,7 +1158,8 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param dominioService the dominioService to set
+	 * @param dominioService
+	 *                           the dominioService to set
 	 */
 	public void setDominioService(final DominioService dominioService) {
 		this.dominioService = dominioService;
@@ -1151,7 +1173,8 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param ambito the ambito to set
+	 * @param ambito
+	 *                   the ambito to set
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;
@@ -1165,7 +1188,8 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idArea the idArea to set
+	 * @param idArea
+	 *                   the idArea to set
 	 */
 	public void setIdArea(final String idArea) {
 		this.idArea = idArea;
@@ -1179,7 +1203,8 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idEntidad the idEntidad to set
+	 * @param idEntidad
+	 *                      the idEntidad to set
 	 */
 	public void setIdEntidad(final String idEntidad) {
 		this.idEntidad = idEntidad;
@@ -1193,7 +1218,8 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idFuenteDato the idFuenteDato to set
+	 * @param idFuenteDato
+	 *                         the idFuenteDato to set
 	 */
 	public void setIdFuenteDato(final Long idFuenteDato) {
 		this.idFuenteDato = idFuenteDato;
@@ -1214,7 +1240,8 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarAdvertencia the mostrarAdvertencia to set
+	 * @param mostrarAdvertencia
+	 *                               the mostrarAdvertencia to set
 	 */
 	public void setMostrarAdvertencia(final boolean mostrarAdvertencia) {
 		this.mostrarAdvertencia = mostrarAdvertencia;
@@ -1228,9 +1255,10 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param configuraciones the configuraciones to set
+	 * @param configuraciones
+	 *                            the configuraciones to set
 	 */
-	public void setConfiguraciones(List<ConfiguracionAutenticacion> configuraciones) {
+	public void setConfiguraciones(final List<ConfiguracionAutenticacion> configuraciones) {
 		this.configuraciones = configuraciones;
 	}
 
@@ -1243,7 +1271,7 @@ public class DialogDominio extends DialogControllerBase {
 		return desactivarConsulta;
 	}
 
-	public void setDesactivarConsulta(Boolean desactivarConsulta) {
+	public void setDesactivarConsulta(final Boolean desactivarConsulta) {
 		this.desactivarConsulta = desactivarConsulta;
 	}
 }

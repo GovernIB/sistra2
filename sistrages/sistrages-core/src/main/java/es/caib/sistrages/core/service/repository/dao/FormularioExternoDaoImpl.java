@@ -8,10 +8,12 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
+import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.comun.FilaImportarGestor;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
@@ -37,6 +39,9 @@ public class FormularioExternoDaoImpl implements FormularioExternoDao {
 	 */
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@Autowired
+	private TramiteDaoImpl tramiteDao;
 
 	/**
 	 * Crea una nueva instancia de FormularioExternoDaoImpl.
@@ -115,6 +120,17 @@ public class FormularioExternoDaoImpl implements FormularioExternoDao {
 			throw new NoExisteDato(NO_EXISTE_EL_FORM_EXTERNO + pId);
 		}
 		entityManager.remove(jGestorExternoFormularios);
+
+	}
+
+	@Override
+	public boolean tieneTramitesAsociados(Long idGFE) {
+		List<DominioTramite> tramitesConGfe = tramiteDao.getTramiteVersionByGfe(idGFE);
+		if (tramitesConGfe != null && !tramitesConGfe.isEmpty()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/*
@@ -175,8 +191,8 @@ public class FormularioExternoDaoImpl implements FormularioExternoDao {
 	 * Listar avisos.
 	 *
 	 * @param pIdArea idArea
-	 * @param pIdioma    idioma
-	 * @param pFiltro    filtro
+	 * @param pIdioma idioma
+	 * @param pFiltro filtro
 	 * @return Listado de avisos
 	 */
 	@SuppressWarnings("unchecked")
@@ -256,16 +272,15 @@ public class FormularioExternoDaoImpl implements FormularioExternoDao {
 
 	@Override
 	public GestorExternoFormularios getFormularioExternoByIdentificador(String identificador) {
-	    GestorExternoFormularios gestorExternoFormularios = null;
+		GestorExternoFormularios gestorExternoFormularios = null;
 		String sql = "select a from JGestorExternoFormularios as a where a.identificador like :identificador ";
 		final Query query = entityManager.createQuery(sql);
 
 		query.setParameter("identificador", identificador);
 
-
 		final List<JGestorExternoFormularios> results = query.getResultList();
 		if (results != null && !results.isEmpty()) {
-			gestorExternoFormularios  = results.get(0).toModel();
+			gestorExternoFormularios = results.get(0).toModel();
 		}
 		return gestorExternoFormularios;
 	}
@@ -274,13 +289,25 @@ public class FormularioExternoDaoImpl implements FormularioExternoDao {
 	public Long importar(FilaImportarGestor filaGestor, Long idArea) {
 		JConfiguracionAutenticacion config = null;
 		if (filaGestor.getConfiguracionAutenticacionActual() != null) {
-			config = entityManager.find(JConfiguracionAutenticacion.class, filaGestor.getConfiguracionAutenticacionActual().getCodigo());
+			if (filaGestor.getConfiguracionAutenticacionActual().getCodigo() == null) {
+				// La configuracion no existe, la creamos.
+				config = new JConfiguracionAutenticacion();
+				JArea jarea = entityManager.find(JArea.class, idArea);
+				config.setArea(jarea);
+				config.setDescripcion(filaGestor.getConfiguracionAutenticacionActual().getDescripcion());
+				config.setIdentificador(filaGestor.getConfiguracionAutenticacionActual().getIdentificador());
+				config.setUsuario(filaGestor.getConfiguracionAutenticacionActual().getUsuario());
+				config.setPassword(filaGestor.getConfiguracionAutenticacionActual().getPassword());
+				entityManager.persist(config);
+			} else {
+				config = entityManager.find(JConfiguracionAutenticacion.class,
+						filaGestor.getConfiguracionAutenticacionActual().getCodigo());
+			}
 		}
 
 		if (filaGestor.getGestorActual() == null) { // Si no existe, se crea.
 			final JArea jarea = entityManager.find(JArea.class, idArea);
-			final JGestorExternoFormularios jGFE = JGestorExternoFormularios
-					.fromModel(filaGestor.getGestor());
+			final JGestorExternoFormularios jGFE = JGestorExternoFormularios.fromModel(filaGestor.getGestor());
 			jGFE.setCodigo(null);
 			jGFE.setArea(jarea);
 			jGFE.setConfiguracionAutenticacion(config);
@@ -297,6 +324,6 @@ public class FormularioExternoDaoImpl implements FormularioExternoDao {
 			return jGFE.getCodigo();
 
 		}
- 	}
+	}
 
 }

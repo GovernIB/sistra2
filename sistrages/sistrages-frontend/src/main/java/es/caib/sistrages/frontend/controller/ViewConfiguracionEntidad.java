@@ -23,6 +23,7 @@ import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.EntidadService;
@@ -143,9 +144,12 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	 * Cancelar.
 	 */
 	public void refrescar() {
-		final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
-		final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
-		final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+		final String urlBase = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
+		final String usuario = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
+		final String pwd = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
 
 		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, "E", data.getCodigoDIR3());
 		if (resultado.getCodigo() == 1) {
@@ -265,7 +269,6 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 
 		UtilJSF.openDialog(DialogPlantillaEntidad.class, modoAccesoDlg, params, true, 380, 200);
 	}
-
 
 	/**
 	 * Gestión de retorno lopd.
@@ -395,7 +398,8 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	/**
 	 * Retorno dialogo fichero.
 	 *
-	 * @param event respuesta dialogo
+	 * @param event
+	 *                  respuesta dialogo
 	 */
 	public void returnDialogoFichero(final SelectEvent event) {
 		// recupera datos entidad activa
@@ -491,7 +495,8 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	/**
 	 * Establece el valor de data.
 	 *
-	 * @param data el nuevo valor de data
+	 * @param data
+	 *                 el nuevo valor de data
 	 */
 	public void setData(final Entidad data) {
 		this.data = data;
@@ -505,7 +510,8 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	}
 
 	/**
-	 * @param oficinas the oficinas to set
+	 * @param oficinas
+	 *                     the oficinas to set
 	 */
 	public void setOficinas(final List<OficinaRegistro> oficinas) {
 		this.oficinas = oficinas;

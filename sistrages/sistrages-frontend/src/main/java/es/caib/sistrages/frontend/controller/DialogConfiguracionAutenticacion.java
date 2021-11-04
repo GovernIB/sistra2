@@ -8,8 +8,10 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
+import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -36,6 +38,10 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 	/** Datos elemento. */
 	private ConfiguracionAutenticacion data;
 
+	/** Parametro modo importar **/
+	private String modoImportar;
+
+	private boolean modoImportarActivo = false;
 	/**
 	 * Inicialización.
 	 */
@@ -46,9 +52,21 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new ConfiguracionAutenticacion();
 		} else {
-			data = configuracionAutenticacionService.getConfiguracionAutenticacion(new Long(id));
+			if (id != null) {
+				data = configuracionAutenticacionService.getConfiguracionAutenticacion(new Long(id));
+			}
 		}
 
+		if (modoImportar != null && "true".equals(modoImportar)) {
+			modoImportarActivo = true;
+			if (iData != null) {
+				data = (ConfiguracionAutenticacion) UtilJSON.fromJSON(iData, ConfiguracionAutenticacion.class);
+			} else {
+				data = new ConfiguracionAutenticacion();
+			}
+		} else {
+			modoImportarActivo = false;
+		}
 	}
 
 	/**
@@ -62,15 +80,21 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 			if (!verificarGuardar()) {
 				return;
 			}
-			Long idConf = configuracionAutenticacionService.addConfiguracionAutenticacion(Long.valueOf(area), data);
-			this.data.setCodigo(idConf);
+			if (modoImportarActivo) {
+				this.data.setCodigoImportacion(-1l);
+			} else {
+				Long idConf = configuracionAutenticacionService.addConfiguracionAutenticacion(Long.valueOf(area), data);
+				this.data.setCodigo(idConf);
+			}
 			break;
 		case EDICION:
 			if (!verificarGuardar()) {
 				return;
 			}
 
-			configuracionAutenticacionService.updateConfiguracionAutenticacion(data);
+			if (!modoImportarActivo) {
+				configuracionAutenticacionService.updateConfiguracionAutenticacion(data);
+			}
 			break;
 		case CONSULTA:
 			// No hay que hacer nada
@@ -204,6 +228,20 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 
 	public void setArea(String area) {
 		this.area = area;
+	}
+
+	/**
+	 * @return the modoImportar
+	 */
+	public String getModoImportar() {
+		return modoImportar;
+	}
+
+	/**
+	 * @param modoImportar the modoImportar to set
+	 */
+	public void setModoImportar(String modoImportar) {
+		this.modoImportar = modoImportar;
 	}
 
 	/** Ayuda. */

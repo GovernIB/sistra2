@@ -1182,4 +1182,77 @@ public final class ValidacionesTipo {
 			throw new ValidacionTipoException("No se puede convertir a B64 Url safe.");
 		}
 	}
+
+	/**
+	 * Convierte a bytes.
+	 *
+	 * @param tamanyo
+	 *                    Tamaño en formato nMB / nKB donde n es un número.
+	 * @return tamaño en bytes (si nulo o blanco devuelve 0)
+	 * @throws ValidacionTipoException
+	 */
+	public int convertirTamanyoBytes(final String tamanyo) throws ValidacionTipoException {
+		final String tam = tamanyo.trim();
+		int num = 0;
+		if (StringUtils.isNotBlank(tamanyo)) {
+			try {
+				final String numStr = tam.substring(0, tam.length() - ConstantesNumero.N2).trim();
+				num = Integer.parseInt(numStr);
+			} catch (final NumberFormatException nfe) {
+				throw new ValidacionTipoException("Tamaño no tiene formato correcto (nMB / nKB donde n es un número)");
+			}
+			if (tam.endsWith("MB")) {
+				num = num * ConstantesNumero.N1024 * ConstantesNumero.N1024;
+			} else if (tam.endsWith("KB")) {
+				num = num * ConstantesNumero.N1024;
+			} else {
+				throw new ValidacionTipoException("Tamaño no tiene formato correcto (nMB / nKB donde n es un número)");
+			}
+		}
+		return num;
+	}
+
+	/**
+	 * Obtiene cantidad de tamaño fichero especificado como string.
+	 *
+	 * @param tamanyo
+	 *                    Tamaño en formato nMB / nKB donde n es un número.
+	 * @return tamaño en bytes (si nulo o blanco devuelve 0)
+	 * @throws ValidacionTipoException
+	 */
+	public int obtenerTamanyoCantidad(final String tamanyo) throws ValidacionTipoException {
+		final String tam = tamanyo.trim();
+		int num = 0;
+		if (StringUtils.isNotBlank(tamanyo)) {
+			try {
+				final String numStr = tam.substring(0, tam.length() - ConstantesNumero.N2).trim();
+				num = Integer.parseInt(numStr);
+			} catch (final NumberFormatException nfe) {
+				throw new ValidacionTipoException("Tamaño no tiene formato correcto (nMB / nKB donde n es un número)");
+			}
+		}
+		return num;
+	}
+
+	/**
+	 * Obtiene cantidad de tamaño fichero especificado como string.
+	 *
+	 * @param tamanyo
+	 *                    Tamaño en formato nMB / nKB donde n es un número.
+	 * @return tamaño en bytes (si nulo o blanco devuelve nulo)
+	 * @throws ValidacionTipoException
+	 */
+	public String obtenerTamanyoUnidad(final String tamanyo) throws ValidacionTipoException {
+		final String tam = tamanyo.trim();
+		String res = null;
+		if (StringUtils.isNotBlank(tamanyo)) {
+			try {
+				res = tam.substring(tam.length() - ConstantesNumero.N2).trim();
+			} catch (final Exception nfe) {
+				throw new ValidacionTipoException("Tamaño no tiene formato correcto (nMB / nKB donde n es un número)");
+			}
+		}
+		return res;
+	}
+
 }

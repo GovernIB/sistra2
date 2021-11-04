@@ -111,6 +111,8 @@ public class DialogDominioPing extends DialogControllerBase {
 				if (valoresDominio.isError()) {
 					addMessageContext(TypeNivelGravedad.ERROR,
 							valoresDominio.getCodigoError() + " : " + valoresDominio.getDescripcionError());
+					mostrarTablaDatos = true;
+					mostrarTablaFicheros = false;
 				} else {
 					if (valoresDominio.getFicheros().isEmpty()) {
 						mostrarTablaDatos = true;

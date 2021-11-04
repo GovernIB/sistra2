@@ -1940,6 +1940,15 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		return res;
 	}
 
+	public String simular() {
+		String estilo = "";
+		if (UtilJSF.checkEntorno(TypeEntorno.PRODUCCION)) {
+			((OpcionArbol) this.selectedNode.getData()).getTasa().setSimulado(false);
+			estilo = "display:none";
+		}
+		return estilo;
+	}
+
 	/**
 	 * Obtiene el valor de id.
 	 *

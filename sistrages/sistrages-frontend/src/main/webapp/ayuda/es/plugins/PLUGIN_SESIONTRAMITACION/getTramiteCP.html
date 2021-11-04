@@ -1,0 +1,60 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_SESIONTRAMITACION.getTramiteCP()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_SESIONTRAMITACION">PLUGIN_SESIONTRAMITACION</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_SESIONTRAMITACION&metodo=getTramiteCP">getTramiteCP</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	getTramiteCP(): <a href="AyudaServlet?lang=ca&plugin=DATOS_TRAMITECP">: DATOS_TRAMITECP</a>
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+		<li>Metodo que retorna el objecto'<a href="AyudaServlet?lang=ca&plugin=DATOS_TRAMITECP">DATOS_TRAMITECP</a>' con la información del trámite en el catálogo de procedimientos.
+		</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METROS DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>DATOS_TRAMITECP</b>: Retorna el objecto DATOS_TRAMITECP con la información del trámite en el catálogo de procedimientos. </li>
+	</ul>
+</p>
+ <p>
+	<b>Ejemplo</b>
+ </p>
+<p> Supongamos que deseamos obtener el trámite en el catálogo de procedimientos</p>
+<p class="codigoScript">
+	var tramite = PLUGIN_SESIONTRAMITACION.getTramiteCP();
+ </p>
+ <p>
+   La función getTramiteCP retorna el objecto <a href="AyudaServlet?lang=ca&plugin=DATOS_TRAMITECP">DATOS_TRAMITECP</a> a partir del cual extraer la información que nos interesa, por ejemplo, la descripción, mediante la siguiente función:
+ </p>
+  <p class="codigoScript">
+	var descripcion = tramite.getDescripcion();
+ </p>
+<br />
+
+
+</body>
+</html>

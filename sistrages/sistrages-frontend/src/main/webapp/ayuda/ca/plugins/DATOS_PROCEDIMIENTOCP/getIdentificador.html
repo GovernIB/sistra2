@@ -1,0 +1,56 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_PROCEDIMIENTOCP.getIdentificador()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_PROCEDIMIENTOCP">DATOS_PROCEDIMIENTOCP</a></li>
+		  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_PROCEDIMIENTOCP&metodo=getIdentificador">getIdentificador</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	getIdentificador(): String
+</h1>
+<p>
+	<b>IDENTIFICADOR</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que retorna l'identificador del procediment associat al tràmit en el catàleg de procediments.</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: Cadena de caràcters amb l'identificador del procediment associat al tràmit en el catàleg de procediments. </li>
+	</ul>
+</p>
+ <p>
+	<b>Exemple</b>
+ </p>
+<p> Si es desitja obtenir l'identificador del procediment associat al tràmit en el catàleg de procediments, utilitzarem la funció de la següent forma:</p>
+ <p class="codigoScript">
+	var procedimiento = PLUGIN_SESIONFORMULARIO.getTramiteCP().getProcedimiento(); <br />
+	var identificador_procedimiento = procedimiento.getIdentificador();<br />
+ </p>
+ <p>
+  La funció getIdentificador() retornarà l'identificador del procediment associat al tràmit en el catàleg de procediments. En cas de no tenir-ne cap, retornarà 'null'.
+ </p>
+<br />
+
+</body>
+</html>

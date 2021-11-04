@@ -15,13 +15,13 @@
   	<ul>
   		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_SESIONTRAMITACION">PLUGIN_SESIONTRAMITACION</a></li>
       	  <li>></li>
-      	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_SESIONTRAMITACION&metodo=getRepresentanteUsuario">getRepresentanteUsuario</a></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_SESIONTRAMITACION&metodo=getRepresentanteUsuario">getRepresentante</a></li>
   	</ul>
 </div>
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	getRepresentanteUsuario(): <a href="AyudaServlet?lang=es&plugin=DATOS_USUARIO">: DATOS_USUARIO</a>
+	getRepresentante(): <a href="AyudaServlet?lang=es&plugin=DATOS_USUARIO">: DATOS_USUARIO</a>
 </h1>
 <p>
 	<b>DESCRIPCIÓN</b>
@@ -48,7 +48,7 @@
 <p class="codigoScript">
 	var autenticado = PLUGIN_SESIONTRAMITACION.isAutenticado();
 	if (autenticado == true) {
-		var usuario = PLUGIN_SESIONTRAMITACION.getRepresentanteUsuario();
+		var usuario = PLUGIN_SESIONTRAMITACION.getRepresentante();
 	}
  </p>
  <p>

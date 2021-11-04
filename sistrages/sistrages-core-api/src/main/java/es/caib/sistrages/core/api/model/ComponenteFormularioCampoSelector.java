@@ -66,8 +66,7 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	/**
 	 * Establece el valor de tipoCampoIndexado.
 	 *
-	 * @param tipoCampoIndexado
-	 *            el nuevo valor de tipoCampoIndexado
+	 * @param tipoCampoIndexado el nuevo valor de tipoCampoIndexado
 	 */
 	public void setTipoCampoIndexado(final TypeCampoIndexado tipoCampoIndexado) {
 		this.tipoCampoIndexado = tipoCampoIndexado;
@@ -85,8 +84,7 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	/**
 	 * Establece el valor de tipoListaValores.
 	 *
-	 * @param tipoListaValores
-	 *            el nuevo valor de tipoListaValores
+	 * @param tipoListaValores el nuevo valor de tipoListaValores
 	 */
 	public void setTipoListaValores(final TypeListaValores tipoListaValores) {
 		this.tipoListaValores = tipoListaValores;
@@ -104,8 +102,7 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	/**
 	 * Establece el valor de scriptValoresPosibles.
 	 *
-	 * @param scriptValoresPosibles
-	 *            el nuevo valor de scriptValoresPosibles
+	 * @param scriptValoresPosibles el nuevo valor de scriptValoresPosibles
 	 */
 	public void setScriptValoresPosibles(final Script scriptValoresPosibles) {
 		this.scriptValoresPosibles = scriptValoresPosibles;
@@ -123,8 +120,7 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	/**
 	 * Establece el valor de codDominio.
 	 *
-	 * @param codDominio
-	 *            el nuevo valor de codDominio
+	 * @param codDominio el nuevo valor de codDominio
 	 */
 	public void setCodDominio(final Long pCodDominio) {
 		this.codDominio = pCodDominio;
@@ -142,11 +138,12 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	/**
 	 * Establece el valor de campoDominioCodigo.
 	 *
-	 * @param campoDominioCodigo
-	 *            el nuevo valor de campoDominioCodigo
+	 * @param campoDominioCodigo el nuevo valor de campoDominioCodigo
 	 */
 	public void setCampoDominioCodigo(final String campoDominioCodigo) {
-		this.campoDominioCodigo = campoDominioCodigo;
+		if (campoDominioCodigo != null) {
+			this.campoDominioCodigo = campoDominioCodigo.toUpperCase();
+		}
 	}
 
 	/**
@@ -161,11 +158,12 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	/**
 	 * Establece el valor de campoDominioDescripcion.
 	 *
-	 * @param campoDominioDescripcion
-	 *            el nuevo valor de campoDominioDescripcion
+	 * @param campoDominioDescripcion el nuevo valor de campoDominioDescripcion
 	 */
 	public void setCampoDominioDescripcion(final String campoDominioDescripcion) {
-		this.campoDominioDescripcion = campoDominioDescripcion;
+		if (campoDominioDescripcion != null) {
+			this.campoDominioDescripcion = campoDominioDescripcion.toUpperCase();
+		}
 	}
 
 	/**
@@ -180,8 +178,7 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	/**
 	 * Establece el valor de indiceAlfabetico.
 	 *
-	 * @param indiceAlfabetico
-	 *            el nuevo valor de indiceAlfabetico
+	 * @param indiceAlfabetico el nuevo valor de indiceAlfabetico
 	 */
 	public void setIndiceAlfabetico(final boolean indiceAlfabetico) {
 		this.indiceAlfabetico = indiceAlfabetico;
@@ -199,8 +196,7 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	/**
 	 * Establece el valor de listaParametrosDominio.
 	 *
-	 * @param parametrosDominio
-	 *            el nuevo valor de listaParametrosDominio
+	 * @param parametrosDominio el nuevo valor de listaParametrosDominio
 	 */
 	public void setListaParametrosDominio(final List<ParametroDominio> parametrosDominio) {
 		this.listaParametrosDominio = parametrosDominio;
@@ -218,8 +214,7 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	/**
 	 * Establece el valor de listaValorListaFija.
 	 *
-	 * @param listaValorListaFija
-	 *            el nuevo valor de listaValorListaFija
+	 * @param listaValorListaFija el nuevo valor de listaValorListaFija
 	 */
 	public void setListaValorListaFija(final List<ValorListaFija> listaValorListaFija) {
 		this.listaValorListaFija = listaValorListaFija;
@@ -237,8 +232,7 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	/**
 	 * Establece el valor de altura.
 	 *
-	 * @param altura
-	 *            el nuevo valor de altura
+	 * @param altura el nuevo valor de altura
 	 */
 	public void setAltura(final int altura) {
 		this.altura = altura;
@@ -252,8 +246,7 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	}
 
 	/**
-	 * @param orientacion
-	 *            the orientacion to set
+	 * @param orientacion the orientacion to set
 	 */
 	public void setOrientacion(final String orientacion) {
 		this.orientacion = orientacion;

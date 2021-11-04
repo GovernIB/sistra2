@@ -15,6 +15,7 @@ import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.service.FormularioExternoService;
+import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 
 /**
  * La clase FormularioExternoServiceBean.
@@ -67,6 +68,18 @@ public class FormularioExternoServiceBean implements FormularioExternoService {
 	public boolean removeFormularioExterno(final Long id) {
 		return formularioExternoService.removeFormularioExterno(id);
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.api.service.FormularioExternoService#
+	 * tieneTramitesAsociados( java.lang.Long)
+	 */
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	public boolean tieneTramitesAsociados(Long idGFE) {
+		return formularioExternoService.tieneTramitesAsociados(idGFE);
 	}
 
 	/*

@@ -22,11 +22,11 @@ public final class TamanyoMaximoAnexosAlcanzadoException extends ServiceRollback
 	/**
 	 * Constructor ExtensionAnexoNoValidaException.
 	 *
-	 * @param pMessage
+	 * @param tamanyo
 	 *            Mensaje de error.
 	 */
-	public TamanyoMaximoAnexosAlcanzadoException(final String pMessage) {
-		super(pMessage);
+	public TamanyoMaximoAnexosAlcanzadoException(final String tamanyo) {
+		super(tamanyo);
 	}
 
 }

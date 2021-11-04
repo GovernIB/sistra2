@@ -18,7 +18,7 @@
 
 	<p:ajaxStatus id="startAjaxDialog" onstart="PF('loading').show();" oncomplete="PF('loading').hide();"/>
 	<ui:include src="../common/popups.xhtml" />
-	
+
 	<!-- Parametros dialogo -->
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogErroresValidacion.modoAcceso}"/>
@@ -29,16 +29,16 @@
 	</f:metadata>
 	<h:form id="dialogErroresValidacion" styleClass="margin-top-10">
 			<!-- Growl mensajes -->
-			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
-			
-			<p:dataTable  id="dataTable" var="dt" value="#{dialogErroresValidacion.listaErrores}"
+			<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
+
+			<p:dataTable  id="dataTableErrores" var="dt" value="#{dialogErroresValidacion.listaErrores}"
 							emptyMessage="#{msg['error.emptyRows']}" styleClass="margin-left-25 margin-right-25"
 							scrollable="true" scrollHeight="440" selection="#{dialogErroresValidacion.filaSeleccionada}"
 							selectionMode="single" rowKey="#{dt.hashCode()}">
-					
+
 					<p:ajax event="rowSelect" global="false"/>
-					<p:ajax event="rowDblselect" oncomplete="triggerDoubleClickCorregir();"  disabled="#{dialogErroresValidacion.isConsulta()}"/>
-					
+					<p:ajax event="rowUnselect" />
+
 					<!-- Columnas -->
 						<p:column headerText="#{msg['dialogErroresValidacion.tipo']}" styleClass="grid-left" style="width:12%;" sortBy="#{dt.tipo}">
 							<h:outputText value="#{msg['typeErrorValidacion.' += dt.tipo]}"/>
@@ -56,25 +56,31 @@
 			 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-						<p:commandButton id="btnCorregir" value="#{msg['botones.corregir']}" actionListener="#{dialogErroresValidacion.corregir}" rendered="#{dialogErroresValidacion.isEdicion()}" process="@this" styleClass="boton" update="growlDialog">
-							<p:ajax event="dialogReturn" listener="#{dialogErroresValidacion.returnDialogo}"/>
+						<p:commandButton id="btnCorregir"
+							value="#{msg['botones.corregir']}" styleClass="boton"
+							actionListener="#{dialogErroresValidacion.corregir()}"
+							rendered="#{dialogErroresValidacion.isEdicion()}"
+							process="@this" update="growl dataTableErrores" >
+							<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['dialogErroresValidacion.corregir']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+							<p:ajax event="dialogReturn" listener="#{dialogErroresValidacion.returnDialogo}" update="growl dataTableErrores"/>
 						</p:commandButton>
-						
 
-						<p:commandButton id="btnValidar" value="#{msg['botones.validar']}" actionListener="#{dialogErroresValidacion.validar}" rendered="#{dialogErroresValidacion.isEdicion()}" process="@this" styleClass="boton" update="growlDialog dataTable"/>
+						<p:commandButton id="btnValidar" value="#{msg['botones.validar']}" actionListener="#{dialogErroresValidacion.validar}" rendered="#{dialogErroresValidacion.isEdicion()}" process="@this" styleClass="boton" update="growl dataTableErrores"/>
 
-						
+
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogErroresValidacion.cerrar}" process="@this" styleClass="boton-azul"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
+		<p:confirmDialog global="true" >
+			<p:outputPanel styleClass="confirmar_botonera">
+	        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"/>
+	        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close"/>
+			</p:outputPanel>
+	    </p:confirmDialog>
 	</h:form>
-	
-	<h:outputScript >
-		function triggerDoubleClickCorregir() {
-			document.getElementById("dialogErroresValidacion:btnCorregir").click();
-		}
-	</h:outputScript>
+
+
 </h:body>
 
 </f:view>

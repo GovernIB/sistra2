@@ -148,12 +148,18 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	 */
 	public void aceptar() {
 
-		tramiteService.updateTramitePaso(data);
+		if (data.getScriptAlFinalizar() == null && data.isAvisoAlFinalizar()) {
+			addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.registro.error.script"));
+		} else {
 
-		final DialogResult result = new DialogResult();
-		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data);
-		UtilJSF.closeDialog(result);
+			tramiteService.updateTramitePaso(data);
+
+			final DialogResult result = new DialogResult();
+			result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+			result.setResult(data);
+			UtilJSF.closeDialog(result);
+		}
 	}
 
 	/**

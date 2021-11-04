@@ -454,7 +454,7 @@ public class GeneradorPdf {
 			PdfPCell cell;
 			cell = new PdfPCell(new Paragraph(campoTexto.getEtiqueta(), ETIQUETA));
 			cell.setBorder(Rectangle.NO_BORDER);
-			cell.setBackgroundColor(Color.WHITE);
+			// cell.setBackgroundColor(Color.WHITE);
 
 			table.addCell(cell);
 
@@ -559,7 +559,7 @@ public class GeneradorPdf {
 			cell.setBorder(Rectangle.NO_BORDER);
 			cell.setPaddingLeft(16);
 			cell.setPaddingTop(0);
-			cell.setBackgroundColor(Color.WHITE);
+			// cell.setBackgroundColor(Color.WHITE);
 			table.addCell(cell);
 
 			// añadir todo el contenido a la celda padre y lo añade a la tabla global

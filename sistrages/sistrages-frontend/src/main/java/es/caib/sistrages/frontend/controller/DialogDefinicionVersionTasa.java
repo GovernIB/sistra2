@@ -15,6 +15,7 @@ import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -72,7 +73,8 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 	 * Editar descripcion
 	 */
 	public void editarDescripcion() {
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, this.data.getDescripcion(), tramiteVersion, UtilTraducciones.CARACTERES_NOPERMIT_REGWEB3, UtilTraducciones.TAMANYO_MAXIMO_REGWEB3);
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, this.data.getDescripcion(), tramiteVersion,
+				UtilTraducciones.CARACTERES_NOPERMIT_REGWEB3, UtilTraducciones.TAMANYO_MAXIMO_REGWEB3);
 
 	}
 
@@ -96,8 +98,7 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del script de obligatoriedad.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoDescripcion(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -117,8 +118,7 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del script de obligatoriedad.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoObligatoriedad(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -138,8 +138,7 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del script de pago.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoPago(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -226,16 +225,14 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final Tasa data) {
 		this.data = data;
@@ -249,8 +246,7 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramiteService
-	 *            the tramiteService to set
+	 * @param tramiteService the tramiteService to set
 	 */
 	public void setTramiteService(final TramiteService tramiteService) {
 		this.tramiteService = tramiteService;
@@ -272,8 +268,7 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idPaso
-	 *            the idPaso to set
+	 * @param idPaso the idPaso to set
 	 */
 	public void setIdPaso(final String idPaso) {
 		this.idPaso = idPaso;
@@ -287,8 +282,7 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idiomas
-	 *            the idiomas to set
+	 * @param idiomas the idiomas to set
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;

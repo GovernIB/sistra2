@@ -18,7 +18,18 @@ public enum TypePropiedadConfiguracion {
 	/** Prefijo plugin. */
 	PLUGINS_PREFIJO("plugins.prefix"),
 	/** Tinymce botón code activo. **/
-	TINYMCE_CODE("tinymce.code");
+	TINYMCE_CODE("tinymce.code"),
+	/** Sistrages ayuda externa. */
+	SISTRAGES_AYUDA_PATH("ayuda.sistrages.path"),
+	/** Sistramit rest password. **/
+	SISTRAMIT_REST_PWD("sistramit.rest.pwd"),
+	/** Sistramit rest usuario. **/
+	SISTRAMIT_REST_USER("sistramit.rest.user"),
+	/** Sistramit rest url. **/
+	SISTRAMIT_REST_URL("sistramit.rest.url"),
+	/** Sistramit rest url. **/
+	ANEXO_TAMANYO_MAX_INDIVIDUAL("sistramit.anexos.tamanyoMaximoIndividual");
+
 	/**
 	 * Valor como string.
 	 */
@@ -28,7 +39,7 @@ public enum TypePropiedadConfiguracion {
 	 * Constructor.
 	 *
 	 * @param valueStr
-	 *            Valor como string.
+	 *                     Valor como string.
 	 */
 	private TypePropiedadConfiguracion(final String valueStr) {
 		stringValue = valueStr;
@@ -43,7 +54,7 @@ public enum TypePropiedadConfiguracion {
 	 * Obtiene enum desde string.
 	 *
 	 * @param text
-	 *            string
+	 *                 string
 	 * @return TypeSiNo
 	 */
 	public static TypePropiedadConfiguracion fromString(final String text) {

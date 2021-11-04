@@ -1,0 +1,56 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_PROCEDIMIENTOCP.getIdProcedimientoSIA()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_PROCEDIMIENTOCP">DATOS_PROCEDIMIENTOCP</a></li>
+		  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_PROCEDIMIENTOCP&metodo=getIdProcedimientoSIA">getIdProcedimientoSIA</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	getIdProcedimientoSIA(): String
+</h1>
+<p>
+	<b>IDENTIFICADOR SIA</b>
+</p>
+<p>
+	<ul>
+		<li>Método que retorna el identificador SIA del procedimento asociado al trámite en el catálogo de procedimentos.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: Cadena de caracteres con el identificador SIA del procedimento asociado al trámite en el catálogo de procedimentos. </li>
+	</ul>
+</p>
+ <p>
+	<b>Ejemplo</b>
+ </p>
+<p> Si se desea obtener el identificador SIA del procedimento asociado al trámite en el catálogo de procedimentos, utilizaremos la función de la siguiente forma:</p>
+ <p class="codigoScript">
+	var procedimiento = PLUGIN_SESIONFORMULARIO.getTramiteCP().getProcedimiento(); <br />
+	var idprocedimientosia_procedimiento = procedimiento.getIdProcedimientoSIA();<br />
+ </p>
+ <p>
+  La función getIdProcedimientoSIA() devolverá el identificador SIA del procedimento asociado al trámite en el catálogo de procedimentos. En cas de no tener, devolverá'null'.
+ </p>
+<br />
+
+</body>
+</html>

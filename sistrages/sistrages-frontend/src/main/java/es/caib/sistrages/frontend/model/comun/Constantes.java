@@ -121,9 +121,6 @@ public final class Constantes {
 	/** Sistramit rest url. **/
 	public static final String SISTRAMIT_REST_URL = "sistramit.rest.url";
 
-	/** Sistrages ayuda externa. */
-	public static final String SISTRAGES_AYUDA_PATH = "ayuda.sistrages.path";
-
 	public static final String EXTENSIONES_TODAS = "*";
 	public static final String LISTAS_SEPARADOR = ";";
 

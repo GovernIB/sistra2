@@ -10,6 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.caib.sistra2.commons.utils.ValidacionTipoException;
+import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistrages.core.api.exception.EncodeException;
 import es.caib.sistrages.core.api.exception.RestException;
 import es.caib.sistrages.core.api.model.Area;
@@ -51,7 +53,9 @@ import es.caib.sistrages.core.api.model.types.TypeFlujo;
 import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypePaso;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.rest.api.interna.RAnexoTramite;
 import es.caib.sistrages.rest.api.interna.RAnexoTramiteAyuda;
 import es.caib.sistrages.rest.api.interna.RAnexoTramitePresentacionElectronica;
@@ -105,6 +109,10 @@ public class VersionTramiteAdapter {
 	/** Servicio rest. */
 	@Autowired
 	private RestApiInternaService restApiService;
+
+	/** Servicio system. */
+	@Autowired
+	private SystemService systemService;
 
 	/**
 	 * Convierte a entidad rest RVersionTramite
@@ -1132,6 +1140,17 @@ public class VersionTramiteAdapter {
 	 */
 	private List<RAnexoTramite> generaAnexos(final List<Documento> documentos, final String idioma) {
 		List<RAnexoTramite> lres = null;
+
+		// Obtiene tamanyo en bytes de tamaño máximo individual
+		final String tamMaxStr = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ANEXO_TAMANYO_MAX_INDIVIDUAL.toString());
+		int tamMaxBytes = 0;
+		try {
+			tamMaxBytes = ValidacionesTipo.getInstance().convertirTamanyoBytes(tamMaxStr);
+		} catch (final ValidacionTipoException e) {
+			throw new RestException("Error al obtener propiedad tamaño anexo individual: " + tamMaxStr, e);
+		}
+
 		if (documentos != null) {
 			lres = new ArrayList<>();
 			for (final Documento d : documentos) {
@@ -1154,8 +1173,28 @@ public class VersionTramiteAdapter {
 				resPE.setInstancias(d.getNumeroInstancia());
 				resPE.setScriptFirmantes(AdapterUtils.generaScript(d.getScriptFirmarDigitalmente(), idioma));
 				resPE.setScriptValidacion(AdapterUtils.generaScript(d.getScriptValidacion(), idioma));
-				resPE.setTamanyoMax(d.getTamanyoMaximo());
-				resPE.setTamanyoUnidad(d.getTipoTamanyo() == null ? null : d.getTipoTamanyo().toString());
+
+				// Valida que se cumple tamaño máximo individual, sino se fija máximo permitido
+				final String tamConfigStr = d.getTamanyoMaximo() + d.getTipoTamanyo().toString();
+				int tamConfigBytes = 0;
+				try {
+					tamConfigBytes = ValidacionesTipo.getInstance().convertirTamanyoBytes(tamConfigStr);
+				} catch (final ValidacionTipoException e) {
+					throw new RestException(
+							"Error al obtener propiedad tamaño anexo especificado en configuración: " + tamConfigStr,
+							e);
+				}
+				if (tamConfigBytes < tamMaxBytes) {
+					resPE.setTamanyoMax(d.getTamanyoMaximo());
+					resPE.setTamanyoUnidad(d.getTipoTamanyo().toString());
+				} else {
+					try {
+						resPE.setTamanyoMax(ValidacionesTipo.getInstance().obtenerTamanyoCantidad(tamMaxStr));
+						resPE.setTamanyoUnidad(ValidacionesTipo.getInstance().obtenerTamanyoUnidad(tamMaxStr));
+					} catch (final ValidacionTipoException e) {
+						throw new RestException("Error al limitar propiedad tamaño anexo individual: " + tamMaxStr, e);
+					}
+				}
 
 				res.setPresentacionElectronica(resPE);
 				lres.add(res);

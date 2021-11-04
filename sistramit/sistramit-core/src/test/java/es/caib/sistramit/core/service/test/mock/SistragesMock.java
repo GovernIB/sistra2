@@ -81,7 +81,7 @@ public class SistragesMock {
 		parametros.add(vp);
 		vp = new RValorParametro();
 		vp.setCodigo(TypePropiedadConfiguracion.ANEXOS_TAMANYO_TOTAL.toString());
-		vp.setValor("10");
+		vp.setValor("10MB");
 		parametros.add(vp);
 
 		final RListaParametros propiedades = new RListaParametros();

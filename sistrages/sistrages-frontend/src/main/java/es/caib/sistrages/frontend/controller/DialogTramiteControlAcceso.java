@@ -16,6 +16,7 @@ import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeAvisoEntidad;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.service.AvisoEntidadService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -99,7 +100,8 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event respuesta dialogo
+	 * @param event
+	 *                  respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -145,9 +147,12 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 		// Invalidaciones
 		if (invalidacion) {
 
-			final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
-			final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
-			final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+			final String urlBase = systemService
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
+			final String usuario = systemService
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
+			final String pwd = systemService
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
 			this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_TRAMITE,
 					tramite.getIdentificador() + "#" + tramiteVersion.getNumeroVersion());
 		}
@@ -228,7 +233,8 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	/**
 	 * Establece el valor de id.
 	 *
-	 * @param id el nuevo valor de id
+	 * @param id
+	 *               el nuevo valor de id
 	 */
 	public void setId(final Long id) {
 		this.id = id;
@@ -246,7 +252,8 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	/**
 	 * Establece el valor de tramiteVersion.
 	 *
-	 * @param tramiteVersion el nuevo valor de tramiteVersion
+	 * @param tramiteVersion
+	 *                           el nuevo valor de tramiteVersion
 	 */
 	public void setTramiteVersion(final TramiteVersion tramiteVersion) {
 		this.tramiteVersion = tramiteVersion;
@@ -260,7 +267,8 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param avisoEntidad the avisoEntidad to set
+	 * @param avisoEntidad
+	 *                         the avisoEntidad to set
 	 */
 	public void setAvisoEntidad(final AvisoEntidad avisoEntidad) {
 		this.avisoEntidad = avisoEntidad;
@@ -274,7 +282,8 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idiomas the idiomas to set
+	 * @param idiomas
+	 *                    the idiomas to set
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;

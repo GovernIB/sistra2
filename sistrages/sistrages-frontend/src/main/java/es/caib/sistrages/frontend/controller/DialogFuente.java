@@ -16,6 +16,7 @@ import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
@@ -84,7 +85,8 @@ public class DialogFuente extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de FuenteDatosCampoes.
 	 *
-	 * @param event respuesta dialogo
+	 * @param event
+	 *                  respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -246,9 +248,12 @@ public class DialogFuente extends DialogControllerBase {
 				}
 			}
 			if (invalidaciones) {
-				final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
-				final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
-				final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+				final String urlBase = systemService
+						.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
+				final String usuario = systemService
+						.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
+				final String pwd = systemService
+						.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
 
 				final List<String> identificadorDominios = this.dominioService.listDominiosByFD(data.getCodigo());
 				for (final String identificador : identificadorDominios) {
@@ -360,7 +365,8 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *               the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -374,7 +380,8 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data the data to set
+	 * @param data
+	 *                 the data to set
 	 */
 	public void setData(final FuenteDatos data) {
 		this.data = data;
@@ -388,7 +395,8 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	/**
-	 * @param valorSeleccionado the valorSeleccionado to set
+	 * @param valorSeleccionado
+	 *                              the valorSeleccionado to set
 	 */
 	public void setValorSeleccionado(final FuenteDatosCampo valorSeleccionado) {
 		this.valorSeleccionado = valorSeleccionado;
@@ -402,7 +410,8 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idArea the idArea to set
+	 * @param idArea
+	 *                   the idArea to set
 	 */
 	public void setIdArea(final String idArea) {
 		this.idArea = idArea;
@@ -416,7 +425,8 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	/**
-	 * @param ambito the ambito to set
+	 * @param ambito
+	 *                   the ambito to set
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;

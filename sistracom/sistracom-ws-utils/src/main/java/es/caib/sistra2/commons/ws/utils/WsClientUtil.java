@@ -93,7 +93,6 @@ public class WsClientUtil {
 				final String[] nonProxyHostsArray = nonProxyHosts.split("\\|");
 				for (int i = 0; i < nonProxyHostsArray.length; i++) {
 					final String a = nonProxyHostsArray[i].replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*");
-					;
 					if (urlURL.getHost().matches(a)) {
 						existe = true;
 						break;

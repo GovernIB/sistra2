@@ -1,0 +1,56 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_TRAMITECP.getOrganoDestinoDir3()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_TRAMITECP">DATOS_TRAMITECP</a></li>
+		  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_TRAMITECP&metodo=getOrganoDestinoDir3">getOrganoDestinoDir3</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	getOrganoDestinoDir3(): String
+</h1>
+<p>
+	<b>ÓRGANO DE DESTINO DIR3</b>
+</p>
+<p>
+	<ul>
+		<li>Método que retorna el órgano de destino DIR3 asociado al trámite en el catálogo de procedimentos</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: Cadena de caracteres con el órgano de destino DIR3 asociado al trámite en el catálogo de procedimentos. </li>
+	</ul>
+</p>
+ <p>
+	<b>Ejemplo</b>
+ </p>
+<p> Si se desea obtener el órgano de destino DIR3 asociado al trámite en el catálogo de procedimentos, utilizaremos la función de la siguiente forma:</p>
+ <p class="codigoScript">
+	var tramite = PLUGIN_SESIONFORMULARIO.getTramiteCP(); <br />
+	var organodestinodir3_tramite = tramite.getOrganoDestinoDir3();<br />
+ </p>
+ <p>
+  La función getOrganoDestinoDir3() devolverá el órgano de destino DIR3 asociado al trámite en el catálogo de procedimentos. En caso de no tener ninguna, devolverá 'null'.
+ </p>
+<br />
+
+</body>
+</html>

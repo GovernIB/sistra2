@@ -12,6 +12,7 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.AvisoEntidadService;
 import es.caib.sistrages.core.api.service.EntidadService;
@@ -132,9 +133,12 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	 * Refrescar cache.
 	 */
 	public void refrescarCache() {
-		final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
-		final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
-		final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+		final String urlBase = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
+		final String usuario = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
+		final String pwd = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
 		final Entidad entidad = entidadService.loadEntidadByArea(idEntidad);
 		this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_ENTIDAD, entidad.getCodigoDIR3());
 
@@ -202,7 +206,8 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event respuesta dialogo
+	 * @param event
+	 *                  respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 
@@ -231,7 +236,8 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	}
 
 	/**
-	 * @param filtro the filtro to set
+	 * @param filtro
+	 *                   the filtro to set
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
@@ -245,7 +251,8 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	}
 
 	/**
-	 * @param listaDatos the listaDatos to set
+	 * @param listaDatos
+	 *                       the listaDatos to set
 	 */
 	public void setListaDatos(final List<AvisoEntidad> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -259,7 +266,8 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	}
 
 	/**
-	 * @param datoSeleccionado the datoSeleccionado to set
+	 * @param datoSeleccionado
+	 *                             the datoSeleccionado to set
 	 */
 	public void setDatoSeleccionado(final AvisoEntidad datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
@@ -268,7 +276,8 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	/**
 	 * Abrir dialogo.
 	 *
-	 * @param modoAccesoDlg Modo acceso
+	 * @param modoAccesoDlg
+	 *                          Modo acceso
 	 */
 	private void abrirDlg(final TypeModoAcceso modoAccesoDlg) {
 		// Verifica si no hay fila seleccionada

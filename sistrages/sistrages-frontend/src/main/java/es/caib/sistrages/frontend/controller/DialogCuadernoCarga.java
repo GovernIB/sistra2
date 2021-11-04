@@ -38,7 +38,6 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
-import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.Tramite;
@@ -59,7 +58,6 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteRegistro;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
-import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
 import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
@@ -190,9 +188,10 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param gestores the gestores to set
+	 * @param gestores
+	 *                     the gestores to set
 	 */
-	public void setGestores(Map<Long, GestorExternoFormularios> gestores) {
+	public void setGestores(final Map<Long, GestorExternoFormularios> gestores) {
 		this.gestores = gestores;
 	}
 
@@ -222,7 +221,6 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 
 	/** Filas formularios. **/
 	final List<FilaImportarFormulario> filasFormulario = new ArrayList<>();
-
 
 	/** Mostrar botones formateadores. **/
 	private Integer posicionGestor;
@@ -286,7 +284,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	/**
 	 * carga de fichero.
 	 *
-	 * @param event el evento
+	 * @param event
+	 *                  el evento
 	 * @throws IOException
 	 *
 	 */
@@ -341,7 +340,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			}
 		} catch (final Exception e) {
 			LOGGER.error("Error extrayendo la info del zip.", e);
-			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogCuadernoCarga.error.ficheroContenido"));
+			addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogCuadernoCarga.error.ficheroContenido"));
 			setMostrarPanelInfo(false);
 			return;
 		} finally {
@@ -446,6 +446,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 
 		return true;
 	}
+
 	/**
 	 * Check dominio.
 	 *
@@ -483,7 +484,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del retorno dialogo area.
 	 *
-	 * @param event respuesta dialogo
+	 * @param event
+	 *                  respuesta dialogo
 	 */
 	public void returnDialogoGestor(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -918,22 +920,24 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	 * existe.
 	 **/
 	private void prepararFlujoTramiteFormulario(final TramitePasoRellenar pasoRellenar) {
-//		for (final FormularioTramite form : pasoRellenar.getFormulariosTramite()) {
-//			if (form.getTipoFormulario() == TypeFormularioGestor.EXTERNO && form.getFormularioGestorExterno() != null
-//					&& form.getFormularioGestorExterno().getIdentificador() != null) {
-//				final boolean existe = gestorFormularioService
-//						.existeFormulario(form.getFormularioGestorExterno().getIdentificador(), null);
-//
-//				if (!existe) {
-//					mostrarFilasFormularios = true;
-//					final FilaImportarFormulario fila = new FilaImportarFormulario();
-//					fila.setCorrecto(false);
-//					fila.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.gestorExternoInexistente",
-//							new String[] { form.getFormularioGestorExterno().getIdentificador() }));
-//					filasFormulario.add(fila);
-//				}
-//			}
-//		}
+		// for (final FormularioTramite form : pasoRellenar.getFormulariosTramite()) {
+		// if (form.getTipoFormulario() == TypeFormularioGestor.EXTERNO &&
+		// form.getFormularioGestorExterno() != null
+		// && form.getFormularioGestorExterno().getIdentificador() != null) {
+		// final boolean existe = gestorFormularioService
+		// .existeFormulario(form.getFormularioGestorExterno().getIdentificador(),
+		// null);
+		//
+		// if (!existe) {
+		// mostrarFilasFormularios = true;
+		// final FilaImportarFormulario fila = new FilaImportarFormulario();
+		// fila.setCorrecto(false);
+		// fila.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.gestorExternoInexistente",
+		// new String[] { form.getFormularioGestorExterno().getIdentificador() }));
+		// filasFormulario.add(fila);
+		// }
+		// }
+		// }
 	}
 
 	/**
@@ -977,7 +981,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			if (gestorActual == null) {
 
 				// Si no existe o está desactivado la personalización, dan info
-				String mensaje = UtilJSF.getLiteral("dialogTramiteImportar.error.noexistegestor");
+				final String mensaje = UtilJSF.getLiteral("dialogTramiteImportar.error.noexistegestor");
 				filasGestores.add(FilaImportarGestor.crearITgestor(gestor, gestorActual, mensaje, configuracionAut));
 
 			} else {
@@ -986,12 +990,13 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 				} else {
 					if (!identificadorArea.equals(gestorActual.getAreaIdentificador())) {
 						// Si no existe o está desactivado la personalización, dan info
-						String mensaje = UtilJSF.getLiteral("dialogTramiteImportar.error.existegestorOtroArea");
+						final String mensaje = UtilJSF.getLiteral("dialogTramiteImportar.error.existegestorOtroArea");
 						filasGestores.add(FilaImportarGestor.creaITgestorExisteMalConf(gestor, gestorActual, mensaje,
 								configuracionAut));
 					} else {
 						if (configuracionAut == null) {
-							String mensaje = UtilJSF.getLiteral("dialogTramiteImportar.error.existegestorsinconfig");
+							final String mensaje = UtilJSF
+									.getLiteral("dialogTramiteImportar.error.existegestorsinconfig");
 							filasGestores.add(FilaImportarGestor.creaITgestorExisteSinConfig(gestor, gestorActual,
 									mensaje, configuracionAut));
 						} else {
@@ -1133,7 +1138,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del retorno dialogo area.
 	 *
-	 * @param event respuesta dialogo
+	 * @param event
+	 *                  respuesta dialogo
 	 */
 	public void returnDialogoDominio(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -1151,7 +1157,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del retorno dialogo area.
 	 *
-	 * @param event respuesta dialogo
+	 * @param event
+	 *                  respuesta dialogo
 	 */
 	public void returnDialogoArea(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -1167,7 +1174,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del retorno dialogo tramite.
 	 *
-	 * @param event respuesta dialogo
+	 * @param event
+	 *                  respuesta dialogo
 	 */
 	public void returnDialogoTramite(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -1182,7 +1190,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del retorno dialogo tramite version.
 	 *
-	 * @param event respuesta dialogo
+	 * @param event
+	 *                  respuesta dialogo
 	 */
 	public void returnDialogoTramiteVersion(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -1196,7 +1205,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del retorno dialogo tramite version.
 	 *
-	 * @param event respuesta dialogo
+	 * @param event
+	 *                  respuesta dialogo
 	 */
 	public void returnDialogoRegistro(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -1259,7 +1269,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			final FormateadorFormulario formateador = (FormateadorFormulario) UtilCoreApi.deserialize(contenidoFile);
 			formateadores.put(codigo, formateador);
 
-		}  else if (nombreFichero.startsWith("gestoresExternosFormulario_")) {
+		} else if (nombreFichero.startsWith("gestoresExternosFormulario_")) {
 			final Long codigo = obtenerId(nombreFichero);
 			final GestorExternoFormularios gestor = (GestorExternoFormularios) UtilCoreApi.deserialize(contenidoFile);
 			gestores.put(codigo, gestor);
@@ -1382,9 +1392,12 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			for (final FilaImportarDominio dominio : filasDominios) {
 				if (dominio.getAccion() != TypeImportarAccion.MANTENER && dominio.getDominioActual() != null) {
 
-					final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
-					final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
-					final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+					final String urlBase = systemService
+							.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
+					final String usuario = systemService
+							.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
+					final String pwd = systemService
+							.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
 					this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_DOMINIO,
 							dominio.getDominioActual().getIdentificador());
 				}
@@ -1393,9 +1406,12 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 
 		if (refrescarCacheTramite && filaTramiteVersion.getTramiteVersionActual() != null
 				&& filaTramite.getTramiteActual() != null) {
-			final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
-			final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
-			final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+			final String urlBase = systemService
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
+			final String usuario = systemService
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
+			final String pwd = systemService
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
 			this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_TRAMITE,
 					filaTramite.getTramiteActual().getIdentificador() + "#"
 							+ filaTramiteVersion.getTramiteVersionActual().getNumeroVersion());
@@ -1442,7 +1458,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *               the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -1456,7 +1473,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data the data to set
+	 * @param data
+	 *                 the data to set
 	 */
 	public void setData(final Tramite data) {
 		this.data = data;
@@ -1470,7 +1488,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarPanelInfo the mostrarPanelInfo to set
+	 * @param mostrarPanelInfo
+	 *                             the mostrarPanelInfo to set
 	 */
 	public void setMostrarPanelInfo(final boolean mostrarPanelInfo) {
 		this.mostrarPanelInfo = mostrarPanelInfo;
@@ -1484,7 +1503,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramiteVersion the tramiteVersion to set
+	 * @param tramiteVersion
+	 *                           the tramiteVersion to set
 	 */
 	public void setTramiteVersion(final TramiteVersion tramiteVersion) {
 		this.tramiteVersion = tramiteVersion;
@@ -1498,7 +1518,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramite the tramite to set
+	 * @param tramite
+	 *                    the tramite to set
 	 */
 	public void setTramite(final Tramite tramite) {
 		this.tramite = tramite;
@@ -1512,7 +1533,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param area the area to set
+	 * @param area
+	 *                 the area to set
 	 */
 	public void setArea(final Area area) {
 		this.area = area;
@@ -1526,7 +1548,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param formularioInternoService the formularioInternoService to set
+	 * @param formularioInternoService
+	 *                                     the formularioInternoService to set
 	 */
 	public void setFormularioInternoService(final FormularioInternoService formularioInternoService) {
 		this.formularioInternoService = formularioInternoService;
@@ -1540,7 +1563,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramiteService the tramiteService to set
+	 * @param tramiteService
+	 *                           the tramiteService to set
 	 */
 	public void setTramiteService(final TramiteService tramiteService) {
 		this.tramiteService = tramiteService;
@@ -1554,7 +1578,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param contenido the contenido to set
+	 * @param contenido
+	 *                      the contenido to set
 	 */
 	public void setContenido(final byte[] contenido) {
 		this.contenido = contenido;
@@ -1568,7 +1593,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param dominiosId the dominiosId to set
+	 * @param dominiosId
+	 *                       the dominiosId to set
 	 */
 	public void setDominios(final Map<Long, Dominio> dominios) {
 		this.dominios = dominios;
@@ -1582,7 +1608,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param formularios the formularios to set
+	 * @param formularios
+	 *                        the formularios to set
 	 */
 	public void setFormularios(final Map<Long, DisenyoFormulario> formularios) {
 		this.formularios = formularios;
@@ -1596,7 +1623,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param ficheros the ficheros to set
+	 * @param ficheros
+	 *                     the ficheros to set
 	 */
 	public void setFicheros(final Map<Long, Fichero> ficheros) {
 		this.ficheros = ficheros;
@@ -1610,7 +1638,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param ficherosContent the ficherosContent to set
+	 * @param ficherosContent
+	 *                            the ficherosContent to set
 	 */
 	public void setFicherosContent(final Map<Long, byte[]> ficherosContent) {
 		this.ficherosContent = ficherosContent;
@@ -1624,7 +1653,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param fuentesDatos the fuentesDatos to set
+	 * @param fuentesDatos
+	 *                         the fuentesDatos to set
 	 */
 	public void setFuentesDatos(final Map<Long, FuenteDatos> fuentesDatos) {
 		this.fuentesDatos = fuentesDatos;
@@ -1638,7 +1668,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param fuentesDatosContent the fuentesDatosContent to set
+	 * @param fuentesDatosContent
+	 *                                the fuentesDatosContent to set
 	 */
 	public void setFuentesDatosContent(final Map<Long, byte[]> fuentesDatosContent) {
 		this.fuentesDatosContent = fuentesDatosContent;
@@ -1652,7 +1683,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param formateadores the formateadores to set
+	 * @param formateadores
+	 *                          the formateadores to set
 	 */
 	public void setFormateadores(final Map<Long, FormateadorFormulario> formateadores) {
 		this.formateadores = formateadores;
@@ -1680,7 +1712,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param filaArea the filaArea to set
+	 * @param filaArea
+	 *                     the filaArea to set
 	 */
 	public void setFilaArea(final FilaImportarArea filaArea) {
 		this.filaArea = filaArea;
@@ -1694,7 +1727,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param filaTramite the filaTramite to set
+	 * @param filaTramite
+	 *                        the filaTramite to set
 	 */
 	public void setFilaTramite(final FilaImportarTramite filaTramite) {
 		this.filaTramite = filaTramite;
@@ -1708,7 +1742,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param filaTramiteVersion the filaTramiteVersion to set
+	 * @param filaTramiteVersion
+	 *                               the filaTramiteVersion to set
 	 */
 	public void setFilaTramiteVersion(final FilaImportarTramiteVersion filaTramiteVersion) {
 		this.filaTramiteVersion = filaTramiteVersion;
@@ -1722,7 +1757,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarBotonArea the mostrarBotonArea to set
+	 * @param mostrarBotonArea
+	 *                             the mostrarBotonArea to set
 	 */
 	public void setMostrarBotonArea(final boolean mostrarBotonArea) {
 		this.mostrarBotonArea = mostrarBotonArea;
@@ -1736,7 +1772,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarBotonTramite the mostrarBotonTramite to set
+	 * @param mostrarBotonTramite
+	 *                                the mostrarBotonTramite to set
 	 */
 	public void setMostrarBotonTramite(final boolean mostrarBotonTramite) {
 		this.mostrarBotonTramite = mostrarBotonTramite;
@@ -1750,7 +1787,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarBotonTramiteVersion the mostrarBotonTramiteVersion to set
+	 * @param mostrarBotonTramiteVersion
+	 *                                       the mostrarBotonTramiteVersion to set
 	 */
 	public void setMostrarBotonTramiteVersion(final boolean mostrarBotonTramiteVersion) {
 		this.mostrarBotonTramiteVersion = mostrarBotonTramiteVersion;
@@ -1764,7 +1802,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarRegistro the mostrarRegistro to set
+	 * @param mostrarRegistro
+	 *                            the mostrarRegistro to set
 	 */
 	public void setMostrarRegistro(final boolean mostrarRegistro) {
 		this.mostrarRegistro = mostrarRegistro;
@@ -1778,7 +1817,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param pasosRegistro the pasosRegistro to set
+	 * @param pasosRegistro
+	 *                          the pasosRegistro to set
 	 */
 	public void setPasosRegistro(final List<TramitePaso> pasosRegistro) {
 		this.pasosRegistro = pasosRegistro;
@@ -1803,7 +1843,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param filaEntidad the filaEntidad to set
+	 * @param filaEntidad
+	 *                        the filaEntidad to set
 	 */
 	public void setFilaEntidad(final FilaImportarEntidad filaEntidad) {
 		this.filaEntidad = filaEntidad;
@@ -1817,7 +1858,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param filaTramiteRegistro the filaTramiteRegistro to set
+	 * @param filaTramiteRegistro
+	 *                                the filaTramiteRegistro to set
 	 */
 	public final void setFilaTramiteRegistro(final FilaImportarTramiteRegistro filaTramiteRegistro) {
 		this.filaTramiteRegistro = filaTramiteRegistro;
@@ -1831,7 +1873,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param todoCorrecto the todoCorrecto to set
+	 * @param todoCorrecto
+	 *                         the todoCorrecto to set
 	 */
 	public void setTodoCorrecto(final boolean todoCorrecto) {
 		this.todoCorrecto = todoCorrecto;
@@ -1845,7 +1888,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarRegistroOficina the mostrarRegistroOficina to set
+	 * @param mostrarRegistroOficina
+	 *                                   the mostrarRegistroOficina to set
 	 */
 	public void setMostrarRegistroOficina(final boolean mostrarRegistroOficina) {
 		this.mostrarRegistroOficina = mostrarRegistroOficina;
@@ -1859,7 +1903,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param dir3zip the dir3zip to set
+	 * @param dir3zip
+	 *                    the dir3zip to set
 	 */
 	public final void setDir3zip(final String dir3zip) {
 		this.dir3zip = dir3zip;
@@ -1873,7 +1918,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param modoZip the modoZip to set
+	 * @param modoZip
+	 *                    the modoZip to set
 	 */
 	public final void setModoZip(final String modoZip) {
 		this.modoZip = modoZip;
@@ -1887,7 +1933,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param revisionZip the revisionZip to set
+	 * @param revisionZip
+	 *                        the revisionZip to set
 	 */
 	public final void setRevisionZip(final String revisionZip) {
 		this.revisionZip = revisionZip;
@@ -1901,7 +1948,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param versionZip the versionZip to set
+	 * @param versionZip
+	 *                       the versionZip to set
 	 */
 	public final void setVersionZip(final String versionZip) {
 		this.versionZip = versionZip;
@@ -1915,7 +1963,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param fechaZip the fechaZip to set
+	 * @param fechaZip
+	 *                     the fechaZip to set
 	 */
 	public final void setFechaZip(final String fechaZip) {
 		this.fechaZip = fechaZip;
@@ -1929,7 +1978,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param usuarioZip the usuarioZip to set
+	 * @param usuarioZip
+	 *                       the usuarioZip to set
 	 */
 	public final void setUsuarioZip(final String usuarioZip) {
 		this.usuarioZip = usuarioZip;
@@ -1943,7 +1993,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param refrescarCacheTramite the refrescarCacheTramite to set
+	 * @param refrescarCacheTramite
+	 *                                  the refrescarCacheTramite to set
 	 */
 	public void setRefrescarCacheTramite(final boolean refrescarCacheTramite) {
 		this.refrescarCacheTramite = refrescarCacheTramite;
@@ -1957,7 +2008,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param refrescarCacheDominio the refrescarCacheDominio to set
+	 * @param refrescarCacheDominio
+	 *                                  the refrescarCacheDominio to set
 	 */
 	public void setRefrescarCacheDominio(final boolean refrescarCacheDominio) {
 		this.refrescarCacheDominio = refrescarCacheDominio;
@@ -1971,9 +2023,10 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarFilasFormularios the mostrarFilasFormularios to set
+	 * @param mostrarFilasFormularios
+	 *                                    the mostrarFilasFormularios to set
 	 */
-	public void setMostrarFilasFormularios(boolean mostrarFilasFormularios) {
+	public void setMostrarFilasFormularios(final boolean mostrarFilasFormularios) {
 		this.mostrarFilasFormularios = mostrarFilasFormularios;
 	}
 
@@ -1992,9 +2045,10 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
-	 * @param posicionGestor the posicionGestor to set
+	 * @param posicionGestor
+	 *                           the posicionGestor to set
 	 */
-	public void setPosicionGestor(Integer posicionGestor) {
+	public void setPosicionGestor(final Integer posicionGestor) {
 		this.posicionGestor = posicionGestor;
 	}
 

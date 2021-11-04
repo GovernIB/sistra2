@@ -17,6 +17,7 @@ import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.EntidadService;
@@ -167,14 +168,16 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
+		if (formularioExternoService.tieneTramitesAsociados(datoSeleccionado.getCodigo())) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
+			return;
+		}
 		// Eliminamos
 		if (formularioExternoService.removeFormularioExterno(datoSeleccionado.getCodigo())) {
 			// Refrescamos datos
 			buscar();
 			// Mostramos mensaje
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
-		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
 		}
 	}
 
@@ -182,9 +185,12 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	 * Refrescar cache.
 	 */
 	public void refrescarCache() {
-		final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
-		final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
-		final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+		final String urlBase = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
+		final String usuario = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
+		final String pwd = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
 		final Entidad entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
 		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, Constantes.CACHE_ENTIDAD,
 				entidad.getCodigoDIR3());
@@ -258,7 +264,8 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event respuesta dialogo
+	 * @param event
+	 *                  respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 
@@ -287,7 +294,8 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	}
 
 	/**
-	 * @param filtro the filtro to set
+	 * @param filtro
+	 *                   the filtro to set
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
@@ -301,7 +309,8 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	}
 
 	/**
-	 * @param listaDatos the listaDatos to set
+	 * @param listaDatos
+	 *                       the listaDatos to set
 	 */
 	public void setListaDatos(final List<GestorExternoFormularios> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -311,7 +320,7 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		return ambito;
 	}
 
-	public void setAmbito(String ambito) {
+	public void setAmbito(final String ambito) {
 		this.ambito = ambito;
 	}
 
@@ -319,7 +328,7 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
@@ -327,7 +336,7 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		return area;
 	}
 
-	public void setArea(String area) {
+	public void setArea(final String area) {
 		this.area = area;
 	}
 
@@ -339,7 +348,8 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	}
 
 	/**
-	 * @param datoSeleccionado the datoSeleccionado to set
+	 * @param datoSeleccionado
+	 *                             the datoSeleccionado to set
 	 */
 	public void setDatoSeleccionado(final GestorExternoFormularios datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
@@ -348,7 +358,8 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	/**
 	 * Abrir dialogo.
 	 *
-	 * @param modoAccesoDlg Modo acceso
+	 * @param modoAccesoDlg
+	 *                          Modo acceso
 	 */
 	private void abrirDlg(final TypeModoAcceso modoAccesoDlg) {
 		// Verifica si no hay fila seleccionada
@@ -369,7 +380,7 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		return mostrarBreadcrumb;
 	}
 
-	public void setMostrarBreadcrumb(boolean mostrarBreadcrumb) {
+	public void setMostrarBreadcrumb(final boolean mostrarBreadcrumb) {
 		this.mostrarBreadcrumb = mostrarBreadcrumb;
 	}
 
@@ -377,7 +388,7 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		return breadCrumb;
 	}
 
-	public void setBreadCrumb(MenuModel breadCrumb) {
+	public void setBreadCrumb(final MenuModel breadCrumb) {
 		this.breadCrumb = breadCrumb;
 	}
 

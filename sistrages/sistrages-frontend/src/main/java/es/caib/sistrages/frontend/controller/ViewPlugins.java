@@ -14,13 +14,13 @@ import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.PluginService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.ResultadoError;
-import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -155,9 +155,12 @@ public class ViewPlugins extends ViewControllerBase {
 	 * Refrescar.
 	 */
 	public void refrescar() {
-		final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
-		final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
-		final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+		final String urlBase = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
+		final String usuario = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
+		final String pwd = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
 
 		String tipo = null;
 		String identificador = null;
@@ -222,7 +225,7 @@ public class ViewPlugins extends ViewControllerBase {
 	 * Retorno dialogo.
 	 *
 	 * @param event
-	 *            respuesta dialogo
+	 *                  respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -285,7 +288,7 @@ public class ViewPlugins extends ViewControllerBase {
 	 * Abre dialogo.
 	 *
 	 * @param modoAccesoDlg
-	 *            Modo acceso
+	 *                          Modo acceso
 	 */
 	private void abrirDlgPlugin(final TypeModoAcceso modoAccesoDlg) {
 		// Verifica si no hay fila seleccionada
@@ -311,7 +314,7 @@ public class ViewPlugins extends ViewControllerBase {
 
 	/**
 	 * @param filtro
-	 *            the filtro to set
+	 *                   the filtro to set
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
@@ -326,7 +329,7 @@ public class ViewPlugins extends ViewControllerBase {
 
 	/**
 	 * @param listaDatos
-	 *            the listaDatos to set
+	 *                       the listaDatos to set
 	 */
 	public void setListaDatos(final List<Plugin> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -341,7 +344,7 @@ public class ViewPlugins extends ViewControllerBase {
 
 	/**
 	 * @param datoSeleccionado
-	 *            the datoSeleccionado to set
+	 *                             the datoSeleccionado to set
 	 */
 	public void setDatoSeleccionado(final Plugin datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
@@ -356,7 +359,7 @@ public class ViewPlugins extends ViewControllerBase {
 
 	/**
 	 * @param ambito
-	 *            the ambito to set
+	 *                   the ambito to set
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;

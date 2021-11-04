@@ -16,6 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistra2.commons.utils.ValidacionTipoException;
+import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistrages.rest.api.interna.RScript;
@@ -710,34 +712,15 @@ public final class UtilsFlujo {
 	 *                     Número de bytes del fichero
 	 */
 	public static void verificarTamanyoMaximo(final String tamMax, final int numBytes) {
-
-		final String tam = tamMax.trim();
-
-		int num = 0;
+		int tamMaxBytes;
 		try {
-			final String numStr = tam.substring(0, tam.length() - ConstantesNumero.N2).trim();
-			num = Integer.parseInt(numStr);
-		} catch (final NumberFormatException nfe) {
-			throw new TamanyoMaximoAnexoException(
-					"No se ha podido verificar el tamaño maximo. La especificación de tamaño máximo no tiene un formato correcto: "
-							+ tamMax,
-					nfe);
+			tamMaxBytes = ValidacionesTipo.getInstance().convertirTamanyoBytes(tamMax);
+		} catch (final ValidacionTipoException e) {
+			throw new TamanyoMaximoAnexoException("Error al obtener propiedad tamaño máximo global", e);
 		}
-
-		if (tam.endsWith("MB")) {
-			num = num * ConstantesNumero.N1024 * ConstantesNumero.N1024;
-		} else if (tam.endsWith("KB")) {
-			num = num * ConstantesNumero.N1024;
-		} else {
-			throw new TamanyoMaximoAnexoException(
-					"No se ha podido verificar el tamaño maximo. La especificación de tamaño máximo no tiene un formato correcto: "
-							+ tamMax);
-		}
-
-		if (numBytes > num) {
+		if (numBytes > tamMaxBytes) {
 			throw new TamanyoMaximoAnexoException("Se ha sobrepasado el tamaño máximo");
 		}
-
 	}
 
 	/**

@@ -238,6 +238,10 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		}
 	}
 
+	public void check() {
+		tiposAutenticacionCER = tiposAutenticacionPIN = tiposAutenticacionPER = tramiteVersion.isAutenticado();
+	}
+
 	// ------- FUNCIONES PRIVADAS ------------------------------
 	/**
 	 * Método que se encarga de cargar el dialog de carga dependiendo de si existe

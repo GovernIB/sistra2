@@ -16,6 +16,7 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarGestor;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
 import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -59,6 +60,10 @@ public class DialogTramiteImportarGestor extends DialogControllerBase {
 		configAutSinAutenticacion.setIdentificador(UtilJSF.getLiteral("dialogDominio.sinAutenticacion"));
 		configuraciones.add(0, configAutSinAutenticacion);
 
+		if (data.getConfiguracionAutenticacionActual() != null && data.getConfiguracionAutenticacionActual().getCodigoImportacion() != null) {
+			configuraciones.add(data.getConfiguracionAutenticacionActual());
+		}
+
 	}
 
 	/**
@@ -69,12 +74,19 @@ public class DialogTramiteImportarGestor extends DialogControllerBase {
 		// Muestra dialogo
 		if (data.getConfiguracionAutenticacionActual() == null
 				|| data.getConfiguracionAutenticacionActual().getCodigo() == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			if (data.getConfiguracionAutenticacionActual() != null && data.getConfiguracionAutenticacionActual().getCodigoImportacion() == null) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			} else {
+				nuevo();
+			}
 		} else {
 			final Map<String, String> params = new HashMap<>();
-			params.put(TypeParametroVentana.AREA.toString(), area.toString());
+			if (area != null) {
+				params.put(TypeParametroVentana.AREA.toString(), area.toString());
+			}
 			params.put(TypeParametroVentana.ID.toString(),
 					data.getConfiguracionAutenticacionActual().getCodigo().toString());
+
 			UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 195);
 		}
 	}
@@ -112,21 +124,23 @@ public class DialogTramiteImportarGestor extends DialogControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		abrirDlg(TypeModoAcceso.ALTA);
-	}
-
-	/**
-	 * Abrir dialogo.
-	 *
-	 * @param modoAccesoDlg Modo acceso
-	 */
-	private void abrirDlg(final TypeModoAcceso modoAccesoDlg) {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 
-		params.put(TypeParametroVentana.AREA.toString(), this.area.toString());
-		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, modoAccesoDlg, params, true, 550, 195);
+		if (area != null) {
+			params.put(TypeParametroVentana.AREA.toString(), this.area.toString());
+		}
+
+		params.put(TypeParametroVentana.MODO_IMPORTAR.toString(), "true");
+
+		TypeModoAcceso modo = TypeModoAcceso.ALTA;
+		if (data.getConfiguracionAutenticacionActual() != null && data.getConfiguracionAutenticacionActual().getCodigoImportacion() != null && data.getConfiguracionAutenticacionActual().getCodigo() == null) {
+			//Pasamos la configuracion pasada
+			params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.data.getConfiguracionAutenticacionActual()));
+			modo = TypeModoAcceso.EDICION;
+		}
+		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, modo , params, true, 550, 195);
 	}
 
 	/**
@@ -148,11 +162,29 @@ public class DialogTramiteImportarGestor extends DialogControllerBase {
 				message = UtilJSF.getLiteral("info.modificado.ok");
 			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
 			// Refrescamos datos
 			ConfiguracionAutenticacion confNueva = (ConfiguracionAutenticacion) respuesta.getResult();
-			configuraciones.add(confNueva);
+			boolean contiene = false;
+			//Buscamos por si ya está asignada
+			if (configuraciones != null) {
+				for(ConfiguracionAutenticacion conf : configuraciones) {
+					if (conf.getCodigo() == null && conf.getCodigoImportacion() != null && conf.getCodigoImportacion().compareTo(confNueva.getCodigoImportacion()) == 0) {
+						conf.setDescripcion(confNueva.getDescripcion());
+						conf.setIdentificador(confNueva.getIdentificador());
+						conf.setPassword(confNueva.getPassword());
+						conf.setUsuario(confNueva.getUsuario());
+						contiene = true;
+						break;
+					}
+				}
+			}
+
+			if (!contiene) {
+				configuraciones.add(confNueva);
+			}
 			data.setConfiguracionAutenticacionActual(confNueva);
-			// checkActualizar();
+
 		}
 	}
 

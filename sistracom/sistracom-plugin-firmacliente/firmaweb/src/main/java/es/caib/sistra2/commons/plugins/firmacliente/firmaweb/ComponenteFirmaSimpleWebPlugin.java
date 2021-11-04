@@ -57,6 +57,12 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 		try {
 			final ApiFirmaWebSimple api = generarApi();
 
+			final String profile = getPropiedad("profile");
+			final String email = infoSesionFirma.getEmail();
+			final String idioma = infoSesionFirma.getIdioma();
+
+			// En caso de firma con certificado representación se pasa nif empresa en
+			// parámetro organizationId (representante en administrationId / username)
 			String administrationId;
 			String username;
 			String organizationId = null;
@@ -69,13 +75,16 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 				username = infoSesionFirma.getNombreUsuario();
 			}
 
-			// TODO PENDIENTE DE PASAR CIF EMPRESA (organizationId)
-			// final FirmaSimpleCommonInfo commonInfo = new
-			// FirmaSimpleCommonInfo(getPropiedad("profile"), infoSesionFirma.getIdioma(),
-			// username, administrationId, infoSesionFirma.getEmail());
-			final FirmaSimpleCommonInfo commonInfo = new FirmaSimpleCommonInfo(getPropiedad("profile"),
-					infoSesionFirma.getIdioma(), infoSesionFirma.getNombreUsuario(), infoSesionFirma.getNif(),
-					infoSesionFirma.getEmail());
+			final FirmaSimpleCommonInfo commonInfo = new FirmaSimpleCommonInfo(profile, idioma, username,
+					administrationId, organizationId, email);
+
+			/*
+			 * ANTES SE PASABA SOLO EL NIF DEL FIRMANTE (PARA S2 LA EMPRESA SI CERT 11 O 12)
+			 * final FirmaSimpleCommonInfo commonInfo = new
+			 * FirmaSimpleCommonInfo(getPropiedad("profile"), infoSesionFirma.getIdioma(),
+			 * infoSesionFirma.getNombreUsuario(), infoSesionFirma.getNif(),
+			 * infoSesionFirma.getEmail());
+			 */
 
 			return api.getTransactionID(commonInfo);
 		} catch (final Exception e) {

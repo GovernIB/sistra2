@@ -22,7 +22,10 @@ import org.primefaces.model.SortOrder;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoOculto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
@@ -44,12 +47,14 @@ import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeErrorValidacion;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.model.types.TypePaso;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
+import es.caib.sistrages.core.api.util.UtilScripts;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.TramiteVersiones;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -135,13 +140,20 @@ public class ViewTramites extends ViewControllerBase {
 	private String width;
 	private String pag;
 	private List<Dominio> dominiosNoUtilizados;
+	private List<String> scriptsProblematicos;
+
+	private String idAreaAux;
+	private String idTramiteAux;
 
 	/**
 	 * Inicializacion.
 	 */
 	public void init() {
 
+		idAreaAux = null;
+		idTramiteAux = null;
 		dominiosNoUtilizados = null;
+		scriptsProblematicos = new ArrayList<>();
 		height = "100%";
 		width = "100%";
 		// Id entidad
@@ -173,7 +185,7 @@ public class ViewTramites extends ViewControllerBase {
 
 		if (idTramite != null) {
 
-			Tramite tramCrumb = tramiteService.getTramite(Long.valueOf(idTramite));
+			final Tramite tramCrumb = tramiteService.getTramite(Long.valueOf(idTramite));
 
 			tramiteSeleccionadaBreadcrumb = new TramiteVersiones(tramCrumb, null);
 			tramiteSeleccionada = tramiteSeleccionadaBreadcrumb;
@@ -603,7 +615,7 @@ public class ViewTramites extends ViewControllerBase {
 	 * Método publico de filtrar
 	 */
 	public void filtrar() {
-		DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot()
+		final DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot()
 				.findComponent("form:dataTableTramites");
 		dataTable.setFirst(0);
 
@@ -846,10 +858,12 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	public void onResizeTable() {
-//		String swidth = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("anchura");
-//		String sheight = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("altura");
-//		height = "100%";
-//		width = "100%";
+		// String swidth =
+		// FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("anchura");
+		// String sheight =
+		// FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("altura");
+		// height = "100%";
+		// width = "100%";
 
 	}
 
@@ -858,7 +872,7 @@ public class ViewTramites extends ViewControllerBase {
 	 *
 	 * @param filtro
 	 */
-	private void buscarTramites(final String filtro, boolean nuevaArea) {
+	private void buscarTramites(final String filtro, final boolean nuevaArea) {
 
 		desmarcar();
 
@@ -867,8 +881,8 @@ public class ViewTramites extends ViewControllerBase {
 			private static final long serialVersionUID = 1l;
 
 			@Override
-			public List<TramiteVersiones> load(int first, int pageSize, String sortField, SortOrder sortOrder,
-					Map<String, Object> filters) {
+			public List<TramiteVersiones> load(int first, final int pageSize, final String sortField,
+					final SortOrder sortOrder, final Map<String, Object> filters) {
 				listaTramiteVersiones.clear();
 				setRowCount(tramiteService.listTramiteTotal(UtilJSF.getSessionBean().getEntidad().getCodigo(),
 						convertirAreas(), filtro));
@@ -880,8 +894,8 @@ public class ViewTramites extends ViewControllerBase {
 						first = 0;
 
 					}
-					if (pag != "0") {
-						int primero = Integer.parseInt(pag);
+					if (!pag.equals("0")) {
+						final int primero = Integer.parseInt(pag);
 						first = primero * 10;
 
 						pag = "0";
@@ -920,9 +934,9 @@ public class ViewTramites extends ViewControllerBase {
 			}
 
 			@Override
-			public TramiteVersiones getRowData(String rowKey) {
+			public TramiteVersiones getRowData(final String rowKey) {
 
-				for (TramiteVersiones tramiteVersiones : listaTramiteVersiones) {
+				for (final TramiteVersiones tramiteVersiones : listaTramiteVersiones) {
 
 					if (tramiteVersiones.getTramite().getCodigo().toString().equals(rowKey)) {
 						return tramiteVersiones;
@@ -933,7 +947,7 @@ public class ViewTramites extends ViewControllerBase {
 			}
 
 			@Override
-			public Object getRowKey(TramiteVersiones tramiteVersiones) {
+			public Object getRowKey(final TramiteVersiones tramiteVersiones) {
 				return tramiteVersiones.getTramite().getCodigo();
 
 			}
@@ -943,9 +957,9 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	private List<Long> convertirAreas() {
-		List<Long> areas = new ArrayList<>();
+		final List<Long> areas = new ArrayList<>();
 		if (listaAreasSeleccionadas != null) {
-			for (Area area : listaAreasSeleccionadas) {
+			for (final Area area : listaAreasSeleccionadas) {
 				areas.add(area.getCodigo());
 			}
 		}
@@ -1169,9 +1183,9 @@ public class ViewTramites extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, List<String>> params = new HashMap<>();
 		// params.put(TypeParametroVentana.ID.toString(),
-		DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot()
+		final DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot()
 				.findComponent("form:dataTableTramites");
-		int pagina = dataTable.getPage();
+		final int pagina = dataTable.getPage();
 		params.put("pagina", Arrays.asList(String.valueOf(pagina)));
 		params.put(TypeParametroVentana.ID.toString(), Arrays.asList(versionSeleccionada.getCodigo().toString()));
 		UtilJSF.redirectJsfPage("/secure/app/viewDefinicionVersion.xhtml", params);
@@ -1213,6 +1227,9 @@ public class ViewTramites extends ViewControllerBase {
 			return;
 		}
 
+		idArea = this.versionSeleccionada.getIdArea().toString();
+		idTramite = this.versionSeleccionada.getIdTramite().toString();
+		idTramiteVersion = null;
 		// Eliminamos
 		this.tramiteService.removeTramiteVersion(this.versionSeleccionada.getCodigo(),
 				this.versionSeleccionada.getNumeroVersion());
@@ -1220,16 +1237,23 @@ public class ViewTramites extends ViewControllerBase {
 		// Invalidaciones
 		if (!UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
 			final Tramite tramite = tramiteService.getTramite(this.versionSeleccionada.getIdTramite());
-			final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
-			final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
-			final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+			final String urlBase = systemService
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
+			final String usuario = systemService
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
+			final String pwd = systemService
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
 			this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_TRAMITE,
 					tramite.getIdentificador() + "#" + this.versionSeleccionada.getNumeroVersion());
 		}
 
 		// Refrescamos datos
-		buscarTramites();
+		// buscarTramites();
+		this.versionSeleccionada = null;
+		final Tramite tramCrumb = tramiteService.getTramite(Long.valueOf(idTramite));
 
+		tramiteSeleccionadaBreadcrumb = new TramiteVersiones(tramCrumb, null);
+		tramiteSeleccionada = tramiteSeleccionadaBreadcrumb;
 		// Mostramos mensaje
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral(LITERAL_INFO_BORRADO_OK));
 	}
@@ -1288,8 +1312,19 @@ public class ViewTramites extends ViewControllerBase {
 
 		// Verificamos si se ha modificado
 		if (!respuesta.isCanceled()) {
-			buscarTramites();
+
+			recuperdatosVersion();
+			this.versionSeleccionada.setBloqueada(false);
+			// buscarTramites();
 		}
+	}
+
+	private void recuperdatosVersion() {
+		idArea = this.versionSeleccionada.getIdArea().toString();
+		idTramite = this.versionSeleccionada.getIdTramite().toString();
+
+		this.tramiteSeleccionada = null;
+		idTramiteVersion = versionSeleccionada.getCodigo().toString();
 	}
 
 	/**
@@ -1403,7 +1438,7 @@ public class ViewTramites extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
-		Tramite tramite = tramiteService.getTramite(this.versionSeleccionada.getIdTramite());
+		final Tramite tramite = tramiteService.getTramite(this.versionSeleccionada.getIdTramite());
 		params.put(TypeParametroVentana.TRAMITE.toString(), tramite.getIdentificador());
 		params.put(TypeParametroVentana.VERSION.toString(),
 				String.valueOf(this.versionSeleccionada.getNumeroVersion()));
@@ -1458,9 +1493,12 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void refrescarCache(final String identificadorTramite, final int numeroVersion) {
 		if (identificadorTramite != null) {
-			final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
-			final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
-			final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+			final String urlBase = systemService
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
+			final String usuario = systemService
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
+			final String pwd = systemService
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
 
 			this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_TRAMITE,
 					identificadorTramite + "#" + numeroVersion);
@@ -1505,8 +1543,9 @@ public class ViewTramites extends ViewControllerBase {
 				UtilJSF.addMessageContext(respuesta.getMensaje().getNivel(), respuesta.getMensaje().getMensaje());
 			}
 
+			recuperdatosVersion();
 			// Refrescamos datos
-			buscarTramites();
+			// buscarTramites();
 		}
 
 	}
@@ -1589,358 +1628,6 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * Verificar dominio.
-	 *
-	 * @param dominios the dominios
-	 * @param codForm  the cod form
-	 */
-	private void verificarDominio(List<Dominio> dominios, Long codForm) {
-		DisenyoFormulario formulario = formIntService.getFormularioInternoCompleto(codForm);
-		if (formulario.getScriptPlantilla() != null) {
-			tieneDominio(formulario.getScriptPlantilla(), dominios);
-
-		}
-		for (PaginaFormulario pag : formulario.getPaginas()) {
-			dominioScriptPagina(pag, dominios);
-
-			for (LineaComponentesFormulario linea : pag.getLineas()) {
-
-				for (ComponenteFormulario selector : linea.getComponentes()) {
-					if (selector.getTipo().equals(TypeObjetoFormulario.SELECTOR)) {
-
-						ComponenteFormularioCampoSelector campoSelector = (ComponenteFormularioCampoSelector) selector;
-						dominioScriptSelector(campoSelector, dominios);
-						for (int i = 0; i < dominios.size(); i++) {
-
-							if (campoSelector.getCodDominio() != null
-									&& campoSelector.getCodDominio().equals(dominios.get(i).getCodigo())) {
-								if (dominiosNoUtilizados.contains(dominios.get(i))) {
-									dominiosNoUtilizados.remove(dominios.get(i));
-								}
-
-							}
-						}
-					}
-				}
-
-			}
-
-		}
-
-	}
-
-	/**
-	 * Dominio script pagina.
-	 *
-	 * @param pag the pag
-	 */
-	private void dominioScriptPagina(PaginaFormulario pag, List<Dominio> dominios) {
-
-		if (pag.getScriptNavegacion() != null) {
-			tieneDominio(pag.getScriptNavegacion(), dominios);
-
-		}
-		if (pag.getScriptValidacion() != null) {
-			tieneDominio(pag.getScriptValidacion(), dominios);
-
-		}
-
-	}
-
-	/**
-	 * Dominio script.
-	 *
-	 * @param pasoForm the paso form
-	 */
-	private void dominioScriptSelector(ComponenteFormularioCampoSelector campoSelector, List<Dominio> dominios) {
-
-		if (campoSelector.getScriptAutorrellenable() != null) {
-			tieneDominio(campoSelector.getScriptAutorrellenable(), dominios);
-
-		}
-		if (campoSelector.getScriptSoloLectura() != null) {
-			tieneDominio(campoSelector.getScriptSoloLectura(), dominios);
-
-		}
-		if (campoSelector.getScriptValidacion() != null) {
-			tieneDominio(campoSelector.getScriptValidacion(), dominios);
-
-		}
-		if (campoSelector.getScriptValoresPosibles() != null) {
-			tieneDominio(campoSelector.getScriptValoresPosibles(), dominios);
-
-		}
-
-	}
-
-	/**
-	 * Dominio script.
-	 *
-	 * @param pasoForm the paso form
-	 */
-	private void dominioScript(TramitePasoRellenar pasoForm, List<Dominio> dominios) {
-		TramiteVersion tramiteVersionDom = tramiteService.getTramiteVersion(this.versionSeleccionada.getCodigo());
-
-		if (tramiteVersionDom.getScriptInicializacionTramite() != null) {
-			tieneDominio(tramiteVersionDom.getScriptInicializacionTramite(), dominios);
-
-		}
-		if (tramiteVersionDom.getScriptPersonalizacion() != null) {
-			tieneDominio(tramiteVersionDom.getScriptPersonalizacion(), dominios);
-
-		}
-		if (pasoForm.getScriptNavegacion() != null) {
-			tieneDominio(pasoForm.getScriptNavegacion(), dominios);
-
-		}
-		if (pasoForm.getScriptVariables() != null) {
-			tieneDominio(pasoForm.getScriptVariables(), dominios);
-
-		}
-
-	}
-
-	/**
-	 * Dominio script formulario.
-	 *
-	 * @param formTram the form tram
-	 */
-	private void dominioScriptFormulario(FormularioTramite formTram, List<Dominio> dominios) {
-
-		if (formTram.getScriptDatosIniciales() != null) {
-			tieneDominio(formTram.getScriptDatosIniciales(), dominios);
-
-		}
-		if (formTram.getScriptFirma() != null) {
-			tieneDominio(formTram.getScriptFirma(), dominios);
-
-		}
-		if (formTram.getScriptObligatoriedad() != null) {
-			tieneDominio(formTram.getScriptObligatoriedad(), dominios);
-
-		}
-		if (formTram.getScriptParametros() != null) {
-			tieneDominio(formTram.getScriptParametros(), dominios);
-
-		}
-		if (formTram.getScriptRetorno() != null) {
-			tieneDominio(formTram.getScriptRetorno(), dominios);
-
-		}
-
-	}
-
-	/**
-	 * Dominio script anexar.
-	 *
-	 * @param pasoAnexar the paso anexar
-	 */
-	private void dominioScriptAnexar(TramitePasoAnexar pasoAnexar, List<Dominio> dominios) {
-
-		if (pasoAnexar.getScriptAnexosDinamicos() != null) {
-			tieneDominio(pasoAnexar.getScriptAnexosDinamicos(), dominios);
-
-		}
-		if (pasoAnexar.getDocumentos() != null) {
-			for (Documento document : pasoAnexar.getDocumentos()) {
-				if (document.getScriptFirmarDigitalmente() != null) {
-					tieneDominio(document.getScriptFirmarDigitalmente(), dominios);
-
-				}
-				if (document.getScriptObligatoriedad() != null) {
-					tieneDominio(document.getScriptObligatoriedad(), dominios);
-
-				}
-				if (document.getScriptValidacion() != null) {
-					tieneDominio(document.getScriptValidacion(), dominios);
-
-				}
-			}
-		}
-
-	}
-
-	/**
-	 * Dominio script pagar.
-	 *
-	 * @param pasoPagar the paso pagar
-	 */
-	private void dominioScriptPagar(TramitePasoTasa pasoPagar, List<Dominio> dominios) {
-
-		if (pasoPagar.getTasas() != null) {
-			for (Tasa tasa : pasoPagar.getTasas()) {
-				if (tasa.getScriptObligatoriedad() != null) {
-					tieneDominio(tasa.getScriptObligatoriedad(), dominios);
-
-				}
-				if (tasa.getScriptPago() != null) {
-					tieneDominio(tasa.getScriptPago(), dominios);
-
-				}
-
-			}
-		}
-	}
-
-	/**
-	 * Dominio script registrar.
-	 *
-	 * @param pasoRegistrar the paso registrar
-	 */
-	private void dominioScriptRegistrar(TramitePasoRegistrar pasoRegistrar, List<Dominio> dominios) {
-
-		if (pasoRegistrar.getScriptAlFinalizar() != null) {
-			tieneDominio(pasoRegistrar.getScriptAlFinalizar(), dominios);
-
-		}
-		if (pasoRegistrar.getScriptDestinoRegistro() != null) {
-			tieneDominio(pasoRegistrar.getScriptDestinoRegistro(), dominios);
-
-		}
-		if (pasoRegistrar.getScriptNavegacion() != null) {
-			tieneDominio(pasoRegistrar.getScriptNavegacion(), dominios);
-
-		}
-		if (pasoRegistrar.getScriptPresentador() != null) {
-			tieneDominio(pasoRegistrar.getScriptPresentador(), dominios);
-
-		}
-		if (pasoRegistrar.getScriptRepresentante() != null) {
-			tieneDominio(pasoRegistrar.getScriptRepresentante(), dominios);
-
-		}
-		if (pasoRegistrar.getScriptValidarRegistrar() != null) {
-			tieneDominio(pasoRegistrar.getScriptValidarRegistrar(), dominios);
-		}
-		if (pasoRegistrar.getScriptVariables() != null) {
-			tieneDominio(pasoRegistrar.getScriptVariables(), dominios);
-
-		}
-
-	}
-
-//	/**
-//	 * Tiene dominio.
-//	 *
-//	 * @param script the script
-//	 */
-//	private void tieneDominio(Script script, List<Dominio> dominios) {
-//		for (Dominio dom : dominios) {
-//			if (script.getContenido().contains(dom.getDescripcion())) {
-//				if (dominiosNoUtilizados.contains(dom)) {
-//					dominiosNoUtilizados.add(dom);
-//
-//				}
-//
-//			}
-//		}
-//
-//	}
-
-	/**
-	 * Tiene dominio.
-	 *
-	 * @param script the script
-	 */
-	private void tieneDominio(Script script, List<Dominio> dominios) {
-		for (int i = 0; i < dominios.size(); i++) {
-			if (script.getContenido().contains(dominios.get(i).getIdentificador())) {
-				if (dominiosNoUtilizados.contains(dominios.get(i))) {
-					dominiosNoUtilizados.remove(dominios.get(i));
-
-				}
-
-			}
-		}
-
-	}
-
-	/**
-	 * Dom paso rellenar.
-	 *
-	 * @param paso     the paso
-	 * @param dominios the dominios
-	 */
-	private void domPasoRellenar(TramitePaso paso, List<Dominio> dominios) {
-		final TramitePasoRellenar pasoForm = (TramitePasoRellenar) paso;
-
-		dominioScript(pasoForm, dominios);
-
-		for (FormularioTramite formTram : pasoForm.getFormulariosTramite()) {
-			if (formTram.getIdFormularioInterno() != null) {
-				verificarDominio(dominios, formTram.getIdFormularioInterno());
-
-				dominioScriptFormulario(formTram, dominios);
-
-			}
-		}
-
-	}
-
-	/**
-	 * Dom paso anexar.
-	 *
-	 * @param paso the paso
-	 */
-	private void domPasoAnexar(TramitePaso paso, List<Dominio> dominios) {
-		final TramitePasoAnexar pasoAnexar = (TramitePasoAnexar) paso;
-
-		dominioScriptAnexar(pasoAnexar, dominios);
-
-	}
-
-	/**
-	 * Dom paso pagar.
-	 *
-	 * @param paso the paso
-	 */
-	private void domPasoPagar(TramitePaso paso, List<Dominio> dominios) {
-		final TramitePasoTasa pasopagar = (TramitePasoTasa) paso;
-
-		dominioScriptPagar(pasopagar, dominios);
-
-	}
-
-	/**
-	 * Dom paso registrar.
-	 *
-	 * @param paso the paso
-	 */
-	private void domPasoRegistrar(TramitePaso paso, List<Dominio> dominios) {
-		final TramitePasoRegistrar pasoRegistrar = (TramitePasoRegistrar) paso;
-
-		dominioScriptRegistrar(pasoRegistrar, dominios);
-
-	}
-
-	/**
-	 * Contiene dominio.
-	 */
-	private void contieneDominio() {
-
-		List<Dominio> dominios = tramiteService.getDominioSimpleByTramiteId(this.versionSeleccionada.getCodigo());
-		dominiosNoUtilizados = dominios;
-		final List<TramitePaso> pasos = tramiteService.getTramitePasos(this.versionSeleccionada.getCodigo());
-		for (TramitePaso paso : pasos) {
-			if (paso.getTipo().equals(TypePaso.RELLENAR)) {
-				domPasoRellenar(paso, dominios);
-
-			} else if (paso.getTipo().equals(TypePaso.ANEXAR)) {
-				domPasoAnexar(paso, dominios);
-
-			} else if (paso.getTipo().equals(TypePaso.PAGAR)) {
-				domPasoPagar(paso, dominios);
-
-			} else if (paso.getTipo().equals(TypePaso.REGISTRAR)) {
-				domPasoRegistrar(paso, dominios);
-
-			}
-
-		}
-
-	}
-
-	/**
 	 * Valido tramite version.
 	 *
 	 * @param pEdicion the edicion
@@ -1950,20 +1637,8 @@ public class ViewTramites extends ViewControllerBase {
 		final List<ErrorValidacion> listaErrores = tramiteService
 				.validarVersionTramite(this.versionSeleccionada.getCodigo(), UtilJSF.getSessionBean().getLang());
 
-		contieneDominio();
-		if (dominiosNoUtilizados != null) {
-			for (Dominio dominioNoUtil : dominiosNoUtilizados) {
-
-				ErrorValidacion errorVal = new ErrorValidacion();
-				errorVal.setDescripcion("No se esta utilizando el dominio indicado");
-				errorVal.setElemento(dominioNoUtil.getIdentificador());
-				errorVal.setTipo(TypeErrorValidacion.DOMINIOS);
-				listaErrores.add(errorVal);
-			}
-		}
-
 		if (!listaErrores.isEmpty()) {
-			for (ErrorValidacion error : listaErrores) {
+			for (final ErrorValidacion error : listaErrores) {
 				if (error.getDescripcion().equals("errorFormulario")) {
 					error.setDescripcion(UtilJSF.getLiteral("error.formulario.vacio"));
 				}
@@ -1999,25 +1674,25 @@ public class ViewTramites extends ViewControllerBase {
 		return true;
 	}
 
-	private boolean tieneFormulario() {
-		/**
-		 * Recupera disenyo formularios.
-		 *
-		 * @param pTramiteVersion tramite version
-		 */
-
-		if (!this.versionSeleccionada.getListaPasos().isEmpty()) {
-			for (final TramitePaso paso : this.versionSeleccionada.getListaPasos()) {
-				if (paso instanceof TramitePasoRellenar) {
-					final List<FormularioTramite> formularios = ((TramitePasoRellenar) paso).getFormulariosTramite();
-					if (formularios != null && !formularios.isEmpty()) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
+//	private boolean tieneFormulario() {
+//		/**
+//		 * Recupera disenyo formularios.
+//		 *
+//		 * @param pTramiteVersion tramite version
+//		 */
+//
+//		if (!this.versionSeleccionada.getListaPasos().isEmpty()) {
+//			for (final TramitePaso paso : this.versionSeleccionada.getListaPasos()) {
+//				if (paso instanceof TramitePasoRellenar) {
+//					final List<FormularioTramite> formularios = ((TramitePasoRellenar) paso).getFormulariosTramite();
+//					if (formularios != null && !formularios.isEmpty()) {
+//						return true;
+//					}
+//				}
+//			}
+//		}
+//		return false;
+//	}
 
 	/**
 	 * Obtiene el valor de filtro.
@@ -2167,7 +1842,7 @@ public class ViewTramites extends ViewControllerBase {
 		return dataModel;
 	}
 
-	public void setDataModel(LazyDataModel<TramiteVersiones> dataModel) {
+	public void setDataModel(final LazyDataModel<TramiteVersiones> dataModel) {
 		this.dataModel = dataModel;
 	}
 
@@ -2175,7 +1850,7 @@ public class ViewTramites extends ViewControllerBase {
 		return admEntidad;
 	}
 
-	public void setAdmEntidad(boolean admEntidad) {
+	public void setAdmEntidad(final boolean admEntidad) {
 		this.admEntidad = admEntidad;
 	}
 
@@ -2183,7 +1858,7 @@ public class ViewTramites extends ViewControllerBase {
 		return height;
 	}
 
-	public void setHeight(String height) {
+	public void setHeight(final String height) {
 		this.height = height;
 	}
 
@@ -2191,7 +1866,7 @@ public class ViewTramites extends ViewControllerBase {
 		return width;
 	}
 
-	public void setWidth(String width) {
+	public void setWidth(final String width) {
 		this.width = width;
 	}
 
@@ -2199,7 +1874,7 @@ public class ViewTramites extends ViewControllerBase {
 		return pag;
 	}
 
-	public void setPag(String pag) {
+	public void setPag(final String pag) {
 		this.pag = pag;
 	}
 
@@ -2207,8 +1882,32 @@ public class ViewTramites extends ViewControllerBase {
 		return dominiosNoUtilizados;
 	}
 
-	public void setDominiosNoUtilizados(List<Dominio> dominiosNoUtilizados) {
+	public void setDominiosNoUtilizados(final List<Dominio> dominiosNoUtilizados) {
 		this.dominiosNoUtilizados = dominiosNoUtilizados;
+	}
+
+	public List<String> getScriptsProblematicos() {
+		return scriptsProblematicos;
+	}
+
+	public void setScriptsProblematicos(final List<String> scriptsProblematicos) {
+		this.scriptsProblematicos = scriptsProblematicos;
+	}
+
+	public String getIdAreaAux() {
+		return idAreaAux;
+	}
+
+	public void setIdAreaAux(final String idAreaAux) {
+		this.idAreaAux = idAreaAux;
+	}
+
+	public String getIdTramiteAux() {
+		return idTramiteAux;
+	}
+
+	public void setIdTramiteAux(final String idTramiteAux) {
+		this.idTramiteAux = idTramiteAux;
 	}
 
 }

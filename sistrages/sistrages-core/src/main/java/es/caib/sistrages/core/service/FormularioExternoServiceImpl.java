@@ -74,6 +74,18 @@ public class FormularioExternoServiceImpl implements FormularioExternoService {
 	 * (non-Javadoc)
 	 *
 	 * @see es.caib.sistrages.core.api.service.FormularioExternoService#
+	 * tieneTramitesAsociados( java.lang.Long)
+	 */
+	@Override
+	@NegocioInterceptor
+	public boolean tieneTramitesAsociados(Long idGFE) {
+		return formularioExternoDao.tieneTramitesAsociados(idGFE);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.api.service.FormularioExternoService#
 	 * updateFormularioExterno(es. caib.sistrages.core.api.model.FormularioExterno)
 	 */
 	@Override

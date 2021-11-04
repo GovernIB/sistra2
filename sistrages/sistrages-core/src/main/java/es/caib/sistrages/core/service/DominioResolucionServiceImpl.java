@@ -98,7 +98,6 @@ public class DominioResolucionServiceImpl implements DominioResolucionService {
 			// Consulta dominio
 			try {
 				valoresDominio = iplugin.invocarDominio(idDominio, url, parametros, usrRev, pwdRev, 60L);
-				valoresDominio.setError(false);
 			} catch (final DominioPluginException e) {
 				valoresDominio = new ValoresDominio();
 				valoresDominio.setError(true);

@@ -32,7 +32,7 @@
 
 			<!-- Workpanel: Iframe HTML -->
 			<p:outputPanel id="formulario-panel" styleClass="w100 h100">
-				<iframe id="formulario-frame" name="formulario-frame" src="#{dialogAyuda.urlIframe}" class="ayuda-frame">
+				<iframe id="formulario-frame" name="formulario-frame" src="#{dialogAyuda.urlIframe}"  class="ayuda-frame">
 				  <p>Tu navegador no soporta iframes.</p>
 				</iframe>
 			 </p:outputPanel>
@@ -52,6 +52,14 @@
 
 	</h:form>
 
+	<h:outputScript>
+		      window.onresize = function() {
+		      	console.log("Height: " + window.innerHeight + " Width:" + window.innerWidth);
+		      	$("#formulario-frame").height(window.innerHeight - 40);
+		      	$("#formulario-frame").width(window.innerWidth);
+		      }
+
+	</h:outputScript>
 
 </h:body>
 

@@ -1336,7 +1336,9 @@ public class TramiteDaoImpl implements TramiteDao {
 						for (final Object[] objectForm : objectForms) {
 							final TramiteSimpleFormulario formulario = new TramiteSimpleFormulario();
 							formulario.setCodigo(Long.valueOf(objectForm[0].toString()));
-							formulario.setIdFormularioInterno(Long.valueOf(objectForm[1].toString()));
+							if (objectForm[1] != null) {
+								formulario.setIdFormularioInterno(Long.valueOf(objectForm[1].toString()));
+							}
 							formularios.add(formulario);
 						}
 					}

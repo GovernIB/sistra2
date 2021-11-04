@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ import es.caib.sistramit.core.service.component.integracion.RegistroComponent;
 import es.caib.sistramit.core.service.component.literales.Literales;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
+import es.caib.sistramit.core.service.model.flujo.DatosDocumentoAnexo;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoFormulario;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoPago;
 import es.caib.sistramit.core.service.model.flujo.DatosFicheroPersistencia;
@@ -582,7 +584,11 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		// Recuperamos fichero
 		final DatosFicheroPersistencia fichero = dao.recuperarFicheroPersistencia(refFichero);
 		byte[] contentFic = fichero.getContenido();
-		String nombreFic = fichero.getNombre();
+		final String instancia = (documento.getTipo() == TypeDocumento.ANEXO
+				? ((DatosDocumentoAnexo) documento).getInstancia() + ""
+				: "1");
+		final String nombreFic = documento.getId() + "-" + instancia + "."
+				+ FilenameUtils.getExtension(fichero.getNombre());
 
 		// Recuperamos firma
 		DatosFicheroPersistencia firmaFichero = null;
@@ -595,7 +601,6 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		// Si se anexa un PADES, directamente se anexa la firma
 		if (firmaDocumento != null && firmaDocumento.getTipoFirma() == TypeFirmaDigital.PADES) {
 			contentFic = firmaFichero.getContenido();
-			nombreFic = firmaFichero.getNombre();
 			anexarFirma = false;
 		}
 

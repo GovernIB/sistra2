@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.service.SystemService;
-import es.caib.sistrages.frontend.model.comun.Constantes;
 
 /**
  * Servlet renderizador html.
@@ -89,11 +89,12 @@ public class AyudaServlet extends HttpServlet {
 
 	}
 
-	private void retornarContenidoAyuda( String url, final String mimeType, final HttpServletRequest request,
+	private void retornarContenidoAyuda(String url, final String mimeType, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException, ServletException {
 
 		// Obtiene directorio externo ayuda
-		final String dirAyudaExterna = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAGES_AYUDA_PATH);
+		final String dirAyudaExterna = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAGES_AYUDA_PATH.toString());
 
 		// Retornamos contenido
 		if (StringUtils.isEmpty(url))

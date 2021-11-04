@@ -15,6 +15,9 @@ public class ConfiguracionAutenticacion extends ModelApi {
 	/** Id. */
 	private Long codigo;
 
+	/** Id que no se mapea, es sólo para saber que es en la creación de la importacion **/
+	private Long codigoImportacion;
+
 	/** Identificador **/
 	private String identificador;
 
@@ -103,6 +106,20 @@ public class ConfiguracionAutenticacion extends ModelApi {
 	 */
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	/**
+	 * @return the codigoImportacion
+	 */
+	public Long getCodigoImportacion() {
+		return codigoImportacion;
+	}
+
+	/**
+	 * @param codigoImportacion the codigoImportacion to set
+	 */
+	public void setCodigoImportacion(Long codigoImportacion) {
+		this.codigoImportacion = codigoImportacion;
 	}
 
 	/*

@@ -11,11 +11,11 @@ import javax.inject.Inject;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.ResultadoError;
-import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -97,9 +97,12 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	 * Refrescar.
 	 */
 	public void refrescar() {
-		final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
-		final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
-		final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+		final String urlBase = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
+		final String usuario = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
+		final String pwd = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
 
 		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, "C", null);
 		if (resultado.getCodigo() == 1) {
@@ -158,7 +161,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	 * Retorno dialogo.
 	 *
 	 * @param event
-	 *            respuesta dialogo
+	 *                  respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 
@@ -200,7 +203,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 
 	/**
 	 * @param filtro
-	 *            the filtro to set
+	 *                   the filtro to set
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
@@ -215,7 +218,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 
 	/**
 	 * @param listaDatos
-	 *            the listaDatos to set
+	 *                       the listaDatos to set
 	 */
 	public void setListaDatos(final List<ConfiguracionGlobal> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -230,7 +233,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 
 	/**
 	 * @param datoSeleccionado
-	 *            the datoSeleccionado to set
+	 *                             the datoSeleccionado to set
 	 */
 	public void setDatoSeleccionado(final ConfiguracionGlobal datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;

@@ -570,8 +570,8 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		}
 
 		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdSesionTramitacion())) {
-			predicate = builder.and(predicate, builder.equal(tableS.get("sesionTramitacion").get("idSesionTramitacion"),
-					pFiltroBusqueda.getIdSesionTramitacion()));
+			predicate = builder.and(predicate,
+					builder.equal(tableS.get("idSesionTramitacion"), pFiltroBusqueda.getIdSesionTramitacion()));
 		}
 
 		if (StringUtils.isNoneBlank(pFiltroBusqueda.getNif())) {
@@ -863,8 +863,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Busca sesion tramitacion.
 	 *
-	 * @param idSesionTramitacion
-	 *                                id sesion tramitacion
+	 * @param idSesionTramitacion id sesion tramitacion
 	 * @return sesion tramitacion
 	 */
 	private HSesionTramitacion findHSesionTramitacion(final String idSesionTramitacion) {
@@ -882,8 +881,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Busca tramite.
 	 *
-	 * @param idSesionTramitacion
-	 *                                id sesion tramitacion
+	 * @param idSesionTramitacion id sesion tramitacion
 	 * @return sesion tramitacion
 	 */
 	private HTramite findHTramite(final String idSesionTramitacion) {
@@ -901,8 +899,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Busca tramite y genera excepcion si no lo encuentra.
 	 *
-	 * @param idSesionTramitacion
-	 *                                id sesion tramitacion
+	 * @param idSesionTramitacion id sesion tramitacion
 	 * @return sesion tramitacion
 	 */
 	private HTramite getHTramite(final String pIdSesionTramitacion) {
@@ -916,8 +913,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Busca pasos tramite.
 	 *
-	 * @param idSesionTramitacion
-	 *                                id sesion tramitacion
+	 * @param idSesionTramitacion id sesion tramitacion
 	 * @return pasos tramite
 	 */
 	@SuppressWarnings("unchecked")
@@ -931,8 +927,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Busca paso tramite.
 	 *
-	 * @param idSesionTramitacion
-	 *                                id sesion tramitacion
+	 * @param idSesionTramitacion id sesion tramitacion
 	 * @return paso tramite
 	 */
 	@SuppressWarnings("unchecked")
@@ -956,8 +951,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Busca paso tramite y genera excepción si no lo encuentra.
 	 *
-	 * @param idSesionTramitacion
-	 *                                id sesion tramitacion
+	 * @param idSesionTramitacion id sesion tramitacion
 	 * @return paso tramite
 	 */
 	private HPaso getHPaso(final String idSesionTramitacion, final String idPaso) {
@@ -972,8 +966,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Obtiene ficheros de las firmas de un documento.
 	 *
-	 * @param hdoc
-	 *                 HDocumento
+	 * @param hdoc HDocumento
 	 * @return ficheros de las firmas de un documento.
 	 */
 	private List<ReferenciaFichero> obtenerFirmasDocumento(final HDocumento hdoc) {
@@ -991,8 +984,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Obtiene ficheros deun documento.
 	 *
-	 * @param hdoc
-	 *                 HDocumento
+	 * @param hdoc HDocumento
 	 * @return ficheros de un documento.
 	 */
 	private List<ReferenciaFichero> obtenerFicherosDocumento(final HDocumento hdoc) {
@@ -1017,8 +1009,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Método para Eliminar ficheros de la clase FlujoTramiteDaoImpl.
 	 *
-	 * @param ficheros
-	 *                     Parámetro ficheros
+	 * @param ficheros Parámetro ficheros
 	 */
 	private void eliminarFicheros(final List<ReferenciaFichero> ficheros) {
 		if (!ficheros.isEmpty()) {

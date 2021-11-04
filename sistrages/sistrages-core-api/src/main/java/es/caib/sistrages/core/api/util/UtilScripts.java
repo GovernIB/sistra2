@@ -2,6 +2,8 @@ package es.caib.sistrages.core.api.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
@@ -337,10 +339,10 @@ public class UtilScripts {
 	}
 
 	/**
-	 * Devuelve la lista de formularios simplificado.
+	 * Obtiene el valor de tramiteSimpleFormularios.
 	 *
-	 * @param pasoRellenar
-	 * @return
+	 * @param pasoRellenar the paso rellenar
+	 * @return el valor de tramiteSimpleFormularios
 	 */
 	private static List<TramiteSimpleFormulario> getTramiteSimpleFormularios(final TramitePasoRellenar pasoRellenar) {
 
@@ -357,4 +359,84 @@ public class UtilScripts {
 		return formularios;
 	}
 
+	/**
+	 * Buscar comentarios script.
+	 *
+	 * @param script the script
+	 * @return true, if successful
+	 */
+	public static boolean buscarComentariosScript(String script) {
+		boolean warn = false;
+		boolean existe = comentarioSimple(script);
+		if (existe) {
+			return true;
+		}
+		String contenidoScript = añadirFinComentario(script);
+		Pattern regex = Pattern.compile("\\/\\*(.*?)(PLUGIN_DATOSFORMULARIO\\.get)(.*?)\\*\\/");
+		// Quitamos todos los espacios en blanco y saltos de línea
+		String scriptSearch = contenidoScript.replaceAll("\\r*\\n", "");
+		scriptSearch = scriptSearch.replaceAll("\\s", "");
+		final Matcher matcher = regex.matcher(scriptSearch);
+
+		if (matcher.find()) {
+			warn = true;
+		}
+
+		return warn;
+	}
+
+	/**
+	 * Comentario simple.
+	 *
+	 * @param script the script
+	 * @return true, if successful
+	 */
+	private static boolean comentarioSimple(String script) {
+		boolean existe = false;
+		Pattern regex = Pattern.compile("\\/\\/(.*?)(PLUGIN_DATOSFORMULARIO\\.get)(.*?)$");
+
+		String[] arrayScript = script.split("\n");
+		for (int x = 0; x < arrayScript.length; x++) {
+			final Matcher matcher = regex.matcher(arrayScript[x]);
+			if (matcher.find()) {
+				return true;
+			}
+
+		}
+
+		return existe;
+	}
+
+	/**
+	 * Añadir fin comentario.
+	 *
+	 * @param script the script
+	 * @return the string
+	 */
+	private static String añadirFinComentario(String script) {
+		int iniComent = 0;
+		int finComent = 0;
+		String contenidoScript = script;
+		final List<String> deps = new ArrayList<>();
+
+		Pattern regex = Pattern.compile("\\/\\*");
+		Pattern regex1 = Pattern.compile("\\*\\/");
+
+		final Matcher matcher = regex.matcher(script);
+		final Matcher matcher1 = regex1.matcher(script);
+
+		while (matcher.find()) {
+			iniComent++;
+		}
+		while (matcher1.find()) {
+			finComent++;
+		}
+
+		if (iniComent > finComent) {
+			contenidoScript = script + "*/";
+		}
+
+		return contenidoScript;
+
+	}
 }

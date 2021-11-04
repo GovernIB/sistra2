@@ -1,6 +1,7 @@
 package es.caib.sistramit.core.service.component.formulario.interno.formateadores.impl;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -13,6 +14,9 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 
+import es.caib.sistra2.commons.pdf.ImageStamp;
+import es.caib.sistra2.commons.pdf.ObjectStamp;
+import es.caib.sistra2.commons.pdf.UtilPDF;
 import es.caib.sistra2.commons.pdfcaib.GeneradorPdf;
 import es.caib.sistra2.commons.pdfcaib.model.Cabecera;
 import es.caib.sistra2.commons.pdfcaib.model.CampoTexto;
@@ -77,6 +81,24 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/** Propiedad plantilla que indica si se muestra título en mayusculas. */
 	public static final String PROP_MOSTRAR_TITULO_MAYUSCULAS = "titulo.mayusculas";
 
+	/** Propiedad plantilla que indica si se muestra subtítulo en mayusculas. */
+	public static final String PROP_MOSTRAR_SUBTITULO_MAYUSCULAS = "subtitulo.mayusculas";
+
+	/** Propiedad plantilla que indica marca de agua. */
+	public static final String PROP_MARCA_AGUA_URL = "marcaAgua.url";
+
+	/** Propiedad plantilla que indica escala X. */
+	public static final String PROP_MARCA_AGUA_SCALE_X = "marcaAgua.scale.percentX";
+
+	/** Propiedad plantilla que indica escala Y. */
+	public static final String PROP_MARCA_AGUA_SCALE_Y = "marcaAgua.scale.percentY";
+
+	/** Propiedad plantilla que indica posicion X. */
+	public static final String PROP_MARCA_AGUA_POSITION_X = "marcaAgua.position.X";
+
+	/** Propiedad plantilla que indica posicion y. */
+	public static final String PROP_MARCA_AGUA_POSITION_Y = "marcaAgua.position.Y";
+
 	/** Visualización campos indexados. **/
 	private TipoVisualizacionValorIndexado visualizacionValorIndexado;
 
@@ -97,6 +119,24 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
 	/** Si se muestra titulo en mayusculas. **/
 	private Boolean mostrarTituloMayusculas;
+
+	/** Si se muestra subtitulo en mayusculas. **/
+	private Boolean mostrarSubtituloMayusculas;
+
+	/** Marca agua: url. */
+	private String marcaAguaUrl;
+
+	/** Marca agua: escala X. */
+	private Integer marcaAguaEscalaX;
+
+	/** Marca agua: escala Y. */
+	private Integer marcaAguaEscalaY;
+
+	/** Marca agua: posicion X. */
+	private Integer marcaAguaPosicionX;
+
+	/** Marca agua: posicion Y. */
+	private Integer marcaAguaPosicionY;
 
 	@Override
 	public byte[] formatear(final byte[] ixml, final byte[] plantilla, final String idioma,
@@ -120,6 +160,9 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 		// TODO PENDIENTE VERSALITAS
 		if (mostrarTituloMayusculas) {
 			cabecera.setTitulo(cabecera.getTitulo().toUpperCase());
+		}
+		if (mostrarSubtituloMayusculas && StringUtils.isNotBlank(cabecera.getSubtitulo())) {
+			cabecera.setSubtitulo(cabecera.getSubtitulo().toUpperCase());
 		}
 
 		cabecera.setCodigoSia(siaProcedimiento);
@@ -191,13 +234,67 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
 		// Generar PDF
 		try {
+			// Genera PDF
 			final GeneradorPdf generadorPdf = new GeneradorPdf();
-			final byte[] pdf = generadorPdf.generarPdf(formularioPdf);
+			byte[] pdf = generadorPdf.generarPdf(formularioPdf);
+			// Establece marca de agua
+			pdf = stampMarcaAgua(pdf);
 			return pdf;
 		} catch (final Exception e) {
 			throw new FormateadorException("Error convirtiendo el documento a bytes", e);
 		}
 
+	}
+
+	/**
+	 * Stamp marca de agua.
+	 *
+	 * @param pdf
+	 *                PDF
+	 * @return pdf con marca de agua
+	 */
+	protected byte[] stampMarcaAgua(final byte[] pdf) {
+		ByteArrayInputStream bis = null;
+		ByteArrayOutputStream bos = null;
+		byte[] pdfStamp = pdf;
+		try {
+			if (StringUtils.isNotBlank(marcaAguaUrl)) {
+				byte[] marcarAguaBytes;
+				if (marcaAguaUrl.startsWith("http")) {
+					marcarAguaBytes = IOUtils.toByteArray(new URL(marcaAguaUrl));
+				} else {
+					marcarAguaBytes = IOUtils.toByteArray(new FileInputStream(marcaAguaUrl));
+				}
+				final ImageStamp imgStamp = new ImageStamp();
+				imgStamp.setImagen(marcarAguaBytes);
+				imgStamp.setOverContent(false);
+				imgStamp.setScalePerCent(marcaAguaEscalaX != null || marcaAguaEscalaY != null);
+				if (marcaAguaEscalaX != null) {
+					imgStamp.setXScale((float) marcaAguaEscalaX);
+				}
+				if (marcaAguaEscalaY != null) {
+					imgStamp.setYScale((float) marcaAguaEscalaY);
+				}
+				if (marcaAguaPosicionX != null) {
+					imgStamp.setX(marcaAguaPosicionX);
+				}
+				if (marcaAguaPosicionY != null) {
+					imgStamp.setY(marcaAguaPosicionY);
+				}
+				final ObjectStamp[] objects = new ObjectStamp[1];
+				objects[0] = imgStamp;
+				bis = new ByteArrayInputStream(pdf);
+				bos = new ByteArrayOutputStream(pdf.length + marcarAguaBytes.length);
+				UtilPDF.stamp(bos, bis, objects);
+				pdfStamp = bos.toByteArray();
+			}
+			return pdfStamp;
+		} catch (final Exception ex) {
+			throw new FormateadorException("Excepción al stampar marca de agua: " + ex.getMessage(), ex);
+		} finally {
+			IOUtils.closeQuietly(bis);
+			IOUtils.closeQuietly(bos);
+		}
 	}
 
 	/**
@@ -214,6 +311,12 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 		mostrarAviso = false;
 		mostrarTituloConProcedimiento = false;
 		mostrarTituloMayusculas = false;
+		mostrarSubtituloMayusculas = false;
+		marcaAguaUrl = null;
+		marcaAguaEscalaX = null;
+		marcaAguaEscalaY = null;
+		marcaAguaPosicionX = null;
+		marcaAguaPosicionY = null;
 
 		if (plantilla != null) {
 			try (ByteArrayInputStream bis = new ByteArrayInputStream(plantilla)) {
@@ -240,6 +343,23 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 						.valueOf(propiedades.getProperty(PROP_MOSTRAR_TITULO_PROCEDIMIENTO));
 
 				mostrarTituloMayusculas = Boolean.valueOf(propiedades.getProperty(PROP_MOSTRAR_TITULO_MAYUSCULAS));
+
+				mostrarSubtituloMayusculas = Boolean
+						.valueOf(propiedades.getProperty(PROP_MOSTRAR_SUBTITULO_MAYUSCULAS));
+
+				marcaAguaUrl = propiedades.getProperty(PROP_MARCA_AGUA_URL);
+				if (StringUtils.isNotBlank(propiedades.getProperty(PROP_MARCA_AGUA_SCALE_X))) {
+					marcaAguaEscalaX = Integer.valueOf(propiedades.getProperty(PROP_MARCA_AGUA_SCALE_X));
+				}
+				if (StringUtils.isNotBlank(propiedades.getProperty(PROP_MARCA_AGUA_SCALE_Y))) {
+					marcaAguaEscalaY = Integer.valueOf(propiedades.getProperty(PROP_MARCA_AGUA_SCALE_Y));
+				}
+				if (StringUtils.isNotBlank(propiedades.getProperty(PROP_MARCA_AGUA_POSITION_X))) {
+					marcaAguaPosicionX = Integer.valueOf(propiedades.getProperty(PROP_MARCA_AGUA_POSITION_X));
+				}
+				if (StringUtils.isNotBlank(propiedades.getProperty(PROP_MARCA_AGUA_POSITION_Y))) {
+					marcaAguaPosicionY = Integer.valueOf(propiedades.getProperty(PROP_MARCA_AGUA_POSITION_Y));
+				}
 
 			} catch (final Exception e) {
 				throw new FormateadorException("Error obteniendo propiedades formateador", e);

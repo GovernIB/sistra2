@@ -14,6 +14,7 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.ModelApi;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
@@ -50,6 +51,8 @@ public class DialogErroresValidacion extends DialogControllerBase {
 
 	private List<Dominio> listaDominios;
 
+	private Boolean esString;
+
 	@Inject
 	TramiteService tramiteService;
 
@@ -60,6 +63,7 @@ public class DialogErroresValidacion extends DialogControllerBase {
 	 * Inicialización.
 	 */
 	public void init() {
+		this.esString = Boolean.FALSE;
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
@@ -81,32 +85,31 @@ public class DialogErroresValidacion extends DialogControllerBase {
 			if (StringUtils.isNotEmpty(idiomas) && hayErroresLiteral) {
 				idiomasObligatorios = UtilTraducciones.getIdiomas(idiomas);
 			}
-
 			final boolean hayErroresDominio = listaErrores.stream()
-					.anyMatch(e -> TypeErrorValidacion.DOMINIOS.equals(e.getTipo()));
+					.anyMatch(e -> (TypeErrorValidacion.DOMINIOS_ANYADIR.equals(e.getTipo())
+							|| TypeErrorValidacion.DOMINIOS_ELIMINAR.equals(e.getTipo())));
 			if (StringUtils.isNotEmpty(idTramite) && hayErroresDominio) {
 				listaDominios = dominioService.listDominio(Long.valueOf(idTramite), null);
 			}
 		}
-
 	}
 
 	public void corregir() {
 		if (verificarFilaSeleccionada()) {
-			if (TypeErrorValidacion.LITERALES.equals(filaSeleccionada.getTipo())) {
+			if (TypeErrorValidacion.DOMINIOS_ANYADIR.equals(filaSeleccionada.getTipo())) {
+				anyadirDominio();
+			} else if (TypeErrorValidacion.DOMINIOS_ELIMINAR.equals(filaSeleccionada.getTipo())) {
+				eliminarDominio();
+			} else if (TypeErrorValidacion.SCRIPTS.equals(filaSeleccionada.getTipo())) {
+				corregirScript();
+			} else if (TypeErrorValidacion.LITERALES.equals(filaSeleccionada.getTipo())) {
 				corregirLiteral();
 			} else if (TypeErrorValidacion.LITERALES_HTML.equals(filaSeleccionada.getTipo())) {
 				corregirLiteralHTML();
-			} else if (TypeErrorValidacion.SCRIPTS.equals(filaSeleccionada.getTipo())) {
-				corregirScript();
-			} else if (TypeErrorValidacion.DOMINIOS.equals(filaSeleccionada.getTipo())) {
-				corregirDominio();
-			} else if (TypeErrorValidacion.DATOS_REGISTRO.equals(filaSeleccionada.getTipo())) {
-				corregirDatosRegistro();
-			} else if (TypeErrorValidacion.FORMATEADOR.equals(filaSeleccionada.getTipo())) {
-				corregirFormateador();
+			} else {
+				addMessageContext(TypeNivelGravedad.WARNING,
+						UtilJSF.getLiteral("dialogErroresValidacion.correccionmanual"));
 			}
-
 		}
 	}
 
@@ -125,8 +128,19 @@ public class DialogErroresValidacion extends DialogControllerBase {
 		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
 			if (respuesta.getResult() instanceof Literal) {
 				tramiteService.updateLiteral((Literal) respuesta.getResult());
+				addMessageContext(TypeNivelGravedad.INFO,
+						UtilJSF.getLiteral("dialogErroresValidacion.literal.corregido"));
+				validar();
 			} else if (respuesta.getResult() instanceof Script) {
 				tramiteService.updateScript((Script) respuesta.getResult());
+				addMessageContext(TypeNivelGravedad.INFO,
+						UtilJSF.getLiteral("dialogErroresValidacion.script.corregido"));
+
+				validar();
+			} else if ((respuesta.getResult() == null && this.esString)) {
+				this.esString = Boolean.FALSE;
+				addMessageContext(TypeNivelGravedad.INFO,
+						UtilJSF.getLiteral("dialogErroresValidacion.script.eliminar"));
 			}
 		}
 	}
@@ -166,9 +180,8 @@ public class DialogErroresValidacion extends DialogControllerBase {
 		Script script = null;
 		if (filaSeleccionada.getItem() instanceof Script) {
 			script = (Script) filaSeleccionada.getItem();
-
+			this.esString = Boolean.TRUE;
 			cargarDialogScript(script, filaSeleccionada.getParams());
-
 		}
 
 	}
@@ -183,7 +196,7 @@ public class DialogErroresValidacion extends DialogControllerBase {
 
 	}
 
-	private void corregirDominio() {
+	private void anyadirDominio() {
 		Dominio dominioError = null;
 		Dominio dominioAux = null;
 		if (filaSeleccionada.getItem() instanceof Dominio) {
@@ -208,6 +221,7 @@ public class DialogErroresValidacion extends DialogControllerBase {
 						// asociar
 						dominioService.addTramiteVersion(dominio.getCodigo(), Long.valueOf(idTramiteVersion));
 						addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.alta.dominio.empleado"));
+						validar();
 
 					} else {
 						if (TypeAmbito.ENTIDAD.equals(dominio.getAmbito())) {
@@ -223,7 +237,36 @@ public class DialogErroresValidacion extends DialogControllerBase {
 				}
 			}
 		}
+	}
 
+	private void eliminarDominio() {
+		Dominio dominioError = null;
+		Dominio dominioAux = null;
+		if (filaSeleccionada.getItem() instanceof Dominio) {
+			dominioError = (Dominio) filaSeleccionada.getItem();
+
+			if (dominioError != null
+					&& (StringUtils.isNotEmpty(dominioError.getIdentificador()) || dominioError.getCodigo() != null)) {
+
+				// cargamos dominio
+				if (StringUtils.isNotEmpty(dominioError.getIdentificador())) {
+					dominioAux = dominioService.loadDominio(dominioError.getIdentificador());
+				} else if (dominioError.getCodigo() != null) {
+					dominioAux = dominioService.loadDominio(dominioError.getCodigo());
+				}
+				// esto es por un error con el final de la variable dominio
+				final Dominio dominio = dominioAux;
+
+				if (dominio != null) {
+					if (listaDominios.stream().anyMatch(d -> dominio.getCodigo().equals(d.getCodigo()))) {
+
+						dominioService.removeTramiteVersion(dominio.getCodigo(), Long.valueOf(this.idTramiteVersion));
+						addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.baja.dominio"));
+						validar();
+					}
+				}
+			}
+		}
 	}
 
 	private void corregirDatosRegistro() {
@@ -309,6 +352,14 @@ public class DialogErroresValidacion extends DialogControllerBase {
 
 	public void setListaDominios(final List<Dominio> listaDominios) {
 		this.listaDominios = listaDominios;
+	}
+
+	public final Boolean getEsString() {
+		return esString;
+	}
+
+	public final void setEsString(Boolean esString) {
+		this.esString = esString;
 	}
 
 }

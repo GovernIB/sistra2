@@ -313,6 +313,13 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void aceptar() {
 
+		boolean comentariosWarning = UtilScripts.buscarComentariosScript(data.getContenido());
+		if (comentariosWarning) {
+			addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+					UtilJSF.getLiteral("dialogScript.error.scriptcomentarios"));
+			return;
+
+		}
 		if (isIdentificadorMensajesRepetido()) {
 			addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
 					UtilJSF.getLiteral("dialogScript.error.identificadorDuplicado"));

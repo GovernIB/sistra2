@@ -51,8 +51,8 @@
 							 disabled="#{viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago eq null}"
 							process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago)}" />
 
-			<p:outputLabel value="#{msg['viewDefinicionVersionTasa.simularpago']}" />
-			<p:selectBooleanCheckbox id="simularpago" disabled="true" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.simulado}" />
+			<p:outputLabel value="#{msg['viewDefinicionVersionTasa.simularpago']}" style="#{viewDefinicionVersion.simular()}"/>
+			<p:selectBooleanCheckbox id="simularpago" disabled="true" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.simulado}" style="#{viewDefinicionVersion.simular()}"/>
 
 			<f:facet name = "footer">
 				<p:outputPanel id="toolbar" styleClass="grid-right">

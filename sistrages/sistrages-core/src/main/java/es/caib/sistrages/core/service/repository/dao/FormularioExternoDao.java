@@ -22,7 +22,7 @@ public interface FormularioExternoDao {
 	/**
 	 * Añade el formulario externo.
 	 *
-	 * @param removeByArea         identificador de la area
+	 * @param removeByArea       identificador de la area
 	 * @param pFormularioExterno formulario externo
 	 */
 	void add(final Long pIdArea, GestorExternoFormularios pFormularioExterno);
@@ -33,6 +33,14 @@ public interface FormularioExternoDao {
 	 * @param pId el identificador de formulario externo
 	 */
 	void remove(Long pId);
+
+	/**
+	 * Comprueba si tiene tramites un Formulario gestor externo (FGE)
+	 * 
+	 * @param idFGE
+	 * @return
+	 */
+	boolean tieneTramitesAsociados(Long idFGE);
 
 	/**
 	 * Elimina el formulario externo.
@@ -60,8 +68,8 @@ public interface FormularioExternoDao {
 	 * Lista de avisos del area
 	 *
 	 * @param pIdArea identificador de la area
-	 * @param pFiltro    filtro
-	 * @param pIdioma    idioma
+	 * @param pFiltro filtro
+	 * @param pIdioma idioma
 	 * @return la lista de Formulario Externo
 	 */
 	List<GestorExternoFormularios> getAllByFiltro(Long pIdArea, TypeIdioma pIdioma, String pFiltro);
@@ -76,6 +84,7 @@ public interface FormularioExternoDao {
 
 	/**
 	 * Lista de gestores externos segun configuracion
+	 *
 	 * @param id
 	 * @param idArea
 	 * @return
@@ -84,6 +93,7 @@ public interface FormularioExternoDao {
 
 	/**
 	 * Gestor externo de formulario por identificador
+	 *
 	 * @param identificador
 	 * @return
 	 */
@@ -91,6 +101,7 @@ public interface FormularioExternoDao {
 
 	/**
 	 * Método que importa un gestor area
+	 *
 	 * @param filaGestor
 	 * @param idArea
 	 * @return

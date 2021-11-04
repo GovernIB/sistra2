@@ -4,9 +4,11 @@
 package es.caib.sistra2.commons.utils.test;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,9 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.caib.sistra2.commons.pdf.ImageStamp;
+import es.caib.sistra2.commons.pdf.ObjectStamp;
+import es.caib.sistra2.commons.pdf.UtilPDF;
 import es.caib.sistra2.commons.pdfcaib.GeneradorPdf;
 import es.caib.sistra2.commons.pdfcaib.model.Cabecera;
 import es.caib.sistra2.commons.pdfcaib.model.CampoTexto;
@@ -204,12 +209,10 @@ public class TestPdfCaib {
 		formularioPdf.setLineas(lineas);
 		final GeneradorPdf generadorPdf = new GeneradorPdf();
 		byte[] pdf;
+		final String path = new File(".").getCanonicalPath();
+		final String FILE_NAME = path + "/target/itext-test-file.pdf";
 		try {
 			pdf = generadorPdf.generarPdf(formularioPdf);
-			System.out.println(pdf);
-
-			final String path = new File(".").getCanonicalPath();
-			final String FILE_NAME = path + "/target/itext-test-file.pdf";
 			System.out.println(FILE_NAME);
 			final OutputStream out = new FileOutputStream(FILE_NAME);
 			out.write(pdf);
@@ -219,6 +222,23 @@ public class TestPdfCaib {
 		} catch (final IOException e) {
 			log.error("Error al crear el pdf");
 		}
+
+		// Stamp marca agua
+		final String FILE_NAME_STAMP = path + "/target/itext-test-file-stamp.pdf";
+		final OutputStream out2 = new FileOutputStream(FILE_NAME_STAMP);
+		final InputStream in2 = new FileInputStream(FILE_NAME);
+		final ImageStamp imgStamp = new ImageStamp();
+		imgStamp.setImagen(IOUtils.toByteArray(TestPdfCaib.class.getResourceAsStream("/goib-marca-agua.png")));
+		imgStamp.setOverContent(false);
+		imgStamp.setScalePerCent(true);
+		imgStamp.setXScale((float) 50);
+		imgStamp.setYScale((float) 50);
+		imgStamp.setX(90);
+		imgStamp.setY(70);
+		final ObjectStamp[] objects = new ObjectStamp[1];
+		objects[0] = imgStamp;
+		UtilPDF.stamp(out2, in2, objects);
+		System.out.println(FILE_NAME_STAMP);
 
 	}
 }

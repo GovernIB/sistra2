@@ -21,7 +21,7 @@ public interface FormularioExternoService {
 	/**
 	 * Añade Formulario Externo.
 	 *
-	 * @param idArea                id Area
+	 * @param idArea                   id Area
 	 * @param GestorExternoFormularios el valor de Formulario Externo
 	 */
 	void addFormularioExterno(Long idArea, GestorExternoFormularios formularioExterno);
@@ -35,6 +35,16 @@ public interface FormularioExternoService {
 	boolean removeFormularioExterno(Long id);
 
 	/**
+	 * Comprueba si un GFE tiene trámites asociados.
+	 *
+	 * @param id el identificador
+	 * @return true, si tiene trámites asociados
+	 * @return false, si no tiene trámites asociados
+	 */
+
+	boolean tieneTramitesAsociados(Long idGFE);
+
+	/**
 	 * Actualiza Formulario Externo.
 	 *
 	 * @param GestorExternoFormularios el valor de Formulario Externo
@@ -45,8 +55,8 @@ public interface FormularioExternoService {
 	 * Lista de Formulario Externo.
 	 *
 	 * @param idArea id Area
-	 * @param idioma    idioma
-	 * @param filtro    filtro busqueda
+	 * @param idioma idioma
+	 * @param filtro filtro busqueda
 	 * @return la lista de Formulario Externo
 	 */
 	List<GestorExternoFormularios> listFormularioExterno(Long idArea, TypeIdioma idioma, String filtro);
@@ -62,6 +72,7 @@ public interface FormularioExternoService {
 
 	/**
 	 * Lista de gestores externos segun configuracion
+	 *
 	 * @param valueOf
 	 * @param valueOf2
 	 * @return
@@ -70,6 +81,7 @@ public interface FormularioExternoService {
 
 	/**
 	 * Gestor externo formulario por identificador
+	 *
 	 * @param identificador
 	 * @return
 	 */

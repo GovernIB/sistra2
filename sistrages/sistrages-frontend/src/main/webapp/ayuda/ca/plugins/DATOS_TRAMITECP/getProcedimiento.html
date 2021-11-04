@@ -1,0 +1,60 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_SESIONTRAMITACION.getProcedimiento()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_TRAMITECP">DATOS_TRAMITECP</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_TRAMITECP&metodo=getProcedimiento">getProcedimiento</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	getProcedimiento(): <a href="AyudaServlet?lang=ca&plugin=DATOS_PROCEDIMIENTOCP">: DATOS_PROCEDIMIENTOCP</a>
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que retorna l'objecte'<a href="AyudaServlet?lang=ca&plugin=DATOS_PROCEDIMIENTOCP">DATOS_PROCEDIMIENTOCP</a>' amb la informació del tràmit que hi ha al catàleg de procediments.
+		</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>DATOS_PROCEDIMIENTOCP</b>: Retorna l'objecte DATOS_PROCEDIMIENTOCP amb la informació del procediment associat a un tràmit en el catàleg de procediments. </li>
+	</ul>
+</p>
+ <p>
+	<b>Exemple</b>
+ </p>
+<p> Suposem que desitgem obtenir procediment associat a un tràmit en el catàleg de procediments.</p>
+<p class="codigoScript">
+	var procedimiento = PLUGIN_SESIONTRAMITACION.getTramiteCP().getProcedimiento();
+ </p>
+ <p>
+   La funció getProcedimiento retorna l'objecte <a href="AyudaServlet?lang=ca&plugin=DATOS_PROCEDIMIENTOCP">DATOS_PROCEDIMIENTOCP</a> a partir del qual extreure la informació que ens interessa, per exemple, la descripció, mitjançant la següent funció:
+ </p>
+  <p class="codigoScript">
+	var descripcion_procedimiento = procedimiento.getDescripcion();
+ </p>
+<br />
+
+
+</body>
+</html>

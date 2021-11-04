@@ -12,6 +12,7 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.ParametroDominio;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.types.TypeParametroDominio;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -177,7 +178,9 @@ public class DialogParametrosDominioCIN extends DialogControllerBase {
 			switch (respuesta.getModoAcceso()) {
 			case ALTA:
 				final ParametroDominio propiedad = (ParametroDominio) respuesta.getResult();
-
+				if (propiedad.getTipo().equals(TypeParametroDominio.CAMPO)) {
+					propiedad.setValor(propiedad.getValor().toUpperCase());
+				}
 				if (parametroDuplicado(propiedad)) {
 					addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
 					return;
@@ -187,7 +190,9 @@ public class DialogParametrosDominioCIN extends DialogControllerBase {
 				break;
 			case EDICION:
 				final ParametroDominio propiedadEdicion = (ParametroDominio) respuesta.getResult();
-
+				if (propiedadEdicion.getTipo().equals(TypeParametroDominio.CAMPO)) {
+					propiedadEdicion.setValor(propiedadEdicion.getValor().toUpperCase());
+				}
 				// Muestra dialogo
 				final int posicion = this.data.indexOf(this.valorSeleccionado);
 				this.data.remove(posicion);

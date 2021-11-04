@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistra2.commons.utils.ValidacionTipoException;
+import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistra2.commons.utils.XssFilter;
 import es.caib.sistrages.rest.api.interna.RAnexoTramite;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionAnexar;
@@ -292,24 +294,23 @@ public final class AccionAnexarDocumento implements AccionPaso {
 			UtilsFlujo.verificarTamanyoMaximo(anexoDetalle.getTamMax(), datosFichero.length);
 
 			// - Verificar tamaño máximo total anexos
-			final String tamanyoTotalAnexosProp = configuracionComponent
+			final String tamanyoTotalAnexosPropStr = configuracionComponent
 					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ANEXOS_TAMANYO_TOTAL);
-			if (StringUtils.isNotBlank(tamanyoTotalAnexosProp)) {
-				long tamanyoMaximoAnexos;
-				try {
-					// Tamaño en MB, pasamos a bytes
-					tamanyoMaximoAnexos = (Long.parseLong(tamanyoTotalAnexosProp) * 1024L * 1024L);
-				} catch (final NumberFormatException nfe) {
-					tamanyoMaximoAnexos = 0;
-				}
-				if (tamanyoMaximoAnexos > 0) {
-					final long tamanyo = dao.calcularTamañoFicherosPaso(pVariablesFlujo.getIdSesionTramitacion(),
-							dipa.getIdPaso(), false);
-					final long tamanyoTotal = tamanyo + datosFichero.length;
-					if (tamanyoTotal > tamanyoMaximoAnexos) {
-						throw new TamanyoMaximoAnexosAlcanzadoException(
-								"Se ha sobrepasado el máximo de tamaño soportado por la plataforma para los anexos de un mismo trámite");
-					}
+			int tamanyoTotalAnexosPropBytes = 0;
+			try {
+				tamanyoTotalAnexosPropBytes = ValidacionesTipo.getInstance()
+						.convertirTamanyoBytes(tamanyoTotalAnexosPropStr);
+			} catch (final ValidacionTipoException e) {
+				throw new ErrorConfiguracionException(
+						"Error al interpretar propiedad " + TypePropiedadConfiguracion.ANEXOS_TAMANYO_TOTAL.toString());
+			}
+
+			if (tamanyoTotalAnexosPropBytes > 0) {
+				final long tamanyo = dao.calcularTamañoFicherosPaso(pVariablesFlujo.getIdSesionTramitacion(),
+						dipa.getIdPaso(), false);
+				final long tamanyoTotal = tamanyo + datosFichero.length;
+				if (tamanyoTotal > tamanyoTotalAnexosPropBytes) {
+					throw new TamanyoMaximoAnexosAlcanzadoException(tamanyoTotalAnexosPropStr);
 				}
 			}
 
