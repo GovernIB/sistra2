@@ -64,7 +64,13 @@ $.fn.appLOPD = function(options) {
 			obri = function(e) {
 
 				imc_popup_lopd
-					.addClass("imc--on");
+					.addClass("imc--on")
+					.attr("aria-hidden", "false");
+
+				// tabulador en el popup
+
+				imc_popup_lopd
+					.appPopupTabula();
 
 				mostra();
 
@@ -106,14 +112,21 @@ $.fn.appLOPD = function(options) {
 				$("html, body")
 					.removeClass("imc--sense-scroll");
 
+				element
+					.find("button[data-accio=lopd-obri]:first")
+						.focus();
+
 				setTimeout(
 					function() {
 
 						imc_popup_lopd_contingut
 							.removeClass("imc--on");
 
+
 						imc_popup_lopd
-							.removeClass("imc--on imc--off");
+							.removeClass("imc--on imc--off")
+							.attr("aria-hidden", "true")
+							.appPopupTabula({ accio: "finalitza" });
 
 					}, 300);
 

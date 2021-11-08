@@ -1,13 +1,13 @@
 <!-- contacte -->
-
+		
 <aside id="imc-contacte" class="imc-contacte">
 
 	<!--<div data-conf="entitat">{{jsonContacte}}</div>-->
 	<div data-conf="suport">
-		<strong>{{txtNecessitauAjuda}}</strong> {{txtContactauAmb}}<button type="button" id="imc-bt-equip-suport" class="imc-bt--com-text"><span>{{txtEquipSuport}}</span></button>
+		<strong>{{txtNecessitauAjuda}}</strong> {{txtContactauAmb}}<button type="button" id="imc-bt-equip-suport" class="imc-bt--com-text" aria-haspopup="true"><span>{{txtEquipSuport}}</span></button>
 	</div>
 
-	<div id="imc-suport" class="imc-suport" aria-hidden="true" role="dialog">
+	<div id="imc-suport" class="imc-suport" aria-hidden="true" role="dialog" tabindex="0">
 		<div class="imc--c">
 
 			<!-- ajuda -->
@@ -51,7 +51,7 @@
 
 			<div class="imc-s--contingut imc-s--form">
 
-				<h2><span>{{txtFormContacte}}</span></h2>
+				<h2><span>{{txtFormContacte}}</span></h2>	
 
 				<form action="" method="post">
 
@@ -144,7 +144,7 @@
 						<button type="button" class="imc-bt imc--tanca" data-tipus="tanca"><span>{{txtTanca}}</span></button>
 					</li>
 				</ul>
-
+			
 	  		</div>
 
 	  		<!-- missatge -->
@@ -174,14 +174,14 @@
 
 		</div>
 	</div>
-
+	
 </aside>
 
 <!-- peu -->
 
 <footer class="imc-peu" id="imc-peu">
 	<div class="imc--contingut">
-
+	
 		<div class="imc-peu-govern">
 			<p><strong>{{jsonContacte}}</strong></p>
 		</div>

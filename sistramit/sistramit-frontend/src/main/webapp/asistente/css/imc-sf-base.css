@@ -1,11 +1,6 @@
 /* Document CSS */
 
 
-/* cap fixe */
-
-.imc-cap--fixe { position: fixed; z-index: 1; top: 0; left: 0; width: 100%; min-width: 45em; /*min-height: 10em;*/ }
-
-
 /* cap */
 
 .imc-cap { min-height: 4.5em; background-color: #4dba79; }
@@ -273,7 +268,7 @@ aside address { display: inline; }
 }
 
 .imc-missatge .imc--text,
-.imc-suport .imc-s--contingut { position: fixed; z-index: 22; top: 50%; left: 50%; width: 100%; max-width: 40em; min-height: 10em; padding: 1.5em 1em; background-color: #fff; transform: translate(-50%, -50%); visibility: hidden; opacity: 0; }
+.imc-suport .imc-s--contingut { position: fixed; z-index: 22; top: 50%; left: 50%; width: 90%; max-width: 40em; min-height: 10em; padding: 1.5em 1em; background-color: #fff; transform: translate(-50%, -50%); visibility: hidden; opacity: 0; }
 
 .imc-missatge .imc--text.imc--on,
 .imc-suport .imc-s--contingut.imc--on {
@@ -290,7 +285,7 @@ aside address { display: inline; }
 /* missatge */
 
 
-.imc-missatge .imc--text { outline: none; transition: outline .2s ease-out; }
+.imc-missatge .imc--text { /*border: .5em solid #4dba79;*/ outline: none; transition: outline .2s ease-out; }
 .imc-missatge:focus .imc--text { outline-color: #294233; }
 
 .imc-missatge .imc--text h2 { margin-bottom: .5em; margin-left: 5em; }
@@ -310,7 +305,7 @@ aside address { display: inline; }
 
 .imc-missatge .imc--text .imc--cancela:hover,
 .imc-missatge .imc--text .imc--cancela:focus,
-.imc-missatge .imc--text .imc--cancela:active { background-color: #666; }
+.imc-missatge .imc--text .imc--cancela:active { background-color: #000; }
 
 /*.imc-missatge button[data-tipus="tanca"] { display: none; }*/
 .imc-missatge button { display: none; }
@@ -442,25 +437,12 @@ aside address { display: inline; }
 	background-image: url(imgs/icones/ico_reintenta.svg);
 }
 
+
+
 /* suport */
 
-/* per ESBORRAR!!!
-
-.imc-suport {
-	z-index: 20;
-	visibility: visible;
-	opacity: 1;
-}
-
-.imc-suport .imc-s--contingut {
-	visibility: visible;
-	opacity: 1;
-} */
-
-
-
-
-.imc-suport .imc-s--contingut { max-width: 30em; padding-left: 5em; }
+.imc-suport .imc-s--contingut { width: 90%; max-width: 30em; padding-left: 5em; /*border: .5em solid #4dba79;*/ outline: .5em solid #4dba79; transition: outline .2s ease-out; }
+.imc-suport:focus .imc-s--contingut { outline-color: #294233; }
 
 .imc-suport .imc-s--contingut::before {
 	content: "";
@@ -530,6 +512,8 @@ form textarea { font: normal 1em 'Bariol Regular', Arial, Helvetica, sans-serif;
 	padding: .5em 1.5em .5em 3.2em;
 	background: transparent url(imgs/icones/ico_error.svg) no-repeat 1.3em 50% / auto 1.5em;
 }
+
+.imc-suport button.imc-bt.imc--ico::before { margin-right: .5em; }
 
 
 /* suport missatge */
@@ -893,10 +877,12 @@ html[data-estil="ac"] .imc-cap .imc--opcions .imc-bt {
 	.imc-bt.imc--elimina::before {
 		background-image: url(imgs/icones/ico_eliminau_fff.svg);
 	}
-
+	
 	.imc-bt.imc--ico::before {
 		margin-right: 0;
 	}
+
+	.imc-missatge .imc--text .imc--botonera button.imc-bt.imc--ico::before { margin-right: .5em; }
 
 }
 
@@ -936,15 +922,100 @@ html[data-estil="ac"] .imc-cap .imc--opcions .imc-bt {
 
 }
 
-@media only screen and (max-width : 420px) {
+@media only screen and (max-width : 450px) {
 
 	body { font-size: 80%; }
+
+	.imc-cap .imc--c {
+		padding: .5em .5em;
+	}
+
+	.imc-cap .imc--logo {
+		width: 4em; height: 3em;
+	}
+
+	.imc-tramitacio .imc--elimina {
+		bottom: -1.3em;
+	}
+
+	.imc-cap .imc--dades {
+		width: 75%; padding-left: 0;
+	}
+
+	.imc-cap .imc--dades h1 span {
+		font-size: 1.3em;
+	}
+
+	.imc-tramitacio .imc--c {
+		padding: .5em;
+	}
+
+	.imc-tramitacio h2 span {
+		font-size: 1.3em;
+	}
+
+	.imc-molla-pa {
+		min-height: 3em;
+	}
+
+	.imc-molla-pa .imc--c {
+		padding: 0 .5em;
+	}
+
+	.imc-molla-pa .imc--nom {
+	    position: absolute; top: -999em; left: -999em;
+	}
+
+	.imc-molla-pa li div.imc--selec span {
+		position: static;
+	}
+
+	.imc-contingut > .imc--c {
+		padding: .5em;
+	}
+
+	nav.imc--navegacio li {
+		width: 12em; padding: 0 1em 0 0;
+	}
+
+	nav.imc--navegacio li:last-child {
+		padding: 0 0 0 1em;
+	}
+
+	.imc-peu .imc--contingut {
+		flex-direction: column;
+	}
+
+	.imc-peu-govern {
+		width: inherit; padding-bottom: 1em;
+	}
+
+	.imc-peu-opcions {
+		width: inherit; padding-bottom: 1em;
+	}
+
+    .imc-peu-xarxes {
+		width: inherit;
+	}
+
+	.imc--important {
+		padding: .8em 1.5em .8em 3em; background-position: .8em .6em;
+	}
+
+	.imc-suport .imc-s--contingut {
+		padding-left: 4em;
+	}
+
+	.imc-suport .imc-s--contingut::before {
+		width: 2em; height: 2em;
+	}
+
 
 }
 
 
 
-/* media
+/* media 
 
 @media only screen and (max-width : 850px) {
 
@@ -1047,7 +1118,7 @@ html[data-estil="ac"] .imc-cap .imc--opcions .imc-bt {
 
 
 @media only screen and (max-width : 370px) {
-
+	
 	.imc-molla-pa li::before { margin: 0 .5em; }
 
     nav li { width: 45%; }

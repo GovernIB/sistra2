@@ -1,0 +1,54 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_ANEXOSDINAMICOS.setPrecedenciaSobreAnexosFijos(true)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_ANEXOSDINAMICOS">DATOS_ANEXOSDINAMICOS</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_ANEXOSDINAMICOS&metodo=setPrecedenciaSobreAnexosFijos">setPrecedenciaSobreAnexosFijos</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setPrecedenciaSobreAnexosFijos(true): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet establir la precedència dels annexes dinàmics per sobre dels annexes fixes.
+    	Per tant, si aquesta propietat es seteja a true, els annexes dinàmics apareixeran primer en l'assistent
+    	de tramitació. Indicar que hi ha dos nivells d'ordenació en els annexes. <br>
+    	- El primer nivell no es pot canviar i dóna precedència als annexes obligatoris sobre els annexes opcionals.<br>
+    	- El segon nivell estableix la precedència dels annexes fixes o dinàmics dintre del primer nivell. </li>
+    </ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>booleà</b>: variable de tipus booleà indicant si es vol establir la precedència.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+<p>Si volem establir la precedència dels annexes dinàmics sobre els annexes fixes:</p>
+ <p class="codigoScript">
+DATOS_ANEXOSDINAMICOS.setPrecedenciaSobreAnexosFijos(true); <br/>
+</p>
+<p>El resultat mostrarà primer els annexes dinàmics que s'afegeixin, respectant el primer nivell d'ordenació. </p>
+</body>
+</html>

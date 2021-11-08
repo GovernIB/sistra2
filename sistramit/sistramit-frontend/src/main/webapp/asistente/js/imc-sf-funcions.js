@@ -40,10 +40,19 @@ $.fn.appCap = function(options) {
 		var element = $(this),
 			inicia = function() {
 
-				var cap_fixe_ALTURA = imc_cap_fixe.height();
+				if (imc_cap_fixe.css("position") === "fixed") {
 
-				imc_contingut
-					.css("paddingTop", cap_fixe_ALTURA+"px");
+					var cap_fixe_ALTURA = imc_cap_fixe.height();
+
+					imc_contingut
+						.css("paddingTop", cap_fixe_ALTURA+"px");
+
+				} else {
+
+					imc_contingut
+						.removeAttr("style");
+
+				}
 
 			};
 		
@@ -735,8 +744,13 @@ $.fn.appSuport = function(options) {
 			},
 			mostra = function(desDeBoto) {
 
+				el_suport_form
+					.removeClass("imc--on")
+					.attr("aria-hidden", "true");
+
 				el_suport_ajuda
-					.addClass("imc--on");
+					.addClass("imc--on")
+					.attr("aria-hidden", "false");
 
 				if (desDeBoto) {
 
@@ -761,6 +775,11 @@ $.fn.appSuport = function(options) {
 					.off('.appSuport')
 					.on('click.appSuport', amagaFons);
 
+				// tabulador
+
+				el_suport
+					.appPopupTabula();
+
 			},
 			formulari = function() {
 
@@ -778,19 +797,33 @@ $.fn.appSuport = function(options) {
 				}
 
 				el_suport_ajuda
-					.removeClass("imc--on");
+					.removeClass("imc--on")
+					.attr("aria-hidden", "true");
 
 				el_suport_form
-					.addClass("imc--on");
+					.addClass("imc--on")
+					.attr("aria-hidden", "false");
+
+				// tabulador
+
+				el_suport
+					.appPopupTabula();
 
 			},
 			torna = function() {
 
 				el_suport_ajuda
-					.addClass("imc--on");
+					.addClass("imc--on")
+					.attr("aria-hidden", "false");
 
 				el_suport_form
-					.removeClass("imc--on");
+					.removeClass("imc--on")
+					.attr("aria-hidden", "true");
+
+				// tabulador
+
+				el_suport
+					.appPopupTabula();
 
 			},
 			amagaFons = function(e) {
@@ -813,16 +846,22 @@ $.fn.appSuport = function(options) {
 					function() {
 
 						el_suport_ajuda
-							.removeClass("imc--on");
+							.removeClass("imc--on")
+							.attr("aria-hidden", "true");
 
 						el_suport_form
-							.removeClass("imc--on");
+							.removeClass("imc--on")
+							.attr("aria-hidden", "false");
 
 						el_suport_missatge
 							.removeClass("imc--on imc--enviant imc--enviat-correcte");
 
 						el_suport
-							.removeClass("imc--on imc--off");
+							.removeClass("imc--on imc--off")
+							.appPopupTabula({ accio: "finalitza" });
+
+						bt_equip_suport
+							.focus();
 
 					}, 200);
 
@@ -1310,9 +1349,24 @@ $.fn.appPopupTabula = function(options) {
 				esMissatge = (element.closest(".imc-missatge").length) ? true : false;
 
 
+				// es formulari?
+
+				esFormulari = (element.closest(".imc-forms-contenidor").length) ? true : false;
+
+
 				// es popup de document?
 
 				esPopupDocument = (element.closest(".imc-document").length) ? true : false;
+
+
+				// es LOPD de registrar?
+
+				esPopupLOPD = (element.closest(".imc-popup--lopd").length) ? true : false;
+
+
+				// es suport?
+
+				esSuport = (element.closest(".imc-suport").length) ? true : false;
 
 
 				// pinta
@@ -1329,9 +1383,21 @@ $.fn.appPopupTabula = function(options) {
 			},
 			pinta = function() {
 
-				// revisem si és una capa amb formulari o una capa missatge
 
-				if (!esMissatge) {
+				// es un missatge
+
+				if (esMissatge) {
+
+					element
+						.find("button")
+							.attr("data-tabula", "si");
+
+				}
+
+
+				// es un formulari
+
+				if (esFormulari) {
 
 					// és un formulari
 
@@ -1339,7 +1405,6 @@ $.fn.appPopupTabula = function(options) {
 
 					f_elms
 						.each(function() {
-
 
 							var f_el = $(this)
 								,f_el_tipus = f_el.attr("data-tipus")
@@ -1425,6 +1490,12 @@ $.fn.appPopupTabula = function(options) {
 
 						});
 
+					// i la botonera de navegació i ajuda
+
+					element
+						.find("button")
+							.attr("data-tabula", "si");
+
 				}
 
 
@@ -1433,21 +1504,51 @@ $.fn.appPopupTabula = function(options) {
 				if (esPopupDocument) {
 
 					element
-						.find("input[type=checkbox]")
+						.find("input[type=text], input[type=checkbox]")
 							.attr("data-tabula", "si")
 							.end()
 						.find(".imc-bt-anexa")
+							.attr("data-tabula", "si")
+							.end()
+						.find("button")
 							.attr("data-tabula", "si");
 
 				}
 
 
-				// els botons finals, tant se val que siga un missatge o un formulari
+				// popup LOPD?
 
-				element
-					.find("button")
-						.attr("data-tabula", "si");
+				if (esPopupLOPD) {
 
+					element
+						.find("a")
+							.attr("data-tabula", "si")
+							.end()
+						.find("button")
+							.attr("data-tabula", "si");
+
+				}
+
+
+				// suport
+
+				if (esSuport) {
+
+					// capa amagada
+
+					var capa_mostrada = element.find("div[aria-hidden=false]:first")
+						,capa_amagada = element.find("div[aria-hidden=true]:first");
+
+					capa_mostrada
+						.find("a, input[type=text], input[type=email], select, textarea, button")
+							.attr("data-tabula", "si");
+					
+					capa_amagada
+						.find("a, input[type=text], input[type=email], select, textarea, button")
+							.removeAttr("data-tabula")
+							.removeAttr("data-tabpos");
+
+				}
 
 				// activem
 

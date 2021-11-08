@@ -210,44 +210,33 @@ body.imc--sense-scroll { overflow: hidden; }
 
 /* document */
 
-.imc-popup--lopd { position: fixed; z-index: -1; top: 0; left: 0; width: 100%; height: 100%; visibility: hidden; opacity: 0; }
+.imc-popup--lopd { position: fixed; z-index: -1; top: 0; left: 0; width: 100%; height: 100%; visibility: hidden; opacity: 0;transition: visibility .3s ease-out, opacity .3s ease-out; }
 .imc-popup--lopd .imc--c { position: fixed; z-index: 11; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,.7); }
 
 .imc-popup--lopd.imc--on {
     z-index: 10;
     visibility: visible;
     opacity: 1;
-    -webkit-transition: visibility 0 ease-out, opacity .3s ease-out;
-    -moz-transition: visibility 0 ease-out, opacity .3s ease-out;
-    -ms-transition: visibility 0 ease-out, opacity .3s ease-out;
-    -o-transition: visibility 0 ease-out, opacity .3s ease-out;
     transition: visibility 0 ease-out, opacity .3s ease-out;
 }
 
 .imc-popup--lopd.imc--off {
     z-index: 10;
     opacity: 0;
-    -webkit-transition: opacity .3s ease-out;
-    -moz-transition: opacity .3s ease-out;
-    -ms-transition: opacity .3s ease-out;
-    -o-transition: opacity .3s ease-out;
-    transition: opacity .3s ease-out;
 }
 
 .imc-popup--lopd .imc--lopd-contingut { overflow: auto; position: fixed; z-index: 12; top: 50%; left: 50%; width: 100%; max-width: 50em; max-height: 80%; padding: 1.5em 2em 2em 2em; background-color: #fff; transform: translate(-50%, -50%); visibility: hidden; opacity: 0; }
 
+.imc-popup--lopd .imc--lopd-contingut { /*border: .5em solid #4dba79;*/ outline: .5em solid #4dba79; transition: outline .2s ease-out; }
+.imc-popup--lopd:focus .imc--lopd-contingut { outline-color: #294233; }
+
 .imc-popup--lopd .imc--lopd-contingut.imc--on {
     visibility: visible;
     opacity: 1;
-    -webkit-transition: visibility 0 ease-out, opacity .3s ease-out;
-    -moz-transition: visibility 0 ease-out, opacity .3s ease-out;
-    -ms-transition: visibility 0 ease-out, opacity .3s ease-out;
-    -o-transition: visibility 0 ease-out, opacity .3s ease-out;
-    transition: visibility 0 ease-out, opacity .3s ease-out;
 }
 
 
-.imc-popup--lopd .imc--lopd-contingut h2 { margin-bottom: .6em; }
+.imc-popup--lopd .imc--lopd-contingut h2 { padding-right: 5em; margin-bottom: .6em; }
 .imc-popup--lopd .imc--lopd-contingut h2 span { font-size: 1.5em; }
 
 .imc-popup--lopd .imc-bt-capa-tanca { float: right; position: relative; top: -.4em; }
@@ -318,3 +307,40 @@ body.imc--sense-scroll { overflow: hidden; }
     100% { background-color: #eaeaea; }
 }
 
+
+
+
+
+/* media */
+
+@media only screen and (max-width : 440px) {
+
+    .imc--registre > ul > li {
+        padding-left: 0;
+    }
+
+    .imc--registre > ul div.imc--reg strong {
+        padding: .2em .5em;
+    }
+
+    .imc--registre .imc--signants p {
+        padding: 0 .5em;
+    }
+
+    .imc--registre .imc--signants ul {
+        padding: 0 0 0 .5em;
+    }
+
+    .imc--registre div.imc--presentacio {
+        padding: .5em .5em;
+    }
+
+    .imc--lopd-check > label {
+        display: block; min-height: 2em;
+    }
+
+    .imc-popup--lopd .imc--lopd-contingut {
+        width: 90%; padding: 1.5em;
+    }
+
+}

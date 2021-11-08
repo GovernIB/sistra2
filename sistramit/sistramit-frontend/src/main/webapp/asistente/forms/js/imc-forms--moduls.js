@@ -446,7 +446,7 @@ $.fn.appFormsConfiguracio = function(options) {
 			json_valors_possibles = forms_json.datos.valoresPosibles,
 			json_accions = forms_json.datos.acciones,
 			json_recursos = forms_json.datos.recursos,
-			json_mayuscules = forms_json.datos.mayusculas || false,
+			json_mayuscules = forms_json.datos.forzarMayusculas || false,
 			inicia = function() {
 
 				if (desDe === "inicia") {

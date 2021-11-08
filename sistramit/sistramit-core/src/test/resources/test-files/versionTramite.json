@@ -746,7 +746,7 @@
         }
       ],
       "scriptAnexosDinamicos":{
-            "script": "var anex = DATOS_ANEXOSDINAMICOS.crearAnexo(); \r\nanex.setIdentificador('DIN1');\r\nanex.setDescripcion('Anexo dinamico');\r\nanex.setObligatorio(true);\r\nanex.setExtensiones('pdf');\r\nanex.setTamanyoMaximo('1MB');\r\nDATOS_ANEXOSDINAMICOS.addAnexo(anex);",
+            "script": "DATOS_ANEXOSDINAMICOS.setPrecedenciaSobreAnexosFijos(false); \r\nvar anex = DATOS_ANEXOSDINAMICOS.crearAnexo(); \r\nanex.setIdentificador('DIN1');\r\nanex.setDescripcion('Anexo dinamico');\r\nanex.setObligatorio(true);\r\nanex.setExtensiones('pdf');\r\nanex.setTamanyoMaximo('1MB');\r\nDATOS_ANEXOSDINAMICOS.addAnexo(anex);",
             "literales": []
           },
       "permiteSubsanar": false

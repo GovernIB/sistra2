@@ -13,6 +13,7 @@ import es.caib.sistrages.rest.api.interna.RAnexoTramite;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionAnexar;
 import es.caib.sistrages.rest.api.interna.RScript;
 import es.caib.sistramit.core.api.exception.AccionPasoNoExisteException;
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
@@ -44,6 +45,7 @@ import es.caib.sistramit.core.service.model.flujo.DocumentoPasoPersistencia;
 import es.caib.sistramit.core.service.model.flujo.EstadoMarcadores;
 import es.caib.sistramit.core.service.model.flujo.EstadoSubestadoPaso;
 import es.caib.sistramit.core.service.model.flujo.FirmaDocumentoPersistencia;
+import es.caib.sistramit.core.service.model.flujo.ListaDinamicaAnexos;
 import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
 import es.caib.sistramit.core.service.model.flujo.RespuestaEjecutarAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
@@ -218,8 +220,13 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 		final List<Anexo> anexosFij = calcularDetalleListaFijaAnexos(defPaso, pDefinicionTramite, pVariablesFlujo);
 
 		// Evaluamos lista dinamica de documentos
-		final List<Anexo> anexosDin = calcularDetalleListaDinamicaAnexos(pDipa, defPaso, pDefinicionTramite,
+		final ListaDinamicaAnexos listDin = calcularDetalleListaDinamicaAnexos(pDipa, defPaso, pDefinicionTramite,
 				pVariablesFlujo);
+		final List<Anexo> anexosDin = listDin.getAnexos();
+		final boolean precedenciaDin = listDin.isPrecedenciaSobreAnexosFijos();
+
+		// Verifica si existen ids anexos repetidos entre fijos y dinamicos
+		verificarIdAnexoRepetido(anexosFij, anexosDin);
 
 		// Si hay algun doc presencial, todos deberan ser presenciales
 		revisarDocumentosPresenciales(anexosFij, anexosDin);
@@ -228,14 +235,43 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 		final DetallePasoAnexar dpa = new DetallePasoAnexar();
 		dpa.setId(defPaso.getIdentificador());
 		// - Añadimos los anexos poniendo primero los obligatorios y luego los
-		// opcionales
-		dpa.getAnexos().addAll(obtenerAnexos(TypeObligatoriedad.OBLIGATORIO, anexosFij));
-		dpa.getAnexos().addAll(obtenerAnexos(TypeObligatoriedad.OBLIGATORIO, anexosDin));
-		dpa.getAnexos().addAll(obtenerAnexos(TypeObligatoriedad.OPCIONAL, anexosFij));
-		dpa.getAnexos().addAll(obtenerAnexos(TypeObligatoriedad.OPCIONAL, anexosDin));
+		// opcionales. En segundo nivel de orden, se tiene en cuenta si se quieren
+		// primero los fijos o los dinámicos.
+		if (precedenciaDin) {
+			dpa.getAnexos().addAll(obtenerAnexos(TypeObligatoriedad.OBLIGATORIO, anexosDin));
+			dpa.getAnexos().addAll(obtenerAnexos(TypeObligatoriedad.OBLIGATORIO, anexosFij));
+			dpa.getAnexos().addAll(obtenerAnexos(TypeObligatoriedad.OPCIONAL, anexosDin));
+			dpa.getAnexos().addAll(obtenerAnexos(TypeObligatoriedad.OPCIONAL, anexosFij));
+		} else {
+			dpa.getAnexos().addAll(obtenerAnexos(TypeObligatoriedad.OBLIGATORIO, anexosFij));
+			dpa.getAnexos().addAll(obtenerAnexos(TypeObligatoriedad.OBLIGATORIO, anexosDin));
+			dpa.getAnexos().addAll(obtenerAnexos(TypeObligatoriedad.OPCIONAL, anexosFij));
+			dpa.getAnexos().addAll(obtenerAnexos(TypeObligatoriedad.OPCIONAL, anexosDin));
+		}
 		dpa.setCompletado(TypeSiNo.NO);
 
 		return dpa;
+	}
+
+	/**
+	 * Verifica si hay anexo repetido.
+	 *
+	 * @param anexosFij
+	 *                      Anexos fijos
+	 * @param anexosDin
+	 *                      Anexos dinámicos
+	 */
+	private void verificarIdAnexoRepetido(final List<Anexo> anexosFij, final List<Anexo> anexosDin) {
+		final List<String> ids = new ArrayList<>();
+		final List<Anexo> anexos = new ArrayList<>();
+		anexos.addAll(anexosFij);
+		anexos.addAll(anexosDin);
+		for (final Anexo a : anexos) {
+			if (ids.contains(a.getId())) {
+				throw new ErrorConfiguracionException("Id anexo repetido: " + a.getId());
+			}
+			ids.add(a.getId());
+		}
 	}
 
 	/**
@@ -331,10 +367,11 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 *                               Variables flujo
 	 * @return Lista dinámica de anexos
 	 */
-	private List<Anexo> calcularDetalleListaDinamicaAnexos(final DatosInternosPasoAnexar pDipa,
+	private ListaDinamicaAnexos calcularDetalleListaDinamicaAnexos(final DatosInternosPasoAnexar pDipa,
 			final RPasoTramitacionAnexar defPaso, final DefinicionTramiteSTG pDefinicionTramite,
 			final VariablesFlujo pVariablesFlujo) {
 		final List<Anexo> anexos = new ArrayList<>();
+		boolean precedencia = false;
 		// Comprobamos si existe script de anexos dinamicos
 		if (UtilsSTG.existeScript(defPaso.getScriptAnexosDinamicos())) {
 			// Ejecutamos script
@@ -346,6 +383,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 
 			// Evaluamos resultado
 			final ResAnexosDinamicos rsa = (ResAnexosDinamicos) rs.getResultado();
+			precedencia = rsa.isPrecedenciaSobreAnexosFijos();
 			for (final ClzAnexoDinamico anexd : rsa.getAnexos()) {
 
 				if (verificarIdAnexoRepetido(anexos, anexd.getIdentificador())) {
@@ -391,12 +429,16 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 				anexos.add(anexo);
 			}
 		}
-		return anexos;
+
+		final ListaDinamicaAnexos res = new ListaDinamicaAnexos();
+		res.setAnexos(anexos);
+		res.setPrecedenciaSobreAnexosFijos(precedencia);
+		return res;
 	}
 
 	/**
 	 * Verifica si id anexo esta repetido.
-	 * 
+	 *
 	 * @param anexos
 	 *                          anexos
 	 * @param identificador

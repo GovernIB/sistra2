@@ -222,31 +222,18 @@ body.imc--sense-scroll { overflow: hidden; }
 }
 
 
-/* media 
+@media only screen and (max-width : 450px) {
 
-@media only screen and (max-width : 850px) {
+	.imc--formularis a strong {
+		padding: .2em .5em;
+	}
 
-	.imc--formularis a strong { font-size: 1em; }
+	.imc--icones li {
+		padding-bottom: .5em;
+	}
 
-	.imc--icones { padding-left: 1.5em; }
-	.imc--icones ul { font-size: .8em; }
-
-	.imc-formulari iframe { max-height: 100%; }
-
-
-
-}
-
-
-@media only screen and (max-width : 420px) {
-
-	
-
-	.imc--formularis { float: none; width: 100%; margin-bottom: 1.5em; }
-	.imc--formularis a strong { line-height: 1.1em; }
-
-	.imc--icones { float: none; width: 100%; padding-left: 7em; }
+	.imc--icones li div.imc--completat {
+		margin-left: 0;
+	}
 
 }
-
-*/

@@ -25,6 +25,9 @@ public final class ResAnexosDinamicos implements ResAnexosDinamicosInt {
 	 */
 	private final List<ClzAnexoDinamico> anexos = new ArrayList<>();
 
+	/** Indica si los anexos dinámicos van antes que los anexos fijos. */
+	private boolean precedenciaSobreAnexosFijos;
+
 	@Override
 	public String getPluginId() {
 		return ID;
@@ -77,6 +80,26 @@ public final class ResAnexosDinamicos implements ResAnexosDinamicosInt {
 	 */
 	public List<ClzAnexoDinamico> getAnexos() {
 		return anexos;
+	}
+
+	/**
+	 * Método de acceso a precedenciaSobreAnexosFijos.
+	 * 
+	 * @return precedenciaSobreAnexosFijos
+	 */
+	public boolean isPrecedenciaSobreAnexosFijos() {
+		return precedenciaSobreAnexosFijos;
+	}
+
+	/**
+	 * Método para establecer precedenciaSobreAnexosFijos.
+	 * 
+	 * @param precedenciaSobreAnexosFijos
+	 *                                        precedenciaSobreAnexosFijos a
+	 *                                        establecer
+	 */
+	public void setPrecedenciaSobreAnexosFijos(final boolean precedenciaSobreAnexosFijos) {
+		this.precedenciaSobreAnexosFijos = precedenciaSobreAnexosFijos;
 	}
 
 }

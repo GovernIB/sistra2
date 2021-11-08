@@ -22,7 +22,7 @@
 , .imc-forms--missatge fieldset { font-size: 1em; list-style: none; margin: 0; padding: 0; outline: none; border: none; }
 
 .imc-forms--missatge *, .imc-forms--missatge *::before, .imc-forms--missatge *::after {
-  -webkit-box-sizing: border-box;
+  -webkit-box-sizing: border-box; 
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -62,7 +62,7 @@
 	transition: opacity .3s ease-out;
 }
 
-.imc-forms--missatge .imc--text { position: fixed; z-index: 22; top: 50%; left: 50%; width: 100%; max-width: 40em; min-height: 10em; padding: 1.5em 1em; background-color: #fff; transform: translate(-50%, -50%); visibility: hidden; opacity: 0; }
+.imc-forms--missatge .imc--text { position: fixed; z-index: 22; top: 50%; left: 50%; width: 100%; max-width: 40em; min-height: 10em; padding: 1.5em 1em .5em 1em; background-color: #fff; transform: translate(-50%, -50%); visibility: hidden; opacity: 0; }
 
 .imc-forms--missatge .imc--text.imc--on {
 	visibility: visible;
@@ -75,7 +75,7 @@
 }
 
 
-.imc-forms--missatge .imc--text { outline: none; transition: outline .2s ease-out; }
+.imc-forms--missatge .imc--text { /*border: .5em solid #4dba79;*/ outline: none; transition: outline .2s ease-out; }
 .imc-forms--missatge:focus .imc--text { outline-color: #294233; }
 
 .imc-forms--missatge .imc--text h2 { margin-bottom: .5em; margin-left: 5em; }
@@ -95,14 +95,18 @@
 
 .imc-forms--missatge .imc--text .imc--cancela:hover,
 .imc-forms--missatge .imc--text .imc--cancela:focus,
-.imc-forms--missatge .imc--text .imc--cancela:active { background-color: #666; }
+.imc-forms--missatge .imc--text .imc--cancela:active { background-color: #000; }
+
+.imc-forms--missatge .imc--text .imc--cancela:hover span,
+.imc-forms--missatge .imc--text .imc--cancela:focus span,
+.imc-forms--missatge .imc--text .imc--cancela:active span { color: #fff; }
 
 .imc-forms--missatge button { display: none; }
 
 
 /* button */
 
-.imc-forms--missatge button { display: none; color: #fff; vertical-align: middle; padding: .4em .7em; background-color: #4dba79; border:none; cursor: pointer; will-change: background-color; }
+.imc-forms--missatge button { display: none; color: #fff; vertical-align: middle; padding: .4em .7em; margin-bottom: .5em; background-color: #4dba79; border:none; cursor: pointer; will-change: background-color; }
 
 .imc-forms--missatge button:hover,
 .imc-forms--missatge button:focus,
@@ -158,6 +162,8 @@
 .imc-forms--missatge[data-accio='carregant'] .imc--text { min-height: 4em; }
 .imc-forms--missatge[data-accio='carregant'] .imc--text div { margin-bottom: 0; }
 .imc-forms--missatge[data-accio='carregant'] .imc--text .imc--botonera { display: none; }
+
+.imc-forms--missatge[data-accio='carregant'] .imc--text { padding: 1.5em 1em; }
 
 
 .imc-forms--missatge[data-accio='esborra'] .imc--text { background: #fff url(forms/imgs/ico_eliminau.svg) no-repeat 1.5em 1em / auto 3em; }
@@ -248,3 +254,24 @@
 .imc-forms--missatge[data-accio='error'] button[data-tipus="tanca"] span { color: #333; }
 .imc-forms--missatge[data-accio='error'] button[data-tipus="tanca"]:hover span,
 .imc-forms--missatge[data-accio='error'] button[data-tipus="tanca"]:focus span { color: #fff; }
+
+
+
+
+/* media */
+
+@media only screen and (max-width : 450px) {
+
+	.imc-forms--missatge .imc--text {
+    width: 90%;
+  }
+
+  .imc-forms--missatge button::before {
+  	margin-right: .5em;
+  }
+
+  .imc-forms--missatge .imc--text .imc--botonera button::before {
+		margin-right: .5em;
+	}
+
+}

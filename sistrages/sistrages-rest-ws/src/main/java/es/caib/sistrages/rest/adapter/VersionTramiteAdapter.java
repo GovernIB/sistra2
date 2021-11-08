@@ -374,7 +374,9 @@ public class VersionTramiteAdapter {
 	 */
 	private RPasoTramitacion crearPasoAnexar(final TramitePasoAnexar paso, final String idioma) {
 		RPasoTramitacionAnexar resPaso = null;
-		if (paso.getDocumentos() != null && !paso.getDocumentos().isEmpty()) {
+		if ((paso.getDocumentos() != null && !paso.getDocumentos().isEmpty())
+				|| (paso.getScriptAnexosDinamicos() != null
+						&& !StringUtils.isEmpty(paso.getScriptAnexosDinamicos().getContenido()))) {
 			resPaso = new RPasoTramitacionAnexar();
 			resPaso.setIdentificador(paso.getIdPasoTramitacion());
 			resPaso.setTipo(paso.getTipo().toString());
@@ -682,8 +684,7 @@ public class VersionTramiteAdapter {
 	 * Genera componente campo oculto.
 	 *
 	 * @param cco
-	 * @param idioma
-	 *                   idioma
+	 * @param idioma idioma
 	 * @return RComponenteCampoOculto
 	 */
 	private RComponenteCampoOculto generaComponenteCampoOculto(final ComponenteFormularioCampoOculto cco,
@@ -856,8 +857,7 @@ public class VersionTramiteAdapter {
 	/**
 	 * Genera texto teléfono.
 	 *
-	 * @param ct
-	 *               campo texto
+	 * @param ct campo texto
 	 * @return Propiedades teléfono
 	 */
 	private RPropiedadesTextoTelefono generaTextoTelefono(final ComponenteFormularioCampoTexto ct) {

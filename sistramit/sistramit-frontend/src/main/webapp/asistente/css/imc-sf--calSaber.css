@@ -22,3 +22,21 @@
 
 .imc--lopd h5 { margin-top: 1em; margin-bottom: .3em; }
 .imc--lopd h5 span { font-size: 1.1em; }
+
+
+
+
+/* media */
+
+@media only screen and (max-width : 450px) {
+
+	.imc--fi-termini {
+		padding: .8em 1.5em .8em 3em;
+		background-position: .8em .6em;
+	}
+
+	.imc--explicacio-detallada {
+		padding: 1em 1em;
+	}
+
+}

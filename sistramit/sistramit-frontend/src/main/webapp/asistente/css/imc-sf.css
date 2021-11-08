@@ -165,3 +165,24 @@ button {
 	-o-transition: background-color .2s ease-out;
 	transition: background-color .2s ease-out;
 }
+
+
+/* cap fixe */
+
+.imc-cap--fixe { position: fixed; z-index: 1; top: 0; left: 0; width: 100%; min-width: 45em; /*min-height: 10em;*/ }
+
+
+/* media - mòbil */
+
+@media only screen and (max-width : 450px) {
+
+	.imc-contenidor {
+		min-width: inherit;
+  }
+
+  .imc-cap--fixe {
+  	position: static;
+  	min-width: inherit;
+  }
+
+}

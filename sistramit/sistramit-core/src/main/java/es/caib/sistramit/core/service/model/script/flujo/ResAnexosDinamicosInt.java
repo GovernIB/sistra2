@@ -22,7 +22,7 @@ public interface ResAnexosDinamicosInt extends PluginScriptRes {
 
 	/**
 	 * Crear anexo dinámico para establecer sus propiedades.
-	 * 
+	 *
 	 * @return anexo
 	 */
 	ClzAnexoDinamico crearAnexo();
@@ -36,5 +36,14 @@ public interface ResAnexosDinamicosInt extends PluginScriptRes {
 	 *                             Excepcion
 	 */
 	void addAnexo(final ClzAnexoDinamico anexo) throws ScriptException;
+
+	/**
+	 * Indica si los anexos dinámicos van antes que los anexos fijos (por defecto
+	 * false). En cualquier caso, siempre se mostrarán antes los obligatorios y
+	 * después los opcionales.
+	 *
+	 * @param precedenciaSobreAnexosFijos
+	 */
+	void setPrecedenciaSobreAnexosFijos(final boolean precedenciaSobreAnexosFijos);
 
 }

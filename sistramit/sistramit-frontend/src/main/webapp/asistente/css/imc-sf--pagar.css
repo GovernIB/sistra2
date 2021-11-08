@@ -290,31 +290,22 @@
 html.imc--sense-scroll,
 body.imc--sense-scroll { overflow: hidden; }
 
-.imc-pagament iframe { outline: none; transition: outline .2s ease-out; }
+.imc-pagament iframe { /*border: .5em solid #4dba79;*/ outline: none; transition: outline .2s ease-out; }
 .imc-pagament:focus iframe { outline-color: #294233; }
 
 
 
+/* media */
 
-/* media
+@media only screen and (max-width : 440px) {
 
-@media only screen and (max-width : 850px) {
+	.imc--pagaments > ul {
+		padding-left: 0;
+	}
 
-	.imc--pagaments a strong { font-size: 1em; }
-
-	.imc--icones { padding-left: 1.5em; }
-	.imc--icones ul { font-size: .8em; }
-
-}
-
-
-@media only screen and (max-width : 420px) {
-
-	.imc--pagaments { float: none; width: 100%; margin-bottom: 1.5em; }
-	.imc--pagaments a strong { line-height: 1.1em; }
-
-	.imc--icones { float: none; width: 100%; padding-left: 7em; }
+	.imc--pagaments > ul .imc--pagament-fila a strong {
+		padding: .2em .5em;
+	}
 
 }
 
-*/

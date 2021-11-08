@@ -1,0 +1,54 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_ANEXOSDINAMICOS.setPrecedenciaSobreAnexosFijos(true)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_ANEXOSDINAMICOS">DATOS_ANEXOSDINAMICOS</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_ANEXOSDINAMICOS&metodo=setPrecedenciaSobreAnexosFijos">setPrecedenciaSobreAnexosFijos</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setPrecedenciaSobreAnexosFijos(true): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite establecer la precedencia de los anexos dinámicos sobre los anexos fijos.
+    	Por tanto, si esta propiedad se setea a true, los anexos dinámicos apareceran primero en el asistente
+    	de tramitación. Indicar que existen dos niveles de ordenación en los anexos. <br>
+    	- El primer nivel no se puede canviar y da precedencia a los anexos obligatorios sobre los anexos opcionales.<br>
+    	- El segundo nivel establece la precedencia de los anexos fijos o dinámicos dentro del primer nivel. </li>
+    </ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>booleano</b>: variable de tipo booleano indicando si se quiere establecer la precedencia de los anexos dinámicos.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+<p>Si queremos establecer la precedencia de los anexos dinámicos sobre los anexos fijos:</p>
+ <p class="codigoScript">
+DATOS_ANEXOSDINAMICOS.setPrecedenciaSobreAnexosFijos(true); <br/>
+</p>
+<p>El resultado mostrará primero los anexos dinámicos que se añadan, respectando el primer nivel de ordenación. </p>
+</body>
+</html>

@@ -27,7 +27,7 @@ $.fn.indexa = function(options) {
 						.addClass("imc-index-alfabet")
 							.insertBefore( el_opcions_llista );
 
-					var bt_reset = $("<button>").attr({ type: "button", title: "Sin valor" }).addClass("imc--bt-reset").on("click.indexa", senseValor);
+					var bt_reset = $("<button>").attr({ type: "button", title: txtFormDinEliminaSeleccio }).addClass("imc--bt-reset").on("click.indexa", senseValor);
 
 					element
 						.find("a.imc-select:first")

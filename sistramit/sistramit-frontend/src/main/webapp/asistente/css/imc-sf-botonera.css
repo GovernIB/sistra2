@@ -64,7 +64,7 @@
 .imc-bt.imc--cancela:hover,
 .imc-bt.imc--cancela:focus,
 .imc-bt.imc--cancela:active {
-	background-color: #666;
+	background-color: #000;
 }
 
 .imc-bt.imc--cancela:hover span,
