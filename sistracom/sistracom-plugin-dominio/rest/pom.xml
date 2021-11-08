@@ -5,7 +5,7 @@
     <parent>
         <artifactId>sistracom-plugin-dominio</artifactId>
         <groupId>es.caib.sistra2</groupId>
-        <version>${sistra2.version}</version>
+        <version>1.2.1</version>
     </parent>
 
 
@@ -23,7 +23,7 @@
          <dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-dominio-api</artifactId>
-            <version>${sistra2.version}</version>
+            <version>1.2.1</version>
              <scope>compile</scope>
         </dependency>
 
@@ -55,7 +55,7 @@
 		<dependency>
             <artifactId>sistracom-ws-utils</artifactId>
     		<groupId>es.caib.sistra2</groupId>
-            <version>${sistra2.version}</version>
+            <version>1.2.1</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -124,6 +124,7 @@
 				</executions>
 				<inherited>true</inherited>
 				<configuration>
+					<javaSource>1.8</javaSource>
 					<schemaDirectory>src/main/resources/xsd</schemaDirectory>
 				</configuration>
 

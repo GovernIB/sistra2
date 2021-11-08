@@ -5,7 +5,7 @@
     <parent>
         <artifactId>sistracom-plugin-catalogoprocedimientos</artifactId>
         <groupId>es.caib.sistra2</groupId>
-        <version>${sistra2.version}</version>
+        <version>1.2.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
@@ -34,14 +34,14 @@
         <dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-catalogoprocedimientos-api</artifactId>
-            <version>${sistra2.version}</version>
+            <version>1.2.1</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-autenticacion-api</artifactId>
-            <version>${sistra2.version}</version>
+            <version>1.2.1</version>
             <scope>compile</scope>
         </dependency>
 
@@ -59,6 +59,23 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${slf4j.version}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<!--  JDK 11 -->
+		<dependency>
+  			<groupId>javax.xml.bind</groupId>
+  			<artifactId>jaxb-api</artifactId>
+ 			 <version>${xmlbind.version}</version>
+		</dependency>
+		<dependency>
+  			<groupId>com.sun.xml.bind</groupId>
+  			<artifactId>jaxb-core</artifactId>
+  			<version>${xmlbind.version}</version>
+		</dependency>
+		<dependency>
+  			<groupId>com.sun.xml.bind</groupId>
+  			<artifactId>jaxb-impl</artifactId>
+  			<version>${xmlbind.version}</version>
 		</dependency>
 
     </dependencies>

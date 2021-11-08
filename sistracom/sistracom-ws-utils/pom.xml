@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>es.caib.sistra2</groupId>
 		<artifactId>sistracom</artifactId>
-		<version>${sistra2.version}</version>
+		<version>1.2.1</version>
 	</parent>
 
 	<artifactId>sistracom-ws-utils</artifactId>
@@ -42,6 +42,11 @@
 		    <groupId>org.apache.cxf</groupId>
 		    <artifactId>cxf-rt-ws-security</artifactId>
 		    <version>${cxf.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.xml.ws</groupId>
+			<artifactId>jaxws-api</artifactId>
+			<version>${jaxws.version}</version>
 		</dependency>
 
 	</dependencies>

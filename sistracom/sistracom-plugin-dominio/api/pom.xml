@@ -5,7 +5,7 @@
     <parent>
         <artifactId>sistracom-plugin-dominio</artifactId>
         <groupId>es.caib.sistra2</groupId>
-        <version>${sistra2.version}</version>
+        <version>1.2.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

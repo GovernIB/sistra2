@@ -547,8 +547,9 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		@SuppressWarnings("unchecked")
 		final List<JGestorExternoFormularios> results = query.getResultList();
 
-		 if (results != null && !results.isEmpty()) {
-			for (final Iterator<JGestorExternoFormularios> iterator = results.iterator(); iterator.hasNext() && gfe == null; ) {
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JGestorExternoFormularios> iterator = results.iterator(); iterator.hasNext()
+					&& gfe == null;) {
 				final JGestorExternoFormularios jgestor = iterator.next();
 				gfe = jgestor.toModel();
 			}
@@ -584,6 +585,10 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 					Long idGestor = mapGestores.get(id);
 					GestorExternoFormularios form = gestores.get(idGestor);
 					formulario.setFormularioGestorExterno(form);
+					if (formulario.getIdFormularioInterno() != null) {
+						formulariosId.put(formulario.getIdentificador(), formulario.getIdFormularioInterno());
+						formulario.setIdFormularioInterno(null);
+					}
 				}
 			}
 		}
@@ -649,7 +654,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 //					}
 					final Long idJFormulario = formularioInternoDao.addFormulario(formT, false);
 
-					if (formulario.getTipoFormulario().equals("I")) {
+					if (formulario.getTipoFormulario().equals("I") || formulario.getTipoFormulario().equals("E")) {
 
 						// Actualizamos el jformulario
 						final Long idFormularioInterno = formulariosId.get(formulario.getIdentificador());
@@ -1359,14 +1364,12 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		}
 	}
 
-
 	@Override
 	public void borrarScriptsRellenar(final Long idPaso, final Long idTramiteVersion) {
 
-
 		final JPasoRellenar jpaso = entityManager.find(JPasoRellenar.class, idPaso);
 		if (jpaso != null && jpaso.getFormulariosTramite() != null) {
-			for( JFormularioTramite jform :  jpaso.getFormulariosTramite()) {
+			for (JFormularioTramite jform : jpaso.getFormulariosTramite()) {
 				jform.setScriptDatosIniciales(null);
 				jform.setScriptFirmar(null);
 				jform.setScriptObligatoriedad(null);
@@ -1383,20 +1386,21 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 				jform.setScriptPlantilla(null);
 				entityManager.merge(jform);
 
-				//Paginas
+				// Paginas
 				if (formulario.getPaginas() != null && !formulario.getPaginas().isEmpty()) {
-					for( PaginaFormulario pagina : formulario.getPaginas()) {
+					for (PaginaFormulario pagina : formulario.getPaginas()) {
 						final JPaginaFormulario jpag = entityManager.find(JPaginaFormulario.class, pagina.getCodigo());
 						jpag.setScriptNavegacion(null);
 						jpag.setScriptValidacion(null);
 						entityManager.merge(jpag);
 
-						//Lineas de la pagina.
+						// Lineas de la pagina.
 						if (jpag.getLineasFormulario() != null && !jpag.getLineasFormulario().isEmpty()) {
-							for (  JLineaFormulario jlinea : jpag.getLineasFormulario()) {
-								//Componentes de la linea
-								if (jlinea.getElementoFormulario() != null && !jlinea.getElementoFormulario().isEmpty()) {
-									 for (  JElementoFormulario componente : jlinea.getElementoFormulario()) {
+							for (JLineaFormulario jlinea : jpag.getLineasFormulario()) {
+								// Componentes de la linea
+								if (jlinea.getElementoFormulario() != null
+										&& !jlinea.getElementoFormulario().isEmpty()) {
+									for (JElementoFormulario componente : jlinea.getElementoFormulario()) {
 										String tipo = componente.getTipo();
 										if (componente.getCampoFormulario() != null) {
 											componente.getCampoFormulario().setScriptAutocalculado(null);
@@ -1435,7 +1439,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	public void borrarScriptsPago(Long idTramiteVersion) {
 		final JPasoPagos jpaso = entityManager.find(JPasoPagos.class, idTramiteVersion);
 		if (jpaso != null && jpaso.getPagosTramite() != null) {
-			for ( JPagoTramite pago : jpaso.getPagosTramite()) {
+			for (JPagoTramite pago : jpaso.getPagosTramite()) {
 				pago.setScriptDatosPago(null);
 				pago.setScriptObligatoriedad(null);
 				entityManager.merge(pago);
@@ -1460,7 +1464,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	public void borrarScriptsCaptura(Long idTramiteVersion) {
 		final JPasoCaptura jpaso = entityManager.find(JPasoCaptura.class, idTramiteVersion);
 		if (jpaso != null) {
-			//entityManager.merge(jpaso);
+			// entityManager.merge(jpaso);
 		}
 	}
 
