@@ -61,23 +61,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!--  JDK 11 -->
-		<dependency>
-  			<groupId>javax.xml.bind</groupId>
-  			<artifactId>jaxb-api</artifactId>
- 			 <version>${xmlbind.version}</version>
-		</dependency>
-		<dependency>
-  			<groupId>com.sun.xml.bind</groupId>
-  			<artifactId>jaxb-core</artifactId>
-  			<version>${xmlbind.version}</version>
-		</dependency>
-		<dependency>
-  			<groupId>com.sun.xml.bind</groupId>
-  			<artifactId>jaxb-impl</artifactId>
-  			<version>${xmlbind.version}</version>
-		</dependency>
-
     </dependencies>
     <build>
     	<resources>

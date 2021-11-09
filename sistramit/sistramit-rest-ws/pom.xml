@@ -109,7 +109,6 @@
 						<webResource>
 							<directory>src\main\jboss\${loginConfig.authMethod}</directory>
 				            <targetPath>/WEB-INF</targetPath>
-				            <filtering>true</filtering>
 						</webResource>
 					</webResources>
 				</configuration>

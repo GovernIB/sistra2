@@ -57,7 +57,6 @@
 							 	<xmlConfig implementation="java.io.File">src/main/xsd/formulario/v1/mapping.xsdconfig</xmlConfig>
 							 	<xmlConfig implementation="java.io.File">src/main/xsd/pago/v1/mapping.xsdconfig</xmlConfig>
 							</xmlConfigs>
-							<javaSource>1.8</javaSource>
 						</configuration>
 					</execution>
 				</executions>
