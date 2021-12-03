@@ -274,12 +274,6 @@ $.fn.appEmplenaFormulari = function(options) {
 						FORMS_JSON = jsonForm;
 
 						if (FORMS_JSON.estado === "SUCCESS" || FORMS_JSON.estado === "WARNING") {
-
-							/*
-							imc_forms_finestra
-								.find(".imc--contingut:first")
-									.html( FORMS_JSON.datos.html );
-							*/
 							
 							// carregat
 
@@ -369,7 +363,9 @@ $.fn.appEmplenaFormulari = function(options) {
 
 				$("#imc-forms-contenidor")
 					.find(".imc--contingut:first")
-						.html( FORMS_JSON.datos.html );
+						.html( $(FORMS_JSON.datos.html).html() );
+
+				// marquem el form amb el seu ID
 
 				$("#imc-forms-contenidor")
 					.attr("data-id", form_id)
@@ -389,9 +385,18 @@ $.fn.appEmplenaFormulari = function(options) {
 			},
 			mostra = function() {
 
+				// mostrem capa general
+
 				$("#imc-forms-contenidor")
-					//.attr("data-id", form_id)
 					.attr("aria-hidden", "false");
+
+				// mostrem capa finestra (on está tot el form, que pot ser un popup)
+
+				$("#imc-forms-contenidor")
+					.find(".imc--finestra")
+						.attr("aria-hidden", "false");
+
+				// amaguem el demés
 
 				ico_fons
 					.attr("aria-hidden", "true");

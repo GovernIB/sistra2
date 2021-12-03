@@ -371,4 +371,11 @@ public interface TramiteDao {
 
 	int getTotalByFiltro(Long idEntidad, List<Long> areas, String filtro);
 
+	/**
+	 * Actualiza dominios si no están agregados.
+	 * @param idTramiteVersion
+	 * @param dominios
+	 */
+	void actualizarDominios(TramiteVersion tramiteVersion, final List<Dominio> dominios);
+
 }

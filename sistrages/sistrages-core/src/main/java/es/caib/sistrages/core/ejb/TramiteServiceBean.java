@@ -589,7 +589,18 @@ public class TramiteServiceBean implements TramiteService {
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public int listTramiteTotal(Long idEntidad, List<Long> areas, String filtro) {
-		// TODO Auto-generated method stub
 		return tramiteService.listTramiteTotal(idEntidad, areas, filtro);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void actualizarDominios(TramiteVersion idTramiteVersion,  final List<Dominio> dominios) {
+		 tramiteService.actualizarDominios(idTramiteVersion, dominios);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<ErrorValidacion> checkDominioNoUtilizado(Long idDominio, Long idTramiteVersion, final String idioma) {
+		return tramiteService.checkDominioNoUtilizado(idDominio, idTramiteVersion, idioma);
 	}
 }

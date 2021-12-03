@@ -69,6 +69,9 @@ public final class ResAnexosDinamicos implements ResAnexosDinamicosInt {
 		if (StringUtils.isBlank(anexo.getExtensiones())) {
 			throw new ScriptException("No se han establecido extensiones para el anexo " + anexo.getIdentificador());
 		}
+		if (anexo.getMaxInstancias() <= 0) {
+			throw new ScriptException("El número de instancias ha de ser mayor a 0 (" + anexo.getMaxInstancias() + ")");
+		}
 
 		anexos.add(anexo);
 	}
@@ -84,7 +87,7 @@ public final class ResAnexosDinamicos implements ResAnexosDinamicosInt {
 
 	/**
 	 * Método de acceso a precedenciaSobreAnexosFijos.
-	 * 
+	 *
 	 * @return precedenciaSobreAnexosFijos
 	 */
 	public boolean isPrecedenciaSobreAnexosFijos() {
@@ -93,11 +96,12 @@ public final class ResAnexosDinamicos implements ResAnexosDinamicosInt {
 
 	/**
 	 * Método para establecer precedenciaSobreAnexosFijos.
-	 * 
+	 *
 	 * @param precedenciaSobreAnexosFijos
 	 *                                        precedenciaSobreAnexosFijos a
 	 *                                        establecer
 	 */
+	@Override
 	public void setPrecedenciaSobreAnexosFijos(final boolean precedenciaSobreAnexosFijos) {
 		this.precedenciaSobreAnexosFijos = precedenciaSobreAnexosFijos;
 	}

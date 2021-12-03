@@ -18,6 +18,9 @@ public class TramiteVersion extends ModelApi {
 	/** codigo. */
 	private Long codigo;
 
+	/** descripcion. */
+	private String descripcion;
+
 	/** codigo tramite. */
 	private Long idTramite;
 
@@ -136,6 +139,20 @@ public class TramiteVersion extends ModelApi {
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	public final String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descripcion the descripcion to set
+	 */
+	public final void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 	/**

@@ -709,11 +709,25 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
 				TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
 
-		// - Anexamos anexo DINAMICO
+		// - Anexamos anexo DINAMICO (primera instancia)
 		params = new ParametrosAccionPaso();
 		params.addParametroEntrada("idAnexo", "DIN1");
 		params.addParametroEntrada("presentacion", TypePresentacion.ELECTRONICA);
-		params.addParametroEntrada("nombreFichero", "dinamico.pdf");
+		params.addParametroEntrada("nombreFichero", "dinamico1.pdf");
+		params.addParametroEntrada("titulo", "instancia dinamica 1");
+		params.addParametroEntrada("datosFichero", readResourceFromClasspath("test-files/anexoFormulario.pdf"));
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
+
+		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+		this.logger.info("Detalle paso: " + dp.print());
+
+		// - Anexamos anexo DINAMICO (segunda instancia)
+		params = new ParametrosAccionPaso();
+		params.addParametroEntrada("idAnexo", "DIN1");
+		params.addParametroEntrada("presentacion", TypePresentacion.ELECTRONICA);
+		params.addParametroEntrada("nombreFichero", "dinamico2.pdf");
+		params.addParametroEntrada("titulo", "instancia dinamica 2");
 		params.addParametroEntrada("datosFichero", readResourceFromClasspath("test-files/anexoFormulario.pdf"));
 		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
 				TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);

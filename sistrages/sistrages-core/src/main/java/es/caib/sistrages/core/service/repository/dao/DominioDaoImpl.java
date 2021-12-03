@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.comun.ConstantesDominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
@@ -477,8 +478,23 @@ public class DominioDaoImpl implements DominioDao {
 				if (filaDominio.getConfiguracionAutenticacionActual() == null) {
 					dominioAlmacenar.setConfiguracionAutenticacion(null);
 				} else {
-					JConfiguracionAutenticacion config = entityManager.find(JConfiguracionAutenticacion.class, filaDominio.getConfiguracionAutenticacionActual().getCodigo());
-					dominioAlmacenar.setConfiguracionAutenticacion(config);
+					if (filaDominio.getConfiguracionAutenticacionActual().getCodigo() == null) {
+						JConfiguracionAutenticacion config = JConfiguracionAutenticacion.fromModel(filaDominio.getConfiguracionAutenticacionActual());
+						if (TypeAmbito.ENTIDAD.toString().equals(dominioAlmacenar.getAmbito())) {
+							JEntidad jentidad = entityManager.find(JEntidad.class, idEntidad);
+							//TODO Falta poner jentidad
+						}
+						if (TypeAmbito.AREA.toString().equals(dominioAlmacenar.getAmbito())) {
+							JArea jarea = entityManager.find(JArea.class, idArea);
+							config.setArea(jarea);
+						}
+						entityManager.persist(config);
+						entityManager.flush();
+						dominioAlmacenar.setConfiguracionAutenticacion(config);
+					} else {
+						JConfiguracionAutenticacion config = entityManager.find(JConfiguracionAutenticacion.class, filaDominio.getConfiguracionAutenticacionActual().getCodigo());
+						dominioAlmacenar.setConfiguracionAutenticacion(config);
+					}
 				}
 				break;
 			case FUENTE_DATOS:
@@ -599,6 +615,37 @@ public class DominioDaoImpl implements DominioDao {
 		final List<Dominio> dominios = new ArrayList<>();
 		for (final JDominio jdominio : jDominios) {
 			dominios.add(jdominio.toModel());
+		}
+		return dominios;
+	}
+
+	@Override
+	public List<Dominio> getDominiosByIdentificador(List<String> identificadoresDominio, final Long idEntidad, final Long idArea) {
+		final String sql = "select d from JDominio d where d.identificador IN (:identificadores) ORDER BY d.identificador ";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("identificadores", identificadoresDominio);
+
+		final List<JDominio> jDominios = query.getResultList();
+		final List<Dominio> dominios = new ArrayList<>();
+		for (final JDominio jdominio : jDominios) {
+			final Dominio dom = jdominio.toModel();
+			if (dom.getAmbito() == TypeAmbito.GLOBAL) {
+				dominios.add(dom);
+			} else if (dom.getAmbito() == TypeAmbito.ENTIDAD) {
+				//Solo se agregan dominios de la misma entidad
+				if (dom.getEntidad().compareTo(idEntidad) == 0) {
+					dominios.add(dom);
+				}
+			} else if (dom.getAmbito() == TypeAmbito.AREA) {
+				//Solo se agregan dominios de la misma area
+				for(Area area : dom.getAreas()) {
+					if (area.getCodigo().compareTo(idArea) == 0) {
+						dominios.add(dom);
+						break;
+					}
+				}
+			}
 		}
 		return dominios;
 	}

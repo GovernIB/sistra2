@@ -133,12 +133,22 @@ public class SessionBean {
 	/** Datos que obtienen el ancho y alto de la pantalla. **/
 	private Integer height;
 	private Integer width;
-	public void submitAspect () {
 
-		String swidth = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("hiddenWidth");
-		String sheight = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("hiddenHeight");
-		if (swidth != null) { width = Integer.parseInt(swidth);}
-		if (sheight != null) { height = Integer.parseInt(sheight);}
+	/** Paginación */
+	private Integer paginacion;
+
+	public void submitAspect() {
+
+		String swidth = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+				.get("hiddenWidth");
+		String sheight = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+				.get("hiddenHeight");
+		if (swidth != null) {
+			width = Integer.parseInt(swidth);
+		}
+		if (sheight != null) {
+			height = Integer.parseInt(sheight);
+		}
 
 	}
 
@@ -163,6 +173,10 @@ public class SessionBean {
 			FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale(sesion.getIdioma()));
 		}
 
+		// asignamos paginación por defecto si no tiene
+		if (getPaginacion() == null) {
+			setPaginacion(10);
+		}
 		lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
 		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 		rolesList = securityService.getRoles();
@@ -733,4 +747,17 @@ public class SessionBean {
 		this.width = width;
 	}
 
+	/**
+	 * @return the paginacion
+	 */
+	public final Integer getPaginacion() {
+		return paginacion;
+	}
+
+	/**
+	 * @param paginacion the paginacion to set
+	 */
+	public final void setPaginacion(Integer paginacion) {
+		this.paginacion = paginacion;
+	}
 }

@@ -130,6 +130,9 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	/** Cabecera. **/
 	private String cabecera;
 
+	// variable que desactiva el boton exportar
+	private Boolean disabled = false;
+
 	/**
 	 * Inicialización.
 	 */
@@ -150,7 +153,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		formateadores = tramiteService.getFormateadoresTramiteVersion(Long.valueOf(id));
 		formularios = tramiteService.getFormulariosTramiteVersion(Long.valueOf(id));
 		ficheros = tramiteService.getFicherosTramiteVersion(Long.valueOf(id));
-		gestorExternoFormularios=tramiteService.getGFEByTramiteVersion(Long.valueOf(id));
+		gestorExternoFormularios = tramiteService.getGFEByTramiteVersion(Long.valueOf(id));
 
 		for (final Long dominioId : dominiosId) {
 			dominios.add(dominioService.loadDominio(dominioId));
@@ -315,6 +318,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 
 		// 10. Descargar.
 		final InputStream myInputStream = new ByteArrayInputStream(content);
+		disabled = true;
 		return new DefaultStreamedContent(myInputStream, "application/zip", getNombreZip() + ".zip");
 
 	}
@@ -610,6 +614,20 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	 */
 	public void setGestorExternoFormularios(List<GestorExternoFormularios> gestorExternoFormularios) {
 		this.gestorExternoFormularios = gestorExternoFormularios;
+	}
+
+	/**
+	 * @return the disabled
+	 */
+	public final Boolean getDisabled() {
+		return disabled;
+	}
+
+	/**
+	 * @param disabled the disabled to set
+	 */
+	public final void setDisabled(Boolean disabled) {
+		this.disabled = disabled;
 	}
 
 }

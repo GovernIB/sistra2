@@ -290,7 +290,7 @@
 html.imc--sense-scroll,
 body.imc--sense-scroll { overflow: hidden; }
 
-.imc-pagament iframe { /*border: .5em solid #4dba79;*/ outline: none; transition: outline .2s ease-out; }
+.imc-pagament iframe { /*border: .5em solid #4dba79;*/ /* outline: .5em solid #4dba79; */ outline: none; transition: outline .2s ease-out; }
 .imc-pagament:focus iframe { outline-color: #294233; }
 
 

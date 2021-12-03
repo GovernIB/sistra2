@@ -126,6 +126,10 @@ public enum TypeParametroVentana {
 	 */
 	CARACT_NO_PERMITIDOS,
 	/**
+	 * DESACTIVA BOTONERA
+	 */
+	DESACTIVAR_BOTONERA,
+	/**
 	 * Caracteres no permitidos
 	 */
 	TAMANYO_MAX,

@@ -245,4 +245,11 @@ public interface DominioService {
 	 */
 	public List<Dominio> getDominiosByConfAut(Long idConfiguracion, Long idArea);
 
+	/**
+	 * Obtiene dominios segun identificadores
+	 * @param identificadoresDominio
+	 * @return
+	 */
+	public List<Dominio> getDominiosByIdentificador(List<String> identificadoresDominio, final Long idEntidad, final Long idArea);
+
 }

@@ -42,6 +42,7 @@ import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
 import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JDominio;
+import es.caib.sistrages.core.service.repository.model.JEntidad;
 import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFormateadorFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormulario;
@@ -151,9 +152,9 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 
 		if (StringUtils.isNotBlank(filtro)) {
-			sql.append(" AND (upper(t.descripcion) like :filtro OR upper(t.identificador) like :filtro)");
+			sql.append(" AND (upper(t.descripcion) like :filtro OR upper(t.identificador) like :filtro) escape @ ");
 		}
-		sql.append(" ORDER BY t.identificador");
+		sql.append("ORDER BY t.identificador");
 
 		final Query query = entityManager.createQuery(sql.toString());
 		if (idEntidad != null) {
@@ -180,6 +181,7 @@ public class TramiteDaoImpl implements TramiteDao {
 
 	@Override
 	public int getTotalByFiltro(Long idEntidad, List<Long> areas, String filtro) {
+
 		StringBuilder sql = new StringBuilder(" Select count(t) From JTramite t where ");
 
 		if (idEntidad == null) {
@@ -195,7 +197,8 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 
 		if (StringUtils.isNotBlank(filtro)) {
-			sql.append(" AND (upper(t.descripcion) like :filtro OR upper(t.identificador) like :filtro)");
+			sql.append(
+					" AND (upper(t.descripcion) like :filtro escape \'@\' OR upper(t.identificador) like :filtro escape \'@\')");
 		}
 		sql.append(" ORDER BY t.codigo");
 
@@ -234,7 +237,8 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 
 		if (StringUtils.isNotBlank(filtro)) {
-			sql.append(" AND (upper(t.descripcion) like :filtro OR upper(t.identificador) like :filtro)");
+			sql.append(
+					" AND (upper(t.descripcion) like :filtro escape \'@\' OR upper(t.identificador) like :filtro escape \'@\')");
 		}
 		sql.append(" ORDER BY t.codigo");
 
@@ -413,6 +417,7 @@ public class TramiteDaoImpl implements TramiteDao {
 				tramiteVersion.setDatosUsuarioBloqueo(jTramiteVersion.getUsuarioDatosBloqueo());
 				tramiteVersion.setActiva(jTramiteVersion.isActiva());
 				tramiteVersion.setTipoFlujo(TypeFlujo.fromString(jTramiteVersion.getTipoflujo()));
+				tramiteVersion.setDescripcion(jTramiteVersion.getDescripcion());
 				tramiteVersion.setRelease(jTramiteVersion.getRelease());
 				tramiteVersion.setIdTramite(jTramiteVersion.getTramite().getCodigo());
 				tramiteVersion.setFechaUltima(getFechaUltima(jTramiteVersion.getCodigo()));
@@ -1235,6 +1240,7 @@ public class TramiteDaoImpl implements TramiteDao {
 			tv.setDatosUsuarioBloqueo("");
 			tv.setCodigoUsuarioBloqueo("");
 			tv.setTipoFlujo(filaTramiteVersion.getTramiteVersion().getTipoFlujo());
+			tv.setDescripcion(filaTramiteVersion.getTramiteVersion().getDescripcion());
 			tv.setHuella(filaTramiteVersion.getTramiteVersion().getHuella());
 			this.updateTramiteVersion(tv);
 
@@ -1516,6 +1522,33 @@ public class TramiteDaoImpl implements TramiteDao {
 			removeTramiteVersion(tv);
 		}
 		this.entityManager.flush();
+	}
+
+	@Override
+	public void actualizarDominios(TramiteVersion tramiteVersion, final List<Dominio> dominios) {
+		final JVersionTramite jversionTramite = entityManager.find(JVersionTramite.class, tramiteVersion.getCodigo());
+
+		for (Dominio dominio : dominios) {
+			final JDominio jdominio = entityManager.find(JDominio.class, dominio.getCodigo());
+			if (!jdominio.getVersionesTramite().contains(jversionTramite)) {
+				jdominio.getVersionesTramite().add(jversionTramite);
+				entityManager.merge(jdominio);
+			}
+		}
+
+		entityManager.flush();
+	}
+
+	private JDominio getJDominio(String identificadorDominio) {
+		JDominio result = null;
+		final String sql = "SELECT d FROM JDominio d where d.identificador = :codigoDominio";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("codigoDominio", identificadorDominio);
+		final List<JDominio> list = query.getResultList();
+		if (!list.isEmpty()) {
+			result = list.get(0);
+		}
+		return result;
 	}
 
 }

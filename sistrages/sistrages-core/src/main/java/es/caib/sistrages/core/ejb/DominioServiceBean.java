@@ -293,4 +293,10 @@ public class DominioServiceBean implements DominioService {
 		return dominioService.getDominiosByConfAut(idConfiguracion,  idArea);
 	}
 
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<Dominio> getDominiosByIdentificador(List<String> identificadoresDominio,  final Long idEntidad, final Long idArea) {
+		return dominioService.getDominiosByIdentificador(identificadoresDominio, idEntidad, idArea);
+	}
+
 }

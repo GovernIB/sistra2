@@ -36,6 +36,11 @@
 			<!-- Contenido dialogo -->
 			<h:panelGrid columns="2" columnClasses="w20 grid-left, w80 grid-left"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="20" cellspacing="0">
 
+				<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.descripcion']}" />
+				<p:panelGrid styleClass="noBorders" columns="1" columnClasses="noPadding-left">
+					<p:inputText value="#{dialogDefinicionVersionPropiedades.tramiteVersion.descripcion}"/>
+				</p:panelGrid>
+
 	            <p:outputLabel for="autenticado" value="#{msg['viewDefinicionVersionPropiedades.autenticacion']}" />
 
 				<p:panelGrid styleClass="noBorders">
@@ -77,9 +82,9 @@
 				</p:panelGrid>
 	         	<p:outputLabel for="idiomaCastellano" value="#{msg['viewDefinicionVersionPropiedades.idioma']}" />
 				<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,,">
-					<p:selectBooleanCheckbox rendered="#{sessionBean.idiomas.contains('ca')}" id="idiomaCatalan" value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaCaSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCatalan']}" required="true"/>
-					<p:selectBooleanCheckbox rendered="#{sessionBean.idiomas.contains('es')}" id="idiomaCastellano" value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaEsSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCastellano']}" required="true"/>
-					<p:selectBooleanCheckbox rendered="#{sessionBean.idiomas.contains('en')}" id="idiomaIngles"  value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaEnSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaIngles']}" required="true"/>
+					<p:selectBooleanCheckbox rendered="#{sessionBean.idiomas.contains('ca')}" id="idiomaCatalan" value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaCaSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCatalan']}" />
+					<p:selectBooleanCheckbox rendered="#{sessionBean.idiomas.contains('es')}" id="idiomaCastellano" value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaEsSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCastellano']}" />
+					<p:selectBooleanCheckbox rendered="#{sessionBean.idiomas.contains('en')}" id="idiomaIngles"  value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaEnSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaIngles']}" />
 				</p:panelGrid>
 
 	         	<p:outputLabel for="persistencia" value="#{msg['viewDefinicionVersionPropiedades.persistencia']}" />

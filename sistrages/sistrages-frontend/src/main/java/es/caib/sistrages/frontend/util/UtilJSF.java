@@ -819,4 +819,22 @@ public final class UtilJSF {
 
 		UtilJSF.openDialog(DialogAyuda.class, TypeModoAcceso.CONSULTA, params, true, 900, 550);
 	}
+
+	/**
+	 * Método que actualiza la paginación
+	 */
+	public static void setPaginacion(Integer paginacion, String pagina) {
+		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("sessionBean");
+		sb.setPaginacion(paginacion);
+	}
+
+	/**
+	 * Método que devuelve la paginación
+	 */
+	public static Integer getPaginacion(String pagina) {
+		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("sessionBean");
+		return sb.getPaginacion();
+	}
 }

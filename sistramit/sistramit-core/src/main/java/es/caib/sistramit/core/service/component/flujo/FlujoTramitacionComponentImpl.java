@@ -234,7 +234,8 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		// Generamos destinatarios, asunto y mensaje
 		final List<String> destinatarios = UtilsFormularioSoporte
 				.obtenerDestinatariosFormularioSoporte(datosFormSoporte, entidad, datosSesion);
-		final String asunto = UtilsFormularioSoporte.obtenerAsuntoFormularioSoporte(literalesComponent, datosSesion);
+		final String asunto = UtilsFormularioSoporte.obtenerAsuntoFormularioSoporte(literalesComponent,
+				datosFormSoporte, entidad, datosSesion);
 		final String mensaje = UtilsFormularioSoporte.construyeMensajeSoporteIncidencias(literalesComponent,
 				datosFormSoporte, entidad, datosSesion);
 

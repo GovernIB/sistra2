@@ -299,4 +299,10 @@ public class DominioServiceImpl implements DominioService {
 		return dominioDao.getDominiosByConfAut(idConfiguracion ,idArea);
 	}
 
+	@Override
+	@NegocioInterceptor
+	public List<Dominio> getDominiosByIdentificador(List<String> identificadoresDominio, final Long idEntidad, final Long idArea) {
+		return dominioDao.getDominiosByIdentificador(identificadoresDominio, idEntidad, idArea);
+	}
+
 }

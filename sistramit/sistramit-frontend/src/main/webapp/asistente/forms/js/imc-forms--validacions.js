@@ -255,25 +255,35 @@ $.fn.appValida = function(opcions) {
 
 	if (format === "data" && valor !== "") {
 
+		var revisaData = true
+			,esCorrecte = true;
+
 		if (valor.indexOf("-") === -1)  {
 
-			var data = valor.split("/")
-				,dataDia = parseInt(data[0], 10)
-				,dataMes = parseInt(data[1], 10)
-				,dataAny = parseInt(data[2], 10);
+			var data_sp = valor.split("/")
+				,data_sp_size = data_sp.length
+				,dataDia = parseInt(data_sp[data_sp_size-3], 10)
+				,dataMes = parseInt(data_sp[data_sp_size-2], 10)
+				,dataAny = parseInt(data_sp[data_sp_size-1], 10);
+
+			revisaData = (data_sp[data_sp_size-3].indexOf("_") !== -1 || data_sp[data_sp_size-2].indexOf("_") !== -1 || data_sp[data_sp_size-1].indexOf("_") !== -1) ? false : true;
 
 		} else {
 
-			var data = valor.split("-")
-				,dataDia = parseInt(data[2], 10)
-				,dataMes = parseInt(data[1], 10)
-				,dataAny = parseInt(data[0], 10);
+			var data_sp = valor.split("-")
+				,dataDia = parseInt(data_sp[2], 10)
+				,dataMes = parseInt(data_sp[1], 10)
+				,dataAny = parseInt(data_sp[0], 10);
 
 		}
 
-		var d = new Date(dataAny, dataMes-1, dataDia);
+		if (revisaData) {
 
-		esCorrecte = (d.getFullYear() == dataAny && d.getMonth() == dataMes-1 && d.getDate() == dataDia && dataAny < 9999 && valor.length === 10) ? true : false;
+			var d = new Date(dataAny, dataMes-1, dataDia);
+
+			esCorrecte = (d.getFullYear() == dataAny && d.getMonth() == dataMes-1 && d.getDate() == dataDia && dataAny < 9999) ? true : false;
+
+		}
 
 	}
 

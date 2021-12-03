@@ -1155,6 +1155,7 @@ public class TramiteServiceImpl implements TramiteService {
 	}
 
 	@Override
+	@NegocioInterceptor
 	public List<ScriptInfo> listScriptsInfo(final Long idTramiteVersion) {
 		final List<ScriptInfo> scriptsInfo = new ArrayList<>();
 
@@ -1406,6 +1407,18 @@ public class TramiteServiceImpl implements TramiteService {
 			List<Long> areas, String filtro) {
 
 		return tramiteDao.getAllByFiltro(first, pageSize, sortField, asc, idEntidad, areas, filtro);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void actualizarDominios(TramiteVersion tramiteVersion, final List<Dominio> dominios) {
+		 tramiteDao.actualizarDominios(tramiteVersion, dominios);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<ErrorValidacion> checkDominioNoUtilizado(Long idDominio, Long idTramiteVersion, final String idioma) {
+		return validadorComponent.checkDominioNoUtilizado(idDominio, idTramiteVersion, idioma);
 	}
 
 }

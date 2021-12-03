@@ -53,4 +53,12 @@ public interface ValidadorComponent {
 	List<ErrorValidacion> comprobarScript(Script pScript, List<Dominio> pListaDominios,
 			List<String> pIdiomasTramiteVersion, String pIdioma);
 
+	/**
+	 * Valida que un dominio no se utiliza.
+	 * @param idDominio
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	List<ErrorValidacion> checkDominioNoUtilizado(Long idDominio, Long idTramiteVersion, final String pIdioma);
+
 }

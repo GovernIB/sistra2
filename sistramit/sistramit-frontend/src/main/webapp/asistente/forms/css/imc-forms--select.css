@@ -77,7 +77,7 @@ div.imc-select a.imc-select.imc-select-lectura:focus { background-color: #f9f9e8
 
 /* enlaces.select -> opciones */
 
-div.imc-opcions .imc-select-submenu { display: none; position: absolute; z-index: 1; top: 0; left: 0; min-width: 10em; background-color: #fff; border: 1px solid #B9BBBD; }
+div.imc-opcions .imc-select-submenu { display: none; position: absolute; z-index: 3; top: 0; left: 0; min-width: 10em; background-color: #fff; border: 1px solid #B9BBBD; }
 
 div.imc-opcions ul { overflow: auto; max-height: 20em; list-style: none; margin: 0 !important; }
 	div.imc-opcions ul a { display: block; font-size: 1em; padding: .3em .5em; }

@@ -285,7 +285,7 @@ aside address { display: inline; }
 /* missatge */
 
 
-.imc-missatge .imc--text { /*border: .5em solid #4dba79;*/ outline: none; transition: outline .2s ease-out; }
+.imc-missatge .imc--text { /*border: .5em solid #4dba79;*/ /* outline: .5em solid #4dba79; */ outline: none; transition: outline .2s ease-out; }
 .imc-missatge:focus .imc--text { outline-color: #294233; }
 
 .imc-missatge .imc--text h2 { margin-bottom: .5em; margin-left: 5em; }
@@ -441,7 +441,7 @@ aside address { display: inline; }
 
 /* suport */
 
-.imc-suport .imc-s--contingut { width: 90%; max-width: 30em; padding-left: 5em; /*border: .5em solid #4dba79;*/ outline: .5em solid #4dba79; transition: outline .2s ease-out; }
+.imc-suport .imc-s--contingut { width: 90%; max-width: 30em; padding-left: 5em; /*border: .5em solid #4dba79;*/ /* outline: .5em solid #4dba79; */ outline: none; transition: outline .2s ease-out; }
 .imc-suport:focus .imc-s--contingut { outline-color: #294233; }
 
 .imc-suport .imc-s--contingut::before {

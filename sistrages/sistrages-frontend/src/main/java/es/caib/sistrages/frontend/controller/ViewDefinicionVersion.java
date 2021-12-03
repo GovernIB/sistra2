@@ -44,6 +44,7 @@ import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeExtension;
@@ -711,11 +712,21 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		if (dominioService.tieneTramiteVersion(this.dominioSeleccionado.getCodigo(), this.id)) {
 
-			dominioService.removeTramiteVersion(this.dominioSeleccionado.getCodigo(), this.tramiteVersion.getCodigo());
-
-			dominios = tramiteService.getDominioSimpleByTramiteId(id);
-
-			dominioSeleccionado = null;
+			List<ErrorValidacion> errores = tramiteService.checkDominioNoUtilizado(this.dominioSeleccionado.getCodigo(), this.id, UtilJSF.getIdioma().toString());
+			if (errores.isEmpty()) {
+				dominioService.removeTramiteVersion(this.dominioSeleccionado.getCodigo(), this.tramiteVersion.getCodigo());
+				dominios = tramiteService.getDominioSimpleByTramiteId(id);
+				dominioSeleccionado = null;
+			} else {
+				StringBuilder valor = new StringBuilder();
+				for(ErrorValidacion error : errores) {
+					valor.append(error.getElemento());
+					valor.append(", ");
+				}
+				String[] params = new String[1];
+				params[0] =  valor.toString().substring(0, valor.toString().length()-2);
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.dominio.borrarConRelacion", params));
+			}
 		} else {
 
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.relacionInexistente"));

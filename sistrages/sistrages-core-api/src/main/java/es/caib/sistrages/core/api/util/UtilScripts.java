@@ -10,6 +10,7 @@ import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramiteVersion;
@@ -439,4 +440,297 @@ public class UtilScripts {
 		return contenidoScript;
 
 	}
+
+//	public static String extraerComentariosOld(String texto) {
+//		if (texto == null || texto.isEmpty()) {
+//			return texto;
+//		}
+//
+//		if (!texto.contains("//") && !texto.contains("/*")) {
+//			return "";
+//		}
+//		//Calculamos las posiciones de comentario.
+//		StringBuilder comentario = new StringBuilder();
+//
+//		//ComentarioActivo indica que está abierto '/*' y tenemos que buscar el cierre '*/'
+//		boolean comentarioActivo = false;
+//		int posDblBarra = -1;
+//		int posBarraAst = -1;
+//		for (String text : texto.split("\n")) {
+//
+//			//Vemos si hay comentarios en el texto
+//			if (comentarioActivo) {
+//				posBarraAst = text.indexOf("*/");
+//			} else {
+//				posBarraAst = text.indexOf("/*");
+//			}
+//			posDblBarra = text.indexOf("//");
+//
+//
+//
+//			if (comentarioActivo) {
+//				if (posBarraAst == -1) {
+//					comentario.append( text );
+//					continue;
+//				}
+//
+//				//Si se cierra el comentario, puede que este la doble barra después también. Algo asi como:
+//				// ESTO_ES_UN_COMENTARIO_Y_VOY_A_CERRARLO */ AHORA IRÍA CÓDIGO Y VUELVO A PONER COMENTARIO // ESTO_ES_TEXTO_COMENTADO
+//				comentario.append(texto.substring(0,posBarraAst));
+//				if (posDblBarra > posBarraAst) {
+//					comentario.append( texto.substring(posDblBarra) );
+//				}
+//
+//				//Deja de estar activo el modo comentario
+//				comentarioActivo = false;
+//			} else {
+//
+//				if (posDblBarra >= 0 || posBarraAst >= 0) {
+//					if (posBarraAst != -1) {
+//						if (posDblBarra == -1 || posBarraAst < posDblBarra) {
+//							comentario.append( text.substring(posBarraAst) );
+//							comentarioActivo = true;
+//						} else {
+//							comentario.append( text.substring(posDblBarra) );
+//						}
+//					} else {
+//						comentario.append( text.substring(posDblBarra) );
+//					}
+//				}
+//			}
+//
+//
+//
+//		}
+//
+//		return comentario.toString();
+//	}
+
+
+	public static String extraerComentarios(String texto) {
+		if (texto == null || texto.isEmpty()) {
+			return texto;
+		}
+
+		if (!texto.contains("//") && !texto.contains("/*")) {
+			return "";
+		}
+		//Calculamos las posiciones de comentario.
+		StringBuilder comentario = new StringBuilder();
+
+		ClaseAyudaScripts claseScripts = ClaseAyudaScripts.getInstance();
+		claseScripts.setComentarioActivo(false);
+		//Lo hacemos por lineas ya que uno de los tipos de comentarios, solo va por lineas '//'
+		for (String text : texto.split("\n")) {
+
+			claseScripts.reiniciar();
+			claseScripts = claseScripts.getComentario(text, claseScripts);
+			comentario.append(claseScripts.getComentario());
+		}
+
+		return comentario.toString();
+	}
+
+	public static String extraerContenido(String texto) {
+		if (texto == null || texto.isEmpty()) {
+			return texto;
+		}
+
+		if (!texto.contains("//") && !texto.contains("/*")) {
+			return texto;
+		}
+		//Calculamos las posiciones de comentario.
+		StringBuilder contenido = new StringBuilder();
+
+		//ComentarioActivo indica que está abierto '/*' y tenemos que buscar el cierre '*/'
+		ClaseAyudaScripts claseScripts = ClaseAyudaScripts.getInstance();
+		claseScripts.setComentarioActivo(false);
+		for (String text : texto.split("\n")) {
+
+			claseScripts.reiniciar();
+			claseScripts = claseScripts.getTexto(text, claseScripts);
+			contenido.append(claseScripts.getTexto());
+
+		}
+
+		return  contenido.toString() ;
+	}
+
+	/**
+	 * Método para ver si un identificador es utilizado dentro del script y es invocado.
+	 * @param script
+	 * @param identificador
+	 * @return
+	 */
+	public static boolean isDominioUtilizado(Script script, String identificador) {
+		if (script == null || script.getContenido() == null || script.getContenido().isEmpty()) {
+			return false;
+		}
+
+		final String contenido = UtilScripts.extraerContenido(script.getContenido());
+		Matcher matcher = Pattern.compile("PLUGIN_DOMINIOS.invocarDominio\\(\\'"+identificador+"\\'").matcher(contenido);
+		return matcher.find();
+	}
+
+
+	/**
+	 * Clase de ayuda para poder
+	 * @author Indra
+	 *
+	 */
+	public static class ClaseAyudaScripts {
+
+		/** Los atributos de comentario y texto **/
+		private StringBuilder comentario = new StringBuilder();
+		private StringBuilder texto = new StringBuilder();
+		//ComentarioActivo indica que está abierto '/*' y tenemos que buscar el cierre '*/'
+		private boolean comentarioActivo;
+
+		/** Obtener una instancia de la clase **/
+		public static ClaseAyudaScripts getInstance() {
+			return new ClaseAyudaScripts();
+		}
+
+		/** Constructor basico **/
+		public ClaseAyudaScripts() {
+			this.texto = new StringBuilder();
+			this.comentario = new StringBuilder();
+		}
+
+		/** Reinicia los textos almacenados **/
+		public void reiniciar() {
+			this.texto = new StringBuilder();
+			this.comentario = new StringBuilder();
+		}
+
+		/**
+		 * Método recursivo.
+		 *
+		 * @param text
+		 * @param claseAyuda
+		 **/
+		public ClaseAyudaScripts getComentario(String text, ClaseAyudaScripts claseAyuda) {
+
+			if (text == null || text.isEmpty()) {
+				return claseAyuda;
+			}
+
+			if (claseAyuda.isComentarioActivo()) {
+				int posAstBarra = text.indexOf("*/");
+				//Si aun no ha encontrado el cierre, sigue en comentario
+				if (posAstBarra == -1) {
+					claseAyuda.setComentario(text);
+					return claseAyuda;
+				} else {
+					String subtexto = text.substring(0, posAstBarra+2);
+					claseAyuda.setComentario(subtexto);
+					String textoSiguiente = text.substring(posAstBarra+2);
+					claseAyuda.setComentarioActivo(false);
+					return getComentario (textoSiguiente, claseAyuda);
+				}
+			} else {
+				int posBarraAst = text.indexOf("/*");
+				int posDblBarra = text.indexOf("//");
+				if (posBarraAst == -1 && posDblBarra == -1) {
+					return claseAyuda;
+				} else {
+					//Es decir, que /* esta antes que //
+					if (posDblBarra == -1 || (posBarraAst != -1 && posBarraAst < posDblBarra)) {
+						claseAyuda.setComentarioActivo(true);
+						claseAyuda.setTexto(text.substring(0,posBarraAst));
+						return getComentario(text.substring(posBarraAst), claseAyuda);
+					} else {
+						claseAyuda.setComentario(text.substring(posDblBarra));
+						return claseAyuda;
+					}
+				}
+			}
+		}
+
+		/**
+		 * Método recursivo.
+		 *
+		 * @param text
+		 * @param claseAyuda
+		 **/
+		public ClaseAyudaScripts getTexto(String text, ClaseAyudaScripts claseAyuda) {
+
+			if (text == null || text.isEmpty()) {
+				return claseAyuda;
+			}
+
+			if (claseAyuda.isComentarioActivo()) {
+				int posAstBarra = text.indexOf("*/");
+				//Si aun no ha encontrado el cierre, sigue en comentario
+				if (posAstBarra == -1) {
+					return claseAyuda;
+				} else {
+					String textoSiguiente = text.substring( posAstBarra + 2);
+					claseAyuda.setComentarioActivo(false);
+					return getTexto (textoSiguiente, claseAyuda);
+				}
+			} else {
+				int posBarraAst = text.indexOf("/*");
+				int posDblBarra = text.indexOf("//");
+				if (posBarraAst == -1 && posDblBarra == -1) {
+					claseAyuda.setTexto(text);
+					return claseAyuda;
+				} else {
+					//Es decir, que /* esta antes que //
+					if (posDblBarra == -1 || (posBarraAst != -1 && posBarraAst < posDblBarra)) {
+						claseAyuda.setComentarioActivo(true);
+						claseAyuda.setTexto(text.substring(0,posBarraAst));
+						return getTexto(text.substring(posBarraAst+2), claseAyuda);
+					} else {
+						claseAyuda.setTexto(text.substring(0,posDblBarra));
+						return claseAyuda;
+					}
+				}
+			}
+		}
+
+		/**
+		 * @return the texto
+		 */
+		public String getTexto() {
+			return texto.toString();
+		}
+		/**
+		 * @param texto the texto to set
+		 */
+		public void setTexto(String texto) {
+			this.texto.append(texto);
+		}
+
+		/**
+		 * @return the comentarioActivo
+		 */
+		public boolean isComentarioActivo() {
+			return comentarioActivo;
+		}
+
+		/**
+		 * @param comentarioActivo the comentarioActivo to set
+		 */
+		public void setComentarioActivo(boolean comentarioActivo) {
+			this.comentarioActivo = comentarioActivo;
+		}
+
+		/**
+		 * @return the comentario
+		 */
+		public String getComentario() {
+			return comentario.toString();
+		}
+
+		/**
+		 * @param comentario the comentario to set
+		 */
+		public void setComentario(String comentario) {
+			this.comentario.append(comentario);
+		}
+ 	}
+
 }
+
+

@@ -241,6 +241,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		dt.setTelematico(tramiteRolsac.isTelematico());
 		dt.setPlazoInicio(tramiteRolsac.getDataInici() != null ? tramiteRolsac.getDataInici().getTime() : null);
 		dt.setPlazoFin(tramiteRolsac.getDataTancament() != null ? tramiteRolsac.getDataTancament().getTime() : null);
+		dt.setEmailSoporte(procRolsac.getDirElectronica());
 
 		if (dt.isTelematico() && tramiteRolsac.getPlataforma() != null
 				&& getIdentificadorPlafaformaSistra2().equals(tramiteRolsac.getPlataforma().getIdentificador())) {
@@ -699,18 +700,11 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 			lopd.setTextoCabecera(procRolsac.getLopdCabecera());
 			// - Campos
 			final List<CampoLOPD> campos = new ArrayList<>();
-			// - Derechos
-			if (StringUtils.isNotBlank(procRolsac.getLopdDerechos())) {
+			// - Responsable
+			if (StringUtils.isNotBlank(procRolsac.getLopdResponsable())) {
 				final CampoLOPD c = new CampoLOPD();
-				c.setTitulo(obtenTituloCampoLOPD("derechos", idioma));
-				c.setDescripcion(procRolsac.getLopdDerechos());
-				campos.add(c);
-			}
-			// - Destinatario
-			if (StringUtils.isNotBlank(procRolsac.getLopdDestinatario())) {
-				final CampoLOPD c = new CampoLOPD();
-				c.setTitulo(obtenTituloCampoLOPD("destinatario", idioma));
-				c.setDescripcion(procRolsac.getLopdDestinatario());
+				c.setTitulo(obtenTituloCampoLOPD("responsable", idioma));
+				c.setDescripcion(procRolsac.getLopdResponsable());
 				campos.add(c);
 			}
 			// - Finalidad
@@ -720,19 +714,26 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 				c.setDescripcion(procRolsac.getLopdFinalidad());
 				campos.add(c);
 			}
-			// - Responsable
-			if (StringUtils.isNotBlank(procRolsac.getLopdResponsable())) {
-				final CampoLOPD c = new CampoLOPD();
-				c.setTitulo(obtenTituloCampoLOPD("responsable", idioma));
-				c.setDescripcion(procRolsac.getLopdResponsable());
-				campos.add(c);
-			}
 			// - Legitimación
 			if (procRolsac.getLopdLegitimacion() != null
 					&& StringUtils.isNotBlank(procRolsac.getLopdLegitimacion().getNombre())) {
 				final CampoLOPD c = new CampoLOPD();
 				c.setTitulo(obtenTituloCampoLOPD("legitimacion", idioma));
 				c.setDescripcion(procRolsac.getLopdLegitimacion().getNombre());
+				campos.add(c);
+			}
+			// - Destinatario
+			if (StringUtils.isNotBlank(procRolsac.getLopdDestinatario())) {
+				final CampoLOPD c = new CampoLOPD();
+				c.setTitulo(obtenTituloCampoLOPD("destinatario", idioma));
+				c.setDescripcion(procRolsac.getLopdDestinatario());
+				campos.add(c);
+			}
+			// - Derechos
+			if (StringUtils.isNotBlank(procRolsac.getLopdDerechos())) {
+				final CampoLOPD c = new CampoLOPD();
+				c.setTitulo(obtenTituloCampoLOPD("derechos", idioma));
+				c.setDescripcion(procRolsac.getLopdDerechos());
 				campos.add(c);
 			}
 			// - InfoAdicional (archivo)
@@ -808,6 +809,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		dt.setPlazoFin(
 				servicioRolsac.getFechaDespublicacion() != null ? servicioRolsac.getFechaDespublicacion().getTime()
 						: null);
+		dt.setEmailSoporte(servicioRolsac.getCorreo());
 		if (dt.isTelematico() && servicioRolsac.getPlataforma() != null
 				&& getIdentificadorPlafaformaSistra2().equals(servicioRolsac.getPlataforma().getIdentificador())) {
 			final DefinicionTramiteTelematico definicion = new DefinicionTramiteTelematico();

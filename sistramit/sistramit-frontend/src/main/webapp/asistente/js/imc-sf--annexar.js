@@ -390,6 +390,9 @@ $.fn.appAnnexa = function(options) {
 				imc_document_contingut
 					.addClass("imc--on");
 
+				imc_document
+					.attr("aria-hidden", "false");
+
 				ico_anim
 					.addClass("imc--off");
 
@@ -428,6 +431,9 @@ $.fn.appAnnexa = function(options) {
 
 						imc_document_contingut
 							.removeClass("imc--on");
+
+						imc_document
+							.attr("aria-hidden", "true");
 
 						imc_document
 							.removeClass("imc--on imc--off")
@@ -528,16 +534,12 @@ $.fn.appAnnexa = function(options) {
 									var mida_max = imc_document.attr("data-mida")
 										,esMB = (mida_max.indexOf("MB") !== -1) ? true : false
 										,mida_max_num = (esMB) ? parseInt( mida_max.replace("MB", ""), 10 ) : parseInt( mida_max.replace("KB", ""), 10 )
+										,mida_max_BT = (esMB) ? mida_max_num * 1048576 : mida_max_num * 1024;
 
-									if (esMB) {
 
-										esMidaPosible = (mida_max_num > arxiu_mida_MB) ? true : false;
+									// comprovem la mida
 
-									} else {
-
-										esMidaPosible = (mida_max_num > arxiu_mida_KB) ? true : false;
-
-									}
+									var esMidaPosible = (mida_max_BT > arxiu_mida) ? true : false;
 									
 									if (!esMidaPosible && imc_document.attr("data-mida") !== "null") {
 
@@ -1258,6 +1260,7 @@ $.fn.appAnnexatEsborra = function(opcions){
 				imc_missatge
 					.appMissatge({
 						boto: bt
+						, bt: bt
 						, accio: "esborra"
 						, titol: txtVolEsborrarTitol
 						, text: arxiu_text

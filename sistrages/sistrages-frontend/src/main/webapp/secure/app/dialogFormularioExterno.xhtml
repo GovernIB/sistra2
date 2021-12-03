@@ -76,7 +76,7 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 		     	<f:facet name="left">
-	     			<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" actionListener="#{dialogFormularioExterno.tramites()}" process="@this"  />
+	     			<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" rendered="#{!dialogFormularioExterno.isAlta()}" reactionListener="#{dialogFormularioExterno.tramites()}" process="@this"  />
 
 	     		</f:facet>
 					<f:facet name="right">

@@ -75,7 +75,7 @@
 }
 
 
-.imc-forms--missatge .imc--text { /*border: .5em solid #4dba79;*/ outline: none; transition: outline .2s ease-out; }
+.imc-forms--missatge .imc--text { /*border: .5em solid #4dba79;*/ /* outline: .5em solid #4dba79; */ outline: none; transition: outline .2s ease-out; }
 .imc-forms--missatge:focus .imc--text { outline-color: #294233; }
 
 .imc-forms--missatge .imc--text h2 { margin-bottom: .5em; margin-left: 5em; }

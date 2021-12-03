@@ -1,0 +1,55 @@
+<html>
+<head>
+<meta charset=UTF-8>
+<meta http-equiv="content-type" content="text/html; utf-8">
+<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+	<h1 class="stgH1">TABLA SCRIPTS REPRESENTACI&Oacute;N</h1>
+	<p>En esta tabla se explican las diferentes casu&iacute;sticas
+		de representaci&oacute;n.</p>
+	<h2 class="stgH2">TAbla</h2>
+	<table>
+		<tr>
+			<th><b>Login</b></th>
+			<th><b>¿Quien se autentica en S2?</b></th>
+			<th><b>Script presentador</b></th>
+			<th><b>Script representaci&oacute;n</b></th>
+			<th><b>Asiento</b></th>
+		</tr>
+		<tr>
+			<td>Certificado PF (Persona A)</td>
+			<td>Persona A</td>
+			<td>Persona A por defecto</td>
+			<td>En el script indicamos: <br> Representado = "Empresa 1" <br>
+				<i>(Representante por defecto es persona A)</i></td>
+			<td>Se traslada a asiento: <br>- Interesado: Empresa 1 <br>-
+				Representante: Persona A
+			</td>
+		</tr>
+		<tr>
+			<td>Certificado representac&oacute;n PJ ("Persona A" representa a
+				"Empresa 1")</td>
+			<td>Empresa 1</td>
+			<td>Empresa 1 por defecto</td>
+			<td>El representante y el representado por defecto ser&aacute;n los que
+				aparezcan en la informaci&oacute;n del certificado. En caso de querer
+				indicar otro, se ha de indicar en el script.</td>
+			<td>Se traslada a asiento: <br> - Interesado: Empresa A <br>
+				- Representante: Persona A
+			</td>
+		</tr>
+		<tr>
+			<td>Certificat representaci&oacute;n PJ ("Persona A" representa a
+				"Empresa 1")</td>
+			<td>Emrpesa 1</td>
+			<td>Empresa 1 por defecto</td>
+			<td>En el script indicamos: <br> Representado = "Empresa 2" <br>
+				Representante por defecto es Empresa 1
+			</td>
+			<td>Se traslada a asiento: <br> - Interesado: Empresa 2 <br>
+				- Representante: Empresa 1
+			</td>
+		</tr>
+	</table>
+</html>

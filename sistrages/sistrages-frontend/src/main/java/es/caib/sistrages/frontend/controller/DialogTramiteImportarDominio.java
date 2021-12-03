@@ -246,13 +246,17 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 
 		// Muestra dialogo
 		if (data.getConfiguracionAutenticacionActual() == null
-				|| data.getConfiguracionAutenticacionActual().getCodigo() == null) {
+				|| (data.getConfiguracionAutenticacionActual().getCodigo() == null && data.getConfiguracionAutenticacionActual().getCodigoImportacion() == null)) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 		} else {
 			final Map<String, String> params = new HashMap<>();
 			params.put(TypeParametroVentana.AREA.toString(), area.toString());
-			params.put(TypeParametroVentana.ID.toString(),
-					data.getConfiguracionAutenticacionActual().getCodigo().toString());
+			if (data.getConfiguracionAutenticacionActual().getCodigo() != null) {
+				params.put(TypeParametroVentana.ID.toString(), data.getConfiguracionAutenticacionActual().getCodigo().toString());
+			} else if (data.getConfiguracionAutenticacionActual().getCodigoImportacion() != null) {
+				params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(data.getConfiguracionAutenticacionActual()));
+				params.put(TypeParametroVentana.MODO_IMPORTAR.toString(), "true");
+			}
 			UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 195);
 		}
 	}
@@ -300,21 +304,15 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		abrirDlg(TypeModoAcceso.ALTA);
-	}
 
-	/**
-	 * Abrir dialogo.
-	 *
-	 * @param modoAccesoDlg Modo acceso
-	 */
-	private void abrirDlg(final TypeModoAcceso modoAccesoDlg) {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 
 		params.put(TypeParametroVentana.AREA.toString(), this.area.toString());
-		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, modoAccesoDlg, params, true, 550, 195);
+		params.put(TypeParametroVentana.DESACTIVAR_BOTONERA.toString(), "true");
+		params.put(TypeParametroVentana.MODO_IMPORTAR.toString(), "true");
+		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.ALTA, params, true, 550, 195);
 	}
 
 	/**

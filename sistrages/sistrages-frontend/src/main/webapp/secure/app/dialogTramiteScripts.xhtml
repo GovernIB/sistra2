@@ -23,7 +23,7 @@
 		<f:viewParam name="ID" value="#{dialogTramiteScripts.id}"/>
 		<f:viewAction action="#{dialogTramiteScripts.init}" />
 	</f:metadata>
-	<h:form id="formHistorial" styleClass="margin-top-10">
+	<h:form id="formHistorial" style="margin-bottom: 40px" styleClass="margin-top-10">
 
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
@@ -32,8 +32,8 @@
 				<!-- Data table -->
 				<p:dataTable  id="dataTable" var="td" value="#{dialogTramiteScripts.data}"
 							 rows="10" emptyMessage="#{msg['error.emptyRows']}"
-							 scrollable="true" scrollHeight="550px"
-							 style="width:90%;margin:auto"
+							 scrollable="true" scrollHeight="850px"
+							 style="width:90%;margin:auto;"
 							 paginator="true" paginatorPosition="bottom"
 	                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 	                         rowsPerPageTemplate="5,10,15,30"

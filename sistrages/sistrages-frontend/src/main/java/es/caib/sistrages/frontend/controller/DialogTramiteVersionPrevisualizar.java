@@ -173,7 +173,11 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 			mochilaDatos.put(Constantes.CLAVE_MOCHILA_ERRORESVALIDACION,
 					listaErrores.stream().map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
 
-			UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, null, true, 1050, 520);
+			if (this.isEdicion()) {
+				UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.EDICION, null, true, 1050, 520);
+			} else {
+				UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, null, true, 1050, 520);
+			}
 		} else {
 			if (!calcularUrl(true)) {
 				return;
@@ -442,7 +446,11 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 			mochilaDatos.put(Constantes.CLAVE_MOCHILA_ERRORESVALIDACION,
 					listaErrores.stream().map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
 
-			UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, null, true, 1050, 520);
+			if (this.isEdicion()) {
+				UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.EDICION, null, true, 1050, 520);
+			} else {
+				UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, null, true, 1050, 520);
+			}
 		} else {
 			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.validacion"));
 

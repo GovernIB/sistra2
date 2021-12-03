@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -21,15 +23,18 @@ import org.primefaces.model.TreeNode;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.LiteralScript;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioComponenteSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioPaginaSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypePluginScript;
 import es.caib.sistrages.core.api.model.types.TypeScript;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
+import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -53,6 +58,10 @@ public class DialogScript extends DialogControllerBase {
 	/** Script service. */
 	@Inject
 	private ScriptService scriptService;
+
+	/** Tramite service. */
+	@Inject
+	private DominioService dominioService;
 
 	/** Tramite service. */
 	@Inject
@@ -332,9 +341,20 @@ public class DialogScript extends DialogControllerBase {
 			return;
 		}
 
+		if (funcionGetValorIncorrecta()) {
+			addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+					UtilJSF.getLiteral("dialogScript.error.getValorErroneo"));
+			return;
+		}
+
+		if (!agregarDominioNoUtilizados()) {
+			return;
+		}
+
 		if (!validoScript()) {
 			return;
 		}
+
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
@@ -345,6 +365,143 @@ public class DialogScript extends DialogControllerBase {
 			result.setResult(this.data);
 		}
 		UtilJSF.closeDialog(result);
+	}
+
+	private boolean funcionGetValorIncorrecta() {
+		String contenido = UtilScripts.extraerContenido(data.getContenido());
+		if (contenido.contains("PLUGIN_DATOSFORMULARIO.getValor")) {
+
+			Matcher matcher = Pattern.compile("PLUGIN_DATOSFORMULARIO.getValor\\(\\'(.*?)\\'").matcher(contenido);
+			Integer totalCoincidencias = 0;
+			while (matcher.find())
+			{
+				totalCoincidencias++;
+			}
+
+			//Vamos a comprobar si alguna no tiene las comillas simples
+			Matcher matcherComprobarIncorrectas = Pattern.compile("PLUGIN_DATOSFORMULARIO.getValor\\((.*?)\\)").matcher(contenido);
+			Integer totalCoincidenciasGenerico = 0;
+			while (matcherComprobarIncorrectas.find())
+			{
+				totalCoincidenciasGenerico++;
+				//EN JDK9 o superiores, existe un macher.result.count, que es más eficiente
+			}
+
+			return totalCoincidenciasGenerico.compareTo(totalCoincidencias) != 0;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Método que se encarga de buscar los dominios que se utilizan y los agregará si no están
+	 */
+	private boolean agregarDominioNoUtilizados() {
+		String contenido = UtilScripts.extraerContenido(data.getContenido());
+		List<String> identificadoresDominio = new ArrayList<>();
+		//Busca el patrón PLUGIN_DOMINIO.invocarDominio('{0}' siendo {0} el identificador
+		Matcher matcher = Pattern.compile("PLUGIN_DOMINIOS.invocarDominio\\(\\'(.*?)\\'").matcher(contenido);
+		Integer totalCoincidencias = 0;
+		while (matcher.find())
+		{
+			totalCoincidencias++;
+			String identifDominio = matcher.group(1);
+			if (!identificadoresDominio.contains(identifDominio)) {
+				identificadoresDominio.add(identifDominio);
+			}
+		}
+
+		//Vamos a comprobar si alguna no tiene las comillas simples
+		Matcher matcherComprobarIncorrectas = Pattern.compile("PLUGIN_DOMINIOS.invocarDominio\\((.*?)\\)").matcher(contenido);
+		Integer totalCoincidenciasGenerico = 0;
+		while (matcherComprobarIncorrectas.find())
+		{
+			totalCoincidenciasGenerico++;
+			//EN JDK9 o superiores, existe un macher.result.count, que es más eficiente
+		}
+
+		if (totalCoincidenciasGenerico.compareTo(totalCoincidencias) != 0) {
+			addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+					UtilJSF.getLiteral("dialogScript.error.invocarDominioErroneo"));
+			return false;
+		}
+
+		if (!identificadoresDominio.isEmpty()) {
+			UtilJSF.getIdEntidad();
+			TramiteVersion tramVersion = tramiteService.getTramiteVersion(Long.valueOf(this.idTramiteVersion));
+			List<Dominio> dominiosByIdentificador = dominioService.getDominiosByIdentificador(identificadoresDominio, UtilJSF.getIdEntidad(), tramVersion.getIdArea());
+			if (dominiosByIdentificador.size() == identificadoresDominio.size()) {
+				tramiteService.actualizarDominios(tramVersion, dominiosByIdentificador);
+				//Actualizamos los dominios
+				dominios = tramiteService.getDominioSimpleByTramiteId(Long.valueOf(idTramiteVersion));
+			} else {
+				//Si no es igual, hay que dar le mensaje de error correcto.
+				for (String identificador : identificadoresDominio) {
+					boolean encontrado = false;
+					for (Dominio dominio : dominios) {
+						if (dominio.getIdentificador().equals(identificador)) {
+							encontrado = true;
+							break;
+						}
+					}
+
+					if (!encontrado) {
+						Dominio dom = dominioService.loadDominio(identificador);
+						if (dom == null) {
+							String[] params = new String[1];
+							params[0] = identificador;
+							addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+									UtilJSF.getLiteral("dialogScript.error.identificador.noExiste", params ));
+							return false;
+						} else {
+							if (dom.getAmbito() == TypeAmbito.ENTIDAD && dom.getEntidad().compareTo(UtilJSF.getIdEntidad()) != 0) {
+								//Es tipo entidad y no cuadra la misma id entidad
+								String[] params = new String[1];
+								params[0] = dom.getIdentificador();
+								addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+										UtilJSF.getLiteral("dialogScript.error.identificador.otraArea", params));
+								return false;
+							} else {
+								//Es de tipo area y no cuadra dentro del area.
+								String[] params = new String[1];
+								params[0] = dom.getIdentificador();
+								addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+										UtilJSF.getLiteral("dialogScript.error.identificador.otraArea", params));
+								return false;
+							}
+						}
+					}
+				}
+
+				return false;
+			}
+
+		}
+		return true;
+	}
+
+	/**
+	 * Abre un di&aacute;logo para anyadir los datos.
+	 */
+	public void anyadirDominio() {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), idTramiteVersion);
+		TramiteVersion tramVersion = tramiteService.getTramiteVersion(Long.valueOf(this.idTramiteVersion));
+		params.put(TypeParametroVentana.AREA.toString(), tramVersion.getIdArea().toString());
+		UtilJSF.openDialog(DialogDefinicionVersionDominios.class, TypeModoAcceso.ALTA, params, true, 950, 550);
+	}
+
+	/**
+	 * Cuando vuelve de anyadir dominio.
+	 *
+	 * @param event
+	 */
+	public void returnDialogoDominio(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled()) {
+			Dominio dominio = (Dominio) respuesta.getResult();
+			dominios.add(dominio);
+		}
 	}
 
 	public void cerrar() {
@@ -434,7 +591,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * Verifica si hay fila seleccionada de area.
+	 * Verifica si hay fila seleccionada de mensaje.
 	 *
 	 * @return
 	 */

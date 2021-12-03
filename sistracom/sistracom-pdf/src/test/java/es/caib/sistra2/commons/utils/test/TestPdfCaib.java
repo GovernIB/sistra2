@@ -43,8 +43,7 @@ public class TestPdfCaib {
 		final Logger log = LoggerFactory.getLogger(TestPdfCaib.class);
 
 		final Cabecera cabecera = new Cabecera();
-		cabecera.setTitulo("Solicitud de acreditaciones de entidades especializadas \r\n"
-		/* + "PARA SERVICIOS DE PREVENCIÓN AJENOS A LAS EMPRESAS" */);
+		cabecera.setTitulo("QUEIXES I SUGGERIMENTS (IB-SALUT)");
 		final PersonalizacionTexto personalizacicionTextoTituloCabecera = new PersonalizacionTexto(true, true,
 				TypeFuente.NOTOSANS, 20);
 		final PersonalizacionTexto personalizacicionTextoSubTituloCabecera = new PersonalizacionTexto(true, true,
@@ -52,20 +51,20 @@ public class TestPdfCaib {
 
 		final PersonalizacionTexto personalizacicionTextoCodigoSia = new PersonalizacionTexto(true, true,
 				TypeFuente.NOTOSANS, 12);
-		cabecera.setSubtitulo("para servicios de prevencion ajenos a las empresas");
+		cabecera.setSubtitulo("Formulari 1");
 		cabecera.setCodigoSia("2212");
-		cabecera.setPersonalizacionCodigoSiaTitulo(personalizacicionTextoCodigoSia);
-		cabecera.setPersonalizacionTextoTitulo(personalizacicionTextoTituloCabecera);
+		// cabecera.setPersonalizacionCodigoSiaTitulo(personalizacicionTextoCodigoSia);
+		// cabecera.setPersonalizacionTextoTitulo(personalizacicionTextoTituloCabecera);
 		cabecera.setPersonalizacionTextoSubtitulo(personalizacicionTextoSubTituloCabecera);
-		cabecera.setAltoLogo(140);
-		cabecera.setAnchoLogo(140);
+		cabecera.setAltoLogo(120);
+		cabecera.setAnchoLogo(120);
 
 		/** Ejemplo logo cargando directamente la imagen */
 		// cabecera.setLogo(
 		// "G:\\workspace\\trunk-simac-lib-pdjf\\fuentes\\java\\src\\main\\resources\\logo.png");
 
 		/** Ejemplo logo cargado como array de bytes */
-		final byte[] arrayBytes = IOUtils.toByteArray(TestPdfCaib.class.getResourceAsStream("/logocaib.jpg"));
+		final byte[] arrayBytes = IOUtils.toByteArray(TestPdfCaib.class.getResourceAsStream("/logo_goib.jpg"));
 		cabecera.setLogoByte(arrayBytes);
 		formularioPdf.setCabecera(cabecera);
 
@@ -195,7 +194,7 @@ public class TestPdfCaib {
 
 		linea = new Linea();
 		final PersonalizacionTexto personalizacicionTexto = new PersonalizacionTexto(false, true, TypeFuente.NOTOSANS,
-				6);
+				10);
 		final Texto texto = new Texto(personalizacicionTexto,
 				"De acuerdo con lo que dispuesto en el artículo 28 de la Ley 39/2015, de 1 de octubre, del Procedmiento Administrativo Común de las\r\n"
 						+ "Administraciones Públicas, en ausencia de oposición expresa por parte del interesado, el órgano gestor del procedimiento estará autorizado para\r\n"
@@ -228,13 +227,13 @@ public class TestPdfCaib {
 		final OutputStream out2 = new FileOutputStream(FILE_NAME_STAMP);
 		final InputStream in2 = new FileInputStream(FILE_NAME);
 		final ImageStamp imgStamp = new ImageStamp();
-		imgStamp.setImagen(IOUtils.toByteArray(TestPdfCaib.class.getResourceAsStream("/goib-marca-agua.png")));
+		imgStamp.setImagen(IOUtils.toByteArray(TestPdfCaib.class.getResourceAsStream("/marca_aigua.png")));
 		imgStamp.setOverContent(false);
 		imgStamp.setScalePerCent(true);
-		imgStamp.setXScale((float) 50);
-		imgStamp.setYScale((float) 50);
-		imgStamp.setX(90);
-		imgStamp.setY(70);
+		imgStamp.setXScale((float) 35);
+		imgStamp.setYScale((float) 35);
+		imgStamp.setX(160);
+		imgStamp.setY(160);
 		final ObjectStamp[] objects = new ObjectStamp[1];
 		objects[0] = imgStamp;
 		UtilPDF.stamp(out2, in2, objects);

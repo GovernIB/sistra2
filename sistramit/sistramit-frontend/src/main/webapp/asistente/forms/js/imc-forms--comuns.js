@@ -1458,3 +1458,34 @@ $.fn.appTitle = function(options) {
 
 	return this;
 }
+
+
+
+// appFormsDataFormat
+
+var appFormsDataFormat = function(data_val) {
+
+	var format = (data_val.indexOf("/") === -1) ? "in" : "es"
+		,acceptaInputDate = (Modernizr.inputtypes.date) ? true : false;
+
+	// revisem casos extraordinaris
+
+	if (format === "es" && acceptaInputDate) {
+
+		var data_in = data_val.split("/");
+
+		data_val = data_in[2] + "-" + data_in[1] + "-" + data_in[0];
+
+	} else if (format === "in" && !acceptaInputDate) {
+
+		var data_es = data_val.split("-");
+
+		data_val = data_es[2] + "/" + data_es[1] + "/" + data_es[0];
+
+	}
+
+	// retornem
+
+	return data_val;
+
+}

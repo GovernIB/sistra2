@@ -14,7 +14,7 @@ import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistramit.core.api.exception.ErrorFormularioSoporteException;
-import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.service.component.literales.Literales;
 import es.caib.sistramit.core.service.model.flujo.DatosFormularioSoporte;
 import es.caib.sistramit.core.service.model.flujo.DatosSesionTramitacion;
@@ -34,15 +34,24 @@ public final class UtilsFormularioSoporte {
 	 * Obtiene asunto email.
 	 *
 	 * @param literales
-	 *                      literales
+	 *                             literales
+	 * @param datosFormSoporte
+	 *                             datos soporte
+	 * @param entidad
+	 *                             entidad
 	 * @param sesion
-	 *                      datos sesion tramite
+	 *                             datos sesion tramite
 	 * @return asunto
 	 */
 	public static String obtenerAsuntoFormularioSoporte(final Literales literales,
+			final DatosFormularioSoporte datosFormSoporte, final RConfiguracionEntidad entidad,
 			final DatosSesionTramitacion sesion) {
-		final String asunto = literales.getLiteral(Literales.SOPORTE_INCIDENCIAS, "asunto",
-				sesion.getDatosTramite().getIdioma());
+		final ROpcionFormularioSoporte opc = obtenerOpcionFormularioSoporte(datosFormSoporte.getProblemaTipo(),
+				entidad);
+		final String idioma = sesion.getDatosTramite().getIdioma();
+		final String asunto = literales.getLiteral(Literales.SOPORTE_INCIDENCIAS, "asunto", idioma) + " - "
+				+ UtilsSTG.obtenerLiteral(opc.getDescripcion(), idioma) + " - "
+				+ sesion.getDatosTramite().getIdSesionTramitacion();
 		return asunto;
 	}
 
@@ -144,12 +153,24 @@ public final class UtilsFormularioSoporte {
 				datosSesion.getDatosTramite().getTituloTramite());
 		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "tramiteId"),
 				datosSesion.getDatosTramite().getIdTramite());
+		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "procedimientoId"),
+				datosSesion.getDatosTramite().getDefinicionTramiteCP().getProcedimiento().getIdProcedimientoSIA());
+
 		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "fechaCreacion"),
 				formateaFecha(datosSesion.getDatosTramite().getFechaInicio()));
-		if (datosSesion.getDatosTramite().getNivelAutenticacion() == TypeAutenticacion.ANONIMO) {
-			listaCampos += addParameterMensaje(getLiteral(literales, idioma, "idPersistencia"),
-					datosSesion.getDatosTramite().getIdSesionTramitacion());
-		}
+		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "idPersistencia"),
+				datosSesion.getDatosTramite().getIdSesionTramitacion());
+		final String qaa = datosSesion.getDatosTramite()
+				.getMetodoAutenticacionInicio() != TypeMetodoAutenticacion.ANONIMO
+						? " - QAA: " + (getLiteral(literales, idioma,
+								"autenticacion.qaa."
+										+ datosSesion.getDatosTramite().getUsuarioAutenticado().getQaa().toString()))
+						: "";
+		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "autenticacion"),
+				getLiteral(literales, idioma,
+						"autenticacion." + datosSesion.getDatosTramite().getMetodoAutenticacionInicio().toString())
+						+ qaa);
+
 		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "nif"), datosFormSoporte.getNif());
 		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "nombre"), datosFormSoporte.getNombre());
 		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "telefono"), datosFormSoporte.getTelefono());

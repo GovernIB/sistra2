@@ -1,0 +1,55 @@
+<html>
+<head>
+<meta charset=UTF-8>
+<meta http-equiv="content-type" content="text/html; utf-8">
+<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+	<h1 class="stgH1">TAULA SCRIPTS REPRESENTACI&Oacute;</h1>
+	<p>En aquesta taula s'expliquen les diferents casu&iacute;stiques
+		de representaci&oacute;.</p>
+	<h2 class="stgH2">TAULA</h2>
+	<table>
+		<tr>
+			<th><b>Login</b></th>
+			<th><b>¿Qui s'autentica a S2?</b></th>
+			<th><b>Script presentador</b></th>
+			<th><b>Script representaci&oacute;</b></th>
+			<th><b>Asiento</b></th>
+		</tr>
+		<tr>
+			<td>Certificat PF (Persona A)</td>
+			<td>Persona A</td>
+			<td>Persona A per defecte</td>
+			<td>A l'script indicam: <br> Representado = "Empresa 1" <br>
+				<i>(Representant per defecte es persona A)</i></td>
+			<td>Es transllada a asiento: <br>- Interessat: Empresa 1 <br>-
+				Representant: Persona A
+			</td>
+		</tr>
+		<tr>
+			<td>Certificat representac&oacute; PJ ("Persona A" representa a
+				"Empresa 1")</td>
+			<td>Empresa 1</td>
+			<td>Empresa 1 per defecte</td>
+			<td>El representant i el representat per defecte seran els que
+				apareixin a la informaci&oacute; del certificat. En cas de voler
+				indicar-ne uns altres, s'ha d'indicar a l'script.</td>
+			<td>Es transllada a asiento: <br> - Interessat: Empresa A <br>
+				- Representant: Persona A
+			</td>
+		</tr>
+		<tr>
+			<td>Certificat representaci&oacute; PJ ("Persona A" representa a
+				"Empresa 1")</td>
+			<td>Emrpesa 1</td>
+			<td>Empresa 1 per defecte</td>
+			<td>A l'script indicam: <br> Representat = "Empresa 2" <br>
+				Representant per defecte es Empresa 1
+			</td>
+			<td>Es transllada a asiento: <br> - Interessat: Empresa 2 <br>
+				- Representant: Empresa 1
+			</td>
+		</tr>
+	</table>
+</html>

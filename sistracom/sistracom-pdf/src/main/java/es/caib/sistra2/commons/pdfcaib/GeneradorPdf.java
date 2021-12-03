@@ -230,12 +230,23 @@ public class GeneradorPdf {
 		final Color myColor = new Color(195, 0, 69);
 		final PdfPTable head;
 		if (cabecera.getLogo() != null || cabecera.getLogoByte() != null) {
-			head = new PdfPTable(2);
-			try {
-				head.setWidths(new int[] { 6, 20 });
-			} catch (final DocumentException e) {
-				e.printStackTrace();
+			if (cabecera.getTitulo().length() <= 120) {
+
+				head = new PdfPTable(3);
+				try {
+					head.setWidths(new int[] { 6, 15, 5 });
+				} catch (final DocumentException e) {
+					e.printStackTrace();
+				}
+			} else {
+				head = new PdfPTable(2);
+				try {
+					head.setWidths(new int[] { 5, 20 });
+				} catch (final DocumentException e) {
+					e.printStackTrace();
+				}
 			}
+
 		} else {
 			head = new PdfPTable(1);
 		}
@@ -325,13 +336,26 @@ public class GeneradorPdf {
 				fuenteCabeceraCodigoSia.setColor(myColor);
 
 				final Paragraph p = new Paragraph();
-				p.add(new Chunk("CODI SIA  ", fuenteCabeceraCodigoSia));
+				if (cabecera.getTitulo().length() <= 120) {
+					p.add(new Chunk("\n\n\n\n\nCODI SIA  ", fuenteCabeceraCodigoSia));
+				} else {
+					p.add(new Chunk("CODI SIA  ", fuenteCabeceraCodigoSia));
+				}
 				p.add(new Chunk(cabecera.getCodigoSia(), fuenteCabeceraCodigoSiaTexto));
 				p.setAlignment(Element.ALIGN_RIGHT);
-				p.setSpacingBefore(3);
-				text.addElement(p);
+				if (cabecera.getTitulo().length() <= 120) {
+					head.addCell(text);
+					final PdfPCell codiCell = new PdfPCell();
+					codiCell.addElement(p);
+					codiCell.setBorder(Rectangle.NO_BORDER);
+					head.addCell(codiCell);
+				} else {
+					p.setSpacingBefore(3);
+					text.addElement(p);
+					head.addCell(text);
+				}
 			}
-			head.addCell(text);
+
 			final PdfPCell cell = new PdfPCell(head);
 			cell.setBorder(Rectangle.NO_BORDER);
 			cell.setColspan(COLUMNAS_TABLA);

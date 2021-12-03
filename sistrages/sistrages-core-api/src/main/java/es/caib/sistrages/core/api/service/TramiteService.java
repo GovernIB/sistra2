@@ -704,4 +704,20 @@ public interface TramiteService {
 	public List<Tramite> listTramite(int first, int pageSize, String sortField, boolean asc, Long idEntidad,
 			List<Long> areas, String filtro);
 
+	/**
+	 * Si algún identificador no está agregado, mira de añadirlo.
+	 * @param idTramiteVersion
+	 * @param dominios
+	 */
+	public void actualizarDominios(TramiteVersion idTramiteVersion,  final List<Dominio> dominios);
+
+	/**
+	 * Devuelve la lista de datos que utilizan un dominio
+	 * @param idDominio
+	 * @param idTramiteVersion
+	 * @param idioma
+	 * @return
+	 */
+	public List<ErrorValidacion> checkDominioNoUtilizado(Long idDominio, Long idTramiteVersion,  final String idioma);
+
 }

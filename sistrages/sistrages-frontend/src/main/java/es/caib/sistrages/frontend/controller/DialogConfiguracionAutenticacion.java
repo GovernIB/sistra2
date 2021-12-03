@@ -8,7 +8,6 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
-import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
 import es.caib.sistrages.core.api.util.UtilJSON;
@@ -41,7 +40,13 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 	/** Parametro modo importar **/
 	private String modoImportar;
 
+	/** Desactivar botonera. */
+	private String desactivarBotonera;
+
 	private boolean modoImportarActivo = false;
+
+	private boolean desactivarBotoneraActivo = false;
+
 	/**
 	 * Inicialización.
 	 */
@@ -67,7 +72,18 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 		} else {
 			modoImportarActivo = false;
 		}
+
+		//Si no tiene codigo, desactivar botones de dominios / gestores
+		if (data == null || data.getCodigo() == null) {
+			desactivarBotoneraActivo = true;
+		}
+
+		//Si se pasa una propiedad, se fuerza a que no se vean los botones de dominios / gestores
+		if (desactivarBotonera != null && "true".equals(desactivarBotonera)) {
+			desactivarBotoneraActivo = true;
+		}
 	}
+
 
 	/**
 	 * Aceptar.
@@ -242,6 +258,34 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 	 */
 	public void setModoImportar(String modoImportar) {
 		this.modoImportar = modoImportar;
+	}
+
+	/**
+	 * @return the desactivarBotonera
+	 */
+	public String getDesactivarBotonera() {
+		return desactivarBotonera;
+	}
+
+	/**
+	 * @param desactivarBotonera the desactivarBotonera to set
+	 */
+	public void setDesactivarBotonera(String desactivarBotonera) {
+		this.desactivarBotonera = desactivarBotonera;
+	}
+
+	/**
+	 * @return the desactivarBotoneraActivo
+	 */
+	public boolean isDesactivarBotoneraActivo() {
+		return desactivarBotoneraActivo;
+	}
+
+	/**
+	 * @param desactivarBotoneraActivo the desactivarBotoneraActivo to set
+	 */
+	public void setDesactivarBotoneraActivo(boolean desactivarBotoneraActivo) {
+		this.desactivarBotoneraActivo = desactivarBotoneraActivo;
 	}
 
 	/** Ayuda. */

@@ -74,6 +74,7 @@ public class DialogFormularioExterno extends DialogControllerBase {
 
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new GestorExternoFormularios();
+
 		} else {
 			data = formularioService.getFormularioExterno(new Long(id));
 		}
@@ -103,6 +104,10 @@ public class DialogFormularioExterno extends DialogControllerBase {
 	public void aceptar() {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
+		if (data.getConfiguracionAutenticacion().getIdentificador() == UtilJSF
+				.getLiteral("dialogDominio.sinAutenticacion")) {
+			data.setConfiguracionAutenticacion(null);
+		}
 		switch (acceso) {
 		case ALTA:
 			if (!verificarGuardar()) {
@@ -149,6 +154,7 @@ public class DialogFormularioExterno extends DialogControllerBase {
 				String.valueOf(this.data.getConfiguracionAutenticacion().getCodigo()));
 		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 195);
 	}
+
 	/**
 	 * Crea nueva propiedad.
 	 */

@@ -33,6 +33,7 @@ import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.LiteralScript;
+import es.caib.sistrages.core.api.model.ModelApi;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
@@ -52,10 +53,10 @@ import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypeListaValores;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
-import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.core.api.util.UtilScripts;
 import es.caib.sistrages.core.service.component.literales.Literales;
+import es.caib.sistrages.core.service.repository.dao.DominioDao;
 import es.caib.sistrages.core.service.repository.dao.EntidadDao;
 import es.caib.sistrages.core.service.repository.dao.FormateadorFormularioDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
@@ -85,7 +86,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	FormateadorFormularioDao formateadorFormularioDao;
 
 	@Autowired
-	DominioService dominioService;
+	DominioDao dominioDao;
 
 	@Autowired
 	Literales literales;
@@ -363,6 +364,16 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 
 				comprobarScript(paginaFormulario.getScriptValidacion(),
 						"tramitePasoRellenar.disenyoFormulario.scriptValidacion",
+						new String[] {
+								literales.getLiteral("validador", "tramitePasoRellenar.disenyoFormulario.pagina",
+										pIdioma) + " " + Integer.toString(paginaFormulario.getOrden()),
+								formulario.getIdentificador() },
+						"literal.script.mensaje.formulario.pagina", "compilar.script.formulario.pagina",
+						"dominio.script.formulario.pagina", "script.comentario", pTramiteVersion.getListaAuxDominios(),
+						pIdiomasTramiteVersion, pIdioma, pListaDominiosNoUsados, listaErrores, UtilJSON.toJSON(params));
+
+				comprobarScript(paginaFormulario.getScriptNavegacion(),
+						"tramitePasoRellenar.disenyoFormulario.scriptNavegacion",
 						new String[] {
 								literales.getLiteral("validador", "tramitePasoRellenar.disenyoFormulario.pagina",
 										pIdioma) + " " + Integer.toString(paginaFormulario.getOrden()),
@@ -787,6 +798,14 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 		params.put("TIPO_SCRIPT_FLUJO", UtilJSON.toJSON(TypeScriptFlujo.SCRIPT_PERMITIR_REGISTRO));
 
 		comprobarScript(pasoRegistrar.getScriptValidarRegistrar(), "tramitePasoRegistrar.scriptValidarRegistrar",
+				new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },
+				"literal.script.mensaje.paso", "compilar.script.paso", "dominio.script.paso", "script.comentario",
+				pTramiteVersion.getListaAuxDominios(), pIdiomasTramiteVersion, pIdioma, pListaDominiosNoUsados,
+				listaErrores, UtilJSON.toJSON(params));
+
+		params.put("TIPO_SCRIPT_FLUJO", UtilJSON.toJSON(TypeScriptFlujo.SCRIPT_AVISO));
+
+		comprobarScript(pasoRegistrar.getScriptAlFinalizar(), "tramitePasoRegistrar.scriptAlFinalizar",
 				new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },
 				"literal.script.mensaje.paso", "compilar.script.paso", "dominio.script.paso", "script.comentario",
 				pTramiteVersion.getListaAuxDominios(), pIdiomasTramiteVersion, pIdioma, pListaDominiosNoUsados,
@@ -1358,7 +1377,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 		String resultado = null;
 
 		if (pCodDominio != null) {
-			final Dominio dominio = dominioService.loadDominio(pCodDominio);
+			final Dominio dominio = dominioDao.getByCodigo(pCodDominio);
 			resultado = dominio.getIdentificador();
 		}
 
@@ -1388,6 +1407,365 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public List<ErrorValidacion> checkDominioNoUtilizado(Long idDominio, Long idTramiteVersion, final String pIdioma) {
+		List<ErrorValidacion> listaErrores = new ArrayList<>();
+		Dominio dominio = dominioDao.getByCodigo(idDominio);
+		String identificador = dominio.getIdentificador();
+		TramiteVersion tramiteVersion = tramiteDao.getTramiteVersion(idTramiteVersion);
+		// recupera pasos si no los tiene cargados
+		if (tramiteVersion.getListaPasos() == null || tramiteVersion.getListaPasos().isEmpty()) {
+			tramiteVersion.setListaPasos(tramitePasoDao.getTramitePasos(tramiteVersion.getCodigo()));
+		}
+
+		if (UtilScripts.isDominioUtilizado(tramiteVersion.getScriptPersonalizacion(), identificador)) {
+			final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) dominio, "propiedades.scriptPersonalizacion", new String[] { literales.getLiteral("validador", "propiedades", pIdioma) },  pIdioma, false, "");
+			listaErrores.add(error);
+		}
+
+
+		if (UtilScripts.isDominioUtilizado(tramiteVersion.getScriptInicializacionTramite(), identificador)) {
+			final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) dominio, "propiedades.scriptInicializacionTramite", new String[] { literales.getLiteral("validador", "propiedades", pIdioma) },  pIdioma, false, "");
+			listaErrores.add(error);
+		}
+
+		if (!tramiteVersion.getListaPasos().isEmpty()) {
+			for (final TramitePaso paso : tramiteVersion.getListaPasos()) {
+				// literales debe saber
+				if (paso instanceof TramitePasoDebeSaber) {
+					//No tiene script el paso debe saber
+				} else if (paso instanceof TramitePasoRellenar) {
+					checkDominioNoUtilizadoPasoRellenar(tramiteVersion, identificador, listaErrores, pIdioma, (TramitePasoRellenar) paso, dominio.getCodigo());
+				} else if (paso instanceof TramitePasoAnexar) {
+					checkDominioNoUtilizadoAnexar( identificador, listaErrores, pIdioma, (TramitePasoAnexar) paso);
+				} else if (paso instanceof TramitePasoTasa) {
+					checkDominioNoUtilizadoTasa( identificador, listaErrores, pIdioma, (TramitePasoTasa) paso);
+				} else if (paso instanceof TramitePasoRegistrar) {
+					checkDominioNoUtilizadoRegistrar( identificador, listaErrores, pIdioma, (TramitePasoRegistrar) paso);
+				}
+			}
+		}
+
+		return listaErrores;
+	}
+
+	/**
+	 * Checkea si un dominio es utilizado en el paso rellenar.
+	 * @param pTramiteVersion
+	 * @param identificador
+	 * @param listaErrores
+	 * @param pIdioma
+	 * @param pasoRellenar
+	 * @param idDominio
+	 */
+	private void checkDominioNoUtilizadoPasoRellenar(final TramiteVersion pTramiteVersion,
+			String identificador, List<ErrorValidacion> listaErrores , final String pIdioma, final TramitePasoRellenar pasoRellenar, final Long idDominio) {
+
+		if (pasoRellenar.getFormulariosTramite() != null) {
+
+			for (final FormularioTramite formulario : pasoRellenar.getFormulariosTramite()) {
+				if (UtilScripts.isDominioUtilizado(formulario.getScriptObligatoriedad(), identificador)) {
+					final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) formulario, "tramitePasoRellenar.scriptObligatoriedad", new String[] { formulario.getIdentificador() },  pIdioma, false, "");
+					listaErrores.add(error);
+				}
+
+				if (UtilScripts.isDominioUtilizado(formulario.getScriptFirma(), identificador)) {
+					final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) formulario, "tramitePasoRellenar.scriptFirma", new String[] { formulario.getIdentificador() },  pIdioma, false, "");
+					listaErrores.add(error);
+				}
+
+				if (UtilScripts.isDominioUtilizado(formulario.getScriptDatosIniciales(), identificador)) {
+					final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) formulario, "tramitePasoRellenar.scriptDatosIniciales", new String[] { formulario.getIdentificador() },  pIdioma, false, "");
+					listaErrores.add(error);
+				}
+
+				if (UtilScripts.isDominioUtilizado(formulario.getScriptParametros(), identificador)) {
+					final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) formulario, "tramitePasoRellenar.scriptParametros", new String[] { formulario.getIdentificador() },  pIdioma, false, "");
+					listaErrores.add(error);
+				}
+
+				if (UtilScripts.isDominioUtilizado(formulario.getScriptRetorno(), identificador)) {
+					final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) formulario, "tramitePasoRellenar.scriptRetorno", new String[] { formulario.getIdentificador() },  pIdioma, false, "");
+					listaErrores.add(error);
+				}
+
+				// DISEÑO DEL FORMULARIO
+				// propiedades del formulario
+				if (formulario.getIdFormularioInterno() != null) {
+					final DisenyoFormulario disenyoFormulario = formularioInternoDao
+							.getFormularioCompletoById(formulario.getIdFormularioInterno());
+					if (disenyoFormulario != null) {
+						formulario.setDisenyoFormulario(disenyoFormulario);
+						checkDominioNoUtilizadoDisenyoFormulario(pTramiteVersion, identificador, listaErrores, pIdioma, formulario, idDominio);
+					}
+				}
+			}
+		}
+	}
+
+
+	/**
+	 * Checkea si un dominio es utilizado en un diseño de formulario.
+	 *
+	 * @param pTramiteVersion        tramiteversion
+	 * @param pIdiomasTramiteVersion idiomas definidos en la version
+	 * @param pIdioma                idioma para mostrar los errores
+	 * @return lista de errores de validacion
+	 * @param formulario formulario
+	 */
+	private void checkDominioNoUtilizadoDisenyoFormulario(final TramiteVersion pTramiteVersion, final String identificador,
+			 List<ErrorValidacion> listaErrores ,  final String pIdioma,  final FormularioTramite formulario, final Long idDominio) {
+
+
+		if (formulario.getDisenyoFormulario().getPaginas() != null) {
+
+
+			for (final PaginaFormulario paginaFormulario : formulario.getDisenyoFormulario().getPaginas()) {
+
+				if (UtilScripts.isDominioUtilizado(paginaFormulario.getScriptValidacion(), identificador)) {
+					final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) formulario, "tramitePasoRellenar.disenyoFormulario.scriptValidacion", new String[] { paginaFormulario.getIdentificador() },  pIdioma, false, "");
+					listaErrores.add(error);
+				}
+
+				if (UtilScripts.isDominioUtilizado(paginaFormulario.getScriptNavegacion(), identificador)) {
+					final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) formulario, "tramitePasoRellenar.disenyoFormulario.scriptNavegacion", new String[] { paginaFormulario.getIdentificador() },  pIdioma, false, "");
+					listaErrores.add(error);
+				}
+			}
+		}
+
+		if (UtilScripts.isDominioUtilizado(formulario.getDisenyoFormulario().getScriptPlantilla(), identificador)) {
+			final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) formulario, "tramitePasoRellenar.disenyoFormulario.scriptPlantilla", new String[] { formulario.getIdentificador() },  pIdioma, false, "");
+			listaErrores.add(error);
+		}
+
+		if (formulario.getDisenyoFormulario().getPaginas() != null) {
+			for (final PaginaFormulario paginaFormulario : formulario.getDisenyoFormulario().getPaginas()) {
+				if (paginaFormulario.getLineas() != null) {
+					for (final LineaComponentesFormulario linea : paginaFormulario.getLineas()) {
+						if (linea.getComponentes() != null) {
+							for (final ComponenteFormulario componente : linea.getComponentes()) {
+
+								if (componente instanceof ComponenteFormularioCampo) {
+									final ComponenteFormularioCampo campo = (ComponenteFormularioCampo) componente;
+
+									if (UtilScripts.isDominioUtilizado(campo.getScriptAutorrellenable(), identificador)) {
+										final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) formulario, "tramitePasoRellenar.disenyoFormulario.scriptAutorellenable", new String[] { campo.getIdComponente(),
+												literales.getLiteral("validador",
+														"tramitePasoRellenar.disenyoFormulario.pagina", pIdioma)
+														+ " " + Integer.toString(paginaFormulario.getOrden()),
+												formulario.getIdentificador() },  pIdioma, false, "");
+										listaErrores.add(error);
+									}
+
+									if (UtilScripts.isDominioUtilizado(campo.getScriptSoloLectura(), identificador)) {
+										final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) formulario, "tramitePasoRellenar.disenyoFormulario.scriptSoloLectura", new String[] { campo.getIdComponente(),
+												literales.getLiteral("validador",
+														"tramitePasoRellenar.disenyoFormulario.pagina", pIdioma)
+														+ " " + Integer.toString(paginaFormulario.getOrden()),
+												formulario.getIdentificador() },  pIdioma, false, "");
+										listaErrores.add(error);
+									}
+
+									if (UtilScripts.isDominioUtilizado(campo.getScriptValidacion(), identificador)) {
+										final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) formulario, "tramitePasoRellenar.disenyoFormulario.scriptValidacion", new String[] { campo.getIdComponente(),
+												literales.getLiteral("validador",
+														"tramitePasoRellenar.disenyoFormulario.pagina", pIdioma)
+														+ " " + Integer.toString(paginaFormulario.getOrden()),
+												formulario.getIdentificador() },  pIdioma, false, "");
+										listaErrores.add(error);
+									}
+
+									if (componente instanceof ComponenteFormularioCampoSelector) {
+										final ComponenteFormularioCampoSelector selector = (ComponenteFormularioCampoSelector) componente;
+										if (TypeListaValores.SCRIPT.equals(selector.getTipoListaValores())) {
+
+											if (UtilScripts.isDominioUtilizado(selector.getScriptValoresPosibles(), identificador)) {
+												final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) formulario, "tramitePasoRellenar.disenyoFormulario.scriptValoresPosibles", new String[] { campo.getIdComponente(),
+													literales.getLiteral("validador",
+															"tramitePasoRellenar.disenyoFormulario.pagina", pIdioma)
+															+ " " + Integer.toString(paginaFormulario.getOrden()),
+													formulario.getIdentificador() },  pIdioma, false, "");
+												listaErrores.add(error);
+											}
+
+										} else if (TypeListaValores.DOMINIO.equals(selector.getTipoListaValores()) && selector.getCodDominio() != null && selector.getCodDominio().compareTo(idDominio) == 0) {
+												final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) formulario, "tramitePasoRellenar.disenyoFormulario.dominio", new String[] { campo.getIdComponente(),
+														literales.getLiteral("validador",
+																"tramitePasoRellenar.disenyoFormulario.pagina", pIdioma)
+																+ " " + Integer.toString(paginaFormulario.getOrden()),
+														formulario.getIdentificador() },  pIdioma, false, "");
+													listaErrores.add(error);
+										}
+
+									}
+
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Checkea si un dominio es utilizado en el paso anexar..
+	 *
+	 * @param pTramiteVersion        tramiteversion
+	 * @param pIdiomasTramiteVersion idiomas definidos en la version
+	 * @param pIdioma                idioma para mostrar los errores
+	 * @return lista de errores de validacion
+	 * @param pasoAnexar paso anexar
+	 */
+	private void checkDominioNoUtilizadoAnexar(String identificador, List<ErrorValidacion> listaErrores , final String pIdioma, final TramitePasoAnexar pasoAnexar) {
+
+		if (UtilScripts.isDominioUtilizado(pasoAnexar.getScriptAnexosDinamicos(), identificador)) {
+			final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) pasoAnexar, "tramitePasoAnexar.listaDinamicaAnexos", new String[] { literales.getLiteral("validador", "tramitePasoAnexar", pIdioma) },  pIdioma, false, "");
+			listaErrores.add(error);
+		}
+
+		if (pasoAnexar.getDocumentos() != null && !pasoAnexar.getDocumentos().isEmpty()) {
+			for (final Documento documento : pasoAnexar.getDocumentos()) {
+
+				if (UtilScripts.isDominioUtilizado(documento.getScriptObligatoriedad(), identificador)) {
+					final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) pasoAnexar, "tramitePasoAnexar.scriptObligatoriedad", new String[] { documento.getIdentificador() },  pIdioma, false, "");
+					listaErrores.add(error);
+				}
+
+				if (UtilScripts.isDominioUtilizado(documento.getScriptFirmarDigitalmente(), identificador)) {
+					final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) pasoAnexar, "tramitePasoAnexar.scriptFirmarDigitalmente", new String[] { documento.getIdentificador() },  pIdioma, false, "");
+					listaErrores.add(error);
+				}
+
+				if (UtilScripts.isDominioUtilizado(documento.getScriptValidacion(), identificador)) {
+					final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) pasoAnexar, "tramitePasoAnexar.scripValidacion", new String[] { documento.getIdentificador() },  pIdioma, false, "");
+					listaErrores.add(error);
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Checkea si un dominio es utilizado en el paso tasa
+	 *  @param listaErrores
+	 * @param pIdioma
+	 * @param pasoTasa
+	 */
+	private void checkDominioNoUtilizadoTasa( String identificador, List<ErrorValidacion> listaErrores , final String pIdioma, final TramitePasoTasa pasoTasa) {
+
+		if (UtilScripts.isDominioUtilizado(pasoTasa.getScriptNavegacion(), identificador)) {
+			final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) pasoTasa, "tramitePasoTasa.scripValidacion", new String[] { pasoTasa.getIdPasoTramitacion() },  pIdioma, false, "");
+			listaErrores.add(error);
+		}
+
+		if (UtilScripts.isDominioUtilizado(pasoTasa.getScriptVariables(), identificador)) {
+			final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) pasoTasa, "tramitePasoTasa.scriptVariables", new String[] { pasoTasa.getIdPasoTramitacion() },  pIdioma, false, "");
+			listaErrores.add(error);
+		}
+
+
+		if (pasoTasa.getTasas() != null) {
+			for (final Tasa tasa : pasoTasa.getTasas()) {
+
+				if (UtilScripts.isDominioUtilizado(tasa.getScriptObligatoriedad(), identificador)) {
+					final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) pasoTasa, "tramitePasoTasa.scriptObligatoriedad", new String[] { tasa.getIdentificador() },  pIdioma, false, "");
+					listaErrores.add(error);
+				}
+
+				if (UtilScripts.isDominioUtilizado(tasa.getScriptPago(), identificador)) {
+					final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) pasoTasa, "tramitePasoTasa.scriptPago", new String[] { tasa.getIdentificador() },  pIdioma, false, "");
+					listaErrores.add(error);
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Checkea si un dominio es utilizado en el paso registrar.
+	 * @param identificador
+	 * @param listaErrores
+	 * @param pIdioma
+	 * @param pasoRegistrar
+	 */
+	private void checkDominioNoUtilizadoRegistrar(String identificador, List<ErrorValidacion> listaErrores , final String pIdioma, final TramitePasoRegistrar pasoRegistrar) {
+
+
+		if (UtilScripts.isDominioUtilizado(pasoRegistrar.getScriptAlFinalizar(), identificador)) {
+			final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) pasoRegistrar, "tramitePasoRegistrar.scriptAlFinalizar", new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },  pIdioma, false, "");
+			listaErrores.add(error);
+		}
+
+		if (UtilScripts.isDominioUtilizado(pasoRegistrar.getScriptDestinoRegistro(), identificador)) {
+			final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) pasoRegistrar, "tramitePasoRegistrar.scriptDestinoRegistro", new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },  pIdioma, false, "");
+			listaErrores.add(error);
+		}
+
+		if (UtilScripts.isDominioUtilizado(pasoRegistrar.getScriptNavegacion(), identificador)) {
+			final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) pasoRegistrar, "tramitePasoRegistrar.scriptNavegacion", new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },  pIdioma, false, "");
+			listaErrores.add(error);
+		}
+
+
+		if (UtilScripts.isDominioUtilizado(pasoRegistrar.getScriptPresentador(), identificador)) {
+			final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) pasoRegistrar, "tramitePasoRegistrar.scriptPresentador", new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },  pIdioma, false, "");
+			listaErrores.add(error);
+		}
+
+		if (UtilScripts.isDominioUtilizado(pasoRegistrar.getScriptRepresentante(), identificador)) {
+			final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) pasoRegistrar, "tramitePasoRegistrar.scriptRepresentante", new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },  pIdioma, false, "");
+			listaErrores.add(error);
+		}
+
+		if (UtilScripts.isDominioUtilizado(pasoRegistrar.getScriptValidarRegistrar(), identificador)) {
+			final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) pasoRegistrar, "tramitePasoRegistrar.scriptValidarRegistrar", new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },  pIdioma, false, "");
+			listaErrores.add(error);
+		}
+
+		if (UtilScripts.isDominioUtilizado(pasoRegistrar.getScriptVariables(), identificador)) {
+			final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) pasoRegistrar, "tramitePasoRegistrar.scriptVariables", new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },  pIdioma, false, "");
+			listaErrores.add(error);
+		}
+
+	}
+
+	/**
+	 * Devuelve el error validacion con lo básico.
+	 * @param item
+	 * @param pLiteral
+	 * @param pOpciones
+	 * @param pIdioma
+	 * @param pMostrarElemento
+	 * @param pElemento
+	 * @return
+	 */
+	public ErrorValidacion getInstanceErrorValidacion(ModelApi item , final String pLiteral, final String[] pOpciones, final String pIdioma, final boolean pMostrarElemento, final String pElemento) {
+		ErrorValidacion error = new ErrorValidacion();
+		final String literal = literales.getLiteral("validador", pLiteral, pIdioma);
+		final StringBuilder elemento = new StringBuilder();
+
+		if (pOpciones != null) {
+			elemento.append(pOpciones[pOpciones.length - 1] + " > ");
+
+			for (int i = pOpciones.length - 2; i >= 0; i--) {
+				elemento.append(pOpciones[i] + " > ");
+			}
+		}
+
+		if (pMostrarElemento) {
+			elemento.append(literal + " > " + pElemento);
+		} else {
+			elemento.append(literal);
+		}
+		error.setItem(item);
+		error.setElemento(elemento.toString());
+		error.setTipo(TypeErrorValidacion.DOMINIOS_ELIMINAR);
+		return error;
 	}
 
 	/**************************************/

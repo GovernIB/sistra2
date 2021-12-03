@@ -224,7 +224,7 @@
 				</p:toolbar>
 
 				<p:dataTable id="dataTableTramites" var="td" value="#{viewTramites.dataModel}"
-												 rows="10" emptyMessage="#{msg['error.emptyRows']}" rowExpandMode="single"
+												 rows="#{viewTramites.paginacion}" emptyMessage="#{msg['error.emptyRows']}" rowExpandMode="single"
 												 scrollable="true" scrollHeight="100%" rowIndexVar="rowIndex"
 						                         paginator="true" paginatorPosition="bottom"
 						                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -275,6 +275,10 @@
 										<!-- Columnas -->
 									    <p:column headerText="#{msg['viewTramitesVersion.headerVersion']}" >
 									        <h:outputText value="#{tdVersiones.numeroVersion}" />
+									    </p:column>
+
+									    <p:column headerText="#{msg['viewTramitesVersion.descripcion']}"  >
+									     	<h:outputText value="#{tdVersiones.descripcion}" />
 									    </p:column>
 
 									    <p:column headerText="#{msg['viewTramitesVersion.headerFlujo']}"  >

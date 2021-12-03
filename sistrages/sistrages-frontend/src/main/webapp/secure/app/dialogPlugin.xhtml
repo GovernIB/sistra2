@@ -28,7 +28,7 @@
 		<f:viewAction action="#{dialogPlugin.init}" />
 	</f:metadata>
 	<h:form id="dialogPlugin" styleClass="margin-top-10">
-  			<p:outputPanel>
+  			<p:outputPanel style="position:relative; height:497px;">
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
@@ -109,7 +109,7 @@
 				      }
 			    </h:outputScript>
 			</p:outputPanel>
-		  	 <p:outputPanel styleClass="botonera">
+		  	 <p:outputPanel style="position:absolute !important; margin-bottom:0px; padding-bottom:0px; margin-top:auto; width:98% !important;left:1% !important;">
 		     	<p:toolbar>
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogPlugin.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>

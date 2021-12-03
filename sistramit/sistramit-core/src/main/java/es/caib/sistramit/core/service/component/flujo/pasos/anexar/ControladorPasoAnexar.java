@@ -425,6 +425,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 					f.setNombre(pVariablesFlujo.getUsuario().getNombreApellidos());
 					anexo.getFirmantes().add(f);
 				}
+				anexo.setMaxInstancias(anexd.getMaxInstancias());
 
 				anexos.add(anexo);
 			}

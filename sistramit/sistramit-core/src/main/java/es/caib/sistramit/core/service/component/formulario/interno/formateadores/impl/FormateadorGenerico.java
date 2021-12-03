@@ -214,7 +214,7 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 							// Creamos texto aviso
 							final RComponenteAviso componenteAviso = (RComponenteAviso) componente;
 							final PersonalizacionTexto personalizacicionTexto = new PersonalizacionTexto(false, true,
-									TypeFuente.NOTOSANS, 6);
+									TypeFuente.NOTOSANS, 10);
 							// Texto aviso puede contener html, por lo q limpiamos
 							final String textoAviso = Jsoup.parse(componenteAviso.getEtiqueta()).text();
 							final Texto texto = new Texto(personalizacicionTexto, textoAviso, 6);

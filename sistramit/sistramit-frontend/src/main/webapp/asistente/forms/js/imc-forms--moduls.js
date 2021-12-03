@@ -480,6 +480,12 @@ $.fn.appFormsConfiguracio = function(options) {
 
 					}
 
+					// esborrem recursos (css) anteriors
+
+					imc_forms_finestra
+						.find("link")
+							.remove();
+
 				}
 
 				if (desDe === "inicia" || desDe === "avalua") {
@@ -1019,6 +1025,19 @@ $.fn.appFormsConfiguracio = function(options) {
 
 								if (elm_input_tipus === "texto" || elm_input_tipus === "oculto") {
 
+
+									// revisem si es data
+
+									if (elm_input_contingut === "fe") {
+
+										val_valor = appFormsDataFormat(val_valor);
+
+									}
+
+									/*
+
+									ANTIC
+
 									var esData = (elm_input_contingut === "fe") ? true : false
 										,data_format = (typeof APP_FORM_DATA_FORMAT !== "undefined" && APP_FORM_DATA_FORMAT === "es") ? "es" : "in";
 
@@ -1028,7 +1047,10 @@ $.fn.appFormsConfiguracio = function(options) {
 
 										val_valor = data_internacional[2] + "-" + data_internacional[1] + "-" + data_internacional[0];
 
-									}
+									}*/
+
+
+									// apliquem valor
 
 									elm_input
 										.val( val_valor );
@@ -1161,6 +1183,10 @@ $.fn.appFormsConfiguracio = function(options) {
 											elm
 												.find("a.imc-select:first")
 													.html( $("<span>").text(txtFormDinSelecciona + "...") );
+
+											elm
+												.find("ul li.imc-select-seleccionat")
+													.removeClass("imc-select-seleccionat");
 
 										}
 										,50
@@ -1866,7 +1892,13 @@ $.fn.appFormsAvalua = function(options) {
 
 								const callback = function(mutationsList, observer) {
 
-									for (const mutation of mutationsList) {
+									var mutationsList_size = mutationsList.length; // v.ie11
+
+									//for (const mutation of mutationsList) {
+
+									for (var i = 0; i < mutationsList_size; i++) {
+
+										mutation = mutationsList[i];
 
 										if (mutation.type === 'childList') {
 
@@ -1881,7 +1913,8 @@ $.fn.appFormsAvalua = function(options) {
 
 														avalua();
 
-													},330
+													}
+													,330
 												);
 
 											}
@@ -2750,7 +2783,7 @@ $.fn.appFormsAccions = function(options) {
 
 						$("#imc-forms-contenidor")
 							.find(".imc--contingut:first")
-								.html( FORMS_JSON.datos.html );
+								.html( $(FORMS_JSON.datos.html).html() );
 
 						// FORMS iniciem
 
@@ -2784,6 +2817,9 @@ $.fn.appFormsAccions = function(options) {
 
 						$("html, body")
 							.addClass("imc--sense-scroll");
+
+						$("#imc-forms-contenidor")
+							.appPopupTabula();
 
 					}, 300);
 
@@ -3017,9 +3053,9 @@ $.fn.appDataEspanyola = function(options) {
 	}, options);
 
 	var data = settings.data
-		,data_esp = "";
+		,data_esp = data;
 
-	if (data) {
+	if (data && data.indexOf("-") !== -1) {
 
 		var data_ = data.split("-");
 
@@ -3027,7 +3063,7 @@ $.fn.appDataEspanyola = function(options) {
 
 	}
 
-	return data_esp;	
+	return data_esp;
 
 }
 

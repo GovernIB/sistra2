@@ -43,7 +43,7 @@
 				<p:outputLabel for="areas" value="#{msg['dialogDominioClonar.headerArea']}" rendered="#{dialogDominioClonar.mostrarAreas}" />
 				<p:selectOneMenu id="areas" styleClass="w90" value="#{dialogDominioClonar.areaID}" rendered="#{dialogDominioClonar.mostrarAreas}" >
 						    <f:selectItems value="#{dialogDominioClonar.areas}" var="area"   itemLabel="#{area.identificador}" itemValue="#{area.codigo}" />
-							<p:ajax listener="#{dialogDominioClonar.onChangeArea}" update="@form" process="@this"/>
+							<p:ajax listener="#{dialogDominioClonar.onChangeArea}" process="@this"/>
 				</p:selectOneMenu>
 
 				<p:outputLabel for="fuentes" value="#{msg['dialogDominioClonar.headerFD']}" rendered="#{dialogDominioClonar.mostrarFDs}" />

@@ -174,4 +174,11 @@ public interface DominioDao {
 	 * @return
 	 */
 	List<Dominio> getDominiosByConfAut(Long idConfiguracion, Long idArea);
+
+	/**
+	 * Devuelve los dominios que tienen ese identificador.
+	 * @param identificadoresDominio
+	 * @return
+	 */
+	List<Dominio> getDominiosByIdentificador(List<String> identificadoresDominio, final Long idEntidad, final Long idArea);
 }
