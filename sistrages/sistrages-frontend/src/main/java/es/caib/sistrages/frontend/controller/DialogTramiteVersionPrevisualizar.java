@@ -172,11 +172,17 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 
 			mochilaDatos.put(Constantes.CLAVE_MOCHILA_ERRORESVALIDACION,
 					listaErrores.stream().map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
+			Map<String, String> params = null;
+			params = new HashMap<>();
+			params.put(TypeParametroVentana.TRAMITE.toString(),
+					String.valueOf(this.data.getIdTramite()));
+			params.put(TypeParametroVentana.TRAMITEVERSION.toString(),
+					String.valueOf(this.data.getCodigo()));
 
 			if (this.isEdicion()) {
-				UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.EDICION, null, true, 1050, 520);
+				UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.EDICION, params, true, 1050, 520);
 			} else {
-				UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, null, true, 1050, 520);
+				UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, params, true, 1050, 520);
 			}
 		} else {
 			if (!calcularUrl(true)) {
@@ -446,10 +452,17 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 			mochilaDatos.put(Constantes.CLAVE_MOCHILA_ERRORESVALIDACION,
 					listaErrores.stream().map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
 
+			Map<String, String> params = null;
+			params = new HashMap<>();
+			params.put(TypeParametroVentana.TRAMITE.toString(),
+					String.valueOf(this.data.getIdTramite()));
+			params.put(TypeParametroVentana.TRAMITEVERSION.toString(),
+					String.valueOf(this.data.getCodigo()));
+
 			if (this.isEdicion()) {
-				UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.EDICION, null, true, 1050, 520);
+				UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.EDICION, params, true, 1050, 520);
 			} else {
-				UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, null, true, 1050, 520);
+				UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, params, true, 1050, 520);
 			}
 		} else {
 			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.validacion"));

@@ -1185,7 +1185,7 @@ public class ViewTramites extends ViewControllerBase {
 		}
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(idTramiteSeleccionado));
 		params.put(TypeParametroVentana.AREA.toString(), String.valueOf(idArea));
-		UtilJSF.openDialog(DialogTramiteVersion.class, TypeModoAcceso.ALTA, params, true, 400, 150);
+		UtilJSF.openDialog(DialogTramiteVersion.class, TypeModoAcceso.ALTA, params, true, 400, 160);
 
 	}
 

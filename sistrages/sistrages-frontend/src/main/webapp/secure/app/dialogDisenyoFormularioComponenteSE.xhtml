@@ -54,14 +54,14 @@
 
 	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio() and not dialogDisenyoFormulario.isDominioLF()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.dominioCodigo']}" /></h:column>
 	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio() and not dialogDisenyoFormulario.isDominioLF()}">
-		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.campoDominioCodigo}" maxlength="100" disabled="#{dialogDisenyoFormulario.consulta}">
+		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.campoDominioCodigo}" onblur="this.value = this.value.toUpperCase();"  maxlength="100" disabled="#{dialogDisenyoFormulario.consulta}">
 			<p:ajax event="blur" process="@this" />
 		</p:inputText>
 	</h:column>
 
 	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio() and not dialogDisenyoFormulario.isDominioLF()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.dominioDescripcion']}" /></h:column>
 	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio() and not dialogDisenyoFormulario.isDominioLF()}">
-		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.campoDominioDescripcion}" maxlength="100" disabled="#{dialogDisenyoFormulario.consulta}">
+		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.campoDominioDescripcion}" onblur="this.value = this.value.toUpperCase();"  maxlength="100" disabled="#{dialogDisenyoFormulario.consulta}">
 			<p:ajax event="blur" process="@this" />
 		</p:inputText>
 	</h:column>

@@ -1,5 +1,7 @@
 package es.caib.sistra2.commons.plugins.dominio.rest;
 
+import java.util.Map;
+
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistra2.commons.plugins.dominio.rest.cxf.Columna;
 import es.caib.sistra2.commons.plugins.dominio.rest.cxf.Fila;
@@ -28,7 +30,18 @@ public class Utilidades {
 		ValoresDominio valoresDominio = null;
 		if (rvaloresDominio != null) {
 			valoresDominio = new ValoresDominio();
-			valoresDominio.setDatos(rvaloresDominio.getDatos());
+
+			if (rvaloresDominio.getDatos() != null) {
+				for (final Map<String, String> fila : rvaloresDominio.getDatos()) {
+					final int numfila = valoresDominio.addFila();
+					for (final Map.Entry<String, String> columna : fila.entrySet()) {
+						valoresDominio.setValor(numfila, columna.getKey(), columna.getValue());
+					}
+				}
+			}
+
+			// TODO FALTA QUE LOS VALORES DOMINIO GESTIONEN FICHEROS
+
 			valoresDominio.setCodigoRetorno(rvaloresDominio.getCodigoRetorno());
 			valoresDominio.setCodigoError(rvaloresDominio.getCodigoError());
 			valoresDominio.setError(rvaloresDominio.isError());

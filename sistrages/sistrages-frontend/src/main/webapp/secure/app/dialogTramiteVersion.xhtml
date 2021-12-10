@@ -39,13 +39,13 @@
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="version" value="#{msg['dialogTramiteVersion.version']}" />
-                	<p:inputNumber id="version" value="#{dialogTramiteVersion.dataVersion.numeroVersion}" decimalPlaces="0" disabled="#{!dialogTramiteVersion.alta}" required="true" size="30" maxValue="99" minValue="0" />
+                	<p:inputNumber id="version" value="#{dialogTramiteVersion.dataVersion.numeroVersion}" decimalPlaces="0" disabled="#{!dialogTramiteVersion.alta}" required="true" size="35" maxValue="99" minValue="0" />
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogTramiteVersion.descripcion']}" />
-                	<p:inputText id="descripcion" value="#{dialogTramiteVersion.dataVersion.descripcion}" decimalPlaces="0" disabled="#{!dialogTramiteVersion.alta}" required="true" size="30" maxValue="255" minValue="0" />
+                	<p:inputText id="descripcion" value="#{dialogTramiteVersion.dataVersion.descripcion}"   disabled="#{!dialogTramiteVersion.alta}" size="35" maxlength="255"  />
 
 					<p:outputLabel for="tipo" value="#{msg['dialogTramiteVersion.tipo']}" />
-				 	<p:selectOneMenu id="tipo" value="#{dialogTramiteVersion.dataVersion.tipoFlujo}" style="width:215px" required="true">
+				 	<p:selectOneMenu id="tipo" value="#{dialogTramiteVersion.dataVersion.tipoFlujo}" style="width:249px" required="true">
 					     <f:selectItems value="#{TypeFlujo.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFlujo.' += tipo]}" />
 					</p:selectOneMenu >
 

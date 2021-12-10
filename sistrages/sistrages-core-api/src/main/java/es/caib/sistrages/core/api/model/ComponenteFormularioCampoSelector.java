@@ -142,7 +142,7 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	 */
 	public void setCampoDominioCodigo(final String campoDominioCodigo) {
 		if (campoDominioCodigo != null) {
-			this.campoDominioCodigo = campoDominioCodigo.toUpperCase();
+			this.campoDominioCodigo = campoDominioCodigo;//.toUpperCase();
 		}
 	}
 
@@ -162,7 +162,7 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	 */
 	public void setCampoDominioDescripcion(final String campoDominioDescripcion) {
 		if (campoDominioDescripcion != null) {
-			this.campoDominioDescripcion = campoDominioDescripcion.toUpperCase();
+			this.campoDominioDescripcion = campoDominioDescripcion;//.toUpperCase();
 		}
 	}
 

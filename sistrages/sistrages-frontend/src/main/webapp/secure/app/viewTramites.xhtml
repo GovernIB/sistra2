@@ -150,7 +150,7 @@
 			        <f:facet name="right">
 			        	 <h:panelGroup rendered="#{viewTramites.seleccionadasAreas}">
 
-			        	 	<p:commandButton id="btnNuevoTramite" value="#{msg['botones.nuevoTramite']}" icon="fa fa-file" actionListener="#{viewTramites.nuevoTramite}" process="@this" update="growl"  rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea and viewTramites.versionSeleccionada eq null}">
+			        	 	<p:commandButton id="btnNuevoTramite" value="#{msg['botones.nuevoTramite']}" icon="fa fa-file" actionListener="#{viewTramites.nuevoTramite}" process="@this" update="growl"  rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea and viewTramites.versionSeleccionada eq null and !viewTramites.isNotDesarrollo()}">
 				     		     <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl @form"/>
 			   		        </p:commandButton>
 
@@ -248,7 +248,7 @@
 					    </p:column>
 
 					    <p:column headerText="#{msg['viewTramites.headerDescripcion']}">
-					        <h:outputText value="#{td.tramite.descripcion}" />
+					        <h:outputText   value="#{td.tramite.descripcion}"  />
 					    </p:column>
 
 		 				<p:column headerText="#{msg['viewTramites.headerActivo']}">
@@ -264,6 +264,7 @@
 								<!-- Data table -->
 								<p:dataTable  id="dataTableVersiones" var="tdVersiones" value="#{td.listaVersiones}"
 											  emptyMessage="#{msg['error.emptyRows']}"
+											  rowIndexVar="rowIndexVer"
 											  styleClass="w95 margin-left-25 margin-top-10 margin-bottom-10"
 								        	  selectionMode="single" selection="#{viewTramites.versionSeleccionada}" rowKey="#{tdVersiones.codigo}"
 											  >
@@ -273,12 +274,15 @@
 										<p:ajax event="rowDblselect" listener="#{viewTramites.editarVersionDblClick}"/>
 
 										<!-- Columnas -->
-									    <p:column headerText="#{msg['viewTramitesVersion.headerVersion']}" >
+									    <p:column headerText="#{msg['viewTramitesVersion.headerVersion']}"  >
 									        <h:outputText value="#{tdVersiones.numeroVersion}" />
 									    </p:column>
 
-									    <p:column headerText="#{msg['viewTramitesVersion.descripcion']}"  >
-									     	<h:outputText value="#{tdVersiones.descripcion}" />
+									    <p:column headerText="#{msg['viewTramitesVersion.descripcion']}" >
+									     	<h:outputText id="descripcionTxt" value="#{tdVersiones.descripcion == null ? '' : (tdVersiones.descripcion.length() >= 12 ?  ( tdVersiones.descripcion.substring(0,12).concat('...')  )   : tdVersion.descripcion)}" />
+									     	<p:tooltip
+             									   for="form:dataTableTramites:#{rowIndex}:dataTableVersiones:#{rowIndexVer}:descripcionTxt"
+               										 value="#{tdVersiones.descripcion}" position="#{rowIndex == 0 ? 'right' : 'top'}" delay="500" />
 									    </p:column>
 
 									    <p:column headerText="#{msg['viewTramitesVersion.headerFlujo']}"  >

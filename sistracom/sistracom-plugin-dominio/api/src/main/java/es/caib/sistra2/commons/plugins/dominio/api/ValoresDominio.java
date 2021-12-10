@@ -18,7 +18,7 @@ public final class ValoresDominio implements Serializable {
 	/**
 	 * Filas de valores.
 	 */
-	private List<Map<String, String>> datos = new ArrayList<>();
+	private final List<Map<String, String>> datos = new ArrayList<>();
 
 	/**
 	 * Ficheros.
@@ -69,7 +69,7 @@ public final class ValoresDominio implements Serializable {
 	 */
 	public void setValor(final int numfila, final String cod, final String val) {
 		final Map<String, String> fila = datos.get(numfila - 1);
-		fila.put(cod, val);
+		fila.put(cod.toUpperCase(), val == null ? null : val);
 	}
 
 	/**
@@ -85,7 +85,7 @@ public final class ValoresDominio implements Serializable {
 	public String getValor(final int numfila, final String cod) {
 		String valor;
 		final Map<String, String> fila = datos.get(numfila - 1);
-		valor = fila.get(cod);
+		valor = fila.get(cod.toUpperCase());
 		if (valor == null) {
 			valor = "";
 		}
@@ -148,7 +148,7 @@ public final class ValoresDominio implements Serializable {
 	 *                    Fichero
 	 */
 	public void addFichero(final String id, final FicheroDominio fichero) {
-		ficheros.put(id, fichero);
+		ficheros.put(id.toUpperCase(), fichero);
 	}
 
 	/**
@@ -159,7 +159,7 @@ public final class ValoresDominio implements Serializable {
 	 * @return fichero
 	 */
 	public FicheroDominio getFichero(final String id) {
-		return ficheros.get(id);
+		return ficheros.get(id.toUpperCase());
 	}
 
 	/**
@@ -214,17 +214,8 @@ public final class ValoresDominio implements Serializable {
 	}
 
 	/**
-	 * Set datos.
-	 *
-	 * @param datos2
-	 */
-	public void setDatos(final List<Map<String, String>> datos2) {
-		this.datos = datos2;
-	}
-
-	/**
 	 * Método de acceso a codigoRetorno.
-	 * 
+	 *
 	 * @return codigoRetorno
 	 */
 	public String getCodigoRetorno() {
@@ -233,7 +224,7 @@ public final class ValoresDominio implements Serializable {
 
 	/**
 	 * Método para establecer codigoRetorno.
-	 * 
+	 *
 	 * @param codigoRetorno
 	 *                          codigoRetorno a establecer
 	 */
