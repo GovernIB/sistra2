@@ -440,10 +440,10 @@ $.fn.appPas = function(options) {
 
 								var html_completat = molla_pa_el.find("div:first").html();
 
-								var html_a = $("<a>").attr("href", "#pas/"+el_id).append( html_completat );
+								var html_molla_pas = (el_accessible === "s") ? $("<a>").attr("href", "#pas/"+el_id).append( html_completat ) : $("<div>").addClass("imc--completat").append( html_completat ) ;
 
 								molla_pa_el
-									.html( html_a );
+									.html( html_molla_pas );
 
 							}
 
@@ -675,6 +675,13 @@ $.fn.appPas = function(options) {
 					imc_contingut_c
 						.find(".imc--navegacio:first .imc--anterior")
 							.attr("href", "#pas/"+pas_anterior);
+
+				} else if (!pas_anterior || pas_anterior === null) {
+
+					imc_contingut_c
+						.find(".imc--navegacio:first .imc--anterior")
+							.parent()
+								.remove();
 
 				}
 

@@ -6,9 +6,11 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.model.LazyDataModel;
 
 import es.caib.sistrahelp.core.api.model.Area;
@@ -79,6 +81,11 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		// Normaliza filtro
 		normalizarFiltro();
 
+		// Reinicia la fila del dataTable
+		final DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot()
+				.findComponent("form:dataTable");
+		dataTable.setFirst(0);
+
 		// Buscar
 		this.buscar();
 	}
@@ -107,6 +114,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		listaDatos = new EventoAuditoriaTramitacionLazyDataModel(helpDeskService, rowCount, filtros);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
+
 	}
 
 	private void sanitarFiltros() {

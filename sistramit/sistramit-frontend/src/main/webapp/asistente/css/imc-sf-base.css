@@ -145,6 +145,17 @@ body[data-fluix="p"] .imc-tramitacio .imc--elimina { bottom: 0; top: 0; }
 }
 
 
+.imc-molla-pa li div.imc--completat { background-color: #8c8c8c; }
+.imc-molla-pa li div.imc--completat::after {
+	background-color: #8c8c8c;
+	border: none;
+}
+
+.imc-molla-pa li div.imc--completat {
+  color: #fff;
+}
+
+
 body[data-fluix="p"] .imc-molla-pa { display: none; }
 
 
@@ -585,6 +596,10 @@ form textarea { font: normal 1em 'Bariol Regular', Arial, Helvetica, sans-serif;
 	background: transparent url(imgs/icones/ico_error.svg) no-repeat center center / 100% auto;
 	animation-name: "";
 }
+
+.imc-suport form input[readonly] { background-color: #f2f2f2; }
+
+.imc-suport form input.imc--nif-error { border-color: #c00; }
 
 
 /* input type */

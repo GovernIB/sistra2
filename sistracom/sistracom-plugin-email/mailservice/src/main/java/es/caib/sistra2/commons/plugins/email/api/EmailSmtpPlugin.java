@@ -46,7 +46,7 @@ public class EmailSmtpPlugin extends AbstractPluginProperties implements IEmailP
 			final InternetAddress[] direcciones = new InternetAddress[destinatarios.size()];
 			for (int i = 0; i < destinatarios.size(); i++) {
 				final InternetAddress direccion = new InternetAddress();
-				direccion.setAddress(destinatarios.get(0));
+				direccion.setAddress(destinatarios.get(i));
 				direcciones[i] = direccion;
 			}
 			msg.setRecipients(javax.mail.Message.RecipientType.TO, direcciones);

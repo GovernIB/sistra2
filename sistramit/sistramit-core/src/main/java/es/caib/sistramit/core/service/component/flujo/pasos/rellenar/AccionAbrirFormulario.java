@@ -177,6 +177,8 @@ public final class AccionAbrirFormulario implements AccionPaso {
 		difi.setXmlDatosActuales(pDipa.getDatosFormulario(pDefinicionFormulario.getIdentificador()));
 		difi.setTituloProcedimiento(pVariablesFlujo.getDatosTramiteCP().getProcedimiento().getDescripcion());
 		difi.setCodigoSiaProcedimiento(pVariablesFlujo.getDatosTramiteCP().getProcedimiento().getIdProcedimientoSIA());
+		difi.setDir3ResponsableProcedimiento(
+				pVariablesFlujo.getDatosTramiteCP().getProcedimiento().getOrganoResponsableDir3());
 		final ParametrosAperturaFormulario p = new ParametrosAperturaFormulario();
 		if (!pDefinicionFormulario.isInterno()) {
 			difi.setIdGestorFormulariosExterno(

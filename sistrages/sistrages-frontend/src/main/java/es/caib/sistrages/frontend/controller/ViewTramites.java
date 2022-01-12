@@ -1708,11 +1708,6 @@ public class ViewTramites extends ViewControllerBase {
 				.validarVersionTramite(this.versionSeleccionada.getCodigo(), UtilJSF.getSessionBean().getLang());
 
 		if (!listaErrores.isEmpty()) {
-			for (final ErrorValidacion error : listaErrores) {
-				if (error.getDescripcion().equals("errorFormulario")) {
-					error.setDescripcion(UtilJSF.getLiteral("error.formulario.vacio"));
-				}
-			}
 			Map<String, String> params = null;
 			TypeModoAcceso modoAccesoErrores;
 

@@ -64,6 +64,9 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	/** Código sia procedimiento. */
 	private String codigoSiaProcedimiento;
 
+	/** Código dir3 responsable. */
+	private String dir3ResponsableProcedimiento;
+
 	/**
 	 * Método de acceso a idSesionTramitacion.
 	 *
@@ -370,7 +373,7 @@ public final class DatosInicioSesionFormulario implements Serializable {
 
 	/**
 	 * Método de acceso a codigoSiaProcedimiento.
-	 * 
+	 *
 	 * @return codigoSiaProcedimiento
 	 */
 	public String getCodigoSiaProcedimiento() {
@@ -379,12 +382,31 @@ public final class DatosInicioSesionFormulario implements Serializable {
 
 	/**
 	 * Método para establecer codigoSiaProcedimiento.
-	 * 
+	 *
 	 * @param codigoSiaProcedimiento
 	 *                                   codigoSiaProcedimiento a establecer
 	 */
 	public void setCodigoSiaProcedimiento(final String codigoSiaProcedimiento) {
 		this.codigoSiaProcedimiento = codigoSiaProcedimiento;
+	}
+
+	/**
+	 * Método de acceso a dir3Responsable.
+	 * 
+	 * @return dir3Responsable
+	 */
+	public String getDir3ResponsableProcedimiento() {
+		return dir3ResponsableProcedimiento;
+	}
+
+	/**
+	 * Método para establecer dir3Responsable.
+	 * 
+	 * @param dir3Responsable
+	 *                            dir3Responsable a establecer
+	 */
+	public void setDir3ResponsableProcedimiento(final String dir3Responsable) {
+		this.dir3ResponsableProcedimiento = dir3Responsable;
 	}
 
 }

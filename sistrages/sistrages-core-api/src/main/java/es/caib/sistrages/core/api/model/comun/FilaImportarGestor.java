@@ -126,14 +126,17 @@ public class FilaImportarGestor extends FilaImportarBase {
 			final GestorExternoFormularios gestorActual, final String mensaje, final ConfiguracionAutenticacion config) {
 
 		TypeImportarExiste existe;
+		TypeImportarResultado resultado;
 		if (gestorActual == null) {
 			existe = TypeImportarExiste.NO_EXISTE;
+			resultado = TypeImportarResultado.WARNING;
 		} else {
 			existe = TypeImportarExiste.EXISTE;
+			resultado = TypeImportarResultado.INFO;
 		}
 
 		return new FilaImportarGestor(gestor, gestorActual, TypeImportarAccion.NADA, existe,
-				TypeImportarEstado.ERROR, TypeImportarResultado.INFO, mensaje, false, config);
+				TypeImportarEstado.ERROR, resultado , mensaje, false, config);
 
 	}
 

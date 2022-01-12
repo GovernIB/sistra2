@@ -14,7 +14,7 @@ public final class RTNavegacionRegistroPendienteReintento implements ReglaTramit
 	@Override
 	public boolean execute(final ContextoReglaTramitacion pCtx, final Object[] vars) {
 		boolean res = true;
-		// Si el paso actual es de pagos y hay un pago iniciado no se puede
+		// Si el paso actual es de registro y esta pendiente reintentar no se puede
 		// cambiar de paso
 		if (pCtx.getIdPasoActual() != null && pCtx.getPaso(pCtx.getIdPasoActual()).getTipo() == TypePaso.REGISTRAR
 				&& pCtx.getPaso(pCtx.getIdPasoActual())

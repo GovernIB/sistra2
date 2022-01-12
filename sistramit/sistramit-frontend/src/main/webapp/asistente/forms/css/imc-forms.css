@@ -723,6 +723,10 @@
 
 .imc-el-taula-botonera button[disabled] { background-color: #999 !important; }
 
+
+fieldset[data-autoordre="s"] .imc-el-taula-botonera .imc--posicio { display: none; }
+
+
 .imc-form .imc-el-taula div.imc-el-taula-elements { clear: both; overflow: auto; overflow-x: hidden; height: 12.1em; margin: 0 .7em; background-color: #fff; border: 3px solid #ccc; }
 .imc-form .imc-el-taula div.imc-el-taula-elements p { font-style: italic; color: #333; padding: .3em .5em; }
 
@@ -796,7 +800,7 @@
 
 .imc-forms--taula .imc--c { position: fixed; z-index: 15; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,.7); }
 
-.imc-forms--taula .imc--form { overflow: auto; position: fixed; z-index: 16; top: 50%; left: 50%; width: 100%; max-width: 68em; min-height: 10em; max-height: 48em; padding: 0; background-color: #fff; transform: translate(-50%, -50%); }
+.imc-forms--taula .imc--form { overflow: auto; position: fixed; z-index: 16; top: 50%; left: 50%; width: 100%; max-width: 68em; min-height: 8em; max-height: 90%; padding: 0; background-color: #fff; transform: translate(-50%, -50%); }
 
 .imc-forms--taula .imc--form { /*border: .5em solid #4dba79;*/ /* outline: .5em solid #4dba79; */ outline: none; transition: outline .2s ease-out; }
 .imc-forms--taula:focus .imc--form { outline-color: #294233; }

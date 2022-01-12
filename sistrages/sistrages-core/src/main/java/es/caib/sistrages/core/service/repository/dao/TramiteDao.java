@@ -378,4 +378,11 @@ public interface TramiteDao {
 	 */
 	void actualizarDominios(TramiteVersion tramiteVersion, final List<Dominio> dominios);
 
+	/**
+	 * Devuelve el total de tramite por GFE
+	 * @param id
+	 * @return
+	 */
+	boolean getCountTramiteVersionByGfe(Long id);
+
 }

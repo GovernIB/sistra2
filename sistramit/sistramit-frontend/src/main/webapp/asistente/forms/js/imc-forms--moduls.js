@@ -888,7 +888,7 @@ $.fn.appFormsConfiguracio = function(options) {
 							if (conf_tipus === "listaElementos") {
 
 								elm
-									.appFormsLlistaElements({ columnes: conf_opcions.columnas, filesMax: conf_opcions.maxElementos });
+									.appFormsLlistaElements({ columnes: conf_opcions.columnas, filesMax: conf_opcions.maxElementos, autoOrdre: conf_opcions.autoorden, desDe: desDe });
 
 							}
 
@@ -1159,7 +1159,7 @@ $.fn.appFormsConfiguracio = function(options) {
 								} else if (elm_input_tipus === "listaElementos") {
 
 									elm
-										.appFormsLlistaElements({ dades: val_valor });
+										.appFormsLlistaElements({ dades: val_valor, desDe: desDe });
 
 								}
 
@@ -2085,6 +2085,18 @@ $.fn.appFormsAvalua = function(options) {
 					,validacio_missatge = (validacio !== null && validacio.mensaje) ? validacio.mensaje : false
 					,camp_id = (validacio !== null && validacio.campo !== null && validacio.campo !== "") ? validacio.campo : false;
 
+				// llevem "error", per si estiguera correcte
+
+				if (camp_id && camp_id !== "" && camp_id !== null) {
+
+					element
+						.find("*[data-id='"+camp_id+"']")
+							.removeClass("imc-el-error");
+
+				}
+
+				// si hi ha error, el marquem
+
 				if (validacio_estat === "error") {
 
 					if (camp_id && camp_id !== "" && camp_id !== null) {
@@ -2103,6 +2115,8 @@ $.fn.appFormsAvalua = function(options) {
 
 				}
 
+				// si hi ha missatge, el mostrem
+
 				if (validacio_missatge && validacio_missatge !== null && validacio_missatge !== "") {
 
 					var destacaCamp = function() {
@@ -2110,7 +2124,7 @@ $.fn.appFormsAvalua = function(options) {
 							if (validacio_estat === "error") {
 
 								input_element
-									.appDestaca({ referent: element.find(".imc--form:first") }); // imc_forms_contenidor.find(".imc--contingut:first")
+									.appDestaca({ referent: element.find(".imc--form:first") });
 
 							}
 
@@ -2128,25 +2142,25 @@ $.fn.appFormsAvalua = function(options) {
 
 				}
 
-				// configuracio
+				// configuració
 
-				element // imc_forms_contenidor
+				element
 					.attr("data-repinta", "s")
 					.appFormsConfiguracio({ forms_json: avalua_json, desDe: "avalua" });
 
 
 				// formateig de dades
 
-				element // imc_forms_contenidor
+				element
 					.appFormsFormateig();
 
 			},
 			remarca = function(camp_id) {
 
-				element // imc_forms_contenidor
-					.find("div[data-id="+camp_id+"]:first")
+				element
+					.find("*[data-id="+camp_id+"]:first") // .find("div[data-id="+camp_id+"]:first")
 						.addClass("imc-el-error")
-						.appDestaca({ referent: element.find(".imc--form:first") }); // imc_forms_contenidor.find(".imc--contingut:first")
+						.appDestaca({ referent: element.find(".imc--form:first") });
 
 			},
 			enfocaAlSeguent = function() {
@@ -2643,6 +2657,16 @@ $.fn.appFormsAccions = function(options) {
 					,hiHaPagSeguent = (json.datos.recargar === "s") ? true : false
 					,camp_id = (json.datos.validacion && json.datos.validacion !== null) ? json.datos.validacion.campo : false
 					,url = json.datos.url;
+
+				// llevem "error", per si estiguera correcte
+
+				if (camp_id && camp_id !== "" && camp_id !== null) {
+
+					element
+						.find("*[data-id='"+camp_id+"']")
+							.removeClass("imc-el-error");
+
+				}
 
 				// si hi ha error
 

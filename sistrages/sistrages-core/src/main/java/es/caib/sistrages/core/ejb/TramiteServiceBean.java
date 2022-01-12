@@ -603,4 +603,10 @@ public class TramiteServiceBean implements TramiteService {
 	public List<ErrorValidacion> checkDominioNoUtilizado(Long idDominio, Long idTramiteVersion, final String idioma) {
 		return tramiteService.checkDominioNoUtilizado(idDominio, idTramiteVersion, idioma);
 	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public boolean getCountTramiteVersionByGfe(Long id) {
+		return tramiteService.getCountTramiteVersionByGfe(id);
+	}
 }

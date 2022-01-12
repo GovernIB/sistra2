@@ -54,6 +54,11 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 	 */
 	public static final String PROP_JUSTIFICANTE_ERROR = "justificanteERROR";
 
+	/**
+	 * Si genera error al registrar (true/false).
+	 */
+	public static final String PROP_REGISTRAR_ERROR = "registrarERROR";
+
 	public RegistroMockPlugin(final String prefijoPropiedades, final Properties properties) {
 		super(prefijoPropiedades, properties);
 	}
@@ -109,6 +114,11 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 			if (duracionSegundos > 0) {
 				retardo(duracionSegundos);
 			}
+		}
+
+		// Si hay que simular error registro
+		if ("true".equals(getPropiedad(PROP_REGISTRAR_ERROR))) {
+			throw new RegistroPluginException("Simulación error registro");
 		}
 
 		// Devolvemos simulacion registro

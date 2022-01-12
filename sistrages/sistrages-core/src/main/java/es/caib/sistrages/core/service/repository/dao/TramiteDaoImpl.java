@@ -1074,13 +1074,31 @@ public class TramiteDaoImpl implements TramiteDao {
 	}
 
 	@Override
+	public boolean getCountTramiteVersionByGfe(Long id) {
+		Query query = getQueryTramiteVersionByGFE(id, true);
+		Long total = (Long) query.getSingleResult();
+		return total >= 1;
+	}
+
+	private Query getQueryTramiteVersionByGFE(final Long idGFE, final boolean isTotal) {
+
+		final String sql;
+		if (isTotal) {
+			sql = "Select count(t) From JPasoRellenar pr JOIN pr.pasoTramitacion pt JOIN pr.formulariosTramite ft JOIN pt.versionTramite t JOIN ft.formularioExterno fe where fe.codigo=:idGfe order by t.numeroVersion desc";
+		} else {
+			 sql = "Select t  From JPasoRellenar pr JOIN pr.pasoTramitacion pt JOIN pr.formulariosTramite ft JOIN pt.versionTramite t JOIN ft.formularioExterno fe where fe.codigo=:idGfe order by t.numeroVersion desc";
+		}
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idGfe", idGFE);
+
+		return query;
+	}
+
+	@Override
 	public List<DominioTramite> getTramiteVersionByGfe(final Long idGfe) {
 		final List<DominioTramite> resultado = new ArrayList<>();
 
-		final String sql = "Select t From JPasoRellenar pr JOIN pr.pasoTramitacion pt JOIN pr.formulariosTramite ft JOIN pt.versionTramite t JOIN ft.formularioExterno fe where fe.codigo=:idGfe order by t.numeroVersion desc";
-
-		final Query query = entityManager.createQuery(sql);
-		query.setParameter("idGfe", idGfe);
+		final Query query = getQueryTramiteVersionByGFE(idGfe, false);
 
 		@SuppressWarnings("unchecked")
 		final List<JVersionTramite> results = query.getResultList();
@@ -1550,5 +1568,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 		return result;
 	}
+
+
 
 }

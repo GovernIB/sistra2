@@ -204,21 +204,28 @@ public class DialogFormularioExterno extends DialogControllerBase {
 	 */
 	public void tramites() {
 
-		String ambito = "A";
-		// Muestra dialogo
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.data.getCodigo()));
-		if (ambito != null) {
-			params.put(TypeParametroVentana.AMBITO.toString(), ambito);
-			final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
-			if (typeAmbito == TypeAmbito.AREA) {
-				params.put("AREA", id);
+		boolean existenTramites = tramiteService.getCountTramiteVersionByGfe(Long.valueOf(id));
+
+		if (existenTramites) {
+			String ambito = "A";
+
+			// Muestra dialogo
+			final Map<String, String> params = new HashMap<>();
+			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.data.getCodigo()));
+			if (ambito != null) {
+				params.put(TypeParametroVentana.AMBITO.toString(), ambito);
+				final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
+				if (typeAmbito == TypeAmbito.AREA) {
+					params.put("AREA", id);
+				}
+				if (typeAmbito == TypeAmbito.ENTIDAD) {
+					params.put("ENTIDAD", id);
+				}
 			}
-			if (typeAmbito == TypeAmbito.ENTIDAD) {
-				params.put("ENTIDAD", id);
-			}
+			UtilJSF.openDialog(DialogGestorExternoTramites.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("dialogFormularioExterno.error.sinTramitesAsociados"));
 		}
-		UtilJSF.openDialog(DialogGestorExternoTramites.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
 	}
 
 	/**

@@ -98,6 +98,9 @@ public class DialogTramiteImportarGestor extends DialogControllerBase {
 
 		data.setMensaje(null);
 		data.setEstado(TypeImportarEstado.REVISADO);
+		if (data.getConfiguracionAutenticacionActual() != null && data.getConfiguracionAutenticacionActual().getCodigo() == null && data.getConfiguracionAutenticacionActual().getCodigoImportacion() == null) {
+			data.setConfiguracionAutenticacionActual(null);
+		}
 
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();

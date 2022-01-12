@@ -141,9 +141,7 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	 * @param campoDominioCodigo el nuevo valor de campoDominioCodigo
 	 */
 	public void setCampoDominioCodigo(final String campoDominioCodigo) {
-		if (campoDominioCodigo != null) {
-			this.campoDominioCodigo = campoDominioCodigo;//.toUpperCase();
-		}
+		this.campoDominioCodigo = campoDominioCodigo;//.toUpperCase();
 	}
 
 	/**
@@ -161,9 +159,7 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	 * @param campoDominioDescripcion el nuevo valor de campoDominioDescripcion
 	 */
 	public void setCampoDominioDescripcion(final String campoDominioDescripcion) {
-		if (campoDominioDescripcion != null) {
-			this.campoDominioDescripcion = campoDominioDescripcion;//.toUpperCase();
-		}
+		this.campoDominioDescripcion = campoDominioDescripcion;//.toUpperCase();
 	}
 
 	/**

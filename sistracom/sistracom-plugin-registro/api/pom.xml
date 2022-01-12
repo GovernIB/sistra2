@@ -5,13 +5,14 @@
     <parent>
         <artifactId>sistracom-plugin-registro</artifactId>
         <groupId>es.caib.sistra2</groupId>
-        <version>1.2.1</version>
+        <version>1.2.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
-
     <artifactId>sistracom-plugin-registro-api</artifactId>
+
     <dependencies>
+    	<!--  PLUGINS IB -->
         <dependency>
             <groupId>org.fundaciobit.pluginsib.core</groupId>
             <artifactId>pluginsib-core</artifactId>

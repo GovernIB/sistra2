@@ -916,6 +916,12 @@ public class TramiteServiceImpl implements TramiteService {
 		return tramiteDao.getTramiteVersionByGfe(idGfe);
 	}
 
+	@Override
+	@NegocioInterceptor
+	public boolean getCountTramiteVersionByGfe(Long id) {
+		return tramiteDao.getCountTramiteVersionByGfe(id);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -1420,5 +1426,7 @@ public class TramiteServiceImpl implements TramiteService {
 	public List<ErrorValidacion> checkDominioNoUtilizado(Long idDominio, Long idTramiteVersion, final String idioma) {
 		return validadorComponent.checkDominioNoUtilizado(idDominio, idTramiteVersion, idioma);
 	}
+
+
 
 }

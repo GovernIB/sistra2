@@ -493,7 +493,8 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		final RFormularioTramite defFormulario = UtilsFormularioInterno.obtenerDefinicionFormulario(datosSesion);
 		return formateador.formatear(xml, plantilla, definicionTramiteSTG.getDefinicionVersion().getIdioma(),
 				defFormulario.getFormularioInterno(), datosInicioSesionFormulario.getTituloProcedimiento(),
-				datosInicioSesionFormulario.getCodigoSiaProcedimiento());
+				datosInicioSesionFormulario.getCodigoSiaProcedimiento(),
+				datosInicioSesionFormulario.getDir3ResponsableProcedimiento());
 
 	}
 

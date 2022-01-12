@@ -55,7 +55,11 @@ public enum TypeParametroEvento {
 	/**
 	 * Valoración trámite: observaciones.
 	 */
-	VALORACION_OBSERVACIONES("VALOBS");
+	VALORACION_OBSERVACIONES("VALOBS"),
+	/**
+	 * Registro: asiento registro.
+	 */
+	REGISTRO_ASIENTOREGISTRO("REGASIENTO");
 
 	/**
 	 * Valor como string.

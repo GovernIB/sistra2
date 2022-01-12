@@ -16,7 +16,7 @@
 		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
 		<p:importEnum type="es.caib.sistrahelp.core.api.model.types.TypeAutenticacion" var="TypeAutenticacion"/>
 
-		<h:form id="form" styleClass="h100">
+		<h:form id="form" style="height:85%;">
 
 			<!-- Growl mensajes -->
 			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
@@ -71,10 +71,10 @@
 
 
 			<!-- Data table -->
-			<p:outputPanel  styleClass="h80">
+			<p:outputPanel  styleClass="h100">
 			<p:dataTable id="dataTable" var="dt" value="#{viewInformacionPagos.listaDatos}"  lazy="true"
 						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
-						 scrollable="true" scrollHeight="90%"
+						 scrollable="true" scrollHeight="100%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"

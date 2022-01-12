@@ -106,6 +106,10 @@ public final class HFormulario implements IModelApi {
 	@Column(name = "SFR_SIAPRO")
 	private String codigoSiaProcedimiento;
 
+	/** Atributo codigo dir3 responsable procedimiento. */
+	@Column(name = "SFR_DIR3PRO")
+	private String dir3ResponsableProcedimiento;
+
 	/** Atributo xml. */
 	@Lob
 	@Column(name = "SFR_XML")
@@ -582,6 +586,26 @@ public final class HFormulario implements IModelApi {
 	 */
 	public void setEstadoFinalizacion(final int estado) {
 		this.estadoFinalizacion = estado;
+	}
+
+	/**
+	 * Método de acceso a dir3ResponsableProcedimiento.
+	 * 
+	 * @return dir3ResponsableProcedimiento
+	 */
+	public String getDir3ResponsableProcedimiento() {
+		return dir3ResponsableProcedimiento;
+	}
+
+	/**
+	 * Método para establecer dir3ResponsableProcedimiento.
+	 * 
+	 * @param dir3ResponsableProcedimiento
+	 *                                         dir3ResponsableProcedimiento a
+	 *                                         establecer
+	 */
+	public void setDir3ResponsableProcedimiento(final String dir3ResponsableProcedimiento) {
+		this.dir3ResponsableProcedimiento = dir3ResponsableProcedimiento;
 	}
 
 }

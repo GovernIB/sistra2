@@ -720,4 +720,11 @@ public interface TramiteService {
 	 */
 	public List<ErrorValidacion> checkDominioNoUtilizado(Long idDominio, Long idTramiteVersion,  final String idioma);
 
+	/**
+	 * Devuelve si hay tramites asociados a la GFE
+	 * @param id
+	 * @return
+	 */
+	public boolean getCountTramiteVersionByGfe(Long id);
+
 }

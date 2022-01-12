@@ -171,11 +171,10 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 
 			// formularios
 			if (!tieneFormularios(pTramiteVersion)) {
-				// final ErrorValidacion error = errorValidacion("error formulario", null, null,
-				// pIdioma);
-				final ErrorValidacion error = new ErrorValidacion(pTramiteVersion.getIdString(), "errorFormulario");
+
+				final ErrorValidacion error = new ErrorValidacion(pTramiteVersion.getIdString(), literales.getLiteral("validador","formulario.vacio", pIdioma));
 				// tipificamos el error
-				error.setTipo(TypeErrorValidacion.DATOS_REGISTRO);
+				error.setTipo(TypeErrorValidacion.TRAMITE);
 				error.setItem(pTramiteVersion);
 
 				listaErrores.add(error);

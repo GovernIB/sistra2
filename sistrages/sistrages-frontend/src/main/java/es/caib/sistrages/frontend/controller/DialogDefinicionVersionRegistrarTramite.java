@@ -152,13 +152,16 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.registro.error.script"));
 		} else {
+			if(data.isValidaRepresentacion()) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.check.valida.no.implementado"));
+			} else {
+				tramiteService.updateTramitePaso(data);
 
-			tramiteService.updateTramitePaso(data);
-
-			final DialogResult result = new DialogResult();
-			result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-			result.setResult(data);
-			UtilJSF.closeDialog(result);
+				final DialogResult result = new DialogResult();
+				result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+				result.setResult(data);
+				UtilJSF.closeDialog(result);
+			}
 		}
 	}
 

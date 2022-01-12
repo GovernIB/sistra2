@@ -22,7 +22,7 @@
 
 </h:head>
 
-<h:body styleClass="body-color">
+<h:body styleClass="body-color" style="position:relative;">
 
   <f:facet name="last">
     <h:outputStylesheet library="css" name="style.css" />
@@ -34,11 +34,11 @@
       <ui:include src="./header.xhtml"/>
     </p:layoutUnit>
 
-    <p:layoutUnit id="work" position="center" header="#{msg[sessionBean.literalTituloPantalla]}">
+    <p:layoutUnit id="work" position="center" header="#{msg[sessionBean.literalTituloPantalla]}" >
       <ui:insert name="content" />
     </p:layoutUnit>
 
-    <p:layoutUnit id="footer" position="south" size="60">
+    <p:layoutUnit id="footer" position="south" size="60" style="position:absolute; bottom:0px;">
       <ui:include src="./footer.xhtml" />
     </p:layoutUnit>
 

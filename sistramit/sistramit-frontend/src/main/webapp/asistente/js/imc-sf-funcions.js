@@ -309,15 +309,15 @@ $.fn.appMissatge = function(options) {
 
 				accepta_bt
 					.off('.appMissatge')
-					.on('click.appMissatge', accepta);
+					.one('click.appMissatge', accepta);
 
 				cancela_bt
 					.off('.appMissatge')
-					.on('click.appMissatge', cancela);
+					.one('click.appMissatge', cancela);
 
 				tanca_bt
 					.off('.appMissatge')
-					.on('click.appMissatge', tanca);
+					.one('click.appMissatge', tanca);
 
 				element
 					.find("h2 span")
@@ -789,10 +789,17 @@ $.fn.appSuport = function(options) {
 				if (APP_JSON_TRAMIT_T.autenticacion === "c") {
 
 					$("#nif")
-						.val( APP_JSON_TRAMIT_U.nif );
+						.val( APP_JSON_TRAMIT_U.nif )
+						.attr("readonly", "readonly");
 
 					$("#nombre")
-						.val( APP_JSON_TRAMIT_U.nombre + " " + APP_JSON_TRAMIT_U.apellido1 + " " + APP_JSON_TRAMIT_U.apellido2 );
+						.val( APP_JSON_TRAMIT_U.nombre + " " + APP_JSON_TRAMIT_U.apellido1 + " " + APP_JSON_TRAMIT_U.apellido2 )
+						.attr("readonly", "readonly");
+
+				} else {
+
+					$("#nif, #nombre")
+						.removeAttr("readonly");
 
 				}
 
@@ -945,6 +952,50 @@ $.fn.appSuport = function(options) {
 
 				}
 
+
+				// revisa NIF
+
+				// dni, nie, nifOtros, nifPJ
+
+				var nif_val = $("#nif").val();
+
+				if (nif_val !== "") {
+
+					var dni_valid = ( appValidaIdentificadorSuport.dni(nif_val) ) ? true : false
+						,nie_valid = ( appValidaIdentificadorSuport.nie(nif_val) ) ? true : false
+						,nifOtros_valid = ( appValidaIdentificadorSuport.nifOtros(nif_val) ) ? true : false
+						,nifPJ_valid = ( appValidaIdentificadorSuport.nifPJ(nif_val) ) ? true : false;
+
+					if (!dni_valid && !nie_valid && !nifOtros_valid && !nifPJ_valid) {
+
+						var nif_error = function() {
+
+								$("#nif")
+									.addClass("imc--nif-error")
+									.focus()
+									.off(".nifError")
+									.on("keyup.nifError", function() {
+
+										$(this)
+											.removeClass("imc--nif-error");
+											
+									});
+
+							};
+
+						imc_missatge
+							.appMissatge({ accio: "error", titol: txtSuportNIF_errorTitol, text: txtSuportNIF_errorText, alTancar: function() { nif_error(); } });
+
+						return;
+
+					}
+
+				}
+
+				$("#nif")
+					.removeClass("imc--nif-error");
+
+
 				// missatge
 
 				el_suport_form
@@ -960,10 +1011,12 @@ $.fn.appSuport = function(options) {
 					.removeClass("imc--enviat-correcte imc--enviat-error imc--enviat-fatal")
 					.addClass("imc--on imc--enviant");
 
+
 				// envia config
 
 				var	pag_url = APP_TRAMIT_SUPORT,
 					formData = new FormData( el_suport_form.find("form:first")[0] );
+
 
 				// arxius
 
@@ -987,6 +1040,7 @@ $.fn.appSuport = function(options) {
 						});
 
 				}
+
 
 				// ajax
 
@@ -1141,6 +1195,176 @@ $.fn.appSuport = function(options) {
 	});
 	return this;
 }
+
+
+// valida identificador SUPORT
+
+var appValidaIdentificadorSuport = (function(){
+
+	var LETRAS_DNI = "TRWAGMYFPDXBNJZSQVHLCKE";
+
+	var calcularLetraDni = function(valor) {
+		var dni = parseInt(valor, 10);
+		var modulo = dni % 23;
+		var letra = LETRAS_DNI.charAt(modulo);
+		return letra;
+	};
+
+	var obtenerDigitos = function(valor) {
+		var digitos = "";
+		for (i = 0; i < valor.length; i++) {
+			if (!isNaN(valor.charAt(i))) {
+				digitos += valor.charAt(i);
+			}
+        }
+		return digitos;
+	}
+
+	// dni, nie, nifOtros, nifPJ, nss  (abans: nif, cif, nie, nss)
+
+	return {
+		dni: function(valor) {
+			valor = valor.toUpperCase();
+
+			if (valor.length != 9) {
+				return false;
+			}
+
+			var patronNif = "^[0-9]{0,8}[" + LETRAS_DNI + "]{1}$";
+			var regExp = new RegExp(patronNif);
+			if (!regExp.test(valor)) {
+				return false;
+			}
+			var digitos = obtenerDigitos(valor);
+			var letra = calcularLetraDni(digitos);
+
+			return (valor.charAt(8) == letra);
+
+		},
+		nie: function(valor) {
+			valor = valor.toUpperCase();
+
+			if (valor.length != 9) {
+				return false;
+			}
+
+			var patronNie = "^[X|Y|Z][0-9]{1,8}[A-Z]{1}$";
+			var regExp=new RegExp(patronNie);
+			if (!regExp.test(valor)) {
+				return false;
+			}
+
+			var numero = "0";
+			if (valor.charAt(0) == "Y") {
+				numero = "1";
+			} else if (valor.charAt(0) == "Z"){
+				numero = "2";
+			}
+
+			var digitos = obtenerDigitos(valor);
+
+			var letra = calcularLetraDni(numero + digitos);
+
+			return (valor.charAt(8) ==  letra);
+
+		},
+		nifOtros: function(valor) {
+			valor = valor.toUpperCase();
+
+			if (valor.length != 9) {
+				return false;
+			}
+
+			var patronNifOtros = "^[K|L|M][0-9]{1,8}[A-Z]{1}$";
+			var regExp = new RegExp(patronNifOtros);
+			if (!regExp.test(valor)) {
+				return false;
+			}
+			var digitos = obtenerDigitos(valor);
+			var letra = calcularLetraDni(digitos);
+
+			return (valor.charAt(8) == letra);
+
+		},
+		nifPJ: function(valor) {
+			valor = valor.toUpperCase();
+
+			var patronCif = "^[ABCDEFGHJKLMNPQRSUVW]{1}[0-9]{7}([0-9]||[ABCDEFGHIJ]){1}$";
+			var regExp = new RegExp(patronCif);
+			if (!regExp.test(valor)) {
+				return false;
+			}
+
+			var codigoControl = valor.substring(valor.length - 1, valor.length);
+
+			var v1 = [ 0, 2, 4, 6, 8, 1, 3, 5, 7, 9 ];
+			var v2 = [ "J", "A", "B", "C", "D", "E", "F", "G", "H", "I" ];
+
+			var suma = 0;
+            for (i = 2; i <= 6; i += 2) {
+            	suma += v1[parseInt(valor.substring(i - 1, i), 10)];
+                suma += parseInt(valor.substring(i, i + 1));
+            }
+
+            suma += v1[parseInt(valor.substring(7, 8))];
+            suma = (10 - (suma % 10));
+            if (suma == 10) {
+                suma = 0;
+            }
+            var letraControl = v2[suma];
+            res = (codigoControl == (suma + "") || codigoControl.toUpperCase() == letraControl);
+
+            return res;
+
+		},
+		nif: function(valor) {
+
+			// dni
+
+			valor = valor.toUpperCase();
+
+			if (valor.length != 9) {
+				return false;
+			}
+
+			var esPatronNIF = false
+				,esPatronNIFotros = false
+				,esLletraNumero = false;
+
+			var patronNif = "^[0-9]{0,8}[" + LETRAS_DNI + "]{1}$";
+
+			var regExp = new RegExp(patronNif);
+
+			if (regExp.test(valor)) {
+				esPatronNIF = true;
+			}
+
+			var patronNifOtros = "^[K|L|M][0-9]{1,8}[A-Z]{1}$";
+
+			var regExp = new RegExp(patronNifOtros);
+
+			if (regExp.test(valor)) {
+				esPatronNIFotros = true;
+			}
+
+
+			var digitos = obtenerDigitos(valor);
+			var letra = calcularLetraDni(digitos);
+
+			if (valor.charAt(8) == letra) {
+				esLletraNumero = true;
+			}
+
+			// resultat
+
+			var resultat = ((esPatronNIF || esPatronNIFotros) && esLletraNumero) ? true : false;
+
+			return resultat;
+
+		}
+	}
+
+})();
 
 
 // accessibilitat

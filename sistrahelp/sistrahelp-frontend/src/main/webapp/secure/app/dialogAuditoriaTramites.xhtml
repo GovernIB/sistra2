@@ -57,16 +57,16 @@
 						<p:inputText id="nifUsu" value="#{dialogAuditoriaTramites.dato.nif}" disabled="true" size="100"/>
 
 				 		<p:outputLabel for="descripcion" value="#{msg['dialogAuditoriaTramites.descripcion']}:" />
-						<p:inputTextarea id="descripcion" value="#{dialogAuditoriaTramites.dato.descripcion}" disabled="true" rows="3" cols="102"/>
+						<p:inputTextarea id="descripcion" value="#{dialogAuditoriaTramites.dato.descripcion}" disabled="true" rows="3" cols="100"/>
 
 				 		<p:outputLabel for="resultado" value="#{msg['dialogAuditoriaTramites.resultado']}:" />
 						<p:inputText id="resultado" value="#{dialogAuditoriaTramites.dato.resultado}" disabled="true" size="100"/>
 					</h:panelGrid>
 				</p:fieldset>
 				<p:spacer height="5px"/>
-				<p:fieldset legend="#{msg['dialogAuditoriaTramites.detalle']}" styleClass="margin-left-10 margin-right-10 margin-bottom-25  noPadding" rendered="#{dialogAuditoriaTramites.mostrarDetalle}">
-			 		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25 grid-right,padding-right-18 w75" columns="2"  styleClass="w100">
-				 		<p:outputLabel for="codigoError" value="#{msg['dialogAuditoriaTramites.codigoError']}:" rendered="#{dialogAuditoriaTramites.dato.codigoError != null and not empty dialogAuditoriaTramites.dato.codigoError}" />
+				<p:fieldset legend="#{msg['dialogAuditoriaTramites.detalle']}" styleClass="margin-left-10 margin-right-10  noPadding"  rendered="#{dialogAuditoriaTramites.mostrarDetalle}">
+			 		<h:panelGrid rowClasses=",ui-datatable-odd" columnClasses="padding-left-18 w18 grid-right,padding-right-18 w75, w5" columns="3" styleClass="w100">
+				 	 	<p:outputLabel for="codigoError" value="#{msg['dialogAuditoriaTramites.codigoError']}:" rendered="#{dialogAuditoriaTramites.dato.codigoError != null and not empty dialogAuditoriaTramites.dato.codigoError}" />
 				 		<h:panelGroup rendered="#{dialogAuditoriaTramites.dato.codigoError != null and not empty dialogAuditoriaTramites.dato.codigoError}" >
 							<p:inputText id="codigoError" value="#{dialogAuditoriaTramites.dato.codigoError}" disabled="true" size="70"/>
 							<p:spacer width="5px"/>
@@ -86,29 +86,72 @@
 								</p:outputPanel>
 							</p:dialog>
 						</h:panelGroup>
+						<p:column rendered="#{dialogAuditoriaTramites.dato.codigoError != null and not empty dialogAuditoriaTramites.dato.codigoError}"> </p:column>
 
 						<p:outputLabel for="dataTablePropiedades" value="#{msg['dialogAuditoriaTramites.headerPropiedades']}:" />
-						<p:dataTable  id="dataTablePropiedades" var="td" value="#{dialogAuditoriaTramites.dato.propiedadesEvento.asArrayList}"
-									  emptyMessage="#{msg['error.emptyRows']}"
-									  scrollable="true"
-			                          paginator="false"
-			                          selectionMode="single" rowKey="#{td.key}"
-			                          >
+						<p:column>
+							<p:dataTable  id="dataTablePropiedades" var="td" value="#{dialogAuditoriaTramites.dato.propiedadesEvento.asArrayList}"
+										  emptyMessage="#{msg['error.emptyRows']}"
+										  scrollable="true"
+				                          paginator="false"
+				                          selection="#{dialogAuditoriaTramites.valorSeleccionado}"
+								          selectionMode="single" rowKey="#{td.key}"
+				                          >
 
-							<!-- Columnas -->
-						    <p:column headerText="#{msg['dialogAuditoriaTramites.headerPropiedades.codigo']}" class="ui-panelgrid-cell">
-						        <h:outputText value="#{td.key}" />
-						    </p:column>
+								<p:ajax event="rowSelect" global="false" update="dialogAuditoriaTramites:txtCopy" />
 
-						    <p:column headerText="#{msg['dialogAuditoriaTramites.headerPropiedades.valor']}" class="ui-panelgrid-cell">
-						        <h:outputText value="#{td.value}" />
-						    </p:column>
+								<!-- Columnas -->
+							    <p:column headerText="#{msg['dialogAuditoriaTramites.headerPropiedades.codigo']}" style="width:30%;"  class="ui-panelgrid-cell">
+							        <h:outputText value="#{td.key}" />
+							    </p:column>
 
-			 			</p:dataTable>
+							    <p:column headerText="#{msg['dialogAuditoriaTramites.headerPropiedades.valor']}" style="width:70%;" class="ui-panelgrid-cell">
+							        <h:outputText value="#{td.value}" />
+							    </p:column>
 
+				 			</p:dataTable>
+
+			 			</p:column>
+			 			<p:column for="dataTablePropiedades" value="#{msg['dialogAuditoriaTramites.headerPropiedades']}:">
+			 				<p:inputText id="txtCopy" value="#{dialogAuditoriaTramites.copiar}" style="display:none" />
+							<p:commandButton id="btnCopiar" value=" " icon="fa fa-copy" onclick="copiarClipboard();" style="height:20px;width:30px" process="@this"/>
+							<p:commandButton id="hiddenCommandGrowl" styleClass="button" process="@this" update="growlDialog"  action="#{dialogAuditoriaTramites.avisarGrowl()}"  style="display:none" />
+						</p:column>
+
+
+						<p:spacer height="10px"/>
 						<p:spacer height="10px"/>
 						<p:spacer height="10px"/>
 					</h:panelGrid>
+					 <h:outputScript >
+
+							function copiarClipboard() {
+
+								// Crea un campo de texto "oculto"
+								var aux = document.createElement("input");
+
+								var texto = document.getElementById("dialogAuditoriaTramites:txtCopy");
+
+								// Asigna el contenido del elemento especificado al valor del campo
+								aux.setAttribute("value", texto.value);
+
+								// Añade el campo a la página
+								document.body.appendChild(aux);
+
+								// Selecciona el contenido del campo
+								aux.select();
+
+								// Copia el texto seleccionado
+								document.execCommand("copy");
+
+								// Elimina el campo de la página
+								document.body.removeChild(aux);
+
+								document.getElementById("dialogAuditoriaTramites:hiddenCommandGrowl").click();
+							}
+
+
+						</h:outputScript>
 
 				</p:fieldset>
 			</p:outputPanel>

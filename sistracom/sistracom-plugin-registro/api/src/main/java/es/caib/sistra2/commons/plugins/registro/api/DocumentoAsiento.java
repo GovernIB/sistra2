@@ -144,7 +144,7 @@ public class DocumentoAsiento implements Serializable {
 
 	/**
 	 * Método de acceso a tipoFirma.
-	 * 
+	 *
 	 * @return tipoFirma
 	 */
 	public TypeFirmaDigital getTipoFirma() {
@@ -153,7 +153,7 @@ public class DocumentoAsiento implements Serializable {
 
 	/**
 	 * Método para establecer tipoFirma.
-	 * 
+	 *
 	 * @param tipoFirma
 	 *                      tipoFirma a establecer
 	 */

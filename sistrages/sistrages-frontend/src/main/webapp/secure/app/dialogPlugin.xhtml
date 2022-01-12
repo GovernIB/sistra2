@@ -28,7 +28,7 @@
 		<f:viewAction action="#{dialogPlugin.init}" />
 	</f:metadata>
 	<h:form id="dialogPlugin" styleClass="margin-top-10">
-  			<p:outputPanel style="position:relative; height:497px;">
+  			<p:outputPanel style="height:497px;">
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
@@ -55,7 +55,7 @@
 
 					<p:outputLabel for="dataTablePropiedades" value="#{msg['dialogPlugin.headerPropiedad']}" />
 					<p:dataTable  id="dataTablePropiedades" var="td" value="#{dialogPlugin.data.propiedades}"
-								  rows="25" emptyMessage="#{msg['error.emptyRows']}"
+								  rows="25" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="275"
 								  paginator="false" selectionMode="single" selection="#{dialogPlugin.propiedadSeleccionada}" rowKey="#{td.codigo}">
 
 						<!-- Necesario para actualizar en controlador la fila seleccionada -->
@@ -109,7 +109,7 @@
 				      }
 			    </h:outputScript>
 			</p:outputPanel>
-		  	 <p:outputPanel style="position:absolute !important; margin-bottom:0px; padding-bottom:0px; margin-top:auto; width:98% !important;left:1% !important;">
+		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogPlugin.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>

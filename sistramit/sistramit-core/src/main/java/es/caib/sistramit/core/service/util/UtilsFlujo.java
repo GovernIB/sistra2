@@ -21,6 +21,7 @@ import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistrages.rest.api.interna.RScript;
+import es.caib.sistramit.core.api.exception.EncodeException;
 import es.caib.sistramit.core.api.exception.ErrorNoControladoException;
 import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.exception.FormatoInvalidoFechaFrontException;
@@ -762,6 +763,25 @@ public final class UtilsFlujo {
 		} catch (final Exception e) {
 			throw new JsonException("Error convirtiendo a JSON: " + e.getMessage(), e);
 		}
+	}
+
+	/**
+	 * Convierte string en bytes.
+	 *
+	 * @param str
+	 *                String
+	 * @return bytes
+	 */
+	public static byte[] stringToBytes(final String str) {
+		byte[] res = null;
+		if (str != null) {
+			try {
+				res = str.getBytes(Constantes.UTF8);
+			} catch (final UnsupportedEncodingException e) {
+				throw new EncodeException(e);
+			}
+		}
+		return res;
 	}
 
 	/**

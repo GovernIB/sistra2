@@ -63,6 +63,9 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/** Propiedad plantilla que indica url logo. **/
 	public static final String PROP_LOGO_URL = "logo.url";
 
+	/** Propiedad plantilla que indica url logo. **/
+	public static final String PROP_LOGO_DINAMICO_URL = "logo.dinamico.url";
+
 	/** Propiedad plantilla que indica escalado alto logo en %. **/
 	public static final String PROP_LOGO_ALTO = "logo.escalado.alto";
 
@@ -108,6 +111,9 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/** Url de la imagen. **/
 	private String urlImagen;
 
+	/** Url de la imagen dinamico. **/
+	private String urlImagenDinamico;
+
 	/** Escalado alto imagen. */
 	private Integer escaladoAltoImagen;
 
@@ -140,7 +146,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
 	@Override
 	public byte[] formatear(final byte[] ixml, final byte[] plantilla, final String idioma,
-			final RFormularioInterno defFormInterno, final String tituloProcedimiento, final String siaProcedimiento) {
+			final RFormularioInterno defFormInterno, final String tituloProcedimiento, final String siaProcedimiento,
+			final String codigoDir3Responsable) {
 
 		final XmlFormulario xml = UtilsFormulario.xmlToValores(ixml);
 
@@ -151,6 +158,9 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
 		// Cabecera
 		final Cabecera cabecera = new Cabecera();
+		formularioPdf.setCabecera(cabecera);
+
+		// - Titulo
 		if (mostrarTituloConProcedimiento) {
 			cabecera.setTitulo(tituloProcedimiento);
 			cabecera.setSubtitulo(defFormInterno.getTitulo());
@@ -165,28 +175,28 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 			cabecera.setSubtitulo(cabecera.getSubtitulo().toUpperCase());
 		}
 
+		// - Codigo SIA
 		cabecera.setCodigoSia(siaProcedimiento);
 
-		if (StringUtils.isNotBlank(urlImagen)) {
-			try {
-				byte[] arrayBytes = null;
-				if (urlImagen.startsWith("http")) {
-					arrayBytes = IOUtils.toByteArray(new URL(urlImagen));
-				} else {
-					arrayBytes = IOUtils.toByteArray(new FileInputStream(urlImagen));
-				}
-				cabecera.setLogoByte(arrayBytes);
-				if (escaladoAltoImagen != null) {
-					cabecera.setAltoLogo(escaladoAltoImagen);
-				}
-				if (escaladoAnchoImagen != null) {
-					cabecera.setAnchoLogo(escaladoAnchoImagen);
-				}
-			} catch (final IOException e) {
-				throw new FormateadorException("Error accediendo a url logo: " + urlImagen, e);
+		// - Logo
+		byte[] arrayBytes = null;
+		if (StringUtils.isNotBlank(urlImagenDinamico)) {
+			// Reemplazamos DIR3
+			final String url = urlImagenDinamico.replace("${DIR3_RESPONSABLE}", codigoDir3Responsable);
+			arrayBytes = getImagen(url);
+		}
+		if (arrayBytes == null && StringUtils.isNotBlank(urlImagen)) {
+			arrayBytes = getImagen(urlImagen);
+		}
+		if (arrayBytes != null) {
+			cabecera.setLogoByte(arrayBytes);
+			if (escaladoAltoImagen != null) {
+				cabecera.setAltoLogo(escaladoAltoImagen);
+			}
+			if (escaladoAnchoImagen != null) {
+				cabecera.setAnchoLogo(escaladoAnchoImagen);
 			}
 		}
-		formularioPdf.setCabecera(cabecera);
 
 		// Recorremos las paginas
 		final List<Linea> lineas = new ArrayList<Linea>();
@@ -247,13 +257,36 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	}
 
 	/**
+	 * Obtiene url imagen
+	 *
+	 * @param url
+	 *                url imagen
+	 * @return bytes imagen (nulo si no puede recuperarla)
+	 */
+	private byte[] getImagen(final String url) {
+		byte[] arrayBytes = null;
+		if (StringUtils.isNotBlank(url)) {
+			try {
+				if (url.startsWith("http")) {
+					arrayBytes = IOUtils.toByteArray(new URL(url));
+				} else {
+					arrayBytes = IOUtils.toByteArray(new FileInputStream(url));
+				}
+			} catch (final IOException e) {
+				arrayBytes = null;
+			}
+		}
+		return arrayBytes;
+	}
+
+	/**
 	 * Stamp marca de agua.
 	 *
 	 * @param pdf
 	 *                PDF
 	 * @return pdf con marca de agua
 	 */
-	protected byte[] stampMarcaAgua(final byte[] pdf) {
+	private byte[] stampMarcaAgua(final byte[] pdf) {
 		ByteArrayInputStream bis = null;
 		ByteArrayOutputStream bos = null;
 		byte[] pdfStamp = pdf;
@@ -325,6 +358,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 				propiedades.load(bis);
 
 				urlImagen = propiedades.getProperty(PROP_LOGO_URL);
+				urlImagenDinamico = propiedades.getProperty(PROP_LOGO_DINAMICO_URL);
+
 				escaladoAltoImagen = (propiedades.getProperty(PROP_LOGO_ALTO) != null
 						? Integer.parseInt(propiedades.getProperty(PROP_LOGO_ALTO))
 						: null);

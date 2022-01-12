@@ -55,6 +55,7 @@ public final class FormularioDaoImpl implements FormularioDao {
 		hFormulario.setDatosActuales(dis.getXmlDatosActuales());
 		hFormulario.setTituloProcedimiento(dis.getTituloProcedimiento());
 		hFormulario.setCodigoSiaProcedimiento(dis.getCodigoSiaProcedimiento());
+		hFormulario.setDir3ResponsableProcedimiento(dis.getDir3ResponsableProcedimiento());
 		hFormulario.setIdGestorFormulariosExterno(dis.getIdGestorFormulariosExterno());
 
 		try {
@@ -90,6 +91,7 @@ public final class FormularioDaoImpl implements FormularioDao {
 		dis.setXmlDatosActuales(h.getDatosActuales());
 		dis.setTituloProcedimiento(h.getTituloProcedimiento());
 		dis.setCodigoSiaProcedimiento(h.getCodigoSiaProcedimiento());
+		dis.setDir3ResponsableProcedimiento(h.getDir3ResponsableProcedimiento());
 		dis.setEntidad(h.getEntidad());
 		dis.setIdGestorFormulariosExterno(h.getIdGestorFormulariosExterno());
 		try {

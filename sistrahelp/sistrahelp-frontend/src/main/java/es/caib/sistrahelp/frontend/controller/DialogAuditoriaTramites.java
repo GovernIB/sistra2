@@ -1,5 +1,7 @@
 package es.caib.sistrahelp.frontend.controller;
 
+import java.util.Map.Entry;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -15,6 +17,10 @@ import es.caib.sistrahelp.frontend.util.UtilJSF;
 public class DialogAuditoriaTramites extends DialogControllerBase {
 
 	private EventoAuditoriaTramitacion dato;
+
+	private Entry<String, String> valorSeleccionado;
+
+	private String copiar;
 
 	/**
 	 * Inicialización.
@@ -54,12 +60,48 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 	public void setDato(final EventoAuditoriaTramitacion dato) {
 		this.dato = dato;
 	}
-	
+
 	/**
 	 * Ayuda.
 	 */
 	public void ayuda() {
 		UtilJSF.openHelp("dialogoAuditoriaTramites");
+	}
+
+	/**
+	 * @return the copiar
+	 */
+	public String getCopiar() {
+		return copiar;
+	}
+
+	/**
+	 * @param copiar the copiar to set
+	 */
+	public void setCopiar(String copiar) {
+		this.copiar = copiar;
+	}
+
+	/**
+	 * @return the valorSeleccionado
+	 */
+	public Entry<String, String> getValorSeleccionado() {
+		return valorSeleccionado;
+	}
+
+	/** Avisa al growl que se ha copiado correctamente **/
+	public void avisarGrowl() {
+		UtilJSF.addMessageContext(es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * @param valorSeleccionado the valorSeleccionado to set
+	 */
+	public void setValorSeleccionado(Entry<String, String> valorSeleccionado) {
+		this.valorSeleccionado = valorSeleccionado;
+		if (valorSeleccionado != null) {
+			this.copiar = valorSeleccionado.getValue();
+		}
 	}
 
 }

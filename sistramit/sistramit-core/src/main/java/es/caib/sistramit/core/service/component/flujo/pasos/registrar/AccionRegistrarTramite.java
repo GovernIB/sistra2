@@ -25,6 +25,8 @@ import es.caib.sistra2.commons.plugins.registro.api.types.TypeOrigenDocumento;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeValidez;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistra2.commons.utils.JSONUtil;
+import es.caib.sistra2.commons.utils.JSONUtilException;
 import es.caib.sistra2.commons.utils.NifUtils;
 import es.caib.sistra2.commons.utils.ValidacionTipoException;
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
@@ -34,9 +36,11 @@ import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.Constantes;
+import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.DatosInteresado;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRegistrar;
+import es.caib.sistramit.core.api.model.flujo.DocumentoRegistro;
 import es.caib.sistramit.core.api.model.flujo.Entidad;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
@@ -46,11 +50,15 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFirmaDigital;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
+import es.caib.sistramit.core.api.model.system.EventoAuditoria;
+import es.caib.sistramit.core.api.model.system.types.TypeEvento;
+import es.caib.sistramit.core.api.model.system.types.TypeParametroEvento;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.flujo.ConstantesFlujo;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
 import es.caib.sistramit.core.service.component.integracion.RegistroComponent;
 import es.caib.sistramit.core.service.component.literales.Literales;
+import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoAnexo;
@@ -101,6 +109,9 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/** Configuración. */
 	@Autowired
 	private ConfiguracionComponent configuracion;
+	/** Auditoria. */
+	@Autowired
+	private AuditoriaComponent auditoriaComponent;
 
 	@Override
 	public RespuestaEjecutarAccionPaso ejecutarAccionPaso(final DatosPaso pDatosPaso, final DatosPersistenciaPaso pDpp,
@@ -286,8 +297,28 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			resReg = registroComponent.reintentarRegistro(pDefinicionTramite.getDefinicionVersion().getIdEntidad(),
 					idSesionRegistro, pVariablesFlujo.isDebugEnabled());
 		} else {
-			// Generar asiento
-			final AsientoRegistral asiento = generarAsiento(pDipa, pVariablesFlujo, pDefinicionTramite);
+			// Generar asiento con info asiento
+			final AsientoRegistral asiento = generarAsiento(pDipa, pVariablesFlujo, pDefinicionTramite, true);
+			// Genera evento debug (json excluyendo contenido docs)
+			if (pVariablesFlujo.isDebugEnabled()) {
+				final AsientoRegistral asientoDebug = generarAsiento(pDipa, pVariablesFlujo, pDefinicionTramite, false);
+				String asientoStr;
+				try {
+					asientoStr = JSONUtil.toJSON(asientoDebug);
+				} catch (final JSONUtilException e) {
+					asientoStr = "Error al serializar info asiento: " + e.getMessage();
+				}
+				final ListaPropiedades listaPropiedades = new ListaPropiedades();
+				listaPropiedades.addPropiedad(TypeParametroEvento.REGISTRO_ASIENTOREGISTRO.toString(), asientoStr);
+				final EventoAuditoria evento = new EventoAuditoria();
+				evento.setIdSesionTramitacion(pVariablesFlujo.getIdSesionTramitacion());
+				evento.setFecha(new Date());
+				evento.setTipoEvento(TypeEvento.DEBUG_SCRIPT);
+				evento.setDescripcion("Debug envio valores registro");
+				evento.setPropiedadesEvento(listaPropiedades);
+				auditoriaComponent.auditarEventoAplicacion(evento);
+			}
+			// Invoca a registrar
 			resReg = registroComponent.registrar(pDefinicionTramite.getDefinicionVersion().getIdEntidad(),
 					pVariablesFlujo.getIdSesionTramitacion(), idSesionRegistro, asiento,
 					pVariablesFlujo.isDebugEnabled());
@@ -410,10 +441,14 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 *                               variables flujo
 	 * @param pDefinicionTramite
 	 *                               Definición trámite
+	 * @param pContenidoDocs
+	 *                               Indica si genera o no el contenido de los
+	 *                               documentos (para debug generar sin contenido)
 	 * @return asiento registral
 	 */
 	private AsientoRegistral generarAsiento(final DatosInternosPasoRegistrar pDipa,
-			final VariablesFlujo pVariablesFlujo, final DefinicionTramiteSTG pDefinicionTramite) {
+			final VariablesFlujo pVariablesFlujo, final DefinicionTramiteSTG pDefinicionTramite,
+			final boolean pContenidoDocs) {
 		final AsientoRegistral asiento = new AsientoRegistral();
 		// - Datos origen
 		final DatosOrigen datosOrigen = new DatosOrigen();
@@ -449,9 +484,10 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		// - Documentos
 		final List<DocumentoAsiento> documentosRegistro = new ArrayList<>();
 		final DetallePasoRegistrar dpr = (DetallePasoRegistrar) pDipa.getDetallePaso();
-		documentosRegistro.addAll(generarDocumentosRegistro(pDipa, pVariablesFlujo, dpr.getFormularios()));
-		documentosRegistro.addAll(generarDocumentosRegistro(pDipa, pVariablesFlujo, dpr.getAnexos()));
-		documentosRegistro.addAll(generarDocumentosRegistro(pDipa, pVariablesFlujo, dpr.getPagos()));
+		documentosRegistro
+				.addAll(generarDocumentosRegistro(pDipa, pVariablesFlujo, dpr.getFormularios(), pContenidoDocs));
+		documentosRegistro.addAll(generarDocumentosRegistro(pDipa, pVariablesFlujo, dpr.getAnexos(), pContenidoDocs));
+		documentosRegistro.addAll(generarDocumentosRegistro(pDipa, pVariablesFlujo, dpr.getPagos(), pContenidoDocs));
 		asiento.setDocumentosRegistro(documentosRegistro);
 
 		asiento.setDatosOrigen(datosOrigen);
@@ -467,16 +503,20 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 *                                    variables flujo
 	 * @param listaDocumentosRegistro
 	 *                                    documentos registro
+	 * @param pContenidoDocs
+	 *                                    Indica si genera o no el contenido de los
+	 *                                    documentos (para debug generar sin
+	 *                                    contenido)
 	 * @return documentos asiento
 	 */
 	private List<DocumentoAsiento> generarDocumentosRegistro(final DatosInternosPasoRegistrar pDipa,
-			final VariablesFlujo pVariablesFlujo,
-			final List<es.caib.sistramit.core.api.model.flujo.DocumentoRegistro> listaDocumentosRegistro) {
+			final VariablesFlujo pVariablesFlujo, final List<DocumentoRegistro> listaDocumentosRegistro,
+			final boolean pContenidoDocs) {
 		final List<DocumentoAsiento> documentosRegistro = new ArrayList<>();
 		if (listaDocumentosRegistro != null) {
-			for (final es.caib.sistramit.core.api.model.flujo.DocumentoRegistro dr : listaDocumentosRegistro) {
+			for (final DocumentoRegistro dr : listaDocumentosRegistro) {
 				final List<DocumentoAsiento> documentosAsientoRegistral = generarDocumentosRegistro(pDipa,
-						pVariablesFlujo, dr);
+						pVariablesFlujo, dr, pContenidoDocs);
 				documentosRegistro.addAll(documentosAsientoRegistral);
 			}
 		}
@@ -492,11 +532,13 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 *                            Variables flujo
 	 * @param pDocReg
 	 *                            Documento registro
+	 * @param pContenidoDocs
+	 *                            Indica si genera o no el contenido de los
+	 *                            documentos (para debug generar sin contenido)
 	 * @return
 	 */
 	private List<DocumentoAsiento> generarDocumentosRegistro(final DatosInternosPasoRegistrar pDipa,
-			final VariablesFlujo pVariablesFlujo,
-			final es.caib.sistramit.core.api.model.flujo.DocumentoRegistro pDocReg) {
+			final VariablesFlujo pVariablesFlujo, final DocumentoRegistro pDocReg, final boolean pContenidoDocs) {
 
 		final List<DocumentoAsiento> res = new ArrayList<>();
 
@@ -517,7 +559,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			}
 
 			// XML formulario
-			res.add(generarDocumentoRegistro(dd, dd.getFichero(), null, true));
+			res.add(generarDocumentoRegistro(dd, dd.getFichero(), null, true, pContenidoDocs));
 			// PDF formulario
 			final ReferenciaFichero refPDF = ((DatosDocumentoFormulario) dd).getPdf();
 			// Si tiene firmas, generamos un documento para cada firma
@@ -525,11 +567,11 @@ public final class AccionRegistrarTramite implements AccionPaso {
 				final List<FirmaDocumentoPersistencia> firmas = documentoPersistencia
 						.obtenerFirmasFichero(refPDF.getId());
 				for (final FirmaDocumentoPersistencia f : firmas) {
-					res.add(generarDocumentoRegistro(dd, refPDF, f, false));
+					res.add(generarDocumentoRegistro(dd, refPDF, f, false, pContenidoDocs));
 				}
 			} else {
 				// Si no tiene firmas, generamos un documento para el pdf
-				res.add(generarDocumentoRegistro(dd, refPDF, null, false));
+				res.add(generarDocumentoRegistro(dd, refPDF, null, false, pContenidoDocs));
 			}
 			break;
 		case ANEXO:
@@ -540,20 +582,21 @@ public final class AccionRegistrarTramite implements AccionPaso {
 					final List<FirmaDocumentoPersistencia> firmas = documentoPersistencia
 							.obtenerFirmasFichero(dd.getFichero().getId());
 					for (final FirmaDocumentoPersistencia f : firmas) {
-						res.add(generarDocumentoRegistro(dd, dd.getFichero(), f, false));
+						res.add(generarDocumentoRegistro(dd, dd.getFichero(), f, false, pContenidoDocs));
 					}
 				} else {
 					// Si no tiene firmas, generamos un documento para el pdf
-					res.add(generarDocumentoRegistro(dd, dd.getFichero(), null, false));
+					res.add(generarDocumentoRegistro(dd, dd.getFichero(), null, false, pContenidoDocs));
 				}
 			}
 			break;
 		case PAGO:
 			// XML Pago
-			res.add(generarDocumentoRegistro(dd, dd.getFichero(), null, true));
+			res.add(generarDocumentoRegistro(dd, dd.getFichero(), null, true, pContenidoDocs));
 			// Justificante Pago (para pago electronico)
 			if (dd.getPresentacion() == TypePresentacion.ELECTRONICA) {
-				res.add(generarDocumentoRegistro(dd, ((DatosDocumentoPago) dd).getJustificantePago(), null, false));
+				res.add(generarDocumentoRegistro(dd, ((DatosDocumentoPago) dd).getJustificantePago(), null, false,
+						pContenidoDocs));
 			}
 			break;
 		default:
@@ -574,16 +617,23 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 *                           firma
 	 * @param xml
 	 *                           si es xml
+	 * @param pContenidoDocs
+	 *                           Indica si genera o no el contenido de los
+	 *                           documentos (para debug generar sin contenido)
 	 * @return documento registro
 	 */
 	private DocumentoAsiento generarDocumentoRegistro(final DatosDocumento documento,
-			final ReferenciaFichero refFichero, final FirmaDocumentoPersistencia firmaDocumento, final boolean xml) {
+			final ReferenciaFichero refFichero, final FirmaDocumentoPersistencia firmaDocumento, final boolean xml,
+			final boolean pContenidoDocs) {
 
 		// TODO Ver si particularizamos titulo
+		byte[] contentFic = null;
+		String contentFicStr = null;
 
 		// Recuperamos fichero
 		final DatosFicheroPersistencia fichero = dao.recuperarFicheroPersistencia(refFichero);
-		byte[] contentFic = fichero.getContenido();
+		contentFic = fichero.getContenido();
+		contentFicStr = "fic:" + refFichero.getId();
 		final String instancia = (documento.getTipo() == TypeDocumento.ANEXO
 				? ((DatosDocumentoAnexo) documento).getInstancia() + ""
 				: "1");
@@ -592,15 +642,18 @@ public final class AccionRegistrarTramite implements AccionPaso {
 
 		// Recuperamos firma
 		DatosFicheroPersistencia firmaFichero = null;
+		String firmaFicheroStr = null;
 		boolean anexarFirma = false;
 		if (firmaDocumento != null) {
 			firmaFichero = dao.recuperarFicheroPersistencia(firmaDocumento.getFirma());
+			firmaFicheroStr = "fic:" + firmaDocumento.getFirma().getId();
 			anexarFirma = true;
 		}
 
 		// Si se anexa un PADES, directamente se anexa la firma
 		if (firmaDocumento != null && firmaDocumento.getTipoFirma() == TypeFirmaDigital.PADES) {
 			contentFic = firmaFichero.getContenido();
+			contentFicStr = "fic:" + firmaDocumento.getFirma().getId();
 			anexarFirma = false;
 		}
 
@@ -619,14 +672,17 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		documentoAsientoRegistral.setTipoDocumento(calcularTipoDocumental(documento.getTipo(), xml));
 		documentoAsientoRegistral.setValidez(calcularValidez(documento.getTipo()));
 		documentoAsientoRegistral.setNombreFichero(nombreFic);
-		documentoAsientoRegistral.setContenidoFichero(contentFic);
+		documentoAsientoRegistral
+				.setContenidoFichero(pContenidoDocs ? contentFic : UtilsFlujo.stringToBytes(contentFicStr));
+
 		if (firmaDocumento != null) {
 			documentoAsientoRegistral.setTipoFirma(es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaDigital
 					.fromString(firmaDocumento.getTipoFirma().toString()));
 			documentoAsientoRegistral.setModoFirma(calcularTipoFirmaAsiento(firmaDocumento.getTipoFirma()));
 			if (anexarFirma) {
 				documentoAsientoRegistral.setNombreFirmaAnexada(firmaFichero.getNombre());
-				documentoAsientoRegistral.setContenidoFirma(firmaFichero.getContenido());
+				documentoAsientoRegistral.setContenidoFirma(
+						pContenidoDocs ? firmaFichero.getContenido() : UtilsFlujo.stringToBytes(firmaFicheroStr));
 			}
 		} else {
 			documentoAsientoRegistral.setModoFirma(TypeFirmaAsiento.SIN_FIRMA);
