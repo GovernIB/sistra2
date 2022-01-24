@@ -226,7 +226,7 @@
 				<p:dataTable id="dataTableTramites" var="td" value="#{viewTramites.dataModel}"
 												 rows="#{viewTramites.paginacion}" emptyMessage="#{msg['error.emptyRows']}" rowExpandMode="single"
 												 scrollable="true" scrollHeight="#{viewTramites.height}" rowIndexVar="rowIndex"
-						                         paginator="true" paginatorPosition="bottom"
+						                         paginator="#{viewTramites.mostrarPaginacion()}" paginatorPosition="bottom"
 						                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 						                         rowsPerPageTemplate="5,10,15,30"
 												 expandedRow="#{viewTramites.expandir(td)}" widgetVar="myWidget"

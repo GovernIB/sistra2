@@ -971,13 +971,13 @@ $.fn.appSuport = function(options) {
 						var nif_error = function() {
 
 								$("#nif")
-									.addClass("imc--nif-error")
+									.addClass("imc--f-suport-error")
 									.focus()
 									.off(".nifError")
 									.on("keyup.nifError", function() {
 
 										$(this)
-											.removeClass("imc--nif-error");
+											.removeClass("imc--f-suport-error");
 											
 									});
 
@@ -993,7 +993,76 @@ $.fn.appSuport = function(options) {
 				}
 
 				$("#nif")
-					.removeClass("imc--nif-error");
+					.removeClass("imc--f-suport-error");
+
+
+				// revisa TELF
+
+				var telf_val = $("#telefono").val();
+
+				var regexp = new RegExp( '(6|7|8|9)([0-9]){8}' )
+					,esTelfCorrecte = (regexp.test(telf_val)) ? true : false;
+
+				if (!esTelfCorrecte) {
+
+					var telf_error = function() {
+
+							$("#telefono")
+								.addClass("imc--f-suport-error")
+								.focus()
+								.off(".telfError")
+								.on("keyup.telfError", function() {
+
+									$(this)
+										.removeClass("imc--f-suport-error");
+										
+								});
+
+						};
+
+					imc_missatge
+						.appMissatge({ accio: "error", titol: txtSuportTelf_errorTitol, text: txtSuportTelf_errorText, alTancar: function() { telf_error(); } });
+
+					return;
+
+				}
+
+				$("#telefono")
+					.removeClass("imc--f-suport-error");
+
+
+				// revisa correu
+
+				var correu_val = $("#email").val();
+
+				var esCorreuCorrecte = (/^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,4}$/.test(correu_val)) ? true : false;;
+
+				if (!esCorreuCorrecte) {
+
+					var correu_error = function() {
+
+							$("#email")
+								.addClass("imc--f-suport-error")
+								.focus()
+								.off(".correuError")
+								.on("keyup.correuError", function() {
+
+									$(this)
+										.removeClass("imc--f-suport-error");
+										
+								});
+
+						};
+
+					imc_missatge
+						.appMissatge({ accio: "error", titol: txtSuportCorreu_errorTitol, text: txtSuportCorreu_errorText, alTancar: function() { correu_error(); } });
+
+					return;
+
+				}
+
+				$("#email")
+					.removeClass("imc--f-suport-error");
 
 
 				// missatge

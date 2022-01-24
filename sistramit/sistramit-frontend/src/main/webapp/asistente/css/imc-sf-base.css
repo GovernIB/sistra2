@@ -599,7 +599,7 @@ form textarea { font: normal 1em 'Bariol Regular', Arial, Helvetica, sans-serif;
 
 .imc-suport form input[readonly] { background-color: #f2f2f2; }
 
-.imc-suport form input.imc--nif-error { border-color: #c00; }
+.imc-suport form input.imc--f-suport-error { border-color: #c00; }
 
 
 /* input type */

@@ -64,8 +64,8 @@
 					</h:panelGrid>
 				</p:fieldset>
 				<p:spacer height="5px"/>
-				<p:fieldset legend="#{msg['dialogAuditoriaTramites.detalle']}" styleClass="margin-left-10 margin-right-10  noPadding"  rendered="#{dialogAuditoriaTramites.mostrarDetalle}">
-			 		<h:panelGrid rowClasses=",ui-datatable-odd" columnClasses="padding-left-18 w18 grid-right,padding-right-18 w75, w5" columns="3" styleClass="w100">
+				<p:fieldset legend="#{msg['dialogAuditoriaTramites.detalle']}" styleClass="margin-left-10 margin-right-10 margin-bottom-10 noPadding"  rendered="#{dialogAuditoriaTramites.mostrarDetalle}">
+			 		<h:panelGrid rowClasses=",ui-datatable-odd" columnClasses="padding-left-18 w18 grid-right,padding-right-18 w75, w5" columns="3" styleClass="w100 h100">
 				 	 	<p:outputLabel for="codigoError" value="#{msg['dialogAuditoriaTramites.codigoError']}:" rendered="#{dialogAuditoriaTramites.dato.codigoError != null and not empty dialogAuditoriaTramites.dato.codigoError}" />
 				 		<h:panelGroup rendered="#{dialogAuditoriaTramites.dato.codigoError != null and not empty dialogAuditoriaTramites.dato.codigoError}" >
 							<p:inputText id="codigoError" value="#{dialogAuditoriaTramites.dato.codigoError}" disabled="true" size="70"/>
@@ -92,6 +92,7 @@
 						<p:column>
 							<p:dataTable  id="dataTablePropiedades" var="td" value="#{dialogAuditoriaTramites.dato.propiedadesEvento.asArrayList}"
 										  emptyMessage="#{msg['error.emptyRows']}"
+										  styleClass="h100"
 										  scrollable="true"
 				                          paginator="false"
 				                          selection="#{dialogAuditoriaTramites.valorSeleccionado}"
@@ -105,7 +106,7 @@
 							        <h:outputText value="#{td.key}" />
 							    </p:column>
 
-							    <p:column headerText="#{msg['dialogAuditoriaTramites.headerPropiedades.valor']}" style="width:70%;" class="ui-panelgrid-cell">
+							    <p:column headerText="#{msg['dialogAuditoriaTramites.headerPropiedades.valor']}" style="width:70%;word-break: break-all;" class="ui-panelgrid-cell">
 							        <h:outputText value="#{td.value}" />
 							    </p:column>
 

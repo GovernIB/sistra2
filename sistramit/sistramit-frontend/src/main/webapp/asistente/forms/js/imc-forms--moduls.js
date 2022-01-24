@@ -666,7 +666,7 @@ $.fn.appFormsConfiguracio = function(options) {
 											: (conf_contingut === "id") ? "text"
 											: (conf_contingut === "nu") ? "text"
 											: (conf_contingut === "pw") ? "password"
-											: (conf_contingut === "te") ? "number"
+											: (conf_contingut === "te") ? "text" // number?
 											: (conf_contingut === "d") ? "hidden"
 											: "";
 
@@ -820,14 +820,14 @@ $.fn.appFormsConfiguracio = function(options) {
 								if (conf_opcions.fijo) {
 
 									elm_input
-										.attr("data-fixe", conf_opcions.fijo);
+										.attr({ "data-fixe": conf_opcions.fijo, maxlength: "9" });
 
 								}
 
 								if (conf_opcions.movil) {
 
 									elm_input
-										.attr("data-mobil", conf_opcions.movil);
+										.attr({ "data-mobil": conf_opcions.movil, maxlength: "9" });
 
 								}
 

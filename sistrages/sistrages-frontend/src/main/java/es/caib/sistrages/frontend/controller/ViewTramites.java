@@ -888,6 +888,14 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
+	 * Para mostrar la paginacion de tramites.
+	 * @return
+	 */
+	public boolean mostrarPaginacion() {
+		return this.dataModel != null && this.dataModel.getWrappedData() != null && !((List)this.dataModel.getWrappedData()).isEmpty();
+	}
+
+	/**
 	 * Buscar tramites.
 	 *
 	 * @param filtro

@@ -1112,7 +1112,7 @@ public class TramiteDaoImpl implements TramiteDao {
 				dominioTramite.setIdTramiteVersion(jTramiteVersion.getCodigo());
 				dominioTramite.setNumVersion(jTramiteVersion.getNumeroVersion());
 				dominioTramite.setRelease(jTramiteVersion.getRelease());
-				dominioTramite.setTramite(jTramiteVersion.getTramite().getDescripcion());
+				dominioTramite.setTramite(jTramiteVersion.getTramite().getIdentificador());
 				resultado.add(dominioTramite);
 			}
 		}

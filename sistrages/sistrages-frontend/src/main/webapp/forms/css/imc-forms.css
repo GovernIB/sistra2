@@ -1034,13 +1034,16 @@
 
 .imc-form .imc-element.imc-missatge-en-linia ul li { list-style: circle; }
 
-/* nav */
+.imc-form .imc-missatge-en-linia ol { padding-bottom: .5em; margin: .5em 0 0 2em; }
+.imc-form .imc-missatge-en-linia ol li { list-style: decimal; padding-bottom: .3em; }
 
+/* nav */
 .imc--forms-nav { clear: both; padding: .9em 0 0 0;
-margin-top: 0;
-height: 4em;
-border-top: 1px solid #aeaeae;
-box-shadow: 0 0 .5em .2em rgba(0, 0, 0, 0.2); }
+		margin-top: 0;
+		height: 4em;
+		border-top: 1px solid #aeaeae;
+		box-shadow: 0 0 .5em .2em rgba(0, 0, 0, 0.2); }
+
 .imc--forms-nav ul { list-style: none; text-align: center; margin: 0; }
 .imc--forms-nav li { display: inline-block; margin: 0 .3em; }
 
