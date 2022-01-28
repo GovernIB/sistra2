@@ -76,7 +76,7 @@ public final class ValoresDominio implements Serializable {
 	 */
 	public void setValor(final int numfila, final String cod, final String val) {
 		final Map<String, String> fila = datos.get(numfila - ConstantesNumero.N1);
-		fila.put(cod, val);
+		fila.put(cod.toUpperCase(), val);
 	}
 
 	/**
@@ -90,11 +90,13 @@ public final class ValoresDominio implements Serializable {
 	 * @return Valor columna para la fila seleccionada
 	 */
 	public String getValor(final int numfila, final String cod) {
-		String valor;
+		String valor = "";
 		final Map<String, String> fila = datos.get(numfila - ConstantesNumero.N1);
-		valor = fila.get(cod);
-		if (valor == null) {
-			valor = "";
+		if (cod != null) {
+			valor = fila.get(cod.toUpperCase());
+			if (valor == null) {
+				valor = "";
+			}
 		}
 		return valor;
 	}
@@ -214,7 +216,7 @@ public final class ValoresDominio implements Serializable {
 	}
 
 	/**
-	 * Setea los datos.
+	 * Setea los datos directamente (Las keys de los maps deben estar a upper).
 	 *
 	 * @param datos2
 	 */

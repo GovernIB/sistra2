@@ -16,7 +16,7 @@ import java.util.Map;
 public final class ValoresDominio implements Serializable {
 
 	/**
-	 * Filas de valores.
+	 * Filas de valores. Las keys de los maps se fuerzan a upper.
 	 */
 	private final List<Map<String, String>> datos = new ArrayList<>();
 
@@ -83,11 +83,13 @@ public final class ValoresDominio implements Serializable {
 	 * @return Valor columna para la fila seleccionada
 	 */
 	public String getValor(final int numfila, final String cod) {
-		String valor;
+		String valor = "";
 		final Map<String, String> fila = datos.get(numfila - 1);
-		valor = fila.get(cod.toUpperCase());
-		if (valor == null) {
-			valor = "";
+		if (cod != null) {
+			valor = fila.get(cod.toUpperCase());
+			if (valor == null) {
+				valor = "";
+			}
 		}
 		return valor;
 	}

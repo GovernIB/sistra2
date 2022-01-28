@@ -24,7 +24,8 @@ public final class RValoresDominio implements Serializable {
 	private static final int N1 = 1;
 
 	/**
-	 * Filas de valores.
+	 * Filas de valores. Las keys de los maps se fuerzan a upper.
+	 *
 	 */
 	@ApiModelProperty(value = "Filas de valores")
 	private final List<Map<String, String>> datos = new ArrayList<>();
@@ -62,15 +63,15 @@ public final class RValoresDominio implements Serializable {
 	 * Establece el valor de una columna en una fila.
 	 *
 	 * @param numfila
-	 *            Numero de fila (empiezan desde 1)
+	 *                    Numero de fila (empiezan desde 1)
 	 * @param cod
-	 *            Nombre columna
+	 *                    Nombre columna
 	 * @param val
-	 *            Valor
+	 *                    Valor
 	 */
 	public void setValor(final int numfila, final String cod, final String val) {
 		final Map<String, String> fila = datos.get(numfila - N1);
-		fila.put(cod, val);
+		fila.put(cod.toUpperCase(), val);
 	}
 
 	/**
@@ -78,17 +79,19 @@ public final class RValoresDominio implements Serializable {
 	 * devuelve cadena vacía.
 	 *
 	 * @param numfila
-	 *            Numero de fila (empiezan desde 1)
+	 *                    Numero de fila (empiezan desde 1)
 	 * @param cod
-	 *            Nombre columna
+	 *                    Nombre columna
 	 * @return Valor columna para la fila seleccionada
 	 */
 	public String getValor(final int numfila, final String cod) {
-		String valor;
+		String valor = "";
 		final Map<String, String> fila = datos.get(numfila - N1);
-		valor = fila.get(cod);
-		if (valor == null) {
-			valor = "";
+		if (cod != null) {
+			valor = fila.get(cod.toUpperCase());
+			if (valor == null) {
+				valor = "";
+			}
 		}
 		return valor;
 	}
@@ -115,7 +118,7 @@ public final class RValoresDominio implements Serializable {
 	 * Método para establecer error.
 	 *
 	 * @param pError
-	 *            error a establecer
+	 *                   error a establecer
 	 */
 	public void setError(final boolean pError) {
 		error = pError;
@@ -134,7 +137,7 @@ public final class RValoresDominio implements Serializable {
 	 * Método para establecer descripcionError.
 	 *
 	 * @param pDescripcionError
-	 *            descripcionError a establecer
+	 *                              descripcionError a establecer
 	 */
 	public void setDescripcionError(final String pDescripcionError) {
 		descripcionError = pDescripcionError;
@@ -178,7 +181,7 @@ public final class RValoresDominio implements Serializable {
 	 * Método para establecer codigoError.
 	 *
 	 * @param pCodigoError
-	 *            codigoError a establecer
+	 *                         codigoError a establecer
 	 */
 	public void setCodigoError(final String pCodigoError) {
 		codigoError = pCodigoError;
