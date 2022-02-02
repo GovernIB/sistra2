@@ -89,7 +89,7 @@
 	        				<h:panelGrid styleClass="noBorders" columns="3" cellpadding="10">
 		           				<p:selectBooleanCheckbox id="checkEmail" required="true" value="#{viewConfiguracionEntidad.data.emailHabilitado}" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
 								<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.email']}" />
-							    <p:inputText value="#{viewConfiguracionEntidad.data.email}" size="70"  maxlength="50" disabled="#{!viewConfiguracionEntidad.permiteEditar}" validatorMessage="#{msg['viewConfiguracionEntidad.emailIncorrecto']}">
+							    <p:inputText value="#{viewConfiguracionEntidad.data.email}" size="70"  maxlength="500" disabled="#{!viewConfiguracionEntidad.permiteEditar}" validatorMessage="#{msg['viewConfiguracionEntidad.emailIncorrecto']}">
 							    	<f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"  />
 							    </p:inputText>
 
