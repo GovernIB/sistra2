@@ -1,13 +1,14 @@
 package es.caib.sistra2.commons.plugins.dominio.rest;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
+import javax.xml.ws.Service;
+import javax.xml.ws.soap.SOAPBinding;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,8 +23,6 @@ import es.caib.sistra2.commons.plugins.dominio.api.IDominioPlugin;
 import es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio;
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistra2.commons.plugins.dominio.rest.cxf.SistraFacade;
-import es.caib.sistra2.commons.plugins.dominio.rest.cxf.SistraFacadeException_Exception;
-import es.caib.sistra2.commons.plugins.dominio.rest.cxf.SistraFacadeService;
 import es.caib.sistra2.commons.ws.utils.WsClientUtil;
 
 /**
@@ -39,6 +38,7 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 
 	/** Propiedades. **/
 	private static final QName SERVICE_NAME = new QName("urn:es:caib:sistra:ws:v2:services", "SistraFacadeService");
+	private static final QName PORT_NAME = new QName("urn:es:caib:sistra:ws:v2:services", "SistraFacade");
 
 	/** Constructor. **/
 	public DominioPluginRest(final String prefijoPropiedades, final Properties properties) {
@@ -50,12 +50,32 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 			final List<ParametroDominio> parametros, final String user, final String pass, final Long timeout)
 			throws DominioPluginException {
 		ValoresDominio retorno;
-		if (url.endsWith("wsdl")) {
-			retorno = invocarDominioWSDL(idDominio, url, parametros, user, pass, timeout);
+		if (url.indexOf("[SISTRA1]") != -1 || url.endsWith("wsdl")) {
+			final String urlWs = getSistra1WsUrl(url);
+			final String soapAction = getSistra1WsSoapAction(url);
+			final boolean logCallsSistra1 = "true".equals(this.getProperty("logCallsSistra1"));
+			retorno = invocarDominioWSDL(idDominio, urlWs, parametros, user, pass, soapAction, timeout,
+					logCallsSistra1);
 		} else {
 			retorno = invocarDominioREST(idDominio, url, parametros, user, pass, timeout);
 		}
 		return retorno;
+	}
+
+	private String getSistra1WsSoapAction(final String url) {
+		String res = null;
+		final int pos = url.indexOf("[SOAP-ACTION=");
+		if (pos != -1) {
+			res = url.substring(pos + "[SOAP-ACTION=".length(), url.indexOf("]", pos));
+		}
+		return StringUtils.trim(res);
+	}
+
+	private String getSistra1WsUrl(final String url) {
+		// Elimina tags especiales configuracion S1
+		String res = StringUtils.replaceAll(url, "\\[SISTRA1\\]", "");
+		res = StringUtils.replaceAll(res, "\\[SOAP-ACTION=.*\\]", "");
+		return StringUtils.trim(res);
 	}
 
 	/**
@@ -65,62 +85,49 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 	 * @param url
 	 * @param parametros
 	 * @param timeout
+	 * @param logCalls
 	 * @return
 	 * @throws DominioPluginException
 	 */
 	private ValoresDominio invocarDominioWSDL(final String idDominio, final String url,
-			final List<ParametroDominio> parametros, final String user, final String pass, final Long timeout)
-			throws DominioPluginException {
-		ValoresDominio valoresDominio = null;
-		URL wsdlURL;
-		/***
-		 * En caso de error: PKIX path building faild SunCertPathBuilderException... Hay
-		 * que importar, bajarse el certificado del https y ejecutar:
-		 *
-		 * La ruta del keytool y el cacert variará según servidor (cambiar el $JAVA_HOME
-		 * por la ruta correcta) :
-		 *
-		 * $JAVA_HOME\jre\bin>keytool -import -trustcacerts -keystore
-		 * $JAVA_HOME\jre\lib\security\cacerts -storepass changeit -alias provescaib
-		 * -file provescaibes.crt -noprompt
-		 *
-		 */
+			final List<ParametroDominio> parametros, final String user, final String pass, final String soapAction,
+			final Long timeout, final boolean logCalls) throws DominioPluginException {
 
 		try {
-			wsdlURL = new URL(url);
-		} catch (final MalformedURLException e) {
-			throw new DominioPluginException("URL mal formada", e.getCause());
-		}
 
-		final SistraFacadeService ss = new SistraFacadeService(wsdlURL, SERVICE_NAME);
-		final SistraFacade port = ss.getSistraFacade();
+			// final SistraFacadeService ss = new SistraFacadeService(wsdlURL,
+			// SERVICE_NAME);
+			// final SistraFacade port = ss.getSistraFacade();
 
-		try {
-			configurarService((BindingProvider) port, getEndpoint(url), user, pass, (timeout * 1000L), false);
-		} catch (final Exception e1) {
-			throw new DominioPluginException("Mal configuracion del servicio", e1.getCause());
+			final Service service = javax.xml.ws.Service.create(SERVICE_NAME);
+			service.addPort(PORT_NAME, SOAPBinding.SOAP11HTTP_BINDING, url);
+			final SistraFacade port = service.getPort(PORT_NAME, SistraFacade.class);
 
-		}
+			final BindingProvider bp = (BindingProvider) port;
 
-		final es.caib.sistra2.commons.plugins.dominio.rest.cxf.ParametrosDominio parametrosWSDL = new es.caib.sistra2.commons.plugins.dominio.rest.cxf.ParametrosDominio();
-		if (parametros != null && !parametros.isEmpty()) {
-			for (final ParametroDominio parametro : parametros) {
-				if (parametro.getValor() != null && !parametro.getValor().isEmpty()) {
-					parametrosWSDL.getParametro().add(parametro.getValor());
+			final String endpoint = getEndpoint(url);
+			bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpoint);
+			WsClientUtil.configurePort(bp, endpoint, user, pass, "BASIC", soapAction, (timeout*1000L), logCalls);
+
+			final es.caib.sistra2.commons.plugins.dominio.rest.cxf.ParametrosDominio parametrosWSDL = new es.caib.sistra2.commons.plugins.dominio.rest.cxf.ParametrosDominio();
+			if (parametros != null && !parametros.isEmpty()) {
+				for (final ParametroDominio parametro : parametros) {
+					if (parametro.getValor() != null && !parametro.getValor().isEmpty()) {
+						parametrosWSDL.getParametro().add(parametro.getValor());
+					}
 				}
 			}
-		}
 
-		try {
 			final es.caib.sistra2.commons.plugins.dominio.rest.cxf.ValoresDominio valoresDominioSistra1 = port
 					.obtenerDominio(idDominio, parametrosWSDL);
-			valoresDominio = Utilidades.getValoresDominioSistra1(valoresDominioSistra1);
+			final ValoresDominio valoresDominio = Utilidades.getValoresDominioSistra1(valoresDominioSistra1);
 
-		} catch (final SistraFacadeException_Exception e) {
-			throw new DominioPluginException("Error conectándose a la url", e.getCause());
+			return valoresDominio;
+
+		} catch (final Exception e) {
+			throw new DominioPluginException("Error conectándose a la url: " + e.getMessage(), e);
 		}
 
-		return valoresDominio;
 	}
 
 	/**
@@ -139,28 +146,13 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 		return endpoint;
 	}
 
-	/**
-	 * Configura service.
-	 *
-	 * @param bp
-	 *                     Binding Provider
-	 * @param endpoint
-	 *                     Endpoint ws
-	 * @param user
-	 *                     usuario
-	 * @param pass
-	 *                     password
-	 * @throws Exception
-	 */
-	private void configurarService(final BindingProvider bp, final String endpoint, final String user,
-			final String pass, final Long timeout, final boolean logCalls) throws Exception {
-		bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpoint);
-		WsClientUtil.configurePort(bp, endpoint, user, pass, "BASIC", timeout, logCalls);
-	}
-
 	private ValoresDominio invocarDominioREST(final String idDominio, final String url,
 			final List<ParametroDominio> parametros, final String user, final String pass, final Long timeout)
 			throws DominioPluginException {
+
+		// Para habilitar logs de rest hay que habilitar a nivel de apache client
+		// logging.level.org.apache.http=DEBUG
+		// logging.level.httpclient.wire=DEBUG
 
 		final RestTemplate restTemplate = new RestTemplate(getClientHttpRequestFactory((int) (timeout * 1000L)));
 
@@ -199,7 +191,6 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 		final HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
 		// Connect timeout
 		clientHttpRequestFactory.setConnectTimeout(timeout);
-
 		// Read timeout
 		clientHttpRequestFactory.setReadTimeout(timeout);
 		return clientHttpRequestFactory;

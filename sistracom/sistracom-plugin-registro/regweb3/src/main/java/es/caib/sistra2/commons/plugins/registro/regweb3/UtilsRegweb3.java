@@ -149,7 +149,7 @@ public class UtilsRegweb3 {
 
 		bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpoint);
 
-		WsClientUtil.configurePort(bp, endpoint, user, pass, "BASIC", timeout, logCalls);
+		WsClientUtil.configurePort(bp, endpoint, user, pass, "BASIC", null, timeout, logCalls);
 
 	}
 
@@ -308,7 +308,7 @@ public class UtilsRegweb3 {
 	 */
 	public static String eliminarCaracteresNoPermitidos(final String cadena) {
 		final String[] charsNoPermitidos = { "\\+", ">", "%", "\\*", "&", ":", ";", "¿", "\\?", "/", "\\|", "!", "<",
-				"¡", "\"" , "'"};
+				"¡", "\"", "'" };
 		String nombreFicheroNormalizado = cadena;
 		for (final String cnp : charsNoPermitidos) {
 			nombreFicheroNormalizado = nombreFicheroNormalizado.replaceAll(cnp, "_");

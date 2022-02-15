@@ -5,6 +5,7 @@ import java.net.URL;
 
 import javax.xml.ws.BindingProvider;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
@@ -21,7 +22,7 @@ public class WsClientUtil {
 	private final static Logger log = LoggerFactory.getLogger(WsClientUtil.class);
 
 	public static void configurePort(final BindingProvider port, final String url, final String user, final String pass,
-			final String auth, final Long timeout, final boolean logCalls) throws Exception {
+			final String auth, final String soapAction, final Long timeout, final boolean logCalls) throws Exception {
 
 		final Client client = ClientProxy.getClient(port);
 		final HTTPConduit conduit = (HTTPConduit) client.getConduit();
@@ -30,6 +31,11 @@ public class WsClientUtil {
 		// Timeout
 		if (timeout != null) {
 			httpClientPolicy.setReceiveTimeout(timeout);
+		}
+
+		// Soap-Action
+		if (StringUtils.isNotBlank(soapAction)) {
+			port.getRequestContext().put(BindingProvider.SOAPACTION_URI_PROPERTY, soapAction);
 		}
 
 		// Disable CN Check
