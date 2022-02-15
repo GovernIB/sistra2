@@ -23,7 +23,7 @@
          <dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-dominio-api</artifactId>
-            <version>1.2.1-SNAPSHOT</version>
+            <version>1.2.2</version>
              <scope>compile</scope>
         </dependency>
 
