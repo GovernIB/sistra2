@@ -397,12 +397,12 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 * @return
 	 */
 	public boolean isNingunError() {
-		if (filaEntidad == null || filaEntidad.getResultado().isError() || filaArea == null
+		if (filaEntidad == null || filaEntidad.getResultado() ==null || filaEntidad.getResultado().isError() || filaArea == null
 				|| filaArea.getResultado().isError()) {
 			return false;
 		}
 
-		if (filaTramite == null || filaTramite.getResultado().isError() || filaTramiteVersion == null
+		if (filaTramite == null || filaTramite.getResultado() ==null || filaTramite.getResultado().isError() || filaTramiteVersion == null
 				|| filaTramiteVersion.getResultado().isError() || filaTramiteRegistro == null
 				|| filaTramiteRegistro.getResultado().isError()) {
 			return false;

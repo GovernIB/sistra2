@@ -400,9 +400,9 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 		prepararFlujoGestores();
 
 		// Seteamos si se ven los botones de area/tramite/tramiteVersion
-		this.setMostrarBotonArea(filaArea.getResultado().isWarning() && isNingunError());
-		this.setMostrarBotonTramite(filaTramite.getResultado().isWarning() && isNingunError());
-		this.setMostrarBotonTramiteVersion(filaTramiteVersion.getResultado().isWarning() && isNingunError());
+		this.setMostrarBotonArea(filaArea != null && filaArea.getResultado() != null && filaArea.getResultado().isWarning() && isNingunError());
+		this.setMostrarBotonTramite(filaTramite != null && filaTramite.getResultado() != null && filaTramite.getResultado().isWarning() && isNingunError());
+		this.setMostrarBotonTramiteVersion(filaTramiteVersion != null && filaTramiteVersion.getResultado() != null && filaTramiteVersion.getResultado().isWarning() && isNingunError());
 
 		setMostrarPanelInfo(true);
 
@@ -415,12 +415,12 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	 * @return
 	 */
 	public boolean isNingunError() {
-		if (filaEntidad == null || filaEntidad.getResultado().isError() || filaArea == null
+		if (filaEntidad == null || filaEntidad.getResultado() == null || filaEntidad.getResultado().isError() || filaArea == null
 				|| filaArea.getResultado().isError()) {
 			return false;
 		}
 
-		if (filaTramite == null || filaTramite.getResultado().isError() || filaTramiteVersion == null
+		if (filaTramite == null || filaTramite.getResultado() == null ||  filaTramite.getResultado().isError() || filaTramiteVersion == null
 				|| filaTramiteVersion.getResultado().isError() || filaTramiteRegistro == null
 				|| filaTramiteRegistro.getResultado().isError()) {
 			return false;
