@@ -77,7 +77,8 @@ public class HEventoAuditoria implements IModelApi {
     /**
      * detalle.
      */
-    @Column(name = "LOG_EVEDET", length = 4000)
+    @Lob
+    @Column(name = "LOG_EVEDET")
     private String detalle;
 
     /**
