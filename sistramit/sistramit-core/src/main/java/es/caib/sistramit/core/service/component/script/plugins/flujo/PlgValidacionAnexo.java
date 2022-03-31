@@ -91,7 +91,7 @@ public final class PlgValidacionAnexo implements PlgValidacionAnexoInt {
 					datosPDFAnexo.put(key, reader.getAcroFields().getField(key));
 				}
 			} catch (final IOException ex) {
-				log.warn("Error extrayendo valor PDF: " + codigo + ". Devolvemos valor vacío.", ex);
+				log.warn("Error extraient valor PDF: " + codigo + ". Devolvemos valor vacío.", ex);
 				datosPDFAnexo = null;
 			}
 		}
@@ -117,7 +117,7 @@ public final class PlgValidacionAnexo implements PlgValidacionAnexoInt {
 			try {
 				documentoXML = reader.read(new ByteArrayInputStream(this.datosFicheroAnexo));
 			} catch (final DocumentException e) {
-				log.warn("Error extrayendo valor xml: " + xpath + ". Devolvemos valor vacío.", e);
+				log.warn("Error extraient valor xml: " + xpath + ". Devolvemos valor vacío.", e);
 				documentoXML = null;
 			}
 		}

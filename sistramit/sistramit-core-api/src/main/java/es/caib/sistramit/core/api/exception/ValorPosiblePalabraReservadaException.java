@@ -18,13 +18,11 @@ public final class ValorPosiblePalabraReservadaException extends ServiceRollback
 	/**
 	 * Constructor ValorCampoFormularioCaracteresNoPermitidosException.
 	 *
-	 * @param idCampo
-	 *            idCampo
-	 * @param valorNoPermitido
-	 *            valor no permitido
+	 * @param idCampo          idCampo
+	 * @param valorNoPermitido valor no permitido
 	 */
 	public ValorPosiblePalabraReservadaException(final String idCampo, final String valorNoPermitido) {
-		super("El valor del campo de formulario " + idCampo + " tiene caracteres no permitidos: " + valorNoPermitido);
+		super("El valor del camp de formulari " + idCampo + " té caràcters no permesos: " + valorNoPermitido);
 	}
 
 }

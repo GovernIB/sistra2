@@ -7,28 +7,24 @@ import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
  * existe.
  */
 @SuppressWarnings("serial")
-public final class CampoFormularioNoExisteException
-        extends ServiceRollbackException {
+public final class CampoFormularioNoExisteException extends ServiceRollbackException {
 
-    /*
-     * CampoFormularioNoExisteException FATAL.
-     */
-    @Override
-    public TypeNivelExcepcion getNivel() {
-        return TypeNivelExcepcion.FATAL;
-    }
+	/*
+	 * CampoFormularioNoExisteException FATAL.
+	 */
+	@Override
+	public TypeNivelExcepcion getNivel() {
+		return TypeNivelExcepcion.FATAL;
+	}
 
-    /**
-     * Constructor CampoFormularioNoExisteException.
-     *
-     * @param idFormulario
-     *            Parámetro id formulario
-     * @param idCampo
-     *            Parámetro id campo
-     */
-    public CampoFormularioNoExisteException(final String idFormulario,
-            final String idCampo) {
-        super("Campo " + idCampo + " no existe en formulario " + idFormulario);
-    }
+	/**
+	 * Constructor CampoFormularioNoExisteException.
+	 *
+	 * @param idFormulario Parámetro id formulario
+	 * @param idCampo      Parámetro id campo
+	 */
+	public CampoFormularioNoExisteException(final String idFormulario, final String idCampo) {
+		super("Camp " + idCampo + " no existeix en formulari " + idFormulario);
+	}
 
 }

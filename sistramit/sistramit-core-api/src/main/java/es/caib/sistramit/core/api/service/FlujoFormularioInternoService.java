@@ -3,7 +3,9 @@ package es.caib.sistramit.core.api.service;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.formulario.Captcha;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
+import es.caib.sistramit.core.api.model.formulario.ResultadoBuscadorDinamico;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
 import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
@@ -119,6 +121,54 @@ public interface FlujoFormularioInternoService {
 	 * @return Lista de valores campo
 	 */
 	List<ValorCampo> deserializarValoresCampos(String idSesionFormulario, Map<String, String> valores);
+
+	/**
+	 * Realiza búsqueda sobre selector dinámico.
+	 *
+	 * @param idSesionFormulario
+	 *                               idSesionFormulario
+	 * @param idCampo
+	 *                               idCampo
+	 * @param textoCampo
+	 *                               texto a buscar
+	 * @param valores
+	 *                               valores actuales
+	 * @return valores posibles selector
+	 */
+	ResultadoBuscadorDinamico buscadorDinamico(String idSesionFormulario, String idCampo, String textoCampo,
+			List<ValorCampo> valores);
+
+	/**
+	 * Genera imagen de captcha.
+	 *
+	 * @param idSesionFormulario
+	 *                               idSesionFormulario
+	 * @param idCampo
+	 *                               idCampo
+	 * @return imagen de captcha
+	 */
+	Captcha generarImagenCaptcha(final String idSesionFormulario, final String idCampo);
+
+	/**
+	 * Genera sonido de captcha.
+	 *
+	 * @param idSesionFormulario
+	 *                               idSesionFormulario
+	 * @param idCampo
+	 *                               idCampo
+	 * @return sonido de captcha
+	 */
+	Captcha generarSonidoCaptcha(final String idSesionFormulario, final String idCampo);
+
+	/**
+	 * Regenerar imagen de captcha.
+	 *
+	 * @param idSesionFormulario
+	 *                               idSesionFormulario
+	 * @param pIdImagen
+	 *                               Imagen
+	 */
+	void regenerarCaptcha(final String idSesionFormulario, final String idCampo);
 
 	// -------------------------------------------------------------------------------------------
 	// - Métodos especiales invocados desde el interceptor. No pasan por

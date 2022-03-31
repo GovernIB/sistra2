@@ -20,21 +20,19 @@ public final class EncodeException extends ServiceRollbackException {
 	/**
 	 * Constructor EncodeException.
 	 *
-	 * @param cause
-	 *            Causa
+	 * @param cause Causa
 	 */
 	public EncodeException(final Exception cause) {
-		super("Error conversion: " + cause.getMessage(), cause);
+		super("Error conversió: " + cause.getMessage(), cause);
 	}
 
 	/**
 	 * Constructor EncodeException.
 	 *
-	 * @param cause
-	 *            Causa
+	 * @param cause Causa
 	 */
 	public EncodeException(final String cause) {
-		super("Error conversion: " + cause);
+		super("Error conversió: " + cause);
 	}
 
 }

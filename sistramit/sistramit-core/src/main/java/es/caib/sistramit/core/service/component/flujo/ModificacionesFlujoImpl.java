@@ -332,7 +332,7 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 		}
 		if (idPasoActual == null) {
 			if (pasosPersist.isEmpty()) {
-				throw new ErrorConfiguracionException("No se ha recuperado ningun paso de persistencia");
+				throw new ErrorConfiguracionException("No s'ha recuperat cap passa de persistència");
 			}
 			idPasoActual = pasosPersist.get(0).getId();
 		}
@@ -404,7 +404,7 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 			// Verificamos si hay que inicializar o revisar el paso
 			final DatosPaso dpDest = pDatosSesion.getDatosTramite().getDatosPaso(pIdPaso);
 			if (dpDest == null) {
-				throw new AccionPasoNoPermitidaException("No existen datos para paso " + pIdPaso);
+				throw new AccionPasoNoPermitidaException("No existen dades per passa " + pIdPaso);
 			}
 			if (dpDest.getEstado() == TypeEstadoPaso.NO_INICIALIZADO || dpDest.getEstado() == TypeEstadoPaso.REVISAR) {
 				// Preparamos plugins paso
@@ -430,7 +430,7 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 	public DetallePaso obtenerDetallePaso(final DatosSesionTramitacion pDatosSesion, final String pIdPaso) {
 		final DatosPaso datosPaso = pDatosSesion.getDatosTramite().getDatosPaso(pIdPaso);
 		if (datosPaso == null) {
-			throw new AccionPasoNoPermitidaException("No existen datos del paso " + pIdPaso);
+			throw new AccionPasoNoPermitidaException("No existeixen dades de la passa " + pIdPaso);
 		}
 		final ControladorPaso cpa = this.getControladorPaso(pDatosSesion, pIdPaso);
 		final DetallePaso dtpa = cpa.detallePaso(datosPaso, pDatosSesion.getDefinicionTramite());
@@ -470,15 +470,15 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 					final int indicePasoActual = UtilsSTG.devuelveIndicePaso(idPasoActual,
 							pDatosSesion.getDefinicionTramite());
 					if (indicePasoActual == ConstantesNumero.N_1) {
-						throw new ErrorConfiguracionException("No se encuentra paso " + idPasoActual);
+						throw new ErrorConfiguracionException("No es troba passa " + idPasoActual);
 					}
 
 					final int indiceSiguiente = indicePasoActual + ConstantesNumero.N1;
 
 					if (indiceSiguiente >= pDatosSesion.getDefinicionTramite().getDefinicionVersion().getPasos()
 							.size()) {
-						throw new ErrorConfiguracionException("El paso " + idPasoActual
-								+ " es el último, no es final y no tiene configurado un paso siguiente en el script de navegacion");
+						throw new ErrorConfiguracionException("La passa " + idPasoActual
+								+ " és el darrer, no és final y no té configurat una passa següent en el script de navegació");
 					}
 					idPasoSiguiente = pDatosSesion.getDefinicionTramite().getDefinicionVersion().getPasos()
 							.get(indiceSiguiente).getIdentificador();
@@ -610,13 +610,13 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 					cp = controladorPasoAccion;
 					break;
 				default:
-					throw new TipoNoControladoException("Tipo de paso no controlado: " + dp.getTipo().name());
+					throw new TipoNoControladoException("Tipus de passa no controlada: " + dp.getTipo().name());
 				}
 			}
 		}
 
 		if (cp == null) {
-			throw new TipoNoControladoException("Tipo de paso no controlado para paso con id: " + idPaso);
+			throw new TipoNoControladoException("Tipus de passa no controlada per passa amb id: " + idPaso);
 		}
 
 		return cp;
@@ -674,7 +674,7 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 				if (defPasoSiguiente == null) {
 					throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_NAVEGACION_PASO.name(),
 							pDatosSesion.getDatosTramite().getIdSesionTramitacion(), pIdPaso,
-							"El script de navegacion no ha devuelto un id de paso correcto: " + idPasoSiguiente);
+							"El script de navegació no ha tornat un id de passa correcte: " + idPasoSiguiente);
 				}
 			}
 

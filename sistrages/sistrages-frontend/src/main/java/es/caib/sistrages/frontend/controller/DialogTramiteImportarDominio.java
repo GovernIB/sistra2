@@ -21,6 +21,7 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
@@ -129,12 +130,10 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 		case CONSULTA_REMOTA:
 			mostrarUrl = true;
 			setMostrarConfiguraciones(true);
-			if (area == null) {
-				configuraciones = new ArrayList<>();
-			} else {
-				configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(area,
-						TypeIdioma.fromString(UtilJSF.getSessionBean().getLang()), null);
-			}
+			final TypeAmbito typeAmbito = data.getDominio().getAmbito();
+			configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(typeAmbito, area,
+					UtilJSF.getIdEntidad(), TypeIdioma.fromString(UtilJSF.getSessionBean().getLang()), null);
+
 			ConfiguracionAutenticacion configAutSinAutenticacion = new ConfiguracionAutenticacion();
 			configAutSinAutenticacion.setCodigo(null);
 			configAutSinAutenticacion.setIdentificador(UtilJSF.getLiteral("dialogDominio.sinAutenticacion"));
@@ -193,9 +192,9 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 			final Map<String, String> params = new HashMap<>();
 			params.put(TypeParametroVentana.ID.toString(), dominio.getCodigo().toString());
 			params.put(TypeParametroVentana.AMBITO.toString(), dominio.getAmbito().toString());
-			if (dominio.getAreas() != null && !dominio.getAreas().isEmpty()) {
+			if (dominio.getArea() != null) {
 				params.put(TypeParametroVentana.AREA.toString(),
-						((Area) dominio.getAreas().toArray()[0]).getCodigo().toString());
+						dominio.getArea().getCodigo().toString());
 			}
 			UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 700);
 		}
@@ -244,17 +243,28 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	 */
 	public void consultarConfiguracion() {
 
+		String ambito = data.getDominio().getAmbito().toString();
 		// Muestra dialogo
 		if (data.getConfiguracionAutenticacionActual() == null
-				|| (data.getConfiguracionAutenticacionActual().getCodigo() == null && data.getConfiguracionAutenticacionActual().getCodigoImportacion() == null)) {
+				|| (data.getConfiguracionAutenticacionActual().getCodigo() == null
+						&& data.getConfiguracionAutenticacionActual().getCodigoImportacion() == null)) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 		} else {
 			final Map<String, String> params = new HashMap<>();
-			params.put(TypeParametroVentana.AREA.toString(), area.toString());
+
+			params.put(TypeParametroVentana.AMBITO.toString(), ambito);
+			if (TypeAmbito.AREA.toString().equals(ambito)) {
+				params.put(TypeParametroVentana.AREA.toString(), data.getIdArea().toString());
+			} else if (TypeAmbito.ENTIDAD.toString().equals(ambito)) {
+				params.put(TypeParametroVentana.ENTIDAD.toString(), data.getIdEntidad().toString());
+			}
+
 			if (data.getConfiguracionAutenticacionActual().getCodigo() != null) {
-				params.put(TypeParametroVentana.ID.toString(), data.getConfiguracionAutenticacionActual().getCodigo().toString());
+				params.put(TypeParametroVentana.ID.toString(),
+						data.getConfiguracionAutenticacionActual().getCodigo().toString());
 			} else if (data.getConfiguracionAutenticacionActual().getCodigoImportacion() != null) {
-				params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(data.getConfiguracionAutenticacionActual()));
+				params.put(TypeParametroVentana.DATO.toString(),
+						UtilJSON.toJSON(data.getConfiguracionAutenticacionActual()));
 				params.put(TypeParametroVentana.MODO_IMPORTAR.toString(), "true");
 			}
 			UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 195);
@@ -305,13 +315,17 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	 */
 	public void nuevo() {
 
-
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 
-		params.put(TypeParametroVentana.AREA.toString(), this.area.toString());
+		if (TypeAmbito.AREA.toString().equals(data.getDominio().getAmbito().toString())) {
+			params.put(TypeParametroVentana.AREA.toString(), this.area.toString());
+		} else if (TypeAmbito.ENTIDAD.toString().equals(data.getDominio().getAmbito().toString())) {
+			params.put(TypeParametroVentana.ENTIDAD.toString(), data.getIdEntidad().toString());
+		}
 		params.put(TypeParametroVentana.DESACTIVAR_BOTONERA.toString(), "true");
 		params.put(TypeParametroVentana.MODO_IMPORTAR.toString(), "true");
+		params.put(TypeParametroVentana.AMBITO.toString(), data.getDominio().getAmbito().toString());
 		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.ALTA, params, true, 550, 195);
 	}
 

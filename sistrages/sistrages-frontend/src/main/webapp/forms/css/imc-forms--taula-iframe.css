@@ -22,9 +22,9 @@ aside { display: none; }
 	background: transparent url() no-repeat center center / auto 1em;
 }
 
-.imc-iframe-botonera button.imc-bt-ta-guarda-i-nou::before { background-image: url(../imgs/icones/ico_afegix.svg); }
-.imc-iframe-botonera button.imc-bt-ta-guarda::before { background-image: url(../imgs/icones/ico_guarda.svg); }
-.imc-iframe-botonera button.imc-bt-ta-cancela::before { background-image: url(../imgs/icones/ico_cancela.svg); }
+.imc-iframe-botonera button.imc-bt-ta-guarda-i-nou::before { background-image: url(forms/imgs/ico_afegix.svg); }
+.imc-iframe-botonera button.imc-bt-ta-guarda::before { background-image: url(forms/imgs/ico_guarda.svg); }
+.imc-iframe-botonera button.imc-bt-ta-cancela::before { background-image: url(forms/imgs/ico_cancela.svg); }
 
 .imc-iframe-botonera button.imc-bt-ta-guarda-i-nou,
 .imc-iframe-botonera button.imc-bt-ta-guarda { background-color: #4dba79; }

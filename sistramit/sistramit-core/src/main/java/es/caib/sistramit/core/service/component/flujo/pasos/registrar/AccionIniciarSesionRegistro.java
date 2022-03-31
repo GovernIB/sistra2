@@ -106,12 +106,12 @@ public final class AccionIniciarSesionRegistro implements AccionPaso {
 
 		// El paso debe estar en un estado valido para registrar
 		if (pDipa.getEstado() != TypeEstadoPaso.PENDIENTE) {
-			throw new AccionPasoNoPermitidaException("El paso no esta en un estado valido para registrar");
+			throw new AccionPasoNoPermitidaException("La passa no està en un estat vàlid per registrar");
 		}
 
 		// No debe estar en estado reintentar
 		if (detallePasoRegistrar.getReintentar() == TypeSiNo.SI) {
-			throw new AccionPasoNoPermitidaException(" Registro está pediente de verificación (estado reintentar)");
+			throw new AccionPasoNoPermitidaException(" Registre està pendent de verificació (estat reintentar)");
 		}
 
 		// Validaciones registro
@@ -126,12 +126,12 @@ public final class AccionIniciarSesionRegistro implements AccionPaso {
 		// caso de que el acceso sea autenticado)
 		if (pVariablesFlujo.getNivelAutenticacion() != TypeAutenticacion.ANONIMO && !pVariablesFlujo.getUsuario()
 				.getNif().equals(pDipa.getParametrosRegistro().getDatosPresentacion().getPresentador().getNif())) {
-			throw new AccionPasoNoPermitidaException("El trámite debe ser registrado por el presentador ("
+			throw new AccionPasoNoPermitidaException("El tràmite ha de ser registrat pel presentador ("
 					+ pDipa.getParametrosRegistro().getDatosPresentacion().getPresentador().getNif() + ")");
 		}
 		// Verificar si los documentos estan firmados
 		if (!detallePasoRegistrar.verificarFirmas()) {
-			throw new AccionPasoNoPermitidaException("No están todos los documentos firmados");
+			throw new AccionPasoNoPermitidaException("No estan tots els documents signats");
 		}
 
 		// Verificamos si se permite registro
@@ -141,7 +141,7 @@ public final class AccionIniciarSesionRegistro implements AccionPaso {
 		// Validar representacion
 		if (pasoRegistrar.isAdmiteRepresentacion() && pasoRegistrar.isValidaRepresentacion()) {
 			// TODO PENDIENTE IMPLEMENTACION
-			throw new RuntimeException("Validar representacion pendiente implementar");
+			throw new RuntimeException("Validar representació pendent implementar");
 		}
 
 		// Script de permitir registrar

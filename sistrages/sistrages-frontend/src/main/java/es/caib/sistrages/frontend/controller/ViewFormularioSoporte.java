@@ -12,6 +12,7 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.types.TypeFormularioSoporte;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -43,8 +44,7 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de propiedades.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 
@@ -70,7 +70,7 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 	 * Crea nueva propiedad.
 	 */
 	public void nuevoFormulario() {
-		UtilJSF.openDialog(DialogFormularioSoporte.class, TypeModoAcceso.ALTA, null, true, 600, 250);
+		UtilJSF.openDialog(DialogFormularioSoporte.class, TypeModoAcceso.ALTA, null, true, 600, 270);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(datoSeleccionado.getCodigo()));
-		UtilJSF.openDialog(DialogFormularioSoporte.class, TypeModoAcceso.EDICION, params, true, 600, 250);
+		UtilJSF.openDialog(DialogFormularioSoporte.class, TypeModoAcceso.EDICION, params, true, 600, 270);
 	}
 
 	/**
@@ -113,6 +113,14 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 
 	}
 
+	public String showTipos(List<TypeFormularioSoporte> lista) {
+		String stringFormado = "";
+		for (TypeFormularioSoporte el : lista) {
+			stringFormado += UtilJSF.getLiteral("typeFormularioSoporte." + el.toString()) + "<br/>";
+		}
+		return stringFormado;
+	}
+
 	/**
 	 * Verifica si hay fila seleccionada.
 	 *
@@ -132,9 +140,11 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 	 */
 	private void buscar() {
 		// lista
+		TypeFormularioSoporte a = TypeFormularioSoporte.ADMINISTRADOR_AREA;
 		listaDatos = entidadService.listOpcionesFormularioSoporte(UtilJSF.getIdEntidad());
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
+
 	}
 
 	/**
@@ -159,8 +169,7 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setListaDatos(final List<FormularioSoporte> data) {
 		this.listaDatos = data;
@@ -174,8 +183,7 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 	}
 
 	/**
-	 * @param dataSeleccionada
-	 *            the dataSeleccionada to set
+	 * @param dataSeleccionada the dataSeleccionada to set
 	 */
 	public void setDatoSeleccionado(final FormularioSoporte datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;

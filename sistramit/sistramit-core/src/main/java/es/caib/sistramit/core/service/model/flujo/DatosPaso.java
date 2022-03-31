@@ -57,7 +57,7 @@ public final class DatosPaso implements Serializable {
 			datosInternosPaso = new DatosInternosPasoGuardar(idSesionTramitacion, idPaso);
 			break;
 		default:
-			throw new TipoNoControladoException("Tipo de paso no permitido: " + tipo);
+			throw new TipoNoControladoException("Tipus de passa no permesa: " + tipo);
 		}
 	}
 

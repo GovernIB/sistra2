@@ -86,7 +86,7 @@ public final class ResDatosInicialesFormulario
     private void validarCampo(final ValorCampo vs) throws ScriptException {
         if (!UtilsFormulario.comprobarCaracteresPermitidos(vs)) {
             throw new ScriptException(
-                    "Valor campo contiene caracteres no permitidos: "
+                    "Valor camp conté caràcters no permesos: "
                             + vs.print());
         }
     }

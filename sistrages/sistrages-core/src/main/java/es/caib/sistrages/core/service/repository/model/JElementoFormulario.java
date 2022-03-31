@@ -81,6 +81,9 @@ public class JElementoFormulario implements IModelApi {
 	private JSeccionFormulario seccionFormulario;
 
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "elementoFormulario", cascade = CascadeType.ALL)
+	private JCampoFormularioCaptcha captchaFormulario;
+
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "elementoFormulario", cascade = CascadeType.ALL)
 	private JCampoFormulario campoFormulario;
 
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "elementoFormulario", cascade = CascadeType.ALL)
@@ -226,6 +229,20 @@ public class JElementoFormulario implements IModelApi {
 		this.imagenFormulario = imagenFormulario;
 	}
 
+	/**
+	 * @return the captchaFormulario
+	 */
+	public JCampoFormularioCaptcha getCaptchaFormulario() {
+		return captchaFormulario;
+	}
+
+	/**
+	 * @param captchaFormulario the captchaFormulario to set
+	 */
+	public void setCaptchaFormulario(JCampoFormularioCaptcha captchaFormulario) {
+		this.captchaFormulario = captchaFormulario;
+	}
+
 	public <T> ComponenteFormulario toModel(final Class<T> model) {
 		ComponenteFormulario newModel = null;
 
@@ -309,6 +326,13 @@ public class JElementoFormulario implements IModelApi {
 			jModel.setNoMostrarTexto(false);
 			jModel.setTexto(JLiteral.fromModel(texto));
 			break;
+		case CAPTCHA:
+			texto.add(new Traduccion("es", "Incluye el texto de la imagen"));
+			texto.add(new Traduccion("ca", "Inclou el text de la imatge"));
+			jModel.setNumeroColumnas(1);
+			jModel.setNoMostrarTexto(false);
+			jModel.setTexto(JLiteral.fromModel(texto));
+			break;
 		default:
 			jModel.setNoMostrarTexto(true);
 			jModel.setNumeroColumnas(1);
@@ -337,6 +361,7 @@ public class JElementoFormulario implements IModelApi {
 					JListaElementosFormulario.clonar(elemento.getListaElementosFormulario(), jelemento, jpagina));
 			jelemento.setEtiquetaFormulario(JEtiquetaFormulario.clonar(elemento.getEtiquetaFormulario(), jelemento));
 			jelemento.setSeccionFormulario(JSeccionFormulario.clonar(elemento.getSeccionFormulario(), jelemento));
+			jelemento.setCaptchaFormulario(JCampoFormularioCaptcha.clonar(elemento.getCaptchaFormulario(), jelemento));
 			jelemento.setCampoFormulario(JCampoFormulario.clonar(elemento.getCampoFormulario(), jelemento, cambioArea));
 			jelemento.setImagenFormulario(JImagenFormulario.clonar(elemento.getImagenFormulario(), jelemento));
 		}

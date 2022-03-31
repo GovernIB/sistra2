@@ -8,19 +8,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
+import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.FuenteDatosComponent;
+import es.caib.sistrages.core.service.repository.dao.AreaDao;
 import es.caib.sistrages.core.service.repository.dao.DominioDao;
+import es.caib.sistrages.core.service.repository.dao.EntidadDao;
 import es.caib.sistrages.core.service.repository.dao.FuenteDatoDao;
+import es.caib.sistrages.core.service.repository.model.JFuenteDatos;
 
 /**
  * La clase DominioServiceImpl.
@@ -33,6 +37,12 @@ public class DominioServiceImpl implements DominioService {
 	 * log.
 	 */
 	private final Logger log = LoggerFactory.getLogger(DominioServiceImpl.class);
+
+	@Autowired
+	EntidadDao entidadDao;
+
+	@Autowired
+	AreaDao areaDao;
 
 	/**
 	 * dominio dao.
@@ -63,14 +73,6 @@ public class DominioServiceImpl implements DominioService {
 	public Dominio loadDominio(final Long codDominio) {
 		Dominio result = null;
 		result = dominioDao.getByCodigo(codDominio);
-		return result;
-	}
-
-	@Override
-	@NegocioInterceptor
-	public Dominio loadDominio(final String identificadorDominio) {
-		Dominio result = null;
-		result = dominioDao.getByIdentificador(identificadorDominio);
 		return result;
 	}
 
@@ -251,8 +253,14 @@ public class DominioServiceImpl implements DominioService {
 
 	@Override
 	@NegocioInterceptor
-	public FuenteDatos loadFuenteDato(final String idFuenteDato) {
-		return fuenteDatoDao.getByIdentificador(idFuenteDato);
+	public FuenteDatos loadFuenteDato(final TypeAmbito ambito, final String identificador, final Long codigoEntidad, final Long codigoArea, final Long codigoFD) {
+		return fuenteDatoDao.getByIdentificador(ambito, identificador, codigoEntidad, codigoArea, codigoFD);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public boolean existeFuenteDato(final TypeAmbito ambito, final String identificador, final Long codigoEntidad, final Long codigoArea, final Long codigoFD) {
+		return fuenteDatoDao.existeFDByIdentificador(ambito, identificador, codigoEntidad, codigoArea, codigoFD);
 	}
 
 	@Override
@@ -283,7 +291,16 @@ public class DominioServiceImpl implements DominioService {
 	@NegocioInterceptor
 	public void importarDominio(final FilaImportarDominio filaDominio, final Long idEntidad, final Long idArea)
 			throws Exception {
-		dominioDao.importar(filaDominio, idEntidad, idArea);
+		// Si es de tipo FD , vemos de obtenerlo antes
+		JFuenteDatos jfuenteDatos;
+		if (filaDominio.getDominio().getTipo() == TypeDominio.FUENTE_DATOS) {
+			jfuenteDatos = fuenteDatoDao.importarFD(filaDominio, filaDominio.getDominio().getAmbito(),
+					idEntidad, idArea);
+		} else {
+			jfuenteDatos = null ;
+		}
+
+		dominioDao.importar(filaDominio, idEntidad, idArea, jfuenteDatos);
 	}
 
 	@Override
@@ -303,6 +320,30 @@ public class DominioServiceImpl implements DominioService {
 	@NegocioInterceptor
 	public List<Dominio> getDominiosByIdentificador(List<String> identificadoresDominio, final Long idEntidad, final Long idArea) {
 		return dominioDao.getDominiosByIdentificador(identificadoresDominio, idEntidad, idArea);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public boolean existeDominioByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
+			Long codigoArea, Long codigoDominio) {
+		return dominioDao.existeDominioByIdentificador( ambito,  identificador,  codigoEntidad,
+				 codigoArea,  codigoDominio);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Dominio loadDominioByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
+			Long codigoArea, Long codigoDominio) {
+		return dominioDao.getDominioByIdentificador( ambito,  identificador,  null, null,codigoEntidad,
+				 codigoArea,  codigoDominio);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Dominio loadDominioByIdentificadorCompuesto(String identificadorCompuesto) {
+
+		ValorIdentificadorCompuesto valor = new ValorIdentificadorCompuesto(identificadorCompuesto);
+		return dominioDao.getDominioByIdentificador(valor.getAmbito(), valor.getIdentificador(), valor.getIdentificadorEntidad(), valor.getIdentificadorArea(), null, null, null);
 	}
 
 }

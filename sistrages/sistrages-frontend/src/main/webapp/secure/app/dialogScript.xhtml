@@ -10,6 +10,8 @@
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
 
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeAmbito" var="TypeAmbito" />
+
 <h:head>
 	<title><h:outputText value="#{msg['dialogScript.titulo']}"/>
 		   <h:outputText value=" - #{msg['dialogScript.campo']} #{dialogScript.nombreComponente}" rendered="#{not empty dialogScript.nombreComponente}" />
@@ -68,6 +70,8 @@
 		<f:viewParam name="COMPONENTE" value="#{dialogScript.idComponente}"/>
 		<f:viewParam name="COMPONENTE_NOMBRE" value="#{dialogScript.nombreComponente}"/>
 		<f:viewParam name="PAGINA" value="#{dialogScript.idPagina}"/>
+		<f:viewParam name="LITERAL_HTML" required="false" value="#{dialogScript.literalHTML}"/>
+		<f:viewAction action="#{dialogScript.checkLiteral}" />
 		<f:viewAction action="#{dialogScript.init}" />
 	</f:metadata>
 	<h:form id="dialogScript" styleClass="margin-top-10" style="height:100%">
@@ -169,18 +173,22 @@
 										   		 >
 
 												<p:ajax event="rowSelect" global="false" />
+												<p:column styleClass="wpx35">
+										        	<p:commandButton id="commandCopiarDominio"  value=" " style="width:30px;height:30px" process="@this" styleClass="button margin-top-3"   onclick="copiarClipboardDominio('#{dominio.identificadorCompuesto}');" icon="fa fa-copy" />
+										        	<p:tooltip value="#{msg['botones.copiar']} #{dominio.identificadorCompuesto}" for="commandCopiarDominio" ></p:tooltip>
+										        </p:column>
 
-										        <p:column headerText="#{msg['dialogScript.mensaje.headerIdentificador']}" styleClass="w20">
-										        	<h:outputText value="#{dominio.identificador}" />
+										        <p:column headerText="#{msg['dialogScript.mensaje.headerIdentificador']}" styleClass="w30" style="word-wrap: break-word;">
+										        	<h:outputText value="#{dominio.identificadorCompuesto}"   />
 										        </p:column>
 
 												<p:column headerText="#{msg['dialogScript.mensaje.headerDescripcion']}"  styleClass="w40">
 										        	<h:outputText value="#{dominio.descripcion}" />
 										        </p:column>
 
-												<p:column headerText=""  styleClass="w40">
-													<p:commandButton id="btnCons" value="#{msg['botones.consultar']}"  icon="fa fa-eye"  actionListener="#{dialogScript.consultarDominio(dominio.codigo)}" process="@this"  />
-													<p:commandButton id="btnPing" value="#{msg['botones.ping']}" icon="fa fa-arrow-up" actionListener="#{dialogScript.ping(dominio.codigo)}" process="@this" style="margin-left:10px" />
+												<p:column headerText=""  styleClass="w20">
+													<p:commandButton id="btnCons" value="#{msg['botones.consultar']}"  icon="fa fa-eye"  actionListener="#{dialogScript.consultarDominio(dominio)}" process="@this" style="width:100px" />
+													<p:commandButton id="btnPing" value="#{msg['botones.ping']}" icon="fa fa-arrow-up" actionListener="#{dialogScript.ping(dominio.codigo)}" process="@this" style="margin-top:10px; width:100px" />
 												</p:column>
 										    </p:dataTable>
 									  </p:panel>
@@ -232,6 +240,28 @@
 								//console.log("texto copiado fin:" + valor);
 
 								document.getElementById("dialogScript:hiddenCommandMensajeCopy").click();
+							}
+
+							function copiarClipboardDominio(domIdentificador) {
+
+								// Crea un campo de texto "oculto"
+								var aux = document.createElement("input");
+
+								// Asigna el contenido del elemento especificado al valor del campo
+								aux.setAttribute("value", domIdentificador);
+
+								// Añade el campo a la página
+								document.body.appendChild(aux);
+
+								// Selecciona el contenido del campo
+								aux.select();
+
+								// Copia el texto seleccionado
+								document.execCommand("copy");
+
+								// Elimina el campo de la página
+								document.body.removeChild(aux);
+
 							}
 						</h:outputScript>
 

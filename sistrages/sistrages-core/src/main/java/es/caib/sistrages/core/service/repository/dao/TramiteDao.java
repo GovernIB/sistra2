@@ -12,6 +12,7 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
+import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 
 /**
  * La interface TramiteDao.
@@ -227,11 +228,13 @@ public interface TramiteDao {
 
 	/**
 	 * Obtiene tramite a partir de identificador.
-	 *
 	 * @param identificador
+	 * @param idArea
+	 * @param identificadorArea
 	 * @return
 	 */
-	Tramite getTramiteByIdentificador(String identificador);
+
+	Tramite getTramiteByIdentificador(String identificador, final Long idArea, String identificadorArea, Long codigoTramite);
 
 	/**
 	 * Obtiene tramite version a partir del num version y su id tramite.
@@ -273,16 +276,18 @@ public interface TramiteDao {
 	 * @param codigo
 	 * @return
 	 */
-	boolean checkIdentificadorRepetido(String identificador, Long codigo);
+	boolean checkIdentificadorRepetido(String identificador, Long codigo, final Long idArea);
 
 	/**
 	 * Recupera el tramite Version dado el identificador logico
-	 *
+	 * @param idEntidad
+	 * @param idArea
 	 * @param idTramite
 	 * @param numeroVersion
 	 * @return
 	 */
-	TramiteVersion getTramiteVersionByNumVersion(String idTramite, int numeroVersion);
+
+	TramiteVersion getTramiteVersionByNumVersion(String idEntidad, String idArea, String idTramite, int numeroVersion);
 
 	/**
 	 * Importa un trámite.
@@ -376,7 +381,7 @@ public interface TramiteDao {
 	 * @param idTramiteVersion
 	 * @param dominios
 	 */
-	void actualizarDominios(TramiteVersion tramiteVersion, final List<Dominio> dominios);
+	void actualizarDominios(TramiteVersion tramiteVersion, final List<ValorIdentificadorCompuesto> dominios);
 
 	/**
 	 * Devuelve el total de tramite por GFE

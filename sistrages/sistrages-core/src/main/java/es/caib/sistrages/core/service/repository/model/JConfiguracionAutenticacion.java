@@ -12,6 +12,10 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
+import es.caib.sistrages.core.api.model.ConsultaGeneral;
+import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeConsultaGeneral;
 
 /**
  * JConfiguracionAutenticacion
@@ -31,6 +35,13 @@ public class JConfiguracionAutenticacion implements IModelApi {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "CAU_CODARE", nullable = false)
 	private JArea area;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "CAU_CODENT", nullable = false)
+	private JEntidad entidad;
+
+	@Column(name = "CAU_AMBITO", nullable = false, length = 1)
+	private String ambito;
 
 	@Column(name = "CAU_IDENTI", nullable = false, length = 20)
 	private String identificador;
@@ -69,6 +80,34 @@ public class JConfiguracionAutenticacion implements IModelApi {
 	 */
 	public void setIdentificador(final String identificador) {
 		this.identificador = identificador;
+	}
+
+	/**
+	 * @return the entidad
+	 */
+	public JEntidad getEntidad() {
+		return entidad;
+	}
+
+	/**
+	 * @param entidad the entidad to set
+	 */
+	public void setEntidad(JEntidad entidad) {
+		this.entidad = entidad;
+	}
+
+	/**
+	 * @return the ambito
+	 */
+	public String getAmbito() {
+		return ambito;
+	}
+
+	/**
+	 * @param ambito the ambito to set
+	 */
+	public void setAmbito(String ambito) {
+		this.ambito = ambito;
 	}
 
 	/**
@@ -131,9 +170,27 @@ public class JConfiguracionAutenticacion implements IModelApi {
 		final ConfiguracionAutenticacion confAutenticacion = new ConfiguracionAutenticacion();
 		confAutenticacion.setCodigo(codigo);
 		confAutenticacion.setIdentificador(this.getIdentificador());
+		if (this.ambito.equals(TypeAmbito.GLOBAL.toString())) {
+			confAutenticacion.setIdentificadorCompuesto("GLOBAL"+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+this.identificador);
+		} else if (this.ambito.equals(TypeAmbito.ENTIDAD.toString())) {
+			String idEntidad = this.entidad.getIdentificador();
+			confAutenticacion.setIdentificadorCompuesto(idEntidad+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+this.identificador);
+		} else {
+			if (this.area != null) {
+				String idArea = this.area.getIdentificador();
+				String idEntidad = this.area.getEntidad().getIdentificador();
+				confAutenticacion.setArea(area.getCodigo());
+				confAutenticacion.setIdentificadorCompuesto(idEntidad+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+idArea+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+this.identificador);
+			}
+		}
+		confAutenticacion.setIdentificador(this.getIdentificador());
+		confAutenticacion.setAmbito(TypeAmbito.fromString(this.getAmbito()));
 		confAutenticacion.setDescripcion(this.getDescripcion());
 		confAutenticacion.setUsuario(this.getUsuario());
 		confAutenticacion.setPassword(this.getPassword());
+		if (this.getEntidad() != null) {
+			confAutenticacion.setEntidad(this.getEntidad().getCodigo());
+		}
 		return confAutenticacion;
 	}
 
@@ -146,6 +203,7 @@ public class JConfiguracionAutenticacion implements IModelApi {
 			jModel.setDescripcion(model.getDescripcion());
 			jModel.setUsuario(model.getUsuario());
 			jModel.setPassword(model.getPassword());
+			jModel.setAmbito(model.getAmbito().toString());
 		}
 		return jModel;
 	}
@@ -156,6 +214,22 @@ public class JConfiguracionAutenticacion implements IModelApi {
 		this.setIdentificador(pConfAut.getIdentificador());
 		this.setUsuario(pConfAut.getUsuario());
 		this.setPassword(pConfAut.getPassword());
+	}
+
+	/** ToModel consulta general **/
+	public ConsultaGeneral toModelConsultaGeneral() {
+		ConsultaGeneral consulta = new ConsultaGeneral();
+		consulta.setAmbito(TypeAmbito.fromString(this.getAmbito()));
+		consulta.setCodigo(this.getCodigo());
+		consulta.setDescripcion(this.getDescripcion());
+		consulta.setIdentificador(this.getIdentificador());
+		consulta.setSubtipo("");
+		consulta.setTipo(TypeConsultaGeneral.CONFIG_AUTENTICACION);
+		if (this.getArea() != null) {
+			consulta.setArea(this.getArea().getIdentificador());
+			consulta.setIdArea(area.getCodigo());
+		}
+		return consulta;
 	}
 
 }

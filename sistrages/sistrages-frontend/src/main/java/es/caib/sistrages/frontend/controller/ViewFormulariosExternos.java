@@ -238,7 +238,8 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	 * @return el valor de permiteAlta
 	 */
 	public boolean getPermiteAlta() {
-		return (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+		return (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT || securityService
+				.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id)).contains(TypeRolePermisos.ADMINISTRADOR_AREA));
 	}
 
 	/**
@@ -247,7 +248,8 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	 * @return el valor de permiteEditar
 	 */
 	public boolean getPermiteEditar() {
-		return (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+		return (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT || securityService
+				.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id)).contains(TypeRolePermisos.ADMINISTRADOR_AREA));
 	}
 
 	/**
@@ -264,8 +266,7 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 
@@ -294,8 +295,7 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	}
 
 	/**
-	 * @param filtro
-	 *                   the filtro to set
+	 * @param filtro the filtro to set
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
@@ -309,8 +309,7 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	}
 
 	/**
-	 * @param listaDatos
-	 *                       the listaDatos to set
+	 * @param listaDatos the listaDatos to set
 	 */
 	public void setListaDatos(final List<GestorExternoFormularios> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -348,8 +347,7 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	}
 
 	/**
-	 * @param datoSeleccionado
-	 *                             the datoSeleccionado to set
+	 * @param datoSeleccionado the datoSeleccionado to set
 	 */
 	public void setDatoSeleccionado(final GestorExternoFormularios datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
@@ -358,8 +356,7 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	/**
 	 * Abrir dialogo.
 	 *
-	 * @param modoAccesoDlg
-	 *                          Modo acceso
+	 * @param modoAccesoDlg Modo acceso
 	 */
 	private void abrirDlg(final TypeModoAcceso modoAccesoDlg) {
 		// Verifica si no hay fila seleccionada

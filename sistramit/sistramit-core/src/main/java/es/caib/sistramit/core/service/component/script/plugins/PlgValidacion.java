@@ -85,7 +85,7 @@ public final class PlgValidacion implements PlgValidacionInt {
 		existeAviso = pExisteaAviso;
 		tipoAviso = TypeValidacion.fromString(StringUtils.lowerCase(pTipo));
 		if (tipoAviso == null) {
-			throw new ScriptException("Tipo de aviso no valido: " + pTipo);
+			throw new ScriptException("Tipus d'avis no vàlido: " + pTipo);
 		}
 	}
 

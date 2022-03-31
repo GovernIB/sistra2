@@ -53,8 +53,6 @@ $.fn.appSerialitza = function(opcions) {
 
 					}
 
-					//form_id_i_valors[el_id] = el_valortipus + "#-@" + input_val;
-
 					form_el_json[el_id] = { id: el_id, tipo: el_valortipus, valor: input_val };
 
 					form_id_i_valors[el_id] = JSON.stringify( form_el_json[el_id] );
@@ -65,8 +63,6 @@ $.fn.appSerialitza = function(opcions) {
 					var input_el = el.find("input:first")
 						,input_val = input_el.val()
 						,input_text = el.find(".imc-select:first span").text();
-
-					//form_id_i_valors[el_id] = el_valortipus + "#-@" + input_val + "#-@" + input_text;
 
 					if (input_val === "") {
 
@@ -109,16 +105,12 @@ $.fn.appSerialitza = function(opcions) {
 
 							if (check_el.is(":checked")) {
 
-								//valor += "#-@" + check_val + "#-@" + check_text;
-
 								form_el_json[el_id]["valor"]
 									.push({ descripcion: check_text, valor: check_val });
 
 							}
 
 						});
-
-					//form_id_i_valors[el_id] = el_valortipus + valor;
 
 					form_id_i_valors[el_id] = JSON.stringify( form_el_json[el_id] );
 
@@ -130,13 +122,9 @@ $.fn.appSerialitza = function(opcions) {
 
 					if (input_el.length) {
 
-						//form_id_i_valors[el_id] = el_valortipus + "#-@" + input_val + "#-@" + input_text;
-
 						form_el_json[el_id] = { id: el_id, tipo: el_valortipus, valor: { descripcion: input_text, valor: input_val } };
 
 					} else {
-
-						//form_id_i_valors[el_id] = el_valortipus + "#-@#-@";
 
 						form_el_json[el_id] = { id: el_id, tipo: el_valortipus, valor: null };
 
@@ -144,12 +132,30 @@ $.fn.appSerialitza = function(opcions) {
 
 					form_id_i_valors[el_id] = JSON.stringify( form_el_json[el_id] );
 
+				} else if (el_tipus === "selector" && el_contingut === "a") {
+
+					var input_el = el.find("input[type=hidden]:first")
+						,input_val = input_el.val()
+						,input_text = el.find("textarea:first").val();
+
+					if (input_el.length) {
+
+						form_el_json[el_id] = { id: el_id, tipo: el_valortipus, valor: { descripcion: input_text, valor: input_val } };
+
+					} else {
+
+						form_el_json[el_id] = { id: el_id, tipo: el_valortipus, valor: null };
+
+					}
+
+					form_id_i_valors[el_id] = JSON.stringify( form_el_json[el_id] );
+
+
+
 				} else if (el_tipus === "verificacion") {
 
 					var input_el = el.find("input:first")
 						,input_val = (input_el.is(":checked")) ? input_el.attr("data-marcat") : input_el.attr("data-desmarcat");
-
-					//form_id_i_valors[el_id] = el_valortipus + "#-@" + input_val;
 
 					form_el_json[el_id] = { id: el_id, tipo: el_valortipus, valor: input_val };
 
@@ -159,8 +165,6 @@ $.fn.appSerialitza = function(opcions) {
 
 					var input_el = el.find("input:first")
 						,input_val = input_el.val();
-
-					//form_id_i_valors[el_id] = "s#-@" + input_val;
 
 					form_el_json[el_id] = { id: el_id, tipo: "s", valor: input_val };
 
@@ -184,28 +188,7 @@ $.fn.appSerialitza = function(opcions) {
 									,tr_dades = tr_el.attr("data-dades")
 									,td_elms = tr_el.find("td");
 
-								//var element_json = { "elemento": [] };
-
 								var element_json = JSON.parse(tr_dades);
-								
-								/*
-								td_elms
-									.each(function(k) {
-
-										if (k >= 1) {
-
-											var td_el = $(this)
-												,td_id = td_el.attr("data-id")
-												,td_tipus = td_el.attr("data-tipus")
-												,td_valor = td_el.text();
-
-											element_json["elemento"]
-												.push({ "id": td_id, "tipo": td_tipus, "valor": td_valor });
-
-										}
-
-									});
-									*/
 
 								form_el_json[el_id]["valor"]
 									.push( element_json );
@@ -351,6 +334,11 @@ $.fn.appSerialitza = function(opcions) {
 					} else if (el_tipus === "selector" && el_contingut === "u") {
 
 						esError = (esObligatori && !input_el.length) ? true : false;
+						ERROR_TEXT = (esError) ? txtFormDinCampError_selector : false;
+
+					} else if (el_tipus === "selector" && el_contingut === "a") {
+
+						esError = (input_el.is(":required") && input_val === "") ? true : false;
 						ERROR_TEXT = (esError) ? txtFormDinCampError_selector : false;
 
 					} else if (el_tipus === "verificacion") {

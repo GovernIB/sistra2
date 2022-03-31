@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
+import es.caib.sistrages.rest.api.interna.RArea;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistramit.core.api.exception.ErrorFormularioSoporteException;
@@ -61,16 +62,19 @@ public final class UtilsFormularioSoporte {
 	 * @param opc
 	 *                    opción
 	 * @param entidad
+	 * @param area
 	 * @return
 	 */
 	public static List<String> obtenerDestinatariosFormularioSoporte(final DatosFormularioSoporte datosFormSoporte,
-			final RConfiguracionEntidad entidad, final DatosSesionTramitacion datosSesion) {
+			final RConfiguracionEntidad entidad, final String area, final DatosSesionTramitacion datosSesion) {
 
 		final ROpcionFormularioSoporte opc = obtenerOpcionFormularioSoporte(datosFormSoporte.getProblemaTipo(),
 				entidad);
 
 		final List<String> destinatarios = new ArrayList<>();
-		if ("R".equals(opc.getDestinatario())) {
+
+		// Destinatarios responsables
+		if (opc.getDestinatario().contains("R")) {
 			// Responsable incidencias o email contacto genérico
 			String emailDest = datosSesion.getDatosTramite().getDefinicionTramiteCP().getEmailSoporte();
 			if (StringUtils.isBlank(emailDest)) {
@@ -78,27 +82,58 @@ public final class UtilsFormularioSoporte {
 			}
 			if (StringUtils.isBlank(emailDest)) {
 				throw new ErrorFormularioSoporteException(
-						"Tramite no tiene indicado email de soporte ni a nivel de trámite ni de entidad");
+						"Tràmit no té indicat email de suport ni a nivell de tràmit ni d'entidad");
 			}
 			if (!ValidacionesTipo.getInstance().esEmail(emailDest)) {
-				throw new ErrorFormularioSoporteException("Email no es válido: " + emailDest);
+				throw new ErrorFormularioSoporteException("Email no és vàlid: " + emailDest);
 			}
 			destinatarios.add(emailDest);
-		} else if ("E".equals(opc.getDestinatario())) {
+		}
+
+		// Destinatarios especificos
+		if (opc.getDestinatario().contains("E")) {
 			// Lista destinatarios
-			if (StringUtils.isNotBlank(opc.getListaEmails())) {
-				final String[] listaDest = opc.getListaEmails().split(";");
-				for (final String dest : listaDest) {
-					if (!ValidacionesTipo.getInstance().esEmail(dest)) {
-						throw new ErrorFormularioSoporteException("Email no es válido: " + dest);
-					}
-					destinatarios.add(dest);
+			destinatarios.addAll(obtenerDestinatariosFromListaString(opc.getListaEmails()));
+		}
+
+		// Destinatarios area
+		if (opc.getDestinatario().contains("A")) {
+			for (final RArea a : entidad.getArea()) {
+				if (a.getId().equals(area)) {
+					destinatarios.addAll(obtenerDestinatariosFromListaString(a.getEmails()));
+					break;
 				}
 			}
-		} else {
-			throw new ErrorFormularioSoporteException("Tipo destinatario no soportado: " + opc.getDestinatario());
 		}
-		return destinatarios;
+
+		// Si no hay ningun destinatario generamos error
+		if (destinatarios.isEmpty()) {
+			throw new ErrorFormularioSoporteException("Tipus destinatari no suportat: " + opc.getDestinatario());
+	}
+
+	return destinatarios;
+
+	}
+
+	/**
+	 * Obtiene emails de string.
+	 *
+	 * @param listaEmails
+	 *                        emails separados por ;
+	 * @return Lista emails
+	 */
+	protected static List<String> obtenerDestinatariosFromListaString(final String listaEmails) {
+		final List<String> destinatariosE = new ArrayList<>();
+		if (StringUtils.isNotBlank(listaEmails)) {
+			final String[] listaDest = listaEmails.split(";");
+			for (final String dest : listaDest) {
+				if (!ValidacionesTipo.getInstance().esEmail(dest)) {
+					throw new ErrorFormularioSoporteException("Email no és vàlid: " + dest);
+				}
+				destinatariosE.add(dest);
+			}
+		}
+		return destinatariosE;
 	}
 
 	/**
@@ -122,7 +157,7 @@ public final class UtilsFormularioSoporte {
 			}
 		}
 		if (opc == null) {
-			throw new ErrorFormularioSoporteException("No existe opcion con codigo: " + problemaTipo);
+			throw new ErrorFormularioSoporteException("No existeix opció amb codi: " + problemaTipo);
 		}
 		return opc;
 	}
@@ -238,7 +273,7 @@ public final class UtilsFormularioSoporte {
 			}
 			return plantillaHtml;
 		} catch (final Exception ex) {
-			throw new ErrorFormularioSoporteException("No se ha podido cargar la plantilla para envio aviso", ex);
+			throw new ErrorFormularioSoporteException("No s'ha pogut carregar la plantilla per enviament avis", ex);
 		}
 	}
 

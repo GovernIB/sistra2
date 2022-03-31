@@ -27,6 +27,9 @@ public class TramiteVersion extends ModelApi {
 	/** codigo area (No se mapea, sólo para ir mas rápidos con los permisos). */
 	private Long idArea;
 
+	/** identificador area (No se mapea, sólo para ir mas rápidos con los permisos). */
+	private String identificadorArea;
+
 	/** numero version. */
 	private int numeroVersion;
 
@@ -788,6 +791,20 @@ public class TramiteVersion extends ModelApi {
 	 */
 	public void setTiposAutenticacion(final List<TypeAutenticacion> tiposAutenticacion) {
 		this.tiposAutenticacion = tiposAutenticacion;
+	}
+
+	/**
+	 * @return the identificadorArea
+	 */
+	public String getIdentificadorArea() {
+		return identificadorArea;
+	}
+
+	/**
+	 * @param identificadorArea the identificadorArea to set
+	 */
+	public void setIdentificadorArea(String identificadorArea) {
+		this.identificadorArea = identificadorArea;
 	}
 
 	/**

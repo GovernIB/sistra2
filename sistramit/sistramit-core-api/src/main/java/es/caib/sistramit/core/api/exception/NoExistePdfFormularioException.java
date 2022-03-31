@@ -12,28 +12,26 @@ import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
  *
  */
 @SuppressWarnings("serial")
-public final class NoExistePdfFormularioException
-        extends ServiceRollbackException {
+public final class NoExistePdfFormularioException extends ServiceRollbackException {
 
-    /*
-     * NoExistePdfFormularioException WARNING.
-     */
-    @Override
-    public TypeNivelExcepcion getNivel() {
-        return TypeNivelExcepcion.WARNING;
-    }
+	/*
+	 * NoExistePdfFormularioException WARNING.
+	 */
+	@Override
+	public TypeNivelExcepcion getNivel() {
+		return TypeNivelExcepcion.WARNING;
+	}
 
-    /**
-     * Constructor NoExistePdfFormularioException.
-     *
-     * @param idFormulario
-     *            Parámetro id formulario
-     */
-    public NoExistePdfFormularioException(final String idFormulario) {
-        super("No existe pdf de visualizacion para el formulario");
-        final ListaPropiedades props = new ListaPropiedades();
-        props.addPropiedad("idFormulario", idFormulario);
-        this.setDetallesExcepcion(props);
-    }
+	/**
+	 * Constructor NoExistePdfFormularioException.
+	 *
+	 * @param idFormulario Parámetro id formulario
+	 */
+	public NoExistePdfFormularioException(final String idFormulario) {
+		super("No existeix pdf de visualització pel formulari");
+		final ListaPropiedades props = new ListaPropiedades();
+		props.addPropiedad("idFormulario", idFormulario);
+		this.setDetallesExcepcion(props);
+	}
 
 }

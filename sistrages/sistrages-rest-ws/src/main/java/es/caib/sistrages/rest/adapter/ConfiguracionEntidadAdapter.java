@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.IncidenciaValoracion;
@@ -13,6 +14,7 @@ import es.caib.sistrages.core.api.model.PlantillaEntidad;
 import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
+import es.caib.sistrages.rest.api.interna.RArea;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RIncidenciaValoracion;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
@@ -42,7 +44,8 @@ public class ConfiguracionEntidadAdapter {
 	 * @param gestoresExternosFormularios
 	 */
 	public RConfiguracionEntidad convertir(final Entidad entidad, final List<FormularioSoporte> formSoporte,
-			final List<PlantillaFormateador> plantillas, final List<IncidenciaValoracion> valoraciones, final List<PlantillaEntidad> plantillasEntidad) {
+			final List<PlantillaFormateador> plantillas, final List<IncidenciaValoracion> valoraciones,
+			final List<PlantillaEntidad> plantillasEntidad, final List<Area> areas) {
 
 		final RConfiguracionEntidad rConfiguracionEntidad = new RConfiguracionEntidad();
 		rConfiguracionEntidad.setTimestamp(System.currentTimeMillis() + "");
@@ -127,18 +130,26 @@ public class ConfiguracionEntidadAdapter {
 		List<RPlantillaEntidad> rplantillasEntidad = null;
 		if (plantillasEntidad != null) {
 			rplantillasEntidad = new ArrayList<>();
-			for(PlantillaEntidad plantilla : plantillasEntidad) {
+			for (PlantillaEntidad plantilla : plantillasEntidad) {
 				RPlantillaEntidad rplantilla = new RPlantillaEntidad();
 				rplantilla.setIdioma(plantilla.getIdioma());
 				rplantilla.setTipo(plantilla.getTipo().toString());
 				if (plantilla.getFichero() != null) {
-					rplantilla.setPath(
-							restApiService.getReferenciaFichero(plantilla.getFichero().getCodigo()));
+					rplantilla.setPath(restApiService.getReferenciaFichero(plantilla.getFichero().getCodigo()));
 				}
 				rplantillasEntidad.add(rplantilla);
 			}
 		}
 		rConfiguracionEntidad.setPlantillas(rplantillasEntidad);
+
+		List<RArea> listaAreas = new ArrayList<>();
+		for (Area area : areas) {
+			RArea rarea = new RArea();
+			rarea.setId(area.getIdentificadorCompuesto());
+			rarea.setEmails(area.getEmail());
+			listaAreas.add(rarea);
+		}
+		rConfiguracionEntidad.setArea(listaAreas);
 		return rConfiguracionEntidad;
 	}
 

@@ -1,0 +1,62 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_INSTRUCCIONES.addParametroMensaje(parametro)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_INSTRUCCIONES">DATOS_INSTRUCCIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_INSTRUCCIONES&metodo=addParametroMensaje">addParametroMensaje</a></li>
+  	</ul>
+</div>
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	addParametroMensaje(String parametro):void
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que permet afegir el valor dels paràmetres a substituir a la informació. D'aquesta manera es pot dotar de dinamisme aquesta informació.</li>
+    	<li>Els paràmetres s'identifiquen a la informació mitjançant claus ({0} {1} ...).</li>
+    	<li>Si el missatge té més d'un paràmetre, cal tenir present que importa l'ordre en què s'hi afegeixen.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>paràmetre</b>: String amb el valor del paràmetre que cal fixar.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>
+Posem per exemple que a la informació de Cal Saber volem mostrar un NIF i una data</p>
+<p>
+Prèviament, a la pantalla de script s'ha de definir la informació a la pestanya de missatges de validació, per exemple amb l'identificador CodFechas i el valor següent: </br >
+<i>El DNI {0} entra a data {1}.</i><br />
+Des de l'script, es fa referència a aquest missatge de la manera següent: <br /></p>
+<p class="codigoScript">
+	DATOS_INSTRUCCIONES.setCodigoMensaje('CodFechas'); <br />
+	DATOS_INSTRUCCIONES.addParametroMensaje('12345678T'); <br />
+	DATOS_INSTRUCCIONES.addParametroMensaje('10/09/2012'); <br />
+</p>
+<p>
+Com a resultat de l'execució de l'script s'obtindrà el resultat següent:<br />
+ <b>El DNI 12345678T entra a data 10/09/2012.</b>
+ </p>
+</body>
+</html>

@@ -25,7 +25,7 @@ public final class FlujoInvalidoException extends ServiceRollbackException {
 	 *
 	 */
 	public FlujoInvalidoException() {
-		super("El flujo no es válido");
+		super("El fluxe no es vàlid");
 	}
 
 }

@@ -30,6 +30,13 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 
 	/** Id elemento a tratar. */
 	private String area;
+	private Long idArea;
+
+	/** Id entidad */
+	private String entidad;
+
+	/** Ambito. */
+	private String ambito;
 
 	/** Data en formato JSON. */
 	private String iData;
@@ -56,6 +63,7 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new ConfiguracionAutenticacion();
+			data.setAmbito(TypeAmbito.fromString(ambito));
 		} else {
 			if (id != null) {
 				data = configuracionAutenticacionService.getConfiguracionAutenticacion(new Long(id));
@@ -64,6 +72,7 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 
 		if (modoImportar != null && "true".equals(modoImportar)) {
 			modoImportarActivo = true;
+			data.setAmbito(TypeAmbito.fromString(ambito));
 			if (iData != null) {
 				data = (ConfiguracionAutenticacion) UtilJSON.fromJSON(iData, ConfiguracionAutenticacion.class);
 			} else {
@@ -73,17 +82,21 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 			modoImportarActivo = false;
 		}
 
-		//Si no tiene codigo, desactivar botones de dominios / gestores
+		// Si no tiene codigo, desactivar botones de dominios / gestores
 		if (data == null || data.getCodigo() == null) {
 			desactivarBotoneraActivo = true;
 		}
 
-		//Si se pasa una propiedad, se fuerza a que no se vean los botones de dominios / gestores
+		// Si se pasa una propiedad, se fuerza a que no se vean los botones de dominios
+		// / gestores
 		if (desactivarBotonera != null && "true".equals(desactivarBotonera)) {
 			desactivarBotoneraActivo = true;
 		}
-	}
 
+		if (area != null) {
+			idArea = Long.valueOf(area);
+		}
+	}
 
 	/**
 	 * Aceptar.
@@ -91,6 +104,12 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 	public void aceptar() {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
+		data.setAmbito(TypeAmbito.fromString(ambito));
+		if (TypeAmbito.AREA.toString().equals(ambito)) {
+			data.setArea(Long.valueOf(area));
+		} else if (TypeAmbito.ENTIDAD.toString().equals(ambito)) {
+			data.setEntidad(Long.valueOf(entidad));
+		}
 		switch (acceso) {
 		case ALTA:
 			if (!verificarGuardar()) {
@@ -98,10 +117,10 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 			}
 			if (modoImportarActivo) {
 				this.data.setCodigoImportacion(-1l);
-			} else {
-				Long idConf = configuracionAutenticacionService.addConfiguracionAutenticacion(Long.valueOf(area), data);
-				this.data.setCodigo(idConf);
 			}
+			Long idConf = configuracionAutenticacionService.addConfiguracionAutenticacion(idArea,
+					UtilJSF.getIdEntidad(), data);
+			this.data.setCodigo(idConf);
 			break;
 		case EDICION:
 			if (!verificarGuardar()) {
@@ -142,7 +161,7 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.data.getCodigo()));
-		params.put("AMBITO", TypeAmbito.AREA.toString());
+		params.put("AMBITO", data.getAmbito().toString());
 		params.put("AREA", this.area);
 		UtilJSF.openDialog(DialogConfiguracionDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
 	}
@@ -187,7 +206,9 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 			return false;
 		}
 
-		final boolean existe = configuracionAutenticacionService.existeConfiguracionAutenticacion(data.getIdentificador(), data.getCodigo());
+		final boolean existe = configuracionAutenticacionService.existeConfiguracionAutenticacion(
+				TypeAmbito.fromString(ambito), data.getIdentificador(), UtilJSF.getIdEntidad(), idArea,
+				data.getCodigo());
 
 		if (existe) {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
@@ -286,6 +307,34 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 	 */
 	public void setDesactivarBotoneraActivo(boolean desactivarBotoneraActivo) {
 		this.desactivarBotoneraActivo = desactivarBotoneraActivo;
+	}
+
+	/**
+	 * @return the entidad
+	 */
+	public String getEntidad() {
+		return entidad;
+	}
+
+	/**
+	 * @param entidad the entidad to set
+	 */
+	public void setEntidad(String entidad) {
+		this.entidad = entidad;
+	}
+
+	/**
+	 * @return the ambito
+	 */
+	public String getAmbito() {
+		return ambito;
+	}
+
+	/**
+	 * @param ambito the ambito to set
+	 */
+	public void setAmbito(String ambito) {
+		this.ambito = ambito;
 	}
 
 	/** Ayuda. */

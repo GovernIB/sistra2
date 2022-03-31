@@ -39,6 +39,11 @@ public class JPasoDebeSaber implements IModelApi {
 	@JoinColumn(name = "PDB_INSINI")
 	private JLiteral instruccionesInicio;
 
+	/** Script para anexos dinámicos. **/
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "PDB_SCRINS")
+	private JScript scriptDebeSaber;
+
 	/**
 	 * Constructor.
 	 */
@@ -54,8 +59,7 @@ public class JPasoDebeSaber implements IModelApi {
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param codigo the codigo to set
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -69,8 +73,7 @@ public class JPasoDebeSaber implements IModelApi {
 	}
 
 	/**
-	 * @param pasoTramitacion
-	 *            the pasoTramitacion to set
+	 * @param pasoTramitacion the pasoTramitacion to set
 	 */
 	public void setPasoTramitacion(final JPasoTramitacion pasoTramitacion) {
 		this.pasoTramitacion = pasoTramitacion;
@@ -84,16 +87,29 @@ public class JPasoDebeSaber implements IModelApi {
 	}
 
 	/**
-	 * @param instruccionesInicio
-	 *            the instruccionesInicio to set
+	 * @param instruccionesInicio the instruccionesInicio to set
 	 */
 	public void setInstruccionesInicio(final JLiteral instruccionesInicio) {
 		this.instruccionesInicio = instruccionesInicio;
 	}
 
 	/**
+	 * @return the scriptDebeSaber
+	 */
+	public JScript getScriptDebeSaber() {
+		return scriptDebeSaber;
+	}
+
+	/**
+	 * @param scriptDebeSaber the scriptDebeSaber to set
+	 */
+	public void setScriptDebeSaber(JScript scriptDebeSaber) {
+		this.scriptDebeSaber = scriptDebeSaber;
+	}
+
+	/**
 	 * From model.
-	 * 
+	 *
 	 * @param mpasoDebeSaber
 	 * @return
 	 */
@@ -102,6 +118,7 @@ public class JPasoDebeSaber implements IModelApi {
 		if (mpasoDebeSaber != null) {
 			jpaso = new JPasoDebeSaber();
 			jpaso.setCodigo(mpasoDebeSaber.getIdPasoRelacion());
+			jpaso.setScriptDebeSaber(JScript.fromModel(mpasoDebeSaber.getScriptDebeSaber()));
 			if (mpasoDebeSaber.getInstruccionesIniciales() != null) {
 				jpaso.setInstruccionesInicio(JLiteral.fromModel(mpasoDebeSaber.getInstruccionesIniciales()));
 			}
@@ -122,6 +139,7 @@ public class JPasoDebeSaber implements IModelApi {
 			jpasoDebeSaber = new JPasoDebeSaber();
 			jpasoDebeSaber.setCodigo(null);
 			jpasoDebeSaber.setPasoTramitacion(jpasoTramitacion);
+			jpasoDebeSaber.setScriptDebeSaber(origPasoDebeSaber.getScriptDebeSaber());
 			jpasoDebeSaber.setInstruccionesInicio(JLiteral.clonar(origPasoDebeSaber.getInstruccionesInicio()));
 		}
 		return jpasoDebeSaber;

@@ -2,6 +2,8 @@ package es.caib.sistra2.commons.plugins.firmacliente.mock;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
@@ -22,6 +24,8 @@ import es.caib.sistra2.commons.plugins.firmacliente.api.TypeFirmaDigital;
  */
 public class ComponenteFirmaPluginMock extends AbstractPluginProperties implements IFirmaPlugin {
 
+	private static Map<String, InfoSesionFirma> SESIONES_FIRMA = new HashMap<String, InfoSesionFirma>();
+
 	public ComponenteFirmaPluginMock() {
 	}
 
@@ -30,7 +34,9 @@ public class ComponenteFirmaPluginMock extends AbstractPluginProperties implemen
 
 	@Override
 	public String generarSesionFirma(final InfoSesionFirma infoSesionFirma) throws FirmaPluginException {
-		return "SF" + System.currentTimeMillis();
+		final String idSesionFirma = "SF" + System.currentTimeMillis();
+		SESIONES_FIRMA.put(idSesionFirma, infoSesionFirma);
+		return idSesionFirma;
 	}
 
 	@Override
@@ -58,8 +64,12 @@ public class ComponenteFirmaPluginMock extends AbstractPluginProperties implemen
 	@Override
 	public FicheroFirmado obtenerFirmaFichero(final String idSesionFirma, final String idFicheroFirma)
 			throws FirmaPluginException {
+
+		final InfoSesionFirma sf = SESIONES_FIRMA.get(idSesionFirma);
+
 		final FicheroFirmado fichero = new FicheroFirmado();
-		final byte[] contenido = "firma cades".getBytes();
+		// Devuelve nif como firma para luego al validar firma se tenga el nif
+		final byte[] contenido = sf.getNif().getBytes();
 		fichero.setFirmaFichero(contenido);
 		fichero.setMimetypeFichero("application/octet-stream");
 		fichero.setNombreFichero("fichero.cades");

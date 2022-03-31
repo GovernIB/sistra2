@@ -57,6 +57,7 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteRegistro;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
@@ -122,10 +123,6 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	/** System servicio. **/
 	@Inject
 	private SystemService systemService;
-
-	/** Servicio. */
-	@Inject
-	private FormularioExternoService gestorFormularioService;
 
 	/** Servicio. */
 	@Inject
@@ -339,7 +336,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 				}
 			}
 		} catch (final Exception e) {
-			LOGGER.error("Error extrayendo la info del zip.", e);
+			UtilJSF.loggearErrorFront("Error extrayendo la info del zip.", e);
 			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogCuadernoCarga.error.ficheroContenido"));
 			setMostrarPanelInfo(false);
@@ -416,30 +413,30 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	 */
 	public boolean isNingunError() {
 		if (filaEntidad == null || filaEntidad.getResultado() == null || filaEntidad.getResultado().isError() || filaArea == null
-				|| filaArea.getResultado().isError()) {
+				|| filaArea.getResultado() == null || filaArea.getResultado().isError()) {
 			return false;
 		}
 
-		if (filaTramite == null || filaTramite.getResultado() == null ||  filaTramite.getResultado().isError() || filaTramiteVersion == null
-				|| filaTramiteVersion.getResultado().isError() || filaTramiteRegistro == null
-				|| filaTramiteRegistro.getResultado().isError()) {
+		if (filaTramite == null || filaTramite.getResultado() == null || filaTramite.getResultado().isError() || filaTramiteVersion == null
+				|| filaTramiteVersion.getResultado() == null || filaTramiteVersion.getResultado().isError() || filaTramiteRegistro == null
+				|| filaTramiteRegistro.getResultado() == null || filaTramiteRegistro.getResultado().isError()) {
 			return false;
 		}
 
 		for (final FilaImportarDominio fila : filasDominios) {
-			if (fila == null || fila.getResultado().isError()) {
+			if (fila == null || fila.getResultado() == null || fila.getResultado().isError()) {
 				return false;
 			}
 		}
 
 		for (final FilaImportarFormateador fila : filasFormateador) {
-			if (fila == null || fila.getResultado().isError()) {
+			if (fila == null || fila.getResultado() == null || fila.getResultado().isError()) {
 				return false;
 			}
 		}
 
 		for (final FilaImportarGestor fila : filasGestores) {
-			if (fila == null || fila.getResultado().isError()) {
+			if (fila == null || fila.getResultado() == null || fila.getResultado().isError()) {
 				return false;
 			}
 		}
@@ -505,42 +502,42 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	 */
 	private void checkTodoCorrecto() {
 
-		if (filaEntidad == null || filaEntidad.getResultado().isErrorOrWarning() || filaArea == null
-				|| filaArea.getResultado().isErrorOrWarning()) {
+		if (filaEntidad == null || filaEntidad.getResultado() == null || filaEntidad.getResultado().isErrorOrWarning() || filaArea == null
+				|| filaArea.getResultado() == null || filaArea.getResultado().isErrorOrWarning()) {
 			setTodoCorrecto(false);
 			return;
 		}
 
-		if (filaTramite == null || filaTramite.getResultado().isErrorOrWarning() || filaTramiteVersion == null
-				|| filaTramiteVersion.getResultado().isErrorOrWarning() || filaTramiteRegistro == null
-				|| filaTramiteRegistro.getResultado().isErrorOrWarning()) {
+		if (filaTramite == null || filaTramite.getResultado() == null || filaTramite.getResultado().isErrorOrWarning() || filaTramiteVersion == null
+				|| filaTramiteVersion.getResultado() == null || filaTramiteVersion.getResultado().isErrorOrWarning() || filaTramiteRegistro == null
+						|| filaTramiteRegistro.getResultado() == null || filaTramiteRegistro.getResultado().isErrorOrWarning()) {
 			setTodoCorrecto(false);
 			return;
 		}
 
 		for (final FilaImportarDominio fila : filasDominios) {
-			if (fila == null || fila.getResultado().isErrorOrWarning()) {
+			if (fila == null || fila.getResultado() == null || fila.getResultado().isErrorOrWarning()) {
 				setTodoCorrecto(false);
 				return;
 			}
 		}
 
 		for (final FilaImportarFormateador fila : filasFormateador) {
-			if (fila == null || fila.getResultado().isErrorOrWarning()) {
+			if (fila == null || fila.getResultado() == null || fila.getResultado().isErrorOrWarning()) {
 				setTodoCorrecto(false);
 				return;
 			}
 		}
 
 		for (final FilaImportarGestor fila : this.filasGestores) {
-			if (fila == null || fila.getResultado().isErrorOrWarning()) {
+			if (fila == null || fila.getResultado() == null || fila.getResultado().isErrorOrWarning()) {
 				setTodoCorrecto(false);
 				return;
 			}
 		}
 
 		for (final FilaImportarFormulario fila : filasFormulario) {
-			if (fila != null && !fila.isCorrecto()) {
+			if (fila != null && fila.getResultado() != null && !fila.isCorrecto()) {
 				setTodoCorrecto(false);
 				return;
 			}
@@ -601,7 +598,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	 */
 	private void prepararFlujoArea() {
 
-		final Area areaActual = tramiteService.getAreaByIdentificador(area.getIdentificador());
+		String idEntidad = entidadService.loadEntidad(UtilJSF.getIdEntidad()).getIdentificador();
+		final Area areaActual = tramiteService.getAreaByIdentificador(idEntidad, area.getIdentificador());
 
 		if (areaActual == null) {
 			// Si no existe el área, sólo el adm. de entidad puede
@@ -678,7 +676,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	 * @return
 	 */
 	private void prepararFlujoTramite() {
-		final Tramite tramiteActual = tramiteService.getTramiteByIdentificador(tramite.getIdentificador());
+		final Tramite tramiteActual = tramiteService.getTramiteByIdentificador(tramite.getIdentificador(), filaArea.getArea().getCodigo(), null, null);
 
 		// Si el area actual y el tramite actual no tienen el mismo area, provocar un
 		// error.
@@ -798,7 +796,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 				try {
 					rellenarInfoRegistro();
 				} catch (final Exception e) {
-					LOGGER.error("Error intentando carga el plugin de registro al importar", e);
+					UtilJSF.loggearErrorFront("Error intentando carga el plugin de registro al importar", e);
 					addMessageContext(TypeNivelGravedad.ERROR,
 							UtilJSF.getLiteral("dialogTramiteImportar.error.pluginregistro"));
 					filaTramiteRegistro.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.pluginregistro"));
@@ -964,7 +962,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			final GestorExternoFormularios gestor = entry.getValue();
 
 			final GestorExternoFormularios gestorActual = gestorExternoService
-					.getFormularioExternoByIdentificador(gestor.getIdentificador());
+					.getFormularioExternoByIdentificador(TypeAmbito.AREA, gestor.getIdentificador(), UtilJSF.getIdEntidad(), filaArea.getArea().getCodigo(), null );
 
 			String identificadorArea = null;
 			Long idArea = null;
@@ -974,8 +972,8 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			}
 			ConfiguracionAutenticacion configuracionAut = null;
 			if (idArea != null && gestor != null && gestor.getConfiguracionAutenticacion() != null) {
-				configuracionAut = configuracionAutenticacionService.getConfiguracionAutenticacion(
-						gestor.getConfiguracionAutenticacion().getIdentificador(), idArea);
+				configuracionAut = configuracionAutenticacionService.getConfiguracionAutenticacion(TypeAmbito.AREA,
+						gestor.getConfiguracionAutenticacion().getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
 			}
 
 			if (gestorActual == null) {
@@ -1029,7 +1027,11 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	private void prepararFlujoDominioFD() {
 		for (final Map.Entry<Long, Dominio> entry : dominios.entrySet()) {
 			final Dominio dominio = entry.getValue();
-			final Dominio dominioActual = dominioService.loadDominio(dominio.getIdentificador());
+			Long idArea = null;
+			if (dominio.getAmbito() == TypeAmbito.AREA && filaArea.getAreaActual() != null) {
+				idArea = filaArea.getAreaActual().getCodigo();
+			}
+			final Dominio dominioActual = dominioService.loadDominioByIdentificador(dominio.getAmbito(), dominio.getIdentificador(), UtilJSF.getIdEntidad(), idArea , null);
 			FuenteDatos fd = null;
 			byte[] fdContent = null;
 			FuenteDatos fdActual = null;
@@ -1042,10 +1044,9 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			}
 
 			if (fdActual == null && fd != null) {
-				fdActual = dominioService.loadFuenteDato(fd.getIdentificador());
+				fdActual = dominioService.loadFuenteDato(fd.getAmbito(), fd.getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
 			}
 
-			Long idArea = null;
 			if (filaArea.getAreaActual() != null) {
 				idArea = filaArea.getAreaActual().getCodigo();
 			}

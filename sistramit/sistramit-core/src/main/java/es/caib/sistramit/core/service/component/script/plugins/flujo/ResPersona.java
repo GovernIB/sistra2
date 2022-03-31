@@ -301,11 +301,11 @@ public final class ResPersona implements ResPersonaInt {
 			final String pApellido2) throws ScriptException {
 
 		if (StringUtils.isBlank(pNif)) {
-			throw new ScriptException("Es obligatorio establecer el nif");
+			throw new ScriptException("Es obligatori establir el nif");
 		}
 
 		if (StringUtils.isBlank(pNombre)) {
-			throw new ScriptException("Es obligatorio establecer el nombre");
+			throw new ScriptException("Es obligatori establir el nom");
 		}
 
 		nif = NifUtils.normalizarNif(pNif);
@@ -364,7 +364,7 @@ public final class ResPersona implements ResPersonaInt {
 			try {
 				res = (Long.parseLong(numero) > 0);
 			} catch (final NumberFormatException nfe) {
-				throw new ScriptException("No es número: " + numero);
+				throw new ScriptException("No és nombre: " + numero);
 			}
 		}
 		return res;

@@ -23,8 +23,8 @@
 	tinyMCE.init({
 		   // General options
 		    mode : "textareas",
-		    plugins: "code image link lists paste",
-		    toolbar: "bold italic | link image | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat #{dialogTraduccionHTML.sourceCode}" ,
+		    plugins: "code image link lists paste textcolor",
+		    toolbar: "bold italic | forecolor backcolor | link image | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat #{dialogTraduccionHTML.sourceCode}" ,
 		    menubar: "",
 		    paste_as_text : true,
 		    readonly : #{dialogTraduccionHTML.readonly}
@@ -144,7 +144,6 @@
     	if (isVacio(contenido)) {
     		correcto = false;
     	} else {
-    		debugger;
     		correcto = true;
     		document.getElementById(id).value = contenido;
     	}
@@ -153,7 +152,6 @@
 
   //<![CDATA[
     function isVacio(texto)  {
-    	debugger;
     	while (texto.indexOf('&nbsp;') >= 0) {
     		texto = texto.replace('&nbsp;',"");
     	}
@@ -167,7 +165,6 @@
     		texto = texto.replace('\n',"");
     	}
     	texto = texto.trim();
-    	debugger;
     	if (texto == '') {
     		return true;
    		}

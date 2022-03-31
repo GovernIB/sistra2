@@ -214,9 +214,10 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 			final String problemaTipo, final String problemaDesc, final String horarioContacto,
 			final AnexoFichero anexo) {
 
-		// Obtenemos entidad
+		// Obtenemos entidad / area
 		final RConfiguracionEntidad entidad = configuracionComponent
 				.obtenerConfiguracionEntidad(datosSesion.getDefinicionTramite().getDefinicionVersion().getIdEntidad());
+		final String area = datosSesion.getDefinicionTramite().getDefinicionVersion().getIdArea();
 
 		// Obtiene detalle tramite
 		final DetalleTramite detalleTramite = controladorFlujo.detalleTramite(datosSesion);
@@ -233,7 +234,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 
 		// Generamos destinatarios, asunto y mensaje
 		final List<String> destinatarios = UtilsFormularioSoporte
-				.obtenerDestinatariosFormularioSoporte(datosFormSoporte, entidad, datosSesion);
+				.obtenerDestinatariosFormularioSoporte(datosFormSoporte, entidad, area, datosSesion);
 		final String asunto = UtilsFormularioSoporte.obtenerAsuntoFormularioSoporte(literalesComponent,
 				datosFormSoporte, entidad, datosSesion);
 		final String mensaje = UtilsFormularioSoporte.construyeMensajeSoporteIncidencias(literalesComponent,
@@ -257,7 +258,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		final IEmailPlugin plgEmail = (IEmailPlugin) configuracionComponent.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
 		try {
 			if (!plgEmail.envioEmail(destinatarios, asunto, mensaje, anexos)) {
-				throw new ErrorFormularioSoporteException("Error enviando mail");
+				throw new ErrorFormularioSoporteException("Error enviant mail");
 			}
 		} catch (final EmailPluginException e) {
 			log.error("Error al enviar email", e);
@@ -337,14 +338,14 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 				.fromString(defTramSTG.getDefinicionVersion().getTipoFlujo());
 		if (tipoFlujo == null) {
 			throw new TipoNoControladoException(
-					"Tipo de flujo no controlado: " + defTramSTG.getDefinicionVersion().getTipoFlujo());
+					"Tipus de fluix no controlat: " + defTramSTG.getDefinicionVersion().getTipoFlujo());
 		}
 
 		final String propEntorno = configuracionComponent
 				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ENTORNO);
 		final TypeEntorno entorno = TypeEntorno.fromString(propEntorno);
 		if (entorno == null) {
-			throw new TipoNoControladoException("Tipo de entorno no controlado: " + propEntorno);
+			throw new TipoNoControladoException("Tipus d'entorn no controlat: " + propEntorno);
 		}
 
 		// Validar correspondencia con catalogo procedimientos
@@ -361,7 +362,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 
 		if (verificarTramiteCatalogo == null) {
 			throw new CatalogoProcedimientosVerificacionException(
-					"La propiedad de verificacion de tramite catalogo en sistramit.properties no esta incluido.");
+					"La propietat de verificació de tràmit catàleg en sistramit.properties no està inclós.");
 		}
 
 		// Comprobamos cuando esta activo la verificación del catalogo los siguiente
@@ -373,13 +374,13 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 
 			// Si el tramite del catalogo no está marcado como telematico, error!
 			if (!tramiteCP.isTelematico()) {
-				throw new CatalogoProcedimientosVerificacionException("El trámite no está marcado como telemático.");
+				throw new CatalogoProcedimientosVerificacionException("El tràmit no està marcat com telemàtic.");
 			}
 
 			// Si el tramite del catalogo no está marcado como telematico, error!
 			if (tramiteCP.getTramiteTelematico() == null) {
 				throw new CatalogoProcedimientosVerificacionException(
-						"La información del trámite telemático no está rellenado.");
+						"La informació del tràmit telemàtico no està emplenat.");
 			}
 
 			// Si no cuadran el identificador y versión del catalogo con el de
@@ -391,7 +392,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 							.compareTo(defTramSTG.getDefinicionVersion().getVersion()) != 0
 					|| !tramiteCP.getTramiteTelematico().getTramiteIdentificador()
 							.equals(defTramSTG.getDefinicionVersion().getIdentificador())) {
-				throw new CatalogoProcedimientosVerificacionException("No coinciden la versión o el trámite.");
+				throw new CatalogoProcedimientosVerificacionException("No coincideixen la versió o el tràmit.");
 			}
 
 		}
@@ -597,7 +598,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 			urlLogout = plgLogin.iniciarSesionLogout(detalleTramite.getEntidad().getId(),
 					detalleTramite.getTramite().getIdioma(), urlCarpeta);
 		} catch (final AutenticacionPluginException e) {
-			throw new AutenticacionException("Error haciendo logout", e);
+			throw new AutenticacionException("Error fent logout", e);
 		}
 
 		// Marcamos flujo como invalido

@@ -22,6 +22,7 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.comun.TramitePrevisualizacion;
+import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
@@ -93,6 +94,9 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	/** Simular catalago. */
 	private boolean simularCatalogo;
 
+	/** Validar clicked */
+	private boolean validarNotClicked = true;
+
 	public String getText(final DefinicionTramiteCP tramite) {
 
 		final StringBuilder texto = new StringBuilder();
@@ -151,6 +155,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 			}
 		} catch (final Exception ex) {
 			tramites = new ArrayList<>();
+			UtilJSF.loggearErrorFront("Error obteniendo catalogo de procedimientos", ex);
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.accesoCatalogo"));
 		}
@@ -159,12 +164,18 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 
 	}
 
+	public void actualizar() {
+		setData(tramiteService.getTramiteVersion(Long.valueOf(id)));
+	}
+
 	/**
 	 * Previsualizar
 	 *
 	 * @param previsualizar Si es true, se previsualizar, si es false, se copia.
 	 */
 	public void aceptar() {
+		actualizar();
+		validarNotClicked = false;
 		final List<ErrorValidacion> listaErrores = tramiteService.validarVersionTramite(data,
 				UtilJSF.getSessionBean().getLang());
 		if (!listaErrores.isEmpty()) {
@@ -174,10 +185,8 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 					listaErrores.stream().map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
 			Map<String, String> params = null;
 			params = new HashMap<>();
-			params.put(TypeParametroVentana.TRAMITE.toString(),
-					String.valueOf(this.data.getIdTramite()));
-			params.put(TypeParametroVentana.TRAMITEVERSION.toString(),
-					String.valueOf(this.data.getCodigo()));
+			params.put(TypeParametroVentana.TRAMITE.toString(), String.valueOf(this.data.getIdTramite()));
+			params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(this.data.getCodigo()));
 
 			if (this.isEdicion()) {
 				UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.EDICION, params, true, 1050, 520);
@@ -247,8 +256,8 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 			}
 		}
 
-		urlTramite = urlBase + "/asistente/iniciarTramite.html?tramite=" + tramite.getIdentificador() + "&version="
-				+ data.getNumeroVersion() + "&idioma=" + idioma + "&servicioCatalogo=" + servicioCatalogo
+		urlTramite = urlBase + "/asistente/iniciarTramite.html?tramite=" + tramite.getIdentificadorCompuesto()
+				+ "&version=" + data.getNumeroVersion() + "&idioma=" + idioma + "&servicioCatalogo=" + servicioCatalogo
 				+ "&idTramiteCatalogo=" + tramCP + params;
 		return true;
 	}
@@ -286,7 +295,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	public void cancelar() {
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setCanceled(true);
+		result.setCanceled(validarNotClicked);
 		UtilJSF.closeDialog(result);
 	}
 
@@ -444,6 +453,8 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	}
 
 	public void validar() {
+		actualizar();
+		validarNotClicked = false;
 		final List<ErrorValidacion> listaErrores = tramiteService.validarVersionTramite(data,
 				UtilJSF.getSessionBean().getLang());
 		if (!listaErrores.isEmpty()) {
@@ -454,10 +465,8 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 
 			Map<String, String> params = null;
 			params = new HashMap<>();
-			params.put(TypeParametroVentana.TRAMITE.toString(),
-					String.valueOf(this.data.getIdTramite()));
-			params.put(TypeParametroVentana.TRAMITEVERSION.toString(),
-					String.valueOf(this.data.getCodigo()));
+			params.put(TypeParametroVentana.TRAMITE.toString(), String.valueOf(this.data.getIdTramite()));
+			params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(this.data.getCodigo()));
 
 			if (this.isEdicion()) {
 				UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.EDICION, params, true, 1050, 520);
@@ -634,6 +643,20 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 
 	public void setTramite(Tramite tramite) {
 		this.tramite = tramite;
+	}
+
+	/**
+	 * @return the validarNotClicked
+	 */
+	public final boolean isValidarNotClicked() {
+		return validarNotClicked;
+	}
+
+	/**
+	 * @param validarNotClicked the validarNotClicked to set
+	 */
+	public final void setValidarNotClicked(boolean validarNotClicked) {
+		this.validarNotClicked = validarNotClicked;
 	}
 
 }

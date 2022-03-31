@@ -314,7 +314,7 @@ public class SistragesMock {
 			defTramite.setTimestamp("" + System.currentTimeMillis());
 			return defTramite;
 		} catch (final Exception ex) {
-			throw new RuntimeException("Error cargando definición trámite desde json", ex);
+			throw new RuntimeException("Error carregant definició tràmite desde json", ex);
 		}
 	}
 

@@ -35,7 +35,9 @@ import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.frontend.controller.DialogAyuda;
 import es.caib.sistrages.frontend.controller.SessionBean;
+import es.caib.sistrages.frontend.controller.ViewConfiguracionAutenticacion;
 import es.caib.sistrages.frontend.controller.ViewConfiguracionEntidad;
+import es.caib.sistrages.frontend.controller.ViewConsultaGeneral;
 import es.caib.sistrages.frontend.controller.ViewDominios;
 import es.caib.sistrages.frontend.controller.ViewEntidades;
 import es.caib.sistrages.frontend.controller.ViewFormateadorFormulario;
@@ -471,7 +473,7 @@ public final class UtilJSF {
 			final String contextPath = servletContext.getContextPath();
 			FacesContext.getCurrentInstance().getExternalContext().redirect(contextPath + jsfPage);
 		} catch (final IOException e) {
-			UtilJSF.LOG.error("Error redirigiendo", e);
+			UtilJSF.loggearErrorFront("Error redirigiendo", e);
 		}
 	}
 
@@ -491,7 +493,7 @@ public final class UtilJSF {
 					.redirect(ec.encodeRedirectURL(contextPath + jsfPage, params));
 			FacesContext.getCurrentInstance().responseComplete();
 		} catch (final IOException e) {
-			UtilJSF.LOG.error("Error redirigiendo", e);
+			UtilJSF.loggearErrorFront("Error redirigiendo", e);
 		}
 	}
 
@@ -563,6 +565,10 @@ public final class UtilJSF {
 		case PROPIEDADES_GLOBALES:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewPropiedadesConfiguracion.class) + EXTENSION_XHTML;
 			break;
+		case CONFIGURACION_AUTENTICACION:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewConfiguracionAutenticacion.class) + EXTENSION_XHTML
+					+ "?ambito=G";
+			break;
 		default:
 			url = URL_SIN_IMPLEMENTAR;
 			break;
@@ -605,6 +611,13 @@ public final class UtilJSF {
 			break;
 		case MENSAJES:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewMensajesAvisoEntidad.class) + EXTENSION_XHTML;
+			break;
+		case CONSULTA_GENERAL:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewConsultaGeneral.class) + EXTENSION_XHTML;
+			break;
+		case CONFIGURACION_AUTENTICACION:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewConfiguracionAutenticacion.class) + EXTENSION_XHTML
+					+ ambitoEntidadURL;
 			break;
 		default:
 			url = URL_SIN_IMPLEMENTAR;
@@ -703,6 +716,20 @@ public final class UtilJSF {
 			idEntidad = entidad.getCodigo();
 		}
 		return idEntidad;
+	}
+
+	/**
+	 * Obtiene id entidad.
+	 *
+	 * @return id entidad
+	 */
+	public static String getIdentificadorEntidad() {
+		String identificadorEntidad = null;
+		final Entidad entidad = UtilJSF.getSessionBean().getEntidad();
+		if (entidad != null) {
+			identificadorEntidad = entidad.getIdentificador();
+		}
+		return identificadorEntidad;
 	}
 
 	/**
@@ -820,6 +847,16 @@ public final class UtilJSF {
 		UtilJSF.openDialog(DialogAyuda.class, TypeModoAcceso.CONSULTA, params, true, 900, 550);
 	}
 
+	public static void openHelp(final String id, Map<String, String> params) {
+		if (StringUtils.isBlank(id)) {
+			throw new FrontException("No existe identificador");
+		}
+
+		params.put(TypeParametroVentana.ID.toString(), id);
+
+		UtilJSF.openDialog(DialogAyuda.class, TypeModoAcceso.CONSULTA, params, true, 900, 550);
+	}
+
 	/**
 	 * Método que actualiza la paginación
 	 */
@@ -837,4 +874,34 @@ public final class UtilJSF {
 				.get("sessionBean");
 		return sb.getPaginacion();
 	}
+
+	/** Método que comprueba si tienes el rol de administrador de entidad activo **/
+	public static boolean isRolAdministrador() {
+		  return isRol(TypeRoleAcceso.ADMIN_ENT);
+	}
+
+	/** Método que comprueba si tienes el rol de desarrollador activo **/
+	public static boolean isRolDesarrolllador() {
+		  return isRol(TypeRoleAcceso.DESAR);
+	}
+
+	/** Método que comprueba si tienes el rol de super administrador ¡ activo **/
+	public static boolean isRolSuperAdministrador() {
+		  return isRol(TypeRoleAcceso.SUPER_ADMIN);
+	}
+
+	private static boolean isRol(TypeRoleAcceso rolAcceso) {
+		return ((SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+		.get("sessionBean")).getActiveRole() == rolAcceso;
+	}
+
+	public static void loggearErrorFront(String mensaje, Exception e) {
+		if (e == null) {
+			LOG.error(mensaje);
+		} else {
+			LOG.error(mensaje, e);
+		}
+	}
+
+
 }

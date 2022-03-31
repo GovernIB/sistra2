@@ -264,7 +264,7 @@ $.fn.submenu = function(options) {
 				submenu_elm
 					.css({ top: submenu_T+"px", left: submenu_L+"px" })
 					.attr("tabindex", "-1")
-					.show(20, function() {
+					.show(function() {
 
 						$(document)
 							.on("click.submenu", onWindow)

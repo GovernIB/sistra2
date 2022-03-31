@@ -42,6 +42,7 @@
 				<p:inputText id="codigo" value="#{dialogDominio.data.identificador}" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase();" styleClass="w95" validatorMessage="#{msg['error.validacion.identificador']}">
 					<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 					<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
+					<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
 			   	</p:inputText>
 
 				<p:outputLabel for="descripcion" value="#{msg['dialogDominio.headerDescripcion']}" />
@@ -63,6 +64,7 @@
 					<p:selectOneMenu id="tipo" layout="pageDirection" value="#{dialogDominio.data.tipo}" style="width:200px" required="true" disabled="#{dialogDominio.isConsulta()}">
 					     <f:selectItems value="#{dialogDominio.tipos}" var="tipo" itemLabel="#{msg['typeDominio.' += tipo]}" itemValue="#{tipo}"  />
 						 <p:ajax event="change" listener="#{dialogDominio.actualizarTipo()}" update="panel_tipo pg_labelParametros pg_gridParametros"/>
+						 <p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
 					</p:selectOneMenu>
 
 
@@ -71,7 +73,9 @@
 
 						<p:column id="columnaBBDD1" colspan="1" rendered="#{dialogDominio.visibleJNDI}" >
 							<p:outputLabel for="jndi" value="#{msg['dialogDominio.headerTipo.consultaBD.jndi']}" style="margin-right:20px" />
-							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" disabled="#{dialogDominio.isConsulta()}" size="43" maxlength="500" />
+							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" disabled="#{dialogDominio.isConsulta()}" size="43" maxlength="500" >
+								<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
+							</p:inputText>
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleJNDI}"  value="" />
 
@@ -83,12 +87,13 @@
 								<textarea disabled="disabled" id="sqlDecoded" cols="49" rows="8" maxlength="2000" class="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable ui-state-disabled" role="textbox" aria-disabled="true" aria-readonly="false" aria-multiline="true" style="overflow: auto;"><h:outputText value="#{dialogDominio.data.sqlDecoded}" /></textarea>
 							</c:when>
 							<c:otherwise>
-								<textarea id="sqlDecoded" cols="49" rows="8" maxlength="2000" class="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable" role="textbox" aria-disabled="false" aria-readonly="false" aria-multiline="true" style="overflow: auto;"><h:outputText value="#{dialogDominio.data.sqlDecoded}" /></textarea>
+								<p:inputTextarea id="sqlDecoded" value="#{dialogDominio.data.sqlDecoded}" autoResize="false" rows="8" cols="50" maxlength="2000" styleClass="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable" role="textbox" aria-disabled="false" aria-readonly="false" aria-multiline="true">
+									<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
+								</p:inputTextarea>
 							</c:otherwise>
 							</c:choose>
 
 							<p:inputTextarea id="sql" value="#{dialogDominio.data.sql}" autoResize="false" rows="8" cols="50" maxlength="2000" styleClass="no-display" />
-
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleJNDI}"  value="" />
 
@@ -157,7 +162,10 @@
 								<p:outputLabel for="urlRemoto" value="#{msg['dialogDominio.headerTipo.consultaRemota.url']}"  />
 							</p>
 							<p>
-								<p:inputText id="urlRemoto" value="#{dialogDominio.data.url}" disabled="#{dialogDominio.isConsulta()}" size="45"  maxlength="500"/>
+								<p:inputText id="urlRemoto" value="#{dialogDominio.data.url}" disabled="#{dialogDominio.isConsulta()}" size="45"  maxlength="500">
+									<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
+								</p:inputText>
+
 							</p>
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleRemoto}" value=""  />
@@ -168,6 +176,8 @@
 							 	<p:selectOneMenu id="configAut" value="#{dialogDominio.data.configuracionAutenticacion}"  style="width:150px" disabled="#{dialogDominio.isConsulta()}" converter="#{configuracionConverter}">
 									    <f:selectItems value="#{dialogDominio.configuraciones}" var="confAut" itemValue="#{confAut}" itemLabel="#{confAut.identificador}" />
 									<p:ajax event="change" listener="#{dialogDominio.actualizarConf()}" update="btnConsultarConf"/>
+									<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
+
 								</p:selectOneMenu >
 								<p:commandButton id="btnConsultarConf" title="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{dialogDominio.consultarConfiguracion()}" process="@this" update="growlDialog"
 												 disabled="#{dialogDominio.desactivarConsulta}" >
@@ -180,7 +190,9 @@
 							<h:panelGrid id="panelCongAut2" columnClasses="w30, w40, w30" columns = "3"  cellspacing = "0"  width="100%">
 
 								<p:outputLabel for="timeout" value="#{msg['dialogDominio.headerTipo.consultaRemota.timeout']}"  style="margin-right:5px"  />
-								<p:inputNumber id="timeout" value="#{dialogDominio.data.timeout}" disabled="#{dialogDominio.isConsulta()}" maxlength="4" maxValue="9999" decimalPlaces="0" />
+								<p:inputNumber id="timeout" value="#{dialogDominio.data.timeout}" disabled="#{dialogDominio.isConsulta()}" maxlength="4" maxValue="9999" decimalPlaces="0" >
+									<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
+								</p:inputNumber>
 								<p:commandButton id="btnCrearConfig2" style="display:none">
 								</p:commandButton>
 							</h:panelGrid>
@@ -191,6 +203,7 @@
 							<p:outputLabel for="fuente" value="#{msg['dialogDominio.headerTipo.fuente.fuente']}" style="margin-right:20px" />
 							<p:selectOneMenu id="fuente" value="#{dialogDominio.idFuenteDato}"  style="width:200px" disabled="#{dialogDominio.isConsulta()}">
 							    <f:selectItems value="#{dialogDominio.fuentes}" var="fd" itemValue="#{fd.codigo}" itemLabel="#{fd.identificador}" />
+							    <p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
 							</p:selectOneMenu >
 							<p>
 								<p:commandButton id="btnFDestructura" 	value="#{msg['botones.fd.estructura']}" actionListener="#{dialogDominio.fuentedatosEST()}" update="growlDialog" process="@form" styleClass="margin-left:20px" />
@@ -206,10 +219,13 @@
 								<textarea disabled="disabled" id="fuenteQueryDecoded" cols="40" rows="4" maxlength="2000" class="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable ui-state-disabled" role="textbox" aria-disabled="true" aria-readonly="false" aria-multiline="true" data-autosize-on="true" style="overflow: auto;"><h:outputText value="#{dialogDominio.data.sqlDecoded}" /></textarea>
 							</c:when>
 							<c:otherwise>
-								<textarea id="fuenteQueryDecoded" cols="40" rows="4" maxlength="2000" class="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable" role="textbox" aria-disabled="false" aria-readonly="false" aria-multiline="true" data-autosize-on="true" style="overflow: auto;"><h:outputText value="#{dialogDominio.data.sqlDecoded}" /></textarea>
+
+								<p:inputTextarea id="fuenteQueryDecoded" value="#{dialogDominio.data.sqlDecoded}" autoResize="false" rows="4" cols="40" maxlength="2000" styleClass="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable" role="textbox" aria-disabled="false" aria-readonly="false" aria-multiline="true">
+									<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
+								</p:inputTextarea>
 							</c:otherwise>
 							</c:choose>
-							<p:inputTextarea id="fuenteQuery" value="#{dialogDominio.data.sql}" rows="4" cols="40" styleClass="no-display"/>
+							<p:inputTextarea id="fuenteQuery" value="#{dialogDominio.data.sql}" autoResize="false" rows="4" cols="40" maxlength="2000" styleClass="no-display"/>
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleFuente}"  value="" />
 				</h:panelGrid>
@@ -235,11 +251,11 @@
 			                  		oncomplete="triggerDblClickParametros();"
 			                        update=":dialogDominio:dataTableParametros"
 			                        />
-
 								<!-- Columnas -->
 								<p:column headerText="#{msg['dialogDominio.headerParametros.codigo']}" class="ui-panelgrid-cell">
 									<h:outputText value="#{td.codigo}" />
 							    </p:column>
+
 
 
 				 		</p:dataTable>
@@ -280,11 +296,11 @@
 	     	<p:toolbar>
 	     		<f:facet name="left">
 	     			<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" actionListener="#{dialogDominio.tramites()}" process="@this" rendered="#{dialogDominio.data.codigo ne null}" />
-
-					<p:commandButton id="btnPing" value="#{msg['botones.ping']}"  process="@form" icon="fa fa-arrow-up" onclick="cambioValorB64('confirmDialogPing');"  />
+	     			<p:remoteCommand name="actualizar" update="@form"/>
+					<p:commandButton id="btnPing" value="#{msg['botones.ping']}" process="@form" update="@form" icon="fa fa-arrow-up" oncomplete="cambioValorPingB64('confirmDialogPing');" />
 	     		</f:facet>
 				<f:facet name="right">
-	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptarSinInvalidacion()}" process="@form" update="growlDialog"  rendered="#{dialogDominio.permiteGuardar() and dialogDominio.isAlta()}" styleClass="boton-azul"  />
+	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptarSinInvalidacion()}" process="@form" update="growlDialog"  rendered="#{dialogDominio.permiteGuardar() and dialogDominio.isAlta()}" styleClass="boton-azul" onclick="cambioValorB64(null);" />
 					<p:commandButton value="#{msg['botones.guardar']}"  process="@form" styleClass="boton-azul" rendered="#{dialogDominio.permiteGuardar() and dialogDominio.mostrarAdvertencia and dialogDominio.isEdicion()}"   onclick="cambioValorB64('confirmDialogGuardar');"  />
 	        		<p:commandButton value="#{msg['botones.guardar']}"  process="@form" styleClass="boton-azul" rendered="#{dialogDominio.permiteGuardar() and !dialogDominio.mostrarAdvertencia and dialogDominio.isEdicion()}"  onclick="cambioValorB64('confirmDialogCache');"  />
 					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominio.cancelar()}" process="@this" rendered="#{dialogDominio.permiteGuardar()}"/>
@@ -314,7 +330,7 @@
 
 	     <p:confirmDialog widgetVar="confirmDialogPing" id="confirmDialogPing"  header="#{msg['confirm.titulo']}" message="#{msg['confirm.guardar']}" icon="fa fa-question-circle fa-3x confirmar_icono" >
 				<p:outputPanel styleClass="confirmar_botonera">
-				  	 <p:commandButton value="#{msg['botones.si']}" actionListener="#{dialogDominio.ping()}" oncomplete="PF('confirmDialogPing').hide();"  process="@this" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check" update="@form" />
+				  	 <p:commandButton value="#{msg['botones.si']}" actionListener="#{dialogDominio.ping()}" oncomplete="PF('confirmDialogPing').hide();"  process="@form" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check" update="@form" />
      				 <p:commandButton value="#{msg['botones.no']}" type="button"  onclick="PF('confirmDialogPing').hide();"    styleClass="ui-confirmdialog-no" icon="fa fa-close" />
 				</p:outputPanel>
 		    </p:confirmDialog>
@@ -332,6 +348,11 @@
      				 <p:commandButton id="botonCacheNo" widgetVar="botonWidget2" onclick="disableClick()"  oncomplete="enableClick()"  value="#{msg['botones.no']}" actionListener="#{dialogDominio.aceptarSinInvalidacion()}" process="@this" styleClass="ui-confirmdialog-no" icon="fa fa-close"  />
 				</p:outputPanel>
 		    </p:confirmDialog>
+		    <h:panelGrid id="inputEscondida" style="display:none">
+
+		    	<h:outputText value="#{dialogDominio.hayCambios}" id="hayCambios"/>
+		    	<p:commandButton id="btnPingNoGuardar" actionListener="#{dialogDominio.ping()}" process="@this" style="display:none" />
+		    </h:panelGrid>
 	</h:form>
 
 </h:body>
@@ -339,21 +360,42 @@
 
 <script type="text/javascript" language="javascript">
 
-
     function cambioValorB64(id) {
-    	var elSql = $('#sqlDecoded')[0];
-    	var elFuente = $('#fuenteQueryDecoded')[0];
+    	var elSql = $('#dialogDominio\\:sqlDecoded')[0];
+    	var elFuente = $('#dialogDominio\\:fuenteQueryDecoded')[0];
 
     	if (elSql) {
-    		var plain = $('#sqlDecoded').val().trim();
+    		var plain = $('#dialogDominio\\:sqlDecoded').val().trim();
     		$('#dialogDominio\\:sql').val(encodeBase64(plain));
     	}
 
     	if (elFuente) {
-    		var plain = $('#fuenteQueryDecoded').val().trim();
+    		var plain = $('#dialogDominio\\:fuenteQueryDecoded').val().trim();
     		$('#dialogDominio\\:fuenteQuery').val(encodeBase64(plain));
     	}
     	PF(id).show();
+    }
+
+    function cambioValorPingB64(id) {
+    	$('#dialogDominio\\:btnPing').focus();
+    	var cambios = $('#dialogDominio\\:hayCambios').html();
+    	var elSql = $('#dialogDominio\\:sqlDecoded')[0];
+    	var elFuente = $('#dialogDominio\\:fuenteQueryDecoded')[0];
+
+    	if(cambios == "true"){
+	    	if (elSql) {
+	    		var plain = $('#dialogDominio\\:sqlDecoded').val().trim();
+	    		$('#dialogDominio\\:sql').val(encodeBase64(plain));
+	    	}
+
+	    	if (elFuente) {
+	    		var plain = $('#dialogDominio\\:fuenteQueryDecoded').val().trim();
+	    		$('#dialogDominio\\:fuenteQuery').val(encodeBase64(plain));
+	    	}
+	    	PF(id).show();
+    	}else{
+    		$('#dialogDominio\\:btnPingNoGuardar').click();
+    	}
     }
 
     function ponerEventosElemento(elemento) {
@@ -394,15 +436,15 @@
 
     function ponerEventos() {
 
-		var elSql = $('#sqlDecoded')[0];
+		var elSql = $('#dialogDominio\\:sqlDecoded')[0];
 		var elFuente = $('#fuenteQueryDecoded')[0];
 
 	    if (elSql) {
-	    	ponerEventosElemento("#sqlDecoded");
+	    	ponerEventosElemento("#dialogDominio\\:sqlDecoded");
 	    }
 
 	    if (elFuente) {
-	    	ponerEventosElemento("#fuenteQueryDecoded");
+	    	ponerEventosElemento("#dialogDominio\\:fuenteQueryDecoded");
 	    }
 	 }
 

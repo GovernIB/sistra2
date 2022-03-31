@@ -773,8 +773,10 @@ $.fn.appAnnexa = function(options) {
 					imc_contenidor
 						.remove();
 
+					var debug = json.mensaje.debug;
+
 					imc_missatge
-						.appMissatge({ accio: "error", titol: titol, text: text, alTancar: function() { document.location = url; } });
+						.appMissatge({ accio: "error", titol: titol, text: text, debug: debug, alTancar: function() { document.location = url; } });
 
 				}
 
@@ -1321,7 +1323,7 @@ $.fn.appAnnexatEsborra = function(opcions){
 						consola("Annexar esborra: error des de JSON");
 
 						imc_contenidor
-							.errors({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: json.url });
+							.errors({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
 
 					}
 

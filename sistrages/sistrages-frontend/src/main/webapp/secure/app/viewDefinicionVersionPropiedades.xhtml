@@ -12,10 +12,15 @@
 		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
         <h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left" rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="12" cellspacing="0">
+
+			<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.identificador']}" />
+			<p:inputText 	 id="codigo" value="#{viewDefinicionVersion.tramite.getIdentificadorCompuesto()}" size="107" disabled="true" />
+
 			<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.descripcion']}" />
 			<p:panelGrid styleClass="noBorders" columns="1" columnClasses="noPadding-left,,">
 				<p:inputText value="#{viewDefinicionVersion.tramiteVersion.descripcion}" disabled="true"  size="107"    />
 			</p:panelGrid>
+
             <p:outputLabel for="autenticado" value="#{msg['viewDefinicionVersionPropiedades.autenticacion']}" />
 			<p:panelGrid styleClass="noBorders">
 				<p:row>

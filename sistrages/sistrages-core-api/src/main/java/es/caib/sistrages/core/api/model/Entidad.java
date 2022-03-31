@@ -17,6 +17,9 @@ public class Entidad extends ModelApi {
 	/** codigo DIR 3. */
 	private String codigoDIR3;
 
+	/** codigo DIR 3. */
+	private String identificador;
+
 	/** nombre. */
 	private Literal nombre;
 
@@ -144,6 +147,20 @@ public class Entidad extends ModelApi {
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
+	}
+
+	/**
+	 * @return the identificador
+	 */
+	public String getIdentificador() {
+		return identificador;
+	}
+
+	/**
+	 * @param identificador the identificador to set
+	 */
+	public void setIdentificador(String identificador) {
+		this.identificador = identificador;
 	}
 
 	/**

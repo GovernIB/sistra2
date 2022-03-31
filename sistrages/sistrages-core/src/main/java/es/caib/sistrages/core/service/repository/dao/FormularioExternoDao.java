@@ -2,8 +2,10 @@ package es.caib.sistrages.core.service.repository.dao;
 
 import java.util.List;
 
+import es.caib.sistrages.core.api.model.ConsultaGeneral;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.comun.FilaImportarGestor;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 
 /**
@@ -36,7 +38,7 @@ public interface FormularioExternoDao {
 
 	/**
 	 * Comprueba si tiene tramites un Formulario gestor externo (FGE)
-	 * 
+	 *
 	 * @param idFGE
 	 * @return
 	 */
@@ -76,11 +78,13 @@ public interface FormularioExternoDao {
 
 	/**
 	 * Existe formulario gestor externo.
-	 *
 	 * @param identificador
+	 * @param idCodigo
+	 * @param idArea
 	 * @return
 	 */
-	boolean existeFormulario(String identificador, final Long idCodigo);
+
+	boolean existeFormulario(String identificador, final Long idCodigo, final Long idArea);
 
 	/**
 	 * Lista de gestores externos segun configuracion
@@ -97,7 +101,20 @@ public interface FormularioExternoDao {
 	 * @param identificador
 	 * @return
 	 */
-	GestorExternoFormularios getFormularioExternoByIdentificador(String identificador);
+	GestorExternoFormularios getFormularioExternoByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
+			Long codigoArea, Long codigoGFE);
+
+	/**
+	 * Existe F
+	 * @param ambito
+	 * @param identificador
+	 * @param codigoEntidad
+	 * @param codigoArea
+	 * @param codigoGFE
+	 * @return
+	 */
+	boolean existeGFEByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
+				Long codigoArea, Long codigoGFE);
 
 	/**
 	 * Método que importa un gestor area
@@ -107,5 +124,19 @@ public interface FormularioExternoDao {
 	 * @return
 	 */
 	Long importar(FilaImportarGestor filaGestor, Long idArea);
+
+	/**
+	 * Obtiene la consulta general.
+	 * @param filtro
+	 * @param idioma
+	 * @param idEntidad
+	 * @param idArea
+	 * @param checkGlobal
+	 * @param checkEntidad
+	 * @param checkArea
+	 * @return
+	 */
+	List<ConsultaGeneral> listar(String filtro, TypeIdioma idioma, Long idEntidad, Long idArea, boolean checkGlobal,
+			boolean checkEntidad, boolean checkArea);
 
 }

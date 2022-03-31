@@ -8,7 +8,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
-import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -27,8 +26,6 @@ public class DialogGestorExternoTramites extends DialogControllerBase {
 	/** Enlace servicio. */
 	@Inject
 	private TramiteService tramiteService;
-
-
 
 	/** Campos. **/
 	private List<DominioTramite> campos;
@@ -49,9 +46,7 @@ public class DialogGestorExternoTramites extends DialogControllerBase {
 	 * Inicialización.
 	 */
 	public void init() {
-
 		campos = tramiteService.getTramiteVersionByGfe(Long.valueOf(id));
-
 	}
 
 	/**

@@ -1,0 +1,54 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_INSTRUCCIONES.setCodigoMensajeError(codigo)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_INSTRUCCIONES">DATOS_INSTRUCCIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_INSTRUCCIONES&metodo=setCodigoMensaje">setCodigoMensaje</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setCodigoMensaje(String codigo):void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que permite recuperar la información a partir de un código, que tendrá que estar previamente definido.</li>
+    	<li>LLa información se define en la pantalla del script, en la pestaña de mensajes validación.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>codigo</b>: String con el identificador del mensaje de error. </li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>
+Pongamos por caso que queremos referenciar desde el script una información, previamente definida en la pestaña de mensajes de validación, con el identificador 'CodFechas'.
+</p>
+<p>La información se fijaría a nivel de script mediante el código siguiente:</p>
+<p class="codigoScript">
+	DATOS_INSTRUCCIONES.setCodigoMensaje('CodFechas');
+</p>
+</body>
+</html>

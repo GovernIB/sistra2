@@ -28,7 +28,7 @@ public final class RTBloqueoPasos implements ReglaTramitacion {
         // Controlamos de que solo puede existir uno
         if (ldpp.size() > ConstantesNumero.N1) {
             throw new ErrorConfiguracionException(
-                    "No pueden existir más de un paso pagar");
+                    "No poden existir més de una passa pagar");
         }
 
         // Comprobamos si debemos bloquear

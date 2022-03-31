@@ -95,6 +95,12 @@ public class DialogEntidad extends DialogControllerBase {
 			return;
 		}
 
+
+		if (entidadService.existeEntidad(data.getIdentificador(), data.getCodigo())) {
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
+			return;
+		}
+
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 		switch (acceso) {
@@ -114,6 +120,7 @@ public class DialogEntidad extends DialogControllerBase {
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
 	}
+
 
 	/**
 	 * Cancelar.

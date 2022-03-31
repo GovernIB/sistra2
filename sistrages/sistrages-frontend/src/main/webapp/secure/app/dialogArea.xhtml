@@ -39,6 +39,12 @@
 				 	<p:outputLabel for="descripcion" value="#{msg['dialogArea.descripcion']}" />
 				 	<p:inputText id="descripcion" value="#{dialogArea.data.descripcion}" disabled="#{dialogArea.consulta}" required="true" size="40" maxlength="255" />
 
+					<p:outputLabel for="email" value="#{msg['dialogArea.email']}" />
+				 	<p:inputText id="email" value="#{dialogArea.data.email}" disabled="#{dialogArea.consulta}" size="40" maxlength="255" />
+
+				 	<p:outputLabel for="aviso" value=" " />
+				 	<h:outputText id="aviso" value="#{msg['dialogArea.aviso']}" />
+
 				</h:panelGrid>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">

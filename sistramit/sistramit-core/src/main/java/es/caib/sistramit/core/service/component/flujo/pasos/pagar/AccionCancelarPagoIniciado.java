@@ -106,7 +106,7 @@ public final class AccionCancelarPagoIniciado implements AccionPaso {
         if (sesionPago.getPresentacion() == null
                 || pPago.getRellenado() == TypeEstadoDocumento.SIN_RELLENAR) {
             throw new AccionPasoNoPermitidaException(
-                    "No se ha iniciado el pago");
+                    "No s'ha iniciat el pagament");
         }
 
         switch (sesionPago.getPresentacion()) {
@@ -116,7 +116,7 @@ public final class AccionCancelarPagoIniciado implements AccionPaso {
             if (pPago
                     .getRellenado() != TypeEstadoDocumento.RELLENADO_CORRECTAMENTE) {
                 throw new AccionPasoNoPermitidaException(
-                        "El pago es presencial pero no esta en estado correcto");
+                        "El pagament és presencial pero no està en estat correcte");
             }
             break;
         case ELECTRONICA:
@@ -125,18 +125,18 @@ public final class AccionCancelarPagoIniciado implements AccionPaso {
             if (pPago
                     .getRellenado() != TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE) {
                 throw new AccionPasoNoPermitidaException(
-                        "El pago no esta en estado iniciado");
+                        "El pagament no està en estat iniciat");
             }
             final PagoComponentVerificacion dvp = pagoExternoComponent
                     .verificarPagoElectronico(sesionPago, debugEnabled);
             if (dvp.isVerificado() && dvp.isPagado()) {
                 throw new AccionPasoNoPermitidaException(
-                        "El pago esta completado");
+                        "El pagament està completat");
             }
             break;
         default:
             throw new AccionPasoNoPermitidaException(
-                    "Tipo presentacion no reconocida");
+                    "Tipus presentació no reconeguda");
         }
 
     }

@@ -16,6 +16,8 @@ import es.caib.sistrages.core.api.exception.EncodeException;
 import es.caib.sistrages.core.api.exception.RestException;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCaptcha;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoOculto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
@@ -62,6 +64,7 @@ import es.caib.sistrages.rest.api.interna.RAnexoTramitePresentacionElectronica;
 import es.caib.sistrages.rest.api.interna.RComponente;
 import es.caib.sistrages.rest.api.interna.RComponenteAviso;
 import es.caib.sistrages.rest.api.interna.RComponenteCampoOculto;
+import es.caib.sistrages.rest.api.interna.RComponenteCaptcha;
 import es.caib.sistrages.rest.api.interna.RComponenteCheckbox;
 import es.caib.sistrages.rest.api.interna.RComponenteSeccion;
 import es.caib.sistrages.rest.api.interna.RComponenteSelector;
@@ -187,12 +190,12 @@ public class VersionTramiteAdapter {
 				final List<RGestorFormularioExterno> rgfes = new ArrayList<>();
 				for (final GestorExternoFormularios gfe : gestoresExternosFormularios) {
 					final RGestorFormularioExterno rgfe = new RGestorFormularioExterno();
-					rgfe.setIdentificador(gfe.getIdentificador());
+					rgfe.setIdentificador(gfe.getIdentificadorCompuesto());
 					rgfe.setUrl(gfe.getUrl());
 					if (gfe.getConfiguracionAutenticacion() != null) {
 						final RConfiguracionAutenticacion rConfiguracionAutenticacion = new RConfiguracionAutenticacion();
 						rConfiguracionAutenticacion
-								.setIdentificador(gfe.getConfiguracionAutenticacion().getIdentificador());
+								.setIdentificador(gfe.getConfiguracionAutenticacion().getIdentificadorCompuesto());
 						rConfiguracionAutenticacion.setUsuario(gfe.getConfiguracionAutenticacion().getUsuario());
 						rConfiguracionAutenticacion.setPassword(gfe.getConfiguracionAutenticacion().getPassword());
 						rgfe.setConfiguracionAutenticacion(rConfiguracionAutenticacion);
@@ -241,7 +244,7 @@ public class VersionTramiteAdapter {
 			if (t != null && t.getIdArea() != null) {
 				final Area e = restApiService.loadArea(t.getIdArea());
 				if (e != null) {
-					res = e.getIdentificador();
+					res = e.getIdentificadorCompuesto();
 				}
 			}
 		}
@@ -401,6 +404,7 @@ public class VersionTramiteAdapter {
 		resPaso.setTipo(paso.getTipo().toString());
 		resPaso.setPasoFinal(paso.isPasoFinal());
 		resPaso.setInstruccionesInicio(AdapterUtils.generarLiteralIdioma(paso.getInstruccionesIniciales(), idioma));
+		resPaso.setScriptInstruccionesInicio(AdapterUtils.generaScript(paso.getScriptDebeSaber(), idioma));
 		return resPaso;
 	}
 
@@ -476,7 +480,7 @@ public class VersionTramiteAdapter {
 				formularioTramite.setScriptPostguardar(AdapterUtils.generaScript(f.getScriptRetorno(), idioma));
 				if (f.getTipoFormulario() == TypeFormularioGestor.EXTERNO) {
 					final RFormularioExterno rfe = new RFormularioExterno();
-					rfe.setIdentificadorGestorFormularios(f.getFormularioGestorExterno().getIdentificador());
+					rfe.setIdentificadorGestorFormularios(f.getFormularioGestorExterno().getIdentificadorCompuesto());
 					rfe.setIdentificadorFormulario(f.getIdFormularioExterno());
 					formularioTramite.setFormularioExterno(rfe);
 				}
@@ -665,6 +669,11 @@ public class VersionTramiteAdapter {
 					final RComponenteSeccion resSC = generaComponenteSeccion(csc, idioma);
 					lc.add(resSC);
 					break;
+				case CAPTCHA:
+					final ComponenteFormularioCampoCaptcha cscaptcha = (ComponenteFormularioCampoCaptcha) c;
+					final RComponenteCaptcha resSCaptcha = generaComponenteCaptcha(cscaptcha, idioma);
+					lc.add(resSCaptcha);
+					break;
 				case ETIQUETA:
 					final ComponenteFormularioEtiqueta ca = (ComponenteFormularioEtiqueta) c;
 					final RComponenteAviso resET = generaComponenteAviso(ca, idioma);
@@ -684,15 +693,18 @@ public class VersionTramiteAdapter {
 	 * Genera componente campo oculto.
 	 *
 	 * @param cco
-	 * @param idioma idioma
+	 * @param idioma
+	 *                   idioma
 	 * @return RComponenteCampoOculto
 	 */
 	private RComponenteCampoOculto generaComponenteCampoOculto(final ComponenteFormularioCampoOculto cco,
 			final String idioma) {
 		final RComponenteCampoOculto resCO = new RComponenteCampoOculto();
-		resCO.setIdentificador(cco.getIdComponente());
-		resCO.setTipo(cco.getTipo().toString());
+		// Props comunes
+		generaPropsComunesComponente(cco, resCO, idioma);
 		resCO.setPropiedadesCampo(generarPropiedadesCampo(cco, idioma));
+		// Props especificas
+		// - No hay.
 		return resCO;
 	}
 
@@ -705,15 +717,26 @@ public class VersionTramiteAdapter {
 	 */
 	private RComponenteAviso generaComponenteAviso(final ComponenteFormularioEtiqueta ca, final String idioma) {
 		final RComponenteAviso resET = new RComponenteAviso();
-		resET.setAlineacion(ca.getAlineacionTexto() == null ? null : ca.getAlineacionTexto().toString());
-		resET.setAyuda(AdapterUtils.generarLiteralIdioma(ca.getAyuda(), idioma));
-		resET.setColumnas(ca.getNumColumnas());
-		resET.setEtiqueta(AdapterUtils.generarLiteralIdioma(ca.getTexto(), idioma));
-		resET.setIdentificador(ca.getIdComponente());
-		resET.setMostrarEtiqueta(!ca.isNoMostrarTexto());
-		resET.setTipo(ca.getTipo().toString());
+		// Props comunes
+		generaPropsComunesComponente(ca, resET, idioma);
+		// Props especificas
 		resET.setTipoAviso(ca.getTipoEtiqueta().toString());
 		return resET;
+	}
+
+	/**
+	 * Genera Componente Captcha
+	 *
+	 * @param csc
+	 * @param idioma
+	 * @return RComponenteSeccion
+	 */
+	private RComponenteCaptcha generaComponenteCaptcha(final ComponenteFormularioCampoCaptcha csc,
+			final String idioma) {
+		final RComponenteCaptcha resSC = new RComponenteCaptcha();
+		// Props comunes
+		generaPropsComunesComponente(csc, resSC, idioma);
+		return resSC;
 	}
 
 	/**
@@ -725,14 +748,10 @@ public class VersionTramiteAdapter {
 	 */
 	private RComponenteSeccion generaComponenteSeccion(final ComponenteFormularioSeccion csc, final String idioma) {
 		final RComponenteSeccion resSC = new RComponenteSeccion();
-		resSC.setAlineacion(csc.getAlineacionTexto() == null ? null : csc.getAlineacionTexto().toString());
-		resSC.setAyuda(AdapterUtils.generarLiteralIdioma(csc.getAyuda(), idioma));
-		resSC.setColumnas(csc.getNumColumnas());
-		resSC.setEtiqueta(AdapterUtils.generarLiteralIdioma(csc.getTexto(), idioma));
-		resSC.setIdentificador(csc.getIdComponente());
+		// Props comunes
+		generaPropsComunesComponente(csc, resSC, idioma);
+		// Props especificas
 		resSC.setLetra(csc.getLetra());
-		resSC.setMostrarEtiqueta(!csc.isNoMostrarTexto());
-		resSC.setTipo(csc.getTipo().toString());
 		return resSC;
 	}
 
@@ -746,11 +765,14 @@ public class VersionTramiteAdapter {
 	private RComponenteSelector generaComponenteSelector(final ComponenteFormularioCampoSelector cs,
 			final String idioma) {
 		final RComponenteSelector resSL = new RComponenteSelector();
-		resSL.setAlineacion(cs.getAlineacionTexto() == null ? null : cs.getAlineacionTexto().toString());
-		resSL.setAyuda(AdapterUtils.generarLiteralIdioma(cs.getAyuda(), idioma));
-		resSL.setColumnas(cs.getNumColumnas());
-		resSL.setEtiqueta(AdapterUtils.generarLiteralIdioma(cs.getTexto(), idioma));
-		resSL.setIdentificador(cs.getIdComponente());
+		// Props comunes
+		generaPropsComunesComponente(cs, resSL, idioma);
+		resSL.setPropiedadesCampo(generarPropiedadesComunesCampo(cs, idioma));
+		// Props especificas
+		resSL.setTipoSelector(cs.getTipoCampoIndexado().toString());
+		resSL.setTipoListaValores(cs.getTipoListaValores().toString());
+		resSL.setOrientacion(cs.getOrientacion());
+		resSL.setIndiceAlfabetico(cs.isIndiceAlfabetico());
 		switch (cs.getTipoListaValores()) {
 		case DOMINIO:
 			resSL.setListaDominio(generaListaDominio(cs));
@@ -762,13 +784,6 @@ public class VersionTramiteAdapter {
 			resSL.setScriptListaValores(AdapterUtils.generaScript(cs.getScriptValoresPosibles(), idioma));
 			break;
 		}
-		resSL.setMostrarEtiqueta(!cs.isNoMostrarTexto());
-		resSL.setPropiedadesCampo(generarPropiedadesCampo(cs, idioma));
-		resSL.setTipo(cs.getTipo().toString());
-		resSL.setTipoSelector(cs.getTipoCampoIndexado().toString());
-		resSL.setTipoListaValores(cs.getTipoListaValores().toString());
-		resSL.setOrientacion(cs.getOrientacion());
-		resSL.setIndiceAlfabetico(cs.isIndiceAlfabetico());
 		return resSL;
 	}
 
@@ -782,14 +797,10 @@ public class VersionTramiteAdapter {
 	private RComponenteCheckbox generaComponenteCheckBox(final ComponenteFormularioCampoCheckbox cch,
 			final String idioma) {
 		final RComponenteCheckbox resCH = new RComponenteCheckbox();
-		resCH.setAlineacion(cch.getAlineacionTexto() == null ? null : cch.getAlineacionTexto().toString());
-		resCH.setAyuda(AdapterUtils.generarLiteralIdioma(cch.getAyuda(), idioma));
-		resCH.setColumnas(cch.getNumColumnas());
-		resCH.setEtiqueta(AdapterUtils.generarLiteralIdioma(cch.getTexto(), idioma));
-		resCH.setIdentificador(cch.getIdComponente());
-		resCH.setMostrarEtiqueta(!cch.isNoMostrarTexto());
-		resCH.setPropiedadesCampo(generarPropiedadesCampo(cch, idioma));
-		resCH.setTipo(cch.getTipo().toString());
+		// Props comunes
+		generaPropsComunesComponente(cch, resCH, idioma);
+		resCH.setPropiedadesCampo(generarPropiedadesComunesCampo(cch, idioma));
+		// Props especificas
 		resCH.setValorChecked(cch.getValorChecked());
 		resCH.setValorNoChecked(cch.getValorNoChecked());
 		return resCH;
@@ -804,15 +815,11 @@ public class VersionTramiteAdapter {
 	 */
 	private RComponenteTextbox generaComponenteTextbox(final ComponenteFormularioCampoTexto ct, final String idioma) {
 		final RComponenteTextbox resTB = new RComponenteTextbox();
-		resTB.setAlineacion(ct.getAlineacionTexto() == null ? null : ct.getAlineacionTexto().toString());
-		resTB.setAyuda(AdapterUtils.generarLiteralIdioma(ct.getAyuda(), idioma));
-		resTB.setColumnas(ct.getNumColumnas());
-		resTB.setEtiqueta(AdapterUtils.generarLiteralIdioma(ct.getTexto(), idioma));
-		resTB.setIdentificador(ct.getIdComponente());
-		resTB.setMostrarEtiqueta(!ct.isNoMostrarTexto());
-		resTB.setTipo(ct.getTipo().toString());
+		// Props comunes
+		generaPropsComunesComponente(ct, resTB, idioma);
+		resTB.setPropiedadesCampo(generarPropiedadesComunesCampo(ct, idioma));
+		// Props especificas
 		resTB.setTipoTexto(ct.getTipoCampoTexto().toString());
-		resTB.setPropiedadesCampo(generaPropiedadesCampo(ct, idioma));
 		switch (ct.getTipoCampoTexto()) {
 		case NORMAL:
 			resTB.setTextoNormal(generaTextoNormal(ct));
@@ -839,6 +846,27 @@ public class VersionTramiteAdapter {
 	}
 
 	/**
+	 * Genera props comunes campo.
+	 *
+	 * @param ct
+	 *                   ComponenteFormularioCampo
+	 * @param resTB
+	 *                   Def componente
+	 * @param idioma
+	 *                   idioma
+	 */
+	private void generaPropsComunesComponente(final ComponenteFormulario ct, final RComponente resTB,
+			final String idioma) {
+		resTB.setAlineacion(ct.getAlineacionTexto() == null ? null : ct.getAlineacionTexto().toString());
+		resTB.setAyuda(AdapterUtils.generarLiteralIdioma(ct.getAyuda(), idioma));
+		resTB.setColumnas(ct.getNumColumnas());
+		resTB.setEtiqueta(AdapterUtils.generarLiteralIdioma(ct.getTexto(), idioma));
+		resTB.setIdentificador(ct.getIdComponente());
+		resTB.setMostrarEtiqueta(!ct.isNoMostrarTexto());
+		resTB.setTipo(ct.getTipo().toString());
+	}
+
+	/**
 	 * Genera propiedades Texto Email
 	 *
 	 * @param ct
@@ -857,7 +885,8 @@ public class VersionTramiteAdapter {
 	/**
 	 * Genera texto teléfono.
 	 *
-	 * @param ct campo texto
+	 * @param ct
+	 *               campo texto
 	 * @return Propiedades teléfono
 	 */
 	private RPropiedadesTextoTelefono generaTextoTelefono(final ComponenteFormularioCampoTexto ct) {
@@ -905,7 +934,7 @@ public class VersionTramiteAdapter {
 			l.setCampoCodigo(cs.getCampoDominioCodigo());
 			l.setCampoDescripcion(cs.getCampoDominioDescripcion());
 		}
-		l.setDominio(d.getIdentificador());
+		l.setDominio(d.getIdentificadorCompuesto());
 		l.setParametros(generaParametrosDominio(cs.getListaParametrosDominio()));
 		return l;
 	}
@@ -944,48 +973,12 @@ public class VersionTramiteAdapter {
 	}
 
 	/**
-	 * Genera Propiedades del Campo checkbox
-	 *
-	 * @param ori
-	 * @return RPropiedadesCampo
-	 */
-	private RPropiedadesCampo generarPropiedadesCampo(final ComponenteFormularioCampoCheckbox ori,
-			final String idioma) {
-		final RPropiedadesCampo res = new RPropiedadesCampo();
-		res.setNoModificable(ori.isNoModificable());
-		res.setObligatorio(ori.isObligatorio());
-		res.setScriptAutorrellenable(AdapterUtils.generaScript(ori.getScriptAutorrellenable(), idioma));
-		res.setScriptEstado((AdapterUtils.generaScript(ori.getScriptSoloLectura(), idioma)));
-		res.setScriptValidacion((AdapterUtils.generaScript(ori.getScriptValidacion(), idioma)));
-		res.setSoloLectura(ori.isSoloLectura());
-		return res;
-	}
-
-	/**
-	 * genera Propiedades Campo texto
-	 *
-	 * @param ori
-	 * @return RPropiedadesCampo
-	 */
-	private RPropiedadesCampo generaPropiedadesCampo(final ComponenteFormularioCampoTexto ori, final String idioma) {
-		final RPropiedadesCampo res = new RPropiedadesCampo();
-		res.setNoModificable(ori.isNoModificable());
-		res.setObligatorio(ori.isObligatorio());
-		res.setScriptAutorrellenable(AdapterUtils.generaScript(ori.getScriptAutorrellenable(), idioma));
-		res.setScriptEstado((AdapterUtils.generaScript(ori.getScriptSoloLectura(), idioma)));
-		res.setScriptValidacion((AdapterUtils.generaScript(ori.getScriptValidacion(), idioma)));
-		res.setSoloLectura(ori.isSoloLectura());
-		return res;
-	}
-
-	/**
 	 * genera Propiedades Campo selector
 	 *
 	 * @param ori
 	 * @return RPropiedadesCampo
 	 */
-	private RPropiedadesCampo generarPropiedadesCampo(final ComponenteFormularioCampoSelector ori,
-			final String idioma) {
+	private RPropiedadesCampo generarPropiedadesComunesCampo(final ComponenteFormularioCampo ori, final String idioma) {
 		final RPropiedadesCampo res = new RPropiedadesCampo();
 		res.setNoModificable(ori.isNoModificable());
 		res.setObligatorio(ori.isObligatorio());

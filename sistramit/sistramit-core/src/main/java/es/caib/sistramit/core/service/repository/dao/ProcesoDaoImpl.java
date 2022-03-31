@@ -42,7 +42,7 @@ public class ProcesoDaoImpl implements ProcesoDao {
                 ID_MAESTRO);
         if (jProceso == null) {
             throw new ProcesoConfiguracionException(
-                    "No existe fila en tabla de procesos con id " + ID_MAESTRO);
+                    "No existeix fila en tabla de processos amb id " + ID_MAESTRO);
         }
 
         // Verifica si esta configurado como maestro

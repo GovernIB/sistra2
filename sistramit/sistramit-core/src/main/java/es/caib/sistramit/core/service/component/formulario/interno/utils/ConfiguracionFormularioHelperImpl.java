@@ -25,9 +25,11 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.formulario.AccionFormulario;
 import es.caib.sistramit.core.api.model.formulario.AccionFormularioNormalizada;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
+import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoCaptcha;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoOculto;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelector;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelectorDesplegable;
+import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelectorDinamico;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelectorMultiple;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelectorUnico;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoCP;
@@ -83,8 +85,8 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		ConfiguracionCampo confCampo = null;
 		final TypeCampo tipoCampo = UtilsSTG.traduceTipoCampo(pCampoDef.getTipo());
 		if (tipoCampo == null) {
-			throw new ErrorConfiguracionException("Campo de tipo " + pCampoDef.getTipo() + " no soportado para campo "
-					+ pCampoDef.getIdentificador());
+			throw new ErrorConfiguracionException(
+					"Camp de tipus " + pCampoDef.getTipo() + " no soportat per camp " + pCampoDef.getIdentificador());
 		}
 		switch (tipoCampo) {
 		case TEXTO:
@@ -99,8 +101,11 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		case OCULTO:
 			confCampo = obtenerConfiguracionCampoOculto((RComponenteCampoOculto) pCampoDef);
 			break;
+		case CAPTCHA:
+			confCampo = obtenerConfiguracionCampoCaptcha(pCampoDef);
+			break;
 		default:
-			throw new TipoNoControladoException("Tipo de campo no soportado: " + tipoCampo.name());
+			throw new TipoNoControladoException("Tipus de camp no suportat: " + tipoCampo.name());
 		}
 		return confCampo;
 	}
@@ -201,7 +206,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 
 		if (pf == null) {
 			throw new ErrorConfiguracionException(
-					"No se ha podido obtener plantilla pdf para formulario " + pDatosSesion.getIdFormulario());
+					"No s'ha pogut obtenir plantilla pdf per formulari " + pDatosSesion.getIdFormulario());
 		}
 
 		return pf;
@@ -273,8 +278,8 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	private ConfiguracionCampoSelector obtenerConfiguracionCampoSelector(final RComponenteSelector pCampoDef) {
 		final TypeSelector tipoSelector = UtilsSTG.traduceTipoSelector(pCampoDef.getTipoSelector());
 		if (tipoSelector == null) {
-			throw new ErrorConfiguracionException("Campo de tipo selector " + pCampoDef.getTipoSelector()
-					+ " no soportado para campo " + pCampoDef.getIdentificador());
+			throw new ErrorConfiguracionException("Camp de tipus selector " + pCampoDef.getTipoSelector()
+					+ " no suportat per camp " + pCampoDef.getIdentificador());
 		}
 		ConfiguracionCampoSelector confCampoSelector = null;
 		switch (tipoSelector) {
@@ -292,9 +297,12 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		case MULTIPLE:
 			confCampoSelector = new ConfiguracionCampoSelectorMultiple();
 			break;
+		case DINAMICO:
+			confCampoSelector = new ConfiguracionCampoSelectorDinamico();
+			break;
 		default:
-			throw new ErrorConfiguracionException("Campo de tipo selector " + pCampoDef.getTipoSelector()
-					+ " no soportado para campo " + pCampoDef.getIdentificador());
+			throw new ErrorConfiguracionException("Camp de tipus selector " + pCampoDef.getTipoSelector()
+					+ " no suportat per camp " + pCampoDef.getIdentificador());
 		}
 
 		// Establecemos propiedades generales
@@ -350,8 +358,8 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		// Creamos configuración específica según el tipo de campo de texto
 		final TypeTexto typeTexto = UtilsSTG.traduceTipoTexto(pCampoDef.getTipoTexto());
 		if (typeTexto == null) {
-			throw new ErrorConfiguracionException("Campo de texto de tipo " + pCampoDef.getTipoTexto()
-					+ " no soportado para campo " + pCampoDef.getIdentificador());
+			throw new ErrorConfiguracionException("Camp de text de tipus " + pCampoDef.getTipoTexto()
+					+ " no soportat per camp " + pCampoDef.getIdentificador());
 		}
 
 		switch (typeTexto) {
@@ -389,7 +397,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 			confCampo = new ConfiguracionCampoTextoPassword();
 			break;
 		default:
-			throw new TipoNoControladoException("Tipo de campo texto no controlado: " + pCampoDef.getTipoTexto());
+			throw new TipoNoControladoException("Tipus de camp texto no controlat: " + pCampoDef.getTipoTexto());
 		}
 
 		// Establecemos propiedades generales
@@ -534,6 +542,19 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 			confCampo.setModificable(TypeSiNo.SI);
 		}
 		confCampo.setEvaluar(TypeSiNo.fromBoolean(UtilsSTG.existeScript(propsGenerales.getScriptValidacion())));
+	}
+
+	/**
+	 * Obtiene configuración campo captcha.
+	 *
+	 * @param pCampoDef
+	 *                      Definición campo
+	 * @return Configuración campo
+	 */
+	private ConfiguracionCampo obtenerConfiguracionCampoCaptcha(final RComponente pCampoDef) {
+		final ConfiguracionCampoCaptcha confCampo = ConfiguracionCampoCaptcha
+				.createNewConfiguracionCampoCaptcha(pCampoDef.getIdentificador());
+		return confCampo;
 	}
 
 }

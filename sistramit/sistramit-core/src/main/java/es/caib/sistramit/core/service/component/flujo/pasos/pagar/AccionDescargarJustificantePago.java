@@ -113,7 +113,7 @@ public final class AccionDescargarJustificantePago implements AccionPaso {
         if (detallePago
                 .getRellenado() != TypeEstadoDocumento.RELLENADO_CORRECTAMENTE) {
             throw new AccionPasoNoPermitidaException(
-                    "El pago no esta realizado");
+                    "El pagament no està realitzat");
         }
     }
 

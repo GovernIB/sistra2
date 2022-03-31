@@ -217,7 +217,7 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 		// Recupera sesion de firma asociada al documento
 		final String sf = dipa.recuperarSesionFirma(idDocumento, instancia);
 		if (sf == null) {
-			throw new SesionFirmaClienteException("No existe sesion de firma almacenada en datos paso");
+			throw new SesionFirmaClienteException("No existeix sessió de firma emmagatzemada en dades passa");
 		}
 
 		// Recupera firma de componente externo

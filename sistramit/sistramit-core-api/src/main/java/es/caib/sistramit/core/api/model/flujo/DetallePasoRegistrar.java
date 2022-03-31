@@ -6,6 +6,7 @@ import java.util.List;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoFirma;
+import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedadFirmante;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 
 /**
@@ -259,7 +260,8 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	}
 
 	/**
-	 * Verifica si estan firmados los documentos.
+	 * Verifica si estan firmados los documentos: firmados por todos los firmantes
+	 * obligatorios y al menos por uno de los opcionales requeridos.
 	 *
 	 * @param res
 	 * @param docs
@@ -267,14 +269,35 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 */
 	private boolean verificarFirmas(final List<DocumentoRegistro> docs) {
 		boolean res = true;
+		boolean opcRequeridoExiste;
+		boolean opcRequeridoFirmado;
 		if (docs != null) {
 			for (final DocumentoRegistro doc : docs) {
 				if (doc.getFirmar() == TypeSiNo.SI) {
+					opcRequeridoExiste = false;
+					opcRequeridoFirmado = false;
 					for (final Firma fi : doc.getFirmas()) {
-						if (fi.getEstadoFirma() == TypeEstadoFirma.NO_FIRMADO) {
+						// Si no ha firmado un firmante obligatorio, no ha finalizado
+						if (fi.getObligatoriedad() == TypeObligatoriedadFirmante.OBLIGATORIO
+								&& fi.getEstadoFirma() == TypeEstadoFirma.NO_FIRMADO) {
 							res = false;
 							break;
 						}
+						// Apuntamos si hay opcional requerido y si se ha firmado
+						if (fi.getObligatoriedad() == TypeObligatoriedadFirmante.OPCIONAL_REQUERIDO) {
+							opcRequeridoExiste = true;
+							if (fi.getEstadoFirma() == TypeEstadoFirma.FIRMADO) {
+								opcRequeridoFirmado = true;
+							}
+						}
+					}
+					// Si existe opcional requerido y no se ha firmado ninguno, no se ha finalizado
+					if (opcRequeridoExiste && !opcRequeridoFirmado) {
+						res = false;
+					}
+					// Si no se cumple firma para documento, no seguimos verificando
+					if (!res) {
+						break;
 					}
 				}
 			}
@@ -440,7 +463,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 
 	/**
 	 * Método de acceso a instruccionesTramitacion.
-	 * 
+	 *
 	 * @return instruccionesTramitacion
 	 */
 	public String getInstruccionesTramitacion() {
@@ -449,7 +472,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 
 	/**
 	 * Método para establecer instruccionesTramitacion.
-	 * 
+	 *
 	 * @param instruccionesTramitacion
 	 *                                     instruccionesTramitacion a establecer
 	 */

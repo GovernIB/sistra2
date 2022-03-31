@@ -12,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import es.caib.sistra2.commons.plugins.dominio.api.DominioPluginException;
 import es.caib.sistra2.commons.plugins.dominio.api.IDominioPlugin;
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
+import es.caib.sistrages.core.api.exception.ValorIdentificadorIncorrectoException;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.service.DominioResolucionService;
@@ -63,7 +65,11 @@ public class DominioResolucionServiceImpl implements DominioResolucionService {
 	@NegocioInterceptor
 	public ValoresDominio realizarConsultaFuenteDatos(final String idDominio,
 			final List<ValorParametroDominio> parametros) {
-		return fuenteDatosComponent.realizarConsultaFuenteDatos(idDominio, parametros);
+		ValorIdentificadorCompuesto valor = new ValorIdentificadorCompuesto(idDominio);
+		if (valor.isError()) {
+			throw new ValorIdentificadorIncorrectoException("Error obteniendo el identificador compuesto de :" + idDominio);
+		}
+		return fuenteDatosComponent.realizarConsultaFuenteDatos(valor.getAmbito(), valor.getIdentificadorEntidad(), valor.getIdentificadorArea(), valor.getIdentificador(), parametros);
 	}
 
 	@Override
@@ -109,9 +115,9 @@ public class DominioResolucionServiceImpl implements DominioResolucionService {
 	}
 
 	@Override
-	public ValoresDominio realizarConsultaListaFija(final TypeAmbito ambito, final Long idEntidad,
+	public ValoresDominio realizarConsultaListaFija(final TypeAmbito ambito, final Long idEntidad, final Long idArea,
 			final String identificador, final String url, final List<Propiedad> parametros) {
-		return fuenteDatosComponent.realizarConsultaListaFija(identificador);
+		return fuenteDatosComponent.realizarConsultaListaFija(ambito, idEntidad, idArea, identificador, null, null);
 	}
 
 }

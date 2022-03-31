@@ -70,7 +70,6 @@
         	<p:outputPanel>
 	        	<p:selectOneRadio id="tipopresentacion" disabled="true" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.tipoPresentacion}" layout="custom">
 		        	<f:selectItem itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica']}" itemValue="#{TypePresentacion.ELECTRONICA}" />
-		        	<f:selectItem itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.presencial']}" itemValue="#{TypePresentacion.PRESENCIAL}" />
 	        	</p:selectOneRadio>
 	         	<h:panelGrid columns="2" columnClasses="noPadding-left wpx100 padding8," styleClass="w100">
 					<p:outputPanel>
@@ -126,12 +125,6 @@
 
 					</h:panelGrid>
 
-
-					<p:outputPanel>
-						<p:radioButton id="presencial" for="tipopresentacion" itemIndex="1" />
-						<p:spacer width="8" height="1"/>
-						<p:outputLabel for="presencial" value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.presencial']}" />
-					</p:outputPanel>
 					<!-- <p:outputPanel>
 						<p:selectBooleanCheckbox id="compulsar" disabled="true" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.debeCompulsar}" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.presencial.compulsar']}"/>
 						<p:selectBooleanCheckbox id="presentarfotocopia" disabled="true" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.debeFotocopiar}"  itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.presencial.presentarfotocopia']}"/>

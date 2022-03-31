@@ -28,6 +28,13 @@ public interface EntidadDao {
 	Entidad getByCodigo(String codigoDir3);
 
 	/**
+	 * Obtener entidad a partir del identificador.
+	 * @param string
+	 * @return
+	 */
+	Entidad getByIdentificador(String identificador);
+
+	/**
 	 * Obtiene la entidad.
 	 *
 	 * @param idArea
@@ -177,5 +184,14 @@ public interface EntidadDao {
 	 * @param plantillaEntidad
 	 */
 	void removePlantillaEmailFin(Long plantillaEntidad);
+
+	/**
+	 * Comprueba si existe el identificador según codigo o no.
+	 * @param identificador
+	 * @param codigo
+	 * @return
+	 */
+	boolean existeFormulario(String identificador, Long codigo);
+
 
 }

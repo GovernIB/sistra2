@@ -22,13 +22,11 @@ public final class ValorCampoFormularioNoValidoException extends ServiceRollback
 	/**
 	 * Constructor ValorCampoFormularioNoValidoException.
 	 *
-	 * @param idCampo
-	 *            idCampo
-	 * @param valorSerializado
-	 *            valorSerializado
+	 * @param idCampo          idCampo
+	 * @param valorSerializado valorSerializado
 	 */
 	public ValorCampoFormularioNoValidoException(final String idCampo, final String valorSerializado) {
-		super("El valor serializado del campo de formulario " + idCampo + " no es correcto: " + valorSerializado);
+		super("El valor serialitzat del camp de formulari " + idCampo + " no és correcte: " + valorSerializado);
 	}
 
 }

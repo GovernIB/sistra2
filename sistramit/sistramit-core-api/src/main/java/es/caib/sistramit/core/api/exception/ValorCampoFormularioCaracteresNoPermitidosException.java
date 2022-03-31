@@ -19,13 +19,11 @@ public final class ValorCampoFormularioCaracteresNoPermitidosException extends S
 	/**
 	 * Constructor ValorCampoFormularioCaracteresNoPermitidosException.
 	 *
-	 * @param idCampo
-	 *            idCampo
-	 * @param valorNoPermitido
-	 *            valor no permitido
+	 * @param idCampo          idCampo
+	 * @param valorNoPermitido valor no permitido
 	 */
 	public ValorCampoFormularioCaracteresNoPermitidosException(final String idCampo, final String valorNoPermitido) {
-		super("El valor del campo de formulario " + idCampo + " tiene caracteres no permitidos: " + valorNoPermitido);
+		super("El valor del camp de formulari " + idCampo + " té caràcters no permesos: " + valorNoPermitido);
 	}
 
 }

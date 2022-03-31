@@ -3,6 +3,8 @@ package es.caib.sistrages.rest;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
@@ -25,6 +28,7 @@ import es.caib.sistrages.core.api.model.Rol;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.rest.adapter.AvisosEntidadAdapter;
 import es.caib.sistrages.rest.adapter.ConfiguracionEntidadAdapter;
@@ -34,7 +38,6 @@ import es.caib.sistrages.rest.adapter.RolesAdapter;
 import es.caib.sistrages.rest.adapter.ValoresDominioAdapter;
 import es.caib.sistrages.rest.adapter.VersionTramiteAdapter;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
-import es.caib.sistrages.rest.api.interna.RConfiguracionAutenticacion;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RDominio;
@@ -43,6 +46,7 @@ import es.caib.sistrages.rest.api.interna.RPermisoHelpDesk;
 import es.caib.sistrages.rest.api.interna.RValorParametro;
 import es.caib.sistrages.rest.api.interna.RValoresDominio;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
+import es.caib.sistrages.rest.exception.NoExisteException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -57,6 +61,9 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/interna")
 @Api(value = "interna", produces = "application/json")
 public class ApiInternaRestController {
+
+	/** Log. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(ApiInternaRestController.class);
 
 	/** Servicio negocio. */
 	@Autowired
@@ -118,14 +125,14 @@ public class ApiInternaRestController {
 	/**
 	 * Recupera configuración entidad.
 	 *
-	 * @param codigoDIR3
-	 *                       id entidad
+	 * @param codigoDIR3 id entidad
 	 * @return Entidad
 	 */
 	@ApiOperation(value = "Lista de Propiedades de configuracion de entidad", notes = "Lista de Propiedades de configuracion de entidad", response = RConfiguracionEntidad.class)
 	@RequestMapping(value = "/entidad/{id}", method = RequestMethod.GET)
 	public RConfiguracionEntidad obtenerConfiguracionEntidad(@PathVariable("id") final String codigoDIR3) {
 		final Entidad entidad = restApiService.loadEntidad(codigoDIR3);
+		final List<Area> areas = restApiService.listAreasByEntidad(entidad.getCodigo());
 		final List<FormularioSoporte> formSoporte = restApiService.listOpcionesFormularioSoporte(entidad.getCodigo());
 		final FormateadorFormulario formateador = restApiService.getFormateadorPorDefecto(codigoDIR3);
 		List<PlantillaFormateador> plantillas = null;
@@ -138,18 +145,16 @@ public class ApiInternaRestController {
 		if (entidad.isValorarTramite()) {
 			valoraciones = restApiService.getValoraciones(entidad.getCodigo());
 		}
-		return confEntidadAdapter.convertir(entidad, formSoporte, plantillas, valoraciones, plantillasEntidad);
+
+		return confEntidadAdapter.convertir(entidad, formSoporte, plantillas, valoraciones, plantillasEntidad, areas);
 	}
 
 	/**
 	 * Recupera definición versión de trámite.
 	 *
-	 * @param idioma
-	 *                      Idioma
-	 * @param idtramite
-	 *                      Id Trámite
-	 * @param version
-	 *                      Versión trámite
+	 * @param idioma    Idioma
+	 * @param idtramite Id Trámite
+	 * @param version   Versión trámite
 	 * @return versión de trámite
 	 * @throws Exception
 	 */
@@ -159,6 +164,10 @@ public class ApiInternaRestController {
 			@PathVariable("version") final int version, @PathVariable("idioma") final String idioma) {
 		final String idiomaDefecto = restApiService.getValorConfiguracionGlobal("definicionTramite.lenguajeDefecto");
 		final TramiteVersion tv = restApiService.loadTramiteVersion(idtramite, version);
+		if (tv == null) {
+			LOGGER.error("No existe el tramite " + idtramite + " version " + version);
+			throw new NoExisteException("No existe el tramite " + idtramite + " version " + version);
+		}
 		final List<GestorExternoFormularios> gestoresExternosFormularios = restApiService
 				.listGestorExternoFormularios(tv.getIdArea());
 		return versionTramiteAdapter.convertir(idtramite, tv, idioma, idiomaDefecto, gestoresExternosFormularios);
@@ -172,17 +181,20 @@ public class ApiInternaRestController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "Obtiene la definición del dominio", notes = "Obtiene la definición del dominio", response = RDominio.class)
-	@RequestMapping(value = "/dominio/{idDominio}", method = RequestMethod.GET)
+	@RequestMapping(value = "/dominio/{idDominio:.+}", method = RequestMethod.GET)
 	public RDominio obtenerDefinicionDominio(@PathVariable("idDominio") final String idDominio) {
 		final Dominio dominio = restApiService.loadDominio(idDominio);
+		if (dominio == null) {
+			LOGGER.error("No existe el dominio " + idDominio);
+			throw new NoExisteException("No existe el dominio " + idDominio);
+		}
 		return dominioAdapter.convertir(dominio);
 	}
 
 	/**
 	 * Obtiene avisos activos entidad.
 	 *
-	 * @param idEntidad
-	 *                      Id entidad
+	 * @param idEntidad Id entidad
 	 * @return avisos
 	 */
 	@ApiOperation(value = "Obtiene los avisos de una entidad", notes = "Obtiene los avisos de una entidad", response = RAvisosEntidad.class)
@@ -194,10 +206,8 @@ public class ApiInternaRestController {
 	/**
 	 * Recupera valores de un dominio de fuente de datos.
 	 *
-	 * @param idDominio
-	 *                           id dominio
-	 * @param parametrosJSON
-	 *                           parametros (en formato JSON)
+	 * @param idDominio      id dominio
+	 * @param parametrosJSON parametros (en formato JSON)
 	 * @return Valores dominio
 	 */
 	@ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores FD de un dominio", response = RValoresDominio.class)
@@ -217,16 +227,18 @@ public class ApiInternaRestController {
 		}
 
 		final ValoresDominio res = restApiService.realizarConsultaFuenteDatos(idDominio, listaParams);
+		if (res == null) {
+			LOGGER.error("No existen los valores de dominio " + idDominio);
+			throw new NoExisteException("No existen los valores de dominio " + idDominio);
+		}
 		return valoresDominioAdapter.convertir(res);
 	}
 
 	/**
 	 * Recupera valores de un dominio de fuente de datos.
 	 *
-	 * @param idDominio
-	 *                           id dominio
-	 * @param parametrosJSON
-	 *                           parametros (en formato JSON)
+	 * @param idDominio      id dominio
+	 * @param parametrosJSON parametros (en formato JSON)
 	 * @return Valores dominio
 	 */
 	@ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores LF de un dominio", response = RValoresDominio.class)
@@ -234,6 +246,10 @@ public class ApiInternaRestController {
 	public RValoresDominio obtenerValoresDominioLF(@PathVariable("idDominio") final String idDominio) {
 
 		final ValoresDominio res = restApiService.realizarConsultaListaFija(idDominio);
+		if (res == null) {
+			LOGGER.error("No existen los valores de dominio " + idDominio);
+			throw new NoExisteException("No existen los valores de dominio " + idDominio);
+		}
 		return valoresDominioAdapter.convertir(res);
 	}
 

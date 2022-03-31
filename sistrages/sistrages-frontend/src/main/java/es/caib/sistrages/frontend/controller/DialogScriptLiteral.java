@@ -38,6 +38,9 @@ public class DialogScriptLiteral extends DialogControllerBase {
 	/** Idiomas. **/
 	private List<String> idiomas;
 
+	/** Variable que indica si hay que abrir el editor html */
+	private String literalHTML;
+
 	/**
 	 * Inicialización.
 	 */
@@ -81,8 +84,7 @@ public class DialogScriptLiteral extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de traducciones.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -97,7 +99,12 @@ public class DialogScriptLiteral extends DialogControllerBase {
 	 * Editar descripcion del literal script.
 	 */
 	public void editarDescripcion() {
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getLiteral(), idiomas, idiomas);
+		if (literalHTML == null || !literalHTML.equals("true")) {
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getLiteral(), idiomas, idiomas);
+		} else {
+			UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.EDICION, data.getLiteral(), idiomas, idiomas,
+					false);
+		}
 	}
 
 	/**
@@ -108,8 +115,7 @@ public class DialogScriptLiteral extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -123,8 +129,7 @@ public class DialogScriptLiteral extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idScript
-	 *            the idScript to set
+	 * @param idScript the idScript to set
 	 */
 	public void setIdScript(final String idScript) {
 		this.idScript = idScript;
@@ -138,8 +143,7 @@ public class DialogScriptLiteral extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final LiteralScript data) {
 		this.data = data;
@@ -153,8 +157,7 @@ public class DialogScriptLiteral extends DialogControllerBase {
 	}
 
 	/**
-	 * @param literal
-	 *            the literal to set
+	 * @param literal the literal to set
 	 */
 	public void setLiteral(final String literal) {
 		this.literal = literal;
@@ -168,11 +171,24 @@ public class DialogScriptLiteral extends DialogControllerBase {
 	}
 
 	/**
-	 * @param iIdiomas
-	 *            the iIdiomas to set
+	 * @param iIdiomas the iIdiomas to set
 	 */
 	public void setiIdiomas(final String iIdiomas) {
 		this.iIdiomas = iIdiomas;
+	}
+
+	/**
+	 * @return the literalHTML
+	 */
+	public final String getLiteralHTML() {
+		return literalHTML;
+	}
+
+	/**
+	 * @param literalHTML the literalHTML to set
+	 */
+	public final void setLiteralHTML(String literalHTML) {
+		this.literalHTML = literalHTML;
 	}
 
 }

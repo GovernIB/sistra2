@@ -21,6 +21,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCaptcha;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoOculto;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
@@ -245,6 +246,9 @@ public class JPaginaFormulario implements IModelApi {
 									.add(elemento.getCampoFormulario().toModel(ComponenteFormularioCampoOculto.class));
 							break;
 						case CAPTCHA:
+							componentes
+							.add(elemento.getCaptchaFormulario().toModel());
+							break;
 						case LINEA:
 						case PAGINA:
 							break;

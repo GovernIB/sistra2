@@ -25,6 +25,7 @@ import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCaptcha;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
@@ -242,6 +243,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		case ADD_CHECKBOX:
 			insertaCampo(TypeObjetoFormulario.CHECKBOX);
 			break;
+		case ADD_CAPTCHA:
+			insertaLineaComponenteBloque(TypeObjetoFormulario.CAPTCHA);
+			// insertaCampo(TypeObjetoFormulario.CAPTCHA);
+			break;
 		case COPIAR:
 			copy(false);
 			break;
@@ -301,7 +306,12 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(tramiteVersion.getCodigo()));
-		UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.CONSULTA, params, true, 750, 400);
+		if (this.modoAcceso.equals(TypeModoAcceso.EDICION.toString())) {
+			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 750, 400);
+		} else {
+			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.CONSULTA, params, true, 750,
+					400);
+		}
 	}
 
 	/**
@@ -388,7 +398,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 */
 	private String getPaginaEdicionComponente(final TypeObjetoFormulario tipo) {
 		String pagina;
-		switch (((ComponenteFormulario) objetoFormularioEdit).getTipo()) {
+		switch (tipo) {
 		case CAMPO_TEXTO:
 			pagina = "/secure/app/dialogDisenyoFormularioComponente.xhtml";
 			break;
@@ -406,6 +416,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			break;
 		case CAMPO_OCULTO:
 			pagina = "/secure/app/dialogDisenyoFormularioComponenteOC.xhtml";
+			break;
+		case CAPTCHA:
+			pagina = "/secure/app/dialogDisenyoFormularioComponenteCP.xhtml";
 			break;
 		// TODO PENDIENTE
 		default:
@@ -532,6 +545,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 						try {
 							Pattern.compile(campo.getExpresionRegular());
 						} catch (final PatternSyntaxException e) {
+							UtilJSF.loggearErrorFront("Error con la epxresion del campo " + campo.getIdComponente(), e);
 							addMessageContext(TypeNivelGravedad.WARNING,
 									UtilJSF.getLiteral("warning.componente.expresion.incorrecta"), true);
 							return false;
@@ -658,6 +672,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				try {
 					BeanUtils.copyProperties(cfOriginal, objetoFormularioEdit);
 				} catch (final Exception e) {
+					UtilJSF.loggearErrorFront("Error no controlado ", e);
 					throw new ErrorNoControladoException(e);
 				}
 
@@ -679,6 +694,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					BeanUtils.copyProperties(objetoFormularioEdit, cfUpdate);
 					BeanUtils.copyProperties(cfOriginal, cfUpdate);
 				} catch (final Exception e) {
+					UtilJSF.loggearErrorFront("Error no controlado al copiar propiedades del componente", e);
 					throw new ErrorNoControladoException(e);
 				}
 
@@ -713,6 +729,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				}
 			}
 		} catch (IllegalAccessException | InvocationTargetException e) {
+			// UtilJSF.loggearErrorFront("Error establecimiendo traducciones", e);
 			throw new FrontException("Error estableciendo traducciones", e);
 		}
 
@@ -981,7 +998,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		if (tipoObjetoCopy == TypeObjetoFormulario.CAMPO_TEXTO || tipoObjetoCopy == TypeObjetoFormulario.CAMPO_OCULTO
 				|| tipoObjetoCopy == TypeObjetoFormulario.CHECKBOX || tipoObjetoCopy == TypeObjetoFormulario.SELECTOR
 				|| tipoObjetoCopy == TypeObjetoFormulario.SECCION || tipoObjetoCopy == TypeObjetoFormulario.ETIQUETA
-				|| tipoObjetoCopy == TypeObjetoFormulario.LINEA) {
+				|| tipoObjetoCopy == TypeObjetoFormulario.LINEA || tipoObjetoCopy == TypeObjetoFormulario.CAPTCHA) {
 			seleccionable = true;
 		} else {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.noimplementado"), true);
@@ -1021,7 +1038,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		}
 
 		if (tipoObjetoCopy == TypeObjetoFormulario.CAMPO_TEXTO || tipoObjetoCopy == TypeObjetoFormulario.CAMPO_OCULTO
-				|| tipoObjetoCopy == TypeObjetoFormulario.CHECKBOX || tipoObjetoCopy == TypeObjetoFormulario.SELECTOR) {
+				|| tipoObjetoCopy == TypeObjetoFormulario.CHECKBOX || tipoObjetoCopy == TypeObjetoFormulario.SELECTOR
+				|| tipoObjetoCopy == TypeObjetoFormulario.CAPTCHA) {
 
 			/**
 			 * Si es de tipo texto, checkbox o selector, los pasos a seguir son:
@@ -1372,6 +1390,14 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		insertaLineaComponenteBloque(TypeObjetoFormulario.SECCION);
 	}
 
+	/** Inserta un componente de tipo seccion. **/
+	public void insertaCaptcha() {
+		if (isModificadoSinGuardar(TypeAccionFormulario.ADD_SECCION)) {
+			return;
+		}
+		insertaLineaComponenteBloque(TypeObjetoFormulario.CAPTCHA);
+	}
+
 	/** Inserta un componente de tipo etiqueta. **/
 	public void insertaEtiqueta() {
 		if (isModificadoSinGuardar(TypeAccionFormulario.ADD_ETIQUETA)) {
@@ -1431,6 +1457,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				seleccionaComponente(((LineaComponentesFormulario) componente).getComponentes().get(0));
 				break;
 			case LINEA:
+				seleccionaComponente(componente);
+				break;
+			case CAPTCHA:
 				seleccionaComponente(componente);
 				break;
 			default:
@@ -1506,6 +1535,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			try {
 				BeanUtils.copyProperties(campoNuevo, campo);
 			} catch (IllegalAccessException | InvocationTargetException e) {
+				UtilJSF.loggearErrorFront("Error copiando propiedades", e);
 			}
 			campoNuevo.setNumColumnas(ConstantesDisenyo.TAM_MIN_COMPONENTE_MULTILINEA);
 
@@ -1537,6 +1567,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 						+ ((ComponenteFormulario) objetoFormularioEdit).getNumColumnas();
 
 				if (objetoFormularioEdit instanceof ComponenteFormularioSeccion) {
+					inicio = ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA;
+					fin = ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA;
+				} else if (objetoFormularioEdit instanceof ComponenteFormularioCampoCaptcha) {
 					inicio = ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA;
 					fin = ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA;
 				} else if (objetoFormularioEdit instanceof ComponenteFormularioCampoTexto) {

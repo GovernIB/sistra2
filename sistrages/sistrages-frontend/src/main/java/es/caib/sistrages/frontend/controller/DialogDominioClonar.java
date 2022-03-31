@@ -162,9 +162,12 @@ public class DialogDominioClonar extends DialogControllerBase {
 			idEntidad = null;
 		}
 
-		if (dominioService.loadDominio(nuevoIdentificador) != null) {
+
+		Long lIdArea = (idArea == null) ? null : Long.valueOf(idArea);
+		Dominio dominioNuevoIdentificador = dominioService.loadDominioByIdentificador(this.data.getAmbito(), nuevoIdentificador, this.data.getEntidad(), lIdArea , null);
+		if (dominioNuevoIdentificador != null) {
 			Object[] valueHolder = new Object[2];
-			valueHolder = mensaje(nuevoIdentificador);
+			valueHolder = mensaje(dominioNuevoIdentificador);
 			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral((String) valueHolder[0], (Object[]) valueHolder[1]));
 			return;
@@ -190,15 +193,13 @@ public class DialogDominioClonar extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
-	public Object[] mensaje(String nuevoIdentificador) {
-		Dominio dataNuevo = dominioService.loadDominio(nuevoIdentificador);
+	public Object[] mensaje(Dominio dataNuevo) {
+
 		Object[] propiedades = new Object[2];
 		Object[] valueHolder = new Object[2];
-		Set<Area> areas = dataNuevo.getAreas();
 		if (dataNuevo.getAmbito() == TypeAmbito.AREA && areas.iterator().next().getIdentificador() != null) {
-			Area elarea = areas.iterator().next();
-			propiedades[0] = elarea.getCodigoDIR3Entidad();
-			propiedades[1] = elarea.getIdentificador();
+			propiedades[0] = dataNuevo.getArea().getCodigoDIR3Entidad();
+			propiedades[1] = dataNuevo.getArea().getIdentificador();
 			valueHolder[0] = "dialogDominio.error.duplicated.area";
 			valueHolder[1] = propiedades;
 		} else if (dataNuevo.getAmbito() == TypeAmbito.ENTIDAD && dataNuevo.getEntidad() != null) {

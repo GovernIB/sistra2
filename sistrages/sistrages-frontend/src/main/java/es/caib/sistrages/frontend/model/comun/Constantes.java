@@ -38,6 +38,9 @@ public final class Constantes {
 	public static final String AREA = "AREA";
 
 	/** Constante importar. **/
+	public static final String ENTIDAD = "ENTIDAD";
+
+	/** Constante importar. **/
 	public static final String CLAVE_MOCHILA_IMPORTAR = "IMPORTAR";
 
 	/** Constante importar area. **/
@@ -144,4 +147,5 @@ public final class Constantes {
 	public static final String CACHE_DOMINIO = "D";
 	public static final String CACHE_TRAMITE = "T";
 	public static final String CACHE_ENTIDAD = "E";
+
 }

@@ -14,15 +14,23 @@
 <h2 class="stgH2">BARRA DE DISSENY</h2>
 <p>
 	<ul>
-		<li><span class="boton">Formulari</span>: pitjant aquest bot&oacute; s'obrir&agrave; la <a href="AyudaServlet?lang=ca&id=propiedadesFormularioDialog">fitxa</a> per a configurar les propietats del formulari (cap&ccedil;alera, gesti&oacute; de p&agrave;gines i plantilles de visualitzaci&oacute;).</li>
+		<li><span class="nombreCampo">Formulari</span>: pitjant aquest bot&oacute; s'obrir&agrave; la <a href="AyudaServlet?lang=ca&id=propiedadesFormularioDialog">fitxa</a> per a configurar les propietats del formulari (cap&ccedil;alera, gesti&oacute; de p&agrave;gines i plantilles de visualitzaci&oacute;).</li>
 		<li><span class="nombreCampo">Components:</span> secci&oacute; que presenta els botons per a la inserci&oacute; de components en el formulari. Els tipus de camps disponibles s&oacute;n:</li>
 		<ul class="detalle">
 		<li><span class="boton">L&iacute;nia:</span> aquest bot&oacute; permet incloure una l&iacute;nia en el formulari. Cada component haur&agrave; de posicionar-se en una l&iacute;nia.</li>
 		<li><span class="boton">Secci&oacute;:</span> aquest bot&oacute; permet crear un camp secci&oacute;. Aquest tipus de camps permet marcar els diferents apartats o seccions d'un formulari.</li>
 		<li><span class="boton">Av&iacute;s:</span> aquest bot&oacute; permet incloure avisos informatius de diferents tipus (info, warning i error). Cada tipus d'av&iacute;s presenta una iconografia il&middot;lustrativa.</li>
 		<li><span class="boton">Camp de text:</span> aquest bot&oacute; permet incloure un camp de text.</li>
-		<li><span class="boton">Camp selector:</span> aquest bot&oacute; permet incloure un camp selector. Aquest camp permet presentar diferents valors i permetre la selecci&oacute; d'un o diversos valors al ciutad&agrave;, depenent del tipus de selector (desplegable, selecci&oacute; m&uacute;ltiple o selecci&oacute; &uacute;nica). En cas d'utilizar la selecci&#243; &#250;nica de forma horitzontal, s'han d'ocupar suficients columnes per a poder tenir la vista en horitzontal. En cas de que no es deixin, a la vista veurem les opcions en vertical.</li>
+		<li><span class="boton">Camp selector:</span> aquest bot&oacute; permet incloure un camp selector. Aquest camp permet presentar diferents valors i permetre la selecci&oacute; d'un o diversos valors al ciutad&agrave;, depenent del tipus de selector
+			<ul class="detalle2">
+		 		<li><span class="nombreCampo" style="color:#C2385D;">Llista desplegable:</span> element compost per un llistat d'opcions del qual nom&eacute;s es pot seleccionar una opci&oacute;. &Eacute;s obligatori seleccionar un element</li>
+		 		<li><span class="nombreCampo" style="color:#C2385D;">Selecci&oacute; &uacute;nica:</span> element compost per un grup d'opcions de les quals nom&eacute;s es pot seleccionar una. &Eacute;s obligatori seleccionar una opci&oacute;. Si s'utilitza aquest element s'han de deixar ocupades les suficients columnes per a poder tenir la vista en horitzontal. En cas que no es deixin en la vista ho veurem en vertical.</li>
+		 		<li><span class="nombreCampo" style="color:#C2385D;">Selecci&oacute; m&uacute;ltiple:</span> element compost per un grup d'opcions de les quals es pot seleccionar una, diverses o cap.</li>
+				<li><span class="nombreCampo" style="color:#C2385D;">Cerca din&agrave;mica:</span> element compost per un grup d'opcions de les quals es pot seleccionar una, que filtra el resultat d'un domini segons una cadena de car&agrave;cters introduïda. Perqu&egrave; es mostrin resultats aquesta cadena ha de tenir m&iacute;nim tres car&agrave;cters.</li>
+		 	</ul>
+		</li>
 		<li><span class="boton">Camp checkbox</span>: aquest bot&oacute; permet incloure en el formulari un camp casella de verificaci&oacute;.</li>
+		<li><span class="boton">Camp captcha</span>: aquest bot&oacute; permet incloure en el formulari un camp captcha, el qual prev&eacute; que bots o automatismes puguin dur a terme tramitacions completes. Per a completar aquest camp s'haur&agrave; d'emplenar amb els car&agrave;cters de la imatge o del dictat per veu.</li>
 		</ul>
 		<li><span class="nombreCampo">Posicionament:</span> secci&oacute; que permet especificar la posici&oacute; que s'assignar&agrave; a un camp en crear-lo respecte a un camp seleccionat. Els valors contemplats s&oacute;n:</li>
 		<ul class="detalle">

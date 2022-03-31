@@ -247,31 +247,31 @@ public final class AccionAnexarDocumento implements AccionPaso {
 
 		// Verificamos que coincide el tipo de presentacion
 		if (anexoDetalle.getPresentacion() != presentacion) {
-			throw new ParametrosEntradaIncorrectosException("No coincide el tipo de presentacion");
+			throw new ParametrosEntradaIncorrectosException("No coincideix el tipus de presentació");
 		}
 
 		// Validaciones anexo electronico
 		if (presentacion == TypePresentacion.ELECTRONICA) {
 			// Comprobamos si el fichero anexado está vacío
 			if (datosFichero.length == 0) {
-				throw new AnexoVacioException("El fichero a anexar está vacío");
+				throw new AnexoVacioException("El fitxer a anexar està buit");
 			}
 
 			// Realizamos validaciones
 			// - Parametro nombreFichero obligatorio para genericos
 			if (anexoDetalle.getMaxInstancias() > ConstantesNumero.N1) {
 				if (StringUtils.isEmpty(titulo)) {
-					throw new ParametrosEntradaIncorrectosException("Falta especificar el título del documento");
+					throw new ParametrosEntradaIncorrectosException("Falta especificar el títol del document");
 				}
 				if (!XssFilter.filtroXss(titulo)) {
 					throw new ParametrosEntradaIncorrectosException(
-							"Titulo instancia contiene carácteres no permitidos");
+							"Títol instancia conté caràcters no permesos");
 				}
 			}
 			// - Verificamos si es generico y ha llegado al maximo de instancias
 			if (anexoDetalle.getMaxInstancias() > ConstantesNumero.N1
 					&& anexoDetalle.getFicheros().size() == (anexoDetalle.getMaxInstancias())) {
-				throw new AccionPasoNoPermitidaException("El limite de instancias para el anexo " + anexoDetalle.getId()
+				throw new AccionPasoNoPermitidaException("El límit d'instancies per l'annex " + anexoDetalle.getId()
 						+ " es " + anexoDetalle.getMaxInstancias());
 			}
 			// - Verificar extensiones
@@ -279,17 +279,17 @@ public final class AccionAnexarDocumento implements AccionPaso {
 			if (anexoDetalle.getExtensiones() != null && (anexoDetalle.getExtensiones().toLowerCase() + ",")
 					.indexOf(extensionFichero.toLowerCase() + ",") == ConstantesNumero.N_1) {
 				throw new ExtensionAnexoNoValidaException(
-						"Extension '" + extensionFichero + "' no permitida para anexo " + anexoDetalle.getId());
+						"Extensió '" + extensionFichero + "' no permesa per annex " + anexoDetalle.getId());
 			} else {
 				if (StringUtils.isBlank(extensionFichero)) {
 					throw new ExtensionAnexoNoValidaException(
-							"El fichero debe tener extensión para anexo " + anexoDetalle.getId());
+							"El fitxer ha de tenir extensió per a annex " + anexoDetalle.getId());
 				}
 			}
 			// - Verificar tamaño maximo individual anexo
 			if (StringUtils.isBlank(anexoDetalle.getTamMax())) {
 				throw new ErrorConfiguracionException(
-						"No se ha configurado el tamaño maximo para el anexo: " + anexoDetalle.getId());
+						"No s'ha configurat la mida màxima per l'annex: " + anexoDetalle.getId());
 			}
 			UtilsFlujo.verificarTamanyoMaximo(anexoDetalle.getTamMax(), datosFichero.length);
 
@@ -302,7 +302,7 @@ public final class AccionAnexarDocumento implements AccionPaso {
 						.convertirTamanyoBytes(tamanyoTotalAnexosPropStr);
 			} catch (final ValidacionTipoException e) {
 				throw new ErrorConfiguracionException(
-						"Error al interpretar propiedad " + TypePropiedadConfiguracion.ANEXOS_TAMANYO_TOTAL.toString());
+						"Error al interpretar propietat " + TypePropiedadConfiguracion.ANEXOS_TAMANYO_TOTAL.toString());
 			}
 
 			if (tamanyoTotalAnexosPropBytes > 0) {
@@ -317,7 +317,7 @@ public final class AccionAnexarDocumento implements AccionPaso {
 			// - Verificar si debe anexarse firmado
 			if (anexoDetalle.getAnexarfirmado() == TypeSiNo.SI) {
 				// TODO Pendiente implementar
-				throw new RuntimeException("Pendiente implementar");
+				throw new RuntimeException("Per implementar");
 			}
 
 			// - Ejecutamos script de validacion de anexo (solo para no dinamicos)

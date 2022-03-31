@@ -17,6 +17,7 @@ import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRellenar;
+import es.caib.sistramit.core.api.model.flujo.Firmante;
 import es.caib.sistramit.core.api.model.flujo.Formulario;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.Persona;
@@ -24,6 +25,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRellenar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedad;
+import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedadFirmante;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
 import es.caib.sistramit.core.service.component.flujo.pasos.ControladorPasoReferenciaImpl;
@@ -162,7 +164,7 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 			accionPaso = accionDescargarXmlFormulario;
 			break;
 		default:
-			throw new AccionPasoNoExisteException("No existe acción " + pAccionPaso + " en el paso Debe Rellenar");
+			throw new AccionPasoNoExisteException("No existeix acció " + pAccionPaso + " a la passa Cal Emplenar");
 		}
 
 		rp = accionPaso.ejecutarAccionPaso(pDatosPaso, pDpp, pAccionPaso, pParametros, pDefinicionTramite,
@@ -232,7 +234,7 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 
 		// Debe existir al menos 1 formulario
 		if (formularios.isEmpty()) {
-			throw new ErrorConfiguracionException("Paso rellenar debe tener al menos 1 formulario");
+			throw new ErrorConfiguracionException("Passa emplenar ha de tenir al menos 1 formulari");
 		}
 
 		// Creamos detalle paso
@@ -299,9 +301,9 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 					&& docPer.getEstado() == TypeEstadoDocumento.RELLENADO_CORRECTAMENTE) {
 				// Si tiene script de firmantes lo ejecutamos
 				if (UtilsSTG.existeScript(formularioDef.getScriptFirmantes())) {
-					final ResFirmantes resf = ejecutarScriptFirmantes(pVariablesFlujo, pDefinicionTramite,
+					final List<Firmante> firmantes = calcularFirmantes(pVariablesFlujo, pDefinicionTramite,
 							formularioDef, formulariosCompletados);
-					formulario.setFirmantes(resf.getFirmantes());
+					formulario.setFirmantes(firmantes);
 				} else {
 					// Si no tiene script de firmantes, pues el único
 					// firmante sería el iniciador.
@@ -309,12 +311,13 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 					// error ya que no sabremos nif iniciador
 					if (pVariablesFlujo.getNivelAutenticacion() == TypeAutenticacion.ANONIMO) {
 						throw new ErrorConfiguracionException(
-								"No se ha establecido script de firmantes para formulario "
+								"No s'ha establert script de signants per formulari "
 										+ formularioDef.getIdentificador());
 					}
 
 					final Persona f = UtilsFlujo.usuarioPersona(pVariablesFlujo.getUsuario());
-					formulario.getFirmantes().add(f);
+					formulario.getFirmantes()
+							.add(new Firmante(f.getNif(), f.getNombre(), TypeObligatoriedadFirmante.OBLIGATORIO));
 				}
 			}
 
@@ -379,7 +382,7 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 		TypeObligatoriedad rs = TypeObligatoriedad.fromString(pFormularioDef.getObligatoriedad());
 		if (rs == null) {
 			throw new TipoNoControladoException(
-					"Valor " + pFormularioDef.getObligatoriedad() + " no definido para TypeObligatoriedad");
+					"Valor " + pFormularioDef.getObligatoriedad() + " no definit per TypeObligatoriedad");
 		}
 
 		if (rs == TypeObligatoriedad.DEPENDIENTE) {
@@ -404,7 +407,7 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 	 *                                    formulario actual
 	 * @return el res firmantes
 	 */
-	private ResFirmantes ejecutarScriptFirmantes(final VariablesFlujo pVariablesFlujo,
+	private List<Firmante> calcularFirmantes(final VariablesFlujo pVariablesFlujo,
 			final DefinicionTramiteSTG pDefinicionTramite, final RFormularioTramite formularioDef,
 			final List<DatosDocumento> pFormulariosCompletados) {
 
@@ -417,12 +420,13 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 
 		// Evaluamos resultado con la lista de firmantes
 		final ResFirmantes resf = (ResFirmantes) rs.getResultado();
-		if (resf.getFirmantes().isEmpty()) {
+		final List<Firmante> firmantes = resf.calcularFirmantes();
+		if (firmantes.isEmpty()) {
 			throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_FIRMANTES.name(),
 					pVariablesFlujo.getIdSesionTramitacion(), formularioDef.getIdentificador(),
-					"No se han especificado firmantes");
+					"No s'han especificat signants");
 		}
-		return resf;
+		return firmantes;
 	}
 
 	/**
@@ -443,7 +447,7 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 			// de configuración modificada
 			if (((DetallePasoRellenar) pDipa.getDetallePaso()).getFormulario(docDpp.getId()) == null) {
 				throw new ConfiguracionModificadaException(
-						"El formulario " + docDpp.getId() + " no existe en configuración");
+						"El formulari " + docDpp.getId() + " no existeix en configuració");
 			}
 
 			// Obtenemos detalle formulario recalculado

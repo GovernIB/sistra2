@@ -9,6 +9,7 @@
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
 <p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroVentana" var="TypeParametroDialogo"/>
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
 
 <h:head>
 	<title><h:outputText value="#{msg['viewDefinicionVersion.indice.pasosTramitacion.debeSaber']}"/></title>
@@ -49,6 +50,19 @@
 					</p:outputPanel>
 				</h:panelGrid>
 			</p:outputPanel>
+			<p:row>
+				<p:column>
+					<p:outputLabel value="#{msg['viewDefinicionVersionDebeSaber.instruccionesScriptHead']}" style="margin-left: 20px;"/>
+				</p:column>
+				<p:column>
+
+		           		<p:commandButton style="margin-left: 20px;" id="buttonScript2" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionDebeSaber.editarScript(TypeScriptFlujo.SCRIPT_DEBE_SABER.name(), dialogDefinicionVersionDebeSaber.data.scriptDebeSaber)}"
+								process="@this" update="growlDialog" value="#{msg['viewDefinicionVersionDebeSaber.instruccionesScript']}" styleClass="#{dialogDefinicionVersionDebeSaber.getColorScript(dialogDefinicionVersionDebeSaber.data.scriptDebeSaber)}">
+								<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionDebeSaber.returnDialogoScriptDebeSaber}" update="growlDialog buttonScript2"  />
+						</p:commandButton>
+
+		       	</p:column>
+	       	</p:row>
 		  	<p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">

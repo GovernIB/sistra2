@@ -37,7 +37,14 @@
 
 								<p:commandButton id="btnPrevisualizarTramite"
 									 	value="#{msg['botones.previsualizarTramite']}" icon="fa fa-eye"
-										actionListener="#{viewDefinicionVersion.previsualizar()}" process="@this" style="margin-left:4px;width:170px;" />
+										actionListener="#{viewDefinicionVersion.previsualizar()}" process="@this" style="margin-left:4px;width:170px;" >
+
+									 <p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol "/>
+								</p:commandButton>
+								<p:commandButton id="actualiza"
+									 	value="btn"
+										actionListener="#{viewDefinicionVersion.actualizar()}" process="@this"  update="@form :workDefinicionVersion growl formArbol:arbol" style="display:none"/>
+
 								<p:commandButton id="btnRefrescarCache"
 									 	value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" rendered="#{viewDefinicionVersion.isPermiteRefrescar()}"
 										actionListener="#{viewTramites.refrescarCache(viewDefinicionVersion.tramite.identificador, viewDefinicionVersion.tramiteVersion.numeroVersion)}" process="@this" style="margin-left:4px;width:150px;" update="growl" />
@@ -66,8 +73,8 @@
 					</p:layoutUnit>
 
 					<p:layoutUnit position="center">
-						<p:outputPanel id="workDefinicionVersion" styleClass="h100">
-						   <ui:include src="#{viewDefinicionVersion.opcionUrl}"/>
+						<p:outputPanel id="workDefinicionVersion" styleClass="h100 update">
+						   <ui:include src="#{viewDefinicionVersion.opcionUrl}" />
 						 </p:outputPanel>
 					</p:layoutUnit>
 
@@ -102,6 +109,10 @@
 	       		timestampDblClick = ahora;
 	       		lastSelected = newSelected;
 	      }
+
+	      	function clickUpdate(){
+					$("#breadDefinicionVersion\\:actualiza").click();
+				}
 	    </h:outputScript>
 
 

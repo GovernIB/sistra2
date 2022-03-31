@@ -113,7 +113,7 @@ public final class DebugTramitacionController extends TramitacionController {
 		// Debug no permitido en produción
 		final TypeEntorno entorno = this.getEntorno();
 		if (entorno == TypeEntorno.PRODUCCION) {
-			throw new WarningFrontException("Acceso a DEBUG TRAMITACION no permitido para producción");
+			throw new WarningFrontException("Accés a DEBUG TRAMITACION no perés per producció");
 		}
 
 		// Obtiene sesion activa

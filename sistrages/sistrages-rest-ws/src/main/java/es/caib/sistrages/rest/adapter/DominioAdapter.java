@@ -26,7 +26,7 @@ public class DominioAdapter {
 		if (dominio != null) {
 			rDominio = new RDominio();
 			rDominio.setTipoCache(dominio.getCache().toString());
-			rDominio.setIdentificador(dominio.getIdentificador());
+			rDominio.setIdentificador(dominio.getIdentificadorCompuesto());
 			rDominio.setSql(dominio.getSql());
 			rDominio.setTipo(dominio.getTipo().toString());
 			if (RDominio.TIPO_CONSULTA_BD.equals(rDominio.getTipo())) {
@@ -36,7 +36,7 @@ public class DominioAdapter {
 			}
 			if (dominio.getConfiguracionAutenticacion() != null) {
 				final RConfiguracionAutenticacion rConfAutenticacion = new RConfiguracionAutenticacion();
-				rConfAutenticacion.setIdentificador(dominio.getConfiguracionAutenticacion().getIdentificador());
+				rConfAutenticacion.setIdentificador(dominio.getConfiguracionAutenticacion().getIdentificadorCompuesto());
 				rConfAutenticacion.setUsuario(dominio.getConfiguracionAutenticacion().getUsuario());
 				rConfAutenticacion.setPassword(dominio.getConfiguracionAutenticacion().getPassword());
 				rDominio.setConfiguracionAutenticacion(rConfAutenticacion);

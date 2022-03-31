@@ -114,7 +114,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 
 		// Ejecutamos reglas pre
 		if (!ejecutarReglas(ctx, reglas, TypeFaseEjecucion.PRE_INICIO, null)) {
-			throw new ErrorConfiguracionException("Error aplicando regla de tramitación al iniciar trámite");
+			throw new ErrorConfiguracionException("Error aplicant regla de tramitació al iniciar tràmit");
 		}
 
 		// Se establece primer paso como actual y se va a dicho paso
@@ -126,7 +126,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 
 		// Ejecutamos reglas post
 		if (!ejecutarReglas(ctx, reglas, TypeFaseEjecucion.POST_INICIO, null)) {
-			throw new ErrorConfiguracionException("Error aplicando regla de tramitación al iniciar trámite");
+			throw new ErrorConfiguracionException("Error aplicant regla de tramitació al iniciar tràmit");
 		}
 		return rp;
 	}
@@ -157,7 +157,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 
 		// Ejecutamos reglas pre
 		if (!ejecutarReglas(ctx, reglas, TypeFaseEjecucion.PRE_CARGA, null)) {
-			throw new ErrorConfiguracionException("Error aplicando regla de tramitación al cargar trámite");
+			throw new ErrorConfiguracionException("Error aplicant regla de tramitació al carregar tràmit");
 		}
 
 		// Vamos a siguiente paso
@@ -168,7 +168,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 
 		// Ejecutamos reglas post
 		if (!ejecutarReglas(ctx, reglas, TypeFaseEjecucion.POST_CARGA, null)) {
-			throw new ErrorConfiguracionException("Error aplicando regla de tramitación al cargar trámite");
+			throw new ErrorConfiguracionException("Error aplicant regla de tramitació al carregar tràmit");
 		}
 
 		return rp;
@@ -190,17 +190,17 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 			final RPasoTramitacion pasoDef = UtilsSTG.devuelveDefinicionPaso(pIdPaso,
 					pDatosSesion.getDefinicionTramite());
 			if (pasoDef == null) {
-				throw new ErrorConfiguracionException("No existe paso con id: " + pIdPaso);
+				throw new ErrorConfiguracionException("No existeix passa amb id: " + pIdPaso);
 			}
 			tipoPaso = TypePaso.fromString(pasoDef.getTipo());
 			if (tipoPaso == null) {
-				throw new TipoNoControladoException("Tipo de paso no controlado: " + pasoDef.getIdentificador());
+				throw new TipoNoControladoException("Tipus de passa no controlada: " + pasoDef.getIdentificador());
 			}
 
 			// Control bucle infinito si es un paso de tipo accion que vuelve a si
 			// mismo
 			if (tipoPaso == TypePaso.ACCION && pIdPaso.equals(pDatosSesion.getDatosTramite().getIdPasoActual())) {
-				throw new ErrorConfiguracionException("Un paso accion no puede volver sobre si mismo");
+				throw new ErrorConfiguracionException("Una passa acció no pot tornar sobre si mateixa");
 			}
 
 			// Si simulamos acceso catalogo servicios no podemos ir a paso registrar
@@ -235,7 +235,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 
 			// Ejecutamos reglas post
 			if (!ejecutarReglas(ctx, reglas, TypeFaseEjecucion.POST_NAVEGACION, vars)) {
-				throw new ErrorConfiguracionException("Error aplicando regla de tramitación al ir a paso");
+				throw new ErrorConfiguracionException("Error aplicant regla de tramitació al anar a passa");
 			}
 
 			// Si el paso es de tipo accion ejecutamos automaticamente la accion
@@ -277,7 +277,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 		final Object[] vars = { accionPaso };
 		// Ejecutamos reglas pre
 		if (!ejecutarReglas(ctx, reglas, TypeFaseEjecucion.PRE_ACCION, vars)) {
-			throw new ErrorConfiguracionException("Error aplicando regla de tramitación al ejecutar acción: "
+			throw new ErrorConfiguracionException("Error aplicant regla de tramitació al executar acció: "
 					+ accionPaso.name() + " en paso " + idPaso);
 		}
 
@@ -290,7 +290,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 
 		// Ejecutamos reglas post
 		if (!ejecutarReglas(ctx, reglas, TypeFaseEjecucion.POST_ACCION, vars)) {
-			throw new ErrorConfiguracionException("Error aplicando regla de tramitación al ejecutar acción: "
+			throw new ErrorConfiguracionException("Error aplicant regla de tramitació al executar acció: "
 					+ accionPaso.name() + " en paso " + idPaso);
 		}
 
@@ -325,7 +325,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 
 		// No puede estar finalizado
 		if (pDatosSesion.getDatosTramite().getEstadoTramite() == TypeEstadoTramite.FINALIZADO) {
-			throw new CancelacionNoPermitidaException("Trámite ya ha finalizado");
+			throw new CancelacionNoPermitidaException("Tràmit ja ha finalitzat");
 		}
 
 		// Obtenemos reglas del flujo
@@ -337,7 +337,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 		// Ejecutamos reglas pre (si falla una regla no dejamos cancelar)
 		if (!ejecutarReglas(ctx, reglas, TypeFaseEjecucion.PRE_CANCELAR, null)) {
 			throw new CancelacionNoPermitidaException(
-					"Cancelación del trámite no permitida debido a las reglas de tramitación");
+					"Cancelació del tràmit no permesa degut a les regles de tramitació");
 		}
 
 		// Cancelamos tramite (marcamos como finalizado y cancelado)
@@ -567,17 +567,17 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 		// Control acceso paso
 		// - Si es el paso actual
 		if (dp == null) {
-			throw new AccionPasoNoPermitidaException("Paso " + pIdPaso + " no existe. El paso actual es: "
+			throw new AccionPasoNoPermitidaException("Passa " + pIdPaso + " no existeix. La passa actual és: "
 					+ pDatosSesion.getDatosTramite().getIdPasoActual());
 		}
 		if (!dp.getIdPaso().equals(pDatosSesion.getDatosTramite().getIdPasoActual())) {
-			throw new AccionPasoNoPermitidaException("El paso " + pIdPaso + " no es el actual. El paso actual es: "
+			throw new AccionPasoNoPermitidaException("La passa " + pIdPaso + " no és la actual. La passa actual és: "
 					+ pDatosSesion.getDatosTramite().getIdPasoActual());
 		}
 		// - El paso no debera estar no inicializado o para revisar
 		if (dp.getEstado() == TypeEstadoPaso.NO_INICIALIZADO || dp.getEstado() == TypeEstadoPaso.REVISAR) {
 			throw new AccionPasoNoPermitidaException(
-					"El paso " + pIdPaso + " no esta inicializado o esta pendiente de revisar");
+					"La passa " + pIdPaso + " no està inicialitzada o està pendent de revisar");
 		}
 	}
 
@@ -665,7 +665,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 					.getBean("reglasFlujoPersonalizado");
 			break;
 		default:
-			throw new TipoNoControladoException("Tipo de flujo " + tipoFlujo.name() + " no controlado");
+			throw new TipoNoControladoException("Tipus de fluix " + tipoFlujo.name() + " no controlat");
 		}
 
 		return reglasFlujo;

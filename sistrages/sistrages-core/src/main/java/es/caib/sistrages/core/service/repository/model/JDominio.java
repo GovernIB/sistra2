@@ -21,11 +21,13 @@ import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.codec.binary.Base64;
 
-import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.ConsultaGeneral;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeCache;
+import es.caib.sistrages.core.api.model.types.TypeConsultaGeneral;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.util.UtilJSON;
 
@@ -54,6 +56,14 @@ public class JDominio implements IModelApi {
 
 	@Column(name = "DOM_AMBITO", nullable = false, length = 1)
 	private String ambito;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "DOM_CODENT", nullable = true)
+	private JEntidad entidad;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "DOM_CODARE", nullable = true)
+	private JArea area;
 
 	@Column(name = "DOM_IDENTI", unique = true, nullable = false, length = 20)
 	private String identificador;
@@ -85,20 +95,9 @@ public class JDominio implements IModelApi {
 	@Column(name = "DOM_TIMEOUT")
 	private Long timeout;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "STG_DOMENT", joinColumns = {
-			@JoinColumn(name = "DEN_CODDOM", nullable = false, updatable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "DEN_CODENT", nullable = false, updatable = false) })
-	private Set<JEntidad> entidades = new HashSet<>(0);
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "dominio")
 	private Set<JCampoFormularioIndexado> camposFormularioIndexado = new HashSet<>(0);
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "STG_AREDOM", joinColumns = {
-			@JoinColumn(name = "DMA_CODDOM", nullable = false, updatable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "DMA_CODARE", nullable = false, updatable = false) })
-	private Set<JArea> areas = new HashSet<>(0);
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "STG_DOMVER", joinColumns = {
@@ -212,12 +211,12 @@ public class JDominio implements IModelApi {
 		this.parametros = parametros;
 	}
 
-	public Set<JEntidad> getEntidades() {
-		return this.entidades;
+	public JEntidad getEntidad() {
+		return this.entidad;
 	}
 
-	public void setEntidades(final Set<JEntidad> entidades) {
-		this.entidades = entidades;
+	public void setEntidad(final JEntidad entidades) {
+		this.entidad = entidades;
 	}
 
 	public Set<JCampoFormularioIndexado> getCamposFormularioIndexado() {
@@ -228,12 +227,12 @@ public class JDominio implements IModelApi {
 		this.camposFormularioIndexado = camposFormularioIndexado;
 	}
 
-	public Set<JArea> getAreas() {
-		return this.areas;
+	public JArea getArea() {
+		return this.area;
 	}
 
-	public void setAreas(final Set<JArea> areas) {
-		this.areas = areas;
+	public void setArea(final JArea areas) {
+		this.area = areas;
 	}
 
 	public Set<JVersionTramite> getVersionesTramite() {
@@ -277,6 +276,18 @@ public class JDominio implements IModelApi {
 		dominio.setCodigo(this.codigo);
 		dominio.setCache(TypeCache.fromString(this.cacheo));
 		dominio.setIdentificador(this.identificador);
+		if (this.ambito.equals(TypeAmbito.GLOBAL.toString())) {
+			dominio.setIdentificadorCompuesto("GLOBAL"+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+this.identificador);
+		} else if (this.ambito.equals(TypeAmbito.ENTIDAD.toString())) {
+			String idEntidad = this.entidad.getIdentificador();
+			dominio.setIdentificadorCompuesto(idEntidad+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+this.identificador);
+		} else {
+			JArea jarea = this.area;
+			String idArea = jarea.getIdentificador();
+			String idEntidad = jarea.getEntidad().getIdentificador();
+			dominio.setIdArea(idArea);
+			dominio.setIdentificadorCompuesto(idEntidad+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+idArea+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+this.identificador);
+		}
 		dominio.setDescripcion(this.descripcion);
 		dominio.setTimeout(this.timeout);
 
@@ -297,15 +308,11 @@ public class JDominio implements IModelApi {
 		if (this.getConfiguracionAutenticacion () != null) {
 			dominio.setConfiguracionAutenticacion(this.getConfiguracionAutenticacion().toModel());
 		}
-		if (this.getAreas() != null) {
-			final Set<Area> idAreas = new HashSet<>();
-			for (final JArea area : this.areas) {
-				idAreas.add(area.toModel());
-			}
-			dominio.setAreas(idAreas);
+		if (this.getArea() != null) {
+			dominio.setArea(this.area.toModel());
 		}
-		if (this.getEntidades() != null && !this.getEntidades().isEmpty()) {
-			dominio.setEntidad(((JEntidad) this.getEntidades().toArray()[0]).getCodigo());
+		if (this.getEntidad() != null ) {
+			dominio.setEntidad(this.getEntidad().getCodigo());
 		}
 		return dominio;
 	}
@@ -365,23 +372,20 @@ public class JDominio implements IModelApi {
 	 * @param jentidad
 	 * @return
 	 */
-	public static JDominio clonar(final JDominio dominio, final String nuevoIdentificador, final Set<JArea> jareas,
+	public static JDominio clonar(final JDominio dominio, final String nuevoIdentificador, final JArea jareas,
 			final JFuenteDatos jfuenteDatos, final JEntidad jentidad) {
 		JDominio jdominio = null;
 		if (dominio != null) {
 			jdominio = new JDominio();
 			jdominio.setAmbito(dominio.getAmbito());
-			jdominio.setAreas(jareas);
+			jdominio.setArea(jareas);
 			jdominio.setCacheo(dominio.getCacheo());
 			jdominio.setCamposFormularioIndexado(null);
 			jdominio.setDatasourceJndi(dominio.getDatasourceJndi());
 			jdominio.setDescripcion(dominio.getDescripcion());
-			jdominio.setEntidades(new HashSet<>(0));
+			jdominio.setEntidad(jentidad);
 			jdominio.setTimeout(dominio.timeout);
 			jdominio.setConfiguracionAutenticacion(dominio.getConfiguracionAutenticacion());
-			if (jentidad != null) {
-				jdominio.getEntidades().add(jentidad);
-			}
 			jdominio.setFuenteDatos(jfuenteDatos);
 			jdominio.setIdentificador(nuevoIdentificador);
 			jdominio.setListaFijaValores(dominio.getListaFijaValores());
@@ -392,5 +396,22 @@ public class JDominio implements IModelApi {
 			jdominio.setVersionesTramite(null);
 		}
 		return jdominio;
+	}
+
+	/** ToModel ConsultaGeneral **/
+	public ConsultaGeneral toModelConsultaGeneral() {
+		ConsultaGeneral consulta = new ConsultaGeneral();
+		consulta.setAmbito(TypeAmbito.fromString(this.getAmbito()));
+		consulta.setCodigo(this.getCodigo());
+		consulta.setDescripcion(this.getDescripcion());
+		consulta.setIdentificador(this.getIdentificador());
+		consulta.setSubtipo(this.getTipo());
+		consulta.setTipo(TypeConsultaGeneral.DOMINIO);
+
+		if (this.getArea() != null) {
+			consulta.setArea(this.area.getIdentificador());
+			consulta.setIdArea(this.area.getCodigo());
+		}
+		return consulta;
 	}
 }

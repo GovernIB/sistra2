@@ -208,7 +208,7 @@ public final class AccionVerificarPagoPasarela implements AccionPaso {
 	private void validacionesPago(final DatosInternosPasoPagar pDipa, final Pago pPago) {
 		// - El pago debe estar en estado iniciado
 		if (pPago.getRellenado() != TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE) {
-			throw new AccionPasoNoPermitidaException("El pago no esta en estado iniciado");
+			throw new AccionPasoNoPermitidaException("El pagament no està en estat iniciat");
 		}
 	}
 

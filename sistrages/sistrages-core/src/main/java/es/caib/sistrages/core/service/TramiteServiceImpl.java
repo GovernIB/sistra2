@@ -43,7 +43,9 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarGestor;
 import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
 import es.caib.sistrages.core.api.model.comun.ScriptInfo;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
+import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
+import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -64,6 +66,7 @@ import es.caib.sistrages.core.service.repository.dao.HistorialVersionDao;
 import es.caib.sistrages.core.service.repository.dao.ScriptDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
 import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
+import es.caib.sistrages.core.service.repository.model.JFuenteDatos;
 
 /**
  * La clase TramiteServiceImpl.
@@ -836,8 +839,8 @@ public class TramiteServiceImpl implements TramiteService {
 	 */
 	@Override
 	@NegocioInterceptor
-	public Area getAreaByIdentificador(final String identificador) {
-		return areaDao.getAreaByIdentificador(identificador);
+	public Area getAreaByIdentificador(final String identificadorEntidad, final String identificador) {
+		return areaDao.getAreaByIdentificador(identificadorEntidad, identificador);
 	}
 
 	/*
@@ -849,8 +852,8 @@ public class TramiteServiceImpl implements TramiteService {
 	 */
 	@Override
 	@NegocioInterceptor
-	public Tramite getTramiteByIdentificador(final String identificador) {
-		return tramiteDao.getTramiteByIdentificador(identificador);
+	public Tramite getTramiteByIdentificador(final String identificador, final Long idArea, String identificadorArea, Long codigoTramite) {
+		return tramiteDao.getTramiteByIdentificador(identificador, idArea, identificadorArea, codigoTramite);
 	}
 
 	/*
@@ -957,8 +960,8 @@ public class TramiteServiceImpl implements TramiteService {
 	 */
 	@Override
 	@NegocioInterceptor
-	public boolean checkIdentificadorRepetido(final String identificador, final Long codigo) {
-		return tramiteDao.checkIdentificadorRepetido(identificador, codigo);
+	public boolean checkIdentificadorRepetido(final String identificador, final Long codigo, final Long idArea) {
+		return tramiteDao.checkIdentificadorRepetido(identificador, codigo, idArea);
 	}
 
 	/*
@@ -978,9 +981,11 @@ public class TramiteServiceImpl implements TramiteService {
 	public FilaImportarResultado importar(final FilaImportar filaImportar) throws Exception {
 		final FilaImportarResultado resultado = new FilaImportarResultado();
 
+		//Paso 1. Importamos el area
 		final Long idArea = areaDao.importar(filaImportar.getFilaArea(), filaImportar.getIdEntidad());
 		resultado.setIdArea(idArea);
 
+		//Paso 2. Importamos el trámite.
 		final Long idTramite = tramiteDao.importar(filaImportar.getFilaTramite(), idArea);
 		resultado.setIdTramite(idTramite);
 
@@ -989,14 +994,26 @@ public class TramiteServiceImpl implements TramiteService {
 		 * idDominiosEquivalencia es de donde viene, la id que equivale con el
 		 * importado.
 		 **/
+		//Paso 3. Importamos los dominios y Fuentes de datos.
 		final Map<Long, Long> idDominiosEquivalencia = new HashMap<>();
 		final List<Long> idDominios = new ArrayList<>();
 		for (final FilaImportarDominio filaDominio : filaImportar.getFilaDominios()) {
-			final Long idDominio = dominiosDao.importar(filaDominio, filaImportar.getIdEntidad(), idArea);
+
+			// Si es de tipo FD , vemos de obtenerlo antes
+			JFuenteDatos jfuenteDatos;
+			if (filaDominio.getDominio().getTipo() == TypeDominio.FUENTE_DATOS) {
+				jfuenteDatos = fuenteDatoDao.importarFD(filaDominio, filaDominio.getDominio().getAmbito(),
+						filaImportar.getIdEntidad(), idArea);
+			} else {
+				jfuenteDatos = null ;
+			}
+
+			final Long idDominio = dominiosDao.importar(filaDominio, filaImportar.getIdEntidad(), idArea, jfuenteDatos);
 			idDominios.add(idDominio);
 			idDominiosEquivalencia.put(idDominio, filaDominio.getDominio().getCodigo());
 		}
 
+		//Paso 4. Importamos los formateadores.
 		final Map<Long, FormateadorFormulario> formateadores = new HashMap<>();
 		final Map<Long, Long> mapFormateadores = new HashMap<>();
 		for (final FilaImportarFormateador filaFormateador : filaImportar.getFilaFormateador()) {
@@ -1007,6 +1024,7 @@ public class TramiteServiceImpl implements TramiteService {
 			mapFormateadores.put(filaFormateador.getFormateadorFormulario().getCodigo(), idFormateador);
 		}
 
+		//Paso 5. Importamos los gestores.
 		final Map<Long, GestorExternoFormularios> gestores = new HashMap<>();
 		final Map<Long, Long> mapGestores = new HashMap<>();
 		if (filaImportar.getFilaGestor() != null) {
@@ -1019,10 +1037,12 @@ public class TramiteServiceImpl implements TramiteService {
 			}
 		}
 
+		//Importamos la version de trámite
 		final Long idTramiteVersion = tramiteDao.importar(filaImportar.getFilaTramiteVersion(), idTramite, idDominios,
 				filaImportar.getUsuario(), filaImportar.isModoIM());
 		resultado.setIdTramiteVersion(idTramiteVersion);
 
+		//Importamos los pasos
 		int ordenPaso = 1;
 		final List<TramitePaso> pasos = filaImportar.getFilaTramiteVersion().getTramiteVersion().getListaPasos();
 		Collections.sort(pasos, new Comparator<TramitePaso>() {
@@ -1208,6 +1228,9 @@ public class TramiteServiceImpl implements TramiteService {
 				final List<ScriptInfo> scripts = listScriptsInfo((TramitePasoTasa) tramitePaso);
 				scriptsInfo.addAll(scripts);
 
+			} else if (tramitePaso instanceof TramitePasoDebeSaber) {
+				final List<ScriptInfo> scripts = listScriptsInfo((TramitePasoDebeSaber) tramitePaso);
+				scriptsInfo.addAll(scripts);
 			}
 
 		}
@@ -1345,6 +1368,21 @@ public class TramiteServiceImpl implements TramiteService {
 	}
 
 	/**
+	 * Listscript de un paso de tipo debe saber.
+	 *
+	 * @param paso
+	 * @return
+	 */
+	private List<ScriptInfo> listScriptsInfo(final TramitePasoDebeSaber paso) {
+		final List<ScriptInfo> scriptsInfo = new ArrayList<>();
+		if (paso.getScriptDebeSaber() != null) {
+			scriptsInfo.add(new ScriptInfo(paso.getScriptDebeSaber().getCodigo(), TypePaso.DEBESABER,
+					TypeScriptFlujo.SCRIPT_DEBE_SABER));
+		}
+		return scriptsInfo;
+	}
+
+	/**
 	 * Obtiene el literal del paso.
 	 */
 	private final TypePaso getTypePaso(final TramitePaso tramitePaso) {
@@ -1417,8 +1455,8 @@ public class TramiteServiceImpl implements TramiteService {
 
 	@Override
 	@NegocioInterceptor
-	public void actualizarDominios(TramiteVersion tramiteVersion, final List<Dominio> dominios) {
-		 tramiteDao.actualizarDominios(tramiteVersion, dominios);
+	public void actualizarDominios(TramiteVersion tramiteVersion, final List<ValorIdentificadorCompuesto> dominios) {
+		tramiteDao.actualizarDominios(tramiteVersion, dominios);
 	}
 
 	@Override
@@ -1426,7 +1464,5 @@ public class TramiteServiceImpl implements TramiteService {
 	public List<ErrorValidacion> checkDominioNoUtilizado(Long idDominio, Long idTramiteVersion, final String idioma) {
 		return validadorComponent.checkDominioNoUtilizado(idDominio, idTramiteVersion, idioma);
 	}
-
-
 
 }

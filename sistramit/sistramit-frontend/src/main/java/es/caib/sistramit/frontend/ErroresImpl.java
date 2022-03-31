@@ -63,6 +63,7 @@ public final class ErroresImpl implements Errores {
 		String tituloMensaje;
 		String textoMensaje;
 		String urlMensaje;
+		final String debug = null;
 
 		// Establecemos nivel excepcion
 		TypeNivelExcepcion nivel;

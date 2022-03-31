@@ -21,21 +21,19 @@ public final class DatabaseException extends ServiceRollbackException {
 	/**
 	 * Constructor DatabaseException.
 	 *
-	 * @param cause
-	 *            Causa
+	 * @param cause Causa
 	 */
 	public DatabaseException(final Exception cause) {
-		super("Error en la capa de base de datos: " + cause.getMessage(), cause);
+		super("Error a la capa de base de dades: " + cause.getMessage(), cause);
 	}
 
 	/**
 	 * Constructor DatabaseException.
 	 *
-	 * @param cause
-	 *            Causa
+	 * @param cause Causa
 	 */
 	public DatabaseException(final String cause) {
-		super("Error en la capa de base de datos: " + cause);
+		super("Error a la capa de base de dades: " + cause);
 	}
 
 }

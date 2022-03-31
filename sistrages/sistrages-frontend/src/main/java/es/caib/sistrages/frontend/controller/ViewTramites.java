@@ -199,7 +199,7 @@ public class ViewTramites extends ViewControllerBase {
 	 * Abre dialogo de nueva Area.
 	 */
 	public void nuevaArea() {
-		UtilJSF.openDialog(DialogArea.class, TypeModoAcceso.ALTA, null, true, 520, 160);
+		UtilJSF.openDialog(DialogArea.class, TypeModoAcceso.ALTA, null, true, 520, 180);
 	}
 
 	/**
@@ -744,8 +744,7 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	private boolean verificarFilaSeleccionadaArea() {
 		boolean filaSeleccionada = true;
-		if (this.listaAreasSeleccionadas == null || listaAreasSeleccionadas.isEmpty()
-				|| listaAreasSeleccionadas.size() > 1) {
+		if (this.listaAreasSeleccionadas == null || listaAreasSeleccionadas.isEmpty()) {
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
@@ -889,10 +888,12 @@ public class ViewTramites extends ViewControllerBase {
 
 	/**
 	 * Para mostrar la paginacion de tramites.
+	 *
 	 * @return
 	 */
 	public boolean mostrarPaginacion() {
-		return this.dataModel != null && this.dataModel.getWrappedData() != null && !((List)this.dataModel.getWrappedData()).isEmpty();
+		return this.dataModel != null && this.dataModel.getWrappedData() != null
+				&& !((List) this.dataModel.getWrappedData()).isEmpty();
 	}
 
 	/**
@@ -1106,7 +1107,7 @@ public class ViewTramites extends ViewControllerBase {
 		final Area areaSeleccionada = listaAreasSeleccionadas.get(0);
 
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(areaSeleccionada.getCodigo()));
-		UtilJSF.openDialog(DialogArea.class, modoAcceso, params, true, 520, 160);
+		UtilJSF.openDialog(DialogArea.class, modoAcceso, params, true, 520, 180);
 	}
 
 	/**

@@ -46,15 +46,57 @@
 
 .imc--registre .imc--signants ul { font-size: 1em; padding: 0 0 0 1em; }
 
+
+/*
 .imc--registre .imc--signants li { display: flex; align-items: center; min-height: 2em; margin-top: .3em; border: 1px solid #fff; }
 
 .imc--registre .imc--signants li::before { content: ""; display: block; width: 2em; height: 2em; background: #006300 url(imgs/icones/ico_correcte.svg) no-repeat center center / auto .9em; }
 
 .imc--registre .imc--signants li.imc--per-signar::before { background: #d66000 url(imgs/icones/ico_signar.svg) no-repeat center center / auto 1em; }
+*/
 
+
+.imc--registre .imc--signants li.imc--signant { display: flex; align-items: center; min-height: 2em; margin-top: .3em; border: 1px solid #fff; }
+.imc--registre .imc--signants li.imc--signant::before { content: ""; display: block; width: 2em; height: 2em; }
+
+.imc--registre .imc--signants li.imc--signant strong { display: inline-block; padding: .3em 1em; }
+
+.imc--registre .imc--signants li.imc--signant[data-signat="s"]::before { background: #006300 url(imgs/icones/ico_correcte.svg) no-repeat center center / auto .9em; }
+.imc--registre .imc--signants li.imc--signant[data-signat="n"]::before { background: #d66000 url(imgs/icones/ico_signar.svg) no-repeat center center / auto 1em; }
+
+.imc--registre .imc--signants li.imc--signant[data-signat="n"] strong { width: calc(100% - 2em - 5.2em); }
+
+
+/* signants obligatoris */
+
+.imc--registre .imc--signants li.imc--signant[data-signat="n"][data-obligatorietat="s"]::before {
+    background: url(imgs/icones/ico_signar.svg) no-repeat .8em .8em / auto .9em, url(imgs/icones/ico_obligatori.svg) no-repeat .2em .2em / auto .8em;
+    background-color: #d66000;
+}
+
+.imc--registre .imc--signants li.imc--signant[data-signat="n"][data-obligatorietat="n"]::before {
+    background: url(imgs/icones/ico_signar.svg) no-repeat .8em .8em / auto .9em, url(imgs/icones/ico_opcional.svg) no-repeat .2em .2em / auto .8em;
+    background-color: #106fc8;
+}
+
+
+/*
 .imc--registre .imc--signants li strong { display: inline-block; padding: .3em 1em; }
-
 .imc--registre .imc--signants li.imc--per-signar strong { width: calc(100% - 2em - 5.2em); }
+*/
+
+.imc--registre .imc--signants li.imc--signants-r { margin-top: .3em; border: 1px solid #fff; }
+.imc--registre .imc--signants li.imc--signants-r p { display: flex; align-items: center; min-height: 2em; padding-left: 0; }
+.imc--registre .imc--signants li.imc--signants-r p::before { content: ""; display: block; width: 2em; height: 2em; margin-right: 1em; background: url(imgs/icones/ico_signar.svg) no-repeat .8em .8em / auto .9em, url(imgs/icones/ico_obligatori.svg) no-repeat .2em .2em / auto .8em; background-color: #d66000; }
+
+.imc--registre .imc--signants li[data-completat="s"].imc--signants-r p::before { background: #006300 url(imgs/icones/ico_correcte.svg) no-repeat center center / auto .9em; }
+
+.imc--registre .imc--signants li.imc--signants-r ul { width: 100%; padding-left: 2em; }
+
+.imc--registre .imc--signants li.imc--signants-r li.imc--signant[data-signat="n"]::before { background-color: #666; }
+
+
+
 
 .imc--registre .imc--signants li .imc-bt.imc--ico::before { margin-right: .5em; }
 
@@ -89,6 +131,31 @@
 
 .imc--registre .imc--lopd { padding-top: 1em; }
 .imc--registre .imc--lopd button { margin-left: 1em; }
+
+
+/* signatura info */
+
+.imc--signans-info { margin-bottom: 2em; }
+
+.imc--signans-info[aria-hidden="true"] { display: none; }
+
+.imc--signans-info ul { display: flex; align-items: center; margin-top: .5em; }
+.imc--signans-info ul li { display: flex; align-items: center; margin-right: 1.5em; }
+.imc--signans-info ul li::before { content: ""; display: block; width: 2em; height: 2em; margin-right: .4em; }
+
+.imc--signans-info ul li.imc--ogligatori::before {
+    background: url(imgs/icones/ico_signar.svg) no-repeat .8em .8em / auto .9em, url(imgs/icones/ico_obligatori.svg) no-repeat .2em .2em / auto .8em;
+    background-color: #d66000;
+}
+
+.imc--signans-info ul li.imc--opcional::before {
+    background: url(imgs/icones/ico_signar.svg) no-repeat .8em .8em / auto .9em, url(imgs/icones/ico_opcional.svg) no-repeat .2em .2em / auto .8em;
+    background-color: #106fc8;
+}
+
+.imc--signans-info ul li.imc--requerit::before { background: #666 url(imgs/icones/ico_signar.svg) no-repeat center center / auto 1em; }
+
+.imc--signans-info ul li.imc--completada::before { background: #006300 url(imgs/icones/ico_correcte.svg) no-repeat center center / auto .9em; }
 
 
 /* botonera */

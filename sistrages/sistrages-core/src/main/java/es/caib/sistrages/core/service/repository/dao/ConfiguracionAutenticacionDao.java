@@ -1,8 +1,11 @@
 package es.caib.sistrages.core.service.repository.dao;
 
+import java.util.Collection;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
+import es.caib.sistrages.core.api.model.ConsultaGeneral;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 
 /**
@@ -20,11 +23,11 @@ public interface ConfiguracionAutenticacionDao {
 
 	/**
 	 * Añade el configuracion autenticacion.
-	 *
-	 * @param removeByArea         identificador de la area
+	 * @param pIdArea         identificador de la area
+	 * @param idEntidad         identificador de la entidad
 	 * @param pConfAut configuracion autenticacion
 	 */
-	Long add(final Long pIdArea, ConfiguracionAutenticacion pConfAut);
+	Long add(final Long pIdArea, final Long idEntidad, ConfiguracionAutenticacion pConfAut);
 
 	/**
 	 * Elimina el configuracion autenticacion.
@@ -47,38 +50,55 @@ public interface ConfiguracionAutenticacionDao {
 	 */
 	void update(ConfiguracionAutenticacion pConfiguracionAutenticacion);
 
-	/**
-	 * Lista de avisos de area
-	 *
-	 * @param pIdArea identificador de la area
-	 * @return la lista configuracion autenticacion del area
-	 */
-	List<ConfiguracionAutenticacion> getAll(Long pIdArea);
 
 	/**
 	 * Lista de avisos del area
 	 *
-	 * @param pIdArea identificador de la area
-	 * @param pFiltro    filtro
-	 * @param pIdioma    idioma
+	 * @param ambito Ambito (Area/Global/Entidad)
+	 * @param idArea identificador de la area
+	 * @param idEntidad Identificador de la entidad
+	 * @param filtro    filtro
+	 * @param idioma    idioma
 	 * @return la lista de configuracion autenticacion
 	 */
-	List<ConfiguracionAutenticacion> getAllByFiltro(Long pIdArea, TypeIdioma pIdioma, String pFiltro);
+	List<ConfiguracionAutenticacion> getAllByFiltro(final TypeAmbito ambito, Long idArea, final Long idEntidad, TypeIdioma idioma, String filtro);
 
 	/**
 	 * Existe configuracion autenticacion con esse identificador.
-	 *
+	 * @param ambito
 	 * @param identificador
+	 * @param codigoEntidad
+	 * @param codigoArea
+	 * @param codigoConfAut
 	 * @return
 	 */
-	boolean existeConfiguracionAutenticacion(String identificador, final Long idCodigo);
+
+	boolean existeConfiguracionAutenticacion(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut);
 
 	/**
 	 * Obtiene la configuracion autenticacion por identificador y codigo.
+	 * @param ambito
 	 * @param identificador
-	 * @param codigo
+	 * @param codigoEntidad
+	 * @param codigoArea
+	 * @param codigoConfAut
 	 * @return
 	 */
-	ConfiguracionAutenticacion getConfiguracionAutenticacion(String identificador, Long codigo);
+
+	ConfiguracionAutenticacion getConfiguracionAutenticacion(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut);
+
+	/**
+	 * Devuelve una lista de tipo consulta general
+	 * @param filtro
+	 * @param idioma
+	 * @param idEntidad
+	 * @param idArea
+	 * @param checkAmbitoGlobal
+	 * @param checkAmbitoEntidad
+	 * @param checkAmbitoArea
+	 * @return
+	 */
+	List<ConsultaGeneral> listar(String filtro, TypeIdioma idioma, Long idEntidad, Long idArea,
+			boolean checkAmbitoGlobal, boolean checkAmbitoEntidad, boolean checkAmbitoArea);
 
 }

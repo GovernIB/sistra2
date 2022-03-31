@@ -82,6 +82,14 @@
 .imc-forms--missatge .imc--text h2 span { font-size: 1.4em; }
 .imc-forms--missatge .imc--text .imc--explicacio { margin-bottom: 2em; margin-left: 5em; }
 
+
+.imc-forms--missatge .imc--text .imc--desenvolupadors { color: #666; margin-bottom: 2em; margin-left: 5em; }
+.imc-forms--missatge .imc--text .imc--desenvolupadors[aria-hidden="true"] { display: none; }
+
+.imc-forms--missatge .imc--text .imc--desenvolupadors h3,
+.imc-forms--missatge .imc--text .imc--desenvolupadors p { font-size: .9em; }
+
+
 .imc-forms--missatge .imc--text .imc--botonera { text-align: right; }
 .imc-forms--missatge .imc--text .imc--botonera button { margin-left: .5em; }
 

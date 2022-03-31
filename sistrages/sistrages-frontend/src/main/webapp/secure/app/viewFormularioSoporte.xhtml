@@ -4,7 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
@@ -50,7 +51,7 @@
 						</p:column>
 
 						<p:column headerText="#{msg['viewFormularioSoporte.headerTipoDestinatario']}">
-							<h:outputText value="#{msg['typeFormularioSoporte.' += td.tipoDestinatario]}" />
+						  	<h:outputText value="#{viewFormularioSoporte.showTipos(td.tipoDestinatario)}" escape="false"/>
 						</p:column>
 
 						<p:column headerText="#{msg['viewFormularioSoporte.headerEmails']}">

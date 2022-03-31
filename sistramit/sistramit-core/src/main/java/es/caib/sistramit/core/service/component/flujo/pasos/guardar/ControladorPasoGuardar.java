@@ -115,7 +115,7 @@ public final class ControladorPasoGuardar extends ControladorPasoReferenciaImpl 
 			accionPaso = accionValorarTramite;
 			break;
 		default:
-			throw new AccionPasoNoExisteException("No existe acción " + pAccionPaso + " en el paso guardar");
+			throw new AccionPasoNoExisteException("No existeix acció " + pAccionPaso + " a la passa guardar");
 		}
 
 		final RespuestaEjecutarAccionPaso rp = accionPaso.ejecutarAccionPaso(pDatosPaso, pDpp, pAccionPaso, pParametros,

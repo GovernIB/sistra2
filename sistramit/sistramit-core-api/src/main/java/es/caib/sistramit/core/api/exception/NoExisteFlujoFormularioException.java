@@ -20,11 +20,10 @@ public final class NoExisteFlujoFormularioException extends ServiceRollbackExcep
 	/**
 	 * Constructor NoExisteFlujoFormularioException.
 	 *
-	 * @param idSesionFormulario
-	 *            idSesionFormulario
+	 * @param idSesionFormulario idSesionFormulario
 	 */
 	public NoExisteFlujoFormularioException(final String idSesionFormulario) {
-		super("No existe flujo de formulario con id: " + idSesionFormulario);
+		super("No existeix fluxe de formulari amb id: " + idSesionFormulario);
 	}
 
 }

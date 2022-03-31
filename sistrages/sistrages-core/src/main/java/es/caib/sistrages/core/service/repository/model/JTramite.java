@@ -96,7 +96,9 @@ public class JTramite implements IModelApi {
 		tramite.setDescripcion(descripcion);
 		tramite.setIdentificador(identificador);
 		tramite.setIdArea(this.area.getCodigo());
+		tramite.setIdentificadorArea(this.area.getIdentificador());
 		tramite.setIdEntidad(this.area.getEntidad().getCodigo());
+		tramite.setIdentificadorEntidad(this.area.getEntidad().getIdentificador());
 		return tramite;
 	}
 

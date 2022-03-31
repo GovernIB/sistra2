@@ -24,7 +24,7 @@ import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
  */
 public final class UtilTraducciones {
 	public static String TAMANYO_MAXIMO_REGWEB3 = "200";
-	public static String CARACTERES_NOPERMIT_REGWEB3 = ">,%,*,&,:,;,¿,?,/,|,!,<,¡,\"";
+	public static String CARACTERES_NOPERMIT_REGWEB3 = ">,%,*,&,:,;,¿,?,/,|,!,<,¡,\",\',\\,\n,\t";
 
 	/** Constructor privado para evitar problema. */
 	private UtilTraducciones() {

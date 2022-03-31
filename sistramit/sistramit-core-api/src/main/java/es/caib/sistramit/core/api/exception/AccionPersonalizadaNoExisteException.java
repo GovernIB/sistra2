@@ -22,13 +22,11 @@ public final class AccionPersonalizadaNoExisteException extends ServiceRollbackE
 	/**
 	 * Constructor AccionPersonalizadaNoExisteException.
 	 *
-	 * @param idFormulario
-	 *            Parámetro id formulario
-	 * @param codigoAccion
-	 *            Parámetro codigo accion
+	 * @param idFormulario Parámetro id formulario
+	 * @param codigoAccion Parámetro codigo accion
 	 */
 	public AccionPersonalizadaNoExisteException(final String idFormulario, final String codigoAccion) {
-		super("No existe codigo de accion " + codigoAccion + " para el formulario " + idFormulario);
+		super("No existeix codi d'acció " + codigoAccion + " para el formulario " + idFormulario);
 	}
 
 }

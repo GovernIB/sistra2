@@ -1,5 +1,7 @@
 package es.caib.sistrages.core.api.model;
 
+import java.util.List;
+
 import es.caib.sistrages.core.api.model.types.TypeFormularioSoporte;
 
 /**
@@ -29,7 +31,7 @@ public class FormularioSoporte extends ModelApi {
 	/**
 	 * tipo destinatario.
 	 */
-	private TypeFormularioSoporte tipoDestinatario;
+	private List<TypeFormularioSoporte> tipoDestinatario;
 
 	/**
 	 * lista de emails.
@@ -55,8 +57,7 @@ public class FormularioSoporte extends ModelApi {
 	/**
 	 * Establece el valor de codigo.
 	 *
-	 * @param codigo
-	 *            el nuevo valor de codigo
+	 * @param codigo el nuevo valor de codigo
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -74,8 +75,7 @@ public class FormularioSoporte extends ModelApi {
 	/**
 	 * Establece el valor de tipoIncidencia.
 	 *
-	 * @param tipoIncidencia
-	 *            el nuevo valor de tipoIncidencia
+	 * @param tipoIncidencia el nuevo valor de tipoIncidencia
 	 */
 	public void setTipoIncidencia(final Literal tipoIncidencia) {
 		this.tipoIncidencia = tipoIncidencia;
@@ -93,8 +93,7 @@ public class FormularioSoporte extends ModelApi {
 	/**
 	 * Establece el valor de descripcion.
 	 *
-	 * @param descripcion
-	 *            el nuevo valor de descripcion
+	 * @param descripcion el nuevo valor de descripcion
 	 */
 	public void setDescripcion(final Literal descripcion) {
 		this.descripcion = descripcion;
@@ -112,8 +111,7 @@ public class FormularioSoporte extends ModelApi {
 	/**
 	 * Establece el valor de listaEmails.
 	 *
-	 * @param emails
-	 *            el nuevo valor de listaEmails
+	 * @param emails el nuevo valor de listaEmails
 	 */
 	public void setListaEmails(final String emails) {
 		this.listaEmails = emails;
@@ -124,17 +122,16 @@ public class FormularioSoporte extends ModelApi {
 	 *
 	 * @return el valor de tipoDestinatario
 	 */
-	public TypeFormularioSoporte getTipoDestinatario() {
+	public List<TypeFormularioSoporte> getTipoDestinatario() {
 		return tipoDestinatario;
 	}
 
 	/**
 	 * Establece el valor de tipoDestinatario.
 	 *
-	 * @param destinatario
-	 *            el nuevo valor de tipoDestinatario
+	 * @param destinatario el nuevo valor de tipoDestinatario
 	 */
-	public void setTipoDestinatario(final TypeFormularioSoporte destinatario) {
+	public void setTipoDestinatario(final List<TypeFormularioSoporte> destinatario) {
 		this.tipoDestinatario = destinatario;
 	}
 

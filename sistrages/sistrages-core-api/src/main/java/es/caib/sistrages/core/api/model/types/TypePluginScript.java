@@ -122,5 +122,9 @@ public enum TypePluginScript {
 	/**
 	 * Resultado valores posible (exclusivo dentro del formulario)
 	 */
-	DATOS_VALORESPOSIBLES;
+	DATOS_VALORESPOSIBLES,
+	/**
+	 * Resultado script instrucciones
+	 */
+	DATOS_INSTRUCCIONES;
 }

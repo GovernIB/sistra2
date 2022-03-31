@@ -13,6 +13,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -464,8 +465,12 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	public void previsualizar() {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(tramiteVersion.getCodigo()));
-
-		UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.CONSULTA, params, true, 750, 400);
+		if (this.permiteEditar()) {
+			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 750, 400);
+		} else {
+			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.CONSULTA, params, true, 750,
+					400);
+		}
 	}
 
 	/**
@@ -537,6 +542,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 						}
 
 					} catch (final RegistroPluginException e) {
+						UtilJSF.loggearErrorFront("Error obteniendo los datos de registro", e);
 						UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
 								UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.registro.error"));
 					}
@@ -547,6 +553,10 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			}
 
 		}
+	}
+
+	public void actualizar() {
+		recuperarDatos();
 	}
 
 	/**
@@ -643,21 +653,24 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void returnDialogoRefrescarTramite(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
-		if (!respuesta.isCanceled()) {
+		if (respuesta != null && !respuesta.isCanceled()) {
 
 			recuperarDatos();
 
 			// Refrescamos el arbol
 			inicializarArbol();
 
-			if (TypeModoAcceso.ALTA.equals(respuesta.getModoAcceso())) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral(Constantes.LITERAL_INFO_ALTA_OK));
-			} else if (TypeModoAcceso.EDICION.equals(respuesta.getModoAcceso())) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
-						UtilJSF.getLiteral(Constantes.LITERAL_INFO_MODIFICADO_OK));
-			}
-		}
+			/*
+			 * if (TypeModoAcceso.ALTA.equals(respuesta.getModoAcceso())) {
+			 * UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+			 * UtilJSF.getLiteral(Constantes.LITERAL_INFO_ALTA_OK)); } else if
+			 * (TypeModoAcceso.EDICION.equals(respuesta.getModoAcceso())) {
+			 * UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+			 * UtilJSF.getLiteral(Constantes.LITERAL_INFO_MODIFICADO_OK)); }
+			 */
 
+		}
+		RequestContext.getCurrentInstance().execute("clickUpdate();");
 	}
 
 	/**
@@ -712,20 +725,23 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		if (dominioService.tieneTramiteVersion(this.dominioSeleccionado.getCodigo(), this.id)) {
 
-			List<ErrorValidacion> errores = tramiteService.checkDominioNoUtilizado(this.dominioSeleccionado.getCodigo(), this.id, UtilJSF.getIdioma().toString());
+			List<ErrorValidacion> errores = tramiteService.checkDominioNoUtilizado(this.dominioSeleccionado.getCodigo(),
+					this.id, UtilJSF.getIdioma().toString());
 			if (errores.isEmpty()) {
-				dominioService.removeTramiteVersion(this.dominioSeleccionado.getCodigo(), this.tramiteVersion.getCodigo());
+				dominioService.removeTramiteVersion(this.dominioSeleccionado.getCodigo(),
+						this.tramiteVersion.getCodigo());
 				dominios = tramiteService.getDominioSimpleByTramiteId(id);
 				dominioSeleccionado = null;
 			} else {
 				StringBuilder valor = new StringBuilder();
-				for(ErrorValidacion error : errores) {
+				for (ErrorValidacion error : errores) {
 					valor.append(error.getElemento());
 					valor.append(", ");
 				}
 				String[] params = new String[1];
-				params[0] =  valor.toString().substring(0, valor.toString().length()-2);
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.dominio.borrarConRelacion", params));
+				params[0] = valor.toString().substring(0, valor.toString().length() - 2);
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+						UtilJSF.getLiteral("error.dominio.borrarConRelacion", params));
 			}
 		} else {
 
@@ -1395,6 +1411,13 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		inicializarArbol();
 	}
 
+	public void returnDialogPrevisualizar(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		RequestContext requestContext = RequestContext.getCurrentInstance();
+		requestContext.update(":workDefinicionVersion");
+
+	}
+
 	/**
 	 * Verifica si hay fila seleccionada.
 	 *
@@ -1839,6 +1862,19 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			return null;
 		} else {
 			return (TramitePasoRegistrar) ((OpcionArbol) this.selectedNode.getData()).getTramitePaso();
+		}
+	}
+
+	/**
+	 * Tramite paso debe saber seleccionado.
+	 *
+	 * @return
+	 */
+	public TramitePasoDebeSaber getTramitePasoDSeleccionado() {
+		if (this.selectedNode == null) {
+			return null;
+		} else {
+			return (TramitePasoDebeSaber) ((OpcionArbol) this.selectedNode.getData()).getTramitePaso();
 		}
 	}
 

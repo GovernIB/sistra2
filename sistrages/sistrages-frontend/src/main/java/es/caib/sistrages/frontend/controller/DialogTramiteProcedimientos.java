@@ -69,6 +69,7 @@ public class DialogTramiteProcedimientos extends DialogControllerBase {
 				setTramites(iplugin.obtenerTramites(id, intVersion, UtilJSF.getIdioma().toString()));
 			}
 		} catch (final Exception ex) {
+			UtilJSF.loggearErrorFront("Error obteniendo el catalogo de procedimientos", ex);
 			tramites = new ArrayList<>();
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.accesoCatalogo"));

@@ -60,7 +60,7 @@ public final class PagoComponentImpl implements PagoComponent {
 			final IComponentePagoPlugin plugin = obtenerPlugin(idEntidad);
 			return plugin.consultaTasa(idPasarela, idTasa);
 		} catch (final PagoPluginException e) {
-			throw new PagoException("Excepcion consultando tasa " + idTasa + ": " + e.getMessage(), e);
+			throw new PagoException("Excepció consultant tasa " + idTasa + ": " + e.getMessage(), e);
 		}
 	}
 
@@ -69,12 +69,12 @@ public final class PagoComponentImpl implements PagoComponent {
 			final boolean debugEnabled) {
 
 		if (debugEnabled) {
-			log.debug("Inicio sesion pago - simulado: " + sesionPago.isSimulado());
+			log.debug("Inici sessió pagament - simulat: " + sesionPago.isSimulado());
 		}
 
 		if (sesionPago.getPresentacion() != TypePresentacion.ELECTRONICA) {
 			throw new PagoException(
-					"El pago no tiene presentacion electronica (tipo presentacion: " + sesionPago.getPresentacion());
+					"El pagagament no té presentació electrònica (tipus presentació: " + sesionPago.getPresentacion());
 		}
 
 		PagoComponentRedireccion res = null;
@@ -97,7 +97,7 @@ public final class PagoComponentImpl implements PagoComponent {
 
 		if (sesionPago.getPresentacion() != TypePresentacion.ELECTRONICA) {
 			throw new PagoException(
-					"El pago no tiene presentacion electronica (tipo presentacion: " + sesionPago.getPresentacion());
+					"El pagament no té presentació electrònica (tipus presentació: " + sesionPago.getPresentacion());
 		}
 
 		PagoComponentVerificacion res = null;
@@ -119,7 +119,7 @@ public final class PagoComponentImpl implements PagoComponent {
 
 			if (sesionPago.getPresentacion() != TypePresentacion.PRESENCIAL) {
 				throw new PagoException(
-						"El pago no tiene presentacion presencial (tipo presentacion: " + sesionPago.getPresentacion());
+						"El pagament no té presentació presencial (tipus presentació: " + sesionPago.getPresentacion());
 			}
 
 			byte[] cartaPago = null;
@@ -131,7 +131,7 @@ public final class PagoComponentImpl implements PagoComponent {
 
 			return cartaPago;
 		} catch (final PagoPluginException e) {
-			throw new PagoException("Excepcion obteniendo carta de pago presencial: " + e.getMessage(), e);
+			throw new PagoException("Excepció obtenint carta de pagament presencial: " + e.getMessage(), e);
 		}
 	}
 
@@ -170,7 +170,7 @@ public final class PagoComponentImpl implements PagoComponent {
 			res.setUrl(resPlg.getUrlPago());
 			return res;
 		} catch (final PagoPluginException e) {
-			throw new PagoException("Excepcion al iniciar pago electronico: " + e.getMessage(), e);
+			throw new PagoException("Excepció al iniciar pagament electrònic: " + e.getMessage(), e);
 		}
 	}
 
@@ -246,7 +246,7 @@ public final class PagoComponentImpl implements PagoComponent {
 			res.setMensajeError(resPlg.getMensajeErrorPasarela());
 			return res;
 		} catch (final PagoPluginException e) {
-			throw new PagoException("Excepcion al iniciar pago electronico: " + e.getMessage(), e);
+			throw new PagoException("Excepció al iniciar pagament electrònic: " + e.getMessage(), e);
 		}
 	}
 
@@ -328,7 +328,7 @@ public final class PagoComponentImpl implements PagoComponent {
 
 			return pdf;
 		} catch (final Exception e) {
-			throw new FormateadorException("Error convirtiendo el documento a bytes", e);
+			throw new FormateadorException("Error convertint el document a bytes", e);
 		}
 
 	}

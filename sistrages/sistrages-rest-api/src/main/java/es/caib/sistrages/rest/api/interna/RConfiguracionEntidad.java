@@ -54,6 +54,9 @@ public class RConfiguracionEntidad {
 	@ApiModelProperty(value = "Dias preregistro")
 	private int diasPreregistro;
 
+	@ApiModelProperty(value = "Areas de la entidad")
+	private List<RArea> area;
+
 	/** Email. */
 	@ApiModelProperty(value = "Email")
 	private String email;
@@ -177,8 +180,7 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer logo.
 	 *
-	 * @param logo
-	 *                 logo a establecer
+	 * @param logo logo a establecer
 	 */
 	public void setLogo(final String logo) {
 		this.logo = logo;
@@ -196,8 +198,7 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer css.
 	 *
-	 * @param css
-	 *                css a establecer
+	 * @param css css a establecer
 	 */
 	public void setCss(final String css) {
 		this.css = css;
@@ -215,8 +216,7 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer contactoHTML.
 	 *
-	 * @param contactoHTML
-	 *                         contactoHTML a establecer
+	 * @param contactoHTML contactoHTML a establecer
 	 */
 	public void setContactoHTML(final RLiteral contactoHTML) {
 		this.contactoHTML = contactoHTML;
@@ -234,8 +234,7 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer urlCarpeta.
 	 *
-	 * @param urlCarpeta
-	 *                       urlCarpeta a establecer
+	 * @param urlCarpeta urlCarpeta a establecer
 	 */
 	public void setUrlCarpeta(final RLiteral urlCarpeta) {
 		this.urlCarpeta = urlCarpeta;
@@ -253,8 +252,7 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer email.
 	 *
-	 * @param email
-	 *                  email a establecer
+	 * @param email email a establecer
 	 */
 	public void setEmail(final String email) {
 		this.email = email;
@@ -272,8 +270,7 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer ayudaEmail.
 	 *
-	 * @param ayudaEmail
-	 *                       ayudaEmail a establecer
+	 * @param ayudaEmail ayudaEmail a establecer
 	 */
 	public void setAyudaEmail(final boolean ayudaEmail) {
 		this.ayudaEmail = ayudaEmail;
@@ -291,8 +288,7 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer ayudaTelefono.
 	 *
-	 * @param ayudaTelefono
-	 *                          ayudaTelefono a establecer
+	 * @param ayudaTelefono ayudaTelefono a establecer
 	 */
 	public void setAyudaTelefono(final String ayudaTelefono) {
 		this.ayudaTelefono = ayudaTelefono;
@@ -310,8 +306,7 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer ayudaUrl.
 	 *
-	 * @param ayudaUrl
-	 *                     ayudaUrl a establecer
+	 * @param ayudaUrl ayudaUrl a establecer
 	 */
 	public void setAyudaUrl(final String ayudaUrl) {
 		this.ayudaUrl = ayudaUrl;
@@ -329,8 +324,7 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer ayudaFormulario.
 	 *
-	 * @param ayudaFormulario
-	 *                            ayudaFormulario a establecer
+	 * @param ayudaFormulario ayudaFormulario a establecer
 	 */
 	public void setAyudaFormulario(final List<ROpcionFormularioSoporte> ayudaFormulario) {
 		this.ayudaFormulario = ayudaFormulario;
@@ -348,8 +342,7 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer plugins.
 	 *
-	 * @param plugins
-	 *                    plugins a establecer
+	 * @param plugins plugins a establecer
 	 */
 	public void setPlugins(final List<RPlugin> plugins) {
 		this.plugins = plugins;
@@ -367,8 +360,7 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer identificador.
 	 *
-	 * @param identificador
-	 *                          identificador a establecer
+	 * @param identificador identificador a establecer
 	 */
 	public void setIdentificador(final String identificador) {
 		this.identificador = identificador;
@@ -386,8 +378,7 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer infoLopdHTML.
 	 *
-	 * @param infoLopdHTML
-	 *                         infoLopdHTML a establecer
+	 * @param infoLopdHTML infoLopdHTML a establecer
 	 */
 	public void setInfoLopdHTML(final RLiteral infoLopdHTML) {
 		this.infoLopdHTML = infoLopdHTML;
@@ -405,8 +396,7 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer diasPreregistro.
 	 *
-	 * @param diasPreregistro
-	 *                            diasPreregistro a establecer
+	 * @param diasPreregistro diasPreregistro a establecer
 	 */
 	public void setDiasPreregistro(final int diasPreregistro) {
 		this.diasPreregistro = diasPreregistro;
@@ -424,8 +414,7 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer descripcion.
 	 *
-	 * @param descripcion
-	 *                        descripcion a establecer
+	 * @param descripcion descripcion a establecer
 	 */
 	public void setDescripcion(final RLiteral descripcion) {
 		this.descripcion = descripcion;
@@ -443,8 +432,7 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer timestamp.
 	 *
-	 * @param timestamp
-	 *                      timestamp a establecer
+	 * @param timestamp timestamp a establecer
 	 */
 	public void setTimestamp(final String timestamp) {
 		this.timestamp = timestamp;
@@ -526,8 +514,7 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer plantillasDefecto.
 	 *
-	 * @param plantillasDefecto
-	 *                              plantillasDefecto a establecer
+	 * @param plantillasDefecto plantillasDefecto a establecer
 	 */
 	public void setPlantillasDefecto(final List<RPlantillaIdioma> plantillasDefecto) {
 		this.plantillasDefecto = plantillasDefecto;
@@ -541,8 +528,7 @@ public class RConfiguracionEntidad {
 	}
 
 	/**
-	 * @param lopdIntroduccion
-	 *                             the lopdIntroduccion to set
+	 * @param lopdIntroduccion the lopdIntroduccion to set
 	 */
 	public final void setLopdIntroduccion(final RLiteral lopdIntroduccion) {
 		this.lopdIntroduccion = lopdIntroduccion;
@@ -556,8 +542,7 @@ public class RConfiguracionEntidad {
 	}
 
 	/**
-	 * @param permiteSubsanarAnexar
-	 *                                  the permiteSubsanarAnexar to set
+	 * @param permiteSubsanarAnexar the permiteSubsanarAnexar to set
 	 */
 	public final void setPermiteSubsanarAnexar(final boolean permiteSubsanarAnexar) {
 		this.permiteSubsanarAnexar = permiteSubsanarAnexar;
@@ -571,8 +556,7 @@ public class RConfiguracionEntidad {
 	}
 
 	/**
-	 * @param permiteSubsanarPagar
-	 *                                 the permiteSubsanarPagar to set
+	 * @param permiteSubsanarPagar the permiteSubsanarPagar to set
 	 */
 	public final void setPermiteSubsanarPagar(final boolean permiteSubsanarPagar) {
 		this.permiteSubsanarPagar = permiteSubsanarPagar;
@@ -586,8 +570,7 @@ public class RConfiguracionEntidad {
 	}
 
 	/**
-	 * @param permiteSubsanarRegistrar
-	 *                                     the permiteSubsanarRegistrar to set
+	 * @param permiteSubsanarRegistrar the permiteSubsanarRegistrar to set
 	 */
 	public final void setPermiteSubsanarRegistrar(final boolean permiteSubsanarRegistrar) {
 		this.permiteSubsanarRegistrar = permiteSubsanarRegistrar;
@@ -601,8 +584,7 @@ public class RConfiguracionEntidad {
 	}
 
 	/**
-	 * @param instruccionesSubsanacion
-	 *                                     the instruccionesSubsanacion to set
+	 * @param instruccionesSubsanacion the instruccionesSubsanacion to set
 	 */
 	public final void setInstruccionesSubsanacion(final RLiteral instruccionesSubsanacion) {
 		this.instruccionesSubsanacion = instruccionesSubsanacion;
@@ -616,8 +598,7 @@ public class RConfiguracionEntidad {
 	}
 
 	/**
-	 * @param diasTramitesPresenciales
-	 *                                     the diasTramitesPresenciales to set
+	 * @param diasTramitesPresenciales the diasTramitesPresenciales to set
 	 */
 	public final void setDiasTramitesPresenciales(final Integer diasTramitesPresenciales) {
 		this.diasTramitesPresenciales = diasTramitesPresenciales;
@@ -631,8 +612,7 @@ public class RConfiguracionEntidad {
 	}
 
 	/**
-	 * @param instruccionesPresencial
-	 *                                    the instruccionesPresencial to set
+	 * @param instruccionesPresencial the instruccionesPresencial to set
 	 */
 	public final void setInstruccionesPresencial(final RLiteral instruccionesPresencial) {
 		this.instruccionesPresencial = instruccionesPresencial;
@@ -646,8 +626,7 @@ public class RConfiguracionEntidad {
 	}
 
 	/**
-	 * @param registroCentralizado
-	 *                                 the registroCentralizado to set
+	 * @param registroCentralizado the registroCentralizado to set
 	 */
 	public final void setRegistroCentralizado(final boolean registroCentralizado) {
 		this.registroCentralizado = registroCentralizado;
@@ -661,8 +640,7 @@ public class RConfiguracionEntidad {
 	}
 
 	/**
-	 * @param oficinaRegistroCentralizado
-	 *                                        the oficinaRegistroCentralizado to set
+	 * @param oficinaRegistroCentralizado the oficinaRegistroCentralizado to set
 	 */
 	public final void setOficinaRegistroCentralizado(final String oficinaRegistroCentralizado) {
 		this.oficinaRegistroCentralizado = oficinaRegistroCentralizado;
@@ -676,8 +654,7 @@ public class RConfiguracionEntidad {
 	}
 
 	/**
-	 * @param valorarTramite
-	 *                           the valorarTramite to set
+	 * @param valorarTramite the valorarTramite to set
 	 */
 	public final void setValorarTramite(final boolean valorarTramite) {
 		this.valorarTramite = valorarTramite;
@@ -691,8 +668,7 @@ public class RConfiguracionEntidad {
 	}
 
 	/**
-	 * @param incidenciasValoracion
-	 *                                  the incidenciasValoracion to set
+	 * @param incidenciasValoracion the incidenciasValoracion to set
 	 */
 	public void setIncidenciasValoracion(final List<RIncidenciaValoracion> incidenciasValoracion) {
 		this.incidenciasValoracion = incidenciasValoracion;
@@ -710,9 +686,8 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer registroOcultarDescargaDocumentos.
 	 *
-	 * @param registroOcultarDescargaDocumentos
-	 *                                              registroOcultarDescargaDocumentos
-	 *                                              a establecer
+	 * @param registroOcultarDescargaDocumentos registroOcultarDescargaDocumentos a
+	 *                                          establecer
 	 */
 	public void setRegistroOcultarDescargaDocumentos(final boolean registroOcultarDescargaDocumentos) {
 		this.registroOcultarDescargaDocumentos = registroOcultarDescargaDocumentos;
@@ -730,8 +705,7 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer urlSede.
 	 *
-	 * @param urlSede
-	 *                    urlSede a establecer
+	 * @param urlSede urlSede a establecer
 	 */
 	public void setUrlSede(final RLiteral urlSede) {
 		this.urlSede = urlSede;
@@ -749,11 +723,24 @@ public class RConfiguracionEntidad {
 	/**
 	 * Método para establecer plantillas.
 	 *
-	 * @param plantillas
-	 *                       plantillas a establecer
+	 * @param plantillas plantillas a establecer
 	 */
 	public void setPlantillas(final List<RPlantillaEntidad> plantillas) {
 		this.plantillas = plantillas;
+	}
+
+	/**
+	 * @return the area
+	 */
+	public final List<RArea> getArea() {
+		return area;
+	}
+
+	/**
+	 * @param area the area to set
+	 */
+	public final void setArea(List<RArea> area) {
+		this.area = area;
 	}
 
 }

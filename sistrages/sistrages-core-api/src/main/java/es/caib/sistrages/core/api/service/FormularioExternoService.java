@@ -3,6 +3,7 @@ package es.caib.sistrages.core.api.service;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 
 /**
@@ -68,7 +69,7 @@ public interface FormularioExternoService {
 	 * @para midCodigo
 	 * @return
 	 */
-	boolean existeFormulario(String identificador, Long idCodigo);
+	boolean existeFormulario(String identificador, Long idCodigo, Long idArea);
 
 	/**
 	 * Lista de gestores externos segun configuracion
@@ -81,10 +82,25 @@ public interface FormularioExternoService {
 
 	/**
 	 * Gestor externo formulario por identificador
-	 *
+	 * @param ambito
 	 * @param identificador
+	 * @param codigoEntidad
+	 * @param codigoArea
+	 * @param codigoGFE
 	 * @return
 	 */
-	GestorExternoFormularios getFormularioExternoByIdentificador(String identificador);
+	GestorExternoFormularios getFormularioExternoByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
+			Long codigoArea, Long codigoGFE);
 
+	/**
+	 * Existe el gfe
+	 * @param ambito
+	 * @param identificador
+	 * @param codigoEntidad
+	 * @param codigoArea
+	 * @param codigoGFE
+	 * @return
+	 */
+	boolean existeGFEByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
+			Long codigoArea, Long codigoGFE);
 }

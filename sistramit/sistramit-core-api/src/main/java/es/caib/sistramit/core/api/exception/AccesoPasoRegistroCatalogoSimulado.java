@@ -21,11 +21,10 @@ public final class AccesoPasoRegistroCatalogoSimulado extends ServiceRollbackExc
 	/**
 	 * Constructor AccesoPasoRegistroCatalogoSimulado.
 	 *
-	 * @param pMessage
-	 *                     Mensaje de error.
+	 * @param pMessage Mensaje de error.
 	 */
 	public AccesoPasoRegistroCatalogoSimulado() {
-		super("No se puede acceder a paso registro si se simula acceso a catalogo de servicios");
+		super("No es pot accedir a passa registre si es simula accés a catàleg de serveis");
 	}
 
 }

@@ -1,12 +1,16 @@
 package es.caib.sistrages.core.service.repository.dao;
 
+import java.util.Collection;
 import java.util.List;
 
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
+import es.caib.sistrages.core.api.model.ConsultaGeneral;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeIdioma;
+import es.caib.sistrages.core.service.repository.model.JFuenteDatos;
 
 /**
  * La interface DominioDao.
@@ -21,13 +25,6 @@ public interface DominioDao {
 	 */
 	Dominio getByCodigo(final Long idDominio);
 
-	/**
-	 * Obtiene el valor de byCodigo.
-	 *
-	 * @param codigoDominio the codigo dominio
-	 * @return el valor de byCodigo
-	 */
-	Dominio getByIdentificador(final String codigoDominio);
 
 	/**
 	 * Obtiene el valor de all.
@@ -137,7 +134,7 @@ public interface DominioDao {
 	 *         reemplaza o crea.
 	 * @throws Exception
 	 */
-	Long importar(FilaImportarDominio filaDominio, Long idEntidad, Long idArea) throws Exception;
+	Long importar(FilaImportarDominio filaDominio, Long idEntidad, Long idArea, final JFuenteDatos jfuenteDatos) ;
 
 	/**
 	 * Clona un dominio.
@@ -152,11 +149,16 @@ public interface DominioDao {
 
 	/**
 	 * Obtiene el valores dominio.
-	 *
+	 * @param ambito
+	 * @param codigoEntidad
+	 * @param codigoArea
 	 * @param identificador
+	 * @param identificadorEntidad
+	 * @param identificadorArea
 	 * @return
 	 */
-	ValoresDominio realizarConsultaListaFija(String identificador);
+
+	ValoresDominio realizarConsultaListaFija(final TypeAmbito ambito, final Long codigoEntidad, final Long codigoArea, final String identificador, String identificadorEntidad, String identificadorArea);
 
 	/**
 	 * Borra todos las referencias entre dominios y trámites (normalmente producido
@@ -181,4 +183,49 @@ public interface DominioDao {
 	 * @return
 	 */
 	List<Dominio> getDominiosByIdentificador(List<String> identificadoresDominio, final Long idEntidad, final Long idArea);
+
+	/**
+	 * Devuelve los datos que coinciden con el patrón
+	 * @param filtro
+	 * @param idioma
+	 * @param idEntidad
+	 * @param idArea
+	 * @param checkAmbitoGlobal
+	 * @param checkAmbitoEntidad
+	 * @param checkAmbitoArea
+	 * @return
+	 */
+	public List<ConsultaGeneral> listar(String filtro, TypeIdioma idioma, Long idEntidad, Long idArea,
+			boolean checkAmbitoGlobal, boolean checkAmbitoEntidad, boolean checkAmbitoArea);
+
+
+	/**
+	 * Comprueba si existe un dominio según el identificador.
+	 * @param ambito
+	 * @param identificador
+	 * @param codigoEntidad
+	 * @param codigoArea
+	 * @param codigoDominio
+	 * @return
+	 */
+	public boolean existeDominioByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea,
+			Long codigoDominio);
+
+
+	/**
+	 * Obtiene el dominio según el identificador.
+	 * @param ambito
+	 * @param identificador
+	 * @param identificadorEntidad
+	 * @param identificadorArea
+	 * @param codigoEntidad
+	 * @param codigoArea
+	 * @param codigoDominio
+	 * @return
+	 */
+
+	public Dominio getDominioByIdentificador(TypeAmbito ambito, String identificador, String identificadorEntidad, String identificadorArea, Long codigoEntidad, Long codigoArea,
+			Long codigoDominio);
+
+
 }

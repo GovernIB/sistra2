@@ -251,7 +251,7 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 			pdf = stampMarcaAgua(pdf);
 			return pdf;
 		} catch (final Exception e) {
-			throw new FormateadorException("Error convirtiendo el documento a bytes", e);
+			throw new FormateadorException("Error convertint el document a bytes", e);
 		}
 
 	}
@@ -323,7 +323,7 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 			}
 			return pdfStamp;
 		} catch (final Exception ex) {
-			throw new FormateadorException("Excepción al stampar marca de agua: " + ex.getMessage(), ex);
+			throw new FormateadorException("Excepció al estampar marca d'aigua: " + ex.getMessage(), ex);
 		} finally {
 			IOUtils.closeQuietly(bis);
 			IOUtils.closeQuietly(bos);
@@ -397,7 +397,7 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 				}
 
 			} catch (final Exception e) {
-				throw new FormateadorException("Error obteniendo propiedades formateador", e);
+				throw new FormateadorException("Error obtenint propietat formatetjador", e);
 			}
 		}
 	}
@@ -435,11 +435,11 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 					}
 				}
 				if (StringUtils.isBlank(valor)) {
-					throw new FormateadorException("Fecha no valida");
+					throw new FormateadorException("Data no vàlida");
 				}
 			}
 		} catch (final ValidacionTipoException e) {
-			throw new FormateadorException("Fecha no valida");
+			throw new FormateadorException("Data no vàlida");
 		}
 		return valor;
 	}
@@ -458,7 +458,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 		for (final ValorCampo valor : xml.getValores()) {
 			if (valor.getId() != null && componente.getIdentificador().equals(valor.getId())) {
 				encontrado = true;
-				if (UtilsSTG.traduceTipoCampo(componente.getTipo()) != TypeCampo.OCULTO) {
+				final TypeCampo tipoCampo = UtilsSTG.traduceTipoCampo(componente.getTipo());
+				if (tipoCampo != TypeCampo.OCULTO && tipoCampo != TypeCampo.CAPTCHA) {
 					if (valor instanceof ValorCampoSimple) {
 						String valorCampoSimple = ((ValorCampoSimple) valor).getValor();
 						if (isComponenteTipoFecha(componente)) {

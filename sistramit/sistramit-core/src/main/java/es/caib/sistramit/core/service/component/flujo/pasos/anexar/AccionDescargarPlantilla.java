@@ -57,7 +57,7 @@ public final class AccionDescargarPlantilla implements AccionPaso {
 
 		// Verificamos si realmente tiene plantilla
 		if (defAnexo == null || defAnexo.getAyuda() == null || defAnexo.getAyuda().getFichero() == null) {
-			throw new AccionPasoNoPermitidaException("El anexo " + idAnexo + " no tiene definida plantilla interna");
+			throw new AccionPasoNoPermitidaException("L'annex " + idAnexo + " no té definida plantilla interna");
 		}
 
 		// Recuperamos plantilla de repositorio de ficheros
@@ -71,7 +71,7 @@ public final class AccionDescargarPlantilla implements AccionPaso {
 			contenidoFic = IOUtils.toByteArray(fis);
 		} catch (final IOException e) {
 			throw new AccionPasoNoPermitidaException(
-					"Error al acceder a plantilla " + pathFile + " para el anexo " + idAnexo, e);
+					"Error al accedir a plantilla " + pathFile + " per l'annex " + idAnexo, e);
 		}
 
 		// Devolvemos respuesta

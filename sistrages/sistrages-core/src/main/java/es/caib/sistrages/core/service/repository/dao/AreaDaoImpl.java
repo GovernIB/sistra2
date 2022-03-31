@@ -216,15 +216,15 @@ public class AreaDaoImpl implements AreaDao {
 	 * java.lang.String)
 	 */
 	@Override
-	public Area getAreaByIdentificador(final String identificador) {
+	public Area getAreaByIdentificador(final String identificadorEntidad, final String identificador) {
 
-		final String sql = "Select t From JArea t where t.identificador = :identificador";
+		final String sql = "Select t From JArea t where t.identificador = :identificador and t.entidad.identificador = :identificadorEntidad";
 		final Query query = entityManager.createQuery(sql);
 
 		query.setParameter("identificador", identificador);
-
+		query.setParameter("identificadorEntidad", identificadorEntidad);
 		final List<JArea> jareas = query.getResultList();
-		Area area;
+		final Area area;
 		if (jareas.isEmpty()) {
 			area = null;
 		} else {
@@ -245,18 +245,17 @@ public class AreaDaoImpl implements AreaDao {
 	public boolean checkIdentificadorRepetido(final String pIdentificador, final Long pCodigo) {
 		boolean repetido = false;
 
-		String sql = "Select t From JArea t where t.identificador = :identificador";
+		StringBuilder sql = new StringBuilder("Select t From JArea t where t.identificador = :identificador");
 		if (pCodigo != null) {
-			sql += " and t.codigo != :codigo";
+			sql.append(" and t.codigo != :codigo");
 		}
 
-		final Query query = entityManager.createQuery(sql);
+		final Query query = entityManager.createQuery(sql.toString());
 
 		query.setParameter("identificador", pIdentificador);
 		if (pCodigo != null) {
 			query.setParameter("codigo", pCodigo);
 		}
-
 		final List<JArea> listaAreas = query.getResultList();
 
 		if (listaAreas == null || listaAreas.isEmpty()) {

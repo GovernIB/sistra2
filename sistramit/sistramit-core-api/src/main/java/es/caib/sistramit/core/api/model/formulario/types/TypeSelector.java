@@ -18,7 +18,11 @@ public enum TypeSelector {
 	/**
 	 * Selección múltiple a través de una lista de checks (Código String: m).
 	 */
-	MULTIPLE("m");
+	MULTIPLE("m"),
+	/**
+	 * Selector dinámico en base a un texto de búsqueda.
+	 */
+	DINAMICO("a");
 
 	/**
 	 * Valor como string.
@@ -29,7 +33,7 @@ public enum TypeSelector {
 	 * Constructor.
 	 *
 	 * @param value
-	 *            Valor como string.
+	 *                  Valor como string.
 	 */
 	private TypeSelector(final String value) {
 		stringValueSelector = value;

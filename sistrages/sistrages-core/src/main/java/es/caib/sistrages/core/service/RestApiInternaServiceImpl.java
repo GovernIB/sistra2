@@ -30,6 +30,7 @@ import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
@@ -221,7 +222,13 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Override
 	@NegocioInterceptor
 	public TramiteVersion loadTramiteVersion(final String idTramite, final int version) {
-		final TramiteVersion tramiteVersion = tramiteDao.getTramiteVersionByNumVersion(idTramite, version);
+
+		ValorIdentificadorCompuesto valor = new ValorIdentificadorCompuesto(idTramite);
+		if (valor.isError()) {
+			return null;
+		}
+		final TramiteVersion tramiteVersion = tramiteDao.getTramiteVersionByNumVersion(valor.getIdentificadorEntidad(),
+				valor.getIdentificadorArea(), valor.getIdentificador(), version);
 		if (tramiteVersion != null) {
 
 			final List<Long> dominiosId = new ArrayList<>();
@@ -234,12 +241,24 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 		return tramiteVersion;
 	}
 
+	/**
+	 * El identificador del dominio viene en el siguiente formato:
+	 *
+	 */
 	@Override
 	@NegocioInterceptor
 	public Dominio loadDominio(final String idDominio) {
-		final Dominio dom = dominioDao.getByIdentificador(idDominio);
+
+		ValorIdentificadorCompuesto valor = new ValorIdentificadorCompuesto(idDominio);
+		// Si tiene algun error, no se podrá extraer la información
+		if (valor.isError()) {
+			return null;
+		}
+		final Dominio dom = dominioDao.getDominioByIdentificador(valor.getAmbito(), valor.getIdentificador(),
+				valor.getIdentificadorEntidad(), valor.getIdentificadorArea(), null, null, null);
+
 		// Reemplaza placeholders
-		if (dom.getConfiguracionAutenticacion() != null) {
+		if (dom != null && dom.getConfiguracionAutenticacion() != null) {
 			dom.getConfiguracionAutenticacion().setUsuario(
 					configuracionComponent.replacePlaceholders(dom.getConfiguracionAutenticacion().getUsuario()));
 			dom.getConfiguracionAutenticacion().setPassword(
@@ -323,13 +342,23 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@NegocioInterceptor
 	public ValoresDominio realizarConsultaFuenteDatos(final String idDominio,
 			final List<ValorParametroDominio> parametros) {
-		return fuenteDatosComponent.realizarConsultaFuenteDatos(idDominio, parametros);
+		ValorIdentificadorCompuesto valor = new ValorIdentificadorCompuesto(idDominio);
+		if (valor.isError()) {
+			return null;
+		}
+		return fuenteDatosComponent.realizarConsultaFuenteDatos(valor.getAmbito(), valor.getIdentificadorEntidad(),
+				valor.getIdentificadorArea(), valor.getIdentificador(), parametros);
 	}
 
 	@Override
 	@NegocioInterceptor
 	public ValoresDominio realizarConsultaListaFija(final String idDominio) {
-		return fuenteDatosComponent.realizarConsultaListaFija(idDominio);
+		ValorIdentificadorCompuesto valor = new ValorIdentificadorCompuesto(idDominio);
+		if (valor.isError()) {
+			return null;
+		}
+		return fuenteDatosComponent.realizarConsultaListaFija(valor.getAmbito(), null, null, valor.getIdentificador(),
+				valor.getIdentificadorEntidad(), valor.getIdentificadorArea());
 	}
 
 	@Override
@@ -356,10 +385,17 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 		final List<Area> listaAreas = areaDao.getAll(pIdEntidad);
 		final List<String> listaIdAreas = new ArrayList<>();
 		for (final Area area : listaAreas) {
-			listaIdAreas.add(area.getIdentificador());
+			listaIdAreas.add(area.getIdentificadorCompuesto());
 		}
 
 		return listaIdAreas;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<Area> listAreasByEntidad(final Long pIdEntidad) {
+		final List<Area> listaAreas = areaDao.getAll(pIdEntidad);
+		return listaAreas;
 	}
 
 	@Override

@@ -23,7 +23,7 @@ public final class RTAccionModificacion implements ReglaTramitacion {
         if (vars == null || vars.length == 0
                 || !(vars[0] instanceof TypeAccionPaso)) {
             throw new ErrorConfiguracionException(
-                    "No se esta estableciendo la accion como variable de la regla");
+                    "No se està establint la acció com variable de la regla");
         }
         final TypeAccionPaso accion = (TypeAccionPaso) vars[0];
 
@@ -35,7 +35,7 @@ public final class RTAccionModificacion implements ReglaTramitacion {
             // Si el paso esta solo lectura, no permitimos accion
             if (dp.isSoloLectura()) {
                 throw new AccionPasoNoPermitidaException(
-                        "El paso " + dp.getIdPaso() + " esta solo lectura");
+                        "La passa " + dp.getIdPaso() + " està només lectura");
             }
             // Invalidamos pasos posteriores
             boolean post = false;

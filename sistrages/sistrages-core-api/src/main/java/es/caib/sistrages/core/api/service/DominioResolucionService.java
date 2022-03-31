@@ -46,7 +46,7 @@ public interface DominioResolucionService {
 	 * @param parametros
 	 * @return
 	 */
-	public ValoresDominio realizarConsultaRemota(TypeAmbito ambito, Long idEntidad, String idDominio, String url,
+	public ValoresDominio realizarConsultaRemota(TypeAmbito ambito, Long idEntidad,  String idDominio, String url,
 			String user, String pwd, List<ParametroDominio> parametros);
 
 	/**
@@ -59,7 +59,7 @@ public interface DominioResolucionService {
 	 * @param parametros
 	 * @return
 	 */
-	public ValoresDominio realizarConsultaListaFija(TypeAmbito ambito, Long idEntidad, String identificador, String url,
+	public ValoresDominio realizarConsultaListaFija(TypeAmbito ambito, Long idEntidad, final Long idArea, String identificador, String url,
 			List<Propiedad> parametros);
 
 }

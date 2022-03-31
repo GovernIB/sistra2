@@ -90,7 +90,7 @@ public class UtilsFormulario {
 				}
 			}
 		} catch (final UnsupportedEncodingException uee) {
-			throw new XmlFormularioException("Encoding UTF-8 no soportado", uee);
+			throw new XmlFormularioException("Encoding UTF-8 no suportat", uee);
 		} catch (final XmlException e) {
 			throw new XmlFormularioException("Error al interpretar xml", e);
 		}
@@ -153,7 +153,7 @@ public class UtilsFormulario {
 			}
 			break;
 		default:
-			throw new TipoNoControladoException("Tipo de campo " + campo.getTipo() + " no controlado");
+			throw new TipoNoControladoException("Tipus de camp " + campo.getTipo() + " no controlat");
 		}
 		return vc;
 	}
@@ -292,7 +292,7 @@ public class UtilsFormulario {
 			final byte[] xml = baos.toByteArray();
 			return xml;
 		} catch (final UnsupportedEncodingException uee) {
-			throw new XmlFormularioException("Encoding UTF-8 no soportado", uee);
+			throw new XmlFormularioException("Encoding UTF-8 no suportat", uee);
 		} catch (final IOException e) {
 			throw new XmlFormularioException("Error al generar xml", e);
 		} finally {
@@ -323,7 +323,7 @@ public class UtilsFormulario {
 			establecerValorXmlLista(valorCampo, campoXml);
 			break;
 		default:
-			throw new TipoNoControladoException("Tipo de campo no permitido: " + valorCampo.getTipo().name());
+			throw new TipoNoControladoException("Tipus de camp no permés: " + valorCampo.getTipo().name());
 		}
 	}
 

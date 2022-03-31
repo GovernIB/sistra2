@@ -14,15 +14,23 @@
 <h2 class="stgH2">BARRA DE DISEÑO</h2>
 <p>
 	<ul>
-		<li><span class="boton">Formulario</span>: pulsando este bot&oacute;n se abrir&aacute; la <a href="AyudaServlet?lang=es&id=propiedadesFormularioDialog">ficha</a> para configurar las propiedades del formulario (cabecera, gesti&oacute;n de p&aacute;ginas y plantillas de visualizaci&oacute;n).</li>
+		<li><span class="nombreCampo">Formulario</span>: pulsando este bot&oacute;n se abrir&aacute; la <a href="AyudaServlet?lang=es&id=propiedadesFormularioDialog">ficha</a> para configurar las propiedades del formulario (cabecera, gesti&oacute;n de p&aacute;ginas y plantillas de visualizaci&oacute;n).</li>
 		<li><span class="nombreCampo">Componentes:</span> secci&oacute;n que presenta los botones para la inserci&oacute;n de componentes en el formulario. Los tipos de campos disponibles son:</li>
 		<ul class="detalle">
 		<li><span class="boton">L&iacute;nea:</span> este bot&oacute;n permite incluir una l&iacute;nea en el formulario. Cada componente deber&aacute; posicionarse en una l&iacute;nea.</li>
 		<li><span class="boton">Secci&oacute;n:</span> este bot&oacute;n permite crear un campo secci&oacute;n. Este tipo de campos permite marcar los diferentes apartados o secciones de un formulario.</li>
 		<li><span class="boton">Aviso:</span> este bot&oacute;n permite incluir avisos informativos de diferentes tipos (info, warning y error). Cada tipo de aviso presenta una iconograf&iacute;a ilustrativa.</li>
 		<li><span class="boton">Campo de texto:</span> este bot&oacute;n permite incluir un campo de texto.</li>
-		<li><span class="boton">Campo selector:</span> este bot&oacute;n permite incluir un campo selector. Este campo permite presentar diferentes valores y permitir la selecci&oacute;n de uno o varios valores al ciudadano, dependiendo del tipo de selector (desplegable, selecci&oacute;n m&uacute;ltiple o selecci&oacute;n &uacute;nica). En caso de utilizar la selección única en horizontal, hay que ocupar suficientes columnas para poder tener la vista en horizontal. En caso de que no se dejen, en la vista veremos las opciones en vertical.</li>
+		<li><span class="boton">Campo selector:</span> este bot&oacute;n permite incluir un campo selector. Este campo permite presentar diferentes valores y permitir la selecci&oacute;n de uno o varios valores al ciudadano, dependiendo del tipo de selector.
+		 	<ul class="detalle2">
+		 		<li><span class="nombreCampo" style="color:#C2385D;">Lista desplegable:</span> elemento compuesto por un listado de opciones del cual solo se puede seleccionar una opci&oacute;n. Es obligatorio seleccionar un elemento</li>
+		 		<li><span class="nombreCampo" style="color:#C2385D;">Selecci&oacute;n &uacute;nica:</span> elemento compuesto por un grupo de opciones de las cuales solo se puede seleccionar una. Es obligatorio seleccionar una opci&oacute;n. Si se utiliza este elemento se tienen que dejar ocupadas las suficientes columnas para poder tener la vista en horizontal. En caso de que no se dejen en la vista lo veremos en vertical.</li>
+		 		<li><span class="nombreCampo" style="color:#C2385D;">Selecci&oacute;n m&uacute;ltiple:</span> elemento compuesto por un grupo de opciones de las cuales se puede seleccionar una, varias o ninguna.</li>
+				<li><span class="nombreCampo" style="color:#C2385D;">B&uacute;squeda din&aacute;mica:</span> elemento compuesto por un grupo de opciones de las cuales se puede seleccionar una, que filtra el resultado de un dominio seg&uacute;n una cadena de c&aacute;racteres introducida. Para que se muestren resultados esta cadena tiene que tener m&iacute;nimo tres car&aacute;cteres.</li>
+		 	</ul>
+		 </li>
 		<li><span class="boton">Campo checkbox</span>: este bot&oacute;n permite incluir en el formulario un campo casilla de verificaci&oacute;n.</li>
+		<li><span class="boton">Campo captcha</span>: este bot&oacute;n permite incluir en el formulario un campo captcha, el cual previene que bots o automatismos puedan llevar a cabo tramitaciones completas. Para completar este campo se tendr&aacute; que rellenar con los car&aacute;cteres de la imagen o del dictado por voz.</li>
 		</ul>
 		<li><span class="nombreCampo">Posicionamiento:</span> secci&oacute;n que permite especificar la posici&oacute;n que se asignar&aacute; a un campo al crearlo respecto a un campo seleccionado. Los valores contemplados son:</li>
 		<ul class="detalle">

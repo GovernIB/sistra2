@@ -18,6 +18,7 @@ import es.caib.sistramit.core.api.exception.ValorCampoFormularioCaracteresNoPerm
 import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
+import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
 import es.caib.sistramit.core.service.component.integracion.DominiosComponent;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
 import es.caib.sistramit.core.service.component.script.ScriptExec;
@@ -29,6 +30,7 @@ import es.caib.sistramit.core.service.model.formulario.interno.types.TypeListaVa
 import es.caib.sistramit.core.service.model.integracion.ParametrosDominio;
 import es.caib.sistramit.core.service.model.integracion.ValoresDominio;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFormulario;
+import es.caib.sistramit.core.service.util.UtilsFlujo;
 import es.caib.sistramit.core.service.util.UtilsFormulario;
 import es.caib.sistramit.core.service.util.UtilsSTG;
 
@@ -46,37 +48,33 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 	@Override
 	public ValoresPosiblesCampo calcularValoresPosiblesCampoSelector(final DatosSesionFormularioInterno pDatosSesion,
 			final RComponenteSelector pCampoDef) {
-		List<ValorIndexado> valoresPosibles = null;
+		return calcularValoresPosibles(pDatosSesion, pCampoDef, null);
+	}
 
-		// Verificamos origen lista valores
-		final TypeListaValores tipoListaValores = UtilsSTG.traduceTipoListaValores(pCampoDef.getTipoListaValores());
-		if (tipoListaValores == null) {
-			throw new ErrorConfiguracionException("Tipo lista valores " + pCampoDef.getTipoListaValores()
-					+ " no contemplado en campo " + pCampoDef.getIdentificador());
+	@Override
+	public List<ValorIndexado> calcularValoresPosiblesCampoSelectorDinamico(
+			final DatosSesionFormularioInterno pDatosSesion, final RComponenteSelector pCampoDef,
+			final String textoBusqueda) {
+
+		// Filtrado valores:
+		// - Si el dominio tiene un parámetro con el texto de búsqueda lo filtra el
+		// dominio
+		// - Si el dominio tiene no un parámetro con el texto de búsqueda se realiza
+		// filtro manual
+
+		final ValoresPosiblesCampo vpc = calcularValoresPosibles(pDatosSesion, pCampoDef, textoBusqueda);
+
+		final List<ValorIndexado> valoresFiltrados = new ArrayList<>();
+		final boolean filtroManual = !(UtilsFormularioInterno.existeParametroDominioTextoBusqueda(pCampoDef));
+		for (final ValorIndexado vi : vpc.getValores()) {
+			if (!filtroManual || (StringUtils.isNotBlank(textoBusqueda)
+					&& UtilsFlujo.eliminarDiacriticos(vi.getDescripcion().toLowerCase())
+							.indexOf(UtilsFlujo.eliminarDiacriticos(textoBusqueda.toLowerCase())) != -1)) {
+				valoresFiltrados.add(vi);
+			}
 		}
 
-		// Calculamos lista valores
-		switch (tipoListaValores) {
-		case FIJA:
-			valoresPosibles = calcularValoresPosiblesCampoDesdeListaFija(pCampoDef);
-			break;
-		case DOMINIO:
-			valoresPosibles = calcularValoresPosiblesCampoDesdeDominio(pDatosSesion, pCampoDef);
-			break;
-		case SCRIPT:
-			valoresPosibles = calcularValoresPosiblesCampoDesdeScript(pDatosSesion, pCampoDef);
-			break;
-		default:
-			throw new TipoNoControladoException("Tipo lista valores " + tipoListaValores.toString()
-					+ " no controlado para campo " + pCampoDef.getIdentificador());
-		}
-
-		// Verificamos caracteres permitidos y valores reservados
-		verificarCaracteresPermitidos(pCampoDef, valoresPosibles);
-
-		// Añadimos valores posibles.
-		final ValoresPosiblesCampo vpc = generarValoresPosibles(pDatosSesion, pCampoDef, valoresPosibles);
-		return vpc;
+		return valoresFiltrados;
 	}
 
 	@Override
@@ -92,10 +90,15 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 		for (final RComponente campoDef : UtilsFormularioInterno.devuelveListaCampos(paginaDef)) {
 			final TypeCampo tipoCampo = UtilsSTG.traduceTipoCampo(campoDef.getTipo());
 			if (tipoCampo == TypeCampo.SELECTOR) {
-				final ValoresPosiblesCampo valsCampo = calcularValoresPosiblesCampoSelector(pDatosSesion,
-						(RComponenteSelector) campoDef);
-				res.add(valsCampo);
+				final TypeSelector tipoSelector = UtilsSTG
+						.traduceTipoSelector(((RComponenteSelector) campoDef).getTipoSelector());
+				if (tipoSelector != TypeSelector.DINAMICO) {
+					final ValoresPosiblesCampo valsCampo = calcularValoresPosiblesCampoSelector(pDatosSesion,
+							(RComponenteSelector) campoDef);
+					res.add(valsCampo);
+				}
 			}
+
 		}
 
 		return res;
@@ -146,14 +149,14 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 		if (valoresPosibles != null && !valoresPosibles.isEmpty()) {
 			for (final ValorIndexado vi : valoresPosibles) {
 				if (StringUtils.isNotBlank(vi.getValor()) && StringUtils.isBlank(vi.getDescripcion())) {
-					throw new ErrorConfiguracionException("El campo " + pCampoDef.getIdentificador()
-							+ " del formulario " + pDatosSesion.getIdFormulario()
-							+ " tiene en su lista de valores posibles un valor con descripcion vacia");
+					throw new ErrorConfiguracionException("El camp " + pCampoDef.getIdentificador() + " del formulari "
+							+ pDatosSesion.getIdFormulario()
+							+ " té en la seva llista de valors posibles un valor amb descripció buida");
 				}
 				if (StringUtils.isNotBlank(vi.getValor()) && StringUtils.isBlank(vi.getValor())) {
-					throw new ErrorConfiguracionException("El campo " + pCampoDef.getIdentificador()
-							+ " del formulario " + pDatosSesion.getIdFormulario()
-							+ " tiene en su lista de valores posibles un valor con código vacio");
+					throw new ErrorConfiguracionException("El camp " + pCampoDef.getIdentificador() + " del formulari "
+							+ pDatosSesion.getIdFormulario()
+							+ " té en la seva llista de valors posibles un valor amb descripció buida");
 				}
 			}
 		}
@@ -178,8 +181,7 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 		// Verificamos que exista script
 		if (!UtilsSTG.existeScript(pCampoDef.getScriptListaValores())) {
 			throw new ErrorConfiguracionException(
-					"No se ha indicado script para el cálculo de valores posibles para el campo "
-							+ pCampoDef.getIdentificador());
+					"No s'ha indicat script pel càlcul de valors possibles pel camp " + pCampoDef.getIdentificador());
 		}
 
 		// Ejecutamos script valores posibles
@@ -204,27 +206,30 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 	 * Calcula valores posibles desde dominio.
 	 *
 	 * @param pDatosSesion
-	 *                         Datos sessión
+	 *                          Datos sessión
 	 * @param pCampoDef
-	 *                         Definición campo
+	 *                          Definición campo
+	 * @param textoBusqueda
+	 *                          Texto búsqueda (para selectores dinámicos)
 	 * @return valores posibles
 	 */
 	private List<ValorIndexado> calcularValoresPosiblesCampoDesdeDominio(
-			final DatosSesionFormularioInterno pDatosSesion, final RComponenteSelector pCampoDef) {
+			final DatosSesionFormularioInterno pDatosSesion, final RComponenteSelector pCampoDef,
+			final String textoBusqueda) {
 		// Obtenemos parametros acceso dominio
 		final String idDominio = pCampoDef.getListaDominio().getDominio();
 		final String campoCodigo = pCampoDef.getListaDominio().getCampoCodigo();
 		final String campoDescripcion = pCampoDef.getListaDominio().getCampoDescripcion();
 		if (StringUtils.isBlank(campoCodigo) || StringUtils.isBlank(campoDescripcion)) {
-			throw new ErrorConfiguracionException("No se ha especificado campo código o descripción para el dominio "
-					+ idDominio + " en selector " + pCampoDef.getIdentificador());
+			throw new ErrorConfiguracionException("No s'ha especificat camp codi o descripció pel domini " + idDominio
+					+ " en selector " + pCampoDef.getIdentificador());
 		}
-		final ParametrosDominio parametros = UtilsFormularioInterno.obtenerParametrosDominio(pDatosSesion, pCampoDef);
+		final ParametrosDominio parametros = UtilsFormularioInterno.obtenerParametrosDominio(pDatosSesion, pCampoDef,
+				textoBusqueda);
 		// Accedemos a dominio
 		final ValoresDominio vals = dominiosComponent.recuperarDominio(idDominio, parametros,
 				pDatosSesion.getDefinicionTramite());
-		// Obtenemos lista de valores del campo a partir de los valores del
-		// dominio
+		// Obtenemos lista valores a partir de los valores del dominio
 		final List<ValorIndexado> valoresPosibles = UtilsFormularioInterno.extraerValoresPosibles(campoCodigo,
 				campoDescripcion, vals);
 		return valoresPosibles;
@@ -244,6 +249,52 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 					.add(ValorIndexado.createNewValorIndexado(valorFijo.getCodigo(), valorFijo.getDescripcion()));
 		}
 		return valoresPosibles;
+	}
+
+	/**
+	 * Calcula valores posibles.
+	 *
+	 * @param pDatosSesion
+	 *                          Datos sesión
+	 * @param pCampoDef
+	 *                          Definición campo
+	 * @param textoBusqueda
+	 *                          Texto búsqueda
+	 * @return Valores posibles
+	 */
+	private ValoresPosiblesCampo calcularValoresPosibles(final DatosSesionFormularioInterno pDatosSesion,
+			final RComponenteSelector pCampoDef, final String textoBusqueda) {
+		List<ValorIndexado> valoresPosibles = null;
+
+		// Verificamos origen lista valores
+		final TypeListaValores tipoListaValores = UtilsSTG.traduceTipoListaValores(pCampoDef.getTipoListaValores());
+		if (tipoListaValores == null) {
+			throw new ErrorConfiguracionException("Tipus llista valors " + pCampoDef.getTipoListaValores()
+					+ " no contemplat en camp " + pCampoDef.getIdentificador());
+		}
+
+		// Calculamos lista valores
+		switch (tipoListaValores) {
+		case FIJA:
+			valoresPosibles = calcularValoresPosiblesCampoDesdeListaFija(pCampoDef);
+			break;
+		case DOMINIO:
+			valoresPosibles = calcularValoresPosiblesCampoDesdeDominio(pDatosSesion, pCampoDef, textoBusqueda);
+			break;
+		case SCRIPT:
+			valoresPosibles = calcularValoresPosiblesCampoDesdeScript(pDatosSesion, pCampoDef);
+			break;
+		default:
+			throw new TipoNoControladoException("Tipus llista valors " + tipoListaValores.toString()
+					+ " no controlat per camp " + pCampoDef.getIdentificador());
+		}
+
+		// Verificamos caracteres permitidos y valores reservados
+		verificarCaracteresPermitidos(pCampoDef, valoresPosibles);
+
+		// Añadimos valores posibles.
+		final ValoresPosiblesCampo vpc = generarValoresPosibles(pDatosSesion, pCampoDef, valoresPosibles);
+		return vpc;
 	}
 
 }

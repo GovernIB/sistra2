@@ -409,10 +409,19 @@ public class AsistenteTramitacionController extends TramitacionController {
 			version += "-" + System.currentTimeMillis();
 		}
 
+		// Iframe firma
+		final String iframeFirmaWidth = StringUtils.defaultString(
+				getSystemService().obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IFRAME_FIRMA_WIDTH), "200");
+		final String iframeFirmaHeight = StringUtils.defaultString(
+				getSystemService().obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IFRAME_FIRMA_HEIGHT),
+				"200");
+
 		final AsistenteConfig conf = new AsistenteConfig();
 		conf.setUrl(getSystemService().obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL));
 		conf.setIdioma(this.getIdioma());
 		conf.setVersion(version);
+		conf.setIframeFirmaHeight(iframeFirmaHeight);
+		conf.setIframeFirmaWidth(iframeFirmaWidth);
 
 		return new ModelAndView("asistente/configuracion", "configuracion", conf);
 	}
@@ -485,10 +494,10 @@ public class AsistenteTramitacionController extends TramitacionController {
 		if (dt.getTramite().getTipoPasoActual() == TypePaso.RELLENAR) {
 			accionPaso = TypeAccionPasoRellenar.GUARDAR_FORMULARIO;
 		} else if (dt.getTramite().getTipoPasoActual() == TypePaso.CAPTURAR) {
-			throw new ErrorFrontException("PENDIENTE IMPLEMENTAR");
+			throw new ErrorFrontException("PENDENT IMPLEMENTAR");
 		} else {
 			throw new ErrorFrontException(
-					"No se permite guardar formulario para paso " + dt.getTramite().getTipoPasoActual());
+					"No es permet guardar formulari per passa " + dt.getTramite().getTipoPasoActual());
 		}
 
 		final ResultadoAccionPaso respuestaGuardarFormulario = getFlujoTramitacionService()
@@ -709,12 +718,12 @@ public class AsistenteTramitacionController extends TramitacionController {
 
 		// Comprobamos que sea el iniciador (en caso de autenticado)
 		if (dt.getTramite().getAutenticacion() != userInfo.getAutenticacion()) {
-			throw new WarningFrontException("No coincide nivel autenticacion");
+			throw new WarningFrontException("No coincideix nivell autenticació");
 		}
 		if (dt.getTramite().getAutenticacion() != TypeAutenticacion.ANONIMO) {
 			if (!StringUtils.equals(dt.getUsuario().getNif(), userInfo.getNif())) {
-				throw new WarningFrontException("No coincide usuario autenticado (" + user.getUsuario().getNif()
-						+ ") con usuario iniciador trámite (" + dt.getUsuario().getNif() + ")");
+				throw new WarningFrontException("No coincideix usuari autenticat (" + user.getUsuario().getNif()
+						+ ") amb usuario iniciador tràmit (" + dt.getUsuario().getNif() + ")");
 			}
 		}
 

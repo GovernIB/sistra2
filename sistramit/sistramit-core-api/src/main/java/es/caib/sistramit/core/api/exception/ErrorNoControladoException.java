@@ -21,18 +21,16 @@ public final class ErrorNoControladoException extends ServiceRollbackException {
 	/**
 	 * Constructor ErrorNoControladoException.
 	 *
-	 * @param cause
-	 *            Causa
+	 * @param cause Causa
 	 */
 	public ErrorNoControladoException(final Throwable cause) {
-		super("Error no controlado en la capa de servicio: " + cause.getMessage(), cause);
+		super("Error no controlat a la capa de servei: " + cause.getMessage(), cause);
 	}
 
 	/**
 	 * Constructor.
 	 *
-	 * @param message
-	 *            mensaje
+	 * @param message mensaje
 	 */
 	public ErrorNoControladoException(final String message) {
 		super(message);

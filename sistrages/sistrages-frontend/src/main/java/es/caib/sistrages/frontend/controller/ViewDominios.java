@@ -13,7 +13,7 @@ import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuModel;
 
-import es.caib.sistrages.core.api.model.Area;
+
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
@@ -380,7 +380,7 @@ public class ViewDominios extends ViewControllerBase {
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 
 		if (this.datoSeleccionado.getAmbito() == TypeAmbito.AREA) {
-			final Long idArea = ((Area) datoSeleccionado.getAreas().toArray()[0]).getCodigo();
+			final Long idArea = datoSeleccionado.getArea().getCodigo();
 			params.put(TypeParametroVentana.AREA.toString(), String.valueOf(idArea));
 		}
 		UtilJSF.openDialog(DialogDominioClonar.class, TypeModoAcceso.ALTA, params, true, 500, 200);

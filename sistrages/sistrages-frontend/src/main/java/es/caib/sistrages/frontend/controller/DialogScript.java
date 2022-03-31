@@ -29,12 +29,12 @@ import es.caib.sistrages.core.api.model.comun.DisenyoFormularioPaginaSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
+import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypePluginScript;
 import es.caib.sistrages.core.api.model.types.TypeScript;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
-import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -58,10 +58,6 @@ public class DialogScript extends DialogControllerBase {
 	/** Script service. */
 	@Inject
 	private ScriptService scriptService;
-
-	/** Tramite service. */
-	@Inject
-	private DominioService dominioService;
 
 	/** Tramite service. */
 	@Inject
@@ -108,6 +104,8 @@ public class DialogScript extends DialogControllerBase {
 	private boolean visibleDominios = true;
 	/** Permite editar. **/
 	private boolean permiteEditar = false;
+	/** Indica si hay que mostrar el editor html */
+	private String literalHTML;
 
 	/**
 	 * Indicaría el texto que se añade al codeMirror pero de momento desactivado.
@@ -268,10 +266,11 @@ public class DialogScript extends DialogControllerBase {
 	 *
 	 * @param idDominio
 	 */
-	public void consultarDominio(final Long idDominio) {
+	public void consultarDominio(final Dominio dominio) {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), idDominio.toString());
+		params.put(TypeParametroVentana.ID.toString(), dominio.getCodigo().toString());
+		params.put(TypeParametroVentana.AMBITO.toString(), dominio.getAmbito().toString());
 		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 670);
 	}
 
@@ -355,7 +354,6 @@ public class DialogScript extends DialogControllerBase {
 			return;
 		}
 
-
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
@@ -373,18 +371,17 @@ public class DialogScript extends DialogControllerBase {
 
 			Matcher matcher = Pattern.compile("PLUGIN_DATOSFORMULARIO.getValor\\(\\'(.*?)\\'").matcher(contenido);
 			Integer totalCoincidencias = 0;
-			while (matcher.find())
-			{
+			while (matcher.find()) {
 				totalCoincidencias++;
 			}
 
-			//Vamos a comprobar si alguna no tiene las comillas simples
-			Matcher matcherComprobarIncorrectas = Pattern.compile("PLUGIN_DATOSFORMULARIO.getValor\\((.*?)\\)").matcher(contenido);
+			// Vamos a comprobar si alguna no tiene las comillas simples
+			Matcher matcherComprobarIncorrectas = Pattern.compile("PLUGIN_DATOSFORMULARIO.getValor\\((.*?)\\)")
+					.matcher(contenido);
 			Integer totalCoincidenciasGenerico = 0;
-			while (matcherComprobarIncorrectas.find())
-			{
+			while (matcherComprobarIncorrectas.find()) {
 				totalCoincidenciasGenerico++;
-				//EN JDK9 o superiores, existe un macher.result.count, que es más eficiente
+				// EN JDK9 o superiores, existe un macher.result.count, que es más eficiente
 			}
 
 			return totalCoincidenciasGenerico.compareTo(totalCoincidencias) != 0;
@@ -394,16 +391,17 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * Método que se encarga de buscar los dominios que se utilizan y los agregará si no están
+	 * Método que se encarga de buscar los dominios que se utilizan y los agregará
+	 * si no están
 	 */
 	private boolean agregarDominioNoUtilizados() {
 		String contenido = UtilScripts.extraerContenido(data.getContenido());
 		List<String> identificadoresDominio = new ArrayList<>();
-		//Busca el patrón PLUGIN_DOMINIO.invocarDominio('{0}' siendo {0} el identificador
-		Matcher matcher = Pattern.compile("PLUGIN_DOMINIOS.invocarDominio\\(\\'(.*?)\\'").matcher(contenido);
+		// Busca el patrón PLUGIN_DOMINIO.invocarDominio('{0}' siendo {0} el
+		// identificador
+		Matcher matcher = Pattern.compile("PLUGIN_DOMINIO.invocarDominio\\(\\'("+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+"*?)\\'").matcher(contenido);
 		Integer totalCoincidencias = 0;
-		while (matcher.find())
-		{
+		while (matcher.find()) {
 			totalCoincidencias++;
 			String identifDominio = matcher.group(1);
 			if (!identificadoresDominio.contains(identifDominio)) {
@@ -411,13 +409,13 @@ public class DialogScript extends DialogControllerBase {
 			}
 		}
 
-		//Vamos a comprobar si alguna no tiene las comillas simples
-		Matcher matcherComprobarIncorrectas = Pattern.compile("PLUGIN_DOMINIOS.invocarDominio\\((.*?)\\)").matcher(contenido);
+		// Vamos a comprobar si alguna no tiene las comillas simples
+		Matcher matcherComprobarIncorrectas = Pattern.compile("PLUGIN_DOMINIO.invocarDominio\\((.*?)\\)")
+				.matcher(contenido);
 		Integer totalCoincidenciasGenerico = 0;
-		while (matcherComprobarIncorrectas.find())
-		{
+		while (matcherComprobarIncorrectas.find()) {
 			totalCoincidenciasGenerico++;
-			//EN JDK9 o superiores, existe un macher.result.count, que es más eficiente
+			// EN JDK9 o superiores, existe un macher.result.count, que es más eficiente
 		}
 
 		if (totalCoincidenciasGenerico.compareTo(totalCoincidencias) != 0) {
@@ -426,55 +424,55 @@ public class DialogScript extends DialogControllerBase {
 			return false;
 		}
 
-		if (!identificadoresDominio.isEmpty()) {
-			UtilJSF.getIdEntidad();
-			TramiteVersion tramVersion = tramiteService.getTramiteVersion(Long.valueOf(this.idTramiteVersion));
-			List<Dominio> dominiosByIdentificador = dominioService.getDominiosByIdentificador(identificadoresDominio, UtilJSF.getIdEntidad(), tramVersion.getIdArea());
-			if (dominiosByIdentificador.size() == identificadoresDominio.size()) {
-				tramiteService.actualizarDominios(tramVersion, dominiosByIdentificador);
-				//Actualizamos los dominios
-				dominios = tramiteService.getDominioSimpleByTramiteId(Long.valueOf(idTramiteVersion));
-			} else {
-				//Si no es igual, hay que dar le mensaje de error correcto.
-				for (String identificador : identificadoresDominio) {
-					boolean encontrado = false;
-					for (Dominio dominio : dominios) {
-						if (dominio.getIdentificador().equals(identificador)) {
-							encontrado = true;
-							break;
-						}
-					}
 
-					if (!encontrado) {
-						Dominio dom = dominioService.loadDominio(identificador);
-						if (dom == null) {
-							String[] params = new String[1];
-							params[0] = identificador;
-							addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
-									UtilJSF.getLiteral("dialogScript.error.identificador.noExiste", params ));
-							return false;
-						} else {
-							if (dom.getAmbito() == TypeAmbito.ENTIDAD && dom.getEntidad().compareTo(UtilJSF.getIdEntidad()) != 0) {
-								//Es tipo entidad y no cuadra la misma id entidad
-								String[] params = new String[1];
-								params[0] = dom.getIdentificador();
-								addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
-										UtilJSF.getLiteral("dialogScript.error.identificador.otraArea", params));
-								return false;
-							} else {
-								//Es de tipo area y no cuadra dentro del area.
-								String[] params = new String[1];
-								params[0] = dom.getIdentificador();
-								addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
-										UtilJSF.getLiteral("dialogScript.error.identificador.otraArea", params));
-								return false;
-							}
-						}
-					}
+		if (!identificadoresDominio.isEmpty()) {
+			final List<ValorIdentificadorCompuesto> dominiosDelScript  =new ArrayList<>();
+			TramiteVersion tramVersion = tramiteService.getTramiteVersion(Long.valueOf(this.idTramiteVersion));
+
+			//Revisamos si los identificadores están correctos
+			for(String identificadorDominio : identificadoresDominio) {
+
+				ValorIdentificadorCompuesto identificador = new ValorIdentificadorCompuesto(identificadorDominio);
+				dominiosDelScript.add(identificador);
+				if (identificador.getAmbito() == TypeAmbito.ENTIDAD && !UtilJSF.getIdentificadorEntidad().equals(identificador.getIdentificadorEntidad())) {
+					String[] params = new String[1];
+					params[0] = identificador.getIdentificador();
+					addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+							UtilJSF.getLiteral("dialogScript.error.identificador.otraEntidad", params));
+					return false;
 				}
 
-				return false;
+				if (identificador.getAmbito() == TypeAmbito.AREA) {
+					//Doble comprobacion
+					// - C1: Primero si la entidad del area es de otra area, error
+					if (!UtilJSF.getIdentificadorEntidad().equals(identificador.getIdentificadorEntidad())) {
+						//Si la entidad no cuadra, es que ya está mal
+						String[] params = new String[1];
+						params[0] = identificador.getIdentificador();
+						addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+								UtilJSF.getLiteral("dialogScript.error.identificador.otraEntidad", params));
+						return false;
+					}
+
+
+					// - C2: Comprobar el area coincide con el del tramite.
+					if (!tramVersion.getIdentificadorArea().equals(identificador.getIdentificadorArea())) {
+
+						String[] params = new String[1];
+						params[0] = identificador.getIdentificador();
+						addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+								UtilJSF.getLiteral("dialogScript.error.identificador.otraArea", params));
+						return false;
+			        }
+
+				}
 			}
+
+			//Si no ha petado, actualizamos los valores
+			tramiteService.actualizarDominios(tramVersion, dominiosDelScript);
+			// Actualizamos los dominios
+			dominios = tramiteService.getDominioSimpleByTramiteId(Long.valueOf(idTramiteVersion));
+
 
 		}
 		return true;
@@ -623,6 +621,7 @@ public class DialogScript extends DialogControllerBase {
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(mensajeSeleccionado.getCodigo()));
 		params.put(TypeParametroVentana.ID_SCRIPT.toString(), String.valueOf(this.data.getCodigo()));
 		params.put(TypeParametroVentana.IDIOMAS.toString(), UtilJSON.toJSON(idiomas));
+		params.put(TypeParametroVentana.LITERAL_HTML.toString(), literalHTML);
 
 		UtilJSF.openDialog(DialogScriptLiteral.class, TypeModoAcceso.EDICION, params, true, 650, 200);
 	}
@@ -651,6 +650,15 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
+	 * revisa si el literal está a null y cambia el valor.
+	 */
+	public void checkLiteral() {
+		if (literalHTML == null) {
+			literalHTML = "";
+		}
+	}
+
+	/**
 	 * Abre dialogo de nueva mensaje.
 	 */
 	public void nuevoMensaje() {
@@ -659,6 +667,8 @@ public class DialogScript extends DialogControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID_SCRIPT.toString(), String.valueOf(this.data.getCodigo()));
 		params.put(TypeParametroVentana.IDIOMAS.toString(), UtilJSON.toJSON(idiomas));
+		params.put(TypeParametroVentana.LITERAL_HTML.toString(), literalHTML);
+
 		UtilJSF.openDialog(DialogScriptLiteral.class, TypeModoAcceso.ALTA, params, true, 650, 200);
 	}
 
@@ -1117,6 +1127,20 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;
+	}
+
+	/**
+	 * @return the literalHTML
+	 */
+	public final String getLiteralHTML() {
+		return literalHTML;
+	}
+
+	/**
+	 * @param literalHTML the literalHTML to set
+	 */
+	public final void setLiteralHTML(String literalHTML) {
+		this.literalHTML = literalHTML;
 	}
 
 	private boolean validoScript() {

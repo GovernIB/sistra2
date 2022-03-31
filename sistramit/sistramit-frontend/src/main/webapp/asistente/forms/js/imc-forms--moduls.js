@@ -655,6 +655,7 @@ $.fn.appFormsConfiguracio = function(options) {
 											: (conf_contingut === "d") ? "desplegable"
 											: (conf_contingut === "m") ? "multiple"
 											: (conf_contingut === "u") ? "unic"
+											: (conf_contingut === "a") ? "ajax"
 											: "";
 
 								var type = (conf_contingut === "an") ? "text"
@@ -668,6 +669,7 @@ $.fn.appFormsConfiguracio = function(options) {
 											: (conf_contingut === "pw") ? "password"
 											: (conf_contingut === "te") ? "text" // number?
 											: (conf_contingut === "d") ? "hidden"
+											: (conf_contingut === "a") ? "text"
 											: "";
 
 								elm_input
@@ -892,6 +894,18 @@ $.fn.appFormsConfiguracio = function(options) {
 
 							}
 
+							// selector ajax
+
+							if (conf_tipus === "selector" && conf_contingut === "a") {
+
+								elm
+									.find("textarea:first")
+										.attr("placeholder", txtFormDinSelectDinamic)
+										.end()
+									.appFormsSelectorAjax();
+
+							}
+
 						});
 
 				}
@@ -1019,9 +1033,12 @@ $.fn.appFormsConfiguracio = function(options) {
 							elm_input
 								.attr( "data-tipus", val_tipus );
 
+
+							// revisem si hi ha valor if() o no else{}
+
 							if (val_valor && val_valor !== "" && val_valor !== null && val_valor !== "null") {
 
-								// amb valor
+								// AMB VALOR!
 
 								if (elm_input_tipus === "texto" || elm_input_tipus === "oculto") {
 
@@ -1134,25 +1151,59 @@ $.fn.appFormsConfiguracio = function(options) {
 
 									}
 
+								} else if (elm_input_tipus === "selector" && elm_input_contingut === "a") {
+
+									// apliquem valor
+
+									var bt_span = $("<span>").text( txtFormDinEliminaSeleccio )
+										,bt_ = $("<button>").attr({ type: "button", "data-accio": "seleccio-elimina", title: txtFormDinEliminaSeleccio, "data-tabula": "si" }).append( bt_span );
+
+									elm
+										.find("textarea:first")
+											.prop("readonly", true)
+											.val( val_valor.descripcion )
+											.end()
+										.find("input:first")
+											.val( val_valor.valor )
+											.end()
+										.find(".imc-el-control:first")
+											.append( bt_ );
+
+									var capa_altura = appRevisaAlturaCamp(val_valor.descripcion, elm.find(".imc-el-control:first"));
+
 								} else if (elm_input_tipus === "verificacion") {
 
 									var estaMarcat = elm.find("input[data-marcat='"+val_valor+"']:first").length;
 
-									if (estaMarcat && !elm_esLectura) {
+									// marcat
+
+									if (estaMarcat) {
 
 										elm
 											.find("input:first")
 												.prop("checked", true);
-											//.find("label")
-											//	.trigger("click");
+
+									} else if (!estaMarcat) {
+
+										elm
+											.find("input:first")
+												.prop("checked", false);
 
 									}
+
+									// lectura
 
 									if (elm_esLectura) {
 
 										elm
 											.find("input")
 												.attr("disabled", "disabled");
+
+									} else if (!elm_esLectura) {
+
+										elm
+											.find("input")
+												.removeAttr("disabled");
 
 									}
 
@@ -1165,7 +1216,7 @@ $.fn.appFormsConfiguracio = function(options) {
 
 							} else {
 
-								// sense valor (null)
+								// SENSE VALOR (null)
 
 								if (elm_input_tipus === "texto") {
 
@@ -1207,6 +1258,12 @@ $.fn.appFormsConfiguracio = function(options) {
 													.find("input")
 														.attr("disabled", "disabled");
 
+											} else if (!elm_esLectura) {
+
+												elm
+													.find("input")
+														.removeAttr("disabled");
+
 											}
 
 										}
@@ -1225,6 +1282,17 @@ $.fn.appFormsConfiguracio = function(options) {
 										},50
 									);
 
+								} else if (elm_input_tipus === "selector" && elm_input_contingut === "a") {
+
+									elm
+										.find("input, textarea")
+											.prop("readonly", false)
+											.val( "" );
+
+									elm
+										.find("button[data-accio=seleccio-elimina]")
+											.remove();
+
 								} else if (elm_input_tipus === "verificacion") {
 
 									elm
@@ -1236,6 +1304,12 @@ $.fn.appFormsConfiguracio = function(options) {
 										elm
 											.find("input")
 												.attr("disabled", "disabled");
+
+									} else if (!elm_esLectura) {
+
+										elm
+											.find("input")
+												.removeAttr("disabled");
 
 									}
 
@@ -1368,6 +1442,11 @@ $.fn.appFormsConfiguracio = function(options) {
 										elm_textarea
 											.attr("readonly", "readonly");
 
+									} else if (conf_tipus === "selector" && conf_contingut === "u") {
+
+										elm_textarea
+											.attr("readonly", "readonly");
+
 									} else if (conf_tipus === "selector" && conf_contingut === "d") {
 
 										elm
@@ -1379,6 +1458,11 @@ $.fn.appFormsConfiguracio = function(options) {
 										elm
 											.find("input")
 												.attr("disabled", "disabled");
+
+									} else if (conf_tipus === "selector" && conf_contingut === "a") {
+
+										elm_textarea
+											.attr("readonly", "readonly");
 
 									} else if (conf_tipus === "check" || conf_tipus === "verificacion") {
 
@@ -1408,6 +1492,17 @@ $.fn.appFormsConfiguracio = function(options) {
 										elm
 											.find("input")
 												.removeAttr("disabled");
+
+									} else if (conf_tipus === "selector" && conf_contingut === "a") {
+
+										var estaMarcat = (elm.find("input[type=hidden]:first").val() !== "") ? true : false;
+
+										if (!estaMarcat) {
+
+											elm_textarea
+												.removeAttr("readonly");
+
+										}
 
 									} else if (conf_tipus === "check" || conf_tipus === "verificacion") {
 
@@ -1793,7 +1888,8 @@ $.fn.appFormsAvalua = function(options) {
 					.on("blur.appFormsAvalua", "div[data-tipus='texto'] input, div[data-tipus='texto'] textarea", selecciona)
 					.on("click.appFormsAvalua", "div[data-tipus='selector'][data-contingut='d'] .imc-select-submenu ul a", selecciona)
 					.on("click.appFormsAvalua", "fieldset[data-tipus='selector'] label", selecciona)
-					.on("click.appFormsAvalua", "div[data-type='check'] .imc-input-check", selecciona);
+					.on("click.appFormsAvalua", "div[data-type='check'] .imc-input-check", selecciona)
+					.on("click.appFormsAvalua", "button[data-accio=seleccio-elimina], .imc--selector-opcions-ajax button", selecciona);
 
 				// revisem si hi ha llista d'elements (taula) al form per aplicar l'observació de qualsevol canvi a la taula
 
@@ -2054,7 +2150,7 @@ $.fn.appFormsAvalua = function(options) {
 							*/
 
 							imc_body
-								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: json.url });
+								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
 
 						}
 
@@ -2484,9 +2580,21 @@ $.fn.appFormsAccions = function(options) {
 								.find(".imc-el-error:first")
 									.appDestaca({ referent: imc_forms_contenidor.find(".imc--contingut:first") });
 
-							imc_forms_finestra
-								.find(".imc-el-error:first input")
-									.focus();
+							var elm_amb_error = imc_forms_finestra.find(".imc-el-error:first");
+
+							if (elm_amb_error.attr("data-contingut") === "d") {
+
+								elm_amb_error
+									.find("a.imc-select:first")
+										.focus();
+
+							} else {
+
+								elm_amb_error
+									.find("input:first")
+										.focus();
+
+							}
 
 							return;
 
@@ -2528,9 +2636,21 @@ $.fn.appFormsAccions = function(options) {
 								.find(".imc-el-error:first")
 									.appDestaca({ referent: imc_forms_contenidor.find(".imc--contingut:first") });
 
-							imc_forms_finestra
-								.find(".imc-el-error:first input")
-									.focus();
+							var elm_amb_error = imc_forms_finestra.find(".imc-el-error:first");
+
+							if (elm_amb_error.attr("data-contingut") === "d") {
+
+								elm_amb_error
+									.find("a.imc-select:first")
+										.focus();
+
+							} else {
+
+								elm_amb_error
+									.find("input:first")
+										.focus();
+
+							}
 
 							return;
 
@@ -2628,7 +2748,7 @@ $.fn.appFormsAccions = function(options) {
 							consola("FORMS formulari envia: error des de JSON");
 
 							imc_body
-								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: json.url });
+								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
 
 						}
 
@@ -2843,7 +2963,7 @@ $.fn.appFormsAccions = function(options) {
 							.addClass("imc--sense-scroll");
 
 						$("#imc-forms-contenidor")
-							.appPopupTabula();
+							.appFormsPopupTabula();
 
 					}, 300);
 
@@ -2903,7 +3023,7 @@ $.fn.appMissatgeFormAccions = function(options) {
 
 				imc_forms_contenidor
 					.attr("aria-hidden", "true")
-					.appPopupTabula({ accio: "finalitza" });
+					.appFormsPopupTabula({ accio: "finalitza" });
 
 				$("html, body")
 					.removeClass("imc--sense-scroll");
@@ -3025,7 +3145,7 @@ $.fn.appMissatgeFormAccions = function(options) {
 							consola("FORMS desa i surt: error des de JSON");
 
 							imc_body
-								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: json.url });
+								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
 
 						}
 
@@ -3134,7 +3254,7 @@ $.fn.appFormsPopupTabula = function(options) {
 
 				// es missatge?
 
-				esMissatge = (element.closest(".imc-missatge").length) ? true : false;
+				esMissatge = (element.closest(".imc-forms--missatge").length) ? true : false;
 
 
 				// pinta
@@ -3243,6 +3363,14 @@ $.fn.appFormsPopupTabula = function(options) {
 									.find("input[type=radio]")
 										.attr("data-tabula", "si");
 
+							} else if (f_el_contingut === "a") {
+
+
+
+								f_el
+									.find("textarea:first")
+										.attr("data-tabula", "si");
+
 							}
 
 						});
@@ -3313,8 +3441,12 @@ $.fn.appFormsPopupTabula = function(options) {
 
 				el_num = in_tabpos;
 
+				consola("reposiciona: " + el_num);
+
 			},
 			tabula = function(e) {
+
+				//consola(el_num);
 
 				var tecla = e.keyCode
 					,esShift = !!e.shiftKey;
@@ -3356,3 +3488,447 @@ $.fn.appFormsPopupTabula = function(options) {
 
 	return this;
 }
+
+
+
+// appFormsSelectorAjax
+
+$.fn.appFormsSelectorAjax = function(options) {
+
+	var settings = $.extend({
+			element: ""
+		}, options);
+
+	this.each(function(){
+		var element = $(this)
+			,envia_ajax = false
+			,valorsSerialitzats = false
+			,llistat_pare = false
+			,prepara = function() {
+
+				var control_el = element.find(".imc-el-control:first");
+
+				$("<input>")
+					.attr({ type: "hidden" })
+					.appendTo( control_el );
+
+				$("<div>")
+					.addClass("imc--selector-opcions-ajax")
+					.attr({ tabindex: "-1", "aria-hidden": "true" })
+					.appendTo( control_el );
+
+			}
+			,inicia = function(e) {
+
+				var input_el = $(this)
+					,input_val = input_el.val();
+
+				if (input_val.length < 3 || input_el.prop("readonly")) {
+					return;
+				}
+
+				// més de 3 caracters, numéric, lletres, o intro
+
+				if ( (e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 65 && e.keyCode <= 90) || (e.keyCode >= 191 && e.keyCode <= 192) || e.keyCode === 13 || e.keyCode === 8 ) {
+
+					crida(input_el);
+
+				}
+
+			}
+			,serialitze = function(e) {
+
+				// activem nav per teclat
+
+				var input_ = $(this)
+					,control_el = input_.closest(".imc-el-control");
+
+				control_el
+					.off(".appFormsSelectorAjax")
+					.on("keyup.appFormsSelectorAjax", navega);
+
+				// serialitzem
+
+				valorsSerialitzats = imc_forms_finestra.appSerialitza({ verifica: false });
+
+			}
+			,crida = function(input_el) {
+
+				// carregant dades
+
+				llistat_pare = input_el.parent().find(".imc--selector-opcions-ajax:first");
+
+				var carregant_codi = $("<div>").addClass("imc--carregant").text( txtFormDinCercantDades );
+
+				llistat_pare
+					.html( carregant_codi )
+					.attr("aria-hidden", "false");
+
+				// serialitza, afegim dades camp
+
+				valorsSerialitzats["idCampo"] = input_el.attr("id");
+				valorsSerialitzats["textoCampo"] = input_el.val();
+
+				// dades ajax
+
+				var pag_url = APP_FORM_SELECTOR_AJAX
+					,pag_dades = valorsSerialitzats;
+
+				// ajax
+
+				if (envia_ajax) {
+
+					envia_ajax
+						.abort();
+
+				}
+
+				envia_ajax =
+					$.ajax({
+						url: pag_url,
+						data: pag_dades,
+						method: "post",
+						dataType: "json",
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader(headerCSRF, tokenCSRF);
+						}
+					})
+					.done(function( data ) {
+
+						envia_ajax = false;
+
+						var json = data;
+
+						if (json.estado === "SUCCESS" || json.estado === "WARNING") {
+
+							if (json.estado === "WARNING") {
+
+								imc_forms_missatge
+									.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { mostra(); } });
+
+								return;
+
+							}
+
+							pinta(json);
+
+						} else {
+
+							envia_ajax = false;
+
+							consola("Forms, selector dinàmic ajax: error des de JSON");
+
+							imc_body
+								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
+
+						}
+
+					})
+					.fail(function(dades, tipus, errorThrown) {
+
+						envia_ajax = false;
+
+						if (tipus === "abort") {
+							return false;
+						}
+
+						consola("Forms, selector dinàmic ajax: error des de FAIL");
+
+						imc_body
+							.appFormsErrorsGeneral({ estat: "fail" });
+
+					});
+
+			}
+			,pinta = function(json) {
+
+				// llistat_pare
+
+				var valors_json = json.datos.valores
+					,valors_size = (valors_json) ? valors_json.length : 0;
+
+
+				// no hi ha resultats
+
+				if (!valors_size) {
+
+					var cap_resultat_codi = $("<div>").addClass("imc--sense-resultats").text( txtFormDinSenseResultats );
+
+					llistat_pare
+						.html( cap_resultat_codi );
+
+					return;
+
+				}
+
+
+				// hi ha resultats
+
+				var valors_ll = $("<ul>");
+
+				llistat_pare
+					.html( valors_ll );
+
+				$(valors_json)
+					.each(function() {
+
+						var valor = this
+							,valor_id = valor.valor
+							,valor_text = valor.descripcion;
+
+						var sp_ = $("<span>").text( valor_text )
+							,bt_ = $("<button>").attr({ "type": "button", "data-id": valor_id, "data-text": valor_text }).html( sp_ );
+
+						$("<li>")
+							.html( bt_ )
+							.appendTo( valors_ll );
+
+					});
+
+			}
+			,selecciona = function(e) {
+
+				var bt_sel = $(this)
+					,bt_val = bt_sel.attr("data-id")
+					,bt_text = bt_sel.attr("data-text");
+
+				var control_el = bt_sel.closest(".imc-el-control");
+
+
+				// revisa altura
+
+				var capa_altura = appRevisaAlturaCamp(bt_text, control_el);
+
+
+				// pintem
+
+				control_el
+					.find("input[type=hidden]:first")
+						.val( bt_val )
+						.end()
+					.find("input[type=text]:first, textarea")
+						.val( bt_text )
+						.prop("readonly", true);
+
+				$("<button>")
+					.attr({ type: "button", "data-accio": "seleccio-elimina", title: txtFormDinEliminaSeleccio, "data-tabula": "si" })
+						.html( $("<span>").text( txtFormDinEliminaSeleccio ) )
+						.appendTo( control_el );
+
+				llistat_pare
+					.attr("aria-hidden", "true");
+
+				setTimeout(
+					function() {
+
+						llistat_pare
+							.html( "" );
+
+					},50
+				);
+
+				//capa__
+				//	.remove();
+
+
+				// tabulem de nou
+
+				$("#imc-forms-contenidor")
+					.appFormsPopupTabula();
+
+				// enfoquem al control dinàmic
+
+				setTimeout(
+					function() {
+
+						control_el
+							.find("input[type=text]:first, textarea")
+								.focus();
+
+					},100
+				);
+				
+			}
+			,navega = function(e) {
+
+				e.preventDefault();
+
+				if (e.keyCode === 40) { // avall
+
+					var item_selec = llistat_pare.find("button.imc--seleccionada")
+						,llistat_seg = item_selec.parent().next();
+
+					if (item_selec.length && llistat_seg.length) {
+
+						llistat_pare
+							.find("button.imc--seleccionada:first")
+								.removeClass("imc--seleccionada");
+
+						llistat_seg
+							.find("button:first")
+								.addClass("imc--seleccionada")
+								.focus();
+
+					} else if (!item_selec.length || (item_selec.length && !llistat_seg.length)) {
+
+						llistat_pare
+							.find("button.imc--seleccionada:first")
+								.removeClass("imc--seleccionada");
+
+						llistat_pare
+							.find("button:first")
+								.addClass("imc--seleccionada")
+								.focus();
+						
+					}
+
+					e.preventDefault();
+					return false;
+
+				} else if (e.keyCode === 38) { // amunt
+
+					var item_selec = llistat_pare.find("button.imc--seleccionada")
+						,llistat_seg = item_selec.parent().prev();
+
+					if (item_selec.length && llistat_seg.length) {
+
+						llistat_pare
+							.find("button.imc--seleccionada:first")
+								.removeClass("imc--seleccionada");
+
+						llistat_seg
+							.find("button:first")
+								.addClass("imc--seleccionada")
+								.focus();
+
+					} else if (!item_selec.length || (item_selec.length && !llistat_seg.length)) {
+
+						llistat_pare
+							.find("button.imc--seleccionada:first")
+								.removeClass("imc--seleccionada");
+
+						llistat_pare
+							.find("button:last")
+								.addClass("imc--seleccionada")
+								.focus();
+						
+					}
+
+					e.preventDefault();
+					return false;
+
+				} else if (e.keyCode === 27) { // esc
+
+					reseteja();
+
+				}
+
+			}
+			,revisa = function() {
+
+				setTimeout(
+					function() {
+
+						var obj_focusat = $(document.activeElement);
+
+						if (!obj_focusat.closest("div[data-contingut=a]").length) {
+
+							setTimeout(
+								function() {
+
+									reseteja();
+
+								}, 500
+							);
+
+						}
+
+					}, 100
+					
+				);
+
+			}
+			,reseteja = function(e) {
+
+				if (typeof llistat_pare === "boolean") {
+					return;
+				}
+
+				llistat_pare
+					.html( "" )
+					.attr("aria-hidden", "true");
+
+			}
+			,elimina = function(e) {
+
+				var bt = $(this)
+					,control_el = bt.parent()
+					,esLectura = (bt.closest(".imc-element").attr("data-lectura") === "s") ? true : false;
+
+				if (esLectura) {
+					return;
+				}
+
+				control_el
+					.find("input[type=hidden]:first")
+						.val( "" )
+						.end()
+					.find("input[type=text]:first, textarea")
+						.removeAttr("style")
+						.val( "" )
+						.prop("readonly", false)
+						.focus();
+
+				setTimeout(
+					function() {
+
+						control_el
+							.find("button[data-accio=seleccio-elimina]")
+								.remove();
+
+					}, 50
+					
+				);
+
+			};
+
+		// prepara
+
+		prepara();
+		
+		// events
+
+		element
+			.off(".appFormsSelectorAjax")
+			.on("keyup.appFormsSelectorAjax", "input[type=text], textarea", inicia)
+			.on("focus.appFormsSelectorAjax", "input[type=text], textarea", serialitze)
+			.on("blur.appFormsSelectorAjax", "input[type=text], textarea, .imc--selector-opcions-ajax li button", revisa)
+			.on("click.appFormsSelectorAjax", ".imc--selector-opcions-ajax li button", selecciona)
+			.on("click.appFormsSelectorAjax", "button[data-accio=seleccio-elimina]", elimina);
+		
+	});
+
+	return this;
+}
+
+function appRevisaAlturaCamp(bt_text, control_el) {
+
+	var capa__ = $("<div>")
+					.addClass("imc--selector-ajax-altura")
+					.text( bt_text )
+					.appendTo( control_el );
+
+	var capa_altura = capa__.outerHeight(true);
+
+	control_el
+		.find("textarea")
+			.css("height", capa_altura+"px");
+
+	control_el
+		.find(".imc--selector-ajax-altura")
+			.remove();
+
+	return capa_altura;
+
+}
+

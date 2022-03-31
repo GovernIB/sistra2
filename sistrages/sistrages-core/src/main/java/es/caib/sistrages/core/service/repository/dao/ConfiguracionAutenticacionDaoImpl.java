@@ -13,10 +13,13 @@ import org.springframework.stereotype.Repository;
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
+import es.caib.sistrages.core.api.model.ConsultaGeneral;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JConfiguracionAutenticacion;
 import es.caib.sistrages.core.service.repository.model.JDominio;
+import es.caib.sistrages.core.service.repository.model.JEntidad;
 import es.caib.sistrages.core.service.repository.model.JGestorExternoFormularios;
 
 /**
@@ -27,9 +30,12 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 
 	private static final String FALTA_IDENTIFICADOR = "Falta el identificador";
 	private static final String NO_EXISTE_EL_CONF_AUT = "No existe la configuracion autenticacion: ";
-	private static final String FALTA_AREA = "Falta el are";
+	private static final String FALTA_AMBITO = "Falta el ambito";
+	private static final String FALTA_AREA = "Falta el area";
+	private static final String FALTA_ENTIDAD = "Falta la entidad";
 	private static final String FALTA_CONF_AUTENTICACION = "Falta la configuracion autenticacion";
 	private static final String NO_EXISTE_EL_AREA = "No existe el area: ";
+	private static final String NO_EXISTE_LA_ENTIDAD = "No existe la entidad:";
 
 	/**
 	 * entity manager.
@@ -79,23 +85,44 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 	 * es.caib.sistrages.core.api.model.ConfiguracionAutenticacion)
 	 */
 	@Override
-	public Long add(final Long pIdArea, final ConfiguracionAutenticacion pConfiguracionAutenticacion) {
-		if (pConfiguracionAutenticacion == null) {
+	public Long add(final Long pIdArea, final Long idEntidad, final ConfiguracionAutenticacion data) {
+
+		if (data == null) {
 			throw new FaltanDatosException(FALTA_CONF_AUTENTICACION);
 		}
 
-		if (pIdArea == null) {
-			throw new FaltanDatosException(FALTA_AREA);
+		JArea jArea = null;
+		JEntidad jEntidad = null;
+		if (data.getAmbito() == TypeAmbito.AREA) {
+
+			if (pIdArea == null) {
+				throw new FaltanDatosException(FALTA_AREA);
+			} else {
+				jArea = entityManager.find(JArea.class, pIdArea);
+				if (jArea == null) {
+					throw new FaltanDatosException(NO_EXISTE_EL_AREA + pIdArea);
+				}
+			}
 		}
 
-		final JArea jArea = entityManager.find(JArea.class, pIdArea);
-		if (jArea == null) {
-			throw new FaltanDatosException(NO_EXISTE_EL_AREA + pIdArea);
+		if (data.getAmbito() == TypeAmbito.ENTIDAD) {
+
+			if (idEntidad == null) {
+				throw new FaltanDatosException(FALTA_ENTIDAD);
+			} else {
+				jEntidad = entityManager.find(JEntidad.class, idEntidad);
+				if (jEntidad == null) {
+					throw new FaltanDatosException(NO_EXISTE_LA_ENTIDAD + idEntidad);
+				}
+			}
 		}
+
+
 
 		final JConfiguracionAutenticacion jConfiguracionAutenticacion = JConfiguracionAutenticacion
-				.fromModel(pConfiguracionAutenticacion);
+				.fromModel(data);
 		jConfiguracionAutenticacion.setArea(jArea);
+		jConfiguracionAutenticacion.setEntidad(jEntidad);
 		entityManager.persist(jConfiguracionAutenticacion);
 		return jConfiguracionAutenticacion.getCodigo();
 	}
@@ -174,52 +201,59 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 	 * es.caib.sistrages.core.api.model.types.TypeIdioma, java.lang.String)
 	 */
 	@Override
-	public List<ConfiguracionAutenticacion> getAllByFiltro(final Long pIdArea, final TypeIdioma pIdioma,
+	public List<ConfiguracionAutenticacion> getAllByFiltro(final TypeAmbito ambito, final Long idArea, final Long idEntidad, final TypeIdioma pIdioma,
 			final String pFiltro) {
-		if (pIdArea == null) {
+		if (ambito == null) {
+			throw new FaltanDatosException(FALTA_AMBITO);
+		}
+
+		if (idArea == null && ambito == TypeAmbito.AREA) {
 			throw new FaltanDatosException(FALTA_AREA);
 		}
-		return listarConfiguracionAutenticacion(pIdArea, pIdioma, pFiltro);
+
+		if (idEntidad == null && ambito == TypeAmbito.ENTIDAD) {
+			throw new FaltanDatosException(FALTA_ENTIDAD);
+		}
+
+		return listarConfiguracionAutenticacion(ambito, idArea, idEntidad, pIdioma, pFiltro);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * es.caib.sistrages.core.service.repository.dao.ConfiguracionAutenticacionDao#getAll(
-	 * java. lang.Long)
-	 */
-	@Override
-	public List<ConfiguracionAutenticacion> getAll(final Long pIdArea) {
-		if (pIdArea == null) {
-			throw new FaltanDatosException(FALTA_AREA);
-		}
-		return listarConfiguracionAutenticacion(pIdArea, null, null);
-	}
 
 	/**
 	 * Listar avisos.
 	 *
-	 * @param pIdArea idArea
+	 * @param idArea idArea
 	 * @param pIdioma    idioma
 	 * @param pFiltro    filtro
 	 * @return Listado de avisos
 	 */
 	@SuppressWarnings("unchecked")
-	private List<ConfiguracionAutenticacion> listarConfiguracionAutenticacion(final Long pIdArea, final TypeIdioma pIdioma,
+	private List<ConfiguracionAutenticacion> listarConfiguracionAutenticacion(final TypeAmbito ambito, final Long idArea, final Long idEntidad, final TypeIdioma pIdioma,
 			final String pFiltro) {
 		final List<ConfiguracionAutenticacion> listaConfiguraciones = new ArrayList<>();
-		String sql = "select a from JConfiguracionAutenticacion as a";
+		StringBuilder sql = new StringBuilder("select a from JConfiguracionAutenticacion as a");
 
-		sql += " where a.area.codigo = :idArea ";
-		if (StringUtils.isNotBlank(pFiltro)) {
-			sql += "  AND ( a.identificador like :filtro OR a.descripcion like :filtro OR a.url like :filtro) ";
+		sql.append( " where a.ambito = :ambito ");
+		if (ambito == TypeAmbito.AREA) {
+			sql.append(" AND a.area.codigo = :idArea ");
 		}
-		sql += "  order by a.identificador, a.codigo";
+		if (ambito == TypeAmbito.ENTIDAD) {
+			sql.append(" AND a.entidad.codigo = :idEntidad ");
+		}
+		if (StringUtils.isNotBlank(pFiltro)) {
+			sql .append( "  AND (LOWER(a.descripcion) LIKE :filtro OR LOWER(a.identificador) LIKE :filtro) ");
+		}
+		sql.append("  order by a.identificador, a.codigo");
 
-		final Query query = entityManager.createQuery(sql);
+		final Query query = entityManager.createQuery(sql.toString());
+		query.setParameter("ambito", ambito.toString());
 
-		query.setParameter("idArea", pIdArea);
+		if (ambito == TypeAmbito.AREA) {
+			query.setParameter("idArea", idArea);
+		}
+		if (ambito == TypeAmbito.ENTIDAD) {
+			query.setParameter("idEntidad", idEntidad);
+		}
 
 		if (StringUtils.isNotBlank(pFiltro)) {
 			query.setParameter("filtro", "%" + pFiltro.toLowerCase() + "%");
@@ -248,36 +282,96 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 	}
 
 	@Override
-	public boolean existeConfiguracionAutenticacion(final String identificador, final Long idCodigo) {
-		final StringBuffer sql = new StringBuffer(
-				"select count(a) from JConfiguracionAutenticacion as a where a.identificador like :identificador");
-		if (idCodigo != null) {
-			sql.append(" and a.codigo != :codigo");
-		}
-		final Query query = entityManager.createQuery(sql.toString());
-		query.setParameter("identificador", identificador);
-		if (idCodigo != null) {
-			query.setParameter("codigo", idCodigo);
-		}
+	public boolean existeConfiguracionAutenticacion(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut) {
+		Query query = getQuery(true, ambito, identificador, codigoEntidad, codigoArea, codigoConfAut);
 		final Long cuantos = (Long) query.getSingleResult();
 		return cuantos != 0l;
 	}
 
 	@Override
-	public ConfiguracionAutenticacion getConfiguracionAutenticacion(String identificador, Long codArea) {
-		ConfiguracionAutenticacion config = null;
-		final StringBuffer sql = new StringBuffer(
-				"select a from JConfiguracionAutenticacion as a where a.identificador like :identificador and a.area.codigo = :codArea");
+	public ConfiguracionAutenticacion getConfiguracionAutenticacion(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut) {
+		Query query = getQuery(false, ambito, identificador, codigoEntidad, codigoArea, codigoConfAut);
+		final List<JConfiguracionAutenticacion> confAuts = query.getResultList();
+		final ConfiguracionAutenticacion confAut;
+		if (confAuts == null || confAuts.isEmpty()) {
+			confAut = null;
+		} else {
+			confAut = confAuts.get(0).toModel();
+		}
+		return confAut;
+	}
+
+	private Query getQuery (boolean isTotal, TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut) {
+		final StringBuilder sql = new StringBuilder("select ");
+		if (isTotal) {
+			sql.append(" count(d) ");
+		} else {
+			sql.append(" d ");
+		}
+		sql.append(" from JConfiguracionAutenticacion d where d.ambito like :ambito ");
+		if (ambito == TypeAmbito.AREA) {
+			sql.append(" AND d.area.codigo = :codigoArea");
+		}
+		if (ambito == TypeAmbito.ENTIDAD) {
+			sql.append(" AND d.entidad.codigo = :codigoEntidad");
+		}
+		if (identificador != null && !identificador.isEmpty()) {
+			sql.append(" AND d.identificador = :identificador");
+		}
+		if (codigoConfAut != null) {
+			sql.append(" AND d.codigo != :codigoConfAut");
+		}
 
 		final Query query = entityManager.createQuery(sql.toString());
-		query.setParameter("identificador", identificador);
-		query.setParameter("codArea", codArea);
-
-		final List<JConfiguracionAutenticacion> configs =  query.getResultList();
-		if (configs != null && !configs.isEmpty()) {
-			config = configs.get(0).toModel();
+		query.setParameter("ambito", ambito.toString());
+		if (ambito == TypeAmbito.AREA) {
+			query.setParameter("codigoArea", codigoArea);
 		}
-		return config;
+		if (ambito == TypeAmbito.ENTIDAD) {
+			query.setParameter("codigoEntidad", codigoEntidad);
+		}
+		if (identificador != null && !identificador.isEmpty()) {
+			query.setParameter("identificador", identificador);
+		}
+		if (codigoConfAut != null) {
+			query.setParameter("codigoConfAut", codigoConfAut);
+		}
+
+
+		return query;
+	}
+
+	@Override
+	public List<ConsultaGeneral> listar(String filtro, TypeIdioma idioma, Long idEntidad, Long idArea,
+			boolean checkAmbitoGlobal, boolean checkAmbitoEntidad, boolean checkAmbitoArea) {
+		final List<ConsultaGeneral> listaConfiguraciones = new ArrayList<>();
+		StringBuilder sql = new StringBuilder("select a from JConfiguracionAutenticacion as a");
+
+		sql.append(" where a.ambito in (:ambitos)");
+		if (StringUtils.isNotBlank(filtro)) {
+			sql .append( "  AND (LOWER(a.descripcion) LIKE :filtro OR LOWER(a.identificador) LIKE :filtro) ");
+		}
+		sql .append( "  order by a.identificador, a.codigo");
+
+		List<String> ambitos = new ArrayList<>();
+		if (checkAmbitoGlobal) { ambitos.add(TypeAmbito.GLOBAL.toString()); }
+		if (checkAmbitoEntidad) { ambitos.add(TypeAmbito.ENTIDAD.toString()); }
+		if (checkAmbitoArea) { ambitos.add(TypeAmbito.AREA.toString()); }
+
+		final Query query = entityManager.createQuery(sql.toString());
+		query.setParameter("ambitos", ambitos);
+
+		if (StringUtils.isNotBlank(filtro)) {
+			query.setParameter("filtro", "%" + filtro.toLowerCase() + "%");
+		}
+
+		final List<JConfiguracionAutenticacion> results = query.getResultList();
+		if (results != null && !results.isEmpty()) {
+			for (final JConfiguracionAutenticacion jConfiguracionAutenticacion : results) {
+				listaConfiguraciones.add(jConfiguracionAutenticacion.toModelConsultaGeneral());
+			}
+		}
+		return listaConfiguraciones;
 	}
 
 }

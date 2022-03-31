@@ -190,7 +190,7 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 			accionPaso = accionDescargarJustificantePago;
 			break;
 		default:
-			throw new AccionPasoNoExisteException("No existe acción " + pAccionPaso + " en el paso pagar");
+			throw new AccionPasoNoExisteException("No existeix acció " + pAccionPaso + " a la passa pagar");
 		}
 
 		final RespuestaEjecutarAccionPaso respuesta = accionPaso.ejecutarAccionPaso(pDatosPaso, pDpp, pAccionPaso,
@@ -307,7 +307,7 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 
 		if (pPagoDef.getScriptPago() == null) {
 			throw new ErrorConfiguracionException(
-					"No se ha especificado script de pago para el pago " + pPagoDef.getIdentificador());
+					"No s'ha especificat script de pagament pel pagagament " + pPagoDef.getIdentificador());
 		}
 
 		// Ejecutamos script
@@ -327,7 +327,7 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 			if (pVariablesFlujo.getNivelAutenticacion() == TypeAutenticacion.ANONIMO) {
 				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_DATOS_PAGO.name(),
 						pVariablesFlujo.getIdSesionTramitacion(), pPagoDef.getIdentificador(),
-						"No se ha especificado contribuyente y el trámite se ha iniciado de forma anónima");
+						"No s'ha especificat contribuent y el tràmit s'ha iniciat de forma anònima");
 			}
 			// Por defecto el contribyente sera el iniciador
 			dp.setContribuyente(UtilsFlujo.usuarioPersona(pVariablesFlujo.getUsuario()));
@@ -459,7 +459,7 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 		if (datosSesionPago.getPresentacion() != null
 				&& !detallePagoPasarela.getPresentacionesPermitidas().contains(datosSesionPago.getPresentacion())) {
 			throw new ErrorConfiguracionException(
-					"El pago se realizado mediante una forma de presentación que no está permitida");
+					"El pagament s'ha realitzat mitjançant una forma de presentació que no està permessa");
 		}
 		// - Rellenado
 		detallePagoPasarela.setRellenado(pDocumentoPersistencia.getEstado());
@@ -494,7 +494,7 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 		if (pDocDpp.getEstado() == TypeEstadoDocumento.RELLENADO_CORRECTAMENTE
 				|| (pDocDpp.getEstado() == TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE)) {
 			throw new ConfiguracionModificadaException(
-					"Existe un pago iniciado o ya realizado que ya no hay que realizarlo: " + pDocDpp.getId());
+					"Existeix un pagament iniciat o ja realitzat que ja no hi ha que realitzar-lo: " + pDocDpp.getId());
 		}
 
 		// Borramos documento del paso y ficheros asociados
@@ -538,7 +538,7 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 				break;
 			default:
 				throw new TipoNoControladoException(
-						"Tipo rellenado " + detallePago.getRellenado().name() + " no valido para pago");
+						"Tipus emplenat " + detallePago.getRellenado().name() + " no vàlid per pagament");
 			}
 		}
 		return marcadores;

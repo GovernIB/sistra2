@@ -37,6 +37,7 @@ import es.caib.sistramit.core.service.component.script.plugins.flujo.ResAnexosDi
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResAviso;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResDatosInicialesFormulario;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResFirmantes;
+import es.caib.sistramit.core.service.component.script.plugins.flujo.ResInstrucciones;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResModificacionFormularios;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResPago;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResParametrosFormulario;
@@ -65,6 +66,7 @@ import es.caib.sistramit.core.service.model.script.flujo.ResAnexosDinamicosInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResAvisoInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResDatosInicialesFormularioInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResFirmantesInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResInstruccionesInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResModificacionFormulariosInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResPagoInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResParametrosFormularioInt;
@@ -186,12 +188,12 @@ public final class ScriptExecImpl implements ScriptExec {
 			final String engineScript = configuracion
 					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SCRIPT_ENGINE);
 			if (StringUtils.isBlank(engineScript)) {
-				throw new ScriptException("No se ha establecido ScriptEngine");
+				throw new ScriptException("No s'ha establert ScriptEngine");
 			}
 
 			final ScriptEngine jsEngine = engineManager.getEngineByName(engineScript);
 			if (jsEngine == null) {
-				throw new ScriptException("No se ha podido obtener ScriptEngine: " + engineScript);
+				throw new ScriptException("No s'ha pogut obtenir ScriptEngine: " + engineScript);
 			}
 
 			for (final PluginScript plg : plugins) {
@@ -200,7 +202,7 @@ public final class ScriptExecImpl implements ScriptExec {
 			result = jsEngine.eval(sb.toString());
 		} catch (final ScriptException ex) {
 			throw new EngineScriptException(pTipoScript.name(), idSesion, pIdElemento, ex.getLineNumber(),
-					"Error ejecutando script: " + ex.getMessage(), ex);
+					"Error executant script: " + ex.getMessage(), ex);
 		}
 		return result;
 	}
@@ -227,7 +229,7 @@ public final class ScriptExecImpl implements ScriptExec {
 		// - Evaluamos si se ha marcado con error el script
 		final PlgError plgError = (PlgError) getPlugin(plugins, PlgErrorInt.ID);
 		if (plgError != null && plgError.isExisteError()) {
-			String msgError = "Script marcado con error (no se ha establecido mensaje error)";
+			String msgError = "Script marcat amb error (no s'ha establert missatge error)";
 			if (StringUtils.isNotBlank(plgError.getCodigoMensajeError())) {
 				msgError = ScriptUtils.calculaMensajeError(codigosError, plgError.getCodigoMensajeError(),
 						plgError.getParametrosMensajeError());
@@ -274,7 +276,7 @@ public final class ScriptExecImpl implements ScriptExec {
 		MensajeValidacion mensaje = null;
 		final PlgValidacion plgAviso = (PlgValidacion) getPlugin(plugins, PlgValidacionInt.ID);
 		if (plgAviso != null && plgAviso.isExisteAviso()) {
-			final String textoMensajeAviso = calcularMensaje(plgAviso.getCodigoMensajeAviso(),
+			final String textoMensajeAviso = ScriptUtils.calcularMensaje(plgAviso.getCodigoMensajeAviso(),
 					plgAviso.getParametrosMensajeAviso(), plgAviso.getTextoMensajeAviso(), codigosError);
 			mensaje = new MensajeValidacion(plgAviso.getCampo(), plgAviso.getTipoAviso(), textoMensajeAviso);
 		}
@@ -297,7 +299,7 @@ public final class ScriptExecImpl implements ScriptExec {
 		Object res = null;
 		// Obtenemos si el script devuelve resultado a traves de un plugin
 		// resultado
-		final String idPlgRes = getPluginResultadoFlujo(pTipoScript, result);
+		final String idPlgRes = getPluginResultadoFlujo(pTipoScript);
 		// Si es asi obtenemos plugin resultado
 		if (idPlgRes != null) {
 			res = getPlugin(plugins, idPlgRes);
@@ -317,10 +319,9 @@ public final class ScriptExecImpl implements ScriptExec {
 	 *
 	 * @param pTipoScript
 	 *                        Tipo scripto flujo
-	 * @param result
 	 * @return Id plugin resultado. Nulo si no devuelve plugin tipo resultado.
 	 */
-	private String getPluginResultadoFlujo(final TypeScriptFlujo pTipoScript, final Object result) {
+	private String getPluginResultadoFlujo(final TypeScriptFlujo pTipoScript) {
 		String res = null;
 		switch (pTipoScript) {
 		case SCRIPT_PARAMETROS_INICIALES:
@@ -364,6 +365,9 @@ public final class ScriptExecImpl implements ScriptExec {
 			break;
 		case SCRIPT_AVISO:
 			res = ResAvisoInt.ID;
+			break;
+		case SCRIPT_INSTRUCCIONES_DEBE_SABER:
+			res = ResInstruccionesInt.ID;
 			break;
 		default:
 			res = null;
@@ -420,6 +424,9 @@ public final class ScriptExecImpl implements ScriptExec {
 
 		// Creamos plugins especificos segun tipo script
 		switch (pTipoScript) {
+		case SCRIPT_INSTRUCCIONES_DEBE_SABER:
+			plugins.add(new ResInstrucciones());
+			break;
 		case SCRIPT_PARAMETROS_INICIALES:
 			plugins.add(new ResParametrosIniciales());
 			break;
@@ -566,33 +573,6 @@ public final class ScriptExecImpl implements ScriptExec {
 	}
 
 	/**
-	 * Calucula mensaje a mostrar.
-	 *
-	 * @param codigoMensajeError
-	 *                                             Codigo mensaje
-	 * @param parametrosMensajeError
-	 *                                             Parametros mensaje
-	 * @param textoMensajeErrorParticularizado
-	 *                                             Texto particularizado
-	 * @param pCodigosError
-	 *                                             Codigos de error
-	 * @return mensaje
-	 */
-	private String calcularMensaje(final String codigoMensajeError, final List<String> parametrosMensajeError,
-			final String textoMensajeErrorParticularizado, final Map<String, String> pCodigosError) {
-		String textoMensajeError;
-		if (StringUtils.isNotBlank(codigoMensajeError)) {
-			textoMensajeError = ScriptUtils.calculaMensajeError(pCodigosError, codigoMensajeError,
-					parametrosMensajeError);
-		} else if (StringUtils.isNotBlank(textoMensajeErrorParticularizado)) {
-			textoMensajeError = textoMensajeErrorParticularizado;
-		} else {
-			textoMensajeError = "";
-		}
-		return textoMensajeError;
-	}
-
-	/**
 	 * Crea plugin de acceso a formularios.
 	 *
 	 * @param pVariablesFlujo
@@ -642,7 +622,7 @@ public final class ScriptExecImpl implements ScriptExec {
 		// - Evaluamos si se ha marcado con error el script
 		final PlgError plgError = (PlgError) getPlugin(pPlugins, PlgErrorInt.ID);
 		if (plgError != null && plgError.isExisteError()) {
-			final String textoMensajeError = calcularMensaje(plgError.getCodigoMensajeError(),
+			final String textoMensajeError = ScriptUtils.calcularMensaje(plgError.getCodigoMensajeError(),
 					plgError.getParametrosMensajeError(), plgError.getTextoMensajeError(), pCodigosError);
 			// TODO Generar excepcion con los detalles (script, idsesion,...)
 			throw new ErrorScriptException(textoMensajeError);

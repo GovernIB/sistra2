@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import es.caib.sistramit.core.api.model.formulario.Captcha;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
+import es.caib.sistramit.core.api.model.formulario.ResultadoBuscadorDinamico;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
 import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
+import es.caib.sistramit.core.api.model.formulario.types.TypePalabraReservada;
 import es.caib.sistramit.core.api.service.FlujoFormularioInternoService;
 import es.caib.sistramit.frontend.controller.TramitacionController;
 import es.caib.sistramit.frontend.model.MensajeUsuario;
@@ -128,6 +131,32 @@ public final class FormularioController extends TramitacionController {
 
 	}
 
+	@RequestMapping("/buscadorDinamico.json")
+	public ModelAndView buscadorDinamico(@RequestParam("idCampo") final String idCampo,
+			@RequestParam("textoCampo") final String textoCampo, final HttpServletRequest request) {
+
+		final String idSesionFormulario = getIdSesionFormuarioActiva();
+
+		// Recuperamos valores pagina
+		final Map<String, String> valoresRequest = extraerValoresCampo(request);
+
+		// Deserializamos valores
+		final List<ValorCampo> lista = formService.deserializarValoresCampos(idSesionFormulario, valoresRequest);
+
+		// Invocamos al controlador para evaluar el cambio
+		final ResultadoBuscadorDinamico re = formService.buscadorDinamico(idSesionFormulario, idCampo, textoCampo,
+				lista);
+
+		// Devolvemos respuesta
+		final RespuestaJSON resp = new RespuestaJSON();
+		resp.setDatos(re);
+		resp.setMensaje(new MensajeUsuario("", ""));
+		resp.setEstado(TypeRespuestaJSON.SUCCESS);
+
+		return generarJsonView(resp);
+
+	}
+
 	/**
 	 * Guarda los datos de la página.
 	 *
@@ -201,6 +230,54 @@ public final class FormularioController extends TramitacionController {
 	}
 
 	/**
+	 * Método para generar imagen de un captcha (XDP).
+	 *
+	 * @param idCampo
+	 *                    idCampo
+	 * @return Imagen con el captcha
+	 */
+	@RequestMapping("/generarImagenCaptcha.html")
+	public ModelAndView generarImagenCaptcha(@RequestParam("id") final String idCampo) {
+		final String idSesionFormulario = getIdSesionFormuarioActiva();
+		final Captcha captcha = formService.generarImagenCaptcha(idSesionFormulario, idCampo);
+		return generarDownloadView(captcha.getFichero(), captcha.getContenido());
+	}
+
+	/**
+	 * Método para generar sonido de un captcha.
+	 *
+	 * @param idCampo
+	 *                    idCampo
+	 * @return sonido con el captcha
+	 */
+	@RequestMapping("/generarSonidoCaptcha.html")
+	public ModelAndView generarSonidoCaptcha(@RequestParam("id") final String idCampo) {
+		final String idSesionFormulario = getIdSesionFormuarioActiva();
+		final Captcha captcha = formService.generarSonidoCaptcha(idSesionFormulario, idCampo);
+		return generarDownloadView(captcha.getFichero(), captcha.getContenido());
+	}
+
+	/**
+	 * Método para regenerar captcha.
+	 *
+	 * @param idCampo
+	 *                    idCampo
+	 * @return Indica que se ha regenerado para que se vuelva a cargar
+	 */
+	@RequestMapping("/regenerarCaptcha.html")
+	public ModelAndView regenerarCaptcha(@RequestParam("id") final String idCampo) {
+		final String idSesionFormulario = getIdSesionFormuarioActiva();
+		formService.regenerarCaptcha(idSesionFormulario, idCampo);
+		final RespuestaJSON res = new RespuestaJSON();
+		res.setEstado(TypeRespuestaJSON.SUCCESS);
+		return generarJsonView(res);
+	}
+
+	// ----------------------------------------------------
+	// METODOS PRIVADOS
+	// ----------------------------------------------------
+
+	/**
 	 * Extrae valores campos de la request.
 	 *
 	 * @param request
@@ -212,7 +289,7 @@ public final class FormularioController extends TramitacionController {
 		final Map<String, String> valoresRequest = new LinkedHashMap<String, String>();
 		while (enumer.hasMoreElements()) {
 			final String enumString = enumer.nextElement();
-			if ("accion".equals(enumString) || "idCampo".equals(enumString)) {
+			if (TypePalabraReservada.fromString(enumString) != null) {
 				continue;
 			}
 			final String valor = request.getParameter(enumString);

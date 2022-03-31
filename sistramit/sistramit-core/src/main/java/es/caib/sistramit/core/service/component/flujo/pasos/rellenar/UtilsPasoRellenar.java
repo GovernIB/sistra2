@@ -67,8 +67,8 @@ public final class UtilsPasoRellenar {
 			if (f.getRellenado() == TypeEstadoDocumento.RELLENADO_CORRECTAMENTE) {
 				final RFormularioTramite formularioDef = UtilsSTG.devuelveDefinicionFormulario(pasoDef, f.getId());
 				if (formularioDef == null) {
-					throw new ErrorConfiguracionException("No existe formulario " + f.getId()
-							+ " en la definicion del paso " + pasoDef.getIdentificador());
+					throw new ErrorConfiguracionException("No existeix formulari " + f.getId()
+							+ " a la definició de la passa " + pasoDef.getIdentificador());
 				}
 
 				// TODO Ver datos firmantes

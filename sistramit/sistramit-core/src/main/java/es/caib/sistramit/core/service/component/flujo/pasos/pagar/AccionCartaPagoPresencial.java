@@ -102,13 +102,13 @@ public final class AccionCartaPagoPresencial implements AccionPaso {
 
 		// - El pago debe estar en estado pendiente de realizar
 		if (pPago.getRellenado() != TypeEstadoDocumento.SIN_RELLENAR) {
-			throw new AccionPasoNoPermitidaException("El pago ya ha sido iniciado");
+			throw new AccionPasoNoPermitidaException("El pagament ja ha estat iniciat");
 		}
 
 		// - Verificamos si se permite presentacion electronica
 		if (!pPago.getPresentacionesPermitidas().contains(TypePresentacion.PRESENCIAL)) {
 			throw new ErrorConfiguracionException(
-					"El pago se realizado mediante una forma de presentación que no está permitida");
+					"El pagament s'ha realitzat mitjançant una forma de presentació que no està permessa");
 		}
 
 	}

@@ -177,7 +177,7 @@ public final class UtilsSTG {
 				final TypeAvisoEntidad tipoAvisoEntidad = TypeAvisoEntidad.fromString(avisoPlataforma.getTipo());
 
 				if (tipoAvisoEntidad == null) {
-					throw new TipoNoControladoException("Tipo de aviso no controlado: " + avisoPlataforma.getTipo());
+					throw new TipoNoControladoException("Tipus d'avís no controlat: " + avisoPlataforma.getTipo());
 				}
 
 				switch (tipoAvisoEntidad) {
@@ -213,7 +213,7 @@ public final class UtilsSTG {
 					incluirAviso = !pasosRegistro.isEmpty();
 					break;
 				default:
-					throw new TipoNoControladoException("Tipo de aviso no controlado: " + avisoPlataforma.getTipo());
+					throw new TipoNoControladoException("Tipús d'avís no controlat: " + avisoPlataforma.getTipo());
 				}
 
 				if (incluirAviso) {
@@ -381,7 +381,7 @@ public final class UtilsSTG {
 		}
 		if (res == null) {
 			throw new ErrorConfiguracionException(
-					"No existe formulario con id " + idFormulario + " en paso " + definicionPaso.getIdentificador());
+					"No existeix formulari amb id " + idFormulario + " en passa " + definicionPaso.getIdentificador());
 		}
 		return res;
 	}
@@ -406,7 +406,7 @@ public final class UtilsSTG {
 		}
 		if (res == null) {
 			throw new ErrorConfiguracionException(
-					"No existe anexo con id " + idAnexo + " en paso " + definicionPaso.getIdentificador());
+					"No existeix annex amb id " + idAnexo + " en passa " + definicionPaso.getIdentificador());
 		}
 		return res;
 	}
@@ -430,7 +430,7 @@ public final class UtilsSTG {
 		}
 		if (res == null) {
 			throw new ErrorConfiguracionException(
-					"No existe pago con id " + id + " en paso " + definicionPaso.getIdentificador());
+					"No existeix pagament amb id " + id + " en passa " + definicionPaso.getIdentificador());
 		}
 		return res;
 	}
@@ -496,10 +496,10 @@ public final class UtilsSTG {
 			defFormulario = UtilsSTG.devuelveDefinicionFormulario((RPasoTramitacionRellenar) defPaso, idFormulario);
 		} else if (tipoPaso == TypePaso.CAPTURAR) {
 			// TODO Pendiente
-			throw new ErrorConfiguracionException("Tipo de paso no implementado");
+			throw new ErrorConfiguracionException("Tipus de passa no implementada");
 		} else {
 			throw new ErrorConfiguracionException(
-					"Se ha indicado un tipo de paso que no tiene formularios: " + defPaso.getTipo());
+					"S'ha indicat un tipus de passa que no té formularis: " + defPaso.getTipo());
 		}
 		return defFormulario;
 	}
@@ -576,6 +576,8 @@ public final class UtilsSTG {
 			res = TypeSelector.MULTIPLE;
 		} else if ("UNICA".equals(tipoSelector)) {
 			res = TypeSelector.UNICO;
+		} else if ("DINAMICO".equals(tipoSelector)) {
+			res = TypeSelector.DINAMICO;
 		}
 		return res;
 	}
@@ -633,6 +635,8 @@ public final class UtilsSTG {
 			res = TypeParametroDominio.PARAMETRO;
 		} else if ("S".equals(tipoParametroDominio)) {
 			res = TypeParametroDominio.SESION;
+		} else if ("B".equals(tipoParametroDominio)) {
+			res = TypeParametroDominio.BUSQUEDA;
 		}
 		return res;
 	}
@@ -649,7 +653,7 @@ public final class UtilsSTG {
 	public static String obtenerUrlGestorFormulariosExterno(final DefinicionTramiteSTG defTramite, final String idGFE) {
 		final RGestorFormularioExterno gfe = obtenerConfGFE(defTramite, idGFE);
 		if (StringUtils.isBlank(gfe.getUrl())) {
-			throw new ErrorConfiguracionException("No se encuentra url para gestor formularios: " + idGFE);
+			throw new ErrorConfiguracionException("No es troba url per gestor formularis: " + idGFE);
 		}
 		return gfe.getUrl();
 	}
@@ -716,7 +720,7 @@ public final class UtilsSTG {
 
 	/**
 	 * Obtiene configuración gestor formulario.
-	 * 
+	 *
 	 * @param defTramite
 	 *                       Definición trámite
 	 * @param idGFE
@@ -735,7 +739,7 @@ public final class UtilsSTG {
 			}
 		}
 		if (gfe == null) {
-			throw new ErrorConfiguracionException("No se encuentra gestor formularios: " + idGFE);
+			throw new ErrorConfiguracionException("No es troba gestor formularis: " + idGFE);
 		}
 		return gfe;
 	}

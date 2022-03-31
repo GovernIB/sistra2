@@ -242,7 +242,7 @@ $.fn.appEmplenaFormulari = function(options) {
 							consola("Formulari (carrega ticket): error des de JSON");
 							
 							imc_contenidor
-								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: data.url });
+								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: data.url });
 
 						}
 						
@@ -291,7 +291,7 @@ $.fn.appEmplenaFormulari = function(options) {
 							consola("Formulari (carrega dades): error des de JSON");
 							
 							imc_contenidor
-								.errors({ estat: FORMS_JSON.estado, titol: FORMS_JSON.mensaje.titulo, text: FORMS_JSON.mensaje.texto, url: FORMS_JSON.url });
+								.errors({ estat: FORMS_JSON.estado, titol: FORMS_JSON.mensaje.titulo, text: FORMS_JSON.mensaje.texto, debug: FORMS_JSON.mensaje.debug, url: FORMS_JSON.url });
 
 						}
 
@@ -411,7 +411,7 @@ $.fn.appEmplenaFormulari = function(options) {
 							.addClass("imc--sense-scroll");
 
 						$("#imc-forms-contenidor")
-							.appPopupTabula();
+							.appFormsPopupTabula();
 
 
 					}, 300);

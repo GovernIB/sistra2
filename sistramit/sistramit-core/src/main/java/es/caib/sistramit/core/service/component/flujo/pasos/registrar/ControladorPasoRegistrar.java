@@ -167,7 +167,7 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 			accionPaso = accionRegistrarTramite;
 			break;
 		default:
-			throw new AccionPasoNoExisteException("No existe acción " + pAccionPaso + " en el paso registrar");
+			throw new AccionPasoNoExisteException("No existeix acció " + pAccionPaso + " en la passa registrar");
 		}
 
 		final RespuestaEjecutarAccionPaso rp = accionPaso.ejecutarAccionPaso(pDatosPaso, pDpp, pAccionPaso, pParametros,

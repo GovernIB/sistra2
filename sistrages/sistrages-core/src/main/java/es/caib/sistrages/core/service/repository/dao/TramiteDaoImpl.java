@@ -34,6 +34,7 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.model.comun.TramiteSimpleFormulario;
 import es.caib.sistrages.core.api.model.comun.TramiteSimplePaso;
+import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeFlujo;
@@ -42,7 +43,6 @@ import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
 import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JDominio;
-import es.caib.sistrages.core.service.repository.model.JEntidad;
 import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFormateadorFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormulario;
@@ -809,30 +809,16 @@ public class TramiteDaoImpl implements TramiteDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Dominio> getDominioSimpleByTramiteId(final Long idTramiteVersion) {
-		final String sql = "Select d.codigo, d.identificador, d.descripcion, d.ambito From JDominio d JOIN d.versionesTramite t where t.codigo = :idTramiteVersion order by d.identificador asc";
+		final String sql = "Select d From JDominio d JOIN d.versionesTramite t where t.codigo = :idTramiteVersion order by d.identificador asc";
 
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
 
-		final List<Object[]> resultados = query.getResultList();
+		final List<JDominio> resultados = query.getResultList();
 		final List<Dominio> dominios = new ArrayList<>();
 		if (resultados != null && !resultados.isEmpty()) {
-			for (final Object[] resultado : resultados) {
-
-				final Dominio dominio = new Dominio();
-				if (resultado[0] != null) {
-					dominio.setCodigo(Long.valueOf(resultado[0].toString()));
-				}
-				if (resultado[1] != null) {
-					dominio.setIdentificador(resultado[1].toString());
-				}
-				if (resultado[2] != null) {
-					dominio.setDescripcion(resultado[2].toString());
-				}
-				if (resultado[3] != null) {
-					dominio.setAmbito(TypeAmbito.fromString(resultado[3].toString()));
-				}
-				dominios.add(dominio);
+			for (final JDominio resultado : resultados) {
+				dominios.add(resultado.toModel());
 			}
 		}
 
@@ -842,13 +828,28 @@ public class TramiteDaoImpl implements TramiteDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getTramiteDominiosIdentificador(final Long idTramiteVersion) {
-		final String sql = "Select d.identificador From JDominio d JOIN d.versionesTramite t where t.codigo = :idTramiteVersion order by d.identificador asc";
+		final String sql = "Select d From JDominio d JOIN d.versionesTramite t where t.codigo = :idTramiteVersion order by d.identificador asc";
 
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
 
-		final List<String> resultado = query.getResultList();
-
+		final List<JDominio> jdominios = query.getResultList();
+		final List<String> resultado = new ArrayList<>();
+		if (jdominios != null) {
+			for(JDominio jdominio : jdominios) {
+				if (jdominio.getAmbito().equals(TypeAmbito.GLOBAL.toString())) {
+					resultado.add("GLOBAL"+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+jdominio.getIdentificador());
+				} else if (jdominio.getAmbito().equals(TypeAmbito.ENTIDAD.toString())) {
+					String idEntidad = jdominio.getEntidad().getIdentificador();
+					resultado.add(idEntidad+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+jdominio.getIdentificador());
+				} else {
+					JArea jarea = jdominio.getArea();
+					String idArea = jarea.getIdentificador();
+					String idEntidad = jarea.getEntidad().getIdentificador();
+					resultado.add(idEntidad+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+idArea+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+jdominio.getIdentificador());
+				}
+			}
+		}
 		return resultado;
 	}
 
@@ -978,19 +979,37 @@ public class TramiteDaoImpl implements TramiteDao {
 	}
 
 	@Override
-	public Tramite getTramiteByIdentificador(final String identificador) {
+	public Tramite getTramiteByIdentificador(final String identificador,final Long idArea, String identificadorArea, Long codigoTramite) {
 
-		final String sql = "Select t From JTramite t where t.identificador = :identificador";
-		final Query query = entityManager.createQuery(sql);
+		final StringBuilder sql = new StringBuilder("Select t From JTramite t where t.identificador = :identificador");
+		if (idArea != null) {
+			sql.append(" and t.area.codigo = :idArea");
+		}
+		if (identificadorArea != null && !identificadorArea.isEmpty()) {
+			sql.append(" and t.area.identificador = :identificadorArea");
+		}
+		if (codigoTramite != null) {
+			sql.append(" and t.codigo = :codigoTramite");
+		}
 
+		final Query query = entityManager.createQuery(sql.toString());
 		query.setParameter("identificador", identificador);
+		if (idArea != null) {
+			query.setParameter("idArea", idArea);
+		}
+		if (identificadorArea != null && !identificadorArea.isEmpty()) {
+			query.setParameter("identificadorArea", identificadorArea);
+		}
+		if (codigoTramite != null) {
+			query.setParameter("codigoTramite", codigoTramite);
+		}
 
 		Tramite tramite = null;
 
 		@SuppressWarnings("unchecked")
 		final List<JTramite> tramites = query.getResultList();
 
-		if (tramites != null && tramites.size() > 0) {
+		if (tramites != null && !tramites.isEmpty()) {
 			tramite = tramites.get(0).toModel();
 		}
 
@@ -1016,11 +1035,14 @@ public class TramiteDaoImpl implements TramiteDao {
 	}
 
 	@Override
-	public TramiteVersion getTramiteVersionByNumVersion(final String idTramite, final int numeroVersion) {
-		final String sql = "Select t From JVersionTramite t where t.tramite.identificador = :idTramite and t.numeroVersion = :numeroVersion";
+	public TramiteVersion getTramiteVersionByNumVersion(String idEntidad, String idArea, final String idTramite, final int numeroVersion) {
+		final String sql = "Select t From JVersionTramite t JOIN t.tramite tram where tram.area.identificador = :idArea and tram.area.entidad.identificador =:idEntidad and tram.identificador = :idTramite and t.numeroVersion = :numeroVersion";
 		final Query query = entityManager.createQuery(sql);
 
 		query.setParameter("idTramite", idTramite);
+		query.setParameter("idArea", idArea);
+		query.setParameter("idEntidad", idEntidad);
+
 		query.setParameter("numeroVersion", numeroVersion);
 
 		TramiteVersion tramiteVersion = null;
@@ -1121,16 +1143,22 @@ public class TramiteDaoImpl implements TramiteDao {
 	}
 
 	@Override
-	public boolean checkIdentificadorRepetido(final String identificador, final Long codigo) {
-		String sql = "Select count(t) From JTramite t where t.identificador = :identificador";
+	public boolean checkIdentificadorRepetido(final String identificador, final Long codigo, final Long idArea) {
+		StringBuilder sql = new StringBuilder("Select count(t) From JTramite t where t.identificador = :identificador");
 		if (codigo != null) {
-			sql += " and t.codigo != :codigo";
+			sql.append(" and t.codigo != :codigo");
 		}
-		final Query query = entityManager.createQuery(sql);
+		if (idArea != null) {
+			sql.append(" and t.area.codigo = :idArea");
+		}
+		final Query query = entityManager.createQuery(sql.toString());
 
 		query.setParameter("identificador", identificador);
 		if (codigo != null) {
 			query.setParameter("codigo", codigo);
+		}
+		if (idArea != null) {
+			query.setParameter("idArea", idArea);
 		}
 
 		final Long cuantos = (Long) query.getSingleResult();
@@ -1543,12 +1571,13 @@ public class TramiteDaoImpl implements TramiteDao {
 	}
 
 	@Override
-	public void actualizarDominios(TramiteVersion tramiteVersion, final List<Dominio> dominios) {
+	public void actualizarDominios(TramiteVersion tramiteVersion, final List<ValorIdentificadorCompuesto> dominios) {
 		final JVersionTramite jversionTramite = entityManager.find(JVersionTramite.class, tramiteVersion.getCodigo());
 
-		for (Dominio dominio : dominios) {
-			final JDominio jdominio = entityManager.find(JDominio.class, dominio.getCodigo());
-			if (!jdominio.getVersionesTramite().contains(jversionTramite)) {
+		for (ValorIdentificadorCompuesto valdominio : dominios) {
+
+			final JDominio jdominio = getJDominio(valdominio);
+			if (jdominio != null && !jdominio.getVersionesTramite().contains(jversionTramite)) {
 				jdominio.getVersionesTramite().add(jversionTramite);
 				entityManager.merge(jdominio);
 			}
@@ -1557,11 +1586,27 @@ public class TramiteDaoImpl implements TramiteDao {
 		entityManager.flush();
 	}
 
-	private JDominio getJDominio(String identificadorDominio) {
+	private JDominio getJDominio(ValorIdentificadorCompuesto identificadorDominio) {
 		JDominio result = null;
-		final String sql = "SELECT d FROM JDominio d where d.identificador = :codigoDominio";
-		final Query query = entityManager.createQuery(sql);
-		query.setParameter("codigoDominio", identificadorDominio);
+		final StringBuilder sql = new StringBuilder("SELECT d FROM JDominio d where d.ambito = :ambito AND d.identificador = :identificador ");
+		if (identificadorDominio.getAmbito() == TypeAmbito.ENTIDAD) {
+			sql.append(" AND d.entidad.identificador = :identificadorEntidad");
+		}
+		if (identificadorDominio.getAmbito() == TypeAmbito.AREA) {
+			sql.append(" AND d.area.identificador = :identificadorArea");
+			sql.append(" AND d.area.entidad.identificador = :identificadorEntidad");
+		}
+		final Query query = entityManager.createQuery(sql.toString());
+		query.setParameter("ambito", identificadorDominio.getAmbito().toString());
+		query.setParameter("identificador", identificadorDominio.getIdentificador());
+		if (identificadorDominio.getAmbito() == TypeAmbito.ENTIDAD) {
+			query.setParameter("identificadorEntidad", identificadorDominio.getIdentificadorEntidad());
+		}
+		if (identificadorDominio.getAmbito() == TypeAmbito.AREA) {
+			query.setParameter("identificadorEntidad", identificadorDominio.getIdentificadorEntidad());
+			query.setParameter("identificadorArea", identificadorDominio.getIdentificadorArea());
+		}
+
 		final List<JDominio> list = query.getResultList();
 		if (!list.isEmpty()) {
 			result = list.get(0);

@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
@@ -32,6 +34,8 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
+import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
+import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
 import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
@@ -170,7 +174,7 @@ public class DialogDominioImportar extends DialogControllerBase {
 				}
 			}
 		} catch (final Exception e) {
-			LOGGER.error("Error extrayendo la info del zip.", e);
+			UtilJSF.loggearErrorFront("Error extrayendo la info del zip.", e);
 			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogDominioImportar.error.cargandoFichero"));
 			setMostrarPanelInfo(false);
@@ -189,23 +193,37 @@ public class DialogDominioImportar extends DialogControllerBase {
 			return;
 		}
 
-		final Dominio dominioActual = dominioService.loadDominio(data.getIdentificador());
-		FuenteDatos fdActual = null;
-		if (data.getTipo() == TypeDominio.FUENTE_DATOS) {
+		final Long idArea = (area == null) ? null : area.getCodigo();
 
-			if (dominioActual != null) {
+		if (TypeAmbito.fromString(ambito) != data.getAmbito()) {
+			filaDominio =  UtilCuadernoCarga.getFilaDominio(data, data, this.fuentesDatos, this.fuentesDatosContent,
+					this.fuentesDatos, UtilJSF.getIdEntidad(), idArea);
+			filaDominio.setMensaje(UtilJSF.getLiteral("dialogDominioImportar.error.dominioDiferenteAmbito"));
+			filaDominio.setEstado(TypeImportarEstado.ERROR);
+			filaDominio.setAccion(TypeImportarAccion.NADA);
+			List<TypeImportarAccion> acciones = new ArrayList<>();
+			acciones.add(TypeImportarAccion.NADA);
+			filaDominio.setAcciones(acciones );
+			filaDominio.setResultado(TypeImportarResultado.ERROR);
+			filaDominio.setVisibleBoton(false);
+			setMostrarPanelInfo(true);
+			setMostrarBotonImportar(false);
+			return;
+		}
+
+		final Dominio dominioActual = dominioService.loadDominioByIdentificador(TypeAmbito.fromString(ambito), data.getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
+		FuenteDatos fdActual = null;
+		if (dominioActual != null) {
+
+			if (dominioActual.getTipo() == TypeDominio.FUENTE_DATOS && dominioActual.getIdFuenteDatos() != null) {
 				fdActual = dominioService.loadFuenteDato(dominioActual.getIdFuenteDatos());
 			}
 
 			if (fdActual == null && this.fuentesDatos != null) {
-				fdActual = dominioService.loadFuenteDato(this.fuentesDatos.getIdentificador());
+				fdActual = dominioService.loadFuenteDato(TypeAmbito.fromString(ambito), this.fuentesDatos.getIdentificador(), UtilJSF.getIdEntidad(), area.getCodigo(), null);
 			}
 		}
 
-		Long idArea = null;
-		if (area != null) {
-			idArea = area.getCodigo();
-		}
 		filaDominio = UtilCuadernoCarga.getFilaDominio(data, dominioActual, this.fuentesDatos, this.fuentesDatosContent,
 				fdActual, UtilJSF.getIdEntidad(), idArea);
 

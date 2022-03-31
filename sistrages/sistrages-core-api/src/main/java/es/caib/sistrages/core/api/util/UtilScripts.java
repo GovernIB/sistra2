@@ -104,6 +104,9 @@ public class UtilScripts {
 		case SCRIPT_PERSONALIZACION_TRAMITE:
 			plugins.add(0, TypePluginScript.DATOS_PERSONALIZACION);
 			break;
+		case SCRIPT_DEBE_SABER:
+			plugins.add(0, TypePluginScript.DATOS_INSTRUCCIONES);
+			break;
 		case SCRIPT_DATOS_INICIALES_FORMULARIO:
 			plugins.add(0, TypePluginScript.DATOS_VALORESINICIALES);
 			break;
@@ -506,7 +509,6 @@ public class UtilScripts {
 //		return comentario.toString();
 //	}
 
-
 	public static String extraerComentarios(String texto) {
 		if (texto == null || texto.isEmpty()) {
 			return texto;
@@ -515,12 +517,13 @@ public class UtilScripts {
 		if (!texto.contains("//") && !texto.contains("/*")) {
 			return "";
 		}
-		//Calculamos las posiciones de comentario.
+		// Calculamos las posiciones de comentario.
 		StringBuilder comentario = new StringBuilder();
 
 		ClaseAyudaScripts claseScripts = ClaseAyudaScripts.getInstance();
 		claseScripts.setComentarioActivo(false);
-		//Lo hacemos por lineas ya que uno de los tipos de comentarios, solo va por lineas '//'
+		// Lo hacemos por lineas ya que uno de los tipos de comentarios, solo va por
+		// lineas '//'
 		for (String text : texto.split("\n")) {
 
 			claseScripts.reiniciar();
@@ -539,10 +542,11 @@ public class UtilScripts {
 		if (!texto.contains("//") && !texto.contains("/*")) {
 			return texto;
 		}
-		//Calculamos las posiciones de comentario.
+		// Calculamos las posiciones de comentario.
 		StringBuilder contenido = new StringBuilder();
 
-		//ComentarioActivo indica que está abierto '/*' y tenemos que buscar el cierre '*/'
+		// ComentarioActivo indica que está abierto '/*' y tenemos que buscar el cierre
+		// '*/'
 		ClaseAyudaScripts claseScripts = ClaseAyudaScripts.getInstance();
 		claseScripts.setComentarioActivo(false);
 		for (String text : texto.split("\n")) {
@@ -553,11 +557,13 @@ public class UtilScripts {
 
 		}
 
-		return  contenido.toString() ;
+		return contenido.toString();
 	}
 
 	/**
-	 * Método para ver si un identificador es utilizado dentro del script y es invocado.
+	 * Método para ver si un identificador es utilizado dentro del script y es
+	 * invocado.
+	 *
 	 * @param script
 	 * @param identificador
 	 * @return
@@ -568,13 +574,14 @@ public class UtilScripts {
 		}
 
 		final String contenido = UtilScripts.extraerContenido(script.getContenido());
-		Matcher matcher = Pattern.compile("PLUGIN_DOMINIOS.invocarDominio\\(\\'"+identificador+"\\'").matcher(contenido);
+		Matcher matcher = Pattern.compile("PLUGIN_DOMINIO.invocarDominio\\(\\'"+identificador+"\\'\\)")
+				.matcher(contenido);
 		return matcher.find();
 	}
 
-
 	/**
 	 * Clase de ayuda para poder
+	 *
 	 * @author Indra
 	 *
 	 */
@@ -583,7 +590,8 @@ public class UtilScripts {
 		/** Los atributos de comentario y texto **/
 		private StringBuilder comentario = new StringBuilder();
 		private StringBuilder texto = new StringBuilder();
-		//ComentarioActivo indica que está abierto '/*' y tenemos que buscar el cierre '*/'
+		// ComentarioActivo indica que está abierto '/*' y tenemos que buscar el cierre
+		// '*/'
 		private boolean comentarioActivo;
 
 		/** Obtener una instancia de la clase **/
@@ -617,16 +625,16 @@ public class UtilScripts {
 
 			if (claseAyuda.isComentarioActivo()) {
 				int posAstBarra = text.indexOf("*/");
-				//Si aun no ha encontrado el cierre, sigue en comentario
+				// Si aun no ha encontrado el cierre, sigue en comentario
 				if (posAstBarra == -1) {
 					claseAyuda.setComentario(text);
 					return claseAyuda;
 				} else {
-					String subtexto = text.substring(0, posAstBarra+2);
+					String subtexto = text.substring(0, posAstBarra + 2);
 					claseAyuda.setComentario(subtexto);
-					String textoSiguiente = text.substring(posAstBarra+2);
+					String textoSiguiente = text.substring(posAstBarra + 2);
 					claseAyuda.setComentarioActivo(false);
-					return getComentario (textoSiguiente, claseAyuda);
+					return getComentario(textoSiguiente, claseAyuda);
 				}
 			} else {
 				int posBarraAst = text.indexOf("/*");
@@ -634,10 +642,10 @@ public class UtilScripts {
 				if (posBarraAst == -1 && posDblBarra == -1) {
 					return claseAyuda;
 				} else {
-					//Es decir, que /* esta antes que //
+					// Es decir, que /* esta antes que //
 					if (posDblBarra == -1 || (posBarraAst != -1 && posBarraAst < posDblBarra)) {
 						claseAyuda.setComentarioActivo(true);
-						claseAyuda.setTexto(text.substring(0,posBarraAst));
+						claseAyuda.setTexto(text.substring(0, posBarraAst));
 						return getComentario(text.substring(posBarraAst), claseAyuda);
 					} else {
 						claseAyuda.setComentario(text.substring(posDblBarra));
@@ -661,13 +669,13 @@ public class UtilScripts {
 
 			if (claseAyuda.isComentarioActivo()) {
 				int posAstBarra = text.indexOf("*/");
-				//Si aun no ha encontrado el cierre, sigue en comentario
+				// Si aun no ha encontrado el cierre, sigue en comentario
 				if (posAstBarra == -1) {
 					return claseAyuda;
 				} else {
-					String textoSiguiente = text.substring( posAstBarra + 2);
+					String textoSiguiente = text.substring(posAstBarra + 2);
 					claseAyuda.setComentarioActivo(false);
-					return getTexto (textoSiguiente, claseAyuda);
+					return getTexto(textoSiguiente, claseAyuda);
 				}
 			} else {
 				int posBarraAst = text.indexOf("/*");
@@ -676,13 +684,13 @@ public class UtilScripts {
 					claseAyuda.setTexto(text);
 					return claseAyuda;
 				} else {
-					//Es decir, que /* esta antes que //
+					// Es decir, que /* esta antes que //
 					if (posDblBarra == -1 || (posBarraAst != -1 && posBarraAst < posDblBarra)) {
 						claseAyuda.setComentarioActivo(true);
-						claseAyuda.setTexto(text.substring(0,posBarraAst));
-						return getTexto(text.substring(posBarraAst+2), claseAyuda);
+						claseAyuda.setTexto(text.substring(0, posBarraAst));
+						return getTexto(text.substring(posBarraAst + 2), claseAyuda);
 					} else {
-						claseAyuda.setTexto(text.substring(0,posDblBarra));
+						claseAyuda.setTexto(text.substring(0, posDblBarra));
 						return claseAyuda;
 					}
 				}
@@ -695,6 +703,7 @@ public class UtilScripts {
 		public String getTexto() {
 			return texto.toString();
 		}
+
 		/**
 		 * @param texto the texto to set
 		 */
@@ -729,8 +738,6 @@ public class UtilScripts {
 		public void setComentario(String comentario) {
 			this.comentario.append(comentario);
 		}
- 	}
+	}
 
 }
-
-

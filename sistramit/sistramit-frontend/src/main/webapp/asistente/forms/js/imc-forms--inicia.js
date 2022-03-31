@@ -31,6 +31,7 @@ $.fn.appFormsErrorsGeneral = function(options) {
 			estat: false,
 			titol: txtFormDinErrorGeneralTitol,
 			text: txtFormDinErrorGeneralText,
+			debug: false,
 			url: APP_
 	}, options);
 	this.each(function(){
@@ -38,6 +39,7 @@ $.fn.appFormsErrorsGeneral = function(options) {
 			estat = settings.estat,
 			titol = settings.titol,
 			text = settings.text,
+			debug = settings.debug,
 			url = settings.url,
 			mostra = function() {
 
@@ -49,7 +51,7 @@ $.fn.appFormsErrorsGeneral = function(options) {
 				}
 
 				imc_forms_missatge
-					.appFormsMissatge({ accio: "error", titol: titol, text: text, alTancar: function() { document.location = url; } });
+					.appFormsMissatge({ accio: "error", titol: titol, text: text, debug: debug, alTancar: function() { document.location = url; } });
 
 			};
 		

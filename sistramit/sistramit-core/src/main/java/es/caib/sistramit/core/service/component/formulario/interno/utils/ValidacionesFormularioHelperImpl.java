@@ -103,10 +103,10 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 						break;
 					case LISTA_ELEMENTOS:
 						throw new TipoNoControladoException(
-								"Tipo de campo NO ESTA IMPLEMENTADO: " + configuracion.getTipo());
+								"Tipus de camp NO ESTÀ IMPLEMENTAT: " + configuracion.getTipo());
 					default:
 						// Tipo no permitido
-						throw new TipoNoControladoException("Tipo de campo no controlado: " + configuracion.getTipo());
+						throw new TipoNoControladoException("Tipus de camp no controlat: " + configuracion.getTipo());
 					}
 				}
 			}
@@ -189,6 +189,10 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 
 		return mensaje;
 	}
+
+	// ---------------------------------------------
+	// METODOS PRIVADOS
+	// ---------------------------------------------
 
 	/**
 	 * Valida campo texto en funcion de su configuracion.
@@ -401,7 +405,7 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 				break;
 			default:
 				throw new TipoNoControladoException(
-						"Tipo de separador numerico no controlado: " + opcionesCampo.getSeparador());
+						"Tipus de separador numèric no controlat: " + opcionesCampo.getSeparador());
 			}
 		}
 		return valor;
@@ -439,7 +443,7 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 							",", numeroDecimales);
 					break;
 				default:
-					throw new TipoNoControladoException("Tipo de separador numerico no controlado: " + tipoSeparador);
+					throw new TipoNoControladoException("Tipus de separador numèrico no controlat: " + tipoSeparador);
 				}
 			}
 		} catch (NumberFormatException | ValidacionTipoException ex) {

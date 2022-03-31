@@ -96,6 +96,25 @@ public class UtilsFormularioInterno {
 	}
 
 	/**
+	 * Obtiene lista ids campos captcha de la página.
+	 *
+	 * @param defPagina
+	 *                      Definición página
+	 * @return Lista ids campos captcha de la página
+	 */
+	public static List<String> devuelveListaCamposCaptcha(final RPaginaFormulario defPagina) {
+		final List<String> res = new ArrayList<>();
+		final List<RComponente> camposPag = devuelveListaCampos(defPagina);
+		for (final RComponente c : camposPag) {
+			final TypeCampo tipoCampo = UtilsSTG.traduceTipoCampo(c.getTipo());
+			if (tipoCampo == TypeCampo.CAPTCHA) {
+				res.add(c.getIdentificador());
+			}
+		}
+		return res;
+	}
+
+	/**
 	 * Devuelve componente la página.
 	 *
 	 * @param idComponente
@@ -137,7 +156,7 @@ public class UtilsFormularioInterno {
 		RPropiedadesCampo res = null;
 		final TypeCampo tipoCampo = UtilsSTG.traduceTipoCampo(pCampoDef.getTipo());
 		if (tipoCampo == null) {
-			throw new ErrorConfiguracionException("Componente " + pCampoDef.getIdentificador() + " no es un campo");
+			throw new ErrorConfiguracionException("Component " + pCampoDef.getIdentificador() + " no és un camp");
 		}
 		switch (tipoCampo) {
 		case TEXTO:
@@ -153,10 +172,11 @@ public class UtilsFormularioInterno {
 			res = ((RComponenteCampoOculto) pCampoDef).getPropiedadesCampo();
 			break;
 		case CAPTCHA:
-			// TODO Pendiente captcha
-			throw new TipoNoControladoException("Tipo campo no controlado: " + tipoCampo);
+			// No tiene props especificas, retornamos propiedades por defecto
+			res = new RPropiedadesCampo();
+			break;
 		default:
-			throw new TipoNoControladoException("Tipo campo no controlado: " + tipoCampo);
+			throw new TipoNoControladoException("Tipus campo no controlat: " + tipoCampo);
 		}
 		return res;
 	}
@@ -170,7 +190,15 @@ public class UtilsFormularioInterno {
 	 */
 	public static ValorCampo crearValorVacio(final RComponente pCampoDef) {
 		final TypeValor tipoValor = obtenerTipoValorCampo(pCampoDef);
-		final ValorCampo res = UtilsFormulario.crearValorVacio(pCampoDef.getIdentificador(), tipoValor);
+		ValorCampo res;
+		if (UtilsSTG.traduceTipoCampo(pCampoDef.getTipo()) == TypeCampo.VERIFICACION) {
+			// Si es check, valor vacío es no seleccionado
+			res = new ValorCampoSimple(pCampoDef.getIdentificador(),
+					((RComponenteCheckbox) pCampoDef).getValorNoChecked());
+		} else {
+			// Creamos valor vacío
+			res = UtilsFormulario.crearValorVacio(pCampoDef.getIdentificador(), tipoValor);
+		}
 		return res;
 	}
 
@@ -192,6 +220,7 @@ public class UtilsFormularioInterno {
 		if (tipoCampo == TypeCampo.SELECTOR) {
 			res.addDependenciasSelector(buscarDependenciasSelector((RComponenteSelector) pCampoDef));
 		}
+
 		// Script autorrellenable
 		if (UtilsSTG.existeScript(propsCampo.getScriptAutorrellenable())) {
 			res.addDependenciasAutorrellenable(buscarDependenciasScript(propsCampo.getScriptAutorrellenable()));
@@ -243,7 +272,7 @@ public class UtilsFormularioInterno {
 			}
 		}
 		if (res == null) {
-			throw new ErrorConfiguracionException("No existe pagina con id: " + identificadorPagina);
+			throw new ErrorConfiguracionException("No existeix pàgina amb id: " + identificadorPagina);
 		}
 		return res;
 	}
@@ -274,7 +303,7 @@ public class UtilsFormularioInterno {
 			}
 		}
 		if (res == null) {
-			throw new ErrorConfiguracionException("No existe pagina con id: " + identificadorPagina);
+			throw new ErrorConfiguracionException("No existeix pàgina amb id: " + identificadorPagina);
 		}
 		return res;
 	}
@@ -294,7 +323,7 @@ public class UtilsFormularioInterno {
 				pDatosSesion.getDatosInicioSesion().getIdPaso(), pDatosSesion.getDatosInicioSesion().getIdFormulario(),
 				pDatosSesion.getDefinicionTramite());
 		if (indiceDef > defFormulario.getFormularioInterno().getPaginas().size()) {
-			throw new ErrorConfiguracionException("No existe pagina con indice: " + indiceDef);
+			throw new ErrorConfiguracionException("No existeix pàgina amb índex: " + indiceDef);
 		}
 		final RPaginaFormulario res = defFormulario.getFormularioInterno().getPaginas()
 				.get(indiceDef - ConstantesNumero.N1);
@@ -331,16 +360,41 @@ public class UtilsFormularioInterno {
 	}
 
 	/**
+	 * Verifica si existe filtrado por texto busqueda.
+	 *
+	 * @param pCampoDef
+	 *
+	 * @return boolean
+	 */
+	public static boolean existeParametroDominioTextoBusqueda(final RComponenteSelector pCampoDef) {
+		boolean res = false;
+		if (UtilsSTG.traduceTipoListaValores(pCampoDef.getTipoListaValores()) == TypeListaValores.DOMINIO) {
+			final List<RParametroDominio> parametrosDef = pCampoDef.getListaDominio().getParametros();
+			if (parametrosDef != null) {
+				for (final RParametroDominio parDef : parametrosDef) {
+					final TypeParametroDominio tipoParametro = UtilsSTG.traduceTipoParametroDominio(parDef.getTipo());
+					if (tipoParametro == TypeParametroDominio.BUSQUEDA) {
+						res = true;
+					}
+				}
+			}
+		}
+		return res;
+	}
+
+	/**
 	 * Obtiene parametros dominio.
 	 *
 	 * @param pDatosSesion
-	 *                         Datos sesion formulario
+	 *                          Datos sesion formulario
 	 * @param pCampoDef
-	 *                         Definicion campo selector
+	 *                          Definicion campo selector
+	 * @param textoBusqueda
+	 *                          Texto búsqueda (para selectores dinámicos)
 	 * @return parametros
 	 */
 	public static ParametrosDominio obtenerParametrosDominio(final DatosSesionFormularioInterno pDatosSesion,
-			final RComponenteSelector pCampoDef) {
+			final RComponenteSelector pCampoDef, final String textoBusqueda) {
 
 		final ParametrosDominio parametros = new ParametrosDominio();
 
@@ -350,8 +404,8 @@ public class UtilsFormularioInterno {
 
 				final TypeParametroDominio tipoParametro = UtilsSTG.traduceTipoParametroDominio(parDef.getTipo());
 				if (tipoParametro == null) {
-					throw new ErrorConfiguracionException("Tipo parámetro " + parDef.getTipo()
-							+ " no soportado en campo " + pCampoDef.getIdentificador());
+					throw new ErrorConfiguracionException("Tipus paràmetre " + parDef.getTipo()
+							+ " no suportat en camp " + pCampoDef.getIdentificador());
 				}
 
 				switch (tipoParametro) {
@@ -367,7 +421,7 @@ public class UtilsFormularioInterno {
 				case PARAMETRO:
 					if (!pDatosSesion.getDatosInicioSesion().getParametros().existeParametro(parDef.getValor())) {
 						throw new TipoNoControladoException(
-								"No existe parámetro apertura formulario usado como para parametro dominio: "
+								"No existeix paràmetre apertura formulari usat com per paràmetre domini: "
 										+ parDef.getValor());
 					}
 					final String paramForm = pDatosSesion.getDatosInicioSesion().getParametros()
@@ -380,11 +434,18 @@ public class UtilsFormularioInterno {
 								pDatosSesion.getDatosInicioSesion().getIdioma());
 					} else {
 						throw new TipoNoControladoException(
-								"Propiedad para parametro dominio de tipo sesión no controlado: " + parDef.getValor());
+								"Propietat per paràmetre domini de tipus sessió no controlat: " + parDef.getValor());
 					}
 					break;
+				case BUSQUEDA:
+					if (UtilsSTG.traduceTipoSelector(pCampoDef.getTipoSelector()) != TypeSelector.DINAMICO) {
+						throw new TipoNoControladoException(
+								"Paràmetre text de cerca només permès per a selector dinàmic");
+					}
+					parametros.addParametro(parDef.getIdentificador(), textoBusqueda);
+					break;
 				default:
-					throw new TipoNoControladoException("Tipo de parametro dominio no controlado: " + parDef.getTipo());
+					throw new TipoNoControladoException("Tipus de paràmetre domini no controlat: " + parDef.getTipo());
 				}
 			}
 		}
@@ -430,7 +491,7 @@ public class UtilsFormularioInterno {
 				}
 				break;
 			default:
-				throw new TipoNoControladoException("Tipo de campo no controlado: " + valorCampo.getTipo());
+				throw new TipoNoControladoException("Tipus de camp no controlat: " + valorCampo.getTipo());
 			}
 		}
 		if (res == null) {
@@ -611,9 +672,11 @@ public class UtilsFormularioInterno {
 			p.getConfiguracion().add(SerializationUtils.clone(cc));
 		}
 		for (final ValorCampo vc : pagData.getValores()) {
-			p.getValores().add(SerializationUtils.clone(vc));
+			// No pasamos valores captcha
+			if (p.getConfiguracion(vc.getId()).getTipo() != TypeCampo.CAPTCHA) {
+				p.getValores().add(SerializationUtils.clone(vc));
+			}
 		}
-		p.setRecursos(SerializationUtils.clone(pagData.getRecursos()));
 		return p;
 	}
 
@@ -690,8 +753,11 @@ public class UtilsFormularioInterno {
 		case LISTA_ELEMENTOS:
 			tipoValor = TypeValor.LISTA_ELEMENTOS;
 			break;
+		case CAPTCHA:
+			tipoValor = TypeValor.SIMPLE;
+			break;
 		default:
-			throw new TipoNoControladoException("Tipo de campo " + tipoCampo + " no controlado");
+			throw new TipoNoControladoException("Tipus de camp " + tipoCampo + " no controlat");
 		}
 		return tipoValor;
 	}

@@ -132,14 +132,14 @@ public final class AccionIniciarPago implements AccionPaso {
         if (pPago.getRellenado() != TypeEstadoDocumento.SIN_RELLENAR
                 && pReiniciar == TypeSiNo.NO) {
             throw new AccionPasoNoPermitidaException(
-                    "El pago ya ha sido iniciado");
+                    "El pagament ja ha estat iniciat");
         }
 
         // - Verificamos si se permite presentacion electronica
         if (!pPago.getPresentacionesPermitidas()
                 .contains(TypePresentacion.ELECTRONICA)) {
             throw new ErrorConfiguracionException(
-                    "El pago se realizado mediante una forma de presentación que no está permitida");
+                    "El pagament s'ha realitzat mitjançant una forma de presentació que no està permessa");
         }
 
     }

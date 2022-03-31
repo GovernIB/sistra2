@@ -41,11 +41,11 @@
 						</p:selectOneMenu>
 	         		</h:column>
 
-					<h:column>
+					<h:column rendered="#{dialogParametrosDominio.data.tipo != TypeParametroDominio.BUSQUEDA}">
 						<p:outputLabel for="valor" value="#{msg['dialogParametrosDominioCIN.valor']}"  />
 					</h:column>
-					<h:column>
-				 		<p:inputText id="valor" value="#{dialogParametrosDominio.data.valor}" disabled="#{dialogParametrosDominio.isConsulta()}" required="#{dialogParametrosDominio.data.tipo != TypeParametroDominio.SESION}" maxlength="100" size="30" rendered="#{dialogParametrosDominio.data.tipo != TypeParametroDominio.SESION}" styleClass="w90" />
+					<h:column rendered="#{dialogParametrosDominio.data.tipo != TypeParametroDominio.BUSQUEDA}">
+				 		<p:inputText id="valor" value="#{dialogParametrosDominio.data.valor}" disabled="#{dialogParametrosDominio.isConsulta()}" required="#{dialogParametrosDominio.data.tipo != TypeParametroDominio.SESION and dialogParametrosDominio.data.tipo != TypeParametroDominio.BUSQUEDA}" maxlength="100" size="30" rendered="#{dialogParametrosDominio.data.tipo != TypeParametroDominio.SESION and dialogParametrosDominio.data.tipo != TypeParametroDominio.BUSQUEDA}" styleClass="w90" />
 				 		<p:selectOneMenu id="valorSesion" value="#{dialogParametrosDominio.data.valor}" rendered="#{dialogParametrosDominio.data.tipo == TypeParametroDominio.SESION}" styleClass="w90">
 						    <f:selectItems value="#{TypeParametroSesion.ALL_VALUES}" var="tipoParametroSesion" itemLabel="#{msg['typeSesion.' += tipoParametroSesion]}" itemValue="#{tipoParametroSesion.toString()}" />
 						</p:selectOneMenu>

@@ -199,7 +199,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 							ValidacionesTipo.getInstance().convierteBase64UrlSafe(resReg.getNumeroRegistro()));
 				} catch (final ValidacionTipoException e) {
 					throw new AccionPasoNoPermitidaException(
-							"No se ha podido convertir número registro a B64: " + resReg.getNumeroRegistro());
+							"No s'ha pogut convertir número registre a B64: " + resReg.getNumeroRegistro());
 				}
 				plantilla = StringUtils.replace(plantilla, "${URL_SEDE}", urlSede);
 				plantilla = StringUtils.replace(plantilla, "${URL_CARPETA}", urlCarpeta);
@@ -258,13 +258,13 @@ public final class AccionRegistrarTramite implements AccionPaso {
 
 		// El paso debe estar en un estado valido para registrar
 		if (pDipa.getEstado() != TypeEstadoPaso.PENDIENTE) {
-			throw new AccionPasoNoPermitidaException("El paso no esta en un estado valido para registrar");
+			throw new AccionPasoNoPermitidaException("La passa no està en un estat vàlid per registrar");
 		}
 
 		// Como se ha iniciado sesión registro deberá estar en estado reintentar
 		if (detallePasoRegistrar.getReintentar() == TypeSiNo.NO) {
 			throw new AccionPasoNoPermitidaException(
-					" No se ha iniciado sesión registro y no está en estado reintentar");
+					" No s'ha iniciat sessió registre i no està en estat reintentar");
 		}
 
 	}
@@ -306,7 +306,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 				try {
 					asientoStr = JSONUtil.toJSON(asientoDebug);
 				} catch (final JSONUtilException e) {
-					asientoStr = "Error al serializar info asiento: " + e.getMessage();
+					asientoStr = "Error al serialitzar info seient: " + e.getMessage();
 				}
 				final ListaPropiedades listaPropiedades = new ListaPropiedades();
 				listaPropiedades.addPropiedad(TypeParametroEvento.REGISTRO_ASIENTOREGISTRO.toString(), asientoStr);
@@ -373,7 +373,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			detallePasoRegistrar.setReintentar(TypeSiNo.SI);
 			break;
 		default:
-			throw new TipoNoControladoException("Tipo de resultado registro no controlado: " + resReg.getResultado());
+			throw new TipoNoControladoException("Tipus de resultat registre no controlat: " + resReg.getResultado());
 		}
 	}
 
@@ -428,7 +428,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			dao.establecerDatosDocumento(pDipa.getIdSesionTramitacion(), pDipa.getIdPaso(), docAsientoDpp);
 			break;
 		default:
-			throw new TipoNoControladoException("Tipo de resultado registro no controlado: " + resReg.getResultado());
+			throw new TipoNoControladoException("Tipus de resultat registre no controlat: " + resReg.getResultado());
 		}
 	}
 
@@ -555,7 +555,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			// Debe ser electronico
 			if (dd.getPresentacion() != TypePresentacion.ELECTRONICA) {
 				throw new ErrorConfiguracionException(
-						"Un formulario no puede tener presentación presencial: " + dd.getId());
+						"Un formulari no pot tenir presentació presencial: " + dd.getId());
 			}
 
 			// XML formulario
@@ -716,7 +716,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			res = TypeFirmaAsiento.FIRMA_ATTACHED;
 			break;
 		default:
-			throw new TipoNoControladoException("Tipo firma no controlado: " + typeFirmaDigital);
+			throw new TipoNoControladoException("Tipus firma no controlat: " + typeFirmaDigital);
 		}
 		return res;
 	}
@@ -766,7 +766,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			res = TypeValidez.ORIGINAL;
 			break;
 		default:
-			throw new TipoNoControladoException("Tipo de documento no soportado para registro: " + tipoDocumento);
+			throw new TipoNoControladoException("Tipus de document no suportat per registre: " + tipoDocumento);
 		}
 		return res;
 	}
@@ -789,7 +789,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		} else if (NifUtils.esNifPersonaFisica(datosInteresado.getNif())) {
 			tipoDocumento = TypeDocumentoIdentificacion.NIF;
 		} else {
-			throw new TipoNoControladoException("Tipo de identificación no controlado");
+			throw new TipoNoControladoException("Tipus d'identificació no controlat");
 		}
 
 		final Interesado interesado = new Interesado();
@@ -843,7 +843,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 						plantilla = new String(contenidoFic, Constantes.UTF8);
 					} catch (final IOException e) {
 						throw new AccionPasoNoPermitidaException(
-								"Error al acceder a plantilla finalizacion registro " + pathFile, e);
+								"Error al accedir a plantilla finalització registre " + pathFile, e);
 					}
 				}
 			}

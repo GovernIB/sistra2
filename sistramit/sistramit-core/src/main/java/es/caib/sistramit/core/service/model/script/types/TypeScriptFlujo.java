@@ -8,6 +8,10 @@ package es.caib.sistramit.core.service.model.script.types;
  */
 public enum TypeScriptFlujo implements TypeScript {
 	/**
+	 * Script de texto Debe saber.
+	 */
+	SCRIPT_INSTRUCCIONES_DEBE_SABER,
+	/**
 	 * Script de parametros iniciales del trámite.
 	 */
 	SCRIPT_PARAMETROS_INICIALES,

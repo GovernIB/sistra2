@@ -24,7 +24,6 @@ var APP_TIMEOUT_RT = ${configuracion.timeoutAjaxRegistro};
 
 // configuració de URLs
 
-
 var	APP_ = "${configuracion.url}/asistente/"
 	,APP_SERVIDOR = "${configuracion.url}/asistente/";
 
@@ -93,8 +92,13 @@ var APP_FORMS_URL_DINAMICA = "s"
 	,APP_FORM_AVALUA_CAMP = APP_SERVIDOR + "fm/evaluarCambioCampo.json"
 	,APP_FORMS_CAPTCHA = APP_SERVIDOR + "fm/generarImagenCaptcha.html"
 	,APP_FORMS_CAPTCHA_REGENERA = APP_SERVIDOR + "fm/regenerarCaptcha.html"
-	,APP_FORMS_CAPTCHA_REPRODUIX = ""
+	,APP_FORMS_CAPTCHA_REPRODUIX = APP_SERVIDOR + "fm/generarSonidoCaptcha.html"
 	,APP_FORM_PAG_ACTUAL = APP_SERVIDOR + "fm/cargarPaginaActual.json"
 	,APP_FORM_PAG_ANTERIOR = APP_SERVIDOR + "fm/cargarPaginaAnterior.json"
-	,APP_FORM_DESAR_SORTIR = APP_SERVIDOR + "fm/guardarSalirPagina.json";
+	,APP_FORM_DESAR_SORTIR = APP_SERVIDOR + "fm/guardarSalirPagina.json"
+	,APP_FORM_SELECTOR_AJAX = APP_SERVIDOR + "fm/buscadorDinamico.json";
 
+
+/* configuracion iframe firma */
+var APP_SIGNATURA_IFRAME_WIDTH = ${configuracion.iframeFirmaWidth}
+	,APP_SIGNATURA_IFRAME_HEIGHT = ${configuracion.iframeFirmaHeight};

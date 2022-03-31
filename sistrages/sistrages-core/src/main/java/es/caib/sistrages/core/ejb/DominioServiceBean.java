@@ -48,12 +48,6 @@ public class DominioServiceBean implements DominioService {
 		return dominioService.loadDominio(codDominio);
 	}
 
-	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public Dominio loadDominio(final String identificadorDominio) {
-		return dominioService.loadDominio(identificadorDominio);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 *
@@ -239,8 +233,8 @@ public class DominioServiceBean implements DominioService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public FuenteDatos loadFuenteDato(final String idFuenteDato) {
-		return dominioService.loadFuenteDato(idFuenteDato);
+	public FuenteDatos loadFuenteDato(final TypeAmbito ambito, final String identificador, final Long codigoEntidad, final Long codigoArea, final Long codigoFD) {
+		return dominioService.loadFuenteDato(ambito, identificador, codigoEntidad, codigoArea, codigoFD);
 	}
 
 	@Override
@@ -297,6 +291,37 @@ public class DominioServiceBean implements DominioService {
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<Dominio> getDominiosByIdentificador(List<String> identificadoresDominio,  final Long idEntidad, final Long idArea) {
 		return dominioService.getDominiosByIdentificador(identificadoresDominio, idEntidad, idArea);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public boolean existeDominioByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
+			Long codigoArea, Long codigoDominio) {
+		return dominioService.existeDominioByIdentificador( ambito,  identificador,  codigoEntidad,
+				 codigoArea,  codigoDominio);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public Dominio loadDominioByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
+			Long codigoArea, Long codigoDominio) {
+		return dominioService.loadDominioByIdentificador( ambito,  identificador,  codigoEntidad,
+				 codigoArea,  codigoDominio);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public Dominio loadDominioByIdentificadorCompuesto(String identificador) {
+		return dominioService.loadDominioByIdentificadorCompuesto( identificador);
+
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public boolean existeFuenteDato(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea,
+			Long codigoFD) {
+		return dominioService.existeFuenteDato( ambito,  identificador,  codigoEntidad,
+				 codigoArea,  codigoFD);
 	}
 
 }

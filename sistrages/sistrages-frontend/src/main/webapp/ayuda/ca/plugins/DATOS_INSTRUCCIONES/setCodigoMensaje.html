@@ -1,0 +1,54 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_INSTRUCCIONES.setCodigoMensajeError(codigo)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_INSTRUCCIONES">DATOS_INSTRUCCIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_INSTRUCCIONES&metodo=setCodigoMensaje">setCodigoMensaje</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setCodigoMensaje(String codigo):void
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que permet recuperar la informació a partir dun codi, que haurà d'estar prèviament definit.</li>
+		<li>La informació es defineix a la pantalla de l'script, a la pestanya de missatges validació.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>codigo</b>: String amb l'identificador del missatge d'error.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>
+Posem per cas que volem referenciar des del script una informació, prèviament definida a la pestanya de missatges de validació, amb l'identificador 'CodFechas'.
+</p>
+<p>La informació es fixaria a nivell de script mitjançant el codi següent:</p>
+<p class="codigoScript">
+	DATOS_INSTRUCCIONES.setCodigoMensaje('CodFechas');
+</p>
+</body>
+</html>

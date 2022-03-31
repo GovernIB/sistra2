@@ -111,7 +111,7 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 			}
 
 		} catch (final RegistroPluginException e) {
-			LOGGER.error("Error obteniendo informacion de registro", e);
+			UtilJSF.loggearErrorFront("Error obteniendo informacion de registro", e);
 			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteImportarRegistro.registro.error"));
 		}
@@ -127,7 +127,7 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 			libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(), this.data.getOficina(),
 					TypeRegistro.REGISTRO_ENTRADA);
 		} catch (final RegistroPluginException e) {
-			LOGGER.error("Error obteniendo informacion de registro", e);
+			UtilJSF.loggearErrorFront("Error obteniendo informacion de registro", e);
 			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteImportarRegistro.registro.error"));
 		}

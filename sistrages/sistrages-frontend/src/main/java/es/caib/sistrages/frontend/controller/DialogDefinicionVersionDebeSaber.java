@@ -1,6 +1,8 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -9,11 +11,16 @@ import javax.inject.Inject;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.TramiteService;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
@@ -62,8 +69,7 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de propiedades.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -113,9 +119,7 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		if (TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.EDICION) {
-			result.setResult(data);
-		}
+		result.setResult(data);
 		UtilJSF.closeDialog(result);
 	}
 
@@ -128,6 +132,47 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
 	}
+
+	public void returnDialogoScriptDebeSaber(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+			case EDICION:
+				data.setScriptDebeSaber((Script) respuesta.getResult());
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Editar script
+	 */
+	public void editarScript(final String tipoScript, final Script script) {
+		final Map<String, String> maps = new HashMap<>();
+		maps.put(TypeParametroVentana.TIPO_SCRIPT_FLUJO.toString(),
+				UtilJSON.toJSON(TypeScriptFlujo.fromString(tipoScript)));
+		if (script != null) {
+			UtilJSF.getSessionBean().limpiaMochilaDatos();
+			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
+		}
+		String literal = "true";
+		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
+		maps.put(TypeParametroVentana.TRAMITEPASO.toString(), id);
+		maps.put(TypeParametroVentana.LITERAL_HTML.toString(), literal);
+
+		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 700);
+	}
+
+	/**
+	 * Retorno dialogo.
+	 *
+	 * @param event respuesta dialogo
+	 */
 
 	/**
 	 * Ayuda.
@@ -144,8 +189,7 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -159,8 +203,7 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final TramitePasoDebeSaber data) {
 		this.data = data;
@@ -182,8 +225,7 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idiomas
-	 *            the idiomas to set
+	 * @param idiomas the idiomas to set
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;

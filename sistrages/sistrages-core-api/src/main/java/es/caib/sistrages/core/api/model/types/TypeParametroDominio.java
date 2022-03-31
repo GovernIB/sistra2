@@ -15,7 +15,9 @@ public enum TypeParametroDominio {
 	/** Valor de un parámetro. */
 	PARAMETRO("P"),
 	/** Valor de una sesion. **/
-	SESION("S");
+	SESION("S"),
+	/** Texto de búsqueda **/
+	BUSQUEDA("B");
 
 	private String valor;
 

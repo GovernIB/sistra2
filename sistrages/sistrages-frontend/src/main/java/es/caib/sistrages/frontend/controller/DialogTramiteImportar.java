@@ -62,6 +62,7 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteRegistro;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
@@ -71,7 +72,6 @@ import es.caib.sistrages.core.api.model.types.TypeListaValores;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
-import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
@@ -130,10 +130,6 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/** Servicio. */
 	@Inject
 	private ComponenteService componenteService;
-
-	/** Servicio. */
-	@Inject
-	private FormularioExternoService gestorFormularioService;
 
 	/** Servicio. */
 	@Inject
@@ -321,7 +317,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 				}
 			}
 		} catch (final Exception e) {
-			LOGGER.error("Error extrayendo la info del zip.", e);
+			UtilJSF.loggearErrorFront("Error extrayendo la info del zip.", e);
 			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogTramiteImportar.error.fichero"));
 			setMostrarPanelInfo(false);
 			return;
@@ -387,7 +383,6 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		prepararFlujoGestores();
 
 		setMostrarPanelInfo(true);
-
 		checkTodoCorrecto();
 	}
 
@@ -397,31 +392,31 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 * @return
 	 */
 	public boolean isNingunError() {
-		if (filaEntidad == null || filaEntidad.getResultado() ==null || filaEntidad.getResultado().isError() || filaArea == null
-				|| filaArea.getResultado().isError()) {
+		if (filaEntidad == null || filaEntidad.getResultado() == null || filaEntidad.getResultado().isError() || filaArea == null
+				|| filaArea.getResultado() == null || filaArea.getResultado().isError()) {
 			return false;
 		}
 
-		if (filaTramite == null || filaTramite.getResultado() ==null || filaTramite.getResultado().isError() || filaTramiteVersion == null
-				|| filaTramiteVersion.getResultado().isError() || filaTramiteRegistro == null
-				|| filaTramiteRegistro.getResultado().isError()) {
+		if (filaTramite == null || filaTramite.getResultado() == null || filaTramite.getResultado().isError() || filaTramiteVersion == null
+				|| filaTramiteVersion.getResultado() == null || filaTramiteVersion.getResultado().isError() || filaTramiteRegistro == null
+				|| filaTramiteRegistro.getResultado() == null || filaTramiteRegistro.getResultado().isError()) {
 			return false;
 		}
 
 		for (final FilaImportarDominio fila : filasDominios) {
-			if (fila == null || fila.getResultado().isError()) {
+			if (fila == null || fila.getResultado() == null || fila.getResultado().isError()) {
 				return false;
 			}
 		}
 
 		for (final FilaImportarFormateador fila : filasFormateador) {
-			if (fila == null || fila.getResultado().isError()) {
+			if (fila == null || fila.getResultado() == null || fila.getResultado().isError()) {
 				return false;
 			}
 		}
 
 		for (final FilaImportarFormulario fila : filasFormulario) {
-			if (fila != null && fila.isCorrecto()) {
+			if (fila == null  || fila.getResultado() == null || fila.getResultado().isError()) {
 				return false;
 			}
 		}
@@ -434,35 +429,35 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 */
 	private void checkTodoCorrecto() {
 
-		if (filaEntidad == null || filaEntidad.getResultado().isErrorOrWarning() || filaArea == null
+		if (filaEntidad == null || filaEntidad.getResultado() == null ||  filaEntidad.getResultado().isErrorOrWarning() || filaArea == null
 				|| filaArea.getResultado().isErrorOrWarning()) {
 			setTodoCorrecto(false);
 			return;
 		}
 
-		if (filaTramite == null || filaTramite.getResultado().isErrorOrWarning() || filaTramiteVersion == null
-				|| filaTramiteVersion.getResultado().isErrorOrWarning() || filaTramiteRegistro == null
-				|| filaTramiteRegistro.getResultado().isErrorOrWarning()) {
+		if (filaTramite == null  || filaTramite.getResultado() == null || filaTramite.getResultado().isErrorOrWarning() || filaTramiteVersion == null
+				|| filaTramiteVersion.getResultado() == null || filaTramiteVersion.getResultado().isErrorOrWarning() || filaTramiteRegistro == null
+				|| filaTramiteRegistro.getResultado() == null || filaTramiteRegistro.getResultado().isErrorOrWarning()) {
 			setTodoCorrecto(false);
 			return;
 		}
 
 		for (final FilaImportarDominio fila : filasDominios) {
-			if (fila == null || fila.getResultado().isErrorOrWarning()) {
+			if (fila == null || fila.getResultado() == null || fila.getResultado().isErrorOrWarning()) {
 				setTodoCorrecto(false);
 				return;
 			}
 		}
 
 		for (final FilaImportarFormateador fila : filasFormateador) {
-			if (fila == null || fila.getResultado().isErrorOrWarning()) {
+			if (fila == null || fila.getResultado() == null || fila.getResultado().isErrorOrWarning()) {
 				setTodoCorrecto(false);
 				return;
 			}
 		}
 
 		for (final FilaImportarGestor fila : this.filasGestores) {
-			if (fila == null || fila.getResultado().isErrorOrWarning()) {
+			if (fila == null || fila.getResultado() == null || fila.getResultado().isErrorOrWarning()) {
 				setTodoCorrecto(false);
 				return;
 			}
@@ -533,11 +528,12 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		// Creamos las acciones.
 		final List<TypeImportarAccion> acciones = new ArrayList<>();
 		acciones.add(TypeImportarAccion.SELECCIONAR);
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+		if (UtilJSF.isRolAdministrador()) {
 			acciones.add(TypeImportarAccion.CREAR);
 		}
 
-		final Area areaActual = tramiteService.getAreaByIdentificador(area.getIdentificador());
+		final Entidad entidadPropia = entidadService.loadEntidad(UtilJSF.getIdEntidad());
+		final Area areaActual = tramiteService.getAreaByIdentificador(entidadPropia.getIdentificador(),area.getIdentificador());
 		if (areaActual == null) {
 
 			// Lo dejamos como pendiente
@@ -552,7 +548,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 				filaArea = FilaImportarArea.crearITerrorEntidadIncorrecta(area, areaActual,
 						UtilJSF.getLiteral("dialogTramiteImportar.error.distintaEntidad"));
 
-			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+			} else if (UtilJSF.isRolAdministrador()) {
 
 				// Si es adm. entidad, puede seleccionarlo sin problema
 				filaArea = FilaImportarArea.crearITseleccionOK(area, areaActual);
@@ -600,13 +596,16 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 */
 	private void prepararFlujoTramite() {
 
-		final Tramite tramiteActual = tramiteService.getTramiteByIdentificador(tramite.getIdentificador());
+		final Tramite tramiteActual;
 		if (filaArea.getAccion() == null) {
+			tramiteActual = null;
 			// Lo dejamos a error a la espera que realice una acción con
 			filaTramite = FilaImportarTramite.crearITerrorAreaSinSeleccionar(tramite, tramiteActual,
 					UtilJSF.getLiteral("dialogTramiteImportar.error.areanulo"));
 			return;
 		}
+
+		tramiteActual = tramiteService.getTramiteByIdentificador(tramite.getIdentificador(), filaArea.getArea().getCodigo(), null, null);
 
 		if (filaArea.getResultado() == null || filaArea.getResultado() == TypeImportarResultado.WARNING) {
 			// Lo dejamos a error a la espera que realice una acción con
@@ -740,7 +739,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 				try {
 					rellenarInfoRegistro();
 				} catch (final Exception e) {
-					LOGGER.error("Error intentando carga el plugin de registro al importar", e);
+					UtilJSF.loggearErrorFront("Error intentando carga el plugin de registro al importar", e);
 					addMessageContext(TypeNivelGravedad.ERROR,
 							UtilJSF.getLiteral("dialogTramiteImportar.error.pluginregistro"));
 					filaTramiteRegistro.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.pluginregistro"));
@@ -819,7 +818,11 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		this.filasDominios.clear();
 		for (final Map.Entry<Long, Dominio> entry : dominios.entrySet()) {
 			final Dominio dominio = entry.getValue();
-			final Dominio dominioActual = dominioService.loadDominio(dominio.getIdentificador());
+			Long idArea = null;
+			if (dominio.getAmbito() == TypeAmbito.AREA &&  this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
+				idArea = this.filaArea.getAreaActual().getCodigo();
+			}
+			final Dominio dominioActual = dominioService.loadDominioByIdentificador(dominio.getAmbito(), dominio.getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
 			FuenteDatos fd = null;
 			byte[] fdContent = null;
 			FuenteDatos fdActual = null;
@@ -832,11 +835,10 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			}
 
 			if (fdActual == null && fd != null) {
-				fdActual = dominioService.loadFuenteDato(fd.getIdentificador());
+				fdActual = dominioService.loadFuenteDato(fd.getAmbito(), fd.getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
 			}
 
 			String identificadorArea = null;
-			Long idArea = null;
 			if (this.filaArea != null && this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
 				identificadorArea = this.filaArea.getAreaActual().getIdentificador();
 				idArea = this.filaArea.getAreaActual().getCodigo();
@@ -845,8 +847,8 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			ConfiguracionAutenticacion configuracionAutenticacion = null;
 			if (dominio.getTipo() == TypeDominio.CONSULTA_REMOTA && dominio.getConfiguracionAutenticacion() != null
 					&& idArea != null) {
-				configuracionAutenticacion = configuracionAutenticacionService.getConfiguracionAutenticacion(
-						dominio.getConfiguracionAutenticacion().getIdentificador(), idArea);
+				configuracionAutenticacion = configuracionAutenticacionService.getConfiguracionAutenticacion(dominio.getAmbito(),
+						dominio.getConfiguracionAutenticacion().getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
 			}
 
 			final FilaImportarDominio fila = UtilImportacion.getFilaDominio(dominio, dominioActual, fd, fdContent,
@@ -969,20 +971,19 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		filasGestores.clear();
 		for (final Map.Entry<Long, GestorExternoFormularios> entry : gestores.entrySet()) {
 			final GestorExternoFormularios gestor = entry.getValue();
-
-			final GestorExternoFormularios gestorActual = gestorExternoService
-					.getFormularioExternoByIdentificador(gestor.getIdentificador());
-
 			String identificadorArea = null;
 			Long idArea = null;
 			if (this.filaArea != null && this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
 				identificadorArea = this.filaArea.getAreaActual().getIdentificador();
 				idArea = this.filaArea.getAreaActual().getCodigo();
 			}
+			final GestorExternoFormularios gestorActual = gestorExternoService
+					.getFormularioExternoByIdentificador(TypeAmbito.AREA, gestor.getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
+
 			ConfiguracionAutenticacion configuracionAut = null;
 			if (idArea != null && gestor != null && gestor.getConfiguracionAutenticacion() != null) {
-				configuracionAut = configuracionAutenticacionService.getConfiguracionAutenticacion(
-						gestor.getConfiguracionAutenticacion().getIdentificador(), idArea);
+				configuracionAut = configuracionAutenticacionService.getConfiguracionAutenticacion(TypeAmbito.AREA,
+						gestor.getConfiguracionAutenticacion().getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
 			}
 
 			if (gestorActual == null) {

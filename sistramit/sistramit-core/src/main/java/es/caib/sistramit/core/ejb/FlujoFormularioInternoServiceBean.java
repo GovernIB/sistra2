@@ -11,7 +11,9 @@ import javax.interceptor.Interceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import es.caib.sistramit.core.api.model.formulario.Captcha;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
+import es.caib.sistramit.core.api.model.formulario.ResultadoBuscadorDinamico;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
 import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
@@ -78,6 +80,27 @@ public class FlujoFormularioInternoServiceBean implements FlujoFormularioInterno
 	@Override
 	public SesionFormularioInfo obtenerInformacionFormulario(final String idSesionFormulario) {
 		return flujoFormularioInternoService.obtenerInformacionFormulario(idSesionFormulario);
+	}
+
+	@Override
+	public ResultadoBuscadorDinamico buscadorDinamico(final String idSesionFormulario, final String idCampo,
+			final String textoCampo, final List<ValorCampo> valores) {
+		return flujoFormularioInternoService.buscadorDinamico(idSesionFormulario, idCampo, textoCampo, valores);
+	}
+
+	@Override
+	public Captcha generarImagenCaptcha(final String idSesionFormulario, final String idCampo) {
+		return flujoFormularioInternoService.generarImagenCaptcha(idSesionFormulario, idCampo);
+	}
+
+	@Override
+	public Captcha generarSonidoCaptcha(final String idSesionFormulario, final String idCampo) {
+		return flujoFormularioInternoService.generarSonidoCaptcha(idSesionFormulario, idCampo);
+	}
+
+	@Override
+	public void regenerarCaptcha(final String idSesionFormulario, final String idCampo) {
+		flujoFormularioInternoService.regenerarCaptcha(idSesionFormulario, idCampo);
 	}
 
 }

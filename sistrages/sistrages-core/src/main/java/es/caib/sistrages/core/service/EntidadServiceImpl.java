@@ -443,4 +443,10 @@ public class EntidadServiceImpl implements EntidadService {
 			entidadDao.removePlantillaEmailFin(plantillaEntidad.getCodigo());
 		}
 	}
+
+	@Override
+	@NegocioInterceptor
+	public boolean existeEntidad(String identificador, Long codigo) {
+	 	return entidadDao.existeFormulario(identificador, codigo);
+	}
 }

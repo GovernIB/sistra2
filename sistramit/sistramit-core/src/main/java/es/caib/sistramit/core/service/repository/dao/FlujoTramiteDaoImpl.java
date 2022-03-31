@@ -89,7 +89,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		// Establecemos sesion tramitacion
 		final HSesionTramitacion hSesionTramitacion = findHSesionTramitacion(dpt.getIdSesionTramitacion());
 		if (hSesionTramitacion == null) {
-			throw new RepositoryException("No existe tramite: " + dpt.getIdSesionTramitacion());
+			throw new RepositoryException("No existeix tràmit: " + dpt.getIdSesionTramitacion());
 		}
 		hTramite.setSesionTramitacion(hSesionTramitacion);
 		// Establecemos fecha ultimo acceso
@@ -393,27 +393,51 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		return recuperarTramitesPersistenciaCriteria(pFiltro);
 	}
 
+	/**
+	 * Añade filtro a la where.
+	 *
+	 * @param hql
+	 *                   hql
+	 * @param filtro
+	 *                   filtro
+	 * @param        boolean
+	 *                   si ya existen parametros
+	 * @return hql
+	 */
+	private String addFiltroToWhere(String hql, final String filtro, final boolean existeParams) {
+		if (existeParams) {
+			hql += " and ";
+		}
+		hql += " " + filtro + " ";
+		return hql;
+	}
+
 	@Override
 	public List<TramiteFinalizado> recuperarTramitesFinalizados(final FiltroTramiteFinalizado pFiltro) {
 
 		final Map<String, Object> params = new LinkedHashMap<String, Object>();
 
 		String hql = "SELECT t FROM HTramiteFinalizado t WHERE ";
+		boolean existeParams = false;
 		if (pFiltro.getNif() != null) {
-			hql += "t.nifPresentador = :nif ";
+			hql = addFiltroToWhere(hql, "t.nifPresentador = :nif", existeParams);
 			params.put("nif", pFiltro.getNif());
+			existeParams = true;
 		}
 		if (pFiltro.getIdSesionTramitacion() != null) {
-			hql += "t.idSesionTramitacion = :idSesionTramitacion ";
+			hql = addFiltroToWhere(hql, "t.idSesionTramitacion = :idSesionTramitacion", existeParams);
 			params.put("idSesionTramitacion", pFiltro.getIdSesionTramitacion());
+			existeParams = true;
 		}
 		if (pFiltro.getFechaDesde() != null) {
-			hql += " and t.fechaFinalizacion >= :fechaDesde ";
+			hql = addFiltroToWhere(hql, "t.fechaFinalizacion >= :fechaDesde", existeParams);
 			params.put("fechaDesde", pFiltro.getFechaDesde());
+			existeParams = true;
 		}
 		if (pFiltro.getFechaHasta() != null) {
-			hql += " and t.fechaFinalizacion <= :fechaHasta ";
+			hql = addFiltroToWhere(hql, "t.fechaFinalizacion <= :fechaHasta", existeParams);
 			params.put("fechaHasta", pFiltro.getFechaHasta());
+			existeParams = true;
 		}
 		final Query query = entityManager.createQuery(hql);
 		for (final String paramName : params.keySet()) {
@@ -456,7 +480,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 
 			if (pFiltro.getFechaHasta() != null) {
 				predicate = builder.and(predicate,
-						builder.lessThanOrEqualTo(tableT.get("fechaInicio"), pFiltro.getFechaHasta()));
+						builder.lessThanOrEqualTo(tableT.get("fechaHasta"), pFiltro.getFechaHasta()));
 			}
 		}
 
@@ -471,7 +495,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		predicate = builder.and(predicate, builder.isFalse(tableT.get("purgaPendientePorPagoRealizado")));
 
 		// - Sin que se haya cumplido fecha caducidad
-		Predicate predicateFechaCaducidad = builder.lessThan(tableT.get("fechaCaducidad"), builder.currentTimestamp());
+		Predicate predicateFechaCaducidad = builder.lessThan(builder.currentTimestamp(), tableT.get("fechaCaducidad"));
 		predicateFechaCaducidad = builder.or(predicateFechaCaducidad, builder.isNull(tableT.get("fechaCaducidad")));
 		predicate = builder.and(predicate, predicateFechaCaducidad);
 
@@ -863,7 +887,8 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Busca sesion tramitacion.
 	 *
-	 * @param idSesionTramitacion id sesion tramitacion
+	 * @param idSesionTramitacion
+	 *                                id sesion tramitacion
 	 * @return sesion tramitacion
 	 */
 	private HSesionTramitacion findHSesionTramitacion(final String idSesionTramitacion) {
@@ -881,7 +906,8 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Busca tramite.
 	 *
-	 * @param idSesionTramitacion id sesion tramitacion
+	 * @param idSesionTramitacion
+	 *                                id sesion tramitacion
 	 * @return sesion tramitacion
 	 */
 	private HTramite findHTramite(final String idSesionTramitacion) {
@@ -899,13 +925,14 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Busca tramite y genera excepcion si no lo encuentra.
 	 *
-	 * @param idSesionTramitacion id sesion tramitacion
+	 * @param idSesionTramitacion
+	 *                                id sesion tramitacion
 	 * @return sesion tramitacion
 	 */
 	private HTramite getHTramite(final String pIdSesionTramitacion) {
 		final HTramite hTramite = findHTramite(pIdSesionTramitacion);
 		if (hTramite == null) {
-			throw new RepositoryException("No existe tramite: " + pIdSesionTramitacion);
+			throw new RepositoryException("No existeix tràmit: " + pIdSesionTramitacion);
 		}
 		return hTramite;
 	}
@@ -913,7 +940,8 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Busca pasos tramite.
 	 *
-	 * @param idSesionTramitacion id sesion tramitacion
+	 * @param idSesionTramitacion
+	 *                                id sesion tramitacion
 	 * @return pasos tramite
 	 */
 	@SuppressWarnings("unchecked")
@@ -927,7 +955,8 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Busca paso tramite.
 	 *
-	 * @param idSesionTramitacion id sesion tramitacion
+	 * @param idSesionTramitacion
+	 *                                id sesion tramitacion
 	 * @return paso tramite
 	 */
 	@SuppressWarnings("unchecked")
@@ -940,8 +969,8 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		HPaso res = null;
 		if (!results.isEmpty()) {
 			if (results.size() > ConstantesNumero.N1) {
-				throw new RepositoryException("Se han encontrado " + results.size() + " con id paso " + idPaso
-						+ " para id sesion tramitacion " + idSesionTramitacion);
+				throw new RepositoryException("S'ha trobat " + results.size() + " amb id passa " + idPaso
+						+ " per id sessió tramitació " + idSesionTramitacion);
 			}
 			res = results.get(0);
 		}
@@ -951,14 +980,15 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Busca paso tramite y genera excepción si no lo encuentra.
 	 *
-	 * @param idSesionTramitacion id sesion tramitacion
+	 * @param idSesionTramitacion
+	 *                                id sesion tramitacion
 	 * @return paso tramite
 	 */
 	private HPaso getHPaso(final String idSesionTramitacion, final String idPaso) {
 		final HPaso paso = findHPaso(idSesionTramitacion, idPaso);
 		if (paso == null) {
 			throw new RepositoryException(
-					"No se encuentra paso " + idPaso + " para id sesion tramitacion " + idSesionTramitacion);
+					"No es troba passa " + idPaso + " per id sessió tramitació " + idSesionTramitacion);
 		}
 		return paso;
 	}
@@ -966,7 +996,8 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Obtiene ficheros de las firmas de un documento.
 	 *
-	 * @param hdoc HDocumento
+	 * @param hdoc
+	 *                 HDocumento
 	 * @return ficheros de las firmas de un documento.
 	 */
 	private List<ReferenciaFichero> obtenerFirmasDocumento(final HDocumento hdoc) {
@@ -984,7 +1015,8 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Obtiene ficheros deun documento.
 	 *
-	 * @param hdoc HDocumento
+	 * @param hdoc
+	 *                 HDocumento
 	 * @return ficheros de un documento.
 	 */
 	private List<ReferenciaFichero> obtenerFicherosDocumento(final HDocumento hdoc) {
@@ -1009,7 +1041,8 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Método para Eliminar ficheros de la clase FlujoTramiteDaoImpl.
 	 *
-	 * @param ficheros Parámetro ficheros
+	 * @param ficheros
+	 *                     Parámetro ficheros
 	 */
 	private void eliminarFicheros(final List<ReferenciaFichero> ficheros) {
 		if (!ficheros.isEmpty()) {

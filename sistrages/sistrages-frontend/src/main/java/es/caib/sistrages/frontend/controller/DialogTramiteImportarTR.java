@@ -109,7 +109,7 @@ public class DialogTramiteImportarTR extends DialogControllerBase {
 						UtilJSF.getLiteral("dialogTramiteImportarTR.error.datosvacios"));
 				return;
 			}
-			if (tramiteService.checkIdentificadorRepetido(this.data.getIdentificador(), null)) {
+			if (tramiteService.checkIdentificadorRepetido(this.data.getIdentificador(), null, this.filaArea.getArea().getCodigo())) {
 				addMessageContext(TypeNivelGravedad.WARNING,
 						UtilJSF.getLiteral("dialogTramiteImportarTR.error.identificadorRepetido"));
 				return;

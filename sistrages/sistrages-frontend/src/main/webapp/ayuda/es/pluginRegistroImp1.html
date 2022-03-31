@@ -1,0 +1,93 @@
+<html>
+<head>
+<meta charset=UTF-8>
+<meta http-equiv="content-type" content="text/html; utf-8">
+<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+	<h1 class="stgH1">registro.regweb3.RegistroRegweb3Plugin</h1>
+	<p>En esta tabla se explican las diferentes propiedades de la implementación</p>
+	<h2 class="stgH2">Tabla</h2>
+	<table>
+		<tr>
+			<th><b>Código</b></th>
+			<th><b>Descripción</b></th>
+			<th><b>Ejemplo</b></th>
+		</tr>
+		<tr>
+			<td>endpoint.info</td>
+			<td>URL de informació de REGWEB3</td>
+			<td>https://dev.caib.es/regweb3/ws/v3/RegWebInfo</td>
+		</tr>
+		<tr>
+			<td>endpoint.asiento</td>
+			<td>URL per a registrar a REGWEB3</td>
+			<td>https://dev.caib.es/regweb3/ws/v3/RegWebAsientoRegistral</td>
+		</tr>
+		<tr>
+			<td>log.peticionesWS</td>
+			<td>Propiedad para mostrar el log de las peticiones al WebService</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>aplicacion.codigo</td>
+			<td> Codigo de aplicación </td>
+			<td>SISTRA2</td>
+		</tr>
+		<tr>
+			<td>aplicacion.version</td>
+			<td>Indica la versión de la aplicación</td>
+			<td>${config.sistra2.version}.${config.sistra2.version.patch}</td>
+		</tr>
+		<tr>
+			<td>usr</td>
+			<td>Usuario a autenticar</td>
+			<td>$sistra2_regweb</td>
+		</tr>
+		<tr>
+			<td>pwd</td>
+			<td>Contraseña del usuario a autenticar</td>
+			<td>sistra2_regwebc</td>
+		</tr>
+		<tr>
+			<td>insertarDocs</td>
+			<td>Indica si se tienen que enviar documentos</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>insertarDocs.internos</td>
+			<td>Indica si se tienen que enviar documentos internos</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>insertarDocs.formateados</td>
+			<td>Indica si se tienen que enviar documentos formateados</td>
+			<td>true</td>
+		</tr>
+		<tr>
+			<td>urlSeucaib</td>
+			<td>Enlace de seuCaib</td>
+			<td>http://caibter.indra.es/seucaib</td>
+		</tr>
+		<tr>
+			<td>wsdl.dir</td>
+			<td>Indica la ruta en la que se encuentran los WSDL </td>
+			<td>/app/caib/sistra/plugins/regweb3/FBIT</td>
+		</tr>
+		<tr>
+			<td>justificanteDESCARGA</td>
+			<td>Tipo de justificante de descarga que se genera</td>
+			<td>carpeta</td>
+		</tr>
+		<tr>
+			<td>timeout</td>
+			<td>Indica el timeout de los registros (en segundos)</td>
+			<td>3000</td>
+		</tr>
+		<tr>
+			<td>justificanteURL</td>
+			<td>Indica la ruta del justificante</td>
+			<td>/#/moduls/registres/p/${NUMERO_REGISTRO_B64URLSAFE}</td>
+		</tr>
+	</table>
+</html>

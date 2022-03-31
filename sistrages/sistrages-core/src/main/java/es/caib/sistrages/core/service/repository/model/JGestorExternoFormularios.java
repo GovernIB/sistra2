@@ -11,7 +11,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import es.caib.sistrages.core.api.model.ConsultaGeneral;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
+import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeConsultaGeneral;
 
 /**
  * JFormularioExterno
@@ -127,6 +131,13 @@ public class JGestorExternoFormularios implements IModelApi {
 		final GestorExternoFormularios formExterno = new GestorExternoFormularios();
 		formExterno.setCodigo(codigo);
 		formExterno.setIdentificador(this.getIdentificador());
+		//Como sólo es de tipo área, pues ya está claro el id. compuesto
+		JArea jarea = this.area;
+		if (jarea != null) {
+			String idArea = jarea.getIdentificador();
+			String idEntidad = jarea.getEntidad().getIdentificador();
+			formExterno.setIdentificadorCompuesto(idEntidad+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+idArea+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+this.identificador);
+		}
 		formExterno.setDescripcion(this.getDescripcion());
 		formExterno.setUrl(this.getUrl());
 		if (this.getConfiguracionAutenticacion() != null) {
@@ -166,6 +177,20 @@ public class JGestorExternoFormularios implements IModelApi {
 		} else {
 			this.setConfiguracionAutenticacion(JConfiguracionAutenticacion.fromModel(model.getConfiguracionAutenticacion()));
 		}
+	}
+
+	/** Devuelve el objeto consulta general **/
+	public ConsultaGeneral toModelConsultaGeneral() {
+		ConsultaGeneral consulta = new ConsultaGeneral();
+		consulta.setAmbito(TypeAmbito.AREA);
+		consulta.setCodigo(this.getCodigo());
+		consulta.setDescripcion(this.getDescripcion());
+		consulta.setIdentificador(this.getIdentificador());
+		consulta.setSubtipo("");
+		consulta.setTipo(TypeConsultaGeneral.GFE);
+		consulta.setArea(this.getArea().getIdentificador());
+		consulta.setIdArea(area.getCodigo());
+		return consulta;
 	}
 
 }

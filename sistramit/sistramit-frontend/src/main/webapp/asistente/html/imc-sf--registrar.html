@@ -22,6 +22,24 @@
 
 		<h4><span>{{txtInfoResum}}</span></h4>
 
+		<div class="imc--signans-info" aria-hidden="true">
+			<p>{{txtSignantsInfo_intro}}</p>
+			<ul>
+				<li class="imc--ogligatori">
+					<span>{{txtSignantsInfo_obligatori}}</span>
+				</li>
+				<li class="imc--opcional">
+					<span>{{txtSignantsInfo_opcional}}</span>
+				</li>
+				<li class="imc--requerit">
+					<span>{{txtSignantsInfo_requerida}}</span>
+				</li>
+				<li class="imc--completada">
+					<span>{{txtSignantsInfo_completada}}</span>
+				</li>
+			</ul>
+		</div>
+
 		{{if formularis}}
 		<h5><span>{{txtFormularis}}</span></h5>
 		
@@ -47,8 +65,9 @@
 						<p>{{if firmas|size|equals>1}}{{txtSignant}}{{else}}{{txtSignants}}{{/if}}:</p>
 						<ul>
 							{{firmas}}
+
 							{{if estadoFirma|equals>n}}
-							<li class="imc--per-signar" data-nif="{{firmante.nif}}">
+							<li class="imc--signant" data-signat="{{estadoFirma}}" data-nif="{{firmante.nif}}" data-obligatorietat="{{obligatoriedad}}" aria-label="{{if obligatoriedad|equals>s}}{{txtSignaturaOgligatoria}}{{else}}{{txtSignaturaOpcional}}{{/if}}">
 
 								<strong>
 									{{firmante.nombre}} ({{firmante.nif}})
@@ -57,7 +76,7 @@
 
 							</li>
 							{{else}}
-							<li class="imc--signat" data-nif="{{firmante.nif}}">
+							<li class="imc--signant" data-signat="{{estadoFirma}}" data-nif="{{firmante.nif}}" data-obligatorietat="{{obligatoriedad}}" aria-label="{{if obligatoriedad|equals>s}}{{txtSignaturaOgligatoria}}{{else}}{{txtSignaturaOpcional}}{{/if}}">
 
 								<strong>
 									{{firmante.nombre}} ({{firmante.nif}})
@@ -107,8 +126,9 @@
 						<p>{{if firmas|size|equals>1}}{{txtSignant}}{{else}}{{txtSignants}}{{/if}}:</p>
 						<ul>
 							{{firmas}}
+
 							{{if estadoFirma|equals>n}}
-							<li class="imc--per-signar" data-nif="{{firmante.nif}}">
+							<li class="imc--signant" data-signat="{{estadoFirma}}" data-nif="{{firmante.nif}}" data-obligatorietat="{{obligatoriedad}}" aria-label="{{if obligatoriedad|equals>s}}{{txtSignaturaOgligatoria}}{{else}}{{txtSignaturaOpcional}}{{/if}}">
 
 								<strong>
 									{{firmante.nombre}} ({{firmante.nif}})
@@ -117,7 +137,7 @@
 
 							</li>
 							{{else}}
-							<li class="imc--signat" data-nif="{{firmante.nif}}">
+							<li class="imc--signant" data-signat="{{estadoFirma}}" data-nif="{{firmante.nif}}" data-obligatorietat="{{obligatoriedad}}" aria-label="{{if obligatoriedad|equals>s}}{{txtSignaturaOgligatoria}}{{else}}{{txtSignaturaOpcional}}{{/if}}">
 
 								<strong>
 									{{firmante.nombre}} ({{firmante.nif}})
@@ -213,7 +233,7 @@
 <div class="imc-signatura" id="imc-signatura">
 	<div class="imc--c">
 
-		<button type="button" id="imc-bt-iframe-tanca"><span>{{txtPagamentTanca}}</span></button>
+		<button type="button" id="imc-bt-iframe-tanca"><span>{{txtSignaturaTanca}}</span></button>
 
 		<iframe id="imc-signatura-iframe" src="" scrolling="yes" frameborder="0"></iframe>
 
@@ -226,8 +246,6 @@
 	<div class="imc--c">
 
 		<div class="imc--lopd-contingut">
-			
-			<button type="button" class="imc-bt-capa-tanca" data-accio="lopd-tanca"><span>{{txtTanca}}</span></button>
 
 			<h2><span>{{txtTitolLOPD}}</span></h2>
 
@@ -252,6 +270,8 @@
 				{{/campsLOPD}}
 			</div>
 			{{/if}}
+
+			<button type="button" class="imc-bt-capa-tanca" data-accio="lopd-tanca"><span>{{txtTanca}}</span></button>
 
 		</div>
 

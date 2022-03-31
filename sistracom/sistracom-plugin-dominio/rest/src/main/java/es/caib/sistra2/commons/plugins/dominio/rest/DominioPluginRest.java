@@ -46,11 +46,16 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 	}
 
 	@Override
-	public ValoresDominio invocarDominio(final String idDominio, final String url,
+	public ValoresDominio invocarDominio(final String idCompuestoDominio, final String url,
 			final List<ParametroDominio> parametros, final String user, final String pass, final Long timeout)
 			throws DominioPluginException {
+
+		// Del identificador compuesto, solo nos quedamos con el idDominio
+		final String idDominio = idCompuestoDominio.substring(idCompuestoDominio.lastIndexOf(".") + 1);
+
+		// Recuperamos dominio según sea rest o soap (S1)
 		ValoresDominio retorno;
-		if (url.indexOf("[SISTRA1]") != -1 || url.endsWith("wsdl")) {
+		if (url.indexOf("[SOAP]") != -1 || url.endsWith("wsdl")) {
 			final String urlWs = getSistra1WsUrl(url);
 			final String soapAction = getSistra1WsSoapAction(url);
 			final boolean logCallsSistra1 = "true".equals(this.getProperty("logCallsSistra1"));
@@ -73,7 +78,7 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 
 	private String getSistra1WsUrl(final String url) {
 		// Elimina tags especiales configuracion S1
-		String res = StringUtils.replaceAll(url, "\\[SISTRA1\\]", "");
+		String res = StringUtils.replaceAll(url, "\\[SOAP\\]", "");
 		res = StringUtils.replaceAll(res, "\\[SOAP-ACTION=.*\\]", "");
 		return StringUtils.trim(res);
 	}
@@ -107,7 +112,7 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 
 			final String endpoint = getEndpoint(url);
 			bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpoint);
-			WsClientUtil.configurePort(bp, endpoint, user, pass, "BASIC", soapAction, (timeout*1000L), logCalls);
+			WsClientUtil.configurePort(bp, endpoint, user, pass, "BASIC", soapAction, timeout * 1000L, logCalls);
 
 			final es.caib.sistra2.commons.plugins.dominio.rest.cxf.ParametrosDominio parametrosWSDL = new es.caib.sistra2.commons.plugins.dominio.rest.cxf.ParametrosDominio();
 			if (parametros != null && !parametros.isEmpty()) {

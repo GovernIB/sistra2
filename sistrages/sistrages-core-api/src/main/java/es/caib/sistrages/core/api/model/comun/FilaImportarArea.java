@@ -261,14 +261,8 @@ public class FilaImportarArea extends FilaImportarBase {
 	 */
 	public static FilaImportarArea crearCCseleccionOK(final Area area, final Area areaActual) {
 
-		FilaImportarArea fila;
-		if (area.getDescripcion().equals(areaActual.getDescripcion())) {
-			fila = new FilaImportarArea(TypeImportarAccion.SELECCIONAR, TypeImportarExiste.EXISTE,
+		FilaImportarArea fila = new FilaImportarArea(TypeImportarAccion.SELECCIONAR, TypeImportarExiste.EXISTE,
 					TypeImportarEstado.REVISADO, TypeImportarResultado.INFO, area, areaActual);
-		} else {
-			fila = new FilaImportarArea(TypeImportarAccion.REEMPLAZAR, TypeImportarExiste.EXISTE,
-					TypeImportarEstado.PENDIENTE, TypeImportarResultado.WARNING, area, areaActual);
-		}
 		return fila;
 	}
 

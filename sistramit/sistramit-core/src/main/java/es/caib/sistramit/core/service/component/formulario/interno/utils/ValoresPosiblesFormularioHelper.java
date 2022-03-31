@@ -3,6 +3,7 @@ package es.caib.sistramit.core.service.component.formulario.interno.utils;
 import java.util.List;
 
 import es.caib.sistrages.rest.api.interna.RComponenteSelector;
+import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
 import es.caib.sistramit.core.service.model.formulario.interno.DatosSesionFormularioInterno;
 
@@ -16,7 +17,7 @@ public interface ValoresPosiblesFormularioHelper {
 	 * Calculamos valores posibles campos selectores de la pagina actual.
 	 *
 	 * @param pDatosSesion
-	 *            Datos sesion formulario
+	 *                         Datos sesion formulario
 	 * @return Lista valores posibles campos
 	 */
 	List<ValoresPosiblesCampo> calcularValoresPosiblesPaginaActual(final DatosSesionFormularioInterno pDatosSesion);
@@ -25,12 +26,26 @@ public interface ValoresPosiblesFormularioHelper {
 	 * Calcula valores posibles para un campo de tipo selector.
 	 *
 	 * @param pDatosSesion
-	 *            Datos sesión formulario
+	 *                         Datos sesión formulario
 	 * @param pCampoDef
-	 *            Identificador campo
+	 *                         Identificador campo
 	 * @return Valores posibles
 	 */
 	ValoresPosiblesCampo calcularValoresPosiblesCampoSelector(final DatosSesionFormularioInterno pDatosSesion,
 			final RComponenteSelector pCampoDef);
+
+	/**
+	 * Calcula valores posibles para un campo de tipo selector.
+	 *
+	 * @param pDatosSesion
+	 *                          Datos sesión formulario
+	 * @param pCampoDef
+	 *                          Identificador campo
+	 * @param textoBusqueda
+	 *                          Texto búsqueda
+	 * @return Valores posibles
+	 */
+	List<ValorIndexado> calcularValoresPosiblesCampoSelectorDinamico(final DatosSesionFormularioInterno pDatosSesion,
+			final RComponenteSelector pCampoDef, String textoBusqueda);
 
 }

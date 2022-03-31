@@ -57,6 +57,8 @@ public class ViewMigracion extends ViewControllerBase {
 
 	private boolean saltaExcepcion = false;
 
+	private boolean disabled = false;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -79,7 +81,7 @@ public class ViewMigracion extends ViewControllerBase {
 			Collections.sort(listaTramite, (o1, o2) -> o1.getIdentificador().compareTo(o2.getIdentificador()));
 
 		} catch (Exception ex) {
-
+			UtilJSF.loggearErrorFront("Error en la migracion", ex);
 			saltaExcepcion = true;
 
 		}
@@ -109,29 +111,34 @@ public class ViewMigracion extends ViewControllerBase {
 
 				if (listaErrores == null || listaErrores.isEmpty()) {
 					UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.migracion"));
+				} else {
+					UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.migracionCompleta"));
 				}
+				disabled = true;
 			} else {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
 			}
 		}
 	}
+
 	/***
-	 * Función que se encarga de retornar el contenido de la etiqueta style en funcion del tipo de elemento
-	 * para mostrar o ocultar elementos. Depende de saltaExcepcion, variable que contiene true si ocurre una
-	 * excepción con la base de datos de sistra1
-	 * 
-	 * @elemento posibles valores:
-	 *  1 hace referencia a la etiqueta que contiene el mensaje de error. Oculta por defecto.
-	 *  otros hace referencia a los elementos visibles por defecto (desplegables, botones ...)
+	 * Función que se encarga de retornar el contenido de la etiqueta style en
+	 * funcion del tipo de elemento para mostrar o ocultar elementos. Depende de
+	 * saltaExcepcion, variable que contiene true si ocurre una excepción con la
+	 * base de datos de sistra1
+	 *
+	 * @elemento posibles valores: 1 hace referencia a la etiqueta que contiene el
+	 *           mensaje de error. Oculta por defecto. otros hace referencia a los
+	 *           elementos visibles por defecto (desplegables, botones ...)
 	 */
 	public String setVisibleExcepcion(int elemento) {
-		if(elemento == 1) {
+		if (elemento == 1) {
 			if (!saltaExcepcion) {
 				return "display:none;";
 			} else {
 				return "color:red; display:flex; justify-content:center;";
 			}
-		}else {
+		} else {
 			if (!saltaExcepcion) {
 				return "";
 			} else {
@@ -210,6 +217,14 @@ public class ViewMigracion extends ViewControllerBase {
 
 	public void setUnificarPantallas(final boolean unificarPantallas) {
 		this.unificarPantallas = unificarPantallas;
+	}
+
+	public final boolean isDisabled() {
+		return disabled;
+	}
+
+	public final void setDisabled(boolean disabled) {
+		this.disabled = disabled;
 	}
 
 }

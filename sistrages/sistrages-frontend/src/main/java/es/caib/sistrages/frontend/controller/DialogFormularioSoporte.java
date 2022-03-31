@@ -1,5 +1,8 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -35,6 +38,14 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 
 	private String descripcion;
 
+	private Boolean listaCorr;
+
+	private Boolean respInc;
+
+	private Boolean adminArea;
+
+	private String emails;
+
 	/**
 	 * Inicialización.
 	 */
@@ -53,6 +64,21 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 				if (data != null && data.getTipoIncidencia() != null) {
 					tipoIncidencia = data.getTipoIncidencia().getTraduccion(UtilJSF.getSessionBean().getLang());
 				}
+
+				if (data != null && data.getTipoDestinatario() != null) {
+					for (TypeFormularioSoporte tipoDest : data.getTipoDestinatario()) {
+						if (tipoDest.equals(TypeFormularioSoporte.LISTA_DE_EMAILS)) {
+							listaCorr = true;
+						}
+						if (tipoDest.equals(TypeFormularioSoporte.RESPONSABLE_DE_INCIDENCIAS)) {
+							respInc = true;
+						}
+						if (tipoDest.equals(TypeFormularioSoporte.ADMINISTRADOR_AREA)) {
+							adminArea = true;
+						}
+					}
+					tipoIncidencia = data.getTipoIncidencia().getTraduccion(UtilJSF.getSessionBean().getLang());
+				}
 			}
 		}
 
@@ -61,8 +87,7 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de propiedades.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoDescripcion(final SelectEvent event) {
 
@@ -78,8 +103,7 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de propiedades.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoTipoIncidencia(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -122,15 +146,32 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	 */
 	public void aceptar() {
 
-		if (data.getTipoDestinatario() == TypeFormularioSoporte.LISTA_DE_EMAILS && data.getListaEmails() != null && data.getListaEmails().isEmpty()) {
-			addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogFormularioSoporte.error.emailVacio"));
+		if (listaCorr && data.getListaEmails() != null && data.getListaEmails().isEmpty()) {
+			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogFormularioSoporte.error.emailVacio"));
 			return;
 		}
 
-		//Si no pone de tipo emails, se quitan los emails.
-		if (data.getTipoDestinatario() != TypeFormularioSoporte.LISTA_DE_EMAILS) {
+		// Si no pone de tipo emails, se quitan los emails.
+		if (!listaCorr) {
 			data.setListaEmails("");
+		}
+
+		// Se añaden los tipos
+		if (listaCorr || respInc || adminArea) {
+			List<TypeFormularioSoporte> lista = new ArrayList<>();
+			if (listaCorr) {
+				lista.add(TypeFormularioSoporte.LISTA_DE_EMAILS);
+			}
+			if (respInc) {
+				lista.add(TypeFormularioSoporte.RESPONSABLE_DE_INCIDENCIAS);
+			}
+			if (adminArea) {
+				lista.add(TypeFormularioSoporte.ADMINISTRADOR_AREA);
+			}
+			data.setTipoDestinatario(lista);
+		} else {
+			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogFormularioSoporte.error.noTipo"));
+			return;
 		}
 
 		// Realizamos alta o update
@@ -170,8 +211,7 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final FormularioSoporte data) {
 		this.data = data;
@@ -199,6 +239,62 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 
 	public void setId(final String id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the listaEmails
+	 */
+	public final Boolean getListaCorr() {
+		return listaCorr;
+	}
+
+	/**
+	 * @param listaEmails the listaEmails to set
+	 */
+	public final void setListaCorr(Boolean listaCorr) {
+		this.listaCorr = listaCorr;
+	}
+
+	/**
+	 * @return the respInc
+	 */
+	public final Boolean getRespInc() {
+		return respInc;
+	}
+
+	/**
+	 * @param respInc the respInc to set
+	 */
+	public final void setRespInc(Boolean respInc) {
+		this.respInc = respInc;
+	}
+
+	/**
+	 * @return the adminArea
+	 */
+	public final Boolean getAdminArea() {
+		return adminArea;
+	}
+
+	/**
+	 * @param adminArea the adminArea to set
+	 */
+	public final void setAdminArea(Boolean adminArea) {
+		this.adminArea = adminArea;
+	}
+
+	/**
+	 * @return the emails
+	 */
+	public final String getEmails() {
+		return emails;
+	}
+
+	/**
+	 * @param emails the emails to set
+	 */
+	public final void setEmails(String emails) {
+		this.emails = emails;
 	}
 
 }

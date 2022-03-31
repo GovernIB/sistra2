@@ -44,6 +44,10 @@
 					</p:selectOneMenu >
 					<p:outputLabel   value="" />
 
+					<p:outputLabel   for="codigo" value="#{msg['dialogTramiteVersionPrevisualizar.identificador']}" />
+                	<p:inputText 	 id="codigo" value="#{dialogTramiteVersionPrevisualizar.tramite.getIdentificadorCompuesto()}" style="width:417px;" disabled="true" />
+					<p:outputLabel   value="" />
+
 					<p:outputLabel for="procedimiento" value="#{msg['dialogTramiteVersionPrevisualizar.tramite']}" />
 					<p:column>
 						<p:selectOneMenu id="procedimiento"  value="#{dialogTramiteVersionPrevisualizar.tramiteSeleccionado}" style="width:400px;" styleClass="margin-top-10">

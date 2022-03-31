@@ -1,6 +1,8 @@
 package es.caib.sistramit.core.service.util;
 
 import java.io.UnsupportedEncodingException;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ import es.caib.sistramit.core.api.model.flujo.EntidadRedesSociales;
 import es.caib.sistramit.core.api.model.flujo.EntidadSoporte;
 import es.caib.sistramit.core.api.model.flujo.EntidadSoporteAnexo;
 import es.caib.sistramit.core.api.model.flujo.Firma;
+import es.caib.sistramit.core.api.model.flujo.Firmante;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.SoporteOpcion;
@@ -286,7 +289,7 @@ public final class UtilsFlujo {
 		if (usuarioAutenticadoInfo.getAutenticacion() != datosPersistenciaTramite.getAutenticacion()
 				|| (usuarioAutenticadoInfo.getAutenticacion() == TypeAutenticacion.AUTENTICADO
 						&& !usuarioAutenticadoInfo.getNif().equals(datosPersistenciaTramite.getNifIniciador()))) {
-			throw new UsuarioNoPermitidoException("Usuario no puede acceder al tramite",
+			throw new UsuarioNoPermitidoException("Usuari no pot accedir al tràmit",
 					usuarioAutenticadoInfo.getAutenticacion(), usuarioAutenticadoInfo.getNif());
 		}
 
@@ -455,7 +458,7 @@ public final class UtilsFlujo {
 		if (StringUtils.isBlank(dependencia)) {
 			throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(),
 					pVariablesFlujo.getIdSesionTramitacion(), idDocumento,
-					"El script de dependencia no ha devuelto valor");
+					"El script de dependència no ha tornat valor");
 		}
 		dependencia = dependencia.toLowerCase();
 		TypeObligatoriedad obligatorio;
@@ -468,7 +471,7 @@ public final class UtilsFlujo {
 		} else {
 			throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(),
 					pVariablesFlujo.getIdSesionTramitacion(), idDocumento,
-					"El script de dependencia no ha devuelto un valor válido: " + dependencia);
+					"El script de dependència no ha tornat valor vàlid: " + dependencia);
 		}
 
 		return obligatorio;
@@ -489,7 +492,7 @@ public final class UtilsFlujo {
 			final boolean pObligatorio) {
 		final Object valor = pParametros.getParametroEntrada(pParametro);
 		if (pObligatorio && ((valor == null) || ((valor instanceof String) && StringUtils.isEmpty((String) valor)))) {
-			throw new ParametrosEntradaIncorrectosException("Falta especificar parametro " + pParametro);
+			throw new ParametrosEntradaIncorrectosException("Falta especificar paràmetre " + pParametro);
 		}
 		return valor;
 	}
@@ -507,7 +510,7 @@ public final class UtilsFlujo {
 			try {
 				instancia = Integer.parseInt(instanciaStr);
 			} catch (final NumberFormatException nfe) {
-				throw new ParametrosEntradaIncorrectosException("El parametro instancia no es un numero", nfe);
+				throw new ParametrosEntradaIncorrectosException("El paràmetre instancia no és un nombre", nfe);
 			}
 		}
 		return instancia;
@@ -574,7 +577,7 @@ public final class UtilsFlujo {
 
 			// TODO PENDIENTE DE VER COMO SE IMPLEMENTA PRESENCIAL
 			if (datosDocumento.getPresentacion() == TypePresentacion.PRESENCIAL) {
-				throw new ErrorNoControladoException("PENDIENTE IMPLEMENTAR ENTREGA PRESENCIAL");
+				throw new ErrorNoControladoException("PENDENT IMPLEMENTAR ENTREGA PRESENCIAL");
 			}
 
 			// Obtenemos datos persistencia documento
@@ -606,7 +609,7 @@ public final class UtilsFlujo {
 					}
 					// Info firmas
 					dr.setFirmas(
-							verificarFirmantes(datosDocumento, docPersistencia, docPersistencia.getFormularioPdf()));
+							obtenerInfoFirmas(datosDocumento, docPersistencia, docPersistencia.getFormularioPdf()));
 					// Añade a lista formularios
 					listaFormularios.add(dr);
 				}
@@ -615,7 +618,7 @@ public final class UtilsFlujo {
 				// Establecemos instancia
 				dr.setInstancia(((DatosDocumentoAnexo) datosDocumento).getInstancia());
 				// Info firmas
-				dr.setFirmas(verificarFirmantes(datosDocumento, docPersistencia, docPersistencia.getFichero()));
+				dr.setFirmas(obtenerInfoFirmas(datosDocumento, docPersistencia, docPersistencia.getFichero()));
 				// Añade a lista anexos
 				listaAnexos.add(dr);
 				break;
@@ -652,22 +655,23 @@ public final class UtilsFlujo {
 	}
 
 	/**
-	 * Verificamos lista de firmantes si han firmado
+	 * Obtiene info firmas.
 	 *
 	 * @param datosDocumento
 	 * @param docPersistencia
 	 * @param ficheroFirmado
 	 * @return estado firmas
 	 */
-	private static List<Firma> verificarFirmantes(final DatosDocumento datosDocumento,
+	private static List<Firma> obtenerInfoFirmas(final DatosDocumento datosDocumento,
 			final DocumentoPasoPersistencia docPersistencia, final ReferenciaFichero ficheroFirmado) {
 		final List<Firma> firmas = new ArrayList<>();
 		if (datosDocumento.getFirmar() == TypeSiNo.SI) {
-			for (final Persona p : datosDocumento.getFirmantes()) {
+			for (final Firmante f : datosDocumento.getFirmantes()) {
 				final Firma fdr = new Firma();
-				fdr.setFirmante(p);
+				fdr.setFirmante(new Persona(f.getNif(), f.getNombre()));
+				fdr.setObligatoriedad(f.getObligatorio());
 				final FirmaDocumentoPersistencia fdp = docPersistencia.obtenerFirmaFichero(ficheroFirmado.getId(),
-						p.getNif());
+						f.getNif());
 				if (fdp != null) {
 					fdr.setEstadoFirma(TypeEstadoFirma.FIRMADO);
 					fdr.setFechaFirma(UtilsFlujo.formateaFechaFront(fdp.getFecha()));
@@ -717,10 +721,10 @@ public final class UtilsFlujo {
 		try {
 			tamMaxBytes = ValidacionesTipo.getInstance().convertirTamanyoBytes(tamMax);
 		} catch (final ValidacionTipoException e) {
-			throw new TamanyoMaximoAnexoException("Error al obtener propiedad tamaño máximo global", e);
+			throw new TamanyoMaximoAnexoException("Error al obtenir propietat mida màxima global", e);
 		}
 		if (numBytes > tamMaxBytes) {
-			throw new TamanyoMaximoAnexoException("Se ha sobrepasado el tamaño máximo");
+			throw new TamanyoMaximoAnexoException("Se ha sobrepassat la mida màxima");
 		}
 	}
 
@@ -761,7 +765,7 @@ public final class UtilsFlujo {
 			final Object obj = jacksonObjectMapper.readValue(json, clase);
 			return obj;
 		} catch (final Exception e) {
-			throw new JsonException("Error convirtiendo a JSON: " + e.getMessage(), e);
+			throw new JsonException("Error convertint a JSON: " + e.getMessage(), e);
 		}
 	}
 
@@ -796,7 +800,7 @@ public final class UtilsFlujo {
 			final String json = new String(jsonBytes, Constantes.UTF8);
 			return jsonToJava(json, clase);
 		} catch (final UnsupportedEncodingException e) {
-			throw new JsonException("Error convirtiendo a JSON: " + e.getMessage(), e);
+			throw new JsonException("Error convertint a JSON: " + e.getMessage(), e);
 		}
 	}
 
@@ -815,8 +819,24 @@ public final class UtilsFlujo {
 			final String json = jacksonObjectMapper.writeValueAsString(obj);
 			return json;
 		} catch (final Exception e) {
-			throw new JsonException("Error convirtiendo a JSON: " + e.getMessage(), e);
+			throw new JsonException("Error convertint a JSON: " + e.getMessage(), e);
 		}
+	}
+
+	/**
+	 * Elimina carácteres diacriticos.
+	 * 
+	 * @param word
+	 *                 palabra
+	 * @return palabra
+	 */
+	public static String eliminarDiacriticos(final String word) {
+		String finalWord = null;
+		if (word != null) {
+			final String normalizedWord = Normalizer.normalize(word, Form.NFD);
+			finalWord = normalizedWord.replaceAll("\\p{M}", "");
+		}
+		return finalWord;
 	}
 
 }

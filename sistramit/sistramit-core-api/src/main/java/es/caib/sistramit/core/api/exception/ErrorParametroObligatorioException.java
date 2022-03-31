@@ -20,21 +20,19 @@ public final class ErrorParametroObligatorioException extends ServiceRollbackExc
 	/**
 	 * Constructor DatabaseException.
 	 *
-	 * @param cause
-	 *            Causa
+	 * @param cause Causa
 	 */
 	public ErrorParametroObligatorioException(final Exception cause) {
-		super("Error Parametro Obligatorio: " + cause.getMessage(), cause);
+		super("Error Paràmetro Obligatori: " + cause.getMessage(), cause);
 	}
 
 	/**
 	 * Constructor DatabaseException.
 	 *
-	 * @param cause
-	 *            Causa
+	 * @param cause Causa
 	 */
 	public ErrorParametroObligatorioException(final String cause) {
-		super("Error Parametro Obligatorio: " + cause);
+		super("Error Paràmetro Obligatori: " + cause);
 	}
 
 }

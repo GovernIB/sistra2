@@ -1,0 +1,52 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_INSTRUCCIONES.setTextoMensajeError(texto)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_INSTRUCCIONES">DATOS_INSTRUCCIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_INSTRUCCIONES&metodo=setTextoMensaje">setTextoMensaje</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setTextoMensaje(String texto):void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que permite fijar directamente por script el texto de la información.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>texto</b>: String con el texto pertinente a la información. </li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>
+Pongamos por caso que queremos establecer una instrucción directamentee desde el script. Lo podríamos hacer a través del script de la manera siguiente:
+</p>
+<p class="codigoScript">
+	DATOS_INSTRUCCIONES.setTextoMensaje('Debe rellenar todos los pasos);
+</p>
+</body>
+</html>

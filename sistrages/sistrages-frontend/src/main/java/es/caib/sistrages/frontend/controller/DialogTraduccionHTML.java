@@ -146,7 +146,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 				sourceCode = " | code";
 			}
 		} catch (final Exception e) {
-			getLogger().error("Error obteniendo la propiedad de sourceCode de tinymce ", e);
+			UtilJSF.loggearErrorFront("Error obteniendo la propiedad de sourceCode de tinymce ", e);
 			sourceCode = "";
 		}
 	}

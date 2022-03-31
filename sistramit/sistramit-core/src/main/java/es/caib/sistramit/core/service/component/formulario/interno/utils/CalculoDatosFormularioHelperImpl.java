@@ -15,12 +15,16 @@ import es.caib.sistramit.core.api.exception.CampoFormularioNoExisteException;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ValorCampoFormularioCaracteresNoPermitidosException;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
+import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelector;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
+import es.caib.sistramit.core.api.model.formulario.ResultadoBuscadorDinamico;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
+import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValorResetCampos;
 import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
+import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
 import es.caib.sistramit.core.service.component.script.ScriptExec;
 import es.caib.sistramit.core.service.component.script.plugins.formulario.ResEstadoCampo;
@@ -110,6 +114,40 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 				}
 			}
 		}
+	}
+
+	@Override
+	public ResultadoBuscadorDinamico calcularValoresPosiblesSelectorDinamico(
+			final DatosSesionFormularioInterno datosSesion, final String idCampo, final String textoCampo,
+			final List<ValorCampo> valoresPagina) {
+
+		// Recupera pagina actual
+		final PaginaFormularioData paginaActual = datosSesion.getDatosFormulario().getPaginaActualFormulario();
+
+		// Recupera definicion campo selector
+		final ConfiguracionCampo confCampo = paginaActual.getConfiguracionCampo(idCampo);
+		if (confCampo == null || confCampo.getTipo() != TypeCampo.SELECTOR
+				|| ((ConfiguracionCampoSelector) confCampo).getContenido() != TypeSelector.DINAMICO) {
+			throw new ErrorConfiguracionException("Campo " + idCampo + " no es de tipo selector");
+		}
+
+		// Actualizamos datos de la pagina actual con los nuevos datos
+		if (valoresPagina != null) {
+			paginaActual.actualizarValoresPagina(valoresPagina);
+		}
+
+		// Recuperamos valores posibles
+		final RPaginaFormulario pagDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
+		final RComponenteSelector campoDef = (RComponenteSelector) UtilsFormularioInterno
+				.devuelveComponentePagina(pagDef, idCampo);
+		final List<ValorIndexado> vpc = valoresPosiblesHelper.calcularValoresPosiblesCampoSelectorDinamico(datosSesion,
+				campoDef, textoCampo);
+
+		// Devuelve resultado
+		final ResultadoBuscadorDinamico res = new ResultadoBuscadorDinamico();
+		res.setValores(vpc);
+		return res;
+
 	}
 
 	// --------------------------------------------------------------------------------
@@ -298,7 +336,7 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 		}
 		if (vcAuto == null) {
 			throw new ErrorConfiguracionException(
-					"No existe valor calculado para campo " + campoDef.getIdentificador());
+					"No existeix valor calculat per campo " + campoDef.getIdentificador());
 		}
 		return vcAuto;
 	}
@@ -443,7 +481,9 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 			// - Solo tendra sentido para campos posteriores
 			if (!campoPosterior && idCampo.equals(campoDefSel.getIdentificador())) {
 				campoPosterior = true;
-			} else if (campoPosterior && UtilsSTG.traduceTipoCampo(campoDefSel.getTipo()) == TypeCampo.SELECTOR) {
+			} else if (campoPosterior && UtilsSTG.traduceTipoCampo(campoDefSel.getTipo()) == TypeCampo.SELECTOR
+					&& UtilsSTG.traduceTipoSelector(
+							((RComponenteSelector) campoDefSel).getTipoSelector()) != TypeSelector.DINAMICO) {
 				evaluarCampo = true;
 			}
 

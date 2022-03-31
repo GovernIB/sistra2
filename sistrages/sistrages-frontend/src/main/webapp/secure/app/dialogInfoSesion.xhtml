@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogInfoSesion.titulo']}"/></title>
+	<h:outputScript library="js" name="encode.js"/>
+</h:head>
+
+<h:body>
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewAction action="#{dialogInfoSesion.init}" />
+	</f:metadata>
+  		<p:outputPanel>
+			<!-- Contenido dialogo -->
+			<!-- Growl mensajes -->
+			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
+			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+				<p:outputLabel for="usr" value="#{msg['dialogInfoSesion.usr']}" />
+				<h:outputText id="usr" value="#{dialogInfoSesion.usr}" />
+
+				<p:outputLabel for="roles" value="#{msg['dialogInfoSesion.roles']}" />
+				<h:outputText id="roles" value="#{dialogInfoSesion.roles}" />
+
+				<p:outputLabel for="RolesArea" value="#{msg['dialogInfoSesion.rolesArea']}" />
+				<p:dataTable id="RolesArea" var="td" value="#{dialogInfoSesion.listaRoles}">
+					<p:column headerText="#{msg['viewConsultaGeneral.area']}">
+		                <h:outputText value="#{td.area.identificadorCompuesto}" />
+		            </p:column>
+
+		            <p:column headerText="#{msg['dialogInfoSesion.roles']}">
+		                <h:outputText value="#{td.valor}" />
+		            </p:column>
+				</p:dataTable>
+			</h:panelGrid>
+		</p:outputPanel>
+
+</h:body>
+</f:view>
+</html>

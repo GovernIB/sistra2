@@ -72,8 +72,8 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 				try {
 					definicionTramite = plgCP.obtenerDefinicionTramite(idTramiteCP, servicio, idioma);
 				} catch (final CatalogoPluginException e) {
-					log.error("Error obteniendo la info del tramite", e);
-					throw new CatalogoProcedimientosException("Error obteniendo la definición de tramites", e);
+					log.error("Error obtenint la info del tràmit", e);
+					throw new CatalogoProcedimientosException("Error obtenint la definició de tramits", e);
 				}
 			}
 			// - Guarda en cache
@@ -83,23 +83,23 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 		// Verificamos datos definicion
 		if (definicionTramite == null) {
 			throw new CatalogoProcedimientosException(
-					"Error obteniendo la definición de tramites: devuelve nulo la definición");
+					"Error obtenint la definició de tramits: torna nul la definició");
 		}
 		if (definicionTramite.getProcedimiento() == null) {
 			throw new CatalogoProcedimientosException(
-					"Error obteniendo la definición de tramites: no existe procedimiento asociado");
+					"Error obtenint la definició de tràmits: no existeix procediment associat");
 		}
 		if (StringUtils.isBlank(definicionTramite.getProcedimiento().getIdProcedimientoSIA())) {
 			throw new CatalogoProcedimientosException(
-					"Error obteniendo la definición de tramites: no existe código SIA asociado al procedimiento");
+					"Error obtenint la definició de tràmits: no existeix codi SIA associat al procediment");
 		}
 		if (StringUtils.isBlank(definicionTramite.getProcedimiento().getOrganoResponsableDir3())) {
 			throw new CatalogoProcedimientosException(
-					"Error obteniendo la definición de tramites: no existe código DIR3 asociado al procedimiento");
+					"Error obtenint la definició de tràmits: no existeix codi associat DIR3 associat al procediment");
 		}
 		if (StringUtils.isBlank(definicionTramite.getOrganoDestinoDir3())) {
 			throw new CatalogoProcedimientosException(
-					"Error obteniendo la definición de tramites: no existe código DIR3 destinatario trámite");
+					"Error obtenint la definició de tràmits: no existeix codi DIR3 destinatari tràmit");
 		}
 
 		return definicionTramite;
@@ -112,8 +112,8 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 			final ArchivoCP archivo = plgCP.descargarArchivo(referenciaArchivo);
 			return archivo;
 		} catch (final CatalogoPluginException e) {
-			log.error("Error obteniendo la info del tramite", e);
-			throw new CatalogoProcedimientosException("Error obteniendo la definición de tramites", e);
+			log.error("Error obtenint la info del tràmit", e);
+			throw new CatalogoProcedimientosException("Error obtenint la definició de tràmits", e);
 		}
 	}
 
@@ -141,7 +141,7 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 				.fromString(configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ENTORNO));
 		if (entorno != TypeEntorno.DESARROLLO) {
 			throw new CatalogoProcedimientosException(
-					"Simulación de catálogo procedimientos sólo disponible para entorno desarrollo");
+					"Simulació de catàleg procediments només disponible per entorn desenvolupament");
 		}
 
 		final DefinicionTramiteTelematico tt = new DefinicionTramiteTelematico();
@@ -219,7 +219,7 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 		if (cacheManager.cacheExists(CACHE_NAME)) {
 			cache = cacheManager.getCache(CACHE_NAME);
 		} else {
-			throw new CacheException("Cache de dominio no esta definida: " + CACHE_NAME);
+			throw new CacheException("Caché de domini no està definida: " + CACHE_NAME);
 		}
 		return cache;
 	}

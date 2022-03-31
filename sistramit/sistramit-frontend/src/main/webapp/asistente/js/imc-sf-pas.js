@@ -109,6 +109,12 @@ var HTML_PAS_LITERALS = {
 			,txtAccepteLOPD: txtAccepteLOPD
 			,txtTitolLOPD: txtTitolLOPD
 			,txtTanca: txtTanca
+			,txtSignantsInfo_intro: txtSignantsInfo_intro
+			,txtSignantsInfo_obligatori: txtSignantsInfo_obligatori
+			,txtSignantsInfo_opcional: txtSignantsInfo_opcional
+			,txtSignantsInfo_requerida: txtSignantsInfo_requerida
+			,txtSignantsInfo_completada: txtSignantsInfo_completada
+			,txtSignaturaTanca: txtSignaturaTanca
 		},
 		"gj": {
 			txtRegistratCorrectament: txtRegistratCorrectament
@@ -143,6 +149,7 @@ var HTML_PAS_LITERALS = {
 			,txtSignatura: txtSignatura
 			,txtDocumentacioMostra: txtDocumentacioMostra
 			,txtDescarregantURL: txtDescarregantURL
+			,txtValoracioEspecificaTitol: txtValoracioEspecificaTitol
 		},
 		"cd": {
 		},
@@ -279,7 +286,7 @@ $.fn.appPas = function(options) {
 							consola("Pas: error des de JSON");
 
 							imc_contenidor
-								.errors({ estat: pas_json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: pas_json.url });
+								.errors({ estat: pas_json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: pas_json.url });
 
 						}
 						
@@ -568,6 +575,8 @@ $.fn.appPas = function(options) {
 								,txtSignants: txtSignants
 								,txtSignatEl: txtSignatEl
 								,txtSignatura: txtSignatura
+								,txtSignaturaOgligatoria: txtSignaturaOgligatoria
+								,txtSignaturaOpcional: txtSignaturaOpcional
 							}
 						};
 

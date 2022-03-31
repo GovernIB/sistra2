@@ -1,5 +1,7 @@
 package es.caib.sistrages.core.api.model;
 
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
+
 /**
  *
  * Configuracion Autenticacion.
@@ -15,11 +17,26 @@ public class ConfiguracionAutenticacion extends ModelApi {
 	/** Id. */
 	private Long codigo;
 
-	/** Id que no se mapea, es sólo para saber que es en la creación de la importacion **/
+	/** Ámbito dominio (G : Global / E: Entidad / A: Área) */
+	private TypeAmbito ambito;
+
+	/** Si el ambito es entidad **/
+	private Long entidad;
+
+	/** Si el ambito es entidad **/
+	private Long area;
+
+	/**
+	 * Id que no se mapea, es sólo para saber que es en la creación de la
+	 * importacion
+	 **/
 	private Long codigoImportacion;
 
 	/** Identificador **/
 	private String identificador;
+
+	/** Identificador compuesto**/
+	private String identificadorCompuesto;
 
 	/** Descripcion **/
 	private String descripcion;
@@ -42,8 +59,7 @@ public class ConfiguracionAutenticacion extends ModelApi {
 	}
 
 	/**
-	 * @param codigo
-	 *                   the codigo to set
+	 * @param codigo the codigo to set
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -57,11 +73,24 @@ public class ConfiguracionAutenticacion extends ModelApi {
 	}
 
 	/**
-	 * @param identificador
-	 *                          the identificador to set
+	 * @param identificador the identificador to set
 	 */
 	public final void setIdentificador(final String identificador) {
 		this.identificador = identificador;
+	}
+
+	/**
+	 * @return the identificadorCompuesto
+	 */
+	public String getIdentificadorCompuesto() {
+		return identificadorCompuesto;
+	}
+
+	/**
+	 * @param identificadorCompuesto the identificadorCompuesto to set
+	 */
+	public void setIdentificadorCompuesto(String identificadorCompuesto) {
+		this.identificadorCompuesto = identificadorCompuesto;
 	}
 
 	/**
@@ -72,13 +101,11 @@ public class ConfiguracionAutenticacion extends ModelApi {
 	}
 
 	/**
-	 * @param descripcion
-	 *                        the descripcion to set
+	 * @param descripcion the descripcion to set
 	 */
 	public final void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
 	}
-
 
 	/**
 	 * @return the usuario
@@ -120,6 +147,48 @@ public class ConfiguracionAutenticacion extends ModelApi {
 	 */
 	public void setCodigoImportacion(Long codigoImportacion) {
 		this.codigoImportacion = codigoImportacion;
+	}
+
+	/**
+	 * @return the ambito
+	 */
+	public TypeAmbito getAmbito() {
+		return ambito;
+	}
+
+	/**
+	 * @param ambito the ambito to set
+	 */
+	public void setAmbito(TypeAmbito ambito) {
+		this.ambito = ambito;
+	}
+
+	/**
+	 * @return the entidad
+	 */
+	public Long getEntidad() {
+		return entidad;
+	}
+
+	/**
+	 * @param entidad the entidad to set
+	 */
+	public void setEntidad(Long entidad) {
+		this.entidad = entidad;
+	}
+
+	/**
+	 * @return the area
+	 */
+	public final Long getArea() {
+		return area;
+	}
+
+	/**
+	 * @param area the area to set
+	 */
+	public final void setArea(Long area) {
+		this.area = area;
 	}
 
 	/*

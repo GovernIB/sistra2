@@ -2,6 +2,7 @@ package es.caib.sistramit.core.service.component.formulario.interno.utils;
 
 import java.util.List;
 
+import es.caib.sistramit.core.api.model.formulario.ResultadoBuscadorDinamico;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.service.model.formulario.interno.DatosSesionFormularioInterno;
@@ -34,10 +35,26 @@ public interface CalculoDatosFormularioHelper {
 
 	/**
 	 * Recalcula datos pagina actual (campos autorrellenables).
-	 * 
+	 *
 	 * @param datosSesion
 	 *                        Datos sesión
 	 */
 	void recalcularDatosPagina(DatosSesionFormularioInterno datosSesion);
+
+	/**
+	 * Calcula valores posibles de un selector dinámico.
+	 *
+	 * @param datosSesion
+	 *                          Datos sesión
+	 * @param idCampo
+	 *                          id campo selector dinámico
+	 * @param textoCampo
+	 *                          texto a buscar
+	 * @param valoresPagina
+	 *                          valores actuales página
+	 * @return
+	 */
+	ResultadoBuscadorDinamico calcularValoresPosiblesSelectorDinamico(DatosSesionFormularioInterno datosSesion,
+			String idCampo, String textoCampo, List<ValorCampo> valoresPagina);
 
 }

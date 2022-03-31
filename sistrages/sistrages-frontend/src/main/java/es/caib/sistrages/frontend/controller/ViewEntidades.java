@@ -85,7 +85,7 @@ public class ViewEntidades extends ViewControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		UtilJSF.openDialog(DialogEntidad.class, TypeModoAcceso.ALTA, null, true, 570, 250);
+		UtilJSF.openDialog(DialogEntidad.class, TypeModoAcceso.ALTA, null, true, 570, 290);
 	}
 
 	/**

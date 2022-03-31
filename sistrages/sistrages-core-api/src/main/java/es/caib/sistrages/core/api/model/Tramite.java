@@ -1,5 +1,7 @@
 package es.caib.sistrages.core.api.model;
 
+import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
+
 /**
  *
  * Trámite.
@@ -18,6 +20,12 @@ public class Tramite extends ModelApi {
 
 	/** Identificador. */
 	private String identificador;
+
+	/** Identificador area. **/
+	private String identificadorArea;
+
+	/** Identificador entidad. **/
+	private String identificadorEntidad;
 
 	/** Descripcion. */
 	private String descripcion;
@@ -128,4 +136,38 @@ public class Tramite extends ModelApi {
 		this.idEntidad = idEntidad;
 	}
 
+	/**
+	 * @return the identificadorArea
+	 */
+	public String getIdentificadorArea() {
+		return identificadorArea;
+	}
+
+	/**
+	 * @param identificadorArea the identificadorArea to set
+	 */
+	public void setIdentificadorArea(String identificadorArea) {
+		this.identificadorArea = identificadorArea;
+	}
+
+	/**
+	 * @return the identificadorEntidad
+	 */
+	public String getIdentificadorEntidad() {
+		return identificadorEntidad;
+	}
+
+	/**
+	 * @param identificadorEntidad the identificadorEntidad to set
+	 */
+	public void setIdentificadorEntidad(String identificadorEntidad) {
+		this.identificadorEntidad = identificadorEntidad;
+	}
+
+	/** Obtener el identificador compuesto **/
+	public String getIdentificadorCompuesto() {
+		return this.getIdentificadorEntidad()
+		+ ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO + this.getIdentificadorArea()
+		+ ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO + this.getIdentificador();
+	}
 }

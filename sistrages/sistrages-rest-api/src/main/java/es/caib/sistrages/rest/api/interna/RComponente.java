@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
 		@Type(value = RComponenteTextbox.class, name = "RComponenteTextbox"),
 		@Type(value = RComponenteCampoOculto.class, name = "RComponenteCampoOculto"),
 		@Type(value = RComponenteSelector.class, name = "RComponenteSelector"),
+		@Type(value = RComponenteCaptcha.class, name = "RComponenteCaptcha"),
 		@Type(value = RComponenteCheckbox.class, name = "RComponenteCheckbox") })
 @ApiModel(value = "RComponente", description = "Descripcion de RComponente")
 public abstract class RComponente {

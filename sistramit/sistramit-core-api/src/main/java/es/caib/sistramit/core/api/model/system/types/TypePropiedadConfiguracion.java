@@ -117,7 +117,11 @@ public enum TypePropiedadConfiguracion {
 	 */
 	VERIFICAR_TRAMITE_CATALOGO("catalogoProcedimientos.verificarTramite"),
 	/** Motor de scripting. */
-	SCRIPT_ENGINE("scriptEngine");
+	SCRIPT_ENGINE("scriptEngine"),
+	/** Iframe firma width. */
+	IFRAME_FIRMA_WIDTH("iframeFirmaWidth"),
+	/** Iframe firma heigth. */
+	IFRAME_FIRMA_HEIGHT("iframeFirmaHeight");
 
 	/**
 	 * Valor como string.

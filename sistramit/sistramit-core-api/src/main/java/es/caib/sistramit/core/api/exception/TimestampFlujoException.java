@@ -11,20 +11,20 @@ import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
 @SuppressWarnings("serial")
 public final class TimestampFlujoException extends ServiceRollbackException {
 
-    /*
-     * FlujoInvalidoException FATAL.
-     */
-    @Override
-    public TypeNivelExcepcion getNivel() {
-        return TypeNivelExcepcion.FATAL;
-    }
+	/*
+	 * FlujoInvalidoException FATAL.
+	 */
+	@Override
+	public TypeNivelExcepcion getNivel() {
+		return TypeNivelExcepcion.FATAL;
+	}
 
-    /**
-     * Constructor TimestampFlujoException.
-     *
-     */
-    public TimestampFlujoException() {
-        super("El trámite se está modificando en otra sesión");
-    }
+	/**
+	 * Constructor TimestampFlujoException.
+	 *
+	 */
+	public TimestampFlujoException() {
+		super("El tràmit se està modificant en otra sessió");
+	}
 
 }

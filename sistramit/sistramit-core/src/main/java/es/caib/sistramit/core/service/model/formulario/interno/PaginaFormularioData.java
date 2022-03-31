@@ -10,8 +10,8 @@ import es.caib.sistramit.core.api.exception.TipoValorCampoFormularioException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.formulario.AccionFormularioPersonalizada;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
-import es.caib.sistramit.core.api.model.formulario.RecursosFormulario;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
+import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
 
 /**
  *
@@ -71,12 +71,6 @@ public final class PaginaFormularioData implements Serializable {
 	 * Acciones personalizadas del formulario.
 	 */
 	private List<AccionFormularioPersonalizada> accionesPersonalizadas = new ArrayList<>();
-
-	/**
-	 * Recursos estáticos del formulario. Se establecen las urls de estos recursos
-	 * estáticos para establecerse en el html del formulario.
-	 */
-	private RecursosFormulario recursos;
 
 	/**
 	 * Dependencias de los campos de la página.
@@ -172,22 +166,14 @@ public final class PaginaFormularioData implements Serializable {
 	}
 
 	/**
-	 * Método de acceso a recursos.
+	 * Obtiene el valor inicial de un campo.
 	 *
-	 * @return el recursos
+	 * @param idCampo
+	 *                    Id campo
+	 * @return Valor campo
 	 */
-	public RecursosFormulario getRecursos() {
-		return recursos;
-	}
-
-	/**
-	 * Método para settear el campo recursos.
-	 *
-	 * @param pRecursos
-	 *                      el recursos a settear
-	 */
-	public void setRecursos(final RecursosFormulario pRecursos) {
-		recursos = pRecursos;
+	public ValorCampo getValorInicialCampo(final String idCampo) {
+		return getValorCampoLista(idCampo, valoresIniciales);
 	}
 
 	/**
@@ -198,7 +184,10 @@ public final class PaginaFormularioData implements Serializable {
 	 */
 	public void actualizarValoresPagina(final List<ValorCampo> pValores) {
 		for (final ValorCampo vc : pValores) {
-			actualizarValorCampo(vc);
+			// Se actualizan valores excepto si es un captcha (nunca se actualiza valor)
+			if (this.getConfiguracionCampo(vc.getId()).getTipo() != TypeCampo.CAPTCHA) {
+				actualizarValorCampo(vc);
+			}
 		}
 	}
 
@@ -238,15 +227,35 @@ public final class PaginaFormularioData implements Serializable {
 		}
 
 		if (this.getConfiguracionCampo(vcOld.getId()).getModificable() == TypeSiNo.NO) {
-			final ValorCampo vcInicial = getValorCampoLista(pvcNew.getId(), valoresIniciales);
+			final ValorCampo vcInicial = getValorInicialCampo(pvcNew.getId());
 			if (!pvcNew.esValorIgual(vcInicial)) {
-				throw new ErrorCampoNoModificableException("El campo " + vcOld.getId() + " no es modificable");
+				throw new ErrorCampoNoModificableException("El camp " + vcOld.getId() + " no és modificable");
 			}
 		}
 
 		// Reemplazamos valor
 		vcOld.reemplazaValor(pvcNew);
 
+	}
+
+	/**
+	 * Reinicializa valor de un campo (cambia valor inicial).
+	 *
+	 * @param pValorCampo
+	 *                        valor campo
+	 */
+	public void reinicializarValorCampo(final ValorCampo pValorCampo) {
+		final ValorCampo vc = getValorCampo(pValorCampo.getId());
+		if (vc != null) {
+			this.valores.remove(vc);
+		}
+		final ValorCampo vcInicial = getValorCampoLista(pValorCampo.getId(), valoresIniciales);
+		if (vcInicial != null) {
+			this.valoresIniciales.remove(vcInicial);
+		}
+
+		this.valores.add(pValorCampo);
+		this.valoresIniciales.add(pValorCampo.duplicar());
 	}
 
 	/**
@@ -394,7 +403,7 @@ public final class PaginaFormularioData implements Serializable {
 
 	/**
 	 * Método de acceso a dependencias.
-	 * 
+	 *
 	 * @return dependencias
 	 */
 	public List<DependenciaCampo> getDependencias() {
@@ -403,7 +412,7 @@ public final class PaginaFormularioData implements Serializable {
 
 	/**
 	 * Método para establecer dependencias.
-	 * 
+	 *
 	 * @param dependencias
 	 *                         dependencias a establecer
 	 */

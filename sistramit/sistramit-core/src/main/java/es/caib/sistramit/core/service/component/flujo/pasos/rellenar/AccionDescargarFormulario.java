@@ -70,8 +70,8 @@ public final class AccionDescargarFormulario implements AccionPaso {
         if (formulario
                 .getRellenado() != TypeEstadoDocumento.RELLENADO_CORRECTAMENTE) {
             throw new AccionPasoNoPermitidaException(
-                    "No se puede descargar el formulario " + idFormulario
-                            + " porque no está rellenado");
+                    "No es pot descarregar el formulari " + idFormulario
+                            + " perqué no està emplenat");
         }
         // - Comprobamos si dispone de pdf de visualizacion.
         // Si no existe generamos excepcion para que sea capturada por el front

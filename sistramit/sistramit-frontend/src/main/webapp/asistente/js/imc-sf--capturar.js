@@ -157,7 +157,7 @@ $.fn.appEmplenaFormulariCaptura = function(options) {
 							consola("Formulari captura (carrega ticket): error des de JSON");
 							
 							imc_contenidor
-								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: data.url });
+								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: data.url });
 
 						}
 						
@@ -206,7 +206,7 @@ $.fn.appEmplenaFormulariCaptura = function(options) {
 							consola("Formulari captura (carrega dades): error des de JSON");
 							
 							imc_contenidor
-								.errors({ estat: FORMS_JSON.estado, titol: FORMS_JSON.mensaje.titulo, text: FORMS_JSON.mensaje.texto, url: FORMS_JSON.url });
+								.errors({ estat: FORMS_JSON.estado, titol: FORMS_JSON.mensaje.titulo, text: FORMS_JSON.mensaje.texto, debug: FORMS_JSON.mensaje.debug, url: FORMS_JSON.url });
 
 						}
 

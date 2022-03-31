@@ -104,8 +104,7 @@ public class DialogPlugin extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de propiedades.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -311,8 +310,7 @@ public class DialogPlugin extends DialogControllerBase {
 	private boolean verificarGuardar() {
 		if (MAXLENGTH_PROPIEDADES
 				- (data.getPropiedades() == null ? 0 : UtilJSON.toJSON(data.getPropiedades()).length()) < 0) {
-			addMessageContext(TypeNivelGravedad.WARNING,
-					UtilJSF.getLiteral("error.propiedades.tamanyosuperado"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.propiedades.tamanyosuperado"));
 			return false;
 		}
 
@@ -327,8 +325,7 @@ public class DialogPlugin extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -342,8 +339,7 @@ public class DialogPlugin extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final Plugin data) {
 		this.data = data;
@@ -357,8 +353,7 @@ public class DialogPlugin extends DialogControllerBase {
 	}
 
 	/**
-	 * @param propiedadSeleccionada
-	 *            the propiedadSeleccionada to set
+	 * @param propiedadSeleccionada the propiedadSeleccionada to set
 	 */
 	public void setPropiedadSeleccionada(final Propiedad propiedadSeleccionada) {
 		this.propiedadSeleccionada = propiedadSeleccionada;
@@ -372,8 +367,7 @@ public class DialogPlugin extends DialogControllerBase {
 	}
 
 	/**
-	 * @param ambito
-	 *            the ambito to set
+	 * @param ambito the ambito to set
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;
@@ -387,8 +381,7 @@ public class DialogPlugin extends DialogControllerBase {
 	}
 
 	/**
-	 * @param iData
-	 *            the iData to set
+	 * @param iData the iData to set
 	 */
 	public void setiData(final String iData) {
 		this.iData = iData;
@@ -402,16 +395,17 @@ public class DialogPlugin extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tipos
-	 *            the tipos to set
+	 * @param tipos the tipos to set
 	 */
 	public void setTipos(final List<TypePlugin> tipos) {
 		this.tipos = tipos;
 	}
 
 	/** Ayuda. */
-    public void ayuda() {
-        UtilJSF.openHelp("pluginDialog");
-    }
+	public void ayuda() {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
+		UtilJSF.openHelp("pluginDialog", params);
+	}
 
 }

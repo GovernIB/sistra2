@@ -52,7 +52,7 @@ public final class AccionValorarTramite implements AccionPaso {
 
 		// Controlamos que no este valorado
 		if (detallePaso.getValoracion() == null) {
-			throw new ErrorConfiguracionException("No está configurada la valoración en el trámite");
+			throw new ErrorConfiguracionException("No està configurada la valoració al tràmite");
 		}
 		if (detallePaso.getValoracion().getValorado() == TypeSiNo.NO) {
 

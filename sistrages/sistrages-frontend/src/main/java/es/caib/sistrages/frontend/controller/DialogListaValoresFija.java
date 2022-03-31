@@ -98,6 +98,7 @@ public class DialogListaValoresFija extends DialogControllerBase {
 			}
 
 		} catch (IllegalAccessException | InvocationTargetException e) {
+			UtilJSF.loggearErrorFront("Error establecimiendo traducciones", e);
 			throw new FrontException("Error estableciendo traducciones", e);
 		}
 

@@ -14,6 +14,7 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.DocumentoRegistro;
 import es.caib.sistramit.core.api.model.flujo.Firma;
+import es.caib.sistramit.core.api.model.flujo.Firmante;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoFirma;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFirmaDigital;
@@ -60,11 +61,16 @@ public final class UtilsPasoRegistrar {
 	/**
 	 * Verifica si el documento se puede firmar.
 	 *
-	 * @param pDatosPaso      Datos paso
-	 * @param pVariablesFlujo Variables flujo
-	 * @param idDocumento     id documento
-	 * @param instancia       instancia
-	 * @param nifFirmante     nif firmante
+	 * @param pDatosPaso
+	 *                            Datos paso
+	 * @param pVariablesFlujo
+	 *                            Variables flujo
+	 * @param idDocumento
+	 *                            id documento
+	 * @param instancia
+	 *                            instancia
+	 * @param nifFirmante
+	 *                            nif firmante
 	 */
 	public void validacionesFirmaDocumento(final DatosPaso pDatosPaso, final VariablesFlujo pVariablesFlujo,
 			final String idDocumento, final int instancia, final String nifFirmante) {
@@ -76,45 +82,49 @@ public final class UtilsPasoRegistrar {
 		final DatosDocumento dd = pVariablesFlujo.getDocumento(idDocumento, instancia);
 		if (dd.getFirmar() != TypeSiNo.SI) {
 			throw new AccionPasoNoPermitidaException(
-					"El documento " + idDocumento + "-" + instancia + " no esta configurado para firmar");
+					"El document " + idDocumento + "-" + instancia + " no està configurat per firmar");
 		}
 		// Verificamos si la persona esta como firmante del documento
 		final Persona firmante = obtieneDatosFirmante(pVariablesFlujo, idDocumento, instancia, nifFirmante);
 		if (firmante == null) {
-			throw new AccionPasoNoPermitidaException("El documento " + idDocumento + "-" + instancia
-					+ " no tiene configurado como firmante a " + nifFirmante);
+			throw new AccionPasoNoPermitidaException("El document " + idDocumento + "-" + instancia
+					+ " no té configurat com signant a " + nifFirmante);
 		}
 		// Verificamos si la persona ya ha firmado el documento
 		final DocumentoRegistro docReg = dpr.buscarDocumentoRegistro(idDocumento, instancia);
 		if (docReg == null) {
-			throw new AccionPasoNoPermitidaException("El documento " + idDocumento + "-" + instancia
-					+ " no esta en la lista de documentos para registro");
+			throw new AccionPasoNoPermitidaException("El document " + idDocumento + "-" + instancia
+					+ " no està a la llista de documents per registre");
 		}
 		final Firma firma = docReg.getFirma(nifFirmante);
 		if (firma == null) {
 			throw new AccionPasoNoPermitidaException(
-					"No se encuentra información de la firma para el documento " + idDocumento + "-" + instancia);
+					"No es troba informació de la firma pel document " + idDocumento + "-" + instancia);
 		}
 		if (firma.getEstadoFirma() == TypeEstadoFirma.FIRMADO) {
 			throw new AccionPasoNoPermitidaException(
-					"El documento " + idDocumento + "-" + instancia + " ya ha sido firmado por " + nifFirmante);
+					"El document " + idDocumento + "-" + instancia + " ja ha estat signat per " + nifFirmante);
 		}
 	}
 
 	/**
 	 * Obtiene datos persona firmante.
 	 *
-	 * @param pVariablesFlujo variables flujo
-	 * @param idDocumento     id documento
-	 * @param instancia       instancia
-	 * @param nifFirmante     nif firmante
+	 * @param pVariablesFlujo
+	 *                            variables flujo
+	 * @param idDocumento
+	 *                            id documento
+	 * @param instancia
+	 *                            instancia
+	 * @param nifFirmante
+	 *                            nif firmante
 	 * @return firmante
 	 */
-	public Persona obtieneDatosFirmante(final VariablesFlujo pVariablesFlujo, final String idDocumento,
+	public Firmante obtieneDatosFirmante(final VariablesFlujo pVariablesFlujo, final String idDocumento,
 			final int instancia, final String nifFirmante) {
-		Persona firmante = null;
+		Firmante firmante = null;
 		final DatosDocumento dd = pVariablesFlujo.getDocumento(idDocumento, instancia);
-		for (final Persona p : dd.getFirmantes()) {
+		for (final Firmante p : dd.getFirmantes()) {
 			if (p.getNif().equals(nifFirmante)) {
 				firmante = p;
 				break;
@@ -126,9 +136,12 @@ public final class UtilsPasoRegistrar {
 	/**
 	 * Obtiene referencia documento a firmar según el tipo de documento.
 	 *
-	 * @param pVariablesFlujo variables flujo
-	 * @param idDocumento     id documento
-	 * @param instancia       instancia
+	 * @param pVariablesFlujo
+	 *                            variables flujo
+	 * @param idDocumento
+	 *                            id documento
+	 * @param instancia
+	 *                            instancia
 	 * @return fichero a firmar
 	 */
 	public ReferenciaFichero obtenerReferenciaFicheroFirmar(final VariablesFlujo pVariablesFlujo,
@@ -145,7 +158,7 @@ public final class UtilsPasoRegistrar {
 			break;
 		default:
 			throw new AccionPasoNoPermitidaException(
-					"No se permite firma de documento " + idDocumento + " - " + instancia);
+					"No es permet firma de document " + idDocumento + " - " + instancia);
 		}
 		return ref;
 	}
@@ -153,7 +166,8 @@ public final class UtilsPasoRegistrar {
 	/**
 	 * Obtiene extensión fichero según tipo firma.
 	 *
-	 * @param tipoFirma Tipo firma
+	 * @param tipoFirma
+	 *                      Tipo firma
 	 * @return extensión
 	 */
 	public String getExtensionFirma(final TypeFirmaDigital tipoFirma) {
@@ -175,7 +189,7 @@ public final class UtilsPasoRegistrar {
 			res = "xades";
 			break;
 		default:
-			throw new TipoNoControladoException("Tipo de firma no controlado: " + tipoFirma);
+			throw new TipoNoControladoException("Tipus de firma no controlat: " + tipoFirma);
 		}
 		return res;
 	}
@@ -200,7 +214,7 @@ public final class UtilsPasoRegistrar {
 			return plantilla;
 		} catch (final IOException ex) {
 			// Error al cargar plantilla mail
-			LOGGER.error("Error cargando plantilla mail finalizar registro: " + ex.getMessage(), ex);
+			LOGGER.error("Error carregant plantilla mail finalitzar registre: " + ex.getMessage(), ex);
 		}
 		return plantilla;
 	}

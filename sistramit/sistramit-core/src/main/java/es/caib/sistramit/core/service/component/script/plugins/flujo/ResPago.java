@@ -46,7 +46,7 @@ public final class ResPago implements ResPagoInt {
 	public void setContribuyente(final String nif, final String nombre) throws ScriptException {
 		final String nifNormalizado = NifUtils.normalizarNif(nif);
 		if (!NifUtils.esNifPersonaFisica(nifNormalizado) && !NifUtils.esNifPersonaJuridica(nifNormalizado)) {
-			throw new ScriptException("El dato proporcionado como nif persona no es un nif válido: " + nifNormalizado);
+			throw new ScriptException("La dada proporcionada com nif persona no és un nif vàlid: " + nifNormalizado);
 		}
 		validarDatosPersona(nifNormalizado, nombre);
 		datosPago.setContribuyente(new Persona(nifNormalizado, nombre));
@@ -86,11 +86,11 @@ public final class ResPago implements ResPagoInt {
 	 */
 	private void validarDatosPersona(final String nifNormalizado, final String pNombre) throws ScriptException {
 		if (!NifUtils.esNifPersonaFisica(nifNormalizado) && !NifUtils.esNifPersonaJuridica(nifNormalizado)) {
-			throw new ScriptException("El dato proporcionado no es un nif valido: " + nifNormalizado);
+			throw new ScriptException("La dada proporcionada no és un nif vàlid: " + nifNormalizado);
 		}
 		if (StringUtils.isEmpty(pNombre) || !XssFilter.filtroXss(pNombre)) {
 			throw new ScriptException(
-					"El dato proporcionado como nombre persona esta vacio o contiene caraceteres no permitidos");
+					"La dada proporcionada com nom persona està buit o conté caràceters no permesos");
 		}
 	}
 
@@ -111,13 +111,13 @@ public final class ResPago implements ResPagoInt {
 	private void validarDatosPago(final String codigo, final String modelo, final String concepto)
 			throws ScriptException {
 		if (!XssFilter.filtroXss(codigo)) {
-			throw new ScriptException("El codigo contiene caracteres no permitidos");
+			throw new ScriptException("El codi conté caràcters no permesos");
 		}
 		if (!XssFilter.filtroXss(modelo)) {
-			throw new ScriptException("El modelo contiene caracteres no permitidos");
+			throw new ScriptException("El model conté caràcters no permesos");
 		}
 		if (!XssFilter.filtroXss(concepto)) {
-			throw new ScriptException("El concepto contiene caracteres no permitidos");
+			throw new ScriptException("El concepte conté caràcters no permesos");
 		}
 	}
 

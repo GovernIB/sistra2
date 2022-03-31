@@ -81,7 +81,7 @@ public final class DominiosComponentImpl implements DominiosComponent {
 
 		final boolean existe = UtilsSTG.existeDominioDefinicion(idDominio, defTramite);
 		if (!existe) {
-			throw new DominioNoExisteException("No existe dominio " + idDominio + " en la definición del tramite");
+			throw new DominioNoExisteException("No existeix domini " + idDominio + " en la definició del tràmit");
 		}
 		final RDominio dominio = configuracionComponent.recuperarDefinicionDominio(idDominio);
 
@@ -91,7 +91,7 @@ public final class DominiosComponentImpl implements DominiosComponent {
 		// Verificamos cache a usar
 		final TypeCache tipoCache = TypeCache.fromString(dominio.getTipoCache());
 		if (tipoCache == null) {
-			throw new TipoNoControladoException("Tipo cache no controlado " + dominio.getTipoCache());
+			throw new TipoNoControladoException("Tipus cache no controlat " + dominio.getTipoCache());
 		}
 
 		// Intentamos obtener de cache
@@ -113,15 +113,15 @@ public final class DominiosComponentImpl implements DominiosComponent {
 				valoresDominio = resuelveDominioFD(dominio, parametrosDominio);
 				break;
 			default:
-				throw new TipoNoControladoException("Tipo de dominio no soportado: " + dominio.getTipo());
+				throw new TipoNoControladoException("Tipus de domini no suportat: " + dominio.getTipo());
 			}
 
 			// Controlamos que el dominio devuelve datos nulos
 			if (valoresDominio == null) {
-				throw new DominioSinDatosException("Dominio " + dominio.getIdentificador() + " devuelve datos nulos");
+				throw new DominioSinDatosException("Domini " + dominio.getIdentificador() + " retorna dades nules");
 			} else if (valoresDominio.isError()) {
 				// Controlamos que el dominio devuelve código retorno opcional
-				throw new DominioErrorException("Dominio " + dominio.getIdentificador() + " no se puede recuperar: ["
+				throw new DominioErrorException("Domini " + dominio.getIdentificador() + " no es pot recuperar: ["
 						+ valoresDominio.getCodigoError() + "] - " + valoresDominio.getDescripcionError());
 			}
 
@@ -237,14 +237,14 @@ public final class DominiosComponentImpl implements DominiosComponent {
 			cachename = CACHE_IMPLICITA_NAME;
 			break;
 		default:
-			throw new TipoNoControladoException("Tipo cache no controlado");
+			throw new TipoNoControladoException("Tipus cache no controlat");
 		}
 		final CacheManager cacheManager = CacheManager.getInstance();
 		Cache cache;
 		if (cacheManager.cacheExists(cachename)) {
 			cache = cacheManager.getCache(cachename);
 		} else {
-			throw new CacheException("Cache de dominio no esta definida: " + cachename);
+			throw new CacheException("Cache de domini no està definida: " + cachename);
 		}
 		return cache;
 	}

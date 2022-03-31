@@ -27,7 +27,7 @@ $.fn.indexa = function(options) {
 						.addClass("imc-index-alfabet")
 							.insertBefore( el_opcions_llista );
 
-					var bt_reset = $("<button>").attr({ type: "button", title: txtFormDinEliminaSeleccio }).addClass("imc--bt-reset").on("click.indexa", senseValor);
+					var bt_reset = $("<button>").attr({ type: "button", title: txtFormDinEliminaSeleccio, "data-tabula": "si" }).addClass("imc--bt-reset").on("click.indexa", senseValor);
 
 					element
 						.find("a.imc-select:first")
@@ -63,7 +63,14 @@ $.fn.indexa = function(options) {
 					.on('focus.submenu', onFocus);
 
 			},
-			senseValor = function() {
+			senseValor = function(e) {
+
+				var bt_ = $(this)
+					,esLectura = (bt_.closest(".imc-element").attr("data-lectura") === "s") ? true : false;
+
+				if (esLectura) {
+					return;
+				}
 
 				// sense valor
 
@@ -123,7 +130,7 @@ $.fn.indexa = function(options) {
 				}
 				
 			},
-			onKeyUp = function(e) {
+			/*onKeyUp = function(e) {
 				
 				if (element.find(".imc-select-submenu:first").hasClass("imc-submenu-on")) {
 					if (!element.hasClass("imc-el-index-marcant")) {
@@ -132,38 +139,139 @@ $.fn.indexa = function(options) {
 					}
 				}
 				
+			},*/
+			onKeyUp = function(e) {
+
+				if (!element.find(".imc-select-submenu:first").hasClass("imc-submenu-on")) {
+					return;
+				}
+
+				var tecla = String.fromCharCode(e.keyCode);
+
+				var regex = new RegExp("^[a-zA-Z]+$");
+
+				if (!regex.test(tecla)) {
+					return;
+				}
+
+				var div_selector = element.find("div.imc-select:first");
+
+				if (!div_selector.find(".imc--teclat").length) {
+
+					$("<div>")
+						.addClass("imc--teclat")
+						.appendTo( div_selector );
+
+				}
+
+				var div_teclat = div_selector.find(".imc--teclat:first")
+					,text_escrit = div_teclat.text() + tecla;
+
+				div_teclat
+					.text( text_escrit );
+
+				if (text_inicia) {
+
+					clearTimeout(text_inicia);
+
+					element
+						.removeClass("imc-el-index-marcant");
+
+				}
+
+				if (text_llimit) {
+
+					clearTimeout(text_llimit);
+
+					element
+						.removeClass("imc-el-index-marcant");
+
+				}
+
+				var text_llimit = setTimeout(function() {
+
+							div_selector
+								.find(".imc--teclat:first")
+									.remove();
+
+						},2000
+					);
+
+				var text_inicia = setTimeout(function() {
+
+							element
+								.addClass("imc-el-index-marcant");
+
+							// situa
+							
+							situa( text_escrit );
+
+						},500
+					);
+
+				el_opcions_llista
+					.stop();
+					
 			},
 			situa = function(elm_text) {
 			
-				var opcio_llista_trobat = false,
-					opcio_llista_posicio = 0,
-					elm_trobat = false,
-					elm_trobat_mateixa_lletra = 0,
-					elm_trobats = [];
+				var opcio_llista_trobat = false
+					,opcio_llista_posicio = 0
+					,elm_trobat = false
+					,elm_trobat_mateixa_lletra = 0
+					,elm_trobats = [];
 				
-				el_opcions.each(function() {
-					var opcio = $(this).find("a"),
-						opcio_text = opcio.text().toUpperCase(),
-						opcio_inicial = normalize( opcio_text.charAt(0) );
-					if (elm_text === opcio_inicial) {
-						elm_trobat_mateixa_lletra++;
-						elm_trobats.push( opcio );
-					}
-					if (!opcio_llista_trobat && elm_text === opcio_inicial) {
-						opcio_llista_trobat = true;
-						elm_trobat = opcio;
-					}
-					if (!opcio_llista_trobat) {
-						opcio_llista_posicio += opcio.outerHeight() + 2;
-					}
-				});
+				el_opcions
+					.each(function() {
+
+						var opcio = $(this).find("a")
+							,opcio_text = opcio.text().toUpperCase()
+							,opcio_inicial = normalize( opcio_text.charAt(0) );
+
+						if (elm_text.length > 1) {
+
+							var coincideix = opcio_text.startsWith( elm_text );
+
+							if (coincideix) {
+								elm_trobat_mateixa_lletra++;
+								elm_trobats.push( opcio );
+							}
+
+							if (!opcio_llista_trobat && coincideix) {
+								opcio_llista_trobat = true;
+								elm_trobat = opcio;
+							}
+
+							if (!opcio_llista_trobat) {
+								opcio_llista_posicio += opcio.parent().outerHeight(true);// + 2;
+							}
+
+						} else {
+
+							if (elm_text === opcio_inicial) {
+								elm_trobat_mateixa_lletra++;
+								elm_trobats.push( opcio );
+							}
+
+							if (!opcio_llista_trobat && elm_text === opcio_inicial) {
+								opcio_llista_trobat = true;
+								elm_trobat = opcio;
+							}
+
+							if (!opcio_llista_trobat) {
+								opcio_llista_posicio += opcio.parent().outerHeight(true);// + 2;
+							}
+
+						}
+
+					});
 
 				if (elm_trobat) {
 					
 					if (elm_trobats.length > 1) {
 						
 						if (elm_text != ultima_opcio) {
-							el_opcions_llista.find(".imc-alfabet-focus:first").removeClass("imc-alfabet-focus");
+							el_opcions_llista.find(".imc-alfabet-focus").removeClass("imc-alfabet-focus");
 						}
 						
 						var elm_trobats_size = elm_trobats.length,
@@ -173,7 +281,7 @@ $.fn.indexa = function(options) {
 						
 						for (var i=0; i<elm_trobats_size; i++) {
 							if (!elm_tro_trobat) {
-								opcio_llista_posicio_suma += $(elm_trobats[i]).outerHeight() + 2;
+								opcio_llista_posicio_suma += $(elm_trobats[i]).parent().outerHeight(true);// + 2;
 							}
 							if ($(elm_trobats[i]).hasClass("imc-alfabet-focus")) {
 								elm_tro_posicio = i+1;
@@ -195,7 +303,6 @@ $.fn.indexa = function(options) {
 												
 					}
 					
-					
 					el_opcions_llista
 						.animate(
 							{
@@ -203,20 +310,33 @@ $.fn.indexa = function(options) {
 							}
 							,200
 							, function() {
-								elm_trobat.addClass("imc-alfabet-marca");
+
+								elm_trobat
+									.addClass("imc-alfabet-marca")
+										.focus();
+
 								setTimeout(
 									function() {
-										elm_trobat.removeClass("imc-alfabet-marca").addClass("imc-alfabet-focus").focus();
+
+										elm_trobat
+											.removeClass("imc-alfabet-marca")
+											.addClass("imc-alfabet-focus");
+
 										ultima_opcio = elm_text;
-										element.removeClass("imc-el-index-marcant");
+
+										element
+											.removeClass("imc-el-index-marcant");
+
 									},400
 								);
+
 							}
 						);
 						
 				} else {
 					
-					element.removeClass("imc-el-index-marcant");
+					element
+						.removeClass("imc-el-index-marcant");
 					
 				}
 				

@@ -154,6 +154,67 @@ $.fn.appSigna = function(options) {
 			document_signant_nif = false,
 			inicia = function() {
 
+				// signatures "r"?
+
+				var signants_els = element.find(".imc--signants");
+
+				signants_els
+					.each(function() {
+
+						var signants_el = $(this)
+							,signants_llistat = signants_el.find("ul:first")
+							,hiHa_r = signants_el.find("li[data-obligatorietat=r]").length;
+
+						if (hiHa_r) {
+
+							var p_txt = $("<p>").text( txtSignarUnDelsSeguents )
+								,llistat_r = $("<ul>");
+
+							var data_completat = signants_el.find("li[data-obligatorietat=r][data-signat=s]").length ? "s" : "n";
+
+							$("<li>")
+								.addClass("imc--signants-r")
+								.attr("data-completat", data_completat)
+								.html( p_txt )
+								.append( llistat_r )
+								.appendTo( signants_llistat );
+
+							signants_el
+								.find("li[data-obligatorietat=r]")
+									.each(function() {
+
+										llistat_r
+											.append( $(this).clone() );
+
+									});
+
+							signants_el
+								.find("ul:first > li[data-obligatorietat=r]")
+									.remove();
+
+						}
+
+					});
+
+				// hi ha signants?
+
+				element
+					.find(".imc--signans-info:first")
+						.attr("aria-hidden", "true");
+
+				var hiHa_signants = element.find(".imc--signants").length ? true : false;
+
+				if (hiHa_signants) {
+
+					element
+						.find(".imc--signans-info:first")
+							.attr("aria-hidden", "false");
+
+				}
+
+
+				// events
+
 				element
 					.off('.appSigna')
 					.on('click.appSigna', ".imc--signa", obri);
@@ -174,7 +235,7 @@ $.fn.appSigna = function(options) {
 
 				document_id = elm_li_reg.attr("data-id");
 				document_instancia = elm_li_reg.attr("data-instancia");
-				document_signant_nif = bt.closest("li.imc--per-signar").attr("data-nif");
+				document_signant_nif = bt.closest("li.imc--signant").attr("data-nif");
 
 				if (bt.attr("data-obligatori") === "d") {
 					return;
@@ -255,6 +316,17 @@ $.fn.appSigna = function(options) {
 									imc_signatura_iframe
 										.attr("src", form_url);
 
+									if (typeof APP_SIGNATURA_IFRAME_WIDTH !== "undefined" && typeof APP_SIGNATURA_IFRAME_HEIGHT !== "undefined") {
+
+										if (APP_SIGNATURA_IFRAME_WIDTH === "" || APP_SIGNATURA_IFRAME_HEIGHT === "") {
+											return;
+										}
+
+										imc_signatura_iframe
+											.css({ width: APP_SIGNATURA_IFRAME_WIDTH+"px", height: APP_SIGNATURA_IFRAME_HEIGHT+"px" });
+										
+									}
+
 								};
 
 							if (data.estado === "WARNING") {
@@ -275,7 +347,7 @@ $.fn.appSigna = function(options) {
 							consola("Formulari: error des de JSON");
 							
 							imc_contenidor
-								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: data.url });
+								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: data.url });
 
 						}
 						
@@ -572,7 +644,7 @@ $.fn.appRegistra = function(options) {
 							consola("Registra: error des de JSON");
 							
 							imc_contenidor
-								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: data.url });
+								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: data.url });
 
 						}
 						

@@ -20,6 +20,7 @@ import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCaptcha;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoOculto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
@@ -50,6 +51,7 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteRegistro;
 import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
+import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JElementoFormulario;
 import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFormateadorFormulario;
@@ -796,6 +798,13 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 						continue;
 					}
 
+					if (isTipoCaptcha(mlinea)) {
+						anyadirComponenteCaptcha((ComponenteFormularioCampoCaptcha) mlinea.getComponentes().get(0),
+								mlinea.getOrden(), idPagina);
+						ordenLinea++;
+						continue;
+					}
+
 					final ObjetoFormulario objetoFormularioLine = formularioInternoDao
 							.addComponente(TypeObjetoFormulario.LINEA, idPagina, null, mlinea.getOrden(), null);
 					final Long idLinea = objetoFormularioLine.getCodigo();
@@ -874,6 +883,24 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	}
 
 	/**
+	 * Los tipos etiqueta se crean de tirón, se pide añadir una etiqueta y
+	 * directamente crea una linea con su sección.
+	 *
+	 * @param mlinea
+	 * @return
+	 */
+	private boolean isTipoCaptcha(final LineaComponentesFormulario mlinea) {
+		boolean tipoEtiqueta = false;
+		if (mlinea != null && mlinea.getComponentes() != null && mlinea.getComponentes().size() == 1
+				&& (mlinea.getComponentes().get(0) instanceof ComponenteFormularioCampoCaptcha)) {
+			tipoEtiqueta = true;
+		}
+
+		return tipoEtiqueta;
+
+	}
+
+	/**
 	 * Añade componente de tipo sección.
 	 *
 	 * @param componente
@@ -902,6 +929,50 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		}
 		comp.setIdComponente(componente.getIdComponente());
 		comp.setLetra(componente.getLetra());
+		comp.setNoMostrarTexto(componente.isNoMostrarTexto());
+		comp.setNumColumnas(componente.getNumColumnas());
+		comp.setOrden(componente.getOrden());
+		if (componente.getTexto() != null) {
+			componente.getTexto().setCodigo(null);
+			if (componente.getTexto().getTraducciones() != null) {
+				for (final Traduccion traduccion : componente.getTexto().getTraducciones()) {
+					traduccion.setCodigo(null);
+				}
+			}
+			comp.setTexto(componente.getTexto());
+		}
+		comp.setTipo(componente.getTipo());
+		formularioInternoDao.updateComponente(comp);
+	}
+
+	/**
+	 * Añade componente de tipo captcha.
+	 *
+	 * @param componente
+	 * @param idLinea
+	 * @param idPagina
+	 */
+	private void anyadirComponenteCaptcha(final ComponenteFormularioCampoCaptcha componente, final int orden,
+			final Long idPagina) {
+		final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(), idPagina, null, orden,
+				null);
+		entityManager.flush();
+		final Long id = ((LineaComponentesFormulario) retorno).getComponentes()
+				.get(((LineaComponentesFormulario) retorno).getComponentes().size() - 1).getCodigo();
+
+		final ComponenteFormularioCampoCaptcha comp = (ComponenteFormularioCampoCaptcha) formularioInternoDao
+				.getComponenteById(id);
+		comp.setAlineacionTexto(componente.getAlineacionTexto());
+		if (componente.getAyuda() != null) {
+			componente.getAyuda().setCodigo(null);
+			if (componente.getAyuda().getTraducciones() != null) {
+				for (final Traduccion traduccion : componente.getAyuda().getTraducciones()) {
+					traduccion.setCodigo(null);
+				}
+			}
+			comp.setAyuda(componente.getAyuda());
+		}
+		comp.setIdComponente(componente.getIdComponente());
 		comp.setNoMostrarTexto(componente.isNoMostrarTexto());
 		comp.setNumColumnas(componente.getNumColumnas());
 		comp.setOrden(componente.getOrden());
@@ -1401,7 +1472,6 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 								if (jlinea.getElementoFormulario() != null
 										&& !jlinea.getElementoFormulario().isEmpty()) {
 									for (JElementoFormulario componente : jlinea.getElementoFormulario()) {
-										String tipo = componente.getTipo();
 										if (componente.getCampoFormulario() != null) {
 											componente.getCampoFormulario().setScriptAutocalculado(null);
 											componente.getCampoFormulario().setScriptSoloLectura(null);

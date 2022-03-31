@@ -2,6 +2,7 @@ package es.caib.sistramit.core.service.component.flujo.pasos.debesaber;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,9 @@ import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.service.component.flujo.pasos.ControladorPasoReferenciaImpl;
+import es.caib.sistramit.core.service.component.script.RespuestaScript;
+import es.caib.sistramit.core.service.component.script.ScriptUtils;
+import es.caib.sistramit.core.service.component.script.plugins.flujo.ResInstrucciones;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.DatosInternosPasoDebeSaber;
 import es.caib.sistramit.core.service.model.flujo.DatosPaso;
@@ -29,6 +33,7 @@ import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
 import es.caib.sistramit.core.service.model.flujo.types.TypeEstadoPaso;
 import es.caib.sistramit.core.service.model.flujo.types.TypeFaseActualizacionDatosInternos;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
+import es.caib.sistramit.core.service.model.script.types.TypeScriptFlujo;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
 import es.caib.sistramit.core.service.util.UtilsSTG;
 
@@ -71,7 +76,7 @@ public final class ControladorPasoDebeSaber extends ControladorPasoReferenciaImp
 			final DatosPersistenciaPaso pDpp, final TypeAccionPaso pAccionPaso, final ParametrosAccionPaso pParametros,
 			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo) {
 		// Este paso no tiene acciones
-		throw new AccionPasoNoPermitidaException("Paso Debe Saber no tiene acciones");
+		throw new AccionPasoNoPermitidaException("Passa Cal Saber no té accions");
 	}
 
 	// ---------------------------------------------------------------------------
@@ -113,14 +118,14 @@ public final class ControladorPasoDebeSaber extends ControladorPasoReferenciaImp
 				.devuelveDefinicionPaso(dipa.getIdPaso(), definicionTramite);
 
 		if (defPaso == null) {
-			throw new ConfiguracionModificadaException("No existe paso con id " + dipa.getIdPaso());
+			throw new ConfiguracionModificadaException("No existeix passa amb id " + dipa.getIdPaso());
 		}
 
 		final List<DescripcionPaso> descripcionesPaso = new ArrayList<>();
 		for (final RPasoTramitacion paso : definicionTramite.getDefinicionVersion().getPasos()) {
 			final TypePaso tipoPaso = TypePaso.fromString(paso.getTipo());
 			if (tipoPaso == null) {
-				throw new TipoNoControladoException("Tipo paso no controlado: " + paso.getTipo());
+				throw new TipoNoControladoException("Tipus passa no controlat: " + paso.getTipo());
 			}
 			final DescripcionPaso d = new DescripcionPaso();
 			d.setId(paso.getIdentificador());
@@ -134,7 +139,22 @@ public final class ControladorPasoDebeSaber extends ControladorPasoReferenciaImp
 		final DetallePasoDebeSaber dpds = new DetallePasoDebeSaber();
 		dpds.setId(dipa.getIdPaso());
 		dpds.setCompletado(TypeSiNo.SI);
-		dpds.setInstrucciones(StringUtils.defaultString(defPaso.getInstruccionesInicio()));
+		if (UtilsSTG.existeScript(defPaso.getScriptInstruccionesInicio())) {
+			// Ejecutamos script
+			final Map<String, String> codigosError = UtilsSTG
+					.convertLiteralesToMap(defPaso.getScriptInstruccionesInicio().getLiterales());
+			final RespuestaScript rs = getScriptFlujo().executeScriptFlujo(
+					TypeScriptFlujo.SCRIPT_INSTRUCCIONES_DEBE_SABER, defPaso.getIdentificador(),
+					defPaso.getScriptInstruccionesInicio().getScript(), pVariablesFlujo, null, null, codigosError,
+					definicionTramite);
+			// Evaluamos resultado
+			final ResInstrucciones ri = (ResInstrucciones) rs.getResultado();
+			final String textoInstrucciones = ScriptUtils.calcularMensaje(ri.getCodigoMensaje(),
+					ri.getParametrosMensaje(), ri.getTextoMensaje(), codigosError);
+			dpds.setInstrucciones(StringUtils.defaultString(textoInstrucciones));
+		} else {
+			dpds.setInstrucciones(StringUtils.defaultString(defPaso.getInstruccionesInicio()));
+		}
 		dpds.setInfoLOPD(UtilsSTG.obtenerLiteral(entidadInfo.getInfoLopdHTML(),
 				definicionTramite.getDefinicionVersion().getIdioma()));
 		dpds.setPasos(descripcionesPaso);

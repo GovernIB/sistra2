@@ -13,7 +13,9 @@ public enum TypeCampoIndexado {
 	/** Lista selección múltiple (lista checks). */
 	MULTIPLE("MULTIPLE"),
 	/** Lista selección única (lista radios). */
-	UNICA("UNICA");
+	UNICA("UNICA"),
+	/** Buscador dinámico **/
+	DINAMICO("DINAMICO");
 
 	private String valor;
 

@@ -153,13 +153,13 @@ public class SystemServiceImpl implements SystemService {
 
 		// Validamos tipo
 		if (invalidacion.getTipo() == null) {
-			throw new TipoNoControladoException("Tipo de invalidación no soportada");
+			throw new TipoNoControladoException("Tipus d'invalidació no suportada");
 		}
 
 		// Validamos identificador obligatorio
 		if (invalidacion.getTipo() != TypeInvalidacion.CONFIGURACION
 				&& StringUtils.isBlank(invalidacion.getIdentificador())) {
-			throw new ErrorConfiguracionException("Invalidación incorrecta: no existe identificador");
+			throw new ErrorConfiguracionException("Invalidació incorrecta: no existeix identificador");
 		}
 
 		// Validamos identificador para tipo trámite
@@ -167,13 +167,13 @@ public class SystemServiceImpl implements SystemService {
 			final String[] codigos = invalidacion.getIdentificador().split("#");
 			if (codigos.length != 2) {
 				throw new ErrorConfiguracionException(
-						"Invalidación incorrecta: no es válido identificador " + invalidacion.getIdentificador());
+						"Invalidació incorrecta: no és vàlid identificador " + invalidacion.getIdentificador());
 			}
 			try {
 				Integer.parseInt(codigos[1]);
 			} catch (final NumberFormatException nfe) {
 				throw new ErrorConfiguracionException(
-						"Invalidación incorrecta: no es válido identificador " + invalidacion.getIdentificador());
+						"Invalidació incorrecta: no es vàlido identificador " + invalidacion.getIdentificador());
 			}
 		}
 

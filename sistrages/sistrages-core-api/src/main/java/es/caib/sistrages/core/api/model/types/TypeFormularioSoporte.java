@@ -14,7 +14,11 @@ public enum TypeFormularioSoporte {
 	/**
 	 * Lista fija de emails.
 	 */
-	LISTA_DE_EMAILS("E");
+	LISTA_DE_EMAILS("E"),
+	/**
+	 * Lista fija de emails.
+	 */
+	ADMINISTRADOR_AREA("A");
 
 	private String valor;
 

@@ -121,7 +121,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 			}
 
 		} catch (final RegistroPluginException e) {
-			LOGGER.error("Error obteniendo informacion de registro", e);
+			UtilJSF.loggearErrorFront("Error obteniendo informacion de registro", e);
 			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.registro.error"));
 		}
@@ -137,7 +137,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 			libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(), this.data.getCodigoOficinaRegistro(),
 					TypeRegistro.REGISTRO_ENTRADA);
 		} catch (final RegistroPluginException e) {
-			LOGGER.error("Error obteniendo informacion de registro", e);
+			UtilJSF.loggearErrorFront("Error obteniendo informacion de registro", e);
 			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.registro.error"));
 		}
@@ -152,8 +152,9 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.registro.error.script"));
 		} else {
-			if(data.isValidaRepresentacion()) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.check.valida.no.implementado"));
+			if (data.isValidaRepresentacion()) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+						UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.check.valida.no.implementado"));
 			} else {
 				tramiteService.updateTramitePaso(data);
 

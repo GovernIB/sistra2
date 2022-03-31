@@ -28,6 +28,7 @@ import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.frontend.model.comun.Constantes;
+import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeOpcionMenuAdmOper;
 import es.caib.sistrages.frontend.model.types.TypeOpcionMenuSuperAdministrador;
@@ -378,6 +379,11 @@ public class SessionBean {
 		UtilJSF.redirectJsfDefaultPageRole(activeRole, obtenerIdEntidad());
 	}
 
+	/** Abrir dialog info sesion. */
+	public void infoSesion() {
+		UtilJSF.openDialog(DialogInfoSesion.class, TypeModoAcceso.CONSULTA, null, true, 620, 340);
+	}
+
 	/** Genera menu segun role activo. */
 	public MenuModel getMenuModel() {
 		final MenuModel model = new DefaultMenuModel();
@@ -403,6 +409,11 @@ public class SessionBean {
 
 		final DefaultSubMenu firstSubmenu = new DefaultSubMenu(getUserName());
 		firstSubmenu.setIcon("fa-li fa fa-user-o");
+		final DefaultMenuItem item0 = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones.datosSesion"));
+		item0.setCommand("#{sessionBean.infoSesion()}");
+		item0.setProcess("@this");
+		item0.setUpdate("growlHeader");
+		firstSubmenu.addElement(item0);
 		final DefaultMenuItem item = new DefaultMenuItem(UtilJSF.getLiteral(getChangeLang()));
 		item.setCommand("#{sessionBean.cambiarIdioma(sessionBean.getChangeLang())}");
 		item.setIcon("fa-li fa fa-flag");
@@ -759,5 +770,11 @@ public class SessionBean {
 	 */
 	public final void setPaginacion(Integer paginacion) {
 		this.paginacion = paginacion;
+	}
+
+	public void loggerErrorFront(Object tipo, Object mensaje, Object traza, Exception exception) {
+		if (tipo != null) {
+			UtilJSF.loggearErrorFront("Error en el front. " + tipo + " " + mensaje, exception);
+		}
 	}
 }

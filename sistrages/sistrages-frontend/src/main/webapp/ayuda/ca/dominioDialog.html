@@ -46,6 +46,7 @@
 				<li><b>Consulta Remota:</b> domini que recupera valors d'una ubicaci&oacute; remota a partir del plugin de domini remot:
 					<ul class="detalle2">
 						<li>URL: URL contra la que es far&agrave; la consulta remota.</li>
+						<li>Per a consultar com definir els dominis de SISTRA1 i SISTRA2, cliqueu <a href="AyudaServlet?id=pluginDomRemoto&lang=es">aquí</a></li>
 					</ul>
 				</li>
 				<li><b>Font Dades:</b> domini que recupera dades d'una Font de Dades definida a SISTRAGESBACK:
@@ -53,10 +54,10 @@
 						<li>Font: desplegable que permet seleccionar la font de dades a consultar. &Uacute;nicament es mostren les fonts de dades que pertanyin a l'&agrave;mbit del domini</li>
 						<li>Query: consulta, en llenguatge pseudoSQL per consultar una font de dades. El format d'aquesta consulta ha de ser:
 							<p><i>SELECT campo (, campo)* FROM fuenteDatos WHERE expresion ( [AND | OR] expresion ] )* ORDER BY campo</i></p>
-							<p>on expresion: <i>campo [= | LIKE] ?</i>, on "?" &eacute;s un par&agrave;metre</p>
+							<p>on expresion: <i>campo [= | LIKE] :param</i>, on ":param" és el paràmetre que es passarà.</p>
 							<p>Les part&iacute;cules de la sent&egrave;ncia pseudoSQL (SELECT, FROM, WHERE, LIKE, AND, OR, ORDER BY) han d'estar en maj&uacute;scules.<br>
 							Respecte a las comparancions en el WHERE seran <i>ignorecase</i> ( = y LIKE ).<br>
-							Respecte al LIKE es realitzar&agrave; autom&agrave;ticament la comparaci&oacute;: %parametre% .<br>
+							Respecte al LIKE es realitzar&agrave; autom&agrave;ticament la comparaci&oacute; amb :param.<br>
 							Respecte al ORDER BY nom&eacute;s es pot indicar un camp. A m&eacute;s com tots els camps s&oacute;n de tipus cadena, l'ordenaci&oacute; &eacute;s literal pel que si es vol crear un camp en la font de dades que permeti ordenar seq&uuml;encialment, millor emprar lletres que n&uacute;meros.
 							</p>
 						</li>

@@ -21,8 +21,6 @@ import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JIdioma;
 import es.caib.sistrages.core.service.repository.model.JLiteral;
 import es.caib.sistrages.core.service.repository.model.JPlantillaEntidad;
-import es.caib.sistrages.core.service.repository.model.JPlantillaFormulario;
-import es.caib.sistrages.core.service.repository.model.JPlantillaIdiomaFormulario;
 
 @Repository("entidadDao")
 public class EntidadDaoImpl implements EntidadDao {
@@ -113,6 +111,7 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setRoleAdministrador(entidad.getRol());
 		jEntidad.setRoleSup(entidad.getRolSup());
 		jEntidad.setDiasPreregistro(entidad.getDiasPreregistro());
+		jEntidad.setIdentificador(entidad.getIdentificador());
 		entityManager.persist(jEntidad);
 	}
 
@@ -150,6 +149,7 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setActiva(entidad.isActivo());
 		jEntidad.setRoleAdministrador(entidad.getRol());
 		jEntidad.setRoleSup(entidad.getRolSup());
+		jEntidad.setIdentificador(entidad.getIdentificador());
 		entityManager.merge(jEntidad);
 	}
 
@@ -470,5 +470,36 @@ public class EntidadDaoImpl implements EntidadDao {
 		}
 
 		entityManager.remove(jPlantillaEntidad);
+	}
+
+	@Override
+	public boolean existeFormulario(String identificador, Long codigo) {
+		final StringBuffer sql = new StringBuffer(
+				"select count(a) from JEntidad as a where a.identificador like :identificador");
+		if (codigo != null) {
+			sql.append(" and a.codigo != :codigo");
+		}
+		final Query query = entityManager.createQuery(sql.toString());
+		query.setParameter("identificador", identificador);
+		if (codigo != null) {
+			query.setParameter("codigo", codigo);
+		}
+		final Long cuantos = (Long) query.getSingleResult();
+		return cuantos != 0l;
+	}
+
+	@Override
+	public Entidad getByIdentificador(String identificador) {
+		final String sql = "select d from JDominio d where d.identificador = :identificador ";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("identificador", identificador);
+
+		List<JEntidad> jentidad = query.getResultList();
+		Entidad entidad = null;
+		if (jentidad != null && !jentidad.isEmpty()) {
+			entidad = jentidad.get(0).toModel();
+		}
+
+		return entidad;
 	}
 }

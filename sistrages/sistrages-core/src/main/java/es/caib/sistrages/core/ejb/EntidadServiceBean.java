@@ -327,4 +327,10 @@ public class EntidadServiceBean implements EntidadService {
 		entidadService.removePlantillaEmailFin(plantillaEntidad);
 	}
 
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
+	public boolean existeEntidad(String identificador, Long codigo) {
+		return entidadService.existeEntidad(identificador, codigo);
+	}
+
 }

@@ -24,19 +24,15 @@ public final class LimiteTramitacionException extends ServiceRollbackException {
 	 *
 	 * Constructor.
 	 *
-	 * @param pIdTramite
-	 *            Id tramite
-	 * @param version
-	 *            Version tramite
-	 * @param limite
-	 *            limite
-	 * @param intervalo
-	 *            intervalo
+	 * @param pIdTramite Id tramite
+	 * @param version    Version tramite
+	 * @param limite     limite
+	 * @param intervalo  intervalo
 	 */
 	public LimiteTramitacionException(final String pIdTramite, final int version, final long limite,
 			final int intervalo) {
 
-		super("Limite de tramitacion alcanzado");
+		super("Límit de tramitació aconseguit");
 
 		final ListaPropiedades detalles = new ListaPropiedades();
 		detalles.addPropiedad("idTramite", pIdTramite);

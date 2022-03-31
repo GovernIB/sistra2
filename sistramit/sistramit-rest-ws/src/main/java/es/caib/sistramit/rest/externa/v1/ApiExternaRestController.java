@@ -191,10 +191,10 @@ public class ApiExternaRestController {
 				for (final String ev : pRFiltro.getListaEventos()) {
 					final TypeEvento evento = TypeEvento.fromString(ev);
 					if (evento == null) {
-						throw new ErrorFrontException("No existe evento de tipo " + ev);
+						throw new ErrorFrontException("No existeix event de tipus " + ev);
 					}
 					if (eventosNoPermitidos.contains(evento)) {
-						throw new ErrorFrontException("Evento no permitido: " + ev);
+						throw new ErrorFrontException("Event no permés: " + ev);
 					}
 					filtro.getListaEventos().add(evento);
 				}

@@ -48,14 +48,14 @@ public final class PasoAnexarController extends TramitacionController {
 	 * trámite.
 	 *
 	 * @param idPaso
-	 *            Identificador paso.
+	 *                    Identificador paso.
 	 * @param idAnexo
-	 *            Identificador anexo.
+	 *                    Identificador anexo.
 	 * @param titulo
-	 *            Título del anexo (para genéricos).
+	 *                    Título del anexo (para genéricos).
 	 * @param request
-	 *            Request para extraer el fichero (busca fichero en el parámetro de
-	 *            la request "fichero").
+	 *                    Request para extraer el fichero (busca fichero en el
+	 *                    parámetro de la request "fichero").
 	 * @return Genera un HTML que invoca a la función fileUploaded del parent
 	 */
 	@RequestMapping(value = "/anexarDocumento.json", method = RequestMethod.POST)
@@ -90,19 +90,19 @@ public final class PasoAnexarController extends TramitacionController {
 	 * Anexa documento presencial.
 	 *
 	 * @param idPaso
-	 *            idPaso
+	 *                                idPaso
 	 * @param idAnexo
-	 *            idAnexo
+	 *                                idAnexo
 	 * @param titulo
-	 *            titulo
+	 *                                titulo
 	 * @param anexarPresencial
-	 *            indica si se anexa o se quita
+	 *                                indica si se anexa o se quita
 	 * @param idSesionTramitacion
-	 *            idSesionTramitacion
+	 *                                idSesionTramitacion
 	 * @return respuesta paso
 	 */
-	private RespuestaJSON anexarPresencial(String idPaso, String idAnexo, String titulo, TypeSiNo anexarPresencial,
-			String idSesionTramitacion) {
+	private RespuestaJSON anexarPresencial(final String idPaso, final String idAnexo, final String titulo,
+			final TypeSiNo anexarPresencial, final String idSesionTramitacion) {
 
 		RespuestaJSON res = null;
 
@@ -126,21 +126,21 @@ public final class PasoAnexarController extends TramitacionController {
 	 * Anexa documento electronico.
 	 *
 	 * @param idPaso
-	 *            idPaso
+	 *                                idPaso
 	 * @param idAnexo
-	 *            idAnexo
+	 *                                idAnexo
 	 * @param titulo
-	 *            titulo
+	 *                                titulo
 	 * @param request
-	 *            request
+	 *                                request
 	 * @param idSesionTramitacion
-	 *            idSesionTramitacion
+	 *                                idSesionTramitacion
 	 * @return respuesta paso
 	 */
 	private RespuestaJSON anexarElectronico(final String idPaso, final String idAnexo, final String titulo,
 			final HttpServletRequest request, final String idSesionTramitacion) {
 		RespuestaJSON resAnexar;
-		boolean errorLectura = false;
+		boolean errorLectura = true;
 
 		// Recuperamos datos fichero de la request
 		String fileName = null;
@@ -148,14 +148,15 @@ public final class PasoAnexarController extends TramitacionController {
 		if (request instanceof MultipartHttpServletRequest) {
 			final MultipartHttpServletRequest mp = (MultipartHttpServletRequest) request;
 			final MultipartFile fic = mp.getFile("fichero");
-			try {
-				fileName = fic.getOriginalFilename();
-				fileContent = fic.getBytes();
-			} catch (final IOException e) {
-				errorLectura = true;
+			if (fic != null) {
+				try {
+					fileName = fic.getOriginalFilename();
+					fileContent = fic.getBytes();
+					errorLectura = false;
+				} catch (final IOException e) {
+					// Capturamos error para que no genere excepcion
+				}
 			}
-		} else {
-			errorLectura = true;
 		}
 
 		resAnexar = new RespuestaJSON();
@@ -183,9 +184,13 @@ public final class PasoAnexarController extends TramitacionController {
 			}
 
 		} else {
+			// Error al leer el fichero
 			resAnexar.setEstado(TypeRespuestaJSON.ERROR);
-			resAnexar.setMensaje(new MensajeUsuario("Error", "Error al leer fichero de la request"));
+			resAnexar.setMensaje(new MensajeUsuario(
+					getLiteralesFront().getLiteralFront(LiteralesFront.MENSAJES, "atencion", getIdioma()),
+					getLiteralesFront().getLiteralFront(LiteralesFront.MENSAJES, "anexoNoSePuedeLeer", getIdioma())));
 		}
+
 		return resAnexar;
 	}
 
@@ -193,11 +198,12 @@ public final class PasoAnexarController extends TramitacionController {
 	 * Borra un documento.
 	 *
 	 * @param idPaso
-	 *            Id paso
+	 *                      Id paso
 	 * @param idAnexo
-	 *            Id anexo
+	 *                      Id anexo
 	 * @param instancia
-	 *            Instancia (en caso de ser multiinstancia, es decir, genérico)
+	 *                      Instancia (en caso de ser multiinstancia, es decir,
+	 *                      genérico)
 	 * @return Devuelve JSON con estado actual del paso
 	 */
 	@RequestMapping(value = "/borrarDocumento.json", method = RequestMethod.POST)
@@ -216,13 +222,14 @@ public final class PasoAnexarController extends TramitacionController {
 	 * Acción borrar documento.
 	 *
 	 * @param idPaso
-	 *            Id paso
+	 *                                Id paso
 	 * @param idAnexo
-	 *            Id anexo
+	 *                                Id anexo
 	 * @param instancia
-	 *            Instancia (en caso de ser multiinstancia, es decir, genérico)
+	 *                                Instancia (en caso de ser multiinstancia, es
+	 *                                decir, genérico)
 	 * @param idSesionTramitacion
-	 *            idSesionTramitacion
+	 *                                idSesionTramitacion
 	 * @return respuesta
 	 */
 	private RespuestaJSON accionBorrarDocumento(final String idPaso, final String idAnexo, final String instancia,
@@ -245,11 +252,12 @@ public final class PasoAnexarController extends TramitacionController {
 	 * Devuelve contenido del anexo.
 	 *
 	 * @param idPaso
-	 *            Identificador paso.
+	 *                      Identificador paso.
 	 * @param idAnexo
-	 *            Identificador del anexo.
+	 *                      Identificador del anexo.
 	 * @param instancia
-	 *            Instancia (en caso de ser multiinstancia, es decir, genérico)
+	 *                      Instancia (en caso de ser multiinstancia, es decir,
+	 *                      genérico)
 	 * @return Genera descarga documento
 	 */
 	@RequestMapping(value = "/descargarDocumento.html")
@@ -279,9 +287,9 @@ public final class PasoAnexarController extends TramitacionController {
 	 * Realiza download de la plantilla de un anexo.
 	 *
 	 * @param idPaso
-	 *            Identificador paso.
+	 *                    Identificador paso.
 	 * @param idAnexo
-	 *            Identificador anexo.
+	 *                    Identificador anexo.
 	 * @return Documento para descargar.
 	 */
 	@RequestMapping("/descargarPlantilla.html")

@@ -78,10 +78,15 @@ public final class DownloadFileView implements View {
 
 		// Recogemos nombre fichero y datos
 		String nombreFichero = (String) model.get(PARAMETER_FILENAME);
-		final byte[] datosFichero = (byte[]) model.get(PARAMETER_FILEDATA);
+		byte[] datosFichero = (byte[]) model.get(PARAMETER_FILEDATA);
 
 		// Volcamos fichero en stream response
+		if (datosFichero == null) {
+			datosFichero = new byte[0];
+		}
+
 		final ByteArrayInputStream bis = new ByteArrayInputStream(datosFichero);
+
 		try {
 
 			// Normalizamos fichero
@@ -97,14 +102,14 @@ public final class DownloadFileView implements View {
 		} catch (final java.io.IOException exc) {
 			logger.info("Client aborted");
 		} catch (final Exception exc) {
-			logger.error("Error descargando fichero", exc);
+			logger.error("Error descarregant fitxer", exc);
 		} finally {
 			try {
 				if (!response.isCommitted()) {
 					response.flushBuffer();
 				}
 			} catch (final Exception ex) {
-				logger.warn("Client flush no realizado", ex);
+				logger.warn("Client flush no realitzat", ex);
 			}
 			if (bis != null) {
 				bis.close();

@@ -27,20 +27,26 @@ import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ErrorPdfFormularioException;
 import es.caib.sistramit.core.api.exception.FormularioFinalizadoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.comun.types.TypeValidacion;
 import es.caib.sistramit.core.api.model.formulario.AccionFormulario;
 import es.caib.sistramit.core.api.model.formulario.AccionFormularioPersonalizada;
+import es.caib.sistramit.core.api.model.formulario.Captcha;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelector;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
 import es.caib.sistramit.core.api.model.formulario.MensajeValidacion;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
+import es.caib.sistramit.core.api.model.formulario.RecursosFormulario;
+import es.caib.sistramit.core.api.model.formulario.ResultadoBuscadorDinamico;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
 import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
+import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
 import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
+import es.caib.sistramit.core.api.model.formulario.types.TypeCaptcha;
 import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -50,6 +56,7 @@ import es.caib.sistramit.core.service.component.formulario.interno.utils.Configu
 import es.caib.sistramit.core.service.component.formulario.interno.utils.UtilsFormularioInterno;
 import es.caib.sistramit.core.service.component.formulario.interno.utils.ValidacionesFormularioHelper;
 import es.caib.sistramit.core.service.component.formulario.interno.utils.ValoresPosiblesFormularioHelper;
+import es.caib.sistramit.core.service.component.literales.Literales;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.formulario.DatosFinalizacionFormulario;
 import es.caib.sistramit.core.service.model.formulario.DatosInicioSesionFormulario;
@@ -61,6 +68,7 @@ import es.caib.sistramit.core.service.model.formulario.interno.PaginaFormularioD
 import es.caib.sistramit.core.service.model.formulario.types.TipoFinalizacionFormulario;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FormularioDao;
+import es.caib.sistramit.core.service.util.UtilsCaptcha;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
 import es.caib.sistramit.core.service.util.UtilsFormulario;
 import es.caib.sistramit.core.service.util.UtilsSTG;
@@ -99,6 +107,10 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	@Autowired
 	private CalculoDatosFormularioHelper calculoDatosFormularioHelper;
 
+	/** Literales negocio. */
+	@Autowired
+	private Literales literales;
+
 	@Override
 	public String cargarSesion(final String ticket) {
 
@@ -111,8 +123,8 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 
 		// Verificamos si ha variado la release
 		if (defTramite.getDefinicionVersion().getRelease() != dis.getReleaseTramite()) {
-			throw new ErrorConfiguracionException("Ha variado la release del trámite: " + dis.getReleaseTramite()
-					+ " vs " + defTramite.getDefinicionVersion().getRelease());
+			throw new ErrorConfiguracionException("Ha variat la release del tràmit: " + dis.getReleaseTramite() + " vs "
+					+ defTramite.getDefinicionVersion().getRelease());
 		}
 
 		// Generamos datos sesion en memoria
@@ -178,6 +190,8 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		pagAct.setValoresPosibles(vpp);
 		pagAct.setHtml(html);
 		pagAct.setAcciones(acciones);
+		final RecursosFormulario recursos = calcularRecursosEstaticos(paginaDef, pagData);
+		pagAct.setRecursos(recursos);
 
 		// Ajuste valores selectores (no obligatorios, radios,...)
 		ajustarSelectoresPagina(pagAct);
@@ -242,6 +256,37 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 			res.setDebugEnabled(datosSesion.isDebugEnabled());
 		}
 		return res;
+	}
+
+	@Override
+	public ResultadoBuscadorDinamico buscadorDinamico(final String idCampo, final String textoCampo,
+			final List<ValorCampo> valoresPagina) {
+		return calculoDatosFormularioHelper.calcularValoresPosiblesSelectorDinamico(datosSesion, idCampo, textoCampo,
+				valoresPagina);
+	}
+
+	@Override
+	public Captcha generarImagenCaptcha(final String idCampo) {
+		return generarCaptchaCampo(idCampo, datosSesion.getDatosInicioSesion().getIdioma(), TypeCaptcha.IMAGEN);
+	}
+
+	@Override
+	public Captcha generarSonidoCaptcha(final String idCampo) {
+		return generarCaptchaCampo(idCampo, datosSesion.getDatosInicioSesion().getIdioma(), TypeCaptcha.SONIDO);
+	}
+
+	@Override
+	public void regenerarCaptcha(final String idCampo) {
+		// Generamos nuevo texto de captcha
+		final String textCaptcha = UtilsCaptcha.generarKeyCaptcha();
+		// Obtenemos datos página actual
+		final PaginaFormularioData pagData = datosSesion.getDatosFormulario().getPaginaActualFormulario();
+		// Establecemos nuevo valor
+		if (pagData.getConfiguracionCampo(idCampo).getTipo() != TypeCampo.CAPTCHA) {
+			throw new ErrorConfiguracionException("Camp " + idCampo + " no es captcha");
+		}
+		final ValorCampoSimple vc = new ValorCampoSimple(idCampo, textCaptcha);
+		pagData.reinicializarValorCampo(vc);
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -313,7 +358,13 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 			ValorCampo valorInicialCampo = UtilsFormularioInterno.buscarValorCampo(valoresCampo,
 					campoDef.getIdentificador());
 			if (valorInicialCampo == null) {
+				// Crea valor vacío según campo
 				valorInicialCampo = UtilsFormularioInterno.crearValorVacio(campoDef);
+			}
+
+			// Si es captcha, reinicia valor
+			if (UtilsSTG.traduceTipoCampo(campoDef.getTipo()) == TypeCampo.CAPTCHA) {
+				valorInicialCampo = new ValorCampoSimple(campoDef.getIdentificador(), UtilsCaptcha.generarKeyCaptcha());
 			}
 
 			// Calculamos dependencias con otros campos
@@ -476,7 +527,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 				plantilla = IOUtils.toByteArray(fis);
 			} catch (final IOException e) {
 				throw new ErrorPdfFormularioException(
-						"Error generando pdf formulario, no se puede acceder a plantilla: " + e.getMessage(), e);
+						"Error generant pdf formulari, no es pot accedir a plantilla: " + e.getMessage(), e);
 			}
 		}
 
@@ -486,7 +537,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 			formateador = (FormateadorPdfFormulario) Class.forName(plantillaPdf.getClaseFormateador()).newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			throw new ErrorPdfFormularioException(
-					"Error generando pdf formulario a partir classname " + plantillaPdf.getClaseFormateador(), e);
+					"Error generant pdf formulari a partir classname " + plantillaPdf.getClaseFormateador(), e);
 		}
 
 		// Formateamos a PDF
@@ -551,18 +602,26 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 */
 	protected ResultadoGuardarPagina guardarPaginaImpl(final List<ValorCampo> valoresPagina,
 			final String accionPersonalizada, final boolean salirSinFinalizar) {
+
+		MensajeValidacion mensaje = null;
+
 		// Verificamos que no este finalizada la sesion de formulario
 		if (datosSesion.isFinalizada()) {
-			throw new FormularioFinalizadoException("No se puede guardar pagina: sesion formulario finalizada");
+			throw new FormularioFinalizadoException("No es pot guardar pàgina: sessió formulari finalitzada");
 		}
 
-		// Almacenamos valores campos
-		datosSesion.getDatosFormulario().getPaginaActualFormulario().actualizarValoresPagina(valoresPagina);
+		// Validación captchas
+		final PaginaFormularioData pagData = datosSesion.getDatosFormulario().getPaginaActualFormulario();
+		mensaje = validarCapthas(pagData, valoresPagina);
 
-		// Realizamos validaciones
-		MensajeValidacion mensaje = null;
-		if (!salirSinFinalizar) {
-			mensaje = validarGuardarPagina(datosSesion, accionPersonalizada);
+		// Guardamos valores pagina
+		if (mensaje == null) {
+			// Almacenamos valores campos (excepto captchas)
+			datosSesion.getDatosFormulario().getPaginaActualFormulario().actualizarValoresPagina(valoresPagina);
+			// Realizamos validaciones
+			if (!salirSinFinalizar) {
+				mensaje = validarGuardarPagina(datosSesion, accionPersonalizada);
+			}
 		}
 
 		// Devolvemos resultado
@@ -583,8 +642,8 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 						idPaginaSiguiente);
 				if (indiceDefSiguiente <= datosSesion.getDatosFormulario().getPaginaActualFormulario().getIndiceDef()) {
 					throw new ErrorConfiguracionException(
-							"El script de navegación de página debe indicar una página posterior (página actual: "
-									+ paginaDef.getIdentificador() + " - página siguiente: " + idPaginaSiguiente);
+							"El script de navegació de pàgina ha d'indicar una pàgina posterior (pàgina actual: "
+									+ paginaDef.getIdentificador() + " - pàgina següent: " + idPaginaSiguiente);
 				}
 				// Si pagina siguiente ya se ha rellenado antes, la obtenemos
 				PaginaFormularioData paginaSiguiente = datosSesion.getDatosFormulario()
@@ -618,6 +677,94 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		}
 
 		return res;
+	}
+
+	/**
+	 * Valida campos captcha.
+	 *
+	 * @param paginaActual
+	 *                          Datos página
+	 * @param valoresPagina
+	 * @return valores actuales campos captcha.
+	 */
+	private MensajeValidacion validarCapthas(final PaginaFormularioData paginaActual,
+			final List<ValorCampo> valoresPagina) {
+
+		MensajeValidacion mensaje = null;
+
+		// Validamos captchas (si hay uno que da error, no pasa validación)
+		boolean valido = true;
+		String idCampo = null;
+		for (final ConfiguracionCampo cc : paginaActual.getConfiguracion()) {
+			if (cc.getTipo() == TypeCampo.CAPTCHA) {
+				final ValorCampoSimple vcOld = (ValorCampoSimple) UtilsFormularioInterno
+						.buscarValorCampo(paginaActual.getValores(), cc.getId());
+				final ValorCampoSimple vcNew = (ValorCampoSimple) UtilsFormularioInterno.buscarValorCampo(valoresPagina,
+						cc.getId());
+				if (vcOld == null || vcNew == null
+						|| !StringUtils.equalsIgnoreCase(vcOld.getValor(), vcNew.getValor())) {
+					valido = false;
+					idCampo = cc.getId();
+					break;
+				}
+			}
+		}
+
+		// En caso de no pasar validacion, indicamos error validacion
+		if (!valido) {
+			final String errorMsg = literales.getLiteral(Literales.GESTOR_FORMULARIOS_INTERNO,
+					"validacion.captcha.incorrecta", null, datosSesion.getDatosInicioSesion().getIdioma());
+			mensaje = new MensajeValidacion(idCampo, TypeValidacion.ERROR, errorMsg);
+		}
+
+		// Reseteamos valores de todos los captchas (medida seguridad para forzar
+		// reentrada captcha)
+		for (final ConfiguracionCampo cc : paginaActual.getConfiguracion()) {
+			if (cc.getTipo() == TypeCampo.CAPTCHA) {
+				final String newCaptcha = UtilsCaptcha.generarKeyCaptcha();
+				paginaActual.reinicializarValorCampo(new ValorCampoSimple(cc.getId(), newCaptcha));
+			}
+		}
+
+		return mensaje;
+
+	}
+
+	/**
+	 * Calcula recursos estáticos página (imágenes,...)
+	 *
+	 * @param paginaDef
+	 *                      Definición página
+	 * @param pagData
+	 *                      Datos página
+	 * @return recursos estáticos página
+	 */
+	private RecursosFormulario calcularRecursosEstaticos(final RPaginaFormulario paginaDef,
+			final PaginaFormularioData pagData) {
+		final RecursosFormulario recursos = new RecursosFormulario();
+		// TODO PENDIENTE RECURSOS
+		return recursos;
+	}
+
+	/**
+	 * Genera captcha campo
+	 *
+	 * @param idCampo
+	 *                    id campo
+	 * @param tipo
+	 *                    Tipo captcja
+	 * @return captcha
+	 */
+	private Captcha generarCaptchaCampo(final String idCampo, final String idioma, final TypeCaptcha tipo) {
+		// Obtenemos datos página actual
+		final PaginaFormularioData pagData = datosSesion.getDatosFormulario().getPaginaActualFormulario();
+		// Generamos captcha a partir valor
+		if (pagData.getConfiguracionCampo(idCampo).getTipo() != TypeCampo.CAPTCHA) {
+			throw new ErrorConfiguracionException("Camp " + idCampo + " no es captcha");
+		}
+		final ValorCampoSimple vc = (ValorCampoSimple) pagData.getValorCampo(idCampo);
+		final Captcha captcha = UtilsCaptcha.generaCaptcha(vc.getValor(), idioma, tipo);
+		return captcha;
 	}
 
 }

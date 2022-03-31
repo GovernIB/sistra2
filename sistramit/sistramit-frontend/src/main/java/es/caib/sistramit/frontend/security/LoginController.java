@@ -120,7 +120,7 @@ public final class LoginController {
 		final SavedRequest savedRequest = loginRequestCache.getRequest(request, response);
 
 		if (savedRequest == null) {
-			throw new ErrorFrontException("Punto de entrada a la aplicación no válido");
+			throw new ErrorFrontException("Punt d'entrada a la aplicació no vàlid");
 		}
 		final String url = savedRequest.getRedirectUrl();
 
@@ -171,7 +171,7 @@ public final class LoginController {
 			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_CARPETA,
 					ConstantesSeguridad.TICKET_PARAM);
 		} else {
-			throw new ErrorFrontException("Punto de entrada a la aplicación no válido: " + url);
+			throw new ErrorFrontException("Punt de entrada a la aplicació no vàlido: " + url);
 		}
 
 		// Metemos atributo en la session para que el filtro de autologout no
@@ -242,7 +242,7 @@ public final class LoginController {
 		try {
 			response.sendRedirect(sesionHttp.getUrlInicio());
 		} catch (final IOException e) {
-			throw new LoginException("Error al redirigir tras acceso componente autenticacion.");
+			throw new LoginException("Error al redirigir rere accés component autenticació.");
 		}
 		return null;
 	}
@@ -285,7 +285,7 @@ public final class LoginController {
 			view = new ModelAndView("redirect:" + "/asistente/cerrarSesion.html");
 		} else {
 			// Cierre de sesión exception
-			throw new ErrorFrontException("Ha ocurrido un error al realizar el cierre de sesión");
+			throw new ErrorFrontException("Ha ocorregut un error al realitzar el tancament de sessió");
 		}
 		return view;
 	}
@@ -328,7 +328,7 @@ public final class LoginController {
 		// Obtenemos ticket de la peticion
 		final String[] tickets = pSavedRequest.getParameterMap().get(pTicketName);
 		if (tickets == null || tickets.length != ConstantesNumero.N1) {
-			throw new ErrorFrontException("No existe ticket");
+			throw new ErrorFrontException("No existeix ticket");
 		}
 		final String ticket = tickets[0];
 

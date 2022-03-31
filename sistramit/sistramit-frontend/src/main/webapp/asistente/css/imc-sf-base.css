@@ -303,6 +303,12 @@ aside address { display: inline; }
 .imc-missatge .imc--text h2 span { font-size: 1.4em; }
 .imc-missatge .imc--text .imc--explicacio { margin-bottom: 2em; margin-left: 5em; }
 
+.imc-missatge .imc--text .imc--desenvolupadors { color: #666; margin-bottom: 2em; margin-left: 5em; }
+.imc-missatge .imc--text .imc--desenvolupadors[aria-hidden="true"] { display: none; }
+
+.imc-missatge .imc--text .imc--desenvolupadors h3,
+.imc-missatge .imc--text .imc--desenvolupadors p { font-size: .9em; }
+
 .imc-missatge .imc--text .imc--botonera { text-align: right; }
 .imc-missatge .imc--text .imc--botonera button { margin-left: .5em; }
 
@@ -404,6 +410,10 @@ aside address { display: inline; }
 .imc-missatge[data-accio='error'] .imc--text { background: #fff url(imgs/icones/ico_error.svg) no-repeat 1.5em 1em / auto 3em; }
 
 .imc-missatge[data-accio='error'] button[data-tipus="tanca"] { display: inline-block; }
+
+
+
+
 
 
 .imc-missatge[data-accio='signa'] .imc--text { background: #fff url(imgs/icones/ico_signa_4dba79.svg) no-repeat 1.5em 1em / auto 3em; }
@@ -599,20 +609,21 @@ form textarea { font: normal 1em 'Bariol Regular', Arial, Helvetica, sans-serif;
 
 .imc-suport form input[readonly] { background-color: #f2f2f2; }
 
-.imc-suport form input.imc--f-suport-error { border-color: #c00; }
+.imc-suport form input.imc--f-suport-error,
+.imc-suport form textarea.imc--f-suport-error { border-color: #c00; }
+
+
+.imc-el[data-obligatori="si"] label::after { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.2em; width: .5em; height: .5em; margin-left: .2em; background: transparent url(imgs/icones/ico_form_obligatori.svg) no-repeat center center / 100% auto; }
+
+
+
 
 
 /* input type */
 
 .imc-input-type { position: relative; }
 
-.imc-input-type input { position: absolute;
-top: 0;
-left: 0;
-z-index: -1;
-font-size: 1em;
-padding: .2em;
-width: 100%; }
+.imc-input-type input { position: absolute; top: 0; left: 0; z-index: -1; font-size: 1em; padding: .2em; width: 100%; }
 
 .imc-input-type a { display: block; width: 100%; color: #fff; text-align: center; background-color: #4dba79; }
 .imc-input-type a::before { display: none !important; }

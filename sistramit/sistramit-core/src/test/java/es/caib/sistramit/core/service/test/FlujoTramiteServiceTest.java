@@ -45,6 +45,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
+import es.caib.sistramit.core.api.model.formulario.ResultadoBuscadorDinamico;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
 import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
@@ -321,6 +322,17 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		// * Estado campo
 		Assert.isTrue(paginaData.getConfiguracion("TXT_CALC").getSoloLectura() == TypeSiNo.SI,
 				"El campo no está como solo lectura");
+
+		// -- Buscador dinamico
+		// * Valores posibles de selector dinámico debe estar vacio de inicio
+		final ValoresPosiblesCampo vpcSelDin = UtilsFormularioInterno.buscarValoresPosibles(valoresPosibles,
+				"SEL_DINAMICO");
+		Assert.isTrue(vpcSelDin == null, "No se deben establecer valores posibles para selector dinámico");
+		// * Busca valor por texto "lor 2" -> debe devolver "Valor2"
+		final ResultadoBuscadorDinamico rbd = flujoFormularioInternoService.buscadorDinamico(idSesionFormulario,
+				"SEL_DINAMICO", "lor 2", valoresActuales);
+		Assert.isTrue(rbd.getValores().size() == 1 && rbd.getValores().get(0).getValor().equals("V2"),
+				"La búsqueda para selector dinámico debe devolver el elemento V2");
 
 		// -- Evaluar cambio campo
 		final ValorCampoSimple vcs = (ValorCampoSimple) UtilsFormularioInterno.buscarValorCampo(valoresActuales,

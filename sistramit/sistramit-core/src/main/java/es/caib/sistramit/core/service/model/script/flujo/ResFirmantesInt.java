@@ -18,15 +18,28 @@ public interface ResFirmantesInt extends PluginScriptRes {
 	String ID = "DATOS_FIRMANTES";
 
 	/**
-	 * Añade firmante.
+	 * Añade firmante (deberán firmar todos los firmantes indicados).
 	 *
 	 * @param nif
-	 *            Nif.
+	 *                   Nif.
 	 * @param nombre
-	 *            Nombre completo.
+	 *                   Nombre completo.
 	 * @throws ScriptException
-	 *             Excepcion
+	 *                             Excepcion
 	 */
 	void addFirmante(final String nif, final String nombre) throws ScriptException;
+
+	/**
+	 * Añade firmante opcional (de los firmantes opcionales, al menos deberá firmar
+	 * uno de ellos).
+	 *
+	 * @param nif
+	 *                   Nif.
+	 * @param nombre
+	 *                   Nombre completo.
+	 * @throws ScriptException
+	 *                             Excepcion
+	 */
+	void addFirmanteOpcional(final String nif, final String nombre) throws ScriptException;
 
 }

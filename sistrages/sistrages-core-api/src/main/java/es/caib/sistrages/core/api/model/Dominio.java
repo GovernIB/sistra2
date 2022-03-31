@@ -1,8 +1,6 @@
 package es.caib.sistrages.core.api.model;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -29,6 +27,9 @@ public class Dominio extends ModelApi {
 
 	/** Identificador. **/
 	private String identificador;
+
+	/** Identificador. **/
+	private String identificadorCompuesto;
 
 	/** Descripcion. */
 	private String descripcion;
@@ -68,7 +69,10 @@ public class Dominio extends ModelApi {
 	private List<Propiedad> parametros;
 
 	/** Areas. **/
-	private Set<Area> areas = new HashSet<>(0);
+	private Area area;
+
+	/** Id Area. **/
+	private String idArea;
 
 	/** Si el ambito es entidad **/
 	private Long entidad;
@@ -265,15 +269,15 @@ public class Dominio extends ModelApi {
 	/**
 	 * @return the areas
 	 */
-	public Set<Area> getAreas() {
-		return areas;
+	public Area getArea() {
+		return area;
 	}
 
 	/**
 	 * @param areas the areas to set
 	 */
-	public void setAreas(final Set<Area> areas) {
-		this.areas = areas;
+	public void setArea(final Area areas) {
+		this.area = areas;
 	}
 
 	public String getSqlDecoded() {
@@ -338,6 +342,34 @@ public class Dominio extends ModelApi {
 	 */
 	public void setConfiguracionAutenticacion(ConfiguracionAutenticacion configuracionAutenticacion) {
 		this.configuracionAutenticacion = configuracionAutenticacion;
+	}
+
+	/**
+	 * @return the identificadorCompuesto
+	 */
+	public String getIdentificadorCompuesto() {
+		return identificadorCompuesto;
+	}
+
+	/**
+	 * @param identificadorCompuesto the identificadorCompuesto to set
+	 */
+	public void setIdentificadorCompuesto(String identificadorCompuesto) {
+		this.identificadorCompuesto = identificadorCompuesto;
+	}
+
+	/**
+	 * @return the idArea
+	 */
+	public String getIdArea() {
+		return idArea;
+	}
+
+	/**
+	 * @param idArea the idArea to set
+	 */
+	public void setIdArea(String idArea) {
+		this.idArea = idArea;
 	}
 
 }

@@ -42,7 +42,7 @@ public class PagoExternoDaoImpl implements PagoExternoDao {
 		try {
 			h.setInfoAutenticacion(Serializador.serialize(retornoPago.getUsuario()));
 		} catch (final IOException e) {
-			throw new SerializacionException("Error serializando informacion usuario", e);
+			throw new SerializacionException("Error serialitzant informació usuari", e);
 		}
 
 		entityManager.persist(h);
@@ -79,17 +79,17 @@ public class PagoExternoDaoImpl implements PagoExternoDao {
 			h = (HPagoExterno) results.get(0);
 		}
 		if (h == null) {
-			throw new TicketPagoException("No existe pago externo con el ticket " + ticket);
+			throw new TicketPagoException("No existeix pagament extern amb el ticket " + ticket);
 		}
 
 		// Si se consume ticket, no debe estar usado
 		if (consumirTicket && h.isUsadoRetorno()) {
-			throw new TicketPagoException("El ticket " + ticket + " ya ha sido usado");
+			throw new TicketPagoException("El ticket " + ticket + " ja ha estat utilitzat");
 		}
 
 		// Si no se consume ticket, debe estar usado
 		if (!consumirTicket && !h.isUsadoRetorno()) {
-			throw new TicketPagoException("El ticket " + ticket + " no ha sido usado");
+			throw new TicketPagoException("El ticket " + ticket + " no ha estat utilitzat");
 		}
 
 		final RetornoPago res = new RetornoPago();
@@ -99,7 +99,7 @@ public class PagoExternoDaoImpl implements PagoExternoDao {
 		try {
 			res.setUsuario((UsuarioAutenticadoInfo) Serializador.deserialize(h.getInfoAutenticacion()));
 		} catch (ClassNotFoundException | IOException e) {
-			throw new SerializacionException("Error al deserializar informacion usuario para ticket " + ticket, e);
+			throw new SerializacionException("Error al deserialitzar informació usuari per ticket " + ticket, e);
 		}
 
 		// Si se consume ticket, marcamos ticket como usado

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCaptcha;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoOculto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
@@ -18,6 +19,7 @@ import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeAlineacionTexto;
 import es.caib.sistrages.core.api.model.types.TypeCampoTexto;
 import es.caib.sistrages.core.api.model.types.TypeOrientacion;
+import es.caib.sistrages.core.service.component.literales.Literales;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 
 @Component("formRenderComponent")
@@ -28,6 +30,9 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 	@Autowired
 	FormularioInternoDao formIntDao;
+
+	@Autowired
+	Literales literales;
 
 	public FormRenderComponentImpl() {
 		super();
@@ -173,6 +178,10 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 						campoOculto(pOut, cf, pLang, pModoEdicion, pMostrarOcultos, ultimoCampoEsOculto);
 						ultimoCampoEsOculto = true;
 						break;
+					case CAPTCHA:
+						campoCaptcha(pOut, cf, pLang, pModoEdicion);
+						ultimoCampoEsOculto = false;
+						break;
 					default:
 						break;
 					}
@@ -263,7 +272,8 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		}
 
 		if (tipo != null && !"textarea".equals(tipo)) {
-			// Cambiamos en modo editor a tipo text para que no saque el calendario al hacer clic
+			// Cambiamos en modo editor a tipo text para que no saque el calendario al hacer
+			// clic
 			if (pModoEdicion && "date".equals(tipo)) {
 				tipo = "text";
 			}
@@ -272,6 +282,44 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 		escribeLinea(pOut, "<div class=\"imc-el-control\">", elemento.toString(), "</div>", 6);
 
+		escribeLinea(pOut, "</div>", 5);
+
+	}
+
+	/**
+	 * Para pintar una captcha
+	 *
+	 * @param pOut
+	 * @param pCF
+	 * @param pLang
+	 * @param pModoEdicion
+	 */
+	private void campoCaptcha(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang,
+			final boolean pModoEdicion) {
+		final ComponenteFormularioCampoCaptcha campo = (ComponenteFormularioCampoCaptcha) pCF;
+
+		final StringBuilder estilo = new StringBuilder();
+
+		if (campo.getNumColumnas() > 1) {
+			estilo.append(" imc-el-").append(campo.getNumColumnas());
+		}
+
+		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente()), escribeCodigo(pCF.getCodigo(), pModoEdicion),
+				escribeTieneScripts(campo, pModoEdicion), "class=\"imc-element imc-el-captcha", estilo.toString(),
+				"\" data-type=\"captcha\">", 5);
+
+		escribeLinea(pOut, "<div class=\"imc-el-etiqueta\">", 6);
+		escribeLinea(pOut, "<label for=\"CAPTCHA\">" + trataLiteral(campo.getTexto().getTraduccion(pLang)) + "</label>",
+				7);
+		escribeLinea(pOut, "</div>", 6);
+		escribeLinea(pOut, "<div class=\"imc-el-control\">", 6);
+		escribeLinea(pOut, "<div class=\"imc--img\">", 7);
+		escribeLinea(pOut, "<img src=\"\" alt=\"\">", 8);
+		escribeLinea(pOut, "</div>", 7);
+		escribeLinea(pOut, "<input id=\"", String.valueOf(campo.getIdComponente()), "\" name=\"",
+				String.valueOf(campo.getIdComponente()) + "\"  type=\"text\">", 7);
+		escribeLinea(pOut, "<button type=\"button\"><span>"+literales.getLiteral("componente", "captcha.refrescarImagen", pLang)+"</span></button>", 7);
+		escribeLinea(pOut, "</div>", 6);//Refresca imagen
 		escribeLinea(pOut, "</div>", 5);
 
 	}
@@ -313,6 +361,9 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) pCF;
 
 		switch (campo.getTipoCampoIndexado()) {
+		case DINAMICO:
+			campoSelectorDinamico(pOut, campo, pLang, pModoEdicion);
+			break;
 		case DESPLEGABLE:
 			campoSelectorDesplegable(pOut, campo, pLang, pModoEdicion);
 			break;
@@ -326,6 +377,49 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			break;
 		}
 
+	}
+
+	private void campoSelectorDinamico(final StringBuilder pOut, final ComponenteFormularioCampoSelector pCampo,
+			final String pLang, final boolean pModoEdicion) {
+
+		final StringBuilder estilo = new StringBuilder();
+		String texto = "";
+
+		if (pCampo.getNumColumnas() > 1) {
+			estilo.append(" imc-el-").append(pCampo.getNumColumnas());
+		}
+
+		// estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
+
+		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
+			texto = "<div class=\"imc-el-etiqueta\"><label for=\"" + pCampo.getIdComponente() + "\">"
+					+ trataLiteral(pCampo.getTexto().getTraduccion(pLang)) + "</label></div>";
+		}
+
+		escribeLinea(pOut, "<div", escribeId(pCampo.getIdComponente()), escribeCodigo(pCampo.getCodigo(), pModoEdicion),
+				escribeObligatorio(pCampo, pModoEdicion), escribeTieneScripts(pCampo, pModoEdicion),
+				" class=\"imc-element ", estilo.toString(), "\" data-type=\"select\">", 5);
+
+		escribeLinea(pOut, texto, 6);
+
+		escribeLinea(pOut, "<div class=\"imc-el-control\">", 6);
+
+		// Importate, la siguiente linea no cambia por dos razones:
+		// - Se deja así para que parezca en el editor un desplegable
+		// - Se produce un error con los tipos textarea (y habría que revisar el js)
+		// No se escribe lo siguiente escribeLinea(pOut, "<textarea id=\"" +
+		// pCampo.getIdComponente() + "\" cols=\"\" rows=\"\" />", 8);
+
+		// TODO De momento ñapa para poder mostrar en editor
+		if (pModoEdicion) {
+			escribeLinea(pOut, "<input id=\"" + pCampo.getIdComponente() + "\" cols=\"\" rows=\"\" />", 8);
+		} else {
+			escribeLinea(pOut, "<textarea id=\"" + pCampo.getIdComponente() + "\" cols=\"\" rows=\"\" />", 8);
+		}
+
+		// escribeLinea(pOut, "</div>", 7);
+		escribeLinea(pOut, "</div>", 6);
+		escribeLinea(pOut, "</div>", 5);
 	}
 
 	private void campoSelectorDesplegable(final StringBuilder pOut, final ComponenteFormularioCampoSelector pCampo,

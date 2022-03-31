@@ -23,11 +23,10 @@ public final class MetodoAutenticacionException extends ServiceRollbackException
 	/**
 	 * Constructor QaaException.
 	 *
-	 * @param pMessage
-	 *                     Mensaje de error.
+	 * @param pMessage Mensaje de error.
 	 */
 	public MetodoAutenticacionException(final TypeMetodoAutenticacion metodo) {
-		super("Método de autenticación " + metodo.toString() + " no está permitido en el trámite");
+		super("Mètode de autenticació " + metodo.toString() + " no està permés al tràmit");
 	}
 
 }

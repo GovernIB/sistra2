@@ -163,7 +163,7 @@ $.fn.appPagament = function(options) {
 							consola("Pagament electrònic: error des de JSON");
 							
 							imc_contenidor
-								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: data.url });
+								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: data.url });
 
 						}
 						
@@ -368,7 +368,7 @@ $.fn.appPagamentPresencial = function(options) {
 							consola("Pagament presencial: error des de JSON");
 							
 							imc_contenidor
-								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: data.url });
+								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: data.url });
 
 						}
 						
@@ -517,7 +517,7 @@ $.fn.appPagaments = function(options) {
 							consola("Taxa "+errorConsola+": error des de JSON");
 							
 							imc_contenidor
-								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: data.url });
+								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: data.url });
 
 						}
 						

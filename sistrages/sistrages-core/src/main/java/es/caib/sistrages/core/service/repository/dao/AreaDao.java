@@ -70,9 +70,10 @@ public interface AreaDao {
 	 * Obtiene un area por identificador.
 	 *
 	 * @param identificador
+	 * @param identificadorEntidad
 	 * @return
 	 */
-	Area getAreaByIdentificador(String identificador);
+	Area getAreaByIdentificador(String identificadorEntidad, String identificador);
 
 	/**
 	 * Comprueba si el identificador está repetido.

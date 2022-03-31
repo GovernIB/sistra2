@@ -162,6 +162,6 @@ pre { font: normal 1.2em 'Bariol Regular', Arial, Helvetica, sans-serif; white-s
 
 /* error */
 
-div.imc--desenvolupadors { font-size: .9em; }
+div.imc--desenvolupadors { color: #666; font-size: .9em; }
 div.imc--desenvolupadors h2 { font-weight: normal; }
 div.imc--desenvolupadors p { color: #666; }

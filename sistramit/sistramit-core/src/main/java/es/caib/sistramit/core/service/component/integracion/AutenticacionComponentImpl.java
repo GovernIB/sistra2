@@ -54,7 +54,7 @@ public final class AutenticacionComponentImpl implements AutenticacionComponent 
 			return plgAuth.iniciarSesionAutenticacion(codigoEntidad, idioma, metodosAut, tipoQaa, urlCallback,
 					urlCallbackError);
 		} catch (final AutenticacionPluginException e) {
-			throw new AutenticacionException("Error al iniciar sesión de autenticación", e);
+			throw new AutenticacionException("Error al iniciar sessió d'autenticació", e);
 		}
 
 	}
@@ -68,7 +68,7 @@ public final class AutenticacionComponentImpl implements AutenticacionComponent 
 		try {
 			u = plgAuth.validarTicketAutenticacion(pTicket);
 		} catch (final AutenticacionPluginException e) {
-			throw new AutenticacionException("Error al validar ticket de autenticación", e);
+			throw new AutenticacionException("Error al validar ticket d'autenticació", e);
 		}
 		final DatosAutenticacionUsuario res = new DatosAutenticacionUsuario();
 		res.setAutenticacion(TypeAutenticacion.fromString(u.getAutenticacion().toString()));
@@ -82,7 +82,7 @@ public final class AutenticacionComponentImpl implements AutenticacionComponent 
 		res.setEmail(u.getEmail());
 		if (res.getAutenticacion() != TypeAutenticacion.ANONIMO) {
 			if (u.getQaa() == null) {
-				throw new AutenticacionException("No se ha retornado QAA");
+				throw new AutenticacionException("No s'ha retornat QAA");
 			}
 			res.setQaa(TypeQAA.fromString(u.getQaa().toString()));
 		}
@@ -109,7 +109,7 @@ public final class AutenticacionComponentImpl implements AutenticacionComponent 
 		try {
 			return plgAuth.iniciarSesionLogout(codigoEntidad, idioma, urlCallback);
 		} catch (final AutenticacionPluginException e) {
-			throw new AutenticacionException("Error al iniciar sesión de logout", e);
+			throw new AutenticacionException("Error al iniciar sessió de logout", e);
 		}
 	}
 

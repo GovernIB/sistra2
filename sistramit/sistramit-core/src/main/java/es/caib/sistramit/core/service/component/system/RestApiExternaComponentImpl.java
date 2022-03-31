@@ -41,7 +41,7 @@ public class RestApiExternaComponentImpl implements RestApiExternaComponent {
 	@Override
 	public List<TramitePersistencia> recuperarTramites(final FiltroTramitePersistencia pFiltro) {
 		if (pFiltro.getNif() == null && pFiltro.getIdSesionTramitacion() == null) {
-			throw new ErrorParametroObligatorioException("El parámetro <NIF> o <idSesionTramitacion> es obligatorio");
+			throw new ErrorParametroObligatorioException("El paràmetre <NIF> o <idSesionTramitacion> és obligatori");
 		}
 		return flujoTramiteDao.recuperarTramitesPersistencia(pFiltro);
 	}
@@ -49,7 +49,7 @@ public class RestApiExternaComponentImpl implements RestApiExternaComponent {
 	@Override
 	public List<Evento> recuperarEventos(final FiltroEvento pFiltro) {
 		if (pFiltro.getFecha() == null) {
-			throw new ErrorParametroObligatorioException("El parámetro <Fecha evento> es obligatorio");
+			throw new ErrorParametroObligatorioException("El paràmetre <Fecha evento> és obligatori");
 		}
 		return auditoriaDao.recuperarEventos(pFiltro);
 	}
@@ -58,28 +58,28 @@ public class RestApiExternaComponentImpl implements RestApiExternaComponent {
 	public String obtenerTicketAcceso(final InfoTicketAcceso pInfoTicketAcceso) {
 
 		if (pInfoTicketAcceso.getIdSesionTramitacion() == null) {
-			throw new ErrorParametroObligatorioException("El parámetro <Identificador de la sesión> es obligatorio");
+			throw new ErrorParametroObligatorioException("El paràmetre <Identificador de la sesión> és obligatori");
 		}
 
 		if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getMetodoAutenticacion() == null) {
-			throw new ErrorParametroObligatorioException("El parámetro <Metodo Autenticacion> es obligatorio");
+			throw new ErrorParametroObligatorioException("El paràmetre <Metodo Autenticacion> és obligatori");
 		}
 
 		if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getAutenticacion() == TypeAutenticacion.AUTENTICADO) {
 			if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getNif() == null) {
-				throw new ErrorParametroObligatorioException("El parámetro <Nif usuario> es obligatorio");
+				throw new ErrorParametroObligatorioException("El paràmetre <Nif usuario> és obligatori");
 			}
 
 			if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getNombre() == null) {
-				throw new ErrorParametroObligatorioException("El parámetro <Nombre usuario> es obligatorio");
+				throw new ErrorParametroObligatorioException("El paràmetre <Nombre usuario> és obligatori");
 			}
 
 			if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getUsername() == null) {
-				throw new ErrorParametroObligatorioException("El parámetro <Código usuario> es obligatorio");
+				throw new ErrorParametroObligatorioException("El paràmetre <Código usuario> és obligatori");
 			}
 
 			if (pInfoTicketAcceso.getUsuarioAutenticadoInfo().getQaa() == null) {
-				throw new ErrorParametroObligatorioException("El parámetro <QAA> es obligatorio");
+				throw new ErrorParametroObligatorioException("El paràmetre <QAA> és obligatori");
 			}
 		}
 
@@ -96,7 +96,7 @@ public class RestApiExternaComponentImpl implements RestApiExternaComponent {
 	@Override
 	public List<TramiteFinalizado> recuperarTramitesFinalizados(final FiltroTramiteFinalizado pFiltro) {
 		if (pFiltro.getNif() == null && pFiltro.getIdSesionTramitacion() == null) {
-			throw new ErrorParametroObligatorioException("El parámetro <NIF> o <idSesionTramitacion> es obligatorio");
+			throw new ErrorParametroObligatorioException("El paràmetre <NIF> o <idSesionTramitacion> és obligatori");
 		}
 		return flujoTramiteDao.recuperarTramitesFinalizados(pFiltro);
 	}

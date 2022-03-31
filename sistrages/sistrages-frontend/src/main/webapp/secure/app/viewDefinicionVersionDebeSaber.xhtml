@@ -4,6 +4,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
 
 	<h:form id="formViewDefinicionVersionDebeSaber" styleClass="h100">
 
@@ -21,14 +22,28 @@
 					process="@this" update="growl">
 		        </p:commandButton>
 			</p:outputPanel>
-		</h:panelGrid>
 
+		</h:panelGrid>
+		<p:row>
+				<p:column>
+					<p:outputLabel value="#{msg['viewDefinicionVersionDebeSaber.instruccionesScriptHead']}" style="margin-left: 20px;"/>
+
+				</p:column>
+				<p:column >
+					<p:commandButton style="margin-left: 20px;" id="scriptButton1" icon="fa fa-bolt"
+						actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DEBE_SABER.name(),viewDefinicionVersion.tramitePasoDSSeleccionado.scriptDebeSaber.codigo)}"
+						styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoDSSeleccionado.scriptDebeSaber)}"
+						disabled="#{viewDefinicionVersion.tramitePasoDSSeleccionado.scriptDebeSaber eq null}"
+						value="#{msg['viewDefinicionVersionDebeSaber.instruccionesScript']}"
+						process="@this" update="growl"  />
+				</p:column>
+			</p:row>
 				<p:outputPanel id="toolbar" styleClass="grid-right">
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
 						actionListener="#{viewDefinicionVersion.editarPaso()}" style="margin-right:20px"
 						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						process="@this" update="growl">
-						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol descripcion"  />
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionDebeSaber"  />
 					</p:commandButton>
 					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o"
 						actionListener="#{viewDefinicionVersion.ayudaDebeSaber()}"

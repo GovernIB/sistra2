@@ -13,6 +13,7 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
 
@@ -37,7 +38,7 @@ public class ConfiguracionAutenticacionServiceBean implements ConfiguracionAuten
 	 * getConfiguracionAutenticacion(java. lang.Long)
 	 */
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR , ConstantesRolesAcceso.SUPER_ADMIN})
 	public ConfiguracionAutenticacion getConfiguracionAutenticacion(final Long id) {
 		return configuracionAutenticacionService.getConfiguracionAutenticacion(id);
 	}
@@ -50,9 +51,9 @@ public class ConfiguracionAutenticacionServiceBean implements ConfiguracionAuten
 	 * es.caib.sistrages.core.api.model.ConfiguracionAutenticacion)
 	 */
 	@Override
-	@RolesAllowed({ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public Long addConfiguracionAutenticacion(final Long idEntidad, final ConfiguracionAutenticacion configuracionAutenticacion) {
-		return configuracionAutenticacionService.addConfiguracionAutenticacion(idEntidad, configuracionAutenticacion);
+	@RolesAllowed({ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR , ConstantesRolesAcceso.SUPER_ADMIN})
+	public Long addConfiguracionAutenticacion(final Long idArea, final Long idEntidad, final ConfiguracionAutenticacion configuracionAutenticacion) {
+		return configuracionAutenticacionService.addConfiguracionAutenticacion(idArea, idEntidad, configuracionAutenticacion);
 
 	}
 
@@ -63,7 +64,7 @@ public class ConfiguracionAutenticacionServiceBean implements ConfiguracionAuten
 	 * removeConfiguracionAutenticacion( java.lang.Long)
 	 */
 	@Override
-	@RolesAllowed({ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	@RolesAllowed({ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR, ConstantesRolesAcceso.SUPER_ADMIN })
 	public boolean removeConfiguracionAutenticacion(final Long id) {
 		return configuracionAutenticacionService.removeConfiguracionAutenticacion(id);
 
@@ -76,7 +77,7 @@ public class ConfiguracionAutenticacionServiceBean implements ConfiguracionAuten
 	 * updateConfiguracionAutenticacion(es. caib.sistrages.core.api.model.ConfiguracionAutenticacion)
 	 */
 	@Override
-	@RolesAllowed({ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	@RolesAllowed({ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR, ConstantesRolesAcceso.SUPER_ADMIN })
 	public void updateConfiguracionAutenticacion(final ConfiguracionAutenticacion configuracionAutenticacion) {
 		configuracionAutenticacionService.updateConfiguracionAutenticacion(configuracionAutenticacion);
 
@@ -90,22 +91,22 @@ public class ConfiguracionAutenticacionServiceBean implements ConfiguracionAuten
 	 * es.caib.sistrages.core.api.model.types.TypeIdioma, java.lang.String)
 	 */
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public List<ConfiguracionAutenticacion> listConfiguracionAutenticacion(final Long idEntidad, final TypeIdioma idioma,
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR, ConstantesRolesAcceso.SUPER_ADMIN })
+	public List<ConfiguracionAutenticacion> listConfiguracionAutenticacion(final TypeAmbito ambito, final Long idArea, final Long idEntidad, final TypeIdioma idioma,
 			final String filtro) {
-		return configuracionAutenticacionService.listConfiguracionAutenticacion(idEntidad, idioma, filtro);
+		return configuracionAutenticacionService.listConfiguracionAutenticacion(ambito, idArea, idEntidad, idioma, filtro);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public boolean existeConfiguracionAutenticacion(final String identificador, final Long codigo) {
-		return configuracionAutenticacionService.existeConfiguracionAutenticacion(identificador, codigo);
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR, ConstantesRolesAcceso.SUPER_ADMIN })
+	public boolean existeConfiguracionAutenticacion(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut) {
+		return configuracionAutenticacionService.existeConfiguracionAutenticacion(ambito, identificador, codigoEntidad, codigoArea, codigoConfAut);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public ConfiguracionAutenticacion getConfiguracionAutenticacion(String identificador, Long codigo) {
-		return configuracionAutenticacionService.getConfiguracionAutenticacion(identificador, codigo);
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR , ConstantesRolesAcceso.SUPER_ADMIN})
+	public ConfiguracionAutenticacion getConfiguracionAutenticacion(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut) {
+		return configuracionAutenticacionService.getConfiguracionAutenticacion(ambito, identificador, codigoEntidad, codigoArea, codigoConfAut);
 	}
 
 }

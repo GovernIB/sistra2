@@ -383,6 +383,7 @@ function carregaHTML() {
 					,jsonInstagram: jsonInstagram
 					,jsonTwitter: jsonTwitter
 					,jsonFacebook: jsonFacebook
+					,txtObriFinestra: txtObriFinestra
 				};
 
 			var html_contacte = Mark.up(htmlContacte[0], txtHTML_Contacte);
@@ -398,6 +399,7 @@ function carregaHTML() {
 					,txtAccepta: txtAccepta
 					,txtCancela: txtCancela
 					,txtTanca: txtTanca
+					,txtCodiDebugDesenv: txtCodiDebugDesenv
 				};
 
 			var html_missatge = Mark.up(htmlMissatge[0], txtHTML_Missatge);

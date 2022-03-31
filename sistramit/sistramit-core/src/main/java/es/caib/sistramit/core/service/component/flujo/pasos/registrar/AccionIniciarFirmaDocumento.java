@@ -139,7 +139,7 @@ public final class AccionIniciarFirmaDocumento implements AccionPaso {
 						pVariablesFlujo.getUsuarioAutenticado().getRepresentante().getNombreApellidos());
 			} else {
 				throw new ErrorConfiguracionException(
-						"No se puede establecer como firmante una persona juridica si no se autentica con certificado de representación");
+						"No es pot establir com signant una persona jurídica si no s'autentica am certificat de representació");
 			}
 		}
 

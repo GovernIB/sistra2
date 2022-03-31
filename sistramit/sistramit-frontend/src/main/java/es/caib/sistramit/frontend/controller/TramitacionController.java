@@ -1,5 +1,8 @@
 package es.caib.sistramit.frontend.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.annotation.Resource;
 import javax.ejb.EJBException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +32,7 @@ import es.caib.sistramit.frontend.model.MensajeAsistente;
 import es.caib.sistramit.frontend.model.MensajeUsuario;
 import es.caib.sistramit.frontend.model.RespuestaJSON;
 import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
+import es.caib.sistramit.frontend.security.SecurityUtils;
 import es.caib.sistramit.frontend.view.DownloadFileView;
 import es.caib.sistramit.frontend.view.HtmlView;
 import es.caib.sistramit.frontend.view.JsonView;
@@ -101,7 +105,7 @@ public abstract class TramitacionController {
 	protected final String getIdSesionFormuarioActiva() {
 		final String ft = getIdSesionFormulario();
 		if (ft == null) {
-			throw new WarningFrontException("No existe instancia sesion de formulario en sesion");
+			throw new WarningFrontException("No existeix instància sessió de formulari en sessió");
 		}
 		return ft;
 	}
@@ -127,7 +131,7 @@ public abstract class TramitacionController {
 	protected final String getIdSesionTramitacionActiva() {
 		final String ft = getIdSesionTramitacion();
 		if (ft == null) {
-			throw new WarningFrontException("No existe instancia sesion de tramitacion en sesion");
+			throw new WarningFrontException("No existeix instància sesió de tramitació en sessió");
 		}
 		return ft;
 	}
@@ -341,6 +345,19 @@ public abstract class TramitacionController {
 		// Generamos respuesta JSON
 		final RespuestaJSON res = errores.generarRespuestaJsonExcepcion(ex, getIdioma());
 
+		// Para FATAL establecemos info debug
+		if (res.getEstado() == TypeRespuestaJSON.FATAL) {
+			// Fecha
+			String debug = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS").format(new Date());
+			// Host
+			debug += " - " + SecurityUtils.getJbossNodeName();
+			// Sesion tramitacion
+			if (getIdSesionTramitacion() != null) {
+				debug += " - " + getIdSesionTramitacion();
+			}
+			res.getMensaje().setDebug(debug);
+		}
+
 		// Comprobamos si se fuerza url redireccion
 		if (StringUtils.isNotBlank(urlRedirectForced)) {
 			res.setUrl(urlRedirectForced);
@@ -362,8 +379,7 @@ public abstract class TramitacionController {
 
 		// Si es una FrontException auditamos error
 		if (ex instanceof ErrorFrontException) {
-			final String idSesionTramitacion = getIdSesionTramitacion();
-			systemService.auditarErrorFront(idSesionTramitacion, (ErrorFrontException) ex);
+			systemService.auditarErrorFront(getIdSesionTramitacion(), (ErrorFrontException) ex);
 		}
 
 		return view;

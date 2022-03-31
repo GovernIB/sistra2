@@ -9,41 +9,37 @@ import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
  *
  */
 @SuppressWarnings("serial")
-public final class ErrorFormularioSoporteException
-        extends ServiceRollbackException {
+public final class ErrorFormularioSoporteException extends ServiceRollbackException {
 
-    @Override
-    public TypeNivelExcepcion getNivel() {
-        return TypeNivelExcepcion.WARNING;
-    }
+	@Override
+	public TypeNivelExcepcion getNivel() {
+		return TypeNivelExcepcion.WARNING;
+	}
 
-    /**
-     * Constructor ErrorFormularioSoporteException.
-     *
-     */
-    public ErrorFormularioSoporteException() {
-        super("Error al enviar formulario de soporte");
-    }
+	/**
+	 * Constructor ErrorFormularioSoporteException.
+	 *
+	 */
+	public ErrorFormularioSoporteException() {
+		super("Error al enviar formulari de suport");
+	}
 
-    /**
-     * Constructor ErrorFormularioSoporteException.
-     * 
-     * @param message
-     *            mensaje
-     */
-    public ErrorFormularioSoporteException(String message) {
-        super("Error al enviar formulario de soporte: " + message);
-    }
+	/**
+	 * Constructor ErrorFormularioSoporteException.
+	 *
+	 * @param message mensaje
+	 */
+	public ErrorFormularioSoporteException(String message) {
+		super("Error al enviar formulari de suport: " + message);
+	}
 
-    /**
-     * Constructor ErrorFormularioSoporteException.
-     * 
-     * @param message
-     *            mensaje
-     * @param error
-     *            error
-     */
-    public ErrorFormularioSoporteException(String message, Exception error) {
-        super("Error al enviar formulario de soporte: " + message, error);
-    }
+	/**
+	 * Constructor ErrorFormularioSoporteException.
+	 *
+	 * @param message mensaje
+	 * @param error   error
+	 */
+	public ErrorFormularioSoporteException(String message, Exception error) {
+		super("Error al enviar formulari de suport: " + message, error);
+	}
 }

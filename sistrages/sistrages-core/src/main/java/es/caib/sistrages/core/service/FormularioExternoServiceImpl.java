@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.service.FormularioExternoService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
@@ -110,8 +111,8 @@ public class FormularioExternoServiceImpl implements FormularioExternoService {
 
 	@Override
 	@NegocioInterceptor
-	public boolean existeFormulario(final String identificador, final Long idCodigo) {
-		return formularioExternoDao.existeFormulario(identificador, idCodigo);
+	public boolean existeFormulario(final String identificador, final Long idCodigo, final Long idArea) {
+		return formularioExternoDao.existeFormulario(identificador, idCodigo, idArea);
 	}
 
 	@Override
@@ -120,10 +121,19 @@ public class FormularioExternoServiceImpl implements FormularioExternoService {
 		return formularioExternoDao.getGestorExternoByAutenticacion(id, idArea);
 	}
 
+
 	@Override
 	@NegocioInterceptor
-	public GestorExternoFormularios getFormularioExternoByIdentificador(String identificador) {
-		return formularioExternoDao.getFormularioExternoByIdentificador(identificador);
+	public boolean existeGFEByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
+			Long codigoArea, Long codigoGFE) {
+		return formularioExternoDao.existeGFEByIdentificador( ambito,  identificador,  codigoEntidad, codigoArea, codigoGFE);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public GestorExternoFormularios getFormularioExternoByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
+			Long codigoArea, Long codigoGFE) {
+		return formularioExternoDao.getFormularioExternoByIdentificador(ambito,  identificador,  codigoEntidad, codigoArea, codigoGFE);
 	}
 
 }

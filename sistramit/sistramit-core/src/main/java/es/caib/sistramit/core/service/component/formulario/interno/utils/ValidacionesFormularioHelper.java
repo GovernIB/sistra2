@@ -16,7 +16,7 @@ public interface ValidacionesFormularioHelper {
 	 * Realiza verificacion de la pagina actual del formulario.
 	 *
 	 * @param datosSesion
-	 *            Datos sesion formulario
+	 *                        Datos sesion formulario
 	 *
 	 */
 	void validarConfiguracionCampos(final DatosSesionFormularioInterno datosSesion);
@@ -25,7 +25,7 @@ public interface ValidacionesFormularioHelper {
 	 * Valida página al guardar.
 	 *
 	 * @param datosSesion
-	 *            Datos sesion
+	 *                        Datos sesion
 	 * @return En caso de encontrar error de validación devuelve mensaje (null si no
 	 *         hay error de validación).
 	 */
@@ -36,7 +36,7 @@ public interface ValidacionesFormularioHelper {
 	 * del campo.
 	 *
 	 * @param datosSesion
-	 *            Datos sesion
+	 *                        Datos sesion
 	 * @return En caso de error devuelve error de validación (se detiene en el
 	 *         primer error de validación encontrado).
 	 */

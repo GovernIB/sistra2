@@ -24,6 +24,7 @@ import es.caib.sistrages.core.api.model.comun.FilaImportar;
 import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
 import es.caib.sistrages.core.api.model.comun.ScriptInfo;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
+import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 
 /**
  * La interface TramiteService.
@@ -439,15 +440,18 @@ public interface TramiteService {
 	 * @param identificador
 	 * @return
 	 */
-	public Area getAreaByIdentificador(String identificador);
+	public Area getAreaByIdentificador(String identificadorEntidad, String identificador);
 
 	/**
 	 * Obtiene tramite por identificador.
-	 *
 	 * @param identificador
+	 * @param idArea
+	 * @param identificadorArea
+	 * @param codigoTramite
 	 * @return
 	 */
-	public Tramite getTramiteByIdentificador(String identificador);
+
+	public Tramite getTramiteByIdentificador(String identificador, final Long idArea, String identificadorArea, Long codigoTramite);
 
 	/**
 	 * Obtiene el tramite version con el num. version más alto.
@@ -509,7 +513,7 @@ public interface TramiteService {
 	 * @param codigo
 	 * @return true, si existe
 	 */
-	public boolean checkIdentificadorRepetido(String identificador, Long codigo);
+	public boolean checkIdentificadorRepetido(String identificador, Long codigo, Long idArea);
 
 	/**
 	 * Comprueba si el identificador de area está repetido.
@@ -709,7 +713,7 @@ public interface TramiteService {
 	 * @param idTramiteVersion
 	 * @param dominios
 	 */
-	public void actualizarDominios(TramiteVersion idTramiteVersion,  final List<Dominio> dominios);
+	public void actualizarDominios(TramiteVersion idTramiteVersion,  final List<ValorIdentificadorCompuesto> dominios);
 
 	/**
 	 * Devuelve la lista de datos que utilizan un dominio

@@ -51,14 +51,17 @@ $.fn.appDocumentacioMostra = function(options) {
 					,hasDeObrir = (documentacio_el.hasClass("imc--on")) ? false : true;
 
 				var bt_text = (hasDeObrir) ? txtDocumentacioAmaga : txtDocumentacioMostra
-					,acciona = (hasDeObrir) ? obri() : tanca();
+					,acciona = (hasDeObrir) ? obri(bt) : tanca(bt);
 
 				bt
 					.find("span")
 						.text( bt_text );
 
 			},
-			obri = function() {
+			obri = function(bt) {
+
+				bt
+					.attr("aria-expanded", "true");
 
 				documentacio_el
 					.stop()
@@ -66,7 +69,10 @@ $.fn.appDocumentacioMostra = function(options) {
 					.addClass("imc--on");
 
 			},
-			tanca = function() {
+			tanca = function(bt) {
+
+				bt
+					.attr("aria-expanded", "false");
 
 				documentacio_el
 					.stop()
@@ -220,7 +226,7 @@ $.fn.appJustificantURL = function(options) {
 									consola("Justificant URL: error des de JSON");
 
 									imc_contenidor
-										.errors({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: json.url });
+										.errors({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
 
 								}
 
@@ -400,6 +406,7 @@ $.fn.appValora = function(options) {
 						.off('.appValora')
 						.on('mouseenter.appValora', ".imc--estrelles label", entra)
 						.on('mouseleave.appValora', ".imc--estrelles label", surt)
+						.on('focus.appValora', ".imc--estrelles input", enfoca)
 						.on('click.appValora', ".imc--estrelles label", valora)
 						.on('click.appValora', "button[data-accio='valora']", envia);
 
@@ -418,6 +425,18 @@ $.fn.appValora = function(options) {
 			surt = function() {
 
 				var label_el_txt = (valor_seleccionat === 0) ? txtSenseValoracio : valoracio_el.find(".imc--estrelles label[for=imc-f-estrelles-"+valor_seleccionat+"]:first").text();
+
+				output_el
+					.text( label_el_txt );
+
+			},
+			enfoca = function(e) {
+
+				var input_el = $(this)
+					,label_el_txt = input_el.next().find("span:first").text()
+					,label_el_val = input_el.val();
+
+				valor_seleccionat = label_el_val;
 
 				output_el
 					.text( label_el_txt );
@@ -457,7 +476,7 @@ $.fn.appValora = function(options) {
 				if (!valoracio_val) {
 
 					imc_missatge
-						.appMissatge({ accio: "error", titol: txtValoracioNoHiHa });
+						.appMissatge({ accio: "error", titol: txtValoracioNoHiHa, text: txtValoracioNoHiHaText });
 
 					return;
 
@@ -535,7 +554,7 @@ $.fn.appValora = function(options) {
 									consola("Guarda valora: error des de JSON");
 
 									imc_contenidor
-										.errors({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: json.url });
+										.errors({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
 
 								}
 

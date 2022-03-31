@@ -405,6 +405,9 @@ public class JPasoTramitacion implements IModelApi {
 			final Literal instruccionesIniciales = this.getPasoDebeSaber().getInstruccionesInicio().toModel();
 			paso.setInstruccionesIniciales(instruccionesIniciales);
 		}
+		if (this.getPasoDebeSaber().getScriptDebeSaber() != null) {
+			paso.setScriptDebeSaber(this.getPasoDebeSaber().getScriptDebeSaber().toModel());
+		}
 		return paso;
 	}
 

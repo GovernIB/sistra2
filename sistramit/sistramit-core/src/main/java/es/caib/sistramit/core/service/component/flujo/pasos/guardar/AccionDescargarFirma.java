@@ -54,7 +54,7 @@ public final class AccionDescargarFirma implements AccionPaso {
 				.obtenerReferenciaFicheroFirmar(pVariablesFlujo, idDocumento, instancia);
 		if (ficheroFirmar == null) {
 			throw new AccionPasoNoPermitidaException(
-					"No existe documento registro con id: " + idDocumento + " - " + instanciaStr);
+					"No existeix document registre amb id: " + idDocumento + " - " + instanciaStr);
 		}
 
 		// Recupera firma asociada al fichero
@@ -62,8 +62,8 @@ public final class AccionDescargarFirma implements AccionPaso {
 				pVariablesFlujo.getIdSesionTramitacion(), dd.getIdPaso(), idDocumento, instancia);
 		final FirmaDocumentoPersistencia fdp = docPersistencia.obtenerFirmaFichero(ficheroFirmar.getId(), firmante);
 		if (fdp == null) {
-			throw new AccionPasoNoPermitidaException("No existe firma documento registro con id: " + idDocumento + " - "
-					+ instanciaStr + " para firmante " + firmante);
+			throw new AccionPasoNoPermitidaException("No existeix firma document registre amb id: " + idDocumento + " - "
+					+ instanciaStr + " per signant " + firmante);
 		}
 
 		// Recuperamos datos firma

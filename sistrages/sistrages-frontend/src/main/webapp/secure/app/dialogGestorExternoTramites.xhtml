@@ -54,9 +54,9 @@
 
 			    <p:column headerText="#{msg['dialogDominioTramites.headerTramite']}">
 			        <h:outputText value="${td.tramite}" />
-			    </p:column>
+			    </p:column>			    
 
-			    <p:column headerText="#{msg['dialogDominioTramites.headerEntidad']}">
+				<p:column headerText="#{msg['dialogDominioTramites.headerEntidad']}">
 			        <h:outputText value="${td.entidad.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" />
 			    </p:column>
 

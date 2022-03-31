@@ -163,5 +163,24 @@ public class ConstantesRegweb3 {
 	public static final int MAX_SIZE_ANEXO_FILENAME = 80;
 	/** Tamanyo max. titulo fichero anexo. */
 	public static final int MAX_SIZE_ANEXO_TITULO = 200;
-
+	/** Tamanyo max. documento de identificacion del interesado. */
+	public static final int MAX_SIZE_DOC_INTERESADO = 17;
+	/** Tamanyo max. razon social */
+	public static final int MAX_SIZE_RAZON_SOCIAL = 80;
+	/** Tamanyo max. nombre */
+	public static final int MAX_SIZE_NOMBRE = 30;
+	/** Tamanyo max. apellido1 */
+	public static final int MAX_SIZE_APELLIDO1 = 30;
+	/** Tamanyo max. apellido2 */
+	public static final int MAX_SIZE_APELLIDO2 = 30;
+	/** Tamanyo max. direccion */
+	public static final int MAX_SIZE_DIRECCION = 160;
+	/** Tamanyo max. cp */
+	public static final int MAX_SIZE_CP = 5;
+	/** Tamanyo max. email */
+	public static final int MAX_SIZE_EMAIL = 160;
+	/** Tamanyo max. telefono */
+	public static final int MAX_SIZE_TLF = 20;
+	/** Tamanyo max. direccion electronica */
+	public static final int MAX_SIZE_DIRECCION_ELECTRONICA = 160;
 }

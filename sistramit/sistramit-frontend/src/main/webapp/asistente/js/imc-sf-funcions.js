@@ -268,6 +268,7 @@ $.fn.appMissatge = function(options) {
 			accio: "informa",
 			titol: "",
 			text: "",
+			debug: false,
 			bt: false,
 			araAmaga: false,
 			amagaDesdeFons: true,
@@ -285,6 +286,7 @@ $.fn.appMissatge = function(options) {
 			element_text = element.find(".imc--text:first"),
 			titol_txt = settings.titol,
 			text_txt = settings.text,
+			debug_txt = settings.debug,
 			bt = settings.bt,
 			araAmaga = settings.araAmaga,
 			amagaDesdeFons = settings.amagaDesdeFons,
@@ -336,6 +338,28 @@ $.fn.appMissatge = function(options) {
 				element
 					.find(".imc--explicacio:first")
 						.html( text_txt );
+
+				// debug HTML
+
+				element
+					.find(".imc--desenvolupadors:first")
+						.attr("aria-hidden", "true")
+						.end()
+					.find(".imc--desenvolupadors:first p")
+						.text( "" );
+
+				if (debug_txt) {
+
+					element
+						.find(".imc--desenvolupadors:first")
+							.attr("aria-hidden", "false")
+							.end()
+						.find(".imc--desenvolupadors:first p")
+							.text( debug_txt );
+
+				}
+
+				// mostrem
 
 				element_c
 					.off('.appMissatge');
@@ -815,6 +839,32 @@ $.fn.appSuport = function(options) {
 
 				el_suport
 					.appPopupTabula();
+
+
+				// provar HTML5 support
+
+				el_suport_form
+					.find("input[required]")
+						.off(".suportValidacio")
+						.on("invalid.suportValidacio", function(e) {
+
+							var input_invalid = e.target;
+
+							if (input_invalid.validity.valueMissing) {
+								input_invalid.setCustomValidity( txtSuport_campObligatori );
+							}
+
+							$(input_invalid)
+								.addClass("imc--f-suport-error");
+
+						})
+						.on("change.suportValidacio", function(e) {
+
+							var input_invalid = e.target;
+
+							input_invalid.setCustomValidity('');
+							
+						});
 
 			},
 			torna = function() {
@@ -1499,6 +1549,7 @@ $.fn.appAccessibilitat = function(options) {
 							,txtAccTecnologiaText_2: txtAccTecnologiaText_2
 							,txtAccEinesTitol: txtAccEinesTitol
 							,txtAccEinesText_1: txtAccEinesText_1
+							,txtAccTorna: txtAccTorna
 							,pasActualId: JSON_PAS_ACTUAL.datos.actual.id
 						};
 
@@ -1558,6 +1609,7 @@ $.fn.errors = function(options) {
 			estat: false,
 			titol: txtErrorGeneralTitol,
 			text: txtErrorGeneralText,
+			debug: false,
 			url: APP_
 	}, options);
 	this.each(function(){
@@ -1565,6 +1617,7 @@ $.fn.errors = function(options) {
 			estat = settings.estat,
 			titol = settings.titol,
 			text = settings.text,
+			debug = settings.debug,
 			url = settings.url,
 			mostra = function() {
 
@@ -1576,7 +1629,7 @@ $.fn.errors = function(options) {
 				}
 
 				imc_missatge
-					.appMissatge({ accio: "error", titol: titol, text: text, alTancar: function() { document.location = url; } });
+					.appMissatge({ accio: "error", titol: titol, text: text, debug: debug, alTancar: function() { document.location = url; } });
 
 			};
 		
@@ -1777,6 +1830,14 @@ $.fn.appPopupTabula = function(options) {
 
 								f_el
 									.find("input[type=radio]")
+										.attr("data-tabula", "si");
+
+							} else if (f_el_contingut === "a") {
+
+								// llista checks
+
+								f_el
+									.find("input[type=text]")
 										.attr("data-tabula", "si");
 
 							}

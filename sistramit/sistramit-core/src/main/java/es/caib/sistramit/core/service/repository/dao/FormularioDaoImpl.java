@@ -62,7 +62,7 @@ public final class FormularioDaoImpl implements FormularioDao {
 			hFormulario.setInfoAutenticacion(Serializador.serializeJSON(dis.getInfoAutenticacion()));
 			hFormulario.setParametrosFormulario(Serializador.serializeJSON(dis.getParametros()));
 		} catch (final JSONUtilException e) {
-			throw new SerializacionException("Error serializando datos inicio formulario", e);
+			throw new SerializacionException("Error serialitzant dades inici formulari", e);
 		}
 		// Almacenamos datos inicio formulario
 		entityManager.persist(hFormulario);
@@ -100,7 +100,7 @@ public final class FormularioDaoImpl implements FormularioDao {
 			dis.setParametros((ParametrosAperturaFormulario) Serializador.deserializeJSON(h.getParametrosFormulario(),
 					ParametrosAperturaFormulario.class));
 		} catch (final JSONUtilException e) {
-			throw new SerializacionException("Error serializando datos inicio formulario", e);
+			throw new SerializacionException("Error serialitzant dades inici formulari", e);
 		}
 
 		return dis;
@@ -111,7 +111,7 @@ public final class FormularioDaoImpl implements FormularioDao {
 			final DatosFinalizacionFormulario datosFinSesion) {
 		final HFormulario hFormulario = obtenerSesionFormulario(ticket);
 		if (hFormulario.getFechaFin() != null) {
-			throw new TicketFormularioException("La sesión de formulario ya se ha finalizado anteriormente: " + ticket);
+			throw new TicketFormularioException("La sessió de formulari ja s'ha finalitzat anteriorment: " + ticket);
 		}
 		hFormulario.setPdf(datosFinSesion.getPdf());
 		hFormulario.setXml(datosFinSesion.getXml());
@@ -126,10 +126,10 @@ public final class FormularioDaoImpl implements FormularioDao {
 			final boolean interno) {
 		final HFormulario hFormulario = obtenerSesionFormulario(ticket, interno);
 		if (hFormulario.isUsadoRetorno()) {
-			throw new TicketFormularioException("Ya se ha usado el ticket para retornar el formulario " + ticket);
+			throw new TicketFormularioException("Ja s'ha utilitzat el ticket per retornar el formulari " + ticket);
 		}
 		if (hFormulario.getFechaFin() == null) {
-			throw new TicketFormularioException("La sesión de formulario no se ha finalizado " + ticket);
+			throw new TicketFormularioException("La sessió de formulari no s'ha finalitzat " + ticket);
 		}
 		final DatosFinalizacionFormulario df = new DatosFinalizacionFormulario();
 		df.setFechaFinalizacion(hFormulario.getFechaFin());
@@ -172,7 +172,7 @@ public final class FormularioDaoImpl implements FormularioDao {
 			h = (HFormulario) results.get(0);
 		}
 		if (h == null) {
-			throw new TicketFormularioException("No existe formulario con el ticket " + ticket);
+			throw new TicketFormularioException("No existeix formulari amb el ticket " + ticket);
 		}
 		return h;
 	}

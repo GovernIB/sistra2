@@ -66,6 +66,8 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 
 	/** Id. **/
 	private String id;
+	private Long idArea;
+	private Long idEntidad;
 
 	/** Ambito. **/
 	private String ambito;
@@ -108,18 +110,14 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 				permiteAlta = false;
 				permiteEditar = false;
 			}
-		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+		} else  {
 			permiteAlta = true;
 			permiteEditar = true;
-		} else {
-			throw new FrontException(
-					"No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area");
 		}
 
-		// Recupera datos
-		buscar();
-
 		if (ambito.equals(TypeAmbito.AREA.toString())) {
+
+			idArea = Long.valueOf(id);
 
 			mostrarBreadcrumb = true;
 			/* inicializa breadcrum y lo creamos */
@@ -131,9 +129,19 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 			item.setUrl("/secure/app/viewTramites.xhtml?area=" + id);
 			breadCrumb.addElement(item);
 
+		} else if (ambito.equals(TypeAmbito.ENTIDAD.toString())) {
+
+			idEntidad = UtilJSF.getIdEntidad();
+			mostrarBreadcrumb = false;
+
 		} else {
 			mostrarBreadcrumb = false;
 		}
+
+
+		// Recupera datos
+		buscar();
+
 	}
 
 	/**
@@ -151,7 +159,7 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	 */
 	private void buscar() {
 		// Filtra
-		listaDatos = configuracionAutenticacionService.listConfiguracionAutenticacion(Long.valueOf(id),
+		listaDatos = configuracionAutenticacionService.listConfiguracionAutenticacion(TypeAmbito.fromString(ambito), idArea, idEntidad,
 				UtilJSF.getIdioma(), filtro);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
@@ -388,7 +396,13 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 		if (modoAccesoDlg != TypeModoAcceso.ALTA) {
 			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		}
-		params.put(TypeParametroVentana.AREA.toString(), this.id);
+		if (TypeAmbito.fromString(ambito) == TypeAmbito.AREA) {
+			params.put(TypeParametroVentana.AREA.toString(), this.idArea.toString());
+		}
+		if (TypeAmbito.fromString(ambito) == TypeAmbito.ENTIDAD) {
+			params.put(TypeParametroVentana.ENTIDAD.toString(), UtilJSF.getIdEntidad().toString());
+		}
+		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
 		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, modoAccesoDlg, params, true, 550, 195);
 	}
 

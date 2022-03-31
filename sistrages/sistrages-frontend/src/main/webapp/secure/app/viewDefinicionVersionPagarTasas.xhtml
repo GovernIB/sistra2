@@ -88,26 +88,6 @@
 
 				</p:outputPanel>
 
-
-				<p:outputLabel value="#{msg['viewDefinicionVersionAnexarDocumentos.headerPermitirSubsanacion']}" />
-				<p:column>
-					<h:panelGrid id="columnaBotonSubsanar" style="margin-bottom:0px" columns="2" >
-						<p:selectBooleanCheckbox id="checkSubsanar" value="#{viewDefinicionVersion.tramitePasoTSSeleccionado.permiteSubsanar}" disabled="true" style="margin-left:5px;margin-right:20px" />
-						<p:commandButton id="btnActivarSubsanacion" actionListener="#{viewDefinicionVersion.activarSubsanacion(viewDefinicionVersion.tramitePasoTSSeleccionado.codigo,'pt')}"
-								value="#{msg['viewDefinicionVersionAnexarDocumentos.activarSubsanacion']}"
-								process="@this" update="growl checkSubsanar columnaBotonSubsanar"
-								rendered="#{!viewDefinicionVersion.tramitePasoTSSeleccionado.permiteSubsanar}"
-								>
-						</p:commandButton>
-						<p:commandButton id="btnDesactivarSubsanacion" actionListener="#{viewDefinicionVersion.desactivarSubsanacion(viewDefinicionVersion.tramitePasoTSSeleccionado.codigo,'pt')}"
-								value="#{msg['viewDefinicionVersionAnexarDocumentos.desactivarSubsanacion']}"
-								process="@this" update="checkSubsanar columnaBotonSubsanar"
-								rendered="#{viewDefinicionVersion.tramitePasoTSSeleccionado.permiteSubsanar}"
-								>
-						</p:commandButton>
-					</h:panelGrid>
-				</p:column>
-
 				<p:outputLabel value=" " />
 				<p:outputLabel value=" " />
 

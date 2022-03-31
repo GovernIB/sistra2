@@ -45,6 +45,14 @@
 			<div>
 				<c:out value="${error.mensaje.texto}"/>
 			</div>
+
+			<c:if test="${not empty error.mensaje.debug}">
+			<div class="imc--desenvolupadors">
+				<h2><span><spring:message code="error.txtCodiDebugDesenv"/></span></h2>
+				<p>${error.mensaje.debug}</p>
+			</div>
+			</c:if>
+
 			<c:if test="${not empty error.url}">
 			<div class="imc--botonera">
 				<a href="javascript:redireccion();"><span><spring:message code="error.continuar"/></span></a>

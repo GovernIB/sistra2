@@ -3,7 +3,9 @@ package es.caib.sistramit.core.service.component.formulario.interno;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.formulario.Captcha;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
+import es.caib.sistramit.core.api.model.formulario.ResultadoBuscadorDinamico;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
 import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
@@ -108,5 +110,44 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 	 * @return Info sesion formulario
 	 */
 	SesionFormularioInfo obtenerInformacionFormulario();
+
+	/**
+	 * Realiza búsqueda sobre selector dinámico.
+	 *
+	 * @param idCampo
+	 *                       idCampo
+	 * @param textoCampo
+	 *                       texto a buscar
+	 * @param valores
+	 *                       valores actuales
+	 * @return valores posibles selector
+	 */
+	ResultadoBuscadorDinamico buscadorDinamico(String idCampo, String textoCampo, List<ValorCampo> valores);
+
+	/**
+	 * Genera imagen de captcha.
+	 *
+	 * @param idCampo
+	 *                    idCampo
+	 * @return imagen de captcha
+	 */
+	Captcha generarImagenCaptcha(String idCampo);
+
+	/**
+	 * Genera imagen de captcha.
+	 *
+	 * @param idCampo
+	 *                    idCampo
+	 * @return imagen de captcha
+	 */
+	Captcha generarSonidoCaptcha(String idCampo);
+
+	/**
+	 * Regenerar imagen de captcha.
+	 *
+	 * @param pIdImagen
+	 *                      Imagen
+	 */
+	void regenerarCaptcha(String idCampo);
 
 }

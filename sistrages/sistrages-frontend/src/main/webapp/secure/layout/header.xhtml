@@ -36,7 +36,7 @@
 			<p:panelGrid columns="1" styleClass="ui-noborder botonera-menu" columnClasses="header-color">
 				<p:row>
 					<p:column>
-	 		    		<p:menubar styleClass="header-color" model="#{sessionBean.menuModel}" autoDisplay="false"/>
+	 		    		<p:menubar styleClass="header-color" model="#{sessionBean.menuModel}" autoDisplay="false" process="@this" update="growlHeader"/>
 	 		    	</p:column>
 	 		    </p:row>
 	 		    <p:row>

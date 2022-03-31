@@ -18,6 +18,9 @@ public class GestorExternoFormularios extends ModelApi {
 	/** Identificador **/
 	private String identificador;
 
+	/** Identificador compuesto **/
+	private String identificadorCompuesto;
+
 	/** Descripcion **/
 	private String descripcion;
 
@@ -62,6 +65,20 @@ public class GestorExternoFormularios extends ModelApi {
 	 */
 	public final void setIdentificador(final String identificador) {
 		this.identificador = identificador;
+	}
+
+	/**
+	 * @return the identificadorCompuesto
+	 */
+	public String getIdentificadorCompuesto() {
+		return identificadorCompuesto;
+	}
+
+	/**
+	 * @param identificadorCompuesto the identificadorCompuesto to set
+	 */
+	public void setIdentificadorCompuesto(String identificadorCompuesto) {
+		this.identificadorCompuesto = identificadorCompuesto;
 	}
 
 	/**

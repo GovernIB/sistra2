@@ -10,6 +10,7 @@ import es.caib.sistrages.core.api.model.ValorParametroDominio;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.service.repository.model.JFuenteDatos;
 
 public interface FuenteDatoDao {
 
@@ -46,15 +47,19 @@ public interface FuenteDatoDao {
 
 	void importarCSV(Long idFuenteDatos, CsvDocumento csv);
 
-	FuenteDatos getByIdentificador(String idFuenteDato);
-
 	void removeByArea(Long idArea);
 
-	ValoresDominio realizarConsultaFuenteDatos(String idDominio, List<ValorParametroDominio> parametros);
+	ValoresDominio realizarConsultaFuenteDatos(final TypeAmbito ambito, final String idEntidad, final String idArea, final String idDominio, final List<ValorParametroDominio> parametros);
 
-	Long importarFD(FilaImportarDominio filaDominio, TypeAmbito ambito, Long idDominio, final Long idArea)
+	JFuenteDatos importarFD(FilaImportarDominio filaDominio, TypeAmbito ambito, Long idDominio, final Long idArea)
 			throws Exception;
 
 	ValoresDominio realizarConsultaBD(String datasource, String sql, List<ValorParametroDominio> parametros);
+
+	boolean existeFDByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea,
+			Long codigoFD);
+
+	FuenteDatos getByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea,
+			Long codigoFD);
 
 }

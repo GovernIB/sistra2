@@ -77,7 +77,7 @@ public abstract class ControladorPasoReferenciaImpl implements ControladorPaso {
         }
         if (pDatosPaso.getEstado() != TypeEstadoPaso.NO_INICIALIZADO) {
             throw new AccionPasoNoPermitidaException(
-                    "No se puede inicializar el paso porque el paso no esta pendiente de inicializar");
+                    "No s'ha pogut inicialitzar la passa perqué la passa no està pendent de inicialitzar");
         }
         // Recuperamos datos de persistencia (no existira ningun documento
         // todavia)
@@ -126,8 +126,8 @@ public abstract class ControladorPasoReferenciaImpl implements ControladorPaso {
                 // En caso contrario debe estar en el mismo estado sino implica
                 // que ha habido un cambio en la definicion del tramite
                 throw new ConfiguracionModificadaException(
-                        "El estado actual del paso: " + dpp.getEstado().name()
-                                + " no concuerda con el almacenado: "
+                        "El estat actual de la passa: " + dpp.getEstado().name()
+                                + " no concorda amb el emmagatzemat: "
                                 + estadoActual.name());
             }
         } else {
@@ -149,7 +149,7 @@ public abstract class ControladorPasoReferenciaImpl implements ControladorPaso {
         }
         if (pDatosPaso.getEstado() != TypeEstadoPaso.REVISAR) {
             throw new AccionPasoNoPermitidaException(
-                    "No se puede revisar el paso porque el paso no esta pendiente de revisar");
+                    "No es pot revisar la passa perqué la passa no està pendent de revisar");
         }
         // Recuperamos datos de persistencia
         final DatosPersistenciaPaso dpp = dao.obtenerPasoPersistencia(
@@ -210,9 +210,9 @@ public abstract class ControladorPasoReferenciaImpl implements ControladorPaso {
         // Verificamos que la accion se corresponde con el paso
         if (!verificarAccionPaso(pDatosPaso.getTipo(), pAccionPaso)) {
             throw new AccionPasoNoPermitidaException(
-                    "Se esta ejecutando una accion de tipo "
+                    "Se està executant una acció de tipus "
                             + pAccionPaso.getClass().getSimpleName() + "."
-                            + pAccionPaso.name() + " sobre paso de tipo "
+                            + pAccionPaso.name() + " sobre passa de tipus "
                             + pDatosPaso.getTipo().name());
         }
 
@@ -249,7 +249,7 @@ public abstract class ControladorPasoReferenciaImpl implements ControladorPaso {
                     pDatosPaso.getIdPaso());
             if (!dpp.equals(dppNew)) {
                 throw new AccionPasoNoPermitidaException(
-                        "LOS DATOS DE PERSISTENCIA SON INCONSISTENTES CON BBDD");
+                        "LES DADES DE PERSISTÈNCIA SÓN INCONSISTENTS AMB BBDD");
             }
         }
 
@@ -552,7 +552,7 @@ public abstract class ControladorPasoReferenciaImpl implements ControladorPaso {
             break;
         default:
             throw new TipoNoControladoException(
-                    "Tipo de paso no controlado: " + pTipoPaso.name());
+                    "Tipus de passa no controlat: " + pTipoPaso.name());
         }
         return ok;
     }

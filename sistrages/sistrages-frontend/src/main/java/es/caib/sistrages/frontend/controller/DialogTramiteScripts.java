@@ -181,6 +181,7 @@ public class DialogTramiteScripts extends DialogControllerBase {
 				try {
 					return u1.getResumenTXT().compareTo(u2.getResumenTXT());
 				} catch (final Exception e) {
+					UtilJSF.loggearErrorFront("Error comparando resumenes de scripts", e);
 					return 0;
 				}
 			}

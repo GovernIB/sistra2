@@ -93,7 +93,7 @@ public class Persona implements ModelApi {
 	 *
 	 * @return el string
 	 */
-	public final String print() {
+	public String print() {
 		return "Persona [nif=" + nif + ", nombre=" + nombre + "]";
 	}
 

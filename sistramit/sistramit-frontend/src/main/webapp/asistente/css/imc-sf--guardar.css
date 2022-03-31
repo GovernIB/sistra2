@@ -9,15 +9,17 @@
 .imc-contingut h3 { margin-top: 1.5em; }
 
 .imc--guarda-correcte { position: relative; padding: 1em 2em 1em 5em; margin-bottom: 1.5em; background-color: #fff; }
-.imc--guarda-correcte p { font-size: 1.4em; font-weight: bold; margin-bottom: 0 !important; }
+.imc--guarda-correcte p { font-size: 1.7em; font-weight: bold; margin-bottom: 0 !important; }
 
 .imc--guarda-correcte::before { content: ""; display: block; position: absolute; top: .8em; left: 1.5em; width: 2em; height: 2em; background: transparent url(imgs/icones/ico_tramitat_4dba79.svg) no-repeat center center / 100% auto; }
 
+/*
 .imc--guarda h4 { margin-bottom: .5em; }
 .imc--guarda h4 span { font-size: 1.4em; }
+*/
 
-.imc--guarda h5 { margin-bottom: .5em; }
-.imc--guarda h5 span { font-size: 1.2em; font-weight: normal; }
+.imc--guarda h4 { margin-bottom: .5em; }
+.imc--guarda h4 span { font-size: 1.2em; }
 
 .imc--guarda div > p { margin-bottom: 1em; }
 
@@ -25,7 +27,7 @@
 .imc--guarda .imc--fi-carpeta p:last-child { margin-bottom: 0; }
 
 .imc--guarda .imc--fi-carpeta a.imc-bt,
-.imc--guarda .imc--fi-carpeta button { background-color: #265d3c; }
+.imc--guarda .imc--fi-carpeta button { font-size: .9em; background-color: #265d3c; }
 .imc--guarda .imc--fi-carpeta a.imc-bt span,
 .imc--guarda .imc--fi-carpeta button span { color: #fff; }
 
@@ -65,7 +67,7 @@
 
 .imc--guarda-documentacio { margin-bottom: 3em; }
 
-.imc--guarda-documentacio .imc--documentacio { display: none; padding: 1em 2em; border: 1px solid #fff; }
+.imc--guarda-documentacio .imc--documentacio { display: none; padding: 1em 2em; border: 3px solid #fff; }
 
 .imc--guarda-documentacio .imc--documentacio > ul { margin-bottom: 1em; }
 .imc--guarda-documentacio .imc--documentacio > ul > li { padding-left: 2em; margin-bottom: .4em; }
@@ -150,20 +152,30 @@
     width: 10em; font-size: 1.5em; text-align: left; padding: .2em 1em 0 1em;
 }
 
+
+
+
+.imc--estrelles label:hover svg { color: #265d3c; /*filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));*/ }
+
+
+
+
 .imc--estrelles input:checked ~ label {
     color: #999;
 }
 
 .imc--estrelles input:checked + label {
-    color: #4dba79; border-bottom-color: ##4dba79;
+    color: #4dba79; border-bottom-color: #4dba79;
 }
 
 .imc--estrelles input:focus + label {
     border-bottom-style: dotted;
+    color: #000;
 }
 
 .imc--estrelles:hover input + label {
-    color: #4dba79;
+    /*color: #4dba79;
+    color: #000;*/
 }
 
 .imc--estrelles input:hover ~ label,
@@ -173,7 +185,7 @@
 
 .imc--estrelles input:hover + label,
 .imc--estrelles input:focus + label {
-    color: #4dba79;
+    color: #265d3c;
 }
 
 .imc--estrelles input,
@@ -203,7 +215,8 @@
 
 .imc--valoracio p label { display: block; padding-bottom: .3em; }
 
-.imc--valoracio-especifica { display: none; }
+.imc--valoracio-especifica { display: none; padding: 1em 2em .5em 2em; margin-bottom: 1em; background-color: rgb(255, 255, 255); }
+.imc--valoracio-especifica h4 { margin-bottom: 1em; }
 
 
 
@@ -214,3 +227,22 @@ nav.imc--navegacio.imc--g li:last-child {
 }
 
 nav .imc-bt.imc--sortir::before { background-image: url(imgs/icones/ico_desconecta.svg); background-size: auto 1.5em; }
+
+
+
+/* media */
+
+@media only screen and (max-width : 440px) {
+
+    .imc--guarda .imc-bt.imc--ico::before { margin-right: .4em; }
+
+    .imc--guarda .imc--fi-carpeta { padding: 1em; }
+
+    .imc--guarda-documentacio .imc--documentacio { padding: 1em 1em; border: 2px solid #fff; }
+    .imc--guarda-documentacio .imc--documentacio > ul > li { padding-left: 1em; }
+
+    .imc--estrelles output { display: block; width: 100%; text-align: center; padding-top: .5em; }
+
+    .imc--valoracio-especifica { padding: 1em 1em .5em 1em; }
+
+}

@@ -32,7 +32,7 @@
   		<!-- Growl mensajes -->
 		<p:growl id="growlDialogFormularioSoporte" widgetVar="growlDialogFormularioSoporte" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 wpx50, " columns = "2" cellpadding = "5" cellspacing = "0"  style="width:100%;">
+		<h:panelGrid id="panel" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 wpx50, " columns = "2" cellpadding = "5" cellspacing = "0"  style="width:100%;">
 
 			<p:outputLabel for="inputTipoIncidenciaHidden" value="#{msg['dialogFormularioSoporte.headerTipoIncidencia']}"/>
 			<p:column>
@@ -53,17 +53,20 @@
         		</p:commandButton>
 			</p:column>
 
-			<p:outputLabel for="tipoDestinatario" value="#{msg['dialogFormularioSoporte.headerTipoDestinatario']}" />
-			<p:selectOneMenu id="tipoDestinatario" value="#{dialogFormularioSoporte.data.tipoDestinatario}" style="width:75%;" required="true">
-			     <f:selectItems value="#{TypeFormularioSoporte.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioSoporte.' += tipo]}" />
-				 <p:ajax event="change" process="@form"  update="@form" />
-		    </p:selectOneMenu >
+			<p:outputLabel value="#{msg['dialogFormularioSoporte.headerTipoDestinatario']}" />
+			<p:column>
+				<p:selectBooleanCheckbox id="checkListaEmails" itemLabel="#{msg['typeFormularioSoporte.E']}"  value="#{dialogFormularioSoporte.listaCorr}" >
+					<p:ajax event="change" global="false" update="panel" />
+				</p:selectBooleanCheckbox>
+				<p:selectBooleanCheckbox id="tipoCER" itemLabel="#{msg['typeFormularioSoporte.R']}"  value="#{dialogFormularioSoporte.respInc}" />
+				<p:selectBooleanCheckbox id="tipoPIN" itemLabel="#{msg['typeFormularioSoporte.A']}"  value="#{dialogFormularioSoporte.adminArea}" />
+			</p:column>
 
-			<p:outputLabel id="labelEmails" value="#{msg['dialogFormularioSoporte.headerEmails']}"   rendered="#{dialogFormularioSoporte.data.tipoDestinatario.toString() == 'E'}"/>
-			<p:inputText   id="inputEmails" value="#{dialogFormularioSoporte.data.listaEmails}" style="width:80%;" maxlength="4000" rendered="#{dialogFormularioSoporte.data.tipoDestinatario.toString() == 'E'}" />
+			<p:outputLabel id="labelEmails" value="#{msg['dialogFormularioSoporte.headerEmails']}" rendered="#{dialogFormularioSoporte.listaCorr}"/>
+			<p:inputText   id="inputEmails" value="#{dialogFormularioSoporte.data.listaEmails}" style="width:80%;" maxlength="4000" rendered="#{dialogFormularioSoporte.listaCorr}" />
 
-			<p:spacer 	   id="tabEmailsInfo" width="5" height="1"  rendered="#{dialogFormularioSoporte.data.tipoDestinatario.toString() == 'E'}" />
-			<p:outputLabel id="labelEmailsInfo"  styleClass="outputlabel-nota" value="#{msg['dialogFormularioSoporte.headerEmailsNota']}" rendered="#{dialogFormularioSoporte.data.tipoDestinatario.toString() == 'E'}" />
+			<p:spacer 	   id="tabEmailsInfo" width="5" height="1" rendered="#{dialogFormularioSoporte.listaCorr}" />
+			<p:outputLabel id="labelEmailsInfo"  styleClass="outputlabel-nota" value="#{msg['dialogFormularioSoporte.headerEmailsNota']}" rendered="#{dialogFormularioSoporte.listaCorr}" />
 
 	 	</h:panelGrid>
 

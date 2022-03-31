@@ -1,8 +1,5 @@
 package es.caib.sistrages.core.service.repository.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +14,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import es.caib.sistrages.core.api.model.Entidad;
-import es.caib.sistrages.core.api.model.PlantillaEntidad;
 
 /**
  * JEntidad.
@@ -44,6 +40,10 @@ public class JEntidad implements IModelApi {
 	/** Código DIR3 */
 	@Column(name = "ENT_DIR3", unique = true, nullable = false, length = 10)
 	private String codigoDir3;
+
+	/** Identificador **/
+	@Column(name = "ENT_IDENTI", unique = true, nullable = false, length = 20)
+	private String identificador;
 
 	/** Indica si la entidad está activa */
 	@Column(name = "ENT_ACTIVA", nullable = false, precision = 1, scale = 0)
@@ -204,6 +204,20 @@ public class JEntidad implements IModelApi {
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
+	}
+
+	/**
+	 * @return the identificador
+	 */
+	public String getIdentificador() {
+		return identificador;
+	}
+
+	/**
+	 * @param identificador the identificador to set
+	 */
+	public void setIdentificador(String identificador) {
+		this.identificador = identificador;
 	}
 
 	/**
@@ -679,7 +693,6 @@ public class JEntidad implements IModelApi {
 		this.urlSede = urlSedeElectronica;
 	}
 
-
 	/**
 	 * toModel.
 	 */
@@ -687,6 +700,7 @@ public class JEntidad implements IModelApi {
 		final Entidad entidad = new Entidad();
 		entidad.setCodigo(this.codigo);
 		entidad.setCodigoDIR3(this.codigoDir3);
+		entidad.setIdentificador(this.identificador);
 		entidad.setNombre(this.nombre.toModel());
 		entidad.setEmail(this.email);
 		entidad.setRol(this.roleAdministrador);
@@ -754,7 +768,7 @@ public class JEntidad implements IModelApi {
 		entidad.setOficinaRegistroCentralizado(oficinaRegistroCentralizado);
 		entidad.setValorarTramite(valorarTramite);
 		entidad.setRegistroOcultarDescargaDocumentos(registroOcultarDescargaDocumentos);
-		List<PlantillaEntidad> plantillas = new ArrayList<>();
+//		List<PlantillaEntidad> plantillas = new ArrayList<>();
 //		if (this.getPlantillaEntidad() != null) {
 //			for(JPlantillaEntidad jplantilla : this.getPlantillaEntidad()) {
 //				plantillas.add(jplantilla.toModel());

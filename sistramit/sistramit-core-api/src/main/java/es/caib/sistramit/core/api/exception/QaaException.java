@@ -22,11 +22,10 @@ public final class QaaException extends ServiceRollbackException {
 	/**
 	 * Constructor QaaException.
 	 *
-	 * @param pMessage
-	 *                     Mensaje de error.
+	 * @param pMessage Mensaje de error.
 	 */
 	public QaaException() {
-		super("Nivel de QAA del trámite es superior al del usuario autenticado");
+		super("Nivell de QAA del tràmit és superior al del usuari autenticat");
 	}
 
 }

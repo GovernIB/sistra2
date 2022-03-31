@@ -107,7 +107,7 @@ public final class ControladorGestorFormulariosExternoImpl implements Controlado
 			urlRedireccion = plgFormulario.invocarFormulario(difi.getIdGestorFormulariosExterno(), urlGestorFormulario,
 					usrGestorFormulario, pwdGestorFormulario, datosInicio);
 		} catch (final FormularioPluginException e) {
-			throw new InicioFormularioExternoException("Error iniciando formulario en Gestor Formulario "
+			throw new InicioFormularioExternoException("Error iniciant formulari en Gestor Formulari "
 					+ difi.getIdGestorFormulariosExterno() + ": " + e.getMessage(), e);
 		}
 

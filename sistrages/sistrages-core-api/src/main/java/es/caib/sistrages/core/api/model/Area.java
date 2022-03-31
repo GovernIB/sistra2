@@ -19,8 +19,14 @@ public class Area extends ModelApi {
 	/** Identificador. */
 	private String identificador;
 
+	/** Identificador. */
+	private String identificadorCompuesto;
+
 	/** Descripción. */
 	private String descripcion;
+
+	/** Email */
+	private String email;
 
 	/** Tiene permiso **/
 	private Boolean tienePermiso = true;
@@ -38,8 +44,7 @@ public class Area extends ModelApi {
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param codigo the codigo to set
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -53,11 +58,24 @@ public class Area extends ModelApi {
 	}
 
 	/**
-	 * @param identificador
-	 *            the identificador to set
+	 * @param identificador the identificador to set
 	 */
 	public void setIdentificador(final String codigo) {
 		this.identificador = codigo;
+	}
+
+	/**
+	 * @return the identificadorCompuesto
+	 */
+	public String getIdentificadorCompuesto() {
+		return identificadorCompuesto;
+	}
+
+	/**
+	 * @param identificadorCompuesto the identificadorCompuesto to set
+	 */
+	public void setIdentificadorCompuesto(String identificadorCompuesto) {
+		this.identificadorCompuesto = identificadorCompuesto;
 	}
 
 	/**
@@ -68,8 +86,7 @@ public class Area extends ModelApi {
 	}
 
 	/**
-	 * @param descripcion
-	 *            the descripcion to set
+	 * @param descripcion the descripcion to set
 	 */
 	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
@@ -85,10 +102,23 @@ public class Area extends ModelApi {
 	}
 
 	/**
+	 * @return the email
+	 */
+	public final String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email the email to set
+	 */
+	public final void setEmail(String email) {
+		this.email = email;
+	}
+
+	/**
 	 * Establece el valor de codigoDIR3Entidad.
 	 *
-	 * @param codigoDIR3Entidad
-	 *            el nuevo valor de codigoDIR3Entidad
+	 * @param codigoDIR3Entidad el nuevo valor de codigoDIR3Entidad
 	 */
 	public void setCodigoDIR3Entidad(final String codigoDIR3Entidad) {
 		this.codigoDIR3Entidad = codigoDIR3Entidad;
@@ -140,6 +170,17 @@ public class Area extends ModelApi {
 			}
 		} else if (!identificador.equals(other.identificador)) {
 			return false;
+		}
+		if (email == null) {
+			if (other.email != null) {
+				return false;
+			}
+		} else if (!email.equals(other.email))
+			return false;
+		if (codigo == null) {
+			if (other.codigo != null) {
+				return false;
+			}
 		}
 		if (descripcion == null) {
 			if (other.descripcion != null) {

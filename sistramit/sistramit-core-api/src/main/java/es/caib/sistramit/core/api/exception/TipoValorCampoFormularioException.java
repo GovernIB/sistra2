@@ -9,26 +9,23 @@ import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
  *
  */
 @SuppressWarnings("serial")
-public final class TipoValorCampoFormularioException
-        extends ServiceRollbackException {
+public final class TipoValorCampoFormularioException extends ServiceRollbackException {
 
-    /*
-     * TipoValorCampoFormularioException FATAL.
-     */
-    @Override
-    public TypeNivelExcepcion getNivel() {
-        return TypeNivelExcepcion.FATAL;
-    }
+	/*
+	 * TipoValorCampoFormularioException FATAL.
+	 */
+	@Override
+	public TypeNivelExcepcion getNivel() {
+		return TypeNivelExcepcion.FATAL;
+	}
 
-    /**
-     * Constructor TipoValorCampoFormularioException.
-     *
-     * @param idCampo
-     *            Parámetro id campo
-     */
-    public TipoValorCampoFormularioException(final String idCampo) {
-        super("El valor del campo de formulario " + idCampo
-                + " no es del tipo correcto");
-    }
+	/**
+	 * Constructor TipoValorCampoFormularioException.
+	 *
+	 * @param idCampo Parámetro id campo
+	 */
+	public TipoValorCampoFormularioException(final String idCampo) {
+		super("El valor del camp de formulari " + idCampo + " no és del tipus correcte");
+	}
 
 }

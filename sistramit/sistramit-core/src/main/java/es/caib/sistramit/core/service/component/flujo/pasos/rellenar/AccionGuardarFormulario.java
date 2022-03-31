@@ -100,7 +100,7 @@ public final class AccionGuardarFormulario implements AccionPaso {
 			validarGuardarFormulario(dipa, idFormulario);
 			// Verificamos que se ha pasado parametro ticket
 			if (StringUtils.isBlank(ticket)) {
-				throw new ParametrosEntradaIncorrectosException("Falta especificar parametro ticket");
+				throw new ParametrosEntradaIncorrectosException("Falta especificar paràmetre ticket");
 			}
 			// Obtenemos datos finalizacion gestor formulario
 			dff = obtenerDatosFinalizacionGestor(dipa, idFormulario, ticket, pDefinicionTramite);
@@ -192,10 +192,10 @@ public final class AccionGuardarFormulario implements AccionPaso {
 		final Formulario formularioDetalle = ((DetallePasoRellenar) pDipa.getDetallePaso())
 				.getFormulario(pIdFormulario);
 		if (formularioDetalle == null) {
-			throw new AccionPasoNoPermitidaException("El formulario no existe: " + pIdFormulario);
+			throw new AccionPasoNoPermitidaException("El formulari no existeix: " + pIdFormulario);
 		}
 		if (formularioDetalle.getObligatorio() == TypeObligatoriedad.DEPENDIENTE) {
-			throw new AccionPasoNoPermitidaException("Un formulario dependiente no puede ser guardado");
+			throw new AccionPasoNoPermitidaException("Un formulari dependent no pot ser guardat");
 		}
 	}
 
@@ -296,17 +296,17 @@ public final class AccionGuardarFormulario implements AccionPaso {
 			if (idFormModif.equals(pFormularioDef.getIdentificador())) {
 				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO.name(),
 						pVariablesFlujo.getIdSesionTramitacion(), pFormularioDef.getIdentificador(),
-						"Se ha intentado modificar estado del formulario actual");
+						"S'ha intentat modificar estat del formulari actual");
 			}
 			if (((DetallePasoRellenar) pDipa.getDetallePaso()).getFormulario(idFormModif) == null) {
 				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO.name(),
 						pVariablesFlujo.getIdSesionTramitacion(), pFormularioDef.getIdentificador(),
-						"Se ha intentado modificar estado de formulario de otro paso (" + idFormModif + ")");
+						"S'ha intentat modificar estat de formulari de altra passa (" + idFormModif + ")");
 			}
 			if (!esFormularioPosterior(pFormularioDef.getIdentificador(), idFormModif, pPasoDef)) {
 				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO.name(),
 						pVariablesFlujo.getIdSesionTramitacion(), pFormularioDef.getIdentificador(),
-						"Se ha intentado modificar estado de formulario de un formulario anterior (" + idFormModif
+						"S'ha intentat modificar estat de formulari de un formulari anterior (" + idFormModif
 								+ ")");
 			}
 		}
@@ -364,18 +364,18 @@ public final class AccionGuardarFormulario implements AccionPaso {
 			if (idFormModif.equals(pFormularioDef.getIdentificador())) {
 				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO.name(),
 						pVariablesFlujo.getIdSesionTramitacion(), pFormularioDef.getIdentificador(),
-						"Se ha intentado modificar datos del formulario actual");
+						"S'ha intentat modificar dades del formulari actual");
 			}
 
 			if (((DetallePasoRellenar) pDipa.getDetallePaso()).getFormulario(idFormModif) == null) {
 				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO.name(),
 						pVariablesFlujo.getIdSesionTramitacion(), pFormularioDef.getIdentificador(),
-						"Se ha intentado modificar el formulario de otro paso (" + idFormModif + ")");
+						"S'ha intentat modificar el formulari d'altra paso (" + idFormModif + ")");
 			}
 			if (!esFormularioPosterior(pFormularioDef.getIdentificador(), idFormModif, pPasoDef)) {
 				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO.name(),
 						pVariablesFlujo.getIdSesionTramitacion(), pFormularioDef.getIdentificador(),
-						"Se ha intentado modificar un formulario anterior (" + idFormModif + ")");
+						"S'ha intentat modificar un formulari anterior (" + idFormModif + ")");
 			}
 		}
 	}
@@ -597,14 +597,14 @@ public final class AccionGuardarFormulario implements AccionPaso {
 		final Formulario formularioDetalle = ((DetallePasoRellenar) pDipa.getDetallePaso())
 				.getFormulario(pIdFormulario);
 		if (formularioDetalle == null) {
-			throw new AccionPasoNoPermitidaException("El formulario no existe: " + pIdFormulario);
+			throw new AccionPasoNoPermitidaException("El formulari no existeix: " + pIdFormulario);
 		}
 		if (formularioDetalle.getObligatorio() != TypeObligatoriedad.OPCIONAL) {
-			throw new AccionPasoNoPermitidaException("Solo puede ser cancelado un formulario opcional");
+			throw new AccionPasoNoPermitidaException("Només pot ser cancelat un formulari opcional");
 		}
 		if (formularioDetalle.getRellenado() == TypeEstadoDocumento.SIN_RELLENAR) {
 			throw new AccionPasoNoPermitidaException(
-					"El formulario no esta rellenado (ni correcta ni incorrectamente)");
+					"El formulari no està emplenat (ni correcta ni incorrectament)");
 		}
 	}
 

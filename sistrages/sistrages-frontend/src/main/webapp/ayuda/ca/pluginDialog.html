@@ -3,8 +3,34 @@
 	<meta charset=UTF-8>
 	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+		<script type="text/javascript">
+		function generarFilas(){
+			let url = (window.location != window.parent.location) ? document.referrer : document.location.href;
+			const urlParams = new URLSearchParams(url);
+			const ambito = urlParams.get('AMBITO');
+			let lista = document.getElementById('lista');
+			console.log(lista);
+			if(ambito == 'E'){
+				lista.innerHTML += `
+				<li><a href="AyudaServlet?id=pluginCatalogoProcedimientos&lang=ca"><span class="nombreCampo">Plugin de cat&agrave;leg de procediments</span></a></li>
+				<li><a href="AyudaServlet?id=pluginRegistro&lang=ca"><span class="nombreCampo">Plugin de registre</span></a></li>
+				<li><a href="AyudaServlet?id=pluginFirma&lang=ca"><span class="nombreCampo">Plugin de firma</span></a></li>
+				<li><a href="AyudaServlet?id=pluginFormExternos&lang=ca"><span class="nombreCampo">Plugin de formularis externs</span></a></li>
+				<li><a href="AyudaServlet?id=pluginPagos&lang=ca"><span class="nombreCampo">Plugin de pagaments</span></a></li>
+				<li><a href="AyudaServlet?id=pluginValidacionFirma&lang=ca"><span class="nombreCampo">Plugin de validaci&oacute; de firma</span> </a></li>
+									`
+			}else if(ambito == 'G'){
+				lista.innerHTML += `
+					<li><a href="AyudaServlet?id=pluginDomRemoto&lang=ca"><span class="nombreCampo">Plugin de domini remot</span></a></li>
+					<li><a href="AyudaServlet?id=pluginLogin&lang=ca"><span class="nombreCampo">Plugin de login</span></a></li>
+					<li><a href="AyudaServlet?id=pluginEmail&lang=ca"><span class="nombreCampo">Plugin de email</span></a></li>
+					<li><a href="AyudaServlet?id=pluginConvPdf&lang=ca"><span class="nombreCampo">Plugin de conversi&oacute; pdf</span></a></li>
+									`
+			}
+		}
+	</script>
 </head>
-<body>
+<body onload="generarFilas();">
 <h1 class="stgH1">MANTENIMENT PLUGIN</h1>
 <p>
 	En la pantalla de '<i>Mateniment plugin</i>' pot mantenir les dades corresponents a un plugin.<br>
@@ -38,6 +64,11 @@
 	<ul>
 		<li><span class="boton">Desar</span>: tanca la pantalla guardant els canvis.</li>
 		<li><span class="boton">Cancel&middot;lar</span>: tanca la pantalla sense guardar els canvis.</li>
+	</ul>
+</p>
+<h2 class="stgH2">PROPIETATS PLUGIN</h2>
+<p>
+	<ul id="lista">
 	</ul>
 </p>
 </body>

@@ -43,7 +43,7 @@ public final class ResPersonalizacionTramite implements ResPersonalizacionTramit
 	@Override
 	public void setTituloTramite(final String pTituloTramite) throws ScriptException {
 		if (!XssFilter.filtroXss(pTituloTramite)) {
-			throw new ScriptException("El titulo del tramite tiene caracteres no permitidos");
+			throw new ScriptException("El títol del tràmit té caràcters no permesos");
 		}
 		tituloTramite = pTituloTramite;
 	}
@@ -69,7 +69,7 @@ public final class ResPersonalizacionTramite implements ResPersonalizacionTramit
 	@Override
 	public void setPlazoInicio(final String pPlazoInicio) throws ScriptException {
 		if (!ValidacionesTipo.getInstance().esFecha(pPlazoInicio, Constantes.FORMATO_FECHAHORA_FRONTAL)) {
-			throw new ScriptException("La fecha no tiene un formato correcto: " + Constantes.FORMATO_FECHAHORA_FRONTAL);
+			throw new ScriptException("La data no té un format correcte: " + Constantes.FORMATO_FECHAHORA_FRONTAL);
 		}
 		plazoInicio = UtilsFlujo.deformateaFecha(pPlazoInicio, Constantes.FORMATO_FECHAHORA_FRONTAL);
 	}
@@ -86,7 +86,7 @@ public final class ResPersonalizacionTramite implements ResPersonalizacionTramit
 	@Override
 	public void setPlazoFin(final String pPlazoFin) throws ScriptException {
 		if (!ValidacionesTipo.getInstance().esFecha(pPlazoFin, Constantes.FORMATO_FECHAHORA_FRONTAL)) {
-			throw new ScriptException("La fecha no tiene un formato correcto: " + Constantes.FORMATO_FECHAHORA_FRONTAL);
+			throw new ScriptException("La data no té un format correcte: " + Constantes.FORMATO_FECHAHORA_FRONTAL);
 		}
 		plazoFin = UtilsFlujo.deformateaFecha(pPlazoFin, Constantes.FORMATO_FECHAHORA_FRONTAL);
 	}

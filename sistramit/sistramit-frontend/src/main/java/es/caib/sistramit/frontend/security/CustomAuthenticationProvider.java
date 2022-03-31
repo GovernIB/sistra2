@@ -30,7 +30,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         final String usuario = authentication.getName();
         final String passwd = authentication.getCredentials().toString();
         if (StringUtils.isBlank(usuario) || StringUtils.isBlank(passwd)) {
-            throw new BadCredentialsException("Usuario no válido");
+            throw new BadCredentialsException("Usuari no vàlid");
         }
 
         // Obtenemos security service
@@ -80,7 +80,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                         .validarTicketPasarelaPagos(sesionInfo, passwd);
             } else {
                 throw new BadCredentialsException(
-                        "Usuario no valido: " + usuario);
+                        "Usuari no vàlid: " + usuario);
             }
         } catch (final Exception ex) {
             // Se genera excepcion y se mostrará el mensaje de la excepción

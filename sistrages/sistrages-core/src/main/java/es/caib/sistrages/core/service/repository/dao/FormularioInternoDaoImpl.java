@@ -40,8 +40,8 @@ import es.caib.sistrages.core.api.model.types.TypeListaValores;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
 import es.caib.sistrages.core.service.repository.model.JAccionPersonalizada;
-import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JCampoFormulario;
+import es.caib.sistrages.core.service.repository.model.JCampoFormularioCaptcha;
 import es.caib.sistrages.core.service.repository.model.JCampoFormularioCasillaVerificacion;
 import es.caib.sistrages.core.service.repository.model.JCampoFormularioIndexado;
 import es.caib.sistrages.core.service.repository.model.JCampoFormularioTexto;
@@ -346,6 +346,22 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				entityManager.merge(jPagina);
 				objetoResultado = jLineaCreada.toModel();
 				break;
+			case CAPTCHA:
+				nuevoOrden = creaHuecoEntreLineas(jPagina, pOrden);
+				final JLineaFormulario jLineaBloqueCreadaCaptcha = JLineaFormulario.createDefault(nuevoOrden, jPagina);
+				if (jLineaBloqueCreadaCaptcha != null) {
+					final JCampoFormularioCaptcha jObjFormSeccion = JCampoFormularioCaptcha.createDefault(1,
+							jLineaBloqueCreadaCaptcha);
+
+					entityManager.persist(jLineaBloqueCreadaCaptcha);
+					jObjFormSeccion.getElementoFormulario().setCaptchaFormulario(jObjFormSeccion);
+					entityManager.persist(jObjFormSeccion);
+					entityManager.merge(jPagina);
+
+					objetoResultado = jLineaBloqueCreadaCaptcha.toModel();
+					((LineaComponentesFormulario) objetoResultado).getComponentes().add(jObjFormSeccion.toModel());
+				}
+				break;
 			case CAMPO_TEXTO:
 				// creaHuecoEnComponentes(jLineaSeleccionada, pOrden);
 				nuevoOrden = creaHuecoEntreComponentes(jLineaSeleccionada, pOrden);
@@ -573,6 +589,13 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 			}
 
 			switch (pComponente.getTipo()) {
+			case CAPTCHA:
+				final JCampoFormularioCaptcha jCaptcha = jElemento.getCaptchaFormulario();
+				//final ComponenteFormularioCampoCaptcha captcha = (ComponenteFormularioCampoCaptcha) pComponente;
+				//jSeccion.setLetra(captcha.getLetra());
+				entityManager.merge(jCaptcha);
+				objetoResultado = jCaptcha.toModel();
+				break;
 			case SECCION:
 				final JSeccionFormulario jSeccion = jElemento.getSeccionFormulario();
 				final ComponenteFormularioSeccion seccion = (ComponenteFormularioSeccion) pComponente;
@@ -894,6 +917,11 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		// miramos si es seccion
 		if (jComponente.getSeccionFormulario() != null) {
 			componente = jComponente.getSeccionFormulario().toModel();
+		}
+
+		// miramos si es seccion
+		if (jComponente.getCaptchaFormulario() != null) {
+			componente = jComponente.getCaptchaFormulario().toModel();
 		}
 
 		// miramos si es imagen
@@ -1409,12 +1437,10 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 			for (final JCampoFormularioIndexado selector : selectores) {
 				if (selector.getDominio() != null
 						&& selector.getDominio().getAmbito().equals(TypeAmbito.AREA.toString())
-						&& selector.getDominio().getAreas() != null) {
+						&& selector.getDominio().getArea() != null) {
 					boolean contieneArea = false;
-					for (final JArea area : selector.getDominio().getAreas()) {
-						if (area.getCodigo().compareTo(idAreaAntigua) == 0) {
+					if (selector.getDominio().getArea() != null && selector.getDominio().getArea().getCodigo().compareTo(idAreaAntigua) == 0) {
 							contieneArea = true;
-						}
 					}
 
 					if (contieneArea) {

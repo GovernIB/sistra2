@@ -95,4 +95,6 @@ public interface RestApiInternaService {
 	List<GestorExternoFormularios> listGestorExternoFormularios(Long pIdEntidad);
 
 	List<PlantillaEntidad> getPlantillasEntidad(Long codigo);
+
+	List<Area> listAreasByEntidad(Long pIdEntidad);
 }

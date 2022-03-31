@@ -892,7 +892,7 @@ public class HDocumento implements IModelApi {
 			clave = hDocumento.getPagoJustificantePdfClave();
 		}
 		if (clave == null) {
-			throw new RepositoryException("No se ha encontrado clave acceso para fichero " + hDocumento.getFichero());
+			throw new RepositoryException("No s'ha trobat clau accés per fitxer " + hDocumento.getFichero());
 		}
 		return clave;
 	}

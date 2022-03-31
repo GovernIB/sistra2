@@ -3,7 +3,6 @@ package es.caib.sistrages.frontend.util;
 import java.util.Arrays;
 import java.util.List;
 
-import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
@@ -115,6 +114,19 @@ public class UtilCuadernoCarga {
 	 * @return
 	 */
 	private static FilaImportarDominio checkDominios(final FilaImportarDominio fila) {
+
+		// Puede que no exista el dominio de tipo area , en el area seleccionada.
+		if (fila.getDominio() != null && fila.getDominioActual() == null && fila.getDominio().getAmbito() == TypeAmbito.AREA) {
+
+			fila.setAccion(TypeImportarAccion.NADA);
+			fila.setExiste(TypeImportarExiste.EXISTE);
+			fila.setEstado(TypeImportarEstado.ERROR);
+			fila.setResultado(TypeImportarResultado.ERROR);
+			fila.setVisibleBoton(false);
+			fila.setMismoTipo(false);
+			fila.setMensaje(UtilJSF.getLiteral("importar.error.ambitoAreaNoExisteDom"));
+			return fila;
+		}
 
 		// Prohibido importar dominios de distintos ambitos.
 		if (fila.getDominio() != null && fila.getDominioActual() != null
@@ -238,15 +250,10 @@ public class UtilCuadernoCarga {
 	 */
 	private static boolean isAreaErroneo(final Dominio dominio, final Dominio dominio2) {
 		boolean retorno;
-		if (dominio.getAreas().size() != 1 || dominio2.getAreas().size() != 1) {
+		if (dominio.getArea() ==null || dominio2.getArea() == null || dominio.getIdArea() ==null || dominio2.getIdArea() == null ) {
 			retorno = true;
 		} else {
-
-			final String identificador1 = ((Area) dominio.getAreas().toArray()[0]).getIdentificador();
-			final String identificador2 = ((Area) dominio2.getAreas().toArray()[0]).getIdentificador();
-
-			retorno = !identificador1.equals(identificador2);
-
+			retorno = !dominio.getIdArea().equals(dominio2.getIdArea());
 		}
 		return retorno;
 	}

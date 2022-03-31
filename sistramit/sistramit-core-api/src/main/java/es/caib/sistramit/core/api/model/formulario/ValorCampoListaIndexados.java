@@ -137,10 +137,10 @@ public final class ValorCampoListaIndexados extends ValorCampo {
 	@Override
 	public void reemplazaValor(ValorCampo valorCampo) {
 		if (!this.getId().equals(valorCampo.getId())) {
-			throw new ErrorConfiguracionException("No coincide id");
+			throw new ErrorConfiguracionException("No coincideix id");
 		}
 		if (this.getTipo() != valorCampo.getTipo()) {
-			throw new ErrorConfiguracionException("No coincide tipo");
+			throw new ErrorConfiguracionException("No coincide tipus");
 		}
 		final ValorCampoListaIndexados valorNew = (ValorCampoListaIndexados) valorCampo;
 		if (valorNew.getValor() == null) {

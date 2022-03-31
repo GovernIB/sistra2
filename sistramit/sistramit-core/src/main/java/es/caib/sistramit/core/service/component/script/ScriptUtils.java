@@ -54,7 +54,7 @@ public final class ScriptUtils {
 			}
 		}
 		if (res == null) {
-			throw new ErrorConfiguracionException("No existe mensaje error con código " + pCodigoMensajeError);
+			throw new ErrorConfiguracionException("No existeix missatge error amb còdi " + pCodigoMensajeError);
 		}
 		return res;
 	}
@@ -76,22 +76,22 @@ public final class ScriptUtils {
 	public static void validarDatosPersona(final String nifNormalizado, final String pNombre, final String pApellido1,
 			final String pApellido2) throws ScriptException {
 		if (!NifUtils.esNifPersonaFisica(nifNormalizado) && !NifUtils.esNifPersonaJuridica(nifNormalizado)) {
-			throw new ScriptException("El dato proporcionado como nif persona no es un nif válido: " + nifNormalizado);
+			throw new ScriptException("La dada proporcionada com nif persona no és un nif vàlid: " + nifNormalizado);
 		}
 
 		if (StringUtils.isEmpty(pNombre) || !XssFilter.filtroXss(pNombre)) {
 			throw new ScriptException(
-					"El dato proporcionado como nombre persona esta vacio o contiene caracteres no permitidos");
+					"La dada proporcionada com nom persona està buit o conté caràcters no permesos");
 		}
 
 		if (!StringUtils.isBlank(pApellido1) && !XssFilter.filtroXss(pApellido1)) {
 			throw new ScriptException(
-					"El dato proporcionado como apellido 1 persona contiene caracteres no permitidos");
+					"La dada proporcionada com cognom 1 persona conté caràcters no permesos");
 		}
 
 		if (!StringUtils.isBlank(pApellido2) && !XssFilter.filtroXss(pApellido2)) {
 			throw new ScriptException(
-					"El dato proporcionado como apellido 2 persona contiene caracteres no permitidos");
+					"La dada proporcionada com cognom 2 persona conté caràcters no permesos");
 		}
 	}
 
@@ -132,6 +132,32 @@ public final class ScriptUtils {
 			res = new ClzValorCampoCompuesto("", "");
 		}
 		return res;
+	}
+
+	/**
+	 * Calucula mensaje a mostrar.
+	 *
+	 * @param codigoMensaje
+	 *                                        Codigo mensaje
+	 * @param parametrosMensaje
+	 *                                        Parametros mensaje
+	 * @param textoMensajeParticularizado
+	 *                                        Texto particularizado
+	 * @param pCodigosMensaje
+	 *                                        Codigos de mensaje
+	 * @return mensaje
+	 */
+	public static String calcularMensaje(final String codigoMensaje, final List<String> parametrosMensaje,
+			final String textoMensajeParticularizado, final Map<String, String> pCodigosMensaje) {
+		String textoMensajeError;
+		if (StringUtils.isNotBlank(codigoMensaje)) {
+			textoMensajeError = ScriptUtils.calculaMensajeError(pCodigosMensaje, codigoMensaje, parametrosMensaje);
+		} else if (StringUtils.isNotBlank(textoMensajeParticularizado)) {
+			textoMensajeError = textoMensajeParticularizado;
+		} else {
+			textoMensajeError = "";
+		}
+		return textoMensajeError;
 	}
 
 }

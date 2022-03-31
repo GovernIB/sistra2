@@ -2,7 +2,6 @@ package es.caib.sistrages.frontend.util;
 
 import java.util.List;
 
-import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
@@ -155,6 +154,13 @@ public class UtilImportacion {
 
 			return FilaImportarDominio.crearITerrorAmbitoAreas(dominio, dominioActual, fd, fdContent, fdActual,
 					UtilJSF.getLiteral("importar.error.ambitoAreaDistintaArea"), configuracionAutenticacion);
+		}
+
+		// Puede que no exista el dominio de tipo area , en el area seleccionada.
+		if (dominio != null && dominioActual == null && dominio.getAmbito() == TypeAmbito.AREA) {
+
+			return FilaImportarDominio.crearITerrorAmbitoAreas(dominio, dominioActual, fd, fdContent, fdActual,
+					UtilJSF.getLiteral("importar.error.ambitoAreaNoExisteDom"), configuracionAutenticacion);
 		}
 
 		// Si el área existe en BBDD, tiene que ser el mismo area que la seleccionada
@@ -429,13 +435,10 @@ public class UtilImportacion {
 	 */
 	private static boolean isAreaErroneo(final Dominio dominio, final String identificadorArea) {
 		boolean retorno;
-		if (dominio.getAreas().size() != 1 || identificadorArea == null || identificadorArea.isEmpty()) {
+		if (dominio.getArea() == null || identificadorArea == null || identificadorArea.isEmpty()) {
 			retorno = true;
 		} else {
-			final String identificador1 = ((Area) dominio.getAreas().toArray()[0]).getIdentificador();
-
-			retorno = !identificador1.equals(identificadorArea);
-
+			retorno = !dominio.getArea().getIdentificador().equals(identificadorArea);
 		}
 		return retorno;
 	}
@@ -449,13 +452,10 @@ public class UtilImportacion {
 	 */
 	private static boolean isAreaErroneo(final Dominio dominio, final Dominio dominio2) {
 		boolean retorno;
-		if (dominio.getAreas().size() != 1 || dominio2.getAreas().size() != 1) {
+		if (dominio.getArea() ==null || dominio2.getArea() == null || dominio.getIdArea() ==null || dominio2.getIdArea() == null ) {
 			retorno = true;
 		} else {
-			final String identificador1 = ((Area) dominio.getAreas().toArray()[0]).getIdentificador();
-			final String identificador2 = ((Area) dominio2.getAreas().toArray()[0]).getIdentificador();
-
-			retorno = !identificador1.equals(identificador2);
+			retorno = !dominio.getIdArea().equals(dominio2.getIdArea());
 		}
 		return retorno;
 	}

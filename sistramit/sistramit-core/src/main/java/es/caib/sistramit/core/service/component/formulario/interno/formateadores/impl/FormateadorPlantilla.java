@@ -88,7 +88,7 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 			return pdf.guardarEnMemoria(true);
 
 		} catch (final Exception e) {
-			throw new FormateadorException("Error convirtiendo el documento a bytes", e);
+			throw new FormateadorException("Error convertint el document a bytes", e);
 		}
 	}
 
@@ -117,11 +117,11 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 					final Date date = ValidacionesTipo.getInstance().parseFecha(fecha, "dd-MM-yyyy");
 					valor = ValidacionesTipo.getInstance().formateaFecha(date, FORMATO_FECHAS_PDF);
 				} else {
-					throw new FormateadorException("Fecha no valida");
+					throw new FormateadorException("Data no vàlida");
 				}
 			}
 		} catch (final ValidacionTipoException e) {
-			throw new FormateadorException("Fecha no valida");
+			throw new FormateadorException("Data no vàlida");
 		}
 		return valor;
 	}

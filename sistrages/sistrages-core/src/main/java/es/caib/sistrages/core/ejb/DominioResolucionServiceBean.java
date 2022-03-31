@@ -56,9 +56,9 @@ public class DominioResolucionServiceBean implements DominioResolucionService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public ValoresDominio realizarConsultaListaFija(final TypeAmbito ambito, final Long idEntidad,
+	public ValoresDominio realizarConsultaListaFija(final TypeAmbito ambito, final Long idEntidad, final Long idArea,
 			final String identificador, final String url, final List<Propiedad> parametros) {
-		return dominioResolucionService.realizarConsultaListaFija(ambito, idEntidad, identificador, url, parametros);
+		return dominioResolucionService.realizarConsultaListaFija(ambito, idEntidad, idArea, identificador, url, parametros);
 	}
 
 }

@@ -114,7 +114,7 @@ public final class PlgDatosFormulario implements PlgDatosFormularioInt {
 				}
 			}
 			if (res != null && res.getTipo() != tipoValor) {
-				throw new ScriptException("El campo " + pIdCampo + " no es de tipo " + tipoValor.name());
+				throw new ScriptException("El camp " + pIdCampo + " no és de tipus " + tipoValor.name());
 			}
 		}
 		return res;

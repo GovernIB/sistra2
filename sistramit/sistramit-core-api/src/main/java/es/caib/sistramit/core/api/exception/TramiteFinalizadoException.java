@@ -20,11 +20,10 @@ public final class TramiteFinalizadoException extends ServiceRollbackException {
 	/**
 	 * Constructor TramiteFinalizadoException.
 	 *
-	 * @param pIdSesionTramite
-	 *            Id sesion tramite.
+	 * @param pIdSesionTramite Id sesion tramite.
 	 */
 	public TramiteFinalizadoException(final String pIdSesionTramite) {
-		super("Tramite " + pIdSesionTramite + " finalizado");
+		super("Tràmit " + pIdSesionTramite + " finalitzat");
 	}
 
 }

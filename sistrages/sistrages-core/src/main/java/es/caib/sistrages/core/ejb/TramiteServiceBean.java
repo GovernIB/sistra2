@@ -34,6 +34,7 @@ import es.caib.sistrages.core.api.model.comun.FilaImportar;
 import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
 import es.caib.sistrages.core.api.model.comun.ScriptInfo;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
+import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.service.TramiteService;
 
 @Stateless
@@ -377,14 +378,14 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public Area getAreaByIdentificador(final String identificador) {
-		return tramiteService.getAreaByIdentificador(identificador);
+	public Area getAreaByIdentificador(final String identificadorEntidad, final String identificador) {
+		return tramiteService.getAreaByIdentificador(identificadorEntidad, identificador);
 	}
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public Tramite getTramiteByIdentificador(final String identificador) {
-		return tramiteService.getTramiteByIdentificador(identificador);
+	public Tramite getTramiteByIdentificador(String identificador, final Long idArea, String identificadorArea, Long codigoTramite) {
+		return tramiteService.getTramiteByIdentificador(identificador, idArea, identificadorArea, codigoTramite);
 	}
 
 	@Override
@@ -431,8 +432,8 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public boolean checkIdentificadorRepetido(final String identificador, final Long codigo) {
-		return tramiteService.checkIdentificadorRepetido(identificador, codigo);
+	public boolean checkIdentificadorRepetido(final String identificador, final Long codigo, final Long idArea) {
+		return tramiteService.checkIdentificadorRepetido(identificador, codigo, idArea);
 	}
 
 	@Override
@@ -594,7 +595,7 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void actualizarDominios(TramiteVersion idTramiteVersion,  final List<Dominio> dominios) {
+	public void actualizarDominios(TramiteVersion idTramiteVersion,  final List<ValorIdentificadorCompuesto> dominios) {
 		 tramiteService.actualizarDominios(idTramiteVersion, dominios);
 	}
 

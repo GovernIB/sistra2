@@ -244,4 +244,9 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 		return restApiService.getPlantillasEntidad(codigo);
 	}
 
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<Area> listAreasByEntidad(final Long pIdEntidad) {
+		return restApiService.listAreasByEntidad(pIdEntidad);
+	}
 }

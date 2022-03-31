@@ -1,0 +1,9 @@
+Tras ejecutar sistrages_update_from_1.2.2_to_1.3.0.sql y hacer las pruebas, ejecutar esta sentencia:
+
+Drop table STG_DOMENT cascade constraints;
+Drop table STG_AREDOM cascade constraints;
+
+
+1_SISTRA2_SELECT_INVOCARDOMINIO_FUNCION.sql. Este script crea dos funciones PL/SQL que utilizará el script siguiente.
+
+2_SISTRA2_SELECT_INVOCARDOMINIO_AVANZADO.sql. Este script devuelve los scripts de los trámites que contienen invocaciones a dominios, así como los identificadores por los que se tienen que sustituir manualmente en la definición de dichos trámites y scripts para que funcionen tras las modificaciones realizadas en BBDD y en la aplicación. Las modificaciones de los scripts de los trámites afectados, deben realizarse tras finalizar el despliegue de esta versión de SISTRA2.

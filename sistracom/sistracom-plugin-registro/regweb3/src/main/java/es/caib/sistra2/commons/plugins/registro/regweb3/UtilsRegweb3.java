@@ -135,14 +135,10 @@ public class UtilsRegweb3 {
 	/**
 	 * Configura service.
 	 *
-	 * @param bp
-	 *                     Binding Provider
-	 * @param endpoint
-	 *                     Endpoint ws
-	 * @param user
-	 *                     usuario
-	 * @param pass
-	 *                     password
+	 * @param bp       Binding Provider
+	 * @param endpoint Endpoint ws
+	 * @param user     usuario
+	 * @param pass     password
 	 */
 	private static void configurarService(final BindingProvider bp, final String endpoint, final String user,
 			final String pass, final Long timeout, final boolean logCalls) throws Exception {
@@ -156,8 +152,7 @@ public class UtilsRegweb3 {
 	/**
 	 * Obtiene tipo interesado.
 	 *
-	 * @param documentoIdentificacion
-	 *                                    documento identicacion
+	 * @param documentoIdentificacion documento identicacion
 	 * @return tipo interesado
 	 */
 	public static String getTipoInteresado(final String documentoIdentificacion) {
@@ -171,8 +166,7 @@ public class UtilsRegweb3 {
 	/**
 	 * Obtiene tipo documento identificacion.
 	 *
-	 * @param documentoIdentificacion
-	 *                                    documento identicacion
+	 * @param documentoIdentificacion documento identicacion
 	 * @return tipo documento identificacion.
 	 */
 	public static String getTipoDocumentoIdentificacion(final String documentoIdentificacion) {
@@ -192,10 +186,8 @@ public class UtilsRegweb3 {
 	/**
 	 * Obtener datos interesado asiento.
 	 *
-	 * @param asiento
-	 *                           asiento
-	 * @param tipoInteresado
-	 *                           tipo interesado (RPT/RPD).
+	 * @param asiento        asiento
+	 * @param tipoInteresado tipo interesado (RPT/RPD).
 	 *
 	 * @return interesado
 	 */
@@ -226,7 +218,8 @@ public class UtilsRegweb3 {
 		if (StringUtils.isNotBlank(interesadoAsiento.getDocIdentificacion())) {
 			interesado.setTipoInteresado(
 					new Long(UtilsRegweb3.getTipoInteresado(interesadoAsiento.getDocIdentificacion())));
-			interesado.setDocumento(interesadoAsiento.getDocIdentificacion());
+			interesado.setDocumento(UtilsRegweb3.truncarTexto(interesadoAsiento.getDocIdentificacion(),
+					ConstantesRegweb3.MAX_SIZE_DOC_INTERESADO));
 			interesado.setTipoDocumentoIdentificacion(tipoDocumento.toString());
 		} else {
 			interesado.setTipoInteresado(new Long(ConstantesRegweb3.TIPO_INTERESADO_PERSONA_FISICA));
@@ -234,21 +227,28 @@ public class UtilsRegweb3 {
 
 		if (interesado.getTipoInteresado().longValue() == Long
 				.parseLong(ConstantesRegweb3.TIPO_INTERESADO_PERSONA_JURIDICA)) {
-			interesado.setRazonSocial(interesadoAsiento.getRazonSocial());
+			interesado.setRazonSocial(UtilsRegweb3.truncarTexto(interesadoAsiento.getRazonSocial(),
+					ConstantesRegweb3.MAX_SIZE_RAZON_SOCIAL));
 		} else {
-			interesado.setNombre(interesadoAsiento.getNombre());
-			interesado.setApellido1(interesadoAsiento.getApellido1());
-			interesado.setApellido2(interesadoAsiento.getApellido2());
+			interesado.setNombre(
+					UtilsRegweb3.truncarTexto(interesadoAsiento.getNombre(), ConstantesRegweb3.MAX_SIZE_NOMBRE));
+			interesado.setApellido1(
+					UtilsRegweb3.truncarTexto(interesadoAsiento.getApellido1(), ConstantesRegweb3.MAX_SIZE_APELLIDO1));
+			interesado.setApellido2(
+					UtilsRegweb3.truncarTexto(interesadoAsiento.getApellido2(), ConstantesRegweb3.MAX_SIZE_APELLIDO2));
 		}
 
 		interesado.setPais(interesadoAsiento.getPais());
 		interesado.setProvincia(interesadoAsiento.getProvincia());
 		interesado.setLocalidad(interesadoAsiento.getMunicipio());
-		interesado.setDireccion(interesadoAsiento.getDireccion());
-		interesado.setCp(interesadoAsiento.getCodigoPostal());
-		interesado.setEmail(interesadoAsiento.getEmail());
-		interesado.setTelefono(interesadoAsiento.getTelefono());
-		interesado.setDireccionElectronica(interesadoAsiento.getDireccionElectronica());
+		interesado.setDireccion(
+				UtilsRegweb3.truncarTexto(interesadoAsiento.getDireccion(), ConstantesRegweb3.MAX_SIZE_DIRECCION));
+		interesado.setCp(UtilsRegweb3.truncarTexto(interesadoAsiento.getCodigoPostal(), ConstantesRegweb3.MAX_SIZE_CP));
+		interesado.setEmail(UtilsRegweb3.truncarTexto(interesadoAsiento.getEmail(), ConstantesRegweb3.MAX_SIZE_EMAIL));
+		interesado.setTelefono(
+				UtilsRegweb3.truncarTexto(interesadoAsiento.getTelefono(), ConstantesRegweb3.MAX_SIZE_TLF));
+		interesado.setDireccionElectronica(UtilsRegweb3.truncarTexto(interesadoAsiento.getDireccionElectronica(),
+				ConstantesRegweb3.MAX_SIZE_DIRECCION_ELECTRONICA));
 		if (interesadoAsiento.getCanal() != null) {
 			interesado.setCanal(Long.parseLong(interesadoAsiento.getCanal().toString()));
 		}
@@ -261,10 +261,8 @@ public class UtilsRegweb3 {
 	/**
 	 * Trunca texto si se pasa del tamaño máximo.
 	 *
-	 * @param texto
-	 *                   Texto
-	 * @param tamMax
-	 *                   Tamaño máximo
+	 * @param texto  Texto
+	 * @param tamMax Tamaño máximo
 	 * @return texto truncado
 	 */
 	public static String truncarTexto(final String texto, final int tamMax) {
@@ -278,10 +276,8 @@ public class UtilsRegweb3 {
 	/**
 	 * Trunca filename si se pasa del tamaño máximo.
 	 *
-	 * @param filename
-	 *                     filename
-	 * @param tamMax
-	 *                     Tamaño máximo
+	 * @param filename filename
+	 * @param tamMax   Tamaño máximo
 	 * @return filename truncado
 	 */
 	public static String truncarFilename(final String filename, final int tamMax) {
@@ -302,8 +298,7 @@ public class UtilsRegweb3 {
 	/**
 	 * Elimina carácteres no permitidos.
 	 *
-	 * @param cadena
-	 *                   Cadena
+	 * @param cadena Cadena
 	 * @return Cadena normalizada
 	 */
 	public static String eliminarCaracteresNoPermitidos(final String cadena) {

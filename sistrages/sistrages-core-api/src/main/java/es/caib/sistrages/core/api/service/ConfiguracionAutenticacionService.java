@@ -3,6 +3,7 @@ package es.caib.sistrages.core.api.service;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 
 /**
@@ -24,7 +25,7 @@ public interface ConfiguracionAutenticacionService {
 	 * @param idArea                id Area
 	 * @param configuracionAutenticacion el valor de Configuracion Autenticacion
 	 */
-	Long addConfiguracionAutenticacion(Long idArea, ConfiguracionAutenticacion configuracionAutenticacion);
+	Long addConfiguracionAutenticacion(Long idArea, Long idEntidad, ConfiguracionAutenticacion configuracionAutenticacion);
 
 	/**
 	 * Elimina Configuracion Autenticacion.
@@ -44,28 +45,37 @@ public interface ConfiguracionAutenticacionService {
 	/**
 	 * Lista de Configuracion Autenticacion.
 	 *
+	 * @param ambito Ambito
+	 * @param idEntidad id Entidad
 	 * @param idArea id Area
 	 * @param idioma    idioma
 	 * @param filtro    filtro busqueda
 	 * @return la lista de Configuracion Autenticacion
 	 */
-	List<ConfiguracionAutenticacion> listConfiguracionAutenticacion(Long idArea, TypeIdioma idioma, String filtro);
+	List<ConfiguracionAutenticacion> listConfiguracionAutenticacion(final TypeAmbito ambito, Long idArea, Long idEntidad, TypeIdioma idioma, String filtro);
 
 	/**
 	 * Comprueba si ya existe un identificador.
-	 *
+	 * @param ambito
 	 * @param identificador
-	 * @para idCodigo
+	 * @param codigoEntidad
+	 * @param codigoArea
+	 * @param codigoConfAut
 	 * @return
 	 */
-	boolean existeConfiguracionAutenticacion(String identificador, Long idCodigo);
+
+	boolean existeConfiguracionAutenticacion(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut);
 
 	/**
 	 * Obtiene la configuracion autenticacion
+	 * @param ambito
 	 * @param identificador
-	 * @param codigo
+	 * @param codigoEntidad
+	 * @param codigoArea
+	 * @param codigoConfAut
 	 * @return
 	 */
-	ConfiguracionAutenticacion getConfiguracionAutenticacion(String identificador, Long codigo);
+
+	ConfiguracionAutenticacion getConfiguracionAutenticacion(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut);
 
 }

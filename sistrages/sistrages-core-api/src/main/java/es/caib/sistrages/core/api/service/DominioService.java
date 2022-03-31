@@ -28,12 +28,29 @@ public interface DominioService {
 	public Dominio loadDominio(Long codDominio);
 
 	/**
-	 * Obtener dominio.
+	 * Comprueba si en un ambito, existe un identificador.
 	 *
-	 * @param identificador identificador del dominio
-	 * @return dominio
+	 * @param ambito Ambito (Entidad, Area, Global)
+	 * @param identificador Identificador del dominio
+	 * @param codigoEntidad Código de la entidad (necesario si es ambito entidad)
+	 * @param codigoArea Código del área (necesario si es ambito area)
+	 * @param codigoDominio  Código del propio dominio (en caso de alta, es nulo)
+	 * @return
 	 */
-	public Dominio loadDominio(String identificador);
+	public boolean existeDominioByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoDominio);
+
+	/**
+	 * <p>Comprueba si en un ambito, existe un identificador.</p>
+	 * <p>IMPORTANTE, SI NO SE PASAN BIEN TODOS LOS DATOS, SI LA QUERY DEVUELVE MÁS DE UN DATO, ENTONCES SE DEVUELVE EL PRIMERO DE ELLOS </p>
+	 *
+	 * @param ambito Ambito (Entidad, Area, Global)
+	 * @param identificador Identificador del dominio
+	 * @param codigoEntidad Código de la entidad (necesario si es ambito entidad)
+	 * @param codigoArea Código del área (necesario si es ambito area)
+	 * @param codigoDominio  Código del propio dominio (en caso de alta, es nulo)
+	 * @return
+	 */
+	public Dominio loadDominioByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoDominio);
 
 	/**
 	 * Añade dominio.
@@ -88,11 +105,29 @@ public interface DominioService {
 
 	/**
 	 * Obtener fuenteDato.
-	 *
-	 * @param idFuenteDato ID del fuenteDato
-	 * @return fuenteDato
+	 * @param ambito
+	 * @param identificador
+	 * @param codigoEntidad
+	 * @param codigoArea
+	 * @param codigoFD
+	 * @return
 	 */
-	public FuenteDatos loadFuenteDato(String idFuenteDato);
+
+	public FuenteDatos loadFuenteDato(final TypeAmbito ambito, final String identificador, final Long codigoEntidad, final Long codigoArea, final Long codigoFD);
+
+	/**
+	 * Existe fuenteDato.
+	 * @param ambito
+	 * @param identificador
+	 * @param codigoEntidad
+	 * @param codigoArea
+	 * @param codigoFD
+	 * @return
+	 */
+
+	public boolean existeFuenteDato(final TypeAmbito ambito, final String identificador, final Long codigoEntidad, final Long codigoArea, final Long codigoFD);
+
+
 
 	/**
 	 * Obtener fuenteDato.
@@ -251,5 +286,12 @@ public interface DominioService {
 	 * @return
 	 */
 	public List<Dominio> getDominiosByIdentificador(List<String> identificadoresDominio, final Long idEntidad, final Long idArea);
+
+	/**
+	 * Obtiene el dominio segun el identificador compuesto.
+	 * @param identificador
+	 * @return
+	 */
+	public Dominio loadDominioByIdentificadorCompuesto(String identificador);
 
 }

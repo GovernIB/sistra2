@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistramit.core.api.exception.NoExisteFlujoFormularioException;
+import es.caib.sistramit.core.api.model.formulario.Captcha;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
+import es.caib.sistramit.core.api.model.formulario.ResultadoBuscadorDinamico;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
 import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
@@ -98,6 +100,35 @@ public class FlujoFormularioInternoServiceImpl implements FlujoFormularioInterno
 			final Map<String, String> valores) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
 		return ff.deserializarValoresCampos(valores);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public ResultadoBuscadorDinamico buscadorDinamico(final String idSesionFormulario, final String idCampo,
+			final String textoCampo, final List<ValorCampo> valores) {
+		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
+		return ff.buscadorDinamico(idCampo, textoCampo, valores);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Captcha generarImagenCaptcha(final String idSesionFormulario, final String idCampo) {
+		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
+		return ff.generarImagenCaptcha(idCampo);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Captcha generarSonidoCaptcha(final String idSesionFormulario, final String idCampo) {
+		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
+		return ff.generarSonidoCaptcha(idCampo);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void regenerarCaptcha(final String idSesionFormulario, final String idCampo) {
+		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
+		ff.regenerarCaptcha(idCampo);
 	}
 
 	// -------------------------------------------------------------------------------------------

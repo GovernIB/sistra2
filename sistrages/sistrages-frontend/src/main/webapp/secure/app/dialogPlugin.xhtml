@@ -13,6 +13,12 @@
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogPlugin.titulo']}"/></title>
+	<style type="text/css">
+		.dContents{
+			display:contents;
+		}
+
+	</style>
 </h:head>
 
 <h:body>
@@ -33,7 +39,7 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="wpx25" columns = "3" cellpadding = "5" cellspacing = "0"  style="width:100%;">
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="wpx25 dContents" columns = "3" cellpadding = "5" cellspacing = "0"  style="width:100%;">
 
 					<p:outputLabel for="tipo" value="#{msg['dialogPlugin.headerTipo']}" />
 					<p:selectOneMenu id="tipo" value="#{dialogPlugin.data.tipo}"  required="true" disabled="#{dialogPlugin.isConsulta()}" style="width:94%;">
@@ -53,7 +59,7 @@
 					<p:inputText id="prefijoPropiedades" value="#{dialogPlugin.data.prefijoPropiedades}" disabled="#{dialogPlugin.isConsulta()}" style="width:98%;" maxlength="100"/>
 					<p:outputLabel value="" />
 
-					<p:outputLabel for="dataTablePropiedades" value="#{msg['dialogPlugin.headerPropiedad']}" />
+   					<p:outputLabel for="dataTablePropiedades" value="#{msg['dialogPlugin.headerPropiedad']}"/>
 					<p:dataTable  id="dataTablePropiedades" var="td" value="#{dialogPlugin.data.propiedades}"
 								  rows="25" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="275"
 								  paginator="false" selectionMode="single" selection="#{dialogPlugin.propiedadSeleccionada}" rowKey="#{td.codigo}">

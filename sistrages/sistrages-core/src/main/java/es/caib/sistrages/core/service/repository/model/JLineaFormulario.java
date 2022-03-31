@@ -137,6 +137,9 @@ public class JLineaFormulario implements IModelApi {
 				case SELECTOR:
 					ncolumnas += jElementoFormulario.getNumeroColumnas();
 					break;
+				case CAPTCHA:
+					ncolumnas += jElementoFormulario.getNumeroColumnas();
+					break;
 				default:
 					break;
 				}

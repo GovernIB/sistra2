@@ -42,19 +42,19 @@ public final class ResAnexosDinamicos implements ResAnexosDinamicosInt {
 	public void addAnexo(final ClzAnexoDinamico anexo) throws ScriptException {
 		// Verifica datos obligatorios y formato
 		if (StringUtils.isBlank(anexo.getIdentificador())) {
-			throw new ScriptException("No se ha indicado identificador anexo");
+			throw new ScriptException("No s'ha indicat identificador annex");
 		}
 		if (StringUtils.isBlank(anexo.getDescripcion())) {
-			throw new ScriptException("No se ha indicado descripcion anexo " + anexo.getIdentificador());
+			throw new ScriptException("No s'ha indicat descripció annex " + anexo.getIdentificador());
 		}
 		if (!XssFilter.filtroXss(anexo.getIdentificador()) || !XssFilter.filtroXss(anexo.getDescripcion())) {
 			throw new ScriptException(
-					"El dato proporcionado como identificador o descripcion contiene caraceteres no permitidos para anexo "
+					"La dada proporcionada com identificador o descripció conté caràceters no permesos per annex "
 							+ anexo.getIdentificador());
 		}
 		if (StringUtils.isNotBlank(anexo.getTamanyoMaximo())) {
 			if (!anexo.getTamanyoMaximo().endsWith("MB") && !anexo.getTamanyoMaximo().endsWith("KB")) {
-				throw new ScriptException("Se debe indicar el tamaño maximo con el formato 'n MB / n KB' para anexo "
+				throw new ScriptException("S'ha d'indicar la mida màxima amb el format 'n MB / n KB' per annex "
 						+ anexo.getIdentificador());
 			}
 			try {
@@ -62,15 +62,15 @@ public final class ResAnexosDinamicos implements ResAnexosDinamicosInt {
 						anexo.getTamanyoMaximo().length() - ConstantesNumero.N2)));
 			} catch (final NumberFormatException nfe) {
 				throw new ScriptException(
-						new Exception("El tamaño máximo se debe especificar con un número entero' para anexo "
+						new Exception("La mida màxima s'ha d'especificar amb un nombre sencer per annex "
 								+ anexo.getIdentificador(), nfe));
 			}
 		}
 		if (StringUtils.isBlank(anexo.getExtensiones())) {
-			throw new ScriptException("No se han establecido extensiones para el anexo " + anexo.getIdentificador());
+			throw new ScriptException("No s'han establert extensions per l'annex " + anexo.getIdentificador());
 		}
 		if (anexo.getMaxInstancias() <= 0) {
-			throw new ScriptException("El número de instancias ha de ser mayor a 0 (" + anexo.getMaxInstancias() + ")");
+			throw new ScriptException("El nombre d'instancies ha de ser major a 0 (" + anexo.getMaxInstancias() + ")");
 		}
 
 		anexos.add(anexo);

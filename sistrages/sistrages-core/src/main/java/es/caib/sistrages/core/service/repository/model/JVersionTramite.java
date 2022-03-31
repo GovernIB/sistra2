@@ -580,6 +580,7 @@ public class JVersionTramite implements IModelApi {
 	public TramiteVersion toModel() {
 		final TramiteVersion tramiteVersion = new TramiteVersion();
 		tramiteVersion.setIdArea(this.tramite.getArea().getCodigo());
+		tramiteVersion.setIdentificadorArea(this.tramite.getArea().getIdentificador());
 		tramiteVersion.setActiva(this.isActiva());
 		tramiteVersion.setAutenticado(this.isAutenticado());
 		tramiteVersion.setNoAutenticado(this.isNoAutenticado());
@@ -665,6 +666,7 @@ public class JVersionTramite implements IModelApi {
 			jversionTramite.setIdiomasSoportados(model.getIdiomasSoportados());
 			jversionTramite.setScriptInicializacionTramite(JScript.fromModel(model.getScriptInicializacionTramite()));
 			jversionTramite.setScriptPersonalizacion(JScript.fromModel(model.getScriptPersonalizacion()));
+
 			if (model.isLimiteTramitacion()) {
 				jversionTramite.setLimiteTramitacion("S");
 			} else {

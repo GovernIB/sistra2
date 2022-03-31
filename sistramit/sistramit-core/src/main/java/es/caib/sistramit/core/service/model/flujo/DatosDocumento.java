@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
-import es.caib.sistramit.core.api.model.flujo.Persona;
+import es.caib.sistramit.core.api.model.flujo.Firmante;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 
@@ -50,7 +50,7 @@ public abstract class DatosDocumento implements Serializable {
 	/**
 	 * Indica lista de firmantes del documento.
 	 */
-	private List<Persona> firmantes = new ArrayList<>();
+	private List<Firmante> firmantes = new ArrayList<>();
 
 	/**
 	 * Tipo documento ENI.
@@ -186,7 +186,7 @@ public abstract class DatosDocumento implements Serializable {
 	 *
 	 * @return firmantes
 	 */
-	public List<Persona> getFirmantes() {
+	public List<Firmante> getFirmantes() {
 		return firmantes;
 	}
 
@@ -196,7 +196,7 @@ public abstract class DatosDocumento implements Serializable {
 	 * @param firmantes
 	 *                      firmantes a establecer
 	 */
-	public void setFirmantes(final List<Persona> firmantes) {
+	public void setFirmantes(final List<Firmante> firmantes) {
 		this.firmantes = firmantes;
 	}
 
@@ -211,7 +211,7 @@ public abstract class DatosDocumento implements Serializable {
 
 	/**
 	 * Método de acceso a tipoENI.
-	 * 
+	 *
 	 * @return tipoENI
 	 */
 	public String getTipoENI() {
@@ -220,7 +220,7 @@ public abstract class DatosDocumento implements Serializable {
 
 	/**
 	 * Método para establecer tipoENI.
-	 * 
+	 *
 	 * @param tipoENI
 	 *                    tipoENI a establecer
 	 */

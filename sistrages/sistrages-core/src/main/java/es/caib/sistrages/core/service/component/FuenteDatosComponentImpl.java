@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.service.repository.dao.DominioDao;
 import es.caib.sistrages.core.service.repository.dao.FuenteDatoDao;
 
@@ -20,9 +21,8 @@ public class FuenteDatosComponentImpl implements FuenteDatosComponent {
 	DominioDao dominioDao;
 
 	@Override
-	public ValoresDominio realizarConsultaFuenteDatos(final String idDominio,
-			final List<ValorParametroDominio> parametros) {
-		return fuenteDatosDao.realizarConsultaFuenteDatos(idDominio, parametros);
+	public ValoresDominio realizarConsultaFuenteDatos(final TypeAmbito ambito, final String idEntidad, final String idArea, final String idDominio, final List<ValorParametroDominio> parametros) {
+		return fuenteDatosDao.realizarConsultaFuenteDatos(ambito, idEntidad, idArea, idDominio, parametros);
 	}
 
 	@Override
@@ -32,8 +32,8 @@ public class FuenteDatosComponentImpl implements FuenteDatosComponent {
 	}
 
 	@Override
-	public ValoresDominio realizarConsultaListaFija(final String identificador) {
-		return dominioDao.realizarConsultaListaFija(identificador);
+	public ValoresDominio realizarConsultaListaFija(final TypeAmbito ambito, final Long codigoEntidad, final Long codigoArea, final String identificador, String identificadorEntidad, String identificadorArea) {
+		return dominioDao.realizarConsultaListaFija(ambito, codigoEntidad, codigoArea, identificador, identificadorEntidad, identificadorArea);
 	}
 
 }

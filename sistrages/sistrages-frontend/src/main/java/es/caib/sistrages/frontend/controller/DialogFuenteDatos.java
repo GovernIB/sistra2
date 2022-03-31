@@ -129,6 +129,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 					// Mensaje
 					message = UtilJSF.getLiteral("info.modificado.ok");
 				} catch (final Exception ex) {
+					UtilJSF.loggearErrorFront("Error actualizados fuente datos fila", ex);
 					if (ex.getCause() instanceof FuenteDatosPkException) {
 						addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importarCSV.error.pk"));
 						return;
@@ -280,7 +281,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 			file = new DefaultStreamedContent(bis, "csv", "Fichero.csv");
 
 		} catch (final Exception ex) {
-
+			UtilJSF.loggearErrorFront("No se puede generar el csv", ex);
 			throw new FrontException("No se puede generar el csv", ex);
 		}
 

@@ -12,7 +12,7 @@
 <h:head>
 </h:head>
 
-<body>
+<body onload="#{sessionBean.loggerErrorFront(pfExceptionHandler.type, pfExceptionHandler.message, pfExceptionHandler.formattedStackTrace, pfExceptionHandler.exception)}">
   <f:facet name="last">
     <h:outputStylesheet library="css" name="style.css" />
   </f:facet>

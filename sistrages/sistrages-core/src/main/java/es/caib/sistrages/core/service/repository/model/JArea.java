@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 
 /**
  * JArea
@@ -43,6 +44,9 @@ public class JArea implements IModelApi {
 
 	@Column(name = "ARE_DESCR", nullable = false)
 	private String descripcion;
+
+	@Column(name = "ARE_EMAIL", nullable = false)
+	private String email;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "STG_AREDOM", joinColumns = {
@@ -87,6 +91,14 @@ public class JArea implements IModelApi {
 		this.descripcion = descripcion;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public Set<JDominio> getDominios() {
 		return this.dominios;
 	}
@@ -100,7 +112,9 @@ public class JArea implements IModelApi {
 		area.setCodigo(this.codigo);
 		area.setDescripcion(this.descripcion);
 		area.setIdentificador(this.identificador);
+		area.setIdentificadorCompuesto(this.getEntidad().getIdentificador()+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+this.identificador);
 		area.setCodigoDIR3Entidad(this.entidad.getCodigoDir3());
+		area.setEmail(this.email);
 		return area;
 	}
 
@@ -110,6 +124,7 @@ public class JArea implements IModelApi {
 			jArea.setCodigo(area.getCodigo());
 			jArea.setIdentificador(area.getIdentificador());
 			jArea.setDescripcion(area.getDescripcion());
+			jArea.setEmail(area.getEmail());
 		}
 		return jArea;
 	}

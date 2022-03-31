@@ -1,5 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,8 @@ import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
+import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
+import es.caib.sistrages.core.api.model.types.TypeTamanyo;
 
 /**
  * Mantenimiento de definici&oacute;n de versi&oacute;n Anexo.
@@ -44,6 +47,10 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	/** Tramite service. */
 	@Inject
 	private TramiteService tramiteService;
+
+	/** config global service. */
+	@Inject
+	private ConfiguracionGlobalService cfService;
 
 	/** Id. **/
 	private String id;
@@ -75,14 +82,14 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	 * @return el valor de permiteEditar
 	 */
 	public boolean getPermiteEditar() {
-		if (UtilJSF.getSessionBean().getActiveRole().equals(TypeRoleAcceso.ADMIN_ENT) ||
-				UtilJSF.getSessionBean().getActiveRole().equals(TypeRoleAcceso.DESAR)){
+		if (UtilJSF.getSessionBean().getActiveRole().equals(TypeRoleAcceso.ADMIN_ENT)
+				|| UtilJSF.getSessionBean().getActiveRole().equals(TypeRoleAcceso.DESAR)) {
 			return true;
+		} else {
+			return false;
 		}
-			else{
-				return false;
-			}
-		}
+	}
+
 	/** Init. **/
 	public void init() {
 		data = tramiteService.getDocumento(Long.valueOf(id));
@@ -389,6 +396,36 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		if (data.isDebeAnexarFirmado() && data.isDebeFirmarDigitalmente()) {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.firma.unicidad"));
 			return false;
+		}
+
+		String tamanyoMaxIndiv = cfService.listConfiguracionGlobal("sistramit.anexos.tamanyoMaximoIndividual").get(0)
+				.getValor();
+		Integer tamanyoMax = Integer.parseInt(tamanyoMaxIndiv.substring(0, tamanyoMaxIndiv.length() - 2));
+		TypeTamanyo tipoTamanyo = TypeTamanyo
+				.fromString(tamanyoMaxIndiv.substring(tamanyoMaxIndiv.length() - 2, tamanyoMaxIndiv.length()));
+		if (data.getTipoTamanyo().equals(tipoTamanyo)) {
+			if (tamanyoMax < data.getTamanyoMaximo()) {
+				String[] params = new String[1];
+				params[0] = tamanyoMaxIndiv;
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.tamanyoMaxSup", params));
+				return false;
+			}
+		} else {
+			if (data.getTipoTamanyo().equals(TypeTamanyo.MEGABYTES)) {
+				if (tamanyoMax < (data.getTamanyoMaximo() * 1024)) {
+					String[] params = new String[1];
+					params[0] = tamanyoMaxIndiv;
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.tamanyoMaxSup", params));
+					return false;
+				}
+			} else {
+				if ((tamanyoMax * 1024) < data.getTamanyoMaximo()) {
+					String[] params = new String[1];
+					params[0] = tamanyoMaxIndiv;
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.tamanyoMaxSup", params));
+					return false;
+				}
+			}
 		}
 
 		return true;

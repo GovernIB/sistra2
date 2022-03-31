@@ -68,7 +68,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 			definicionVersion = sistragesComponent.recuperarDefinicionTramite(idTramite, version, idioma);
 		}
 		if (definicionVersion == null) {
-			throw new ErrorConfiguracionException("Error al recuperar definición trámite");
+			throw new ErrorConfiguracionException("Error al recuperar definició tràmit");
 		}
 		return new DefinicionTramiteSTG(new Date(), definicionVersion);
 	}
@@ -122,7 +122,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 			return props;
 		} catch (final IOException e) {
 			throw new CargaConfiguracionException(
-					"Error al cargar la configuracion del properties '" + pathProperties + "' : " + e.getMessage(), e);
+					"Error al carregar la configuració del properties '" + pathProperties + "' : " + e.getMessage(), e);
 		}
 	}
 
@@ -151,7 +151,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 
 		String prefijoGlobal = this.getPropiedadGlobal(TypePropiedadConfiguracion.PLUGINS_PREFIJO);
 		if (prefijoGlobal == null) {
-			throw new PluginErrorException("No se ha definido propiedad global para prefijo global para plugins: "
+			throw new PluginErrorException("No s'ha definit propietat global per prefix global per plugins: "
 					+ TypePropiedadConfiguracion.PLUGINS_PREFIJO);
 		}
 		if (!prefijoGlobal.endsWith(".")) {
@@ -170,7 +170,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 			}
 
 			if (rplg == null) {
-				throw new PluginErrorException("No existe plugin de tipo " + plgTipo);
+				throw new PluginErrorException("No existeix plugin de tipus " + plgTipo);
 			}
 
 			classname = rplg.getClassname();
@@ -195,13 +195,13 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 
 			if (plg == null) {
 				throw new PluginErrorException(
-						"No se ha podido instanciar plugin de tipo " + plgTipo + " , PluginManager devuelve nulo.");
+						"No s'ha pogut instanciar plugin de tipus " + plgTipo + " , PluginManager retorna nulo.");
 			}
 
 			return plg;
 
 		} catch (final Exception e) {
-			throw new PluginErrorException("Error al instanciar plugin " + plgTipo + " con classname " + classname, e);
+			throw new PluginErrorException("Error al instanciar plugin " + plgTipo + " amb classname " + classname, e);
 		}
 	}
 
@@ -223,7 +223,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 					final String valueSystem = System.getProperty(propSystem);
 					if (valueSystem.indexOf(placeholder) >= 0) {
 						throw new ErrorConfiguracionException(
-								"Valor no válido para propiedad " + propSystem + ": " + valueSystem);
+								"Valor no vàlido per propietat " + propSystem + ": " + valueSystem);
 					}
 					res = StringUtils.replace(res, placeholder + propSystem + "}", valueSystem);
 				}

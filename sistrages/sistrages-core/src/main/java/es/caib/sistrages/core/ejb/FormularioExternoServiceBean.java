@@ -13,6 +13,7 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.service.FormularioExternoService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
@@ -51,7 +52,7 @@ public class FormularioExternoServiceBean implements FormularioExternoService {
 	 * es.caib.sistrages.core.api.model.FormularioExterno)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void addFormularioExterno(final Long idEntidad, final GestorExternoFormularios FormularioExterno) {
 		formularioExternoService.addFormularioExterno(idEntidad, FormularioExterno);
 
@@ -64,7 +65,7 @@ public class FormularioExternoServiceBean implements FormularioExternoService {
 	 * removeFormularioExterno( java.lang.Long)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public boolean removeFormularioExterno(final Long id) {
 		return formularioExternoService.removeFormularioExterno(id);
 
@@ -77,7 +78,7 @@ public class FormularioExternoServiceBean implements FormularioExternoService {
 	 * tieneTramitesAsociados( java.lang.Long)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public boolean tieneTramitesAsociados(Long idGFE) {
 		return formularioExternoService.tieneTramitesAsociados(idGFE);
 	}
@@ -89,7 +90,7 @@ public class FormularioExternoServiceBean implements FormularioExternoService {
 	 * updateFormularioExterno(es. caib.sistrages.core.api.model.FormularioExterno)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void updateFormularioExterno(final GestorExternoFormularios FormularioExterno) {
 		formularioExternoService.updateFormularioExterno(FormularioExterno);
 
@@ -111,8 +112,8 @@ public class FormularioExternoServiceBean implements FormularioExternoService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public boolean existeFormulario(final String identificador, final Long codigo) {
-		return formularioExternoService.existeFormulario(identificador, codigo);
+	public boolean existeFormulario(final String identificador, final Long codigo, final Long idArea) {
+		return formularioExternoService.existeFormulario(identificador, codigo, idArea);
 	}
 
 	@Override
@@ -123,8 +124,18 @@ public class FormularioExternoServiceBean implements FormularioExternoService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public GestorExternoFormularios getFormularioExternoByIdentificador(String identificador) {
-		return formularioExternoService.getFormularioExternoByIdentificador(identificador);
+	public boolean existeGFEByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
+			Long codigoArea, Long codigoGFE) {
+		return formularioExternoService.existeGFEByIdentificador(ambito, identificador, codigoEntidad, codigoArea,
+				codigoGFE);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public GestorExternoFormularios getFormularioExternoByIdentificador(TypeAmbito ambito, String identificador,
+			Long codigoEntidad, Long codigoArea, Long codigoGFE) {
+		return formularioExternoService.getFormularioExternoByIdentificador(ambito, identificador, codigoEntidad,
+				codigoArea, codigoGFE);
 	}
 
 }

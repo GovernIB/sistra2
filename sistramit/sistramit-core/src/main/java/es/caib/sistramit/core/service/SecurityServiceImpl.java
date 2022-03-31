@@ -180,7 +180,7 @@ public class SecurityServiceImpl implements SecurityService {
 		final String params[] = ticket.split(":");
 		if (params.length != 2) {
 			throw new TicketFormularioException(
-					"Formato ticket formulario externo no es correcto (idSesionFormulario:ticketGFE): " + ticket);
+					"Format ticket formulari extern no és correcte (idSesionFormulario:ticketGFE): " + ticket);
 		}
 
 		// Id sesion formulario
@@ -210,7 +210,7 @@ public class SecurityServiceImpl implements SecurityService {
 			drf = plgFormularios.obtenerResultadoFormulario(dif.getIdGestorFormulariosExterno(), urlGestorFormulario,
 					usrGestorFormulario, pwdGestorFormulario, ticket);
 		} catch (final FormularioPluginException e) {
-			throw new TicketFormularioException("Error al obtener resultado formulario: " + e.getMessage(), e);
+			throw new TicketFormularioException("Error al obtenir resultat formulari: " + e.getMessage(), e);
 		}
 
 		// Almacenamos finalizacion formulario
@@ -261,7 +261,7 @@ public class SecurityServiceImpl implements SecurityService {
 
 		// Verificamos que no ha sido usado y que no se ha cumplido timeout
 		if (infoTicket.isUsado()) {
-			throw new TicketCarpetaCiudadanaException("Ticket ya ha sido usado: " + ticket);
+			throw new TicketCarpetaCiudadanaException("Ticket ja ha estat utilitzat: " + ticket);
 		}
 		int secsTimeout = TIMEOUT_TICKET_DEFAULT;
 		final String secsTimeoutStr = configuracionComponent
@@ -277,8 +277,8 @@ public class SecurityServiceImpl implements SecurityService {
 				secsTimeout = TIMEOUT_TICKET_DEFAULT;
 			}
 		} catch (final NumberFormatException e) {
-			log.warn("La propiedad " + TypePropiedadConfiguracion.TIMEOUT_TICKET.toString()
-					+ " no tiene un valor válido: " + secsTimeoutStr);
+			log.warn("La propietat " + TypePropiedadConfiguracion.TIMEOUT_TICKET.toString()
+					+ " no té un valor vàlid: " + secsTimeoutStr);
 			secsTimeout = TIMEOUT_TICKET_DEFAULT;
 		}
 		final Date dateNow = new Date();
@@ -287,7 +287,7 @@ public class SecurityServiceImpl implements SecurityService {
 		cal.add(Calendar.SECOND, secsTimeout);
 		final Date dateMax = cal.getTime();
 		if (dateNow.after(dateMax)) {
-			throw new TicketCarpetaCiudadanaException("Ticket ha expirado: " + ticket);
+			throw new TicketCarpetaCiudadanaException("Ticket ha expirat: " + ticket);
 		}
 
 		// Devolvemos usuario autenticado

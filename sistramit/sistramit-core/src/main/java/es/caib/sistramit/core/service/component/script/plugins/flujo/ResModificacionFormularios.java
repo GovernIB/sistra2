@@ -144,7 +144,7 @@ public final class ResModificacionFormularios
             final ValorCampo valor) throws ScriptException {
         if (!UtilsFormulario.comprobarCaracteresPermitidos(valor)) {
             throw new ScriptException(
-                    "Valor campo contiene caracteres no permitidos: "
+                    "Valor camp conté caràcters no permesos: "
                             + valor.print());
         }
         if (!this.datosModificadosFormularios.containsKey(idFormulario)) {

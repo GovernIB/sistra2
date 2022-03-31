@@ -30,6 +30,13 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+					<p:outputLabel for="identificador" value="#{msg['dialogEntidad.headerIdentificador']}" />
+					<p:inputText id="identificador" value="#{dialogEntidad.data.identificador}" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase();" styleClass="w95" validatorMessage="#{msg['error.validacion.identificador']}">
+						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
+						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
+				   	</p:inputText>
+
 					<p:outputLabel for="codigo" value="#{msg['dialogEntidad.headerCodigoDIR3']}" />
 					<p:inputText id="codigo" value="#{dialogEntidad.data.codigoDIR3}" required="true" size="40" maxlength="10" onblur="this.value = this.value.toUpperCase();">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>

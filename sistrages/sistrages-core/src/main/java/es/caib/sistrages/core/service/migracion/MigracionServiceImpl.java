@@ -456,6 +456,14 @@ public class MigracionServiceImpl implements MigracionService {
 					componente.setTexto(componenteSistra.getTexto());
 				}
 				formIntDao.updateComponente(componente);
+			} else if ("captcha".equals(comType)) {
+				lineaComponente = (LineaComponentesFormulario) insertaLineaComponenteBloque(pagina,
+						TypeObjetoFormulario.CAPTCHA);
+				componente = lineaComponente.getComponentes().get(0);
+				if (componenteSistra.getTexto() != null) {
+					componente.setTexto(componenteSistra.getTexto());
+				}
+				formIntDao.updateComponente(componente);
 			} else if ("label".equals(comType)) {
 				lineaComponente = (LineaComponentesFormulario) insertaLineaComponenteBloque(pagina,
 						TypeObjetoFormulario.ETIQUETA);

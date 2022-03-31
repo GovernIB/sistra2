@@ -8,6 +8,10 @@ let forms_missatge_html = ''
 			+ '<div class="imc--text">'
 				+ '<h2><span></span></h2>'
 				+ '<div class="imc--explicacio"></div>'
+				+ '<div class="imc--desenvolupadors" aria-hidden="true">'
+					+ '<h3><span>{{txtFormDinCodiDebugDesenv}}</span></h3>'
+					+ '<p></p>'
+				+ '</div>'
 				+ '<div class="imc--botonera">'
 					+ '<button type="button" class="imc-bt imc--cancela" data-tipus="cancela"><span>{{txtFormDinCancela}}</span></button>'
 					+ '<button type="button" class="imc-bt imc--ico imc--principal" data-tipus="desa"><span>{{txtFormDinDesarSortir}}</span></button>'
@@ -30,6 +34,9 @@ var imc_forms_missatge = $("#imc-forms--missatge");
 // literals
 
 imc_forms_missatge
+	.find("h3:first span")
+		.text( txtFormDinCodiDebugDesenv )
+		.end()
 	.find("button[data-tipus=cancela] span")
 		.text( txtFormDinCancela )
 		.end()
@@ -55,6 +62,7 @@ $.fn.appFormsMissatge = function(options) {
 			,accio: "informa"
 			,titol: ""
 			,text: ""
+			,debug: false
 			,bt: false
 			,araAmaga: false
 			,amagaDesdeFons: true
@@ -73,6 +81,7 @@ $.fn.appFormsMissatge = function(options) {
 			,element_text = element.find(".imc--text:first")
 			,titol_txt = settings.titol
 			,text_txt = settings.text
+			,debug_txt = settings.debug
 			,bt = settings.bt
 			,araAmaga = settings.araAmaga
 			,amagaDesdeFons = settings.amagaDesdeFons
@@ -124,6 +133,26 @@ $.fn.appFormsMissatge = function(options) {
 				element
 					.find(".imc--explicacio:first")
 						.html( text_txt );
+
+				// debug HTML
+
+				element
+					.find(".imc--desenvolupadors:first")
+						.attr("aria-hidden", "true")
+						.end()
+					.find(".imc--desenvolupadors:first p")
+						.text( "" );
+
+				if (debug_txt) {
+
+					element
+						.find(".imc--desenvolupadors:first")
+							.attr("aria-hidden", "false")
+							.end()
+						.find(".imc--desenvolupadors:first p")
+							.text( debug_txt );
+
+				}
 
 				element_c
 					.off('.appFormsMissatge');

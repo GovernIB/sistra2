@@ -12,29 +12,27 @@ import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
 @SuppressWarnings("serial")
 public final class ErrorJsonException extends ServiceRollbackException {
 
-    @Override
-    public TypeNivelExcepcion getNivel() {
-        return TypeNivelExcepcion.FATAL;
-    }
+	@Override
+	public TypeNivelExcepcion getNivel() {
+		return TypeNivelExcepcion.FATAL;
+	}
 
-    /**
-     * Constructor DatabaseException.
-     *
-     * @param cause
-     *            Causa
-     */
-    public ErrorJsonException(final Exception cause) {
-        super("Error conversion JSON: " + cause.getMessage(), cause);
-    }
+	/**
+	 * Constructor DatabaseException.
+	 *
+	 * @param cause Causa
+	 */
+	public ErrorJsonException(final Exception cause) {
+		super("Error conversió JSON: " + cause.getMessage(), cause);
+	}
 
-    /**
-     * Constructor DatabaseException.
-     *
-     * @param cause
-     *            Causa
-     */
-    public ErrorJsonException(final String cause) {
-        super("Error conversion JSON: " + cause);
-    }
+	/**
+	 * Constructor DatabaseException.
+	 *
+	 * @param cause Causa
+	 */
+	public ErrorJsonException(final String cause) {
+		super("Error conversió JSON: " + cause);
+	}
 
 }

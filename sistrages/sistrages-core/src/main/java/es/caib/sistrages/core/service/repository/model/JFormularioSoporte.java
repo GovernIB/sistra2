@@ -1,5 +1,8 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +16,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.types.TypeAutenticacion;
 import es.caib.sistrages.core.api.model.types.TypeFormularioSoporte;
 
 /**
@@ -42,7 +46,7 @@ public class JFormularioSoporte implements IModelApi {
 	@JoinColumn(name = "FSO_DSCTIP", nullable = false)
 	private JLiteral descripcion;
 
-	@Column(name = "FSO_TIPDST", nullable = false, length = 1)
+	@Column(name = "FSO_TIPDST", nullable = false, length = 5)
 	private String tipoDestinatario;
 
 	@Column(name = "FSO_LSTEMA", length = 4000)
@@ -105,7 +109,17 @@ public class JFormularioSoporte implements IModelApi {
 		fst.setCodigo(codigo);
 		fst.setTipoIncidencia(TipoIncidencia.toModel());
 		fst.setDescripcion(descripcion.toModel());
-		fst.setTipoDestinatario(TypeFormularioSoporte.fromString(tipoDestinatario));
+		final List<TypeFormularioSoporte> listDest = new ArrayList<>();
+		if (this.getTipoDestinatario() != null && !this.getTipoDestinatario().isEmpty()) {
+			final String[] tipos = this.getTipoDestinatario().split(";");
+			for (final String tipo : tipos) {
+				final TypeFormularioSoporte typeForm = TypeFormularioSoporte.fromString(tipo);
+				if (tipo != null && !listDest.contains(typeForm)) {
+					listDest.add(typeForm);
+				}
+			}
+		}
+		fst.setTipoDestinatario(listDest);
 		fst.setListaEmails(listaEmails);
 		return fst;
 	}
@@ -117,7 +131,23 @@ public class JFormularioSoporte implements IModelApi {
 			jModel.setCodigo(model.getCodigo());
 			jModel.setTipoIncidencia(JLiteral.fromModel(model.getTipoIncidencia()));
 			jModel.setDescripcion(JLiteral.fromModel(model.getDescripcion()));
-			jModel.setTipoDestinatario(model.getTipoDestinatario().toString());
+			if (model.getTipoDestinatario() != null) {
+				final StringBuilder tipoDest = new StringBuilder();
+				for (final TypeFormularioSoporte tipoForm : model.getTipoDestinatario()) {
+					if (tipoDest != null) {
+						tipoDest.append(tipoForm.toString());
+						tipoDest.append(";");
+					}
+				}
+
+				String tipoDestString = tipoDest.toString();
+				if (tipoDestString.endsWith(";")) {
+					tipoDestString = tipoDestString.substring(0, tipoDestString.length() - 1);
+				}
+				jModel.setTipoDestinatario(tipoDestString);
+			} else {
+				jModel.setTipoDestinatario(null);
+			}
 			jModel.setListaEmails(model.getListaEmails());
 		}
 		return jModel;

@@ -13,6 +13,7 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarGestor;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
 import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
@@ -52,7 +53,7 @@ public class DialogTramiteImportarGestor extends DialogControllerBase {
 		if (area == null) {
 			configuraciones = new ArrayList<>();
 		} else {
-			configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(area,
+			configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(TypeAmbito.AREA, area, null,
 					TypeIdioma.fromString(UtilJSF.getSessionBean().getLang()), null);
 		}
 		ConfiguracionAutenticacion configAutSinAutenticacion = new ConfiguracionAutenticacion();
@@ -136,6 +137,8 @@ public class DialogTramiteImportarGestor extends DialogControllerBase {
 		}
 
 		params.put(TypeParametroVentana.MODO_IMPORTAR.toString(), "true");
+		//Como los GFE son solo de ambito area, se puede forzar el ambito a la fuerza
+		params.put(TypeParametroVentana.AMBITO.toString(), TypeAmbito.AREA.toString());
 
 		TypeModoAcceso modo = TypeModoAcceso.ALTA;
 		if (data.getConfiguracionAutenticacionActual() != null && data.getConfiguracionAutenticacionActual().getCodigoImportacion() != null && data.getConfiguracionAutenticacionActual().getCodigo() == null) {

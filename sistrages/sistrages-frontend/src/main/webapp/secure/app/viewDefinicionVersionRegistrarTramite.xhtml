@@ -53,21 +53,6 @@
 						process="@this" update="growl" style="margin-left:2px;margin-bottom:1px" />
        		</p:outputPanel>
 
-			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.instruccionesEntrega']}" />
-            <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="instrucciones" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesPresentacion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
-           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccionHTML(viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesPresentacion)}"
-						process="@this" update="growl"  style="margin-left:2px;margin-bottom:1px" />
-       		</p:outputPanel>
-
-			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.instruccionesSubsanacion']}" />
-			<p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="instruccionesSubsanacion" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesSubsanacion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
-           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccionHTML(viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesSubsanacion)}"
-						process="@this" update="growl"  style="margin-left:2px;margin-bottom:1px" />
-       		</p:outputPanel>
-
-
 			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.presentacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
            		<p:commandButton id="scriptButton2"
@@ -95,13 +80,6 @@
 						icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PERMITIR_REGISTRO.name(), viewDefinicionVersion.tramitePasoREGSeleccionado.scriptValidarRegistrar.codigo)}"
 						process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptValidarRegistrar)}"/>
 
-
-			<p:outputLabel value="#{msg['viewDefinicionVersionAnexarDocumentos.headerPermitirSubsanacion']}" />
-			<p:column>
-				<h:panelGrid id="columnaBotonSubsanar" style="margin-bottom:0px" columns="2" >
-					<p:selectBooleanCheckbox id="checkSubsanar" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.permiteSubsanar}" disabled="true" style="margin-left:5px;margin-right:20px" />
-				</h:panelGrid>
-			</p:column>
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.alfinalizar']}" />
 			<p:outputPanel styleClass="ui-inputgroup">

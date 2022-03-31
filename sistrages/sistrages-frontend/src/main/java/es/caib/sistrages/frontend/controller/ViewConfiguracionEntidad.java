@@ -92,7 +92,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 					.obtenerPluginEntidad(TypePlugin.REGISTRO, UtilJSF.getIdEntidad());
 			oficinas = iplugin.obtenerOficinasRegistro(data.getCodigoDIR3(), TypeRegistro.REGISTRO_ENTRADA);
 		} catch (final Exception e) {
-			LOGGER.error("Error obteniendo informacion de registro", e);
+			UtilJSF.loggearErrorFront("Error obteniendo informacion de registro", e);
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.registro.error"));
 		}

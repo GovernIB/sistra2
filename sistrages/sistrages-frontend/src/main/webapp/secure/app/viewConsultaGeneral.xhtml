@@ -1,0 +1,103 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../layout/mainLayout.xhtml">
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeConsultaGeneral" var="TypeConsultaGeneral"/>
+
+	<f:metadata>
+		<f:viewAction action="#{viewConsultaGeneral.init}" />
+	</f:metadata>
+
+	<ui:define name="content">
+
+
+		<h:form id="form" style="height: 100%">
+
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+			<!-- Toolbar -->
+			<p:toolbar id="toolbar">
+				 <f:facet name="left">
+		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
+		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
+			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewConsultaGeneral.filtro}" />
+			        	<p:commandButton icon="fa fa-search" actionListener="#{viewConsultaGeneral.filtrar()}" process="panelFiltro panelBotones" update="growl dataTable" />
+	           		</h:panelGrid>
+		        </f:facet>
+
+		        <f:facet name="right">
+					<h:panelGrid id="panelBotones" columns="8" cellspacing="5" style="margin-top:3px" columnClasses="pb5,,,,pb5,,,">
+							<p:column styleClass="w100" style="padding-bottom:5px;"><h:outputText value="#{msg['viewConsultaGeneral.ambito']}: " style="margin-right:5px;margin-bottom:15px" /></p:column>
+          					<p:column>
+          						<h:outputText value="#{msg['viewConsultaGeneral.global']} " /><p:selectBooleanCheckbox value="#{viewConsultaGeneral.checkAmbitoGlobal}" label="Areas" style="margin-right:3px"> </p:selectBooleanCheckbox>
+          					</p:column>
+							<p:column><h:outputText value="#{msg['viewConsultaGeneral.entidad']} " /><p:selectBooleanCheckbox value="#{viewConsultaGeneral.checkAmbitoEntidad}" label="Entidad" style="margin-right:3px"> </p:selectBooleanCheckbox></p:column>
+						 	<p:column><h:outputText value="#{msg['viewConsultaGeneral.area']} " /><p:selectBooleanCheckbox value="#{viewConsultaGeneral.checkAmbitoArea}" label="Area" style="margin-right:3px"> </p:selectBooleanCheckbox></p:column>
+
+
+          					<p:column><h:outputText value="#{msg['viewConsultaGeneral.elementos']}: " style="margin-right:5px;margin-left:50px" /></p:column>
+          					<p:column><h:outputText value="#{msg['viewConsultaGeneral.dominio']} " /><p:selectBooleanCheckbox value="#{viewConsultaGeneral.checkDominio}" label="Dominios" style="margin-right:20px"> </p:selectBooleanCheckbox></p:column>
+          					<p:column><h:outputText value="#{msg['viewConsultaGeneral.confAut']} " /><p:selectBooleanCheckbox value="#{viewConsultaGeneral.checkConf}" label="Conf. Autenticación" style="margin-right:20px"> </p:selectBooleanCheckbox></p:column>
+          					<p:column><h:outputText value="#{msg['viewConsultaGeneral.gfe']} " /><p:selectBooleanCheckbox value="#{viewConsultaGeneral.checkGFE}" label="GFE"> </p:selectBooleanCheckbox></p:column>
+					</h:panelGrid>
+				</f:facet>
+			</p:toolbar>
+
+				<!-- Data table -->
+				<p:dataTable  id="dataTable" var="td" value="#{viewConsultaGeneral.listaDatos}"
+						 rows="15" emptyMessage="#{msg['error.emptyRows']}"
+						 scrollable="true" scrollHeight="90%"
+                         paginator="true" paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,30"
+			        	 selectionMode="single" selection="#{viewConsultaGeneral.datoSeleccionado}" rowKey="#{td.identificador}">
+
+					<!-- Necesario para actualizar en controlador la fila seleccionada -->
+					<p:ajax event="rowSelect" global="false"/>
+					<p:ajax event="rowDblselect"
+									process="@this"
+									oncomplete="triggerDblClick();"
+			                  		update=":form:growl"
+			                        />
+
+					<!-- Columnas -->
+					<p:column headerText="AMBITO" width="15%">
+				        <h:outputText value="#{td.ambito}" />
+				        <h:outputText value=" ( #{td.area} )" rendered="#{td.ambito.toString() == 'A'}"  />
+				    </p:column>
+
+					<p:column headerText="TIPO" width="25%">
+				        <h:outputText value="#{td.tipo}" />
+				        <h:outputText value=" - #{msg['typeDominio.' += td.subtipo]}"  rendered="${!empty td.subtipo}" />
+				    </p:column>
+
+					<p:column headerText="IDENTIFICADOR" width="35%">
+				        <h:outputText value="#{td.identificador}" />
+				    </p:column>
+
+				    <p:column headerText="DESCRIPCION" width="25%">
+				    		<h:outputText value="#{td.descripcion}" />
+				       		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit ui-btn-icon-bottom" process="@this" rendered="false" />
+			        		<p:commandButton id="btnPing" value="#{msg['botones.ping']}" icon="fa fa-arrow-up" process="@this" rendered="#{td.tipo.toString() == 'DX'}" style="margin-left:10px"/>
+				    </p:column>
+
+				</p:dataTable>
+				<h:outputScript >
+				      function triggerDblClick() {
+				       	$('#form\\:btnEditarHidden').click();
+				      }
+				    </h:outputScript>
+
+					<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewConsultaGeneral.consultarDato}" process="@this" update="growl" style="display: none">
+				    </p:commandButton>
+
+
+		</h:form>
+
+
+	</ui:define>
+
+</ui:composition>

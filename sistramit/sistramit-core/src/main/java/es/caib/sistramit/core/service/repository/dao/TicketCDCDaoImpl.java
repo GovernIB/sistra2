@@ -41,7 +41,7 @@ public class TicketCDCDaoImpl implements TicketCDCDao {
 		try {
 			hTck.setInfoAutenticacion(Serializador.serialize(pInfoTicketAcceso.getUsuarioAutenticadoInfo()));
 		} catch (final IOException e) {
-			throw new TicketCarpetaCiudadanaException("Error serializando informacion usuario");
+			throw new TicketCarpetaCiudadanaException("Error serialitzant informació usuari");
 		}
 
 		entityManager.persist(hTck);
@@ -61,7 +61,7 @@ public class TicketCDCDaoImpl implements TicketCDCDao {
 			infoTicket.setUsuarioAutenticadoInfo(
 					(UsuarioAutenticadoInfo) Serializador.deserialize(h.getInfoAutenticacion()));
 		} catch (final ClassNotFoundException | IOException e) {
-			throw new TicketCarpetaCiudadanaException("Error serializando informacion usuario");
+			throw new TicketCarpetaCiudadanaException("Error serialitzando informació usuari");
 		}
 		infoTicket.setUsado(h.isUsadoRetorno());
 		infoTicket.setFecha(h.getFechaInicio());

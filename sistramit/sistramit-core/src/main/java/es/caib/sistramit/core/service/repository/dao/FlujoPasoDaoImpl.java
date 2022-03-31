@@ -120,11 +120,11 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 		final HTramite hTramite = getHTramite(pIdSesionTramitacion);
 
 		if (StringUtils.isBlank(pNombre)) {
-			throw new RepositoryException("No se ha indicado nombre del fichero");
+			throw new RepositoryException("No s'ha indicat nom del fitxer");
 		}
 
 		if (pContenido == null || pContenido.length <= 0) {
-			throw new RepositoryException("No se puede insertar fichero vacio");
+			throw new RepositoryException("No es pot insertar fitxer buit");
 		}
 
 		final HFichero hFichero = new HFichero();
@@ -281,8 +281,8 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 		HPaso res = null;
 		if (!results.isEmpty()) {
 			if (results.size() > ConstantesNumero.N1) {
-				throw new RepositoryException("Se han encontrado " + results.size() + " con id paso " + idPaso
-						+ " para id sesion tramitacion " + idSesionTramitacion);
+				throw new RepositoryException("S'han trobat " + results.size() + " amb id passa " + idPaso
+						+ " per id sessió tramitació " + idSesionTramitacion);
 			}
 			res = results.get(0);
 		}
@@ -302,7 +302,7 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 		final HPaso paso = findHPaso(idSesionTramitacion, idPaso);
 		if (paso == null) {
 			throw new RepositoryException(
-					"No se encuentra paso " + idPaso + " para id sesion tramitacion " + idSesionTramitacion);
+					"No es troba passa " + idPaso + " per id sessió tramitació " + idSesionTramitacion);
 		}
 		return paso;
 	}
@@ -346,7 +346,7 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 		final HDocumento hDoc = findHDocumento(codPaso, idDocumento, instancia);
 		if (hDoc == null) {
 			throw new RepositoryException(
-					"No se encuentra documento " + idDocumento + " - " + instancia + " en el paso " + codPaso);
+					"No es troba document " + idDocumento + " - " + instancia + " a la passa " + codPaso);
 		}
 		return hDoc;
 	}
@@ -380,7 +380,7 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 	private HTramite getHTramite(final String pIdSesionTramitacion) {
 		final HTramite hTramite = findHTramite(pIdSesionTramitacion);
 		if (hTramite == null) {
-			throw new RepositoryException("No existe tramite: " + pIdSesionTramitacion);
+			throw new RepositoryException("No existeix tràmit: " + pIdSesionTramitacion);
 		}
 		return hTramite;
 	}
@@ -416,7 +416,7 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 		final HFichero hFichero = findHFichero(referenciaFichero);
 		if (hFichero == null) {
 			throw new RepositoryException(
-					"No se encuentra fichero " + referenciaFichero.getId() + " - " + referenciaFichero.getClave());
+					"No es troba fitxer " + referenciaFichero.getId() + " - " + referenciaFichero.getClave());
 		}
 		return hFichero;
 	}

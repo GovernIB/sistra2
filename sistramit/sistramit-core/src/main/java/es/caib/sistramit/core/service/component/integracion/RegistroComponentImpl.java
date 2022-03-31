@@ -70,7 +70,7 @@ public final class RegistroComponentImpl implements RegistroComponent {
 				&& TypeEntorno.fromString(configuracionComponent
 						.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ENTORNO)) == TypeEntorno.PRODUCCION) {
 			throw new ErrorConfiguracionException(
-					"Solo se puede especificar una entidad distinta en los datos de registro en un entorno distinto a Producción");
+					"Nomes es pot especificar una entitat diferent en les dades de registre en un entorn diferent a Producció");
 		}
 
 		// Registramos
@@ -85,7 +85,7 @@ public final class RegistroComponentImpl implements RegistroComponent {
 		} catch (final RegistroPluginException ex) {
 			// Auditamos error
 			final RegistroSolicitudException rse = new RegistroSolicitudException(
-					"Excepcion al registrar. Marcamos para reintentar.", ex);
+					"Excepció al registrar. Marcam per reintentar.", ex);
 			auditoriaComponent.auditarExcepcionNegocio(idSesionTramitacion, rse);
 			resultado.setResultado(TypeResultadoRegistro.REINTENTAR);
 		}
@@ -108,7 +108,7 @@ public final class RegistroComponentImpl implements RegistroComponent {
 			justificante = plgRegistro.obtenerJustificanteRegistro(codigoEntidad, numeroRegistro);
 		} catch (final RegistroPluginException e) {
 			throw new RegistroJustificanteException(
-					"Error obteniendo justificante registro: " + codigoEntidad + " - " + numeroRegistro, e);
+					"Error obtenint justificant registre: " + codigoEntidad + " - " + numeroRegistro, e);
 		}
 		return justificante;
 	}
@@ -118,7 +118,7 @@ public final class RegistroComponentImpl implements RegistroComponent {
 			final boolean debugEnabled) {
 
 		if (debugEnabled) {
-			log.debug("Obteniendo libro organismo " + codigoEntidad + " - " + codigoOrganismo);
+			log.debug("Obtenint llibre organisme " + codigoEntidad + " - " + codigoOrganismo);
 		}
 
 		final IRegistroPlugin plgRegistro = (IRegistroPlugin) configuracionComponent
@@ -129,7 +129,7 @@ public final class RegistroComponentImpl implements RegistroComponent {
 			libro = plgRegistro.obtenerLibroOrganismo(codigoEntidad, codigoOrganismo);
 		} catch (final RegistroPluginException e) {
 			throw new RegistroSolicitudException(
-					"Error obteniendo libro asociado a organismo: " + codigoEntidad + " - " + codigoOrganismo, e);
+					"Error obtenint llibre associat a organisme: " + codigoEntidad + " - " + codigoOrganismo, e);
 		}
 		return libro.getCodigo();
 	}
@@ -161,7 +161,7 @@ public final class RegistroComponentImpl implements RegistroComponent {
 			return res;
 		} catch (final RegistroPluginException e) {
 			throw new RegistroJustificanteException(
-					"Error obteniendo como se descargan justificantes para entidad: " + codigoEntidad, e);
+					"Error obtenint com es descarreguen justificants per entitat: " + codigoEntidad, e);
 		}
 	}
 
@@ -179,7 +179,7 @@ public final class RegistroComponentImpl implements RegistroComponent {
 			return idSesionRegistro;
 		} catch (final RegistroPluginException e) {
 			throw new RegistroSolicitudException(
-					"Error iniciando sesión registro entrada para entidad: " + codigoEntidad, e);
+					"Error iniciant sessió registre entrada per entitat: " + codigoEntidad, e);
 		}
 	}
 
@@ -209,7 +209,7 @@ public final class RegistroComponentImpl implements RegistroComponent {
 			return res;
 		} catch (final RegistroPluginException e) {
 			throw new RegistroSolicitudException(
-					"Error iniciando sesión registro entrada para entidad: " + codigoEntidad, e);
+					"Error iniciant sessió registre entrada per entitat: " + codigoEntidad, e);
 		}
 	}
 

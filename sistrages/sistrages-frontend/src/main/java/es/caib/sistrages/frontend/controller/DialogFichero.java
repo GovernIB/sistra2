@@ -235,6 +235,7 @@ public class DialogFichero extends DialogControllerBase {
 					final CsvDocumento csv = CsvUtil.importar(bis);
 					dominioService.importarCSV(Long.valueOf(id), csv);
 				} catch (final Exception ex) {
+					UtilJSF.loggearErrorFront("Error importando csv" , ex);
 					if (ex.getCause() instanceof FuenteDatosPkException) {
 						addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importarCSV.error.pk"));
 						return;

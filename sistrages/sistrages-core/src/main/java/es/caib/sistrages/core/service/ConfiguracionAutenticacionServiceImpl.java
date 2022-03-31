@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
@@ -53,8 +54,8 @@ public class ConfiguracionAutenticacionServiceImpl implements ConfiguracionAuten
 	 */
 	@Override
 	@NegocioInterceptor
-	public Long addConfiguracionAutenticacion(final Long idArea, final ConfiguracionAutenticacion confAutenticacion) {
-		return configuracionAutenticacionDao.add(idArea, confAutenticacion);
+	public Long addConfiguracionAutenticacion(final Long idArea, final Long idEntidad, final ConfiguracionAutenticacion confAutenticacion) {
+		return configuracionAutenticacionDao.add(idArea, idEntidad, confAutenticacion);
 	}
 
 	/*
@@ -91,21 +92,21 @@ public class ConfiguracionAutenticacionServiceImpl implements ConfiguracionAuten
 	 */
 	@Override
 	@NegocioInterceptor
-	public List<ConfiguracionAutenticacion> listConfiguracionAutenticacion(final Long idArea, final TypeIdioma idioma,
+	public List<ConfiguracionAutenticacion> listConfiguracionAutenticacion(final TypeAmbito ambito, final Long idArea, final Long idEntidad, final TypeIdioma idioma,
 			final String filtro) {
-		return configuracionAutenticacionDao.getAllByFiltro(idArea, idioma, filtro);
+		return configuracionAutenticacionDao.getAllByFiltro(ambito, idArea, idEntidad, idioma, filtro);
 	}
 
 	@Override
 	@NegocioInterceptor
-	public boolean existeConfiguracionAutenticacion(final String identificador, final Long idCodigo) {
-		return configuracionAutenticacionDao.existeConfiguracionAutenticacion(identificador, idCodigo);
+	public boolean existeConfiguracionAutenticacion(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut) {
+		return configuracionAutenticacionDao.existeConfiguracionAutenticacion(ambito, identificador, codigoEntidad, codigoArea, codigoConfAut);
 	}
 
 	@Override
 	@NegocioInterceptor
-	public ConfiguracionAutenticacion getConfiguracionAutenticacion(String identificador, Long codigo) {
-		return configuracionAutenticacionDao.getConfiguracionAutenticacion(identificador, codigo);
+	public ConfiguracionAutenticacion getConfiguracionAutenticacion(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut) {
+		return configuracionAutenticacionDao.getConfiguracionAutenticacion(ambito, identificador, codigoEntidad, codigoArea, codigoConfAut);
 	}
 
 }

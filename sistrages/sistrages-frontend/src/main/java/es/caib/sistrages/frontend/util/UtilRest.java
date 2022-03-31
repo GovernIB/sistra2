@@ -44,6 +44,7 @@ public class UtilRest {
 		try {
 			invJSON = JsonUtil.toJson(inv);
 		} catch (final JsonException e) {
+			UtilJSF.loggearErrorFront("Error refrescando " , e);
 			resultado.setMensaje(e.getMessage());
 			return resultado;
 		}
@@ -66,6 +67,7 @@ public class UtilRest {
 				break;
 			}
 		} catch (final RestClientException e) {
+			UtilJSF.loggearErrorFront("Error restclient", e);
 			resultado.setMensaje(e.getMessage());
 		}
 

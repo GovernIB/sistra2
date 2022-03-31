@@ -3,6 +3,11 @@ body{
   margin:0px;
 }
 
+.captchaImg{
+	background-image: url(#{resource["primefaces-custom:images/captchaIcono.png"]}) !important;
+	background-size: 16px 16px !important;
+}
+
 /****  cabecera *****/
 /** Para el growl . **/
 .ui-growl-item-container{
@@ -268,6 +273,20 @@ body{
 	 width: 25px !important;
 }
 
+.wpx30{
+	 width: 30px !important;
+}
+
+.wpx35{
+	 width: 35px !important;
+}
+
+.wpx40{
+	 width: 40px !important;
+}
+.wpx45{
+	 width: 45px !important;
+}
 .wpx50{
 	 width: 50px !important;
 }
@@ -349,6 +368,21 @@ body{
 
 .noPadding-bottom {
   padding-bottom: 0px !important;
+}
+.pb1 {
+  padding-bottom: 1px !important;
+}
+.pb2 {
+  padding-bottom: 2px !important;
+}
+.pb3 {
+  padding-bottom: 3px !important;
+}
+.pb4 {
+  padding-bottom: 4px !important;
+}
+.pb5 {
+  padding-bottom: 5px !important;
 }
 
 .noPadding-top {

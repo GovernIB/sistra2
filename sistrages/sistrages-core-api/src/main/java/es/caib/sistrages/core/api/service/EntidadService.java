@@ -270,4 +270,12 @@ public interface EntidadService {
 	 */
 	public void removePlantillaEmailFin(PlantillaEntidad plantillaEntidad);
 
+	/**
+	 * Comprueba si el identificador se usa
+	 * @param identificador
+	 * @param codigo
+	 * @return
+	 */
+	public boolean existeEntidad(String identificador, Long codigo);
+
 }

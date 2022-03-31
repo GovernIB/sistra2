@@ -11,15 +11,18 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Literal;
-import es.caib.sistrages.core.api.model.ModelApi;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeErrorValidacion;
+import es.caib.sistrages.core.api.model.types.TypeTamanyo;
+import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
@@ -27,7 +30,6 @@ import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
@@ -58,6 +60,9 @@ public class DialogErroresValidacion extends DialogControllerBase {
 
 	@Inject
 	DominioService dominioService;
+
+	@Inject
+	private ConfiguracionGlobalService cfService;
 
 	/**
 	 * Inicialización.
@@ -98,6 +103,8 @@ public class DialogErroresValidacion extends DialogControllerBase {
 		if (verificarFilaSeleccionada()) {
 			if (TypeErrorValidacion.DOMINIOS_ANYADIR.equals(filaSeleccionada.getTipo())) {
 				anyadirDominio();
+			} else if (TypeErrorValidacion.SCRIPT_DOMINIO_ID_NO_COMPUESTO.equals(filaSeleccionada.getTipo())) {
+				actualizarIdentificadorDominio();
 			} else if (TypeErrorValidacion.DOMINIOS_ELIMINAR.equals(filaSeleccionada.getTipo())) {
 				eliminarDominio();
 			} else if (TypeErrorValidacion.SCRIPTS.equals(filaSeleccionada.getTipo())) {
@@ -106,6 +113,8 @@ public class DialogErroresValidacion extends DialogControllerBase {
 				corregirLiteral();
 			} else if (TypeErrorValidacion.LITERALES_HTML.equals(filaSeleccionada.getTipo())) {
 				corregirLiteralHTML();
+			} else if (TypeErrorValidacion.DOCUMENTO_TAMANYO_SUPERIOR.equals(filaSeleccionada.getTipo())) {
+				corregirDocumento();
 			} else {
 				addMessageContext(TypeNivelGravedad.WARNING,
 						UtilJSF.getLiteral("dialogErroresValidacion.correccionmanual"));
@@ -158,6 +167,26 @@ public class DialogErroresValidacion extends DialogControllerBase {
 		return isFilaSeleccionada;
 	}
 
+	private void corregirDocumento() {
+		Documento doc = null;
+		String tamanyoMaxIndiv = cfService.listConfiguracionGlobal("sistramit.anexos.tamanyoMaximoIndividual").get(0)
+				.getValor();
+		Integer tamanyoMax = Integer.parseInt(tamanyoMaxIndiv.substring(0, tamanyoMaxIndiv.length() - 2));
+		TypeTamanyo tipoTamanyo = TypeTamanyo
+				.fromString(tamanyoMaxIndiv.substring(tamanyoMaxIndiv.length() - 2, tamanyoMaxIndiv.length()));
+		if (filaSeleccionada.getItem() instanceof Documento) {
+			doc = (Documento) filaSeleccionada.getItem();
+			if (doc != null && doc.getCodigo() != null) {
+				doc.setTamanyoMaximo(tamanyoMax);
+				doc.setTipoTamanyo(tipoTamanyo);
+				tramiteService.updateDocumentoTramite(doc);
+				addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.modificacion.documento"));
+				validar();
+			}
+
+		}
+	}
+
 	private void corregirLiteral() {
 		Literal literal = null;
 		if (filaSeleccionada.getItem() instanceof Literal) {
@@ -196,6 +225,53 @@ public class DialogErroresValidacion extends DialogControllerBase {
 
 	}
 
+	private void actualizarIdentificadorDominio() {
+		Dominio dominioError = null;
+		Dominio dominioAux = null;
+		if (filaSeleccionada.getItem() instanceof Dominio) {
+			dominioError = (Dominio) filaSeleccionada.getItem();
+
+			if (dominioError != null
+					&& (StringUtils.isNotEmpty(dominioError.getIdentificador()) || dominioError.getCodigo() != null)) {
+
+//				// cargamos dominio
+//				if (StringUtils.isNotEmpty(dominioError.getIdentificador())) {
+//					Long idArea = null;
+//					if (dominioError.getAmbito() == TypeAmbito.AREA) {
+//						idArea = dominioError.getAreas().getCodigo();
+//					}
+//					dominioAux = dominioService.loadDominioByIdentificador(dominioError.getAmbito(), dominioError.getIdentificador(), dominioError.getEntidad(), idArea, null);
+//				} else if (dominioError.getCodigo() != null) {
+//					dominioAux = dominioService.loadDominio(dominioError.getCodigo());
+//				}
+//				// esto es por un error con el final de la variable dominio
+//				final Dominio dominio = dominioAux;
+//
+//				// existe en la app
+//				if (dominio != null) {
+//					// miramos si pertenece a nuestra global/entidad/area
+//					if (listaDominios.stream().anyMatch(d -> dominio.getCodigo().equals(d.getCodigo()))) {
+//						// asociar
+//						dominioService.addTramiteVersion(dominio.getCodigo(), Long.valueOf(idTramiteVersion));
+//						addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.alta.dominio.empleado"));
+//						validar();
+//
+//					} else {
+//						if (TypeAmbito.ENTIDAD.equals(dominio.getAmbito())) {
+//							addMessageContext(TypeNivelGravedad.ERROR,
+//									UtilJSF.getLiteral("error.dominio.pertence.entidad"));
+//						} else if (TypeAmbito.AREA.equals(dominio.getAmbito())) {
+//							addMessageContext(TypeNivelGravedad.ERROR,
+//									UtilJSF.getLiteral("error.dominio.pertence.area"));
+//						}
+//					}
+//				} else {
+//					addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.dominio.noexiste"));
+//				}
+			}
+		}
+	}
+
 	private void anyadirDominio() {
 		Dominio dominioError = null;
 		Dominio dominioAux = null;
@@ -207,7 +283,12 @@ public class DialogErroresValidacion extends DialogControllerBase {
 
 				// cargamos dominio
 				if (StringUtils.isNotEmpty(dominioError.getIdentificador())) {
-					dominioAux = dominioService.loadDominio(dominioError.getIdentificador());
+					Long idArea = null;
+					if (dominioError.getAmbito() == TypeAmbito.AREA) {
+						idArea = dominioError.getArea().getCodigo();
+					}
+					dominioAux = dominioService.loadDominioByIdentificador(dominioError.getAmbito(),
+							dominioError.getIdentificador(), dominioError.getEntidad(), idArea, null);
 				} else if (dominioError.getCodigo() != null) {
 					dominioAux = dominioService.loadDominio(dominioError.getCodigo());
 				}
@@ -250,7 +331,12 @@ public class DialogErroresValidacion extends DialogControllerBase {
 
 				// cargamos dominio
 				if (StringUtils.isNotEmpty(dominioError.getIdentificador())) {
-					dominioAux = dominioService.loadDominio(dominioError.getIdentificador());
+					Long idArea = null;
+					if (dominioError.getAmbito() == TypeAmbito.AREA) {
+						idArea = dominioError.getArea().getCodigo();
+					}
+					dominioAux = dominioService.loadDominioByIdentificador(dominioError.getAmbito(),
+							dominioError.getIdentificador(), dominioError.getEntidad(), idArea, null);
 				} else if (dominioError.getCodigo() != null) {
 					dominioAux = dominioService.loadDominio(dominioError.getCodigo());
 				}
@@ -266,35 +352,6 @@ public class DialogErroresValidacion extends DialogControllerBase {
 					}
 				}
 			}
-		}
-	}
-
-	private void corregirDatosRegistro() {
-		TramitePasoRegistrar paso = null;
-		if (filaSeleccionada.getItem() instanceof TramitePasoRegistrar) {
-			paso = (TramitePasoRegistrar) filaSeleccionada.getItem();
-
-			final Map<String, String> map = new HashMap<>();
-			map.put(TypeParametroVentana.ID.toString(), paso.getCodigo().toString());
-			map.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
-
-			UtilJSF.openDialog(DialogDefinicionVersionRegistrarTramite.class, TypeModoAcceso.EDICION, map, true, 950,
-					450);
-		}
-	}
-
-	private void corregirFormateador() {
-		if (StringUtils.isNotEmpty(filaSeleccionada.getParams())) {
-			final Map<String, String> params = (Map<String, String>) UtilJSON.fromJSON(filaSeleccionada.getParams(),
-					Map.class);
-
-			Map<String, Object> mochilaDatos = null;
-			UtilJSF.getSessionBean().limpiaMochilaDatos();
-			mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
-			mochilaDatos.put(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO, idiomasObligatorios);
-
-			UtilJSF.openDialog(DialogPropiedadesFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 950,
-					490);
 		}
 	}
 

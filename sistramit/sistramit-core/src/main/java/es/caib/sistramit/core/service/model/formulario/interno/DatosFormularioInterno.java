@@ -158,7 +158,7 @@ public final class DatosFormularioInterno implements Serializable {
 			}
 		}
 		if (res == null) {
-			throw new ErrorConfiguracionException("No existe campo con id: " + idCampo);
+			throw new ErrorConfiguracionException("No existeix camp amb id: " + idCampo);
 		}
 		return res;
 	}
@@ -211,7 +211,7 @@ public final class DatosFormularioInterno implements Serializable {
 			}
 		}
 		if (res == null) {
-			throw new ErrorConfiguracionException("No existe campo con id: " + idCampo);
+			throw new ErrorConfiguracionException("No existeix camp amb id: " + idCampo);
 		}
 		return res;
 	}

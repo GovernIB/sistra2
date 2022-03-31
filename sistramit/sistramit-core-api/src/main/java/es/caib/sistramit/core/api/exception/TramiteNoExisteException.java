@@ -20,11 +20,10 @@ public final class TramiteNoExisteException extends ServiceRollbackException {
 	/**
 	 * Constructor TramiteNoExisteException.
 	 *
-	 * @param pIdSesionTramite
-	 *            Id sesion tramite.
+	 * @param pIdSesionTramite Id sesion tramite.
 	 */
 	public TramiteNoExisteException(final String pIdSesionTramite) {
-		super("Sesion de tramitacion " + pIdSesionTramite + " no existe en persistencia");
+		super("Sessió de tramitació " + pIdSesionTramite + " no existeix en persistència");
 	}
 
 }

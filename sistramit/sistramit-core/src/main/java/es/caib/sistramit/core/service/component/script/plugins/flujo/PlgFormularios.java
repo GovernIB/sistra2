@@ -162,8 +162,8 @@ public final class PlgFormularios implements PlgFormulariosInt {
         if (res != null) {
             // Verificamos tipo
             if (res.getTipo() != tipoValor) {
-                throw new ScriptException("El campo " + campo
-                        + " no es de tipo " + tipoValor.name());
+                throw new ScriptException("El camp " + campo
+                        + " no és de tipus " + tipoValor.name());
             }
         }
 
@@ -184,8 +184,8 @@ public final class PlgFormularios implements PlgFormulariosInt {
         final DatosDocumentoFormulario df = this.datosFormularios
                 .get(idFormulario);
         if (df == null) {
-            throw new ScriptException("El formulario " + idFormulario
-                    + " no existe, no esta rellenado o no es accesible desde este script");
+            throw new ScriptException("El formulari " + idFormulario
+                    + " no existeix, no esta emplenat o no és accesible desde aquest script");
         }
         return df;
     }

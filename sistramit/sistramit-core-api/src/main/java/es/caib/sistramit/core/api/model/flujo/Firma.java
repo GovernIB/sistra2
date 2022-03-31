@@ -3,6 +3,7 @@ package es.caib.sistramit.core.api.model.flujo;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoFirma;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFirmaDigital;
+import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedadFirmante;
 
 /**
  * Indica el estado de una firma.
@@ -17,6 +18,11 @@ public final class Firma implements ModelApi {
 	 * Indica firmante.
 	 */
 	private Persona firmante;
+
+	/**
+	 * Obligatoriedad firma.
+	 */
+	private TypeObligatoriedadFirmante obligatoriedad = TypeObligatoriedadFirmante.OBLIGATORIO;
 
 	/**
 	 * Indica si se permite descargar la firma desde la lista.
@@ -49,11 +55,11 @@ public final class Firma implements ModelApi {
 	 * Constructor.
 	 *
 	 * @param pFirmante
-	 *            firmante
+	 *                         firmante
 	 * @param pEstadoFirma
-	 *            Parámetro estado firma
+	 *                         Parámetro estado firma
 	 * @param pFechaFirma
-	 *            Parámetro fecha firma
+	 *                         Parámetro fecha firma
 	 */
 	public Firma(final Persona pFirmante, final TypeEstadoFirma pEstadoFirma, final String pFechaFirma) {
 		super();
@@ -84,7 +90,7 @@ public final class Firma implements ModelApi {
 	 * Método para establecer estadoFirma.
 	 *
 	 * @param pEstadoFirma
-	 *            estadoFirma a establecer
+	 *                         estadoFirma a establecer
 	 */
 	public void setEstadoFirma(final TypeEstadoFirma pEstadoFirma) {
 		estadoFirma = pEstadoFirma;
@@ -103,7 +109,7 @@ public final class Firma implements ModelApi {
 	 * Método para establecer fechaFirma.
 	 *
 	 * @param pFechaFirma
-	 *            fechaFirma a establecer
+	 *                        fechaFirma a establecer
 	 */
 	public void setFechaFirma(final String pFechaFirma) {
 		fechaFirma = pFechaFirma;
@@ -122,7 +128,7 @@ public final class Firma implements ModelApi {
 	 * Método para establecer firmante.
 	 *
 	 * @param firmante
-	 *            firmante a establecer
+	 *                     firmante a establecer
 	 */
 	public void setFirmante(final Persona firmante) {
 		this.firmante = firmante;
@@ -141,7 +147,7 @@ public final class Firma implements ModelApi {
 	 * Método para establecer descargable.
 	 *
 	 * @param descargable
-	 *            descargable a establecer
+	 *                        descargable a establecer
 	 */
 	public void setDescargable(final TypeSiNo descargable) {
 		this.descargable = descargable;
@@ -149,7 +155,7 @@ public final class Firma implements ModelApi {
 
 	/**
 	 * Método de acceso a tipoFirma.
-	 * 
+	 *
 	 * @return tipoFirma
 	 */
 	public TypeFirmaDigital getTipoFirma() {
@@ -158,12 +164,31 @@ public final class Firma implements ModelApi {
 
 	/**
 	 * Método para establecer tipoFirma.
-	 * 
+	 *
 	 * @param tipoFirma
-	 *            tipoFirma a establecer
+	 *                      tipoFirma a establecer
 	 */
 	public void setTipoFirma(final TypeFirmaDigital tipoFirma) {
 		this.tipoFirma = tipoFirma;
+	}
+
+	/**
+	 * Método de acceso a obligatoriedad.
+	 * 
+	 * @return obligatoriedad
+	 */
+	public TypeObligatoriedadFirmante getObligatoriedad() {
+		return obligatoriedad;
+	}
+
+	/**
+	 * Método para establecer obligatoriedad.
+	 * 
+	 * @param obligatoriedad
+	 *                           obligatoriedad a establecer
+	 */
+	public void setObligatoriedad(final TypeObligatoriedadFirmante obligatoriedad) {
+		this.obligatoriedad = obligatoriedad;
 	}
 
 }

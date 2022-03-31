@@ -1,0 +1,28 @@
+<html>
+<head>
+<meta charset=UTF-8>
+<meta http-equiv="content-type" content="text/html; utf-8">
+<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+	<h1 class="stgH1">dominio.rest.DominioPluginRest</h1>
+	<p>Aquest plugin no requereix de cap propietat per a la seva configuració.</p>
+	<h2>Configuració de dominis de SISTRA1 (SOAP)</h2>
+	<p>Per a configurar un domini SISTRA1 que utilitza SOAP, s'ha de definir l'URL del domini especificant el prefixe [SISTRA1].
+	 El plugin comprovarà si la URL va precedida de “[SISTRA1]” i ho agafarà com un servei SOAP de SISTRA1. <br><br>
+
+	 Per a configurar un dominio SISTRA1 que utilitza un WS contra SAP, utilitzant el soap-action, s'ha d'afegir el prefixe
+	 <b>[SISTRA1][SOAP-ACTION=urlSoapAction]url. </b><br><br>
+	 Per exemple: Si a SISTRA 1 es té un domini amb la següent URL: <b>https://geminis.caib.es:52001/sap/xi/engine?type=entry&amp;version=3.0&amp;Sender.Service=RHAPSODY_HERMES_SYSTRA&amp;Interface=urn:es:caib:sistra:ws:v2:model:SistraFacade^SI_Comunicaciones_Systra_SAP</b>,
+	  a SISTRA2 s'ha d'especificar l'URL de la sigüent forma:
+	 <b>[SISTRA1][SOAP-ACTION=http://sap.com/xi/WebService/soap1.1]http://geminis:50800/sap/xi/engine?type=entry&amp;version=3.0&amp;Sender.Service=RHAPSODY_HERMES_SYSTRA&amp;Interface=urn:es:caib:sistra:ws:v2:model:SistraFacade%5ESI_Comunicaciones_Systra_SAP</b>
+	 <br><br>Si el plugin no detecta aquests prefixes, ho agafarà com un servei REST basat en el contracte per a SISTRA2 que defineix el plugin.<br>
+	 També s'ha de tenir en compte la codificació de les URLs, sobre tot quan s'utilitzen URLs complexes com les dels dominis resolts per SAP. Aquestes URLs contenen caràcters especials, com a l'exemple indicat, el caràcter ‘^’.
+	 Aquest caràcter s'ha de sustituir per la seva codificació pertinent, que en aquest cas és ‘%5E’ (En l'exemple que s'ha afegit, ja s'ha realitzat el canvi).  </p>
+
+
+	<h2>Configuració de dominis de SISTRA2 (REST)</h2>
+	<p>Els dominis de SISTRA2 han d'implementar una interfície REST i ser capaces de mapejar peticions tipus POST per establir una comunicació correcta.
+	En el següent apartat s'especifica la interfície a implementar.
+	</p>
+</html>

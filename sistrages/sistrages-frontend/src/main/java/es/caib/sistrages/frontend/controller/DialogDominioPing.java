@@ -14,6 +14,7 @@ import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.service.DominioResolucionService;
 import es.caib.sistrages.core.api.service.DominioService;
@@ -81,8 +82,13 @@ public class DialogDominioPing extends DialogControllerBase {
 		// Si es tipo lista fija, rellenar los datos.
 		if (isTipoListaFija && dominio.getListaFija() != null && !dominio.getListaFija().isEmpty()) {
 
+			Long idArea = null;
+			if (this.dominio.getAmbito() == TypeAmbito.AREA) {
+				idArea = this.dominio.getArea().getCodigo();
+			}
+
 			valoresDominio = dominioResolucionService.realizarConsultaListaFija(this.dominio.getAmbito(),
-					UtilJSF.getIdEntidad(), this.dominio.getIdentificador(), this.dominio.getUrl(),
+					UtilJSF.getIdEntidad(), idArea, this.dominio.getIdentificador(), this.dominio.getUrl(),
 					this.dominio.getParametros());
 
 		}
@@ -94,6 +100,7 @@ public class DialogDominioPing extends DialogControllerBase {
 	 */
 	public void ping() {
 
+		//int test = 32/0;
 		try {
 			if (dominio.getTipo() == TypeDominio.FUENTE_DATOS) {
 				valoresDominio = pingFuenteDatos(getValorParametrosDominio());
@@ -109,6 +116,7 @@ public class DialogDominioPing extends DialogControllerBase {
 
 			if (valoresDominio != null) {
 				if (valoresDominio.isError()) {
+					UtilJSF.loggearErrorFront("Error haciendo el ping del dominio:" + this.id +" \nErrorCodigo:"+valoresDominio.getCodigoError()+" \nDescripcionError:"+valoresDominio.getDescripcionError(), null);
 					addMessageContext(TypeNivelGravedad.ERROR,
 							valoresDominio.getCodigoError() + " : " + valoresDominio.getDescripcionError());
 					mostrarTablaDatos = true;
@@ -124,7 +132,7 @@ public class DialogDominioPing extends DialogControllerBase {
 				}
 			}
 		} catch (final Exception e) {
-			getLogger().error("Error haciendo el ping del dominio:" + this.id, e);
+			UtilJSF.loggearErrorFront("Error haciendo el ping del dominio:" + this.id, e);
 			StringWriter errors = new StringWriter();
 			e.printStackTrace(new PrintWriter(errors));
 			setMensajeError("Error: " + errors);
@@ -164,7 +172,7 @@ public class DialogDominioPing extends DialogControllerBase {
 	 * Resuelve el ping para fuente de datos.
 	 */
 	private ValoresDominio pingFuenteDatos(final List<ValorParametroDominio> parametros) {
-		return dominioResolucionService.realizarConsultaFuenteDatos(dominio.getIdentificador(), parametros);
+		return dominioResolucionService.realizarConsultaFuenteDatos(dominio.getIdentificadorCompuesto(), parametros);
 	}
 
 	/**

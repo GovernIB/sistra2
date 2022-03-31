@@ -12,7 +12,7 @@
 
 		<div class="imc--guarda-justificant">
 
-			<h4><span>{{txtDesauJustificant}}</span></h4>
+			<h3><span>{{txtDesauJustificant}}</span></h3>
 
 			{{if jsonJustificantDescarrega|equals>car}}
 			<div class="imc--fi-carpeta">
@@ -41,14 +41,14 @@
 		{{if jsonDocumentsMostra|equals>s}}
 		<div class="imc--guarda-documentacio">
 
-			<h4><span>{{txtDesauDocumentacio}}</span></h4>
+			<h3><span>{{txtDesauDocumentacio}}</span></h3>
 
-			<p>{{txtDesauDocumentacioInfo}} <button type="buttton" id="imc-bt--documentacio" data-accio="documenta"><span>{{txtDocumentacioMostra}}</span></button></p>
+			<p>{{txtDesauDocumentacioInfo}} <button type="buttton" id="imc-bt--documentacio" data-accio="documenta" aria-controls="imc--pas-guarda-docs" aria-expanded="false"><span>{{txtDocumentacioMostra}}</span></button></p>
 
-			<div class="imc--documentacio">
+			<div class="imc--documentacio" id="imc--pas-guarda-docs" role="region" aria-labelledby="imc-bt--documentacio">
 
 				{{if formularis}}
-				<h5><span>{{txtFormularis}}</span></h5>
+				<h4><span>{{txtFormularis}}</span></h4>
 				
 				<ul>
 					{{formularis}}
@@ -96,7 +96,7 @@
 				{{/if}}
 
 				{{if annexes}}
-				<h5><span>{{txtAnnexes}}</span></h5>
+				<h4><span>{{txtAnnexes}}</span></h4>
 				
 				<ul>
 					{{annexes}}
@@ -144,7 +144,7 @@
 				{{/if}}
 
 				{{if pagaments}}
-				<h5><span>{{txtPagaments}}</span></h5>
+				<h4><span>{{txtPagaments}}</span></h4>
 				
 				<ul>
 					{{pagaments}}
@@ -170,15 +170,15 @@
 
 		<form class="imc--valoracio">
 
-			<h4><span>{{txtValoracioTitol}}</span></h4>
+			<h3><span>{{txtValoracioTitol}}</span></h3>
 
 			<p>{{txtValoracioInformacio}}</p>
 
 			<div class="imc--estrelles">
 
-				<input id="imc-f-estrelles-0" type="radio" name="imc-f-estrelles" value="0" checked />
+				<!--<input id="imc-f-estrelles-0" type="radio" name="imc-f-estrelles" value="0" checked />-->
 
-				<input id="imc-f-estrelles-1" type="radio" name="imc-f-estrelles" value="1" />
+				<input id="imc-f-estrelles-1" type="radio" name="imc-f-estrelles" value="1" aria-controls="imc--valoracio-especifica" />
 				<label for="imc-f-estrelles-1">
 					<span>{{txtValoracio1}}</span>
 					<svg viewBox="0 0 512 512">
@@ -186,7 +186,7 @@
 					</svg>
 				</label>
 
-				<input id="imc-f-estrelles-2" type="radio" name="imc-f-estrelles" value="2" />
+				<input id="imc-f-estrelles-2" type="radio" name="imc-f-estrelles" value="2" aria-controls="imc--valoracio-especifica" />
 				<label for="imc-f-estrelles-2">
 					<span>{{txtValoracio2}}</span>
 					<svg viewBox="0 0 512 512">
@@ -194,7 +194,7 @@
 					</svg>
 				</label>
 
-				<input id="imc-f-estrelles-3" type="radio" name="imc-f-estrelles" value="3" />
+				<input id="imc-f-estrelles-3" type="radio" name="imc-f-estrelles" value="3" aria-controls="imc--valoracio-especifica" />
 				<label for="imc-f-estrelles-3">
 					<span>{{txtValoracio3}}</span>
 					<svg viewBox="0 0 512 512">
@@ -218,11 +218,13 @@
 					</svg>
 				</label>
 
-				<output>{{txtSenseValoracio}}</output>
+				<output id="imc--estrelles-resultat" for="imc-f-estrelles-1 imc-f-estrelles-2 imc-f-estrelles-3 imc-f-estrelles-4 imc-f-estrelles-5">{{txtSenseValoracio}}</output>
 
 			</div>
 
-			<div class="imc--valoracio-especifica">
+			<div class="imc--valoracio-especifica" role="region" aria-labelledby="imc--estrelles-resultat">
+
+				<h4><span>{{txtValoracioEspecificaTitol}}</span></h4>
 
 				{{if jsonValoracioProblemes}}
 

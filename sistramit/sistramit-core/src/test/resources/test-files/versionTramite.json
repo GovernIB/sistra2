@@ -49,7 +49,11 @@
       "tipo": "ds",
       "pasoFinal": false,
       "scriptNavegacion": null,
-      "instruccionesInicio": "ha de saber"
+      "instruccionesInicio": "ha de saber",
+      "scriptInstruccionesInicio": {
+            "script": "DATOS_INSTRUCCIONES.setTextoMensaje('Es una <strong>instrucciÃ³n</strong>');",
+            "literales": []
+      }
     },
 {
       "type": "RPasoTramitacionRellenar",
@@ -78,7 +82,7 @@
           "formularioInterno": {
             "mostrarTitulo": true,
             "permitirGuardarSinFinalizar": false,
-            "titulo": "Formulario 1 (título)",
+            "titulo": "Formulario 1 (tï¿½tulo)",
             "plantillas": [],
             "scriptPlantillas": null,
             "paginas": [
@@ -214,7 +218,7 @@
                         "etiqueta": "Desplegable",
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
-                        "columnas": 2,
+                        "columnas": 1,
                         "ayuda": "Ayuda online",
                         "propiedadesCampo": {
                           "obligatorio": true,
@@ -250,9 +254,50 @@
                       },
                       {
                         "type": "RComponenteSelector",
+                        "identificador": "SEL_DINAMICO",
+                        "tipo": "SE",
+                        "etiqueta": "DinÃ¡mico",
+                        "mostrarEtiqueta": true,
+                        "alineacion": "I",
+                        "columnas": 1,
+                        "ayuda": "Ayuda online",
+                        "propiedadesCampo": {
+                          "obligatorio": false,
+                          "soloLectura": false,
+                          "noModificable": false,
+                          "scriptAutorrellenable": null,
+                          "scriptEstado": null,
+                          "scriptValidacion": null
+                        },
+                        "tipoSelector": "DINAMICO",
+                        "tipoListaValores": "F",
+                        "listaFija": [
+                          {
+                            "codigo": "V1",
+                            "descripcion": "Valor 1 es",
+                            "porDefecto": true
+                          },
+                          {
+                            "codigo": "V2",
+                            "descripcion": "Valor 2",
+                            "porDefecto": false
+                          },
+                          {
+                            "codigo": "V3",
+                            "descripcion": "Valor 3",
+                            "porDefecto": false
+                          }
+                        ],
+                        "listaDominio": null,
+                        "scriptListaValores": null,
+                        "indiceAlfabetico": false,
+                        "orientacion": "V"
+                      },
+                      {
+                        "type": "RComponenteSelector",
                         "identificador": "SEL_MULTIPLE",
                         "tipo": "SE",
-                        "etiqueta": "Múltiple",
+                        "etiqueta": "MÃºltiple",
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 1,
@@ -282,10 +327,10 @@
                         "type": "RComponenteSelector",
                         "identificador": "SEL_UNICA",
                         "tipo": "SE",
-                        "etiqueta": "Única",
+                        "etiqueta": "Ãšnica",
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
-                        "columnas": 3,
+                        "columnas": 1,
                         "ayuda": "Ayuda online",
                         "propiedadesCampo": {
                           "obligatorio": true,
@@ -333,7 +378,7 @@
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 1,
-                        "ayuda": "En función de este campo se deben establecer como solo lectura los campos de la derecha",
+                        "ayuda": "En funciï¿½n de este campo se deben establecer como solo lectura los campos de la derecha",
                         "propiedadesCampo": {
                           "obligatorio": false,
                           "soloLectura": false,
@@ -388,7 +433,7 @@
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 1,
-                        "ayuda": "Según el checkbox toma como valores posibles: DS1/DS2 ó DS3/DS4.  También se autorrellena a DS1 ó DS3.",
+                        "ayuda": "Segï¿½n el checkbox toma como valores posibles: DS1/DS2 ï¿½ DS3/DS4.  Tambiï¿½n se autorrellena a DS1 ï¿½ DS3.",
                         "propiedadesCampo": {
                           "obligatorio": false,
                           "soloLectura": false,
@@ -443,7 +488,7 @@
                         "type": "RComponenteSeccion",
                         "identificador": "ID_1550474877126",
                         "tipo": "SC",
-                        "etiqueta": "VALIDACIÓN CAMPO",
+                        "etiqueta": "VALIDACIï¿½N CAMPO",
                         "mostrarEtiqueta": true,
                         "alineacion": "I",
                         "columnas": 6,

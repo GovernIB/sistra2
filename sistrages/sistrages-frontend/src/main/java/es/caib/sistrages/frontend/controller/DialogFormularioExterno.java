@@ -79,7 +79,7 @@ public class DialogFormularioExterno extends DialogControllerBase {
 			data = formularioService.getFormularioExterno(new Long(id));
 		}
 
-		configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(Long.valueOf(area),
+		configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(TypeAmbito.AREA, Long.valueOf(area), null,
 				TypeIdioma.fromString(UtilJSF.getSessionBean().getLang()), null);
 		ConfiguracionAutenticacion configAutSinAutenticacion = new ConfiguracionAutenticacion();
 		configAutSinAutenticacion.setCodigo(null);
@@ -90,9 +90,9 @@ public class DialogFormularioExterno extends DialogControllerBase {
 		if (id != null) {
 			final List<DominioTramite> tramites = tramiteService.getTramiteVersionByGfe(Long.valueOf(id));
 			if (tramites == null || tramites.isEmpty()) {
-				mostrarAdvertencia = false;
+				setMostrarAdvertencia(false);
 			} else {
-				mostrarAdvertencia = true;
+				setMostrarAdvertencia(true);
 			}
 		}
 
@@ -104,8 +104,8 @@ public class DialogFormularioExterno extends DialogControllerBase {
 	public void aceptar() {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
-		if (data.getConfiguracionAutenticacion().getIdentificador() == UtilJSF
-				.getLiteral("dialogDominio.sinAutenticacion")) {
+		if (data.getConfiguracionAutenticacion().getIdentificador().equals(UtilJSF
+				.getLiteral("dialogDominio.sinAutenticacion"))) {
 			data.setConfiguracionAutenticacion(null);
 		}
 		switch (acceso) {
@@ -249,7 +249,7 @@ public class DialogFormularioExterno extends DialogControllerBase {
 			return false;
 		}
 
-		final boolean existe = formularioService.existeFormulario(data.getIdentificador(), data.getCodigo());
+		final boolean existe = formularioService.existeFormulario(data.getIdentificador(), data.getCodigo(), Long.valueOf(area));
 
 		if (existe) {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
@@ -357,5 +357,19 @@ public class DialogFormularioExterno extends DialogControllerBase {
 
 	public void setDesactivarConsulta(Boolean desactivarConsulta) {
 		this.desactivarConsulta = desactivarConsulta;
+	}
+
+	/**
+	 * @return the mostrarAdvertencia
+	 */
+	public boolean isMostrarAdvertencia() {
+		return mostrarAdvertencia;
+	}
+
+	/**
+	 * @param mostrarAdvertencia the mostrarAdvertencia to set
+	 */
+	public void setMostrarAdvertencia(boolean mostrarAdvertencia) {
+		this.mostrarAdvertencia = mostrarAdvertencia;
 	}
 }

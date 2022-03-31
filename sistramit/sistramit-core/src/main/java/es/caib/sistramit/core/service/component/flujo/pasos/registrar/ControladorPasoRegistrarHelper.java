@@ -131,7 +131,7 @@ public final class ControladorPasoRegistrarHelper {
 					|| StringUtils.isBlank(resPresentador.getNombre())) {
 				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_PRESENTADOR_REGISTRO.name(),
 						pVariablesFlujo.getIdSesionTramitacion(), idPaso,
-						"No se ha especificado presentador en el script");
+						"No s'ha especificat presentador al script");
 			}
 			// Devolvemos presentador establecido en el script
 			presentador = new DatosInteresado(resPresentador.getNif(), resPresentador.getNombre(),
@@ -143,7 +143,7 @@ public final class ControladorPasoRegistrarHelper {
 			if (pVariablesFlujo.getNivelAutenticacion() == TypeAutenticacion.ANONIMO) {
 				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_PRESENTADOR_REGISTRO.name(),
 						pVariablesFlujo.getIdSesionTramitacion(), idPaso,
-						"No se ha especificado presentador en el script (obligatorio si iniciador es anónimo)");
+						"No s'ha especificat presentador al script (obligatori si iniciador és anònim)");
 			}
 			// Devolvemos presentador como iniciador
 			final DatosUsuario iniciador = pVariablesFlujo.getUsuario();
@@ -213,7 +213,7 @@ public final class ControladorPasoRegistrarHelper {
 		if (ValidacionesTipo.getInstance().esNifPersonaJuridica(datosPresentacion.getPresentador().getNif())
 				&& resultado == null) {
 			throw new ErrorConfiguracionException(
-					"El nif del presentador es de persona jurídica pero el trámite no está configurado para establecer la información de representación");
+					"El nif del presentador és de persona jurídica però el tràmite no està configurat per establir la informació de representació");
 		}
 
 		return resultado;
@@ -289,7 +289,7 @@ public final class ControladorPasoRegistrarHelper {
 				// TODO VER SI GENERAR EXCEPCION O NO GENERAR AVISO
 				if (!ValidacionesTipo.getInstance().esEmail(resAviso.getEmail())) {
 					throw new ErrorConfiguracionException(
-							"No se ha especificado email válido para aviso: " + resAviso.getEmail());
+							"No s'ha especificat email vàlid per avís: " + resAviso.getEmail());
 				}
 				aviso.setAvisar(TypeSiNo.SI);
 				aviso.setEmail(resAviso.getEmail());
@@ -344,7 +344,7 @@ public final class ControladorPasoRegistrarHelper {
 			if (resRepresentado == null || resRepresentado.isNulo()) {
 				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_REPRESENTACION_REGISTRO.name(),
 						pVariablesFlujo.getIdSesionTramitacion(), idPaso,
-						"El trámite admite representacion y no se ha especificado representado en el script");
+						"El tràmite admet representació i no s'ha especificat representat al script");
 			}
 			representado = new DatosInteresado(resRepresentado.getNif(), resRepresentado.getNombre(),
 					resRepresentado.getApellido1(), resRepresentado.getApellido2(),

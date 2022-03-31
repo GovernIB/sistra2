@@ -23,6 +23,12 @@ public final class AsistenteConfig {
 	/** Timeout ajax para registro (0 sin timeout). */
 	private String timeoutAjaxRegistro = "0";
 
+	/** Iframe firma width. */
+	private String iframeFirmaWidth;
+
+	/** Iframe firma height. */
+	private String iframeFirmaHeight;
+
 	/**
 	 * Método de acceso a url.
 	 *
@@ -116,6 +122,44 @@ public final class AsistenteConfig {
 	 */
 	public void setTimeoutAjaxRegistro(final String timeoutAjaxRegistro) {
 		this.timeoutAjaxRegistro = timeoutAjaxRegistro;
+	}
+
+	/**
+	 * Método de acceso a iframeFirmaWidth.
+	 *
+	 * @return iframeFirmaWidth
+	 */
+	public String getIframeFirmaWidth() {
+		return iframeFirmaWidth;
+	}
+
+	/**
+	 * Método para establecer iframeFirmaWidth.
+	 *
+	 * @param iframeFirmaWidth
+	 *                             iframeFirmaWidth a establecer
+	 */
+	public void setIframeFirmaWidth(final String iframeFirmaWidth) {
+		this.iframeFirmaWidth = iframeFirmaWidth;
+	}
+
+	/**
+	 * Método de acceso a iframeFirmaHeight.
+	 *
+	 * @return iframeFirmaHeight
+	 */
+	public String getIframeFirmaHeight() {
+		return iframeFirmaHeight;
+	}
+
+	/**
+	 * Método para establecer iframeFirmaHeight.
+	 *
+	 * @param iframeFirmaHeight
+	 *                              iframeFirmaHeight a establecer
+	 */
+	public void setIframeFirmaHeight(final String iframeFirmaHeight) {
+		this.iframeFirmaHeight = iframeFirmaHeight;
 	}
 
 }

@@ -32,10 +32,10 @@ public class FormularioTramite extends ModelApi {
 	/** Orden. **/
 	private int orden;
 
-	/** Formulario. **/
+	/** Formulario interno. **/
 	private Long idFormularioInterno;
 
-	/** Formulario. **/
+	/** ID Formulario externo. **/
 	private String idFormularioExterno;
 
 	/**
@@ -380,4 +380,5 @@ public class FormularioTramite extends ModelApi {
 	public void setFormularioGestorExterno(final GestorExternoFormularios formularioGestorExterno) {
 		this.formularioGestorExterno = formularioGestorExterno;
 	}
+
 }

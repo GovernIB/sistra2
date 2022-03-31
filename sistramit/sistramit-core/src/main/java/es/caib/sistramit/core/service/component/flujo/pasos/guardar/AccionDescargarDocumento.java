@@ -65,7 +65,7 @@ public final class AccionDescargarDocumento implements AccionPaso {
 			break;
 		default:
 			throw new AccionPasoNoPermitidaException(
-					"No existe documento registro con id: " + idDocumento + " - " + instanciaStr);
+					"No existeix document registre amb id: " + idDocumento + " - " + instanciaStr);
 		}
 
 		// Si el documento está firmado por un solo firmante y es PADES, directamente

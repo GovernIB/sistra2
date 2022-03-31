@@ -140,5 +140,9 @@ public enum TypeParametroVentana {
 	/**
 	 * Filas
 	 */
-	ROWS;
+	ROWS,
+	/**
+	 * Parámetro que indica si hay que poner el editor de texto en html
+	 */
+	LITERAL_HTML;
 }

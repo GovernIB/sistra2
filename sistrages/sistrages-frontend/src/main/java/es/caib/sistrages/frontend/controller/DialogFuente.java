@@ -222,10 +222,11 @@ public class DialogFuente extends DialogControllerBase {
 			}
 		}
 
+		Long lIdArea = (idArea == null) ? null : Long.valueOf(idArea);
 		switch (acceso) {
 		case ALTA:
 			// Verifica unicidad codigo
-			if (dominioService.loadFuenteDato(this.data.getIdentificador()) != null) {
+			if (dominioService.existeFuenteDato(TypeAmbito.fromString(ambito), this.data.getIdentificador(), UtilJSF.getIdEntidad(), lIdArea, null)) {
 				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return;
 			}
@@ -234,14 +235,15 @@ public class DialogFuente extends DialogControllerBase {
 			break;
 		case EDICION:
 			// Verifica unicidad codigo
-			final FuenteDatos d = dominioService.loadFuenteDato(this.data.getIdentificador());
-			if (d != null && d.getCodigo().longValue() != this.data.getCodigo().longValue()) {
+
+			if (dominioService.existeFuenteDato(TypeAmbito.fromString(ambito), this.data.getIdentificador(), UtilJSF.getIdEntidad(), lIdArea, this.data.getCodigo())) {
 				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return;
 			}
 			try {
 				this.dominioService.updateFuenteDato(this.data);
 			} catch (final Exception ex) {
+				UtilJSF.loggearErrorFront("Error actualizando fuente de datos", ex);
 				if (ex.getCause() instanceof FuenteDatosPkException) {
 					addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importarCSV.error.pk"));
 					return;

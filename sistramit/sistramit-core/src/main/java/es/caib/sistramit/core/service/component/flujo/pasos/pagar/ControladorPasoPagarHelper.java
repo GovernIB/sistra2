@@ -145,7 +145,7 @@ public final class ControladorPasoPagarHelper {
 
             return res;
         } catch (final UnsupportedEncodingException uee) {
-            throw new XmlPagoException("Encoding UTF-8 no soportado", uee);
+            throw new XmlPagoException("Encoding UTF-8 no suportat", uee);
         } catch (final XmlException | ParseException e) {
             throw new XmlPagoException("Error al interpretar xml", e);
         }

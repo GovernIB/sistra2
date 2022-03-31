@@ -11,20 +11,19 @@ import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
 @SuppressWarnings("serial")
 public final class TramiteCaducadoException extends ServiceRollbackException {
 
-    @Override
-    public TypeNivelExcepcion getNivel() {
-        // TramiteCaducadoException FATAL.
-        return TypeNivelExcepcion.FATAL;
-    }
+	@Override
+	public TypeNivelExcepcion getNivel() {
+		// TramiteCaducadoException FATAL.
+		return TypeNivelExcepcion.FATAL;
+	}
 
-    /**
-     * Constructor TramiteCaducadoException.
-     *
-     * @param pIdSesionTramite
-     *            Id sesion tramite.
-     */
-    public TramiteCaducadoException(final String pIdSesionTramite) {
-        super("Tramite " + pIdSesionTramite + " finalizado");
-    }
+	/**
+	 * Constructor TramiteCaducadoException.
+	 *
+	 * @param pIdSesionTramite Id sesion tramite.
+	 */
+	public TramiteCaducadoException(final String pIdSesionTramite) {
+		super("Tràmite " + pIdSesionTramite + " finalitzat");
+	}
 
 }

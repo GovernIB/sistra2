@@ -20,6 +20,7 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.Anexo;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoAnexar;
 import es.caib.sistramit.core.api.model.flujo.Fichero;
+import es.caib.sistramit.core.api.model.flujo.Firmante;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.PlantillaAnexo;
@@ -27,6 +28,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoAnexar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedad;
+import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedadFirmante;
 import es.caib.sistramit.core.api.model.flujo.types.TypePlantillaAnexo;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
@@ -158,7 +160,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 			accionPaso = accionBorrarAnexo;
 			break;
 		default:
-			throw new AccionPasoNoExisteException("No existe acción " + pAccionPaso + " en el paso Anexar");
+			throw new AccionPasoNoExisteException("No existeix acció " + pAccionPaso + " a la passa Anexar");
 		}
 		final RespuestaEjecutarAccionPaso rp = accionPaso.ejecutarAccionPaso(pDatosPaso, pDpp, pAccionPaso, pParametros,
 				pDefinicionTramite, pVariablesFlujo);
@@ -268,7 +270,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 		anexos.addAll(anexosDin);
 		for (final Anexo a : anexos) {
 			if (ids.contains(a.getId())) {
-				throw new ErrorConfiguracionException("Id anexo repetido: " + a.getId());
+				throw new ErrorConfiguracionException("Id annex repetit: " + a.getId());
 			}
 			ids.add(a.getId());
 		}
@@ -389,7 +391,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 				if (verificarIdAnexoRepetido(anexos, anexd.getIdentificador())) {
 					throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_LISTA_DINAMICA_ANEXOS.name(),
 							pVariablesFlujo.getIdSesionTramitacion(), null,
-							"Id anexo repetido: " + anexd.getIdentificador());
+							"Id annex repetit: " + anexd.getIdentificador());
 				}
 
 				final Anexo anexo = Anexo.createNewAnexo();
@@ -420,7 +422,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 				}
 				if (anexd.isFirmar()) {
 					anexo.setFirmar(TypeSiNo.SI);
-					final Persona f = Persona.createNewPersona();
+					final Firmante f = Firmante.createNewFirmante();
 					f.setNif(pVariablesFlujo.getUsuario().getNif());
 					f.setNombre(pVariablesFlujo.getUsuario().getNombreApellidos());
 					anexo.getFirmantes().add(f);
@@ -567,18 +569,13 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 					pDefinicionTramite);
 
 			final ResFirmantes resf = (ResFirmantes) rs.getResultado();
-			if (resf.getFirmantes().isEmpty()) {
+			List<Firmante> firmantes = resf.calcularFirmantes();
+			if (firmantes.isEmpty()) {
 				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_FIRMANTES.name(),
 						pVariablesFlujo.getIdSesionTramitacion(), anexoDef.getIdentificador(),
-						"No se han especificado firmantes");
+						"No s'han especificat signants");
 			}
-
-			for (final Persona p : resf.getFirmantes()) {
-				final Persona f = Persona.createNewPersona();
-				f.setNif(p.getNif());
-				f.setNombre(p.getNombre());
-				anexoDetalle.getFirmantes().add(f);
-			}
+			anexoDetalle.setFirmantes(firmantes);
 
 		} else {
 			// Si no tiene script de firmantes, el único firmante sería el
@@ -587,12 +584,13 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 			if (pVariablesFlujo.getNivelAutenticacion() == TypeAutenticacion.ANONIMO) {
 				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_FIRMANTES.name(),
 						pVariablesFlujo.getIdSesionTramitacion(), anexoDef.getIdentificador(),
-						"El trámite es anónimo y no se ha establecido script de firmantes");
+						"El tràmit és anònim i no s'ha establert script de firmants");
 			}
 			final Persona f = new Persona();
 			f.setNif(pVariablesFlujo.getUsuario().getNif());
 			f.setNombre(pVariablesFlujo.getUsuario().getNombreApellidos());
-			anexoDetalle.getFirmantes().add(f);
+			anexoDetalle.getFirmantes()
+					.add(new Firmante(f.getNif(), f.getNombre(), TypeObligatoriedadFirmante.OBLIGATORIO));
 		}
 	}
 
@@ -612,7 +610,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 			final RAnexoTramite detalle, final VariablesFlujo pVariablesFlujo) {
 		TypeObligatoriedad rs = TypeObligatoriedad.fromString(detalle.getObligatoriedad());
 		if (rs == null) {
-			throw new TipoNoControladoException("Tipo de obligatoriedad no controlado");
+			throw new TipoNoControladoException("Tipus d'obligatoriedad no controlat");
 		}
 		// Si es dependiente ejecutamos script de dependencia
 		if (rs == TypeObligatoriedad.DEPENDIENTE) {
@@ -795,7 +793,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 			default:
 				// El tipo RELLENADO_INCORRECTAMENTE no aplica a anexos
 				throw new TipoNoControladoException(
-						"Tipo rellenado " + a.getRellenado().name() + " no valido para anexo");
+						"Tipus emplenat " + a.getRellenado().name() + " no vàlid per annex");
 			}
 
 			// Si esta pendiente de asistente no hace falta seguir mirando

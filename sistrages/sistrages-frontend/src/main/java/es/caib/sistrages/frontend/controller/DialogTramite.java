@@ -81,7 +81,7 @@ public class DialogTramite extends DialogControllerBase {
 	 * @return
 	 */
 	private boolean isIdentificadorRepetido() {
-		return tramiteService.checkIdentificadorRepetido(data.getIdentificador(), data.getCodigo());
+		return tramiteService.checkIdentificadorRepetido( data.getIdentificador(), data.getCodigo(), Long.valueOf(idArea));
 	}
 
 	/**

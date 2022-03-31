@@ -6,7 +6,7 @@ div.imc-select { display: inline-block; position: relative; width: 100%; }
 
 	div.imc-select a.imc-select { overflow: hidden; display: inline-block; position: relative; height: 2.2em; color: #626A72; padding: .2em 2em 0 .2em; background-color: #fff; border: 3px solid #ccc; }
 	div.imc-select a.imc-select:hover { border-color: #999; }
-	div.imc-select a.imc-select:focus { background-color: #f9f9e8; border-color: #333; }
+	div.imc-select a.imc-select:focus { background-color: #f9f9e8; border-color: #4dba79; }
 		div.imc-select a.imc-select span { overflow: hidden; display: inline-block; white-space: nowrap; padding-top: .1em; margin-right: 1.5em; }
 
 div.imc-select a.imc-select::before {
@@ -72,6 +72,8 @@ div.imc-select a.imc-select.imc-select-lectura:focus { background-color: #f9f9e8
     background-color: #000;
 }
 
+.imc-form .imc-el-index[data-lectura="s"] .imc-el-control a.imc-select { width: 100%; }
+.imc-el-index[data-lectura="s"] button.imc--bt-reset { display: none; }
 
 
 
@@ -82,7 +84,7 @@ div.imc-opcions .imc-select-submenu { display: none; position: absolute; z-index
 div.imc-opcions ul { overflow: auto; max-height: 20em; list-style: none; margin: 0 !important; }
 	div.imc-opcions ul a { display: block; font-size: 1em; padding: .3em .5em; }
 	div.imc-opcions ul a:hover
-	,div.imc-opcions ul a.hover { background-color: #cc073c; }
+	,div.imc-opcions ul a.hover { background-color: #265d3c; }
 	div.imc-opcions ul li { padding: 0; }
 	div.imc-opcions ul li.imc-select-seleccionat a { font-style: italic; color: #999; background-color: transparent; cursor: default; }
 
@@ -307,6 +309,13 @@ div.imc-select-lectura a.imc-select:focus { background: none; background-color: 
 	background: transparent url(forms/imgs/ico_error.svg) no-repeat center center / auto 100%;
 }
 
+
+/* teclat */
+
+.imc--teclat { position: absolute; z-index: 3; top: 1.6em; left: 0; font-size: .8em; color: #fff; padding: .3em .5em; background-color: #333; }
+
+
+
 /* input check */
 
 .imc-input-check { overflow: hidden; display: inline-block; position: relative; vertical-align: middle; }
@@ -339,8 +348,8 @@ div.imc-select-lectura a.imc-select:focus { background: none; background-color: 
 .imc-input-check input:disabled ~ label:focus::before { background-color: #666 !important; }
 
 .imc-input-check input:checked:disabled ~ label { display: inline-block; color: #333; cursor: default; }
-.imc-input-check input:checked:disabled ~ label::before { background-color: #000; }
-.imc-input-check input:checked:disabled ~ label:focus::before { background-color: #368355 !important; background-image: url(forms/imgs/ico_input_check.svg); }
+.imc-input-check input:checked:disabled ~ label::before { background-color: #666 !important; }
+.imc-input-check input:checked:disabled ~ label:focus::before { background-color: #666 !important; }
 
 .imc-el-error .imc-input-check input ~ label { color: #c00 !important; }
 .imc-el-error .imc-input-check input ~ label::before { background-color: #c00; }
@@ -399,3 +408,51 @@ fieldset.imc-element .imc-input-check label::before,
 fieldset.imc-element .imc-input-radio label::before {
 	margin-left: .3em;
 }
+
+
+
+/* input dinàmic ajax */
+
+div.imc-element[data-contingut="a"] .imc-el-control { position: relative; }
+
+div.imc-element[data-contingut="a"] .imc--selector-opcions-ajax { overflow: auto; position: absolute; z-index: 2; top: 2.2em; left: .8em; width: calc(100% - 1.6em); max-height: 10em; background-color: #fff; border: 1px solid #B9BBBD; box-shadow: .2em .2em .5em rgb(150,150,150); transition: visibility .2s cubic-bezier(0,.78,.25,1), opacity .2s cubic-bezier(0,.78,.25,1); }
+
+div.imc-element[data-contingut="a"] .imc--selector-opcions-ajax[aria-hidden="true"] { visibility: hidden; opacity: 0; }
+div.imc-element[data-contingut="a"] .imc--selector-opcions-ajax[aria-hidden="false"] { visibility: visible; opacity: 1; transition: visibility 0s ease-out, opacity .2s cubic-bezier(0,.78,.25,1); }
+
+div.imc-element[data-contingut="a"] .imc--carregant { font-size: .9em; font-style: italic; padding: .5em; }
+
+div.imc-element[data-contingut="a"] .imc--carregant::before {
+	content: ""; display: inline-block; vertical-align: middle; width: 1em; height: 1em; margin-right: .5em; border: .1em solid transparent; border-top-color: #4dba79; border-bottom-color: #4dba79; border-radius: 50%;
+	animation-name: carregant; animation-duration: 1s; animation-iteration-count: infinite; animation-timing-function: linear;
+}
+
+div.imc-element[data-contingut="a"] .imc--sense-resultats { font-weight: bold; padding: .5em; }
+
+div.imc-element[data-contingut="a"] .imc--selector-opcions-ajax ul { margin: 0; }
+div.imc-element[data-contingut="a"] .imc--selector-opcions-ajax ul li button { width: 100%; font-size: 1em; text-align: left; padding-right: .5em; padding-left: .5em; background-color: transparent; }
+div.imc-element[data-contingut="a"] .imc--selector-opcions-ajax ul li button span { color: #265d3c; }
+
+div.imc-element[data-contingut="a"] .imc--selector-opcions-ajax ul li button:hover,
+div.imc-element[data-contingut="a"] .imc--selector-opcions-ajax ul li button:focus { background-color: #265d3c; }
+
+div.imc-element[data-contingut="a"] .imc--selector-opcions-ajax ul li button:hover span,
+div.imc-element[data-contingut="a"] .imc--selector-opcions-ajax ul li button:focus span { color: #fff; }
+
+
+div.imc-element[data-contingut="a"] button[data-accio="seleccio-elimina"] { position: absolute; z-index: 1; top: .25em; right: 1em; height: 1.55em; background: #265d3c url(forms/imgs/ico_tanca_fff.svg) no-repeat center center / auto .7em; }
+div.imc-element[data-contingut="a"] button[data-accio="seleccio-elimina"] span { position: absolute; top: -999em; left: -999em; }
+
+div.imc-element[data-contingut="a"] button[data-accio="seleccio-elimina"]:hover,
+div.imc-element[data-contingut="a"] button[data-accio="seleccio-elimina"]:focus { background-color: #000; }
+
+div.imc-element[data-contingut="a"] textarea { overflow: hidden; height: 2em; min-height: 2em; padding-right: 2.5em; resize: none; }
+
+div.imc-element[data-contingut="a"] .imc--selector-ajax-altura { position: absolute; z-index: -1; top: 2.2em; left: .8em; width: calc(100% - 1.6em); font-size: 110%; padding: .4em 2.5em .4em .3em; opacity: .5; }
+
+
+div.imc-element[data-contingut="a"][data-lectura="s"] textarea { padding-right: .5em; }
+div.imc-element[data-contingut="a"][data-lectura="s"] button[data-accio="seleccio-elimina"] { display: none; }
+
+
+

@@ -446,6 +446,21 @@ body{
   padding-bottom: 0px !important;
 }
 
+.pb1 {
+  padding-bottom: 1px !important;
+}
+.pb2 {
+  padding-bottom: 2px !important;
+}
+.pb3 {
+  padding-bottom: 3px !important;
+}
+.pb4 {
+  padding-bottom: 4px !important;
+}
+.pb5 {
+  padding-bottom: 5px !important;
+}
 .noPadding-top {
   padding-top: 0px !important;
 }

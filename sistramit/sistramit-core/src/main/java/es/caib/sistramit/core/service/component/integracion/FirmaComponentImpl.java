@@ -77,7 +77,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 		try {
 			sf = plgFirma.generarSesionFirma(infoSesionFirma);
 		} catch (final FirmaPluginException e) {
-			throw new SesionFirmaClienteException("Excepción al generar sesión firma: " + e.getMessage(), e);
+			throw new SesionFirmaClienteException("Excepció al generar sessió firma: " + e.getMessage(), e);
 		}
 
 		// Añade fichero
@@ -96,7 +96,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 		fichero.setSesion(sf);
 		final TypeTipoDocumental tipoDoc = TypeTipoDocumental.fromString(tipoDocumental);
 		if (tipoDoc == null) {
-			throw new SesionFirmaClienteException("No se reconoce tipo documental: " + tipoDocumental);
+			throw new SesionFirmaClienteException("No es reconeix tipus documental: " + tipoDocumental);
 		}
 		fichero.setTipoDocumental(tipoDoc);
 		try {
@@ -105,7 +105,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 			final ListaPropiedades lp = new ListaPropiedades();
 			lp.addPropiedad("fileId", fileId);
 			lp.addPropiedad("idSesionFirma", sf);
-			throw new SesionFirmaClienteException("Excepción al enviar fichero a firmar: " + e.getMessage(), e, lp);
+			throw new SesionFirmaClienteException("Excepció al enviar fitxer a signar: " + e.getMessage(), e, lp);
 		}
 
 		// Iniciar sesion firma
@@ -116,7 +116,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 			final ListaPropiedades lp = new ListaPropiedades();
 			lp.addPropiedad("fileId", fileId);
 			lp.addPropiedad("idSesionFirma", sf);
-			throw new SesionFirmaClienteException("Excepción al iniciar sesión firma: " + e.getMessage(), e, lp);
+			throw new SesionFirmaClienteException("Excepció al iniciar sessió signatura: " + e.getMessage(), e, lp);
 		}
 
 		final RedireccionFirma res = new RedireccionFirma();
@@ -138,14 +138,14 @@ public final class FirmaComponentImpl implements FirmaComponent {
 		try {
 			final TypeEstadoFirmado estado = plgFirma.obtenerEstadoSesionFirma(sesionFirma);
 			if (estado == null) {
-				throw new SesionFirmaClienteException("No se ha recuperado estado firma");
+				throw new SesionFirmaClienteException("No s'ha recuperat estat signatura");
 			}
 			if (estado == TypeEstadoFirmado.FINALIZADO_OK) {
 				// Recoge firma
 				final FicheroFirmado fic = plgFirma.obtenerFirmaFichero(sesionFirma, fileId);
 				final TypeFirmaDigital tipoFirma = TypeFirmaDigital.fromString(fic.getFirmaTipo().toString());
 				if (tipoFirma == null) {
-					throw new SesionFirmaClienteException("Tipo firma no reconocida: " + fic.getFirmaTipo().toString());
+					throw new SesionFirmaClienteException("Tipus signatura no reconeguda: " + fic.getFirmaTipo().toString());
 				}
 				// Establece datos firma
 				resFirma.setFinalizada(true);
@@ -157,14 +157,14 @@ public final class FirmaComponentImpl implements FirmaComponent {
 				resFirma.setCancelada(true);
 			}
 		} catch (final FirmaPluginException ex) {
-			throw new SesionFirmaClienteException("Error accediendo a plugin firma cliente: " + ex.getMessage(), ex);
+			throw new SesionFirmaClienteException("Error accedint a plugin firma client: " + ex.getMessage(), ex);
 		}
 
 		// Cerramos sesion firma (no gestionamos excepcion)
 		try {
 			plgFirma.cerrarSesionFirma(sesionFirma);
 		} catch (final FirmaPluginException ex) {
-			LOGGER.warn("Error cerrando sesion de firma cliente: " + ex.getMessage(), ex);
+			LOGGER.warn("Error tancant sessió de firma client: " + ex.getMessage(), ex);
 		}
 		return resFirma;
 	}
@@ -195,7 +195,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 			validateResponse = plgValidaFirma.validateSignature(validateRequest);
 		} catch (final Exception e) {
 			throw new ValidacionFirmaException(
-					"Error accediendo a plugin de validación de firma en servidor: " + e.getMessage(), e);
+					"Error accedint a plugin de validació de firma en servidor: " + e.getMessage(), e);
 		}
 
 		// Verifica si ha firmado el firmante

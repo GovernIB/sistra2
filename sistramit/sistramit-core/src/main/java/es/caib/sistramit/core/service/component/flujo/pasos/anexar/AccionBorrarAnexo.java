@@ -88,7 +88,7 @@ public final class AccionBorrarAnexo implements AccionPaso {
 		// Recuperamos instancia documento
 		final DocumentoPasoPersistencia docPersistencia = pDpp.getDocumentoPasoPersistencia(pIdAnexo, pInstancia);
 		if (docPersistencia == null) {
-			throw new AccionPasoNoPermitidaException("No existe instancia del documento");
+			throw new AccionPasoNoPermitidaException("No existeix instancia del document");
 		}
 
 		// - Marcamos los ficheros para borrar (fichero anexo y ficheros firmas)
