@@ -714,7 +714,7 @@ public class ViewTramites extends ViewControllerBase {
 
 		} else if (verificarFilaSeleccionadaVersion()) {
 			final Tramite tramite = tramiteService.getTramite(this.versionSeleccionada.getIdTramite());
-			params.put(TypeParametroVentana.ID.toString(), tramite.getIdentificador());
+			params.put(TypeParametroVentana.ID.toString(), tramite.getIdentificadorCompuesto());
 			params.put(TypeParametroVentana.VERSION.toString(),
 					String.valueOf(this.versionSeleccionada.getNumeroVersion()));
 

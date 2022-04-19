@@ -61,6 +61,7 @@
 				</h:panelGrid>
 
 				<p:spacer height="20px"/>
+
 				<p:dataTable  id="dataTable" var="dt" value="#{viewMigracion.listaErrores}"
 							emptyMessage="#{msg['error.emptyRows']}" styleClass="margin-left-25 margin-right-25"
 							scrollable="true" scrollHeight="400" rendered="#{viewMigracion.listaErrores.size() > 0}"
@@ -80,6 +81,9 @@
 						</p:column>
 				</p:dataTable>
 				<p:outputLabel id="labelExcepcion" value="#{msg['viewMigracion.excBBDD']}"  style="#{viewMigracion.setVisibleExcepcion(1)}"/>
+				<p:commandButton value="#{msg['botones.exportar']}" ajax="false" style="#{viewMigracion.estilo}">
+					<p:fileDownload value="#{viewMigracion.exportarErrores}"></p:fileDownload>
+				</p:commandButton>
 			</p:panel>
 		<h:outputScript>
 		$("#comboTramitesSistra_filter").on('paste.ui-selectonemenu', function() {

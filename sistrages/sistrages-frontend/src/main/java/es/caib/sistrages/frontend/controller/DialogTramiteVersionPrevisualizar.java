@@ -149,7 +149,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 			iplugin = (ICatalogoProcedimientosPlugin) componenteService
 					.obtenerPluginEntidad(TypePlugin.CATALOGO_PROCEDIMIENTOS, UtilJSF.getIdEntidad());
 
-			tramites = iplugin.obtenerTramites(tramite.getIdentificador(), this.data.getNumeroVersion(), idioma);
+			tramites = iplugin.obtenerTramites(tramite.getIdentificadorCompuesto(), this.data.getNumeroVersion(), idioma);
 			if (tramiteSeleccionado == null && tramites != null && !tramites.isEmpty()) {
 				tramiteSeleccionado = tramites.get(0).getIdentificador();
 			}

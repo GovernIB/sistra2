@@ -83,10 +83,31 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	/**
+	 * Abre dialogo de dominios.
+	 *
+	 */
+	public void dominios() {
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.data.getCodigo()));
+		if (ambito != null) {
+			params.put(TypeParametroVentana.AMBITO.toString(), ambito);
+			final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
+			if (typeAmbito == TypeAmbito.AREA) {
+				params.put("AREA", id);
+			}
+			if (typeAmbito == TypeAmbito.ENTIDAD) {
+				params.put("ENTIDAD", id);
+			}
+		}
+		UtilJSF.openDialog(DialogFuenteDominios.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
+	}
+
+	/**
 	 * Retorno dialogo de los botones de FuenteDatosCampoes.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -226,7 +247,8 @@ public class DialogFuente extends DialogControllerBase {
 		switch (acceso) {
 		case ALTA:
 			// Verifica unicidad codigo
-			if (dominioService.existeFuenteDato(TypeAmbito.fromString(ambito), this.data.getIdentificador(), UtilJSF.getIdEntidad(), lIdArea, null)) {
+			if (dominioService.existeFuenteDato(TypeAmbito.fromString(ambito), this.data.getIdentificador(),
+					UtilJSF.getIdEntidad(), lIdArea, null)) {
 				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return;
 			}
@@ -236,7 +258,8 @@ public class DialogFuente extends DialogControllerBase {
 		case EDICION:
 			// Verifica unicidad codigo
 
-			if (dominioService.existeFuenteDato(TypeAmbito.fromString(ambito), this.data.getIdentificador(), UtilJSF.getIdEntidad(), lIdArea, this.data.getCodigo())) {
+			if (dominioService.existeFuenteDato(TypeAmbito.fromString(ambito), this.data.getIdentificador(),
+					UtilJSF.getIdEntidad(), lIdArea, this.data.getCodigo())) {
 				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return;
 			}
@@ -367,8 +390,7 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *               the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -382,8 +404,7 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *                 the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final FuenteDatos data) {
 		this.data = data;
@@ -397,8 +418,7 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	/**
-	 * @param valorSeleccionado
-	 *                              the valorSeleccionado to set
+	 * @param valorSeleccionado the valorSeleccionado to set
 	 */
 	public void setValorSeleccionado(final FuenteDatosCampo valorSeleccionado) {
 		this.valorSeleccionado = valorSeleccionado;
@@ -412,8 +432,7 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idArea
-	 *                   the idArea to set
+	 * @param idArea the idArea to set
 	 */
 	public void setIdArea(final String idArea) {
 		this.idArea = idArea;
@@ -427,8 +446,7 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	/**
-	 * @param ambito
-	 *                   the ambito to set
+	 * @param ambito the ambito to set
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;

@@ -26,9 +26,9 @@
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
-		<f:viewParam name="MODO_ACCESO" value="#{dialogDominioTramites.modoAcceso}"/>
-		<f:viewParam name="ID" value="#{dialogDominioTramites.id}"/>
-		<f:viewAction action="#{dialogDominioTramites.init}" />
+		<f:viewParam name="MODO_ACCESO" value="#{dialogFuenteDominios.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogFuenteDominios.id}"/>
+		<f:viewAction action="#{dialogFuenteDominios.init}" />
 	</f:metadata>
 	<h:form id="dialogFuenteDatos"  styleClass="margin-top-10">
 
@@ -39,45 +39,42 @@
 
 			<p:dataTable  id="dataTableDatos"
 						  var="td"
-						  value="#{dialogDominioTramites.campos}"
+						  value="#{dialogFuenteDominios.campos}"
 						  rows="10"
 						  emptyMessage="#{msg['error.emptyRows']}"
 						  scrollable="true"
 						  scrollHeight="100%"
 						  styleClass="h100"
+						  style="margin-bottom:40px;"
                           paginator="true"
                           paginatorPosition="bottom"
                           paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                           rowsPerPageTemplate="5,10,15,30"
 			        	  selectionMode="single"
-			        	  selection="#{dialogDominioTramites.valorSeleccionado}"
+			        	  selection="#{dialogFuenteDominios.valorSeleccionado}"
 			        	  rowIndexVar="rowIndex"
-			        	  rowKey="#{td.tramiteVersion}">
+			        	  rowKey="#{td.identificadorCompuesto}">
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
 				<p:ajax event="rowSelect" global="false" />
 				<p:ajax event="rowUnselect" />
 
-			    <p:column headerText="#{msg['dialogDominioTramites.headerTramite']}" style="width:25%">
-			        <h:outputText value="${dialogDominioTramites.getIdCompuesto(td.idTramiteVersion, td.area)}"/>
+			    <p:column headerText="#{msg['dialogDisenyoFormulario.componente.dominio']}" style="width:25%">
+			        <h:outputText value="${td.identificadorCompuesto}"/>
 			        <br/><br/>
-			        <p:commandButton value="#{msg['botones.copiar']}" onclick="copyClipBorad('${dialogDominioTramites.getIdCompuesto(td.idTramiteVersion, td.area)}');" type="button" />
+			        <p:commandButton value="#{msg['botones.copiar']}" onclick="copyClipBorad('${td.identificadorCompuesto}');" type="button" />
+			    </p:column>
+
+				<p:column headerText="#{msg['viewDefinicionVersionDominios.headerDescripcion']}">
+			        <h:outputText value="${td.descripcion}" />
 			    </p:column>
 
 			    <p:column headerText="#{msg['dialogDominioTramites.headerEntidad']}">
-			        <h:outputText value="${td.entidad.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" />
+			        <h:outputText value="${dialogFuenteDominios.getIdEntidadDominio(td.entidad)}" />
 			    </p:column>
 
 			     <p:column headerText="#{msg['dialogDominioTramites.headerArea']}">
-			        <h:outputText value="${td.area}" />
-			    </p:column>
-
-			     <p:column headerText="#{msg['dialogDominioTramites.headerNumVersion']}" style="width:1%">
-			        <h:outputText value="${td.numVersion}" />
-			    </p:column>
-
-			     <p:column headerText="#{msg['dialogDominioTramites.headerRelease']}"  style="width:1%">
-			        <h:outputText value="${td.release}" />
+			        <h:outputText value="${td.area.getIdentificadorCompuesto()}" />
 			    </p:column>
 
 			</p:dataTable>
@@ -87,7 +84,7 @@
 	  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominioTramites.aceptar()}" process="@form" update="@form growlDialog" styleClass="boton-azul"  />
+		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogFuenteDominios.aceptar()}" process="@form" update="@form growlDialog" styleClass="boton-azul"  />
 					</f:facet>
 				</p:toolbar>
 		 </p:outputPanel>

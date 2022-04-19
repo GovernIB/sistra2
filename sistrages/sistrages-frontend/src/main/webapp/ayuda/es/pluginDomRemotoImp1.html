@@ -9,17 +9,16 @@
 	<p>Este plugin no requiere de ninguna propiedad para su configuración.</p>
 	<br>
 	<h2>Configuración de dominios de SISTRA1 (SOAP)</h2>
-	<p>Para configurar un dominio SISTRA1 que utiliza SOAP, hay que definir la URL del dominio especificando el prefijo [SISTRA1].
-	 El plugin comprobará si la URL va precedida de “[SISTRA1]” y lo tomará como un servicio SOAP de SISTRA1. <br><br>
+	<p>	Para configurar un dominio que siguen el contrato SOAP (utilizado en SISTRA1), hay que definir la URL del dominio especificando el prefijo [SOAP] (y sin que aparezca “?wsdl” al final).
+		El plugin comprobará si la URL va precedida del TAG “[SOAP]” y lo tomará como un servicio SOAP<br><br>
 
-	 Para configurar un dominio SISTRA1 que utiliza un WS contra SAP, usando el soap-action, debe anteponerse el prefijo
-	 [SISTRA1][SOAP-ACTION=urlSoapAction]url. <br><br>
-	 Por ejemplo: Si en SISTRA 1 se tiene un dominio con la siguiente URL: <b>https://geminis.caib.es:52001/sap/xi/engine?type=entry&amp;version=3.0&amp;Sender.Service=RHAPSODY_HERMES_SYSTRA&amp;Interface=urn:es:caib:sistra:ws:v2:model:SistraFacade^SI_Comunicaciones_Systra_SAP</b>,
-	  en SISTRA2 se debe especificar la url de la siguiente forma:
-	 <b>[SISTRA1][SOAP-ACTION=http://sap.com/xi/WebService/soap1.1]http://geminis:50800/sap/xi/engine?type=entry&amp;version=3.0&amp;Sender.Service=RHAPSODY_HERMES_SYSTRA&amp;Interface=urn:es:caib:sistra:ws:v2:model:SistraFacade%5ESI_Comunicaciones_Systra_SAP</b>
-	 <br><br>Si el plugin no detecta estos prefijos, lo tomará como un servicio REST basado en el contrato para SISTRA2 que define el plugin.<br>
-	 También hay que tener en cuenta la codificación de las URLs, sobre todo cuando se utilizan URLs complejas como las de los dominios resueltas por SAP. Estas URLs contienen caracteres especiales, como en el ejemplo indicado, el carácter ‘^’.
-	 Este carácter se tiene que sustituir por su codificación pertinente, que en este caso es ‘%5E’ (En el ejemplo que se ha añadido, ya se ha realizado el cambio).  </p>
+		Para configurar un dominio que siguen el contrato SOAP (utilizado en SISTRA1), pero que utiliza un WS contra SAP, usando el soap-action, debe anteponerse el prefijo [SOAP][SOAP-ACTION= =<URL-SOAP>]url.<br><br>
+		Por ejemplo: Si en SISTRA 1 se tiene un dominio con la siguiente URL: <b>https://geminis.caib.es:52001/sap/xi/engine?type=entry&amp;version=3.0&amp;Sender.Service=RHAPSODY_HERMES_SYSTRA&amp;Interface=urn:es:caib:sistra:ws:v2:model:SistraFacade^SI_Comunicaciones_Systra_SAP</b>,
+	  	en SISTRA2 se debe especificar la url de la siguiente forma:
+		<b>[SOAP][SOAP-ACTION=http://sap.com/xi/WebService/soap1.1]http://geminis:50800/sap/xi/engine?type=entry&amp;version=3.0&amp;Sender.Service=RHAPSODY_HERMES_SYSTRA&amp;Interface=urn:es:caib:sistra:ws:v2:model:SistraFacade%5ESI_Comunicaciones_Systra_SAP</b>
+		<br><br>Si el plugin no detecta estos prefijos, lo tomará como un servicio REST basado en el contrato para SISTRA2 que define el plugin.<br>
+		También hay que tener en cuenta la codificación de las URLs, sobre todo cuando se utilizan URLs complejas como las de los dominios resueltas por SAP. Estas URLs contienen caracteres especiales, como en el ejemplo indicado, el carácter ‘^’.
+		Este carácter se tiene que sustituir por su codificación pertinente, que en este caso es ‘%5E’ (En el ejemplo que se ha añadido, ya se ha realizado el cambio).</p>
 
 
 	<h2>Configuración de dominios de SISTRA2 (REST)</h2>

@@ -1,5 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,10 @@ import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.DominioTramite;
+import es.caib.sistrages.core.api.model.FuenteDatos;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.DominioService;
+import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -20,7 +24,7 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
 @ViewScoped
-public class DialogDominioTramites extends DialogControllerBase {
+public class DialogFuenteDominios extends DialogControllerBase {
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -33,17 +37,23 @@ public class DialogDominioTramites extends DialogControllerBase {
 	@Inject
 	private DominioService dominioService;
 
+	@Inject
+	private EntidadService entidadService;
+
 	/** Datos elemento. */
-	private Dominio data;
+	private FuenteDatos data;
+
+	/** listaDominios. **/
+	private List<String> listaDominios;
 
 	/** Campos. **/
-	private List<DominioTramite> campos;
+	private List<Dominio> campos;
 
 	/** Campos en formato JSON. **/
 	private String iCampos;
 
 	/** Fila seleccionada. **/
-	private DominioTramite valorSeleccionado;
+	private Dominio valorSeleccionado;
 
 	/** Ambito. **/
 	private String ambito;
@@ -55,10 +65,24 @@ public class DialogDominioTramites extends DialogControllerBase {
 	 * Inicialización.
 	 */
 	public void init() {
+		data = dominioService.loadFuenteDato(Long.valueOf(id));
+		campos = new ArrayList<Dominio>();
+		listaDominios = dominioService.listDominiosByFD(Long.valueOf(id));
+		if (data.getArea() != null) {
+			buscarDominios(data.getAmbito(), null, data.getArea().getCodigo());
+		} else {
+			buscarDominios(data.getAmbito(), data.getEntidad().getCodigo(), null);
+		}
+	}
 
-		data = dominioService.loadDominio(Long.valueOf(id));
-		campos = tramiteService.getTramiteVersionByDominio(Long.valueOf(id));
-
+	private void buscarDominios(TypeAmbito ambito, Long codigoEntidad, Long codigoArea) {
+		for (String dom : listaDominios) {
+			Dominio dominio = dominioService.loadDominioByIdentificador(ambito, dom, codigoEntidad, codigoArea, null);
+			if (codigoEntidad == null) {
+				dominio.setEntidad(entidadService.loadEntidadByArea(codigoArea).getCodigo());
+			}
+			campos.add(dominio);
+		}
 	}
 
 	/**
@@ -77,10 +101,10 @@ public class DialogDominioTramites extends DialogControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.valorSeleccionado.getIdTramiteVersion()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.valorSeleccionado.getIdentificador()));
 
 		params.put(TypeParametroVentana.MODO_ACCESO.toString(), TypeModoAcceso.CONSULTA.toString());
-		UtilJSF.openDialog(ViewDefinicionVersion.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
+		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
 
 	}
 
@@ -95,10 +119,12 @@ public class DialogDominioTramites extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
-	public String getIdCompuesto(Long idTram, String idArea) {
-		return tramiteService
-				.getTramiteByIdentificador(tramiteService.getIdentificadorByCodigoVersion(idTram), null, idArea, null)
-				.getIdentificadorCompuesto();
+	public String getIdEntidadDominio(Long idEnt) {
+		if (idEnt != null) {
+			return entidadService.loadEntidad(idEnt).getIdentificador();
+		}
+
+		return null;
 	}
 
 	/**
@@ -118,43 +144,43 @@ public class DialogDominioTramites extends DialogControllerBase {
 	/**
 	 * @return the data
 	 */
-	public Dominio getData() {
+	public FuenteDatos getData() {
 		return data;
 	}
 
 	/**
 	 * @param data the data to set
 	 */
-	public void setData(final Dominio data) {
+	public void setData(final FuenteDatos data) {
 		this.data = data;
 	}
 
 	/**
 	 * @return the valorSeleccionado
 	 */
-	public DominioTramite getValorSeleccionado() {
+	public Dominio getValorSeleccionado() {
 		return valorSeleccionado;
 	}
 
 	/**
 	 * @param valorSeleccionado the valorSeleccionado to set
 	 */
-	public void setValorSeleccionado(final DominioTramite valorSeleccionado) {
+	public void setValorSeleccionado(final Dominio valorSeleccionado) {
 		this.valorSeleccionado = valorSeleccionado;
 	}
 
 	/**
 	 * @return the campos
 	 */
-	public List<DominioTramite> getCampos() {
-		return campos;
+	public List<String> getListaDominios() {
+		return listaDominios;
 	}
 
 	/**
 	 * @param campos the campos to set
 	 */
-	public void setCampos(final List<DominioTramite> campos) {
-		this.campos = campos;
+	public void setListaDominios(final List<String> listaDominios) {
+		this.listaDominios = listaDominios;
 	}
 
 	/**
@@ -197,6 +223,20 @@ public class DialogDominioTramites extends DialogControllerBase {
 	 */
 	public void setArea(final String area) {
 		this.area = area;
+	}
+
+	/**
+	 * @return the campos
+	 */
+	public final List<Dominio> getCampos() {
+		return campos;
+	}
+
+	/**
+	 * @param campos the campos to set
+	 */
+	public final void setCampos(List<Dominio> campos) {
+		this.campos = campos;
 	}
 
 }

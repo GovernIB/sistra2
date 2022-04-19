@@ -91,6 +91,13 @@
             <version>1.3.0</version>
         </dependency>
 
+        <!--  Plugin PDF -->
+		<dependency>
+			<groupId>org.fundaciobit.pluginsib.documentconverter</groupId>
+			<artifactId>pluginsib-documentconverter-openoffice</artifactId>
+			<version>${plugins-ib.version}</version>
+		</dependency>
+
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>

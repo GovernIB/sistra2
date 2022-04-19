@@ -65,11 +65,14 @@ import es.caib.sistrages.core.service.repository.dao.FormateadorFormularioDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
 import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
+import org.fundaciobit.plugins.documentconverter.openoffice.OpenOfficeDocumentConverterPlugin;
+import org.fundaciobit.pluginsib.documentconverter.IDocumentConverterPlugin;
+
 
 @Component("validadorComponent")
 public class ValidadorComponentImpl implements ValidadorComponent {
 
-	private static final Pattern PLUGINDOMI_INVOCAR_PATTERN = Pattern.compile("PLUGIN_DOMINIO.invocarDominio\\(\\'("
+	private static final Pattern PLUGINDOMI_INVOCAR_PATTERN = Pattern.compile("PLUGIN_DOMINIOS.invocarDominio\\(\\'("
 			+ ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO + "*?)\\'");
 
 	@Autowired
@@ -214,7 +217,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 			for (Dominio dominio : pListaDominiosNoUsados) {
 				final ErrorValidacion errorVal = new ErrorValidacion();
 				errorVal.setDescripcion(literales.getLiteral("validador", "dominio.nousado", pIdioma));
-				errorVal.setElemento(dominio.getIdentificador());
+				errorVal.setElemento(dominio.getIdentificadorCompuesto());
 				errorVal.setTipo(TypeErrorValidacion.DOMINIOS_ELIMINAR);
 				errorVal.setItem(dominio);
 				listaErrores.add(errorVal);
@@ -668,13 +671,13 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 
 				// Comprueba si hay documentos no convertibles a pdf
 				if (documento.isDebeConvertirPDF()) {
+
+					final IDocumentConverterPlugin pluginConverterPDF = new OpenOfficeDocumentConverterPlugin();
+
+
 					String[] extensiones = documento.getExtensiones().split(";");
 					for (String extension : extensiones) {
-						if (!extension.equals("pdf") && !extension.equals("doc") && !extension.equals("docx")
-								&& !extension.equals("xls") && !extension.equals("xlsx") && !extension.equals("ppt")
-								&& !extension.equals("pptx") && !extension.equals("pps") && !extension.equals("jpg")
-								&& !extension.equals("png") && !extension.equals("gif") && !extension.equals("txt")
-								&& !extension.equals("rtf")) {
+						if (!pluginConverterPDF.isFileExtensionSupported(extension) ) {
 							String[] paramLiteral = { extension };
 							final ErrorValidacion error = new ErrorValidacion(documento.getIdentificador(),
 									literales.getLiteral("validador", "documento.extension", paramLiteral, pIdioma));

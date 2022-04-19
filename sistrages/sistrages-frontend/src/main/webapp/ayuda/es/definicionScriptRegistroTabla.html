@@ -8,7 +8,7 @@
 	<h1 class="stgH1">TABLA SCRIPTS REPRESENTACI&Oacute;N</h1>
 	<p>En esta tabla se explican las diferentes casu&iacute;sticas
 		de representaci&oacute;n.</p>
-	<h2 class="stgH2">TAbla</h2>
+	<h2 class="stgH2">TABRA</h2>
 	<table>
 		<tr>
 			<th><b>Login</b></th>
@@ -21,10 +21,9 @@
 			<td>Certificado PF (Persona A)</td>
 			<td>Persona A</td>
 			<td>Persona A por defecto</td>
-			<td>En el script indicamos: <br> Representado = "Empresa 1" <br>
-				<i>(Representante por defecto es persona A)</i></td>
-			<td>Se traslada a asiento: <br>- Interesado: Empresa 1 <br>-
-				Representante: Persona A
+			<td>Null por defecto</td>
+			<td>Se traslada a asiento: <br>- Interesado: Persona A <br>-
+				Representante: NO
 			</td>
 		</tr>
 		<tr>
@@ -35,14 +34,14 @@
 			<td>El representante y el representado por defecto ser&aacute;n los que
 				aparezcan en la informaci&oacute;n del certificado. En caso de querer
 				indicar otro, se ha de indicar en el script.</td>
-			<td>Se traslada a asiento: <br> - Interesado: Empresa A <br>
+			<td>Se traslada a asiento: <br> - Interesado: Empresa 1 <br>
 				- Representante: Persona A
 			</td>
 		</tr>
 		<tr>
 			<td>Certificat representaci&oacute;n PJ ("Persona A" representa a
 				"Empresa 1")</td>
-			<td>Emrpesa 1</td>
+			<td>Empresa 1</td>
 			<td>Empresa 1 por defecto</td>
 			<td>En el script indicamos: <br> Representado = "Empresa 2" <br>
 				Representante por defecto es Empresa 1
@@ -52,4 +51,11 @@
 			</td>
 		</tr>
 	</table>
+	<p>Si no se indica nada en los scripts de "Establecer presentador" ni de "Establecer representaci&oacute;n" (que s&oacute;lo es accesible si se marca el check "Admite representaci&oacute;n"), los datos por defecto que se guardan en el asiento reflejado en REGWEB3 son los definidos en el formulario con los datos del certificado, que pueden ser cargados mediante el script de "Carga de datos iniciales". </p>
+	<p>Por ejemplo, como se aprecia en el tr&aacute;mite TEST-IDENT, su script de "Carga de datos iniciales" carga los datos del certificado de persona f&iacute;sica o de persona jur&iacute;dica con representante, seg&uacute;n corresponda. Para ello, utiliza las instrucciones getUsuario() para el solicitante, interesado o representado y getRepresentante() para el representante de la empresa o entidad solicitante, del PLUGIN_SESIONTRAMITACION.</p>
+	<p>Evidentemente, si se utiliza un certificado de persona f&iacute;sica, &eacute;sta ser&aacute; quien se autentica y el formulario no cargar&aacute; ning&uacute;n dato en “Representant” y, por defecto, el registro de entrada mostrar&aacute; en el asiento el interesado, sin ning&uacute;n representante. </p>
+	<p>Al utilizar un certificado de persona jur&iacute;dica con representante, quien se autentica es el representado (la empresa o entidad solicitante o interesada) y el formulario cargar&aacute; los datos del representado y su representante, de forma que, por defecto, el registro de entrada mostrar&aacute; en el asiento el interesado (empresa o entidad solicitante), con los datos del representante. </p>
+	<p>Si se indican otros datos en los scripts de "Establecer presentador" y/o de "Establecer representaci&oacute;n", los datos reflejados en el asiento ser&aacute;n los indicados en dichos scripts. </p>
+	
+	
 </html>

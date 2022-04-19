@@ -83,6 +83,8 @@
 		<javax.email.version>1.4</javax.email.version>
 		<httpcomponents.version>4.3.4</httpcomponents.version>
 		<cagecaptcha.version>1.0</cagecaptcha.version>
+		<jersey-http.version>1.19.4</jersey-http.version>
+		<aopalliance.version>1.0</aopalliance.version>
 	</properties>
 
 	<!-- Repositorio GOIB: https://github.com/GovernIB/maven/tree/gh-pages -->

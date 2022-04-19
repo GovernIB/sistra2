@@ -30,11 +30,11 @@
 .imc--registre .imc--descarrega:hover,
 .imc--registre .imc--descarrega:focus { background-color: #368355; }
 
-.imc--registre .imc--signa { background-color: #265d3c; }
+.imc--registre .imc--signa { background-color: #d66000; }
 .imc--registre .imc--signa span { color: #fff; }
 
 .imc--registre .imc--signa:hover,
-.imc--registre .imc--signa:focus { background-color: #000; }
+.imc--registre .imc--signa:focus { background-color: #733707; }
 
 .imc--registre .imc--signa::before { background-image: url(imgs/icones/ico_signar.svg); }
 

@@ -21,10 +21,9 @@
 			<td>Certificat PF (Persona A)</td>
 			<td>Persona A</td>
 			<td>Persona A per defecte</td>
-			<td>A l'script indicam: <br> Representado = "Empresa 1" <br>
-				<i>(Representant per defecte es persona A)</i></td>
-			<td>Es transllada a asiento: <br>- Interessat: Empresa 1 <br>-
-				Representant: Persona A
+			<td>Null per defecte</td>
+			<td>Es transllada a asiento: <br>- Interessat: Persona A <br>-
+				Representant: NO
 			</td>
 		</tr>
 		<tr>
@@ -35,7 +34,7 @@
 			<td>El representant i el representat per defecte seran els que
 				apareixin a la informaci&oacute; del certificat. En cas de voler
 				indicar-ne uns altres, s'ha d'indicar a l'script.</td>
-			<td>Es transllada a asiento: <br> - Interessat: Empresa A <br>
+			<td>Es transllada a asiento: <br> - Interessat: Empresa 1 <br>
 				- Representant: Persona A
 			</td>
 		</tr>
@@ -52,4 +51,10 @@
 			</td>
 		</tr>
 	</table>
+	<p>Si no s'indica res als scripts de "Establir presentador" ni de "Establir representaci&oacute;" (que es accessible si es marca el check "Admet representaci&oacute;"), les dades per defecte que ee guarden en el asiento reflectit en REGWEB3 son les definides en el formulari amb les dades del certificat, que poden ser cargades amb l'script de "C&agrave;rrega de dades inicials". </p>
+	<p>Per exemple, com s'aprecia al tr&agrave;mit TEST-IDENT, el seu script de "C&agrave;rrega de dades inicials" carrega les dades del certificat de persona f&iacute;sica o de persona jur&iacute;dica amb representant, segons correspongui. Per aix&ograve;, utilitza les instruccions getUsuario() per al solicitant, interesat o representat i getRepresentante() per al representant de l'empresa o entidad solicitant, del PLUGIN_SESIONTRAMITACION.</p>
+	<p>Evidentment, si s'utilitza un certificat de persona f&iacute;sica, aquesta ser&agrave; qui s'autentica i el formulari no carregar&agrave; cap dada a “Representant” i, per defecte, el registre d'entrada mostrar&agrave; en el asiento l'interesat, sense cap representant. </p>
+	<p>Al utilitzar un certificat de persona jur&iacute;dica amb representant, qui s'autentica es el representat (l'empresa o entitat solicitant o interesada) i el formulario carregar&agrave; les dades del representat y el seu representant, de manera que, per defecte, el registre d'entrada mostrar&agrave; en el asiento l'interesat (empresa o entitat solicitant), amb les dades del representant. </p>
+	<p>Si s'indiquen altres dades en els scripts de "Establir presentador" i/o de "Establir representaci&oacute;", les dades reflectides en el asiento ser&agrave;n les indicades als scripts. </p>
+	
 </html>

@@ -58,7 +58,7 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 		if (url.indexOf("[SOAP]") != -1 || url.endsWith("wsdl")) {
 			final String urlWs = getSistra1WsUrl(url);
 			final String soapAction = getSistra1WsSoapAction(url);
-			final boolean logCallsSistra1 = "true".equals(this.getProperty("logCallsSistra1"));
+			final boolean logCallsSistra1 = "true".equals(this.getProperty("logCallsSoap"));
 			retorno = invocarDominioWSDL(idDominio, urlWs, parametros, user, pass, soapAction, timeout,
 					logCallsSistra1);
 		} else {

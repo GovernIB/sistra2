@@ -8,7 +8,7 @@ public class TestWsSistra1 {
 	public static void main(final String[] args) throws Exception {
 
 		final Properties properties = new Properties();
-		properties.setProperty("pluginsib.dominio.ws.logCallsSistra1", "true");
+		properties.setProperty("pluginsib.dominio.ws.logCallsSoap", "true");
 		final DominioPluginRest plg = new DominioPluginRest("pluginsib.dominio.ws.", properties);
 
 		final ValoresDominio vd = plg.invocarDominio("PINBALADMIN_ENTITATS",

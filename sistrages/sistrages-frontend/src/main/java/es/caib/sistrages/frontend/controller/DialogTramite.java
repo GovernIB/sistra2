@@ -47,7 +47,11 @@ public class DialogTramite extends DialogControllerBase {
 	 * Aceptar.
 	 */
 	public void aceptar() {
-
+		if (idArea == null) {
+			if (data.getIdArea() != null) {
+				idArea = data.getIdArea().toString();
+			}
+		}
 		if (isIdentificadorRepetido()) {
 			addMessageContext(TypeNivelGravedad.INFO, "ERROR",
 					UtilJSF.getLiteral("dialogTramite.error.identificadorDuplicado"));
@@ -81,7 +85,8 @@ public class DialogTramite extends DialogControllerBase {
 	 * @return
 	 */
 	private boolean isIdentificadorRepetido() {
-		return tramiteService.checkIdentificadorRepetido( data.getIdentificador(), data.getCodigo(), Long.valueOf(idArea));
+		return tramiteService.checkIdentificadorRepetido(data.getIdentificador(), data.getCodigo(),
+				Long.valueOf(idArea));
 	}
 
 	/**

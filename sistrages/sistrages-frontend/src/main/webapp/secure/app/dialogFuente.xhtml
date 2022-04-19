@@ -112,6 +112,9 @@
 
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
+		     		<f:facet name="left">
+	     				<p:commandButton id="btnTramites" value="#{msg['botones.dominios']}" icon="fa fa-level-down" actionListener="#{dialogFuente.dominios()}" process="@this" rendered="#{dialogFuente.data.codigo ne null}" />
+	     			</f:facet>
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.guardar']}" process="@form" styleClass="boton-azul" rendered="#{dialogFuente.permiteEdicion and  !dialogFuente.isEdicion()}" actionListener="#{dialogFuente.aceptar(false)}" />
 		        		<p:commandButton value="#{msg['botones.guardar']}" process="@form" styleClass="boton-azul" rendered="#{dialogFuente.permiteEdicion and  dialogFuente.isEdicion()}" onclick="PF('confirmDialogGuardar').show()" />

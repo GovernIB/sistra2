@@ -1,5 +1,8 @@
 package es.caib.sistrages.frontend.controller.migracion;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -10,9 +13,14 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+
+import com.lowagie.text.Document;
 
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.comun.migracion.ConstantesMigracion;
 import es.caib.sistrages.core.api.model.comun.migracion.ErrorMigracion;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -20,6 +28,7 @@ import es.caib.sistrages.core.api.service.migracion.MigracionService;
 import es.caib.sistrages.frontend.controller.ViewControllerBase;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.core.api.util.CsvUtil;
 
 /**
  * Migracion
@@ -58,6 +67,8 @@ public class ViewMigracion extends ViewControllerBase {
 	private boolean saltaExcepcion = false;
 
 	private boolean disabled = false;
+
+	private String estilo = "display: none;";
 
 	/**
 	 * Inicializacion.
@@ -113,12 +124,33 @@ public class ViewMigracion extends ViewControllerBase {
 					UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.migracion"));
 				} else {
 					UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.migracionCompleta"));
+					estilo = "display: block;";
 				}
 				disabled = true;
 			} else {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
 			}
 		}
+	}
+
+	public StreamedContent getExportarErrores() throws Exception {
+		final Document doc = new Document();
+		final CsvDocumento csv = new CsvDocumento();
+		final String[] cols = { "Tipo", "Elemento", "Descripcion" };
+		csv.setColumnas(cols);
+		int i = 0;
+		for (ErrorMigracion err : listaErrores) {
+			csv.addFila();
+			csv.setValor(i, "Tipo", err.getTipo().name());
+			csv.setValor(i, "Elemento", err.getElemento());
+			csv.setValor(i, "Descripcion", err.getDescripcion());
+			i++;
+		}
+
+		final byte[] contentsFuenteDatosCSV = CsvUtil.exportar(csv);
+
+		final InputStream myInputStream = new ByteArrayInputStream(contentsFuenteDatosCSV);
+		return new DefaultStreamedContent(myInputStream, "text/csv", "erroresMigracion.csv");
 	}
 
 	/***
@@ -225,6 +257,14 @@ public class ViewMigracion extends ViewControllerBase {
 
 	public final void setDisabled(boolean disabled) {
 		this.disabled = disabled;
+	}
+
+	public final String getEstilo() {
+		return estilo;
+	}
+
+	public final void setEstilo(String estilo) {
+		this.estilo = estilo;
 	}
 
 }

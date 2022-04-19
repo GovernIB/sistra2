@@ -14,7 +14,7 @@ var imc_registre
 // onReady
 
 function appPasRegistrarInicia() {
-	
+
 	imc_registre = imc_contingut.find(".imc--registre:first");
 	imc_bt_registra = $("#imc-bt-registra");
 	imc_bt_reintenta = $("#imc-bt-reintenta")
@@ -58,7 +58,37 @@ $.fn.appLOPD = function(options) {
 				element
 					.off('.appLOPD')
 					.on('click.appLOPD', "button[data-accio=lopd-obri]", obri)
-					.on('click.appLOPD', "button[data-accio=lopd-tanca]", tanca);
+					.on('click.appLOPD', "button[data-accio=lopd-tanca]", tanca)
+					.on('change.appLOPD', "#imc--f-re-accepta", accepta);
+
+				// revisa botó acceptat
+
+				if (localStorage.getItem(APP_JSON_TRAMIT_T.idSesion) === "s") {
+
+					$("#imc--f-re-accepta")
+						.prop("checked", true);
+
+				}
+
+			},
+			accepta = function(e) {
+
+				// guardem botó acceptat
+
+				var check_el = $(this)
+					,estaSeleccionat = check_el.is(":checked");
+
+				if (estaSeleccionat) {
+
+					localStorage
+						.setItem(APP_JSON_TRAMIT_T.idSesion, 's');
+
+				} else {
+
+					localStorage
+						.removeItem(APP_JSON_TRAMIT_T.idSesion);
+
+				}
 
 			},
 			obri = function(e) {
@@ -131,10 +161,10 @@ $.fn.appLOPD = function(options) {
 					}, 300);
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -288,7 +318,7 @@ $.fn.appSigna = function(options) {
 						.abort();
 
 				}
-				
+
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
@@ -324,7 +354,7 @@ $.fn.appSigna = function(options) {
 
 										imc_signatura_iframe
 											.css({ width: APP_SIGNATURA_IFRAME_WIDTH+"px", height: APP_SIGNATURA_IFRAME_HEIGHT+"px" });
-										
+
 									}
 
 								};
@@ -345,24 +375,24 @@ $.fn.appSigna = function(options) {
 							envia_ajax = false;
 
 							consola("Formulari: error des de JSON");
-							
+
 							imc_contenidor
 								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: data.url });
 
 						}
-						
+
 					})
 					.fail(function(dades, tipus, errorThrown) {
 
 						if (tipus === "abort") {
 							return false;
 						}
-						
+
 						consola("Formulari: error des de FAIL");
-						
+
 						imc_contenidor
 							.errors({ estat: "fail" });
-						
+
 					});
 
 			},
@@ -444,10 +474,10 @@ $.fn.appSigna = function(options) {
 					}, 300);
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -480,10 +510,10 @@ $.fn.appRegistre = function(options) {
 				document.location = url + "?" + id + "=" + elm_id + "&idPaso=" + APP_TRAMIT_PAS_ID + "&instancia=" + elm_instancia;
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -510,17 +540,17 @@ $.fn.appSiganuraDescarrega = function(options) {
 					,bt_tipus = bt.attr("data-tipus")
 					,elm_id = bt.closest(".imc--reg-doc").attr("data-id")
 					,elm_instancia = bt.closest(".imc--reg-doc").attr("data-instancia")
-					,elm_signant = bt.closest(".imc--signat").attr("data-nif")
+					,elm_signant = bt.closest(".imc--signant").attr("data-nif")
 					,url = APP_SIGNATURA_REGISTRAR_DESCARREGA
 					,id = "idDocumento";
 
 				document.location = url + "?" + id + "=" + elm_id + "&idPaso=" + APP_TRAMIT_PAS_ID + "&instancia=" + elm_instancia + "&firmante=" + elm_signant;
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -579,7 +609,7 @@ $.fn.appRegistra = function(options) {
 				// està OK
 
 				var bt = $(this);
-				
+
 				accio = bt.attr("data-accio");
 
 				var titol = (accio === "reintenta") ? txtReintentarAtencioTitol : txtRegistrarAtencioTitol
@@ -598,7 +628,7 @@ $.fn.appRegistra = function(options) {
 			registra = function() {
 
 				// missatge carregant
-				
+
 				imc_missatge
 					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtRegistrant, text: txtRegistrantText, alMostrar: function() { registrant(); } });
 
@@ -616,7 +646,7 @@ $.fn.appRegistra = function(options) {
 						.abort();
 
 				}
-				
+
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
@@ -642,12 +672,12 @@ $.fn.appRegistra = function(options) {
 							envia_ajax = false;
 
 							consola("Registra: error des de JSON");
-							
+
 							imc_contenidor
 								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: data.url });
 
 						}
-						
+
 					})
 					.fail(function(dades, tipus, errorThrown) {
 
@@ -656,19 +686,19 @@ $.fn.appRegistra = function(options) {
 						if (tipus === "abort") {
 							return false;
 						}
-						
+
 						consola("Registra: error des de FAIL");
-						
+
 						imc_contenidor
 							.errors({ estat: "fail" });
-						
+
 					});
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
