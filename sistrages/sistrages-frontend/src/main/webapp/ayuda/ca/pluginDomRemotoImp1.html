@@ -9,7 +9,9 @@
 	<p>Aquest plugin no requereix de cap propietat per a la seva configuració.</p>
 	<h2>Configuració de dominis de SISTRA1 (SOAP)</h2>
 	<p> Per a configurar un domini que segueixen el contracte SOAP (utilitzat en SISTRA1), cal definir la URL del domini especificant el prefix [SOAP] (i sense que aparegui “?wsdl” al final).
-	El plugin comprovarà si la URL va precedida del TAG “[SOAP]” i ho prendrà com un servei SOAP<br><br>
+	El plugin comprovarà si la URL va precedida del TAG “[SOAP]” i ho prendrà com un servei SOAP.<br><br>
+
+	Un altre punt a tenir en compte és que el camp identificador del domini definit, ha de tenir el mateix valor que l'identificador del backoffice al qual es realitza la consulta remota. En cas de no coincidir aquest camp, no funcionarà correctament la consulta remota. <br><br>
 
 	Per a configurar un domini que segueixen el contracte SOAP (utilitzat en SISTRA1), però que utilitza un W contra SAP, usant el soap-action, ha d'anteposar-se el prefix [SOAP][SOAP-ACTION= =<URL-SOAP>]url.<br><br>
 	Per exemple: Si en SISTRA 1 es té un domini amb la següent URL: <b>https://geminis.caib.es:52001/sap/xi/engine?type=entry&amp;version=3.0&amp;Sender.Service=RHAPSODY_HERMES_SYSTRA&amp;Interface=urn:és:caib:sistra:ws:v2:model:SistraFacade^SI_Comunicacions_Systra_SAP</b>,

@@ -234,20 +234,16 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 	 * @throws FirmaPluginException
 	 */
 	private Long convertTypeTipoDocumental(final TypeTipoDocumental tipoDocumental) throws FirmaPluginException {
-
-		// TODO PENDIENTE DE VER TRADUCCIÓN A CÓDIGO TIPO DOCUMENTAL DE PFIB
+		// Quitamos el TD y nos quedamos con el numero
+		// TD99 --> 99
 		Long res = null;
-		switch (tipoDocumental) {
-		case TD14_SOLICITUD:
-			res = 14L;
-			break;
-		case TD99_OTROS:
-			res = 99L;
-			break;
-		default:
-			throw new FirmaPluginException("Pendiente mapeo código para tipo documental " + tipoDocumental);
+		if (tipoDocumental != null) {
+			try {
+				res = Long.parseLong(tipoDocumental.toString().substring(2));
+			} catch (final NumberFormatException nfe) {
+				throw new FirmaPluginException("Error mapeo código para tipo documental " + tipoDocumental);
+			}
 		}
-
 		return res;
 	}
 

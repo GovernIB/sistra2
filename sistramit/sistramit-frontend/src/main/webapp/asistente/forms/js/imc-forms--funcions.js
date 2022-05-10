@@ -150,7 +150,7 @@ $.fn.indexa = function(options) {
 
 				var regex = new RegExp("^[a-zA-Z]+$");
 
-				if (!regex.test(tecla)) {
+				if (!regex.test(tecla) && e.keyCode !== 32 ) {
 					return;
 				}
 

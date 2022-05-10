@@ -181,8 +181,13 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 		}
 		final HttpEntity<RFiltroDominio> request = new HttpEntity<>(filtro, headers);
 
-		final ResponseEntity<RValoresDominio> response = restTemplate.postForEntity(url, request,
-				RValoresDominio.class);
+		ResponseEntity<RValoresDominio> response = null;
+
+		try {
+			response = restTemplate.postForEntity(url, request, RValoresDominio.class);
+		} catch (final Exception e) {
+			throw new DominioPluginException("Error realizando conexión con " + url + ": " + e.getMessage(), e);
+		}
 
 		if (response == null) {
 			throw new DominioPluginException("Respuesta vacía.");

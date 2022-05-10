@@ -105,8 +105,7 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 			final UsuarioAutenticadoInfo user = (UsuarioAutenticadoInfo) pArgumentos[0];
 			propiedadesEvento.addPropiedad(TypeParametroEvento.URL_INICIO.toString(),
 					(String) pArgumentos[ConstantesNumero.N6]);
-			propiedadesEvento.addPropiedad(TypeParametroEvento.AUTENTICACION.toString(),
-					user.getMetodoAutenticacion().toString());
+			addPropsAutenticacion(propiedadesEvento, user);
 			addPropsUserAgent(propiedadesEvento, user.getSesionInfo().getUserAgent());
 			evento.setPropiedadesEvento(propiedadesEvento);
 			eventosFlujo.add(evento);
@@ -117,6 +116,7 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 			final EventoAuditoria evento = crearEvento(TypeEvento.CARGAR_TRAMITE, idSesionTramitacion);
 			final ListaPropiedades propiedadesEvento = new ListaPropiedades();
 			final UsuarioAutenticadoInfo user = (UsuarioAutenticadoInfo) pArgumentos[1];
+			addPropsAutenticacion(propiedadesEvento, user);
 			addPropsUserAgent(propiedadesEvento, user.getSesionInfo().getUserAgent());
 			evento.setPropiedadesEvento(propiedadesEvento);
 			eventosFlujo.add(evento);
@@ -143,6 +143,29 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 		}
 
 		return eventosFlujo;
+	}
+
+	/**
+	 * Añade propiedades autenticación.
+	 *
+	 * @param propiedadesEvento
+	 *                              Propiedades evento
+	 * @param user
+	 *                              User
+	 */
+	protected void addPropsAutenticacion(final ListaPropiedades propiedadesEvento, final UsuarioAutenticadoInfo user) {
+		// Metodo auth
+		propiedadesEvento.addPropiedad(TypeParametroEvento.AUTENTICACION.toString(),
+				user.getMetodoAutenticacion().toString());
+		// QAA
+		if (user.getQaa() != null) {
+			propiedadesEvento.addPropiedad(TypeParametroEvento.AUTENTICACION_QAA.toString(), user.getQaa().toString());
+		}
+		// Representante
+		if (user.getRepresentante() != null) {
+			propiedadesEvento.addPropiedad(TypeParametroEvento.AUTENTICACION_RPTE.toString(),
+					user.getRepresentante().getNif() + " - " + user.getRepresentante().getNombreApellidos());
+		}
 	}
 
 	/**

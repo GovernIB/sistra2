@@ -29,6 +29,9 @@ public final class AsistenteConfig {
 	/** Iframe firma height. */
 	private String iframeFirmaHeight;
 
+	/** Formulario: carácteres búsqueda. */
+	private String formularioNumCharsBusqueda;
+
 	/**
 	 * Método de acceso a url.
 	 *
@@ -160,6 +163,25 @@ public final class AsistenteConfig {
 	 */
 	public void setIframeFirmaHeight(final String iframeFirmaHeight) {
 		this.iframeFirmaHeight = iframeFirmaHeight;
+	}
+
+	/**
+	 * Método de acceso a formularioNumCharsBusqueda.
+	 * 
+	 * @return formularioNumCharsBusqueda
+	 */
+	public String getFormularioNumCharsBusqueda() {
+		return formularioNumCharsBusqueda;
+	}
+
+	/**
+	 * Método para establecer formularioNumCharsBusqueda.
+	 * 
+	 * @param formularioNumCharsBusqueda
+	 *                                       formularioNumCharsBusqueda a establecer
+	 */
+	public void setFormularioNumCharsBusqueda(final String formularioNumCharsBusqueda) {
+		this.formularioNumCharsBusqueda = formularioNumCharsBusqueda;
 	}
 
 }

@@ -416,12 +416,18 @@ public class AsistenteTramitacionController extends TramitacionController {
 				getSystemService().obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IFRAME_FIRMA_HEIGHT),
 				"200");
 
+		// Formulario: carácteres búsqueda. */
+		final String formularioNumCharsBusqueda = StringUtils.defaultString(
+				getSystemService().obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.FORM_NUMCHARS_BUSQUEDA),
+				"3");
+
 		final AsistenteConfig conf = new AsistenteConfig();
 		conf.setUrl(getSystemService().obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL));
 		conf.setIdioma(this.getIdioma());
 		conf.setVersion(version);
 		conf.setIframeFirmaHeight(iframeFirmaHeight);
 		conf.setIframeFirmaWidth(iframeFirmaWidth);
+		conf.setFormularioNumCharsBusqueda(formularioNumCharsBusqueda);
 
 		return new ModelAndView("asistente/configuracion", "configuracion", conf);
 	}

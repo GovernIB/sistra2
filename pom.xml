@@ -76,7 +76,12 @@
 		<firmasimple.jersey.version>1.0.2</firmasimple.jersey.version>
 		<itext.version>2.1.7</itext.version>
 		<regweb3-ws.version>3.1.2</regweb3-ws.version>
+
+		<!--
 		<cxf.version>3.3.0</cxf.version>
+		 -->
+		<cxf.version>3.2.5</cxf.version>
+
 		<dom4j.version>1.6.1</dom4j.version>
 		<jaxen.version>1.1.6</jaxen.version>
 		<jsoup.version>1.12.1</jsoup.version>

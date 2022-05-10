@@ -13,6 +13,14 @@ public enum TypeParametroEvento {
 	 */
 	AUTENTICACION("AUT"),
 	/**
+	 * Autenticación QAA.
+	 */
+	AUTENTICACION_QAA("AUTQAA"),
+	/**
+	 * Autenticación Representante.
+	 */
+	AUTENTICACION_RPTE("AUTRPTE"),
+	/**
 	 * Sistema operativo.
 	 */
 	SISTEMA_OPERATIVO("SO"),

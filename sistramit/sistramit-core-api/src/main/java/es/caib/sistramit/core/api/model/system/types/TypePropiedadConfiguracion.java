@@ -121,7 +121,9 @@ public enum TypePropiedadConfiguracion {
 	/** Iframe firma width. */
 	IFRAME_FIRMA_WIDTH("iframeFirmaWidth"),
 	/** Iframe firma heigth. */
-	IFRAME_FIRMA_HEIGHT("iframeFirmaHeight");
+	IFRAME_FIRMA_HEIGHT("iframeFirmaHeight"),
+	/** Formulario: carácteres búsqueda.. */
+	FORM_NUMCHARS_BUSQUEDA("formularioNumCharsBusqueda");
 
 	/**
 	 * Valor como string.

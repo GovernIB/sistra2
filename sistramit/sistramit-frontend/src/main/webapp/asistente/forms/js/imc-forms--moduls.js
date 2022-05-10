@@ -702,6 +702,9 @@ $.fn.appFormsConfiguracio = function(options) {
 									elm_input
 										.attr({ "data-linies": conf_opcions.lineas });
 
+									elm
+										.addClass("imc-el-files-"+conf_opcions.lineas);
+
 								}	
 
 								// mayúscules
@@ -898,9 +901,11 @@ $.fn.appFormsConfiguracio = function(options) {
 
 							if (conf_tipus === "selector" && conf_contingut === "a") {
 
+								var place_holder_text = (APP_FORM_SELECTOR_DIN_NUM > 1) ? txtFormDinSelectDinamicNum.replace('{{num}}', APP_FORM_SELECTOR_DIN_NUM) : txtFormDinSelectDinamic;
+
 								elm
 									.find("textarea:first")
-										.attr("placeholder", txtFormDinSelectDinamic)
+										.attr("placeholder", place_holder_text)
 										.end()
 									.appFormsSelectorAjax();
 
@@ -1418,11 +1423,41 @@ $.fn.appFormsConfiguracio = function(options) {
 								,conf_id = conf.id
 								,conf_obligatori = conf.obligatorio || false
 								,conf_lectura = conf.soloLectura || false
+								,conf_ocult = conf.oculto || false
 								,conf_modificable = conf.modificable || false;
 
-							var elm = element.find("*[data-id="+conf_id+"]") // imc_forms_contenidor.find("*[data-id="+conf_id+"]")
+							var elm = element.find("*[data-id="+conf_id+"]")
 								,elm_input = elm.find("input:first")
 								,elm_textarea = elm.find("textarea:first");
+
+
+							// ocult
+
+							if (conf_ocult) {
+
+								elm
+									.attr({ "data-ocult": conf_ocult });
+
+								var esSeparador = elm.hasClass("imc-sep-salt-carro");
+
+								if (esSeparador && conf_ocult === "s") {
+
+									elm
+										.prevUntil(".imc-sep-salt-carro")
+											.attr({ "data-ocult-bloc": conf_ocult });
+
+								} else if (esSeparador && conf_ocult === "n") {
+
+									elm
+										.prevUntil(".imc-sep-salt-carro")
+											.removeAttr("data-ocult-bloc");
+
+								}
+
+							}
+
+
+							// només lectura
 
 							if (conf_lectura) {
 
@@ -3523,13 +3558,13 @@ $.fn.appFormsSelectorAjax = function(options) {
 				var input_el = $(this)
 					,input_val = input_el.val();
 
-				if (input_val.length < 3 || input_el.prop("readonly")) {
+				if (input_val.length < APP_FORM_SELECTOR_DIN_NUM || input_el.prop("readonly")) {
 					return;
 				}
 
 				// més de 3 caracters, numéric, lletres, o intro
 
-				if ( (e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 65 && e.keyCode <= 90) || (e.keyCode >= 191 && e.keyCode <= 192) || e.keyCode === 13 || e.keyCode === 8 ) {
+				if ( (e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 65 && e.keyCode <= 90) || (e.keyCode >= 191 && e.keyCode <= 192) || e.keyCode === 13 || e.keyCode === 8 || e.keyCode === 32 ) {
 
 					crida(input_el);
 

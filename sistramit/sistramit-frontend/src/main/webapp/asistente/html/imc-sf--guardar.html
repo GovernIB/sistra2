@@ -6,11 +6,24 @@
 
 		<div class="imc--guarda-correcte">
 
+			{{if desti|equals>envio}}
+			<p>{{txtEnviatCorrectament|upcase}}</p>
+			{{else}}
 			<p>{{txtRegistratCorrectament|upcase}}</p>
+			{{/if}}
 
 		</div>
 
 		<div class="imc--guarda-justificant">
+
+			{{if desti|equals>envio}}
+			<h3><span>{{txtJustificantEnviament}}</span></h3>
+			<div class="imc--fi-carpeta">
+				<p>
+					<span>{{txtCarpetaNumeroEnviament}}:</span> <strong>{{jsonNumeroRegistre}}</strong>
+				</p>
+			</div>
+			{{else}}
 
 			<h3><span>{{txtDesauJustificant}}</span></h3>
 
@@ -34,6 +47,8 @@
 				<button type="button" class="imc-bt imc--ico imc--justificant" data-accio="desa"><span>{{txtDesauJustificant}}</span></button>
 				{{/if}}
 			</div>
+			{{/if}}
+
 			{{/if}}
 
 		</div>
