@@ -8,7 +8,7 @@
 	<h1 class="stgH1">dominio.rest.DominioPluginRest</h1>
 	<p>Este plugin no requiere de ninguna propiedad para su configuración.</p>
 	<br>
-	<h2>Configuración de dominios de SISTRA1 (SOAP)</h2>
+	<h2>Configuración de dominios SOAP</h2>
 	<p>	Para configurar un dominio que siguen el contrato SOAP (utilizado en SISTRA1), hay que definir la URL del dominio especificando el prefijo [SOAP] (y sin que aparezca “?wsdl” al final).
 		El plugin comprobará si la URL va precedida del TAG “[SOAP]” y lo tomará como un servicio SOAP<br><br>
 
@@ -24,8 +24,8 @@
 		Este carácter se tiene que sustituir por su codificación pertinente, que en este caso es ‘%5E’ (En el ejemplo que se ha añadido, ya se ha realizado el cambio).</p>
 
 
-	<h2>Configuración de dominios de SISTRA2 (REST)</h2>
-	<p>Los dominios de SISTRA2 tienen que implementar una interfaz REST y ser capaces de mapear peticiones tipo POST para establecer una comunicación correcta.
-	En el siguiente apartado se especifica la interfaz a implementar.
+	<h2>Configuración de dominios REST</h2>
+	<p>Estos dominios tienen que implementar una interfaz REST y ser capaces de mapear peticiones tipo POST para establecer una comunicación correcta.El contrato que han de implementar se especifica en el
+	<a href="https://github.com/GovernIB/sistra2/blob/sistra2-1.3/sistramit/doc/SISTRAMIT_Manual_Integracio_Aplicacions.odt" target="_blank">manual de integración de aplicaciones </a>.
 	</p>
 </html>
