@@ -104,7 +104,11 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 			if (UtilsSTG.existeScript(pc.getScriptAutorrellenable())
 					&& (pc.isSoloLectura() || (vc == null || vc.esVacio()))) {
 				// Ejecutar script autorrellenable y actualiza valor campo
-				final ValorCampo vca = ejecutarScriptAutorrellenable(datosSesion, rc);
+				ValorCampo vca = ejecutarScriptAutorrellenable(datosSesion, rc);
+				// Si se ha reseteado campo, creamos valor vacio dependiendo del campo
+				if (vca instanceof ValorResetCampos) {
+					vca = UtilsFormularioInterno.crearValorVacio(rc);
+				}
 				pag.actualizarValorCampo(vca);
 				// Evalua cambios a realizar tras modificar campo
 				if (!vca.esValorIgual(vc)) {
