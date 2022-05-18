@@ -375,7 +375,7 @@ $.fn.appDestaca = function(options) {
 
 			},
 			elimina = function() {
-
+				
 				$("#imc-destacat")
 					.remove();
 
@@ -705,7 +705,7 @@ $.fn.appFormsConfiguracio = function(options) {
 									elm
 										.addClass("imc-el-files-"+conf_opcions.lineas);
 
-								}
+								}	
 
 								// mayúscules
 
@@ -893,7 +893,7 @@ $.fn.appFormsConfiguracio = function(options) {
 							if (conf_tipus === "listaElementos") {
 
 								elm
-									.appFormsLlistaElements({ columnes: conf_opcions.columnas, filesMax: conf_opcions.maxElementos, autoOrdre: conf_opcions.autoorden, desDe: desDe });
+									.appFormsLlistaElements({ columnes: conf_opcions.columnas, filesMax: conf_opcions.maxElementos, filesNum: conf_opcions.numElementos, operacions: conf_opcions.operaciones, autoOrdre: conf_opcions.autoorden, desDe: desDe });
 
 							}
 
@@ -1125,7 +1125,7 @@ $.fn.appFormsConfiguracio = function(options) {
 														.find("input[value='"+selec_val+"']:first")
 															.prop("checked", true);
 
-													if (elm_esLectura) {
+													if (elm.attr("data-lectura") === "s") {
 
 														elm
 															.find("input")
@@ -1150,6 +1150,14 @@ $.fn.appFormsConfiguracio = function(options) {
 												elm
 													.find("input[value='"+opcio_valor+"']:first")
 														.prop("checked", true);
+
+												if (elm.attr("data-lectura") === "s") {
+
+													elm
+														.find("input")
+															.attr("disabled", "disabled");
+
+												}
 
 											},50
 										);
@@ -1257,13 +1265,13 @@ $.fn.appFormsConfiguracio = function(options) {
 												.find("input")
 													.prop("checked", false);
 
-											if (elm_esLectura) {
+											if (elm.attr("data-lectura") === "s") {
 
 												elm
 													.find("input")
 														.attr("disabled", "disabled");
 
-											} else if (!elm_esLectura) {
+											} else if (elm.attr("data-lectura") !== "s") {
 
 												elm
 													.find("input")
@@ -1283,6 +1291,20 @@ $.fn.appFormsConfiguracio = function(options) {
 											elm
 												.find("input")
 													.prop("checked", false);
+
+											if (elm.attr("data-lectura") === "s") {
+
+												elm
+													.find("input")
+														.attr("disabled", "disabled");
+
+											} else if (elm.attr("data-lectura") !== "s") {
+
+												elm
+													.find("input")
+														.removeAttr("disabled");
+
+											}
 
 										},50
 									);
@@ -1473,11 +1495,6 @@ $.fn.appFormsConfiguracio = function(options) {
 
 										elm_input
 											.attr("readonly", "readonly");
-
-										elm_textarea
-											.attr("readonly", "readonly");
-
-									} else if (conf_tipus === "selector" && conf_contingut === "u") {
 
 										elm_textarea
 											.attr("readonly", "readonly");
@@ -1835,7 +1852,7 @@ $.fn.appFormsValida = function(options) {
 
 					if (!idValid && input.attr("data-nss") === "s") {
 
-						idValid = ( appValidaIdentificador.nss(input_val) ) ? true : false;
+						idValid = ( appValidaIdentificador.nss(input_val) ) ? true : false;	
 
 					}
 
@@ -1936,11 +1953,12 @@ $.fn.appFormsAvalua = function(options) {
 				input = $(this);
 				input_element = input.closest(".imc-element");
 
-				var esAvaluable = (input_element.attr("data-avalua") === "s") ? true : false;
+				var esAvaluable = (input_element.attr("data-avalua") === "s") ? true : false
+					,esLectura = (input_element.attr("data-lectura") === "s") ? true : false;
 
-				if (esAvaluable) {
+				if (esAvaluable && !esLectura) {
 
-					element // imc_forms_contenidor
+					element
 						.attr("data-preevalua", "s");
 
 					// posar capa invisible
@@ -1996,9 +2014,10 @@ $.fn.appFormsAvalua = function(options) {
 
 				input = $(this);
 
-				var esAvaluable = (input.closest(".imc-element").attr("data-avalua") === "s") ? true : false;
+				var esAvaluable = (input.closest(".imc-element").attr("data-avalua") === "s") ? true : false
+					,esLectura = (input.closest(".imc-element").attr("data-lectura") === "s") ? true : false;
 
-				if (esAvaluable) {
+				if (esAvaluable && !esLectura) {
 
 					avalua();
 
@@ -2903,7 +2922,7 @@ $.fn.appFormsAccions = function(options) {
 			actualCarrega = function() {
 
 				$.when(
-
+					
 					$.getJSON( APP_FORM_PAG_ACTUAL )
 
 				).then(
@@ -2913,7 +2932,7 @@ $.fn.appFormsAccions = function(options) {
 						FORMS_JSON = jsonForm;
 
 						if (FORMS_JSON.estado === "SUCCESS" || FORMS_JSON.estado === "WARNING") {
-
+							
 							// carregat
 
 							actualCarregat();
@@ -2928,7 +2947,7 @@ $.fn.appFormsAccions = function(options) {
 						} else {
 
 							consola("Formulari (carrega pàg. actual): error des de JSON");
-
+							
 							imc_contenidor
 								.errors({ estat: FORMS_JSON.estado, titol: FORMS_JSON.mensaje.titulo, text: FORMS_JSON.mensaje.texto, url: FORMS_JSON.url });
 
@@ -2976,7 +2995,7 @@ $.fn.appFormsAccions = function(options) {
 					,200
 				);
 
-
+				
 
 			},
 			actualMostra = function() {
@@ -3105,7 +3124,7 @@ $.fn.appMissatgeFormAccions = function(options) {
 						.focus();
 
 				}
-
+				
 			},
 			desaSurt = function() {
 
@@ -3128,7 +3147,7 @@ $.fn.appMissatgeFormAccions = function(options) {
 					},
 					200
 				);
-
+		
 			},
 			enviament = function(valorsSerialitzats) {
 
@@ -3213,10 +3232,10 @@ $.fn.appMissatgeFormAccions = function(options) {
 				document.location = url;
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -3439,7 +3458,7 @@ $.fn.appFormsPopupTabula = function(options) {
 
 							el
 								.attr("data-tabpos", i+1);
-
+							
 						});
 
 					elems_tab
@@ -3500,7 +3519,7 @@ $.fn.appFormsPopupTabula = function(options) {
 						.focus();
 
 				} else if ( !esShift && tecla === 9){
-
+				
 					e.preventDefault();
 
 					el_num++;
@@ -3515,10 +3534,10 @@ $.fn.appFormsPopupTabula = function(options) {
 				}
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 
 	return this;
@@ -3563,13 +3582,13 @@ $.fn.appFormsSelectorAjax = function(options) {
 				}
 
 				// més de 3 caracters, numéric, lletres, o intro
-				var regex = new RegExp("^[a-zA-Z0-9]+$");
+
 				var tecla = String.fromCharCode(e.keyCode);
 
-				if ( regex.test(tecla) || e.keyCode === 13 || e.keyCode === 8 || e.keyCode === 32 ) {
+				var regex = new RegExp("^[a-zA-Z0-9]+$");
 
+				if (!regex.test(tecla) || e.keyCode === 13 || e.keyCode === 8 || e.keyCode === 32 ) {
 					crida(input_el);
-
 				}
 
 			}
@@ -3784,7 +3803,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 
 					},100
 				);
-
+				
 			}
 			,navega = function(e) {
 
@@ -3816,7 +3835,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 							.find("button:first")
 								.addClass("imc--seleccionada")
 								.focus();
-
+						
 					}
 
 					e.preventDefault();
@@ -3848,7 +3867,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 							.find("button:last")
 								.addClass("imc--seleccionada")
 								.focus();
-
+						
 					}
 
 					e.preventDefault();
@@ -3881,7 +3900,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 						}
 
 					}, 100
-
+					
 				);
 
 			}
@@ -3924,7 +3943,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 								.remove();
 
 					}, 50
-
+					
 				);
 
 			};
@@ -3932,7 +3951,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 		// prepara
 
 		prepara();
-
+		
 		// events
 
 		element
@@ -3942,7 +3961,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 			.on("blur.appFormsSelectorAjax", "input[type=text], textarea, .imc--selector-opcions-ajax li button", revisa)
 			.on("click.appFormsSelectorAjax", ".imc--selector-opcions-ajax li button", selecciona)
 			.on("click.appFormsSelectorAjax", "button[data-accio=seleccio-elimina]", elimina);
-
+		
 	});
 
 	return this;
