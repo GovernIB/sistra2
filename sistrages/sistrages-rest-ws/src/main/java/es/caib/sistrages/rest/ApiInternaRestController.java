@@ -211,7 +211,7 @@ public class ApiInternaRestController {
 	 * @return Valores dominio
 	 */
 	@ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores FD de un dominio", response = RValoresDominio.class)
-	@RequestMapping(value = "/dominioFuenteDatos/{idDominio}", method = RequestMethod.POST)
+	@RequestMapping(value = "/dominioFuenteDatos/{idDominio:.+}", method = RequestMethod.POST)
 	public RValoresDominio obtenerValoresDominioFD(@PathVariable("idDominio") final String idDominio,
 			@RequestBody(required = false) final RListaParametros parametros) {
 
@@ -242,7 +242,7 @@ public class ApiInternaRestController {
 	 * @return Valores dominio
 	 */
 	@ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores LF de un dominio", response = RValoresDominio.class)
-	@RequestMapping(value = "/dominioListaFija/{idDominio}", method = RequestMethod.GET)
+	@RequestMapping(value = "/dominioListaFija/{idDominio:.+}", method = RequestMethod.GET)
 	public RValoresDominio obtenerValoresDominioLF(@PathVariable("idDominio") final String idDominio) {
 
 		final ValoresDominio res = restApiService.realizarConsultaListaFija(idDominio);
