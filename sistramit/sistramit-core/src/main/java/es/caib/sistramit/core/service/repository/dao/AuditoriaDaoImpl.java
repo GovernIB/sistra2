@@ -205,7 +205,7 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 		}
 
 		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdTramite())) {
-			predicate = builder.and(predicate, builder.equal(tableT.get("idTramite"), pFiltroBusqueda.getIdTramite()));
+			predicate = builder.and(predicate, builder.like(tableT.get("idTramite"), "%" + pFiltroBusqueda.getIdTramite() + "%"));
 		}
 
 		if (pFiltroBusqueda.getVersionTramite() != null) {

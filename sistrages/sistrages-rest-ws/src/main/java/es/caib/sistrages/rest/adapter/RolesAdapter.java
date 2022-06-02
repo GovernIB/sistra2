@@ -30,7 +30,7 @@ public class RolesAdapter {
 			final RPermisoHelpDesk rPermiso = new RPermisoHelpDesk();
 			rPermiso.setTipoPermiso("A");
 			rPermiso.setCodigoDIR3Entidad(rol.getArea().getCodigoDIR3Entidad());
-			rPermiso.setIdentificadorArea(rol.getArea().getIdentificador());
+			rPermiso.setIdentificadorArea(rol.getArea().getIdentificadorCompuesto());
 			rPermiso.setTipo(rol.getTipo().toString());
 			rPermiso.setValor(rol.getValor());
 			rListaPermisos.add(rPermiso);
