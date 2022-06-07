@@ -480,7 +480,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 
 			if (pFiltro.getFechaHasta() != null) {
 				predicate = builder.and(predicate,
-						builder.lessThanOrEqualTo(tableT.get("fechaCaducidad"), pFiltro.getFechaHasta()));
+						builder.lessThanOrEqualTo(tableT.get("fechaInicio"), pFiltro.getFechaHasta()));
 			}
 		}
 
