@@ -193,12 +193,13 @@ public class UtilImportacion {
 
 		// Si ambos dominios son de tipo Area, tienen que ser el mismo area (sino, es
 		// probable que no se vean)
+		/*
 		if (dominio != null && dominioActual != null && dominio.getAmbito() == TypeAmbito.AREA
 				&& isAreaErroneo(dominioActual, dominio)) {
 
 			return FilaImportarDominio.crearITerrorAmbitoAreas(dominio, dominioActual, fd, fdContent, fdActual,
 					UtilJSF.getLiteral("importar.error.ambitoAreaDistintaArea"), configuracionAutenticacion);
-		}
+		}*/
 
 		// Puede que no exista el dominio de tipo area , en el area seleccionada.
 		if (dominio != null && dominioActual == null && dominio.getAmbito() == TypeAmbito.AREA) {
