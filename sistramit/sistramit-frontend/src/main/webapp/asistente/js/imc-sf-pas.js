@@ -30,6 +30,7 @@ var HTML_PAS_LITERALS = {
 			,txtPagarTitol: txtPagarTitol
 			,txtPagarExplicacio: txtPagarExplicacio
 			,txtRegistrarTitol: txtRegistrarTitol
+			,txtEnviarTitol: txtEnviarTitol
 			,txtRegistrarExplicacio: txtRegistrarExplicacio
 			,txtTitolLOPD: txtTitolLOPD
 			,txtSeguent: txtSeguent
@@ -95,7 +96,9 @@ var HTML_PAS_LITERALS = {
 		},
 		"rt": {
 			txtRegistrarTitol: txtRegistrarTitol
+			,txtEnviarTitol: txtEnviarTitol
 			,txtRegistrarInfo: txtRegistrarInfo
+			,txtEnviarInfo: txtEnviarInfo
 			,txtRegistrarInfoImportant: txtRegistrarInfoImportant
 			,txtInfoResum: txtInfoResum
 			,txtFormularis: txtFormularis
@@ -103,6 +106,7 @@ var HTML_PAS_LITERALS = {
 			,txtPagaments: txtPagaments
 			,txtAnterior: txtAnterior
 			,txtRegistrar: txtRegistrar
+			,txtEnviar: txtEnviar
 			,txtReintentar: txtReintentar
 			,txtSignatura: txtSignatura
 			,txtTitolLOPD: txtTitolLOPD
@@ -118,12 +122,13 @@ var HTML_PAS_LITERALS = {
 		},
 		"gj": {
 			txtRegistratCorrectament: txtRegistratCorrectament
+			,txtEnviatCorrectament: txtEnviatCorrectament
 			,txtDesauJustificant: txtDesauJustificant
+			,txtJustificantEnviament: txtJustificantEnviament
 			,txtAnarAlJustificant: txtAnarAlJustificant
 			,txtObriFinestra: txtObriFinestra
 			,txtDesauInfo: txtDesauInfo
 			,txtNumeroRegistre: txtNumeroRegistre
-			,txtDesauJustificant: txtDesauJustificant
 			,txtDesauDocumentacio: txtDesauDocumentacio
 			,txtDesauDocumentacioInfo: txtDesauDocumentacioInfo
 			,txtFormularis: txtFormularis
@@ -131,6 +136,7 @@ var HTML_PAS_LITERALS = {
 			,txtPagaments: txtPagaments
 			,txtAnterior: txtAnterior
 			,txtRegistrar: txtRegistrar
+			,txtEnviar: txtEnviar
 			,txtSotiuTramit: txtSotiuTramit
 			,txtValoracioTitol: txtValoracioTitol
 			,txtValoracioInformacio: txtValoracioInformacio
@@ -145,6 +151,7 @@ var HTML_PAS_LITERALS = {
 			,txtSenseValoracio: txtSenseValoracio
 			,txtCarpetaCiutadana: txtCarpetaCiutadana
 			,txtCarpetaNumeroRegistre: txtCarpetaNumeroRegistre
+			,txtCarpetaNumeroEnviament: txtCarpetaNumeroEnviament
 			,txtCarpetaAnarJustificant: txtCarpetaAnarJustificant
 			,txtSignatura: txtSignatura
 			,txtDocumentacioMostra: txtDocumentacioMostra
@@ -427,7 +434,13 @@ $.fn.appPas = function(options) {
 
 							// text
 
-							var nom_txt = (el_tipus === "ds") ? txtCalSaber : (el_tipus === "rf") ? txtEmplenar : (el_tipus === "ad") ? txtAnnexar : (el_tipus === "pt") ? txtPagar : (el_tipus === "rt") ? txtRegistrar : "";
+							var nom_txt = (el_tipus === "ds") ? txtCalSaber
+											: (el_tipus === "rf") ? txtEmplenar
+											: (el_tipus === "ad") ? txtAnnexar
+											: (el_tipus === "pt") ? txtPagar
+											: (el_tipus === "rt" && APP_TRAMIT_DESTI === "envio") ? txtEnviar
+											: (el_tipus === "rt" && APP_TRAMIT_DESTI === "registro") ? txtRegistrar
+											: "";
 
 							molla_pa_el
 								.find(".imc--nom")
@@ -566,6 +579,8 @@ $.fn.appPas = function(options) {
 					HTML_PAS_LITERALS[pas_tipus]["reintentar"] = pas_json.datos.actual.reintentar;
 					HTML_PAS_LITERALS[pas_tipus]["seguent"] = pas_json.datos.siguiente;
 
+					HTML_PAS_LITERALS[pas_tipus]["desti"] = APP_TRAMIT_DESTI;
+
 					var txtGlobals = {
 							globals: {
 								txtSignar: txtSignar
@@ -596,6 +611,8 @@ $.fn.appPas = function(options) {
 					HTML_PAS_LITERALS[pas_tipus]["jsonValoracio"] = pas_json.datos.actual.valoracion;
 					HTML_PAS_LITERALS[pas_tipus]["jsonValorat"] = false;
 					HTML_PAS_LITERALS[pas_tipus]["jsonValoracioProblemes"] = false;
+
+					HTML_PAS_LITERALS[pas_tipus]["desti"] = APP_TRAMIT_DESTI;
 
 					if (pas_json.datos.actual.valoracion) {
 

@@ -187,7 +187,7 @@ public final class AccionIniciarPago implements AccionPaso {
                 .obtenerPropiedadConfiguracion(
                         TypePropiedadConfiguracion.SISTRAMIT_URL)
                 + ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_PAGO_EXTERNO
-                + "?" + ConstantesSeguridad.TICKET_PARAM + "=" + ticket;
+                + "?" + ConstantesSeguridad.PARAM_TICKETAUTH + "=" + ticket;
 
         // Inicia sesion de pago en pasarela externa
         final PagoComponentRedireccion urlInicioPago = pagoExternoComponent

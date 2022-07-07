@@ -25,6 +25,12 @@ public class TramitePasoRegistrar extends TramitePaso {
 	/** Script presentador. **/
 	private Script scriptPresentador;
 
+	/** Destino. **/
+	private String destino;
+
+	/** Script presentador. **/
+	private EnvioRemoto envioRemoto;
+
 	/** Instrucciones fin tramitación */
 	private Literal instruccionesFinTramitacion;
 
@@ -251,4 +257,31 @@ public class TramitePasoRegistrar extends TramitePaso {
 		this.scriptAlFinalizar = scriptAlFinalizar;
 	}
 
+	/**
+	 * @return the destino
+	 */
+	public final String getDestino() {
+		return destino;
+	}
+
+	/**
+	 * @param destino the destino to set
+	 */
+	public final void setDestino(String destino) {
+		this.destino = destino;
+	}
+
+	/**
+	 * @return the envioRemoto
+	 */
+	public final EnvioRemoto getEnvioRemoto() {
+		return envioRemoto;
+	}
+
+	/**
+	 * @param envioRemoto the envioRemoto to set
+	 */
+	public final void setEnvioRemoto(EnvioRemoto envioRemoto) {
+		this.envioRemoto = envioRemoto;
+	}
 }

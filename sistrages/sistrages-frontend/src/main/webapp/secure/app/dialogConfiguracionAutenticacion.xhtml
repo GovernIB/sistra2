@@ -78,7 +78,7 @@
 		     	<p:toolbar>
 		     		<f:facet name="left">
 		     			<p:commandButton id="btnDominios" value="#{msg['botones.dominios']}" icon="fa fa-level-down" actionListener="#{dialogConfiguracionAutenticacion.dominios()}" process="@this" rendered="#{dialogConfiguracionAutenticacion.data.codigo ne null and !dialogConfiguracionAutenticacion.desactivarBotoneraActivo}" />
-	     				<p:commandButton id="btnConfigs" value="#{msg['botones.sgeArea']}" icon="fa fa-level-down" actionListener="#{dialogConfiguracionAutenticacion.formsExternos()}" process="@this" rendered="#{dialogConfiguracionAutenticacion.data.codigo ne null and !dialogConfiguracionAutenticacion.desactivarBotoneraActivo}" />
+	     				<p:commandButton id="btnConfigs" value="#{msg['botones.sgeArea']}" icon="fa fa-level-down" actionListener="#{dialogConfiguracionAutenticacion.formsExternos()}" process="@this" rendered="#{dialogConfiguracionAutenticacion.data.codigo ne null and !dialogConfiguracionAutenticacion.desactivarBotoneraActivo and dialogConfiguracionAutenticacion.isArea}" />
 	     	 		</f:facet>
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogConfiguracionAutenticacion.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogConfiguracionAutenticacion.isAlta() or dialogConfiguracionAutenticacion.isEdicion()}"/>

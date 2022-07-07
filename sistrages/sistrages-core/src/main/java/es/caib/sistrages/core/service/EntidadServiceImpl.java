@@ -231,6 +231,19 @@ public class EntidadServiceImpl implements EntidadService {
 	 * (non-Javadoc)
 	 *
 	 * @see
+	 * es.caib.sistrages.core.api.service.EntidadService#removeLogoAsistenteEntidad(
+	 * java.lang.Long)
+	 */
+	@Override
+	@NegocioInterceptor
+	public void removeIconoAsistenteEntidad(final Long idEntidad) {
+		borrarIconoAsistente(idEntidad);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
 	 * es.caib.sistrages.core.api.service.EntidadService#removeCssEntidad(java.lang.
 	 * Long)
 	 */
@@ -268,6 +281,21 @@ public class EntidadServiceImpl implements EntidadService {
 	@NegocioInterceptor
 	public void uploadLogoAsistenteEntidad(final Long idEntidad, final Fichero fichero, final byte[] content) {
 		final Fichero newFichero = entidadDao.uploadLogoAsistente(idEntidad, fichero);
+
+		ficheroExternoDao.guardarFichero(idEntidad, newFichero, content);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.EntidadService#uploadLogoAsistenteEntidad(
+	 * java.lang.Long, es.caib.sistrages.core.api.model.Fichero, byte[])
+	 */
+	@Override
+	@NegocioInterceptor
+	public void uploadIconoAsistenteEntidad(final Long idEntidad, final Fichero fichero, final byte[] content) {
+		final Fichero newFichero = entidadDao.uploadIconoAsistente(idEntidad, fichero);
 
 		ficheroExternoDao.guardarFichero(idEntidad, newFichero, content);
 	}
@@ -368,6 +396,14 @@ public class EntidadServiceImpl implements EntidadService {
 		}
 	}
 
+	private void borrarIconoAsistente(final Long idEntidad) {
+		final Entidad entidad = entidadDao.getById(idEntidad);
+		if (entidad != null && entidad.getIconoAsistenteTramitacion() != null) {
+			ficheroExternoDao.marcarBorrar(entidad.getIconoAsistenteTramitacion().getCodigo());
+			entidadDao.removeIconoAsistente(idEntidad);
+		}
+	}
+
 	private void borrarLogoGestor(final Long idEntidad) {
 		final Entidad entidad = entidadDao.getById(idEntidad);
 		if (entidad != null && entidad.getLogoGestor() != null) {
@@ -429,7 +465,8 @@ public class EntidadServiceImpl implements EntidadService {
 	public PlantillaEntidad uploadPlantillasEmailFin(Long idEntidad, Long idPlantillaEntidad,
 			PlantillaEntidad plantillaEntidad, byte[] contents) {
 
-		final PlantillaEntidad newPlantilla =  entidadDao.uploadPlantillasEmailFin(idPlantillaEntidad, plantillaEntidad, idEntidad);
+		final PlantillaEntidad newPlantilla = entidadDao.uploadPlantillasEmailFin(idPlantillaEntidad, plantillaEntidad,
+				idEntidad);
 		ficheroExternoDao.guardarFichero(idEntidad, newPlantilla.getFichero(), contents);
 
 		return newPlantilla;
@@ -447,6 +484,6 @@ public class EntidadServiceImpl implements EntidadService {
 	@Override
 	@NegocioInterceptor
 	public boolean existeEntidad(String identificador, Long codigo) {
-	 	return entidadDao.existeFormulario(identificador, codigo);
+		return entidadDao.existeFormulario(identificador, codigo);
 	}
 }

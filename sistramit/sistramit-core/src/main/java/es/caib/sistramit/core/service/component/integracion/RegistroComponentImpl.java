@@ -24,8 +24,6 @@ import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
-import es.caib.sistramit.core.service.model.system.Envio;
-import es.caib.sistramit.core.service.repository.dao.EnvioDao;
 
 /**
  * Implementación componente registro.
@@ -46,10 +44,6 @@ public final class RegistroComponentImpl implements RegistroComponent {
 	/** Auditoria. */
 	@Autowired
 	private AuditoriaComponent auditoriaComponent;
-
-	/** Envio */
-	@Autowired
-	private EnvioDao envioDao;
 
 	@Override
 	public ResultadoRegistrar registrar(final String codigoEntidad, final String idSesionTramitacion,
@@ -166,11 +160,6 @@ public final class RegistroComponentImpl implements RegistroComponent {
 	}
 
 	@Override
-	public void guardarEnvio(final Envio envio) {
-		envioDao.addEnvio(envio);
-	}
-
-	@Override
 	public String iniciarSesionRegistro(final String codigoEntidad, final boolean debugEnabled) {
 		final IRegistroPlugin plgRegistro = (IRegistroPlugin) configuracionComponent
 				.obtenerPluginEntidad(TypePluginEntidad.REGISTRO, codigoEntidad);
@@ -178,8 +167,8 @@ public final class RegistroComponentImpl implements RegistroComponent {
 			final String idSesionRegistro = plgRegistro.iniciarSesionRegistroEntrada(codigoEntidad);
 			return idSesionRegistro;
 		} catch (final RegistroPluginException e) {
-			throw new RegistroSolicitudException(
-					"Error iniciant sessió registre entrada per entitat: " + codigoEntidad, e);
+			throw new RegistroSolicitudException("Error iniciant sessió registre entrada per entitat: " + codigoEntidad,
+					e);
 		}
 	}
 
@@ -209,7 +198,8 @@ public final class RegistroComponentImpl implements RegistroComponent {
 			return res;
 		} catch (final RegistroPluginException e) {
 			throw new RegistroSolicitudException(
-					"Error iniciant sessió registre entrada per entitat: " + codigoEntidad, e);
+					"Error verificant sessió registre entrada " + idSesionRegistro + " per entitat: " + codigoEntidad,
+					e);
 		}
 	}
 

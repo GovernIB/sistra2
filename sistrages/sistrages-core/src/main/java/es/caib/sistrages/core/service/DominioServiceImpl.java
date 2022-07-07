@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
@@ -16,11 +17,13 @@ import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeClonarAccion;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.FuenteDatosComponent;
 import es.caib.sistrages.core.service.repository.dao.AreaDao;
+import es.caib.sistrages.core.service.repository.dao.ConfiguracionAutenticacionDao;
 import es.caib.sistrages.core.service.repository.dao.DominioDao;
 import es.caib.sistrages.core.service.repository.dao.EntidadDao;
 import es.caib.sistrages.core.service.repository.dao.FuenteDatoDao;
@@ -55,6 +58,12 @@ public class DominioServiceImpl implements DominioService {
 	 */
 	@Autowired
 	FuenteDatoDao fuenteDatoDao;
+
+	/**
+	 * config aute dao.
+	 */
+	@Autowired
+	ConfiguracionAutenticacionDao configAutDao;
 
 	/**
 	 * dominio dao.
@@ -253,13 +262,15 @@ public class DominioServiceImpl implements DominioService {
 
 	@Override
 	@NegocioInterceptor
-	public FuenteDatos loadFuenteDato(final TypeAmbito ambito, final String identificador, final Long codigoEntidad, final Long codigoArea, final Long codigoFD) {
+	public FuenteDatos loadFuenteDato(final TypeAmbito ambito, final String identificador, final Long codigoEntidad,
+			final Long codigoArea, final Long codigoFD) {
 		return fuenteDatoDao.getByIdentificador(ambito, identificador, codigoEntidad, codigoArea, codigoFD);
 	}
 
 	@Override
 	@NegocioInterceptor
-	public boolean existeFuenteDato(final TypeAmbito ambito, final String identificador, final Long codigoEntidad, final Long codigoArea, final Long codigoFD) {
+	public boolean existeFuenteDato(final TypeAmbito ambito, final String identificador, final Long codigoEntidad,
+			final Long codigoArea, final Long codigoFD) {
 		return fuenteDatoDao.existeFDByIdentificador(ambito, identificador, codigoEntidad, codigoArea, codigoFD);
 	}
 
@@ -294,10 +305,10 @@ public class DominioServiceImpl implements DominioService {
 		// Si es de tipo FD , vemos de obtenerlo antes
 		JFuenteDatos jfuenteDatos;
 		if (filaDominio.getDominio().getTipo() == TypeDominio.FUENTE_DATOS) {
-			jfuenteDatos = fuenteDatoDao.importarFD(filaDominio, filaDominio.getDominio().getAmbito(),
-					idEntidad, idArea);
+			jfuenteDatos = fuenteDatoDao.importarFD(filaDominio, filaDominio.getDominio().getAmbito(), idEntidad,
+					idArea);
 		} else {
-			jfuenteDatos = null ;
+			jfuenteDatos = null;
 		}
 
 		dominioDao.importar(filaDominio, idEntidad, idArea, jfuenteDatos);
@@ -305,20 +316,40 @@ public class DominioServiceImpl implements DominioService {
 
 	@Override
 	@NegocioInterceptor
-	public void clonar(final String dominioID, final String nuevoIdentificador, final Long areaID, final Long fdID,
-			final Long idEntidad) {
-		dominioDao.clonar(dominioID, nuevoIdentificador, areaID, fdID, idEntidad);
+	public void clonar(final String dominioID, final String nuevoIdentificador, final Long areaID, final Long idEntidad, final TypeClonarAccion accionFD, final FuenteDatos fd, final TypeClonarAccion accionCA, final ConfiguracionAutenticacion confAut) {
+		FuenteDatos fuenteDatos = null;
+		ConfiguracionAutenticacion conf = null;
+		if (accionFD != TypeClonarAccion.NADA) {
+			if (accionFD == TypeClonarAccion.MANTENER) {
+				fuenteDatos = fd;
+			} else {
+				//Reemplaza/Crea los datos del fd del dominio con el fd objetivo
+				fuenteDatos = fuenteDatoDao.clonar(dominioID, accionFD, fd, idEntidad, areaID);
+			}
+		}
+
+		if (accionCA != TypeClonarAccion.NADA) {
+			if (accionCA == TypeClonarAccion.MANTENER) {
+				conf = confAut;
+			} else {
+				//Reemplaza/Crea los datos del fd del dominio con el fd objetivo
+				conf = configAutDao.clonar(dominioID, accionCA, confAut, idEntidad, areaID);
+			}
+		}
+
+		dominioDao.clonar(dominioID, nuevoIdentificador, areaID,  idEntidad, fuenteDatos, conf);
 	}
 
 	@Override
 	@NegocioInterceptor
-	public List<Dominio> getDominiosByConfAut(Long idConfiguracion, Long idArea) {
-		return dominioDao.getDominiosByConfAut(idConfiguracion ,idArea);
+	public List<Dominio> getDominiosByConfAut(TypeAmbito ambito, Long idConfiguracion, Long idArea) {
+		return dominioDao.getDominiosByConfAut(ambito, idConfiguracion, idArea);
 	}
 
 	@Override
 	@NegocioInterceptor
-	public List<Dominio> getDominiosByIdentificador(List<String> identificadoresDominio, final Long idEntidad, final Long idArea) {
+	public List<Dominio> getDominiosByIdentificador(List<String> identificadoresDominio, final Long idEntidad,
+			final Long idArea) {
 		return dominioDao.getDominiosByIdentificador(identificadoresDominio, idEntidad, idArea);
 	}
 
@@ -326,16 +357,15 @@ public class DominioServiceImpl implements DominioService {
 	@NegocioInterceptor
 	public boolean existeDominioByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
 			Long codigoArea, Long codigoDominio) {
-		return dominioDao.existeDominioByIdentificador( ambito,  identificador,  codigoEntidad,
-				 codigoArea,  codigoDominio);
+		return dominioDao.existeDominioByIdentificador(ambito, identificador, codigoEntidad, codigoArea, codigoDominio);
 	}
 
 	@Override
 	@NegocioInterceptor
 	public Dominio loadDominioByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
 			Long codigoArea, Long codigoDominio) {
-		return dominioDao.getDominioByIdentificador( ambito,  identificador,  null, null,codigoEntidad,
-				 codigoArea,  codigoDominio);
+		return dominioDao.getDominioByIdentificador(ambito, identificador, null, null, codigoEntidad, codigoArea,
+				codigoDominio);
 	}
 
 	@Override
@@ -343,7 +373,8 @@ public class DominioServiceImpl implements DominioService {
 	public Dominio loadDominioByIdentificadorCompuesto(String identificadorCompuesto) {
 
 		ValorIdentificadorCompuesto valor = new ValorIdentificadorCompuesto(identificadorCompuesto);
-		return dominioDao.getDominioByIdentificador(valor.getAmbito(), valor.getIdentificador(), valor.getIdentificadorEntidad(), valor.getIdentificadorArea(), null, null, null);
+		return dominioDao.getDominioByIdentificador(valor.getAmbito(), valor.getIdentificador(),
+				valor.getIdentificadorEntidad(), valor.getIdentificadorArea(), null, null, null);
 	}
 
 }

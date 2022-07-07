@@ -39,7 +39,7 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="wpx25 dContents" columns = "3" cellpadding = "5" cellspacing = "0"  style="width:100%;">
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w15 dContents, w75, wpx25" columns = "3" cellpadding = "5" cellspacing = "0"  style="width:100%;">
 
 					<p:outputLabel for="tipo" value="#{msg['dialogPlugin.headerTipo']}" />
 					<p:selectOneMenu id="tipo" value="#{dialogPlugin.data.tipo}"  required="true" disabled="#{dialogPlugin.isConsulta()}" style="width:94%;">

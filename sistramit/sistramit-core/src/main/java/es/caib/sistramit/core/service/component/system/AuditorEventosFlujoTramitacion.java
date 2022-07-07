@@ -20,44 +20,52 @@ public interface AuditorEventosFlujoTramitacion {
 	 * de un metodo.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesion tramitación Instancia objeto invocado
+	 *                                Id sesion tramitación Instancia objeto
+	 *                                invocado
 	 * @param metodo
-	 *            Nombre metodo
+	 *                                Nombre metodo
 	 * @param argumentos
-	 *            Argumentos
+	 *                                Argumentos
+	 * @param debugEnabled
+	 *                                Si está habilitado el debug en el trámite
 	 * @return Devuelve eventos generados.
 	 */
-	List<EventoAuditoria> interceptaInvocacion(String idSesionTramitacion, String metodo, Object[] argumentos);
+	List<EventoAuditoria> interceptaInvocacion(String idSesionTramitacion, String metodo, Object[] argumentos,
+			boolean debugEnabled);
 
 	/**
 	 * Permite establecer logica personalizada para auditar eventos en el retorno de
 	 * un metodo.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesion tramitación Instancia objeto invocado
+	 *                                Id sesion tramitación Instancia objeto
+	 *                                invocado
 	 * @param metodo
-	 *            Nombre metodo
+	 *                                Nombre metodo
 	 * @param argumentos
-	 *            Argumentos
+	 *                                Argumentos
 	 * @param result
-	 *            Resultado del metodo
+	 *                                Resultado del metodo
+	 * @param debugEnabled
+	 *                                Si está habilitado el debug en el trámite
 	 * @return Devuelve eventos generados.
 	 */
 	List<EventoAuditoria> interceptaRetorno(String idSesionTramitacion, String metodo, Object[] argumentos,
-			Object result);
+			Object result, boolean debugEnabled);
 
 	/**
 	 * Permite establecer logica personalizada para auditar eventos si un metodo
 	 * genera una excepcion.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesion tramitación Instancia objeto invocado
+	 *                                Id sesion tramitación Instancia objeto
+	 *                                invocado
 	 * @param metodo
-	 *            Nombre metodo
+	 *                                Nombre metodo
 	 * @param argumentos
-	 *            Argumentos
+	 *                                Argumentos
 	 * @param excepcion
-	 *            generada
+	 *                                generada
 	 * @return Devuelve eventos generados.
 	 */
 	List<EventoAuditoria> interceptaExcepcion(String idSesionTramitacion, String metodo, Object[] argumentos,

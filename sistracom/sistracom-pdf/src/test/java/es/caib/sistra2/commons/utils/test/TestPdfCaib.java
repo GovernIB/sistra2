@@ -43,7 +43,7 @@ public class TestPdfCaib {
 		final Logger log = LoggerFactory.getLogger(TestPdfCaib.class);
 
 		final Cabecera cabecera = new Cabecera();
-		cabecera.setTitulo("QUEIXES I SUGGERIMENTS (IB-SALUT)");
+		cabecera.setTitulo("RECURS D'ALÇADA RECURS D'ALÇADA RECURS D'ALÇADA RECURS D'ALÇADA ");
 		final PersonalizacionTexto personalizacicionTextoTituloCabecera = new PersonalizacionTexto(true, true,
 				TypeFuente.NOTOSANS, 20);
 		final PersonalizacionTexto personalizacicionTextoSubTituloCabecera = new PersonalizacionTexto(true, true,
@@ -51,7 +51,7 @@ public class TestPdfCaib {
 
 		final PersonalizacionTexto personalizacicionTextoCodigoSia = new PersonalizacionTexto(true, true,
 				TypeFuente.NOTOSANS, 12);
-		cabecera.setSubtitulo("Formulari 1");
+		cabecera.setSubtitulo("Formulari");
 		cabecera.setCodigoSia("2212");
 		// cabecera.setPersonalizacionCodigoSiaTitulo(personalizacicionTextoCodigoSia);
 		// cabecera.setPersonalizacionTextoTitulo(personalizacicionTextoTituloCabecera);

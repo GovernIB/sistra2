@@ -4,6 +4,7 @@
 package es.caib.sistrages.frontend.controller;
 
 import javax.faces.bean.ManagedProperty;
+import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -11,7 +12,10 @@ import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.frontend.model.ResultadoError;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -24,7 +28,8 @@ import es.caib.sistrages.frontend.util.UtilRest;
  *
  */
 public abstract class ViewControllerBase {
-
+	@Inject
+	private SystemService systemService;
 	/**
 	 * Log.
 	 */
@@ -46,7 +51,31 @@ public abstract class ViewControllerBase {
 	 */
 	public void refrescarCache(final String urlBase, final String usuario, final String pwd, final String tipo,
 			final String identificador) {
-		refrescarCache(urlBase, usuario, pwd, tipo, identificador, false);
+		refrescarCache(urlBase, usuario, pwd, tipo, identificador, true);
+	}
+
+	public ResultadoError refrescar() {
+
+		final String urlBase = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
+		final String usuario = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
+		final String pwd = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
+
+		return this.refrescarCacheResult(urlBase, usuario, pwd, Constantes.CACHE_COMPLETA, true);
+
+	}
+
+	/**
+	 * Refresca la cache
+	 */
+	public ResultadoError refrescarCacheResult(final String urlBase, final String usuario, final String pwd,
+			final String tipo, final boolean mensaje) {
+
+		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, tipo);
+
+		return resultado;
 	}
 
 	/**
@@ -64,6 +93,17 @@ public abstract class ViewControllerBase {
 						UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
 			}
 		}
+	}
+
+	/**
+	 * Refresca la cache devoliviendo resultado
+	 */
+	public ResultadoError refrescarCacheResultado(final String urlBase, final String usuario, final String pwd,
+			final String tipo, final String identificador) {
+
+		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, tipo, identificador);
+
+		return resultado;
 	}
 
 	/**

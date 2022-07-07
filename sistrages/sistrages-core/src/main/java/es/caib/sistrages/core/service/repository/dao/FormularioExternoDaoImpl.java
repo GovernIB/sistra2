@@ -32,7 +32,8 @@ public class FormularioExternoDaoImpl implements FormularioExternoDao {
 
 	private static final String FALTA_IDENTIFICADOR = "Falta el identificador";
 	private static final String NO_EXISTE_EL_FORM_EXTERNO = "No existe el Formulario Externo: ";
-	private static final String FALTA_AREA = "Falta el are";
+	private static final String FALTA_AREA = "Falta el area";
+	private static final String FALTA_ENTIDAD = "Falta el area";
 	private static final String FALTA_AVISO = "Falta el formulario Externo";
 	private static final String NO_EXISTE_EL_AREA = "No existe el area: ";
 
@@ -171,7 +172,7 @@ public class FormularioExternoDaoImpl implements FormularioExternoDao {
 		if (pIdArea == null) {
 			throw new FaltanDatosException(FALTA_AREA);
 		}
-		return listarGestorExternoFormularios(pIdArea, pIdioma, pFiltro);
+		return listarGestorExternoFormularios(pIdArea, pIdioma, pFiltro, null);
 	}
 
 	/*
@@ -186,7 +187,15 @@ public class FormularioExternoDaoImpl implements FormularioExternoDao {
 		if (pIdArea == null) {
 			throw new FaltanDatosException(FALTA_AREA);
 		}
-		return listarGestorExternoFormularios(pIdArea, null, null);
+		return listarGestorExternoFormularios(pIdArea, null, null, null);
+	}
+
+	@Override
+	public List<GestorExternoFormularios> getAllByEntidad(Long pIdEntidad) {
+		if (pIdEntidad == null) {
+			throw new FaltanDatosException(FALTA_ENTIDAD);
+		}
+		return listarGestorExternoFormularios(null, null, null, pIdEntidad);
 	}
 
 	/**
@@ -199,9 +208,9 @@ public class FormularioExternoDaoImpl implements FormularioExternoDao {
 	 */
 	@SuppressWarnings("unchecked")
 	private List<GestorExternoFormularios> listarGestorExternoFormularios(final Long pIdArea, final TypeIdioma idioma,
-			final String pFiltro) {
+			final String pFiltro, final Long pIdAreaEntidad) {
 		final List<GestorExternoFormularios> listaFormularioExterno = new ArrayList<>();
-		Query query  = getQuery(pFiltro, null, pIdArea, false, false, false);
+		Query query  = getQuery(pFiltro, null, pIdArea, false, false, false, pIdAreaEntidad);
 		final List<JGestorExternoFormularios> results = query.getResultList();
 		if (results != null && !results.isEmpty()) {
 			for (final JGestorExternoFormularios jGestorExternoFormularios : results) {
@@ -211,7 +220,7 @@ public class FormularioExternoDaoImpl implements FormularioExternoDao {
 		return listaFormularioExterno;
 	}
 
-	private Query getQuery(final String filtro, final Long idEntidad, final Long idArea, final boolean checkGlobal, final boolean checkEntidad, final boolean checkArea) {
+	private Query getQuery(final String filtro, final Long idEntidad, final Long idArea, final boolean checkGlobal, final boolean checkEntidad, final boolean checkArea, final Long pIdAreaEntidad) {
 		StringBuilder sql = new StringBuilder("select a from JGestorExternoFormularios as a where 1 = 1 ");
 
 		if (checkEntidad || checkGlobal || checkArea) {
@@ -220,6 +229,10 @@ public class FormularioExternoDaoImpl implements FormularioExternoDao {
 
 		if (idArea != null) {
 			 sql.append(" AND a.area.codigo = :idArea ");
+		}
+
+		if (pIdAreaEntidad != null) {
+			 sql.append(" AND a.area.entidad.codigo = :pIdAreaEntidad ");
 		}
 
 		if (StringUtils.isNotBlank(filtro)) {
@@ -235,6 +248,9 @@ public class FormularioExternoDaoImpl implements FormularioExternoDao {
 		if (idArea != null) {
 			query.setParameter("idArea", idArea);
 		}
+		if (pIdAreaEntidad != null) {
+			query.setParameter("pIdAreaEntidad", pIdAreaEntidad);
+		}
 
 		if (StringUtils.isNotBlank(filtro)) {
 			query.setParameter("filtro", "%" + filtro.toLowerCase() + "%");
@@ -245,7 +261,7 @@ public class FormularioExternoDaoImpl implements FormularioExternoDao {
 
 	@Override
 	public List<ConsultaGeneral> listar(final String filtro, final TypeIdioma idioma, Long idEntidad, Long idArea, final boolean checkGlobal, final boolean checkEntidad, final boolean checkArea) {
-		Query query = getQuery(filtro, idEntidad, idArea, checkGlobal, checkEntidad, checkArea);
+		Query query = getQuery(filtro, idEntidad, idArea, checkGlobal, checkEntidad, checkArea, null);
 		final List<JGestorExternoFormularios> results = query.getResultList();
 		final List<ConsultaGeneral> datos = new ArrayList<>();
 		if (results != null && !results.isEmpty()) {
@@ -417,5 +433,7 @@ public class FormularioExternoDaoImpl implements FormularioExternoDao {
 
 		}
 	}
+
+
 
 }

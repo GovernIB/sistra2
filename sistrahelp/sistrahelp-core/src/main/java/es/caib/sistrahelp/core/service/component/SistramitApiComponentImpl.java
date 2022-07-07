@@ -96,7 +96,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 
 		final RINEventoAuditoria param = new RINEventoAuditoria();
 		param.setPaginacion(convierteFiltroPaginacion(pFiltroPaginacion));
-		param.setFiltro(convierteFiltroAuditoriaBusqueda(pFiltroBusqueda));
+		param.setFiltro(convierteFiltroAuditoriaBusqueda(toCapital(pFiltroBusqueda)));
 
 		final HttpEntity<RINEventoAuditoria> request = new HttpEntity<>(param, headers);
 		ResponseEntity<ROUTEventoAuditoria> response = null;
@@ -134,6 +134,35 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 		}
 
 		return resultado;
+	}
+
+	private FiltroAuditoriaTramitacion toCapital(FiltroAuditoriaTramitacion filtro) {
+		if (filtro != null) {
+			if (filtro.getIdSesionTramitacion() != null) {
+				filtro.setIdSesionTramitacion(filtro.getIdSesionTramitacion().toUpperCase());
+			}
+
+			if (filtro.getIdProcedimientoCP() != null) {
+				filtro.setIdProcedimientoCP(filtro.getIdProcedimientoCP().toUpperCase());
+			}
+
+			if (filtro.getNombre() != null) {
+				filtro.setNombre(filtro.getNombre().toUpperCase());
+			}
+
+			if (filtro.getNif() != null) {
+				filtro.setNif(filtro.getNif().toUpperCase());
+			}
+
+			if (filtro.getIdTramite() != null) {
+				filtro.setIdTramite(filtro.getIdTramite().toUpperCase());
+			}
+
+			if (filtro.getCodSia() != null) {
+				filtro.setCodSia(filtro.getCodSia().toUpperCase());
+			}
+		}
+		return filtro;
 	}
 
 	@Override
@@ -363,6 +392,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 			rFiltro.setNombre(pFiltro.getNombre());
 			rFiltro.setFechaDesde(pFiltro.getFechaDesde());
 			rFiltro.setFechaHasta(pFiltro.getFechaHasta());
+			rFiltro.setCodSia(pFiltro.getCodSia());
 
 			if (pFiltro.getEvento() != null) {
 				rFiltro.setEvento(pFiltro.getEvento().name());

@@ -51,7 +51,7 @@
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewRolesPermisos.listaDatos}"
-						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+						 rows="#{viewRolesPermisos.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -64,6 +64,7 @@
 		                  		oncomplete="triggerDblClick();"
 		                        update=":form:dataTable"
 		                        />
+		         <p:ajax event="page" update=":form:dataTable :form:toolbar"/>
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewRolesPermisos.headerCodigo']}">

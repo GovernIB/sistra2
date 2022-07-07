@@ -74,7 +74,8 @@ public final class AccionAbrirFormulario implements AccionPaso {
 		// Si el formulario es dependiente, no debería dejar abrirlo
 		final Formulario formularioDetalle = ((DetallePasoRellenar) dipa.getDetallePaso()).getFormulario(idFor);
 		if (formularioDetalle == null) {
-			throw new AccionPasoNoPermitidaException("No existeix formulari " + idFor + " a la passa " + dipa.getIdPaso());
+			throw new AccionPasoNoPermitidaException(
+					"No existeix formulari " + idFor + " a la passa " + dipa.getIdPaso());
 		}
 		if (formularioDetalle.getObligatorio() == TypeObligatoriedad.DEPENDIENTE) {
 			throw new AccionPasoNoPermitidaException("Un formulari dependent no pot ser obert");

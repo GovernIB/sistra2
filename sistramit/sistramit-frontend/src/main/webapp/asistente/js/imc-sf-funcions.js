@@ -1754,7 +1754,12 @@ $.fn.appPopupTabula = function(options) {
 
 							var f_el = $(this)
 								,f_el_tipus = f_el.attr("data-tipus")
-								,f_el_contingut = f_el.attr("data-contingut");
+								,f_el_contingut = f_el.attr("data-contingut")
+								,f_el_ocult = f_el.attr("data-ocult");
+
+							if (f_el_ocult === "s") {
+								return;
+							}
 
 							if (f_el_tipus === "texto") {
 
@@ -1799,10 +1804,7 @@ $.fn.appPopupTabula = function(options) {
 								// llista d'elements
 
 								f_el
-									.find("button")
-										.attr("data-tabula", "si")
-										.end()
-									.find("input[type=radio]")
+									.find("button, input[type=radio]")
 										.attr("data-tabula", "si");
 
 							} else if (f_el_contingut === "d") {
@@ -1810,10 +1812,7 @@ $.fn.appPopupTabula = function(options) {
 								// selector
 
 								f_el
-									.find("a.imc-select:first")
-										.attr("data-tabula", "si")
-										.end()
-									.find("button.imc--bt-reset")
+									.find("a.imc-select:first, button.imc--bt-reset")
 										.attr("data-tabula", "si");
 
 							} else if (f_el_contingut === "m") {
@@ -1858,13 +1857,7 @@ $.fn.appPopupTabula = function(options) {
 				if (esPopupDocument) {
 
 					element
-						.find("input[type=text], input[type=checkbox]")
-							.attr("data-tabula", "si")
-							.end()
-						.find(".imc-bt-anexa")
-							.attr("data-tabula", "si")
-							.end()
-						.find("button")
+						.find("input[type=text]:visible, input[type=checkbox]:visible, .imc-bt-anexa:visible, button:visible")
 							.attr("data-tabula", "si");
 
 				}
@@ -1875,10 +1868,7 @@ $.fn.appPopupTabula = function(options) {
 				if (esPopupLOPD) {
 
 					element
-						.find("a")
-							.attr("data-tabula", "si")
-							.end()
-						.find("button")
+						.find("a:visible, button:visible")
 							.attr("data-tabula", "si");
 
 				}

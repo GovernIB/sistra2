@@ -58,6 +58,16 @@ public class JEntidad implements IModelApi {
 	@JoinColumn(name = "ENT_LOGOTT")
 	private JFichero logoAsistenteTramitacion;
 
+	/** Icono entidad GestorExternoFormularios Trámites */
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "ENT_ICONOSTT")
+	private JFichero iconoAsistenteTramitacion;
+
+	/** Titulo entidad GestorExternoFormularios Trámites */
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "ENT_TITULOSTT")
+	private JLiteral tituloAsistenteTramitacion;
+
 	/** CSS Asistente Tramitación **/
 	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "ENT_CSSTT")
@@ -218,6 +228,34 @@ public class JEntidad implements IModelApi {
 	 */
 	public void setIdentificador(String identificador) {
 		this.identificador = identificador;
+	}
+
+	/**
+	 * @return the iconoAsistenteTramitacion
+	 */
+	public JFichero getIconoAsistenteTramitacion() {
+		return iconoAsistenteTramitacion;
+	}
+
+	/**
+	 * @param iconoAsistenteTramitacion the iconoAsistenteTramitacion to set
+	 */
+	public void setIconoAsistenteTramitacion(JFichero iconoAsistenteTramitacion) {
+		this.iconoAsistenteTramitacion = iconoAsistenteTramitacion;
+	}
+
+	/**
+	 * @return the tituloAsistenteTramitacion
+	 */
+	public JLiteral getTituloAsistenteTramitacion() {
+		return tituloAsistenteTramitacion;
+	}
+
+	/**
+	 * @param tituloAsistenteTramitacion the tituloAsistenteTramitacion to set
+	 */
+	public void setTituloAsistenteTramitacion(JLiteral tituloAsistenteTramitacion) {
+		this.tituloAsistenteTramitacion = tituloAsistenteTramitacion;
 	}
 
 	/**
@@ -707,6 +745,12 @@ public class JEntidad implements IModelApi {
 		entidad.setActivo(this.activa);
 		if (this.cssAsistenteTramitacion != null) {
 			entidad.setCss(this.cssAsistenteTramitacion.toModel());
+		}
+		if (this.iconoAsistenteTramitacion != null) {
+			entidad.setIconoAsistenteTramitacion(this.iconoAsistenteTramitacion.toModel());
+		}
+		if (this.tituloAsistenteTramitacion != null) {
+			entidad.setTituloAsistenteTramitacion(this.tituloAsistenteTramitacion.toModel());
 		}
 		entidad.setEmailHabilitado(contactoEmail);
 		entidad.setFormularioIncidenciasHabilitado(contactoFormularioIncidencias);

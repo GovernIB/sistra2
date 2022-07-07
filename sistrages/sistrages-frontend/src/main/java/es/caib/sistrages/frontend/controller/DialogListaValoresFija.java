@@ -17,6 +17,7 @@ import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
@@ -63,10 +64,20 @@ public class DialogListaValoresFija extends DialogControllerBase {
 	 */
 	public void aceptar() {
 		// Retornamos resultado
+		if (data.getDescripcion() == null) {
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("dialogListaValoresFija.errVacio"));
+			return;
+		}
+
+		if (!data.getDescripcion().getIdiomas().containsAll(idiomas)) {
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("dialogListaValoresFija.errIdiomas"));
+			return;
+		}
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
+
 	}
 
 	/**
@@ -124,8 +135,7 @@ public class DialogListaValoresFija extends DialogControllerBase {
 	}
 
 	/**
-	 * @param iData
-	 *            the iData to set
+	 * @param iData the iData to set
 	 */
 	public void setiData(final String iData) {
 		this.iData = iData;
@@ -139,8 +149,7 @@ public class DialogListaValoresFija extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final ValorListaFija data) {
 		this.data = data;

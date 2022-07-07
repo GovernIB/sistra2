@@ -1,0 +1,36 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">ENVIAMENTS REMOTS</h1>
+<p>
+	En la pantalla de '<i>Enviaments Remots</i>' es pot gestionar l'alta, baixa i edici&oacute; de enviaments. Els enviaments tenen un &agrave;mbit d'aplicaci&oacute;, entitat i/o &agrave;rea, que es refereix a si apliquen a una entitat concreta o a una &agrave;rea d'una entitat.<br><br>
+	Aquesta pantalla permet la realitzaci&oacute; de cerques filtrades d'enviaments.<br><br>
+	El manteniment d'enviaments d'&agrave;mbit entitat hauran de ser mantinguts per un usuari amb rol '<i>Administrador d'entitat</i>' i els d'&agrave;rea per un desenvolupador amb permisos d'administraci&oacute; d'&agrave;rea o tamb&eacute; per un Administrador d'entitat.
+</p>
+<h2 class="stgH2">CAMPS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Identificador:</span> codi un&iacute;voc que identifica l'enviament i mitjan&ccedil;ant el qual es podr&agrave; invocar l'enviament </li>
+		<li><span class="nombreCampo">Descripci&oacute;:</span> text descriptiu de la funcionalitat prove&iuml;da per l'enviament</li>
+		<li><span class="nombreCampo">URL:</span> URL del servei al qual es vol realitzar l'enviament remot.</li>
+		<li><span class="nombreCampo">Configuraci&oacute; Autenticaci&oacute;:</span> autenticaci&oacute; que s'enviar&agrave; al servei en cas d'estar securitzat. </li>
+		<li><span class="nombreCampo">Timeout (segons):</span> temps que esperar&agrave; SISTRA2 en cas de no obtenir resposta del servei.</li>
+
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Cercar</span>: introduint un text en el camp '<i>Cercar</i>' i prement el bot&oacute; amb la icona de la lupa es dur&agrave; a terme un filtratge dels enviaments que continguin el text introdu&iuml;t. El criteri de cerca aplicar&agrave; en qualsevol dels camps de l'enviament. Posteriorment es visualitzaran els resultats de la cerca filtrant-ho en el llistat d'enviaments.</li>
+		<li><span class="boton">Nou</span>: prement en el bot&oacute; s'obrir&agrave; la <a href="AyudaServlet?lang=ca&id=envioRemoto">fitxa</a> per donar d'alta un nou enviament en el qual haur&agrave; d'emplenar els camps m&iacute;nims so&#320;licitats.</li>
+		<li><span class="boton">Editar</span>: seleccionant un enviament del llistat i prement en el bot&oacute; s'obrir&agrave; la fitxa per poder realitzar les modificacions dels camps desitjats.</li>
+		<li> <span class="boton">Eliminar</span>: seleccionant un enviament del llistat i prement sobre el bot&oacute; podr&agrave; suprimir un enviament existent. Previ a l'eliminaci&oacute; del enviament es mostrar&agrave; un missatge de confirmaci&oacute; de l'acci&oacute;.</li>
+		<li> <span class="boton">Tr&agrave;mit</span>: seleccionant un enviament del llistat i prement sobre el bot&oacute;  es mostrar&agrave; un di&agrave;leg amb tots els tr&agrave;mits que utilitzen l'enviament</li>
+	</ul>
+</p>
+</body>
+</html>

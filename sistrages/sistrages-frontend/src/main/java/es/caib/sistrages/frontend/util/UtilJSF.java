@@ -40,6 +40,7 @@ import es.caib.sistrages.frontend.controller.ViewConfiguracionEntidad;
 import es.caib.sistrages.frontend.controller.ViewConsultaGeneral;
 import es.caib.sistrages.frontend.controller.ViewDominios;
 import es.caib.sistrages.frontend.controller.ViewEntidades;
+import es.caib.sistrages.frontend.controller.ViewEnviosRemotos;
 import es.caib.sistrages.frontend.controller.ViewFormateadorFormulario;
 import es.caib.sistrages.frontend.controller.ViewFuentes;
 import es.caib.sistrages.frontend.controller.ViewMensajesAvisoEntidad;
@@ -618,6 +619,14 @@ public final class UtilJSF {
 		case CONFIGURACION_AUTENTICACION:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewConfiguracionAutenticacion.class) + EXTENSION_XHTML
 					+ ambitoEntidadURL;
+			break;/*
+		case SECCIONES_REUTILIZABLES:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewSeccionesReutilizables.class) + EXTENSION_XHTML
+			+ ambitoEntidadURL;
+			break; */
+		case ENVIOS_REMOTOS:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewEnviosRemotos.class) + EXTENSION_XHTML
+					+ ambitoEntidadURL;
 			break;
 		default:
 			url = URL_SIN_IMPLEMENTAR;
@@ -806,6 +815,19 @@ public final class UtilJSF {
 	}
 
 	/**
+	 * Devuelve el entorno.
+	 *
+	 * @return
+	 */
+	public static boolean isPromocionSe2Pro() {
+		final String promocionDesa2Pro = FacesContext.getCurrentInstance().getApplication()
+				.evaluateExpressionGet(FacesContext.getCurrentInstance(), "#{frontModuleConfig}",
+						es.caib.sistrages.frontend.ModuleConfig.class)
+				.getPromocionSe2Pro();
+		return promocionDesa2Pro != null && promocionDesa2Pro.equalsIgnoreCase("true");
+	}
+
+	/**
 	 * Devuelve la revision de SVN o GIT.
 	 *
 	 * @return
@@ -877,22 +899,22 @@ public final class UtilJSF {
 
 	/** Método que comprueba si tienes el rol de administrador de entidad activo **/
 	public static boolean isRolAdministrador() {
-		  return isRol(TypeRoleAcceso.ADMIN_ENT);
+		return isRol(TypeRoleAcceso.ADMIN_ENT);
 	}
 
 	/** Método que comprueba si tienes el rol de desarrollador activo **/
 	public static boolean isRolDesarrolllador() {
-		  return isRol(TypeRoleAcceso.DESAR);
+		return isRol(TypeRoleAcceso.DESAR);
 	}
 
 	/** Método que comprueba si tienes el rol de super administrador ¡ activo **/
 	public static boolean isRolSuperAdministrador() {
-		  return isRol(TypeRoleAcceso.SUPER_ADMIN);
+		return isRol(TypeRoleAcceso.SUPER_ADMIN);
 	}
 
 	private static boolean isRol(TypeRoleAcceso rolAcceso) {
-		return ((SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
-		.get("sessionBean")).getActiveRole() == rolAcceso;
+		return ((SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("sessionBean"))
+				.getActiveRole() == rolAcceso;
 	}
 
 	public static void loggearErrorFront(String mensaje, Exception e) {
@@ -902,6 +924,5 @@ public final class UtilJSF {
 			LOG.error(mensaje, e);
 		}
 	}
-
 
 }

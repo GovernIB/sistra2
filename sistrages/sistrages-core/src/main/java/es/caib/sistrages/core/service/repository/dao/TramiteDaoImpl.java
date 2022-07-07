@@ -418,6 +418,7 @@ public class TramiteDaoImpl implements TramiteDao {
 				tramiteVersion.setActiva(jTramiteVersion.isActiva());
 				tramiteVersion.setTipoFlujo(TypeFlujo.fromString(jTramiteVersion.getTipoflujo()));
 				tramiteVersion.setDescripcion(jTramiteVersion.getDescripcion());
+				tramiteVersion.setTipoTramite(jTramiteVersion.getTipoTramite());
 				tramiteVersion.setRelease(jTramiteVersion.getRelease());
 				tramiteVersion.setIdTramite(jTramiteVersion.getTramite().getCodigo());
 				tramiteVersion.setFechaUltima(getFechaUltima(jTramiteVersion.getCodigo()));
@@ -473,6 +474,9 @@ public class TramiteDaoImpl implements TramiteDao {
 
 		final JVersionTramite jTramiteVersion = JVersionTramite.fromModel(tramiteVersion);
 		jTramiteVersion.setTramite(jTramite);
+		if (jTramiteVersion.getTipoTramite() == null) {
+			jTramiteVersion.setTipoTramite("T");
+		}
 		entityManager.persist(jTramiteVersion);
 		entityManager.flush();
 
@@ -480,6 +484,9 @@ public class TramiteDaoImpl implements TramiteDao {
 			for (final TramitePaso paso : tramiteVersion.getListaPasos()) {
 				final JPasoTramitacion jpaso = JPasoTramitacion.fromModel(paso);
 				jpaso.setVersionTramite(jTramiteVersion);
+				if (jpaso.getPasoRegistrar() != null && jpaso.getPasoRegistrar().getDestino() == null) {
+					jpaso.getPasoRegistrar().setDestino("R");
+				}
 				entityManager.persist(jpaso);
 			}
 		}
@@ -812,7 +819,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		final String sql = "Select d From JDominio d JOIN d.versionesTramite t where t.codigo = :idTramiteVersion order by d.identificador asc";
 
 		final Query query = entityManager.createQuery(sql);
-		query.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
+		query.setParameter("idTramiteVersion", idTramiteVersion);
 
 		final List<JDominio> resultados = query.getResultList();
 		final List<Dominio> dominios = new ArrayList<>();
@@ -836,17 +843,21 @@ public class TramiteDaoImpl implements TramiteDao {
 		final List<JDominio> jdominios = query.getResultList();
 		final List<String> resultado = new ArrayList<>();
 		if (jdominios != null) {
-			for(JDominio jdominio : jdominios) {
+			for (JDominio jdominio : jdominios) {
 				if (jdominio.getAmbito().equals(TypeAmbito.GLOBAL.toString())) {
-					resultado.add("GLOBAL"+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+jdominio.getIdentificador());
+					resultado.add("GLOBAL" + ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO
+							+ jdominio.getIdentificador());
 				} else if (jdominio.getAmbito().equals(TypeAmbito.ENTIDAD.toString())) {
 					String idEntidad = jdominio.getEntidad().getIdentificador();
-					resultado.add(idEntidad+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+jdominio.getIdentificador());
+					resultado.add(idEntidad + ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO
+							+ jdominio.getIdentificador());
 				} else {
 					JArea jarea = jdominio.getArea();
 					String idArea = jarea.getIdentificador();
 					String idEntidad = jarea.getEntidad().getIdentificador();
-					resultado.add(idEntidad+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+idArea+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+jdominio.getIdentificador());
+					resultado.add(idEntidad + ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO + idArea
+							+ ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO
+							+ jdominio.getIdentificador());
 				}
 			}
 		}
@@ -979,7 +990,8 @@ public class TramiteDaoImpl implements TramiteDao {
 	}
 
 	@Override
-	public Tramite getTramiteByIdentificador(final String identificador,final Long idArea, String identificadorArea, Long codigoTramite) {
+	public Tramite getTramiteByIdentificador(final String identificador, final Long idArea, String identificadorArea,
+			Long codigoTramite) {
 
 		final StringBuilder sql = new StringBuilder("Select t From JTramite t where t.identificador = :identificador");
 		if (idArea != null) {
@@ -1035,7 +1047,8 @@ public class TramiteDaoImpl implements TramiteDao {
 	}
 
 	@Override
-	public TramiteVersion getTramiteVersionByNumVersion(String idEntidad, String idArea, final String idTramite, final int numeroVersion) {
+	public TramiteVersion getTramiteVersionByNumVersion(String idEntidad, String idArea, final String idTramite,
+			final int numeroVersion) {
 		final String sql = "Select t From JVersionTramite t JOIN t.tramite tram where tram.area.identificador = :idArea and tram.area.entidad.identificador =:idEntidad and tram.identificador = :idTramite and t.numeroVersion = :numeroVersion";
 		final Query query = entityManager.createQuery(sql);
 
@@ -1096,6 +1109,35 @@ public class TramiteDaoImpl implements TramiteDao {
 	}
 
 	@Override
+	public List<DominioTramite> getTramiteVersionByEnvioRemoto(final Long idEnvioRemoto) {
+		final List<DominioTramite> resultado = new ArrayList<>();
+
+		final String sql = "Select t  From JPasoRegistrar pr JOIN pr.pasoTramitacion pt JOIN pt.versionTramite t JOIN pr.envioRemoto fe where fe.codigo=:idEnvioRemoto order by t.numeroVersion desc";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idEnvioRemoto", idEnvioRemoto);
+
+		@SuppressWarnings("unchecked")
+		final List<JVersionTramite> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JVersionTramite> iterator = results.iterator(); iterator.hasNext();) {
+				final JVersionTramite jTramiteVersion = iterator.next();
+				final DominioTramite dominioTramite = new DominioTramite();
+				dominioTramite.setArea(jTramiteVersion.getTramite().getArea().getIdentificador());
+				dominioTramite.setEntidad(jTramiteVersion.getTramite().getArea().getEntidad().getNombre().toModel());
+				dominioTramite.setIdTramiteVersion(jTramiteVersion.getCodigo());
+				dominioTramite.setNumVersion(jTramiteVersion.getNumeroVersion());
+				dominioTramite.setRelease(jTramiteVersion.getRelease());
+				dominioTramite.setTramite(jTramiteVersion.getTramite().getDescripcion());
+				resultado.add(dominioTramite);
+			}
+		}
+
+		return resultado;
+	}
+
+	@Override
 	public boolean getCountTramiteVersionByGfe(Long id) {
 		Query query = getQueryTramiteVersionByGFE(id, true);
 		Long total = (Long) query.getSingleResult();
@@ -1108,7 +1150,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		if (isTotal) {
 			sql = "Select count(t) From JPasoRellenar pr JOIN pr.pasoTramitacion pt JOIN pr.formulariosTramite ft JOIN pt.versionTramite t JOIN ft.formularioExterno fe where fe.codigo=:idGfe order by t.numeroVersion desc";
 		} else {
-			 sql = "Select t  From JPasoRellenar pr JOIN pr.pasoTramitacion pt JOIN pr.formulariosTramite ft JOIN pt.versionTramite t JOIN ft.formularioExterno fe where fe.codigo=:idGfe order by t.numeroVersion desc";
+			sql = "Select t  From JPasoRellenar pr JOIN pr.pasoTramitacion pt JOIN pr.formulariosTramite ft JOIN pt.versionTramite t JOIN ft.formularioExterno fe where fe.codigo=:idGfe order by t.numeroVersion desc";
 		}
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("idGfe", idGFE);
@@ -1222,6 +1264,8 @@ public class TramiteDaoImpl implements TramiteDao {
 
 			final JTramite jTramite = entityManager.find(JTramite.class, idTramite);
 			jTramiteVersion.setTramite(jTramite);
+			jTramiteVersion.setTipoTramite(filaTramiteVersion.getTramiteVersion().getTipoTramite());
+
 			entityManager.persist(jTramiteVersion);
 			idTramiteVersion = jTramiteVersion.getCodigo();
 			break;
@@ -1244,7 +1288,12 @@ public class TramiteDaoImpl implements TramiteDao {
 						}
 					}
 				}
+				if (paso.getPasoRegistrar() != null && paso.getPasoRegistrar().getEnvioRemoto() != null) {
+					//Seteamos para que no de un error de fk.
+					paso.getPasoRegistrar().setEnvioRemoto(null);
+				}
 				entityManager.remove(paso);
+				entityManager.flush();
 			}
 
 			idTramiteVersion = filaTramiteVersion.getTramiteVersionActual().getCodigo();
@@ -1253,6 +1302,7 @@ public class TramiteDaoImpl implements TramiteDao {
 			tv.setPersistencia(filaTramiteVersion.getTramiteVersion().isPersistencia());
 			tv.setAutenticado(filaTramiteVersion.getTramiteVersion().isAutenticado());
 			tv.setBloqueada(false);
+			tv.setTipoTramite(filaTramiteVersion.getTramiteVersion().getTipoTramite());
 			tv.setDebug(filaTramiteVersion.getTramiteVersion().isDebug());
 			tv.setDesactivacion(filaTramiteVersion.getTramiteVersion().isDesactivacion());
 			tv.setIdiomasSoportados(filaTramiteVersion.getTramiteVersion().getIdiomasSoportados());
@@ -1266,7 +1316,6 @@ public class TramiteDaoImpl implements TramiteDao {
 			}
 			tv.setNivelQAA(filaTramiteVersion.getTramiteVersion().getNivelQAA());
 			tv.setNoAutenticado(filaTramiteVersion.getTramiteVersion().isNoAutenticado());
-			tv.setNumeroVersion(filaTramiteVersion.getTramiteVersion().getNumeroVersion());
 			tv.setPersistenciaDias(filaTramiteVersion.getTramiteVersion().getPersistenciaDias());
 			tv.setPersistenciaInfinita(filaTramiteVersion.getTramiteVersion().isPersistenciaInfinita());
 			tv.setPlazoFinDesactivacion(filaTramiteVersion.getTramiteVersion().getPlazoFinDesactivacion());
@@ -1288,6 +1337,9 @@ public class TramiteDaoImpl implements TramiteDao {
 			tv.setTipoFlujo(filaTramiteVersion.getTramiteVersion().getTipoFlujo());
 			tv.setDescripcion(filaTramiteVersion.getTramiteVersion().getDescripcion());
 			tv.setHuella(filaTramiteVersion.getTramiteVersion().getHuella());
+			if (tv.getTipoTramite() == null) {
+				tv.setTipoTramite("T");
+			}
 			this.updateTramiteVersion(tv);
 
 			// Solo en el modo Cuaderno de Carga se puede reemplazar y eliiminar versiones
@@ -1588,7 +1640,8 @@ public class TramiteDaoImpl implements TramiteDao {
 
 	private JDominio getJDominio(ValorIdentificadorCompuesto identificadorDominio) {
 		JDominio result = null;
-		final StringBuilder sql = new StringBuilder("SELECT d FROM JDominio d where d.ambito = :ambito AND d.identificador = :identificador ");
+		final StringBuilder sql = new StringBuilder(
+				"SELECT d FROM JDominio d where d.ambito = :ambito AND d.identificador = :identificador ");
 		if (identificadorDominio.getAmbito() == TypeAmbito.ENTIDAD) {
 			sql.append(" AND d.entidad.identificador = :identificadorEntidad");
 		}
@@ -1613,7 +1666,5 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 		return result;
 	}
-
-
 
 }

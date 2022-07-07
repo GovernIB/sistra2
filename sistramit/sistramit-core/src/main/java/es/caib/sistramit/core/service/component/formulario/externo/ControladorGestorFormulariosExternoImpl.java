@@ -13,6 +13,9 @@ import es.caib.sistra2.commons.plugins.formulario.api.FormularioPluginException;
 import es.caib.sistra2.commons.plugins.formulario.api.IFormularioPlugin;
 import es.caib.sistra2.commons.plugins.formulario.api.ParametroFormulario;
 import es.caib.sistra2.commons.plugins.formulario.api.UsuarioInfo;
+import es.caib.sistrages.rest.api.interna.RConfiguracionAutenticacion;
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistrages.rest.api.interna.RGestorFormularioExterno;
 import es.caib.sistramit.core.api.exception.InicioFormularioExternoException;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
@@ -53,15 +56,29 @@ public final class ControladorGestorFormulariosExternoImpl implements Controlado
 		// Almacena sesion en BBDD generando ticket
 		final String ticket = dao.crearSesionGestorFormularios(difi);
 
-		// Obtenemos datos conexión GFE a partir versión trámite
+		// Id GFE
+		final String idGestorFormulariosExterno = difi.getIdGestorFormulariosExterno();
+
+		// Obtenemos def trámite
 		final DefinicionTramiteSTG defTramite = configuracionComponent.recuperarDefinicionTramite(difi.getIdTramite(),
 				difi.getVersionTramite(), difi.getIdioma());
-		final String urlGestorFormulario = UtilsSTG.obtenerUrlGestorFormulariosExterno(defTramite,
-				difi.getIdGestorFormulariosExterno());
-		final String usrGestorFormulario = UtilsSTG.obtenerUsrGestorFormulariosExterno(defTramite,
-				difi.getIdGestorFormulariosExterno());
-		final String pwdGestorFormulario = UtilsSTG.obtenerPwdGestorFormulariosExterno(defTramite,
-				difi.getIdGestorFormulariosExterno());
+
+		// Obtenemos conf entidad
+		final RConfiguracionEntidad confEntidad = configuracionComponent
+				.obtenerConfiguracionEntidad(defTramite.getDefinicionVersion().getIdEntidad());
+
+		// Obtenemos datos conexión GFE
+		final RGestorFormularioExterno confGfe = UtilsSTG.obtenerConfiguracionGFE(confEntidad,
+				idGestorFormulariosExterno);
+		final String urlGestorFormulario = confGfe.getUrl();
+		String usrGestorFormulario = null;
+		String pwdGestorFormulario = null;
+		if (confGfe.getIdentificadorConfAutenticacion() != null) {
+			final RConfiguracionAutenticacion confAut = configuracionComponent.obtenerConfiguracionAutenticacion(
+					confGfe.getIdentificadorConfAutenticacion(), confGfe.getIdentificadorEntidad());
+			usrGestorFormulario = confAut.getUsuario();
+			pwdGestorFormulario = confAut.getPassword();
+		}
 
 		// Info usuario
 		UsuarioInfo usuarioInfo = null;
@@ -103,12 +120,13 @@ public final class ControladorGestorFormulariosExternoImpl implements Controlado
 		// Invocamos a GFE
 		final IFormularioPlugin plgFormulario = obtenerPluginFormulario(difi.getEntidad());
 		String urlRedireccion = null;
-		try { //urlGestorFormulario = "http://localhost:8081/projectebaseexemple/api/externa/services";
-			urlRedireccion = plgFormulario.invocarFormulario(difi.getIdGestorFormulariosExterno(), urlGestorFormulario,
+		try { // urlGestorFormulario =
+				// "http://localhost:8081/projectebaseexemple/api/externa/services";
+			urlRedireccion = plgFormulario.invocarFormulario(idGestorFormulariosExterno, urlGestorFormulario,
 					usrGestorFormulario, pwdGestorFormulario, datosInicio);
 		} catch (final FormularioPluginException e) {
 			throw new InicioFormularioExternoException("Error iniciant formulari en Gestor Formulari "
-					+ difi.getIdGestorFormulariosExterno() + ": " + e.getMessage(), e);
+					+ idGestorFormulariosExterno + ": " + e.getMessage(), e);
 		}
 
 		// Retornamos url redireccion formulario

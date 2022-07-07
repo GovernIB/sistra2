@@ -22,6 +22,7 @@ public class FiltroEventoAuditoria implements Serializable {
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private TypeEvento evento;
+	private String codSia;
 
 	private String idTramite;
 	private Integer versionTramite;
@@ -161,6 +162,14 @@ public class FiltroEventoAuditoria implements Serializable {
 
 	public void setSortOrder(final String sortOrder) {
 		this.sortOrder = sortOrder;
+	}
+
+	public final String getCodSia() {
+		return codSia;
+	}
+
+	public final void setCodSia(String codSia) {
+		this.codSia = codSia;
 	}
 
 }

@@ -26,6 +26,7 @@
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<!-- <f:validateRegex pattern="^[a-zA-Z0-9_-]{1,50}$" /> -->
 	         			<p:ajax event="blur" process="@this" />
+	         		    <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 	         		</p:inputText>
 	         	</h:column>
 
@@ -33,6 +34,7 @@
 	         	<h:column>
 	         		<p:selectOneMenu id="columnas" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numColumnas}" disabled="#{dialogDisenyoFormulario.consulta}">
 	         				<p:ajax event="blur" process="@this" />
+	         				<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 							<f:selectItems value="#{dialogDisenyoFormulario.ncolumnas}" var="n" itemValue="#{n}" itemLabel="#{n}"/>
 				        </p:selectOneMenu>
  				</h:column>
@@ -50,7 +52,7 @@
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.noMostrarTexto']}"/></h:column>
 	         	<h:column>
 	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.noMostrarTexto}" disabled="#{dialogDisenyoFormulario.consulta}">
-	         			<p:ajax event="change" global="false" />
+	         			<p:ajax event="change" global="false" listener="#{dialogDisenyoFormulario.setCambios}"/>
 	         		</p:selectBooleanCheckbox>
 	         	</h:column>
 
@@ -65,14 +67,14 @@
 				<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.obligatorio']}"/></h:column>
 	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
 	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.obligatorio}" disabled="#{dialogDisenyoFormulario.consulta}">
-	         			<p:ajax event="change" global="false" />
+	         			<p:ajax event="change" global="false" listener="#{dialogDisenyoFormulario.setCambios}" />
 	         		</p:selectBooleanCheckbox>
 	         	</h:column>
 
 	            <h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.soloLectura']}"/></h:column>
 	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
 	         		<p:selectBooleanCheckbox id="soloLectura" value="#{dialogDisenyoFormulario.objetoFormularioEdit.soloLectura}" disabled="#{dialogDisenyoFormulario.consulta}">
-	         			<p:ajax event="change" global="false" />
+	         			<p:ajax event="change" global="false" listener="#{dialogDisenyoFormulario.setCambios}" />
 	         		</p:selectBooleanCheckbox>
 				</h:column>
 
@@ -140,6 +142,7 @@
 				<h:column>
 					<p:selectOneMenu id="tipoAlineacion" value="#{dialogDisenyoFormulario.objetoFormularioEdit.alineacionTexto}" required="true" disabled="#{dialogDisenyoFormulario.consulta}">
 					    <p:ajax event="blur" process="@this" />
+					    <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 					    <f:selectItems value="#{TypeAlineacionTexto.ALL_VALUES}" var="tipoAlineacion" itemLabel="#{msg['typeAlineacionTexto.' += tipoAlineacion]}" />
 					</p:selectOneMenu>
 				</h:column>

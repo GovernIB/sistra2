@@ -54,7 +54,6 @@
 					     <f:selectItems value="#{TypeCache.ALL_VALUES}" var="cache" itemLabel="#{msg['typeCache.' += cache]}" itemValue="#{cache}"  />
 						 <p:ajax event="change" process="@form" update="panelCacheo" />
 					</p:selectOneMenu>
-					<p:commandButton id="btnCacheo" value="#{msg['botones.refrescarCache']}" actionListener="#{dialogDominio.refrescarCache()}" icon="fa fa-refresh" process="@form" update="growlDialog" disabled="#{dialogDominio.isConsulta()}" rendered="#{dialogDominio.data.cache.toString() == 'E'}" />
 				</h:panelGrid>
 
 				<p:column>
@@ -300,9 +299,7 @@
 					<p:commandButton id="btnPing" value="#{msg['botones.ping']}" process="@form" update="@form" icon="fa fa-arrow-up" oncomplete="cambioValorPingB64('confirmDialogPing');" />
 	     		</f:facet>
 				<f:facet name="right">
-	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptarSinInvalidacion()}" process="@form" update="growlDialog"  rendered="#{dialogDominio.permiteGuardar() and dialogDominio.isAlta()}" styleClass="boton-azul" onclick="cambioValorB64(null);" />
-					<p:commandButton value="#{msg['botones.guardar']}"  process="@form" styleClass="boton-azul" rendered="#{dialogDominio.permiteGuardar() and dialogDominio.mostrarAdvertencia and dialogDominio.isEdicion()}"   onclick="cambioValorB64('confirmDialogGuardar');"  />
-	        		<p:commandButton value="#{msg['botones.guardar']}"  process="@form" styleClass="boton-azul" rendered="#{dialogDominio.permiteGuardar() and !dialogDominio.mostrarAdvertencia and dialogDominio.isEdicion()}"  onclick="cambioValorB64('confirmDialogCache');"  />
+	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptar()}" process="@form" update="growlDialog"  rendered="#{dialogDominio.permiteGuardar()}" styleClass="boton-azul" onclick="cambioValorB64(null);" />
 					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominio.cancelar()}" process="@this" rendered="#{dialogDominio.permiteGuardar()}"/>
 					<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominio.cancelar()}" process="@this"  rendered="#{dialogDominio.permiteGuardar() == false}"/>
 					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDominio.ayuda}" process="@this"/>
@@ -337,17 +334,12 @@
 
 	    <p:confirmDialog id="confirmDialogGuardar" widgetVar="confirmDialogGuardar"  header="#{msg['confirm.titulo']}" message="#{msg['confirm.dominioactualizar']}" icon="fa fa-question-circle fa-3x confirmar_icono"    >
 	    	<p:outputPanel styleClass="confirmar_botonera">
-	        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" 	icon="fa fa-check" process="@this" onclick="PF('confirmDialogGuardar').hide();PF('confirmDialogCache').show()" />
+	        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" 	icon="fa fa-check" process="@this" onclick="PF('confirmDialogGuardar').hide();" actionListener="#{dialogDominio.aceptar()}" />
 	        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" 				icon="fa fa-close" process="@this" onclick="PF('confirmDialogGuardar').hide();" />
 	        </p:outputPanel>
 	    </p:confirmDialog>
 
-		<p:confirmDialog widgetVar="confirmDialogCache" id="confirmDialogCache" header="#{msg['confirm.tituloInvalidacion']}" message="#{msg['confirm.invalidacion']}" icon="fa fa-question-circle fa-3x confirmar_icono" >
-				<p:outputPanel styleClass="confirmar_botonera">
-					 <p:commandButton id="botonCacheSi" widgetVar="botonWidget1" onclick="disableClick()"  oncomplete="enableClick()"  value="#{msg['botones.si']}" actionListener="#{dialogDominio.aceptarConInvalidacion()}" process="@this" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  />
-     				 <p:commandButton id="botonCacheNo" widgetVar="botonWidget2" onclick="disableClick()"  oncomplete="enableClick()"  value="#{msg['botones.no']}" actionListener="#{dialogDominio.aceptarSinInvalidacion()}" process="@this" styleClass="ui-confirmdialog-no" icon="fa fa-close"  />
-				</p:outputPanel>
-		    </p:confirmDialog>
+
 		    <h:panelGrid id="inputEscondida" style="display:none">
 
 		    	<h:outputText value="#{dialogDominio.hayCambios}" id="hayCambios"/>

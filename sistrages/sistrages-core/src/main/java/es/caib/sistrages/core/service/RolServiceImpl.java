@@ -77,7 +77,7 @@ public class RolServiceImpl implements RolService {
 	@Override
 	@NegocioInterceptor
 	public void updateRol(final Rol rol) {
-rolDao.update(rol);
+		rolDao.update(rol);
 	}
 
 	/*
@@ -90,6 +90,11 @@ rolDao.update(rol);
 	@NegocioInterceptor
 	public List<Rol> listRol(final Long idEntidad, final String filtro) {
 		return rolDao.getAllByFiltro(idEntidad, filtro);
+	}
+
+	@Override
+	public List<Rol> getRolesByArea(Long idCodigoArea) {
+		return rolDao.getAllByArea(idCodigoArea);
 	}
 
 }

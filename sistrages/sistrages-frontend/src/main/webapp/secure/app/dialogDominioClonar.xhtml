@@ -43,21 +43,33 @@
 				<p:outputLabel for="areas" value="#{msg['dialogDominioClonar.headerArea']}" rendered="#{dialogDominioClonar.mostrarAreas}" />
 				<p:selectOneMenu id="areas" styleClass="w90" value="#{dialogDominioClonar.areaID}" rendered="#{dialogDominioClonar.mostrarAreas}" >
 						    <f:selectItems value="#{dialogDominioClonar.areas}" var="area"   itemLabel="#{area.identificador}" itemValue="#{area.codigo}" />
-							<p:ajax listener="#{dialogDominioClonar.onChangeArea}" process="@this"/>
+							<p:ajax listener="#{dialogDominioClonar.onChangeArea}" process="@this" update="@form"/>
 				</p:selectOneMenu>
 
-				<p:outputLabel for="fuentes" value="#{msg['dialogDominioClonar.headerFD']}" rendered="#{dialogDominioClonar.mostrarFDs}" />
-				<p:selectOneMenu id="fuentes" styleClass="w90"  value="#{dialogDominioClonar.fuenteID}" rendered="#{dialogDominioClonar.mostrarFDs}">
-					     <f:selectItems value="#{dialogDominioClonar.fuentes}" var="fuente" itemLabel="#{fuente.identificador}" itemValue="#{fuente.codigo}"  />
-				</p:selectOneMenu >
+				<p:outputLabel id="labelFD1" value="#{msg['dialogDominioClonar.headerFD']}" rendered="#{dialogDominioClonar.mostrarFDs}" />
+				<p:outputLabel id="labelFD2" value="#{dialogDominioClonar.fdLabel}" rendered="#{dialogDominioClonar.mostrarFDs}" />
 
+				<p:outputLabel id="labelFD3"  value=" " rendered="#{dialogDominioClonar.mostrarFDreemplazar}" />
+				<p:column rendered="#{dialogDominioClonar.mostrarFDreemplazar}">
+					<p:selectBooleanCheckbox  id="checkFD1"    value="#{dialogDominioClonar.fdReemplazar}"  />
+					<p:outputLabel value="#{msg['dialogDominioClonar.fd.reemplazar']}" />
+				</p:column>
+
+				<p:outputLabel id="labelCA1" value="#{msg['dialogDominioClonar.headerCA']}" rendered="#{dialogDominioClonar.mostrarCAs}" />
+				<p:outputLabel id="labelCA2" value="#{dialogDominioClonar.caLabel}" rendered="#{dialogDominioClonar.mostrarCAs}" />
+
+				<p:outputLabel id="labelCA3"  value=" " rendered="#{dialogDominioClonar.mostrarCAreemplazar}" />
+				<p:column rendered="#{dialogDominioClonar.mostrarCAreemplazar}">
+					<p:selectBooleanCheckbox  id="checkCA1"    value="#{dialogDominioClonar.caReemplazar}"  />
+					<p:outputLabel value="#{msg['dialogDominioClonar.fd.reemplazar']}" />
+				</p:column>
 			</h:panelGrid>
 		</p:outputPanel>
 	  	<p:outputPanel styleClass="botonera">
 	     	<p:toolbar>
 	     		<f:facet name="right">
 	        		<p:commandButton value="#{msg['botones.duplicar']}" actionListener="#{dialogDominioClonar.clonar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
-	        		<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominioClonar.cerrar()}" process="@this" />
+	        		<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominioClonar.cerrar()}" process="@this" styleClass="margin-left-3" />
 				</f:facet>
 			</p:toolbar>
 	    </p:outputPanel>

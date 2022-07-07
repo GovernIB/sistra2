@@ -34,6 +34,9 @@ public class ViewEventosPlataforma extends ViewControllerBase {
 	@Inject
 	private HelpDeskService helpDeskService;
 
+	/** Paginacion */
+	private Integer paginacion;
+
 	/**
 	 * lista datos.
 	 */
@@ -53,6 +56,8 @@ public class ViewEventosPlataforma extends ViewControllerBase {
 	 * Inicializa.
 	 */
 	public void init() {
+		paginacion = UtilJSF.getPaginacion("viewEventosPlataforma");
+
 		UtilJSF.verificarAcceso();
 
 		// Titulo pantalla
@@ -176,8 +181,7 @@ public class ViewEventosPlataforma extends ViewControllerBase {
 	/**
 	 * Establece el valor de listaDatos.
 	 *
-	 * @param listaDatos
-	 *            el nuevo valor de listaDatos
+	 * @param listaDatos el nuevo valor de listaDatos
 	 */
 	public void setListaDatos(final LazyDataModel<EventoAuditoriaTramitacion> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -195,8 +199,7 @@ public class ViewEventosPlataforma extends ViewControllerBase {
 	/**
 	 * Establece el valor de datoSeleccionado.
 	 *
-	 * @param datoSeleccionado
-	 *            el nuevo valor de datoSeleccionado
+	 * @param datoSeleccionado el nuevo valor de datoSeleccionado
 	 */
 	public void setDatoSeleccionado(final EventoAuditoriaTramitacion datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
@@ -214,11 +217,25 @@ public class ViewEventosPlataforma extends ViewControllerBase {
 	/**
 	 * Establece el valor de filtros.
 	 *
-	 * @param filtros
-	 *            el nuevo valor de filtros
+	 * @param filtros el nuevo valor de filtros
 	 */
 	public void setFiltros(final FiltroAuditoriaTramitacion filtros) {
 		this.filtros = filtros;
+	}
+
+	/**
+	 * @return the paginacion
+	 */
+	public final Integer getPaginacion() {
+		return paginacion;
+	}
+
+	/**
+	 * @param paginacion the paginacion to set
+	 */
+	public final void setPaginacion(Integer paginacion) {
+		this.paginacion = paginacion;
+		UtilJSF.setPaginacion(paginacion, "viewEventosPlataforma");
 	}
 
 }

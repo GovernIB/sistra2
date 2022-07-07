@@ -36,6 +36,10 @@ public class RVersionTramite {
 	@ApiModelProperty(value = "Idioma")
 	private String idioma;
 
+	/** Tipo trámite: Trámite (T) / Servicio (S). */
+	@ApiModelProperty(value = "Tipo trámite: Trámite (T) / Servicio (S)")
+	private String tipoTramite;
+
 	/** Tipo flujo: Normalizado (N) / Personalizado (P). */
 	@ApiModelProperty(value = "Tipo flujo: Normalizado (N) / Personalizado (P)")
 	private String tipoFlujo;
@@ -55,10 +59,6 @@ public class RVersionTramite {
 	/** Pasos tramitación. */
 	@ApiModelProperty(value = "Pasos tramitación")
 	private List<RPasoTramitacion> pasos;
-
-	/** Gestores formularios externos entidad. */
-	@ApiModelProperty(value = "Gestores formularios externos")
-	private List<RGestorFormularioExterno> gestoresFormulariosExternos;
 
 	/**
 	 * Método de acceso a idTramite.
@@ -288,12 +288,23 @@ public class RVersionTramite {
 		this.idArea = idArea;
 	}
 
-	public List<RGestorFormularioExterno> getGestoresFormulariosExternos() {
-		return gestoresFormulariosExternos;
+	/**
+	 * Método de acceso a tipoTramite.
+	 *
+	 * @return tipoTramite
+	 */
+	public String getTipoTramite() {
+		return tipoTramite;
 	}
 
-	public void setGestoresFormulariosExternos(final List<RGestorFormularioExterno> gestoresFormulariosExternos) {
-		this.gestoresFormulariosExternos = gestoresFormulariosExternos;
+	/**
+	 * Método para establecer tipoTramite.
+	 *
+	 * @param tipoTramite
+	 *                        tipoTramite a establecer
+	 */
+	public void setTipoTramite(final String tipoTramite) {
+		this.tipoTramite = tipoTramite;
 	}
 
 }

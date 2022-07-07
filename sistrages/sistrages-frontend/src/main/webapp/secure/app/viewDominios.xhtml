@@ -20,10 +20,24 @@
 			<!-- Growl mensajes -->
 			<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-			<p:column rendered="#{viewDominios.mostrarBreadcrumb}">
-				<div style="width:100%;height:35px">
-					<p:breadCrumb homeDisplay="text" model="#{viewDominios.breadCrumb}" />
-				</div>
+			<p:column rendered="#{viewDominios.mostrarBreadcrumb}" style="width:100%;">
+				<div style="display:grid; grid-template-columns: 1fr 1fr; height:25px !important; overflow:hidden;">
+					<div style="display:grid; grid-template-columns: 1fr;">
+						<p:breadCrumb homeDisplay="text" model="#{viewDominios.breadCrumb}" style="border-right: none !important; border-top-right-radius: 0px;"/>
+					</div>
+					<div style="display:grid; grid-template-columns: 5fr 1fr; overflow:hidden; padding:5px 5px 7px 5px; background: #e9e9e9; border: 1px solid #dddddd;  border-left: none !important; color: #333333; font-size: 8pt !important; border-top-right-radius: 6px !important;">
+		                <p:outputLabel for="@next" value="" style="font-size: 8pt !important; font-weight: bold; text-align: right; margin-right: 1em;"/>
+		                <p:selectOneMenu id="option" value="#{viewDominios.accion}" style="font-size: 7pt !important; font-weight: bold; height:75%; padding:0px !important; margin-top: 0px !important">
+			                <p:ajax event="change" listener="#{viewDominios.cambiarAccion}" update="@form"/>
+		                   	<!--  <f:selectItems value="#{viewDominios.listaAreas}" var="area" itemValue="#{area.codigo}" itemLabel="#{area.identificador}" style="padding-top: 0px !important;"/> -->
+		                    <f:selectItem itemLabel="#{msg['botones.dominiosArea']}" itemValue="D"/>
+		                    <f:selectItem itemLabel="#{msg['botones.datosFuenteArea']}" itemValue="F"/>
+		                    <f:selectItem itemLabel="#{msg['botones.sgeArea']}" itemValue="S"/>
+		                    <f:selectItem itemLabel="#{msg['botones.configuracionAutenticacionArea']}" itemValue="C"/>
+  		                    <f:selectItem itemLabel="#{msg['botones.envioRemoto']}" itemValue="E"/>
+		                </p:selectOneMenu>
+	       		  	</div>
+	          	</div>
 			</p:column>
 
 			<!-- Toolbar -->
@@ -50,7 +64,6 @@
 		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnPing" value="#{msg['botones.ping']}" icon="fa fa-arrow-up" actionListener="#{viewDominios.ping()}" process="@this" update="growl dataTable"/>
-		        	    <p:commandButton id="btnRefrescarCache" value="#{msg['botones.refrescarCache']}" icon="fa fa-retweet" actionListener="#{viewDominios.refrescarCache()}" process="@this" update="growl dataTable" disabled="#{!viewDominios.getPermiteEditar() or viewDominios.datoSeleccionado eq null or viewDominios.datoSeleccionado.cache.toString() != 'E'}"/>
 		        		<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" actionListener="#{viewDominios.tramites()}" process="@this" update="growl dataTable" rendered="#{viewDominios.getPermiteConsultar()}"/>
 		        		<p:commandButton id="btnImportar"  value="#{msg['botones.importar']}" icon="fa fa-download"  actionListener="#{viewDominios.importar()}"  process="@this" update="growl @form" rendered="#{viewDominios.getPermiteImportar()}">
 		        			<p:ajax event="dialogReturn" listener="#{viewDominios.returnDialogoImportar}" update="growl dataTable"/>
@@ -66,7 +79,7 @@
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewDominios.listaDatos}"
-						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+						 rows="#{viewDominios.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -80,6 +93,7 @@
 		                  		oncomplete="triggerDblClick();"
 		                        update=":form:dataTable"
 		                        />
+		         <p:ajax event="page" update=":form:dataTable :form:toolbar"/>
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewDominios.headerCodigo']}">

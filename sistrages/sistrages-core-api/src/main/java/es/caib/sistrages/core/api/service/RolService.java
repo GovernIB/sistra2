@@ -12,25 +12,30 @@ public interface RolService {
 	/**
 	 * Obtiene el Rol.
 	 *
-	 * @param idRol
-	 *            el identificador
+	 * @param idRol el identificador
 	 * @return el Rol
 	 */
 	Rol getRol(Long idRol);
 
 	/**
+	 * Obtiene el Rol por idArea.
+	 *
+	 * @param idRol el identificador
+	 * @return el Rol
+	 */
+	List<Rol> getRolesByArea(Long idCodigoArea);
+
+	/**
 	 * Añade Rol.
 	 *
-	 * @param idRol
-	 *            el Rol
+	 * @param idRol el Rol
 	 */
 	void addRol(Rol idRol);
 
 	/**
 	 * Elimina rol.
 	 *
-	 * @param idRol
-	 *            el identificador
+	 * @param idRol el identificador
 	 * @return true, si se realiza correctamente
 	 */
 	boolean removeRol(Long idRol);
@@ -38,18 +43,15 @@ public interface RolService {
 	/**
 	 * Actualiza Rol.
 	 *
-	 * @param rol
-	 *            el Rol
+	 * @param rol el Rol
 	 */
 	void updateRol(Rol rol);
 
 	/**
 	 * Lista de roles.
 	 *
-	 * @param idEntidad
-	 *            id Entidad
-	 * @param filtro
-	 *            filtro busqueda
+	 * @param idEntidad id Entidad
+	 * @param filtro    filtro busqueda
 	 * @return la lista de roles
 	 */
 	List<Rol> listRol(Long idEntidad, String filtro);

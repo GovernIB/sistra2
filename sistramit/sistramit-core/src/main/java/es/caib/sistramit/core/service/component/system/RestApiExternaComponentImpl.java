@@ -88,7 +88,7 @@ public class RestApiExternaComponentImpl implements RestApiExternaComponent {
 		// - Construimos url
 		final String urlCallback = configuracionComponent.obtenerPropiedadConfiguracion(
 				TypePropiedadConfiguracion.SISTRAMIT_URL) + ConstantesSeguridad.PUNTOENTRADA_RETORNO_CARPETA + "?"
-				+ ConstantesSeguridad.TICKET_PARAM + "=" + ticket;
+				+ ConstantesSeguridad.PARAM_TICKETAUTH + "=" + ticket;
 
 		return urlCallback;
 	}

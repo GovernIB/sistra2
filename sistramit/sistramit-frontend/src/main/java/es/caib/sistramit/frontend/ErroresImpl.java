@@ -13,6 +13,7 @@ import es.caib.sistramit.core.api.exception.ServiceException;
 import es.caib.sistramit.core.api.exception.TramiteFinalizadoException;
 import es.caib.sistramit.core.api.exception.TramiteNoExisteException;
 import es.caib.sistramit.core.api.exception.UsuarioNoPermitidoException;
+import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
@@ -91,6 +92,11 @@ public final class ErroresImpl implements Errores {
 		textoMensaje = devolverMensajeError(pEx, idioma);
 		urlMensaje = devolverUrlExcepcion(pEx, idioma, tipoError);
 
+		// Reemplazamos parametros especiales
+		tituloMensaje = reemplazarPropiedadesExcepcion(tituloMensaje, pEx);
+		textoMensaje = reemplazarPropiedadesExcepcion(textoMensaje, pEx);
+		urlMensaje = reemplazarPropiedadesExcepcion(urlMensaje, pEx);
+
 		// Creamos respuesta
 		final RespuestaJSON res = new RespuestaJSON();
 		res.setEstado(tipoError);
@@ -98,6 +104,33 @@ public final class ErroresImpl implements Errores {
 		res.setMensaje(new MensajeUsuario(tituloMensaje, textoMensaje));
 
 		return res;
+	}
+
+	/**
+	 * Reemplaza propiedades excepción.
+	 *
+	 * @param msg
+	 *                Mensaje
+	 * @param pEx
+	 *                Excepcion
+	 * @return Mensaje
+	 */
+	private String reemplazarPropiedadesExcepcion(final String msg, final Exception pEx) {
+		final Exception ex = pEx;
+		final String nombreExcepcion = getNombreExcepcion(ex);
+		String mensaje = msg;
+		mensaje = StringUtils.replace(mensaje, "[#excepcion.nombre#]", nombreExcepcion);
+		mensaje = StringUtils.replace(mensaje, "[#excepcion.mensaje#]", ex.getMessage());
+		if (ex instanceof ServiceException) {
+			final ListaPropiedades propsEx = ((ServiceException) ex).getDetallesExcepcion();
+			if (propsEx != null) {
+				for (final String key : propsEx.getPropiedades().keySet()) {
+					mensaje = StringUtils.replace(mensaje, "[#excepcion.propiedad." + key + "#]",
+							propsEx.getPropiedad(key));
+				}
+			}
+		}
+		return mensaje;
 	}
 
 	/**
@@ -144,6 +177,11 @@ public final class ErroresImpl implements Errores {
 					// Mantenemos url defecto
 				}
 			}
+		}
+
+		// Si la url es relativa, añadimos url asistente
+		if (url != null && url.startsWith("/")) {
+			url = getUrlAsistente() + url;
 		}
 
 		return url;
@@ -196,10 +234,6 @@ public final class ErroresImpl implements Errores {
 
 		// Buscamos si existe texto particularizado para la excepcion
 		mensaje = literales.getLiteralFront(LiteralesFront.EXCEPCIONES, "text." + nombreExcepcion, idioma, mensaje);
-
-		// Reemplazamos parametros especiales
-		mensaje = StringUtils.replace(mensaje, "[#excepcion.nombre#]", nombreExcepcion);
-		mensaje = StringUtils.replace(mensaje, "[#excepcion.mensaje#]", ex.getMessage());
 
 		return mensaje;
 

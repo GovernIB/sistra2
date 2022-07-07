@@ -14,8 +14,10 @@ import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuModel;
 
 import es.caib.sistrages.core.api.exception.FrontException;
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
+import es.caib.sistrages.core.api.model.Sesion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
@@ -24,6 +26,7 @@ import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.FormularioExternoService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -52,8 +55,18 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	@Inject
 	private SecurityService securityService;
 
+	/** tramite service. */
+	@Inject
+	private TramiteService tramiteService;
+
 	@Inject
 	private EntidadService entidadService;
+
+	/** Lista de areas. */
+	private List<Area> listaAreas;
+
+	/** Accion. **/
+	private String accion;
 
 	/** Filtro (puede venir por parametro). */
 	private String filtro;
@@ -103,6 +116,19 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		// Recupera datos
 		buscar();
 		if (ambito.equals(TypeAmbito.AREA.toString())) {
+			Sesion sesion = null;
+
+			// Recupera info usuario
+			String userName = securityService.getUsername();
+
+			// recuperamos datos por defecto del usuario
+			if (!userName.isEmpty()) {
+				sesion = systemService.getSesion(userName);
+				listaAreas = tramiteService.listArea(sesion.getEntidad(), null);
+				if (!tramiteService.getArea(Long.parseLong(id)).getIdentificador().equals(area)) {
+					area = tramiteService.getArea(Long.parseLong(id)).getIdentificador();
+				}
+			}
 
 			mostrarBreadcrumb = true;
 			/* inicializa breadcrum y lo creamos */
@@ -176,29 +202,16 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		if (formularioExternoService.removeFormularioExterno(datoSeleccionado.getCodigo())) {
 			// Refrescamos datos
 			buscar();
+			ResultadoError re = this.refrescar();
+			String message = "";
 			// Mostramos mensaje
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
-		}
-	}
-
-	/**
-	 * Refrescar cache.
-	 */
-	public void refrescarCache() {
-		final String urlBase = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
-		final String usuario = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
-		final String pwd = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
-		final Entidad entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
-		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, Constantes.CACHE_ENTIDAD,
-				entidad.getCodigoDIR3());
-		if (resultado.getCodigo() == 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
-		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
+			if (re.getCodigo() != 1) {
+				message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("error.refrescarCache")
+						+ ": " + re.getMensaje();
+			} else {
+				message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+			}
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 		}
 	}
 
@@ -264,6 +277,27 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	}
 
 	/**
+	 * Cambia de acción
+	 */
+	public void cambiarAccion() {
+		switch (accion) {
+		case "D":
+			UtilJSF.redirectJsfPage("/secure/app/viewDominios.xhtml?ambito=A&id=" + id + "&area=" + area);
+		case "F":
+			UtilJSF.redirectJsfPage("/secure/app/viewFuentes.xhtml?ambito=A&id=" + id + "&area=" + area);
+		case "S":
+			break;
+		case "C":
+			UtilJSF.redirectJsfPage(
+					"/secure/app/viewConfiguracionAutenticacion.xhtml?ambito=A&id=" + id + "&area=" + area);
+		case "E":
+			UtilJSF.redirectJsfPage("/secure/app/viewEnviosRemotos.xhtml?ambito=A&id=" + id + "&area=" + area);
+		default:
+			break;
+		}
+	}
+
+	/**
 	 * Retorno dialogo.
 	 *
 	 * @param event respuesta dialogo
@@ -275,13 +309,25 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		// Verificamos si se ha modificado
 		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 			// Mensaje
-			String message = null;
 			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
-				message = UtilJSF.getLiteral("info.alta.ok");
+				/*if (re.getCodigo() != 1) {
+					message = UtilJSF.getLiteral("info.alta.ok") + ". " + UtilJSF.getLiteral("error.refrescarCache")
+							+ ": " + re.getMensaje();
+				} else {
+					message = UtilJSF.getLiteral("info.alta.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+				}*/
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.alta.ok"));
 			} else {
-				message = UtilJSF.getLiteral("info.modificado.ok");
+				ResultadoError re = this.refrescar();
+				String message = null;
+				if (re.getCodigo() != 1) {
+					message = UtilJSF.getLiteral("info.modificado.ok") + ". "
+							+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
+				} else {
+					message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+				}
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 			}
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 			// Refrescamos datos
 			buscar();
 		}
@@ -389,4 +435,31 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		this.breadCrumb = breadCrumb;
 	}
 
+	/**
+	 * @return the listaAreas
+	 */
+	public final List<Area> getListaAreas() {
+		return listaAreas;
+	}
+
+	/**
+	 * @param listaAreas the listaAreas to set
+	 */
+	public final void setListaAreas(List<Area> listaAreas) {
+		this.listaAreas = listaAreas;
+	}
+
+	/**
+	 * @return the accion
+	 */
+	public final String getAccion() {
+		return accion;
+	}
+
+	/**
+	 * @param accion the accion to set
+	 */
+	public final void setAccion(String accion) {
+		this.accion = accion;
+	}
 }

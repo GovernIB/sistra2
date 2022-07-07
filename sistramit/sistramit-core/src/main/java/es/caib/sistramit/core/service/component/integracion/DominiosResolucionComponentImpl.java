@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistra2.commons.plugins.dominio.api.DominioPluginException;
 import es.caib.sistra2.commons.plugins.dominio.api.IDominioPlugin;
+import es.caib.sistrages.rest.api.interna.RConfiguracionAutenticacion;
 import es.caib.sistrages.rest.api.interna.RDominio;
 import es.caib.sistrages.rest.api.interna.RValoresDominio;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
@@ -126,19 +127,32 @@ public final class DominiosResolucionComponentImpl implements DominiosResolucion
 		} else {
 			try {
 				final List<es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio> parametros = new ArrayList<>();
-				if (parametrosDominio != null && parametrosDominio.getParametros() != null) {
-					for (final ParametroDominio param : parametrosDominio.getParametros()) {
-						es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio params = new es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio();
-						params.setCodigo(param.getCodigo());
-						params.setValor(param.getValor());
+				if (dominio.getParametros() != null && !dominio.getParametros().isEmpty()) {
+					// Recorremos parametros en orden
+					for (final String paramCodigo : dominio.getParametros()) {
+						// Buscamos valor en parametros
+						String paramValue = null;
+						for (final ParametroDominio param : parametrosDominio.getParametros()) {
+							if (param.getCodigo().equals(paramCodigo)) {
+								paramValue = param.getValor();
+								break;
+							}
+						}
+						// Establecemos parametros
+						final es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio params = new es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio();
+						params.setCodigo(paramCodigo);
+						params.setValor(paramValue);
 						parametros.add(params);
 					}
 				}
 				String user = null;
 				String pass = null;
-				if (dominio.getConfiguracionAutenticacion() != null) {
-					user = dominio.getConfiguracionAutenticacion().getUsuario();
-					pass = dominio.getConfiguracionAutenticacion().getPassword();
+				if (dominio.getIdentificadorConfAutenticacion() != null) {
+					final RConfiguracionAutenticacion confAut = configuracionComponent
+							.obtenerConfiguracionAutenticacion(dominio.getIdentificadorConfAutenticacion(),
+									dominio.getIdentificadorEntidad());
+					user = confAut.getUsuario();
+					pass = confAut.getPassword();
 				}
 				Long timeout = dominio.getTimeout();
 				if (timeout == null) {

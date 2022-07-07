@@ -69,18 +69,15 @@ public class DialogFuenteDominios extends DialogControllerBase {
 		campos = new ArrayList<Dominio>();
 		listaDominios = dominioService.listDominiosByFD(Long.valueOf(id));
 		if (data.getArea() != null) {
-			buscarDominios(data.getAmbito(), null, data.getArea().getCodigo());
+			buscarDominios();
 		} else {
-			buscarDominios(data.getAmbito(), data.getEntidad().getCodigo(), null);
+			buscarDominios();
 		}
 	}
 
-	private void buscarDominios(TypeAmbito ambito, Long codigoEntidad, Long codigoArea) {
+	private void buscarDominios() {
 		for (String dom : listaDominios) {
-			Dominio dominio = dominioService.loadDominioByIdentificador(ambito, dom, codigoEntidad, codigoArea, null);
-			if (codigoEntidad == null) {
-				dominio.setEntidad(entidadService.loadEntidadByArea(codigoArea).getCodigo());
-			}
+			Dominio dominio = dominioService.loadDominioByIdentificadorCompuesto(dom);
 			campos.add(dominio);
 		}
 	}

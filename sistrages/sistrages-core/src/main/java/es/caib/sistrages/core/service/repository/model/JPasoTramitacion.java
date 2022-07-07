@@ -295,8 +295,12 @@ public class JPasoTramitacion implements IModelApi {
 		paso.setCodigoOficinaRegistro(this.getPasoRegistrar().getCodigoOficinaRegistro());
 		paso.setPermiteSubsanar(this.getPasoRegistrar().isPermiteSubsanar());
 		paso.setAvisoAlFinalizar(this.getPasoRegistrar().isAvisoAlFinalizar());
+		paso.setDestino(this.getPasoRegistrar().getDestino());
 		if (this.getPasoRegistrar().getInstruccionesSubsanacion() != null) {
 			paso.setInstruccionesSubsanacion(this.getPasoRegistrar().getInstruccionesSubsanacion().toModel());
+		}
+		if (this.getPasoRegistrar().getEnvioRemoto() != null) {
+			paso.setEnvioRemoto(this.getPasoRegistrar().getEnvioRemoto().toModel());
 		}
 		if (this.getPasoRegistrar().getInstruccionesFinTramitacion() != null) {
 			paso.setInstruccionesFinTramitacion(this.getPasoRegistrar().getInstruccionesFinTramitacion().toModel());
@@ -490,6 +494,8 @@ public class JPasoTramitacion implements IModelApi {
 			jpaso.setPasoRegistrar(JPasoRegistrar.clonar(origPaso.getPasoRegistrar(), jpaso));
 			jpaso.setPasoRellenar(JPasoRellenar.clonar(origPaso.getPasoRellenar(), jpaso));
 
+			jpaso.setScriptNavegacion(JScript.clonar(origPaso.getScriptNavegacion()));
+			jpaso.setScriptVariables(JScript.clonar(origPaso.getScriptVariables()));
 		}
 		return jpaso;
 	}

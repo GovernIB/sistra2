@@ -40,7 +40,7 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 
 	private Boolean listaCorr;
 
-	private Boolean respInc;
+	private Boolean respInc = false;
 
 	private Boolean adminArea;
 

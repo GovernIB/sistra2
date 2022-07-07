@@ -42,7 +42,7 @@ public final class AbrirFormulario implements ModelApi {
 	 * Método para establecer tipo.
 	 *
 	 * @param pTipo
-	 *            tipo a establecer
+	 *                  tipo a establecer
 	 */
 	public void setTipo(final TypeFormulario pTipo) {
 		tipo = pTipo;
@@ -61,7 +61,7 @@ public final class AbrirFormulario implements ModelApi {
 	 * Método para establecer url.
 	 *
 	 * @param url
-	 *            url a establecer
+	 *                url a establecer
 	 */
 	public void setUrl(final String url) {
 		this.url = url;
@@ -80,7 +80,7 @@ public final class AbrirFormulario implements ModelApi {
 	 * Método para establecer ticket.
 	 *
 	 * @param ticket
-	 *            ticket a establecer
+	 *                   ticket a establecer
 	 */
 	public void setTicket(final String ticket) {
 		this.ticket = ticket;

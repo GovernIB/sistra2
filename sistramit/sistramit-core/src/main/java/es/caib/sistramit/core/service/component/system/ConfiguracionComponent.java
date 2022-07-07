@@ -3,6 +3,7 @@ package es.caib.sistramit.core.service.component.system;
 import org.fundaciobit.pluginsib.core.IPlugin;
 
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
+import es.caib.sistrages.rest.api.interna.RConfiguracionAutenticacion;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RDominio;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
@@ -22,7 +23,7 @@ public interface ConfiguracionComponent {
 	 * Obtiene configuración.
 	 *
 	 * @param propiedad
-	 *            Propiedad configuración
+	 *                      Propiedad configuración
 	 *
 	 * @return configuración
 	 */
@@ -32,10 +33,10 @@ public interface ConfiguracionComponent {
 	 * Obtiene configuración.
 	 *
 	 * @param propiedad
-	 *            Propiedad configuración
+	 *                       Propiedad configuración
 	 * @param forceLocal
-	 *            si fuerza solo a buscar en el properties local y no buscar en la
-	 *            configuración global del STG
+	 *                       si fuerza solo a buscar en el properties local y no
+	 *                       buscar en la configuración global del STG
 	 * @return configuración
 	 */
 	String obtenerPropiedadConfiguracion(TypePropiedadConfiguracion propiedad, boolean forceLocal);
@@ -44,11 +45,11 @@ public interface ConfiguracionComponent {
 	 * Recupera definición versión de trámite.
 	 *
 	 * @param idTramite
-	 *            id trámite
+	 *                      id trámite
 	 * @param version
-	 *            versión
+	 *                      versión
 	 * @param idioma
-	 *            idioma
+	 *                      idioma
 	 * @return Definición versión trámite
 	 */
 	DefinicionTramiteSTG recuperarDefinicionTramite(String idTramite, int version, String idioma);
@@ -57,7 +58,7 @@ public interface ConfiguracionComponent {
 	 * Recupera definición versión de trámite.
 	 *
 	 * @param idDominio
-	 *            id Dominio
+	 *                      id Dominio
 	 * @return Definición dominio
 	 */
 	RDominio recuperarDefinicionDominio(String idDominio);
@@ -82,7 +83,7 @@ public interface ConfiguracionComponent {
 	 * Obtiene tipo plugin global.
 	 *
 	 * @param tipoPlugin
-	 *            tipo plugin
+	 *                       tipo plugin
 	 * @return Plugin
 	 */
 	IPlugin obtenerPluginGlobal(TypePluginGlobal tipoPlugin);
@@ -91,7 +92,7 @@ public interface ConfiguracionComponent {
 	 * Obtiene tipo plugin entidad.
 	 *
 	 * @param tipoPlugin
-	 *            tipo plugin
+	 *                       tipo plugin
 	 * @return Plugin
 	 */
 	IPlugin obtenerPluginEntidad(TypePluginEntidad tipoPlugin, String idEntidad);
@@ -102,5 +103,16 @@ public interface ConfiguracionComponent {
 	 * @return configuración
 	 */
 	String obtenerUrlResources();
+
+	/**
+	 * Obtiene configuración autenticación.
+	 *
+	 * @param idConfAut
+	 *                      id configuración autenticación.
+	 * @param idEntidad
+	 *                      id entidad (nulo si global).
+	 * @return configuración autenticación
+	 */
+	RConfiguracionAutenticacion obtenerConfiguracionAutenticacion(String idConfAut, String idEntidad);
 
 }

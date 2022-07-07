@@ -823,3 +823,4 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	}
 
 }
+

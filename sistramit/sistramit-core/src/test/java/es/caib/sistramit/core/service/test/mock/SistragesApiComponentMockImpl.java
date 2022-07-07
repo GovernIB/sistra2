@@ -35,7 +35,7 @@ public final class SistragesApiComponentMockImpl implements SistragesApiComponen
 
 	@Override
 	public RVersionTramite recuperarDefinicionTramite(final String idTramite, final int version, final String idioma) {
-		final RVersionTramite definicionVersion = SistragesMock.crearVersionTramite();
+		final RVersionTramite definicionVersion = SistragesMock.crearVersionTramite(idTramite);
 		return definicionVersion;
 	}
 

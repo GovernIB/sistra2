@@ -147,5 +147,6 @@ public final class Constantes {
 	public static final String CACHE_DOMINIO = "D";
 	public static final String CACHE_TRAMITE = "T";
 	public static final String CACHE_ENTIDAD = "E";
+	public static final String CACHE_COMPLETA = "X";
 
 }

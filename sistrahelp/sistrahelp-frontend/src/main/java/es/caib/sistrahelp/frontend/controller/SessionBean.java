@@ -60,6 +60,9 @@ public class SessionBean {
 	 */
 	private String lang;
 
+	/** Paginación */
+	private Integer paginacion;
+
 	/**
 	 * Locale actual.
 	 */
@@ -134,6 +137,11 @@ public class SessionBean {
 			if (listaAreasHelpSupervisor.isEmpty()) {
 				rolesList.remove(TypeRoleAcceso.SUPERVISOR_ENTIDAD);
 			}
+		}
+
+		// asignamos paginación por defecto si no tiene
+		if (getPaginacion() == null) {
+			setPaginacion(10);
 		}
 
 		// Lista de entidades según cada rol
@@ -538,6 +546,20 @@ public class SessionBean {
 
 	public void setListaAreasEntidad(final List<Area> listaAreasEntidad) {
 		this.listaAreasEntidad = listaAreasEntidad;
+	}
+
+	/**
+	 * @return the paginacion
+	 */
+	public final Integer getPaginacion() {
+		return paginacion;
+	}
+
+	/**
+	 * @param paginacion the paginacion to set
+	 */
+	public final void setPaginacion(Integer paginacion) {
+		this.paginacion = paginacion;
 	}
 
 }

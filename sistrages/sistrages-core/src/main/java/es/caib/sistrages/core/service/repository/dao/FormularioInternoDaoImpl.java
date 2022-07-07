@@ -54,6 +54,7 @@ import es.caib.sistrages.core.service.repository.model.JIdioma;
 import es.caib.sistrages.core.service.repository.model.JImagenFormulario;
 import es.caib.sistrages.core.service.repository.model.JLineaFormulario;
 import es.caib.sistrages.core.service.repository.model.JLiteral;
+import es.caib.sistrages.core.service.repository.model.JLiteralErrorScript;
 import es.caib.sistrages.core.service.repository.model.JPaginaFormulario;
 import es.caib.sistrages.core.service.repository.model.JPlantillaFormulario;
 import es.caib.sistrages.core.service.repository.model.JPlantillaIdiomaFormulario;
@@ -1119,6 +1120,26 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		final JFormulario jFormulario = entityManager.find(JFormulario.class, codigo);
 		if (jFormulario.getPaginas() != null) {
 			for (final JPaginaFormulario pagina : jFormulario.getPaginas()) {
+				if (pagina.getScriptNavegacion() != null) {
+					if (pagina.getScriptNavegacion().getLiterales() != null && !pagina.getScriptNavegacion().getLiterales().isEmpty()) {
+						for(JLiteralErrorScript literal : pagina.getScriptNavegacion().getLiterales()) {
+							entityManager.remove(literal);
+						}
+					}
+					pagina.getScriptNavegacion().setLiterales(null);
+					entityManager.remove(pagina.getScriptNavegacion());
+				}
+
+				if (pagina.getScriptValidacion() != null) {
+					if (pagina.getScriptValidacion().getLiterales() != null && !pagina.getScriptValidacion().getLiterales().isEmpty()) {
+						for(JLiteralErrorScript literal : pagina.getScriptValidacion().getLiterales()) {
+							entityManager.remove(literal);
+						}
+					}
+					pagina.getScriptValidacion().setLiterales(null);
+					entityManager.remove(pagina.getScriptValidacion());
+
+				}
 				entityManager.remove(pagina);
 			}
 		}

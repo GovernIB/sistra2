@@ -18,6 +18,7 @@ import es.caib.sistrages.core.api.service.AvisoEntidadService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -46,6 +47,9 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	/** Id entidad. */
 	private Long idEntidad;
 
+	/** Paginacion */
+	private Integer paginacion;
+
 	/** Filtro (puede venir por parametro). */
 	private String filtro;
 
@@ -65,6 +69,7 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(idEntidad);
 		// Titulo
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
+		paginacion = UtilJSF.getPaginacion("viewMensajesAvisoEntidad");
 		// Recupera datos
 		buscar();
 	}
@@ -122,26 +127,19 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		if (avisoEntidadService.removeAvisoEntidad(datoSeleccionado.getCodigo())) {
 			// Refrescamos datos
 			buscar();
+			ResultadoError re = this.refrescar();
+			String message = "";
 			// Mostramos mensaje
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+			if (re != null && re.getCodigo() != 1) {
+				message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("error.refrescarCache")
+						+ ": " + re.getMensaje();
+			} else {
+				message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+			}
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
 		}
-	}
-
-	/**
-	 * Refrescar cache.
-	 */
-	public void refrescarCache() {
-		final String urlBase = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
-		final String usuario = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
-		final String pwd = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
-		final Entidad entidad = entidadService.loadEntidadByArea(idEntidad);
-		this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_ENTIDAD, entidad.getCodigoDIR3());
-
 	}
 
 	/**
@@ -206,8 +204,7 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 
@@ -216,13 +213,29 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		// Verificamos si se ha modificado
 		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 			// Mensaje
-			String message = null;
+
 			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
-				message = UtilJSF.getLiteral("info.alta.ok");
+				/*
+				 * if (result != null && result.getCodigo() == 1) { message =
+				 * UtilJSF.getLiteral("info.alta.ok") + ". " +
+				 * UtilJSF.getLiteral("info.refrescar"); } else { message =
+				 * UtilJSF.getLiteral("info.alta.ok") + ". " +
+				 * UtilJSF.getLiteral("error.refrescar") + ": " + result.getMensaje(); }
+				 */
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.alta.ok"));
 			} else {
-				message = UtilJSF.getLiteral("info.modificado.ok");
+				String message = null;
+				ResultadoError result = this.refrescar();
+				if (result != null && result.getCodigo() == 1) {
+					message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("info.refrescar");
+				} else {
+					message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("error.refrescar")
+							+ ": " + result.getMensaje();
+				}
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
 			}
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
 			// Refrescamos datos
 			buscar();
 		}
@@ -236,8 +249,7 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	}
 
 	/**
-	 * @param filtro
-	 *                   the filtro to set
+	 * @param filtro the filtro to set
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
@@ -251,8 +263,7 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	}
 
 	/**
-	 * @param listaDatos
-	 *                       the listaDatos to set
+	 * @param listaDatos the listaDatos to set
 	 */
 	public void setListaDatos(final List<AvisoEntidad> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -266,8 +277,22 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	}
 
 	/**
-	 * @param datoSeleccionado
-	 *                             the datoSeleccionado to set
+	 * @return the paginacion
+	 */
+	public final Integer getPaginacion() {
+		return paginacion;
+	}
+
+	/**
+	 * @param paginacion the paginacion to set
+	 */
+	public final void setPaginacion(Integer paginacion) {
+		this.paginacion = paginacion;
+		UtilJSF.setPaginacion(paginacion, "viewMensajesAvisoEntidad");
+	}
+
+	/**
+	 * @param datoSeleccionado the datoSeleccionado to set
 	 */
 	public void setDatoSeleccionado(final AvisoEntidad datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
@@ -276,8 +301,7 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	/**
 	 * Abrir dialogo.
 	 *
-	 * @param modoAccesoDlg
-	 *                          Modo acceso
+	 * @param modoAccesoDlg Modo acceso
 	 */
 	private void abrirDlg(final TypeModoAcceso modoAccesoDlg) {
 		// Verifica si no hay fila seleccionada

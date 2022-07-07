@@ -12,12 +12,16 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RPasoTramitacionRegistrar", description = "Descripcion de RPasoTramitacionRegistrar", parent = RPasoTramitacion.class)
 public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 
-	/** Destino registro. */
-	@ApiModelProperty(value = "Destino registro")
-	private RDestinoRegistro destino;
+	/** Tipo destino: registro o envío. */
+	@ApiModelProperty(value = "Tipo destino: registro (R) o envío (E)")
+	private String tipoDestino;
+
+	/** Destino. */
+	@ApiModelProperty(value = "Datos Destino")
+	private RDestino destino;
 
 	/** Script destino registro. */
-	@ApiModelProperty(value = "Script destino registro")
+	@ApiModelProperty(value = "Script destino")
 	private RScript scriptDestino;
 
 	/** Instrucciones presentación. */
@@ -99,7 +103,7 @@ public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 	 *
 	 * @return destino
 	 */
-	public RDestinoRegistro getDestino() {
+	public RDestino getDestino() {
 		return destino;
 	}
 
@@ -109,7 +113,7 @@ public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 	 * @param destino
 	 *                    destino a establecer
 	 */
-	public void setDestino(final RDestinoRegistro destino) {
+	public void setDestino(final RDestino destino) {
 		this.destino = destino;
 	}
 
@@ -295,6 +299,25 @@ public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 	 */
 	public final void setScriptAlFinalizar(final RScript scriptAlFinalizar) {
 		this.scriptAlFinalizar = scriptAlFinalizar;
+	}
+
+	/**
+	 * Método de acceso a tipoDestino.
+	 *
+	 * @return tipoDestino
+	 */
+	public String getTipoDestino() {
+		return tipoDestino;
+	}
+
+	/**
+	 * Método para establecer tipoDestino.
+	 *
+	 * @param tipoDestino
+	 *                        tipoDestino a establecer
+	 */
+	public void setTipoDestino(final String tipoDestino) {
+		this.tipoDestino = tipoDestino;
 	}
 
 }

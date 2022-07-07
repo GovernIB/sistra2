@@ -259,8 +259,7 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/**
 	 * Obtiene url imagen
 	 *
-	 * @param url
-	 *                url imagen
+	 * @param url url imagen
 	 * @return bytes imagen (nulo si no puede recuperarla)
 	 */
 	private byte[] getImagen(final String url) {
@@ -282,8 +281,7 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/**
 	 * Stamp marca de agua.
 	 *
-	 * @param pdf
-	 *                PDF
+	 * @param pdf PDF
 	 * @return pdf con marca de agua
 	 */
 	private byte[] stampMarcaAgua(final byte[] pdf) {
@@ -409,6 +407,18 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	 * @param componente
 	 * @return
 	 */
+	private boolean isComponenteTipoMultilinea(final RComponente componente) {
+		return UtilsSTG.traduceTipoCampo(componente.getTipo()) == TypeCampo.TEXTO
+				&& UtilsSTG.traduceTipoTexto(((RComponenteTextbox) componente).getTipoTexto()) == TypeTexto.NORMAL
+				&& ((RComponenteTextbox) componente).getTextoNormal().getLineas() > 1;
+	}
+
+	/**
+	 * Comprueba si un componente es de tipo texto
+	 *
+	 * @param componente
+	 * @return
+	 */
 	private boolean isComponenteTipoFecha(final RComponente componente) {
 		return UtilsSTG.traduceTipoCampo(componente.getTipo()) == TypeCampo.TEXTO
 				&& UtilsSTG.traduceTipoTexto(((RComponenteTextbox) componente).getTipoTexto()) == TypeTexto.FECHA;
@@ -417,8 +427,7 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/**
 	 * Convierte la fecha en formato YYYY-MM-DD a DD-MM-YYYY
 	 *
-	 * @param fecha
-	 *                  Fecha en formato YYYY-MM-DD
+	 * @param fecha Fecha en formato YYYY-MM-DD
 	 * @return Fecha en formato DD-MM-YYYY
 	 * @throws Exception
 	 */
@@ -462,9 +471,16 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 				if (tipoCampo != TypeCampo.OCULTO && tipoCampo != TypeCampo.CAPTCHA) {
 					if (valor instanceof ValorCampoSimple) {
 						String valorCampoSimple = ((ValorCampoSimple) valor).getValor();
+						// Conversión fecha
 						if (isComponenteTipoFecha(componente)) {
 							valorCampoSimple = getConversionFecha(valorCampoSimple);
 						}
+						// Si es multilinea nos aseguramos que exista un salto de línea
+						if (isComponenteTipoMultilinea(componente) && valorCampoSimple != null
+								&& valorCampoSimple.indexOf("\n") == -1) {
+							valorCampoSimple = valorCampoSimple + "\r\n";
+						}
+						// Establece valor en pdf
 						linea.getObjetosLinea().add(new CampoTexto(6, isMultilinea(valorCampoSimple),
 								componente.getEtiqueta(), valorCampoSimple));
 					} else if (valor instanceof ValorCampoIndexado) {
@@ -487,8 +503,7 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/**
 	 * Indica si texto es multilínea.
 	 *
-	 * @param texto
-	 *                  texto
+	 * @param texto texto
 	 * @return boolean
 	 */
 	private boolean isMultilinea(final String texto) {

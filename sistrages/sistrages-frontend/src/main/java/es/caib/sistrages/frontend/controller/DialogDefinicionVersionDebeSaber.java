@@ -12,8 +12,10 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
@@ -44,6 +46,9 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 	/** Data. **/
 	private TramitePasoDebeSaber data;
 
+	/** Data inicial **/
+	private TramitePasoDebeSaber dataI;
+
 	/** ID tramite version. **/
 	private String idTramiteVersion;
 
@@ -52,6 +57,8 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 
 	/** Idiomas. **/
 	private List<String> idiomas;
+
+	private boolean cambios = false;
 
 	/**
 	 * Crea una nueva instancia de ViewDefinicionVersionDebeSaber.
@@ -62,6 +69,7 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 
 	public void init() {
 		data = (TramitePasoDebeSaber) tramiteService.getTramitePaso(Long.valueOf(id));
+		dataI = (TramitePasoDebeSaber) tramiteService.getTramitePaso(Long.valueOf(id));
 		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
 	}
@@ -81,6 +89,10 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 			case EDICION:
 
 				final Literal traduccionesMod = (Literal) respuesta.getResult();
+				final Literal traduccionesI = dataI.getInstruccionesIniciales();
+				if (this.isCambioLiterales(traduccionesI, traduccionesMod)) {
+					cambios = true;
+				}
 				data.setInstruccionesIniciales(traduccionesMod);
 
 				break;
@@ -115,6 +127,10 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 
 		if (TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.EDICION) {
 			tramiteService.updateTramitePaso(data);
+			if (cambios) {
+				tramiteService.actualizarFechaTramiteVersion(Long.parseLong(idTramiteVersion),
+						UtilJSF.getSessionBean().getUserName(), "Modificación debe saber");
+			}
 		}
 
 		final DialogResult result = new DialogResult();
@@ -141,6 +157,19 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 			case ALTA:
 			case EDICION:
 				data.setScriptDebeSaber((Script) respuesta.getResult());
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(dataI.getScriptDebeSaber(), data.getScriptDebeSaber())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			default:
 				break;
@@ -229,6 +258,10 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;
+	}
+
+	public void setCambios() {
+		this.cambios = true;
 	}
 
 }

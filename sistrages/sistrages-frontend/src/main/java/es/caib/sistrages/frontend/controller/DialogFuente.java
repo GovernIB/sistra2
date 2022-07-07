@@ -209,7 +209,7 @@ public class DialogFuente extends DialogControllerBase {
 	/**
 	 * Aceptar.
 	 */
-	public void aceptar(final boolean invalidaciones) {
+	public void aceptar() {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 		final Map<String, FuenteDatosCampo> codigoCampos = new HashMap<>();
@@ -272,19 +272,7 @@ public class DialogFuente extends DialogControllerBase {
 					return;
 				}
 			}
-			if (invalidaciones) {
-				final String urlBase = systemService
-						.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
-				final String usuario = systemService
-						.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
-				final String pwd = systemService
-						.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
 
-				final List<String> identificadorDominios = this.dominioService.listDominiosByFD(data.getCodigo());
-				for (final String identificador : identificadorDominios) {
-					this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_DOMINIO, identificador);
-				}
-			}
 			break;
 		case CONSULTA:
 			// No hay que hacer nada

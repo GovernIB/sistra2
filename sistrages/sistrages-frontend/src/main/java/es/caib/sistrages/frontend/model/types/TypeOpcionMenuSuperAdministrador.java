@@ -31,4 +31,5 @@ public enum TypeOpcionMenuSuperAdministrador implements OpcionMenu {
 	 * Configuracion autenticacion
 	 */
 	CONFIGURACION_AUTENTICACION;
+
 }

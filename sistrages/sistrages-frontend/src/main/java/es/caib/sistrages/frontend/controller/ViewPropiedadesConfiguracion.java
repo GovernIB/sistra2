@@ -94,27 +94,6 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	}
 
 	/**
-	 * Refrescar.
-	 */
-	public void refrescar() {
-		final String urlBase = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
-		final String usuario = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
-		final String pwd = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
-
-		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, "C", null);
-		if (resultado.getCodigo() == 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
-		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
-		}
-
-	}
-
-	/**
 	 * Abre dialogo para editar dato.
 	 */
 	public void editar() {
@@ -140,7 +119,16 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 		// Refrescamos datos
 		buscar();
 		// Mostramos mensaje
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+		ResultadoError re = this.refrescar();
+		String message = "";
+		// Mostramos mensaje
+		if (re.getCodigo() != 1) {
+			message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("error.refrescarCache") + ": "
+					+ re.getMensaje();
+		} else {
+			message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+		}
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 	}
 
 	/**
@@ -160,8 +148,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 
@@ -174,7 +161,14 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
 				message = UtilJSF.getLiteral("info.alta.ok");
 			} else {
-				message = UtilJSF.getLiteral("info.modificado.ok");
+				ResultadoError re = this.refrescar();
+				// Mostramos mensaje
+				if (re.getCodigo() != 1) {
+					message = UtilJSF.getLiteral("info.modificado.ok") + ". "
+							+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
+				} else {
+					message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+				}
 			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 			// Refrescamos datos
@@ -202,8 +196,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param filtro
-	 *                   the filtro to set
+	 * @param filtro the filtro to set
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
@@ -217,8 +210,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param listaDatos
-	 *                       the listaDatos to set
+	 * @param listaDatos the listaDatos to set
 	 */
 	public void setListaDatos(final List<ConfiguracionGlobal> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -232,8 +224,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param datoSeleccionado
-	 *                             the datoSeleccionado to set
+	 * @param datoSeleccionado the datoSeleccionado to set
 	 */
 	public void setDatoSeleccionado(final ConfiguracionGlobal datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;

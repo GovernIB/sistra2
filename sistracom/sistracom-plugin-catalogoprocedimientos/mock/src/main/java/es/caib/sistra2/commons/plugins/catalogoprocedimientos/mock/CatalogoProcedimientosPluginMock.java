@@ -27,24 +27,36 @@ public class CatalogoProcedimientosPluginMock extends AbstractPluginProperties
 	private List<DefinicionProcedimientoCP> procedimientos;
 	private List<DefinicionTramiteCP> tramites;
 
-	public CatalogoProcedimientosPluginMock() {
+	public static final String IMPLEMENTATION_BASE_PROPERTY = "mock.";
+
+	public CatalogoProcedimientosPluginMock() throws CatalogoPluginException {
 		init();
 	}
 
-	public CatalogoProcedimientosPluginMock(final String prefijoPropiedades, final Properties properties) {
+	public CatalogoProcedimientosPluginMock(final String prefijoPropiedades, final Properties properties)
+			throws CatalogoPluginException {
+		super(prefijoPropiedades, properties);
 		init();
 	}
 
-	private void init() {
+	private void init() throws CatalogoPluginException {
 
 		procedimientos = new ArrayList<>();
 		tramites = new ArrayList<>();
 
+		final String codigoSIA = getPropiedad("codigoSIA");
+		final String identificadorProc = getPropiedad("identificadroProc");
+		final String codigoDir3 = getPropiedad("codigoDir3");
+		final String identificadorTram = getPropiedad("identificadorTram");
+
 		final DefinicionProcedimientoCP procedimiento = new DefinicionProcedimientoCP();
-		procedimiento.setIdentificador("PROC1");
+
+		procedimiento.setIdentificador(
+				(identificadorProc == null || identificadorProc.equals("")) ? "PROC1" : identificadorProc);
 		procedimiento.setDescripcion("Procedimiento 1");
-		procedimiento.setIdProcedimientoSIA("SIA1");
-		procedimiento.setOrganoResponsableDir3("RespDIR3");
+		procedimiento.setIdProcedimientoSIA((codigoSIA == null || codigoSIA.equals("")) ? "24435" : codigoSIA);
+		procedimiento
+				.setOrganoResponsableDir3((codigoDir3 == null || codigoDir3.equals("")) ? "EA0001301" : codigoDir3);
 		final DefinicionLOPD lopd = new DefinicionLOPD();
 		lopd.setTextoCabecera("Texto para la cabecera");
 		final List<CampoLOPD> camposLopd = new ArrayList<>();
@@ -67,11 +79,11 @@ public class CatalogoProcedimientosPluginMock extends AbstractPluginProperties
 		procedimientos.add(procedimiento);
 
 		final DefinicionTramiteCP dt = new DefinicionTramiteCP();
-		dt.setIdentificador("TC1");
-		dt.setDescripcion("Tramite 1");
+		dt.setIdentificador((identificadorTram == null || identificadorTram.equals("")) ? "TC1" : identificadorTram);
+		dt.setDescripcion("Trámite 1");
 		dt.setProcedimiento(procedimiento);
 		dt.setVigente(true);
-		dt.setOrganoDestinoDir3("DIR3-1");
+		dt.setOrganoDestinoDir3((codigoDir3 == null || codigoDir3.equals("")) ? "EA0001301" : codigoDir3);
 		tramites.add(dt);
 
 		final DefinicionTramiteCP dt2 = new DefinicionTramiteCP();
@@ -108,6 +120,17 @@ public class CatalogoProcedimientosPluginMock extends AbstractPluginProperties
 		a.setFilename("lopd-mock.txt");
 		a.setContent("lopd mock".getBytes(StandardCharsets.UTF_8));
 		return a;
+	}
+
+	private String getPropiedad(final String propiedad) throws CatalogoPluginException {
+		final String res = getProperty(
+				CATALOGO_PROCEDIMIENTOS_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + propiedad);
+		/*
+		 * if (res == null) { throw new
+		 * CatalogoPluginException("No se ha especificado parametro " + propiedad +
+		 * " en propiedades"); }
+		 */
+		return res;
 	}
 
 }

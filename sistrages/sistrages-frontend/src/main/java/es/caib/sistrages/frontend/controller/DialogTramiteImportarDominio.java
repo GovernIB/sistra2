@@ -193,8 +193,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 			params.put(TypeParametroVentana.ID.toString(), dominio.getCodigo().toString());
 			params.put(TypeParametroVentana.AMBITO.toString(), dominio.getAmbito().toString());
 			if (dominio.getArea() != null) {
-				params.put(TypeParametroVentana.AREA.toString(),
-						dominio.getArea().getCodigo().toString());
+				params.put(TypeParametroVentana.AREA.toString(), dominio.getArea().getCodigo().toString());
 			}
 			UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 700);
 		}
@@ -254,9 +253,11 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 
 			params.put(TypeParametroVentana.AMBITO.toString(), ambito);
 			if (TypeAmbito.AREA.toString().equals(ambito)) {
-				params.put(TypeParametroVentana.AREA.toString(), data.getIdArea().toString());
+				params.put(TypeParametroVentana.AREA.toString(),
+						data.getConfiguracionAutenticacionActual().getArea().toString());
 			} else if (TypeAmbito.ENTIDAD.toString().equals(ambito)) {
-				params.put(TypeParametroVentana.ENTIDAD.toString(), data.getIdEntidad().toString());
+				params.put(TypeParametroVentana.ENTIDAD.toString(),
+						data.getConfiguracionAutenticacionActual().getEntidad().toString());
 			}
 
 			if (data.getConfiguracionAutenticacionActual().getCodigo() != null) {

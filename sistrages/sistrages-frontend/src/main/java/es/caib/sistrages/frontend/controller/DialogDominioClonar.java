@@ -1,7 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -11,11 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeClonarAccion;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
+import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -38,11 +39,17 @@ public class DialogDominioClonar extends DialogControllerBase {
 	@Inject
 	private DominioService dominioService;
 
+	/** Servicio. */
 	@Inject
 	private EntidadService entidadService;
+
 	/** Servicio. */
 	@Inject
 	private TramiteService tramiteService;
+
+	/** Servicio. */
+	@Inject
+	private ConfiguracionAutenticacionService configuracionAutenticacionService;
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -59,9 +66,6 @@ public class DialogDominioClonar extends DialogControllerBase {
 	/** Dominio. **/
 	private FuenteDatos fuente;
 
-	/** fuenteID. **/
-	private Long fuenteID;
-
 	/** Area. **/
 	private Area area;
 
@@ -71,14 +75,24 @@ public class DialogDominioClonar extends DialogControllerBase {
 	/** Area del usuario (solo en ambito tipo area). **/
 	private List<Area> areas;
 
-	/** Fuentes de datos del ambito entidad. **/
-	private List<FuenteDatos> fuentes;
-
 	/** Mostrar areas. **/
 	private boolean mostrarAreas;
 
 	/** Mostrar fuentes de datos. **/
 	private boolean mostrarFDs;
+	private boolean mostrarFDreemplazar;
+	private boolean fdReemplazar;
+	private FuenteDatos fd;
+	private String fdLabel;
+	private TypeClonarAccion accionFD = TypeClonarAccion.NADA;
+
+	/** Mostrar configuracion autenticacion **/
+	private boolean mostrarCAs;
+	private boolean mostrarCAreemplazar;
+	private boolean caReemplazar;
+	ConfiguracionAutenticacion confAut;
+	private String caLabel;
+	private TypeClonarAccion accionCA= TypeClonarAccion.NADA;
 
 	/**
 	 * Inicialización.
@@ -97,6 +111,10 @@ public class DialogDominioClonar extends DialogControllerBase {
 				}
 			}
 
+			if (!areas.isEmpty()) {
+				areaID = areas.get(0).getCodigo();
+			}
+
 		} else { // Ambito == TypeAmbito.GLOBAL o TypeAmbito.AREA
 			mostrarAreas = false;
 		}
@@ -104,25 +122,45 @@ public class DialogDominioClonar extends DialogControllerBase {
 		if (data.getTipo() == TypeDominio.FUENTE_DATOS) {
 
 			mostrarFDs = true;
-			if (data.getAmbito() == TypeAmbito.AREA) {
-				fuentes = dominioService.listFuenteDato(TypeAmbito.AREA, Long.valueOf(idArea), null);
 
-			} else if (data.getAmbito() == TypeAmbito.ENTIDAD) {
-				fuentes = dominioService.listFuenteDato(TypeAmbito.ENTIDAD, UtilJSF.getIdEntidad(), null);
-			}
-
-			for (final FuenteDatos fue : fuentes) {
-				if (fue.getCodigo().compareTo(data.getIdFuenteDatos()) == 0) {
-					fuente = fue;
-					break;
-				}
-			}
+			checkFuenteDatos();
 
 		} else {
 			mostrarFDs = false;
 		}
 
+		if (data.getConfiguracionAutenticacion() != null) {
+			mostrarCAs=true;
+			checkConfAut();
+		}
+
 		nuevoIdentificador = data.getIdentificador();
+	}
+
+	private void checkConfAut() {
+		mostrarCAs=data.getConfiguracionAutenticacion() != null;
+
+		if (data.getConfiguracionAutenticacion() != null)  {
+			confAut = configuracionAutenticacionService.getConfiguracionAutenticacion(data.getAmbito(), data.getConfiguracionAutenticacion().getIdentificador() , UtilJSF.getIdEntidad(), this.areaID, null);
+			mostrarCAreemplazar = confAut != null;
+			caReemplazar = confAut != null;
+			if (confAut == null) {
+				caLabel = UtilJSF.getLiteral("dialogDominioClonar.confAut.noExiste");
+			} else {
+				caLabel = UtilJSF.getLiteral("dialogDominioClonar.confAut.existe");
+			}
+		}
+	}
+
+	private void checkFuenteDatos() {
+		fd = dominioService.loadFuenteDato(data.getAmbito(), data.getIdentificadorFD() , UtilJSF.getIdEntidad(), this.areaID, null);
+		mostrarFDreemplazar = fd != null;
+		fdReemplazar = fd != null;
+		if (fd == null) {
+			fdLabel = UtilJSF.getLiteral("dialogDominioClonar.fd.noExiste");
+		} else {
+			fdLabel = UtilJSF.getLiteral("dialogDominioClonar.fd.existe");
+		}
 	}
 
 	/**
@@ -130,9 +168,10 @@ public class DialogDominioClonar extends DialogControllerBase {
 	 */
 	public void onChangeArea() {
 		if (data.getTipo() == TypeDominio.FUENTE_DATOS) {
-			fuentes = dominioService.listFuenteDato(TypeAmbito.AREA, areaID, null);
-			fuente = null;
+			checkFuenteDatos();
 		}
+
+		checkConfAut();
 	}
 
 	/**
@@ -145,10 +184,12 @@ public class DialogDominioClonar extends DialogControllerBase {
 			return;
 		}
 
-		if (data.getTipo() == TypeDominio.FUENTE_DATOS && fuenteID == null) {
-			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral(LITERAL_ERROR_OBLIGATORIO));
+		/*
+		 * if (data.getTipo() == TypeDominio.FUENTE_DATOS && fuenteID == null) {
+				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral(LITERAL_ERROR_OBLIGATORIO));
 			return;
-		}
+			}
+		*/
 
 		if (nuevoIdentificador == null || nuevoIdentificador.isEmpty()) {
 			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral(LITERAL_ERROR_OBLIGATORIO));
@@ -163,8 +204,8 @@ public class DialogDominioClonar extends DialogControllerBase {
 		}
 
 
-		Long lIdArea = (idArea == null) ? null : Long.valueOf(idArea);
-		Dominio dominioNuevoIdentificador = dominioService.loadDominioByIdentificador(this.data.getAmbito(), nuevoIdentificador, this.data.getEntidad(), lIdArea , null);
+//		Long lIdArea = (idArea == null) ? null : Long.valueOf(idArea);
+		Dominio dominioNuevoIdentificador = dominioService.loadDominioByIdentificador(this.data.getAmbito(), nuevoIdentificador, this.data.getEntidad(), areaID , null);
 		if (dominioNuevoIdentificador != null) {
 			Object[] valueHolder = new Object[2];
 			valueHolder = mensaje(dominioNuevoIdentificador);
@@ -173,7 +214,27 @@ public class DialogDominioClonar extends DialogControllerBase {
 			return;
 		}
 
-		dominioService.clonar(id, nuevoIdentificador, areaID, fuenteID, idEntidad);
+
+		if (mostrarFDs) {
+			if (fd == null) {
+				accionFD = TypeClonarAccion.CREAR;
+			} else if(fdReemplazar) {
+				accionFD = TypeClonarAccion.REEMPLAZAR;
+			} else {
+				accionFD = TypeClonarAccion.MANTENER;
+			}
+		}
+
+		if (mostrarCAs) {
+			if (confAut == null) {
+				accionCA = TypeClonarAccion.CREAR;
+			} else if(caReemplazar) {
+				accionCA = TypeClonarAccion.REEMPLAZAR;
+			} else {
+				accionCA = TypeClonarAccion.MANTENER;
+			}
+		}
+		dominioService.clonar(id, nuevoIdentificador, areaID,  idEntidad, accionFD, fd, accionCA, confAut);
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
@@ -284,20 +345,6 @@ public class DialogDominioClonar extends DialogControllerBase {
 	}
 
 	/**
-	 * @return the fuentes
-	 */
-	public List<FuenteDatos> getFuentes() {
-		return fuentes;
-	}
-
-	/**
-	 * @param fuentes the fuentes to set
-	 */
-	public void setFuentes(final List<FuenteDatos> fuentes) {
-		this.fuentes = fuentes;
-	}
-
-	/**
 	 * @return the mostrarAreas
 	 */
 	public boolean isMostrarAreas() {
@@ -353,19 +400,6 @@ public class DialogDominioClonar extends DialogControllerBase {
 		this.nuevoIdentificador = nuevoIdentificador;
 	}
 
-	/**
-	 * @return the fuenteID
-	 */
-	public Long getFuenteID() {
-		return fuenteID;
-	}
-
-	/**
-	 * @param fuenteID the fuenteID to set
-	 */
-	public void setFuenteID(final Long fuenteID) {
-		this.fuenteID = fuenteID;
-	}
 
 	/**
 	 * @return the areaID
@@ -379,5 +413,103 @@ public class DialogDominioClonar extends DialogControllerBase {
 	 */
 	public void setAreaID(final Long areaID) {
 		this.areaID = areaID;
+	}
+
+	/**
+	 * @return the mostrarFDreemplazar
+	 */
+	public boolean isMostrarFDreemplazar() {
+		return mostrarFDreemplazar;
+	}
+
+	/**
+	 * @param mostrarFDreemplazar the mostrarFDreemplazar to set
+	 */
+	public void setMostrarFDreemplazar(boolean mostrarFDreemplazar) {
+		this.mostrarFDreemplazar = mostrarFDreemplazar;
+	}
+
+	/**
+	 * @return the fdReemplazar
+	 */
+	public boolean isFdReemplazar() {
+		return fdReemplazar;
+	}
+
+	/**
+	 * @param fdReemplazar the fdReemplazar to set
+	 */
+	public void setFdReemplazar(boolean fdReemplazar) {
+		this.fdReemplazar = fdReemplazar;
+	}
+
+	/**
+	 * @return the fdLabel
+	 */
+	public String getFdLabel() {
+		return fdLabel;
+	}
+
+	/**
+	 * @param fdLabel the fdLabel to set
+	 */
+	public void setFdLabel(String fdLabel) {
+		this.fdLabel = fdLabel;
+	}
+
+	/**
+	 * @return the mostrarCAs
+	 */
+	public boolean isMostrarCAs() {
+		return mostrarCAs;
+	}
+
+	/**
+	 * @param mostrarCAs the mostrarCAs to set
+	 */
+	public void setMostrarCAs(boolean mostrarCAs) {
+		this.mostrarCAs = mostrarCAs;
+	}
+
+	/**
+	 * @return the mostrarCAreemplazar
+	 */
+	public boolean isMostrarCAreemplazar() {
+		return mostrarCAreemplazar;
+	}
+
+	/**
+	 * @param mostrarCAreemplazar the mostrarCAreemplazar to set
+	 */
+	public void setMostrarCAreemplazar(boolean mostrarCAreemplazar) {
+		this.mostrarCAreemplazar = mostrarCAreemplazar;
+	}
+
+	/**
+	 * @return the caReemplazar
+	 */
+	public boolean isCaReemplazar() {
+		return caReemplazar;
+	}
+
+	/**
+	 * @param caReemplazar the caReemplazar to set
+	 */
+	public void setCaReemplazar(boolean caReemplazar) {
+		this.caReemplazar = caReemplazar;
+	}
+
+	/**
+	 * @return the caLabel
+	 */
+	public String getCaLabel() {
+		return caLabel;
+	}
+
+	/**
+	 * @param caLabel the caLabel to set
+	 */
+	public void setCaLabel(String caLabel) {
+		this.caLabel = caLabel;
 	}
 }

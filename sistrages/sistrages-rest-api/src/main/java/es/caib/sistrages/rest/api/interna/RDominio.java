@@ -1,5 +1,7 @@
 package es.caib.sistrages.rest.api.interna;
 
+import java.util.List;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -12,6 +14,12 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RDominio", description = "Descripcion de RDominio")
 public class RDominio {
 
+	/** Tipos dominio. */
+	public static final String TIPO_LISTA_LISTA = "L";
+	public static final String TIPO_CONSULTA_BD = "B";
+	public static final String TIPO_CONSULTA_REMOTA = "R";
+	public static final String TIPO_FUENTE_DATOS = "F";
+
 	/** Timestamp recuperacion. */
 	@ApiModelProperty(value = "Timestamp recuperacion")
 	private String timestamp;
@@ -19,6 +27,10 @@ public class RDominio {
 	/** Identificador. */
 	@ApiModelProperty(value = "Identificador")
 	private String identificador;
+
+	/** Identificador entidad (nulo si global). */
+	@ApiModelProperty(value = "Identificador entidad (Código DIR3). Será nulo si ámbito global")
+	private String identificadorEntidad;
 
 	/** Cacheo implicito. */
 	@ApiModelProperty(value = "Tipo cacheo: explícito - 24 h (E) / implícito - 1 min (I) / no cache (N)")
@@ -31,11 +43,6 @@ public class RDominio {
 	@ApiModelProperty(value = "Tipo dominio: Lista fija (L),Consulta BD (B), Consulta remota (R) y Fuente datos (F)")
 	private String tipo;
 
-	public static final String TIPO_LISTA_LISTA = "L";
-	public static final String TIPO_CONSULTA_BD = "B";
-	public static final String TIPO_CONSULTA_REMOTA = "R";
-	public static final String TIPO_FUENTE_DATOS = "F";
-
 	/** JNDI BD / URL para BD / Consulta remota. */
 	@ApiModelProperty(value = "JNDI BD / URL para BD / Consulta remota")
 	private String uri;
@@ -46,11 +53,15 @@ public class RDominio {
 
 	/** Configuracion autenticacion. */
 	@ApiModelProperty(value = "Configuracion autenticacion")
-	private RConfiguracionAutenticacion configuracionAutenticacion;
+	private String identificadorConfAutenticacion;
 
 	/** Timeout (para dominios remotos). */
 	@ApiModelProperty(value = "Timeout en segundos (para dominios remotos)")
 	private Long timeout;
+
+	/** Lista parámetros. */
+	@ApiModelProperty(value = "Lista de parámetros")
+	private List<String> parametros;
 
 	/**
 	 * Método de acceso a identificador.
@@ -163,23 +174,8 @@ public class RDominio {
 	}
 
 	/**
-	 * @return the configuracionAutenticacion
-	 */
-	public RConfiguracionAutenticacion getConfiguracionAutenticacion() {
-		return configuracionAutenticacion;
-	}
-
-	/**
-	 * @param configuracionAutenticacion
-	 *                                       the configuracionAutenticacion to set
-	 */
-	public void setConfiguracionAutenticacion(final RConfiguracionAutenticacion configuracionAutenticacion) {
-		this.configuracionAutenticacion = configuracionAutenticacion;
-	}
-
-	/**
 	 * Método de acceso a timeout.
-	 * 
+	 *
 	 * @return timeout
 	 */
 	public Long getTimeout() {
@@ -188,12 +184,70 @@ public class RDominio {
 
 	/**
 	 * Método para establecer timeout.
-	 * 
+	 *
 	 * @param timeout
 	 *                    timeout a establecer
 	 */
 	public void setTimeout(final Long timeout) {
 		this.timeout = timeout;
+	}
+
+	/**
+	 * Método de acceso a idConfiguracionAutenticacion.
+	 *
+	 * @return idConfiguracionAutenticacion
+	 */
+	public String getIdentificadorConfAutenticacion() {
+		return identificadorConfAutenticacion;
+	}
+
+	/**
+	 * Método para establecer idConfiguracionAutenticacion.
+	 *
+	 * @param idConfiguracionAutenticacion
+	 *                                         idConfiguracionAutenticacion a
+	 *                                         establecer
+	 */
+	public void setIdentificadorConfAutenticacion(final String idConfiguracionAutenticacion) {
+		this.identificadorConfAutenticacion = idConfiguracionAutenticacion;
+	}
+
+	/**
+	 * Método de acceso a identificadorEntidad.
+	 *
+	 * @return identificadorEntidad
+	 */
+	public String getIdentificadorEntidad() {
+		return identificadorEntidad;
+	}
+
+	/**
+	 * Método para establecer identificadorEntidad.
+	 *
+	 * @param identificadorEntidad
+	 *                                 identificadorEntidad a establecer
+	 */
+	public void setIdentificadorEntidad(final String identificadorEntidad) {
+		this.identificadorEntidad = identificadorEntidad;
+	}
+
+	/**
+	 * Método de acceso a parametros.
+	 *
+	 * @return parametros
+	 */
+	public List<String> getParametros() {
+		return parametros;
+	}
+
+	/**
+	 * Método para establecer parametros.
+	 *
+	 * @param parametros
+	 *                       parametros a establecer
+	 */
+	public void setParametros(final List<String> parametros) {
+		this.parametros = parametros;
 	}
 
 }

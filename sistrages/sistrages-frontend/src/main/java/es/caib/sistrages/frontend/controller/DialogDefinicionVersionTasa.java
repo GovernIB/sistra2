@@ -48,6 +48,9 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 	/** Tasa. */
 	private Tasa data;
 
+	/** Tasa inicial. */
+	private Tasa dataI;
+
 	/** Tramite version. **/
 	private TramiteVersion tramiteVersion;
 
@@ -60,11 +63,14 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 	/** Idiomas. **/
 	private List<String> idiomas;
 
+	private boolean cambios = false;
+
 	/**
 	 * Crea una nueva instancia de ViewDefinicionVersionTasa1.
 	 */
 	public void init() {
 		data = tramiteService.getTasa(Long.valueOf(id));
+		dataI = tramiteService.getTasa(Long.valueOf(id));
 		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		setIdiomas(UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados()));
 	}
@@ -108,6 +114,11 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 			case ALTA:
 			case EDICION:
 				data.setDescripcion((Literal) respuesta.getResult());
+				final Literal traduccionesMod = (Literal) respuesta.getResult();
+				final Literal traduccionesI = dataI.getDescripcion();
+				if (this.isCambioLiterales(traduccionesI, traduccionesMod)) {
+					cambios = true;
+				}
 				break;
 			default:
 				break;
@@ -128,6 +139,19 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 			case ALTA:
 			case EDICION:
 				data.setScriptObligatoriedad((Script) respuesta.getResult());
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(dataI.getScriptObligatoriedad(), data.getScriptObligatoriedad())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			default:
 				break;
@@ -148,6 +172,19 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 			case ALTA:
 			case EDICION:
 				data.setScriptPago((Script) respuesta.getResult());
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(dataI.getScriptPago(), data.getScriptPago())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			default:
 				break;
@@ -165,7 +202,10 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 		}
 
 		tramiteService.updateTasaTramite(data);
-
+		if (cambios) {
+			tramiteService.actualizarFechaTramiteVersion(Long.parseLong(idTramiteVersion),
+					UtilJSF.getSessionBean().getUserName(), "Modificación tasa");
+		}
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data);
@@ -288,4 +328,7 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 		this.idiomas = idiomas;
 	}
 
+	public void setCambios() {
+		this.cambios = true;
+	}
 }

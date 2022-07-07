@@ -20,6 +20,7 @@
 	         	<h:column>
 	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.letra}" maxlength="2" readonly="#{dialogDisenyoFormulario.consulta}">
 	         			<p:ajax event="blur" process="@this" />
+	         			<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 	         		</p:inputText>
 	         	</h:column>
 

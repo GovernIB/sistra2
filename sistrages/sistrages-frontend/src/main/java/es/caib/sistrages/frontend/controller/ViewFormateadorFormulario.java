@@ -14,6 +14,7 @@ import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -41,6 +42,9 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	/** Id entidad. */
 	private Long idEntidad;
 
+	/** Paginacion */
+	private Integer paginacion;
+
 	/** FormateadorFormularioService. */
 	@Inject
 	private FormateadorFormularioService fmtService;
@@ -49,6 +53,7 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	 * Inicializacion.
 	 */
 	public void init() {
+		paginacion = UtilJSF.getPaginacion("viewFormateadorFormulario");
 		// Entidad activa
 		idEntidad = UtilJSF.getIdEntidad();
 		// Control acceso
@@ -163,8 +168,7 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -175,7 +179,13 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
 				message = UtilJSF.getLiteral("info.alta.ok");
 			} else {
-				message = UtilJSF.getLiteral("info.modificado.ok");
+				ResultadoError re = this.refrescar();
+				if (re.getCodigo() != 1) {
+					message = UtilJSF.getLiteral("info.modificado.ok") + ". "
+							+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
+				} else {
+					message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+				}
 			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 			// Refrescamos datos
@@ -238,8 +248,7 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	/**
 	 * Establece el valor de filtro.
 	 *
-	 * @param filtro
-	 *            el nuevo valor de filtro
+	 * @param filtro el nuevo valor de filtro
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
@@ -257,8 +266,7 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	/**
 	 * Establece el valor de listaDatos.
 	 *
-	 * @param listaDatos
-	 *            el nuevo valor de listaDatos
+	 * @param listaDatos el nuevo valor de listaDatos
 	 */
 	public void setListaDatos(final List<FormateadorFormulario> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -276,11 +284,24 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	/**
 	 * Establece el valor de datoSeleccionado.
 	 *
-	 * @param datoSeleccionado
-	 *            el nuevo valor de datoSeleccionado
+	 * @param datoSeleccionado el nuevo valor de datoSeleccionado
 	 */
 	public void setDatoSeleccionado(final FormateadorFormulario datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
 	}
 
+	/**
+	 * @return the paginacion
+	 */
+	public final Integer getPaginacion() {
+		return paginacion;
+	}
+
+	/**
+	 * @param paginacion the paginacion to set
+	 */
+	public final void setPaginacion(Integer paginacion) {
+		this.paginacion = paginacion;
+		UtilJSF.setPaginacion(paginacion, "viewFormateadorFormulario");
+	}
 }

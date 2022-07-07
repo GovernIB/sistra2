@@ -488,12 +488,19 @@ $.fn.appFormsConfiguracio = function(options) {
 
 				}
 
-				if (desDe === "inicia" || desDe === "avalua") {
+				if (desDe === "inicia") {
 
 					// mayuscules
 
 					imc_forms_finestra
 						.removeAttr("data-mayuscules")
+						.off(".appFormsAvalua");
+
+				}
+
+				if (desDe === "avalua") {
+
+					imc_forms_finestra
 						.off(".appFormsAvalua");
 
 				}
@@ -1445,6 +1452,7 @@ $.fn.appFormsConfiguracio = function(options) {
 								,conf_id = conf.id
 								,conf_obligatori = conf.obligatorio || false
 								,conf_lectura = conf.soloLectura || false
+								,conf_tipus = conf.tipo || false
 								,conf_ocult = conf.oculto || false
 								,conf_modificable = conf.modificable || false;
 
@@ -1453,9 +1461,9 @@ $.fn.appFormsConfiguracio = function(options) {
 								,elm_textarea = elm.find("textarea:first");
 
 
-							// ocult
+							// separador i ocult
 
-							if (conf_ocult) {
+							if (conf_tipus === "separador" && conf_ocult) {
 
 								elm
 									.attr({ "data-ocult": conf_ocult });
@@ -1475,6 +1483,46 @@ $.fn.appFormsConfiguracio = function(options) {
 											.removeAttr("data-ocult-bloc");
 
 								}
+
+							}
+
+
+							// bloc i ocult
+
+							if (conf_tipus === "bloque" && conf_ocult) {
+
+								//alert(conf_id)
+
+								var bloc_ultim = element.find("*[data-bloc="+conf_id+"]:last")
+
+								elm
+									.attr({ "data-ocult": conf_ocult });
+
+								var esSeparador = bloc_ultim.hasClass("imc-sep-bloc-fi");
+
+								if (esSeparador && conf_ocult === "s") {
+
+									bloc_ultim
+										.prevUntil(".imc-sep-bloc-ini")
+											.attr({ "data-ocult-bloc": conf_ocult });
+
+								} else if (esSeparador && conf_ocult === "n") {
+
+									bloc_ultim
+										.prevUntil(".imc-sep-bloc-ini")
+											.removeAttr("data-ocult-bloc");
+
+								}
+
+							}
+
+
+							// element ocult
+
+							if (conf_tipus !== "separador" && conf_tipus !== "bloque" && conf_ocult) {
+
+								elm
+									.attr({ "data-ocult": conf_ocult });
 
 							}
 
@@ -1956,6 +2004,14 @@ $.fn.appFormsAvalua = function(options) {
 				var esAvaluable = (input_element.attr("data-avalua") === "s") ? true : false
 					,esLectura = (input_element.attr("data-lectura") === "s") ? true : false;
 
+				//alert( "input_element_HTML: " + input_element.html() );
+
+				//alert( "input_element: " + input_element.attr("data-id") + " -- " + "esLectura: " + esLectura)
+
+				if (esLectura) {
+					return;
+				}
+
 				if (esAvaluable && !esLectura) {
 
 					element
@@ -2288,8 +2344,17 @@ $.fn.appFormsAvalua = function(options) {
 					imc_forms_missatge
 						.appFormsMissatge({ araAmaga: true });
 
-					enfocaAlSeguent();
+					// esperem una miqueta al enfocar
 
+					setTimeout(
+						function() {
+
+							enfocaAlSeguent();
+
+						}
+						,100
+					);
+					
 				}
 
 				// configuració
@@ -3339,7 +3404,12 @@ $.fn.appFormsPopupTabula = function(options) {
 
 							var f_el = $(this)
 								,f_el_tipus = f_el.attr("data-tipus")
-								,f_el_contingut = f_el.attr("data-contingut");
+								,f_el_contingut = f_el.attr("data-contingut")
+								,f_el_ocult = f_el.attr("data-ocult");
+
+							if (f_el_ocult === "s") {
+								return;
+							}
 
 							if (f_el_tipus === "texto") {
 
@@ -3587,7 +3657,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 
 				var regex = new RegExp("^[a-zA-Z0-9]+$");
 
-				if (!regex.test(tecla) || e.keyCode === 13 || e.keyCode === 8 || e.keyCode === 32 ) {
+				if (regex.test(tecla) || e.keyCode === 13 || e.keyCode === 8 || e.keyCode === 32 ) {
 					crida(input_el);
 				}
 

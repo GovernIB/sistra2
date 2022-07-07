@@ -1,5 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,14 +13,20 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.FuenteDatos;
+import es.caib.sistrages.core.api.model.Sesion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.SecurityService;
+import es.caib.sistrages.core.api.service.SystemService;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.ResultadoError;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -43,6 +50,14 @@ public class ViewFuentes extends ViewControllerBase {
 	@Inject
 	private SecurityService securityService;
 
+	/** sistem service. */
+	@Inject
+	private SystemService systemService;
+
+	/** tramite service. */
+	@Inject
+	private TramiteService tramiteService;
+
 	/** Id. **/
 	private String id;
 
@@ -57,6 +72,9 @@ public class ViewFuentes extends ViewControllerBase {
 
 	/** Dato seleccionado en la lista. */
 	private FuenteDatos datoSeleccionado;
+
+	/** Paginacion */
+	private Integer paginacion;
 
 	/** Permite editar. **/
 	private Boolean permiteEditar = false;
@@ -73,6 +91,12 @@ public class ViewFuentes extends ViewControllerBase {
 	/** Area. **/
 	private String area;
 
+	/** Accion. **/
+	private String accion;
+
+	/** Lista de areas. */
+	private List<Area> listaAreas;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -84,11 +108,26 @@ public class ViewFuentes extends ViewControllerBase {
 		if (ambito == null) {
 			return;
 		}
+		paginacion = UtilJSF.getPaginacion("viewFuentes");
+
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
 		checkPermisos();
 		buscar(null);
 
 		if (ambito.equals(TypeAmbito.AREA.toString())) {
+			Sesion sesion = null;
+
+			// Recupera info usuario
+			String userName = securityService.getUsername();
+
+			// recuperamos datos por defecto del usuario
+			if (!userName.isEmpty()) {
+				sesion = systemService.getSesion(userName);
+				listaAreas = tramiteService.listArea(sesion.getEntidad(), null);
+				if (!tramiteService.getArea(Long.parseLong(id)).getIdentificador().equals(area)) {
+					area = tramiteService.getArea(Long.parseLong(id)).getIdentificador();
+				}
+			}
 
 			mostrarBreadcrumb = true;
 			/* inicializa breadcrum y lo creamos */
@@ -114,6 +153,27 @@ public class ViewFuentes extends ViewControllerBase {
 
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
+	}
+
+	/**
+	 * Cambia de acción
+	 */
+	public void cambiarAccion() {
+		switch (accion) {
+		case "D":
+			UtilJSF.redirectJsfPage("/secure/app/viewDominios.xhtml?ambito=A&id=" + id + "&area=" + area);
+		case "F":
+			break;
+		case "S":
+			UtilJSF.redirectJsfPage("/secure/app/viewFormulariosExternos.xhtml?ambito=A&id=" + id + "&area=" + area);
+		case "C":
+			UtilJSF.redirectJsfPage(
+					"/secure/app/viewConfiguracionAutenticacion.xhtml?ambito=A&id=" + id + "&area=" + area);
+		case "E":
+			UtilJSF.redirectJsfPage("/secure/app/viewEnviosRemotos.xhtml?ambito=A&id=" + id + "&area=" + area);
+		default:
+			break;
+		}
 	}
 
 	/**
@@ -159,13 +219,35 @@ public class ViewFuentes extends ViewControllerBase {
 		}
 
 		// Eliminamos
+		final List<String> identificadorDominios = this.dominioService
+				.listDominiosByFD(this.datoSeleccionado.getCodigo());
 		if (!dominioService.removeFuenteDato(this.datoSeleccionado.getCodigo())) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
 		} else {
 			// Refrescamos datos
 			filtrar();
 			// Mostramos mensaje
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+			String message = "";
+			ResultadoError re = null;
+			boolean hayError = false;
+			String msgErr = "";
+			for (final String identificador : identificadorDominios) {
+				re = this.refrescar();
+				if (re.getCodigo() != 1) {
+					hayError = true;
+					msgErr = re.getMensaje();
+				}
+			}
+			if (hayError) {
+				message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("error.refrescarCache")
+						+ ": " + msgErr;
+			} else if (!hayError && !identificadorDominios.isEmpty()) {
+				message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+			} else {
+				message = UtilJSF.getLiteral("info.borrado.ok");
+			}
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
 		}
 	}
 
@@ -211,10 +293,30 @@ public class ViewFuentes extends ViewControllerBase {
 		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 			// Mensaje
 			String message = null;
+
 			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
 				message = UtilJSF.getLiteral("info.alta.ok");
 			} else {
-				message = UtilJSF.getLiteral("info.modificado.ok");
+				final List<String> identificadorDominios = this.dominioService
+						.listDominiosByFD(this.datoSeleccionado.getCodigo());
+				ResultadoError re = null;
+				boolean hayError = false;
+				String msgErr = "";
+				for (final String identificador : identificadorDominios) {
+					re = this.refrescar();
+					if (re.getCodigo() != 1) {
+						hayError = true;
+						msgErr = re.getMensaje();
+					}
+				}
+				if (hayError) {
+					message = UtilJSF.getLiteral("info.modificado.ok") + ". "
+							+ UtilJSF.getLiteral("error.refrescarCache") + ": " + msgErr;
+				} else if (!hayError && !identificadorDominios.isEmpty()) {
+					message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+				} else {
+					message = UtilJSF.getLiteral("info.modificado.ok");
+				}
 			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
@@ -498,4 +600,46 @@ public class ViewFuentes extends ViewControllerBase {
 		this.area = area;
 	}
 
+	/**
+	 * @return the listaAreas
+	 */
+	public final List<Area> getListaAreas() {
+		return listaAreas;
+	}
+
+	/**
+	 * @param listaAreas the listaAreas to set
+	 */
+	public final void setListaAreas(List<Area> listaAreas) {
+		this.listaAreas = listaAreas;
+	}
+
+	/**
+	 * @return the paginacion
+	 */
+	public final Integer getPaginacion() {
+		return paginacion;
+	}
+
+	/**
+	 * @param paginacion the paginacion to set
+	 */
+	public final void setPaginacion(Integer paginacion) {
+		this.paginacion = paginacion;
+		UtilJSF.setPaginacion(paginacion, "viewFuentes");
+	}
+
+	/**
+	 * @return the accion
+	 */
+	public final String getAccion() {
+		return accion;
+	}
+
+	/**
+	 * @param accion the accion to set
+	 */
+	public final void setAccion(String accion) {
+		this.accion = accion;
+	}
 }

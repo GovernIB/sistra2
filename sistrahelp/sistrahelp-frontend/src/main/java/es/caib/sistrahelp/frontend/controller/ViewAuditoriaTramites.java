@@ -37,6 +37,9 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	@Inject
 	private HelpDeskService helpDeskService;
 
+	/** Paginacion */
+	private Integer paginacion;
+
 	/**
 	 * lista datos.
 	 */
@@ -59,6 +62,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 */
 	public void init() {
 		UtilJSF.verificarAcceso();
+
+		paginacion = UtilJSF.getPaginacion("viewAuditoriaTramites");
 
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
@@ -96,6 +101,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		filtros.setNombre(StringUtils.trim(filtros.getNombre()));
 		filtros.setIdTramite(StringUtils.trim(filtros.getIdTramite()));
 		filtros.setIdProcedimientoCP(StringUtils.trim(filtros.getIdProcedimientoCP()));
+		filtros.setCodSia(filtros.getCodSia());
 	}
 
 	/**
@@ -268,6 +274,21 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 
 	public void setTiposEventos(final List<TypeEvento> tiposEventos) {
 		this.tiposEventos = tiposEventos;
+	}
+
+	/**
+	 * @return the paginacion
+	 */
+	public final Integer getPaginacion() {
+		return paginacion;
+	}
+
+	/**
+	 * @param paginacion the paginacion to set
+	 */
+	public final void setPaginacion(Integer paginacion) {
+		this.paginacion = paginacion;
+		UtilJSF.setPaginacion(paginacion, "viewAuditoriaTramites");
 	}
 
 }

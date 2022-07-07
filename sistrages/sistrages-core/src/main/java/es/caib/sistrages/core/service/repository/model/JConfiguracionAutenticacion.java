@@ -24,7 +24,7 @@ import es.caib.sistrages.core.api.model.types.TypeConsultaGeneral;
 @Table(name = "STG_CONFAUT")
 public class JConfiguracionAutenticacion implements IModelApi {
 
- 	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_CONFAUT_SEQ")
@@ -66,7 +66,6 @@ public class JConfiguracionAutenticacion implements IModelApi {
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
-
 
 	/**
 	 * @return the identificador
@@ -171,16 +170,20 @@ public class JConfiguracionAutenticacion implements IModelApi {
 		confAutenticacion.setCodigo(codigo);
 		confAutenticacion.setIdentificador(this.getIdentificador());
 		if (this.ambito.equals(TypeAmbito.GLOBAL.toString())) {
-			confAutenticacion.setIdentificadorCompuesto("GLOBAL"+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+this.identificador);
+			confAutenticacion.setIdentificadorCompuesto(
+					"GLOBAL" + ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO + this.identificador);
 		} else if (this.ambito.equals(TypeAmbito.ENTIDAD.toString())) {
 			String idEntidad = this.entidad.getIdentificador();
-			confAutenticacion.setIdentificadorCompuesto(idEntidad+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+this.identificador);
+			confAutenticacion.setIdentificadorCompuesto(
+					idEntidad + ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO + this.identificador);
 		} else {
 			if (this.area != null) {
 				String idArea = this.area.getIdentificador();
 				String idEntidad = this.area.getEntidad().getIdentificador();
 				confAutenticacion.setArea(area.getCodigo());
-				confAutenticacion.setIdentificadorCompuesto(idEntidad+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+idArea+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+this.identificador);
+				confAutenticacion.setIdentificadorCompuesto(
+						idEntidad + ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO + idArea
+								+ ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO + this.identificador);
 			}
 		}
 		confAutenticacion.setIdentificador(this.getIdentificador());
@@ -203,7 +206,9 @@ public class JConfiguracionAutenticacion implements IModelApi {
 			jModel.setDescripcion(model.getDescripcion());
 			jModel.setUsuario(model.getUsuario());
 			jModel.setPassword(model.getPassword());
-			jModel.setAmbito(model.getAmbito().toString());
+			if (model.getAmbito() != null) {
+				jModel.setAmbito(model.getAmbito().toString());
+			}
 		}
 		return jModel;
 	}

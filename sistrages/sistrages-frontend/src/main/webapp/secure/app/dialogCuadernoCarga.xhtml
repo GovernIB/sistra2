@@ -173,7 +173,7 @@
 							</h:column>
 
 							<h:column>
-								<p:commandButton value="..." process="@form" actionListener="#{dialogCuadernoCarga.checkTramiteRegistro()}" style="margin-left:5px" rendered="#{dialogCuadernoCarga.isNingunError()}">
+								<p:commandButton value="..." process="@form" actionListener="#{dialogCuadernoCarga.checkTramiteRegistro()}" style="margin-left:5px" rendered="#{dialogCuadernoCarga.isNingunError() and dialogCuadernoCarga.filaTramiteRegistro.isTipoTramite()}">
 									<p:ajax event="dialogReturn" listener="#{dialogCuadernoCarga.returnDialogoRegistro}" update="tramiteRegistro @form" />
 								</p:commandButton>
 							</h:column>

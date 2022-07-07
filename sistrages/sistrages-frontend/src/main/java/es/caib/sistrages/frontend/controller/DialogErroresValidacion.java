@@ -163,6 +163,7 @@ public class DialogErroresValidacion extends DialogControllerBase {
 		boolean isFilaSeleccionada = true;
 		if (this.filaSeleccionada == null) {
 			isFilaSeleccionada = false;
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 		}
 		return isFilaSeleccionada;
 	}

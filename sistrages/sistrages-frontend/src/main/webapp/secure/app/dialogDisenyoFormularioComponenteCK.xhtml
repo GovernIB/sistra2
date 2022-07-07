@@ -9,6 +9,7 @@
    	<h:column>
    		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.valorChecked}" disabled="#{dialogDisenyoFormulario.consulta}">
    			<p:ajax event="blur" process="@this" />
+	        <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
    		</p:inputText>
    	</h:column>
 
@@ -16,6 +17,7 @@
    	<h:column>
    		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.valorNoChecked}" disabled="#{dialogDisenyoFormulario.consulta}">
    			<p:ajax event="blur" process="@this" />
+	        <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
    		</p:inputText>
    	</h:column>
 

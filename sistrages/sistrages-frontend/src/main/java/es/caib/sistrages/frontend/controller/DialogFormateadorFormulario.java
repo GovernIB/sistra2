@@ -12,6 +12,7 @@ import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -130,6 +131,7 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 				return;
 			}
 			fmtService.updateFormateadorFormulario(data, idEntidad);
+
 			break;
 		case CONSULTA:
 			// No hay que hacer nada

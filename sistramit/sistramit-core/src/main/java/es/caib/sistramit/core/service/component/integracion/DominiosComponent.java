@@ -27,8 +27,16 @@ public interface DominiosComponent {
 	 * Invalida dominio en la caché.
 	 *
 	 * @param idDominio
-	 *            idDominio
+	 *                      idDominio
 	 */
 	void invalidarDominio(String idDominio);
+
+	/**
+	 * Borra caché dominios.
+	 *
+	 * @param idDominio
+	 *                      idDominio
+	 */
+	void invalidarDominios();
 
 }

@@ -20,6 +20,16 @@ import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 public final class InfoLoginTramite implements Serializable {
 
 	/**
+	 * Id trámite.
+	 */
+	private String idTramite;
+
+	/**
+	 * Versión trámite.
+	 */
+	private int version;
+
+	/**
 	 * Idioma.
 	 */
 	private String idioma;
@@ -205,7 +215,7 @@ public final class InfoLoginTramite implements Serializable {
 
 	/**
 	 * Convierte metodos autenticacion a string.
-	 * 
+	 *
 	 * @return etodos autenticacion a string
 	 */
 	public String metodosAutenticadoToString() {
@@ -295,7 +305,7 @@ public final class InfoLoginTramite implements Serializable {
 
 	/**
 	 * Método de acceso a metodosAutenticado.
-	 * 
+	 *
 	 * @return metodosAutenticado
 	 */
 	public List<TypeMetodoAutenticacion> getMetodosAutenticado() {
@@ -304,12 +314,50 @@ public final class InfoLoginTramite implements Serializable {
 
 	/**
 	 * Método para establecer metodosAutenticado.
-	 * 
+	 *
 	 * @param metodosAutenticado
 	 *                               metodosAutenticado a establecer
 	 */
 	public void setMetodosAutenticado(final List<TypeMetodoAutenticacion> metodosAutenticado) {
 		this.metodosAutenticado = metodosAutenticado;
+	}
+
+	/**
+	 * Método de acceso a idTramite.
+	 * 
+	 * @return idTramite
+	 */
+	public String getIdTramite() {
+		return idTramite;
+	}
+
+	/**
+	 * Método para establecer idTramite.
+	 * 
+	 * @param idTramite
+	 *                      idTramite a establecer
+	 */
+	public void setIdTramite(final String idTramite) {
+		this.idTramite = idTramite;
+	}
+
+	/**
+	 * Método de acceso a version.
+	 * 
+	 * @return version
+	 */
+	public int getVersion() {
+		return version;
+	}
+
+	/**
+	 * Método para establecer version.
+	 * 
+	 * @param version
+	 *                    version a establecer
+	 */
+	public void setVersion(final int version) {
+		this.version = version;
 	}
 
 }

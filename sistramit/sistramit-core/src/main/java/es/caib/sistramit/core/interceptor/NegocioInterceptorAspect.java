@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -21,15 +22,18 @@ import es.caib.sistramit.core.api.exception.DatabaseException;
 import es.caib.sistramit.core.api.exception.ErrorNoControladoException;
 import es.caib.sistramit.core.api.exception.ServiceException;
 import es.caib.sistramit.core.api.exception.ServiceRollbackException;
+import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.comun.ResultadoProcesoProgramado;
 import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
 import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
 import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.api.service.FlujoFormularioInternoService;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.api.service.PurgaService;
+import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.core.service.component.system.AuditorEventosFlujoTramitacion;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.model.system.EventoFlujoInfo;
@@ -69,7 +73,7 @@ public final class NegocioInterceptorAspect {
 	 * Intercepta invocacion a metodo.
 	 *
 	 * @param jp
-	 *            JointPoint
+	 *               JointPoint
 	 */
 	@Before("@annotation(es.caib.sistramit.core.interceptor.NegocioInterceptor)")
 	public void processInvocation(final JoinPoint jp) {
@@ -80,8 +84,30 @@ public final class NegocioInterceptorAspect {
 		// Audita eventos flujo tramitacion
 		if (isFlujoTramitacionService(jp)) {
 			final List<EventoAuditoria> eventos = auditorEventosFlujoTramitacion.interceptaInvocacion(
-					infoFlujo.getIdSesionTramitacion(), jp.getSignature().getName(), jp.getArgs());
+					infoFlujo.getIdSesionTramitacion(), jp.getSignature().getName(), jp.getArgs(),
+					infoFlujo.isDebugEnabled());
 			auditoriaComponent.auditarEventosAplicacion(eventos);
+		}
+
+		// Audita eventos sistema
+		if (isSystemService(jp)) {
+
+			// Invalidaciones
+			if ("invalidar".equals(jp.getSignature().getName())) {
+				final Invalidacion inv = (Invalidacion) jp.getArgs()[0];
+				if (inv != null) {
+					final ListaPropiedades props = new ListaPropiedades();
+					props.addPropiedad("invalidacion", inv.getTipo().toString()
+							+ (StringUtils.isNotBlank(inv.getIdentificador()) ? " - " + inv.getIdentificador() : ""));
+					final EventoAuditoria ev = new EventoAuditoria();
+					ev.setTipoEvento(TypeEvento.INV_REQ);
+					ev.setFecha(new Date());
+					ev.setResultado("OK");
+					ev.setPropiedadesEvento(props);
+					auditoriaComponent.auditarEventoAplicacion(ev);
+				}
+			}
+
 		}
 
 	}
@@ -90,9 +116,9 @@ public final class NegocioInterceptorAspect {
 	 * Intercepta retorno de un metodo.
 	 *
 	 * @param jp
-	 *            JointPoint
+	 *                   JointPoint
 	 * @param retVal
-	 *            Objeto retornado
+	 *                   Objeto retornado
 	 */
 	@AfterReturning(pointcut = "@annotation(es.caib.sistramit.core.interceptor.NegocioInterceptor)", returning = "retVal")
 	public void processReturn(final JoinPoint jp, final Object retVal) {
@@ -102,21 +128,45 @@ public final class NegocioInterceptorAspect {
 		// Audita eventos flujo tramitacion
 		if (isFlujoTramitacionService(jp)) {
 			final List<EventoAuditoria> eventos = auditorEventosFlujoTramitacion.interceptaRetorno(
-					infoFlujo.getIdSesionTramitacion(), jp.getSignature().getName(), jp.getArgs(), retVal);
+					infoFlujo.getIdSesionTramitacion(), jp.getSignature().getName(), jp.getArgs(), retVal,
+					infoFlujo.isDebugEnabled());
 			auditoriaComponent.auditarEventosAplicacion(eventos);
 		}
 
 		// Audita eventos purga
 		if (isPurgaService(jp)) {
-			final ResultadoProcesoProgramado rp = (ResultadoProcesoProgramado) retVal;
-			if (rp != null) {
-				final EventoAuditoria ev = new EventoAuditoria();
-				ev.setTipoEvento(TypeEvento.PROCESO_PURGA);
-				ev.setFecha(new Date());
-				ev.setResultado(Boolean.toString(rp.isFinalizadoOk()));
-				ev.setPropiedadesEvento(rp.getDetalles());
-				auditoriaComponent.auditarEventoAplicacion(ev);
+
+			// Purgar persistencia
+			if ("purgarPersistencia".equals(jp.getSignature().getName())) {
+				final ResultadoProcesoProgramado rp = (ResultadoProcesoProgramado) retVal;
+				if (rp != null) {
+					final EventoAuditoria ev = new EventoAuditoria();
+					ev.setTipoEvento(TypeEvento.PROCESO_PURGA);
+					ev.setFecha(new Date());
+					ev.setResultado(Boolean.toString(rp.isFinalizadoOk()));
+					ev.setPropiedadesEvento(rp.getDetalles());
+					auditoriaComponent.auditarEventoAplicacion(ev);
+				}
 			}
+
+		}
+
+		// Audita eventos sistema
+		if (isSystemService(jp)) {
+
+			// Invalidaciones
+			if ("revisarInvalidaciones".equals(jp.getSignature().getName())) {
+				final ListaPropiedades rp = (ListaPropiedades) retVal;
+				if (rp != null) {
+					final EventoAuditoria ev = new EventoAuditoria();
+					ev.setTipoEvento(TypeEvento.INV_EJE);
+					ev.setFecha(new Date());
+					ev.setResultado("OK");
+					ev.setPropiedadesEvento(rp);
+					auditoriaComponent.auditarEventoAplicacion(ev);
+				}
+			}
+
 		}
 
 	}
@@ -125,9 +175,9 @@ public final class NegocioInterceptorAspect {
 	 * Intercepta excepcion y realiza auditoria.
 	 *
 	 * @param jp
-	 *            JoinPoint
+	 *               JoinPoint
 	 * @param ex
-	 *            Exception
+	 *               Exception
 	 */
 	@AfterThrowing(pointcut = "@annotation(es.caib.sistramit.core.interceptor.NegocioInterceptor)", throwing = "ex")
 	public void processException(final JoinPoint jp, final Throwable ex) {
@@ -179,16 +229,16 @@ public final class NegocioInterceptorAspect {
 	 * genera una nueva excepcion de negocio).
 	 *
 	 * @param jp
-	 *            JointPoint
+	 *                      JointPoint
 	 * @param ex
-	 *            Excepcion
+	 *                      Excepcion
 	 * @param flujoInfo
-	 *            info flujo
+	 *                      info flujo
 	 * @return En caso necesario se indica si se debe generar una nueva excepcion
 	 *         que encapsule la original.
 	 */
 	private ServiceRollbackException auditaExcepcion(final JoinPoint jp, final Throwable ex,
-			EventoFlujoInfo flujoInfo) {
+			final EventoFlujoInfo flujoInfo) {
 
 		final Logger logJP = LoggerFactory.getLogger(jp.getTarget().getClass());
 
@@ -236,7 +286,7 @@ public final class NegocioInterceptorAspect {
 	 * Obtiene info flujo.
 	 *
 	 * @param jp
-	 *            Jointpoint
+	 *               Jointpoint
 	 * @return info flujo
 	 */
 	private EventoFlujoInfo getInfoFlujo(final JoinPoint jp) {
@@ -291,7 +341,7 @@ public final class NegocioInterceptorAspect {
 	 * Verifica si llamada es al service de flujo de tramitación.
 	 *
 	 * @param jp
-	 *            JointPoint
+	 *               JointPoint
 	 * @return boolean
 	 */
 	private boolean isFlujoTramitacionService(final JoinPoint jp) {
@@ -302,11 +352,22 @@ public final class NegocioInterceptorAspect {
 	 * Verifica si llamada es al service de purga.
 	 *
 	 * @param jp
-	 *            JointPoint
+	 *               JointPoint
 	 * @return boolean
 	 */
 	private boolean isPurgaService(final JoinPoint jp) {
 		return jp.getTarget() instanceof PurgaService;
+	}
+
+	/**
+	 * Verifica si llamada es al service de System.
+	 *
+	 * @param jp
+	 *               JointPoint
+	 * @return boolean
+	 */
+	private boolean isSystemService(final JoinPoint jp) {
+		return jp.getTarget() instanceof SystemService;
 	}
 
 }

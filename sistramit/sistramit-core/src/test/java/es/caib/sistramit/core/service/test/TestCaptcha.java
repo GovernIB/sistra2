@@ -19,7 +19,7 @@ public class TestCaptcha {
 
 		// Sonido
 		c = UtilsCaptcha.generaCaptcha(captchaValor, idioma, TypeCaptcha.SONIDO);
-		IOUtils.copy(new ByteArrayInputStream(c.getContenido()), new FileOutputStream("P:/temp/captcha.wav"));
+		IOUtils.copy(new ByteArrayInputStream(c.getContenido()), new FileOutputStream("/temp/captcha.wav"));
 
 		// Sonido
 		c = UtilsCaptcha.generaCaptcha(captchaValor, idioma, TypeCaptcha.IMAGEN);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
@@ -12,18 +13,23 @@ import es.caib.sistramit.core.api.exception.ServiceException;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.DatosSesionPago;
+import es.caib.sistramit.core.api.model.flujo.FirmaVerificacion;
 import es.caib.sistramit.core.api.model.flujo.PagoVerificacion;
+import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoPagar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRegistrar;
+import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRellenar;
+import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.api.model.system.types.TypeParametroEvento;
+import es.caib.sistramit.core.service.util.UtilsFlujo;
 
 /**
  * Permite establecer logica personalizada para auditar eventos en la invocacion
@@ -37,9 +43,13 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 
 	@Override
 	public List<EventoAuditoria> interceptaInvocacion(final String idSesionTramitacion, final String pMetodo,
-			final Object[] pArgumentos) {
-		// No se requiere
-		return new ArrayList<>();
+			final Object[] pArgumentos, final boolean debugEnabled) {
+		List<EventoAuditoria> eventosFlujoTramitacion = null;
+		// Auditamos invocaciones si debug esta habilitado
+		if (debugEnabled) {
+			eventosFlujoTramitacion = eventoFlujoTramitacionInvocacion(idSesionTramitacion, pMetodo, pArgumentos);
+		}
+		return eventosFlujoTramitacion;
 	}
 
 	@Override
@@ -51,16 +61,58 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 
 	@Override
 	public List<EventoAuditoria> interceptaRetorno(final String idSesionTramitacion, final String pMetodo,
-			final Object[] pArgumentos, final Object pResult) {
+			final Object[] pArgumentos, final Object pResult, final boolean debugEnabled) {
 		// Auditamos eventos de tramitacion
-		final List<EventoAuditoria> eventosFlujoTramitacion = eventoFlujoTramitacion(idSesionTramitacion, pMetodo,
-				pArgumentos, pResult);
+		final List<EventoAuditoria> eventosFlujoTramitacion = eventoFlujoTramitacionRetorno(idSesionTramitacion,
+				pMetodo, pArgumentos, pResult);
 		return eventosFlujoTramitacion;
 	}
 
 	// ----------------------------------------------------------------------------
 	// FUNCIONES UTILIDAD
 	// ----------------------------------------------------------------------------
+
+	/**
+	 * Crea eventos invocacion.
+	 *
+	 * @param idSesionTramitacion
+	 *                                idSesionTramitacion
+	 * @param pMetodo
+	 *                                Metodo
+	 * @param pArgumentos
+	 *                                Argumentos
+	 * @return Eventos
+	 */
+	private List<EventoAuditoria> eventoFlujoTramitacionInvocacion(final String idSesionTramitacion,
+			final String pMetodo, final Object[] pArgumentos) {
+
+		final List<EventoAuditoria> eventosFlujo = new ArrayList<>();
+
+		// Evento ir a paso
+		if ("irAPaso".equals(pMetodo)) {
+			final EventoAuditoria evento = crearEvento(TypeEvento.DEBUG_FLUJO, idSesionTramitacion);
+			evento.setDescripcion("irAPaso: " + TypePaso.fromString((String) pArgumentos[1]).name());
+			eventosFlujo.add(evento);
+		}
+
+		// Evento ir a paso actual
+		if ("irAPasoActual".equals(pMetodo)) {
+			final EventoAuditoria evento = crearEvento(TypeEvento.DEBUG_FLUJO, idSesionTramitacion);
+			evento.setDescripcion("irAPasoActual");
+			eventosFlujo.add(evento);
+		}
+
+		// Evento accion paso
+		if ("accionPaso".equals(pMetodo)) {
+			final EventoAuditoria evento = crearEvento(TypeEvento.DEBUG_FLUJO, idSesionTramitacion);
+			evento.setDescripcion("accionPaso: " + TypePaso.fromString((String) pArgumentos[1]).name() + " / "
+					+ ((TypeAccionPaso) pArgumentos[2]).name());
+			eventosFlujo.add(evento);
+		}
+
+		return eventosFlujo;
+
+	}
 
 	/**
 	 * Crea evento.
@@ -93,7 +145,7 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 	 *                                Resultado
 	 * @return Eventos
 	 */
-	private List<EventoAuditoria> eventoFlujoTramitacion(final String idSesionTramitacion, final String pMetodo,
+	private List<EventoAuditoria> eventoFlujoTramitacionRetorno(final String idSesionTramitacion, final String pMetodo,
 			final Object[] pArgumentos, final Object pResult) {
 		final List<EventoAuditoria> eventosFlujo = new ArrayList<>();
 
@@ -154,17 +206,22 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 	 *                              User
 	 */
 	protected void addPropsAutenticacion(final ListaPropiedades propiedadesEvento, final UsuarioAutenticadoInfo user) {
-		// Metodo auth
-		propiedadesEvento.addPropiedad(TypeParametroEvento.AUTENTICACION.toString(),
-				user.getMetodoAutenticacion().toString());
-		// QAA
-		if (user.getQaa() != null) {
-			propiedadesEvento.addPropiedad(TypeParametroEvento.AUTENTICACION_QAA.toString(), user.getQaa().toString());
-		}
-		// Representante
-		if (user.getRepresentante() != null) {
-			propiedadesEvento.addPropiedad(TypeParametroEvento.AUTENTICACION_RPTE.toString(),
-					user.getRepresentante().getNif() + " - " + user.getRepresentante().getNombreApellidos());
+		if (user != null) {
+			// Metodo auth
+			if (user.getMetodoAutenticacion() != null) {
+				propiedadesEvento.addPropiedad(TypeParametroEvento.AUTENTICACION.toString(),
+						user.getMetodoAutenticacion().toString());
+			}
+			// QAA
+			if (user.getQaa() != null) {
+				propiedadesEvento.addPropiedad(TypeParametroEvento.AUTENTICACION_QAA.toString(),
+						user.getQaa().toString());
+			}
+			// Representante
+			if (user.getRepresentante() != null) {
+				propiedadesEvento.addPropiedad(TypeParametroEvento.AUTENTICACION_RPTE.toString(),
+						user.getRepresentante().getNif() + " - " + user.getRepresentante().getNombreApellidos());
+			}
 		}
 	}
 
@@ -203,23 +260,80 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 		final List<EventoAuditoria> eventos = new ArrayList<>();
 
 		final TypeAccionPaso accionPaso = (TypeAccionPaso) pArgumentos[ConstantesNumero.N2];
+		final ParametrosAccionPaso parametrosPaso = (ParametrosAccionPaso) pArgumentos[ConstantesNumero.N3];
 		final ResultadoAccionPaso respuestaAccionPaso = (ResultadoAccionPaso) pResult;
 
-		// Evento registro tramite
-		if (accionPaso instanceof TypeAccionPasoRegistrar
-				&& ((TypeAccionPasoRegistrar) accionPaso) == TypeAccionPasoRegistrar.REGISTRAR_TRAMITE) {
-			// Comprobamos si se ha conseguido registrar
-			final ResultadoRegistrar resReg = ((ResultadoRegistrar) respuestaAccionPaso
-					.getParametroRetorno("resultado"));
+		// Eventos formulario
+		if (accionPaso instanceof TypeAccionPasoRellenar) {
 
-			if (resReg.getResultado() == TypeResultadoRegistro.CORRECTO) {
-				final EventoAuditoria eventoRegistrarTramite = crearEvento(TypeEvento.REGISTRAR_TRAMITE,
-						idSesionTramitacion);
+			final TypeAccionPasoRellenar accionPasoRellenar = (TypeAccionPasoRellenar) accionPaso;
+
+			// Abrir / Guardar formulario
+			if (accionPasoRellenar == TypeAccionPasoRellenar.ABRIR_FORMULARIO
+					|| accionPasoRellenar == TypeAccionPasoRellenar.GUARDAR_FORMULARIO) {
+				final TypeEvento tipoEventoForm = (accionPasoRellenar == TypeAccionPasoRellenar.ABRIR_FORMULARIO
+						? TypeEvento.FORMULARIO_INICIO
+						: TypeEvento.FORMULARIO_FIN);
+				final String idFormulario = (String) UtilsFlujo.recuperaParametroAccionPaso(parametrosPaso,
+						"idFormulario", true);
+				final EventoAuditoria eventoFormulario = crearEvento(tipoEventoForm, idSesionTramitacion);
 				final ListaPropiedades propiedadesEvento = new ListaPropiedades();
-				eventoRegistrarTramite.setPropiedadesEvento(propiedadesEvento);
-				propiedadesEvento.addPropiedad(TypeParametroEvento.NUMERO_REGISTRO.toString(),
-						resReg.getNumeroRegistro());
-				eventos.add(eventoRegistrarTramite);
+				eventoFormulario.setPropiedadesEvento(propiedadesEvento);
+				propiedadesEvento.addPropiedad(TypeParametroEvento.DOCUMENTO_ID.toString(), idFormulario);
+				eventos.add(eventoFormulario);
+			}
+		}
+
+		// Eventos paso registro tramite
+		if (accionPaso instanceof TypeAccionPasoRegistrar) {
+
+			final TypeAccionPasoRegistrar accionPasoRegistrar = (TypeAccionPasoRegistrar) accionPaso;
+
+			// Inicio / fin firma
+			if (accionPasoRegistrar == TypeAccionPasoRegistrar.INICIAR_FIRMA_DOCUMENTO
+					|| accionPasoRegistrar == TypeAccionPasoRegistrar.VERIFICAR_FIRMA_DOCUMENTO) {
+				final String idDocumento = (String) UtilsFlujo.recuperaParametroAccionPaso(parametrosPaso,
+						"idDocumento", true);
+				final String instanciaStr = (String) UtilsFlujo.recuperaParametroAccionPaso(parametrosPaso, "instancia",
+						false);
+				final String nifFirmante = (String) UtilsFlujo.recuperaParametroAccionPaso(parametrosPaso, "firmante",
+						true);
+				final TypeEvento tipoEventoFirma = (accionPasoRegistrar == TypeAccionPasoRegistrar.INICIAR_FIRMA_DOCUMENTO
+						? TypeEvento.FIRMA_INICIO
+						: TypeEvento.FIRMA_FIN);
+				final EventoAuditoria eventoFirma = crearEvento(tipoEventoFirma, idSesionTramitacion);
+				final ListaPropiedades propiedadesEvento = new ListaPropiedades();
+				propiedadesEvento.addPropiedad(TypeParametroEvento.DOCUMENTO_ID.toString(), idDocumento);
+				propiedadesEvento.addPropiedad(TypeParametroEvento.DOCUMENTO_INSTANCIA.toString(), instanciaStr);
+				propiedadesEvento.addPropiedad(TypeParametroEvento.NIF.toString(), nifFirmante);
+				if (accionPasoRegistrar == TypeAccionPasoRegistrar.VERIFICAR_FIRMA_DOCUMENTO) {
+					final FirmaVerificacion fv = ((FirmaVerificacion) respuestaAccionPaso
+							.getParametroRetorno("resultado"));
+					eventoFirma.setResultado(
+							fv.getRealizada() == TypeSiNo.SI && fv.getVerificada() == TypeSiNo.SI ? "OK" : "KO");
+					if (StringUtils.isNotBlank(fv.getDetalleError())) {
+						propiedadesEvento.addPropiedad(TypeParametroEvento.FIRMA_ERROR.toString(),
+								fv.getDetalleError());
+					}
+				}
+				eventoFirma.setPropiedadesEvento(propiedadesEvento);
+				eventos.add(eventoFirma);
+			}
+
+			// Registro tramite
+			if (accionPasoRegistrar == TypeAccionPasoRegistrar.REGISTRAR_TRAMITE) {
+				// Comprobamos si se ha conseguido registrar
+				final ResultadoRegistrar resReg = ((ResultadoRegistrar) respuestaAccionPaso
+						.getParametroRetorno("resultado"));
+				if (resReg.getResultado() == TypeResultadoRegistro.CORRECTO) {
+					final EventoAuditoria eventoRegistrarTramite = crearEvento(TypeEvento.REGISTRAR_TRAMITE,
+							idSesionTramitacion);
+					final ListaPropiedades propiedadesEvento = new ListaPropiedades();
+					eventoRegistrarTramite.setPropiedadesEvento(propiedadesEvento);
+					propiedadesEvento.addPropiedad(TypeParametroEvento.NUMERO_REGISTRO.toString(),
+							resReg.getNumeroRegistro());
+					eventos.add(eventoRegistrarTramite);
+				}
 			}
 		}
 

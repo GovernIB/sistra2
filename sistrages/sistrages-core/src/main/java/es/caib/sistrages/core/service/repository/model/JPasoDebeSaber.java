@@ -141,6 +141,7 @@ public class JPasoDebeSaber implements IModelApi {
 			jpasoDebeSaber.setPasoTramitacion(jpasoTramitacion);
 			jpasoDebeSaber.setScriptDebeSaber(origPasoDebeSaber.getScriptDebeSaber());
 			jpasoDebeSaber.setInstruccionesInicio(JLiteral.clonar(origPasoDebeSaber.getInstruccionesInicio()));
+			jpasoDebeSaber.setScriptDebeSaber(JScript.clonar(origPasoDebeSaber.getScriptDebeSaber()));
 		}
 		return jpasoDebeSaber;
 	}

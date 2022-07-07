@@ -11,8 +11,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
-import es.caib.sistramit.core.service.model.system.Envio;
-import es.caib.sistramit.core.service.model.system.types.TypeEnvio;
+import es.caib.sistramit.core.service.model.system.EnvioAviso;
+import es.caib.sistramit.core.service.model.system.types.TypeEnvioAviso;
 
 /**
  * Mapeo tabla STT_AVISOS.
@@ -222,7 +222,7 @@ public final class HEnvio implements IModelApi {
 	 * @param m
 	 * @return
 	 */
-	public static HEnvio fromModel(final Envio m) {
+	public static HEnvio fromModel(final EnvioAviso m) {
 		final HEnvio h = new HEnvio();
 		h.setCodigo(m.getCodigo());
 		h.setFechaCreacion(m.getFechaCreacion());
@@ -233,11 +233,11 @@ public final class HEnvio implements IModelApi {
 		return h;
 	}
 
-	public Envio toModel() {
-		final Envio m = new Envio();
+	public EnvioAviso toModel() {
+		final EnvioAviso m = new EnvioAviso();
 		m.setCodigo(this.getCodigo());
 		m.setFechaCreacion(this.getFechaCreacion());
-		m.setTipo(TypeEnvio.fromString(this.getTipo()));
+		m.setTipo(TypeEnvioAviso.fromString(this.getTipo()));
 		m.setDestino(this.getDestino());
 		m.setTitulo(this.getTitulo());
 		m.setMensaje(this.getMensaje());

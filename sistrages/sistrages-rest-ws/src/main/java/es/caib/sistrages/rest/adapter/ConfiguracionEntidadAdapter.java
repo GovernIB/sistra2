@@ -7,15 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.EnvioRemoto;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.IncidenciaValoracion;
 import es.caib.sistrages.core.api.model.PlantillaEntidad;
 import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.rest.api.interna.RArea;
+import es.caib.sistrages.rest.api.interna.RConfiguracionAutenticacion;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistrages.rest.api.interna.REnvioRemoto;
+import es.caib.sistrages.rest.api.interna.RGestorFormularioExterno;
 import es.caib.sistrages.rest.api.interna.RIncidenciaValoracion;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistrages.rest.api.interna.RPlantillaEntidad;
@@ -45,7 +51,9 @@ public class ConfiguracionEntidadAdapter {
 	 */
 	public RConfiguracionEntidad convertir(final Entidad entidad, final List<FormularioSoporte> formSoporte,
 			final List<PlantillaFormateador> plantillas, final List<IncidenciaValoracion> valoraciones,
-			final List<PlantillaEntidad> plantillasEntidad, final List<Area> areas) {
+			final List<PlantillaEntidad> plantillasEntidad, final List<Area> areas,
+			final List<EnvioRemoto> enviosRemotos, final List<ConfiguracionAutenticacion> configuraciones,
+			final List<GestorExternoFormularios> gestores) {
 
 		final RConfiguracionEntidad rConfiguracionEntidad = new RConfiguracionEntidad();
 		rConfiguracionEntidad.setTimestamp(System.currentTimeMillis() + "");
@@ -54,6 +62,10 @@ public class ConfiguracionEntidadAdapter {
 				entidad.getLogoAsistente() != null ? entidad.getLogoAsistente().getCodigo() : null));
 		rConfiguracionEntidad.setLogoGestor(restApiService
 				.getReferenciaFichero(entidad.getLogoGestor() != null ? entidad.getLogoGestor().getCodigo() : null));
+		rConfiguracionEntidad.setTitulo(AdapterUtils.generarLiteral(entidad.getTituloAsistenteTramitacion()));
+		rConfiguracionEntidad.setIcono(restApiService.getReferenciaFichero(
+				entidad.getIconoAsistenteTramitacion() != null ? entidad.getIconoAsistenteTramitacion().getCodigo()
+						: null));
 		rConfiguracionEntidad.setCss(
 				restApiService.getReferenciaFichero(entidad.getCss() != null ? entidad.getCss().getCodigo() : null));
 		rConfiguracionEntidad.setContactoHTML(AdapterUtils.generarLiteral(entidad.getPie()));
@@ -130,8 +142,8 @@ public class ConfiguracionEntidadAdapter {
 		List<RPlantillaEntidad> rplantillasEntidad = null;
 		if (plantillasEntidad != null) {
 			rplantillasEntidad = new ArrayList<>();
-			for (PlantillaEntidad plantilla : plantillasEntidad) {
-				RPlantillaEntidad rplantilla = new RPlantillaEntidad();
+			for (final PlantillaEntidad plantilla : plantillasEntidad) {
+				final RPlantillaEntidad rplantilla = new RPlantillaEntidad();
 				rplantilla.setIdioma(plantilla.getIdioma());
 				rplantilla.setTipo(plantilla.getTipo().toString());
 				if (plantilla.getFichero() != null) {
@@ -142,15 +154,71 @@ public class ConfiguracionEntidadAdapter {
 		}
 		rConfiguracionEntidad.setPlantillas(rplantillasEntidad);
 
-		List<RArea> listaAreas = new ArrayList<>();
-		for (Area area : areas) {
-			RArea rarea = new RArea();
+		final List<RArea> listaAreas = new ArrayList<>();
+		for (final Area area : areas) {
+			final RArea rarea = new RArea();
 			rarea.setId(area.getIdentificadorCompuesto());
 			rarea.setEmails(area.getEmail());
 			listaAreas.add(rarea);
 		}
 		rConfiguracionEntidad.setArea(listaAreas);
+
+		final List<REnvioRemoto> listaEnvios = new ArrayList<>();
+		for (final EnvioRemoto er : enviosRemotos) {
+			final REnvioRemoto rer = new REnvioRemoto();
+			rer.setIdentificador(er.getIdentificador());
+			if (er.getConfiguracionAutenticacion() != null) {
+				rer.setIdentificadorConfAutenticacion(er.getConfiguracionAutenticacion().getIdentificadorCompuesto());
+			}
+			// rer.setIdentificadorEntidad(er.getEntidad().getIdentificador());
+			if (er.getTimeout() != null) {
+				rer.setTimeout(er.getTimeout().toString());
+			}
+			rer.setUrl(er.getUrl());
+			listaEnvios.add(rer);
+		}
+		rConfiguracionEntidad.setEnviosRemoto(listaEnvios);
+
+		if (configuraciones != null) {
+			final List<RConfiguracionAutenticacion> rconfiguraciones = new ArrayList<>();
+			for (final ConfiguracionAutenticacion configuracion : configuraciones) {
+				rconfiguraciones.add(toRConfiguracion(configuracion));
+			}
+			rConfiguracionEntidad.setConfiguracionesAutenticacion(rconfiguraciones);
+		}
+
+		if (gestores != null) {
+			final List<RGestorFormularioExterno> rgfes = new ArrayList<>();
+			for (final GestorExternoFormularios gfe : gestores) {
+				final RGestorFormularioExterno rgfe = new RGestorFormularioExterno();
+				rgfe.setIdentificador(gfe.getIdentificadorCompuesto());
+				rgfe.setUrl(gfe.getUrl());
+				rgfe.setIdentificadorEntidad(entidad.getCodigoDIR3());
+
+				if (gfe.getConfiguracionAutenticacion() != null) {
+					rgfe.setIdentificadorConfAutenticacion(
+							gfe.getConfiguracionAutenticacion().getIdentificadorCompuesto());
+				}
+				rgfes.add(rgfe);
+
+			}
+			rConfiguracionEntidad.setGestoresFormulariosExternos(rgfes);
+		}
 		return rConfiguracionEntidad;
+	}
+
+	/**
+	 * Conversion a modelo rest RConfiguracionAtutenticacion
+	 *
+	 * @param configuracion Configuracion de autenticacion
+	 * @return el parametro RConfiguracionAutenticacion
+	 */
+	private RConfiguracionAutenticacion toRConfiguracion(final ConfiguracionAutenticacion configuracion) {
+		final RConfiguracionAutenticacion rconfiguracion = new RConfiguracionAutenticacion();
+		rconfiguracion.setIdentificador(configuracion.getIdentificadorCompuesto());
+		rconfiguracion.setPassword(configuracion.getPassword());
+		rconfiguracion.setUsuario(configuracion.getUsuario());
+		return rconfiguracion;
 	}
 
 	/**

@@ -183,10 +183,8 @@ public class RolDaoImpl implements RolDao {
 	/**
 	 * Listar roles.
 	 *
-	 * @param idEntidad
-	 *            Id entidad
-	 * @param filtro
-	 *            filtro
+	 * @param idEntidad Id entidad
+	 * @param filtro    filtro
 	 * @return Listado de roles
 	 */
 	@SuppressWarnings("unchecked")

@@ -13,23 +13,26 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class AsientoRegistral implements Serializable {
 
-    /** Datos origen del asiento */
-    private DatosOrigen datosOrigen;
+	/** Datos origen del asiento */
+	private DatosOrigen datosOrigen;
 
-    /** Datos destino del asiento */
-    private DatosDestino datosDestino;
+	/** Datos destino del asiento */
+	private DatosDestino datosDestino;
 
-    private List<Interesado> interesados = new ArrayList ();
-
-	private List<DocumentoAsiento> documentosRegistro = new ArrayList ();
-
+	/** Datos asunto. */
 	private DatosAsunto datosAsunto;
+
+	/** Interesados. */
+	private List<Interesado> interesados = new ArrayList();
+
+	/** Documentos. */
+	private List<DocumentoAsiento> documentosRegistro = new ArrayList();
 
 	public DatosOrigen getDatosOrigen() {
 		return datosOrigen;
 	}
 
-	public void setDatosOrigen(DatosOrigen datosOrigen) {
+	public void setDatosOrigen(final DatosOrigen datosOrigen) {
 		this.datosOrigen = datosOrigen;
 	}
 
@@ -37,16 +40,15 @@ public class AsientoRegistral implements Serializable {
 		return datosDestino;
 	}
 
-	public void setDatosDestino(DatosDestino datosDestino) {
+	public void setDatosDestino(final DatosDestino datosDestino) {
 		this.datosDestino = datosDestino;
 	}
-
 
 	public List<Interesado> getInteresados() {
 		return interesados;
 	}
 
-	public void setInteresados(List<Interesado> interesados) {
+	public void setInteresados(final List<Interesado> interesados) {
 		this.interesados = interesados;
 	}
 
@@ -54,7 +56,7 @@ public class AsientoRegistral implements Serializable {
 		return documentosRegistro;
 	}
 
-	public void setDocumentosRegistro(List<DocumentoAsiento> documentosRegistro) {
+	public void setDocumentosRegistro(final List<DocumentoAsiento> documentosRegistro) {
 		this.documentosRegistro = documentosRegistro;
 	}
 
@@ -62,7 +64,7 @@ public class AsientoRegistral implements Serializable {
 		return datosAsunto;
 	}
 
-	public void setDatosAsunto(DatosAsunto datosAsunto) {
+	public void setDatosAsunto(final DatosAsunto datosAsunto) {
 		this.datosAsunto = datosAsunto;
 	}
 

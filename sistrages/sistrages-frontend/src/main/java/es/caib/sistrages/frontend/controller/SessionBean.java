@@ -22,17 +22,20 @@ import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Sesion;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
+import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeOpcionMenuAdmOper;
 import es.caib.sistrages.frontend.model.types.TypeOpcionMenuSuperAdministrador;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilRest;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 /**
@@ -199,6 +202,8 @@ public class SessionBean {
 
 			if (TypeRoleAcceso.SUPER_ADMIN.equals(TypeRoleAcceso.fromString(sesion.getPerfil()))) {
 				activeRole = TypeRoleAcceso.SUPER_ADMIN;
+				systemService.updateSesionEntidad(userName, null);
+
 			} else if (TypeRoleAcceso.ADMIN_ENT.equals(TypeRoleAcceso.fromString(sesion.getPerfil()))) {
 				activeRole = TypeRoleAcceso.ADMIN_ENT;
 				listaEntidades = listaEntidadesAdministrador;
@@ -211,6 +216,7 @@ public class SessionBean {
 
 				if (entidad == null) {
 					entidad = listaEntidades.get(0);
+					systemService.updateSesionEntidad(userName, entidad.getCodigo());
 				}
 			} else if (TypeRoleAcceso.DESAR.equals(TypeRoleAcceso.fromString(sesion.getPerfil()))) {
 				activeRole = TypeRoleAcceso.DESAR;
@@ -224,6 +230,7 @@ public class SessionBean {
 
 				if (entidad == null) {
 					entidad = listaEntidades.get(0);
+					systemService.updateSesionEntidad(userName, entidad.getCodigo());
 				}
 			}
 
@@ -336,6 +343,8 @@ public class SessionBean {
 		} else if (activeRole == TypeRoleAcceso.DESAR) {
 			listaEntidadesDesarrollador = securityService.getEntidadesDesarrollador();
 			listaEntidades = listaEntidadesDesarrollador;
+		} else if (activeRole == TypeRoleAcceso.SUPER_ADMIN) {
+			listaEntidades = null;
 		}
 
 		entidad = null;
@@ -349,6 +358,10 @@ public class SessionBean {
 				throw new FrontException("No tiene ninguna entidad asociada al role activo");
 			}
 			entidad = listaEntidades.get(0);
+			systemService.updateSesionEntidad(userName, entidad.getCodigo());
+		} else {
+			systemService.updateSesionEntidad(userName, null);
+
 		}
 
 		// Cambia logo

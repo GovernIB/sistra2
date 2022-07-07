@@ -77,7 +77,7 @@
 				</h:panelGrid>
 
 	            <p:outputLabel for="habilitardebug" value="#{msg['dialogTramiteControlAcceso.habilitardebug']}" />
-	            <p:selectBooleanCheckbox id="habilitardebug" value="#{dialogTramiteControlAcceso.tramiteVersion.debug}"/>
+	            <p:selectBooleanCheckbox id="habilitardebug" value="#{dialogTramiteControlAcceso.tramiteVersion.debug}" disabled="#{dialogTramiteControlAcceso.deshabilitarEdicionDebug()}"/>
 
 	         	<p:outputLabel for="limitartramitacion" value="#{msg['dialogTramiteControlAcceso.limitartramitacion']}" />
 				<p:panelGrid styleClass="noBorders">
@@ -112,11 +112,10 @@
 			<p:outputPanel styleClass="botonera">
 				<p:toolbar>
 					<f:facet name="right">
-						<p:commandButton id="botonNoDes" type="button" value="#{msg['botones.guardar']}" styleClass="boton-azul" onclick="PF('confirmDialogGuardar').show()" rendered="#{!dialogTramiteControlAcceso.isDesarrollo()}" process="@form" />
 
 						<p:commandButton id="botonDes" value="#{msg['botones.guardar']}" styleClass="boton-azul"
-						 	actionListener="#{dialogTramiteControlAcceso.aceptarSinInvalidacion()}" process="@form"
-							update="@form growlDialog" rendered="#{dialogTramiteControlAcceso.isDesarrollo()}" />
+						 	actionListener="#{dialogTramiteControlAcceso.aceptar()}" process="@form"
+							update="@form growlDialog"  />
 
 						<p:commandButton value="#{msg['botones.cancelar']}"
 							actionListener="#{dialogTramiteControlAcceso.cancelar()}" process="@this" />
@@ -126,21 +125,6 @@
 				</p:toolbar>
 			</p:outputPanel>
 
-
-		    <!-- dialogo para confirmar -->
-		    <p:confirmDialog widgetVar="confirmDialogBorrar" id="confirmDialogBorrar"  header="#{msg['confirm.titulo']}" message="#{msg['dialogTramiteControlAcceso.confirm.mensajeAviso']}" icon="fa fa-question-circle fa-3x confirmar_icono" >
-				<p:outputPanel styleClass="confirmar_botonera">
-				  	 <p:commandButton value="#{msg['botones.si']}" actionListener="#{dialogTramiteControlAcceso.eliminarAvisoEntidad()}" oncomplete="PF('confirmDialogBorrar').hide();"  process="@this" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check" update="@form" />
-     				 <p:commandButton value="#{msg['botones.no']}" type="button"  onclick="PF('confirmDialogBorrar').hide();"    styleClass="ui-confirmdialog-no" icon="fa fa-close" />
-				</p:outputPanel>
-		    </p:confirmDialog>
-
-		    <p:confirmDialog widgetVar="confirmDialogGuardar" id="confirmDialogGuardar" header="#{msg['confirm.tituloInvalidacion']}" message="#{msg['confirm.invalidacion']}" icon="fa fa-question-circle fa-3x confirmar_icono" >
-				<p:outputPanel styleClass="confirmar_botonera">
-					 <p:commandButton value="#{msg['botones.si']}" actionListener="#{dialogTramiteControlAcceso.aceptarConInvalidacion()}"  process="@form" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  />
-     				 <p:commandButton value="#{msg['botones.no']}" actionListener="#{dialogTramiteControlAcceso.aceptarSinInvalidacion()}"  process="@form" styleClass="ui-confirmdialog-no" icon="fa fa-close"  />
-				</p:outputPanel>
-		    </p:confirmDialog>
 		</h:form>
 	</h:body>
 

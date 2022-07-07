@@ -221,6 +221,14 @@ nav.imc--navegacio .imc-bt.imc--registrar:focus {
 	background-color: #000;
 }
 
+nav.imc--navegacio .imc-bt.imc--enviar { background-color: #265d3c; }
+nav.imc--navegacio .imc-bt.imc--enviar::before { background-image: url(imgs/icones/ico_envia_fff.svg); background-size: auto 1em; }
+
+nav.imc--navegacio .imc-bt.imc--enviar:hover,
+nav.imc--navegacio .imc-bt.imc--enviar:focus {
+	background-color: #000;
+}
+
 
 body[data-fluix="p"] nav.imc--navegacio li:first-child { display: none; }
 

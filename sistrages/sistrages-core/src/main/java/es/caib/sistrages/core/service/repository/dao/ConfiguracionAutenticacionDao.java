@@ -6,6 +6,7 @@ import java.util.List;
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.ConsultaGeneral;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeClonarAccion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 
 /**
@@ -100,5 +101,25 @@ public interface ConfiguracionAutenticacionDao {
 	 */
 	List<ConsultaGeneral> listar(String filtro, TypeIdioma idioma, Long idEntidad, Long idArea,
 			boolean checkAmbitoGlobal, boolean checkAmbitoEntidad, boolean checkAmbitoArea);
+
+	/**
+	 * Devuelve una lista de configuracion autenticacion
+	 * @param ambito
+	 * @param codigoEntidad
+	 * @return
+	 */
+	List<ConfiguracionAutenticacion> listConfiguracionAutenticacionRest(TypeAmbito ambito, Long codigoEntidad);
+
+	/**
+	 * Método que clona la CA de un dominio en otro area/entidad
+	 * @param dominioID
+	 * @param caReemplazar
+	 * @param confAut
+	 * @param idEntidad
+	 * @param areaID
+	 * @return
+	 */
+	ConfiguracionAutenticacion clonar(String dominioID, TypeClonarAccion accionCA, ConfiguracionAutenticacion confAut,
+			Long idEntidad, Long areaID);
 
 }

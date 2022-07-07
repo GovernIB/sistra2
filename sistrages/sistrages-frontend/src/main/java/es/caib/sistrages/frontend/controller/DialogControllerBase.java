@@ -1,13 +1,19 @@
 package es.caib.sistrages.frontend.controller;
 
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 
 import org.primefaces.context.RequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.LiteralScript;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
+import es.caib.sistrages.core.api.service.SystemService;
+import es.caib.sistrages.frontend.model.DialogResultMessage;
 import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -23,6 +29,8 @@ import es.caib.sistrages.frontend.util.UtilRest;
  */
 public abstract class DialogControllerBase {
 
+	@Inject
+	private SystemService systemService;
 	/** Log. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(DialogControllerBase.class);
 
@@ -45,7 +53,7 @@ public abstract class DialogControllerBase {
 	public void refrescarCache(final String urlBase, final String usuario, final String pwd, final String tipo,
 			final String identificador, final boolean mensaje) {
 
-		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, tipo, identificador);
+		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, tipo);
 
 		if (mensaje) {
 			if (resultado.getCodigo() == 1) {
@@ -63,6 +71,33 @@ public abstract class DialogControllerBase {
 	public void refrescarCache(final String urlBase, final String usuario, final String pwd, final String tipo,
 			final String identificador) {
 		refrescarCache(urlBase, usuario, pwd, tipo, identificador, false);
+	}
+
+	/**
+	 * Refresca la cache
+	 */
+	public ResultadoError refrescar() {
+
+		final String urlBase = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
+		final String usuario = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
+		final String pwd = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
+
+		return this.refrescarCacheResult(urlBase, usuario, pwd, Constantes.CACHE_COMPLETA, true);
+
+	}
+
+	/**
+	 * Refresca la cache
+	 */
+	public ResultadoError refrescarCacheResult(final String urlBase, final String usuario, final String pwd,
+			final String tipo, final boolean mensaje) {
+
+		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, tipo);
+
+		return resultado;
 	}
 
 	/** Es desarrollo? **/
@@ -218,6 +253,66 @@ public abstract class DialogControllerBase {
 				FacesContext.getCurrentInstance().validationFailed();
 			}
 		}
+	}
+
+	/** Método que comprueba si dos scripts son iguales **/
+	public boolean isCambioScripts(Script scr1, Script scr2) {
+		if (scr1 == null) {
+			if (scr2 == null) {
+				return false;
+			} else {
+				return true;
+			}
+		} else if (scr2 == null) {
+			return true;
+		} else {
+			if (scr1.getMensajes().size() != scr2.getMensajes().size()) {
+				return true;
+			} else {
+				for (int i = 0; i < scr1.getMensajes().size(); i++) {
+					if (isCambioLiterales(scr1.getMensajes().get(i).getLiteral(),
+							scr2.getMensajes().get(i).getLiteral())) {
+						return true;
+					}
+					if (!scr1.getMensajes().get(i).getIdentificador()
+							.equals(scr2.getMensajes().get(i).getIdentificador())) {
+						return true;
+					}
+				}
+			}
+			if (scr1.getContenido().equals(scr2.getContenido())) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+	}
+
+	/** Método que comprueba si dos literales son iguales **/
+	public boolean isCambioLiterales(Literal l1, Literal l2) {
+		boolean mod = false;
+		if (l1 == null) {
+			if (l2 != null) {
+				mod = true;
+			}
+		} else if (l2 == null) {
+			mod = true;
+		} else {
+			if (l1.getIdiomas().size() == l2.getIdiomas().size()) {
+				for (String idioma : l1.getIdiomas()) {
+					if (l2.getTraduccion(idioma) != null) {
+						if (!l1.getTraduccion(idioma).equals(l2.getTraduccion(idioma))) {
+							mod = true;
+						}
+					} else {
+						mod = true;
+					}
+				}
+			} else {
+				mod = true;
+			}
+		}
+		return mod;
 	}
 
 	/**

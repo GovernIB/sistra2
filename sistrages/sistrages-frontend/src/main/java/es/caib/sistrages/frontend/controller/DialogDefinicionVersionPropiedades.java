@@ -15,8 +15,11 @@ import javax.inject.Inject;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeAutenticacion;
+import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.api.model.types.TypeScript;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -43,6 +46,9 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	/** tramite version. */
 	private TramiteVersion tramiteVersion;
 
+	/** tramite version Inicial. */
+	private TramiteVersion tramiteVersionI;
+
 	/** tramite version idioma Es soportado. */
 	private boolean tramiteVersionIdiomaEsSoportado;
 
@@ -66,6 +72,8 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	private boolean tiposAutenticacionPIN;
 	private boolean tiposAutenticacionPER;
 
+	private boolean cambios = false;
+
 	/**
 	 * Inicialización.
 	 */
@@ -73,6 +81,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 		/* recuperamos los datos */
 		tramiteVersion = tramiteService.getTramiteVersion(id);
+		tramiteVersionI = tramiteService.getTramiteVersion(id);
 		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
 		if (idiomas.contains("ca") && UtilJSF.getSessionBean().getIdiomas().contains("ca")) {
 			this.tramiteVersionIdiomaCaSoportado = true;
@@ -152,6 +161,21 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 				tipos.add(TypeAutenticacion.CLAVE_PERMANENTE);
 			}
 			tramiteVersion.setTiposAutenticacion(tipos);
+			if (tramiteVersion.getTipoTramite().equals("T")) {
+
+				List<TramitePaso> pasos = tramiteService.getTramitePasos(tramiteVersion.getCodigo());
+				for (TramitePaso paso : pasos) {
+					if (paso.getTipo().equals(TypePaso.REGISTRAR)) {
+						TramitePasoRegistrar reg = (TramitePasoRegistrar) paso;
+						reg.setDestino("R");
+						tramiteService.updateTramitePaso(reg);
+					}
+				}
+			}
+			if (cambios) {
+				tramiteService.actualizarFechaTramiteVersion(tramiteVersion.getCodigo(),
+						UtilJSF.getSessionBean().getUserName(), "Modificación propiedades");
+			}
 			tramiteService.updateTramiteVersion(tramiteVersion);
 		}
 
@@ -214,6 +238,20 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 			case ALTA:
 			case EDICION:
 				this.tramiteVersion.setScriptInicializacionTramite((Script) respuesta.getResult());
+				if (tramiteVersionI != null && tramiteVersion != null) {
+					if (this.isCambioScripts(tramiteVersion.getScriptInicializacionTramite(),
+							tramiteVersionI.getScriptInicializacionTramite())) {
+						cambios = true;
+					}
+				} else if (tramiteVersionI == null) {
+					if (tramiteVersion != null) {
+						cambios = true;
+					}
+				} else {
+					if (tramiteVersionI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			default:
 				break;
@@ -237,6 +275,20 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 			case ALTA:
 			case EDICION:
 				this.tramiteVersion.setScriptPersonalizacion((Script) respuesta.getResult());
+				if (tramiteVersionI != null && tramiteVersion != null) {
+					if (this.isCambioScripts(tramiteVersion.getScriptPersonalizacion(),
+							tramiteVersionI.getScriptPersonalizacion())) {
+						cambios = true;
+					}
+				} else if (tramiteVersionI == null) {
+					if (tramiteVersion != null) {
+						cambios = true;
+					}
+				} else {
+					if (tramiteVersionI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			default:
 				break;
@@ -450,6 +502,10 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	 */
 	public final void setTiposAutenticacionPER(final boolean tiposAutenticacionPER) {
 		this.tiposAutenticacionPER = tiposAutenticacionPER;
+	}
+
+	public void setCambios() {
+		this.cambios = true;
 	}
 
 }

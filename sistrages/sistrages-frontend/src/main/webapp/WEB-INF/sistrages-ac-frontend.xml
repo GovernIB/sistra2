@@ -24,6 +24,7 @@
 		<property name="version" value="${sistra2.version}" />
 		<property name="commitSvn" value="${commitSvn}" />
 		<property name="commitGit" value="${commitGit}" />
+		<property name="promocionSe2Pro" value="${promocioSe2Pro}" />
 	</bean>
 
 	<!-- Scope view para spring beans usados como backbeans de JSF: @Scope(view) -->

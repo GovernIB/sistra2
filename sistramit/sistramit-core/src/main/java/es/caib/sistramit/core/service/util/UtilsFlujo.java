@@ -315,6 +315,8 @@ public final class UtilsFlujo {
 		e.setId(entidad.getIdentificador());
 		e.setNombre(UtilsSTG.obtenerLiteral(entidad.getDescripcion(), idioma));
 		e.setLogo(obtenerUrlPublica(urlResources, entidad.getLogo()));
+		e.setTituloApp(UtilsSTG.obtenerLiteral(entidad.getTitulo(), idioma));
+		e.setFavicon(obtenerUrlPublica(urlResources, entidad.getIcono()));
 		e.setCss(obtenerUrlPublica(urlResources, entidad.getCss()));
 		e.setContacto(UtilsSTG.obtenerLiteral(entidad.getContactoHTML(), idioma));
 		e.setUrlCarpeta(UtilsSTG.obtenerLiteral(entidad.getUrlCarpeta(), idioma));
@@ -390,6 +392,8 @@ public final class UtilsFlujo {
 		} else {
 			detalleTramiteInfo.setPersistente(TypeSiNo.NO);
 		}
+		detalleTramiteInfo.setTipoTramite(pDatosSesion.getDatosTramite().getTipoTramite());
+		detalleTramiteInfo.setDestino(pDatosSesion.getDatosTramite().getTipoDestino());
 		detalleTramiteInfo.setTipoFlujo(pDatosSesion.getDatosTramite().getTipoFlujo());
 		detalleTramiteInfo.setAutenticacion(pDatosSesion.getDatosTramite().getNivelAutenticacion());
 		detalleTramiteInfo.setMetodoAutenticacion(pDatosSesion.getDatosTramite().getMetodoAutenticacionInicio());
@@ -825,7 +829,7 @@ public final class UtilsFlujo {
 
 	/**
 	 * Elimina carácteres diacriticos.
-	 * 
+	 *
 	 * @param word
 	 *                 palabra
 	 * @return palabra

@@ -38,6 +38,7 @@ import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.EnvioRemoto;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FuenteDatos;
@@ -73,11 +74,13 @@ import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
+import es.caib.sistrages.core.api.model.types.TypeTramite;
 import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.EntidadService;
+import es.caib.sistrages.core.api.service.EnvioRemotoService;
 import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.core.api.service.FormularioExternoService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
@@ -85,6 +88,7 @@ import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeImportarTipo;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -126,6 +130,10 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/** Servicio. */
 	@Inject
 	private EntidadService entidadService;
+
+	/** Servicio. */
+	@Inject
+	private EnvioRemotoService envioRemotoService;
 
 	/** Servicio. */
 	@Inject
@@ -227,6 +235,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 * centralizado o no)
 	 **/
 	private boolean mostrarRegistroOficina;
+	private boolean mostrarRegistroServicio;
 
 	/** A true significa que no hay ninguna fila con error. **/
 	private boolean todoCorrecto;
@@ -262,8 +271,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/**
 	 * carga de fichero.
 	 *
-	 * @param event
-	 *                  el evento
+	 * @param event el evento
 	 * @throws IOException
 	 *
 	 */
@@ -392,13 +400,14 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 * @return
 	 */
 	public boolean isNingunError() {
-		if (filaEntidad == null || filaEntidad.getResultado() == null || filaEntidad.getResultado().isError() || filaArea == null
-				|| filaArea.getResultado() == null || filaArea.getResultado().isError()) {
+		if (filaEntidad == null || filaEntidad.getResultado() == null || filaEntidad.getResultado().isError()
+				|| filaArea == null || filaArea.getResultado() == null || filaArea.getResultado().isError()) {
 			return false;
 		}
 
-		if (filaTramite == null || filaTramite.getResultado() == null || filaTramite.getResultado().isError() || filaTramiteVersion == null
-				|| filaTramiteVersion.getResultado() == null || filaTramiteVersion.getResultado().isError() || filaTramiteRegistro == null
+		if (filaTramite == null || filaTramite.getResultado() == null || filaTramite.getResultado().isError()
+				|| filaTramiteVersion == null || filaTramiteVersion.getResultado() == null
+				|| filaTramiteVersion.getResultado().isError() || filaTramiteRegistro == null
 				|| filaTramiteRegistro.getResultado() == null || filaTramiteRegistro.getResultado().isError()) {
 			return false;
 		}
@@ -416,7 +425,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		}
 
 		for (final FilaImportarFormulario fila : filasFormulario) {
-			if (fila == null  || fila.getResultado() == null || fila.getResultado().isError()) {
+			if (fila == null || fila.getResultado() == null || fila.getResultado().isError()) {
 				return false;
 			}
 		}
@@ -429,15 +438,17 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 */
 	private void checkTodoCorrecto() {
 
-		if (filaEntidad == null || filaEntidad.getResultado() == null ||  filaEntidad.getResultado().isErrorOrWarning() || filaArea == null
-				|| filaArea.getResultado().isErrorOrWarning()) {
+		if (filaEntidad == null || filaEntidad.getResultado() == null || filaEntidad.getResultado().isErrorOrWarning()
+				|| filaArea == null || filaArea.getResultado().isErrorOrWarning()) {
 			setTodoCorrecto(false);
 			return;
 		}
 
-		if (filaTramite == null  || filaTramite.getResultado() == null || filaTramite.getResultado().isErrorOrWarning() || filaTramiteVersion == null
-				|| filaTramiteVersion.getResultado() == null || filaTramiteVersion.getResultado().isErrorOrWarning() || filaTramiteRegistro == null
-				|| filaTramiteRegistro.getResultado() == null || filaTramiteRegistro.getResultado().isErrorOrWarning()) {
+		if (filaTramite == null || filaTramite.getResultado() == null || filaTramite.getResultado().isErrorOrWarning()
+				|| filaTramiteVersion == null || filaTramiteVersion.getResultado() == null
+				|| filaTramiteVersion.getResultado().isErrorOrWarning() || filaTramiteRegistro == null
+				|| filaTramiteRegistro.getResultado() == null
+				|| filaTramiteRegistro.getResultado().isErrorOrWarning()) {
 			setTodoCorrecto(false);
 			return;
 		}
@@ -533,7 +544,8 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		}
 
 		final Entidad entidadPropia = entidadService.loadEntidad(UtilJSF.getIdEntidad());
-		final Area areaActual = tramiteService.getAreaByIdentificador(entidadPropia.getIdentificador(),area.getIdentificador());
+		final Area areaActual = tramiteService.getAreaByIdentificador(entidadPropia.getIdentificador(),
+				area.getIdentificador());
 		if (areaActual == null) {
 
 			// Lo dejamos como pendiente
@@ -605,7 +617,8 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			return;
 		}
 
-		tramiteActual = tramiteService.getTramiteByIdentificador(tramite.getIdentificador(), filaArea.getArea().getCodigo(), null, null);
+		tramiteActual = tramiteService.getTramiteByIdentificador(tramite.getIdentificador(),
+				filaArea.getArea().getCodigo(), null, null);
 
 		if (filaArea.getResultado() == null || filaArea.getResultado() == TypeImportarResultado.WARNING) {
 			// Lo dejamos a error a la espera que realice una acción con
@@ -731,13 +744,21 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		} else {
 			filaTramiteRegistro = FilaImportarTramiteRegistro.creaITconPasoRegistro(tramiteVersion, pasoRegistro);
 
-			if (entidad.isRegistroCentralizado()) {
+			if (entidad.isRegistroCentralizado() && filaTramiteRegistro.getPasoRegistro() != null &&  ((TramitePasoRegistrar)filaTramiteRegistro.getPasoRegistro()).getEnvioRemoto() == null) {
 				filaTramiteRegistro.setResultado(TypeImportarResultado.OK);
 				filaTramiteRegistro.setAccion(TypeImportarAccion.NADA);
 				filaTramiteRegistro.setMostrarRegistro(false);
+
 			} else {
 				try {
-					rellenarInfoRegistro();
+					if ( ((TramitePasoRegistrar)filaTramiteRegistro.getPasoRegistro()).getEnvioRemoto() == null) {
+						filaTramiteRegistro.setTipoTramite(true);
+						rellenarInfoRegistro();
+					}
+					if ( ((TramitePasoRegistrar)filaTramiteRegistro.getPasoRegistro()).getEnvioRemoto() != null) {
+						filaTramiteRegistro.setTipoTramite(false);
+						rellenarInfoServicio();
+					}
 				} catch (final Exception e) {
 					UtilJSF.loggearErrorFront("Error intentando carga el plugin de registro al importar", e);
 					addMessageContext(TypeNivelGravedad.ERROR,
@@ -819,10 +840,11 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		for (final Map.Entry<Long, Dominio> entry : dominios.entrySet()) {
 			final Dominio dominio = entry.getValue();
 			Long idArea = null;
-			if (dominio.getAmbito() == TypeAmbito.AREA &&  this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
+			if (dominio.getAmbito() == TypeAmbito.AREA && this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
 				idArea = this.filaArea.getAreaActual().getCodigo();
 			}
-			final Dominio dominioActual = dominioService.loadDominioByIdentificador(dominio.getAmbito(), dominio.getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
+			final Dominio dominioActual = dominioService.loadDominioByIdentificador(dominio.getAmbito(),
+					dominio.getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
 			FuenteDatos fd = null;
 			byte[] fdContent = null;
 			FuenteDatos fdActual = null;
@@ -835,7 +857,8 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			}
 
 			if (fdActual == null && fd != null) {
-				fdActual = dominioService.loadFuenteDato(fd.getAmbito(), fd.getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
+				fdActual = dominioService.loadFuenteDato(fd.getAmbito(), fd.getIdentificador(), UtilJSF.getIdEntidad(),
+						idArea, null);
 			}
 
 			String identificadorArea = null;
@@ -847,8 +870,9 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			ConfiguracionAutenticacion configuracionAutenticacion = null;
 			if (dominio.getTipo() == TypeDominio.CONSULTA_REMOTA && dominio.getConfiguracionAutenticacion() != null
 					&& idArea != null) {
-				configuracionAutenticacion = configuracionAutenticacionService.getConfiguracionAutenticacion(dominio.getAmbito(),
-						dominio.getConfiguracionAutenticacion().getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
+				configuracionAutenticacion = configuracionAutenticacionService.getConfiguracionAutenticacion(
+						dominio.getAmbito(), dominio.getConfiguracionAutenticacion().getIdentificador(),
+						UtilJSF.getIdEntidad(), idArea, null);
 			}
 
 			final FilaImportarDominio fila = UtilImportacion.getFilaDominio(dominio, dominioActual, fd, fdContent,
@@ -897,6 +921,38 @@ public class DialogTramiteImportar extends DialogControllerBase {
 				}
 			}
 
+		}
+
+	}
+
+
+	/**
+	 * Rellenando la info de servicio. <br />
+	 *
+	 * Si no existe el registro, lo crea.
+	 *
+	 * @throws RegistroPluginException
+	 *
+	 */
+	private void rellenarInfoServicio() throws RegistroPluginException {
+
+		setMostrarRegistroServicio(true);
+
+		//Buscamos el envio si existe.
+		Long idArea = null;
+		if (this.filaArea != null && this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
+			 idArea = this.filaArea.getAreaActual().getCodigo();
+		}
+		EnvioRemoto envio = envioRemotoService.getEnvioByIdentificador(this.filaTramiteRegistro.getEnvioRemoto().getAmbito(), this.filaTramiteRegistro.getEnvioRemoto().getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
+		this.filaTramiteRegistro.setEnvioRemoto(envio);
+		if (envio == null) {
+			this.filaTramiteRegistro.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.envio.noexisteenvio"));
+			this.filaTramiteRegistro.setEnvioRemotoAccion(TypeImportarAccion.CREAR);
+			this.filaTramiteRegistro.setResultado(TypeImportarResultado.OK);
+		} else {
+			this.filaTramiteRegistro.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.envio.existeenvio"));
+			this.filaTramiteRegistro.setEnvioRemotoAccion(TypeImportarAccion.MANTENER);
+			this.filaTramiteRegistro.setResultado(TypeImportarResultado.OK);
 		}
 
 	}
@@ -977,13 +1033,14 @@ public class DialogTramiteImportar extends DialogControllerBase {
 				identificadorArea = this.filaArea.getAreaActual().getIdentificador();
 				idArea = this.filaArea.getAreaActual().getCodigo();
 			}
-			final GestorExternoFormularios gestorActual = gestorExternoService
-					.getFormularioExternoByIdentificador(TypeAmbito.AREA, gestor.getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
+			final GestorExternoFormularios gestorActual = gestorExternoService.getFormularioExternoByIdentificador(
+					TypeAmbito.AREA, gestor.getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
 
 			ConfiguracionAutenticacion configuracionAut = null;
 			if (idArea != null && gestor != null && gestor.getConfiguracionAutenticacion() != null) {
 				configuracionAut = configuracionAutenticacionService.getConfiguracionAutenticacion(TypeAmbito.AREA,
-						gestor.getConfiguracionAutenticacion().getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
+						gestor.getConfiguracionAutenticacion().getIdentificador(), UtilJSF.getIdEntidad(), idArea,
+						null);
 			}
 
 			if (gestorActual == null) {
@@ -1079,6 +1136,9 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 		if (posicionDominio != null) {
 			final FilaImportarDominio fila = this.filasDominios.get(posicionDominio);
+			if(UtilJSF.getIdEntidad() != null) {
+				fila.setIdEntidad(UtilJSF.getIdEntidad());
+			}
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
 			mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, fila);
@@ -1091,6 +1151,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			if (idArea != null) {
 				mochilaDatos.put(Constantes.AREA, idArea);
 			}
+
 			UtilJSF.openDialog(DialogTramiteImportarDominio.class, TypeModoAcceso.EDICION, null, true,
 					fila.getAnchura(), fila.getAltura());
 		}
@@ -1099,8 +1160,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del retorno dialogo area.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoDominio(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -1118,8 +1178,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del retorno dialogo area.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoArea(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -1144,8 +1203,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del retorno dialogo tramite.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoTramite(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -1162,8 +1220,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del retorno dialogo tramite version.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoTramiteVersion(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -1177,8 +1234,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del retorno dialogo tramite version.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoRegistro(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -1227,8 +1283,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/**
 	 * Retorno dialogo del retorno dialogo area.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoGestor(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -1436,23 +1491,27 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		filaImportar.setModo(Constantes.IMPORTAR_TIPO_IM);
 		final FilaImportarResultado resultado = tramiteService.importar(filaImportar);
 
+		ResultadoError re = null;
+
 		if (refrescarCacheDominio) {
 			for (final FilaImportarDominio dominio : filasDominios) {
 				if (dominio.getAccion() != TypeImportarAccion.MANTENER && dominio.getDominioActual() != null) {
 
-					final String urlBase = systemService
-							.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
-					final String usuario = systemService
-							.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
-					final String pwd = systemService
-							.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
-					this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_DOMINIO,
-							dominio.getDominioActual().getIdentificador());
+					re = this.refrescar();
+
 				}
 			}
 		}
 
-		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
+		if (re == null) {
+			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
+		} else if (re.getCodigo() != 1) {
+			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok") + ". "
+					+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje());
+		} else {
+			addMessageContext(TypeNivelGravedad.INFO,
+					UtilJSF.getLiteral("info.importar.ok") + ". " + UtilJSF.getLiteral("info.cache.ok"));
+		}
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(false);
@@ -1590,8 +1649,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *               the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -1605,8 +1663,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *                 the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final Tramite data) {
 		this.data = data;
@@ -1620,8 +1677,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarPanelInfo
-	 *                             the mostrarPanelInfo to set
+	 * @param mostrarPanelInfo the mostrarPanelInfo to set
 	 */
 	public void setMostrarPanelInfo(final boolean mostrarPanelInfo) {
 		this.mostrarPanelInfo = mostrarPanelInfo;
@@ -1635,8 +1691,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramiteVersion
-	 *                           the tramiteVersion to set
+	 * @param tramiteVersion the tramiteVersion to set
 	 */
 	public void setTramiteVersion(final TramiteVersion tramiteVersion) {
 		this.tramiteVersion = tramiteVersion;
@@ -1650,8 +1705,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramite
-	 *                    the tramite to set
+	 * @param tramite the tramite to set
 	 */
 	public void setTramite(final Tramite tramite) {
 		this.tramite = tramite;
@@ -1665,8 +1719,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param area
-	 *                 the area to set
+	 * @param area the area to set
 	 */
 	public void setArea(final Area area) {
 		this.area = area;
@@ -1680,8 +1733,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param formularioInternoService
-	 *                                     the formularioInternoService to set
+	 * @param formularioInternoService the formularioInternoService to set
 	 */
 	public void setFormularioInternoService(final FormularioInternoService formularioInternoService) {
 		this.formularioInternoService = formularioInternoService;
@@ -1695,8 +1747,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramiteService
-	 *                           the tramiteService to set
+	 * @param tramiteService the tramiteService to set
 	 */
 	public void setTramiteService(final TramiteService tramiteService) {
 		this.tramiteService = tramiteService;
@@ -1710,8 +1761,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param contenido
-	 *                      the contenido to set
+	 * @param contenido the contenido to set
 	 */
 	public void setContenido(final byte[] contenido) {
 		this.contenido = contenido;
@@ -1725,8 +1775,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param dominiosId
-	 *                       the dominiosId to set
+	 * @param dominiosId the dominiosId to set
 	 */
 	public void setDominios(final Map<Long, Dominio> dominios) {
 		this.dominios = dominios;
@@ -1740,8 +1789,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param formularios
-	 *                        the formularios to set
+	 * @param formularios the formularios to set
 	 */
 	public void setFormularios(final Map<Long, DisenyoFormulario> formularios) {
 		this.formularios = formularios;
@@ -1755,8 +1803,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param ficheros
-	 *                     the ficheros to set
+	 * @param ficheros the ficheros to set
 	 */
 	public void setFicheros(final Map<Long, Fichero> ficheros) {
 		this.ficheros = ficheros;
@@ -1770,8 +1817,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param ficherosContent
-	 *                            the ficherosContent to set
+	 * @param ficherosContent the ficherosContent to set
 	 */
 	public void setFicherosContent(final Map<Long, byte[]> ficherosContent) {
 		this.ficherosContent = ficherosContent;
@@ -1785,8 +1831,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param fuentesDatos
-	 *                         the fuentesDatos to set
+	 * @param fuentesDatos the fuentesDatos to set
 	 */
 	public void setFuentesDatos(final Map<Long, FuenteDatos> fuentesDatos) {
 		this.fuentesDatos = fuentesDatos;
@@ -1800,8 +1845,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param fuentesDatosContent
-	 *                                the fuentesDatosContent to set
+	 * @param fuentesDatosContent the fuentesDatosContent to set
 	 */
 	public void setFuentesDatosContent(final Map<Long, byte[]> fuentesDatosContent) {
 		this.fuentesDatosContent = fuentesDatosContent;
@@ -1815,8 +1859,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param formateadores
-	 *                          the formateadores to set
+	 * @param formateadores the formateadores to set
 	 */
 	public void setFormateadores(final Map<Long, FormateadorFormulario> formateadores) {
 		this.formateadores = formateadores;
@@ -1844,8 +1887,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param filaArea
-	 *                     the filaArea to set
+	 * @param filaArea the filaArea to set
 	 */
 	public void setFilaArea(final FilaImportarArea filaArea) {
 		this.filaArea = filaArea;
@@ -1859,8 +1901,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param filaTramite
-	 *                        the filaTramite to set
+	 * @param filaTramite the filaTramite to set
 	 */
 	public void setFilaTramite(final FilaImportarTramite filaTramite) {
 		this.filaTramite = filaTramite;
@@ -1874,8 +1915,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param filaTramiteVersion
-	 *                               the filaTramiteVersion to set
+	 * @param filaTramiteVersion the filaTramiteVersion to set
 	 */
 	public void setFilaTramiteVersion(final FilaImportarTramiteVersion filaTramiteVersion) {
 		this.filaTramiteVersion = filaTramiteVersion;
@@ -1900,8 +1940,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param filaEntidad
-	 *                        the filaEntidad to set
+	 * @param filaEntidad the filaEntidad to set
 	 */
 	public void setFilaEntidad(final FilaImportarEntidad filaEntidad) {
 		this.filaEntidad = filaEntidad;
@@ -1915,8 +1954,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param filaTramiteRegistro
-	 *                                the filaTramiteRegistro to set
+	 * @param filaTramiteRegistro the filaTramiteRegistro to set
 	 */
 	public final void setFilaTramiteRegistro(final FilaImportarTramiteRegistro filaTramiteRegistro) {
 		this.filaTramiteRegistro = filaTramiteRegistro;
@@ -1930,8 +1968,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param todoCorrecto
-	 *                         the todoCorrecto to set
+	 * @param todoCorrecto the todoCorrecto to set
 	 */
 	public void setTodoCorrecto(final boolean todoCorrecto) {
 		this.todoCorrecto = todoCorrecto;
@@ -1945,8 +1982,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarRegistroOficina
-	 *                                   the mostrarRegistroOficina to set
+	 * @param mostrarRegistroOficina the mostrarRegistroOficina to set
 	 */
 	public void setMostrarRegistroOficina(final boolean mostrarRegistroOficina) {
 		this.mostrarRegistroOficina = mostrarRegistroOficina;
@@ -1960,8 +1996,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param dir3zip
-	 *                    the dir3zip to set
+	 * @param dir3zip the dir3zip to set
 	 */
 	public final void setDir3zip(final String dir3zip) {
 		this.dir3zip = dir3zip;
@@ -1975,8 +2010,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param modoZip
-	 *                    the modoZip to set
+	 * @param modoZip the modoZip to set
 	 */
 	public final void setModoZip(final String modoZip) {
 		this.modoZip = modoZip;
@@ -1990,8 +2024,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param revisionZip
-	 *                        the revisionZip to set
+	 * @param revisionZip the revisionZip to set
 	 */
 	public final void setRevisionZip(final String revisionZip) {
 		this.revisionZip = revisionZip;
@@ -2005,8 +2038,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param versionZip
-	 *                       the versionZip to set
+	 * @param versionZip the versionZip to set
 	 */
 	public final void setVersionZip(final String versionZip) {
 		this.versionZip = versionZip;
@@ -2020,8 +2052,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param fechaZip
-	 *                     the fechaZip to set
+	 * @param fechaZip the fechaZip to set
 	 */
 	public final void setFechaZip(final String fechaZip) {
 		this.fechaZip = fechaZip;
@@ -2035,8 +2066,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param usuarioZip
-	 *                       the usuarioZip to set
+	 * @param usuarioZip the usuarioZip to set
 	 */
 	public final void setUsuarioZip(final String usuarioZip) {
 		this.usuarioZip = usuarioZip;
@@ -2050,8 +2080,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param refrescarCacheDominio
-	 *                                  the refrescarCacheDominio to set
+	 * @param refrescarCacheDominio the refrescarCacheDominio to set
 	 */
 	public void setRefrescarCacheDominio(final boolean refrescarCacheDominio) {
 		this.refrescarCacheDominio = refrescarCacheDominio;
@@ -2065,8 +2094,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarFilasFormularios
-	 *                                    the mostrarFilasFormularios to set
+	 * @param mostrarFilasFormularios the mostrarFilasFormularios to set
 	 */
 	public final void setMostrarFilasFormularios(final boolean mostrarFilasFormularios) {
 		this.mostrarFilasFormularios = mostrarFilasFormularios;
@@ -2080,8 +2108,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param filasFormulario
-	 *                            the filasFormulario to set
+	 * @param filasFormulario the filasFormulario to set
 	 */
 	public final void setFilasFormulario(final List<FilaImportarFormulario> filasFormulario) {
 		this.filasFormulario = filasFormulario;
@@ -2092,6 +2119,20 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 */
 	public List<FilaImportarGestor> getFilasGestores() {
 		return filasGestores;
+	}
+
+	/**
+	 * @return the mostrarRegistroServicio
+	 */
+	public boolean isMostrarRegistroServicio() {
+		return mostrarRegistroServicio;
+	}
+
+	/**
+	 * @param mostrarRegistroServicio the mostrarRegistroServicio to set
+	 */
+	public void setMostrarRegistroServicio(boolean mostrarRegistroServicio) {
+		this.mostrarRegistroServicio = mostrarRegistroServicio;
 	}
 
 }

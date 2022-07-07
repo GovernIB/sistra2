@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,14 +19,17 @@ import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.EnvioRemoto;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.EntidadService;
+import es.caib.sistrages.core.api.service.EnvioRemotoService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -61,6 +65,10 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	@Inject
 	private EntidadService entidadService;
 
+	/** Entidad service. */
+	@Inject
+	private EnvioRemotoService envioRemotoService;
+
 	/** Id. **/
 	private String id;
 
@@ -69,6 +77,9 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 
 	/** Tramite Paso Registrar. **/
 	private TramitePasoRegistrar data;
+
+	/** Tramite Paso Registrar inicial. **/
+	private TramitePasoRegistrar dataI;
 
 	/** Tramite version. **/
 	private TramiteVersion tramiteVersion;
@@ -88,14 +99,36 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	/** Idiomas. **/
 	private List<String> idiomas;
 
+	/** Envios Remotos. **/
+	private Map<String, String> enviosRemotos;
+
+	/** Seleccion */
+	private String seleccion;
+
+	private boolean cambios = false;
+
 	/**
 	 * Init.
 	 */
 	public void init() {
 		data = (TramitePasoRegistrar) tramiteService.getTramitePaso(Long.valueOf(id));
+		dataI = (TramitePasoRegistrar) tramiteService.getTramitePaso(Long.valueOf(id));
 		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
 		cargarDatosRegistro();
+		enviosRemotos = new HashMap<>();
+		addToList(envioRemotoService.listEnvio(TypeAmbito.AREA, tramiteVersion.getIdArea(), ""));
+		addToList(envioRemotoService.listEnvio(TypeAmbito.ENTIDAD, entidad.getCodigo(), ""));
+	}
+
+	private void addToList(final List<EnvioRemoto> eoL) {
+		if (eoL != null) {
+			for (final EnvioRemoto er : eoL) {
+				if (data.getEnvioRemoto() == null || (!data.getEnvioRemoto().getCodigo().equals(er.getCodigo()))) {
+					enviosRemotos.put(er.getIdentificador(), er.getCodigo().toString());
+				}
+			}
+		}
 	}
 
 	/**
@@ -147,7 +180,13 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	 * Guarda los datos y cierra el dialog.
 	 */
 	public void aceptar() {
-
+		if (StringUtils.isNotBlank(seleccion)) {
+			data.setEnvioRemoto(envioRemotoService.loadEnvio(Long.valueOf(seleccion)));
+			if (data.getEnvioRemoto().getAmbito().equals(TypeAmbito.AREA)) {
+				data.getEnvioRemoto().setArea(tramiteService.getArea(tramiteVersion.getIdArea()));
+			}
+			data.getEnvioRemoto().setEntidad(entidad);
+		}
 		if (data.getScriptAlFinalizar() == null && data.isAvisoAlFinalizar()) {
 			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.registro.error.script"));
@@ -156,6 +195,11 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
 						UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.check.valida.no.implementado"));
 			} else {
+				if (this.cambios) {
+					tramiteService.actualizarFechaTramiteVersion(Long.parseLong(idTramiteVersion),
+							UtilJSF.getSessionBean().getUserName(), "Modificación registro");
+				}
+				this.cambios = false;
 				tramiteService.updateTramitePaso(data);
 
 				final DialogResult result = new DialogResult();
@@ -221,6 +265,11 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 			case ALTA:
 			case EDICION:
 				data.setInstruccionesSubsanacion((Literal) respuesta.getResult());
+				final Literal traduccionesMod = (Literal) respuesta.getResult();
+				final Literal traduccionesI = dataI.getInstruccionesSubsanacion();
+				if (this.isCambioLiterales(traduccionesI, traduccionesMod)) {
+					cambios = true;
+				}
 				break;
 			default:
 				break;
@@ -241,6 +290,11 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 			case ALTA:
 			case EDICION:
 				data.setInstruccionesFinTramitacion((Literal) respuesta.getResult());
+				final Literal traduccionesMod = (Literal) respuesta.getResult();
+				final Literal traduccionesI = dataI.getInstruccionesFinTramitacion();
+				if (this.isCambioLiterales(traduccionesI, traduccionesMod)) {
+					cambios = true;
+				}
 				break;
 			default:
 				break;
@@ -261,6 +315,11 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 			case ALTA:
 			case EDICION:
 				data.setInstruccionesPresentacion((Literal) respuesta.getResult());
+				final Literal traduccionesMod = (Literal) respuesta.getResult();
+				final Literal traduccionesI = dataI.getInstruccionesPresentacion();
+				if (this.isCambioLiterales(traduccionesI, traduccionesMod)) {
+					cambios = true;
+				}
 				break;
 			default:
 				break;
@@ -281,6 +340,19 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 			case ALTA:
 			case EDICION:
 				data.setScriptPresentador((Script) respuesta.getResult());
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(data.getScriptPresentador(), dataI.getScriptPresentador())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			default:
 				break;
@@ -301,6 +373,19 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 			case ALTA:
 			case EDICION:
 				data.setScriptAlFinalizar((Script) respuesta.getResult());
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(data.getScriptAlFinalizar(), dataI.getScriptAlFinalizar())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			default:
 				break;
@@ -321,6 +406,19 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 			case ALTA:
 			case EDICION:
 				data.setScriptValidarRegistrar((Script) respuesta.getResult());
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(data.getScriptValidarRegistrar(), dataI.getScriptValidarRegistrar())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			default:
 				break;
@@ -341,6 +439,19 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 			case ALTA:
 			case EDICION:
 				data.setScriptDestinoRegistro((Script) respuesta.getResult());
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(data.getScriptDestinoRegistro(), dataI.getScriptDestinoRegistro())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			default:
 				break;
@@ -361,6 +472,19 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 			case ALTA:
 			case EDICION:
 				data.setScriptRepresentante((Script) respuesta.getResult());
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(data.getScriptRepresentante(), dataI.getScriptRepresentante())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			default:
 				break;
@@ -477,4 +601,51 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	public final void setEntidad(final Entidad entidad) {
 		this.entidad = entidad;
 	}
+
+	/**
+	 * @return the enviosRemotos
+	 */
+	public final Map<String, String> getEnviosRemotos() {
+		return enviosRemotos;
+	}
+
+	/**
+	 * @param enviosRemotos the enviosRemotos to set
+	 */
+	public final void setEnviosRemotos(final Map<String, String> enviosRemotos) {
+		this.enviosRemotos = enviosRemotos;
+	}
+
+	/**
+	 * @return the seleccion
+	 */
+	public final String getSeleccion() {
+		return seleccion;
+	}
+
+	public boolean getEsEnvio() {
+		if (data.getDestino().equals("E")) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean getEsTipoServicio() {
+		if (tramiteVersion.getTipoTramite().equals("S")) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @param seleccion the seleccion to set
+	 */
+	public final void setSeleccion(final String seleccion) {
+		this.seleccion = seleccion;
+	}
+
+	public void setCambios() {
+		this.cambios = true;
+	}
+
 }

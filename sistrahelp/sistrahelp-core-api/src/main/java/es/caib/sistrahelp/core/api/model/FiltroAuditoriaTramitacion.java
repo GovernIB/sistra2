@@ -23,6 +23,7 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 	private TypeEvento evento;
 
 	private String idTramite;
+	private String codSia;
 	private Integer versionTramite;
 	private String idProcedimientoCP;
 	private String idProcedimientoSIA;
@@ -55,6 +56,7 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 		super();
 		if (pFiltroAuditoriaTramitacion != null) {
 			this.listaAreas = pFiltroAuditoriaTramitacion.listaAreas;
+			this.codSia = pFiltroAuditoriaTramitacion.codSia;
 			this.idSesionTramitacion = pFiltroAuditoriaTramitacion.idSesionTramitacion;
 			this.nif = pFiltroAuditoriaTramitacion.nif;
 			this.nombre = pFiltroAuditoriaTramitacion.nombre;
@@ -200,5 +202,19 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 
 	public void setSortOrder(final String sortOrder) {
 		this.sortOrder = sortOrder;
+	}
+
+	/**
+	 * @return the codSia
+	 */
+	public final String getCodSia() {
+		return codSia;
+	}
+
+	/**
+	 * @param codSia the codSia to set
+	 */
+	public final void setCodSia(String codSia) {
+		this.codSia = codSia;
 	}
 }

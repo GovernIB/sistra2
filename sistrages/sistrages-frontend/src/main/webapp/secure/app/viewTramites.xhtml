@@ -45,12 +45,12 @@
 			    	 scrollable="true" scrollHeight="#{viewTramites.height}" rows="100"  scrollRows="100" autoResize="true"
 
 			   		selection="#{viewTramites.listaAreasSeleccionadas}" rowKey="#{area.codigo}">
-					<p:ajax event="rowSelectCheckbox" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites"/>
-					<p:ajax event="rowSelect" global="false" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" onclick="myWidget.getPaginator().setPage(0)"/>
-					<p:ajax event="rowUnselect" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites"/>
-					<p:ajax event="rowUnselectCheckbox" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites"/>
-					<p:ajax event="toggleSelect" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" />
-					<p:ajax event="rowDblselect" oncomplete="triggerDoubleClickArea();" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" />
+					<p:ajax event="rowSelectCheckbox" listener="#{viewTramites.filtrar}" update="@form" process="@form"/>
+					<p:ajax event="rowSelect" global="false" listener="#{viewTramites.filtrar}" update="@form" process="@form" onclick="myWidget.getPaginator().setPage(0)"/>
+					<p:ajax event="rowUnselect" listener="#{viewTramites.filtrar}" update="@form" process="@form"/>
+					<p:ajax event="rowUnselectCheckbox" listener="#{viewTramites.filtrar}" update="@form" process="@form"/>
+					<p:ajax event="toggleSelect" listener="#{viewTramites.filtrar}" update="@form" process="@form"/>
+					<p:ajax event="rowDblselect" oncomplete="triggerDoubleClickArea();" update="@form" process="@form"/>
 
 
 			        <p:column selectionMode="multiple" style="width:16px;text-align:center" />
@@ -67,10 +67,9 @@
 			        </p:column>
 			        <f:facet name="footer" style="align:left">
 			        	<div align="left" style="display:#{(viewTramites.admEntidad)?'none':'block'}">
-            			<h:selectBooleanCheckbox itemLabel="Prev.Areas" value="#{viewTramites.mostrarTodasAreas}"  >
+            			<p:selectBooleanCheckbox itemLabel="#{msg['viewTramites.mostrarTodasAreas']}" value="#{viewTramites.mostrarTodasAreas}"  >
 						 		<p:ajax event="change" process="@this" update="@form" listener="#{viewTramites.calcularAreas}"  />
-						</h:selectBooleanCheckbox>
-						<h:outputText value="#{msg['viewTramites.mostrarTodasAreas']}" />
+						</p:selectBooleanCheckbox>
 						</div>
         			</f:facet>
 			    </p:dataTable>
@@ -172,7 +171,7 @@
 			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoDesbloquear}" update="growl @form" />
 			        		</p:commandButton>
 
-							<p:commandButton id="btnPrevisualizar" value="#{msg['botones.previsualizarTramite']}" icon="fa fa-eye" actionListener="#{viewTramites.previsualizar}" process="@this" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
+							<p:commandButton id="btnPrevisualizar" value="#{msg['botones.previsualizarTramite']}" icon="fa fa-eye" actionListener="#{viewTramites.previsualizar}" process="@this" rendered="#{(viewTramites.tienePermisosTramite or viewTramites.previs) and viewTramites.versionSeleccionada ne null}" />
 
 			        		<p:menuButton value="#{msg['viewTramites.mas']}" rendered="#{not(not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null)) }">
 
@@ -182,7 +181,7 @@
 			        			</p:menuitem>
 
 								<p:separator rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
-								<p:menuitem id="btnControlAcceso" value="#{msg['botones.controlAcceso']}" icon="fa fa-edit" onclick="triggerControlAcceso();return false;" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}"></p:menuitem>
+								<p:menuitem id="btnControlAcceso" value="#{msg['botones.controlAcceso']}" icon="fa fa-edit" onclick="triggerControlAcceso();return false;" rendered="#{(viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null) or (viewTramites.isAdminArea() and viewTramites.versionSeleccionada ne null)}"></p:menuitem>
 			        			<p:menuitem id="btnHistorial" value="#{msg['botones.historial']}" icon="fa fa-history" actionListener="#{viewTramites.historialVersion}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
 
 								<p:separator rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}"  />
@@ -202,6 +201,7 @@
 					        	<p:menuitem id="btnDatosArea" value="#{msg['botones.datosFuenteArea']}" icon="fa fa-table" actionListener="#{viewTramites.datosArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}" />
 								<p:menuitem id="btnSGEArea" value="#{msg['botones.sgeArea']}" icon="fa fa-database" actionListener="#{viewTramites.sgeArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}"/>
 					        	<p:menuitem id="btnConfiguracionArea" value="#{msg['botones.configuracionAutenticacionArea']}" icon="fa fa-table" actionListener="#{viewTramites.confAutArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}" />
+								<p:menuitem id="btnEnvioRem" value="#{msg['botones.envioRemoto']}" icon="fa fa-paper-plane" actionListener="#{viewTramites.envioRemoto}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}" />
 
 								<p:separator />
 								<p:menuitem id="btnImportar"  				value="#{msg['botones.importarTramite']}" 	icon="fa fa-download"  onclick="triggerImportarTramite(); return false;" 		rendered="#{viewTramites.isDesarrollo()}"></p:menuitem>

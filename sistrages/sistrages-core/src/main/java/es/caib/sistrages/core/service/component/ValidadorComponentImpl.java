@@ -829,7 +829,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 		params.put("TRAMITEVERSION", String.valueOf(pTramiteVersion.getCodigo()));
 		params.put("TRAMITEPASO", String.valueOf(pasoRegistrar.getCodigo()));
 
-		if (StringUtils.isEmpty(pasoRegistrar.getCodigoOficinaRegistro()) && !entidad.isRegistroCentralizado()) {
+		if (pasoRegistrar.getEnvioRemoto() == null && StringUtils.isEmpty(pasoRegistrar.getCodigoOficinaRegistro()) && !entidad.isRegistroCentralizado()) {
 			final ErrorValidacion error = errorValidacion("tramitePasoRegistrar.oficinaRegistro",
 					new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },
 					"vacio.registrar", pIdioma);
@@ -840,7 +840,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 			listaErrores.add(error);
 		}
 
-		if (StringUtils.isEmpty(pasoRegistrar.getCodigoLibroRegistro()) && !entidad.isRegistroCentralizado()) {
+		if (pasoRegistrar.getEnvioRemoto() == null && StringUtils.isEmpty(pasoRegistrar.getCodigoLibroRegistro()) && !entidad.isRegistroCentralizado()) {
 			final ErrorValidacion error = errorValidacion("tramitePasoRegistrar.libroRegistro",
 					new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },
 					"vacio.registrar", pIdioma);

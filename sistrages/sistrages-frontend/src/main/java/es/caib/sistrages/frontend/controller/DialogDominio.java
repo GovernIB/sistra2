@@ -37,6 +37,7 @@ import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.DialogResultMessage;
+import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -404,21 +405,6 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * Refresca la cache
-	 */
-	public void refrescarCache() {
-
-		final String urlBase = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
-		final String usuario = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
-		final String pwd = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
-
-		this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_DOMINIO, data.getIdentificador());
-	}
-
-	/**
 	 * Crea nueva propiedad.
 	 */
 	public void nuevaPropiedad() {
@@ -649,22 +635,7 @@ public class DialogDominio extends DialogControllerBase {
 	/**
 	 * Aceptar.
 	 */
-	public void aceptarConInvalidacion() {
-		aceptar(true);
-	}
-
-	/**
-	 * Aceptar.
-	 */
-	public void aceptarSinInvalidacion() {
-		aceptar(false);
-	}
-
-	/**
-	 * Aceptar.
-	 */
-	public void aceptar(final boolean invalidaciones) {
-
+	public void aceptar() {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 
@@ -673,17 +644,6 @@ public class DialogDominio extends DialogControllerBase {
 			if (!correcto) {
 				return;
 			}
-		}
-
-		if (invalidaciones) {
-			final String urlBase = systemService
-					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
-			final String usuario = systemService
-					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
-			final String pwd = systemService
-					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
-
-			this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_DOMINIO, data.getIdentificador(), false);
 		}
 
 		// Retornamos resultado

@@ -36,8 +36,7 @@ public class Script extends ModelApi {
 	/**
 	 * Establece el valor de codigo.
 	 *
-	 * @param codigo
-	 *            el nuevo valor de codigo
+	 * @param codigo el nuevo valor de codigo
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -55,8 +54,7 @@ public class Script extends ModelApi {
 	/**
 	 * Establece el valor de contenido.
 	 *
-	 * @param contenido
-	 *            el nuevo valor de contenido
+	 * @param contenido el nuevo valor de contenido
 	 */
 	public void setContenido(final String contenido) {
 		this.contenido = contenido;
@@ -70,8 +68,7 @@ public class Script extends ModelApi {
 	}
 
 	/**
-	 * @param mensajes
-	 *            the mensajes to set
+	 * @param mensajes the mensajes to set
 	 */
 	public void setMensajes(final List<LiteralScript> mensajes) {
 		this.mensajes = mensajes;
@@ -85,8 +82,7 @@ public class Script extends ModelApi {
 	}
 
 	/**
-	 * @param mensajesAlterado
-	 *            the mensajesAlterado to set
+	 * @param mensajesAlterado the mensajesAlterado to set
 	 */
 	public void setMensajesAlterado(final Boolean mensajesAlterado) {
 		this.mensajesAlterado = mensajesAlterado;

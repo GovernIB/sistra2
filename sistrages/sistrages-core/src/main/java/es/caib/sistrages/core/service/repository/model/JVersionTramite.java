@@ -44,6 +44,10 @@ public class JVersionTramite implements IModelApi {
 	@Column(name = "VTR_DESCR", nullable = false, length = 255)
 	private String descripcion;
 
+	/** Tipo Trámite. **/
+	@Column(name = "VTR_TIPTRA", nullable = false, length = 1)
+	private String tipoTramite;
+
 	/** Script inicialización trámite. **/
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "VTR_SCRINTRA")
@@ -573,6 +577,20 @@ public class JVersionTramite implements IModelApi {
 	}
 
 	/**
+	 * @return the tipoTramite
+	 */
+	public String getTipoTramite() {
+		return tipoTramite;
+	}
+
+	/**
+	 * @param tipoTramite the tipoTramite to set
+	 */
+	public void setTipoTramite(String tipoTramite) {
+		this.tipoTramite = tipoTramite;
+	}
+
+	/**
 	 * ToModel.
 	 *
 	 * @return
@@ -592,6 +610,9 @@ public class JVersionTramite implements IModelApi {
 
 		if (this.getDescripcion() != null) {
 			tramiteVersion.setDescripcion(this.getDescripcion());
+		}
+		if (this.getTipoTramite() != null) {
+			tramiteVersion.setTipoTramite(this.getTipoTramite());
 		}
 		tramiteVersion.setCodigo(this.getCodigo());
 		if (this.getTramite() != null) {
@@ -690,6 +711,10 @@ public class JVersionTramite implements IModelApi {
 				jversionTramite.setDescripcion(model.getDescripcion());
 			}
 
+			if (model.getTipoTramite() != null) {
+				jversionTramite.setTipoTramite(model.getTipoTramite());
+			}
+
 			if (model.getTiposAutenticacion() != null) {
 				final StringBuilder tipoAut = new StringBuilder();
 				for (final TypeAutenticacion tipoAutenticacion : model.getTiposAutenticacion()) {
@@ -723,6 +748,7 @@ public class JVersionTramite implements IModelApi {
 			jversionTramite = new JVersionTramite();
 			jversionTramite.setCodigo(null);
 			jversionTramite.setDescripcion(origVersionTramite.getDescripcion());
+			jversionTramite.setTipoTramite(origVersionTramite.getTipoTramite());
 			jversionTramite.setRelease(1);
 			jversionTramite.setNumeroVersion(numVersionNuevo);
 			jversionTramite.setTramite(origVersionTramite.getTramite());

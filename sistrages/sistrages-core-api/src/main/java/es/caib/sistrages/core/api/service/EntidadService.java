@@ -20,8 +20,7 @@ public interface EntidadService {
 	/**
 	 * Obtener entidad.
 	 *
-	 * @param idEntidad
-	 *            idEntidad
+	 * @param idEntidad idEntidad
 	 * @return entidad
 	 */
 	public Entidad loadEntidad(Long idEntidad);
@@ -29,8 +28,7 @@ public interface EntidadService {
 	/**
 	 * Obtener entidad segun area.
 	 *
-	 * @param idArea
-	 *            idArea
+	 * @param idArea idArea
 	 * @return entidad
 	 */
 	public Entidad loadEntidadByArea(Long idArea);
@@ -38,32 +36,29 @@ public interface EntidadService {
 	/**
 	 * Añade entidad por parte del superadministrador.
 	 *
-	 * @param entidad
-	 *            Entidad con los datos requeridos por superadministrador.
+	 * @param entidad Entidad con los datos requeridos por superadministrador.
 	 */
 	public void addEntidad(Entidad entidad);
 
 	/**
 	 * Actualización entidad por parte del superadministrador.
 	 *
-	 * @param entidad
-	 *            Entidad con los datos requeridos por superadministrador.
+	 * @param entidad Entidad con los datos requeridos por superadministrador.
 	 */
 	public void updateEntidadSuperAdministrador(Entidad entidad);
 
 	/**
 	 * Actualización entidad por parte del administrador de entidad.
 	 *
-	 * @param entidad
-	 *            Entidad con los datos requeridos por el administrador de entidad.
+	 * @param entidad Entidad con los datos requeridos por el administrador de
+	 *                entidad.
 	 */
 	public void updateEntidadAdministradorEntidad(final Entidad entidad);
 
 	/**
 	 * Elimina entidad.
 	 *
-	 * @param idEntidad
-	 *            idEntidad
+	 * @param idEntidad idEntidad
 	 * @return true, si se ha realizado con &eacute;xito
 	 */
 	public boolean removeEntidad(Long idEntidad);
@@ -71,10 +66,8 @@ public interface EntidadService {
 	/**
 	 * Listar entidades.
 	 *
-	 * @param typeIdioma
-	 *            Idioma
-	 * @param filtro
-	 *            filtro
+	 * @param typeIdioma Idioma
+	 * @param filtro     filtro
 	 * @return entidades
 	 */
 	public List<Entidad> listEntidad(TypeIdioma typeIdioma, String filtro);
@@ -82,68 +75,62 @@ public interface EntidadService {
 	/**
 	 * Elimina logo gestor entidad.
 	 *
-	 * @param idEntidad
-	 *            idEntidad
+	 * @param idEntidad idEntidad
 	 */
 	public void removeLogoGestorEntidad(Long idEntidad);
 
 	/**
 	 * Elimina logo asistente entidad.
 	 *
-	 * @param idEntidad
-	 *            idEntidad
+	 * @param idEntidad idEntidad
 	 */
 	public void removeLogoAsistenteEntidad(Long idEntidad);
 
 	/**
+	 * Elimina icono asistente entidad.
+	 *
+	 * @param idEntidad idEntidad
+	 */
+	public void removeIconoAsistenteEntidad(Long idEntidad);
+
+	/**
 	 * Elimina css asistente tramitacion entidad.
 	 *
-	 * @param idEntidad
-	 *            idEntidad
+	 * @param idEntidad idEntidad
 	 */
 	public void removeCssEntidad(Long idEntidad);
 
 	/**
 	 * Incorpora logo gestor entidad.
 	 *
-	 * @param idEntidad
-	 *            idEntidad
-	 * @param fichero
-	 *            fichero
-	 * @param content
-	 *            contenido del fichero
+	 * @param idEntidad idEntidad
+	 * @param fichero   fichero
+	 * @param content   contenido del fichero
 	 */
 	public void uploadLogoGestorEntidad(Long idEntidad, Fichero fichero, byte[] content);
 
 	/**
 	 * Incorpora logo asistente entidad.
 	 *
-	 * @param idEntidad
-	 *            idEntidad
-	 * @param fichero
-	 *            fichero
-	 * @param content
-	 *            contenido del fichero
+	 * @param idEntidad idEntidad
+	 * @param fichero   fichero
+	 * @param content   contenido del fichero
 	 */
 	public void uploadLogoAsistenteEntidad(Long idEntidad, Fichero fichero, byte[] content);
 
 	/**
 	 * Incorpora css entidad.
 	 *
-	 * @param idEntidad
-	 *            idEntidad
-	 * @param fichero
-	 *            fichero
-	 * @param content
-	 *            contenido del fichero
+	 * @param idEntidad idEntidad
+	 * @param fichero   fichero
+	 * @param content   contenido del fichero
 	 */
 	public void uploadCssEntidad(Long idEntidad, Fichero fichero, byte[] content);
 
 	/**
 	 * Lista de opciones de formulario soporte.
 	 *
-	 * @param idEntidad
-	 *            el identicador de entidad.
+	 * @param idEntidad el identicador de entidad.
 	 * @return Lista de opciones de formulario soporte.
 	 */
 	public List<FormularioSoporte> listOpcionesFormularioSoporte(final Long idEntidad);
@@ -151,8 +138,7 @@ public interface EntidadService {
 	/**
 	 * Obtener opcion de formulario de soporte.
 	 *
-	 * @param id
-	 *            identificador de la opcion de formulario de soporte.
+	 * @param id identificador de la opcion de formulario de soporte.
 	 * @return Opcion de formulario de soporte.
 	 */
 	public FormularioSoporte loadOpcionFormularioSoporte(Long id);
@@ -160,26 +146,22 @@ public interface EntidadService {
 	/**
 	 * Añade opcion de formulario de soporte.
 	 *
-	 * @param idEntidad
-	 *            identificador de la entidad.
-	 * @param fst
-	 *            opcion de formulario de soporte.
+	 * @param idEntidad identificador de la entidad.
+	 * @param fst       opcion de formulario de soporte.
 	 */
 	public void addOpcionFormularioSoporte(Long idEntidad, FormularioSoporte fst);
 
 	/**
 	 * Actualización de la opcion de formulario de soporte.
 	 *
-	 * @param fst
-	 *            opcion de formulario de soporte.
+	 * @param fst opcion de formulario de soporte.
 	 */
 	public void updateOpcionFormularioSoporte(FormularioSoporte fst);
 
 	/**
 	 * Elimina la opcion de formulario de soporte.
 	 *
-	 * @param id
-	 *            identificador
+	 * @param id identificador
 	 * @return true, si se ha realizado con &eacute;xito
 	 */
 	public boolean removeOpcionFormularioSoporte(Long id);
@@ -187,8 +169,7 @@ public interface EntidadService {
 	/**
 	 * Obtiene la lista de valoraciones que tiene la entidad.
 	 *
-	 * @param idEntidad
-	 *            Codigo de la entidad.
+	 * @param idEntidad Codigo de la entidad.
 	 * @return Listado de valoraciones
 	 */
 	public List<IncidenciaValoracion> getValoraciones(final Long idEntidad);
@@ -226,10 +207,8 @@ public interface EntidadService {
 	/**
 	 * Comprueba si al crear o modificar una entidad, si repetimos código dir
 	 *
-	 * @param codigoDIR3
-	 *            Código DIR3
-	 * @param idEntidad
-	 *            Puede ser nulo cuando es alta
+	 * @param codigoDIR3 Código DIR3
+	 * @param idEntidad  Puede ser nulo cuando es alta
 	 * @return Devuelve true si hay ya alguna entidad con dicho código DIR3
 	 */
 	public boolean existeCodigoDIR3(String codigoDIR3, Long idEntidad);
@@ -240,14 +219,14 @@ public interface EntidadService {
 	 *
 	 * @param identificador
 	 * @param idEntidad
-	 * @param codigo
-	 *            Puede ser nulo cuando es alta
+	 * @param codigo        Puede ser nulo cuando es alta
 	 * @return Devuelve true si hay ya alguna valoración con dicho identificador
 	 */
 	public boolean existeIdentificadorValoracion(String identificador, Long idEntidad, Long codigo);
 
 	/**
 	 * Obtener lista plantilla email fin
+	 *
 	 * @param codEntidad
 	 * @return
 	 */
@@ -255,6 +234,7 @@ public interface EntidadService {
 
 	/**
 	 * Sube un plantilla entidad fin email registro
+	 *
 	 * @param idEntidad
 	 * @param idPlantillaEntidad
 	 * @param plantillaEntidad
@@ -266,16 +246,20 @@ public interface EntidadService {
 
 	/**
 	 * Borra un plantilla entidad fin email registro.
+	 *
 	 * @param plantillaEntidad
 	 */
 	public void removePlantillaEmailFin(PlantillaEntidad plantillaEntidad);
 
 	/**
 	 * Comprueba si el identificador se usa
+	 *
 	 * @param identificador
 	 * @param codigo
 	 * @return
 	 */
 	public boolean existeEntidad(String identificador, Long codigo);
+
+	void uploadIconoAsistenteEntidad(Long idEntidad, Fichero fichero, byte[] content);
 
 }

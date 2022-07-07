@@ -38,7 +38,18 @@
 
 				<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.descripcion']}" />
 				<p:panelGrid styleClass="noBorders" columns="1" columnClasses="noPadding-left">
-					<p:inputText value="#{dialogDefinicionVersionPropiedades.tramiteVersion.descripcion}" size="90" maxlength="255"   />
+					<p:inputText value="#{dialogDefinicionVersionPropiedades.tramiteVersion.descripcion}" size="90" maxlength="255"   >
+						<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
+					</p:inputText>
+				</p:panelGrid>
+
+				<p:outputLabel value="#{msg['dialogDominioExportar.tipo']} *" />
+				<p:panelGrid styleClass="noBorders" columns="1" columnClasses="noPadding-left,,">
+					<p:selectOneRadio id="tipo" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.tipoTramite}">
+			            <f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.tramite']}" itemValue="T"/>
+			            <f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.servicio']}" itemValue="S"/>
+			            <p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
+			        </p:selectOneRadio>
 				</p:panelGrid>
 
 	            <p:outputLabel for="autenticado" value="#{msg['viewDefinicionVersionPropiedades.autenticacion']}" />
@@ -48,6 +59,7 @@
 						<p:column styleClass="noPadding-left">
 							<p:selectBooleanCheckbox id="autenticado"  value="#{dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.autenticado']}" required="true" onChange="desmarcar(this);">
 							 		<p:ajax event="change" update="tipoCER tipoPIN tipoPER nivelQAA" listener="#{dialogDefinicionVersionPropiedades.check}"/>
+							 		<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
 							</p:selectBooleanCheckbox>
 						</p:column>
 
@@ -59,21 +71,30 @@
 						            <f:selectItem itemLabel="#{msg['typeQAA.1']}" itemValue="1" />
 						            <f:selectItem itemLabel="#{msg['typeQAA.2']}" itemValue="2" />
 						            <f:selectItem itemLabel="#{msg['typeQAA.3']}" itemValue="3" />
+						            <p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
 						        </p:selectOneMenu>
 
 
 					        </h:panelGrid>
  								<p:column>
-									<p:selectBooleanCheckbox id="tipoCER" itemLabel="#{msg['tiposAutenticacion.CER']}"  value="#{dialogDefinicionVersionPropiedades.tiposAutenticacionCER}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" />
-									<p:selectBooleanCheckbox id="tipoPIN" itemLabel="#{msg['tiposAutenticacion.PIN']}"  value="#{dialogDefinicionVersionPropiedades.tiposAutenticacionPIN}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" />
-									<p:selectBooleanCheckbox id="tipoPER" itemLabel="#{msg['tiposAutenticacion.PER']}"  value="#{dialogDefinicionVersionPropiedades.tiposAutenticacionPER}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" />
+									<p:selectBooleanCheckbox id="tipoCER" itemLabel="#{msg['tiposAutenticacion.CER']}"  value="#{dialogDefinicionVersionPropiedades.tiposAutenticacionCER}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" >
+										<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
+									</p:selectBooleanCheckbox>
+									<p:selectBooleanCheckbox id="tipoPIN" itemLabel="#{msg['tiposAutenticacion.PIN']}"  value="#{dialogDefinicionVersionPropiedades.tiposAutenticacionPIN}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" >
+										<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
+									</p:selectBooleanCheckbox>
+									<p:selectBooleanCheckbox id="tipoPER" itemLabel="#{msg['tiposAutenticacion.PER']}"  value="#{dialogDefinicionVersionPropiedades.tiposAutenticacionPER}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" >
+										<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
+									</p:selectBooleanCheckbox>
 								</p:column>
 						</p:column>
 					</p:row>
 
 					<p:row>
 						<p:column styleClass="noPadding-left">
-							<p:selectBooleanCheckbox id="sinAutenticacion"  itemLabel="#{msg['viewDefinicionVersionPropiedades.sinautenticacion']}" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.noAutenticado}"  style="width:170px"  />
+							<p:selectBooleanCheckbox id="sinAutenticacion"  itemLabel="#{msg['viewDefinicionVersionPropiedades.sinautenticacion']}" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.noAutenticado}"  style="width:170px"  >
+								<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
+							</p:selectBooleanCheckbox>
 						</p:column>
 						<p:column>
 							<p:spacer width="8"/>
@@ -82,28 +103,39 @@
 				</p:panelGrid>
 	         	<p:outputLabel for="idiomaCastellano" value="#{msg['viewDefinicionVersionPropiedades.idioma']}" />
 				<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,,">
-					<p:selectBooleanCheckbox rendered="#{sessionBean.idiomas.contains('ca')}" id="idiomaCatalan" value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaCaSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCatalan']}" />
-					<p:selectBooleanCheckbox rendered="#{sessionBean.idiomas.contains('es')}" id="idiomaCastellano" value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaEsSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCastellano']}" />
-					<p:selectBooleanCheckbox rendered="#{sessionBean.idiomas.contains('en')}" id="idiomaIngles"  value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaEnSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaIngles']}" />
+					<p:selectBooleanCheckbox rendered="#{sessionBean.idiomas.contains('ca')}" id="idiomaCatalan" value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaCaSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCatalan']}" >
+						<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
+					</p:selectBooleanCheckbox>
+					<p:selectBooleanCheckbox rendered="#{sessionBean.idiomas.contains('es')}" id="idiomaCastellano" value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaEsSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCastellano']}" >
+						<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
+					</p:selectBooleanCheckbox>
+					<p:selectBooleanCheckbox rendered="#{sessionBean.idiomas.contains('en')}" id="idiomaIngles"  value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaEnSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaIngles']}" >
+						<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
+					</p:selectBooleanCheckbox>
 				</p:panelGrid>
 
 	         	<p:outputLabel for="persistencia" value="#{msg['viewDefinicionVersionPropiedades.persistencia']}" />
 				<p:panelGrid styleClass="noBorders">
 					<p:row>
 						<p:column styleClass="noPadding-left">
-							<p:selectBooleanCheckbox id="persistencia" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.persistencia}"/>
+							<p:selectBooleanCheckbox id="persistencia" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.persistencia}">
+								<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
+							</p:selectBooleanCheckbox>
 							<p:spacer width="40" height="1"/>
 						</p:column>
 						<p:column>
 							<p:selectOneRadio id="tipopersistencia" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.persistenciaInfinita}">
 					            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.sinlimite']}" itemValue="true" />
 					            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.pordias']}" itemValue="false" />
+					            <p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
 			     		   </p:selectOneRadio>
 			     		 </p:column>
 						<p:column>
 								<p:outputLabel for="numdias" value="#{msg['viewDefinicionVersionPropiedades.numdias']}" />
 								<p:spacer width="8"/>
-								<p:spinner id="numdias" size="3" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.persistenciaDias}" min="1" max="99"/>
+								<p:spinner id="numdias" size="3" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.persistenciaDias}" min="1" max="99">
+									<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
+								</p:spinner>
 						</p:column>
 					</p:row>
 				</p:panelGrid>

@@ -13,11 +13,13 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.types.TypeDestino;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.service.component.flujo.ConstantesFlujo;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
+import es.caib.sistramit.core.service.component.integracion.EnvioRemotoComponent;
 import es.caib.sistramit.core.service.component.integracion.RegistroComponent;
 import es.caib.sistramit.core.service.component.literales.Literales;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
@@ -26,6 +28,7 @@ import es.caib.sistramit.core.service.model.flujo.DatosInternosPasoRegistrar;
 import es.caib.sistramit.core.service.model.flujo.DatosPaso;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaPaso;
 import es.caib.sistramit.core.service.model.flujo.DocumentoPasoPersistencia;
+import es.caib.sistramit.core.service.model.flujo.ParametrosRegistro;
 import es.caib.sistramit.core.service.model.flujo.RespuestaAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.RespuestaEjecutarAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
@@ -49,6 +52,9 @@ public final class AccionIniciarSesionRegistro implements AccionPaso {
 	/** Componente de registro. */
 	@Autowired
 	private RegistroComponent registroComponent;
+	/** Componente de envio remoto. */
+	@Autowired
+	private EnvioRemotoComponent envioRemotoComponent;
 	/** Literales negocio. */
 	@Autowired
 	private Literales literales;
@@ -68,8 +74,8 @@ public final class AccionIniciarSesionRegistro implements AccionPaso {
 		validacionesRegistrar(pDipa, pDpp, pVariablesFlujo, pDefinicionTramite);
 
 		// Iniciamos sesión registro
-		final String idSesionRegistro = registroComponent.iniciarSesionRegistro(
-				pDefinicionTramite.getDefinicionVersion().getIdEntidad(), pVariablesFlujo.isDebugEnabled());
+		final String idSesionRegistro = iniciarSesionRegistro(pVariablesFlujo.getTipoDestino(),
+				pDipa.getParametrosRegistro(), pVariablesFlujo.isDebugEnabled());
 
 		// Actualizamos persistencia
 		actualizarPersistencia(pDipa, pDpp, idSesionRegistro);
@@ -83,6 +89,32 @@ public final class AccionIniciarSesionRegistro implements AccionPaso {
 		final RespuestaEjecutarAccionPaso rep = new RespuestaEjecutarAccionPaso();
 		rep.setRespuestaAccionPaso(rp);
 		return rep;
+	}
+
+	/**
+	 * Inicia sesión registro.
+	 *
+	 * @param tipoDestino
+	 *                               Tipo destino
+	 *
+	 * @param parametrosRegistro
+	 *                               parametrosRegistro
+	 * @param debugEnabled
+	 *                               debug
+	 * @return Id sesión
+	 */
+	protected String iniciarSesionRegistro(final TypeDestino tipoDestino, final ParametrosRegistro parametrosRegistro,
+			final boolean debugEnabled) {
+		String idSesionRegistro;
+		if (tipoDestino == TypeDestino.REGISTRO) {
+			idSesionRegistro = registroComponent
+					.iniciarSesionRegistro(parametrosRegistro.getDatosRegistrales().getCodigoEntidad(), debugEnabled);
+		} else {
+			idSesionRegistro = envioRemotoComponent.iniciarSesionEnvio(
+					parametrosRegistro.getDatosRegistrales().getCodigoEntidad(),
+					parametrosRegistro.getDatosRegistrales().getIdEnvioRemoto(), debugEnabled);
+		}
+		return idSesionRegistro;
 	}
 
 	/**

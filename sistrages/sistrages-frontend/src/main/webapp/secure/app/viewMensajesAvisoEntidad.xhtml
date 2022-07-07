@@ -39,7 +39,6 @@
 		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewMensajesAvisoEntidad.eliminar()}" process="@this" update="growl dataTable" rendered="#{viewMensajesAvisoEntidad.permiteAlta}">
 		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnRefrescarCache" value="#{msg['botones.refrescarCache']}" icon="fa fa-retweet" actionListener="#{viewMensajesAvisoEntidad.refrescarCache()}" process="@this" update="growl dataTable" rendered="#{viewMensajesAvisoEntidad.permiteEditar or viewMensajesAvisoEntidad.permiteAlta}"/>
 		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewMensajesAvisoEntidad.ayuda()}" process="@this" update="growl"/>
 		        	</h:panelGrid>
 		        </f:facet>
@@ -49,7 +48,7 @@
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewMensajesAvisoEntidad.listaDatos}"
-						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+						 rows="#{viewMensajesAvisoEntidad.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -62,6 +61,7 @@
 		                  		oncomplete="triggerDblClick();"
 		                        update=":form:dataTable"
 		                        />
+		        <p:ajax event="page" update=":form:dataTable :form:toolbar"/>
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewMensajesAvisoEntidad.headerDescripcion']}">

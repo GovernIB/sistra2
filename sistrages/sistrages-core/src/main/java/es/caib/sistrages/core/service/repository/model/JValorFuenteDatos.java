@@ -40,6 +40,7 @@ public class JValorFuenteDatos implements IModelApi {
 	private String valor;
 
 	public JValorFuenteDatos() {
+		//Constructor vacio
 	}
 
 	public Long getCodigo() {

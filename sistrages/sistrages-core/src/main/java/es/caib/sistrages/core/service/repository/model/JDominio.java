@@ -304,6 +304,7 @@ public class JDominio implements IModelApi {
 
 		if (this.getFuenteDatos() != null) {
 			dominio.setIdFuenteDatos(this.getFuenteDatos().getCodigo());
+			dominio.setIdentificadorFD(this.getFuenteDatos().getIdentificador());
 		}
 		if (this.getConfiguracionAutenticacion () != null) {
 			dominio.setConfiguracionAutenticacion(this.getConfiguracionAutenticacion().toModel());
@@ -373,7 +374,7 @@ public class JDominio implements IModelApi {
 	 * @return
 	 */
 	public static JDominio clonar(final JDominio dominio, final String nuevoIdentificador, final JArea jareas,
-			final JFuenteDatos jfuenteDatos, final JEntidad jentidad) {
+			final JFuenteDatos jfuenteDatos, final JEntidad jentidad, final JConfiguracionAutenticacion jconfAut) {
 		JDominio jdominio = null;
 		if (dominio != null) {
 			jdominio = new JDominio();
@@ -385,7 +386,7 @@ public class JDominio implements IModelApi {
 			jdominio.setDescripcion(dominio.getDescripcion());
 			jdominio.setEntidad(jentidad);
 			jdominio.setTimeout(dominio.timeout);
-			jdominio.setConfiguracionAutenticacion(dominio.getConfiguracionAutenticacion());
+			jdominio.setConfiguracionAutenticacion(jconfAut);
 			jdominio.setFuenteDatos(jfuenteDatos);
 			jdominio.setIdentificador(nuevoIdentificador);
 			jdominio.setListaFijaValores(dominio.getListaFijaValores());

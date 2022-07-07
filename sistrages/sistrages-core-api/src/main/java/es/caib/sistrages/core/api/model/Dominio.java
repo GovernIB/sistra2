@@ -53,6 +53,7 @@ public class Dominio extends ModelApi {
 
 	/** Para tipo Fuente de datos indica el ID de la Fuente de datos */
 	private Long idFuenteDatos;
+	private String identificadorFD;
 
 	/**
 	 * JSON con la lista de valores (identificador - valor)
@@ -370,6 +371,20 @@ public class Dominio extends ModelApi {
 	 */
 	public void setIdArea(String idArea) {
 		this.idArea = idArea;
+	}
+
+	/**
+	 * @return the identificadorFD
+	 */
+	public String getIdentificadorFD() {
+		return identificadorFD;
+	}
+
+	/**
+	 * @param identificadorFD the identificadorFD to set
+	 */
+	public void setIdentificadorFD(String identificadorFD) {
+		this.identificadorFD = identificadorFD;
 	}
 
 }

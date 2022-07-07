@@ -44,7 +44,63 @@ public class UtilRest {
 		try {
 			invJSON = JsonUtil.toJson(inv);
 		} catch (final JsonException e) {
-			UtilJSF.loggearErrorFront("Error refrescando " , e);
+			UtilJSF.loggearErrorFront("Error refrescando ", e);
+			resultado.setMensaje(e.getMessage());
+			return resultado;
+		}
+
+		final HttpEntity<RInvalidacion> request = new HttpEntity<>(inv, headers);
+
+		final MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		map.add("invalidacion", invJSON);
+
+//		final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map,
+//				headers);
+
+		ResponseEntity<Boolean> response = null;
+		try {
+			response = restTemplate.postForEntity(urlBase + "/invalidacion", request, Boolean.class);
+
+			switch (response.getStatusCodeValue()) {
+			case 200:
+				resultado.setCodigo(1);
+				break;
+			}
+		} catch (final RestClientException e) {
+			UtilJSF.loggearErrorFront("Error restclient", e);
+			resultado.setMensaje(e.getMessage());
+		}
+
+		return resultado;
+	}
+
+	/**
+	 * Refrescar.
+	 *
+	 * @param urlBase       url base
+	 * @param usuario       usuario
+	 * @param pwd           pwd
+	 * @param tipo          tipo
+	 * @param identificador identificador
+	 * @return 1 si se ha ejecutado correctamente, 0 si ha habido algun error.
+	 */
+	public static ResultadoError refrescar(final String urlBase, final String usuario, final String pwd,
+			final String tipo) {
+		final RestTemplate restTemplate = new RestTemplate();
+		final ResultadoError resultado = new ResultadoError(0, null);
+
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(usuario, pwd));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+		final RInvalidacion inv = new RInvalidacion();
+		inv.setTipo(tipo);
+		String invJSON;
+		try {
+			invJSON = JsonUtil.toJson(inv);
+		} catch (final JsonException e) {
+			UtilJSF.loggearErrorFront("Error refrescando ", e);
 			resultado.setMensaje(e.getMessage());
 			return resultado;
 		}

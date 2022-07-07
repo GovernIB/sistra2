@@ -404,6 +404,7 @@ public class FilaImportarDominio extends FilaImportarBase {
 		this.configuracionAutenticacionActual = configuracionAutenticacionActual;
 	}
 
+
 	/**
 	 * Crea un elemento FilaImportarDominio de tipo IT (Importar Tramite) cuando
 	 * tiene un error de tipo:
@@ -435,6 +436,35 @@ public class FilaImportarDominio extends FilaImportarBase {
 		fila.setConfiguracionAutenticacionActual(configuracionAutenticacion);
 		return fila;
 	}
+
+
+
+	/**
+	 * Crea un elemento FilaImportarDominio de tipo IT (Importar Tramite) cuando
+	 * el dominio de tipo área no existe.
+	 *
+	 * @param dominio
+	 * @param dominioActual
+	 * @param fd
+	 * @param fdContent
+	 * @param fdActual
+	 * @param literal
+	 * @return
+	 */
+	public static FilaImportarDominio crearITcrearAreaDominio(final Dominio dominio, final Dominio dominioActual,
+			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual, final String literal, final ConfiguracionAutenticacion configuracionAutenticacion) {
+		final FilaImportarDominio fila = new FilaImportarDominio(dominio, dominioActual, fd, fdContent, fdActual,
+				literal);
+		fila.setAccion(TypeImportarAccion.CREAR);
+		fila.setExiste(TypeImportarExiste.NO_EXISTE);
+		fila.setEstado(TypeImportarEstado.REVISADO);
+		fila.setResultado(TypeImportarResultado.OK);
+		fila.setVisibleBoton(false);
+		fila.setMismoTipo(false);
+		fila.setConfiguracionAutenticacionActual(configuracionAutenticacion);
+		return fila;
+	}
+
 
 	/**
 	 * Crea un elemento FilaImportarDominio de tipo IT (Importar Tramite) que sólo

@@ -63,7 +63,7 @@ public class EntidadDaoImpl implements EntidadDao {
 	 */
 
 	@Override
-	public Entidad getByCodigo(final String codigoDir3) {
+	public Entidad getByCodigoDIR3(final String codigoDir3) {
 		Entidad entidad = null;
 
 		final String sql = "select entidad from JEntidad entidad where entidad.codigoDir3 like '" + codigoDir3 + "'";
@@ -182,7 +182,8 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setUrlCarpetaCiudadana(
 				JLiteral.mergeModel(jEntidad.getUrlCarpetaCiudadana(), entidad.getUrlCarpetaCiudadana()));
 		jEntidad.setDiasPreregistro(entidad.getDiasPreregistro());
-
+		jEntidad.setTituloAsistenteTramitacion(
+				JLiteral.mergeModel(jEntidad.getTituloAsistenteTramitacion(), entidad.getTituloAsistenteTramitacion()));
 		jEntidad.setMapaWeb(JLiteral.mergeModel(jEntidad.getMapaWeb(), entidad.getMapaWeb()));
 		jEntidad.setAvisoLegal(JLiteral.mergeModel(jEntidad.getAvisoLegal(), entidad.getAvisoLegal()));
 		jEntidad.setRss(JLiteral.mergeModel(jEntidad.getRss(), entidad.getRss()));
@@ -314,6 +315,29 @@ public class EntidadDaoImpl implements EntidadDao {
 	 * (non-Javadoc)
 	 *
 	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.EntidadDao#removeLogoAsistente(
+	 * java.lang.Long)
+	 */
+	@Override
+	public void removeIconoAsistente(final Long idEntidad) {
+		final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
+		if (jEntidad == null) {
+			throw new NoExisteDato("No existe entidad " + idEntidad);
+		}
+
+		final JFichero jFichero = jEntidad.getIconoAsistenteTramitacion();
+		if (jFichero != null) {
+			jEntidad.setIconoAsistenteTramitacion(null);
+			entityManager.merge(jEntidad);
+			entityManager.remove(jFichero);
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
 	 * es.caib.sistrages.core.service.repository.dao.EntidadDao#removeCssAsistente(
 	 * java.lang.Long)
 	 */
@@ -377,6 +401,26 @@ public class EntidadDaoImpl implements EntidadDao {
 	 * (non-Javadoc)
 	 *
 	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.EntidadDao#uploadLogoAsistente(
+	 * java.lang.Long, es.caib.sistrages.core.api.model.Fichero)
+	 */
+	@Override
+	public Fichero uploadIconoAsistente(final Long idEntidad, final Fichero fichero) {
+		final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
+		if (jEntidad == null) {
+			throw new NoExisteDato("No existe entidad " + idEntidad);
+		}
+
+		jEntidad.setIconoAsistenteTramitacion(JFichero.fromModel(fichero));
+		entityManager.merge(jEntidad);
+
+		return jEntidad.getIconoAsistenteTramitacion().toModel();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
 	 * es.caib.sistrages.core.service.repository.dao.EntidadDao#uploadCssAsistente(
 	 * java.lang.Long, es.caib.sistrages.core.api.model.Fichero)
 	 */
@@ -425,7 +469,7 @@ public class EntidadDaoImpl implements EntidadDao {
 
 		final Query query = entityManager.createQuery(sql);
 
-		query.setParameter("codigo", codEntidad );
+		query.setParameter("codigo", codEntidad);
 
 		final List<JPlantillaEntidad> results = query.getResultList();
 
@@ -440,7 +484,8 @@ public class EntidadDaoImpl implements EntidadDao {
 	}
 
 	@Override
-	public PlantillaEntidad uploadPlantillasEmailFin(Long idPlantillaEntidad, PlantillaEntidad plantilla, final Long idEntidad) {
+	public PlantillaEntidad uploadPlantillasEmailFin(Long idPlantillaEntidad, PlantillaEntidad plantilla,
+			final Long idEntidad) {
 		JPlantillaEntidad jPlantillaEntidad;
 
 		if (plantilla.getCodigo() != null) {
@@ -450,7 +495,7 @@ public class EntidadDaoImpl implements EntidadDao {
 			} else {
 				jPlantillaEntidad.setFichero(JFichero.fromModel(plantilla.getFichero()));
 			}
-			jPlantillaEntidad.getFichero().setPublico(false); //En plantilla de email fin es privado, NO publico
+			jPlantillaEntidad.getFichero().setPublico(false); // En plantilla de email fin es privado, NO publico
 			entityManager.merge(jPlantillaEntidad);
 		} else {
 			jPlantillaEntidad = JPlantillaEntidad.fromModel(plantilla);

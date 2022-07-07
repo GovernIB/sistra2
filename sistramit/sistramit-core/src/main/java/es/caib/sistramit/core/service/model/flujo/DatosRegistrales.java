@@ -32,6 +32,9 @@ public final class DatosRegistrales implements Serializable {
 	/** extracto del asiento */
 	private String extracto;
 
+	/** identificador envío remoto (para destino envío). */
+	private String idEnvioRemoto;
+
 	/**
 	 * Método de acceso a libro.
 	 *
@@ -184,7 +187,7 @@ public final class DatosRegistrales implements Serializable {
 
 	/**
 	 * Método de acceso a codigoEntidad.
-	 * 
+	 *
 	 * @return codigoEntidad
 	 */
 	public String getCodigoEntidad() {
@@ -193,12 +196,31 @@ public final class DatosRegistrales implements Serializable {
 
 	/**
 	 * Método para establecer codigoEntidad.
-	 * 
+	 *
 	 * @param codigoEntidad
 	 *                          codigoEntidad a establecer
 	 */
 	public void setCodigoEntidad(final String codigoEntidad) {
 		this.codigoEntidad = codigoEntidad;
+	}
+
+	/**
+	 * Método de acceso a idEnvioRemoto.
+	 * 
+	 * @return idEnvioRemoto
+	 */
+	public String getIdEnvioRemoto() {
+		return idEnvioRemoto;
+	}
+
+	/**
+	 * Método para establecer idEnvioRemoto.
+	 * 
+	 * @param idEnvioRemoto
+	 *                          idEnvioRemoto a establecer
+	 */
+	public void setIdEnvioRemoto(final String idEnvioRemoto) {
+		this.idEnvioRemoto = idEnvioRemoto;
 	}
 
 }

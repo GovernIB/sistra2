@@ -25,6 +25,7 @@ import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRegistrar;
+import es.caib.sistramit.core.api.model.flujo.types.TypeDestino;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
@@ -424,8 +425,8 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	private DatosRepresentacion calcularDatosRepresentacion(final String pIdpaso,
 			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo,
 			final DatosPresentacion datosPresentacion) {
-		final DatosRepresentacion dr = ControladorPasoRegistrarHelper.getInstance().calcularDatosRepresentacion(
-				pIdpaso, pDefinicionTramite, pVariablesFlujo, datosPresentacion, getScriptFlujo());
+		final DatosRepresentacion dr = ControladorPasoRegistrarHelper.getInstance().calcularDatosRepresentacion(pIdpaso,
+				pDefinicionTramite, pVariablesFlujo, datosPresentacion, getScriptFlujo());
 		return dr;
 	}
 
@@ -469,22 +470,50 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		final RPasoTramitacionRegistrar pasoRegistrar = (RPasoTramitacionRegistrar) UtilsSTG
 				.devuelveDefinicionPaso(pIdPaso, pDefinicionTramite);
 
+		// Establecemos datos registro destino
+		DatosRegistrales datosRegistrales = null;
+		if (pVariablesFlujo.getTipoDestino() == TypeDestino.REGISTRO) {
+			datosRegistrales = obtenerDatosRegistralesRegistro(pDefinicionTramite, pasoRegistrar, pVariablesFlujo);
+		} else {
+			datosRegistrales = obtenerDatosRegistralesEnvio(pDefinicionTramite, pasoRegistrar, pVariablesFlujo);
+		}
+
+		if (pVariablesFlujo.isDebugEnabled()) {
+			debug("Calculo datos registrales: \n" + datosRegistrales.print());
+		}
+
+		return datosRegistrales;
+	}
+
+	/**
+	 * Obtiene datos registrales para registro.
+	 *
+	 * @param pDefinicionTramite
+	 *                               Definición trámite
+	 * @param pasoRegistrar
+	 *                               Definición paso registrar
+	 * @param pVariablesFlujo
+	 *                               Variables flujo
+	 * @return datos registrales
+	 */
+	protected DatosRegistrales obtenerDatosRegistralesRegistro(final DefinicionTramiteSTG pDefinicionTramite,
+			final RPasoTramitacionRegistrar pasoRegistrar, final VariablesFlujo pVariablesFlujo) {
+		final DatosRegistrales dr;
+		final DatosRegistrales datosRegistrales = new DatosRegistrales();
+
 		// Verificamos si se establece datos centralizados a nivel de entidad
-		final RConfiguracionEntidad entidadInfo = getConfig()
-				.obtenerConfiguracionEntidad(pDefinicionTramite.getDefinicionVersion().getIdEntidad());
+		final String idEntidad = pDefinicionTramite.getDefinicionVersion().getIdEntidad();
+		final RConfiguracionEntidad entidadInfo = getConfig().obtenerConfiguracionEntidad(idEntidad);
 
 		// Evaluamos script de parametros dinamicos si existe
-		final ResRegistro resRegistro = ControladorPasoRegistrarHelper.getInstance()
-				.ejecutarScriptParametrosRegistro(pIdPaso, pDefinicionTramite, pVariablesFlujo, getScriptFlujo());
-
-		// Establecemos datos registro destino
-		final DatosRegistrales datosRegistrales = new DatosRegistrales();
+		final ResRegistro resRegistro = ControladorPasoRegistrarHelper.getInstance().ejecutarScriptParametrosRegistro(
+				pasoRegistrar.getIdentificador(), pDefinicionTramite, pVariablesFlujo, getScriptFlujo());
 
 		// - Entidad
 		if (StringUtils.isNotBlank(resRegistro.getCodigoEntidad())) {
 			datosRegistrales.setCodigoEntidad(resRegistro.getCodigoEntidad());
 		} else {
-			datosRegistrales.setCodigoEntidad(pDefinicionTramite.getDefinicionVersion().getIdEntidad());
+			datosRegistrales.setCodigoEntidad(idEntidad);
 		}
 
 		// - Organo destino
@@ -536,12 +565,30 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		} else {
 			datosRegistrales.setExtracto(pVariablesFlujo.getTituloTramite());
 		}
+		dr = datosRegistrales;
+		return dr;
+	}
 
-		if (pVariablesFlujo.isDebugEnabled()) {
-			debug("Calculo datos registrales: \n" + datosRegistrales.print());
-		}
-
-		return datosRegistrales;
+	/**
+	 * Obtiene datos registrales para envio.
+	 *
+	 * @param pDefinicionTramite
+	 *                               Definición trámite
+	 * @param pasoRegistrar
+	 *                               Definición paso registrar
+	 * @param pVariablesFlujo
+	 *                               Variables flujo
+	 * @return datos registrales
+	 */
+	protected DatosRegistrales obtenerDatosRegistralesEnvio(final DefinicionTramiteSTG pDefinicionTramite,
+			final RPasoTramitacionRegistrar pasoRegistrar, final VariablesFlujo pVariablesFlujo) {
+		final DatosRegistrales dr;
+		final DatosRegistrales datosRegistrales = new DatosRegistrales();
+		datosRegistrales.setCodigoEntidad(pDefinicionTramite.getDefinicionVersion().getIdEntidad());
+		datosRegistrales.setExtracto(pVariablesFlujo.getTituloTramite());
+		datosRegistrales.setIdEnvioRemoto(pasoRegistrar.getDestino().getIdentificadorEnvioRemoto());
+		dr = datosRegistrales;
+		return dr;
 	}
 
 	/**

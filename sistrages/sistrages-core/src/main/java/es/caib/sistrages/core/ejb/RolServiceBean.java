@@ -92,4 +92,10 @@ public class RolServiceBean implements RolService {
 		return rolService.listRol(idEntidad, filtro);
 	}
 
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	public List<Rol> getRolesByArea(Long idCodigoArea) {
+		return rolService.getRolesByArea(idCodigoArea);
+	}
+
 }

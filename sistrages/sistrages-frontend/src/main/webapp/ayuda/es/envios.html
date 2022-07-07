@@ -1,0 +1,36 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">ENVIOS REMOTOS</h1>
+<p>
+	En la pantalla de '<i>Env&iacute;os Remotos</i>' se puede gestionar el alta, baja y edici&oacute;n de envios. Los envios tienen un &aacute;mbito de aplicaci&oacute;n de entitat o de &aacute;rea, que se refleja en si aplican a nivel de entidad concreta o a nivel de un &aacute;rea de una entidad.<br><br>
+	Esta pantalla permite la realizaci&oacute;n de b&uacute;quedas filtradas de envios.<br><br>
+	El mantenimiento de envios de &aacute;mbito entidad tendr&aacute;n que ser mantenidos por un usuario con rol '<i>Administrador de entidad</i>' y los de &aacute;rea por un desarrollador con permisos de administraci&oacute;n de &aacute;rea o tambi&eacute;n por un Administrador de entidad.
+</p>
+<h2 class="stgH2">CAMPOS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Identificador:</span> C&oacute;digo un&iacute;voco que identifica el env&iacute;o y mdeiante el cual se puede invocar el env&iacute;o </li>
+		<li><span class="nombreCampo">Descripci&oacute;n:</span> Texto descriptivo de la funcionalidad provista por el env&iacute;o</li>
+		<li><span class="nombreCampo">URL:</span> URL del servicio al cual se quiere realizar el env&iacute;o remoto.</li>
+		<li><span class="nombreCampo">Configuraci&oacute;n Autenticaci&oacute;n:</span> autenticaci&oacute;n que se enviar&aacute; al servicio en caso de estar securizado. </li>
+		<li><span class="nombreCampo">Timeout (segundos):</span> tiempo que esperar&aacute; SISTRA2 en caso de no obtener respuesta del servicio.</li>
+
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Buscar</span>: introduciendo un texto en el campo '<i>Buscar</i>' y pulsando el bot&oacute;n con el icono de la lupa se llevar&aacute; a cabo un filtrado de los envios que contengan el texto introducido. El criterio de b&uacute;squeda aplicar&aacute; a cualquiera de los campos del envio. Posteriormente se visualizar&aacute;n los resultados de la b&uacute;squeda filtr&aacute;ndolos en el listado de envios.</li>
+		<li><span class="boton">Nuevo</span>: pulsando en el bot&oacute;n se abrir&acute; la <a href="AyudaServlet?lang=es&id=envioRemoto">ficha</a> para dar de alta un nuevo envio en el cual tendr&aacute; que rellenar los campos m&iacute;nimos solicitados.</li>
+		<li><span class="boton">Editar</span>: seleccionando un envio del listado y pulsando en el bot&oacute;n se abrir&aacute; la ficha para poder realizar las modificaciones de los campos deseados.</li>
+		<li> <span class="boton">Eliminar</span>: seleccionando un envio del listado y pulsando en el bot&oacute;n podr&aacute; suprimir un envio existente. Previo a la eliminaci&oacute;n del envio se mostrar&aacute; un mensaje de confirmaci&oacute;n de la acci&oacute;n.</li>
+		<li> <span class="boton">Tr&aacute;mites</span>: seleccionando un envio del listado y pulsando en el bot&oacute;n se mostrar&aacute; un di&aacute;logo con todos los tr&aacute;mites que utilizan el envio</li>
+	</ul>
+</p>
+</body>
+</html>

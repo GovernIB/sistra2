@@ -1,0 +1,123 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../layout/mainLayout.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{viewEnviosRemotos.init}" />
+		<f:viewParam name="ambito" value="#{viewEnviosRemotos.ambito}"/>
+		<f:viewParam name="id" value="#{viewEnviosRemotos.id}"/>
+		<f:viewParam name="filtro" value="#{viewEnviosRemotos.filtro}"/>
+		<f:viewParam name="area" value="#{viewEnviosRemotos.area}"/>
+	</f:metadata>
+
+	<ui:define name="content">
+
+		<h:form id="form" style="height: 100%">
+
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+			<p:column rendered="#{viewEnviosRemotos.mostrarBreadcrumb}" style="width:100%;">
+				<div style="display:grid; grid-template-columns: 1fr 1fr; height:25px !important; overflow:hidden;">
+					<div style="display:grid; grid-template-columns: 1fr;">
+						<p:breadCrumb homeDisplay="text" model="#{viewEnviosRemotos.breadCrumb}" style="border-right: none !important; border-top-right-radius: 0px;"/>
+					</div>
+					<div style="display:grid; grid-template-columns: 5fr 1fr; overflow:hidden; padding:5px 5px 7px 5px; background: #e9e9e9; border: 1px solid #dddddd;  border-left: none !important; color: #333333; font-size: 8pt !important; border-top-right-radius: 6px !important;">
+		                 <p:outputLabel for="@next" value="" style="font-size: 8pt !important; font-weight: bold; text-align: right; margin-right: 1em;"/>
+		                <p:selectOneMenu id="option" value="#{viewEnviosRemotos.accion}" style="font-size: 7pt !important; font-weight: bold; height:75%; padding:0px !important; margin-top: 0px !important">
+			                <p:ajax event="change" listener="#{viewEnviosRemotos.cambiarAccion}" update="@form"/>
+		                   	<!--  <f:selectItems value="#{viewDominios.listaAreas}" var="area" itemValue="#{area.codigo}" itemLabel="#{area.identificador}" style="padding-top: 0px !important;"/> -->
+							<f:selectItem itemLabel="#{msg['botones.envioRemoto']}" itemValue="E"/>
+		                    <f:selectItem itemLabel="#{msg['botones.dominiosArea']}" itemValue="D"/>
+		                    <f:selectItem itemLabel="#{msg['botones.datosFuenteArea']}" itemValue="F"/>
+		                    <f:selectItem itemLabel="#{msg['botones.sgeArea']}" itemValue="S"/>
+		                    <f:selectItem itemLabel="#{msg['botones.configuracionAutenticacionArea']}" itemValue="C"/>
+		                </p:selectOneMenu>
+	       		  	</div>
+	          	</div>
+			</p:column>
+
+			<!-- Toolbar -->
+			<p:toolbar id="toolbar">
+				<f:facet name=""></f:facet>
+		        <f:facet name="left">
+		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
+		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
+			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewEnviosRemotos.filtro}"/>
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewEnviosRemotos.filtrar()}" process="panelFiltro" update="growl dataTable" />
+	           		</h:panelGrid>
+		        </f:facet>
+
+		        <f:facet name="right">
+		        	<h:panelGrid id="panelBotones" columns="10" cellspacing="5">
+		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewEnviosRemotos.nuevo()}" process="@this" update="growl"  rendered="#{viewEnviosRemotos.getPermiteEditar()}">
+		        			<p:ajax event="dialogReturn" listener="#{viewEnviosRemotos.returnDialogo}" update="growl dataTable"/>
+		        		</p:commandButton>
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEnviosRemotos.editar()}" process="@this" update="growl" rendered="#{viewEnviosRemotos.getPermiteEditar()}">
+		        			<p:ajax event="dialogReturn" listener="#{viewEnviosRemotos.returnDialogo}" update="growl dataTable"/>
+		        		</p:commandButton>
+		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewEnviosRemotos.consultar()}" process="@this" update="growl" rendered="#{viewEnviosRemotos.getPermiteConsultar()}" />
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewEnviosRemotos.eliminar()}" process="@this" update="growl dataTable"  rendered="#{viewEnviosRemotos.getPermiteEditar()}">
+		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+		        		</p:commandButton>
+		        		<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" actionListener="#{viewEnviosRemotos.tramites()}" process="@this" update="growl dataTable" rendered="#{viewEnviosRemotos.getPermiteConsultar()}"/>
+	        			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewEnviosRemotos.ayuda()}" process="@this" update="growl"/>
+		        	</h:panelGrid>
+		        </f:facet>
+		    </p:toolbar>
+
+			<!-- Data table -->
+			<p:dataTable  id="dataTable" var="td" value="#{viewEnviosRemotos.listaDatos}"
+						 rows="#{viewEnviosRemotos.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
+						 scrollable="true" scrollHeight="90%"
+                         paginator="true" paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,30"
+			        	 selectionMode="single" selection="#{viewEnviosRemotos.datoSeleccionado}" rowKey="#{td.identificador}">
+
+
+				<!-- Necesario para actualizar en controlador la fila seleccionada -->
+				<p:ajax event="rowSelect" global="false" update=":form:panelBotones"/>
+				<p:ajax event="rowDblselect"
+		                  		oncomplete="triggerDblClick();"
+		                        update=":form:dataTable"
+		                        />
+		        <p:ajax event="page" update=":form:dataTable :form:toolbar"/>
+
+
+				<!-- Columnas -->
+			    <p:column headerText="#{msg['dialogTestData.codigo']}">
+			        <h:outputText value="#{td.identificador}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['dialogTestData.descripcion']}">
+			        <h:outputText value="#{td.descripcion}" />
+			    </p:column>
+
+
+			</p:dataTable>
+
+			<h:outputScript >
+		      function triggerDblClick() {
+		       	$('#form\\:btnEditarHidden').click();
+		      }
+		    </h:outputScript>
+
+			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEnviosRemotos.rcDobleClick}" process="@this" update="growl" style="display: none">
+		    	<p:ajax event="dialogReturn" listener="#{viewEnviosRemotos.returnDialogo}" update="growl dataTable"/>
+		    </p:commandButton>
+
+		    <p:confirmDialog global="true" >
+				<p:outputPanel styleClass="confirmar_botonera">
+		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+				</p:outputPanel>
+		    </p:confirmDialog>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

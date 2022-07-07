@@ -1,9 +1,12 @@
 package es.caib.sistrages.rest.adapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.rest.api.interna.RConfiguracionAutenticacion;
+import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.rest.api.interna.RDominio;
 
 /**
@@ -21,10 +24,11 @@ public class DominioAdapter {
 	 *
 	 * @param dominio
 	 */
-	public RDominio convertir(final Dominio dominio) {
+	public RDominio convertir(final Dominio dominio, final String idEntidad) {
 		RDominio rDominio = null;
 		if (dominio != null) {
 			rDominio = new RDominio();
+			rDominio.setIdentificadorEntidad(idEntidad);
 			rDominio.setTipoCache(dominio.getCache().toString());
 			rDominio.setIdentificador(dominio.getIdentificadorCompuesto());
 			rDominio.setSql(dominio.getSql());
@@ -35,13 +39,19 @@ public class DominioAdapter {
 				rDominio.setUri(dominio.getUrl());
 			}
 			if (dominio.getConfiguracionAutenticacion() != null) {
-				final RConfiguracionAutenticacion rConfAutenticacion = new RConfiguracionAutenticacion();
-				rConfAutenticacion.setIdentificador(dominio.getConfiguracionAutenticacion().getIdentificadorCompuesto());
-				rConfAutenticacion.setUsuario(dominio.getConfiguracionAutenticacion().getUsuario());
-				rConfAutenticacion.setPassword(dominio.getConfiguracionAutenticacion().getPassword());
-				rDominio.setConfiguracionAutenticacion(rConfAutenticacion);
+				rDominio.setIdentificadorConfAutenticacion(
+						dominio.getConfiguracionAutenticacion().getIdentificadorCompuesto());
 			}
 			rDominio.setTimeout(dominio.getTimeout());
+
+			if (dominio.getParametros() != null) {
+				final List<String> parametros = new ArrayList<String>();
+				for (final Propiedad p : dominio.getParametros()) {
+					parametros.add(p.getCodigo());
+				}
+				rDominio.setParametros(parametros);
+			}
+
 		}
 		return rDominio;
 	}

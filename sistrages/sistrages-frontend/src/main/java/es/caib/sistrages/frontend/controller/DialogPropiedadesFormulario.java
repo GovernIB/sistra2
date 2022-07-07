@@ -1,5 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
 import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -32,6 +34,10 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ViewScoped
 public class DialogPropiedadesFormulario extends DialogControllerBase {
 
+	/** Tramite service. */
+	@Inject
+	private TramiteService tramiteService;
+
 	/** id */
 	private String id;
 
@@ -41,6 +47,11 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	/** Id. tramite version. **/
 	private String idTramiteVersion;
 
+	/** Indica si hay cambios **/
+	private boolean cambios = false;
+
+	/** Datos iniciales **/
+	private DisenyoFormulario dataI;
 	/**
 	 * Datos elemento.
 	 */
@@ -77,7 +88,10 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 		if (id == null) {
 			data = new DisenyoFormulario();
+			dataI = new DisenyoFormulario();
+
 		} else {
+			dataI = formIntService.getFormularioInternoPaginas(Long.valueOf(id));
 			data = formIntService.getFormularioInternoPaginas(Long.valueOf(id));
 			literal = data.getTextoCabecera() != null
 					? data.getTextoCabecera().getTraduccion(UtilJSF.getSessionBean().getLang(), idiomas)
@@ -103,6 +117,21 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.pagina.sinFinal"));
 				return;
 			}
+
+			// comprobamos si se han modificado propiedades
+			if (dataI.isMostrarCabecera() != data.isMostrarCabecera()
+					|| dataI.isPermitirAccionesPersonalizadas() != data.isPermitirAccionesPersonalizadas()
+					|| dataI.isPermitirGuardarSinFinalizar() != data.isPermitirGuardarSinFinalizar()) {
+				cambios = true;
+			}
+
+			if (cambios) {
+				tramiteService.actualizarFechaTramiteVersion(Long.parseLong(idTramiteVersion),
+						UtilJSF.getSessionBean().getUserName(), "Modificación formulario");
+			}
+
+			// comprobamos si se han modificado paginas
+
 			formIntService.updateFormularioInterno(data);
 
 			break;
@@ -114,7 +143,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data);
+		result.setResult(new Object[] { data, cambios });
 		UtilJSF.closeDialog(result);
 
 		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO);
@@ -179,7 +208,11 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			Literal literalesI = dataI.getTextoCabecera();
 			final Literal literales = (Literal) respuesta.getResult();
+			if (this.isCambioLiterales(literalesI, literales)) {
+				cambios = true;
+			}
 			data.setTextoCabecera(literales);
 			setLiteral(literales.getTraduccion(UtilJSF.getSessionBean().getLang(), idiomas));
 		}
@@ -226,6 +259,19 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 			case ALTA:
 			case EDICION:
 				data.setScriptPlantilla((Script) respuesta.getResult());
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(data.getScriptPlantilla(), dataI.getScriptPlantilla())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			default:
 				break;
@@ -252,6 +298,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		this.data.getPaginas().add(posicion + 1, pagina);
 		this.data.getPaginas().get(posicion + 1).setOrden(this.data.getPaginas().get(posicion + 1).getOrden() + 1);
 		this.data.getPaginas().get(posicion).setOrden(this.data.getPaginas().get(posicion).getOrden() - 1);
+		cambios = true;
 	}
 
 	/**
@@ -274,6 +321,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		this.data.getPaginas().add(posicion - 1, pagina);
 		this.data.getPaginas().get(posicion - 1).setOrden(this.data.getPaginas().get(posicion - 1).getOrden() - 1);
 		this.data.getPaginas().get(posicion).setOrden(this.data.getPaginas().get(posicion).getOrden() + 1);
+		cambios = true;
 	}
 
 	private void intercambioOrden(List<PaginaFormulario> paginas, int posicion, boolean subir) {
@@ -290,6 +338,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		pagina.setIdentificador("P" + pagina.getOrden());
 		this.data.getPaginas().add(pagina);
 		asignaPaginaFinal(data.getPaginas());
+		cambios = true;
 	}
 
 	/** Consultar pagina. **/
@@ -354,10 +403,12 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 			switch (respuesta.getModoAcceso()) {
 			case ALTA:
 			case EDICION:
-				pagina = (PaginaFormulario) respuesta.getResult();
+				Object[] obj = (Object[]) respuesta.getResult();
+				pagina = (PaginaFormulario) obj[0];
 
 				// Muestra dialogo
 				// final int posicion = this.data.getPaginas().indexOf(this.paginaSeleccionada);
+
 				final int posicion = this.paginaSeleccionada.getOrden() - 1;
 				this.data.getPaginas().get(posicion).setPaginaFinal(pagina.isPaginaFinal());
 				this.data.getPaginas().get(posicion).setScriptValidacion(pagina.getScriptValidacion());
@@ -365,7 +416,9 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 				paginaSeleccionada.setPaginaFinal(pagina.isPaginaFinal());
 				paginaSeleccionada.setScriptNavegacion(pagina.getScriptNavegacion());
 				paginaSeleccionada.setScriptValidacion(pagina.getScriptValidacion());
-
+				if ((boolean) obj[1]) {
+					cambios = (boolean) obj[1];
+				}
 				break;
 			case CONSULTA:
 				// No hay que hacer nada
@@ -397,6 +450,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		}
 
 		paginaSeleccionada = null;
+		cambios = true;
 	}
 
 	public void nuevaPlantilla() {
@@ -427,6 +481,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 				}
 
 				this.data.getPlantillas().add(plantilla);
+				cambios = true;
 				break;
 			case EDICION:
 				plantilla = (PlantillaFormulario) respuesta.getResult();
@@ -444,6 +499,19 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 				final int posicion = this.data.getPlantillas().indexOf(this.plantillaSeleccionada);
 				this.data.getPlantillas().remove(posicion);
 				this.data.getPlantillas().add(posicion, plantilla);
+				// comprobamos si se ha modificado
+				if (!plantillaSeleccionada.getIdentificador().equals(plantilla.getIdentificador())) {
+					cambios = true;
+				}
+				if (plantillaSeleccionada.getIdFormateadorFormulario() != plantilla.getIdFormateadorFormulario()) {
+					cambios = true;
+				}
+				if (!plantillaSeleccionada.getDescripcion().equals(plantilla.getDescripcion())) {
+					cambios = true;
+				}
+				if (plantillaSeleccionada.isPorDefecto() != plantilla.isPorDefecto()) {
+					cambios = true;
+				}
 				this.plantillaSeleccionada = plantilla;
 				break;
 			case CONSULTA:
@@ -488,6 +556,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 		this.data.getPlantillas().remove(posicion);
 		plantillaSeleccionada = null;
+		cambios = true;
 	}
 
 	private void asignaPaginaFinal(List<PaginaFormulario> paginas) {
@@ -723,8 +792,33 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		return editar;
 	}
 
+	public boolean isMod() {
+		if (dataI.getPaginas().size() == data.getPaginas().size()) {
+			for (PaginaFormulario pag : data.getPaginas()) {
+				getPaginaSeleccionada();
+			}
+		} else {
+			cambios = true;
+		}
+		return cambios;
+	}
+
 	public void setEditar(boolean editar) {
 		this.editar = editar;
+	}
+
+	/**
+	 * @return the cambios
+	 */
+	public final boolean isCambios() {
+		return cambios;
+	}
+
+	/**
+	 * @param cambios the cambios to set
+	 */
+	public final void setCambios(boolean cambios) {
+		this.cambios = cambios;
 	}
 
 }

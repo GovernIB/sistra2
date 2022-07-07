@@ -1,37 +1,34 @@
 package es.caib.sistramit.core.service;
 
-import java.util.ArrayList;
+import java.net.InetAddress;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.caib.sistra2.commons.plugins.email.api.IEmailPlugin;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
+import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypeInvalidacion;
-import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
 import es.caib.sistramit.core.service.component.integracion.CatalogoProcedimientosComponent;
 import es.caib.sistramit.core.service.component.integracion.DominiosComponent;
+import es.caib.sistramit.core.service.component.integracion.EnvioAvisoComponent;
 import es.caib.sistramit.core.service.component.integracion.SistragesComponent;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
-import es.caib.sistramit.core.service.model.system.Envio;
-import es.caib.sistramit.core.service.repository.dao.EnvioDao;
 import es.caib.sistramit.core.service.repository.dao.InvalidacionDao;
 import es.caib.sistramit.core.service.repository.dao.ProcesoDao;
 
@@ -67,9 +64,9 @@ public class SystemServiceImpl implements SystemService {
 	@Autowired
 	private CatalogoProcedimientosComponent catalogoProcedimientosComponent;
 
-	/** Envio DAO. */
+	/** Envio avisos. */
 	@Autowired
-	private EnvioDao envioDao;
+	private EnvioAvisoComponent envioAvisoComponent;
 
 	/** Fecha revision invalidaciones. */
 	private Date fcRevisionInvalidaciones;
@@ -110,41 +107,58 @@ public class SystemServiceImpl implements SystemService {
 
 	@Override
 	@NegocioInterceptor
-	public void revisarInvalidaciones() {
+	public ListaPropiedades revisarInvalidaciones() {
+		ListaPropiedades props = null;
 		final List<Invalidacion> invalidaciones = invalidacionDAO.obtenerInvalidaciones(fcRevisionInvalidaciones);
 		fcRevisionInvalidaciones = new Date();
-		for (final Invalidacion inv : invalidaciones) {
-			switch (inv.getTipo()) {
-			case CONFIGURACION:
-				sistragesComponent.evictConfiguracionGlobal();
-				break;
-			case ENTIDAD:
-				sistragesComponent.evictConfiguracionEntidad(inv.getIdentificador());
-				sistragesComponent.evictAvisosEntidad(inv.getIdentificador());
-				catalogoProcedimientosComponent.evictCatalogoProcedimientosEntidad(inv.getIdentificador());
-				break;
-			case DOMINIO:
-				sistragesComponent.evictDefinicionDominio(inv.getIdentificador());
-				dominiosComponent.invalidarDominio(inv.getIdentificador());
-				break;
-			case TRAMITE:
-				final String[] codigos = inv.getIdentificador().split("#");
-				final String idTramite = codigos[0];
-				final int version = Integer.parseInt(codigos[1]);
+		if (!invalidaciones.isEmpty()) {
+			props = new ListaPropiedades();
+			try {
+				props.addPropiedad("jboss-instancia", InetAddress.getLocalHost().getHostAddress());
+			} catch (final Exception ex) {
+				props.addPropiedad("jboss-instancia", "unknown");
+			}
+			for (final Invalidacion inv : invalidaciones) {
+				props.addPropiedad("invalidacion", inv.getTipo().toString()
+						+ (StringUtils.isNotBlank(inv.getIdentificador()) ? " - " + inv.getIdentificador() : ""));
+				switch (inv.getTipo()) {
+				case COMPLETA:
+					sistragesComponent.evictConfiguracionGlobal();
+					sistragesComponent.evictConfiguracionEntidad();
+					sistragesComponent.evictDefinicionTramite();
+					sistragesComponent.evictDefinicionDominio();
+					break;
+				case CONFIGURACION:
+					sistragesComponent.evictConfiguracionGlobal();
+					break;
+				case ENTIDAD:
+					sistragesComponent.evictConfiguracionEntidad(inv.getIdentificador());
+					sistragesComponent.evictAvisosEntidad(inv.getIdentificador());
+					catalogoProcedimientosComponent.evictCatalogoProcedimientosEntidad(inv.getIdentificador());
+					break;
+				case DOMINIO:
+					sistragesComponent.evictDefinicionDominio(inv.getIdentificador());
+					dominiosComponent.invalidarDominio(inv.getIdentificador());
+					break;
+				case TRAMITE:
+					final String[] codigos = inv.getIdentificador().split("#");
+					final String idTramite = codigos[0];
+					final int version = Integer.parseInt(codigos[1]);
 
-				// Invalidamos para todos los idiomas posibles
-				final String idiomasSoportados = configuracionComponent
-						.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IDIOMAS_SOPORTADOS);
-				final String[] idiomas = idiomasSoportados.split(",");
-				for (final String idioma : idiomas) {
-					sistragesComponent.evictDefinicionTramite(idTramite, version, idioma);
+					// Invalidamos para todos los idiomas posibles
+					final String idiomasSoportados = configuracionComponent
+							.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IDIOMAS_SOPORTADOS);
+					final String[] idiomas = idiomasSoportados.split(",");
+					for (final String idioma : idiomas) {
+						sistragesComponent.evictDefinicionTramite(idTramite, version, idioma);
+					}
+					break;
+				default:
+					break;
 				}
-				break;
-			default:
-				break;
 			}
 		}
-
+		return props;
 	}
 
 	@Override
@@ -157,7 +171,8 @@ public class SystemServiceImpl implements SystemService {
 		}
 
 		// Validamos identificador obligatorio
-		if (invalidacion.getTipo() != TypeInvalidacion.CONFIGURACION
+		if ((invalidacion.getTipo() != TypeInvalidacion.CONFIGURACION
+				&& invalidacion.getTipo() != TypeInvalidacion.COMPLETA)
 				&& StringUtils.isBlank(invalidacion.getIdentificador())) {
 			throw new ErrorConfiguracionException("Invalidació incorrecta: no existeix identificador");
 		}
@@ -182,44 +197,12 @@ public class SystemServiceImpl implements SystemService {
 
 	@Override
 	public void procesarEnviosInmediatos() {
-		final IEmailPlugin plgEmail = (IEmailPlugin) configuracionComponent.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
-		final List<Envio> envios = envioDao.listaInmediatos();
-		for (final Envio envio : envios) {
-			enviarMensaje(plgEmail, envio);
-		}
+		envioAvisoComponent.procesarEnviosInmediatos();
 	}
 
 	@Override
 	public void procesarEnviosReintentos() {
-		final IEmailPlugin plgEmail = (IEmailPlugin) configuracionComponent.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
-		final List<Envio> envios = envioDao.listaReintentos();
-		for (final Envio envio : envios) {
-			enviarMensaje(plgEmail, envio);
-		}
-	}
-
-	/**
-	 * Método encargado de realizar el envío de emails.
-	 *
-	 * @param plgEmail
-	 * @param envio
-	 */
-	private void enviarMensaje(final IEmailPlugin plgEmail, final Envio envio) {
-		try {
-			final List<String> destino = new ArrayList<>();
-			destino.add(envio.getDestino());
-
-			if (plgEmail.envioEmail(destino, envio.getTitulo(), envio.getMensaje(), null)) {
-				envioDao.guardarCorrecto(envio.getCodigo());
-			} else {
-				envioDao.errorEnvio(envio.getCodigo(), "Error enviando mail");
-			}
-
-		} catch (final Exception e) {
-			final String mensajeError = ExceptionUtils.getMessage(e);
-			log.error("Error al enviar email", e);
-			envioDao.errorEnvio(envio.getCodigo(), mensajeError);
-		}
+		envioAvisoComponent.procesarEnviosReintentos();
 	}
 
 }

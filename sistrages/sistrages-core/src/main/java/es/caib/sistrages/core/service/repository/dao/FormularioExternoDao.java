@@ -139,4 +139,11 @@ public interface FormularioExternoDao {
 	List<ConsultaGeneral> listar(String filtro, TypeIdioma idioma, Long idEntidad, Long idArea, boolean checkGlobal,
 			boolean checkEntidad, boolean checkArea);
 
+	/**
+	 * Devuelve todoslos GFE asociado a areas de una entidad
+	 * @param pIdEntidad
+	 * @return
+	 */
+	List<GestorExternoFormularios> getAllByEntidad(Long pIdEntidad);
+
 }

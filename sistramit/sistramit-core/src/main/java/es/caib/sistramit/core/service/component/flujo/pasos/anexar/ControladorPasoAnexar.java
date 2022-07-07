@@ -32,6 +32,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedadFirmante;
 import es.caib.sistramit.core.api.model.flujo.types.TypePlantillaAnexo;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
 import es.caib.sistramit.core.service.component.flujo.pasos.ControladorPasoReferenciaImpl;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
@@ -401,9 +402,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 				anexo.setTipoENI("TD99");
 				anexo.setAyuda("");
 				anexo.setPresentacion(TypePresentacion.ELECTRONICA);
-				if (StringUtils.isNotBlank(anexd.getExtensiones())) {
-					anexo.setExtensiones(anexd.getExtensiones());
-				}
+				anexo.setExtensiones(calcularExtensionesPermitidas(anexd.getExtensiones()));
 				if (StringUtils.isNotBlank(anexd.getTamanyoMaximo())
 						&& !("0KB".equals(StringUtils.deleteWhitespace(anexd.getTamanyoMaximo().toUpperCase())))) {
 					anexo.setTamMax(anexd.getTamanyoMaximo());
@@ -504,16 +503,17 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 					anexoDetalle.setTamMax(anexoDef.getPresentacionElectronica().getTamanyoMax()
 							+ anexoDef.getPresentacionElectronica().getTamanyoUnidad());
 				}
+				String extensiones = "";
 				if (anexoDef.getPresentacionElectronica().getExtensiones() != null
 						&& !anexoDef.getPresentacionElectronica().getExtensiones().isEmpty()) {
-					anexoDetalle.setExtensiones("");
 					for (final String ext : anexoDef.getPresentacionElectronica().getExtensiones()) {
-						if (StringUtils.isNotBlank(anexoDetalle.getExtensiones())) {
-							anexoDetalle.setExtensiones(anexoDetalle.getExtensiones() + ",");
+						if (StringUtils.isNotBlank(extensiones)) {
+							extensiones += ",";
 						}
-						anexoDetalle.setExtensiones(anexoDetalle.getExtensiones() + ext);
+						extensiones += ext;
 					}
 				}
+				anexoDetalle.setExtensiones(calcularExtensionesPermitidas(extensiones));
 				// Comprobamos si debe firmarse digitalmente
 				if (anexoDef.getPresentacionElectronica().isAnexarFirmado()) {
 					anexoDetalle.setAnexarfirmado(TypeSiNo.SI);
@@ -543,6 +543,26 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	}
 
 	/**
+	 * Calcula extensiones permitidas.
+	 *
+	 * @param extensionesDef
+	 *                           Extensiones establecidas en definición trámite.
+	 * @return extensiones permitidas
+	 */
+	private String calcularExtensionesPermitidas(final String extensionesDef) {
+		String res = extensionesDef;
+		if (StringUtils.isBlank(extensionesDef)) {
+			// Establecemos extensiones por defecto
+			final String extDefecto = this.getConfig()
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ANEXOS_EXTENSIONES_PERMITIDAS);
+			if (StringUtils.isNotBlank(extDefecto)) {
+				res = extDefecto;
+			}
+		}
+		return res;
+	}
+
+	/**
 	 * Calcula los firmantes de un anexo.
 	 *
 	 * @param anexoDetalle
@@ -569,7 +589,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 					pDefinicionTramite);
 
 			final ResFirmantes resf = (ResFirmantes) rs.getResultado();
-			List<Firmante> firmantes = resf.calcularFirmantes();
+			final List<Firmante> firmantes = resf.calcularFirmantes();
 			if (firmantes.isEmpty()) {
 				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_FIRMANTES.name(),
 						pVariablesFlujo.getIdSesionTramitacion(), anexoDef.getIdentificador(),

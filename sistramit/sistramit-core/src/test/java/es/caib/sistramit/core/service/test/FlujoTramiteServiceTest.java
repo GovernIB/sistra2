@@ -67,11 +67,12 @@ import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
 import es.caib.sistramit.core.service.test.mock.SistragesMock;
 import es.caib.sistramit.core.service.util.UtilsFormulario;
 
-// TODO Meter en test la funcionalidad que se pueda: convertir pdf,
-// anexar firmado, script validacion, anexos dinamicos, opcionales,...
+//TODO Meter en test la funcionalidad que se pueda: convertir pdf,
+//anexar firmado, script validacion, anexos dinamicos, opcionales,...
 
 /**
- * Testing capa de negocio de tramitación.
+ * Testing capa de negocio de tramitación (flujo trámite normalizado tipo
+ * trámite con toda la casuística).
  *
  * @author Indra
  */
@@ -188,10 +189,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 				"No se devuelve id sesion tramitacion");
 
 		// Cargar trámite mediante clave tramitacion (fuera sesion)
-		final InfoLoginTramite infoLogin = securityService
-				.obtenerInfoLoginTramiteAnonimoPersistente(idSesionTramitacion);
-		Assert.isTrue(infoLogin.isLoginAnonimoAuto(), "No se ha establecido login anonimo automatico");
-
+		final InfoLoginTramite infoLogin = securityService.obtenerInfoLoginTramite(idSesionTramitacion);
+		Assert.isTrue(infoLogin.getNiveles().contains(TypeAutenticacion.ANONIMO), "No se permite login anónimo");
 		flujoTramitacionService.cargarTramite(idSesionTramitacion, usuarioAutenticadoInfo);
 		dt = flujoTramitacionService.obtenerDetalleTramite(idSesionTramitacion);
 		Assert.isTrue(idSesionTramitacion.equals(dt.getTramite().getIdSesion()),
@@ -206,27 +205,48 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 */
 	@Test
 	public void test6_flujoTramitacionElectronico() throws Exception {
+		test_flujoTramitacionElectronico(true);
+	}
+
+	/**
+	 * Verificación flujo tramitación: trámite tipo servicio.
+	 */
+	@Test
+	public void test7_flujoTramitacionTramiteServicio() throws Exception {
+		test_flujoTramitacionElectronico(false);
+	}
+
+	protected void test_flujoTramitacionElectronico(final boolean registro)
+			throws UnsupportedEncodingException, IOException {
+		final String idTramite;
+
+		if (registro) {
+			idTramite = SistragesMock.ID_TRAMITE;
+		} else {
+			idTramite = SistragesMock.ID_TRAMITE_SERVICIO;
+		}
 
 		final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(TypeAutenticacion.AUTENTICADO);
 
 		// Iniciar trámite
-		final String idSesionTramitacion = flujoTramitacion_iniciarTramite(usuarioAutenticadoInfo);
+		final String idSesionTramitacion = flujoTramitacion_iniciarTramite(usuarioAutenticadoInfo, idTramite);
 
 		// Detalle paso actual: Debe saber
 		flujoTramitacion_debeSaber(idSesionTramitacion);
 
 		// Pasamos a paso siguiente: rellenar
-		flujoTramitacion_rellenar(idSesionTramitacion);
+		flujoTramitacion_rellenar(idSesionTramitacion, registro);
 
-		// Pasamos a paso siguiente: anexar
-		flujoTramitacion_anexar_electronico(idSesionTramitacion);
+		if (registro) {
+			// Pasamos a paso siguiente: anexar
+			flujoTramitacion_anexar_electronico(idSesionTramitacion);
 
-		// Pasamos a paso siguiente: pagar
-		flujoTramitacion_pagar_electronico(idSesionTramitacion, usuarioAutenticadoInfo);
+			// Pasamos a paso siguiente: pagar
+			flujoTramitacion_pagar_electronico(idSesionTramitacion, usuarioAutenticadoInfo);
+		}
 
 		// Pasamos a paso siguiente: registrar
-		flujoTramitacion_registro_electronico(idSesionTramitacion, usuarioAutenticadoInfo);
-
+		flujoTramitacion_registro_electronico(idSesionTramitacion, usuarioAutenticadoInfo, registro);
 	}
 
 	/**
@@ -238,7 +258,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 *                                presentacion
 	 * @throws UnsupportedEncodingException
 	 */
-	private void flujoTramitacion_rellenar(final String idSesionTramitacion) throws UnsupportedEncodingException {
+	private void flujoTramitacion_rellenar(final String idSesionTramitacion, final boolean registro)
+			throws UnsupportedEncodingException {
 		DetallePasos dp;
 
 		// Pasa al paso Rellenar
@@ -250,11 +271,16 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		Assert.isTrue(dp.getActual().getTipo() == TypePaso.RELLENAR, "Paso actual no es rellenar");
 		this.logger.info("Detalle paso: " + dp.print());
 
-		// Rellenar formulario interno
-		flujoTramitacion_rellenar_formInterno(idSesionTramitacion);
+		if (registro) {
+			// Rellenar formulario interno
+			flujoTramitacion_rellenar_formInterno_complejo(idSesionTramitacion);
+			// Rellenar formulario externo
+			flujoTramitacion_rellenar_formExterno(idSesionTramitacion);
+		} else {
+			// Rellenar formulario simple
+			flujoTramitacion_rellenar_formInterno_simple(idSesionTramitacion);
 
-		// Rellenar formulario externo
-		flujoTramitacion_rellenar_formExterno(idSesionTramitacion);
+		}
 
 		// Paso terminado
 		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
@@ -264,7 +290,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
 	}
 
-	protected void flujoTramitacion_rellenar_formInterno(final String idSesionTramitacion)
+	protected void flujoTramitacion_rellenar_formInterno_complejo(final String idSesionTramitacion)
 			throws UnsupportedEncodingException {
 		ParametrosAccionPaso parametros;
 		ResultadoAccionPaso resPaso;
@@ -466,6 +492,68 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		datosFichero = (byte[]) resPaso.getParametroRetorno("datosFichero");
 		Assert.isTrue(nombreFichero.endsWith(".pdf"), "El fichero no es pdf");
 		Assert.isTrue(datosFichero.length > 0, "El fichero no tiene contenido");
+	}
+
+	protected void flujoTramitacion_rellenar_formInterno_simple(final String idSesionTramitacion)
+			throws UnsupportedEncodingException {
+		ParametrosAccionPaso parametros;
+		ResultadoAccionPaso resPaso;
+		byte[] datosFichero;
+		final XmlFormulario xmlForm;
+		PaginaFormulario paginaData;
+		ResultadoGuardarPagina resGuardar;
+		List<ValorCampo> valoresActuales;
+		DetallePasos dp;
+
+		// Verifica que esta en paso rellenar
+		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+		Assert.isTrue(dp.getActual().getTipo() == TypePaso.RELLENAR, "Paso actual no es rellenar");
+		this.logger.info("Detalle paso: " + dp.print());
+		final DetallePasoRellenar dpr = (DetallePasoRellenar) dp.getActual();
+
+		// -- Abrimos formulario
+		parametros = new ParametrosAccionPaso();
+		parametros.addParametroEntrada("idFormulario", dpr.getFormularios().get(0).getId());
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, dp.getActual().getId(),
+				TypeAccionPasoRellenar.ABRIR_FORMULARIO, parametros);
+		final AbrirFormulario af = (AbrirFormulario) resPaso.getParametroRetorno("referencia");
+		Assert.isTrue(af.getTipo() == TypeFormulario.INTERNO, "Tipo formulario no es interno");
+		Assert.isTrue(af.getTicket() != null, "No se ha devuelto ticket formulario");
+
+		// -- Redirigimos formulario
+		final String idSesionFormulario = flujoFormularioInternoService.cargarSesion(af.getTicket());
+		flujoFormularioInternoService.inicializarSesion(idSesionFormulario);
+
+		// -- Cargamos pagina actual
+		paginaData = flujoFormularioInternoService.cargarPaginaActual(idSesionFormulario);
+		valoresActuales = paginaData.getValores();
+
+		// -- Guardar pagina 1
+		// * Metemos valores campos textos
+		((ValorCampoSimple) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_NORMAL"))
+				.setValor("Valor modificado");
+
+		// * Guardar pagina
+		resGuardar = flujoFormularioInternoService.guardarPagina(idSesionFormulario, valoresActuales, null);
+		Assert.isTrue(resGuardar.getValidacion() == null,
+				"El formulario tiene mensaje validación: " + resGuardar.getValidacion());
+		Assert.isTrue(resGuardar.getFinalizado() == TypeSiNo.SI, "No se ha finalizado formulario tras guardar página");
+
+		// -- Guardar formulario
+		parametros = new ParametrosAccionPaso();
+		parametros.addParametroEntrada("idFormulario", dpr.getFormularios().get(0).getId());
+		parametros.addParametroEntrada("ticket", idSesionFormulario);
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, dp.getActual().getId(),
+				TypeAccionPasoRellenar.GUARDAR_FORMULARIO, parametros);
+
+		// -- Mostramos xml tras guardar
+		parametros = new ParametrosAccionPaso();
+		parametros.addParametroEntrada("idFormulario", dpr.getFormularios().get(0).getId());
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, dp.getActual().getId(),
+				TypeAccionPasoRellenar.DESCARGAR_XML, parametros);
+		datosFichero = (byte[]) resPaso.getParametroRetorno("xml");
+		this.logger.info("XML formulario guardado: " + new String(datosFichero, "UTF-8"));
+
 	}
 
 	protected void esIgualListaValores(final List<ValorCampo> valoresActuales, final List<ValorCampo> valoresPagina1) {
@@ -881,12 +969,13 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 * @param usuarioAutenticadoInfo
 	 *                                   id sesión tramitación
 	 */
-	private String flujoTramitacion_iniciarTramite(final UsuarioAutenticadoInfo usuarioAutenticadoInfo) {
+	private String flujoTramitacion_iniciarTramite(final UsuarioAutenticadoInfo usuarioAutenticadoInfo,
+			final String idTramite) {
 		final Map<String, String> parametrosInicio = new HashMap<>();
 
-		final String idSesionTramitacion = flujoTramitacionService.iniciarTramite(usuarioAutenticadoInfo,
-				SistragesMock.ID_TRAMITE, SistragesMock.VERSION_TRAMITE, SistragesMock.IDIOMA,
-				SistragesMock.ID_TRAMITE_CP, false, URL_INICIO, parametrosInicio);
+		final String idSesionTramitacion = flujoTramitacionService.iniciarTramite(usuarioAutenticadoInfo, idTramite,
+				SistragesMock.VERSION_TRAMITE, SistragesMock.IDIOMA, SistragesMock.ID_TRAMITE_CP, false, URL_INICIO,
+				parametrosInicio);
 		Assert.isTrue(usuarioAutenticadoInfo != null, "No se devuelve id sesion tramitacion");
 		this.logger.info("Tramite iniciado: " + usuarioAutenticadoInfo);
 
@@ -983,7 +1072,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 * @throws IOException
 	 */
 	private void flujoTramitacion_registro_electronico(final String idSesionTramitacion,
-			final UsuarioAutenticadoInfo usuarioAutenticadoInfo) throws IOException {
+			final UsuarioAutenticadoInfo usuarioAutenticadoInfo, final boolean registro) throws IOException {
 
 		DetallePasos dp;
 		ResultadoIrAPaso rp;
@@ -1013,53 +1102,61 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 				"El fichero no tiene contenido");
 
 		// -- Descargamos anexo
-		final DocumentoRegistro anexo = ((DetallePasoRegistrar) dp.getActual()).getAnexos().get(0);
-		parametros = new ParametrosAccionPaso();
-		parametros.addParametroEntrada("idDocumento", anexo.getId());
-		parametros.addParametroEntrada("instancia", anexo.getInstancia() + "");
-		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
-				TypeAccionPasoRegistrar.DESCARGAR_DOCUMENTO, parametros);
-		Assert.isTrue(((byte[]) resPaso.getParametroRetorno("datosFichero")).length > 0,
-				"El fichero no tiene contenido");
+		if (registro) {
+			final DocumentoRegistro anexo = ((DetallePasoRegistrar) dp.getActual()).getAnexos().get(0);
+			parametros = new ParametrosAccionPaso();
+			parametros.addParametroEntrada("idDocumento", anexo.getId());
+			parametros.addParametroEntrada("instancia", anexo.getInstancia() + "");
+			resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
+					TypeAccionPasoRegistrar.DESCARGAR_DOCUMENTO, parametros);
+			Assert.isTrue(((byte[]) resPaso.getParametroRetorno("datosFichero")).length > 0,
+					"El fichero no tiene contenido");
+		}
 
 		// -- Descargamos pago
-		final DocumentoRegistro pago = ((DetallePasoRegistrar) dp.getActual()).getPagos().get(0);
-		parametros = new ParametrosAccionPaso();
-		parametros.addParametroEntrada("idDocumento", pago.getId());
-		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
-				TypeAccionPasoRegistrar.DESCARGAR_DOCUMENTO, parametros);
-		Assert.isTrue(((String) resPaso.getParametroRetorno("nombreFichero")).endsWith(".pdf"), "El fichero no es pdf");
-		Assert.isTrue(((byte[]) resPaso.getParametroRetorno("datosFichero")).length > 0,
-				"El fichero no tiene contenido");
+		if (registro) {
+			final DocumentoRegistro pago = ((DetallePasoRegistrar) dp.getActual()).getPagos().get(0);
+			parametros = new ParametrosAccionPaso();
+			parametros.addParametroEntrada("idDocumento", pago.getId());
+			resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
+					TypeAccionPasoRegistrar.DESCARGAR_DOCUMENTO, parametros);
+			Assert.isTrue(((String) resPaso.getParametroRetorno("nombreFichero")).endsWith(".pdf"),
+					"El fichero no es pdf");
+			Assert.isTrue(((byte[]) resPaso.getParametroRetorno("datosFichero")).length > 0,
+					"El fichero no tiene contenido");
+		}
 
 		// -- Firmamos formulario
-		parametros = new ParametrosAccionPaso();
-		parametros.addParametroEntrada("idDocumento", formulario.getId());
-		parametros.addParametroEntrada("instancia", "1");
-		parametros.addParametroEntrada("firmante", usuarioAutenticadoInfo.getNif());
-		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
-				TypeAccionPasoRegistrar.INICIAR_FIRMA_DOCUMENTO, parametros);
-		Assert.isTrue(resPaso.getParametroRetorno("url") != null, "No se ha retornado url inicio firma");
+		if (registro) {
+			parametros = new ParametrosAccionPaso();
+			parametros.addParametroEntrada("idDocumento", formulario.getId());
+			parametros.addParametroEntrada("instancia", "1");
+			parametros.addParametroEntrada("firmante", usuarioAutenticadoInfo.getNif());
+			resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
+					TypeAccionPasoRegistrar.INICIAR_FIRMA_DOCUMENTO, parametros);
+			Assert.isTrue(resPaso.getParametroRetorno("url") != null, "No se ha retornado url inicio firma");
 
-		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
-				TypeAccionPasoRegistrar.VERIFICAR_FIRMA_DOCUMENTO, parametros);
-		final FirmaVerificacion firmaVerificacion = (FirmaVerificacion) resPaso.getParametroRetorno("resultado");
-		Assert.isTrue(
-				firmaVerificacion.getRealizada() == TypeSiNo.SI && firmaVerificacion.getVerificada() == TypeSiNo.SI,
-				"No se ha verificado la firma correctamente: " + firmaVerificacion.getDetalleError());
+			resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
+					TypeAccionPasoRegistrar.VERIFICAR_FIRMA_DOCUMENTO, parametros);
+			final FirmaVerificacion firmaVerificacion = (FirmaVerificacion) resPaso.getParametroRetorno("resultado");
+			Assert.isTrue(
+					firmaVerificacion.getRealizada() == TypeSiNo.SI && firmaVerificacion.getVerificada() == TypeSiNo.SI,
+					"No se ha verificado la firma correctamente: " + firmaVerificacion.getDetalleError());
 
-		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
-		this.logger.info("Detalle paso: " + dp.print());
+			dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+			this.logger.info("Detalle paso: " + dp.print());
 
-		// -- Descargar firma
-		parametros = new ParametrosAccionPaso();
-		parametros.addParametroEntrada("idDocumento", formulario.getId());
-		parametros.addParametroEntrada("instancia", "1");
-		parametros.addParametroEntrada("firmante", usuarioAutenticadoInfo.getNif());
-		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
-				TypeAccionPasoRegistrar.DESCARGAR_FIRMA, parametros);
-		Assert.isTrue((resPaso.getParametroRetorno("nombreFichero") != null
-				&& resPaso.getParametroRetorno("datosFichero") != null), "No se ha recuperado firma");
+			// -- Descargar firma
+			parametros = new ParametrosAccionPaso();
+			parametros.addParametroEntrada("idDocumento", formulario.getId());
+			parametros.addParametroEntrada("instancia", "1");
+			parametros.addParametroEntrada("firmante", usuarioAutenticadoInfo.getNif());
+			resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
+					TypeAccionPasoRegistrar.DESCARGAR_FIRMA, parametros);
+			Assert.isTrue((resPaso.getParametroRetorno("nombreFichero") != null
+					&& resPaso.getParametroRetorno("datosFichero") != null), "No se ha recuperado firma");
+
+		}
 
 		// -- Registrar
 		parametros = new ParametrosAccionPaso();
@@ -1088,22 +1185,27 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 				&& resPaso.getParametroRetorno("datosFichero") != null), "No se ha recuperado documento");
 
 		// -- Paso Guardar: Descargar firma formulario
-		parametros = new ParametrosAccionPaso();
-		parametros.addParametroEntrada("idDocumento", formulario.getId());
-		parametros.addParametroEntrada("instancia", "1");
-		parametros.addParametroEntrada("firmante", usuarioAutenticadoInfo.getNif());
-		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso, TypeAccionPasoGuardar.DESCARGAR_FIRMA,
-				parametros);
-		Assert.isTrue((resPaso.getParametroRetorno("nombreFichero") != null
-				&& resPaso.getParametroRetorno("datosFichero") != null), "No se ha recuperado firma");
+		if (registro) {
+			parametros = new ParametrosAccionPaso();
+			parametros.addParametroEntrada("idDocumento", formulario.getId());
+			parametros.addParametroEntrada("instancia", "1");
+			parametros.addParametroEntrada("firmante", usuarioAutenticadoInfo.getNif());
+			resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
+					TypeAccionPasoGuardar.DESCARGAR_FIRMA, parametros);
+			Assert.isTrue((resPaso.getParametroRetorno("nombreFichero") != null
+					&& resPaso.getParametroRetorno("datosFichero") != null), "No se ha recuperado firma");
+		}
 
 		// -- Paso Guardar: descargar justificante
-		parametros = new ParametrosAccionPaso();
-		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
-				TypeAccionPasoGuardar.DESCARGAR_JUSTIFICANTE, parametros);
-		Assert.isTrue(resPaso.getParametroRetorno("nombreFichero") != null,
-				"Justificante registro no tiene nombre fichero");
-		Assert.isTrue(resPaso.getParametroRetorno("datosFichero") != null, "Justificante registro no tiene contenido");
+		if (registro) {
+			parametros = new ParametrosAccionPaso();
+			resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
+					TypeAccionPasoGuardar.DESCARGAR_JUSTIFICANTE, parametros);
+			Assert.isTrue(resPaso.getParametroRetorno("nombreFichero") != null,
+					"Justificante registro no tiene nombre fichero");
+			Assert.isTrue(resPaso.getParametroRetorno("datosFichero") != null,
+					"Justificante registro no tiene contenido");
+		}
 
 		// -- Paso Guardar: valorar trámite
 		parametros = new ParametrosAccionPaso();

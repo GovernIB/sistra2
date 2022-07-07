@@ -24,7 +24,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
-import es.caib.sistra2.commons.utils.ValidacionesCadena;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.LoginException;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
@@ -50,6 +49,15 @@ import es.caib.sistramit.frontend.model.RespuestaJSON;
 @Controller
 public final class LoginController {
 
+	/** View Login Ticket. */
+	private static final String VIEW_LOGIN = "login";
+
+	/** View Login Ticket. */
+	private static final String VIEW_LOGINTICKET = "loginTicket";
+
+	/** View Login: info login. */
+	private static final String VIEW_LOGINMODEL = "login";
+
 	/** Parámetro trámite catálogo. */
 	private static final String PARAM_TRAMITECP = "idTramiteCatalogo";
 
@@ -62,11 +70,11 @@ public final class LoginController {
 	/** Parámetro trámite. */
 	private static final String PARAM_TRAMITE = "tramite";
 
-	/** Parámetro login. */
-	private static final String PARAM_LOGIN = "login";
-
 	/** Parámetro idioma. */
 	private static final String PARAM_IDIOMA = "idioma";
+
+	/** Parámetro para forzar tipo autenticación. */
+	private static final String PARAM_LOGIN = "login";
 
 	/** Log. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
@@ -127,14 +135,6 @@ public final class LoginController {
 		// Obtiene punto entrada
 		final String puntoEntrada = getPuntoEntrada(url);
 
-		// Guardamos url original para poder redirigir clave
-		if (ConstantesSeguridad.PUNTOENTRADA_INICIAR_TRAMITE.equals(puntoEntrada)) {
-			sesionHttp.setUrlInicio(url);
-			sesionHttp.setIdTramite(getParamValue(savedRequest, PARAM_TRAMITE));
-			sesionHttp
-					.setVersion(ValidacionesCadena.getInstance().parseInt(getParamValue(savedRequest, PARAM_VERSION)));
-		}
-
 		// Establecemos idioma que viene en la saved request y si no viene ninguno el
 		// idioma por defecto
 		final String idiomaSavedRequest = getParamValue(savedRequest, PARAM_IDIOMA);
@@ -148,28 +148,29 @@ public final class LoginController {
 		ModelAndView login = null;
 		if (ConstantesSeguridad.PUNTOENTRADA_INICIAR_TRAMITE.equals(puntoEntrada)) {
 			// Inicio tramite: mostrar pagina login
-			login = autenticarFormLogin(savedRequest);
+			login = autenticarFormLogin(savedRequest, true);
 		} else if (ConstantesSeguridad.PUNTOENTRADA_CARGAR_TRAMITE.equals(puntoEntrada)) {
-			// Si existe ticket carpeta autenticamos via ticket, sino
-			// autenticamos de forma anonima automaticamente
-			if (existeTicket(savedRequest, ConstantesSeguridad.TICKET_PARAM)) {
+			// Si existe ticket carpeta autenticamos via ticket
+			if (existeParametro(savedRequest, ConstantesSeguridad.PARAM_TICKETAUTH)) {
 				login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_CARPETA,
-						ConstantesSeguridad.TICKET_PARAM);
+						ConstantesSeguridad.PARAM_TICKETAUTH);
 			} else {
-				login = autenticarFormLoginPersistenteAnonimo(savedRequest);
+				// Si no existe ticket carpeta, autenticamos form login (anonimo o mediante
+				// clave)
+				login = autenticarFormLogin(savedRequest, false);
 			}
 		} else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN.equals(puntoEntrada)) {
 			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_CLAVE,
-					ConstantesSeguridad.TICKET_PARAM);
+					ConstantesSeguridad.PARAM_TICKETAUTH);
 		} else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_FORMULARIO_EXTERNO.equals(puntoEntrada)) {
 			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_GF,
-					ConstantesSeguridad.TICKET_PARAM);
+					ConstantesSeguridad.PARAM_TICKETAUTH);
 		} else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_PAGO_EXTERNO.equals(puntoEntrada)) {
 			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_PAGO,
-					ConstantesSeguridad.TICKET_PARAM);
+					ConstantesSeguridad.PARAM_TICKETAUTH);
 		} else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_CARPETA.equals(puntoEntrada)) {
 			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_CARPETA,
-					ConstantesSeguridad.TICKET_PARAM);
+					ConstantesSeguridad.PARAM_TICKETAUTH);
 		} else {
 			throw new ErrorFrontException("Punt de entrada a la aplicació no vàlido: " + url);
 		}
@@ -291,6 +292,20 @@ public final class LoginController {
 	}
 
 	/**
+	 * Si no se puede cargar trámite por restricción QAA se procede de nuevo con la
+	 * recarga para forzar autenticación.
+	 *
+	 * @param idSesionTramitacion
+	 *                                Id sesión tramitación
+	 * @return Redirección a cargar trámite
+	 */
+	@RequestMapping("/reautenticar.html")
+	public ModelAndView reautenticar(@RequestParam("idSesionTramitacion") final String idSesionTramitacion) {
+		return new ModelAndView("redirect:" + ConstantesSeguridad.PUNTOENTRADA_CARGAR_TRAMITE + "?idSesionTramitacion="
+				+ idSesionTramitacion + "&login=" + TypeAutenticacion.AUTENTICADO);
+	}
+
+	/**
 	 * Sanitiza idioma. En caso de no estar soportado generará una LoginException.
 	 *
 	 * @param pIdiomaSavedRequest
@@ -337,68 +352,65 @@ public final class LoginController {
 		li.setTicketName(pTicketUser);
 		li.setTicketValue(ticket);
 		li.setIdioma(sesionHttp.getIdioma());
-		return new ModelAndView("loginTicket", PARAM_LOGIN, li);
+		return new ModelAndView(VIEW_LOGINTICKET, VIEW_LOGINMODEL, li);
 	}
 
 	/**
 	 * Autentica via formulario de login.
 	 *
 	 * @param savedRequest
-	 *                         Request
+	 *                          Request
+	 * @param inicioTramite
+	 *                          Indica si es inicio trámite.
 	 *
 	 * @return Vista para autenticar con formulario de login
 	 */
-	private ModelAndView autenticarFormLogin(final SavedRequest savedRequest) {
+	private ModelAndView autenticarFormLogin(final SavedRequest savedRequest, final boolean inicioTramite) {
 
-		// Obtenemos parametros inicio tramite
-		final String paramCodigoTramite = getParamValue(savedRequest, PARAM_TRAMITE);
-		final String paramVersionTramite = getParamValue(savedRequest, PARAM_VERSION);
-		final String paramLogin = getParamValue(savedRequest, PARAM_LOGIN);
-		final String paramIdTramiteCP = getParamValue(savedRequest, PARAM_TRAMITECP);
-		final String servicioCP = getParamValue(savedRequest, PARAM_SERVICIOCP, "false");
-
-		// Obtenemos info login tramite
-		final InfoLoginTramite infoLoginTramite = securityService.obtenerInfoLoginTramite(paramCodigoTramite,
-				Integer.parseInt(paramVersionTramite), paramIdTramiteCP, Boolean.parseBoolean(servicioCP.toLowerCase()),
-				sesionHttp.getIdioma(), savedRequest.getRedirectUrl());
-
-		// Comprobamos si hay que filtrar el metodo de autenticacion
-		TypeAutenticacion filtroAutenticacion = null;
-		if (paramLogin != null) {
-			filtroAutenticacion = TypeAutenticacion.fromString(paramLogin);
-			// Si no esta permitido el filtro, no lo aplicacmos
-			if (!infoLoginTramite.getNiveles().contains(filtroAutenticacion)) {
-				filtroAutenticacion = null;
-			}
+		// Obtiene info login tramite
+		InfoLoginTramite infoLoginTramite = null;
+		if (inicioTramite) {
+			// - Inicio trámite: a través parámetros inicio
+			final String paramCodigoTramite = getParamValue(savedRequest, PARAM_TRAMITE);
+			final String paramVersionTramite = getParamValue(savedRequest, PARAM_VERSION);
+			final String paramIdTramiteCP = getParamValue(savedRequest, PARAM_TRAMITECP);
+			final String servicioCP = getParamValue(savedRequest, PARAM_SERVICIOCP, "false");
+			infoLoginTramite = securityService.obtenerInfoLoginTramite(paramCodigoTramite,
+					Integer.parseInt(paramVersionTramite), paramIdTramiteCP,
+					Boolean.parseBoolean(servicioCP.toLowerCase()), sesionHttp.getIdioma(),
+					savedRequest.getRedirectUrl());
+		} else {
+			// Carga trámite: a través info persistencia
+			final String paramIdSesionTramitacion = getParamValue(savedRequest, ConstantesSeguridad.PARAM_IDSESION);
+			infoLoginTramite = securityService.obtenerInfoLoginTramite(paramIdSesionTramitacion);
 		}
+
+		// Guardamos url original para poder redirigir clave
+		sesionHttp.setUrlInicio(savedRequest.getRedirectUrl());
+		sesionHttp.setIdTramite(infoLoginTramite.getIdTramite());
+		sesionHttp.setVersion(infoLoginTramite.getVersion());
+
+		// Filtro metodo de autenticacion:
+		final String paramLogin = getParamValue(savedRequest, PARAM_LOGIN);
+		TypeAutenticacion filtroAutenticacion = TypeAutenticacion.fromString(paramLogin);
+		// Si no esta permitido el filtro, no lo aplicacmos
+		if (filtroAutenticacion != null && !infoLoginTramite.getNiveles().contains(filtroAutenticacion)) {
+			filtroAutenticacion = null;
+		}
+		// Si se carga trámite y no se especifica filtro, marcamos para login anónimo
+		// automático
+		if (!inicioTramite && filtroAutenticacion != TypeAutenticacion.AUTENTICADO
+				&& infoLoginTramite.getNiveles().contains(TypeAutenticacion.ANONIMO)) {
+			infoLoginTramite.setLoginAnonimoAuto(true);
+		}
+		// Aplicamos filtro autenticación
 		if (filtroAutenticacion != null) {
 			infoLoginTramite.getNiveles().clear();
 			infoLoginTramite.getNiveles().add(filtroAutenticacion);
 		}
 
 		// Devolvemos formulario de login
-		return new ModelAndView(PARAM_LOGIN, PARAM_LOGIN, infoLoginTramite);
-	}
-
-	/**
-	 * Autentica via formulario de login persistente anónimo.
-	 *
-	 * @param savedRequest
-	 *                         Request
-	 *
-	 * @return Vista para autenticar con formulario de login
-	 */
-	private ModelAndView autenticarFormLoginPersistenteAnonimo(final SavedRequest savedRequest) {
-
-		// Obtenemos parametros inicio tramite
-		final String idSesionTramitacion = getParamValue(savedRequest, ConstantesSeguridad.ANONIMO_PARAM_IDSESION);
-
-		// Obtenemos info login tramite
-		final InfoLoginTramite infoLoginTramite = securityService
-				.obtenerInfoLoginTramiteAnonimoPersistente(idSesionTramitacion);
-
-		// Devolvemos formulario de login
-		return new ModelAndView(PARAM_LOGIN, PARAM_LOGIN, infoLoginTramite);
+		return new ModelAndView(VIEW_LOGIN, VIEW_LOGINMODEL, infoLoginTramite);
 	}
 
 	/**
@@ -459,17 +471,17 @@ public final class LoginController {
 	}
 
 	/**
-	 * Comprueba si existe ticket en request.
+	 * Comprueba si existe parametro en request.
 	 *
 	 * @param pSavedRequest
 	 *                          Request
-	 * @param pTicketName
+	 * @param pParamName
 	 *                          Ticket
 	 * @return boolean
 	 */
-	private boolean existeTicket(final SavedRequest pSavedRequest, final String pTicketName) {
+	private boolean existeParametro(final SavedRequest pSavedRequest, final String pParamName) {
 		boolean res = true;
-		final String[] tickets = pSavedRequest.getParameterMap().get(pTicketName);
+		final String[] tickets = pSavedRequest.getParameterMap().get(pParamName);
 		if (tickets == null || tickets.length != ConstantesNumero.N1) {
 			res = false;
 		}

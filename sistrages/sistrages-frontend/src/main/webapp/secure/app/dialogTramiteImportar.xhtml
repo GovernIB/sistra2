@@ -164,7 +164,7 @@
 							</h:column>
 
 							<h:column>
-								<p:commandButton value="..." actionListener="#{dialogTramiteImportar.checkTramiteRegistro()}" style="margin-left:5px" rendered="#{dialogTramiteImportar.isNingunError()}" process="@this">
+								<p:commandButton value="..." actionListener="#{dialogTramiteImportar.checkTramiteRegistro()}" style="margin-left:5px" rendered="#{dialogTramiteImportar.isNingunError() and dialogTramiteImportar.filaTramiteRegistro.isTipoTramite()}" process="@this">
 									<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoRegistro}" update="tramiteRegistro @form " />
 								</p:commandButton>
 							</h:column>

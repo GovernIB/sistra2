@@ -100,7 +100,7 @@ public class DialogDominioPing extends DialogControllerBase {
 	 */
 	public void ping() {
 
-		//int test = 32/0;
+		// int test = 32/0;
 		try {
 			if (dominio.getTipo() == TypeDominio.FUENTE_DATOS) {
 				valoresDominio = pingFuenteDatos(getValorParametrosDominio());
@@ -116,11 +116,19 @@ public class DialogDominioPing extends DialogControllerBase {
 
 			if (valoresDominio != null) {
 				if (valoresDominio.isError()) {
-					UtilJSF.loggearErrorFront("Error haciendo el ping del dominio:" + this.id +" \nErrorCodigo:"+valoresDominio.getCodigoError()+" \nDescripcionError:"+valoresDominio.getDescripcionError(), null);
-					addMessageContext(TypeNivelGravedad.ERROR,
-							valoresDominio.getCodigoError() + " : " + valoresDominio.getDescripcionError());
-					mostrarTablaDatos = true;
-					mostrarTablaFicheros = false;
+					/*
+					 * UtilJSF.loggearErrorFront("Error haciendo el ping del dominio:" + this.id
+					 * +" \nErrorCodigo:"+valoresDominio.getCodigoError()+" \nDescripcionError:"
+					 * +valoresDominio.getDescripcionError(), null);
+					 * addMessageContext(TypeNivelGravedad.ERROR, valoresDominio.getCodigoError() +
+					 * " : " + valoresDominio.getDescripcionError()); mostrarTablaDatos = true;
+					 * mostrarTablaFicheros = false;
+					 */
+					setMensajeError(valoresDominio.getDescripcionError());
+					setMostrarError(true);
+					setMostrarTablaDatos(false);
+					setMostrarTablaFicheros(false);
+					addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogDominioPing.error.conexion"));
 				} else {
 					if (valoresDominio.getFicheros().isEmpty()) {
 						mostrarTablaDatos = true;
@@ -139,9 +147,7 @@ public class DialogDominioPing extends DialogControllerBase {
 			setMostrarError(true);
 			setMostrarTablaDatos(false);
 			setMostrarTablaFicheros(false);
-			addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogDominioPing.error.conexion")
-					);
+			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogDominioPing.error.conexion"));
 		}
 	}
 
@@ -230,8 +236,7 @@ public class DialogDominioPing extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *               the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -245,8 +250,7 @@ public class DialogDominioPing extends DialogControllerBase {
 	}
 
 	/**
-	 * @param dominio
-	 *                    the dominio to set
+	 * @param dominio the dominio to set
 	 */
 	public void setDominio(final Dominio dominio) {
 		this.dominio = dominio;
@@ -260,8 +264,7 @@ public class DialogDominioPing extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarTablaParametro
-	 *                                  the mostrarTablaParametro to set
+	 * @param mostrarTablaParametro the mostrarTablaParametro to set
 	 */
 	public void setMostrarTablaParametro(final boolean mostrarTablaParametro) {
 		this.mostrarTablaParametro = mostrarTablaParametro;
@@ -275,8 +278,7 @@ public class DialogDominioPing extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarTablaDatos
-	 *                              the mostrarTablaDatos to set
+	 * @param mostrarTablaDatos the mostrarTablaDatos to set
 	 */
 	public void setMostrarTablaDatos(final boolean mostrarTablaDatos) {
 		this.mostrarTablaDatos = mostrarTablaDatos;
@@ -290,8 +292,7 @@ public class DialogDominioPing extends DialogControllerBase {
 	}
 
 	/**
-	 * @param valoresDominio
-	 *                           the valoresDominio to set
+	 * @param valoresDominio the valoresDominio to set
 	 */
 	public void setValoresDominio(final ValoresDominio valoresDominio) {
 		this.valoresDominio = valoresDominio;
@@ -305,8 +306,7 @@ public class DialogDominioPing extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarTablaFicheros
-	 *                                 the mostrarTablaFicheros to set
+	 * @param mostrarTablaFicheros the mostrarTablaFicheros to set
 	 */
 	public void setMostrarTablaFicheros(final boolean mostrarTablaFicheros) {
 		this.mostrarTablaFicheros = mostrarTablaFicheros;

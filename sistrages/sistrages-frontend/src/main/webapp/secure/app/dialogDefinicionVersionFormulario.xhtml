@@ -47,6 +47,7 @@
             <p:inputText id="identificador" required="true" styleClass="w25" maxlength="20" value="#{dialogDefinicionVersionFormulario.data.identificador}" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
 				<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 				<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
+				<p:ajax event="change" listener="#{dialogDefinicionVersionFormulario.setCambios}" process="@this" update="@this"/>
 	        </p:inputText>
 
             <p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionFormulario.descripcion']}" />
@@ -63,6 +64,7 @@
                  <p:column styleClass="noPadding-left">
                  <p:selectOneRadio id="obligatoriedad" value="#{dialogDefinicionVersionFormulario.data.obligatoriedad}">
                    <f:selectItems value="#{TypeFormularioObligatoriedad.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioObligatoriedad.' += tipo]}" />
+                   <p:ajax event="change" listener="#{dialogDefinicionVersionFormulario.setCambios}" process="@this" update="@this"/>
 	              </p:selectOneRadio>
 	             </p:column>
 	             <p:column>
@@ -79,7 +81,9 @@
            <p:panelGrid styleClass="noBorders">
                <p:row>
                  <p:column styleClass="noPadding-left">
-            <p:selectBooleanCheckbox id="firmardigitalmente" value="#{dialogDefinicionVersionFormulario.data.debeFirmarse}" itemLabel="#{msg['dialogDefinicionVersionFormulario.firmardigitalmente']}"/>
+            <p:selectBooleanCheckbox id="firmardigitalmente" value="#{dialogDefinicionVersionFormulario.data.debeFirmarse}" itemLabel="#{msg['dialogDefinicionVersionFormulario.firmardigitalmente']}">
+            	<p:ajax event="change" listener="#{dialogDefinicionVersionFormulario.setCambios}" process="@this" update="@this"/>
+            </p:selectBooleanCheckbox>
              </p:column>
              <p:column>
                <p:commandButton id="scriptFirma" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), dialogDefinicionVersionFormulario.data.scriptFirma)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
@@ -130,6 +134,7 @@
 			<p:outputLabel for="gestorFormularioExterno" value="#{msg['dialogDefinicionVersionFormulario.gestorFormularioExterno']}*" rendered="#{dialogDefinicionVersionFormulario.data.tipoFormulario == TypeFormularioGestor.EXTERNO}" />
 			<p:selectOneMenu id="gestorFormularioExterno" value="#{dialogDefinicionVersionFormulario.data.formularioGestorExterno}" required="true"  converter="#{gestorConverter}"  rendered="#{dialogDefinicionVersionFormulario.data.tipoFormulario == TypeFormularioGestor.EXTERNO}">
     					 <f:selectItems value="#{dialogDefinicionVersionFormulario.gestores}" var="gestor" itemLabel="#{gestor.identificador}" itemValue="#{gestor}" />
+    					 <p:ajax event="change" listener="#{dialogDefinicionVersionFormulario.setCambios}" process="@this" update="@this"/>
 			</p:selectOneMenu >
 
             <p:outputLabel for="identificadorExt" value="#{msg['dialogDefinicionVersionFormulario.gestorFormularioExternoIDFormulario']}" rendered="#{dialogDefinicionVersionFormulario.data.tipoFormulario == TypeFormularioGestor.EXTERNO}"/>

@@ -69,12 +69,10 @@ import es.caib.sistrages.rest.api.interna.RComponenteCheckbox;
 import es.caib.sistrages.rest.api.interna.RComponenteSeccion;
 import es.caib.sistrages.rest.api.interna.RComponenteSelector;
 import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
-import es.caib.sistrages.rest.api.interna.RConfiguracionAutenticacion;
-import es.caib.sistrages.rest.api.interna.RDestinoRegistro;
+import es.caib.sistrages.rest.api.interna.RDestino;
 import es.caib.sistrages.rest.api.interna.RFormularioExterno;
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
 import es.caib.sistrages.rest.api.interna.RFormularioTramite;
-import es.caib.sistrages.rest.api.interna.RGestorFormularioExterno;
 import es.caib.sistrages.rest.api.interna.RLineaComponentes;
 import es.caib.sistrages.rest.api.interna.RListaDominio;
 import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
@@ -127,7 +125,7 @@ public class VersionTramiteAdapter {
 	 * @return RVersionTramite
 	 */
 	public RVersionTramite convertir(final String idtramite, final TramiteVersion tv, final String idioma,
-			final String idiomaDefecto, final List<GestorExternoFormularios> gestoresExternosFormularios) {
+			final String idiomaDefecto) {
 
 		RVersionTramite rVersionTramite = null;
 
@@ -176,37 +174,18 @@ public class VersionTramiteAdapter {
 			rVersionTramite.setIdentificador(idtramite);
 			rVersionTramite.setVersion(tv.getNumeroVersion());
 			rVersionTramite.setRelease(tv.getRelease());
-
+			rVersionTramite.setTipoTramite(tv.getTipoTramite());
 			rVersionTramite.setPasos(pasos);
 			rVersionTramite.setDominios(restApiService.getIdentificadoresDominiosByTV(tv.getCodigo()));
 			rVersionTramite.setIdioma(idiRes);
 			rVersionTramite.setTipoFlujo(tv.getTipoFlujo().toString());
 			rVersionTramite.setControlAcceso(generaControlAcceso(tv));
-			rVersionTramite.setIdEntidad(generaidEntidadfromTramite(tv.getIdTramite()));
+			final String idEntidad = generaidEntidadfromTramite(tv.getIdTramite());
+			rVersionTramite.setIdEntidad(idEntidad);
 			rVersionTramite.setIdArea(generaidAreafromTramite(tv.getIdTramite()));
 			rVersionTramite.setPropiedades(generaPropiedades(tv, idioma));
-
-			if (gestoresExternosFormularios != null) {
-				final List<RGestorFormularioExterno> rgfes = new ArrayList<>();
-				for (final GestorExternoFormularios gfe : gestoresExternosFormularios) {
-					final RGestorFormularioExterno rgfe = new RGestorFormularioExterno();
-					rgfe.setIdentificador(gfe.getIdentificadorCompuesto());
-					rgfe.setUrl(gfe.getUrl());
-					if (gfe.getConfiguracionAutenticacion() != null) {
-						final RConfiguracionAutenticacion rConfiguracionAutenticacion = new RConfiguracionAutenticacion();
-						rConfiguracionAutenticacion
-								.setIdentificador(gfe.getConfiguracionAutenticacion().getIdentificadorCompuesto());
-						rConfiguracionAutenticacion.setUsuario(gfe.getConfiguracionAutenticacion().getUsuario());
-						rConfiguracionAutenticacion.setPassword(gfe.getConfiguracionAutenticacion().getPassword());
-						rgfe.setConfiguracionAutenticacion(rConfiguracionAutenticacion);
-					}
-					rgfes.add(rgfe);
-
-				}
-				rVersionTramite.setGestoresFormulariosExternos(rgfes);
-			}
-
 		}
+
 		return rVersionTramite;
 
 	}
@@ -347,10 +326,17 @@ public class VersionTramiteAdapter {
 		resPaso.setTipo(paso.getTipo().toString());
 		resPaso.setPasoFinal(paso.isPasoFinal());
 		resPaso.setAdmiteRepresentacion(paso.isAdmiteRepresentacion());
-		final RDestinoRegistro destinoRegistro = new RDestinoRegistro();
+		final RDestino destinoRegistro = new RDestino();
+
+		// REGISTRO [OFICINA / LIBRO] - ENVIO [ID ENVIO REMOTO]
 		destinoRegistro.setOficinaRegistro(paso.getCodigoOficinaRegistro());
 		destinoRegistro.setLibroRegistro(paso.getCodigoLibroRegistro());
+		if (paso.getEnvioRemoto() != null) {
+			destinoRegistro.setIdentificadorEnvioRemoto(paso.getEnvioRemoto().getIdentificador());
+		}
+
 		resPaso.setDestino(destinoRegistro);
+		resPaso.setTipoDestino(paso.getDestino());
 		resPaso.setInstruccionesPresentacionHtml(
 				AdapterUtils.generarLiteralIdioma(paso.getInstruccionesPresentacion(), idioma));
 		resPaso.setInstruccionesTramitacionHtml(
@@ -693,8 +679,7 @@ public class VersionTramiteAdapter {
 	 * Genera componente campo oculto.
 	 *
 	 * @param cco
-	 * @param idioma
-	 *                   idioma
+	 * @param idioma idioma
 	 * @return RComponenteCampoOculto
 	 */
 	private RComponenteCampoOculto generaComponenteCampoOculto(final ComponenteFormularioCampoOculto cco,
@@ -848,12 +833,9 @@ public class VersionTramiteAdapter {
 	/**
 	 * Genera props comunes campo.
 	 *
-	 * @param ct
-	 *                   ComponenteFormularioCampo
-	 * @param resTB
-	 *                   Def componente
-	 * @param idioma
-	 *                   idioma
+	 * @param ct     ComponenteFormularioCampo
+	 * @param resTB  Def componente
+	 * @param idioma idioma
 	 */
 	private void generaPropsComunesComponente(final ComponenteFormulario ct, final RComponente resTB,
 			final String idioma) {
@@ -885,8 +867,7 @@ public class VersionTramiteAdapter {
 	/**
 	 * Genera texto teléfono.
 	 *
-	 * @param ct
-	 *               campo texto
+	 * @param ct campo texto
 	 * @return Propiedades teléfono
 	 */
 	private RPropiedadesTextoTelefono generaTextoTelefono(final ComponenteFormularioCampoTexto ct) {

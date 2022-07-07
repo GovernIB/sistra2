@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
@@ -38,6 +39,7 @@ import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
 import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
+import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
@@ -47,6 +49,7 @@ import es.caib.sistrages.frontend.model.types.TypeImportarTipo;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilCuadernoCarga;
+import es.caib.sistrages.frontend.util.UtilImportacion;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -63,6 +66,10 @@ public class DialogDominioImportar extends DialogControllerBase {
 	/** Servicio. */
 	@Inject
 	private ConfiguracionGlobalService configuracionGlobalService;
+
+	/** Servicio. */
+	@Inject
+	private ConfiguracionAutenticacionService configuracionAutenticacionService;
 
 	/** Dominio. */
 	private Dominio data;
@@ -224,8 +231,25 @@ public class DialogDominioImportar extends DialogControllerBase {
 			}
 		}
 
-		filaDominio = UtilCuadernoCarga.getFilaDominio(data, dominioActual, this.fuentesDatos, this.fuentesDatosContent,
-				fdActual, UtilJSF.getIdEntidad(), idArea);
+
+		ConfiguracionAutenticacion configuracionAutenticacion = null;
+		if (data != null && data.getTipo() == TypeDominio.CONSULTA_REMOTA && data.getConfiguracionAutenticacion() != null
+				&& idArea != null) {
+			configuracionAutenticacion = configuracionAutenticacionService.getConfiguracionAutenticacion(
+					data.getAmbito(), data.getConfiguracionAutenticacion().getIdentificador(),
+					UtilJSF.getIdEntidad(), idArea, null);
+		}
+		final String identificadorArea = this.area == null ? "" :  this.area.getIdentificadorCompuesto();
+		filaDominio = UtilImportacion.getFilaDominioID(data, dominioActual, this.fuentesDatos, this.fuentesDatosContent,
+				fdActual, identificadorArea, UtilJSF.getIdEntidad(), idArea, configuracionAutenticacion);
+
+		if(UtilJSF.getIdEntidad() != null) {
+			filaDominio.setIdEntidad(UtilJSF.getIdEntidad());
+		}
+
+		if(this.area != null) {
+			filaDominio.setIdArea(this.area.getCodigo());
+		}
 
 		setMostrarPanelInfo(true);
 		if (filaDominio.getResultado() != TypeImportarResultado.INFO

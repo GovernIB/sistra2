@@ -2,11 +2,20 @@
 
 <div class="imc-pas">
 
+	{{if desti|equals>envio}}
+	<h3><span>{{txtEnviarTitol}}</span></h3>
+	{{else}}
 	<h3><span>{{txtRegistrarTitol}}</span></h3>
+	{{/if}}
 
 	<div class="imc--info">
-		
+
+		{{if desti|equals>envio}}
+		<p>{{txtEnviarInfo}}</p>
+		{{else}}
 		<p>{{txtRegistrarInfo}}</p>
+		{{/if}}
+
 		<div class="imc--important">
 			<p>{{txtRegistrarInfoImportant}}</p>
 			{{if txtInstruccions}}
@@ -218,9 +227,17 @@
 			</li>
 			{{else}}
 			{{if registrar|equals>s}}
-			<li>
-				<a class="imc-bt imc--registrar" href="javascript:;" id="imc-bt-registra" data-accio="registra"><span>{{txtRegistrar}}</span></a>
-			</li>
+
+				{{if desti|equals>envio}}
+				<li>
+					<a class="imc-bt imc--enviar" href="javascript:;" id="imc-bt-registra" data-accio="registra"><span>{{txtEnviar}}</span></a>
+				</li>
+				{{else}}
+				<li>
+					<a class="imc-bt imc--registrar" href="javascript:;" id="imc-bt-registra" data-accio="registra"><span>{{txtRegistrar}}</span></a>
+				</li>
+				{{/if}}
+
 			{{/if}}
 			{{/if}}
 		</ul>

@@ -22,6 +22,7 @@ import org.primefaces.model.SortOrder;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.Rol;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
@@ -31,16 +32,19 @@ import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
+import es.caib.sistrages.core.api.service.RolService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.TramiteVersiones;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilRest;
 
 /**
  * Mantenimiento de tramites.
@@ -62,6 +66,9 @@ public class ViewTramites extends ViewControllerBase {
 	@Inject
 	private SecurityService securityService;
 
+	/** rol service. */
+	@Inject
+	private RolService rolService;
 	/** System service. **/
 	@Inject
 	private SystemService systemService;
@@ -213,7 +220,8 @@ public class ViewTramites extends ViewControllerBase {
 		}
 
 		final Area area = listaAreasSeleccionadas.get(0);
-		if (tramiteService.removeArea(area.getCodigo())) {
+
+		if (borrarRolesAsociados(area.getCodigo()) && tramiteService.removeArea(area.getCodigo())) {
 			listaAreasSeleccionadas.clear();
 			this.buscarAreas();
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral(LITERAL_INFO_BORRADO_OK));
@@ -221,6 +229,17 @@ public class ViewTramites extends ViewControllerBase {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
 		}
 
+	}
+
+	private boolean borrarRolesAsociados(Long codArea) {
+		boolean noFallo = true;
+		List<Rol> roles = rolService.getRolesByArea(codArea);
+		for (Rol rol : roles) {
+			if (!rolService.removeRol(rol.getCodigo())) {
+				noFallo = false;
+			}
+		}
+		return noFallo;
 	}
 
 	/**
@@ -264,6 +283,20 @@ public class ViewTramites extends ViewControllerBase {
 		final Area area = listaAreasSeleccionadas.get(0);
 		UtilJSF.redirectJsfPage("/secure/app/viewConfiguracionAutenticacion.xhtml?ambito=A&id=" + area.getCodigo()
 				+ "&area=" + area.getIdentificador());
+	}
+
+	/**
+	 * Envio remoto
+	 */
+	public void envioRemoto() {
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionadaArea()) {
+			return;
+		}
+
+		final Area area = listaAreasSeleccionadas.get(0);
+		UtilJSF.redirectJsfPage("/secure/app/viewEnviosRemotos.xhtml?ambito=A&id=" + area.getCodigo() + "&area="
+				+ area.getIdentificador());
 	}
 
 	/**
@@ -340,15 +373,13 @@ public class ViewTramites extends ViewControllerBase {
 		// Verificamos si se ha modificado
 		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
-
 			final FilaImportarResultado resultado = (FilaImportarResultado) respuesta.getResult();
 			idArea = resultado.getIdArea().toString();
 			idTramite = resultado.getIdTramite().toString();
 			idTramiteVersion = resultado.getIdTramiteVersion().toString();
-
 			// Refrescamos datos
 			buscarAreas();
+			versionSeleccionada = tramiteService.getTramiteVersion(resultado.getIdTramiteVersion());
 
 		}
 	}
@@ -374,6 +405,15 @@ public class ViewTramites extends ViewControllerBase {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
 		}
 
+	}
+
+	public boolean isAdminArea() {
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
+				&& permisosCacheados.contains(TypeRolePermisos.ADMINISTRADOR_AREA)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -402,8 +442,20 @@ public class ViewTramites extends ViewControllerBase {
 
 		// Verificamos si se ha modificado
 		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
-			// Mensaje
-			final String message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
+			String message = "";
+			if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+				ResultadoError re = null;
+				re = this.refrescar();
+				if (re != null && re.getCodigo() == 1) {
+					message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK) + ". "
+							+ UtilJSF.getLiteral("info.cache.ok");
+				} else {
+					message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK) + ". "
+							+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
+				}
+			} else {
+				message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
+			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
 			// Refrescamos datos
@@ -456,6 +508,22 @@ public class ViewTramites extends ViewControllerBase {
 
 			// Refrescamos datos
 			buscarAreas();
+
+			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
+				Area areaRespuesta = (Area) respuesta.getResult();
+				Area aCreada = null;
+				for (Area area : listaAreasSeleccionadas) {
+					if (area.getIdentificador().equals(areaRespuesta.getIdentificador())) {
+						aCreada = area;
+					}
+				}
+				listaAreasSeleccionadas.clear();
+				listaAreasSeleccionadas.add(aCreada);
+			} else {
+				listaAreasSeleccionadas.clear();
+				listaAreasSeleccionadas.add((Area) respuesta.getResult());
+			}
+
 		}
 	}
 
@@ -585,6 +653,18 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
+	 * Propiedad que muestra el botón previsualizar en pre a desarrollador
+	 */
+	public boolean getPrevis() {
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
+				&& TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.PREPRODUCCION) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Obtiene el valor de tienePermisosVersion, se tiene que cumplir que:
 	 * <ul>
 	 * <li>Tiene que haber una versión seleccionada.</li>
@@ -617,7 +697,6 @@ public class ViewTramites extends ViewControllerBase {
 		final DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot()
 				.findComponent("form:dataTableTramites");
 		dataTable.setFirst(0);
-
 		idTramiteVersion = null;
 		idTramite = null;
 
@@ -1315,15 +1394,7 @@ public class ViewTramites extends ViewControllerBase {
 
 		// Invalidaciones
 		if (!UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
-			final Tramite tramite = tramiteService.getTramite(this.versionSeleccionada.getIdTramite());
-			final String urlBase = systemService
-					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
-			final String usuario = systemService
-					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
-			final String pwd = systemService
-					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
-			this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_TRAMITE,
-					tramite.getIdentificador() + "#" + this.versionSeleccionada.getNumeroVersion());
+			this.refrescar();
 		}
 
 		// Refrescamos datos
@@ -1377,6 +1448,28 @@ public class ViewTramites extends ViewControllerBase {
 		params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
 
 		UtilJSF.openDialog(DialogTramiteDesbloquear.class, TypeModoAcceso.EDICION, params, true, 500, 320);
+
+	}
+
+	/**
+	 * Refrescar cache.
+	 */
+	public void refrescarCache() {
+		final String urlBase = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
+		final String usuario = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
+		final String pwd = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
+
+		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, Constantes.CACHE_COMPLETA);
+
+		if (resultado.getCodigo() == 1) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
+		}
 
 	}
 
@@ -1562,44 +1655,6 @@ public class ViewTramites extends ViewControllerBase {
 		params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
 		params.put(TypeParametroVentana.MODO_IMPORTAR.toString(), modo);
 		UtilJSF.openDialog(DialogTramiteExportar.class, TypeModoAcceso.EDICION, params, true, 900, 520);
-	}
-
-	/**
-	 * Metodo prinicpal para refrescar la cache de un tramite (es llamado desde
-	 * viewTramites y viewDefinicionVersion)
-	 *
-	 * @param identificadorTramite
-	 */
-	public void refrescarCache(final String identificadorTramite, final int numeroVersion) {
-		if (identificadorTramite != null) {
-			final String urlBase = systemService
-					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
-			final String usuario = systemService
-					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
-			final String pwd = systemService
-					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
-
-			this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_TRAMITE,
-					identificadorTramite + "#" + numeroVersion);
-		}
-	}
-
-	/**
-	 * Regrescar.
-	 */
-	public void refrescar() {
-		String identificador = null;
-
-		for (final TramiteVersiones tramite : listaTramiteVersiones) {
-			if (tramite.getTramite().getCodigo().equals(versionSeleccionada.getIdTramite())) {
-				identificador = tramite.getTramite().getIdentificador();
-				break;
-			}
-		}
-
-		if (identificador != null) {
-			refrescarCache(identificador, versionSeleccionada.getNumeroVersion());
-		}
 	}
 
 	/**

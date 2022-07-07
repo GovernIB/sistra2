@@ -16,8 +16,11 @@ import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeAvisoEntidad;
+import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.AvisoEntidadService;
+import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -49,6 +52,10 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	@Inject
 	private SystemService systemService;
 
+	/** Security service. **/
+	@Inject
+	private SecurityService securityService;
+
 	/** Idiomas del tramite version. **/
 	private List<String> idiomas;
 
@@ -78,6 +85,18 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 		}
 	}
 
+	public boolean deshabilitarEdicionDebug() {
+		final TypeEntorno entornoActual = TypeEntorno.fromString(UtilJSF.getEntorno());
+		if (entornoActual.equals(TypeEntorno.PREPRODUCCION) || entornoActual.equals(TypeEntorno.PRODUCCION)) {
+			if (UtilJSF.getSessionBean().getActiveRole() != TypeRoleAcceso.ADMIN_ENT) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Genera vacío el aviso entidad.
 	 */
@@ -100,8 +119,7 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -122,20 +140,10 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 		crearAvisoEntidad();
 	}
 
-	/** Aceptada invallidacion desde el confirmDialog. **/
-	public void aceptarConInvalidacion() {
-		aceptar(true);
-	}
-
-	/** Cancelada invallidacion desde el confirmDialog. **/
-	public void aceptarSinInvalidacion() {
-		aceptar(false);
-	}
-
 	/**
 	 * Aceptar.
 	 */
-	public void aceptar(final boolean invalidacion) {
+	public void aceptar() {
 
 		// Comprobamos que el mensaje de aviso está correcto.
 		if (!checkMensajeAviso()) {
@@ -143,19 +151,6 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 		}
 
 		tramiteService.updateTramiteVersionControlAcceso(tramiteVersion, avisoEntidad, UtilJSF.getIdEntidad());
-
-		// Invalidaciones
-		if (invalidacion) {
-
-			final String urlBase = systemService
-					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
-			final String usuario = systemService
-					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
-			final String pwd = systemService
-					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
-			this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_TRAMITE,
-					tramite.getIdentificador() + "#" + tramiteVersion.getNumeroVersion());
-		}
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
@@ -233,8 +228,7 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	/**
 	 * Establece el valor de id.
 	 *
-	 * @param id
-	 *               el nuevo valor de id
+	 * @param id el nuevo valor de id
 	 */
 	public void setId(final Long id) {
 		this.id = id;
@@ -252,8 +246,7 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	/**
 	 * Establece el valor de tramiteVersion.
 	 *
-	 * @param tramiteVersion
-	 *                           el nuevo valor de tramiteVersion
+	 * @param tramiteVersion el nuevo valor de tramiteVersion
 	 */
 	public void setTramiteVersion(final TramiteVersion tramiteVersion) {
 		this.tramiteVersion = tramiteVersion;
@@ -267,8 +260,7 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param avisoEntidad
-	 *                         the avisoEntidad to set
+	 * @param avisoEntidad the avisoEntidad to set
 	 */
 	public void setAvisoEntidad(final AvisoEntidad avisoEntidad) {
 		this.avisoEntidad = avisoEntidad;
@@ -282,8 +274,7 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param idiomas
-	 *                    the idiomas to set
+	 * @param idiomas the idiomas to set
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;

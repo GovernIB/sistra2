@@ -31,6 +31,7 @@ import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.ModelApi;
+import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
@@ -198,6 +199,18 @@ public class DialogTramiteExportar extends DialogControllerBase {
 			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteExportar.error.tramiteBloqueado"));
 			correcto = false;
+		}
+
+		if (modo.equals("CC")) {
+			List<Tasa> tasas = this.tramiteVersion.getPasoTasa().getTasas();
+			for (Tasa tasa : tasas) {
+				if (tasa.isSimulado()) {
+					addMessageContext(TypeNivelGravedad.ERROR,
+							UtilJSF.getLiteral("dialogTramiteExportar.error.simular"));
+					correcto = false;
+					break;
+				}
+			}
 		}
 
 		return correcto;

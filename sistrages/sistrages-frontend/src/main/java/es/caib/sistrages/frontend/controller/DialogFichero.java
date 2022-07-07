@@ -126,6 +126,7 @@ public class DialogFichero extends DialogControllerBase {
 		switch (tipoCampoFichero) {
 		case LOGO_GESTOR_ENTIDAD:
 		case LOGO_ASISTENTE_ENTIDAD:
+		case ICONO_ASISTENTE_ENTIDAD:
 		case CSS_ENTIDAD:
 
 			if (id == null) {
@@ -168,8 +169,7 @@ public class DialogFichero extends DialogControllerBase {
 		case PLANTILLA_ENTIDAD:
 			final Map<String, Object> mochilaDatos3 = UtilJSF.getSessionBean().getMochilaDatos();
 			if (!mochilaDatos3.isEmpty()) {
-				plantillaEntidad = (PlantillaEntidad) mochilaDatos3
-						.get(Constantes.CLAVE_MOCHILA_PLANTILLA_ENTIDAD);
+				plantillaEntidad = (PlantillaEntidad) mochilaDatos3.get(Constantes.CLAVE_MOCHILA_PLANTILLA_ENTIDAD);
 				if (plantillaEntidad != null) {
 					idPlantillaEntidad = plantillaEntidad.getCodigo();
 				}
@@ -218,6 +218,16 @@ public class DialogFichero extends DialogControllerBase {
 
 				entidadService.uploadLogoAsistenteEntidad(entidad.getCodigo(), fichero, file.getContents());
 				break;
+			case ICONO_ASISTENTE_ENTIDAD:
+				fichero = entidad.getIconoAsistenteTramitacion();
+				if (fichero == null) {
+					fichero = new Fichero();
+					fichero.setPublico(true);
+				}
+				fichero.setNombre(file.getFileName());
+
+				entidadService.uploadIconoAsistenteEntidad(entidad.getCodigo(), fichero, file.getContents());
+				break;
 			case CSS_ENTIDAD:
 				fichero = entidad.getCss();
 				if (fichero == null) {
@@ -235,7 +245,7 @@ public class DialogFichero extends DialogControllerBase {
 					final CsvDocumento csv = CsvUtil.importar(bis);
 					dominioService.importarCSV(Long.valueOf(id), csv);
 				} catch (final Exception ex) {
-					UtilJSF.loggearErrorFront("Error importando csv" , ex);
+					UtilJSF.loggearErrorFront("Error importando csv", ex);
 					if (ex.getCause() instanceof FuenteDatosPkException) {
 						addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importarCSV.error.pk"));
 						return;
@@ -291,8 +301,8 @@ public class DialogFichero extends DialogControllerBase {
 				}
 				fichero.setNombre(file.getFileName());
 
-				plantillaEntidad = entidadService.uploadPlantillasEmailFin(UtilJSF.getIdEntidad(),
-						idPlantillaEntidad, plantillaEntidad, file.getContents());
+				plantillaEntidad = entidadService.uploadPlantillasEmailFin(UtilJSF.getIdEntidad(), idPlantillaEntidad,
+						plantillaEntidad, file.getContents());
 				break;
 			default:
 				break;
@@ -330,6 +340,10 @@ public class DialogFichero extends DialogControllerBase {
 			break;
 		case LOGO_ASISTENTE_ENTIDAD:
 			entidadService.removeLogoAsistenteEntidad(entidad.getCodigo());
+			entidad = entidadService.loadEntidad(entidad.getCodigo());
+			break;
+		case ICONO_ASISTENTE_ENTIDAD:
+			entidadService.removeIconoAsistenteEntidad(entidad.getCodigo());
 			entidad = entidadService.loadEntidad(entidad.getCodigo());
 			break;
 		case CSS_ENTIDAD:
@@ -381,6 +395,14 @@ public class DialogFichero extends DialogControllerBase {
 			existeFichero = entidad.getLogoAsistente() != null;
 			if (existeFichero) {
 				nombreFichero = entidad.getLogoAsistente().getNombre();
+			} else {
+				nombreFichero = null;
+			}
+			break;
+		case ICONO_ASISTENTE_ENTIDAD:
+			existeFichero = entidad.getIconoAsistenteTramitacion() != null;
+			if (existeFichero) {
+				nombreFichero = entidad.getIconoAsistenteTramitacion().getNombre();
 			} else {
 				nombreFichero = null;
 			}
@@ -439,6 +461,9 @@ public class DialogFichero extends DialogControllerBase {
 			extensiones = Constantes.EXTENSIONES_FICHEROS_LOGO;
 			break;
 		case LOGO_ASISTENTE_ENTIDAD:
+			extensiones = Constantes.EXTENSIONES_FICHEROS_LOGO;
+			break;
+		case ICONO_ASISTENTE_ENTIDAD:
 			extensiones = Constantes.EXTENSIONES_FICHEROS_LOGO;
 			break;
 		case CSS_ENTIDAD:

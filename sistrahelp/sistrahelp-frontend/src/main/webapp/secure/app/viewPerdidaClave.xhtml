@@ -84,7 +84,7 @@
 			<!-- Data table -->
 			<p:outputPanel  styleClass="h100">
 				<p:dataTable id="dataTable" var="dt" value="#{viewPerdidaClave.listaDatos}" liveResize="true"
-							 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+							 rows="#{viewPerdidaClave.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
 							 scrollable="true" scrollHeight="100%"
 	                         paginator="true" paginatorPosition="bottom"
 	                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -95,6 +95,8 @@
 
 					<!-- Necesario para actualizar en controlador la fila seleccionada -->
 					<p:ajax event="rowSelect" global="false"/>
+
+					<p:ajax event="page" update=":form:dataTable"/>
 
 					<!-- Columnas -->
 			   		<p:column headerText="#{msg['viewPerdidaClave.headClaveTramitacion']}" sortBy="#{dt.idSesionTramitacion}">
@@ -117,7 +119,17 @@
 
 				</p:dataTable>
 			</p:outputPanel>
-
+				<h:outputScript >
+		      document.getElementsByName("form:dataTable_rppDD")[0].addEventListener("change", refrescarPaginacion);
+		      function refrescarPaginacion() {
+		      		document.getElementById("form:paginacion").focus();
+		        	document.getElementById("form:paginacion").value = document.getElementsByName("form:dataTable_rppDD")[0].value
+		        	document.getElementById("form:paginacion").blur();
+		      }
+		    </h:outputScript>
+			<p:inputText id="paginacion" value="#{viewPerdidaClave.paginacion}" style="opacity:0">
+				<p:ajax event="blur" update="@form" process="@this"/>
+			</p:inputText>
 		</h:form>
 
 	</ui:define>

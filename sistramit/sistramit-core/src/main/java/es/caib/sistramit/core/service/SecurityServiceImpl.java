@@ -17,7 +17,9 @@ import es.caib.sistra2.commons.plugins.formulario.api.DatosRetornoFormulario;
 import es.caib.sistra2.commons.plugins.formulario.api.FormularioPluginException;
 import es.caib.sistra2.commons.plugins.formulario.api.IFormularioPlugin;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
+import es.caib.sistrages.rest.api.interna.RConfiguracionAutenticacion;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistrages.rest.api.interna.RGestorFormularioExterno;
 import es.caib.sistramit.core.api.exception.TicketCarpetaCiudadanaException;
 import es.caib.sistramit.core.api.exception.TicketFormularioException;
 import es.caib.sistramit.core.api.model.flujo.AvisoPlataforma;
@@ -100,11 +102,10 @@ public class SecurityServiceImpl implements SecurityService {
 
 	@Override
 	@NegocioInterceptor
-	public InfoLoginTramite obtenerInfoLoginTramiteAnonimoPersistente(final String idSesionTramitacion) {
+	public InfoLoginTramite obtenerInfoLoginTramite(final String idSesionTramitacion) {
 		final DatosPersistenciaTramite dpt = flujoTramiteDao.obtenerTramitePersistencia(idSesionTramitacion);
 		final InfoLoginTramite infoLogin = generarInfoLoginTramite(dpt.getIdTramite(), dpt.getVersionTramite(),
 				dpt.getIdTramiteCP(), dpt.isServicioCP(), dpt.getIdioma());
-		infoLogin.setLoginAnonimoAuto(true);
 		return infoLogin;
 	}
 
@@ -189,16 +190,28 @@ public class SecurityServiceImpl implements SecurityService {
 		// - Obtenemos datos sesion formulario
 		final DatosInicioSesionFormulario dif = formularioDao
 				.obtenerDatosInicioSesionGestorFormularios(idSesionFormulario, true);
+		final String idGestorFormulariosExterno = dif.getIdGestorFormulariosExterno();
 
-		// Obtenemos datos conexión GFE a partir versión trámite
+		// Obtenemos definicion trámite
 		final DefinicionTramiteSTG defTramite = configuracionComponent.recuperarDefinicionTramite(dif.getIdTramite(),
 				dif.getVersionTramite(), dif.getIdioma());
-		final String urlGestorFormulario = UtilsSTG.obtenerUrlGestorFormulariosExterno(defTramite,
-				dif.getIdGestorFormulariosExterno());
-		final String usrGestorFormulario = UtilsSTG.obtenerUsrGestorFormulariosExterno(defTramite,
-				dif.getIdGestorFormulariosExterno());
-		final String pwdGestorFormulario = UtilsSTG.obtenerPwdGestorFormulariosExterno(defTramite,
-				dif.getIdGestorFormulariosExterno());
+
+		// Obtenemos conf entidad
+		final RConfiguracionEntidad confEntidad = configuracionComponent
+				.obtenerConfiguracionEntidad(defTramite.getDefinicionVersion().getIdEntidad());
+
+		// Obtenemos datos conexión GFE
+		final RGestorFormularioExterno confGfe = UtilsSTG.obtenerConfiguracionGFE(confEntidad,
+				idGestorFormulariosExterno);
+		final String urlGestorFormulario = confGfe.getUrl();
+		String usrGestorFormulario = null;
+		String pwdGestorFormulario = null;
+		if (confGfe.getIdentificadorConfAutenticacion() != null) {
+			final RConfiguracionAutenticacion confAut = configuracionComponent.obtenerConfiguracionAutenticacion(
+					confGfe.getIdentificadorConfAutenticacion(), confGfe.getIdentificadorEntidad());
+			usrGestorFormulario = confAut.getUsuario();
+			pwdGestorFormulario = confAut.getPassword();
+		}
 
 		// Obtenemos plugin formularios
 		final IFormularioPlugin plgFormularios = (IFormularioPlugin) configuracionComponent
@@ -207,7 +220,7 @@ public class SecurityServiceImpl implements SecurityService {
 		// Invocamos plugin para obtener resultado
 		DatosRetornoFormulario drf = null;
 		try {
-			drf = plgFormularios.obtenerResultadoFormulario(dif.getIdGestorFormulariosExterno(), urlGestorFormulario,
+			drf = plgFormularios.obtenerResultadoFormulario(idGestorFormulariosExterno, urlGestorFormulario,
 					usrGestorFormulario, pwdGestorFormulario, ticket);
 		} catch (final FormularioPluginException e) {
 			throw new TicketFormularioException("Error al obtenir resultat formulari: " + e.getMessage(), e);
@@ -277,8 +290,8 @@ public class SecurityServiceImpl implements SecurityService {
 				secsTimeout = TIMEOUT_TICKET_DEFAULT;
 			}
 		} catch (final NumberFormatException e) {
-			log.warn("La propietat " + TypePropiedadConfiguracion.TIMEOUT_TICKET.toString()
-					+ " no té un valor vàlid: " + secsTimeoutStr);
+			log.warn("La propietat " + TypePropiedadConfiguracion.TIMEOUT_TICKET.toString() + " no té un valor vàlid: "
+					+ secsTimeoutStr);
 			secsTimeout = TIMEOUT_TICKET_DEFAULT;
 		}
 		final Date dateNow = new Date();
@@ -334,6 +347,8 @@ public class SecurityServiceImpl implements SecurityService {
 		}
 
 		final InfoLoginTramite res = new InfoLoginTramite();
+		res.setIdTramite(codigoTramite);
+		res.setVersion(versionTramite);
 		res.setIdioma(idioma);
 		res.setTitulo(defTramiteCP.getDescripcion());
 		res.setNiveles(niveles);

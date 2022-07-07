@@ -14,8 +14,10 @@ import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuModel;
 
 import es.caib.sistrages.core.api.exception.FrontException;
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.Sesion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
@@ -24,6 +26,7 @@ import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -55,6 +58,10 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	@Inject
 	private EntidadService entidadService;
 
+	/** tramite service. */
+	@Inject
+	private TramiteService tramiteService;
+
 	/** Filtro (puede venir por parametro). */
 	private String filtro;
 
@@ -63,6 +70,12 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 
 	/** Dato seleccionado en la lista. */
 	private ConfiguracionAutenticacion datoSeleccionado;
+
+	/** Paginacion */
+	private Integer paginacion;
+
+	/** Accion. **/
+	private String accion;
 
 	/** Id. **/
 	private String id;
@@ -74,6 +87,9 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 
 	/** Area. **/
 	private String area;
+
+	/** Lista de areas. */
+	private List<Area> listaAreas;
 
 	boolean permiteAlta = false;
 	boolean permiteEditar = false;
@@ -90,6 +106,8 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	public void init() {
 		// Titulo
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
+
+		paginacion = UtilJSF.getPaginacion("viewConfiguracionAutenticacion");
 
 		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 			final List<TypeRolePermisos> permisos = securityService
@@ -110,7 +128,7 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 				permiteAlta = false;
 				permiteEditar = false;
 			}
-		} else  {
+		} else {
 			permiteAlta = true;
 			permiteEditar = true;
 		}
@@ -118,6 +136,20 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 		if (ambito.equals(TypeAmbito.AREA.toString())) {
 
 			idArea = Long.valueOf(id);
+
+			Sesion sesion = null;
+
+			// Recupera info usuario
+			String userName = securityService.getUsername();
+
+			// recuperamos datos por defecto del usuario
+			if (!userName.isEmpty()) {
+				sesion = systemService.getSesion(userName);
+				listaAreas = tramiteService.listArea(sesion.getEntidad(), null);
+				if (!tramiteService.getArea(Long.parseLong(id)).getIdentificador().equals(area)) {
+					area = tramiteService.getArea(Long.parseLong(id)).getIdentificador();
+				}
+			}
 
 			mostrarBreadcrumb = true;
 			/* inicializa breadcrum y lo creamos */
@@ -137,7 +169,6 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 		} else {
 			mostrarBreadcrumb = false;
 		}
-
 
 		// Recupera datos
 		buscar();
@@ -159,8 +190,8 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	 */
 	private void buscar() {
 		// Filtra
-		listaDatos = configuracionAutenticacionService.listConfiguracionAutenticacion(TypeAmbito.fromString(ambito), idArea, idEntidad,
-				UtilJSF.getIdioma(), filtro);
+		listaDatos = configuracionAutenticacionService.listConfiguracionAutenticacion(TypeAmbito.fromString(ambito),
+				idArea, idEntidad, UtilJSF.getIdioma(), filtro);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 	}
@@ -195,34 +226,23 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 			return;
 
 		// Eliminamos
+		String eliminado = this.datoSeleccionado.getIdentificadorCompuesto();
 		if (configuracionAutenticacionService.removeConfiguracionAutenticacion(datoSeleccionado.getCodigo())) {
 			// Refrescamos datos
 			buscar();
 			// Mostramos mensaje
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+			ResultadoError re = this.refrescar();
+			String message = "";
+			// Mostramos mensaje
+			if (re.getCodigo() != 1) {
+				message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("error.refrescarCache")
+						+ ": " + re.getMensaje();
+			} else {
+				message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+			}
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
-		}
-	}
-
-	/**
-	 * Refrescar cache.
-	 */
-	public void refrescarCache() {
-		final String urlBase = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
-		final String usuario = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
-		final String pwd = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
-		final Entidad entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
-		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, Constantes.CACHE_ENTIDAD,
-				entidad.getCodigoDIR3());
-		if (resultado.getCodigo() == 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
-		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
 		}
 	}
 
@@ -286,10 +306,29 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	}
 
 	/**
+	 * Cambia de acción
+	 */
+	public void cambiarAccion() {
+		switch (accion) {
+		case "D":
+			UtilJSF.redirectJsfPage("/secure/app/viewDominios.xhtml?ambito=A&id=" + id + "&area=" + area);
+		case "F":
+			UtilJSF.redirectJsfPage("/secure/app/viewFuentes.xhtml?ambito=A&id=" + id + "&area=" + area);
+		case "S":
+			UtilJSF.redirectJsfPage("/secure/app/viewFormulariosExternos.xhtml?ambito=A&id=" + id + "&area=" + area);
+		case "C":
+			break;
+		case "E":
+			UtilJSF.redirectJsfPage("/secure/app/viewEnviosRemotos.xhtml?ambito=A&id=" + id + "&area=" + area);
+		default:
+			break;
+		}
+	}
+
+	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 
@@ -298,14 +337,25 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 		// Verificamos si se ha modificado
 		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 			// Mensaje
-			String message = null;
 			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
-				message = UtilJSF.getLiteral("info.alta.ok");
+				/*if (re.getCodigo() != 1) {
+					message = UtilJSF.getLiteral("info.alta.ok") + ". " + UtilJSF.getLiteral("error.refrescarCache")
+							+ ": " + re.getMensaje();
+				} else {
+					message = UtilJSF.getLiteral("info.alta.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+				}*/
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.alta.ok"));
 			} else {
-				message = UtilJSF.getLiteral("info.modificado.ok");
+				ResultadoError re = this.refrescar();
+				String message = null;
+				if (re.getCodigo() != 1) {
+					message = UtilJSF.getLiteral("info.modificado.ok") + ". "
+							+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
+				} else {
+					message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+				}
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 			}
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-			// Refrescamos datos
 			buscar();
 		}
 	}
@@ -318,8 +368,7 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param filtro
-	 *                   the filtro to set
+	 * @param filtro the filtro to set
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
@@ -333,8 +382,7 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param listaDatos
-	 *                       the listaDatos to set
+	 * @param listaDatos the listaDatos to set
 	 */
 	public void setListaDatos(final List<ConfiguracionAutenticacion> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -372,8 +420,7 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param datoSeleccionado
-	 *                             the datoSeleccionado to set
+	 * @param datoSeleccionado the datoSeleccionado to set
 	 */
 	public void setDatoSeleccionado(final ConfiguracionAutenticacion datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
@@ -382,8 +429,7 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	/**
 	 * Abrir dialogo.
 	 *
-	 * @param modoAccesoDlg
-	 *                          Modo acceso
+	 * @param modoAccesoDlg Modo acceso
 	 */
 	private void abrirDlg(final TypeModoAcceso modoAccesoDlg) {
 		// Verifica si no hay fila seleccionada
@@ -414,10 +460,9 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	}
 
 	/**
-	 * @param configuracionAutenticacionService
-	 *                                              the
-	 *                                              configuracionAutenticacionService
-	 *                                              to set
+	 * @param configuracionAutenticacionService the
+	 *                                          configuracionAutenticacionService to
+	 *                                          set
 	 */
 	public void setConfiguracionAutenticacionService(
 			final ConfiguracionAutenticacionService configuracionAutenticacionService) {
@@ -438,6 +483,49 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 
 	public void setBreadCrumb(final MenuModel breadCrumb) {
 		this.breadCrumb = breadCrumb;
+	}
+
+	/**
+	 * @return the listaAreas
+	 */
+	public final List<Area> getListaAreas() {
+		return listaAreas;
+	}
+
+	/**
+	 * @param listaAreas the listaAreas to set
+	 */
+	public final void setListaAreas(List<Area> listaAreas) {
+		this.listaAreas = listaAreas;
+	}
+
+	/**
+	 * @return the paginacion
+	 */
+	public final Integer getPaginacion() {
+		return paginacion;
+	}
+
+	/**
+	 * @param paginacion the paginacion to set
+	 */
+	public final void setPaginacion(Integer paginacion) {
+		this.paginacion = paginacion;
+		UtilJSF.setPaginacion(paginacion, "viewConfiguracionAurenticacion");
+	}
+
+	/**
+	 * @return the accion
+	 */
+	public final String getAccion() {
+		return accion;
+	}
+
+	/**
+	 * @param accion the accion to set
+	 */
+	public final void setAccion(String accion) {
+		this.accion = accion;
 	}
 
 }

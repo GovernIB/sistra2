@@ -59,10 +59,33 @@ public class UtilImportacion {
 
 	public static FilaImportarDominio getFilaDominio(final Dominio dominio, final Dominio dominioActual,
 			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual,
-			final String identificadorAreaSeleccionada, final Long idArea, ConfiguracionAutenticacion configuracionAutenticacion) {
+			final String identificadorAreaSeleccionada, /*final Long idEntidad,*/ final Long idArea, ConfiguracionAutenticacion configuracionAutenticacion) {
 
 		final FilaImportarDominio fila = UtilImportacion.checkDominios(dominio, dominioActual, fd, fdContent, fdActual,
 				identificadorAreaSeleccionada, idArea, configuracionAutenticacion);
+		return UtilImportacion.rellenarDatosPorDefecto(fila);
+	}
+
+
+	/**
+	 * Compara dos dominios y obtiene las condiciones para la importación desde importacion DOMINIO (dialogDominioImportar).
+	 *
+	 * Comprobación de permisos: - Si es global tienes que ser superadministrador. -
+	 * Si es de entidad, tienes que ser adm. entidad. - Si es de area, tienes que
+	 * ser adm.entidad o desarrollador con permiso de adm./des. area.
+	 *
+	 * Pasos a realizar: <br />
+	 *
+	 * @param fila
+	 * @return
+	 */
+
+	public static FilaImportarDominio getFilaDominioID(final Dominio dominio, final Dominio dominioActual,
+			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual,
+			final String identificadorAreaSeleccionada, final Long idEntidad, final Long idArea, ConfiguracionAutenticacion configuracionAutenticacion) {
+
+		final FilaImportarDominio fila = UtilImportacion.checkDominiosID(dominio, dominioActual, fd, fdContent, fdActual,
+				identificadorAreaSeleccionada, idEntidad, idArea, configuracionAutenticacion);
 		return UtilImportacion.rellenarDatosPorDefecto(fila);
 	}
 
@@ -135,6 +158,27 @@ public class UtilImportacion {
 		return fila;
 	}
 
+	/** El check desde importacion dominios **/
+	private static FilaImportarDominio checkDominiosID(final Dominio dominio, final Dominio dominioActual,
+			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual,
+			final String identificadorAreaSeleccionada, final Long idEntidad, final Long idArea, final ConfiguracionAutenticacion configuracionAutenticacion) {
+
+		// Prohibido importar dominios de distintos ambitos.
+		if (dominio != null && dominioActual != null && dominio.getAmbito() != dominioActual.getAmbito()) {
+
+			return FilaImportarDominio.crearITerrorAmbitoAreas(dominio, dominioActual, fd, fdContent, fdActual,
+					UtilJSF.getLiteral("importar.error.distintosAmbitos"), configuracionAutenticacion);
+
+		}
+
+		if (checkPermisos(dominio)) {
+			return checkDominioModoEdicion(dominio, dominioActual, fd, fdContent, fdActual, configuracionAutenticacion);
+		} else {
+			return checkDominioModoSoloActualizacion(dominio, dominioActual, fd, fdContent, fdActual, configuracionAutenticacion);
+		}
+
+	}
+
 	private static FilaImportarDominio checkDominios(final Dominio dominio, final Dominio dominioActual,
 			final FuenteDatos fd, final byte[] fdContent, final FuenteDatos fdActual,
 			final String identificadorAreaSeleccionada, final Long idArea, final ConfiguracionAutenticacion configuracionAutenticacion) {
@@ -159,8 +203,8 @@ public class UtilImportacion {
 		// Puede que no exista el dominio de tipo area , en el area seleccionada.
 		if (dominio != null && dominioActual == null && dominio.getAmbito() == TypeAmbito.AREA) {
 
-			return FilaImportarDominio.crearITerrorAmbitoAreas(dominio, dominioActual, fd, fdContent, fdActual,
-					UtilJSF.getLiteral("importar.error.ambitoAreaNoExisteDom"), configuracionAutenticacion);
+			return FilaImportarDominio.crearITcrearAreaDominio(dominio, dominioActual, fd, fdContent, fdActual,
+					UtilJSF.getLiteral("importar.ok.crearDomArea"), configuracionAutenticacion);
 		}
 
 		// Si el área existe en BBDD, tiene que ser el mismo area que la seleccionada
@@ -279,7 +323,6 @@ public class UtilImportacion {
 			} else {
 				literal = UtilJSF.getLiteral("importar.error.sinpermisos.actualizacion");
 			}
-			literal = "";
 			fila = FilaImportarDominio.crearITerrorSoloMantener(dominio, dominioActual, fd, fdContent, fdActual,
 					literal, configuracionAutenticacion);
 

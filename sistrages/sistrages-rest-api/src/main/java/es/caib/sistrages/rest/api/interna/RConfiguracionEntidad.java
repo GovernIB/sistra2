@@ -26,9 +26,17 @@ public class RConfiguracionEntidad {
 	@ApiModelProperty(value = "Descripción")
 	private RLiteral descripcion;
 
+	/** Título. */
+	@ApiModelProperty(value = "Titulo")
+	private RLiteral titulo;
+
 	/** Referencia logo. */
 	@ApiModelProperty(value = "Referencia logo")
 	private String logo;
+
+	/** Referencia icono. */
+	@ApiModelProperty(value = "Referencia icono")
+	private String icono;
 
 	/** Referencia logo. */
 	@ApiModelProperty(value = "Referencia logo")
@@ -167,6 +175,18 @@ public class RConfiguracionEntidad {
 	/** Plantillas entidad. */
 	@ApiModelProperty(value = "Plantillas entidad")
 	private List<RPlantillaEntidad> plantillas;
+
+	/** Envío remoto. */
+	@ApiModelProperty(value = "Envios remoto")
+	private List<REnvioRemoto> enviosRemoto;
+
+	/** Configuraciones autenticación. */
+	@ApiModelProperty(value = "Configuraciones autenticación entidad y sus areas")
+	private List<RConfiguracionAutenticacion> configuracionesAutenticacion;
+
+	/** Gestores formularios externos entidad. */
+	@ApiModelProperty(value = "Gestores formularios externos entidad y sus areas")
+	private List<RGestorFormularioExterno> gestoresFormulariosExternos;
 
 	/**
 	 * Método de acceso a logo.
@@ -739,8 +759,90 @@ public class RConfiguracionEntidad {
 	/**
 	 * @param area the area to set
 	 */
-	public final void setArea(List<RArea> area) {
+	public final void setArea(final List<RArea> area) {
 		this.area = area;
+	}
+
+	/**
+	 * Método de acceso a enviosRemoto.
+	 *
+	 * @return enviosRemoto
+	 */
+	public List<REnvioRemoto> getEnviosRemoto() {
+		return enviosRemoto;
+	}
+
+	/**
+	 * Método para establecer enviosRemoto.
+	 *
+	 * @param enviosRemoto enviosRemoto a establecer
+	 */
+	public void setEnviosRemoto(final List<REnvioRemoto> enviosRemoto) {
+		this.enviosRemoto = enviosRemoto;
+	}
+
+	/**
+	 * Método de acceso a configuracionesAutenticacion.
+	 *
+	 * @return configuracionesAutenticacion
+	 */
+	public List<RConfiguracionAutenticacion> getConfiguracionesAutenticacion() {
+		return configuracionesAutenticacion;
+	}
+
+	/**
+	 * Método para establecer configuracionesAutenticacion.
+	 *
+	 * @param configuracionesAutenticacion configuracionesAutenticacion a establecer
+	 */
+	public void setConfiguracionesAutenticacion(final List<RConfiguracionAutenticacion> configuracionesAutenticacion) {
+		this.configuracionesAutenticacion = configuracionesAutenticacion;
+	}
+
+	/**
+	 * Método de acceso a gestoresFormulariosExternos.
+	 *
+	 * @return gestoresFormulariosExternos
+	 */
+	public List<RGestorFormularioExterno> getGestoresFormulariosExternos() {
+		return gestoresFormulariosExternos;
+	}
+
+	/**
+	 * @return the titulo
+	 */
+	public final RLiteral getTitulo() {
+		return titulo;
+	}
+
+	/**
+	 * @param titulo the titulo to set
+	 */
+	public final void setTitulo(RLiteral titulo) {
+		this.titulo = titulo;
+	}
+
+	/**
+	 * @return the icono
+	 */
+	public final String getIcono() {
+		return icono;
+	}
+
+	/**
+	 * @param icono the icono to set
+	 */
+	public final void setIcono(String icono) {
+		this.icono = icono;
+	}
+
+	/**
+	 * Método para establecer gestoresFormulariosExternos.
+	 *
+	 * @param gestoresFormulariosExternos gestoresFormulariosExternos a establecer
+	 */
+	public void setGestoresFormulariosExternos(final List<RGestorFormularioExterno> gestoresFormulariosExternos) {
+		this.gestoresFormulariosExternos = gestoresFormulariosExternos;
 	}
 
 }

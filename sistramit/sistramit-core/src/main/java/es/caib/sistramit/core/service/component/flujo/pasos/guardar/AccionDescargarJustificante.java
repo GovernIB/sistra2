@@ -7,8 +7,10 @@ import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeJustificante;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.types.TypeDestino;
 import es.caib.sistramit.core.service.component.flujo.ConstantesFlujo;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
 import es.caib.sistramit.core.service.component.integracion.RegistroComponent;
@@ -45,6 +47,11 @@ public final class AccionDescargarJustificante implements AccionPaso {
 			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo) {
 
 		// TODO Pendiente gestion entrega presencial. De momento solo electronico
+
+		// Solo valido para destino registro
+		if (pVariablesFlujo.getTipoDestino() == TypeDestino.ENVIO) {
+			throw new AccionPasoNoPermitidaException("No es permet descarrega justificant per enviament");
+		}
 
 		// Obtenemos datos registro
 		final DatosDocumentoJustificante ddj = (DatosDocumentoJustificante) pVariablesFlujo

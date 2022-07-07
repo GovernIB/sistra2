@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
+import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -42,8 +43,8 @@ public class SystemServiceBean implements SystemService {
 	}
 
 	@Override
-	public void revisarInvalidaciones() {
-		systemService.revisarInvalidaciones();
+	public ListaPropiedades revisarInvalidaciones() {
+		return systemService.revisarInvalidaciones();
 	}
 
 	@Override

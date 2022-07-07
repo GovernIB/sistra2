@@ -300,4 +300,14 @@ public final class DominiosComponentImpl implements DominiosComponent {
 		}
 	}
 
+	@Override
+	public void invalidarDominios() {
+		final CacheManager cacheManager = CacheManager.getInstance();
+		Cache cache;
+		if (cacheManager.cacheExists(CACHE_NAME)) {
+			cache = cacheManager.getCache(CACHE_NAME);
+			cache.removeAll();
+		}
+	}
+
 }

@@ -16,17 +16,21 @@ public class RGestorFormularioExterno {
 	@ApiModelProperty(value = "Identificador")
 	private String identificador;
 
+	/** Identificador entidad (nulo si global). */
+	@ApiModelProperty(value = "Identificador entidad (Código DIR3). Será nulo si ámbito global")
+	private String identificadorEntidad;
+
 	/** Url. */
 	@ApiModelProperty(value = "Url")
 	private String url;
 
 	/** Configuracion autenticacion. */
 	@ApiModelProperty(value = "Configuracion autenticacion")
-    private RConfiguracionAutenticacion configuracionAutenticacion;
-	
+	private String identificadorConfAutenticacion;
+
 	/**
 	 * Método de acceso a identificador.
-	 * 
+	 *
 	 * @return identificador
 	 */
 	public String getIdentificador() {
@@ -35,7 +39,7 @@ public class RGestorFormularioExterno {
 
 	/**
 	 * Método para establecer identificador.
-	 * 
+	 *
 	 * @param identificador
 	 *                          identificador a establecer
 	 */
@@ -45,7 +49,7 @@ public class RGestorFormularioExterno {
 
 	/**
 	 * Método de acceso a url.
-	 * 
+	 *
 	 * @return url
 	 */
 	public String getUrl() {
@@ -54,7 +58,7 @@ public class RGestorFormularioExterno {
 
 	/**
 	 * Método para establecer url.
-	 * 
+	 *
 	 * @param url
 	 *                url a establecer
 	 */
@@ -63,17 +67,42 @@ public class RGestorFormularioExterno {
 	}
 
 	/**
-	 * @return the configuracionAutenticacion
+	 * Método de acceso a idConfiguracionAutenticacion.
+	 *
+	 * @return idConfiguracionAutenticacion
 	 */
-	public RConfiguracionAutenticacion getConfiguracionAutenticacion() {
-		return configuracionAutenticacion;
+	public String getIdentificadorConfAutenticacion() {
+		return identificadorConfAutenticacion;
 	}
 
 	/**
-	 * @param configuracionAutenticacion the configuracionAutenticacion to set
+	 * Método para establecer idConfiguracionAutenticacion.
+	 *
+	 * @param idConfiguracionAutenticacion
+	 *                                         idConfiguracionAutenticacion a
+	 *                                         establecer
 	 */
-	public void setConfiguracionAutenticacion(RConfiguracionAutenticacion configuracionAutenticacion) {
-		this.configuracionAutenticacion = configuracionAutenticacion;
+	public void setIdentificadorConfAutenticacion(final String idConfiguracionAutenticacion) {
+		this.identificadorConfAutenticacion = idConfiguracionAutenticacion;
+	}
+
+	/**
+	 * Método de acceso a identificadorEntidad.
+	 *
+	 * @return identificadorEntidad
+	 */
+	public String getIdentificadorEntidad() {
+		return identificadorEntidad;
+	}
+
+	/**
+	 * Método para establecer identificadorEntidad.
+	 *
+	 * @param identificadorEntidad
+	 *                                 identificadorEntidad a establecer
+	 */
+	public void setIdentificadorEntidad(final String identificadorEntidad) {
+		this.identificadorEntidad = identificadorEntidad;
 	}
 
 }

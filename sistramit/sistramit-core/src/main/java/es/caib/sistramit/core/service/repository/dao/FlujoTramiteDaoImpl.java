@@ -176,8 +176,8 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 			}
 			// Si no existe paso registro, presentador será el iniciador
 			if (hTramiteFin.getNumeroRegistro() == null) {
-				hTramiteFin.setNumeroRegistro(hTramiteFin.getNifIniciador());
-				hTramiteFin.setNifPresentador(hTramiteFin.getNombreIniciador());
+				hTramiteFin.setNumeroRegistro(hTramiteFin.getNumeroRegistro());
+				hTramiteFin.setNifPresentador(hTramiteFin.getNifIniciador());
 			}
 
 			entityManager.persist(hTramiteFin);

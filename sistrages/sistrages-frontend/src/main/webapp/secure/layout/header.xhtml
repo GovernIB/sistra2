@@ -4,7 +4,10 @@
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+
   	xmlns:p="http://primefaces.org/ui">
+
 
 <h:body>
   <ui:composition>
@@ -40,9 +43,22 @@
 	 		    	</p:column>
 	 		    </p:row>
 	 		    <p:row>
-	 		    	<p:column>
-	 		    		<p:menuButton value="#{msg['cabecera.opciones']}" model="#{sessionBean.menuModelOpciones}" iconPos="right" menuStyleClass="menuOpciones"/>
-	 		    	</p:column>
+	 		    	<p:toolbar class="header-color">
+			 		    <f:facet name="left">
+			           	</f:facet>
+			           	<f:facet name="right">
+			           		<p:panelGrid columns="2" columnClasses="header-color" style="margin-right:0;">
+									<p:row>
+						 		    	<p:column>
+						 		    		<p:commandButton id="refrescarCache" style ="margin-right:5px" value="#{msg['botones.refrescarCache']}" icon="fa fa-retweet" actionListener="#{viewTramites.refrescarCache}" process="@this" update="growlHeader"/>
+						 		    	</p:column>
+						 		    	<p:column>
+						 		    		<p:menuButton value="#{msg['cabecera.opciones']}" model="#{sessionBean.menuModelOpciones}" iconPos="right" menuStyleClass="menuOpciones"/>
+						 		    	</p:column>
+			 		    			</p:row>
+			 		    	</p:panelGrid>
+						</f:facet>
+	 		    	</p:toolbar>
 	 		    </p:row>
     		</p:panelGrid>
 		</p:panelGrid>

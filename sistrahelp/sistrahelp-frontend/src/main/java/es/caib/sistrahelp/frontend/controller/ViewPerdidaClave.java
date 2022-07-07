@@ -30,6 +30,9 @@ public class ViewPerdidaClave extends ViewControllerBase {
 	@Inject
 	private HelpDeskService helpDeskService;
 
+	/** Paginacion */
+	private Integer paginacion;
+
 	/**
 	 * lista datos.
 	 */
@@ -50,6 +53,8 @@ public class ViewPerdidaClave extends ViewControllerBase {
 	 */
 	public void init() {
 		UtilJSF.verificarAcceso();
+
+		paginacion = UtilJSF.getPaginacion("viewPerdidaClave");
 
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
@@ -156,8 +161,7 @@ public class ViewPerdidaClave extends ViewControllerBase {
 	/**
 	 * Establece el valor de listaDatos.
 	 *
-	 * @param listaDatos
-	 *            el nuevo valor de listaDatos
+	 * @param listaDatos el nuevo valor de listaDatos
 	 */
 	public void setListaDatos(final List<PerdidaClave> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -175,8 +179,7 @@ public class ViewPerdidaClave extends ViewControllerBase {
 	/**
 	 * Establece el valor de datoSeleccionado.
 	 *
-	 * @param datoSeleccionado
-	 *            el nuevo valor de datoSeleccionado
+	 * @param datoSeleccionado el nuevo valor de datoSeleccionado
 	 */
 	public void setDatoSeleccionado(final PerdidaClave datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
@@ -194,11 +197,24 @@ public class ViewPerdidaClave extends ViewControllerBase {
 	/**
 	 * Establece el valor de filtros.
 	 *
-	 * @param filtros
-	 *            el nuevo valor de filtros
+	 * @param filtros el nuevo valor de filtros
 	 */
 	public void setFiltros(final FiltroPerdidaClave filtros) {
 		this.filtros = filtros;
 	}
 
+	/**
+	 * @return the paginacion
+	 */
+	public final Integer getPaginacion() {
+		return paginacion;
+	}
+
+	/**
+	 * @param paginacion the paginacion to set
+	 */
+	public final void setPaginacion(Integer paginacion) {
+		this.paginacion = paginacion;
+		UtilJSF.setPaginacion(paginacion, "viewPerdidaClave");
+	}
 }

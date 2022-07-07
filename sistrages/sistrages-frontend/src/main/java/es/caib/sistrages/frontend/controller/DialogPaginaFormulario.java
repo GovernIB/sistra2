@@ -33,10 +33,16 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 	/** Id. formulario interno. **/
 	private String idFormularioInterno;
 
+	/** cambios **/
+	private boolean cambios = false;
 	/**
 	 * Datos elemento.
 	 */
 	private PaginaFormulario data;
+	/**
+	 * Datos elemento iniciales.
+	 */
+	private PaginaFormulario dataI;
 
 	@Inject
 	FormularioInternoService formIntService;
@@ -54,8 +60,10 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 			final Object json = mochila.get(Constantes.CLAVE_MOCHILA_FORMULARIO);
 			if (json == null) {
 				data = new PaginaFormulario();
+				dataI = new PaginaFormulario();
 			} else {
 				data = (PaginaFormulario) UtilJSON.fromJSON(json.toString(), PaginaFormulario.class);
+				dataI = (PaginaFormulario) UtilJSON.fromJSON(json.toString(), PaginaFormulario.class);
 			}
 		}
 	}
@@ -97,6 +105,19 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 			case ALTA:
 			case EDICION:
 				data.setScriptValidacion((Script) respuesta.getResult());
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(data.getScriptValidacion(), dataI.getScriptValidacion())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			default:
 				break;
@@ -117,6 +138,19 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 			case ALTA:
 			case EDICION:
 				data.setScriptNavegacion((Script) respuesta.getResult());
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(data.getScriptNavegacion(), dataI.getScriptNavegacion())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			default:
 				break;
@@ -135,7 +169,12 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 		if (data.isPaginaFinal()) {
 			data.setScriptNavegacion(null);
 		}
-		result.setResult(data);
+
+		if (!data.getIdentificador().equals(dataI.getIdentificador())
+				|| data.isPaginaFinal() != dataI.isPaginaFinal()) {
+			cambios = true;
+		}
+		result.setResult(new Object[] { data, cambios });
 		UtilJSF.closeDialog(result);
 	}
 

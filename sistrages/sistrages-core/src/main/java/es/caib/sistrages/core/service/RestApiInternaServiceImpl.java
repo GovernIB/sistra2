@@ -12,10 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.AvisoEntidad;
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.EnvioRemoto;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
@@ -39,9 +41,11 @@ import es.caib.sistrages.core.service.component.FormRenderComponent;
 import es.caib.sistrages.core.service.component.FuenteDatosComponent;
 import es.caib.sistrages.core.service.repository.dao.AreaDao;
 import es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao;
+import es.caib.sistrages.core.service.repository.dao.ConfiguracionAutenticacionDao;
 import es.caib.sistrages.core.service.repository.dao.ConfiguracionGlobalDao;
 import es.caib.sistrages.core.service.repository.dao.DominioDao;
 import es.caib.sistrages.core.service.repository.dao.EntidadDao;
+import es.caib.sistrages.core.service.repository.dao.EnvioRemotoDao;
 import es.caib.sistrages.core.service.repository.dao.FicheroExternoDao;
 import es.caib.sistrages.core.service.repository.dao.FormateadorFormularioDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioExternoDao;
@@ -77,6 +81,14 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	/** DAO Entidad. */
 	@Autowired
 	private EntidadDao entidadDao;
+
+	/** DAO Entidad. */
+	@Autowired
+	private EnvioRemotoDao envioRemotoDao;
+
+	/** DAO Entidad. */
+	@Autowired
+	private ConfiguracionAutenticacionDao configuracionAutenticacionDao;
 
 	/** FicheroExterno dao. */
 	@Autowired
@@ -197,10 +209,32 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 
 	@Override
 	@NegocioInterceptor
-	public Entidad loadEntidad(final String codigoDir3) {
+	public Entidad loadEntidad(final String identificador) {
 		Entidad result = null;
-		result = entidadDao.getByCodigo(codigoDir3);
+		// result = entidadDao.getByIdentificador(identificador);
+		result = entidadDao.getByCodigoDIR3(identificador);
 		return result;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Entidad loadEntidadByArea(final Long idArea) {
+		Entidad result = null;
+		// result = entidadDao.getByIdentificador(identificador);
+		result = entidadDao.getByArea(idArea);
+		return result;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<EnvioRemoto> listEnvio(final TypeAmbito ambito, final Long id, final String filtro) {
+		return envioRemotoDao.getAllByFiltro(ambito, id, filtro);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<EnvioRemoto> listEnvioByEntidad(final Long idEntidad) {
+		return envioRemotoDao.listEnviosByEntidad(idEntidad);
 	}
 
 	@Override
@@ -418,9 +452,9 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 
 	@Override
 	@NegocioInterceptor
-	public List<GestorExternoFormularios> listGestorExternoFormularios(final Long pIdArea) {
+	public List<GestorExternoFormularios> listGestorExternoFormularios(final Long pIdEntidad) {
 		// Recupera GFE
-		final List<GestorExternoFormularios> lgfe = formularioExternoDao.getAll(pIdArea);
+		final List<GestorExternoFormularios> lgfe = formularioExternoDao.getAllByEntidad(pIdEntidad);
 		// Reemplaza placeholders
 		for (final GestorExternoFormularios g : lgfe) {
 			if (g.getConfiguracionAutenticacion() != null) {
@@ -437,6 +471,12 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@NegocioInterceptor
 	public List<PlantillaEntidad> getPlantillasEntidad(Long codigo) {
 		return entidadDao.getListaPlantillasEmailFin(codigo);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<ConfiguracionAutenticacion> listConfiguracionAutenticacion(TypeAmbito entidad, Long codigoEntidad) {
+		return configuracionAutenticacionDao.listConfiguracionAutenticacionRest(entidad, codigoEntidad);
 	}
 
 }

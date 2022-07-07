@@ -20,6 +20,7 @@ import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeClonarAccion;
 import es.caib.sistrages.core.api.service.DominioService;
 
 /**
@@ -233,7 +234,8 @@ public class DominioServiceBean implements DominioService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public FuenteDatos loadFuenteDato(final TypeAmbito ambito, final String identificador, final Long codigoEntidad, final Long codigoArea, final Long codigoFD) {
+	public FuenteDatos loadFuenteDato(final TypeAmbito ambito, final String identificador, final Long codigoEntidad,
+			final Long codigoArea, final Long codigoFD) {
 		return dominioService.loadFuenteDato(ambito, identificador, codigoEntidad, codigoArea, codigoFD);
 	}
 
@@ -270,9 +272,8 @@ public class DominioServiceBean implements DominioService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void clonar(final String dominioID, final String nuevoIdentificador, final Long areaID, final Long fdID,
-			final Long idEntidad) {
-		dominioService.clonar(dominioID, nuevoIdentificador, areaID, fdID, idEntidad);
+	public void clonar(final String dominioID, final String nuevoIdentificador, final Long areaID, final Long idEntidad, final TypeClonarAccion accionFD, final FuenteDatos fd, final TypeClonarAccion accionCA, final ConfiguracionAutenticacion confAut) {
+		dominioService.clonar(dominioID, nuevoIdentificador, areaID, idEntidad, accionFD,  fd,  accionCA, confAut);
 	}
 
 	@Override
@@ -283,13 +284,14 @@ public class DominioServiceBean implements DominioService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public List<Dominio> getDominiosByConfAut(Long idConfiguracion, Long idArea) {
-		return dominioService.getDominiosByConfAut(idConfiguracion,  idArea);
+	public List<Dominio> getDominiosByConfAut(TypeAmbito ambito, Long idConfiguracion, Long idArea) {
+		return dominioService.getDominiosByConfAut(ambito, idConfiguracion, idArea);
 	}
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public List<Dominio> getDominiosByIdentificador(List<String> identificadoresDominio,  final Long idEntidad, final Long idArea) {
+	public List<Dominio> getDominiosByIdentificador(List<String> identificadoresDominio, final Long idEntidad,
+			final Long idArea) {
 		return dominioService.getDominiosByIdentificador(identificadoresDominio, idEntidad, idArea);
 	}
 
@@ -297,22 +299,22 @@ public class DominioServiceBean implements DominioService {
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public boolean existeDominioByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
 			Long codigoArea, Long codigoDominio) {
-		return dominioService.existeDominioByIdentificador( ambito,  identificador,  codigoEntidad,
-				 codigoArea,  codigoDominio);
+		return dominioService.existeDominioByIdentificador(ambito, identificador, codigoEntidad, codigoArea,
+				codigoDominio);
 	}
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public Dominio loadDominioByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
 			Long codigoArea, Long codigoDominio) {
-		return dominioService.loadDominioByIdentificador( ambito,  identificador,  codigoEntidad,
-				 codigoArea,  codigoDominio);
+		return dominioService.loadDominioByIdentificador(ambito, identificador, codigoEntidad, codigoArea,
+				codigoDominio);
 	}
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public Dominio loadDominioByIdentificadorCompuesto(String identificador) {
-		return dominioService.loadDominioByIdentificadorCompuesto( identificador);
+		return dominioService.loadDominioByIdentificadorCompuesto(identificador);
 
 	}
 
@@ -320,8 +322,7 @@ public class DominioServiceBean implements DominioService {
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public boolean existeFuenteDato(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea,
 			Long codigoFD) {
-		return dominioService.existeFuenteDato( ambito,  identificador,  codigoEntidad,
-				 codigoArea,  codigoFD);
+		return dominioService.existeFuenteDato(ambito, identificador, codigoEntidad, codigoArea, codigoFD);
 	}
 
 }

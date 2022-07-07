@@ -40,14 +40,13 @@ public interface SecurityService {
 			final boolean servicioCatalogo, String idioma, String urlInicioTramite);
 
 	/**
-	 * Obtiene información para mostrar el login en la carga trámite anónimo
-	 * persistente.
+	 * Obtiene información para mostrar el login en la carga trámite persistente.
 	 *
 	 * @param idSesionTramitacion
 	 *                                id sesion tramitación
 	 * @return información para mostrar login
 	 */
-	InfoLoginTramite obtenerInfoLoginTramiteAnonimoPersistente(String idSesionTramitacion);
+	InfoLoginTramite obtenerInfoLoginTramite(String idSesionTramitacion);
 
 	/**
 	 * Inicio sesión en Clave.

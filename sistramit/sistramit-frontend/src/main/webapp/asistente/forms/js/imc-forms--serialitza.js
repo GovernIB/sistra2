@@ -16,6 +16,8 @@ $.fn.appSerialitza = function(opcions) {
 
 	var form_el_json = {};
 
+	var formEnMayuscules = (imc_forms_finestra.attr("data-mayuscules") === "s") ? true : false;
+
 	// element = imc_forms_finestra;
 
 	element
@@ -27,7 +29,8 @@ $.fn.appSerialitza = function(opcions) {
 					,el_tipus = el.attr("data-tipus")
 					,el_contingut = el.attr("data-contingut")
 					,el_valortipus = el.attr("data-valortipus")
-					,esObligatori = (el.attr("data-obligatori") === "s") ? true : false;
+					,esObligatori = (el.attr("data-obligatori") === "s") ? true : false
+					,enMayuscules = (el.attr("data-mayuscules") === "s") ? true : false;
 
 				// serialitza
 
@@ -47,7 +50,7 @@ $.fn.appSerialitza = function(opcions) {
 
 					input_val = (el_contingut === "nu") ? input_val : input_val.replace(/#-@/g, "").replace(/</g, "").replace(/>/g, "");
 
-					if (el_contingut === "id") {
+					if (el_tipus === "texto" && (el_contingut === "id" || formEnMayuscules || enMayuscules)) {
 
 						input_val = input_val.toUpperCase();
 

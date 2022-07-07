@@ -67,7 +67,23 @@ public enum TypeParametroEvento {
 	/**
 	 * Registro: asiento registro.
 	 */
-	REGISTRO_ASIENTOREGISTRO("REGASIENTO");
+	REGISTRO_ASIENTOREGISTRO("REGASIENTO"),
+	/**
+	 * Documento: identificador.
+	 */
+	DOCUMENTO_ID("DOCIDE"),
+	/**
+	 * Documento: instancia.
+	 */
+	DOCUMENTO_INSTANCIA("DOCINS"),
+	/**
+	 * NIF.
+	 */
+	NIF("NIF"),
+	/**
+	 * PROBLEMA FIRMA.
+	 */
+	FIRMA_ERROR("FIRERROR");
 
 	/**
 	 * Valor como string.

@@ -13,8 +13,9 @@ import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuModel;
 
-
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.Sesion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
@@ -23,7 +24,9 @@ import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -48,6 +51,11 @@ public class ViewDominios extends ViewControllerBase {
 	@Inject
 	private SecurityService securityService;
 
+	/** tramite service. */
+	@Inject
+	private TramiteService tramiteService;
+
+	/** sistem service. */
 	@Inject
 	private SystemService systemService;
 
@@ -62,6 +70,12 @@ public class ViewDominios extends ViewControllerBase {
 
 	/** Area. **/
 	private String area;
+
+	/** Accion. **/
+	private String accion;
+
+	/** Lista de areas. */
+	private List<Area> listaAreas;
 
 	/** Lista de datos. */
 	private List<Dominio> listaDatos;
@@ -84,18 +98,35 @@ public class ViewDominios extends ViewControllerBase {
 	/** miga de pan */
 	private MenuModel breadCrumb;
 
+	/** Paginacion */
+	private Integer paginacion;
+
 	/** Inicializacion. */
 	public void init() {
 
 		if (ambito == null) {
 			return;
 		}
-
+		setAccion("D");
+		paginacion = UtilJSF.getPaginacion("viewDominios");
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
 		checkPermisos();
 		buscar(null);
 
 		if (ambito.equals(TypeAmbito.AREA.toString())) {
+			Sesion sesion = null;
+
+			// Recupera info usuario
+			String userName = securityService.getUsername();
+
+			// recuperamos datos por defecto del usuario
+			if (!userName.isEmpty()) {
+				sesion = systemService.getSesion(userName);
+				listaAreas = tramiteService.listArea(sesion.getEntidad(), null);
+				if (!tramiteService.getArea(Long.parseLong(id)).getIdentificador().equals(area)) {
+					area = tramiteService.getArea(Long.parseLong(id)).getIdentificador();
+				}
+			}
 
 			mostrarBreadcrumb = true;
 			/* inicializa breadcrum y lo creamos */
@@ -154,6 +185,27 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
+	 * Cambia de acción
+	 */
+	public void cambiarAccion() {
+		switch (accion) {
+		case "D":
+			break;
+		case "F":
+			UtilJSF.redirectJsfPage("/secure/app/viewFuentes.xhtml?ambito=A&id=" + id + "&area=" + area);
+		case "S":
+			UtilJSF.redirectJsfPage("/secure/app/viewFormulariosExternos.xhtml?ambito=A&id=" + id + "&area=" + area);
+		case "C":
+			UtilJSF.redirectJsfPage(
+					"/secure/app/viewConfiguracionAutenticacion.xhtml?ambito=A&id=" + id + "&area=" + area);
+		case "E":
+			UtilJSF.redirectJsfPage("/secure/app/viewEnviosRemotos.xhtml?ambito=A&id=" + id + "&area=" + area);
+		default:
+			break;
+		}
+	}
+
+	/**
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
@@ -208,12 +260,20 @@ public class ViewDominios extends ViewControllerBase {
 		}
 
 		// Eliminamos
+		String eliminado = this.datoSeleccionado.getIdentificadorCompuesto();
 		if (this.dominioService.removeDominio(this.datoSeleccionado.getCodigo())) {
 			// Refrescamos datos
 			filtrar();
-
+			ResultadoError re = this.refrescar();
+			String message = "";
 			// Mostramos mensaje
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+			if (re.getCodigo() != 1) {
+				message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("error.refrescarCache")
+						+ ": " + re.getMensaje();
+			} else {
+				message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+			}
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.borrar.dependencias"));
 		}
@@ -238,27 +298,9 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * Refrescar cache.
-	 */
-	public void refrescarCache() {
-		if (datoSeleccionado != null) {
-			final String urlBase = systemService
-					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
-			final String usuario = systemService
-					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
-			final String pwd = systemService
-					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
-
-			this.refrescarCache(urlBase, usuario, pwd, Constantes.CACHE_DOMINIO, datoSeleccionado.getIdentificador());
-
-		}
-	}
-
-	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 
@@ -267,13 +309,27 @@ public class ViewDominios extends ViewControllerBase {
 		// Verificamos si se ha modificado
 		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 			// Mensaje
-			String message = null;
 			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
-				message = UtilJSF.getLiteral("info.alta.ok");
+				/*
+				 * ResultadoError re =
+				 * this.refrescar(this.datoSeleccionado.getIdentificadorCompuesto()); if
+				 * (re.getCodigo() != 1) { message = UtilJSF.getLiteral("info.alta.ok") + ". " +
+				 * UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje(); } else {
+				 * message = UtilJSF.getLiteral("info.alta.ok") + ". " +
+				 * UtilJSF.getLiteral("info.cache.ok"); }
+				 */
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.alta.ok"));
 			} else {
-				message = UtilJSF.getLiteral("info.modificado.ok");
+				String message = null;
+				ResultadoError re = this.refrescar();
+				if (re.getCodigo() != 1) {
+					message = UtilJSF.getLiteral("info.modificado.ok") + ". "
+							+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
+				} else {
+					message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+				}
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 			}
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
 			// Mensaje dialogo
 			if (respuesta.getMensaje() != null) {
@@ -293,18 +349,22 @@ public class ViewDominios extends ViewControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoImportar(final SelectEvent event) {
 
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
 		// Verificamos si se ha modificado
-		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
-
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
-
+		if (!respuesta.isCanceled() && this.datoSeleccionado != null && respuesta.getModoAcceso() != null && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			ResultadoError re = this.refrescar();
+			if (re.getCodigo() != 1) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok") + ". "
+						+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje());
+			} else {
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+						UtilJSF.getLiteral("info.importar.ok") + ". " + UtilJSF.getLiteral("info.cache.ok"));
+			}
 			// Refrescamos datos
 			buscar(filtro);
 
@@ -315,8 +375,7 @@ public class ViewDominios extends ViewControllerBase {
 	/**
 	 * Retorno dialogo clonar.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoClonar(final SelectEvent event) {
 
@@ -482,8 +541,7 @@ public class ViewDominios extends ViewControllerBase {
 	/**
 	 * Abre dialogo de tramites.
 	 *
-	 * @param modoAccesoDlg
-	 *                          Modo acceso
+	 * @param modoAccesoDlg Modo acceso
 	 */
 	public void tramites() {
 
@@ -508,8 +566,7 @@ public class ViewDominios extends ViewControllerBase {
 	/**
 	 * Abre dialogo.
 	 *
-	 * @param modoAccesoDlg
-	 *                          Modo acceso
+	 * @param modoAccesoDlg Modo acceso
 	 */
 	private void abrirDlg(final TypeModoAcceso modoAccesoDlg) {
 
@@ -555,8 +612,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param filtro
-	 *                   the filtro to set
+	 * @param filtro the filtro to set
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
@@ -570,8 +626,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param listaDatos
-	 *                       the listaDatos to set
+	 * @param listaDatos the listaDatos to set
 	 */
 	public void setListaDatos(final List<Dominio> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -585,8 +640,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param datoSeleccionado
-	 *                             the datoSeleccionado to set
+	 * @param datoSeleccionado the datoSeleccionado to set
 	 */
 	public void setDatoSeleccionado(final Dominio datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
@@ -600,8 +654,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param ambito
-	 *                   the ambito to set
+	 * @param ambito the ambito to set
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;
@@ -615,8 +668,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *               the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -630,8 +682,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param permiteEditar
-	 *                          the permiteEditar to set
+	 * @param permiteEditar the permiteEditar to set
 	 */
 	public void setPermiteEditar(final Boolean permiteEditar) {
 		this.permiteEditar = permiteEditar;
@@ -645,8 +696,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param permiteConsultar
-	 *                             the permiteConsultar to set
+	 * @param permiteConsultar the permiteConsultar to set
 	 */
 	public void setPermiteConsultar(final Boolean permiteConsultar) {
 		this.permiteConsultar = permiteConsultar;
@@ -660,8 +710,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param mostrarBreadcrumb
-	 *                              the mostrarBreadcrumb to set
+	 * @param mostrarBreadcrumb the mostrarBreadcrumb to set
 	 */
 	public void setMostrarBreadcrumb(final boolean mostrarBreadcrumb) {
 		this.mostrarBreadcrumb = mostrarBreadcrumb;
@@ -675,8 +724,7 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param breadCrumb
-	 *                       the breadCrumb to set
+	 * @param breadCrumb the breadCrumb to set
 	 */
 	public void setBreadCrumb(final MenuModel breadCrumb) {
 		this.breadCrumb = breadCrumb;
@@ -690,11 +738,53 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * @param area
-	 *                 the area to set
+	 * @param area the area to set
 	 */
 	public void setArea(final String area) {
 		this.area = area;
+	}
+
+	/**
+	 * @return the listaAreas
+	 */
+	public final List<Area> getListaAreas() {
+		return listaAreas;
+	}
+
+	/**
+	 * @param listaAreas the listaAreas to set
+	 */
+	public final void setListaAreas(List<Area> listaAreas) {
+		this.listaAreas = listaAreas;
+	}
+
+	/**
+	 * @return the paginacion
+	 */
+	public final Integer getPaginacion() {
+		return paginacion;
+	}
+
+	/**
+	 * @param paginacion the paginacion to set
+	 */
+	public final void setPaginacion(Integer paginacion) {
+		this.paginacion = paginacion;
+		UtilJSF.setPaginacion(paginacion, "viewDominios");
+	}
+
+	/**
+	 * @return the accion
+	 */
+	public final String getAccion() {
+		return accion;
+	}
+
+	/**
+	 * @param accion the accion to set
+	 */
+	public final void setAccion(String accion) {
+		this.accion = accion;
 	}
 
 }

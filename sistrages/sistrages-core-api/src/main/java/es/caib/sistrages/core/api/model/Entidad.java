@@ -68,6 +68,12 @@ public class Entidad extends ModelApi {
 	/** Url sede electronica **/
 	private Literal urlSede;
 
+	/** Título sistramit **/
+	private Literal tituloAsistenteTramitacion;
+
+	/** logo asistente. */
+	private Fichero iconoAsistenteTramitacion;
+
 	/** dias preregistro. */
 	private Integer diasPreregistro;
 
@@ -129,7 +135,7 @@ public class Entidad extends ModelApi {
 	private boolean registroOcultarDescargaDocumentos;
 
 	/** Plantillas **/
-	private List<PlantillaEntidad> plantillasMailFinRegistro ;
+	private List<PlantillaEntidad> plantillasMailFinRegistro;
 
 	/**
 	 * Obtiene el valor de codigo.
@@ -714,6 +720,34 @@ public class Entidad extends ModelApi {
 	 */
 	public void setPlantillasMailFinRegistro(List<PlantillaEntidad> plantillas) {
 		this.plantillasMailFinRegistro = plantillas;
+	}
+
+	/**
+	 * @return the tituloAsistenteTramitacion
+	 */
+	public final Literal getTituloAsistenteTramitacion() {
+		return tituloAsistenteTramitacion;
+	}
+
+	/**
+	 * @param tituloAsistenteTramitacion the tituloAsistenteTramitacion to set
+	 */
+	public final void setTituloAsistenteTramitacion(Literal tituloAsistenteTramitacion) {
+		this.tituloAsistenteTramitacion = tituloAsistenteTramitacion;
+	}
+
+	/**
+	 * @return the iconoAsistenteTramitacion
+	 */
+	public final Fichero getIconoAsistenteTramitacion() {
+		return iconoAsistenteTramitacion;
+	}
+
+	/**
+	 * @param iconoAsistenteTramitacion the iconoAsistenteTramitacion to set
+	 */
+	public final void setIconoAsistenteTramitacion(Fichero iconoAsistenteTramitacion) {
+		this.iconoAsistenteTramitacion = iconoAsistenteTramitacion;
 	}
 
 }

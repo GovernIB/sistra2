@@ -96,6 +96,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/** Pag. actual. **/
 	private int paginaActual;
 
+	private Boolean cambios = false;
+
 	/** Posicionamiento. **/
 	private String posicionamiento;
 
@@ -113,6 +115,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	/** Url iframe. **/
 	private String urlIframe;
+
+	private Literal traduccionesI;
 
 	/** Indica si esta 'colapsado' el panel de propiedades (a true colapsado). **/
 	private boolean visiblePropiedades = false;
@@ -190,17 +194,19 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 **/
 	public void descartarCambios() {
 
-		ObjetoFormulario ofOriginal = null;
-		if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
-			ofOriginal = formulario.getPaginas().get(paginaActual - 1).getLinea(objetoFormularioEdit.getCodigo());
-		} else if (objetoFormularioEdit instanceof ComponenteFormulario) {
-			ofOriginal = formulario.getPaginas().get(paginaActual - 1).getComponente(objetoFormularioEdit.getCodigo());
-		}
+		/*
+		 * ObjetoFormulario ofOriginal = null; if (objetoFormularioEdit instanceof
+		 * LineaComponentesFormulario) { ofOriginal =
+		 * formulario.getPaginas().get(paginaActual -
+		 * 1).getLinea(objetoFormularioEdit.getCodigo()); } else if
+		 * (objetoFormularioEdit instanceof ComponenteFormulario) { ofOriginal =
+		 * formulario.getPaginas().get(paginaActual -
+		 * 1).getComponente(objetoFormularioEdit.getCodigo()); }
+		 *
+		 * if (ofOriginal != null) { objetoFormularioEdit = ofOriginal; }
+		 */
 
-		if (ofOriginal != null) {
-			objetoFormularioEdit = ofOriginal;
-		}
-
+		recuperarFormulario(id);
 		// Continuamos con la accion que se iba a realizar
 		continuarAccion();
 	}
@@ -631,14 +637,17 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			switch (respuesta.getModoAcceso()) {
 			case ALTA:
 			case EDICION:
-				pagina = (PaginaFormulario) respuesta.getResult();
+				Object[] obj = (Object[]) respuesta.getResult();
+				pagina = (PaginaFormulario) obj[0];
 				formIntService.guardarPagina(pagina);
 				formulario.getPaginas().get(paginaActual - 1).setIdentificador(pagina.getIdentificador());
 				formulario.getPaginas().get(paginaActual - 1).setCodigo(pagina.getCodigo());
 				formulario.getPaginas().get(paginaActual - 1).setPaginaFinal(pagina.isPaginaFinal());
 				formulario.getPaginas().get(paginaActual - 1).setScriptNavegacion(pagina.getScriptNavegacion());
 				formulario.getPaginas().get(paginaActual - 1).setScriptNavegacion(pagina.getScriptValidacion());
-
+				if ((boolean) obj[1]) {
+					cambios = (boolean) obj[1];
+				}
 				break;
 			case CONSULTA:
 				// No hay que hacer nada
@@ -697,7 +706,11 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					UtilJSF.loggearErrorFront("Error no controlado al copiar propiedades del componente", e);
 					throw new ErrorNoControladoException(e);
 				}
-
+				if (this.cambios) {
+					tramiteService.actualizarFechaTramiteVersion(Long.parseLong(idTramiteVersion),
+							UtilJSF.getSessionBean().getUserName(), "Modificación formulario");
+				}
+				this.cambios = false;
 				addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.modificado.ok"));
 
 				// Refresca iframe formulario
@@ -719,6 +732,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			// Solo tiene sentido cambios para edicion
 			if (!respuesta.isCanceled() && respuesta.getModoAcceso() == TypeModoAcceso.EDICION) {
 				final Literal traduccionesMod = (Literal) respuesta.getResult();
+				if (this.isCambioLiterales(traduccionesI, traduccionesMod)) {
+					cambios = true;
+				}
 				if (traduccionesEdit == null) {
 					traduccionesEdit = new Literal();
 				}
@@ -753,6 +769,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 */
 	public void editarTraduccionesTexto() {
 		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getTexto();
+		traduccionesI = formIntService.getComponenteFormulario(objetoFormularioEdit.getCodigo()).getTexto();
 		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso),
 				((ComponenteFormulario) objetoFormularioEdit).getTexto(), idiomas, idiomas);
 	}
@@ -762,6 +779,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 */
 	public void editarTraduccionesTextoOpcional() {
 		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getTexto();
+		traduccionesI = formIntService.getComponenteFormulario(objetoFormularioEdit.getCodigo()).getTexto();
 		UtilTraducciones.openDialogTraduccionOpcional(TypeModoAcceso.valueOf(modoAcceso),
 				((ComponenteFormulario) objetoFormularioEdit).getTexto(), idiomas, idiomas);
 	}
@@ -771,6 +789,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 */
 	public void editarTraduccionesHTML() {
 		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getTexto();
+		traduccionesI = formIntService.getComponenteFormulario(objetoFormularioEdit.getCodigo()).getTexto();
 		UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.valueOf(modoAcceso),
 				((ComponenteFormulario) objetoFormularioEdit).getTexto(), idiomas, idiomas, false);
 	}
@@ -780,6 +799,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 */
 	public void editarTraduccionesHTMLOpcional() {
 		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getTexto();
+		traduccionesI = formIntService.getComponenteFormulario(objetoFormularioEdit.getCodigo()).getTexto();
 		UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.valueOf(modoAcceso),
 				((ComponenteFormulario) objetoFormularioEdit).getTexto(), idiomas, idiomas, true);
 	}
@@ -789,6 +809,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 */
 	public void editarTraduccionesAyuda() {
 		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getAyuda();
+		traduccionesI = formIntService.getComponenteFormulario(objetoFormularioEdit.getCodigo()).getAyuda();
 		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso), traduccionesEdit, idiomas, idiomas,
 				true, codigoObjFormularioDestino, codigoObjFormularioDestino);
 	}
@@ -850,10 +871,11 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			ofOriginal = formulario.getPaginas().get(paginaActual - 1).getComponente(objetoFormularioEdit.getCodigo());
 		}
 
-		if (!UtilCoreApi.equalsModelApi(ofOriginal, objetoFormularioEdit)) {
+		if (!UtilCoreApi.equalsModelApi(ofOriginal, objetoFormularioEdit) || this.cambios) {
 			// Guardamos componente destino
 			codigoObjFormularioDestino = idComponente;
 			// Invocamos a boton para que dispare ventana de confirmacion
+			this.cambios = false;
 			final RequestContext contextReq = RequestContext.getCurrentInstance();
 			contextReq.execute("PF('confirmationButton').jq.click();");
 			UtilJSF.doValidationFailed();
@@ -1283,12 +1305,20 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				message = UtilJSF.getLiteral("info.alta.ok");
 			} else {
 				message = UtilJSF.getLiteral("info.modificado.ok");
+				limpiaSeleccion();
+				// objetoFormularioEdit = null;
 			}
 			addMessageContext(TypeNivelGravedad.INFO, message);
 
-			final DisenyoFormulario formularioNuevo = (DisenyoFormulario) respuesta.getResult();
+			Object[] obj = (Object[]) respuesta.getResult();
+
+			final DisenyoFormulario formularioNuevo = (DisenyoFormulario) obj[0];
 
 			recuperarFormulario(id);
+
+			if ((boolean) obj[1]) {
+				cambios = true;
+			}
 
 			// formulario.setMostrarCabecera(formularioNuevo.isMostrarCabecera());
 			// formulario.setTextoCabecera(formularioNuevo.getTextoCabecera());
@@ -1527,6 +1557,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	}
 
 	public void cambiarCampoTextoMultilinea() {
+		setCambios();
 		final ComponenteFormularioCampoTexto campo = (ComponenteFormularioCampoTexto) objetoFormularioEdit;
 		if (campo.isNormalMultilinea()) {
 			final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
@@ -1990,6 +2021,24 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				if (objetoFormularioEdit instanceof ComponenteFormularioCampo) {
 					((ComponenteFormularioCampo) objetoFormularioEdit)
 							.setScriptAutorrellenable((Script) respuesta.getResult());
+					ComponenteFormularioCampo objI = (ComponenteFormularioCampo) formIntService
+							.getComponenteFormulario(objetoFormularioEdit.getCodigo());
+					if (objI != null && objetoFormularioEdit != null) {
+						if (this.isCambioScripts(
+								((ComponenteFormularioCampo) objetoFormularioEdit).getScriptAutorrellenable(),
+								objI.getScriptAutorrellenable())) {
+							cambios = true;
+						}
+					} else if (objI == null) {
+						if (objetoFormularioEdit != null) {
+							cambios = true;
+						}
+					} else {
+						if (objI != null) {
+							cambios = true;
+						}
+					}
+
 				}
 				break;
 			default:
@@ -2013,6 +2062,23 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				if (objetoFormularioEdit instanceof ComponenteFormularioCampo) {
 					((ComponenteFormularioCampo) objetoFormularioEdit)
 							.setScriptSoloLectura((Script) respuesta.getResult());
+					ComponenteFormularioCampo objI = (ComponenteFormularioCampo) formIntService
+							.getComponenteFormulario(objetoFormularioEdit.getCodigo());
+					if (objI != null && objetoFormularioEdit != null) {
+						if (this.isCambioScripts(
+								((ComponenteFormularioCampo) objetoFormularioEdit).getScriptSoloLectura(),
+								objI.getScriptSoloLectura())) {
+							cambios = true;
+						}
+					} else if (objI == null) {
+						if (objetoFormularioEdit != null) {
+							cambios = true;
+						}
+					} else {
+						if (objI != null) {
+							cambios = true;
+						}
+					}
 				}
 				break;
 			default:
@@ -2036,12 +2102,34 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				if (objetoFormularioEdit instanceof ComponenteFormularioCampo) {
 					((ComponenteFormularioCampo) objetoFormularioEdit)
 							.setScriptValidacion((Script) respuesta.getResult());
+					ComponenteFormularioCampo objI = (ComponenteFormularioCampo) formIntService
+							.getComponenteFormulario(objetoFormularioEdit.getCodigo());
+					if (objI != null && objetoFormularioEdit != null) {
+						if (this.isCambioScripts(
+								((ComponenteFormularioCampo) objetoFormularioEdit).getScriptValidacion(),
+								objI.getScriptValidacion())) {
+							cambios = true;
+						}
+					} else if (objI == null) {
+						if (objetoFormularioEdit != null) {
+							cambios = true;
+						}
+					} else {
+						if (objI != null) {
+							cambios = true;
+						}
+					}
 				}
 				break;
 			default:
 				break;
 			}
 		}
+	}
+
+	/** Revierte los cambios al indicar que no se quiere guardar **/
+	public void revertirEnFrontal() {
+		objetoFormularioEdit = formIntService.getComponenteFormulario(objetoFormularioEdit.getCodigo());
 	}
 
 	/*
@@ -2059,6 +2147,23 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
 					((ComponenteFormularioCampoSelector) objetoFormularioEdit)
 							.setScriptValoresPosibles((Script) respuesta.getResult());
+					ComponenteFormularioCampoSelector objI = (ComponenteFormularioCampoSelector) formIntService
+							.getComponenteFormulario(objetoFormularioEdit.getCodigo());
+					if (objI != null && objetoFormularioEdit != null) {
+						if (this.isCambioScripts(
+								((ComponenteFormularioCampoSelector) objetoFormularioEdit).getScriptValoresPosibles(),
+								objI.getScriptValoresPosibles())) {
+							cambios = true;
+						}
+					} else if (objI == null) {
+						if (objetoFormularioEdit != null) {
+							cambios = true;
+						}
+					} else {
+						if (objI != null) {
+							cambios = true;
+						}
+					}
 				}
 				break;
 			default:
@@ -2095,6 +2200,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	}
 
 	public void changedNoModificable() {
+		setCambios();
 		if (objetoFormularioEdit instanceof ComponenteFormularioCampo
 				&& ((ComponenteFormularioCampo) objetoFormularioEdit).isNoModificable()) {
 			((ComponenteFormularioCampo) objetoFormularioEdit).setSoloLectura(true);
@@ -2561,5 +2667,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public void setHeight(String height) {
 		this.height = height;
+	}
+
+	public void setCambios() {
+		this.cambios = true;
 	}
 }

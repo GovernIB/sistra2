@@ -13,7 +13,7 @@
 	<meta name="_csrf" content="${_csrf.token}"/>
 	<meta name="_csrf_header" content="${_csrf.headerName}"/>
 
-	<title>GOIB</title>
+	<title></title>
 
 	<!--[if IE]><link rel="shortcut icon" href="imgs/favicon/favicon.ico" type="image/x-icon" /><![endif]-->
 	<link rel="apple-touch-icon-precomposed" href="imgs/favicon/favicon-apple.png" />
@@ -21,7 +21,7 @@
 
 	<link rel="stylesheet" media="screen" href="css/imc-sf.css" />
 
-	<script src="js/utils/jquery-3.3.1.min.js"></script>
+	<script src="js/utils/jquery-3.6.0.min.js"></script>
 
 	<!-- inicia! -->
 	<script src="js/configuracion.js"></script>

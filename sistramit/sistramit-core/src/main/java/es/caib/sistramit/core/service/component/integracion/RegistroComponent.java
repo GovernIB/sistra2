@@ -4,7 +4,6 @@ import es.caib.sistra2.commons.plugins.registro.api.AsientoRegistral;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
 import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDescargaJustificante;
-import es.caib.sistramit.core.service.model.system.Envio;
 
 /**
  * Interface RegistroComponent.
@@ -85,12 +84,4 @@ public interface RegistroComponent {
 	 */
 	TypeDescargaJustificante descargaJustificantes(String codigoEntidad);
 
-	/**
-	 * Guarda un envio (principalmente para enviar email) cuando se termina un
-	 * registro.
-	 *
-	 * @param aviso
-	 *                  Envio a realizar
-	 */
-	void guardarEnvio(Envio envio);
 }

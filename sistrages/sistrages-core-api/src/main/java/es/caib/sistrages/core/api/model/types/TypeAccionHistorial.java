@@ -32,6 +32,10 @@ public enum TypeAccionHistorial {
 	 */
 	MOVER_TRAMITE("M"),
 	/**
+	 * Modificar trámite
+	 */
+	MODIFICAR_TRAMITE("Z"),
+	/**
 	 * Reiniciado el historial de versiones
 	 */
 	REINICIADO("R");

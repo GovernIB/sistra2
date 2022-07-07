@@ -10,10 +10,7 @@ import es.caib.sistramit.core.api.model.comun.ResultadoProcesoProgramado;
  */
 public interface PurgaService {
 
-	/**
-	 * Realiza proceso programado de purga.
-	 *
-	 */
+	/** Realiza proceso programado de purga. */
 	ResultadoProcesoProgramado purgarPersistencia();
 
 	/** Realiza purga flujos tramitación. */

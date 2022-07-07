@@ -10,6 +10,7 @@ import javax.faces.event.ActionListener;
 import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -23,8 +24,11 @@ public class DialogConfiguracionDominio extends DialogControllerBase {
 	/** Id elemento a tratar. */
 	private String id;
 
-	/** Id elemento a tratar. */
+	/** Id area del elemento a tratar. */
 	private String idArea;
+
+	/** Id entidad del elemento a tratar. */
+	private String idEntidad;
 
 	/** Enlace servicio. */
 	@Inject
@@ -49,7 +53,13 @@ public class DialogConfiguracionDominio extends DialogControllerBase {
 	 * Inicialización.
 	 */
 	public void init() {
-		campos = dominioService.getDominiosByConfAut(Long.valueOf(id), Long.valueOf(idArea));
+		if (TypeAmbito.fromString(ambito).equals(TypeAmbito.AREA)) {
+			campos = dominioService.getDominiosByConfAut(TypeAmbito.AREA, Long.valueOf(id), Long.valueOf(idArea));
+		} else if (TypeAmbito.fromString(ambito).equals(TypeAmbito.ENTIDAD)) {
+			campos = dominioService.getDominiosByConfAut(TypeAmbito.ENTIDAD, Long.valueOf(id), Long.valueOf(idArea));
+		} else {
+			campos = dominioService.getDominiosByConfAut(TypeAmbito.GLOBAL, Long.valueOf(id), null);
+		}
 	}
 
 	/**
@@ -72,7 +82,7 @@ public class DialogConfiguracionDominio extends DialogControllerBase {
 		params.put(TypeParametroVentana.ID.toString(), this.valorSeleccionado.getCodigo().toString());
 		params.put(TypeParametroVentana.AMBITO.toString(), this.valorSeleccionado.getAmbito().toString());
 		UtilJSF.openDialog(DialogDominioPing.class, TypeModoAcceso.CONSULTA, params, true, 770, 600);
-		}
+	}
 
 	/**
 	 * @return the id
@@ -82,8 +92,7 @@ public class DialogConfiguracionDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -92,15 +101,14 @@ public class DialogConfiguracionDominio extends DialogControllerBase {
 	/**
 	 * @return the valorSeleccionado
 	 */
-	public Dominio  getValorSeleccionado() {
+	public Dominio getValorSeleccionado() {
 		return valorSeleccionado;
 	}
 
 	/**
-	 * @param valorSeleccionado
-	 *            the valorSeleccionado to set
+	 * @param valorSeleccionado the valorSeleccionado to set
 	 */
-	public void setValorSeleccionado(final Dominio  valorSeleccionado) {
+	public void setValorSeleccionado(final Dominio valorSeleccionado) {
 		this.valorSeleccionado = valorSeleccionado;
 	}
 
@@ -112,8 +120,7 @@ public class DialogConfiguracionDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param campos
-	 *            the campos to set
+	 * @param campos the campos to set
 	 */
 	public void setCampos(final List<Dominio> campos) {
 		this.campos = campos;
@@ -127,8 +134,7 @@ public class DialogConfiguracionDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param iCampos
-	 *            the iCampos to set
+	 * @param iCampos the iCampos to set
 	 */
 	public void setiCampos(final String iCampos) {
 		this.iCampos = iCampos;
@@ -142,8 +148,7 @@ public class DialogConfiguracionDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param ambito
-	 *            the ambito to set
+	 * @param ambito the ambito to set
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;
@@ -157,8 +162,7 @@ public class DialogConfiguracionDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * @param area
-	 *            the area to set
+	 * @param area the area to set
 	 */
 	public void setArea(final String area) {
 		this.area = area;
@@ -178,5 +182,18 @@ public class DialogConfiguracionDominio extends DialogControllerBase {
 		this.idArea = idArea;
 	}
 
+	/**
+	 * @return the idEntidad
+	 */
+	public final String getIdEntidad() {
+		return idEntidad;
+	}
+
+	/**
+	 * @param idEntidad the idEntidad to set
+	 */
+	public final void setIdEntidad(String idEntidad) {
+		this.idEntidad = idEntidad;
+	}
 
 }

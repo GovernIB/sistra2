@@ -53,7 +53,38 @@ public enum TypeEvento {
 	/**
 	 * EVALUAR TRÁMITE.
 	 */
-	VALORACION_TRAMITE("TR_VAL");
+	VALORACION_TRAMITE("TR_VAL"),
+	/**
+	 * FORMULARIO INICIO.
+	 */
+	FORMULARIO_INICIO("TR_FRI"),
+	/**
+	 * FORMULARIO FIN.
+	 */
+	FORMULARIO_FIN("TR_FRF"),
+	/**
+	 * FIRMA INICIO.
+	 */
+	FIRMA_INICIO("TR_SGI"),
+	/**
+	 * FIRMA FIN.
+	 */
+	FIRMA_FIN("TR_SGF"),
+
+	/**
+	 * INVALIDACIONES: PETICIÓN INVALIDACIÓN
+	 */
+	INV_REQ("IV_PET"),
+
+	/**
+	 * INVALIDACIONES: EJECUCIÓN INVALIDACIÓN
+	 */
+	INV_EJE("IV_EJE"),
+
+	/**
+	 * DEBUG FLUJO
+	 */
+	DEBUG_FLUJO("TR_DEB");
 
 	/**
 	 * Valor como string.
@@ -63,8 +94,7 @@ public enum TypeEvento {
 	/**
 	 * Constructor.
 	 *
-	 * @param value
-	 *                  Valor como string.
+	 * @param value Valor como string.
 	 */
 	private TypeEvento(final String value) {
 		stringValueEvento = value;
@@ -83,8 +113,7 @@ public enum TypeEvento {
 	/**
 	 * Método para From string de la clase TypeAutenticacion.
 	 *
-	 * @param text
-	 *                 Parámetro text
+	 * @param text Parámetro text
 	 * @return el type autenticacion
 	 */
 	public static TypeEvento fromString(final String text) {

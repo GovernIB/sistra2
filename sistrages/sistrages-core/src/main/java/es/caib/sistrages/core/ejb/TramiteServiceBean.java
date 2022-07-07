@@ -384,7 +384,8 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public Tramite getTramiteByIdentificador(String identificador, final Long idArea, String identificadorArea, Long codigoTramite) {
+	public Tramite getTramiteByIdentificador(String identificador, final Long idArea, String identificadorArea,
+			Long codigoTramite) {
 		return tramiteService.getTramiteByIdentificador(identificador, idArea, identificadorArea, codigoTramite);
 	}
 
@@ -410,6 +411,12 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<DominioTramite> getTramiteVersionByDominio(final Long idDominio) {
 		return tramiteService.getTramiteVersionByDominio(idDominio);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<DominioTramite> getTramiteVersionByEnvioRemoto(final Long idEnvioRemoto) {
+		return tramiteService.getTramiteVersionByEnvioRemoto(idEnvioRemoto);
 	}
 
 	@Override
@@ -595,8 +602,8 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void actualizarDominios(TramiteVersion idTramiteVersion,  final List<ValorIdentificadorCompuesto> dominios) {
-		 tramiteService.actualizarDominios(idTramiteVersion, dominios);
+	public void actualizarDominios(TramiteVersion idTramiteVersion, final List<ValorIdentificadorCompuesto> dominios) {
+		tramiteService.actualizarDominios(idTramiteVersion, dominios);
 	}
 
 	@Override
@@ -609,5 +616,11 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public boolean getCountTramiteVersionByGfe(Long id) {
 		return tramiteService.getCountTramiteVersionByGfe(id);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void actualizarFechaTramiteVersion(Long idTramiteVersion, String username, String detalle) {
+		tramiteService.actualizarFechaTramiteVersion(idTramiteVersion, username, detalle);
 	}
 }

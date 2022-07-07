@@ -28,7 +28,9 @@ public enum TypePropiedadConfiguracion {
 	/** Sistramit rest url. **/
 	SISTRAMIT_REST_URL("sistramit.rest.url"),
 	/** Sistramit rest url. **/
-	ANEXO_TAMANYO_MAX_INDIVIDUAL("sistramit.anexos.tamanyoMaximoIndividual");
+	ANEXO_TAMANYO_MAX_INDIVIDUAL("sistramit.anexos.tamanyoMaximoIndividual"),
+	/** Anexo extensiones permitidas **/
+	ANEXOS_EXTENSIONES_PERMITIDAS("sistramit.anexos.extensionesPermitidas");
 
 	/**
 	 * Valor como string.

@@ -14,6 +14,12 @@ public final class Entidad implements ModelApi {
 	/** Logo (path). */
 	private String logo;
 
+	/** Favicon (path). */
+	private String favicon;
+
+	/** Título app. */
+	private String tituloApp;
+
 	/** Css (path). */
 	private String css;
 
@@ -255,7 +261,7 @@ public final class Entidad implements ModelApi {
 
 	/**
 	 * Método de acceso a urlSede.
-	 * 
+	 *
 	 * @return urlSede
 	 */
 	public String getUrlSede() {
@@ -264,12 +270,50 @@ public final class Entidad implements ModelApi {
 
 	/**
 	 * Método para establecer urlSede.
-	 * 
+	 *
 	 * @param urlSede
 	 *                    urlSede a establecer
 	 */
 	public void setUrlSede(final String urlSede) {
 		this.urlSede = urlSede;
+	}
+
+	/**
+	 * Método de acceso a favicon.
+	 *
+	 * @return favicon
+	 */
+	public String getFavicon() {
+		return favicon;
+	}
+
+	/**
+	 * Método para establecer favicon.
+	 *
+	 * @param favicon
+	 *                    favicon a establecer
+	 */
+	public void setFavicon(final String favicon) {
+		this.favicon = favicon;
+	}
+
+	/**
+	 * Método de acceso a tituloApp.
+	 * 
+	 * @return tituloApp
+	 */
+	public String getTituloApp() {
+		return tituloApp;
+	}
+
+	/**
+	 * Método para establecer tituloApp.
+	 * 
+	 * @param tituloApp
+	 *                      tituloApp a establecer
+	 */
+	public void setTituloApp(final String tituloApp) {
+		this.tituloApp = tituloApp;
 	}
 
 }

@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.api.model.comun;
 
+import es.caib.sistrages.core.api.model.EnvioRemoto;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
@@ -24,6 +25,11 @@ public class FilaImportarTramiteRegistro extends FilaImportarBase {
 	/** Indica el codigo de oficina. **/
 	private String oficina;
 
+	/** Indica el envio remoto */
+	private EnvioRemoto envioRemoto;
+	private String envioRemotoMensaje;
+	private TypeImportarAccion envioRemotoAccion;
+
 	/** Indica el texto de oficina. **/
 	private String oficinaText;
 
@@ -38,6 +44,8 @@ public class FilaImportarTramiteRegistro extends FilaImportarBase {
 
 	/** Mostrar registro. **/
 	private boolean mostrarRegistro;
+
+	private boolean isTipoTramite = true;
 
 	/** Constructor básico. **/
 	public FilaImportarTramiteRegistro() {
@@ -58,6 +66,7 @@ public class FilaImportarTramiteRegistro extends FilaImportarBase {
 		this.pasoRegistro = pasoRegistro;
 		this.libro = tramiteVersion.getPasoRegistrar().getCodigoLibroRegistro();
 		this.oficina = tramiteVersion.getPasoRegistrar().getCodigoOficinaRegistro();
+		this.envioRemoto = tramiteVersion.getPasoRegistrar().getEnvioRemoto();
 		this.mostrarRegistro = mostrarRegistro;
 	}
 
@@ -174,6 +183,62 @@ public class FilaImportarTramiteRegistro extends FilaImportarBase {
 	}
 
 	/**
+	 * @return the isTipoTramite
+	 */
+	public boolean isTipoTramite() {
+		return isTipoTramite;
+	}
+
+	/**
+	 * @param isTipoTramite the isTipoTramite to set
+	 */
+	public void setTipoTramite(boolean isTipoTramite) {
+		this.isTipoTramite = isTipoTramite;
+	}
+
+	/**
+	 * @return the envioRemoto
+	 */
+	public EnvioRemoto getEnvioRemoto() {
+		return envioRemoto;
+	}
+
+	/**
+	 * @param envioRemoto the envioRemoto to set
+	 */
+	public void setEnvioRemoto(EnvioRemoto envioRemoto) {
+		this.envioRemoto = envioRemoto;
+	}
+
+	/**
+	 * @return the envioRemotoMensaje
+	 */
+	public String getEnvioRemotoMensaje() {
+		return envioRemotoMensaje;
+	}
+
+	/**
+	 * @param envioRemotoMensaje the envioRemotoMensaje to set
+	 */
+	public void setEnvioRemotoMensaje(String envioRemotoMensaje) {
+		this.envioRemotoMensaje = envioRemotoMensaje;
+	}
+
+	/**
+	 * @return the envioRemotoAccion
+	 */
+	public TypeImportarAccion getEnvioRemotoAccion() {
+		return envioRemotoAccion;
+	}
+
+	/**
+	 * @param envioRemotoAccion the envioRemotoAccion to set
+	 */
+	public void setEnvioRemotoAccion(TypeImportarAccion envioRemotoAccion) {
+		this.envioRemotoAccion = envioRemotoAccion;
+	}
+
+	/**
 	 * Crea un elemento FilaImportarTramiteRegistro de tipo IM (Importar Tramite)
 	 * cuando NO tiene una acción el trámite.
 	 *
@@ -242,5 +307,6 @@ public class FilaImportarTramiteRegistro extends FilaImportarBase {
 		return new FilaImportarTramiteRegistro(TypeImportarAccion.NADA, TypeImportarExiste.EXISTE,
 				TypeImportarEstado.ERROR, TypeImportarResultado.ERROR, tramiteVersion, null, false);
 	}
+
 
 }

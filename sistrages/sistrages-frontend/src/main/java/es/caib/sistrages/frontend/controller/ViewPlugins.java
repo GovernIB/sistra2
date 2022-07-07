@@ -43,6 +43,9 @@ public class ViewPlugins extends ViewControllerBase {
 	/** Id entidad activa. */
 	private Long idEntidad;
 
+	/** Paginacion */
+	private Integer paginacion;
+
 	private Entidad entidad;
 
 	/** Filtro. */
@@ -72,6 +75,7 @@ public class ViewPlugins extends ViewControllerBase {
 		if (ambito == null) {
 			throw new FrontException("No se ha indicado ambito");
 		}
+		paginacion = UtilJSF.getPaginacion("viewPlugins");
 
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
 
@@ -141,50 +145,27 @@ public class ViewPlugins extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 		// Eliminamos
+		String identificador = null;
+		if (TypeAmbito.fromString(ambito).equals(TypeAmbito.ENTIDAD)) {
+			identificador = entidad.getCodigoDIR3();
+		}
 		if (pluginService.removePlugin(this.datoSeleccionado.getCodigo())) {
 			// Refrescamos datos
 			buscar();
 			// Mostramos mensaje
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+			ResultadoError re = this.refrescar();
+			String message = "";
+			// Mostramos mensaje
+			if (re.getCodigo() != 1) {
+				message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("error.refrescarCache")
+						+ ": " + re.getMensaje();
+			} else {
+				message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+			}
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
 		}
-	}
-
-	/**
-	 * Refrescar.
-	 */
-	public void refrescar() {
-		final String urlBase = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
-		final String usuario = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
-		final String pwd = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
-
-		String tipo = null;
-		String identificador = null;
-		switch (TypeAmbito.fromString(ambito)) {
-		case GLOBAL:
-			tipo = "C";
-			break;
-		case ENTIDAD:
-			tipo = "E";
-			if (entidad != null) {
-				identificador = entidad.getCodigoDIR3();
-			}
-			break;
-		default:
-			break;
-		}
-		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, tipo, identificador);
-		if (resultado.getCodigo() == 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
-		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
-		}
-
 	}
 
 	/**
@@ -224,8 +205,7 @@ public class ViewPlugins extends ViewControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -236,7 +216,19 @@ public class ViewPlugins extends ViewControllerBase {
 			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
 				message = UtilJSF.getLiteral("info.alta.ok");
 			} else {
-				message = UtilJSF.getLiteral("info.modificado.ok");
+				String identificador = null;
+				if (TypeAmbito.fromString(ambito).equals(TypeAmbito.ENTIDAD)) {
+					identificador = entidad.getCodigoDIR3();
+				}
+				// Mostramos mensaje
+				ResultadoError re = this.refrescar();
+				// Mostramos mensaje
+				if (re.getCodigo() != 1) {
+					message = UtilJSF.getLiteral("info.modificado.ok") + ". "
+							+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
+				} else {
+					message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+				}
 			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 			// Refrescamos datos
@@ -287,8 +279,7 @@ public class ViewPlugins extends ViewControllerBase {
 	/**
 	 * Abre dialogo.
 	 *
-	 * @param modoAccesoDlg
-	 *                          Modo acceso
+	 * @param modoAccesoDlg Modo acceso
 	 */
 	private void abrirDlgPlugin(final TypeModoAcceso modoAccesoDlg) {
 		// Verifica si no hay fila seleccionada
@@ -313,8 +304,7 @@ public class ViewPlugins extends ViewControllerBase {
 	}
 
 	/**
-	 * @param filtro
-	 *                   the filtro to set
+	 * @param filtro the filtro to set
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
@@ -328,8 +318,7 @@ public class ViewPlugins extends ViewControllerBase {
 	}
 
 	/**
-	 * @param listaDatos
-	 *                       the listaDatos to set
+	 * @param listaDatos the listaDatos to set
 	 */
 	public void setListaDatos(final List<Plugin> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -343,8 +332,7 @@ public class ViewPlugins extends ViewControllerBase {
 	}
 
 	/**
-	 * @param datoSeleccionado
-	 *                             the datoSeleccionado to set
+	 * @param datoSeleccionado the datoSeleccionado to set
 	 */
 	public void setDatoSeleccionado(final Plugin datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
@@ -358,8 +346,7 @@ public class ViewPlugins extends ViewControllerBase {
 	}
 
 	/**
-	 * @param ambito
-	 *                   the ambito to set
+	 * @param ambito the ambito to set
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;
@@ -371,6 +358,21 @@ public class ViewPlugins extends ViewControllerBase {
 
 	public void setEntidad(final Entidad entidad) {
 		this.entidad = entidad;
+	}
+
+	/**
+	 * @return the paginacion
+	 */
+	public final Integer getPaginacion() {
+		return paginacion;
+	}
+
+	/**
+	 * @param paginacion the paginacion to set
+	 */
+	public final void setPaginacion(Integer paginacion) {
+		this.paginacion = paginacion;
+		UtilJSF.setPaginacion(paginacion, "viewPlugins");
 	}
 
 }

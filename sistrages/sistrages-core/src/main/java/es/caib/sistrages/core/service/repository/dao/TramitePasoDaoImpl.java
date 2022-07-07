@@ -28,13 +28,17 @@ import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
 import es.caib.sistrages.core.api.model.ComponenteFormularioImagen;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
+import es.caib.sistrages.core.api.model.EnvioRemoto;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
+import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.LiteralScript;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.ParametroDominio;
@@ -45,14 +49,19 @@ import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramitePasoAnexar;
+import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteRegistro;
 import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
+import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
 import es.caib.sistrages.core.service.repository.model.JArea;
+import es.caib.sistrages.core.service.repository.model.JConfiguracionAutenticacion;
 import es.caib.sistrages.core.service.repository.model.JElementoFormulario;
+import es.caib.sistrages.core.service.repository.model.JEntidad;
+import es.caib.sistrages.core.service.repository.model.JEnvioRemoto;
 import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFormateadorFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormulario;
@@ -562,7 +571,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	}
 
 	@Override
-	public Long importar(final FilaImportarTramiteRegistro filaTramiteVersion, final TramitePaso tramitePaso,
+	public Long importar(final FilaImportarTramiteRegistro filaTramiteRegistro, final TramitePaso tramitePaso,
 			final Long idTramiteVersion, final Long idEntidad, final Map<Long, DisenyoFormulario> formularios,
 			final Map<Long, Fichero> ficheros, final Map<Long, byte[]> ficherosContent,
 			final Map<Long, FormateadorFormulario> formateadores, final Map<Long, Long> mapFormateadores,
@@ -625,9 +634,23 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		}
 
 		if (jpaso.getPasoRegistrar() != null) {
-			jpaso.getPasoRegistrar().setCodigoLibroRegistro(filaTramiteVersion.getLibro());
-			jpaso.getPasoRegistrar().setCodigoOficinaRegistro(filaTramiteVersion.getOficina());
+			if (filaTramiteRegistro.isTipoTramite()) {
+				jpaso.getPasoRegistrar().setCodigoLibroRegistro(filaTramiteRegistro.getLibro());
+				jpaso.getPasoRegistrar().setCodigoOficinaRegistro(filaTramiteRegistro.getOficina());
+			} else {
+				JEntidad jentidad = null ; //idEntidad, idArea
+				JArea jarea = null;
+				if (idEntidad != null) {
+					jentidad = entityManager.find(JEntidad.class, idEntidad);
+				}
+				if (idArea != null) {
+					jarea = entityManager.find(JArea.class, idArea);
+				}
+				JEnvioRemoto jenvio = importarEnvioRemoto(filaTramiteRegistro, jentidad, jarea);
+				jpaso.getPasoRegistrar().setEnvioRemoto(jenvio);
+			}
 		}
+
 		entityManager.persist(jpaso);
 		entityManager.flush();
 
@@ -705,6 +728,85 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		return jpaso.getCodigo();
 	}
 
+	private JEnvioRemoto importarEnvioRemoto(FilaImportarTramiteRegistro filaTramiteRegistro, final JEntidad jentidad, final JArea jarea) {
+		JEnvioRemoto jenvio = null;
+		if (filaTramiteRegistro.getEnvioRemotoAccion() != null ) {
+			if (filaTramiteRegistro.getEnvioRemotoAccion() == TypeImportarAccion.MANTENER || filaTramiteRegistro.getEnvioRemotoAccion() == TypeImportarAccion.SELECCIONAR) {
+				if (filaTramiteRegistro.getEnvioRemoto() != null) {
+					return entityManager.find(JEnvioRemoto.class, filaTramiteRegistro.getEnvioRemoto().getCodigo());
+				}
+			}
+			if (filaTramiteRegistro.getEnvioRemotoAccion() == TypeImportarAccion.CREAR) {
+				EnvioRemoto env = ((TramitePasoRegistrar) filaTramiteRegistro.getPasoRegistro()).getEnvioRemoto();
+				if (env != null) {
+					jenvio = new JEnvioRemoto();
+					jenvio.setAmbito(env.getAmbito().toString());
+					jenvio.setArea(jarea);
+					JConfiguracionAutenticacion jaut = getJConfiguracionAutenticacion(env, null, jentidad, jarea);
+					jenvio.setConfiguracionAutenticacion(jaut);
+					jenvio.setDescripcion(env.getDescripcion());
+					jenvio.setEntidad(jentidad);
+					jenvio.setIdentificador(env.getIdentificador());
+					jenvio.setTimeout(env.getTimeout());
+					jenvio.setUrl(env.getUrl());
+					entityManager.persist(jenvio);
+				}
+			}
+
+			if (filaTramiteRegistro.getEnvioRemotoAccion() == TypeImportarAccion.REEMPLAZAR) {
+				EnvioRemoto env = ((TramitePasoRegistrar) filaTramiteRegistro.getPasoRegistro()).getEnvioRemoto();
+				if (filaTramiteRegistro.getEnvioRemoto() != null) {
+					jenvio = entityManager.find(JEnvioRemoto.class, filaTramiteRegistro.getEnvioRemoto().getCodigo());
+				}
+				if (env != null && jenvio != null) {
+					JConfiguracionAutenticacion jaut = getJConfiguracionAutenticacion(env, jenvio.getConfiguracionAutenticacion(), jentidad, jarea);
+					jenvio.setConfiguracionAutenticacion(jaut);
+					jenvio.setDescripcion(env.getDescripcion());
+					jenvio.setEntidad(jentidad);
+					jenvio.setIdentificador(env.getIdentificador());
+					jenvio.setTimeout(env.getTimeout());
+					jenvio.setUrl(env.getUrl());
+					entityManager.persist(jenvio);
+				}
+			}
+		}
+		return jenvio;
+	}
+
+	private JConfiguracionAutenticacion getJConfiguracionAutenticacion(EnvioRemoto env,
+			JConfiguracionAutenticacion jconfig, final JEntidad jentidad, final JArea jarea) {
+		if (jconfig == null) {
+			//Lo creamos
+			if (env.getConfiguracionAutenticacion() == null) {
+				return null;
+			} else {
+				ConfiguracionAutenticacion conf = env.getConfiguracionAutenticacion() ;
+				JConfiguracionAutenticacion jconnew = new JConfiguracionAutenticacion();
+				jconnew.setAmbito(conf.getAmbito().toString());
+				jconnew.setArea(jarea);
+				jconnew.setEntidad(jentidad);
+				jconnew.setDescripcion(conf.getDescripcion());
+				jconnew.setIdentificador(conf.getIdentificador());
+				jconnew.setPassword(conf.getPassword());
+				jconnew.setUsuario(conf.getUsuario());
+				entityManager.persist(jconnew);
+				return jconnew;
+			}
+		} else {
+			if (env.getConfiguracionAutenticacion() == null) {
+				return null;
+			} else {
+				ConfiguracionAutenticacion conf = env.getConfiguracionAutenticacion() ;
+				jconfig.setDescripcion(conf.getDescripcion());
+				jconfig.setIdentificador(conf.getIdentificador());
+				jconfig.setPassword(conf.getPassword());
+				jconfig.setUsuario(conf.getUsuario());
+				entityManager.merge(jconfig);
+				return jconfig;
+			}
+		}
+	}
+
 	/**
 	 * Añaden plantilla y su lista de plantillas idiomas.
 	 *
@@ -770,10 +872,10 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			paginaFormulario.setLineas(null);
 			final DisenyoFormulario formulario = formularioInternoDao.getFormularioPaginasById(idFormulario);
 			if (paginaFormulario.getScriptValidacion() != null) {
-				paginaFormulario.getScriptValidacion().setCodigo(null);
+				paginaFormulario.setScriptValidacion(Script.clonar(paginaFormulario.getScriptValidacion()));
 			}
 			if (paginaFormulario.getScriptNavegacion() != null) {
-				paginaFormulario.getScriptNavegacion().setCodigo(null);
+				paginaFormulario.setScriptNavegacion(Script.clonar(paginaFormulario.getScriptNavegacion()));
 			}
 			paginaFormulario.setCodigo(null);
 

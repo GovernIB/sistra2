@@ -44,6 +44,10 @@ public enum TypePlugin {
 	 */
 	REGISTRO("E"),
 	/**
+	 * Plugin de envio remoto (Entidad).
+	 */
+	ENVIO_REMOTO("B"),
+	/**
 	 * Plugin de Conversión PDF
 	 */
 	CONVERSION_PDF("V"),

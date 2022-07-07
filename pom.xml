@@ -4,13 +4,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>es.caib.sistra2</groupId>
 	<artifactId>sistra2</artifactId>
-	<version>1.3.0</version>
+	<version>1.3.1</version>
 	<packaging>pom</packaging>
 	<name>Sistra2</name>
 
 	<properties>
 		<!-- Version aplicacion y propiedades -->
-		<sistra2.version>1.3.0</sistra2.version>
+		<sistra2.version>1.3.1</sistra2.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<schema.generate.databaseProductName>Oracle</schema.generate.databaseProductName>
@@ -40,7 +40,7 @@
 		<validation-api.version>1.1.0.Final</validation-api.version>
 		<jsf2.version>2.2.15</jsf2.version>
 		<jstl.version>1.2</jstl.version>
-		<primefaces.version>6.1</primefaces.version>
+		<primefaces.version>6.2</primefaces.version>
 		<primefacesExtensions.version>6.1.1</primefacesExtensions.version>
 		<primefaces.allThemes.version>1.0.8</primefaces.allThemes.version>
 		<jersey.version>2.27</jersey.version>
@@ -77,9 +77,7 @@
 		<itext.version>2.1.7</itext.version>
 		<regweb3-ws.version>3.1.2</regweb3-ws.version>
 
-		<!--
-		<cxf.version>3.3.0</cxf.version>
-		 -->
+		<!-- Mantenemos misma versión que tiene JBoss -->
 		<cxf.version>3.2.5</cxf.version>
 
 		<dom4j.version>1.6.1</dom4j.version>

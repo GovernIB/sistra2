@@ -21,6 +21,9 @@ public class TramiteVersion extends ModelApi {
 	/** descripcion. */
 	private String descripcion;
 
+	/** Tipo Tramite. */
+	private String tipoTramite;
+
 	/** codigo tramite. */
 	private Long idTramite;
 
@@ -133,6 +136,20 @@ public class TramiteVersion extends ModelApi {
 	 */
 	public Long getCodigo() {
 		return codigo;
+	}
+
+	/**
+	 * @return the tipoTramite
+	 */
+	public final String getTipoTramite() {
+		return tipoTramite;
+	}
+
+	/**
+	 * @param tipoTramite the tipoTramite to set
+	 */
+	public final void setTipoTramite(String tipoTramite) {
+		this.tipoTramite = tipoTramite;
 	}
 
 	/**

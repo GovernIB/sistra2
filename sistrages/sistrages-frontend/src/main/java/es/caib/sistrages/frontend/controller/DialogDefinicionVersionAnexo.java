@@ -1,6 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeExtension;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -32,6 +34,7 @@ import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.model.types.TypeTamanyo;
 
 /**
@@ -48,6 +51,10 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	@Inject
 	private TramiteService tramiteService;
 
+	/** System service */
+	@Inject
+	private SystemService systemService;
+
 	/** config global service. */
 	@Inject
 	private ConfiguracionGlobalService cfService;
@@ -57,6 +64,9 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 
 	/** Data. **/
 	private Documento data;
+
+	/** Data inicial **/
+	private Documento dataI;
 
 	/** Documento seleccioando. **/
 	private Documento datoSeleccionado;
@@ -76,6 +86,8 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	/** Idiomas. **/
 	private List<String> idiomas;
 
+	private boolean cambios = false;
+
 	/**
 	 * Obtiene el valor de permiteEditar.
 	 *
@@ -93,6 +105,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	/** Init. **/
 	public void init() {
 		data = tramiteService.getDocumento(Long.valueOf(id));
+		dataI = tramiteService.getDocumento(Long.valueOf(id));
 		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 
 		if (data.getExtensiones().equals(Constantes.EXTENSIONES_TODAS)) {
@@ -141,7 +154,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	public void returnDialogoFichero(final SelectEvent event) {
 
 		data = tramiteService.getDocumento(Long.valueOf(id));
-
+		cambios = true;
 	}
 
 	/**
@@ -161,6 +174,10 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 
 				final Literal traduccion = (Literal) respuesta.getResult();
 				data.setDescripcion(traduccion);
+				final Literal traduccionesI = dataI.getDescripcion();
+				if (this.isCambioLiterales(traduccionesI, traduccion)) {
+					cambios = true;
+				}
 
 				break;
 			case CONSULTA:
@@ -187,6 +204,10 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 			case EDICION:
 				final Literal traduccion = (Literal) respuesta.getResult();
 				data.setAyudaTexto(traduccion);
+				final Literal traduccionesI = dataI.getAyudaTexto();
+				if (this.isCambioLiterales(traduccionesI, traduccion)) {
+					cambios = true;
+				}
 
 				break;
 			case CONSULTA:
@@ -214,6 +235,19 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 			case EDICION:
 				final Script script = (Script) respuesta.getResult();
 				data.setScriptObligatoriedad(script);
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(dataI.getScriptObligatoriedad(), data.getScriptObligatoriedad())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			case CONSULTA:
 			default:
@@ -239,6 +273,19 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 			case EDICION:
 				final Script script = (Script) respuesta.getResult();
 				data.setScriptFirmarDigitalmente(script);
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(dataI.getScriptFirmarDigitalmente(), data.getScriptFirmarDigitalmente())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			case CONSULTA:
 			default:
@@ -264,6 +311,19 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 			case EDICION:
 				final Script script = (Script) respuesta.getResult();
 				data.setScriptValidacion(script);
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(dataI.getScriptValidacion(), data.getScriptValidacion())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			case CONSULTA:
 			default:
@@ -331,6 +391,10 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		switch (TypeModoAcceso.valueOf(modoAcceso)) {
 		case ALTA:
 		case EDICION:
+			if (cambios) {
+				tramiteService.actualizarFechaTramiteVersion(Long.parseLong(idTramiteVersion),
+						UtilJSF.getSessionBean().getUserName(), "Modificación anexo");
+			}
 			tramiteService.updateDocumentoTramite(data);
 			break;
 		case CONSULTA:
@@ -388,6 +452,17 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 			for (final String cadena : listaExtensiones) {
 				if (!cadena.matches("^\\w{3,4}$")) {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.extensiones.formato"));
+					return false;
+				}
+				String[] listaExtensionesPermitidas = {};
+				if (systemService.obtenerPropiedadConfiguracion(
+						TypePropiedadConfiguracion.ANEXOS_EXTENSIONES_PERMITIDAS.toString()) != null) {
+					listaExtensionesPermitidas = systemService.obtenerPropiedadConfiguracion(
+							TypePropiedadConfiguracion.ANEXOS_EXTENSIONES_PERMITIDAS.toString()).split(",");
+				}
+				if (!Arrays.asList(listaExtensionesPermitidas).contains(cadena)) {
+					addMessageContext(TypeNivelGravedad.WARNING,
+							UtilJSF.getLiteral("error.extensionNoPermitida", new Object[] { cadena }));
 					return false;
 				}
 			}
@@ -521,6 +596,10 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;
+	}
+
+	public void setCambios() {
+		this.cambios = true;
 	}
 
 }

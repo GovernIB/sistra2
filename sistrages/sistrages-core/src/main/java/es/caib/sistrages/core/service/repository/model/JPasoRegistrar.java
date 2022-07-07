@@ -68,6 +68,15 @@ public class JPasoRegistrar implements IModelApi {
 	@Column(name = "PRG_REGOFI", length = 20)
 	private String codigoOficinaRegistro;
 
+	/** Destino */
+	@Column(name = "PRG_DESTIN", nullable = false, length = 1)
+	private String destino;
+
+	/** Envio Remoto */
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "PRG_CODEVR")
+	private JEnvioRemoto envioRemoto;
+
 	/** Código libro registro. **/
 	@Column(name = "PRG_REGLIB", length = 20)
 	private String codigoLibroRegistro;
@@ -330,6 +339,34 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
+	 * @return the destino
+	 */
+	public String getDestino() {
+		return destino;
+	}
+
+	/**
+	 * @param destino the destino to set
+	 */
+	public void setDestino(String destino) {
+		this.destino = destino;
+	}
+
+	/**
+	 * @return the codigoEnvio
+	 */
+	public JEnvioRemoto getEnvioRemoto() {
+		return envioRemoto;
+	}
+
+	/**
+	 * @param codigoEnvio the codigoEnvio to set
+	 */
+	public void setEnvioRemoto(JEnvioRemoto envioRemoto) {
+		this.envioRemoto = envioRemoto;
+	}
+
+	/**
 	 * From model.
 	 *
 	 * @param paso
@@ -354,6 +391,8 @@ public class JPasoRegistrar implements IModelApi {
 			jpaso.setPermiteSubsanar(paso.isPermiteSubsanar());
 			jpaso.setScriptAlFinalizar(JScript.fromModel(paso.getScriptAlFinalizar()));
 			jpaso.setAvisoAlFinalizar(paso.isAvisoAlFinalizar());
+			jpaso.setDestino(paso.getDestino());
+			jpaso.setEnvioRemoto(JEnvioRemoto.fromModelStatic(paso.getEnvioRemoto()));
 		}
 		return jpaso;
 	}
@@ -388,6 +427,14 @@ public class JPasoRegistrar implements IModelApi {
 			jpasoRegistrar.setPermiteSubsanar(origPasoRegistrar.isPermiteSubsanar());
 			jpasoRegistrar.setScriptAlFinalizar(JScript.clonar(origPasoRegistrar.getScriptAlFinalizar()));
 			jpasoRegistrar.setAvisoAlFinalizar(origPasoRegistrar.isAvisoAlFinalizar());
+			jpasoRegistrar.setDestino(origPasoRegistrar.getDestino());
+			if (origPasoRegistrar.getEnvioRemoto() != null) {
+				jpasoRegistrar.setEnvioRemoto(JEnvioRemoto.clonar(origPasoRegistrar.getEnvioRemoto(),
+						origPasoRegistrar.getEnvioRemoto().getIdentificador(),
+						origPasoRegistrar.getEnvioRemoto().getArea(), origPasoRegistrar.getEnvioRemoto().getEntidad()));
+			} else {
+				jpasoRegistrar.setEnvioRemoto(null);
+			}
 		}
 		return jpasoRegistrar;
 	}

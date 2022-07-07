@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.EnvioRemoto;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
@@ -28,7 +30,6 @@ import es.caib.sistrages.core.api.model.Rol;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
-import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.rest.adapter.AvisosEntidadAdapter;
 import es.caib.sistrages.rest.adapter.ConfiguracionEntidadAdapter;
@@ -119,7 +120,9 @@ public class ApiInternaRestController {
 	public RConfiguracionGlobal obtenerConfiguracionGlobal() {
 		final List<ConfiguracionGlobal> cg = restApiService.listConfiguracionGlobal(null);
 		final List<Plugin> pg = restApiService.listPlugin(TypeAmbito.GLOBAL, (long) 0, null);
-		return confGlobalAdapter.convertir(cg, pg);
+		final List<ConfiguracionAutenticacion> configuraciones = restApiService
+				.listConfiguracionAutenticacion(TypeAmbito.GLOBAL, null);
+		return confGlobalAdapter.convertir(cg, pg, configuraciones);
 	}
 
 	/**
@@ -139,14 +142,28 @@ public class ApiInternaRestController {
 		if (formateador != null) {
 			plantillas = restApiService.getPlantillasFormateador(formateador.getCodigo());
 		}
-		List<PlantillaEntidad> plantillasEntidad = restApiService.getPlantillasEntidad(entidad.getCodigo());
+		final List<PlantillaEntidad> plantillasEntidad = restApiService.getPlantillasEntidad(entidad.getCodigo());
 
 		List<IncidenciaValoracion> valoraciones = null;
 		if (entidad.isValorarTramite()) {
 			valoraciones = restApiService.getValoraciones(entidad.getCodigo());
 		}
 
-		return confEntidadAdapter.convertir(entidad, formSoporte, plantillas, valoraciones, plantillasEntidad, areas);
+		final List<EnvioRemoto> enviosRemotos = restApiService.listEnvioByEntidad(entidad.getCodigo());
+
+		/*
+		 * for (Area a : areas) { for (EnvioRemoto er :
+		 * restApiService.listEnvio(TypeAmbito.AREA, a.getCodigo(), "")) {
+		 * enviosRemotos.add(er); } } for (EnvioRemoto er :
+		 * restApiService.listEnvio(TypeAmbito.ENTIDAD, entidad.getCodigo(), "")) {
+		 * enviosRemotos.add(er); }
+		 */
+		final List<ConfiguracionAutenticacion> configuraciones = restApiService
+				.listConfiguracionAutenticacion(TypeAmbito.ENTIDAD, entidad.getCodigo());
+		final List<GestorExternoFormularios> gestores = restApiService
+				.listGestorExternoFormularios(entidad.getCodigo());
+		return confEntidadAdapter.convertir(entidad, formSoporte, plantillas, valoraciones, plantillasEntidad, areas,
+				enviosRemotos, configuraciones, gestores);
 	}
 
 	/**
@@ -168,9 +185,7 @@ public class ApiInternaRestController {
 			LOGGER.error("No existe el tramite " + idtramite + " version " + version);
 			throw new NoExisteException("No existe el tramite " + idtramite + " version " + version);
 		}
-		final List<GestorExternoFormularios> gestoresExternosFormularios = restApiService
-				.listGestorExternoFormularios(tv.getIdArea());
-		return versionTramiteAdapter.convertir(idtramite, tv, idioma, idiomaDefecto, gestoresExternosFormularios);
+		return versionTramiteAdapter.convertir(idtramite, tv, idioma, idiomaDefecto);
 	}
 
 	/**
@@ -188,7 +203,17 @@ public class ApiInternaRestController {
 			LOGGER.error("No existe el dominio " + idDominio);
 			throw new NoExisteException("No existe el dominio " + idDominio);
 		}
-		return dominioAdapter.convertir(dominio);
+		String idEntidad = null;
+		if (dominio.getAmbito() != TypeAmbito.GLOBAL) {
+			if (dominio.getAmbito().equals(TypeAmbito.ENTIDAD)) {
+				final Entidad entidad = restApiService.loadEntidad(dominio.getEntidad());
+				idEntidad = entidad.getIdentificador();
+			} else if (dominio.getAmbito().equals(TypeAmbito.AREA)) {
+				final Entidad entidad = restApiService.loadEntidadByArea(dominio.getArea().getCodigo());
+				idEntidad = entidad.getCodigoDIR3();
+			}
+		}
+		return dominioAdapter.convertir(dominio, idEntidad);
 	}
 
 	/**

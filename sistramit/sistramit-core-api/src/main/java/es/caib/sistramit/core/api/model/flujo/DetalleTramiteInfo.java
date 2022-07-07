@@ -1,9 +1,11 @@
 package es.caib.sistramit.core.api.model.flujo;
 
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.flujo.types.TypeDestino;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
+import es.caib.sistramit.core.api.model.flujo.types.TypeTramite;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 
@@ -30,6 +32,12 @@ public class DetalleTramiteInfo implements ModelApi {
 
 	/** Título trámite. */
 	private String titulo;
+
+	/** Tipo trámite. */
+	private TypeTramite tipoTramite;
+
+	/** Tipo destino. */
+	private TypeDestino destino;
 
 	/** Tipo flujo tramitación. */
 	private TypeFlujoTramitacion tipoFlujo;
@@ -71,7 +79,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * Método para establecer idSesionTramitacion.
 	 *
 	 * @param idSesionTramitacion
-	 *            idSesionTramitacion a establecer
+	 *                                idSesionTramitacion a establecer
 	 */
 	public void setIdSesion(final String idSesionTramitacion) {
 		this.idSesion = idSesionTramitacion;
@@ -90,7 +98,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * Método para establecer idTramite.
 	 *
 	 * @param idTramite
-	 *            idTramite a establecer
+	 *                      idTramite a establecer
 	 */
 	public void setId(final String idTramite) {
 		this.id = idTramite;
@@ -109,7 +117,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * Método para establecer version.
 	 *
 	 * @param version
-	 *            version a establecer
+	 *                    version a establecer
 	 */
 	public void setVersion(final int version) {
 		this.version = version;
@@ -128,7 +136,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * Método para establecer idioma.
 	 *
 	 * @param idioma
-	 *            idioma a establecer
+	 *                   idioma a establecer
 	 */
 	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
@@ -147,7 +155,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * Método para establecer titulo.
 	 *
 	 * @param titulo
-	 *            titulo a establecer
+	 *                   titulo a establecer
 	 */
 	public void setTitulo(final String titulo) {
 		this.titulo = titulo;
@@ -166,7 +174,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * Método para establecer tipoFlujo.
 	 *
 	 * @param tipoFlujo
-	 *            tipoFlujo a establecer
+	 *                      tipoFlujo a establecer
 	 */
 	public void setTipoFlujo(final TypeFlujoTramitacion tipoFlujo) {
 		this.tipoFlujo = tipoFlujo;
@@ -185,7 +193,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * Método para establecer autenticacion.
 	 *
 	 * @param autenticacion
-	 *            autenticacion a establecer
+	 *                          autenticacion a establecer
 	 */
 	public void setAutenticacion(final TypeAutenticacion autenticacion) {
 		this.autenticacion = autenticacion;
@@ -204,7 +212,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * Método para establecer metodoAutenticacion.
 	 *
 	 * @param metodoAutenticacion
-	 *            metodoAutenticacion a establecer
+	 *                                metodoAutenticacion a establecer
 	 */
 	public void setMetodoAutenticacion(final TypeMetodoAutenticacion metodoAutenticacion) {
 		this.metodoAutenticacion = metodoAutenticacion;
@@ -223,7 +231,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * Método para establecer nuevo.
 	 *
 	 * @param nuevo
-	 *            nuevo a establecer
+	 *                  nuevo a establecer
 	 */
 	public void setNuevo(final TypeSiNo nuevo) {
 		this.nuevo = nuevo;
@@ -242,7 +250,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * Método para establecer persistente.
 	 *
 	 * @param persistente
-	 *            persistente a establecer
+	 *                        persistente a establecer
 	 */
 	public void setPersistente(final TypeSiNo persistente) {
 		this.persistente = persistente;
@@ -261,7 +269,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * Método para establecer diasPersistencia.
 	 *
 	 * @param diasPersistencia
-	 *            diasPersistencia a establecer
+	 *                             diasPersistencia a establecer
 	 */
 	public void setDiasPersistencia(final int diasPersistencia) {
 		this.diasPersistencia = diasPersistencia;
@@ -280,7 +288,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * Método para establecer idPasoActual.
 	 *
 	 * @param idPasoActual
-	 *            idPasoActual a establecer
+	 *                         idPasoActual a establecer
 	 */
 	public void setIdPasoActual(final String idPasoActual) {
 		this.idPasoActual = idPasoActual;
@@ -299,7 +307,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * Método para establecer tipoPasoActual.
 	 *
 	 * @param tipoPasoActual
-	 *            tipoPasoActual a establecer
+	 *                           tipoPasoActual a establecer
 	 */
 	public void setTipoPasoActual(final TypePaso tipoPasoActual) {
 		this.tipoPasoActual = tipoPasoActual;
@@ -318,10 +326,48 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * Método para establecer presentacion.
 	 *
 	 * @param presentacion
-	 *            presentacion a establecer
+	 *                         presentacion a establecer
 	 */
 	public void setPresentacion(final TypePresentacion presentacion) {
 		this.presentacion = presentacion;
+	}
+
+	/**
+	 * Método de acceso a tipoTramite.
+	 * 
+	 * @return tipoTramite
+	 */
+	public TypeTramite getTipoTramite() {
+		return tipoTramite;
+	}
+
+	/**
+	 * Método para establecer tipoTramite.
+	 * 
+	 * @param tipoTramite
+	 *                        tipoTramite a establecer
+	 */
+	public void setTipoTramite(final TypeTramite tipoTramite) {
+		this.tipoTramite = tipoTramite;
+	}
+
+	/**
+	 * Método de acceso a tipoDestino.
+	 * 
+	 * @return tipoDestino
+	 */
+	public TypeDestino getDestino() {
+		return destino;
+	}
+
+	/**
+	 * Método para establecer tipoDestino.
+	 * 
+	 * @param tipoDestino
+	 *                        tipoDestino a establecer
+	 */
+	public void setDestino(final TypeDestino tipoDestino) {
+		this.destino = tipoDestino;
 	}
 
 }

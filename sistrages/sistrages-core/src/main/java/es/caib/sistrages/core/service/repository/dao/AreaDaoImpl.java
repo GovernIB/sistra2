@@ -166,7 +166,6 @@ public class AreaDaoImpl implements AreaDao {
 		final JArea jAreaNew = JArea.fromModel(pArea);
 		jAreaNew.setCodigo(jArea.getCodigo());
 		jAreaNew.setEntidad(jArea.getEntidad());
-		jAreaNew.setDominios(jArea.getDominios());
 		entityManager.merge(jAreaNew);
 	}
 

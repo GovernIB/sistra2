@@ -45,6 +45,7 @@ import es.caib.sistramit.core.api.model.flujo.Entidad;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.types.TypeDestino;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFirmaDigital;
@@ -56,6 +57,8 @@ import es.caib.sistramit.core.api.model.system.types.TypeParametroEvento;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.flujo.ConstantesFlujo;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
+import es.caib.sistramit.core.service.component.integracion.EnvioAvisoComponent;
+import es.caib.sistramit.core.service.component.integracion.EnvioRemotoComponent;
 import es.caib.sistramit.core.service.component.integracion.RegistroComponent;
 import es.caib.sistramit.core.service.component.literales.Literales;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
@@ -70,6 +73,7 @@ import es.caib.sistramit.core.service.model.flujo.DatosPaso;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaPaso;
 import es.caib.sistramit.core.service.model.flujo.DocumentoPasoPersistencia;
 import es.caib.sistramit.core.service.model.flujo.FirmaDocumentoPersistencia;
+import es.caib.sistramit.core.service.model.flujo.ParametrosRegistro;
 import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
 import es.caib.sistramit.core.service.model.flujo.RespuestaAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.RespuestaEjecutarAccionPaso;
@@ -77,8 +81,8 @@ import es.caib.sistramit.core.service.model.flujo.ResultadoRegistro;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
 import es.caib.sistramit.core.service.model.flujo.types.TypeEstadoPaso;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
-import es.caib.sistramit.core.service.model.system.Envio;
-import es.caib.sistramit.core.service.model.system.types.TypeEnvio;
+import es.caib.sistramit.core.service.model.system.EnvioAviso;
+import es.caib.sistramit.core.service.model.system.types.TypeEnvioAviso;
 import es.caib.sistramit.core.service.repository.dao.FlujoPasoDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
 import es.caib.sistramit.core.service.util.UtilsSTG;
@@ -106,12 +110,18 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/** Componente de registro. */
 	@Autowired
 	private RegistroComponent registroComponent;
+	/** Componente de envio remoto. */
+	@Autowired
+	private EnvioRemotoComponent envioRemotoComponent;
 	/** Configuración. */
 	@Autowired
 	private ConfiguracionComponent configuracion;
 	/** Auditoria. */
 	@Autowired
 	private AuditoriaComponent auditoriaComponent;
+	/** Envio aviso. */
+	@Autowired
+	private EnvioAvisoComponent envioAvisoComponent;
 
 	@Override
 	public RespuestaEjecutarAccionPaso ejecutarAccionPaso(final DatosPaso pDatosPaso, final DatosPersistenciaPaso pDpp,
@@ -170,8 +180,11 @@ public final class AccionRegistrarTramite implements AccionPaso {
 
 		final DetallePasoRegistrar detallePasoRegistrar = (DetallePasoRegistrar) pDipa.getDetallePaso();
 
+		// TODO TRAMITE-SERVICIO: VER SI PARA SERVICIO ENVIAMOS CORREO FINALIZACION
+
 		if (resReg != null && resReg.getResultado() == TypeResultadoRegistro.CORRECTO
-				&& detallePasoRegistrar.getAvisoFinalizar().getAvisar() == TypeSiNo.SI) {
+				&& detallePasoRegistrar.getAvisoFinalizar().getAvisar() == TypeSiNo.SI
+				&& pVariablesFlujo.getTipoDestino() == TypeDestino.REGISTRO) {
 
 			final String idEntidad = pDefinicionTramite.getDefinicionVersion().getIdEntidad();
 			final RConfiguracionEntidad entidad = configuracion.obtenerConfiguracionEntidad(idEntidad);
@@ -227,13 +240,13 @@ public final class AccionRegistrarTramite implements AccionPaso {
 
 			// Enviamos mail
 			final String email = detallePasoRegistrar.getAvisoFinalizar().getEmail();
-			final Envio envio = new Envio();
+			final EnvioAviso envio = new EnvioAviso();
 			envio.setDestino(email);
 			envio.setFechaCreacion(new Date());
 			envio.setMensaje(mensaje);
-			envio.setTipo(TypeEnvio.EMAIL);
+			envio.setTipo(TypeEnvioAviso.EMAIL);
 			envio.setTitulo(titulo);
-			registroComponent.guardarEnvio(envio);
+			envioAvisoComponent.generarEnvio(envio);
 
 		}
 
@@ -263,8 +276,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 
 		// Como se ha iniciado sesión registro deberá estar en estado reintentar
 		if (detallePasoRegistrar.getReintentar() == TypeSiNo.NO) {
-			throw new AccionPasoNoPermitidaException(
-					" No s'ha iniciat sessió registre i no està en estat reintentar");
+			throw new AccionPasoNoPermitidaException(" No s'ha iniciat sessió registre i no està en estat reintentar");
 		}
 
 	}
@@ -294,33 +306,100 @@ public final class AccionRegistrarTramite implements AccionPaso {
 
 		ResultadoRegistrar resReg = null;
 		if (reintentar) {
-			resReg = registroComponent.reintentarRegistro(pDefinicionTramite.getDefinicionVersion().getIdEntidad(),
-					idSesionRegistro, pVariablesFlujo.isDebugEnabled());
+			// Reintentar registro
+			resReg = reintentarRegistrar(idSesionRegistro, pDipa.getParametrosRegistro(), pVariablesFlujo);
 		} else {
 			// Generar asiento con info asiento
 			final AsientoRegistral asiento = generarAsiento(pDipa, pVariablesFlujo, pDefinicionTramite, true);
-			// Genera evento debug (json excluyendo contenido docs)
-			if (pVariablesFlujo.isDebugEnabled()) {
-				final AsientoRegistral asientoDebug = generarAsiento(pDipa, pVariablesFlujo, pDefinicionTramite, false);
-				String asientoStr;
-				try {
-					asientoStr = JSONUtil.toJSON(asientoDebug);
-				} catch (final JSONUtilException e) {
-					asientoStr = "Error al serialitzar info seient: " + e.getMessage();
-				}
-				final ListaPropiedades listaPropiedades = new ListaPropiedades();
-				listaPropiedades.addPropiedad(TypeParametroEvento.REGISTRO_ASIENTOREGISTRO.toString(), asientoStr);
-				final EventoAuditoria evento = new EventoAuditoria();
-				evento.setIdSesionTramitacion(pVariablesFlujo.getIdSesionTramitacion());
-				evento.setFecha(new Date());
-				evento.setTipoEvento(TypeEvento.DEBUG_SCRIPT);
-				evento.setDescripcion("Debug envio valores registro");
-				evento.setPropiedadesEvento(listaPropiedades);
-				auditoriaComponent.auditarEventoAplicacion(evento);
-			}
+			// Audita registro
+			auditarRegistro(pDipa, pDefinicionTramite, pVariablesFlujo);
 			// Invoca a registrar
-			resReg = registroComponent.registrar(pDefinicionTramite.getDefinicionVersion().getIdEntidad(),
+			resReg = realizarRegistro(idSesionRegistro, pDipa.getParametrosRegistro(), asiento, pVariablesFlujo);
+		}
+		return resReg;
+	}
+
+	/**
+	 * Genera evento debug (json excluyendo contenido docs).
+	 *
+	 * @param pDipa
+	 *                               Datos internos paso
+	 * @param pDefinicionTramite
+	 *                               Definición trámite
+	 * @param pVariablesFlujo
+	 *                               Variables flujo
+	 */
+	protected void auditarRegistro(final DatosInternosPasoRegistrar pDipa,
+			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo) {
+		if (pVariablesFlujo.isDebugEnabled()) {
+			final AsientoRegistral asientoDebug = generarAsiento(pDipa, pVariablesFlujo, pDefinicionTramite, false);
+			String asientoStr;
+			try {
+				asientoStr = JSONUtil.toJSON(asientoDebug);
+			} catch (final JSONUtilException e) {
+				asientoStr = "Error al serialitzar info seient: " + e.getMessage();
+			}
+			final ListaPropiedades listaPropiedades = new ListaPropiedades();
+			listaPropiedades.addPropiedad(TypeParametroEvento.REGISTRO_ASIENTOREGISTRO.toString(), asientoStr);
+			final EventoAuditoria evento = new EventoAuditoria();
+			evento.setIdSesionTramitacion(pVariablesFlujo.getIdSesionTramitacion());
+			evento.setFecha(new Date());
+			evento.setTipoEvento(TypeEvento.DEBUG_SCRIPT);
+			evento.setDescripcion("Debug envio valores registro");
+			evento.setPropiedadesEvento(listaPropiedades);
+			auditoriaComponent.auditarEventoAplicacion(evento);
+		}
+	}
+
+	/**
+	 * Realiza registro.
+	 *
+	 * @param idSesionRegistro
+	 *                               id sesion
+	 * @param parametrosRegistro
+	 *                               Parámetros registro
+	 * @param asiento
+	 *                               asiento
+	 * @param pVariablesFlujo
+	 *                               Variables flujo
+	 * @return resultado registro
+	 */
+	protected ResultadoRegistrar realizarRegistro(final String idSesionRegistro,
+			final ParametrosRegistro parametrosRegistro, final AsientoRegistral asiento,
+			final VariablesFlujo pVariablesFlujo) {
+		ResultadoRegistrar resReg;
+		if (pVariablesFlujo.getTipoDestino() == TypeDestino.REGISTRO) {
+			resReg = registroComponent.registrar(parametrosRegistro.getDatosRegistrales().getCodigoEntidad(),
 					pVariablesFlujo.getIdSesionTramitacion(), idSesionRegistro, asiento,
+					pVariablesFlujo.isDebugEnabled());
+		} else {
+			resReg = envioRemotoComponent.realizarEnvio(parametrosRegistro.getDatosRegistrales().getCodigoEntidad(),
+					parametrosRegistro.getDatosRegistrales().getIdEnvioRemoto(),
+					pVariablesFlujo.getIdSesionTramitacion(), idSesionRegistro, asiento,
+					pVariablesFlujo.isDebugEnabled());
+		}
+		return resReg;
+	}
+
+	/**
+	 * Reintentar registrar.
+	 *
+	 * @param idSesionRegistro
+	 *                               id sesión
+	 * @param parametrosRegistro
+	 *                               parametrosRegistro
+	 * @param pVariablesFlujo
+	 * @return
+	 */
+	protected ResultadoRegistrar reintentarRegistrar(final String idSesionRegistro,
+			final ParametrosRegistro parametrosRegistro, final VariablesFlujo pVariablesFlujo) {
+		ResultadoRegistrar resReg;
+		if (pVariablesFlujo.getTipoDestino() == TypeDestino.REGISTRO) {
+			resReg = registroComponent.reintentarRegistro(parametrosRegistro.getDatosRegistrales().getCodigoEntidad(),
+					idSesionRegistro, pVariablesFlujo.isDebugEnabled());
+		} else {
+			resReg = envioRemotoComponent.reintentarEnvio(parametrosRegistro.getDatosRegistrales().getCodigoEntidad(),
+					parametrosRegistro.getDatosRegistrales().getIdEnvioRemoto(), idSesionRegistro,
 					pVariablesFlujo.isDebugEnabled());
 		}
 		return resReg;

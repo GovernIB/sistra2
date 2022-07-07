@@ -45,9 +45,6 @@
 									 	value="btn"
 										actionListener="#{viewDefinicionVersion.actualizar()}" process="@this"  update="@form :workDefinicionVersion growl formArbol:arbol" style="display:none"/>
 
-								<p:commandButton id="btnRefrescarCache"
-									 	value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" rendered="#{viewDefinicionVersion.isPermiteRefrescar()}"
-										actionListener="#{viewTramites.refrescarCache(viewDefinicionVersion.tramite.identificador, viewDefinicionVersion.tramiteVersion.numeroVersion)}" process="@this" style="margin-left:4px;width:150px;" update="growl" />
 							</div>
 							</h:form>
 

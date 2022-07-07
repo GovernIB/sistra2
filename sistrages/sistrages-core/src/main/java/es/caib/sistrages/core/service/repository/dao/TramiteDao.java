@@ -228,13 +228,15 @@ public interface TramiteDao {
 
 	/**
 	 * Obtiene tramite a partir de identificador.
+	 * 
 	 * @param identificador
 	 * @param idArea
 	 * @param identificadorArea
 	 * @return
 	 */
 
-	Tramite getTramiteByIdentificador(String identificador, final Long idArea, String identificadorArea, Long codigoTramite);
+	Tramite getTramiteByIdentificador(String identificador, final Long idArea, String identificadorArea,
+			Long codigoTramite);
 
 	/**
 	 * Obtiene tramite version a partir del num version y su id tramite.
@@ -267,6 +269,15 @@ public interface TramiteDao {
 	 * @param idDominio
 	 * @return
 	 */
+
+	/**
+	 * Lista de tramite versión que tengan un dominio.
+	 *
+	 * @param idDominio
+	 * @return
+	 */
+	List<DominioTramite> getTramiteVersionByEnvioRemoto(Long idEnvioRemoto);
+
 	List<DominioTramite> getTramiteVersionByGfe(Long idGfe);
 
 	/**
@@ -280,6 +291,7 @@ public interface TramiteDao {
 
 	/**
 	 * Recupera el tramite Version dado el identificador logico
+	 * 
 	 * @param idEntidad
 	 * @param idArea
 	 * @param idTramite
@@ -378,6 +390,7 @@ public interface TramiteDao {
 
 	/**
 	 * Actualiza dominios si no están agregados.
+	 * 
 	 * @param idTramiteVersion
 	 * @param dominios
 	 */
@@ -385,6 +398,7 @@ public interface TramiteDao {
 
 	/**
 	 * Devuelve el total de tramite por GFE
+	 * 
 	 * @param id
 	 * @return
 	 */

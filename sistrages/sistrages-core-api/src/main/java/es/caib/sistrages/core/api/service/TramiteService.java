@@ -444,6 +444,7 @@ public interface TramiteService {
 
 	/**
 	 * Obtiene tramite por identificador.
+	 *
 	 * @param identificador
 	 * @param idArea
 	 * @param identificadorArea
@@ -451,7 +452,8 @@ public interface TramiteService {
 	 * @return
 	 */
 
-	public Tramite getTramiteByIdentificador(String identificador, final Long idArea, String identificadorArea, Long codigoTramite);
+	public Tramite getTramiteByIdentificador(String identificador, final Long idArea, String identificadorArea,
+			Long codigoTramite);
 
 	/**
 	 * Obtiene el tramite version con el num. version más alto.
@@ -476,6 +478,14 @@ public interface TramiteService {
 	 * @return
 	 */
 	public List<DominioTramite> getTramiteVersionByDominio(Long idDominio);
+
+	/**
+	 * Obtiene la lista de tramite versión que tienen ese envio remoto.
+	 *
+	 * @param idDominio
+	 * @return
+	 */
+	public List<DominioTramite> getTramiteVersionByEnvioRemoto(Long idEnvioRemoto);
 
 	/**
 	 * Obtiene la lista de tramite versión que tienen ese gestor de formulario
@@ -710,25 +720,30 @@ public interface TramiteService {
 
 	/**
 	 * Si algún identificador no está agregado, mira de añadirlo.
+	 *
 	 * @param idTramiteVersion
 	 * @param dominios
 	 */
-	public void actualizarDominios(TramiteVersion idTramiteVersion,  final List<ValorIdentificadorCompuesto> dominios);
+	public void actualizarDominios(TramiteVersion idTramiteVersion, final List<ValorIdentificadorCompuesto> dominios);
 
 	/**
 	 * Devuelve la lista de datos que utilizan un dominio
+	 *
 	 * @param idDominio
 	 * @param idTramiteVersion
 	 * @param idioma
 	 * @return
 	 */
-	public List<ErrorValidacion> checkDominioNoUtilizado(Long idDominio, Long idTramiteVersion,  final String idioma);
+	public List<ErrorValidacion> checkDominioNoUtilizado(Long idDominio, Long idTramiteVersion, final String idioma);
 
 	/**
 	 * Devuelve si hay tramites asociados a la GFE
+	 *
 	 * @param id
 	 * @return
 	 */
 	public boolean getCountTramiteVersionByGfe(Long id);
+
+	void actualizarFechaTramiteVersion(Long idTramiteVersion, String username, String detalle);
 
 }

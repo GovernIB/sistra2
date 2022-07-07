@@ -14,10 +14,12 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.AvisoEntidad;
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.EnvioRemoto;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
@@ -82,6 +84,12 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public Entidad loadEntidadByArea(final Long idArea) {
+		return restApiService.loadEntidadByArea(idArea);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
 	public Entidad loadEntidad(final String codigoDIR3) {
 		return restApiService.loadEntidad(codigoDIR3);
 	}
@@ -96,6 +104,12 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 	@RolesAllowed(ConstantesRolesAcceso.REST)
 	public Tramite loadTramite(final Long idTramite) {
 		return restApiService.loadTramite(idTramite);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<EnvioRemoto> listEnvio(final TypeAmbito ambito, final Long id, final String filtro) {
+		return restApiService.listEnvio(ambito, id, filtro);
 	}
 
 	@Override
@@ -249,4 +263,17 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 	public List<Area> listAreasByEntidad(final Long pIdEntidad) {
 		return restApiService.listAreasByEntidad(pIdEntidad);
 	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<ConfiguracionAutenticacion> listConfiguracionAutenticacion(TypeAmbito entidad, Long codigoEntidad) {
+		return restApiService.listConfiguracionAutenticacion(entidad, codigoEntidad);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<EnvioRemoto> listEnvioByEntidad(Long idEntidad) {
+		return restApiService.listEnvioByEntidad(idEntidad);
+	}
+
 }

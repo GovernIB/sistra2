@@ -162,7 +162,13 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.data.getCodigo()));
 		params.put("AMBITO", data.getAmbito().toString());
-		params.put("AREA", this.area);
+		if (data.getAmbito().equals(TypeAmbito.AREA)) {
+			params.put("AREA", this.area);
+		} else if (data.getAmbito().equals(TypeAmbito.ENTIDAD)) {
+			params.put("AREA", this.entidad);
+		} else {
+			params.put("AREA", "");
+		}
 		UtilJSF.openDialog(DialogConfiguracionDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
 	}
 
@@ -176,7 +182,11 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.data.getCodigo()));
 		params.put("AMBITO", TypeAmbito.AREA.toString());
-		params.put("AREA", this.area);
+		if (data.getAmbito().equals(TypeAmbito.AREA)) {
+			params.put("AREA", this.area);
+		} else {
+			params.put("AREA", this.entidad);
+		}
 		UtilJSF.openDialog(DialogConfiguracionFormulario.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
 	}
 
@@ -335,6 +345,18 @@ public class DialogConfiguracionAutenticacion extends DialogControllerBase {
 	 */
 	public void setAmbito(String ambito) {
 		this.ambito = ambito;
+	}
+
+	public boolean getIsArea() {
+		if (ambito != null) {
+			if (TypeAmbito.fromString(ambito).equals(TypeAmbito.AREA)) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
 	}
 
 	/** Ayuda. */

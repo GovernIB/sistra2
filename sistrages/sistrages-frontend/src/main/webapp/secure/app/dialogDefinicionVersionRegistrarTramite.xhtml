@@ -44,10 +44,11 @@
 							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.oficina']}" />
 					</p:column>
 					<p:column>
-						<p:selectOneMenu id="oficina" styleClass="w90" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoOficinaRegistro}" required="#{!dialogDefinicionVersionRegistrarTramite.entidad.registroCentralizado}" >
+						<p:selectOneMenu id="oficina" styleClass="w90" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoOficinaRegistro}" required="#{!dialogDefinicionVersionRegistrarTramite.entidad.registroCentralizado and dialogDefinicionVersionRegistrarTramite.data.destino!='E'}" >
 						    <f:selectItem itemLabel="" noSelectionOption="true"></f:selectItem>
 						    <f:selectItems value="#{dialogDefinicionVersionRegistrarTramite.oficinas}"  itemLabel="#{oficina.nombre}" itemValue="#{oficina.codigo}" var="oficina"  />
 							<p:ajax listener="#{dialogDefinicionVersionRegistrarTramite.onChangeOficina}" update="@form" />
+							 <p:ajax event="change" listener="#{dialogDefinicionVersionRegistrarTramite.setCambios}" process="@this" update="@this"/>
 						</p:selectOneMenu>
 					</p:column>
 				</p:row>
@@ -57,27 +58,52 @@
 							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.libro']}" />
 					</p:column>
 					<p:column>
-						<p:selectOneMenu id="libro" styleClass="w90" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoLibroRegistro}" required="#{!dialogDefinicionVersionRegistrarTramite.entidad.registroCentralizado}">
+						<p:selectOneMenu id="libro" styleClass="w90" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoLibroRegistro}" required="#{!dialogDefinicionVersionRegistrarTramite.entidad.registroCentralizado and dialogDefinicionVersionRegistrarTramite.data.destino!='E'}">
 						    <f:selectItem  itemLabel="" noSelectionOption="true"></f:selectItem>
 						    <f:selectItems value="#{dialogDefinicionVersionRegistrarTramite.libros}"  itemLabel="#{libro.nombre}" itemValue="#{libro.codigo}" var="libro" />
+						    <p:ajax event="change" listener="#{dialogDefinicionVersionRegistrarTramite.setCambios}" process="@this" update="@this"/>
 						</p:selectOneMenu>
 					</p:column>
 				</p:row>
 				<p:row>
-					<p:column colspan="2">
-						<p:commandButton id="buttonScript1" icon="fa fa-bolt"
-							actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(TypeScriptFlujo.SCRIPT_PARAMETROS_REGISTRO.name(), dialogDefinicionVersionRegistrarTramite.data.scriptDestinoRegistro)}"
-							value="#{msg['script.SCRIPT_PARAMETROS_REGISTRO.titulo']}" styleClass="#{dialogDefinicionVersionRegistrarTramite.getColorScript(dialogDefinicionVersionRegistrarTramite.data.scriptDestinoRegistro)}"
-							process="@this" update="growl">
-							<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoScriptRegistro}" update="growl buttonScript1"/>
-						</p:commandButton>
-					</p:column>
+					<p:column colspan="4">
+
+				        <p:outputPanel id="customPanel" style="margin-bottom:10px">
+				            <p:selectOneRadio id="customRadio" value="#{dialogDefinicionVersionRegistrarTramite.data.destino}" layout="custom">
+				            	<p:ajax event="change" update="@form" />
+				            	<p:ajax event="change" listener="#{dialogDefinicionVersionRegistrarTramite.setCambios}" process="@this" update="@this"/>
+				                <f:selectItem itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.registroElectronico']}" itemValue="R"/>
+				                <f:selectItem itemLabel="#{msg['botones.envioRemoto']}" itemValue="E"/>
+				            </p:selectOneRadio>
+
+				            <h:panelGrid columns="3" cellpadding="5">
+								<p:radioButton id="opt1" for="customRadio" itemIndex="0"/>
+								<h:outputLabel for="op1" value="#{msg['viewDefinicionVersionRegistrarTramite.registroElectronico']}"/>
+				                <p:commandButton id="buttonScript1" icon="fa fa-bolt"
+									actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(TypeScriptFlujo.SCRIPT_PARAMETROS_REGISTRO.name(), dialogDefinicionVersionRegistrarTramite.data.scriptDestinoRegistro)}"
+									value="#{msg['script.SCRIPT_PARAMETROS_REGISTRO.titulo']}" styleClass="#{dialogDefinicionVersionRegistrarTramite.getColorScript(dialogDefinicionVersionRegistrarTramite.data.scriptDestinoRegistro)}"
+									process="@this" update="growl" disabled="#{dialogDefinicionVersionRegistrarTramite.esEnvio}">
+									<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoScriptRegistro}" update="growl buttonScript1"/>
+								</p:commandButton>
+
+								<p:radioButton id="opt2" for="customRadio" itemIndex="1" rendered="#{dialogDefinicionVersionRegistrarTramite.esTipoServicio}"/>
+								<h:outputLabel for="opt2" value="#{msg['botones.envioRemoto']}" rendered="#{dialogDefinicionVersionRegistrarTramite.esTipoServicio}"/>
+				                <p:selectOneMenu  styleClass="w100" id="labeled" alwaysDisplayLabel="true" value="#{dialogDefinicionVersionRegistrarTramite.seleccion}" disabled="#{!dialogDefinicionVersionRegistrarTramite.esEnvio}" rendered="#{dialogDefinicionVersionRegistrarTramite.esTipoServicio}">
+				                	<f:selectItem itemLabel="#{dialogDefinicionVersionRegistrarTramite.data.envioRemoto.identificador}" itemValue="#{dialogDefinicionVersionRegistrarTramite.data.envioRemoto.codigo}"/>
+				                	<f:selectItems value="#{dialogDefinicionVersionRegistrarTramite.enviosRemotos}" />
+				                	<p:ajax event="change" listener="#{dialogDefinicionVersionRegistrarTramite.setCambios}" process="@this" update="@this"/>
+				                </p:selectOneMenu>
+				            </h:panelGrid>
+				        </p:outputPanel>
+			        </p:column>
 				</p:row>
 			</p:panelGrid>
 
 			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.instruccionesTramitacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="tramitacion" required="true" disabled="true" value="#{dialogDefinicionVersionRegistrarTramite.data.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,dialogDefinicionVersionRegistrarTramite.idiomas)}"  styleClass="w85"/>
+           		<p:inputText id="tramitacion" required="true" disabled="true" value="#{dialogDefinicionVersionRegistrarTramite.data.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,dialogDefinicionVersionRegistrarTramite.idiomas)}"  styleClass="w85">
+           			<p:ajax event="change" listener="#{dialogDefinicionVersionRegistrarTramite.setCambios}" process="@this" update="@this"/>
+           		</p:inputText>
            		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarInstTramitacion()}"
 						process="@this" update="growl">
 					<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoInstrucciones}" update="growl tramitacion"/>
@@ -97,6 +123,7 @@
             <p:outputPanel styleClass="ui-inputgroup">
 	            <p:selectBooleanCheckbox id="admite" value="#{dialogDefinicionVersionRegistrarTramite.data.admiteRepresentacion}"  itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.admite']}">
 	            	<p:ajax event="change" global="false" process="@form:admite" update="formdialogDefinicionVersionRegistrarTramite:buttonScript3 @form:valida" />
+	            	<p:ajax event="change" listener="#{dialogDefinicionVersionRegistrarTramite.setCambios}" process="@this" update="@this"/>
 	            </p:selectBooleanCheckbox>
 	            <p:spacer width="30" height="1"/>
            		<p:commandButton id="buttonScript3" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(TypeScriptFlujo.SCRIPT_REPRESENTACION_REGISTRO.name(), dialogDefinicionVersionRegistrarTramite.data.scriptRepresentante)}"
@@ -107,7 +134,9 @@
 						<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoScriptRepresentante}" update="growl buttonScript3"/>
 				</p:commandButton>
 				<p:spacer width="30" height="1"/>
-				<p:selectBooleanCheckbox id="valida" value="#{dialogDefinicionVersionRegistrarTramite.data.validaRepresentacion}" itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.valida']}" disabled="#{dialogDefinicionVersionRegistrarTramite.data.admiteRepresentacion == false}"/>
+				<p:selectBooleanCheckbox id="valida" value="#{dialogDefinicionVersionRegistrarTramite.data.validaRepresentacion}" itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.valida']}" disabled="#{dialogDefinicionVersionRegistrarTramite.data.admiteRepresentacion == false}">
+					<p:ajax event="change" listener="#{dialogDefinicionVersionRegistrarTramite.setCambios}" process="@this" update="@this"/>
+				</p:selectBooleanCheckbox>
        		</p:outputPanel>
 
        		<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.registrar']}" />
@@ -120,6 +149,7 @@
 			<p:outputPanel styleClass="ui-inputgroup">
 	            <p:selectBooleanCheckbox id="aviso" value="#{dialogDefinicionVersionRegistrarTramite.data.avisoAlFinalizar}"  itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.alfinalizar.aviso']}">
 	            	<p:ajax event="change" global="false" process="@form:aviso" update="formdialogDefinicionVersionRegistrarTramite:buttonScript5 @form:aviso" />
+	            	<p:ajax event="change" listener="#{dialogDefinicionVersionRegistrarTramite.setCambios}" process="@this" update="@this"/>
 	            </p:selectBooleanCheckbox>
 	            <p:spacer width="30" height="1"/>
 	           	<p:commandButton id="buttonScript5"

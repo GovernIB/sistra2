@@ -360,9 +360,11 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	}
 
 	private void printDocumentos(final String ident, final StringBuffer strb, final List<DocumentoRegistro> docsr) {
-		for (final DocumentoRegistro dr : docsr) {
-			strb.append(ident).append("  - " + dr.getId() + "-" + dr.getInstancia() + " - Firmar:" + dr.getFirmar()
-					+ " - Firmado:" + dr.getFirmado() + "\n");
+		if (docsr != null) {
+			for (final DocumentoRegistro dr : docsr) {
+				strb.append(ident).append("  - " + dr.getId() + "-" + dr.getInstancia() + " - Firmar:" + dr.getFirmar()
+						+ " - Firmado:" + dr.getFirmado() + "\n");
+			}
 		}
 	}
 

@@ -21,12 +21,10 @@
 		        <h:panelGrid columns="2" cellpadding="5">
 		            <h:outputText value="#{msg['viewConfiguracionEntidad.gestorTramits.headerLog']}" />
 		           	<p:column>
-		           		<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty viewConfiguracionEntidad.data.logoGestor}"/>
-		           		<p:commandLink action="#{viewConfiguracionEntidad.descargaFichero(viewConfiguracionEntidad.data.logoGestor)}" target="_blank" value="#{viewConfiguracionEntidad.data.logoGestor.nombre}" rendered="#{!empty viewConfiguracionEntidad.data.logoGestor}"/>
-		           		<p:spacer width="20" height="1"/>
-		           		<p:commandButton id="btnLogoGestor" icon="fa fa-cog" process="@this" update="growl" actionListener="#{viewConfiguracionEntidad.gestionFicheroLogoGestor()}" disabled="#{!viewConfiguracionEntidad.permiteEditar}">
-		           			<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoFichero}" update="form growl"/>
-		           		</p:commandButton>
+          				<p:inputText  id="inputUrlCarpetaCiudadana" size="70" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.urlCarpetaCiudadana.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+		            	<p:commandButton id="btnUrlCarpetaCiudadana" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarUrlCarpetaCiudadana}" process="@this" update=":form:growl" styleClass="va-top">
+		            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoUrlCarpetaCiudadana}" update=":form:growl inputUrlCarpetaCiudadana"/>
+		        		</p:commandButton>
 		        	</p:column>
 		        </h:panelGrid>
 		    </p:panel>
@@ -36,6 +34,24 @@
 					<p:tabView id="tabView" activeIndex="0" dynamic="true" style="margin: 30px;" >
 	        			<p:tab title="#{msg['viewConfiguracionEntidad.tabPropiedades']}" >
 	        				<h:panelGrid id="gridPropiedades" columns="2" cellpadding="5" >
+					            <h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.tituloStt']}" />
+					            <p:column>
+					           		<p:inputText  id="tituloStt" size="70" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.tituloAsistenteTramitacion.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+					            	<p:commandButton id="tituloStt2" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarTituloAsistente}" process="@this" update=":form:growl" styleClass="va-top">
+					            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoTituloAsistente}" update=":form:growl tituloStt"/>
+					        		</p:commandButton>
+					            </p:column>
+
+					            <h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLogStt']}" />
+					            <p:column>
+					           		<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty viewConfiguracionEntidad.data.iconoAsistenteTramitacion}"/>
+					           		<p:commandLink action="#{viewConfiguracionEntidad.descargaFichero(viewConfiguracionEntidad.data.iconoAsistenteTramitacion)}" target="_blank" value="#{viewConfiguracionEntidad.data.iconoAsistenteTramitacion.nombre}" rendered="#{!empty viewConfiguracionEntidad.data.iconoAsistenteTramitacion}"/>
+				            		<p:spacer width="20" height="1"/>
+					           		<p:commandButton id="btnIconoSistramit" icon="fa fa-cog" process="@this" update=":form:growl" actionListener="#{viewConfiguracionEntidad.gestionFicheroIconoAsistente()}" disabled="#{!viewConfiguracionEntidad.permiteEditar}">
+					           			<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoFichero}" update=":form :form:growl"/>
+					           		</p:commandButton>
+					            </p:column>
+
 					            <h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLog']}" />
 					            <p:column>
 					           		<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty viewConfiguracionEntidad.data.logoAsistente}"/>
@@ -196,7 +212,6 @@
 			<p:toolbar id="toolbar">
 				<f:facet name="right">
 				 	<p:commandButton id="btnAceptar"  value="#{msg['botones.guardar']}" icon="fa fa-check" actionListener="#{viewConfiguracionEntidad.aceptar()}" process="@form" update="growl form:tabView:panelResgistro" styleClass="boton-azul" style="margin-right:20px" rendered="#{viewConfiguracionEntidad.permiteEditar}"/>
-				 	<p:commandButton id="btnRefrescar"  value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" actionListener="#{viewConfiguracionEntidad.refrescar()}" process="@form" update="growl" rendered="#{viewConfiguracionEntidad.permiteEditar}"/>
 				 	<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewConfiguracionEntidad.ayuda()}" process="@this" update="growl"/>
 				</f:facet>
 			</p:toolbar>

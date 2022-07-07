@@ -10,6 +10,7 @@ import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeClonarAccion;
 
 /**
  * Dominio service.
@@ -30,27 +31,34 @@ public interface DominioService {
 	/**
 	 * Comprueba si en un ambito, existe un identificador.
 	 *
-	 * @param ambito Ambito (Entidad, Area, Global)
+	 * @param ambito        Ambito (Entidad, Area, Global)
 	 * @param identificador Identificador del dominio
 	 * @param codigoEntidad Código de la entidad (necesario si es ambito entidad)
-	 * @param codigoArea Código del área (necesario si es ambito area)
-	 * @param codigoDominio  Código del propio dominio (en caso de alta, es nulo)
+	 * @param codigoArea    Código del área (necesario si es ambito area)
+	 * @param codigoDominio Código del propio dominio (en caso de alta, es nulo)
 	 * @return
 	 */
-	public boolean existeDominioByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoDominio);
+	public boolean existeDominioByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
+			Long codigoArea, Long codigoDominio);
 
 	/**
-	 * <p>Comprueba si en un ambito, existe un identificador.</p>
-	 * <p>IMPORTANTE, SI NO SE PASAN BIEN TODOS LOS DATOS, SI LA QUERY DEVUELVE MÁS DE UN DATO, ENTONCES SE DEVUELVE EL PRIMERO DE ELLOS </p>
+	 * <p>
+	 * Comprueba si en un ambito, existe un identificador.
+	 * </p>
+	 * <p>
+	 * IMPORTANTE, SI NO SE PASAN BIEN TODOS LOS DATOS, SI LA QUERY DEVUELVE MÁS DE
+	 * UN DATO, ENTONCES SE DEVUELVE EL PRIMERO DE ELLOS
+	 * </p>
 	 *
-	 * @param ambito Ambito (Entidad, Area, Global)
+	 * @param ambito        Ambito (Entidad, Area, Global)
 	 * @param identificador Identificador del dominio
 	 * @param codigoEntidad Código de la entidad (necesario si es ambito entidad)
-	 * @param codigoArea Código del área (necesario si es ambito area)
-	 * @param codigoDominio  Código del propio dominio (en caso de alta, es nulo)
+	 * @param codigoArea    Código del área (necesario si es ambito area)
+	 * @param codigoDominio Código del propio dominio (en caso de alta, es nulo)
 	 * @return
 	 */
-	public Dominio loadDominioByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoDominio);
+	public Dominio loadDominioByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
+			Long codigoArea, Long codigoDominio);
 
 	/**
 	 * Añade dominio.
@@ -105,6 +113,7 @@ public interface DominioService {
 
 	/**
 	 * Obtener fuenteDato.
+	 *
 	 * @param ambito
 	 * @param identificador
 	 * @param codigoEntidad
@@ -113,10 +122,12 @@ public interface DominioService {
 	 * @return
 	 */
 
-	public FuenteDatos loadFuenteDato(final TypeAmbito ambito, final String identificador, final Long codigoEntidad, final Long codigoArea, final Long codigoFD);
+	public FuenteDatos loadFuenteDato(final TypeAmbito ambito, final String identificador, final Long codigoEntidad,
+			final Long codigoArea, final Long codigoFD);
 
 	/**
 	 * Existe fuenteDato.
+	 *
 	 * @param ambito
 	 * @param identificador
 	 * @param codigoEntidad
@@ -125,9 +136,8 @@ public interface DominioService {
 	 * @return
 	 */
 
-	public boolean existeFuenteDato(final TypeAmbito ambito, final String identificador, final Long codigoEntidad, final Long codigoArea, final Long codigoFD);
-
-
+	public boolean existeFuenteDato(final TypeAmbito ambito, final String identificador, final Long codigoEntidad,
+			final Long codigoArea, final Long codigoFD);
 
 	/**
 	 * Obtener fuenteDato.
@@ -263,7 +273,7 @@ public interface DominioService {
 	 * @param fdID
 	 * @param idEntidad
 	 */
-	public void clonar(String dominioID, String nuevoIdentificador, Long areaID, Long fdID, final Long idEntidad);
+	public void clonar(String dominioID, String nuevoIdentificador, Long areaID, final Long idEntidad, final TypeClonarAccion accionFD, final FuenteDatos fd, final TypeClonarAccion accionCA, final ConfiguracionAutenticacion confAut);
 
 	/**
 	 * Devuelve el identificador de los dominios con esa fuente de datos
@@ -275,20 +285,24 @@ public interface DominioService {
 
 	/**
 	 * Devuelve los dominios remotos que tienen esa configuracion.
+	 *
 	 * @param valueOf
 	 * @return
 	 */
-	public List<Dominio> getDominiosByConfAut(Long idConfiguracion, Long idArea);
+	public List<Dominio> getDominiosByConfAut(TypeAmbito ambito, Long idConfiguracion, Long idArea);
 
 	/**
 	 * Obtiene dominios segun identificadores
+	 *
 	 * @param identificadoresDominio
 	 * @return
 	 */
-	public List<Dominio> getDominiosByIdentificador(List<String> identificadoresDominio, final Long idEntidad, final Long idArea);
+	public List<Dominio> getDominiosByIdentificador(List<String> identificadoresDominio, final Long idEntidad,
+			final Long idArea);
 
 	/**
 	 * Obtiene el dominio segun el identificador compuesto.
+	 *
 	 * @param identificador
 	 * @return
 	 */

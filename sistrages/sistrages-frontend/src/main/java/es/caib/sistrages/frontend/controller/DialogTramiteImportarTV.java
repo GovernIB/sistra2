@@ -93,6 +93,7 @@ public class DialogTramiteImportarTV extends DialogControllerBase {
 					data.setNumVersion(String.valueOf(tramVersion.getNumeroVersion()));
 					data.setDestinoVersion(String.valueOf(tramVersion.getNumeroVersion()));
 					data.setDestinoRelease(String.valueOf(tramVersion.getRelease() + 1));
+					data.setTramiteVersionActual(tramVersion);
 					break;
 				}
 			}

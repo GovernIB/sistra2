@@ -13,8 +13,10 @@ import org.springframework.stereotype.Repository;
 
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.ConsultaGeneral;
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.comun.ConstantesDominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
@@ -25,6 +27,7 @@ import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.core.service.repository.model.JArea;
+import es.caib.sistrages.core.service.repository.model.JCampoFuenteDatos;
 import es.caib.sistrages.core.service.repository.model.JConfiguracionAutenticacion;
 import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
@@ -227,12 +230,12 @@ public class DominioDaoImpl implements DominioDao {
 	@Override
 	public List<String> getAllByFuenteDatos(final Long idFuenteDatos) {
 		final List<String> result = new ArrayList<>();
-		final String sql = "SELECT d.identificador FROM JDominio d where d.fuenteDatos.codigo = :idFuenteDatos";
+		final String sql = "SELECT d FROM JDominio d where d.fuenteDatos.codigo = :idFuenteDatos";
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("idFuenteDatos", idFuenteDatos);
-		final List<String> list = query.getResultList();
-		for (final String d : list) {
-			result.add(d);
+		final List<JDominio> list = query.getResultList();
+		for (final JDominio d : list) {
+			result.add(d.toModel().getIdentificadorCompuesto());
 		}
 		return result;
 	}
@@ -284,7 +287,6 @@ public class DominioDaoImpl implements DominioDao {
 		return query.getResultList();
 	}
 
-
 	@Override
 	public List<ConsultaGeneral> listar(String filtro, TypeIdioma idioma, Long idEntidad, Long idArea,
 			boolean checkAmbitoGlobal, boolean checkAmbitoEntidad, boolean checkAmbitoArea) {
@@ -292,7 +294,7 @@ public class DominioDaoImpl implements DominioDao {
 
 		sql.append(" WHERE d.ambito IN (:ambitos) ");
 		if (StringUtils.isNotBlank(filtro)) {
-			sql .append( " AND (LOWER(d.descripcion) LIKE :filtro OR LOWER(d.identificador) LIKE :filtro)");
+			sql.append(" AND (LOWER(d.descripcion) LIKE :filtro OR LOWER(d.identificador) LIKE :filtro)");
 		}
 		List<String> ambitos = new ArrayList<>();
 		if (checkAmbitoGlobal) {
@@ -314,17 +316,13 @@ public class DominioDaoImpl implements DominioDao {
 		List<JDominio> jdominios = query.getResultList();
 		List<ConsultaGeneral> datos = new ArrayList<>();
 		if (jdominios != null) {
-			for(JDominio jdominio : jdominios) {
+			for (JDominio jdominio : jdominios) {
 				datos.add(jdominio.toModelConsultaGeneral());
 			}
 		}
 
 		return datos;
 	}
-
-
-
-
 
 	@Override
 	public void addTramiteVersion(final Long idDominio, final Long idTramiteVersion) {
@@ -409,8 +407,7 @@ public class DominioDaoImpl implements DominioDao {
 	 */
 	@SuppressWarnings("unchecked")
 	private List<JDominio> listarJDominios(final Long idTramite, final String filtro) {
-		String sql = "select distinct d"
-				+ " from JDominio d, JTramite t "
+		String sql = "select distinct d" + " from JDominio d, JTramite t "
 				+ " where t.codigo = :idTramite and (d.ambito = 'G' or" + " (d.ambito = 'A' and d.area = t.area ) or"
 				+ " (d.ambito = 'E' and d.entidad = t.area.entidad) )";
 
@@ -444,10 +441,89 @@ public class DominioDaoImpl implements DominioDao {
 	 * @throws Exception
 	 */
 	@Override
-	public Long importar(final FilaImportarDominio filaDominio, final Long idEntidad, final Long idArea, final JFuenteDatos jfuenteDatos)  {
+	public Long importar(final FilaImportarDominio filaDominio, final Long idEntidad, final Long idArea,
+			final JFuenteDatos jfuenteDatos) {
 
 		// Si es reemplazar, hacemos la acción.
-		if (filaDominio.getAccion() == TypeImportarAccion.REEMPLAZAR) {
+		if (filaDominio.getAccion() == TypeImportarAccion.CREAR) {
+
+			JDominio dominioAlmacenar = JDominio.fromModelStatic(filaDominio.getDominio());
+			dominioAlmacenar.setCodigo(null);
+			dominioAlmacenar.setConfiguracionAutenticacion(null);
+			dominioAlmacenar.setArea(null);
+			dominioAlmacenar.setEntidad(null);
+
+			if (filaDominio.getDominio().getAmbito() == TypeAmbito.AREA) {
+
+					final JArea jArea = entityManager.find(JArea.class, idArea);
+					dominioAlmacenar.setArea(jArea);
+			}
+
+			if (filaDominio.getDominio().getAmbito() == TypeAmbito.ENTIDAD) {
+					final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
+					dominioAlmacenar.setEntidad(jEntidad);
+			}
+
+			// Seteamos la fuente de datos (estara a null si no es de tipo Fuente datos)
+			dominioAlmacenar.setFuenteDatos(jfuenteDatos);
+
+			// Actualizamos los tipos
+			switch (filaDominio.getDominio().getTipo()) {
+			case CONSULTA_BD:
+				dominioAlmacenar.setDatasourceJndi(filaDominio.getResultadoJndi());
+				dominioAlmacenar.setSql(JDominio.decodeSql(filaDominio.getResultadoSQL()));
+				break;
+			case CONSULTA_REMOTA:
+				dominioAlmacenar.setServicioRemotoUrl(filaDominio.getResultadoURL());
+				if (filaDominio.getConfiguracionAutenticacionActual() == null
+						|| filaDominio.getConfiguracionAutenticacionActual().getIdentificador()
+								.equals("Sense autenticació")
+						|| filaDominio.getConfiguracionAutenticacionActual().getIdentificador()
+								.equals("Sin autenticación")) {
+					dominioAlmacenar.setConfiguracionAutenticacion(null);
+				} else {
+					if (filaDominio.getConfiguracionAutenticacionActual().getCodigo() == null) {
+						JConfiguracionAutenticacion config = JConfiguracionAutenticacion
+								.fromModel(filaDominio.getConfiguracionAutenticacionActual());
+						if (TypeAmbito.ENTIDAD.toString().equals(dominioAlmacenar.getAmbito())) {
+							JEntidad jentidad = entityManager.find(JEntidad.class, idEntidad);
+							config.setEntidad(jentidad);
+							config.setAmbito(TypeAmbito.ENTIDAD.toString());
+						}
+						if (TypeAmbito.AREA.toString().equals(dominioAlmacenar.getAmbito())) {
+							JArea jarea = entityManager.find(JArea.class, idArea);
+							config.setArea(jarea);
+							config.setAmbito(TypeAmbito.AREA.toString());
+						} else {
+							config.setAmbito(TypeAmbito.GLOBAL.toString());
+						}
+						entityManager.persist(config);
+						entityManager.flush();
+						dominioAlmacenar.setConfiguracionAutenticacion(config);
+					} else {
+						JConfiguracionAutenticacion config = entityManager.find(JConfiguracionAutenticacion.class,
+								filaDominio.getConfiguracionAutenticacionActual().getCodigo());
+						dominioAlmacenar.setConfiguracionAutenticacion(config);
+					}
+				}
+				break;
+			case FUENTE_DATOS:
+				dominioAlmacenar.setSql(JDominio.decodeSql(filaDominio.getResultadoSQL()));
+				break;
+			case LISTA_FIJA:
+				dominioAlmacenar.setListaFijaValores(filaDominio.getResultadoLista());
+				break;
+			}
+			// Actualizamos los params
+			dominioAlmacenar.setParametros(UtilJSON.toJSON(filaDominio.getDominio().getParametros()));
+			// Actualizamos el tipo de cache
+			dominioAlmacenar.setCacheo(filaDominio.getDominio().getCache().toString());
+			entityManager.persist(dominioAlmacenar);
+
+			return dominioAlmacenar.getCodigo();
+
+
+		} else if (filaDominio.getAccion() == TypeImportarAccion.REEMPLAZAR) {
 
 			JDominio dominioAlmacenar;
 			if (filaDominio.getDominioActual() == null) { // No existe Dominio
@@ -475,7 +551,7 @@ public class DominioDaoImpl implements DominioDao {
 
 			}
 
-			//Seteamos la fuente de datos (estara a null si no es de tipo Fuente datos)
+			// Seteamos la fuente de datos (estara a null si no es de tipo Fuente datos)
 			dominioAlmacenar.setFuenteDatos(jfuenteDatos);
 
 			// Actualizamos los tipos
@@ -486,9 +562,11 @@ public class DominioDaoImpl implements DominioDao {
 				break;
 			case CONSULTA_REMOTA:
 				dominioAlmacenar.setServicioRemotoUrl(filaDominio.getResultadoURL());
-				if (filaDominio.getConfiguracionAutenticacionActual() == null || filaDominio
-						.getConfiguracionAutenticacionActual().getIdentificador().equals("Sense autenticació") || filaDominio
-						.getConfiguracionAutenticacionActual().getIdentificador().equals("Sin autenticación")) {
+				if (filaDominio.getConfiguracionAutenticacionActual() == null
+						|| filaDominio.getConfiguracionAutenticacionActual().getIdentificador()
+								.equals("Sense autenticació")
+						|| filaDominio.getConfiguracionAutenticacionActual().getIdentificador()
+								.equals("Sin autenticación")) {
 					dominioAlmacenar.setConfiguracionAutenticacion(null);
 				} else {
 					if (filaDominio.getConfiguracionAutenticacionActual().getCodigo() == null) {
@@ -544,23 +622,30 @@ public class DominioDaoImpl implements DominioDao {
 	 * asocian.
 	 */
 	@Override
-	public void clonar(final String dominioID, final String nuevoIdentificador, final Long areaID, final Long fdID,
-			final Long idEntidad) {
+	public void clonar(final String dominioID, final String nuevoIdentificador, final Long areaID,
+			final Long idEntidad, final FuenteDatos fd, final ConfiguracionAutenticacion confAut) {
 
 		JArea jareas = null;
 		JFuenteDatos jfuenteDatos = null;
+		JConfiguracionAutenticacion jconfAut = null;
 		if (areaID != null) {
 			jareas = entityManager.find(JArea.class, areaID);
 		}
-		if (fdID != null) {
-			jfuenteDatos = entityManager.find(JFuenteDatos.class, fdID);
+		if (fd != null) {
+			jfuenteDatos = entityManager.find(JFuenteDatos.class, fd.getCodigo());
+
 		}
+		if (confAut != null) {
+			jconfAut =  entityManager.find(JConfiguracionAutenticacion.class, confAut.getCodigo());
+		}
+
 		JEntidad jentidad = null;
 		if (idEntidad != null) {
 			jentidad = entityManager.find(JEntidad.class, idEntidad);
 		}
-		final JDominio hdominio = JDominio.clonar(entityManager.find(JDominio.class, Long.valueOf(dominioID)),
-				nuevoIdentificador, jareas, jfuenteDatos, jentidad);
+
+		final JDominio hdominio = JDominio.clonar(entityManager.find(JDominio.class, Long.valueOf(dominioID)) ,
+				nuevoIdentificador, jareas, jfuenteDatos, jentidad, jconfAut);
 		entityManager.persist(hdominio);
 	}
 
@@ -568,9 +653,11 @@ public class DominioDaoImpl implements DominioDao {
 	 * Obtiene el valores dominio.
 	 */
 	@Override
-	public ValoresDominio realizarConsultaListaFija(final TypeAmbito ambito, final Long codigoEntidad, final Long codigoArea, final String identificador, String identificadorEntidad, String identificadorArea) {
+	public ValoresDominio realizarConsultaListaFija(final TypeAmbito ambito, final Long codigoEntidad,
+			final Long codigoArea, final String identificador, String identificadorEntidad, String identificadorArea) {
 		final ValoresDominio valoresDominio = new ValoresDominio();
-		final Dominio dominio = this.getDominioByIdentificadorPrivado(ambito, identificador, identificadorEntidad, identificadorArea, codigoEntidad, codigoArea, null);
+		final Dominio dominio = this.getDominioByIdentificadorPrivado(ambito, identificador, identificadorEntidad,
+				identificadorArea, codigoEntidad, codigoArea, null);
 		for (final Propiedad prop : dominio.getListaFija()) {
 			final int fila = valoresDominio.addFila();
 			valoresDominio.setValor(fila, ConstantesDominio.LISTAFIJA_COLUMNA_CODIGO, prop.getCodigo());
@@ -621,12 +708,22 @@ public class DominioDaoImpl implements DominioDao {
 	}
 
 	@Override
-	public List<Dominio> getDominiosByConfAut(Long idConfiguracion, Long idArea) {
-		final String sql = "select d from JDominio d where d.ambito = 'A' and d.area.codigo = :idArea and d.configuracionAutenticacion.codigo = :idConf ORDER BY d.identificador ";
+	public List<Dominio> getDominiosByConfAut(TypeAmbito ambito, Long idConfiguracion, Long idArea) {
+		final String sql;
+		if (ambito.equals(TypeAmbito.AREA)) {
+			sql = "select d from JDominio d where d.ambito = :Ambito and d.area.codigo = :idArea and d.configuracionAutenticacion.codigo = :idConf ORDER BY d.identificador ";
+		} else if (ambito.equals(TypeAmbito.ENTIDAD)) {
+			sql = "select d from JDominio d where d.ambito = :Ambito and d.entidad.codigo = :idArea and d.configuracionAutenticacion.codigo = :idConf ORDER BY d.identificador ";
+		} else {
+			sql = "select d from JDominio d where d.ambito = :Ambito and d.configuracionAutenticacion.codigo = :idConf ORDER BY d.identificador ";
+		}
 
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("idConf", idConfiguracion);
-		query.setParameter("idArea", idArea);
+		if (!ambito.equals(TypeAmbito.GLOBAL)) {
+			query.setParameter("idArea", idArea);
+		}
+		query.setParameter("Ambito", ambito.toString());
 
 		final List<JDominio> jDominios = query.getResultList();
 		final List<Dominio> dominios = new ArrayList<>();
@@ -637,25 +734,27 @@ public class DominioDaoImpl implements DominioDao {
 	}
 
 	@Override
-	public List<Dominio> getDominiosByIdentificador(List<String> identificadoresDominio, final Long idEntidad, final Long idArea) {
+	public List<Dominio> getDominiosByIdentificador(List<String> identificadoresDominio, final Long idEntidad,
+			final Long idArea) {
 
 		final List<Dominio> dominios = new ArrayList<>();
-		for(String identificadorDominio : identificadoresDominio) {
+		for (String identificadorDominio : identificadoresDominio) {
 			ValorIdentificadorCompuesto valor = new ValorIdentificadorCompuesto(identificadorDominio);
-			Dominio dom = getDominioByIdentificador(valor.getIdentificador(), valor.getAmbito(), valor.getIdentificadorEntidad(), valor.getIdentificadorArea());
+			Dominio dom = getDominioByIdentificador(valor.getIdentificador(), valor.getAmbito(),
+					valor.getIdentificadorEntidad(), valor.getIdentificadorArea());
 			if (dom != null) {
 				if (dom.getAmbito() == TypeAmbito.GLOBAL) {
 					dominios.add(dom);
 				} else if (dom.getAmbito() == TypeAmbito.ENTIDAD) {
-					//Solo se agregan dominios de la misma entidad
+					// Solo se agregan dominios de la misma entidad
 					if (dom.getEntidad().compareTo(idEntidad) == 0) {
 						dominios.add(dom);
 					}
 				} else if (dom.getAmbito() == TypeAmbito.AREA) {
-					//Solo se agregan dominios de la misma area
+					// Solo se agregan dominios de la misma area
 					if (dom.getArea().getCodigo().compareTo(idArea) == 0) {
-							dominios.add(dom);
-							break;
+						dominios.add(dom);
+						break;
 					}
 				}
 			}
@@ -663,9 +762,11 @@ public class DominioDaoImpl implements DominioDao {
 		return dominios;
 	}
 
-	private Dominio getDominioByIdentificador(String identificadorDominio, final TypeAmbito ambito, final String idEntidad, final String idArea) {
+	private Dominio getDominioByIdentificador(String identificadorDominio, final TypeAmbito ambito,
+			final String idEntidad, final String idArea) {
 
-		final StringBuilder sql = new StringBuilder("select d from JDominio d where d.ambito = :ambito and d.identificador = :identificador ");
+		final StringBuilder sql = new StringBuilder(
+				"select d from JDominio d where d.ambito = :ambito and d.identificador = :identificador ");
 		if (ambito == TypeAmbito.ENTIDAD) {
 			sql.append(" AND d.entidad.identificador = :idEntidad");
 		}
@@ -694,7 +795,6 @@ public class DominioDaoImpl implements DominioDao {
 		return resultado;
 	}
 
-
 	@Override
 	public boolean existeDominioByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
 			Long codigoArea, Long codigoDominio) {
@@ -703,7 +803,8 @@ public class DominioDaoImpl implements DominioDao {
 		return cuantos != 0l;
 	}
 
-	private Query getQuery (boolean isTotal, TypeAmbito ambito, String identificador,  String identificadorEntidad, String identificadorArea, Long codigoEntidad, Long codigoArea, Long codigoDominio) {
+	private Query getQuery(boolean isTotal, TypeAmbito ambito, String identificador, String identificadorEntidad,
+			String identificadorArea, Long codigoEntidad, Long codigoArea, Long codigoDominio) {
 		final StringBuilder sql = new StringBuilder("select ");
 		if (isTotal) {
 			sql.append(" count(d) ");
@@ -762,19 +863,21 @@ public class DominioDaoImpl implements DominioDao {
 			query.setParameter("codigoDominio", codigoDominio);
 		}
 
-
 		return query;
 	}
 
 	@Override
-	public Dominio getDominioByIdentificador(TypeAmbito ambito, String identificador, String identificadorEntidad, String identificadorArea, Long codigoEntidad,
-			Long codigoArea, Long codigoDominio) {
-		return getDominioByIdentificadorPrivado(ambito, identificador, identificadorEntidad, identificadorArea, codigoEntidad, codigoArea, codigoDominio);
+	public Dominio getDominioByIdentificador(TypeAmbito ambito, String identificador, String identificadorEntidad,
+			String identificadorArea, Long codigoEntidad, Long codigoArea, Long codigoDominio) {
+		return getDominioByIdentificadorPrivado(ambito, identificador, identificadorEntidad, identificadorArea,
+				codigoEntidad, codigoArea, codigoDominio);
 	}
 
-	private Dominio getDominioByIdentificadorPrivado(TypeAmbito ambito, String identificador, String identificadorEntidad, String identificadorArea, Long codigoEntidad,
-			Long codigoArea, Long codigoDominio) {
-		Query query = getQuery(false, ambito, identificador,identificadorEntidad,identificadorArea, codigoEntidad, codigoArea, codigoDominio);
+	private Dominio getDominioByIdentificadorPrivado(TypeAmbito ambito, String identificador,
+			String identificadorEntidad, String identificadorArea, Long codigoEntidad, Long codigoArea,
+			Long codigoDominio) {
+		Query query = getQuery(false, ambito, identificador, identificadorEntidad, identificadorArea, codigoEntidad,
+				codigoArea, codigoDominio);
 		final List<JDominio> dominios = query.getResultList();
 		final Dominio dominio;
 		if (dominios == null || dominios.isEmpty()) {

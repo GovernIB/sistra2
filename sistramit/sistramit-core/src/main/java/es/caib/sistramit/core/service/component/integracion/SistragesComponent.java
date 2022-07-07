@@ -49,6 +49,14 @@ public interface SistragesComponent {
 	void evictConfiguracionEntidad(String idEntidad);
 
 	/**
+	 * Borra caché de configuracion entidad.
+	 *
+	 * @param idEntidad
+	 */
+	@CacheEvict(value = "cacheConfiguracion", allEntries = true)
+	void evictConfiguracionEntidad();
+
+	/**
 	 * Recupera avisos entidad.
 	 *
 	 * @param idEntidad
@@ -61,7 +69,6 @@ public interface SistragesComponent {
 	 * Quita de caché avisos entidad.
 	 *
 	 * @param idEntidad
-	 * @return configuracion entidad.
 	 */
 	@CacheEvict(value = "cacheConfiguracion", key = "'avisosEntidad-' + #idEntidad")
 	void evictAvisosEntidad(String idEntidad);
@@ -70,11 +77,11 @@ public interface SistragesComponent {
 	 * Recupera definición versión de trámite.
 	 *
 	 * @param idTramite
-	 *            id trámite
+	 *                      id trámite
 	 * @param version
-	 *            versión
+	 *                      versión
 	 * @param idioma
-	 *            idioma
+	 *                      idioma
 	 * @return Definición versión trámite
 	 */
 	@Cacheable(value = "cacheTramites", key = "#idTramite + '-' + #version + '-' + #idioma")
@@ -84,11 +91,11 @@ public interface SistragesComponent {
 	 * Recupera definición versión de trámite (sin usar cache).
 	 *
 	 * @param idTramite
-	 *            id trámite
+	 *                      id trámite
 	 * @param version
-	 *            versión
+	 *                      versión
 	 * @param idioma
-	 *            idioma
+	 *                      idioma
 	 * @return Definición versión trámite
 	 */
 	RVersionTramite recuperarDefinicionTramiteNoCache(String idTramite, int version, String idioma);
@@ -97,15 +104,21 @@ public interface SistragesComponent {
 	 * Quita de cache definición versión de trámite.
 	 *
 	 * @param idTramite
-	 *            id trámite
+	 *                      id trámite
 	 * @param version
-	 *            versión
+	 *                      versión
 	 * @param idioma
-	 *            idioma
+	 *                      idioma
 	 * @return
 	 */
 	@CacheEvict(value = "cacheTramites", key = "#idTramite + '-' + #version + '-' + #idioma")
 	void evictDefinicionTramite(String idTramite, int version, String idioma);
+
+	/**
+	 * Borra cache de trámites.
+	 */
+	@CacheEvict(value = "cacheTramites", allEntries = true)
+	void evictDefinicionTramite();
 
 	/**
 	 * Recupera definición dominio.
@@ -120,8 +133,13 @@ public interface SistragesComponent {
 	 * Quita de cache definición dominio.
 	 *
 	 * @param idDominio
-	 * @return
 	 */
 	@CacheEvict(value = "cacheDominios", key = "#idDominio")
 	void evictDefinicionDominio(String idDominio);
+
+	/**
+	 * Borra cache definición dominio.
+	 */
+	@CacheEvict(value = "cacheDominios", allEntries = true)
+	void evictDefinicionDominio();
 }

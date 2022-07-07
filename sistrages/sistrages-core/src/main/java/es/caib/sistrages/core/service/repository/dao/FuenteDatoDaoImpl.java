@@ -2,6 +2,7 @@ package es.caib.sistrages.core.service.repository.dao;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -29,7 +30,9 @@ import es.caib.sistrages.core.api.exception.FuenteDatosCSVNoExisteCampoException
 import es.caib.sistrages.core.api.exception.FuenteDatosConsultaDominioPeticionIncorrecta;
 import es.caib.sistrages.core.api.exception.FuenteDatosPkException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
@@ -38,6 +41,7 @@ import es.caib.sistrages.core.api.model.ValorParametroDominio;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeClonarAccion;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.util.CsvUtil;
 import es.caib.sistrages.core.service.model.ConsultaFuenteDatos;
@@ -91,11 +95,29 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 		return valores;
 	}
 
+
+	private List<JValorFuenteDatos>  getJValoresFuenteDatos(Long idFuenteDato) {
+		final String sql = "SELECT d FROM JValorFuenteDatos d where d.filaFuenteDatos.fuenteDatos.codigo = :idFuenteDato  order by d.codigo";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idFuenteDato", idFuenteDato);
+		final List<JValorFuenteDatos> results = query.getResultList();
+		return results;
+	}
+
 	private List<JFilasFuenteDatos> getJFilasFuenteDatos(final Long idFuenteDato) {
 		final String sql = "SELECT d FROM JFilasFuenteDatos d where d.fuenteDatos.codigo = :idFuenteDato  order by d.codigo";
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("idFuenteDato", idFuenteDato);
 		final List<JFilasFuenteDatos> results = query.getResultList();
+		return results;
+	}
+
+
+	private List<JCampoFuenteDatos> getJFuenteCampos(final Long idFuenteDato) {
+		final String sql = "SELECT d FROM JCampoFuenteDatos d where d.fuenteDatos.codigo = :idFuenteDato  order by d.codigo";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idFuenteDato", idFuenteDato);
+		final List<JCampoFuenteDatos> results = query.getResultList();
 		return results;
 	}
 
@@ -908,5 +930,109 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 		}
 		return sql;
 	}
+
+	@Override
+	public FuenteDatos clonar(String dominioID, TypeClonarAccion accion, FuenteDatos ifd,final Long idEntidad, final Long areaID) {
+		JDominio dominio = entityManager.find(JDominio.class, Long.valueOf(dominioID));
+		JFuenteDatos fd = null;
+		JFuenteDatos fdOriginal = dominio.getFuenteDatos();
+
+		//Paso extra, por si acaso, al crear, resulta que ya existe
+		// En caso de que ya existe y la accion fuese crear, pasa automáticamente a reemplazar
+		if (accion == TypeClonarAccion.CREAR && existeFDByIdentificador(TypeAmbito.fromString(fdOriginal.getAmbito()), fdOriginal.getIdentificador(), idEntidad, areaID, null)) {
+			accion = TypeClonarAccion.REEMPLAZAR;
+		}
+
+		if (accion == TypeClonarAccion.REEMPLAZAR) {
+			fd = entityManager.find(JFuenteDatos.class, ifd.getCodigo());
+			fd.setDescripcion(fdOriginal.getDescripcion());
+			entityManager.merge(fd);
+
+			/////BORRAMOS LOS CAMPOS, FILAS Y DATOS DE LA FUENTE DE DATOS.
+			// Borramos filas de datos de la fuente de datos
+			final String sqlValores = "delete from JValorFuenteDatos as a where a.filaFuenteDatos.codigo in (select fila from JFilasFuenteDatos as fila where fila.fuenteDatos.codigo = :idFuenteDato)";
+			final Query queryValores = entityManager.createQuery(sqlValores);
+			queryValores.setParameter("idFuenteDato", fd.getCodigo());
+			queryValores.executeUpdate();
+
+			// Borramos filas de datos de la fuente de datos
+			final String sql = "delete from JFilasFuenteDatos as a where a.fuenteDatos.codigo = :idFuenteDato";
+			final Query query = entityManager.createQuery(sql);
+			query.setParameter("idFuenteDato", fd.getCodigo());
+			query.executeUpdate();
+
+			// Borramos filas de datos de la fuente de datos
+			final String sqlCampos = "delete from JCampoFuenteDatos as a where a.fuenteDatos.codigo = :idFuenteDato";
+			final Query queryCampos = entityManager.createQuery(sqlCampos);
+			queryCampos.setParameter("idFuenteDato", fd.getCodigo());
+			queryCampos.executeUpdate();
+
+			// Flusheamos los datos borrados por si acaso
+			entityManager.flush();
+
+		} else if (accion == TypeClonarAccion.CREAR) { //CREAMOS
+
+			fd = new JFuenteDatos();
+			fd.setDescripcion(fdOriginal.getDescripcion());
+			fd.setAmbito(fdOriginal.getAmbito());
+			JArea area = null;
+			if (areaID != null) {
+				area = entityManager.find(JArea.class, areaID);
+			}
+			fd.setArea(area);
+			JEntidad entidad = null;
+			if (idEntidad != null) {
+				entidad = entityManager.find(JEntidad.class, idEntidad);
+			}
+			fd.setEntidad(entidad);
+			fd.setIdentificador(fdOriginal.getIdentificador());
+			entityManager.persist(fd);
+		}
+
+
+		Map<Long, JCampoFuenteDatos> campos = new HashMap<>();
+		Map<Long, JFilasFuenteDatos> filas = new HashMap<>();
+
+		///Duplicamos los campos.
+		for (final JCampoFuenteDatos jcampo : this.getJFuenteCampos(fdOriginal.getCodigo())) {
+
+			JCampoFuenteDatos jcamponew = new JCampoFuenteDatos();
+			jcamponew.setClavePrimaria(jcampo.getClavePrimaria());
+			jcamponew.setFuenteDatos(fd);
+			jcamponew.setIdCampo(jcampo.getIdCampo());
+			jcamponew.setOrden(jcampo.getOrden());
+			entityManager.persist(jcamponew);
+			campos.put(jcampo.getCodigo(), jcamponew);
+		}
+
+		//Duplicamos las filas
+		for(JFilasFuenteDatos jfila : this.getJFilasFuenteDatos(fdOriginal.getCodigo())) {
+
+				JFilasFuenteDatos jfilanew = new JFilasFuenteDatos();
+				jfilanew.setFuenteDatos(fd);
+				Set<JValorFuenteDatos> valoresFuenteDatos = new HashSet<>();
+				jfilanew.setValoresFuenteDatos(valoresFuenteDatos);
+				entityManager.persist(jfilanew);
+				filas.put(jfila.getCodigo(), jfilanew);
+		}
+
+		//Duplicamos los datos
+		for(JValorFuenteDatos valor : this.getJValoresFuenteDatos(fdOriginal.getCodigo())) {
+			JValorFuenteDatos jvalornew = new JValorFuenteDatos();
+			jvalornew.setCampoFuenteDatos(campos.get(valor.getCampoFuenteDatos().getCodigo()));
+			jvalornew.setFilaFuenteDatos(filas.get(valor.getFilaFuenteDatos().getCodigo()));
+			jvalornew.setValor(valor.getValor());
+			entityManager.persist(jvalornew);
+		}
+
+
+
+		// Flusheamos los datos vueltos a crear
+		entityManager.flush();
+
+ 		return fd.toModel();
+
+	}
+
 
 }

@@ -184,6 +184,11 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 					builder.lessThanOrEqualTo(tableE.get("fecha"), pFiltroBusqueda.getFechaHasta()));
 		}
 
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getCodSia())) {
+			predicate = builder.and(predicate,
+					builder.like(tableT.get("idProcedimientoSIA"), "%" + pFiltroBusqueda.getCodSia() + "%"));
+		}
+
 		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdSesionTramitacion())) {
 			predicate = builder.and(predicate, builder.equal(tableE.get("sesionTramitacion").get("idSesionTramitacion"),
 					pFiltroBusqueda.getIdSesionTramitacion()));

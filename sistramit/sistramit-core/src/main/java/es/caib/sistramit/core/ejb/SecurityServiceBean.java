@@ -76,8 +76,8 @@ public class SecurityServiceBean implements SecurityService {
 	}
 
 	@Override
-	public InfoLoginTramite obtenerInfoLoginTramiteAnonimoPersistente(final String idSesionTramitacion) {
-		return securityService.obtenerInfoLoginTramiteAnonimoPersistente(idSesionTramitacion);
+	public InfoLoginTramite obtenerInfoLoginTramite(final String idSesionTramitacion) {
+		return securityService.obtenerInfoLoginTramite(idSesionTramitacion);
 	}
 
 	@Override

@@ -13,6 +13,7 @@ var APP_JSON_TRAMIT
 	,APP_TRAMIT_INFO
 	,APP_TRAMIT_PAS_ID
 	,APP_TRAMIT_FLUIX
+	,APP_TRAMIT_DESTI
 	,APP_USUARI_ID;
 
 var APP_JSON_TRAMIT_MISSATGE = false;
@@ -261,6 +262,7 @@ function carregaHTML() {
 			// html
 
 			APP_TRAMIT_FLUIX = APP_JSON_TRAMIT_T.tipoFlujo;
+			APP_TRAMIT_DESTI = APP_JSON_TRAMIT_T.destino || "registro";
 
 			imc_body
 				.attr("data-fluix", APP_TRAMIT_FLUIX);
@@ -315,6 +317,7 @@ function carregaHTML() {
 					,txtAnnexar: txtAnnexar
 					,txtPagar: txtPagar
 					,txtRegistrar: txtRegistrar
+					,txtEnviar: txtEnviar
 				};
 
 			var html_cap = Mark.up(htmlCap[0], txtHTML_Cap);
@@ -406,6 +409,33 @@ function carregaHTML() {
 
 			imc_body
 				.append( html_missatge );
+
+			// títol - app
+
+			var app_titol = APP_JSON_TRAMIT_E.tituloApp;
+
+			if (app_titol !== "") {
+
+				imc_head
+					.find("title:first")
+						.text( app_titol );
+
+			}
+
+			// entitat - favicon
+
+			var app_favicon = APP_JSON_TRAMIT_E.favicon;
+
+			if (app_favicon !== "") {
+
+				imc_head
+					.find("link[rel=icon]:first")
+						.attr({ "href": app_favicon })
+						.end()
+					.find("link[rel=apple-touch-icon-precomposed]:first")
+						.attr({ "href": app_favicon });
+
+			}
 
 			// entitat - logo
 

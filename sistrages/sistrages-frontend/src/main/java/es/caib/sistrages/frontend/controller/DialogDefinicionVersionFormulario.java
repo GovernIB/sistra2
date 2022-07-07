@@ -54,6 +54,9 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/** Data. **/
 	private FormularioTramite data;
 
+	/** Data inicial. **/
+	private FormularioTramite dataI;
+
 	/** ID tramiteVersion version. **/
 	private String idTramiteVersion;
 
@@ -72,13 +75,16 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/** Area **/
 	private String area;
 
+	/** Cambios **/
+	private boolean cambios = false;
+
 	/** Init. **/
 	public void init() {
 
 		data = tramiteService.getFormulario(Long.valueOf(id));
+		dataI = tramiteService.getFormulario(Long.valueOf(id));
 		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
-		gestores = gestorFormularioExternoService.listFormularioExterno(Long.valueOf(area), UtilJSF.getIdioma(),
-				null);
+		gestores = gestorFormularioExternoService.listFormularioExterno(Long.valueOf(area), UtilJSF.getIdioma(), null);
 		setIdiomas(UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados()));
 	}
 
@@ -97,6 +103,11 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 			case ALTA:
 			case EDICION:
 				final Literal traducciones = (Literal) respuesta.getResult();
+				Literal literalesI = dataI.getDescripcion();
+				final Literal literales = (Literal) respuesta.getResult();
+				if (this.isCambioLiterales(literalesI, literales)) {
+					cambios = true;
+				}
 				data.setDescripcion(traducciones);
 				break;
 
@@ -115,9 +126,11 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 */
 	public void editarDescripcion() {
 		if (data.getDescripcion() == null) {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, null, tramiteVersion, UtilTraducciones.CARACTERES_NOPERMIT_REGWEB3, UtilTraducciones.TAMANYO_MAXIMO_REGWEB3);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, null, tramiteVersion,
+					UtilTraducciones.CARACTERES_NOPERMIT_REGWEB3, UtilTraducciones.TAMANYO_MAXIMO_REGWEB3);
 		} else {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), tramiteVersion, UtilTraducciones.CARACTERES_NOPERMIT_REGWEB3, UtilTraducciones.TAMANYO_MAXIMO_REGWEB3);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), tramiteVersion,
+					UtilTraducciones.CARACTERES_NOPERMIT_REGWEB3, UtilTraducciones.TAMANYO_MAXIMO_REGWEB3);
 		}
 	}
 
@@ -132,7 +145,10 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 		}
 
 		tramiteService.updateFormularioTramite(data);
-
+		if (cambios) {
+			tramiteService.actualizarFechaTramiteVersion(Long.parseLong(idTramiteVersion),
+					UtilJSF.getSessionBean().getUserName(), "Modificación formulario");
+		}
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
@@ -170,6 +186,19 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 			case EDICION:
 				final Script script = (Script) respuesta.getResult();
 				data.setScriptDatosIniciales(script);
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(data.getScriptDatosIniciales(), dataI.getScriptDatosIniciales())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			case CONSULTA:
 			default:
@@ -191,6 +220,19 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 			case EDICION:
 				final Script script = (Script) respuesta.getResult();
 				data.setScriptFirma(script);
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(data.getScriptFirma(), dataI.getScriptFirma())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			case CONSULTA:
 			default:
@@ -212,6 +254,19 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 			case EDICION:
 				final Script script = (Script) respuesta.getResult();
 				data.setScriptObligatoriedad(script);
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(data.getScriptObligatoriedad(), dataI.getScriptObligatoriedad())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			case CONSULTA:
 			default:
@@ -233,6 +288,19 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 			case EDICION:
 				final Script script = (Script) respuesta.getResult();
 				data.setScriptParametros(script);
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(data.getScriptParametros(), dataI.getScriptParametros())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			case CONSULTA:
 			default:
@@ -254,6 +322,19 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 			case EDICION:
 				final Script script = (Script) respuesta.getResult();
 				data.setScriptRetorno(script);
+				if (dataI != null && data != null) {
+					if (this.isCambioScripts(data.getScriptRetorno(), dataI.getScriptRetorno())) {
+						cambios = true;
+					}
+				} else if (dataI == null) {
+					if (data != null) {
+						cambios = true;
+					}
+				} else {
+					if (dataI != null) {
+						cambios = true;
+					}
+				}
 				break;
 			case CONSULTA:
 			default:
@@ -454,6 +535,14 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 */
 	public void setArea(String area) {
 		this.area = area;
+	}
+
+	public void setCambios() {
+		this.cambios = true;
+	}
+
+	public boolean getCambios() {
+		return this.cambios;
 	}
 
 }

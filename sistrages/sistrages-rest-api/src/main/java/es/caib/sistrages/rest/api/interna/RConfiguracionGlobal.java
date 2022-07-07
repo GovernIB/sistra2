@@ -14,73 +14,97 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RConfiguracionGlobal", description = "Descripcion de RConfiguracionGlobal")
 public class RConfiguracionGlobal {
 
-    /** Timestamp recuperacion. */
+	/** Timestamp recuperacion. */
 	@ApiModelProperty(value = "Timestamp recuperacion")
-    private String timestamp;
+	private String timestamp;
 
-    /** Propiedades. */
+	/** Propiedades. */
 	@ApiModelProperty(value = "Propiedades")
-    private RListaParametros propiedades;
+	private RListaParametros propiedades;
 
-    /** Plugins. */
+	/** Plugins. */
 	@ApiModelProperty(value = "Plugins")
-    private List<RPlugin> plugins;
+	private List<RPlugin> plugins;
 
-    /**
-     * Método de acceso a propiedades.
-     *
-     * @return propiedades
-     */
-    public RListaParametros getPropiedades() {
-        return propiedades;
-    }
+	/** Configuraciones autenticación. */
+	@ApiModelProperty(value = "Configuraciones autenticación global")
+	private List<RConfiguracionAutenticacion> configuracionesAutenticacion;
 
-    /**
-     * Método para establecer propiedades.
-     *
-     * @param propiedades
-     *            propiedades a establecer
-     */
-    public void setPropiedades(RListaParametros propiedades) {
-        this.propiedades = propiedades;
-    }
+	/**
+	 * Método de acceso a propiedades.
+	 *
+	 * @return propiedades
+	 */
+	public RListaParametros getPropiedades() {
+		return propiedades;
+	}
 
-    /**
-     * Método de acceso a plugins.
-     *
-     * @return plugins
-     */
-    public List<RPlugin> getPlugins() {
-        return plugins;
-    }
+	/**
+	 * Método para establecer propiedades.
+	 *
+	 * @param propiedades
+	 *                        propiedades a establecer
+	 */
+	public void setPropiedades(final RListaParametros propiedades) {
+		this.propiedades = propiedades;
+	}
 
-    /**
-     * Método para establecer plugins.
-     *
-     * @param plugins
-     *            plugins a establecer
-     */
-    public void setPlugins(List<RPlugin> plugins) {
-        this.plugins = plugins;
-    }
+	/**
+	 * Método de acceso a plugins.
+	 *
+	 * @return plugins
+	 */
+	public List<RPlugin> getPlugins() {
+		return plugins;
+	}
 
-    /**
-     * Método de acceso a timestamp.
-     *
-     * @return timestamp
-     */
-    public String getTimestamp() {
-        return timestamp;
-    }
+	/**
+	 * Método para establecer plugins.
+	 *
+	 * @param plugins
+	 *                    plugins a establecer
+	 */
+	public void setPlugins(final List<RPlugin> plugins) {
+		this.plugins = plugins;
+	}
 
-    /**
-     * Método para establecer timestamp.
-     *
-     * @param timestamp
-     *            timestamp a establecer
-     */
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
+	/**
+	 * Método de acceso a timestamp.
+	 *
+	 * @return timestamp
+	 */
+	public String getTimestamp() {
+		return timestamp;
+	}
+
+	/**
+	 * Método para establecer timestamp.
+	 *
+	 * @param timestamp
+	 *                      timestamp a establecer
+	 */
+	public void setTimestamp(final String timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	/**
+	 * Método de acceso a configuracionesAutenticacion.
+	 * 
+	 * @return configuracionesAutenticacion
+	 */
+	public List<RConfiguracionAutenticacion> getConfiguracionesAutenticacion() {
+		return configuracionesAutenticacion;
+	}
+
+	/**
+	 * Método para establecer configuracionesAutenticacion.
+	 * 
+	 * @param configuracionesAutenticacion
+	 *                                         configuracionesAutenticacion a
+	 *                                         establecer
+	 */
+	public void setConfiguracionesAutenticacion(final List<RConfiguracionAutenticacion> configuracionesAutenticacion) {
+		this.configuracionesAutenticacion = configuracionesAutenticacion;
+	}
 
 }

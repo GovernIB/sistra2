@@ -192,6 +192,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private TreeNode mpan2;
 	private int conti;
 
+	private boolean cambios = false;
+
 	/**
 	 * Crea una nueva instancia de view definicion version.
 	 */
@@ -643,7 +645,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), id.toString());
-		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 950, 470);
+		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 950, 550);
 	}
 
 	/**
@@ -2059,6 +2061,14 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		return root;
 	}
 
+	public void setCambios() {
+		this.cambios = true;
+	}
+
+	public boolean getCambios() {
+		return this.cambios;
+	}
+
 	/**
 	 * Obtiene el valor de breadCrumb.
 	 *
@@ -2296,6 +2306,13 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	public void setPagina(int pagina) {
 		this.pagina = pagina;
+	}
+
+	public boolean getEsTipoServicio() {
+		if (tramiteVersion.getTipoTramite().equals("S")) {
+			return true;
+		}
+		return false;
 	}
 
 }

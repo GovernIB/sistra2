@@ -48,6 +48,9 @@ public class RFiltroEventoAuditoria {
 	@ApiModelProperty(value = "Cod. Procedimiento SIA")
 	private String idProcedimientoSIA;
 
+	@ApiModelProperty(value = "Filtro Cod. Procedimiento SIA")
+	private String codSia;
+
 	@ApiModelProperty(value = "Error plataforma")
 	private boolean errorPlataforma;
 
@@ -175,6 +178,14 @@ public class RFiltroEventoAuditoria {
 
 	public void setSortOrder(final String sortOrder) {
 		this.sortOrder = sortOrder;
+	}
+
+	public final String getCodSia() {
+		return codSia;
+	}
+
+	public final void setCodSia(String codSia) {
+		this.codSia = codSia;
 	}
 
 }

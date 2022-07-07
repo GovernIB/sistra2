@@ -29,6 +29,10 @@ public enum TypePluginEntidad {
 	 */
 	REGISTRO("E"),
 	/**
+	 * Plugin de envio remoto (Entidad).
+	 */
+	ENVIO_REMOTO("B"),
+	/**
 	 * Plugin de validación de firma (Entidad).
 	 */
 	VALIDACION_FIRMA_SERVIDOR("S");
@@ -42,7 +46,7 @@ public enum TypePluginEntidad {
 	 * Constructor.
 	 *
 	 * @param valueStr
-	 *            Valor como string.
+	 *                     Valor como string.
 	 */
 	private TypePluginEntidad(final String valueStr) {
 		stringValue = valueStr;
@@ -57,7 +61,7 @@ public enum TypePluginEntidad {
 	 * Obtiene enum desde string.
 	 *
 	 * @param text
-	 *            string
+	 *                 string
 	 * @return TypeSiNo
 	 */
 	public static TypePluginEntidad fromString(final String text) {

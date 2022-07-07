@@ -5,10 +5,12 @@ import java.util.List;
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.AvisoEntidad;
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.EnvioRemoto;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
@@ -74,6 +76,8 @@ public interface RestApiInternaService {
 
 	Area loadArea(Long idArea);
 
+	Entidad loadEntidadByArea(Long idArea);
+
 	public List<Rol> obtenerPermisosHelpdesk();
 
 	ValoresDominio realizarConsultaListaFija(String idDominio);
@@ -97,4 +101,10 @@ public interface RestApiInternaService {
 	List<PlantillaEntidad> getPlantillasEntidad(Long codigo);
 
 	List<Area> listAreasByEntidad(Long pIdEntidad);
+
+	List<ConfiguracionAutenticacion> listConfiguracionAutenticacion(TypeAmbito entidad, Long codigoEntidad);
+
+	List<EnvioRemoto> listEnvio(TypeAmbito ambito, Long id, String filtro);
+
+	List<EnvioRemoto> listEnvioByEntidad(Long idEntidad);
 }

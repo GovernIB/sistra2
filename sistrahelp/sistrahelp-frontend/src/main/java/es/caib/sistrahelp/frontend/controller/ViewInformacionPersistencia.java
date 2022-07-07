@@ -39,6 +39,9 @@ public class ViewInformacionPersistencia extends ViewControllerBase {
 	 */
 	private LazyDataModel<PersistenciaAuditoria> listaDatos;
 
+	/** Paginacion */
+	private Integer paginacion;
+
 	/**
 	 * dato seleccionado.
 	 */
@@ -54,6 +57,8 @@ public class ViewInformacionPersistencia extends ViewControllerBase {
 	 */
 	public void init() {
 		UtilJSF.verificarAcceso();
+
+		paginacion = UtilJSF.getPaginacion("viewInformacionPersistencia");
 
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
@@ -177,8 +182,7 @@ public class ViewInformacionPersistencia extends ViewControllerBase {
 	/**
 	 * Establece el valor de listaDatos.
 	 *
-	 * @param listaDatos
-	 *            el nuevo valor de listaDatos
+	 * @param listaDatos el nuevo valor de listaDatos
 	 */
 	public void setListaDatos(final LazyDataModel<PersistenciaAuditoria> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -196,8 +200,7 @@ public class ViewInformacionPersistencia extends ViewControllerBase {
 	/**
 	 * Establece el valor de datoSeleccionado.
 	 *
-	 * @param datoSeleccionado
-	 *            el nuevo valor de datoSeleccionado
+	 * @param datoSeleccionado el nuevo valor de datoSeleccionado
 	 */
 	public void setDatoSeleccionado(final PersistenciaAuditoria datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
@@ -215,11 +218,25 @@ public class ViewInformacionPersistencia extends ViewControllerBase {
 	/**
 	 * Establece el valor de filtros.
 	 *
-	 * @param filtros
-	 *            el nuevo valor de filtros
+	 * @param filtros el nuevo valor de filtros
 	 */
 	public void setFiltros(final FiltroPersistenciaAuditoria filtros) {
 		this.filtros = filtros;
+	}
+
+	/**
+	 * @return the paginacion
+	 */
+	public final Integer getPaginacion() {
+		return paginacion;
+	}
+
+	/**
+	 * @param paginacion the paginacion to set
+	 */
+	public final void setPaginacion(Integer paginacion) {
+		this.paginacion = paginacion;
+		UtilJSF.setPaginacion(paginacion, "viewInformacionPersistencia");
 	}
 
 }

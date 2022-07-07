@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypePlugin" var="TypePlugin"/>
+
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogEnvioRemoto.titulo']}"/></title>
+</h:head>
+
+<h:body style="width:100% !important;">
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogEnvioRemoto.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogEnvioRemoto.id}"/>
+		<f:viewParam name="AREA" value="#{dialogEnvioRemoto.area}"/>
+		<f:viewParam name="ENTIDAD" value="#{dialogEnvioRemoto.entidad}"/>
+		<f:viewParam name="AMBITO" value="#{dialogEnvioRemoto.ambito}"/>
+		<f:viewParam name="DATO"  value="#{dialogEnvioRemoto.iData}"/>
+		<f:viewParam name="DESACTIVAR_BOTONERA" value="#{dialogEnvioRemoto.desactivarBotonera}" />
+
+
+		<f:viewAction action="#{dialogEnvioRemoto.init}" />
+	</f:metadata>
+	<h:form id="dialogFormularioExterno" styleClass="margin-top-10">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
+
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 wpx20,,wpx25" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
+
+
+					<p:outputLabel for="identificador" value="#{msg['viewDisenyoSelect.propiedades.identificador']}" />
+					<p:inputText id="identificador" value="#{dialogEnvioRemoto.data.identificador}" disabled="#{dialogEnvioRemoto.isConsulta()}" required="true" size="55" maxlength="20"  onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
+						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
+				   	</p:inputText>
+				   	<p:outputLabel value="" />
+
+					<p:outputLabel for="descripcion" value="#{msg['dialogConfiguracionAutenticacion.headerDescripcion']}" />
+					<p:inputText id="descripcion" value="#{dialogEnvioRemoto.data.descripcion}" disabled="#{dialogEnvioRemoto.isConsulta()}" required="true" size="55" maxlength="255"/>
+					<p:outputLabel value="" />
+
+					<p:outputLabel for="url" value="#{msg['dialogFormularioExterno.headerURL']}" />
+					<p:inputText id="url" value="#{dialogEnvioRemoto.data.url}" disabled="#{dialogEnvioRemoto.isConsulta()}" required="true" size="55" />
+					<p:outputLabel value="" />
+
+
+						<p:outputLabel for="configAut" value="#{msg['dialogFormularioExterno.headerConfigAutenticacion']} *"  style="margin-right:5px" />
+					 	<h:panelGrid columns = "2">
+						 	<p:selectOneMenu id="configAut" value="#{dialogEnvioRemoto.data.configuracionAutenticacion}"  style="width:150px" disabled="#{dialogEnvioRemoto.isConsulta()}" converter="#{configuracionConverter}">
+								    <f:selectItems value="#{dialogEnvioRemoto.configuraciones}" var="confAut" itemValue="#{confAut}" itemLabel="#{confAut.identificador}" />
+								<p:ajax event="change" listener="#{dialogEnvioRemoto.actualizarConf()}" update="btnConsultarConf"/>
+							</p:selectOneMenu >
+							<p:commandButton id="btnConsultarConf" title="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{dialogEnvioRemoto.consultarConfiguracion()}" process="@this" update="growlDialog"
+											 disabled="#{dialogEnvioRemoto.desactivarConsulta}" >
+	       					</p:commandButton>
+						</h:panelGrid>
+						<p:outputLabel value="" />
+
+					<p:outputLabel for="timeout" value="#{msg['dialogDominio.headerTipo.consultaRemota.timeout']}" />
+					<p:inputText id="timeout" value="#{dialogEnvioRemoto.data.timeout}" disabled="#{dialogEnvioRemoto.isConsulta()}" size="55" maxlength="50"/>
+					<p:outputLabel value="" />
+
+				</h:panelGrid>
+				<h:outputScript rendered="#{!dialogEnvioRemoto.isConsulta()}">
+				      function rcEditarPropiedad() {
+				      	document.getElementById("dialogFormularioExterno:btnEditarPropiedad").click();
+				      }
+
+				      function  rcBorrarPropiedad() {
+				      	document.getElementById("dialogFormularioExterno:btnEliminarPropiedad").click();
+				      }
+			    </h:outputScript>
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+		     		<f:facet name="left">
+	     				<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" actionListener="#{dialogEnvioRemoto.tramites()}" process="@this" rendered="#{dialogEnvioRemoto.data.codigo ne null and !dialogEnvioRemoto.desactivarBotoneraActivo}" />
+	     	 		</f:facet>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogEnvioRemoto.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogEnvioRemoto.isAlta() or dialogEnvioRemoto.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogEnvioRemoto.cancelar()}" process="@this"  rendered="#{dialogEnvioRemoto.isAlta() or dialogEnvioRemoto.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogEnvioRemoto.cancelar()}" process="@this"  rendered="#{dialogEnvioRemoto.isConsulta()}"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogEnvioRemoto.ayuda}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

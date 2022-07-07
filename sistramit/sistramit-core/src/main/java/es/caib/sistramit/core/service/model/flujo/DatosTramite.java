@@ -11,9 +11,11 @@ import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTram
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
+import es.caib.sistramit.core.api.model.flujo.types.TypeDestino;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
+import es.caib.sistramit.core.api.model.flujo.types.TypeTramite;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
@@ -56,6 +58,16 @@ public final class DatosTramite implements Serializable {
 	 * Entorno.
 	 */
 	private TypeEntorno entorno;
+
+	/**
+	 * Tipo trámite.
+	 */
+	private TypeTramite tipoTramite;
+
+	/**
+	 * Tipo destino.
+	 */
+	private TypeDestino tipoDestino = TypeDestino.REGISTRO;
 
 	/**
 	 * Tipo de flujo.
@@ -198,7 +210,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para settear el campo ultimoAcceso.
 	 *
 	 * @param pUltimoAcceso
-	 *            el campo ultimoAcceso a settear
+	 *                          el campo ultimoAcceso a settear
 	 */
 	public void setUltimoAcceso(final Date pUltimoAcceso) {
 		ultimoAcceso = pUltimoAcceso;
@@ -208,7 +220,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer idSesionTramitacion.
 	 *
 	 * @param pIdSesionTramitacion
-	 *            idSesionTramitacion a establecer
+	 *                                 idSesionTramitacion a establecer
 	 */
 	public void setIdSesionTramitacion(final String pIdSesionTramitacion) {
 		idSesionTramitacion = pIdSesionTramitacion;
@@ -227,7 +239,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer idioma.
 	 *
 	 * @param pIdioma
-	 *            idioma a establecer
+	 *                    idioma a establecer
 	 */
 	public void setIdioma(final String pIdioma) {
 		idioma = pIdioma;
@@ -237,7 +249,7 @@ public final class DatosTramite implements Serializable {
 	 * Obtiene los datos de un paso por id del paso.
 	 *
 	 * @param id
-	 *            del paso
+	 *               del paso
 	 * @return datosPaso Datos del paso
 	 */
 	public DatosPaso getDatosPaso(final String id) {
@@ -255,7 +267,7 @@ public final class DatosTramite implements Serializable {
 	 * Obtiene los datos de pasos por tipo de paso.
 	 *
 	 * @param tipoPaso
-	 *            Tipo de paso
+	 *                     Tipo de paso
 	 *
 	 * @return Lista de pasos del tipo indicado
 	 */
@@ -273,7 +285,7 @@ public final class DatosTramite implements Serializable {
 	 * Obtiene el orden de un paso (empieza en 0).
 	 *
 	 * @param idPaso
-	 *            Id de paso
+	 *                   Id de paso
 	 *
 	 * @return Orden del paso. Devuelve -1 si no lo encuentra.
 	 */
@@ -332,7 +344,7 @@ public final class DatosTramite implements Serializable {
 	 * Elimina los datos de un paso.
 	 *
 	 * @param id
-	 *            Id del paso
+	 *               Id del paso
 	 */
 	public void removeDatosPaso(final String id) {
 		for (final DatosPaso dp : this.datosPasos) {
@@ -356,7 +368,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer parametrosInicio.
 	 *
 	 * @param pParametrosInicio
-	 *            parametrosInicio a establecer
+	 *                              parametrosInicio a establecer
 	 */
 	public void setParametrosInicio(final Map<String, String> pParametrosInicio) {
 		parametrosInicio = pParametrosInicio;
@@ -375,7 +387,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer usuario.
 	 *
 	 * @param pUsuario
-	 *            usuario a establecer
+	 *                     usuario a establecer
 	 */
 	public void setIniciador(final DatosUsuario pUsuario) {
 		iniciador = pUsuario;
@@ -394,7 +406,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer idPasoActual.
 	 *
 	 * @param pIdPasoActual
-	 *            idPasoActual a establecer
+	 *                          idPasoActual a establecer
 	 */
 	public void setIdPasoActual(final String pIdPasoActual) {
 		idPasoActual = pIdPasoActual;
@@ -413,7 +425,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer tituloTramite.
 	 *
 	 * @param pTituloTramite
-	 *            tituloTramite a establecer
+	 *                           tituloTramite a establecer
 	 */
 	public void setTituloTramite(final String pTituloTramite) {
 		tituloTramite = pTituloTramite;
@@ -432,7 +444,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer plazoInicio.
 	 *
 	 * @param pPlazoInicio
-	 *            plazoInicio a establecer
+	 *                         plazoInicio a establecer
 	 */
 	public void setPlazoInicio(final Date pPlazoInicio) {
 		plazoInicio = pPlazoInicio;
@@ -451,7 +463,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer plazoFin.
 	 *
 	 * @param pPlazoFin
-	 *            plazoFin a establecer
+	 *                      plazoFin a establecer
 	 */
 	public void setPlazoFin(final Date pPlazoFin) {
 		plazoFin = pPlazoFin;
@@ -479,7 +491,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer nivelAutenticacion.
 	 *
 	 * @param pNivelAutenticacion
-	 *            nivelAutenticacion a establecer
+	 *                                nivelAutenticacion a establecer
 	 */
 	public void setNivelAutenticacion(final TypeAutenticacion pNivelAutenticacion) {
 		nivelAutenticacion = pNivelAutenticacion;
@@ -499,7 +511,8 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer definición trámite en el Catálogo de Procedimientos.
 	 *
 	 * @param pDefinicionTramiteCP
-	 *            definición trámite en el Catálogo de Procedimientos a establecer
+	 *                                 definición trámite en el Catálogo de
+	 *                                 Procedimientos a establecer
 	 */
 	public void setDefinicionTramiteCP(final DefinicionTramiteCP pDefinicionTramiteCP) {
 		definicionTramiteCP = pDefinicionTramiteCP;
@@ -518,7 +531,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer idTramite.
 	 *
 	 * @param pIdTramite
-	 *            idTramite a establecer
+	 *                       idTramite a establecer
 	 */
 	public void setIdTramite(final String pIdTramite) {
 		idTramite = pIdTramite;
@@ -537,7 +550,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer versionTramite.
 	 *
 	 * @param pVersionTramite
-	 *            versionTramite a establecer
+	 *                            versionTramite a establecer
 	 */
 	public void setVersionTramite(final int pVersionTramite) {
 		versionTramite = pVersionTramite;
@@ -556,7 +569,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer entorno.
 	 *
 	 * @param pEntorno
-	 *            entorno a establecer
+	 *                     entorno a establecer
 	 */
 	public void setEntorno(final TypeEntorno pEntorno) {
 		entorno = pEntorno;
@@ -575,7 +588,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer tipoFlujo.
 	 *
 	 * @param pTipoFlujo
-	 *            tipoFlujo a establecer
+	 *                       tipoFlujo a establecer
 	 */
 	public void setTipoFlujo(final TypeFlujoTramitacion pTipoFlujo) {
 		tipoFlujo = pTipoFlujo;
@@ -594,7 +607,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer plazoDinamico.
 	 *
 	 * @param pPlazoDinamico
-	 *            plazoDinamico a establecer
+	 *                           plazoDinamico a establecer
 	 */
 	public void setPlazoDinamico(final boolean pPlazoDinamico) {
 		plazoDinamico = pPlazoDinamico;
@@ -613,7 +626,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer estadoTramite.
 	 *
 	 * @param pEstadoTramite
-	 *            estadoTramite a establecer
+	 *                           estadoTramite a establecer
 	 */
 	public void setEstadoTramite(final TypeEstadoTramite pEstadoTramite) {
 		estadoTramite = pEstadoTramite;
@@ -623,9 +636,9 @@ public final class DatosTramite implements Serializable {
 	 * Indica si el paso es accesible.
 	 *
 	 * @param idPaso
-	 *            Id paso
+	 *                      Id paso
 	 * @param accesible
-	 *            Accesible
+	 *                      Accesible
 	 */
 	public void setAccesibilidadPaso(final String idPaso, final boolean accesible) {
 		this.accesibilidadPasos.put(idPaso, accesible);
@@ -635,7 +648,7 @@ public final class DatosTramite implements Serializable {
 	 * Indica si el paso es accesible.
 	 *
 	 * @param idPaso
-	 *            Id paso return accesible
+	 *                   Id paso return accesible
 	 * @return Indica si el paso es accesible
 	 */
 	public boolean getAccesibilidadPaso(final String idPaso) {
@@ -660,7 +673,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer idPasoSiguiente.
 	 *
 	 * @param pIdPasoSiguiente
-	 *            idPasoSiguiente a establecer
+	 *                             idPasoSiguiente a establecer
 	 */
 	public void setIdPasoSiguiente(final String pIdPasoSiguiente) {
 		idPasoSiguiente = pIdPasoSiguiente;
@@ -679,7 +692,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer nuevo.
 	 *
 	 * @param pNuevo
-	 *            nuevo a establecer
+	 *                   nuevo a establecer
 	 */
 	public void setNuevo(final boolean pNuevo) {
 		nuevo = pNuevo;
@@ -698,7 +711,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer urlInicio.
 	 *
 	 * @param pUrlInicio
-	 *            urlInicio a establecer
+	 *                       urlInicio a establecer
 	 */
 	public void setUrlInicio(final String pUrlInicio) {
 		urlInicio = pUrlInicio;
@@ -717,7 +730,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer fechaCaducidad.
 	 *
 	 * @param pFechaCaducidad
-	 *            fechaCaducidad a establecer
+	 *                            fechaCaducidad a establecer
 	 */
 	public void setFechaCaducidad(final Date pFechaCaducidad) {
 		fechaCaducidad = pFechaCaducidad;
@@ -736,7 +749,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer metodosLogin.
 	 *
 	 * @param pMetodosLogin
-	 *            metodosLogin a establecer
+	 *                          metodosLogin a establecer
 	 */
 	public void setMetodosLogin(final List<TypeAutenticacion> pMetodosLogin) {
 		metodosLogin = pMetodosLogin;
@@ -751,7 +764,7 @@ public final class DatosTramite implements Serializable {
 
 	/**
 	 * @param pVigente
-	 *            the vigente to set
+	 *                     the vigente to set
 	 */
 	public void setVigente(final boolean pVigente) {
 		vigente = pVigente;
@@ -770,7 +783,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer metodoAutenticacionInicio.
 	 *
 	 * @param pMetodoAutenticacionInicio
-	 *            metodoAutenticacionInicio a establecer
+	 *                                       metodoAutenticacionInicio a establecer
 	 */
 	public void setMetodoAutenticacionInicio(final TypeMetodoAutenticacion pMetodoAutenticacionInicio) {
 		metodoAutenticacionInicio = pMetodoAutenticacionInicio;
@@ -789,7 +802,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer timestampFlujo.
 	 *
 	 * @param pTimestampFlujo
-	 *            timestampFlujo a establecer
+	 *                            timestampFlujo a establecer
 	 */
 	public void setTimestampFlujo(final Date pTimestampFlujo) {
 		timestampFlujo = pTimestampFlujo;
@@ -808,7 +821,7 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer fechaInicio.
 	 *
 	 * @param fechaInicio
-	 *            fechaInicio a establecer
+	 *                        fechaInicio a establecer
 	 */
 	public void setFechaInicio(final Date fechaInicio) {
 		this.fechaInicio = fechaInicio;
@@ -827,10 +840,48 @@ public final class DatosTramite implements Serializable {
 	 * Método para establecer usuarioAutenticado.
 	 *
 	 * @param usuarioAutenticado
-	 *            usuarioAutenticado a establecer
+	 *                               usuarioAutenticado a establecer
 	 */
 	public void setUsuarioAutenticado(final UsuarioAutenticadoInfo usuarioAutenticado) {
 		this.usuarioAutenticado = usuarioAutenticado;
+	}
+
+	/**
+	 * Método de acceso a tipoTramite.
+	 *
+	 * @return tipoTramite
+	 */
+	public TypeTramite getTipoTramite() {
+		return tipoTramite;
+	}
+
+	/**
+	 * Método para establecer tipoTramite.
+	 *
+	 * @param tipoTramite
+	 *                        tipoTramite a establecer
+	 */
+	public void setTipoTramite(final TypeTramite tipoTramite) {
+		this.tipoTramite = tipoTramite;
+	}
+
+	/**
+	 * Método de acceso a tipoDestino.
+	 * 
+	 * @return tipoDestino
+	 */
+	public TypeDestino getTipoDestino() {
+		return tipoDestino;
+	}
+
+	/**
+	 * Método para establecer tipoDestino.
+	 * 
+	 * @param tipoDestino
+	 *                        tipoDestino a establecer
+	 */
+	public void setTipoDestino(final TypeDestino tipoDestino) {
+		this.tipoDestino = tipoDestino;
 	}
 
 }

@@ -41,8 +41,6 @@
 	       		   			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 						</p:commandButton>
 
-		        		<p:commandButton id="btnRefrescar"  value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" actionListener="#{viewPlugins.refrescar()}" process="@this" update="dataTable growl" />
-
 		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewPlugins.ayuda()}" process="@this" update="growl"/>
 		        	</h:panelGrid>
 		        </f:facet>
@@ -51,7 +49,7 @@
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewPlugins.listaDatos}"
-						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+						 rows="#{viewPlugins.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -64,6 +62,7 @@
 		                  		oncomplete="triggerDblClick();"
 		                        update=":form:dataTable"
 		                        />
+		         <p:ajax event="page" update=":form:dataTable :form:toolbar"/>
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewPlugins.tipo']}">

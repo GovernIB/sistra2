@@ -52,6 +52,9 @@ public class ViewRolesPermisos extends ViewControllerBase {
 	 */
 	private Rol datoSeleccionado;
 
+	/** Paginacion */
+	private Integer paginacion;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -62,6 +65,7 @@ public class ViewRolesPermisos extends ViewControllerBase {
 		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(idEntidad);
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
+		paginacion = UtilJSF.getPaginacion("viewConfiguracionAutenticacion");
 		// Recupera datos
 		buscar();
 	}
@@ -129,8 +133,7 @@ public class ViewRolesPermisos extends ViewControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -205,8 +208,7 @@ public class ViewRolesPermisos extends ViewControllerBase {
 	/**
 	 * Abrir dialogo edicion o consulta datos.
 	 *
-	 * @param modoAcceso
-	 *            modo acceso
+	 * @param modoAcceso modo acceso
 	 */
 	private void abrirDialogo(final TypeModoAcceso modoAcceso) {
 		// Verifica si no hay fila seleccionada
@@ -242,8 +244,7 @@ public class ViewRolesPermisos extends ViewControllerBase {
 	/**
 	 * Establece el valor de filtro.
 	 *
-	 * @param filtro
-	 *            el nuevo valor de filtro
+	 * @param filtro el nuevo valor de filtro
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
@@ -261,8 +262,7 @@ public class ViewRolesPermisos extends ViewControllerBase {
 	/**
 	 * Establece el valor de listaDatos.
 	 *
-	 * @param listaDatos
-	 *            el nuevo valor de listaDatos
+	 * @param listaDatos el nuevo valor de listaDatos
 	 */
 	public void setListaDatos(final List<Rol> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -280,11 +280,25 @@ public class ViewRolesPermisos extends ViewControllerBase {
 	/**
 	 * Establece el valor de datoSeleccionado.
 	 *
-	 * @param datoSeleccionado
-	 *            el nuevo valor de datoSeleccionado
+	 * @param datoSeleccionado el nuevo valor de datoSeleccionado
 	 */
 	public void setDatoSeleccionado(final Rol datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
+	}
+
+	/**
+	 * @return the paginacion
+	 */
+	public final Integer getPaginacion() {
+		return paginacion;
+	}
+
+	/**
+	 * @param paginacion the paginacion to set
+	 */
+	public final void setPaginacion(Integer paginacion) {
+		this.paginacion = paginacion;
+		UtilJSF.setPaginacion(paginacion, "viewConfiguracionAurenticacion");
 	}
 
 }

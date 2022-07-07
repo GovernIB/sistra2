@@ -21,6 +21,9 @@ public final class ModuleConfig {
 	/** Commit git. **/
 	private String commitGit;
 
+	/** promocionDesa2Pro **/
+	private String promocionSe2Pro;
+
 	/**
 	 * @return the entorno
 	 */
@@ -80,6 +83,24 @@ public final class ModuleConfig {
 
 	public void setCommitGit(final String commit_git) {
 		this.commitGit = commit_git;
+	}
+
+
+
+	/**
+	 * @return the promocionSe2Pro
+	 */
+	public String getPromocionSe2Pro() {
+		return promocionSe2Pro;
+	}
+
+
+
+	/**
+	 * @param promocionDesa2Pro the promocionSe2Pro to set
+	 */
+	public void setPromocionSe2Pro(String promocionSe2Pro) {
+		this.promocionSe2Pro = promocionSe2Pro;
 	}
 
 }

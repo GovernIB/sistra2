@@ -9,6 +9,7 @@ import java.util.Map;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
+import es.caib.sistramit.core.api.model.flujo.types.TypeDestino;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
@@ -117,6 +118,11 @@ public final class VariablesFlujo implements Serializable {
 	private UsuarioAutenticadoInfo usuarioAutenticado;
 
 	/**
+	 * Tipo destino.
+	 */
+	private TypeDestino tipoDestino;
+
+	/**
 	 * Método de acceso a entorno.
 	 *
 	 * @return entorno
@@ -129,7 +135,7 @@ public final class VariablesFlujo implements Serializable {
 	 * Método para establecer entorno.
 	 *
 	 * @param entorno
-	 *            entorno a establecer
+	 *                    entorno a establecer
 	 */
 	public void setEntorno(final TypeEntorno entorno) {
 		this.entorno = entorno;
@@ -148,7 +154,7 @@ public final class VariablesFlujo implements Serializable {
 	 * Método para establecer idSesionTramitacion.
 	 *
 	 * @param idSesionTramitacion
-	 *            idSesionTramitacion a establecer
+	 *                                idSesionTramitacion a establecer
 	 */
 	public void setIdSesionTramitacion(final String idSesionTramitacion) {
 		this.idSesionTramitacion = idSesionTramitacion;
@@ -167,7 +173,7 @@ public final class VariablesFlujo implements Serializable {
 	 * Método para establecer nivelAutenticacion.
 	 *
 	 * @param nivelAutenticacion
-	 *            nivelAutenticacion a establecer
+	 *                               nivelAutenticacion a establecer
 	 */
 	public void setNivelAutenticacion(final TypeAutenticacion nivelAutenticacion) {
 		this.nivelAutenticacion = nivelAutenticacion;
@@ -186,7 +192,7 @@ public final class VariablesFlujo implements Serializable {
 	 * Método para establecer metodoAutenticacion.
 	 *
 	 * @param metodoAutenticacion
-	 *            metodoAutenticacion a establecer
+	 *                                metodoAutenticacion a establecer
 	 */
 	public void setMetodoAutenticacion(final TypeMetodoAutenticacion metodoAutenticacion) {
 		this.metodoAutenticacion = metodoAutenticacion;
@@ -205,7 +211,7 @@ public final class VariablesFlujo implements Serializable {
 	 * Método para establecer usuario.
 	 *
 	 * @param usuario
-	 *            usuario a establecer
+	 *                    usuario a establecer
 	 */
 	public void setUsuario(final DatosUsuario usuario) {
 		this.usuario = usuario;
@@ -224,7 +230,7 @@ public final class VariablesFlujo implements Serializable {
 	 * Método para establecer idioma.
 	 *
 	 * @param idioma
-	 *            idioma a establecer
+	 *                   idioma a establecer
 	 */
 	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
@@ -243,7 +249,7 @@ public final class VariablesFlujo implements Serializable {
 	 * Método para establecer urlInicioTramite.
 	 *
 	 * @param urlInicioTramite
-	 *            urlInicioTramite a establecer
+	 *                             urlInicioTramite a establecer
 	 */
 	public void setUrlInicioTramite(final String urlInicioTramite) {
 		this.urlInicioTramite = urlInicioTramite;
@@ -262,7 +268,7 @@ public final class VariablesFlujo implements Serializable {
 	 * Método para establecer idTramite.
 	 *
 	 * @param idTramite
-	 *            idTramite a establecer
+	 *                      idTramite a establecer
 	 */
 	public void setIdTramite(final String idTramite) {
 		this.idTramite = idTramite;
@@ -281,7 +287,7 @@ public final class VariablesFlujo implements Serializable {
 	 * Método para establecer versionTramite.
 	 *
 	 * @param versionTramite
-	 *            versionTramite a establecer
+	 *                           versionTramite a establecer
 	 */
 	public void setVersionTramite(final int versionTramite) {
 		this.versionTramite = versionTramite;
@@ -300,7 +306,7 @@ public final class VariablesFlujo implements Serializable {
 	 * Método para establecer tituloTramite.
 	 *
 	 * @param tituloTramite
-	 *            tituloTramite a establecer
+	 *                          tituloTramite a establecer
 	 */
 	public void setTituloTramite(final String tituloTramite) {
 		this.tituloTramite = tituloTramite;
@@ -319,7 +325,7 @@ public final class VariablesFlujo implements Serializable {
 	 * Método para establecer parametrosInicio.
 	 *
 	 * @param parametrosInicio
-	 *            parametrosInicio a establecer
+	 *                             parametrosInicio a establecer
 	 */
 	public void setParametrosInicio(final Map<String, String> parametrosInicio) {
 		this.parametrosInicio = parametrosInicio;
@@ -338,7 +344,7 @@ public final class VariablesFlujo implements Serializable {
 	 * Método para establecer datosTramiteCP.
 	 *
 	 * @param datosTramiteCP
-	 *            datosTramiteCP a establecer
+	 *                           datosTramiteCP a establecer
 	 */
 	public void setDatosTramiteCP(final DefinicionTramiteCP datosTramiteCP) {
 		this.datosTramiteCP = datosTramiteCP;
@@ -357,7 +363,7 @@ public final class VariablesFlujo implements Serializable {
 	 * Método para establecer documentos.
 	 *
 	 * @param documentos
-	 *            documentos a establecer
+	 *                       documentos a establecer
 	 */
 	public void setDocumentos(final List<DatosDocumento> documentos) {
 		this.documentos = documentos;
@@ -376,7 +382,7 @@ public final class VariablesFlujo implements Serializable {
 	 * Método para establecer fechaInicioPlazo.
 	 *
 	 * @param fechaInicioPlazo
-	 *            fechaInicioPlazo a establecer
+	 *                             fechaInicioPlazo a establecer
 	 */
 	public void setFechaInicioPlazo(final Date fechaInicioPlazo) {
 		this.fechaInicioPlazo = fechaInicioPlazo;
@@ -395,7 +401,7 @@ public final class VariablesFlujo implements Serializable {
 	 * Método para establecer fechaFinPlazo.
 	 *
 	 * @param fechaFinPlazo
-	 *            fechaFinPlazo a establecer
+	 *                          fechaFinPlazo a establecer
 	 */
 	public void setFechaFinPlazo(final Date fechaFinPlazo) {
 		this.fechaFinPlazo = fechaFinPlazo;
@@ -414,7 +420,7 @@ public final class VariablesFlujo implements Serializable {
 	 * Método para establecer debugEnabled.
 	 *
 	 * @param debugEnabled
-	 *            debugEnabled a establecer
+	 *                         debugEnabled a establecer
 	 */
 	public void setDebugEnabled(final boolean debugEnabled) {
 		this.debugEnabled = debugEnabled;
@@ -449,7 +455,7 @@ public final class VariablesFlujo implements Serializable {
 	 * Método para establecer usuarioAutenticado.
 	 *
 	 * @param usuarioAutenticado
-	 *            usuarioAutenticado a establecer
+	 *                               usuarioAutenticado a establecer
 	 */
 	public void setUsuarioAutenticado(final UsuarioAutenticadoInfo usuarioAutenticado) {
 		this.usuarioAutenticado = usuarioAutenticado;
@@ -459,9 +465,9 @@ public final class VariablesFlujo implements Serializable {
 	 * Permite acceder a un documento.
 	 *
 	 * @param idDocumento
-	 *            Id documento
+	 *                        Id documento
 	 * @param instancia
-	 *            En caso de anexo genérico permite indicar la instancia
+	 *                        En caso de anexo genérico permite indicar la instancia
 	 * @return Documento
 	 */
 	public DatosDocumento getDocumento(final String idDocumento, final int instancia) {
@@ -484,7 +490,7 @@ public final class VariablesFlujo implements Serializable {
 
 	/**
 	 * Método de acceso a representante.
-	 * 
+	 *
 	 * @return representante
 	 */
 	public DatosUsuario getRepresentante() {
@@ -493,12 +499,31 @@ public final class VariablesFlujo implements Serializable {
 
 	/**
 	 * Método para establecer representante.
-	 * 
+	 *
 	 * @param representante
-	 *            representante a establecer
+	 *                          representante a establecer
 	 */
 	public void setRepresentante(final DatosUsuario representante) {
 		this.representante = representante;
+	}
+
+	/**
+	 * Método de acceso a tipoDestino.
+	 * 
+	 * @return tipoDestino
+	 */
+	public TypeDestino getTipoDestino() {
+		return tipoDestino;
+	}
+
+	/**
+	 * Método para establecer tipoDestino.
+	 * 
+	 * @param tipoDestino
+	 *                        tipoDestino a establecer
+	 */
+	public void setTipoDestino(final TypeDestino tipoDestino) {
+		this.tipoDestino = tipoDestino;
 	}
 
 }

@@ -131,33 +131,19 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, message);
 			return;
 		}
-
 		// Guardar cambios de la entidad.
 		entidadService.updateEntidadAdministradorEntidad(data);
 
-		final String message = UtilJSF.getLiteral("info.modificado.ok");
+		String message = "";
+		ResultadoError re = this.refrescar();
+		if (re.getCodigo() != 1) {
+			message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("error.refrescarCache")
+					+ ": " + re.getMensaje();
+		} else {
+			message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+		}
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
-	}
-
-	/**
-	 * Cancelar.
-	 */
-	public void refrescar() {
-		final String urlBase = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_URL.toString());
-		final String usuario = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_USER.toString());
-		final String pwd = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_REST_PWD.toString());
-
-		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, "E", data.getCodigoDIR3());
-		if (resultado.getCodigo() == 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
-		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
-		}
 	}
 
 	/**
@@ -209,6 +195,13 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	}
 
 	/**
+	 * Abre explorar titulo asistente.
+	 */
+	public void explorarTituloAsistente() {
+		explorarLiteral(data.getTituloAsistenteTramitacion());
+	}
+
+	/**
 	 * Abre explorar url sede.
 	 */
 	public void explorarUrlSedeElectronica() {
@@ -225,6 +218,19 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
 			final Literal literales = (Literal) respuesta.getResult();
 			data.setUrlCarpetaCiudadana(literales);
+		}
+	}
+
+	/**
+	 * Gestión de retorno titulo asistente
+	 *
+	 * @param event
+	 */
+	public void returnDialogoTituloAsistente(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Literal literales = (Literal) respuesta.getResult();
+			data.setTituloAsistenteTramitacion(literales);
 		}
 	}
 
@@ -398,8 +404,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	/**
 	 * Retorno dialogo fichero.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoFichero(final SelectEvent event) {
 		// recupera datos entidad activa
@@ -461,6 +466,11 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		gestionFichero(TypeCampoFichero.CSS_ENTIDAD);
 	}
 
+	/** Gestion de fichero del css asistente. **/
+	public void gestionFicheroIconoAsistente() {
+		gestionFichero(TypeCampoFichero.ICONO_ASISTENTE_ENTIDAD);
+	}
+
 	/**
 	 * Método unificado para gestionar ficheros.
 	 *
@@ -495,8 +505,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	/**
 	 * Establece el valor de data.
 	 *
-	 * @param data
-	 *                 el nuevo valor de data
+	 * @param data el nuevo valor de data
 	 */
 	public void setData(final Entidad data) {
 		this.data = data;
@@ -510,8 +519,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	}
 
 	/**
-	 * @param oficinas
-	 *                     the oficinas to set
+	 * @param oficinas the oficinas to set
 	 */
 	public void setOficinas(final List<OficinaRegistro> oficinas) {
 		this.oficinas = oficinas;

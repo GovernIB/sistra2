@@ -12,7 +12,7 @@ import es.caib.sistrages.rest.api.interna.RComponenteSelector;
 import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
-import es.caib.sistrages.rest.api.interna.RDestinoRegistro;
+import es.caib.sistrages.rest.api.interna.RDestino;
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
 import es.caib.sistrages.rest.api.interna.RFormularioTramite;
 import es.caib.sistrages.rest.api.interna.RLineaComponentes;
@@ -216,7 +216,7 @@ public class XTestJson {
         final RPasoTramitacionRegistrar pr = new RPasoTramitacionRegistrar();
         pr.setIdentificador("RT1");
         pr.setTipo("RT");
-        final RDestinoRegistro destino = new RDestinoRegistro();
+        final RDestino destino = new RDestino();
         destino.setOficinaRegistro("OF1");
         destino.setLibroRegistro("LIB1");
         pr.setDestino(destino);

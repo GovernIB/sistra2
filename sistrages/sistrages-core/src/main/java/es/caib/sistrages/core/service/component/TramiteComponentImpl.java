@@ -168,7 +168,7 @@ public class TramiteComponentImpl implements TramiteComponent {
 		documento.setTipoTamanyo(TypeTamanyo.KILOBYTES);
 		documento.setTipoPresentacion(TypePresentacion.ELECTRONICA);
 		documento.setNumeroInstancia(1);
-		documento.setExtensiones("pdf;doc");
+		documento.setExtensiones("pdf;odt");
 		documento.setTamanyoMaximo(1024);
 		documento.setTipoDocumental(TypeTipoDocumental.TD99_OTROS);
 		return documento;

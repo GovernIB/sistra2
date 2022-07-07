@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
+import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -19,7 +20,8 @@ public interface SystemService {
 	/**
 	 * Obtiene configuración.
 	 *
-	 * @param propiedad Propiedad configuración
+	 * @param propiedad
+	 *                      Propiedad configuración
 	 *
 	 * @return configuración
 	 */
@@ -28,8 +30,10 @@ public interface SystemService {
 	/**
 	 * Audita error en front.
 	 *
-	 * @param idSesionTramitacion id sesión tramitación
-	 * @param error               error frontal
+	 * @param idSesionTramitacion
+	 *                                id sesión tramitación
+	 * @param error
+	 *                                error frontal
 	 */
 	void auditarErrorFront(String idSesionTramitacion, ErrorFrontException error);
 
@@ -37,11 +41,15 @@ public interface SystemService {
 	 * Permite recuperar la lista de eventos internos parametrizada por fecha e
 	 * identificador de sesión.
 	 *
-	 * @param fechaDesde          Fecha inicio (opcional)
-	 * @param fechaHasta          Fecha fin (opcional)
-	 * @param idSesionTramitacion Id sesion tramitacion
-	 * @param ordenAsc            Indica si orden ascendente de fecha evento (true)
-	 *                            o descendente (false).
+	 * @param fechaDesde
+	 *                                Fecha inicio (opcional)
+	 * @param fechaHasta
+	 *                                Fecha fin (opcional)
+	 * @param idSesionTramitacion
+	 *                                Id sesion tramitacion
+	 * @param ordenAsc
+	 *                                Indica si orden ascendente de fecha evento
+	 *                                (true) o descendente (false).
 	 *
 	 * @return Lista de eventos asociados a la sesión.
 	 */
@@ -51,19 +59,23 @@ public interface SystemService {
 	/**
 	 * Invalida caché.
 	 *
-	 * @param invalidacion datos invalidación caché
+	 * @param invalidacion
+	 *                         datos invalidación caché
 	 */
 	void invalidar(Invalidacion invalidacion);
 
 	/**
 	 * Revisa invalidaciones a procesar.
+	 * 
+	 * @return invalidaciones realizadas
 	 */
-	void revisarInvalidaciones();
+	ListaPropiedades revisarInvalidaciones();
 
 	/**
 	 * Verifica si es maestro
 	 *
-	 * @param instancia instancia
+	 * @param instancia
+	 *                      instancia
 	 * @return si es maestro
 	 */
 	boolean verificarMaestro(String instancia);

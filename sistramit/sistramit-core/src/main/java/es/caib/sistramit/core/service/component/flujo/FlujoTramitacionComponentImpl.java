@@ -26,6 +26,7 @@ import es.caib.sistra2.commons.plugins.email.api.AnexoEmail;
 import es.caib.sistra2.commons.plugins.email.api.EmailPluginException;
 import es.caib.sistra2.commons.plugins.email.api.IEmailPlugin;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
 import es.caib.sistramit.core.api.exception.AutenticacionException;
 import es.caib.sistramit.core.api.exception.CatalogoProcedimientosVerificacionException;
@@ -35,7 +36,8 @@ import es.caib.sistramit.core.api.exception.FlujoInvalidoException;
 import es.caib.sistramit.core.api.exception.GenerarPdfClaveException;
 import es.caib.sistramit.core.api.exception.LimiteTramitacionException;
 import es.caib.sistramit.core.api.exception.MetodoAutenticacionException;
-import es.caib.sistramit.core.api.exception.QaaException;
+import es.caib.sistramit.core.api.exception.QaaInicioTramiteException;
+import es.caib.sistramit.core.api.exception.QaaRecargaTramiteException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.exception.TramiteNoExisteException;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
@@ -47,8 +49,10 @@ import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.types.TypeDestino;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
+import es.caib.sistramit.core.api.model.flujo.types.TypeTramite;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
@@ -114,6 +118,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	public String iniciarTramite(final UsuarioAutenticadoInfo pUsuarioAutenticado, final String idTramite,
 			final int version, final String idioma, final String idTramiteCatalogo, final boolean servicioCatalogo,
 			final String urlInicio, final Map<String, String> parametrosInicio) {
+
 		// Establecemos info usuario
 		usuarioAutenticadoInfo = pUsuarioAutenticado;
 		// Generamos id de sesión
@@ -121,9 +126,9 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		// Control de si el flujo es válido
 		controlFlujoInvalido();
 		// Inicializa datos generales sesión
-		this.datosSesion = generarDatosSesion(idSesionTramitacion, TypeEstadoTramite.RELLENANDO, idTramite, version,
-				idioma, idTramiteCatalogo, servicioCatalogo, urlInicio, parametrosInicio, usuarioAutenticadoInfo,
-				new Date(), null);
+		this.datosSesion = generarDatosSesion(true, idSesionTramitacion, TypeEstadoTramite.RELLENANDO, idTramite,
+				version, idioma, idTramiteCatalogo, servicioCatalogo, urlInicio, parametrosInicio,
+				usuarioAutenticadoInfo, new Date(), null);
 		// Realizamos operacion de iniciar
 		controladorFlujo.iniciarTramite(datosSesion);
 		// Retornamos id sesion
@@ -283,6 +288,9 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	/**
 	 * Genera datos de sesion de tramitación.
 	 *
+	 * @param inicio
+	 *                                    Indica si es inicio de trámite o recarga
+	 *
 	 * @param idSesionTramitacion
 	 *                                    id sesion tramitacion
 	 * @param estado
@@ -308,10 +316,11 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	 * @return Datos sesion tramitacion
 	 * @throws CatalogoPluginException
 	 */
-	private DatosSesionTramitacion generarDatosSesion(final String idSesionTramitacion, final TypeEstadoTramite estado,
-			final String pIdTramite, final int pVersion, final String pIdioma, final String pIdTramiteCP,
-			final boolean servicioCP, final String pUrlInicio, final Map<String, String> pParametrosInicio,
-			final UsuarioAutenticadoInfo pUsuarioAutenticadoInfo, final Date pFechaInicio, final Date pFechaCaducidad) {
+	private DatosSesionTramitacion generarDatosSesion(final boolean inicio, final String idSesionTramitacion,
+			final TypeEstadoTramite estado, final String pIdTramite, final int pVersion, final String pIdioma,
+			final String pIdTramiteCP, final boolean servicioCP, final String pUrlInicio,
+			final Map<String, String> pParametrosInicio, final UsuarioAutenticadoInfo pUsuarioAutenticadoInfo,
+			final Date pFechaInicio, final Date pFechaCaducidad) {
 
 		// Obtenemos la definición del trámite(si no está el idioma
 		// disponible, se coge el idioma por defecto o bien el primero
@@ -326,14 +335,22 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		controlLimitacionTramitacion(defTramSTG);
 
 		// Control QAA
-		controlQAA(defTramSTG);
+		controlQAA(inicio, idSesionTramitacion, defTramSTG);
 
 		// Obtenemos las propiedades del trámite en el Catalogo de
 		// Procedimientos
 		final DefinicionTramiteCP tramiteCP = catalogoProcedimientosComponent.obtenerDefinicionTramite(
 				defTramSTG.getDefinicionVersion().getIdEntidad(), pIdTramiteCP, servicioCP, pIdioma);
 
-		// Props tipo flujo y entorno
+		// Props tipo trámite, destino, tipo flujo y entorno
+		final TypeTramite tipoTramite = TypeTramite
+				.fromString(defTramSTG.getDefinicionVersion().getTipoTramite().toLowerCase());
+		TypeDestino tipoDestino = TypeDestino.REGISTRO;
+		final RPasoTramitacionRegistrar pasoReg = UtilsSTG.devuelveDefinicionPasoRegistrar(defTramSTG);
+		if (pasoReg != null && "e".equals(pasoReg.getTipoDestino().toLowerCase())) {
+			// Tipo destino vendrá informado si existe paso registro
+			tipoDestino = TypeDestino.ENVIO;
+		}
 		final TypeFlujoTramitacion tipoFlujo = TypeFlujoTramitacion
 				.fromString(defTramSTG.getDefinicionVersion().getTipoFlujo());
 		if (tipoFlujo == null) {
@@ -403,6 +420,8 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		st.getDatosTramite().setIdSesionTramitacion(idSesionTramitacion);
 		st.getDatosTramite().setIdTramite(pIdTramite);
 		st.getDatosTramite().setVersionTramite(pVersion);
+		st.getDatosTramite().setTipoTramite(tipoTramite);
+		st.getDatosTramite().setTipoDestino(tipoDestino);
 		st.getDatosTramite().setTipoFlujo(tipoFlujo);
 		st.getDatosTramite()
 				.setTituloTramite(tramiteCP.getProcedimiento().getDescripcion() + " - " + tramiteCP.getDescripcion());
@@ -427,17 +446,27 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	/**
 	 * Comparamos si nivel tramite es superior al del usuario autenticado.
 	 *
+	 * @param inicio
+	 *                                Indica si es inicio o recarga
+	 * @param idSesionTramitacion
+	 *                                id Sesion Tramitacion
+	 *
 	 * @param defTramSTG
-	 *                       Definición trámite
+	 *                                Definición trámite
 	 */
-	private void controlQAA(final DefinicionTramiteSTG defTramSTG) {
+	private void controlQAA(final boolean inicio, final String idSesionTramitacion,
+			final DefinicionTramiteSTG defTramSTG) {
 		if (this.usuarioAutenticadoInfo.getAutenticacion() != TypeAutenticacion.ANONIMO) {
 			// Control QAA
 			final TypeQAA qaaTramite = TypeQAA
 					.fromString(defTramSTG.getDefinicionVersion().getPropiedades().getNivelQAA() + "");
 			final TypeQAA qaaUsuario = this.usuarioAutenticadoInfo.getQaa();
 			if (qaaTramite.esSuperior(qaaUsuario)) {
-				throw new QaaException();
+				if (inicio) {
+					throw new QaaInicioTramiteException();
+				} else {
+					throw new QaaRecargaTramiteException(idSesionTramitacion);
+				}
 			}
 			// Control metodo autenticacion
 			final List<TypeMetodoAutenticacion> metAut = UtilsSTG.convertMetodosAutenticado(
@@ -516,7 +545,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		UtilsFlujo.controlCargaTramite(tram, usuarioAutenticadoInfo, recarga);
 
 		// Inicializa datos de sesión
-		datosSesion = generarDatosSesion(pIdSesionTramitacion, tram.getEstado(), tram.getIdTramite(),
+		datosSesion = generarDatosSesion(false, pIdSesionTramitacion, tram.getEstado(), tram.getIdTramite(),
 				tram.getVersionTramite(), tram.getIdioma(), tram.getIdTramiteCP(), tram.isServicioCP(),
 				tram.getUrlInicio(), tram.getParametrosInicio(), usuarioAutenticadoInfo, tram.getFechaInicio(),
 				tram.getFechaCaducidad());
@@ -544,7 +573,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		// TODO V0 Ver de cifrar id sesion
 		final String url = configuracionComponent.obtenerPropiedadConfiguracion(
 				TypePropiedadConfiguracion.SISTRAMIT_URL) + ConstantesSeguridad.PUNTOENTRADA_CARGAR_TRAMITE + "?"
-				+ ConstantesSeguridad.ANONIMO_PARAM_IDSESION + "=" + idSesionTramitacion;
+				+ ConstantesSeguridad.PARAM_IDSESION + "=" + idSesionTramitacion;
 
 		// Generación PDF
 		final PDFDocument documento = new PDFDocument(titulo);

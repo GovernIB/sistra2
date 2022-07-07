@@ -1,7 +1,11 @@
 package es.caib.sistrages.core.service.repository.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,13 +18,19 @@ import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.ConsultaGeneral;
+import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeClonarAccion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.service.repository.model.JArea;
+import es.caib.sistrages.core.service.repository.model.JCampoFuenteDatos;
 import es.caib.sistrages.core.service.repository.model.JConfiguracionAutenticacion;
 import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
+import es.caib.sistrages.core.service.repository.model.JFilasFuenteDatos;
+import es.caib.sistrages.core.service.repository.model.JFuenteDatos;
 import es.caib.sistrages.core.service.repository.model.JGestorExternoFormularios;
+import es.caib.sistrages.core.service.repository.model.JValorFuenteDatos;
 
 /**
  * La clase ConfiguracionAutenticacionDaoImpl.
@@ -283,14 +293,14 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 
 	@Override
 	public boolean existeConfiguracionAutenticacion(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut) {
-		Query query = getQuery(true, ambito, identificador, codigoEntidad, codigoArea, codigoConfAut);
+		Query query = getQuery(true, ambito, identificador, codigoEntidad, codigoArea, codigoConfAut, null);
 		final Long cuantos = (Long) query.getSingleResult();
 		return cuantos != 0l;
 	}
 
 	@Override
 	public ConfiguracionAutenticacion getConfiguracionAutenticacion(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut) {
-		Query query = getQuery(false, ambito, identificador, codigoEntidad, codigoArea, codigoConfAut);
+		Query query = getQuery(false, ambito, identificador, codigoEntidad, codigoArea, codigoConfAut, null);
 		final List<JConfiguracionAutenticacion> confAuts = query.getResultList();
 		final ConfiguracionAutenticacion confAut;
 		if (confAuts == null || confAuts.isEmpty()) {
@@ -301,7 +311,7 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 		return confAut;
 	}
 
-	private Query getQuery (boolean isTotal, TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut) {
+	private Query getQuery (boolean isTotal, TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut, Long codigoEntidadArea) {
 		final StringBuilder sql = new StringBuilder("select ");
 		if (isTotal) {
 			sql.append(" count(d) ");
@@ -310,7 +320,11 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 		}
 		sql.append(" from JConfiguracionAutenticacion d where d.ambito like :ambito ");
 		if (ambito == TypeAmbito.AREA) {
-			sql.append(" AND d.area.codigo = :codigoArea");
+			if (codigoEntidadArea == null) {
+				sql.append(" AND d.area.codigo = :codigoArea");
+			} else {
+				sql.append(" AND d.area.entidad.codigo = :codigoEntidadArea");
+			}
 		}
 		if (ambito == TypeAmbito.ENTIDAD) {
 			sql.append(" AND d.entidad.codigo = :codigoEntidad");
@@ -325,7 +339,11 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 		final Query query = entityManager.createQuery(sql.toString());
 		query.setParameter("ambito", ambito.toString());
 		if (ambito == TypeAmbito.AREA) {
-			query.setParameter("codigoArea", codigoArea);
+			if (codigoEntidadArea == null) {
+				query.setParameter("codigoArea", codigoArea);
+			} else {
+				query.setParameter("codigoEntidadArea", codigoEntidadArea);
+			}
 		}
 		if (ambito == TypeAmbito.ENTIDAD) {
 			query.setParameter("codigoEntidad", codigoEntidad);
@@ -373,5 +391,89 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 		}
 		return listaConfiguraciones;
 	}
+
+	@Override
+	public List<ConfiguracionAutenticacion> listConfiguracionAutenticacionRest(TypeAmbito ambito, Long codigoEntidad) {
+		List<ConfiguracionAutenticacion> configuraciones = new ArrayList<>();
+		Query query;
+		if (ambito == TypeAmbito.GLOBAL) {
+			query = getQuery(false, ambito, null, null, null, null, null);
+			final List<JConfiguracionAutenticacion> results = query.getResultList();
+			if (results != null && !results.isEmpty()) {
+				for (final JConfiguracionAutenticacion jConfiguracionAutenticacion : results) {
+					configuraciones.add(jConfiguracionAutenticacion.toModel());
+				}
+			}
+		} else {
+			query = getQuery(false, TypeAmbito.ENTIDAD, null, codigoEntidad, null, null, codigoEntidad);
+			final List<JConfiguracionAutenticacion> results = query.getResultList();
+			if (results != null && !results.isEmpty()) {
+				for (final JConfiguracionAutenticacion jConfiguracionAutenticacion : results) {
+					configuraciones.add(jConfiguracionAutenticacion.toModel());
+				}
+			}
+
+			query = getQuery(false, TypeAmbito.AREA, null, codigoEntidad, null, null, codigoEntidad);
+			final List<JConfiguracionAutenticacion> results2 = query.getResultList();
+			if (results2 != null && !results2.isEmpty()) {
+				for (final JConfiguracionAutenticacion jConfiguracionAutenticacion : results2) {
+					configuraciones.add(jConfiguracionAutenticacion.toModel());
+				}
+			}
+		}
+		return configuraciones;
+	}
+
+	@Override
+	public ConfiguracionAutenticacion clonar(String dominioID, TypeClonarAccion accion, ConfiguracionAutenticacion confAut,
+			Long idEntidad, Long areaID) {
+		JDominio dominio = entityManager.find(JDominio.class, Long.valueOf(dominioID));
+		JConfiguracionAutenticacion ca = null;
+		JConfiguracionAutenticacion caOriginal = dominio.getConfiguracionAutenticacion();
+
+		//Paso extra, por si acaso, al crear, resulta que ya existe
+		// En caso de que ya existe y la accion fuese crear, pasa automáticamente a reemplazar
+		if (accion == TypeClonarAccion.CREAR && existeConfiguracionAutenticacion(TypeAmbito.fromString(caOriginal.getAmbito()), caOriginal.getIdentificador(), idEntidad, areaID, null)) {
+			accion = TypeClonarAccion.REEMPLAZAR;
+		}
+
+		if (accion == TypeClonarAccion.CREAR) {
+
+			ca = new JConfiguracionAutenticacion();
+			ca.setDescripcion(caOriginal.getDescripcion());
+			ca.setAmbito(caOriginal.getAmbito());
+			JArea area = null;
+			if (areaID != null) {
+				area = entityManager.find(JArea.class, areaID);
+			}
+			ca.setArea(area);
+			JEntidad entidad = null;
+			if (idEntidad != null) {
+				entidad = entityManager.find(JEntidad.class, idEntidad);
+			}
+			ca.setEntidad(entidad);
+			ca.setIdentificador(caOriginal.getIdentificador());
+			ca.setDescripcion(caOriginal.getDescripcion());
+			ca.setPassword(caOriginal.getPassword());
+			ca.setUsuario(caOriginal.getUsuario());
+			entityManager.persist(ca);
+
+		} else if (accion == TypeClonarAccion.REEMPLAZAR){ //CREAMOS
+
+			ca = entityManager.find(JConfiguracionAutenticacion.class, confAut.getCodigo());
+			ca.setDescripcion(caOriginal.getDescripcion());
+			ca.setPassword(caOriginal.getPassword());
+			ca.setUsuario(caOriginal.getUsuario());
+			entityManager.merge(ca);
+
+
+		}
+
+		// Flusheamos los datos vueltos a crear
+		entityManager.flush();
+
+ 		return ca.toModel();
+	}
+
 
 }

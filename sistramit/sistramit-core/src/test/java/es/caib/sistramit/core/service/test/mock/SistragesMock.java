@@ -12,9 +12,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.caib.sistrages.rest.api.interna.RAviso;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
+import es.caib.sistrages.rest.api.interna.RConfiguracionAutenticacion;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RDominio;
+import es.caib.sistrages.rest.api.interna.REnvioRemoto;
+import es.caib.sistrages.rest.api.interna.RGestorFormularioExterno;
 import es.caib.sistrages.rest.api.interna.RIncidenciaValoracion;
 import es.caib.sistrages.rest.api.interna.RListaParametros;
 import es.caib.sistrages.rest.api.interna.RLiteral;
@@ -41,18 +44,30 @@ import es.caib.sistramit.core.service.model.integracion.types.TypeCache;
  */
 public class SistragesMock {
 
-	/** Id entidad test. */
-	public final static String ID_ENTIDAD = "A04003003";
+	/** DIR3 entidad test. */
+	public final static String DIR3_ENTIDAD = "A04003003";
+	/** ID entidad test. */
+	public final static String ID_ENTIDAD = "CAIB";
+	/** ID AREA test. */
+	public final static String ID_AREA = "TESTS";
+	/** ID Dominio. */
+	public static final String ID_DOMINIO = "CAIB.TESTS.DOM-JUNIT";
+	/** ID aut mock. */
+	private static final String ID_AUT_MOCK = "CAIB.TESTS.AUTMOCK";
+	/** ID gfe mock. */
+	private static final String ID_GFE_MOCK = "CAIB.TESTS.GFMOCK";
+	/** ID remoto mock. */
+	private static final String ID_EVRE_MOCK = "CAIB.TESTS.EVREMOCK";
 	/** Id tramite test. */
-	public final static String ID_TRAMITE = "TRAM_JUNIT";
+	public final static String ID_TRAMITE = "CAIB.TESTS.TEST-JUNIT";
+	/** Id tramite test tipo servicio. */
+	public final static String ID_TRAMITE_SERVICIO = "CAIB.TESTS.TEST-SERVICIO";
 	/** Version tramite test. */
 	public final static int VERSION_TRAMITE = 1;
 	/** Id tramite CP test. */
 	public final static String ID_TRAMITE_CP = "TC1";
 	/** Idioma test. */
 	public final static String IDIOMA = "es";
-	/** ID Dominio. */
-	public static final String ID_DOMINIO = "DOM-JUNIT";
 	/** ID Dominio CACHE EXPLICITO. */
 	public static final String ID_DOMINIO_CACHE_EXPLICITO = "DOM-CACHE-EXPLICITO";
 	/** ID Dominio CACHE IMPLICITO. */
@@ -206,6 +221,34 @@ public class SistragesMock {
 		plantillasDefecto.add(plantillaIdioma);
 		e.setPlantillasDefecto(plantillasDefecto);
 
+		// GFE
+		final List<RGestorFormularioExterno> gestoresFormulariosExternos = new ArrayList<>();
+		final RGestorFormularioExterno rgfe = new RGestorFormularioExterno();
+		rgfe.setIdentificador(ID_GFE_MOCK);
+		rgfe.setIdentificadorEntidad(ID_ENTIDAD);
+		rgfe.setIdentificadorConfAutenticacion(ID_AUT_MOCK);
+		gestoresFormulariosExternos.add(rgfe);
+		e.setGestoresFormulariosExternos(gestoresFormulariosExternos);
+
+		// AUT
+		final List<RConfiguracionAutenticacion> configuracionesAutenticacion = new ArrayList<>();
+		final RConfiguracionAutenticacion ca = new RConfiguracionAutenticacion();
+		ca.setIdentificador(ID_AUT_MOCK);
+		ca.setUsuario("usu1");
+		ca.setPassword("pass1");
+		configuracionesAutenticacion.add(ca);
+		e.setConfiguracionesAutenticacion(configuracionesAutenticacion);
+
+		// ENVIO REMOTO
+		final List<REnvioRemoto> enviosRemoto = new ArrayList<>();
+		final REnvioRemoto er = new REnvioRemoto();
+		er.setIdentificador(ID_EVRE_MOCK);
+		er.setIdentificadorConfAutenticacion(ID_AUT_MOCK);
+		er.setUrl("http://www.google.com");
+		er.setTimeout("30");
+		enviosRemoto.add(er);
+		e.setEnviosRemoto(enviosRemoto);
+
 		return e;
 
 	}
@@ -247,6 +290,13 @@ public class SistragesMock {
 		plugin = new RPlugin();
 		plugin.setTipo(TypePluginEntidad.FORMULARIOS_EXTERNOS.toString());
 		plugin.setClassname("es.caib.sistra2.commons.plugins.formulario.mock.FormularioPluginMock");
+		plugin.setPrefijoPropiedades("prefijo");
+		plugin.setPropiedades(crearListaParametros());
+		plugins.add(plugin);
+
+		plugin = new RPlugin();
+		plugin.setTipo(TypePluginEntidad.ENVIO_REMOTO.toString());
+		plugin.setClassname("es.caib.sistra2.commons.plugins.registro.mock.EnvioRemotoMockPlugin");
 		plugin.setPrefijoPropiedades("prefijo");
 		plugin.setPropiedades(crearListaParametros());
 		plugins.add(plugin);
@@ -299,18 +349,18 @@ public class SistragesMock {
 		return vd;
 	}
 
-	public static RVersionTramite crearVersionTramite() {
+	public static RVersionTramite crearVersionTramite(final String idTramite) {
 
 		try {
 			final InputStream inputStream = Thread.currentThread().getContextClassLoader()
-					.getResourceAsStream("test-files/versionTramite.json");
+					.getResourceAsStream("test-files/" + idTramite + ".json");
 			final StringWriter writer = new StringWriter();
 			IOUtils.copy(inputStream, writer, "UTF-8");
 			final String json = writer.toString();
 			final ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			final RVersionTramite defTramite = mapper.readValue(json, RVersionTramite.class);
-			defTramite.setIdEntidad(ID_ENTIDAD);
+			defTramite.setIdEntidad(DIR3_ENTIDAD);
 			defTramite.setTimestamp("" + System.currentTimeMillis());
 			return defTramite;
 		} catch (final Exception ex) {
@@ -321,6 +371,7 @@ public class SistragesMock {
 	public static RDominio crearDominio(final String idDominio) {
 		final RDominio dom1 = new RDominio();
 		dom1.setIdentificador(idDominio);
+		dom1.setIdentificadorEntidad(ID_ENTIDAD);
 		dom1.setTimestamp(generateTimestamp());
 		dom1.setTipo(RDominio.TIPO_LISTA_LISTA);
 

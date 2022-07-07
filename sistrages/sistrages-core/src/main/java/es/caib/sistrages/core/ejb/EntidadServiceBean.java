@@ -150,6 +150,19 @@ public class EntidadServiceBean implements EntidadService {
 	 * (non-Javadoc)
 	 *
 	 * @see
+	 * es.caib.sistrages.core.api.service.EntidadService#removeLogoAsistenteEntidad(
+	 * java.lang.Long)
+	 */
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public void removeIconoAsistenteEntidad(final Long idEntidad) {
+		entidadService.removeIconoAsistenteEntidad(idEntidad);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
 	 * es.caib.sistrages.core.api.service.EntidadService#removeCssEntidad(java.lang.
 	 * Long)
 	 */
@@ -184,6 +197,13 @@ public class EntidadServiceBean implements EntidadService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
 	public void uploadLogoAsistenteEntidad(final Long idEntidad, final Fichero fichero, final byte[] content) {
 		entidadService.uploadLogoAsistenteEntidad(idEntidad, fichero, content);
+
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public void uploadIconoAsistenteEntidad(final Long idEntidad, final Fichero fichero, final byte[] content) {
+		entidadService.uploadIconoAsistenteEntidad(idEntidad, fichero, content);
 
 	}
 
@@ -318,7 +338,7 @@ public class EntidadServiceBean implements EntidadService {
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
 	public PlantillaEntidad uploadPlantillasEmailFin(Long idEntidad, Long idPlantillaEntidad,
 			PlantillaEntidad plantillaEntidad, byte[] contents) {
-		return entidadService.uploadPlantillasEmailFin(idEntidad, idPlantillaEntidad , plantillaEntidad, contents);
+		return entidadService.uploadPlantillasEmailFin(idEntidad, idPlantillaEntidad, plantillaEntidad, contents);
 	}
 
 	@Override

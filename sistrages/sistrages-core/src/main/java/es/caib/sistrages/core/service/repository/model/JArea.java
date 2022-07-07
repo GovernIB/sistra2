@@ -48,12 +48,6 @@ public class JArea implements IModelApi {
 	@Column(name = "ARE_EMAIL", nullable = false)
 	private String email;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "STG_AREDOM", joinColumns = {
-			@JoinColumn(name = "DMA_CODARE", nullable = false, updatable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "DMA_CODDOM", nullable = false, updatable = false) })
-	private Set<JDominio> dominios = new HashSet<>(0);
-
 	/** Constructor. **/
 	public JArea() {
 		super();
@@ -99,20 +93,13 @@ public class JArea implements IModelApi {
 		this.email = email;
 	}
 
-	public Set<JDominio> getDominios() {
-		return this.dominios;
-	}
-
-	public void setDominios(final Set<JDominio> dominios) {
-		this.dominios = dominios;
-	}
-
 	public Area toModel() {
 		final Area area = new Area();
 		area.setCodigo(this.codigo);
 		area.setDescripcion(this.descripcion);
 		area.setIdentificador(this.identificador);
-		area.setIdentificadorCompuesto(this.getEntidad().getIdentificador()+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+this.identificador);
+		area.setIdentificadorCompuesto(this.getEntidad().getIdentificador()
+				+ ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO + this.identificador);
 		area.setCodigoDIR3Entidad(this.entidad.getCodigoDir3());
 		area.setEmail(this.email);
 		return area;

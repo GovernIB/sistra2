@@ -116,15 +116,16 @@ public class UtilCuadernoCarga {
 	private static FilaImportarDominio checkDominios(final FilaImportarDominio fila) {
 
 		// Puede que no exista el dominio de tipo area , en el area seleccionada.
+		/*
 		if (fila.getDominio() != null && fila.getDominioActual() == null && fila.getDominio().getAmbito() == TypeAmbito.AREA) {
 
-			fila.setAccion(TypeImportarAccion.NADA);
-			fila.setExiste(TypeImportarExiste.EXISTE);
-			fila.setEstado(TypeImportarEstado.ERROR);
-			fila.setResultado(TypeImportarResultado.ERROR);
+			fila.setAccion(TypeImportarAccion.CREAR);
+			fila.setExiste(TypeImportarExiste.NO_EXISTE);
+			fila.setEstado(TypeImportarEstado.REVISADO);
+			fila.setResultado(TypeImportarResultado.OK);
 			fila.setVisibleBoton(false);
 			fila.setMismoTipo(false);
-			fila.setMensaje(UtilJSF.getLiteral("importar.error.ambitoAreaNoExisteDom"));
+			fila.setMensaje(UtilJSF.getLiteral("importar.ok.crearDomArea"));
 			return fila;
 		}
 
@@ -132,15 +133,15 @@ public class UtilCuadernoCarga {
 		if (fila.getDominio() != null && fila.getDominioActual() != null
 				&& fila.getDominio().getAmbito() != fila.getDominioActual().getAmbito()) {
 
-			fila.setAccion(TypeImportarAccion.NADA);
+			fila.setAccion(TypeImportarAccion.CREAR);
 			fila.setExiste(TypeImportarExiste.EXISTE);
-			fila.setEstado(TypeImportarEstado.ERROR);
-			fila.setResultado(TypeImportarResultado.ERROR);
+			fila.setEstado(TypeImportarEstado.REVISADO);
+			fila.setResultado(TypeImportarResultado.OK);
 			fila.setVisibleBoton(false);
 			fila.setMismoTipo(false);
-			fila.setMensaje(UtilJSF.getLiteral("importar.error.distintosAmbitos"));
+			fila.setMensaje(UtilJSF.getLiteral("importar.ok.crearDomArea"));
 			return fila;
-		}
+		}*/
 
 		// Si ambos dominios son de tipo Entidad, tienen que ser de la misma entidad
 		if (fila.getDominio() != null && fila.getDominioActual() != null
