@@ -431,6 +431,22 @@ public class ViewTramites extends ViewControllerBase {
 
 	}
 
+	public boolean isDesarrollo() {
+		if (UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean isPreproduccion() {
+		if (UtilJSF.checkEntorno(TypeEntorno.PREPRODUCCION)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	/**
 	 * Retorno dialogo control acceso.
 	 *
@@ -656,8 +672,10 @@ public class ViewTramites extends ViewControllerBase {
 	 * Propiedad que muestra el botón previsualizar en pre a desarrollador
 	 */
 	public boolean getPrevis() {
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
-				&& TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.PREPRODUCCION) {
+		if ((UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
+				&& TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.PREPRODUCCION)
+				|| (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
+						&& TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.DESARROLLO)) {
 			return true;
 		} else {
 			return false;
@@ -953,6 +971,17 @@ public class ViewTramites extends ViewControllerBase {
 		} else {
 			listaTramiteVersiones.clear();
 		}
+	}
+
+	public boolean getTienePermiso() {
+
+		for (Area ar : listaAreas) {
+			if (ar.getCodigo().equals(versionSeleccionada.getIdArea())) {
+				return ar.getTienePermiso();
+			}
+		}
+		return false;
+
 	}
 
 	public void onResizeTable() {

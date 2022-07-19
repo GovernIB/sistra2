@@ -193,23 +193,22 @@
         						<p:menuitem id="btnRefrescar" value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" actionListener="#{viewTramites.refrescar}" process="@this" update="growl @form" rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.isNotDesarrollo()}" />
 					        	<p:menuitem id="btnDuplicar" value="#{msg['botones.duplicarVersion']}" icon="fa fa-copy" onclick="triggerClonarTramite(); return false;" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null and viewTramites.isDesarrollo()}" />
 
-	        					<p:separator rendered="#{viewTramites.tramiteSeleccionada ne null}" />
-			        			<p:menuitem id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite}" process="@this" update="growl" rendered="#{viewTramites.tramiteSeleccionada ne null or viewTramites.versionSeleccionada ne null}" />
+	        					<p:separator rendered="#{viewTramites.tramiteSeleccionada ne null and viewTramites.tienePermisosAreaConsulta}" />
+			        			<p:menuitem id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite}" process="@this" update="growl" rendered="#{(viewTramites.tramiteSeleccionada ne null or viewTramites.versionSeleccionada ne null) and viewTramites.tienePermisosAreaConsulta}" />
 
-								<p:separator rendered="#{viewTramites.seleccionadaArea}" />
-			        			<p:menuitem id="btnDominioArea" value="#{msg['botones.dominiosArea']}" icon="fa fa-database" actionListener="#{viewTramites.dominioArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}"/>
-					        	<p:menuitem id="btnDatosArea" value="#{msg['botones.datosFuenteArea']}" icon="fa fa-table" actionListener="#{viewTramites.datosArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}" />
-								<p:menuitem id="btnSGEArea" value="#{msg['botones.sgeArea']}" icon="fa fa-database" actionListener="#{viewTramites.sgeArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}"/>
-					        	<p:menuitem id="btnConfiguracionArea" value="#{msg['botones.configuracionAutenticacionArea']}" icon="fa fa-table" actionListener="#{viewTramites.confAutArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}" />
-								<p:menuitem id="btnEnvioRem" value="#{msg['botones.envioRemoto']}" icon="fa fa-paper-plane" actionListener="#{viewTramites.envioRemoto}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea}" />
+								<p:separator rendered="#{viewTramites.tienePermisosAreaConsulta}"/>
+			        			<p:menuitem id="btnDominioArea" value="#{msg['botones.dominiosArea']}" icon="fa fa-database" actionListener="#{viewTramites.dominioArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}"/>
+					        	<p:menuitem id="btnDatosArea" value="#{msg['botones.datosFuenteArea']}" icon="fa fa-table" actionListener="#{viewTramites.datosArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}" />
+								<p:menuitem id="btnSGEArea" value="#{msg['botones.sgeArea']}" icon="fa fa-database" actionListener="#{viewTramites.sgeArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}"/>
+					        	<p:menuitem id="btnConfiguracionArea" value="#{msg['botones.configuracionAutenticacionArea']}" icon="fa fa-table" actionListener="#{viewTramites.confAutArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}" />
+								<p:menuitem id="btnEnvioRem" value="#{msg['botones.envioRemoto']}" icon="fa fa-paper-plane" actionListener="#{viewTramites.envioRemoto}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}" />
 
-								<p:separator />
-								<p:menuitem id="btnImportar"  				value="#{msg['botones.importarTramite']}" 	icon="fa fa-download"  onclick="triggerImportarTramite(); return false;" 		rendered="#{viewTramites.isDesarrollo()}"></p:menuitem>
-								<p:menuitem id="btnExportar" 				value="#{msg['botones.exportarVersion']}" 	icon="fa fa-upload" actionListener="#{viewTramites.exportarVersion}" 		rendered="#{viewTramites.versionSeleccionada ne null}"		 process="@this" update="growl"   />
-	        					<p:menuitem id="btnProcesarCuadernoCarga"   value="#{msg['botones.procesarCC']}" 		icon="fa fa-download fa-rotate-90"  onclick="triggerProcesarCC(); return false;"	   		rendered="#{!viewTramites.isDesarrollo()}"></p:menuitem>
-								<p:menuitem id="btnGenerarCuadernoCarga"  	value="#{msg['botones.generarCC']}" 		icon="fa fa-upload fa-rotate-270" actionListener="#{viewTramites.generarCuadernoCarga}" rendered="#{viewTramites.versionSeleccionada ne null and (viewTramites.isDesarrollo() or viewTramites.isPreproduccion())}" process="@this" update="growl" />
-								<p:menuitem id="btnGenerarScripts"  		value="#{msg['botones.generarScripts']}" 	icon="fa fa-bolt" actionListener="#{viewTramites.generarScript}" rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.isDesarrollo()}" process="@this" update="growl" />
-								<p:separator  />
+								<p:separator rendered="#{viewTramites.tienePermisosArea}"/>
+								<p:menuitem id="btnImportar"  				value="#{msg['botones.importarTramite']}" 	icon="fa fa-download"  onclick="triggerImportarTramite(); return false;" 		rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosArea}"></p:menuitem>
+								<p:menuitem id="btnExportar" 				value="#{msg['botones.exportarVersion']}" 	icon="fa fa-upload" actionListener="#{viewTramites.exportarVersion}" 		rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.tienePermisosArea}"		 process="@this" update="growl"   />
+	        					<p:menuitem id="btnProcesarCuadernoCarga"   value="#{msg['botones.procesarCC']}" 		icon="fa fa-download fa-rotate-90"  onclick="triggerProcesarCC(); return false;"	   		rendered="#{!viewTramites.isDesarrollo() and viewTramites.tienePermisosArea}"></p:menuitem>
+								<p:menuitem id="btnGenerarCuadernoCarga"  	value="#{msg['botones.generarCC']}" 		icon="fa fa-upload fa-rotate-270" actionListener="#{viewTramites.generarCuadernoCarga}" rendered="#{viewTramites.versionSeleccionada ne null and (viewTramites.isDesarrollo() or viewTramites.isPreproduccion()) and viewTramites.tienePermisosArea}" process="@this" update="growl" />
+								<p:menuitem id="btnGenerarScripts"  		value="#{msg['botones.generarScripts']}" 	icon="fa fa-bolt" actionListener="#{viewTramites.generarScript}" rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.isDesarrollo() and viewTramites.tienePermisosArea}" process="@this" update="growl" /><p:separator  />
 			        			<p:menuitem id="btnHelp2" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewTramites.ayuda()}" process="@this" update="growl" iconPos="top"/>
 			        		</p:menuButton>
 			        	</h:panelGroup>

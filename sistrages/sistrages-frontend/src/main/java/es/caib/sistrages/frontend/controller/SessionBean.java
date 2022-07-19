@@ -236,14 +236,23 @@ public class SessionBean {
 
 		} else if (rolesList.contains(TypeRoleAcceso.SUPER_ADMIN)) {
 			activeRole = TypeRoleAcceso.SUPER_ADMIN;
+			systemService.updateSesionPerfil(userName, activeRole.toString());
+			systemService.updateSesionIdioma(userName, locale.getLanguage());
+			systemService.updateSesionEntidad(userName, null);
 		} else if (rolesList.contains(TypeRoleAcceso.ADMIN_ENT)) {
 			activeRole = TypeRoleAcceso.ADMIN_ENT;
 			listaEntidades = listaEntidadesAdministrador;
 			entidad = listaEntidades.get(0);
+			systemService.updateSesionPerfil(userName, activeRole.toString());
+			systemService.updateSesionIdioma(userName, locale.getLanguage());
+			systemService.updateSesionEntidad(userName, entidad.getCodigo());
 		} else if (rolesList.contains(TypeRoleAcceso.DESAR)) {
 			activeRole = TypeRoleAcceso.DESAR;
 			listaEntidades = listaEntidadesDesarrollador;
 			entidad = listaEntidades.get(0);
+			systemService.updateSesionPerfil(userName, activeRole.toString());
+			systemService.updateSesionIdioma(userName, locale.getLanguage());
+			systemService.updateSesionEntidad(userName, entidad.getCodigo());
 		} else {
 			UtilJSF.redirectJsfPage("/error/errorUsuarioSinRol.xhtml", null);
 			return;
