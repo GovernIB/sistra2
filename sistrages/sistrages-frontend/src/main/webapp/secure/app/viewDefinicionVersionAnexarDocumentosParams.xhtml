@@ -1,0 +1,129 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
+
+	<h:form id="formViewDefinicionVersionAnexarDocumentos" styleClass="h100">
+
+		<!-- Growl mensajes -->
+		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+		<h:panelGrid columns="2" columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h10" cellpadding="10" cellspacing="10">
+
+				<p:outputLabel value="#{msg['viewDefinicionVersionAnexarDocumentos.listafija']}" />
+				<p:outputPanel>
+					<!-- Toolbar -->
+					<p:toolbar id="toolbar">
+						<f:facet name="right">
+							<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
+								<p:commandButton id="btnNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file"
+									actionListener="#{viewDefinicionVersionParams.nuevoDocumento()}" process="@this"
+									rendered="#{viewDefinicionVersionParams.permiteEditar()}"
+									update="growl">
+									<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoDocumentoAlta}" update="growl formArbol:arbol @form" oncomplete="$('#formViewDefinicionVersionAnexarDocumentos\\:btnEditarHidden').click();" />
+		        				</p:commandButton>
+
+								<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
+									actionListener="#{viewDefinicionVersionParams.editarDocumento()}" process="@this"
+									rendered="#{viewDefinicionVersionParams.permiteEditar()}"
+									update="growl dataTable">
+									<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="growl formArbol:arbol @form" />
+		        				</p:commandButton>
+
+								<p:commandButton id="btnEliminar"
+									value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"
+									actionListener="#{viewDefinicionVersionParams.eliminarDocumento()}"
+									rendered="#{viewDefinicionVersionParams.permiteEditar()}"
+									process="@this" update="growl formArbol:arbol @form">
+										<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+		        				</p:commandButton>
+
+								<p:commandButton id="btnSubir"
+									value="#{msg['botones.subir']}" icon="fa fa-caret-up"
+									actionListener="#{viewDefinicionVersionParams.subirDocumento()}"
+									rendered="#{viewDefinicionVersionParams.permiteEditar()}"
+									process="@this" update="growl formArbol:arbol @form"  />
+
+								<p:commandButton id="btnBajar"
+									value="#{msg['botones.bajar']}" icon="fa fa-caret-down"
+									rendered="#{viewDefinicionVersionParams.permiteEditar()}"
+									actionListener="#{viewDefinicionVersionParams.bajarDocumento()}"
+									process="@this" update="growl formArbol:arbol @form"  />
+
+								<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
+									icon="fa fa-question-circle-o"
+									actionListener="#{viewDefinicionVersionParams.ayudaAnexos()}" process="@this"
+									update="growl formArbol:arbol @form"  />
+							</h:panelGrid>
+						</f:facet>
+					</p:toolbar>
+
+					<p:dataTable id="dataTable" var="documentos"
+						emptyMessage="#{msg['error.emptyRows']}"
+						value="#{viewDefinicionVersionParams.tramitePasoANEXSeleccionado.documentos}"
+						scrollable="true" paginator="false" rowKey="#{documentos.idString}" selectionMode="single"
+						 selection="#{viewDefinicionVersionParams.documentoSeleccionado}" dblClickSelect="true">
+
+
+						<!-- Necesario para actualizar en controlador la fila seleccionada -->
+						<p:ajax event="rowSelect" global="false"/>
+						<p:ajax event="rowDblselect" oncomplete="triggerDblClick();"/>
+
+						<!-- Columnas -->
+						<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionAnexarDocumentos.headerIdentificador']}" >
+							<h:outputText value="#{documentos.identificador}" />
+						</p:column>
+
+
+						<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionAnexarDocumentos.headerDescripcion']}">
+							<h:outputText value="#{documentos.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersionParams.idiomas)}" />
+						</p:column>
+
+						<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionAnexarDocumentos.headerObligatoriedad']}">
+							<h:outputText value="#{msg['typeFormularioObligatoriedad.'+=documentos.obligatoriedad]}" />
+						</p:column>
+
+
+					</p:dataTable>
+				</p:outputPanel>
+
+				<p:outputLabel for="listadinamica" value="#{msg['script.SCRIPT_LISTA_DINAMICA_ANEXOS.titulo']}" />
+				<p:commandButton id="listadinamica" icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.editarScriptListaDinamica()}"
+						styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.tramitePasoANEXSeleccionado.scriptAnexosDinamicos)}"
+						process="@this" update="growl">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoScriptListaDinamica}" update="growl listadinamica" />
+				</p:commandButton>
+
+				<p:confirmDialog global="true" >
+					<p:outputPanel styleClass="confirmar_botonera">
+			        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+			        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+					</p:outputPanel>
+			    </p:confirmDialog>
+
+			   	<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit"
+								actionListener="#{viewDefinicionVersionParams.editarDocumentoAlta()}" process="@this"
+								update="growl" style="display: none">
+					<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos formViewDefinicionVersionAnexarDocumentos:dataTable dataTable" />
+		        </p:commandButton>
+
+		        <h:outputScript >
+			      function triggerDblClick() {
+			       	$('#formViewDefinicionVersionAnexarDocumentos\\:btnEditarDblClickHidden').click();
+			      }
+			    </h:outputScript>
+
+				<p:commandButton id="btnEditarDblClickHidden"
+					 	value="#{msg['botones.editar']}" icon="fa fa-edit"
+						actionListener="#{viewDefinicionVersionParams.editarDocumentoDblClick()}" process="@this"
+						update="growl dataTable" style="display:none">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos formViewDefinicionVersionAnexarDocumentos:dataTable dataTable" />
+       			</p:commandButton>
+		</h:panelGrid>
+
+	</h:form>
+
+</ui:composition>

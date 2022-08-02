@@ -108,7 +108,7 @@ public interface FlujoFormularioInternoService {
 	 * @param idSesionFormulario
 	 *                               id sesion formulario
 	 */
-	void cancelarFormulario(String idSesionFormulario);
+	ResultadoGuardarPagina cancelarFormulario(String idSesionFormulario);
 
 	/**
 	 * Deserializa valores devueltos por el formulario.

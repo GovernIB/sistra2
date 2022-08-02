@@ -35,49 +35,66 @@
 .imc-forms-contenidor .imc--finestra { /*border: .5em solid #4dba79;*/ /* outline: .5em solid #4dba79; */ outline: none; transition: outline .2s ease-out; }
 .imc-forms-contenidor:focus .imc--finestra { outline-color: #294233; }
 
-.imc-forms-contenidor .imc--marc { height: 3em; text-align: right; padding: .5em 1em; background-color: #4dba79; }
 
-.imc-forms-contenidor .imc--ajuda,
-.imc-forms-contenidor .imc--marc > button { display: inline-block; vertical-align: middle; }
+/* titol formulari */
 
-.imc-forms-contenidor .imc--marc > button { margin-left: 2em; }
+.imc-forms-contenidor .imc--finestra > h3 { height: 3.5em; padding: 1em; margin-top: 0; margin-bottom: 0; background-color: #4dba79; }
 
-.imc-forms-contenidor .imc--marc button {
-    color: #fff;
-    background-color: #265d3c;
-}
+.imc-forms-contenidor .imc--finestra > h3 span { display: block; overflow: hidden; font-size: 1.35em; font-weight: normal; color: #fff; white-space: nowrap; text-overflow: ellipsis; }
+.imc-forms-contenidor .imc--finestra > h3 span::before { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1em; height: 1em; margin-right: .8em; background: transparent url(forms/imgs/ico_formulari_fff.svg) no-repeat center center / auto 100%; opacity: .4; }
+
+
+/* marc superior formulari */
+
+.imc-forms-contenidor .imc--marc { display: grid; grid-template-columns: auto auto; height: 3em; padding: .5em 1em; border-bottom: 1px solid #aeaeae; box-shadow: 0 0 .5em .2em rgba(0, 0, 0, 0.2); }
+
+.imc-forms-contenidor .imc--marc button { background-color: #265d3c; }
 
 .imc-forms-contenidor .imc--marc button:hover,
 .imc-forms-contenidor .imc--marc button:focus {
     background-color: #000;
 }
 
-.imc-forms-contenidor .imc--finestra .imc--ajuda {  }
-.imc-forms-contenidor .imc--finestra .imc--ajuda strong { font-weight: normal; color: #fff; padding-right: .7em; }
-.imc-forms-contenidor .imc--finestra .imc--ajuda strong::before {
-	content: "";
-	display: inline-block;
-	width: 2em;
-	height: 2em;
-	vertical-align: middle;
-	margin-right: .5em;
-	border-radius: 50%;
-	background: #fff url(forms/imgs/ico_info.svg) no-repeat center center / auto 1.2em;
+
+/* ajuda superior formulari */
+
+.imc-forms-contenidor .imc--marc .imc--ajuda { }
+.imc-forms-contenidor .imc--marc .imc--ajuda strong { font-weight: normal; /*color: #fff;*/ padding-right: .7em; }
+.imc-forms-contenidor .imc--marc .imc--ajuda strong::before {
+	content: ""; display: inline-block; width: 2em; height: 2em; vertical-align: middle; margin-right: .5em; border-radius: 50%; background: #106fc8 url(forms/imgs/ico_info_fff.svg) no-repeat center center / auto 1.2em;
 }
-.imc-forms-contenidor .imc--finestra .imc--ajuda button { height: 2em; }
+.imc-forms-contenidor .imc--marc .imc--ajuda button { margin-left: .5em; height: 2em; }
 
-.imc-forms-contenidor .imc--finestra .imc--ajuda.imc--desactivada strong { color: #000; }
-.imc-forms-contenidor .imc--finestra .imc--ajuda.imc--desactivada strong::before { background-color: #000; }
-
-.imc-forms-contenidor .imc--finestra > h3 { height: 3.5em; padding: 1em; margin-top: 0; margin-bottom: 0; border-bottom: 1px solid #aeaeae; box-shadow: 0 0 .5em .2em rgba(0, 0, 0, 0.2); }
-
-.imc-forms-contenidor .imc--finestra > h3 span { display: block; overflow: hidden; font-size: 1.35em; font-weight: normal; white-space: nowrap; text-overflow: ellipsis; }
-.imc-forms-contenidor .imc--finestra > h3 span::before { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1em; height: 1em; margin-right: .8em; background: transparent url(forms/imgs/ico_formulari.svg) no-repeat center center / auto 100%; opacity: .4; }
-
-.imc-forms-contenidor .imc--contingut { overflow: auto; position: relative; min-width: 45em; height: calc(100% - 10.5em); }
+.imc-forms-contenidor .imc--marc .imc--ajuda.imc--desactivada strong { color: #000; }
+.imc-forms-contenidor .imc--marc .imc--ajuda.imc--desactivada strong::before { background-color: #ccc; }
 
 
-/* button */
+/* seccions navegació formulari */
+
+.imc--nav-seccions { position: relative; text-align: right; }
+
+.imc--nav-seccions > button::before { content: ""; display: inline-block; width: 1em; height: 1em; vertical-align: middle; margin-right: .5em; background: transparent url(forms/imgs/ico_seccio_nav_fff.svg) no-repeat center center / auto 100%;
+}
+
+.imc--nav-seccions > ul { position: absolute; z-index: 3; top: 100%; right: 0; padding: .5em 1em; background-color: #fff; box-shadow: 0 0 .5em .2em rgba(0, 0, 0, 0.2); }
+
+.imc--nav-seccions > ul[aria-hidden="true"] { display: none; }
+
+.imc--nav-seccions > ul li { padding-bottom: .2em; }
+.imc--nav-seccions > ul li a { display: block; padding: .2em .5em; }
+
+
+.imc-forms-contenidor[data-index-seccions="n"] .imc--nav-seccions * { display: none; position: absolute; top: -999em; left: -999em; visibility: hidden; opacity: 0; }
+
+
+
+/* contingut formulari */
+
+.imc-forms-contenidor .imc--contingut { overflow: auto; scroll-behavior: smooth; position: relative; min-width: 45em; height: calc(100% - 10.5em); }
+
+
+
+/* contingut button */
 
 .imc-forms-contenidor button { display: inline-block; color: #fff; vertical-align: middle; padding: .4em .7em; background-color: #4dba79; border:none; cursor: pointer; will-change: background-color; }
 
@@ -312,18 +329,8 @@
 
 
 .imc-form h4 { clear: both; width: 100%; font-size: 1.1em; font-weight: normal; text-transform: uppercase; padding: 1em 0 .5em 0; margin: .5em 0 .1em 0; }
-/*
-.imc-form h4.imc-seccio { overflow: hidden; position: relative; width: 100%; }
 
-.imc-form h4.imc-seccio::before { content: ""; display: block; position: absolute; top: 2em; left: 2.6em; width: 100%; height: .5em; border-bottom: 1px solid rgba(204, 7, 60, .4); }
-
-.imc-form h4.imc-seccio span { display: block; padding: .2em 0; }
-.imc-form h4.imc-seccio span.imc-se-marca { float: left; position: relative; top: -0.2em; width: 2em; height: 2em; text-align:center; padding-top: .25em; border: 3px solid rgba(204, 7, 60, .4); border-radius: 50%; }
-.imc-form h4.imc-seccio span.imc-se-titol { width: 100%; font-weight: bold; padding-left: 2.6em; }
-*/
-
-
-.imc-form h4.imc-seccio { display: flex; font-weight: bold; line-height: 2.5em; padding: 0; margin: 1em 0 .1em 0; background-color: #f2f2f2; }
+.imc-form h4.imc-seccio { display: flex; position: relative; font-weight: bold; line-height: 2.5em; padding: 0; margin: 1em 0 .1em 0; background-color: #f2f2f2; }
 .imc-form h4.imc-seccio span.imc-se-marca { width: 3em; color: #fff; text-align: center; background-color: #666; }
 .imc-form h4.imc-seccio span.imc-se-titol { width: calc(100% - 3em); padding-left: 1.2em; }
 
@@ -729,6 +736,7 @@
 
 .imc-el-taula-botonera button[class].imc-bt-afegix::before { background-image: url(forms/imgs/ico_afegix.svg); }
 .imc-el-taula-botonera button[class].imc-bt-elimina::before { background-image: url(forms/imgs/ico_elimina.svg); }
+.imc-el-taula-botonera button[class].imc-bt-consulta::before { background-image: url(forms/imgs/ico_consulta_fff.svg); }
 .imc-el-taula-botonera button[class].imc-bt-modifica::before { background-image: url(forms/imgs/ico_modifica.svg); }
 .imc-el-taula-botonera button[class].imc-bt-baixa::before { background-image: url(forms/imgs/ico_baixa.svg); }
 .imc-el-taula-botonera button[class].imc-bt-puja::before { background-image: url(forms/imgs/ico_baixa.svg); transform: rotate(180deg); }
@@ -781,12 +789,27 @@ fieldset[data-lectura="n"] .imc-el-taula-botonera .imc--controls button { displa
 fieldset[data-lectura="n"][data-operacions*="I"] .imc-el-taula-botonera .imc--controls button.imc-bt-afegix { display: inline-block; }
 fieldset[data-lectura="n"][data-operacions*="B"] .imc-el-taula-botonera .imc--controls button.imc-bt-elimina { display: inline-block; }
 fieldset[data-lectura="n"][data-operacions*="M"] .imc-el-taula-botonera .imc--controls button.imc-bt-modifica { display: inline-block; }
+fieldset[data-lectura="n"][data-operacions*="C"] .imc-el-taula-botonera .imc--controls button.imc-bt-consulta { display: inline-block; }
 
 fieldset[data-lectura="n"] .imc-el-taula-botonera .imc--posicio button { display: none; }
 fieldset[data-lectura="n"][data-operacions*="O"] .imc-el-taula-botonera .imc--posicio button { display: inline-block; }
 
 
-fieldset[data-autoordre="s"] .imc-el-taula-botonera .imc--posicio { display: none; }
+fieldset .imc-el-taula-cerca { display: none; text-align: center; padding: 0 .7em 1em .7em; }
+fieldset[data-cerca="s"] legend { position: absolute; top: -999em; left: -999em; }
+fieldset[data-cerca="s"] .imc-el-taula-cerca { display: block; }
+
+
+fieldset[data-cerca="s"] .imc-el-taula-elements { display: none; }
+fieldset[data-cercat="s"] .imc-el-taula-elements { display: block; }
+
+
+
+.imc-form .imc-el-taula p.imc--sense-resultats { display: flex; justify-content: center; font-style: italic; text-align: center; }
+.imc-form .imc-el-taula p.imc--sense-resultats::before { content: ""; display: inline-block; width: 1.2em; height: 1.2em; margin-right: .5em; background: transparent url(forms/imgs/ico_alerta.svg) no-repeat center center / auto 100%; }
+
+
+/*fieldset[data-autoordre="s"] .imc-el-taula-botonera .imc--posicio { display: none; }*/
 
 
 
@@ -871,6 +894,17 @@ fieldset[data-autoordre="s"] .imc-el-taula-botonera .imc--posicio { display: non
 .imc-forms--taula[data-mayuscules="s"] .imc-form .imc-el-control textarea,
 .imc-forms--taula .imc-form .imc-el-control input[data-mayuscules="s"],
 .imc-forms--taula .imc-form .imc-el-control textarea[data-mayuscules="s"] { text-transform: uppercase; }
+
+
+.imc-forms--taula .imc--botonera button { display: none; }
+
+.imc-forms--taula[data-des-de="afegix"] .imc--botonera button[data-accio="llista-el-cancela"],
+.imc-forms--taula[data-des-de="afegix"] .imc--botonera button[data-accio="llista-el-desa"] { display: inline-block; }
+
+.imc-forms--taula[data-des-de="modifica"] .imc--botonera button[data-accio="llista-el-cancela"],
+.imc-forms--taula[data-des-de="modifica"] .imc--botonera button[data-accio="llista-el-desa"] { display: inline-block; }
+
+.imc-forms--taula[data-des-de="consulta"] .imc--botonera button[data-accio="llista-el-tanca"] { display: inline-block; }
 
 
 
@@ -1162,6 +1196,19 @@ fieldset[data-autoordre="s"] .imc-el-taula-botonera .imc--posicio { display: non
 .imc--forms-nav .imc--tanca button span { padding-right: .5em; }
 
 
+.imc--forms-nav .imc--imprimir button::after { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1.1em; height: 1.1em; background: transparent url(forms/imgs/ico_imprimix_fff.svg) no-repeat center center / auto 100%; opacity: .5; }
+.imc--forms-nav .imc--imprimir button span { padding-right: .5em; }
+
+.imc--forms-nav .imc--cancelar button::after { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1.1em; height: 1.1em; background: transparent url(forms/imgs/ico_desconnecta_fff.svg) no-repeat center center / auto 100%; opacity: .5; }
+.imc--forms-nav .imc--cancelar button span { padding-right: .5em; }
+
+.imc--forms-nav .imc--tancar button::after { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1.1em; height: 1.1em; background: transparent url(forms/imgs/ico_tanca_fff.svg) no-repeat center center / auto 100%; opacity: .5; }
+.imc--forms-nav .imc--tancar button span { padding-right: .5em; }
+
+.imc--forms-nav .imc--editar button::after { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1.1em; height: 1.1em; background: transparent url(forms/imgs/ico_edita_fff.svg) no-repeat center center / auto 100%; opacity: .5; }
+.imc--forms-nav .imc--editar button span { padding-right: .5em; }
+
+
 /*
 .imc--forms-nav li.imc-nav-desa { }
 
@@ -1371,6 +1418,20 @@ body[data-fluix="p"] .imc-forms-contenidor .imc--forms-nav .imc--tanca { display
 
 
 .imc-element[data-ocult-bloc="s"] { display: none !important; }
+
+
+/* bt principal */
+
+.imc-form .imc-bt.imc--principal { background-color: #265d3c; }
+
+.imc-form .imc-bt.imc--principal span { color: #fff; }
+
+.imc-form .imc-bt.imc--principal:hover,
+.imc-form .imc-bt.imc--principal:focus,
+.imc-form .imc-bt.imc--principal:active { color: #fff; background-color: #000; }
+
+.imc-form .imc-bt.imc--principal::before { background: transparent url(imgs/icones/ico_correcte.svg) no-repeat center center / auto 1em; }
+
 
 
 

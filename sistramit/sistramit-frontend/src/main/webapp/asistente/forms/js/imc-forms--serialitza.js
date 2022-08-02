@@ -30,7 +30,9 @@ $.fn.appSerialitza = function(opcions) {
 					,el_contingut = el.attr("data-contingut")
 					,el_valortipus = el.attr("data-valortipus")
 					,esObligatori = (el.attr("data-obligatori") === "s") ? true : false
-					,enMayuscules = (el.attr("data-mayuscules") === "s") ? true : false;
+					,enMayuscules = (el.attr("data-mayuscules") === "s") ? true : false
+					,estaOcult = (el.attr("data-ocult") === "s") ? true : false
+					,estaBlocOcult = (el.attr("data-ocult-bloc") === "s") ? true : false;
 
 				// serialitza
 
@@ -206,7 +208,7 @@ $.fn.appSerialitza = function(opcions) {
 
 				// verifica?
 
-				if (verifica) {
+				if (verifica && !estaOcult && !estaBlocOcult) {
 
 					if (el_tipus === "texto" || el_tipus === "oculto") {
 

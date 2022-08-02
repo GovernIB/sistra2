@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
+import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoRepresentante;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeQAA;
@@ -167,6 +168,17 @@ public class ApiExternaRestController {
 				usuarioAutenticadoInfo.setNif(rUsuarioAutenticadoInfo.getNif());
 				usuarioAutenticadoInfo.setNombre(rUsuarioAutenticadoInfo.getNombre());
 				usuarioAutenticadoInfo.setUsername(rUsuarioAutenticadoInfo.getUsername());
+
+				if(rUsuarioAutenticadoInfo.getRepresentanteInfo() != null) {
+					final UsuarioAutenticadoRepresentante usuarioAutenticadoRepresentante = new UsuarioAutenticadoRepresentante();
+					usuarioAutenticadoRepresentante.setNif(rUsuarioAutenticadoInfo.getRepresentanteInfo().getNif());
+					usuarioAutenticadoRepresentante.setNombre(rUsuarioAutenticadoInfo.getRepresentanteInfo().getNombre());
+					usuarioAutenticadoRepresentante.setApellido1(rUsuarioAutenticadoInfo.getRepresentanteInfo().getApellido1());
+					usuarioAutenticadoRepresentante.setApellido2(rUsuarioAutenticadoInfo.getRepresentanteInfo().getApellido2());
+					usuarioAutenticadoRepresentante.setEmail(rUsuarioAutenticadoInfo.getRepresentanteInfo().getEmail());
+					usuarioAutenticadoInfo.setRepresentante(usuarioAutenticadoRepresentante);
+
+				}
 				info.setUsuarioAutenticadoInfo(usuarioAutenticadoInfo);
 			}
 		}

@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="formViewDefinicionVersionPasos" styleClass="h100">
+
+		<!-- Growl mensajes -->
+		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+		<p:outputPanel styleClass="titulo_pasos">
+			<h:outputText value="#{msg['viewDefinicionVersionPasos.flujo']}"/>
+		</p:outputPanel>
+
+		<p:dataTable id="dataTable" var="pasos" styleClass="hide-table-header"
+			emptyMessage="#{msg['error.emptyRows']}"
+			value="#{viewDefinicionVersionParams.tramiteVersion.listaPasos}" rows="10"
+			scrollable="true" paginator="false" rowKey="#{pasos.codigo}"
+			dblClickSelect="true">
+
+			<p:column styleClass="grid-center">
+				<h:outputText value="#{msg['typePaso.' += pasos.idPasoTramitacion]}" />
+			</p:column>
+
+		</p:dataTable>
+
+	</h:form>
+
+</ui:composition>

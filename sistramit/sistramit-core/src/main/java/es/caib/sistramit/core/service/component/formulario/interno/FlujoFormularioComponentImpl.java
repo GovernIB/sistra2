@@ -230,10 +230,19 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	}
 
 	@Override
-	public void cancelarFormulario() {
+	public ResultadoGuardarPagina cancelarFormulario() {
 		final DatosFinalizacionFormulario datosFinSesion = new DatosFinalizacionFormulario();
 		datosFinSesion.setEstadoFinalizacion(TipoFinalizacionFormulario.CANCELADO);
 		dao.finalizarSesionGestorFormularios(datosSesion.getTicket(), datosFinSesion);
+
+		// Retornamos indicando que esta finalizado y url redireccion
+		final ResultadoGuardarPagina res = new ResultadoGuardarPagina();
+		res.setFinalizado(TypeSiNo.SI);
+		res.setUrl(this.configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
+				+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_FORMULARIO_INTERNO + "?idPaso="
+				+ datosSesion.getDatosInicioSesion().getIdPaso() + "&idFormulario="
+				+ datosSesion.getDatosInicioSesion().getIdFormulario() + "&ticket=" + datosSesion.getTicket());
+		return res;
 	}
 
 	@Override

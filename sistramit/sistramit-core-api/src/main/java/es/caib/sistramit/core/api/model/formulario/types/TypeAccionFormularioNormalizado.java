@@ -13,6 +13,10 @@ public enum TypeAccionFormularioNormalizado implements TypeAccionFormulario {
 	 */
 	FINALIZAR("finalizar"),
 	/**
+	 * Acción cancelar (Código String: cancelar).
+	 */
+	CANCELAR("cancelar"),
+	/**
 	 * Acción anterior (Código String: anterior).
 	 */
 	ANTERIOR("anterior"),

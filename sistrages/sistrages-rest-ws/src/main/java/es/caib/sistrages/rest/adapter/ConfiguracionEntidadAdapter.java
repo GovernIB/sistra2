@@ -56,8 +56,10 @@ public class ConfiguracionEntidadAdapter {
 			final List<GestorExternoFormularios> gestores) {
 
 		final RConfiguracionEntidad rConfiguracionEntidad = new RConfiguracionEntidad();
+		rConfiguracionEntidad.setAccesibilidadHTML(AdapterUtils.generarLiteral(entidad.getAccesibilidad()));
 		rConfiguracionEntidad.setTimestamp(System.currentTimeMillis() + "");
-		rConfiguracionEntidad.setIdentificador(entidad.getCodigoDIR3() != null ? entidad.getCodigoDIR3() : null);
+		rConfiguracionEntidad.setIdentificador(entidad.getCodigoDIR3());
+		rConfiguracionEntidad.setCodigo(entidad.getIdentificador());
 		rConfiguracionEntidad.setLogo(restApiService.getReferenciaFichero(
 				entidad.getLogoAsistente() != null ? entidad.getLogoAsistente().getCodigo() : null));
 		rConfiguracionEntidad.setLogoGestor(restApiService
@@ -87,7 +89,6 @@ public class ConfiguracionEntidadAdapter {
 		rConfiguracionEntidad.setDescripcion(AdapterUtils.generarLiteral(entidad.getNombre()));
 		rConfiguracionEntidad.setDiasPreregistro(entidad.getDiasPreregistro());
 		rConfiguracionEntidad.setInfoLopdHTML(AdapterUtils.generarLiteral(entidad.getLopd()));
-
 		rConfiguracionEntidad.setMapaWeb(AdapterUtils.generarLiteral(entidad.getMapaWeb()));
 		rConfiguracionEntidad.setAvisoLegal(AdapterUtils.generarLiteral(entidad.getAvisoLegal()));
 		rConfiguracionEntidad.setRss(AdapterUtils.generarLiteral(entidad.getRss()));
@@ -210,7 +211,8 @@ public class ConfiguracionEntidadAdapter {
 	/**
 	 * Conversion a modelo rest RConfiguracionAtutenticacion
 	 *
-	 * @param configuracion Configuracion de autenticacion
+	 * @param configuracion
+	 *                          Configuracion de autenticacion
 	 * @return el parametro RConfiguracionAutenticacion
 	 */
 	private RConfiguracionAutenticacion toRConfiguracion(final ConfiguracionAutenticacion configuracion) {

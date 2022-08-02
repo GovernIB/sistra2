@@ -83,6 +83,11 @@ public class JEntidad implements IModelApi {
 	@JoinColumn(name = "ENT_PIETT")
 	private JLiteral piePaginaAsistenteTramitacion;
 
+	/** Declaración accesibilidad (HTML) */
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "ENT_ACCTT")
+	private JLiteral declaracionAccesibilidad;
+
 	/** Email contacto genérico */
 	@Column(name = "ENT_EMAIL", length = 500)
 	private String email;
@@ -249,6 +254,20 @@ public class JEntidad implements IModelApi {
 	 */
 	public JLiteral getTituloAsistenteTramitacion() {
 		return tituloAsistenteTramitacion;
+	}
+
+	/**
+	 * @return the declaracionAccesibilidad
+	 */
+	public final JLiteral getDeclaracionAccesibilidad() {
+		return declaracionAccesibilidad;
+	}
+
+	/**
+	 * @param declaracionAccesibilidad the declaracionAccesibilidad to set
+	 */
+	public final void setDeclaracionAccesibilidad(JLiteral declaracionAccesibilidad) {
+		this.declaracionAccesibilidad = declaracionAccesibilidad;
 	}
 
 	/**
@@ -762,6 +781,9 @@ public class JEntidad implements IModelApi {
 		}
 		if (this.piePaginaAsistenteTramitacion != null) {
 			entidad.setPie(this.piePaginaAsistenteTramitacion.toModel());
+		}
+		if (this.declaracionAccesibilidad != null) {
+			entidad.setAccesibilidad(this.declaracionAccesibilidad.toModel());
 		}
 		entidad.setRol(this.roleAdministrador);
 		entidad.setTelefono(this.telefono);

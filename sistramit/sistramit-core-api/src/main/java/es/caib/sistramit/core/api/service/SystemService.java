@@ -5,6 +5,7 @@ import java.util.List;
 
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
+import es.caib.sistramit.core.api.model.flujo.Entidad;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -66,7 +67,7 @@ public interface SystemService {
 
 	/**
 	 * Revisa invalidaciones a procesar.
-	 * 
+	 *
 	 * @return invalidaciones realizadas
 	 */
 	ListaPropiedades revisarInvalidaciones();
@@ -89,5 +90,16 @@ public interface SystemService {
 	 * Procesa los envíos pendientes de reintentar
 	 */
 	void procesarEnviosReintentos();
+
+	/**
+	 * Obtiene identificador entidad.
+	 *
+	 * @param identificador
+	 *                          identificador entidad.
+	 * @param idioma
+	 *                          Idioma
+	 * @return info entidad
+	 */
+	Entidad obtenerInfoEntidad(String identificador, String idioma);
 
 }

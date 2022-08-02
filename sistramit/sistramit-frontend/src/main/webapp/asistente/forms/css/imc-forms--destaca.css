@@ -64,3 +64,15 @@
 .imc-preevalua .imc--baix { left: 0; width: 100%; }
 .imc-preevalua .imc--esquerre { left: 0; }
 .imc-preevalua .imc--dreta { }
+
+
+/* destaca secció */
+
+.imc--secc-destaca svg { 
+  position: absolute; z-index: -3; top: 0; left: 0; width: 100%; height: 100%;
+  stroke-dasharray: 140 540; stroke-dashoffset: -474; stroke-width: 0px; fill: transparent; stroke: #4dba79; transition: stroke-width 1s, stroke-dashoffset 1s, stroke-dasharray 1s;
+}
+
+.imc--secc-destacat svg {  z-index: 1; 
+	stroke-width: 10px; stroke-dashoffset: 0; stroke-dasharray: 2260;
+}

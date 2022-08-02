@@ -1,0 +1,72 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="tipoFormularioObligatoriedad" />
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypePago" var="tipoPago" />
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
+
+	<h:form id="formViewDefinicionVersionTasa" styleClass="h100">
+
+		<!-- Growl mensajes -->
+		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+
+        <h:panelGrid columns="2" columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="10">
+
+            <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionTasa.identificador']}" />
+          	<p:inputText id="identificador" value="#{viewDefinicionVersionParams.tasaTramiteSeleccionado.identificador}" required="true" disabled="true" styleClass="w35"/>
+
+
+            <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionTasa.descripcion']}" />
+            <p:outputPanel styleClass="ui-inputgroup">
+           		<p:inputText id="descripcion" value="#{viewDefinicionVersionParams.tasaTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersionParams.idiomas)}" required="true" disabled="true" styleClass="w85"/>
+           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionParams.consultarTraduccion(viewDefinicionVersionParams.tasaTramiteSeleccionado.descripcion)}"
+						process="@this" update="growl"/>
+       		</p:outputPanel>
+
+         	<p:outputLabel value="#{msg['viewDefinicionVersionTasa.obligatoriedad']}" />
+         	<p:panelGrid styleClass="noBorders">
+       	  		<p:row>
+	       	  		<p:column styleClass="noPadding-left">
+
+	       	  		<p:selectOneRadio id="obligatoriedad" disabled="true" value="#{viewDefinicionVersionParams.tasaTramiteSeleccionado.obligatoriedad}">
+							    <f:selectItems value="#{tipoFormularioObligatoriedad.ALL_VALUES}"  itemLabel="#{msg['typeFormularioObligatoriedad.'+=tipo]}" var="tipo" />
+					</p:selectOneRadio>
+				     </p:column>
+				     <p:column>
+				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(),viewDefinicionVersionParams.tasaTramiteSeleccionado.scriptObligatoriedad.codigo)}" value="#{msg['script.SCRIPT_DEPENDENCIA_DOCUMENTO.titulo']}"
+							 disabled="#{viewDefinicionVersionParams.tasaTramiteSeleccionado.scriptObligatoriedad eq null}"
+							process="@this" update="growl" styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.tasaTramiteSeleccionado.scriptObligatoriedad)}" >
+
+						</p:commandButton>
+					</p:column>
+				</p:row>
+         	</p:panelGrid>
+
+            <p:outputLabel for="scriptdepago" value="#{msg['viewDefinicionVersionTasa.scriptdepago']}" />
+          	<p:commandButton id="scriptdepago" icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_DATOS_PAGO.name(), viewDefinicionVersionParams.tasaTramiteSeleccionado.scriptPago.codigo)}" value="#{msg['viewDefinicionVersionTasa.scriptdepago.establecerdatos']}"
+							 disabled="#{viewDefinicionVersionParams.tasaTramiteSeleccionado.scriptPago eq null}"
+							process="@this" update="growl" styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.tasaTramiteSeleccionado.scriptPago)}" />
+
+			<p:outputLabel value="#{msg['viewDefinicionVersionTasa.simularpago']}" style="#{viewDefinicionVersionParams.simular()}"/>
+			<p:selectBooleanCheckbox id="simularpago" disabled="true" value="#{viewDefinicionVersionParams.tasaTramiteSeleccionado.simulado}" style="#{viewDefinicionVersionParams.simular()}"/>
+
+			<f:facet name = "footer">
+				<p:outputPanel id="toolbar" styleClass="grid-right">
+					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
+						actionListener="#{viewDefinicionVersionParams.editarTasaTramite()}"
+						rendered="#{viewDefinicionVersionParams.permiteEditar()}"
+						process="@this" update="growl">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionTasa" />
+			       	</p:commandButton>
+				</p:outputPanel>
+			</f:facet>
+
+		</h:panelGrid>
+
+	</h:form>
+
+</ui:composition>

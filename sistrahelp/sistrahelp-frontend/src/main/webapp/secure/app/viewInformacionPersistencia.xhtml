@@ -27,43 +27,38 @@
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
         	<p:panelGrid id="panelFiltro" styleClass="noBackground w100 h10 noBorders">
         		<p:row>
-        			<p:column styleClass="w28">
-		        		<h:panelGrid columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
+        			<p:column styleClass="w33">
+		        		<h:panelGrid columns="2" styleClass="w100 padding-right-2pct" columnClasses="w20 grid-right,w74">
 			        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewInformacionPersistencia.filtroIdSesion']}:"/>
-				        	<p:inputText id="filtroIdSesion" value="#{viewInformacionPersistencia.filtros.idSesionTramitacion}" size="30" maxlength="30"/>
+				        	<p:inputText id="filtroIdSesion" value="#{viewInformacionPersistencia.filtros.idSesionTramitacion}" size="30" maxlength="30" onkeyup="capitalize(this)" onblur="trim(this)"/>
 			        	</h:panelGrid>
 		        	</p:column>
-		        	<p:column styleClass="w20">
-			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
-				        	<p:outputLabel for="filtroNif" value="#{msg['viewInformacionPersistencia.filtroNif']}:"/>
-				        	<p:inputText id="filtroNif" value="#{viewInformacionPersistencia.filtros.nif}" size="12" maxlength="12" onblur="this.value = this.value.toUpperCase();"/>
-			        	</h:panelGrid>
-		        	</p:column>
-		        	<p:column styleClass="w26">
+		        	<p:column styleClass="w23">
 			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
+				        	<p:outputLabel for="filtroNif" value="#{msg['viewInformacionPersistencia.filtroNif']}:"/>
+				        	<p:inputText id="filtroNif" value="#{viewInformacionPersistencia.filtros.nif}" size="34" maxlength="12" onkeyup="capitalize(this)" onblur="trim(this)"/>
+			        	</h:panelGrid>
+		        	</p:column>
+		        	<p:column styleClass="w27">
+			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w40 grid-right,w60">
 			        		<p:outputLabel for="filtroTramite" value="#{msg['viewInformacionPersistencia.filtroTramite']}:"/>
 			        		<h:panelGroup>
-				        		<p:inputText id="filtroTramite" value="#{viewInformacionPersistencia.filtros.idTramite}" size="16" maxlength="20" onblur="this.value = this.value.toUpperCase();">
+				        		<p:inputText id="filtroTramite" value="#{viewInformacionPersistencia.filtros.idTramite}" size="16" maxlength="20" onkeyup="capitalize(this)" onblur="trim(this)">
 				        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
 				        		</p:inputText>
 				        		<p:outputLabel value=" / "/>
-				        		<p:inputText id="filtroVersion" value="#{viewInformacionPersistencia.filtros.versionTramite}" size="1" maxlength="2">
+				        		<p:inputText id="filtroVersion" value="#{viewInformacionPersistencia.filtros.versionTramite}" size="1" maxlength="2" onkeyup="capitalize(this)" onblur="trim(this)">
 				        			<p:keyFilter regEx="/[0-9]/i"/>
 				        		</p:inputText>
 			        		</h:panelGroup>
 			        	</h:panelGrid>
 		        	</p:column>
 		        	<p:column styleClass="w26">
-			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w40 grid-right,w60">
-			        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewInformacionPersistencia.filtroProcedimiento']}:"/>
-			        		<p:inputText id="filtroProcedimiento" value="#{viewInformacionPersistencia.filtros.idProcedimientoCP}" size="20" maxlength="20">
-			        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
-			        		</p:inputText>
-			        	</h:panelGrid>
+
 		        	</p:column>
 				</p:row>
 				<p:row>
-					<p:column colspan="2">
+					<p:column styleClass="w33">
 						<p:outputLabel value="#{msg['viewInformacionPersistencia.filtroFecha']}:" styleClass="padding-right-2pct"/>
 
 		        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewInformacionPersistencia.filtroFechaInicio']}:" styleClass="padding-right-4"/>
@@ -79,6 +74,14 @@
 							</p:selectOneMenu >
 			        	</h:panelGrid>
 		        	</p:column>
+		        	<p:column>
+						<h:panelGrid columns="2" styleClass="w100" columnClasses="w40 grid-right,w60">
+			        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewInformacionPersistencia.filtroProcedimiento']}:"/>
+			        		<p:inputText id="filtroProcedimiento" value="#{viewInformacionPersistencia.filtros.idProcedimientoCP}" size="25" maxlength="20" onkeyup="capitalize(this)" onblur="trim(this)">
+			        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+			        		</p:inputText>
+			        	</h:panelGrid>
+	          		</p:column>
 		        	<p:column>
 			        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="table-rightaligned">
 		          			<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewInformacionPersistencia.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
@@ -166,6 +169,15 @@
 			<p:inputText id="paginacion" value="#{viewInformacionPersistencia.paginacion}" style="opacity:0">
 				<p:ajax event="blur" update="@form" process="@this"/>
 			</p:inputText>
+			<h:outputScript >
+		     function capitalize(element){
+				element.value = element.value.toUpperCase();
+			 }
+
+			 function trim(element){
+			 	element.value = element.value.trim();
+			 }
+		   </h:outputScript>
 		</h:form>
 
 	</ui:define>

@@ -51,7 +51,6 @@ public final class SistragesApiComponentImpl implements SistragesApiComponent {
 
 	@Override
 	public RConfiguracionEntidad obtenerConfiguracionEntidad(final String idEntidad) {
-
 		final RestTemplate restTemplate = new RestTemplate();
 		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
 		return restTemplate.getForObject(getUrl() + "/entidad/" + idEntidad, RConfiguracionEntidad.class);

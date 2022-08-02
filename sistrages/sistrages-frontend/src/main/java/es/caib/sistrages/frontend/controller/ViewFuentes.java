@@ -108,6 +108,8 @@ public class ViewFuentes extends ViewControllerBase {
 		if (ambito == null) {
 			return;
 		}
+		setAccion("F");
+
 		paginacion = UtilJSF.getPaginacion("viewFuentes");
 
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);

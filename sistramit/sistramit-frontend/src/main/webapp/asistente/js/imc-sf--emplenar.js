@@ -17,39 +17,18 @@ function appPasEmplenarInicia() {
 		.appFormulariDescarrega();
 
 	if (FORMS_ARXIUS) {
-
 		return;
-
 	}
 
 	// carrega JS inicial de FORMS
 
 	$.when(
 		
-		$.get(APP_ + "forms/html/imc--forms-contenidor.html?" + APP_VERSIO)
-		,$.getScript(APP_ + "forms/js/imc-forms--inicia.js?" + APP_VERSIO)
+		$.getScript(APP_ + "forms/js/imc-forms--inicia.js?" + APP_VERSIO)
 
 	).then(
 
-		function( htmlForms ) {
-
-			imc_body
-				.append( htmlForms[0] );
-
-			// literals
-
-			$("#imc-forms-contenidor")
-				.find("strong:first")
-					.text( txtFormDinAjudaActivada )
-					.end()
-				.find("button:first span ")
-					.text( txtFormDinDesactivar );
-
-			// carrega CSS i JS
-
-			appFormsCarregaScripts() 
-			
-			// carrega formulari
+		function() {
 
 			FORMS_ARXIUS = true;
 
@@ -98,6 +77,7 @@ $.fn.appFormulariDescarrega = function(options) {
 			};
 		
 		// inicia
+		
 		inicia();
 		
 	});

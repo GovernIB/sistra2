@@ -1,6 +1,20 @@
 /* Document CSS */
 
 
+
+.imc--accessibilitat-llistat { position: absolute; z-index: 3; top: 100%; right: 0; padding: .5em 1em; background-color: #fff; box-shadow: 0 0 .5em .2em rgba(0, 0, 0, 0.2); }
+
+.imc--accessibilitat-llistat[aria-hidden="true"] { display: none; }
+
+.imc--accessibilitat-llistat li { padding-bottom: .2em; }
+.imc--accessibilitat-llistat li a { display: block; padding: .2em .5em; }
+
+
+
+
+
+
+
 /* mostra accessibilitat */
 
 .imc-contenidor.imc--mostra-acc .imc-tramitacio .imc--elimina,

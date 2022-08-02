@@ -178,7 +178,7 @@
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firma']}"  />
 						<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,noPadding-left">
 
-						    <p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" id="debeAnexarFirmado" value="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado}" >
+						    <p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" id="debeAnexarFirmado" style ="display:none" value="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado}" >
 						    	<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this"/>
 						    </p:selectBooleanCheckbox>
 

@@ -224,8 +224,9 @@ public final class FormularioController extends TramitacionController {
 	@RequestMapping("/cancelar.json")
 	public ModelAndView cancelar() {
 		final String idSesionFormulario = getIdSesionFormuarioActiva();
-		formService.cancelarFormulario(idSesionFormulario);
+		final ResultadoGuardarPagina rgp = formService.cancelarFormulario(idSesionFormulario);
 		final RespuestaJSON res = new RespuestaJSON();
+		res.setDatos(rgp);
 		return generarJsonView(res);
 	}
 

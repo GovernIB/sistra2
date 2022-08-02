@@ -4,7 +4,7 @@
 	      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 	      http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	      version="2.5">
-	      
+
   <display-name>sistramit-frontend</display-name>
 
   <!-- Context listener para cargar los xml de los modulos -->
@@ -16,18 +16,18 @@
   </listener>
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>/WEB-INF/sistramit-ac-frontend-jboss.xml    			 
+    <param-value>/WEB-INF/sistramit-ac-frontend-jboss.xml
     			 /WEB-INF/sistramit-ac-frontend-security.xml
     </param-value>
   </context-param>
-  
+
   <!-- Fuerza logout si es un punto de entrada -->
 	<filter>
        <filter-name>autoLogoutFilter</filter-name>
        <filter-class>es.caib.sistramit.frontend.security.AutoLogoutFilter</filter-class>
-   </filter>  
-   	
-  <!--  Charset enconding -->  	
+   </filter>
+
+  <!--  Charset enconding -->
   <filter>
     <filter-name>CharacterEncoding</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -40,13 +40,13 @@
       <param-value>true</param-value>
     </init-param>
   </filter>
-  
+
   <!-- Spring Security  -->
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter>
-  
+
   <!-- Mappings -->
   <filter-mapping>
 	<filter-name>autoLogoutFilter</filter-name>
@@ -60,20 +60,21 @@
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
   </filter-mapping>
-  
+
   <!-- Session timeout -->
   <!--  TODO: PENDIENTE DE QUE LO COJA DEL PROPERTIES -->
   <session-config>
      <session-timeout>30</session-timeout>
+     <tracking-mode>COOKIE</tracking-mode>
   </session-config>
-  
+
   <!--  Dispatcher servlet Spring -->
   <servlet>
     <servlet-name>sistramit-frontend</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  
+
   <!--  Servlet mappings -->
   <servlet-mapping>
     <servlet-name>sistramit-frontend</servlet-name>
@@ -96,5 +97,5 @@
  <welcome-file-list>
 	<welcome-file>index.jsp</welcome-file>
  </welcome-file-list>
-  
+
 </web-app>

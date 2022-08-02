@@ -1393,7 +1393,7 @@ $.fn.appTitle = function(options) {
 
 				var elm_t_text = elm_t.text();
 
-				imc_body
+				imc_forms_body
 					.find("div[role=tooltip]")
 						.remove();
 
@@ -1445,7 +1445,7 @@ $.fn.appTitle = function(options) {
 
 				var elm_t = $(this);
 
-				imc_body
+				imc_forms_body
 					.find("div[role=tooltip]:first")
 						.attr("aria-hidden", "true");
 

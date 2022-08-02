@@ -412,8 +412,9 @@ public class SessionBean {
 
 			final HttpSession sessionHttp = (HttpSession) FacesContext.getCurrentInstance().getExternalContext()
 					.getSession(false);
-
-			sessionHttp.setAttribute("LOGO_ENTIDAD_ACTIVA", entidad.getLogoGestor());
+			if (sessionHttp != null) {
+				sessionHttp.setAttribute("LOGO_ENTIDAD_ACTIVA", entidad.getLogoGestor());
+			}
 		} else {
 			logo = url + Constantes.ENTIDAD_NO_LOGO;
 		}

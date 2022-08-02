@@ -170,7 +170,8 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setPiePaginaAsistenteTramitacion(
 				JLiteral.mergeModel(jEntidad.getPiePaginaAsistenteTramitacion(), entidad.getPie()));
 		jEntidad.setLopd(JLiteral.mergeModel(jEntidad.getLopd(), entidad.getLopd()));
-
+		jEntidad.setDeclaracionAccesibilidad(
+				JLiteral.mergeModel(jEntidad.getDeclaracionAccesibilidad(), entidad.getAccesibilidad()));
 		jEntidad.setEmail(entidad.getEmail());
 		jEntidad.setContactoEmail(entidad.isEmailHabilitado());
 		jEntidad.setContactoTelefono(entidad.isTelefonoHabilitado());
@@ -203,6 +204,7 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setOficinaRegistroCentralizado(entidad.getOficinaRegistroCentralizado());
 		jEntidad.setValorarTramite(entidad.isValorarTramite());
 		jEntidad.setRegistroOcultarDescargaDocumentos(entidad.isRegistroOcultarDescargaDocumentos());
+
 		entityManager.merge(jEntidad);
 	}
 

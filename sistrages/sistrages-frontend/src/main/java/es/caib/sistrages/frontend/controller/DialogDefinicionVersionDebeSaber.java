@@ -113,10 +113,10 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 
 		if (data.getInstruccionesIniciales() == null) {
 			UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.ALTA, data.getInstruccionesIniciales(), idiomas,
-					idiomas, false);
+					idiomas, true);
 		} else {
 			UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.EDICION, data.getInstruccionesIniciales(), idiomas,
-					idiomas, false);
+					idiomas, true);
 		}
 	}
 

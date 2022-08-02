@@ -6,6 +6,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.springframework.util.StringUtils;
+
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Traduccion;
@@ -266,6 +268,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
 				return;
 			}
+			textoCa = replaceComillas(textoCa);
 			data.add(new Traduccion(TypeIdioma.CATALAN.toString(), textoCa));
 		}
 		if (visibleEs) {
@@ -277,6 +280,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
 				return;
 			}
+			textoEs = replaceComillas(textoEs);
 			data.add(new Traduccion(TypeIdioma.CASTELLANO.toString(), textoEs));
 		}
 		if (visibleEn) {
@@ -288,6 +292,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
 				return;
 			}
+			textoEn = replaceComillas(textoEn);
 			data.add(new Traduccion(TypeIdioma.INGLES.toString(), textoEn));
 		}
 		if (visibleDe) {
@@ -299,6 +304,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_EXCEDE_LONGITUD));
 				return;
 			}
+			textoDe = replaceComillas(textoDe);
 			data.add(new Traduccion(TypeIdioma.ALEMAN.toString(), textoDe));
 		}
 
@@ -308,6 +314,14 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
 
+	}
+
+	private String replaceComillas(String texto) {
+		texto = StringUtils.replace(texto, "`", "'");
+		texto = StringUtils.replace(texto, "´", "'");
+		texto = StringUtils.replace(texto, "‘", "'");
+		texto = StringUtils.replace(texto, "’", "'");
+		return texto;
 	}
 
 	/**

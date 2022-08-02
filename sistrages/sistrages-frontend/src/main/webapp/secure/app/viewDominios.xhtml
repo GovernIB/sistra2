@@ -13,6 +13,10 @@
 		<f:viewParam name="area" value="#{viewDominios.area}"/>
 	</f:metadata>
 
+	<f:facet name="last">
+  		<h:outputStylesheet library="default" name="css/yourstyles.css" />
+	</f:facet>
+
 	<ui:define name="content">
 
 		<h:form id="form" style="height: 100%">
@@ -60,8 +64,7 @@
 		        			<p:ajax event="dialogReturn" listener="#{viewDominios.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewDominios.consultar()}" process="@this" update="growl" rendered="#{viewDominios.getPermiteConsultar()}" />
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewDominios.eliminar()}" process="@this" update="growl dataTable"  rendered="#{viewDominios.getPermiteEditar()}">
-		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewDominios.avisoEliminar()}" process="@this" update="growl dataTable"  rendered="#{viewDominios.getPermiteEditar()}">
 		        		</p:commandButton>
 		        		<p:commandButton id="btnPing" value="#{msg['botones.ping']}" icon="fa fa-arrow-up" actionListener="#{viewDominios.ping()}" process="@this" update="growl dataTable"/>
 		        		<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" actionListener="#{viewDominios.tramites()}" process="@this" update="growl dataTable" rendered="#{viewDominios.getPermiteConsultar()}"/>
@@ -130,6 +133,28 @@
 		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
 				</p:outputPanel>
 		    </p:confirmDialog>
+
+			<!-- Dialogo confirmar cambios desde view a traves de boton oculto -->
+	    	<p:commandButton value="Confirmation" id="confirmationButton" widgetVar="confirmationButton" onclick="PF('dlgConfirmar').show();" styleClass="no-display" process="@this">
+	    	<p:ajax event="click" update="@form"/>
+
+	    	</p:commandButton>
+
+			<style>
+			  .ui-dialog-content > .ui-icon {
+				    display: none !important;
+				}
+
+
+			</style>
+
+			 <p:confirmDialog header="#{msg['confirm.componente.eliminar.titulo']}" global="true" id="dlgConfirmar" widgetVar="dlgConfirmar" message="#{viewDominios.msg}" styleClass="confirmar_ancho">
+		    	<p:outputPanel styleClass="confirmar_botonera">
+	           	 	<p:commandButton value="#{msg['botones.si']}" actionListener="#{viewDominios.eliminar}" styleClass="boton-azul" icon="ui-icon-check" onclick="PF('dlgConfirmar').hide();" process="@this"  update="@form" />
+	            	<p:commandButton value="#{msg['botones.no']}" icon="ui-icon-close" onclick="PF('dlgConfirmar').hide();" process="@this"  update="@form"  />
+	            </p:outputPanel>
+        	</p:confirmDialog>
+
 		</h:form>
 
 	</ui:define>

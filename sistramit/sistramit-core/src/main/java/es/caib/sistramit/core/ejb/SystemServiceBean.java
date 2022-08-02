@@ -13,6 +13,7 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
+import es.caib.sistramit.core.api.model.flujo.Entidad;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -65,5 +66,10 @@ public class SystemServiceBean implements SystemService {
 	@Override
 	public void procesarEnviosReintentos() {
 		systemService.procesarEnviosReintentos();
+	}
+
+	@Override
+	public Entidad obtenerInfoEntidad(final String identificador, final String idioma) {
+		return systemService.obtenerInfoEntidad(identificador, idioma);
 	}
 }

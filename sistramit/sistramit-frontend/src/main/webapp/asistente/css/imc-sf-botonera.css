@@ -45,7 +45,9 @@
 /* botons */
 
 .imc-bt.imc--principal { background-color: #265d3c; }
+
 .imc-bt.imc--principal span { color: #fff; }
+
 .imc-bt.imc--principal:hover,
 .imc-bt.imc--principal:focus,
 .imc-bt.imc--principal:active { color: #fff; background-color: #000; }

@@ -128,7 +128,8 @@ public class ApiInternaRestController {
 	/**
 	 * Recupera configuración entidad.
 	 *
-	 * @param codigoDIR3 id entidad
+	 * @param codigoDIR3
+	 *                       id entidad
 	 * @return Entidad
 	 */
 	@ApiOperation(value = "Lista de Propiedades de configuracion de entidad", notes = "Lista de Propiedades de configuracion de entidad", response = RConfiguracionEntidad.class)
@@ -151,17 +152,12 @@ public class ApiInternaRestController {
 
 		final List<EnvioRemoto> enviosRemotos = restApiService.listEnvioByEntidad(entidad.getCodigo());
 
-		/*
-		 * for (Area a : areas) { for (EnvioRemoto er :
-		 * restApiService.listEnvio(TypeAmbito.AREA, a.getCodigo(), "")) {
-		 * enviosRemotos.add(er); } } for (EnvioRemoto er :
-		 * restApiService.listEnvio(TypeAmbito.ENTIDAD, entidad.getCodigo(), "")) {
-		 * enviosRemotos.add(er); }
-		 */
 		final List<ConfiguracionAutenticacion> configuraciones = restApiService
 				.listConfiguracionAutenticacion(TypeAmbito.ENTIDAD, entidad.getCodigo());
+
 		final List<GestorExternoFormularios> gestores = restApiService
 				.listGestorExternoFormularios(entidad.getCodigo());
+
 		return confEntidadAdapter.convertir(entidad, formSoporte, plantillas, valoraciones, plantillasEntidad, areas,
 				enviosRemotos, configuraciones, gestores);
 	}
@@ -169,9 +165,12 @@ public class ApiInternaRestController {
 	/**
 	 * Recupera definición versión de trámite.
 	 *
-	 * @param idioma    Idioma
-	 * @param idtramite Id Trámite
-	 * @param version   Versión trámite
+	 * @param idioma
+	 *                      Idioma
+	 * @param idtramite
+	 *                      Id Trámite
+	 * @param version
+	 *                      Versión trámite
 	 * @return versión de trámite
 	 * @throws Exception
 	 */
@@ -219,7 +218,8 @@ public class ApiInternaRestController {
 	/**
 	 * Obtiene avisos activos entidad.
 	 *
-	 * @param idEntidad Id entidad
+	 * @param idEntidad
+	 *                      Id entidad
 	 * @return avisos
 	 */
 	@ApiOperation(value = "Obtiene los avisos de una entidad", notes = "Obtiene los avisos de una entidad", response = RAvisosEntidad.class)
@@ -231,8 +231,10 @@ public class ApiInternaRestController {
 	/**
 	 * Recupera valores de un dominio de fuente de datos.
 	 *
-	 * @param idDominio      id dominio
-	 * @param parametrosJSON parametros (en formato JSON)
+	 * @param idDominio
+	 *                           id dominio
+	 * @param parametrosJSON
+	 *                           parametros (en formato JSON)
 	 * @return Valores dominio
 	 */
 	@ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores FD de un dominio", response = RValoresDominio.class)
@@ -262,8 +264,10 @@ public class ApiInternaRestController {
 	/**
 	 * Recupera valores de un dominio de fuente de datos.
 	 *
-	 * @param idDominio      id dominio
-	 * @param parametrosJSON parametros (en formato JSON)
+	 * @param idDominio
+	 *                           id dominio
+	 * @param parametrosJSON
+	 *                           parametros (en formato JSON)
 	 * @return Valores dominio
 	 */
 	@ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores LF de un dominio", response = RValoresDominio.class)

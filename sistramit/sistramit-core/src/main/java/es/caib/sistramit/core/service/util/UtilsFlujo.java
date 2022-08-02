@@ -313,6 +313,7 @@ public final class UtilsFlujo {
 
 		final Entidad e = new Entidad();
 		e.setId(entidad.getIdentificador());
+		e.setCodigo(entidad.getCodigo());
 		e.setNombre(UtilsSTG.obtenerLiteral(entidad.getDescripcion(), idioma));
 		e.setLogo(obtenerUrlPublica(urlResources, entidad.getLogo()));
 		e.setTituloApp(UtilsSTG.obtenerLiteral(entidad.getTitulo(), idioma));
@@ -324,6 +325,10 @@ public final class UtilsFlujo {
 		e.setUrlMapaWeb(UtilsSTG.obtenerLiteral(entidad.getMapaWeb(), idioma));
 		e.setUrlAvisoLegal(UtilsSTG.obtenerLiteral(entidad.getAvisoLegal(), idioma));
 		e.setUrlRss(UtilsSTG.obtenerLiteral(entidad.getRss(), idioma));
+		e.setUrlAccesibilidad(
+				configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
+						+ "/accesibilidad/declaracion/" + idioma + "/" + entidad.getIdentificador() + ".html");
+		e.setHtmlAccesibilidad(UtilsSTG.obtenerLiteral(entidad.getAccesibilidadHTML(), idioma));
 		final EntidadRedesSociales redes = new EntidadRedesSociales();
 		redes.setFacebook(entidad.getUrlFacebook());
 		redes.setInstagram(entidad.getUrlInstagram());

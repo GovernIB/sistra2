@@ -8,8 +8,11 @@ package es.caib.sistramit.core.api.model.flujo;
 @SuppressWarnings("serial")
 public final class Entidad implements ModelApi {
 
-	/** Id entidad. */
+	/** Id entidad (DIR3). */
 	private String id;
+
+	/** Código entidad (GOIB, APB,...). */
+	private String codigo;
 
 	/** Logo (path). */
 	private String logo;
@@ -43,6 +46,12 @@ public final class Entidad implements ModelApi {
 
 	/** Url rss. */
 	private String urlRss;
+
+	/** Url accesibilidad. */
+	private String urlAccesibilidad;
+
+	/** Html accesibilidad. */
+	private String htmlAccesibilidad;
 
 	/** Soporte. */
 	private EntidadSoporte soporte;
@@ -299,7 +308,7 @@ public final class Entidad implements ModelApi {
 
 	/**
 	 * Método de acceso a tituloApp.
-	 * 
+	 *
 	 * @return tituloApp
 	 */
 	public String getTituloApp() {
@@ -308,12 +317,69 @@ public final class Entidad implements ModelApi {
 
 	/**
 	 * Método para establecer tituloApp.
-	 * 
+	 *
 	 * @param tituloApp
 	 *                      tituloApp a establecer
 	 */
 	public void setTituloApp(final String tituloApp) {
 		this.tituloApp = tituloApp;
+	}
+
+	/**
+	 * Método de acceso a urlAccesibilidad.
+	 *
+	 * @return urlAccesibilidad
+	 */
+	public String getUrlAccesibilidad() {
+		return urlAccesibilidad;
+	}
+
+	/**
+	 * Método para establecer urlAccesibilidad.
+	 *
+	 * @param urlAccesibilidad
+	 *                             urlAccesibilidad a establecer
+	 */
+	public void setUrlAccesibilidad(final String urlAccesibilidad) {
+		this.urlAccesibilidad = urlAccesibilidad;
+	}
+
+	/**
+	 * Método de acceso a htmlAccesibilidad.
+	 *
+	 * @return htmlAccesibilidad
+	 */
+	public String getHtmlAccesibilidad() {
+		return htmlAccesibilidad;
+	}
+
+	/**
+	 * Método para establecer htmlAccesibilidad.
+	 *
+	 * @param htmlAccesibilidad
+	 *                              htmlAccesibilidad a establecer
+	 */
+	public void setHtmlAccesibilidad(final String htmlAccesibilidad) {
+		this.htmlAccesibilidad = htmlAccesibilidad;
+	}
+
+	/**
+	 * Método de acceso a codigo.
+	 * 
+	 * @return codigo
+	 */
+	public String getCodigo() {
+		return codigo;
+	}
+
+	/**
+	 * Método para establecer codigo.
+	 * 
+	 * @param codigo
+	 *                   codigo a establecer
+	 */
+	public void setCodigo(final String codigo) {
+		this.codigo = codigo;
 	}
 
 }

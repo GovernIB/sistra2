@@ -13,10 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
+import es.caib.sistramit.core.api.model.flujo.Entidad;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypeInvalidacion;
@@ -31,6 +33,7 @@ import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.repository.dao.InvalidacionDao;
 import es.caib.sistramit.core.service.repository.dao.ProcesoDao;
+import es.caib.sistramit.core.service.util.UtilsFlujo;
 
 @Service
 @Transactional
@@ -203,6 +206,13 @@ public class SystemServiceImpl implements SystemService {
 	@Override
 	public void procesarEnviosReintentos() {
 		envioAvisoComponent.procesarEnviosReintentos();
+	}
+
+	@Override
+	public Entidad obtenerInfoEntidad(final String identificador, final String idioma) {
+		final RConfiguracionEntidad re = configuracionComponent.obtenerConfiguracionEntidad(identificador);
+		final Entidad entidad = UtilsFlujo.detalleTramiteEntidad(re, idioma, configuracionComponent);
+		return entidad;
 	}
 
 }

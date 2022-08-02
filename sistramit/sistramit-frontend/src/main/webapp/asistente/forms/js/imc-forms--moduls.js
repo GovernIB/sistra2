@@ -1,4 +1,4 @@
-﻿// MISSATGE
+﻿// mòduls
 
 
 // appFormsAjuda
@@ -73,12 +73,6 @@ $.fn.appFormsAjuda = function(opcions) {
 						imc_forms_ajuda
 							.fadeIn(200);
 
-					});
-
-				$.ajax({
-					  type: "POST",
-					  url: "activarAyuda.do",
-					  data: { activar: ("on" == ajuda_data)}
 					});
 
 			},
@@ -455,8 +449,29 @@ $.fn.appFormsConfiguracio = function(options) {
 
 					var poderGuardar = forms_json.datos.permitirGuardar || "n";
 
-					element // imc_forms_contenidor
+					element
 						.attr("data-guardar", poderGuardar);
+
+					// índex a les seccions
+
+					var indexSeccions = forms_json.datos.indiceSecciones || "n";
+
+					element
+						.attr("data-index-seccions", indexSeccions);
+
+					if (indexSeccions === "s" && element.find("#imc--nav-seccions").length) {
+
+						$.getScript(
+							APP_FORMS_ + "forms/js/imc-forms--seccions-nav.js?" + APP_FORMS_VERSIO
+							,function() {
+
+								element
+									.appFormsSeccionsNav();
+
+							}
+						);
+
+					}
 
 					// títol
 
@@ -900,7 +915,7 @@ $.fn.appFormsConfiguracio = function(options) {
 							if (conf_tipus === "listaElementos") {
 
 								elm
-									.appFormsLlistaElements({ columnes: conf_opcions.columnas, filesMax: conf_opcions.maxElementos, filesNum: conf_opcions.numElementos, operacions: conf_opcions.operaciones, autoOrdre: conf_opcions.autoorden, desDe: desDe });
+									.appFormsLlistaElements({ columnes: conf_opcions.columnas, cerca: conf.busqueda, filesMax: conf_opcions.maxElementos, filesNum: conf_opcions.numElementos, operacions: conf_opcions.operaciones, autoOrdre: conf_opcions.autoorden, desDe: desDe });
 
 							}
 
@@ -1385,41 +1400,39 @@ $.fn.appFormsConfiguracio = function(options) {
 							var bt_class = (acc_tipus === "anterior") ? "imc--anterior"
 											: (acc_tipus === "siguiente") ? "imc--seguent"
 											: (acc_tipus === "finalizar") ? "imc--finalitza"
-											: (acc_tipus === "salir") ? "imc--eixir"
 											: (acc_tipus === "imprimir") ? "imc--imprimir"
+											: (acc_tipus === "cancelar") ? "imc--cancelar"
+											: (acc_tipus === "cerrar") ? "imc--tancar"
+											: (acc_tipus === "editar") ? "imc--editar"
 											: acc_estil;
 
 							var acc_validar = (acc_tipus === "anterior") ? "n"
 											: (acc_tipus === "siguiente") ? "s"
 											: (acc_tipus === "finalizar") ? "s"
-											: (acc_tipus === "salir") ? "n"
+											: (acc_tipus === "imprimir") ? "n"
+											: (acc_tipus === "cancelar") ? "n"
+											: (acc_tipus === "cerrar") ? "n"
+											: (acc_tipus === "editar") ? "n"
 											: acc_validar;
 
 							var bt_text = (acc_tipus === "anterior") ? txtFormDinAnterior
 											: (acc_tipus === "siguiente") ? txtFormDinSeguent
 											: (acc_tipus === "finalizar") ? txtFormDinFinalitza
-											: (acc_tipus === "salir") ? txtFormDinEixir
-											: acc_text;
+											: (acc_tipus === "imprimir") ? txtFormDinImprimir
+											: (acc_tipus === "cancelar") ? txtFormDinCancela
+											: (acc_tipus === "cerrar") ? txtFormDinTanca
+											: (acc_tipus === "editar") ? txtFormDinEdita
+											: (acc_text && acc_text !== "" && acc_text !== null) ? acc_text
+											: "";
 
-							// accions aterior i següent
-
-							if (acc_tipus === "anterior") {
-
-								acc_accio = "anterior";
-
-							} else if (acc_tipus === "siguiente") {
-
-								acc_accio = "seguent";
-
-							}
-
-							// imprimir
-
-							if (acc_tipus === "imprimir") {
-
-								bt_text = (acc_text && acc_text !== "" && acc_text !== null) ? acc_text : txtFormDinImprimir;
-
-							}
+							var acc_accio = (acc_tipus === "anterior") ? "anterior"
+											: (acc_tipus === "siguiente") ? "seguent"
+											: (acc_tipus === "finalizar") ? "finaliza"
+											: (acc_tipus === "imprimir") ? "imprimix"
+											: (acc_tipus === "cancelar") ? "cancela"
+											: (acc_tipus === "cerrar") ? "tanca"
+											: (acc_tipus === "editar") ? "edita"
+											: "";
 
 							// afegim html botó
 
@@ -1432,12 +1445,13 @@ $.fn.appFormsConfiguracio = function(options) {
 
 						});
 
+					/*
 					var bt_finalitza_span = $("<span>").text( txtFormDinTancaFormulari )
 						,bt_finalitza_button = $("<button>").addClass("imc--form-tanca").attr({ type: "button", id: "imc-bt-iframe-tanca", "data-accio": "tanca" }).html( bt_finalitza_span )
 						,bt_li = $("<li>").addClass("imc--tanca").html( bt_finalitza_button );
 
 					acc_llistat
-						.prepend( bt_li );
+						.prepend( bt_li );*/
 
 				}
 
@@ -2259,7 +2273,7 @@ $.fn.appFormsAvalua = function(options) {
 								.errors({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: json.url });
 							*/
 
-							imc_body
+							imc_forms_body
 								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
 
 						}
@@ -2278,7 +2292,7 @@ $.fn.appFormsAvalua = function(options) {
 
 						consola("Avalua dada del formulari: error des de FAIL");
 
-						imc_body
+						imc_forms_body
 							.appFormsErrorsGeneral({ estat: "fail" });
 
 					});
@@ -2464,8 +2478,8 @@ $.fn.appFormsFormateig = function(options) {
 
 						$.when(
 
-							$.getScript(APP_ + "forms/js/utils/jquery-maskedinput.min.js?" + APP_VERSIO)
-							,$.getScript(APP_ + "forms/js/utils/jquery-ui-1.10.3.custom.min.js?" + APP_VERSIO)
+							$.getScript(APP_FORMS_ + "forms/js/utils/jquery-maskedinput.min.js?" + APP_VERSIO)
+							,$.getScript(APP_FORMS_ + "forms/js/utils/jquery-ui-1.10.3.custom.min.js?" + APP_VERSIO)
 
 						).then(
 
@@ -2474,15 +2488,15 @@ $.fn.appFormsFormateig = function(options) {
 								// estils
 
 								$("<link>")
-									.attr({ rel: "stylesheet", media: "screen", href: APP_ + "forms/css/ui-lightness/jquery-ui-1.10.3.custom.min.css?" + APP_VERSIO })
-										.appendTo( imc_head );
+									.attr({ rel: "stylesheet", media: "screen", href: APP_FORMS_ + "forms/css/ui-lightness/jquery-ui-1.10.3.custom.min.css?" + APP_VERSIO })
+										.appendTo( imc_forms_head );
 
 								arxius_data = true;
 
 								// configura
 
 								$.getScript(
-									APP_ + "forms/js/literals/jquery-imc-literals-calendari-"+APP_IDIOMA+".js?" + APP_VERSIO
+									APP_FORMS_ + "forms/js/literals/jquery-imc-literals-calendari-"+APP_IDIOMA+".js?" + APP_VERSIO
 									,function() {
 
 										configura_data();
@@ -2500,7 +2514,7 @@ $.fn.appFormsFormateig = function(options) {
 
 								consola("Forms inicia (data): error caregant CSS i JS");
 
-								imc_body
+								imc_forms_body
 									.appFormsErrorsGeneral({ estat: "fail" });
 
 							}
@@ -2533,7 +2547,7 @@ $.fn.appFormsFormateig = function(options) {
 
 						$.when(
 
-							$.getScript(APP_ + "forms/js/utils/jquery-maskedinput.min.js?" + APP_VERSIO)
+							$.getScript(APP_FORMS_ + "forms/js/utils/jquery-maskedinput.min.js?" + APP_VERSIO)
 
 						).then(
 
@@ -2555,7 +2569,7 @@ $.fn.appFormsFormateig = function(options) {
 
 								consola("Forms inicia (hora): error caregant CSS i JS");
 
-								imc_body
+								imc_forms_body
 									.appFormsErrorsGeneral({ estat: "fail" });
 
 							}
@@ -2640,6 +2654,8 @@ $.fn.appFormsAccions = function(options) {
 
 				element
 					.off(".appFormsAccions")
+					.on("click.appFormsAccions", "button[data-accio=edita]", edita)
+					.on("click.appFormsAccions", "button[data-accio=cancela]", cancela)
 					.on("click.appFormsAccions", "button[data-accio=tanca]", tanca)
 					.on("click.appFormsAccions", "button[data-accio=anterior]", anterior)
 					.on("click.appFormsAccions", "button[data-accio=seguent]", envia)
@@ -2660,6 +2676,139 @@ $.fn.appFormsAccions = function(options) {
 			},
 			tanca = function() {
 
+				// amaga formulari
+
+				imc_forms_contenidor
+					.attr("aria-hidden", "true")
+					.appFormsPopupTabula({ accio: "finalitza" });
+
+				$("html, body")
+					.removeClass("imc--sense-scroll");
+
+				setTimeout(
+					function() {
+
+						imc_forms_finestra
+							.removeClass("imc--on");
+
+						if (APP_FORMS_URL_DINAMICA === "s") {
+
+							document.location = "#pas/" + APP_TRAMIT_PAS_ID;
+
+						}
+
+					}, 300);
+
+				var form_id = imc_forms_contenidor.attr("data-id")
+					,enllas_el = $("body").find("a[data-id="+form_id+"]");
+
+				if (enllas_el.length) {
+
+					enllas_el
+						.focus();
+
+				}
+
+			},
+			edita = function() {
+
+				imc_forms_missatge
+					.appFormsMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtFormDinEditantTitol, alMostrar: function() { editant(); } });
+
+			},
+			editant = function() {
+
+				// serialitza
+
+				var valorsSerialitzats = imc_forms_finestra.appSerialitza({ verifica: false });
+
+				// dades ajax
+
+				var pag_url = APP_FORM_EDITAR,
+					pag_dades = valorsSerialitzats;
+
+				// ajax
+
+				if (envia_ajax) {
+
+					envia_ajax
+						.abort();
+
+				}
+
+				envia_ajax =
+					$.ajax({
+						url: pag_url,
+						data: pag_dades,
+						method: "post",
+						dataType: "json",
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader(headerCSRF, tokenCSRF);
+						}
+					})
+					.done(function( data ) {
+
+						envia_ajax = false;
+
+						json = data;
+
+						if (json.estado === "SUCCESS" || json.estado === "WARNING") {
+
+							if (json.estado === "WARNING") {
+
+								imc_forms_missatge
+									.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { editat(json); } });
+
+								return;
+
+							}
+
+							editat(json);
+
+						} else {
+
+							envia_ajax = false;
+
+							consola("Formulari EDITA: error des de JSON");
+
+							imc_forms_body
+								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
+
+						}
+
+					})
+					.fail(function(dades, tipus, errorThrown) {
+
+						envia_ajax = false;
+
+						if (tipus === "abort") {
+							return false;
+						}
+
+						consola("Formulari EDITA: error des de FAIL");
+
+						imc_forms_body
+							.appFormsErrorsGeneral({ estat: "fail" });
+
+					});
+
+			},
+			editat = function(json) {
+
+				document
+					.location = json.datos.url;
+
+			},
+			cancela = function() {
+
+				imc_forms_missatge
+					.removeClass("imc--si-pot-guardar imc--no-pot-guardar")
+					.appFormsMissatge({ accio: "formCancela", titol: txtFormDinEixirTitol, text: txtFormDinEixirNoGuardaText })
+					.appMissatgeFormAccions();
+
+			},
+			/*cancela = function() {
+
 				var potGuardar = imc_forms_contenidor.attr("data-guardar");
 
 				var text_avis = (potGuardar === "s") ? txtFormDinEixirText : txtFormDinEixirNoGuardaText
@@ -2673,7 +2822,7 @@ $.fn.appFormsAccions = function(options) {
 				imc_forms_missatge
 					.appMissatgeFormAccions();
 
-			},
+			},*/
 			imprimir = function() {
 
 				document.location = APP_FORM_IMPRIMIR;
@@ -2866,7 +3015,7 @@ $.fn.appFormsAccions = function(options) {
 
 							consola("FORMS formulari envia: error des de JSON");
 
-							imc_body
+							imc_forms_body
 								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
 
 						}
@@ -2882,7 +3031,7 @@ $.fn.appFormsAccions = function(options) {
 
 						consola("FORMS formulari envia: error des de FAIL");
 
-						imc_body
+						imc_forms_body
 							.appFormsErrorsGeneral({ estat: "fail" });
 
 					});
@@ -3135,6 +3284,96 @@ $.fn.appMissatgeFormAccions = function(options) {
 			},
 			surt = function() {
 
+				imc_forms_missatge
+					.appFormsMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtFormDinCancelantTitol, alMostrar: function() { sortint(); } });
+
+			},
+			sortint = function() {
+
+				// serialitza
+
+				var valorsSerialitzats = imc_forms_finestra.appSerialitza({ verifica: false });
+
+				// dades ajax
+
+				var pag_url = APP_FORM_CANCELAR,
+					pag_dades = valorsSerialitzats;
+
+				// ajax
+
+				if (envia_ajax) {
+
+					envia_ajax
+						.abort();
+
+				}
+
+				envia_ajax =
+					$.ajax({
+						url: pag_url,
+						data: pag_dades,
+						method: "post",
+						dataType: "json",
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader(headerCSRF, tokenCSRF);
+						}
+					})
+					.done(function( data ) {
+
+						envia_ajax = false;
+
+						json = data;
+
+						if (json.estado === "SUCCESS" || json.estado === "WARNING") {
+
+							if (json.estado === "WARNING") {
+
+								imc_forms_missatge
+									.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { editat(json); } });
+
+								return;
+
+							}
+
+							sortit(json);
+
+						} else {
+
+							envia_ajax = false;
+
+							consola("Formulari CANCEL·LA: error des de JSON");
+
+							imc_forms_body
+								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
+
+						}
+
+					})
+					.fail(function(dades, tipus, errorThrown) {
+
+						envia_ajax = false;
+
+						if (tipus === "abort") {
+							return false;
+						}
+
+						consola("Formulari CANCEL·LA: error des de FAIL");
+
+						imc_forms_body
+							.appFormsErrorsGeneral({ estat: "fail" });
+
+					});
+
+			},
+			sortit = function(json) {
+
+
+				document
+					.location = json.datos.url;
+
+			},
+			/*surt = function() {
+
 				element
 					.off('.appMissatgeFormAccions');
 
@@ -3190,7 +3429,7 @@ $.fn.appMissatgeFormAccions = function(options) {
 
 				}
 				
-			},
+			},*/
 			desaSurt = function() {
 
 				element
@@ -3263,7 +3502,7 @@ $.fn.appMissatgeFormAccions = function(options) {
 
 							consola("FORMS desa i surt: error des de JSON");
 
-							imc_body
+							imc_forms_body
 								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
 
 						}
@@ -3279,13 +3518,14 @@ $.fn.appMissatgeFormAccions = function(options) {
 
 						consola("FORMS desa i surt: error des de FAIL");
 
-						imc_body
+						imc_forms_body
 							.appFormsErrorsGeneral({ estat: "fail" });
 
 					});
 
 			},
 			mostra = function(json) {
+
 
 				var url = json.datos.url;
 
@@ -3744,7 +3984,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 
 							consola("Forms, selector dinàmic ajax: error des de JSON");
 
-							imc_body
+							imc_forms_body
 								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
 
 						}
@@ -3760,7 +4000,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 
 						consola("Forms, selector dinàmic ajax: error des de FAIL");
 
-						imc_body
+						imc_forms_body
 							.appFormsErrorsGeneral({ estat: "fail" });
 
 					});

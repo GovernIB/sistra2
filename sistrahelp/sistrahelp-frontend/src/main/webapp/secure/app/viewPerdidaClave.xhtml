@@ -27,9 +27,9 @@
         	<p:panelGrid id="panelFiltro" styleClass="noBackground w100 h10 noBorders">
         		<p:row>
         			<p:column styleClass="w50 noPadding">
-		        		<h:panelGrid columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
-			        		<p:outputLabel for="filtroDato" value="#{msg['viewPerdidaClave.filtroDatoFormulario']}:"/>
-				        	<p:inputText id="filtroDato" value="#{viewPerdidaClave.filtros.datoFormulario}" size="60" maxlength="60" required="true"/>
+		        		<h:panelGrid columns="2" styleClass="w75" columnClasses="w25,">
+			        		<p:outputLabel for="filtroDato" value="#{msg['viewPerdidaClave.filtroDatoFormulario']}:" />
+				        	<p:inputText id="filtroDato" value="#{viewPerdidaClave.filtros.datoFormulario}" maxlength="60" style="width:95%; margin-left:2%" required="true" onkeyup="capitalize(this)" onblur="trim(this)"/>
 			        	</h:panelGrid>
 					</p:column>
 					<p:column styleClass="w25 noPadding">
@@ -40,39 +40,44 @@
 			        			<p:outputLabel for="filtroVersion" value="#{msg['viewPerdidaClave.filtroVersion']}:"/>
 			        		</h:panelGroup>
 			        		<h:panelGroup>
-				        		<p:inputText id="filtroTramite" value="#{viewPerdidaClave.filtros.idTramite}" size="16" maxlength="20" onblur="this.value = this.value.toUpperCase();" required="true">
+				        		<p:inputText id="filtroTramite" value="#{viewPerdidaClave.filtros.idTramite}" size="16" maxlength="20"  required="true" onkeyup="capitalize(this)" onblur="trim(this)">
 				        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
 				        		</p:inputText>
 				        		<p:outputLabel value=" / "/>
-				        		<p:inputText id="filtroVersion" value="#{viewPerdidaClave.filtros.versionTramite}" size="1" maxlength="2" required="true">
+				        		<p:inputText id="filtroVersion" value="#{viewPerdidaClave.filtros.versionTramite}" size="1" maxlength="2" required="true" onkeyup="capitalize(this)" onblur="trim(this)">
 				        			<p:keyFilter regEx="/[0-9]/i"/>
 				        		</p:inputText>
 			        		</h:panelGroup>
 			        	</h:panelGrid>
 		        	</p:column>
 		        	<p:column styleClass="w25 noPadding">
-			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w40 grid-right,w60">
-			        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewPerdidaClave.filtroProcedimiento']}:"/>
-			        		<p:inputText id="filtroProcedimiento" value="#{viewPerdidaClave.filtros.idProcedimientoCP}" size="20" maxlength="20">
-			        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
-			        		</p:inputText>
-			        	</h:panelGrid>
+
 		        	</p:column>
 	        	</p:row>
 	        	<p:row>
-	        		<p:column colspan="2">
-						<p:outputLabel value="#{msg['viewPerdidaClave.filtroFecha']}:" styleClass="padding-right-2pct"/>
+	        		<p:column styleClass="w33 noPadding"  >
+						<h:panelGrid columns="5" styleClass="w75" columnClasses="w15 grid-right,w5 grid-right,w10,w5 grid-right,w10">
+							<p:outputLabel value="#{msg['viewPerdidaClave.filtroFecha']}:" />
 
-		        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewPerdidaClave.filtroFechaInicio']}:" styleClass="padding-right-4"/>
-		        		<p:calendar id="filtroFechaInicio" value="#{viewPerdidaClave.filtros.fechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
+			        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewPerdidaClave.filtroFechaInicio']}:" styleClass="padding-right-4"/>
+			        		<p:calendar id="filtroFechaInicio" value="#{viewPerdidaClave.filtros.fechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
 
-		        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewPerdidaClave.filtroFechaFin']}:" styleClass="padding-right-4"/>
-		        		<p:calendar id="filtroFechaFin" value="#{viewPerdidaClave.filtros.fechaHasta}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true"/>
-
+			        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewPerdidaClave.filtroFechaFin']}:" styleClass="padding-right-4"/>
+			        		<p:calendar id="filtroFechaFin" value="#{viewPerdidaClave.filtros.fechaHasta}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true"/>
+						</h:panelGrid>
 					</p:column>
 
-					<p:column styleClass="noPadding">
-			        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="table-rightaligned">
+					<p:column styleClass="w33 noPadding">
+			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
+			        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewPerdidaClave.filtroProcedimiento']}:"/>
+			        		<p:inputText id="filtroProcedimiento" value="#{viewPerdidaClave.filtros.idProcedimientoCP}" size="24" maxlength="20" onkeyup="capitalize(this)" onblur="trim(this)">
+			        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+			        		</p:inputText>
+			        	</h:panelGrid>
+	          		</p:column>
+
+	          		<p:column styleClass="w33 noPadding">
+						<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="table-rightaligned">
 		          			<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewPerdidaClave.filtrar}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
 		          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewPerdidaClave.ayuda}"/>
 						</h:panelGrid>
@@ -130,6 +135,15 @@
 			<p:inputText id="paginacion" value="#{viewPerdidaClave.paginacion}" style="opacity:0">
 				<p:ajax event="blur" update="@form" process="@this"/>
 			</p:inputText>
+			<h:outputScript >
+			     function capitalize(element){
+					element.value = element.value.toUpperCase();
+				 }
+
+				 function trim(element){
+				 	element.value = element.value.trim();
+				 }
+		   </h:outputScript>
 		</h:form>
 
 	</ui:define>

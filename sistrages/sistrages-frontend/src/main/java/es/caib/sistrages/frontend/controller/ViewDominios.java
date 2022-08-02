@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
@@ -17,6 +18,7 @@ import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Sesion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
@@ -70,6 +72,9 @@ public class ViewDominios extends ViewControllerBase {
 
 	/** Area. **/
 	private String area;
+
+	/** MSG. **/
+	private String msg;
 
 	/** Accion. **/
 	private String accion;
@@ -243,11 +248,7 @@ public class ViewDominios extends ViewControllerBase {
 		abrirDlg(TypeModoAcceso.CONSULTA);
 	}
 
-	/**
-	 * Elimina dato seleccionado.
-	 */
-	public void eliminar() {
-
+	public void avisoEliminar() {
 		// Verificamos por si acaso si hay permisos
 		if (!permiteEditar) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, LITERAL_SIN_PERMISOS);
@@ -259,8 +260,31 @@ public class ViewDominios extends ViewControllerBase {
 			return;
 		}
 
+		final RequestContext contextReq = RequestContext.getCurrentInstance();
+
+		if (this.datoSeleccionado.getTipo().equals(TypeDominio.FUENTE_DATOS)) {
+			String[] param = new String[1];
+			param[0] = this.datoSeleccionado.getIdentificadorFD();
+			this.msg = UtilJSF.getLiteral("confirm.componente.eliminarFD", param);
+			contextReq.update("form:dlgConfirmar");
+		} else {
+			this.msg = UtilJSF.getLiteral("confirm.borrado");
+			contextReq.update("form:dlgConfirmar");
+		}
+		contextReq.execute("PF('confirmationButton').jq.click();");
+	}
+
+	/**
+	 * Elimina dato seleccionado.
+	 */
+	public void eliminar() {
+
 		// Eliminamos
 		String eliminado = this.datoSeleccionado.getIdentificadorCompuesto();
+		Long idFd = null;
+		if (this.datoSeleccionado.getTipo().equals(TypeDominio.FUENTE_DATOS)) {
+			idFd = this.datoSeleccionado.getIdFuenteDatos();
+		}
 		if (this.dominioService.removeDominio(this.datoSeleccionado.getCodigo())) {
 			// Refrescamos datos
 			filtrar();
@@ -273,7 +297,14 @@ public class ViewDominios extends ViewControllerBase {
 			} else {
 				message = UtilJSF.getLiteral("info.borrado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
 			}
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+			if (idFd != null) {
+				if (this.dominioService.removeFuenteDato(idFd)) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+				} else {
+					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+							UtilJSF.getLiteral("error.borrar.dependencias.fd"));
+				}
+			}
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.borrar.dependencias"));
 		}
@@ -356,7 +387,8 @@ public class ViewDominios extends ViewControllerBase {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
 		// Verificamos si se ha modificado
-		if (!respuesta.isCanceled() && this.datoSeleccionado != null && respuesta.getModoAcceso() != null && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+		if (!respuesta.isCanceled() && this.datoSeleccionado != null && respuesta.getModoAcceso() != null
+				&& !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 			ResultadoError re = this.refrescar();
 			if (re.getCodigo() != 1) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok") + ". "
@@ -518,7 +550,7 @@ public class ViewDominios extends ViewControllerBase {
 				} else {
 					permiteConsultar = true;
 				}
-			} else if (permisos.contains(TypeRolePermisos.CONSULTA)) {
+			} else {
 				permiteConsultar = true;
 			}
 		}
@@ -785,6 +817,20 @@ public class ViewDominios extends ViewControllerBase {
 	 */
 	public final void setAccion(String accion) {
 		this.accion = accion;
+	}
+
+	/**
+	 * @return the msg
+	 */
+	public final String getMsg() {
+		return msg;
+	}
+
+	/**
+	 * @param msg the msg to set
+	 */
+	public final void setMsg(String msg) {
+		this.msg = msg;
 	}
 
 }

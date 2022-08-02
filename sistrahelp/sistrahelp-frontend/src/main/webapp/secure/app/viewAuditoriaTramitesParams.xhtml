@@ -1,0 +1,198 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../layout/paramsLayout.xhtml">
+
+	<f:metadata>
+		<f:viewParam name="TRAMITE" value="#{viewAuditoriaTramitesParams.tramite}"/>
+		<f:viewParam name="VERSION" value="#{viewAuditoriaTramitesParams.version}"/>
+		<f:viewAction action="#{viewAuditoriaTramitesParams.init}" />
+	</f:metadata>
+
+
+
+	<ui:define name="content">
+		<h:outputScript library="primefaces-custom" name="calendar_es.js" />
+		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
+
+		<h:form id="form" style="height:88%;">
+
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+			<!-- onblur="this.value = this.value.toUpperCase();" para pasar valor de strings a Uppercase -->
+			<!-- Toolbar -->
+        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
+        	<p:panelGrid id="panelFiltro"  styleClass="noBackground w100 h10 noBorders ,showcase-text-align-center" style="display:none">
+        			<p:column styleClass=" noPadding ">
+		        		<h:panelGrid columns="2" styleClass="w100, noPadding" >
+			        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewAuditoriaTramites.filtroIdSesion']}:"/>
+				        	<p:inputText id="filtroIdSesion" value="#{viewAuditoriaTramitesParams.filtros.idSesionTramitacion}" size="20" maxlength="30" onkeyup="capitalize(this)" onblur="trim(this)"/>
+			        	</h:panelGrid>
+
+			        	<h:panelGrid columns="2" styleClass="w100, noPadding" >
+				        	<p:outputLabel for="filtroNombre" value="#{msg['viewAuditoriaTramites.filtroNombre']}:"/>
+				        	<p:inputText id="filtroNombre" value="#{viewAuditoriaTramitesParams.filtros.nombre}" size="20" maxlength="12" style="margin-left:12px"  onkeyup="capitalize(this)" onblur="trim(this)"/>
+			        	</h:panelGrid>
+		        	</p:column>
+		        	<p:column styleClass=" noPadding p-justify-start">
+			        	<h:panelGrid columns="2" styleClass="w100, noPadding">
+				        	<p:outputLabel for="filtroNif" value="#{msg['viewAuditoriaTramites.filtroNif']}:"/>
+				        	<p:inputText id="filtroNif" value="#{viewAuditoriaTramitesParams.filtros.nif}" size="22" maxlength="12" style="margin-left: 70px;"  onkeyup="capitalize(this)" onblur="trim(this)"/>
+			        	</h:panelGrid>
+
+			        	<h:panelGrid columns="2" styleClass="w100, noPadding">
+			        		<p:outputLabel for="filtroTramite" value="#{msg['viewAuditoriaTramites.filtroTramite']}:"/>
+			        		<h:panelGroup>
+				        		<p:inputText id="filtroTramite" value="#{viewAuditoriaTramitesParams.filtros.idTramite}" size="15" maxlength="20"  onkeyup="capitalize(this)" onblur="trim(this)">
+				        			<p:keyFilter preventPaste="false" regEx="/[a-z0-9_-]/i"/>
+				        		</p:inputText>
+				        		<p:outputLabel value=" / "/>
+				        		<p:inputText id="filtroVersion" value="#{viewAuditoriaTramitesParams.filtros.versionTramite}" size="1" maxlength="2"  onkeyup="capitalize(this)" onblur="trim(this)">
+				        			<p:keyFilter preventPaste="false" regEx="/[0-9]/i"/>
+				        		</p:inputText>
+			        		</h:panelGroup>
+			        	</h:panelGrid>
+		        	</p:column>
+		        	<p:column styleClass=" noPadding p-justify-start">
+			        	<h:panelGrid columns="2" styleClass="w100, noPadding" >
+			        		<p:outputLabel for="filtroArea" value="#{msg['viewAuditoriaTramites.headArea']}:"/>
+			        		<p:inputText id="filtroArea" value="#{viewAuditoriaTramitesParams.filtroArea}" size="19" maxlength="20" style="margin-left:27px"  onkeyup="capitalize(this)" onblur="trim(this)">
+			        			<p:keyFilter preventPaste="false" regEx="/[a-z0-9_-]/i"/>
+			        		</p:inputText>
+			        	</h:panelGrid>
+
+			        	<h:panelGrid columns="2" styleClass="w100">
+			        		<p:outputLabel for="filtroEvento" value="#{msg['viewAuditoriaTramites.filtroEvento']}:"  />
+
+							<p:selectOneMenu id="filtroEvento" value="#{viewAuditoriaTramitesParams.filtros.evento}" style="width:144px">
+							 	<f:selectItem itemLabel="#{msg['selectItem.Todos']}" itemValue="" />
+		    					<f:selectItems value="#{viewAuditoriaTramitesParams.tiposEventos}" var="evento" itemLabel="#{evento} - #{msg['typeEvento.' += evento]}" />
+							</p:selectOneMenu >
+			        	</h:panelGrid>
+			        </p:column>
+		        	<p:column styleClass=" noPadding p-justify-start">
+			        	<h:panelGrid columns="2" styleClass="w100, noPadding" >
+			        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewAuditoriaTramites.filtroProcedimiento']}:"/>
+			        		<p:inputText id="filtroProcedimiento" value="#{viewAuditoriaTramitesParams.filtros.idProcedimientoCP}" size="19" maxlength="20"  onkeyup="capitalize(this)" onblur="trim(this)">
+			        			<p:keyFilter preventPaste="false" regEx="/[a-z0-9_-]/i"/>
+			        		</p:inputText>
+			        	</h:panelGrid>
+
+			        	<h:panelGrid columns="2" styleClass="w100, noPadding">
+			        		<p:outputLabel for="filtroCodSia" value="#{msg['viewAuditoriaTramites.headSIA']}:"/>
+			        		<p:inputText id="filtroCodSia" value="#{viewAuditoriaTramitesParams.filtros.codSia}"  size="19" locale="#{sessionBean.locale}" style="margin-left: 68px;" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"  onkeyup="capitalize(this)" onblur="trim(this)"/>
+						</h:panelGrid>
+
+					</p:column>
+
+					<p:column styleClass=" noPadding p-justify-start">
+					<h:panelGrid columns="2" styleClass="w100, noPadding">
+						<p:outputLabel for="filtroFechaInicio" value="#{msg['viewAuditoriaTramites.filtroFechaInicio']}:"/>
+			        	<p:calendar id="filtroFechaInicio" value="#{viewAuditoriaTramitesParams.filtros.fechaDesde}" size="14" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" />
+					</h:panelGrid>
+					<h:panelGrid columns="2" styleClass="w100, noPadding">
+			        	<p:outputLabel for="filtroFechaFin" value="#{msg['viewAuditoriaTramites.filtroFechaFin']}:"/>
+			        	<p:calendar id="filtroFechaFin" value="#{viewAuditoriaTramitesParams.filtros.fechaHasta}" style="margin-left:15px" size="14" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+					</h:panelGrid>
+					</p:column>
+					<p:column styleClass=" noPadding p-align-start">
+			        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" >
+		          			<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramitesParams.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+		          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewAuditoriaTramitesParams.ayuda}"/>
+						</h:panelGrid>
+					</p:column>
+          	</p:panelGrid>
+
+
+			<!-- Data table -->
+			<p:outputPanel  styleClass="h100">
+			<p:dataTable id="dataTable" var="dt" value="#{viewAuditoriaTramitesParams.listaDatos}" lazy="true"
+						 rows="#{viewAuditoriaTramitesParams.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
+						 scrollable="true" scrollHeight="100%"
+                         paginator="true" paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords}"
+                         rowsPerPageTemplate="5,10,15,30"
+			        	 selectionMode="single" selection="#{viewAuditoriaTramitesParams.datoSeleccionado}" rowKey="#{dt.id}">
+
+
+				<!-- Necesario para actualizar en controlador la fila seleccionada -->
+				<p:ajax event="rowSelect" global="false"/>
+				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" update=":form:dataTable"/>
+				<p:ajax event="page" update=":form:dataTable"/>
+
+				<!-- Columnas -->
+				<p:column headerText="#{msg['viewAuditoriaTramites.headEvento']}" style="width:8% !important;" sortBy="#{dt.tipoEvento}">
+			        <h:outputText value="#{dt.tipoEvento} - #{msg['typeEvento.' += dt.tipoEvento]}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headFecha']}" style="width:7% !important;" sortBy="#{dt.fecha}">
+			        <h:outputText value="#{dt.fecha}">
+			        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
+			        </h:outputText>
+			    </p:column>
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headIdSesion']}" style="width:12% !important;" sortBy="#{dt.idSesionTramitacion}">
+			        <h:outputText value="#{dt.idSesionTramitacion}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headNif']}" style="width:5% !important;" sortBy="#{dt.nif}">
+			        <h:outputText value="#{dt.nif}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headNombre']}" style="width:8% !important;" sortBy="#{dt.nombre}">
+			        <h:outputText value="#{dt.nombre.concat(' ').concat(dt.apellido1).concat(' ').concat(dt.apellido2)}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headTramite']}" style="width:5% !important;" sortBy="#{dt.idTramite}">
+			        <h:outputText value="#{dt.idTramite}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headArea']}" style="width:5% !important;" sortBy="#{dt.idTramite}">
+			        <h:outputText value="#{dt.area}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headVersion']}" style="width:2% !important;" sortBy="#{dt.versionTramite}">
+			        <h:outputText value="#{dt.versionTramite}" />
+			    </p:column>
+			   	<p:column headerText="#{msg['viewAuditoriaTramites.headProcedimiento']}" style="width:4% !important;" sortBy="#{dt.idProcedimientoCP}">
+			        <h:outputText value="#{dt.idProcedimientoCP}" />
+			    </p:column>
+			   	<p:column headerText="#{msg['viewAuditoriaTramites.headSIA']}" style="width:3% !important;" sortBy="#{dt.idProcedimientoSIA}">
+			        <h:outputText value="#{dt.idProcedimientoSIA}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headDescripcionEvento']}" style="width:17% !important;" sortBy="#{dt.descripcion}">
+			        <h:outputText value="#{dt.descripcion}" />
+			    </p:column>
+			   	<p:column headerText="#{msg['viewAuditoriaTramites.headError']}" style="width:17% !important;" sortBy="#{dt.codigoError}">
+			        <h:outputText value="#{dt.codigoError}" />
+			    </p:column>
+			</p:dataTable></p:outputPanel>
+
+			<h:outputScript >
+		      function triggerDblClick() {
+		        	$('#form\\:btnEditarHidden').click();
+		      }
+
+		      document.getElementsByName("form:dataTable_rppDD")[0].addEventListener("change", refrescarPaginacion);
+		      function refrescarPaginacion() {
+		      		document.getElementById("form:paginacion").focus();
+		        	document.getElementById("form:paginacion").value = document.getElementsByName("form:dataTable_rppDD")[0].value
+		        	document.getElementById("form:paginacion").blur();
+		      }
+		    </h:outputScript>
+		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewAuditoriaTramitesParams.rcDobleClick()}" process="@this" update="growl" style="display:none"/>
+			<p:inputText id="paginacion" value="#{viewAuditoriaTramitesParams.paginacion}" style="opacity:0">
+				<p:ajax event="blur" update="@form" process="@this"/>
+			</p:inputText>
+			<h:outputScript >
+		     function capitalize(element){
+				element.value = element.value.toUpperCase();
+			 }
+
+			 function trim(element){
+			 	element.value = element.value.trim();
+			 }
+		   </h:outputScript>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

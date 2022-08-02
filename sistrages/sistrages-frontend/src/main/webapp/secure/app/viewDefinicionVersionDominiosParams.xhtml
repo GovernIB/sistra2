@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<f:metadata>
+	</f:metadata>
+
+	<h:form id="formViewDefinicionVersionDominios" styleClass="h100">
+
+		<!-- Growl mensajes -->
+		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+		<!-- Toolbar -->
+		<p:toolbar id="toolbar">
+			<f:facet name="right">
+				<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
+					<p:commandButton value="#{msg['botones.anyadir']}" icon="fa fa-plus"
+						actionListener="#{viewDefinicionVersionParams.anyadirDominio()}" process="@this"
+						rendered="#{viewDefinicionVersionParams.permiteEditar()}"
+						update="growl">
+							<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionDominios"/>
+					</p:commandButton>
+
+					<p:commandButton id="btnQuitar"
+						value="#{msg['botones.quitar']}" icon="fa fa-times"
+						actionListener="#{viewDefinicionVersionParams.quitarDominio()}"
+						rendered="#{viewDefinicionVersionParams.permiteEditar()}"
+						process="@this" update="growl dataTable" >
+						<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.quitar']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+					</p:commandButton>
+
+					<p:commandButton value="#{msg['botones.consultar']}" icon="fa fa-search"
+						actionListener="#{viewDefinicionVersionParams.consultarDominio()}" process="@this"
+						update="growl"/>
+
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
+						icon="fa fa-question-circle-o"
+						actionListener="#{viewDefinicionVersionParams.ayudaDominio()}" process="@this"
+						update="growl dataTable" />
+				</h:panelGrid>
+			</f:facet>
+		</p:toolbar>
+
+		<p:dataTable  id="dataTable" var="dominio" value="#{viewDefinicionVersionParams.dominios}"
+						 emptyMessage="#{msg['error.emptyRows']}"
+						 rows="10"
+						 scrollable="true" scrollHeight="90%"
+                         paginator="true" paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,30"
+			        	 selectionMode="single" selection="#{viewDefinicionVersionParams.dominioSeleccionado}" rowKey="#{dominio.idString}" dblClickSelect="true">
+
+			<!-- Necesario para actualizar en controlador la fila seleccionada -->
+			<p:ajax event="rowSelect" global="false" />
+			<p:ajax event="rowUnselect" />
+			<p:ajax event="rowDblselect" oncomplete="triggerDblClick();"/>
+
+			<!-- Columnas -->
+		    <p:column headerText="#{msg['viewDefinicionVersionDominios.headerCodigo']}" sortBy="#{dominio.codigo}">
+		        <h:outputText value="#{dominio.identificador}" />
+		    </p:column>
+
+		    <p:column headerText="#{msg['viewDefinicionVersionDominios.headerTipo']}" sortBy="#{dominio.ambito}">
+		        <h:outputText value="#{dominio.ambito}" />
+		    </p:column>
+
+		    <p:column headerText="#{msg['viewDefinicionVersionDominios.headerDescripcion']}"  sortBy="#{dominio.descripcion}">
+		        <h:outputText value="#{dominio.descripcion}" />
+		    </p:column>
+
+		</p:dataTable>
+
+		<p:confirmDialog global="true" >
+			<p:outputPanel styleClass="confirmar_botonera">
+	        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+	        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+			</p:outputPanel>
+	    </p:confirmDialog>
+
+		<h:outputScript >
+	      function triggerDblClick() {
+	       	$('#formViewDefinicionVersionDominios\\:btnEditarDblClickHidden').click();
+	      }
+	    </h:outputScript>
+
+		<p:commandButton id="btnEditarDblClickHidden"
+			 	value="#{msg['botones.editar']}" icon="fa fa-edit"
+				actionListener="#{viewDefinicionVersionParams.consultarDominioDblClick()}" process="@this"
+				update="growl dataTable" style="display:none">
+				<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionDominios formViewDefinicionVersionDominios:dataTable dataTable" />
+     	</p:commandButton>
+
+	</h:form>
+
+</ui:composition>

@@ -11,10 +11,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
+import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeClonarAccion;
+import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
+import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
+import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -35,6 +43,17 @@ public class DialogTramiteClonar extends DialogControllerBase {
 	/** Servicio. */
 	@Inject
 	private TramiteService tramiteService;
+
+	/** Servicio. **/
+	@Inject
+	private SessionBean sessionBean;
+
+	/** Servicio. **/
+	@Inject
+	private DominioService dominioService;
+
+	@Inject
+	private ConfiguracionAutenticacionService configuracionAutenticacionService;
 
 	/** Servicio. **/
 	@Inject
@@ -122,6 +141,28 @@ public class DialogTramiteClonar extends DialogControllerBase {
 			return;
 		}
 
+		if (this.data.getIdArea() != areaID) {
+			List<Dominio> doms = tramiteService.getDominioSimpleByTramiteId(this.data.getCodigo());
+			for (Dominio dom : doms) {
+				Dominio dominioNuevoIdentificador = dominioService.loadDominioByIdentificador(TypeAmbito.AREA,
+						dom.getIdentificador(), sessionBean.getEntidad().getCodigo(), areaID, null);
+				if (dominioNuevoIdentificador != null) {
+					Object[] valueHolder = new Object[2];
+					valueHolder = mensaje(dominioNuevoIdentificador);
+					addMessageContext(TypeNivelGravedad.ERROR,
+							UtilJSF.getLiteral((String) valueHolder[0], (Object[]) valueHolder[1]));
+					return;
+				}
+
+			}
+
+			for (Dominio dom : doms) {
+				if (dom.getAmbito().equals(TypeAmbito.AREA)) {
+					clonarDominio(dom);
+				}
+			}
+		}
+
 		// Clonamos
 		this.tramiteService.clonadoTramiteVersion(this.data.getCodigo(), UtilJSF.getSessionBean().getUserName(), areaID,
 				tramiteID);
@@ -131,6 +172,50 @@ public class DialogTramiteClonar extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
+
+	}
+
+	public Object[] mensaje(Dominio dataNuevo) {
+
+		Object[] propiedades = new Object[2];
+		Object[] valueHolder = new Object[2];
+		if (dataNuevo.getAmbito() == TypeAmbito.AREA && areas.iterator().next().getIdentificador() != null) {
+			propiedades[0] = dataNuevo.getIdentificador();
+			propiedades[1] = dataNuevo.getArea().getIdentificador();
+			valueHolder[0] = "dialogTramiteClonar.error.duplicated.area";
+			valueHolder[1] = propiedades;
+		} else {
+			valueHolder[0] = "dialogDominio.error.codigoRepetido";
+			valueHolder[1] = null;
+		}
+		return valueHolder;
+	}
+
+	public void clonarDominio(Dominio dom) {
+
+		TypeClonarAccion acFd = TypeClonarAccion.CREAR;
+		TypeClonarAccion acCa = TypeClonarAccion.CREAR;
+//		Long lIdArea = (idArea == null) ? null : Long.valueOf(idArea);
+
+		ConfiguracionAutenticacion confAut = null;
+
+		if (dom.getConfiguracionAutenticacion() != null) {
+			confAut = dom.getConfiguracionAutenticacion();
+		} else {
+			acCa = TypeClonarAccion.NADA;
+		}
+		FuenteDatos fd = null;
+		if (dom.getTipo() == TypeDominio.FUENTE_DATOS) {
+
+			fd = dominioService.loadFuenteDato(dom.getAmbito(), dom.getIdentificadorFD(), UtilJSF.getIdEntidad(),
+					this.areaID, null);
+
+		} else {
+			acFd = TypeClonarAccion.NADA;
+		}
+
+		dominioService.clonar(dom.getCodigo().toString(), dom.getIdentificador(), areaID,
+				sessionBean.getEntidad().getCodigo(), acFd, fd, acCa, confAut);
 
 	}
 

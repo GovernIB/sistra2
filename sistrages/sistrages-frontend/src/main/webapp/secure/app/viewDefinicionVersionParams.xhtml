@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../layout/mainLayoutParams.xhtml">
+
+
+	<f:metadata>
+		<f:viewParam  name="TRAMITE" value="#{viewDefinicionVersionParams.tramiteId}"/>
+		<f:viewParam  name="VERSION" value="#{viewDefinicionVersionParams.version}"/>
+			   <f:viewParam  name="pagina" value="#{viewDefinicionVersionParams.pagina}"/>
+
+		<f:viewAction action="#{viewDefinicionVersionParams.init()}" />
+	</f:metadata>
+
+
+
+	<ui:define name="content">
+
+		<p:outputPanel id="panel" styleClass="h100">
+
+				<!-- Growl mensajes -->
+				<p:growl id="growl" widgetVar="growl" showDetail="false" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+				<p:layout id="mainDefinicionVersion" styleClass="h100">
+
+
+					<p:layoutUnit id="indexDefinicionVersion" position="west" size="250">
+						<h:form id="formArbol">
+							<p:tree id="arbol" value="#{viewDefinicionVersionParams.root}" var="node" selectionMode="single" selection="#{viewDefinicionVersionParams.selectedNode}"  styleClass="sin-bordes h100 w100 arbolTramites" style="overflow:hidden" onNodeClick="javascript:triggerDblClickTree();">
+								<p:treeNode>
+									<h:outputText value="#{node}" />
+								</p:treeNode>
+
+								<p:ajax event="select" listener="#{viewDefinicionVersionParams.onNodeSelect}" update=":workDefinicionVersion" delay="500"/>
+							</p:tree>
+
+							<p:commandButton process="@this" id="hiddenCommandEditar" styleClass="button no-display"  action="#{viewDefinicionVersionParams.rcDobleClickTree()}">
+				      			   <p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="@parent :workDefinicionVersion"  />
+					        </p:commandButton>
+
+
+						</h:form>
+					</p:layoutUnit>
+
+					<p:layoutUnit position="center">
+						<p:outputPanel id="workDefinicionVersion" styleClass="h100 update">
+						   <ui:include src="#{viewDefinicionVersionParams.opcionUrl}" />
+						 </p:outputPanel>
+					</p:layoutUnit>
+
+				</p:layout>
+
+		</p:outputPanel>
+
+		<h:outputScript >
+
+		  var timestampDblClick = 0;
+		  var lastSelected = "";
+
+	      function triggerDblClickTree()
+	       {
+	       		// console.log("triggerDblClickTree");
+
+				var newSelected = $(".ui-state-highlight").text();
+
+				// console.log(lastSelected + "-" + newSelected);
+
+	       		// console.log('triggerDblClickTree');
+	       		var ahora = Date.now();
+
+				if (newSelected == lastSelected) {
+		       		if ( (ahora - timestampDblClick &lt; 500)) {
+		       			// console.log('dblClick');
+		       			//rcDobleClickTree();
+		       			document.getElementById("formArbol:hiddenCommandEditar").click();
+		       		}
+		       	}
+
+	       		timestampDblClick = ahora;
+	       		lastSelected = newSelected;
+	      }
+
+	    </h:outputScript>
+
+
+							<p:confirmDialog global="true" >
+								<p:outputPanel styleClass="confirmar_botonera">
+						        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form" />
+						        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+								</p:outputPanel>
+						    </p:confirmDialog>
+
+	</ui:define>
+
+
+</ui:composition>

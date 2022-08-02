@@ -61,6 +61,11 @@
 
 				 		<p:outputLabel for="resultado" value="#{msg['dialogAuditoriaTramites.resultado']}:" />
 						<p:inputText id="resultado" value="#{dialogAuditoriaTramites.dato.resultado}" disabled="true" size="100"/>
+
+						<p:outputLabel for="btnSTG" value=""/>
+						<p:commandButton id="btnSTG"
+									 	value="#{msg['botones.stg']}" icon="fa fa-paper-plane"
+										actionListener="#{dialogAuditoriaTramites.sistrages()}" process="@this" style="margin-left:4px;width:200px;" />
 					</h:panelGrid>
 				</p:fieldset>
 				<p:spacer height="5px"/>

@@ -35,6 +35,7 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.Rol;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
@@ -57,6 +58,7 @@ import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.EntidadService;
+import es.caib.sistrages.core.api.service.RolService;
 import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -92,6 +94,10 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/** Security service. */
 	@Inject
 	private SecurityService securityService;
+
+	/** Rol service. */
+	@Inject
+	private RolService rolService;
 
 	/** Tramite service. */
 	@Inject
@@ -412,6 +418,30 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		}
 
+	}
+
+	/**
+	 * Abre diálogo sistrahelp
+	 */
+	public void sistrahelp() {
+		if (isHelpDesk()) {
+			final Map<String, String> params = new HashMap<>();
+			params.put(TypeParametroVentana.TRAMITE.toString(), tramite.getIdentificadorCompuesto());
+			params.put(TypeParametroVentana.VERSION.toString(), Integer.toString(tramiteVersion.getNumeroVersion()));
+			UtilJSF.openDialog(DialogHelpDesk.class, TypeModoAcceso.CONSULTA, params, true, 1300, 550);
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.registro.error"));
+		}
+	}
+
+	public boolean isHelpDesk() {
+		final List<TypeRoleAcceso> permisos = securityService.getRoles();
+		if (permisos.contains(TypeRoleAcceso.HELPDESK) || permisos.contains(TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**

@@ -1,5 +1,7 @@
 package es.caib.sistrahelp.frontend.controller;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.faces.bean.ManagedBean;
@@ -41,6 +43,13 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 			resultado = true;
 		}
 		return resultado;
+	}
+
+	public void sistrages() {
+		final Map<String, String> params = new HashMap<>();
+		params.put("TRAMITE", dato.getIdTramite());
+		params.put("VERSION", dato.getVersionTramite().toString());
+		UtilJSF.openDialog(DialogDefinicionVersion.class, TypeModoAcceso.CONSULTA, params, true, 1300, 550);
 	}
 
 	/**
@@ -91,7 +100,8 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 
 	/** Avisa al growl que se ha copiado correctamente **/
 	public void avisarGrowl() {
-		UtilJSF.addMessageContext(es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		UtilJSF.addMessageContext(es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad.INFO,
+				UtilJSF.getLiteral("info.copiado.ok"));
 	}
 
 	/**

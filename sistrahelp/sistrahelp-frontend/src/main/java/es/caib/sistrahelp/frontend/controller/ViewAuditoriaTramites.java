@@ -3,6 +3,8 @@ package es.caib.sistrahelp.frontend.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -56,6 +58,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	private FiltroAuditoriaTramitacion filtros;
 
 	private List<TypeEvento> tiposEventos;
+
+	private String filtroArea;
 
 	/**
 	 * Inicializa.
@@ -138,6 +142,13 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 			}
 		}
 		return varB;
+	}
+
+	/**
+	 *
+	 */
+	public String split(String idComp) {
+		return idComp.split("\\.")[2];
 	}
 
 	/**
@@ -291,4 +302,30 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		UtilJSF.setPaginacion(paginacion, "viewAuditoriaTramites");
 	}
 
+	/**
+	 * @return the filtroArea
+	 */
+	public final String getFiltroArea() {
+		return filtroArea;
+	}
+
+	/**
+	 * @param filtroArea the filtroArea to set
+	 */
+	public final void setFiltroArea(String filtroArea) {
+		List<String> areasEnt = convierteListaAreas();
+		if (filtroArea != null && !filtroArea.isEmpty() && areasEnt != null) {
+			filtros.getListaAreas().clear();
+			for (String ar : areasEnt) {
+				Pattern pattern = Pattern.compile(filtroArea, Pattern.CASE_INSENSITIVE);
+				Matcher matcher = pattern.matcher(ar.split("\\.")[1]);
+				boolean matchFound = matcher.find();
+				if (matchFound) {
+					filtros.getListaAreas().add(ar);
+				}
+			}
+		} else {
+			filtros.setListaAreas(areasEnt);
+		}
+	}
 }

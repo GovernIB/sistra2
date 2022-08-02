@@ -109,6 +109,7 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 		if (ambito == null) {
 			return;
 		}
+		setAccion("E");
 		paginacion = UtilJSF.getPaginacion("viewEnviosRemotos");
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
 		checkPermisos();
@@ -289,12 +290,12 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 			// Mensaje
 			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
-				/*if (re.getCodigo() != 1) {
-					message = UtilJSF.getLiteral("info.alta.ok") + ". " + UtilJSF.getLiteral("error.refrescarCache")
-							+ ": " + re.getMensaje();
-				} else {
-					message = UtilJSF.getLiteral("info.alta.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
-				}*/
+				/*
+				 * if (re.getCodigo() != 1) { message = UtilJSF.getLiteral("info.alta.ok") +
+				 * ". " + UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje(); }
+				 * else { message = UtilJSF.getLiteral("info.alta.ok") + ". " +
+				 * UtilJSF.getLiteral("info.cache.ok"); }
+				 */
 				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.alta.ok"));
 			} else {
 				String message = null;

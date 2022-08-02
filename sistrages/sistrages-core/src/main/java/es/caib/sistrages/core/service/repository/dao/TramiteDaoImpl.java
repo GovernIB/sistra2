@@ -240,7 +240,7 @@ public class TramiteDaoImpl implements TramiteDao {
 			sql.append(
 					" AND (upper(t.descripcion) like :filtro escape \'@\' OR upper(t.identificador) like :filtro escape \'@\')");
 		}
-		sql.append(" ORDER BY t.codigo");
+		sql.append(" ORDER BY t.identificador");
 
 		final Query query = entityManager.createQuery(sql.toString());
 		if (idEntidad != null) {
@@ -531,10 +531,6 @@ public class TramiteDaoImpl implements TramiteDao {
 		@SuppressWarnings("unchecked")
 		final List<JDominio> jdominios = queryDominios.getResultList();
 		for (final JDominio jdominio : jdominios) {
-			if (cambioArea && jdominio.getAmbito().equals("A")) {
-				// Si hay cambio de area y el ambito es de area (A), se ignora
-				continue;
-			}
 			jdominio.getVersionesTramite().add(jVersionTramite);
 			entityManager.merge(jdominio);
 		}
@@ -1289,7 +1285,7 @@ public class TramiteDaoImpl implements TramiteDao {
 					}
 				}
 				if (paso.getPasoRegistrar() != null && paso.getPasoRegistrar().getEnvioRemoto() != null) {
-					//Seteamos para que no de un error de fk.
+					// Seteamos para que no de un error de fk.
 					paso.getPasoRegistrar().setEnvioRemoto(null);
 				}
 				entityManager.remove(paso);

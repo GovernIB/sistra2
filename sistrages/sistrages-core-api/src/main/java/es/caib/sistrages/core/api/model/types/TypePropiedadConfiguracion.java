@@ -27,6 +27,8 @@ public enum TypePropiedadConfiguracion {
 	SISTRAMIT_REST_USER("sistramit.rest.user"),
 	/** Sistramit rest url. **/
 	SISTRAMIT_REST_URL("sistramit.rest.url"),
+	/** Sistrahelp view url. **/
+	SISTRAHELP_VIEW_URL("sistrahelp.view.url"),
 	/** Sistramit rest url. **/
 	ANEXO_TAMANYO_MAX_INDIVIDUAL("sistramit.anexos.tamanyoMaximoIndividual"),
 	/** Anexo extensiones permitidas **/

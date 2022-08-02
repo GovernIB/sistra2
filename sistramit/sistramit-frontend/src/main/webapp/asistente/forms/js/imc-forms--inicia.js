@@ -1,7 +1,7 @@
 // index
 
-var imc_head = $("head")
-	,imc_body = $("body");
+var imc_forms_head = $("head")
+	,imc_forms_body = $("body");
 
 var imc_forms_contenidor
 	,imc_forms_formulari_c
@@ -27,13 +27,15 @@ function consola(text) {
 // errors generals
 
 $.fn.appFormsErrorsGeneral = function(options) {
+
 	var settings = $.extend({
 			estat: false,
 			titol: txtFormDinErrorGeneralTitol,
 			text: txtFormDinErrorGeneralText,
 			debug: false,
-			url: APP_
-	}, options);
+			url: APP_FORMS_
+		}, options);
+
 	this.each(function(){
 		var element = $(this),
 			estat = settings.estat,
@@ -59,6 +61,7 @@ $.fn.appFormsErrorsGeneral = function(options) {
 		mostra();
 		
 	});
+
 	return this;
 }
 
@@ -68,51 +71,10 @@ $.fn.appFormsErrorsGeneral = function(options) {
 
 function appFormsInicia() {
 
-
 	// configuracio
 
 	imc_forms_contenidor
 		.appFormsConfiguracio({ forms_json: FORMS_JSON, desDe: "inicia" });
-
-	//imc_body
-	//	.appTitle();
-
-	/*
-
-	// ajuda
-
-	imc_forms_ajuda
-		.appFormsAjuda();
-
-	// errors
-
-	imc_forms_contenidor
-		.appFormsErrors();
-
-	// arbre
-
-	imc_forms_contenidor
-		.find(".imc-el-arbre")
-			.arbre();
-
-	// taula
-
-	imc_forms_contenidor
-		.find(".imc-el-taula")
-			.taula();
-
-	// text selector
-
-	imc_forms_contenidor
-		.find(".imc-el-text-selector")
-			.inputSelectAjax();
-
-	// formateig de dades
-
-	imc_forms_contenidor
-		.appFormsFormateig();
-
-	*/
 
 }
 
@@ -166,23 +128,23 @@ function appFormsCarregaScripts() {
 
 			$("<style>")
 				.html( cssFormsDestaca[0] )
-					.appendTo( imc_head );
+					.appendTo( imc_forms_head );
 
 			$("<style>")
 				.html( cssFormsSelect[0] )
-					.appendTo( imc_head );
+					.appendTo( imc_forms_head );
 
 			$("<style>")
 				.html( cssFormsTaulaIframe[0] )
-					.appendTo( imc_head );
+					.appendTo( imc_forms_head );
 
 			$("<style>")
 				.html( cssFormsMissatge[0] )
-					.appendTo( imc_head );
+					.appendTo( imc_forms_head );
 
 			$("<style>")
 				.html( cssForms[0] )
-					.appendTo( imc_head );
+					.appendTo( imc_forms_head );
 
 			FORMS_JS = true;
 
@@ -194,7 +156,7 @@ function appFormsCarregaScripts() {
 
 			consola("Error carrega arxius JS i CSS de FORMS");
 
-			imc_body
+			imc_forms_body
 				.appFormsErrorsGeneral({ estat: "fail" });
 
 		}
@@ -202,3 +164,49 @@ function appFormsCarregaScripts() {
 	);
 
 }
+
+
+// càrrega inicial
+
+$.when(
+	
+	$.get(APP_FORMS_ + "forms/html/imc--forms-contenidor.html?" + APP_VERSIO)
+
+).then(
+
+	function( htmlForms ) {
+
+		imc_forms_body
+			.append( htmlForms );
+
+		// literals
+
+		var ajuda_marc = $("#imc-forms-contenidor .imc--ajuda:first");
+
+		ajuda_marc
+			.find("strong:first")
+				.text( txtFormDinAjudaActivada )
+				.end()
+			.find("button:first span")
+				.text( txtFormDinDesactivar );
+
+		// carrega CSS i JS
+
+		appFormsCarregaScripts();
+		
+		// carrega formulari
+
+		FORMS_ARXIUS = true;
+
+	}
+
+).fail(
+
+	function() {
+
+		consola("Formulari: error des de l'inicia de FORMS (FAIL)");
+
+	}
+
+);
+

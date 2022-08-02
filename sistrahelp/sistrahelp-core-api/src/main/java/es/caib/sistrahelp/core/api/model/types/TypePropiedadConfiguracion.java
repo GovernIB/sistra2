@@ -15,10 +15,11 @@ public enum TypePropiedadConfiguracion {
 	/** STG Url. */
 	SISTRAGES_URL("sistrages.rest.url"),
 	/** STG Url. */
+	SISTRAGES_VIEW_URL("sistrages.view.url"),
+	/** STG Url. */
 	SISTRAGES_USR("sistrages.rest.user"),
 	/** STG Url. */
-	SISTRAGES_PWD("sistrages.rest.pwd"),
-	SISTRAGES_AYUDA_PATH("ayuda.sistrahelp.path"),
+	SISTRAGES_PWD("sistrages.rest.pwd"), SISTRAGES_AYUDA_PATH("ayuda.sistrahelp.path"),
 
 	PATH_FICHEROS_EXTERNOS("ficherosExternos.path"),
 
@@ -36,8 +37,7 @@ public enum TypePropiedadConfiguracion {
 	/**
 	 * Constructor.
 	 *
-	 * @param valueStr
-	 *            Valor como string.
+	 * @param valueStr Valor como string.
 	 */
 	private TypePropiedadConfiguracion(final String valueStr) {
 		stringValue = valueStr;
@@ -51,8 +51,7 @@ public enum TypePropiedadConfiguracion {
 	/**
 	 * Obtiene enum desde string.
 	 *
-	 * @param text
-	 *            string
+	 * @param text string
 	 * @return TypeSiNo
 	 */
 	public static TypePropiedadConfiguracion fromString(final String text) {

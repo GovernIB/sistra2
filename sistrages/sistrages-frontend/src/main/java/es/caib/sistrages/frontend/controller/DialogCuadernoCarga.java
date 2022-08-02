@@ -799,17 +799,18 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 		} else {
 			filaTramiteRegistro = FilaImportarTramiteRegistro.creaCCconPasoRegistro(tramiteVersion, pasoRegistro);
 			final Entidad entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
-			if (entidad.isRegistroCentralizado() && filaTramiteRegistro.getPasoRegistro() != null &&  ((TramitePasoRegistrar)filaTramiteRegistro.getPasoRegistro()).getEnvioRemoto() == null) {
+			if (entidad.isRegistroCentralizado() && filaTramiteRegistro.getPasoRegistro() != null
+					&& ((TramitePasoRegistrar) filaTramiteRegistro.getPasoRegistro()).getEnvioRemoto() == null) {
 				filaTramiteRegistro.setResultado(TypeImportarResultado.OK);
 				filaTramiteRegistro.setAccion(TypeImportarAccion.NADA);
 				filaTramiteRegistro.setMostrarRegistro(false);
 			} else {
 				try {
-					if ( ((TramitePasoRegistrar)filaTramiteRegistro.getPasoRegistro()).getEnvioRemoto() == null) {
+					if (((TramitePasoRegistrar) filaTramiteRegistro.getPasoRegistro()).getEnvioRemoto() == null) {
 						filaTramiteRegistro.setTipoTramite(true);
 						rellenarInfoRegistro();
 					}
-					if ( ((TramitePasoRegistrar)filaTramiteRegistro.getPasoRegistro()).getEnvioRemoto() != null) {
+					if (((TramitePasoRegistrar) filaTramiteRegistro.getPasoRegistro()).getEnvioRemoto() != null) {
 						filaTramiteRegistro.setTipoTramite(false);
 						rellenarInfoServicio();
 					}
@@ -836,12 +837,14 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 
 		setMostrarRegistroServicio(true);
 
-		//Buscamos el envio si existe.
+		// Buscamos el envio si existe.
 		Long idArea = null;
 		if (this.filaArea != null && this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
-			 idArea = this.filaArea.getAreaActual().getCodigo();
+			idArea = this.filaArea.getAreaActual().getCodigo();
 		}
-		EnvioRemoto envio = envioRemotoService.getEnvioByIdentificador(this.filaTramiteRegistro.getEnvioRemoto().getAmbito(), this.filaTramiteRegistro.getEnvioRemoto().getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
+		EnvioRemoto envio = envioRemotoService.getEnvioByIdentificador(
+				this.filaTramiteRegistro.getEnvioRemoto().getAmbito(),
+				this.filaTramiteRegistro.getEnvioRemoto().getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
 		this.filaTramiteRegistro.setEnvioRemoto(envio);
 		if (envio == null) {
 			this.filaTramiteRegistro.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.envio.noexisteenvio"));
@@ -1464,11 +1467,14 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 		if (refrescarCacheTramite && filaTramiteVersion.getTramiteVersionActual() != null
 				&& filaTramite.getTramiteActual() != null) {
 			re2 = this.refrescar();
+			if (re2.getCodigo() != 1) {
+				err = true;
+			}
 
 		}
 		if (re == null && re2 == null) {
 			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
-		} else if (err || re2 != null) {
+		} else if (err) {
 			String mensaje = "";
 			if (re2 != null && re2.getCodigo() != 1) {
 				mensaje = re2.getMensaje();
@@ -1476,7 +1482,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 				mensaje = re.getMensaje();
 			}
 			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok") + ". "
-					+ UtilJSF.getLiteral("error.refrescarCache") + ": " + mensaje  );
+					+ UtilJSF.getLiteral("error.refrescarCache") + ": " + mensaje);
 		} else {
 			addMessageContext(TypeNivelGravedad.INFO,
 					UtilJSF.getLiteral("info.importar.ok") + ". " + UtilJSF.getLiteral("info.cache.ok"));

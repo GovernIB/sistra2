@@ -41,6 +41,12 @@
 
 									 <p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol "/>
 								</p:commandButton>
+								<p:commandButton id="btnSTH"
+									 	value="#{msg['botones.sth']}" icon="fa fa-paper-plane"
+										actionListener="#{viewDefinicionVersion.sistrahelp()}" process="@this" style="margin-left:4px;width:170px;" rendered="#{viewDefinicionVersion.isHelpDesk()}">
+
+									 <p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol "/>
+								</p:commandButton>
 								<p:commandButton id="actualiza"
 									 	value="btn"
 										actionListener="#{viewDefinicionVersion.actualizar()}" process="@this"  update="@form :workDefinicionVersion growl formArbol:arbol" style="display:none"/>

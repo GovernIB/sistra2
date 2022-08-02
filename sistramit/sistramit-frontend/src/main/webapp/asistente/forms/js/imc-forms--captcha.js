@@ -115,7 +115,7 @@ $.fn.appFormsCaptcha = function(options) {
 
 					consola("Captcha regenera: error des de FAIL. " + dades + ", "+ tipus +", "+ errorThrown);
 
-					imc_body
+					imc_forms_body
 						.appFormsErrorsGeneral({ estat: "fail" });
 
 				});
@@ -172,7 +172,7 @@ $.fn.appFormsCaptcha = function(options) {
 
 							consola("Captcha genera: error des de JSON");
 
-							imc_body
+							imc_forms_body
 								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
 
 						}
@@ -188,7 +188,7 @@ $.fn.appFormsCaptcha = function(options) {
 
 						consola("Captcha genera: error des de FAIL");
 
-						imc_body
+						imc_forms_body
 							.appFormsErrorsGeneral({ estat: "fail" });
 
 					});

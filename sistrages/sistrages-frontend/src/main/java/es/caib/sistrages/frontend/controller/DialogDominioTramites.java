@@ -94,10 +94,10 @@ public class DialogDominioTramites extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
-	public String getIdCompuesto(Long idTram, String idArea) {
+	public String getIdentificador(Long idTram, String idArea) {
 		return tramiteService
 				.getTramiteByIdentificador(tramiteService.getIdentificadorByCodigoVersion(idTram), null, idArea, null)
-				.getIdentificadorCompuesto();
+				.getIdentificador();
 	}
 
 	/**

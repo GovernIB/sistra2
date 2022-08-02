@@ -46,6 +46,14 @@ public class HelpDeskServiceImpl implements HelpDeskService {
 				.obtenerAuditoriaEvento(filtroAuditoriaTramitacion, pFiltroPaginacion);
 		if (resultadoEventoAuditoria != null) {
 			resultado = resultadoEventoAuditoria.getListaEventos();
+			if (resultado != null) {
+				for (EventoAuditoriaTramitacion ev : resultado) {
+					if (ev.getIdTramite() != null) {
+						String[] arr = ev.getIdTramite().split("\\.");
+						ev.setArea(arr[1]);
+					}
+				}
+			}
 		}
 
 		return resultado;

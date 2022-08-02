@@ -32,7 +32,7 @@
 			        		</p:commandButton>
 			        		<p:commandButton id="btnConsultarArea" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarArea}" process="@this" update="growl" rendered="#{not viewTramites.tienePermisosAreas and viewTramites.seleccionadaArea}" />
 			        		<p:commandButton id="btnEditarArea" value="#{msg['botones.editar']}" icon="fa fa-edit ui-btn-icon-bottom" actionListener="#{viewTramites.editarArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosAreas and viewTramites.seleccionadaArea}">
-			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl areas"/>
+			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl @form"/>
 			        		</p:commandButton>
 			        		<p:commandButton id="btnEliminarArea" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarArea}" process="@this" update="@form growl" rendered="#{viewTramites.tienePermisosAreas and viewTramites.seleccionadaArea}">
 	        					<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borradoArea']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
@@ -208,7 +208,8 @@
 								<p:menuitem id="btnExportar" 				value="#{msg['botones.exportarVersion']}" 	icon="fa fa-upload" actionListener="#{viewTramites.exportarVersion}" 		rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.tienePermisosArea}"		 process="@this" update="growl"   />
 	        					<p:menuitem id="btnProcesarCuadernoCarga"   value="#{msg['botones.procesarCC']}" 		icon="fa fa-download fa-rotate-90"  onclick="triggerProcesarCC(); return false;"	   		rendered="#{!viewTramites.isDesarrollo() and viewTramites.tienePermisosArea}"></p:menuitem>
 								<p:menuitem id="btnGenerarCuadernoCarga"  	value="#{msg['botones.generarCC']}" 		icon="fa fa-upload fa-rotate-270" actionListener="#{viewTramites.generarCuadernoCarga}" rendered="#{viewTramites.versionSeleccionada ne null and (viewTramites.isDesarrollo() or viewTramites.isPreproduccion()) and viewTramites.tienePermisosArea}" process="@this" update="growl" />
-								<p:menuitem id="btnGenerarScripts"  		value="#{msg['botones.generarScripts']}" 	icon="fa fa-bolt" actionListener="#{viewTramites.generarScript}" rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.isDesarrollo() and viewTramites.tienePermisosArea}" process="@this" update="growl" /><p:separator  />
+								<p:menuitem id="btnGenerarScripts"  		value="#{msg['botones.generarScripts']}" 	icon="fa fa-bolt" actionListener="#{viewTramites.generarScript}" rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.isDesarrollo() and viewTramites.tienePermisosArea}" process="@this" update="growl" />
+								<p:separator  />
 			        			<p:menuitem id="btnHelp2" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewTramites.ayuda()}" process="@this" update="growl" iconPos="top"/>
 			        		</p:menuButton>
 			        	</h:panelGroup>

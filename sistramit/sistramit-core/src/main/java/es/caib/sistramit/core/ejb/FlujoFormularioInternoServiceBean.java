@@ -62,8 +62,8 @@ public class FlujoFormularioInternoServiceBean implements FlujoFormularioInterno
 	}
 
 	@Override
-	public void cancelarFormulario(final String idSesionFormulario) {
-		flujoFormularioInternoService.cancelarFormulario(idSesionFormulario);
+	public ResultadoGuardarPagina cancelarFormulario(final String idSesionFormulario) {
+		return flujoFormularioInternoService.cancelarFormulario(idSesionFormulario);
 	}
 
 	@Override

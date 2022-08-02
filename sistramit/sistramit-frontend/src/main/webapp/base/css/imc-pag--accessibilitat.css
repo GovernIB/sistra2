@@ -1,0 +1,114 @@
+/* Document CSS */
+
+
+/* formateig */
+
+body, form, table, caption, tr, th, td, ul, ol, li, dl, dt, dd, img, p, header, h1, h2, h3, h4, h5, h6, object, iframe, legend, fieldset { font-size: 1em; list-style: none; margin: 0; padding: 0; outline: none; border: none; }
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section { display: block; }
+
+*, *::before, *::after {
+  -webkit-box-sizing: border-box; 
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+
+/* generic */
+
+@font-face {
+	font-family: 'Bariol Regular';
+	src: url('../fonts/Bariol_Regular.ttf');
+}
+
+body { font: normal 100% 'Bariol Regular', Arial, Helvetica, sans-serif; color: #333; background-color: #eaeaea; }
+
+p { font-size: 1.1em; line-height: 1.2em; }
+
+a { color: #3b8e5d; text-decoration: none; will-change: color, background-color; transition: color .2s ease-out, background-color .2s ease-out; }
+
+a:hover,
+a:focus { color: #fff; background-color: #4dba79; }
+
+pre { font: normal 1.2em 'Bariol Regular', Arial, Helvetica, sans-serif; white-space: pre-wrap; }
+
+
+.imc-cap { position: fixed; z-index: 1; top: 0; left: 0; width: 100%; min-height: 4.5em; background-color: #4dba79; }
+.imc-cap .imc--c { display: flex; align-items: center; width: 100%; max-width: 75em; color: #fff; padding: .5em 1em; margin: 0 auto; }
+
+.imc-cap .imc--logo { width: 4em; height: 3.5em; background: transparent url() no-repeat left center / auto 100%; }
+
+.imc-cap .imc--dades { width: 60%; padding-left: 2em; }
+.imc-cap .imc--dades h1 { font-weight: normal; text-transform: uppercase; padding: 0 0 .1em 0; }
+
+.imc-cap .imc--dades h1 svg { display: inline-block; position: relative; top: .3em; width: 2em; height: auto; margin-right: .5em;}
+.imc-cap .imc--dades h1 path { fill: #fff; }
+
+.imc-cap .imc--dades h1 span { font-size: 1.5em; }
+.imc-cap .imc--dades div { display: inline-block; vertical-align: middle; margin-right: 1em; }
+
+.imc-contingut { width: 100%; max-width: 75em; padding: 6em 1em 1em 1em; margin: 0 auto; }
+ 
+.imc-contingut h2 { margin-bottom: 1em; }
+.imc-contingut h2 span { font-size: 1.5em; font-weight: normal; }
+
+.imc-contingut h3 { margin-bottom: 1em; }
+.imc-contingut h3 span { font-size: 1.1em; text-transform: uppercase; }
+
+.imc-acc p { margin-bottom: 1em; }
+
+.imc-acc ul,
+.imc-acc ol { padding-left: 1em; margin-bottom: 1em; margin-left: 1em; }
+
+.imc-acc ul li { list-style: circle; padding-bottom: .4em; }
+
+.imc-acc ol li { list-style: decimal; padding-bottom: .4em; }
+
+
+/* peu */
+
+.imc-peu { width: 100%; max-width: 75em; padding: 1em; margin: 0 auto; }
+.imc-peu .imc--contingut { display: flex; align-items: center; }
+
+.imc-peu.imc-peu-posicio-estatica { position: static; margin-top: 6em; margin-left: 5%; }
+
+.imc-peu-govern { width: 33%; }
+.imc-peu-govern strong { text-transform: uppercase; padding-right: .5em; white-space: nowrap;  }
+.imc-peu-govern span { white-space: nowrap; }
+
+.imc-peu p,
+.imc-peu ul,
+.imc-peu li { display: inline-block; vertical-align: middle; }
+
+.imc-peu-opcions { width: 33%; text-align: center; }
+.imc-peu-opcions li::before { content: "|"; }
+.imc-peu-opcions li:first-child::before { content: ""; }
+.imc-peu-opcions li a { color: #000; text-transform: uppercase; padding: 0 .5em; }
+.imc-peu-opcions li a:hover,
+.imc-peu-opcions li a:focus,
+.imc-peu-opcions li a:active { color: #4dba79; background-color: transparent; }
+
+.imc-en-rss span { display: inline-block; vertical-align: middle; }
+.imc-en-rss svg { display: inline-block; width: .7em; height: .7em; vertical-align: middle; }
+.imc-en-rss path { fill: #000000; }
+
+.imc-en-rss:hover path,
+.imc-en-rss:focus path,
+.imc-en-rss:active path { fill: #4dba79; }
+
+
+/* xarxes */
+
+.imc-peu-xarxes { width: 33%; text-align: right; white-space: nowrap; }
+.imc-peu-xarxes p { font-size: .9em; padding-right: 1em; }
+
+a.imc-bt-xarxa { display: inline-block; width: 2.5em; height: 2.5em; padding-top: .25em; margin-right: .2em; border: .2em solid #333; border-radius: 2em; will-change: border-color; transition: background-color .2s ease-out, border-color .2s ease-out; }
+a.imc-bt-xarxa svg { transform: scale(.7, .7); }
+a.imc-bt-xarxa path { fill: #333; }
+a.imc-bt-xarxa span { position: fixed; top: -999em; left: -999em; }
+
+a.imc-bt-xarxa:hover,
+a.imc-bt-xarxa:focus,
+a.imc-bt-xarxa:active { background-color: #4dba79; border-color: #4dba79; }
+a.imc-bt-xarxa:hover path,
+a.imc-bt-xarxa:focus path,
+a.imc-bt-xarxa:active path { fill: #fff; }

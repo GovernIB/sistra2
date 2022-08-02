@@ -31,8 +31,8 @@
 		                <p:selectOneMenu id="option" value="#{viewFuentes.accion}" style="font-size: 7pt !important; font-weight: bold; height:75%; padding:0px !important; margin-top: 0px !important">
 			                <p:ajax event="change" listener="#{viewFuentes.cambiarAccion}" update="@form"/>
 		                   	<!--  <f:selectItems value="#{viewDominios.listaAreas}" var="area" itemValue="#{area.codigo}" itemLabel="#{area.identificador}" style="padding-top: 0px !important;"/> -->
-		                    <f:selectItem itemLabel="#{msg['botones.datosFuenteArea']}" itemValue="F"/>
 		                    <f:selectItem itemLabel="#{msg['botones.dominiosArea']}" itemValue="D"/>
+		                    <f:selectItem itemLabel="#{msg['botones.datosFuenteArea']}" itemValue="F"/>
 		                    <f:selectItem itemLabel="#{msg['botones.sgeArea']}" itemValue="S"/>
 		                    <f:selectItem itemLabel="#{msg['botones.configuracionAutenticacionArea']}" itemValue="C"/>
   		                    <f:selectItem itemLabel="#{msg['botones.envioRemoto']}" itemValue="E"/>

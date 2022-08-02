@@ -1,0 +1,120 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui">
+
+  <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="TypeFormularioObligatoriedad" />
+  <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
+  <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioGestor" var="TypeFormularioGestor"/>
+
+  <h:form id="formviewDefinicionVersionFormulario" styleClass="h100">
+
+    <!-- Growl mensajes -->
+    <p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+
+        <h:panelGrid rowClasses=", ui-datatable-odd" columns="2" columnClasses="w10 padding-left-18, w90 grid-left" styleClass="w100 h100" cellpadding = "5" cellspacing = "0">
+
+            <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionFormulario.identificador']}" />
+            <p:inputText id="identificador" required="true" disabled="true" styleClass="w35" value="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.identificador}" />
+
+
+            <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionFormulario.descripcion']}" />
+            <p:outputPanel styleClass="ui-inputgroup">
+               <p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersionParams.idiomas)}" />
+               <p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionParams.consultarTraduccion(viewDefinicionVersionParams.formularioTramiteSeleccionado.descripcion)}"	process="@this" update="growl" />
+           </p:outputPanel>
+
+           <p:outputLabel value="#{msg['viewDefinicionVersionFormulario.obligatoriedad']}" />
+           <p:panelGrid styleClass="noBorders">
+           		<p:row>
+                	<p:column styleClass="noPadding-left">
+                 		<p:selectOneRadio id="obligatoriedad" disabled="true" value="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.obligatoriedad}">
+                   			<f:selectItems value="#{TypeFormularioObligatoriedad.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioObligatoriedad.' += tipo]}" />
+              			</p:selectOneRadio>
+             		</p:column>
+             		<p:column>
+               			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptObligatoriedad.codigo)}" value="#{msg['script.SCRIPT_DEPENDENCIA_DOCUMENTO.titulo']}"
+              				disabled="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptObligatoriedad eq null}"
+              				styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptObligatoriedad)}"
+              				process="@this" update="growl"/>
+          			</p:column>
+        		</p:row>
+           </p:panelGrid>
+
+           <p:outputLabel value="#{msg['viewDefinicionVersionFormulario.firma']}" />
+           <p:panelGrid styleClass="noBorders">
+	           <p:row>
+    	           <p:column styleClass="noPadding-left">
+        			    <p:selectBooleanCheckbox id="firmardigitalmente" disabled="true" value="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.debeFirmarse}" itemLabel="#{msg['viewDefinicionVersionFormulario.firmardigitalmente']}"/>
+             		</p:column>
+             		<p:column>
+               			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptFirma.codigo)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
+              				disabled="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptFirma eq null}"
+              				styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptFirma)}"
+              				process="@this" update="growl"/>
+          			</p:column>
+        		</p:row>
+           </p:panelGrid>
+
+      		<p:outputLabel value="#{msg['viewDefinicionVersionFormulario.scriptpersonalizacion']}" />
+           	<p:panelGrid styleClass="noBorders">
+           		<p:row>
+                	<p:column styleClass="noPadding-left">
+           		 		<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_DATOS_INICIALES_FORMULARIO.name(), viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptDatosIniciales.codigo)}" value="#{msg['script.SCRIPT_DATOS_INICIALES_FORMULARIO.titulo']}"
+              				disabled="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptDatosIniciales eq null}"
+              				styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptDatosIniciales)}"
+              				process="@this" update="growl"/>
+          			</p:column>
+        		</p:row>
+            	<p:row>
+             		<p:column styleClass="noPadding-left">
+             			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_PARAMETROS_FORMULARIO.name(), viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptParametros.codigo)}" value="#{msg['script.SCRIPT_PARAMETROS_FORMULARIO.titulo']}"
+             				disabled="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptParametros eq null}"
+              				styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptParametros)}"
+              			 	process="@this" update="growl"/>
+          			</p:column>
+        		</p:row>
+        		<p:row>
+             		<p:column styleClass="noPadding-left">
+               			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO.name(), viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptRetorno.codigo)}" value="#{msg['script.SCRIPT_POSTGUARDAR_FORMULARIO.titulo']}"
+	             			disabled="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptRetorno eq null}"
+    	          			styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.formularioTramiteSeleccionado.scriptRetorno)}"
+        	      			process="@this" update="growl"/>
+          			</p:column>
+        		</p:row>
+           	</p:panelGrid>
+
+           	<p:outputLabel value="#{msg['viewDefinicionVersionFormulario.disenyoformulario']}"  rendered="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.INTERNO}" />
+      		<p:commandButton actionListener="#{viewDefinicionVersionParams.consultarDisenyo()}" value="#{msg['viewDefinicionVersionFormulario.disenyoformulario.consultardisenyo']}"
+            	  process="@this" update="growl" rendered="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.INTERNO}" />
+
+			<p:outputLabel for="gestorFormularioExterno" value="#{msg['dialogDefinicionVersionFormulario.gestorFormularioExterno']}" rendered="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.EXTERNO}" />
+			<p:inputText id="gestorFormularioExterno"  styleClass="w35" value="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.formularioGestorExterno.identificador}" disabled="true" rendered="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.EXTERNO}"/>
+
+            <p:outputLabel for="identificadorExt" value="#{msg['dialogDefinicionVersionFormulario.gestorFormularioExternoIDFormulario']}"  rendered="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.EXTERNO}"/>
+            <p:inputText id="identificadorExt"  styleClass="w35" value="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.idFormularioExterno}" disabled="true" rendered="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.EXTERNO}"/>
+
+
+
+
+      		<f:facet name = "footer">
+        		<p:outputPanel id="toolbar" styleClass="grid-right">
+          			<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
+            			actionListener="#{viewDefinicionVersionParams.editarFormularioSeleccionado()}"
+            			rendered="#{viewDefinicionVersionParams.permiteEditar()}"
+            			process="@this" update="growl">
+                		<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formviewDefinicionVersionFormulario" />
+           			</p:commandButton>
+           			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o"
+						actionListener="#{viewDefinicionVersionParams.ayudaFormulario()}"
+						process="@this" update="growl" iconPos="top"/>
+        		</p:outputPanel>
+      		</f:facet>
+
+    	</h:panelGrid>
+
+  </h:form>
+
+</ui:composition>

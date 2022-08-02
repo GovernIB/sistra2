@@ -27,8 +27,17 @@
 				<li>
 					<button type="button" id="imc-bt-desa" class="imc-bt imc--ico imc--desa"><span>{{txtDesauClau}}</span></button>
 				</li>
-				<li>
-					<a href="#accessibilitat" class="imc-bt imc--ico imc--bt-accessibilitat"><span>{{txtAccessibilitat}}</span></a>
+				<li class="imc--li-accessibilitat">
+
+					<!--<a href="#accessibilitat" class="imc-bt imc--ico imc--bt-accessibilitat"><span>{{txtAccessibilitat}}</span></a>-->
+
+					<button type="button" class="imc-bt imc--ico imc--acc" id="imc--bt-accessibilitat" aria-controls="imc--bt-accessibilitat-llistat" aria-expanded="false" data-accio="acc-menu"><span>{{txtAccessibilitat}}</span></button>
+
+					<ul class="imc--accessibilitat-llistat" role="region" id="imc--bt-accessibilitat-llistat" aria-labelledby="imc--bt-accessibilitat" aria-hidden="true">
+						<li><a href="{{urlAccessibilitat}}" target="_blank" title="{{txtObriFinestra}}"><span>{{txtAccDeclaracio}}</span></a></li>
+						<li><button type="button" data-accio="acc-popup"><span>{{txtAccConfiguracio}}</span></button></li>
+					</ul>
+
 				</li>
 				<li>
 					<button type="button" id="imc-bt-desconecta" class="imc-bt imc--ico imc--desconecta" aria-haspopup="true"><span>{{txtDesconecta}}</span></button>

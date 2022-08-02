@@ -230,16 +230,18 @@ function carregaHTML() {
 		,$.get(APP_ + "html/imc-cap.html")
 		,$.get(APP_ + "html/imc-contacte.html")
 		,$.get(APP_ + "html/imc-missatge.html")
+		,$.get(APP_ + "html/imc-accessibilitat.html")
 		//,$.getScript(APP_ + "js/utils/modernizr-imc-0.3.js?" + APP_VERSIO)
 		,$.getScript(APP_ + "js/utils/modernizr-custom.js?" + APP_VERSIO)
 		,$.getScript(APP_ + "js/utils/markup.min.js?" + APP_VERSIO)
 		,$.getScript(APP_ + "js/imc-sf-pas.js?" + APP_VERSIO)
 		,$.getScript(APP_ + "js/imc-sf-funcions.js?" + APP_VERSIO)
+		,$.getScript(APP_ + "js/imc-sf--accessibilitat.js?" + APP_VERSIO)
 		,$.getScript(APP_ + "js/imc-sf-inicia.js?" + APP_VERSIO)
 
 	).then(
 
-		function( cssBotonera, cssBase, htmlCap, htmlContacte, htmlMissatge) {
+		function( cssBotonera, cssBase, htmlCap, htmlContacte, htmlMissatge, htmlAccessibilitat) {
 
 			// MarkUp retorna només text
 
@@ -296,7 +298,8 @@ function carregaHTML() {
 
 			APP_USUARI_ID = ( jsonAutenticacio === "c") ? APP_JSON_TRAMIT_U.nif : false;
 
-			var jsonTramitTitol = APP_JSON_TRAMIT_T.titulo;
+			var jsonTramitTitol = APP_JSON_TRAMIT_T.titulo
+				,urlAccessibilitat = APP_JSON_TRAMIT_E.urlAccesibilidad;
 
 			var txtHTML_Cap = {
 					txtGovern: txtGovern
@@ -305,7 +308,11 @@ function carregaHTML() {
 					,txtDesconecta: txtDesconecta
 					,txtClauTramitacio: txtClauTramitacio
 					,txtDesauClau: txtDesauClau
+					,urlAccessibilitat: urlAccessibilitat
 					,txtAccessibilitat: txtAccessibilitat
+					,txtObriFinestra: txtObriFinestra
+					,txtAccDeclaracio: txtAccDeclaracio
+					,txtAccConfiguracio: txtAccConfiguracio
 					,txtEliminau: txtEliminau
 					,jsonAutenticacio: jsonAutenticacio
 					,jsonUsuari: jsonUsuari
@@ -409,6 +416,22 @@ function carregaHTML() {
 
 			imc_body
 				.append( html_missatge );
+
+			// accessibilitat
+
+			var txtHTML_Acc = {
+					txtAccessibilitat: txtAccessibilitat
+					,txtAccCanviaTitol: txtAccCanviaTitol
+					,txtAccCanviaText_1: txtAccCanviaText_1
+					,txtEstilsDefecte: txtEstilsDefecte
+					,txtEstilsAltContrast: txtEstilsAltContrast
+					,txtCanvia: txtCanvia
+				};
+
+			var html_acc = Mark.up(htmlAccessibilitat[0], txtHTML_Acc);
+
+			imc_body
+				.append( html_acc );
 
 			// títol - app
 

@@ -190,8 +190,8 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 		}
 
 		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdSesionTramitacion())) {
-			predicate = builder.and(predicate, builder.equal(tableE.get("sesionTramitacion").get("idSesionTramitacion"),
-					pFiltroBusqueda.getIdSesionTramitacion()));
+			predicate = builder.and(predicate, builder.like(tableE.get("sesionTramitacion").get("idSesionTramitacion"),
+					"%" + pFiltroBusqueda.getIdSesionTramitacion() + "%"));
 		}
 
 		if (StringUtils.isNoneBlank(pFiltroBusqueda.getNif())) {
@@ -210,7 +210,8 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 		}
 
 		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdTramite())) {
-			predicate = builder.and(predicate, builder.like(tableT.get("idTramite"), "%" + pFiltroBusqueda.getIdTramite() + "%"));
+			predicate = builder.and(predicate,
+					builder.like(tableT.get("idTramite"), "%" + pFiltroBusqueda.getIdTramite() + "%"));
 		}
 
 		if (pFiltroBusqueda.getVersionTramite() != null) {
@@ -220,7 +221,7 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 
 		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdProcedimientoCP())) {
 			predicate = builder.and(predicate,
-					builder.equal(tableT.get("idProcedimientoCP"), pFiltroBusqueda.getIdProcedimientoCP()));
+					builder.like(tableT.get("idProcedimientoCP"), "%" + pFiltroBusqueda.getIdProcedimientoCP() + "%"));
 		}
 
 		query.where(predicate);

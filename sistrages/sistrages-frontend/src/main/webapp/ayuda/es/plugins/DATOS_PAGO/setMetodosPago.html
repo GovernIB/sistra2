@@ -1,0 +1,70 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_PAGO.setMetodosPago(metodosPago)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_PAGO">DATOS_PAGO</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_PAGO&metodo=setContribuyente">setMetodosPago</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setMetodosPago(String metodosPago): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li><p>Método que permite establecer los métodos de pago que se mostrarán en PaymentIB durante la realización de un pago. <br><br>
+    			Actualmente, PaymentIB consta de dos tipos de pasarela de pago , la pasarela de la ATIB y la pasarela TPV.
+    			Para cada una de ellas, vamos a identificar los posibles métodos de pago que se pueden configurar.
+    			(<b>Importante: Los métodos de pago que se indican a continuación aparecerán en caso en que se encuentren establecidos por defecto en PaymentIB. Si se indica
+    			un método en este script que no esté configurado en PaymentIB, este no aparecerá como método de pago.</b>) <br><br>
+
+    			<b>Pasarela de la ATIB</b>: Esta pasarela de pago está configurada para que por defecto solo se realice el pago mediante tarjeta electrónica. En caso de no establecer
+    			ningún valor mediante este método, al configurar esta pasarela el usuario deberá realizar el pago mediante tarjeta electrónica. Los métodos de pago que pueden establecerse
+    			en esta pasarela son los siguientes:
+    			<ul>
+    				<li>Tarjeta electrónica. Identificador: <b>TJ</b></li>
+    				<li>Banca electrónica: Banca March. Identificador: <b>BM</b></li>
+    				<li>Banca electrónica: La Caixa. Identificador: <b>LC</b></li>
+    				<li>Banca electrónica: BBVA. Identificador: <b>BB</b></li>
+    			</ul>
+
+    			<br>
+    			<b>Pasarela TPV</b>: Esta pasarela actualmente solo disponde de un método de pago, por lo que no sería necesario indicar los métodos de pago utilizando esta pasarela.
+
+
+    		</p></li>
+    </ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>metodosPago</b>: Métodos de pago que se establecerán en PaymentIB. Se han de indicar los métodos mediante sus identificadores y separandolos con ';'. </li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Si deseamos establecer los métodos de pago de tarjeta electrónica, Banca March y La Caixa, para la pasarela de la ATIB, incluríamos la línea de código siguiente en el script: </p>
+ <p class="codigoScript">
+DATOS_PAGO.setMetodosPago(TJ; BM; LC);
+</p>
+</body>
+</html>

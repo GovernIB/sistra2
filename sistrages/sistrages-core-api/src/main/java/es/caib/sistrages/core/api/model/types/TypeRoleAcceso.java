@@ -9,9 +9,9 @@ import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
  *
  */
 public enum TypeRoleAcceso {
-
-	SUPER_ADMIN(ConstantesRolesAcceso.SUPER_ADMIN), ADMIN_ENT(ConstantesRolesAcceso.ADMIN_ENT), DESAR(
-			ConstantesRolesAcceso.DESAR);
+	HELPDESK(ConstantesRolesAcceso.HELPDESK), SUPERVISOR_ENTIDAD(ConstantesRolesAcceso.SUPERVISOR_ENTIDAD),
+	SUPER_ADMIN(ConstantesRolesAcceso.SUPER_ADMIN), ADMIN_ENT(ConstantesRolesAcceso.ADMIN_ENT),
+	DESAR(ConstantesRolesAcceso.DESAR);
 
 	/**
 	 * Role name;
@@ -20,9 +20,8 @@ public enum TypeRoleAcceso {
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param pRoleName
-	 *            Role name
+	 *
+	 * @param pRoleName Role name
 	 */
 	private TypeRoleAcceso(final String pRoleName) {
 		roleName = pRoleName;
@@ -31,8 +30,7 @@ public enum TypeRoleAcceso {
 	/**
 	 * Obtiene enum desde string.
 	 *
-	 * @param text
-	 *            string
+	 * @param text string
 	 * @return TypeSiNo
 	 */
 	public static TypeRoleAcceso fromString(final String text) {

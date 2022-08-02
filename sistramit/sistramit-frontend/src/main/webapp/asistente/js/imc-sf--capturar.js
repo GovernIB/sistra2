@@ -22,39 +22,18 @@ function appPasCapturarInicia() {
 		.location = "#pas/"+APP_TRAMIT_PAS_ID+"/formulari/"+form_captura_id; // APP_FORM_XML + "?idFormulario=" + form_captura_id + "&idPaso=" + APP_TRAMIT_PAS_ID;
 
 	if (FORMS_ARXIUS) {
-
 		return;
-
 	}
 
 	// carrega JS inicial de FORMS
 
 	$.when(
 		
-		$.get(APP_ + "forms/html/imc--forms-contenidor.html?" + APP_VERSIO)
-		,$.getScript(APP_ + "forms/js/imc-forms--inicia.js?" + APP_VERSIO)
+		$.getScript(APP_ + "forms/js/imc-forms--inicia.js?" + APP_VERSIO)
 
 	).then(
 
-		function( htmlForms ) {
-
-			imc_form_captura
-				.append( htmlForms[0] );
-
-			// literals
-
-			$("#imc-forms-contenidor")
-				.find("strong:first")
-					.text( txtFormDinAjudaActivada )
-					.end()
-				.find("button:first span ")
-					.text( txtFormDinDesactivar );
-
-			// carrega CSS i JS
-
-			appFormsCarregaScripts() 
-			
-			// carrega formulari
+		function() {
 
 			FORMS_ARXIUS = true;
 

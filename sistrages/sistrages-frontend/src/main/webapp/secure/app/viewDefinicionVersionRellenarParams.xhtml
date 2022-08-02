@@ -1,0 +1,122 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<f:metadata>
+		<f:viewAction action="#{viewDefinicionVersionRellenar.init}" />
+		<f:viewParam name="id" value="#{viewDefinicionVersionRellenar.id}"/>
+	</f:metadata>
+
+	<h:form id="formViewDefinicionVersionRellenar" styleClass="h100">
+
+		<!-- Growl mensajes -->
+		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+		<!-- Toolbar -->
+		<p:toolbar id="toolbar">
+			<f:facet name="right">
+				<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
+					<p:commandButton id="btnNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file"
+						actionListener="#{viewDefinicionVersionParams.nuevoFormulario()}" process="@this"
+						rendered="#{viewDefinicionVersionParams.permiteEditar()}"
+						update="growl">
+							<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoFormularioAlta}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable" process="@this" oncomplete="$('#formViewDefinicionVersionRellenar\\:btnEditarHidden').click();" />
+		        	</p:commandButton>
+
+					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
+						actionListener="#{viewDefinicionVersionParams.editarFormulario()}" process="@this"
+						rendered="#{viewDefinicionVersionParams.permiteEditar()}"
+						update="growl">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable" />
+					</p:commandButton>
+
+					<p:commandButton id="btnEliminar"
+						value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"
+						actionListener="#{viewDefinicionVersionParams.eliminarFormulario()}"
+						rendered="#{viewDefinicionVersionParams.permiteEditar()}"
+						process="@this" update="growl formArbol:arbol formViewDefinicionVersionRellenar:dataTable formViewDefinicionVersionRellenar dataTable">
+						<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+		        	</p:commandButton>
+
+					<p:commandButton id="btnSubir"
+						value="#{msg['botones.subir']}" icon="fa fa-caret-up"
+						rendered="#{viewDefinicionVersionParams.permiteEditar()}"
+						actionListener="#{viewDefinicionVersionParams.subirFormulario()}"
+						process="@this" update="growl formArbol:arbol formViewDefinicionVersionRellenar:dataTable formViewDefinicionVersionRellenar dataTable" />
+
+					<p:commandButton id="btnBajar"
+						value="#{msg['botones.bajar']}" icon="fa fa-caret-down"
+						rendered="#{viewDefinicionVersionParams.permiteEditar()}"
+						actionListener="#{viewDefinicionVersionParams.bajarFormulario()}"
+						process="@this" update="growl formArbol:arbol formViewDefinicionVersionRellenar:dataTable formViewDefinicionVersionRellenar dataTable" />
+
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
+						icon="fa fa-question-circle-o"
+						actionListener="#{viewDefinicionVersionParams.ayudaRellenar()}" process="@this"
+						update="growl dataTable" />
+				</h:panelGrid>
+			</f:facet>
+		</p:toolbar>
+
+
+			<p:dataTable  id="dataTable" var="formularios" value="#{viewDefinicionVersionParams.tramitePasoRELLSeleccionado.formulariosTramite}"
+						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+						 scrollable="true" scrollHeight="90%"
+                         paginator="true" paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,30"
+			        	 selectionMode="single" selection="#{viewDefinicionVersionParams.formularioSeleccionado}" rowKey="#{formularios.idString}" dblClickSelect="true">
+
+			<!-- Necesario para actualizar en controlador la fila seleccionada -->
+			<p:ajax event="rowSelect" global="false"/>
+			<p:ajax event="rowDblselect" oncomplete="triggerDblClick();"/>
+
+			<!-- Columnas -->
+			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionRellenar.headerIdentificador']}" >
+				<h:outputText value="#{formularios.identificador}" />
+			</p:column>
+
+
+			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionRellenar.headerDescripcion']}">
+				<h:outputText value="#{formularios.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersionParams.idiomas)}" />
+			</p:column>
+
+			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionRellenar.headerTipo']}">
+				<h:outputText value="#{msg['typeFormularioGestor.'+=formularios.tipoFormulario]}" />
+			</p:column>
+
+
+
+		</p:dataTable>
+
+			<p:confirmDialog global="true" >
+				<p:outputPanel styleClass="confirmar_botonera">
+		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+				</p:outputPanel>
+		    </p:confirmDialog>
+
+			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit"
+				actionListener="#{viewDefinicionVersionParams.editarFormularioAlta()}" process="@this"
+				update="growl" style="display: none">
+				<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable" />
+			</p:commandButton>
+
+			<h:outputScript >
+		      function triggerDblClick() {
+		       	$('#formViewDefinicionVersionRellenar\\:btnEditarDblClickHidden').click();
+		      }
+		    </h:outputScript>
+
+			<p:commandButton id="btnEditarDblClickHidden" value="#{msg['botones.editar']}" icon="fa fa-edit"
+				actionListener="#{viewDefinicionVersionParams.editarFormularioDblClick()}" process="@this"
+				style="display:none"
+				update="growl">
+				<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable" />
+			</p:commandButton>
+
+	</h:form>
+
+</ui:composition>

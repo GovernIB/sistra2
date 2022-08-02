@@ -92,7 +92,7 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 	 * Cancela el rellenado del formulario.
 	 *
 	 */
-	void cancelarFormulario();
+	ResultadoGuardarPagina cancelarFormulario();
 
 	/**
 	 * Deserializa valores devueltos por el formulario.

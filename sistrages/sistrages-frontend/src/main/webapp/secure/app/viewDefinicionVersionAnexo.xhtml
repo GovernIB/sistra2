@@ -108,7 +108,7 @@
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firma']}"  />
 						<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,noPadding-left">
 
-						    <p:selectBooleanCheckbox disabled="true" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" id="debeAnexarFirmado" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.debeAnexarFirmado}" />
+						    <p:selectBooleanCheckbox disabled="true" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" id="debeAnexarFirmado" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.debeAnexarFirmado}" style="display:none;"/>
 						    <p:selectBooleanCheckbox disabled="true" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firmar']}" id="debeFirmarDigitalmente" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.debeFirmarDigitalmente}" />
 
 							<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente.codigo)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"

@@ -38,9 +38,9 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties impl
 	 * Constructor.
 	 *
 	 * @param prefijoPropiedades
-	 *            prefijo props
+	 *                               prefijo props
 	 * @param properties
-	 *            propiedades
+	 *                               propiedades
 	 */
 	public ComponentePagoPaymentIBPlugin(final String prefijoPropiedades, final Properties properties) {
 		super(prefijoPropiedades, properties);
@@ -50,9 +50,9 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties impl
 	 * Inicia pago electrónico.
 	 *
 	 * @param datosPago
-	 *            Datos pago.
+	 *                        Datos pago.
 	 * @param urlCallback
-	 *            Url callback.
+	 *                        Url callback.
 	 * @return Redirección al pago (identificador pago + url)
 	 */
 	@Override
@@ -79,6 +79,8 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties impl
 		rdatosPago.setSujetoPasivoNif(datosPago.getSujetoPasivoNif());
 		rdatosPago.setSujetoPasivoNombre(datosPago.getSujetoPasivoNombre());
 		rdatosPago.setTasaId(datosPago.getTasaId());
+		rdatosPago.setMetodosPago(datosPago.getMetodosPago());
+
 		datos.setDatosPago(rdatosPago);
 		datos.setUrlCallback(urlCallback);
 
@@ -93,7 +95,7 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties impl
 	 * Verifica estado pago contra pasarela de pago.
 	 *
 	 * @param identificador
-	 *            identificador pago
+	 *                          identificador pago
 	 * @return estado pago
 	 */
 	@Override
@@ -120,7 +122,7 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties impl
 	 * Obtiene justificante de pago
 	 *
 	 * @param identificador
-	 *            identificador pago
+	 *                          identificador pago
 	 * @return Justificante de pago (nulo si la pasarela no genera justificante).
 	 */
 	@Override
@@ -141,7 +143,7 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties impl
 	 * Obtiene importe tasa.
 	 *
 	 * @param idTasa
-	 *            id tasa
+	 *                   id tasa
 	 * @return importe (en cents)
 	 * @throws PagoPluginException
 	 */
@@ -174,7 +176,7 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties impl
 	 * Obtiene carta de pago presencial (PDF).
 	 *
 	 * @param datosPago
-	 *            Datos pago
+	 *                      Datos pago
 	 * @return carta de pago presencial
 	 */
 	@Override
@@ -211,7 +213,7 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties impl
 	 * Obtiene propiedad.
 	 *
 	 * @param propiedad
-	 *            propiedad
+	 *                      propiedad
 	 * @return valor
 	 * @throws FirmaPluginException
 	 */

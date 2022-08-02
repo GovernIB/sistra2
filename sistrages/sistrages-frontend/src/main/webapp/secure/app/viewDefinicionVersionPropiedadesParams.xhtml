@@ -1,0 +1,109 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
+
+	<h:form id="formViewDefinicionVersionPropiedades" styleClass="h100">
+
+		<!-- Growl mensajes -->
+		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+        <h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left" rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="12" cellspacing="0">
+
+			<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.identificador']}" />
+			<p:inputText 	 id="codigo" value="#{viewDefinicionVersionParams.tramite.getIdentificadorCompuesto()}" size="107" disabled="true" />
+
+			<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.descripcion']}" />
+			<p:panelGrid styleClass="noBorders" columns="1" columnClasses="noPadding-left,,">
+				<p:inputText value="#{viewDefinicionVersionParams.tramiteVersion.descripcion}" disabled="true"  size="107"    />
+			</p:panelGrid>
+
+			<p:outputLabel value="#{msg['dialogDominioExportar.tipo']} *" />
+			<p:panelGrid styleClass="noBorders" columns="1" columnClasses="noPadding-left,,">
+				<p:selectOneRadio id="tipo" value="#{viewDefinicionVersionParams.tramiteVersion.tipoTramite}" disabled="true">
+		            <f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.tramite']}" itemValue="T"/>
+		            <f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.servicio']}" itemValue="S"/>
+		        </p:selectOneRadio>
+			</p:panelGrid>
+
+            <p:outputLabel for="autenticado" value="#{msg['viewDefinicionVersionPropiedades.autenticacion']}" />
+			<p:panelGrid styleClass="noBorders">
+				<p:row>
+					<p:column styleClass="noPadding-left">
+						<p:selectBooleanCheckbox id="autenticado" disabled="true" value="#{viewDefinicionVersionParams.tramiteVersion.autenticado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.autenticado']}" required="true"/>
+					</p:column>
+					<p:column>
+						<p:outputLabel for="nivelQAA" value="#{msg['viewDefinicionVersionPropiedades.nivelQAA']}" />
+						<p:spacer width="8" height="1"/>
+						<p:inputText id="nivelQAA" disabled="true" value="#{msg['typeQAA.' += viewDefinicionVersionParams.tramiteVersion.nivelQAA]}"/>
+					</p:column>
+					<p:column>
+						<p:selectBooleanCheckbox itemLabel="#{msg['tiposAutenticacion.CER']}" value="#{viewDefinicionVersionParams.tramiteVersion.tieneTipoAutenticacion('CER')}" disabled="true" />
+						<p:selectBooleanCheckbox itemLabel="#{msg['tiposAutenticacion.PIN']}" value="#{viewDefinicionVersionParams.tramiteVersion.tieneTipoAutenticacion('PIN')}" disabled="true" />
+						<p:selectBooleanCheckbox itemLabel="#{msg['tiposAutenticacion.PER']}" value="#{viewDefinicionVersionParams.tramiteVersion.tieneTipoAutenticacion('PER')}" disabled="true" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="noPadding-left">
+						<p:selectBooleanCheckbox id="sinAutenticacion" disabled="true" itemLabel="#{msg['viewDefinicionVersionPropiedades.sinautenticacion']}" value="#{viewDefinicionVersionParams.tramiteVersion.noAutenticado}"  style="width:170px" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+         	<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.idioma']}" />
+			<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,,">
+				<ui:repeat var="idioma" value="#{sessionBean.idiomas}">
+					<p:selectBooleanCheckbox disabled="true" value="#{viewDefinicionVersionParams.idiomas.contains(idioma)}"  itemLabel="#{msg[idioma]}" required="true"/>
+				</ui:repeat>
+			</p:panelGrid>
+
+         	<p:outputLabel for="persistencia" value="#{msg['viewDefinicionVersionPropiedades.persistencia']}" />
+			<p:panelGrid styleClass="noBorders">
+				<p:row>
+					<p:column styleClass="noPadding-left">
+						<p:selectBooleanCheckbox id="persistencia" disabled="true" value="#{viewDefinicionVersionParams.tramiteVersion.persistencia}"/>
+						<p:spacer width="40" height="1"/>
+					</p:column>
+					<p:column>
+						<p:selectOneRadio id="tipopersistencia" disabled="true" value="#{viewDefinicionVersionParams.tramiteVersion.persistenciaInfinita}">
+				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.sinlimite']}" itemValue="true" />
+				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.pordias']}" itemValue="false" />
+		     		   </p:selectOneRadio>
+		     		 </p:column>
+					<p:column>
+							<p:outputLabel for="numdias" value="#{msg['viewDefinicionVersionPropiedades.numdias']}" />
+							<p:spacer width="8"/>
+							<p:inputText id="numdias" size="3" disabled="true" value="#{viewDefinicionVersionParams.tramiteVersion.persistenciaDias}"/>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:outputLabel for="scriptpersonalizacion" value="#{msg['script.SCRIPT_PERSONALIZACION_TRAMITE.titulo']}" />
+			<p:commandButton id="scriptpersonalizacion" icon="fa fa-bolt" disabled="#{viewDefinicionVersionParams.tramiteVersion.scriptPersonalizacion eq null}" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_PERSONALIZACION_TRAMITE.name() ,viewDefinicionVersionParams.tramiteVersion.scriptPersonalizacion.codigo)}" styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.tramiteVersion.scriptPersonalizacion)}"
+						process="@this" update="growl"/>
+
+			<p:outputLabel for="scriptparametrosiniciales" value="#{msg['script.SCRIPT_PARAMETROS_INICIALES.titulo']}" />
+			<p:commandButton id="scriptparametrosiniciales" icon="fa fa-bolt"  disabled="#{viewDefinicionVersionParams.tramiteVersion.scriptInicializacionTramite eq null}" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_PARAMETROS_INICIALES.name() ,viewDefinicionVersionParams.tramiteVersion.scriptInicializacionTramite.codigo)}" styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.tramiteVersion.scriptInicializacionTramite)}"
+						process="@this" update="growl"/>
+
+			<f:facet name = "footer">
+				<p:outputPanel id="toolbar" styleClass="grid-right">
+					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul" rendered="#{viewDefinicionVersionParams.permiteEditar()}"
+						actionListener="#{viewDefinicionVersionParams.editarPropiedades()}"
+						process="@this" update="growl">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionPropiedades"  />
+					</p:commandButton>
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o"
+						actionListener="#{viewDefinicionVersionParams.ayudaPropiedades()}"
+						process="@this" update="growl" iconPos="top"/>
+				</p:outputPanel>
+			</f:facet>
+
+		</h:panelGrid>
+
+	</h:form>
+
+</ui:composition>

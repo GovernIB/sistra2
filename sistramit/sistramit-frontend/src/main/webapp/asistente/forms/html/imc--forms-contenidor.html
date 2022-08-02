@@ -29,16 +29,21 @@
 
 		<div class="imc--finestra" aria-hidden="true">
 			
+			<h3><span></span></h3>
+
 			<div class="imc--marc">
 
 				<div id="imc-forms-ajuda" class="imc--ajuda">
 					<strong>{{txtFormDinAjudaActivada}}</strong>
-					<button type="button" id="imc-bt-ajuda" class="imc-bt"><span>{{txtFormDinDesactivar}}</span></button>
+					<button type="button" id="imc-bt-ajuda" class="imc-bt imc--bt-ajuda"><span>{{txtFormDinDesactivar}}</span></button>
 				</div>
 
-			</div>
+				<nav id="imc--nav-seccions" class="imc--nav-seccions">
+					<button type="button" id="imc--nav-seccions-bt" aria-controls="imc--nav-seccions-llistat" aria-expanded="false" data-accio="seccio-obri"><span>Seccions del formulari</span></button>
+					<ul class="imc--secc" role="region" id="imc--nav-seccions-llistat" aria-labelledby="imc--nav-seccions-bt" aria-hidden="true"></ul>
+				</nav>
 
-			<h3><span></span></h3>
+			</div>
 
 			<div class="imc--contingut imc-form imc--form" aria-live="polite"></div>
 

@@ -21,6 +21,12 @@ public class DialogTramite extends DialogControllerBase {
 	@Inject
 	private TramiteService tramiteService;
 
+	/**
+	 * Enlace sessionBean.
+	 */
+	@Inject
+	private SessionBean sessionBean;
+
 	/** Id elemento a tratar. */
 	private String id;
 
@@ -55,6 +61,13 @@ public class DialogTramite extends DialogControllerBase {
 		if (isIdentificadorRepetido()) {
 			addMessageContext(TypeNivelGravedad.INFO, "ERROR",
 					UtilJSF.getLiteral("dialogTramite.error.identificadorDuplicado"));
+			return;
+		}
+		String identifCompuesto = sessionBean.getEntidad().getIdentificador() + "."
+				+ tramiteService.getArea(Long.valueOf(getIdArea())).getIdentificador() + "." + data.getIdentificador();
+		if (identifCompuesto.length() > 100) {
+			addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("error.identifCompuestoLength", new Object[] { identifCompuesto }));
 			return;
 		}
 

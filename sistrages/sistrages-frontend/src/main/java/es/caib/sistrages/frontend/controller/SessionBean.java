@@ -452,7 +452,10 @@ public class SessionBean {
 						UtilJSF.getLiteral("roles." + role.name().toLowerCase()));
 				item2.setCommand("#{sessionBean.cambiarRoleActivo(\"" + role.toString() + "\")}");
 				item2.setIcon("fa-li fa fa-id-card-o");
-				secondSubmenu.addElement(item2);
+				if (!TypeRoleAcceso.HELPDESK.equals(role) && !TypeRoleAcceso.SUPERVISOR_ENTIDAD.equals(role)) {
+					secondSubmenu.addElement(item2);
+				}
+
 			}
 		}
 		model.addElement(secondSubmenu);

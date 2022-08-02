@@ -41,6 +41,9 @@ public class Entidad extends ModelApi {
 	/** pie. */
 	private Literal pie;
 
+	/** pie. */
+	private Literal accesibilidad;
+
 	/** email. */
 	private String email;
 
@@ -647,6 +650,20 @@ public class Entidad extends ModelApi {
 	 */
 	public final boolean isRegistroCentralizado() {
 		return registroCentralizado;
+	}
+
+	/**
+	 * @return the accesibilidad
+	 */
+	public final Literal getAccesibilidad() {
+		return accesibilidad;
+	}
+
+	/**
+	 * @param accesibilidad the accesibilidad to set
+	 */
+	public final void setAccesibilidad(Literal accesibilidad) {
+		this.accesibilidad = accesibilidad;
 	}
 
 	/**

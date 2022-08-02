@@ -1,0 +1,154 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="TypeFormularioObligatoriedad" />
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypePresentacion" var="TypePresentacion" />
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeExtension" var="TypeExtension" />
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeTamanyo" var="TypeTamanyo" />
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
+
+
+	<h:form id="formViewDefinicionVersionAnexo" styleClass="h100">
+
+		<!-- Growl mensajes -->
+		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+       	<h:panelGrid columns="2"  rowClasses=", ui-datatable-odd"  columnClasses="w15 grid-left, w85 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="0">
+
+            <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionAnexo.identificador']}" />
+          	<p:inputText id="identificador" required="true" disabled="true" styleClass="w35" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.identificador}"  />
+
+
+            <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionAnexo.descripcion']}" />
+            <p:outputPanel styleClass="ui-inputgroup">
+           		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersionParams.idiomas)}" />
+           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionParams.consultarTraduccion(viewDefinicionVersionParams.documentoTramiteSeleccionado.descripcion)}"
+						process="@this" update="growl"/>
+       		</p:outputPanel>
+
+			<p:outputLabel 	for="tipoDocumental" value="#{msg['viewDefinicionVersionAnexo.tipoDocumental']}" />
+            <p:inputText 	id="tipoDocumental" required="true" disabled="true" styleClass="w35" value="#{msg['typeTipoDocumental.' += viewDefinicionVersionParams.documentoTramiteSeleccionado.tipoDocumental]}"  />
+
+         	<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.obligatoriedad']}" />
+         	<p:panelGrid styleClass="noBorders" columns="2" columnClasses="noPadding-left,">
+	         	<p:selectOneRadio id="obligatoriedad" disabled="true" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.obligatoriedad}">
+		            <f:selectItems value="#{TypeFormularioObligatoriedad.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioObligatoriedad.' += tipo]}" />
+			     </p:selectOneRadio>
+
+		     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptObligatoriedad.codigo)}" value="#{msg['script.SCRIPT_DEPENDENCIA_DOCUMENTO.titulo']}"
+					styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptObligatoriedad)}"
+					disabled="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptObligatoriedad eq null}"
+					process="@this" update="growl"/>
+         	</p:panelGrid>
+
+        	<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.ayuda']}" />
+        	<p:outputPanel>
+	        	<h:panelGrid columns="2" columnClasses="noPadding-left wpx120," styleClass="w100">
+					<p:outputLabel  value="#{msg['viewDefinicionVersionAnexo.ayuda.fichero']}" />
+					<p:column>
+						<h:outputText  id="ficheroVacio" value="#{msg['error.noexistefitxer']}" rendered="#{empty viewDefinicionVersionParams.documentoTramiteSeleccionado.ayudaFichero}"/>
+		           		<p:commandLink id="ficheroLink" action="#{dialogDefinicionVersionAnexo.descargaFichero(viewDefinicionVersionParams.documentoTramiteSeleccionado.ayudaFichero)}" target="_blank" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.ayudaFichero.nombre}" rendered="#{!empty viewDefinicionVersionParams.documentoTramiteSeleccionado.ayudaFichero}"/>
+		           	</p:column>
+
+					<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.ayuda.url']}" />
+					<p:inputText id="url_input"  disabled="true" styleClass="w85" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.ayudaURL}" />
+
+					<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.ayuda.mensaje']}" />
+					<p:outputPanel styleClass="ui-inputgroup">
+	           			<p:inputText id="mensaje_input" disabled="true" styleClass="w85" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.ayudaTexto.getTraduccion(sessionBean.lang,viewDefinicionVersionParams.idiomas)}" />
+	           			<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionParams.consultarTraduccionHTML(viewDefinicionVersionParams.documentoTramiteSeleccionado.ayudaTexto)}"
+							process="@this" update="growl"/>
+	       			</p:outputPanel>
+
+	         	</h:panelGrid>
+			</p:outputPanel>
+
+         	<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion']}" />
+        	<p:outputPanel>
+	        	<p:selectOneRadio id="tipopresentacion" disabled="true" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.tipoPresentacion}" layout="custom">
+		        	<f:selectItem itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica']}" itemValue="#{TypePresentacion.ELECTRONICA}" />
+	        	</p:selectOneRadio>
+	         	<h:panelGrid columns="2" columnClasses="noPadding-left wpx100 padding8," styleClass="w100">
+					<p:outputPanel>
+						<p:radioButton id="electronica" for="tipopresentacion" itemIndex="0" />
+						<p:spacer width="8" height="1"/>
+						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica']}" />
+					</p:outputPanel>
+					<h:panelGrid columns="2" columnClasses="wpx120 grid-right, padding-left-4" styleClass="panel_izq w100">
+						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.numinstancias']}" for="numinstancias"/>
+						<p:panelGrid styleClass="noBorders" columns="2" columnClasses="noPadding-left,">
+							<p:inputText id="numinstancias" disabled="true" size="3" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.numeroInstancia}" />
+
+						</p:panelGrid>
+
+						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.extensiones']}" />
+						<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,,noPadding-left">
+								<p:selectOneRadio id="extensiones" disabled="true" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.extensionSeleccion}">
+						        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.todas']}" itemValue="#{TypeExtension.TODAS}"/>
+						        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.personalizadas']}" itemValue="#{TypeExtension.PERSONALIZADAS}"/>
+					        	</p:selectOneRadio>
+					        	<p:inputText id="personalizadas_input" disabled="true" size="15" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.extensiones}"/>
+						 </p:panelGrid>
+
+						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.tammaximo']}" for="tammaximo" />
+						<p:panelGrid styleClass="noBorders" columns="4" columnClasses="noPadding-left,noPadding-left">
+							<p:inputText id="tammaximo" disabled="true" size="3" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.tamanyoMaximo}"  />
+							<p:selectOneRadio id="tipotam" disabled="true" columns="1" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.tipoTamanyo}">
+						        	<f:selectItems value="#{TypeTamanyo.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeTamanyo.' += tipo]}" />
+					        </p:selectOneRadio>
+
+
+							<p:spacer width="8" height="1"/>
+							<p:selectBooleanCheckbox id="convertirpdf" disabled="true" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.debeConvertirPDF}" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.convertirpdf']}"/>
+						</p:panelGrid>
+
+						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firma']}"  />
+						<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,noPadding-left">
+
+						    <p:selectBooleanCheckbox disabled="true" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" id="debeAnexarFirmado" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.debeAnexarFirmado}" style="display:none;"/>
+						    <p:selectBooleanCheckbox disabled="true" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firmar']}" id="debeFirmarDigitalmente" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.debeFirmarDigitalmente}" />
+
+							<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptFirmarDigitalmente.codigo)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
+									styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptFirmarDigitalmente)}"
+									disabled="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptFirmarDigitalmente eq null}"
+									process="@this" update="growl"/>
+						</p:panelGrid>
+
+						<p:outputLabel value="#{msg['script.SCRIPT_VALIDAR_ANEXO.titulo']}" />
+						<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_VALIDAR_ANEXO.name(), viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptValidacion.codigo)}"
+									styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptValidacion)}"
+									disabled="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptValidacion eq null}"
+										process="@this" update="growl"/>
+
+					</h:panelGrid>
+
+					<!-- <p:outputPanel>
+						<p:selectBooleanCheckbox id="compulsar" disabled="true" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.debeCompulsar}" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.presencial.compulsar']}"/>
+						<p:selectBooleanCheckbox id="presentarfotocopia" disabled="true" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.debeFotocopiar}"  itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.presencial.presentarfotocopia']}"/>
+					</p:outputPanel> -->
+	         	</h:panelGrid>
+			</p:outputPanel>
+
+
+			<f:facet name = "footer">
+				<p:outputPanel id="toolbar" styleClass="grid-right">
+					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
+						rendered="#{viewDefinicionVersionParams.permiteEditar()}"
+						actionListener="#{viewDefinicionVersionParams.editarDocumentoTramite()}"
+						process="@this" update="growl">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionAnexo" />
+					</p:commandButton>
+           			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o"
+						actionListener="#{viewDefinicionVersionParams.ayudaAnexo()}"
+						process="@this" update="growl" iconPos="top"/>
+				</p:outputPanel>
+			</f:facet>
+
+		</h:panelGrid>
+
+	</h:form>
+
+</ui:composition>

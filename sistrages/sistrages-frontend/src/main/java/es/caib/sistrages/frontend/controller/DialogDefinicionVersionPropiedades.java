@@ -111,11 +111,12 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 				return;
 			}
 
-			if (this.getTramiteVersion().getDescripcion().trim().isEmpty()
-					|| this.getTramiteVersion().getDescripcion() == null) {
-				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.descripcionNull"));
-				return;
-			}
+			/*
+			 * if (this.getTramiteVersion().getDescripcion().trim().isEmpty() ||
+			 * this.getTramiteVersion().getDescripcion() == null) {
+			 * addMessageContext(TypeNivelGravedad.WARNING,
+			 * UtilJSF.getLiteral("warning.descripcionNull")); return; }
+			 */
 
 			if (!this.getTramiteVersion().isAutenticado() && !this.getTramiteVersion().isNoAutenticado()) {
 				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.tipoAutenticacion"));

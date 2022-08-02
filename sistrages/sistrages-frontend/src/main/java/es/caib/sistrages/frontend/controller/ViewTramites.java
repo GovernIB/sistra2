@@ -976,7 +976,9 @@ public class ViewTramites extends ViewControllerBase {
 	public boolean getTienePermiso() {
 
 		for (Area ar : listaAreas) {
-			if (ar.getCodigo().equals(versionSeleccionada.getIdArea())) {
+			List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidadByArea(ar.getCodigo());
+			if (ar.getCodigo().equals(versionSeleccionada.getIdArea())
+					&& !(permisos.size() == 1 && permisos.get(0).equals(TypeRolePermisos.CONSULTA))) {
 				return ar.getTienePermiso();
 			}
 		}
@@ -1302,7 +1304,7 @@ public class ViewTramites extends ViewControllerBase {
 		}
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(idTramiteSeleccionado));
 		params.put(TypeParametroVentana.AREA.toString(), String.valueOf(idArea));
-		UtilJSF.openDialog(DialogTramiteVersion.class, TypeModoAcceso.ALTA, params, true, 400, 160);
+		UtilJSF.openDialog(DialogTramiteVersion.class, TypeModoAcceso.ALTA, params, true, 400, 180);
 
 	}
 

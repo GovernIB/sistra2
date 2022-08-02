@@ -67,6 +67,12 @@ public final class RUsuarioAutenticadoInfo {
 	private String qaa;
 
 	/**
+	 * Información de representante
+	 */
+	@ApiModelProperty(value = "Información de representante")
+	private RRepresentanteInfo representanteInfo;
+
+	/**
 	 * Método de acceso a autenticacion.
 	 *
 	 * @return autenticacion
@@ -236,5 +242,21 @@ public final class RUsuarioAutenticadoInfo {
 	public void setQaa(final String qaa) {
 		this.qaa = qaa;
 	}
+
+	/**
+	 * @return the representanteInfo
+	 */
+	public final RRepresentanteInfo getRepresentanteInfo() {
+		return representanteInfo;
+	}
+
+	/**
+	 * @param representanteInfo the representanteInfo to set
+	 */
+	public final void setRepresentanteInfo(RRepresentanteInfo representanteInfo) {
+		this.representanteInfo = representanteInfo;
+	}
+
+
 
 }

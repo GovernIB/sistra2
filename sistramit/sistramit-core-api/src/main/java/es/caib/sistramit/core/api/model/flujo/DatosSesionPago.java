@@ -59,10 +59,16 @@ public class DatosSesionPago implements ModelApi {
 	private String detallePago;
 
 	/**
+	 * Indica si se filtran los métodos de pago (lista separada por ; ). Si no se
+	 * establece, se mostarán los activos por defecto.
+	 */
+	private String metodosPago;
+
+	/**
 	 * Método para establecer identificadorPago.
 	 *
 	 * @param identificadorPago
-	 *            identificadorPago a establecer
+	 *                              identificadorPago a establecer
 	 */
 	public void setIdentificadorPago(final String identificadorPago) {
 		this.identificadorPago = identificadorPago;
@@ -90,7 +96,7 @@ public class DatosSesionPago implements ModelApi {
 	 * Método para establecer fechaPago.
 	 *
 	 * @param fechaPago
-	 *            fechaPago a establecer
+	 *                      fechaPago a establecer
 	 */
 	public void setFechaPago(final Date fechaPago) {
 		this.fechaPago = fechaPago;
@@ -109,7 +115,7 @@ public class DatosSesionPago implements ModelApi {
 	 * Método para establecer localizador.
 	 *
 	 * @param localizador
-	 *            localizador a establecer
+	 *                        localizador a establecer
 	 */
 	public void setLocalizador(final String localizador) {
 		this.localizador = localizador;
@@ -128,7 +134,7 @@ public class DatosSesionPago implements ModelApi {
 	 * Método para establecer pasarelaId.
 	 *
 	 * @param pasarelaId
-	 *            pasarelaId a establecer
+	 *                       pasarelaId a establecer
 	 */
 	public void setPasarelaId(final String pasarelaId) {
 		this.pasarelaId = pasarelaId;
@@ -147,7 +153,7 @@ public class DatosSesionPago implements ModelApi {
 	 * Método para establecer organismoId.
 	 *
 	 * @param organismoId
-	 *            organismoId a establecer
+	 *                        organismoId a establecer
 	 */
 	public void setOrganismoId(final String organismoId) {
 		this.organismoId = organismoId;
@@ -166,7 +172,7 @@ public class DatosSesionPago implements ModelApi {
 	 * Método para establecer idioma.
 	 *
 	 * @param idioma
-	 *            idioma a establecer
+	 *                   idioma a establecer
 	 */
 	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
@@ -185,7 +191,7 @@ public class DatosSesionPago implements ModelApi {
 	 * Método para establecer modelo.
 	 *
 	 * @param modelo
-	 *            modelo a establecer
+	 *                   modelo a establecer
 	 */
 	public void setModelo(final String modelo) {
 		this.modelo = modelo;
@@ -204,7 +210,7 @@ public class DatosSesionPago implements ModelApi {
 	 * Método para establecer concepto.
 	 *
 	 * @param concepto
-	 *            concepto a establecer
+	 *                     concepto a establecer
 	 */
 	public void setConcepto(final String concepto) {
 		this.concepto = concepto;
@@ -223,7 +229,7 @@ public class DatosSesionPago implements ModelApi {
 	 * Método para establecer tasaId.
 	 *
 	 * @param tasaId
-	 *            tasaId a establecer
+	 *                   tasaId a establecer
 	 */
 	public void setTasaId(final String tasaId) {
 		this.tasaId = tasaId;
@@ -242,7 +248,7 @@ public class DatosSesionPago implements ModelApi {
 	 * Método para establecer importe.
 	 *
 	 * @param importe
-	 *            importe a establecer
+	 *                    importe a establecer
 	 */
 	public void setImporte(final int importe) {
 		this.importe = importe;
@@ -261,7 +267,7 @@ public class DatosSesionPago implements ModelApi {
 	 * Método para establecer detallePago.
 	 *
 	 * @param detallePago
-	 *            detallePago a establecer
+	 *                        detallePago a establecer
 	 */
 	public void setDetallePago(final String detallePago) {
 		this.detallePago = detallePago;
@@ -280,7 +286,7 @@ public class DatosSesionPago implements ModelApi {
 	 * Método para establecer simulado.
 	 *
 	 * @param simulado
-	 *            simulado a establecer
+	 *                     simulado a establecer
 	 */
 	public void setSimulado(final boolean simulado) {
 		this.simulado = simulado;
@@ -299,7 +305,7 @@ public class DatosSesionPago implements ModelApi {
 	 * Método para establecer presentacion.
 	 *
 	 * @param presentacion
-	 *            presentacion a establecer
+	 *                         presentacion a establecer
 	 */
 	public void setPresentacion(final TypePresentacion presentacion) {
 		this.presentacion = presentacion;
@@ -318,7 +324,7 @@ public class DatosSesionPago implements ModelApi {
 	 * Método para establecer sujetoPasivo.
 	 *
 	 * @param sujetoPasivo
-	 *            sujetoPasivo a establecer
+	 *                         sujetoPasivo a establecer
 	 */
 	public void setSujetoPasivo(final Persona sujetoPasivo) {
 		this.sujetoPasivo = sujetoPasivo;
@@ -337,9 +343,28 @@ public class DatosSesionPago implements ModelApi {
 	 * Método para establecer entidadId.
 	 *
 	 * @param entidadId
-	 *            entidadId a establecer
+	 *                      entidadId a establecer
 	 */
 	public void setEntidadId(final String entidadId) {
 		this.entidadId = entidadId;
+	}
+
+	/**
+	 * Método de acceso a metodosPago.
+	 * 
+	 * @return metodosPago
+	 */
+	public String getMetodosPago() {
+		return metodosPago;
+	}
+
+	/**
+	 * Método para establecer metodosPago.
+	 * 
+	 * @param metodosPago
+	 *                        metodosPago a establecer
+	 */
+	public void setMetodosPago(final String metodosPago) {
+		this.metodosPago = metodosPago;
 	}
 }

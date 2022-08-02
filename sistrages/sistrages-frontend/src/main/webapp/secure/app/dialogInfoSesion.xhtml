@@ -37,7 +37,7 @@
 				<p:outputLabel for="RolesArea" value="#{msg['dialogInfoSesion.rolesArea']}" />
 				<p:dataTable id="RolesArea" var="td" value="#{dialogInfoSesion.listaRoles}">
 					<p:column headerText="#{msg['viewConsultaGeneral.area']}">
-		                <h:outputText value="#{td.area.identificadorCompuesto}" />
+		                <h:outputText value="#{td.area.identificador}" />
 		            </p:column>
 
 		            <p:column headerText="#{msg['dialogInfoSesion.roles']}">

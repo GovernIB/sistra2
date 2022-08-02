@@ -27,30 +27,29 @@
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
         	<p:panelGrid id="panelFiltro" styleClass="noBackground w100 h10 noBorders">
         	<p:row>
-        	<p:column styleClass="w33">
-        		<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
+        	<p:column styleClass="w40">
+        		<h:panelGrid columns="2" styleClass="w100" columnClasses="w23 grid-right, w69">
 	        		<p:outputLabel for="filtroTipoAcceso" value="#{msg['viewInformacionPagos.filtroTipoAcceso']}:"/>
-					<p:selectOneMenu id="filtroTipoAcceso" value="#{viewInformacionPagos.filtros.tipoAcceso}" required="true">
+					<p:selectOneMenu id="filtroTipoAcceso" value="#{viewInformacionPagos.filtros.tipoAcceso}" required="true" style="margin-left: 5%">
     					<f:selectItems value="#{TypeAutenticacion.ALL_VALUES}" var="tipoAcceso" itemLabel="#{msg['typeTipoAcceso.' += tipoAcceso]}"/>
     					<p:ajax event="change" update="id1 id2" oncomplete="$('.ui-state-error').removeClass('ui-state-error');" />
 					</p:selectOneMenu >
 	        	</h:panelGrid>
 	        </p:column>
 	        <p:column styleClass="w33">
-        		<h:panelGrid id="id1" columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
+        		<h:panelGrid id="id1" columns="2" styleClass="w100" columnClasses="w45 grid-right,w74">
 	        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewInformacionPagos.filtroIdSesion']}:"/>
-		        	<p:inputText id="filtroIdSesion" value="#{viewInformacionPagos.filtros.idSesionTramitacion}" size="30" maxlength="30" required="#{viewInformacionPagos.filtros.tipoAcceso eq TypeAutenticacion.ANONIMO}"/>
+		        	<p:inputText id="filtroIdSesion" value="#{viewInformacionPagos.filtros.idSesionTramitacion}" size="30" maxlength="30" required="#{viewInformacionPagos.filtros.tipoAcceso eq TypeAutenticacion.ANONIMO}" onkeyup="capitalize(this)" onblur="trim(this)"/>
 	        	</h:panelGrid>
 	        </p:column>
 	        <p:column styleClass="w34">
-	        	<h:panelGrid id="id2" columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
-		        	<p:outputLabel for="filtroNif" value="#{msg['viewInformacionPagos.filtroNif']}:"/>
-		        	<p:inputText id="filtroNif" value="#{viewInformacionPagos.filtros.nif}" size="12" maxlength="12" required="#{viewInformacionPagos.filtros.tipoAcceso eq null or viewInformacionPagos.filtros.tipoAcceso eq TypeAutenticacion.AUTENTICADO}" onblur="this.value = this.value.toUpperCase();"/>
-	        	</h:panelGrid>
+
 	        </p:column>
 			</p:row>
 			<p:row>
-			<p:column colspan="2">
+			<p:column  styleClass="w40">
+				<h:panelGrid columns="5" styleClass="w100" columnClasses="w15 grid-right,w5 grid-right,w10,w5 grid-right,w10">
+
 					<p:outputLabel value="#{msg['viewInformacionPagos.filtroFecha']}:" styleClass="padding-right-2pct"/>
 
 	        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewInformacionPagos.filtroFechaInicio']}:" styleClass="padding-right-4"/>
@@ -58,7 +57,13 @@
 
 	        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewInformacionPagos.filtroFechaFin']}:" styleClass="padding-right-4"/>
 	        		<p:calendar id="filtroFechaFin" value="#{viewInformacionPagos.filtros.fechaHasta}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
-
+				</h:panelGrid>
+	        </p:column>
+	        <p:column>
+	        	<h:panelGrid id="id2" columns="2" styleClass="w100" columnClasses="w45 grid-right,w75">
+		        	<p:outputLabel for="filtroNif" value="#{msg['viewInformacionPagos.filtroNif']}:"/>
+		        	<p:inputText id="filtroNif" value="#{viewInformacionPagos.filtros.nif}" size="30" maxlength="12" required="#{viewInformacionPagos.filtros.tipoAcceso eq null or viewInformacionPagos.filtros.tipoAcceso eq TypeAutenticacion.AUTENTICADO}" onkeyup="capitalize(this)" onblur="trim(this)"/>
+	        	</h:panelGrid>
 	        </p:column>
 	        <p:column>
 	        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="table-rightaligned">
@@ -137,6 +142,15 @@
 			<p:inputText id="paginacion" value="#{viewInformacionPagos.paginacion}" style="opacity:0">
 				<p:ajax event="blur" update="@form" process="@this"/>
 			</p:inputText>
+			<h:outputScript >
+		     function capitalize(element){
+				element.value = element.value.toUpperCase();
+			 }
+
+			 function trim(element){
+			 	element.value = element.value.trim();
+			 }
+		   </h:outputScript>
 		</h:form>
 
 	</ui:define>

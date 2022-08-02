@@ -37,6 +37,9 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 	/** resultado. */
 	private String resultado;
 
+	/** área. */
+	private String area;
+
 	/** propiedades evento. */
 	private ListaPropiedades propiedadesEvento;
 
@@ -373,6 +376,20 @@ public final class EventoAuditoriaTramitacion extends ModelApi {
 
 	public void setDescripcionTramite(String descripcionTramite) {
 		this.descripcionTramite = descripcionTramite;
+	}
+
+	/**
+	 * @return the area
+	 */
+	public final String getArea() {
+		return area;
+	}
+
+	/**
+	 * @param area the area to set
+	 */
+	public final void setArea(String area) {
+		this.area = area;
 	}
 
 }

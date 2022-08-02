@@ -188,6 +188,31 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	}
 
 	/**
+	 * Abre explorar asistente accesibilidad.
+	 */
+	public void explorarAssistentAcc() {
+		TypeModoAcceso modoAccesoDlg = TypeModoAcceso.CONSULTA;
+		if (getPermiteEditar()) {
+			modoAccesoDlg = TypeModoAcceso.EDICION;
+		}
+		UtilTraducciones.openDialogTraduccionHTML(modoAccesoDlg, data.getAccesibilidad(),
+				UtilJSF.getSessionBean().getIdiomas(), UtilJSF.getSessionBean().getIdiomas(), true);
+	}
+
+	/**
+	 * Gestión de retorno asistente accesibilidad.
+	 *
+	 * @param event
+	 */
+	public void returnDialogoAsistenteAcc(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Literal literales = (Literal) respuesta.getResult();
+			data.setAccesibilidad(literales);
+		}
+	}
+
+	/**
 	 * Abre explorar url carpeta ciudadana.
 	 */
 	public void explorarUrlCarpetaCiudadana() {

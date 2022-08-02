@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
+
+	<h:form id="formViewDefinicionVersionDebeSaber" styleClass="h100">
+
+		<!-- Growl mensajes -->
+		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+		<h:panelGrid columns="2" columnClasses="w10 grid-left va-top, w90 grid-left"
+			styleClass="w100" cellpadding="10" cellspacing="10">
+			<p:outputLabel for="descripcion"
+				value="#{msg['viewDefinicionVersionDebeSaber.instrucciones']}" />
+			<p:outputPanel>
+				<p:inputTextarea value="#{viewDefinicionVersionParams.tramitePasoDSSeleccionado.instruccionesIniciales.getTraduccion(sessionBean.lang,viewDefinicionVersionParams.idiomas)}" styleClass="w90" rows="20" id="descripcion" disabled="true" style="margin-right:10px"/>
+				<p:commandButton icon="fa fa-language" styleClass="va-top"
+					actionListener="#{viewDefinicionVersionParams.consultarTraduccionHTML(viewDefinicionVersionParams.tramitePasoDSSeleccionado.instruccionesIniciales)}"
+					process="@this" update="growl">
+		        </p:commandButton>
+			</p:outputPanel>
+
+		</h:panelGrid>
+		<p:row>
+				<p:column>
+					<p:outputLabel value="#{msg['viewDefinicionVersionDebeSaber.instruccionesScriptHead']}" style="margin-left: 20px;"/>
+
+				</p:column>
+				<p:column >
+					<p:commandButton style="margin-left: 20px;" id="scriptButton1" icon="fa fa-bolt"
+						actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_DEBE_SABER.name(),viewDefinicionVersionParams.tramitePasoDSSeleccionado.scriptDebeSaber.codigo)}"
+						styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.tramitePasoDSSeleccionado.scriptDebeSaber)}"
+						disabled="#{viewDefinicionVersionParams.tramitePasoDSSeleccionado.scriptDebeSaber eq null}"
+						value="#{msg['viewDefinicionVersionDebeSaber.instruccionesScript']}"
+						process="@this" update="growl"  />
+				</p:column>
+			</p:row>
+				<p:outputPanel id="toolbar" styleClass="grid-right">
+					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
+						actionListener="#{viewDefinicionVersionParams.editarPaso()}" style="margin-right:20px"
+						rendered="#{viewDefinicionVersionParams.permiteEditar()}"
+						process="@this" update="growl">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionParams.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionDebeSaber"  />
+					</p:commandButton>
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o"
+						actionListener="#{viewDefinicionVersionParams.ayudaDebeSaber()}"
+						process="@this" update="growl" iconPos="top"/>
+				</p:outputPanel>
+
+	</h:form>
+
+</ui:composition>

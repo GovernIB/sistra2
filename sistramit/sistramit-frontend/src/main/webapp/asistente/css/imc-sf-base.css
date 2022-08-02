@@ -29,13 +29,67 @@
 	background-image: url(imgs/icones/ico_accessibilitat.svg);
 }
 
+.imc-bt.imc--acc::before {
+	background-image: url(imgs/icones/ico_accessibilitat_fff.svg); /*transform: rotate(90deg);*/
+}
+
 .imc-bt.imc--desconecta::before {
 	background-image: url(imgs/icones/ico_desconecta.svg);
 }
 
 
 .imc-cap[data-autenticacio="c"] .imc--clau { display: none; }
-.imc-cap[data-autenticacio="c"] .imc--opcions li:first-child { display: none; }
+.imc-cap[data-autenticacio="c"] .imc--opcions > li:first-child { display: none; }
+
+
+/* accessibilitat */
+
+li.imc--li-accessibilitat { position: relative; }
+
+.imc--accessibilitat-llistat { position: absolute; z-index: 3; top: 100%; left: .4em; width: auto; padding: .5em 1em; background-color: #fff; box-shadow: 0 0 .5em .2em rgba(0, 0, 0, 0.2); }
+
+.imc--accessibilitat-llistat[aria-hidden="true"] { display: none; }
+
+.imc--accessibilitat-llistat li { display: block; width: 100%; text-align: left; padding-bottom: .2em; padding-left: 0 !important; }
+.imc--accessibilitat-llistat li a { display: block; padding: .2em .5em; }
+
+.imc--accessibilitat-llistat li button { display: block; padding: .2em .5em; background-color: transparent; }
+.imc--accessibilitat-llistat li button span { color: #3b8e5d; }
+
+.imc--accessibilitat-llistat li button:hover,
+.imc--accessibilitat-llistat li button:focus { background-color: #4dba79; }
+
+.imc--accessibilitat-llistat li button:hover span,
+.imc--accessibilitat-llistat li button:focus span { color: #fff; }
+
+
+.imc-accessibilitat { position: fixed; z-index: 10; top: 0; left: 0; width: 100%; height: 100%; visibility: hidden; opacity: 0; transition: visibility .3s ease-out, opacity .3s ease-out; }
+
+.imc-accessibilitat::before { content: "";
+  position: fixed; z-index: 11; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,.7);
+}
+
+.imc-accessibilitat.imc--on {
+	visibility: visible; opacity: 1; transition: visibility 0 ease-out, opacity .3s ease-out;
+}
+
+
+.imc-accessibilitat .imc--co { overflow: auto; position: fixed; z-index: 12; top: 50%; left: 50%; width: 90%; max-width: 50em; max-height: 80%; padding: 1.5em 2em 2em 2em; background-color: #fff; transform: translate(-50%, -50%); }
+
+
+.imc-acc h4 { font-size: 1.2em; text-transform: uppercase; margin-bottom: .3em; }
+
+.imc-acc > ul { padding-left: 1.5em; margin-top: 1em; }
+.imc-acc > ul > li { position: relative; margin-bottom: 1.5em; }
+
+.imc-acc p { margin-top: 1em; }
+
+.imc-acc-form { text-align: center; padding: 1.5em; margin-top: 1em; background-color: #eaeaea; }
+.imc-acc-form li { display: inline; list-style: none; padding-right: 2em; }
+.imc-acc-form li label { cursor: pointer; }
+
+
+.imc-acc .imc--botonera { padding-top: 1em; text-align: right; }
 
 
 
@@ -917,6 +971,10 @@ html[data-estil="ac"] .imc-cap .imc--opcions .imc-bt {
 	}
 
 	.imc-missatge .imc--text .imc--botonera button.imc-bt.imc--ico::before { margin-right: .5em; }
+
+
+	.imc--accessibilitat-llistat { left: auto; right: 0; }
+
 
 }
 

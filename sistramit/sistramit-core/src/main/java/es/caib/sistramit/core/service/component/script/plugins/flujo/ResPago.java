@@ -74,23 +74,27 @@ public final class ResPago implements ResPagoInt {
 		datosPago.setOrganismo(organismoId);
 	}
 
+	@Override
+	public void setMetodosPago(final String metodos) {
+		datosPago.setMetodosPago(metodos);
+	}
+
 	/**
 	 * Valida datos persona.
 	 *
 	 * @param nifNormalizado
-	 *            Nif normalizado
+	 *                           Nif normalizado
 	 * @param pNombre
-	 *            Nombre
+	 *                           Nombre
 	 * @throws ScriptException
-	 *             Excepcion
+	 *                             Excepcion
 	 */
 	private void validarDatosPersona(final String nifNormalizado, final String pNombre) throws ScriptException {
 		if (!NifUtils.esNifPersonaFisica(nifNormalizado) && !NifUtils.esNifPersonaJuridica(nifNormalizado)) {
 			throw new ScriptException("La dada proporcionada no és un nif vàlid: " + nifNormalizado);
 		}
 		if (StringUtils.isEmpty(pNombre) || !XssFilter.filtroXss(pNombre)) {
-			throw new ScriptException(
-					"La dada proporcionada com nom persona està buit o conté caràceters no permesos");
+			throw new ScriptException("La dada proporcionada com nom persona està buit o conté caràceters no permesos");
 		}
 	}
 
@@ -98,15 +102,15 @@ public final class ResPago implements ResPagoInt {
 	 * Valida datos pago.
 	 *
 	 * @param codigo
-	 *            Codigo
+	 *                     Codigo
 	 * @param modelo
-	 *            Modelo
+	 *                     Modelo
 	 * @param concepto
-	 *            Concepto
+	 *                     Concepto
 	 * @param importe
-	 *            importe en cents
+	 *                     importe en cents
 	 * @throws ScriptException
-	 *             Exception
+	 *                             Exception
 	 */
 	private void validarDatosPago(final String codigo, final String modelo, final String concepto)
 			throws ScriptException {

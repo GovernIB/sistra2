@@ -219,6 +219,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPagina(datosSesion,
 				indiceDefPagina);
 		final List<AccionFormulario> acciones = new ArrayList<>();
+		acciones.add(new AccionFormularioNormalizada(TypeAccionFormularioNormalizado.CANCELAR));
 		if (datosSesion.getDatosFormulario().getIndicePaginaActual() > 1) {
 			acciones.add(new AccionFormularioNormalizada(TypeAccionFormularioNormalizado.ANTERIOR));
 		}

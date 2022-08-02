@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+  	xmlns:ui="http://java.sun.com/jsf/facelets"
+  	xmlns:p="http://primefaces.org/ui"
+  	xmlns:of="http://omnifaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+
+<h:head>
+
+  <title><h:outputText value = "#{msg['aplicacion.titulo']} (#{frontModuleConfig.entornoUpper})" /></title>
+
+  <f:facet name="first">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  </f:facet>
+
+  <h:outputScript library="js" name="common.js" target="head" />
+
+</h:head>
+
+<script>
+	function fnAspect() {
+		jQuery("input[name=hiddenWidth]").val(window.innerWidth);
+		jQuery("input[name=hiddenHeight]").val(window.innerHeight);
+		document.getElementById("formAspect:btnAspect").click();
+
+	}
+	jQuery(document).ready(function() {
+		 setTimeout(function(){ fnAspect(); }, 5000);
+
+    });
+
+
+</script>
+
+<h:body styleClass="body-color">
+	<h:form id="formAspect" style="display:none">
+		<input type="hidden" name="hiddenWidth" value="#{sessionBean.width}" />
+  		<input type="hidden" name="hiddenHeight" value="#{sessionBean.height}" />
+  		<h:commandButton id="btnAspect" action="#{sessionBean.submitAspect}">
+  		  	<f:ajax execute="@this"  render="@this" />
+  		</h:commandButton>
+  </h:form>
+
+
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+
+  <p:layout fullPage="true" >
+
+    <p:layoutUnit id="work" position="center" header="#{msg[sessionBean.literalTituloPantalla]}" styleClass="margin-top-10">
+      <ui:insert name="content" />
+    </p:layoutUnit>
+
+  </p:layout>
+
+
+  <!-- Para que elementos con global=true mostraran icono cargando (commandbutton, events, ...) -->
+  <p:ajaxStatus id="startAjax" onstart="PF('loading').show();" oncomplete="PF('loading').hide();"  />
+
+
+  <!-- Inclusion popups genericos -->
+  <h:form id="formPopUps">
+    <ui:include src="../common/popups.xhtml" />
+  </h:form>
+
+</h:body>
+
+</f:view>
+
+</html>

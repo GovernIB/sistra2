@@ -5,6 +5,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.springframework.util.StringUtils;
+
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
@@ -197,6 +199,7 @@ public class DialogTraduccion extends DialogControllerBase {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_CONTIENE_CHAR));
 					return;
 				}
+				textoCa = replaceComillas(textoCa);
 				data.add(new Traduccion(TypeIdioma.CATALAN.toString(), textoCa));
 			}
 			if (visibleEs) {
@@ -217,6 +220,7 @@ public class DialogTraduccion extends DialogControllerBase {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_CONTIENE_CHAR));
 					return;
 				}
+				textoEs = replaceComillas(textoEs);
 				data.add(new Traduccion(TypeIdioma.CASTELLANO.toString(), textoEs));
 			}
 			if (visibleEn) {
@@ -232,6 +236,7 @@ public class DialogTraduccion extends DialogControllerBase {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_CONTIENE_CHAR));
 					return;
 				}
+				textoEn = replaceComillas(textoEn);
 				data.add(new Traduccion(TypeIdioma.INGLES.toString(), textoEn));
 
 			}
@@ -252,6 +257,7 @@ public class DialogTraduccion extends DialogControllerBase {
 					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_CONTIENE_CHAR));
 					return;
 				}
+				textoDe = replaceComillas(textoDe);
 				data.add(new Traduccion(TypeIdioma.ALEMAN.toString(), textoDe));
 			}
 		}
@@ -262,6 +268,14 @@ public class DialogTraduccion extends DialogControllerBase {
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
 
+	}
+
+	private String replaceComillas(String texto) {
+		texto = StringUtils.replace(texto, "`", "'");
+		texto = StringUtils.replace(texto, "´", "'");
+		texto = StringUtils.replace(texto, "‘", "'");
+		texto = StringUtils.replace(texto, "’", "'");
+		return texto;
 	}
 
 	/**

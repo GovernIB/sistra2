@@ -5,6 +5,7 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -21,6 +22,12 @@ public class DialogArea extends DialogControllerBase {
 	 */
 	@Inject
 	private TramiteService areaService;
+
+	/**
+	 * Enlace sessionBean.
+	 */
+	@Inject
+	private SessionBean sessionBean;
 
 	/**
 	 * Id elemento a tratar.
@@ -75,6 +82,13 @@ public class DialogArea extends DialogControllerBase {
 				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.email.formato"));
 				return;
 			}
+		}
+
+		String identifCompuesto = sessionBean.getEntidad().getIdentificador() + "." + data.getIdentificador();
+		if (identifCompuesto.length() > 100) {
+			addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("error.identifCompuestoLength", new Object[] { identifCompuesto }));
+			return;
 		}
 
 		switch (acceso) {

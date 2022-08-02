@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeDominio" var="TypeDominio"/>
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeCache" var="TypeCache"/>
+
+<h:head>
+	<title><h:outputText value="#{msg['botones.sth']}"/></title>
+	<h:outputScript library="js" name="encode.js"/>
+</h:head>
+
+<h:body styleClass="w100" style="height:100vh">
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="TRAMITE" value="#{dialogHelpDesk.tramite}"/>
+		<f:viewParam name="VERSION" value="#{dialogHelpDesk.version}"/>
+
+		<f:viewAction action="#{dialogHelpDesk.init}" />
+	</f:metadata>
+	<h:form id="dialogHelpDesk" styleClass="w100 h100">
+  		<p:outputPanel styleClass="w100 h100">
+  			<!-- Workpanel: Iframe HTML -->
+			<p:outputPanel id="formulario-panel" styleClass="w100 h100">
+				<iframe id="formulario-frame" name="formulario-frame" class="ayuda-frame" src="#{dialogHelpDesk.url}" styleClass="w100" style="height:calc(100vh - 38px);" >
+				  <p>Tu navegador no soporta iframes.</p>
+				</iframe>
+			 </p:outputPanel>
+
+		</p:outputPanel>
+
+		<p:outputPanel styleClass="botonera" id="botonera">
+			<p:toolbar>
+				<f:facet name="right">
+					<p:outputPanel styleClass="confirmar_botonera">
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogHelpDesk.cancelar}" process="@this"/>
+					</p:outputPanel>
+				</f:facet>
+			</p:toolbar>
+		</p:outputPanel>
+	</h:form>
+</h:body>
+</f:view>
+
+</html>

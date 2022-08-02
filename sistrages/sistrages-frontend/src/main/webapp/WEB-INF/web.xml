@@ -122,6 +122,7 @@
   </welcome-file-list>
   <session-config>
     <session-timeout>30</session-timeout>
+     <tracking-mode>COOKIE</tracking-mode>
   </session-config>
   <error-page>
     <exception-type>javax.faces.application.ViewExpiredException</exception-type>
@@ -143,4 +144,5 @@
     <error-code>500</error-code>
     <location>/error/errorCode.xhtml?errorCode=500</location>
   </error-page>
+
 </web-app>

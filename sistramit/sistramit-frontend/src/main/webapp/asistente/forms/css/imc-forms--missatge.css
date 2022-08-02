@@ -266,6 +266,14 @@
 
 
 
+.imc-forms--missatge[data-accio='formCancela'] .imc--text { background: #fff url(forms/imgs/ico_alerta.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-forms--missatge[data-accio='formCancela'] button[data-tipus="surt"],
+.imc-forms--missatge[data-accio='formCancela'] button[data-tipus="cancela"] { display: inline-block; }
+
+.imc-forms--missatge[data-accio='formCancela'] button[data-tipus="surt"]::before { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1.5em; height: 1.5em; margin-right: .4em; background: transparent url(forms/imgs/ico_eixir_fff.svg) no-repeat 50% 50% / auto 90%; }
+
+
 /* media */
 
 @media only screen and (max-width : 450px) {

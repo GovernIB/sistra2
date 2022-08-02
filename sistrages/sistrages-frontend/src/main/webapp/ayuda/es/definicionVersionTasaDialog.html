@@ -21,8 +21,29 @@
 		<li><span class="boton">Depende:</span> si se marca esta opci&oacute;n la obligatoriedad de realizar el pago de la tasa depender&aacute; del script 'Establecer dependencia'.</li>
 		<li><span class="boton">Establecer dependencia:</span> script que permite establecer la obligatoriedad del pago de la tasa seg&uacute;n otros datos del tr&aacute;mite (dominios, datos de un formulario previo, datos de sesi&oacute;, etc.). &uacute;nicamente se tendr&aacute; en cuenta el valor de este script si se ha fijado previamente la obligatoriedad 'Depende'.</li>
 		</ul>
-		<li><span class="boton">Script de pago:</span> script que permite configurar los detalles de la tasa (plataforma de pago, c&oacute;digo de tasa, importe, concepto, pagador, etc.).</li>
-		<li><span class="boton">Tipo de pago:</span> selector que pemite fijar el tipo de pago disponible para la tasa.</li>
+		<li><span class="nombreCampo">Script de pago:</span> sscript que permite configurar los detalles de la tasa (plataforma de pago, c&oacute;digo de tasa, importe, concepto, pagador, etc.). Actualmente,
+			se pueden configurar dos tipos de pago dependiendo de la pasarela de pagos que se configure. A continuaci&oacute;n se detalla cada uno de estos pagos:</li>
+		<ul class="detalle">
+			<li><span class="boton">Pagos mediante la pasarela de pagos de la ATIB:</span> Los par&aacute;metros que se han de indicar para configurar correctamente el pago per la ATIB son los siguientes: </li>
+					<ul>
+						<li><span><b>DATOS_PAGO.setPasarela():</b></span> Passarela de pago, en este caso ‘ATIB’.</li>
+						<li><span><b>DATOS_PAGO.setOrganismo():</b></span> Identificador del organismo. En el caso de utilizar la passarela de la ATIB, este campo es opcional.</li>
+						<li><span><b>DATOS_PAGO.setDetallePago():</b></span> Se ha de indicar el modelo de pago, el concepto, la tasa y el importe.</li>
+						<li><span><b>DATOS_PAGO.setMetodosPago():</b></span> Se podran establecer los diferentes m&eacute;todos de pago que se permitirán. En la ayuda de la funci&oacute;n se detallan los m&eacute;todos configurables.  </li>
+					</ul>
+			<li><span class="boton">Pagos mediante la pasarela de pagos TPV:</span> Los par&aacute;metros que se han de indicar para configurar correctamente el pago per la ATIB son los siguientes:</li>
+					<ul>
+						<li><span><b>DATOS_PAGO.setPasarela():</b></span> PPassarela de pago, en este caso ‘TPV’.</li>
+						<li><span><b>DATOS_PAGO.setOrganismo():</b></span> Identificador del organismo. En este caso, el organismo es obligatorio. Est&aacute;n definidos los siguientes organismos. En las properties de la aplicac&oacute;n de PaymentIB se pueden dar de alta los organismos que podran utilizar este tipo de pago.</li>
+							<ul>
+								<li><span><b>'ieb': </b></span>Instituto de estudios bale&aacute;ricos.</li>
+								<li><span><b>'ibavi': </b></span>Instituto Balear del Habitage.</li>
+								<li><span><b>'ports': </b></span>Puertos de las Islas Baleares.</li>
+								<li><span><b>'ibjove': </b></span>IB Joven.</li>
+							</ul>
+						<li><span><b>DATOS_PAGO.setDetallePago():</b></span> Se ha de indicar el modelo de pago, el concepto, la tasa y el importe.</li>
+						<li><span><b>DATOS_PAGO.setMetodosPago():</b></span> Se podran establecer los diferentes m&eacute;todos de pago que se permitirán. En la ayuda de la funci&oacute;n se detallan los m&eacute;todos configurables. </li>
+					</ul>
 		<li><span class="boton">Simular pago:</span> <i>check</i> que, en caso de estar activo, activa la simulaci&oacute;n del pago. Esta opci&oacute;n tiene sentido para entornos de desarrollo.</li>
 		</ul>
 	</ul>
