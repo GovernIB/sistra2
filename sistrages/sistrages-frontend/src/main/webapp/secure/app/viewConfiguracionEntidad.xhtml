@@ -44,31 +44,37 @@
 
 					            <h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLogStt']}" />
 					            <p:column>
-					           		<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty viewConfiguracionEntidad.data.iconoAsistenteTramitacion}"/>
-					           		<p:commandLink action="#{viewConfiguracionEntidad.descargaFichero(viewConfiguracionEntidad.data.iconoAsistenteTramitacion)}" target="_blank" value="#{viewConfiguracionEntidad.data.iconoAsistenteTramitacion.nombre}" rendered="#{!empty viewConfiguracionEntidad.data.iconoAsistenteTramitacion}"/>
+					            	<h:panelGroup id="btnIconoSistramitTxt">
+					           			<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty viewConfiguracionEntidad.data.iconoAsistenteTramitacion}"/>
+					           			<p:commandLink action="#{viewConfiguracionEntidad.descargaFichero(viewConfiguracionEntidad.data.iconoAsistenteTramitacion)}" target="_blank" value="#{viewConfiguracionEntidad.data.iconoAsistenteTramitacion.nombre}" rendered="#{!empty viewConfiguracionEntidad.data.iconoAsistenteTramitacion}"/>
+					           		</h:panelGroup>
 				            		<p:spacer width="20" height="1"/>
 					           		<p:commandButton id="btnIconoSistramit" icon="fa fa-cog" process="@this" update=":form:growl" actionListener="#{viewConfiguracionEntidad.gestionFicheroIconoAsistente()}" disabled="#{!viewConfiguracionEntidad.permiteEditar}">
-					           			<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoFichero}" update=":form :form:growl"/>
+					           			<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoFichero}" update=":form:tabView:btnIconoSistramitTxt :form:growl"/>
 					           		</p:commandButton>
 					            </p:column>
 
 					            <h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLog']}" />
 					            <p:column>
-					           		<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty viewConfiguracionEntidad.data.logoAsistente}"/>
-					           		<p:commandLink action="#{viewConfiguracionEntidad.descargaFichero(viewConfiguracionEntidad.data.logoAsistente)}" target="_blank" value="#{viewConfiguracionEntidad.data.logoAsistente.nombre}" rendered="#{!empty viewConfiguracionEntidad.data.logoAsistente}"/>
+					            	<h:panelGroup id="btnLogoAsistenteTxt">
+					           			<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty viewConfiguracionEntidad.data.logoAsistente}"/>
+					           			<p:commandLink action="#{viewConfiguracionEntidad.descargaFichero(viewConfiguracionEntidad.data.logoAsistente)}" target="_blank" value="#{viewConfiguracionEntidad.data.logoAsistente.nombre}" rendered="#{!empty viewConfiguracionEntidad.data.logoAsistente}"/>
+					           		</h:panelGroup>
 				            		<p:spacer width="20" height="1"/>
 					           		<p:commandButton id="btnLogoAsistente" icon="fa fa-cog" process="@this" update=":form:growl" actionListener="#{viewConfiguracionEntidad.gestionFicheroLogoAsistente()}" disabled="#{!viewConfiguracionEntidad.permiteEditar}">
-					           			<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoFichero}" update=":form :form:growl"/>
+					           			<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoFichero}" update=":form:tabView:btnLogoAsistenteTxt :form:growl"/>
 					           		</p:commandButton>
 					            </p:column>
 
 					        	<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerCss']}" />
 					            <p:column>
-					           		<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty viewConfiguracionEntidad.data.css}"/>
-					           		<p:commandLink action="#{viewConfiguracionEntidad.descargaFichero(viewConfiguracionEntidad.data.css)}" target="_blank" value="#{viewConfiguracionEntidad.data.css.nombre}" rendered="#{!empty viewConfiguracionEntidad.data.css}"/>
+					            	<h:panelGroup id="btnCssAsistenteTxt">
+					           			<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty viewConfiguracionEntidad.data.css}"/>
+					           			<p:commandLink action="#{viewConfiguracionEntidad.descargaFichero(viewConfiguracionEntidad.data.css)}" target="_blank" value="#{viewConfiguracionEntidad.data.css.nombre}" rendered="#{!empty viewConfiguracionEntidad.data.css}"/>
+					           		</h:panelGroup>
 									<p:spacer width="20" height="1"/>
 					           		<p:commandButton id="btnCssAsistente" icon="fa fa-cog" process="@this" update=":form:growl" actionListener="#{viewConfiguracionEntidad.gestionFicheroCssAsistente()}" disabled="#{!viewConfiguracionEntidad.permiteEditar}">
-					           			<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoFichero}" update=":form :form:growl"/>
+					           			<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoFichero}" update=":form:tabView:btnCssAsistenteTxt :form:growl"/>
 					           		</p:commandButton>
 								</p:column>
 

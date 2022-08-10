@@ -41,7 +41,15 @@
 					pasarel·la de pagaments TPV:</span> Els par&agrave;metres que s'han d'indicar per a configurar correctament el pagament per TPV s&oacute;n els següents:</li>
 					<ul>
 						<li><span><b>DATOS_PAGO.setPasarela():</b></span> Passarel·la de pagament, en aquest cas ‘TPV’.</li>
-						<li><span><b>DATOS_PAGO.setOrganismo():</b></span> Identificador de l’organisme. En aquest cas, l’organisme &eacute;s obligatori, i hi ha definits els següents organismes. En les properties de l’aplicac&oacute; de PaymentIB es poden donar d’alta els organismes que podran utilitzar aquest tipus de pagament.</li>
+						<li><span><b>DATOS_PAGO.setOrganismo():</b></span> Identificador de l’organisme. En les properties de l’aplicac&oacute; de PaymentIB es poden donar d’alta els organismes que podran utilitzar aquest tipus de pagament.
+						Per tal de fer-ho, ser&agrave; necessari indicar als responsables de SISTRA2 i PAYMENTIB les seg&uuml;ents propietats</li>
+							<ul>
+								<li><span><b>Merchant Name</b></span> Nom de l'organisme que utilitza TPV</li>
+								<li><span><b>Merchant Code</b></span> Codi FUC assignat a l'organisme.</li>
+								<li><span><b>Merchant Terminal</b></span> N&oacute;mero de terminal que li assignar&agrave; el banc.</li>
+								<li><span><b>Merchant Password</b></span> Contrasenya de l'organisme.</li>
+							</ul>
+							<p> Actualment, hi ha configurats els seg&uuml;ents organismes: </p>
 							<ul>
 								<li><span><b>'ieb': </b></span>Institut d’estudis bale&agrave;rics.</li>
 								<li><span><b>'ibavi': </b></span>Institut Balear de l’Habitatge.</li>
@@ -51,6 +59,7 @@
 						<li><span><b>DATOS_PAGO.setDetallePago():</b></span> S'ha d'indicar el model de pagament, el concepte, la tasa i l'import.</li>
 						<li><span><b>DATOS_PAGO.setMetodosPago():</b></span> Es podran establir els diferents m&egrave;todes de pagament que es permetran. A l'ajuda de la funci&oacute; es detallen els m&egrave;todes configurables. </li>
 					</ul>
+					<p> Per utilitzar aquesta pasarel·la,
 		</ul>
 		<li><span class="nombreCampo">Simular pagament:</span> <i>check</i> que, en cas d'estar actiu, activa la simulaci&oacute; del pagament.
 	</ul>

@@ -34,13 +34,22 @@
 			<li><span class="boton">Pagos mediante la pasarela de pagos TPV:</span> Los par&aacute;metros que se han de indicar para configurar correctamente el pago per la ATIB son los siguientes:</li>
 					<ul>
 						<li><span><b>DATOS_PAGO.setPasarela():</b></span> PPassarela de pago, en este caso ‘TPV’.</li>
-						<li><span><b>DATOS_PAGO.setOrganismo():</b></span> Identificador del organismo. En este caso, el organismo es obligatorio. Est&aacute;n definidos los siguientes organismos. En las properties de la aplicac&oacute;n de PaymentIB se pueden dar de alta los organismos que podran utilizar este tipo de pago.</li>
+						<li><span><b>DATOS_PAGO.setOrganismo():</b></span> Identificador del organismo. En este caso, el organismo es obligatorio. En las properties de la aplicac&oacute;n de PaymentIB se pueden dar de alta los organismos que podran utilizar este tipo de pago.
+						Para configurarlos, será necesario indicar a los responsables de SISTRA2 y PAYMENTIB las siguientes propiedades: </li>
+							<ul>
+								<li><span><b>Merchant Name</b></span> Nombre del organismo que utiliza TPV</li>
+								<li><span><b>Merchant Code</b></span> Código FUC asignado al organismo.</li>
+								<li><span><b>Merchant Terminal</b></span> N&oacute;mero de terminal que le assignar&agrave; el banco.</li>
+								<li><span><b>Merchant Password</b></span> Contraseña del organismo.</li>
+							</ul>
+							<p> Actualmente, están configurados los siguientes organismos: </p>
 							<ul>
 								<li><span><b>'ieb': </b></span>Instituto de estudios bale&aacute;ricos.</li>
 								<li><span><b>'ibavi': </b></span>Instituto Balear del Habitage.</li>
 								<li><span><b>'ports': </b></span>Puertos de las Islas Baleares.</li>
 								<li><span><b>'ibjove': </b></span>IB Joven.</li>
 							</ul>
+							<br>
 						<li><span><b>DATOS_PAGO.setDetallePago():</b></span> Se ha de indicar el modelo de pago, el concepto, la tasa y el importe.</li>
 						<li><span><b>DATOS_PAGO.setMetodosPago():</b></span> Se podran establecer los diferentes m&eacute;todos de pago que se permitirán. En la ayuda de la funci&oacute;n se detallan los m&eacute;todos configurables. </li>
 					</ul>

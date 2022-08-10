@@ -45,12 +45,12 @@
 			    	 scrollable="true" scrollHeight="#{viewTramites.height}" rows="100"  scrollRows="100" autoResize="true"
 
 			   		selection="#{viewTramites.listaAreasSeleccionadas}" rowKey="#{area.codigo}">
-					<p:ajax event="rowSelectCheckbox" listener="#{viewTramites.filtrar}" update="@form" process="@form"/>
-					<p:ajax event="rowSelect" global="false" listener="#{viewTramites.filtrar}" update="@form" process="@form" onclick="myWidget.getPaginator().setPage(0)"/>
-					<p:ajax event="rowUnselect" listener="#{viewTramites.filtrar}" update="@form" process="@form"/>
-					<p:ajax event="rowUnselectCheckbox" listener="#{viewTramites.filtrar}" update="@form" process="@form"/>
-					<p:ajax event="toggleSelect" listener="#{viewTramites.filtrar}" update="@form" process="@form"/>
-					<p:ajax event="rowDblselect" oncomplete="triggerDoubleClickArea();" update="@form" process="@form"/>
+					<p:ajax event="rowSelectCheckbox" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites" process="@form"/>
+					<p:ajax event="rowSelect" global="false" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites" process="@form" onclick="myWidget.getPaginator().setPage(0)"/>
+					<p:ajax event="rowUnselect" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites" process="@form"/>
+					<p:ajax event="rowUnselectCheckbox" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites" process="@form"/>
+					<p:ajax event="toggleSelect" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites" process="@form"/>
+					<p:ajax event="rowDblselect" oncomplete="triggerDoubleClickArea();" update="@form:dataTableTramites" process="@form"/>
 
 
 			        <p:column selectionMode="multiple" style="width:16px;text-align:center" />

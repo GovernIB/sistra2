@@ -433,7 +433,12 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	 */
 	public void returnDialogoFichero(final SelectEvent event) {
 		// recupera datos entidad activa
-		setData(entidadService.loadEntidad(idEntidad));
+		Entidad entidad = entidadService.loadEntidad(idEntidad);
+		if (entidad != null) {
+			data.setCss(entidad.getCss());
+			data.setLogoAsistente(entidad.getLogoAsistente());
+			data.setLogoGestor(entidad.getLogoGestor());
+		}
 		UtilJSF.getSessionBean().refrescarEntidad();
 	}
 
