@@ -2021,7 +2021,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	public String simular() {
 		String estilo = "";
-		if (UtilJSF.checkEntorno(TypeEntorno.PRODUCCION)) {
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
 			((OpcionArbol) this.selectedNode.getData()).getTasa().setSimulado(false);
 			estilo = "display:none";
 		}

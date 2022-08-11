@@ -476,7 +476,21 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Override
 	@NegocioInterceptor
 	public List<ConfiguracionAutenticacion> listConfiguracionAutenticacion(TypeAmbito entidad, Long codigoEntidad) {
-		return configuracionAutenticacionDao.listConfiguracionAutenticacionRest(entidad, codigoEntidad);
+		List<ConfiguracionAutenticacion> configAutenticaciones = configuracionAutenticacionDao.listConfiguracionAutenticacionRest(entidad, codigoEntidad);
+
+		//Revisamos usu/pwd para sustituir placeholders
+		for (ConfiguracionAutenticacion ca : configAutenticaciones) {
+			String usrRev = ca.getUsuario();
+			if (usrRev != null) {
+				ca.setUsuario(configuracionComponent.replacePlaceholders(ca.getUsuario()));
+			}
+
+			String pwdRev = ca.getPassword();
+			if(pwdRev != null) {
+				ca.setPassword(configuracionComponent.replacePlaceholders(ca.getPassword()));
+			}
+		}
+		return configAutenticaciones;
 	}
 
 }
