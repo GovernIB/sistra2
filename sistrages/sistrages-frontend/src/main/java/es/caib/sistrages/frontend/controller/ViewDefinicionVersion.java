@@ -794,8 +794,16 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), dominioSeleccionado.getCodigo().toString());
-		params.put(TypeParametroVentana.AMBITO.toString(), TypeAmbito.AREA.toString());
-		params.put("AREA", id.toString());
+
+		TypeAmbito typeAmbitoDom = dominioSeleccionado.getAmbito();
+		params.put(TypeParametroVentana.AMBITO.toString(), typeAmbitoDom.toString());
+		if(typeAmbitoDom == TypeAmbito.AREA) {
+			params.put("AREA", id.toString());
+		}
+		if (typeAmbitoDom == TypeAmbito.ENTIDAD) {
+			params.put("ENTIDAD", UtilJSF.getIdEntidad().toString());
+		}
+
 		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 680);
 
 	}

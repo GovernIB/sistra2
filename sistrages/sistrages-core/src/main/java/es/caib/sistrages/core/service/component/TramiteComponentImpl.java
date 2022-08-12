@@ -29,6 +29,7 @@ import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.api.model.types.TypePresentacion;
 import es.caib.sistrages.core.api.model.types.TypeTamanyo;
 import es.caib.sistrages.core.api.model.types.TypeTipoDocumental;
+import es.caib.sistrages.core.api.model.types.TypeTramite;
 import es.caib.sistrages.core.service.component.literales.Literales;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 import es.caib.sistrages.core.service.repository.dao.HistorialVersionDao;
@@ -77,6 +78,7 @@ public class TramiteComponentImpl implements TramiteComponent {
 		tiposAutenticacion.add(TypeAutenticacion.CLAVE_PIN);
 		tiposAutenticacion.add(TypeAutenticacion.CLAVE_PERMANENTE);
 		tramiteVersion.setTiposAutenticacion(tiposAutenticacion );
+		tramiteVersion.setTipoTramite(TypeTramite.TRAMITE.toString());
 		return tramiteVersion;
 	}
 
