@@ -163,7 +163,8 @@ public class MigracionDaoImpl implements MigracionDao {
 					new BeanPropertyRowMapper<TraverSistra>(TraverSistra.class));
 
 			if (traver != null && !"B".equals(traver.getTrvDestin()) && !"R".equals(traver.getTrvDestin())) {
-				throw new MigracionException("No tiene el destino adecuado");
+				throw new MigracionException("No tiene el destino adecuado. El trámite tiene el campo 'Destino del trámite' con valor 'Consulta' o 'Asistente'"
+						+ " y por ello no se puede migrar.");
 			}
 
 			if (traver != null) {

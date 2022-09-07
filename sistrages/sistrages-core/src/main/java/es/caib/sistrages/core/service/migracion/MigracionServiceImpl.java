@@ -493,8 +493,16 @@ public class MigracionServiceImpl implements MigracionService {
 				TypeObjetoFormulario tipo;
 				if (componenteSistra.getComOculto() != null && componenteSistra.getComOculto().compareTo(1l) == 0) {
 					tipo = TypeObjetoFormulario.CAMPO_OCULTO;
+				} else {
+					tipo = TypeObjetoFormulario.CAMPO_TEXTO;
+				}
 
-					// Comprueba que no esté relleno el script de validacion
+				lineaComponente = createComponent(pagina, lineaComponente, componenteSistra, tipo, pIdioma, pOpciones,
+						listaErrores);
+
+				if(tipo == TypeObjetoFormulario.CAMPO_OCULTO) {
+					componente = lineaComponente.getComponentes().get(0);
+					// Comprueba que no esté relleno el script de validacion en caso de ser un campo oculto
 					if (componenteSistra.getComExpval() != null) {
 						final ErrorMigracion error2 = errorMigracion(componente.getIdComponente(), pOpciones,
 								"elemento.formulario.disenyoFormulario.pagina.elemento.ocultoconscriptvalidacion",
@@ -502,12 +510,7 @@ public class MigracionServiceImpl implements MigracionService {
 						error2.setTipo(TypeErrorMigracion.WARNING);
 						listaErrores.add(error2);
 					}
-				} else {
-					tipo = TypeObjetoFormulario.CAMPO_TEXTO;
 				}
-
-				lineaComponente = createComponent(pagina, lineaComponente, componenteSistra, tipo, pIdioma, pOpciones,
-						listaErrores);
 
 			} else if ("combobox".equals(comType) || "radiobutton".equals(comType) || "listbox".equals(comType)) {
 				lineaComponente = createComponent(pagina, lineaComponente, componenteSistra,
@@ -670,7 +673,15 @@ public class MigracionServiceImpl implements MigracionService {
 						cTextBox.setTipoCampoTexto(TypeCampoTexto.EMAIL);
 
 						if (componenteSistra.getMaxlength() != null) {
-							cTextBox.setNormalTamanyo(componenteSistra.getMaxlength());
+							if(componenteSistra.getMaxlength() > 9999) {
+								final ErrorMigracion errorTam = errorMigracion(componente.getIdComponente(), pOpciones,
+										"elemento.formulario.disenyoFormulario.tamanyo.cambiado", pIdioma);
+								errorTam.setTipo(TypeErrorMigracion.WARNING);
+								listaErrores.add(errorTam);
+								cTextBox.setNormalTamanyo(9999);
+							} else {
+								cTextBox.setNormalTamanyo(componenteSistra.getMaxlength());
+							}
 						}
 					} else if (componenteSistra.getTipoExpRegular() != null && componenteSistra.getTipoExpRegular()) {
 						cTextBox.setTipoCampoTexto(TypeCampoTexto.EXPRESION);
@@ -685,12 +696,28 @@ public class MigracionServiceImpl implements MigracionService {
 								cTextBox.setNormalNumeroLineas(componenteSistra.getComFilas().intValue());
 							}
 							if (componenteSistra.getComColumn() != null) {
-								cTextBox.setNormalTamanyo(componenteSistra.getComColumn().intValue());
+								if(componenteSistra.getComColumn().intValue() > 9999) {
+									final ErrorMigracion errorTam = errorMigracion(componente.getIdComponente(), pOpciones,
+											"elemento.formulario.disenyoFormulario.tamanyo.cambiado", pIdioma);
+									errorTam.setTipo(TypeErrorMigracion.WARNING);
+									listaErrores.add(errorTam);
+									cTextBox.setNormalTamanyo(9999);
+								} else {
+									cTextBox.setNormalTamanyo(componenteSistra.getComColumn().intValue());
+								}
 							}
 						}
 
 						if (componenteSistra.getMaxlength() != null) {
-							cTextBox.setNormalTamanyo(componenteSistra.getMaxlength());
+							if(componenteSistra.getMaxlength() > 9999) {
+								final ErrorMigracion errorTam = errorMigracion(componente.getIdComponente(), pOpciones,
+										"elemento.formulario.disenyoFormulario.tamanyo.cambiado", pIdioma);
+								errorTam.setTipo(TypeErrorMigracion.WARNING);
+								listaErrores.add(errorTam);
+								cTextBox.setNormalTamanyo(9999);
+							} else {
+								cTextBox.setNormalTamanyo(componenteSistra.getMaxlength());
+							}
 						}
 					}
 
