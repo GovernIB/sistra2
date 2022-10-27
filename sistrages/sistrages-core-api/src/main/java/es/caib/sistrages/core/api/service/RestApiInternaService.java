@@ -20,11 +20,13 @@ import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.Rol;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeScriptSeccionReutilizable;
 
 /**
  * Servicios Api Rest.
@@ -68,7 +70,7 @@ public interface RestApiInternaService {
 
 	List<TramitePaso> getTramitePasos(Long idTramiteVersion);
 
-	DisenyoFormulario getDisenyoFormularioById(Long idForm);
+	DisenyoFormulario getDisenyoFormularioById(Long idForm, boolean sinSeccionesReutilizables);
 
 	List<AvisoEntidad> getAvisosEntidad(String pIdEntidad);
 
@@ -107,4 +109,6 @@ public interface RestApiInternaService {
 	List<EnvioRemoto> listEnvio(TypeAmbito ambito, Long id, String filtro);
 
 	List<EnvioRemoto> listEnvioByEntidad(Long idEntidad);
+
+	List<Script> getScriptsSRUByIdFormulario(Long idFormulario, TypeScriptSeccionReutilizable tipoScript);
 }

@@ -87,11 +87,11 @@ public class JCampoFormularioCasillaVerificacion implements IModelApi {
 		return campoCheckbox;
 	}
 
-	public static JCampoFormularioCasillaVerificacion createDefault(final int pOrden, final JLineaFormulario pJLinea) {
+	public static JCampoFormularioCasillaVerificacion createDefault(final int pOrden, final JLineaFormulario pJLinea, final boolean isTipoSeccion, final String identificadorSeccion) {
 		final JCampoFormularioCasillaVerificacion jModel = new JCampoFormularioCasillaVerificacion();
 		jModel.setValorChecked("S");
 		jModel.setValorNoChecked("N");
-		jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.CHECKBOX, pOrden, pJLinea));
+		jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.CHECKBOX, pOrden, pJLinea, isTipoSeccion, identificadorSeccion));
 		return jModel;
 	}
 

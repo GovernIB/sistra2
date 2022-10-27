@@ -1315,7 +1315,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 			}
 			this.getTramitePasoANEXSeleccionado().setPermiteSubsanar(true);
 			break;
-		case REGISTRAR:
+		case FINALIZAR:
 			if (!entidad.isPermiteSubsanarRegistrar()) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 						UtilJSF.getLiteral("viewDefinicionVersionRegistrarTramite.warning.entidadSinSubsanacion"));
@@ -1351,7 +1351,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 		case ANEXAR:
 			this.getTramitePasoANEXSeleccionado().setPermiteSubsanar(false);
 			break;
-		case REGISTRAR:
+		case FINALIZAR:
 			this.getTramitePasoREGSeleccionado().setPermiteSubsanar(false);
 			break;
 		case PAGAR:

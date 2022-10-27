@@ -63,6 +63,7 @@
 		<f:viewParam name="MODO_ACCESO" value="#{dialogScript.modoAcceso}"/>
 		<f:viewParam name="TIPO_SCRIPT_FLUJO" value="#{dialogScript.tipoScriptFlujo}"/>
 		<f:viewParam name="TIPO_SCRIPT_FORMULARIO" value="#{dialogScript.tipoScriptFormulario}"/>
+		<f:viewParam name="TIPO_SCRIPT_SECCION_REUTILIZABLE" value="#{dialogScript.tipoScriptSeccionReutilizable}"/>
 		<f:viewParam name="TRAMITEVERSION" value="#{dialogScript.idTramiteVersion}"/>
 		<f:viewParam name="TRAMITEPASO" value="#{dialogScript.idPasoActual}"/>
 		<f:viewParam name="FORMULARIO_ACTUAL" value="#{dialogScript.idFormularioActual}"/>
@@ -71,6 +72,8 @@
 		<f:viewParam name="COMPONENTE_NOMBRE" value="#{dialogScript.nombreComponente}"/>
 		<f:viewParam name="PAGINA" value="#{dialogScript.idPagina}"/>
 		<f:viewParam name="LITERAL_HTML" required="false" value="#{dialogScript.literalHTML}"/>
+		<f:viewParam name="SECCION_REUTILIZABLE" required="false" value="#{dialogScript.identificadorSeccion}"/>
+		<f:viewParam name="PARAMETRO_DISENYO" value="#{dialogScript.tipoDisenyo}" />
 		<f:viewAction action="#{dialogScript.checkLiteral}" />
 		<f:viewAction action="#{dialogScript.init}" />
 	</f:metadata>
@@ -126,7 +129,7 @@
 
 									<p:panel id="panelMensajes" header="#{msg['dialogScript.validacion.header']}" toggleable="true" widgetVar="panelScripts" collapsed="#{dialogScript.visibleMensajes}"  rendered="#{!dialogScript.mostrarLateralAyuda}" styleClass="sin-bordes noPadding grid-left" >
 
-											<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios" />
+											<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios panelSR" />
 											<div style="text-align:right;margin-bottom:4px">
 												<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{dialogScript.nuevoMensaje}" process="@this" update="growlScript" rendered="#{dialogScript.isPermiteEditar()}" >
 								        				<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoMensaje}" update="growlScript panelPlugins panelMensajes panelDominios panelFormularios"/>
@@ -160,11 +163,11 @@
 
 									 <p:panel id="panelDominios" header="#{msg['dialogScript.dominios.header']}" toggleable="true" widgetVar="panelDominios" style="margin-bottom:2px" collapsed="#{dialogScript.visibleDominios}"  styleClass="sin-bordes noPadding grid-left" rendered="#{!dialogScript.mostrarLateralAyuda}">
 
-											<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios" />
+											<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios panelSR" />
 
 											<p:commandButton value="#{msg['botones.anyadir']}" icon="fa fa-plus"
 												actionListener="#{dialogScript.anyadirDominio()}" process="@this"
-												rendered="#{dialogScript.isPermiteEditar()}" style="margin-bottom:10px;margin-top:10px"
+												rendered="#{dialogScript.isPermiteEditar() and not dialogScript.isScriptSeccionReutilizable()}" style="margin-bottom:10px;margin-top:10px"
 												update="growlScript">
 													<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoDominio}" update="growlScript tableDominios"/>
 											</p:commandButton>
@@ -195,7 +198,7 @@
 
 								 	  <p:panel id="panelFormularios" header="#{msg['dialogScript.formularios.header']}" toggleable="true" widgetVar="panelFormularios" collapsed="#{dialogScript.visibleFormularios}"  styleClass="sin-bordes noPadding grid-left" style="margin-bottom:2px" rendered="#{!dialogScript.mostrarLateralAyuda and dialogScript.treeFormularios.getChildCount() != 0}">
 
-											<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios"  />
+											<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios panelSR"  />
 											<p:tree id="arbol" value="#{dialogScript.treeFormularios}" var="node" styleClass="sin-bordes w100" style="height: 350px;" selectionMode="single" selection="#{dialogScript.selectedNode}" widgetVar="arbol" >
 												<p:treeNode  styleClass="nodoComponente">
 													<i class="#{node.srcIcono()}" style="margin-right:4px" ></i>
@@ -209,6 +212,30 @@
 												<p:commandButton id="commandCopiarNodo" value="#{msg['botones.copiar']}" process="@this" styleClass="button margin-top-3"  rendered="#{dialogScript.isEdicion()}" disabled="#{dialogScript.isDisabledBoton()}" onclick="triggerCopiar();" icon="fa fa-copy" />
 											</div>
 									</p:panel>
+
+									 <p:panel id="panelSR" header="#{msg['cabecera.opciones.scripts_secciones_reutilizables']}" toggleable="true" widgetVar="panelSR" style="margin-bottom:2px" collapsed="#{dialogScript.visibleScriptSR}"  styleClass="sin-bordes noPadding grid-left" rendered="#{!dialogScript.mostrarLateralAyuda and dialogScript.tieneSR}">
+
+											<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios panelSR" />
+
+											<p:dataTable id="tableScriptSR"
+												var="sr" value="#{dialogScript.srL}" emptyMessage="#{msg['error.emptyRows']}"  scrollable="true" scrollHeight="270"
+										   		 >
+
+												<p:ajax event="rowSelect" global="false" />
+												<p:column headerText="#{msg['dialogSeccionesReutilizables.identificador']} #{msg['dialogSeccionesReutilizables.titulo']}" styleClass="wpx35">
+										        	<h:outputText value="#{dialogScript.identificadorSR(sr)}"/>
+										        </p:column>
+
+										        <p:column headerText="#{msg['viewDefinicionVersionAnexarDocumentos.activarSubsanacion']} #{msg['typeListaValores.S']}" styleClass="w30" style="word-wrap: break-word;">
+										        	<p:selectBooleanCheckbox id="activarScriptSR" itemLabel=""  value="#{dialogScript.scrSrNoVacio(sr)}" disabled="true" />
+										        </p:column>
+
+												<p:column headerText=""  styleClass="w40">
+										        	<p:commandButton value="#{msg['botones.consultar']}" icon="fa fa-eye" disabled="#{!dialogScript.scrSrNoVacio(sr)}" actionListener="#{dialogScript.verScript(sr)}" process="@this" styleClass="#{not empty td.script.contenido ? 'boton-azul' : ''}"/>
+										        </p:column>
+
+										    </p:dataTable>
+									  </p:panel>
 			    				</p:column>
 						</h:panelGrid>
 

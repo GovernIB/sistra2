@@ -238,6 +238,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		maps.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
 		maps.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.idFormularioTramite);
 		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
+		maps.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(), TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString());
 
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));

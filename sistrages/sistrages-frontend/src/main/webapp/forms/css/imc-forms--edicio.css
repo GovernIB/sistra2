@@ -201,6 +201,13 @@ pre { font: normal 1.2em 'Bariol Regular', Arial, Helvetica, sans-serif; white-s
     border-bottom-style: none;
 }
 
+.imc-form .imc-element.imc-borde-seccion-reutilizable {
+	color:red;
+	border-color: red;
+	border-width: 1px !important;
+	border-style: solid;
+}
+
 .imc-form .imc-element.imc-sep-salt-carro {
 	display: block;
 	position: relative;

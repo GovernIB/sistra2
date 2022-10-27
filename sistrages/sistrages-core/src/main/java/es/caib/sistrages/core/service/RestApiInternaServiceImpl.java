@@ -27,6 +27,9 @@ import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.Rol;
+import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.ScriptSeccionReutilizable;
+import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
@@ -34,6 +37,7 @@ import es.caib.sistrages.core.api.model.ValorParametroDominio;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeScriptSeccionReutilizable;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.ConfiguracionComponent;
@@ -54,6 +58,7 @@ import es.caib.sistrages.core.service.repository.dao.FormularioSoporteDao;
 import es.caib.sistrages.core.service.repository.dao.IncidenciaValoracionDao;
 import es.caib.sistrages.core.service.repository.dao.PluginsDao;
 import es.caib.sistrages.core.service.repository.dao.RolDao;
+import es.caib.sistrages.core.service.repository.dao.SeccionReutilizableDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
 import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
 
@@ -150,6 +155,10 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Autowired
 	private FormularioExternoDao formularioExternoDao;
 
+	/** DAO Secciones reutilizables. */
+	@Autowired
+	private SeccionReutilizableDao seccionReutilizableDao;
+
 	@Override
 	@NegocioInterceptor
 	public String test(final String echo) {
@@ -210,19 +219,13 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Override
 	@NegocioInterceptor
 	public Entidad loadEntidad(final String identificador) {
-		Entidad result = null;
-		// result = entidadDao.getByIdentificador(identificador);
-		result = entidadDao.getByCodigoDIR3(identificador);
-		return result;
+		return entidadDao.getByCodigoDIR3(identificador);
 	}
 
 	@Override
 	@NegocioInterceptor
 	public Entidad loadEntidadByArea(final Long idArea) {
-		Entidad result = null;
-		// result = entidadDao.getByIdentificador(identificador);
-		result = entidadDao.getByArea(idArea);
-		return result;
+		return entidadDao.getByArea(idArea);
 	}
 
 	@Override
@@ -350,8 +353,8 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 
 	@Override
 	@NegocioInterceptor
-	public DisenyoFormulario getDisenyoFormularioById(final Long idForm) {
-		return formIntDao.getFormularioCompletoById(idForm);
+	public DisenyoFormulario getDisenyoFormularioById(final Long idForm, final boolean sinSecciones) {
+		return formIntDao.getFormularioCompletoById(idForm, sinSecciones);
 	}
 
 	@Override
@@ -428,8 +431,7 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Override
 	@NegocioInterceptor
 	public List<Area> listAreasByEntidad(final Long pIdEntidad) {
-		final List<Area> listaAreas = areaDao.getAll(pIdEntidad);
-		return listaAreas;
+		return areaDao.getAll(pIdEntidad);
 	}
 
 	@Override
@@ -491,6 +493,25 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 			}
 		}
 		return configAutenticaciones;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<Script> getScriptsSRUByIdFormulario(Long idFormulario , TypeScriptSeccionReutilizable tipoScript) {
+		LOG.debug("getScriptsSRUByIdFormulario ");
+		List<SeccionReutilizable> secciones = tramiteDao.getSeccionesReutilizableByFormulario(idFormulario);
+		List<Script> scripts = new ArrayList<>();
+		if (secciones != null && !secciones.isEmpty()) {
+			for( SeccionReutilizable seccion : secciones) {
+				List<ScriptSeccionReutilizable> scriptsSeccion = this.seccionReutilizableDao.getScriptsByIdSeccionReutilizable(seccion.getCodigo());
+				for(ScriptSeccionReutilizable scriptSeccion : scriptsSeccion) {
+						if (scriptSeccion.getTipoScript() == tipoScript) {
+							scripts.add(scriptSeccion.getScript());
+						}
+				}
+			}
+		}
+		return scripts;
 	}
 
 }

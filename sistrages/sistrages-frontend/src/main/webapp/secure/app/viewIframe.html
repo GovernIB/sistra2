@@ -34,13 +34,15 @@
 
 		<script type="text/javascript">
 			 //<![CDATA[
-			function rcEditarArea(/*tag,*/ id) {
+			function rcEditarArea(/*tag,*/ id, data-tipo-seccion,data-seccion-id,data-seccion-id-formulario ) {
 				/*
 				parent.document.getElementById("dialogDominioForm:tagname").value = tag.toLowerCase();
 				parent.document.getElementById("dialogDominioForm:nodeId").value = id;
 				*/
 
-				parent.seleccionarElementoCommand([{name:'id', value:id}]);
+				parent.seleccionarElementoCommand([{name:'id', value:id}, {name:'data-tipo-seccion', value:data-tipo-seccion},
+					{name:'data-seccion-id', value:data-seccion-id},
+					{name:'data-seccion-id-formulario', value:data-seccion-id-formulario}]);
 		    }
 
 	     	var elementos = document.getElementsByClassName("editable");

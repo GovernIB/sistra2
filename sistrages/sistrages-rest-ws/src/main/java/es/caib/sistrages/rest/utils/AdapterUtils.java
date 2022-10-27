@@ -126,4 +126,29 @@ public class AdapterUtils {
 		return res;
 	}
 
+	public static RScript generaScript(final List<Script> origenes, final String idioma) {
+		RScript res = null;
+		if (origenes != null && !origenes.isEmpty()) {
+			res = new RScript();
+			res.setScript("");
+			res.setLiterales(null);
+			List<RLiteralScript> literales = new ArrayList<>();
+			for(Script origen : origenes) {
+				res.setScript(res.getScript()+ " " +origen.getContenido());
+				if (origen.getMensajes() != null) {
+					for (final LiteralScript mensaje : origen.getMensajes()) {
+						final RLiteralScript rliteral = new RLiteralScript();
+						rliteral.setIdentificador(mensaje.getIdentificador());
+						rliteral.setLiteral(generarLiteralIdioma(mensaje.getLiteral(), idioma));
+						literales.add(rliteral);
+					}
+				}
+			}
+			if (!literales.isEmpty()) {
+				res.setLiterales(literales);
+			}
+		}
+		return res;
+	}
+
 }

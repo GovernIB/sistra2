@@ -53,7 +53,7 @@
 		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewConfiguracionAutenticacion.nuevo()}" process="@this" update="growl" rendered="#{viewConfiguracionAutenticacion.permiteAlta}">
 		        			<p:ajax event="dialogReturn" listener="#{viewConfiguracionAutenticacion.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewConfiguracionAutenticacion.consultar()}" process="@this" update="growl" rendered="#{not viewConfiguracionAutenticacion.permiteEditar and not viewConfiguracionAutenticacion.permiteAlta}" />
+		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewConfiguracionAutenticacion.consultar()}" process="@this" update="growl" rendered="#{not viewConfiguracionAutenticacion.permiteEditar and not viewConfiguracionAutenticacion.permiteAlta and viewConfiguracionAutenticacion.ambito eq 'A'}" />
 		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewConfiguracionAutenticacion.editar()}" process="@this" update="growl"  rendered="#{viewConfiguracionAutenticacion.permiteAlta}">
 		        			<p:ajax event="dialogReturn" listener="#{viewConfiguracionAutenticacion.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
@@ -96,7 +96,7 @@
 
 			<h:outputScript >
 		      function triggerDblClick() {
-		      		$('#form\\:btnEditarHidden').click();
+		      	 $('#form\\:btnEditarHidden').click();
 		      }
 		    </h:outputScript>
 

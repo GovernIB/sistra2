@@ -85,8 +85,8 @@ public class FormularioInternoServiceBean implements FormularioInternoService {
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public ObjetoFormulario addComponenteFormulario(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina,
-			final Long pIdLinea, final Integer pOrden, final String pPosicion) {
-		return formIntService.addComponenteFormulario(pTipoObjeto, pIdPagina, pIdLinea, pOrden, pPosicion);
+			final Long pIdLinea, final Integer pOrden, final String pPosicion, final Object objeto, boolean isTipoSeccion, String identificadorSeccion, final String idTramiteVersion) {
+		return formIntService.addComponenteFormulario(pTipoObjeto, pIdPagina, pIdLinea, pOrden, pPosicion, objeto, isTipoSeccion, identificadorSeccion, idTramiteVersion);
 	}
 
 	@Override
@@ -157,9 +157,9 @@ public class FormularioInternoServiceBean implements FormularioInternoService {
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public DisenyoFormularioSimple getFormularioInternoSimple(final Long idFormularioTramite, final Long idFormulario,
-			final String idComponente, final String idPagina, final boolean cargarPaginasPosteriores) {
+			final String idComponente, final String idPagina, final boolean cargarPaginasPosteriores, final boolean isSeccion, final String identificadorSeccion) {
 		return formIntService.getFormularioInternoSimple(idFormularioTramite, idFormulario, idComponente, idPagina,
-				cargarPaginasPosteriores);
+				cargarPaginasPosteriores, isSeccion, identificadorSeccion);
 	}
 
 	@Override

@@ -13,7 +13,9 @@ public enum TypeImportarTipo {
 	/** DOMINIO. **/
 	DOMINIO("N"),
 	/** TRAMITE. **/
-	TRAMITE("T");
+	TRAMITE("T"),
+	/** SECCION REUTILIZABLE **/
+	SECCION_REUTILIZABLE("S");
 
 	/** valor. **/
 	private String valor;

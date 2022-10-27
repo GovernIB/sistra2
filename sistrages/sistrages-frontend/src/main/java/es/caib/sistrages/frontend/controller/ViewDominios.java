@@ -20,7 +20,6 @@ import es.caib.sistrages.core.api.model.Sesion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
-import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
@@ -29,7 +28,6 @@ import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.ResultadoError;
-import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -387,7 +385,7 @@ public class ViewDominios extends ViewControllerBase {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
 		// Verificamos si se ha modificado
-		if (!respuesta.isCanceled() && this.datoSeleccionado != null && respuesta.getModoAcceso() != null
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != null
 				&& !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 			ResultadoError re = this.refrescar();
 			if (re.getCodigo() != 1) {

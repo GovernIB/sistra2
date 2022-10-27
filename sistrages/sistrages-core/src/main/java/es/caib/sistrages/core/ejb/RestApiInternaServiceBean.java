@@ -29,12 +29,14 @@ import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.Rol;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeScriptSeccionReutilizable;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 
 /**
@@ -175,8 +177,8 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.REST)
-	public DisenyoFormulario getDisenyoFormularioById(final Long idForm) {
-		return restApiService.getDisenyoFormularioById(idForm);
+	public DisenyoFormulario getDisenyoFormularioById(final Long idForm, final boolean sinSecciones) {
+		return restApiService.getDisenyoFormularioById(idForm, sinSecciones);
 	}
 
 	@Override
@@ -274,6 +276,12 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 	@RolesAllowed(ConstantesRolesAcceso.REST)
 	public List<EnvioRemoto> listEnvioByEntidad(Long idEntidad) {
 		return restApiService.listEnvioByEntidad(idEntidad);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<Script> getScriptsSRUByIdFormulario(Long idFormulario, TypeScriptSeccionReutilizable tipoScript) {
+		return restApiService.getScriptsSRUByIdFormulario(idFormulario, tipoScript);
 	}
 
 }

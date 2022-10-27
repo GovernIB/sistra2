@@ -42,11 +42,13 @@ import es.caib.sistrages.frontend.controller.ViewDominios;
 import es.caib.sistrages.frontend.controller.ViewEntidades;
 import es.caib.sistrages.frontend.controller.ViewEnviosRemotos;
 import es.caib.sistrages.frontend.controller.ViewFormateadorFormulario;
+import es.caib.sistrages.frontend.controller.ViewFormulariosExternos;
 import es.caib.sistrages.frontend.controller.ViewFuentes;
 import es.caib.sistrages.frontend.controller.ViewMensajesAvisoEntidad;
 import es.caib.sistrages.frontend.controller.ViewPlugins;
 import es.caib.sistrages.frontend.controller.ViewPropiedadesConfiguracion;
 import es.caib.sistrages.frontend.controller.ViewRolesPermisos;
+import es.caib.sistrages.frontend.controller.ViewSeccionesReutilizables;
 import es.caib.sistrages.frontend.controller.ViewTramites;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -619,11 +621,15 @@ public final class UtilJSF {
 		case CONFIGURACION_AUTENTICACION:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewConfiguracionAutenticacion.class) + EXTENSION_XHTML
 					+ ambitoEntidadURL;
-			break;/*
+			break;
 		case SECCIONES_REUTILIZABLES:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewSeccionesReutilizables.class) + EXTENSION_XHTML
-			+ ambitoEntidadURL;
-			break; */
+					+ ambitoEntidadURL;
+			break;
+		case FORMULARIOS_EXTERNOS:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewFormulariosExternos.class) + EXTENSION_XHTML
+					+ ambitoEntidadURL;
+			break;
 		case ENVIOS_REMOTOS:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewEnviosRemotos.class) + EXTENSION_XHTML
 					+ ambitoEntidadURL;
@@ -808,10 +814,15 @@ public final class UtilJSF {
 	 * @return
 	 */
 	public static String getEntorno() {
-		return FacesContext.getCurrentInstance().getApplication()
+		String entorno = FacesContext.getCurrentInstance().getApplication()
 				.evaluateExpressionGet(FacesContext.getCurrentInstance(), "#{frontModuleConfig}",
 						es.caib.sistrages.frontend.ModuleConfig.class)
 				.getEntorno();
+		if(entorno.equals("se")) {
+			return "des";
+		} else {
+			return entorno;
+		}
 	}
 
 	/**
@@ -826,6 +837,20 @@ public final class UtilJSF {
 				.getPromocionSe2Pro();
 		return promocionDesa2Pro != null && promocionDesa2Pro.equalsIgnoreCase("true");
 	}
+
+	/**
+	 * Devuelve si estan activos los servicios
+	 *
+	 * @return
+	 */
+	/*
+	 * public static boolean isServicioActivado() { final String admetreServeis =
+	 * FacesContext.getCurrentInstance().getApplication()
+	 * .evaluateExpressionGet(FacesContext.getCurrentInstance(),
+	 * "#{frontModuleConfig}", es.caib.sistrages.frontend.ModuleConfig.class)
+	 * .getAdmetreServeis(); return admetreServeis != null &&
+	 * admetreServeis.equalsIgnoreCase("true"); }
+	 */
 
 	/**
 	 * Devuelve la revision de SVN o GIT.

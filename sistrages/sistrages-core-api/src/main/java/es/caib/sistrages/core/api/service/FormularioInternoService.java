@@ -71,10 +71,13 @@ public interface FormularioInternoService {
 	 * @param pIdLinea    identificador de la linea
 	 * @param pOrden      orden
 	 * @param pPosicion   posicion
+	 * @param objeto	  objeto
+	 * @param isTipoSeccion Indica si es de tipo seccion reutilizable
+	 * @param identificadorSeccion El identificador de la seccion
 	 * @return objeto formulario
 	 */
 	ObjetoFormulario addComponenteFormulario(TypeObjetoFormulario pTipoObjeto, Long pIdPagina, Long pIdLinea,
-			Integer pOrden, String pPosicion);
+			Integer pOrden, String pPosicion, Object objeto, boolean isTipoSeccion, String identificadorSeccion, String idTramiteVersion);
 
 	/**
 	 * Copia un componente.
@@ -196,20 +199,21 @@ public interface FormularioInternoService {
 	String getPaginaFormularioHTMLDisenyo(final Long pIdPagina, final String pLang);
 
 	/**
-	 * Genera el objeto disenyo formulario simple (principalmente para el
-	 * dialogScript).
-	 *
-	 * @param idFormulario
+	 * G enera el objeto disenyo formulario simple (principalmente para el  dialogScript).
 	 * @param idFormularioTramite
+	 * @param idFormulario
 	 * @param idComponente
 	 * @param idPagina
-	 * @param cargarPaginasPosteriores En caso de passar el idPagina, si está activo
+	 * @param cargarPaginasPosteriores  En caso de passar el idPagina, si está activo
 	 *                                 cargar páginas posteriores, se cargan sin
 	 *                                 componentes
+	 * @param isSeccion
+	 * @param identificadorSeccion
 	 * @return
 	 */
+
 	DisenyoFormularioSimple getFormularioInternoSimple(Long idFormularioTramite, Long idFormulario, String idComponente,
-			String idPagina, boolean cargarPaginasPosteriores);
+			String idPagina, boolean cargarPaginasPosteriores, final boolean isSeccion, final String identificadorSeccion);
 
 	/**
 	 * Devuelve el identificador del formulario

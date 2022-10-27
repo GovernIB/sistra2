@@ -1,11 +1,7 @@
 package es.caib.sistrages.core.service.repository.dao;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,19 +14,14 @@ import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.ConsultaGeneral;
-import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeClonarAccion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.service.repository.model.JArea;
-import es.caib.sistrages.core.service.repository.model.JCampoFuenteDatos;
 import es.caib.sistrages.core.service.repository.model.JConfiguracionAutenticacion;
 import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
-import es.caib.sistrages.core.service.repository.model.JFilasFuenteDatos;
-import es.caib.sistrages.core.service.repository.model.JFuenteDatos;
 import es.caib.sistrages.core.service.repository.model.JGestorExternoFormularios;
-import es.caib.sistrages.core.service.repository.model.JValorFuenteDatos;
 
 /**
  * La clase ConfiguracionAutenticacionDaoImpl.

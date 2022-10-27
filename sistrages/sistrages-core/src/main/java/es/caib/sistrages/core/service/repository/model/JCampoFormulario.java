@@ -184,12 +184,12 @@ public class JCampoFormulario implements IModelApi {
 	}
 
 	public static JCampoFormulario createDefault(final TypeObjetoFormulario pTipoObjeto, final int pOrden,
-			final JLineaFormulario pJLinea) {
+			final JLineaFormulario pJLinea, final boolean isTipoSeccion, final String identificadorSeccion) {
 		final JCampoFormulario jModel = new JCampoFormulario();
 		jModel.setObligatorio(false);
 		jModel.setSoloLectura(false);
 		jModel.setNoModificable(false);
-		jModel.setElementoFormulario(JElementoFormulario.createDefault(pTipoObjeto, pOrden, pJLinea));
+		jModel.setElementoFormulario(JElementoFormulario.createDefault(pTipoObjeto, pOrden, pJLinea, isTipoSeccion, identificadorSeccion));
 		return jModel;
 	}
 

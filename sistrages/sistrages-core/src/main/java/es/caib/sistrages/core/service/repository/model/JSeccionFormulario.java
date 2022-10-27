@@ -84,10 +84,10 @@ public class JSeccionFormulario implements IModelApi {
 		return jModel;
 	}
 
-	public static JSeccionFormulario createDefault(final int pOrden, final JLineaFormulario pJLinea) {
+	public static JSeccionFormulario createDefault(final int pOrden, final JLineaFormulario pJLinea, final boolean isTipoSeccion, final String identificadorSeccion) {
 		final JSeccionFormulario jModel = new JSeccionFormulario();
 		jModel.setLetra("?");
-		jModel.setElementoFormulario(JElementoFormulario.createDefault(TypeObjetoFormulario.SECCION, pOrden, pJLinea));
+		jModel.setElementoFormulario(JElementoFormulario.createDefault(TypeObjetoFormulario.SECCION, pOrden, pJLinea, isTipoSeccion, identificadorSeccion));
 		return jModel;
 	}
 

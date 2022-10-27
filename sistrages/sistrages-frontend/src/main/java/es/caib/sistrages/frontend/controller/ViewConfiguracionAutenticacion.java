@@ -13,28 +13,22 @@ import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuModel;
 
-import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
-import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Sesion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
-import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
-import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.ResultadoError;
-import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
-import es.caib.sistrages.frontend.util.UtilRest;
 
 /**
  * Mantenimiento de configuracion autenticacion de area.
@@ -54,9 +48,6 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 
 	@Inject
 	private SecurityService securityService;
-
-	@Inject
-	private EntidadService entidadService;
 
 	/** tramite service. */
 	@Inject
@@ -114,12 +105,12 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 			final List<TypeRolePermisos> permisos = securityService
 					.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
 
-			if (!permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+			/*if (!permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
 					&& !permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
 					&& !permisos.contains(TypeRolePermisos.CONSULTA)) {
 				throw new FrontException(
 						"No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area");
-			}
+			}*/
 
 			if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)) {
 				// Solo el administrador de area puede editar
@@ -226,8 +217,6 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
-		// Eliminamos
-		String eliminado = this.datoSeleccionado.getIdentificadorCompuesto();
 		if (configuracionAutenticacionService.removeConfiguracionAutenticacion(datoSeleccionado.getCodigo())) {
 			// Refrescamos datos
 			buscar();
@@ -301,7 +290,7 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	public void rcDobleClick() {
 		if (getPermiteEditar()) {
 			editar();
-		} else {
+		} else if (!permiteEditar && !permiteAlta && ambito.equals(TypeAmbito.AREA.toString())) {
 			consultar();
 		}
 	}

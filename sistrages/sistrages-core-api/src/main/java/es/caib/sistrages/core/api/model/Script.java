@@ -149,4 +149,13 @@ public class Script extends ModelApi {
 		return existe;
 	}
 
+	public static Script createInstance() {
+		Script script = new Script();
+		return script;
+	}
+
+	public boolean estaVacio() {
+		return this.contenido == null || contenido.trim().isEmpty();
+	}
+
 }

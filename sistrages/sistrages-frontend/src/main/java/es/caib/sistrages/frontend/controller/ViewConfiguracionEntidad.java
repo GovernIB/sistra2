@@ -437,6 +437,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		if (entidad != null) {
 			data.setCss(entidad.getCss());
 			data.setLogoAsistente(entidad.getLogoAsistente());
+			data.setIconoAsistenteTramitacion(entidad.getIconoAsistenteTramitacion());
 			data.setLogoGestor(entidad.getLogoGestor());
 		}
 		UtilJSF.getSessionBean().refrescarEntidad();

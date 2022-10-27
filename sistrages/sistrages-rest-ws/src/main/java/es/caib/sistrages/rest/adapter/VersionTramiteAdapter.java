@@ -38,6 +38,7 @@ import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.ParametroDominio;
 import es.caib.sistrages.core.api.model.PlantillaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -56,6 +57,7 @@ import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
+import es.caib.sistrages.core.api.model.types.TypeScriptSeccionReutilizable;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.rest.api.interna.RAnexoTramite;
@@ -92,6 +94,7 @@ import es.caib.sistrages.rest.api.interna.RPropiedadesTextoIdentificacion;
 import es.caib.sistrages.rest.api.interna.RPropiedadesTextoNormal;
 import es.caib.sistrages.rest.api.interna.RPropiedadesTextoNumero;
 import es.caib.sistrages.rest.api.interna.RPropiedadesTextoTelefono;
+import es.caib.sistrages.rest.api.interna.RScript;
 import es.caib.sistrages.rest.api.interna.RValorListaFija;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
@@ -456,8 +459,9 @@ public class VersionTramiteAdapter {
 				formularioTramite.setFormularioInterno(generaFormularioInterno(f.getIdFormularioInterno(), idioma));
 				formularioTramite.setIdentificador(f.getIdentificador());
 				formularioTramite.setObligatoriedad(generaObligatoriedad(f.getObligatoriedad()));
+				List<Script> scripts = restApiService.getScriptsSRUByIdFormulario(f.getIdFormularioInterno(), TypeScriptSeccionReutilizable.CARGA_DATOS_INICIAL);
 				formularioTramite
-						.setScriptDatosIniciales(AdapterUtils.generaScript(f.getScriptDatosIniciales(), idioma));
+						.setScriptDatosIniciales(getScriptDatosIniciales(f.getScriptDatosIniciales(), scripts, idioma));
 				formularioTramite
 						.setScriptObligatoriedad(AdapterUtils.generaScript(f.getScriptObligatoriedad(), idioma));
 				formularioTramite.setScriptFirmantes(AdapterUtils.generaScript(f.getScriptFirma(), idioma));
@@ -477,6 +481,23 @@ public class VersionTramiteAdapter {
 	}
 
 	/**
+	 * Concatena ambos emails
+	 * @param generaScript
+	 * @param scripts
+	 * @return
+	 */
+	private RScript getScriptDatosIniciales(Script script, List<Script> scripts, String idioma) {
+		final List<Script> res = new ArrayList<>();
+		if (script != null) {
+			res.add(script);
+		}
+		if (scripts != null && !scripts.isEmpty()) {
+			res.addAll(scripts);
+		}
+		return AdapterUtils.generaScript(res, idioma);
+	}
+
+	/**
 	 * Genera el formulario interno
 	 *
 	 * @param idFormularioInterno
@@ -486,7 +507,7 @@ public class VersionTramiteAdapter {
 	private RFormularioInterno generaFormularioInterno(final Long idFormularioInterno, final String idioma) {
 		RFormularioInterno formInterno = null;
 		if (idFormularioInterno != null) {
-			final DisenyoFormulario d = restApiService.getDisenyoFormularioById(idFormularioInterno);
+			final DisenyoFormulario d = restApiService.getDisenyoFormularioById(idFormularioInterno, true);
 			if (d != null) {
 				formInterno = new RFormularioInterno();
 				formInterno.setMostrarTitulo(d.isMostrarCabecera());

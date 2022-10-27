@@ -21,6 +21,10 @@ public enum TypeObjetoFormulario {
 	 */
 	SECCION("SC"),
 	/**
+	 * Seccion.
+	 */
+	SECCION_REUTILIZABLE("SR"),
+	/**
 	 * Checkbox.
 	 */
 	CHECKBOX("CK"),

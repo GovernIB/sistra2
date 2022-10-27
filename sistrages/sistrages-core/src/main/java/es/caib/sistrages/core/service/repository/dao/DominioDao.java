@@ -233,4 +233,13 @@ public interface DominioDao {
 	public Dominio getDominioByIdentificador(TypeAmbito ambito, String identificador, String identificadorEntidad,
 			String identificadorArea, Long codigoEntidad, Long codigoArea, Long codigoDominio);
 
+	/**
+	 * Devuelve una lista segun ambitos.
+	 * @param ambitos
+	 * @param idTramite
+	 * @param filtro
+	 * @return
+	 */
+	List<Dominio> getAllByFiltro(List<TypeAmbito> ambitos, Long idTramite, String filtro);
+
 }

@@ -1,6 +1,10 @@
 package es.caib.sistrahelp.frontend.controller;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -12,6 +16,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.PrimeFaces;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.model.LazyDataModel;
 
@@ -20,6 +25,8 @@ import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.comun.Constantes;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
+import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
+import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.frontend.model.EventoAuditoriaTramitacionLazyDataModel;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
@@ -38,6 +45,12 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 */
 	@Inject
 	private HelpDeskService helpDeskService;
+
+	/**
+	 * configuracion service.
+	 */
+	@Inject
+	private ConfiguracionService configuracionService;
 
 	/** Paginacion */
 	private Integer paginacion;
@@ -77,7 +90,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		// cargamos los eventos quitando el de purga
 		tiposEventos = new ArrayList<>();
 		for (final TypeEvento ev : TypeEvento.values()) {
-			if (!TypeEvento.PROCESO_PURGA.equals(ev) && !TypeEvento.INV_EJE.equals(ev) && !TypeEvento.INV_REQ.equals(ev)) {
+			if (!TypeEvento.PROCESO_PURGA.equals(ev) && !TypeEvento.INV_EJE.equals(ev)
+					&& !TypeEvento.INV_REQ.equals(ev)) {
 				tiposEventos.add(ev);
 			}
 		}
@@ -106,6 +120,46 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		filtros.setIdTramite(StringUtils.trim(filtros.getIdTramite()));
 		filtros.setIdProcedimientoCP(StringUtils.trim(filtros.getIdProcedimientoCP()));
 		filtros.setCodSia(filtros.getCodSia());
+	}
+
+	/** Genera texto a copiar **/
+	public void generarTxt() {
+		if (this.datoSeleccionado != null) {
+			EventoAuditoriaTramitacion eat = this.datoSeleccionado;
+			String txt = "";
+			txt += "Event: " + eat.getTipoEvento().toString() + " - "
+					+ UtilJSF.getLiteral("typeEvento." + eat.getTipoEvento());
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+			txt += "\nData Inici: " + sdf.format(eat.getFecha());
+			txt += "\nId Sessió: " + eat.getIdSesionTramitacion();
+			txt += "\nNIF: " + eat.getNif();
+			if (eat.getNombre() == null) {
+				eat.setNombre("");
+			}
+			if (eat.getApellido1() == null) {
+				eat.setApellido1("");
+			}
+			if (eat.getApellido2() == null) {
+				eat.setApellido2("");
+			}
+			txt += "\nNom: "
+					+ eat.getNombre().concat(" ").concat(eat.getApellido1()).concat(" ").concat(eat.getApellido2());
+			txt += "\nTràmit: " + split(eat.getIdTramite());
+			txt += "\nÁrea: " + eat.getArea();
+			txt += "\nVersió: " + eat.getVersionTramite();
+			txt += "\nCod Proc Cat: " + eat.getIdProcedimientoCP();
+			txt += "\nCod SIA: " + eat.getIdProcedimientoSIA();
+			txt += "\nDescripció: " + eat.getDescripcion();
+			txt += "\nError: " + eat.getCodigoError();
+
+			txt = txt.replaceAll("null", "");
+
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+
+			PrimeFaces.current().executeScript("document.focus; navigator.clipboard.writeText(`" + txt + "`);");
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.copiar"));
+		}
 	}
 
 	/**
@@ -198,7 +252,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	private boolean verificarFilaSeleccionada() {
 		boolean filaSeleccionada = true;
 		if (this.datoSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			UtilJSF.showMessageDialog(TypeNivelGravedad.WARNING, "", UtilJSF.getLiteral("error.noseleccionadofila"));
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;

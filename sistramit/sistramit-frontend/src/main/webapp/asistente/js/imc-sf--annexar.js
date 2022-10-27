@@ -27,7 +27,7 @@ var imc_navegacio;
 // onReady
 
 function appPasAnnexarInicia() {
-	
+
 	imc_docs = imc_contingut.find(".imc--annexes:first");
 	imc_document = $("#imc-document");
 	imc_doc_c = imc_document.find(".imc--c:first");
@@ -414,7 +414,7 @@ $.fn.appAnnexa = function(options) {
 				imc_doc_c
 					.off('.appAnnexa')
 					.on('click.appAnnexa', tanca);
-				
+
 				*/
 
 			},
@@ -523,7 +523,7 @@ $.fn.appAnnexa = function(options) {
 											}
 
 										});
-										
+
 									if (!esTipusPosible && tipus_posibles !== "null") {
 
 										text_error = txtErrorTipusNoPermes;
@@ -540,7 +540,7 @@ $.fn.appAnnexa = function(options) {
 									// comprovem la mida
 
 									var esMidaPosible = (mida_max_BT > arxiu_mida) ? true : false;
-									
+
 									if (!esMidaPosible && imc_document.attr("data-mida") !== "null") {
 
 										text_error = txtErrorMidaGran;
@@ -671,10 +671,10 @@ $.fn.appAnnexa = function(options) {
 						}
 					})
 					.done(function( data ) {
-						
+
 						var json = data,
 							estat = json.estado;
-						
+
 						if (estat === "ERROR") {
 							finalitzat({ estat: "error", json: json });
 						} else if (estat === "FATAL") {
@@ -691,9 +691,9 @@ $.fn.appAnnexa = function(options) {
 						if (tipus === "abort") {
 							return false;
 						}
-						
+
 						finalitzat({ estat: "fail" });
-						
+
 					});
 
 			},
@@ -814,7 +814,7 @@ $.fn.appAnnexa = function(options) {
 							var doc_item = imc_docs.find("li[data-id="+id+"]:first");
 
 							if (esObligatori) {
-								
+
 								if ( esObligatori === "s" ) {
 
 									var doc_valor = doc_item.find(".imc--opcional:first");
@@ -830,7 +830,7 @@ $.fn.appAnnexa = function(options) {
 										.attr("data-obligatori", "s");
 
 								} else {
-									
+
 									var doc_valor = doc_item.find(".imc--ogligatori:first");
 
 									doc_valor
@@ -933,7 +933,7 @@ $.fn.appAnnexa = function(options) {
 							var doc_item = imc_docs.find("li[data-id="+id+"]:first");
 
 							if (esObligatori) {
-								
+
 								if ( esObligatori === "s" ) {
 
 									var doc_valor = doc_item.find(".imc--opcional:first");
@@ -949,7 +949,7 @@ $.fn.appAnnexa = function(options) {
 										.attr("data-obligatori", "s");
 
 								} else {
-									
+
 									var doc_valor = doc_item.find(".imc--ogligatori:first");
 
 									doc_valor
@@ -983,7 +983,7 @@ $.fn.appAnnexa = function(options) {
 										.attr("data-omplit", "c");
 
 								} else {
-									
+
 									var doc_valor = doc_item.find(".imc--completat:first");
 
 									doc_valor
@@ -1044,10 +1044,10 @@ $.fn.appAnnexa = function(options) {
 					.removeClass("imc--on");
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -1098,10 +1098,10 @@ $.fn.appFitxerAnnexa = function(opcions){
 
 				input_elm
 					.trigger("click");
-				
+
 			},
 			pinta = function(e) {
-				
+
 				input_elm = $(this);
 
 				var arxiu_val = input_elm.val(),
@@ -1162,10 +1162,10 @@ $.fn.appFitxerAnnexa = function(opcions){
 						.appPopupTabula();
 
 				}
-				
+
 			},
 			elimina = function(e) {
-				
+
 				var bt_elimina = $(this);
 
 				bt_elimina
@@ -1178,7 +1178,7 @@ $.fn.appFitxerAnnexa = function(opcions){
 						.remove();
 
 				// input original
-				
+
 				input_elm
 					.val("");
 
@@ -1215,7 +1215,7 @@ $.fn.appFitxerAnnexa = function(opcions){
 				}
 
 			};
-		
+
 		// prepara
 		prepara()
 
@@ -1241,7 +1241,7 @@ $.fn.appAnnexatEsborra = function(opcions){
 			annexe_elm = false,
 			annexe_elm_annexats = false,
 			prepara = function() {
-				
+
 				elm
 					.off(".appAnnexatEsborra")
 					.on("click.appAnnexatEsborra", ".imc--esborra", verifica);
@@ -1309,7 +1309,7 @@ $.fn.appAnnexatEsborra = function(opcions){
 					}
 				})
 				.done(function( data ) {
-					
+
 					var json = data;
 
 					if (json.estado === "SUCCESS" || json.estado === "WARNING") {
@@ -1333,14 +1333,14 @@ $.fn.appAnnexatEsborra = function(opcions){
 					if (tipus === "abort") {
 						return false;
 					}
-					
+
 					consola("Annexar esborra: error des de FAIL");
 
 					imc_contenidor
 						.errors({ estat: "fail" });
-					
+
 				});
-				
+
 			},
 			esborrat = function(opcions) {
 
@@ -1369,7 +1369,7 @@ $.fn.appAnnexatEsborra = function(opcions){
 					,300
 				);
 
-				
+
 
 				/*
 				if (estat === "error" || (estat === "fail")) {
@@ -1388,7 +1388,7 @@ $.fn.appAnnexatEsborra = function(opcions){
 					bt_esborra
 						.parent()
 							.slideUp( 200, function() {
-								
+
 								$(this)
 									.remove();
 
@@ -1440,7 +1440,7 @@ $.fn.appAnnexatEsborra = function(opcions){
 				}
 
 			};
-		
+
 		// prepara
 		prepara()
 

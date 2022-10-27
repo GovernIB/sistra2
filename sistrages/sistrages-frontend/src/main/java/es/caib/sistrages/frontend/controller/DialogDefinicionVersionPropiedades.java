@@ -166,7 +166,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 				List<TramitePaso> pasos = tramiteService.getTramitePasos(tramiteVersion.getCodigo());
 				for (TramitePaso paso : pasos) {
-					if (paso.getTipo().equals(TypePaso.REGISTRAR)) {
+					if (paso.getTipo().equals(TypePaso.FINALIZAR)) {
 						TramitePasoRegistrar reg = (TramitePasoRegistrar) paso;
 						reg.setDestino("R");
 						tramiteService.updateTramitePaso(reg);

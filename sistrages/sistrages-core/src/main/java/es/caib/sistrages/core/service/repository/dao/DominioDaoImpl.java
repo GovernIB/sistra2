@@ -8,7 +8,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
@@ -22,12 +21,10 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
-import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.core.service.repository.model.JArea;
-import es.caib.sistrages.core.service.repository.model.JCampoFuenteDatos;
 import es.caib.sistrages.core.service.repository.model.JConfiguracionAutenticacion;
 import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
@@ -45,9 +42,6 @@ public class DominioDaoImpl implements DominioDao {
 	 */
 	@PersistenceContext
 	private EntityManager entityManager;
-
-	@Autowired
-	private FuenteDatoDao fuenteDatoDao;
 
 	/**
 	 * Crea una nueva instancia de DominioDaoImpl.
@@ -161,6 +155,19 @@ public class DominioDaoImpl implements DominioDao {
 		return listarDominios(ambito, id, filtro);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.DominioDao#getAllByFiltro(es.
+	 * caib.sistrages.core.api.model.types.TypeAmbito, java.lang.Long,
+	 * java.lang.String)
+	 */
+	@Override
+	public List<Dominio> getAllByFiltro(final List<TypeAmbito> ambitos, final Long id, final String filtro) {
+		return listarDominios(ambitos, id, filtro);
+	}
+
 	@Override
 	public List<Dominio> getAllByFiltro(final Long idTramite, final String filtro) {
 		return listarDominios(idTramite, filtro);
@@ -188,7 +195,32 @@ public class DominioDaoImpl implements DominioDao {
 	private List<Dominio> listarDominios(final TypeAmbito ambito, final Long id, final String filtro) {
 		final List<Dominio> dominioes = new ArrayList<>();
 
-		final List<JDominio> results = listarJDominios(ambito, id, filtro);
+		List<TypeAmbito> ambitos = new ArrayList<>();
+		ambitos.add(ambito);
+		final List<JDominio> results = listarJDominios(ambitos, id, filtro);
+
+		if (results != null && !results.isEmpty()) {
+			for (final JDominio jdominio : results) {
+				final Dominio dominio = jdominio.toModel();
+				dominioes.add(dominio);
+			}
+		}
+
+		return dominioes;
+	}
+
+
+	/**
+	 * Listar dominios.
+	 *
+	 * @param ambito ambito
+	 * @param id     id
+	 * @param filtro filtro
+	 * @return lista de dominios
+	 */
+	private List<Dominio> listarDominios(final List<TypeAmbito> ambitos, final Long id, final String filtro) {
+		final List<Dominio> dominioes = new ArrayList<>();
+		final List<JDominio> results = listarJDominios(ambitos, id, filtro);
 
 		if (results != null && !results.isEmpty()) {
 			for (final JDominio jdominio : results) {
@@ -220,7 +252,9 @@ public class DominioDaoImpl implements DominioDao {
 
 	@Override
 	public void removeByEntidad(final Long idEntidad) {
-		final List<JDominio> dominios = listarJDominios(TypeAmbito.ENTIDAD, idEntidad, null);
+		List<TypeAmbito> ambitos = new ArrayList<>();
+		ambitos.add(TypeAmbito.ENTIDAD);
+		final List<JDominio> dominios = listarJDominios(ambitos, idEntidad, null);
 		for (final JDominio d : dominios) {
 			remove(d.getCodigo());
 		}
@@ -242,7 +276,9 @@ public class DominioDaoImpl implements DominioDao {
 
 	@Override
 	public void removeByArea(final Long idArea) {
-		final List<JDominio> dominios = listarJDominios(TypeAmbito.AREA, idArea, null);
+		List<TypeAmbito> ambitos = new ArrayList<>();
+		ambitos.add(TypeAmbito.AREA);
+		final List<JDominio> dominios = listarJDominios(ambitos, idArea, null);
 		for (final JDominio d : dominios) {
 			remove(d.getCodigo());
 		}
@@ -257,24 +293,49 @@ public class DominioDaoImpl implements DominioDao {
 	 * @return dominios
 	 */
 	@SuppressWarnings("unchecked")
-	private List<JDominio> listarJDominios(final TypeAmbito ambito, final Long id, final String filtro) {
-		String sql = "SELECT DISTINCT d FROM JDominio d ";
-
-		if (ambito == TypeAmbito.AREA) {
-			sql += " WHERE d.area.id = :id AND d.ambito = '" + TypeAmbito.AREA + "'";
-		} else if (ambito == TypeAmbito.ENTIDAD) {
-			sql += " WHERE d.entidad.id = :id AND d.ambito = '" + TypeAmbito.ENTIDAD + "'";
-		} else if (ambito == TypeAmbito.GLOBAL) {
-			sql += " WHERE d.ambito = '" + TypeAmbito.GLOBAL + "'";
-		}
-
+	private List<JDominio> listarJDominios(final List<TypeAmbito> ambitos, final Long id, final String filtro) {
+		StringBuilder sql = new StringBuilder("SELECT DISTINCT d FROM JDominio d WHERE 1 = 1 ");
 		if (StringUtils.isNotBlank(filtro)) {
-			sql += " AND (LOWER(d.descripcion) LIKE :filtro OR LOWER(d.identificador) LIKE :filtro)";
+			sql.append(" AND (LOWER(d.descripcion) LIKE :filtro OR LOWER(d.identificador) LIKE :filtro)");
 		}
 
-		sql += " ORDER BY d.identificador";
+		if (ambitos != null && !ambitos.isEmpty()) {
 
-		final Query query = entityManager.createQuery(sql);
+			sql.append(" AND ");
+			if (ambitos.size() >= 2) {
+				sql.append(" ( ");
+			}
+
+			if (ambitos.contains(TypeAmbito.AREA)) {
+
+				sql.append( " ( d.area.id = :id AND d.ambito = '" + TypeAmbito.AREA + "' ) ");
+
+				if (ambitos.contains(TypeAmbito.ENTIDAD) || ambitos.contains(TypeAmbito.GLOBAL)) {
+					sql.append( " OR ");
+				}
+			}
+			if (ambitos.contains(TypeAmbito.ENTIDAD)) {
+
+				sql.append( " ( d.entidad.id = :id AND d.ambito = '" + TypeAmbito.ENTIDAD + "' ) ");
+
+				if (ambitos.contains(TypeAmbito.GLOBAL)) {
+					sql.append( " OR ");
+				}
+			}
+			if (ambitos.contains(TypeAmbito.GLOBAL)) {
+
+				sql.append( " ( d.ambito = '" + TypeAmbito.GLOBAL + "' ) ");
+			}
+
+			if (ambitos.size() >= 2) {
+				sql.append(" ) ");
+			}
+		}
+
+
+		sql.append( " ORDER BY d.identificador");
+
+		final Query query = entityManager.createQuery(sql.toString());
 
 		if (StringUtils.isNotBlank(filtro)) {
 			query.setParameter("filtro", "%" + filtro.toLowerCase() + "%");

@@ -21,7 +21,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
-import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCaptcha;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoOculto;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
@@ -49,11 +48,11 @@ public class JPaginaFormulario implements IModelApi {
 	@JoinColumn(name = "PAF_CODFOR", nullable = false)
 	private JFormulario formulario;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY,   cascade = CascadeType.ALL)
 	@JoinColumn(name = "PAF_SCRVAL")
 	private JScript scriptValidacion;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY,  cascade = CascadeType.ALL)
 	@JoinColumn(name = "PAF_SCRNAV")
 	private JScript scriptNavegacion;
 
@@ -238,6 +237,9 @@ public class JPaginaFormulario implements IModelApi {
 						case SECCION:
 							componentes.add(elemento.getSeccionFormulario().toModel());
 							break;
+						case SECCION_REUTILIZABLE:
+							componentes.add(elemento.getSeccionReutilizableFormulario().toModel());
+							break;
 						case SELECTOR:
 							componentes.add(elemento.getCampoFormulario().getCampoFormularioIndexado().toModel());
 							break;
@@ -284,6 +286,7 @@ public class JPaginaFormulario implements IModelApi {
 			if (model.getCodigo() != null) {
 				jModel.setCodigo(model.getCodigo());
 			}
+			jModel.setIdentificador(model.getIdentificador());
 			jModel.setScriptValidacion(JScript.fromModel(model.getScriptValidacion()));
 			jModel.setScriptNavegacion(JScript.fromModel(model.getScriptNavegacion()));
 			jModel.setOrden(model.getOrden());
@@ -345,5 +348,32 @@ public class JPaginaFormulario implements IModelApi {
 			}
 		}
 		return jpagina;
+	}
+
+	public static JPaginaFormulario fromModelCompleto(PaginaFormulario model) {
+		JPaginaFormulario jModel = null;
+		if (model != null) {
+			jModel = new JPaginaFormulario();
+			jModel.setCodigo(model.getCodigo());
+			if (model.getCodigo() != null) {
+				jModel.setCodigo(model.getCodigo());
+			}
+			jModel.setIdentificador(model.getIdentificador());
+			Set<JLineaFormulario> lineasFormulario = new HashSet<JLineaFormulario>();
+			if (model.getLineas() != null && !model.getLineas().isEmpty()) {
+				for( LineaComponentesFormulario linea : model.getLineas()) {
+					JLineaFormulario jlinea = JLineaFormulario.fromModel(linea);
+					lineasFormulario.add(jlinea);
+				}
+			}
+			jModel.setLineasFormulario(lineasFormulario);
+			jModel.setOrden(model.getOrden());
+			jModel.setPaginaFinal(model.isPaginaFinal());
+			jModel.setScriptValidacion(JScript.fromModel(model.getScriptValidacion()));
+			jModel.setScriptNavegacion(JScript.fromModel(model.getScriptNavegacion()));
+
+
+		}
+		return jModel;
 	}
 }

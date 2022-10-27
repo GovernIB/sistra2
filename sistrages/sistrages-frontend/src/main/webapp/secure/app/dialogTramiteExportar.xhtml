@@ -57,7 +57,6 @@
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 padding-right-18" columns = "1" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel value="#{msg['dialogTramiteExportar.ec.info']}" styleClass="titulo-color" style="color:#000" />
-
 					<p:dataTable  id="dataTable" var="td" value="#{dialogTramiteExportar.dominios}"
 								 rows="10" emptyMessage="#{msg['error.emptyRows']}"
 								 scrollable="true" scrollHeight="90%">
@@ -78,7 +77,6 @@
 					</p:dataTable>
 
 					<p:outputLabel value="#{msg['dialogTramiteExportar.form.info']}" styleClass="titulo-color" style="color:#000"  />
-
 					<p:dataTable  id="dataTableF" var="td" value="#{dialogTramiteExportar.formateadores}"
 								 rows="10" emptyMessage="#{msg['error.emptyRows']}"
 								 scrollable="true" scrollHeight="90%" style="margin-bottom:5px">
@@ -95,8 +93,24 @@
 					</p:dataTable>
 
 					<p:outputLabel value="#{msg['dialogTramiteExportar.gfe.info']}" styleClass="titulo-color" style="color:#000"  />
-
 					<p:dataTable  id="dataTableFGE" var="td" value="#{dialogTramiteExportar.gestorExternoFormularios}"
+								 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+								 scrollable="true" scrollHeight="90%" style="margin-bottom:5px">
+
+						<!-- Columnas -->
+					    <p:column headerText="#{msg['dialogTramiteExportar.form.headerCodigo']}">
+					        <h:outputText value="#{td.identificador}" />
+					    </p:column>
+
+					   <p:column headerText="#{msg['dialogTramiteExportar.form.headerDescripcion']}">
+					        <h:outputText value="#{td.descripcion}" />
+					    </p:column>
+
+					</p:dataTable>
+
+
+					<p:outputLabel value="#{msg['dialogTramiteExportar.seccionesReut.info']}" styleClass="titulo-color" style="color:#000"  />
+					<p:dataTable  id="dataTableSREU" var="td" value="#{dialogTramiteExportar.seccionesReutilizables}"
 								 rows="10" emptyMessage="#{msg['error.emptyRows']}"
 								 scrollable="true" scrollHeight="90%" style="margin-bottom:5px">
 

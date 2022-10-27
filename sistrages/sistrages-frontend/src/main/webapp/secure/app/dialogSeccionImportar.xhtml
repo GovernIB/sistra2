@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogSeccionImportar.header']}"/></title>
+</h:head>
+
+<h:body>
+
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogSeccionImportar.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogSeccionImportar.id}"/>
+		<f:viewAction action="#{dialogSeccionImportar.init}" />
+	</f:metadata>
+
+	<h:form id="formTramite" styleClass="margin-top-10" enctype="multipart/form-data">
+
+			<p:growl id="growlDialogImportar" widgetVar="growlDialogImportar" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
+
+			<p:outputPanel id="panelUpload" styleClass="padding-right-8 padding-left-8" rendered="#{!dialogSeccionImportar.mostrarPanelInfo}">
+				<p:fileUpload id="fichero" mode="advanced" fileUploadListener="#{dialogSeccionImportar.upload}" label="#{msg['botones.explorar']}" uploadLabel="#{msg['botones.anexar']}" cancelLabel="#{msg['botones.cancelar']}"
+					update="formTramite growlDialogImportar" fileLimit="1"  accept="application/zip" multiple="false" fileLimitMessage="#{msg['error.ficheros.limite']}"/>
+			</p:outputPanel>
+
+			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "4" cellpadding = "5" cellspacing = "0"  width="100%" rendered="#{dialogSeccionImportar.mostrarPanelInfo}">
+
+					<p:outputLabel value="#{msg['dialogSeccionImportar.identificador']}" style="font-weight: bold" />
+					<p:outputLabel value="#{msg['dialogSeccionImportar.existe']}" style="font-weight: bold" />
+					<p:outputLabel value="#{msg['dialogSeccionImportar.seccion.accion']}" style="font-weight: bold" />
+					<p:outputLabel value="" style="font-weight: bold" />
+
+					<p:outputLabel value="#{dialogSeccionImportar.data.identificador}"  />
+					<p:outputLabel value="#{msg['typeImportar.existe.' += dialogSeccionImportar.filaSeccion.existe]}"  />
+					<h:column>
+							 <f:facet name = "header"><p:outputLabel value="#{msg['dialogSeccionImportar.seccion.accion']}" style="font-weight: bold" /></f:facet>
+							 <p:outputLabel  value="#{dialogSeccionImportar.filaSeccion.mensaje}"  rendered="#{dialogSeccionImportar.filaSeccion.visibleBoton == false}"/>
+	      					 <p:commandButton value="..." rendered="#{dialogSeccionImportar.filaSeccion.visibleBoton}"  actionListener="#{dialogSeccionImportar.checkDominio()}" style="margin-left:5px" process="@this">
+	      							<p:ajax event="dialogReturn" listener="#{dialogSeccionImportar.returnDialogoDominio}" />
+							</p:commandButton>
+					</h:column>
+					<i id="iconoDominio${fila.seccion.codigo}" class="#{dialogSeccionImportar.filaSeccion.resultado.icon}" style="#{dialogSeccionImportar.filaSeccion.resultado.css}" />
+
+
+					<p:outputLabel value="Script carga incial:" />
+					<h:column>
+							<p:outputLabel value="#{msg['dialogSeccionImportar.script.sri.notiene']}" rendered="#{!dialogSeccionImportar.tieneScriptSRI}" />
+							<p:commandButton icon="fa fa-bolt"  value=" " rendered="#{dialogSeccionImportar.tieneScriptSRI}"  actionListener="#{dialogSeccionImportar.verScriptSRI()}" style="margin-left:5px; width:30px; height:25px" process="@this" styleClass="scriptRelleno" />
+					</h:column>
+					<h:column>
+					</h:column>
+					<h:column>
+					</h:column>
+			</h:panelGrid>
+
+
+			<br />
+			<br />
+
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton id="botonImportar" value="#{msg['botones.importar']}" actionListener="#{dialogSeccionImportar.importar}" process="@this" styleClass="boton-azul" rendered="#{dialogSeccionImportar.mostrarBotonImportar}"  update="@form growlDialogImportar" />
+		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogSeccionImportar.cancelar}" process="@this" />
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+
+	</h:form>
+
+</h:body>
+
+</f:view>
+</html>

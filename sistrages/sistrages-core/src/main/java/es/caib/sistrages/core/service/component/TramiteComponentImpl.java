@@ -77,7 +77,7 @@ public class TramiteComponentImpl implements TramiteComponent {
 		tiposAutenticacion.add(TypeAutenticacion.CERTIFICADO);
 		tiposAutenticacion.add(TypeAutenticacion.CLAVE_PIN);
 		tiposAutenticacion.add(TypeAutenticacion.CLAVE_PERMANENTE);
-		tramiteVersion.setTiposAutenticacion(tiposAutenticacion );
+		tramiteVersion.setTiposAutenticacion(tiposAutenticacion);
 		tramiteVersion.setTipoTramite(TypeTramite.TRAMITE.toString());
 		return tramiteVersion;
 	}
@@ -140,7 +140,7 @@ public class TramiteComponentImpl implements TramiteComponent {
 
 		/* Creamos Registrar */
 		final TramitePasoRegistrar pasoRT = new TramitePasoRegistrar();
-		pasoRT.setIdPasoTramitacion(TypePaso.REGISTRAR.toString());
+		pasoRT.setIdPasoTramitacion(TypePaso.FINALIZAR.toString());
 		final Literal descripcionRT = new Literal();
 		descripcionRT.add(new Traduccion(TypeIdioma.CATALAN.toString(),
 				literales.getLiteral("typePaso", "rt", TypeIdioma.CATALAN.toString())));
@@ -148,7 +148,7 @@ public class TramiteComponentImpl implements TramiteComponent {
 				literales.getLiteral("typePaso", "rt", TypeIdioma.CASTELLANO.toString())));
 		pasoRT.setDescripcion(descripcionRT);
 		pasoRT.setOrden(5);
-		pasoRT.setTipo(TypePaso.REGISTRAR);
+		pasoRT.setTipo(TypePaso.FINALIZAR);
 		listaPasos.add(pasoRT);
 
 		return listaPasos;

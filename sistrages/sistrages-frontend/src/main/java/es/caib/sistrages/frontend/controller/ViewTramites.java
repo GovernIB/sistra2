@@ -1568,7 +1568,7 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * Calcula si se puede desbloquear el tramite o no. Se puede desblqouear si: -
+	 * Calcula si se puede desbloquear el tramite o no. Se puede desbloquear si: -
 	 * Estamos en desarrollo. - Si eres ADM. ENTIDAD puedes. - Si eres
 	 * desarrollador: - Si eres adm. AREA puedes desbloquear - Si eres des. AREA
 	 * sólo puedes desbloquear si eres el que lo bloqueó.

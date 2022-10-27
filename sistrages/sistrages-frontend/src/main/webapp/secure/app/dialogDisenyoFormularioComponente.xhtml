@@ -22,7 +22,7 @@
 	         <h:panelGrid columns="2" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}" columnClasses="w35,w65" styleClass="w100">
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.identificador']}" /></h:column>
 	         	<h:column>
-	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}" maxlength="50" disabled="#{dialogDisenyoFormulario.consulta}" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}" maxlength="50" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<!-- <f:validateRegex pattern="^[a-zA-Z0-9_-]{1,50}$" /> -->
 	         			<p:ajax event="blur" process="@this" />
@@ -32,7 +32,7 @@
 
 				<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.columnasOcupadas']}" /></h:column>
 	         	<h:column>
-	         		<p:selectOneMenu id="columnas" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numColumnas}" disabled="#{dialogDisenyoFormulario.consulta}">
+	         		<p:selectOneMenu id="columnas" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numColumnas}" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 	         				<p:ajax event="blur" process="@this" />
 	         				<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 							<f:selectItems value="#{dialogDisenyoFormulario.ncolumnas}" var="n" itemValue="#{n}" itemLabel="#{n}"/>
@@ -42,7 +42,10 @@
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.etiqueta']}" /></h:column>
 	         	<h:column>
 	         		<p:inputText id="texto" value="#{dialogDisenyoFormulario.objetoFormularioEdit.texto.getTraduccion(sessionBean.lang,dialogDisenyoFormulario.idiomas)}" readonly="true" styleClass="margin-right-10" />
-	         		<p:commandButton id="btnEtiqueta" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesTexto}" process="@this" styleClass="va-top">
+	         		<p:commandButton id="btnEtiqueta" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesTexto}" process="@this" styleClass="va-top" rendered="#{!dialogDisenyoFormulario.consulta and !dialogDisenyoFormulario.desactivarAplicarCambios}">
+	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraduccionesTexto}" update="texto" />
+	        		</p:commandButton>
+	        		<p:commandButton id="btnEtiqueta2" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.consultarTraduccionesTexto}" process="@this" styleClass="va-top" rendered="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraduccionesTexto}" update="texto" />
 	        		</p:commandButton>
 	         	</h:column>
@@ -51,7 +54,7 @@
 
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.noMostrarTexto']}"/></h:column>
 	         	<h:column>
-	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.noMostrarTexto}" disabled="#{dialogDisenyoFormulario.consulta}">
+	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.noMostrarTexto}" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 	         			<p:ajax event="change" global="false" listener="#{dialogDisenyoFormulario.setCambios}"/>
 	         		</p:selectBooleanCheckbox>
 	         	</h:column>
@@ -59,28 +62,31 @@
 				<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.ayudaOnline']}" /></h:column>
 	         	<h:column>
 	         		<p:inputText id="ayuda" value="#{dialogDisenyoFormulario.objetoFormularioEdit.ayuda.getTraduccion(sessionBean.lang,dialogDisenyoFormulario.idiomas)}" readonly="true" styleClass="margin-right-10"/>
-	         		<p:commandButton id="btnAjudaOnline" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesAyuda}" process="@this" styleClass="va-top">
+	         		<p:commandButton id="btnAjudaOnline" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesAyuda}" process="@this" styleClass="va-top" rendered="#{!dialogDisenyoFormulario.consulta and !dialogDisenyoFormulario.desactivarAplicarCambios}">
+	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraduccionesAyuda}" update="ayuda" />
+	        		</p:commandButton>
+	        		<p:commandButton id="btnAjudaOnline2" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.consultarTraduccionesAyuda}" process="@this" styleClass="va-top"  rendered="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraduccionesAyuda}" update="ayuda" />
 	        		</p:commandButton>
 				</h:column>
 
 				<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.obligatorio']}"/></h:column>
 	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
-	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.obligatorio}" disabled="#{dialogDisenyoFormulario.consulta}">
+	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.obligatorio}" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 	         			<p:ajax event="change" global="false" listener="#{dialogDisenyoFormulario.setCambios}" />
 	         		</p:selectBooleanCheckbox>
 	         	</h:column>
 
 	            <h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.soloLectura']}"/></h:column>
 	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
-	         		<p:selectBooleanCheckbox id="soloLectura" value="#{dialogDisenyoFormulario.objetoFormularioEdit.soloLectura}" disabled="#{dialogDisenyoFormulario.consulta}">
+	         		<p:selectBooleanCheckbox id="soloLectura" value="#{dialogDisenyoFormulario.objetoFormularioEdit.soloLectura}" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 	         			<p:ajax event="change" global="false" listener="#{dialogDisenyoFormulario.setCambios}" />
 	         		</p:selectBooleanCheckbox>
 				</h:column>
 
 	            <h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.noModificable']}"/></h:column>
 	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
-	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.noModificable}" disabled="#{dialogDisenyoFormulario.consulta}">
+	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.noModificable}" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 	         			<p:ajax event="change" global="false" update="soloLectura" listener="#{dialogDisenyoFormulario.changedNoModificable}"/>
 	         		</p:selectBooleanCheckbox>
 				</h:column>
@@ -140,7 +146,7 @@
 
 				<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.alineacion']}" /></h:column>
 				<h:column>
-					<p:selectOneMenu id="tipoAlineacion" value="#{dialogDisenyoFormulario.objetoFormularioEdit.alineacionTexto}" required="true" disabled="#{dialogDisenyoFormulario.consulta}">
+					<p:selectOneMenu id="tipoAlineacion" value="#{dialogDisenyoFormulario.objetoFormularioEdit.alineacionTexto}" required="true" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 					    <p:ajax event="blur" process="@this" />
 					    <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 					    <f:selectItems value="#{TypeAlineacionTexto.ALL_VALUES}" var="tipoAlineacion" itemLabel="#{msg['typeAlineacionTexto.' += tipoAlineacion]}" />

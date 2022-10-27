@@ -8,3 +8,4 @@ Drop table STG_AREDOM cascade constraints;
 
 4_SISTRA2_SELECT_INVOCARDOMINIO_AVANZADO.sql. Este script devuelve los registros de BBDD que deberán modificarse con los identificadores compuestos, referenciados en los scripts de los trámites que contienen invocaciones a dominios.
 
+5_CREACION_UPDATE_ROLSAC.sql. 

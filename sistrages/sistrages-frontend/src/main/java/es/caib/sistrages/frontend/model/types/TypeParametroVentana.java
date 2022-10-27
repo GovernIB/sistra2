@@ -64,6 +64,11 @@ public enum TypeParametroVentana {
 	TIPO_SCRIPT_FORMULARIO,
 
 	/**
+	 * Tipo script seccion reutilizable para ventana script.
+	 */
+	TIPO_SCRIPT_SECCION_REUTILIZABLE,
+
+	/**
 	 * tramite.
 	 **/
 	TRAMITE,
@@ -144,5 +149,33 @@ public enum TypeParametroVentana {
 	/**
 	 * Parámetro que indica si hay que poner el editor de texto en html
 	 */
-	LITERAL_HTML;
+	LITERAL_HTML,
+	/**
+	 * Codigo de la seccion reutilizable
+	 */
+	SECCION,
+	/**
+	 * Identificador de la seccion reutilizable
+	 */
+	SECCION_IDENTIFICADOR,
+	/**
+	 * Indica si el parámetro que se pasa es de tipo diseño
+	 */
+	PARAMETRO_DISENYO,
+	/**
+	 * Indica si el parámetro que se pasa es de tipo seccion
+	 */
+	PARAMETRO_DISENYO_SECCION,
+	/**
+	 * Indica si el parámetro que se pasa es de tipo trámite
+	 */
+	PARAMETRO_DISENYO_TRAMITE,
+	/**
+	 * Identificador de la seccion reutilizable
+	 */
+	SECCION_REUTILIZABLE,
+	/**
+	 * Parametro general
+	 */
+	TIPO;
 }

@@ -7,6 +7,10 @@ body{
 	background-image: url(#{resource["primefaces-custom:images/captchaIcono.png"]}) !important;
 	background-size: 16px 16px !important;
 }
+.seccioReutilizableImg{
+	background-image: url(#{resource["primefaces-custom:images/seccionReutilizableIcono.png"]}) !important;
+	background-size: 16px 16px !important;
+}
 
 /****  cabecera *****/
 /** Para el growl . **/

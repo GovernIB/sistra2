@@ -333,7 +333,7 @@ public class JCampoFormularioTexto implements IModelApi {
 		return campoTexto;
 	}
 
-	public static JCampoFormularioTexto createDefault(final int pOrden, final JLineaFormulario pJLinea) {
+	public static JCampoFormularioTexto createDefault(final int pOrden, final JLineaFormulario pJLinea, final boolean isTipoSeccion, final String identificadorSeccion) {
 		final JCampoFormularioTexto jModel = new JCampoFormularioTexto();
 		jModel.setOculto(false);
 		jModel.setTipo(TypeCampoTexto.NORMAL.name());
@@ -347,7 +347,7 @@ public class JCampoFormularioTexto implements IModelApi {
 		jModel.setTelefonoFijo(false);
 		jModel.setTelefonoMovil(false);
 		jModel.setPermiteRango(false);
-		jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.CAMPO_TEXTO, pOrden, pJLinea));
+		jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.CAMPO_TEXTO, pOrden, pJLinea, isTipoSeccion, identificadorSeccion));
 		jModel.setNumeroSeparador("PC"); // Punto y coma
 		jModel.setNormalTamanyo(50);
 		jModel.setForzarMayusculas(false);

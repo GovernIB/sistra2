@@ -42,7 +42,7 @@ public enum TypePaso {
 	/**
 	 * Paso de registro del trámite (Código String: rt).
 	 */
-	REGISTRAR("rt");
+	FINALIZAR("rt");
 
 	/**
 	 * Valor como string.
@@ -52,8 +52,7 @@ public enum TypePaso {
 	/**
 	 * Constructor.
 	 *
-	 * @param value
-	 *            Valor como string.
+	 * @param value Valor como string.
 	 */
 	private TypePaso(final String value) {
 		stringValuePaso = value;
@@ -72,8 +71,7 @@ public enum TypePaso {
 	/**
 	 * Método para From string de la clase TypePaso.
 	 *
-	 * @param text
-	 *            Parámetro text
+	 * @param text Parámetro text
 	 * @return el type paso
 	 */
 	public static TypePaso fromString(final String text) {
@@ -102,7 +100,7 @@ public enum TypePaso {
 			} else if (paso instanceof TramitePasoTasa) {
 				respuesta = TypePaso.PAGAR;
 			} else if (paso instanceof TramitePasoRegistrar) {
-				respuesta = TypePaso.REGISTRAR;
+				respuesta = TypePaso.FINALIZAR;
 			}
 		}
 		return respuesta;

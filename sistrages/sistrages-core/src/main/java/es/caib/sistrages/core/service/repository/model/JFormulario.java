@@ -298,6 +298,7 @@ public class JFormulario implements IModelApi {
 		return jFormulario;
 	}
 
+
 	public static JFormulario mergePlantillasModel(final JFormulario jFormulario, final DisenyoFormulario pFormInt) {
 
 		if (jFormulario != null && pFormInt != null) {

@@ -1,15 +1,21 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.primefaces.PrimeFaces;
+
 import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -53,6 +59,27 @@ public class DialogHistorialVersion extends DialogControllerBase {
 	/** Ayuda. */
 	public void ayuda() {
 		UtilJSF.openHelp("historialVersionDialog");
+	}
+
+	/** Genera texto a copiar **/
+	public void generarTxt() {
+		if (this.datoSeleccionado != null) {
+			HistorialVersion hv = this.datoSeleccionado;
+			String txt = "";
+
+			txt += "Release: " + hv.getRelease();
+			txt += "\nEmpremta: " + hv.getHuella();
+			txt += "\nAcció: " + UtilJSF.getLiteral("typeAccionHistorial." + hv.getTipoAccion());
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+			txt += "\nData: " + sdf.format(hv.getFecha());
+			txt += "\nUsuari: " + hv.getUsuario();
+			txt = txt.replaceAll("null", "");
+
+			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+			PrimeFaces.current().executeScript("document.focus; navigator.clipboard.writeText(`" + txt + "`);");
+		} else {
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.primerocopy"));
+		}
 	}
 
 	/**

@@ -24,6 +24,8 @@ import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.SeccionReutilizable;
+import es.caib.sistrages.core.api.model.SeccionReutilizableTramite;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -622,5 +624,23 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void actualizarFechaTramiteVersion(Long idTramiteVersion, String username, String detalle) {
 		tramiteService.actualizarFechaTramiteVersion(idTramiteVersion, username, detalle);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<SeccionReutilizableTramite> getTramiteVersionBySeccionReutilizable(Long idSeccionReutilizable) {
+		return tramiteService.getTramiteVersionBySeccionReutilizable(idSeccionReutilizable);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<SeccionReutilizable> getSeccionesTramite(Long idTramite) {
+		return tramiteService.getSeccionesTramite(idTramite);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public boolean existenTramitesBySeccionReutilizable(Long codigo) {
+		return tramiteService.existenTramitesBySeccionReutilizable(codigo);
 	}
 }

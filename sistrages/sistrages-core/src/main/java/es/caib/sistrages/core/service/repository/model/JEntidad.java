@@ -259,14 +259,14 @@ public class JEntidad implements IModelApi {
 	/**
 	 * @return the declaracionAccesibilidad
 	 */
-	public final JLiteral getDeclaracionAccesibilidad() {
+	public JLiteral getDeclaracionAccesibilidad() {
 		return declaracionAccesibilidad;
 	}
 
 	/**
 	 * @param declaracionAccesibilidad the declaracionAccesibilidad to set
 	 */
-	public final void setDeclaracionAccesibilidad(JLiteral declaracionAccesibilidad) {
+	public void setDeclaracionAccesibilidad(JLiteral declaracionAccesibilidad) {
 		this.declaracionAccesibilidad = declaracionAccesibilidad;
 	}
 

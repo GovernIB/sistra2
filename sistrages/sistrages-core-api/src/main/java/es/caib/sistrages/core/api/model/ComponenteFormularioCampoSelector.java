@@ -25,6 +25,11 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 
 	/** codDominio. */
 	private Long codDominio;
+	/** Los siguientes datos de dominio es solo para cuando se importa un seccion reutilizable **/
+	String dominioAmbito;
+	String dominioIdentificador;
+	String dominioArea;
+	String dominioEntidad;
 
 	/** campo codDominio codigo. */
 	private String campoDominioCodigo;
@@ -246,6 +251,62 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	 */
 	public void setOrientacion(final String orientacion) {
 		this.orientacion = orientacion;
+	}
+
+	/**
+	 * @return the dominioAmbito
+	 */
+	public String getDominioAmbito() {
+		return dominioAmbito;
+	}
+
+	/**
+	 * @param dominioAmbito the dominioAmbito to set
+	 */
+	public void setDominioAmbito(String dominioAmbito) {
+		this.dominioAmbito = dominioAmbito;
+	}
+
+	/**
+	 * @return the dominioIdentificador
+	 */
+	public String getDominioIdentificador() {
+		return dominioIdentificador;
+	}
+
+	/**
+	 * @param dominioIdentificador the dominioIdentificador to set
+	 */
+	public void setDominioIdentificador(String dominioIdentificador) {
+		this.dominioIdentificador = dominioIdentificador;
+	}
+
+	/**
+	 * @return the dominioArea
+	 */
+	public String getDominioArea() {
+		return dominioArea;
+	}
+
+	/**
+	 * @param dominioArea the dominioArea to set
+	 */
+	public void setDominioArea(String dominioArea) {
+		this.dominioArea = dominioArea;
+	}
+
+	/**
+	 * @return the dominioEntidad
+	 */
+	public String getDominioEntidad() {
+		return dominioEntidad;
+	}
+
+	/**
+	 * @param dominioEntidad the dominioEntidad to set
+	 */
+	public void setDominioEntidad(String dominioEntidad) {
+		this.dominioEntidad = dominioEntidad;
 	}
 
 }

@@ -311,6 +311,45 @@
 					</h:dataTable>
 				</p:column>
 
+
+				<p:column rendered="#{!empty dialogCuadernoCarga.filasSecciones}" >
+
+					<p class="pTituloCabecera">
+						<h:outputText value="#{msg['dialogTramiteImportar.secciones']}" styleClass="subTituloCabecera"  />
+					</p>
+					<h:dataTable rowClasses=", ui-datatable-odd"  columnClasses="padding-left-4 w15, w15,w50,w10 grid-right,w10 grid-center" id="dataTablaSecciones" headerClass="grid-left" value="#{dialogCuadernoCarga.filasSecciones}" var="fila" width="93%" cellspacing="0" cellpadding="5"  style="margin-left:33px;">
+							<h:column headerClass="subTituloTablaImportarIzq">
+								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.secciones.identificador']}" /></f:facet>
+		      					#{fila.seccion.identificador}
+							</h:column>
+
+							<h:column headerClass="subTituloTablaImportarIzq">
+								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.secciones.descripcion']}" /></f:facet>
+		      					#{fila.seccion.descripcion}
+							</h:column>
+
+							<h:column headerClass="subTituloTablaImportarIzq">
+								 <f:facet name = "header" style="text-align: left;">
+								 	<p:outputLabel value="#{msg['dialogTramiteImportar.headerMensaje']}" />
+								 </f:facet>
+		      					<p:outputLabel value=" #{fila.mensaje}"  />
+							</h:column>
+
+							<h:column headerClass="subTituloTablaImportarDer">
+								 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.dominio.accion']}" style="font-weight: bold" /></f:facet>
+							</h:column>
+
+							<h:column headerClass="subTituloTablaImportarIzq">
+								 <f:facet name = "header"></f:facet>
+								 <p:tooltip for="iconoGestorLabel" 	value="#{msg[fila.resultado.literal]}" />
+								 <p:outputLabel id="iconoGestorLabel" 	value="" >
+										<i id="iconoGestor${fila.seccion.codigo}" class="#{fila.resultado.icon}" style="#{fila.resultado.css}" />
+								 </p:outputLabel>
+							</h:column>
+
+					</h:dataTable>
+				</p:column>
+
 				<br />
 				<br />
 				<br />

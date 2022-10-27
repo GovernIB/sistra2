@@ -10,18 +10,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
+import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
+import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.FormRenderComponent;
+import es.caib.sistrages.core.service.repository.dao.DominioDao;
 import es.caib.sistrages.core.service.repository.dao.FicheroExternoDao;
 import es.caib.sistrages.core.service.repository.dao.FormateadorFormularioDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
+import es.caib.sistrages.core.service.repository.dao.SeccionReutilizableDao;
 
 @Service
 @Transactional
@@ -37,6 +41,12 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 
 	@Autowired
 	FormularioInternoDao formIntDao;
+
+	@Autowired
+	SeccionReutilizableDao seccionReutilizableDao;
+
+	@Autowired
+	DominioDao dominioDao;
 
 	/** DAO Fichero Externo. */
 	@Autowired
@@ -78,7 +88,7 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	@Override
 	@NegocioInterceptor
 	public DisenyoFormulario getFormularioInternoCompleto(final Long pId) {
-		return formIntDao.getFormularioCompletoById(pId);
+		return formIntDao.getFormularioCompletoById(pId, false);
 	}
 
 	/*
@@ -114,15 +124,25 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	@Override
 	@NegocioInterceptor
 	public PaginaFormulario getContenidoPaginaFormulario(final Long pId) {
-		return formIntDao.getContenidoPaginaById(pId);
+		return formIntDao.getContenidoPaginaById(pId, false);
 	}
 
 	@Override
 	@NegocioInterceptor
 	public ObjetoFormulario addComponenteFormulario(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina,
-			final Long pIdLinea, final Integer pOrden, final String pPosicion) {
-		return formIntDao.addComponente(pTipoObjeto, pIdPagina, pIdLinea, pOrden, pPosicion);
+			final Long pIdLinea, final Integer pOrden, final String pPosicion, final Object objeto, boolean isTipoSeccion, String identificadorSeccion, String idTramiteVersion) {
+		ObjetoFormulario retorno = formIntDao.addComponente(pTipoObjeto, pIdPagina, pIdLinea, pOrden, pPosicion, objeto, isTipoSeccion, identificadorSeccion);
+		if (pTipoObjeto == TypeObjetoFormulario.SECCION_REUTILIZABLE) {
+			List<Dominio> dominios = seccionReutilizableDao.getDominiosByIdentificadorSeccion(((SeccionReutilizable)objeto).getIdentificador());
+			if (dominios != null && !dominios.isEmpty()) {
+				for(Dominio dominio : dominios) {
+					dominioDao.addTramiteVersion(dominio.getCodigo(), Long.valueOf(idTramiteVersion));
+				}
+			}
+		}
+		return retorno;
 	}
+
 
 	@Override
 	@NegocioInterceptor
@@ -213,9 +233,9 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	@Override
 	@NegocioInterceptor
 	public DisenyoFormularioSimple getFormularioInternoSimple(final Long idFormularioTramite, final Long idFormulario,
-			final String idComponente, final String idPagina, final boolean cargarPaginasPosteriores) {
+			final String idComponente, final String idPagina, final boolean cargarPaginasPosteriores, final boolean isSeccion, final String identificadorSeccion) {
 		return formIntDao.getFormularioInternoSimple(idFormularioTramite, idFormulario, idComponente, idPagina,
-				cargarPaginasPosteriores);
+				cargarPaginasPosteriores, isSeccion, identificadorSeccion);
 	}
 
 	@Override

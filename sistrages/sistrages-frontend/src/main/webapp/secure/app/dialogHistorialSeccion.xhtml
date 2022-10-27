@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogHistorialSeccion.titulo']}"/></title>
+</h:head>
+
+<h:body>
+    <f:facet name="last">
+    	<h:outputStylesheet library="css" name="style.css" />
+    </f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogHistorialSeccion.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogHistorialSeccion.id}"/>
+		<f:viewAction action="#{dialogHistorialSeccion.init}" />
+	</f:metadata>
+	<h:form id="formHistorial" styleClass="margin-top-10">
+
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlHistorial" widgetVar="growlHistorial" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
+
+				<!-- Data table -->
+				<p:dataTable  id="dataTable" var="td" value="#{dialogHistorialSeccion.data}"
+							 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+							 scrollable="true" scrollHeight="550px"
+							 style="width:90%;margin:auto"
+							 paginator="true" paginatorPosition="bottom"
+	                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+	                         rowsPerPageTemplate="5,10,15,30"
+				        	 selectionMode="single" selection="#{dialogHistorialSeccion.datoSeleccionado}" rowKey="#{td.codigo}">
+
+
+					<!-- Necesario para actualizar en controlador la fila seleccionada -->
+					<p:ajax event="rowSelect" global="false" update="@form:detalleCambio" />
+					<p:ajax event="rowUnselect"/>
+
+					<!-- Columnas -->
+				    <p:column headerText="#{msg['dialogHistorialSeccion.headerRelease']}">
+				        <h:outputText value="#{td.release}" />
+				    </p:column>
+
+				    <p:column headerText="#{msg['dialogHistorialSeccion.headerHuella']}">
+				        <h:outputText value="#{td.huella}" />
+				    </p:column>
+
+				    <p:column headerText="#{msg['dialogHistorialSeccion.headerAccion']}">
+				        <h:outputText value="#{msg['typeAccionHistorial.' += td.tipoAccion]}" />
+				    </p:column>
+
+	 				<p:column headerText="#{msg['dialogHistorialSeccion.headerFecha']}">
+				         <h:outputText value="#{td.fecha}">
+	 			        	<f:convertDateTime pattern="dd/MM/yyyy HH:mm" type="date" timeZone="CET"/>
+				        </h:outputText>
+				    </p:column>
+
+	 				<p:column headerText="#{msg['dialogHistorialSeccion.headerUsuario']}">
+				       <h:outputText value="#{td.usuario}" />
+				    </p:column>
+
+				</p:dataTable>
+			<p:outputPanel>
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+					<p:outputLabel value=" " />
+					<p:outputLabel  value=" " />
+
+					<p:outputLabel  value="#{msg['dialogHistorialSeccion.headerDetalle']}" />
+				 	<p:inputTextarea readonly="true" cols="105" rows="5" id="detalleCambio" value="#{dialogHistorialSeccion.datoSeleccionado.detalleCambio}" size="60" maxlength="255" />
+				</h:panelGrid>
+
+			</p:outputPanel>
+		  	<p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton id="botonLimpiar" value="#{msg['botones.borradoHistorial']}" actionListener="#{dialogHistorialSeccion.borradoHistorial()}" process="@this" styleClass="boton-azul" update="@form" rendered="#{dialogHistorialSeccion.isPermiteBorrar()}" >
+		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borradoHistorial']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+		        		</p:commandButton>
+
+		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogHistorialSeccion.cancelar}" process="@this" />
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogHistorialSeccion.ayuda()}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+
+
+	 		<p:confirmDialog global="true" >
+				<p:outputPanel styleClass="confirmar_botonera">
+		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+				</p:outputPanel>
+		    </p:confirmDialog>
+
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

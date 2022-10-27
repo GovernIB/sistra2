@@ -78,6 +78,8 @@ public final class Constantes {
 
 	/** Constante script. **/
 	public static final String CLAVE_MOCHILA_SCRIPT = "SCRIPT";
+	/** Constante script. **/
+	public static final String CLAVE_MOCHILA_SECCION = "SECCION";
 
 	/** Constante literal script. **/
 	public static final String CLAVE_MOCHILA_SCRIPT_LITERAL = "SCRIPT_LITERAL";

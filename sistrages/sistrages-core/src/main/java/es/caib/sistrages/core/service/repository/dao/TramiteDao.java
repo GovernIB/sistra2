@@ -7,6 +7,8 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.SeccionReutilizable;
+import es.caib.sistrages.core.api.model.SeccionReutilizableTramite;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
@@ -228,7 +230,7 @@ public interface TramiteDao {
 
 	/**
 	 * Obtiene tramite a partir de identificador.
-	 * 
+	 *
 	 * @param identificador
 	 * @param idArea
 	 * @param identificadorArea
@@ -291,7 +293,7 @@ public interface TramiteDao {
 
 	/**
 	 * Recupera el tramite Version dado el identificador logico
-	 * 
+	 *
 	 * @param idEntidad
 	 * @param idArea
 	 * @param idTramite
@@ -390,7 +392,7 @@ public interface TramiteDao {
 
 	/**
 	 * Actualiza dominios si no están agregados.
-	 * 
+	 *
 	 * @param idTramiteVersion
 	 * @param dominios
 	 */
@@ -398,10 +400,38 @@ public interface TramiteDao {
 
 	/**
 	 * Devuelve el total de tramite por GFE
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
 	boolean getCountTramiteVersionByGfe(Long id);
+
+	/**
+	 * Obtiene la lista de tramites version que utilizan la seccion reutilizable
+	 * @param idSeccionReutilizable
+	 * @return
+	 */
+	List<SeccionReutilizableTramite> getTramiteVersionBySeccionReutilizable(Long idSeccionReutilizable);
+
+	/**
+	 * Devuelve las secciones reutilizables de un trámite.
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	List<SeccionReutilizable> getSeccionesReutilizableByTramite(Long idTramiteVersion);
+
+	/** Comprueba si existen tramites asociados a una seccion reut.
+	 *
+	 * @param idSeccionReutilizable
+	 * @return
+	 */
+	boolean existenTramiteVersionBySeccionReutilizable(Long idSeccionReutilizable);
+
+	/**
+	 * Devuelve las secciones reutilizables de un formulario.
+	 * @param idFormulario
+	 * @return
+	 */
+	List<SeccionReutilizable> getSeccionesReutilizableByFormulario(Long idFormulario);
 
 }

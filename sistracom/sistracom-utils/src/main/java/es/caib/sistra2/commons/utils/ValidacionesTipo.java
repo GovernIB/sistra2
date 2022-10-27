@@ -1215,4 +1215,16 @@ public final class ValidacionesTipo {
 		return res;
 	}
 
+	public static void main(String[] args) {
+
+		ValidacionesTipo val = new ValidacionesTipo();
+		System.out.println("");System.out.println("");
+
+
+		System.out.println("24394731B.esNifPersonaJuridica:" + val.esNifPersonaJuridica("24394731B"));
+		System.out.println("Q2808014I.esNifPersonaJuridica:" + val.esNifPersonaJuridica("Q2808014I"));
+		System.out.println("Q28080141.esNifPersonaJuridica:" + val.esNifPersonaJuridica("Q28080141"));
+
+
+	}
 }

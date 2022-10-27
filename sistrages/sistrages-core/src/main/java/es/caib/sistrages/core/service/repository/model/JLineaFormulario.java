@@ -112,6 +112,30 @@ public class JLineaFormulario implements IModelApi {
 		return jModel;
 	}
 
+
+	/*
+	public static JLineaFormulario fromModelCompleta(final LineaComponentesFormulario model) {
+		JLineaFormulario jModel = null;
+		if (model != null) {
+			jModel = new JLineaFormulario();
+			jModel.setCodigo(model.getCodigo());
+			jModel.setOrden(model.getOrden());
+
+			Set<JElementoFormulario> elementos;
+			if (model.getComponentes() != null) {
+				elementos = new HashSet<>();
+				for(ComponenteFormulario componente : model.getComponentes()) {
+					JElementoFormulario jelem = JCampoFormularioTexto.
+				}
+				jModel.setElementoFormulario(elementos);
+			}
+
+		}
+		return jModel;
+	}*/
+
+
+
 	public static JLineaFormulario createDefault(final int pOrden, final JPaginaFormulario pJPagina) {
 		final JLineaFormulario jModel = new JLineaFormulario();
 		jModel.setOrden(pOrden);

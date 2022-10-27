@@ -11,7 +11,7 @@
 
 	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.tipo']}" /></h:column>
 	<h:column>
-		<p:selectOneMenu id="tipoCampoIndexado" value="#{dialogDisenyoFormulario.objetoFormularioEdit.tipoCampoIndexado}" required="true" disabled="#{dialogDisenyoFormulario.consulta}">
+		<p:selectOneMenu id="tipoCampoIndexado" value="#{dialogDisenyoFormulario.objetoFormularioEdit.tipoCampoIndexado}" required="true" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 		    <p:ajax event="blur" process="@this"/>
 		    <p:ajax event="change" update="panelPropietats" />
 		    <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
@@ -21,7 +21,7 @@
 
 	<h:column rendered="#{dialogDisenyoFormulario.isListaSeleccionUnica()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.orientacion']}" /></h:column>
 	<h:column rendered="#{dialogDisenyoFormulario.isListaSeleccionUnica()}">
-		<p:selectOneMenu id="tipoOrientacion" value="#{dialogDisenyoFormulario.objetoFormularioEdit.orientacion}" disabled="#{dialogDisenyoFormulario.consulta}">
+		<p:selectOneMenu id="tipoOrientacion" value="#{dialogDisenyoFormulario.objetoFormularioEdit.orientacion}" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 		    <p:ajax event="blur" process="@this" />
 		    <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 		    <f:selectItems value="#{TypeOrientacion.ALL_VALUES}" var="tipoOrientacion" itemLabel="#{msg['typeOrientacion.' += tipoOrientacion.name()]}"  itemValue="#{tipoOrientacion.toString()}" />
@@ -30,7 +30,7 @@
 
 	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.tipoListaValores']}" /></h:column>
 	<h:column>
-		<p:selectOneMenu id="tipoListaValores" value="#{dialogDisenyoFormulario.objetoFormularioEdit.tipoListaValores}" disabled="#{dialogDisenyoFormulario.consulta}">
+		<p:selectOneMenu id="tipoListaValores" value="#{dialogDisenyoFormulario.objetoFormularioEdit.tipoListaValores}" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 		    <p:ajax event="blur" process="@this"/>
 		    <p:ajax event="change" update="panelPropietats" />
 		    <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
@@ -57,7 +57,7 @@
 
 	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio() and not dialogDisenyoFormulario.isDominioLF()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.dominioCodigo']}" /></h:column>
 	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio() and not dialogDisenyoFormulario.isDominioLF()}">
-		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.campoDominioCodigo}" onblur="this.value = this.value.toUpperCase();"  maxlength="100" disabled="#{dialogDisenyoFormulario.consulta}">
+		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.campoDominioCodigo}" onblur="this.value = this.value.toUpperCase();"  maxlength="100" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 			<p:ajax event="blur" process="@this" />
 			<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 		</p:inputText>
@@ -65,7 +65,7 @@
 
 	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio() and not dialogDisenyoFormulario.isDominioLF()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.dominioDescripcion']}" /></h:column>
 	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio() and not dialogDisenyoFormulario.isDominioLF()}">
-		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.campoDominioDescripcion}" onblur="this.value = this.value.toUpperCase();"  maxlength="100" disabled="#{dialogDisenyoFormulario.consulta}">
+		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.campoDominioDescripcion}" onblur="this.value = this.value.toUpperCase();"  maxlength="100" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 			<p:ajax event="blur" process="@this" />
 			<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 		</p:inputText>
@@ -81,7 +81,7 @@
 	<h:column rendered="#{dialogDisenyoFormulario.isListaDesplegable()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.indiceAlfabetico']}"/></h:column>
 	<h:column rendered="#{dialogDisenyoFormulario.isListaDesplegable()}">
 		<p:outputPanel>
-			<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.indiceAlfabetico}" disabled="#{dialogDisenyoFormulario.consulta}">
+			<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.indiceAlfabetico}" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 				<p:ajax event="change" global="false"/>
 				<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 			</p:selectBooleanCheckbox>

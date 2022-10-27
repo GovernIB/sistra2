@@ -53,6 +53,14 @@ public abstract class ComponenteFormulario extends ObjetoFormulario implements C
 	private TypeAlineacionTexto alineacionTexto = TypeAlineacionTexto.IZQUIERDA;
 
 	/**
+	 * Indica si el componente está dentro de una seccion reutilizable. NO SE ALMACENA EN BBDD.
+	 */
+	private boolean tipoSeccionReutilizable = false;
+	/**
+	 * Indica cuando el componente es de tipo seccion reutilizable, el id del form (disenyo formulario)
+	 */
+	private Long idFormSeccion;
+	/**
 	 * Obtiene el valor de idComponente.
 	 *
 	 * @return el valor de idComponente
@@ -202,6 +210,34 @@ public abstract class ComponenteFormulario extends ObjetoFormulario implements C
 	 */
 	public void setAlineacionTexto(final TypeAlineacionTexto alineacionTexto) {
 		this.alineacionTexto = alineacionTexto;
+	}
+
+	/**
+	 * @return the tipoSeccionReutilizable
+	 */
+	public boolean isTipoSeccionReutilizable() {
+		return tipoSeccionReutilizable;
+	}
+
+	/**
+	 * @param tipoSeccionReutilizable the tipoSeccionReutilizable to set
+	 */
+	public void setTipoSeccionReutilizable(boolean tipoSeccionReutilizable) {
+		this.tipoSeccionReutilizable = tipoSeccionReutilizable;
+	}
+
+	/**
+	 * @return the idFormSeccion
+	 */
+	public Long getIdFormSeccion() {
+		return idFormSeccion;
+	}
+
+	/**
+	 * @param idFormSeccion the idFormSeccion to set
+	 */
+	public void setIdFormSeccion(Long idFormSeccion) {
+		this.idFormSeccion = idFormSeccion;
 	}
 
 	@Override

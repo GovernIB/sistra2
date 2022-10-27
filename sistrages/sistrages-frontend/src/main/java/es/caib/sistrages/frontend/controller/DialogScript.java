@@ -20,9 +20,16 @@ import org.primefaces.extensions.event.ClipboardSuccessEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import es.caib.sistrages.core.api.model.ComponenteFormulario;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSeccionReutilizable;
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.LiteralScript;
+import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.ScriptSeccionReutilizable;
+import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioComponenteSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioPaginaSimple;
@@ -31,12 +38,16 @@ import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeIdioma;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.model.types.TypePluginScript;
 import es.caib.sistrages.core.api.model.types.TypeScript;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
+import es.caib.sistrages.core.api.model.types.TypeScriptSeccionReutilizable;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.ScriptService;
+import es.caib.sistrages.core.api.service.SeccionReutilizableService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.core.api.util.UtilScripts;
@@ -59,6 +70,10 @@ public class DialogScript extends DialogControllerBase {
 	@Inject
 	private ScriptService scriptService;
 
+	/** Script service. */
+	@Inject
+	private SeccionReutilizableService srService;
+
 	/** Tramite service. */
 	@Inject
 	private TramiteService tramiteService;
@@ -66,6 +81,10 @@ public class DialogScript extends DialogControllerBase {
 	/** Formulario Interno service. */
 	@Inject
 	private FormularioInternoService formularioInternoService;
+
+	/** seccionReutilizableService service. */
+	@Inject
+	private SeccionReutilizableService seccionReutilizableService;
 
 	/** Id tramite version. **/
 	private String idTramiteVersion;
@@ -91,8 +110,16 @@ public class DialogScript extends DialogControllerBase {
 	private String tipoScriptFlujo;
 	/** Tipo script. **/
 	private String tipoScriptFormulario;
+	/** Tipo script. **/
+	private String tipoScriptSeccionReutilizable;
 	/** Tipo de typeScript. **/
 	private TypeScript tipoScript;
+	/** Identificador seccion **/
+	private String identificadorSeccion;
+	/** Tipo disenyo == SECCION O TRAMITE **/
+	private String tipoDisenyo;
+	/** booleano que indica si es tipo form y tiene sr **/
+	private boolean tieneSR = false;
 
 	/** Visible formulario. **/
 	private boolean visibleFormularios = true;
@@ -102,6 +129,8 @@ public class DialogScript extends DialogControllerBase {
 	private boolean visibleMensajes = true;
 	/** Visible dominiosId. **/
 	private boolean visibleDominios = true;
+	/** Visible scripts sr **/
+	private boolean visibleScriptSR = true;
 	/** Permite editar. **/
 	private boolean permiteEditar = false;
 	/** Indica si hay que mostrar el editor html */
@@ -135,6 +164,9 @@ public class DialogScript extends DialogControllerBase {
 
 	/** Idiomas. **/
 	private List<String> idiomas;
+
+	/** Lista secciones reut. **/
+	private List<ComponenteFormularioCampoSeccionReutilizable> srL = new ArrayList<>();
 
 	/**
 	 * Constructor vacio.
@@ -177,9 +209,23 @@ public class DialogScript extends DialogControllerBase {
 			}
 		}
 
+		if (tipoScriptSeccionReutilizable != null) {
+			tipoScript = (TypeScriptSeccionReutilizable) UtilJSON.fromJSON(tipoScriptSeccionReutilizable,
+					TypeScriptSeccionReutilizable.class);
+			if (permiteEditar) {
+				setPlugins(UtilScripts.getPluginsScript((TypeScriptSeccionReutilizable) tipoScript));
+			}
+		}
+
 		dominios = new ArrayList<>();
 		if (permiteEditar) {
-			dominios = tramiteService.getDominioSimpleByTramiteId(Long.valueOf(idTramiteVersion));
+
+			if (idTramiteVersion != null) {
+				dominios = tramiteService.getDominioSimpleByTramiteId(Long.valueOf(idTramiteVersion));
+			} else if (tipoDisenyo != null
+					&& tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString())) {
+				dominios = seccionReutilizableService.getDominiosByIdentificadorSeccion(identificadorSeccion);
+			}
 		}
 
 		/* inicializa arbol */
@@ -198,25 +244,124 @@ public class DialogScript extends DialogControllerBase {
 					final String identificadorFormulario = formularioInternoService
 							.getIdentificadorFormularioInterno(idFormularioInterno);
 					final DisenyoFormularioSimple formulario = formularioInternoService.getFormularioInternoSimple(null,
-							idFormularioInterno, null, null, obtenerCargarPaginasPosteriores());
+							idFormularioInterno, null, null, obtenerCargarPaginasPosteriores(), false, null);
 
 					cargarArbol(formulario, identificadorFormulario);
 				}
 			}
 
 			if (tipoScript instanceof TypeScriptFormulario) {
+				final DisenyoFormularioSimple disenyoFormulario;
+				if (tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString())) {
+					disenyoFormulario = this.formularioInternoService.getFormularioInternoSimple(
+							Long.valueOf(idFormularioActual), null, idComponente, idPagina,
+							obtenerCargarPaginasPosteriores(), false, null);
+				} else {
+					disenyoFormulario = this.formularioInternoService.getFormularioInternoSimple(null,
+							Long.valueOf(idFormularioActual), idComponente, idPagina, obtenerCargarPaginasPosteriores(),
+							true, identificadorSeccion);
+				}
+
+				if (idTramiteVersion != null) {
+					idiomas = UtilTraducciones.getIdiomas(tramiteService.getIdiomasDisponibles(idTramiteVersion));
+				} else {
+					idiomas = new ArrayList<>();
+					idiomas.add(TypeIdioma.CASTELLANO.toString());
+					idiomas.add(TypeIdioma.CATALAN.toString());
+				}
+
+			}
+
+			if (tipoScript.name().equals("SCRIPT_DATOS_INICIALES_FORMULARIO")) {
+				DisenyoFormulario formulario = this.formularioInternoService
+						.getFormularioInternoCompleto(Long.parseLong(idFormularioInternoActual));
+
+				if (formulario != null) {
+
+					// recorremos paginas
+					for (final PaginaFormulario pagina : formulario.getPaginas()) {
+
+						for (final LineaComponentesFormulario linea : pagina.getLineas()) {
+
+							for (final ComponenteFormulario componente : linea.getComponentes()) {
+								if (componente instanceof ComponenteFormularioCampoSeccionReutilizable) {
+									SeccionReutilizable sr = srService.getSeccionReutilizable(
+											((ComponenteFormularioCampoSeccionReutilizable) componente)
+													.getIdSeccionReutilizable());
+									this.tieneSR = true;
+									componente.setIdComponente(sr.getIdentificador());
+									srL.add((ComponenteFormularioCampoSeccionReutilizable) componente);
+								}
+							}
+						}
+					}
+
+				}
+			}
+
+			if (tipoScript instanceof TypeScriptSeccionReutilizable) {
 
 				final DisenyoFormularioSimple disenyoFormulario = this.formularioInternoService
-						.getFormularioInternoSimple(Long.valueOf(idFormularioActual), null, idComponente, idPagina,
-								obtenerCargarPaginasPosteriores());
+						.getFormularioInternoSimple(null, Long.valueOf(idFormularioActual), idComponente, idPagina,
+								obtenerCargarPaginasPosteriores(), true, identificadorSeccion);
 				if (disenyoFormulario != null) {
 					cargarArbol(disenyoFormulario, disenyoFormulario.getIdentificador());
 				}
-				idiomas = UtilTraducciones.getIdiomas(tramiteService.getIdiomasDisponibles(idTramiteVersion));
+				idiomas = new ArrayList<>();
+				idiomas.add(TypeIdioma.CATALAN.toString());
+				idiomas.add(TypeIdioma.CASTELLANO.toString());
 
 			}
 		}
 
+	}
+
+	public ScriptSeccionReutilizable getScriptSR(ComponenteFormulario cf) {
+		List<ScriptSeccionReutilizable> sSrL = srService.getScriptsByIdSeccionReutilizable(
+				Long.valueOf(((ComponenteFormularioCampoSeccionReutilizable) cf).getIdSeccionReutilizable()));
+		return sSrL.size() > 0 ? sSrL.get(0) : null;
+	}
+
+	public boolean scrSrNoVacio(ComponenteFormulario cf) {
+		ScriptSeccionReutilizable script = getScriptSR(cf);
+		return (script != null && script.getScript() != null && !script.getScript().getContenido().isEmpty());
+
+	}
+
+	/**
+	 * Visualiza el script.
+	 *
+	 * @return
+	 */
+	public void verScript(ComponenteFormulario cf) {
+
+		ScriptSeccionReutilizable valorSeleccionado = getScriptSR(cf);
+
+		// Muestra dialogo
+		if (valorSeleccionado != null) {
+			final Map<String, String> maps = new HashMap<>();
+			maps.put(TypeParametroVentana.TIPO_SCRIPT_SECCION_REUTILIZABLE.toString(),
+					UtilJSON.toJSON(valorSeleccionado.getTipoScript()));
+			SeccionReutilizable seccion = srService
+					.getSeccionReutilizable(valorSeleccionado.getIdSeccionReutilizable());
+			maps.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), seccion.getIdFormularioAsociado().toString());
+			maps.put(TypeParametroVentana.SECCION_REUTILIZABLE.toString(), seccion.getIdentificador());
+			maps.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(),
+					TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());
+			/*
+			 * maps.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
+			 * maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
+			 */
+			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(valorSeleccionado.getScript()));
+
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.CONSULTA, maps, true, 700);
+		}
+
+	}
+
+	public boolean isScriptSeccionReutilizable() {
+		return tipoScript instanceof TypeScriptSeccionReutilizable;
 	}
 
 	/**
@@ -296,6 +441,7 @@ public class DialogScript extends DialogControllerBase {
 			visibleHerramientas = true;
 			visibleMensajes = true;
 			visibleDominios = true;
+			visibleScriptSR = true;
 
 			if ("panelFormularios".equals(event.getComponent().getId())) {
 				visibleFormularios = false;
@@ -311,6 +457,10 @@ public class DialogScript extends DialogControllerBase {
 
 			if ("panelDominios".equals(event.getComponent().getId())) {
 				visibleDominios = false;
+			}
+
+			if ("panelSR".equals(event.getComponent().getId())) {
+				visibleScriptSR = false;
 			}
 		}
 
@@ -346,12 +496,18 @@ public class DialogScript extends DialogControllerBase {
 			return;
 		}
 
-		if (!agregarDominioNoUtilizados()) {
-			return;
-		}
+		if (tipoDisenyo != null && tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString())) {
+			if (!agregarDominioNoUtilizados()) {
+				return;
+			}
 
-		if (!validoScript()) {
-			return;
+			if (!validoScript()) {
+				return;
+			}
+		} else if (tipoDisenyo != null) { // TypeParametroVentana.PARAMETRO_DISENYO_SECCION
+			if (!revisarDominioNoarea()) {
+				return;
+			}
 		}
 
 		// Retornamos resultado
@@ -391,15 +547,17 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * Método que se encarga de buscar los dominios que se utilizan y los agregará
-	 * si no están
+	 * Revisa que no se haya intentado utilizar un dominio de tipo area
+	 *
+	 * @return
 	 */
-	private boolean agregarDominioNoUtilizados() {
+	private boolean revisarDominioNoarea() {
 		String contenido = UtilScripts.extraerContenido(data.getContenido());
 		List<String> identificadoresDominio = new ArrayList<>();
 		// Busca el patrón PLUGIN_DOMINIO.invocarDominio('{0}' siendo {0} el
 		// identificador
-		Matcher matcher = Pattern.compile("PLUGIN_DOMINIO.invocarDominio\\(\\'("+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+"*?)\\'").matcher(contenido);
+		Matcher matcher = Pattern.compile("PLUGIN_DOMINIOS.invocarDominio\\(\\'("
+				+ ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO + "*?)\\'").matcher(contenido);
 		Integer totalCoincidencias = 0;
 		while (matcher.find()) {
 			totalCoincidencias++;
@@ -410,7 +568,7 @@ public class DialogScript extends DialogControllerBase {
 		}
 
 		// Vamos a comprobar si alguna no tiene las comillas simples
-		Matcher matcherComprobarIncorrectas = Pattern.compile("PLUGIN_DOMINIO.invocarDominio\\((.*?)\\)")
+		Matcher matcherComprobarIncorrectas = Pattern.compile("PLUGIN_DOMINIOS.invocarDominio\\((.*?)\\)")
 				.matcher(contenido);
 		Integer totalCoincidenciasGenerico = 0;
 		while (matcherComprobarIncorrectas.find()) {
@@ -424,17 +582,69 @@ public class DialogScript extends DialogControllerBase {
 			return false;
 		}
 
+		if (!identificadoresDominio.isEmpty()) {
+			// Revisamos si los identificadores están correctos
+			for (String identificadorDominio : identificadoresDominio) {
+				ValorIdentificadorCompuesto identificador = new ValorIdentificadorCompuesto(identificadorDominio);
+				if (identificador.getAmbito() == TypeAmbito.AREA) {
+					String[] params = new String[1];
+					params[0] = identificador.getIdentificador();
+					addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+							UtilJSF.getLiteral("dialogScript.error.dominioAreaSRU", params));
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Método que se encarga de buscar los dominios que se utilizan y los agregará
+	 * si no están
+	 */
+	private boolean agregarDominioNoUtilizados() {
+		String contenido = UtilScripts.extraerContenido(data.getContenido());
+		List<String> identificadoresDominio = new ArrayList<>();
+		// Busca el patrón PLUGIN_DOMINIO.invocarDominio('{0}' siendo {0} el
+		// identificador
+		Matcher matcher = Pattern.compile("PLUGIN_DOMINIOS.invocarDominio\\(\\'("
+				+ ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO + "*?)\\'").matcher(contenido);
+		Integer totalCoincidencias = 0;
+		while (matcher.find()) {
+			totalCoincidencias++;
+			String identifDominio = matcher.group(1);
+			if (!identificadoresDominio.contains(identifDominio)) {
+				identificadoresDominio.add(identifDominio);
+			}
+		}
+
+		// Vamos a comprobar si alguna no tiene las comillas simples
+		Matcher matcherComprobarIncorrectas = Pattern.compile("PLUGIN_DOMINIOS.invocarDominio\\((.*?)\\)")
+				.matcher(contenido);
+		Integer totalCoincidenciasGenerico = 0;
+		while (matcherComprobarIncorrectas.find()) {
+			totalCoincidenciasGenerico++;
+			// EN JDK9 o superiores, existe un macher.result.count, que es más eficiente
+		}
+
+		if (totalCoincidenciasGenerico.compareTo(totalCoincidencias) != 0) {
+			addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+					UtilJSF.getLiteral("dialogScript.error.invocarDominioErroneo"));
+			return false;
+		}
 
 		if (!identificadoresDominio.isEmpty()) {
-			final List<ValorIdentificadorCompuesto> dominiosDelScript  =new ArrayList<>();
+			final List<ValorIdentificadorCompuesto> dominiosDelScript = new ArrayList<>();
 			TramiteVersion tramVersion = tramiteService.getTramiteVersion(Long.valueOf(this.idTramiteVersion));
 
-			//Revisamos si los identificadores están correctos
-			for(String identificadorDominio : identificadoresDominio) {
+			// Revisamos si los identificadores están correctos
+			for (String identificadorDominio : identificadoresDominio) {
 
 				ValorIdentificadorCompuesto identificador = new ValorIdentificadorCompuesto(identificadorDominio);
 				dominiosDelScript.add(identificador);
-				if (identificador.getAmbito() == TypeAmbito.ENTIDAD && !UtilJSF.getIdentificadorEntidad().equals(identificador.getIdentificadorEntidad())) {
+				if (identificador.getAmbito() == TypeAmbito.ENTIDAD
+						&& !UtilJSF.getIdentificadorEntidad().equals(identificador.getIdentificadorEntidad())) {
 					String[] params = new String[1];
 					params[0] = identificador.getIdentificador();
 					addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
@@ -443,17 +653,16 @@ public class DialogScript extends DialogControllerBase {
 				}
 
 				if (identificador.getAmbito() == TypeAmbito.AREA) {
-					//Doble comprobacion
+					// Doble comprobacion
 					// - C1: Primero si la entidad del area es de otra area, error
 					if (!UtilJSF.getIdentificadorEntidad().equals(identificador.getIdentificadorEntidad())) {
-						//Si la entidad no cuadra, es que ya está mal
+						// Si la entidad no cuadra, es que ya está mal
 						String[] params = new String[1];
 						params[0] = identificador.getIdentificador();
 						addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
 								UtilJSF.getLiteral("dialogScript.error.identificador.otraEntidad", params));
 						return false;
 					}
-
 
 					// - C2: Comprobar el area coincide con el del tramite.
 					if (!tramVersion.getIdentificadorArea().equals(identificador.getIdentificadorArea())) {
@@ -463,16 +672,15 @@ public class DialogScript extends DialogControllerBase {
 						addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
 								UtilJSF.getLiteral("dialogScript.error.identificador.otraArea", params));
 						return false;
-			        }
+					}
 
 				}
 			}
 
-			//Si no ha petado, actualizamos los valores
+			// Si no ha petado, actualizamos los valores
 			tramiteService.actualizarDominios(tramVersion, dominiosDelScript);
 			// Actualizamos los dominios
 			dominios = tramiteService.getDominioSimpleByTramiteId(Long.valueOf(idTramiteVersion));
-
 
 		}
 		return true;
@@ -562,6 +770,15 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void ayuda() {
 		UtilJSF.openHelp("script");
+	}
+
+	/**
+	 * Obtiene identificador SR
+	 */
+	public String identificadorSR(ComponenteFormulario componente) {
+		SeccionReutilizable sr = srService.getSeccionReutilizable(
+				((ComponenteFormularioCampoSeccionReutilizable) componente).getIdSeccionReutilizable());
+		return sr.getIdentificador();
 	}
 
 	/**
@@ -1088,6 +1305,20 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
+	 * @return the srL
+	 */
+	public final List<ComponenteFormularioCampoSeccionReutilizable> getSrL() {
+		return srL;
+	}
+
+	/**
+	 * @param srL the srL to set
+	 */
+	public final void setSrL(List<ComponenteFormularioCampoSeccionReutilizable> srL) {
+		this.srL = srL;
+	}
+
+	/**
 	 * @return the idFormularioActual
 	 */
 	public String getIdFormularioActual() {
@@ -1113,6 +1344,20 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void setIdFormularioInternoActual(final String idFormularioInternoActual) {
 		this.idFormularioInternoActual = idFormularioInternoActual;
+	}
+
+	/**
+	 * @return the tipoScriptSeccionReutilizable
+	 */
+	public String getTipoScriptSeccionReutilizable() {
+		return tipoScriptSeccionReutilizable;
+	}
+
+	/**
+	 * @param tipoScriptSeccionReutilizable the tipoScriptSeccionReutilizable to set
+	 */
+	public void setTipoScriptSeccionReutilizable(String tipoScriptSeccionReutilizable) {
+		this.tipoScriptSeccionReutilizable = tipoScriptSeccionReutilizable;
 	}
 
 	/**
@@ -1157,6 +1402,62 @@ public class DialogScript extends DialogControllerBase {
 		}
 
 		return true;
+	}
+
+	/**
+	 * @return the identificadorSeccion
+	 */
+	public String getIdentificadorSeccion() {
+		return identificadorSeccion;
+	}
+
+	/**
+	 * @return the visibleScriptSR
+	 */
+	public final boolean isVisibleScriptSR() {
+		return visibleScriptSR;
+	}
+
+	/**
+	 * @param visibleScriptSR the visibleScriptSR to set
+	 */
+	public final void setVisibleScriptSR(boolean visibleScriptSR) {
+		this.visibleScriptSR = visibleScriptSR;
+	}
+
+	/**
+	 * @param identificadorSeccion the identificadorSeccion to set
+	 */
+	public void setIdentificadorSeccion(String identificadorSeccion) {
+		this.identificadorSeccion = identificadorSeccion;
+	}
+
+	/**
+	 * @return the tipoDisenyo
+	 */
+	public String getTipoDisenyo() {
+		return tipoDisenyo;
+	}
+
+	/**
+	 * @param tipoDisenyo the tipoDisenyo to set
+	 */
+	public void setTipoDisenyo(String tipoDisenyo) {
+		this.tipoDisenyo = tipoDisenyo;
+	}
+
+	/**
+	 * @return the tieneSR
+	 */
+	public final boolean isTieneSR() {
+		return tieneSR;
+	}
+
+	/**
+	 * @param tieneSR the tieneSR to set
+	 */
+	public final void setTieneSR(boolean tieneSR) {
+		this.tieneSR = tieneSR;
 	}
 
 }

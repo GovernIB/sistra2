@@ -76,9 +76,9 @@ public class JImagenFormulario implements IModelApi {
 		return imagen;
 	}
 
-	public static JImagenFormulario createDefault(final int pOrden, final JLineaFormulario pJLinea) {
+	public static JImagenFormulario createDefault(final int pOrden, final JLineaFormulario pJLinea, final boolean isTipoSeccion, final String identificadorSeccion) {
 		final JImagenFormulario jModel = new JImagenFormulario();
-		jModel.setElementoFormulario(JElementoFormulario.createDefault(TypeObjetoFormulario.IMAGEN, pOrden, pJLinea));
+		jModel.setElementoFormulario(JElementoFormulario.createDefault(TypeObjetoFormulario.IMAGEN, pOrden, pJLinea, isTipoSeccion, identificadorSeccion));
 		return jModel;
 	}
 

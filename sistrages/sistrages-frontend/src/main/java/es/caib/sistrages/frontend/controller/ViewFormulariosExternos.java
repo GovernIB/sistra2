@@ -15,26 +15,21 @@ import org.primefaces.model.menu.MenuModel;
 
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Area;
-import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.Sesion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
-import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
-import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.FormularioExternoService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.ResultadoError;
-import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
-import es.caib.sistrages.frontend.util.UtilRest;
 
 /**
  * Mantenimiento de formularios externos de area.
@@ -58,9 +53,6 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	/** tramite service. */
 	@Inject
 	private TramiteService tramiteService;
-
-	@Inject
-	private EntidadService entidadService;
 
 	/** Lista de areas. */
 	private List<Area> listaAreas;
@@ -100,19 +92,19 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 		setAccion("S");
 
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
-			final List<TypeRolePermisos> permisos = securityService
-					.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
-			if (!permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
-					&& !permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
-					&& !permisos.contains(TypeRolePermisos.CONSULTA)) {
-				throw new FrontException(
-						"No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area");
-			}
-		} else if (UtilJSF.getSessionBean().getActiveRole() != TypeRoleAcceso.ADMIN_ENT) {
-			throw new FrontException(
-					"No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area");
-		}
+		/*
+		 * if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) { final
+		 * List<TypeRolePermisos> permisos = securityService
+		 * .getPermisosDesarrolladorEntidadByArea(Long.valueOf(id)); if
+		 * (!permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA) &&
+		 * !permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA) &&
+		 * !permisos.contains(TypeRolePermisos.CONSULTA)) { throw new FrontException(
+		 * "No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area"
+		 * ); } } else if (UtilJSF.getSessionBean().getActiveRole() !=
+		 * TypeRoleAcceso.ADMIN_ENT) { throw new FrontException(
+		 * "No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area"
+		 * ); }
+		 */
 
 		// Recupera datos
 		buscar();

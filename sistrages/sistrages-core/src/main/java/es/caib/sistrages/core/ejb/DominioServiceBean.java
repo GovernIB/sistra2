@@ -325,4 +325,10 @@ public class DominioServiceBean implements DominioService {
 		return dominioService.existeFuenteDato(ambito, identificador, codigoEntidad, codigoArea, codigoFD);
 	}
 
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<Dominio> listDominio(List<TypeAmbito> ambitos, Long idTramite, String filtro) {
+		return dominioService.listDominio(ambitos, idTramite, filtro) ;
+	}
+
 }

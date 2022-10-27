@@ -10,6 +10,11 @@
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogHistorialVersion.titulo']}"/></title>
+	<script type="text/javascript">
+		function copy(){
+			console.log(#{dialogHistorialVersion.datoSeleccionado.release});
+		}
+	</script>
 </h:head>
 
 <h:body>
@@ -49,7 +54,7 @@
 				        <h:outputText value="#{td.release}" />
 				    </p:column>
 
-				    <p:column headerText="#{msg['dialogHistorialVersion.headerHuella']}">
+				    <p:column headerText="#{msg['dialogHistorialVersion.headerHuella']}" style="width:20%;">
 				        <h:outputText value="#{td.huella}" />
 				    </p:column>
 
@@ -87,6 +92,7 @@
 		        		</p:commandButton>
 
 		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogHistorialVersion.cancelar}" process="@this" />
+		        		<p:commandButton value="#{msg['dialogDisenyoFormulario.title.copy']}" icon="fa fa-clipboard" actionListener="#{dialogHistorialVersion.generarTxt()}"  process="@this"/>
 		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogHistorialVersion.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>

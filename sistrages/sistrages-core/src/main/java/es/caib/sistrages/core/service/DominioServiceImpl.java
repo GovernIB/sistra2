@@ -122,6 +122,11 @@ public class DominioServiceImpl implements DominioService {
 		return dominioDao.getAllByFiltro(ambito, id, filtro);
 	}
 
+	@Override
+	public List<Dominio> listDominio(List<TypeAmbito> ambitos, Long idTramite, String filtro) {
+		return dominioDao.getAllByFiltro(ambitos, idTramite, filtro);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -376,5 +381,7 @@ public class DominioServiceImpl implements DominioService {
 		return dominioDao.getDominioByIdentificador(valor.getAmbito(), valor.getIdentificador(),
 				valor.getIdentificadorEntidad(), valor.getIdentificadorArea(), null, null, null);
 	}
+
+
 
 }

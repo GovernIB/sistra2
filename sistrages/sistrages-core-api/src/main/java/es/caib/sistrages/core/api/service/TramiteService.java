@@ -15,6 +15,8 @@ import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.SeccionReutilizable;
+import es.caib.sistrages.core.api.model.SeccionReutilizableTramite;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -744,6 +746,33 @@ public interface TramiteService {
 	 */
 	public boolean getCountTramiteVersionByGfe(Long id);
 
+	/**
+	 * Actualiza la fecha del tramite versión (cuando se toca cualquier cosa del trámite)
+	 * @param idTramiteVersion
+	 * @param username
+	 * @param detalle
+	 */
 	void actualizarFechaTramiteVersion(Long idTramiteVersion, String username, String detalle);
+
+	/**
+	 * Devueve los tramites que utilizan la seccion reutilizable
+	 * @param valueOf
+	 * @return
+	 */
+	public List<SeccionReutilizableTramite> getTramiteVersionBySeccionReutilizable(Long idSeccionReutilizable);
+
+	/**
+	 * Lista de secciones reutilizables del tramite.
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	public List<SeccionReutilizable> getSeccionesTramite(Long idTramiteVersion);
+
+	/**
+	 * Indica si hay tramites asociados.
+	 * @param codigo
+	 * @return
+	 */
+	public boolean existenTramitesBySeccionReutilizable(Long codigo);
 
 }

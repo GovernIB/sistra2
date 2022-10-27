@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogDisenyoSeccionReutilizable.titulo']}"/></title>
+</h:head>
+
+<h:body>
+  	 <f:facet name="last">
+   			 <h:outputStylesheet library="css" name="style.css" />
+ 	 </f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" 	value="#{dialogDisenyoSeccionReutilizable.modoAcceso}"/>
+		<f:viewAction action="#{dialogDisenyoSeccionReutilizable.init}" />
+	</f:metadata>
+
+	<h:form id="dialogPaginaSecciones" styleClass="margin-top-10">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" styleClass="w100"  columns = "2" cellpadding = "5" cellspacing = "0">
+
+		         	<h:column>
+						<p:outputLabel for="seccion" value="#{msg['dialogDisenyoSeccionReutilizable.secciones']}:"  />
+					</h:column>
+					<h:column>
+						 <p:selectOneMenu id="seccion" layout="pageDirection" value="#{dialogDisenyoSeccionReutilizable.seccion}"  style="width:20em" height="8em" converter="#{seccionReutilizableConverter}">
+						 	<p:ajax event="change" update="dialogPaginaSecciones:descripcion" listener="#{dialogDisenyoSeccionReutilizable.cargarDescripcion()}" />
+							<f:selectItems value="#{dialogDisenyoSeccionReutilizable.secciones}" var="seccion" itemValue="#{seccion}" itemLabel="#{seccion.identificador}" />
+						</p:selectOneMenu>
+					</h:column>
+					<h:column>
+						<p:outputLabel for="descripcion" value="#{msg['dialogTestData.descripcion']}:"  />
+					</h:column>
+					<h:column>
+						 <p:inputText id="descripcion" value="#{dialogDisenyoSeccionReutilizable.descripcion}" readonly="true" style="width:20em"/>
+					</h:column>
+					<h:column>
+						<p:outputLabel  style="margin-bottom:40px" ></p:outputLabel>
+					</h:column>
+					<h:column>
+						<p:outputLabel  style="margin-bottom:40px" ></p:outputLabel>
+					</h:column>
+					<h:column>
+						<p:outputLabel  style="margin-bottom:40px" ></p:outputLabel>
+					</h:column>
+					<h:column>
+						<p:outputLabel  style="margin-bottom:40px" ></p:outputLabel>
+					</h:column>
+ 				</h:panelGrid>
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogDisenyoSeccionReutilizable.aceptar()}" process="@form" update="@form growlDialog" rendered="#{dialogDisenyoSeccionReutilizable.alta or dialogDisenyoSeccionReutilizable.edicion}" />
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDisenyoSeccionReutilizable.cancelar()}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDisenyoSeccionReutilizable.ayuda()}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

@@ -75,10 +75,10 @@ public class JEtiquetaFormulario implements IModelApi {
 		return etiqueta;
 	}
 
-	public static JEtiquetaFormulario createDefault(final int pOrden, final JLineaFormulario pJLinea) {
+	public static JEtiquetaFormulario createDefault(final int pOrden, final JLineaFormulario pJLinea, final boolean isTipoSeccion, final String identificadorSeccion) {
 		final JEtiquetaFormulario jModel = new JEtiquetaFormulario();
 		jModel.setTipo(TypeEtiqueta.INFO.toString());
-		jModel.setElementoFormulario(JElementoFormulario.createDefault(TypeObjetoFormulario.ETIQUETA, pOrden, pJLinea));
+		jModel.setElementoFormulario(JElementoFormulario.createDefault(TypeObjetoFormulario.ETIQUETA, pOrden, pJLinea, isTipoSeccion, identificadorSeccion));
 		return jModel;
 	}
 

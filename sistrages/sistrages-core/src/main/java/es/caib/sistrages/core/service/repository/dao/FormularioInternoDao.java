@@ -9,7 +9,9 @@ import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
+import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
+import es.caib.sistrages.core.api.model.comun.FilaImportarSeccion;
 import es.caib.sistrages.core.api.model.comun.ScriptInfo;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
@@ -40,7 +42,7 @@ public interface FormularioInternoDao {
 	 * @param pId identificador de formulario
 	 * @return el valor de DisenyoFormulario
 	 */
-	DisenyoFormulario getFormularioCompletoById(Long pId);
+	DisenyoFormulario getFormularioCompletoById(Long pId, boolean sinSecciones);
 
 	/**
 	 * Obtiene el valor de pagina.
@@ -56,7 +58,7 @@ public interface FormularioInternoDao {
 	 * @param pId identificador de pagina
 	 * @return el valor de pagina
 	 */
-	PaginaFormulario getContenidoPaginaById(Long pId);
+	PaginaFormulario getContenidoPaginaById(Long pId, boolean sinSeccionesReutilizables);
 
 	/**
 	 * Obtiene el valor del componente.
@@ -97,10 +99,11 @@ public interface FormularioInternoDao {
 	 * @param pIdLinea    identificador de linea
 	 * @param pOrden      orden del elemento seleccionado
 	 * @param pPosicion   posicion a insertar sobre el elemento seleccionado
-	 * @return TODO
+	 * @param objeto 	  elemento para ser utilizado en el objeto añadido (de momento, sólo en sección reutilizable)
+	 * @return El elemento añadido
 	 */
 	ObjetoFormulario addComponente(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina, final Long pIdLinea,
-			final Integer pOrden, final String pPosicion);
+			final Integer pOrden, final String pPosicion, final Object objeto, boolean isTipoSeccion, String identificadorSeccion);
 
 	/**
 	 * Actualiza un componente de formulario.
@@ -154,16 +157,17 @@ public interface FormularioInternoDao {
 
 	/**
 	 * Devuelve el formulario interno simple.
-	 *
-	 * @param idFormulario
 	 * @param idFormularioTramite
+	 * @param idFormulario
 	 * @param idComponente
 	 * @param idPagina
 	 * @param cargarPaginasPosteriores
+	 * @param isSeccion
+	 * @param identificadorSeccion
 	 * @return
 	 */
 	DisenyoFormularioSimple getFormularioInternoSimple(Long idFormularioTramite, Long idFormulario, String idComponente,
-			String idPagina, boolean cargarPaginasPosteriores);
+			String idPagina, boolean cargarPaginasPosteriores,  boolean isSeccion, String identificadorSeccion);
 
 	/**
 	 * Devuelve el identificador del formulario.
@@ -241,5 +245,19 @@ public interface FormularioInternoDao {
 	 * @param pagina
 	 */
 	void guardarPagina(PaginaFormulario pagina);
+
+	/**
+	 * Crea formulario.
+	 * @param seccion
+	 * @return
+	 */
+	Long addFormulario(SeccionReutilizable seccion);
+
+	/**
+	 * Importa un formulario de una seccion dependiendo de la accion.
+	 * @param filaSeccion
+	 * @return
+	 */
+	Long importarFormularioSeccion(FilaImportarSeccion filaSeccion);
 
 }

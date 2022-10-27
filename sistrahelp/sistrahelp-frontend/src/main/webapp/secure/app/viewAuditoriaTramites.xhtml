@@ -97,8 +97,9 @@
 					</h:panelGrid>
 					</p:column>
 					<p:column styleClass=" noPadding p-align-start">
-			        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" >
-		          			<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+			        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="w100, noPadding, noMargin">
+		          			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+		          			<p:commandButton value="#{msg['botones.copiar']}" icon="fa fa-clipboard"  actionListener="#{viewAuditoriaTramites.generarTxt()}" styleClass="w100"  process="@this" update="growl"/>
 		          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.ayuda}"/>
 						</h:panelGrid>
 					</p:column>
@@ -155,7 +156,7 @@
 			   	<p:column headerText="#{msg['viewAuditoriaTramites.headSIA']}" style="width:3% !important;" sortBy="#{dt.idProcedimientoSIA}">
 			        <h:outputText value="#{dt.idProcedimientoSIA}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headDescripcionEvento']}" style="width:17% !important;" sortBy="#{dt.descripcion}">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headDescripcionEvento']}" style="width:12% !important;" sortBy="#{dt.descripcion}">
 			        <h:outputText value="#{dt.descripcion}" />
 			    </p:column>
 			   	<p:column headerText="#{msg['viewAuditoriaTramites.headError']}" style="width:17% !important;" sortBy="#{dt.codigoError}">
@@ -164,6 +165,10 @@
 			</p:dataTable></p:outputPanel>
 
 			<h:outputScript >
+			  window.onload=function(){
+			  	$('#form\\:btnBuscar').click();
+			  }
+
 		      function triggerDblClick() {
 		        	$('#form\\:btnEditarHidden').click();
 		      }

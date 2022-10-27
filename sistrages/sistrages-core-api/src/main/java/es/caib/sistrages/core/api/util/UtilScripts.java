@@ -25,6 +25,7 @@ import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.api.model.types.TypePluginScript;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
+import es.caib.sistrages.core.api.model.types.TypeScriptSeccionReutilizable;
 
 /**
  * Util de scripts.
@@ -39,6 +40,32 @@ public class UtilScripts {
 	 */
 	private UtilScripts() {
 		// Vacio
+	}
+
+	/**
+	 * Devuelve los tipos de plugins para script de tipo formulario.
+	 *
+	 * @param tipoScript
+	 * @return
+	 */
+	public static List<TypePluginScript> getPluginsScript(final TypeScriptSeccionReutilizable tipoScript) {
+		final List<TypePluginScript> plugins = new ArrayList<>();
+		plugins.add(TypePluginScript.PLUGIN_SESIONTRAMITACION);;
+		plugins.add(TypePluginScript.PLUGIN_DOMINIOS);
+		plugins.add(TypePluginScript.PLUGIN_FORMULARIOS);
+		plugins.add(TypePluginScript.PLUGIN_UTILS);
+		plugins.add(TypePluginScript.PLUGIN_LOG);
+		plugins.add(TypePluginScript.PLUGIN_MENSAJES);
+		plugins.add(TypePluginScript.PLUGIN_ERROR);
+		switch (tipoScript) {
+		case CARGA_DATOS_INICIAL:
+			plugins.add(0, TypePluginScript.DATOS_VALORESINICIALES);
+			break;
+		default:
+			break;
+		}
+
+		return plugins;
 	}
 
 	/**

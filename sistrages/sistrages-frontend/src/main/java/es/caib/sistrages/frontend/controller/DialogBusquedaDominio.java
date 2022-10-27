@@ -8,10 +8,12 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -22,6 +24,10 @@ public class DialogBusquedaDominio extends DialogControllerBase {
 	 * id tramite.
 	 */
 	private String idTramite;
+	/** Tipo : Tramite o seccion **/
+	private String tipo;
+	/** Id seccion */
+	private String idSeccion;
 
 	/** Datos elemento. */
 	private List<Dominio> data;
@@ -83,7 +89,14 @@ public class DialogBusquedaDominio extends DialogControllerBase {
 	}
 
 	public void filtrar() {
-		data = dominioService.listDominio(Long.valueOf(idTramite), filtro);
+		if (tipo.equals(TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString())) {
+			data = dominioService.listDominio(Long.valueOf(idTramite), filtro);
+		} else {
+			List<TypeAmbito> ambitos = new ArrayList<>();
+			ambitos.add(TypeAmbito.ENTIDAD);
+			ambitos.add(TypeAmbito.GLOBAL);
+			data = dominioService.listDominio(ambitos, UtilJSF.getIdEntidad(), filtro);
+		}
 	}
 
 	/**
@@ -123,6 +136,34 @@ public class DialogBusquedaDominio extends DialogControllerBase {
 
 	public void setIdTramite(final String idTramite) {
 		this.idTramite = idTramite;
+	}
+
+	/**
+	 * @return the tipo
+	 */
+	public String getTipo() {
+		return tipo;
+	}
+
+	/**
+	 * @param tipo the tipo to set
+	 */
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	/**
+	 * @return the idSeccion
+	 */
+	public String getIdSeccion() {
+		return idSeccion;
+	}
+
+	/**
+	 * @param idSeccion the idSeccion to set
+	 */
+	public void setIdSeccion(String idSeccion) {
+		this.idSeccion = idSeccion;
 	}
 
 }

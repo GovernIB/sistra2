@@ -308,4 +308,13 @@ public interface DominioService {
 	 */
 	public Dominio loadDominioByIdentificadorCompuesto(String identificador);
 
+	/**
+	 * Devuelve una lista segun los ambitos, idTramite y el filtro
+	 * @param ambitos
+	 * @param idTramite
+	 * @param filtro
+	 * @return
+	 */
+	public List<Dominio> listDominio(List<TypeAmbito> ambitos, Long idTramite, String filtro);
+
 }

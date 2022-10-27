@@ -207,7 +207,8 @@ $.fn.appElement = function(options) {
 				element_f
 					.addClass("imc--el-seleccionat");
 
-				rcEditarComponente(element_f.attr(APP_CAMPO_ID));
+				//rcEditarComponente(element_f.attr(APP_CAMPO_ID));
+				rcEditarComponente2(element_f.attr(APP_CAMPO_ID), element_f.attr(APP_CAMPO_TIPO_SECCION), element_f.attr(APP_CAMPO_SECCION_ID),element_f.attr(APP_CAMPO_SECCION_FORM_ID) );
 
 			},
 			mou = function(e) {
@@ -228,8 +229,8 @@ $.fn.appElement = function(options) {
 							.addClass("imc--el-seleccionat");
 
 						revisaVisibilitat(el_selec_nou);
-						rcEditarComponente(el_selec_nou.attr(APP_CAMPO_ID));
-
+						//rcEditarComponente(el_selec_nou.attr(APP_CAMPO_ID));
+						rcEditarComponente2(el_selec_nou.attr(APP_CAMPO_ID), el_selec_nou.attr(APP_CAMPO_TIPO_SECCION), el_selec_nou.attr(APP_CAMPO_SECCION_ID),el_selec_nou.attr(APP_CAMPO_SECCION_FORM_ID));
 					}
 
 				} else if (e.keyCode === 40 || e.keyCode === 38) {
@@ -271,7 +272,8 @@ $.fn.appElement = function(options) {
 							.addClass("imc--el-seleccionat");
 
 						revisaVisibilitat(el_selec_nou, e_keyCode);
-						rcEditarComponente(el_selec_nou.attr(APP_CAMPO_ID));
+						//rcEditarComponente(el_selec_nou.attr(APP_CAMPO_ID));
+						rcEditarComponente2(el_selec_nou.attr(APP_CAMPO_ID), el_selec_nou.attr(APP_CAMPO_TIPO_SECCION), el_selec_nou.attr(APP_CAMPO_SECCION_ID),el_selec_nou.attr(APP_CAMPO_SECCION_FORM_ID));
 					}
 
 					e.preventDefault();

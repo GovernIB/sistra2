@@ -17,7 +17,7 @@ alter table STG_CONFAUT   add constraint STG_CONFAUT_ENT_FK foreign key (CAU_COD
 
 
 comment on column STG_CONFAUT.CAU_AMBITO is
-'Ámbito fuente datos (G : Global / E: Entidad / A: Área)';
+'�?mbito fuente datos (G : Global / E: Entidad / A: �?rea)';
 comment on column STG_CONFAUT.CAU_CODENT is
 'Indica la entidad si el ambito es de tipo entidad';
 
@@ -116,6 +116,6 @@ INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'iframeFirmaHeight', '500', 'Ancho de la ventana de firma');
 COMMIT; 
 
-/** --- 28/03/2022 **/
-ALTER TABLE STG_GESFOR MODIFY ( GFE_CODARE NOT NULL);
+/** Prop global para indicar el número de caracteres a partir del cuál empezar la búsqueda**/
+INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'formularioNumCharsBusqueda', '1', 'Número de carácteres a partir del cual se lanza la búsqueda en servidor del componente buscador dinámico.');
 

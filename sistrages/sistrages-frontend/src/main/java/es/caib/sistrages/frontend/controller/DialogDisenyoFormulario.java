@@ -37,6 +37,7 @@ import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.ParametroDominio;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.model.comun.ConstantesDisenyo;
@@ -45,11 +46,13 @@ import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeCampoIndexado;
 import es.caib.sistrages.core.api.model.types.TypeCampoTexto;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
+import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypeListaValores;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
+import es.caib.sistrages.core.api.service.SeccionReutilizableService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.core.api.util.UtilDisenyo;
@@ -79,7 +82,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	TramiteService tramiteService;
 
 	@Inject
+	SeccionReutilizableService seccionService;
+
+	@Inject
 	DominioService dominioService;
+
+	@Inject
+	SeccionReutilizableService seccionReutilizableService;
 
 	/** Id formulario **/
 	private String id;
@@ -87,11 +96,21 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/** Id. formulario paso. **/
 	private String idFormulario;
 
+	/** Id. seccion **/
+	private String idSeccion;
+	private String identificadorSeccion;
+
 	/** id tramite. */
 	private String idTramiteVersion;
 
+	/** Tipo de diseño: trámite o seccion **/
+	private String tipoDisenyo;
+
 	/** Formulario. **/
 	private DisenyoFormulario formulario;
+
+	/** Formulario. **/
+	private Map<Long,DisenyoFormulario> formularioSeccion;
 
 	/** Pag. actual. **/
 	private int paginaActual;
@@ -160,6 +179,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/** Altura **/
 	private String height;
 
+	public boolean isTipoTramite() { return tipoDisenyo != null && tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString());}
+	public boolean isTipoSeccion() { return tipoDisenyo != null && tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());}
 	/**
 	 * Inicializacion.
 	 **/
@@ -169,15 +190,26 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		recuperarFormulario(id);
 
 		// recupera tramite version
-		if (StringUtils.isNotEmpty(idTramiteVersion)) {
-			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
-			idiomas = UtilTraducciones.getIdiomasSoportados(tramiteVersion);
-			if (!idiomas.isEmpty()) {
-				if (idiomas.contains(UtilJSF.getIdioma().toString())) {
-					idioma = UtilJSF.getIdioma().toString();
-				} else {
-					idioma = idiomas.get(0);
+		if (isTipoTramite() && StringUtils.isNotEmpty(idTramiteVersion)) {
+				tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
+				idiomas = UtilTraducciones.getIdiomasSoportados(tramiteVersion);
+				if (!idiomas.isEmpty()) {
+					if (idiomas.contains(UtilJSF.getIdioma().toString())) {
+						idioma = UtilJSF.getIdioma().toString();
+					} else {
+						idioma = idiomas.get(0);
+					}
 				}
+		}
+
+		if (isTipoSeccion()) {
+			idiomas = new ArrayList<>();
+			idiomas.add(TypeIdioma.CASTELLANO.toString());
+			idiomas.add(TypeIdioma.CATALAN.toString());
+			if (idiomas.contains(UtilJSF.getIdioma().toString())) {
+				idioma = UtilJSF.getIdioma().toString();
+			} else {
+				idioma = idiomas.get(0);
 			}
 		}
 
@@ -215,6 +247,17 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 * Confirmacion cambios.
 	 **/
 	public void confirmacionCambios() {
+
+		if (this.isTipoSeccion()) {
+			final String identificador = ((ComponenteFormulario) objetoFormularioEdit).getIdComponente();
+			if(!identificador.startsWith("SRE_" + this.getIdentificadorSeccion())) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("error.validacion.identificador.formatoSRE") +" " + "SRE_" + this.getIdentificadorSeccion(), true, ID_TEXT_IDENTIFICADOR);
+				return;
+			}
+		}
+
+
 		// Guarda cambios
 		aplicarCambios();
 
@@ -232,13 +275,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			abrirPropiedadesFormulario(false);
 			break;
 		case ADD_LINEA:
-			insertaLineaComponenteBloque(TypeObjetoFormulario.LINEA);
+			insertaLineaComponenteBloque(TypeObjetoFormulario.LINEA, null);
 			break;
 		case ADD_SECCION:
-			insertaLineaComponenteBloque(TypeObjetoFormulario.SECCION);
+			insertaLineaComponenteBloque(TypeObjetoFormulario.SECCION, null);
 			break;
 		case ADD_ETIQUETA:
-			insertaLineaComponenteBloque(TypeObjetoFormulario.ETIQUETA);
+			insertaLineaComponenteBloque(TypeObjetoFormulario.ETIQUETA, null);
 			break;
 		case ADD_TEXTO:
 			insertaCampo(TypeObjetoFormulario.CAMPO_TEXTO);
@@ -250,8 +293,12 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			insertaCampo(TypeObjetoFormulario.CHECKBOX);
 			break;
 		case ADD_CAPTCHA:
-			insertaLineaComponenteBloque(TypeObjetoFormulario.CAPTCHA);
+			insertaLineaComponenteBloque(TypeObjetoFormulario.CAPTCHA, null);
 			// insertaCampo(TypeObjetoFormulario.CAPTCHA);
+			break;
+		case ADD_SECCION_REUTILIZABLE:
+			final Map<String, String> params = new HashMap<>();
+			UtilJSF.openDialog(DialogDisenyoSeccionReutilizable.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 500, 150);
 			break;
 		case COPIAR:
 			copy(false);
@@ -284,8 +331,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			cancelar(false);
 			break;
 		case SELECCIONAR_OTRO_COMPONENTE:
-			cambiarEdicionComponente(codigoObjFormularioDestino);
+			cambiarEdicionComponente(codigoObjFormularioDestino, false, null , null);
 			codigoObjFormularioDestino = null;
+			break;
+		default:
 			break;
 		}
 
@@ -347,9 +396,20 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		if (StringUtils.isNotEmpty(map.get("id"))) {
 			idComponente = map.get("id");
 		}
+		boolean isTipoSeccion = map.get("tipoSeccion") != null && ("S".equals(map.get("tipoSeccion")));
+		Long seccionID = null;
+		Long seccionFormID = null;
+		if (isTipoSeccion) {
+			if (map.get("seccionId") != null) {
+				seccionID = Long.valueOf(map.get("seccionId"));
+			}
+			if (map.get("seccionFormId") != null) {
+				seccionFormID = Long.valueOf(map.get("seccionFormId"));
+			}
+		}
 
 		// Cambiamos a nuevo componente
-		cambiarEdicionComponente(idComponente);
+		cambiarEdicionComponente(idComponente, isTipoSeccion, seccionID, seccionFormID);
 
 	}
 
@@ -358,15 +418,19 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 *
 	 * @param idComponente the id componente
 	 */
-	private void cambiarEdicionComponente(final String idComponente) {
+	private void cambiarEdicionComponente(final String idComponente, boolean isTipoSeccion, Long seccionID, Long seccionFormID) {
 		limpiaSeleccion();
 
 		if (idComponente != null) {
 			ObjetoFormulario cf = null;
-			if (idComponente.contains("L")) {
-				cf = formulario.getPaginas().get(paginaActual - 1).getLinea(Long.parseLong(idComponente.substring(1)));
+			if (isTipoSeccion) {
+				cf = getComponenteSeccionReutilizable(seccionID, seccionFormID, idComponente);
 			} else {
-				cf = formulario.getPaginas().get(paginaActual - 1).getComponente(Long.parseLong(idComponente));
+				if (idComponente.contains("L")) {
+					cf = formulario.getPaginas().get(paginaActual - 1).getLinea(Long.parseLong(idComponente.substring(1)));
+				} else {
+					cf = formulario.getPaginas().get(paginaActual - 1).getComponente(Long.parseLong(idComponente));
+				}
 			}
 
 			// Buscamos nuevo componente
@@ -394,8 +458,76 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		panelPropiedadesUrl = pagina;
 		generaNumColumnas();
+		calcularVisibilidadSeleccion();
 	}
 
+	/** Las variables booleanas para mostrar o desactivar botones **/
+	private boolean desactivarAplicarCambios = false;
+	private boolean habilitadoObjetoMovible = true;
+	public boolean getHabilitadoBtnObjCopy() {  return habilitadoObjetoMovible; }
+	public boolean getHabilitadoBtnObjPaste() { return habilitadoObjetoMovible;}
+	public boolean getHabilitadoBtnObjCut() { return habilitadoObjetoMovible;}
+	public boolean getHabilitadoBtnObjDel() { return habilitadoObjetoMovible;}
+
+
+	private boolean habilitadoObjetoAccion = true;
+	public boolean getHabilitadoBtnLN() { return habilitadoObjetoAccion; }
+	public boolean getHabilitadoBtnSC() { return habilitadoObjetoAccion; }
+	public boolean getHabilitadoBtnET() { return habilitadoObjetoAccion; }
+	public boolean getHabilitadoBtnCT() { return habilitadoObjetoAccion; }
+	public boolean getHabilitadoBtnSE() { return habilitadoObjetoAccion; }
+	public boolean getHabilitadoBtnCK() { return habilitadoObjetoAccion; }
+	public boolean getHabilitadoBtnOC() { return habilitadoObjetoAccion; }
+	public boolean getHabilitadoBtnCP() { return habilitadoObjetoAccion; }
+	public boolean getHabilitadoBtnSR() { return habilitadoObjetoAccion; }
+
+
+	/**
+	 * Respecto a objetoFormularioEdit , calcula la visibilidad, si se puede tocar ciertos botones o tienen que no ser visibles.
+	 */
+	private void calcularVisibilidadSeleccion() {
+
+		//Desactivamos el boton de aplicar cambios
+		this.desactivarAplicarCambios = objetoFormularioEdit == null || (objetoFormularioEdit instanceof ComponenteFormulario && ((ComponenteFormulario) objetoFormularioEdit).isTipoSeccionReutilizable());
+
+		//Variable que indica si es movible.
+		if (isTipoSeccion()) {
+			//Solo esta habilitado si el orden es mayor que 1 (es decir, no es la seccion principal)
+			this.habilitadoObjetoMovible = objetoFormularioEdit != null;
+		} else {
+			if (objetoFormularioEdit == null) {
+				this.habilitadoObjetoMovible = false;
+			} else {
+				this.habilitadoObjetoMovible = !(objetoFormularioEdit instanceof ComponenteFormulario) || (objetoFormularioEdit instanceof ComponenteFormulario && !((ComponenteFormulario)objetoFormularioEdit).isTipoSeccionReutilizable());
+			}
+		}
+
+		//Variable que indica si los botones de añadir componentes están activos.
+		if (objetoFormularioEdit == null) {
+			habilitadoObjetoAccion = true;
+		}
+
+		if (isTipoSeccion()) {
+			habilitadoObjetoAccion = true;
+		} else {
+			habilitadoObjetoAccion =  !(objetoFormularioEdit instanceof ComponenteFormulario) || (objetoFormularioEdit instanceof ComponenteFormulario && !((ComponenteFormulario)objetoFormularioEdit).isTipoSeccionReutilizable());
+		}
+	}
+
+	private ObjetoFormulario getComponenteSeccionReutilizable(Long seccionID, Long seccionFormID, String idComponente) {
+		if (formularioSeccion == null) {
+			formularioSeccion = new HashMap<>();
+		}
+		if (!formularioSeccion.containsKey(seccionFormID)) {
+			DisenyoFormulario disenyo = seccionReutilizableService.getFormularioInternoCompleto(seccionFormID);
+			formularioSeccion.put(seccionFormID, disenyo);
+		}
+		if (idComponente.contains("L")) {
+			return formularioSeccion.get(seccionFormID).getPaginas().get(0).getLinea(Long.parseLong(idComponente.substring(1)));
+		} else {
+			return formularioSeccion.get(seccionFormID).getPaginas().get(0).getComponente(Long.parseLong(idComponente));
+		}
+	}
 	/**
 	 * Obtiene la pagina que tiene que cargar en la derecha en propiedades.
 	 *
@@ -416,6 +548,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			break;
 		case SECCION:
 			pagina = "/secure/app/dialogDisenyoFormularioSeccion.xhtml";
+			break;
+		case SECCION_REUTILIZABLE:
+			pagina = "/secure/app/dialogDisenyoFormularioSeccionReutilizable.xhtml";
 			break;
 		case CHECKBOX:
 			pagina = "/secure/app/dialogDisenyoFormularioComponente.xhtml";
@@ -481,6 +616,18 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 							UtilJSF.getLiteral("error.validacion.identificador.vacio"), true, ID_TEXT_IDENTIFICADOR);
 					return false;
 				}
+
+				if (this.isTipoSeccion() && !identificador.startsWith("SRE_" + this.getIdentificadorSeccion())) {
+						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+								UtilJSF.getLiteral("error.validacion.identificador.formatoSRE") +" " + "SRE_" + this.getIdentificadorSeccion(), true, ID_TEXT_IDENTIFICADOR);
+						return false;
+				}
+
+				if (!this.isTipoSeccion() && identificador.startsWith("SRE_")) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+							UtilJSF.getLiteral("error.validacion.identificador.formatoExclusivoParaSRE"), true, ID_TEXT_IDENTIFICADOR);
+					return false;
+			}
 
 				// Tiene que formar un tipo de regExp
 				if (!identificador.matches("^[a-zA-Z0-9_-]{1,50}")) {
@@ -656,13 +803,21 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		}
 	}
 
+
+
 	/**
 	 * Aplicar cambios.
 	 **/
 	public void aplicarCambios() {
 		FacesContext.getCurrentInstance().isValidationFailed();
-		if (objetoFormularioEdit != null) {
-			final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
+		if (objetoFormularioEdit != null && !desactivarAplicarCambios) {
+
+			final PaginaFormulario pagina;
+			if (objetoFormularioEdit instanceof ComponenteFormulario &&   ((ComponenteFormulario) objetoFormularioEdit).isTipoSeccionReutilizable()) {
+				pagina = formularioSeccion.get(((ComponenteFormulario) objetoFormularioEdit).getIdFormSeccion()).getPaginas().get(paginaActual - 1);
+			} else {
+				pagina = formulario.getPaginas().get(paginaActual - 1);
+			}
 
 			if (!sonValidosRequerimientos(pagina)) {
 				return;
@@ -693,7 +848,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				// empleados no lo está ya
 				if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
 					final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
-					if (TypeListaValores.DOMINIO.equals(campo.getTipoListaValores()) && campo.getCodDominio() != null
+					if (this.isTipoTramite() && TypeListaValores.DOMINIO.equals(campo.getTipoListaValores()) && campo.getCodDominio() != null
 							&& !dominioService.tieneTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo())) {
 						dominioService.addTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo());
 					}
@@ -707,8 +862,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					throw new ErrorNoControladoException(e);
 				}
 				if (this.cambios) {
-					tramiteService.actualizarFechaTramiteVersion(Long.parseLong(idTramiteVersion),
-							UtilJSF.getSessionBean().getUserName(), "Modificación formulario");
+					if (isTipoSeccion()) {
+						seccionService.actualizarFechaSeccion(Long.parseLong(idSeccion),
+								UtilJSF.getSessionBean().getUserName(), UtilJSF.getLiteral("info.modificado.formulario"));
+					} else {
+						tramiteService.actualizarFechaTramiteVersion(Long.parseLong(idTramiteVersion),
+							UtilJSF.getSessionBean().getUserName(), UtilJSF.getLiteral("info.modificado.formulario") );
+					}
 				}
 				this.cambios = false;
 				addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.modificado.ok"));
@@ -777,10 +937,30 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Editar texto componente.
 	 */
+	public void consultarTraduccionesTexto() {
+		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getTexto();
+		traduccionesI = formIntService.getComponenteFormulario(objetoFormularioEdit.getCodigo()).getTexto();
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.CONSULTA,
+				((ComponenteFormulario) objetoFormularioEdit).getTexto(), idiomas, idiomas);
+	}
+
+	/**
+	 * Editar texto componente.
+	 */
 	public void editarTraduccionesTextoOpcional() {
 		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getTexto();
 		traduccionesI = formIntService.getComponenteFormulario(objetoFormularioEdit.getCodigo()).getTexto();
 		UtilTraducciones.openDialogTraduccionOpcional(TypeModoAcceso.valueOf(modoAcceso),
+				((ComponenteFormulario) objetoFormularioEdit).getTexto(), idiomas, idiomas);
+	}
+
+	/**
+	 * Consultar texto componente.
+	 */
+	public void consultarTraduccionesTextoOpcional() {
+		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getTexto();
+		traduccionesI = formIntService.getComponenteFormulario(objetoFormularioEdit.getCodigo()).getTexto();
+		UtilTraducciones.openDialogTraduccionOpcional(TypeModoAcceso.CONSULTA,
 				((ComponenteFormulario) objetoFormularioEdit).getTexto(), idiomas, idiomas);
 	}
 
@@ -811,6 +991,16 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getAyuda();
 		traduccionesI = formIntService.getComponenteFormulario(objetoFormularioEdit.getCodigo()).getAyuda();
 		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso), traduccionesEdit, idiomas, idiomas,
+				true, codigoObjFormularioDestino, codigoObjFormularioDestino);
+	}
+
+	/**
+	 * Editar ayuda componente.
+	 */
+	public void consultarTraduccionesAyuda() {
+		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getAyuda();
+		traduccionesI = formIntService.getComponenteFormulario(objetoFormularioEdit.getCodigo()).getAyuda();
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.CONSULTA, traduccionesEdit, idiomas, idiomas,
 				true, codigoObjFormularioDestino, codigoObjFormularioDestino);
 	}
 
@@ -865,10 +1055,14 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		ObjetoFormulario ofOriginal = null;
 
-		if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
-			ofOriginal = formulario.getPaginas().get(paginaActual - 1).getLinea(objetoFormularioEdit.getCodigo());
-		} else if (objetoFormularioEdit instanceof ComponenteFormulario) {
-			ofOriginal = formulario.getPaginas().get(paginaActual - 1).getComponente(objetoFormularioEdit.getCodigo());
+		if (objetoFormularioEdit != null && objetoFormularioEdit instanceof ComponenteFormulario && ((ComponenteFormulario) objetoFormularioEdit).isTipoSeccionReutilizable() ) {
+			ofOriginal = formularioSeccion.get(((ComponenteFormulario) objetoFormularioEdit).getIdFormSeccion()).getPaginas().get(0).getComponente(objetoFormularioEdit.getCodigo());
+		} else {
+			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
+				ofOriginal = formulario.getPaginas().get(paginaActual - 1).getLinea(objetoFormularioEdit.getCodigo());
+			} else if (objetoFormularioEdit instanceof ComponenteFormulario) {
+				ofOriginal = formulario.getPaginas().get(paginaActual - 1).getComponente(objetoFormularioEdit.getCodigo());
+			}
 		}
 
 		if (!UtilCoreApi.equalsModelApi(ofOriginal, objetoFormularioEdit) || this.cambios) {
@@ -1057,6 +1251,14 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		if (cut && objetoFormularioEdit.getCodigo().compareTo(idObjetoCopy) == 0) {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.mismoelemento"), true);
 			return;
+		}
+
+		if (this.isTipoSeccion()) {
+			final String identificador = ((ComponenteFormulario) objetoFormularioEdit).getIdComponente();
+			if (!identificador.startsWith("SRE_" + this.getIdentificadorSeccion())) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.validacion.identificador.formatoSRE") +" " + "SRE_" + this.getIdentificadorSeccion(), true, ID_TEXT_IDENTIFICADOR);
+				return;
+			}
 		}
 
 		if (tipoObjetoCopy == TypeObjetoFormulario.CAMPO_TEXTO || tipoObjetoCopy == TypeObjetoFormulario.CAMPO_OCULTO
@@ -1259,6 +1461,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		RequestContext.getCurrentInstance().update("dialogDisenyoFormulario:componente-panel");
 		RequestContext.getCurrentInstance().update("dialogDisenyoFormulario:bh-mover");
 		RequestContext.getCurrentInstance().update("dialogDisenyoFormulario:botonera");
+		RequestContext.getCurrentInstance().update("dialogDisenyoFormulario:bh-herramientas");
 	}
 
 	/**
@@ -1398,7 +1601,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 			if (orden != null) {
 				final ObjetoFormulario componente = formIntService.addComponenteFormulario(tipoCampo, idPagina,
-						linea.getCodigo(), orden, posicionamiento);
+						linea.getCodigo(), orden, posicionamiento, null, this.isTipoSeccion(), identificadorSeccion, this.idTramiteVersion);
 
 				// actualizamos modelo
 				pagina.getLineas().get(linea.getOrden() - 1).addComponente((ComponenteFormulario) componente);
@@ -1414,18 +1617,69 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	/** Inserta un componente de tipo seccion. **/
 	public void insertaSeccion() {
+		if (isTipoSeccion() && tieneYaSeccion()) {
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("dialogDisenyoFormulario.tipoSeccion.errorSecciones"), true);
+			return;
+		}
+
 		if (isModificadoSinGuardar(TypeAccionFormulario.ADD_SECCION)) {
 			return;
 		}
-		insertaLineaComponenteBloque(TypeObjetoFormulario.SECCION);
+		insertaLineaComponenteBloque(TypeObjetoFormulario.SECCION, null);
+	}
+
+	/**
+	 * Busca si tiene alguna seccion.
+	 * @return
+	 */
+	private boolean tieneYaSeccion() {
+		if (formulario != null && formulario.getPaginas() != null && !formulario.getPaginas().isEmpty() && formulario.getPaginas().get(0).getLineas() != null && !formulario.getPaginas().get(0).getLineas().isEmpty()) {
+			for(LineaComponentesFormulario linea : formulario.getPaginas().get(0).getLineas()) {
+				if (linea.getComponentes() != null) {
+					for(ComponenteFormulario componente : linea.getComponentes()) {
+						if (componente.getTipo() == TypeObjetoFormulario.SECCION) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/** Inserta un componente de tipo seccion. **/
 	public void insertaCaptcha() {
-		if (isModificadoSinGuardar(TypeAccionFormulario.ADD_SECCION)) {
+		if (isModificadoSinGuardar(TypeAccionFormulario.ADD_CAPTCHA)) {
 			return;
 		}
-		insertaLineaComponenteBloque(TypeObjetoFormulario.CAPTCHA);
+		insertaLineaComponenteBloque(TypeObjetoFormulario.CAPTCHA, null);
+	}
+
+	public void insertaSeccionReutilizable() {
+
+		if (isModificadoSinGuardar(TypeAccionFormulario.ADD_SECCION_REUTILIZABLE)) {
+			return;
+		}
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		UtilJSF.openDialog(DialogDisenyoSeccionReutilizable.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 500, 170);
+	}
+
+
+	/**
+	 * Retorno dialogo.
+	 *
+	 * @param event respuesta dialogo
+	 */
+	public void returnDialogoSeccionReutilizable(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			SeccionReutilizable seccionR = (SeccionReutilizable) respuesta.getResult();
+			insertaLineaComponenteBloque(TypeObjetoFormulario.SECCION_REUTILIZABLE, seccionR);
+		}
 	}
 
 	/** Inserta un componente de tipo etiqueta. **/
@@ -1433,7 +1687,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		if (isModificadoSinGuardar(TypeAccionFormulario.ADD_ETIQUETA)) {
 			return;
 		}
-		insertaLineaComponenteBloque(TypeObjetoFormulario.ETIQUETA);
+		insertaLineaComponenteBloque(TypeObjetoFormulario.ETIQUETA, null);
 	}
 
 	/** Inserta un componente de tipo linea. **/
@@ -1441,15 +1695,16 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		if (isModificadoSinGuardar(TypeAccionFormulario.ADD_LINEA)) {
 			return;
 		}
-		insertaLineaComponenteBloque(TypeObjetoFormulario.LINEA);
+		insertaLineaComponenteBloque(TypeObjetoFormulario.LINEA, null);
 	}
 
 	/**
 	 * Inserta linea componente
 	 *
 	 * @param tipoCampo
+	 * @param objeto Se pasa una componente de tipo objeto genérico (de momento es seccion reutilizable) por si se quiere pasar algún otro tipo de componente para ser añadido al utilizarse.
 	 */
-	private void insertaLineaComponenteBloque(final TypeObjetoFormulario tipoCampo) {
+	private void insertaLineaComponenteBloque(final TypeObjetoFormulario tipoCampo, final Object objeto) {
 		final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
 		LineaComponentesFormulario lineaSeleccionada = null;
 		Integer ordenLinea = null;
@@ -1474,8 +1729,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 			ordenLinea = UtilDisenyo.ordenInsercionLinea(pagina, lineaSeleccionada, posicionamiento);
 
+			if (isTipoSeccion() && lineaSeleccionada != null && lineaSeleccionada.getOrden() <= 1) {
+				//Nunca se puede poner en la primera línea.
+				ordenLinea = 2;
+			}
+
 			final ObjetoFormulario componente = formIntService.addComponenteFormulario(tipoCampo, pagina.getCodigo(),
-					idLineaSeleccionada, ordenLinea, posicionamiento);
+					idLineaSeleccionada, ordenLinea, posicionamiento, objeto, isTipoSeccion(), identificadorSeccion, this.idTramiteVersion);
 
 			// actualizamos modelo (si habia saltos en el orden de linea puede que el orden
 			// inicial no sea el que toca)
@@ -1490,6 +1750,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				seleccionaComponente(componente);
 				break;
 			case CAPTCHA:
+				seleccionaComponente(componente);
+				break;
+			case SECCION_REUTILIZABLE:
 				seleccionaComponente(componente);
 				break;
 			default:
@@ -1591,7 +1854,12 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				setNcolumnas(null);
 			} else if (objetoFormularioEdit instanceof ComponenteFormulario) {
 
-				final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
+				final PaginaFormulario pagina;
+				if (((ComponenteFormulario) objetoFormularioEdit).isTipoSeccionReutilizable()) {
+					pagina = formularioSeccion.get(((ComponenteFormulario) objetoFormularioEdit).getIdFormSeccion()).getPaginas().get(0);
+				} else {
+					pagina = formulario.getPaginas().get(paginaActual - 1);
+				}
 				int inicio = 1;
 				int fin = ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA
 						- pagina.getLineaComponente(objetoFormularioEdit.getCodigo()).columnasComponentes()
@@ -1737,7 +2005,12 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 * Ayuda.
 	 */
 	public void ayuda() {
-		UtilJSF.openHelp("disenyoFormularioDialog");
+		if(isTipoTramite()) {
+			UtilJSF.openHelp("disenyoFormularioDialog");
+		} else {
+			UtilJSF.openHelp("disenyoFormularioDialogSeccion");
+		}
+
 	}
 
 	/**
@@ -1867,7 +2140,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public void abrirBusquedaDominio() {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.TRAMITE.toString(), String.valueOf(tramiteVersion.getIdTramite()));
+		if (this.isTipoTramite()) {
+			params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(), TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString());
+			params.put(TypeParametroVentana.TRAMITE.toString(), String.valueOf(tramiteVersion.getIdTramite()));
+		} else {
+			params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(), TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());
+			params.put(TypeParametroVentana.SECCION_REUTILIZABLE.toString(), String.valueOf(this.getIdSeccion()));
+		}
 		UtilJSF.openDialog(DialogBusquedaDominio.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 1200, 420);
 	}
 
@@ -1892,7 +2171,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				campo.getListaParametrosDominio().clear();
 			}
 
-			if (!dominioService.tieneTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo())) {
+			if (this.isTipoTramite() && !dominioService.tieneTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo())) {
 				addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.alta.dominio.empleado"));
 			}
 		} else {
@@ -1994,9 +2273,20 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		final Map<String, String> maps = new HashMap<>();
 		maps.put(TypeParametroVentana.TIPO_SCRIPT_FORMULARIO.toString(),
 				UtilJSON.toJSON(TypeScriptFormulario.fromString(tipoScript)));
-		maps.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.idFormulario);
-		maps.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
-		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
+
+		if (this.isTipoSeccion()) {
+			/*maps.put(TypeParametroVentana.TIPO_SCRIPT_SECCION_REUTILIZABLE.toString(),
+					UtilJSON.toJSON(valorSeleccionado.getTipoScript()));*/
+			SeccionReutilizable seccion = seccionReutilizableService.getSeccionReutilizable(Long.valueOf(idSeccion));
+			maps.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), seccion.getIdFormularioAsociado().toString());
+			maps.put(TypeParametroVentana.SECCION_REUTILIZABLE.toString(), seccion.getIdentificador());
+			maps.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(), TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());
+		} else {
+			maps.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.idFormulario);
+			maps.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
+			maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
+			maps.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(), TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());
+		}
 		maps.put(TypeParametroVentana.COMPONENTE.toString(), this.objetoFormularioEdit.getCodigo().toString());
 		maps.put(TypeParametroVentana.COMPONENTE_NOMBRE.toString(), getIdComponente());
 
@@ -2593,8 +2883,14 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 */
 	public boolean getHabilitadoBtnObjIzq() {
 		final int orden = getOrden();
-
 		return orden != 0 ? orden > 1 : false;
+		/*
+		if (isTipoTramite()) {
+			return orden != 0 ? orden > 1 : false;
+		} else {
+			//No puedes desplazarte a la izquierda de la seccion principal
+			return orden > 2;
+		}*/
 	}
 
 	/**
@@ -2605,7 +2901,6 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public boolean getHabilitadoBtnObjDer() {
 		final int orden = getOrden();
 		boolean resultado = false;
-
 		if (objetoFormularioEdit != null) {
 			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
 				resultado = orden != 0 ? orden < numObjetosLinea() : false;
@@ -2613,7 +2908,6 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				resultado = orden != 0 ? orden < numObjetosLinea() : false;
 			}
 		}
-
 		return resultado;
 	}
 
@@ -2642,13 +2936,21 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	private int numObjetosLinea() {
 		int numObj = 0;
 		if (objetoFormularioEdit != null) {
-			final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
+			final PaginaFormulario pagina;
+
+			if (objetoFormularioEdit instanceof ComponenteFormulario && ((ComponenteFormulario) objetoFormularioEdit).isTipoSeccionReutilizable()) {
+				pagina =  formularioSeccion.get(((ComponenteFormulario) objetoFormularioEdit).getIdFormSeccion()).getPaginas().get(0);
+			} else {
+				pagina = formulario.getPaginas().get(paginaActual - 1);
+			}
+
 
 			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
 				numObj = pagina.getLineas().size();
 			} else if (objetoFormularioEdit instanceof ComponenteFormulario) {
 				numObj = pagina.getLineaComponente(objetoFormularioEdit.getCodigo()).getComponentes().size();
 			}
+
 		}
 		return numObj;
 	}
@@ -2671,5 +2973,58 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public void setCambios() {
 		this.cambios = true;
+	}
+
+	/**
+	 * @return the tipoDisenyo
+	 */
+	public String getTipoDisenyo() {
+		return tipoDisenyo;
+	}
+
+	/**
+	 * @param tipoDisenyo the tipoDisenyo to set
+	 */
+	public void setTipoDisenyo(String tipoDisenyo) {
+		this.tipoDisenyo = tipoDisenyo;
+	}
+	/**
+	 * @return the idSeccion
+	 */
+	public String getIdSeccion() {
+		return idSeccion;
+	}
+	/**
+	 * @param idSeccion the idSeccion to set
+	 */
+	public void setIdSeccion(String idSeccion) {
+		this.idSeccion = idSeccion;
+	}
+	/**
+	 * @return the identificadorSeccion
+	 */
+	public String getIdentificadorSeccion() {
+		return identificadorSeccion;
+	}
+	/**
+	 * @param identificadorSeccion the identificadorSeccion to set
+	 */
+	public void setIdentificadorSeccion(String identificadorSeccion) {
+		this.identificadorSeccion = identificadorSeccion;
+	}
+
+
+
+	/**
+	 * @return the desactivarAplicarCambios
+	 */
+	public boolean isDesactivarAplicarCambios() {
+		return desactivarAplicarCambios;
+	}
+	/**
+	 * @param desactivarAplicarCambios the desactivarAplicarCambios to set
+	 */
+	public void setDesactivarAplicarCambios(boolean desactivarAplicarCambios) {
+		this.desactivarAplicarCambios = desactivarAplicarCambios;
 	}
 }

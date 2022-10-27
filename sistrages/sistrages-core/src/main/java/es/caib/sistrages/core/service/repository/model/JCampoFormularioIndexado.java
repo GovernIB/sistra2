@@ -207,6 +207,16 @@ public class JCampoFormularioIndexado implements IModelApi {
 				}
 				if (dominio != null) {
 					campoSelector.setCodDominio(dominio.getCodigo());
+					/** Los siguientes datos solo se utilizan en la importacion de secciones reutilizables **/
+					campoSelector.setDominioAmbito(dominio.getAmbito());
+					campoSelector.setDominioIdentificador(dominio.getIdentificador());
+					if (dominio.getArea() != null) {
+						campoSelector.setDominioArea(dominio.getArea().getIdentificador());
+					}
+					if (dominio.getEntidad() != null) {
+						campoSelector.setDominioEntidad(dominio.getEntidad().getIdentificador());
+					}
+
 				}
 
 				campoSelector.setCampoDominioCodigo(campoDominioCodigo);
@@ -244,13 +254,13 @@ public class JCampoFormularioIndexado implements IModelApi {
 		return campoSelector;
 	}
 
-	public static JCampoFormularioIndexado createDefault(final int pOrden, final JLineaFormulario pJLinea) {
+	public static JCampoFormularioIndexado createDefault(final int pOrden, final JLineaFormulario pJLinea, final boolean isTipoSeccion, final String identificadorSeccion) {
 		final JCampoFormularioIndexado jModel = new JCampoFormularioIndexado();
 		jModel.setTipoCampoIndexado(TypeCampoIndexado.DESPLEGABLE.name());
 		jModel.setTipoListaValores(TypeListaValores.FIJA.toString());
 		jModel.setIndiceAlfabetico(false);
 		jModel.setAltura(1);
-		jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.SELECTOR, pOrden, pJLinea));
+		jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.SELECTOR, pOrden, pJLinea, isTipoSeccion, identificadorSeccion));
 		jModel.setOrientacion("V");// Vertical(V)
 		return jModel;
 	}

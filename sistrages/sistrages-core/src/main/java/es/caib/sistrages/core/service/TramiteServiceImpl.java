@@ -25,8 +25,9 @@ import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Literal;
-import es.caib.sistrages.core.api.model.Rol;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.SeccionReutilizable;
+import es.caib.sistrages.core.api.model.SeccionReutilizableTramite;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -42,6 +43,7 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
 import es.caib.sistrages.core.api.model.comun.FilaImportarGestor;
 import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
+import es.caib.sistrages.core.api.model.comun.FilaImportarSeccion;
 import es.caib.sistrages.core.api.model.comun.ScriptInfo;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
@@ -67,6 +69,7 @@ import es.caib.sistrages.core.service.repository.dao.FuenteDatoDao;
 import es.caib.sistrages.core.service.repository.dao.HistorialVersionDao;
 import es.caib.sistrages.core.service.repository.dao.RolDao;
 import es.caib.sistrages.core.service.repository.dao.ScriptDao;
+import es.caib.sistrages.core.service.repository.dao.SeccionReutilizableDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
 import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
 import es.caib.sistrages.core.service.repository.model.JFuenteDatos;
@@ -100,6 +103,10 @@ public class TramiteServiceImpl implements TramiteService {
 	/** DAO Externo formulario */
 	@Autowired
 	FormularioExternoDao gestorExternoDao;
+
+	/** DAO Seccion reutilizable */
+	@Autowired
+	SeccionReutilizableDao seccionReutilizableDao;
 
 	/** DAO Externo formulario */
 	@Autowired
@@ -929,6 +936,12 @@ public class TramiteServiceImpl implements TramiteService {
 		return tramiteDao.getTramiteVersionByDominio(idDominio);
 	}
 
+	@Override
+	@NegocioInterceptor
+	public List<SeccionReutilizableTramite> getTramiteVersionBySeccionReutilizable(Long idSeccionReutilizable) {
+		return tramiteDao.getTramiteVersionBySeccionReutilizable(idSeccionReutilizable);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -1073,6 +1086,21 @@ public class TramiteServiceImpl implements TramiteService {
 			}
 		}
 
+		// Paso 6. Importamos las secciones.
+		final Map<Long, SeccionReutilizable> secciones = new HashMap<>();
+		final Map<Long, Long> mapSecciones = new HashMap<>();
+		if (filaImportar.getFilaSecciones() != null) {
+			for (final FilaImportarSeccion filaSeccion : filaImportar.getFilaSecciones()) {
+
+				final Long idFormularioAsociado = formularioInternoDao.importarFormularioSeccion(filaSeccion);
+				final Long idSeccion = seccionReutilizableDao.importar(filaSeccion, filaImportar.getIdEntidad(),
+						idFormularioAsociado);
+				final SeccionReutilizable ff = seccionReutilizableDao.getSeccionReutilizable(idSeccion);
+				secciones.put(idSeccion, ff);
+				mapSecciones.put(filaSeccion.getSeccion().getCodigo(), idSeccion);
+			}
+		}
+
 		// Importamos la version de trámite
 		final Long idTramiteVersion = tramiteDao.importar(filaImportar.getFilaTramiteVersion(), idTramite, idDominios,
 				filaImportar.getUsuario(), filaImportar.isModoIM());
@@ -1090,7 +1118,7 @@ public class TramiteServiceImpl implements TramiteService {
 		for (final TramitePaso tramitePaso : pasos) {
 			tramitePaso.setOrden(ordenPaso);
 			reordenar(tramitePaso);
-			if (tramitePaso.getTipo().equals(TypePaso.REGISTRAR)) {
+			if (tramitePaso.getTipo().equals(TypePaso.FINALIZAR)) {
 				if (((TramitePasoRegistrar) tramitePaso).getDestino() == null) {
 					((TramitePasoRegistrar) tramitePaso).setDestino("R");
 				}
@@ -1098,7 +1126,7 @@ public class TramiteServiceImpl implements TramiteService {
 			tramitePasoDao.importar(filaImportar.getFilaTramiteRegistro(), tramitePaso, idTramiteVersion,
 					filaImportar.getIdEntidad(), filaImportar.getFormularios(), filaImportar.getFicheros(),
 					filaImportar.getFicherosContent(), formateadores, mapFormateadores, gestores, mapGestores,
-					idDominiosEquivalencia, idArea);
+					idDominiosEquivalencia, idArea, mapSecciones, secciones);
 			ordenPaso++;
 		}
 
@@ -1359,27 +1387,27 @@ public class TramiteServiceImpl implements TramiteService {
 	private List<ScriptInfo> listScriptsInfo(final TramitePasoRegistrar paso) {
 		final List<ScriptInfo> scriptsInfo = new ArrayList<>();
 		if (paso.getScriptDestinoRegistro() != null) {
-			scriptsInfo.add(new ScriptInfo(paso.getScriptDestinoRegistro().getCodigo(), TypePaso.REGISTRAR,
+			scriptsInfo.add(new ScriptInfo(paso.getScriptDestinoRegistro().getCodigo(), TypePaso.FINALIZAR,
 					TypeScriptFlujo.SCRIPT_PARAMETROS_REGISTRO));
 		}
 		if (paso.getScriptAlFinalizar() != null) {
-			scriptsInfo.add(new ScriptInfo(paso.getScriptAlFinalizar().getCodigo(), TypePaso.REGISTRAR,
+			scriptsInfo.add(new ScriptInfo(paso.getScriptAlFinalizar().getCodigo(), TypePaso.FINALIZAR,
 					TypeScriptFlujo.SCRIPT_AVISO));
 		}
 		if (paso.getScriptPresentador() != null) {
-			scriptsInfo.add(new ScriptInfo(paso.getScriptPresentador().getCodigo(), TypePaso.REGISTRAR,
+			scriptsInfo.add(new ScriptInfo(paso.getScriptPresentador().getCodigo(), TypePaso.FINALIZAR,
 					TypeScriptFlujo.SCRIPT_PRESENTADOR_REGISTRO));
 		}
 		if (paso.getScriptRepresentante() != null) {
-			scriptsInfo.add(new ScriptInfo(paso.getScriptRepresentante().getCodigo(), TypePaso.REGISTRAR,
+			scriptsInfo.add(new ScriptInfo(paso.getScriptRepresentante().getCodigo(), TypePaso.FINALIZAR,
 					TypeScriptFlujo.SCRIPT_REPRESENTACION_REGISTRO));
 		}
 		if (paso.getScriptValidarRegistrar() != null) {
-			scriptsInfo.add(new ScriptInfo(paso.getScriptValidarRegistrar().getCodigo(), TypePaso.REGISTRAR,
+			scriptsInfo.add(new ScriptInfo(paso.getScriptValidarRegistrar().getCodigo(), TypePaso.FINALIZAR,
 					TypeScriptFlujo.SCRIPT_PERMITIR_REGISTRO));
 		}
 		if (paso.getScriptVariables() != null) {
-			scriptsInfo.add(new ScriptInfo(paso.getScriptVariables().getCodigo(), TypePaso.REGISTRAR,
+			scriptsInfo.add(new ScriptInfo(paso.getScriptVariables().getCodigo(), TypePaso.FINALIZAR,
 					TypeScriptFlujo.SCRIPT_VARIABLE_FLUJO));
 		}
 		return scriptsInfo;
@@ -1435,7 +1463,7 @@ public class TramiteServiceImpl implements TramiteService {
 		} else if (tramitePaso instanceof TramitePasoTasa) {
 			paso = TypePaso.PAGAR;
 		} else if (tramitePaso instanceof TramitePasoRegistrar) {
-			paso = TypePaso.REGISTRAR;
+			paso = TypePaso.FINALIZAR;
 		} else if (tramitePaso instanceof TramitePasoDebeSaber) {
 			paso = TypePaso.DEBESABER;
 		} else {
@@ -1504,6 +1532,17 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public List<ErrorValidacion> checkDominioNoUtilizado(Long idDominio, Long idTramiteVersion, final String idioma) {
 		return validadorComponent.checkDominioNoUtilizado(idDominio, idTramiteVersion, idioma);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<SeccionReutilizable> getSeccionesTramite(Long idTramiteVersion) {
+		return tramiteDao.getSeccionesReutilizableByTramite(idTramiteVersion);
+	}
+
+	@Override
+	public boolean existenTramitesBySeccionReutilizable(Long idSeccionReutilizable) {
+		return tramiteDao.existenTramiteVersionBySeccionReutilizable(idSeccionReutilizable);
 	}
 
 }

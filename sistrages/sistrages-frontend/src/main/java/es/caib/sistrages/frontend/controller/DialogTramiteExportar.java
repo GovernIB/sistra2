@@ -31,6 +31,7 @@ import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.ModelApi;
+import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -42,6 +43,7 @@ import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.EntidadService;
+import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.GestorFicherosService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.CsvUtil;
@@ -80,6 +82,10 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	@Inject
 	private EntidadService entidadService;
 
+	/** Servicio. */
+	@Inject
+	private FormularioInternoService formularioInternoService;
+
 	/** Id elemento a tratar. */
 	private String id;
 
@@ -116,6 +122,9 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	/** GestorExternoFormularios. **/
 	List<GestorExternoFormularios> gestorExternoFormularios;
 
+	/** SeccionesReutilizables. **/
+	List<SeccionReutilizable> seccionesReutilizables;
+
 	/** Mostrar botón exportar. **/
 	private boolean mostrarBotonExportar;
 
@@ -150,6 +159,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		tramiteVersion.setListaDominios(dominiosId);
 		tramite = tramiteService.getTramite(tramiteVersion.getIdTramite());
 		area = tramiteService.getAreaTramite(tramiteVersion.getIdTramite());
+		seccionesReutilizables = tramiteService.getSeccionesTramite(Long.valueOf(id));
 
 		formateadores = tramiteService.getFormateadoresTramiteVersion(Long.valueOf(id));
 		formularios = tramiteService.getFormulariosTramiteVersion(Long.valueOf(id));
@@ -201,7 +211,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 			correcto = false;
 		}
 
-		if (modo.equals("CC")) {
+		if (modo.equals("CC") && this.tramiteVersion != null  ) {
 			List<Tasa> tasas = this.tramiteVersion.getPasoTasa().getTasas();
 			for (Tasa tasa : tasas) {
 				if (tasa.isSimulado()) {
@@ -319,6 +329,14 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		// 10. Incluir los formulariosGestoresExternos_ID.data
 		for (final GestorExternoFormularios gestores : gestorExternoFormularios) {
 			incluirModelApi(zos, gestores, "gestoresExternosFormulario_" + gestores.getCodigo() + LITERAL_SUFIJO_DATA);
+		}
+
+		// 10. Incluir los seccionesReutilizables_ID.data
+		for (final SeccionReutilizable seccion : seccionesReutilizables) {
+			//Primero hay que obtener los diseños.
+			final DisenyoFormulario disenyoFormulario = formularioInternoService.getFormularioInterno(seccion.getIdFormularioAsociado());
+			seccion.setDisenyoFormulario(disenyoFormulario);
+			incluirModelApi(zos, seccion, "seccionesReutilizables_" + seccion.getCodigo() + LITERAL_SUFIJO_DATA);
 		}
 
 		zos.closeEntry();
@@ -642,5 +660,21 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	public final void setDisabled(Boolean disabled) {
 		this.disabled = disabled;
 	}
+
+	/**
+	 * @return the seccionesReutilizables
+	 */
+	public List<SeccionReutilizable> getSeccionesReutilizables() {
+		return seccionesReutilizables;
+	}
+
+	/**
+	 * @param seccionesReutilizables the seccionesReutilizables to set
+	 */
+	public void setSeccionesReutilizables(List<SeccionReutilizable> seccionesReutilizables) {
+		this.seccionesReutilizables = seccionesReutilizables;
+	}
+
+
 
 }

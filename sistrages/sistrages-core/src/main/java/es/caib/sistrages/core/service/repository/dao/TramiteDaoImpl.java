@@ -26,6 +26,8 @@ import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.SeccionReutilizable;
+import es.caib.sistrages.core.api.model.SeccionReutilizableTramite;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
@@ -39,9 +41,11 @@ import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeFlujo;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
 import es.caib.sistrages.core.service.repository.model.JArea;
+import es.caib.sistrages.core.service.repository.model.JCampoFormularioSeccionReutilizable;
 import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFormateadorFormulario;
@@ -55,6 +59,7 @@ import es.caib.sistrages.core.service.repository.model.JPasoTramitacion;
 import es.caib.sistrages.core.service.repository.model.JPlantillaFormulario;
 import es.caib.sistrages.core.service.repository.model.JPlantillaIdiomaFormulario;
 import es.caib.sistrages.core.service.repository.model.JScript;
+import es.caib.sistrages.core.service.repository.model.JSeccionReutilizable;
 import es.caib.sistrages.core.service.repository.model.JTramite;
 import es.caib.sistrages.core.service.repository.model.JVersionTramite;
 
@@ -1098,6 +1103,110 @@ public class TramiteDaoImpl implements TramiteDao {
 				dominioTramite.setRelease(jTramiteVersion.getRelease());
 				dominioTramite.setTramite(jTramiteVersion.getTramite().getDescripcion());
 				resultado.add(dominioTramite);
+			}
+		}
+
+		return resultado;
+	}
+
+
+	@Override
+	public boolean existenTramiteVersionBySeccionReutilizable(Long idSeccionReutilizable) {
+
+		final Query query = getQueryBySeccionReutilizable(idSeccionReutilizable, true);
+		Long total = (Long) query.getSingleResult();
+		return total > 0;
+	}
+
+	@Override
+	public List<SeccionReutilizableTramite> getTramiteVersionBySeccionReutilizable(final Long idSeccionReutilizable) {
+
+		final List<SeccionReutilizableTramite> resultado = new ArrayList<>();
+		final Query query = getQueryBySeccionReutilizable(idSeccionReutilizable, false);
+
+		@SuppressWarnings("unchecked")
+		final List<JVersionTramite> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JVersionTramite> iterator = results.iterator(); iterator.hasNext();) {
+				final JVersionTramite jTramiteVersion = iterator.next();
+				final SeccionReutilizableTramite tram = new SeccionReutilizableTramite();
+				tram.setArea(jTramiteVersion.getTramite().getArea().getIdentificador());
+				tram.setEntidad(jTramiteVersion.getTramite().getArea().getEntidad().getNombre().toModel());
+				tram.setIdTramiteVersion(jTramiteVersion.getCodigo());
+				tram.setNumVersion(jTramiteVersion.getNumeroVersion());
+				tram.setRelease(jTramiteVersion.getRelease());
+				tram.setTramite(jTramiteVersion.getTramite().getDescripcion());
+				resultado.add(tram);
+			}
+		}
+
+		return resultado;
+	}
+
+	private Query getQueryBySeccionReutilizable(Long idSeccionReutilizable, boolean total) {
+
+ 		StringBuilder sql ;
+ 		if (total) {
+ 			sql = new StringBuilder("Select count(t) ");
+ 		} else {
+ 			sql = new StringBuilder("Select distinct t ");
+ 		}
+ 		sql.append(" From JPasoRellenar pr JOIN pr.pasoTramitacion pt JOIN pt.versionTramite t JOIN pr.formulariosTramite FORMS JOIN FORMS.formulario FORMU JOIN FORMU.paginas PAGS JOIN PAGS.lineasFormulario LIN JOIN LIN.elementoFormulario ELEM JOIN ELEM.seccionReutilizableFormulario SECREU where ELEM.tipo like '"+TypeObjetoFormulario.SECCION_REUTILIZABLE.toString()+"' and SECREU.seccionReutilizable.codigo = :idSeccionReutilizable order by t.numeroVersion desc");
+
+		final Query query = entityManager.createQuery(sql.toString());
+		if (idSeccionReutilizable != null) {
+			query.setParameter("idSeccionReutilizable", idSeccionReutilizable);
+		}
+		return query;
+	}
+
+	@Override
+	public List<SeccionReutilizable> getSeccionesReutilizableByTramite(final Long idTramiteVersion) {
+		final List<SeccionReutilizable> resultado = new ArrayList<>();
+
+ 		final String sql = "Select ELEM.seccionReutilizableFormulario From JPasoRellenar pr JOIN pr.pasoTramitacion pt JOIN pt.versionTramite t JOIN pr.formulariosTramite FORMS JOIN FORMS.formulario FORMU JOIN FORMU.paginas PAGS JOIN PAGS.lineasFormulario LIN JOIN LIN.elementoFormulario ELEM where ELEM.tipo = '"+TypeObjetoFormulario.SECCION_REUTILIZABLE.toString()+"' and t.codigo = :idTramiteVersion ";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idTramiteVersion", idTramiteVersion);
+
+		@SuppressWarnings("unchecked")
+		final List<JCampoFormularioSeccionReutilizable> results = query.getResultList();
+
+		List<Long> idIncluidas = new ArrayList<>();
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JCampoFormularioSeccionReutilizable> iterator = results.iterator(); iterator.hasNext();) {
+				final JCampoFormularioSeccionReutilizable jseccion = iterator.next();
+				if (!idIncluidas.contains(jseccion.getSeccionReutilizable().getCodigo())) {
+					idIncluidas.add(jseccion.getSeccionReutilizable().getCodigo());
+					resultado.add(jseccion.getSeccionReutilizable().toModel());
+				}
+			}
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public List<SeccionReutilizable> getSeccionesReutilizableByFormulario(final Long idFormulario) {
+		final List<SeccionReutilizable> resultado = new ArrayList<>();
+
+ 		final String sql = "Select ELEM.seccionReutilizableFormulario From JFormulario FORMU JOIN FORMU.paginas PAGS JOIN PAGS.lineasFormulario LIN JOIN LIN.elementoFormulario ELEM where ELEM.tipo = '"+TypeObjetoFormulario.SECCION_REUTILIZABLE.toString()+"' and FORMU.codigo = :idFormulario ";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idFormulario", idFormulario);
+
+		@SuppressWarnings("unchecked")
+		final List<JCampoFormularioSeccionReutilizable> results = query.getResultList();
+
+		List<Long> idIncluidas = new ArrayList<>();
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JCampoFormularioSeccionReutilizable> iterator = results.iterator(); iterator.hasNext();) {
+				final JCampoFormularioSeccionReutilizable jseccion = iterator.next();
+				if (!idIncluidas.contains(jseccion.getSeccionReutilizable().getCodigo())) {
+					idIncluidas.add(jseccion.getSeccionReutilizable().getCodigo());
+					resultado.add(jseccion.getSeccionReutilizable().toModel());
+				}
 			}
 		}
 

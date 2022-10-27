@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFlujo" var="TypeFlujo" />
+
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogSeccionExportar.titulo']}"/></title>
+</h:head>
+
+<h:body>
+
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogSeccionExportar.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogSeccionExportar.id}"/>
+		<f:viewAction action="#{dialogSeccionExportar.init}" />
+	</f:metadata>
+
+	<h:form id="dialogDominioExportar" styleClass="margin-top-10">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growldialog" widgetVar="growldialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
+
+			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+					<p:outputLabel value="#{msg['dialogSeccionExportar.identificador']}" styleClass="titulo-color" style="color:#000" />
+                	<p:outputLabel value="#{dialogSeccionExportar.data.identificador}" />
+
+                	<p:outputLabel value="#{msg['dialogSeccionExportar.release']}" />
+                	<p:outputLabel value="#{dialogSeccionExportar.data.release}" />
+
+				</h:panelGrid>
+
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+						<p:commandButton value="#{msg['botones.exportar']}" ajax="false"  styleClass="boton-azul" rendered="#{dialogSeccionExportar.mostrarBotonExportar}" process="@this">
+		        			<p:fileDownload value="#{dialogSeccionExportar.fichero}"></p:fileDownload>
+		        		</p:commandButton>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogSeccionExportar.cancelar}" process="@this"  />
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

@@ -231,12 +231,10 @@ public class DialogDominioImportar extends DialogControllerBase {
 			}
 		}
 
-
 		ConfiguracionAutenticacion configuracionAutenticacion = null;
-		if (data != null && data.getTipo() == TypeDominio.CONSULTA_REMOTA && data.getConfiguracionAutenticacion() != null
-				&& idArea != null) {
+		if (data != null && data.getTipo() == TypeDominio.CONSULTA_REMOTA && data.getConfiguracionAutenticacion() != null && idArea != null) {
 			configuracionAutenticacion = configuracionAutenticacionService.getConfiguracionAutenticacion(
-					data.getAmbito(), data.getConfiguracionAutenticacion().getIdentificador(),
+					data.getAmbito(), data.getConfiguracionAutenticacion().getIdentificador(), 
 					UtilJSF.getIdEntidad(), idArea, null);
 		}
 		final String identificadorArea = this.area == null ? "" :  this.area.getIdentificadorCompuesto();
@@ -287,7 +285,6 @@ public class DialogDominioImportar extends DialogControllerBase {
 			FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("formTramite");
 		}
 	}
-
 
 	/**
 	 * Carga el dato donde toque.
@@ -344,7 +341,8 @@ public class DialogDominioImportar extends DialogControllerBase {
 		boolean correcto = true;
 		if (entornoActual == TypeEntorno.DESARROLLO
 				|| (entornoActual == TypeEntorno.PREPRODUCCION && entornoFicheroZip == TypeEntorno.DESARROLLO)
-				|| (entornoActual == TypeEntorno.PRODUCCION && entornoFicheroZip == TypeEntorno.PREPRODUCCION)) {
+				|| (entornoActual == TypeEntorno.PRODUCCION && entornoFicheroZip == TypeEntorno.PREPRODUCCION)
+				|| UtilJSF.isPromocionSe2Pro()) {
 
 			final TypeImportarTipo tipo = TypeImportarTipo.fromString(prop.getProperty("tipo"));
 			if (tipo != TypeImportarTipo.DOMINIO) {

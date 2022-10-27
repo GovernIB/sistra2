@@ -1,6 +1,5 @@
 package es.caib.sistrages.core.api.model.comun;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +38,9 @@ public class FilaImportar {
 
 	/** Fila gestor **/
 	private List<FilaImportarGestor> filaGestor;
+
+	/** Fila gestor **/
+	private List<FilaImportarSeccion> filaSecciones;
 
 	/** Formularios internos. **/
 	private Map<Long, DisenyoFormulario> formularios = new HashMap<>();
@@ -270,6 +272,20 @@ public class FilaImportar {
 	 */
 	public void setModo(final String modo) {
 		this.modo = modo;
+	}
+
+	/**
+	 * @return the filaSecciones
+	 */
+	public List<FilaImportarSeccion> getFilaSecciones() {
+		return filaSecciones;
+	}
+
+	/**
+	 * @param filaSecciones the filaSecciones to set
+	 */
+	public void setFilaSecciones(List<FilaImportarSeccion> filaSecciones) {
+		this.filaSecciones = filaSecciones;
 	}
 
 }

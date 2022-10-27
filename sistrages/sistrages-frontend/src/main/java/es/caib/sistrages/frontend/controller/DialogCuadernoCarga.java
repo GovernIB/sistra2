@@ -41,6 +41,7 @@ import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
+import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
@@ -55,6 +56,7 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormulario;
 import es.caib.sistrages.core.api.model.comun.FilaImportarGestor;
 import es.caib.sistrages.core.api.model.comun.FilaImportarResultado;
+import es.caib.sistrages.core.api.model.comun.FilaImportarSeccion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteRegistro;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
@@ -67,7 +69,6 @@ import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
-import es.caib.sistrages.core.api.model.types.TypeTramite;
 import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
@@ -77,7 +78,7 @@ import es.caib.sistrages.core.api.service.EnvioRemotoService;
 import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.core.api.service.FormularioExternoService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
-import es.caib.sistrages.core.api.service.SystemService;
+import es.caib.sistrages.core.api.service.SeccionReutilizableService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -119,6 +120,10 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	/** Componente service. */
 	@Inject
 	private ComponenteService componenteService;
+
+	/** Servicio. */
+	@Inject
+	private SeccionReutilizableService seccionReutilizableService;
 
 	/** Servicio. */
 	@Inject
@@ -181,6 +186,9 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	/** Gestores **/
 	Map<Long, GestorExternoFormularios> gestores = new HashMap<>();
 
+	/** Sectores reutilizables **/
+	Map<Long, SeccionReutilizable> secciones = new HashMap<>();
+
 	/**
 	 * @return the gestores
 	 */
@@ -217,6 +225,9 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	final List<FilaImportarFormateador> filasFormateador = new ArrayList<>();
 
 	/** Filas gestores. */
+	final List<FilaImportarSeccion> filasSecciones = new ArrayList<>();
+
+	/** Filas gestores. */
 	final List<FilaImportarGestor> filasGestores = new ArrayList<>();
 
 	/** Filas formularios. **/
@@ -224,6 +235,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 
 	/** Mostrar botones formateadores. **/
 	private Integer posicionGestor;
+	private Integer posicionSeccion;
 
 	/**
 	 * Indica si se debe mostrar el registro de oficina (si entidad es de registro
@@ -241,6 +253,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	private Integer posicionDominio;
 	/** Mostrar registro. ***/
 	private boolean mostrarRegistro;
+
 	/**
 	 * Indica si se debe mostrar el registro de oficina (si entidad es de registro
 	 * centralizado o no)
@@ -279,6 +292,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	 * Inicialización.
 	 */
 	public void init() {
+		LOGGER.debug("Iniciando cuaderno carga");
 		setMostrarPanelInfo(false);
 		todoCorrecto = false;
 	}
@@ -407,6 +421,9 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 		// Paso 9. preparamos la info a mostrar de los gestores
 		prepararFlujoGestores();
 
+		// Paso 10. Preparamos la info a mostrar de los secciones reutilizables.
+		prepararFlujoSecciones();
+
 		// Seteamos si se ven los botones de area/tramite/tramiteVersion
 		this.setMostrarBotonArea(filaArea != null && filaArea.getResultado() != null
 				&& filaArea.getResultado().isWarning() && isNingunError());
@@ -456,6 +473,12 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			}
 		}
 
+		for (final FilaImportarSeccion fila : filasSecciones) {
+			if (fila == null || fila.getResultado() == null || fila.getResultado().isError()) {
+				return false;
+			}
+		}
+
 		return true;
 	}
 
@@ -494,6 +517,40 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
+	 * Check seccion.
+	 *
+	 * @param identificador
+	 */
+	public void checkSeccion(final String identificador) {
+
+		posicionSeccion = null;
+		for (int posicion = 0; posicion < filasSecciones.size(); posicion++) {
+			if (filasSecciones.get(posicion).getSeccion() != null
+					&& filasSecciones.get(posicion).getSeccion().getIdentificador().equals(identificador)) {
+				posicionSeccion = posicion;
+				break;
+			}
+		}
+
+		if (posicionSeccion != null) {
+			final FilaImportarSeccion fila = this.filasSecciones.get(posicionSeccion);
+			UtilJSF.getSessionBean().limpiaMochilaDatos();
+			final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+			mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, fila);
+
+			Long idArea = null;
+			if (this.filaArea != null && this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
+				idArea = this.filaArea.getAreaActual().getCodigo();
+			}
+
+			if (idArea != null) {
+				mochilaDatos.put(Constantes.AREA, idArea);
+			}
+			UtilJSF.openDialog(DialogTramiteImportarSeccion.class, TypeModoAcceso.EDICION, null, true, 500, 120);
+		}
+	}
+
+	/**
 	 * Retorno dialogo del retorno dialogo area.
 	 *
 	 * @param event respuesta dialogo
@@ -507,6 +564,24 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			this.filasGestores.add(posicionGestor, dato);
 			FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds()
 					.add("formTramite:dataTablaGestores");
+			checkTodoCorrecto();
+		}
+	}
+
+	/**
+	 * Retorno dialogo del retorno dialogo area.
+	 *
+	 * @param event respuesta dialogo
+	 */
+	public void returnDialogoSeccion(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		final FilaImportarSeccion dato = (FilaImportarSeccion) respuesta.getResult();
+		if (!respuesta.isCanceled()) {
+			this.filasSecciones.remove(this.filasSecciones.get(posicionSeccion));
+			dato.setResultado(TypeImportarResultado.OK);
+			this.filasSecciones.add(posicionSeccion, dato);
+			FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds()
+					.add("formTramite:dataTablaSecciones");
 			checkTodoCorrecto();
 		}
 	}
@@ -1063,6 +1138,42 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	}
 
 	/**
+	 * Preparar flujo secciones
+	 */
+	private void prepararFlujoSecciones() {
+		filasSecciones.clear();
+		for (final Map.Entry<Long, SeccionReutilizable> entry : secciones.entrySet()) {
+			final SeccionReutilizable seccion = entry.getValue();
+			Long idArea = null;
+			if (this.filaArea != null && this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
+				idArea = this.filaArea.getAreaActual().getCodigo();
+			}
+			final SeccionReutilizable seccionActual = seccionReutilizableService.getSeccionReutilizableByIdentificador(
+					TypeAmbito.ENTIDAD, seccion.getIdentificador(), UtilJSF.getIdEntidad(), idArea);
+
+
+			if (seccionActual == null) {
+
+				// Si no existe o está desactivado la personalización, dan info
+				final String mensaje = UtilJSF.getLiteral("dialogTramiteImportar.info.noexisteseccion");
+				filasSecciones.add(FilaImportarSeccion.crearITseccion(seccion, seccionActual, mensaje));
+
+			} else {
+				final String mensaje;
+				if (seccionActual.getRelease() > seccion.getRelease()) {
+					//Si la release es más vieja, hay que avisar (acciones reemplazar o nada)
+					 mensaje = UtilJSF.getLiteral("dialogTramiteImportar.info.existeseccionActualMasNueva");
+				} else {
+					//Si la release es más nueva, hay que avisar  (acciones reemplazar o nada)
+					 mensaje = UtilJSF.getLiteral("dialogTramiteImportar.info.existeseccionActualMenosNueva");
+				}
+				filasSecciones.add(FilaImportarSeccion.crearITseccionExiste(seccion, seccionActual, mensaje));
+			}
+
+		}
+	}
+
+	/**
 	 * Recorremos los dominios del zip. <br />
 	 * Obtenemos el dominio actual a partir del identificador. <br />
 	 * Si el dominio tiene fuente de datos, cargamos la FD y sus datos del zip.
@@ -1326,6 +1437,12 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			final GestorExternoFormularios gestor = (GestorExternoFormularios) UtilCoreApi.deserialize(contenidoFile);
 			gestores.put(codigo, gestor);
 
+		} else if (nombreFichero.startsWith("seccionesReutilizables_")) {
+
+			final Long codigo = obtenerId(nombreFichero);
+			final SeccionReutilizable seccion = (SeccionReutilizable) UtilCoreApi.deserialize(contenidoFile);
+			secciones.put(codigo, seccion);
+
 		} else if (!nombreFichero.equals("info.properties")) {
 			addMessageContext(TypeNivelGravedad.ERROR, "Fichero desconocido.");
 			return false;
@@ -1441,6 +1558,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 		filaImportar.setFilaDominios(filasDominios);
 		filaImportar.setFormularios(formularios);
 		filaImportar.setFilaGestor(filasGestores);
+		filaImportar.setFilaSecciones(filasSecciones);
 
 		filaImportar.setIdEntidad(UtilJSF.getIdEntidad());
 		filaImportar.setFicheros(ficheros);
@@ -2103,6 +2221,27 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	 */
 	public void setMostrarRegistroServicio(boolean mostrarRegistroServicio) {
 		this.mostrarRegistroServicio = mostrarRegistroServicio;
+	}
+
+	/**
+	 * @return the filasSecciones
+	 */
+	public List<FilaImportarSeccion> getFilasSecciones() {
+		return filasSecciones;
+	}
+
+	/**
+	 * @return the posicionSeccion
+	 */
+	public Integer getPosicionSeccion() {
+		return posicionSeccion;
+	}
+
+	/**
+	 * @param posicionSeccion the posicionSeccion to set
+	 */
+	public void setPosicionSeccion(Integer posicionSeccion) {
+		this.posicionSeccion = posicionSeccion;
 	}
 
 }

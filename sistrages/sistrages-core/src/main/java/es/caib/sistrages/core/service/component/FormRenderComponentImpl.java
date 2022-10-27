@@ -9,6 +9,7 @@ import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCaptcha;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoOculto;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSeccionReutilizable;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
@@ -16,11 +17,13 @@ import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.types.TypeAlineacionTexto;
 import es.caib.sistrages.core.api.model.types.TypeCampoTexto;
 import es.caib.sistrages.core.api.model.types.TypeOrientacion;
 import es.caib.sistrages.core.service.component.literales.Literales;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
+import es.caib.sistrages.core.service.repository.dao.SeccionReutilizableDao;
 
 @Component("formRenderComponent")
 public class FormRenderComponentImpl implements FormRenderComponent {
@@ -30,6 +33,9 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 	@Autowired
 	FormularioInternoDao formIntDao;
+
+	@Autowired
+	SeccionReutilizableDao seccionDao;
 
 	@Autowired
 	Literales literales;
@@ -58,10 +64,10 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 		if (pModoEdicion) {
 			formulario = formIntDao.getFormularioPaginasById(pIdForm);
-			pagina = formIntDao.getContenidoPaginaById(formulario.getPaginas().get(pPage.intValue() - 1).getCodigo());
+			pagina = formIntDao.getContenidoPaginaById(formulario.getPaginas().get(pPage.intValue() - 1).getCodigo(), false);
 
 		} else {
-			pagina = formIntDao.getContenidoPaginaById(pPage);
+			pagina = formIntDao.getContenidoPaginaById(pPage, false);
 		}
 
 		escribeLinea(html, "<!doctype html>", 0);
@@ -86,7 +92,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 		escribeLinea(html, "<div class=\"imc-form-contingut\">", 4);
 
-		cuerpoHTML(html, pagina, pLang, pModoEdicion, pMostrarOcultos);
+		cuerpoHTML(html, pagina, pLang, pModoEdicion, pMostrarOcultos, false, "", null, null);
 
 		escribeLinea(html, "</div>", 4);
 		escribeLinea(html, "</div>", 3);
@@ -127,6 +133,9 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		escribeLinea(pOut, urlJsIni, "imc-forms--edicio", urlJsFin, 1);
 
 		escribeLinea(pOut, "<script type=\"text/javascript\">var APP_CAMPO_ID = \"data-codigo\";</script>", 1);
+		escribeLinea(pOut, "<script type=\"text/javascript\">var APP_CAMPO_TIPO_SECCION = \"data-tipo-seccion\";</script>", 1);
+		escribeLinea(pOut, "<script type=\"text/javascript\">var APP_CAMPO_SECCION_ID = \"data-seccion-id\";</script>", 1);
+		escribeLinea(pOut, "<script type=\"text/javascript\">var APP_CAMPO_SECCION_FORM_ID = \"data-seccion-id-formulario\";</script>", 1);
 
 		escribeLinea(pOut, "</head>", 0);
 
@@ -141,7 +150,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	}
 
 	private void cuerpoHTML(final StringBuilder pOut, final PaginaFormulario pPagina, final String pLang,
-			final boolean pModoEdicion, final boolean pMostrarOcultos) {
+			final boolean pModoEdicion, final boolean pMostrarOcultos, final boolean isTipoSeccionReutilizable, final String dataSeccionReutilizable, final Long idSeccion, final ComponenteFormulario pCF) {
 
 		if (pPagina != null) {
 
@@ -155,31 +164,35 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 					switch (cf.getTipo()) {
 					case SECCION:
-						campoSeccion(pOut, cf, pLang, pModoEdicion);
+						campoSeccion(pOut, cf, pLang,  pModoEdicion , isTipoSeccionReutilizable, idSeccion, pCF);
 						ultimoCampoEsOculto = false;
 						break;
 					case CAMPO_TEXTO:
-						campoTexto(pOut, cf, pLang, pModoEdicion);
+						campoTexto(pOut, cf, pLang,   pModoEdicion, isTipoSeccionReutilizable, dataSeccionReutilizable);
 						ultimoCampoEsOculto = false;
 						break;
 					case ETIQUETA:
-						campoEtiqueta(pOut, cf, pLang, pModoEdicion);
+						campoEtiqueta(pOut, cf, pLang,   pModoEdicion, isTipoSeccionReutilizable, dataSeccionReutilizable);
 						ultimoCampoEsOculto = false;
 						break;
 					case CHECKBOX:
-						campoCheckBox(pOut, cf, pLang, pModoEdicion);
+						campoCheckBox(pOut, cf, pLang,   pModoEdicion, isTipoSeccionReutilizable, dataSeccionReutilizable);
 						ultimoCampoEsOculto = false;
 						break;
 					case SELECTOR:
-						campoSelector(pOut, cf, pLang, pModoEdicion);
+						campoSelector(pOut, cf, pLang,   pModoEdicion, isTipoSeccionReutilizable, dataSeccionReutilizable);
 						ultimoCampoEsOculto = false;
 						break;
 					case CAMPO_OCULTO:
-						campoOculto(pOut, cf, pLang, pModoEdicion, pMostrarOcultos, ultimoCampoEsOculto);
+						campoOculto(pOut, cf, pLang,   pModoEdicion, pMostrarOcultos, ultimoCampoEsOculto, isTipoSeccionReutilizable, dataSeccionReutilizable);
 						ultimoCampoEsOculto = true;
 						break;
 					case CAPTCHA:
-						campoCaptcha(pOut, cf, pLang, pModoEdicion);
+						campoCaptcha(pOut, cf, pLang,   pModoEdicion, isTipoSeccionReutilizable, dataSeccionReutilizable);
+						ultimoCampoEsOculto = false;
+						break;
+					case SECCION_REUTILIZABLE:
+						campoSeccionReutilizable(pOut, cf, pLang,   pModoEdicion, pMostrarOcultos);
 						ultimoCampoEsOculto = false;
 						break;
 					default:
@@ -202,24 +215,60 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	}
 
 	private void campoSeccion(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang,
-			final boolean pModoEdicion) {
+			final boolean pModoEdicion, final boolean isTipoSeccionReutilizable, final Long idSeccion, final ComponenteFormulario seccion) {
 		final ComponenteFormularioSeccion componente = (ComponenteFormularioSeccion) pCF;
 
-		escribeLinea(pOut, "<h4 ", escribeCodigo(pCF.getCodigo(), pModoEdicion), escribeId(pCF.getIdComponente()),
+		if (isTipoSeccionReutilizable) {
+			escribeLinea(pOut, "<h4 ", escribeCodigo(idSeccion, pModoEdicion), escribeId(idSeccion.toString()),
+					"class=\"imc-element imc-seccio\">", 5);
+		} else {
+			escribeLinea(pOut, "<h4 ", escribeCodigo(pCF.getCodigo(), pModoEdicion), escribeId(pCF.getIdComponente()),
 				"class=\"imc-element imc-seccio\">", 5);
+		}
 
-		escribeLinea(pOut, "<span class=\"imc-se-marca\">", componente.getLetra(), "</span>", 6);
+		if (isTipoSeccionReutilizable) {
+			escribeLinea(pOut, "<span class=\"imc-se-marca\">", ((ComponenteFormularioCampoSeccionReutilizable)seccion).getLetra(), "</span>", 6);
+		} else {
+			escribeLinea(pOut, "<span class=\"imc-se-marca\">", componente.getLetra(), "</span>", 6);
+		}
 		if (!pCF.isNoMostrarTexto() && pCF.getTexto() != null) {
-			escribeLinea(pOut, "<span class=\"imc-se-titol\">", trataLiteral(pCF.getTexto().getTraduccion(pLang)),
-					"</span>", 6);
+			if (isTipoSeccionReutilizable) {
+				escribeLinea(pOut, "<span class=\"imc-se-titol\">", trataLiteral(pCF == null || pCF.getTexto() == null ? "" : pCF.getTexto().getTraduccion(pLang)),
+						"</span>", 6);
+			} else {
+				escribeLinea(pOut, "<span class=\"imc-se-titol\">", trataLiteral(pCF.getTexto().getTraduccion(pLang)),
+							"</span>", 6);
+			}
+
 		}
 
 		escribeLinea(pOut, "</h4>", 5);
 
 	}
 
+	private void campoSeccionReutilizable(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang,
+			final boolean pModoEdicion, boolean pMostrarOcultos) {
+		final ComponenteFormularioCampoSeccionReutilizable componente = (ComponenteFormularioCampoSeccionReutilizable) pCF;
+		SeccionReutilizable seccionReutilizable = seccionDao.getSeccionReutilizable(componente.getIdSeccionReutilizable());
+		Long pIdForm = seccionReutilizable.getIdFormularioAsociado();
+		DisenyoFormulario formulario = formIntDao.getFormularioPaginasById(pIdForm);
+		// 2868
+		if (!formulario.getPaginas().isEmpty()) {
+			PaginaFormulario pagina = formIntDao.getContenidoPaginaById(formulario.getPaginas().get(0).getCodigo(), false);
+			String dataSeccionReutilizable = " data-tipo-seccion=\"S\" data-seccion-id=\""+seccionReutilizable.getCodigo()+"\" data-seccion-id-formulario=\""+seccionReutilizable.getIdFormularioAsociado()+"\" " ;
+			pintarLineaSeccionReutilizable(pOut, pCF, dataSeccionReutilizable); //Linea INICIO
+			cuerpoHTML(pOut, pagina, pLang, pModoEdicion, pMostrarOcultos, true, dataSeccionReutilizable, componente.getCodigo(), pCF);
+			pintarLineaSeccionReutilizable(pOut, pCF,dataSeccionReutilizable); //Línea FIN
+		}
+
+	}
+
+	private void pintarLineaSeccionReutilizable(final StringBuilder pOut, final ComponenteFormulario pCF, String dataSeccionReutilizable) {
+		escribeLinea(pOut, "<div class=\"imc-element imc-separador imc-sep-salt-carro imc-borde-seccion-reutilizable\" data-codigo=\""+pCF.getCodigo()+"\" data-id=\""+pCF.getCodigo()+"\" id=\" \" data-tipo-seccion=\"true\" "+dataSeccionReutilizable+" ></div>", 5);
+	}
+
 	private void campoTexto(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang,
-			final boolean pModoEdicion) {
+			final boolean pModoEdicion, final boolean isTipoSeccion, final String dataSeccionReutilizable) {
 		final ComponenteFormularioCampoTexto campo = (ComponenteFormularioCampoTexto) pCF;
 
 		final StringBuilder estilo = new StringBuilder();
@@ -250,7 +299,8 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 				estilo.append(" imc-el-files-").append(String.valueOf(nfilas));
 
 				elemento.append("<textarea id=\"").append(campo.getIdComponente()).append("\" cols=\"20\" rows=\"")
-						.append(nfilas).append("\"></textarea>");
+						.append(nfilas).append(dataSeccionReutilizable).append("\"></textarea>");
+
 			} else {
 				tipo = "text";
 			}
@@ -262,7 +312,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			tipo = "text";
 		}
 
-		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente()), escribeCodigo(pCF.getCodigo(), pModoEdicion),
+		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente())+" " + dataSeccionReutilizable, escribeCodigo(pCF.getCodigo(), true),
 				escribeObligatorio(campo, pModoEdicion), escribeTieneScripts(campo, pModoEdicion),
 				" class=\"imc-element ", estilo.toString(), "\" data-type=\"", tipo, "\">", 5);
 
@@ -277,7 +327,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			if (pModoEdicion && "date".equals(tipo)) {
 				tipo = "text";
 			}
-			elemento.append("<input id=\"").append(campo.getIdComponente()).append("\" type=\"" + tipo + "\"/>");
+			elemento.append("<input id=\"").append(campo.getIdComponente()).append("\" type=\"" + tipo + "\" "+dataSeccionReutilizable+" />");
 		}
 
 		escribeLinea(pOut, "<div class=\"imc-el-control\">", elemento.toString(), "</div>", 6);
@@ -295,7 +345,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	 * @param pModoEdicion
 	 */
 	private void campoCaptcha(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang,
-			final boolean pModoEdicion) {
+			final boolean pModoEdicion, final boolean isTipoSeccionReutilizable, final String dataSeccionReutilizable) {
 		final ComponenteFormularioCampoCaptcha campo = (ComponenteFormularioCampoCaptcha) pCF;
 
 		final StringBuilder estilo = new StringBuilder();
@@ -304,7 +354,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			estilo.append(" imc-el-").append(campo.getNumColumnas());
 		}
 
-		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente()), escribeCodigo(pCF.getCodigo(), pModoEdicion),
+		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente())+ " " +dataSeccionReutilizable, escribeCodigo(pCF.getCodigo(), pModoEdicion),
 				escribeTieneScripts(campo, pModoEdicion), "class=\"imc-element imc-el-captcha", estilo.toString(),
 				"\" data-type=\"captcha\">", 5);
 
@@ -316,7 +366,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		escribeLinea(pOut, "<div class=\"imc--img\">", 7);
 		escribeLinea(pOut, "<img src=\"\" alt=\"\">", 8);
 		escribeLinea(pOut, "</div>", 7);
-		escribeLinea(pOut, "<input id=\"", String.valueOf(campo.getIdComponente()), "\" name=\"",
+		escribeLinea(pOut, "<input id=\"", String.valueOf(campo.getIdComponente()), "\" name=\" "+dataSeccionReutilizable+" " ,
 				String.valueOf(campo.getIdComponente()) + "\"  type=\"text\">", 7);
 		escribeLinea(pOut, "<button type=\"button\"><span>"+literales.getLiteral("componente", "captcha.refrescarImagen", pLang)+"</span></button>", 7);
 		escribeLinea(pOut, "</div>", 6);//Refresca imagen
@@ -325,7 +375,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	}
 
 	private void campoCheckBox(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang,
-			final boolean pModoEdicion) {
+			final boolean pModoEdicion, final boolean isTipoSeccionReutilizable, final String dataSeccionReutilizable) {
 		final ComponenteFormularioCampoCheckbox campo = (ComponenteFormularioCampoCheckbox) pCF;
 
 		final StringBuilder estilo = new StringBuilder();
@@ -341,13 +391,13 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			texto = "<label for=\"" + campo.getIdComponente() + "\">"
 					+ trataLiteral(campo.getTexto().getTraduccion(pLang)) + "</label>";
 		}
-		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente()), escribeCodigo(pCF.getCodigo(), pModoEdicion),
+		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente())+" " +dataSeccionReutilizable, escribeCodigo(pCF.getCodigo(), pModoEdicion),
 				escribeTieneScripts(campo, pModoEdicion), "class=\"imc-element imc-el-check", estilo.toString(),
 				"\" data-type=\"check\">", 5);
 
 		escribeLinea(pOut, "<div class=\"imc-el-control\">", 6);
 		escribeLinea(pOut, "<div class=\"imc-input-check\">", 7);
-		escribeLinea(pOut, "<input id=\"", String.valueOf(campo.getIdComponente()), "\" type=\"checkbox\">", 8);
+		escribeLinea(pOut, "<input id=\"", String.valueOf(campo.getIdComponente()), "\" "+dataSeccionReutilizable+" type=\"checkbox\">", 8);
 		escribeLinea(pOut, texto, 8);
 
 		escribeLinea(pOut, "</div>", 7);
@@ -357,21 +407,21 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	}
 
 	private void campoSelector(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang,
-			final boolean pModoEdicion) {
+			final boolean pModoEdicion, final boolean isTipoSeccionReutilizable, final String dataSeccionReutilizable) {
 		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) pCF;
 
 		switch (campo.getTipoCampoIndexado()) {
 		case DINAMICO:
-			campoSelectorDinamico(pOut, campo, pLang, pModoEdicion);
+			campoSelectorDinamico(pOut, campo, pLang, pModoEdicion, isTipoSeccionReutilizable, dataSeccionReutilizable);
 			break;
 		case DESPLEGABLE:
-			campoSelectorDesplegable(pOut, campo, pLang, pModoEdicion);
+			campoSelectorDesplegable(pOut, campo, pLang, pModoEdicion, isTipoSeccionReutilizable, dataSeccionReutilizable);
 			break;
 		case MULTIPLE:
-			campoSelectorMultiple(pOut, campo, pLang, pModoEdicion);
+			campoSelectorMultiple(pOut, campo, pLang, pModoEdicion, isTipoSeccionReutilizable, dataSeccionReutilizable);
 			break;
 		case UNICA:
-			campoSelectorUnica(pOut, campo, pLang, pModoEdicion);
+			campoSelectorUnica(pOut, campo, pLang, pModoEdicion, isTipoSeccionReutilizable, dataSeccionReutilizable);
 			break;
 		default:
 			break;
@@ -380,7 +430,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	}
 
 	private void campoSelectorDinamico(final StringBuilder pOut, final ComponenteFormularioCampoSelector pCampo,
-			final String pLang, final boolean pModoEdicion) {
+			final String pLang, final boolean pModoEdicion, final boolean isTipoSeccionReutilizable, final String dataSeccionReutilizable) {
 
 		final StringBuilder estilo = new StringBuilder();
 		String texto = "";
@@ -392,13 +442,13 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		// estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
-			texto = "<div class=\"imc-el-etiqueta\"><label for=\"" + pCampo.getIdComponente() + "\">"
+			texto = "<div class=\"imc-el-etiqueta\"><label for=\"" + pCampo.getIdComponente() + " "+dataSeccionReutilizable+" \">"
 					+ trataLiteral(pCampo.getTexto().getTraduccion(pLang)) + "</label></div>";
 		}
 
 		escribeLinea(pOut, "<div", escribeId(pCampo.getIdComponente()), escribeCodigo(pCampo.getCodigo(), pModoEdicion),
 				escribeObligatorio(pCampo, pModoEdicion), escribeTieneScripts(pCampo, pModoEdicion),
-				" class=\"imc-element ", estilo.toString(), "\" data-type=\"select\">", 5);
+				" class=\"imc-element ", estilo.toString(), "\" "+dataSeccionReutilizable+" data-type=\"select\">", 5);
 
 		escribeLinea(pOut, texto, 6);
 
@@ -412,9 +462,9 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 		// TODO De momento ñapa para poder mostrar en editor
 		if (pModoEdicion) {
-			escribeLinea(pOut, "<input id=\"" + pCampo.getIdComponente() + "\" cols=\"\" rows=\"\" />", 8);
+			escribeLinea(pOut, "<input id=\"" + pCampo.getIdComponente() + "\" cols=\"\" rows=\"\" "+dataSeccionReutilizable+" />", 8);
 		} else {
-			escribeLinea(pOut, "<textarea id=\"" + pCampo.getIdComponente() + "\" cols=\"\" rows=\"\" />", 8);
+			escribeLinea(pOut, "<textarea id=\"" + pCampo.getIdComponente() + "\" cols=\"\" rows=\"\" "+dataSeccionReutilizable+" />", 8);
 		}
 
 		// escribeLinea(pOut, "</div>", 7);
@@ -423,7 +473,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	}
 
 	private void campoSelectorDesplegable(final StringBuilder pOut, final ComponenteFormularioCampoSelector pCampo,
-			final String pLang, final boolean pModoEdicion) {
+			final String pLang, final boolean pModoEdicion, final boolean isTipoSeccionReutilizable, final String dataSeccionReutilizable) {
 
 		final StringBuilder estilo = new StringBuilder();
 		String texto = "";
@@ -439,9 +489,9 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 					+ trataLiteral(pCampo.getTexto().getTraduccion(pLang)) + "</label></div>";
 		}
 
-		escribeLinea(pOut, "<div", escribeId(pCampo.getIdComponente()), escribeCodigo(pCampo.getCodigo(), pModoEdicion),
+		escribeLinea(pOut, "<div", escribeId(pCampo.getIdComponente()) , escribeCodigo(pCampo.getCodigo(), pModoEdicion),
 				escribeObligatorio(pCampo, pModoEdicion), escribeTieneScripts(pCampo, pModoEdicion),
-				" class=\"imc-element imc-el-selector", estilo.toString(), "\" data-type=\"select\">", 5);
+				" class=\"imc-element imc-el-selector", estilo.toString(), "\" "+dataSeccionReutilizable+" data-type=\"select\">", 5);
 
 		escribeLinea(pOut, texto, 6);
 
@@ -449,7 +499,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		escribeLinea(pOut, "<div class=\"imc-select imc-opcions\">", 7);
 
 		escribeLinea(pOut, "<a class=\"imc-select\" tabindex=\"0\" href=\"javascript:;\" style=\"\"></a>", 8);
-		escribeLinea(pOut, "<input id=\"", String.valueOf(pCampo.getIdComponente()), "\" type=\"hidden\">", 8);
+		escribeLinea(pOut, "<input id=\"", String.valueOf(pCampo.getIdComponente()), "\" "+dataSeccionReutilizable+" type=\"hidden\">", 8);
 
 		escribeLinea(pOut, "</div>", 7);
 		escribeLinea(pOut, "</div>", 6);
@@ -457,7 +507,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	}
 
 	private void campoSelectorMultiple(final StringBuilder pOut, final ComponenteFormularioCampoSelector pCampo,
-			final String pLang, final boolean pModoEdicion) {
+			final String pLang, final boolean pModoEdicion, final boolean isTipoSeccionReutilizable, final String dataSeccionReutilizable) {
 
 		final StringBuilder estilo = new StringBuilder();
 
@@ -467,10 +517,10 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 		// estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
 
-		escribeLinea(pOut, "<fieldset", escribeId(pCampo.getIdComponente()),
+		escribeLinea(pOut, "<fieldset", escribeId(pCampo.getIdComponente()) ,
 				escribeCodigo(pCampo.getCodigo(), pModoEdicion), escribeObligatorio(pCampo, pModoEdicion),
 				escribeTieneScripts(pCampo, pModoEdicion), " class=\"imc-element", estilo.toString(),
-				"\" data-type=\"check-list\">", 6);
+				"\" "+dataSeccionReutilizable+" data-type=\"check-list\">", 6);
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
 			escribeLinea(pOut, "<legend class=\"imc-label\">", trataLiteral(pCampo.getTexto().getTraduccion(pLang)),
@@ -481,17 +531,17 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			escribeLinea(pOut, "<ul>", 7);
 			escribeLinea(pOut, "<li>", 7);
 			escribeLinea(pOut, "<div class=\"imc-input-check\"><input id=\"", String.valueOf(pCampo.getIdComponente()),
-					".a\" checked=\"checked\" type=\"checkbox\"><label for=\"",
+					".a\" "+dataSeccionReutilizable+" checked=\"checked\" type=\"checkbox\"><label for=\"",
 					String.valueOf(pCampo.getIdComponente()), ".a\">Opc. A</label></div>", 8);
 			escribeLinea(pOut, "</li>", 7);
 			escribeLinea(pOut, "<li>", 7);
 			escribeLinea(pOut, "<div class=\"imc-input-check\"><input id=\"", String.valueOf(pCampo.getIdComponente()),
-					".b\" type=\"checkbox\"><label for=\"", String.valueOf(pCampo.getIdComponente()),
+					".b\" "+dataSeccionReutilizable+" type=\"checkbox\"><label for=\"", String.valueOf(pCampo.getIdComponente()),
 					".b\">Opc. B</label></div>", 8);
 			escribeLinea(pOut, "</li>", 7);
 			escribeLinea(pOut, "<li>", 7);
 			escribeLinea(pOut, "<div class=\"imc-input-check\"><input id=\"", String.valueOf(pCampo.getIdComponente()),
-					".c\" type=\"checkbox\"><label for=\"", String.valueOf(pCampo.getIdComponente()),
+					".c\" "+dataSeccionReutilizable+" type=\"checkbox\"><label for=\"", String.valueOf(pCampo.getIdComponente()),
 					".c\">Opc. C</label></div>", 8);
 			escribeLinea(pOut, "</li>", 7);
 			escribeLinea(pOut, "</ul>", 7);
@@ -503,7 +553,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	}
 
 	private void campoSelectorUnica(final StringBuilder pOut, final ComponenteFormularioCampoSelector pCampo,
-			final String pLang, final boolean pModoEdicion) {
+			final String pLang, final boolean pModoEdicion, final boolean isTipoSeccionReutilizable, final String dataSeccionReutilizable) {
 
 		final StringBuilder estilo = new StringBuilder();
 
@@ -522,7 +572,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		escribeLinea(pOut, "<fieldset", escribeId(pCampo.getIdComponente()),
 				escribeCodigo(pCampo.getCodigo(), pModoEdicion), escribeObligatorio(pCampo, pModoEdicion),
 				escribeTieneScripts(pCampo, pModoEdicion), " class=\"imc-element " + orientacion, estilo.toString(),
-				"\" data-type=\"radio-list\">", 6);
+				"\" "+dataSeccionReutilizable+" data-type=\"radio-list\">", 6);
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
 			escribeLinea(pOut, "<legend class=\"imc-label\">", trataLiteral(pCampo.getTexto().getTraduccion(pLang)),
@@ -556,7 +606,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	}
 
 	private void campoEtiqueta(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang,
-			final boolean pModoEdicion) {
+			final boolean pModoEdicion, final boolean isTipoSeccionReutilizable, final String dataSeccionReutilizable) {
 		final ComponenteFormularioEtiqueta componente = (ComponenteFormularioEtiqueta) pCF;
 		final StringBuilder estilo = new StringBuilder();
 
@@ -585,7 +635,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	}
 
 	private void campoOculto(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang,
-			final boolean pModoEdicion, final boolean pMostrarOcultos, final boolean ultimoCampoEsOculto) {
+			final boolean pModoEdicion, final boolean pMostrarOcultos, final boolean ultimoCampoEsOculto, final boolean isTipoSeccionReutilizable, final String dataSeccionReutilizable) {
 		final ComponenteFormularioCampoOculto campo = (ComponenteFormularioCampoOculto) pCF;
 
 		final StringBuilder elemento = new StringBuilder();
@@ -603,7 +653,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			more = "";
 		}
 
-		elemento.append("<input id=\"").append(campo.getIdComponente()).append("\" type=\"hidden\"/>");
+		elemento.append("<input id=\"").append(campo.getIdComponente()).append("\" "+dataSeccionReutilizable+" type=\"hidden\"/>");
 
 		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente()), escribeCodigo(pCF.getCodigo(), pModoEdicion),
 				escribeTieneScripts(campo, pModoEdicion), " class=\"imc-element imc-el-hidden ", more,
@@ -615,7 +665,12 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		escribeLinea(pOut, "<script type=\"text/javascript\">", 1);
 		escribeLinea(pOut,
 				"function rcEditarComponente(id) {parent.seleccionarElementoCommand([{name:'id', value:id}]);}", 2);
-
+		escribeLinea(pOut,
+				"function rcEditarComponente2(id,tipoSeccion,seccionid,seccionFormId) {parent.seleccionarElementoCommand([{name:'id', value:id},{name:'tipoSeccion', value:tipoSeccion},{name:'seccionId', value:seccionid},{name:'seccionFormId', value:seccionFormId}]);}", 2);
+/*
+		escribeLinea(pOut,
+				"function rcEditarComponente(id) {parent.seleccionarElementoCommand([{name:'id', value:id},{name:'data-tipo-seccion', value:data-tipo-seccion},{name:'data-seccion-id', value:data-seccion-id},{name:'data-seccion-id-formulario', value:data-seccion-id-formulario}]);}", 2);
+**/
 		escribeLinea(pOut, "var idComponente=\"" + pIdComponente + "\";", 2);
 		escribeLinea(pOut, "</script>", 1);
 	}

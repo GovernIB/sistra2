@@ -1,7 +1,5 @@
 package es.caib.sistrages.core.service.repository.model;
 
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -115,9 +113,10 @@ public class JCampoFormularioCaptcha implements IModelApi {
 		return campoTexto;
 	}
 
-	public static JCampoFormularioCaptcha createDefault(final int pOrden, final JLineaFormulario pJLinea) {
+	public static JCampoFormularioCaptcha createDefault(final int pOrden, final JLineaFormulario pJLinea, final boolean isTipoSeccion, final String identificadorSeccion) {
 		final JCampoFormularioCaptcha jModel = new JCampoFormularioCaptcha();
-		jModel.setElementoFormulario(JElementoFormulario.createDefault(TypeObjetoFormulario.CAPTCHA, pOrden, pJLinea));
+		jModel.setElementoFormulario(JElementoFormulario.createDefault(TypeObjetoFormulario.CAPTCHA, pOrden, pJLinea, isTipoSeccion, identificadorSeccion));
+		//jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.CAPTCHA, pOrden, pJLinea));
 		return jModel;
 	}
 

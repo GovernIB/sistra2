@@ -486,6 +486,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getCodigo()));
 		params.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(),
 				((OpcionArbol) this.selectedNode.getData()).getFormulario().getCodigo().toString());
+		params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(), TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString());
 		Integer width = UtilJSF.getSessionBean().getWidth();
 		Integer height = UtilJSF.getSessionBean().getHeight() - 60;
 		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, width, height);
@@ -1334,7 +1335,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			}
 			this.getTramitePasoANEXSeleccionado().setPermiteSubsanar(true);
 			break;
-		case REGISTRAR:
+		case FINALIZAR:
 			if (!entidad.isPermiteSubsanarRegistrar()) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 						UtilJSF.getLiteral("viewDefinicionVersionRegistrarTramite.warning.entidadSinSubsanacion"));
@@ -1370,7 +1371,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		case ANEXAR:
 			this.getTramitePasoANEXSeleccionado().setPermiteSubsanar(false);
 			break;
-		case REGISTRAR:
+		case FINALIZAR:
 			this.getTramitePasoREGSeleccionado().setPermiteSubsanar(false);
 			break;
 		case PAGAR:

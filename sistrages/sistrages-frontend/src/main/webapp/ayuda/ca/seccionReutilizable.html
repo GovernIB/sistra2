@@ -1,0 +1,89 @@
+<html>
+<head>
+<meta charset=UTF-8>
+<meta http-equiv="content-type" content="text/html; utf-8">
+<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+	<h1 class="stgH1">SECCIONS REUTILITZABLES</h1>
+	<p>
+		A la pantalla de '<i>Seccions Reutilitzables</i>' es pot gestionar
+		l'alta, baixa i edici&oacute; de seccions, aix&iacute; com la
+		importaci&oacute;/exportaci&oacute;. Les seccions reutilitzables
+		permeten la reusabilitat d'una part d'un formulari, de forma que si es
+		detecta que una secció &eacute;s recurrent en m&eacute;s d'un
+		tr&agrave;mit, es pot crear des d'aquets manteniment per tal
+		d'utilitzar-la en altres tr&agrave;mits que requereixin de la mateixa
+		funcionalitat que aporta la secci&oacute;.<br> <br> Aquesta
+		pantalla permet la realitzaci&oacute; de cerques filtrades de seccions
+		reutilitzables aix&iacute; com dur a terme el manteniment de les
+		diferents seccions creades.<br> <br> El manteniment de
+		seccions reutilitzables l'ha de fer un usuari que disposi del rol d' '<i>Administrador
+			d'entitat</i>'.
+	</p>
+	<h2 class="stgH2">CAMPS</h2>
+	<p>
+	<ul>
+		<li><span class="nombreCampo">Identificador:</span> codi
+			un&iacute;voc que identifica la secci&oacute; reutilitzable i
+			mitjan&ccedil;ant el qual es podr&agrave; invocar la secci&oacute;.</li>
+		<li><span class="nombreCampo">Descripci&oacute;:</span> text
+			descriptiu de la funcionalitat prove&iuml;da per la secci&oacute;
+			reutilitzable.</li>
+		<li><span class="nombreCampo">Release:</span> codi que identifica
+			un&iacute;vocament un conjunt de canvis realitzats sobre una
+			secci&oacute;.</li>
+		<li><span class="nombreCampo">Data &uacute;ltima
+				modificaci&oacute;:</span> data que indica quan s'ha realitzat
+			l'&uacute;ltima modificaci&oacute; sobre la secci&oacute;
+			reutilitzable.</li>
+		<li><span class="nombreCampo">Bloquejat per:</span> camp que
+			indica l'usuari que t&eacute; bloquejada la sec&oacute; per a poder
+			editar-la.</li>
+
+	</ul>
+	</p>
+	<h2 class="stgH2">OPERATIVA</h2>
+	<p>
+	<ul>
+		<li><span class="boton">Cercar</span>: introduint un text en el
+			camp '<i>Cercar</i>' i prement el bot&oacute; amb la icona de la lupa
+			es dur&agrave; a terme un filtratge de les seccions que continguin el
+			text introdu&iuml;t. El criteri de cerca aplicar&agrave; a
+			l'identificador i la descripci&oacute; de la secci&oacute;.
+			Posteriorment, es visualitzaran els resultats de la cerca filtrant-ho
+			en el llistat de seccions.</li>
+		<li><span class="boton">Nou</span>: prement en el bot&oacute;
+			s'obrir&agrave; la <a
+			href="AyudaServlet?lang=ca&id=dialogSeccionReutilizable">fitxa</a>
+			per donar d'alta una nova secci&oacute; en la qual s'haur&agrave;n
+			d'emplenar els camps m&iacute;nims so&#320;licitats.</li>
+		<li><span class="boton">Editar</span>: seleccionant una
+			secci&oacute; del llistat i prement en el bot&oacute; s'obrir&agrave;
+			la fitxa per poder realitzar les modificacions dels camps desitjats.</li>
+		<li><span class="boton">Eliminar</span>: seleccionant una
+			secci&oacute; del llistat i prement sobre el bot&oacute; es
+			podr&agrave; suprimir la secci&oacute; seleccionada. Previ a
+			l'eliminaci&oacute;, es mostrar&agrave; un missatge de
+			confirmaci&oacute; de l'acci&oacute;.</li>
+		<li><span class="boton">Importar</span>: prement en el
+			bot&oacute; s'obrir&agrave; una nova pantalla que ens permetr&agrave;
+			seleccionar una secci&oacute; exportada d'un altre entorn per
+			importar-la. Mitjan&ccedil;ant el bot&oacute; <i>Explorar</i>
+			podr&agrave; localitzar el fitxer a importar i posteriorment
+			podr&agrave; importar-lo prement el bot&oacute; <i>Annexar</i>.</li>
+		<li><span class="boton">Exportar</span>: seleccionant una
+			sec&oacute; del llistat i prement sobre aquest bot&oacute;
+			podr&agrave; generar un fitxer d'exportaci&oacute; de la
+			secci&oacute;. Una vegada premut, s'obrir&agrave; una pantalla de
+			confirmaci&oacute; de l'exportaci&oacute; i al confirmar
+			l'acci&oacute; es generar&agrave; el corresponent fitxer que
+			podr&agrave; emprar per importar la secci&oacute; a un altre entorn.</li>
+		<li><span class="boton">Historial</span>: seleccionanda una
+			secci&oacute; del llistat i prement sobre aquest bot&oacute;
+			s'obrir&agrave; una nova pantalla on es podr&agrave; consultar
+			l'historial de modificacions de la versi&oacute;.</li>
+	</ul>
+	</p>
+</body>
+</html>

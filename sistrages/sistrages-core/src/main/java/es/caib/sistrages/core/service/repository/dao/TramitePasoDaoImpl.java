@@ -23,6 +23,7 @@ import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCaptcha;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoOculto;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSeccionReutilizable;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
@@ -37,14 +38,13 @@ import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
-import es.caib.sistrages.core.api.model.Literal;
-import es.caib.sistrages.core.api.model.LiteralScript;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.ParametroDominio;
 import es.caib.sistrages.core.api.model.PlantillaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -106,9 +106,6 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 
 	@Autowired
 	private FormularioInternoDao formularioInternoDao;
-
-	@Autowired
-	private FormateadorFormularioDao formateadorFormularioDao;
 
 	/**
 	 * Crea una nueva instancia de TramiteDaoImpl.
@@ -576,7 +573,8 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			final Map<Long, Fichero> ficheros, final Map<Long, byte[]> ficherosContent,
 			final Map<Long, FormateadorFormulario> formateadores, final Map<Long, Long> mapFormateadores,
 			final Map<Long, GestorExternoFormularios> gestores, final Map<Long, Long> mapGestores,
-			final Map<Long, Long> idDominiosEquivalencia, final Long idArea) {
+			final Map<Long, Long> idDominiosEquivalencia, final Long idArea,
+			final Map<Long, Long> mapSecciones, final Map<Long, SeccionReutilizable> secciones) {
 
 		final JVersionTramite jVersionTramite = entityManager.find(JVersionTramite.class, idTramiteVersion);
 
@@ -708,7 +706,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 						formularioInternoDao.updateFormulario(disenyoFormularioAlmacenado);
 
 						this.anyadirPaginas(formularioInterno.getPaginas(), idJFormulario, ficherosContent,
-								idDominiosEquivalencia, idEntidad);
+								idDominiosEquivalencia, idEntidad, secciones, mapSecciones);
 						this.anyadirPlantillas(formularioInterno.getPlantillas(), idJFormulario, formateadores,
 								mapFormateadores, ficherosContent, idEntidad);
 
@@ -855,7 +853,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	 */
 	private void anyadirPaginas(final List<PaginaFormulario> paginas, final Long idFormulario,
 			final Map<Long, byte[]> ficherosContent, final Map<Long, Long> idDominiosEquivalencia,
-			final Long idEntidad) {
+			final Long idEntidad, final Map<Long, SeccionReutilizable> secciones,final Map<Long, Long> mapSecciones) {
 
 		int ordenPagina = 1;
 		Collections.sort(paginas, new Comparator<PaginaFormulario>() {
@@ -907,8 +905,15 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 						continue;
 					}
 
+					if (isTipoSeccionReutilizable(mlinea)) {
+						anyadirComponenteSeccionReutilizable((ComponenteFormularioCampoSeccionReutilizable) mlinea.getComponentes().get(0),
+								mlinea.getOrden(), idPagina, secciones, mapSecciones);
+						ordenLinea++;
+						continue;
+					}
+
 					final ObjetoFormulario objetoFormularioLine = formularioInternoDao
-							.addComponente(TypeObjetoFormulario.LINEA, idPagina, null, mlinea.getOrden(), null);
+							.addComponente(TypeObjetoFormulario.LINEA, idPagina, null, mlinea.getOrden(), null, null, false, null);
 					final Long idLinea = objetoFormularioLine.getCodigo();
 					final List<ComponenteFormulario> componentes = mlinea.getComponentes();
 
@@ -986,6 +991,23 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 
 	/**
 	 * Los tipos etiqueta se crean de tirón, se pide añadir una etiqueta y
+	 * directamente crea una linea con su sección reutilizable.
+	 *
+	 * @param mlinea
+	 * @return
+	 */
+	private boolean isTipoSeccionReutilizable(final LineaComponentesFormulario mlinea) {
+		boolean tipoEtiqueta = false;
+		if (mlinea != null && mlinea.getComponentes() != null && mlinea.getComponentes().size() == 1
+				&& (mlinea.getComponentes().get(0) instanceof ComponenteFormularioCampoSeccionReutilizable)) {
+			tipoEtiqueta = true;
+		}
+
+		return tipoEtiqueta;
+	}
+
+	/**
+	 * Los tipos etiqueta se crean de tirón, se pide añadir una etiqueta y
 	 * directamente crea una linea con su sección.
 	 *
 	 * @param mlinea
@@ -1012,7 +1034,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	private void anyadirComponenteSeccion(final ComponenteFormularioSeccion componente, final int orden,
 			final Long idPagina) {
 		final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(), idPagina, null, orden,
-				null);
+				null, null, false, null);
 		entityManager.flush();
 		final Long id = ((LineaComponentesFormulario) retorno).getComponentes()
 				.get(((LineaComponentesFormulario) retorno).getComponentes().size() - 1).getCodigo();
@@ -1048,6 +1070,40 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	}
 
 	/**
+	 * Añade componente de tipo sección.
+	 *
+	 * @param componente
+	 * @param idLinea
+	 * @param idPagina
+	 */
+	private void anyadirComponenteSeccionReutilizable(final ComponenteFormularioCampoSeccionReutilizable componente, final int orden,
+			final Long idPagina, final Map<Long, SeccionReutilizable> secciones,final Map<Long, Long> mapSecciones) {
+		Long idSeccionReutilizable = mapSecciones.get(componente.getIdSeccionReutilizable());
+		SeccionReutilizable sesccionReutilizable = secciones.get(idSeccionReutilizable);
+		final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(), idPagina, null, orden,
+				null, sesccionReutilizable, false, null);
+		entityManager.flush();
+		final Long id = ((LineaComponentesFormulario) retorno).getComponentes()
+				.get(((LineaComponentesFormulario) retorno).getComponentes().size() - 1).getCodigo();
+
+		final ComponenteFormularioCampoSeccionReutilizable comp = (ComponenteFormularioCampoSeccionReutilizable) formularioInternoDao
+				.getComponenteById(id);
+		comp.setLetra(componente.getLetra());
+		if (componente.getTexto() != null) {
+			componente.getTexto().setCodigo(null);
+			if (componente.getTexto().getTraducciones() != null) {
+				for (final Traduccion traduccion : componente.getTexto().getTraducciones()) {
+					traduccion.setCodigo(null);
+				}
+			}
+			comp.setTexto(componente.getTexto());
+		}
+		//comp.setIdSeccionReutilizable(idSeccionReutilizable);
+
+		formularioInternoDao.updateComponente(comp);
+	}
+
+	/**
 	 * Añade componente de tipo captcha.
 	 *
 	 * @param componente
@@ -1057,7 +1113,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	private void anyadirComponenteCaptcha(final ComponenteFormularioCampoCaptcha componente, final int orden,
 			final Long idPagina) {
 		final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(), idPagina, null, orden,
-				null);
+				null, null, false, null);
 		entityManager.flush();
 		final Long id = ((LineaComponentesFormulario) retorno).getComponentes()
 				.get(((LineaComponentesFormulario) retorno).getComponentes().size() - 1).getCodigo();
@@ -1102,7 +1158,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	private void anyadirComponenteImagen(final ComponenteFormularioImagen componente, final Long idLinea,
 			final Long idPagina, final Map<Long, byte[]> ficherosContent, final Long idEntidad) {
 		final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(), idPagina, idLinea,
-				componente.getOrden(), null);
+				componente.getOrden(), null, null, false, null);
 		entityManager.flush();
 		final Long id = ((ComponenteFormularioCampoTexto) retorno).getCodigo();
 
@@ -1154,7 +1210,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	private void anyadirComponenteEtiqueta(final ComponenteFormularioEtiqueta componente, final int ordenLinea,
 			final Long idPagina) {
 		final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(), idPagina, null,
-				ordenLinea, null);
+				ordenLinea, null, null, false, null);
 		entityManager.flush();
 		final Long id = ((LineaComponentesFormulario) retorno).getComponentes()
 				.get(((LineaComponentesFormulario) retorno).getComponentes().size() - 1).getCodigo();
@@ -1199,7 +1255,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	private void anyadirComponenteCampoOculto(final ComponenteFormularioCampoOculto componente, final Long idLinea,
 			final Long idPagina) {
 		final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(), idPagina, idLinea,
-				componente.getOrden(), null);
+				componente.getOrden(), null, null, false, null);
 		entityManager.flush();
 
 		final Long id = ((ComponenteFormularioCampoOculto) retorno).getCodigo();
@@ -1222,7 +1278,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	private void anyadirComponenteCampoTexto(final ComponenteFormularioCampoTexto componente, final Long idLinea,
 			final Long idPagina) {
 		final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(), idPagina, idLinea,
-				componente.getOrden(), null);
+				componente.getOrden(), null, null, false, null);
 		entityManager.flush();
 		final Long id = ((ComponenteFormularioCampoTexto) retorno).getCodigo();
 
@@ -1293,7 +1349,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	private void anyadirComponenteSelector(final ComponenteFormularioCampoSelector componente, final Long idLinea,
 			final Long idPagina, final Map<Long, Long> idDominiosEquivalencia) {
 		final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(), idPagina, idLinea,
-				componente.getOrden(), null);
+				componente.getOrden(), null, null, false, null);
 		entityManager.flush();
 		final Long id = ((ComponenteFormularioCampo) retorno).getCodigo();
 
@@ -1380,7 +1436,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	private void anyadirComponenteCampo(final ComponenteFormularioCampo componente, final Long idLinea,
 			final Long idPagina) {
 		final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(), idPagina, idLinea,
-				componente.getOrden(), null);
+				componente.getOrden(), null, null, false, null);
 		entityManager.flush();
 		final Long id = ((ComponenteFormularioCampo) retorno).getCodigo();
 
@@ -1428,7 +1484,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	private void anyadirComponenteCheckbox(final ComponenteFormularioCampoCheckbox componente, final Long idLinea,
 			final Long idPagina) {
 		final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(), idPagina, idLinea,
-				componente.getOrden(), null);
+				componente.getOrden(), null, null, false, null);
 		entityManager.flush();
 		final Long id = ((ComponenteFormularioCampoCheckbox) retorno).getCodigo();
 

@@ -1,0 +1,230 @@
+<html>
+<head>
+<meta charset=UTF-8>
+<meta http-equiv="content-type" content="text/html; utf-8">
+<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+	<h1 class="stgH1">DISSENY DEL FORMULARI</h1>
+	<p>
+		En la pantalla de<i>' Disseny del formulari</i>' es pot dissenyar i
+		previsualizar formularis associats a la versi&oacute; del
+		tr&agrave;mit.<br> Aquesta pantalla es compon d'una
+		cap&ccedil;alera, en la qual es presenten les propietats del formulari
+		i la barra de disseny de components, una &agrave;rea en la zona
+		esquerra en la qual es presenta un editor visual del formulari, una
+		&agrave;rea dreta de configuraci&oacute; de propietats dels camps, i
+		un peu format per una barra de botons amb diferent funcionalitat.<br>
+		Qualsevol canvi realitzat sobre els camps en edici&oacute;
+		haur&agrave; d'aplicar-se mitjan&ccedil;ant el bot&oacute; 'Aplicar
+		canvis' perqu&egrave; es visualitzin a l'&agrave;rea d'edici&oacute;.
+	</p>
+	<br />
+
+	<p>
+		Un tema a tenir present és que les longituds dels camps que es vulguin
+		enviar a registre (dades interessat o representant) segueixen la norma
+		tècnica d'interoperabilitat de model de dades per a l'intercanvi de
+		seients registrals entre entitats registrals (SICRES). Els valors
+		màxims dels camps es poden trobar en la <a
+			href="https://www.boe.es/boe/dias/2011/07/30/pdfs/BOE-A-2011-13174.pdf"
+			target="_blank">següent publicació del BOE</a>, concretament en les
+		pàgines 10 i 11 del document. <br> SISTRA2 ja s'encarrega
+		internament de controlar les mides màximes establertes en la norma i
+		en cas que algun camp superi la mida màxima es truncarà.
+	</p>
+	<h2 class="stgH2">BARRA DE DISSENY</h2>
+	<p>
+	<ul>
+		<li><span class="nombreCampo">Components:</span> secci&oacute;
+			que presenta els botons per a la inserci&oacute; de components en el
+			formulari. Els tipus de camps disponibles s&oacute;n:</li>
+		<ul class="detalle">
+			<li><span class="boton">L&iacute;nia:</span> aquest bot&oacute;
+				permet incloure una l&iacute;nia en el formulari. Cada component
+				haur&agrave; de posicionar-se en una l&iacute;nia.</li>
+			<li><span class="boton">Secci&oacute;:</span> aquest bot&oacute;
+				permet crear un camp secci&oacute;. Aquest tipus de camp
+				nom&eacute;s es pot introdu&#239;r una sola vegada en les seccions
+				reutilitzables.</li>
+			<li><span class="boton">Av&iacute;s:</span> aquest bot&oacute;
+				permet incloure avisos informatius de diferents tipus (info, warning
+				i error). Cada tipus d'av&iacute;s presenta una iconografia
+				il&middot;lustrativa.</li>
+			<li><span class="boton">Camp de text:</span> aquest bot&oacute;
+				permet incloure un camp de text.</li>
+			<li><span class="boton">Camp selector:</span> aquest bot&oacute;
+				permet incloure un camp selector. Aquest camp permet presentar
+				diferents valors i permetre la selecci&oacute; d'un o diversos
+				valors al ciutad&agrave;, depenent del tipus de selector
+				<ul class="detalle2">
+					<li><span class="nombreCampo" style="color: #C2385D;">Llista
+							desplegable:</span> element compost per un llistat d'opcions del qual
+						nom&eacute;s es pot seleccionar una opci&oacute;. &Eacute;s
+						obligatori seleccionar un element</li>
+					<li><span class="nombreCampo" style="color: #C2385D;">Selecci&oacute;
+							&uacute;nica:</span> element compost per un grup d'opcions de les quals
+						nom&eacute;s es pot seleccionar una. &Eacute;s obligatori
+						seleccionar una opci&oacute;. Si s'utilitza aquest element s'han
+						de deixar ocupades les suficients columnes per a poder tenir la
+						vista en horitzontal. En cas que no es deixin en la vista ho
+						veurem en vertical.</li>
+					<li><span class="nombreCampo" style="color: #C2385D;">Selecci&oacute;
+							m&uacute;ltiple:</span> element compost per un grup d'opcions de les
+						quals es pot seleccionar una, diverses o cap.</li>
+					<li><span class="nombreCampo" style="color: #C2385D;">Cerca
+							din&agrave;mica:</span> element compost per un grup d'opcions de les
+						quals es pot seleccionar una, que filtra el resultat d'un domini
+						segons una cadena de car&agrave;cters introduïda. Perqu&egrave; es
+						mostrin resultats aquesta cadena ha de tenir m&iacute;nim tres
+						car&agrave;cters.</li>
+				</ul></li>
+			<li><span class="boton">Camp checkbox</span>: aquest bot&oacute;
+				permet incloure en el formulari un camp casella de
+				verificaci&oacute;.</li>
+			<li><span class="boton">Camp captcha</span>: aquest bot&oacute;
+				permet incloure en el formulari un camp captcha, el qual
+				prev&eacute; que bots o automatismes puguin dur a terme tramitacions
+				completes. Per a completar aquest camp s'haur&agrave; d'emplenar amb
+				els car&agrave;cters de la imatge o del dictat per veu.</li>
+		</ul>
+		<li><span class="nombreCampo">Posicionament:</span> secci&oacute;
+			que permet especificar la posici&oacute; que s'assignar&agrave; a un
+			camp en crear-lo respecte a un camp seleccionat. Els valors
+			contemplats s&oacute;n:</li>
+		<ul class="detalle">
+			<li><span class="boton">Previ:</span> en cas de seleccionar
+				aquest valor, el nou camp es crear&agrave; en una posici&oacute;
+				pr&egrave;via a un camp seleccionat.</li>
+			<li><span class="boton">Posterior:</span> en cas de seleccionar
+				aquest valor, el nou camp es crear&agrave; en una posici&oacute;
+				posterior a un camp seleccionat. Aquesta posici&oacute; &eacute;s la
+				fixada per defecte.</li>
+		</ul>
+		<li><span class="nombreCampo">Moure:</span> secci&oacute; que
+			cont&eacute; els botons per a moure un camp dins d'una l&iacute;nia.
+			No es permet moure camps entre l&iacute;nies. Les opcions de moviment
+			disponibles s&oacute;n:</li>
+		<ul class="detalle">
+			<li><span class="boton">Mou a l'esquerra (<):</span> permet
+				moure cap a l'esquerra un camp seleccionat. Aquest bot&oacute;
+				quedar&agrave; deshabilitat quan no existeixi la possibilitat de
+				moure el component m&eacute;s a l'esquerra.</li>
+			<li><span class="boton">Mou a la dreta (>):</span> permet moure
+				cap a la dreta un camp seleccionat. Aquest bot&oacute;
+				quedar&agrave; deshabilitat quan no existeixi la possibilitat de
+				moure el component m&eacute;s a la dreta</li>
+		</ul>
+	</ul>
+	</p>
+	<h2 class="stgH2">EDITOR VISUAL</h2>
+	<p>
+		Aquest editor permet al desenvolupador veure el resultat del formulari
+		que s'est&agrave; creant en temps de disseny.<br> Els camps
+		inclosos en aquest &agrave;rea s&oacute;n seleccionables, fent clic
+		damunt, de manera que en la zona dreta de la pantalla es presentin les
+		propietats del component seleccionat per a la seva edici&oacute;<br>
+		Els formulari dissenyats es componen de p&agrave;gines, i cadascuna
+		d'aquestes p&agrave;gines hauran de contenir un conjunt de
+		l&iacute;nies sobre les quals se situaran els components o camps.
+	</p>
+	<h2 class="stgH2">PROPIETATS DE COMPONENT</h2>
+	<p>
+	<ul>
+		<li><span class="nombreCampo">Propietats:</span> en aquesta
+			secci&oacute; es configuren les propietats del component seleccionat.
+		</li>
+		<ul class="detalle">
+			<li><span class="boton">Identificador:</span> codi un&iacute;voc
+				que identifica al component dins del formulari. Aquest codi
+				s'haur&agrave; d'utilitzar quan es vulgui referenciar en camp en
+				algun script, ja sigui de formulari o de flux de tramitaci&oacute;.
+				Per a mantenir una convenci&oacute; respecte als identificadors, es
+				recomana la utilitzaci&oacute; de maj&uacute;scules.</li>
+			<li><span class="boton">Columnes ocupades:</span> nombre de
+				columnes que ocupa el component en una l&iacute;nia. Cada
+				l&iacute;nia pot ocupar un m&agrave;xim de 6 columnes.</li>
+			<li><span class="boton">Text:</span> text multiidioma que es
+				presentar&agrave; com a etiqueta del component.</li>
+			<li><span class="boton">No mostrar text:</span> <i>check</i> que
+				en cas d'estar marcat fa que no es mostri etiqueta per al component.</li>
+			<li><span class="boton">Ajuda en l&iacute;nia:</span> text
+				multiidioma que es presentar&agrave; com a ajuda del component al
+				ciutad&agrave;. Aquest text es mostrar&agrave; en el frontal sempre
+				que el ciutad&agrave; mantingui les ajudes actives.</li>
+			<li><span class="boton">Obligatori:</span> indica si la
+				cumplimentaci&oacute; del component &eacute;s requerida.</li>
+			<li><span class="boton">Nom&eacute;s lectura:</span> <i>check</i>
+				que permet establir el component en manera nom&eacute;s lectura, a
+				nivell d'HTML, de manera que el ciutad&agrave; no podr&agrave;
+				introduir cap valor en aquest.</li>
+			<li><span class="boton">No modificable:</span> <i>check</i> que
+				permet establir que es comprovi que un camp no varia el seu valor
+				respecte a les dades inicials del formulari. Aquesta
+				comprovaci&oacute; es realitza en servidor.</li>
+			<li><span class="boton">Tipus:</span> aquesta opci&oacute;
+				est&agrave; disponible &uacute;nicament per a camps de text i
+				selector. Per a un camp de text permet fixar el tipus de valor
+				esperat, de manera que es realitzin unes validacions concordes a
+				aquest tipus (p. ex. Identificaci&oacute; permetria validar si
+				&eacute;s un NIF de persona f&iacute;sica: DNI, NIE o altres [NIF de
+				tipus K, L i M]; jur&iacute;dica: NIF; o altres: NSS). En el cas
+				d'un selector, permetr&agrave; fixar la manera en qu&egrave; es
+				presenten els valors i si es possibilita selecionar un o m&eacute;s
+				valors.</li>
+			<li><span class="boton">Tipus llista valors (selector):</span>
+				aquesta opci&oacute; est&agrave; disponible &uacute;nicament per a
+				camps selector, i permet fixar de quina manera s'alimentar&agrave;
+				els valors a mostrar en el camp. Les opcions disponibles s&oacute;n
+				"Fixa", en la qual s'hauran d'introduir els valors a mostrar,
+				"Domini", en la qual s'haur&agrave; de seleccionar el domini del
+				qual extreure els valors, i "Script", que requerir&agrave;
+				l'emplenament del script "Valors possibles" de la secci&oacute;
+				"Scripts".</li>
+		</ul>
+		<li><span class="nombreCampo">Scripts:</span> secci&oacute; que
+			presenta els scripts del camp. Els scripts disponibles s&oacute;n:</li>
+		<ul class="detalle">
+			<li><span class="boton">Autoemplenat:</span> script que permet
+				assignar un valor al camp en funci&oacute; de valors de camps
+				previs. &eacute;s important que els camps dels quals dep&egrave;n
+				han de tenir posicions anteriors al camp sobre el qual aplica el
+				script.</li>
+			<li><span class="boton">Nom&eacute;s lectura:</span> script que
+				permet assignar l'estat "nom&eacute;s lectura" al camp en
+				funci&oacute; de valors de camps previs. &eacute;s important que els
+				camps dels quals dep&egrave;n han de tenir posicions anteriors al
+				camp sobre el qual aplica el script.</li>
+			<li><span class="boton">Validaci&oacute;:</span> script que
+				permet realitzar una validaci&oacute; del valor del camp. Aquest
+				script permet tant mostrar un missatge informatiu, permetent
+				continuar amb el tr&agrave;mit, o un error, de manera que no el
+				ciutad&agrave; no pugui continuar amb el tr&agrave;mit fins a
+				satisfer la validaci&oacute;.</li>
+			<li><span class="boton">Valors possibles:</span> aquest script
+				es mostra per a camps selector amb Tipus llesta valors "Script", i
+				permet establir el conjunt de valors possibles del camp.</li>
+		</ul>
+		<li><span class="nombreCampo">Estils:</span> permet modificar
+			estils del camp. Els estils disponibles s&oacute;n:</li>
+		<ul class="detalle">
+			<li><span class="boton">Alineaci&oacute; text:</span> permet
+				establir la posici&oacute; de l'etiqueta d'un camp.</li>
+		</ul>
+	</ul>
+	</p>
+	<h2 class="stgH2">BOTONADURA PEU DE P&Aacute;GINA</h2>
+	<p>
+		<li><span class="boton">Aplicar canvis:</span> permet consolidar
+			els canvis que s'hagin realitzat sobre un component. Mentre no
+			s'apliquin els canvis, aquests no seran visibles ni en l'editor
+			visual ni en el frontal.</li>
+		<li><span class="boton">Veure estructura:</span> permet mostrar,
+			en forma d'arbre, l'estructura d'elements del formulari
+			(p&agrave;gines, l&iacute;nies i components).</li>
+		<li><span class="boton">Tancar:</span> tanca la pantalla de
+			disseny del formulari.</li>
+	</ul>
+	</p>
+</body>
+</html>

@@ -519,10 +519,15 @@ public final class UtilJSF {
 	 * @return
 	 */
 	public static String getEntorno() {
-		return FacesContext.getCurrentInstance().getApplication()
+		String entorno =  FacesContext.getCurrentInstance().getApplication()
 				.evaluateExpressionGet(FacesContext.getCurrentInstance(), "#{frontModuleConfig}",
 						es.caib.sistrahelp.frontend.ModuleConfig.class)
 				.getEntorno();
+		if(entorno.equals("se")) {
+			return "des";
+		} else {
+			return entorno;
+		}
 	}
 
 	/**

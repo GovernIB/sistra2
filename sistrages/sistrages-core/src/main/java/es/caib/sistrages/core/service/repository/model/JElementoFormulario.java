@@ -89,6 +89,9 @@ public class JElementoFormulario implements IModelApi {
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "elementoFormulario", cascade = CascadeType.ALL)
 	private JImagenFormulario imagenFormulario;
 
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "elementoFormulario", cascade = CascadeType.ALL)
+	private JCampoFormularioSeccionReutilizable seccionReutilizableFormulario;
+
 	public JElementoFormulario() {
 		super();
 	}
@@ -243,6 +246,20 @@ public class JElementoFormulario implements IModelApi {
 		this.captchaFormulario = captchaFormulario;
 	}
 
+	/**
+	 * @return the seccionReutilizableFormulario
+	 */
+	public JCampoFormularioSeccionReutilizable getSeccionReutilizableFormulario() {
+		return seccionReutilizableFormulario;
+	}
+
+	/**
+	 * @param seccionReutilizableFormulario the seccionReutilizableFormulario to set
+	 */
+	public void setSeccionReutilizableFormulario(JCampoFormularioSeccionReutilizable seccionReutilizableFormulario) {
+		this.seccionReutilizableFormulario = seccionReutilizableFormulario;
+	}
+
 	public <T> ComponenteFormulario toModel(final Class<T> model) {
 		ComponenteFormulario newModel = null;
 
@@ -274,9 +291,13 @@ public class JElementoFormulario implements IModelApi {
 	}
 
 	public static JElementoFormulario createDefault(final TypeObjetoFormulario pTipoObjeto, final int pOrden,
-			final JLineaFormulario pJLinea) {
+			final JLineaFormulario pJLinea, final boolean isTipoSeccion, final String identificadorSeccion) {
 		final JElementoFormulario jModel = new JElementoFormulario();
-		jModel.setIdentificador("ID_" + System.currentTimeMillis());
+		if (isTipoSeccion) {
+			jModel.setIdentificador("SRE_"+identificadorSeccion+"_" + System.currentTimeMillis());
+		} else {
+			jModel.setIdentificador("ID_" + System.currentTimeMillis());
+		}
 		jModel.setTipo(pTipoObjeto.toString());
 		jModel.setOrden(pOrden);
 
@@ -311,6 +332,8 @@ public class JElementoFormulario implements IModelApi {
 			jModel.setNumeroColumnas(ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA);
 			jModel.setNoMostrarTexto(false);
 			jModel.setTexto(JLiteral.fromModel(texto));
+			break;
+		case SECCION_REUTILIZABLE:
 			break;
 		case CHECKBOX:
 			texto.add(new Traduccion("es", "Casilla de verificación"));
@@ -364,6 +387,7 @@ public class JElementoFormulario implements IModelApi {
 			jelemento.setCaptchaFormulario(JCampoFormularioCaptcha.clonar(elemento.getCaptchaFormulario(), jelemento));
 			jelemento.setCampoFormulario(JCampoFormulario.clonar(elemento.getCampoFormulario(), jelemento, cambioArea));
 			jelemento.setImagenFormulario(JImagenFormulario.clonar(elemento.getImagenFormulario(), jelemento));
+			jelemento.setSeccionReutilizableFormulario(JCampoFormularioSeccionReutilizable.clonar(elemento.getSeccionReutilizableFormulario(), jelemento));
 		}
 		return jelemento;
 	}

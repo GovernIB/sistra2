@@ -385,6 +385,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getCodigo()));
 		params.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.id);
+		params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(), TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString());
 
 		Integer width = UtilJSF.getSessionBean().getWidth();
 		Integer height = UtilJSF.getSessionBean().getHeight() - 60;

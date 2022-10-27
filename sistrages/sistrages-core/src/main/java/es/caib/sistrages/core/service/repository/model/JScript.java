@@ -166,7 +166,10 @@ public class JScript implements IModelApi {
 	 * @param mscript
 	 * @return
 	 */
-	public static JScript merge(final JScript jscript, final Script mscript) {
+	public static JScript merge(JScript jscript, final Script mscript) {
+		if (jscript == null) {
+			jscript = new JScript();
+		}
 		jscript.setScript(mscript.getContenido());
 		final Set<JLiteralErrorScript> literalesBorrar = new HashSet<>();
 
