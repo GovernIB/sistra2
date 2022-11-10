@@ -86,7 +86,7 @@ public class DialogScript extends DialogControllerBase {
 	/** seccionReutilizableService service. */
 	@Inject
 	private SeccionReutilizableService seccionReutilizableService;
-	
+
 	/** dominio service. */
 	@Inject
 	private DominioService dominioService;
@@ -513,7 +513,7 @@ public class DialogScript extends DialogControllerBase {
 			if (!revisarDominioNoarea()) {
 				return;
 			}
-			
+
 			if (!revisarDominioNoIdentificadorSimple()) {
 				return;
 			}
@@ -586,7 +586,7 @@ public class DialogScript extends DialogControllerBase {
 				ValorIdentificadorCompuesto identificador = new ValorIdentificadorCompuesto(identificadorDominio);
 				if (identificador.isError()) {
 					String[] params = new String[1];
-					params[0] = identificador.getIdentificador();
+					params[0] = identificadorDominio;
 					addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
 							UtilJSF.getLiteral("error.validacion.identificador.script", params));
 					return false;
@@ -623,12 +623,16 @@ public class DialogScript extends DialogControllerBase {
 			for (String identificadorDominio : identificadoresDominio) {
 				ValorIdentificadorCompuesto identificador = new ValorIdentificadorCompuesto(identificadorDominio);
 				String idCompuesto = "";
-				if (identificador.getIdentificadorEntidad() != null
-						&& !identificador.getIdentificadorEntidad().isEmpty()) {
-					idCompuesto += identificador.getIdentificadorEntidad() + '.';
-				}
-				if (identificador.getIdentificadorArea() != null && !identificador.getIdentificadorArea().isEmpty()) {
-					idCompuesto += identificador.getIdentificadorArea() + '.';
+				if (!identificador.getAmbito().equals(TypeAmbito.GLOBAL)) {
+					if (identificador.getIdentificadorEntidad() != null
+							&& !identificador.getIdentificadorEntidad().isEmpty()) {
+						idCompuesto += identificador.getIdentificadorEntidad() + '.';
+					}
+					if (identificador.getIdentificadorArea() != null && !identificador.getIdentificadorArea().isEmpty()) {
+						idCompuesto += identificador.getIdentificadorArea() + '.';
+					}
+				} else {
+					idCompuesto += "GLOBAL.";
 				}
 				if (dominioService
 						.loadDominioByIdentificadorCompuesto(idCompuesto + identificador.getIdentificador()) == null) {
