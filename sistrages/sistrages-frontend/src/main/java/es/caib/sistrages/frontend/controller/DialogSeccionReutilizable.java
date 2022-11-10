@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.primefaces.PrimeFaces;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
@@ -177,6 +178,8 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 			inicializarScripts();
 			String message =  UtilJSF.getLiteral("info.alta.ok") ;
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+			//RequestContext.getCurrentInstance().execute("refresh()");
+			//PrimeFaces.current().dialog().closeDynamic(null);
 		} else {
 			// 	Retornamos resultado
 			final DialogResult result = new DialogResult();

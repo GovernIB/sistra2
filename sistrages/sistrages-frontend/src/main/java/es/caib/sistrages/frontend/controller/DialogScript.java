@@ -45,6 +45,7 @@ import es.caib.sistrages.core.api.model.types.TypeScript;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
 import es.caib.sistrages.core.api.model.types.TypeScriptSeccionReutilizable;
+import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.service.SeccionReutilizableService;
@@ -85,6 +86,10 @@ public class DialogScript extends DialogControllerBase {
 	/** seccionReutilizableService service. */
 	@Inject
 	private SeccionReutilizableService seccionReutilizableService;
+	
+	/** dominio service. */
+	@Inject
+	private DominioService dominioService;
 
 	/** Id tramite version. **/
 	private String idTramiteVersion;
@@ -508,6 +513,14 @@ public class DialogScript extends DialogControllerBase {
 			if (!revisarDominioNoarea()) {
 				return;
 			}
+			
+			if (!revisarDominioNoIdentificadorSimple()) {
+				return;
+			}
+
+			if (!revisarDominioExiste()) {
+				return;
+			}
 		}
 
 		// Retornamos resultado
@@ -545,6 +558,92 @@ public class DialogScript extends DialogControllerBase {
 			return false;
 		}
 	}
+
+	/**
+	 * Revisa que no se haya intentado utilizar un identificador simple
+	 *
+	 * @return
+	 */
+	private boolean revisarDominioNoIdentificadorSimple() {
+		String contenido = UtilScripts.extraerContenido(data.getContenido());
+		List<String> identificadoresDominio = new ArrayList<>();
+		// Busca el patrón PLUGIN_DOMINIO.invocarDominio('{0}' siendo {0} el
+		// identificador
+		Matcher matcher = Pattern.compile("PLUGIN_DOMINIOS.invocarDominio\\(\\'("
+				+ ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO + "*?)\\'").matcher(contenido);
+		Integer totalCoincidencias = 0;
+		while (matcher.find()) {
+			totalCoincidencias++;
+			String identifDominio = matcher.group(1);
+			if (!identificadoresDominio.contains(identifDominio)) {
+				identificadoresDominio.add(identifDominio);
+			}
+		}
+
+		if (!identificadoresDominio.isEmpty()) {
+			// Revisamos si los identificadores están correctos
+			for (String identificadorDominio : identificadoresDominio) {
+				ValorIdentificadorCompuesto identificador = new ValorIdentificadorCompuesto(identificadorDominio);
+				if (identificador.isError()) {
+					String[] params = new String[1];
+					params[0] = identificador.getIdentificador();
+					addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+							UtilJSF.getLiteral("error.validacion.identificador.script", params));
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Revisa que no se haya intentado utilizar un dominio de tipo area
+	 *
+	 * @return
+	 */
+	private boolean revisarDominioExiste() {
+		String contenido = UtilScripts.extraerContenido(data.getContenido());
+		List<String> identificadoresDominio = new ArrayList<>();
+		// Busca el patrón PLUGIN_DOMINIO.invocarDominio('{0}' siendo {0} el
+		// identificador
+		Matcher matcher = Pattern.compile("PLUGIN_DOMINIOS.invocarDominio\\(\\'("
+				+ ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO + "*?)\\'").matcher(contenido);
+		Integer totalCoincidencias = 0;
+		while (matcher.find()) {
+			totalCoincidencias++;
+			String identifDominio = matcher.group(1);
+			if (!identificadoresDominio.contains(identifDominio)) {
+				identificadoresDominio.add(identifDominio);
+			}
+		}
+
+		if (!identificadoresDominio.isEmpty()) {
+			// Revisamos si los identificadores están correctos
+			for (String identificadorDominio : identificadoresDominio) {
+				ValorIdentificadorCompuesto identificador = new ValorIdentificadorCompuesto(identificadorDominio);
+				String idCompuesto = "";
+				if (identificador.getIdentificadorEntidad() != null
+						&& !identificador.getIdentificadorEntidad().isEmpty()) {
+					idCompuesto += identificador.getIdentificadorEntidad() + '.';
+				}
+				if (identificador.getIdentificadorArea() != null && !identificador.getIdentificadorArea().isEmpty()) {
+					idCompuesto += identificador.getIdentificadorArea() + '.';
+				}
+				if (dominioService
+						.loadDominioByIdentificadorCompuesto(idCompuesto + identificador.getIdentificador()) == null) {
+					String[] params = new String[1];
+					params[0] = idCompuesto + identificador.getIdentificador();
+					addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+							UtilJSF.getLiteral("error.validacion.dominio.no.existe.script", params));
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
 
 	/**
 	 * Revisa que no se haya intentado utilizar un dominio de tipo area

@@ -31,6 +31,7 @@
 		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewSeccionesReutilizables.filtro}"/>
 	           			<p:commandButton widgetVar="btnFiltro" icon="fa fa-search" actionListener="#{viewSeccionesReutilizables.filtrar()}" process="panelFiltro" update="growl dataTable" />
+
 	           		</h:panelGrid>
 		        </f:facet>
 

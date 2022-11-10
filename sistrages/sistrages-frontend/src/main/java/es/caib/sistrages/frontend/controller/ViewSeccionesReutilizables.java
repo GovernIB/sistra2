@@ -8,6 +8,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.primefaces.PrimeFaces;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.menu.MenuModel;
 
@@ -69,6 +71,8 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 	boolean permiteAlta = false;
 	boolean permiteImportar = false;
 	boolean permiteExportar = false;
+	boolean returnAlta = false;
+
 
 	/** Mostrar breadcrumb. **/
 	private boolean mostrarBreadcrumb;
@@ -115,6 +119,18 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 		filtro = normalizarFiltro(filtro);
 		// Busca
 		buscar();
+	}
+
+	/**
+	 * Cuando se crea un alta, para forzar la busqueda
+	 */
+	public void filtrarForzado() {
+		buscar();
+
+		PrimeFaces.current().ajax().update("dataTable");
+		PrimeFaces.current().ajax().update("form:dataTable");
+		RequestContext.getCurrentInstance().update("dataTable");
+		RequestContext.getCurrentInstance().update("form:dataTable");
 	}
 
 	/**
@@ -486,6 +502,18 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
 		// Verificamos si se ha modificado
+		if (respuesta.isCanceled() && returnAlta) {
+
+			Long idSeccion = null;
+			if (this.datoSeleccionado != null) {
+				idSeccion = this.datoSeleccionado.getCodigo();
+			}
+			buscar();
+			if (idSeccion != null) {
+				seleccionarByCodigo(idSeccion);
+			}
+		}
+
 		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 			// Mensaje
 			String message = null;
@@ -554,6 +582,8 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		}
 		params.put(TypeParametroVentana.AMBITO.toString(), TypeAmbito.ENTIDAD.toString());
+
+		returnAlta = (modoAccesoDlg == TypeModoAcceso.ALTA);
 		UtilJSF.openDialog(DialogSeccionReutilizable.class, modoAccesoDlg, params, true, 550, 240);
 	}
 

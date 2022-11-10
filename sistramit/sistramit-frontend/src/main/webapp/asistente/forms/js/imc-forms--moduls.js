@@ -369,7 +369,7 @@ $.fn.appDestaca = function(options) {
 
 			},
 			elimina = function() {
-				
+
 				$("#imc-destacat")
 					.remove();
 
@@ -727,7 +727,7 @@ $.fn.appFormsConfiguracio = function(options) {
 									elm
 										.addClass("imc-el-files-"+conf_opcions.lineas);
 
-								}	
+								}
 
 								// mayúscules
 
@@ -1914,7 +1914,7 @@ $.fn.appFormsValida = function(options) {
 
 					if (!idValid && input.attr("data-nss") === "s") {
 
-						idValid = ( appValidaIdentificador.nss(input_val) ) ? true : false;	
+						idValid = ( appValidaIdentificador.nss(input_val) ) ? true : false;
 
 					}
 
@@ -2368,7 +2368,7 @@ $.fn.appFormsAvalua = function(options) {
 						}
 						,100
 					);
-					
+
 				}
 
 				// configuració
@@ -2801,14 +2801,6 @@ $.fn.appFormsAccions = function(options) {
 			},
 			cancela = function() {
 
-				imc_forms_missatge
-					.removeClass("imc--si-pot-guardar imc--no-pot-guardar")
-					.appFormsMissatge({ accio: "formCancela", titol: txtFormDinEixirTitol, text: txtFormDinEixirNoGuardaText })
-					.appMissatgeFormAccions();
-
-			},
-			/*cancela = function() {
-
 				var potGuardar = imc_forms_contenidor.attr("data-guardar");
 
 				var text_avis = (potGuardar === "s") ? txtFormDinEixirText : txtFormDinEixirNoGuardaText
@@ -2822,7 +2814,7 @@ $.fn.appFormsAccions = function(options) {
 				imc_forms_missatge
 					.appMissatgeFormAccions();
 
-			},*/
+			},
 			imprimir = function() {
 
 				document.location = APP_FORM_IMPRIMIR;
@@ -3136,7 +3128,7 @@ $.fn.appFormsAccions = function(options) {
 			actualCarrega = function() {
 
 				$.when(
-					
+
 					$.getJSON( APP_FORM_PAG_ACTUAL )
 
 				).then(
@@ -3146,7 +3138,7 @@ $.fn.appFormsAccions = function(options) {
 						FORMS_JSON = jsonForm;
 
 						if (FORMS_JSON.estado === "SUCCESS" || FORMS_JSON.estado === "WARNING") {
-							
+
 							// carregat
 
 							actualCarregat();
@@ -3161,7 +3153,7 @@ $.fn.appFormsAccions = function(options) {
 						} else {
 
 							consola("Formulari (carrega pàg. actual): error des de JSON");
-							
+
 							imc_contenidor
 								.errors({ estat: FORMS_JSON.estado, titol: FORMS_JSON.mensaje.titulo, text: FORMS_JSON.mensaje.texto, url: FORMS_JSON.url });
 
@@ -3209,7 +3201,7 @@ $.fn.appFormsAccions = function(options) {
 					,200
 				);
 
-				
+
 
 			},
 			actualMostra = function() {
@@ -3428,7 +3420,7 @@ $.fn.appMissatgeFormAccions = function(options) {
 						.focus();
 
 				}
-				
+
 			},*/
 			desaSurt = function() {
 
@@ -3451,7 +3443,7 @@ $.fn.appMissatgeFormAccions = function(options) {
 					},
 					200
 				);
-		
+
 			},
 			enviament = function(valorsSerialitzats) {
 
@@ -3537,10 +3529,10 @@ $.fn.appMissatgeFormAccions = function(options) {
 				document.location = url;
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -3768,7 +3760,7 @@ $.fn.appFormsPopupTabula = function(options) {
 
 							el
 								.attr("data-tabpos", i+1);
-							
+
 						});
 
 					elems_tab
@@ -3829,7 +3821,7 @@ $.fn.appFormsPopupTabula = function(options) {
 						.focus();
 
 				} else if ( !esShift && tecla === 9){
-				
+
 					e.preventDefault();
 
 					el_num++;
@@ -3844,10 +3836,10 @@ $.fn.appFormsPopupTabula = function(options) {
 				}
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 
 	return this;
@@ -4113,7 +4105,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 
 					},100
 				);
-				
+
 			}
 			,navega = function(e) {
 
@@ -4145,7 +4137,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 							.find("button:first")
 								.addClass("imc--seleccionada")
 								.focus();
-						
+
 					}
 
 					e.preventDefault();
@@ -4177,7 +4169,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 							.find("button:last")
 								.addClass("imc--seleccionada")
 								.focus();
-						
+
 					}
 
 					e.preventDefault();
@@ -4210,7 +4202,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 						}
 
 					}, 100
-					
+
 				);
 
 			}
@@ -4253,7 +4245,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 								.remove();
 
 					}, 50
-					
+
 				);
 
 			};
@@ -4261,7 +4253,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 		// prepara
 
 		prepara();
-		
+
 		// events
 
 		element
@@ -4271,7 +4263,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 			.on("blur.appFormsSelectorAjax", "input[type=text], textarea, .imc--selector-opcions-ajax li button", revisa)
 			.on("click.appFormsSelectorAjax", ".imc--selector-opcions-ajax li button", selecciona)
 			.on("click.appFormsSelectorAjax", "button[data-accio=seleccio-elimina]", elimina);
-		
+
 	});
 
 	return this;

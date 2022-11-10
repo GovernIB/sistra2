@@ -306,7 +306,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			break;
 		case ADD_SECCION_REUTILIZABLE:
 			final Map<String, String> params = new HashMap<>();
-			UtilJSF.openDialog(DialogDisenyoSeccionReutilizable.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 700, 150);
+			UtilJSF.openDialog(DialogDisenyoSeccionReutilizable.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 700, 200);
 			break;
 		case COPIAR:
 			copy(false);
@@ -1676,7 +1676,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		UtilJSF.openDialog(DialogDisenyoSeccionReutilizable.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 500, 170);
+		UtilJSF.openDialog(DialogDisenyoSeccionReutilizable.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 700, 200);
 	}
 
 

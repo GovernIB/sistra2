@@ -137,7 +137,9 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 			List<Dominio> dominios = seccionReutilizableDao.getDominiosByIdentificadorSeccion(((SeccionReutilizable)objeto).getIdentificador());
 			if (dominios != null && !dominios.isEmpty()) {
 				for(Dominio dominio : dominios) {
-					dominioDao.addTramiteVersion(dominio.getCodigo(), Long.valueOf(idTramiteVersion));
+					if (dominio != null) {
+						dominioDao.addTramiteVersion(dominio.getCodigo(), Long.valueOf(idTramiteVersion));
+					}
 				}
 			}
 		}
