@@ -22,8 +22,6 @@ public class DialogDisenyoSeccionReutilizable extends DialogControllerBase {
 	@Inject
 	SeccionReutilizableService seccionesService;
 
-	private String descripcion;
-
 	/**
 	 * Inicialización.
 	 */
@@ -32,17 +30,6 @@ public class DialogDisenyoSeccionReutilizable extends DialogControllerBase {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo != TypeModoAcceso.CONSULTA) {
 			secciones = seccionesService.listSeccionReutilizable(UtilJSF.getIdEntidad(), null, true);
-			this.descripcion = secciones.get(0).getDescripcion();
-		}
-	}
-
-	/**
-	 * Cargar descripcion.
-	 */
-	public void cargarDescripcion() {
-
-		if (seccion != null) {
-			this.descripcion = seccion.getDescripcion();
 		}
 	}
 
@@ -103,20 +90,6 @@ public class DialogDisenyoSeccionReutilizable extends DialogControllerBase {
 	 */
 	public void setSecciones(List<SeccionReutilizable> secciones) {
 		this.secciones = secciones;
-	}
-
-	/**
-	 * @return the descripcion
-	 */
-	public final String getDescripcion() {
-		return descripcion;
-	}
-
-	/**
-	 * @param descripcion the descripcion to set
-	 */
-	public final void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
 	}
 
 }

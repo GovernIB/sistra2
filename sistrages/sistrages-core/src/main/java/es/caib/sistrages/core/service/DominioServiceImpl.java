@@ -322,6 +322,7 @@ public class DominioServiceImpl implements DominioService {
 	@Override
 	@NegocioInterceptor
 	public void clonar(final String dominioID, final String nuevoIdentificador, final Long areaID, final Long idEntidad, final TypeClonarAccion accionFD, final FuenteDatos fd, final TypeClonarAccion accionCA, final ConfiguracionAutenticacion confAut) {
+		log.debug("CLONAR");
 		FuenteDatos fuenteDatos = null;
 		ConfiguracionAutenticacion conf = null;
 		if (accionFD != TypeClonarAccion.NADA) {

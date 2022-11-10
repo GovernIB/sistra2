@@ -32,6 +32,7 @@ import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeImportarTipo;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -84,6 +85,19 @@ public class DialogSeccionExportar extends DialogControllerBase {
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
 	}
+
+	/**
+	 * Cancelar cuando se exporta que hay un mensaje de error.
+	 */
+	public void cancelarExportar() {
+
+		//UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("dialogSeccionExportar.exportadoCorrectamente"));
+		final DialogResult result = new DialogResult();
+		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+		result.setCanceled(false);
+		UtilJSF.closeDialog(result);
+	}
+
 
 	/**
 	 * Exportación de un dominio a un zip. Pasos a realizar:<br />

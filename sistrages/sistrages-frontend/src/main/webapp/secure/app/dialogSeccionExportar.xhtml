@@ -28,7 +28,7 @@
 		<f:viewAction action="#{dialogSeccionExportar.init}" />
 	</f:metadata>
 
-	<h:form id="dialogDominioExportar" styleClass="margin-top-10">
+	<h:form id="dialogSeccionExportar" styleClass="margin-top-10">
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
@@ -48,13 +48,28 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-						<p:commandButton value="#{msg['botones.exportar']}" ajax="false"  styleClass="boton-azul" rendered="#{dialogSeccionExportar.mostrarBotonExportar}" process="@this">
+						<p:commandButton id="btnExportar" widgetVar="btnExportar" value="#{msg['botones.exportar']}" ajax="false"
+										styleClass="boton-azul" rendered="#{dialogSeccionExportar.mostrarBotonExportar}"
+										process="@this" onclick="PrimeFaces.monitorDownload(start, stop)">
 		        			<p:fileDownload value="#{dialogSeccionExportar.fichero}"></p:fileDownload>
 		        		</p:commandButton>
-						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogSeccionExportar.cancelar}" process="@this"  />
+		        		<p:commandButton id="btnCerrarSeccionExportarMsg" value="#{msg['botones.cerrar']}" actionListener="#{dialogSeccionExportar.cancelarExportar}" process="@this" style="display:none" />
+		        		<p:commandButton id="btnCerrarSeccionExportar" value="#{msg['botones.cerrar']}" actionListener="#{dialogSeccionExportar.cancelar}" process="@this"  />
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
+		    <script>
+				    //<![CDATA[
+				    function start() {
+				        //$('#dialogSeccionExportar\\:btnExportar').prop("disabled",true);
+				    }
+
+				    function stop() {
+				    	//$('#dialogSeccionExportar\\:btnExportar').prop("disabled",false);
+				        $('#dialogSeccionExportar\\:btnCerrarSeccionExportarMsg').click();
+				    }
+				    //]]>
+			</script>
 	</h:form>
 </h:body>
 

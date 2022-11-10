@@ -1409,7 +1409,8 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	 * @param script script
 	 * @return lista de dominios invocados
 	 */
-	private List<String> buscarInvocacionesDominios(final String script) {
+	@Override
+	public List<String> buscarInvocacionesDominios(final String script) {
 		final List<String> dominios = new ArrayList<>();
 		if (StringUtils.isNotBlank(script)) {
 			buscarOcurrencias(dominios, PLUGINDOMI_INVOCAR_PATTERN, script);
@@ -1657,7 +1658,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 		List<SeccionReutilizable> seccionesReutilizables = tramiteDao.getSeccionesReutilizableByTramite(pTramiteVersion.getCodigo());
 		if (seccionesReutilizables != null && !seccionesReutilizables.isEmpty()) {
 			for(SeccionReutilizable seccion : seccionesReutilizables) {
-				disenyos.add(seccion.getDisenyoFormulario());
+				disenyos.add(formularioInternoDao.getFormularioCompletoById(seccion.getIdFormularioAsociado(), true));
 			}
 		}
 

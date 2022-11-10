@@ -12,13 +12,13 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.HistorialSeccionReutilizable;
-import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.ScriptSeccionReutilizable;
 import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.comun.FilaImportarSeccion;
@@ -28,6 +28,7 @@ import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.util.UtilScripts;
+import es.caib.sistrages.core.service.component.ValidadorComponent;
 import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JElementoFormulario;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
@@ -35,7 +36,6 @@ import es.caib.sistrages.core.service.repository.model.JFormulario;
 import es.caib.sistrages.core.service.repository.model.JHistorialSeccionReutilizable;
 import es.caib.sistrages.core.service.repository.model.JLineaFormulario;
 import es.caib.sistrages.core.service.repository.model.JPaginaFormulario;
-import es.caib.sistrages.core.service.repository.model.JScript;
 import es.caib.sistrages.core.service.repository.model.JScriptSeccionReutilizable;
 import es.caib.sistrages.core.service.repository.model.JSeccionReutilizable;
 
@@ -50,6 +50,9 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 	 */
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@Autowired
+	ValidadorComponent validadorComponent;
 
 	/** Literal. **/
 	private static final String LITERAL_FALTAIDENTIFICADOR = "Falta el identificador";
@@ -121,7 +124,7 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 		jseccion.setRelease(0);
 		jseccion.setBloqueadoUsuario(username);
 		jseccion.setBloqueado(true);
-		jseccion.setActiva(false);
+		jseccion.setActiva(seccion.isActivado());
 		entityManager.persist(jseccion);
 
 		// Anyadimos un historial
@@ -551,6 +554,16 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 						final JDominio jdom = elemento.getCampoFormulario().getCampoFormularioIndexado().getDominio();
 						idDominios.add(jdom.toModel());
 					}
+
+					if (elemento.getCampoFormulario().getCampoFormularioIndexado().getScriptValoresPosibles() != null) {
+						List<Dominio> dominiosScript = getDominiosByScript(elemento.getCampoFormulario().getCampoFormularioIndexado().getScriptValoresPosibles().getScript());
+						for(Dominio dominio : dominiosScript) {
+								if (!idDominios.contains(dominio)) {
+									idDominios.add(dominio);
+								}
+						}
+					}
+
 					break;
 				case CAMPO_OCULTO:
 				case CAMPO_TEXTO:
@@ -558,7 +571,7 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 					break;
 			}
 		}
-		if (elemento.getCampoFormulario() != null) {
+		if (elemento != null && elemento.getCampoFormulario() != null) {
 			if (elemento.getCampoFormulario().getScriptAutocalculado() != null && elemento.getCampoFormulario().getScriptAutocalculado().getScript() != null && ! elemento.getCampoFormulario().getScriptAutocalculado().getScript() .isEmpty()) {
 				List<Dominio> dominiosScript = getDominiosByScript(elemento.getCampoFormulario().getScriptAutocalculado().getScript());
 				for(Dominio dominio : dominiosScript) {
@@ -590,27 +603,18 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 		return idDominios;
 	}
 
+
+
 	private List<Dominio> getDominiosByScript(String script) {
 		List<Dominio> dominios = new ArrayList<>();
-		String contenido = UtilScripts.extraerContenido(script);
-		List<String> identificadoresDominio = new ArrayList<>();
-		// Busca el patrón PLUGIN_DOMINIO.invocarDominio('{0}' siendo {0} el
-		// identificador
-		Matcher matcher = Pattern.compile("PLUGIN_DOMINIOS.invocarDominio\\(\\'("+ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO+"*?)\\'").matcher(contenido);
-		Integer totalCoincidencias = 0;
-		while (matcher.find()) {
-			totalCoincidencias++;
-			String identifDominio = matcher.group(1);
-			if (!identificadoresDominio.contains(identifDominio)) {
-				identificadoresDominio.add(identifDominio);
+		if (script != null && !script.isEmpty()) {
+			List<String> idDominios = validadorComponent.buscarInvocacionesDominios(script);
+			for(String idenDominio : idDominios) {
+				ValorIdentificadorCompuesto valor = new ValorIdentificadorCompuesto(idenDominio);
+				Dominio dom = getDominioByIdentificador(valor.getIdentificador(), valor.getAmbito(),
+						valor.getIdentificadorEntidad(), valor.getIdentificadorArea());
+				dominios.add(dom);
 			}
-		}
-
-		for(String idenDominio : identificadoresDominio) {
-			ValorIdentificadorCompuesto valor = new ValorIdentificadorCompuesto(idenDominio);
-			Dominio dom = getDominioByIdentificador(valor.getIdentificador(), valor.getAmbito(),
-					valor.getIdentificadorEntidad(), valor.getIdentificadorArea());
-			dominios.add(dom);
 		}
 		return dominios;
 	}

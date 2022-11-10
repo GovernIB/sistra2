@@ -86,7 +86,7 @@ public class JEntidad implements IModelApi {
 	/** Declaración accesibilidad (HTML) */
 	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "ENT_ACCTT")
-	private JLiteral declaracionAccesibilidad;
+	private JLiteralExtendido declaracionAccesibilidad;
 
 	/** Email contacto genérico */
 	@Column(name = "ENT_EMAIL", length = 500)
@@ -259,14 +259,14 @@ public class JEntidad implements IModelApi {
 	/**
 	 * @return the declaracionAccesibilidad
 	 */
-	public JLiteral getDeclaracionAccesibilidad() {
+	public JLiteralExtendido getDeclaracionAccesibilidad() {
 		return declaracionAccesibilidad;
 	}
 
 	/**
 	 * @param declaracionAccesibilidad the declaracionAccesibilidad to set
 	 */
-	public void setDeclaracionAccesibilidad(JLiteral declaracionAccesibilidad) {
+	public void setDeclaracionAccesibilidad(JLiteralExtendido declaracionAccesibilidad) {
 		this.declaracionAccesibilidad = declaracionAccesibilidad;
 	}
 

@@ -61,4 +61,12 @@ public interface ValidadorComponent {
 	 */
 	List<ErrorValidacion> checkDominioNoUtilizado(Long idDominio, Long idTramiteVersion, final String pIdioma);
 
+	/**
+	 * Devuelve las invocaciones de dominios segun el script.
+	 * @param script
+	 * @return
+	 */
+	List<String> buscarInvocacionesDominios(final String script);
+
+
 }

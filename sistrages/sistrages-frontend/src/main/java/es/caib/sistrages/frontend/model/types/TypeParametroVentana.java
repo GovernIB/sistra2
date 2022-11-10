@@ -123,6 +123,10 @@ public enum TypeParametroVentana {
 	 */
 	ES_OPCIONAL,
 	/**
+	 * Indica si hay que comprobar la longitud.
+	 */
+	COMPROBAR_LONGITUD,
+	/**
 	 * Modo importar (CC o IM)
 	 */
 	MODO_IMPORTAR,

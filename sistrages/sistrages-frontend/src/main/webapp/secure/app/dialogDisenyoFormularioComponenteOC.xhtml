@@ -26,7 +26,7 @@
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<!-- <f:validateRegex pattern="^[a-zA-Z0-9_-]{1,50}$" /> -->
 	         			<p:ajax event="blur" process="@this" />
-					    <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
+					    <p:ajax event="change" listener="#{dialogDisenyoFormulario.setearCambios()}" process="@this" update="@this"/>
 	         		</p:inputText>
 	         	</h:column>
 

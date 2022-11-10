@@ -29,34 +29,12 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" styleClass="w100"  columns = "2" cellpadding = "5" cellspacing = "0">
-
-		         	<h:column>
-						<p:outputLabel for="seccion" value="#{msg['dialogDisenyoSeccionReutilizable.secciones']}:"  />
-					</h:column>
-					<h:column>
-						 <p:selectOneMenu id="seccion" layout="pageDirection" value="#{dialogDisenyoSeccionReutilizable.seccion}"  style="width:20em" height="8em" converter="#{seccionReutilizableConverter}">
-						 	<p:ajax event="change" update="dialogPaginaSecciones:descripcion" listener="#{dialogDisenyoSeccionReutilizable.cargarDescripcion()}" />
-							<f:selectItems value="#{dialogDisenyoSeccionReutilizable.secciones}" var="seccion" itemValue="#{seccion}" itemLabel="#{seccion.identificador}" />
-						</p:selectOneMenu>
-					</h:column>
-					<h:column>
-						<p:outputLabel for="descripcion" value="#{msg['dialogTestData.descripcion']}:"  />
-					</h:column>
-					<h:column>
-						 <p:inputText id="descripcion" value="#{dialogDisenyoSeccionReutilizable.descripcion}" readonly="true" style="width:20em"/>
-					</h:column>
-					<h:column>
-						<p:outputLabel  style="margin-bottom:40px" ></p:outputLabel>
-					</h:column>
-					<h:column>
-						<p:outputLabel  style="margin-bottom:40px" ></p:outputLabel>
-					</h:column>
-					<h:column>
-						<p:outputLabel  style="margin-bottom:40px" ></p:outputLabel>
-					</h:column>
-					<h:column>
-						<p:outputLabel  style="margin-bottom:40px" ></p:outputLabel>
-					</h:column>
+					<p:outputLabel for="seccion" value="#{msg['dialogDisenyoSeccionReutilizable.secciones']}:"  />
+					 <p:selectOneMenu id="seccion" layout="pageDirection" value="#{dialogDisenyoSeccionReutilizable.seccion}"  style="width:20em" height="8em" converter="#{seccionReutilizableConverter}">
+						 	<f:selectItems value="#{dialogDisenyoSeccionReutilizable.secciones}" var="seccion" itemValue="#{seccion}" itemLabel="#{seccion.identificador} - #{seccion.descripcion}" />
+					</p:selectOneMenu>
+					<p:outputLabel  style="margin-bottom:100px" ></p:outputLabel>
+					<p:outputLabel  style="margin-bottom:100px" ></p:outputLabel>
  				</h:panelGrid>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">

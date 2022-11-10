@@ -93,6 +93,9 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	/** Indica si se añade el plugin del código fuente. **/
 	private String sourceCode;
 
+	private boolean comprobarExcedeLongitud = true;
+	private String comprobarLongitud;
+
 	/**
 	 * Inicializacion.
 	 *
@@ -125,6 +128,12 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 			borrable = true;
 		} else {
 			borrable = false;
+		}
+
+		if (comprobarLongitud == null || !"N".equals(comprobarLongitud)) {
+			comprobarExcedeLongitud = true;
+		} else {
+			comprobarExcedeLongitud = false;
 		}
 
 		prepararIdiomaInicial();
@@ -251,7 +260,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 
 		// 4000 es el tamaño máximo en tradidi
 
-		return texto != null && texto.length() > 4000;
+		return comprobarExcedeLongitud ? texto != null && texto.length() > 4000 : false;
 	}
 
 	/**
@@ -654,6 +663,20 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	 */
 	public void setSourceCode(final String sourceCode) {
 		this.sourceCode = sourceCode;
+	}
+
+	/**
+	 * @return the comprobarLongitud
+	 */
+	public String getComprobarLongitud() {
+		return comprobarLongitud;
+	}
+
+	/**
+	 * @param comprobarLongitud the comprobarLongitud to set
+	 */
+	public void setComprobarLongitud(String comprobarLongitud) {
+		this.comprobarLongitud = comprobarLongitud;
 	}
 
 }

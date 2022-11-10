@@ -211,6 +211,47 @@ public final class UtilTraducciones {
 		UtilJSF.openDialog(DialogTraduccionHTML.class, modoAcceso, params, true, 770, 700);
 	}
 
+
+	/**
+	 * Abre un dialog de tipo traduccion (es el método PADRE que realmente crea el
+	 * dialog).
+	 *
+	 * @param modoAcceso          Modo de acceso (ALTA, EDICION o CONSULTA)
+	 * @param traducciones        Dato en formato json de tipo Traducciones
+	 * @param idiomas             La lista de idiomas que se puede introducir
+	 *                            literal. Si no se introduce, se supondrán que son
+	 *                            los que tenga traducciones.
+	 * @param idiomasObligatorios La lista de idiomas obligatorios. Si no se
+	 *                            introduce, se supondrán que son los que tenga
+	 *                            traducciones.
+	 */
+	public static void openDialogTraduccionHTMLClob(final TypeModoAcceso modoAcceso, final Literal traducciones,
+			final List<String> idiomas, final List<String> idiomasObligatorios, final Boolean opcional) {
+
+		final Map<String, String> params = new HashMap<>();
+		if (traducciones == null) {
+			UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_LITERALES_HTML);
+		} else {
+			UtilJSF.getSessionBean().getMochilaDatos().put(Constantes.CLAVE_MOCHILA_LITERALES_HTML, traducciones);
+		}
+
+		if (idiomas != null) {
+			params.put(TypeParametroVentana.IDIOMAS.toString(), UtilJSON.toJSON(idiomas));
+		}
+
+		if (idiomasObligatorios != null) {
+			params.put(TypeParametroVentana.OBLIGATORIOS.toString(), UtilJSON.toJSON(idiomasObligatorios));
+		}
+
+		// Variable que marca que si es opcional, tiene que aparecer el botón de borrar
+		if (opcional != null && opcional) {
+			params.put(TypeParametroVentana.ES_OPCIONAL.toString(), "S");
+		}
+		params.put(TypeParametroVentana.COMPROBAR_LONGITUD.toString(), "N");
+
+		UtilJSF.openDialog(DialogTraduccionHTML.class, modoAcceso, params, true, 770, 700);
+	}
+
 	/**
 	 * Calcula la altura del dialog.
 	 *

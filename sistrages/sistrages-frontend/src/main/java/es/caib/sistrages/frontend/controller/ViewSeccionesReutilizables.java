@@ -282,6 +282,24 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 		}
 
 	}
+
+
+	/**
+	 * Retorno dialogo exportar.
+	 *
+	 * @param event respuesta dialogo
+	 */
+	public void returnDialogoExportar(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("dialogSeccionExportar.exportadoCorrectamente"));
+		}
+
+	}
+
 	/**
 	 * Exportar un dominio.
 	 */

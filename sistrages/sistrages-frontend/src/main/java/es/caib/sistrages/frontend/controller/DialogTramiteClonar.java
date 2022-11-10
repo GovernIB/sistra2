@@ -21,7 +21,6 @@ import es.caib.sistrages.core.api.model.types.TypeClonarAccion;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
-import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -51,9 +50,6 @@ public class DialogTramiteClonar extends DialogControllerBase {
 	/** Servicio. **/
 	@Inject
 	private DominioService dominioService;
-
-	@Inject
-	private ConfiguracionAutenticacionService configuracionAutenticacionService;
 
 	/** Servicio. **/
 	@Inject
@@ -99,13 +95,13 @@ public class DialogTramiteClonar extends DialogControllerBase {
 			areas = listaTodasAreas;
 		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 			areas = new ArrayList<>();
-			for (final Area area : listaTodasAreas) {
+			for (final Area areaActual : listaTodasAreas) {
 				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidadByArea(area.getCodigo());
+						.getPermisosDesarrolladorEntidadByArea(areaActual.getCodigo());
 
 				if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
 						|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)) {
-					areas.add(area);
+					areas.add(areaActual);
 				}
 			}
 
@@ -141,14 +137,13 @@ public class DialogTramiteClonar extends DialogControllerBase {
 			return;
 		}
 
-		if (this.data.getIdArea() != areaID) {
+		if (this.data.getIdArea().compareTo(areaID) == 0) {
 			List<Dominio> doms = tramiteService.getDominioSimpleByTramiteId(this.data.getCodigo());
 			for (Dominio dom : doms) {
 				Dominio dominioNuevoIdentificador = dominioService.loadDominioByIdentificador(TypeAmbito.AREA,
 						dom.getIdentificador(), sessionBean.getEntidad().getCodigo(), areaID, null);
 				if (dominioNuevoIdentificador != null) {
-					Object[] valueHolder = new Object[2];
-					valueHolder = mensaje(dominioNuevoIdentificador);
+					Object[] valueHolder = mensaje(dominioNuevoIdentificador);
 					addMessageContext(TypeNivelGravedad.ERROR,
 							UtilJSF.getLiteral((String) valueHolder[0], (Object[]) valueHolder[1]));
 					return;
@@ -195,7 +190,6 @@ public class DialogTramiteClonar extends DialogControllerBase {
 
 		TypeClonarAccion acFd = TypeClonarAccion.CREAR;
 		TypeClonarAccion acCa = TypeClonarAccion.CREAR;
-//		Long lIdArea = (idArea == null) ? null : Long.valueOf(idArea);
 
 		ConfiguracionAutenticacion confAut = null;
 

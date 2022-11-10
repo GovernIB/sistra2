@@ -166,7 +166,7 @@ public class FilaImportarSeccion extends FilaImportarBase {
 		TypeImportarExiste existe = TypeImportarExiste.EXISTE;
 		TypeImportarResultado resultado = TypeImportarResultado.OK;
 		return new FilaImportarSeccion(seccion, seccionActual, TypeImportarAccion.MANTENER, existe,
-				TypeImportarEstado.REVISADO, resultado , mensaje, false, Arrays.asList(TypeImportarAccion.MANTENER/*, TypeImportarAccion.REEMPLAZAR*/));
+				TypeImportarEstado.REVISADO, resultado , mensaje, true, Arrays.asList(TypeImportarAccion.MANTENER/*, TypeImportarAccion.REEMPLAZAR*/));
 
 	}
 
@@ -197,7 +197,7 @@ public class FilaImportarSeccion extends FilaImportarBase {
 		//Este correcto o no, se hará lo mismo
 		//Se podía utilizar el correcto para pasar a resultado a info a warning pero vamos a dejar lo mismo.
 		return new FilaImportarSeccion(data, seccionActual, TypeImportarAccion.REEMPLAZAR, TypeImportarExiste.EXISTE,
-				TypeImportarEstado.REVISADO, TypeImportarResultado.OK , mensaje, false, Arrays.asList(TypeImportarAccion.MANTENER, TypeImportarAccion.REEMPLAZAR));
+				TypeImportarEstado.REVISADO, TypeImportarResultado.OK , mensaje, true, Arrays.asList(TypeImportarAccion.MANTENER, TypeImportarAccion.REEMPLAZAR));
 	}
 
 

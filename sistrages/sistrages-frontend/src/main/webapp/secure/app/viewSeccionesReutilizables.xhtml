@@ -58,7 +58,9 @@
 						<p:commandButton id="btnImportar"  value="#{msg['botones.importar']}" icon="fa fa-download"  actionListener="#{viewSeccionesReutilizables.importar()}"  process="@this" update="growl @form" rendered="#{viewSeccionesReutilizables.permiteImportar}">
 		        			<p:ajax event="dialogReturn" listener="#{viewSeccionesReutilizables.returnDialogoImportar}" update="growl dataTable"/>
 		        		</p:commandButton>
-						<p:commandButton id="btnExportar" value="#{msg['botones.exportar']}" icon="fa fa-upload" actionListener="#{viewSeccionesReutilizables.exportar()}" process="@this" update="growl @form"  rendered="#{viewSeccionesReutilizables.permiteExportar}" />
+						<p:commandButton id="btnExportar" value="#{msg['botones.exportar']}" icon="fa fa-upload" actionListener="#{viewSeccionesReutilizables.exportar()}" process="@this" update="growl @form"  rendered="#{viewSeccionesReutilizables.permiteExportar}">
+							<p:ajax event="dialogReturn" listener="#{viewSeccionesReutilizables.returnDialogoExportar}" update="growl dataTable"/>
+						</p:commandButton>
 	        			<p:commandButton id="btnHistorial" value="#{msg['botones.historial']}" icon="fa fa-history" actionListener="#{viewSeccionesReutilizables.historialVersion}" process="@this" update="growl" />
 
 

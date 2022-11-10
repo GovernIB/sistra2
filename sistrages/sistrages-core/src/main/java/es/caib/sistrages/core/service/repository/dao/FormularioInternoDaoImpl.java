@@ -31,11 +31,13 @@ import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.ParametroDominio;
 import es.caib.sistrages.core.api.model.PlantillaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.Traduccion;
+import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioComponenteSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioPaginaSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
@@ -352,7 +354,24 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 						ObjetoFormulario comp = this.addComponente(componente.getTipo(), idPagina, idLinea, idLinea == null ? ordenLinea : componente.getOrden(), null, componente, false, null);
 						entityManager.flush();
+						if (componente instanceof ComponenteFormularioCampoSelector) {
+							if(((ComponenteFormularioCampoSelector) componente).getListaParametrosDominio() == null || !((ComponenteFormularioCampoSelector) componente).getListaParametrosDominio().isEmpty()) {
+								for(ParametroDominio param : ( (ComponenteFormularioCampoSelector) componente).getListaParametrosDominio()) {
+									param.setCodigo(null);
+								}
+							}
+						}
 
+						if (componente instanceof ComponenteFormularioCampoSelector) {
+							if (((ComponenteFormularioCampoSelector) componente).getListaValorListaFija() == null || !((ComponenteFormularioCampoSelector) componente).getListaValorListaFija().isEmpty()) {
+								for(ValorListaFija param : ( (ComponenteFormularioCampoSelector) componente).getListaValorListaFija()) {
+									param.setCodigo(null);
+									if (param.getDescripcion() != null) {
+										param.getDescripcion().setCodigo(null);
+									}
+								}
+							}
+						}
 						componente.setCodigo(getCodigo(comp));
 						componente.setOrden(ordenComponente);
 						if (componente.getTipo() == TypeObjetoFormulario.SELECTOR && (componente instanceof ComponenteFormularioCampoSelector) && ((ComponenteFormularioCampoSelector)componente).getCodDominio() != null) {

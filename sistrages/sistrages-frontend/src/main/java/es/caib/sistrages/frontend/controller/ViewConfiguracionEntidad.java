@@ -23,11 +23,9 @@ import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
-import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.EntidadService;
-import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -36,7 +34,6 @@ import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
-import es.caib.sistrages.frontend.util.UtilRest;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 /**
@@ -56,9 +53,6 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	@Inject
 	private EntidadService entidadService;
 
-	/** System service. **/
-	@Inject
-	private SystemService systemService;
 
 	/** Componente service. */
 	@Inject
@@ -78,6 +72,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	 */
 	public void init() {
 
+		LOGGER.debug("View Configuracion entidad ");
 		// Entidad activa
 		idEntidad = UtilJSF.getIdEntidad();
 		// Control acceso
@@ -195,7 +190,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		if (getPermiteEditar()) {
 			modoAccesoDlg = TypeModoAcceso.EDICION;
 		}
-		UtilTraducciones.openDialogTraduccionHTML(modoAccesoDlg, data.getAccesibilidad(),
+		UtilTraducciones.openDialogTraduccionHTMLClob(modoAccesoDlg, data.getAccesibilidad(),
 				UtilJSF.getSessionBean().getIdiomas(), UtilJSF.getSessionBean().getIdiomas(), true);
 	}
 

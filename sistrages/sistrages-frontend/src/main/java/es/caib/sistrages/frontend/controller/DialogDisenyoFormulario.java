@@ -181,10 +181,18 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public boolean isTipoTramite() { return tipoDisenyo != null && tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString());}
 	public boolean isTipoSeccion() { return tipoDisenyo != null && tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());}
+	private String titulo;
+
 	/**
 	 * Inicializacion.
 	 **/
 	public void init() {
+
+		if (isTipoSeccion()) {
+			titulo = UtilJSF.getLiteral("dialogDisenyoFormulario.titulo.seccion");
+		} else {
+			titulo = UtilJSF.getLiteral("dialogDisenyoFormulario.titulo.tramite");
+		}
 
 		// Recuperacion formulario
 		recuperarFormulario(id);
@@ -298,7 +306,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			break;
 		case ADD_SECCION_REUTILIZABLE:
 			final Map<String, String> params = new HashMap<>();
-			UtilJSF.openDialog(DialogDisenyoSeccionReutilizable.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 500, 150);
+			UtilJSF.openDialog(DialogDisenyoSeccionReutilizable.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 700, 150);
 			break;
 		case COPIAR:
 			copy(false);
@@ -1221,6 +1229,19 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			tipoObjetoCopy = null;
 			seleccionable = false;
 		}
+
+		if (seleccionable && this.isTipoSeccion()) {
+			String identificador = null;
+
+			if (objetoFormularioEdit instanceof ComponenteFormulario) {
+				identificador = ((ComponenteFormulario) objetoFormularioEdit).getIdComponente();
+			}
+
+			if (identificador != null && !identificador.startsWith("SRE_" + this.getIdentificadorSeccion())) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.validacion.identificador.formatoSRE") +" " + "SRE_" + this.getIdentificadorSeccion(), true, ID_TEXT_IDENTIFICADOR);
+				seleccionable = false;
+			}
+		}
 		return seleccionable;
 	}
 
@@ -1251,14 +1272,6 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		if (cut && objetoFormularioEdit.getCodigo().compareTo(idObjetoCopy) == 0) {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.mismoelemento"), true);
 			return;
-		}
-
-		if (this.isTipoSeccion()) {
-			final String identificador = ((ComponenteFormulario) objetoFormularioEdit).getIdComponente();
-			if (!identificador.startsWith("SRE_" + this.getIdentificadorSeccion())) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.validacion.identificador.formatoSRE") +" " + "SRE_" + this.getIdentificadorSeccion(), true, ID_TEXT_IDENTIFICADOR);
-				return;
-			}
 		}
 
 		if (tipoObjetoCopy == TypeObjetoFormulario.CAMPO_TEXTO || tipoObjetoCopy == TypeObjetoFormulario.CAMPO_OCULTO
@@ -2266,6 +2279,37 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	}
 
+
+	/**
+	 * Editar script
+	 */
+	public void consultarDialogScript(final String tipoScript, final Script script) {
+		final Map<String, String> maps = new HashMap<>();
+		maps.put(TypeParametroVentana.TIPO_SCRIPT_FORMULARIO.toString(),
+				UtilJSON.toJSON(TypeScriptFormulario.fromString(tipoScript)));
+
+		if (this.isTipoSeccion()) {
+			/*maps.put(TypeParametroVentana.TIPO_SCRIPT_SECCION_REUTILIZABLE.toString(),
+					UtilJSON.toJSON(valorSeleccionado.getTipoScript()));*/
+			SeccionReutilizable seccion = seccionReutilizableService.getSeccionReutilizable(Long.valueOf(idSeccion));
+			maps.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), seccion.getIdFormularioAsociado().toString());
+			maps.put(TypeParametroVentana.SECCION_REUTILIZABLE.toString(), seccion.getIdentificador());
+			maps.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(), TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());
+		} else {
+			maps.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.idFormulario);
+			maps.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
+			maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
+			maps.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(), TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());
+		}
+		maps.put(TypeParametroVentana.COMPONENTE.toString(), this.objetoFormularioEdit.getCodigo().toString());
+		maps.put(TypeParametroVentana.COMPONENTE_NOMBRE.toString(), getIdComponente());
+
+		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
+		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.CONSULTA, maps, true, 700);
+
+	}
+
 	/**
 	 * Editar script
 	 */
@@ -2975,6 +3019,14 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		this.cambios = true;
 	}
 
+	public void setearCambios() {
+		this.cambios = true;
+		if (this.objetoFormularioEdit != null && this.objetoFormularioEdit instanceof ComponenteFormulario && ((ComponenteFormulario)this.objetoFormularioEdit).getIdComponente() != null) {
+				((ComponenteFormulario)this.objetoFormularioEdit).setIdComponente(((ComponenteFormulario)this.objetoFormularioEdit).getIdComponente().toUpperCase());
+		}
+	}
+
+
 	/**
 	 * @return the tipoDisenyo
 	 */
@@ -3026,5 +3078,17 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 */
 	public void setDesactivarAplicarCambios(boolean desactivarAplicarCambios) {
 		this.desactivarAplicarCambios = desactivarAplicarCambios;
+	}
+	/**
+	 * @return the titulo
+	 */
+	public String getTitulo() {
+		return titulo;
+	}
+	/**
+	 * @param titulo the titulo to set
+	 */
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
 	}
 }

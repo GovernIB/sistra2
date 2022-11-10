@@ -20,6 +20,7 @@ import es.caib.sistrages.core.service.repository.model.JEntidad;
 import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JIdioma;
 import es.caib.sistrages.core.service.repository.model.JLiteral;
+import es.caib.sistrages.core.service.repository.model.JLiteralExtendido;
 import es.caib.sistrages.core.service.repository.model.JPlantillaEntidad;
 
 @Repository("entidadDao")
@@ -171,7 +172,7 @@ public class EntidadDaoImpl implements EntidadDao {
 				JLiteral.mergeModel(jEntidad.getPiePaginaAsistenteTramitacion(), entidad.getPie()));
 		jEntidad.setLopd(JLiteral.mergeModel(jEntidad.getLopd(), entidad.getLopd()));
 		jEntidad.setDeclaracionAccesibilidad(
-				JLiteral.mergeModel(jEntidad.getDeclaracionAccesibilidad(), entidad.getAccesibilidad()));
+				JLiteralExtendido.mergeModel(jEntidad.getDeclaracionAccesibilidad(), entidad.getAccesibilidad()));
 		jEntidad.setEmail(entidad.getEmail());
 		jEntidad.setContactoEmail(entidad.isEmailHabilitado());
 		jEntidad.setContactoTelefono(entidad.isTelefonoHabilitado());

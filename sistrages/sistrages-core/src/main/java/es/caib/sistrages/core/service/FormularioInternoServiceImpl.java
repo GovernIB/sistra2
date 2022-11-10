@@ -133,6 +133,7 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 			final Long pIdLinea, final Integer pOrden, final String pPosicion, final Object objeto, boolean isTipoSeccion, String identificadorSeccion, String idTramiteVersion) {
 		ObjetoFormulario retorno = formIntDao.addComponente(pTipoObjeto, pIdPagina, pIdLinea, pOrden, pPosicion, objeto, isTipoSeccion, identificadorSeccion);
 		if (pTipoObjeto == TypeObjetoFormulario.SECCION_REUTILIZABLE) {
+			LOG.debug("Extraemos los dominos");
 			List<Dominio> dominios = seccionReutilizableDao.getDominiosByIdentificadorSeccion(((SeccionReutilizable)objeto).getIdentificador());
 			if (dominios != null && !dominios.isEmpty()) {
 				for(Dominio dominio : dominios) {

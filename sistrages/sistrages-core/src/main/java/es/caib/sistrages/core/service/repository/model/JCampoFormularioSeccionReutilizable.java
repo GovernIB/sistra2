@@ -135,7 +135,6 @@ public class JCampoFormularioSeccionReutilizable implements IModelApi {
 	public static JCampoFormularioSeccionReutilizable createDefault(final int pOrden, final JLineaFormulario pJLinea, final boolean isTipoSeccion, final String identificadorSeccion) {
 		final JCampoFormularioSeccionReutilizable jModel = new JCampoFormularioSeccionReutilizable();
 		jModel.setElementoFormulario(JElementoFormulario.createDefault(TypeObjetoFormulario.SECCION_REUTILIZABLE, pOrden, pJLinea, isTipoSeccion, identificadorSeccion));
-		//jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.CAPTCHA, pOrden, pJLinea));
 		return jModel;
 	}
 
@@ -146,6 +145,7 @@ public class JCampoFormularioSeccionReutilizable implements IModelApi {
 			jcampoTexto = new JCampoFormularioSeccionReutilizable();
 			jcampoTexto.setElementoFormulario(jelemento);
 			jcampoTexto.setSeccionReutilizable(campoFormularioTexto.getSeccionReutilizable());
+			jcampoTexto.setLetra(campoFormularioTexto.getLetra());
 		}
 		return jcampoTexto;
 	}
