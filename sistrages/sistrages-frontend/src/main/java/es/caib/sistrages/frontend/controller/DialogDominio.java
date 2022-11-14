@@ -645,12 +645,16 @@ public class DialogDominio extends DialogControllerBase {
         final DialogResult result = new DialogResult();
         result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
         result.setResult(data.getIdentificador());
-        if (identificadorCambiado) {
-            final DialogResultMessage dm = new DialogResultMessage();
+        /*if (identificadorCambiado) {
+        	final DialogResultMessage dm = new DialogResultMessage();
             dm.setNivel(TypeNivelGravedad.WARNING);
-            dm.setMensaje("TODO:Pendiente controlar si se esta usando dominio para sacar aviso");
+            if(UtilJSF.getIdioma().equals("es")) {
+            	dm.setMensaje("TODO:Pendiente controlar si se esta usando dominio para sacar aviso");
+            }else {
+            	dm.setMensaje("TODO:Pendent controlar si s'està utilitzant domini per treure avis");
+            }
             result.setMensaje(dm);
-        }
+        }*/
 
         UtilJSF.closeDialog(result);
     }

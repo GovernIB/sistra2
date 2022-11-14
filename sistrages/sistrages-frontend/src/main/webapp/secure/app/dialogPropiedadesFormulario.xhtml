@@ -75,7 +75,7 @@
 
 				 		</p:dataTable>
 				 		<p:outputPanel styleClass="barra-herramientas-vertical" style="margin-left:5px">
-						    	<p:commandButton id="btnNuevaPagina" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{dialogPropiedadesFormulario.nuevaPagina}" process="@this" update="growlDialog dataTablePaginas btnEditarPagina" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" />
+						    	<p:commandButton id="btnNuevaPagina" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{dialogPropiedadesFormulario.nuevaPagina}" process="@this permitirGuardarSinFinalizar" update="growlDialog dataTablePaginas btnEditarPagina permitirGuardarSinFinalizar" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" />
 								<ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
 								<p:commandButton id="btnEditarPagina" icon="fa fa-edit" title="#{msg['botones.editar']}" actionListener="#{dialogPropiedadesFormulario.editarPagina}" process="@this" update="growlDialog" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}">
 								<p:confirm  header="#{msg['warning.titulo']}"  disabled="#{dialogPropiedadesFormulario.editar}" message="#{msg['dialogPropiedadesFormulario.antesEditar']}" icon="fa fa-exclamation-triangle fa-3x confirmar_icono"/>
@@ -83,7 +83,7 @@
 	        					</p:commandButton>
 	        					<ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
 
-						    	<p:commandButton id="btnEliminarPagina" icon="fa fa-minus"  title="#{msg['botones.eliminar']}" actionListener="#{dialogPropiedadesFormulario.eliminarPagina}" process="@this" update="growlDialog dataTablePaginas btnEditarPagina" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" />
+						    	<p:commandButton id="btnEliminarPagina" icon="fa fa-minus"  title="#{msg['botones.eliminar']}" actionListener="#{dialogPropiedadesFormulario.eliminarPagina}" process="@this permitirGuardarSinFinalizar" update="growlDialog dataTablePaginas btnEditarPagina permitirGuardarSinFinalizar" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" />
 								<ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
 
 						    	<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogPropiedadesFormulario.subirPagina}" process="@this" update="growlDialog dataTablePaginas btnEditarPagina" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" />
@@ -165,7 +165,7 @@
 					</p:commandButton>
 
 					<p:outputLabel value="#{msg['dialogPropiedadesFormulario.permitirGuardarSinFinalizar']}"/>
-					<p:selectBooleanCheckbox id="permitirGuardarSinFinalizar" value="#{dialogPropiedadesFormulario.data.permitirGuardarSinFinalizar}" disabled="#{dialogPropiedadesFormulario.consulta}" styleClass="margin-right-10"  />
+					<p:selectBooleanCheckbox id="permitirGuardarSinFinalizar" value="#{dialogPropiedadesFormulario.data.permitirGuardarSinFinalizar}" disabled="#{dialogPropiedadesFormulario.consulta or dialogPropiedadesFormulario.data.paginas.size() &lt; 2}" styleClass="margin-right-10"  />
 
 				</h:panelGrid>
 

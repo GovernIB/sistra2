@@ -98,6 +98,9 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 					: null;
 		}
 
+		if (data.getPaginas().size() < 2) {
+			this.data.setPermitirGuardarSinFinalizar(false);
+		}
 	}
 
 	/**
@@ -340,6 +343,10 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		this.data.getPaginas().add(pagina);
 		asignaPaginaFinal(data.getPaginas());
 		cambios = true;
+
+		if (data.getPaginas().size() > 1) {
+			this.data.setPermitirGuardarSinFinalizar(true);
+		}
 	}
 
 	/** Consultar pagina. **/
@@ -448,6 +455,11 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		if (!data.getPaginas().isEmpty()) {
 			asignaPaginaFinal(data.getPaginas());
 			cambiarOrdenPaginas(data.getPaginas());
+		}
+
+		// comprobamos si se borrado menor a 2
+		if (data.getPaginas().size() < 2) {
+			this.data.setPermitirGuardarSinFinalizar(false);
 		}
 
 		paginaSeleccionada = null;
