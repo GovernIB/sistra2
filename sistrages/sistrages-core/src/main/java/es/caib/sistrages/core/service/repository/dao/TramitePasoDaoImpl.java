@@ -703,6 +703,11 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 							}
 							disenyoFormularioAlmacenado.setTextoCabecera(formularioInterno.getTextoCabecera());
 						}
+
+						if (formularioInterno.isPermitirGuardarSinFinalizar()) {
+							disenyoFormularioAlmacenado.setPermitirGuardarSinFinalizar(true);
+						}
+
 						formularioInternoDao.updateFormulario(disenyoFormularioAlmacenado);
 
 						this.anyadirPaginas(formularioInterno.getPaginas(), idJFormulario, ficherosContent,
