@@ -620,8 +620,10 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		}
 
 		// Validación captchas
-		final PaginaFormularioData pagData = datosSesion.getDatosFormulario().getPaginaActualFormulario();
-		mensaje = validarCapthas(pagData, valoresPagina);
+		if (!salirSinFinalizar) {
+			final PaginaFormularioData pagData = datosSesion.getDatosFormulario().getPaginaActualFormulario();
+			mensaje = validarCapthas(pagData, valoresPagina);
+		}
 
 		// Guardamos valores pagina
 		if (mensaje == null) {
