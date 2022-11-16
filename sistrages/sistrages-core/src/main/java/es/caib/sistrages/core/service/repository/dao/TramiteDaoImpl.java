@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -157,7 +158,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 
 		if (StringUtils.isNotBlank(filtro)) {
-			sql.append(" AND (upper(t.descripcion) like :filtro OR upper(t.identificador) like :filtro) escape @ ");
+			sql.append(" AND (upper(t.descripcion) like :filtro OR upper(t.identificador) like :filtro)");
 		}
 		sql.append("ORDER BY t.identificador");
 
@@ -169,7 +170,7 @@ public class TramiteDaoImpl implements TramiteDao {
 			query.setParameter("idAreas", areas);
 		}
 		if (StringUtils.isNotBlank(filtro)) {
-			query.setParameter("filtro", "%" + filtro.toUpperCase() + "%");
+			query.setParameter("filtro", "%" + filtro.replace("@", "").toUpperCase() + "%");
 		}
 
 		final List<JTramite> results = query.getResultList();
@@ -536,8 +537,26 @@ public class TramiteDaoImpl implements TramiteDao {
 		@SuppressWarnings("unchecked")
 		final List<JDominio> jdominios = queryDominios.getResultList();
 		for (final JDominio jdominio : jdominios) {
-			jdominio.getVersionesTramite().add(jVersionTramite);
-			entityManager.merge(jdominio);
+			if (jdominio.getAmbito().equals(TypeAmbito.AREA.toString())) {
+
+				//Si el ambito es de tipo AREA, hay que buscar el que toca al area destino y asociarlo si existe (por si hay un error).
+				JDominio jdom = getDominioByAreaIdentificador(jdominio.getIdentificador(), idArea);
+				if (jdom != null) {
+
+					if (jdom.getVersionesTramite() == null) {
+						jdom.setVersionesTramite(new HashSet<>());
+					}
+
+					//Si el ambito es de tipo GLOBAL o ENTIDAD, se asocia directamente
+					jdom.getVersionesTramite().add(jVersionTramite);
+					entityManager.merge(jdom);
+				}
+			} else {
+
+				//Si el ambito es de tipo GLOBAL o ENTIDAD, se asocia directamente
+				jdominio.getVersionesTramite().add(jVersionTramite);
+				entityManager.merge(jdominio);
+			}
 		}
 
 		// Paso 3.0 Obtenemos formateadores
@@ -591,6 +610,23 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 
 		return jVersionTramite.getCodigo();
+	}
+
+	private JDominio getDominioByAreaIdentificador(String identificador, Long idArea) {
+		// Paso 2. Buscamos las relaciones de dominios y las añadimos
+		final String sqlDominios = "Select d From JDominio d WHERE d.identificador like :identificador and d.area.codigo = :idArea";
+
+		final Query queryDominios = entityManager.createQuery(sqlDominios);
+		queryDominios.setParameter("identificador", identificador);
+		queryDominios.setParameter("idArea", idArea);
+
+		@SuppressWarnings("unchecked")
+		final List<JDominio> jdominios = queryDominios.getResultList();
+		JDominio jdom = null;
+		if (jdominios != null && !jdominios.isEmpty()) {
+			jdom = jdominios.get(0);
+		}
+		return jdom;
 	}
 
 	/**
@@ -1109,7 +1145,6 @@ public class TramiteDaoImpl implements TramiteDao {
 		return resultado;
 	}
 
-
 	@Override
 	public boolean existenTramiteVersionBySeccionReutilizable(Long idSeccionReutilizable) {
 
@@ -1146,13 +1181,16 @@ public class TramiteDaoImpl implements TramiteDao {
 
 	private Query getQueryBySeccionReutilizable(Long idSeccionReutilizable, boolean total) {
 
- 		StringBuilder sql ;
- 		if (total) {
- 			sql = new StringBuilder("Select count(t) ");
- 		} else {
- 			sql = new StringBuilder("Select distinct t ");
- 		}
- 		sql.append(" From JPasoRellenar pr JOIN pr.pasoTramitacion pt JOIN pt.versionTramite t JOIN pr.formulariosTramite FORMS JOIN FORMS.formulario FORMU JOIN FORMU.paginas PAGS JOIN PAGS.lineasFormulario LIN JOIN LIN.elementoFormulario ELEM JOIN ELEM.seccionReutilizableFormulario SECREU where ELEM.tipo like '"+TypeObjetoFormulario.SECCION_REUTILIZABLE.toString()+"' and SECREU.seccionReutilizable.codigo = :idSeccionReutilizable order by t.numeroVersion desc");
+		StringBuilder sql;
+		if (total) {
+			sql = new StringBuilder("Select count(t) ");
+		} else {
+			sql = new StringBuilder("Select distinct t ");
+		}
+		sql.append(
+				" From JPasoRellenar pr JOIN pr.pasoTramitacion pt JOIN pt.versionTramite t JOIN pr.formulariosTramite FORMS JOIN FORMS.formulario FORMU JOIN FORMU.paginas PAGS JOIN PAGS.lineasFormulario LIN JOIN LIN.elementoFormulario ELEM JOIN ELEM.seccionReutilizableFormulario SECREU where ELEM.tipo like '"
+						+ TypeObjetoFormulario.SECCION_REUTILIZABLE.toString()
+						+ "' and SECREU.seccionReutilizable.codigo = :idSeccionReutilizable order by t.numeroVersion desc");
 
 		final Query query = entityManager.createQuery(sql.toString());
 		if (idSeccionReutilizable != null) {
@@ -1165,7 +1203,8 @@ public class TramiteDaoImpl implements TramiteDao {
 	public List<SeccionReutilizable> getSeccionesReutilizableByTramite(final Long idTramiteVersion) {
 		final List<SeccionReutilizable> resultado = new ArrayList<>();
 
- 		final String sql = "Select ELEM.seccionReutilizableFormulario From JPasoRellenar pr JOIN pr.pasoTramitacion pt JOIN pt.versionTramite t JOIN pr.formulariosTramite FORMS JOIN FORMS.formulario FORMU JOIN FORMU.paginas PAGS JOIN PAGS.lineasFormulario LIN JOIN LIN.elementoFormulario ELEM where ELEM.tipo = '"+TypeObjetoFormulario.SECCION_REUTILIZABLE.toString()+"' and t.codigo = :idTramiteVersion ";
+		final String sql = "Select ELEM.seccionReutilizableFormulario From JPasoRellenar pr JOIN pr.pasoTramitacion pt JOIN pt.versionTramite t JOIN pr.formulariosTramite FORMS JOIN FORMS.formulario FORMU JOIN FORMU.paginas PAGS JOIN PAGS.lineasFormulario LIN JOIN LIN.elementoFormulario ELEM where ELEM.tipo = '"
+				+ TypeObjetoFormulario.SECCION_REUTILIZABLE.toString() + "' and t.codigo = :idTramiteVersion ";
 
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("idTramiteVersion", idTramiteVersion);
@@ -1175,7 +1214,8 @@ public class TramiteDaoImpl implements TramiteDao {
 
 		List<Long> idIncluidas = new ArrayList<>();
 		if (results != null && !results.isEmpty()) {
-			for (final Iterator<JCampoFormularioSeccionReutilizable> iterator = results.iterator(); iterator.hasNext();) {
+			for (final Iterator<JCampoFormularioSeccionReutilizable> iterator = results.iterator(); iterator
+					.hasNext();) {
 				final JCampoFormularioSeccionReutilizable jseccion = iterator.next();
 				if (!idIncluidas.contains(jseccion.getSeccionReutilizable().getCodigo())) {
 					idIncluidas.add(jseccion.getSeccionReutilizable().getCodigo());
@@ -1191,7 +1231,8 @@ public class TramiteDaoImpl implements TramiteDao {
 	public List<SeccionReutilizable> getSeccionesReutilizableByFormulario(final Long idFormulario) {
 		final List<SeccionReutilizable> resultado = new ArrayList<>();
 
- 		final String sql = "Select ELEM.seccionReutilizableFormulario From JFormulario FORMU JOIN FORMU.paginas PAGS JOIN PAGS.lineasFormulario LIN JOIN LIN.elementoFormulario ELEM where ELEM.tipo = '"+TypeObjetoFormulario.SECCION_REUTILIZABLE.toString()+"' and FORMU.codigo = :idFormulario ";
+		final String sql = "Select ELEM.seccionReutilizableFormulario From JFormulario FORMU JOIN FORMU.paginas PAGS JOIN PAGS.lineasFormulario LIN JOIN LIN.elementoFormulario ELEM where ELEM.tipo = '"
+				+ TypeObjetoFormulario.SECCION_REUTILIZABLE.toString() + "' and FORMU.codigo = :idFormulario ";
 
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("idFormulario", idFormulario);
@@ -1201,7 +1242,8 @@ public class TramiteDaoImpl implements TramiteDao {
 
 		List<Long> idIncluidas = new ArrayList<>();
 		if (results != null && !results.isEmpty()) {
-			for (final Iterator<JCampoFormularioSeccionReutilizable> iterator = results.iterator(); iterator.hasNext();) {
+			for (final Iterator<JCampoFormularioSeccionReutilizable> iterator = results.iterator(); iterator
+					.hasNext();) {
 				final JCampoFormularioSeccionReutilizable jseccion = iterator.next();
 				if (!idIncluidas.contains(jseccion.getSeccionReutilizable().getCodigo())) {
 					idIncluidas.add(jseccion.getSeccionReutilizable().getCodigo());

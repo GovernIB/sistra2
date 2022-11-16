@@ -111,6 +111,21 @@ public class Script extends ModelApi {
 	}
 
 	/**
+	 * Limpia de identificadores.
+	 *
+	 * @param iScript
+	 * @return
+	 */
+	public void limpiarIds() {
+		this.setCodigo(null);
+		if (this.getMensajes() != null && !this.getMensajes().isEmpty()) {
+			for (final LiteralScript mensaje : this.getMensajes()) {
+				mensaje.limpiarIds();
+			}
+		}
+	}
+
+	/**
 	 * Busca entre los literales si contiene el literal según el identificador
 	 *
 	 * @param identificador

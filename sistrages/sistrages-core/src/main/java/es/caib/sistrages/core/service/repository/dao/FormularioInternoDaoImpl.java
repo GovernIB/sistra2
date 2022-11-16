@@ -381,7 +381,9 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 								((ComponenteFormularioCampoSelector)componente).setCodDominio(idDominio);
 							}
 						}
+						this.vaciarIds(componente);
 						this.updateComponente(componente);
+						entityManager.flush();
 						ordenComponente++;
 					}
 				}
@@ -407,6 +409,27 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				ficheroExternoDao.marcarBorrar(jPlantillaidiomaFormulario.getFichero().getCodigo());
 			}
 
+		}
+	}
+
+	private void vaciarIds(ComponenteFormulario componente) {
+		if (componente instanceof ComponenteFormularioCampo) {
+			if (((ComponenteFormularioCampo) componente).getScriptAutorrellenable() != null) {
+				((ComponenteFormularioCampo) componente).getScriptAutorrellenable().limpiarIds();
+			}
+
+			if (((ComponenteFormularioCampo) componente).getScriptSoloLectura() != null) {
+				((ComponenteFormularioCampo) componente).getScriptSoloLectura().limpiarIds();
+			}
+
+			if (((ComponenteFormularioCampo) componente).getScriptValidacion() != null) {
+				((ComponenteFormularioCampo) componente).getScriptValidacion().limpiarIds();
+			}
+		}
+		if (componente instanceof ComponenteFormularioCampoSelector) {
+			if (((ComponenteFormularioCampoSelector) componente).getScriptValoresPosibles() != null) {
+				((ComponenteFormularioCampoSelector) componente).getScriptValoresPosibles().limpiarIds();
+			}
 		}
 	}
 

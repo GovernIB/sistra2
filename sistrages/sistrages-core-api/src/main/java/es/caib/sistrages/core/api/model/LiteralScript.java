@@ -80,7 +80,24 @@ public class LiteralScript extends ModelApi {
 
 	/**
 	 * Clonar.
-	 * 
+	 *
+	 * @param mensaje
+	 * @return
+	 */
+	public void limpiarIds() {
+		this.setCodigo(null);
+		if (this.literal != null) {
+			this.literal.setCodigo(null);
+			for (final Traduccion trad : this.getLiteral().getTraducciones()) {
+				trad.setCodigo(null);
+			}
+		}
+	}
+
+
+	/**
+	 * Clonar.
+	 *
 	 * @param mensaje
 	 * @return
 	 */

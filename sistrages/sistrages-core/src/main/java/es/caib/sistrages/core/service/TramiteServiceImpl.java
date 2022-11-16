@@ -15,6 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.AvisoEntidad;
+import es.caib.sistrages.core.api.model.ComponenteFormulario;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
+import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
@@ -22,9 +26,12 @@ import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.HistorialVersion;
+import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.SeccionReutilizableTramite;
@@ -48,7 +55,10 @@ import es.caib.sistrages.core.api.model.comun.ScriptInfo;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeClonarAccion;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
+import es.caib.sistrages.core.api.model.types.TypeListaValores;
 import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -805,8 +815,173 @@ public class TramiteServiceImpl implements TramiteService {
 	public void clonadoTramiteVersion(final Long idTramiteVersion, final String usuario, final Long idArea,
 			final Long idTramite) {
 		log.debug("Entrando al clonar idTramiteVersion: {} por el usuario {} ", idTramiteVersion, usuario);
+
+		//Primero vemos si hay que clonar dominios de tipo área al nuevo área.
+		//Recorremos todos los dominios asociados, si hay alguna de tipo área,
+		//  entonces tendremos que ver si existe en la nueva área (si no existe, la creamos)
+		List<Dominio> doms = tramiteDao.getDominioSimpleByTramiteId(idTramiteVersion);
+		for (Dominio dom : doms) {
+			if (dom.getAmbito() == TypeAmbito.AREA) {
+				Dominio dominioNuevaArea = dominiosDao.getDominioByIdentificador(TypeAmbito.AREA,
+						dom.getIdentificador(), null, null, null, idArea, null);
+
+				//Si no existe el dominio, lo clonamos
+				if (dominioNuevaArea == null) {
+
+					FuenteDatos fuenteDatosOriginal = null;
+					//Si es de tipo Fuente Datos, se obtiene la fuente de datos original
+					if (dom.getTipo() == TypeDominio.FUENTE_DATOS && dom.getIdFuenteDatos() != null) {
+						fuenteDatosOriginal = fuenteDatoDao.getById(dom.getIdFuenteDatos());
+					}
+
+					//Obtenemos la conf autenticacion si tiene asociada.
+					ConfiguracionAutenticacion confAutOriginal = null;
+					if (dom.getConfiguracionAutenticacion() != null) {
+						confAutOriginal = dom.getConfiguracionAutenticacion();
+					}
+
+					FuenteDatos fdClonado = null;
+					ConfiguracionAutenticacion confAutClonado = null;
+
+					if (fuenteDatosOriginal != null) {
+						//Clonamos la fuente de datos
+						fdClonado = fuenteDatoDao.clonar(dom.getCodigo().toString(), TypeClonarAccion.CREAR, fuenteDatosOriginal, null, idArea);
+					}
+					if (confAutOriginal != null) {
+						//Clonamos la conf autenticacion
+						confAutClonado = configuracionAutenticacionDao.clonar(dom.getCodigo().toString(), TypeClonarAccion.CREAR, confAutOriginal, null, idArea);
+					}
+
+					//Clonamos el dominios y asociamos con las FD/ConfAut clonadas
+					dominiosDao.clonar(dom.getCodigo().toString(), dom.getIdentificador(), idArea, null, fdClonado, confAutClonado);
+				}
+			}
+
+		}
+
+		//Luego clonar el trámite
 		final Long idTramiteVersionNuevo = tramiteDao.clonarTramiteVersion(idTramiteVersion, idArea, idTramite);
+
+		//Sustituimos referencias a los viejos scripts
+		sustituirReferenciasScript(idTramiteVersionNuevo, idTramiteVersion);
+
+		//Actualizamos el historial
 		historialVersionDao.add(idTramiteVersionNuevo, usuario, TypeAccionHistorial.CREACION, "");
+	}
+
+	private void sustituirReferenciasScript(Long idNuevo, Long idViejo) {
+		TramiteVersion tv = tramiteDao.getTramiteVersion(idNuevo);
+		tv.setListaPasos(tramitePasoDao.getTramitePasos(idNuevo));
+		TramiteVersion tvV = tramiteDao.getTramiteVersion(idViejo);
+		String idN = tramiteDao.getById(tv.getIdTramite()).getIdentificadorEntidad() + "."
+				+ tramiteDao.getById(tv.getIdTramite()).getIdentificadorArea();
+		String idV = tramiteDao.getById(tvV.getIdTramite()).getIdentificadorEntidad() + "."
+				+ tramiteDao.getById(tvV.getIdTramite()).getIdentificadorArea();
+		List<TramitePaso> tp = tv.getListaPasos();
+		if (tv.getScriptInicializacionTramite() != null) {
+			sustituirString(scriptDao.getScript(tv.getScriptInicializacionTramite().getCodigo()), idN, idV);
+		}
+		if (tv.getScriptPersonalizacion() != null) {
+			sustituirString(scriptDao.getScript(tv.getScriptPersonalizacion().getCodigo()), idN, idV);
+		}
+		if (tp != null && !tp.isEmpty()) {
+			for (final TramitePaso paso : tp) {
+				if (paso instanceof TramitePasoDebeSaber) {
+					sustituirString(((TramitePasoDebeSaber) paso).getScriptDebeSaber(), idN, idV);
+				} else if (paso instanceof TramitePasoRellenar) {
+					sustituirString(((TramitePasoRellenar) paso).getScriptNavegacion(), idN, idV);
+					sustituirString(((TramitePasoRellenar) paso).getScriptVariables(), idN, idV);
+					List<FormularioTramite> forms = ((TramitePasoRellenar) paso).getFormulariosTramite();
+					if (forms != null && !forms.isEmpty()) {
+						for (final FormularioTramite formulario : forms) {
+							sustituirString(formulario.getScriptDatosIniciales(), idN, idV);
+							sustituirString(formulario.getScriptFirma(), idN, idV);
+							sustituirString(formulario.getScriptObligatoriedad(), idN, idV);
+							sustituirString(formulario.getScriptParametros(), idN, idV);
+							sustituirString(formulario.getScriptRetorno(), idN, idV);
+							final DisenyoFormulario disenyoFormulario = formularioInternoDao
+									.getFormularioCompletoById(formulario.getIdFormularioInterno(), false);
+							if (disenyoFormulario != null) {
+								formulario.setDisenyoFormulario(disenyoFormulario);
+							}
+							if (formulario.getDisenyoFormulario() != null) {
+								sustituirString(formulario.getDisenyoFormulario().getScriptPlantilla(), idN, idV);
+								List<PaginaFormulario> pags = formulario.getDisenyoFormulario().getPaginas();
+								if (pags != null && !pags.isEmpty()) {
+									for (final PaginaFormulario paginaFormulario : pags) {
+										sustituirString(paginaFormulario.getScriptValidacion(), idN, idV);
+										sustituirString(paginaFormulario.getScriptNavegacion(), idN, idV);
+										if (paginaFormulario.getLineas() != null) {
+											for (final LineaComponentesFormulario linea : paginaFormulario
+													.getLineas()) {
+												if (linea.getComponentes() != null) {
+													for (final ComponenteFormulario componente : linea
+															.getComponentes()) {
+														if (componente instanceof ComponenteFormularioCampo) {
+															sustituirString(((ComponenteFormularioCampo) componente)
+																	.getScriptAutorrellenable(), idN, idV);
+															sustituirString(((ComponenteFormularioCampo) componente)
+																	.getScriptSoloLectura(), idN, idV);
+															sustituirString(((ComponenteFormularioCampo) componente)
+																	.getScriptValidacion(), idN, idV);
+															if (componente instanceof ComponenteFormularioCampoSelector) {
+																final ComponenteFormularioCampoSelector selector = (ComponenteFormularioCampoSelector) componente;
+																if (TypeListaValores.SCRIPT
+																		.equals(selector.getTipoListaValores())) {
+																	sustituirString(selector.getScriptValoresPosibles(),
+																			idN, idV);
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+
+								}
+							}
+						}
+					}
+				} else if (paso instanceof TramitePasoAnexar) {
+					((TramitePasoAnexar) paso).getScriptAnexosDinamicos();
+					List<Documento> anexos = ((TramitePasoAnexar) paso).getDocumentos();
+					if (anexos != null && !anexos.isEmpty()) {
+						for (final Documento anexo : anexos) {
+							sustituirString(anexo.getScriptFirmarDigitalmente(), idN, idV);
+							sustituirString(anexo.getScriptObligatoriedad(), idN, idV);
+							sustituirString(anexo.getScriptValidacion(), idN, idV);
+						}
+					}
+				} else if (paso instanceof TramitePasoTasa) {
+					List<Tasa> tasas = ((TramitePasoTasa) paso).getTasas();
+					if (tasas != null && !tasas.isEmpty()) {
+						for (final Tasa tasa : tasas) {
+							sustituirString(tasa.getScriptObligatoriedad(), idN, idV);
+							sustituirString(tasa.getScriptPago(), idN, idV);
+						}
+					}
+				} else if (paso instanceof TramitePasoRegistrar) {
+					sustituirString(((TramitePasoRegistrar) paso).getScriptAlFinalizar(), idN, idV);
+					sustituirString(((TramitePasoRegistrar) paso).getScriptDestinoRegistro(), idN, idV);
+					sustituirString(((TramitePasoRegistrar) paso).getScriptPresentador(), idN, idV);
+					sustituirString(((TramitePasoRegistrar) paso).getScriptRepresentante(), idN, idV);
+					sustituirString(((TramitePasoRegistrar) paso).getScriptValidarRegistrar(), idN, idV);
+				}
+				sustituirString(paso.getScriptNavegacion(), idN, idV);
+				sustituirString(paso.getScriptVariables(), idN, idV);
+			}
+		}
+	}
+
+	private void sustituirString(Script script, String idN, String idV) {
+		if (script != null && !script.getContenido().isEmpty()) {
+			String contenido = script.getContenido();
+			if (contenido.contains(idV)) {
+				script.setContenido(contenido.replaceAll(idV, idN));
+				scriptDao.updateScript(script);
+			}
+		}
 	}
 
 	/*
