@@ -39,7 +39,6 @@ import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
-import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.model.types.TypePluginScript;
 import es.caib.sistrages.core.api.model.types.TypeScript;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
@@ -509,7 +508,7 @@ public class DialogScript extends DialogControllerBase {
 			if (!validoScript()) {
 				return;
 			}
-		} else if (tipoDisenyo != null) { // TypeParametroVentana.PARAMETRO_DISENYO_SECCION
+		} else if (tipoDisenyo != null && tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_SECCION)) {
 			if (!revisarDominioNoarea()) {
 				return;
 			}
@@ -628,7 +627,8 @@ public class DialogScript extends DialogControllerBase {
 							&& !identificador.getIdentificadorEntidad().isEmpty()) {
 						idCompuesto += identificador.getIdentificadorEntidad() + '.';
 					}
-					if (identificador.getIdentificadorArea() != null && !identificador.getIdentificadorArea().isEmpty()) {
+					if (identificador.getIdentificadorArea() != null
+							&& !identificador.getIdentificadorArea().isEmpty()) {
 						idCompuesto += identificador.getIdentificadorArea() + '.';
 					}
 				} else {
@@ -647,7 +647,6 @@ public class DialogScript extends DialogControllerBase {
 
 		return true;
 	}
-
 
 	/**
 	 * Revisa que no se haya intentado utilizar un dominio de tipo area
