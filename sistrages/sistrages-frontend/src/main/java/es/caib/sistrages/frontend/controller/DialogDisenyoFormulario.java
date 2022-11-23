@@ -694,11 +694,6 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 						return false;
 					}
 
-					if (TypeCampoTexto.IBAN.equals(campo.getTipoCampoTexto()) && campo.getNumColumnas() <= 1) {
-						addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogDisenyoFormulario.iban.errorNumColumnas"));
-						return false;
-					}
-
 					if (TypeCampoTexto.EXPRESION.equals(campo.getTipoCampoTexto())
 							&& StringUtils.isEmpty(campo.getExpresionRegular())) {
 						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.expresion"),
@@ -841,6 +836,11 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			// TODO SI ES UNA LINEA NO SE GUARDA
 			if (cfOriginal != null) {
 
+				// TODO PENDIENTE GUARDAR (ver como hacerlo, ¿beanutils?¿metodos
+				// particulares
+				// por tipo componente?) De momento no dejamos cambiar codigo
+				// para permitir
+				// dejar seleccionando
 				try {
 					BeanUtils.copyProperties(cfOriginal, objetoFormularioEdit);
 				} catch (final Exception e) {
@@ -2764,16 +2764,6 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * Comprueba si es un componente de tipo texto
-	 *
-	 * @return
-	 */
-	public boolean isCampoTextoIBAN() {
-		final ComponenteFormularioCampoTexto campo = (ComponenteFormularioCampoTexto) objetoFormularioEdit;
-		return TypeCampoTexto.IBAN.equals(campo.getTipoCampoTexto());
-	}
-
-	/**
 	 * Comprueba si es un tipo de campo texto de tipo expresion.
 	 *
 	 * @return
@@ -3027,13 +3017,6 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public void setCambios() {
 		this.cambios = true;
-	}
-
-	public void setCambiosTipoTexto() {
-		this.cambios = true;
-		if (this.objetoFormularioEdit != null && this.objetoFormularioEdit instanceof ComponenteFormulario && isCampoTextoIBAN() &&  ((ComponenteFormularioCampoTexto) objetoFormularioEdit).getNumColumnas() <= 1) {
-			((ComponenteFormularioCampoTexto) objetoFormularioEdit).setNumColumnas(2);
-		}
 	}
 
 	public void setearCambios() {

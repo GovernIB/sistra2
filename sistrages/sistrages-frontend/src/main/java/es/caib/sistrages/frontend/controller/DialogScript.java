@@ -508,7 +508,7 @@ public class DialogScript extends DialogControllerBase {
 			if (!validoScript()) {
 				return;
 			}
-		} else if (tipoDisenyo != null && tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_SECCION)) {
+		} else if (tipoDisenyo != null && tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString())) {
 			if (!revisarDominioNoarea()) {
 				return;
 			}
