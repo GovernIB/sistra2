@@ -44,7 +44,7 @@
 
 				<p:outputLabel for="inputDescripcion" value="#{msg['dialogDefinicionVersionAnexarDocumentos.headerDescripcion']}" />
 				<p:column>
-					<p:inputText id="inputDescripcion" required="true" value="#{dialogDefinicionVersionAnexarDocumentos.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionAnexarDocumentos.idiomas)}" disabled="true" size="40" style="margin-right:10px" />
+					<p:inputText id="inputDescripcion" required="true" value="#{dialogDefinicionVersionAnexarDocumentos.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionAnexarDocumentos.idiomas)}" readonly="true" size="40" style="margin-right:10px" />
 					<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogDefinicionVersionAnexarDocumentos.editarDescripcion()}" process="@this" update="growldialogDefinicionRellenar" style="margin-right:5px">
 	            		<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexarDocumentos.returnDialogoDescripcion}" update="growldialogDefinicionRellenar inputDescripcion" />
 	        		</p:commandButton>

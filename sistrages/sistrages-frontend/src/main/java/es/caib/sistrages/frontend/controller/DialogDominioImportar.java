@@ -104,6 +104,8 @@ public class DialogDominioImportar extends DialogControllerBase {
 	/** Area. **/
 	private Area area = null;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -203,14 +205,14 @@ public class DialogDominioImportar extends DialogControllerBase {
 		final Long idArea = (area == null) ? null : area.getCodigo();
 
 		if (TypeAmbito.fromString(ambito) != data.getAmbito()) {
-			filaDominio =  UtilCuadernoCarga.getFilaDominio(data, data, this.fuentesDatos, this.fuentesDatosContent,
+			filaDominio = UtilCuadernoCarga.getFilaDominio(data, data, this.fuentesDatos, this.fuentesDatosContent,
 					this.fuentesDatos, UtilJSF.getIdEntidad(), idArea);
 			filaDominio.setMensaje(UtilJSF.getLiteral("dialogDominioImportar.error.dominioDiferenteAmbito"));
 			filaDominio.setEstado(TypeImportarEstado.ERROR);
 			filaDominio.setAccion(TypeImportarAccion.NADA);
 			List<TypeImportarAccion> acciones = new ArrayList<>();
 			acciones.add(TypeImportarAccion.NADA);
-			filaDominio.setAcciones(acciones );
+			filaDominio.setAcciones(acciones);
 			filaDominio.setResultado(TypeImportarResultado.ERROR);
 			filaDominio.setVisibleBoton(false);
 			setMostrarPanelInfo(true);
@@ -218,7 +220,8 @@ public class DialogDominioImportar extends DialogControllerBase {
 			return;
 		}
 
-		final Dominio dominioActual = dominioService.loadDominioByIdentificador(TypeAmbito.fromString(ambito), data.getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
+		final Dominio dominioActual = dominioService.loadDominioByIdentificador(TypeAmbito.fromString(ambito),
+				data.getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
 		FuenteDatos fdActual = null;
 		if (dominioActual != null) {
 
@@ -227,25 +230,27 @@ public class DialogDominioImportar extends DialogControllerBase {
 			}
 
 			if (fdActual == null && this.fuentesDatos != null) {
-				fdActual = dominioService.loadFuenteDato(TypeAmbito.fromString(ambito), this.fuentesDatos.getIdentificador(), UtilJSF.getIdEntidad(), area.getCodigo(), null);
+				fdActual = dominioService.loadFuenteDato(TypeAmbito.fromString(ambito),
+						this.fuentesDatos.getIdentificador(), UtilJSF.getIdEntidad(), area.getCodigo(), null);
 			}
 		}
 
 		ConfiguracionAutenticacion configuracionAutenticacion = null;
-		if (data != null && data.getTipo() == TypeDominio.CONSULTA_REMOTA && data.getConfiguracionAutenticacion() != null && idArea != null) {
+		if (data != null && data.getTipo() == TypeDominio.CONSULTA_REMOTA
+				&& data.getConfiguracionAutenticacion() != null && idArea != null) {
 			configuracionAutenticacion = configuracionAutenticacionService.getConfiguracionAutenticacion(
-					data.getAmbito(), data.getConfiguracionAutenticacion().getIdentificador(), 
-					UtilJSF.getIdEntidad(), idArea, null);
+					data.getAmbito(), data.getConfiguracionAutenticacion().getIdentificador(), UtilJSF.getIdEntidad(),
+					idArea, null);
 		}
-		final String identificadorArea = this.area == null ? "" :  this.area.getIdentificadorCompuesto();
+		final String identificadorArea = this.area == null ? "" : this.area.getIdentificadorCompuesto();
 		filaDominio = UtilImportacion.getFilaDominioID(data, dominioActual, this.fuentesDatos, this.fuentesDatosContent,
 				fdActual, identificadorArea, UtilJSF.getIdEntidad(), idArea, configuracionAutenticacion);
 
-		if(UtilJSF.getIdEntidad() != null) {
+		if (UtilJSF.getIdEntidad() != null) {
 			filaDominio.setIdEntidad(UtilJSF.getIdEntidad());
 		}
 
-		if(this.area != null) {
+		if (this.area != null) {
 			filaDominio.setIdArea(this.area.getCodigo());
 		}
 
@@ -396,6 +401,29 @@ public class DialogDominioImportar extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/** Funciones get/set. **/

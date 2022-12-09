@@ -15,6 +15,7 @@ import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 
 @ManagedBean
 @ViewScoped
@@ -43,6 +44,8 @@ public class DialogInfoSesion extends DialogControllerBase {
 	 * Lista Roles
 	 */
 	private List<Rol> listaRoles;
+
+	private String portapapeles;
 
 	/**
 	 * Inicialización.
@@ -83,6 +86,35 @@ public class DialogInfoSesion extends DialogControllerBase {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	/**
+	 * @return the portapapeles
+	 */
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	/**
+	 * @param portapapeles the portapapeles to set
+	 */
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

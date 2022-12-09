@@ -33,6 +33,7 @@ import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeImportarTipo;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -61,6 +62,8 @@ public class DialogDominioExportar extends DialogControllerBase {
 
 	/** Mostrar botón exportar. **/
 	private boolean mostrarBotonExportar;
+
+	private String portapapeles;
 
 	/**
 	 * Inicialización.
@@ -197,6 +200,29 @@ public class DialogDominioExportar extends DialogControllerBase {
 	}
 
 	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	/**
 	 * @return the id
 	 */
 	public String getId() {
@@ -204,8 +230,7 @@ public class DialogDominioExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -219,8 +244,7 @@ public class DialogDominioExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarBotonExportar
-	 *            the mostrarBotonExportar to set
+	 * @param mostrarBotonExportar the mostrarBotonExportar to set
 	 */
 	public void setMostrarBotonExportar(final boolean mostrarBotonExportar) {
 		this.mostrarBotonExportar = mostrarBotonExportar;
@@ -234,8 +258,7 @@ public class DialogDominioExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final Dominio data) {
 		this.data = data;
@@ -249,8 +272,7 @@ public class DialogDominioExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param fuente
-	 *            the fuente to set
+	 * @param fuente the fuente to set
 	 */
 	public void setFuente(final FuenteDatos fuente) {
 		this.fuente = fuente;

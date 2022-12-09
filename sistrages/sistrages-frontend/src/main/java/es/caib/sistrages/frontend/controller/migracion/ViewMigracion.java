@@ -18,6 +18,8 @@ import org.primefaces.model.StreamedContent;
 
 import com.lowagie.text.Document;
 
+import es.caib.sistrages.core.api.exception.migracion.MigracionException;
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
@@ -50,6 +52,10 @@ public class ViewMigracion extends ViewControllerBase {
 
 	private List<Tramite> listaTramite;
 
+	private List<Area> listaArea;
+
+	private Long areaSeleccionada;
+
 	private List<TramiteVersion> listaTramiteVersionSistra;
 
 	private Long tramiteSistraSeleccionado;
@@ -70,6 +76,8 @@ public class ViewMigracion extends ViewControllerBase {
 
 	private String estilo = "display: none;";
 
+	private String portapapeles;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -86,10 +94,9 @@ public class ViewMigracion extends ViewControllerBase {
 		try {
 
 			setListaTramiteSistra(migracionService.getTramiteSistra());
+			setListaArea(tramiteService.listArea(UtilJSF.getIdEntidad(), ""));
 
-			setListaTramite(tramiteService.listTramiteByEntidad(UtilJSF.getIdEntidad()));
-
-			Collections.sort(listaTramite, (o1, o2) -> o1.getIdentificador().compareTo(o2.getIdentificador()));
+			Collections.sort(listaArea, (o1, o2) -> o1.getIdentificador().compareTo(o2.getIdentificador()));
 
 		} catch (Exception ex) {
 			UtilJSF.loggearErrorFront("Error en la migracion", ex);
@@ -107,26 +114,37 @@ public class ViewMigracion extends ViewControllerBase {
 
 	}
 
+	public void actualizarTramitesS2() {
+		if (getAreaSeleccionada() != null) {
+			setListaTramite(tramiteService.listTramite(getAreaSeleccionada(), ""));
+		}
+	}
+
 	public void migrar() {
 		if (tramiteSistraSeleccionado != null && versionSistraSeleccionado != null && tramiteSeleccionado != null
 				&& StringUtils.isNotEmpty(version)) {
-			if (!tramiteService.tieneTramiteNumVersionRepetida(tramiteSeleccionado, Integer.valueOf(version))) {
+			if (migracionService.isDestinoCorrecto(tramiteSistraSeleccionado,
+					Integer.valueOf(versionSistraSeleccionado))) {
 				// migrar
 				final Map<String, Object> params = new HashMap<>();
 				params.put(ConstantesMigracion.IDIOMA, UtilJSF.getSessionBean().getLang());
 				params.put(ConstantesMigracion.USERNAME, UtilJSF.getSessionBean().getUserName());
 				params.put(ConstantesMigracion.UNIFICAR_PANTALLAS, Boolean.valueOf(unificarPantallas));
 
-				listaErrores = migracionService.migrarTramiteVersion(tramiteSistraSeleccionado,
-						versionSistraSeleccionado, tramiteSeleccionado, Integer.valueOf(version), params);
-
-				if (listaErrores == null || listaErrores.isEmpty()) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.migracion"));
-				} else {
-					UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.migracionCompleta"));
-					estilo = "display: block;";
+				try {
+					listaErrores = migracionService.migrarTramiteVersion(tramiteSistraSeleccionado,
+							versionSistraSeleccionado, tramiteSeleccionado, Integer.valueOf(version), params);
+					if (listaErrores == null || listaErrores.isEmpty()) {
+						UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.migracion"));
+					} else {
+						UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.migracionCompleta"));
+						estilo = "display: block;";
+					}
+					disabled = true;
+				} catch (final MigracionException e) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, e.getMessage());
 				}
-				disabled = true;
+
 			} else {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
 			}
@@ -177,6 +195,45 @@ public class ViewMigracion extends ViewControllerBase {
 				return "display:none;";
 			}
 		}
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	public final Long getAreaSeleccionada() {
+		return areaSeleccionada;
+	}
+
+	public final void setAreaSeleccionada(Long areaSeleccionada) {
+		this.areaSeleccionada = areaSeleccionada;
+	}
+
+	public final List<Area> getListaArea() {
+		return listaArea;
+	}
+
+	public final void setListaArea(List<Area> listaArea) {
+		this.listaArea = listaArea;
 	}
 
 	public List<Tramite> getListaTramiteSistra() {

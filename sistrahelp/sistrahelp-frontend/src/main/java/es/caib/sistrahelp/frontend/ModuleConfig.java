@@ -18,6 +18,9 @@ public final class ModuleConfig {
 	/** Commit git. **/
 	private String commitGit;
 
+	/** Filtro inicial. **/
+	private String filtroInicial;
+
 	/**
 	 * @return the entorno
 	 */
@@ -26,8 +29,7 @@ public final class ModuleConfig {
 	}
 
 	/**
-	 * @param entorno
-	 *                    the entorno to set
+	 * @param entorno the entorno to set
 	 */
 	public void setEntorno(final String entorno) {
 		this.entorno = entorno;
@@ -66,6 +68,14 @@ public final class ModuleConfig {
 
 	public void setCommitGit(String commitGit) {
 		this.commitGit = commitGit;
+	}
+
+	public final String getFiltroInicial() {
+		return filtroInicial;
+	}
+
+	public final void setFiltroInicial(String filtroInicial) {
+		this.filtroInicial = filtroInicial;
 	}
 
 }

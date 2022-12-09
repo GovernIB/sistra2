@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
@@ -35,31 +36,91 @@
 		<f:viewAction action="#{dialogConfiguracionAutenticacion.init}" />
 	</f:metadata>
 	<h:form id="dialogFormularioExterno" styleClass="margin-top-10">
+			<h:outputScript >
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("dialogFormularioExterno:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+
+			 }
+
+			</h:outputScript>
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,,wpx25" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w30,w60," columns = "3" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px;">
 
 
 					<p:outputLabel for="identificador" value="#{msg['dialogConfiguracionAutenticacion.headerIdentificador']}" />
-					<p:inputText id="identificador" value="#{dialogConfiguracionAutenticacion.data.identificador}" disabled="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="20"  onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+					<p:inputText id="identificador" value="#{dialogConfiguracionAutenticacion.data.identificador}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="20"  onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 				   	</p:inputText>
 				   	<p:outputLabel value="" />
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogConfiguracionAutenticacion.headerDescripcion']}" />
-					<p:inputText id="descripcion" value="#{dialogConfiguracionAutenticacion.data.descripcion}" disabled="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="255"/>
+					<p:inputText id="descripcion" value="#{dialogConfiguracionAutenticacion.data.descripcion}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="255"/>
 					<p:outputLabel value="" />
 
 					<p:outputLabel for="usuario" value="#{msg['dialogConfiguracionAutenticacion.headerUsuario']}" />
-					<p:inputText id="usuario" value="#{dialogConfiguracionAutenticacion.data.usuario}" disabled="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="50"/>
+					<p:inputText id="usuario" value="#{dialogConfiguracionAutenticacion.data.usuario}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="50"/>
 					<p:outputLabel value="" />
 
 					<p:outputLabel for="password" value="#{msg['dialogConfiguracionAutenticacion.headerPass']}" />
-					<p:inputText id="password" value="#{dialogConfiguracionAutenticacion.data.password}" disabled="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="50"/>
+					<p:inputText id="password" value="#{dialogConfiguracionAutenticacion.data.password}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="50"/>
 					<p:outputLabel value="" />
 
 
@@ -88,6 +149,15 @@
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
+		    <p:contextMenu>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogFormularioExterno:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{dialogConfiguracionAutenticacion.copiadoCorr}" process="@this" update="@this growlDialog"/>
+            	<p:ajax event="error" listener="#{dialogConfiguracionAutenticacion.copiadoErr}" update="@this growlDialog"/>
+        	</pe:clipboard>
+
+		    <p:inputText id="auxCopiar" value="#{dialogConfiguracionAutenticacion.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 	</h:form>
 </h:body>
 

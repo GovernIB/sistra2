@@ -557,6 +557,8 @@ public final class UtilsSTG {
 			res = TypeTexto.HORA;
 		} else if ("EXPRESION".equals(tipoTexto)) {
 			res = TypeTexto.EXPRESION_REGULAR;
+		} else if ("IBAN".equals(tipoTexto)) {
+			res = TypeTexto.IBAN;
 		}
 
 		return res;

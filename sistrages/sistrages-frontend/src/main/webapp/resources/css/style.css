@@ -116,6 +116,11 @@ body{
     display:none;
 }
 
+/* quitar? */
+.d-block {
+    display:block;
+}
+
 /* pantalla de error*/
 .error_panel_container {
   position: fixed;
@@ -696,6 +701,11 @@ label.ui-state-disabled {
 	margin-top: 30px;
 }
 
+.ui-datatable table{
+	border-collapse: separate;
+	border-spacing: 0;
+}
+
 @media only screen and (max-width:1235px) {
   .ui-panelgrid-cell{
   	padding: 0 0 !important;
@@ -703,4 +713,28 @@ label.ui-state-disabled {
   .titulo-color{
   	font-size: 1.5vw;
   }
+}
+
+.resaltar{
+	border: #0a95ff 2px dotted !important;
+}
+
+.noBorderColor{
+	border-color:#f0f0f0;
+}
+
+.d-block{
+	display: block !important;
+}
+
+.d-none{
+	display: none !important;
+}
+
+/** Para que los input readonly, parezcan disabled **/
+input[readonly="readonly"] {
+	opacity: .65
+}
+textarea[readonly="readonly"] {
+	opacity: .65
 }

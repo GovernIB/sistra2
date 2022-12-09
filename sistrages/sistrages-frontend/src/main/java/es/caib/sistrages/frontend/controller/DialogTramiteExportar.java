@@ -17,6 +17,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -140,8 +141,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	/** Cabecera. **/
 	private String cabecera;
 
-	// variable que desactiva el boton exportar
-	private Boolean disabled = false;
+	private String portapapeles;
 
 	/**
 	 * Inicialización.
@@ -211,7 +211,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 			correcto = false;
 		}
 
-		if (modo.equals("CC") && this.tramiteVersion != null  ) {
+		if (modo.equals("CC") && this.tramiteVersion != null) {
 			List<Tasa> tasas = this.tramiteVersion.getPasoTasa().getTasas();
 			for (Tasa tasa : tasas) {
 				if (tasa.isSimulado()) {
@@ -235,6 +235,29 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	private boolean generandoFichero = false;
@@ -333,8 +356,9 @@ public class DialogTramiteExportar extends DialogControllerBase {
 
 		// 10. Incluir los seccionesReutilizables_ID.data
 		for (final SeccionReutilizable seccion : seccionesReutilizables) {
-			//Primero hay que obtener los diseños.
-			final DisenyoFormulario disenyoFormulario = formularioInternoService.getFormularioInterno(seccion.getIdFormularioAsociado());
+			// Primero hay que obtener los diseños.
+			final DisenyoFormulario disenyoFormulario = formularioInternoService
+					.getFormularioInterno(seccion.getIdFormularioAsociado());
 			seccion.setDisenyoFormulario(disenyoFormulario);
 			incluirModelApi(zos, seccion, "seccionesReutilizables_" + seccion.getCodigo() + LITERAL_SUFIJO_DATA);
 		}
@@ -349,9 +373,12 @@ public class DialogTramiteExportar extends DialogControllerBase {
 
 		// 10. Descargar.
 		final InputStream myInputStream = new ByteArrayInputStream(content);
-		disabled = true;
 		return new DefaultStreamedContent(myInputStream, "application/zip", getNombreZip() + ".zip");
 
+	}
+
+	public void expOk() {
+		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.exportar.ok"));
 	}
 
 	/**
@@ -648,20 +675,6 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @return the disabled
-	 */
-	public final Boolean getDisabled() {
-		return disabled;
-	}
-
-	/**
-	 * @param disabled the disabled to set
-	 */
-	public final void setDisabled(Boolean disabled) {
-		this.disabled = disabled;
-	}
-
-	/**
 	 * @return the seccionesReutilizables
 	 */
 	public List<SeccionReutilizable> getSeccionesReutilizables() {
@@ -674,7 +687,5 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	public void setSeccionesReutilizables(List<SeccionReutilizable> seccionesReutilizables) {
 		this.seccionesReutilizables = seccionesReutilizables;
 	}
-
-
 
 }

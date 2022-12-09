@@ -12,6 +12,8 @@ public enum TypePropiedadConfiguracion {
 	PATH_PROPERTIES("es.caib.sistrahelp.properties.path"),
 	/** Entorno. */
 	ENTORNO("entorno"),
+	/** Entorno. */
+	FILTRO_INICIAL("filtroInicial"),
 	/** STG Url. */
 	SISTRAGES_URL("sistrages.rest.url"),
 	/** STG Url. */

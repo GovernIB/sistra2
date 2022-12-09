@@ -93,6 +93,10 @@ public class HDocumento implements IModelApi {
 	@Column(name = "DTP_ANEDES")
 	private String anexoDescripcionInstancia;
 
+	/** Atributo anexo anexado firmado. */
+	@Column(name = "DTP_ANEAFI")
+	private String anexoAnexadoFirmado;
+
 	/** Atributo pago justificante pdf. */
 	@Column(name = "DTP_PAGJUS")
 	private Long pagoJustificantePdf;
@@ -627,6 +631,7 @@ public class HDocumento implements IModelApi {
 	public static DocumentoPasoPersistencia toModel(final HDocumento hDocumento, final int pInstancia) {
 		final DocumentoPasoPersistencia documento = new DocumentoPasoPersistencia();
 		documento.setAnexoDescripcionInstancia(hDocumento.getAnexoDescripcionInstancia());
+		documento.setAnexoAnexadoFirmado(TypeSiNo.fromString(hDocumento.getAnexoAnexadoFirmado()));
 		documento.setEstado(TypeEstadoDocumento.fromString(hDocumento.getEstado()));
 		documento.setId(hDocumento.getId());
 		documento.setInstancia(pInstancia);
@@ -785,6 +790,11 @@ public class HDocumento implements IModelApi {
 		d.setEstado(documento.getEstado().toString());
 		d.setId(documento.getId());
 		d.setAnexoNombreFichero(documento.getAnexoNombreFichero());
+		if (documento.getAnexoAnexadoFirmado() != null) {
+			d.setAnexoAnexadoFirmado(documento.getAnexoAnexadoFirmado().toString());
+		} else {
+			d.setAnexoAnexadoFirmado(null);
+		}
 		if (documento.getPagoEstadoIncorrecto() != null) {
 			d.setPagoEstadoIncorrecto(documento.getPagoEstadoIncorrecto().toString());
 		} else {
@@ -971,6 +981,25 @@ public class HDocumento implements IModelApi {
 	 */
 	public void setRegistroNombrePresentador(final String registroNombrePresentador) {
 		this.registroNombrePresentador = registroNombrePresentador;
+	}
+
+	/**
+	 * Método de acceso a anexoAnexadoFirmado.
+	 *
+	 * @return anexoAnexadoFirmado
+	 */
+	public String getAnexoAnexadoFirmado() {
+		return anexoAnexadoFirmado;
+	}
+
+	/**
+	 * Método para establecer anexoAnexadoFirmado.
+	 *
+	 * @param anexoAnexadoFirmado
+	 *                                anexoAnexadoFirmado a establecer
+	 */
+	public void setAnexoAnexadoFirmado(final String anexoAnexadoFirmado) {
+		this.anexoAnexadoFirmado = anexoAnexadoFirmado;
 	}
 
 }

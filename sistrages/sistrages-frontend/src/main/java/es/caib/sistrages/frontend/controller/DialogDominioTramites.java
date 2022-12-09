@@ -51,6 +51,8 @@ public class DialogDominioTramites extends DialogControllerBase {
 	/** Area **/
 	private String area;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -98,6 +100,29 @@ public class DialogDominioTramites extends DialogControllerBase {
 		return tramiteService
 				.getTramiteByIdentificador(tramiteService.getIdentificadorByCodigoVersion(idTram), null, idArea, null)
 				.getIdentificador();
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

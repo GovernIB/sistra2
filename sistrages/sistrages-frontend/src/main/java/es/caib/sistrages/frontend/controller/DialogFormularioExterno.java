@@ -65,6 +65,8 @@ public class DialogFormularioExterno extends DialogControllerBase {
 	/** Indica si es visible el botón de consultar **/
 	private Boolean desactivarConsulta = false;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -79,8 +81,8 @@ public class DialogFormularioExterno extends DialogControllerBase {
 			data = formularioService.getFormularioExterno(new Long(id));
 		}
 
-		configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(TypeAmbito.AREA, Long.valueOf(area), null,
-				TypeIdioma.fromString(UtilJSF.getSessionBean().getLang()), null);
+		configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(TypeAmbito.AREA,
+				Long.valueOf(area), null, TypeIdioma.fromString(UtilJSF.getSessionBean().getLang()), null);
 		ConfiguracionAutenticacion configAutSinAutenticacion = new ConfiguracionAutenticacion();
 		configAutSinAutenticacion.setCodigo(null);
 		configAutSinAutenticacion.setIdentificador(UtilJSF.getLiteral("dialogDominio.sinAutenticacion"));
@@ -104,8 +106,8 @@ public class DialogFormularioExterno extends DialogControllerBase {
 	public void aceptar() {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
-		if (data.getConfiguracionAutenticacion().getIdentificador().equals(UtilJSF
-				.getLiteral("dialogDominio.sinAutenticacion"))) {
+		if (data.getConfiguracionAutenticacion().getIdentificador()
+				.equals(UtilJSF.getLiteral("dialogDominio.sinAutenticacion"))) {
 			data.setConfiguracionAutenticacion(null);
 		}
 		switch (acceso) {
@@ -224,7 +226,8 @@ public class DialogFormularioExterno extends DialogControllerBase {
 			}
 			UtilJSF.openDialog(DialogGestorExternoTramites.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
 		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("dialogFormularioExterno.error.sinTramitesAsociados"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+					UtilJSF.getLiteral("dialogFormularioExterno.error.sinTramitesAsociados"));
 		}
 	}
 
@@ -249,13 +252,37 @@ public class DialogFormularioExterno extends DialogControllerBase {
 			return false;
 		}
 
-		final boolean existe = formularioService.existeFormulario(data.getIdentificador(), data.getCodigo(), Long.valueOf(area));
+		final boolean existe = formularioService.existeFormulario(data.getIdentificador(), data.getCodigo(),
+				Long.valueOf(area));
 
 		if (existe) {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

@@ -11,12 +11,12 @@ import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
 @ViewScoped
 public class DialogTramiteImportarSeccion extends DialogControllerBase {
-
 
 	/** Fila Importar. */
 	private FilaImportarSeccion data;
@@ -27,6 +27,8 @@ public class DialogTramiteImportarSeccion extends DialogControllerBase {
 	/** Area **/
 	private Long area;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -34,7 +36,6 @@ public class DialogTramiteImportarSeccion extends DialogControllerBase {
 		data = (FilaImportarSeccion) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_IMPORTAR);
 
 	}
-
 
 	/**
 	 * Guardar.
@@ -66,7 +67,28 @@ public class DialogTramiteImportarSeccion extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
 
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
 
 	/**
 	 * @param data the data to set
@@ -102,7 +124,6 @@ public class DialogTramiteImportarSeccion extends DialogControllerBase {
 	public Long getArea() {
 		return area;
 	}
-
 
 	/**
 	 * @param area the area to set

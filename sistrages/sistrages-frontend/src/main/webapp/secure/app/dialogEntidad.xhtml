@@ -4,7 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
@@ -29,7 +30,7 @@
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px;">
 
 					<p:outputLabel for="identificador" value="#{msg['dialogEntidad.headerIdentificador']}" />
 					<p:inputText id="identificador" value="#{dialogEntidad.data.identificador}" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase();" styleClass="w95" validatorMessage="#{msg['error.validacion.identificador']}">
@@ -45,7 +46,7 @@
 
 					<p:outputLabel for="nombreHidden" value="#{msg['dialogEntidad.headerDescripcion']}" />
 					<p:column>
-						<p:inputText id="nombre" value="#{dialogEntidad.literal}" disabled="true" required="true" size="40" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}"/>
+						<p:inputText id="nombre" value="#{dialogEntidad.literal}" readonly="true" required="true" size="40" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}"/>
 						<p:inputText id="nombreHidden" value="#{dialogEntidad.literal}" type="hidden" required="true" binding="#{mensajesComponent}"/>
 						<p:commandButton id="btnNombre" icon="fa fa-language" actionListener="#{dialogEntidad.editarNombre()}" process="@this" update="growlDialog" style="margin-right:5px">
 		            		<p:ajax event="dialogReturn" listener="#{dialogEntidad.returnDialogo}" update="growlDialog nombre nombreHidden" />
@@ -53,10 +54,10 @@
 					</p:column>
 
 					<p:outputLabel for="rol" value="#{msg['dialogEntidad.headerRol']}" />
-					<p:inputText id="rol" value="#{dialogEntidad.data.rol}" disabled="#{dialogEntidad.isConsulta()}" required="true" size="40" maxlength="100"/>
+					<p:inputText id="rol" value="#{dialogEntidad.data.rol}" readonly="#{dialogEntidad.isConsulta()}" required="true" size="40" maxlength="100"/>
 
 					<p:outputLabel for="rolSup" value="#{msg['dialogEntidad.headerRolSup']}" />
-					<p:inputText id="rolSup" value="#{dialogEntidad.data.rolSup}" disabled="#{dialogEntidad.isConsulta()}" required="true" size="40" maxlength="100"/>
+					<p:inputText id="rolSup" value="#{dialogEntidad.data.rolSup}" readonly="#{dialogEntidad.isConsulta()}" required="true" size="40" maxlength="100"/>
 
 
 					<p:outputLabel for="activo" value="#{msg['dialogEntidad.headerActivo']}" />
@@ -73,6 +74,90 @@
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
+
+		    <h:outputScript >
+
+	             window.onload=function(){
+	                let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+	                onVisible(contextMenu, () => eliminarResaltar());
+
+
+
+	               document.addEventListener('contextmenu', function(ev) {
+	                    ev.preventDefault();
+	                    getPos();
+	                    return false;
+	                }, false);
+	              }
+
+
+
+	               function eliminarResaltar(){
+	                    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+	                      let elementos = document.getElementsByClassName('resaltar');
+	                      if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+	                        for(let i = 0; i &lt; elementos.length; i++){
+	                            elementos[i].classList.remove('resaltar');
+	                        }
+	                      }
+	                }
+
+
+
+	               function onVisible(element, callback) {
+	                  new IntersectionObserver((entries, observer) => {
+	                    entries.forEach(entry => {
+	                      if(entry.intersectionRatio == 0) {
+	                        callback(element);
+	                      }
+	                    });
+	                  }).observe(element);
+	                }
+
+
+	             function getPos(){
+	                 var e = window.event;
+
+
+
+	               var posX = e.clientX;
+	                var posY = e.clientY;
+	                var el = document.elementFromPoint(posX, posY);
+
+
+
+	               let elementos = document.getElementsByClassName('resaltar');
+	                      if(elementos.length &gt; 0){
+	                        for(let i = 0; i &lt; elementos.length; i++){
+	                            elementos[i].classList.remove('resaltar');
+	                        }
+	                      }
+
+
+
+	               el.classList.add("resaltar");
+	                var aux = document.getElementById("dialogEntidad:auxCopiar");
+	                if(el.textContent!=''){
+	                    aux.value = el.textContent;
+	                }else if(el.firstChild!=null){
+	                    aux.value = el.firstChild.value;
+	                }else if(el.value!=null &amp;&amp; el.value!=''){
+	                    aux.value = el.value;
+	                }
+
+	             }
+
+            </h:outputScript>
+
+		    <p:contextMenu id="mainCm" widgetVar="mainCm">
+                <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogEntidad:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+            </p:contextMenu>
+            <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+                <p:ajax event="success" listener="#{dialogEntidad.copiadoCorr}" process="@this" update="@this growlDialog"/>
+                <p:ajax event="error" listener="#{dialogEntidad.copiadoErr}" update="@this growlDialog"/>
+            </pe:clipboard>
+
+            <p:inputText id="auxCopiar" value="#{dialogEntidad.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 	</h:form>
 </h:body>
 

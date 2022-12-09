@@ -83,6 +83,32 @@ public class TramiteComponentImpl implements TramiteComponent {
 	}
 
 	@Override
+	public TramiteVersion createTramiteVersionMigracion(final Integer pNumVersion, final String pIdiomasSoportados) {
+		final TramiteVersion tramiteVersion = new TramiteVersion();
+		tramiteVersion.setNumeroVersion(pNumVersion);
+		tramiteVersion.setTipoFlujo(TypeFlujo.NORMAL);
+		tramiteVersion.setActiva(true);
+		tramiteVersion.setDebug(true);
+		tramiteVersion.setAutenticado(true);
+		tramiteVersion.setNoAutenticado(true);
+		tramiteVersion.setIdiomasSoportados(pIdiomasSoportados);
+		tramiteVersion.setPersistencia(true);
+		tramiteVersion.setPersistenciaInfinita(true);
+		tramiteVersion.setLimiteTramitacion(false);
+		tramiteVersion.setDesactivacion(false);
+		tramiteVersion.setRelease(0);
+		tramiteVersion.setNivelQAA(2);
+		tramiteVersion.setBloqueada(false);
+		List<TypeAutenticacion> tiposAutenticacion = new ArrayList<>();
+		tiposAutenticacion.add(TypeAutenticacion.CERTIFICADO);
+		tiposAutenticacion.add(TypeAutenticacion.CLAVE_PIN);
+		tiposAutenticacion.add(TypeAutenticacion.CLAVE_PERMANENTE);
+		tramiteVersion.setTiposAutenticacion(tiposAutenticacion);
+		tramiteVersion.setTipoTramite(TypeTramite.TRAMITE.toString());
+		return tramiteVersion;
+	}
+
+	@Override
 	public List<TramitePaso> createNormalizado() {
 		final List<TramitePaso> listaPasos = new ArrayList<>();
 
@@ -159,6 +185,15 @@ public class TramiteComponentImpl implements TramiteComponent {
 		final Long idTramiteVersion = tramiteDao.addTramiteVersion(tramiteVersion, idTramite);
 		historialVersionDao.add(idTramiteVersion, usuario, TypeAccionHistorial.CREACION, "");
 		historialVersionDao.add(idTramiteVersion, usuario, TypeAccionHistorial.BLOQUEAR, "");
+
+		return idTramiteVersion;
+	}
+
+	@Override
+	public Long addTramiteVersionMigracion(final TramiteVersion tramiteVersion, final String idTramite,
+			final String usuario) {
+		final Long idTramiteVersion = tramiteDao.addTramiteVersion(tramiteVersion, idTramite);
+		historialVersionDao.add(idTramiteVersion, usuario, TypeAccionHistorial.CREACION, "");
 
 		return idTramiteVersion;
 	}

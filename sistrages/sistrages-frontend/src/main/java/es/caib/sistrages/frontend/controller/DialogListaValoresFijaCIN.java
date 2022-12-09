@@ -28,6 +28,8 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 	private List<String> idiomas;
 	private ValorListaFija valorSeleccionado;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -257,6 +259,29 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 
 	public void setIdiomas(List<String> idiomas) {
 		this.idiomas = idiomas;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

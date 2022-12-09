@@ -24,6 +24,23 @@ public final class ModuleConfig {
 	/** promocionDesa2Pro **/
 	private String promocionSe2Pro;
 
+	/** admetreServeis **/
+	private String admetreServeis;
+
+	/**
+	 * @return the admetreServeis
+	 */
+	public final String getAdmetreServeis() {
+		return admetreServeis;
+	}
+
+	/**
+	 * @param admetreServeis the admetreServeis to set
+	 */
+	public final void setAdmetreServeis(String admetreServeis) {
+		this.admetreServeis = admetreServeis;
+	}
+
 	/**
 	 * @return the entorno
 	 */
@@ -85,16 +102,12 @@ public final class ModuleConfig {
 		this.commitGit = commit_git;
 	}
 
-
-
 	/**
 	 * @return the promocionSe2Pro
 	 */
 	public String getPromocionSe2Pro() {
 		return promocionSe2Pro;
 	}
-
-
 
 	/**
 	 * @param promocionDesa2Pro the promocionSe2Pro to set

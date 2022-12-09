@@ -67,7 +67,7 @@ var HTML_PAS_LITERALS = {
 			,txtElimina: txtElimina
 			,txtEnviar: txtEnviar
 			,txtCancela: txtCancela
-			,txtSeleccionaFitxer: txtSeleccionaFitxer
+			,txtAnnexSelecciona: txtAnnexSelecciona
 			,txtEnviantDades: txtEnviantDades
 			,txtCancelaEnviament: txtCancelaEnviament
 			,txtTornaIntentar: txtTornaIntentar
@@ -539,6 +539,14 @@ $.fn.appPas = function(options) {
 								,txtPlantilla: txtPlantilla
 								,txtDescarrega: txtDescarrega
 								,txtEsborra: txtEsborra
+								,txtSignant: txtSignant
+								,txtSignants: txtSignants
+								,txtSignatEl: txtSignatEl
+								,txtSignatura: txtSignatura
+								,txtSignaturaOgligatoria: txtSignaturaOgligatoria
+								,txtSignaturaOpcional: txtSignaturaOpcional
+								,txtSignatOpcional: txtSignatOpcional
+								,txtSignatObligatori: txtSignatObligatori
 							}
 						};
 

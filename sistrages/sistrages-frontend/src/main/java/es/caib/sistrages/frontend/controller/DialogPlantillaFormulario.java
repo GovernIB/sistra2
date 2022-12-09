@@ -12,6 +12,7 @@ import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -32,6 +33,8 @@ public class DialogPlantillaFormulario extends DialogControllerBase {
 	private FormateadorFormularioService fmtService;
 
 	private List<FormateadorFormulario> listaFormateadores;
+
+	private String portapapeles;
 
 	/**
 	 * Inicialización.
@@ -113,6 +116,29 @@ public class DialogPlantillaFormulario extends DialogControllerBase {
 
 	public void setListaFormateadores(final List<FormateadorFormulario> listaFormateadores) {
 		this.listaFormateadores = listaFormateadores;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

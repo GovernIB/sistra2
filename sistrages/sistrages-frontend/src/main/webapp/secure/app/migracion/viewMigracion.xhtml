@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	template="../../layout/mainLayout.xhtml">
 
 	<f:metadata>
@@ -13,7 +14,66 @@
 	<ui:define name="content">
 
 		<h:form id="form" styleClass="h100" prependId="false">
+			<h:outputScript >
 
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+
+			 }
+
+			</h:outputScript>
 			<!-- Growl mensajes -->
 			<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 			<p:panel>
@@ -38,6 +98,12 @@
 					<i class="fa fa-fw fa-arrow-right" style="#{viewMigracion.setVisibleExcepcion(0)}"/>
 
 					<p:outputPanel style="#{viewMigracion.setVisibleExcepcion(0)}">
+						<p:outputLabel value="#{msg['viewMigracion.area']}2:" styleClass="va-middle margin-right-3" for="comboTramites"/>
+						<p:selectOneMenu id="comboAreas" value="#{viewMigracion.areaSeleccionada}" required="true" filter="true" filterMatchMode="contains" styleClass="va-middle margin-right-10">
+							<f:selectItem itemLabel="" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{viewMigracion.listaArea}" var="area" itemLabel="#{area.identificador}" itemValue="#{area.codigo}" />
+							<p:ajax event="change" listener="#{viewMigracion.actualizarTramitesS2()}" process="@this" update="btnMigrar comboTramites"/>
+						</p:selectOneMenu>
 						<p:outputLabel value="#{msg['viewMigracion.tramite']}2:" styleClass="va-middle margin-right-3" for="comboTramites"/>
 						<p:selectOneMenu id="comboTramites" value="#{viewMigracion.tramiteSeleccionado}" required="true" filter="true" filterMatchMode="contains" styleClass="va-middle margin-right-10">
 							<f:selectItem itemLabel="" noSelectionOption="true"></f:selectItem>
@@ -56,7 +122,7 @@
 						<p:selectBooleanCheckbox value="#{viewMigracion.unificarPantallas}" itemLabel="#{msg['viewMigracion.unificarPantallas']}"/>
 					</p:outputPanel>
 
-					<p:commandButton id="btnMigrar" value="#{msg['botones.migrar']}" disabled="#{viewMigracion.disabled}" actionListener="#{viewMigracion.migrar()}" process="@form" update="@form"  styleClass="boton-azul" style="#{viewMigracion.setVisibleExcepcion(0)}"/>
+					<p:commandButton id="btnMigrar" value="#{msg['botones.migrar']}" readonly="#{viewMigracion.disabled}" actionListener="#{viewMigracion.migrar()}" process="@form" update="@form"  styleClass="boton-azul" style="#{viewMigracion.setVisibleExcepcion(0)}"/>
 
 				</h:panelGrid>
 
@@ -85,6 +151,15 @@
 					<p:fileDownload value="#{viewMigracion.exportarErrores}"></p:fileDownload>
 				</p:commandButton>
 			</p:panel>
+			<p:contextMenu>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this auxCopiar" update="growl" url="javascript:void(0)"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewMigracion.copiadoCorr}" process="@this" update="@this growl"/>
+            	<p:ajax event="error" listener="#{viewMigracion.copiadoErr}" update="@this growl"/>
+        	</pe:clipboard>
+
+		    <p:inputText id="auxCopiar" value="#{viewMigracion.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 		<h:outputScript>
 		$("#comboTramitesSistra_filter").on('paste.ui-selectonemenu', function() {
 		setTimeout(function(){
@@ -92,7 +167,6 @@
 		},2);
 		});
 		</h:outputScript>
-
 
 		</h:form>
 

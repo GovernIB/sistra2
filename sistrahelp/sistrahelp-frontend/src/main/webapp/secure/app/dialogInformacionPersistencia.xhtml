@@ -4,7 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
@@ -22,8 +23,76 @@
 		<f:viewAction action="#{dialogInformacionPersistencia.init}" />
 	</f:metadata>
 	<h:form id="dialogInformacionPersistencia" styleClass="margin-top-10">
+			<h:outputScript>
+				window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("dialogInformacionPersistencia:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+
+			 }
+			</h:outputScript>
+			<p:contextMenu>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogInformacionPersistencia:auxCopiar" update="growl" url="javascript:void(0)"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{dialogInformacionPersistencia.copiadoCorr}" process="@this" update="@this growl"/>
+            	<p:ajax event="error" listener="#{dialogInformacionPersistencia.copiadoErr}" update="@this growl"/>
+        	</pe:clipboard>
+
+		    <p:inputText id="auxCopiar" value="#{dialogInformacionPersistencia.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 			<p:outputPanel>
 			 		<h:panelGrid id="bordes" rowClasses=",ui-datatable-odd" columnClasses="w15 grid-right padding-right-8, w85 padding-right-8" columns="2" styleClass="w100" cellpadding="8px">
+							<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
 
 							<p:outputLabel value="#{msg['dialogInformacionPersistencia.estado']}:"/>
 							<h:panelGrid styleClass="w100" columnClasses="grid-right dipC1, dipC2,grid-right dipC3, dipC4,grid-right dipC5, dipC6" columns="6">

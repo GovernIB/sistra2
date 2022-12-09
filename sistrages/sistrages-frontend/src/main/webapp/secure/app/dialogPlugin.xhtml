@@ -4,7 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
@@ -34,6 +35,17 @@
 		<f:viewAction action="#{dialogPlugin.init}" />
 	</f:metadata>
 	<h:form id="dialogPlugin" styleClass="margin-top-10">
+
+            <p:contextMenu id="mainCm" widgetVar="mainCm">
+                <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogPlugin:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+            </p:contextMenu>
+            <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+                <p:ajax event="success" listener="#{dialogPlugin.copiadoCorr}" process="@this" update="@this growlDialog"/>
+                <p:ajax event="error" listener="#{dialogPlugin.copiadoErr}" update="@this growlDialog"/>
+            </pe:clipboard>
+
+           <p:inputText id="auxCopiar" value="#{dialogPlugin.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+
   			<p:outputPanel style="height:497px;">
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
@@ -41,27 +53,27 @@
 
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w15 dContents, w75, wpx25" columns = "3" cellpadding = "5" cellspacing = "0"  style="width:100%;">
 
-					<p:outputLabel for="tipo" value="#{msg['dialogPlugin.headerTipo']}" />
+					<p:outputLabel for="tipo" value="#{msg['dialogPlugin.headerTipo']}" style="padding-left: 2px; display: block;"/>
 					<p:selectOneMenu id="tipo" value="#{dialogPlugin.data.tipo}"  required="true" disabled="#{dialogPlugin.isConsulta()}" style="width:94%;">
     					 <f:selectItems value="#{dialogPlugin.tipos}" var="tipo" itemLabel="#{msg['typePlugin.' += tipo]}"/>
 					</p:selectOneMenu >
 					<p:outputLabel value=""/>
 
-					<p:outputLabel for="valor" value="#{msg['dialogPlugin.headerClassname']}" />
-					<p:inputText id="valor" value="#{dialogPlugin.data.classname}" disabled="#{dialogPlugin.isConsulta()}" required="true" style="width:98%;" maxlength="500"/>
+					<p:outputLabel for="valor" value="#{msg['dialogPlugin.headerClassname']}" style="padding-left: 2px; display: block;"/>
+					<p:inputText id="valor" value="#{dialogPlugin.data.classname}" readonly="#{dialogPlugin.isConsulta()}" required="true" style="width:98%;" maxlength="500"/>
 					<p:outputLabel value="" />
 
-					<p:outputLabel for="descripcion" value="#{msg['dialogPlugin.headerDescripcion']}" />
-					<p:inputText id="descripcion" value="#{dialogPlugin.data.descripcion}" disabled="#{dialogPlugin.isConsulta()}" required="true" style="width:98%;" maxlength="255"/>
+					<p:outputLabel for="descripcion" value="#{msg['dialogPlugin.headerDescripcion']}" style="padding-left: 2px; display: block;"/>
+					<p:inputText id="descripcion" value="#{dialogPlugin.data.descripcion}" readonly="#{dialogPlugin.isConsulta()}" required="true" style="width:98%;" maxlength="255"/>
 					<p:outputLabel value="" />
 
-					<p:outputLabel for="prefijoPropiedades" value="#{msg['dialogPlugin.headerPrefijo']}" />
-					<p:inputText id="prefijoPropiedades" value="#{dialogPlugin.data.prefijoPropiedades}" disabled="#{dialogPlugin.isConsulta()}" style="width:98%;" maxlength="100"/>
+					<p:outputLabel for="prefijoPropiedades" value="#{msg['dialogPlugin.headerPrefijo']}" style="padding-left: 2px; display: block;"/>
+					<p:inputText id="prefijoPropiedades" value="#{dialogPlugin.data.prefijoPropiedades}" readonly="#{dialogPlugin.isConsulta()}" style="width:98%;" maxlength="100"/>
 					<p:outputLabel value="" />
 
-   					<p:outputLabel for="dataTablePropiedades" value="#{msg['dialogPlugin.headerPropiedad']}"/>
+   					<p:outputLabel for="dataTablePropiedades" value="#{msg['dialogPlugin.headerPropiedad']}" style="padding-left: 2px; display: block;"/>
 					<p:dataTable  id="dataTablePropiedades" var="td" value="#{dialogPlugin.data.propiedades}"
-								  rows="25" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="275"
+								  rows="25" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="343"
 								  paginator="false" selectionMode="single" selection="#{dialogPlugin.propiedadSeleccionada}" rowKey="#{td.codigo}">
 
 						<!-- Necesario para actualizar en controlador la fila seleccionada -->
@@ -71,6 +83,7 @@
 		                  		oncomplete="rcEditarPropiedad();"
 		                        disabled="#{dialogPlugin.isConsulta()}"
 		                        />
+		                <p:ajax event="contextMenu" global="false" process="@this" update="@form:botones"/>
 
 						<!-- Columnas -->
 					    <p:column headerText="#{msg['dialogPlugin.headerParametros.codigo']}" class="ui-panelgrid-cell">
@@ -82,7 +95,7 @@
 					    </p:column>
 
 		 			</p:dataTable>
-		 			<p:column style="margin-left: 0px">
+		 			<p:column id="botones" style="margin-left: 0px">
 						    <p>
 					    		<p:commandButton id="btnNuevaPropiedad" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{dialogPlugin.nuevaPropiedad()}" process="@this" update="growlDialog" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
 	        						<p:ajax event="dialogReturn" listener="#{dialogPlugin.returnDialogo}" update="growlDialog dataTablePropiedades"/>
@@ -94,7 +107,9 @@
 	        					</p:commandButton>
 	        				</p>
 					    	<p>
-					    		<p:commandButton id="btnEliminarPropiedad" icon="fa fa-minus"  title="#{msg['botones.eliminar']}" actionListener="#{dialogPlugin.quitarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
+					    		<p:commandButton id="btnEliminarPropiedad" icon="fa fa-minus"  title="#{msg['botones.eliminar']}" actionListener="#{dialogPlugin.quitarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
+					    			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+					    		</p:commandButton>
 					    	</p>
 					    	<p>
 					    		<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogPlugin.subirPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
@@ -125,6 +140,99 @@
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
+
+			<!-- dialogo para confirmar -->
+            <p:confirmDialog global="true" >
+                <p:outputPanel styleClass="confirmar_botonera">
+                    <p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+                    <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+                </p:outputPanel>
+            </p:confirmDialog>
+
+		    <p:contextMenu for="dataTablePropiedades" id="cMenuPropiedades" widgetVar="cMenuPropiedadesWV" beforeShow="return true;">
+                <p:menuitem id="mnuCopyPropiedades" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogPlugin:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+				<p:menuitem id="mnuNuevoPropiedades" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('dialogPlugin:btnNuevaPropiedad').click();" />
+				<p:menuitem id="mnuEditarPropiedades" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('dialogPlugin:btnEditarPropiedad').click();"/>
+				<p:menuitem id="mnuEliminarPropiedades" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('dialogPlugin:btnEliminarPropiedad').click();" />
+            </p:contextMenu>
+            <pe:clipboard id="clipContextCopyPropiedades" trigger="mnuCopyPropiedades" action="copy" target="auxCopiar">
+                <p:ajax event="success" listener="#{dialogPlugin.copiadoCorr}" process="@this" update="@this growlDialog"/>
+                <p:ajax event="error" listener="#{dialogPlugin.copiadoErr}" update="@this growlDialog"/>
+            </pe:clipboard>
+
+            <h:outputScript >
+
+	             window.onload=function(){
+	                let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+	                onVisible(contextMenu, () => eliminarResaltar());
+
+
+
+	               document.addEventListener('contextmenu', function(ev) {
+	                    ev.preventDefault();
+	                    getPos();
+	                    return false;
+	                }, false);
+	              }
+
+
+
+	               function eliminarResaltar(){
+	                    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+	                      let elementos = document.getElementsByClassName('resaltar');
+	                      if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+	                        for(let i = 0; i &lt; elementos.length; i++){
+	                            elementos[i].classList.remove('resaltar');
+	                        }
+	                      }
+	                }
+
+
+
+	               function onVisible(element, callback) {
+	                  new IntersectionObserver((entries, observer) => {
+	                    entries.forEach(entry => {
+	                      if(entry.intersectionRatio == 0) {
+	                        callback(element);
+	                      }
+	                    });
+	                  }).observe(element);
+	                }
+
+
+	             function getPos(){
+	                 var e = window.event;
+
+
+
+	               var posX = e.clientX;
+	                var posY = e.clientY;
+	                var el = document.elementFromPoint(posX, posY);
+
+
+
+	               let elementos = document.getElementsByClassName('resaltar');
+	                      if(elementos.length &gt; 0){
+	                        for(let i = 0; i &lt; elementos.length; i++){
+	                            elementos[i].classList.remove('resaltar');
+	                        }
+	                      }
+
+
+
+	               el.classList.add("resaltar");
+	                var aux = document.getElementById("dialogPlugin:auxCopiar");
+	                if(el.textContent!=''){
+	                    aux.value = el.textContent;
+	                }else if(el.firstChild!=null){
+	                    aux.value = el.firstChild.value;
+	                }else if(el.value!=null &amp;&amp; el.value!=''){
+	                    aux.value = el.value;
+	                }
+
+	             }
+
+            </h:outputScript>
 	</h:form>
 </h:body>
 

@@ -87,6 +87,8 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	@Inject
 	private ConfiguracionAutenticacionService configuracionAutenticacionService;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -353,6 +355,29 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 			data.setConfiguracionAutenticacionActual(confNueva);
 			// checkActualizar();
 		}
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

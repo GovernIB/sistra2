@@ -9,6 +9,7 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.LazyDataModel;
 
 import es.caib.sistrahelp.core.api.model.Area;
@@ -48,6 +49,8 @@ public class ViewInformacionPagos extends ViewControllerBase {
 
 	/** Paginacion */
 	private Integer paginacion;
+
+	private String portapapeles;
 
 	/**
 	 * filtros.
@@ -95,6 +98,21 @@ public class ViewInformacionPagos extends ViewControllerBase {
 
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
 	}
 
 	/**
@@ -243,5 +261,26 @@ public class ViewInformacionPagos extends ViewControllerBase {
 	public final void setPaginacion(Integer paginacion) {
 		this.paginacion = paginacion;
 		UtilJSF.setPaginacion(paginacion, "viewInformacionPagos");
+	}
+
+	/** Genera texto a copiar **/
+	public void generarTxt() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+
+		PrimeFaces.current().executeScript("document.focus; navigator.clipboard.writeText(`" + portapapeles + "`);");
+	}
+
+	/**
+	 * @return the portapapeles
+	 */
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	/**
+	 * @param portapapeles the portapapeles to set
+	 */
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 }

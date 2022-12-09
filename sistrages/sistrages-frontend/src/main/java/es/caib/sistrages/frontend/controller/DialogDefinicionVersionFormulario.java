@@ -78,6 +78,8 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/** Cambios **/
 	private boolean cambios = false;
 
+	private String portapapeles;
+
 	/** Init. **/
 	public void init() {
 
@@ -385,7 +387,8 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getCodigo()));
 		params.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.id);
-		params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(), TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString());
+		params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(),
+				TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString());
 
 		Integer width = UtilJSF.getSessionBean().getWidth();
 		Integer height = UtilJSF.getSessionBean().getHeight() - 60;
@@ -420,6 +423,29 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 */
 	public DialogDefinicionVersionFormulario() {
 		super();
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

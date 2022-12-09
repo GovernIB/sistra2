@@ -3,6 +3,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
 
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
@@ -41,6 +42,66 @@
 	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeTipoDocumental" var="TipoDocumental" />
 
 	<h:form id="formDialogDefinicionVersionAnexo" styleClass="h100">
+		<h:outputScript >
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("formDialogDefinicionVersionAnexo:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+
+			 }
+
+			</h:outputScript>
 
 		<!-- Growl mensajes -->
 		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
@@ -56,7 +117,7 @@
 
  			<p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionAnexo.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="descripcion" disabled="true" required="true" styleClass="w85" value="#{dialogDefinicionVersionAnexo.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionAnexo.idiomas)}" />
+           		<p:inputText id="descripcion" readonly="true" required="true" styleClass="w85" value="#{dialogDefinicionVersionAnexo.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionAnexo.idiomas)}" />
            		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionAnexo.editarDescripcion()}"
 						process="@this" update="growl">
 						<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoDescripcion}" update="growl descripcion" />
@@ -105,7 +166,7 @@
 
 					<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.ayuda.mensaje']}" />
 					<p:outputPanel styleClass="ui-inputgroup">
-	           			<p:inputText id="mensaje_input" disabled="true" styleClass="w85" value="#{dialogDefinicionVersionAnexo.data.ayudaTexto.getTraduccion(sessionBean.lang,dialogDefinicionVersionAnexo.idiomas)}" />
+	           			<p:inputText id="mensaje_input" readonly="true" styleClass="w85" value="#{dialogDefinicionVersionAnexo.data.ayudaTexto.getTraduccion(sessionBean.lang,dialogDefinicionVersionAnexo.idiomas)}" />
 	           			<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionAnexo.editarAyudaTexto()}"
 							process="@this" update="growl">
 							<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoAyudaTexto}" update="growl mensaje_input" />
@@ -143,16 +204,16 @@
 						</p:panelGrid>
 						<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,,noPadding-left">
 							<p:panelGrid columns="1">
-								<p:selectOneRadio id="extensiones" value="#{dialogDefinicionVersionAnexo.data.extensionSeleccion}">
+								<p:selectOneRadio id="extensiones" value="#{dialogDefinicionVersionAnexo.data.extensionSeleccion}" disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado and !dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente}">
 						        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.todas']}" itemValue="#{TypeExtension.TODAS}"/>
 						        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.personalizadas']}" itemValue="#{TypeExtension.PERSONALIZADAS}"/>
-									<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this"/>
+									<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this :formDialogDefinicionVersionAnexo:personalizadas_input"/>
 					        	</p:selectOneRadio>
 					        	<p:spacer width="8" height="1"/>
 				        	</p:panelGrid>
 				        	<p:panelGrid columns="1">
-				        		<p:inputText id="personalizadas_input" size="15" value="#{dialogDefinicionVersionAnexo.data.extensiones}">
-				        			<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this"/>
+				        		<p:inputText id="personalizadas_input" size="15" value="#{dialogDefinicionVersionAnexo.data.extensiones}" readonly="#{(dialogDefinicionVersionAnexo.data.debeAnexarFirmado and !dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente)  or (dialogDefinicionVersionAnexo.data.extensionSeleccion eq TypeExtension.TODAS)}">
+				        			<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this" />
 				        		</p:inputText>
 				        		<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.formato']}" escape="true"/>
 				        	</p:panelGrid>
@@ -170,7 +231,7 @@
 
 
 							<p:spacer width="8" height="1"/>
-							<p:selectBooleanCheckbox id="convertirpdf" value="#{dialogDefinicionVersionAnexo.data.debeConvertirPDF}" itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.convertirpdf']}">
+							<p:selectBooleanCheckbox id="convertirpdf" value="#{dialogDefinicionVersionAnexo.data.debeConvertirPDF}" itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.convertirpdf']}" disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado and !dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente}">
 								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this"/>
 							</p:selectBooleanCheckbox>
 						</p:panelGrid>
@@ -178,12 +239,12 @@
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firma']}"  />
 						<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,noPadding-left">
 
-						    <p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" id="debeAnexarFirmado" style ="display:none" value="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado}" >
-						    	<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this"/>
+						    <p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" id="debeAnexarFirmado" value="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado}" >
+						    	<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input :formDialogDefinicionVersionAnexo:convertirpdf"/>
 						    </p:selectBooleanCheckbox>
 
 						    <p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.firmar']}" id="debeFirmarDigitalmente" value="#{dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente}" >
-						    	<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this"/>
+						    	<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input :formDialogDefinicionVersionAnexo:convertirpdf"/>
 						    </p:selectBooleanCheckbox>
 
 							<p:commandButton id="btnScriptFirma" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), dialogDefinicionVersionAnexo.data.scriptFirmarDigitalmente)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
@@ -218,6 +279,15 @@
 			</f:facet>
 
 		</h:panelGrid>
+		<p:contextMenu>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :formDialogDefinicionVersionAnexo:auxCopiar" update="growl" url="javascript:void(0)"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{dialogDefinicionVersionAnexo.copiadoCorr}" process="@this" update="@this growl"/>
+            	<p:ajax event="error" listener="#{dialogDefinicionVersionAnexo.copiadoErr}" update="@this growl"/>
+        	</pe:clipboard>
+
+		    <p:inputText id="auxCopiar" value="#{dialogDefinicionVersionAnexo.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 	</h:form>
 	<p:confirmDialog global="true" >
 		<p:outputPanel styleClass="confirmar_botonera">

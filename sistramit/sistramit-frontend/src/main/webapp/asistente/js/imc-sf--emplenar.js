@@ -109,50 +109,14 @@ $.fn.appEmplenaFormulari = function(options) {
 					return;
 				}
 
-				var bt_ico = bt.find(".imc--formulari:first"),
-					bt_ico_T = bt_ico.offset().top,
-					bt_ico_L = bt_ico.offset().left,
-					bt_ico_W = bt_ico.outerWidth(),
-					bt_ico_H = bt_ico.outerHeight();
-
 				if (bt.attr("data-obligatori") === "d" || element.attr("data-lectura") === "s") {
 					return;
 				}
 
-				ico_fons = $("<div>").addClass("imc-ico-fons").attr("aria-hidden", "true").appendTo( imc_body );
-				ico_anim = $("<div>").addClass("imc-ico-anim").attr("aria-hidden", "false").css({ top: bt_ico_T+"px", left: bt_ico_L+"px", width: bt_ico_W+"px", height: bt_ico_W+"px" }).appendTo( ico_fons );
-
-				ico_fons
-					.attr("aria-hidden", "false");
-
-				ico_anim
-					.animate(
-						{ top: "50%", left: "50%", borderRadius: "50%" }
-						,200
-						,function() {
-
-							carrega();
-
-						})
-					.addClass("imc--centra");
-
 				form_nom = bt.find("strong:first").text();
 
-			},
-			carrega = function() {
-
-				ico_anim_carrega = $("<div>").addClass("imc-ico-carrega").appendTo( ico_fons );
-
-				ico_anim_carrega
-					.animate(
-						{ opacity: "1" }
-						,500
-						,function() {
-
-							carregant();
-
-						}
-					);
+				imc_missatge
+					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtCarregantForm + form_nom, alMostrar: function() { carregant(); } });
 
 			},
 			carregant = function() {
@@ -376,25 +340,19 @@ $.fn.appEmplenaFormulari = function(options) {
 					.find(".imc--finestra")
 						.attr("aria-hidden", "false");
 
-				// amaguem el demés
+				// amaguem el missatge carregant
 
-				ico_fons
-					.attr("aria-hidden", "true");
+				imc_missatge
+					.appMissatge({ araAmaga: true });
 
+				/*
 				setTimeout(
 					function() {
-
-						ico_fons
-							.remove();
 
 						$("html, body")
 							.addClass("imc--sense-scroll");
 
-						$("#imc-forms-contenidor")
-							.appFormsPopupTabula();
-
-
-					}, 300);
+					}, 100);*/
 				
 				envia_ajax = false;
 
@@ -414,12 +372,10 @@ $.fn.appEmplenaFormulari = function(options) {
 				imc_missatge
 					.appMissatge({ accio: "error", titol: titol, text: text });
 
-				// capa carrega
+				// amaguem el missatge carregant
 
-				ico_fons
-					.remove();
-
-				tanca();
+				imc_missatge
+					.appMissatge({ araAmaga: true });
 
 				envia_ajax = false;
 

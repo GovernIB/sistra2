@@ -59,6 +59,8 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	/** Dato seleccionado en la lista. */
 	private AvisoEntidad datoSeleccionado;
 
+	private String portapapeles;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -147,6 +149,29 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	 */
 	public void ayuda() {
 		UtilJSF.openHelp("mensajesAvisoEntidad");
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

@@ -55,6 +55,8 @@ public class ViewRolesPermisos extends ViewControllerBase {
 	/** Paginacion */
 	private Integer paginacion;
 
+	private String portapapeles;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -230,6 +232,29 @@ public class ViewRolesPermisos extends ViewControllerBase {
 		listaDatos = rolService.listRol(idEntidad, filtro);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

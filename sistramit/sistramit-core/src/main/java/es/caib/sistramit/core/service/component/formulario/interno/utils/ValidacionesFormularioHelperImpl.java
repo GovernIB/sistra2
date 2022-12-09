@@ -253,6 +253,9 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 			validacionCorrecta = validacionConfiguracionCampoTextoPassword(vcs,
 					(ConfiguracionCampoTextoPassword) confTexto);
 			break;
+		case IBAN:
+			validacionCorrecta = ValidacionesTipo.getInstance().esNumeroCuentaIbanValido(vcs.getValor());
+			break;
 		default:
 			// Tipo no controlado
 			validacionCorrecta = false;

@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
@@ -28,6 +29,67 @@
 		<f:viewAction action="#{dialogPropiedad.init}" />
 	</f:metadata>
 	<h:form id="dialogPropiedad" styleClass="margin-top-10">
+
+			<h:outputScript >
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("dialogPropiedad:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+
+			 }
+
+			</h:outputScript>
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
@@ -36,13 +98,22 @@
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 wpx25,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0" style="width:100%;">
 
 					<p:outputLabel for="codigo" value="#{msg['dialogPropiedad.headerCodigo']}" style="max-width:20px;"/>
-				 	<p:inputText id="codigo" value="#{dialogPropiedad.data.codigo}" disabled="#{dialogPropiedad.isConsulta()}" required="true" style="width:100%;" />
+				 	<p:inputText id="codigo" value="#{dialogPropiedad.data.codigo}" readonly="#{dialogPropiedad.isConsulta()}" required="true" style="width:100%;" />
 
 					<p:outputLabel for="valor" value="#{msg['dialogPropiedad.headerValor']}" rendered="#{dialogPropiedad.mostrarValor}"/>
-				 	<p:inputText id="valor" value="#{dialogPropiedad.data.valor}" disabled="#{dialogPropiedad.isConsulta()}" required="#{dialogPropiedad.mostrarValor}" style="width:100%;" rendered="#{dialogPropiedad.mostrarValor}" />
+				 	<p:inputText id="valor" value="#{dialogPropiedad.data.valor}" readonly="#{dialogPropiedad.isConsulta()}" required="#{dialogPropiedad.mostrarValor}" style="width:100%;" rendered="#{dialogPropiedad.mostrarValor}" />
 
 				</h:panelGrid>
 			</p:outputPanel>
+			<p:contextMenu>
+	       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogPropiedad:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+			    </p:contextMenu>
+			    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+					<p:ajax event="success" listener="#{dialogPropiedad.copiadoCorr}" process="@this" update="@this growlDialog"/>
+	            	<p:ajax event="error" listener="#{dialogPropiedad.copiadoErr}" update="@this growlDialog"/>
+	        	</pe:clipboard>
+
+			    <p:inputText id="auxCopiar" value="#{dialogPropiedad.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">

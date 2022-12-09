@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
@@ -22,6 +23,78 @@
 		<f:viewAction action="#{dialogAuditoriaTramites.init}" />
 	</f:metadata>
 	<h:form id="dialogAuditoriaTramites" styleClass="margin-top-10">
+
+			<h:outputScript >
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("dialogAuditoriaTramites:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+
+			 }
+
+			</h:outputScript>
+					    <p:contextMenu>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogAuditoriaTramites:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+				<p:menuitem value="#{msg['botones.stg']}" icon="fa fa-paper-plane" styleClass="w90" actionListener="#{dialogAuditoriaTramites.sistrages()}" process="@this" rendered="{dialogAuditoriaTramites.dato.getIdTramite() != null}" style="margin-left:4px;width:200px;" />
+			</p:contextMenu>
+
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{dialogAuditoriaTramites.copiadoCorr}" process="@this" update="@this growlDialog"/>
+            	<p:ajax event="error" listener="#{dialogAuditoriaTramites.copiadoErr}" update="@this growlDialog"/>
+        	</pe:clipboard>
+
+		    <p:inputText id="auxCopiar" value="#{dialogAuditoriaTramites.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
@@ -104,8 +177,6 @@
 								          selectionMode="single" rowKey="#{td.key}"
 				                          >
 
-								<p:ajax event="rowSelect" global="false" update="dialogAuditoriaTramites:txtCopy" />
-
 								<!-- Columnas -->
 							    <p:column headerText="#{msg['dialogAuditoriaTramites.headerPropiedades.codigo']}" style="width:30%;"  class="ui-panelgrid-cell">
 							        <h:outputText value="#{td.key}" />
@@ -119,8 +190,6 @@
 
 			 			</p:column>
 			 			<p:column for="dataTablePropiedades" value="#{msg['dialogAuditoriaTramites.headerPropiedades']}:">
-			 				<p:inputText id="txtCopy" value="#{dialogAuditoriaTramites.copiar}" style="display:none" />
-							<p:commandButton id="btnCopiar" value=" " icon="fa fa-copy" onclick="copiarClipboard();" style="height:20px;width:30px" process="@this"/>
 							<p:commandButton id="hiddenCommandGrowl" styleClass="button" process="@this" update="growlDialog"  action="#{dialogAuditoriaTramites.avisarGrowl()}"  style="display:none" />
 						</p:column>
 
@@ -129,37 +198,8 @@
 						<p:spacer height="10px"/>
 						<p:spacer height="10px"/>
 					</h:panelGrid>
-					 <h:outputScript >
-
-							function copiarClipboard() {
-
-								// Crea un campo de texto "oculto"
-								var aux = document.createElement("input");
-
-								var texto = document.getElementById("dialogAuditoriaTramites:txtCopy");
-
-								// Asigna el contenido del elemento especificado al valor del campo
-								aux.setAttribute("value", texto.value);
-
-								// Añade el campo a la página
-								document.body.appendChild(aux);
-
-								// Selecciona el contenido del campo
-								aux.select();
-
-								// Copia el texto seleccionado
-								document.execCommand("copy");
-
-								// Elimina el campo de la página
-								document.body.removeChild(aux);
-
-								document.getElementById("dialogAuditoriaTramites:hiddenCommandGrowl").click();
-							}
-
-
-						</h:outputScript>
-
 				</p:fieldset>
+
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>

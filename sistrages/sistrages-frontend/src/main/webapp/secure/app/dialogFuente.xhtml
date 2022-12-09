@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
@@ -16,6 +17,24 @@
   <f:facet name="last">
     <h:outputStylesheet library="css" name="style.css" />
   </f:facet>
+	<style type="text/css">
+
+		html, #dialogFuenteDatos, #dialogFuenteDatos > table, #dialogFuenteDatos > table > tbody, #dialogFuenteDatos > table > tbody > tr:nth-child(3),
+		#dialogFuenteDatos > table > tbody > tr:nth-child(3) > td:nth-child(2), #dialogFuenteDatos\:dataTableParametros
+		{
+			height: 100% !important;
+		}
+
+		body {
+			height: 90% !important;
+		}
+
+		#dialogFuenteDatos\:dataTableParametros > div.ui-datatable-scrollable-body {
+			height: 90% !important;
+			padding-bottom: 38px !important;
+		}
+
+	</style>
 </h:head>
 
 <h:body>
@@ -29,21 +48,80 @@
 		<f:viewAction action="#{dialogFuente.init}" />
 	</f:metadata>
 	<h:form id="dialogFuenteDatos"  styleClass="margin-top-10">
+			<h:outputScript >
 
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("dialogFuenteDatos:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+
+			 }
+
+			</h:outputScript>
   			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 wpx25, " columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w30, w65" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			  	<p:outputLabel for="codigo" value="#{msg['dialogFuente.headerCodigo']}" />
-			   	<p:inputText id="codigo" value="#{dialogFuente.data.identificador}" style="width:98%;" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+			   	<p:inputText id="codigo" value="#{dialogFuente.data.identificador}" readonly="#{dialogFuente.isConsulta()}" style="width:98%;" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
 					<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 					<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 			   	</p:inputText>
 				<p:outputLabel value="" />
 
 				<p:outputLabel for="descripcion" value="#{msg['dialogFuente.headerDescripcion']}" />
-				<p:inputTextarea id="descripcion" value="#{dialogFuente.data.descripcion}" style="width:98%;" disabled="#{dialogFuente.isConsulta()}" required="true" rows="4" cols="40" maxlength="255"  />
+				<p:inputTextarea id="descripcion" value="#{dialogFuente.data.descripcion}" style="width:98%;" readonly="#{dialogFuente.isConsulta()}" required="true" rows="4" cols="40" maxlength="255"  />
 				<p:outputLabel value="" />
 
 				<p:outputLabel value="#{msg['dialogFuente.headerCampos']}" />
@@ -63,6 +141,7 @@
 							<!-- Necesario para actualizar en controlador la fila seleccionada -->
 							<p:ajax event="rowSelect" global="false" />
 							<p:ajax event="rowUnselect" />
+							<p:ajax event="contextMenu" global="false" process="@this"/>
 
 							<!-- Columnas -->
 							<p:column headerText="#{msg['dialogFuente.headerCampos.clavePrimaria']}" class="ui-panelgrid-cell">
@@ -86,7 +165,9 @@
 		        					</p:commandButton>
 		        				</p>
 						    	<p>
-						    		<p:commandButton id="btnEliminarPropiedad" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogFuente.quitarFuenteDatosCampo()}" process="@this" update="growlDialog dataTableParametros" rendered="#{dialogFuente.permiteEdicion}" />
+						    		<p:commandButton id="btnEliminarPropiedad" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogFuente.quitarFuenteDatosCampo()}" process="@this" update="growlDialog dataTableParametros" rendered="#{dialogFuente.permiteEdicion}" >
+							    		<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+						    		</p:commandButton>
 						    	</p>
 						    	<p>
 						    		<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogFuente.subirFuenteDatosCampo()}" process="@this" update="growlDialog dataTableParametros" rendered="#{dialogFuente.permiteEdicion}" />
@@ -97,7 +178,16 @@
 				 </p:column>
 
 			 </h:panelGrid>
-
+			<p:contextMenu for=":dialogFuenteDatos:dataTableParametros">
+	       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogFuenteDatos:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+	       			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('dialogFuenteDatos:btnNuevaPropiedad').click();" process="@this"  rendered="#{!dialogFuente.consulta}"/>
+	        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('dialogFuenteDatos:btnEditarPropiedad').click();" process="@this" rendered="#{!dialogFuente.consulta}"/>
+	        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('dialogFuenteDatos:btnEliminarPropiedad').click();" process="@this" rendered="#{!dialogFuente.consulta}"/>
+			    </p:contextMenu>
+			    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+					<p:ajax event="success" listener="#{dialogFuente.copiadoCorr}" process="@this" update="@this growlDialog"/>
+	            	<p:ajax event="error" listener="#{dialogFuente.copiadoErr}" update="@this growlDialog"/>
+	        	</pe:clipboard>
 			<h:outputScript >
 			      function rcEditarPropiedad() {
 			        document.getElementById("dialogFuenteDatos:btnEditarPropiedad").click();
@@ -124,6 +214,22 @@
 				</p:toolbar>
 		    </p:outputPanel>
 
+		    <!-- dialogo para confirmar -->
+            <p:confirmDialog global="true" >
+                <p:outputPanel styleClass="confirmar_botonera">
+                    <p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+                    <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+                </p:outputPanel>
+            </p:confirmDialog>
+
+			<p:contextMenu>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :dialogFuenteDatos:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+ 		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{dialogFuente.copiadoCorr}" process="@this" update="@this growlDialog"/>
+            	<p:ajax event="error" listener="#{dialogFuente.copiadoErr}" update="@this growlDialog"/>
+        	</pe:clipboard>
+			<p:inputText id="auxCopiar" value="#{dialogFuente.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 	</h:form>
 </h:body>
 

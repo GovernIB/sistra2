@@ -573,8 +573,8 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			final Map<Long, Fichero> ficheros, final Map<Long, byte[]> ficherosContent,
 			final Map<Long, FormateadorFormulario> formateadores, final Map<Long, Long> mapFormateadores,
 			final Map<Long, GestorExternoFormularios> gestores, final Map<Long, Long> mapGestores,
-			final Map<Long, Long> idDominiosEquivalencia, final Long idArea,
-			final Map<Long, Long> mapSecciones, final Map<Long, SeccionReutilizable> secciones) {
+			final Map<Long, Long> idDominiosEquivalencia, final Long idArea, final Map<Long, Long> mapSecciones,
+			final Map<Long, SeccionReutilizable> secciones) {
 
 		final JVersionTramite jVersionTramite = entityManager.find(JVersionTramite.class, idTramiteVersion);
 
@@ -636,7 +636,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 				jpaso.getPasoRegistrar().setCodigoLibroRegistro(filaTramiteRegistro.getLibro());
 				jpaso.getPasoRegistrar().setCodigoOficinaRegistro(filaTramiteRegistro.getOficina());
 			} else {
-				JEntidad jentidad = null ; //idEntidad, idArea
+				JEntidad jentidad = null; // idEntidad, idArea
 				JArea jarea = null;
 				if (idEntidad != null) {
 					jentidad = entityManager.find(JEntidad.class, idEntidad);
@@ -731,10 +731,12 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		return jpaso.getCodigo();
 	}
 
-	private JEnvioRemoto importarEnvioRemoto(FilaImportarTramiteRegistro filaTramiteRegistro, final JEntidad jentidad, final JArea jarea) {
+	private JEnvioRemoto importarEnvioRemoto(FilaImportarTramiteRegistro filaTramiteRegistro, final JEntidad jentidad,
+			final JArea jarea) {
 		JEnvioRemoto jenvio = null;
-		if (filaTramiteRegistro.getEnvioRemotoAccion() != null ) {
-			if (filaTramiteRegistro.getEnvioRemotoAccion() == TypeImportarAccion.MANTENER || filaTramiteRegistro.getEnvioRemotoAccion() == TypeImportarAccion.SELECCIONAR) {
+		if (filaTramiteRegistro.getEnvioRemotoAccion() != null) {
+			if (filaTramiteRegistro.getEnvioRemotoAccion() == TypeImportarAccion.MANTENER
+					|| filaTramiteRegistro.getEnvioRemotoAccion() == TypeImportarAccion.SELECCIONAR) {
 				if (filaTramiteRegistro.getEnvioRemoto() != null) {
 					return entityManager.find(JEnvioRemoto.class, filaTramiteRegistro.getEnvioRemoto().getCodigo());
 				}
@@ -762,7 +764,8 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 					jenvio = entityManager.find(JEnvioRemoto.class, filaTramiteRegistro.getEnvioRemoto().getCodigo());
 				}
 				if (env != null && jenvio != null) {
-					JConfiguracionAutenticacion jaut = getJConfiguracionAutenticacion(env, jenvio.getConfiguracionAutenticacion(), jentidad, jarea);
+					JConfiguracionAutenticacion jaut = getJConfiguracionAutenticacion(env,
+							jenvio.getConfiguracionAutenticacion(), jentidad, jarea);
 					jenvio.setConfiguracionAutenticacion(jaut);
 					jenvio.setDescripcion(env.getDescripcion());
 					jenvio.setEntidad(jentidad);
@@ -779,11 +782,11 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	private JConfiguracionAutenticacion getJConfiguracionAutenticacion(EnvioRemoto env,
 			JConfiguracionAutenticacion jconfig, final JEntidad jentidad, final JArea jarea) {
 		if (jconfig == null) {
-			//Lo creamos
+			// Lo creamos
 			if (env.getConfiguracionAutenticacion() == null) {
 				return null;
 			} else {
-				ConfiguracionAutenticacion conf = env.getConfiguracionAutenticacion() ;
+				ConfiguracionAutenticacion conf = env.getConfiguracionAutenticacion();
 				JConfiguracionAutenticacion jconnew = new JConfiguracionAutenticacion();
 				jconnew.setAmbito(conf.getAmbito().toString());
 				jconnew.setArea(jarea);
@@ -799,7 +802,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			if (env.getConfiguracionAutenticacion() == null) {
 				return null;
 			} else {
-				ConfiguracionAutenticacion conf = env.getConfiguracionAutenticacion() ;
+				ConfiguracionAutenticacion conf = env.getConfiguracionAutenticacion();
 				jconfig.setDescripcion(conf.getDescripcion());
 				jconfig.setIdentificador(conf.getIdentificador());
 				jconfig.setPassword(conf.getPassword());
@@ -857,8 +860,8 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	 * @param idEntidad
 	 */
 	private void anyadirPaginas(final List<PaginaFormulario> paginas, final Long idFormulario,
-			final Map<Long, byte[]> ficherosContent, final Map<Long, Long> idDominiosEquivalencia,
-			final Long idEntidad, final Map<Long, SeccionReutilizable> secciones,final Map<Long, Long> mapSecciones) {
+			final Map<Long, byte[]> ficherosContent, final Map<Long, Long> idDominiosEquivalencia, final Long idEntidad,
+			final Map<Long, SeccionReutilizable> secciones, final Map<Long, Long> mapSecciones) {
 
 		int ordenPagina = 1;
 		Collections.sort(paginas, new Comparator<PaginaFormulario>() {
@@ -911,14 +914,15 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 					}
 
 					if (isTipoSeccionReutilizable(mlinea)) {
-						anyadirComponenteSeccionReutilizable((ComponenteFormularioCampoSeccionReutilizable) mlinea.getComponentes().get(0),
+						anyadirComponenteSeccionReutilizable(
+								(ComponenteFormularioCampoSeccionReutilizable) mlinea.getComponentes().get(0),
 								mlinea.getOrden(), idPagina, secciones, mapSecciones);
 						ordenLinea++;
 						continue;
 					}
 
-					final ObjetoFormulario objetoFormularioLine = formularioInternoDao
-							.addComponente(TypeObjetoFormulario.LINEA, idPagina, null, mlinea.getOrden(), null, null, false, null);
+					final ObjetoFormulario objetoFormularioLine = formularioInternoDao.addComponente(
+							TypeObjetoFormulario.LINEA, idPagina, null, mlinea.getOrden(), null, null, false, null);
 					final Long idLinea = objetoFormularioLine.getCodigo();
 					final List<ComponenteFormulario> componentes = mlinea.getComponentes();
 
@@ -1081,8 +1085,9 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	 * @param idLinea
 	 * @param idPagina
 	 */
-	private void anyadirComponenteSeccionReutilizable(final ComponenteFormularioCampoSeccionReutilizable componente, final int orden,
-			final Long idPagina, final Map<Long, SeccionReutilizable> secciones,final Map<Long, Long> mapSecciones) {
+	private void anyadirComponenteSeccionReutilizable(final ComponenteFormularioCampoSeccionReutilizable componente,
+			final int orden, final Long idPagina, final Map<Long, SeccionReutilizable> secciones,
+			final Map<Long, Long> mapSecciones) {
 		Long idSeccionReutilizable = mapSecciones.get(componente.getIdSeccionReutilizable());
 		SeccionReutilizable sesccionReutilizable = secciones.get(idSeccionReutilizable);
 		final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(), idPagina, null, orden,
@@ -1103,7 +1108,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			}
 			comp.setTexto(componente.getTexto());
 		}
-		//comp.setIdSeccionReutilizable(idSeccionReutilizable);
+		// comp.setIdSeccionReutilizable(idSeccionReutilizable);
 
 		formularioInternoDao.updateComponente(comp);
 	}

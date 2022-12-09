@@ -31,6 +31,11 @@ body{
 	white-space: nowrap;
 }
 
+.ui-datatable table{
+	border-collapse: separate;
+	border-spacing: 0;
+}
+
 #header .ui-menu-parent .ui-submenu-link .ui-icon {background-image: url(#{resource["primefaces-custom:images/ui-icons_ffffff_256x240.png"]});}
 
 /* quitamos los iconos de los submenus del menu de la cabecera*/
@@ -687,4 +692,20 @@ label.ui-state-disabled {
 .table-leftaligned {
     margin-left: 0 !important;
     margin-right: auto !important;
+}
+
+.resaltar{
+	border: #0a95ff 2px dotted !important;
+}
+
+.noBorderColor{
+	border-color:#f0f0f0;
+}
+
+.d-none{
+	display:none !important;
+}
+
+.d-block{
+	display:block !important;
 }

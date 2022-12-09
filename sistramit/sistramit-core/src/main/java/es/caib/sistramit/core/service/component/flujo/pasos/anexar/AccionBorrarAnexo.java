@@ -41,9 +41,9 @@ public final class AccionBorrarAnexo implements AccionPaso {
 	private FlujoPasoDao dao;
 
 	@Override
-	public RespuestaEjecutarAccionPaso ejecutarAccionPaso(DatosPaso pDatosPaso, DatosPersistenciaPaso pDpp,
-			TypeAccionPaso pAccionPaso, ParametrosAccionPaso pParametros, DefinicionTramiteSTG pDefinicionTramite,
-			VariablesFlujo pVariablesFlujo) {
+	public RespuestaEjecutarAccionPaso ejecutarAccionPaso(final DatosPaso pDatosPaso, final DatosPersistenciaPaso pDpp,
+			final TypeAccionPaso pAccionPaso, final ParametrosAccionPaso pParametros,
+			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo) {
 
 		// Recogemos parametros
 		final String idAnexo = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "idAnexo", true);
@@ -72,15 +72,15 @@ public final class AccionBorrarAnexo implements AccionPaso {
 	 * Actualiza persistencia.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                            Datos internos paso
 	 * @param pDpp
-	 *            Datos persistencia paso
+	 *                            Datos persistencia paso
 	 * @param pIdAnexo
-	 *            Id anexo
+	 *                            Id anexo
 	 * @param pInstancia
-	 *            Instancia
+	 *                            Instancia
 	 * @param pVariablesFlujo
-	 *            Variables flujo
+	 *                            Variables flujo
 	 */
 	private void actualizarPersistencia(final DatosInternosPasoAnexar pDipa, final DatosPersistenciaPaso pDpp,
 			final String pIdAnexo, final int pInstancia, final VariablesFlujo pVariablesFlujo) {
@@ -120,6 +120,7 @@ public final class AccionBorrarAnexo implements AccionPaso {
 			docPersistencia.setFichero(null);
 			docPersistencia.setAnexoDescripcionInstancia(null);
 			docPersistencia.setAnexoNombreFichero(null);
+			docPersistencia.setAnexoAnexadoFirmado(null);
 			docPersistencia.setEstado(TypeEstadoDocumento.SIN_RELLENAR);
 			docPersistencia.setTipo(TypeDocumentoPersistencia.ANEXO);
 
@@ -137,11 +138,11 @@ public final class AccionBorrarAnexo implements AccionPaso {
 	 * Actualiza detalle anexo.
 	 *
 	 * @param pDipa
-	 *            Datos internos paso
+	 *                       Datos internos paso
 	 * @param pIdAnexo
-	 *            Id Anexo
+	 *                       Id Anexo
 	 * @param pInstancia
-	 *            Instancia
+	 *                       Instancia
 	 */
 	private void actualizarDetalleAnexo(final DatosInternosPasoAnexar pDipa, final String pIdAnexo,
 			final int pInstancia) {

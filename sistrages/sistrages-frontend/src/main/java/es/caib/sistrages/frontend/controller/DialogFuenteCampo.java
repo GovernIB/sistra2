@@ -7,6 +7,7 @@ import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -21,6 +22,8 @@ public class DialogFuenteCampo extends DialogControllerBase {
 
 	/** Fuente Datos en formato JSON. **/
 	private String iData;
+
+	private String portapapeles;
 
 	/**
 	 * Inicialización.
@@ -61,6 +64,29 @@ public class DialogFuenteCampo extends DialogControllerBase {
 	}
 
 	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	/**
 	 * @return the id
 	 */
 	public String getId() {
@@ -68,8 +94,7 @@ public class DialogFuenteCampo extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -83,8 +108,7 @@ public class DialogFuenteCampo extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final FuenteDatosCampo data) {
 		this.data = data;
@@ -98,8 +122,7 @@ public class DialogFuenteCampo extends DialogControllerBase {
 	}
 
 	/**
-	 * @param iData
-	 *            the iData to set
+	 * @param iData the iData to set
 	 */
 	public void setiData(final String iData) {
 		this.iData = iData;

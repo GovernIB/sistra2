@@ -4,7 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
@@ -25,6 +26,7 @@
 		<f:viewAction action="#{dialogFormateadorFormulario.init}" />
 	</f:metadata>
 	<h:form id="dialogFormateadorFormulario" styleClass="margin-top-10">
+
   			<p:outputPanel>
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
@@ -33,21 +35,21 @@
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 wpx25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="identificador" value="#{msg['dialogFormateadorFormulario.identificador']}" />
-					<p:inputText id="identificador" value="#{dialogFormateadorFormulario.data.identificador}" required="true" style="width:95%;" maxlength="20" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+					<p:inputText id="identificador" value="#{dialogFormateadorFormulario.data.identificador}" readonly="#{dialogFormateadorFormulario.isConsulta()}"  required="true" style="width:95%;" maxlength="20" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 				   	</p:inputText>
 
 					<p:outputLabel  for="classname" value="#{msg['dialogFormateadorFormulario.classname']}" />
-					<p:inputText 	id="classname" value="#{dialogFormateadorFormulario.data.classname}" disabled="#{dialogFormateadorFormulario.isConsulta()}" required="true" style="width:95%;" maxlength="500"/>
+					<p:inputText 	id="classname" value="#{dialogFormateadorFormulario.data.classname}" readonly="#{dialogFormateadorFormulario.isConsulta()}" required="true" style="width:95%;" maxlength="500"/>
 
 					<p:outputLabel  for="descripcion" value="#{msg['dialogFormateadorFormulario.descripcion']}" />
-					<p:inputText 	id="descripcion" value="#{dialogFormateadorFormulario.data.descripcion}" disabled="#{dialogFormateadorFormulario.isConsulta()}" required="true" style="width:95%;" maxlength="255"/>
+					<p:inputText 	id="descripcion" value="#{dialogFormateadorFormulario.data.descripcion}" readonly="#{dialogFormateadorFormulario.isConsulta()}" required="true" style="width:95%;" maxlength="255"/>
 
 					<p:outputLabel for="generico" value="#{msg['dialogFormateadorFormulario.generico']}"  />
 					<p:column>
 						<p:selectBooleanCheckbox id="generico" value="#{dialogFormateadorFormulario.data.generico}" >
-							<p:ajax event="change" global="false" process="@form:generico" update="dialogFormateadorFormulario:btnPlantilla" listener="#{dialogFormateadorFormulario.checkGenerico()}"/>
+							<p:ajax event="change" global="false" process="@form:generico" update=":dialogFormateadorFormulario:btnPlantilla" listener="#{dialogFormateadorFormulario.checkGenerico()}" />
             			</p:selectBooleanCheckbox>
 						<p:commandButton id="btnPlantilla" value="#{msg['dialogFormateadorFormulario.botonPlantillas']}" icon="fa fa-edit" actionListener="#{dialogFormateadorFormulario.editarPlantillaGenerico()}" process="@form:btnPlantilla" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}" disabled="#{!dialogFormateadorFormulario.data.generico}" style="margin-left:10px" />
 					</p:column>
@@ -67,6 +69,78 @@
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
+
+		    <h:outputScript >
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("dialogFormateadorFormulario:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+
+			 }
+
+			</h:outputScript>
+			<p:contextMenu>
+       			<p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogFormateadorFormulario:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+                <p:menuitem id="mnuEditar" value="#{msg['dialogFormateadorFormulario.botonPlantillas']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('dialogFormateadorFormulario:btnPlantilla').click();" style="display: none;"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{dialogFormateadorFormulario.copiadoCorr}" process="@this" update="@this growlDialog"/>
+            	<p:ajax event="error" listener="#{dialogFormateadorFormulario.copiadoErr}" update="@this growlDialog"/>
+        	</pe:clipboard>
+
+		    <p:inputText id="auxCopiar" value="#{dialogFormateadorFormulario.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+
 	</h:form>
 </h:body>
 

@@ -59,4 +59,10 @@ public class MigracionServiceBean implements MigracionService {
 				pParams);
 	}
 
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public boolean isDestinoCorrecto(final Long pIdTramiteSistra, final int pNumVersionSistra) {
+		return migracionService.isDestinoCorrecto(pIdTramiteSistra, pNumVersionSistra);
+	}
+
 }

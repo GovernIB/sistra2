@@ -48,6 +48,8 @@ public class ViewPerdidaClave extends ViewControllerBase {
 	 */
 	private FiltroPerdidaClave filtros;
 
+	private String portapapeles;
+
 	/**
 	 * Inicializa.
 	 */
@@ -159,6 +161,21 @@ public class ViewPerdidaClave extends ViewControllerBase {
 	}
 
 	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	/**
 	 * Establece el valor de listaDatos.
 	 *
 	 * @param listaDatos el nuevo valor de listaDatos
@@ -217,4 +234,19 @@ public class ViewPerdidaClave extends ViewControllerBase {
 		this.paginacion = paginacion;
 		UtilJSF.setPaginacion(paginacion, "viewPerdidaClave");
 	}
+
+	/**
+	 * @return the portapapeles
+	 */
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	/**
+	 * @param portapapeles the portapapeles to set
+	 */
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
 }

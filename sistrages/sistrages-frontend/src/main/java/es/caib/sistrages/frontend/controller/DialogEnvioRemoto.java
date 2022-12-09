@@ -75,6 +75,8 @@ public class DialogEnvioRemoto extends DialogControllerBase {
 	/** Indica si es visible el botón de consultar **/
 	private Boolean desactivarConsulta = false;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -263,6 +265,29 @@ public class DialogEnvioRemoto extends DialogControllerBase {
 					this.data.getConfiguracionAutenticacion().getCodigo().toString());
 			UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 195);
 		}
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

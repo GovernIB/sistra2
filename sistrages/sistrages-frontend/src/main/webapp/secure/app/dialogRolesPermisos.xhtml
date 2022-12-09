@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
@@ -28,12 +29,71 @@
 	</f:metadata>
 
 	<h:form id="dialogPlugin" styleClass="margin-top-10">
+			<h:outputScript >
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("dialogPlugin:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+			 }
+
+			</h:outputScript>
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 wpx25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 wpx25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px !important;">
 
 					<p:outputLabel for="tipo" value="#{msg['dialogRolesPermisos.headerTipo']}" />
 					<p:selectOneMenu id="tipo" value="#{dialogRolesPermisos.data.tipo}" style="width:90%" required="true" disabled="#{dialogRolesPermisos.consulta}">
@@ -41,7 +101,7 @@
 					</p:selectOneMenu >
 
 					<p:outputLabel for="codigo" value="#{msg['dialogRolesPermisos.headerCodigo']}" />
-					<p:inputText id="codigo" value="#{dialogRolesPermisos.data.valor}" disabled="#{dialogRolesPermisos.consulta}" required="true" style="width:95%" maxlength="100"/>
+					<p:inputText id="codigo" value="#{dialogRolesPermisos.data.valor}" readonly="#{dialogRolesPermisos.consulta}" required="true" style="width:95%" maxlength="100"/>
 
 					<p:outputLabel for="area" value="#{msg['dialogRolesPermisos.headerArea']}" />
 					<p:selectOneMenu id="area" value="#{dialogRolesPermisos.data.area}" style="width:90%"  converter="#{areaConverter}" required="true" disabled="#{dialogRolesPermisos.consulta}">
@@ -49,7 +109,7 @@
         			</p:selectOneMenu>
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogRolesPermisos.headerDescripcion']}" />
-					<p:inputText id="descripcion" value="#{dialogRolesPermisos.data.descripcion}" required="true" style="width:95%" maxlength="255" disabled="#{dialogRolesPermisos.consulta}"/>
+					<p:inputText id="descripcion" value="#{dialogRolesPermisos.data.descripcion}" required="true" style="width:95%" maxlength="255" readonly="#{dialogRolesPermisos.consulta}"/>
 
 					<p:outputLabel value="#{msg['dialogRolesPermisos.headerPermisos']}:"/>
 					<p:outputLabel value=" " />
@@ -82,6 +142,15 @@
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
+		    <p:contextMenu>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogPlugin:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{dialogRolesPermisos.copiadoCorr}" process="@this" update="@this growlDialog"/>
+            	<p:ajax event="error" listener="#{dialogRolesPermisos.copiadoErr}" update="@this growlDialog"/>
+        	</pe:clipboard>
+
+		    <p:inputText id="auxCopiar" value="#{dialogRolesPermisos.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 	</h:form>
 </h:body>
 

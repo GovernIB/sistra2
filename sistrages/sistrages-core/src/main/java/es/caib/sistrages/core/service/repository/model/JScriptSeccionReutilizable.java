@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.ScriptSeccionReutilizable;
 import es.caib.sistrages.core.api.model.types.TypeScriptSeccionReutilizable;
 
@@ -115,7 +114,7 @@ public class JScriptSeccionReutilizable implements IModelApi {
 		if (mScript != null) {
 			jScript = new JScriptSeccionReutilizable();
 			jScript.setCodigo(mScript.getCodigo());
-			jScript.setScript(JScript.fromModel(Script.clonar(mScript.getScript())));
+			jScript.setScript(JScript.fromModel(mScript.getScript()));
 			jScript.setSeccionReutilizable(JSeccionReutilizable.fromModel(mScript.getSeccionReutilizable()));
 			jScript.setTipoScript(mScript.getTipoScript().toString());
 		}

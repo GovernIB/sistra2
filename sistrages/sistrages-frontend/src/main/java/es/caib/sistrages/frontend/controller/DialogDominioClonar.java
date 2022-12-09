@@ -92,7 +92,9 @@ public class DialogDominioClonar extends DialogControllerBase {
 	private boolean caReemplazar;
 	ConfiguracionAutenticacion confAut;
 	private String caLabel;
-	private TypeClonarAccion accionCA= TypeClonarAccion.NADA;
+	private TypeClonarAccion accionCA = TypeClonarAccion.NADA;
+
+	private String portapapeles;
 
 	/**
 	 * Inicialización.
@@ -130,7 +132,7 @@ public class DialogDominioClonar extends DialogControllerBase {
 		}
 
 		if (data.getConfiguracionAutenticacion() != null) {
-			mostrarCAs=true;
+			mostrarCAs = true;
 			checkConfAut();
 		}
 
@@ -138,10 +140,11 @@ public class DialogDominioClonar extends DialogControllerBase {
 	}
 
 	private void checkConfAut() {
-		mostrarCAs=data.getConfiguracionAutenticacion() != null;
+		mostrarCAs = data.getConfiguracionAutenticacion() != null;
 
-		if (data.getConfiguracionAutenticacion() != null)  {
-			confAut = configuracionAutenticacionService.getConfiguracionAutenticacion(data.getAmbito(), data.getConfiguracionAutenticacion().getIdentificador() , UtilJSF.getIdEntidad(), this.areaID, null);
+		if (data.getConfiguracionAutenticacion() != null) {
+			confAut = configuracionAutenticacionService.getConfiguracionAutenticacion(data.getAmbito(),
+					data.getConfiguracionAutenticacion().getIdentificador(), UtilJSF.getIdEntidad(), this.areaID, null);
 			mostrarCAreemplazar = confAut != null;
 			caReemplazar = confAut != null;
 			if (confAut == null) {
@@ -153,7 +156,8 @@ public class DialogDominioClonar extends DialogControllerBase {
 	}
 
 	private void checkFuenteDatos() {
-		fd = dominioService.loadFuenteDato(data.getAmbito(), data.getIdentificadorFD() , UtilJSF.getIdEntidad(), this.areaID, null);
+		fd = dominioService.loadFuenteDato(data.getAmbito(), data.getIdentificadorFD(), UtilJSF.getIdEntidad(),
+				this.areaID, null);
 		mostrarFDreemplazar = fd != null;
 		fdReemplazar = fd != null;
 		if (fd == null) {
@@ -186,10 +190,9 @@ public class DialogDominioClonar extends DialogControllerBase {
 
 		/*
 		 * if (data.getTipo() == TypeDominio.FUENTE_DATOS && fuenteID == null) {
-				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral(LITERAL_ERROR_OBLIGATORIO));
-			return;
-			}
-		*/
+		 * addMessageContext(TypeNivelGravedad.ERROR,
+		 * UtilJSF.getLiteral(LITERAL_ERROR_OBLIGATORIO)); return; }
+		 */
 
 		if (nuevoIdentificador == null || nuevoIdentificador.isEmpty()) {
 			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral(LITERAL_ERROR_OBLIGATORIO));
@@ -203,9 +206,9 @@ public class DialogDominioClonar extends DialogControllerBase {
 			idEntidad = null;
 		}
 
-
 //		Long lIdArea = (idArea == null) ? null : Long.valueOf(idArea);
-		Dominio dominioNuevoIdentificador = dominioService.loadDominioByIdentificador(this.data.getAmbito(), nuevoIdentificador, this.data.getEntidad(), areaID , null);
+		Dominio dominioNuevoIdentificador = dominioService.loadDominioByIdentificador(this.data.getAmbito(),
+				nuevoIdentificador, this.data.getEntidad(), areaID, null);
 		if (dominioNuevoIdentificador != null) {
 			Object[] valueHolder = new Object[2];
 			valueHolder = mensaje(dominioNuevoIdentificador);
@@ -214,11 +217,10 @@ public class DialogDominioClonar extends DialogControllerBase {
 			return;
 		}
 
-
 		if (mostrarFDs) {
 			if (fd == null) {
 				accionFD = TypeClonarAccion.CREAR;
-			} else if(fdReemplazar) {
+			} else if (fdReemplazar) {
 				accionFD = TypeClonarAccion.REEMPLAZAR;
 			} else {
 				accionFD = TypeClonarAccion.MANTENER;
@@ -228,13 +230,13 @@ public class DialogDominioClonar extends DialogControllerBase {
 		if (mostrarCAs) {
 			if (confAut == null) {
 				accionCA = TypeClonarAccion.CREAR;
-			} else if(caReemplazar) {
+			} else if (caReemplazar) {
 				accionCA = TypeClonarAccion.REEMPLAZAR;
 			} else {
 				accionCA = TypeClonarAccion.MANTENER;
 			}
 		}
-		dominioService.clonar(id, nuevoIdentificador, areaID,  idEntidad, accionFD, fd, accionCA, confAut);
+		dominioService.clonar(id, nuevoIdentificador, areaID, idEntidad, accionFD, fd, accionCA, confAut);
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
@@ -272,6 +274,29 @@ public class DialogDominioClonar extends DialogControllerBase {
 			valueHolder[1] = null;
 		}
 		return valueHolder;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**
@@ -399,7 +424,6 @@ public class DialogDominioClonar extends DialogControllerBase {
 	public void setNuevoIdentificador(final String nuevoIdentificador) {
 		this.nuevoIdentificador = nuevoIdentificador;
 	}
-
 
 	/**
 	 * @return the areaID

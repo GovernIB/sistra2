@@ -12,14 +12,14 @@
 	<h:column>
 		<p:selectOneMenu id="tipoCampoTexto" value="#{dialogDisenyoFormulario.objetoFormularioEdit.tipoCampoTexto}" required="true" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 		    <p:ajax event="blur" process="@this" />
-		    <p:ajax event="change" update="panelPropietats" listener="#{dialogDisenyoFormulario.setCambios}"/>
+		    <p:ajax event="change" update="panelPropietats" listener="#{dialogDisenyoFormulario.setCambiosTipoTexto}"/>
 		    <f:selectItems value="#{TypeCampoTexto.ALL_VALUES}" var="tipoCampoTexto" itemLabel="#{msg['typeCampoTexto.' += tipoCampoTexto.name()]}" />
 		</p:selectOneMenu>
 	</h:column>
 
    	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal or dialogDisenyoFormulario.campoTextoEmail}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.tamanyo']}" /></h:column>
    	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal or dialogDisenyoFormulario.campoTextoEmail}">
-   		<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.normalTamanyo}" decimalPlaces="0" minValue="1" maxValue="9999" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+   		<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.normalTamanyo}" decimalPlaces="0" minValue="1" maxValue="9999" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
    			<p:ajax event="blur" process="@this" />
 		    <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
    		</p:inputNumber>
@@ -59,7 +59,7 @@
 
    	<h:column rendered="#{dialogDisenyoFormulario.campoExprRegular}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.exprRegular']}" /></h:column>
    	<h:column rendered="#{dialogDisenyoFormulario.campoExprRegular}">
-   		<p:inputTextarea value="#{dialogDisenyoFormulario.objetoFormularioEdit.expresionRegular}" rows="1" cols="25" autoResize="true" maxlength="4000" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+   		<p:inputTextarea value="#{dialogDisenyoFormulario.objetoFormularioEdit.expresionRegular}" rows="1" cols="25" autoResize="true" maxlength="4000" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
    			<p:ajax event="blur" process="@this" />
 		    <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
    		</p:inputTextarea>
@@ -71,13 +71,13 @@
 	   	<p:outputPanel>
 		   	<p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numDigEnteros']}" />
 
-		   	<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroDigitosEnteros}" decimalPlaces="0" minValue="0" maxValue="99" styleClass="padding-left-4" inputStyleClass="w8" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+		   	<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroDigitosEnteros}" decimalPlaces="0" minValue="0" maxValue="99" styleClass="padding-left-4" inputStyleClass="w8" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 		   		<p:ajax event="blur" process="@this" />
 		    	<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 		   	</p:inputNumber>
 
 		   	<p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numDigDecimales']}" styleClass="padding-left-18"/>
-	   		<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroDigitosDecimales}" decimalPlaces="0" minValue="0" maxValue="9" styleClass="padding-left-4" inputStyleClass="w8" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+	   		<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroDigitosDecimales}" decimalPlaces="0" minValue="0" maxValue="9" styleClass="padding-left-4" inputStyleClass="w8" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 		   		<p:ajax event="blur" process="@this" />
 		    	<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 		   	</p:inputNumber>
@@ -102,13 +102,13 @@
 			   		</p:selectBooleanCheckbox>
 
 		    		<p:outputLabel rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{msg['dialogDisenyoFormulario.componente.numRangoMin']}" styleClass="padding-left-4"/>
-					<p:inputNumber rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroRangoMinimo}" decimalPlaces="0" minValue="0" maxValue="9999999999" styleClass="padding-left-4" inputStyleClass="w20" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+					<p:inputNumber rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroRangoMinimo}" decimalPlaces="0" minValue="0" maxValue="9999999999" styleClass="padding-left-4" inputStyleClass="w20" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 						<p:ajax event="blur" process="@this" />
 						<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 					</p:inputNumber>
 
 		   			<p:outputLabel rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{msg['dialogDisenyoFormulario.componente.numRangoMax']}" styleClass="padding-left-4"/>
-		   			<p:inputNumber rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroRangoMaximo}" decimalPlaces="0" minValue="0" maxValue="9999999999" styleClass="padding-left-4" inputStyleClass="w20" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+		   			<p:inputNumber rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroRangoMaximo}" decimalPlaces="0" minValue="0" maxValue="9999999999" styleClass="padding-left-4" inputStyleClass="w20" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 		   				<p:ajax event="blur" process="@this" />
 						<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 		   			</p:inputNumber>

@@ -50,6 +50,8 @@ public class DialogTramiteProcedimientos extends DialogControllerBase {
 	/** Plugin catalogo. **/
 	private ICatalogoProcedimientosPlugin iplugin;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 *
@@ -64,7 +66,7 @@ public class DialogTramiteProcedimientos extends DialogControllerBase {
 
 		try {
 			iplugin = (ICatalogoProcedimientosPlugin) componenteService
-				.obtenerPluginEntidad(TypePlugin.CATALOGO_PROCEDIMIENTOS, UtilJSF.getIdEntidad());
+					.obtenerPluginEntidad(TypePlugin.CATALOGO_PROCEDIMIENTOS, UtilJSF.getIdEntidad());
 			if (iplugin != null && intVersion != null) {
 				setTramites(iplugin.obtenerTramites(id, intVersion, UtilJSF.getIdioma().toString()));
 			}
@@ -88,6 +90,29 @@ public class DialogTramiteProcedimientos extends DialogControllerBase {
 	}
 
 	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	/**
 	 * @return the id
 	 */
 	public String getId() {
@@ -95,8 +120,7 @@ public class DialogTramiteProcedimientos extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -110,8 +134,7 @@ public class DialogTramiteProcedimientos extends DialogControllerBase {
 	}
 
 	/**
-	 * @param campos
-	 *            the campos to set
+	 * @param campos the campos to set
 	 */
 	public void setCampos(final List<DominioTramite> campos) {
 		this.campos = campos;
@@ -125,8 +148,7 @@ public class DialogTramiteProcedimientos extends DialogControllerBase {
 	}
 
 	/**
-	 * @param iCampos
-	 *            the iCampos to set
+	 * @param iCampos the iCampos to set
 	 */
 	public void setiCampos(final String iCampos) {
 		this.iCampos = iCampos;
@@ -140,8 +162,7 @@ public class DialogTramiteProcedimientos extends DialogControllerBase {
 	}
 
 	/**
-	 * @param ambito
-	 *            the ambito to set
+	 * @param ambito the ambito to set
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;
@@ -155,8 +176,7 @@ public class DialogTramiteProcedimientos extends DialogControllerBase {
 	}
 
 	/**
-	 * @param area
-	 *            the area to set
+	 * @param area the area to set
 	 */
 	public void setArea(final String area) {
 		this.area = area;
@@ -170,8 +190,7 @@ public class DialogTramiteProcedimientos extends DialogControllerBase {
 	}
 
 	/**
-	 * @param version
-	 *            the version to set
+	 * @param version the version to set
 	 */
 	public void setVersion(final String version) {
 		this.version = version;
@@ -185,8 +204,7 @@ public class DialogTramiteProcedimientos extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramites
-	 *            the tramites to set
+	 * @param tramites the tramites to set
 	 */
 	public void setTramites(final List<DefinicionTramiteCP> tramites) {
 		this.tramites = tramites;

@@ -600,7 +600,7 @@ $.fn.appFitxerAdjunta = function(opcions){
 
 				elm
 					.parent()
-						.find(".imc--annexe-error")
+						.find(".imc--annex-error")
 							.remove();
 
 				// input original
@@ -989,11 +989,11 @@ $.fn.appSuport = function(options) {
 					if (revisa_error && text_error) {
 
 						el_suport
-							.find(".imc--annexe-error")
+							.find(".imc--annex-error")
 								.remove();
 
 						$("<div>")
-							.addClass("imc--annexe-error")
+							.addClass("imc--annex-error")
 							.text( text_error )
 							.appendTo( el_suport.find(".imc-el--annexe:first") );
 

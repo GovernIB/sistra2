@@ -44,6 +44,8 @@ public class DialogTramiteImportarGestor extends DialogControllerBase {
 	/** Area **/
 	private Long area;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -53,15 +55,16 @@ public class DialogTramiteImportarGestor extends DialogControllerBase {
 		if (area == null) {
 			configuraciones = new ArrayList<>();
 		} else {
-			configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(TypeAmbito.AREA, area, null,
-					TypeIdioma.fromString(UtilJSF.getSessionBean().getLang()), null);
+			configuraciones = configuracionAutenticacionService.listConfiguracionAutenticacion(TypeAmbito.AREA, area,
+					null, TypeIdioma.fromString(UtilJSF.getSessionBean().getLang()), null);
 		}
 		ConfiguracionAutenticacion configAutSinAutenticacion = new ConfiguracionAutenticacion();
 		configAutSinAutenticacion.setCodigo(null);
 		configAutSinAutenticacion.setIdentificador(UtilJSF.getLiteral("dialogDominio.sinAutenticacion"));
 		configuraciones.add(0, configAutSinAutenticacion);
 
-		if (data.getConfiguracionAutenticacionActual() != null && data.getConfiguracionAutenticacionActual().getCodigoImportacion() != null) {
+		if (data.getConfiguracionAutenticacionActual() != null
+				&& data.getConfiguracionAutenticacionActual().getCodigoImportacion() != null) {
 			configuraciones.add(data.getConfiguracionAutenticacionActual());
 		}
 
@@ -75,7 +78,8 @@ public class DialogTramiteImportarGestor extends DialogControllerBase {
 		// Muestra dialogo
 		if (data.getConfiguracionAutenticacionActual() == null
 				|| data.getConfiguracionAutenticacionActual().getCodigo() == null) {
-			if (data.getConfiguracionAutenticacionActual() != null && data.getConfiguracionAutenticacionActual().getCodigoImportacion() == null) {
+			if (data.getConfiguracionAutenticacionActual() != null
+					&& data.getConfiguracionAutenticacionActual().getCodigoImportacion() == null) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 			} else {
 				nuevo();
@@ -99,7 +103,9 @@ public class DialogTramiteImportarGestor extends DialogControllerBase {
 
 		data.setMensaje(null);
 		data.setEstado(TypeImportarEstado.REVISADO);
-		if (data.getConfiguracionAutenticacionActual() != null && data.getConfiguracionAutenticacionActual().getCodigo() == null && data.getConfiguracionAutenticacionActual().getCodigoImportacion() == null) {
+		if (data.getConfiguracionAutenticacionActual() != null
+				&& data.getConfiguracionAutenticacionActual().getCodigo() == null
+				&& data.getConfiguracionAutenticacionActual().getCodigoImportacion() == null) {
 			data.setConfiguracionAutenticacionActual(null);
 		}
 
@@ -137,16 +143,19 @@ public class DialogTramiteImportarGestor extends DialogControllerBase {
 		}
 
 		params.put(TypeParametroVentana.MODO_IMPORTAR.toString(), "true");
-		//Como los GFE son solo de ambito area, se puede forzar el ambito a la fuerza
+		// Como los GFE son solo de ambito area, se puede forzar el ambito a la fuerza
 		params.put(TypeParametroVentana.AMBITO.toString(), TypeAmbito.AREA.toString());
 
 		TypeModoAcceso modo = TypeModoAcceso.ALTA;
-		if (data.getConfiguracionAutenticacionActual() != null && data.getConfiguracionAutenticacionActual().getCodigoImportacion() != null && data.getConfiguracionAutenticacionActual().getCodigo() == null) {
-			//Pasamos la configuracion pasada
-			params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.data.getConfiguracionAutenticacionActual()));
+		if (data.getConfiguracionAutenticacionActual() != null
+				&& data.getConfiguracionAutenticacionActual().getCodigoImportacion() != null
+				&& data.getConfiguracionAutenticacionActual().getCodigo() == null) {
+			// Pasamos la configuracion pasada
+			params.put(TypeParametroVentana.DATO.toString(),
+					UtilJSON.toJSON(this.data.getConfiguracionAutenticacionActual()));
 			modo = TypeModoAcceso.EDICION;
 		}
-		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, modo , params, true, 550, 195);
+		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, modo, params, true, 550, 195);
 	}
 
 	/**
@@ -172,10 +181,11 @@ public class DialogTramiteImportarGestor extends DialogControllerBase {
 			// Refrescamos datos
 			ConfiguracionAutenticacion confNueva = (ConfiguracionAutenticacion) respuesta.getResult();
 			boolean contiene = false;
-			//Buscamos por si ya está asignada
+			// Buscamos por si ya está asignada
 			if (configuraciones != null) {
-				for(ConfiguracionAutenticacion conf : configuraciones) {
-					if (conf.getCodigo() == null && conf.getCodigoImportacion() != null && conf.getCodigoImportacion().compareTo(confNueva.getCodigoImportacion()) == 0) {
+				for (ConfiguracionAutenticacion conf : configuraciones) {
+					if (conf.getCodigo() == null && conf.getCodigoImportacion() != null
+							&& conf.getCodigoImportacion().compareTo(confNueva.getCodigoImportacion()) == 0) {
 						conf.setDescripcion(confNueva.getDescripcion());
 						conf.setIdentificador(confNueva.getIdentificador());
 						conf.setPassword(confNueva.getPassword());
@@ -192,6 +202,29 @@ public class DialogTramiteImportarGestor extends DialogControllerBase {
 			data.setConfiguracionAutenticacionActual(confNueva);
 
 		}
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

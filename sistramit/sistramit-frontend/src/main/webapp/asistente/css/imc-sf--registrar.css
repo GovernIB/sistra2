@@ -40,21 +40,11 @@
 
 .imc--registre ul div.imc--pagament { grid-template-columns: 3em auto 4em; }
 
+
+
 .imc--registre .imc--signants { width: calc(100% - 3.3em); padding: .2em 0 .2em 0; margin-left: 3.3em; }
-
 .imc--registre .imc--signants p { font-size: 1em; padding: 0 1em; }
-
 .imc--registre .imc--signants ul { font-size: 1em; padding: 0 0 0 1em; }
-
-
-/*
-.imc--registre .imc--signants li { display: flex; align-items: center; min-height: 2em; margin-top: .3em; border: 1px solid #fff; }
-
-.imc--registre .imc--signants li::before { content: ""; display: block; width: 2em; height: 2em; background: #006300 url(imgs/icones/ico_correcte.svg) no-repeat center center / auto .9em; }
-
-.imc--registre .imc--signants li.imc--per-signar::before { background: #d66000 url(imgs/icones/ico_signar.svg) no-repeat center center / auto 1em; }
-*/
-
 
 .imc--registre .imc--signants li.imc--signant { display: flex; align-items: center; min-height: 2em; margin-top: .3em; border: 1px solid #fff; }
 .imc--registre .imc--signants li.imc--signant::before { content: ""; display: block; width: 2em; height: 2em; }
@@ -79,11 +69,6 @@
     background-color: #106fc8;
 }
 
-
-/*
-.imc--registre .imc--signants li strong { display: inline-block; padding: .3em 1em; }
-.imc--registre .imc--signants li.imc--per-signar strong { width: calc(100% - 2em - 5.2em); }
-*/
 
 .imc--registre .imc--signants li.imc--signants-r { margin-top: .3em; border: 1px solid #fff; }
 .imc--registre .imc--signants li.imc--signants-r p { display: flex; align-items: center; min-height: 2em; padding-left: 0; }

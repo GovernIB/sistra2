@@ -58,11 +58,10 @@ public enum TypeOpcionMenuAdmOper implements OpcionMenu {
 	/**
 	 * FORMULARIOS EXTERNOS
 	 */
-	FORMULARIOS_EXTERNOS,
+	// FORMULARIOS_EXTERNOS,
 	/**
 	 * ENVIOS REMOTOS
 	 */
 	ENVIOS_REMOTOS;
-
 
 }

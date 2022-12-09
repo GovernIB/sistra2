@@ -22,7 +22,7 @@
 	         <h:panelGrid columns="2" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}" columnClasses="w35,w65" styleClass="w100">
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.identificador']}" /></h:column>
 	         	<h:column>
-	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}" maxlength="50" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}" maxlength="50" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<!-- <f:validateRegex pattern="^[a-zA-Z0-9_-]{1,50}$" /> -->
 	         			<p:ajax event="blur" process="@this" />

@@ -64,6 +64,8 @@ public class DialogFuente extends DialogControllerBase {
 	/** Valor seleccionado. **/
 	private FuenteDatosCampo valorSeleccionado;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -354,6 +356,21 @@ public class DialogFuente extends DialogControllerBase {
 		return res;
 	}
 
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
 	// ------- FUNCIONES PRIVADAS ------------------------------
 	/**
 	 * Verifica si hay fila seleccionada.
@@ -370,6 +387,15 @@ public class DialogFuente extends DialogControllerBase {
 	}
 
 	// ------- GETTERS / SETTERS --------------------------------
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
 	/**
 	 * @return the id
 	 */

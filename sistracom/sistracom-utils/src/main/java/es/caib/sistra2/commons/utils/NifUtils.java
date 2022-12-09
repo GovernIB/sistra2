@@ -32,6 +32,9 @@ public final class NifUtils {
 	/** Atributo SI n_ ss. */
 	private static final String SIN_SS = "^\\s*[0-9]{2}[\\/|\\s\\-]?[0-9]{7,8}[\\/|\\s\\-]?[0-9]{2}\\s*$";
 
+	/** Indica que NIF PJ deben tener letra como DC. */
+	private static final String NIF_PJ_DC_LETRA = "N,P,Q,R,S,W";
+
 	/** Constructor. **/
 	private NifUtils() {
 		// Constructor vacio
@@ -122,6 +125,7 @@ public final class NifUtils {
 				} else {
 					res = letraNif.equals(letra);
 				}
+
 			}
 		} catch (final IllegalArgumentException e) {
 			res = false;
@@ -261,6 +265,15 @@ public final class NifUtils {
 
 				final String letraControl = v2[suma];
 				res = (codigoControl.equals(Integer.toString(suma)) || codigoControl.equalsIgnoreCase(letraControl));
+
+				// Verificamos si DC debe ser una letra o numero
+				if (res) {
+					final boolean esEntero = ValidacionesTipo.getInstance().esEntero(codigoControl);
+					final String letraInicial = valor.substring(0, 1);
+					res = (NIF_PJ_DC_LETRA.indexOf(letraInicial) != -1 && !esEntero)
+							|| (NIF_PJ_DC_LETRA.indexOf(letraInicial) == -1 && esEntero);
+				}
+
 			}
 		} catch (final IllegalArgumentException e) {
 			res = false;
@@ -313,7 +326,7 @@ public final class NifUtils {
 	 * quitando espacios,/,\ y -.
 	 *
 	 * @param nif
-	 *            nif/cif
+	 *                nif/cif
 	 * @return nif/cif normalizado
 	 */
 	public static String normalizarNif(final String nif) {
@@ -348,7 +361,7 @@ public final class NifUtils {
 	 * Devuelve la letra de control del NIF completo a partir de un DNI.
 	 *
 	 * @param dniNumerico
-	 *            dni al que se quiere añadir la letra del NIF
+	 *                        dni al que se quiere añadir la letra del NIF
 	 * @return el atributo letra nif Letra control NIF.
 	 */
 	private static String getLetraNIF(final String dniNumerico) {
@@ -362,7 +375,7 @@ public final class NifUtils {
 	 * Valida si el parametro String es valido (No es nulo y tiene contenido).
 	 *
 	 * @param token
-	 *            String a Validar
+	 *                  String a Validar
 	 * @return true: si valido true, false: si cadena vacia
 	 */
 	private static boolean esCadenaVacia(final String token) {

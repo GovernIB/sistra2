@@ -22,8 +22,7 @@ public interface MigracionService {
 	/**
 	 * Obtiene la lista de versiones de Sistra
 	 *
-	 * @param pIdTramite
-	 *            id. tramite
+	 * @param pIdTramite id. tramite
 	 * @return lista de versiones de Sistra
 	 */
 	public List<TramiteVersion> getTramiteVersionSistra(Long pIdTramite);
@@ -31,18 +30,23 @@ public interface MigracionService {
 	/**
 	 * Migrar tramite version de Sistra a Sistra2.
 	 *
-	 * @param pIdTramiteSistra
-	 *            id. tramite Sistra
-	 * @param pNumVersionSistra
-	 *            num. version Sistra
-	 * @param pIdTramite
-	 *            id. tramite Sistra2
-	 * @param pNumVersion
-	 *            num. version Sistra2
-	 * @param pParams
-	 *            parametros
+	 * @param pIdTramiteSistra  id. tramite Sistra
+	 * @param pNumVersionSistra num. version Sistra
+	 * @param pIdTramite        id. tramite Sistra2
+	 * @param pNumVersion       num. version Sistra2
+	 * @param pParams           parametros
 	 * @return lista de errores si los hay, en caso contrario nulo
 	 */
 	public List<ErrorMigracion> migrarTramiteVersion(Long pIdTramiteSistra, int pNumVersionSistra, Long pIdTramite,
 			int pNumVersion, Map<String, Object> pParams);
+
+	/**
+	 * comprueba destino correcto
+	 *
+	 * @param pIdTramiteSistra  id. tramite Sistra
+	 * @param pNumVersionSistra num. version Sistra
+	 * @param pIdTramite        id. tramite Sistra2
+	 * @return lista de errores si los hay, en caso contrario nulo
+	 */
+	boolean isDestinoCorrecto(Long pIdTramiteSistra, int pNumVersionSistra);
 }

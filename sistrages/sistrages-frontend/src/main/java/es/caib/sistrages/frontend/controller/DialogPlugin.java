@@ -55,6 +55,8 @@ public class DialogPlugin extends DialogControllerBase {
 
 	private TypePlugin tipoInicialEdicion;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -407,6 +409,29 @@ public class DialogPlugin extends DialogControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
 		UtilJSF.openHelp("pluginDialog", params);
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

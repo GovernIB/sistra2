@@ -22,6 +22,7 @@ import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
@@ -59,6 +60,8 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 	private List<String> idiomas;
 
 	private boolean cambios = false;
+
+	private String portapapeles;
 
 	/**
 	 * Crea una nueva instancia de ViewDefinicionVersionDebeSaber.
@@ -208,6 +211,29 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 	 */
 	public void ayuda() {
 		UtilJSF.openHelp("definicionVersionDebeSaberDialog");
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

@@ -589,7 +589,7 @@ form textarea { font: normal 1em 'Bariol Regular', Arial, Helvetica, sans-serif;
 .imc--problema-explicacio li { display: none; }
 .imc--problema-explicacio li.imc--visible { display: block; }
 
-.imc-suport .imc--annexe-error {
+.imc-suport .imc--annex-error {
 	min-height: 2.2em;
 	color: #cc073c;
 	padding: .5em 1.5em .5em 3.2em;

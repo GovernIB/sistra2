@@ -477,8 +477,19 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 		final List<Anexo> anexos = new ArrayList<>();
 
 		for (final RAnexoTramite anexoDef : defPaso.getAnexos()) {
+
+			// Comprobamos obligatoriedad
+			final TypeObligatoriedad obligatoriedad = evaluarObligatoriedad(pDefinicionTramite, anexoDef,
+					pVariablesFlujo);
+
+			// Si es un dependiente no lo añadimos a la lista de anexos
+			if (obligatoriedad == TypeObligatoriedad.DEPENDIENTE) {
+				continue;
+			}
+
 			// Establece detalle anexo
 			final Anexo anexoDetalle = Anexo.createNewAnexo();
+			anexoDetalle.setObligatorio(obligatoriedad);
 			anexoDetalle.setId(anexoDef.getIdentificador());
 			anexoDetalle.setTitulo(anexoDef.getDescripcion());
 			anexoDetalle.setTipoENI(anexoDef.getTipoDocumental());
@@ -514,29 +525,21 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 					}
 				}
 				anexoDetalle.setExtensiones(calcularExtensionesPermitidas(extensiones));
-				// Comprobamos si debe firmarse digitalmente
-				if (anexoDef.getPresentacionElectronica().isAnexarFirmado()) {
-					anexoDetalle.setAnexarfirmado(TypeSiNo.SI);
-				}
+				// Comprobamos si debe firmarse digitalmente (mediante asistente o anexar
+				// firmado)
+				anexoDetalle.setFirmar(TypeSiNo.fromBoolean(anexoDef.getPresentacionElectronica().isFirmar()));
+				anexoDetalle.setAnexarfirmado(
+						TypeSiNo.fromBoolean(anexoDef.getPresentacionElectronica().isAnexarFirmado()));
 				if (anexoDef.getPresentacionElectronica().isFirmar()
-						&& anexoDetalle.getObligatorio() != TypeObligatoriedad.DEPENDIENTE) {
-					anexoDetalle.setFirmar(TypeSiNo.SI);
+						|| anexoDef.getPresentacionElectronica().isAnexarFirmado()) {
 					calcularFirmantes(anexoDef, anexoDetalle, pDefinicionTramite, pVariablesFlujo);
-				} else {
-					anexoDetalle.setFirmar(TypeSiNo.NO);
 				}
 
 			}
 
-			// Comprobamos obligatoriedad
-			final TypeObligatoriedad obligatoriedad = evaluarObligatoriedad(pDefinicionTramite, anexoDef,
-					pVariablesFlujo);
-			anexoDetalle.setObligatorio(obligatoriedad);
+			// Añadimos a lista anexos
+			anexos.add(anexoDetalle);
 
-			// Si es un dependiente no lo añadimos a la lista de anexos
-			if (anexoDetalle.getObligatorio() != TypeObligatoriedad.DEPENDIENTE) {
-				anexos.add(anexoDetalle);
-			}
 		}
 
 		return anexos;
@@ -745,6 +748,10 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 		final List<ReferenciaFichero> ficsPersistenciaBorrar = new ArrayList<>();
 
 		if (docDpa.getPresentacion() == TypePresentacion.ELECTRONICA) {
+
+			// - Si es un anexo que se ha anexado firmado
+			docDpa.setAnexadofirmado(docDpp.getAnexoAnexadoFirmado());
+
 			// - Fichero anexado y sus firmas
 			final Fichero fichero = new Fichero();
 			docDpa.getFicheros().add(fichero);
@@ -846,7 +853,13 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 			ddf.setId(pDetalleAnexo.getId());
 			ddf.setInstancia(numInstancia);
 			ddf.setPresentacion(pDetalleAnexo.getPresentacion());
-			ddf.setFirmar(pDetalleAnexo.getFirmar());
+			ddf.setAnexadoFirmado(pDetalleAnexo.getAnexadofirmado());
+			if (pDetalleAnexo.getAnexadofirmado() == TypeSiNo.SI) {
+				// Si se ha anexado firmado, no se debe firmar en paso registro
+				ddf.setFirmar(TypeSiNo.NO);
+			} else {
+				ddf.setFirmar(pDetalleAnexo.getFirmar());
+			}
 			ddf.setFirmantes(pDetalleAnexo.getFirmantes());
 			ddf.setTipoENI(pDetalleAnexo.getTipoENI());
 			if (pDetalleAnexo.getMaxInstancias() > ConstantesNumero.N1) {

@@ -5,6 +5,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
@@ -37,21 +38,97 @@
 
 	<h:form id="formTraduccion">
 
+				<h:outputScript >
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+				function consultar(){
+					let elemento = document.getElementsByClassName('resaltar')[0];
+					elemento.click();
+					$('#form\\:btnEditarHidden').click();
+				}
+
+			  function getPos(){
+			   var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("formTraduccion:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+			 }
+
+			</h:outputScript>
+
   				<p:growl id="growlDialogTraduccion" widgetVar="growlDialogTraduccion" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
 				 <h:panelGrid  style="width: 100%;" styleClass="hide-table-header" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 padding-right-18 wpx25,padding-right-18" columns="2" >
 
 		  			<p:outputLabel   for="traduccion_ca" id="labelCa" value="#{msg['ca']}" rendered="#{dialogTraduccion.visibleCa}" />
-		  			<p:inputTextarea id="traduccion_ca" value="#{dialogTraduccion.textoCa}" style="width:98%;" required="#{dialogTraduccion.requiredCa}" rendered="#{dialogTraduccion.visibleCa}" disabled="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false" maxlength="4000"  />
+		  			<p:inputTextarea id="traduccion_ca" value="#{dialogTraduccion.textoCa}" style="width:98%;" required="#{dialogTraduccion.requiredCa}" rendered="#{dialogTraduccion.visibleCa}" readonly="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false" maxlength="4000"  />
 
 					<p:outputLabel   for="traduccion_es"  id="labelEs"  value="#{msg['es']}" rendered="#{dialogTraduccion.visibleEs}" />
-					<p:inputTextarea id="traduccion_es" value="#{dialogTraduccion.textoEs}" style="width:98%;" required="#{dialogTraduccion.requiredEs}" rendered="#{dialogTraduccion.visibleEs}" disabled="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false"  maxlength="4000"/>
+					<p:inputTextarea id="traduccion_es" value="#{dialogTraduccion.textoEs}" style="width:98%;" required="#{dialogTraduccion.requiredEs}" rendered="#{dialogTraduccion.visibleEs}" readonly="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false"  maxlength="4000"/>
 
 					<p:outputLabel   for="traduccion_en"  id="labelEn"  value="#{msg['en']}" rendered="#{dialogTraduccion.visibleEn}" />
-					<p:inputTextarea id="traduccion_en" value="#{dialogTraduccion.textoEn}" style="width:98%;" required="#{dialogTraduccion.requiredEn}" rendered="#{dialogTraduccion.visibleEn}" disabled="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false"  maxlength="4000"/>
+					<p:inputTextarea id="traduccion_en" value="#{dialogTraduccion.textoEn}" style="width:98%;" required="#{dialogTraduccion.requiredEn}" rendered="#{dialogTraduccion.visibleEn}" readonly="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false"  maxlength="4000"/>
 
 		  			<p:outputLabel   for="traduccion_de"  id="labelDe"  value="#{msg['de']}"  rendered="#{dialogTraduccion.visibleDe}" />
-		  			<p:inputTextarea id="traduccion_de" value="#{dialogTraduccion.textoDe}" style="width:98%;" required="#{dialogTraduccion.requiredDe}" rendered="#{dialogTraduccion.visibleDe}" disabled="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false"  maxlength="4000"/>
+		  			<p:inputTextarea id="traduccion_de" value="#{dialogTraduccion.textoDe}" style="width:98%;" required="#{dialogTraduccion.requiredDe}" rendered="#{dialogTraduccion.visibleDe}" readonly="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false"  maxlength="4000"/>
+
+					<p:contextMenu for=":formTraduccion">
+	       				<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :formTraduccion:auxCopiar" update="growl" url="javascript:void(0)"/>
+				    </p:contextMenu>
+				    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+						<p:ajax event="success" listener="#{dialogTraduccion.copiadoCorr}" update="@this growlDialogTraduccion" process="@this" />
+		            	<p:ajax event="error"   listener="#{dialogTraduccion.copiadoErr}"  update="@this growlDialogTraduccion" />
+		        	</pe:clipboard>
+		         	<p:inputText id="auxCopiar" value="#{dialogTraduccion.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+
 
   			 </h:panelGrid>
 

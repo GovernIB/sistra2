@@ -38,6 +38,8 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 	/** Indica si estamos en alta. **/
 	private boolean isAlta;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -219,6 +221,29 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 	 */
 	public void setAlta(final boolean isAlta) {
 		this.isAlta = isAlta;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

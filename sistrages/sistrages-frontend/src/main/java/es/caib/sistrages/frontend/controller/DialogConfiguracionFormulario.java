@@ -11,6 +11,7 @@ import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.service.FormularioExternoService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -45,6 +46,8 @@ public class DialogConfiguracionFormulario extends DialogControllerBase {
 	/** Area **/
 	private String area;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -53,7 +56,6 @@ public class DialogConfiguracionFormulario extends DialogControllerBase {
 		campos = tramiteService.getGestorExternoByAutenticacion(Long.valueOf(id), Long.valueOf(idArea));
 
 	}
-
 
 	/**
 	 * Aceptar.
@@ -67,6 +69,29 @@ public class DialogConfiguracionFormulario extends DialogControllerBase {
 	}
 
 	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	/**
 	 * @return the id
 	 */
 	public String getId() {
@@ -74,8 +99,7 @@ public class DialogConfiguracionFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -89,8 +113,7 @@ public class DialogConfiguracionFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final Dominio data) {
 		this.data = data;
@@ -104,8 +127,7 @@ public class DialogConfiguracionFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param valorSeleccionado
-	 *            the valorSeleccionado to set
+	 * @param valorSeleccionado the valorSeleccionado to set
 	 */
 	public void setValorSeleccionado(final GestorExternoFormularios valorSeleccionado) {
 		this.valorSeleccionado = valorSeleccionado;
@@ -119,8 +141,7 @@ public class DialogConfiguracionFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param campos
-	 *            the campos to set
+	 * @param campos the campos to set
 	 */
 	public void setCampos(final List<GestorExternoFormularios> campos) {
 		this.campos = campos;
@@ -134,8 +155,7 @@ public class DialogConfiguracionFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param iCampos
-	 *            the iCampos to set
+	 * @param iCampos the iCampos to set
 	 */
 	public void setiCampos(final String iCampos) {
 		this.iCampos = iCampos;
@@ -149,8 +169,7 @@ public class DialogConfiguracionFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param ambito
-	 *            the ambito to set
+	 * @param ambito the ambito to set
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;
@@ -164,8 +183,7 @@ public class DialogConfiguracionFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * @param area
-	 *            the area to set
+	 * @param area the area to set
 	 */
 	public void setArea(final String area) {
 		this.area = area;

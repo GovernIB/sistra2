@@ -282,8 +282,8 @@ public class VersionTramiteAdapter {
 		res.setActivo(tv.isActiva());
 		res.setDebug(tv.isDebug());
 		res.setLimitarTramitacion(tv.isLimiteTramitacion());
-		if (tv.getIntLimiteTramitacion() != null) {
-			res.setLimiteTramitacionInicios(tv.getIntLimiteTramitacion());
+		if (tv.getNumLimiteTramitacion() != null) {
+			res.setLimiteTramitacionInicios(tv.getNumLimiteTramitacion());
 		}
 		if (tv.getIntLimiteTramitacion() != null) {
 			res.setLimiteTramitacionIntervalo(tv.getIntLimiteTramitacion());
@@ -459,7 +459,8 @@ public class VersionTramiteAdapter {
 				formularioTramite.setFormularioInterno(generaFormularioInterno(f.getIdFormularioInterno(), idioma));
 				formularioTramite.setIdentificador(f.getIdentificador());
 				formularioTramite.setObligatoriedad(generaObligatoriedad(f.getObligatoriedad()));
-				List<Script> scripts = restApiService.getScriptsSRUByIdFormulario(f.getIdFormularioInterno(), TypeScriptSeccionReutilizable.CARGA_DATOS_INICIAL);
+				final List<Script> scripts = restApiService.getScriptsSRUByIdFormulario(f.getIdFormularioInterno(),
+						TypeScriptSeccionReutilizable.CARGA_DATOS_INICIAL);
 				formularioTramite
 						.setScriptDatosIniciales(getScriptDatosIniciales(f.getScriptDatosIniciales(), scripts, idioma));
 				formularioTramite
@@ -482,11 +483,12 @@ public class VersionTramiteAdapter {
 
 	/**
 	 * Concatena ambos emails
+	 * 
 	 * @param generaScript
 	 * @param scripts
 	 * @return
 	 */
-	private RScript getScriptDatosIniciales(Script script, List<Script> scripts, String idioma) {
+	private RScript getScriptDatosIniciales(final Script script, final List<Script> scripts, final String idioma) {
 		final List<Script> res = new ArrayList<>();
 		if (script != null) {
 			res.add(script);
@@ -700,7 +702,8 @@ public class VersionTramiteAdapter {
 	 * Genera componente campo oculto.
 	 *
 	 * @param cco
-	 * @param idioma idioma
+	 * @param idioma
+	 *                   idioma
 	 * @return RComponenteCampoOculto
 	 */
 	private RComponenteCampoOculto generaComponenteCampoOculto(final ComponenteFormularioCampoOculto cco,
@@ -854,9 +857,12 @@ public class VersionTramiteAdapter {
 	/**
 	 * Genera props comunes campo.
 	 *
-	 * @param ct     ComponenteFormularioCampo
-	 * @param resTB  Def componente
-	 * @param idioma idioma
+	 * @param ct
+	 *                   ComponenteFormularioCampo
+	 * @param resTB
+	 *                   Def componente
+	 * @param idioma
+	 *                   idioma
 	 */
 	private void generaPropsComunesComponente(final ComponenteFormulario ct, final RComponente resTB,
 			final String idioma) {
@@ -888,7 +894,8 @@ public class VersionTramiteAdapter {
 	/**
 	 * Genera texto teléfono.
 	 *
-	 * @param ct campo texto
+	 * @param ct
+	 *               campo texto
 	 * @return Propiedades teléfono
 	 */
 	private RPropiedadesTextoTelefono generaTextoTelefono(final ComponenteFormularioCampoTexto ct) {

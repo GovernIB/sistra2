@@ -41,6 +41,8 @@ public class DialogRolesPermisos extends DialogControllerBase {
 	private TypeRolePermisos gestor;
 	private TypeRolePermisos helpdesk;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -156,9 +158,9 @@ public class DialogRolesPermisos extends DialogControllerBase {
 	}
 
 	/** Ayuda. */
-    public void ayuda() {
-        UtilJSF.openHelp("rolesPermisosDialog");
-    }
+	public void ayuda() {
+		UtilJSF.openHelp("rolesPermisosDialog");
+	}
 
 	/**
 	 * Valida roles.
@@ -180,6 +182,29 @@ public class DialogRolesPermisos extends DialogControllerBase {
 	}
 
 	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	/**
 	 * @return the id
 	 */
 	public String getId() {
@@ -187,8 +212,7 @@ public class DialogRolesPermisos extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -202,8 +226,7 @@ public class DialogRolesPermisos extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final Rol data) {
 		this.data = data;
@@ -217,8 +240,7 @@ public class DialogRolesPermisos extends DialogControllerBase {
 	}
 
 	/**
-	 * @param areas
-	 *            the areas to set
+	 * @param areas the areas to set
 	 */
 	public void setAreas(final List<Area> areas) {
 		this.areas = areas;

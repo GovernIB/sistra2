@@ -11,6 +11,7 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -21,6 +22,7 @@ import es.caib.sistrahelp.core.api.model.comun.Constantes;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.frontend.model.DialogResult;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -32,6 +34,7 @@ public class DialogInformacionPersistencia extends DialogControllerBase {
 
 	private PersistenciaAuditoria dato;
 	private List<FicheroPersistenciaAuditoria> listaFicheros;
+	private String portapapeles;
 
 	/**
 	 * Inicialización.
@@ -100,13 +103,41 @@ public class DialogInformacionPersistencia extends DialogControllerBase {
 	public void setListaFicheros(final List<FicheroPersistenciaAuditoria> listaFicheros) {
 		this.listaFicheros = listaFicheros;
 	}
-	
-	
+
 	/**
 	 * Ayuda.
 	 */
 	public void ayuda() {
 		UtilJSF.openHelp("dialogoInformacionPersistencia");
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	/**
+	 * @return the portapapeles
+	 */
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	/**
+	 * @param portapapeles the portapapeles to set
+	 */
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

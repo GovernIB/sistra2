@@ -69,6 +69,8 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 	/** Indica si antes estaba activo **/
 	private boolean activoOld = false;
 
+	private String portapapeles;
+
 	/** Init. **/
 	public void init() {
 
@@ -80,7 +82,7 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 			activoOld = false;
 		} else {
 			data = seccionService.getSeccionReutilizable(Long.valueOf(id));
-			activoOld  = data.isActivado();
+			activoOld = data.isActivado();
 			scripts = seccionService.getScriptsByIdSeccionReutilizable(Long.valueOf(id));
 		}
 
@@ -92,7 +94,8 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 
 	private void inicializarScripts() {
 		scripts = new ArrayList<>();
-		ScriptSeccionReutilizable scriptCargaInicial = ScriptSeccionReutilizable.createInstance(data.getCodigo(), TypeScriptSeccionReutilizable.CARGA_DATOS_INICIAL);
+		ScriptSeccionReutilizable scriptCargaInicial = ScriptSeccionReutilizable.createInstance(data.getCodigo(),
+				TypeScriptSeccionReutilizable.CARGA_DATOS_INICIAL);
 		scripts.add(scriptCargaInicial);
 	}
 
@@ -105,7 +108,8 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
 		mochilaDatos.put(Constantes.CLAVE_MOCHILA_SCRIPT, this.scripts);
 
-		UtilJSF.openDialog(DialogSeccionReutilizableScripts.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 770, 400);
+		UtilJSF.openDialog(DialogSeccionReutilizableScripts.class, TypeModoAcceso.valueOf(modoAcceso), params, true,
+				770, 400);
 
 	}
 
@@ -113,8 +117,9 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 		if (scripts == null || scripts.isEmpty()) {
 			return "";
 		}
-		for(ScriptSeccionReutilizable script : scripts) {
-			if (script.getScript() != null && script.getScript().getContenido() != null && !script.getScript().getContenido().isEmpty()) {
+		for (ScriptSeccionReutilizable script : scripts) {
+			if (script.getScript() != null && script.getScript().getContenido() != null
+					&& !script.getScript().getContenido().isEmpty()) {
 				return "scriptRelleno";
 			}
 		}
@@ -159,7 +164,8 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 		} else {
 			isAlta = false;
 			if (activoOld && !data.isActivado()) {
-				List<SeccionReutilizableTramite> tramites = tramiteService.getTramiteVersionBySeccionReutilizable(Long.valueOf(id));
+				List<SeccionReutilizableTramite> tramites = tramiteService
+						.getTramiteVersionBySeccionReutilizable(Long.valueOf(id));
 				if (tramites.isEmpty()) {
 					seccionService.updateSeccionReutilizable(data, scripts);
 				} else {
@@ -173,15 +179,15 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 			}
 		}
 
-		//Solo se cierra la ventana si es alta.
+		// Solo se cierra la ventana si es alta.
 		if (isAlta) {
 			inicializarScripts();
-			String message =  UtilJSF.getLiteral("info.alta.ok") ;
+			String message = UtilJSF.getLiteral("info.alta.ok");
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-			//RequestContext.getCurrentInstance().execute("refresh()");
-			//PrimeFaces.current().dialog().closeDynamic(null);
+			// RequestContext.getCurrentInstance().execute("refresh()");
+			// PrimeFaces.current().dialog().closeDynamic(null);
 		} else {
-			// 	Retornamos resultado
+			// Retornamos resultado
 			final DialogResult result = new DialogResult();
 			result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 			result.setResult(data);
@@ -192,16 +198,15 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 
 	public void confirmacionCambios() {
 
-		//Guardamos cambios
+		// Guardamos cambios
 		seccionService.updateSeccionReutilizable(data, scripts);
 
-		// 	Retornamos resultado
+		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
 	}
-
 
 	/**
 	 * Cancelar.
@@ -220,13 +225,13 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 		UtilJSF.openHelp("dialogSeccionReutilizable");
 	}
 
-
 	/**
 	 * Abre un di&aacute;logo para editar los datos.
 	 */
 	public void editarDisenyo() {
 		if (data.getCodigo() == null) {
-			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("dialogSeccionesReutilizables.editarDisenyoSinCrear"));
+			addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("dialogSeccionesReutilizables.editarDisenyoSinCrear"));
 		} else {
 			final Map<String, String> params = new HashMap<>();
 			if (this.data.getIdFormularioAsociado() == null) {
@@ -235,21 +240,23 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 			params.put(TypeParametroVentana.ID.toString(), this.data.getIdFormularioAsociado().toString());
 			params.put(TypeParametroVentana.SECCION.toString(), String.valueOf(data.getCodigo()));
 			params.put(TypeParametroVentana.SECCION_IDENTIFICADOR.toString(), String.valueOf(data.getIdentificador()));
-			params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(), TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());
+			params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(),
+					TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());
 
 			Integer width = UtilJSF.getSessionBean().getWidth();
 			Integer height = UtilJSF.getSessionBean().getHeight() - 60;
-			UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.valueOf(this.modoAcceso), params, true, width, height);
+			UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.valueOf(this.modoAcceso), params, true,
+					width, height);
 		}
 	}
-
 
 	/**
 	 * Abre un di&aacute;logo para editar los datos.
 	 */
 	public void consultarDisenyo() {
 		if (data.getCodigo() == null) {
-			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("dialogSeccionesReutilizables.editarDisenyoSinCrear"));
+			addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("dialogSeccionesReutilizables.editarDisenyoSinCrear"));
 		} else {
 			final Map<String, String> params = new HashMap<>();
 			if (this.data.getIdFormularioAsociado() == null) {
@@ -257,7 +264,8 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 			}
 			params.put(TypeParametroVentana.ID.toString(), this.data.getIdFormularioAsociado().toString());
 			params.put(TypeParametroVentana.SECCION.toString(), String.valueOf(data.getCodigo()));
-			params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(), TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());
+			params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(),
+					TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());
 
 			Integer width = UtilJSF.getSessionBean().getWidth();
 			Integer height = UtilJSF.getSessionBean().getHeight() - 60;
@@ -281,8 +289,10 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 			return false;
 		}
 
-		if (data.getCodigo() == null && seccionService.existeIdentificador(UtilJSF.getIdEntidad(), data.getIdentificador())) {
-			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("dialogSeccionesReutilizables.identificadorRepetido"));
+		if (data.getCodigo() == null
+				&& seccionService.existeIdentificador(UtilJSF.getIdEntidad(), data.getIdentificador())) {
+			addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("dialogSeccionesReutilizables.identificadorRepetido"));
 			return false;
 		}
 		return true;
@@ -293,6 +303,29 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 	 */
 	public DialogSeccionReutilizable() {
 		super();
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**
@@ -322,7 +355,6 @@ public class DialogSeccionReutilizable extends DialogControllerBase {
 	public void setData(final SeccionReutilizable data) {
 		this.data = data;
 	}
-
 
 	/**
 	 * @return the idPaso

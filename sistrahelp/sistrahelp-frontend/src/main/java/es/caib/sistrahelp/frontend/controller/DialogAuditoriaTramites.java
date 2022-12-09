@@ -12,6 +12,7 @@ import es.caib.sistrahelp.core.api.model.comun.Constantes;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 import es.caib.sistrahelp.frontend.model.DialogResult;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -22,7 +23,7 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 
 	private Entry<String, String> valorSeleccionado;
 
-	private String copiar;
+	private String portapapeles;
 
 	/**
 	 * Inicialización.
@@ -53,6 +54,21 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 	}
 
 	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	/**
 	 * Cancelar.
 	 */
 	public void cerrar() {
@@ -78,40 +94,24 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 	}
 
 	/**
-	 * @return the copiar
-	 */
-	public String getCopiar() {
-		return copiar;
-	}
-
-	/**
-	 * @param copiar the copiar to set
-	 */
-	public void setCopiar(String copiar) {
-		this.copiar = copiar;
-	}
-
-	/**
 	 * @return the valorSeleccionado
 	 */
 	public Entry<String, String> getValorSeleccionado() {
 		return valorSeleccionado;
 	}
 
-	/** Avisa al growl que se ha copiado correctamente **/
-	public void avisarGrowl() {
-		UtilJSF.addMessageContext(es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad.INFO,
-				UtilJSF.getLiteral("info.copiado.ok"));
+	/**
+	 * @return the portapapeles
+	 */
+	public final String getPortapapeles() {
+		return portapapeles;
 	}
 
 	/**
-	 * @param valorSeleccionado the valorSeleccionado to set
+	 * @param portapapeles the portapapeles to set
 	 */
-	public void setValorSeleccionado(Entry<String, String> valorSeleccionado) {
-		this.valorSeleccionado = valorSeleccionado;
-		if (valorSeleccionado != null) {
-			this.copiar = valorSeleccionado.getValue();
-		}
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

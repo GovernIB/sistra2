@@ -65,7 +65,7 @@ public class JDominio implements IModelApi {
 	@JoinColumn(name = "DOM_CODARE", nullable = true)
 	private JArea area;
 
-	@Column(name = "DOM_IDENTI", unique = true, nullable = false, length = 20)
+	@Column(name = "DOM_IDENTI", unique = true, nullable = false, length = 50)
 	private String identificador;
 
 	@Column(name = "DOM_DESCR", nullable = false)

@@ -28,6 +28,8 @@ public class DialogPropiedadConfiguracion extends DialogControllerBase {
 	/** Datos elemento. */
 	private ConfiguracionGlobal data;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -126,6 +128,29 @@ public class DialogPropiedadConfiguracion extends DialogControllerBase {
 	 */
 	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

@@ -45,7 +45,11 @@ public class ValidacionFirmaPluginMock extends AbstractPluginProperties implemen
 	public ValidateSignatureResponse validateSignature(final ValidateSignatureRequest firmaAValidar) throws Exception {
 
 		// Obtiene del fichero firmado el nif
-		final String nifFirmante = new String(firmaAValidar.getSignatureData());
+
+		// TODO QUITAR TRAS PROBAR ANEXAR FIRMADO
+		// final String nifFirmante = new String(firmaAValidar.getSignatureData());
+		final String nifFirmante = "33456299Q";
+		// final String nifFirmante = "00000000T";
 
 		final ValidateSignatureResponse res = new ValidateSignatureResponse();
 		final ValidationStatus estadoFirma = new ValidationStatus();

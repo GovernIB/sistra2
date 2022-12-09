@@ -36,6 +36,10 @@ import es.caib.sistrages.frontend.util.UtilRest;
  * @author Indra
  *
  */
+/**
+ * @author aagudo
+ *
+ */
 @ManagedBean
 @ViewScoped
 public class ViewSeccionesReutilizables extends ViewControllerBase {
@@ -73,12 +77,13 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 	boolean permiteExportar = false;
 	boolean returnAlta = false;
 
-
 	/** Mostrar breadcrumb. **/
 	private boolean mostrarBreadcrumb;
 
 	/** miga de pan */
 	private MenuModel breadCrumb;
+
+	private String portapapeles;
 
 	/**
 	 * Inicializacion.
@@ -138,7 +143,7 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 	 */
 	private void buscar() {
 		// Filtra
-		listaDatos = seccionService.listSeccionReutilizable(idEntidad,  filtro, null);
+		listaDatos = seccionService.listSeccionReutilizable(idEntidad, filtro, null);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 	}
@@ -203,7 +208,6 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 		}
 	}
 
-
 	/**
 	 * Bloquear version. Pautas a seguir:
 	 * <ul>
@@ -227,8 +231,7 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 			return;
 		}
 
-		seccionService.bloquearSeccion(this.datoSeleccionado.getCodigo(),
-				UtilJSF.getSessionBean().getUserName());
+		seccionService.bloquearSeccion(this.datoSeleccionado.getCodigo(), UtilJSF.getSessionBean().getUserName());
 
 		Long idSeccion = datoSeleccionado.getCodigo();
 		buscar();
@@ -239,10 +242,11 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 
 	/**
 	 * Marca un dato por seleccionado según su id.
+	 *
 	 * @param idSeccion
 	 */
 	private void seleccionarByCodigo(Long idSeccion) {
-		for(SeccionReutilizable dato : listaDatos) {
+		for (SeccionReutilizable dato : listaDatos) {
 			if (dato.getCodigo().compareTo(idSeccion) == 0) {
 				datoSeleccionado = dato;
 				break;
@@ -299,7 +303,6 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 
 	}
 
-
 	/**
 	 * Retorno dialogo exportar.
 	 *
@@ -311,7 +314,8 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 
 		// Verificamos si se ha modificado
 		if (!respuesta.isCanceled()) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("dialogSeccionExportar.exportadoCorrectamente"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+					UtilJSF.getLiteral("dialogSeccionExportar.exportadoCorrectamente"));
 		}
 
 	}
@@ -326,7 +330,8 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 			return;
 
 		if (this.datoSeleccionado.isBloqueado()) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("dialogSeccionExportar.info.seccionBloqueada"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+					UtilJSF.getLiteral("dialogSeccionExportar.info.seccionBloqueada"));
 			return;
 		}
 		final Map<String, String> params = new HashMap<>();
@@ -339,9 +344,11 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 	 * <ul>
 	 * <li>Tiene que haber una seccion seleccionada.</li>
 	 * <li>Tiene que estar bloqueado</li>
-	 * <ul> Cumplir una de las siguientes:
-	 * 		<li>Si eres adm. entidad ya puedes editarlo.</li>
-	 * 		<li>Sino tienes que ser adminisitrador o desarrollador de área y coincidir con el usuario que lo haya bloqueado.</li>
+	 * <ul>
+	 * Cumplir una de las siguientes:
+	 * <li>Si eres adm. entidad ya puedes editarlo.</li>
+	 * <li>Sino tienes que ser adminisitrador o desarrollador de área y coincidir
+	 * con el usuario que lo haya bloqueado.</li>
 	 * </ul>
 	 * </ul>
 	 *
@@ -351,10 +358,10 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 		if (this.datoSeleccionado == null || !this.datoSeleccionado.isBloqueado()) {
 			return false;
 		} else {
-			return UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT || UtilJSF.getSessionBean().getUserName().equals(this.datoSeleccionado.getBloqueadoUsuario()) ;
+			return UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+					|| UtilJSF.getSessionBean().getUserName().equals(this.datoSeleccionado.getBloqueadoUsuario());
 		}
 	}
-
 
 	/**
 	 * Obtiene el valor de tienePermisosEditarSeccion, se tiene que cumplir que:
@@ -418,7 +425,6 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 		// El ADM. ENTIDAD puede desbloquearlo
 		return UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT;
 	}
-
 
 	/**
 	 * Calcula si se puede bloquear el tramite o no.
@@ -494,8 +500,7 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 	/**
 	 * Retorno dialogo.
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 
@@ -525,7 +530,7 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 			if (respuesta.getResult() instanceof SeccionReutilizable) {
-				Long idSeccion = ((SeccionReutilizable)respuesta.getResult()).getCodigo();
+				Long idSeccion = ((SeccionReutilizable) respuesta.getResult()).getCodigo();
 				buscar();
 				seleccionarByCodigo(idSeccion);
 			} else {
@@ -534,7 +539,7 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 		}
 	}
 
-	public void returnDialogoDesbloquear (final SelectEvent event) {
+	public void returnDialogoDesbloquear(final SelectEvent event) {
 
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
@@ -563,12 +568,10 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 
 	}
 
-
 	/**
 	 * Abrir dialogo.
 	 *
-	 * @param modoAccesoDlg
-	 *                          Modo acceso
+	 * @param modoAccesoDlg Modo acceso
 	 */
 	private void abrirDlg(final TypeModoAcceso modoAccesoDlg) {
 		// Verifica si no hay fila seleccionada
@@ -587,7 +590,6 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 		UtilJSF.openDialog(DialogSeccionReutilizable.class, modoAccesoDlg, params, true, 550, 240);
 	}
 
-
 	/**
 	 * @return the filtro
 	 */
@@ -596,8 +598,7 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 	}
 
 	/**
-	 * @param filtro
-	 *                   the filtro to set
+	 * @param filtro the filtro to set
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
@@ -611,8 +612,7 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 	}
 
 	/**
-	 * @param listaDatos
-	 *                       the listaDatos to set
+	 * @param listaDatos the listaDatos to set
 	 */
 	public void setListaDatos(final List<SeccionReutilizable> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -650,8 +650,7 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 	}
 
 	/**
-	 * @param datoSeleccionado
-	 *                             the datoSeleccionado to set
+	 * @param datoSeleccionado the datoSeleccionado to set
 	 */
 	public void setDatoSeleccionado(final SeccionReutilizable datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
@@ -708,5 +707,33 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 		this.permiteAlta = permiteAlta;
 	}
 
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	/**
+	 * @return the portapapeles
+	 */
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	/**
+	 * @param portapapeles the portapapeles to set
+	 */
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
 
 }

@@ -37,7 +37,7 @@ public class JTramite implements IModelApi {
 	@JoinColumn(name = "TRM_CODARE", nullable = false)
 	private JArea area;
 
-	@Column(name = "TRM_IDENTI", unique = true, nullable = false, length = 20)
+	@Column(name = "TRM_IDENTI", unique = true, nullable = false, length = 50)
 	private String identificador;
 
 	@Column(name = "TRM_DESCR", nullable = false, length = 1000)

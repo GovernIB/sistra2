@@ -736,37 +736,63 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			anexarFirma = false;
 		}
 
+		// Anexo que se ha anexado firmado
+		final boolean anexoAnexadoFirmado = documento.getTipo() == TypeDocumento.ANEXO
+				&& ((DatosDocumentoAnexo) documento).getAnexadoFirmado() == TypeSiNo.SI;
+
+		// Esta firmado si tiene fichero firma o es un anexo anexado firmado
+		final boolean firmado = (firmaDocumento != null || anexoAnexadoFirmado);
+
+		// Creamos info documento asiento registral
 		final DocumentoAsiento documentoAsientoRegistral = new DocumentoAsiento();
 		documentoAsientoRegistral.setTituloDoc(documento.getTitulo());
 		documentoAsientoRegistral.setFechaCaptura(new Date());
 		documentoAsientoRegistral.setOrigenDocumento(TypeOrigenDocumento.CIUDADANO);
-
-		// TODO Ver de establecer configuración por STG
-		if (documento.getTipo() == TypeDocumento.FORMULARIO) {
-			documentoAsientoRegistral.setTipoDocumental("TD14");
-		} else {
-			documentoAsientoRegistral.setTipoDocumental("TD99");
-		}
-
-		documentoAsientoRegistral.setTipoDocumento(calcularTipoDocumental(documento.getTipo(), xml));
-		documentoAsientoRegistral.setValidez(calcularValidez(documento.getTipo()));
+		documentoAsientoRegistral.setTipoDocumental(calcularTipoDocumental(documento));
+		documentoAsientoRegistral.setTipoDocumento(calcularTipoDocumento(documento.getTipo(), xml));
+		documentoAsientoRegistral.setValidez(calcularValidez(documento.getTipo(), firmado));
 		documentoAsientoRegistral.setNombreFichero(nombreFic);
 		documentoAsientoRegistral
 				.setContenidoFichero(pContenidoDocs ? contentFic : UtilsFlujo.stringToBytes(contentFicStr));
 
-		if (firmaDocumento != null) {
-			documentoAsientoRegistral.setTipoFirma(es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaDigital
-					.fromString(firmaDocumento.getTipoFirma().toString()));
-			documentoAsientoRegistral.setModoFirma(calcularTipoFirmaAsiento(firmaDocumento.getTipoFirma()));
+		// - No firmado
+		if (!firmado) {
+			documentoAsientoRegistral.setModoFirma(TypeFirmaAsiento.SIN_FIRMA);
+		}
+
+		// - Firmado
+		if (firmado) {
+			es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaDigital tipoFirma;
+			TypeFirmaAsiento modoFirma;
+			if (anexoAnexadoFirmado) {
+				// Anexo anexado firmado
+				tipoFirma = es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaDigital.PADES;
+				modoFirma = TypeFirmaAsiento.FIRMA_ATTACHED;
+			} else {
+				// Firmado desde asistente
+				tipoFirma = es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaDigital
+						.fromString(firmaDocumento.getTipoFirma().toString());
+				modoFirma = calcularTipoFirmaAsiento(firmaDocumento.getTipoFirma());
+			}
+			documentoAsientoRegistral.setTipoFirma(tipoFirma);
+			documentoAsientoRegistral.setModoFirma(modoFirma);
 			if (anexarFirma) {
 				documentoAsientoRegistral.setNombreFirmaAnexada(firmaFichero.getNombre());
 				documentoAsientoRegistral.setContenidoFirma(
 						pContenidoDocs ? firmaFichero.getContenido() : UtilsFlujo.stringToBytes(firmaFicheroStr));
 			}
-		} else {
-			documentoAsientoRegistral.setModoFirma(TypeFirmaAsiento.SIN_FIRMA);
 		}
+
 		return documentoAsientoRegistral;
+	}
+
+	protected String calcularTipoDocumental(final DatosDocumento documento) {
+		// TODO Ver de establecer configuración por STG
+		String tipoDocumental = "TD99";
+		if (documento.getTipo() == TypeDocumento.FORMULARIO) {
+			tipoDocumental = "TD99";
+		}
+		return tipoDocumental;
 	}
 
 	/**
@@ -809,7 +835,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 *                          si es documento xml
 	 * @return tipo documento asiento
 	 */
-	private TypeDocumental calcularTipoDocumental(
+	private TypeDocumental calcularTipoDocumento(
 			final es.caib.sistramit.core.api.model.flujo.types.TypeDocumento tipoDocumento, final boolean xml) {
 		TypeDocumental res;
 		if (xml) {
@@ -829,17 +855,22 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 *
 	 * @param tipoDocumento
 	 *                          Tipo documento
+	 * @param firmado
 	 * @return Tipo validez
 	 */
-	private TypeValidez calcularValidez(
-			final es.caib.sistramit.core.api.model.flujo.types.TypeDocumento tipoDocumento) {
+	private TypeValidez calcularValidez(final es.caib.sistramit.core.api.model.flujo.types.TypeDocumento tipoDocumento,
+			final boolean firmado) {
 		TypeValidez res = null;
 		switch (tipoDocumento) {
 		case FORMULARIO:
 			res = TypeValidez.ORIGINAL;
 			break;
 		case ANEXO:
-			res = TypeValidez.COPIA;
+			if (firmado) {
+				res = TypeValidez.ORIGINAL;
+			} else {
+				res = TypeValidez.COPIA;
+			}
 			break;
 		case PAGO:
 			res = TypeValidez.ORIGINAL;

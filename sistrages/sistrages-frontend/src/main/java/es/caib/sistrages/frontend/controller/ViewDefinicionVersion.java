@@ -200,6 +200,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	private boolean cambios = false;
 
+	private String portapapeles;
+
 	/**
 	 * Crea una nueva instancia de view definicion version.
 	 */
@@ -486,7 +488,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getCodigo()));
 		params.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(),
 				((OpcionArbol) this.selectedNode.getData()).getFormulario().getCodigo().toString());
-		params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(), TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString());
+		params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(),
+				TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString());
 		Integer width = UtilJSF.getSessionBean().getWidth();
 		Integer height = UtilJSF.getSessionBean().getHeight() - 60;
 		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, width, height);
@@ -798,7 +801,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		TypeAmbito typeAmbitoDom = dominioSeleccionado.getAmbito();
 		params.put(TypeParametroVentana.AMBITO.toString(), typeAmbitoDom.toString());
-		if(typeAmbitoDom == TypeAmbito.AREA) {
+		if (typeAmbitoDom == TypeAmbito.AREA) {
 			params.put("AREA", id.toString());
 		}
 		if (typeAmbitoDom == TypeAmbito.ENTIDAD) {
@@ -2035,6 +2038,29 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			estilo = "display:none";
 		}
 		return estilo;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

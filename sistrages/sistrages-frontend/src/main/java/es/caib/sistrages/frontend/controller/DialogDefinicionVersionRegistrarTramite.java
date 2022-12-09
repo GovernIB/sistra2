@@ -107,6 +107,8 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 
 	private boolean cambios = false;
 
+	private String portapapeles;
+
 	/**
 	 * Init.
 	 */
@@ -508,6 +510,29 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 		maps.put(TypeParametroVentana.TRAMITEPASO.toString(), id);
 
 		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 700);
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

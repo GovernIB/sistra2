@@ -21,9 +21,9 @@
 							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.oficina']}" />
 					</p:column>
 					<p:column style="display:flex" >
-						<p:inputText id="oficina" disabled="true" size="7"
+						<p:inputText id="oficina" readonly="true" size="7"
 							value="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.codigoOficinaRegistro}" />
-						<p:inputText id="oficinaTexto" disabled="true" size="15"
+						<p:inputText id="oficinaTexto" readonly="true" size="15"
 							value="#{viewDefinicionVersionParams.textoOficinaRegistro}" style="margin-left:4px" />
 					</p:column>
 					<p:column>
@@ -31,15 +31,15 @@
 							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.libro']}" />
 					</p:column>
 					<p:column>
-						<p:inputText id="libro" disabled="true" size="7" value="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.codigoLibroRegistro}" />
-						<p:inputText id="libroTexto" disabled="true" size="15" value="#{viewDefinicionVersionParams.textoLibroRegistro}"  style="margin-left:4px" />
+						<p:inputText id="libro" readonly="true" size="7" value="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.codigoLibroRegistro}" />
+						<p:inputText id="libroTexto" readonly="true" size="15" value="#{viewDefinicionVersionParams.textoLibroRegistro}"  style="margin-left:4px" />
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column colspan="4">
 
 				        <p:outputPanel id="customPanel" style="margin-bottom:10px">
-				            <p:selectOneRadio id="customRadio" value="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.destino}" layout="custom" disabled="true">
+				            <p:selectOneRadio id="customRadio" value="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.destino}" layout="custom" readonly="true">
 				                <f:selectItem itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.registroElectronico']}" itemValue="R"/>
 				                <f:selectItem itemLabel="#{msg['botones.envioRemoto']}" itemValue="E" rendered="#{viewDefinicionVersionParams.esTipoServicio}"/>
 				            </p:selectOneRadio>
@@ -56,7 +56,7 @@
 
 								<p:radioButton id="opt2" for="customRadio" itemIndex="1" rendered="#{viewDefinicionVersionParams.esTipoServicio}"/>
 								<h:outputLabel for="opt2" value="#{msg['botones.envioRemoto']}" rendered="#{viewDefinicionVersionParams.esTipoServicio}"/>
-				                <p:selectOneMenu  styleClass="w100" id="labeled" alwaysDisplayLabel="true" disabled="true" rendered="#{viewDefinicionVersionParams.esTipoServicio}">
+				                <p:selectOneMenu  styleClass="w100" id="labeled" alwaysDisplayLabel="true" readonly="true" rendered="#{viewDefinicionVersionParams.esTipoServicio}">
 				                	<f:selectItem itemLabel="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.envioRemoto.identificador}" itemValue=""/>
 				                </p:selectOneMenu>
 				            </h:panelGrid>
@@ -67,7 +67,7 @@
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.instruccionesTramitacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="tramitacion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,viewDefinicionVersionParams.idiomas)}"  />
+           		<p:inputText id="tramitacion" required="true" readonly="true" styleClass="w85" value="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,viewDefinicionVersionParams.idiomas)}"  />
            		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionParams.consultarTraduccionHTML(viewDefinicionVersionParams.tramitePasoREGSeleccionado.instruccionesFinTramitacion)}"
 						process="@this" update="growl" style="margin-left:2px;margin-bottom:1px" />
        		</p:outputPanel>
@@ -83,14 +83,14 @@
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.representacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-	            <p:selectBooleanCheckbox id="admite" disabled="true" value="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.admiteRepresentacion}"   itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.representacion.admite']}"/>
+	            <p:selectBooleanCheckbox id="admite" readonly="true" value="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.admiteRepresentacion}"   itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.representacion.admite']}"/>
 	            <p:spacer width="30" height="1"/>
 	           		<p:commandButton id="scriptButton3"
 	           				disabled="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptRepresentante eq null}"
 							icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_REPRESENTACION_REGISTRO.name(), viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptRepresentante.codigo)}"
 							process="@this" update="growl" value="#{msg['script.SCRIPT_REPRESENTACION_REGISTRO.titulo']}" styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptRepresentante)}" />
 				<p:spacer width="30" height="1"/>
-				<p:selectBooleanCheckbox id="valida" disabled="true" value="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.validaRepresentacion}" itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.representacion.valida']}"/>
+				<p:selectBooleanCheckbox id="valida" readonly="true" value="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.validaRepresentacion}" itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.representacion.valida']}"/>
        		</p:outputPanel>
 
     		<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.registrar']}" />
@@ -102,7 +102,7 @@
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.alfinalizar']}" />
 			<p:outputPanel styleClass="ui-inputgroup">
-	            <p:selectBooleanCheckbox id="aviso" disabled="true" value="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.avisoAlFinalizar}"   itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.alfinalizar.aviso']}"/>
+	            <p:selectBooleanCheckbox id="aviso" readonly="true" value="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.avisoAlFinalizar}"   itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.alfinalizar.aviso']}"/>
 	            <p:spacer width="30" height="1"/>
 	           		<p:commandButton id="scriptButton5"
 	           				disabled="#{viewDefinicionVersionParams.tramitePasoREGSeleccionado.scriptAlFinalizar eq null}"

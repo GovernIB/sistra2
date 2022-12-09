@@ -91,6 +91,8 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	/** miga de pan */
 	private MenuModel breadCrumb;
 
+	private String portapapeles;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -105,12 +107,13 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 			final List<TypeRolePermisos> permisos = securityService
 					.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
 
-			/*if (!permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
-					&& !permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
-					&& !permisos.contains(TypeRolePermisos.CONSULTA)) {
-				throw new FrontException(
-						"No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area");
-			}*/
+			/*
+			 * if (!permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA) &&
+			 * !permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA) &&
+			 * !permisos.contains(TypeRolePermisos.CONSULTA)) { throw new FrontException(
+			 * "No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad con acceso al area"
+			 * ); }
+			 */
 
 			if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)) {
 				// Solo el administrador de area puede editar
@@ -351,6 +354,29 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	}
 
 	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	/**
 	 * @return the filtro
 	 */
 	public String getFiltro() {
@@ -439,7 +465,7 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 			params.put(TypeParametroVentana.ENTIDAD.toString(), UtilJSF.getIdEntidad().toString());
 		}
 		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
-		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, modoAccesoDlg, params, true, 550, 195);
+		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, modoAccesoDlg, params, true, 580, 195);
 	}
 
 	/**

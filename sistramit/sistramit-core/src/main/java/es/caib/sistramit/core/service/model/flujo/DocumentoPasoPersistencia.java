@@ -57,6 +57,10 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	 */
 	private String anexoDescripcionInstancia;
 	/**
+	 * Para anexos indica si se ha anexado firmado.
+	 */
+	private TypeSiNo anexoAnexadoFirmado;
+	/**
 	 * Para pagos indica el justificante de pago en pdf.
 	 */
 	private ReferenciaFichero pagoJustificantePdf;
@@ -687,7 +691,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
 	/**
 	 * Método de acceso a registroNifPresentador.
-	 * 
+	 *
 	 * @return registroNifPresentador
 	 */
 	public String getRegistroNifPresentador() {
@@ -696,7 +700,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
 	/**
 	 * Método para establecer registroNifPresentador.
-	 * 
+	 *
 	 * @param registroNifPresentador
 	 *                                   registroNifPresentador a establecer
 	 */
@@ -706,7 +710,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
 	/**
 	 * Método de acceso a registroNombrePresentador.
-	 * 
+	 *
 	 * @return registroNombrePresentador
 	 */
 	public String getRegistroNombrePresentador() {
@@ -715,12 +719,31 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
 	/**
 	 * Método para establecer registroNombrePresentador.
-	 * 
+	 *
 	 * @param registroNombrePresentador
 	 *                                      registroNombrePresentador a establecer
 	 */
 	public void setRegistroNombrePresentador(final String registroNombrePresentador) {
 		this.registroNombrePresentador = registroNombrePresentador;
+	}
+
+	/**
+	 * Método de acceso a anexoAnexadoFirmado.
+	 * 
+	 * @return anexoAnexadoFirmado
+	 */
+	public TypeSiNo getAnexoAnexadoFirmado() {
+		return anexoAnexadoFirmado;
+	}
+
+	/**
+	 * Método para establecer anexoAnexadoFirmado.
+	 * 
+	 * @param anexoAnexadoFirmado
+	 *                                anexoAnexadoFirmado a establecer
+	 */
+	public void setAnexoAnexadoFirmado(final TypeSiNo anexoAnexadoFirmado) {
+		this.anexoAnexadoFirmado = anexoAnexadoFirmado;
 	}
 
 }

@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	template="../layout/mainLayout.xhtml">
 
 	<f:metadata>
@@ -13,7 +14,67 @@
 	<ui:define name="content">
 
 		<h:form id="form" styleClass="h100" style="overflow-y: auto;">
+			<h:outputScript >
 
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("form:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+
+			 }
+
+			</h:outputScript>
 			<!-- Growl mensajes -->
 			<p:growl id="growl" widgetVar="growl" showDetail="false" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
@@ -21,7 +82,7 @@
 		        <h:panelGrid columns="2" cellpadding="5">
 		            <h:outputText value="#{msg['viewConfiguracionEntidad.gestorTramits.headerLog']}" />
 		           	<p:column>
-          				<p:inputText  id="inputUrlCarpetaCiudadana" size="70" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.urlCarpetaCiudadana.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+          				<p:inputText  id="inputUrlCarpetaCiudadana" size="70" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.urlCarpetaCiudadana.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" readonly="true" styleClass="margin-right-10"/>
 		            	<p:commandButton id="btnUrlCarpetaCiudadana" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarUrlCarpetaCiudadana}" process="@this" update=":form:growl" styleClass="va-top">
 		            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoUrlCarpetaCiudadana}" update=":form:growl inputUrlCarpetaCiudadana"/>
 		        		</p:commandButton>
@@ -36,7 +97,7 @@
 	        				<h:panelGrid id="gridPropiedades" columns="2" cellpadding="5" >
 					            <h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.tituloStt']}" />
 					            <p:column>
-					           		<p:inputText  id="tituloStt" size="70" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.tituloAsistenteTramitacion.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+					           		<p:inputText  id="tituloStt" size="70" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.tituloAsistenteTramitacion.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" readonly="true" styleClass="margin-right-10"/>
 					            	<p:commandButton id="tituloStt2" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarTituloAsistente}" process="@this" update=":form:growl" styleClass="va-top">
 					            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoTituloAsistente}" update=":form:growl tituloStt"/>
 					        		</p:commandButton>
@@ -49,7 +110,7 @@
 					           			<p:commandLink action="#{viewConfiguracionEntidad.descargaFichero(viewConfiguracionEntidad.data.iconoAsistenteTramitacion)}" target="_blank" value="#{viewConfiguracionEntidad.data.iconoAsistenteTramitacion.nombre}" rendered="#{!empty viewConfiguracionEntidad.data.iconoAsistenteTramitacion}"/>
 					           		</h:panelGroup>
 				            		<p:spacer width="20" height="1"/>
-					           		<p:commandButton id="btnIconoSistramit" icon="fa fa-cog" process="@this" update=":form:growl" actionListener="#{viewConfiguracionEntidad.gestionFicheroIconoAsistente()}" disabled="#{!viewConfiguracionEntidad.permiteEditar}">
+					           		<p:commandButton id="btnIconoSistramit" icon="fa fa-cog" process="@this" update=":form:growl" actionListener="#{viewConfiguracionEntidad.gestionFicheroIconoAsistente()}" disabled="#{!viewConfiguracionEntidad.permiteEditar}" >
 					           			<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoFichero}" update=":form:tabView:btnIconoSistramitTxt :form:growl"/>
 					           		</p:commandButton>
 					            </p:column>
@@ -80,7 +141,7 @@
 
 								<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerUrlCarpetaCiudadana']}" />
 				            	<p:column>
-					            	<p:inputText  id="inputUrlCarpetaCiudadana" size="70" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.urlCarpetaCiudadana.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+					            	<p:inputText  id="inputUrlCarpetaCiudadana" size="70" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.urlCarpetaCiudadana.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" readonly="true" styleClass="margin-right-10"/>
 					            	<p:commandButton id="btnUrlCarpetaCiudadana" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarUrlCarpetaCiudadana}" process="@this" update=":form:growl" styleClass="va-top">
 					            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoUrlCarpetaCiudadana}" update=":form:growl inputUrlCarpetaCiudadana"/>
 					        		</p:commandButton>
@@ -88,14 +149,14 @@
 
 								<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerUrlSedeElectronica']}" />
 				            	<p:column>
-					            	<p:inputText  id="inputUrlSedeElectronica" size="70" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.urlSede.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+					            	<p:inputText  id="inputUrlSedeElectronica" size="70" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.urlSede.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" readonly="true" styleClass="margin-right-10"/>
 					            	<p:commandButton id="btnUrlSedeElectronica" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarUrlSedeElectronica}" process="@this" update=":form:growl" styleClass="va-top">
 					            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoUrlSedeElectronica}" update=":form:growl inputUrlSedeElectronica"/>
 					        		</p:commandButton>
 								</p:column>
 
 								<p:outputLabel for="diasPreregistro" value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerDiasPreregistro']}" />
-					            <p:inputNumber  id="diasPreregistro" decimalPlaces="0" padControl="false" size="70" value="#{viewConfiguracionEntidad.data.diasPreregistro}" maxValue="999" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
+					            <p:inputNumber  id="diasPreregistro" decimalPlaces="0" padControl="false" size="70" value="#{viewConfiguracionEntidad.data.diasPreregistro}" maxValue="999" readonly="#{!viewConfiguracionEntidad.permiteEditar}"/>
 
 								<h:outputText value="#{msg['viewConfiguracionEntidad.propiedades.headerPermitirValoraciones']}:" />
 			        			<p:column>
@@ -111,17 +172,17 @@
 	        				<h:panelGrid styleClass="noBorders" columns="3" cellpadding="10">
 		           				<p:selectBooleanCheckbox id="checkEmail" required="true" value="#{viewConfiguracionEntidad.data.emailHabilitado}" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
 								<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.email']}" />
-							    <p:inputText value="#{viewConfiguracionEntidad.data.email}" size="70"  maxlength="500" disabled="#{!viewConfiguracionEntidad.permiteEditar}" validatorMessage="#{msg['viewConfiguracionEntidad.emailIncorrecto']}">
+							    <p:inputText value="#{viewConfiguracionEntidad.data.email}" size="70"  maxlength="500" readonly="#{!viewConfiguracionEntidad.permiteEditar}" validatorMessage="#{msg['viewConfiguracionEntidad.emailIncorrecto']}">
 							    	<f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"  />
 							    </p:inputText>
 
 								<p:selectBooleanCheckbox id="checkTelefonSuport"  value="#{viewConfiguracionEntidad.data.telefonoHabilitado}" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
 								<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.telSuport']}"  />
-							    <p:inputText value="#{viewConfiguracionEntidad.data.telefono}" size="70"  maxlength="10" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
+							    <p:inputText value="#{viewConfiguracionEntidad.data.telefono}" size="70"  maxlength="10" readonly="#{!viewConfiguracionEntidad.permiteEditar}"/>
 
 								<p:selectBooleanCheckbox id="checkUrlSuportTecnic" value="#{viewConfiguracionEntidad.data.urlSoporteHabilitado}" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
 								<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.urlSuport']}" />
-							    <p:inputText value="#{viewConfiguracionEntidad.data.urlSoporte}" size="70"  maxlength="500" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
+							    <p:inputText value="#{viewConfiguracionEntidad.data.urlSoporte}" size="70"  maxlength="500" readonly="#{!viewConfiguracionEntidad.permiteEditar}"/>
 
 								<p:selectBooleanCheckbox id="checkFormularioContacto" value="#{viewConfiguracionEntidad.data.formularioIncidenciasHabilitado}" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
 								<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.formulariCont']}" />
@@ -132,7 +193,7 @@
 							<h:panelGrid styleClass="noBorders" columns="2" cellpadding="10">
 				        		<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerContacto']}" />
 				        		<p:column>
-					        		<p:inputTextarea  id="inputPie" scrollHeight="100" cols="69" rows="5" style="margin-right:10px;height:120px" value="#{viewConfiguracionEntidad.data.pie.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+					        		<p:inputTextarea  id="inputPie" scrollHeight="100" cols="69" rows="5" style="margin-right:10px;height:120px" value="#{viewConfiguracionEntidad.data.pie.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" readonly="true" styleClass="margin-right-10"/>
 					            	<p:commandButton id="btnAssistentPie" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarAssistentPie}" process="@this" update=":form:growl" styleClass="va-top">
 					            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoAsistentePie}" update=":form:growl inputPie"/>
 					        		</p:commandButton>
@@ -140,7 +201,7 @@
 
 				        		<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerMapaWeb']}" />
 				        		<p:column>
-					        		<p:inputText  id="inputMapaWeb" size="69" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.mapaWeb.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+					        		<p:inputText  id="inputMapaWeb" size="69" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.mapaWeb.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" readonly="true" styleClass="margin-right-10"/>
 					            	<p:commandButton id="btnMapaWeb" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarMapaWeb}" process="@this" update=":form:growl" styleClass="va-top">
 					            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoMapaWeb}" update=":form:growl inputMapaWeb"/>
 					        		</p:commandButton>
@@ -148,7 +209,7 @@
 
 				        		<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerAvisoLegal']}" />
 				        		<p:column>
-					        		<p:inputText id="inputAvisoLegal" size="69" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.avisoLegal.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+					        		<p:inputText id="inputAvisoLegal" size="69" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.avisoLegal.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" readonly="true" styleClass="margin-right-10"/>
 					            	<p:commandButton id="btnAvisoLegal" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarAvisoLegal}" process="@this" update=":form:growl" styleClass="va-top">
 					            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoAvisoLegal}" update=":form:growl inputAvisoLegal"/>
 					        		</p:commandButton>
@@ -156,7 +217,7 @@
 
 				        		<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerRss']}" />
 				        		<p:column>
-					        		<p:inputText  id="inputRss" size="69" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.rss.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+					        		<p:inputText  id="inputRss" size="69" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.rss.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" readonly="true" styleClass="margin-right-10"/>
 					            	<p:commandButton id="btnRss" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarRss}" process="@this" update=":form:growl" styleClass="va-top">
 					            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoRss}" update=":form:growl inputRss"/>
 					        		</p:commandButton>
@@ -166,16 +227,16 @@
 	        			<p:tab title="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerRedesSociales']}">
 	        				<h:panelGrid styleClass="noBorders" columns="2" cellpadding="10">
 			        			<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerYoutube']}" />
-			        			<p:inputText  id="inputUrlYoutube" size="70" value="#{viewConfiguracionEntidad.data.urlYoutube}" maxlength="255" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
+			        			<p:inputText  id="inputUrlYoutube" size="70" value="#{viewConfiguracionEntidad.data.urlYoutube}" maxlength="255" readonly="#{!viewConfiguracionEntidad.permiteEditar}"/>
 
 			        			<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerInstagram']}" />
-			        			<p:inputText  id="inputUrlInstagram" size="70" value="#{viewConfiguracionEntidad.data.urlInstagram}" maxlength="255" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
+			        			<p:inputText  id="inputUrlInstagram" size="70" value="#{viewConfiguracionEntidad.data.urlInstagram}" maxlength="255" readonly="#{!viewConfiguracionEntidad.permiteEditar}"/>
 
 			        			<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerTwitter']}" />
-			        			<p:inputText  id="inputUrlTwitter" size="70" value="#{viewConfiguracionEntidad.data.urlTwitter}" maxlength="255" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
+			        			<p:inputText  id="inputUrlTwitter" size="70" value="#{viewConfiguracionEntidad.data.urlTwitter}" maxlength="255" readonly="#{!viewConfiguracionEntidad.permiteEditar}"/>
 
 			        			<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerFacebook']}" />
-			        			<p:inputText  id="inputUrlFacebook" size="70" value="#{viewConfiguracionEntidad.data.urlFacebook}" maxlength="255" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
+			        			<p:inputText  id="inputUrlFacebook" size="70" value="#{viewConfiguracionEntidad.data.urlFacebook}" maxlength="255" readonly="#{!viewConfiguracionEntidad.permiteEditar}"/>
 			        		</h:panelGrid>
 	        			</p:tab>
 	        			<p:tab title="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLopdTitulo']}">
@@ -183,7 +244,7 @@
 
 			        					<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLopd']}" />
 						            	<p:column>
-							            	<p:inputTextarea id="inputLopd" autoResize="false" scrollHeight="100" cols="70" rows="5" style="margin-right:10px;height:120px" value="#{viewConfiguracionEntidad.data.lopd.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+							            	<p:inputTextarea id="inputLopd" autoResize="false" scrollHeight="100" cols="70" rows="5" style="margin-right:10px;height:120px" value="#{viewConfiguracionEntidad.data.lopd.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" readonly="true" styleClass="margin-right-10"/>
 							            	<p:commandButton id="btnLopd" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarLopd}" process="@this" update=":form:growl" styleClass="va-top">
 							            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoLopd}" update=":form:growl inputLopd"/>
 							        		</p:commandButton>
@@ -216,7 +277,7 @@
 	        				<h:panelGrid styleClass="noBorders" columns="2" cellpadding="10">
 			        			<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerDeclaracionAccesibilidad']} (HTML)" />
 			        			<p:column>
-					        		<p:inputTextarea  id="inputAcc" scrollHeight="100" cols="69" rows="5" style="margin-right:10px;height:120px" value="#{viewConfiguracionEntidad.data.accesibilidad.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+					        		<p:inputTextarea  id="inputAcc" scrollHeight="100" cols="69" rows="5" style="margin-right:10px;height:120px" value="#{viewConfiguracionEntidad.data.accesibilidad.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" readonly="true" styleClass="margin-right-10"/>
 					            	<p:commandButton id="btnAssistentAcc" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarAssistentAcc}" process="@this" update=":form:growl" styleClass="va-top">
 					            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoAsistenteAcc}" update=":form:growl inputAcc"/>
 					        		</p:commandButton>
@@ -232,7 +293,31 @@
 				 	<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewConfiguracionEntidad.ayuda()}" process="@this" update="growl"/>
 				</f:facet>
 			</p:toolbar>
+			<p:contextMenu for=":work">
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewConfiguracionEntidad.copiadoCorr}" process="@this" update="@this growl"/>
+            	<p:ajax event="error" listener="#{viewConfiguracionEntidad.copiadoErr}" update="@this growl"/>
+        	</pe:clipboard>
 
+        	<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
+				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+			</p:contextMenu>
+			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewConfiguracionEntidad.copiadoCorr}" process="@this" update="@this growl"/>
+				<p:ajax event="error" listener="#{viewConfiguracionEntidad.copiadoErr}" update="@this growl"/>
+			</pe:clipboard>
+
+			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
+				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+			</p:contextMenu>
+			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewConfiguracionEntidad.copiadoCorr}" process="@this" update="@this growl"/>
+				<p:ajax event="error" listener="#{viewConfiguracionEntidad.copiadoErr}" update="@this growl"/>
+			</pe:clipboard>
+
+		    <p:inputText id="auxCopiar" value="#{viewConfiguracionEntidad.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 		</h:form>
 
 	</ui:define>

@@ -21,6 +21,9 @@ public final class Anexo extends DocumentoFirmado {
 	/** Anexar firmado. */
 	private TypeSiNo anexarfirmado = TypeSiNo.NO;
 
+	/** Indica si se ha anexado firmado. */
+	private TypeSiNo anexadofirmado = TypeSiNo.NO;
+
 	/**
 	 * Indica el número máximo de instancias que se pueden anexar (si no es genérico
 	 * será siempre 1).
@@ -257,7 +260,7 @@ public final class Anexo extends DocumentoFirmado {
 
 	/**
 	 * Método de acceso a dinamico.
-	 * 
+	 *
 	 * @return dinamico
 	 */
 	public TypeSiNo getDinamico() {
@@ -266,12 +269,31 @@ public final class Anexo extends DocumentoFirmado {
 
 	/**
 	 * Método para establecer dinamico.
-	 * 
+	 *
 	 * @param dinamico
 	 *                     dinamico a establecer
 	 */
 	public void setDinamico(final TypeSiNo dinamico) {
 		this.dinamico = dinamico;
+	}
+
+	/**
+	 * Método de acceso a anexadofirmado.
+	 * 
+	 * @return anexadofirmado
+	 */
+	public TypeSiNo getAnexadofirmado() {
+		return anexadofirmado;
+	}
+
+	/**
+	 * Método para establecer anexadofirmado.
+	 * 
+	 * @param anexadofirmado
+	 *                           anexadofirmado a establecer
+	 */
+	public void setAnexadofirmado(final TypeSiNo anexadofirmado) {
+		this.anexadofirmado = anexadofirmado;
 	}
 
 }

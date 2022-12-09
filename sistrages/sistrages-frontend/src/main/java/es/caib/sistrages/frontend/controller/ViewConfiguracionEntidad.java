@@ -53,7 +53,6 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	@Inject
 	private EntidadService entidadService;
 
-
 	/** Componente service. */
 	@Inject
 	private ComponenteService componenteService;
@@ -66,6 +65,8 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 
 	/** Oficinas. **/
 	private List<OficinaRegistro> oficinas;
+
+	private String portapapeles;
 
 	/**
 	 * Inicializacion.
@@ -549,6 +550,29 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	 */
 	public void setOficinas(final List<OficinaRegistro> oficinas) {
 		this.oficinas = oficinas;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

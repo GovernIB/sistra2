@@ -73,6 +73,8 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	@Inject
 	private FormateadorFormularioService fmtService;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -241,7 +243,8 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		maps.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
 		maps.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.idFormularioTramite);
 		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
-		maps.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(), TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString());
+		maps.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(),
+				TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString());
 
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
@@ -832,6 +835,29 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	 */
 	public final void setCambios(boolean cambios) {
 		this.cambios = cambios;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

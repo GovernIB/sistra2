@@ -7,22 +7,19 @@
 		.imc-forms-contenidor[aria-hidden="false"] {
 			visibility: visible;
 			opacity: 1;
-			-webkit-transition: visibility 0s ease-out, opacity .3s ease-out;
-			-moz-transition: visibility 0s ease-out, opacity .3s ease-out;
-			-ms-transition: visibility 0s ease-out, opacity .3s ease-out;
-			-o-transition: visibility 0s ease-out, opacity .3s ease-out;
 			transition: visibility 0s ease-out, opacity .3s ease-out;
 		}
 
 		.imc-forms-contenidor[aria-hidden="true"] {
 			visibility: hidden;
 			opacity: 0;
-			-webkit-transition: visibility .3s ease-out, opacity .3s ease-out;
-			-moz-transition: visibility .3s ease-out, opacity .3s ease-out;
-			-ms-transition: visibility .3s ease-out, opacity .3s ease-out;
-			-o-transition: visibility .3s ease-out, opacity .3s ease-out;
 			transition: visibility .3s ease-out, opacity .3s ease-out;
 		}
+
+		.imc-forms-contenidor.imc-cd { position: static; }
+		.imc-forms-contenidor.imc-cd .imc--c { position: static; }
+		.imc-forms-contenidor.imc-cd .imc--finestra { position: static; }
+
 	</style>
 
 	<div class="imc--c">
@@ -39,7 +36,7 @@
 				</div>
 
 				<nav id="imc--nav-seccions" class="imc--nav-seccions">
-					<button type="button" id="imc--nav-seccions-bt" aria-controls="imc--nav-seccions-llistat" aria-expanded="false" data-accio="seccio-obri"><span>Seccions del formulari</span></button>
+					<button type="button" id="imc--nav-seccions-bt" aria-controls="imc--nav-seccions-llistat" aria-expanded="false" data-accio="seccio-obri"><span>{{txtFormsDinSeccionsForm}}</span></button>
 					<ul class="imc--secc" role="region" id="imc--nav-seccions-llistat" aria-labelledby="imc--nav-seccions-bt" aria-hidden="true"></ul>
 				</nav>
 

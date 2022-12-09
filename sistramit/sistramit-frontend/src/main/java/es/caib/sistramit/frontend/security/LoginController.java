@@ -137,12 +137,14 @@ public final class LoginController {
 
 		// Establecemos idioma que viene en la saved request y si no viene ninguno el
 		// idioma por defecto
-		final String idiomaSavedRequest = getParamValue(savedRequest, PARAM_IDIOMA);
-		final String idiomasSoportados = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IDIOMAS_SOPORTADOS);
-		final String idioma = sanitizeIdioma(idiomaSavedRequest, idiomasSoportados);
-		RequestContextUtils.getLocaleResolver(request).setLocale(request, response, new Locale(idioma));
-		sesionHttp.setIdioma(idioma);
+		if (ConstantesSeguridad.PUNTOENTRADA_INICIAR_TRAMITE.equals(puntoEntrada)) {
+			final String idiomaSavedRequest = getParamValue(savedRequest, PARAM_IDIOMA);
+			final String idiomasSoportados = systemService
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IDIOMAS_SOPORTADOS);
+			final String idioma = sanitizeIdioma(idiomaSavedRequest, idiomasSoportados);
+			RequestContextUtils.getLocaleResolver(request).setLocale(request, response, new Locale(idioma));
+			sesionHttp.setIdioma(idioma);
+		}
 
 		// En función del punto de entrada realizamos login
 		ModelAndView login = null;

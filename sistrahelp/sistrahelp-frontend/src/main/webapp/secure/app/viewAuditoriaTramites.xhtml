@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	template="../layout/mainLayout.xhtml">
 
 	<f:metadata>
@@ -14,6 +15,11 @@
 	<ui:define name="content">
 		<h:outputScript library="primefaces-custom" name="calendar_es.js" />
 		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
+		<style>
+			.ui-panelgrid .ui-panelgrid-cell{
+				border-color:#f0f0f0;
+			}
+		</style>
 
 		<h:form id="form" style="height:88%;">
 
@@ -23,7 +29,7 @@
 			<!-- onblur="this.value = this.value.toUpperCase();" para pasar valor de strings a Uppercase -->
 			<!-- Toolbar -->
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
-        	<p:panelGrid id="panelFiltro"  styleClass="noBackground w100 h10 noBorders ,showcase-text-align-center">
+        	<p:panelGrid id="panelFiltro"  styleClass="noBackground w100 h10 ,showcase-text-align-center">
         			<p:column styleClass=" noPadding ">
 		        		<h:panelGrid columns="2" styleClass="w100, noPadding" >
 			        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewAuditoriaTramites.filtroIdSesion']}:"/>
@@ -99,7 +105,6 @@
 					<p:column styleClass=" noPadding p-align-start">
 			        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="w100, noPadding, noMargin">
 		          			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
-		          			<p:commandButton value="#{msg['botones.copiar']}" icon="fa fa-clipboard"  actionListener="#{viewAuditoriaTramites.generarTxt()}" styleClass="w100"  process="@this" update="growl"/>
 		          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.ayuda}"/>
 						</h:panelGrid>
 					</p:column>
@@ -165,9 +170,79 @@
 			</p:dataTable></p:outputPanel>
 
 			<h:outputScript >
+
 			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
 			  	$('#form\\:btnBuscar').click();
 			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+				function consultar(){
+					let elemento = document.getElementsByClassName('resaltar')[0];
+					elemento.click();
+					$('#form\\:btnEditarHidden').click();
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("form:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+
+				var dataT = document.getElementsByClassName('ui-datatable-scrollable-body')[0];
+				var elEnDataT = dataT.getElementsByClassName('resaltar')[0];
+				if(elEnDataT!=null){
+					document.getElementById("form:detalle").classList.remove("d-none");
+					document.getElementById("form:detalle").classList.add("d-block");
+				}else{
+					document.getElementById("form:detalle").classList.remove("d-block");
+					document.getElementById("form:detalle").classList.add("d-none");
+				}
+			 }
 
 		      function triggerDblClick() {
 		        	$('#form\\:btnEditarHidden').click();
@@ -181,6 +256,7 @@
 		      }
 		    </h:outputScript>
 		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewAuditoriaTramites.rcDobleClick()}" process="@this" update="growl" style="display:none"/>
+
 			<p:inputText id="paginacion" value="#{viewAuditoriaTramites.paginacion}" style="opacity:0">
 				<p:ajax event="blur" update="@form" process="@this"/>
 			</p:inputText>
@@ -192,8 +268,35 @@
 			 function trim(element){
 			 	element.value = element.value.trim();
 			 }
+
 		   </h:outputScript>
 
+		    <p:contextMenu for=":work">
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+       			<p:menuitem id="detalle" icon="fa fa-window-maximize" onclick="consultar();" value="#{msg['dialogAuditoriaTramites.descripcion']}"  process="@this"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewAuditoriaTramites.copiadoCorr}" process="@this" update="@this growl"/>
+            	<p:ajax event="error" listener="#{viewAuditoriaTramites.copiadoErr}" update="@this growl"/>
+        	</pe:clipboard>
+
+			<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
+				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+			</p:contextMenu>
+			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewAuditoriaTramites.copiadoCorr}" process="@this" update="@this growl"/>
+				<p:ajax event="error" listener="#{viewAuditoriaTramites.copiadoErr}" update="@this growl"/>
+			</pe:clipboard>
+
+			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
+				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+			</p:contextMenu>
+			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewAuditoriaTramites.copiadoCorr}" process="@this" update="@this growl"/>
+				<p:ajax event="error" listener="#{viewAuditoriaTramites.copiadoErr}" update="@this growl"/>
+			</pe:clipboard>
+
+		    <p:inputText id="auxCopiar" value="#{viewAuditoriaTramites.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 		</h:form>
 
 	</ui:define>

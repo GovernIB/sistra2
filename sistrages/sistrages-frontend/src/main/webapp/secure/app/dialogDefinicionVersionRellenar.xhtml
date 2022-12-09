@@ -44,7 +44,7 @@
 
 					<p:outputLabel for="inputDescripcion" value="#{msg['dialogDefinicionVersionRellenar.headerDescripcion']}" />
 					<p:column>
-						<p:inputText id="inputDescripcion"  value="#{dialogDefinicionVersionRellenar.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionRellenar.idiomas)}" disabled="true" size="40" styleClass="margin-right-10" required="true" />
+						<p:inputText id="inputDescripcion"  value="#{dialogDefinicionVersionRellenar.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionRellenar.idiomas)}" readonly="true" size="40" styleClass="margin-right-10" required="true" />
 						<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogDefinicionVersionRellenar.editarDescripcion()}" process="@this" update="growldialogDefinicionRellenar" styleClass="margin-right-3">
 		            		<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRellenar.returnDialogoDescripcion}" update="growldialogDefinicionRellenar inputDescripcion" />
 		        		</p:commandButton>

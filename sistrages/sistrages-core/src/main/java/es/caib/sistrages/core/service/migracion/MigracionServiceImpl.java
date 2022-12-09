@@ -113,6 +113,18 @@ public class MigracionServiceImpl implements MigracionService {
 
 	@Override
 	@NegocioInterceptor
+	public boolean isDestinoCorrecto(final Long pIdTramiteSistra, final int pNumVersionSistra) {
+		final TraverSistra traverSistra = recuperaDatosSistra(pIdTramiteSistra, pNumVersionSistra);
+		if (traverSistra != null && !"B".equals(traverSistra.getTrvDestin())
+				&& !"R".equals(traverSistra.getTrvDestin())) {
+			return false;
+		}
+		return true;
+
+	}
+
+	@Override
+	@NegocioInterceptor
 	public List<ErrorMigracion> migrarTramiteVersion(final Long pIdTramiteSistra, final int pNumVersionSistra,
 			final Long pIdTramite, final int pNumVersion, final Map<String, Object> pParams) {
 		final List<ErrorMigracion> listaErrores = new ArrayList<>();
@@ -353,10 +365,10 @@ public class MigracionServiceImpl implements MigracionService {
 			PaginaFormulario pagina = disenyoFormulario.getPaginas().get(0);
 
 			// recorremos las paginas del formulario de sistra
-			//for (final PantalSistra paginaSistra : formulSistra.getPaginas()) {
-			for (int i = 0 ; i < formulSistra.getPaginas().size(); i++) {
+			// for (final PantalSistra paginaSistra : formulSistra.getPaginas()) {
+			for (int i = 0; i < formulSistra.getPaginas().size(); i++) {
 				final PantalSistra paginaSistra = formulSistra.getPaginas().get(i);
-				pagina.setIdentificador("P"+(i+1));
+				pagina.setIdentificador("P" + (i + 1));
 				if (paginaSistra.getPanExpres() != null) {
 					pagina.setScriptNavegacion(
 							createScript("/* TODO: Revisar script" + System.getProperty("line.separator")
@@ -392,7 +404,7 @@ public class MigracionServiceImpl implements MigracionService {
 
 					final PaginaFormulario paginaNueva = new PaginaFormulario();
 					paginaNueva.setOrden(disenyoFormulario.getPaginas().size() + 1);
-					paginaNueva.setIdentificador("P" + "P"+(i+2));
+					paginaNueva.setIdentificador("P" + "P" + (i + 2));
 					paginaNueva.setCodigo(formIntDao.addPagina(idFormulario, paginaNueva));
 					disenyoFormulario.getPaginas().add(paginaNueva);
 
@@ -500,9 +512,10 @@ public class MigracionServiceImpl implements MigracionService {
 				lineaComponente = createComponent(pagina, lineaComponente, componenteSistra, tipo, pIdioma, pOpciones,
 						listaErrores);
 
-				if(tipo == TypeObjetoFormulario.CAMPO_OCULTO) {
+				if (tipo == TypeObjetoFormulario.CAMPO_OCULTO) {
 					componente = lineaComponente.getComponentes().get(0);
-					// Comprueba que no esté relleno el script de validacion en caso de ser un campo oculto
+					// Comprueba que no esté relleno el script de validacion en caso de ser un campo
+					// oculto
 					if (componenteSistra.getComExpval() != null) {
 						final ErrorMigracion error2 = errorMigracion(componente.getIdComponente(), pOpciones,
 								"elemento.formulario.disenyoFormulario.pagina.elemento.ocultoconscriptvalidacion",
@@ -673,7 +686,7 @@ public class MigracionServiceImpl implements MigracionService {
 						cTextBox.setTipoCampoTexto(TypeCampoTexto.EMAIL);
 
 						if (componenteSistra.getMaxlength() != null) {
-							if(componenteSistra.getMaxlength() > 9999) {
+							if (componenteSistra.getMaxlength() > 9999) {
 								final ErrorMigracion errorTam = errorMigracion(componente.getIdComponente(), pOpciones,
 										"elemento.formulario.disenyoFormulario.tamanyo.cambiado", pIdioma);
 								errorTam.setTipo(TypeErrorMigracion.WARNING);
@@ -696,9 +709,10 @@ public class MigracionServiceImpl implements MigracionService {
 								cTextBox.setNormalNumeroLineas(componenteSistra.getComFilas().intValue());
 							}
 							if (componenteSistra.getComColumn() != null) {
-								if(componenteSistra.getComColumn().intValue() > 9999) {
-									final ErrorMigracion errorTam = errorMigracion(componente.getIdComponente(), pOpciones,
-											"elemento.formulario.disenyoFormulario.tamanyo.cambiado", pIdioma);
+								if (componenteSistra.getComColumn().intValue() > 9999) {
+									final ErrorMigracion errorTam = errorMigracion(componente.getIdComponente(),
+											pOpciones, "elemento.formulario.disenyoFormulario.tamanyo.cambiado",
+											pIdioma);
 									errorTam.setTipo(TypeErrorMigracion.WARNING);
 									listaErrores.add(errorTam);
 									cTextBox.setNormalTamanyo(9999);
@@ -709,7 +723,7 @@ public class MigracionServiceImpl implements MigracionService {
 						}
 
 						if (componenteSistra.getMaxlength() != null) {
-							if(componenteSistra.getMaxlength() > 9999) {
+							if (componenteSistra.getMaxlength() > 9999) {
 								final ErrorMigracion errorTam = errorMigracion(componente.getIdComponente(), pOpciones,
 										"elemento.formulario.disenyoFormulario.tamanyo.cambiado", pIdioma);
 								errorTam.setTipo(TypeErrorMigracion.WARNING);
@@ -848,7 +862,7 @@ public class MigracionServiceImpl implements MigracionService {
 		final Integer orden = UtilDisenyo.ordenInsercionComponente(linea, null, posicionamiento);
 
 		final ObjetoFormulario componente = formIntDao.addComponente(tipoCampo, pagina.getCodigo(), linea.getCodigo(),
-				orden, posicionamiento, null, false , null);
+				orden, posicionamiento, null, false, null);
 
 		// actualizamos modelo
 		pagina.getLineas().get(linea.getOrden() - 1).addComponente((ComponenteFormulario) componente);
@@ -1014,11 +1028,12 @@ public class MigracionServiceImpl implements MigracionService {
 			user = (String) pParams.get(ConstantesMigracion.USERNAME);
 		}
 
-		final TramiteVersion tramiteVersion = tramiteComponent.createTramiteVersionDefault(pNumVersion, idiomas, user);
+		final TramiteVersion tramiteVersion = tramiteComponent.createTramiteVersionMigracion(pNumVersion, idiomas);
 
 		tramiteVersion.setListaPasos(tramiteComponent.createNormalizado());
 
-		tramiteVersion.setCodigo(tramiteComponent.addTramiteVersion(tramiteVersion, String.valueOf(pIdTramite), user));
+		tramiteVersion.setCodigo(
+				tramiteComponent.addTramiteVersionMigracion(tramiteVersion, String.valueOf(pIdTramite), user));
 
 		tramiteVersion.setListaPasos(tramitePasoDao.getTramitePasos(tramiteVersion.getCodigo()));
 

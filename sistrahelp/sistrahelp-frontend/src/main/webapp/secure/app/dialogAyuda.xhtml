@@ -27,7 +27,67 @@
 	<p:growl id="growlDialogAyuda" widgetVar="growlDialogAyuda" showDetail="false" life="2000" sticky="false" />
 
 	<h:form id="dialogAyuda" >
+		 <h:outputScript>
+					window.onload=function(){
+		let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+		onVisible(contextMenu, () => eliminarResaltar());
 
+		document.addEventListener('contextmenu', function(ev) {
+			ev.preventDefault();
+			getPos();
+			return false;
+		}, false);
+	}
+
+	function eliminarResaltar(){
+		let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+		let elementos = document.getElementsByClassName('resaltar');
+		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+			for(let i = 0; i &lt; elementos.length; i++){
+				elementos[i].classList.remove('resaltar');
+			}
+		}
+	}
+
+	function onVisible(element, callback) {
+	  new IntersectionObserver((entries, observer) => {
+		entries.forEach(entry => {
+		  if(entry.intersectionRatio == 0) {
+			callback(element);
+		  }
+		});
+	  }).observe(element);
+	}
+
+	function getPos(){
+		var e = window.event;
+
+		var posX = e.clientX;
+		var posY = e.clientY;
+		var el = document.elementFromPoint(posX, posY);
+
+		let elementos = document.getElementsByClassName('resaltar');
+			if(elementos.length &gt; 0){
+				for(let i = 0; i &lt; elementos.length; i++){
+					elementos[i].classList.remove('resaltar');
+				}
+			}
+
+		el.classList.add("resaltar");
+		var aux = document.getElementById("dialogAyuda:auxCopiar");
+		if(el.textContent!=''){
+			aux.value = el.textContent;
+		}else if(el.firstChild!=null){
+			aux.value = el.firstChild.value;
+		}else if(el.value!=null &amp;&amp; el.value!=''){
+			aux.value = el.value;
+		}
+	}
+			</h:outputScript>
+		<p:contextMenu onshow="console.log('escondo')">
+				<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w100" actionListener="#{dialogAyuda.generarTxt()}"   process="@this :dialogAyuda:auxCopiar" update="growlDialogAyuda"/>
+			</p:contextMenu>
+			<p:inputText id="auxCopiar" value="#{dialogAyuda.portapapeles}" style="display:none;"/>
 			<!-- Workpanel: Iframe HTML -->
 			<p:outputPanel id="formulario-panel" styleClass="w100 h100">
 				<iframe id="formulario-frame" name="formulario-frame" src="#{dialogAyuda.urlIframe}" class="ayuda-frame">
@@ -46,7 +106,6 @@
 				</f:facet>
 			</p:toolbar>
 		</p:outputPanel>
-
 
 	</h:form>
 

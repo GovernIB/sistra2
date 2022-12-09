@@ -88,6 +88,8 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 
 	private boolean cambios = false;
 
+	private String portapapeles;
+
 	/**
 	 * Obtiene el valor de permiteEditar.
 	 *
@@ -468,7 +470,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 			}
 		}
 
-		if (data.isDebeAnexarFirmado() && data.isDebeFirmarDigitalmente()) {
+		if (data.isDebeAnexarFirmado() && data.isDebeFirmarDigitalmente() && data.getNumeroInstancia() > 1) {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.firma.unicidad"));
 			return false;
 		}
@@ -504,6 +506,29 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**
@@ -600,6 +625,12 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 
 	public void setCambios() {
 		this.cambios = true;
+
+		if (this.data.isDebeAnexarFirmado() && !this.data.isDebeFirmarDigitalmente()) {
+			this.data.setExtensionSeleccion(TypeExtension.PERSONALIZADAS);
+			this.data.setExtensiones("pdf;");
+			this.data.setDebeConvertirPDF(false);
+		}
 	}
 
 }

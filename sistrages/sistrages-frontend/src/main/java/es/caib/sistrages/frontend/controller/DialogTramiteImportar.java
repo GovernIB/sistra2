@@ -269,6 +269,8 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/** Refresca cache tramite y dominio. **/
 	private boolean refrescarCacheDominio = true;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -770,18 +772,19 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		} else {
 			filaTramiteRegistro = FilaImportarTramiteRegistro.creaITconPasoRegistro(tramiteVersion, pasoRegistro);
 
-			if (entidad.isRegistroCentralizado() && filaTramiteRegistro.getPasoRegistro() != null &&  ((TramitePasoRegistrar)filaTramiteRegistro.getPasoRegistro()).getEnvioRemoto() == null) {
+			if (entidad.isRegistroCentralizado() && filaTramiteRegistro.getPasoRegistro() != null
+					&& ((TramitePasoRegistrar) filaTramiteRegistro.getPasoRegistro()).getEnvioRemoto() == null) {
 				filaTramiteRegistro.setResultado(TypeImportarResultado.OK);
 				filaTramiteRegistro.setAccion(TypeImportarAccion.NADA);
 				filaTramiteRegistro.setMostrarRegistro(false);
 
 			} else {
 				try {
-					if ( ((TramitePasoRegistrar)filaTramiteRegistro.getPasoRegistro()).getEnvioRemoto() == null) {
+					if (((TramitePasoRegistrar) filaTramiteRegistro.getPasoRegistro()).getEnvioRemoto() == null) {
 						filaTramiteRegistro.setTipoTramite(true);
 						rellenarInfoRegistro();
 					}
-					if ( ((TramitePasoRegistrar)filaTramiteRegistro.getPasoRegistro()).getEnvioRemoto() != null) {
+					if (((TramitePasoRegistrar) filaTramiteRegistro.getPasoRegistro()).getEnvioRemoto() != null) {
 						filaTramiteRegistro.setTipoTramite(false);
 						rellenarInfoServicio();
 					}
@@ -951,7 +954,6 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 	}
 
-
 	/**
 	 * Rellenando la info de servicio. <br />
 	 *
@@ -964,12 +966,14 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 		setMostrarRegistroServicio(true);
 
-		//Buscamos el envio si existe.
+		// Buscamos el envio si existe.
 		Long idArea = null;
 		if (this.filaArea != null && this.filaArea.getAccion() == TypeImportarAccion.SELECCIONAR) {
-			 idArea = this.filaArea.getAreaActual().getCodigo();
+			idArea = this.filaArea.getAreaActual().getCodigo();
 		}
-		EnvioRemoto envio = envioRemotoService.getEnvioByIdentificador(this.filaTramiteRegistro.getEnvioRemoto().getAmbito(), this.filaTramiteRegistro.getEnvioRemoto().getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
+		EnvioRemoto envio = envioRemotoService.getEnvioByIdentificador(
+				this.filaTramiteRegistro.getEnvioRemoto().getAmbito(),
+				this.filaTramiteRegistro.getEnvioRemoto().getIdentificador(), UtilJSF.getIdEntidad(), idArea, null);
 		this.filaTramiteRegistro.setEnvioRemoto(envio);
 		if (envio == null) {
 			this.filaTramiteRegistro.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.envio.noexisteenvio"));
@@ -1115,7 +1119,6 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			final SeccionReutilizable seccionActual = seccionReutilizableService.getSeccionReutilizableByIdentificador(
 					TypeAmbito.ENTIDAD, seccion.getIdentificador(), UtilJSF.getIdEntidad(), idArea);
 
-
 			if (seccionActual == null) {
 
 				// Si no existe o está desactivado la personalización, dan info
@@ -1125,11 +1128,11 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			} else {
 				final String mensaje;
 				if (seccionActual.getRelease() > seccion.getRelease()) {
-					//Si la release es más vieja, hay que avisar (acciones reemplazar o nada)
-					 mensaje = UtilJSF.getLiteral("dialogTramiteImportar.info.existeseccionActualMasNueva");
+					// Si la release es más vieja, hay que avisar (acciones reemplazar o nada)
+					mensaje = UtilJSF.getLiteral("dialogTramiteImportar.info.existeseccionActualMasNueva");
 				} else {
-					//Si la release es más nueva, hay que avisar  (acciones reemplazar o nada)
-					 mensaje = UtilJSF.getLiteral("dialogTramiteImportar.info.existeseccionActualMenosNueva");
+					// Si la release es más nueva, hay que avisar (acciones reemplazar o nada)
+					mensaje = UtilJSF.getLiteral("dialogTramiteImportar.info.existeseccionActualMenosNueva");
 				}
 				filasSecciones.add(FilaImportarSeccion.crearITseccionExiste(seccion, seccionActual, mensaje));
 			}
@@ -1198,7 +1201,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 		if (posicionDominio != null) {
 			final FilaImportarDominio fila = this.filasDominios.get(posicionDominio);
-			if(UtilJSF.getIdEntidad() != null) {
+			if (UtilJSF.getIdEntidad() != null) {
 				fila.setIdEntidad(UtilJSF.getIdEntidad());
 			}
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
@@ -1341,7 +1344,6 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			UtilJSF.openDialog(DialogTramiteImportarGestor.class, TypeModoAcceso.EDICION, null, true, 500, 120);
 		}
 	}
-
 
 	/**
 	 * Check seccion.
@@ -1760,6 +1762,29 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/** Ayuda. */
 	public void ayuda() {
 		UtilJSF.openHelp("tramiteImportarDialog");
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/** Funciones get/set. **/
@@ -2263,6 +2288,5 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	public List<FilaImportarSeccion> getFilasSecciones() {
 		return filasSecciones;
 	}
-
 
 }

@@ -8,6 +8,7 @@ import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.service.SeccionReutilizableService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -39,6 +40,8 @@ public class DialogSeccionDesbloquear extends DialogControllerBase {
 	 * Datos elemento.
 	 */
 	private SeccionReutilizable data;
+
+	private String portapapeles;
 
 	/**
 	 * Inicialización.
@@ -75,6 +78,29 @@ public class DialogSeccionDesbloquear extends DialogControllerBase {
 	}
 
 	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	/**
 	 * @return the id
 	 */
 	public String getId() {
@@ -82,8 +108,7 @@ public class DialogSeccionDesbloquear extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -97,8 +122,7 @@ public class DialogSeccionDesbloquear extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final SeccionReutilizable data) {
 		this.data = data;
@@ -112,8 +136,7 @@ public class DialogSeccionDesbloquear extends DialogControllerBase {
 	}
 
 	/**
-	 * @param usuario
-	 *            the usuario to set
+	 * @param usuario the usuario to set
 	 */
 	public void setUsuario(final String usuario) {
 		this.usuario = usuario;
@@ -127,8 +150,7 @@ public class DialogSeccionDesbloquear extends DialogControllerBase {
 	}
 
 	/**
-	 * @param detalle
-	 *            the detalle to set
+	 * @param detalle the detalle to set
 	 */
 	public void setDetalle(final String detalle) {
 		this.detalle = detalle;

@@ -104,6 +104,8 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	/** Lista de tramites en el datagrid. **/
 	private TramiteMensajeAviso tramiteMensajeAvisoSeleccionado;
 
+	private String portapapeles;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -374,6 +376,29 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	/** Ayuda. */
 	public void ayuda() {
 		UtilJSF.openHelp("mensajeAvisoDialog");
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

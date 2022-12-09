@@ -4,7 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFormulario" var="TypeScriptFormulario" />
@@ -27,6 +28,17 @@
 		<f:viewAction action="#{dialogPropiedadesFormulario.init}" />
 	</f:metadata>
 	<h:form styleClass="margin-top-10" id="form">
+
+			<p:contextMenu id="mainCm" widgetVar="mainCm">
+                <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+            </p:contextMenu>
+            <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+                <p:ajax event="success" listener="#{dialogPropiedadesFormulario.copiadoCorr}" process="@this" update="@this growlDialog"/>
+                <p:ajax event="error" listener="#{dialogPropiedadesFormulario.copiadoErr}" update="@this growlDialog"/>
+            </pe:clipboard>
+
+           <p:inputText id="auxCopiar" value="#{dialogPropiedadesFormulario.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
@@ -43,7 +55,7 @@
 					 	</p:selectBooleanCheckbox>
 
 						<p:outputLabel for="textoCabeceraHidden" value="#{msg['dialogPropiedadesFormulario.textoCabecera']}" styleClass="no-display"/>
-						<p:inputText id="textoCabecera" value="#{dialogPropiedadesFormulario.literal}" disabled="true" required="true" size="80" styleClass="margin-right-10 #{not textoCabeceraComponent.valid ? 'ui-state-error' : ''}"/>
+						<p:inputText id="textoCabecera" value="#{dialogPropiedadesFormulario.literal}" readonly="true" required="true" size="80" styleClass="margin-right-10 #{not textoCabeceraComponent.valid ? 'ui-state-error' : ''}"/>
 						<p:inputText id="textoCabeceraHidden" value="#{dialogPropiedadesFormulario.literal}" type="hidden" required="#{dialogPropiedadesFormulario.data.mostrarCabecera}" binding="#{textoCabeceraComponent}"/>
 						<p:commandButton id="btnNombre" icon="fa fa-language" actionListener="#{dialogPropiedadesFormulario.editarTextoCabecera}" process="@this" update="growlDialog" styleClass="va-top" disabled="#{!dialogPropiedadesFormulario.data.mostrarCabecera}" >
 		            		<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogo}" update="growlDialog textoCabecera textoCabeceraHidden" />
@@ -61,6 +73,7 @@
 							<!-- Necesario para actualizar en controlador la fila seleccionada -->
 							<p:ajax event="rowSelect" global="false"/>
 							<p:ajax event="rowUnselect"/>
+							<p:ajax event="contextMenu" global="false" process="@this" update="@form:botonesPagina"/>
 
 							<!-- Columnas -->
 						    <p:column class="ui-panelgrid-cell w75" headerText="#{msg['dialogPropiedadesFormulario.pagina']}">
@@ -74,7 +87,7 @@
 						    </p:column>
 
 				 		</p:dataTable>
-				 		<p:outputPanel styleClass="barra-herramientas-vertical" style="margin-left:5px">
+				 		<p:outputPanel styleClass="barra-herramientas-vertical" style="margin-left:5px" id="botonesPagina">
 						    	<p:commandButton id="btnNuevaPagina" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{dialogPropiedadesFormulario.nuevaPagina}" process="@this permitirGuardarSinFinalizar" update="growlDialog dataTablePaginas btnEditarPagina permitirGuardarSinFinalizar" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" />
 								<ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
 								<p:commandButton id="btnEditarPagina" icon="fa fa-edit" title="#{msg['botones.editar']}" actionListener="#{dialogPropiedadesFormulario.editarPagina}" process="@this" update="growlDialog" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}">
@@ -83,7 +96,9 @@
 	        					</p:commandButton>
 	        					<ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
 
-						    	<p:commandButton id="btnEliminarPagina" icon="fa fa-minus"  title="#{msg['botones.eliminar']}" actionListener="#{dialogPropiedadesFormulario.eliminarPagina}" process="@this permitirGuardarSinFinalizar" update="growlDialog dataTablePaginas btnEditarPagina permitirGuardarSinFinalizar" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" />
+						    	<p:commandButton id="btnEliminarPagina" icon="fa fa-minus"  title="#{msg['botones.eliminar']}" actionListener="#{dialogPropiedadesFormulario.eliminarPagina}" process="@this permitirGuardarSinFinalizar" update="growlDialog dataTablePaginas btnEditarPagina permitirGuardarSinFinalizar" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" >
+						    		<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+					    		</p:commandButton>
 								<ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
 
 						    	<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogPropiedadesFormulario.subirPagina}" process="@this" update="growlDialog dataTablePaginas btnEditarPagina" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" />
@@ -107,6 +122,7 @@
 							<!-- Necesario para actualizar en controlador la fila seleccionada -->
 							<p:ajax event="rowSelect" global="false" update="form:filesPlantilla"/>
 							<p:ajax event="rowUnselect" update="form:filesPlantilla"/>
+							<p:ajax event="contextMenu" global="false" process="@this" update="@form:botonesPlantilla"/>
 
 							<!-- Columnas -->
 							<p:column headerText="#{msg['dialogPropiedadesFormulario.formateador']}" styleClass="ui-panelgrid-cell w20" >
@@ -124,7 +140,7 @@
 
 
 				 		</p:dataTable>
-				 		 	<p:outputPanel styleClass="barra-herramientas-vertical" style="margin-left:5px">
+				 		 	<p:outputPanel styleClass="barra-herramientas-vertical" style="margin-left:5px" id="botonesPlantilla">
 						    	<p:commandButton id="btnNuevaPlantilla" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{dialogPropiedadesFormulario.nuevaPlantilla}" process="@this" update="growlDialog dataTablePlantillas" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}">
 						    		<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoPlantilla}" update="growlDialog dataTablePlantillas"/>
 						    	</p:commandButton>
@@ -135,7 +151,9 @@
 	        					</p:commandButton>
 	        					<ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
 
-						    	<p:commandButton id="btnEliminarPlantilla" icon="fa fa-minus" title="#{msg['botones.eliminar']}" actionListener="#{dialogPropiedadesFormulario.eliminarPlantilla}" process="@this" update="growlDialog dataTablePlantillas" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"/>
+						    	<p:commandButton id="btnEliminarPlantilla" icon="fa fa-minus" title="#{msg['botones.eliminar']}" actionListener="#{dialogPropiedadesFormulario.eliminarPlantilla}" process="@this" update="growlDialog dataTablePlantillas" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}">
+						    		<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+					    		</p:commandButton>
 						    	<ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
 
 								<p:commandButton id="btnConsultarPlantilla" icon="fa fa-eye" title="#{msg['botones.consultar']}" actionListener="#{dialogPropiedadesFormulario.consultarPlantilla}" process="@this" update="growlDialog" rendered="#{!dialogPropiedadesFormulario.alta and !dialogPropiedadesFormulario.edicion}" />
@@ -181,14 +199,166 @@
 				</p:toolbar>
 		    </p:outputPanel>
 
-			<p:confirmDialog global="true">
-				<p:outputPanel styleClass="confirmar_botonera">
-		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" process="@this"/>
-					<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" process="@this"/>
-				</p:outputPanel>
-		    </p:confirmDialog>
+			<!-- dialogo para confirmar -->
+            <p:confirmDialog global="true" >
+                <p:outputPanel styleClass="confirmar_botonera">
+                    <p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+                    <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+                </p:outputPanel>
+            </p:confirmDialog>
+
+			<h:outputScript >
+
+	             window.onload=function(){
+	                let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+	                onVisible(contextMenu, () => eliminarResaltar());
 
 
+
+	               document.addEventListener('contextmenu', function(ev) {
+	                    ev.preventDefault();
+	                    getPos();
+	                    return false;
+	                }, false);
+	              }
+
+
+
+	               function eliminarResaltar(){
+	                    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+	                      let elementos = document.getElementsByClassName('resaltar');
+	                      if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+	                        for(let i = 0; i &lt; elementos.length; i++){
+	                            elementos[i].classList.remove('resaltar');
+	                        }
+	                      }
+	                }
+
+
+
+	               function onVisible(element, callback) {
+	                  new IntersectionObserver((entries, observer) => {
+	                    entries.forEach(entry => {
+	                      if(entry.intersectionRatio == 0) {
+	                        callback(element);
+	                      }
+	                    });
+	                  }).observe(element);
+	                }
+
+
+	             function getPos(){
+	                 var e = window.event;
+
+
+
+	               var posX = e.clientX;
+	                var posY = e.clientY;
+	                var el = document.elementFromPoint(posX, posY);
+
+
+
+	               let elementos = document.getElementsByClassName('resaltar');
+	                      if(elementos.length &gt; 0){
+	                        for(let i = 0; i &lt; elementos.length; i++){
+	                            elementos[i].classList.remove('resaltar');
+	                        }
+	                      }
+
+
+
+	               el.classList.add("resaltar");
+	                var aux = document.getElementById("form:auxCopiar");
+	                if(el.textContent!=''){
+	                    aux.value = el.textContent;
+	                }else if(el.firstChild!=null){
+	                    aux.value = el.firstChild.value;
+	                }else if(el.value!=null &amp;&amp; el.value!=''){
+	                    aux.value = el.value;
+	                }
+
+	             }
+
+	             function opcPagina(){
+	             	if(document.getElementById("form:btnNuevaPagina")!=null){
+						document.getElementById("form:mnuNuevaPagina").style.display='block';
+	             	}else{
+						document.getElementById("form:mnuNuevaPagina").style.display='none';
+	             	}
+
+	             	if(document.getElementById("form:btnEditarPagina")!=null){
+						document.getElementById("form:mnuEditarPagina").style.display='block';
+	             	}else{
+						document.getElementById("form:mnuEditarPagina").style.display='none';
+	             	}
+
+	             	if(document.getElementById("form:btnEliminarPagina")!=null){
+						document.getElementById("form:mnuEliminarPagina").style.display='block';
+	             	}else{
+						document.getElementById("form:mnuEliminarPagina").style.display='none';
+	             	}
+
+	             	if(document.getElementById("form:btnConsultarPagina")!=null){
+						document.getElementById("form:mnuConsultarPagina").style.display='block';
+	             	}else{
+						document.getElementById("form:mnuConsultarPagina").style.display='none';
+	             	}
+	             }
+
+	             function opcPlantilla(){
+	             	if(document.getElementById("form:btnNuevaPlantilla")!=null){
+						document.getElementById("form:mnuNuevaPlantilla").style.display='block';
+	             	}else{
+						document.getElementById("form:mnuNuevaPlantilla").style.display='none';
+	             	}
+
+	             	if(document.getElementById("form:btnEditarPlantilla")!=null){
+						document.getElementById("form:mnuEditarPlantilla").style.display='block';
+	             	}else{
+						document.getElementById("form:mnuEditarPlantilla").style.display='none';
+	             	}
+
+	             	if(document.getElementById("form:btnEliminarPlantilla")!=null){
+						document.getElementById("form:mnuEliminarPlantilla").style.display='block';
+	             	}else{
+						document.getElementById("form:mnuEliminarPlantilla").style.display='none';
+	             	}
+
+	             	if(document.getElementById("form:btnConsultarPlantilla")!=null){
+						document.getElementById("form:mnuConsultarPlantilla").style.display='block';
+	             	}else{
+						document.getElementById("form:mnuConsultarPlantilla").style.display='none';
+	             	}
+	             }
+
+            </h:outputScript>
+
+			<p:contextMenu for="dataTablePaginas" id="cMenuPaginas" widgetVar="cMenuPaginasWV" beforeShow="opcPagina()">
+                <p:menuitem id="mnuCopyPagina" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+				<p:menuitem id="mnuNuevaPagina" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevaPagina').click();" />
+				<p:menuitem id="mnuEditarPagina" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('form:btnEditarPagina').click();"/>
+				<p:menuitem id="mnuEliminarPagina" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:btnEliminarPagina').click();" />
+
+				<p:menuitem id="mnuConsultarPagina" value="#{msg['botones.consultar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:btnConsultarPagina').click();" />
+            </p:contextMenu>
+            <pe:clipboard id="clipContextCopyPaginas" trigger="mnuCopyPagina" action="copy" target="auxCopiar">
+                <p:ajax event="success" listener="#{dialogPropiedadesFormulario.copiadoCorr}" process="@this" update="@this growlDialog"/>
+                <p:ajax event="error" listener="#{dialogPropiedadesFormulario.copiadoErr}" update="@this growlDialog"/>
+            </pe:clipboard>
+
+            <p:contextMenu for="dataTablePlantillas" id="cMenuPlantillas" widgetVar="cMenuPlantillasWV" beforeShow="opcPlantilla()">
+                <p:menuitem id="mnuCopyPlantilla" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+				<p:menuitem id="mnuNuevaPlantilla" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevaPlantilla').click();" />
+				<p:menuitem id="mnuEditarPlantilla" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('form:btnEditarPlantilla').click();"/>
+				<p:menuitem id="mnuEliminarPlantilla" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:btnEliminarPlantilla').click();" />
+
+				<p:menuitem id="mnuConsultarPlantilla" value="#{msg['botones.consultar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:btnConsultarPlantilla').click();" />
+				<p:menuitem id="mnuFilesPlantilla" value="#{msg['dialogPropiedadesFormulario.botonIdioma']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:filesPlantilla').click();" />
+            </p:contextMenu>
+            <pe:clipboard id="clipContextCopyPlantillas" trigger="mnuCopyPlantilla" action="copy" target="auxCopiar">
+                <p:ajax event="success" listener="#{dialogPropiedadesFormulario.copiadoCorr}" process="@this" update="@this growlDialog"/>
+                <p:ajax event="error" listener="#{dialogPropiedadesFormulario.copiadoErr}" update="@this growlDialog"/>
+            </pe:clipboard>
 
 	</h:form>
 </h:body>

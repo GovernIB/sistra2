@@ -3,6 +3,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
@@ -28,11 +29,71 @@
 		</f:metadata>
 
 		<h:form id="formDialogDefinicionVersionControlAcceso" styleClass="h100">
+			<h:outputScript >
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("formDialogDefinicionVersionControlAcceso:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+
+			 }
+
+			</h:outputScript>
 			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
 			<!-- Contenido dialogo -->
-			<h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="25" cellspacing="0">
+			<h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="25" cellspacing="0" style="padding-bottom: 38px !important;">
 
 	         	<p:outputLabel for="activo" value="#{msg['dialogTramiteControlAcceso.activo']}"/>
 	            <p:selectBooleanCheckbox id="activo" value="#{dialogTramiteControlAcceso.tramiteVersion.activa}"/>
@@ -43,7 +104,7 @@
 					<p:column styleClass="ui-inputgroup noPadding-left">
 			           		<p:outputLabel for="mensajedesactivacion" value="#{msg['dialogTramiteControlAcceso.mensajedesactivacion']}" styleClass="center-vertical" />
 			           		<p:spacer width="8" height="1" />
-			           		<p:inputTextarea  id="mensajedesactivacion" disabled="true" styleClass="w75 va-middle" value="#{dialogTramiteControlAcceso.avisoEntidad.mensaje.getTraduccion(sessionBean.lang,dialogTramiteControlAcceso.idiomas)}"/>
+			           		<p:inputTextarea  id="mensajedesactivacion" readonly="true" styleClass="w75 va-middle" value="#{dialogTramiteControlAcceso.avisoEntidad.mensaje.getTraduccion(sessionBean.lang,dialogTramiteControlAcceso.idiomas)}"/>
 
 			           		<p:commandButton id="buttonMensajeDesactivacion" icon="fa fa-language" actionListener="#{dialogTramiteControlAcceso.editarMensajeDesactivacion()}" styleClass="va-top margin-left-3"
 									process="@this" update="growlDialog">
@@ -84,7 +145,7 @@
 					<p:row>
 						<p:column styleClass="noPadding-left">
 							<p:selectBooleanCheckbox id="limitartramitacion" value="#{dialogTramiteControlAcceso.tramiteVersion.limiteTramitacion}">
-									<p:ajax update="numtramitraciones intervalo" />
+									<p:ajax event="change" update="@form:numtramitraciones @form:intervalo" process="@this"/>
 							</p:selectBooleanCheckbox>
 						</p:column>
 						<p:column>
@@ -93,7 +154,7 @@
 						<p:column>
 							<p:outputLabel for="numtramitraciones" value="#{msg['dialogTramiteControlAcceso.numtramitraciones']}" />
 							<p:spacer width="8" height="1" />
-							<p:inputNumber minValue="0" maxValue="9999" decimalPlaces="0" id="numtramitraciones" disabled="#{!dialogTramiteControlAcceso.tramiteVersion.limiteTramitacion}" size="4" value="#{dialogTramiteControlAcceso.tramiteVersion.numLimiteTramitacion}" />
+							<p:inputNumber minValue="0" maxValue="9999" decimalPlaces="0" id="numtramitraciones" readonly="#{!dialogTramiteControlAcceso.tramiteVersion.limiteTramitacion}" size="4" value="#{dialogTramiteControlAcceso.tramiteVersion.numLimiteTramitacion}" />
 						</p:column>
 						<p:column>
 							<p:spacer width="10" height="1" />
@@ -101,7 +162,7 @@
 						<p:column>
 							<p:outputLabel for="intervalo" value="#{msg['dialogTramiteControlAcceso.intervalo']}" />
 							<p:spacer width="8" height="1" />
-							<p:inputNumber minValue="0" maxValue="99" decimalPlaces="0" id="intervalo" disabled="#{!dialogTramiteControlAcceso.tramiteVersion.limiteTramitacion}" size="4" value="#{dialogTramiteControlAcceso.tramiteVersion.intLimiteTramitacion}"/>
+							<p:inputNumber minValue="0" maxValue="99" decimalPlaces="0" id="intervalo" readonly="#{!dialogTramiteControlAcceso.tramiteVersion.limiteTramitacion}" size="4" value="#{dialogTramiteControlAcceso.tramiteVersion.intLimiteTramitacion}"/>
 						</p:column>
 					</p:row>
 				</p:panelGrid>
@@ -124,7 +185,15 @@
 					</f:facet>
 				</p:toolbar>
 			</p:outputPanel>
+			<p:contextMenu>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :formDialogDefinicionVersionControlAcceso:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{dialogTramiteControlAcceso.copiadoCorr}" process="@this" update="@this growlDialog"/>
+            	<p:ajax event="error" listener="#{dialogTramiteControlAcceso.copiadoErr}" update="@this growlDialog"/>
+        	</pe:clipboard>
 
+		    <p:inputText id="auxCopiar" value="#{dialogTramiteControlAcceso.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 		</h:form>
 	</h:body>
 

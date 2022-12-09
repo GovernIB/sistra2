@@ -1,9 +1,10 @@
 package es.caib.sistramit.core.service.component.integracion;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.plugins.certificate.InformacioCertificat;
 import org.fundaciobit.plugins.validatesignature.api.IValidateSignaturePlugin;
 import org.fundaciobit.plugins.validatesignature.api.SignatureDetailInfo;
@@ -26,6 +27,7 @@ import es.caib.sistra2.commons.plugins.firmacliente.api.TypeTipoDocumental;
 import es.caib.sistramit.core.api.exception.SesionFirmaClienteException;
 import es.caib.sistramit.core.api.exception.ValidacionFirmaException;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
+import es.caib.sistramit.core.api.model.flujo.Firmante;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFirmaDigital;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
@@ -145,7 +147,8 @@ public final class FirmaComponentImpl implements FirmaComponent {
 				final FicheroFirmado fic = plgFirma.obtenerFirmaFichero(sesionFirma, fileId);
 				final TypeFirmaDigital tipoFirma = TypeFirmaDigital.fromString(fic.getFirmaTipo().toString());
 				if (tipoFirma == null) {
-					throw new SesionFirmaClienteException("Tipus signatura no reconeguda: " + fic.getFirmaTipo().toString());
+					throw new SesionFirmaClienteException(
+							"Tipus signatura no reconeguda: " + fic.getFirmaTipo().toString());
 				}
 				// Establece datos firma
 				resFirma.setFinalizada(true);
@@ -171,7 +174,45 @@ public final class FirmaComponentImpl implements FirmaComponent {
 
 	@Override
 	public ValidacionFirmante validarFirmante(final String idEntidad, final String idioma, final byte[] signedDocument,
-			final byte[] signature, final String nifFirmante) {
+			final byte[] signature, final String nifFirmantes) {
+		final List<String> nifFirmantesObligatorios = new ArrayList<>();
+		final List<String> nifFirmantesOpcionales = new ArrayList<>();
+		final List<String> nifFirmantesRequeridos = new ArrayList<>();
+		nifFirmantesObligatorios.add(nifFirmantes);
+		final ValidacionFirmante res = validarFirmanteImpl(idEntidad, idioma, signedDocument, signature,
+				nifFirmantesObligatorios, nifFirmantesOpcionales, nifFirmantesRequeridos);
+		return res;
+	}
+
+	@Override
+	public ValidacionFirmante validarFirmante(final String idEntidad, final String idioma, final byte[] signedDocument,
+			final byte[] signature, final List<Firmante> firmantes) {
+		// Desglosamos por obligatoriedad
+		final List<String> nifFirmantesObligatorios = new ArrayList<>();
+		final List<String> nifFirmantesOpcionales = new ArrayList<>();
+		final List<String> nifFirmantesRequeridos = new ArrayList<>();
+		for (final Firmante f : firmantes) {
+			switch (f.getObligatorio()) {
+			case OBLIGATORIO:
+				nifFirmantesObligatorios.add(f.getNif());
+				break;
+			case OPCIONAL:
+				nifFirmantesOpcionales.add(f.getNif());
+				break;
+			case OPCIONAL_REQUERIDO:
+				nifFirmantesRequeridos.add(f.getNif());
+				break;
+			}
+		}
+		// Validamos firma y firmantes requeridos
+		final ValidacionFirmante res = validarFirmanteImpl(idEntidad, idioma, signedDocument, signature,
+				nifFirmantesObligatorios, nifFirmantesOpcionales, nifFirmantesRequeridos);
+		return res;
+	}
+
+	private ValidacionFirmante validarFirmanteImpl(final String idEntidad, final String idioma,
+			final byte[] signedDocument, final byte[] signature, final List<String> nifFirmantesObligatorios,
+			final List<String> nifFirmantesOpcionales, final List<String> nifFirmantesRequeridos) {
 
 		boolean firmaValida = true;
 		String detalleError = null;
@@ -203,10 +244,9 @@ public final class FirmaComponentImpl implements FirmaComponent {
 			firmaValida = false;
 			detalleError = validateResponse.getValidationStatus().getErrorMsg();
 		} else {
-
 			final SignatureDetailInfo[] detalleFirmas = validateResponse.getSignatureDetailInfo();
-			firmaValida = false;
 			detalleError = literalesComponent.getLiteral(Literales.PASO_REGISTRAR, "firma.firmanteNoValido", idioma);
+			final List<String> nifFirmados = new ArrayList<String>();
 			for (int i = 0; i < detalleFirmas.length; i++) {
 				final SignatureDetailInfo detalleFirma = detalleFirmas[i];
 				final InformacioCertificat datosCertificadoFirma = detalleFirma.getCertificateInfo();
@@ -217,12 +257,31 @@ public final class FirmaComponentImpl implements FirmaComponent {
 				} else if ("1".equals(clasificacion) || "11".equals(clasificacion) || "12".equals(clasificacion)) {
 					nifFirma = datosCertificadoFirma.getUnitatOrganitzativaNifCif();
 				}
-				if (StringUtils.equals(nifFirma, nifFirmante)) {
-					firmaValida = true;
-					detalleError = null;
+				if (!nifFirmados.contains(nifFirma)) {
+					nifFirmados.add(nifFirma);
+				}
+			}
+
+			// Firmantes obligatorios deben estar todos
+			firmaValida = true;
+			for (final String nf : nifFirmantesObligatorios) {
+				if (!nifFirmados.contains(nf)) {
+					firmaValida = false;
 					break;
 				}
 			}
+
+			// Firmantes requeridos debe haber al menos uno
+			if (firmaValida && !nifFirmantesRequeridos.isEmpty()) {
+				firmaValida = false;
+				for (final String nf : nifFirmantesRequeridos) {
+					if (nifFirmados.contains(nf)) {
+						firmaValida = true;
+						break;
+					}
+				}
+			}
+
 		}
 
 		// Devuelve resultado validación

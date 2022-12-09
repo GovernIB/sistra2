@@ -37,6 +37,7 @@ import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoEmail;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoExpReg;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoFecha;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoHora;
+import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoIban;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoId;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoNormal;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoNumero;
@@ -396,6 +397,9 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 			break;
 		case PASSWORD: // Password
 			confCampo = new ConfiguracionCampoTextoPassword();
+			break;
+		case IBAN:
+			confCampo = new ConfiguracionCampoTextoIban();
 			break;
 		default:
 			throw new TipoNoControladoException("Tipus de camp texto no controlat: " + pCampoDef.getTipoTexto());

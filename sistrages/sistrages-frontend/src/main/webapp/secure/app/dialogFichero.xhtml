@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
 
 
@@ -11,6 +12,11 @@
 
 	<h:head>
 		<title><h:outputText value="#{msg['dialogFichero.titulo']}" /></title>
+		<style type="text/css">
+			#formFichero\:j_idt19 {
+				padding-bottom: 38px !important;
+			}
+		</style>
 	</h:head>
 
 	<h:body>
@@ -29,6 +35,65 @@
 
 
 		<h:form id="formFichero" styleClass="margin-top-10" enctype="multipart/form-data">
+			<h:outputScript >
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("formFichero:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+			 }
+
+			</h:outputScript>
 			<p:growl id="growlDialogFichero" widgetVar="growlDialogFichero"	life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
 			<h:panelGrid styleClass="hide-table-header w100 margin-top-10" cellpadding="10" columnClasses="w90,w10" columns="2" rendered="#{dialogFichero.mostrarQuitar}">
@@ -54,7 +119,15 @@
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
+			<p:contextMenu>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :formFichero:auxCopiar" update="growlDialogFichero" url="javascript:void(0)"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{dialogFichero.copiadoCorr}" process="@this" update="@this growlDialogFichero"/>
+            	<p:ajax event="error" listener="#{dialogFichero.copiadoErr}" update="@this growlDialogFichero"/>
+        	</pe:clipboard>
 
+		    <p:inputText id="auxCopiar" value="#{dialogFichero.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 		</h:form>
 
 	</h:body>

@@ -46,7 +46,7 @@ $.fn.appSerialitza = function(opcions) {
 
 					if (esData && data_format === "es") {
 
-						input_val = element.appDataEspanyola({ data: input_val });
+						input_val = element.appFormsDataEspanyola({ data: input_val });
 
 					}
 
@@ -55,6 +55,14 @@ $.fn.appSerialitza = function(opcions) {
 					if (el_tipus === "texto" && (el_contingut === "id" || formEnMayuscules || enMayuscules)) {
 
 						input_val = input_val.toUpperCase();
+
+					}
+
+					// iban
+
+					if (el_contingut === "ib" && input_val !== "") {
+
+						input_val = $.trim( input_val.toUpperCase().replace(/\s/g, "") );
 
 					}
 
@@ -214,7 +222,7 @@ $.fn.appSerialitza = function(opcions) {
 
 						// obligatori
 
-						esError = (input_el.is(":required") && input_val === "") ? true : false;
+						esError = (input_el.is(":required") && (!input_val || input_val.trim() === "")) ? true : false;
 						ERROR_TEXT = (esError) ? txtFormDinCampError_buit : false;
 
 						// textarea amb un màxim de línies
@@ -323,6 +331,17 @@ $.fn.appSerialitza = function(opcions) {
 
 							esError = ( !input_el.appValida({ format: "data", valor: input_val }) ) ? true : false;
 							ERROR_TEXT = (esError) ? txtFormDinCampError_data : false;
+
+						}
+
+						// iban
+
+						if (input_el.attr("data-contingut") === "iban" && input_val !== "") {
+
+							var valor_iban = $.trim( input_val.toUpperCase().replace(/\s/g, "") );
+
+							esError = ( !IBAN.isValid( valor_iban ) ) ? true : false;
+							ERROR_TEXT = (esError) ? txtFormDinCampError_iban : false;
 
 						}
 

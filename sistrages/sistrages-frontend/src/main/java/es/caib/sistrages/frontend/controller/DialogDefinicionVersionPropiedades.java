@@ -12,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Script;
@@ -73,6 +74,8 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	private boolean tiposAutenticacionPER;
 
 	private boolean cambios = false;
+
+	private String portapapeles;
 
 	/**
 	 * Inicialización.
@@ -136,6 +139,10 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 				addMessageContext(TypeNivelGravedad.WARNING,
 						UtilJSF.getLiteral("warning.tipoautenticacion.obligatorio"));
 				return;
+			}
+
+			if (this.getTramiteVersion().getTipoTramite().equals("T")) {
+				this.getTramiteVersion().setNoAutenticado(false);
 			}
 
 			String idiomas = "";
@@ -322,7 +329,31 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		}
 	}
 
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
 	// ------- GETTERS / SETTERS --------------------------------
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
 	/**
 	 * Obtiene el valor de id.
 	 *
@@ -507,6 +538,10 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 	public void setCambios() {
 		this.cambios = true;
+		if (this.getTramiteVersion().getTipoTramite().equals("T")) {
+			PrimeFaces.current().executeScript(
+					" function setVacio(){ let check1 = document.getElementById(\"formDialogDefinicionVersionPropiedades:sinAutenticacion\"); check1.children[1].classList.remove(\"ui-state-active\"); check1.children[1].children[0].classList.remove(\"ui-icon\"); check1.children[1].children[0].classList.remove(\"ui-icon-check\"); } setVacio();");
+		}
 	}
 
 }

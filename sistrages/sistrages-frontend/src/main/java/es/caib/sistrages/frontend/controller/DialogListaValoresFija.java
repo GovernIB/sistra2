@@ -39,6 +39,8 @@ public class DialogListaValoresFija extends DialogControllerBase {
 
 	private List<String> idiomas;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -169,5 +171,28 @@ public class DialogListaValoresFija extends DialogControllerBase {
 
 	public void setIdiomas(final List<String> idiomasXdefecto) {
 		this.idiomas = idiomasXdefecto;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 }

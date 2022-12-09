@@ -5,6 +5,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
@@ -23,8 +24,9 @@
 	tinyMCE.init({
 		   // General options
 		    mode : "textareas",
-		    plugins: "code image link lists paste textcolor",
+		    plugins: "code image lists paste textcolor",
 		    toolbar: "bold italic | forecolor backcolor | link image | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat #{dialogTraduccionHTML.sourceCode}" ,
+		    contextmenu_never_use_native: true,
 		    menubar: "",
 		    paste_as_text : false,
 		    readonly : #{dialogTraduccionHTML.readonly}
@@ -178,6 +180,10 @@
 		color: #EEE;
 	}
 
+	#formTraduccion > div:nth-child(4) {
+		padding-bottom: 29px !important;
+	}
+
 </style>
 <h:body onload="mostrar('#{dialogTraduccionHTML.idiomaInicial}')">
 
@@ -193,6 +199,7 @@
 	</f:metadata>
 
 	<h:form id="formTraduccion">
+
 				<p:growl id="growlDialogTraduccion" widgetVar="growlDialogTraduccion" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
 						<div class="ui-inputgroup" align="center" style="margin-top:5px;margin-bottom:5px">
@@ -203,16 +210,16 @@
         				</div>
 
         				<div style="margin:10px" rendered="#{dialogTraduccionHTML.visibleCa}" >
-							<p:inputTextarea id="traduccion_ca" value="#{dialogTraduccionHTML.textoCa}" disabled="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false" maxlength="4000" style="height:600px"  />
+							<p:inputTextarea id="traduccion_ca" value="#{dialogTraduccionHTML.textoCa}" readonly="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false" maxlength="4000" style="height:600px"  />
 						</div>
 						<div style="margin:10px" rendered="#{dialogTraduccionHTML.visibleEs}" >
-							<p:inputTextarea id="traduccion_es" value="#{dialogTraduccionHTML.textoEs}" disabled="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false"  maxlength="4000" style="height:600px"  />
+							<p:inputTextarea id="traduccion_es" value="#{dialogTraduccionHTML.textoEs}" readonly="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false"  maxlength="4000" style="height:600px"  />
 						</div>
 						<div style="margin:10px" rendered="#{dialogTraduccionHTML.visibleEn}" >
-							<p:inputTextarea id="traduccion_en" value="#{dialogTraduccionHTML.textoEn}" disabled="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false"  maxlength="4000" style="height:600px"  />
+							<p:inputTextarea id="traduccion_en" value="#{dialogTraduccionHTML.textoEn}" readonly="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false"  maxlength="4000" style="height:600px"  />
 						</div>
 						<div style="margin:10px" rendered="#{dialogTraduccionHTML.visibleDe}" >
-							<p:inputTextarea id="traduccion_de" value="#{dialogTraduccionHTML.textoDe}" disabled="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false"  maxlength="4000" style="height:600px" />
+							<p:inputTextarea id="traduccion_de" value="#{dialogTraduccionHTML.textoDe}" readonly="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false"  maxlength="4000" style="height:600px" />
 						</div>
 
 		  	 <p:outputPanel styleClass="botonera">
@@ -230,7 +237,6 @@
 			<p:commandButton id="btnErrorEs" actionListener="#{dialogTraduccionHTML.errorEs()}" update="growlDialogTraduccion" style="display:none" process="@this"/>
 			<p:commandButton id="btnErrorEn" actionListener="#{dialogTraduccionHTML.errorEn()}" update="growlDialogTraduccion" style="display:none" process="@this"/>
 			<p:commandButton id="btnErrorDe" actionListener="#{dialogTraduccionHTML.errorDe()}" update="growlDialogTraduccion" style="display:none" process="@this"/>
-
 	</h:form>
 </h:body>
 

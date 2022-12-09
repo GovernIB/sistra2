@@ -4,6 +4,7 @@
   xmlns:f="http://java.sun.com/jsf/core"
   xmlns:h="http://java.sun.com/jsf/html"
   xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:pe="http://primefaces.org/ui/extensions"
   xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
@@ -35,25 +36,84 @@
   <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="TypeFormularioObligatoriedad" />
 
 
-  <h:form id="formDialogDefinicionVersionFormulario" styleClass="h100, margin-top-10">
+  <h:form id="formDialogDefinicionVersionFormulario" styleClass="h100 margin-top-10">
+	<h:outputScript >
 
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("formDialogDefinicionVersionFormulario:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+
+			 }
+
+			</h:outputScript>
 	<!-- Growl mensajes -->
     <p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
 	<p:outputPanel>
 
 
-    <h:panelGrid rowClasses=", ui-datatable-odd" columns="2" columnClasses="w20 padding-left-18, w80 grid-left" styleClass="w100 h100" cellpadding = "5" cellspacing = "0">
+    <h:panelGrid rowClasses=", ui-datatable-odd" columns="2" columnClasses="w20 padding-left-18, w80 grid-left" styleClass="w100 h100" cellpadding = "5" cellspacing = "0" style="padding-bottom: 26px !important;">
 
             <p:outputLabel for="identificador" value="#{msg['dialogSeccionesReutilizables.identificador']}" />
-            <p:inputText id="identificador" required="true" styleClass="w20" maxlength="3" value="#{dialogSeccionReutilizable.data.identificador}" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}" disabled="#{!empty dialogSeccionReutilizable.data.codigo or dialogSeccionReutilizable.isConsulta()}" >
+            <p:inputText id="identificador" required="true" styleClass="w20" maxlength="3" value="#{dialogSeccionReutilizable.data.identificador}" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}" readonly="#{!empty dialogSeccionReutilizable.data.codigo or dialogSeccionReutilizable.isConsulta()}" >
 				<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 				<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 				<!-- <p:ajax event="change" listener="#{dialogSeccionReutilizable.setCambios()}" process="@this" update="@this"/> -->
 	        </p:inputText>
 
             <p:outputLabel for="descripcion" value="#{msg['dialogSeccionesReutilizables.descripcion']}" />
-            <p:inputText id="descripcion" required="true" styleClass="w90" maxlength="255" value="#{dialogSeccionReutilizable.data.descripcion}" disabled="#{dialogSeccionReutilizable.isConsulta() }" />
+            <p:inputText id="descripcion" required="true" styleClass="w90" maxlength="255" value="#{dialogSeccionReutilizable.data.descripcion}" readonly="#{dialogSeccionReutilizable.isConsulta() }" />
 
 			<p:outputLabel value="#{msg['dialogSeccionesReutilizables.checkActivada']}" />
             <p:selectBooleanCheckbox id="firmardigitalmente" value="#{dialogSeccionReutilizable.data.activado}"  disabled="#{dialogSeccionReutilizable.isConsulta() }"  />
@@ -98,6 +158,15 @@
 				</f:facet>
 			</p:toolbar>
 	 </p:outputPanel>
+	 <p:contextMenu>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :formDialogDefinicionVersionFormulario:auxCopiar" update="growl" url="javascript:void(0)"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{dialogSeccionReutilizable.copiadoCorr}" process="@this" update="@this growl"/>
+            	<p:ajax event="error" listener="#{dialogSeccionReutilizable.copiadoErr}" update="@this growl"/>
+        	</pe:clipboard>
+
+		    <p:inputText id="auxCopiar" value="#{dialogSeccionReutilizable.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
   </h:form>
 
 </h:body>

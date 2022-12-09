@@ -293,6 +293,14 @@ $.fn.appValida = function(opcions) {
 
 	}
 
+	if (format === "iban" && valor !== "") {
+
+		var valor_iban = $.trim( valor.toUpperCase().replace(/\s/g, "") );
+
+		esCorrecte = IBAN.isValid( valor_iban );
+
+	}
+
 	// retorna si és correcte
 
 	return esCorrecte;
@@ -416,6 +424,28 @@ var appValidaIdentificador = (function(){
             }
             var letraControl = v2[suma];
             res = (codigoControl == (suma + "") || codigoControl.toUpperCase() == letraControl);
+
+
+            // VERIFICAR PRIMERA LLETRA I SI AL FINAL ÉS LLETRA O NÚMERO
+
+            if (res) {
+
+				var finalAmbLletra = "NPQRSW"
+					,finalAmbNumero = "ABCDEFGHJUV";
+
+	            var lletraInicial = valor.charAt(0)
+	            	codiControlFinal = valor.substring(valor.length - 1, valor.length);
+
+	            if (finalAmbLletra.indexOf(lletraInicial) !== -1 && !isNaN( parseInt(codiControlFinal, 10) ) ) {
+	            	res = false;
+	            }
+
+	            if (finalAmbNumero.indexOf(lletraInicial) !== -1 && isNaN( parseInt(codiControlFinal, 10) ) ) {
+	            	res = false;
+	            }
+
+	        }
+
 
             return res;
 

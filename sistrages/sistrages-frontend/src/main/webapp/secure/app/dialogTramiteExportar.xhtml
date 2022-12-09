@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
@@ -13,9 +14,22 @@
 
 <h:head>
 	<title><h:outputText value="#{dialogTramiteExportar.cabecera}"/></title>
+	<script type="text/javascript" language="JavaScript">
+		function stop(){
+				document.getElementById('dialogExportar:btnExportar').disabled = true;
+				document.getElementById('dialogExportar:btnExportar').classList.add("ui-state-disabled");
+				document.getElementById('dialogExportar:btnHidden').click();
+		}
+	</script>
+	<style type="text/css">
+		#dialogExportar\:j_idt16 {
+			padding-bottom: 38px !important;
+		}
+
+	</style>
 </h:head>
 
-<h:body style="overflow:hidden">
+<h:body>
 
 	<f:facet name="last">
 		<h:outputStylesheet library="css" name="style.css" />
@@ -32,13 +46,74 @@
 		<f:viewAction action="#{dialogTramiteExportar.init}" />
 	</f:metadata>
 
-	<h:form id="dialogExportar" styleClass="margin-top-10" style="overflow-y: auto; height: 550px;">
+	<h:form id="dialogExportar" styleClass="margin-top-10">
+			<h:outputScript >
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("dialogExportar:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+
+			 }
+
+			</h:outputScript>
   			<p:outputPanel>
+  				<p:commandButton id="btnHidden" actionListener="#{dialogTramiteExportar.expOk}" process="@this" style="display:none"/>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growldialog" widgetVar="growldialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel value="#{msg['dialogTramiteExportar.vt.info']}" styleClass="titulo-color" style="color:#000" />
                 	<p:outputLabel  />
@@ -54,12 +129,12 @@
 
 				</h:panelGrid>
 
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 padding-right-18" columns = "1" cellpadding = "5" cellspacing = "0"  width="100%">
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w95 padding-left-18 padding-right-18" columns = "1" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel value="#{msg['dialogTramiteExportar.ec.info']}" styleClass="titulo-color" style="color:#000" />
 					<p:dataTable  id="dataTable" var="td" value="#{dialogTramiteExportar.dominios}"
 								 rows="10" emptyMessage="#{msg['error.emptyRows']}"
-								 scrollable="true" scrollHeight="90%">
+								 scrollable="false" scrollHeight="90%">
 
 						<!-- Columnas -->
 					    <p:column headerText="#{msg['dialogTramiteExportar.ec.headerCodigo']}">
@@ -79,7 +154,7 @@
 					<p:outputLabel value="#{msg['dialogTramiteExportar.form.info']}" styleClass="titulo-color" style="color:#000"  />
 					<p:dataTable  id="dataTableF" var="td" value="#{dialogTramiteExportar.formateadores}"
 								 rows="10" emptyMessage="#{msg['error.emptyRows']}"
-								 scrollable="true" scrollHeight="90%" style="margin-bottom:5px">
+								 scrollable="false" scrollHeight="90%" style="margin-bottom:5px">
 
 						<!-- Columnas -->
 					    <p:column headerText="#{msg['dialogTramiteExportar.form.headerCodigo']}">
@@ -95,7 +170,7 @@
 					<p:outputLabel value="#{msg['dialogTramiteExportar.gfe.info']}" styleClass="titulo-color" style="color:#000"  />
 					<p:dataTable  id="dataTableFGE" var="td" value="#{dialogTramiteExportar.gestorExternoFormularios}"
 								 rows="10" emptyMessage="#{msg['error.emptyRows']}"
-								 scrollable="true" scrollHeight="90%" style="margin-bottom:5px">
+								 scrollable="false" scrollHeight="90%" style="margin-bottom:5px">
 
 						<!-- Columnas -->
 					    <p:column headerText="#{msg['dialogTramiteExportar.form.headerCodigo']}">
@@ -112,7 +187,7 @@
 					<p:outputLabel value="#{msg['dialogTramiteExportar.seccionesReut.info']}" styleClass="titulo-color" style="color:#000"  />
 					<p:dataTable  id="dataTableSREU" var="td" value="#{dialogTramiteExportar.seccionesReutilizables}"
 								 rows="10" emptyMessage="#{msg['error.emptyRows']}"
-								 scrollable="true" scrollHeight="90%" style="margin-bottom:5px">
+								 scrollable="false" scrollHeight="90%" style="margin-bottom:5px">
 
 						<!-- Columnas -->
 					    <p:column headerText="#{msg['dialogTramiteExportar.form.headerCodigo']}">
@@ -126,22 +201,27 @@
 					</p:dataTable>
 
 				</h:panelGrid>
-				<br />
-				<br />
-				<br />
-				<br />
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-						<p:commandButton id="btnExportar" widgetVar="btnExportar" disabled="#{dialogTramiteExportar.disabled}" value="#{msg['botones.exportar']}" ajax="false" styleClass="boton-azul" rendered="#{dialogTramiteExportar.mostrarBotonExportar}" process="@this">
+						<p:commandButton id="btnExportar" widgetVar="btnExportar" value="#{msg['botones.exportar']}" ajax="false" onclick="PrimeFaces.monitorDownload(null, stop)" styleClass="boton-azul" rendered="#{dialogTramiteExportar.mostrarBotonExportar}" process="@this">
 		        			<p:fileDownload value="#{dialogTramiteExportar.fichero}"></p:fileDownload>
 		        		</p:commandButton>
+
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTramiteExportar.cancelar}" process="@this"  />
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
+			<p:contextMenu>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogExportar:auxCopiar" update="growldialog" url="javascript:void(0)"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{dialogTramiteExportar.copiadoCorr}" process="@this" update="@this growldialog"/>
+            	<p:ajax event="error" listener="#{dialogTramiteExportar.copiadoErr}" update="@this growldialog"/>
+        	</pe:clipboard>
 
+		    <p:inputText id="auxCopiar" value="#{dialogTramiteExportar.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 	</h:form>
 </h:body>
 

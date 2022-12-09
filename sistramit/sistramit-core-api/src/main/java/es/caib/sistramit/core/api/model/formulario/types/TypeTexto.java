@@ -46,7 +46,11 @@ public enum TypeTexto {
 	/**
 	 * Password.
 	 */
-	PASSWORD("pw");
+	PASSWORD("pw"),
+	/**
+	 * IBAN.
+	 */
+	IBAN("ib");
 
 	/**
 	 * Valor como string.

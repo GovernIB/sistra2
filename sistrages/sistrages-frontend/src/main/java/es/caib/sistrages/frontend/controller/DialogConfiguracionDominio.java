@@ -14,6 +14,7 @@ import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
@@ -49,6 +50,8 @@ public class DialogConfiguracionDominio extends DialogControllerBase {
 	/** Area **/
 	private String area;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -82,6 +85,29 @@ public class DialogConfiguracionDominio extends DialogControllerBase {
 		params.put(TypeParametroVentana.ID.toString(), this.valorSeleccionado.getCodigo().toString());
 		params.put(TypeParametroVentana.AMBITO.toString(), this.valorSeleccionado.getAmbito().toString());
 		UtilJSF.openDialog(DialogDominioPing.class, TypeModoAcceso.CONSULTA, params, true, 770, 600);
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

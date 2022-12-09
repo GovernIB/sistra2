@@ -82,6 +82,12 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	/** Url . **/
 	private String url;
 
+	/** Mostrar solo procedimientos que esten incorporados a sia **/
+	private boolean soloIncorporadosSia = false;
+
+	/** Mostrar solo procedimientos que esten vigentes **/
+	private boolean soloVigentes = false;
+
 	/** Tramite seleccionado. **/
 	private String tramiteSeleccionado;
 
@@ -97,13 +103,15 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	/** Validar clicked */
 	private boolean validarNotClicked = true;
 
+	private String portapapeles;
+
 	public String getText(final DefinicionTramiteCP tramite) {
 
 		final StringBuilder texto = new StringBuilder();
 		if (!tramite.isVigente()) {
 			texto.append("(V) ");
 		}
-		if (tramite.getProcedimiento().getIdProcedimientoSIA() == null
+		if (tramite.getProcedimiento() == null || tramite.getProcedimiento().getIdProcedimientoSIA() == null
 				|| tramite.getProcedimiento().getIdProcedimientoSIA().isEmpty()) {
 			texto.append("(S) ");
 		}
@@ -145,19 +153,10 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 //			parametros = tramitePrevisualizacion.getParametros();
 //		}
 
-		try {
-			iplugin = (ICatalogoProcedimientosPlugin) componenteService
-					.obtenerPluginEntidad(TypePlugin.CATALOGO_PROCEDIMIENTOS, UtilJSF.getIdEntidad());
+		getProcedimientos();
 
-			tramites = iplugin.obtenerTramites(tramite.getIdentificadorCompuesto(), this.data.getNumeroVersion(), idioma);
-			if (tramiteSeleccionado == null && tramites != null && !tramites.isEmpty()) {
-				tramiteSeleccionado = tramites.get(0).getIdentificador();
-			}
-		} catch (final Exception ex) {
-			tramites = new ArrayList<>();
-			UtilJSF.loggearErrorFront("Error obteniendo catalogo de procedimientos", ex);
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.accesoCatalogo"));
+		if (tramiteSeleccionado == null && tramites != null && !tramites.isEmpty()) {
+			tramiteSeleccionado = tramites.get(0).getIdentificador();
 		}
 
 		calcularUrl(false);
@@ -166,6 +165,43 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 
 	public void actualizar() {
 		setData(tramiteService.getTramiteVersion(Long.valueOf(id)));
+	}
+
+	/**
+	 * Recarga todos los procedimientos, filtrandolos.
+	 */
+	public void recargarProcedimientos() {
+		getProcedimientos();
+		if (soloVigentes || soloIncorporadosSia) {
+			List<DefinicionTramiteCP> tramitesAux = new ArrayList<DefinicionTramiteCP>();
+			tramitesAux.addAll(tramites);
+			for (DefinicionTramiteCP tram : tramitesAux) {
+				if ((soloVigentes && !tram.isVigente()) || (soloIncorporadosSia
+						&& (tram.getProcedimiento() == null || tram.getProcedimiento().getIdProcedimientoSIA() == null
+								|| tram.getProcedimiento().getIdProcedimientoSIA().isEmpty()))) {
+					tramites.remove(tram);
+				}
+
+			}
+		}
+	}
+
+	/**
+	 * Carga todos los procedimientos.
+	 */
+	private void getProcedimientos() {
+		try {
+			iplugin = (ICatalogoProcedimientosPlugin) componenteService
+					.obtenerPluginEntidad(TypePlugin.CATALOGO_PROCEDIMIENTOS, UtilJSF.getIdEntidad());
+
+			tramites = iplugin.obtenerTramites(tramite.getIdentificadorCompuesto(), this.data.getNumeroVersion(),
+					idioma);
+		} catch (final Exception ex) {
+			tramites = new ArrayList<>();
+			UtilJSF.loggearErrorFront("Error obteniendo catalogo de procedimientos", ex);
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.accesoCatalogo"));
+		}
 	}
 
 	/**
@@ -222,16 +258,16 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 			tramCP = "$--SIMULADO--$";
 		} else {
 			tramCP = tramiteSeleccionado;
-		}
-
-		if (tramCP == null) {
-			if (lanzarError) {
-				addMessageContext(TypeNivelGravedad.WARNING,
-						UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.sinseleccionartramite"));
-			} else {
-				urlTramite = UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.sinseleccionartramite");
+			String valida = validarSiaVigente(tramCP);
+			if (valida != null && !valida.isEmpty()) {
+				if (lanzarError) {
+					addMessageContext(TypeNivelGravedad.WARNING, valida);
+				} else {
+					urlTramite = valida;
+				}
+				return false;
 			}
-			return false;
+
 		}
 
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
@@ -264,7 +300,13 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 
 	/** Avisa al growl que se ha copiado correctamente **/
 	public void avisarGrowl() {
-		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		String tramCP = tramiteSeleccionado;
+		String valida = validarSiaVigente(tramCP);
+		if (valida != null && !valida.isEmpty()) {
+			addMessageContext(TypeNivelGravedad.WARNING, valida);
+		} else {
+			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
 	}
 
 	/**
@@ -287,6 +329,27 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 			}
 		}
 		return paramsUrl.toString();
+	}
+
+	private String validarSiaVigente(String tramCP) {
+		if (tramCP != null) {
+			DefinicionTramiteCP tram = null;
+			for (DefinicionTramiteCP dt : tramites) {
+				if (dt != null && dt.getIdentificador() != null && dt.getIdentificador().equals(tramCP)) {
+					tram = dt;
+				}
+			}
+			if (!tram.isVigente() && !simularCatalogo) {
+				return UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.novigente");
+			} else if ((tram.getProcedimiento().getIdProcedimientoSIA() == null
+					|| tram.getProcedimiento().getIdProcedimientoSIA().isEmpty()) && !simularCatalogo) {
+				return UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.nosia");
+			}
+			return "";
+		} else if(!simularCatalogo){
+			return UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.sinseleccionartramite");
+		}
+		return "";
 	}
 
 	/**
@@ -657,6 +720,57 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	 */
 	public final void setValidarNotClicked(boolean validarNotClicked) {
 		this.validarNotClicked = validarNotClicked;
+	}
+
+	/**
+	 * @return the soloIncorporadosSia
+	 */
+	public final boolean isSoloIncorporadosSia() {
+		return soloIncorporadosSia;
+	}
+
+	/**
+	 * @param soloIncorporadosSia the soloIncorporadosSia to set
+	 */
+	public final void setSoloIncorporadosSia(boolean soloIncorporadosSia) {
+		this.soloIncorporadosSia = soloIncorporadosSia;
+	}
+
+	/**
+	 * @return the soloVigentes
+	 */
+	public final boolean isSoloVigentes() {
+		return soloVigentes;
+	}
+
+	/**
+	 * @param soloVigentes the soloVigentes to set
+	 */
+	public final void setSoloVigentes(boolean soloVigentes) {
+		this.soloVigentes = soloVigentes;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

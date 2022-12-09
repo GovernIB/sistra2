@@ -42,6 +42,8 @@ public class DialogGestorExternoTramites extends DialogControllerBase {
 	/** Area **/
 	private String area;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -84,6 +86,29 @@ public class DialogGestorExternoTramites extends DialogControllerBase {
 	}
 
 	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	/**
 	 * @return the id
 	 */
 	public String getId() {
@@ -96,8 +121,6 @@ public class DialogGestorExternoTramites extends DialogControllerBase {
 	public void setId(final String id) {
 		this.id = id;
 	}
-
-
 
 	/**
 	 * @return the valorSeleccionado

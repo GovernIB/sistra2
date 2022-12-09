@@ -3,8 +3,11 @@ package es.caib.sistrahelp.frontend.controller;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.primefaces.PrimeFaces;
+
 import es.caib.sistrahelp.frontend.model.DialogResult;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
 
 /**
@@ -22,6 +25,8 @@ public class DialogAyuda extends DialogControllerBase {
 
 	/** Url iframe. **/
 	private String urlIframe;
+
+	private String portapapeles;
 
 	/**
 	 * Inicializacion.
@@ -51,6 +56,27 @@ public class DialogAyuda extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/** Genera texto a copiar **/
+	public void generarTxt() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+
+		PrimeFaces.current().executeScript("document.focus; navigator.clipboard.writeText(`" + portapapeles + "`);");
+	}
+
+	/**
+	 * @return the portapapeles
+	 */
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	/**
+	 * @param portapapeles the portapapeles to set
+	 */
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

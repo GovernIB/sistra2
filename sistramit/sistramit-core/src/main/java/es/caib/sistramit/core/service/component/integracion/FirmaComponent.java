@@ -1,5 +1,8 @@
 package es.caib.sistramit.core.service.component.integracion;
 
+import java.util.List;
+
+import es.caib.sistramit.core.api.model.flujo.Firmante;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.service.model.integracion.FirmaClienteRespuesta;
 import es.caib.sistramit.core.service.model.integracion.RedireccionFirma;
@@ -72,5 +75,24 @@ public interface FirmaComponent {
 	 */
 	ValidacionFirmante validarFirmante(String idEntidad, String idioma, byte[] signedDocument, byte[] signature,
 			String nifFirmante);
+
+	/**
+	 * Realiza validación de firma verificando si han firmado los firmantes teniendo
+	 * en cuenta la obligatoriedad.
+	 *
+	 * @param idEntidad
+	 *                           Entidad
+	 * @param idioma
+	 *                           Idiona
+	 * @param signedDocument
+	 *                           Fichero a firmar
+	 * @param signature
+	 *                           Firma fichero
+	 * @param firmantes
+	 *                           firmantes
+	 * @return Validación firmante
+	 */
+	ValidacionFirmante validarFirmante(String idEntidad, String idioma, byte[] signedDocument, byte[] signature,
+			List<Firmante> firmantes);
 
 }

@@ -31,6 +31,8 @@ public class DialogValoraciones extends DialogControllerBase {
 	/** Data Seleccionada. **/
 	private IncidenciaValoracion datoSeleccionado;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 *
@@ -42,8 +44,7 @@ public class DialogValoraciones extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de propiedades.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 
@@ -145,6 +146,29 @@ public class DialogValoraciones extends DialogControllerBase {
 	}
 
 	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	/**
 	 * @return the data
 	 */
 	public List<IncidenciaValoracion> getListaDatos() {
@@ -152,8 +176,7 @@ public class DialogValoraciones extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setListaDatos(final List<IncidenciaValoracion> data) {
 		this.listaDatos = data;
@@ -167,8 +190,7 @@ public class DialogValoraciones extends DialogControllerBase {
 	}
 
 	/**
-	 * @param dataSeleccionada
-	 *            the dataSeleccionada to set
+	 * @param dataSeleccionada the dataSeleccionada to set
 	 */
 	public void setDatoSeleccionado(final IncidenciaValoracion datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;

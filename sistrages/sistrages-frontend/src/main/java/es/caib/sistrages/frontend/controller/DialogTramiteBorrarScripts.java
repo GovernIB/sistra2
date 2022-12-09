@@ -30,6 +30,8 @@ public class DialogTramiteBorrarScripts extends DialogControllerBase {
 	/** Id de la version. */
 	private String id;
 
+	private String portapapeles;
+
 	/** Inicialización. */
 	public void init() {
 		setPropiedades(true);
@@ -67,6 +69,29 @@ public class DialogTramiteBorrarScripts extends DialogControllerBase {
 	/** Ayuda. */
 	public void ayuda() {
 		UtilJSF.openHelp("tramiteBorrarScriptDialog");
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

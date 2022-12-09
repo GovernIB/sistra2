@@ -40,6 +40,8 @@ public class DialogEntidad extends DialogControllerBase {
 	 */
 	private String literal;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -174,5 +176,28 @@ public class DialogEntidad extends DialogControllerBase {
 	/** Ayuda. */
 	public void ayuda() {
 		UtilJSF.openHelp("entidadDialog");
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 }

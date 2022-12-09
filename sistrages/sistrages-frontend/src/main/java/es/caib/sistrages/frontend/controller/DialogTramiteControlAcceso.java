@@ -5,6 +5,7 @@ package es.caib.sistrages.frontend.controller;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -71,6 +72,8 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	/** Aviso entidad. **/
 	private AvisoEntidad avisoEntidad;
 
+	private String portapapeles;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -83,6 +86,7 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 		if (avisoEntidad == null) {
 			crearAvisoEntidad();
 		}
+
 	}
 
 	public boolean deshabilitarEdicionDebug() {
@@ -278,6 +282,20 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;
+	}
+
+	/**
+	 * @return the portapapeles
+	 */
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	/**
+	 * @param portapapeles the portapapeles to set
+	 */
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

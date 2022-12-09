@@ -1,5 +1,6 @@
 package es.caib.sistramit.core.service.util;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
@@ -12,10 +13,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.lowagie.text.pdf.AcroFields;
+import com.lowagie.text.pdf.PdfDictionary;
+import com.lowagie.text.pdf.PdfName;
+import com.lowagie.text.pdf.PdfReader;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistra2.commons.utils.ValidacionTipoException;
@@ -88,6 +95,9 @@ public final class UtilsFlujo {
 
 	/** Formato fecha generica (YYYYMMDDHHMISS). */
 	public static final String FORMATO_FECHA_GENERICA = "yyyyMMddHHmmss";
+
+	/** Log. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(UtilsFlujo.class);
 
 	/**
 	 * Formatea fecha en una cadena según la maneja el front.
@@ -846,6 +856,44 @@ public final class UtilsFlujo {
 			finalWord = normalizedWord.replaceAll("\\p{M}", "");
 		}
 		return finalWord;
+	}
+
+	/**
+	 * Funcion para validar si un documento PDF esta firmado.
+	 *
+	 * @param pdf
+	 *                  pdf
+	 * @param isLtv
+	 *                  si es LTV
+	 * @return boolean
+	 */
+	public static boolean esPades(final byte[] pdf, final boolean isLtv) {
+		boolean resultado = false;
+		PdfReader pdfReader;
+		try {
+			pdfReader = new PdfReader(pdf);
+			final AcroFields fields = pdfReader.getAcroFields();
+			final List<String> names = fields.getSignatureNames();
+			if (isLtv) {
+				// Se busca que exista un sello de tiempo
+				final PdfName pdfRFC3161 = new PdfName("ETSI.RFC3161");
+				for (int i = 0; i < names.size(); i++) {
+					final PdfDictionary pdfDictionary = fields.getSignatureDictionary(names.get(i));
+					final PdfName sub = pdfDictionary.getAsName(PdfName.SUBFILTER);
+					if (pdfRFC3161.equals(sub)) {
+						// Es PADES-LTV
+						resultado = true;
+						break;
+					}
+				}
+			} else {
+				// Se busca que exista al menos una firma
+				resultado = (names.size() > 0);
+			}
+		} catch (final IOException e) {
+			LOGGER.warn("No se puede verificar si es PADES: " + e.getMessage());
+		}
+		return resultado;
 	}
 
 }

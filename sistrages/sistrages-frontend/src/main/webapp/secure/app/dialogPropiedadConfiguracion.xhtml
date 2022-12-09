@@ -4,7 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
@@ -33,13 +34,13 @@
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "15" cellspacing = "0" width="100%">
 
 				 	<p:outputLabel for="codigo" value="#{msg['dialogPropiedadConfiguracion.headerCodigo']}" />
-				 	<p:inputText id="codigo" value="#{dialogPropiedadConfiguracion.data.propiedad}" disabled="#{!dialogPropiedadConfiguracion.alta}" required="true" size="40" />
+				 	<p:inputText id="codigo" value="#{dialogPropiedadConfiguracion.data.propiedad}" readonly="#{!dialogPropiedadConfiguracion.alta}" required="true" size="40" />
 
 				 	<p:outputLabel for="valor" value="#{msg['dialogPropiedadConfiguracion.headerValor']}" />
-				 	<p:inputText id="valor" value="#{dialogPropiedadConfiguracion.data.valor}" disabled="#{dialogPropiedadConfiguracion.data.noModificable or dialogPropiedadConfiguracion.consulta}" required="true" size="40" maxlength="500" />
+				 	<p:inputText id="valor" value="#{dialogPropiedadConfiguracion.data.valor}" readonly="#{dialogPropiedadConfiguracion.data.noModificable or dialogPropiedadConfiguracion.consulta}" required="true" size="40" maxlength="500" />
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogPropiedadConfiguracion.headerDescripcion']}" />
-				 	<p:inputTextarea id="descripcion" value="#{dialogPropiedadConfiguracion.descripcion}" disabled="#{!dialogPropiedadConfiguracion.alta}" required="true" rows="10" cols="40"  />
+				 	<p:inputTextarea id="descripcion" value="#{dialogPropiedadConfiguracion.descripcion}" readonly="#{!dialogPropiedadConfiguracion.alta}" required="true" rows="10" cols="40"  />
 
 				</h:panelGrid>
 			</p:outputPanel>
@@ -52,6 +53,90 @@
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
+
+		    <h:outputScript >
+
+	             window.onload=function(){
+	                let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+	                onVisible(contextMenu, () => eliminarResaltar());
+
+
+
+	               document.addEventListener('contextmenu', function(ev) {
+	                    ev.preventDefault();
+	                    getPos();
+	                    return false;
+	                }, false);
+	              }
+
+
+
+	               function eliminarResaltar(){
+	                    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+	                      let elementos = document.getElementsByClassName('resaltar');
+	                      if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+	                        for(let i = 0; i &lt; elementos.length; i++){
+	                            elementos[i].classList.remove('resaltar');
+	                        }
+	                      }
+	                }
+
+
+
+	               function onVisible(element, callback) {
+	                  new IntersectionObserver((entries, observer) => {
+	                    entries.forEach(entry => {
+	                      if(entry.intersectionRatio == 0) {
+	                        callback(element);
+	                      }
+	                    });
+	                  }).observe(element);
+	                }
+
+
+	             function getPos(){
+	                 var e = window.event;
+
+
+
+	               var posX = e.clientX;
+	                var posY = e.clientY;
+	                var el = document.elementFromPoint(posX, posY);
+
+
+
+	               let elementos = document.getElementsByClassName('resaltar');
+	                      if(elementos.length &gt; 0){
+	                        for(let i = 0; i &lt; elementos.length; i++){
+	                            elementos[i].classList.remove('resaltar');
+	                        }
+	                      }
+
+
+
+	               el.classList.add("resaltar");
+	                var aux = document.getElementById("dialogPropiedadConfiguracion:auxCopiar");
+	                if(el.textContent!=''){
+	                    aux.value = el.textContent;
+	                }else if(el.firstChild!=null){
+	                    aux.value = el.firstChild.value;
+	                }else if(el.value!=null &amp;&amp; el.value!=''){
+	                    aux.value = el.value;
+	                }
+
+	             }
+
+            </h:outputScript>
+
+		    <p:contextMenu id="mainCm" widgetVar="mainCm">
+                <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogPropiedadConfiguracion:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+            </p:contextMenu>
+            <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+                <p:ajax event="success" listener="#{dialogPropiedadConfiguracion.copiadoCorr}" process="@this" update="@this growlDialog"/>
+                <p:ajax event="error" listener="#{dialogPropiedadConfiguracion.copiadoErr}" update="@this growlDialog"/>
+            </pe:clipboard>
+
+           <p:inputText id="auxCopiar" value="#{dialogPropiedadConfiguracion.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 	</h:form>
 </h:body>
 

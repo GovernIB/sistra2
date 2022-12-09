@@ -67,6 +67,8 @@ public class ViewPlugins extends ViewControllerBase {
 	@Inject
 	private EntidadService entidadService;
 
+	private String portapapeles;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -373,6 +375,29 @@ public class ViewPlugins extends ViewControllerBase {
 	public final void setPaginacion(Integer paginacion) {
 		this.paginacion = paginacion;
 		UtilJSF.setPaginacion(paginacion, "viewPlugins");
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

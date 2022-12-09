@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	template="../layout/mainLayout.xhtml">
 
 	<f:metadata>
@@ -17,7 +18,80 @@
 		<p:importEnum type="es.caib.sistrahelp.core.api.model.types.TypeTramitePersistencia" var="TypeTramitePersistencia"/>
 
 		<h:form id="form"  style="height:85%;">
+			<h:outputScript>
+				 window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
 
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+				function consultar(){
+					let elemento = document.getElementsByClassName('resaltar')[0];
+					elemento.click();
+					$('#form\\:btnEditarHidden').click();
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("form:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+
+				var dataT = document.getElementsByClassName('ui-datatable-scrollable-body')[0];
+				var elEnDataT = dataT.getElementsByClassName('resaltar')[0];
+				if(elEnDataT!=null){
+					document.getElementById("form:detalle").classList.remove("d-none");
+					document.getElementById("form:detalle").classList.add("d-block");
+				}else{
+					document.getElementById("form:detalle").classList.remove("d-block");
+					document.getElementById("form:detalle").classList.add("d-none");
+				}
+			 }
+
+			</h:outputScript>
 			<!-- Growl mensajes -->
 			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
 
@@ -25,8 +99,8 @@
 
 
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
-        	<p:panelGrid id="panelFiltro" styleClass="noBackground w100 h10 noBorders">
-        		<p:row>
+        	<p:panelGrid id="panelFiltro" styleClass="noBackground w100 h10">
+        		<p:row style="border-color:#f0f0f0">
         			<p:column styleClass="w33">
 		        		<h:panelGrid columns="2" styleClass="w100 padding-right-2pct" columnClasses="w20 grid-right,w74">
 			        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewInformacionPersistencia.filtroIdSesion']}:"/>
@@ -57,7 +131,7 @@
 
 		        	</p:column>
 				</p:row>
-				<p:row>
+				<p:row style="border-color:#f0f0f0">
 					<p:column styleClass="w33">
 						<p:outputLabel value="#{msg['viewInformacionPersistencia.filtroFecha']}:" styleClass="padding-right-2pct"/>
 
@@ -178,6 +252,34 @@
 			 	element.value = element.value.trim();
 			 }
 		   </h:outputScript>
+
+
+			<p:contextMenu for=":work">
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+       			<p:menuitem id="detalle" icon="fa fa-window-maximize" onclick="consultar();" value="#{msg['dialogAuditoriaTramites.descripcion']}"  process="@this"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewInformacionPersistencia.copiadoCorr}" process="@this" update="@this growl"/>
+            	<p:ajax event="error" listener="#{viewInformacionPersistencia.copiadoErr}" update="@this growl"/>
+        	</pe:clipboard>
+
+			<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
+				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+			</p:contextMenu>
+			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewInformacionPersistencia.copiadoCorr}" process="@this" update="@this growl"/>
+				<p:ajax event="error" listener="#{viewInformacionPersistencia.copiadoErr}" update="@this growl"/>
+			</pe:clipboard>
+
+			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
+				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+			</p:contextMenu>
+			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewInformacionPersistencia.copiadoCorr}" process="@this" update="@this growl"/>
+				<p:ajax event="error" listener="#{viewInformacionPersistencia.copiadoErr}" update="@this growl"/>
+			</pe:clipboard>
+
+		    <p:inputText id="auxCopiar" value="#{viewInformacionPersistencia.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 		</h:form>
 
 	</ui:define>

@@ -17,12 +17,9 @@ public interface TramiteComponent {
 	/**
 	 * Crea un tramiteVersion con los valores por defecto
 	 *
-	 * @param pNumVersion
-	 *            num. version
-	 * @param pIdiomasSoportados
-	 *            idiomas soportados
-	 * @param pDatosUsuarioBloqueo
-	 *            datos del usuario para bloquear
+	 * @param pNumVersion          num. version
+	 * @param pIdiomasSoportados   idiomas soportados
+	 * @param pDatosUsuarioBloqueo datos del usuario para bloquear
 	 * @return TramiteVersion
 	 */
 
@@ -39,12 +36,9 @@ public interface TramiteComponent {
 	/**
 	 * Añade un tramite version a un tramite.
 	 *
-	 * @param tramiteVersion
-	 *            tramite version
-	 * @param idTramite
-	 *            id tramite
-	 * @param usuario
-	 *            usuario
+	 * @param tramiteVersion tramite version
+	 * @param idTramite      id tramite
+	 * @param usuario        usuario
 	 * @return the long
 	 */
 	Long addTramiteVersion(TramiteVersion tramiteVersion, String idTramite, String usuario);
@@ -59,10 +53,8 @@ public interface TramiteComponent {
 	/**
 	 * Añade un documento a un tramite.
 	 *
-	 * @param documento
-	 *            documento
-	 * @param idTramitePaso
-	 *            id tramite paso
+	 * @param documento     documento
+	 * @param idTramitePaso id tramite paso
 	 * @return documento
 	 */
 	Documento addDocumentoTramite(Documento documento, Long idTramitePaso);
@@ -77,10 +69,8 @@ public interface TramiteComponent {
 	/**
 	 * Añade una tasa a un tramite.
 	 *
-	 * @param tasa
-	 *            tasa
-	 * @param idTramitePaso
-	 *            id tramite paso
+	 * @param tasa          tasa
+	 * @param idTramitePaso id tramite paso
 	 * @return tasa
 	 */
 	Tasa addTasaTramite(Tasa tasa, Long idTramitePaso);
@@ -95,13 +85,14 @@ public interface TramiteComponent {
 	/**
 	 * Añade un formulario tramite.
 	 *
-	 * @param formularioTramite
-	 *            formulario tramite
-	 * @param idTramitePaso
-	 *            id tramite paso
+	 * @param formularioTramite formulario tramite
+	 * @param idTramitePaso     id tramite paso
 	 * @return formulario tramite
 	 */
 	FormularioTramite addFormularioTramite(FormularioTramite formularioTramite, Long idTramitePaso);
 
+	TramiteVersion createTramiteVersionMigracion(Integer pNumVersion, String pIdiomasSoportados);
+
+	Long addTramiteVersionMigracion(TramiteVersion tramiteVersion, String idTramite, String usuario);
 
 }

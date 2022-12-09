@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
@@ -31,17 +32,84 @@
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growldialogTramiteData" widgetVar="growldialogTramiteData" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+				<h:outputScript >
+
+				  window.onload=function(){
+				    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+					onVisible(contextMenu, () => eliminarResaltar());
+
+					document.addEventListener('contextmenu', function(ev) {
+				    	ev.preventDefault();
+				    	getPos();
+				    	return false;
+					}, false);
+
+
+				  }
+
+					function eliminarResaltar(){
+						let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				  		let elementos = document.getElementsByClassName('resaltar');
+				  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+							for(let i = 0; i &lt; elementos.length; i++){
+								elementos[i].classList.remove('resaltar');
+							}
+				  		}
+					}
+
+					function onVisible(element, callback) {
+					  new IntersectionObserver((entries, observer) => {
+					    entries.forEach(entry => {
+					      if(entry.intersectionRatio == 0) {
+					        callback(element);
+					      }
+					    });
+					  }).observe(element);
+					}
+
+					function consultar(){
+						let elemento = document.getElementsByClassName('resaltar')[0];
+						elemento.click();
+						$('#dialogTramite\\:btnEditarHidden').click();
+					}
+
+				  function getPos(){
+				 	var e = window.event;
+
+				    var posX = e.clientX;
+				    var posY = e.clientY;
+				    var el = document.elementFromPoint(posX, posY);
+
+				    let elementos = document.getElementsByClassName('resaltar');
+				  		if(elementos.length &gt; 0){
+							for(let i = 0; i &lt; elementos.length; i++){
+								elementos[i].classList.remove('resaltar');
+							}
+				  		}
+
+					el.classList.add("resaltar");
+					var aux = document.getElementById("dialogTramite:auxCopiar");
+					if(el.textContent!=''){
+						aux.value = el.textContent;
+					}else if(el.firstChild!=null){
+						aux.value = el.firstChild.value;
+					}else if(el.value!=null &amp;&amp; el.value!=''){
+						aux.value = el.value;
+					}
+				 }
+
+				</h:outputScript>
 
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				 	<p:outputLabel for="identificador" value="#{msg['dialogTramite.codigo']}"  />
-				 	<p:inputText id="identificador" value="#{dialogTramite.data.identificador}" required="true" size="30" maxlength="20" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}" disabled="#{dialogTramite.consulta}"   >
+				 	<p:inputText id="identificador" value="#{dialogTramite.data.identificador}" required="true" size="65" maxlength="50" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}" readonly="#{dialogTramite.consulta}"   >
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
-						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
+						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,50}$" />
 				   	</p:inputText>
 
 				 	<p:outputLabel for="descripcion" value="#{msg['dialogTramite.descripcion']}" />
-			 		<p:inputTextarea id="descripcion" value="#{dialogTramite.data.descripcion}" disabled="#{dialogTramite.consulta}" required="true" cols="40" autoResize="false" maxlength="1000"/>
+			 		<p:inputTextarea id="descripcion" value="#{dialogTramite.data.descripcion}" readonly="#{dialogTramite.consulta}" required="true" cols="63" autoResize="false" maxlength="1000"/>
 				</h:panelGrid>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
@@ -53,6 +121,15 @@
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
+		    <p:contextMenu>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogTramite:auxCopiar" update="growldialogTramiteData" url="javascript:void(0)"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{dialogTramite.copiadoCorr}" process="@this" update="@this growldialogTramiteData"/>
+            	<p:ajax event="error" listener="#{dialogTramite.copiadoErr}" update="@this growldialogTramiteData"/>
+        	</pe:clipboard>
+
+		    <p:inputText id="auxCopiar" value="#{dialogTramite.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 	</h:form>
 </h:body>
 

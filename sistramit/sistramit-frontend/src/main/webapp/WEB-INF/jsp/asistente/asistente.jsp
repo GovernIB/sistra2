@@ -21,7 +21,7 @@
 
 	<link rel="stylesheet" media="screen" href="css/imc-sf.css" />
 
-	<script src="js/utils/jquery-3.6.0.min.js"></script>
+	<script src="js/utils/jquery-1.12.4.min.js"></script>
 
 	<!-- inicia! -->
 	<script src="js/configuracion.js"></script>

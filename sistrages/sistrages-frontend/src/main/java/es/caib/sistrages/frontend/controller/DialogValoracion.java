@@ -31,6 +31,8 @@ public class DialogValoracion extends DialogControllerBase {
 	/** Descripcion. **/
 	private String descripcion;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -53,8 +55,7 @@ public class DialogValoracion extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de propiedades.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogoDescripcion(final SelectEvent event) {
 
@@ -130,8 +131,7 @@ public class DialogValoracion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final IncidenciaValoracion data) {
 		this.data = data;
@@ -145,8 +145,7 @@ public class DialogValoracion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public final void setId(final String id) {
 		this.id = id;
@@ -160,11 +159,39 @@ public class DialogValoracion extends DialogControllerBase {
 	}
 
 	/**
-	 * @param descripcion
-	 *            the descripcion to set
+	 * @param descripcion the descripcion to set
 	 */
 	public final void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+	
+	/**
+	 * @return the portapapeles
+	 */
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	/**
+	 * @param portapapeles the portapapeles to set
+	 */
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

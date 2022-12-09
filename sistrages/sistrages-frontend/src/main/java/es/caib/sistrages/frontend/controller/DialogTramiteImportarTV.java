@@ -43,6 +43,8 @@ public class DialogTramiteImportarTV extends DialogControllerBase {
 	/** Nueva versión cuando se selecciona crear. **/
 	private String nuevaVersion;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -122,6 +124,29 @@ public class DialogTramiteImportarTV extends DialogControllerBase {
 	 */
 	public FilaImportarTramiteVersion getData() {
 		return data;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

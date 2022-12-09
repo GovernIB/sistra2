@@ -17,12 +17,12 @@
         <h:panelGrid columns="2" columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="10">
 
             <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionTasa.identificador']}" />
-          	<p:inputText id="identificador" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.identificador}" required="true" disabled="true" styleClass="w35"/>
+          	<p:inputText id="identificador" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.identificador}" required="true" readonly="true" styleClass="w35"/>
 
 
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionTasa.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="descripcion" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" required="true" disabled="true" styleClass="w85"/>
+           		<p:inputText id="descripcion" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" required="true" readonly="true" styleClass="w85"/>
            		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.tasaTramiteSeleccionado.descripcion)}"
 						process="@this" update="growl"/>
        		</p:outputPanel>
@@ -52,7 +52,7 @@
 							process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago)}" />
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionTasa.simularpago']}" style="#{viewDefinicionVersion.simular()}"/>
-			<p:selectBooleanCheckbox id="simularpago" disabled="true" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.simulado}" style="#{viewDefinicionVersion.simular()}"/>
+			<p:selectBooleanCheckbox id="simularpago" readonly="true" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.simulado}" style="#{viewDefinicionVersion.simular()}"/>
 
 			<f:facet name = "footer">
 				<p:outputPanel id="toolbar" styleClass="grid-right">

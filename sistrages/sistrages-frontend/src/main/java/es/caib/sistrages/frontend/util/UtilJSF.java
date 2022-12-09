@@ -626,10 +626,11 @@ public final class UtilJSF {
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewSeccionesReutilizables.class) + EXTENSION_XHTML
 					+ ambitoEntidadURL;
 			break;
-		case FORMULARIOS_EXTERNOS:
-			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewFormulariosExternos.class) + EXTENSION_XHTML
-					+ ambitoEntidadURL;
-			break;
+		/*
+		 * case FORMULARIOS_EXTERNOS: url = PATH_VIEWS +
+		 * UtilJSF.getViewNameFromClass(ViewFormulariosExternos.class) + EXTENSION_XHTML
+		 * + ambitoEntidadURL; break;
+		 */
 		case ENVIOS_REMOTOS:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewEnviosRemotos.class) + EXTENSION_XHTML
 					+ ambitoEntidadURL;
@@ -818,7 +819,7 @@ public final class UtilJSF {
 				.evaluateExpressionGet(FacesContext.getCurrentInstance(), "#{frontModuleConfig}",
 						es.caib.sistrages.frontend.ModuleConfig.class)
 				.getEntorno();
-		if(entorno.equals("se")) {
+		if (entorno.equals("se")) {
 			return "des";
 		} else {
 			return entorno;
@@ -843,14 +844,13 @@ public final class UtilJSF {
 	 *
 	 * @return
 	 */
-	/*
-	 * public static boolean isServicioActivado() { final String admetreServeis =
-	 * FacesContext.getCurrentInstance().getApplication()
-	 * .evaluateExpressionGet(FacesContext.getCurrentInstance(),
-	 * "#{frontModuleConfig}", es.caib.sistrages.frontend.ModuleConfig.class)
-	 * .getAdmetreServeis(); return admetreServeis != null &&
-	 * admetreServeis.equalsIgnoreCase("true"); }
-	 */
+	public static boolean isServicioActivado() {
+		final String admetreServeis = FacesContext.getCurrentInstance().getApplication()
+				.evaluateExpressionGet(FacesContext.getCurrentInstance(), "#{frontModuleConfig}",
+						es.caib.sistrages.frontend.ModuleConfig.class)
+				.getAdmetreServeis();
+		return admetreServeis != null && admetreServeis.equalsIgnoreCase("true");
+	}
 
 	/**
 	 * Devuelve la revision de SVN o GIT.

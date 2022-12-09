@@ -66,6 +66,8 @@ public class DialogSeccionExportar extends DialogControllerBase {
 	/** Mostrar botón exportar. **/
 	private boolean mostrarBotonExportar;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -91,13 +93,13 @@ public class DialogSeccionExportar extends DialogControllerBase {
 	 */
 	public void cancelarExportar() {
 
-		//UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("dialogSeccionExportar.exportadoCorrectamente"));
+		// UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+		// UtilJSF.getLiteral("dialogSeccionExportar.exportadoCorrectamente"));
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(false);
 		UtilJSF.closeDialog(result);
 	}
-
 
 	/**
 	 * Exportación de un dominio a un zip. Pasos a realizar:<br />
@@ -124,14 +126,15 @@ public class DialogSeccionExportar extends DialogControllerBase {
 		prepararProperties(zos);
 
 		// 2. Incluir el dominio.data
-		final DisenyoFormulario disenyoFormulario = formularioInternoService.getFormularioInternoCompleto(data.getIdFormularioAsociado());
+		final DisenyoFormulario disenyoFormulario = formularioInternoService
+				.getFormularioInternoCompleto(data.getIdFormularioAsociado());
 		data.setDisenyoFormulario(disenyoFormulario);
 		incluirModelApi(zos, data, "seccion.data");
 
 		// 3. Incluir el dominio.data
 		if (scripts != null) {
-			for(ScriptSeccionReutilizable script : scripts) {
-				incluirModelApi(zos, script, "script_tipo_"+script.getTipoScript().toString()+".data");
+			for (ScriptSeccionReutilizable script : scripts) {
+				incluirModelApi(zos, script, "script_tipo_" + script.getTipoScript().toString() + ".data");
 			}
 		}
 		// 4. Cerramos
@@ -204,6 +207,29 @@ public class DialogSeccionExportar extends DialogControllerBase {
 	}
 
 	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	/**
 	 * @return the id
 	 */
 	public String getId() {
@@ -211,8 +237,7 @@ public class DialogSeccionExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -226,8 +251,7 @@ public class DialogSeccionExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarBotonExportar
-	 *            the mostrarBotonExportar to set
+	 * @param mostrarBotonExportar the mostrarBotonExportar to set
 	 */
 	public void setMostrarBotonExportar(final boolean mostrarBotonExportar) {
 		this.mostrarBotonExportar = mostrarBotonExportar;
@@ -241,12 +265,10 @@ public class DialogSeccionExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final SeccionReutilizable data) {
 		this.data = data;
 	}
-
 
 }

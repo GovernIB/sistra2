@@ -103,6 +103,8 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 	/** Lista de areas. */
 	private List<Area> listaAreas;
 
+	private String portapapeles;
+
 	/** Inicializacion. */
 	public void init() {
 
@@ -143,6 +145,21 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 		} else {
 			mostrarBreadcrumb = false;
 		}
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
 	}
 
 	/**
@@ -598,6 +615,14 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 	}
 
 	// ------- GETTERS / SETTERS --------------------------------
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
 	/**
 	 * @return the filtro
 	 */

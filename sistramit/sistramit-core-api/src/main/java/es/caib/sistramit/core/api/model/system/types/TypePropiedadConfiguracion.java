@@ -41,6 +41,12 @@ public enum TypePropiedadConfiguracion {
 	ANEXOS_EXTENSIONES_PERMITIDAS("sistramit.anexos.extensionesPermitidas"),
 
 	/**
+	 * Anexo trámite: indica si cuando se anexa firmado debe ser LTV (sello tiempo):
+	 * boolean.
+	 */
+	ANEXOS_ANEXOFIRMADO_LTV("sistramit.anexos.anexoFirmado.PADES_LTV"),
+
+	/**
 	 * Realiza chequeo de si los datos de persistencia del paso se corresponden con
 	 * los almacenados en BBDD (true/false). Una vez depurada la aplicacion se puede
 	 * deshabilitar

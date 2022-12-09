@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	template="../layout/mainLayout.xhtml">
 
 
@@ -26,6 +27,66 @@
 					<p:layoutUnit id="breadDefinicionVersionLayout" position="north" styleClass="body-color">
 
 						<h:form id="breadDefinicionVersion" style="display:flex;" >
+							<h:outputScript >
+
+							  window.onload=function(){
+							    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+								onVisible(contextMenu, () => eliminarResaltar());
+
+								document.addEventListener('contextmenu', function(ev) {
+							    	ev.preventDefault();
+							    	getPos();
+							    	return false;
+								}, false);
+							  }
+
+								function eliminarResaltar(){
+									let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+							  		let elementos = document.getElementsByClassName('resaltar');
+							  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+										for(let i = 0; i &lt; elementos.length; i++){
+											elementos[i].classList.remove('resaltar');
+										}
+							  		}
+								}
+
+								function onVisible(element, callback) {
+								  new IntersectionObserver((entries, observer) => {
+								    entries.forEach(entry => {
+								      if(entry.intersectionRatio == 0) {
+								        callback(element);
+								      }
+								    });
+								  }).observe(element);
+								}
+
+							  function getPos(){
+							 	var e = window.event;
+
+							    var posX = e.clientX;
+							    var posY = e.clientY;
+							    var el = document.elementFromPoint(posX, posY);
+
+							    let elementos = document.getElementsByClassName('resaltar');
+							  		if(elementos.length &gt; 0){
+										for(let i = 0; i &lt; elementos.length; i++){
+											elementos[i].classList.remove('resaltar');
+										}
+							  		}
+
+								el.classList.add("resaltar");
+								var aux = document.getElementById("breadDefinicionVersion:auxCopiar");
+								if(el.textContent!=''){
+									aux.value = el.textContent;
+								}else if(el.firstChild!=null){
+									aux.value = el.firstChild.value;
+								}else if(el.value!=null &amp;&amp; el.value!=''){
+									aux.value = el.value;
+								}
+
+							 }
+
+							</h:outputScript>
 							<div style="width:100vw;">
 								<p:breadCrumb homeDisplay="text" model="#{viewDefinicionVersion.breadCrumModel}"  />
 							</div>
@@ -52,7 +113,32 @@
 										actionListener="#{viewDefinicionVersion.actualizar()}" process="@this"  update="@form :workDefinicionVersion growl formArbol:arbol" style="display:none"/>
 
 							</div>
-							</h:form>
+							<p:contextMenu for=":work">
+						     	<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :breadDefinicionVersion:auxCopiar" update="growl" url="javascript:void(0)"/>
+						    </p:contextMenu>
+						    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+								<p:ajax event="success" listener="#{viewDefinicionVersion.copiadoCorr}" process="@this" update="@this growl"/>
+						         <p:ajax event="error" listener="#{viewDefinicionVersion.copiadoErr}" update="@this growl"/>
+						    </pe:clipboard>
+
+						    <p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
+								<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+							</p:contextMenu>
+							<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
+								<p:ajax event="success" listener="#{viewDefinicionVersion.copiadoCorr}" process="@this" update="@this growl"/>
+								<p:ajax event="error" listener="#{viewDefinicionVersion.copiadoErr}" update="@this growl"/>
+							</pe:clipboard>
+
+							 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
+								<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+							</p:contextMenu>
+							<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
+								<p:ajax event="success" listener="#{viewDefinicionVersion.copiadoCorr}" process="@this" update="@this growl"/>
+								<p:ajax event="error" listener="#{viewDefinicionVersion.copiadoErr}" update="@this growl"/>
+							</pe:clipboard>
+
+						    <p:inputText id="auxCopiar" value="#{viewDefinicionVersion.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+						</h:form>
 
 
 					</p:layoutUnit>
@@ -127,6 +213,5 @@
 						    </p:confirmDialog>
 
 	</ui:define>
-
 
 </ui:composition>

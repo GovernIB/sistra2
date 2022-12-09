@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.PrimeFaces;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
@@ -132,6 +133,10 @@ public class ViewTramites extends ViewControllerBase {
 	private String idTramiteAux;
 
 	private Integer paginacion;
+
+	private String portapapeles;
+
+	private Boolean renderCmenu = true;
 
 	/**
 	 * Inicializacion.
@@ -665,7 +670,9 @@ public class ViewTramites extends ViewControllerBase {
 		} else {
 			res = false;
 		}
+		PrimeFaces.current().executeScript("opcTramites();");
 		return res;
+
 	}
 
 	/**
@@ -692,7 +699,6 @@ public class ViewTramites extends ViewControllerBase {
 	 * @return el valor de tienePermisosVersion
 	 */
 	public boolean getTienePermisosVersion() {
-
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionadaVersion()) {
 			return false;
@@ -720,6 +726,7 @@ public class ViewTramites extends ViewControllerBase {
 
 		this.buscarTramites(filtro, true);
 		filtro = filtro != null ? quitarEscapeFiltro(filtro) : null;
+		PrimeFaces.current().executeScript("setHeight();");
 
 	}
 
@@ -729,6 +736,7 @@ public class ViewTramites extends ViewControllerBase {
 	public String escaparFiltro(String filtro) {
 		filtro = filtro.replace("_", "@_");
 		filtro = filtro.replace("%", "@%");
+		filtro = filtro.trim();
 		return filtro;
 	}
 
@@ -1029,6 +1037,7 @@ public class ViewTramites extends ViewControllerBase {
 						convertirAreas(), filtro));
 
 				List<Tramite> tramites = new ArrayList<>();
+				String sortFieldAux = "";
 
 				if (listaAreasSeleccionadas != null && !listaAreasSeleccionadas.isEmpty()) {
 					if (nuevaArea) {
@@ -1041,8 +1050,13 @@ public class ViewTramites extends ViewControllerBase {
 
 						pag = "0";
 					}
-					tramites = tramiteService.listTramite(first, pageSize, sortField, true,
-							UtilJSF.getSessionBean().getEntidad().getCodigo(), convertirAreas(), filtro);
+					if (sortField != null && !sortField.isEmpty()) {
+						sortFieldAux = sortField.substring(sortField.indexOf('.') + 1, sortField.length());
+					}
+
+					tramites = tramiteService.listTramite(UtilJSF.getSessionBean().getEntidad().getCodigo(),
+							convertirAreas(), filtro);
+
 				}
 
 				// Obtenemos activa a los tramites que tengan alguna version activa
@@ -1064,17 +1078,68 @@ public class ViewTramites extends ViewControllerBase {
 							&& (tramite.getIdentificador().toUpperCase().contains(filtroNuevo.toUpperCase())
 									|| tramite.getDescripcion().toUpperCase().contains(filtroNuevo.toUpperCase())))
 							|| StringUtils.isEmpty(filtroNuevo))
+
 						listaTramiteVersiones.add(new TramiteVersiones(tramite, listaVersiones));
+
 				}
 
 				if (idTramite != null && !idTramite.isEmpty()) {
 					buscarTramitesPorDefecto();
 				}
 
-				Collections.sort(listaTramiteVersiones,
-						(o1, o2) -> o1.getTramite().getIdentificador().compareTo((o2.getTramite().getIdentificador())));
+				if (sortFieldAux != null && !sortFieldAux.isEmpty()) {
+					switch (sortFieldAux) {
+					case "identificador":
+						Collections.sort(listaTramiteVersiones, (o1, o2) -> o1.getTramite().getIdentificador()
+								.toUpperCase().compareTo((o2.getTramite().getIdentificador().toUpperCase())));
+						if (sortOrder.equals(SortOrder.DESCENDING)) {
+							Collections.reverse(listaTramiteVersiones);
+						}
+						break;
 
-				return listaTramiteVersiones;
+					case "descripcion":
+						Collections.sort(listaTramiteVersiones, (o1, o2) -> o1.getTramite().getDescripcion()
+								.toUpperCase().compareTo((o2.getTramite().getDescripcion().toUpperCase())));
+						if (sortOrder.equals(SortOrder.DESCENDING)) {
+							Collections.reverse(listaTramiteVersiones);
+						}
+						break;
+
+					case "area":
+						Collections.sort(listaTramiteVersiones, (o1, o2) -> o1.getTramite().getIdentificadorArea()
+								.toUpperCase().compareTo((o2.getTramite().getIdentificadorArea().toUpperCase())));
+						if (sortOrder.equals(SortOrder.DESCENDING)) {
+							Collections.reverse(listaTramiteVersiones);
+						}
+						break;
+
+					case "activo":
+						Collections.sort(listaTramiteVersiones, (o1, o2) -> Boolean.toString(o1.getTramite().isActivo())
+								.compareTo((Boolean.toString(o2.getTramite().isActivo()))));
+						if (sortOrder.equals(SortOrder.DESCENDING)) {
+							Collections.reverse(listaTramiteVersiones);
+						}
+						break;
+
+					case "ultima":
+						Collections.sort(listaTramiteVersiones,
+								(o1, o2) -> (Integer.parseInt(getUltimaVersion(o1.getTramite().getCodigo())))
+										- (Integer.parseInt(getUltimaVersion(o2.getTramite().getCodigo()))));
+						if (sortOrder.equals(SortOrder.DESCENDING)) {
+							Collections.reverse(listaTramiteVersiones);
+						}
+						break;
+					}
+				} else {
+					Collections.sort(listaTramiteVersiones, (o1, o2) -> o1.getTramite().getIdentificador()
+							.compareTo((o2.getTramite().getIdentificador())));
+				}
+
+				List<TramiteVersiones> listAux = new ArrayList<TramiteVersiones>();
+				for (int i = first; (i < pageSize + first) && (i < listaTramiteVersiones.size()); i++) {
+					listAux.add(listaTramiteVersiones.get(i));
+				}
+				return listAux;
 
 			}
 
@@ -1241,7 +1306,7 @@ public class ViewTramites extends ViewControllerBase {
 			params.put(TypeParametroVentana.ID.toString(),
 					String.valueOf(this.tramiteSeleccionada.getTramite().getCodigo()));
 		}
-		UtilJSF.openDialog(DialogTramite.class, modoAcceso, params, true, 540, 220);
+		UtilJSF.openDialog(DialogTramite.class, modoAcceso, params, true, 650, 220);
 	}
 
 	/**
@@ -1467,6 +1532,37 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
+	 * Devuelve la ultima version editada
+	 */
+	private String getUltimaVersion(Long tramite) {
+		final List<TramiteVersion> listaVersiones = tramiteService.listTramiteVersion(tramite, null);
+		TramiteVersion ftv = null;
+		for (TramiteVersion tv : listaVersiones) {
+			if (ftv == null || ftv.getFechaUltima() == null || (tv != null && tv.getFechaUltima() != null
+					&& ftv.getFechaUltima().compareTo(tv.getFechaUltima()) < 1)) {
+				ftv = tv;
+			}
+		}
+		if (ftv != null) {
+			return Integer.toString(ftv.getNumeroVersion());
+		} else {
+			return "-1";
+		}
+	}
+
+	/**
+	 * Devuelve la ultima version editada parseada
+	 */
+	public String getUltimaVersionFormateado(Long tramite) {
+		String res = getUltimaVersion(tramite);
+		if (Integer.parseInt(res) >= 0) {
+			return res;
+		} else {
+			return "";
+		}
+	}
+
+	/**
 	 * Bloquear version.
 	 */
 	public void desbloquear() {
@@ -1502,6 +1598,10 @@ public class ViewTramites extends ViewControllerBase {
 					UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
 		}
 
+	}
+
+	public void ordenarDatatble(final String campo) {
+		this.buscarTramites(null, false);
 	}
 
 	/**
@@ -2061,6 +2161,37 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public final void setPaginacion(Integer paginacion) {
 		this.paginacion = paginacion;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	public final Boolean getRenderCmenu() {
+		return renderCmenu;
+	}
+
+	public final void setRenderCmenu(Boolean renderCmenu) {
+		this.renderCmenu = renderCmenu;
 	}
 
 }

@@ -2,7 +2,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jstl/core">
 
 	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
 
@@ -14,18 +15,20 @@
         <h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left" rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="12" cellspacing="0">
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.identificador']}" />
-			<p:inputText 	 id="codigo" value="#{viewDefinicionVersion.tramite.getIdentificadorCompuesto()}" size="107" disabled="true" />
+			<p:inputText 	 id="codigo" value="#{viewDefinicionVersion.tramite.getIdentificadorCompuesto()}" size="107" readonly="true" />
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.descripcion']}" />
 			<p:panelGrid styleClass="noBorders" columns="1" columnClasses="noPadding-left,,">
-				<p:inputText value="#{viewDefinicionVersion.tramiteVersion.descripcion}" disabled="true"  size="107"    />
+				<p:inputText value="#{viewDefinicionVersion.tramiteVersion.descripcion}" readonly="true"  size="107"    />
 			</p:panelGrid>
 
-			<p:outputLabel value="#{msg['dialogDominioExportar.tipo']} *" />
+			<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.tipo']} *" />
 			<p:panelGrid styleClass="noBorders" columns="1" columnClasses="noPadding-left,,">
 				<p:selectOneRadio id="tipo" value="#{viewDefinicionVersion.tramiteVersion.tipoTramite}" disabled="true">
 		            <f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.tramite']}" itemValue="T"/>
-		            <f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.servicio']}" itemValue="S"/>
+		            <c:if test="#{UtilJSF.isServicioActivado()}">
+					  	<f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.servicio']}" itemValue="S"/>
+					</c:if>
 		        </p:selectOneRadio>
 			</p:panelGrid>
 
@@ -38,7 +41,7 @@
 					<p:column>
 						<p:outputLabel for="nivelQAA" value="#{msg['viewDefinicionVersionPropiedades.nivelQAA']}" />
 						<p:spacer width="8" height="1"/>
-						<p:inputText id="nivelQAA" disabled="true" value="#{msg['typeQAA.' += viewDefinicionVersion.tramiteVersion.nivelQAA]}"/>
+						<p:inputText id="nivelQAA" readonly="true" value="#{msg['typeQAA.' += viewDefinicionVersion.tramiteVersion.nivelQAA]}"/>
 					</p:column>
 					<p:column>
 						<p:selectBooleanCheckbox itemLabel="#{msg['tiposAutenticacion.CER']}" value="#{viewDefinicionVersion.tramiteVersion.tieneTipoAutenticacion('CER')}" disabled="true" />
@@ -76,7 +79,7 @@
 					<p:column>
 							<p:outputLabel for="numdias" value="#{msg['viewDefinicionVersionPropiedades.numdias']}" />
 							<p:spacer width="8"/>
-							<p:inputText id="numdias" size="3" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.persistenciaDias}"/>
+							<p:inputText id="numdias" size="3"  readonly="true" value="#{viewDefinicionVersion.tramiteVersion.persistenciaDias}"/>
 					</p:column>
 				</p:row>
 			</p:panelGrid>

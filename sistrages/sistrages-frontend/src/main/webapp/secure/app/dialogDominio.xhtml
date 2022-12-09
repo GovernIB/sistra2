@@ -5,6 +5,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
@@ -15,6 +16,27 @@
 <h:head>
 	<title><h:outputText value="#{msg['dialogDominio.titulo']}"/></title>
 	<h:outputScript library="js" name="encode.js"/>
+	<style type="text/css">
+
+		html, #dialogDominio, #dialogDominio\:j_idt16, #dialogDominio\:j_idt16 > table, #dialogDominio\:j_idt16 > table > tbody,
+		#dialogDominio\:j_idt16 > table > tbody > tr:nth-child(5), #dialogDominio\:j_idt16 > table > tbody > tr:nth-child(5) > td:nth-child(2),
+		#dialogDominio\:pg_gridParametros, #dialogDominio\:gridParametros, #dialogDominio\:gridParametros > tbody,
+		#dialogDominio\:gridParametros > tbody > tr, #dialogDominio\:gridParametros > tbody > tr > td:nth-child(1),
+		#dialogDominio\:dataTableParametros
+		{
+			height: 100% !important;
+		}
+
+		body {
+			height: 90% !important;
+		}
+
+		#dialogDominio\:dataTableParametros > div.ui-datatable-scrollable-body {
+			height: 90% !important;
+			padding-bottom: 38px !important;
+		}
+
+	</style>
 </h:head>
 
 <h:body>
@@ -32,21 +54,82 @@
 		<f:viewAction action="#{dialogDominio.init}" />
 	</f:metadata>
 	<h:form id="dialogDominio" styleClass="margin-top-10">
+		<h:outputScript >
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("dialogDominio:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+			 }
+
+			</h:outputScript>
+
   		<p:outputPanel>
 			<!-- Contenido dialogo -->
 			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
-			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w30 padding-left-18, w65" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="codigo" value="#{msg['dialogDominio.headerCodigo']}" />
-				<p:inputText id="codigo" value="#{dialogDominio.data.identificador}" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase();" styleClass="w95" validatorMessage="#{msg['error.validacion.identificador']}">
+				<p:inputText id="codigo" value="#{dialogDominio.data.identificador}" readonly="#{dialogDominio.isConsulta()}"  required="true" maxlength="50"  onblur="this.value = this.value.toUpperCase();" styleClass="w95" validatorMessage="#{msg['error.validacion.identificador']}">
 					<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
-					<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
+					<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,50}$" />
 					<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
 			   	</p:inputText>
 
 				<p:outputLabel for="descripcion" value="#{msg['dialogDominio.headerDescripcion']}" />
-				<p:inputTextarea id="descripcion" value="#{dialogDominio.data.descripcion}" disabled="#{dialogDominio.isConsulta()}" required="true" rows="4" cols="40" maxlength="255" styleClass="w95" />
+				<p:inputTextarea id="descripcion" value="#{dialogDominio.data.descripcion}" readonly="#{dialogDominio.isConsulta()}" required="true" rows="4" cols="40" maxlength="255" styleClass="w95" />
 
 				<p:outputLabel for="cacheo" value="#{msg['dialogDominio.headerCachear']}" />
 				<h:panelGrid id="panelCacheo" columns="2">
@@ -57,10 +140,10 @@
 				</h:panelGrid>
 
 				<p:column>
-			    	<p style="width:230px">
+			    	<p style="width:40%">
 			    		<p:outputLabel  value="#{msg['dialogDominio.headerTipo']}:" />
 					</p>
-					<p:selectOneMenu id="tipo" layout="pageDirection" value="#{dialogDominio.data.tipo}" style="width:200px" required="true" disabled="#{dialogDominio.isConsulta()}">
+					<p:selectOneMenu id="tipo" layout="pageDirection" value="#{dialogDominio.data.tipo}" style="width:75%" required="true" disabled="#{dialogDominio.isConsulta()}">
 					     <f:selectItems value="#{dialogDominio.tipos}" var="tipo" itemLabel="#{msg['typeDominio.' += tipo]}" itemValue="#{tipo}"  />
 						 <p:ajax event="change" listener="#{dialogDominio.actualizarTipo()}" update="panel_tipo pg_labelParametros pg_gridParametros"/>
 						 <p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
@@ -72,7 +155,7 @@
 
 						<p:column id="columnaBBDD1" colspan="1" rendered="#{dialogDominio.visibleJNDI}" >
 							<p:outputLabel for="jndi" value="#{msg['dialogDominio.headerTipo.consultaBD.jndi']}" style="margin-right:20px" />
-							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" disabled="#{dialogDominio.isConsulta()}" size="43" maxlength="500" >
+							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" readonly="#{dialogDominio.isConsulta()}" size="43" maxlength="500" >
 								<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
 							</p:inputText>
 						</p:column>
@@ -116,6 +199,7 @@
 			                  		oncomplete="triggerDblClickValores();"
 			                        update=":dialogDominio:datalistValores"
 			                        />
+			                    <p:ajax event="contextMenu" global="false" process="@this"/>
 
 								<!-- Columnas -->
 								<p:column headerText="#{msg['dialogDominio.headerParametros.codigo']}" class="ui-panelgrid-cell">
@@ -126,6 +210,16 @@
 							        <h:outputText value="#{td.valor}" />
 							    </p:column>
 				 			</p:dataTable>
+				 			<p:contextMenu for=":dialogDominio:datalistValores">
+				       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogDominio:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+				       			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('dialogDominio:btnNuevoValor').click();" process="@this"   rendered="#{dialogDominio.visibleLista and !dialogDominio.consulta}"/>
+				        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('dialogDominio:btnEditarValor').click();" process="@this"  rendered="#{dialogDominio.visibleLista and !dialogDominio.consulta}"/>
+				        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('dialogDominio:btnEliminarValor').click();" process="@this"  rendered="#{dialogDominio.visibleLista and !dialogDominio.consulta}"/>
+						    </p:contextMenu>
+						    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+								<p:ajax event="success" listener="#{dialogDominio.copiadoCorr}" process="@this" update="@this growlDialog"/>
+				            	<p:ajax event="error" listener="#{dialogDominio.copiadoErr}" update="@this growlDialog"/>
+				        	</pe:clipboard>
 						</p:column>
 						<p:column id="columnaLista2" rendered="#{dialogDominio.visibleLista and !dialogDominio.consulta}">
 								<p>
@@ -161,7 +255,7 @@
 								<p:outputLabel for="urlRemoto" value="#{msg['dialogDominio.headerTipo.consultaRemota.url']}"  />
 							</p>
 							<p>
-								<p:inputText id="urlRemoto" value="#{dialogDominio.data.url}" disabled="#{dialogDominio.isConsulta()}" size="45"  maxlength="500">
+								<p:inputText id="urlRemoto" value="#{dialogDominio.data.url}" readonly="#{dialogDominio.isConsulta()}" size="45"  maxlength="500">
 									<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
 								</p:inputText>
 
@@ -189,7 +283,7 @@
 							<h:panelGrid id="panelCongAut2" columnClasses="w30, w40, w30" columns = "3"  cellspacing = "0"  width="100%">
 
 								<p:outputLabel for="timeout" value="#{msg['dialogDominio.headerTipo.consultaRemota.timeout']}"  style="margin-right:5px"  />
-								<p:inputNumber id="timeout" value="#{dialogDominio.data.timeout}" disabled="#{dialogDominio.isConsulta()}" maxlength="4" maxValue="9999" decimalPlaces="0" >
+								<p:inputNumber id="timeout" value="#{dialogDominio.data.timeout}" readonly="#{dialogDominio.isConsulta()}" maxlength="4" maxValue="9999" decimalPlaces="0" >
 									<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
 								</p:inputNumber>
 								<p:commandButton id="btnCrearConfig2" style="display:none">
@@ -250,6 +344,8 @@
 			                  		oncomplete="triggerDblClickParametros();"
 			                        update=":dialogDominio:dataTableParametros"
 			                        />
+			                    <p:ajax event="contextMenu" global="false" process="@this"/>
+
 								<!-- Columnas -->
 								<p:column headerText="#{msg['dialogDominio.headerParametros.codigo']}" class="ui-panelgrid-cell">
 									<h:outputText value="#{td.codigo}" />
@@ -291,6 +387,16 @@
 		 		</h:panelGroup>
 			</h:panelGrid>
 		</p:outputPanel>
+		<p:contextMenu for=":dialogDominio:dataTableParametros">
+				       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyProp"  process="@this :dialogDominio:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+				       			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('dialogDominio:btnNuevaPropiedad').click();" process="@this"  rendered="#{!dialogDominio.consulta}"/>
+				        		<p:menuitem id="mnuEditarProp" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('dialogDominio:btnEditarPropiedad').click();" process="@this"  rendered="#{!dialogDominio.consulta}"/>
+				        		<p:menuitem id="mnuEliminarProp" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('dialogDominio:btnEliminarPropiedad').click();" process="@this" rendered="#{!dialogDominio.consulta}" />
+						    </p:contextMenu>
+						    <pe:clipboard id="clipContextCopyProp" trigger="mnuCopyProp" action="copy" target="auxCopiar">
+								<p:ajax event="success" listener="#{dialogDominio.copiadoCorr}" process="@this" update="@this growlDialog"/>
+				            	<p:ajax event="error" listener="#{dialogDominio.copiadoErr}" update="@this growlDialog"/>
+				        	</pe:clipboard>
 	  	<p:outputPanel styleClass="botonera">
 	     	<p:toolbar>
 	     		<f:facet name="left">
@@ -345,6 +451,14 @@
 		    	<h:outputText value="#{dialogDominio.hayCambios}" id="hayCambios"/>
 		    	<p:commandButton id="btnPingNoGuardar" actionListener="#{dialogDominio.ping()}" process="@this" style="display:none" />
 		    </h:panelGrid>
+		    <p:contextMenu>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :dialogDominio:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{dialogDominio.copiadoCorr}" process="@this" update="@this growlDialog"/>
+            	<p:ajax event="error" listener="#{dialogDominio.copiadoErr}" update="@this growlDialog"/>
+        	</pe:clipboard>
+        	<p:inputText id="auxCopiar" value="#{dialogDominio.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 	</h:form>
 
 </h:body>

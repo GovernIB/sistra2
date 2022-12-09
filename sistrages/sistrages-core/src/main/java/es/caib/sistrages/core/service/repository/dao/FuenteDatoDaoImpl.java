@@ -95,8 +95,7 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 		return valores;
 	}
 
-
-	private List<JValorFuenteDatos>  getJValoresFuenteDatos(Long idFuenteDato) {
+	private List<JValorFuenteDatos> getJValoresFuenteDatos(Long idFuenteDato) {
 		final String sql = "SELECT d FROM JValorFuenteDatos d where d.filaFuenteDatos.fuenteDatos.codigo = :idFuenteDato  order by d.codigo";
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("idFuenteDato", idFuenteDato);
@@ -111,7 +110,6 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 		final List<JFilasFuenteDatos> results = query.getResultList();
 		return results;
 	}
-
 
 	private List<JCampoFuenteDatos> getJFuenteCampos(final Long idFuenteDato) {
 		final String sql = "SELECT d FROM JCampoFuenteDatos d where d.fuenteDatos.codigo = :idFuenteDato  order by d.codigo";
@@ -167,18 +165,18 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 		StringBuilder sql = new StringBuilder("SELECT DISTINCT d FROM JFuenteDatos d ");
 
 		if (ambito == TypeAmbito.AREA) {
-			sql.append( " WHERE d.area.id = :id AND d.ambito LIKE '" + TypeAmbito.AREA + "'");
+			sql.append(" WHERE d.area.id = :id AND d.ambito LIKE '" + TypeAmbito.AREA + "'");
 		} else if (ambito == TypeAmbito.ENTIDAD) {
-			sql.append( " WHERE d.entidad.id = :id AND d.ambito LIKE '" + TypeAmbito.ENTIDAD + "'");
+			sql.append(" WHERE d.entidad.id = :id AND d.ambito LIKE '" + TypeAmbito.ENTIDAD + "'");
 		} else if (ambito == TypeAmbito.GLOBAL) {
-			sql.append( " WHERE d.ambito LIKE '" + TypeAmbito.GLOBAL + "'");
+			sql.append(" WHERE d.ambito LIKE '" + TypeAmbito.GLOBAL + "'");
 		}
 
 		if (StringUtils.isNotBlank(filtro)) {
-			sql.append( " AND ( LOWER(d.descripcion) LIKE :filtro OR LOWER(d.identificador) LIKE :filtro ) ");
+			sql.append(" AND ( LOWER(d.descripcion) LIKE :filtro OR LOWER(d.identificador) LIKE :filtro ) ");
 		}
 
-		sql.append( " ORDER BY d.identificador");
+		sql.append(" ORDER BY d.identificador");
 
 		final Query query = entityManager.createQuery(sql.toString());
 
@@ -535,8 +533,8 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 	}
 
 	@Override
-	public FuenteDatos getByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
-			Long codigoArea, Long codigoFD) {
+	public FuenteDatos getByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea,
+			Long codigoFD) {
 		Query query = getQuery(false, ambito, identificador, codigoEntidad, codigoArea, codigoFD);
 		final List<JFuenteDatos> fuentesDatos = query.getResultList();
 		final FuenteDatos fd;
@@ -549,14 +547,15 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 	}
 
 	@Override
-	public boolean existeFDByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad,
-			Long codigoArea, Long codigoFD) {
+	public boolean existeFDByIdentificador(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea,
+			Long codigoFD) {
 		Query query = getQuery(true, ambito, identificador, codigoEntidad, codigoArea, codigoFD);
 		final Long cuantos = (Long) query.getSingleResult();
 		return cuantos != 0l;
 	}
 
-	private Query getQuery (boolean isTotal, TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoFD) {
+	private Query getQuery(boolean isTotal, TypeAmbito ambito, String identificador, Long codigoEntidad,
+			Long codigoArea, Long codigoFD) {
 		final StringBuilder sql = new StringBuilder("select ");
 		if (isTotal) {
 			sql.append(" count(d) ");
@@ -592,21 +591,20 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 			query.setParameter("codigoFD", codigoFD);
 		}
 
-
 		return query;
 	}
 
-
 	@Override
-	public ValoresDominio realizarConsultaFuenteDatos(final TypeAmbito ambito, final String idEntidad, final String idArea, final String idDominio,
-			final List<ValorParametroDominio> parametros) {
+	public ValoresDominio realizarConsultaFuenteDatos(final TypeAmbito ambito, final String idEntidad,
+			final String idArea, final String idDominio, final List<ValorParametroDominio> parametros) {
 
 		// TODO MODIFICAR PARA SACAR LA LOGICA A UN COMPONENT Y DEJAR EN EL DAO
 		// SOLO EL ACCESO A DATOS
 
 		// Obtenemos el dominio
 		Dominio result = null;
-		final StringBuilder sql = new StringBuilder("SELECT d FROM JDominio d where d.ambito =:ambito and d.identificador = :idDominio");
+		final StringBuilder sql = new StringBuilder(
+				"SELECT d FROM JDominio d where d.ambito =:ambito and d.identificador = :idDominio");
 		if (ambito == TypeAmbito.ENTIDAD) {
 			sql.append(" and d.entidad.identificador = :idEntidad");
 		}
@@ -638,16 +636,18 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 			throw new FuenteDatosConsultaDominioPeticionIncorrecta("No coincide número de parámetros");
 		}
 
-		return consultaFuenteDatos(result.getSqlDecoded(), parametros);
+		return consultaFuenteDatos(result.getSqlDecoded(), parametros, ambito, idEntidad, idArea);
 
 	}
 
-	private ValoresDominio consultaFuenteDatos(final String sql, final List<ValorParametroDominio> parametros) {
+	private ValoresDominio consultaFuenteDatos(final String sql, final List<ValorParametroDominio> parametros,
+			TypeAmbito ambito, String idEntidad, String idArea) {
 		// Verificamos estructura fuente de datos
 		final ConsultaFuenteDatos cfd = FuenteDatosUtil.decodificarConsulta(sql);
 
 		// Recuperamos filas
-		final List<JFilasFuenteDatos> filas = realizarConsulta(cfd.getIdFuenteDatos(), cfd.getFiltros(), parametros);
+		final List<JFilasFuenteDatos> filas = realizarConsulta(cfd.getIdFuenteDatos(), cfd.getFiltros(), parametros,
+				ambito, idEntidad, idArea);
 
 		// Ordenamos filas
 		FuenteDatosUtil.ordenarFilas(filas, cfd.getCampoOrden());
@@ -659,10 +659,11 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 
 	}
 
-	private List<JFilasFuenteDatos> realizarConsulta(final String idFuenteDatos, final List<FiltroConsultaFuenteDatos> list,
-			final List<ValorParametroDominio> parametros) {
+	private List<JFilasFuenteDatos> realizarConsulta(final String idFuenteDatos,
+			final List<FiltroConsultaFuenteDatos> list, final List<ValorParametroDominio> parametros, TypeAmbito ambito,
+			String idEntidad, String idArea) {
 
-		final String sql = generarSql(list);
+		final String sql = generarSql(list, ambito, idEntidad, idArea);
 
 		final Query query = entityManager.createQuery(sql);
 
@@ -680,57 +681,73 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 			}
 		}
 
+		if (ambito.equals(TypeAmbito.AREA)) {
+			query.setParameter("area", idArea);
+			query.setParameter("entidad", idEntidad);
+		} else if (ambito.equals(TypeAmbito.ENTIDAD)) {
+			query.setParameter("entidad", idEntidad);
+		}
+
 		return query.getResultList();
 	}
 
-	private String generarSql(final List<FiltroConsultaFuenteDatos> filtros) {
-		StringBuilder select = new StringBuilder("SELECT distinct f \nFROM  JFilasFuenteDatos f");
+	private String generarSql(final List<FiltroConsultaFuenteDatos> filtros, TypeAmbito ambito, String idEntidad,
+			String idArea) {
+		StringBuilder select = new StringBuilder("SELECT DISTINCT f \nFROM  JFilasFuenteDatos f");
 		final String orderBy = "\n ORDER BY f.codigo";
 
 		if (filtros != null && !filtros.isEmpty()) {
-			select.append( ", ");
+			select.append(", ");
 			for (int i = 0; i < filtros.size(); i++) {
 				if (i > 0) {
-					select.append( ", ");
+					select.append(", ");
 				}
-				select.append( "JValorFuenteDatos v" + i);
+				select.append("JValorFuenteDatos v" + i);
 			}
 		}
 
 		StringBuilder where = new StringBuilder("\nWHERE \n");
 
-		where.append( "   f.fuenteDatos.identificador = :idFuenteDatos");
+		where.append("   f.fuenteDatos.identificador = :idFuenteDatos");
 
 		if (filtros != null && !filtros.isEmpty()) {
-			where.append( " AND \n   ");
+			where.append(" AND \n   ");
 			for (int i = 0; i < filtros.size(); i++) {
 				if (i > 0) {
-					where.append( " AND ");
+					where.append(" AND ");
 				}
-				where.append( "v" + i + ".filaFuenteDatos = f");
+				where.append("v" + i + ".filaFuenteDatos = f");
 			}
 		}
 
-		where.append( "\n");
+		where.append("\n");
 
 		if (filtros != null && !filtros.isEmpty()) {
-			where.append( " AND ( ");
+			where.append(" AND ( ");
 			for (int numFiltro = 0; numFiltro < filtros.size(); numFiltro++) {
-				final FiltroConsultaFuenteDatos ffd =  filtros.get(numFiltro);
-				where.append( (numFiltro == 0) ? "" : ffd.getConector());
-				where.append( "\n     ( ");
-				where.append( " (upper(v" + numFiltro + ".campoFuenteDatos.idCampo) = :campoFiltro" + numFiltro);
+				final FiltroConsultaFuenteDatos ffd = filtros.get(numFiltro);
+				where.append((numFiltro == 0) ? "" : ffd.getConector());
+				where.append("\n     ( ");
+				where.append(" (upper(v" + numFiltro + ".campoFuenteDatos.idCampo) = :campoFiltro" + numFiltro);
 
 				if (FiltroConsultaFuenteDatos.LIKE.equals(ffd.getOperador())) {
-					where.append( " AND upper(v" + numFiltro + ".valor) LIKE '%' || upper(:valorFiltro" + numFiltro
+					where.append(" AND upper(v" + numFiltro + ".valor) LIKE '%' || upper(:valorFiltro" + numFiltro
 							+ ") || '%' ) ");
 				} else {
-					where.append( " AND upper(v" + numFiltro + ".valor) = upper(:valorFiltro" + numFiltro + ") ) ");
+					where.append(" AND upper(v" + numFiltro + ".valor) = upper(:valorFiltro" + numFiltro + ") ) ");
 				}
 
-				where.append( ") ");
+				where.append(") ");
 			}
-			where.append( "\n ) ");
+			where.append("\n ) ");
+		}
+
+		if (ambito == TypeAmbito.ENTIDAD) {
+			where.append(" and f.fuenteDatos.entidad.identificador = :entidad");
+		}
+		if (ambito == TypeAmbito.AREA) {
+			where.append(
+					" and f.fuenteDatos.area.entidad.identificador = :entidad and f.fuenteDatos.area.identificador = :area");
 		}
 
 		return select.toString() + where.toString() + orderBy;
@@ -755,9 +772,11 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 			// Si no existe tanto el fuente de datos como el por identificador, lo creamos.
 			if (filaDominio.getFuenteDatosActual() == null) {
 
-				if (this.existeFDByIdentificador(ambito, filaDominio.getFuenteDatos().getIdentificador(), idEntidad, idArea, null)) {
+				if (this.existeFDByIdentificador(ambito, filaDominio.getFuenteDatos().getIdentificador(), idEntidad,
+						idArea, null)) {
 					// Ha sido importado ya por otro dominio
-					return entityManager.find(JFuenteDatos.class, this.getByIdentificador(ambito, filaDominio.getFuenteDatos().getIdentificador(), idEntidad, idArea, null).getCodigo());
+					return entityManager.find(JFuenteDatos.class, this.getByIdentificador(ambito,
+							filaDominio.getFuenteDatos().getIdentificador(), idEntidad, idArea, null).getCodigo());
 
 				} else {
 
@@ -797,7 +816,7 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 							.importar(new ByteArrayInputStream(filaDominio.getFuenteDatosContent()));
 					this.importarCSV(jfuente.getCodigo(), csvDocumento);
 
-					return jfuente ;
+					return jfuente;
 				}
 			} else {
 
@@ -932,14 +951,17 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 	}
 
 	@Override
-	public FuenteDatos clonar(String dominioID, TypeClonarAccion accion, FuenteDatos ifd,final Long idEntidad, final Long areaID) {
+	public FuenteDatos clonar(String dominioID, TypeClonarAccion accion, FuenteDatos ifd, final Long idEntidad,
+			final Long areaID) {
 		JDominio dominio = entityManager.find(JDominio.class, Long.valueOf(dominioID));
 		JFuenteDatos fd = null;
 		JFuenteDatos fdOriginal = dominio.getFuenteDatos();
 
-		//Paso extra, por si acaso, al crear, resulta que ya existe
-		// En caso de que ya existe y la accion fuese crear, pasa automáticamente a reemplazar
-		if (accion == TypeClonarAccion.CREAR && existeFDByIdentificador(TypeAmbito.fromString(fdOriginal.getAmbito()), fdOriginal.getIdentificador(), idEntidad, areaID, null)) {
+		// Paso extra, por si acaso, al crear, resulta que ya existe
+		// En caso de que ya existe y la accion fuese crear, pasa automáticamente a
+		// reemplazar
+		if (accion == TypeClonarAccion.CREAR && existeFDByIdentificador(TypeAmbito.fromString(fdOriginal.getAmbito()),
+				fdOriginal.getIdentificador(), idEntidad, areaID, null)) {
 			accion = TypeClonarAccion.REEMPLAZAR;
 		}
 
@@ -948,7 +970,7 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 			fd.setDescripcion(fdOriginal.getDescripcion());
 			entityManager.merge(fd);
 
-			/////BORRAMOS LOS CAMPOS, FILAS Y DATOS DE LA FUENTE DE DATOS.
+			///// BORRAMOS LOS CAMPOS, FILAS Y DATOS DE LA FUENTE DE DATOS.
 			// Borramos filas de datos de la fuente de datos
 			final String sqlValores = "delete from JValorFuenteDatos as a where a.filaFuenteDatos.codigo in (select fila from JFilasFuenteDatos as fila where fila.fuenteDatos.codigo = :idFuenteDato)";
 			final Query queryValores = entityManager.createQuery(sqlValores);
@@ -970,7 +992,7 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 			// Flusheamos los datos borrados por si acaso
 			entityManager.flush();
 
-		} else if (accion == TypeClonarAccion.CREAR) { //CREAMOS
+		} else if (accion == TypeClonarAccion.CREAR) { // CREAMOS
 
 			fd = new JFuenteDatos();
 			fd.setDescripcion(fdOriginal.getDescripcion());
@@ -989,11 +1011,10 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 			entityManager.persist(fd);
 		}
 
-
 		Map<Long, JCampoFuenteDatos> campos = new HashMap<>();
 		Map<Long, JFilasFuenteDatos> filas = new HashMap<>();
 
-		///Duplicamos los campos.
+		/// Duplicamos los campos.
 		for (final JCampoFuenteDatos jcampo : this.getJFuenteCampos(fdOriginal.getCodigo())) {
 
 			JCampoFuenteDatos jcamponew = new JCampoFuenteDatos();
@@ -1005,19 +1026,19 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 			campos.put(jcampo.getCodigo(), jcamponew);
 		}
 
-		//Duplicamos las filas
-		for(JFilasFuenteDatos jfila : this.getJFilasFuenteDatos(fdOriginal.getCodigo())) {
+		// Duplicamos las filas
+		for (JFilasFuenteDatos jfila : this.getJFilasFuenteDatos(fdOriginal.getCodigo())) {
 
-				JFilasFuenteDatos jfilanew = new JFilasFuenteDatos();
-				jfilanew.setFuenteDatos(fd);
-				Set<JValorFuenteDatos> valoresFuenteDatos = new HashSet<>();
-				jfilanew.setValoresFuenteDatos(valoresFuenteDatos);
-				entityManager.persist(jfilanew);
-				filas.put(jfila.getCodigo(), jfilanew);
+			JFilasFuenteDatos jfilanew = new JFilasFuenteDatos();
+			jfilanew.setFuenteDatos(fd);
+			Set<JValorFuenteDatos> valoresFuenteDatos = new HashSet<>();
+			jfilanew.setValoresFuenteDatos(valoresFuenteDatos);
+			entityManager.persist(jfilanew);
+			filas.put(jfila.getCodigo(), jfilanew);
 		}
 
-		//Duplicamos los datos
-		for(JValorFuenteDatos valor : this.getJValoresFuenteDatos(fdOriginal.getCodigo())) {
+		// Duplicamos los datos
+		for (JValorFuenteDatos valor : this.getJValoresFuenteDatos(fdOriginal.getCodigo())) {
 			JValorFuenteDatos jvalornew = new JValorFuenteDatos();
 			jvalornew.setCampoFuenteDatos(campos.get(valor.getCampoFuenteDatos().getCodigo()));
 			jvalornew.setFilaFuenteDatos(filas.get(valor.getFilaFuenteDatos().getCodigo()));
@@ -1025,14 +1046,11 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 			entityManager.persist(jvalornew);
 		}
 
-
-
 		// Flusheamos los datos vueltos a crear
 		entityManager.flush();
 
- 		return fd.toModel();
+		return fd.toModel();
 
 	}
-
 
 }

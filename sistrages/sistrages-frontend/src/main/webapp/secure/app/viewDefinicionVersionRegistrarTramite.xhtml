@@ -2,7 +2,9 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jstl/core">
+
 
 	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
 
@@ -21,9 +23,9 @@
 							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.oficina']}" />
 					</p:column>
 					<p:column style="display:flex" >
-						<p:inputText id="oficina" disabled="true" size="7"
+						<p:inputText id="oficina" readonly="true" size="7"
 							value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoOficinaRegistro}" />
-						<p:inputText id="oficinaTexto" disabled="true" size="15"
+						<p:inputText id="oficinaTexto" readonly="true" size="15"
 							value="#{viewDefinicionVersion.textoOficinaRegistro}" style="margin-left:4px" />
 					</p:column>
 					<p:column>
@@ -31,17 +33,19 @@
 							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.libro']}" />
 					</p:column>
 					<p:column>
-						<p:inputText id="libro" disabled="true" size="7" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoLibroRegistro}" />
-						<p:inputText id="libroTexto" disabled="true" size="15" value="#{viewDefinicionVersion.textoLibroRegistro}"  style="margin-left:4px" />
+						<p:inputText id="libro" readonly="true" size="7" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoLibroRegistro}" />
+						<p:inputText id="libroTexto" readonly="true" size="15" value="#{viewDefinicionVersion.textoLibroRegistro}"  style="margin-left:4px" />
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column colspan="4">
 
 				        <p:outputPanel id="customPanel" style="margin-bottom:10px">
-				            <p:selectOneRadio id="customRadio" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.destino}" layout="custom" disabled="true">
+				            <p:selectOneRadio id="customRadio" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.destino}" layout="custom" readonly="true">
 				                <f:selectItem itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.registroElectronico']}" itemValue="R"/>
-				                <f:selectItem itemLabel="#{msg['botones.envioRemoto']}" itemValue="E" rendered="#{viewDefinicionVersion.esTipoServicio}"/>
+				                <c:if test="#{UtilJSF.isServicioActivado()}">
+				                	<f:selectItem itemLabel="#{msg['botones.envioRemoto']}" itemValue="E" rendered="#{viewDefinicionVersion.esTipoServicio}"/>
+				                </c:if>
 				            </p:selectOneRadio>
 
 				            <h:panelGrid columns="3" cellpadding="5">
@@ -54,11 +58,13 @@
 								value="#{msg['script.SCRIPT_PARAMETROS_REGISTRO.titulo']}"
 								process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptDestinoRegistro)} w100" />
 
-								<p:radioButton id="opt2" for="customRadio" itemIndex="1" rendered="#{viewDefinicionVersion.esTipoServicio}"/>
-								<h:outputLabel for="opt2" value="#{msg['botones.envioRemoto']}" rendered="#{viewDefinicionVersion.esTipoServicio}"/>
-				                <p:selectOneMenu  styleClass="w100" id="labeled" alwaysDisplayLabel="true" disabled="true" rendered="#{viewDefinicionVersion.esTipoServicio}">
-				                	<f:selectItem itemLabel="#{viewDefinicionVersion.tramitePasoREGSeleccionado.envioRemoto.identificador}" itemValue=""/>
-				                </p:selectOneMenu>
+					            <c:if test="#{UtilJSF.isServicioActivado()}">
+									<p:radioButton id="opt2" for="customRadio" itemIndex="1" rendered="#{viewDefinicionVersion.esTipoServicio}"/>
+									<h:outputLabel for="opt2" value="#{msg['botones.envioRemoto']}" rendered="#{viewDefinicionVersion.esTipoServicio}"/>
+					                <p:selectOneMenu  styleClass="w100" id="labeled" alwaysDisplayLabel="true" disabled="true" rendered="#{viewDefinicionVersion.esTipoServicio}">
+					                	<f:selectItem itemLabel="#{viewDefinicionVersion.tramitePasoREGSeleccionado.envioRemoto.identificador}" itemValue=""/>
+					                </p:selectOneMenu>
+				                </c:if>
 				            </h:panelGrid>
 				        </p:outputPanel>
 			        </p:column>
@@ -67,7 +73,7 @@
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.instruccionesTramitacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="tramitacion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}"  />
+           		<p:inputText id="tramitacion" required="true" readonly="true" styleClass="w85" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}"  />
            		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccionHTML(viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion)}"
 						process="@this" update="growl" style="margin-left:2px;margin-bottom:1px" />
        		</p:outputPanel>
@@ -102,7 +108,7 @@
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.alfinalizar']}" />
 			<p:outputPanel styleClass="ui-inputgroup">
-	            <p:selectBooleanCheckbox id="aviso" disabled="true" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.avisoAlFinalizar}"   itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.alfinalizar.aviso']}"/>
+	            <p:selectBooleanCheckbox id="aviso" readonly="true" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.avisoAlFinalizar}"   itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.alfinalizar.aviso']}"/>
 	            <p:spacer width="30" height="1"/>
 	           		<p:commandButton id="scriptButton5"
 	           				disabled="#{viewDefinicionVersion.tramitePasoREGSeleccionado.scriptAlFinalizar eq null}"

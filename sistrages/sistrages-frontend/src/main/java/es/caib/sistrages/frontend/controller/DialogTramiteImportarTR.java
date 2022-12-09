@@ -47,6 +47,8 @@ public class DialogTramiteImportarTR extends DialogControllerBase {
 	/** Accion. **/
 	private String accion;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -109,7 +111,8 @@ public class DialogTramiteImportarTR extends DialogControllerBase {
 						UtilJSF.getLiteral("dialogTramiteImportarTR.error.datosvacios"));
 				return;
 			}
-			if (tramiteService.checkIdentificadorRepetido(this.data.getIdentificador(), null, this.filaArea.getArea().getCodigo())) {
+			if (tramiteService.checkIdentificadorRepetido(this.data.getIdentificador(), null,
+					this.filaArea.getArea().getCodigo())) {
 				addMessageContext(TypeNivelGravedad.WARNING,
 						UtilJSF.getLiteral("dialogTramiteImportarTR.error.identificadorRepetido"));
 				return;
@@ -166,6 +169,29 @@ public class DialogTramiteImportarTR extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

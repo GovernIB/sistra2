@@ -7,6 +7,7 @@ import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -32,6 +33,8 @@ public class DialogPropiedad extends DialogControllerBase {
 	 * Muestra el valor.
 	 */
 	private boolean mostrarValor = true;
+
+	private String portapapeles;
 
 	/**
 	 * Inicialización.
@@ -70,6 +73,29 @@ public class DialogPropiedad extends DialogControllerBase {
 	}
 
 	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	/**
 	 * @return the iData
 	 */
 	public String getiData() {
@@ -77,8 +103,7 @@ public class DialogPropiedad extends DialogControllerBase {
 	}
 
 	/**
-	 * @param iData
-	 *            the iData to set
+	 * @param iData the iData to set
 	 */
 	public void setiData(final String iData) {
 		this.iData = iData;
@@ -92,8 +117,7 @@ public class DialogPropiedad extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @param data the data to set
 	 */
 	public void setData(final Propiedad data) {
 		this.data = data;
@@ -107,8 +131,7 @@ public class DialogPropiedad extends DialogControllerBase {
 	}
 
 	/**
-	 * @param mostrarValor
-	 *            the mostrarValor to set
+	 * @param mostrarValor the mostrarValor to set
 	 */
 	public void setMostrarValor(final boolean mostrarValor) {
 		this.mostrarValor = mostrarValor;
@@ -122,8 +145,7 @@ public class DialogPropiedad extends DialogControllerBase {
 	}
 
 	/**
-	 * @param ocultarValor
-	 *            the ocultarValor to set
+	 * @param ocultarValor the ocultarValor to set
 	 */
 	public void setOcultarValor(final String ocultarValor) {
 		this.ocultarValor = ocultarValor;

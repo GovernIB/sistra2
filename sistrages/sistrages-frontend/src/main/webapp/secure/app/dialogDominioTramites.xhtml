@@ -5,6 +5,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
@@ -31,7 +32,65 @@
 		<f:viewAction action="#{dialogDominioTramites.init}" />
 	</f:metadata>
 	<h:form id="dialogFuenteDatos"  styleClass="margin-top-10">
+			<h:outputScript >
 
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("dialogFuenteDatos:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+			 }
+
+			</h:outputScript>
   			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
@@ -60,8 +119,6 @@
 
 			    <p:column headerText="#{msg['dialogDominioTramites.headerTramite']}" style="width:25%">
 			        <h:outputText value="${dialogDominioTramites.getIdentificador(td.idTramiteVersion, td.area)}"/>
-			        <br/><br/>
-			        <p:commandButton value="#{msg['botones.copiar']}" onclick="copyClipBorad('${dialogDominioTramites.getIdentificador(td.idTramiteVersion, td.area)}');" type="button" />
 			    </p:column>
 
 			    <p:column headerText="#{msg['dialogDominioTramites.headerEntidad']}">
@@ -91,7 +148,15 @@
 					</f:facet>
 				</p:toolbar>
 		 </p:outputPanel>
+		<p:contextMenu>
+    		<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogFuenteDatos:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+	    </p:contextMenu>
+	    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+			<p:ajax event="success" listener="#{dialogDominioTramites.copiadoCorr}" process="@this" update="@this growlDialog"/>
+           	<p:ajax event="error" listener="#{dialogDominioTramites.copiadoErr}" update="@this growlDialog"/>
+       	</pe:clipboard>
 
+	    <p:inputText id="auxCopiar" value="#{dialogDominioTramites.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 	</h:form>
 </h:body>
 

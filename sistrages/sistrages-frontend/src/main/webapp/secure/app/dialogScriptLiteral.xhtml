@@ -44,7 +44,7 @@
 
 				 	<p:outputLabel for="nombreHidden" value="#{msg['dialogScriptLiteral.descripcion']}" />
 				 	<p:column>
-						<p:inputText id="nombre" value="#{dialogScriptLiteral.literal}" disabled="true" required="true" size="40" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}"/>
+						<p:inputText id="nombre" value="#{dialogScriptLiteral.literal}" readonly="true" required="true" size="40" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}"/>
 						<p:inputText id="nombreHidden" value="#{dialogScriptLiteral.literal}" type="hidden" required="true" binding="#{mensajesComponent}" />
 						<p:commandButton id="btnNombre" icon="fa fa-language" actionListener="#{dialogScriptLiteral.editarDescripcion()}" process="@this" update="growlDialog" style="margin-right:5px">
 		            		<p:ajax event="dialogReturn" listener="#{dialogScriptLiteral.returnDialogo}" update="growlDialog nombre nombreHidden" />

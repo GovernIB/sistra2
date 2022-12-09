@@ -19,6 +19,7 @@ import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
@@ -36,7 +37,6 @@ public class DialogSeccionReutilizableScripts extends DialogControllerBase {
 	/** Datos elemento. */
 	private SeccionReutilizable data;
 
-
 	/** Campos. **/
 	private List<ScriptSeccionReutilizable> campos;
 
@@ -51,12 +51,15 @@ public class DialogSeccionReutilizableScripts extends DialogControllerBase {
 
 	private ScriptSeccionReutilizable valorSeleccionado;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
 	public void init() {
 
-		campos = (List<ScriptSeccionReutilizable>) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_SCRIPT);
+		campos = (List<ScriptSeccionReutilizable>) UtilJSF.getSessionBean().getMochilaDatos()
+				.get(Constantes.CLAVE_MOCHILA_SCRIPT);
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		if (campos == null || campos.isEmpty()) {
 			ScriptSeccionReutilizable scriptCargaInicial = new ScriptSeccionReutilizable();
@@ -79,13 +82,16 @@ public class DialogSeccionReutilizableScripts extends DialogControllerBase {
 		final Map<String, String> maps = new HashMap<>();
 		maps.put(TypeParametroVentana.TIPO_SCRIPT_SECCION_REUTILIZABLE.toString(),
 				UtilJSON.toJSON(valorSeleccionado.getTipoScript()));
-		SeccionReutilizable seccion = seccionReutService.getSeccionReutilizable(valorSeleccionado.getIdSeccionReutilizable());
+		SeccionReutilizable seccion = seccionReutService
+				.getSeccionReutilizable(valorSeleccionado.getIdSeccionReutilizable());
 		maps.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), seccion.getIdFormularioAsociado().toString());
 		maps.put(TypeParametroVentana.SECCION_REUTILIZABLE.toString(), seccion.getIdentificador());
-		maps.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(), TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());
-	/*	maps.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
-		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
-*/
+		maps.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(),
+				TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());
+		/*
+		 * maps.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
+		 * maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
+		 */
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(valorSeleccionado.getScript()));
 
@@ -107,7 +113,7 @@ public class DialogSeccionReutilizableScripts extends DialogControllerBase {
 			case ALTA:
 			case EDICION:
 				if (campos != null) {
-					for(ScriptSeccionReutilizable scriptReutilizable : campos) {
+					for (ScriptSeccionReutilizable scriptReutilizable : campos) {
 						if (scriptReutilizable.getTipoScript() == valorSeleccionado.getTipoScript()) {
 							Script script = (Script) respuesta.getResult();
 							scriptReutilizable.setScript(script);
@@ -121,8 +127,8 @@ public class DialogSeccionReutilizableScripts extends DialogControllerBase {
 			}
 		}
 	}
-	/** Falta el return **/
 
+	/** Falta el return **/
 
 	/**
 	 * Aceptar.
@@ -145,6 +151,29 @@ public class DialogSeccionReutilizableScripts extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

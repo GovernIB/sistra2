@@ -35,6 +35,8 @@ public class DialogHistorialVersion extends DialogControllerBase {
 	/** Historial de versiones seleccionado. */
 	private HistorialVersion datoSeleccionado;
 
+	private String portapapeles;
+
 	/** Inicialización. */
 	public void init() {
 		data = tramiteService.listHistorialVersion(Long.valueOf(id), null);
@@ -80,6 +82,29 @@ public class DialogHistorialVersion extends DialogControllerBase {
 		} else {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.primerocopy"));
 		}
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

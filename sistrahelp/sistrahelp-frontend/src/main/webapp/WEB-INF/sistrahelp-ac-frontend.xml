@@ -24,6 +24,7 @@
 		<property name="version" value="${sistra2.version}" />
 		<property name="commitSvn" value="${commitSvn}" />
 		<property name="commitGit" value="${commitGit}" />
+		<property name="filtroInicial" value="${filtroInicial}" />
 	</bean>
 
 	<!-- Scope view para spring beans usados como backbeans de JSF: @Scope(view) -->

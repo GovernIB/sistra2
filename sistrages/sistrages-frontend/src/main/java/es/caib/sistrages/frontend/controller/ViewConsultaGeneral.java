@@ -59,6 +59,8 @@ public class ViewConsultaGeneral extends ViewControllerBase {
 	/** Paginacion */
 	private Integer paginacion;
 
+	private String portapapeles;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -247,6 +249,21 @@ public class ViewConsultaGeneral extends ViewControllerBase {
 		UtilJSF.openHelp("consultaGeneral");
 	}
 
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
 	// ------- FUNCIONES PRIVADAS ------------------------------
 	/**
 	 * Buscar datos.
@@ -264,6 +281,14 @@ public class ViewConsultaGeneral extends ViewControllerBase {
 	}
 
 	// ------- GETTERS / SETTERS --------------------------------
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
 
 	/**
 	 * Obtiene el valor de filtro.

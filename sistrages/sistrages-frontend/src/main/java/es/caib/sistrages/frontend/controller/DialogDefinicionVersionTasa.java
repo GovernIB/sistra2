@@ -65,6 +65,8 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 
 	private boolean cambios = false;
 
+	private String portapapeles;
+
 	/**
 	 * Crea una nueva instancia de ViewDefinicionVersionTasa1.
 	 */
@@ -248,6 +250,29 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 	/**

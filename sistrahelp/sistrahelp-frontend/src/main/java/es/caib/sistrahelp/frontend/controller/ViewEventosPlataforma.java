@@ -9,6 +9,7 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.LazyDataModel;
 
 import es.caib.sistrahelp.core.api.model.Area;
@@ -100,9 +101,9 @@ public class ViewEventosPlataforma extends ViewControllerBase {
 	 */
 	public void consultar() {
 		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionada())
+		if (!verificarFilaSeleccionada()) {
 			return;
-
+		}
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_EVENTO, datoSeleccionado);
@@ -231,6 +232,21 @@ public class ViewEventosPlataforma extends ViewControllerBase {
 	}
 
 	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+	}
+
+	/**
 	 * @param paginacion the paginacion to set
 	 */
 	public final void setPaginacion(Integer paginacion) {
@@ -238,4 +254,27 @@ public class ViewEventosPlataforma extends ViewControllerBase {
 		UtilJSF.setPaginacion(paginacion, "viewEventosPlataforma");
 	}
 
+	private String portapapeles;
+
+	/**
+	 * @return the portapapeles
+	 */
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	/**
+	 * @param portapapeles the portapapeles to set
+	 */
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	public Integer getTamanyoTabla() {
+		if (this.listaDatos != null) {
+			return this.listaDatos.getRowCount();
+		} else {
+			return null;
+		}
+	}
 }

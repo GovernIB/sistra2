@@ -5,6 +5,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
@@ -24,6 +25,65 @@
 		<f:viewAction action="#{viewFormularioSoporte.init}" />
 	</f:metadata>
 	<h:form id="dialogFormularioSoporte">
+		<h:outputScript >
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("dialogFormularioSoporte:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+			 }
+
+			</h:outputScript>
 		<p:outputPanel>
 			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
@@ -40,6 +100,7 @@
 		                  		oncomplete="triggerDblClick();"
 		                        update=":dialogFormularioSoporte"
 		                        />
+		                <p:ajax event="contextMenu" global="false" process="@this"/>
 
 						<!-- Columnas -->
 						<p:column headerText="#{msg['viewFormularioSoporte.headerTipoIncidencia']}">
@@ -71,11 +132,32 @@
 							</p:commandButton>
 						</p>
 						<p>
-							<p:commandButton id="btnEliminarFormulario" icon="fa fa-minus" title="#{msg['botones.eliminar']}" actionListener="#{viewFormularioSoporte.quitarFormulario}" process="@this" update="growlDialog dataTableFormularios" rendered="#{!viewFormularioSoporte.consulta}"/>
+							<p:commandButton id="btnEliminarFormulario" icon="fa fa-minus" title="#{msg['botones.eliminar']}" actionListener="#{viewFormularioSoporte.quitarFormulario}" process="@this" update="growlDialog dataTableFormularios" rendered="#{!viewFormularioSoporte.consulta}">
+								<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+					    	</p:commandButton>
 						</p>
 					</p:column>
 
 			</h:panelGrid>
+
+			<!-- dialogo para confirmar -->
+            <p:confirmDialog global="true" >
+                <p:outputPanel styleClass="confirmar_botonera">
+                    <p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+                    <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+                </p:outputPanel>
+            </p:confirmDialog>
+
+			<p:contextMenu for=":dialogFormularioSoporte:dataTableFormularios">
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogFormularioSoporte:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+       			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('dialogFormularioSoporte:btnNuevoFormulario').click();" process="@this"  rendered="#{!viewFormularioSoporte.consulta}"/>
+        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('dialogFormularioSoporte:btnEditarFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
+        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('dialogFormularioSoporte:btnEliminarFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewFormularioSoporte.copiadoCorr}" process="@this" update="@this growlDialog"/>
+            	<p:ajax event="error" listener="#{viewFormularioSoporte.copiadoErr}" update="@this growlDialog"/>
+        	</pe:clipboard>
 			<h:outputScript >
 		      function triggerDblClick() {
 		        document.getElementById("dialogFormularioSoporte:btnEditarFormulario").click();
@@ -90,6 +172,17 @@
 				</f:facet>
 			</p:toolbar>
 		</p:outputPanel>
+		<p:contextMenu>
+      		<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :dialogFormularioSoporte:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+      		<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('dialogFormularioSoporte:btnNuevoFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
+       		<p:menuitem id="mnuEditarMain" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('dialogFormularioSoporte:btnEditarFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
+       		<p:menuitem id="mnuEliminarMain" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('dialogFormularioSoporte:btnEliminarFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
+	    </p:contextMenu>
+	    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar">
+			<p:ajax event="success" listener="#{viewFormularioSoporte.copiadoCorr}" process="@this" update="@this growlDialog"/>
+           	<p:ajax event="error" listener="#{viewFormularioSoporte.copiadoErr}" update="@this growlDialog"/>
+       	</pe:clipboard>
+		<p:inputText id="auxCopiar" value="#{viewFormularioSoporte.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 	</h:form>
 </h:body>
 

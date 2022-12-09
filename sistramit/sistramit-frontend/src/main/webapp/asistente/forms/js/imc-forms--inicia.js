@@ -12,6 +12,7 @@ var imc_forms_contenidor
 var FORMS_JS = false;
 
 var APP_FORMS_ = ""
+	,FORMS_CONTENIDOR = false
 	,APP_FORMS_VERSIO = "0.1";
 
 
@@ -176,8 +177,23 @@ $.when(
 
 	function( htmlForms ) {
 
-		imc_forms_body
-			.append( htmlForms );
+		// pintem contenidor de FORMS
+
+		if (!FORMS_CONTENIDOR) {
+
+			imc_forms_body
+				.append( htmlForms );
+
+		} else {
+
+			FORMS_CONTENIDOR
+				.append( htmlForms );
+
+			FORMS_CONTENIDOR
+				.find(".imc-forms-contenidor:first")
+					.addClass("imc-cd");
+
+		}
 
 		// literals
 
@@ -189,6 +205,10 @@ $.when(
 				.end()
 			.find("button:first span")
 				.text( txtFormDinDesactivar );
+
+		$("#imc--nav-seccions")
+			.find("button:first span")
+				.text( txtFormsDinSeccionsForm );
 
 		// carrega CSS i JS
 

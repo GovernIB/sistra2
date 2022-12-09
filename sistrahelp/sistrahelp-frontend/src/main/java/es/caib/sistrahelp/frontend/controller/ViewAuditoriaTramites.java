@@ -74,6 +74,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 
 	private String filtroArea;
 
+	private String portapapeles;
+
 	/**
 	 * Inicializa.
 	 */
@@ -124,42 +126,50 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 
 	/** Genera texto a copiar **/
 	public void generarTxt() {
-		if (this.datoSeleccionado != null) {
-			EventoAuditoriaTramitacion eat = this.datoSeleccionado;
-			String txt = "";
-			txt += "Event: " + eat.getTipoEvento().toString() + " - "
-					+ UtilJSF.getLiteral("typeEvento." + eat.getTipoEvento());
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-			txt += "\nData Inici: " + sdf.format(eat.getFecha());
-			txt += "\nId Sessió: " + eat.getIdSesionTramitacion();
-			txt += "\nNIF: " + eat.getNif();
-			if (eat.getNombre() == null) {
-				eat.setNombre("");
-			}
-			if (eat.getApellido1() == null) {
-				eat.setApellido1("");
-			}
-			if (eat.getApellido2() == null) {
-				eat.setApellido2("");
-			}
-			txt += "\nNom: "
-					+ eat.getNombre().concat(" ").concat(eat.getApellido1()).concat(" ").concat(eat.getApellido2());
-			txt += "\nTràmit: " + split(eat.getIdTramite());
-			txt += "\nÁrea: " + eat.getArea();
-			txt += "\nVersió: " + eat.getVersionTramite();
-			txt += "\nCod Proc Cat: " + eat.getIdProcedimientoCP();
-			txt += "\nCod SIA: " + eat.getIdProcedimientoSIA();
-			txt += "\nDescripció: " + eat.getDescripcion();
-			txt += "\nError: " + eat.getCodigoError();
+		/*
+		 * if (this.datoSeleccionado != null) { EventoAuditoriaTramitacion eat =
+		 * this.datoSeleccionado; String txt = ""; txt += "Event: " +
+		 * eat.getTipoEvento().toString() + " - " + UtilJSF.getLiteral("typeEvento." +
+		 * eat.getTipoEvento()); SimpleDateFormat sdf = new
+		 * SimpleDateFormat("dd/MM/yyyy HH:mm"); txt += "\nData Inici: " +
+		 * sdf.format(eat.getFecha()); txt += "\nId Sessió: " +
+		 * eat.getIdSesionTramitacion(); txt += "\nNIF: " + eat.getNif(); if
+		 * (eat.getNombre() == null) { eat.setNombre(""); } if (eat.getApellido1() ==
+		 * null) { eat.setApellido1(""); } if (eat.getApellido2() == null) {
+		 * eat.setApellido2(""); } txt += "\nNom: " +
+		 * eat.getNombre().concat(" ").concat(eat.getApellido1()).concat(" ").concat(eat
+		 * .getApellido2()); txt += "\nTràmit: " + split(eat.getIdTramite()); txt +=
+		 * "\nÁrea: " + eat.getArea(); txt += "\nVersió: " + eat.getVersionTramite();
+		 * txt += "\nCod Proc Cat: " + eat.getIdProcedimientoCP(); txt += "\nCod SIA: "
+		 * + eat.getIdProcedimientoSIA(); txt += "\nDescripció: " +
+		 * eat.getDescripcion(); txt += "\nError: " + eat.getCodigoError();
+		 *
+		 * txt = txt.replaceAll("null", "");
+		 *
+		 * UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+		 * UtilJSF.getLiteral("info.copiado.ok"));
+		 *
+		 * PrimeFaces.current().
+		 * executeScript("document.focus; navigator.clipboard.writeText(`" + txt +
+		 * "`);"); } else { UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+		 * UtilJSF.getLiteral("warning.copiar")); }
+		 */
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
 
-			txt = txt.replaceAll("null", "");
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
 
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
-
-			PrimeFaces.current().executeScript("document.focus; navigator.clipboard.writeText(`" + txt + "`);");
-		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.copiar"));
-		}
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
 	}
 
 	/**
@@ -381,5 +391,13 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		} else {
 			filtros.setListaAreas(areasEnt);
 		}
+	}
+
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 }

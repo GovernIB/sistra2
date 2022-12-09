@@ -1,409 +1,802 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	template="../layout/mainLayout.xhtml">
-
-	<f:metadata>
-		<f:viewAction action="#{viewTramites.init}" />
-	</f:metadata>
-
-	<ui:define name="content">
-
-		<h:form id="form" style="height: 95% !important">
-
-			<!-- Growl mensajes -->
-			<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
-
-			<div class="ui-g"  style="height: 100% !important">
-
-			<div class="ui-g-3 ui-g-nopad"  style="height: 99% ">
-
-				<!-- Toolbar -->
-				<p:toolbar id="toolbarArea">
-					<f:facet name="left">
-						<h:outputText value="#{msg['viewTramites.listadoAreas']}" />
-
-		           	</f:facet>
-		           	<f:facet name="right">
-		           			<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosAreas}">
-			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl @form"/>
-			        		</p:commandButton>
-			        		<p:commandButton id="btnConsultarArea" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarArea}" process="@this" update="growl" rendered="#{not viewTramites.tienePermisosAreas and viewTramites.seleccionadaArea}" />
-			        		<p:commandButton id="btnEditarArea" value="#{msg['botones.editar']}" icon="fa fa-edit ui-btn-icon-bottom" actionListener="#{viewTramites.editarArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosAreas and viewTramites.seleccionadaArea}">
-			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl @form"/>
-			        		</p:commandButton>
-			        		<p:commandButton id="btnEliminarArea" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarArea}" process="@this" update="@form growl" rendered="#{viewTramites.tienePermisosAreas and viewTramites.seleccionadaArea}">
-	        					<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borradoArea']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
-	        				</p:commandButton>
-
-					</f:facet>
-				</p:toolbar>
-
-			    <p:dataTable id="areas" var="area" value="#{viewTramites.listaAreas}" emptyMessage="#{msg['error.emptyRows']}"
-			    	 scrollable="true" scrollHeight="#{viewTramites.height}" rows="100"  scrollRows="100" autoResize="true"
-
-			   		selection="#{viewTramites.listaAreasSeleccionadas}" rowKey="#{area.codigo}">
-					<p:ajax event="rowSelectCheckbox" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites" process="@form"/>
-					<p:ajax event="rowSelect" global="false" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites" process="@form" onclick="myWidget.getPaginator().setPage(0)"/>
-					<p:ajax event="rowUnselect" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites" process="@form"/>
-					<p:ajax event="rowUnselectCheckbox" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites" process="@form"/>
-					<p:ajax event="toggleSelect" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites" process="@form"/>
-					<p:ajax event="rowDblselect" oncomplete="triggerDoubleClickArea();" update="@form:dataTableTramites" process="@form"/>
-
-
-			        <p:column selectionMode="multiple" style="width:16px;text-align:center" />
-			        <p:column style="width:16px;text-align:center" >
-			        		<p:column rendered="#{!area.tienePermiso}">
-			        			<span class="fa fa-lock" title="#{msg['viewTramites.sinPermisos']}" />
-			        		</p:column>
-			        		<p:column rendered="#{area.tienePermiso}">
-			        			<span class="fa fa-unlock" title="#{msg['viewTramites.conPermisos']}" />
-			        		</p:column>
-			        </p:column>
-			        <p:column>
-			            <h:outputText value="#{area.identificador}" />
-			        </p:column>
-			        <f:facet name="footer" style="align:left">
-			        	<div align="left" style="display:#{(viewTramites.admEntidad)?'none':'block'}">
-            			<p:selectBooleanCheckbox itemLabel="#{msg['viewTramites.mostrarTodasAreas']}" value="#{viewTramites.mostrarTodasAreas}"  >
-						 		<p:ajax event="change" process="@this" update="@form" listener="#{viewTramites.calcularAreas}"  />
-						</p:selectBooleanCheckbox>
-						</div>
-        			</f:facet>
-			    </p:dataTable>
-				<h:outputScript>
-				      jQuery(document).ready(function() {
-		                  var tram = #{viewTramites.idTramite!=null};
-		                  var sesion = #{viewTramites.idTramiteVersion!=null};
-		                  var pagTram = #{viewTramites.pag!=null};
-			              if(pagTram){
-			                   	var pagValor = #{viewTramites.pag};
-			                   	if(pagValor !=0){
-			                  	if(tram &amp;&amp; !sesion ){
-			                 		setTimeout(function(){ pageDatatableTram(); }, 100);
-			                 	}
-			                 	if(sesion &amp;&amp; tram){
-			                 		setTimeout(function(){ pageDatatable(); }, 100);
-			                 	}
-			                   }
-			              }
-
-
-						  $(window).resize(function() {
-		  	                 		setTimeout(function(){  refrescarHeight(); }, 100);
-					   	  });
-						  refrescarHeight();
-
-					   });
-
-
-					function refrescarHeight() {
-					   var altura = window.innerHeight - 50;
-					   var alturaAreas = altura - 210;
-					   var alturaAreasBody = altura - 245;
-					   var alturaTramites = altura - 310;
-					   var alturaTramitesBody = altura - 250;
-					   $('#form\\:areas').height(alturaAreas);
-					   $('#form\\:areas .ui-datatable-scrollable-body').height(alturaAreasBody);
-					   $('#form\\:dataTableTramites').height(alturaTramites - 20);
-					   $('#form\\:dataTableTramites .ui-datatable-scrollable-body').height(alturaTramites );
-					   $("#form\\:dataTableTramites div.ui-datatable-scrollable-body").height(alturaTramitesBody);
-					}
-
-				    function pageDatatable() {
-				     	console.log("pagDatatable");
-						document.getElementById("form:btnpage").click();
-					}
-
-					function pageDatatableTram() {
-						console.log("pagDatatableTram");
-						document.getElementById("form:btnpageTram").click();
-					}
-
-
-			    </h:outputScript>
-			    <input type="hidden" name="anchura" value="" />
-	  			<input type="hidden" name="altura" value="" />
-				<p:commandButton value="Filter" id="btnpage" process="@this" update="@form:dataTableTramites" style="visibility:hidden"
-							onclick="PF('myWidget').getPaginator().setPage('#{viewTramites.pag}')" >
-							<p:ajax  execute="@this" listener="#{viewTramites.unSelectTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('V')"/>
-				</p:commandButton>
-				<p:commandButton value="Filter" id="btnpageTram" process="@this" update="@form:dataTableTramites" style="visibility:hidden"
-							onclick="PF('myWidget').getPaginator().setPage('#{viewTramites.pag}')" >
-							<p:ajax  execute="@this" listener="#{viewTramites.unSelectVersionTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('T')"/>
-				</p:commandButton>
-
-
-			</div>
-			<div class="ui-g-9 ui-g-nopad" style="padding-left:10px; max-height:100%;">
-
-				<!-- Toolbar -->
-				<p:toolbar id="toolbarTramites">
-					<f:facet name="left">
-				        		<p:remoteCommand name="search" actionListener="#{viewTramites.filtrar}" update="growl @form" />
-				        		<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewTramites.filtro}" styleClass="margin-right-10" onkeypress="if (event.keyCode == 13) { triggerSearch(); return false; }"/>
-		           				<p:commandButton id="btnSearch" icon="fa fa-search" actionListener="#{viewTramites.filtrar}" process="@form" update="growl @form" styleClass="va-top"/>
-					</f:facet>
-			        <f:facet name="right">
-			        	 <h:panelGroup rendered="#{viewTramites.seleccionadasAreas}">
-
-			        	 	<p:commandButton id="btnNuevoTramite" value="#{msg['botones.nuevoTramite']}" icon="fa fa-file" actionListener="#{viewTramites.nuevoTramite}" process="@this" update="growl"  rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea and viewTramites.versionSeleccionada eq null and !viewTramites.isNotDesarrollo()}">
-				     		     <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl @form"/>
-			   		        </p:commandButton>
-
-			        		<p:commandButton id="btnConsultarTramite" value="#{msg['botones.consultarTramite']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarTramite}" process="@this" update="growl" rendered="#{not viewTramites.tienePermisosTramite and viewTramites.tramiteSeleccionada ne null }" />
-			        		<p:commandButton id="btnEditarTramite" value="#{msg['botones.editarTramite']}" icon="fa fa-edit" actionListener="#{viewTramites.editarTramite}" process="@this" update="growl" rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosTramite and viewTramites.tramiteSeleccionada ne null}">
-			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl @form"/>
-			        		</p:commandButton>
-							<p:commandButton value="#{msg['botones.nuevaVersion']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaVersion}" process="@this" update="growl" rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosTramite and (viewTramites.tramiteSeleccionada ne null or viewTramites.versionSeleccionada ne null)}">
-			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoNuevaVersion}" update="growl form:dataTableTramites" oncomplete="refrescarHeight();" />
-			        		</p:commandButton>
-
-			        		<p:commandButton id="btnConsultarVersion" value="#{msg['botones.consultarVersion']}" icon="fa fa-edit" actionListener="#{viewTramites.consultarVersion}" process="@this" update="growl" rendered="#{not viewTramites.tienePermisosVersion and viewTramites.versionSeleccionada ne null and viewTramites.tienePermisosAreaConsulta}" />
-							<p:commandButton id="btnEditarVersion" value="#{msg['botones.editarVersion']}" icon="fa fa-edit" actionListener="#{viewTramites.editarVersion}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosVersion and viewTramites.versionSeleccionada ne null}" />
-
-			        		<p:commandButton id="btnBloquear" value="#{msg['botones.bloquear']}" icon="fa fa-lock" actionListener="#{viewTramites.bloquear}" process="@this" update="growl @form"  rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null and viewTramites.permiteBloquear}">
-			        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['viewTramitesVersion.bloquear.aviso']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
-			        		</p:commandButton>
-			        		<p:commandButton id="btnDesploquear" value="#{msg['botones.desbloquear']}" icon="fa fa-unlock" actionListener="#{viewTramites.desbloquear}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null and viewTramites.permiteDesbloquear}">
-			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoDesbloquear}" update="growl @form" />
-			        		</p:commandButton>
-
-							<p:commandButton id="btnPrevisualizar" value="#{msg['botones.previsualizarTramite']}" icon="fa fa-eye" actionListener="#{viewTramites.previsualizar}" process="@this" rendered="#{(viewTramites.tienePermisosTramite or viewTramites.previs) and viewTramites.versionSeleccionada ne null}" />
-
-			        		<p:menuButton value="#{msg['viewTramites.mas']}" rendered="#{not(not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null)) }">
-
-								<p:menuitem id="btnMoverTramite" value="#{msg['botones.moverTramite']}" icon="fa fa-exchange" onclick="triggerMoverTramite();return false;" rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosAreas and viewTramites.tramiteSeleccionada ne null}"></p:menuitem>
-			        			<p:menuitem id="btnEliminarTramite" value="#{msg['botones.eliminarTramite']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarTramite}" process="@this" update="growl @form" rendered="#{viewTramites.tienePermisosTramite and viewTramites.tramiteSeleccionada ne null}">
-			        				<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
-			        			</p:menuitem>
-
-								<p:separator rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
-								<p:menuitem id="btnControlAcceso" value="#{msg['botones.controlAcceso']}" icon="fa fa-edit" onclick="triggerControlAcceso();return false;" rendered="#{(viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null) or (viewTramites.isAdminArea() and viewTramites.versionSeleccionada ne null)}"></p:menuitem>
-			        			<p:menuitem id="btnHistorial" value="#{msg['botones.historial']}" icon="fa fa-history" actionListener="#{viewTramites.historialVersion}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
-
-								<p:separator rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}"  />
-			        			<p:menuitem id="btnEliminarVersion" value="#{msg['botones.eliminarVersion']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarVersion}" process="@this" update="growl @form" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}">
-			        				<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
-			        			</p:menuitem>
-			        			<p:menuitem id="btnBorrarScripts" value="#{msg['botones.borrarScripts']}" icon="fa fa-trash-o" actionListener="#{viewTramites.borrarScript}" process="@this" update="growl @form" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
-			        			<p:menuitem id="btnValidar" value="#{msg['botones.validarVersion']}" icon="fa fa-check-square-o" actionListener="#{viewTramites.validarVersion}" process="@this" update="growl"  rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
-        						<p:menuitem id="btnRefrescar" value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" actionListener="#{viewTramites.refrescar}" process="@this" update="growl @form" rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.isNotDesarrollo()}" />
-					        	<p:menuitem id="btnDuplicar" value="#{msg['botones.duplicarVersion']}" icon="fa fa-copy" onclick="triggerClonarTramite(); return false;" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null and viewTramites.isDesarrollo()}" />
-
-	        					<p:separator rendered="#{viewTramites.tramiteSeleccionada ne null and viewTramites.tienePermisosAreaConsulta}" />
-			        			<p:menuitem id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite}" process="@this" update="growl" rendered="#{(viewTramites.tramiteSeleccionada ne null or viewTramites.versionSeleccionada ne null) and viewTramites.tienePermisosAreaConsulta}" />
-
-								<p:separator rendered="#{viewTramites.tienePermisosAreaConsulta}"/>
-			        			<p:menuitem id="btnDominioArea" value="#{msg['botones.dominiosArea']}" icon="fa fa-database" actionListener="#{viewTramites.dominioArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}"/>
-					        	<p:menuitem id="btnDatosArea" value="#{msg['botones.datosFuenteArea']}" icon="fa fa-table" actionListener="#{viewTramites.datosArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}" />
-								<p:menuitem id="btnSGEArea" value="#{msg['botones.sgeArea']}" icon="fa fa-database" actionListener="#{viewTramites.sgeArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}"/>
-					        	<p:menuitem id="btnConfiguracionArea" value="#{msg['botones.configuracionAutenticacionArea']}" icon="fa fa-table" actionListener="#{viewTramites.confAutArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}" />
-								<p:menuitem id="btnEnvioRem" value="#{msg['botones.envioRemoto']}" icon="fa fa-paper-plane" actionListener="#{viewTramites.envioRemoto}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}" />
-
-								<p:separator rendered="#{viewTramites.tienePermisosArea}"/>
-								<p:menuitem id="btnImportar"  				value="#{msg['botones.importarTramite']}" 	icon="fa fa-download"  onclick="triggerImportarTramite(); return false;" 		rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosArea}"></p:menuitem>
-								<p:menuitem id="btnExportar" 				value="#{msg['botones.exportarVersion']}" 	icon="fa fa-upload" actionListener="#{viewTramites.exportarVersion}" 		rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.tienePermisosArea}"		 process="@this" update="growl"   />
-	        					<p:menuitem id="btnProcesarCuadernoCarga"   value="#{msg['botones.procesarCC']}" 		icon="fa fa-download fa-rotate-90"  onclick="triggerProcesarCC(); return false;"	   		rendered="#{!viewTramites.isDesarrollo() and viewTramites.tienePermisosArea}"></p:menuitem>
-								<p:menuitem id="btnGenerarCuadernoCarga"  	value="#{msg['botones.generarCC']}" 		icon="fa fa-upload fa-rotate-270" actionListener="#{viewTramites.generarCuadernoCarga}" rendered="#{viewTramites.versionSeleccionada ne null and (viewTramites.isDesarrollo() or viewTramites.isPreproduccion()) and viewTramites.tienePermisosArea}" process="@this" update="growl" />
-								<p:menuitem id="btnGenerarScripts"  		value="#{msg['botones.generarScripts']}" 	icon="fa fa-bolt" actionListener="#{viewTramites.generarScript}" rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.isDesarrollo() and viewTramites.tienePermisosArea}" process="@this" update="growl" />
-								<p:separator  />
-			        			<p:menuitem id="btnHelp2" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewTramites.ayuda()}" process="@this" update="growl" iconPos="top"/>
-			        		</p:menuButton>
-			        	</h:panelGroup>
-			        	<p:commandButton id="btnImportarVacio"  value="#{msg['botones.importarTramite']}" icon="fa fa-download"  process="@this" action="#{viewTramites.importar()}" rendered="#{viewTramites.isDesarrollo() and (not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null))}">
-      			   			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoImportar}" update="growl @form"  />
-	        			</p:commandButton>
-	        			<p:commandButton id="btnProcesarCuadernoCargaVacio"  value="#{msg['botones.procesarCC']}" icon="fa fa-download fa-rotate-90"  process="@this" action="#{viewTramites.procesarCC()}" rendered="#{!viewTramites.isDesarrollo() and (not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null))}">
-      			   			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoImportar}" update="growl @form"  />
-	        			</p:commandButton>
-			        	<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewTramites.ayuda()}" process="@this" update="growl" iconPos="top" rendered="#{not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null)}"/>
-					</f:facet>
-				</p:toolbar>
-
-				<p:dataTable id="dataTableTramites" var="td" value="#{viewTramites.dataModel}"
-												 rows="#{viewTramites.paginacion}" emptyMessage="#{msg['error.emptyRows']}" rowExpandMode="single"
-												 scrollable="true" scrollHeight="#{viewTramites.height}" rowIndexVar="rowIndex"
-						                         paginator="#{viewTramites.mostrarPaginacion()}" paginatorPosition="bottom"
-						                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						                         rowsPerPageTemplate="5,10,15,30"
-												 expandedRow="#{viewTramites.expandir(td)}" widgetVar="myWidget"
-									        	 selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}"  lazy="true" height="100%">
-
-						<!-- Necesario para actualizar en controlador la fila seleccionada -->
-						<p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectVersionTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('T')"/>
-             			<!-- <p:ajax event="rowDblselect" listener="#{viewTramites.editarVersion}"/> -->
-             			<p:ajax event="rowDblselect" oncomplete="triggerDoubleClick();" update="@form:toolbarTramites"/>
-             			<p:ajax event="page" listener="#{viewTramites.paginar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites"/>
-
-				       	<p:column style="width:16px">
-				        	<p:rowToggler />
-				        </p:column>
-
-						<!-- Columnas -->
-					    <p:column headerText="#{msg['viewTramites.headerCodigo']}">
-					        <h:outputText value="#{td.tramite.identificador}" />
-					    </p:column>
-
-					    <p:column headerText="#{msg['viewTramites.headerDescripcion']}">
-					        <h:outputText   value="#{td.tramite.descripcion}"  />
-					    </p:column>
-
-		 				<p:column headerText="#{msg['viewTramites.headerActivo']}">
-					        <p:selectBooleanCheckbox value="#{td.tramite.activo}" disabled="true" />
-					    </p:column>
-
-					    <p:column headerText="#{msg['viewTramites.headerArea']}">
-					        <h:outputText value="#{viewTramites.getIdentificadorArea(td.tramite.idArea)}" />
-					    </p:column>
-
-
-						<p:rowExpansion  >
-								<!-- Data table -->
-								<p:dataTable  id="dataTableVersiones" var="tdVersiones" value="#{td.listaVersiones}"
-											  emptyMessage="#{msg['error.emptyRows']}"
-											  rowIndexVar="rowIndexVer"
-											  styleClass="w95 margin-left-25 margin-top-10 margin-bottom-10"
-								        	  selectionMode="single" selection="#{viewTramites.versionSeleccionada}" rowKey="#{tdVersiones.codigo}"
-											  >
-
-										<!-- Necesario para actualizar en controlador la fila seleccionada -->
-										<p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('V')"/>
-										<p:ajax event="rowDblselect" listener="#{viewTramites.editarVersionDblClick}"/>
-
-										<!-- Columnas -->
-									    <p:column headerText="#{msg['viewTramitesVersion.headerVersion']}" width="4%">
-									        <h:outputText value="#{tdVersiones.numeroVersion}"/>
-									    </p:column>
-
-									    <p:column headerText="#{msg['viewTramitesVersion.descripcion']}" width="32%" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-									     	<h:outputText id="descripcionTxt" value="#{tdVersiones.descripcion}" />
-									     	<p:tooltip
-             									   for="form:dataTableTramites:#{rowIndex}:dataTableVersiones:#{rowIndexVer}:descripcionTxt"
-               										 value="#{tdVersiones.descripcion}" position="#{rowIndex == 0 ? 'right' : 'top'}" delay="500" />
-									    </p:column>
-
-									    <p:column headerText="#{msg['viewTramitesVersion.headerFlujo']}"  width="7%">
-									     	<h:outputText value="#{msg['typeFlujo.'.concat(tdVersiones.tipoFlujo)]}" />
-									    </p:column>
-
-						 				<p:column headerText="#{msg['viewTramitesVersion.headerActiva']}" width="3%">
-									        <p:selectBooleanCheckbox value="#{tdVersiones.activa}" disabled="true" />
-									    </p:column>
-
-										<p:column headerText="#{msg['viewTramitesVersion.headerRelease']}"  width="7%">
-									        <h:outputText value="#{tdVersiones.release}" />
-									    </p:column>
-
-									    <p:column headerText="#{msg['viewTramitesVersion.headerFechaUltima']}" >
-									        <h:outputText value="#{tdVersiones.fechaUltima}">
-									       		 <f:convertDateTime pattern="dd/MM/yyyy" type="date" timeZone="CET"/>
-									        </h:outputText>
-									    </p:column>
-
-									    <p:column headerText="#{msg['viewTramitesVersion.headerHuella']}" width="16%" >
-									        <h:outputText value="#{tdVersiones.huella}" />
-									    </p:column>
-
-										<p:column headerText="#{msg['viewTramitesVersion.headerBloqueado']}" rendered="#{viewTramites.isDesarrollo()}" >
-									        <h:outputText value="#{tdVersiones.datosUsuarioBloqueo}" />
-									    </p:column>
-
-								</p:dataTable>
-						</p:rowExpansion>
-					</p:dataTable>
-				</div>
-			</div>
-
-
-			<p:commandButton id="btnDlbEditarTramite" actionListener="#{viewTramites.dblEditarDblTramite}" process="@this" update="growl"  style="display:none">
-       			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl @form"/>
-       		</p:commandButton>
-
-			<p:commandButton id="hiddenCommandImportar" styleClass="button"  process="@this" action="#{viewTramites.importar()}"  style="display:none">
-      			   <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoImportar}" update="growl @form"  />
-	        </p:commandButton>
-
-	        <p:commandButton id="hiddenCommandProcesarCC" styleClass="button"  process="@this" action="#{viewTramites.procesarCC()}"  style="display:none">
-      			   <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoImportar}" update="growl @form"  />
-	        </p:commandButton>
-
-
-			<p:commandButton id="hiddenCommandClonar" styleClass="button"   process="@this" update="growl @form"  actionListener="#{viewTramites.duplicarVersion()}" style="display:none">
-		    		<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoClonar}" update="growl @form"/>
-		    </p:commandButton>
-
-	        <p:commandButton id="hiddenCommandMover" styleClass="button"  process="@this"  action="#{viewTramites.moverTramite()}"  style="display:none" update="growl">
-      			   <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoMoverTramite}" update="growl form:dataTableTramites"  />
-	        </p:commandButton>
-
-	        <p:commandButton id="hiddenCommandControlAcceso" styleClass="button" process="@this"  action="#{viewTramites.controlAcceso()}"  style="display:none">
-      			   <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoControlAcceso}" update="growl form:dataTableTramites"  />
-	        </p:commandButton>
-
-			<h:outputScript >
-
-
-				function triggerSearch() {
-		        	document.getElementById("form:btnSearch").click();
-		     	}
-		 		function triggerImportarTramite() {
-		        	document.getElementById("form:hiddenCommandImportar").click();
-		     	}
-		     	function triggerProcesarCC() {
-		        	document.getElementById("form:hiddenCommandProcesarCC").click();
-		     	}
-
-		     	function triggerClonarTramite() {
-		        	document.getElementById("form:hiddenCommandClonar").click();
-		     	}
-
-	      	  	function triggerMoverTramite() {
-	        		document.getElementById("form:hiddenCommandMover").click();
-	      	  	}
-
-	      	  	function triggerControlAcceso() {
-	        		document.getElementById("form:hiddenCommandControlAcceso").click();
-	      	  	}
-
-	      	  	function triggerDoubleClick() {
-	      	  		document.getElementById("form:btnDlbEditarTramite").click();
-	      	  	}
-
-				function triggerDoubleClickArea() {
-					if (document.getElementById("form:btnEditarArea") != null) {
-	      	  			document.getElementById("form:btnEditarArea").click();
-	      	  		} else if (document.getElementById("form:btnConsultarArea") != null) {
-	      	  			document.getElementById("form:btnConsultarArea").click();
-	      	  		}
-	      	  	}
-				function deseleccionar(modo) {
-					$("#form\\:dataTableTramites").find( ".ui-state-highlight").each(function() {
-
-						obj = $( this ).parents("[id^=form\\:dataTableTramites\\:]");
-						if (modo == "T" &amp;&amp; obj.length &gt; 0) {
-							 $( this ).removeClass("ui-state-highlight");
-						}
-						if (modo == "V" &amp;&amp;obj.length == 0) {
-							 $( this ).removeClass("ui-state-highlight");
-						}
-
-					});
-				}
-
-		    </h:outputScript>
-
-
-		    <p:confirmDialog global="true" >
-				<p:outputPanel styleClass="confirmar_botonera">
-		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form" />
-		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
-				</p:outputPanel>
-		    </p:confirmDialog>
-		</h:form>
-
-	</ui:define>
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:c="http://java.sun.com/jstl/core"
+  xmlns:pe="http://primefaces.org/ui/extensions"
+  template="../layout/mainLayout.xhtml">
+
+  <f:metadata>
+    <f:viewAction action="#{viewTramites.init}" />
+  </f:metadata>
+
+  <ui:define name="icerick">
+    <script type="text/javascript">
+      function setHeight(){
+        let dataTable = document.getElementById("form:dataTableTramites");
+        let toolBar = document.getElementById("form:toolbarTramites");
+        let dataTableS = dataTable.querySelector('.ui-datatable-scrollable-body');
+        let height = dataTable.parentElement.offsetHeight - toolBar.offsetHeight - 20;
+        dataTableS.setAttribute("style","max-height: "+height+"px !important")
+      }
+    </script>
+  </ui:define>
+
+
+  <ui:define name="content">
+
+    <h:form id="form" style="height: 95% !important">
+
+      <!-- Growl mensajes -->
+      <p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+      <div class="ui-g"  style="height: 100% !important">
+
+      <div class="ui-g-3 ui-g-nopad"  style="height: 99% ">
+
+      <h:outputScript >
+
+        window.onload=function(){
+          let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+        onVisible(contextMenu, () => eliminarResaltar());
+
+        document.addEventListener('contextmenu', function(ev) {
+            ev.preventDefault();
+            getPos();
+            return false;
+        }, false);
+
+        document.addEventListener('mouseup', function(ev) {
+        	            ev.preventDefault();
+
+           let elementos = document.getElementsByClassName('resaltar');
+            for(let i = 0; i &lt; elementos.length; i++){
+              elementos[i].classList.remove('resaltar');
+            }
+			return false;
+        }, false);
+
+
+        }
+
+        function eliminarResaltar(){
+          let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+            let elementos = document.getElementsByClassName('resaltar');
+            if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 1){
+            for(let i = 0; i &lt; elementos.length; i++){
+              elementos[i].classList.remove('resaltar');
+            }
+			}
+        }
+
+        function onVisible(element, callback) {
+          new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+              if(entry.intersectionRatio == 0) {
+                callback(element);
+              }
+            });
+          }).observe(element);
+        }
+
+		var segundoLoop = false;
+
+        function getPos(){
+         var e = window.event;
+
+          var posX = e.clientX;
+          var posY = e.clientY;
+          var el = document.elementFromPoint(posX, posY);
+
+          let elementos = document.getElementsByClassName('resaltar');
+            if(elementos.length &gt; 0){
+            for(let i = 0; i &lt; elementos.length; i++){
+              elementos[i].classList.remove('resaltar');
+            }
+            }
+
+        el.classList.add("resaltar");
+        var aux = document.getElementById("form:auxCopiar");
+        if(el.textContent!=''){
+          aux.value = el.textContent;
+        }else if(el.firstChild!=null){
+          aux.value = el.firstChild.value;
+        }else if(el.value!=null &amp;&amp; el.value!=''){
+          aux.value = el.value;
+        }
+	}
+
+	function clickEl(){
+		 var e = window.event;
+		 var posX = e.clientX;
+         var posY = e.clientY;
+         var el = document.elementFromPoint(posX, posY);
+         var elAux = document.elementFromPoint(posX, posY);
+         while(elAux!=null &amp;&amp; elAux!=document &amp;&amp; !elAux.classList.contains( 'ui-datatable' )){
+			elAux = elAux.parentNode;
+			if(elAux.id=="form:dataTableTramites_head"){
+				break;
+			}
+		}
+		if(elAux.id=="form:dataTableTramites"){
+			el.click();
+		}else if(elAux.id=="form:areas"){
+			document.getElementById("form:mnuNuevoTramite").style.display='none';
+			if(document.getElementById("form:btnNuevaArea")!=null){
+				document.getElementById("form:mnuNuevoAreaTramite").style.display='block';
+			}
+		}
+		hideOpcTram();
+
+	}
+
+	function hideOpcTram(){
+		document.getElementById("form:mnuNuevoTramite").style.display='none';
+		document.getElementById("form:mnuEditarTramite").style.display='none';
+   		document.getElementById("form:mnuConsultarTramite").style.display='none';
+   		document.getElementById("form:mnuNuevaVersionTramite").style.display='none';
+   		document.getElementById("form:mnuMoverTramite").style.display='none';
+ 		document.getElementById("form:mnuEliminarTramite").style.display='none';
+ 		for (const child of document.getElementById("form:mainCm").childNodes) {
+		  if(child.tagName == 'UL'){
+		  	for (const child2 of child.childNodes) {
+		  		child2.style.marginTop="0px";
+		  		child2.style.marginBottom="0px";
+		  	}
+		  }
+		}
+	}
+
+
+
+      </h:outputScript>
+
+
+        <p:contextMenu widgetVar="mainCm" id="mainCm" beforeShow="clickEl();" for=":work">
+             <p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+             <p:menuitem id="mnuNuevoTramite" value="#{msg['botones.nuevoTramite']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevoTramite').click();" process="@this" style="display:none;"/>
+			 <p:menuitem id="mnuNuevoAreaTramite" value="#{msg['botones.nuevo']} #{msg['dialogDominioTramites.headerArea']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevoArea').click();" style="display:none;"/>
+
+            <p:menuitem id="mnuConsultarTramite" value="#{msg['botones.consultarTramite']}" icon="fa fa-eye" process="@this" onclick="document.getElementById('form:btnConsultarTramite').click();" style="display:none;"/>
+            <p:menuitem id="mnuEditarTramite" value="#{msg['botones.editarTramite']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('form:btnEditarTramite').click();" style="display:none;"/>
+            <p:menuitem id="mnuNuevaVersionTramite" value="#{msg['botones.nuevaVersion']}" icon="fa fa-file" process="@this"  onclick="document.getElementById('form:btnNuevaVersionTramite').click();" style="display:none;"/>
+            <p:menuitem id="mnuMoverTramite" value="#{msg['botones.moverTramite']}" icon="fa fa-exchange" update="growl" onclick="triggerMoverTramite();return false;" style="display:none;"/>
+            <p:menuitem id="mnuEliminarTramite" value="#{msg['botones.eliminarTramite']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarTramite}" process="@this" update="growl @form" style="display:none;"/>
+        </p:contextMenu>
+        <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+        	<p:ajax event="success" listener="#{viewTramites.copiadoCorr}" process="@this" update="@this growl"/>
+             <p:ajax event="error" listener="#{viewTramites.copiadoErr}" update="@this growl"/>
+        </pe:clipboard>
+
+        <p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
+			<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+		</p:contextMenu>
+		<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
+			<p:ajax event="success" listener="#{viewTramites.copiadoCorr}" process="@this" update="@this growl"/>
+			<p:ajax event="error" listener="#{viewTramites.copiadoErr}" update="@this growl"/>
+		</pe:clipboard>
+
+		 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
+			<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+		</p:contextMenu>
+		<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
+			<p:ajax event="success" listener="#{viewTramites.copiadoCorr}" process="@this" update="@this growl"/>
+			<p:ajax event="error" listener="#{viewTramites.copiadoErr}" update="@this growl"/>
+		</pe:clipboard>
+
+        <p:inputText id="auxCopiar" value="#{viewTramites.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+        <!-- Toolbar -->
+        <p:toolbar id="toolbarArea">
+          <f:facet name="left">
+            <h:outputText value="#{msg['viewTramites.listadoAreas']}" />
+                 </f:facet>
+                 <f:facet name="right">
+                     <p:commandButton id="btnNuevoArea" value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosAreas}">
+                    <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl @form"/>
+                  </p:commandButton>
+                  <p:commandButton id="btnConsultarArea" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarArea}" process="@this" update="growl" rendered="#{not viewTramites.tienePermisosAreas and viewTramites.seleccionadaArea}" />
+                  <p:commandButton id="btnEditarArea" value="#{msg['botones.editar']}" icon="fa fa-edit ui-btn-icon-bottom" actionListener="#{viewTramites.editarArea}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosAreas and viewTramites.seleccionadaArea}">
+                    <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl @form"/>
+                  </p:commandButton>
+                  <p:commandButton id="btnEliminarArea" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarArea}" process="@this" update="@form growl" rendered="#{viewTramites.tienePermisosAreas and viewTramites.seleccionadaArea}">
+                    <p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borradoArea']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+                  </p:commandButton>
+
+          </f:facet>
+        </p:toolbar>
+
+          <p:dataTable id="areas" var="area" value="#{viewTramites.listaAreas}" emptyMessage="#{msg['error.emptyRows']}"
+             scrollable="true" scrollHeight="#{viewTramites.height}" rows="100"  scrollRows="100" autoResize="true"
+
+             selection="#{viewTramites.listaAreasSeleccionadas}" rowKey="#{area.codigo}">
+          <p:ajax event="rowSelectCheckbox" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea" process="@form" oncomplete="refrescarHeight();"/>
+          <p:ajax event="rowSelect" global="false" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea" process="@form" onclick="myWidget.getPaginator().setPage(0)" oncomplete="refrescarHeight();"/>
+          <p:ajax event="rowUnselect" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea" process="@form" oncomplete="refrescarHeight();"/>
+          <p:ajax event="rowUnselectCheckbox" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea" process="@form" oncomplete="refrescarHeight();"/>
+          <p:ajax event="toggleSelect" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea" process="@form"/>
+          <p:ajax event="rowDblselect" oncomplete="triggerDoubleClickArea();" update="@form:dataTableTramites @form:toolbarArea" process="@form"/>
+          <p:ajax event="contextMenu" global="false" process="@this" update="@form:toolbarArea" oncomplete="opcAreas();"/>
+
+
+
+              <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+              <p:column style="width:16px;text-align:center">
+                  <p:column rendered="#{!area.tienePermiso}">
+                    <span class="fa fa-lock" title="#{msg['viewTramites.sinPermisos']}" />
+                  </p:column>
+                  <p:column rendered="#{area.tienePermiso}">
+                    <span class="fa fa-unlock" title="#{msg['viewTramites.conPermisos']}" />
+                  </p:column>
+              </p:column>
+              <p:column>
+                  <h:outputText value="#{area.identificador}"/>
+              </p:column>
+              <f:facet name="footer" style="align:left">
+                <div align="left" style="display:#{(viewTramites.admEntidad)?'none':'block'}">
+                  <p:selectBooleanCheckbox itemLabel="#{msg['viewTramites.mostrarTodasAreas']}" value="#{viewTramites.mostrarTodasAreas}"  >
+                 <p:ajax event="change" process="@this" update="@form" listener="#{viewTramites.calcularAreas}"  />
+            </p:selectBooleanCheckbox>
+            </div>
+              </f:facet>
+          </p:dataTable>
+           <p:contextMenu for="areas" id="cMenuAreas" widgetVar="cMenuAreasWV" beforeShow="return true;">
+            	<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyAreas"  process="@this :form:auxCopiar" update=":form:growl" url="javascript:void(0)"/>
+            	<p:menuitem id="mnuNuevoArea" value="#{msg['botones.nuevo']} #{msg['dialogDominioTramites.headerArea']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevoArea').click();" />
+            	<p:menuitem id="mnuConsultarArea" value="#{msg['botones.consultar']} #{msg['dialogDominioTramites.headerArea']}" icon="fa fa-eye" process="@this" onclick="document.getElementById('form:btnConsultarArea').click();" />
+            	<p:menuitem id="mnuEditarArea" value="#{msg['botones.editar']} #{msg['dialogDominioTramites.headerArea']}" icon="fa fa-edit ui-btn-icon-bottom" onclick="document.getElementById('form:btnEditarArea').click();" process="@this"/>
+        		<p:menuitem id="mnuEliminarArea" value="#{msg['botones.eliminar']} #{msg['dialogDominioTramites.headerArea']}" icon="fa fa-trash-o" onclick="document.getElementById('form:btnEliminarArea').click();" process="@this"/>
+        	</p:contextMenu>
+	        <pe:clipboard id="clipContextCopyAreas" trigger="mnuCopyAreas" action="copy" target=":form:auxCopiar">
+	        	<p:ajax event="success" listener="#{viewTramites.copiadoCorr}" process="@this" update="@this :form:growl"/>
+	             <p:ajax event="error" listener="#{viewTramites.copiadoErr}" update="@this :form:growl"/>
+	        </pe:clipboard>
+        <h:outputScript>
+              jQuery(document).ready(function() {
+                      var tram = #{viewTramites.idTramite!=null};
+                      var sesion = #{viewTramites.idTramiteVersion!=null};
+                      var pagTram = #{viewTramites.pag!=null};
+                    if(pagTram){
+                           var pagValor = #{viewTramites.pag};
+                           if(pagValor !=0){
+                          if(tram &amp;&amp; !sesion ){
+                           setTimeout(function(){ pageDatatableTram(); }, 100);
+                         }
+                         if(sesion &amp;&amp; tram){
+                           setTimeout(function(){ pageDatatable(); }, 100);
+                         }
+                         }
+                    }
+
+
+              $(window).resize(function() {
+                             setTimeout(function(){  refrescarHeight(); }, 100);
+                 });
+              refrescarHeight();
+
+             });
+
+			function opcAreas(){
+				if(document.getElementById("form:btnConsultarArea")!=null){
+	          		document.getElementById("form:mnuConsultarArea").style.display='block';
+	          	}else{
+	          		document.getElementById("form:mnuConsultarArea").style.display='none';
+	          	}
+				if(document.getElementById("form:btnEditarArea")!=null){
+	          		document.getElementById("form:mnuEditarArea").style.display='block';
+	          	}else{
+	          		document.getElementById("form:mnuEditarArea").style.display='none';
+	          	}
+				if(document.getElementById("form:btnEliminarArea")!=null){
+	          		document.getElementById("form:mnuEliminarArea").style.display='block';
+	          	}else{
+	          		document.getElementById("form:mnuEliminarArea").style.display='none';
+	          	}
+
+			}
+
+          function refrescarHeight() {
+             var altura = window.innerHeight - 50;
+             var alturaAreas = altura - 220;
+             var esAdministrador = #{(viewTramites.admEntidad)?true:false};
+             if(esAdministrador){
+             	var alturaAreasBody = altura - 245;
+             }else{
+             	var alturaAreasBody = altura - 272;
+			 }
+             var alturaTramites = altura - 310;
+             var alturaTramitesBody = altura - 250;
+             $('#form\\:areas').height(alturaAreas);
+             $('#form\\:areas .ui-datatable-scrollable-body').height(alturaAreasBody);
+             $('#form\\:dataTableTramites').height(alturaTramites - 20);
+             $('#form\\:dataTableTramites .ui-datatable-scrollable-body').height(alturaTramites);
+             $("#form\\:dataTableTramites div.ui-datatable-scrollable-body").height(alturaTramitesBody-50);
+          }
+
+            function pageDatatable() {
+               console.log("pagDatatable");
+            document.getElementById("form:btnpage").click();
+          }
+
+          function pageDatatableTram() {
+            console.log("pagDatatableTram");
+            document.getElementById("form:btnpageTram").click();
+          }
+
+          function opcTramites(){
+			if(document.getElementById("form:btnNuevoTramite")!=null){
+          		document.getElementById("form:mnuNuevoTramite").style.display='block';
+          	}else{
+          		document.getElementById("form:mnuNuevoTramite").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnEditarTramite")!=null){
+          		document.getElementById("form:mnuEditarTramite").style.display='block';
+          	}else{
+          		document.getElementById("form:mnuEditarTramite").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnConsultarTramite")!=null){
+          		document.getElementById("form:mnuConsultarTramite").style.display='block';
+          	}else{
+          		document.getElementById("form:mnuConsultarTramite").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnNuevaVersionTramite")!=null){
+          		document.getElementById("form:mnuNuevaVersionTramite").style.display='block';
+          	}else{
+          		document.getElementById("form:mnuNuevaVersionTramite").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnMoverTramite")!=null){
+          		document.getElementById("form:mnuMoverTramite").style.display='block';
+          	}else{
+          		document.getElementById("form:mnuMoverTramite").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnEliminarTramite")!=null){
+          		document.getElementById("form:mnuEliminarTramite").style.display='block';
+          	}else{
+          		document.getElementById("form:mnuEliminarTramite").style.display='none';
+          	}
+          }
+
+
+          function opcVersiones(){
+
+          	 var elAux = document.getElementsByClassName('resaltar')[0];
+			 while(elAux!=null &amp;&amp; elAux!=document &amp;&amp; !elAux.classList.contains( 'ui-datatable' )){
+				elAux = elAux.parentNode;
+			}
+			var nuevId = elAux.id.replace('dataTableVersiones','')
+
+
+          	if(document.getElementById("form:btnNuevaVersion")!=null){
+          		document.getElementById(nuevId+"mnuNuevaVersionVer").style.display='block';
+          	}else{
+          		document.getElementById(nuevId+"mnuNuevaVersionVer").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnConsultarVersion")!=null){
+          		document.getElementById(nuevId+"mnuConsultarVersionVer").style.display='block';
+          	}else{
+          		document.getElementById(nuevId+"mnuConsultarVersionVer").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnEditarVersion")!=null){
+          		document.getElementById(nuevId+"mnuEditarVersionVer").style.display='block';
+          	}else{
+          		document.getElementById(nuevId+"mnuEditarVersionVer").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnBloquear")!=null){
+          		document.getElementById(nuevId+"mnuBloquearVer").style.display='block';
+          	}else{
+          		document.getElementById(nuevId+"mnuBloquearVer").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnDesploquear")!=null){
+          		document.getElementById(nuevId+"mnuDesploquearVer").style.display='block';
+          	}else{
+          		document.getElementById(nuevId+"mnuDesploquearVer").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnPrevisualizar")!=null){
+          		document.getElementById(nuevId+"mnuPrevisualizarVer").style.display='block';
+          	}else{
+          		document.getElementById(nuevId+"mnuPrevisualizarVer").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnControlAcceso")!=null){
+          		document.getElementById(nuevId+"mnuControlAccesoVer").style.display='block';
+          	}else{
+          		document.getElementById(nuevId+"mnuControlAccesoVer").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnHistorial")!=null){
+          		document.getElementById(nuevId+"mnuHistorialVer").style.display='block';
+          	}else{
+          		document.getElementById(nuevId+"mnuHistorialVer").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnEliminarVersion")!=null){
+          		document.getElementById(nuevId+"mnuEliminarVersionVer").style.display='block';
+          	}else{
+          		document.getElementById(nuevId+"mnuEliminarVersionVer").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnBorrarScripts")!=null){
+          		document.getElementById(nuevId+"mnuBorrarScriptsVer").style.display='block';
+          	}else{
+          		document.getElementById(nuevId+"mnuBorrarScriptsVer").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnValidar")!=null){
+          		document.getElementById(nuevId+"mnuValidarVer").style.display='block';
+          	}else{
+          		document.getElementById(nuevId+"mnuValidarVer").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnRefrescar")!=null){
+          		document.getElementById(nuevId+"mnuRefrescarVer").style.display='block';
+          	}else{
+          		document.getElementById(nuevId+"mnuRefrescarVer").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnDuplicar")!=null){
+          		document.getElementById(nuevId+"mnuDuplicarVer").style.display='block';
+          	}else{
+          		document.getElementById(nuevId+"mnuDuplicarVer").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnProcedimientosTramite")!=null){
+          		document.getElementById(nuevId+"mnuProcedimientosTramiteVer").style.display='block';
+          	}else{
+          		document.getElementById(nuevId+"mnuProcedimientosTramiteVer").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnExportar")!=null){
+          		document.getElementById(nuevId+"mnuExportarVer").style.display='block';
+          	}else{
+          		document.getElementById(nuevId+"mnuExportarVer").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnGenerarCuadernoCarga")!=null){
+          		document.getElementById(nuevId+"mnuGenerarCuadernoCargaVer").style.display='block';
+          	}else{
+          		document.getElementById(nuevId+"mnuGenerarCuadernoCargaVer").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnGenerarScripts")!=null){
+          		document.getElementById(nuevId+"mnuGenerarScriptsVer").style.display='block';
+          	}else{
+          		document.getElementById(nuevId+"mnuGenerarScriptsVer").style.display='none';
+          	}
+          }
+
+		 function eliminarDupl(){
+		 	var elms = document.getElementsByClassName('contextMenuVersiones');
+
+		 	if(elms.length>1){
+		 		elms[0].remove();
+		 	}
+		 }
+          </h:outputScript>
+          <input type="hidden" name="anchura" value="" />
+          <input type="hidden" name="altura" value="" />
+        <p:commandButton value="Filter" id="btnpage" process="@this" update="@form:dataTableTramites" style="visibility:hidden"
+              onclick="PF('myWidget').getPaginator().setPage('#{viewTramites.pag}')" >
+              <p:ajax  execute="@this" listener="#{viewTramites.unSelectTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('V')"/>
+        </p:commandButton>
+        <p:commandButton value="Filter" id="btnpageTram" process="@this" update="@form:dataTableTramites" style="visibility:hidden"
+              onclick="PF('myWidget').getPaginator().setPage('#{viewTramites.pag}')" >
+              <p:ajax  execute="@this" listener="#{viewTramites.unSelectVersionTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('T')"/>
+        </p:commandButton>
+
+
+      </div>
+      <div class="ui-g-9 ui-g-nopad" style="padding-left:10px; max-height:98%;">
+
+        <!-- Toolbar -->
+        <p:toolbar id="toolbarTramites" onchange="opcTramites();">
+          <f:facet name="left">
+                    <p:remoteCommand name="search" actionListener="#{viewTramites.filtrar}" update="growl @form" />
+                    <p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewTramites.filtro}" styleClass="margin-right-10" onkeypress="if (event.keyCode == 13) { triggerSearch(); return false; }"/>
+                       <p:commandButton id="btnSearch" icon="fa fa-search" actionListener="#{viewTramites.filtrar}" process="@form" update="growl @form" styleClass="va-top"/>
+          </f:facet>
+              <f:facet name="right">
+                 <h:panelGroup rendered="#{viewTramites.seleccionadasAreas}">
+
+                   <p:commandButton id="btnNuevoTramite" value="#{msg['botones.nuevoTramite']}" icon="fa fa-file" actionListener="#{viewTramites.nuevoTramite}" process="@this" update="growl"  rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea and viewTramites.versionSeleccionada eq null and !viewTramites.isNotDesarrollo()}">
+                      <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl @form"/>
+                     </p:commandButton>
+
+                  <p:commandButton id="btnConsultarTramite" value="#{msg['botones.consultarTramite']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarTramite}" process="@this" update="growl" rendered="#{not viewTramites.tienePermisosTramite and viewTramites.tramiteSeleccionada ne null }" />
+                  <p:commandButton id="btnEditarTramite" value="#{msg['botones.editarTramite']}" icon="fa fa-edit" actionListener="#{viewTramites.editarTramite}" process="@this" update="growl" rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosTramite and viewTramites.tramiteSeleccionada ne null}" onload="document.getElementById('form:mnuEditarTramite').style.display='block';">
+                    <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl @form"/>
+                  </p:commandButton>
+              <p:commandButton id="btnNuevaVersionTramite" value="#{msg['botones.nuevaVersion']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaVersion}" process="@this" update="growl" rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosTramite and (viewTramites.tramiteSeleccionada ne null or viewTramites.versionSeleccionada ne null)}">
+                    <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoNuevaVersion}" update="growl form:dataTableTramites" oncomplete="refrescarHeight();" />
+                  </p:commandButton>
+
+                  <p:commandButton id="btnConsultarVersion" value="#{msg['botones.consultarVersion']}" icon="fa fa-edit" actionListener="#{viewTramites.consultarVersion}" process="@this" update="growl" rendered="#{not viewTramites.tienePermisosVersion and viewTramites.versionSeleccionada ne null and viewTramites.tienePermisosAreaConsulta}" />
+              <p:commandButton id="btnEditarVersion" value="#{msg['botones.editarVersion']}" icon="fa fa-edit" actionListener="#{viewTramites.editarVersion}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosVersion and viewTramites.versionSeleccionada ne null}" />
+
+                  <p:commandButton id="btnBloquear" value="#{msg['botones.bloquear']}" icon="fa fa-lock" actionListener="#{viewTramites.bloquear}" process="@this" update="growl @form"  rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null and viewTramites.permiteBloquear}">
+                    <p:confirm header="#{msg['confirm.titulo']}" message="#{msg['viewTramitesVersion.bloquear.aviso']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+                  </p:commandButton>
+                  <p:commandButton id="btnDesploquear" value="#{msg['botones.desbloquear']}" icon="fa fa-unlock" actionListener="#{viewTramites.desbloquear}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null and viewTramites.permiteDesbloquear}">
+                    <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoDesbloquear}" update="growl @form" />
+                  </p:commandButton>
+
+              <p:commandButton id="btnPrevisualizar" value="#{msg['botones.previsualizarTramite']}" icon="fa fa-eye" actionListener="#{viewTramites.previsualizar}" process="@this" rendered="#{(viewTramites.tienePermisosTramite or viewTramites.previs) and viewTramites.versionSeleccionada ne null}" />
+
+                  <p:menuButton value="#{msg['viewTramites.mas']}" rendered="#{not(not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null)) }">
+
+                <p:menuitem id="btnMoverTramite" value="#{msg['botones.moverTramite']}" icon="fa fa-exchange" onclick="triggerMoverTramite();return false;" rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosAreas and viewTramites.tramiteSeleccionada ne null}"></p:menuitem>
+                    <p:menuitem id="btnEliminarTramite" value="#{msg['botones.eliminarTramite']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarTramite}" process="@this" update="growl @form" rendered="#{viewTramites.tienePermisosTramite and viewTramites.tramiteSeleccionada ne null}">
+                      <p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+                    </p:menuitem>
+
+                <p:separator rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
+                <p:menuitem id="btnControlAcceso" value="#{msg['botones.controlAcceso']}" icon="fa fa-edit" onclick="triggerControlAcceso();return false;" rendered="#{(viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null) or (viewTramites.isAdminArea() and viewTramites.versionSeleccionada ne null)}"></p:menuitem>
+                    <p:menuitem id="btnHistorial" value="#{msg['botones.historial']}" icon="fa fa-history" actionListener="#{viewTramites.historialVersion}" process="@this" update="growl" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
+
+                <p:separator rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}"  />
+                    <p:menuitem id="btnEliminarVersion" value="#{msg['botones.eliminarVersion']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarVersion}" process="@this" update="growl @form" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}">
+                      <p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+                    </p:menuitem>
+                    <p:menuitem id="btnBorrarScripts" value="#{msg['botones.borrarScripts']}" icon="fa fa-trash-o" actionListener="#{viewTramites.borrarScript}" process="@this" update="growl @form" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
+                    <p:menuitem id="btnValidar" value="#{msg['botones.validarVersion']}" icon="fa fa-check-square-o" actionListener="#{viewTramites.validarVersion}" process="@this" update="growl"  rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null}" />
+                    <p:menuitem id="btnRefrescar" value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" actionListener="#{viewTramites.refrescar}" process="@this" update="growl @form" rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.isNotDesarrollo()}" />
+                    <p:menuitem id="btnDuplicar" value="#{msg['botones.duplicarVersion']}" icon="fa fa-copy" onclick="triggerClonarTramite(); return false;" rendered="#{viewTramites.tienePermisosTramite and viewTramites.versionSeleccionada ne null and viewTramites.isDesarrollo()}" />
+
+                    <p:separator rendered="#{viewTramites.tramiteSeleccionada ne null and viewTramites.tienePermisosAreaConsulta}" />
+                    <p:menuitem id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite}" process="@this" update="growl" rendered="#{(viewTramites.tramiteSeleccionada ne null or viewTramites.versionSeleccionada ne null) and viewTramites.tienePermisosAreaConsulta}" />
+
+                <p:separator rendered="#{viewTramites.tienePermisosAreaConsulta}"/>
+                    <p:menuitem id="btnDominioArea" value="#{msg['botones.dominiosArea']}" icon="fa fa-database" actionListener="#{viewTramites.dominioArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}"/>
+                    <p:menuitem id="btnDatosArea" value="#{msg['botones.datosFuenteArea']}" icon="fa fa-table" actionListener="#{viewTramites.datosArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}" />
+                <p:menuitem id="btnSGEArea" value="#{msg['botones.sgeArea']}" icon="fa fa-database" actionListener="#{viewTramites.sgeArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}"/>
+                    <p:menuitem id="btnConfiguracionArea" value="#{msg['botones.configuracionAutenticacionArea']}" icon="fa fa-table" actionListener="#{viewTramites.confAutArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}" />
+                <p:menuitem id="btnEnvioRem" value="#{msg['botones.envioRemoto']}" icon="fa fa-paper-plane" actionListener="#{viewTramites.envioRemoto}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}" />
+
+                <p:separator rendered="#{viewTramites.tienePermisosArea}"/>
+                <p:menuitem id="btnImportar"  				value="#{msg['botones.importarTramite']}" 	icon="fa fa-download"  onclick="triggerImportarTramite(); return false;" 		rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosArea}"></p:menuitem>
+                <p:menuitem id="btnExportar" 				value="#{msg['botones.exportarVersion']}" 	icon="fa fa-upload" actionListener="#{viewTramites.exportarVersion}" 		rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.tienePermisosArea}"		 process="@this" update="growl"   />
+                    <p:menuitem id="btnProcesarCuadernoCarga"   value="#{msg['botones.procesarCC']}" 		icon="fa fa-download fa-rotate-90"  onclick="triggerProcesarCC(); return false;"	   		rendered="#{!viewTramites.isDesarrollo() and viewTramites.tienePermisosArea}"></p:menuitem>
+                <p:menuitem id="btnGenerarCuadernoCarga"  	value="#{msg['botones.generarCC']}" 		icon="fa fa-upload fa-rotate-270" actionListener="#{viewTramites.generarCuadernoCarga}" rendered="#{viewTramites.versionSeleccionada ne null and (viewTramites.isDesarrollo() or viewTramites.isPreproduccion()) and viewTramites.tienePermisosArea}" process="@this" update="growl" />
+                <p:menuitem id="btnGenerarScripts"  		value="#{msg['botones.generarScripts']}" 	icon="fa fa-bolt" actionListener="#{viewTramites.generarScript}" rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.isDesarrollo() and viewTramites.tienePermisosArea}" process="@this" update="growl" />
+                <p:separator  />
+                    <p:menuitem id="btnHelp2" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewTramites.ayuda()}" process="@this" update="growl" iconPos="top"/>
+                  </p:menuButton>
+                </h:panelGroup>
+                <p:commandButton id="btnImportarVacio"  value="#{msg['botones.importarTramite']}" icon="fa fa-download"  process="@this" action="#{viewTramites.importar()}" rendered="#{viewTramites.isDesarrollo() and (not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null))}">
+                     <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoImportar}" update="growl @form"  />
+                </p:commandButton>
+                <p:commandButton id="btnProcesarCuadernoCargaVacio"  value="#{msg['botones.procesarCC']}" icon="fa fa-download fa-rotate-90"  process="@this" action="#{viewTramites.procesarCC()}" rendered="#{!viewTramites.isDesarrollo() and (not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null))}">
+                     <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoImportar}" update="growl @form"  />
+                </p:commandButton>
+                <p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewTramites.ayuda()}" process="@this" update="growl" iconPos="top" rendered="#{not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null)}"/>
+          </f:facet>
+        </p:toolbar>
+
+
+
+        <p:dataTable id="dataTableTramites" var="td" value="#{viewTramites.dataModel}"
+                         rows="#{viewTramites.paginacion}" emptyMessage="#{msg['error.emptyRows']}" rowExpandMode="single"
+                         scrollable="true" scrollHeight="#{viewTramites.height}" rowIndexVar="rowIndex"
+                                     paginator="#{viewTramites.mostrarPaginacion()}" paginatorPosition="bottom"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10,15,30"
+                         expandedRow="#{viewTramites.expandir(td)}" widgetVar="myWidget"
+                             selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}"  lazy="true" height="100%">
+
+            <!-- Necesario para actualizar en controlador la fila seleccionada -->
+            	   <p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectVersionTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('T')"/>
+                   <p:ajax event="contextMenu" global="false" listener="#{viewTramites.unSelectVersionTramite}" process="@this" update="@form:toolbarTramites" oncomplete="opcTramites();"/>
+
+                   <!-- <p:ajax event="rowDblselect" listener="#{viewTramites.editarVersion}"/> -->
+                   <p:ajax event="rowDblselect" oncomplete="triggerDoubleClick();" update="@form:toolbarTramites"/>
+                   <p:ajax event="page" listener="#{viewTramites.paginar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites"/>
+
+                 <p:column style="width:16px">
+                  <p:rowToggler />
+                </p:column>
+
+            <!-- Columnas -->
+              <p:column id="hCodigo" headerText="#{msg['viewTramites.headerCodigo']}" sortBy="#{td.tramite.identificador}">
+              <h:outputText value="#{td.tramite.identificador}" />
+              </p:column>
+
+              <p:column headerText="#{msg['viewTramites.headerDescripcion']}" sortBy="#{td.tramite.descripcion}">
+                  <h:outputText   value="#{td.tramite.descripcion}"  />
+              </p:column>
+
+             <p:column headerText="#{msg['viewTramites.headerActivo']}" style="width:5% !important;" sortBy="#{td.tramite.activo}">
+                  <p:selectBooleanCheckbox value="#{td.tramite.activo}" disabled="true" />
+              </p:column>
+
+
+             <p:column headerText="#{msg['viewTramites.headerUltimaVersion']}" style="width:5% !important; padding:0 !important" sortBy="#{td.tramite.ultima}">
+                <h:outputText value="#{viewTramites.getUltimaVersionFormateado(td.tramite.codigo)}" />
+              </p:column>
+
+             <c:if test="#{viewTramites.listaAreasSeleccionadas.size() > 1}">
+                <p:column headerText="#{msg['viewTramites.headerArea']}"  sortBy="#{td.tramite.area}">
+                    <h:outputText value="#{viewTramites.getIdentificadorArea(td.tramite.idArea)}" />
+                </p:column>
+             </c:if>
+
+            <p:rowExpansion>
+                <!-- Data table -->
+                <p:dataTable  id="dataTableVersiones" var="tdVersiones" value="#{td.listaVersiones}"
+                        emptyMessage="#{msg['error.emptyRows']}"
+                        rowIndexVar="rowIndexVer"
+                        styleClass="w95 margin-left-25 margin-top-10 margin-bottom-10"
+                            selectionMode="single" selection="#{viewTramites.versionSeleccionada}" rowKey="#{tdVersiones.codigo}"
+                        >
+
+                    <!-- Necesario para actualizar en controlador la fila seleccionada -->
+                    <p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('V')"/>
+                    <p:ajax event="contextMenu" global="false" listener="#{viewTramites.unSelectTramite}" process="@this" update="@form:toolbarTramites" oncomplete="deseleccionar('V'); opcVersiones(); eliminarDupl();"/>
+                    <p:ajax event="rowDblselect" listener="#{viewTramites.editarVersionDblClick}"/>
+
+                    <!-- Columnas -->
+                      <p:column headerText="#{msg['viewTramitesVersion.headerVersion']}" width="4%">
+                          <h:outputText value="#{tdVersiones.numeroVersion}"/>
+                      </p:column>
+
+                      <p:column headerText="#{msg['viewTramitesVersion.descripcion']}" width="32%" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+                         <h:outputText id="descripcionTxt" value="#{tdVersiones.descripcion}" />
+                         <p:tooltip
+                                  for="form:dataTableTramites:#{rowIndex}:dataTableVersiones:#{rowIndexVer}:descripcionTxt"
+                                    value="#{tdVersiones.descripcion}" position="#{rowIndex == 0 ? 'right' : 'top'}" delay="500" />
+                      </p:column>
+
+                      <p:column headerText="#{msg['viewTramitesVersion.headerFlujo']}"  width="7%">
+                         <h:outputText value="#{msg['typeFlujo.'.concat(tdVersiones.tipoFlujo)]}" />
+                      </p:column>
+
+                     <p:column headerText="#{msg['viewTramitesVersion.headerActiva']}" width="3%">
+                          <p:selectBooleanCheckbox value="#{tdVersiones.activa}" disabled="true" />
+                      </p:column>
+
+                    <p:column headerText="#{msg['viewTramitesVersion.headerRelease']}"  width="7%">
+                          <h:outputText value="#{tdVersiones.release}" />
+                      </p:column>
+
+                      <p:column headerText="#{msg['viewTramitesVersion.headerFechaUltima']}" >
+                          <h:outputText value="#{tdVersiones.fechaUltima}">
+                              <f:convertDateTime pattern="dd/MM/yyyy" type="date" timeZone="CET"/>
+                          </h:outputText>
+                      </p:column>
+
+                      <p:column headerText="#{msg['viewTramitesVersion.headerHuella']}" width="16%" >
+                          <h:outputText value="#{tdVersiones.huella}" />
+                      </p:column>
+
+                    <p:column headerText="#{msg['viewTramitesVersion.headerBloqueado']}" rendered="#{viewTramites.isDesarrollo()}" >
+                          <h:outputText value="#{tdVersiones.datosUsuarioBloqueo}" />
+                      </p:column>
+
+                </p:dataTable>
+                 <p:contextMenu for="dataTableVersiones" id="cMenuVers" widgetVar="cMenuVersWV" beforeShow="return true;" class="contextMenuVersiones">
+		            <p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyVers"  process="@this :form:auxCopiar" update=":form:growl" url="javascript:void(0)"/>
+		            <p:menuitem id="mnuNuevaVersionVer" value="#{msg['botones.nuevaVersion']}" icon="fa fa-file" process="@this"  onclick="document.getElementById('form:btnNuevaVersionTramite').click();" />
+		            <p:menuitem id="mnuConsultarVersionVer" value="#{msg['botones.consultarVersion']}" icon="fa fa-edit" onclick="document.getElementById('form:btnConsultarVersion').click();" process="@this"  />
+              		<p:menuitem id="mnuEditarVersionVer" value="#{msg['botones.editarVersion']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditarVersion').click();" process="@this"  />
+                  	<p:menuitem id="mnuBloquearVer" value="#{msg['botones.bloquear']}" icon="fa fa-lock" onclick="document.getElementById('form:btnBloquear').click();" process="@this" />
+                  	<p:menuitem id="mnuDesploquearVer" value="#{msg['botones.desbloquear']}" icon="fa fa-unlock" onclick="document.getElementById('form:btnDesploquear').click();" process="@this" />
+				  	<p:menuitem id="mnuPrevisualizarVer" value="#{msg['botones.previsualizarTramite']}" icon="fa fa-eye" onclick="document.getElementById('form:btnPrevisualizar').click();" process="@this" />
+				   	<p:menuitem id="mnuControlAccesoVer" value="#{msg['botones.controlAcceso']}" icon="fa fa-edit" onclick="triggerControlAcceso();return false;"/>
+                    <p:menuitem id="mnuHistorialVer" value="#{msg['botones.historial']}" icon="fa fa-history" onclick="document.getElementById('form:btnHistorial').click();" process="@this"  />
+                    <p:menuitem id="mnuEliminarVersionVer" value="#{msg['botones.eliminarVersion']}" icon="fa fa-trash-o" onclick="document.getElementById('form:btnEliminarVersion').click();" process="@this"  />
+                    <p:menuitem id="mnuBorrarScriptsVer" value="#{msg['botones.borrarScripts']}" icon="fa fa-trash-o" onclick="document.getElementById('form:btnBorrarScripts').click();" process="@this"  />
+                    <p:menuitem id="mnuValidarVer" value="#{msg['botones.validarVersion']}" icon="fa fa-check-square-o" onclick="document.getElementById('form:btnValidar').click();" process="@this"  />
+                    <p:menuitem id="mnuRefrescarVer" value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" onclick="document.getElementById('form:btnRefrescar').click();" process="@this" />
+                    <p:menuitem id="mnuDuplicarVer" value="#{msg['botones.duplicarVersion']}" icon="fa fa-copy" onclick="triggerClonarTramite(); return false;" update=":form:growl"/>
+                    <p:menuitem id="mnuProcedimientosTramiteVer" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" onclick="document.getElementById('form:btnProcedimientosTramite').click();" process="@this"   />
+					<p:menuitem id="mnuExportarVer" 				value="#{msg['botones.exportarVersion']}" 	icon="fa fa-upload" onclick="document.getElementById('form:btnExportar').click();"  process="@this"    />
+                	<p:menuitem id="mnuGenerarCuadernoCargaVer"  	value="#{msg['botones.generarCC']}" 		icon="fa fa-upload fa-rotate-270" onclick="document.getElementById('form:btnGenerarCuadernoCarga').click();" process="@this"  />
+               		<p:menuitem id="mnuGenerarScriptsVer"  		value="#{msg['botones.generarScripts']}" 	icon="fa fa-bolt" onclick="document.getElementById('form:btnGenerarScripts').click();" process="@this" />
+		        </p:contextMenu>
+		        <pe:clipboard id="clipContextCopyVers" trigger="mnuCopyVers" action="copy" target=":form:auxCopiar">
+		        	<p:ajax event="success" listener="#{viewTramites.copiadoCorr}" process="@this" update="@this :form:growl"/>
+		             <p:ajax event="error" listener="#{viewTramites.copiadoErr}" update="@this :form:growl"/>
+		        </pe:clipboard>
+
+            </p:rowExpansion>
+          </p:dataTable>
+        </div>
+      </div>
+
+      <p:commandButton id="btnDlbEditarTramite" actionListener="#{viewTramites.dblEditarDblTramite}" process="@this" update="growl"  style="display:none">
+             <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl @form"/>
+           </p:commandButton>
+
+      <p:commandButton id="hiddenCommandImportar" styleClass="button"  process="@this" action="#{viewTramites.importar()}"  style="display:none">
+               <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoImportar}" update="growl @form"  />
+          </p:commandButton>
+
+          <p:commandButton id="hiddenCommandProcesarCC" styleClass="button"  process="@this" action="#{viewTramites.procesarCC()}"  style="display:none">
+               <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoImportar}" update="growl @form"  />
+          </p:commandButton>
+
+
+      <p:commandButton id="hiddenCommandClonar" styleClass="button"   process="@this" update="growl @form"  actionListener="#{viewTramites.duplicarVersion()}" style="display:none">
+            <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoClonar}" update="growl @form"/>
+        </p:commandButton>
+
+          <p:commandButton id="hiddenCommandMover" styleClass="button"  process="@this"  action="#{viewTramites.moverTramite()}"  style="display:none" update="growl">
+               <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoMoverTramite}" update="growl form:dataTableTramites"  />
+          </p:commandButton>
+
+          <p:commandButton id="hiddenCommandControlAcceso" styleClass="button" process="@this"  action="#{viewTramites.controlAcceso()}"  style="display:none">
+               <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoControlAcceso}" update="growl form:dataTableTramites"  />
+          </p:commandButton>
+
+      <h:outputScript >
+
+
+        function triggerSearch() {
+              document.getElementById("form:btnSearch").click();
+           }
+         function triggerImportarTramite() {
+              document.getElementById("form:hiddenCommandImportar").click();
+           }
+           function triggerProcesarCC() {
+              document.getElementById("form:hiddenCommandProcesarCC").click();
+           }
+
+           function triggerClonarTramite() {
+              document.getElementById("form:hiddenCommandClonar").click();
+           }
+
+              function triggerMoverTramite() {
+              document.getElementById("form:hiddenCommandMover").click();
+              }
+
+              function triggerControlAcceso() {
+              document.getElementById("form:hiddenCommandControlAcceso").click();
+              }
+
+              function triggerDoubleClick() {
+                document.getElementById("form:btnDlbEditarTramite").click();
+              }
+
+        function triggerDoubleClickArea() {
+          if (document.getElementById("form:btnEditarArea") != null) {
+                  document.getElementById("form:btnEditarArea").click();
+                } else if (document.getElementById("form:btnConsultarArea") != null) {
+                  document.getElementById("form:btnConsultarArea").click();
+                }
+              }
+        function deseleccionar(modo) {
+          $("#form\\:dataTableTramites").find( ".ui-state-highlight").each(function() {
+
+            obj = $( this ).parents("[id^=form\\:dataTableTramites\\:]");
+            if (modo == "T" &amp;&amp; obj.length &gt; 0) {
+               $( this ).removeClass("ui-state-highlight");
+            }
+            if (modo == "V" &amp;&amp;obj.length == 0) {
+               $( this ).removeClass("ui-state-highlight");
+            }
+
+          });
+        }
+
+        </h:outputScript>
+
+
+        <p:confirmDialog global="true" >
+        <p:outputPanel styleClass="confirmar_botonera">
+              <p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form" />
+              <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+        </p:outputPanel>
+        </p:confirmDialog>
+    </h:form>
+
+  </ui:define>
 
 </ui:composition>
