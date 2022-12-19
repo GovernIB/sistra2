@@ -26,9 +26,7 @@
 			<p:panelGrid styleClass="noBorders" columns="1" columnClasses="noPadding-left,,">
 				<p:selectOneRadio id="tipo" value="#{viewDefinicionVersion.tramiteVersion.tipoTramite}" disabled="true">
 		            <f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.tramite']}" itemValue="T"/>
-		            <c:if test="#{UtilJSF.isServicioActivado()}">
-					  	<f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.servicio']}" itemValue="S"/>
-					</c:if>
+					<f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.servicio']}" itemValue="S" disabled="#{!viewDefinicionVersion.isServicioActivado()}"/>
 		        </p:selectOneRadio>
 			</p:panelGrid>
 

@@ -10,7 +10,8 @@
 .imc--fi-termini p:last-child { margin-bottom: 0; }
 
 .imc--explicacio-detallada { padding: 1em 2em; background-color: #fff; }
-.imc--explicacio-detallada > p { margin-bottom: 0; }
+.imc--explicacio-detallada > p { display: flex; align-items: center; margin-bottom: 0; }
+.imc--explicacio-detallada > p button { margin-left: 1em; }
 .imc--explicacio-detallada ul { display: none; margin-top: 1em; }
 
 .imc--e-d ul .imc--num { float: left; font-size: 2em; width: 1em; color: #575353; text-align: right; line-height: 1em; }

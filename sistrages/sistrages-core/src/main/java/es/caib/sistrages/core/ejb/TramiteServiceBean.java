@@ -349,9 +349,9 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void clonadoTramiteVersion(final Long idTramiteVersion, final String usuario, final Long idArea,
+	public Long clonadoTramiteVersion(final Long idTramiteVersion, final String usuario, final Long idArea,
 			final Long idTramite) {
-		tramiteService.clonadoTramiteVersion(idTramiteVersion, usuario, idArea, idTramite);
+		return tramiteService.clonadoTramiteVersion(idTramiteVersion, usuario, idArea, idTramite);
 	}
 
 	@Override

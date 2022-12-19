@@ -11,6 +11,16 @@ article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section { 
   box-sizing: border-box;
 }
 
+
+/* variables */
+
+:root {
+
+	--principal: #3b8e5d;
+
+}
+
+
 /* generic */
 
 @font-face {
@@ -22,7 +32,8 @@ body { font: normal 100% 'Bariol Regular', Arial, Helvetica, sans-serif; color: 
 
 p { font-size: 1.1em; line-height: 1.2em; }
 
-a { color: #3b8e5d; text-decoration: none; padding: 0 .2em; will-change: color, background-color; }
+a { color: var(--principal); text-decoration: none; padding: 0 .2em; will-change: color, background-color; }
+
 a:hover,
 a:focus { color: #fff; background-color: #4dba79; }
 

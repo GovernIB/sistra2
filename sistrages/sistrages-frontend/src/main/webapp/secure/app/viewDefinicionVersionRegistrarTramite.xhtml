@@ -43,14 +43,12 @@
 				        <p:outputPanel id="customPanel" style="margin-bottom:10px">
 				            <p:selectOneRadio id="customRadio" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.destino}" layout="custom" readonly="true">
 				                <f:selectItem itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.registroElectronico']}" itemValue="R"/>
-				                <c:if test="#{UtilJSF.isServicioActivado()}">
-				                	<f:selectItem itemLabel="#{msg['botones.envioRemoto']}" itemValue="E" rendered="#{viewDefinicionVersion.esTipoServicio}"/>
-				                </c:if>
+				                <f:selectItem itemLabel="#{msg['botones.envioRemoto']}" itemValue="E" rendered="#{viewDefinicionVersion.esTipoServicio and viewDefinicionVersion.isServicioActivado()}"/>
 				            </p:selectOneRadio>
 
 				            <h:panelGrid columns="3" cellpadding="5">
 
-								<p:radioButton id="opt1" for="customRadio" itemIndex="0"/>
+								<p:radioButton id="opt1" for="customRadio" itemIndex="0" disabled="true"/>
 								<h:outputLabel for="op1" value="#{msg['viewDefinicionVersionRegistrarTramite.registroElectronico']}"/>
 				                <p:commandButton id="scriptButton1" icon="fa fa-bolt"
 								disabled="#{viewDefinicionVersion.tramitePasoREGSeleccionado.scriptDestinoRegistro eq null}"
@@ -58,13 +56,11 @@
 								value="#{msg['script.SCRIPT_PARAMETROS_REGISTRO.titulo']}"
 								process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptDestinoRegistro)} w100" />
 
-					            <c:if test="#{UtilJSF.isServicioActivado()}">
-									<p:radioButton id="opt2" for="customRadio" itemIndex="1" rendered="#{viewDefinicionVersion.esTipoServicio}"/>
-									<h:outputLabel for="opt2" value="#{msg['botones.envioRemoto']}" rendered="#{viewDefinicionVersion.esTipoServicio}"/>
-					                <p:selectOneMenu  styleClass="w100" id="labeled" alwaysDisplayLabel="true" disabled="true" rendered="#{viewDefinicionVersion.esTipoServicio}">
-					                	<f:selectItem itemLabel="#{viewDefinicionVersion.tramitePasoREGSeleccionado.envioRemoto.identificador}" itemValue=""/>
-					                </p:selectOneMenu>
-				                </c:if>
+								<p:radioButton id="opt2" for="customRadio" itemIndex="1" rendered="#{viewDefinicionVersion.esTipoServicio}" disabled="true"/>
+								<h:outputLabel for="opt2" value="#{msg['botones.envioRemoto']}" rendered="#{viewDefinicionVersion.esTipoServicio}"/>
+				                <p:selectOneMenu  styleClass="w100" id="labeled" alwaysDisplayLabel="true" disabled="true" rendered="#{viewDefinicionVersion.esTipoServicio}">
+				                	<f:selectItem itemLabel="#{viewDefinicionVersion.tramitePasoREGSeleccionado.envioRemoto.identificador}" itemValue=""/>
+				                </p:selectOneMenu>
 				            </h:panelGrid>
 				        </p:outputPanel>
 			        </p:column>

@@ -477,9 +477,11 @@ public class SessionBean {
 		} else {
 
 			for (final TypeOpcionMenuAdmOper opcion : TypeOpcionMenuAdmOper.values()) {
-				item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
-				item.setUrl(UtilJSF.getUrlOpcionMenuAdmOper(opcion, entidad.getCodigo()));
-				model.addElement(item);
+				if (!opcion.equals(TypeOpcionMenuAdmOper.ENVIOS_REMOTOS) || UtilJSF.isServicioActivado()) {
+					item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
+					item.setUrl(UtilJSF.getUrlOpcionMenuAdmOper(opcion, entidad.getCodigo()));
+					model.addElement(item);
+				}
 			}
 
 			// Como es una opción del desplegable, solo se tiene que ver para adm de entidad

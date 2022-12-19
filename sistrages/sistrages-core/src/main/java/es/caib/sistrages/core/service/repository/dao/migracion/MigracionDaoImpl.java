@@ -20,6 +20,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -161,11 +162,6 @@ public class MigracionDaoImpl implements MigracionDao {
 
 			traver = jdbcTemplate.queryForObject(query, param,
 					new BeanPropertyRowMapper<TraverSistra>(TraverSistra.class));
-
-			if (traver != null && !"B".equals(traver.getTrvDestin()) && !"R".equals(traver.getTrvDestin())) {
-				throw new MigracionException("No tiene el destino adecuado. El trámite tiene el campo 'Destino del trámite' con valor 'Consulta' o 'Asistente'"
-						+ " y por ello no se puede migrar.");
-			}
 
 			if (traver != null) {
 				traver.setScriptPersonalizacion(getScript(traver.getTrvCodigo(), "Personalizacion"));
@@ -401,9 +397,12 @@ public class MigracionDaoImpl implements MigracionDao {
 					pDocSistra.getForfor());
 			paramFORMUL.addValue("p_version", pDocSistra.getForver());
 
-			resulFORMUL = jdbcTemplate.queryForObject(queryFORMUL, paramFORMUL,
-					new BeanPropertyRowMapper<FormulSistra>(FormulSistra.class));
-
+			try {
+				resulFORMUL = jdbcTemplate.queryForObject(queryFORMUL, paramFORMUL,
+						new BeanPropertyRowMapper<FormulSistra>(FormulSistra.class));
+			} catch (EmptyResultDataAccessException e) {
+				resulFORMUL = null;
+			}
 			// if (resulFORMUL != null && resulFORMUL.getForVerfun() != 2) {
 			// throw new MigracionException("No tiene la version adecuada");
 			// }
@@ -791,8 +790,9 @@ public class MigracionDaoImpl implements MigracionDao {
 
 							try {
 								if (rs.getBytes("literal") != null) {
-									litAux = "TODO: especifico nivel " + rs.getString("nivaut") + "<br>" + Jsoup.clean(
-											new String(rs.getBytes("literal"), CHARSET_UTF_8), Whitelist.basic()) + "<br>";
+									litAux = "TODO: especifico nivel " + rs.getString("nivaut") + "<br>" + Jsoup
+											.clean(new String(rs.getBytes("literal"), CHARSET_UTF_8), Whitelist.basic())
+											+ "<br>";
 
 									resListaTradNiveles = new Traduccion(rs.getString("idioma"), litAux);
 								}

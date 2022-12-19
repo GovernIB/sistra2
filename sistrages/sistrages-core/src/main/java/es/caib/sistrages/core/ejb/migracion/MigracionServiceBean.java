@@ -12,6 +12,7 @@ import javax.interceptor.Interceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import es.caib.sistrages.core.api.exception.migracion.MigracionException;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
@@ -58,11 +59,4 @@ public class MigracionServiceBean implements MigracionService {
 		return migracionService.migrarTramiteVersion(pIdTramiteSistra, pNumVersionSistra, pIdTramite, pNumVersion,
 				pParams);
 	}
-
-	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
-	public boolean isDestinoCorrecto(final Long pIdTramiteSistra, final int pNumVersionSistra) {
-		return migracionService.isDestinoCorrecto(pIdTramiteSistra, pNumVersionSistra);
-	}
-
 }

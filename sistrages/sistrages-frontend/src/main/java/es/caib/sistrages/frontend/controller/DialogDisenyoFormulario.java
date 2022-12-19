@@ -222,6 +222,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			idiomas = new ArrayList<>();
 			idiomas.add(TypeIdioma.CASTELLANO.toString());
 			idiomas.add(TypeIdioma.CATALAN.toString());
+			idiomas.add(TypeIdioma.INGLES.toString());
 			if (idiomas.contains(UtilJSF.getIdioma().toString())) {
 				idioma = UtilJSF.getIdioma().toString();
 			} else {
@@ -756,7 +757,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 						return false;
 					}
 
-					if (TypeCampoTexto.IBAN.equals(campo.getTipoCampoTexto()) && campo.getNumColumnas() <= 1) {
+					if (TypeCampoTexto.IBAN.equals(campo.getTipoCampoTexto()) && campo.getNumColumnas() <= 2) {
 						addMessageContext(TypeNivelGravedad.ERROR,
 								UtilJSF.getLiteral("dialogDisenyoFormulario.iban.errorNumColumnas"));
 						return false;
@@ -1691,9 +1692,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 				// actualizamos modelo
 				pagina.getLineas().get(linea.getOrden() - 1).addComponente((ComponenteFormulario) componente);
-
 				seleccionaComponente(componente);
-
+				generaNumColumnas();
 			} else {
 				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"), true);
 			}
@@ -1717,7 +1717,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	/**
 	 * Busca si tiene alguna seccion.
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean tieneYaSeccion() {
@@ -3146,8 +3146,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		this.cambios = true;
 		if (this.objetoFormularioEdit != null && this.objetoFormularioEdit instanceof ComponenteFormulario
 				&& isCampoTextoIBAN()
-				&& ((ComponenteFormularioCampoTexto) objetoFormularioEdit).getNumColumnas() <= 1) {
-			((ComponenteFormularioCampoTexto) objetoFormularioEdit).setNumColumnas(2);
+				&& ((ComponenteFormularioCampoTexto) objetoFormularioEdit).getNumColumnas() <= 2) {
+			((ComponenteFormularioCampoTexto) objetoFormularioEdit).setNumColumnas(3);
 		}
 	}
 

@@ -3,6 +3,7 @@ package es.caib.sistrages.frontend.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1123,8 +1124,8 @@ public class ViewTramites extends ViewControllerBase {
 
 					case "ultima":
 						Collections.sort(listaTramiteVersiones,
-								(o1, o2) -> (Integer.parseInt(getUltimaVersion(o1.getTramite().getCodigo())))
-										- (Integer.parseInt(getUltimaVersion(o2.getTramite().getCodigo()))));
+								(o1, o2) -> (getUltimaVersionFecha(o1.getTramite().getCodigo()))
+										.compareTo((getUltimaVersionFecha(o2.getTramite().getCodigo()))));
 						if (sortOrder.equals(SortOrder.DESCENDING)) {
 							Collections.reverse(listaTramiteVersiones);
 						}
@@ -1551,6 +1552,24 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
+	 * Devuelve la fecha ultima version editada
+	 */
+	private Date getUltimaVersionFecha(Long tramite) {
+		final List<TramiteVersion> listaVersiones = tramiteService.listTramiteVersion(tramite, null);
+		Date ftv = null;
+		for (TramiteVersion tv : listaVersiones) {
+			if (ftv == null || (tv != null && tv.getFechaUltima() != null && ftv.compareTo(tv.getFechaUltima()) < 1)) {
+				ftv = tv.getFechaUltima();
+			}
+		}
+		if (ftv != null) {
+			return ftv;
+		} else {
+			return new Date(0);
+		}
+	}
+
+	/**
 	 * Devuelve la ultima version editada parseada
 	 */
 	public String getUltimaVersionFormateado(Long tramite) {
@@ -1808,9 +1827,12 @@ public class ViewTramites extends ViewControllerBase {
 				UtilJSF.addMessageContext(respuesta.getMensaje().getNivel(), respuesta.getMensaje().getMensaje());
 			}
 
-			recuperdatosVersion();
 			// Refrescamos datos
-			// buscarTramites();
+			final TramiteVersion resultado = (TramiteVersion) respuesta.getResult();
+			idArea = resultado.getIdArea().toString();
+			idTramite = resultado.getIdTramite().toString();
+			idTramiteVersion = resultado.getCodigo().toString();
+			buscarTramites();
 		}
 
 	}
@@ -2194,4 +2216,7 @@ public class ViewTramites extends ViewControllerBase {
 		this.renderCmenu = renderCmenu;
 	}
 
+	public boolean isServicioActivado() {
+		return UtilJSF.isServicioActivado();
+	}
 }

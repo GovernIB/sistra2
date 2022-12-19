@@ -123,31 +123,22 @@ public class ViewMigracion extends ViewControllerBase {
 	public void migrar() {
 		if (tramiteSistraSeleccionado != null && versionSistraSeleccionado != null && tramiteSeleccionado != null
 				&& StringUtils.isNotEmpty(version)) {
-			if (migracionService.isDestinoCorrecto(tramiteSistraSeleccionado,
-					Integer.valueOf(versionSistraSeleccionado))) {
-				// migrar
-				final Map<String, Object> params = new HashMap<>();
-				params.put(ConstantesMigracion.IDIOMA, UtilJSF.getSessionBean().getLang());
-				params.put(ConstantesMigracion.USERNAME, UtilJSF.getSessionBean().getUserName());
-				params.put(ConstantesMigracion.UNIFICAR_PANTALLAS, Boolean.valueOf(unificarPantallas));
 
-				try {
-					listaErrores = migracionService.migrarTramiteVersion(tramiteSistraSeleccionado,
-							versionSistraSeleccionado, tramiteSeleccionado, Integer.valueOf(version), params);
-					if (listaErrores == null || listaErrores.isEmpty()) {
-						UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.migracion"));
-					} else {
-						UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.migracionCompleta"));
-						estilo = "display: block;";
-					}
-					disabled = true;
-				} catch (final MigracionException e) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, e.getMessage());
-				}
+			// migrar
+			final Map<String, Object> params = new HashMap<>();
+			params.put(ConstantesMigracion.IDIOMA, UtilJSF.getSessionBean().getLang());
+			params.put(ConstantesMigracion.USERNAME, UtilJSF.getSessionBean().getUserName());
+			params.put(ConstantesMigracion.UNIFICAR_PANTALLAS, Boolean.valueOf(unificarPantallas));
 
+			listaErrores = migracionService.migrarTramiteVersion(tramiteSistraSeleccionado,
+					versionSistraSeleccionado, tramiteSeleccionado, Integer.valueOf(version), params);
+			if (listaErrores == null || listaErrores.isEmpty()) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.migracion"));
 			} else {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.migracionCompleta"));
+				estilo = "display: block;";
 			}
+			disabled = true;
 		}
 	}
 

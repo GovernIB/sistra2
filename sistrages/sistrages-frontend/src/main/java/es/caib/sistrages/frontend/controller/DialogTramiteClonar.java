@@ -125,13 +125,17 @@ public class DialogTramiteClonar extends DialogControllerBase {
 		}
 
 		// Clonamos
-		this.tramiteService.clonadoTramiteVersion(this.data.getCodigo(), UtilJSF.getSessionBean().getUserName(), areaID,
-				tramiteID);
+		Long idVersion = this.tramiteService.clonadoTramiteVersion(this.data.getCodigo(),
+				UtilJSF.getSessionBean().getUserName(), areaID, tramiteID);
 
 		// Retornamos resultado
+		TramiteVersion nuevo = new TramiteVersion();
+		nuevo.setIdArea(areaID);
+		nuevo.setIdTramite(tramiteID);
+		nuevo.setCodigo(idVersion);
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data);
+		result.setResult(nuevo);
 		UtilJSF.closeDialog(result);
 
 	}

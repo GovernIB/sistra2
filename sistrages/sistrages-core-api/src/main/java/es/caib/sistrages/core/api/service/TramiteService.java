@@ -401,7 +401,7 @@ public interface TramiteService {
 	 * @param idArea
 	 * @param idTramite
 	 */
-	public void clonadoTramiteVersion(Long idTramiteVersion, final String usuario, Long idArea, Long idTramite);
+	public Long clonadoTramiteVersion(Long idTramiteVersion, final String usuario, Long idArea, Long idTramite);
 
 	/**
 	 * Devuelve una lista con el id de los tramites que tengan una versión activa
@@ -747,7 +747,9 @@ public interface TramiteService {
 	public boolean getCountTramiteVersionByGfe(Long id);
 
 	/**
-	 * Actualiza la fecha del tramite versión (cuando se toca cualquier cosa del trámite)
+	 * Actualiza la fecha del tramite versión (cuando se toca cualquier cosa del
+	 * trámite)
+	 * 
 	 * @param idTramiteVersion
 	 * @param username
 	 * @param detalle
@@ -756,6 +758,7 @@ public interface TramiteService {
 
 	/**
 	 * Devueve los tramites que utilizan la seccion reutilizable
+	 * 
 	 * @param valueOf
 	 * @return
 	 */
@@ -763,6 +766,7 @@ public interface TramiteService {
 
 	/**
 	 * Lista de secciones reutilizables del tramite.
+	 * 
 	 * @param idTramiteVersion
 	 * @return
 	 */
@@ -770,6 +774,7 @@ public interface TramiteService {
 
 	/**
 	 * Indica si hay tramites asociados.
+	 * 
 	 * @param codigo
 	 * @return
 	 */

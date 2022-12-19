@@ -812,29 +812,30 @@ public class TramiteServiceImpl implements TramiteService {
 	 */
 	@Override
 	@NegocioInterceptor
-	public void clonadoTramiteVersion(final Long idTramiteVersion, final String usuario, final Long idArea,
+	public Long clonadoTramiteVersion(final Long idTramiteVersion, final String usuario, final Long idArea,
 			final Long idTramite) {
 		log.debug("Entrando al clonar idTramiteVersion: {} por el usuario {} ", idTramiteVersion, usuario);
 
-		//Primero vemos si hay que clonar dominios de tipo área al nuevo área.
-		//Recorremos todos los dominios asociados, si hay alguna de tipo área,
-		//  entonces tendremos que ver si existe en la nueva área (si no existe, la creamos)
+		// Primero vemos si hay que clonar dominios de tipo área al nuevo área.
+		// Recorremos todos los dominios asociados, si hay alguna de tipo área,
+		// entonces tendremos que ver si existe en la nueva área (si no existe, la
+		// creamos)
 		List<Dominio> doms = tramiteDao.getDominioSimpleByTramiteId(idTramiteVersion);
 		for (Dominio dom : doms) {
 			if (dom.getAmbito() == TypeAmbito.AREA) {
 				Dominio dominioNuevaArea = dominiosDao.getDominioByIdentificador(TypeAmbito.AREA,
 						dom.getIdentificador(), null, null, null, idArea, null);
 
-				//Si no existe el dominio, lo clonamos
+				// Si no existe el dominio, lo clonamos
 				if (dominioNuevaArea == null) {
 
 					FuenteDatos fuenteDatosOriginal = null;
-					//Si es de tipo Fuente Datos, se obtiene la fuente de datos original
+					// Si es de tipo Fuente Datos, se obtiene la fuente de datos original
 					if (dom.getTipo() == TypeDominio.FUENTE_DATOS && dom.getIdFuenteDatos() != null) {
 						fuenteDatosOriginal = fuenteDatoDao.getById(dom.getIdFuenteDatos());
 					}
 
-					//Obtenemos la conf autenticacion si tiene asociada.
+					// Obtenemos la conf autenticacion si tiene asociada.
 					ConfiguracionAutenticacion confAutOriginal = null;
 					if (dom.getConfiguracionAutenticacion() != null) {
 						confAutOriginal = dom.getConfiguracionAutenticacion();
@@ -844,29 +845,34 @@ public class TramiteServiceImpl implements TramiteService {
 					ConfiguracionAutenticacion confAutClonado = null;
 
 					if (fuenteDatosOriginal != null) {
-						//Clonamos la fuente de datos
-						fdClonado = fuenteDatoDao.clonar(dom.getCodigo().toString(), TypeClonarAccion.CREAR, fuenteDatosOriginal, null, idArea);
+						// Clonamos la fuente de datos
+						fdClonado = fuenteDatoDao.clonar(dom.getCodigo().toString(), TypeClonarAccion.CREAR,
+								fuenteDatosOriginal, null, idArea);
 					}
 					if (confAutOriginal != null) {
-						//Clonamos la conf autenticacion
-						confAutClonado = configuracionAutenticacionDao.clonar(dom.getCodigo().toString(), TypeClonarAccion.CREAR, confAutOriginal, null, idArea);
+						// Clonamos la conf autenticacion
+						confAutClonado = configuracionAutenticacionDao.clonar(dom.getCodigo().toString(),
+								TypeClonarAccion.CREAR, confAutOriginal, null, idArea);
 					}
 
-					//Clonamos el dominios y asociamos con las FD/ConfAut clonadas
-					dominiosDao.clonar(dom.getCodigo().toString(), dom.getIdentificador(), idArea, null, fdClonado, confAutClonado);
+					// Clonamos el dominios y asociamos con las FD/ConfAut clonadas
+					dominiosDao.clonar(dom.getCodigo().toString(), dom.getIdentificador(), idArea, null, fdClonado,
+							confAutClonado);
 				}
 			}
 
 		}
 
-		//Luego clonar el trámite
+		// Luego clonar el trámite
 		final Long idTramiteVersionNuevo = tramiteDao.clonarTramiteVersion(idTramiteVersion, idArea, idTramite);
 
-		//Sustituimos referencias a los viejos scripts
+		// Sustituimos referencias a los viejos scripts
 		sustituirReferenciasScript(idTramiteVersionNuevo, idTramiteVersion);
 
-		//Actualizamos el historial
+		// Actualizamos el historial
 		historialVersionDao.add(idTramiteVersionNuevo, usuario, TypeAccionHistorial.CREACION, "");
+
+		return idTramiteVersionNuevo;
 	}
 
 	private void sustituirReferenciasScript(Long idNuevo, Long idViejo) {

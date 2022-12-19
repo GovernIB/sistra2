@@ -29,7 +29,7 @@ var HTML_FORM_ELECTRONIC;
 // onReady
 
 function appPasAnnexarInicia() {
-
+	
 	imc_docs = imc_contingut.find(".imc--annexes:first");
 	imc_document = $("#imc-document");
 	imc_doc_c = imc_document.find(".imc--c:first");
@@ -83,7 +83,7 @@ $.fn.appAnnexa = function(options) {
 			el_afegits = imc_doc_electronic_form.find(".imc--afegits:first"),
 			html_annexats = el_afegits.find("li:first").html(),
 			inicia = function() {
-
+					
 
 				// botons electrònic enviament
 
@@ -201,7 +201,7 @@ $.fn.appAnnexa = function(options) {
 								}
 
 							});
-
+							
 						if (!esTipusPosible && tipus_posibles !== "null") {
 
 							text_error = txtErrorTipusNoPermes;
@@ -218,7 +218,7 @@ $.fn.appAnnexa = function(options) {
 						// comprovem la mida
 
 						var esMidaPosible = (mida_max_BT > arxiu_mida) ? true : false;
-
+						
 						if (!esMidaPosible && imc_document.attr("data-mida") !== "null") {
 
 							text_error = txtErrorMidaGran;
@@ -228,7 +228,7 @@ $.fn.appAnnexa = function(options) {
 
 					}
 
-
+					
 
 				}
 
@@ -334,10 +334,10 @@ $.fn.appAnnexa = function(options) {
 						}
 					})
 					.done(function( data ) {
-
+						
 						var json = data,
 							estat = json.estado;
-
+						
 						if (estat === "ERROR") {
 							finalitzat({ estat: "error", json: json });
 						} else if (estat === "FATAL") {
@@ -354,9 +354,9 @@ $.fn.appAnnexa = function(options) {
 						if (tipus === "abort") {
 							return false;
 						}
-
+						
 						finalitzat({ estat: "fail" });
-
+						
 					});
 
 			},
@@ -459,10 +459,10 @@ $.fn.appAnnexa = function(options) {
 					.removeClass("imc--on");
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -489,10 +489,10 @@ $.fn.appAnnexaArxiu = function(opcions){
 
 				annexa_input
 					.trigger("click");
-
+				
 			},
 			pinta = function(e) {
-
+				
 				annexa_input = $(this);
 
 				var arxiu_val = annexa_input.val(),
@@ -516,7 +516,7 @@ $.fn.appAnnexaArxiu = function(opcions){
 					arxiu_annexat_el
 						.find("p")
 							.text( arxiu_val );
-
+							
 					input_annex_el
 						.attr("data-emplenat", "si");
 
@@ -526,10 +526,10 @@ $.fn.appAnnexaArxiu = function(opcions){
 						.appPopupTabula();
 
 				}
-
+				
 			},
 			elimina = function(e) {
-
+				
 				var bt_elimina = $(this);
 
 				bt_elimina
@@ -542,7 +542,7 @@ $.fn.appAnnexaArxiu = function(opcions){
 						.remove();
 
 				// input original
-
+				
 				annexa_input
 					.val("");
 
@@ -689,7 +689,7 @@ $.fn.appAnnexaLlistat = function(opcions){
 
 				}
 
-
+				
 
 				// document nom
 
@@ -751,7 +751,7 @@ $.fn.appAnnexaLlistat = function(opcions){
 				var signants_ = item_bt.find(".imc--signants")
 					,hiHa_signants = (signants_.length) ? true : false;
 
-				if (hiHa_signants) {
+				if (hiHa_signants) { 
 
 					var signants_clone = signants_.clone()
 						,signatures_text = item_bt.find(".imc--signatures:first p:first").text() + " ";
@@ -908,7 +908,7 @@ $.fn.appAnnexaLlistat = function(opcions){
 					}
 				})
 				.done(function( data ) {
-
+					
 					var json = data;
 
 					if (json.estado === "SUCCESS" || json.estado === "WARNING") {
@@ -932,14 +932,14 @@ $.fn.appAnnexaLlistat = function(opcions){
 					if (tipus === "abort") {
 						return false;
 					}
-
+					
 					consola("Annexar esborra: error des de FAIL");
 
 					imc_contenidor
 						.errors({ estat: "fail" });
-
+					
 				});
-
+				
 			}
 			,arxiuEsborrat = function(opcions) {
 
@@ -960,9 +960,9 @@ $.fn.appAnnexaLlistat = function(opcions){
 				);
 
 			};
-
+		
 		// events
-
+		
 		elm
 			.off(".appAnnexaLlistat")
 			.on('click.appAnnexaLlistat', "li a", arxiuObri)

@@ -649,7 +649,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	}
 
 	public boolean getEsEnvio() {
-		if (data.getDestino().equals("E")) {
+		if (data.getDestino() != null && data.getDestino().equals("E")) {
 			return true;
 		}
 		return false;
@@ -671,6 +671,10 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 
 	public void setCambios() {
 		this.cambios = true;
+	}
+
+	public boolean isServicioActivado() {
+		return UtilJSF.isServicioActivado();
 	}
 
 }

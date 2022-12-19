@@ -25,7 +25,8 @@ import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 public final class UtilTraducciones {
 	public static String TAMANYO_MAXIMO_REGWEB3 = "200";
 	public static String CARACTERES_NOPERMIT_REGWEB3 = ">,%,*,&,:,;,¿,?,/,|,!,<,¡,\",\\,\n,\t";
-	//public static String CARACTERES_NOPERMIT_SINBARRA = ">,%,*,&,:,;,¿,?,|,!,<,¡,\",\\,\n,\t";
+	// public static String CARACTERES_NOPERMIT_SINBARRA =
+	// ">,%,*,&,:,;,¿,?,|,!,<,¡,\",\\,\n,\t";
 
 	/** Constructor privado para evitar problema. */
 	private UtilTraducciones() {
@@ -211,7 +212,6 @@ public final class UtilTraducciones {
 
 		UtilJSF.openDialog(DialogTraduccionHTML.class, modoAcceso, params, true, 770, 700);
 	}
-
 
 	/**
 	 * Abre un dialog de tipo traduccion (es el método PADRE que realmente crea el

@@ -64,6 +64,8 @@ public class DialogErroresValidacion extends DialogControllerBase {
 	@Inject
 	private ConfiguracionGlobalService cfService;
 
+	private String portapapeles;
+
 	/**
 	 * Inicialización.
 	 */
@@ -418,6 +420,20 @@ public class DialogErroresValidacion extends DialogControllerBase {
 
 	public final void setEsString(Boolean esString) {
 		this.esString = esString;
+	}
+
+	/**
+	 * @return the portapapeles
+	 */
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	/**
+	 * @param portapapeles the portapapeles to set
+	 */
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
 	}
 
 }

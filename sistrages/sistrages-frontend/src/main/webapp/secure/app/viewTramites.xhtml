@@ -559,7 +559,7 @@
                     <p:menuitem id="btnDatosArea" value="#{msg['botones.datosFuenteArea']}" icon="fa fa-table" actionListener="#{viewTramites.datosArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}" />
                 <p:menuitem id="btnSGEArea" value="#{msg['botones.sgeArea']}" icon="fa fa-database" actionListener="#{viewTramites.sgeArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}"/>
                     <p:menuitem id="btnConfiguracionArea" value="#{msg['botones.configuracionAutenticacionArea']}" icon="fa fa-table" actionListener="#{viewTramites.confAutArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}" />
-                <p:menuitem id="btnEnvioRem" value="#{msg['botones.envioRemoto']}" icon="fa fa-paper-plane" actionListener="#{viewTramites.envioRemoto}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}" />
+                <p:menuitem id="btnEnvioRem" value="#{msg['botones.envioRemoto']}" icon="fa fa-paper-plane" actionListener="#{viewTramites.envioRemoto}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta and viewTramites.isServicioActivado()}" />
 
                 <p:separator rendered="#{viewTramites.tienePermisosArea}"/>
                 <p:menuitem id="btnImportar"  				value="#{msg['botones.importarTramite']}" 	icon="fa fa-download"  onclick="triggerImportarTramite(); return false;" 		rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosArea}"></p:menuitem>

@@ -656,8 +656,8 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		elemento.append("<input id=\"").append(campo.getIdComponente()).append("\" "+dataSeccionReutilizable+" type=\"hidden\"/>");
 
 		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente()), escribeCodigo(pCF.getCodigo(), pModoEdicion),
-				escribeTieneScripts(campo, pModoEdicion), " class=\"imc-element imc-el-hidden ", more,
-				"\" data-type=\"hidden\" data-hidden=\"", mostrar, "\">", elemento.toString(), "</div>", 5);
+				escribeTieneScripts(campo, pModoEdicion), " class=\"imc-element imc-el-hidden ", more ,
+				"\" data-type=\"hidden\" data-hidden=\"" , mostrar, "\" "+dataSeccionReutilizable +" >", elemento.toString(), "</div>", 5);
 
 	}
 

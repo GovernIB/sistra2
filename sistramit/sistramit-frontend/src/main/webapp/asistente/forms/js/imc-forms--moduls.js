@@ -369,7 +369,7 @@ $.fn.appDestaca = function(options) {
 
 			},
 			elimina = function() {
-				
+
 				$("#imc-destacat")
 					.remove();
 
@@ -737,7 +737,7 @@ $.fn.appFormsConfiguracio = function(options) {
 									elm
 										.addClass("imc-el-files-"+conf_opcions.lineas);
 
-								}	
+								}
 
 								// mayúscules
 
@@ -1930,7 +1930,7 @@ $.fn.appFormsValida = function(options) {
 
 					if (!idValid && input.attr("data-nss") === "s") {
 
-						idValid = ( appValidaIdentificador.nss(input_val) ) ? true : false;	
+						idValid = ( appValidaIdentificador.nss(input_val) ) ? true : false;
 
 					}
 
@@ -1978,7 +1978,8 @@ $.fn.appFormsValida = function(options) {
 
 					var valor_iban = $.trim( input_val.toUpperCase().replace(/\s/g, "") );
 
-					esError = ( !IBAN.isValid( valor_iban ) ) ? true : false;
+					esError = (IBAN.isValid(valor_iban) && validaCCC(valor_iban)) ? false : true;
+
 					ERROR_TEXT = (esError) ? txtFormDinCampError_iban : false;
 
 				}
@@ -2046,7 +2047,7 @@ $.fn.appFormsAvalua = function(options) {
 				var esAvaluable = (input_element.attr("data-avalua") === "s") ? true : false
 					,esLectura = (input_element.attr("data-lectura") === "s") ? true : false;
 
-				
+
 				// si és lectura no fem res
 
 				if (esLectura) {
@@ -2124,19 +2125,19 @@ $.fn.appFormsAvalua = function(options) {
 
 				// és avaluable, no es lectura i ha canviat el valor en camp de text (data-tipus=texto)
 
-				// console.log("esCampDeText: " + esCampDeText + " esAvaluable: " + esAvaluable + " esLectura: " + esLectura + " valor_inicial_txt: " + valor_inicial_txt + " input.val(): " + input.val());
+				if (esCampDeText && esAvaluable && !esLectura && valor_inicial_txt !== input.val()) {
 
-				if (
-						(esCampDeText && esAvaluable && !esLectura && valor_inicial_txt !== input.val())
-						||
-						(!esCampDeText && esAvaluable && !esLectura)
-				) {
-					// console.log("avaluar si");
 					avalua();
-				} else  {
-					// console.log("avaluar no");
-					element // imc_forms_contenidor
+
+				} else if (!esCampDeText && esAvaluable && !esLectura) {
+
+					avalua();
+
+				} else {
+
+					element
 						.removeAttr("data-preevalua");
+
 				}
 
 			},
@@ -2206,9 +2207,6 @@ $.fn.appFormsAvalua = function(options) {
 			},
 			avalua = function(e) {
 
-
-				// console.log("avalua entra");
-
 				input_element = input.closest(".imc-element");
 				input_id = input_element.attr("data-id");
 				input_tipus = input_element.attr("data-tipus");
@@ -2216,13 +2214,10 @@ $.fn.appFormsAvalua = function(options) {
 				// preevalua?
 
 				if (input_tipus !== "texto" && element.attr("data-preevalua") === "s") { // imc_forms_contenidor.attr("data-preevalua") === "s"
-					// console.log("preevalua = s");
 					return;
 				}
 
 				// missatge enviant
-
-				// console.log("enviaRetarda");
 
 				imc_forms_missatge
 					.attr("tabindex", "-1")
@@ -2415,7 +2410,7 @@ $.fn.appFormsAvalua = function(options) {
 						}
 						,100
 					);
-					
+
 				}
 
 				// configuració
@@ -3183,7 +3178,7 @@ $.fn.appFormsAccions = function(options) {
 			actualCarrega = function() {
 
 				$.when(
-					
+
 					$.getJSON( APP_FORM_PAG_ACTUAL )
 
 				).then(
@@ -3193,7 +3188,7 @@ $.fn.appFormsAccions = function(options) {
 						FORMS_JSON = jsonForm;
 
 						if (FORMS_JSON.estado === "SUCCESS" || FORMS_JSON.estado === "WARNING") {
-							
+
 							// carregat
 
 							actualCarregat();
@@ -3208,7 +3203,7 @@ $.fn.appFormsAccions = function(options) {
 						} else {
 
 							consola("Formulari (carrega pàg. actual): error des de JSON");
-							
+
 							imc_contenidor
 								.errors({ estat: FORMS_JSON.estado, titol: FORMS_JSON.mensaje.titulo, text: FORMS_JSON.mensaje.texto, url: FORMS_JSON.url });
 
@@ -3256,7 +3251,7 @@ $.fn.appFormsAccions = function(options) {
 					,200
 				);
 
-				
+
 
 			},
 			actualMostra = function() {
@@ -3475,7 +3470,7 @@ $.fn.appMissatgeFormAccions = function(options) {
 						.focus();
 
 				}
-				
+
 			},*/
 			desaSurt = function() {
 
@@ -3498,7 +3493,7 @@ $.fn.appMissatgeFormAccions = function(options) {
 					},
 					200
 				);
-		
+
 			},
 			enviament = function(valorsSerialitzats) {
 
@@ -3584,10 +3579,10 @@ $.fn.appMissatgeFormAccions = function(options) {
 				document.location = url;
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -3815,7 +3810,7 @@ $.fn.appFormsPopupTabula = function(options) {
 
 							el
 								.attr("data-tabpos", i+1);
-							
+
 						});
 
 					elems_tab
@@ -3876,7 +3871,7 @@ $.fn.appFormsPopupTabula = function(options) {
 						.focus();
 
 				} else if ( !esShift && tecla === 9){
-				
+
 					e.preventDefault();
 
 					el_num++;
@@ -3891,10 +3886,10 @@ $.fn.appFormsPopupTabula = function(options) {
 				}
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 
 	return this;
@@ -4160,7 +4155,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 
 					},100
 				);
-				
+
 			}
 			,navega = function(e) {
 
@@ -4192,7 +4187,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 							.find("button:first")
 								.addClass("imc--seleccionada")
 								.focus();
-						
+
 					}
 
 					e.preventDefault();
@@ -4224,7 +4219,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 							.find("button:last")
 								.addClass("imc--seleccionada")
 								.focus();
-						
+
 					}
 
 					e.preventDefault();
@@ -4257,7 +4252,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 						}
 
 					}, 100
-					
+
 				);
 
 			}
@@ -4300,7 +4295,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 								.remove();
 
 					}, 50
-					
+
 				);
 
 			};
@@ -4308,7 +4303,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 		// prepara
 
 		prepara();
-		
+
 		// events
 
 		element
@@ -4318,7 +4313,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 			.on("blur.appFormsSelectorAjax", "input[type=text], textarea, .imc--selector-opcions-ajax li button", revisa)
 			.on("click.appFormsSelectorAjax", ".imc--selector-opcions-ajax li button", selecciona)
 			.on("click.appFormsSelectorAjax", "button[data-accio=seleccio-elimina]", elimina);
-		
+
 	});
 
 	return this;
@@ -4359,7 +4354,7 @@ $.fn.appFormsIBAN = function(options) {
 
 		var element = $(this)
 			,enmascara = function(e) {
-				
+
 				/*
 				element
 					.find("input[type=text]")
@@ -4368,13 +4363,13 @@ $.fn.appFormsIBAN = function(options) {
 				//var element = document.getElementById('selector');
 
 				var maskOptions = {
-					mask: 'aa00 0000 0000 0000 0000 0000'
+					mask: 'aa00 **** **** **** **** **** **** **** **** **'
 				};
 
 				var mask = IMask(element.find("input[type=text]")[0], maskOptions);
 
 			};
-		
+
 		// revisem
 
 		if (typeof iMaskLoad === "undefined") {
@@ -4402,7 +4397,7 @@ $.fn.appFormsIBAN = function(options) {
 			);
 
 		}
-		
+
 	});
 
 	return this;

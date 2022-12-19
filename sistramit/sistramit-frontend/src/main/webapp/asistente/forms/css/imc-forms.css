@@ -1490,7 +1490,7 @@ body[data-fluix="p"] .imc-forms-contenidor .imc--forms-nav .imc--tanca { display
 
 /* iban */
 
-.imc-form .imc-el-control input[data-contingut="iban"] { width: 16em; }
+.imc-form .imc-el-control input[data-contingut="iban"] { width: 24em; }
 
 
 

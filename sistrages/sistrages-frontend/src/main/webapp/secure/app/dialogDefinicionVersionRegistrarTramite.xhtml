@@ -150,9 +150,7 @@
 				            	<p:ajax event="change" update="@form" />
 				            	<p:ajax event="change" listener="#{dialogDefinicionVersionRegistrarTramite.setCambios}" process="@this" update="@this"/>
 				                <f:selectItem itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.registroElectronico']}" itemValue="R"/>
-				                <c:if test="#{UtilJSF.isServicioActivado()}">
-				                	<f:selectItem itemLabel="#{msg['botones.envioRemoto']}" itemValue="E"/>
-				                </c:if>
+				                <f:selectItem itemLabel="#{msg['botones.envioRemoto']}" itemValue="E" rendered="#{dialogDefinicionVersionRegistrarTramite.isServicioActivado()}"/>
 				            </p:selectOneRadio>
 
 				            <h:panelGrid columns="3" cellpadding="5">
@@ -165,15 +163,14 @@
 									<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoScriptRegistro}" update="growl buttonScript1"/>
 								</p:commandButton>
 
-				                <c:if test="#{UtilJSF.isServicioActivado()}">
-									<p:radioButton id="opt2" for="customRadio" itemIndex="1" rendered="#{dialogDefinicionVersionRegistrarTramite.esTipoServicio}" onclick="setVacio();"/>
-									<h:outputLabel for="opt2" value="#{msg['botones.envioRemoto']}" rendered="#{dialogDefinicionVersionRegistrarTramite.esTipoServicio}"/>
-					                <p:selectOneMenu  styleClass="w100" id="labeled" alwaysDisplayLabel="true" value="#{dialogDefinicionVersionRegistrarTramite.seleccion}" disabled="#{!dialogDefinicionVersionRegistrarTramite.esEnvio}" rendered="#{dialogDefinicionVersionRegistrarTramite.esTipoServicio}">
-					                	<f:selectItem itemLabel="#{dialogDefinicionVersionRegistrarTramite.data.envioRemoto.identificador}" itemValue="#{dialogDefinicionVersionRegistrarTramite.data.envioRemoto.codigo}"/>
-					                	<f:selectItems value="#{dialogDefinicionVersionRegistrarTramite.enviosRemotos}" />
-					                	<p:ajax event="change" listener="#{dialogDefinicionVersionRegistrarTramite.setCambios}" process="@this" update="@this"/>
-					                </p:selectOneMenu>
-				                </c:if>
+								<p:radioButton id="opt2" for="customRadio" itemIndex="1" rendered="#{dialogDefinicionVersionRegistrarTramite.esTipoServicio}" onclick="setVacio();" disabled="#{!dialogDefinicionVersionRegistrarTramite.isServicioActivado()}"/>
+								<h:outputLabel for="opt2" value="#{msg['botones.envioRemoto']}" rendered="#{dialogDefinicionVersionRegistrarTramite.esTipoServicio}"/>
+				                <p:selectOneMenu  styleClass="w100" id="labeled" alwaysDisplayLabel="true" value="#{dialogDefinicionVersionRegistrarTramite.seleccion}" disabled="#{!dialogDefinicionVersionRegistrarTramite.esEnvio or !dialogDefinicionVersionRegistrarTramite.isServicioActivado()}" rendered="#{dialogDefinicionVersionRegistrarTramite.esTipoServicio}">
+				                	<f:selectItem itemLabel="#{dialogDefinicionVersionRegistrarTramite.data.envioRemoto.identificador}" itemValue="#{dialogDefinicionVersionRegistrarTramite.data.envioRemoto.codigo}"/>
+				                	<f:selectItems value="#{dialogDefinicionVersionRegistrarTramite.enviosRemotos}" />
+				                	<p:ajax event="change" listener="#{dialogDefinicionVersionRegistrarTramite.setCambios}" process="@this" update="@this"/>
+				                </p:selectOneMenu>
+
 				            </h:panelGrid>
 				        </p:outputPanel>
 			        </p:column>

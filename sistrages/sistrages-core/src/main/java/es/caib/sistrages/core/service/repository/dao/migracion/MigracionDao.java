@@ -2,6 +2,7 @@ package es.caib.sistrages.core.service.repository.dao.migracion;
 
 import java.util.List;
 
+import es.caib.sistrages.core.api.exception.migracion.MigracionException;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.migracion.DocumSistra;
@@ -23,8 +24,7 @@ public interface MigracionDao {
 	/**
 	 * Obtiene la lista de las versiones de tramites de Sistra.
 	 *
-	 * @param pIdTramite
-	 *            id. tramite
+	 * @param pIdTramite id. tramite
 	 * @return lista de versiones de tramites
 	 */
 	public List<TramiteVersion> getTramiteVersionSistra(Long pIdTramite);
@@ -32,10 +32,8 @@ public interface MigracionDao {
 	/**
 	 * Obtiene el codigo de la version del tramite
 	 *
-	 * @param pIdTramite
-	 *            id. tramite
-	 * @param pNumVersion
-	 *            num. version
+	 * @param pIdTramite  id. tramite
+	 * @param pNumVersion num. version
 	 * @return codigo de la version del tramite
 	 */
 	public Long getCodigoTramiteVersionSistra(Long pIdTramite, int pNumVersion);
@@ -43,8 +41,7 @@ public interface MigracionDao {
 	/**
 	 * Obtiene la lista de documentos de Sistra
 	 *
-	 * @param pIdTramiteVersion
-	 *            id. tramiteversion
+	 * @param pIdTramiteVersion id. tramiteversion
 	 * @return lista de documentos
 	 */
 	List<DocumSistra> getDocumSistra(Long pIdTramiteVersion);
@@ -52,8 +49,7 @@ public interface MigracionDao {
 	/**
 	 * Obtiene el formulario de un documento
 	 *
-	 * @param pDocSistra
-	 *            doc. sistra
+	 * @param pDocSistra doc. sistra
 	 * @return formulario
 	 */
 	FormulSistra getFormSistra(DocumSistra pDocSistra);
@@ -61,10 +57,8 @@ public interface MigracionDao {
 	/**
 	 * Obtiene el tramiteVersion de Sistra.
 	 *
-	 * @param pIdTramite
-	 *            id. tramite
-	 * @param pNumVersion
-	 *            num version
+	 * @param pIdTramite  id. tramite
+	 * @param pNumVersion num version
 	 * @return tramiteVersion
 	 */
 	TraverSistra getTramiteVersionSistra(Long pIdTramite, int pNumVersion);

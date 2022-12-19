@@ -56,6 +56,7 @@ $.fn.appValida = function(opcions) {
 
 		var validacions_arr = [];
 
+
 		// si no té separador, revisem si hi ha . o ,
 
 		if (!el_separador) {
@@ -131,7 +132,7 @@ $.fn.appValida = function(opcions) {
 
 		// si no té separador, llevem els ceros de l'esquerre
 
-		if (!el_separador) {
+		if (!el_separador && numberExpReg.test(valor)) {
 
 			element
 				.val(parseInt(valor, 10));
@@ -297,7 +298,7 @@ $.fn.appValida = function(opcions) {
 
 		var valor_iban = $.trim( valor.toUpperCase().replace(/\s/g, "") );
 
-		esCorrecte = IBAN.isValid( valor_iban );
+		esCorrecte = IBAN.isValid( valor_iban ) && validaCCC(valor_iban);
 
 	}
 

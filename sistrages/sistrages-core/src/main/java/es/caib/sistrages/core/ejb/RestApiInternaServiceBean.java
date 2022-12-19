@@ -244,6 +244,12 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public String getIdentificadorCompuestoByCodigoVersion(final Long codigoTramiteVersion) {
+		return restApiService.getIdentificadorCompuestoByCodigoVersion(codigoTramiteVersion);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
 	public List<IncidenciaValoracion> getValoraciones(final Long codigo) {
 		return restApiService.getValoraciones(codigo);
 	}

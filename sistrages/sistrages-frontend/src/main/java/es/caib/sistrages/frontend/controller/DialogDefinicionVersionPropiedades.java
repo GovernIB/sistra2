@@ -544,4 +544,8 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		}
 	}
 
+	public boolean isServicioActivado() {
+		return UtilJSF.isServicioActivado();
+	}
+
 }

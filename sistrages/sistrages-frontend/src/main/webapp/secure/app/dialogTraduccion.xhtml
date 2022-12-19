@@ -119,8 +119,9 @@
 
 		  			<p:outputLabel   for="traduccion_de"  id="labelDe"  value="#{msg['de']}"  rendered="#{dialogTraduccion.visibleDe}" />
 		  			<p:inputTextarea id="traduccion_de" value="#{dialogTraduccion.textoDe}" style="width:98%;" required="#{dialogTraduccion.requiredDe}" rendered="#{dialogTraduccion.visibleDe}" readonly="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false"  maxlength="4000"/>
+  			 </h:panelGrid>
 
-					<p:contextMenu for=":formTraduccion">
+  			 <p:contextMenu for=":formTraduccion">
 	       				<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :formTraduccion:auxCopiar" update="growl" url="javascript:void(0)"/>
 				    </p:contextMenu>
 				    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
@@ -128,9 +129,6 @@
 		            	<p:ajax event="error"   listener="#{dialogTraduccion.copiadoErr}"  update="@this growlDialogTraduccion" />
 		        	</pe:clipboard>
 		         	<p:inputText id="auxCopiar" value="#{dialogTraduccion.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
-
-
-  			 </h:panelGrid>
 
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>

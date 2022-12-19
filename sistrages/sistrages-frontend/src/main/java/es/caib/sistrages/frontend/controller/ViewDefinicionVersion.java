@@ -2380,4 +2380,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		return false;
 	}
 
+	public boolean isServicioActivado() {
+		return UtilJSF.isServicioActivado();
+	}
 }

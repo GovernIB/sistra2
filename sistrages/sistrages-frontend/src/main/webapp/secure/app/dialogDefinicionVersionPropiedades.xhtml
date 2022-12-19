@@ -110,9 +110,7 @@
 				<p:panelGrid styleClass="noBorders" columns="1" columnClasses="noPadding-left,,">
 					<p:selectOneRadio id="tipo" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.tipoTramite}">
 			            <f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.tramite']}" itemValue="T"/>
-			            <c:if test="#{UtilJSF.isServicioActivado()}">
-			            	<f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.servicio']}" itemValue="S"/>
-			            </c:if>
+			            <f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.servicio']}" itemValue="S" itemDisabled="#{!dialogDefinicionVersionPropiedades.isServicioActivado()}"/>
 			            <p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@form"/>
 			        </p:selectOneRadio>
 				</p:panelGrid>

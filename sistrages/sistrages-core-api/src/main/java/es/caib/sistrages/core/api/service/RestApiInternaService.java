@@ -111,4 +111,6 @@ public interface RestApiInternaService {
 	List<EnvioRemoto> listEnvioByEntidad(Long idEntidad);
 
 	List<Script> getScriptsSRUByIdFormulario(Long idFormulario, TypeScriptSeccionReutilizable tipoScript);
+
+	String getIdentificadorCompuestoByCodigoVersion(Long codigoTramiteVersion);
 }

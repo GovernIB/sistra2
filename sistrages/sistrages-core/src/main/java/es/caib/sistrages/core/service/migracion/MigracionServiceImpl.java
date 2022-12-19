@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.caib.sistrages.core.api.exception.migracion.MigracionException;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
@@ -113,18 +114,6 @@ public class MigracionServiceImpl implements MigracionService {
 
 	@Override
 	@NegocioInterceptor
-	public boolean isDestinoCorrecto(final Long pIdTramiteSistra, final int pNumVersionSistra) {
-		final TraverSistra traverSistra = recuperaDatosSistra(pIdTramiteSistra, pNumVersionSistra);
-		if (traverSistra != null && !"B".equals(traverSistra.getTrvDestin())
-				&& !"R".equals(traverSistra.getTrvDestin())) {
-			return false;
-		}
-		return true;
-
-	}
-
-	@Override
-	@NegocioInterceptor
 	public List<ErrorMigracion> migrarTramiteVersion(final Long pIdTramiteSistra, final int pNumVersionSistra,
 			final Long pIdTramite, final int pNumVersion, final Map<String, Object> pParams) {
 		final List<ErrorMigracion> listaErrores = new ArrayList<>();
@@ -140,7 +129,26 @@ public class MigracionServiceImpl implements MigracionService {
 			idioma = (String) pParams.get(ConstantesMigracion.IDIOMA);
 		}
 
-		if (traverSistra != null) {
+		for (final DocumSistra documSistra : traverSistra.getListaDocumSistra()) {
+			if (ConstantesMigracion.DOCUM_TIPO_FORMULARIO.equals(documSistra.getTipo())
+					&& documSistra.getFormulario() == null) {
+				final ErrorMigracion error = new ErrorMigracion(null,
+						literales.getLiteral("migracion", "formularioAsociado", idioma), TypeErrorMigracion.ERROR);
+				listaErrores.add(error);
+			}
+		}
+
+		if (tramiteDao.getTramiteVersionByNumVersion(pNumVersion, pIdTramite) != null) {
+			final ErrorMigracion error = new ErrorMigracion(null, literales.getLiteral("migracion", "version", idioma),
+					TypeErrorMigracion.ERROR);
+			listaErrores.add(error);
+		} else if (traverSistra != null && !"B".equals(traverSistra.getTrvDestin())
+				&& !"R".equals(traverSistra.getTrvDestin())) {
+			// destino incorrecto
+			final ErrorMigracion error = new ErrorMigracion(null,
+					literales.getLiteral("error", "destinoIncorrecto", idioma), TypeErrorMigracion.ERROR);
+			listaErrores.add(error);
+		} else if (traverSistra != null) {
 
 			boolean unificarPantallas = false;
 			if (pParams != null) {

@@ -311,6 +311,7 @@ public class JElementoFormulario implements IModelApi {
 		case CAMPO_TEXTO:
 			texto.add(new Traduccion("es", "Campo"));
 			texto.add(new Traduccion("ca", "Camp"));
+			texto.add(new Traduccion("en", "Field"));
 			jModel.setNumeroColumnas(1);
 			jModel.setNoMostrarTexto(false);
 			jModel.setTexto(JLiteral.fromModel(texto));
@@ -322,6 +323,7 @@ public class JElementoFormulario implements IModelApi {
 		case ETIQUETA:
 			texto.add(new Traduccion("es", "Mensaje"));
 			texto.add(new Traduccion("ca", "Missatge"));
+			texto.add(new Traduccion("en", "Message"));
 			jModel.setNumeroColumnas(ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA);
 			jModel.setNoMostrarTexto(false);
 			jModel.setTexto(JLiteral.fromModel(texto));
@@ -329,6 +331,7 @@ public class JElementoFormulario implements IModelApi {
 		case SECCION:
 			texto.add(new Traduccion("es", "Sección"));
 			texto.add(new Traduccion("ca", "Secció"));
+			texto.add(new Traduccion("en", "Section"));
 			jModel.setNumeroColumnas(ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA);
 			jModel.setNoMostrarTexto(false);
 			jModel.setTexto(JLiteral.fromModel(texto));
@@ -338,6 +341,7 @@ public class JElementoFormulario implements IModelApi {
 		case CHECKBOX:
 			texto.add(new Traduccion("es", "Casilla de verificación"));
 			texto.add(new Traduccion("ca", "Casella de verificació"));
+			texto.add(new Traduccion("en", "Checkbox"));
 			jModel.setNumeroColumnas(1);
 			jModel.setNoMostrarTexto(false);
 			jModel.setTexto(JLiteral.fromModel(texto));
@@ -345,6 +349,7 @@ public class JElementoFormulario implements IModelApi {
 		case SELECTOR:
 			texto.add(new Traduccion("es", "Selector"));
 			texto.add(new Traduccion("ca", "Selector"));
+			texto.add(new Traduccion("en", "Selector"));
 			jModel.setNumeroColumnas(1);
 			jModel.setNoMostrarTexto(false);
 			jModel.setTexto(JLiteral.fromModel(texto));
@@ -352,6 +357,7 @@ public class JElementoFormulario implements IModelApi {
 		case CAPTCHA:
 			texto.add(new Traduccion("es", "Incluye el texto de la imagen"));
 			texto.add(new Traduccion("ca", "Inclou el text de la imatge"));
+			texto.add(new Traduccion("en", "Includes the text of the image"));
 			jModel.setNumeroColumnas(1);
 			jModel.setNoMostrarTexto(false);
 			jModel.setTexto(JLiteral.fromModel(texto));

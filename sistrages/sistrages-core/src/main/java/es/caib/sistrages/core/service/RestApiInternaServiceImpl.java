@@ -448,6 +448,14 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 
 	@Override
 	@NegocioInterceptor
+	public String getIdentificadorCompuestoByCodigoVersion(final Long codigoTramiteVersion) {
+		return entidadDao.getByArea(tramiteDao.getTramiteVersion(codigoTramiteVersion).getIdArea()).getIdentificador()
+				+ "." + tramiteDao.getTramiteVersion(codigoTramiteVersion).getIdentificadorArea() + "."
+				+ tramiteDao.getIdentificadorByCodigoVersion(codigoTramiteVersion);
+	}
+
+	@Override
+	@NegocioInterceptor
 	public List<IncidenciaValoracion> getValoraciones(final Long codigo) {
 		return avisoDao.getValoraciones(codigo);
 	}
@@ -478,9 +486,10 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Override
 	@NegocioInterceptor
 	public List<ConfiguracionAutenticacion> listConfiguracionAutenticacion(TypeAmbito entidad, Long codigoEntidad) {
-		List<ConfiguracionAutenticacion> configAutenticaciones = configuracionAutenticacionDao.listConfiguracionAutenticacionRest(entidad, codigoEntidad);
+		List<ConfiguracionAutenticacion> configAutenticaciones = configuracionAutenticacionDao
+				.listConfiguracionAutenticacionRest(entidad, codigoEntidad);
 
-		//Revisamos usu/pwd para sustituir placeholders
+		// Revisamos usu/pwd para sustituir placeholders
 		for (ConfiguracionAutenticacion ca : configAutenticaciones) {
 			String usrRev = ca.getUsuario();
 			if (usrRev != null) {
@@ -488,7 +497,7 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 			}
 
 			String pwdRev = ca.getPassword();
-			if(pwdRev != null) {
+			if (pwdRev != null) {
 				ca.setPassword(configuracionComponent.replacePlaceholders(ca.getPassword()));
 			}
 		}
@@ -497,17 +506,18 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 
 	@Override
 	@NegocioInterceptor
-	public List<Script> getScriptsSRUByIdFormulario(Long idFormulario , TypeScriptSeccionReutilizable tipoScript) {
+	public List<Script> getScriptsSRUByIdFormulario(Long idFormulario, TypeScriptSeccionReutilizable tipoScript) {
 		LOG.debug("getScriptsSRUByIdFormulario ");
 		List<SeccionReutilizable> secciones = tramiteDao.getSeccionesReutilizableByFormulario(idFormulario);
 		List<Script> scripts = new ArrayList<>();
 		if (secciones != null && !secciones.isEmpty()) {
-			for( SeccionReutilizable seccion : secciones) {
-				List<ScriptSeccionReutilizable> scriptsSeccion = this.seccionReutilizableDao.getScriptsByIdSeccionReutilizable(seccion.getCodigo());
-				for(ScriptSeccionReutilizable scriptSeccion : scriptsSeccion) {
-						if (scriptSeccion.getTipoScript() == tipoScript) {
-							scripts.add(scriptSeccion.getScript());
-						}
+			for (SeccionReutilizable seccion : secciones) {
+				List<ScriptSeccionReutilizable> scriptsSeccion = this.seccionReutilizableDao
+						.getScriptsByIdSeccionReutilizable(seccion.getCodigo());
+				for (ScriptSeccionReutilizable scriptSeccion : scriptsSeccion) {
+					if (scriptSeccion.getTipoScript() == tipoScript) {
+						scripts.add(scriptSeccion.getScript());
+					}
 				}
 			}
 		}

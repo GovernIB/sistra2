@@ -78,10 +78,10 @@
 							</p:selectOneMenu >
 
 						<div style="margin-top:5px;">
-							<p:selectBooleanCheckbox value="#{dialogTramiteVersionPrevisualizar.soloIncorporadosSia}" itemLabel="Solo incorporados en SIA" >
+							<p:selectBooleanCheckbox value="#{dialogTramiteVersionPrevisualizar.soloIncorporadosSia}" itemLabel="#{msg['dialogTramiteVersionPrevisualizar.soloSia']}" >
 								<p:ajax event="change" update="dialogTramite:procedimiento" listener="#{dialogTramiteVersionPrevisualizar.recargarProcedimientos()}" />
 							</p:selectBooleanCheckbox>
-							<p:selectBooleanCheckbox value="#{dialogTramiteVersionPrevisualizar.soloVigentes}" itemLabel="Solo Vigentes"  >
+							<p:selectBooleanCheckbox value="#{dialogTramiteVersionPrevisualizar.soloVigentes}" itemLabel="#{msg['dialogTramiteVersionPrevisualizar.soloVigente']}"  >
 								<p:ajax event="change" update="dialogTramite:procedimiento" listener="#{dialogTramiteVersionPrevisualizar.recargarProcedimientos()}" />
 							</p:selectBooleanCheckbox>
 						</div>

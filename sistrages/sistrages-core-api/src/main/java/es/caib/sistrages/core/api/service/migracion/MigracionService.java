@@ -3,6 +3,7 @@ package es.caib.sistrages.core.api.service.migracion;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistrages.core.api.exception.migracion.MigracionException;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.migracion.ErrorMigracion;
@@ -40,13 +41,4 @@ public interface MigracionService {
 	public List<ErrorMigracion> migrarTramiteVersion(Long pIdTramiteSistra, int pNumVersionSistra, Long pIdTramite,
 			int pNumVersion, Map<String, Object> pParams);
 
-	/**
-	 * comprueba destino correcto
-	 *
-	 * @param pIdTramiteSistra  id. tramite Sistra
-	 * @param pNumVersionSistra num. version Sistra
-	 * @param pIdTramite        id. tramite Sistra2
-	 * @return lista de errores si los hay, en caso contrario nulo
-	 */
-	boolean isDestinoCorrecto(Long pIdTramiteSistra, int pNumVersionSistra);
 }

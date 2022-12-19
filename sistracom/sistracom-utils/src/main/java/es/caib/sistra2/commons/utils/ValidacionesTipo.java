@@ -120,8 +120,10 @@ public final class ValidacionesTipo {
 	/**
 	 * Verifica expresión regular.
 	 *
-	 * @param texto   Texto a validar
-	 * @param pattern Patron que valida el texto
+	 * @param texto
+	 *                    Texto a validar
+	 * @param pattern
+	 *                    Patron que valida el texto
 	 * @return boolean true Si cumple el patron false Si no cumple el patron
 	 */
 	private static boolean compruebaRegExp(final String texto, final Pattern pattern) {
@@ -231,13 +233,17 @@ public final class ValidacionesTipo {
 	}
 
 	public boolean esNumeroCuentaIbanValido(final String pNumeroCuenta) {
-		return (checkIBAN(pNumeroCuenta) && esNumeroCuentaValido(pNumeroCuenta.substring(ConstantesNumero.N4)));
+		final boolean ibanCorrecto = checkIBAN(pNumeroCuenta);
+		final boolean cuentaCorrecto = !("ES".equalsIgnoreCase(StringUtils.substring(pNumeroCuenta, 0, 2)))
+				|| esNumeroCuentaValido(pNumeroCuenta.substring(ConstantesNumero.N4));
+		return (ibanCorrecto && cuentaCorrecto);
 	}
 
 	/**
 	 * Comprueba si el codigo SWIFT valido.
 	 *
-	 * @param codigo Codigo SWIFT
+	 * @param codigo
+	 *                   Codigo SWIFT
 	 * @return
 	 */
 	public boolean esNumeroSwiftValido(final String codigo) {
@@ -260,10 +266,14 @@ public final class ValidacionesTipo {
 	/**
 	 * Comprueba si el codigo SWIFT valido.
 	 *
-	 * @param banco     Codigo Banco
-	 * @param pais      Codigo pais
-	 * @param localidad Codigo localidad
-	 * @param sucursal  Codigo sucursal (no obligatorio)
+	 * @param banco
+	 *                      Codigo Banco
+	 * @param pais
+	 *                      Codigo pais
+	 * @param localidad
+	 *                      Codigo localidad
+	 * @param sucursal
+	 *                      Codigo sucursal (no obligatorio)
 	 * @return
 	 */
 	public boolean esNumeroSwiftValido(final String banco, final String pais, final String localidad,
@@ -304,10 +314,14 @@ public final class ValidacionesTipo {
 	/**
 	 * Verifica digitos cuenta.
 	 *
-	 * @param entidad  entidad
-	 * @param sucursal sucursal
-	 * @param dc       digito control
-	 * @param cuenta   num cuenta
+	 * @param entidad
+	 *                     entidad
+	 * @param sucursal
+	 *                     sucursal
+	 * @param dc
+	 *                     digito control
+	 * @param cuenta
+	 *                     num cuenta
 	 * @return true si valido
 	 */
 	private boolean verificaDigitoControlCCC(final String entidad, final String sucursal, final String dc,
@@ -370,7 +384,8 @@ public final class ValidacionesTipo {
 	/**
 	 * Valida si el parametro String es valido (No es nulo y tiene contenido).
 	 *
-	 * @param token String a Validar
+	 * @param token
+	 *                  String a Validar
 	 * @return true: si valido true, false: si cadena vacia
 	 */
 	private static boolean esCadenaVacia(final String token) {
@@ -410,7 +425,8 @@ public final class ValidacionesTipo {
 	/**
 	 * Método para Es numerico de ValidacionesTipoImpl.
 	 *
-	 * @param numero Parámetro numero
+	 * @param numero
+	 *                   Parámetro numero
 	 * @return true, si es satisfactorio
 	 */
 	private boolean esNumerico(final String numero) {
@@ -500,8 +516,10 @@ public final class ValidacionesTipo {
 	/**
 	 * Método para Valida fecha fin de la clase ValidacionesTipoImpl.
 	 *
-	 * @param fechaUno Parámetro fecha uno
-	 * @param fechaDos Parámetro fecha dos
+	 * @param fechaUno
+	 *                     Parámetro fecha uno
+	 * @param fechaDos
+	 *                     Parámetro fecha dos
 	 * @return el int
 	 */
 	private int validaFechaFin(final Date fechaUno, final Date fechaDos) {
@@ -519,11 +537,15 @@ public final class ValidacionesTipo {
 	/**
 	 * Método para Valida fecha fin impl de la clase ValidacionesTipoImpl.
 	 *
-	 * @param fechaUno      Parámetro fecha uno
-	 * @param fechaDos      Parámetro fecha dos
-	 * @param iformatoFecha Parámetro formato fecha
+	 * @param fechaUno
+	 *                          Parámetro fecha uno
+	 * @param fechaDos
+	 *                          Parámetro fecha dos
+	 * @param iformatoFecha
+	 *                          Parámetro formato fecha
 	 * @return el int
-	 * @throws ValidacionTipoException Excepcion validacion
+	 * @throws ValidacionTipoException
+	 *                                     Excepcion validacion
 	 */
 	public int validaFechaFin(final String fechaUno, final String fechaDos, final String iformatoFecha)
 			throws ValidacionTipoException {
@@ -544,8 +566,10 @@ public final class ValidacionesTipo {
 	/**
 	 * Valida contra fecha actual.
 	 *
-	 * @param fecha   Fecha
-	 * @param formato Formato fecha
+	 * @param fecha
+	 *                    Fecha
+	 * @param formato
+	 *                    Formato fecha
 	 * @return entero
 	 * @throws ValidacionTipoException
 	 */
@@ -596,7 +620,8 @@ public final class ValidacionesTipo {
 	/**
 	 * Valida si el objeto pasado es nulo.
 	 *
-	 * @param nulo Objeto a Validar
+	 * @param nulo
+	 *                 Objeto a Validar
 	 * @return true, si es null true si es valido false si no es valido
 	 */
 	private static boolean isNull(final Object nulo) {
@@ -606,7 +631,8 @@ public final class ValidacionesTipo {
 	/**
 	 * Valida si el objeto pasado no es nulo.
 	 *
-	 * @param nulo Objeto a Validar
+	 * @param nulo
+	 *                 Objeto a Validar
 	 * @return true, si es not null true si es valido false si no es valido
 	 */
 	private static boolean isNotNull(final Object nulo) {
@@ -616,8 +642,10 @@ public final class ValidacionesTipo {
 	/**
 	 * Comprueba longitud.
 	 *
-	 * @param texto   Texto
-	 * @param tamanyo Tamaño
+	 * @param texto
+	 *                    Texto
+	 * @param tamanyo
+	 *                    Tamaño
 	 * @return 1 / -1
 	 */
 	private static int longitudJava(final String texto, final long tamanyo) {
@@ -713,8 +741,10 @@ public final class ValidacionesTipo {
 	 * Valida los separadores usados en la conversion de double a cadena y
 	 * viceversa.
 	 *
-	 * @param pSeparadorMiles     Separador miles
-	 * @param pSeparadorDecimales Separador decimales
+	 * @param pSeparadorMiles
+	 *                                Separador miles
+	 * @param pSeparadorDecimales
+	 *                                Separador decimales
 	 * @throws ValidacionTipoException
 	 */
 	private void validarSeparadoresFormatearDouble(final String pSeparadorMiles, final String pSeparadorDecimales)
@@ -831,8 +861,10 @@ public final class ValidacionesTipo {
 	/**
 	 * Parsea fecha de string. Si es nulo, coge el formato por defecto.
 	 *
-	 * @param fecha   fecha
-	 * @param formato formato
+	 * @param fecha
+	 *                    fecha
+	 * @param formato
+	 *                    formato
 	 * @return fecha
 	 * @throws ValidacionTipoException
 	 */
@@ -859,8 +891,10 @@ public final class ValidacionesTipo {
 	/**
 	 * Parsea fecha de string.
 	 *
-	 * @param fecha   fecha
-	 * @param formato formato
+	 * @param fecha
+	 *                    fecha
+	 * @param formato
+	 *                    formato
 	 * @return fecha
 	 * @throws ValidacionTipoException
 	 */
@@ -877,8 +911,10 @@ public final class ValidacionesTipo {
 	/**
 	 * Parsea fecha de string.
 	 *
-	 * @param fecha   fecha
-	 * @param formato formato
+	 * @param fecha
+	 *                    fecha
+	 * @param formato
+	 *                    formato
 	 * @return fecha
 	 * @throws ValidacionTipoException
 	 */
@@ -902,9 +938,12 @@ public final class ValidacionesTipo {
 	/**
 	 * Calcula distancia dias.
 	 *
-	 * @param pFecha1 Fecha inicio
-	 * @param pFecha2 Fecha fin
-	 * @param formato Formato
+	 * @param pFecha1
+	 *                    Fecha inicio
+	 * @param pFecha2
+	 *                    Fecha fin
+	 * @param formato
+	 *                    Formato
 	 * @return
 	 * @throws ValidacionTipoException
 	 */
@@ -921,9 +960,12 @@ public final class ValidacionesTipo {
 	/**
 	 * Calcula distancia entre dias.
 	 *
-	 * @param pFecha1  Fecha inicio
-	 * @param pFecha2  Fecha fin
-	 * @param pHabiles habiles
+	 * @param pFecha1
+	 *                     Fecha inicio
+	 * @param pFecha2
+	 *                     Fecha fin
+	 * @param pHabiles
+	 *                     habiles
 	 * @return distancia entre dias
 	 * @throws ValidacionTipoException
 	 */
@@ -978,7 +1020,8 @@ public final class ValidacionesTipo {
 	/**
 	 * Chequea codigo IBAN de una cuenta.
 	 *
-	 * @param accountNumber Cuenta
+	 * @param accountNumber
+	 *                          Cuenta
 	 * @return true si OK
 	 */
 	private boolean checkIBAN(final String accountNumber) {
@@ -1007,7 +1050,7 @@ public final class ValidacionesTipo {
 		try {
 			final BigInteger ibanNumber = new BigInteger(numericAccountNumber.toString());
 			return ibanNumber.mod(IBANNUMBER_MAGIC_NUMBER).intValue() == 1;
-		} catch (java.lang.NumberFormatException e) {
+		} catch (final java.lang.NumberFormatException e) {
 			return false;
 		}
 
@@ -1130,7 +1173,8 @@ public final class ValidacionesTipo {
 	/**
 	 * Convierte a B64 Url safe.
 	 *
-	 * @param cadena cadena
+	 * @param cadena
+	 *                   cadena
 	 * @return B64 Url safe
 	 * @throws ValidacionTipoException
 	 */
@@ -1149,7 +1193,8 @@ public final class ValidacionesTipo {
 	/**
 	 * Convierte a bytes.
 	 *
-	 * @param tamanyo Tamaño en formato nMB / nKB donde n es un número.
+	 * @param tamanyo
+	 *                    Tamaño en formato nMB / nKB donde n es un número.
 	 * @return tamaño en bytes (si nulo o blanco devuelve 0)
 	 * @throws ValidacionTipoException
 	 */
@@ -1177,7 +1222,8 @@ public final class ValidacionesTipo {
 	/**
 	 * Obtiene cantidad de tamaño fichero especificado como string.
 	 *
-	 * @param tamanyo Tamaño en formato nMB / nKB donde n es un número.
+	 * @param tamanyo
+	 *                    Tamaño en formato nMB / nKB donde n es un número.
 	 * @return tamaño en bytes (si nulo o blanco devuelve 0)
 	 * @throws ValidacionTipoException
 	 */
@@ -1198,7 +1244,8 @@ public final class ValidacionesTipo {
 	/**
 	 * Obtiene cantidad de tamaño fichero especificado como string.
 	 *
-	 * @param tamanyo Tamaño en formato nMB / nKB donde n es un número.
+	 * @param tamanyo
+	 *                    Tamaño en formato nMB / nKB donde n es un número.
 	 * @return tamaño en bytes (si nulo o blanco devuelve nulo)
 	 * @throws ValidacionTipoException
 	 */
