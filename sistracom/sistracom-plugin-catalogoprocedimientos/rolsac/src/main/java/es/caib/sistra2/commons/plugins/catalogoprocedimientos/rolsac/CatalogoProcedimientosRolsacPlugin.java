@@ -52,9 +52,12 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		implements ICatalogoProcedimientosPlugin {
 
 	/** El literal de idioma que no para de estar repetido. **/
+	private static final String TAMANYO_MAXIMO = "200";
+	//private static final String LITERAL_PAGE = "page";
 	private static final String LITERAL_IDIOMA = "lang";
 	private static final String LITERAL_ERROR_NO_CONECTAR = "No se conecta correctamente a ROLSAC";
 	private static final String LITERAL_FILTRO = "filtro";
+	private static final String LITERAL_FILTRO_PAGINACION = "filtroPaginacion";
 
 	/** Log. */
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -107,6 +110,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 			throws CatalogoPluginException {
 
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		//map.add(LITERAL_TAMANYO, TAMANYO_MAXIMO);
+		map.add(LITERAL_FILTRO_PAGINACION, "{\"size\":\"" + TAMANYO_MAXIMO + "\", \"page\" : \"0\"}");
 		map.add(LITERAL_IDIOMA, idioma);
 		map.add(LITERAL_FILTRO, "{\"plataforma\" : \"" + getIdentificadorPlafaformaSistra2() + "\"}");
 
@@ -202,6 +207,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 		// Obtener tramite.
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add(LITERAL_FILTRO_PAGINACION, "{\"size\":\"" + TAMANYO_MAXIMO + "\", \"page\" : \"0\"}");
 		map.add(LITERAL_IDIOMA, idioma);
 		map.add(LITERAL_FILTRO, "{\"plataforma\" : \"" + getIdentificadorPlafaformaSistra2() + "\"}");
 
@@ -273,6 +279,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 		// Obtener tramite.
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add(LITERAL_FILTRO_PAGINACION, "{\"size\":\"" + TAMANYO_MAXIMO + "\", \"page\" : \"0\"}");
 		map.add(LITERAL_IDIOMA, idioma);
 
 		final HttpEntity<MultiValueMap<String, String>> requestProc = new HttpEntity<>(map, headers);
@@ -582,6 +589,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		final List<DefinicionTramiteCP> res = new ArrayList<>();
 
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add(LITERAL_FILTRO_PAGINACION, "{\"size\":\"" + TAMANYO_MAXIMO + "\", \"page\" : \"0\"}");
 		map.add(LITERAL_IDIOMA, idioma);
 		if (version == null) {
 			map.add(LITERAL_FILTRO, "{\"codigoTramiteTelematico\":\"" + idTramite + "\", \"plataforma\" : \""
@@ -623,6 +631,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		final List<DefinicionTramiteCP> res = new ArrayList<>();
 
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add(LITERAL_FILTRO_PAGINACION, "{\"size\":\"" + TAMANYO_MAXIMO + "\", \"page\" : \"0\"}");
 		map.add(LITERAL_IDIOMA, idioma);
 		if (version == null) {
 			map.add(LITERAL_FILTRO, "{\"codigoTramiteTelematico\":\"" + idTramite + "\", \"plataforma\" : \""

@@ -89,8 +89,14 @@
 
 			 }
 
+			function stop(){
+				document.getElementById('dialogDominioExportar:btnExportar').disabled = true;
+				document.getElementById('dialogDominioExportar:btnExportar').classList.add("ui-state-disabled");
+				document.getElementById('dialogDominioExportar:btnHidden').click();
+			}
 			</h:outputScript>
   			<p:outputPanel>
+  				<p:commandButton id="btnHidden" actionListener="#{dialogDominioExportar.expOk}" process="@this" style="display:none"/>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growldialog" widgetVar="growldialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
@@ -112,7 +118,7 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-						<p:commandButton value="#{msg['botones.exportar']}" ajax="false"  styleClass="boton-azul" rendered="#{dialogDominioExportar.mostrarBotonExportar}" process="@this">
+						<p:commandButton id="btnExportar" value="#{msg['botones.exportar']}" ajax="false"  styleClass="boton-azul" onclick="PrimeFaces.monitorDownload(null, stop);" rendered="#{dialogDominioExportar.mostrarBotonExportar}" process="@this">
 		        			<p:fileDownload value="#{dialogDominioExportar.fichero}"></p:fileDownload>
 		        		</p:commandButton>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominioExportar.cancelar}" process="@this"  />

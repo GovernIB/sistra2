@@ -22,7 +22,11 @@
 			<f:viewParam name="ID" value="#{dialogDefinicionVersionPropiedades.id}" />
 			<f:viewAction action="#{dialogDefinicionVersionPropiedades.init}" />
 		</f:metadata>
-
+		<style>
+			.ui-state-disabled{
+				margin-right: 0px !important;
+			}
+		</style>
 	</h:head>
 
 	<h:body>
@@ -38,6 +42,19 @@
 			  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.getElementById("formDialogDefinicionVersionPropiedades:tipo").addEventListener('click', function(ev) {
+			    	var targetElement = event.target || event.srcElement;
+        			if(#{!dialogDefinicionVersionPropiedades.isServicioActivado()}){
+        				while(targetElement.tagName!="TD"){
+        					targetElement = targetElement.parentNode;
+        				}
+        				var el = targetElement.children[0].children[0].children[0];
+        				if(el.id=="formDialogDefinicionVersionPropiedades:tipo:1"){
+        					document.getElementById('formDialogDefinicionVersionPropiedades:hidden2').click();
+        				}
+        			}
+				}, false);
 
 				document.addEventListener('contextmenu', function(ev) {
 			    	ev.preventDefault();
@@ -92,6 +109,10 @@
 
 			 }
 
+			 function metodo(el){
+			 	console.log(el);
+			 }
+
 			</h:outputScript>
 			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
@@ -107,10 +128,11 @@
 				</p:panelGrid>
 
 				<p:outputLabel value="#{msg['dialogDominioExportar.tipo']} *" />
+
 				<p:panelGrid styleClass="noBorders" columns="1" columnClasses="noPadding-left,,">
 					<p:selectOneRadio id="tipo" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.tipoTramite}">
 			            <f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.tramite']}" itemValue="T"/>
-			            <f:selectItem itemLabel="#{msg['dialogTramiteProcedimientos.servicio']}" itemValue="S" itemDisabled="#{!dialogDefinicionVersionPropiedades.isServicioActivado()}"/>
+			            <f:selectItem id="opcServicio" itemLabel="#{msg['dialogTramiteProcedimientos.servicio']}" itemValue="S" itemDisabled="#{!dialogDefinicionVersionPropiedades.isServicioActivado()}" style="width:fit-content;"/>
 			            <p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@form"/>
 			        </p:selectOneRadio>
 				</p:panelGrid>
@@ -155,9 +177,11 @@
 
 					<p:row>
 						<p:column styleClass="noPadding-left">
-							<p:selectBooleanCheckbox id="sinAutenticacion"  itemLabel="#{msg['viewDefinicionVersionPropiedades.sinautenticacion']}" disabled="#{dialogDefinicionVersionPropiedades.tramiteVersion.tipoTramite=='T'}" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.noAutenticado}"  style="width:170px"  >
-								<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
-							</p:selectBooleanCheckbox>
+							<div id="sinAutenticacionDiv" onclick="document.getElementById('formDialogDefinicionVersionPropiedades:hidden').click();">
+								<p:selectBooleanCheckbox id="sinAutenticacion"  itemLabel="#{msg['viewDefinicionVersionPropiedades.sinautenticacion']}" disabled="#{dialogDefinicionVersionPropiedades.tramiteVersion.tipoTramite=='T'}" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.noAutenticado}" style="width:170px">
+									<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
+								</p:selectBooleanCheckbox>
+							</div>
 						</p:column>
 						<p:column>
 							<p:spacer width="8"/>
@@ -240,6 +264,9 @@
         	</pe:clipboard>
 
 		    <p:inputText id="auxCopiar" value="#{dialogDefinicionVersionPropiedades.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+
+		    <p:commandButton id="hidden" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionPropiedades.lanzarAviso()}" process="@this" update="growlDialog" style="display:none;"/>
+			<p:commandButton id="hidden2" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionPropiedades.lanzarAviso2()}" process="@this" update="growlDialog" style="display:none;"/>
 		</h:form>
 	</h:body>
 

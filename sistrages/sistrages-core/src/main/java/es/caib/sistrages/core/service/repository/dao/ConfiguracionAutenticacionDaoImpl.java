@@ -55,8 +55,8 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * es.caib.sistrages.core.service.repository.dao.ConfiguracionAutenticacionDao#getById(
-	 * java. lang.Long)
+	 * es.caib.sistrages.core.service.repository.dao.ConfiguracionAutenticacionDao#
+	 * getById( java. lang.Long)
 	 */
 	@Override
 	public ConfiguracionAutenticacion getById(final Long pId) {
@@ -66,8 +66,8 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 			throw new FaltanDatosException(FALTA_IDENTIFICADOR);
 		}
 
-		final JConfiguracionAutenticacion jConfiguracionAutenticacion = entityManager.find(JConfiguracionAutenticacion.class,
-				pId);
+		final JConfiguracionAutenticacion jConfiguracionAutenticacion = entityManager
+				.find(JConfiguracionAutenticacion.class, pId);
 
 		if (jConfiguracionAutenticacion == null) {
 			throw new NoExisteDato(NO_EXISTE_EL_CONF_AUT + pId);
@@ -82,8 +82,8 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * es.caib.sistrages.core.service.repository.dao.ConfiguracionAutenticacionDao#add(long,
-	 * es.caib.sistrages.core.api.model.ConfiguracionAutenticacion)
+	 * es.caib.sistrages.core.service.repository.dao.ConfiguracionAutenticacionDao#
+	 * add(long, es.caib.sistrages.core.api.model.ConfiguracionAutenticacion)
 	 */
 	@Override
 	public Long add(final Long pIdArea, final Long idEntidad, final ConfiguracionAutenticacion data) {
@@ -118,10 +118,7 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 			}
 		}
 
-
-
-		final JConfiguracionAutenticacion jConfiguracionAutenticacion = JConfiguracionAutenticacion
-				.fromModel(data);
+		final JConfiguracionAutenticacion jConfiguracionAutenticacion = JConfiguracionAutenticacion.fromModel(data);
 		jConfiguracionAutenticacion.setArea(jArea);
 		jConfiguracionAutenticacion.setEntidad(jEntidad);
 		entityManager.persist(jConfiguracionAutenticacion);
@@ -132,8 +129,8 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * es.caib.sistrages.core.service.repository.dao.ConfiguracionAutenticacionDao#remove(
-	 * java. lang.Long)
+	 * es.caib.sistrages.core.service.repository.dao.ConfiguracionAutenticacionDao#
+	 * remove( java. lang.Long)
 	 */
 	@Override
 	public void remove(final Long pId) {
@@ -144,7 +141,7 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 		queryGestor.setParameter("codigoAut", pId);
 		final List<JGestorExternoFormularios> gestores = queryGestor.getResultList();
 		if (gestores != null && !gestores.isEmpty()) {
-			for(JGestorExternoFormularios gestor : gestores) {
+			for (JGestorExternoFormularios gestor : gestores) {
 				gestor.setConfiguracionAutenticacion(null);
 				entityManager.merge(gestor);
 			}
@@ -156,15 +153,14 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 		queryDom.setParameter("codigoAut", pId);
 		final List<JDominio> dominios = queryDom.getResultList();
 		if (dominios != null && !dominios.isEmpty()) {
-			for(JDominio dominio : dominios) {
+			for (JDominio dominio : dominios) {
 				dominio.setConfiguracionAutenticacion(null);
 				entityManager.merge(dominio);
 			}
 		}
 
-
-		final JConfiguracionAutenticacion jConfiguracionAutenticacion = entityManager.find(JConfiguracionAutenticacion.class,
-				pId);
+		final JConfiguracionAutenticacion jConfiguracionAutenticacion = entityManager
+				.find(JConfiguracionAutenticacion.class, pId);
 		if (jConfiguracionAutenticacion == null) {
 			throw new NoExisteDato(NO_EXISTE_EL_CONF_AUT + pId);
 		}
@@ -175,8 +171,8 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * es.caib.sistrages.core.service.repository.dao.ConfiguracionAutenticacionDao#update(es.
-	 * caib. sistrages.core.api.model.ConfiguracionAutenticacion)
+	 * es.caib.sistrages.core.service.repository.dao.ConfiguracionAutenticacionDao#
+	 * update(es. caib. sistrages.core.api.model.ConfiguracionAutenticacion)
 	 */
 	@Override
 	public void update(final ConfiguracionAutenticacion pConfiguracionAutenticacion) {
@@ -184,8 +180,8 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 			throw new FaltanDatosException(FALTA_CONF_AUTENTICACION);
 		}
 
-		final JConfiguracionAutenticacion jConfiguracionAutenticacion = entityManager.find(JConfiguracionAutenticacion.class,
-				pConfiguracionAutenticacion.getCodigo());
+		final JConfiguracionAutenticacion jConfiguracionAutenticacion = entityManager
+				.find(JConfiguracionAutenticacion.class, pConfiguracionAutenticacion.getCodigo());
 		if (jConfiguracionAutenticacion == null) {
 			throw new NoExisteDato(NO_EXISTE_EL_CONF_AUT + pConfiguracionAutenticacion.getCodigo());
 		}
@@ -197,13 +193,14 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see es.caib.sistrages.core.service.repository.dao.ConfiguracionAutenticacionDao#
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.ConfiguracionAutenticacionDao#
 	 * getAllByFiltro( java.lang.Long,
 	 * es.caib.sistrages.core.api.model.types.TypeIdioma, java.lang.String)
 	 */
 	@Override
-	public List<ConfiguracionAutenticacion> getAllByFiltro(final TypeAmbito ambito, final Long idArea, final Long idEntidad, final TypeIdioma pIdioma,
-			final String pFiltro) {
+	public List<ConfiguracionAutenticacion> getAllByFiltro(final TypeAmbito ambito, final Long idArea,
+			final Long idEntidad, final TypeIdioma pIdioma, final String pFiltro) {
 		if (ambito == null) {
 			throw new FaltanDatosException(FALTA_AMBITO);
 		}
@@ -219,22 +216,21 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 		return listarConfiguracionAutenticacion(ambito, idArea, idEntidad, pIdioma, pFiltro);
 	}
 
-
 	/**
 	 * Listar avisos.
 	 *
-	 * @param idArea idArea
-	 * @param pIdioma    idioma
-	 * @param pFiltro    filtro
+	 * @param idArea  idArea
+	 * @param pIdioma idioma
+	 * @param pFiltro filtro
 	 * @return Listado de avisos
 	 */
 	@SuppressWarnings("unchecked")
-	private List<ConfiguracionAutenticacion> listarConfiguracionAutenticacion(final TypeAmbito ambito, final Long idArea, final Long idEntidad, final TypeIdioma pIdioma,
-			final String pFiltro) {
+	private List<ConfiguracionAutenticacion> listarConfiguracionAutenticacion(final TypeAmbito ambito,
+			final Long idArea, final Long idEntidad, final TypeIdioma pIdioma, final String pFiltro) {
 		final List<ConfiguracionAutenticacion> listaConfiguraciones = new ArrayList<>();
 		StringBuilder sql = new StringBuilder("select a from JConfiguracionAutenticacion as a");
 
-		sql.append( " where a.ambito = :ambito ");
+		sql.append(" where a.ambito = :ambito ");
 		if (ambito == TypeAmbito.AREA) {
 			sql.append(" AND a.area.codigo = :idArea ");
 		}
@@ -242,7 +238,7 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 			sql.append(" AND a.entidad.codigo = :idEntidad ");
 		}
 		if (StringUtils.isNotBlank(pFiltro)) {
-			sql .append( "  AND (LOWER(a.descripcion) LIKE :filtro OR LOWER(a.identificador) LIKE :filtro) ");
+			sql.append("  AND (LOWER(a.descripcion) LIKE :filtro OR LOWER(a.identificador) LIKE :filtro) ");
 		}
 		sql.append("  order by a.identificador, a.codigo");
 
@@ -276,21 +272,63 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 			throw new FaltanDatosException(FALTA_AREA);
 		}
 
-		final String sql = "delete from JConfiguracionAutenticacion a where a.area.codigo = :idArea";
-		final Query query = entityManager.createQuery(sql);
-		query.setParameter("idArea", pIdArea);
-		query.executeUpdate();
+		final String sqlConfAut = "select a from JConfiguracionAutenticacion as a where a.area.codigo = :idArea";
+		final Query queryConfAut = entityManager.createQuery(sqlConfAut);
+		queryConfAut.setParameter("idArea", pIdArea);
+
+		final List<JConfiguracionAutenticacion> confAut = queryConfAut.getResultList();
+
+		Long pId = null;
+
+		for (JConfiguracionAutenticacion caut : confAut) {
+			pId = caut.getCodigo();
+
+			if (pId != null) {
+				String sqlGestor = "select a from JGestorExternoFormularios as a where a.configuracionAutenticacion.codigo = :codigoAut";
+				final Query queryGestor = entityManager.createQuery(sqlGestor);
+
+				queryGestor.setParameter("codigoAut", pId);
+				final List<JGestorExternoFormularios> gestores = queryGestor.getResultList();
+				if (gestores != null && !gestores.isEmpty()) {
+					for (JGestorExternoFormularios gestor : gestores) {
+						gestor.setConfiguracionAutenticacion(null);
+						entityManager.merge(gestor);
+					}
+				}
+
+				String sqlDom = "select a from JDominio as a where a.configuracionAutenticacion.codigo = :codigoAut";
+				final Query queryDom = entityManager.createQuery(sqlDom);
+
+				queryDom.setParameter("codigoAut", pId);
+				final List<JDominio> dominios = queryDom.getResultList();
+				if (dominios != null && !dominios.isEmpty()) {
+					for (JDominio dominio : dominios) {
+						dominio.setConfiguracionAutenticacion(null);
+						entityManager.merge(dominio);
+					}
+				}
+
+				final JConfiguracionAutenticacion jConfiguracionAutenticacion = entityManager
+						.find(JConfiguracionAutenticacion.class, pId);
+				if (jConfiguracionAutenticacion == null) {
+					throw new NoExisteDato(NO_EXISTE_EL_CONF_AUT + pId);
+				}
+				entityManager.remove(jConfiguracionAutenticacion);
+			}
+		}
 	}
 
 	@Override
-	public boolean existeConfiguracionAutenticacion(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut) {
+	public boolean existeConfiguracionAutenticacion(TypeAmbito ambito, String identificador, Long codigoEntidad,
+			Long codigoArea, Long codigoConfAut) {
 		Query query = getQuery(true, ambito, identificador, codigoEntidad, codigoArea, codigoConfAut, null);
 		final Long cuantos = (Long) query.getSingleResult();
 		return cuantos != 0l;
 	}
 
 	@Override
-	public ConfiguracionAutenticacion getConfiguracionAutenticacion(TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut) {
+	public ConfiguracionAutenticacion getConfiguracionAutenticacion(TypeAmbito ambito, String identificador,
+			Long codigoEntidad, Long codigoArea, Long codigoConfAut) {
 		Query query = getQuery(false, ambito, identificador, codigoEntidad, codigoArea, codigoConfAut, null);
 		final List<JConfiguracionAutenticacion> confAuts = query.getResultList();
 		final ConfiguracionAutenticacion confAut;
@@ -302,7 +340,8 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 		return confAut;
 	}
 
-	private Query getQuery (boolean isTotal, TypeAmbito ambito, String identificador, Long codigoEntidad, Long codigoArea, Long codigoConfAut, Long codigoEntidadArea) {
+	private Query getQuery(boolean isTotal, TypeAmbito ambito, String identificador, Long codigoEntidad,
+			Long codigoArea, Long codigoConfAut, Long codigoEntidadArea) {
 		final StringBuilder sql = new StringBuilder("select ");
 		if (isTotal) {
 			sql.append(" count(d) ");
@@ -346,7 +385,6 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 			query.setParameter("codigoConfAut", codigoConfAut);
 		}
 
-
 		return query;
 	}
 
@@ -358,14 +396,20 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 
 		sql.append(" where a.ambito in (:ambitos)");
 		if (StringUtils.isNotBlank(filtro)) {
-			sql .append( "  AND (LOWER(a.descripcion) LIKE :filtro OR LOWER(a.identificador) LIKE :filtro) ");
+			sql.append("  AND (LOWER(a.descripcion) LIKE :filtro OR LOWER(a.identificador) LIKE :filtro) ");
 		}
-		sql .append( "  order by a.identificador, a.codigo");
+		sql.append("  order by a.identificador, a.codigo");
 
 		List<String> ambitos = new ArrayList<>();
-		if (checkAmbitoGlobal) { ambitos.add(TypeAmbito.GLOBAL.toString()); }
-		if (checkAmbitoEntidad) { ambitos.add(TypeAmbito.ENTIDAD.toString()); }
-		if (checkAmbitoArea) { ambitos.add(TypeAmbito.AREA.toString()); }
+		if (checkAmbitoGlobal) {
+			ambitos.add(TypeAmbito.GLOBAL.toString());
+		}
+		if (checkAmbitoEntidad) {
+			ambitos.add(TypeAmbito.ENTIDAD.toString());
+		}
+		if (checkAmbitoArea) {
+			ambitos.add(TypeAmbito.AREA.toString());
+		}
 
 		final Query query = entityManager.createQuery(sql.toString());
 		query.setParameter("ambitos", ambitos);
@@ -416,15 +460,18 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 	}
 
 	@Override
-	public ConfiguracionAutenticacion clonar(String dominioID, TypeClonarAccion accion, ConfiguracionAutenticacion confAut,
-			Long idEntidad, Long areaID) {
+	public ConfiguracionAutenticacion clonar(String dominioID, TypeClonarAccion accion,
+			ConfiguracionAutenticacion confAut, Long idEntidad, Long areaID) {
 		JDominio dominio = entityManager.find(JDominio.class, Long.valueOf(dominioID));
 		JConfiguracionAutenticacion ca = null;
 		JConfiguracionAutenticacion caOriginal = dominio.getConfiguracionAutenticacion();
 
-		//Paso extra, por si acaso, al crear, resulta que ya existe
-		// En caso de que ya existe y la accion fuese crear, pasa automáticamente a reemplazar
-		if (accion == TypeClonarAccion.CREAR && existeConfiguracionAutenticacion(TypeAmbito.fromString(caOriginal.getAmbito()), caOriginal.getIdentificador(), idEntidad, areaID, null)) {
+		// Paso extra, por si acaso, al crear, resulta que ya existe
+		// En caso de que ya existe y la accion fuese crear, pasa automáticamente a
+		// reemplazar
+		if (accion == TypeClonarAccion.CREAR
+				&& existeConfiguracionAutenticacion(TypeAmbito.fromString(caOriginal.getAmbito()),
+						caOriginal.getIdentificador(), idEntidad, areaID, null)) {
 			accion = TypeClonarAccion.REEMPLAZAR;
 		}
 
@@ -449,7 +496,7 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 			ca.setUsuario(caOriginal.getUsuario());
 			entityManager.persist(ca);
 
-		} else if (accion == TypeClonarAccion.REEMPLAZAR){ //CREAMOS
+		} else if (accion == TypeClonarAccion.REEMPLAZAR) { // CREAMOS
 
 			ca = entityManager.find(JConfiguracionAutenticacion.class, confAut.getCodigo());
 			ca.setDescripcion(caOriginal.getDescripcion());
@@ -457,14 +504,12 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 			ca.setUsuario(caOriginal.getUsuario());
 			entityManager.merge(ca);
 
-
 		}
 
 		// Flusheamos los datos vueltos a crear
 		entityManager.flush();
 
- 		return ca.toModel();
+		return ca.toModel();
 	}
-
 
 }

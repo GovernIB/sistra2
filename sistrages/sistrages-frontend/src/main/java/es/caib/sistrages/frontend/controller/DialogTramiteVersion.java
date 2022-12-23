@@ -77,7 +77,7 @@ public class DialogTramiteVersion extends DialogControllerBase {
 				UtilJSF.getSessionBean().getUserName());
 		this.dataVersion.setCodigo(idVersion);
 		this.dataVersion.setIdTramite(Long.valueOf(id));
-		this.dataVersion.setIdArea(Long.valueOf(idArea));
+		this.dataVersion.setIdArea(tramiteService.getAreaTramite(Long.valueOf(id)).getCodigo());
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();

@@ -186,6 +186,10 @@ public class DialogDominioExportar extends DialogControllerBase {
 
 	}
 
+	public void expOk() {
+		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.exportar.ok"));
+	}
+
 	/**
 	 * Incluir version.
 	 *

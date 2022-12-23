@@ -195,6 +195,20 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	}
 
 	/**
+	 * Lanzar aviso.
+	 */
+	public void lanzarAviso() {
+		addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noAut"));
+	}
+
+	/**
+	 * Lanzar aviso.
+	 */
+	public void lanzarAviso2() {
+		addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.servicio"));
+	}
+
+	/**
 	 * Cancelar.
 	 */
 	public void cancelar() {

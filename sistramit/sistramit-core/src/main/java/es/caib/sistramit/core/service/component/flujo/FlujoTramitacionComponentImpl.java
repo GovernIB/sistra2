@@ -424,7 +424,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		st.getDatosTramite().setTipoDestino(tipoDestino);
 		st.getDatosTramite().setTipoFlujo(tipoFlujo);
 		st.getDatosTramite()
-				.setTituloTramite(tramiteCP.getProcedimiento().getDescripcion() + " - " + tramiteCP.getDescripcion());
+				.setTituloTramite(tramiteCP.getDescripcion() + " - " + tramiteCP.getProcedimiento().getDescripcion());
 		st.getDatosTramite().setUrlInicio(pUrlInicio);
 		st.getDatosTramite().setParametrosInicio(pParametrosInicio);
 		st.getDatosTramite().setDefinicionTramiteCP(tramiteCP);

@@ -240,16 +240,16 @@ public class TramiteServiceImpl implements TramiteService {
 
 		// Borramos roles area
 		rolDao.removeByArea(id);
+		// Borramos versiones tramites area
+		tramiteDao.removeTramiteVersionByArea(id);
+		// Borramos tramites area
+		tramiteDao.removeByArea(id);
 		// Borramos envios remotos
 		erDao.removeByArea(id);
 		// Borramos dominio area
 		dominiosDao.removeByArea(id);
 		// Borramos fuente datos area
 		fuenteDatoDao.removeByArea(id);
-		// Borramos versiones tramites area
-		tramiteDao.removeTramiteVersionByArea(id);
-		// Borramos tramites area
-		tramiteDao.removeByArea(id);
 		// Borramos gestor externo area
 		gestorExternoDao.removeByArea(id);
 		// Borramos configuracion autenticacion area

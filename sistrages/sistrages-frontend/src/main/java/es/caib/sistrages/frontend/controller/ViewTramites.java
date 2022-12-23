@@ -1,5 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -192,6 +193,28 @@ public class ViewTramites extends ViewControllerBase {
 			versionSeleccionada = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		}
 
+	}
+
+	public void asignarSeleccionado() {
+		unSelectVersionTramite();
+		String codigo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("param");
+		String x = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("x");
+		String y = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("y");
+		// TramiteVersiones tv = new
+		// TramiteVersiones(tramiteService.getTramite(Long.parseLong(codigo)),
+		// tramiteService.listTramiteVersion(Long.parseLong(codigo), null));
+		Tramite tr = new Tramite();
+		try {
+			tr.setCodigo(Long.parseLong(codigo));
+			List<TramiteVersion> ltv = new ArrayList<TramiteVersion>();
+			TramiteVersiones tv = new TramiteVersiones(tr, ltv);
+			this.setTramiteSeleccionada(tv);
+		} catch (NumberFormatException e) {
+			this.setTramiteSeleccionada(null);
+		}
+		PrimeFaces.current().ajax().update("form:toolbarTramites");
+		PrimeFaces.current()
+				.executeScript("document.elementFromPoint(" + x + ", " + y + ").classList.add('resaltar');");
 	}
 
 	/**
@@ -1254,9 +1277,9 @@ public class ViewTramites extends ViewControllerBase {
 			}
 		}
 		i += paginaIni;
-		float pDeci = (float) ((i % paginacion) * 0.1);
+		DecimalFormat formato1 = new DecimalFormat("000.00");
 		float pEntera = ((float) i / (float) paginacion);
-		int resultado = (int) (pEntera - pDeci);
+		int resultado = Integer.parseInt(formato1.format(pEntera).substring(0, formato1.format(pEntera).length() - 3));
 		return resultado;
 		/*
 		 * } else { return 0; }
@@ -1348,7 +1371,9 @@ public class ViewTramites extends ViewControllerBase {
 
 	/** SelectTramite. **/
 	public void unSelectVersionTramite() {
-		versionSeleccionada = null;
+		this.setVersionSeleccionada(null);
+		idTramite = null;
+		idTramiteVersion = null;
 	}
 
 	/**
@@ -1401,7 +1426,9 @@ public class ViewTramites extends ViewControllerBase {
 			idTramiteVersion = resultado.getCodigo().toString();
 
 			// Refrescamos datos
-			buscarTramites();
+			buscarTramites(filtro, false);
+			this.setVersionSeleccionada(resultado);
+			PrimeFaces.current().ajax().update("form:toolbarTramites");
 		}
 	}
 
@@ -1829,10 +1856,18 @@ public class ViewTramites extends ViewControllerBase {
 
 			// Refrescamos datos
 			final TramiteVersion resultado = (TramiteVersion) respuesta.getResult();
+			filtro = "";
+			filtrar();
 			idArea = resultado.getIdArea().toString();
 			idTramite = resultado.getIdTramite().toString();
 			idTramiteVersion = resultado.getCodigo().toString();
+			listaAreasSeleccionadas.clear();
+			listaAreasSeleccionadas.add(tramiteService.getArea(resultado.getIdArea()));
 			buscarTramites();
+			resultado.setBloqueada(false);
+			pag = Integer.toString(numPagina(resultado.getIdArea(), resultado.getIdTramite()));
+			this.setVersionSeleccionada(resultado);
+			PrimeFaces.current().ajax().update("form:toolbarTramites");
 		}
 
 	}

@@ -384,12 +384,12 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 	public boolean existeIdentificador(Long idEntidad, String identificador) {
 
 		StringBuilder sql = new StringBuilder("select count(a) from JSeccionReutilizable as a");
-		sql.append( " where a.entidad.codigo = :idEntidad AND LOWER(a.identificador) LIKE :identificador");
+		sql.append( " where a.entidad.codigo = :idEntidad AND LOWER(a.identificador) LIKE :identificador escape '@' ");
 
 
 		final Query query = entityManager.createQuery(sql.toString());
 		query.setParameter("idEntidad", idEntidad);
-		query.setParameter("identificador", "%" + identificador.toLowerCase() + "%");
+		query.setParameter("identificador", identificador.toLowerCase().replaceAll("_", "@_" ));
 
 		final Long total = (Long) query.getSingleResult();
 		return total > 0l;

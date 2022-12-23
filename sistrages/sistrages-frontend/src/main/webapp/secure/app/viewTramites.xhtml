@@ -107,7 +107,7 @@
         }
 	}
 
-	function clickEl(){
+	/*function clickEl(){
 		 var e = window.event;
 		 var posX = e.clientX;
          var posY = e.clientY;
@@ -129,6 +129,62 @@
 		}
 		hideOpcTram();
 
+	}*/
+
+	function clickEl(){
+		 var e = window.event;
+		 var posX = e.clientX;
+         var posY = e.clientY;
+         var el = document.elementFromPoint(posX, posY);
+         var elAux = document.elementFromPoint(posX, posY);
+         while(elAux!=null &amp;&amp; elAux!=document &amp;&amp; !elAux.classList.contains( 'ui-datatable' )){
+			elAux = elAux.parentNode;
+
+			if(elAux.id=="form:dataTableTramites_head"){
+				break;
+			}
+		}
+		if(elAux.id=="form:dataTableTramites"){
+			while(el.tagName!="TR"){
+				el = el.parentNode;
+			}
+			let elementos = document.getElementById("form:dataTableTramites").getElementsByClassName('ui-state-highlight');
+            if(elementos.length &gt; 0){
+	            for(let i = 0; i &lt; elementos.length; i++){
+	              elementos[i].classList.remove('ui-state-highlight');
+	            }
+            }
+			el.classList.add("ui-state-highlight");
+			var text = el.childNodes[el.childNodes.length-1].childNodes[0].textContent || el.childNodes[el.childNodes.length-1].childNodes[0].innerText;
+			command([{name:'param', value:text},{name:'x', value:posX},{name:'y', value:posY}]);
+		}else if(elAux.id=="form:areas"){
+			document.getElementById("form:mnuNuevoTramite").style.display='none';
+			if(document.getElementById("form:btnNuevaAr ea")!=null){
+				document.getElementById("form:mnuNuevoAreaTramite").style.display='block';
+			}
+		}
+		let elementos = document.getElementsByClassName('resaltar');
+            if(elementos.length &gt; 0){
+            for(let i = 0; i &lt; elementos.length; i++){
+              elementos[i].classList.remove('resaltar');
+
+            }
+            }
+		hideOpcTram();
+
+	}
+
+	function expandirContraer(){
+		var el = document.getElementById("form:dataTableTramites").getElementsByClassName('ui-state-highlight')[0];
+		if(el==null){
+			el = document.getElementById("form:dataTableTramites").getElementsByClassName('ui-expanded-row')[0];
+		}
+		var listaTd = el.getElementsByTagName('*');
+		for(var i=0; i&lt;listaTd.length; i++){
+			if(listaTd[i].getElementsByClassName('ui-row-toggler')[0]!=null){
+				listaTd[i].getElementsByClassName('ui-row-toggler')[0].click();
+			}
+		}
 	}
 
 	function hideOpcTram(){
@@ -163,6 +219,7 @@
             <p:menuitem id="mnuNuevaVersionTramite" value="#{msg['botones.nuevaVersion']}" icon="fa fa-file" process="@this"  onclick="document.getElementById('form:btnNuevaVersionTramite').click();" style="display:none;"/>
             <p:menuitem id="mnuMoverTramite" value="#{msg['botones.moverTramite']}" icon="fa fa-exchange" update="growl" onclick="triggerMoverTramite();return false;" style="display:none;"/>
             <p:menuitem id="mnuEliminarTramite" value="#{msg['botones.eliminarTramite']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarTramite}" process="@this" update="growl @form" style="display:none;"/>
+
         </p:contextMenu>
         <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
         	<p:ajax event="success" listener="#{viewTramites.copiadoCorr}" process="@this" update="@this growl"/>
@@ -210,12 +267,12 @@
              scrollable="true" scrollHeight="#{viewTramites.height}" rows="100"  scrollRows="100" autoResize="true"
 
              selection="#{viewTramites.listaAreasSeleccionadas}" rowKey="#{area.codigo}">
-          <p:ajax event="rowSelectCheckbox" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea" process="@form" oncomplete="refrescarHeight();"/>
-          <p:ajax event="rowSelect" global="false" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea" process="@form" onclick="myWidget.getPaginator().setPage(0)" oncomplete="refrescarHeight();"/>
-          <p:ajax event="rowUnselect" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea" process="@form" oncomplete="refrescarHeight();"/>
-          <p:ajax event="rowUnselectCheckbox" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea" process="@form" oncomplete="refrescarHeight();"/>
-          <p:ajax event="toggleSelect" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea" process="@form"/>
-          <p:ajax event="rowDblselect" oncomplete="triggerDoubleClickArea();" update="@form:dataTableTramites @form:toolbarArea" process="@form"/>
+          <p:ajax event="rowSelectCheckbox" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" process="@form" oncomplete="refrescarHeight();"/>
+          <p:ajax event="rowSelect" global="false" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" process="@form" onclick="myWidget.getPaginator().setPage(0)" oncomplete="refrescarHeight();"/>
+          <p:ajax event="rowUnselect" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" process="@form" oncomplete="refrescarHeight();"/>
+          <p:ajax event="rowUnselectCheckbox" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" process="@form" oncomplete="refrescarHeight();"/>
+          <p:ajax event="toggleSelect" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" process="@form"/>
+          <p:ajax event="rowDblselect" oncomplete="triggerDoubleClickArea();" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites" process="@form"/>
           <p:ajax event="contextMenu" global="false" process="@this" update="@form:toolbarArea" oncomplete="opcAreas();"/>
 
 
@@ -314,12 +371,10 @@
           }
 
             function pageDatatable() {
-               console.log("pagDatatable");
             document.getElementById("form:btnpage").click();
           }
 
           function pageDatatableTram() {
-            console.log("pagDatatableTram");
             document.getElementById("form:btnpageTram").click();
           }
 
@@ -484,11 +539,11 @@
           </h:outputScript>
           <input type="hidden" name="anchura" value="" />
           <input type="hidden" name="altura" value="" />
-        <p:commandButton value="Filter" id="btnpage" process="@this" update="@form:dataTableTramites" style="visibility:hidden"
+        <p:commandButton value="Filter" id="btnpage" process="@this" style="visibility:hidden"
               onclick="PF('myWidget').getPaginator().setPage('#{viewTramites.pag}')" >
               <p:ajax  execute="@this" listener="#{viewTramites.unSelectTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('V')"/>
         </p:commandButton>
-        <p:commandButton value="Filter" id="btnpageTram" process="@this" update="@form:dataTableTramites" style="visibility:hidden"
+        <p:commandButton value="Filter" id="btnpageTram" process="@this" style="visibility:hidden"
               onclick="PF('myWidget').getPaginator().setPage('#{viewTramites.pag}')" >
               <p:ajax  execute="@this" listener="#{viewTramites.unSelectVersionTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('T')"/>
         </p:commandButton>
@@ -593,11 +648,11 @@
                              selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}"  lazy="true" height="100%">
 
             <!-- Necesario para actualizar en controlador la fila seleccionada -->
-            	   <p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectVersionTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('T')"/>
-                   <p:ajax event="contextMenu" global="false" listener="#{viewTramites.unSelectVersionTramite}" process="@this" update="@form:toolbarTramites" oncomplete="opcTramites();"/>
+            	   <p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectVersionTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('T'); expandirContraer();"/>
+                   <p:ajax event="contextMenu" global="false" listener="#{viewTramites.unSelectVersionTramite}" process="@this" update="@form:toolbarTramites" oncomplete="opcTramites(); deseleccionar('T');"/>
 
                    <!-- <p:ajax event="rowDblselect" listener="#{viewTramites.editarVersion}"/> -->
-                   <p:ajax event="rowDblselect" oncomplete="triggerDoubleClick();" update="@form:toolbarTramites"/>
+                   <!-- <p:ajax event="rowDblselect" oncomplete="triggerDoubleClick();" update="@form:toolbarTramites"/> -->
                    <p:ajax event="page" listener="#{viewTramites.paginar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites"/>
 
                  <p:column style="width:16px">
@@ -606,7 +661,7 @@
 
             <!-- Columnas -->
               <p:column id="hCodigo" headerText="#{msg['viewTramites.headerCodigo']}" sortBy="#{td.tramite.identificador}">
-              <h:outputText value="#{td.tramite.identificador}" />
+              		<h:outputText value="#{td.tramite.identificador}"/>
               </p:column>
 
               <p:column headerText="#{msg['viewTramites.headerDescripcion']}" sortBy="#{td.tramite.descripcion}">
@@ -628,6 +683,9 @@
                 </p:column>
              </c:if>
 
+			<p:column headerText="" style="display:none;">
+                <h:outputText id="codTram" value="#{td.tramite.codigo}" />
+            </p:column>
             <p:rowExpansion>
                 <!-- Data table -->
                 <p:dataTable  id="dataTableVersiones" var="tdVersiones" value="#{td.listaVersiones}"
@@ -795,6 +853,8 @@
               <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
         </p:outputPanel>
         </p:confirmDialog>
+
+        <p:remoteCommand id="param" name="command" action="#{viewTramites.asignarSeleccionado}" process="@this" />
     </h:form>
 
   </ui:define>

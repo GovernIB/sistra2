@@ -25,6 +25,7 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.comun.migracion.ConstantesMigracion;
 import es.caib.sistrages.core.api.model.comun.migracion.ErrorMigracion;
+import es.caib.sistrages.core.api.model.comun.migracion.TypeErrorMigracion;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.service.migracion.MigracionService;
 import es.caib.sistrages.frontend.controller.ViewControllerBase;
@@ -130,12 +131,24 @@ public class ViewMigracion extends ViewControllerBase {
 			params.put(ConstantesMigracion.USERNAME, UtilJSF.getSessionBean().getUserName());
 			params.put(ConstantesMigracion.UNIFICAR_PANTALLAS, Boolean.valueOf(unificarPantallas));
 
-			listaErrores = migracionService.migrarTramiteVersion(tramiteSistraSeleccionado,
-					versionSistraSeleccionado, tramiteSeleccionado, Integer.valueOf(version), params);
+			listaErrores = migracionService.migrarTramiteVersion(tramiteSistraSeleccionado, versionSistraSeleccionado,
+					tramiteSeleccionado, Integer.valueOf(version), params);
 			if (listaErrores == null || listaErrores.isEmpty()) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.migracion"));
 			} else {
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.migracionCompleta"));
+				boolean errorCritico = false;
+				if (listaErrores != null) {
+					for (ErrorMigracion err : listaErrores) {
+						if (err.getTipo().equals(TypeErrorMigracion.ERROR)) {
+							errorCritico = true;
+						}
+					}
+				}
+				if (!errorCritico) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.migracionCompleta"));
+				} else {
+					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.migracion"));
+				}
 				estilo = "display: block;";
 			}
 			disabled = true;
