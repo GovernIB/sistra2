@@ -64,6 +64,7 @@ import es.caib.sistramit.core.service.model.script.types.TypeScriptFlujo;
 import es.caib.sistramit.core.service.repository.dao.FlujoPasoDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
 import es.caib.sistramit.core.service.util.UtilsSTG;
+import freemarker.template.utility.StringUtil;
 
 /**
  * Acción que permite descargar una plantilla en el paso Anexar.
@@ -112,7 +113,7 @@ public final class AccionAnexarDocumento implements AccionPaso {
 		// genericos
 
 		// TODO LIMITAR TAMBIEN EN HTML
-		if (StringUtils.isNotBlank(tituloInstancia)) {
+		if (StringUtils.isNotBlank(tituloInstancia) && StringUtils.length(tituloInstancia) > 100) {
 			tituloInstancia = tituloInstancia.substring(0, 100);
 		}
 
