@@ -577,7 +577,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 			TypeEstadoRegistro estado = null;
 			switch (result.getEstado().intValue()) {
 			case 0: // Sessió no iniciada
-				estado = TypeEstadoRegistro.EN_PROCESO;
+				estado = TypeEstadoRegistro.NO_REALIZADO;
 				break;
 			case 1: // Sessió iniciada
 				estado = TypeEstadoRegistro.EN_PROCESO;

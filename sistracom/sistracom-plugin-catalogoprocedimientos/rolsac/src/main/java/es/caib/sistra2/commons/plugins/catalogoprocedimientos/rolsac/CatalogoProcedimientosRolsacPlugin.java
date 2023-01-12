@@ -225,10 +225,22 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 	protected DefinicionTramiteCP obtenerDefinicionTramiteProcedimiento(final RProcedimientoRolsac procRolsac,
 			final RTramiteRolsac tramiteRolsac, final String idioma) throws CatalogoPluginException {
+
 		// Codigo DIR3 responsable procedimiento
-		final String dir3organoResponsable = getCodigoDir3UA(procRolsac.getLink_unidadAdministrativa().getCodigo());
+		String dir3organoResponsable = "";
+		if (procRolsac.getLink_unidadAdministrativa() == null) {
+			log.error("El link de unidad administrativa es nulo con el proc: " + procRolsac.getCodigo());
+		} else {
+			dir3organoResponsable = getCodigoDir3UA(procRolsac.getLink_unidadAdministrativa().getCodigo());
+		}
+
 		// Codigo DIR3 destintario tramite
-		final String dir3organoDestinatario = getCodigoDir3UA(tramiteRolsac.getLink_organCompetent().getCodigo());
+		String dir3organoDestinatario = "";
+		if (tramiteRolsac.getLink_organCompetent() == null) {
+			log.error("El link de organo competente es nulo con el proc: " + procRolsac.getCodigo());
+		} else {
+			dir3organoDestinatario = getCodigoDir3UA(tramiteRolsac.getLink_organCompetent().getCodigo());
+		}
 
 		final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
 		dp.setIdentificador(tramiteRolsac.getLink_procedimiento().getCodigo());
@@ -794,9 +806,18 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 			final RServicioRolsac servicioRolsac) throws CatalogoPluginException {
 
 		// Codigo DIR3 responsable procedimiento
-		final String dir3organoInstructor = getCodigoDir3UA(servicioRolsac.getLink_organoInstructor().getCodigo());
-		final String dir3servicioResponsable = getCodigoDir3UA(
-				servicioRolsac.getLink_servicioResponsable().getCodigo());
+		String dir3organoInstructor = "";
+		if (servicioRolsac.getLink_organoInstructor() == null) {
+			log.error("El link de servicio de unidad administrativa es nulo con el serv: " + servicioRolsac.getCodigo());
+		} else {
+			dir3organoInstructor = getCodigoDir3UA(servicioRolsac.getLink_organoInstructor().getCodigo());
+		}
+		String dir3servicioResponsable = "";
+		if (servicioRolsac.getLink_servicioResponsable() == null) {
+			log.error("El link de servicio de servicio responsable es nulo con el serv: " + servicioRolsac.getCodigo());
+		} else {
+			dir3servicioResponsable = getCodigoDir3UA(servicioRolsac.getLink_servicioResponsable().getCodigo());
+		}
 
 		final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
 		dp.setIdentificador(String.valueOf(servicioRolsac.getCodigo()));
