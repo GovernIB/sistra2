@@ -148,9 +148,10 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 				return;
 			}
 
-			if (this.getTramiteVersion().getTipoTramite().equals("T")) {
-				this.getTramiteVersion().setNoAutenticado(false);
-			}
+			/*
+			 * if (this.getTramiteVersion().getTipoTramite().equals("T")) {
+			 * this.getTramiteVersion().setNoAutenticado(false); }
+			 */
 
 			String idiomas = "";
 			if (tramiteVersionIdiomaEsSoportado) {
@@ -199,13 +200,6 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(this.tramiteVersion);
 		UtilJSF.closeDialog(result);
-	}
-
-	/**
-	 * Lanzar aviso.
-	 */
-	public void lanzarAviso() {
-		addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noAut"));
 	}
 
 	/**
@@ -559,10 +553,12 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 	public void setCambios() {
 		this.cambios = true;
-		if (this.getTramiteVersion().getTipoTramite().equals("T")) {
-			PrimeFaces.current().executeScript(
-					" function setVacio(){ let check1 = document.getElementById(\"formDialogDefinicionVersionPropiedades:sinAutenticacion\"); check1.children[1].classList.remove(\"ui-state-active\"); check1.children[1].children[0].classList.remove(\"ui-icon\"); check1.children[1].children[0].classList.remove(\"ui-icon-check\"); } setVacio();");
-		}
+		/*
+		 * if (this.getTramiteVersion().getTipoTramite().equals("T")) {
+		 * PrimeFaces.current().executeScript(
+		 * " function setVacio(){ let check1 = document.getElementById(\"formDialogDefinicionVersionPropiedades:sinAutenticacion\"); check1.children[1].classList.remove(\"ui-state-active\"); check1.children[1].children[0].classList.remove(\"ui-icon\"); check1.children[1].children[0].classList.remove(\"ui-icon-check\"); } setVacio();"
+		 * ); }
+		 */
 
 		if (tramiteVersion.isPersistenciaInfinita()) {
 			valMin = 0;

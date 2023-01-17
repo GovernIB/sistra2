@@ -177,8 +177,8 @@
 
 					<p:row>
 						<p:column styleClass="noPadding-left">
-							<div id="sinAutenticacionDiv" onclick="document.getElementById('formDialogDefinicionVersionPropiedades:hidden').click();">
-								<p:selectBooleanCheckbox id="sinAutenticacion"  itemLabel="#{msg['viewDefinicionVersionPropiedades.sinautenticacion']}" disabled="#{dialogDefinicionVersionPropiedades.tramiteVersion.tipoTramite=='T'}" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.noAutenticado}" style="width:170px">
+							<div id="sinAutenticacionDiv">
+								<p:selectBooleanCheckbox id="sinAutenticacion"  itemLabel="#{msg['viewDefinicionVersionPropiedades.sinautenticacion']}" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.noAutenticado}" style="width:170px">
 									<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
 								</p:selectBooleanCheckbox>
 							</div>
@@ -265,7 +265,6 @@
 
 		    <p:inputText id="auxCopiar" value="#{dialogDefinicionVersionPropiedades.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 
-		    <p:commandButton id="hidden" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionPropiedades.lanzarAviso()}" process="@this" update="growlDialog" style="display:none;"/>
 			<p:commandButton id="hidden2" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionPropiedades.lanzarAviso2()}" process="@this" update="growlDialog" style="display:none;"/>
 		</h:form>
 	</h:body>
