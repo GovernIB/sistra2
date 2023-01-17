@@ -77,6 +77,8 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 	private String portapapeles;
 
+	private int valMin;
+
 	/**
 	 * Inicialización.
 	 */
@@ -85,6 +87,11 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		/* recuperamos los datos */
 		tramiteVersion = tramiteService.getTramiteVersion(id);
 		tramiteVersionI = tramiteService.getTramiteVersion(id);
+		if (tramiteVersion.isPersistenciaInfinita()) {
+			valMin = 0;
+		} else {
+			valMin = 1;
+		}
 		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
 		if (idiomas.contains("ca") && UtilJSF.getSessionBean().getIdiomas().contains("ca")) {
 			this.tramiteVersionIdiomaCaSoportado = true;
@@ -556,10 +563,31 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 			PrimeFaces.current().executeScript(
 					" function setVacio(){ let check1 = document.getElementById(\"formDialogDefinicionVersionPropiedades:sinAutenticacion\"); check1.children[1].classList.remove(\"ui-state-active\"); check1.children[1].children[0].classList.remove(\"ui-icon\"); check1.children[1].children[0].classList.remove(\"ui-icon-check\"); } setVacio();");
 		}
+
+		if (tramiteVersion.isPersistenciaInfinita()) {
+			valMin = 0;
+			tramiteVersion.setPersistenciaDias(null);
+		} else if (!tramiteVersion.isPersistenciaInfinita()) {
+			valMin = 1;
+		}
 	}
 
 	public boolean isServicioActivado() {
 		return UtilJSF.isServicioActivado();
+	}
+
+	/**
+	 * @return the valMin
+	 */
+	public final int getValMin() {
+		return valMin;
+	}
+
+	/**
+	 * @param valMin the valMin to set
+	 */
+	public final void setValMin(int valMin) {
+		this.valMin = valMin;
 	}
 
 }

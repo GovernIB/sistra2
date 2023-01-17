@@ -206,21 +206,21 @@
 					<p:row>
 						<p:column styleClass="noPadding-left">
 							<p:selectBooleanCheckbox id="persistencia" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.persistencia}">
-								<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
+								<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this @form:tipopersistencia @form:numdias"/>
 							</p:selectBooleanCheckbox>
 							<p:spacer width="40" height="1"/>
 						</p:column>
 						<p:column>
-							<p:selectOneRadio id="tipopersistencia" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.persistenciaInfinita}">
+							<p:selectOneRadio id="tipopersistencia" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.persistenciaInfinita}" readonly="#{!dialogDefinicionVersionPropiedades.tramiteVersion.persistencia}">
 					            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.sinlimite']}" itemValue="true" />
 					            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.pordias']}" itemValue="false" />
-					            <p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
+					            <p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this @form:numdias"/>
 			     		   </p:selectOneRadio>
 			     		 </p:column>
 						<p:column>
 								<p:outputLabel for="numdias" value="#{msg['viewDefinicionVersionPropiedades.numdias']}" />
 								<p:spacer width="8"/>
-								<p:spinner id="numdias" size="3" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.persistenciaDias}" min="1" max="99">
+								<p:spinner id="numdias" size="3" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.persistenciaDias}" min="#{dialogDefinicionVersionPropiedades.valMin}" max="99" readonly="#{dialogDefinicionVersionPropiedades.tramiteVersion.persistenciaInfinita or !dialogDefinicionVersionPropiedades.tramiteVersion.persistencia}">
 									<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios}" process="@this" update="@this"/>
 								</p:spinner>
 						</p:column>
