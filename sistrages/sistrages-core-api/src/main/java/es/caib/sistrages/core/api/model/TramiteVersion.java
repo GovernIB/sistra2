@@ -844,4 +844,78 @@ public class TramiteVersion extends ModelApi {
 		return tiene;
 	}
 
+	@Override
+	public String toString() {
+        return toString("", "ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "TramitVersio. ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           texto.append(tabulacion +"\t NumeroVersio:" + numeroVersion + "\n");
+           texto.append(tabulacion +"\t CodigoUsuariBloqueo:" + codigoUsuarioBloqueo + "\n");
+           texto.append(tabulacion +"\t DadessUsuariBloqueo:" + datosUsuarioBloqueo + "\n");
+           texto.append(tabulacion +"\t Release:" + release + "\n");
+           texto.append(tabulacion +"\t Actiu:" + activa + "\n");
+           texto.append(tabulacion +"\t debug:" + debug + "\n");
+           texto.append(tabulacion +"\t Descripció:" + descripcion + "\n");
+           texto.append(tabulacion +"\t TipusTramit:" + tipoTramite + "\n");
+           texto.append(tabulacion +"\t IdTramit:" + idTramite + "\n");
+           texto.append(tabulacion +"\t IdArea:" + idArea + "\n");
+           texto.append(tabulacion +"\t IdentificadorArea:" + identificadorArea + "\n");
+           texto.append(tabulacion +"\t TipusFlux:" + tipoFlujo + "\n");
+           texto.append(tabulacion +"\t Autenticat:" + autenticado + "\n");
+           texto.append(tabulacion +"\t NoAutenticat:" + noAutenticado + "\n");
+           texto.append(tabulacion +"\t NivellQAA:" + nivelQAA + "\n");
+           texto.append(tabulacion +"\t IdiomasSoportats:" + idiomasSoportados + "\n");
+           texto.append(tabulacion +"\t Persistencia:" + persistencia + "\n");
+           texto.append(tabulacion +"\t PersistenciaInfinita:" + persistenciaInfinita + "\n");
+           texto.append(tabulacion +"\t PersistenciaDies:" + persistenciaDias + "\n");
+           if (scriptPersonalizacion != null) {
+        	   texto.append(tabulacion +"\t ScriptPersonalitzacio: \n");
+        	   texto.append(scriptPersonalizacion.toString(tabulacion+"\t", idioma)+ "\n");
+           }
+           if (scriptInicializacionTramite != null) {
+        	   texto.append(tabulacion +"\t ScriptInicialitzacioTramit: \n");
+        	   texto.append(scriptInicializacionTramite.toString(tabulacion+"\t", idioma)+ "\n");
+           }
+           texto.append(tabulacion +"\t LimiteTramitacio:" + limiteTramitacion + "\n");
+           texto.append(tabulacion +"\t NumLimiteTramitacio:" + numLimiteTramitacion + "\n");
+           texto.append(tabulacion +"\t IntLimiteTramitacio:" + intLimiteTramitacion + "\n");
+           texto.append(tabulacion +"\t Desactivacio:" + desactivacion + "\n");
+           texto.append(tabulacion +"\t TerminiIniciDesactivacio:" + plazoInicioDesactivacion + "\n");
+           texto.append(tabulacion +"\t TerminiFiDesactivacio:" + plazoFinDesactivacion + "\n");
+           if (mensajeDesactivacion != null) {
+        	   texto.append(tabulacion +"\t MissatgeDesactivacio: \n");
+        	   texto.append(mensajeDesactivacion.toString(tabulacion, idioma) + "\n");
+           }
+           if (listaPasos != null && !listaPasos.isEmpty()) {
+        	   texto.append(tabulacion +"\t Pasos: \n");
+        	   for(TramitePaso paso : listaPasos) {
+        		   if (paso instanceof TramitePasoDebeSaber) {
+        			   texto.append(( (TramitePasoDebeSaber) paso ).toString(tabulacion, idioma) + "\n");
+        		   } else if (paso instanceof TramitePasoRellenar) {
+        			   texto.append(( (TramitePasoRellenar) paso ).toString(tabulacion, idioma) + "\n");
+        		   } else if (paso instanceof TramitePasoTasa) {
+        			   texto.append(( (TramitePasoTasa) paso ).toString(tabulacion, idioma) + "\n");
+        		   } else if (paso instanceof TramitePasoAnexar) {
+        			   texto.append(( (TramitePasoAnexar) paso ).toString(tabulacion, idioma) + "\n");
+        		   } else if (paso instanceof TramitePasoRegistrar) {
+        			   texto.append(( (TramitePasoRegistrar) paso ).toString(tabulacion, idioma) + "\n");
+        		   } else {
+        			   texto.append(paso.toString(tabulacion, idioma) + "\n");
+        		   }
+        	   }
+           }
+
+
+           //texto.append(tabulacion +"\t listaDominios:" + listaDominios == null ? "VACIO" : listaDominios.toString() + "\n");
+           return texto.toString();
+     }
+
 }

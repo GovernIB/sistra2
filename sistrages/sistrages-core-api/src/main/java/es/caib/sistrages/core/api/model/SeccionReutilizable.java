@@ -318,4 +318,37 @@ public final class SeccionReutilizable  extends ModelApi {
 		return true;
 	}
 
+
+
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "SeccionsReutilitzable. ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           texto.append(tabulacion +"\t Identificador:" + identificador + "\n");
+           texto.append(tabulacion +"\t Descripcio:" + descripcion + "\n");
+           texto.append(tabulacion +"\t Release:" + release + "\n");
+           texto.append(tabulacion +"\t Huella:" + huella + "\n");
+           texto.append(tabulacion +"\t Activat:" + activado + "\n");
+           texto.append(tabulacion +"\t Bloquejat:" + bloqueado + "\n");
+           texto.append(tabulacion +"\t BloquejatUsuari:" + bloqueadoUsuario + "\n");
+           texto.append(tabulacion +"\t IdEntitat:" + idEntidad + "\n");
+           texto.append(tabulacion +"\t IdentificadorEntitat:" + identificadorEntidad + "\n");
+           texto.append(tabulacion +"\t IdFormularioAsociado:" + idFormularioAsociado + "\n");
+           texto.append(tabulacion +"\t Data:" + fecha + "\n");
+           if (disenyoFormulario != null) {
+        	   texto.append(tabulacion +"\t DisenyoFormulario: \n");
+        	   texto.append(disenyoFormulario.toString(tabulacion, idioma)+ "\n");
+           }
+           return texto.toString();
+     }
+
 }

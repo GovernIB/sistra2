@@ -57,6 +57,7 @@ public class CatalogoProcedimientosPluginMock extends AbstractPluginProperties
 		procedimiento.setIdProcedimientoSIA((codigoSIA == null || codigoSIA.equals("")) ? "24435" : codigoSIA);
 		procedimiento
 				.setOrganoResponsableDir3((codigoDir3 == null || codigoDir3.equals("")) ? "EA0001301" : codigoDir3);
+		procedimiento.setValidacion(1);
 		final DefinicionLOPD lopd = new DefinicionLOPD();
 		lopd.setTextoCabecera("Texto para la cabecera");
 		final List<CampoLOPD> camposLopd = new ArrayList<>();

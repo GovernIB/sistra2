@@ -177,4 +177,26 @@ public class FuenteFila extends ModelApi {
 		return valor;
 	}
 
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "\t Fila. Codigo: "+codigo+" ");
+           if (this.getDatos() != null && !this.getDatos().isEmpty()) {
+        	   texto.append(tabulacion +" Valors: ");
+        	   for(FuenteDatosValor valor : getDatos()) {
+        		   texto.append(valor.toString("", idioma) + " , ");
+        	   }
+        	   texto.append("\n");
+           }
+           return texto.toString();
+     }
+
 }

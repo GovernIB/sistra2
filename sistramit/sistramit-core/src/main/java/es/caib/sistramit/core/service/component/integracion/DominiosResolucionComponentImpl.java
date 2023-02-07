@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import es.caib.sistra2.commons.plugins.dominio.api.DominioPluginException;
 import es.caib.sistra2.commons.plugins.dominio.api.IDominioPlugin;
 import es.caib.sistrages.rest.api.interna.RConfiguracionAutenticacion;
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RDominio;
 import es.caib.sistrages.rest.api.interna.RValoresDominio;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
@@ -20,6 +21,7 @@ import es.caib.sistramit.core.service.model.integracion.ParametroDominio;
 import es.caib.sistramit.core.service.model.integracion.ParametrosDominio;
 import es.caib.sistramit.core.service.model.integracion.ValoresDominio;
 import es.caib.sistramit.core.service.repository.dao.DominioDao;
+import es.caib.sistramit.core.service.util.UtilsFlujo;
 
 /**
  * Resolución de dominios.
@@ -159,8 +161,19 @@ public final class DominiosResolucionComponentImpl implements DominiosResolucion
 					timeout = 60L;
 				}
 
+				String urlDominio = dominio.getUri();
+				// Si es dominio área, aplicamos variables area
+				if ("A".equals(dominio.getAmbito())) {
+					// Obtenemos conf entidad
+					final RConfiguracionEntidad confEntidad = configuracionComponent
+							.obtenerConfiguracionEntidad(dominio.getIdentificadorEntidad());
+					// Reemplazamos vbles area
+					urlDominio = UtilsFlujo.replaceVariablesArea(urlDominio, confEntidad,
+							dominio.getIdentificadorArea());
+				}
+
 				final es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio rvalores = iplugin
-						.invocarDominio(dominio.getIdentificador(), dominio.getUri(), parametros, user, pass, timeout);
+						.invocarDominio(dominio.getIdentificador(), urlDominio, parametros, user, pass, timeout);
 				valoresDominio = new ValoresDominio();
 				valoresDominio.setCodigoError(rvalores.getCodigoError());
 				valoresDominio.setDatos(rvalores.getDatos());

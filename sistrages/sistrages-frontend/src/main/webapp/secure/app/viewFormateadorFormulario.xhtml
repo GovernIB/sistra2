@@ -18,7 +18,8 @@
 			<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
 			<p:contextMenu id="mainCm" widgetVar="mainCm" for=":work">
-                <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+                <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
+                <p:separator/>
 				<p:menuitem id="mnuNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevo').click();" />
 				<p:menuitem id="mnuEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
 				<p:menuitem id="mnuEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:btnEliminar').click();" />
@@ -29,7 +30,7 @@
             </pe:clipboard>
 
 			<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
-				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
 			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewFormateadorFormulario.copiadoCorr}" process="@this" update="@this growl"/>
@@ -37,7 +38,7 @@
 			</pe:clipboard>
 
 			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
-				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
 			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewFormateadorFormulario.copiadoCorr}" process="@this" update="@this growl"/>
@@ -137,7 +138,8 @@
 		    </p:confirmDialog>
 
 			<p:contextMenu for="dataTable" id="cMenuFormateadores" widgetVar="cMenuFormateadoresWV" beforeShow="return true;">
-                <p:menuitem id="mnuCopyFormateador" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+                <p:menuitem id="mnuCopyFormateador" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
+                <p:separator/>
 				<p:menuitem id="mnuNuevoFormateador" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevo').click();" />
 				<p:menuitem id="mnuEditarFormateador" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
 				<p:menuitem id="mnuEliminarFormateador" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:btnEliminar').click();" />
@@ -160,6 +162,7 @@
                     getPos();
                     return false;
                 }, false);
+
               }
 
 
@@ -209,13 +212,15 @@
 
                el.classList.add("resaltar");
                 var aux = document.getElementById("form:auxCopiar");
-                if(el.textContent!=''){
+                if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
                     aux.value = el.textContent;
-                }else if(el.firstChild!=null){
+                }else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
                     aux.value = el.firstChild.value;
                 }else if(el.value!=null &amp;&amp; el.value!=''){
                     aux.value = el.value;
-                }
+                }else{
+		          aux.value = '';
+		        }
 
              }
 

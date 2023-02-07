@@ -203,9 +203,16 @@ public class SecurityServiceImpl implements SecurityService {
 		// Obtenemos datos conexión GFE
 		final RGestorFormularioExterno confGfe = UtilsSTG.obtenerConfiguracionGFE(confEntidad,
 				idGestorFormulariosExterno);
-		final String urlGestorFormulario = confGfe.getUrl();
+		String urlGestorFormulario = confGfe.getUrl();
 		String usrGestorFormulario = null;
 		String pwdGestorFormulario = null;
+
+		// Reemplazamos vbles area
+		if (confGfe.getIdentificadorArea() != null) {
+			urlGestorFormulario = UtilsFlujo.replaceVariablesArea(urlGestorFormulario, confEntidad,
+					confGfe.getIdentificadorArea());
+		}
+
 		if (confGfe.getIdentificadorConfAutenticacion() != null) {
 			final RConfiguracionAutenticacion confAut = configuracionComponent.obtenerConfiguracionAutenticacion(
 					confGfe.getIdentificadorConfAutenticacion(), confGfe.getIdentificadorEntidad());

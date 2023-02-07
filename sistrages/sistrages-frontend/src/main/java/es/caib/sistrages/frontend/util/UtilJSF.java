@@ -418,7 +418,12 @@ public final class UtilJSF {
 		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionBean");
 		if (sb.getActiveRole() != TypeRoleAcceso.ADMIN_ENT && sb.getActiveRole() != TypeRoleAcceso.DESAR) {
-			throw new FrontException("No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad");
+			if (sb.getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+				throw new FrontException("Se está accediendo con perfil de Super Administrador");
+			} else {
+				throw new FrontException(
+						"No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad");
+			}
 		}
 		if (idEntidad == null) {
 			throw new FrontException("No se ha seleccionado ninguna entidad");

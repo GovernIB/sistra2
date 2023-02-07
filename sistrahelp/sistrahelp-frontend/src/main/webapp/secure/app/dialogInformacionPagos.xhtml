@@ -72,13 +72,15 @@
 
 				el.classList.add("resaltar");
 				var aux = document.getElementById("dialogInformacionPagos:auxCopiar");
-				if(el.textContent!=''){
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 					aux.value = el.textContent;
-				}else if(el.firstChild!=null){
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 					aux.value = el.firstChild.value;
 				}else if(el.value!=null &amp;&amp; el.value!=''){
 					aux.value = el.value;
-				}
+				}else{
+		          aux.value = '';
+		        }
 
 				var dataT = document.getElementsByClassName('ui-datatable-scrollable-body')[0];
 				var elEnDataT = dataT.getElementsByClassName('resaltar')[0];
@@ -92,7 +94,8 @@
 			 }
 			</h:outputScript>
 				<p:contextMenu>
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogInformacionPagos:auxCopiar" update="growl" url="javascript:void(0)"/>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogInformacionPagos:auxCopiar" update="growl" />
+       			<p:separator/>
        			<p:menuitem id="detalle" icon="fa fa-window-maximize" onclick="consultar();" value="#{msg['dialogAuditoriaTramites.descripcion']}"  process="@this" update="growl"/>
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">

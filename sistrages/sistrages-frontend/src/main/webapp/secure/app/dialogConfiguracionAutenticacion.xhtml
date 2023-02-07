@@ -85,13 +85,15 @@
 
 				el.classList.add("resaltar");
 				var aux = document.getElementById("dialogFormularioExterno:auxCopiar");
-				if(el.textContent!=''){
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 					aux.value = el.textContent;
-				}else if(el.firstChild!=null){
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 					aux.value = el.firstChild.value;
 				}else if(el.value!=null &amp;&amp; el.value!=''){
 					aux.value = el.value;
-				}
+				}else{
+		          aux.value = '';
+		        }
 
 			 }
 
@@ -150,7 +152,7 @@
 				</p:toolbar>
 		    </p:outputPanel>
 		    <p:contextMenu>
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogFormularioExterno:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogFormularioExterno:auxCopiar" update="growlDialog" />
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{dialogConfiguracionAutenticacion.copiadoCorr}" process="@this" update="@this growlDialog"/>

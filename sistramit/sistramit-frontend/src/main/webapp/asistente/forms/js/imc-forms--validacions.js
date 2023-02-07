@@ -294,6 +294,7 @@ $.fn.appValida = function(opcions) {
 
 	}
 
+
 	if (format === "iban" && valor !== "") {
 
 		var valor_iban = $.trim( valor.toUpperCase().replace(/\s/g, "") );

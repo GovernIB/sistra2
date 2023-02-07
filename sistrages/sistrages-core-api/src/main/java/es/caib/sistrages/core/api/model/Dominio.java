@@ -387,4 +387,56 @@ public class Dominio extends ModelApi {
 		this.identificadorFD = identificadorFD;
 	}
 
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "Dominio. ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           texto.append(tabulacion +"\t Identificador:" + identificador + "\n");
+           texto.append(tabulacion +"\t IdentificadorCompost:" + identificadorCompuesto + "\n");
+           texto.append(tabulacion +"\t Descripcio:" + descripcion + "\n");
+           texto.append(tabulacion +"\t IdArea:" + idArea + "\n");
+           texto.append(tabulacion +"\t Ambit:" + ambito + "\n");
+           texto.append(tabulacion +"\t Cache:" + cache + "\n");
+           texto.append(tabulacion +"\t Tipus:" + tipo + "\n");
+           texto.append(tabulacion +"\t Jndi:" + jndi + "\n");
+           texto.append(tabulacion +"\t Sql:" + sql + "\n");
+           texto.append(tabulacion +"\t SqlDecoded:" + sqlDecoded + "\n");
+           texto.append(tabulacion +"\t IdFontDades:" + idFuenteDatos + "\n");
+           texto.append(tabulacion +"\t IdentificadorFD:" + identificadorFD + "\n");
+           texto.append(tabulacion +"\t Timeout:" + timeout + "\n");
+
+           if (listaFija != null && !listaFija.isEmpty()) {
+        	   texto.append(tabulacion +"\t Propietats \n ");
+    		   for(Propiedad prop : listaFija) {
+        		   texto.append(tabulacion +"\t" + prop.toString(tabulacion+"\t", idioma) + "\n");
+        	   }
+           }
+           if (parametros != null && !parametros.isEmpty()) {
+        	   texto.append(tabulacion +"\t Parametres \n ");
+    		   for(Propiedad prop : parametros) {
+        		   texto.append(tabulacion +"\t" + prop.toString(tabulacion+"\t", idioma) + "\n");
+        	   }
+           }
+           if (area != null) {
+        	   texto.append(tabulacion +"\t" + area.toString(tabulacion+"\t", idioma) + "\n");
+           }
+           if (entidad != null) {
+        	   texto.append(tabulacion +"\t Entitat:" + entidad + "\n");
+           }
+           if (configuracionAutenticacion != null) {
+        	   texto.append(tabulacion +"\t" + configuracionAutenticacion.toString(tabulacion+"\t", idioma) + "\n");
+           }
+
+           return texto.toString();
+     }
+
 }

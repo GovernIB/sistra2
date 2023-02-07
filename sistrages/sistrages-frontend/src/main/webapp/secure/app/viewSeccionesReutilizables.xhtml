@@ -19,6 +19,23 @@
 		<h:form id="form" styleClass="h100">
 
 			<h:outputScript >
+              function setHeight(){
+			    	var altura = window.innerHeight - 50;
+			    	var alturaSecciones = altura - 250;
+		            var alturaSeccionesBody = altura - 278;
+
+		            $('#form\\:dataTable').height(alturaSecciones);
+		            $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaSeccionesBody);
+			    }
+
+				jQuery(document).ready(function() {
+
+			      $(window).resize(function() {
+		              setTimeout(function(){  setHeight(); }, 100);
+		  			});
+
+			      setHeight();
+			  });
 
 			  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
@@ -67,13 +84,15 @@
 
 				el.classList.add("resaltar");
 				var aux = document.getElementById("form:auxCopiar");
-				if(el.textContent!=''){
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 					aux.value = el.textContent;
-				}else if(el.firstChild!=null){
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 					aux.value = el.firstChild.value;
 				}else if(el.value!=null &amp;&amp; el.value!=''){
 					aux.value = el.value;
-				}
+				}else{
+		          aux.value = '';
+		        }
 
 			 }
 
@@ -153,7 +172,7 @@
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewSeccionesReutilizables.listaDatos}"
 						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
-						 scrollable="true" scrollHeight="90%"
+						 scrollable="true"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"
@@ -192,7 +211,8 @@
 
 			</p:dataTable>
 			<p:contextMenu for="dataTable" id="cMenuVers">
-				<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+				<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" />
+				<p:separator/>
 	            <p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this" rendered="#{viewSeccionesReutilizables.permiteAlta}"/>
         		<p:menuitem id="mnuBloquear" value="#{msg['botones.bloquear']}" icon="fa fa-lock" onclick="document.getElementById('form:btnBloquear').click();" process="@this" />
 	        	<p:menuitem id="mnuDesploquear" value="#{msg['botones.desbloquear']}" icon="fa fa-unlock" onclick="document.getElementById('form:btnDesploquear').click();" process="@this" />
@@ -225,7 +245,8 @@
 				</p:outputPanel>
 		    </p:confirmDialog>
 			<p:contextMenu id="cMenuMain" for=":work">
-				<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+				<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :form:auxCopiar" update="growl" />
+				<p:separator/>
 	            <p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this" rendered="#{viewSeccionesReutilizables.permiteAlta}"/>
         		<p:menuitem id="mnuBloquearMain" value="#{msg['botones.bloquear']}" icon="fa fa-lock" onclick="document.getElementById('form:btnBloquear').click();" process="@this"/>
 	        	<p:menuitem id="mnuDesploquearMain" value="#{msg['botones.desbloquear']}" icon="fa fa-unlock" onclick="document.getElementById('form:btnDesploquear').click();" process="@this"/>
@@ -242,7 +263,7 @@
         	</pe:clipboard>
 
         	<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
-				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
 			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewSeccionesReutilizables.copiadoCorr}" process="@this" update="@this growl"/>
@@ -250,7 +271,7 @@
 			</pe:clipboard>
 
 			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
-				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
 			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewSeccionesReutilizables.copiadoCorr}" process="@this" update="@this growl"/>

@@ -63,7 +63,7 @@ public class RTramiteRolsac {
 	private String urlExterna;
 
 	/** Validacion. **/
-	private Long validacio;
+	private Long validacion;
 
 	/** Version. **/
 	private Integer versio;
@@ -365,16 +365,16 @@ public class RTramiteRolsac {
 	/**
 	 * @return the validacio
 	 */
-	public Long getValidacio() {
-		return validacio;
+	public Long getValidacion() {
+		return validacion;
 	}
 
 	/**
 	 * @param validacio
 	 *                      the validacio to set
 	 */
-	public void setValidacio(final Long validacio) {
-		this.validacio = validacio;
+	public void setValidacion(final Long validacion) {
+		this.validacion = validacion;
 	}
 
 	/**

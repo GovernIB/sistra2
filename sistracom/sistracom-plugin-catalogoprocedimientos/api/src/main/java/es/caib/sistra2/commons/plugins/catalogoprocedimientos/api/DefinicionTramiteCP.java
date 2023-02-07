@@ -278,4 +278,5 @@ public class DefinicionTramiteCP implements Serializable {
 		this.tramiteTelematico = tramiteTelematico;
 	}
 
+
 }

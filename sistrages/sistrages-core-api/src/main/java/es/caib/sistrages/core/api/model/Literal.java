@@ -206,4 +206,32 @@ public class Literal extends ModelApi {
 		this.codigo = codigo;
 	}
 
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion +"\t Literal. ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           if (getTraduccion(idioma) != null) {
+        	   texto.append(tabulacion +"\t Text:" + getTraduccion(idioma).replaceAll("\n", "\n\t\t"+tabulacion));
+           }
+           return texto.toString();
+     }
+
+	public void limpiarIds() {
+		this.setCodigo(null);
+		if (this.getTraducciones() != null && !this.getTraducciones().isEmpty()) {
+			for (final Traduccion trad : this.getTraducciones()) {
+				trad.limpiarIds();
+			}
+		}
+	}
+
 }

@@ -29,6 +29,9 @@ public class DefinicionProcedimientoCP implements Serializable {
 	/** Información LOPD. */
 	private DefinicionLOPD lopd;
 
+	/** Validacion **/
+	private Integer validacion;
+
 	/**
 	 * Método de acceso a identificador.
 	 *
@@ -135,7 +138,7 @@ public class DefinicionProcedimientoCP implements Serializable {
 
 	/**
 	 * Método de acceso a lopd.
-	 * 
+	 *
 	 * @return lopd
 	 */
 	public DefinicionLOPD getLopd() {
@@ -144,7 +147,7 @@ public class DefinicionProcedimientoCP implements Serializable {
 
 	/**
 	 * Método para establecer lopd.
-	 * 
+	 *
 	 * @param lopd
 	 *                 lopd a establecer
 	 */
@@ -152,4 +155,36 @@ public class DefinicionProcedimientoCP implements Serializable {
 		this.lopd = lopd;
 	}
 
+	/**
+	 * @return the validacion
+	 */
+	public Integer getValidacion() {
+		return validacion;
+	}
+
+	/**
+	 * @param validacion the validacion to set
+	 */
+	public void setValidacion(Integer validacion) {
+		this.validacion = validacion;
+	}
+
+	/** Segun ROLSAC1 **/
+	public final Integer PUBLICA = 1;
+	public final Integer INTERNA = 2;
+	public final Integer RESERVA = 3;
+	/** BAJA YA NO EXISTE **/
+	public final Integer BAJA = 4;
+
+	public boolean isValidacionPublica() {
+		return this.validacion != null && this.validacion.compareTo(PUBLICA) == 0;
+	}
+
+	public boolean isValidacionInterna() {
+		return this.validacion != null && this.validacion.compareTo(INTERNA) == 0;
+	}
+
+	public boolean isValidacionReserva() {
+		return this.validacion != null && this.validacion.compareTo(RESERVA) == 0;
+	}
 }

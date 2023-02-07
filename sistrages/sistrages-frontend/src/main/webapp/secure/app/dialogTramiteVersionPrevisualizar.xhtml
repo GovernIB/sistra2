@@ -51,16 +51,17 @@
 	</f:metadata>
 
 	<h:form id="dialogTramite" styleClass="margin-top-10">
-
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+				<p:commandButton id="getProcedimientosEnd" style="display:none;" process="@this" actionListener="#{dialogTramiteVersionPrevisualizar.cargaInicial()}"/>
+				<p:commandButton id="getProcedimientosRecargar" style="display:none;" process="@this" actionListener="#{dialogTramiteVersionPrevisualizar.cargaRecarga()}"/>
 
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w15, w75, w10" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px !important;">
 
 					<p:outputLabel   for="idioma" value="#{msg['dialogTramiteVersionPrevisualizar.idioma']}" />
-                	<p:selectOneMenu id="idioma"  value="#{dialogTramiteVersionPrevisualizar.idioma}" >
+                	<p:selectOneMenu id="idioma"  value="#{dialogTramiteVersionPrevisualizar.idioma}" disabled="#{dialogTramiteVersionPrevisualizar.disableTramites and not dialogTramiteVersionPrevisualizar.simularCatalogo}">
 						<f:selectItems value="#{dialogTramiteVersionPrevisualizar.idiomas}" var="idi" itemLabel="#{msg['' += idi]}" itemValue="#{idi.toString()}" />
 						<p:ajax event="change" update="dialogTramite:txtCopy" listener="#{dialogTramiteVersionPrevisualizar.recalcularURL()}" />
 					</p:selectOneMenu >
@@ -72,27 +73,46 @@
 
 					<p:outputLabel for="procedimiento" value="#{msg['dialogTramiteVersionPrevisualizar.tramite']}" />
 					<p:column>
-							<p:selectOneMenu id="procedimiento" filter="true" filterMatchMode="contains" value="#{dialogTramiteVersionPrevisualizar.tramiteSeleccionado}" style="width:400px;" styleClass="margin-top-10">
+							<p:selectOneMenu id="procedimiento" filter="true" filterMatchMode="contains" value="#{dialogTramiteVersionPrevisualizar.tramiteSeleccionado}" style="width:400px;" styleClass="margin-top-10" disabled="#{dialogTramiteVersionPrevisualizar.disableTramites or dialogTramiteVersionPrevisualizar.simularCatalogo}">
 								<f:selectItems value="#{dialogTramiteVersionPrevisualizar.tramites}" var="tramite" itemLabel="#{dialogTramiteVersionPrevisualizar.getText(tramite)}" itemValue="#{tramite.identificador}" />
 								<p:ajax event="change" update="dialogTramite:txtCopy" listener="#{dialogTramiteVersionPrevisualizar.recalcularURL()}" />
 							</p:selectOneMenu >
 
-						<div style="margin-top:5px;">
-							<p:selectBooleanCheckbox value="#{dialogTramiteVersionPrevisualizar.soloIncorporadosSia}" itemLabel="#{msg['dialogTramiteVersionPrevisualizar.soloSia']}" >
-								<p:ajax event="change" update="dialogTramite:procedimiento" listener="#{dialogTramiteVersionPrevisualizar.recargarProcedimientos()}" />
+						<div style="display: flex; margin-top:5px; justify-content: space-between; width: 64%;">
+							<p:selectBooleanCheckbox id="checkSoloSia" value="#{dialogTramiteVersionPrevisualizar.soloIncorporadosSia}" itemLabel="#{msg['dialogTramiteVersionPrevisualizar.soloSia']}" disabled="#{dialogTramiteVersionPrevisualizar.simularCatalogo}">
+								<p:ajax event="change"  listener="#{dialogTramiteVersionPrevisualizar.recargarProcedimientos()}" process="@this"/>
 							</p:selectBooleanCheckbox>
-							<p:selectBooleanCheckbox value="#{dialogTramiteVersionPrevisualizar.soloVigentes}" itemLabel="#{msg['dialogTramiteVersionPrevisualizar.soloVigente']}"  >
-								<p:ajax event="change" update="dialogTramite:procedimiento" listener="#{dialogTramiteVersionPrevisualizar.recargarProcedimientos()}" />
+							<p:selectBooleanCheckbox id="checkSoloVigentes" value="#{dialogTramiteVersionPrevisualizar.soloVigentes}" itemLabel="#{msg['dialogTramiteVersionPrevisualizar.soloVigente']}" disabled="#{dialogTramiteVersionPrevisualizar.simularCatalogo}">
+								<p:ajax event="change"  listener="#{dialogTramiteVersionPrevisualizar.recargarProcedimientos()}"  process="@this"/>
+							</p:selectBooleanCheckbox>
+
+							<p:selectBooleanCheckbox id="checkSoloPublicas" value="#{dialogTramiteVersionPrevisualizar.soloPublicas}" itemLabel="#{msg['dialogTramiteVersionPrevisualizar.soloPublicas']}" disabled="#{dialogTramiteVersionPrevisualizar.simularCatalogo}">
+								<p:ajax event="change"  listener="#{dialogTramiteVersionPrevisualizar.recargarProcedimientos()}"  process="@this"/>
 							</p:selectBooleanCheckbox>
 						</div>
-						<p style="line-height:20px; padding:0px; margin:0px;">
-							<p:outputLabel   styleClass="outputlabel-nota"  value="#{msg['dialogTramiteVersionPrevisualizar.infoVigente']}" />
-						</p>
-						<p style="line-height:20px; padding:0px; margin:0px;">
-							<p:outputLabel   styleClass="outputlabel-nota"  value="#{msg['dialogTramiteVersionPrevisualizar.infoSia']}" />
-						</p>
+						<div style="display: flex; margin-bottom: 5px;">
+							<div style="width: 50%;">
+								<p style="line-height:20px; padding:0px; margin:0px;">
+									<p:outputLabel   styleClass="outputlabel-nota"  value="#{msg['dialogTramiteVersionPrevisualizar.infoVigente']}" />
+								</p>
+								<p style="line-height:20px; padding:0px; margin:0px;">
+									<p:outputLabel   styleClass="outputlabel-nota"  value="#{msg['dialogTramiteVersionPrevisualizar.infoSia']}" />
+								</p>
+							</div>
+							<div style="width: 50%;">
+								<p style="line-height:20px; padding:0px; margin:0px;">
+									<p:outputLabel   styleClass="outputlabel-nota"  value="#{msg['dialogTramiteVersionPrevisualizar.infoPublico']}" />
+								</p>
+								<p style="line-height:20px; padding:0px; margin:0px;">
+									<p:outputLabel   styleClass="outputlabel-nota"  value="#{msg['dialogTramiteVersionPrevisualizar.infoInterno']}" />
+								</p>
+								<p style="line-height:20px; padding:0px; margin:0px;">
+									<p:outputLabel   styleClass="outputlabel-nota"  value="#{msg['dialogTramiteVersionPrevisualizar.infoReservado']}" />
+								</p>
+							</div>
+						</div>
 						<p:selectBooleanCheckbox value="#{dialogTramiteVersionPrevisualizar.simularCatalogo}" itemLabel="#{msg['dialogTramiteVersionPrevisualizar.simularCatalogo']}" rendered="#{dialogTramiteVersionPrevisualizar.isDesarrollo()}" >
-							<p:ajax event="change" update="dialogTramite:txtCopy" listener="#{dialogTramiteVersionPrevisualizar.recalcularURL()}" />
+							<p:ajax event="change" update="dialogTramite:txtCopy dialogTramite:procedimiento dialogTramite:botonera dialogTramite:btnNuevoValor dialogTramite:btnEditarValor dialogTramite:btnEliminarValor dialogTramite:idioma dialogTramite:procedimiento dialogTramite:checkSoloSia dialogTramite:checkSoloVigentes dialogTramite:checkSoloPublicas" listener="#{dialogTramiteVersionPrevisualizar.recalcularURL()}" />
 						</p:selectBooleanCheckbox>
 					</p:column>
 					<p:outputLabel   value="" />
@@ -129,17 +149,17 @@
 						</p:column>
 					<p:column id="botonesTabla">
 								<p>
-									<p:commandButton id="btnNuevoValor" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogTramiteVersionPrevisualizar.nuevoValor()}" process="@this" update="growlDialog"  >
+									<p:commandButton id="btnNuevoValor" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogTramiteVersionPrevisualizar.nuevoValor()}" process="@this" update="growlDialog"  disabled="#{dialogTramiteVersionPrevisualizar.disableTramites and not dialogTramiteVersionPrevisualizar.simularCatalogo}">
 		        						<p:ajax event="dialogReturn" listener="#{dialogTramiteVersionPrevisualizar.returnDialogo}" update="growlDialog datalistValores dialogTramite:txtCopy"/>
 		        					</p:commandButton>
 		        				</p>
 		        				<p>
-		        					<p:commandButton id="btnEditarValor" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogTramiteVersionPrevisualizar.editarValor()}" process="@this" update="growlDialog"  >
+		        					<p:commandButton id="btnEditarValor" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogTramiteVersionPrevisualizar.editarValor()}" process="@this" update="growlDialog"  disabled="#{dialogTramiteVersionPrevisualizar.disableTramites and not dialogTramiteVersionPrevisualizar.simularCatalogo}">
 		        						<p:ajax event="dialogReturn" listener="#{dialogTramiteVersionPrevisualizar.returnDialogo}" update="growlDialog datalistValores dialogTramite:txtCopy"/>
 		        					</p:commandButton>
 		        				</p>
 							    <p>
-							    	<p:commandButton id="btnEliminarValor" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogTramiteVersionPrevisualizar.quitarValor()}" process="@this" update="growlDialog datalistValores dialogTramite:txtCopy" >
+							    	<p:commandButton id="btnEliminarValor" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogTramiteVersionPrevisualizar.quitarValor()}" process="@this" update="growlDialog datalistValores dialogTramite:txtCopy" disabled="#{dialogTramiteVersionPrevisualizar.disableTramites and not dialogTramiteVersionPrevisualizar.simularCatalogo}">
 								    	<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 						    		</p:commandButton>
 							    </p>
@@ -155,18 +175,18 @@
 			        </ui:fragment>
 			    </h:panelGroup>
 			</p:outputPanel>
-		  	 <p:outputPanel styleClass="botonera">
+		  	 <p:outputPanel styleClass="botonera" id="botonera">
 		     	<p:toolbar>
 		     		<f:facet name="left">
 		     			<p:inputText id="txtCopy" value="#{dialogTramiteVersionPrevisualizar.urlTramite}" style="display:none" />
-						<p:commandButton id="btnCopiar" value="#{msg['botones.copiar']}" icon="fa fa-copy" onclick="copiarClipboard();" process="@this"/>
+						<p:commandButton id="btnCopiar" value="#{msg['botones.copiar']}" icon="fa fa-copy" onclick="copiarClipboard();" process="@this" disabled="#{dialogTramiteVersionPrevisualizar.disableTramites and not dialogTramiteVersionPrevisualizar.simularCatalogo}"/>
 						<p:commandButton id="hiddenCommandGrowl" styleClass="button" process="@this"  action="#{dialogTramiteVersionPrevisualizar.avisarGrowl()}"  style="display:none" />
 		     		</f:facet>
 					<f:facet name="right">
-						<p:commandButton value="#{msg['botones.previsualizarTramite']}" actionListener="#{dialogTramiteVersionPrevisualizar.aceptar}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
-		        		<p:commandButton value="#{msg['botones.validarVersion']}" actionListener="#{dialogTramiteVersionPrevisualizar.validar}" process="@this" update="growlDialog" />
-						<p:commandButton id="btnCancelar" value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteVersionPrevisualizar.cancelar}" process="@this" />
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogTramiteVersionPrevisualizar.ayuda()}" process="@this"/>
+						<p:commandButton value="#{msg['botones.previsualizarTramite']}" actionListener="#{dialogTramiteVersionPrevisualizar.aceptar}" process="@form" update="@form growlDialog"  styleClass="boton-azul" disabled="#{dialogTramiteVersionPrevisualizar.disableTramites and not dialogTramiteVersionPrevisualizar.simularCatalogo}"/>
+		        		<p:commandButton value="#{msg['botones.validarVersion']}" actionListener="#{dialogTramiteVersionPrevisualizar.validar}" process="@this" update="growlDialog"/>
+						<p:commandButton id="btnCancelar" value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteVersionPrevisualizar.cancelar}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogTramiteVersionPrevisualizar.ayuda()}" process="@this" />
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
@@ -210,8 +230,21 @@
 			</h:outputScript>
 
             <h:outputScript >
+            	function llamarBoton() {
+                    //Habría que crear un botón de buscar
+                    document.getElementById("dialogTramite:getProcedimientosEnd").click();
+                }
 
+				function llamarBotonRecargar() {
+                    //Habría que crear un botón de buscar
+                    document.getElementById("dialogTramite:getProcedimientosRecargar").click();
+                }
 	             window.onload=function(){
+
+	             	setTimeout(() => {
+                          llamarBoton();
+                    }, "1000")
+
 	                let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 	                onVisible(contextMenu, () => eliminarResaltar());
 
@@ -271,20 +304,22 @@
 
 	               el.classList.add("resaltar");
 	                var aux = document.getElementById("dialogTramite:auxCopiar");
-	                if(el.textContent!=''){
+	                if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 	                    aux.value = el.textContent;
-	                }else if(el.firstChild!=null){
+	                }else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 	                    aux.value = el.firstChild.value;
 	                }else if(el.value!=null &amp;&amp; el.value!=''){
 	                    aux.value = el.value;
-	                }
+	                }else{
+			          aux.value = '';
+			        }
 
 	             }
 
             </h:outputScript>
 
             <p:contextMenu id="mainCm" widgetVar="mainCm">
-                <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogTramite:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+                <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogTramite:auxCopiar" update="growlDialog" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{dialogTramiteVersionPrevisualizar.copiadoCorr}" process="@this" update="@this growlDialog"/>
@@ -294,7 +329,8 @@
            <p:inputText id="auxCopiar" value="#{dialogTramiteVersionPrevisualizar.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 
 			<p:contextMenu for="datalistValores" id="cMenuValores" widgetVar="cMenuValoresWV" beforeShow="return true;">
-                <p:menuitem id="mnuCopyValores" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogTramite:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+                <p:menuitem id="mnuCopyValores" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogTramite:auxCopiar" update="growlDialog" />
+                <p:separator/>
 				<p:menuitem id="mnuNuevoValores" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('dialogTramite:btnNuevoValor').click();" />
 				<p:menuitem id="mnuEditarValores" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('dialogTramite:btnEditarValor').click();"/>
 				<p:menuitem id="mnuEliminarValores" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('dialogTramite:btnEliminarValor').click();" />

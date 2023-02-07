@@ -95,4 +95,26 @@ public class Traduccion extends ModelApi {
 		this.literal = literal;
 	}
 
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "Traduccio. ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           texto.append(tabulacion +"\t Idioma:" + this.idioma + "\n");
+           texto.append(tabulacion +"\t Literal:" + literal + "\n");
+           return texto.toString();
+     }
+
+	public void limpiarIds() {
+		this.setCodigo(null);
+	}
+
 }

@@ -27,9 +27,11 @@ import com.lowagie.text.pdf.PdfReader;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistra2.commons.utils.ValidacionTipoException;
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
+import es.caib.sistrages.rest.api.interna.RArea;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistrages.rest.api.interna.RScript;
+import es.caib.sistrages.rest.api.interna.RVariableArea;
 import es.caib.sistramit.core.api.exception.EncodeException;
 import es.caib.sistramit.core.api.exception.ErrorNoControladoException;
 import es.caib.sistramit.core.api.exception.ErrorScriptException;
@@ -39,6 +41,7 @@ import es.caib.sistramit.core.api.exception.ParametrosEntradaIncorrectosExceptio
 import es.caib.sistramit.core.api.exception.TamanyoMaximoAnexoException;
 import es.caib.sistramit.core.api.exception.TramiteFinalizadoException;
 import es.caib.sistramit.core.api.exception.UsuarioNoPermitidoException;
+import es.caib.sistramit.core.api.exception.VariableAreaNoExisteException;
 import es.caib.sistramit.core.api.model.comun.Constantes;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.comun.types.TypeValidacion;
@@ -893,6 +896,47 @@ public final class UtilsFlujo {
 		} catch (final IOException e) {
 			LOGGER.warn("No se puede verificar si es PADES: " + e.getMessage());
 		}
+		return resultado;
+	}
+
+	/**
+	 * Reemplaza variables de área.
+	 *
+	 * @param cadena
+	 *                              cadena
+	 * @param confEntidad
+	 *                              Configuración entidad
+	 * @param identificadorArea
+	 *                              Id área
+	 * @return
+	 */
+	public static String replaceVariablesArea(final String cadena, final RConfiguracionEntidad confEntidad,
+			final String identificadorArea) {
+
+		String resultado = cadena;
+
+		// Obtenemos area
+		RArea area = null;
+		for (final RArea a : confEntidad.getArea()) {
+			if (a.getId().equals(identificadorArea)) {
+				area = a;
+				break;
+			}
+		}
+		if (area == null) {
+			throw new VariableAreaNoExisteException("No existe área:" + identificadorArea);
+		}
+
+		// Reemplazamos variables area
+		for (final RVariableArea v : area.getVariablesArea()) {
+			resultado = StringUtils.replace(resultado, "{@@" + v.getIdentificador() + "@@}", v.getValor());
+		}
+
+		// Si queda alguna variable por reemplazar, generamos error
+		if (resultado.matches("\\{@@[A-Z0-9]*@@\\}")) {
+			throw new VariableAreaNoExisteException("No se han podido reemplazar todas las variables: " + resultado);
+		}
+
 		return resultado;
 	}
 

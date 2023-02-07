@@ -101,7 +101,7 @@ public class AvisoEntidadServiceBean implements AvisoEntidadService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public AvisoEntidad getAvisoEntidadByTramite(final String identificadorTramite) {
+	public List<AvisoEntidad> getAvisoEntidadByTramite(final String identificadorTramite) {
 		return avisoEntidadService.getAvisoEntidadByTramite(identificadorTramite);
 	}
 

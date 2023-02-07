@@ -45,6 +45,10 @@ public enum TypeParametroEvento {
 	 */
 	NUMERO_REGISTRO("NUMREG"),
 	/**
+	 * Pago: Id sesión.
+	 */
+	PAGO_ID_SESION("PAGIDE"),
+	/**
 	 * Pago: Pasarela pago.
 	 */
 	PAGO_PASARELA("PAGPAS"),

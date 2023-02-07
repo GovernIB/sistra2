@@ -79,13 +79,15 @@
 
 				el.classList.add("resaltar");
 				var aux = document.getElementById("dialogMensajeAviso:auxCopiar");
-				if(el.textContent!=''){
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 					aux.value = el.textContent;
-				}else if(el.firstChild!=null){
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 					aux.value = el.firstChild.value;
 				}else if(el.value!=null &amp;&amp; el.value!=''){
 					aux.value = el.value;
-				}
+				}else{
+		          aux.value = '';
+		        }
 
 			 }
 
@@ -127,7 +129,14 @@
 					</h:panelGrid>
 					<h:panelGrid id="columnaListaTramites" style="margin-bottom:0px" columns="1" styleClass="w100">
 
-								<h:panelGrid  style="margin-bottom:0px" columns="5" styleClass="w100" rendered="#{dialogMensajeAviso.mostrarListaTramites() and dialogMensajeAviso.isNotTipoTramite()}">
+								<h:panelGrid  style="margin-bottom:0px" columns="7" styleClass="w100" rendered="#{dialogMensajeAviso.mostrarListaTramites() and dialogMensajeAviso.isNotTipoTramite()}">
+										<p:outputLabel value="#{msg['dialogMensajeAviso.headerArea']}:" styleClass="margin-right-10" ></p:outputLabel>
+										<p:selectOneMenu id="comboAreas" value="#{dialogMensajeAviso.areaSeleccionado}" styleClass="margin-right-10" filter="true" filterMatchMode="contains">
+												<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>
+										     	<f:selectItems value="#{dialogMensajeAviso.areas}" var="area" itemLabel="#{area.identificador}" itemValue="#{area.codigo}"  />
+			 							      	<p:ajax event="change" listener="#{dialogMensajeAviso.actualizarTramite()}" process="@this" update="@form" />
+										</p:selectOneMenu>
+
 										<p:outputLabel value="#{msg['dialogMensajeAviso.headerTramite']}:" styleClass="margin-right-10" ></p:outputLabel>
 										<p:selectOneMenu id="comboTramites" value="#{dialogMensajeAviso.tramiteSeleccionado}" styleClass="margin-right-10" filter="true" filterMatchMode="contains">
 												<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>
@@ -159,11 +168,14 @@
 										>
 
 										<!-- Columnas -->
-										<p:column headerText="#{msg['dialogMensajeAviso.headerTramite']}" class="ui-panelgrid-cell" width="60%">
+										<p:column headerText="#{msg['dialogMensajeAviso.headerArea']}" class="ui-panelgrid-cell" width="40%">
+											<h:outputText value="#{td.areaTramite}" />
+									    </p:column>
+										<p:column headerText="#{msg['dialogMensajeAviso.headerTramite']}" class="ui-panelgrid-cell" width="40%">
 											<h:outputText value="#{td.identificador}" />
 									    </p:column>
 
-									    <p:column headerText="#{msg['dialogMensajeAviso.headerNumVersion']}" class="ui-panelgrid-cell" width="30%">
+									    <p:column headerText="#{msg['dialogMensajeAviso.headerNumVersion']}" class="ui-panelgrid-cell" width="20%">
 											<h:outputText value="#{td.versionTramite}" />
 									    </p:column>
 
@@ -173,7 +185,7 @@
 
 				 				</p:dataTable>
 								<p:contextMenu>
-					       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogMensajeAviso:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+					       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogMensajeAviso:auxCopiar" update="growlDialog" />
 							    </p:contextMenu>
 							    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
 									<p:ajax event="success" listener="#{dialogMensajeAviso.copiadoCorr}" process="@this" update="@this growlDialog"/>

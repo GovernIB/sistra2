@@ -28,6 +28,10 @@ public class RGestorFormularioExterno {
 	@ApiModelProperty(value = "Configuracion autenticacion")
 	private String identificadorConfAutenticacion;
 
+	/** Identificador área. */
+	@ApiModelProperty(value = "Identificador área.")
+	private String identificadorArea;
+
 	/**
 	 * Método de acceso a identificador.
 	 *
@@ -103,6 +107,25 @@ public class RGestorFormularioExterno {
 	 */
 	public void setIdentificadorEntidad(final String identificadorEntidad) {
 		this.identificadorEntidad = identificadorEntidad;
+	}
+
+	/**
+	 * Método de acceso a identificadorArea.
+	 * 
+	 * @return identificadorArea
+	 */
+	public String getIdentificadorArea() {
+		return identificadorArea;
+	}
+
+	/**
+	 * Método para establecer identificadorArea.
+	 * 
+	 * @param identificadorArea
+	 *                              identificadorArea a establecer
+	 */
+	public void setIdentificadorArea(final String identificadorArea) {
+		this.identificadorArea = identificadorArea;
 	}
 
 }

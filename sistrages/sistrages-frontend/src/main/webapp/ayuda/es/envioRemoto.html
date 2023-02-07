@@ -15,7 +15,8 @@
 	<ul>
 		<li><span class="nombreCampo">Identificador:</span> c&oacute;digo un&iacute;voco que identifica el env&iacute;o y mdeiante el cual se puede invocar el env&iacute;o </li>
 		<li><span class="nombreCampo">Descripci&oacute;n:</span> texto descriptivo de la funcionalidad provista por el env&iacute;o</li>
-		<li><span class="nombreCampo">URL:</span> URL del servicio al cual se quiere realizar el env&iacute;o remoto.</li>
+		<li><span class="nombreCampo">URL:</span> URL del servicio al cual se quiere realizar el env&iacute;o remoto. Si existe un placeholder (por haber seleccionado una variable de &aacute;rea), &eacute;ste ser&aacute; sustituido por el contenido de esa variable, que ser&aacute; insertado al comienzo de este campo. Por ejemplo, si en la variable VAR01 aparece la URL "https://se.caib.es" y la URL de este campo ha de finalizar con "proyectoBase/services/dominios/", en este campo aparecer&aacute; el texto "{@@VAR01@@}/proyectoBase/services/dominios/".</li>
+		<li><span class="nombreCampo">Selección Variable &Aacute;rea:</span> este bot&oacute;n abre una pantalla que permite seleccionar una variable de &aacute;rea que añadir&aacute; un placeholder que ser&aacute; sustituido por la url indicada en esa variable de &aacute;rea a la hora de ejecutar el tr&aacute;mite que utilice este env&iacute;o remoto.</li>
 		<li><span class="nombreCampo">Configuraci&oacute;n Autenticaci&oacute;n:</span> autenticaci&oacute;n que se enviar&aacute; al servicio en caso de estar securizado. </li>
 		<li><span class="nombreCampo">Timeout (segundos):</span> tiempo que esperar&aacute; SISTRA2 en caso de no obtener respuesta del servicio.</li>
 

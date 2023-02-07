@@ -43,7 +43,7 @@ import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RSer
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RTramiteRolsac;
 
 /**
- * Plugin mock catálogo procedimientos.
+ * Plugin catálogo procedimientos.
  *
  * @author Indra
  *
@@ -53,7 +53,6 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 	/** El literal de idioma que no para de estar repetido. **/
 	private static final String TAMANYO_MAXIMO = "200";
-	//private static final String LITERAL_PAGE = "page";
 	private static final String LITERAL_IDIOMA = "lang";
 	private static final String LITERAL_ERROR_NO_CONECTAR = "No se conecta correctamente a ROLSAC";
 	private static final String LITERAL_FILTRO = "filtro";
@@ -89,9 +88,9 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 		DefinicionTramiteCP definicion;
 		if (servicio) {
-			definicion = obtenerDefinicionTramiteServicio(idTramiteCP, idioma);
+			definicion = obtenerDefinicionTramiteServicio(idTramiteCP, idioma, false);
 		} else {
-			definicion = obtenerDefinicionTramiteProcedimiento(idTramiteCP, idioma);
+			definicion = obtenerDefinicionTramiteProcedimiento(idTramiteCP, idioma, false);
 		}
 		return definicion;
 	}
@@ -106,7 +105,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	 * @return
 	 * @throws CatalogoPluginException
 	 */
-	private DefinicionTramiteCP obtenerDefinicionTramiteServicio(final String idServicioCP, final String idioma)
+	private DefinicionTramiteCP obtenerDefinicionTramiteServicio(final String idServicioCP, final String idioma, final boolean modoResumen)
 			throws CatalogoPluginException {
 
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
@@ -118,7 +117,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		final RServicioRolsac servicioRolsac = getRServicioRolsac(idServicioCP, map)[0];
 
 		// Crea definición trámite servicio
-		final DefinicionTramiteCP dt = crearDefinicionTramiteServicio(idioma, servicioRolsac);
+		final DefinicionTramiteCP dt = crearDefinicionTramiteServicio(idioma, servicioRolsac, modoResumen);
 
 		return dt;
 	}
@@ -165,11 +164,12 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 			try {
 				final ResponseEntity<RRespuestaServicios> responseTramite;
 
+				String url = getPropiedad("url");
 				if (idServicioCP == null || idServicioCP.isEmpty()) {
-					responseTramite = restTemplate.postForEntity(getPropiedad("url") + "/servicios", request,
+					responseTramite = restTemplate.postForEntity(url + "/servicios", request,
 							RRespuestaServicios.class);
 				} else {
-					responseTramite = restTemplate.postForEntity(getPropiedad("url") + "/servicios/" + idServicioCP,
+					responseTramite = restTemplate.postForEntity(url + "/servicios/" + idServicioCP,
 							request, RRespuestaServicios.class);
 				}
 				final RServicioRolsac[] serviciosRolsac = responseTramite.getBody().getResultado();
@@ -202,7 +202,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	 * @throws CatalogoPluginException
 	 */
 
-	private DefinicionTramiteCP obtenerDefinicionTramiteProcedimiento(final String idTramiteCP, final String idioma)
+	private DefinicionTramiteCP obtenerDefinicionTramiteProcedimiento(final String idTramiteCP, final String idioma, final boolean modoResumen)
 			throws CatalogoPluginException {
 
 		// Obtener tramite.
@@ -218,13 +218,27 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		final RProcedimientoRolsac procRolsac = getRProcedimientoRolsac(
 				tramiteRolsac.getLink_procedimiento().getCodigo(), idioma);
 
-		final DefinicionTramiteCP dt = obtenerDefinicionTramiteProcedimiento(procRolsac, tramiteRolsac, idioma);
+		final DefinicionTramiteCP dt = obtenerDefinicionTramiteProcedimiento(procRolsac, tramiteRolsac, idioma, modoResumen);
 		return dt;
 
 	}
 
 	protected DefinicionTramiteCP obtenerDefinicionTramiteProcedimiento(final RProcedimientoRolsac procRolsac,
-			final RTramiteRolsac tramiteRolsac, final String idioma) throws CatalogoPluginException {
+			final RTramiteRolsac tramiteRolsac, final String idioma, final boolean modoResumen) throws CatalogoPluginException {
+
+		if (modoResumen) {
+			final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
+			dp.setIdentificador(tramiteRolsac.getLink_procedimiento().getCodigo());
+			dp.setDescripcion(procRolsac.getNombre());
+			dp.setIdProcedimientoSIA(procRolsac.getCodigoSIA());
+			dp.setValidacion(procRolsac.getValidacion());
+			final DefinicionTramiteCP dt = new DefinicionTramiteCP();
+			dt.setIdentificador(String.valueOf(tramiteRolsac.getCodigo()));
+			dt.setDescripcion(tramiteRolsac.getNombre());
+			dt.setVigente(esVigente(procRolsac, tramiteRolsac));
+			dt.setProcedimiento(dp);
+			return dt;
+		}
 
 		// Codigo DIR3 responsable procedimiento
 		String dir3organoResponsable = "";
@@ -247,7 +261,9 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		dp.setDescripcion(procRolsac.getNombre());
 		dp.setIdProcedimientoSIA(procRolsac.getCodigoSIA());
 		dp.setOrganoResponsableDir3(dir3organoResponsable);
+		dp.setValidacion(procRolsac.getValidacion());
 		dp.setServicio(false);
+		dp.setValidacion(procRolsac.getValidacion());
 		dp.setLopd(generarInfoLOPD(procRolsac, idioma));
 
 		final DefinicionTramiteCP dt = new DefinicionTramiteCP();
@@ -305,8 +321,10 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		while (intentos <= intentosMax) {
 
 			try {
+				String url = getPropiedad("url");
+
 				final ResponseEntity<RRespuestaProcedimientos> responseProc = restTemplate.postForEntity(
-						getPropiedad("url") + "/procedimientos/" + codigoProc, requestProc,
+						url + "/procedimientos/" + codigoProc, requestProc,
 						RRespuestaProcedimientos.class);
 				if (responseProc == null || responseProc.getBody() == null
 						|| responseProc.getBody().getResultado() == null) {
@@ -357,8 +375,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 			try {
 				final ResponseEntity<RRespuestaArchivos> responseArchivo;
-
-				responseArchivo = restTemplate.postForEntity(getPropiedad("url") + "/archivos/" + referenciaArchivo,
+				String url = getPropiedad("url");
+				responseArchivo = restTemplate.postForEntity(url + "/archivos/" + referenciaArchivo,
 						request, RRespuestaArchivos.class);
 
 				final RArchivoRolsac[] archivosRolsac = responseArchivo.getBody().getResultado();
@@ -408,11 +426,12 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 			try {
 				final ResponseEntity<RRespuestaTramites> responseTramite;
+				String url = getPropiedad("url");
 				if (idTramiteCP == null || idTramiteCP.isEmpty()) {
-					responseTramite = restTemplate.postForEntity(getPropiedad("url") + "/tramites", request,
+					responseTramite = restTemplate.postForEntity(url + "/tramites", request,
 							RRespuestaTramites.class);
 				} else {
-					responseTramite = restTemplate.postForEntity(getPropiedad("url") + "/tramites/" + idTramiteCP,
+					responseTramite = restTemplate.postForEntity(url + "/tramites/" + idTramiteCP,
 							request, RRespuestaTramites.class);
 				}
 
@@ -463,9 +482,10 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		while (intentos <= intentosMax) {
 
 			try {
+				String url = getPropiedad("url");
 
 				final ResponseEntity<RRespuestaSimple> responseCodDIR3 = restTemplate.postForEntity(
-						getPropiedad("url") + "/unidades_administrativas/codigoDir3/" + codigoDIR3, requestProc,
+						url + "/unidades_administrativas/codigoDir3/" + codigoDIR3, requestProc,
 						RRespuestaSimple.class);
 
 				if (responseCodDIR3 == null || responseCodDIR3.getBody() == null
@@ -510,9 +530,9 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		// Procedimiento publicado
 		final boolean procedimientoPublicado = (procedimiento.getFechaPublicacion() == null
 				|| procedimiento.getFechaPublicacion().before(ahora));
-		// Procedimiento público
-		final boolean procedimientoPublico = procedimiento.getValidacion() == null
-				|| "1".equals(procedimiento.getValidacion().toString());
+		// Procedimiento público (Ya no es necesario el estado, da igual si es publico/resrva/interna)
+		//final boolean procedimientoPublico = procedimiento.getValidacion() == null
+		//		|| "1".equals(procedimiento.getValidacion().toString());
 		// Tramite abierto
 		final boolean tramitePlazoAbierto = (tramite.getDataInici() == null || tramite.getDataInici().before(ahora))
 				&& (tramite.getDataTancament() == null || tramite.getDataTancament().after(ahora));
@@ -520,7 +540,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		final boolean tramitePublicado = (tramite.getDataPublicacio() == null
 				|| tramite.getDataPublicacio().before(ahora));
 		// Vigente
-		return procedimientoPublico && procedimientoNoCaducado && procedimientoPublicado && tramitePlazoAbierto
+		return procedimientoNoCaducado && procedimientoPublicado && tramitePlazoAbierto
 				&& tramitePublicado;
 	}
 
@@ -536,10 +556,10 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		final boolean publicado = (servicio.getFechaPublicacion() == null
 				|| servicio.getFechaPublicacion().before(ahora))
 				&& (servicio.getFechaDespublicacion() == null || servicio.getFechaDespublicacion().after(ahora));
-		// Servicio es público
-		final boolean publico = servicio.getValidacion() == null || "1".equals(servicio.getValidacion().toString());
+		// Servicio es público  (Ya no es necesario el estado, da igual si es publico/resrva/interna)
+		//final boolean publico = servicio.getValidacion() == null || "1".equals(servicio.getValidacion().toString());
 		// Vigente si público y publicado
-		return publico && publicado;
+		return  publicado;
 	}
 
 	/**
@@ -580,8 +600,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 			throws CatalogoPluginException {
 
 		final List<DefinicionTramiteCP> trams = new ArrayList<>();
-		trams.addAll(obtenerTramitesServicios(idTramite, version, idioma));
-		trams.addAll(obtenerTramitesProcedimientos(idTramite, version, idioma));
+		trams.addAll(obtenerTramitesServicios(idTramite, version, idioma, true));
+		trams.addAll(obtenerTramitesProcedimientos(idTramite, version, idioma, true));
 
 		return trams;
 	}
@@ -596,19 +616,23 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	 * @throws CatalogoPluginException
 	 */
 	private List<DefinicionTramiteCP> obtenerTramitesServicios(final String idTramite, final Integer version,
-			final String idioma) throws CatalogoPluginException {
+			final String idioma, final boolean modoResumen) throws CatalogoPluginException {
 
 		final List<DefinicionTramiteCP> res = new ArrayList<>();
 
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add(LITERAL_FILTRO_PAGINACION, "{\"size\":\"" + TAMANYO_MAXIMO + "\", \"page\" : \"0\"}");
 		map.add(LITERAL_IDIOMA, idioma);
+		//String vigentes = "";
+		//if (soloVigentes) {
+		//	vigentes = " \"vigente\":\"1\", ";
+		//}
 		if (version == null) {
 			map.add(LITERAL_FILTRO, "{\"codigoTramiteTelematico\":\"" + idTramite + "\", \"plataforma\" : \""
 					+ getIdentificadorPlafaformaSistra2() + "\"}");
 		} else {
 			map.add(LITERAL_FILTRO,
-					"{\"codigoTramiteTelematico\":\"" + idTramite + "\",\"versionTramiteTelematico\" : \"" + version
+					"{\"codigoTramiteTelematico\":\"" + idTramite + "\", \"versionTramiteTelematico\" : \"" + version
 							+ "\", \"plataforma\" : \"" + getIdentificadorPlafaformaSistra2() + "\"}");
 		}
 
@@ -618,7 +642,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 			for (final RServicioRolsac servicioRolsac : serviciosRolsac) {
 
 				// Crea definición trámite servicio
-				final DefinicionTramiteCP dt = crearDefinicionTramiteServicio(idioma, servicioRolsac);
+				final DefinicionTramiteCP dt = crearDefinicionTramiteServicio(idioma, servicioRolsac, modoResumen);
 
 				res.add(dt);
 			}
@@ -638,13 +662,17 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	 * @throws CatalogoPluginException
 	 */
 	private List<DefinicionTramiteCP> obtenerTramitesProcedimientos(final String idTramite, final Integer version,
-			final String idioma) throws CatalogoPluginException {
+			final String idioma, final boolean resumen) throws CatalogoPluginException {
 
 		final List<DefinicionTramiteCP> res = new ArrayList<>();
 
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add(LITERAL_FILTRO_PAGINACION, "{\"size\":\"" + TAMANYO_MAXIMO + "\", \"page\" : \"0\"}");
 		map.add(LITERAL_IDIOMA, idioma);
+
+		//if (soloVigentes) {
+		//	vigentes = " \"vigente\":\"1\", ";
+		//}
 		if (version == null) {
 			map.add(LITERAL_FILTRO, "{\"codigoTramiteTelematico\":\"" + idTramite + "\", \"plataforma\" : \""
 					+ getIdentificadorPlafaformaSistra2() + "\"}");
@@ -672,7 +700,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 				}
 
 				// Obtiene def tramite
-				final DefinicionTramiteCP dt = obtenerDefinicionTramiteProcedimiento(procRolsac, tramiteRolsac, idioma);
+				final DefinicionTramiteCP dt = obtenerDefinicionTramiteProcedimiento(procRolsac, tramiteRolsac, idioma, resumen);
 				res.add(dt);
 
 			}
@@ -803,7 +831,21 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	}
 
 	protected DefinicionTramiteCP crearDefinicionTramiteServicio(final String idioma,
-			final RServicioRolsac servicioRolsac) throws CatalogoPluginException {
+			final RServicioRolsac servicioRolsac, final boolean modoResumen) throws CatalogoPluginException {
+
+		if (modoResumen) {
+			final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
+			dp.setIdentificador(String.valueOf(servicioRolsac.getCodigo()));
+			dp.setDescripcion(servicioRolsac.getNombre());
+			dp.setIdProcedimientoSIA(servicioRolsac.getCodigoSIA());
+			dp.setValidacion(servicioRolsac.getValidacion());
+			final DefinicionTramiteCP dt = new DefinicionTramiteCP();
+			dt.setIdentificador(String.valueOf(servicioRolsac.getCodigo()));
+			dt.setDescripcion(servicioRolsac.getNombre());
+			dt.setVigente(esVigente(servicioRolsac));
+			dt.setProcedimiento(dp);
+			return dt;
+		}
 
 		// Codigo DIR3 responsable procedimiento
 		String dir3organoInstructor = "";
@@ -824,6 +866,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		dp.setDescripcion(servicioRolsac.getNombre());
 		dp.setIdProcedimientoSIA(servicioRolsac.getCodigoSIA());
 		dp.setOrganoResponsableDir3(dir3servicioResponsable);
+		dp.setValidacion(servicioRolsac.getValidacion());
 		dp.setServicio(true);
 		dp.setLopd(generarInfoLOPD(servicioRolsac, idioma));
 

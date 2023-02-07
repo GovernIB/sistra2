@@ -13,6 +13,7 @@ import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Tramite;
@@ -87,10 +88,15 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	private boolean disabledActivo = false;
 
 	/** Tramite seleccionado. **/
+	private String areaSeleccionado;
+
+	/** Tramite seleccionado. **/
 	private String tramiteSeleccionado;
 
 	/** Version seleccionado. **/
 	private String versionSeleccionado;
+
+	private List<Area> areas;
 
 	/** Tramites. **/
 	private List<Tramite> tramites;
@@ -105,6 +111,8 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	private TramiteMensajeAviso tramiteMensajeAvisoSeleccionado;
 
 	private String portapapeles;
+
+	private String errorCopiar;
 
 	/**
 	 * Inicializacion.
@@ -147,13 +155,12 @@ public class DialogMensajeAviso extends DialogControllerBase {
 				}
 			}
 			if (tramite != null) {
-				data = avisoEntidadService.getAvisoEntidadByTramite(tramite + "#" + tramiteVersion);
+				data = avisoEntidadService.getAvisoEntidadByTramite(tramite + "#" + tramiteVersion).get(0);
 			}
 		}
 
-		/** Cargamos el grid de trámites. **/
-		tramites = tramiteService.listTramiteByEntidad(UtilJSF.getIdEntidad());
-		Collections.sort(tramites, (o1, o2) -> o1.getIdentificador().compareTo(o2.getIdentificador()));
+		setAreas(tramiteService.listArea(UtilJSF.getIdEntidad(), ""));
+		Collections.sort(areas, (o1, o2) -> o1.getIdentificador().compareTo(o2.getIdentificador()));
 
 		listaTramites = new ArrayList<>();
 		if (data != null && data.getListaSerializadaTramites() != null) {
@@ -161,10 +168,15 @@ public class DialogMensajeAviso extends DialogControllerBase {
 			if (trams.length > 0) {
 				for (final String tram : trams) {
 					final String tramCodigo = tram.split("#")[0];
+					final Long tramCodigoLong = Long.valueOf(tramCodigo);
 					final String tramNumeroVersion = tram.split("#")[1];
-					final String tramIdentificador = tramiteService
-							.getIdentificadorByCodigoVersion(Long.valueOf(tramCodigo));
-					listaTramites.add(new TramiteMensajeAviso(tramCodigo, tramIdentificador, tramNumeroVersion));
+					final String tramIdentificador = tramiteService.getIdentificadorByCodigoVersion(tramCodigoLong);
+					final String areaIdentificador = tramiteService
+							.getAreaTramite(tramiteService.getTramiteVersion(tramCodigoLong).getIdTramite())
+							.getIdentificador();
+
+					listaTramites.add(new TramiteMensajeAviso(tramCodigo, tramIdentificador, tramNumeroVersion,
+							areaIdentificador));
 				}
 				Collections.sort(listaTramites, new Comparator<TramiteMensajeAviso>() {
 					@Override
@@ -185,6 +197,11 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	 * Añade un trámite a la lista
 	 */
 	public void anyadirTram() {
+		if (areaSeleccionado == null) {
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("dialogMensajeAviso.error.seleccioneArea"));
+			return;
+		}
+
 		if (tramiteSeleccionado == null) {
 			addMessageContext(TypeNivelGravedad.WARNING,
 					UtilJSF.getLiteral("dialogMensajeAviso.error.seleccioneTramite"));
@@ -213,6 +230,11 @@ public class DialogMensajeAviso extends DialogControllerBase {
 			}
 		}
 
+		if (!avisoEntidadService.getAvisoEntidadByTramite(codigoVersion).isEmpty()) {
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("dialogMensajeAviso.error.asociado"));
+			return;
+		}
+
 		String tramIdentificador = null;
 		for (final Tramite tramit : tramites) {
 			if (tramit.getCodigo().compareTo(Long.valueOf(tramiteSeleccionado)) == 0) {
@@ -221,7 +243,16 @@ public class DialogMensajeAviso extends DialogControllerBase {
 			}
 		}
 
-		listaTramites.add(new TramiteMensajeAviso(codigoVersion, tramIdentificador, versionSeleccionado));
+		String areaIdentificador = null;
+		for (final Area area : areas) {
+			if (area.getCodigo().compareTo(Long.valueOf(areaSeleccionado)) == 0) {
+				areaIdentificador = area.getIdentificador();
+				break;
+			}
+		}
+
+		listaTramites
+				.add(new TramiteMensajeAviso(codigoVersion, tramIdentificador, versionSeleccionado, areaIdentificador));
 	}
 
 	/**
@@ -241,6 +272,15 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	 */
 	public void borrarTramite(final TramiteMensajeAviso tram) {
 		listaTramites.remove(tram);
+	}
+
+	/**
+	 * Actualiza el combo de tramites
+	 */
+	public void actualizarTramite() {
+		if (getAreaSeleccionado() != null) {
+			setListaTramite(tramiteService.listTramite(Long.valueOf(getAreaSeleccionado()), ""));
+		}
 	}
 
 	/**
@@ -321,8 +361,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 
 		if ((data.getTipo() == TypeAvisoEntidad.LISTA || data.getTipo() == TypeAvisoEntidad.TRAMITE_VERSION)
 				&& data.getListaSerializadaTramites().isEmpty()) {
-			addMessageContext(TypeNivelGravedad.WARNING,
-					UtilJSF.getLiteral("dialogMensajeAviso.error.tramitesvacios"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("dialogMensajeAviso.error.tramitesvacios"));
 			return;
 		}
 
@@ -382,15 +421,33 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	 * Copiado correctamente
 	 */
 	public void copiadoCorr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 	/**
 	 * Copiado error
 	 */
 	public void copiadoErr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 
 	public final String getPortapapeles() {
@@ -404,8 +461,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	/**
 	 * Retorno dialogo de los botones de propiedades.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param event respuesta dialogo
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -443,8 +499,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -460,8 +515,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	/**
 	 * Establece el valor de data.
 	 *
-	 * @param data
-	 *            el nuevo valor de data
+	 * @param data el nuevo valor de data
 	 */
 	public void setData(final AvisoEntidad data) {
 		this.data = data;
@@ -479,8 +533,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	/**
 	 * Establece el valor de literal.
 	 *
-	 * @param literal
-	 *            el nuevo valor de literal
+	 * @param literal el nuevo valor de literal
 	 */
 	public void setLiteral(final String literal) {
 		this.literal = literal;
@@ -494,8 +547,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tipos
-	 *            the tipos to set
+	 * @param tipos the tipos to set
 	 */
 	public void setTipos(final List<TypeAvisoEntidad> tipos) {
 		this.tipos = tipos;
@@ -509,8 +561,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramite
-	 *            the tramite to set
+	 * @param tramite the tramite to set
 	 */
 	public void setTramite(final String tramite) {
 		this.tramite = tramite;
@@ -524,11 +575,14 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramiteVersion
-	 *            the tramiteVersion to set
+	 * @param tramiteVersion the tramiteVersion to set
 	 */
 	public void setTramiteVersion(final String tramiteVersion) {
 		this.tramiteVersion = tramiteVersion;
+	}
+
+	public void setListaTramite(final List<Tramite> listaTramite) {
+		this.tramites = listaTramite;
 	}
 
 	/**
@@ -539,8 +593,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param dato
-	 *            the dato to set
+	 * @param dato the dato to set
 	 */
 	public void setDato(final String dato) {
 		this.dato = dato;
@@ -554,11 +607,24 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param disabledActivo
-	 *            the disabledActivo to set
+	 * @param disabledActivo the disabledActivo to set
 	 */
 	public void setDisabledActivo(final boolean disabledActivo) {
 		this.disabledActivo = disabledActivo;
+	}
+
+	/**
+	 * @return the areaSeleccionado
+	 */
+	public String getAreaSeleccionado() {
+		return areaSeleccionado;
+	}
+
+	/**
+	 * @param areaSeleccionado the areaSeleccionado to set
+	 */
+	public void setAreaSeleccionado(final String areaSeleccionado) {
+		this.areaSeleccionado = areaSeleccionado;
 	}
 
 	/**
@@ -569,8 +635,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramiteSeleccionado
-	 *            the tramiteSeleccionado to set
+	 * @param tramiteSeleccionado the tramiteSeleccionado to set
 	 */
 	public void setTramiteSeleccionado(final String tramiteSeleccionado) {
 		this.tramiteSeleccionado = tramiteSeleccionado;
@@ -584,11 +649,18 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param versionSeleccionado
-	 *            the versionSeleccionado to set
+	 * @param versionSeleccionado the versionSeleccionado to set
 	 */
 	public void setVersionSeleccionado(final String versionSeleccionado) {
 		this.versionSeleccionado = versionSeleccionado;
+	}
+
+	public final List<Area> getAreas() {
+		return areas;
+	}
+
+	public final void setAreas(List<Area> areas) {
+		this.areas = areas;
 	}
 
 	/**
@@ -599,8 +671,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramites
-	 *            the tramites to set
+	 * @param tramites the tramites to set
 	 */
 	public void setTramites(final List<Tramite> tramites) {
 		this.tramites = tramites;
@@ -614,8 +685,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param versiones
-	 *            the versiones to set
+	 * @param versiones the versiones to set
 	 */
 	public void setVersiones(final List<TramiteVersion> versiones) {
 		this.versiones = versiones;
@@ -629,8 +699,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param listaTramites
-	 *            the listaTramites to set
+	 * @param listaTramites the listaTramites to set
 	 */
 	public final void setListaTramites(final List<TramiteMensajeAviso> listaTramites) {
 		this.listaTramites = listaTramites;
@@ -644,8 +713,8 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	}
 
 	/**
-	 * @param tramiteMensajeAvisoSeleccionado
-	 *            the tramiteMensajeAvisoSeleccionado to set
+	 * @param tramiteMensajeAvisoSeleccionado the tramiteMensajeAvisoSeleccionado to
+	 *                                        set
 	 */
 	public void setTramiteMensajeAvisoSeleccionado(final TramiteMensajeAviso tramiteMensajeAvisoSeleccionado) {
 		this.tramiteMensajeAvisoSeleccionado = tramiteMensajeAvisoSeleccionado;

@@ -78,13 +78,15 @@
 
 				el.classList.add("resaltar");
 				var aux = document.getElementById("formDialogDefinicionVersionControlAcceso:auxCopiar");
-				if(el.textContent!=''){
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 					aux.value = el.textContent;
-				}else if(el.firstChild!=null){
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 					aux.value = el.firstChild.value;
 				}else if(el.value!=null &amp;&amp; el.value!=''){
 					aux.value = el.value;
-				}
+				}else{
+		          aux.value = '';
+		        }
 
 			 }
 
@@ -112,7 +114,11 @@
 	        				</p:commandButton>
 					</p:column>
 					<p:column>
-						<p:commandButton id="btnEliminar" type="button" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="PF('confirmDialogBorrar').show()" />
+						<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"
+						 	actionListener="#{dialogTramiteControlAcceso.eliminarAviso()}" process="@this"
+							update="@form growlDialog" >
+								<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+						</p:commandButton>
 						<!--
 							<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"  onClick="PF('confirmDialogBorrar').show()" process="@this" update="growlDialog formDialogDefinicionVersionControlAcceso" />
 						 -->
@@ -186,7 +192,7 @@
 				</p:toolbar>
 			</p:outputPanel>
 			<p:contextMenu>
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :formDialogDefinicionVersionControlAcceso:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :formDialogDefinicionVersionControlAcceso:auxCopiar" update="growlDialog" />
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{dialogTramiteControlAcceso.copiadoCorr}" process="@this" update="@this growlDialog"/>
@@ -194,6 +200,13 @@
         	</pe:clipboard>
 
 		    <p:inputText id="auxCopiar" value="#{dialogTramiteControlAcceso.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+
+		    <p:confirmDialog global="true" >
+	    	<p:outputPanel styleClass="confirmar_botonera">
+	        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+	        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+			</p:outputPanel>
+	    </p:confirmDialog>
 		</h:form>
 	</h:body>
 

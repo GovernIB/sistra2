@@ -244,4 +244,35 @@ public abstract class ComponenteFormulario extends ObjetoFormulario implements C
 	public int compareTo(final ComponenteFormulario arg0) {
 		return Integer.compare(this.getOrden(), arg0.getOrden());
 	}
+
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "ComponenteFormulario. ");
+           texto.append(tabulacion +"\t IdComponente:" + idComponente + "\n");
+           texto.append(tabulacion +"\t Tipus:" + tipo + "\n");
+           texto.append(tabulacion +"\t Ordre:" + orden + "\n");
+           texto.append(tabulacion +"\t NumColumnas:" + numColumnas + "\n");
+           texto.append(tabulacion +"\t NoMostrarText:" + noMostrarTexto + "\n");
+           texto.append(tabulacion +"\t AlineacioText:" + alineacionTexto + "\n");
+           texto.append(tabulacion +"\t TipoSeccionReutilizable:" + tipoSeccionReutilizable + "\n");
+           texto.append(tabulacion +"\t IdFormSeccion:" + idFormSeccion + "\n");
+           if (this.texto != null) {
+        	   texto.append(tabulacion +"\t Text: \n");
+        	   texto.append(this.texto.toString(tabulacion, idioma) + "\n");
+           }
+           if (this.ayuda != null) {
+        	   texto.append(tabulacion +"\t Ajuda: \n");
+        	   texto.append(this.ayuda.toString(tabulacion, idioma) + "\n");
+           }
+           return texto.toString();
+     }
 }

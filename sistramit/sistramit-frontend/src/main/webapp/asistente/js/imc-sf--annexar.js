@@ -228,9 +228,23 @@ $.fn.appAnnexa = function(options) {
 
 					}
 
-					
+				}
+
+
+				// comprovem títol si fera falta
+
+				var num_maxim = parseInt(imc_document.attr("data-num"), 10)
+					,titol_val = imc_doc_electronic_form.find(".imc--titol:first input").val();
+
+				if (num_maxim > 1 && !titol_val) {
+
+					text_error = txtErrorIncloureTitol;
+					revisa_error = true;
 
 				}
+
+
+				// mostrem error
 
 				if (revisa_error && text_error) {
 
@@ -243,6 +257,7 @@ $.fn.appAnnexa = function(options) {
 
 				 	return;
 				}
+
 
 				// envia
 
@@ -282,9 +297,6 @@ $.fn.appAnnexa = function(options) {
 
 				formData
 					.append("tipo", doc_tipus);
-
-				var num_maxim = parseInt(imc_document.attr("data-num"), 10)
-					titol_val = imc_doc_electronic_form.find(".imc--titol:first input").val();
 
 				if (num_maxim > 1) {
 
@@ -809,14 +821,15 @@ $.fn.appAnnexaLlistat = function(opcions){
 
 				}
 
-
-				// tabulador en el popup
+				
+				// netegem valor del ´camp títol
 
 				imc_document
-					.appPopupTabula();
+					.find(".imc--titol:first input")
+						.val("");
 
 
-				//
+				// mostrem capa
 
 				imc_document_contingut
 					.addClass("imc--on");
@@ -825,6 +838,11 @@ $.fn.appAnnexaLlistat = function(opcions){
 					.addClass("imc--on")
 					.attr("aria-hidden", "false");
 
+
+				// tabulador en el popup
+
+				imc_document
+					.appPopupTabula();
 
 
 			}

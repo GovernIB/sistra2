@@ -122,4 +122,18 @@ public class FuenteDatosValor extends ModelApi {
 		this.ordenCampo = ordenCampo;
 	}
 
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           return valor;
+     }
+
 }

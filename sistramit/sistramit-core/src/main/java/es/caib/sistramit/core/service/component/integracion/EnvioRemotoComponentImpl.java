@@ -22,6 +22,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
+import es.caib.sistramit.core.service.util.UtilsFlujo;
 
 /**
  * Implementación Envio Remoto.
@@ -136,10 +137,17 @@ public final class EnvioRemotoComponentImpl implements EnvioRemotoComponent {
 			confAut = configuracionComponent.obtenerConfiguracionAutenticacion(
 					confEnvioRemoto.getIdentificadorConfAutenticacion(), codigoEntidad);
 		}
+
+		String url = confEnvioRemoto.getUrl();
+		// Reemplazamos vbles area
+		if (confEnvioRemoto.getIdentificadorArea() != null) {
+			url = UtilsFlujo.replaceVariablesArea(url, confEntidad, confEnvioRemoto.getIdentificadorArea());
+		}
+
 		final DestinoEnvio res = new DestinoEnvio();
 		res.setIdEntidad(codigoEntidad);
 		res.setIdEnvioRemoto(idEnvioRemoto);
-		res.setUrl(confEnvioRemoto.getUrl());
+		res.setUrl(url);
 		if (StringUtils.isNotEmpty(confEnvioRemoto.getTimeout())) {
 			res.setTimeoutSecs(Integer.parseInt(confEnvioRemoto.getTimeout()));
 		}

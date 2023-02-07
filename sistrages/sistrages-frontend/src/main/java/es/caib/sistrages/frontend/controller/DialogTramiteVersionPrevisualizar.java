@@ -7,11 +7,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.SerializationUtils;
+import org.primefaces.PrimeFaces;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CatalogoPluginException;
@@ -22,11 +27,11 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.comun.TramitePrevisualizacion;
-import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.service.ComponenteService;
+import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
@@ -88,6 +93,9 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	/** Mostrar solo procedimientos que esten vigentes **/
 	private boolean soloVigentes = false;
 
+	/** Mostrar solo los procedimientos que sean publicos **/
+	private boolean soloPublicas = true;
+
 	/** Tramite seleccionado. **/
 	private String tramiteSeleccionado;
 
@@ -105,6 +113,10 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 
 	private String portapapeles;
 
+	private String errorCopiar;
+
+	private boolean disableTramites;
+
 	public String getText(final DefinicionTramiteCP tramite) {
 
 		final StringBuilder texto = new StringBuilder();
@@ -115,14 +127,25 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 				|| tramite.getProcedimiento().getIdProcedimientoSIA().isEmpty()) {
 			texto.append("(S) ");
 		}
+		if (tramite.getProcedimiento() != null && tramite.getProcedimiento().isValidacionPublica()) {
+			texto.append("(P) ");
+		}
+		if (tramite.getProcedimiento() != null && tramite.getProcedimiento().isValidacionInterna()) {
+			texto.append("(I) ");
+		}
+		if (tramite.getProcedimiento() != null && tramite.getProcedimiento().isValidacionReserva()) {
+			texto.append("(R) ");
+		}
 
 		texto.append(tramite.getIdentificador());
 		texto.append(" - ");
 		texto.append(tramite.getDescripcion());
+
 		String respuesta = texto.toString();
 		if (texto.toString().length() >= 100) {
 			respuesta = respuesta.substring(0, 100);
 		}
+
 		return respuesta;
 
 	}
@@ -133,6 +156,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	 * @throws CatalogoPluginException
 	 */
 	public void init() throws CatalogoPluginException {
+
 		setData(tramiteService.getTramiteVersion(Long.valueOf(id)));
 
 		tramite = tramiteService.getTramite(this.data.getIdTramite());
@@ -153,54 +177,120 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 //			parametros = tramitePrevisualizacion.getParametros();
 //		}
 
-		getProcedimientos();
-
-		if (tramiteSeleccionado == null && tramites != null && !tramites.isEmpty()) {
-			tramiteSeleccionado = tramites.get(0).getIdentificador();
-		}
-
-		calcularUrl(false);
-
+		disableTramites = true;
+		PrimeFaces.current().ajax().update("dialogTramite:procedimiento");
+		PrimeFaces.current().ajax().update("dialogTramite:botonera");
+		PrimeFaces.current().ajax().update("dialogTramite:btnNuevoValor");
+		PrimeFaces.current().ajax().update("dialogTramite:btnEditarValor");
+		PrimeFaces.current().ajax().update("dialogTramite:btnEliminarValor");
+		PrimeFaces.current().ajax().update("dialogTramite:idioma");
+		PrimeFaces.current().executeScript("document.getElementById('dialogTramite:procedimiento_label').innerHTML=\""
+				+ UtilJSF.getLiteral("cargando")
+				+ "...<marquee direction='right' behavior='alternate' scrolldelay='333' style='width:5% !important'>.</marquee>\";");
 	}
 
 	public void actualizar() {
 		setData(tramiteService.getTramiteVersion(Long.valueOf(id)));
 	}
 
+	public void cargaInicial() {
+		getProcedimientos();
+		if (soloVigentes || soloIncorporadosSia || soloPublicas) {
+			List<DefinicionTramiteCP> tramitesAux = new ArrayList<DefinicionTramiteCP>();
+			tramitesAux.addAll(tramites);
+			for (DefinicionTramiteCP tram : tramitesAux) {
+				if ((soloVigentes && !tram.isVigente())
+						|| (soloPublicas && tram.getProcedimiento() != null
+								&& !tram.getProcedimiento().isValidacionPublica())
+						|| (soloIncorporadosSia && (tram.getProcedimiento() == null
+								|| tram.getProcedimiento().getIdProcedimientoSIA() == null
+								|| tram.getProcedimiento().getIdProcedimientoSIA().isEmpty()))) {
+					tramites.remove(tram);
+				}
+			}
+		}
+		if (tramiteSeleccionado == null && tramites != null && !tramites.isEmpty()) {
+			tramiteSeleccionado = tramites.get(0).getIdentificador();
+		}
+		calcularUrl(false);
+		disableTramites = false;
+		PrimeFaces.current().ajax().update("dialogTramite:procedimiento");
+		PrimeFaces.current().ajax().update("dialogTramite:botonera");
+		PrimeFaces.current().ajax().update("dialogTramite:btnNuevoValor");
+		PrimeFaces.current().ajax().update("dialogTramite:btnEditarValor");
+		PrimeFaces.current().ajax().update("dialogTramite:btnEliminarValor");
+		PrimeFaces.current().ajax().update("dialogTramite:idioma");
+	}
+
 	/**
 	 * Recarga todos los procedimientos, filtrandolos.
 	 */
 	public void recargarProcedimientos() {
+		disableTramites = true;
+		PrimeFaces.current().ajax().update("dialogTramite:procedimiento");
+		PrimeFaces.current().ajax().update("dialogTramite:botonera");
+		PrimeFaces.current().ajax().update("dialogTramite:btnNuevoValor");
+		PrimeFaces.current().ajax().update("dialogTramite:btnEditarValor");
+		PrimeFaces.current().ajax().update("dialogTramite:btnEliminarValor");
+		PrimeFaces.current().ajax().update("dialogTramite:idioma");
+		PrimeFaces.current().executeScript("document.getElementById('dialogTramite:procedimiento_label').innerHTML=\""
+				+ UtilJSF.getLiteral("cargando")
+				+ "...<marquee direction='right' behavior='alternate' scrolldelay='333' style='width:5% !important'>.</marquee>\"");
+		PrimeFaces.current().executeScript("llamarBotonRecargar()");
+	}
+
+	public void cargaRecarga() {
 		getProcedimientos();
-		if (soloVigentes || soloIncorporadosSia) {
+		if (soloVigentes || soloIncorporadosSia || soloPublicas) {
 			List<DefinicionTramiteCP> tramitesAux = new ArrayList<DefinicionTramiteCP>();
 			tramitesAux.addAll(tramites);
 			for (DefinicionTramiteCP tram : tramitesAux) {
-				if ((soloVigentes && !tram.isVigente()) || (soloIncorporadosSia
-						&& (tram.getProcedimiento() == null || tram.getProcedimiento().getIdProcedimientoSIA() == null
+				if ((soloVigentes && !tram.isVigente())
+						|| (soloPublicas && tram.getProcedimiento() != null
+								&& !tram.getProcedimiento().isValidacionPublica())
+						|| (soloIncorporadosSia && (tram.getProcedimiento() == null
+								|| tram.getProcedimiento().getIdProcedimientoSIA() == null
 								|| tram.getProcedimiento().getIdProcedimientoSIA().isEmpty()))) {
 					tramites.remove(tram);
 				}
-
 			}
 		}
+		disableTramites = false;
+		PrimeFaces.current().ajax().update("dialogTramite:procedimiento");
+		PrimeFaces.current().ajax().update("dialogTramite:botonera");
+		PrimeFaces.current().ajax().update("dialogTramite:btnNuevoValor");
+		PrimeFaces.current().ajax().update("dialogTramite:btnEditarValor");
+		PrimeFaces.current().ajax().update("dialogTramite:btnEliminarValor");
+		PrimeFaces.current().ajax().update("dialogTramite:idioma");
 	}
 
-	/**
-	 * Carga todos los procedimientos.
-	 */
-	private void getProcedimientos() {
+	public void getProcedimientos() {
 		try {
 			iplugin = (ICatalogoProcedimientosPlugin) componenteService
 					.obtenerPluginEntidad(TypePlugin.CATALOGO_PROCEDIMIENTOS, UtilJSF.getIdEntidad());
 
 			tramites = iplugin.obtenerTramites(tramite.getIdentificadorCompuesto(), this.data.getNumeroVersion(),
 					idioma);
+			for (DefinicionTramiteCP tramite : tramites) {
+				if (tramite == null) {
+					tramites.remove(tramite);
+				}
+			}
 		} catch (final Exception ex) {
 			tramites = new ArrayList<>();
 			UtilJSF.loggearErrorFront("Error obteniendo catalogo de procedimientos", ex);
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.accesoCatalogo"));
+			PrimeFaces.current().ajax().update("dialogTramite:growlDialog");
+
+		}
+	}
+
+	public boolean isDesactivar() {
+		if (disableTramites) {
+			return !this.simularCatalogo;
+		} else {
+			return false;
 		}
 	}
 
@@ -270,12 +360,11 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 
 		}
 
-		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
-
 		final TramitePrevisualizacion tramitePrevisualizacion = new TramitePrevisualizacion();
 		tramitePrevisualizacion.setProcedimiento(tramCP);
 		tramitePrevisualizacion.setIdioma(idioma);
 		tramitePrevisualizacion.setParametros(parametros);
+		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_TRAMITE + this.data.getIdTramite(), tramitePrevisualizacion);
 
 		final String urlBase = systemService
@@ -339,14 +428,16 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 					tram = dt;
 				}
 			}
-			if (!tram.isVigente() && !simularCatalogo) {
-				return UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.novigente");
-			} else if ((tram.getProcedimiento().getIdProcedimientoSIA() == null
-					|| tram.getProcedimiento().getIdProcedimientoSIA().isEmpty()) && !simularCatalogo) {
-				return UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.nosia");
+			if (tram != null) {
+				if (!tram.isVigente() && !simularCatalogo) {
+					return UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.novigente");
+				} else if ((tram.getProcedimiento().getIdProcedimientoSIA() == null
+						|| tram.getProcedimiento().getIdProcedimientoSIA().isEmpty()) && !simularCatalogo) {
+					return UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.nosia");
+				}
 			}
 			return "";
-		} else if(!simularCatalogo){
+		} else if (!simularCatalogo) {
 			return UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.sinseleccionartramite");
 		}
 		return "";
@@ -754,15 +845,33 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	 * Copiado correctamente
 	 */
 	public void copiadoCorr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 	/**
 	 * Copiado error
 	 */
 	public void copiadoErr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 
 	public final String getPortapapeles() {
@@ -771,6 +880,34 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 
 	public final void setPortapapeles(String portapapeles) {
 		this.portapapeles = portapapeles;
+	}
+
+	/**
+	 * @return the disableTramites
+	 */
+	public final boolean isDisableTramites() {
+		return disableTramites;
+	}
+
+	/**
+	 * @param disableTramites the disableTramites to set
+	 */
+	public final void setDisableTramites(boolean disableTramites) {
+		this.disableTramites = disableTramites;
+	}
+
+	/**
+	 * @return the soloPublicas
+	 */
+	public boolean isSoloPublicas() {
+		return soloPublicas;
+	}
+
+	/**
+	 * @param soloPublicas the soloPublicas to set
+	 */
+	public void setSoloPublicas(boolean soloPublicas) {
+		this.soloPublicas = soloPublicas;
 	}
 
 }

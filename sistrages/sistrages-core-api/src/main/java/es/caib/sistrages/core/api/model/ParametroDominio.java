@@ -113,4 +113,23 @@ public class ParametroDominio extends ModelApi {
 	public void setParametro(final String parametro) {
 		this.parametro = parametro;
 	}
+
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "ParametroDomini. ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           texto.append(tabulacion +"\t Tipus:" + tipo + "\n");
+           texto.append(tabulacion +"\t Valor:" + valor + "\n");
+           texto.append(tabulacion +"\t Parametro:" + parametro + "\n");
+           return texto.toString();
+     }
 }

@@ -272,8 +272,10 @@ public class DominioServiceBean implements DominioService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void clonar(final String dominioID, final String nuevoIdentificador, final Long areaID, final Long idEntidad, final TypeClonarAccion accionFD, final FuenteDatos fd, final TypeClonarAccion accionCA, final ConfiguracionAutenticacion confAut) {
-		dominioService.clonar(dominioID, nuevoIdentificador, areaID, idEntidad, accionFD,  fd,  accionCA, confAut);
+	public void clonar(final String dominioID, final String nuevoIdentificador, final Long areaID, final Long idEntidad,
+			final TypeClonarAccion accionFD, final FuenteDatos fd, final TypeClonarAccion accionCA,
+			final ConfiguracionAutenticacion confAut) {
+		dominioService.clonar(dominioID, nuevoIdentificador, areaID, idEntidad, accionFD, fd, accionCA, confAut);
 	}
 
 	@Override
@@ -328,7 +330,7 @@ public class DominioServiceBean implements DominioService {
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<Dominio> listDominio(List<TypeAmbito> ambitos, Long idTramite, String filtro) {
-		return dominioService.listDominio(ambitos, idTramite, filtro) ;
+		return dominioService.listDominio(ambitos, idTramite, filtro);
 	}
 
 }

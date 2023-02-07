@@ -198,4 +198,27 @@ public class Area extends ModelApi {
 		return true;
 	}
 
+
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + " Area: ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           texto.append(tabulacion +"\t Identificador:" + identificador + "\n");
+           texto.append(tabulacion +"\t Descripcio:" + descripcion + "\n");
+           texto.append(tabulacion +"\t IdentificadorCompost:" + identificadorCompuesto + "\n");
+           texto.append(tabulacion +"\t Email:" + email + "\n");
+           texto.append(tabulacion +"\t TePermis:" + tienePermiso + "\n");
+           texto.append(tabulacion +"\t CodiDIR3Entitat:" + codigoDIR3Entidad + "\n");
+           return texto.toString();
+     }
+
 }

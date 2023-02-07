@@ -69,4 +69,40 @@ public final class ComponenteFormularioCampoSeccionReutilizable extends Componen
 		this.identificadorSeccionReutilizable = identificadorSeccionReutilizable;
 	}
 
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "ComponenteFormularioSeccionReutilizable. ");
+           if (this.getIdComponente() != null) { texto.append(tabulacion +"\t IdComponente:" + this.getIdComponente() + "\n"); }
+           if (this.getTipo() != null) { texto.append(tabulacion +"\t Tipus:" + this.getTipo() + "\n");}
+           texto.append(tabulacion +"\t Ordre:" + this.getOrden() + "\n");
+           texto.append(tabulacion +"\t NumColumnas:" + this.getNumColumnas() + "\n");
+           texto.append(tabulacion +"\t NoMostrarText:" + this.isNoMostrarTexto() + "\n");
+           if (this.getAlineacionTexto() != null) { texto.append(tabulacion +"\t AlineacioText:" + this.getAlineacionTexto() + "\n");}
+           texto.append(tabulacion +"\t TipoSeccionReutilizable:" + this.isTipoSeccionReutilizable() + "\n");
+           if (this.getIdFormSeccion() != null) { texto.append(tabulacion +"\t IdFormSeccion:" + this.getIdFormSeccion() + "\n");}
+
+           if (this.getTexto() != null) {
+        	   texto.append(tabulacion +"\t Text: \n");
+        	   texto.append(this.getTexto().toString(tabulacion, idioma) + "\n");
+           }
+           if (this.getAyuda() != null) {
+        	   texto.append(tabulacion +"\t Ajuda: \n");
+        	   texto.append(this.getAyuda().toString(tabulacion, idioma) + "\n");
+           }
+
+           if (this.letra != null) { texto.append(tabulacion +"\t Letra:" + letra + "\n");}
+           if (this.idSeccionReutilizable != null) { texto.append(tabulacion +"\t IdSeccioReutilitzable:" + idSeccionReutilizable + "\n");}
+           if (this.identificadorSeccionReutilizable != null) { texto.append(tabulacion +"\t IdentificadorSeccioReutilitzable:" + this.identificadorSeccionReutilizable + "\n");}
+           return texto.toString();
+     }
+
 }

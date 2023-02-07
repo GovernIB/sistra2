@@ -15,7 +15,8 @@
 	<ul>
 		<li><span class="nombreCampo">Identificador:</span> código único identificador del gestor.</li>
 		<li><span class="nombreCampo">Descripción:</span> texto descriptivo del gestor.</li>
-		<li><span class="nombreCampo">URL:</span> texto que indica la url del gestor externo.</li>
+		<li><span class="nombreCampo">URL:</span> texto que indica la url del gestor externo. Si existe un placeholder (por haber seleccionado una variable de área), éste será sustituido por el contenido de esa variable, que será insertado al comienzo de este campo. Por ejemplo, si en la variable VAR01 aparece la URL "https://se.caib.es" y la URL de este campo ha de finalizar con "proyectoBase/services/dominios/", en este campo aparecerá el texto "{@@VAR01@@}/proyectoBase/services/dominios/".</li>
+		<li><span class="nombreCampo">Selección Variable Área:</span> este botón abre una pantalla que permite seleccionar una variable de área que añadirá un placeholder que será sustituido por la url indicada en esa variable de área a la hora de ejecutar el trámite que utilice este gestor externo de formulario.</li>
 		</ul>
 		</li>
 	</ul>

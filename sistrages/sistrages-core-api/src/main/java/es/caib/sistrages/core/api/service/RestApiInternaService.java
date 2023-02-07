@@ -25,6 +25,7 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
+import es.caib.sistrages.core.api.model.VariableArea;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeScriptSeccionReutilizable;
 
@@ -113,4 +114,19 @@ public interface RestApiInternaService {
 	List<Script> getScriptsSRUByIdFormulario(Long idFormulario, TypeScriptSeccionReutilizable tipoScript);
 
 	String getIdentificadorCompuestoByCodigoVersion(Long codigoTramiteVersion);
+
+	VariableArea loadVariableArea(Long codVa);
+
+	VariableArea loadVariableAreaByIdentificador(String identificador, Long codigoArea);
+
+	List<VariableArea> listVariableArea(final Long idArea, String filtro);
+
+	List<Dominio> dominioByVariable(final VariableArea va);
+
+	List<GestorExternoFormularios> gfeByVariable(final VariableArea va);
+
+	List<EnvioRemoto> envioRemotoByVariable(final VariableArea va);
+
+	Area getAreaByIdentificador(String identificadorEntidad, String identificador);
+
 }

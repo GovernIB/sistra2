@@ -37,7 +37,7 @@
 	<h:form id="dialogPlugin" styleClass="margin-top-10">
 
             <p:contextMenu id="mainCm" widgetVar="mainCm">
-                <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogPlugin:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+                <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogPlugin:auxCopiar" update="growlDialog" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{dialogPlugin.copiadoCorr}" process="@this" update="@this growlDialog"/>
@@ -60,7 +60,15 @@
 					<p:outputLabel value=""/>
 
 					<p:outputLabel for="valor" value="#{msg['dialogPlugin.headerClassname']}" style="padding-left: 2px; display: block;"/>
-					<p:inputText id="valor" value="#{dialogPlugin.data.classname}" readonly="#{dialogPlugin.isConsulta()}" required="true" style="width:98%;" maxlength="500"/>
+					<p:inputText id="valor" value="#{dialogPlugin.data.realClassname}" readonly="#{dialogPlugin.isReal ? false : true}" required="false" style="width:98%;" maxlength="500">
+						<p:ajax event="keyup" process="@this" />
+					</p:inputText>
+					<p:outputLabel value="" />
+
+					<p:outputLabel for="mockClassname" value="#{msg['dialogPlugin.headerMockClassname']}" style="padding-left: 2px; display: block;"/>
+					<p:inputText id="mockClassname" value="#{dialogPlugin.data.mockClassname}" readonly="#{dialogPlugin.isReal ? true : false}" required="false" style="width:98%;" maxlength="500">
+						<p:ajax event="keyup" process="@this" />
+					</p:inputText>
 					<p:outputLabel value="" />
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogPlugin.headerDescripcion']}" style="padding-left: 2px; display: block;"/>
@@ -119,6 +127,8 @@
 					    	</p>
 					</p:column>
 
+					<p:commandButton id="switchButton" value="#{dialogPlugin.isReal ? msg['botones.switchMock'] : msg['botones.switchReal']}" actionListener="#{dialogPlugin.switchClassname()}" process="@this" update="@this growlDialog valor mockClassname" style="margin-top: 5px;"/>
+
 				</h:panelGrid>
 				<h:outputScript rendered="#{!dialogPlugin.isConsulta()}">
 				      function rcEditarPropiedad() {
@@ -150,7 +160,8 @@
             </p:confirmDialog>
 
 		    <p:contextMenu for="dataTablePropiedades" id="cMenuPropiedades" widgetVar="cMenuPropiedadesWV" beforeShow="return true;">
-                <p:menuitem id="mnuCopyPropiedades" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogPlugin:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+                <p:menuitem id="mnuCopyPropiedades" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogPlugin:auxCopiar" update="growlDialog" />
+                <p:separator/>
 				<p:menuitem id="mnuNuevoPropiedades" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('dialogPlugin:btnNuevaPropiedad').click();" />
 				<p:menuitem id="mnuEditarPropiedades" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('dialogPlugin:btnEditarPropiedad').click();"/>
 				<p:menuitem id="mnuEliminarPropiedades" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('dialogPlugin:btnEliminarPropiedad').click();" />
@@ -222,13 +233,15 @@
 
 	               el.classList.add("resaltar");
 	                var aux = document.getElementById("dialogPlugin:auxCopiar");
-	                if(el.textContent!=''){
+	                if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 	                    aux.value = el.textContent;
-	                }else if(el.firstChild!=null){
+	                }else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 	                    aux.value = el.firstChild.value;
 	                }else if(el.value!=null &amp;&amp; el.value!=''){
 	                    aux.value = el.value;
-	                }
+	                }else{
+			          aux.value = '';
+			        }
 
 	             }
 

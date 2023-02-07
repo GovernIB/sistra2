@@ -42,7 +42,8 @@
 		</li>
 		<li><b>Consulta Remota:</b> dominio que recupera valores de una ubicaci&oacute;n remota a partir del plugin de dominio remoto:
 		<ul class="detalle2">
-			<li>URL: URL contra la que se har&aacute; la consulta remota.</li>
+			<li>URL: URL contra la que se har&aacute; la consulta remota. Si existe un placeholder (por haber seleccionado una variable de &aacute;rea), &eacute;ste ser&aacute; sustituido por el contenido de esa variable, que ser&aacute; insertado al comienzo de este campo. Por ejemplo, si en la variable VAR01 aparece la URL "https://se.caib.es" y la URL de este campo ha de finalizar con "proyectoBase/services/dominios/", en este campo aparecer&aacute; el texto "{@@VAR01@@}/proyectoBase/services/dominios/".</li>
+			<li>Selección Variable &Aacute;rea: Este bot&oacute;n abre una pantalla que permite seleccionar una variable de &aacute;rea que añadir&aacute; un placeholder que ser&aacute; sustituido por la url indicada en esa variable de &aacute;rea a la hora de ejecutar el tr&aacute;mite que utilice este dominio.</li>
 			<li>Para consultar como definir dominios SOAP (utilizados en SISTRA1) y REST (utilizados en SISTRA2), clicad <a href="AyudaServlet?id=pluginDomRemoto&lang=es">aquí</a></li>
 		</ul>
 		</li>

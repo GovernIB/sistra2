@@ -13,8 +13,7 @@ public interface AvisoEntidadService {
 	/**
 	 * Obtiene el valor de Aviso Entidad.
 	 *
-	 * @param id
-	 *            el identificador
+	 * @param id el identificador
 	 * @return el valor de Aviso Entidad
 	 */
 	AvisoEntidad getAvisoEntidad(Long id);
@@ -22,18 +21,15 @@ public interface AvisoEntidadService {
 	/**
 	 * Añade Aviso Entidad.
 	 *
-	 * @param idEntidad
-	 *            id Entidad
-	 * @param avisoEntidad
-	 *            el valor de Aviso Entidad
+	 * @param idEntidad    id Entidad
+	 * @param avisoEntidad el valor de Aviso Entidad
 	 */
 	void addAvisoEntidad(Long idEntidad, AvisoEntidad avisoEntidad);
 
 	/**
 	 * Elimina Aviso Entidad.
 	 *
-	 * @param id
-	 *            el identificador
+	 * @param id el identificador
 	 * @return true, si se realiza correctamente
 	 */
 	boolean removeAvisoEntidad(Long id);
@@ -41,30 +37,26 @@ public interface AvisoEntidadService {
 	/**
 	 * Actualiza Aviso Entidad.
 	 *
-	 * @param avisoEntidad
-	 *            el valor de Aviso Entidad
+	 * @param avisoEntidad el valor de Aviso Entidad
 	 */
 	void updateAvisoEntidad(AvisoEntidad avisoEntidad);
 
 	/**
 	 * Lista de Aviso Entidad.
 	 *
-	 * @param idEntidad
-	 *            id Entidad
-	 * @param idioma
-	 *            idioma
-	 * @param filtro
-	 *            filtro busqueda
+	 * @param idEntidad id Entidad
+	 * @param idioma    idioma
+	 * @param filtro    filtro busqueda
 	 * @return la lista de Aviso Entidad
 	 */
 	List<AvisoEntidad> listAvisoEntidad(Long idEntidad, TypeIdioma idioma, String filtro);
 
 	/**
 	 * Obtiene el aviso entidad según el identificador del tramite
-	 * 
+	 *
 	 * @param identificadorTramite
 	 * @return
 	 */
-	AvisoEntidad getAvisoEntidadByTramite(String identificadorTramite);
+	List<AvisoEntidad> getAvisoEntidadByTramite(String identificadorTramite);
 
 }

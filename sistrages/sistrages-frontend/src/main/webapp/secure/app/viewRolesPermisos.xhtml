@@ -10,6 +10,27 @@
 		<f:viewAction action="#{viewRolesPermisos.init}" />
 	</f:metadata>
 
+	<ui:define name="icerick">
+		<script type="text/javascript">
+		function setHeight(){
+	    	var altura = window.innerHeight - 50;
+	    	var alturaRoles = altura - 250;
+            var alturaRolesBody = altura - 278;
+
+            $('#form\\:dataTable').height(alturaRoles);
+            $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaRolesBody);
+	    }
+
+		jQuery(document).ready(function() {
+
+	      $(window).resize(function() {
+              setTimeout(function(){  setHeight(); }, 100);
+  			});
+
+	      setHeight();
+	  });
+	    </script>
+	</ui:define>
 
 	<ui:define name="content">
 
@@ -25,6 +46,7 @@
 			    	getPos();
 			    	return false;
 				}, false);
+
 			  }
 
 				function eliminarResaltar(){
@@ -63,13 +85,15 @@
 
 				el.classList.add("resaltar");
 				var aux = document.getElementById("form:auxCopiar");
-				if(el.textContent!=''){
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 					aux.value = el.textContent;
-				}else if(el.firstChild!=null){
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 					aux.value = el.firstChild.value;
 				}else if(el.value!=null &amp;&amp; el.value!=''){
 					aux.value = el.value;
-				}
+				}else{
+		          aux.value = '';
+		        }
 
 			 }
 
@@ -112,7 +136,7 @@
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewRolesPermisos.listaDatos}"
 						 rows="#{viewRolesPermisos.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
-						 scrollable="true" scrollHeight="90%"
+						 scrollable="true"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"
@@ -128,15 +152,15 @@
 				<p:ajax event="contextMenu" global="false" process="@this"/>
 
 				<!-- Columnas -->
-			    <p:column headerText="#{msg['viewRolesPermisos.headerCodigo']}">
+			    <p:column headerText="#{msg['viewRolesPermisos.headerCodigo']}" styleClass="w25">
 			        <h:outputText value="#{td.valor}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewRolesPermisos.headerDescripcion']}">
+			    <p:column headerText="#{msg['viewRolesPermisos.headerDescripcion']}" styleClass="w25">
 			        <h:outputText value="#{td.descripcion}" />
 			    </p:column>
 
-				<p:column headerText="#{msg['viewRolesPermisos.headerPermisos']}">
+				<p:column headerText="#{msg['viewRolesPermisos.headerPermisos']}" styleClass="w25">
 					<h:outputText value="#{msg['typeRolePermisos.A']}" rendered="#{td.alta}" />
 			       	<h:outputText value=" - " rendered="#{td.alta and (td.modificacion or td.consulta or td.helpdesk)}" />
 					<h:outputText value="#{msg['typeRolePermisos.M']}" rendered="#{td.modificacion}" />
@@ -147,14 +171,15 @@
 
 			    </p:column>
 
-				<p:column headerText="#{msg['viewRolesPermisos.headerArea']}">
+				<p:column headerText="#{msg['viewRolesPermisos.headerArea']}" styleClass="w25">
 			        <h:outputText value="#{td.area.identificador}" />
 			    </p:column>
 
 			</p:dataTable>
 
 			<p:contextMenu for=":form:dataTable">
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" />
+       			<p:separator/>
        			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this"  rendered="#{viewRolesPermisos.permiteAlta}"/>
         		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewRolesPermisos.permiteAlta}"/>
         		<p:menuitem id="mnuConsultarTabla" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this" rendered="#{not viewRolesPermisos.permiteEditar and not viewRolesPermisos.permiteAlta}" />
@@ -184,7 +209,8 @@
 				</p:outputPanel>
 		    </p:confirmDialog>
 			<p:contextMenu for=":work">
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :form:auxCopiar" update="growl" />
+       			<p:separator/>
        			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this" rendered="#{viewRolesPermisos.permiteAlta}"/>
         		<p:menuitem id="mnuEditarMain" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewRolesPermisos.permiteAlta}"/>
         		<p:menuitem id="mnuConsultarMain" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this" rendered="#{not viewRolesPermisos.permiteEditar and not viewRolesPermisos.permiteAlta}" />
@@ -196,7 +222,7 @@
         	</pe:clipboard>
 
         	<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
-				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
 			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewRolesPermisos.copiadoCorr}" process="@this" update="@this growl"/>
@@ -204,7 +230,7 @@
 			</pe:clipboard>
 
 			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
-				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
 			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewRolesPermisos.copiadoCorr}" process="@this" update="@this growl"/>

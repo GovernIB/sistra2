@@ -125,4 +125,28 @@ public class ValorListaFija extends ModelApi {
 	public void setOrden(final int orden) {
 		this.orden = orden;
 	}
+
+
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "ValorListaFija. ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           texto.append(tabulacion +"\t Valor:" + valor + "\n");
+           texto.append(tabulacion +"\t Ordre:" + orden + "\n");
+           texto.append(tabulacion +"\t porDefecto:" + porDefecto + "\n");
+           if (descripcion != null) {
+        	   texto.append(tabulacion +"\t Descripcio: \n");
+        	   texto.append(descripcion.toString(tabulacion, idioma) + "\n");
+           }
+           return texto.toString();
+     }
 }

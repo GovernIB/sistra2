@@ -164,20 +164,22 @@
 
 	               el.classList.add("resaltar");
 	                var aux = document.getElementById("dialogCampo:auxCopiar");
-	                if(el.textContent!=''){
+	                if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 	                    aux.value = el.textContent;
-	                }else if(el.firstChild!=null){
+	                }else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 	                    aux.value = el.firstChild.value;
 	                }else if(el.value!=null &amp;&amp; el.value!=''){
 	                    aux.value = el.value;
-	                }
+	                }else{
+			          aux.value = '';
+			        }
 
 	             }
 
             </h:outputScript>
 
             <p:contextMenu id="mainCm" widgetVar="mainCm">
-                <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogCampo:auxCopiar" update="growldialogParametrosDominioCIN" url="javascript:void(0)"/>
+                <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogCampo:auxCopiar" update="growldialogParametrosDominioCIN" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{dialogParametrosDominioCIN.copiadoCorr}" process="@this" update="@this growldialogParametrosDominioCIN"/>
@@ -187,7 +189,8 @@
            <p:inputText id="auxCopiar" value="#{dialogParametrosDominioCIN.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 
            <p:contextMenu for="datalistValores" id="cMenuPropiedades" widgetVar="cMenuPropiedadesWV" beforeShow="return true;">
-                <p:menuitem id="mnuCopyValor" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogCampo:auxCopiar" update="growldialogParametrosDominioCIN" url="javascript:void(0)"/>
+                <p:menuitem id="mnuCopyValor" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogCampo:auxCopiar" update="growldialogParametrosDominioCIN" />
+                <p:separator/>
 				<p:menuitem id="mnuNuevoValor" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('dialogCampo:btnNuevoValor').click();" />
 				<p:menuitem id="mnuEditarValor" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('dialogCampo:btnEditarValor').click();"/>
 				<p:menuitem id="mnuEliminarValor" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('dialogCampo:btnEliminarValor').click();" />

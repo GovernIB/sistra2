@@ -3,6 +3,8 @@ package es.caib.sistrages.core.api.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.caib.sistrages.core.api.model.comun.Propiedad;
+
 /**
  *
  * Fuente Datos con Valores.
@@ -52,4 +54,24 @@ public class FuenteDatosValores extends ModelApi {
 	public void addFila(final FuenteFila fuenteDatosFila) {
 		this.filas.add(fuenteDatosFila);
 	}
+
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "\t Datos de fuenteDatos. \n");
+           if (this.getFilas() != null) {
+        	   for(FuenteFila fila : getFilas()) {
+        		   texto.append(tabulacion +"\t" + fila.toString(tabulacion+"\t", idioma) );
+        	   }
+           }
+           return texto.toString();
+     }
 }

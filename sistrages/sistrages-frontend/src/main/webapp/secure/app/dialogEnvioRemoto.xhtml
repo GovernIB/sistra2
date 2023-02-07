@@ -84,13 +84,15 @@
 
 					el.classList.add("resaltar");
 					var aux = document.getElementById("dialogFormularioExterno:auxCopiar");
-					if(el.textContent!=''){
+					if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 						aux.value = el.textContent;
-					}else if(el.firstChild!=null){
+					}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 						aux.value = el.firstChild.value;
 					}else if(el.value!=null &amp;&amp; el.value!=''){
 						aux.value = el.value;
-					}
+					}else{
+			          aux.value = '';
+			        }
 				 }
 
 				</h:outputScript>
@@ -114,10 +116,12 @@
 					<p:outputLabel value="" />
 
 					<p:outputLabel for="url" value="#{msg['dialogFormularioExterno.headerURL']}" />
-					<p:inputText id="url" value="#{dialogEnvioRemoto.data.url}" readonly="#{dialogEnvioRemoto.isConsulta()}" required="true" size="55" />
-					<p:outputLabel value="" />
-
-
+					<p:inputText id="url" value="#{dialogEnvioRemoto.data.url}" readonly="#{dialogEnvioRemoto.isConsulta()}" required="true" size="55" >
+						<p:ajax event="keyup" process="@this"/>
+					</p:inputText>
+					<p:commandButton icon="fa fa-arrow-down" value="#{msg['dialogSeleccionVariableArea.titulo']}" disabled="#{dialogEnvioRemoto.isConsulta()}" actionListener="#{dialogEnvioRemoto.seleccionarVariableArea()}" process="@this" update="growlDialog " >
+						<p:ajax event="dialogReturn" listener="#{dialogEnvioRemoto.returnDialogoSeleccionVarArea}" update="growlDialog url"/>
+					</p:commandButton>
 						<p:outputLabel for="configAut" value="#{msg['dialogFormularioExterno.headerConfigAutenticacion']} *"  style="margin-right:5px" />
 					 	<h:panelGrid columns = "2">
 						 	<p:selectOneMenu id="configAut" value="#{dialogEnvioRemoto.data.configuracionAutenticacion}"  style="width:150px" disabled="#{dialogEnvioRemoto.isConsulta()}" converter="#{configuracionConverter}">
@@ -159,7 +163,7 @@
 				</p:toolbar>
 		    </p:outputPanel>
 		    <p:contextMenu>
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogFormularioExterno:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogFormularioExterno:auxCopiar" update="growlDialog" />
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{dialogEnvioRemoto.copiadoCorr}" process="@this" update="@this growlDialog"/>

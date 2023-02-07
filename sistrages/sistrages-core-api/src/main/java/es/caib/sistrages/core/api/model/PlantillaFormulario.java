@@ -173,4 +173,40 @@ public class PlantillaFormulario extends ModelApi {
 		return result;
 	}
 
+	@Override
+	public String toString() {
+        return toString("", "ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "PlantillaFormulari. ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           texto.append(tabulacion +"\t Identificador:" + identificador + "\n");
+           texto.append(tabulacion +"\t IdFormateadorFormulario:" + idFormateadorFormulario + "\n");
+           texto.append(tabulacion +"\t Descripcion:" + descripcion + "\n");
+           texto.append(tabulacion +"\t PorDefecto:" + porDefecto + "\n");
+           if (this.getPlantillasIdiomaFormularioByIdioma(idioma) != null) {
+        	   texto.append(tabulacion +"\t" + this.getPlantillasIdiomaFormularioByIdioma(idioma).toString(tabulacion, idioma) + " \n");
+           }
+           return texto.toString();
+     }
+
+	private PlantillaIdiomaFormulario getPlantillasIdiomaFormularioByIdioma(String idioma) {
+		PlantillaIdiomaFormulario plantilla = null;
+		if (plantillasIdiomaFormulario != null && !plantillasIdiomaFormulario.isEmpty()) {
+			for(PlantillaIdiomaFormulario plant : plantillasIdiomaFormulario) {
+				if (plant.getIdioma().equals(idioma)) {
+					plantilla = plant;
+					break;
+				}
+			}
+		}
+		return plantilla;
+	}
+
 }

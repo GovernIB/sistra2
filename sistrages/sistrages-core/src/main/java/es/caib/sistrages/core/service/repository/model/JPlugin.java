@@ -69,6 +69,14 @@ public class JPlugin implements IModelApi {
 	@Column(name = "PLG_PREPRO", length = 100)
 	private String prefijoPropiedades;
 
+	/** Clase real */
+	@Column(name = "PLG_CLASSREAL", nullable = true, length = 500)
+	private String claseReal;
+
+	/** Clase mock */
+	@Column(name = "PLG_CLASSMOCK", nullable = true, length = 500)
+	private String claseMock;
+
 	/** Constructor. **/
 	public JPlugin() {
 		super();
@@ -199,6 +207,36 @@ public class JPlugin implements IModelApi {
 	}
 
 	/**
+	 * @return the claseReal
+	 */
+	public String getClaseReal() {
+		return claseReal;
+	}
+
+	/**
+	 * @param claseReal
+	 *            the claseReal to set
+	 */
+	public void setClaseReal(final String claseReal) {
+		this.claseReal = claseReal;
+	}
+
+	/**
+	 * @return the claseMock
+	 */
+	public String getClaseMock() {
+		return claseMock;
+	}
+
+	/**
+	 * @param claseMock
+	 *            the claseMock to set
+	 */
+	public void setClaseMock(final String claseMock) {
+		this.claseMock = claseMock;
+	}
+
+	/**
 	 * toModel.
 	 *
 	 * @return
@@ -213,6 +251,8 @@ public class JPlugin implements IModelApi {
 		plugin.setTipo(TypePlugin.fromString(this.tipo));
 		plugin.setPropiedades((List<Propiedad>) UtilJSON.fromListJSON(propiedades, Propiedad.class));
 		plugin.setPrefijoPropiedades(prefijoPropiedades);
+		plugin.setRealClassname(this.claseReal);
+		plugin.setMockClassname(this.claseMock);
 		return plugin;
 	}
 
@@ -233,6 +273,8 @@ public class JPlugin implements IModelApi {
 			jPlugin.setPropiedades(UtilJSON.toJSON(plugin.getPropiedades()));
 			jPlugin.setTipo(plugin.getTipo().toString());
 			jPlugin.setPrefijoPropiedades(plugin.getPrefijoPropiedades());
+			jPlugin.setClaseReal(plugin.getRealClassname());
+			jPlugin.setClaseMock(plugin.getMockClassname());
 		}
 		return jPlugin;
 	}

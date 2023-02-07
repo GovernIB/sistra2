@@ -21,7 +21,7 @@ public class RAviso {
      * Tipo aviso: Todos (TOD), No autenticados (NAU), Autenticados (AUT), Con
      * pago (PAG), Con registro (REG), Con firma (FIR), Lista trámites (LIS)
      */
-	@ApiModelProperty(value = "Tipo aviso: Todos (TOD), No autenticados (NAU), Autenticados (AUT), Con pago (PAG), Con registro (REG), Con firma (FIR), Lista trámites (LIS)")
+	@ApiModelProperty(value = "Tipo aviso: Todos (TOD), No autenticados (NAU), Autenticados (AUT), Con pago (PAG), Con registro (REG), Con firma (FIR), Con anexo (ANE), Lista trámites (LIS)")
     private String tipo;
 
     /** Bloquear. */

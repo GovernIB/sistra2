@@ -29,6 +29,10 @@ public class REnvioRemoto {
 	@ApiModelProperty(value = "Identificador configuración autenticación")
 	private String identificadorConfAutenticacion;
 
+	/** Identificador área (nulo si global). */
+	@ApiModelProperty(value = "Identificador área. Será nulo si ámbito global")
+	private String identificadorArea;
+
 	/**
 	 * Método de acceso a id.
 	 *
@@ -104,6 +108,25 @@ public class REnvioRemoto {
 	 */
 	public void setIdentificadorConfAutenticacion(final String idConfiguracionAutenticacion) {
 		this.identificadorConfAutenticacion = idConfiguracionAutenticacion;
+	}
+
+	/**
+	 * Método de acceso a identificadorArea.
+	 * 
+	 * @return identificadorArea
+	 */
+	public String getIdentificadorArea() {
+		return identificadorArea;
+	}
+
+	/**
+	 * Método para establecer identificadorArea.
+	 * 
+	 * @param identificadorArea
+	 *                              identificadorArea a establecer
+	 */
+	public void setIdentificadorArea(final String identificadorArea) {
+		this.identificadorArea = identificadorArea;
 	}
 
 }

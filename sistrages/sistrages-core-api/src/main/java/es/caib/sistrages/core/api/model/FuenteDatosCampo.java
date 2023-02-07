@@ -107,4 +107,23 @@ public class FuenteDatosCampo extends ModelApi {
 		this.orden = orden;
 	}
 
+		@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "FuenteDatosCampo. ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           texto.append(tabulacion +"\t Identificador:" + identificador + "\n");
+           texto.append(tabulacion +"\t ClauPrimaria:" + clavePrimaria + "\n");
+           texto.append(tabulacion +"\t Ordre:" + orden + "\n");
+           return texto.toString();
+     }
+
 }

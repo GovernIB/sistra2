@@ -38,6 +38,7 @@ public interface ICatalogoProcedimientosPlugin extends IPlugin {
 	 *                      id trámite sistra
 	 * @param idioma
 	 *                      idioma
+	 * @param soloVigentes	Indica true/false si hay que buscar todo o sólo los vigentes.
 	 * @throws CatalogoPluginException
 	 */
 	List<DefinicionTramiteCP> obtenerTramites(String idTramite, Integer version, String idioma)
@@ -45,7 +46,7 @@ public interface ICatalogoProcedimientosPlugin extends IPlugin {
 
 	/**
 	 * Recupera archivo de catálogo.
-	 * 
+	 *
 	 * @param referenciaArchivo
 	 *                              referencia archivo
 	 * @return archivo

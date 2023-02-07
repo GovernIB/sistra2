@@ -318,4 +318,40 @@ public final class PaginaFormulario extends ModelApi {
 		}
 		return 0;
 	}
+
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "PaginaFormulari. ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           texto.append(tabulacion +"\t Identificador:" + identificador + "\n");
+           texto.append(tabulacion +"\t Ordre:" + orden + "\n");
+           texto.append(tabulacion +"\t PaginaFinal:" + paginaFinal + "\n");
+           texto.append(tabulacion +"\t PaginaAsociadaListaElementos:" + paginaAsociadaListaElementos + "\n");
+           if (scriptValidacion != null) {
+        	   texto.append(tabulacion +"\t ScriptValidacio: \n");
+        	   texto.append(scriptValidacion.toString(tabulacion, idioma)+ "\n");
+           }
+           if (scriptNavegacion != null) {
+        	   texto.append(tabulacion +"\t ScriptNavegacio: \n");
+        	   texto.append(scriptNavegacion.toString(tabulacion, idioma)+ "\n");
+           }
+           if (lineas != null && !lineas.isEmpty()) {
+        	   texto.append(tabulacion +"\t Paginas \n");
+
+        	   for (LineaComponentesFormulario linea : lineas) {
+        		   texto.append(tabulacion +"\t" + linea.toString(tabulacion +"\t", idioma));
+        	   }
+           }
+
+           return texto.toString();
+     }
 }

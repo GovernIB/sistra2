@@ -231,4 +231,29 @@ public class ConfiguracionAutenticacion extends ModelApi {
 		}
 		return true;
 	}
+
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "ConfiguracioAutenticacio. ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           texto.append(tabulacion +"\t Identificador:" + identificador + "\n");
+           texto.append(tabulacion +"\t Descripcio:" + descripcion + "\n");
+           texto.append(tabulacion +"\t IdentificadorCompost:" + identificadorCompuesto + "\n");
+           texto.append(tabulacion +"\t Ambit:" + ambito + "\n");
+           texto.append(tabulacion +"\t Entitat:" + entidad + "\n");
+           texto.append(tabulacion +"\t Area:" + area + "\n");
+           texto.append(tabulacion +"\t CodiImportacio:" + codigoImportacion + "\n");
+           texto.append(tabulacion +"\t Usuari:" + usuario + "\n");
+           texto.append(tabulacion +"\t Password:NOSEPUEDEMOSTRAR\n");
+           return texto.toString();
+     }
 }

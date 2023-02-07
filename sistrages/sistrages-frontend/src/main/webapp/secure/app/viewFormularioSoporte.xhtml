@@ -36,6 +36,7 @@
 			    	getPos();
 			    	return false;
 				}, false);
+
 			  }
 
 				function eliminarResaltar(){
@@ -74,13 +75,15 @@
 
 				el.classList.add("resaltar");
 				var aux = document.getElementById("dialogFormularioSoporte:auxCopiar");
-				if(el.textContent!=''){
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 					aux.value = el.textContent;
-				}else if(el.firstChild!=null){
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 					aux.value = el.firstChild.value;
 				}else if(el.value!=null &amp;&amp; el.value!=''){
 					aux.value = el.value;
-				}
+				}else{
+		          aux.value = '';
+		        }
 			 }
 
 			</h:outputScript>
@@ -149,7 +152,8 @@
             </p:confirmDialog>
 
 			<p:contextMenu for=":dialogFormularioSoporte:dataTableFormularios">
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogFormularioSoporte:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogFormularioSoporte:auxCopiar" update="growlDialog" />
+       			<p:separator/>
        			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('dialogFormularioSoporte:btnNuevoFormulario').click();" process="@this"  rendered="#{!viewFormularioSoporte.consulta}"/>
         		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('dialogFormularioSoporte:btnEditarFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
         		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('dialogFormularioSoporte:btnEliminarFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
@@ -173,7 +177,8 @@
 			</p:toolbar>
 		</p:outputPanel>
 		<p:contextMenu>
-      		<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :dialogFormularioSoporte:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+      		<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :dialogFormularioSoporte:auxCopiar" update="growlDialog" />
+      		<p:separator/>
       		<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('dialogFormularioSoporte:btnNuevoFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
        		<p:menuitem id="mnuEditarMain" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('dialogFormularioSoporte:btnEditarFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>
        		<p:menuitem id="mnuEliminarMain" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('dialogFormularioSoporte:btnEliminarFormulario').click();" process="@this" rendered="#{!viewFormularioSoporte.consulta}"/>

@@ -243,7 +243,9 @@ public class VersionTramiteAdapter {
 
 		final RVersionTramitePropiedades res = new RVersionTramitePropiedades();
 		res.setAutenticado(tv.isAutenticado());
-		if (tv.getPersistenciaDias() != null) {
+
+		res.setPersistente(tv.isPersistencia());
+		if (tv.isPersistencia() && !tv.isPersistenciaInfinita()) {
 			res.setDiasPersistencia(tv.getPersistenciaDias());
 		}
 
@@ -265,7 +267,6 @@ public class VersionTramiteAdapter {
 		}
 
 		res.setNoAutenticado(tv.isNoAutenticado());
-		res.setPersistente(tv.isPersistencia());
 		res.setScriptParametrosIniciales(AdapterUtils.generaScript(tv.getScriptInicializacionTramite(), idioma));
 		res.setScriptPersonalizacion(AdapterUtils.generaScript(tv.getScriptPersonalizacion(), idioma));
 		return res;
@@ -483,7 +484,7 @@ public class VersionTramiteAdapter {
 
 	/**
 	 * Concatena ambos emails
-	 * 
+	 *
 	 * @param generaScript
 	 * @param scripts
 	 * @return

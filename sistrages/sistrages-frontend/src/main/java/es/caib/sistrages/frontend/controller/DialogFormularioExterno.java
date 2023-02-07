@@ -15,11 +15,14 @@ import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.service.ConfiguracionAutenticacionService;
 import es.caib.sistrages.core.api.service.FormularioExternoService;
 import es.caib.sistrages.core.api.service.TramiteService;
+import es.caib.sistrages.core.api.service.VariablesAreaService;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.DialogResultMessage;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -40,6 +43,9 @@ public class DialogFormularioExterno extends DialogControllerBase {
 	/** Enlace servicio. */
 	@Inject
 	private TramiteService tramiteService;
+
+	@Inject
+	private VariablesAreaService vaService;
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -66,6 +72,8 @@ public class DialogFormularioExterno extends DialogControllerBase {
 	private Boolean desactivarConsulta = false;
 
 	private String portapapeles;
+
+	private String errorCopiar;
 
 	/**
 	 * Inicialización.
@@ -132,7 +140,29 @@ public class DialogFormularioExterno extends DialogControllerBase {
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data);
+		if (noExisteVarArea()) {
+			DialogResultMessage msg = new DialogResultMessage();
+			msg.setNivel(TypeNivelGravedad.WARNING);
+			msg.setMensaje(UtilJSF.getLiteral("variable.area.no.existe"));
+			result.setMensaje(msg);
+		} else if (data.getUrl().matches(".*\\{@@[A-Za-z0-9\\_\\-]{1,}@@\\}.*")) {
+			DialogResultMessage msg = new DialogResultMessage();
+			msg.setNivel(TypeNivelGravedad.INFO);
+			msg.setMensaje(UtilJSF.getLiteral("variable.area.existe"));
+			result.setMensaje(msg);
+		}
 		UtilJSF.closeDialog(result);
+	}
+
+	public boolean noExisteVarArea() {
+		if (data.getUrl().matches(".*\\{@@[A-Za-z0-9\\_\\-]{1,}@@\\}.*") && vaService.loadVariableAreaByIdentificador(
+				this.data.getUrl().substring(this.data.getUrl().indexOf('{'), this.data.getUrl().indexOf('}') + 1)
+						.replace("{@@", "").replace("@@}", ""),
+				Long.valueOf(area)) == null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -155,6 +185,29 @@ public class DialogFormularioExterno extends DialogControllerBase {
 		params.put(TypeParametroVentana.ID.toString(),
 				String.valueOf(this.data.getConfiguracionAutenticacion().getCodigo()));
 		UtilJSF.openDialog(DialogConfiguracionAutenticacion.class, TypeModoAcceso.CONSULTA, params, true, 550, 195);
+	}
+
+	/**
+	 * Retorno dialogo de seleccionar variable area.
+	 *
+	 * @param event respuesta dialogo
+	 */
+	public void returnDialogoSeleccionVarArea(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled()) {
+			this.data.setUrl("{@@" + respuesta.getResult() + "@@}" + this.data.getUrl());
+		}
+	}
+
+	/**
+	 * Abre dialogo seleccionar variable área
+	 *
+	 * @param event respuesta dialogo
+	 */
+	public void seleccionarVariableArea() {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), this.area);
+		UtilJSF.openDialog(DialogSeleccionarVariableArea.class, TypeModoAcceso.CONSULTA, params, true, 800, 500);
 	}
 
 	/**
@@ -266,15 +319,33 @@ public class DialogFormularioExterno extends DialogControllerBase {
 	 * Copiado correctamente
 	 */
 	public void copiadoCorr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 	/**
 	 * Copiado error
 	 */
 	public void copiadoErr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 
 	public final String getPortapapeles() {

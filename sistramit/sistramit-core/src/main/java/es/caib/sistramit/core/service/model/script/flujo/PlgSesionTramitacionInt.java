@@ -35,7 +35,7 @@ public interface PlgSesionTramitacionInt extends PluginScriptPlg {
 	 * Devuelve parámetro inicio.
 	 *
 	 * @param parametro
-	 *            Nombre parámetro.
+	 *                      Nombre parámetro.
 	 * @return Devuelve valor parámetro. En caso de no encontrar el parámetro
 	 *         devuelve cadena vacía.
 	 */
@@ -85,5 +85,12 @@ public interface PlgSesionTramitacionInt extends PluginScriptPlg {
 	 * @return Devuelve el tramite.
 	 */
 	ClzTramiteCPInt getTramiteCP();
+
+	/**
+	 * Indica el entorno de ejecución.
+	 *
+	 * @return entorno de ejecución.
+	 */
+	String getEntorno();
 
 }

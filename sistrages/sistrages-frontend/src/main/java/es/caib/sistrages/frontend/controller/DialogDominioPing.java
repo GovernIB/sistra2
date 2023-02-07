@@ -11,13 +11,16 @@ import javax.inject.Inject;
 
 import es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio;
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
+import es.caib.sistrages.core.api.exception.VariableAreaNoExisteException;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
+import es.caib.sistrages.core.api.model.VariableArea;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.service.DominioResolucionService;
 import es.caib.sistrages.core.api.service.DominioService;
+import es.caib.sistrages.core.api.service.VariablesAreaService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -34,6 +37,10 @@ public class DialogDominioPing extends DialogControllerBase {
 	/** Enlace servicio. */
 	@Inject
 	private DominioResolucionService dominioResolucionService;
+
+	/** Enlace servicio. */
+	@Inject
+	private VariablesAreaService vaService;
 
 	/** Id del dominio a tratar. */
 	private String id;
@@ -60,6 +67,8 @@ public class DialogDominioPing extends DialogControllerBase {
 	private Boolean mostrarError;
 
 	private String portapapeles;
+
+	private String errorCopiar;
 
 	/**
 	 * Inicialización.
@@ -161,6 +170,18 @@ public class DialogDominioPing extends DialogControllerBase {
 	private ValoresDominio pingConsultaRemota(final List<ParametroDominio> parametros) {
 		String user = null;
 		String pwd = null;
+		if (this.dominio.getAmbito().equals(TypeAmbito.AREA)
+				&& this.dominio.getUrl().matches(".*\\{@@[A-Za-z0-9\\_\\-]{1,}@@\\}.*")) {
+			VariableArea va = vaService.loadVariableAreaByIdentificador(this.dominio.getUrl()
+					.substring(this.dominio.getUrl().indexOf('{'), this.dominio.getUrl().indexOf('}') + 1)
+					.replace("{@@", "").replace("@@}", ""), this.dominio.getArea().getCodigo());
+			if (va == null) {
+				throw new VariableAreaNoExisteException(UtilJSF.getLiteral("variable.area.no.existe"));
+			} else {
+				this.dominio.setUrl(this.dominio.getUrl().replace(this.dominio.getUrl().substring(
+						this.dominio.getUrl().indexOf('{'), this.dominio.getUrl().indexOf('}') + 1), va.getUrl()));
+			}
+		}
 		if (this.dominio.getConfiguracionAutenticacion() != null) {
 			user = this.dominio.getConfiguracionAutenticacion().getUsuario();
 			pwd = this.dominio.getConfiguracionAutenticacion().getPassword();
@@ -233,15 +254,33 @@ public class DialogDominioPing extends DialogControllerBase {
 	 * Copiado correctamente
 	 */
 	public void copiadoCorr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 	/**
 	 * Copiado error
 	 */
 	public void copiadoErr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 
 	// ------- GETTERS / SETTERS --------------------------------

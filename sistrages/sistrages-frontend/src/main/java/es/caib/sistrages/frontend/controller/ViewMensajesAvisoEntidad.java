@@ -61,6 +61,8 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 
 	private String portapapeles;
 
+	private String errorCopiar;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -155,15 +157,32 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	 * Copiado correctamente
 	 */
 	public void copiadoCorr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 	/**
 	 * Copiado error
 	 */
 	public void copiadoErr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 
 	public final String getPortapapeles() {
@@ -238,29 +257,26 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		// Verificamos si se ha modificado
 		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 			// Mensaje
+			String message = null;
+			ResultadoError result = this.refrescar();
 
 			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
-				/*
-				 * if (result != null && result.getCodigo() == 1) { message =
-				 * UtilJSF.getLiteral("info.alta.ok") + ". " +
-				 * UtilJSF.getLiteral("info.refrescar"); } else { message =
-				 * UtilJSF.getLiteral("info.alta.ok") + ". " +
-				 * UtilJSF.getLiteral("error.refrescar") + ": " + result.getMensaje(); }
-				 */
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.alta.ok"));
+				if (result != null && result.getCodigo() == 1) {
+					message = UtilJSF.getLiteral("info.alta.ok") + ". " + UtilJSF.getLiteral("info.refrescar");
+				} else {
+					message = UtilJSF.getLiteral("info.alta.ok") + ". " + UtilJSF.getLiteral("error.refrescar")
+							+ ": " + result.getMensaje();
+				}
 			} else {
-				String message = null;
-				ResultadoError result = this.refrescar();
 				if (result != null && result.getCodigo() == 1) {
 					message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("info.refrescar");
 				} else {
 					message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("error.refrescar")
 							+ ": " + result.getMensaje();
 				}
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-
 			}
 
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 			// Refrescamos datos
 			buscar();
 		}
@@ -340,7 +356,7 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		}
 
-		UtilJSF.openDialog(DialogMensajeAviso.class, modoAccesoDlg, params, true, 700, 570);
+		UtilJSF.openDialog(DialogMensajeAviso.class, modoAccesoDlg, params, true, 900, 570);
 	}
 
 }

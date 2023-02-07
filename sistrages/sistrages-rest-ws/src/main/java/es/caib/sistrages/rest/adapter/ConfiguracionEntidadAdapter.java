@@ -15,6 +15,7 @@ import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.IncidenciaValoracion;
 import es.caib.sistrages.core.api.model.PlantillaEntidad;
 import es.caib.sistrages.core.api.model.PlantillaFormateador;
+import es.caib.sistrages.core.api.model.VariableArea;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.rest.api.interna.RArea;
@@ -27,6 +28,7 @@ import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistrages.rest.api.interna.RPlantillaEntidad;
 import es.caib.sistrages.rest.api.interna.RPlantillaFormulario;
 import es.caib.sistrages.rest.api.interna.RPlantillaIdioma;
+import es.caib.sistrages.rest.api.interna.RVariableArea;
 import es.caib.sistrages.rest.utils.AdapterUtils;
 
 /**
@@ -156,10 +158,23 @@ public class ConfiguracionEntidadAdapter {
 		rConfiguracionEntidad.setPlantillas(rplantillasEntidad);
 
 		final List<RArea> listaAreas = new ArrayList<>();
+		List<RVariableArea> lrva;
+		List<VariableArea> lva;
 		for (final Area area : areas) {
+			lrva = new ArrayList<RVariableArea>();
 			final RArea rarea = new RArea();
 			rarea.setId(area.getIdentificadorCompuesto());
 			rarea.setEmails(area.getEmail());
+			lva = restApiService.listVariableArea(area.getCodigo(), null);
+			for (final VariableArea va : lva) {
+				final RVariableArea rva = new RVariableArea();
+				rva.setCodigo(va.getCodigo());
+				rva.setDescripcion(va.getDescripcion());
+				rva.setIdentificador(va.getIdentificador());
+				rva.setValor(va.getUrl());
+				lrva.add(rva);
+			}
+			rarea.setVariablesArea(lrva);
 			listaAreas.add(rarea);
 		}
 		rConfiguracionEntidad.setArea(listaAreas);
@@ -171,11 +186,14 @@ public class ConfiguracionEntidadAdapter {
 			if (er.getConfiguracionAutenticacion() != null) {
 				rer.setIdentificadorConfAutenticacion(er.getConfiguracionAutenticacion().getIdentificadorCompuesto());
 			}
+			rer.setIdentificadorArea(obtenerIdCompuestoArea(areas, er.getIdArea()));
 			// rer.setIdentificadorEntidad(er.getEntidad().getIdentificador());
 			if (er.getTimeout() != null) {
 				rer.setTimeout(er.getTimeout().toString());
 			}
+
 			rer.setUrl(er.getUrl());
+
 			listaEnvios.add(rer);
 		}
 		rConfiguracionEntidad.setEnviosRemoto(listaEnvios);
@@ -195,17 +213,29 @@ public class ConfiguracionEntidadAdapter {
 				rgfe.setIdentificador(gfe.getIdentificadorCompuesto());
 				rgfe.setUrl(gfe.getUrl());
 				rgfe.setIdentificadorEntidad(entidad.getCodigoDIR3());
-
+				rgfe.setIdentificadorArea(obtenerIdCompuestoArea(areas, gfe.getAreaIdentificador()));
 				if (gfe.getConfiguracionAutenticacion() != null) {
 					rgfe.setIdentificadorConfAutenticacion(
 							gfe.getConfiguracionAutenticacion().getIdentificadorCompuesto());
 				}
 				rgfes.add(rgfe);
-
 			}
 			rConfiguracionEntidad.setGestoresFormulariosExternos(rgfes);
 		}
 		return rConfiguracionEntidad;
+	}
+
+	private String obtenerIdCompuestoArea(final List<Area> areas, final String areaIdentificador) {
+		String res = null;
+		if (areas != null) {
+			for (final Area a : areas) {
+				if (a.getIdentificador().equals(areaIdentificador)) {
+					res = a.getIdentificadorCompuesto();
+					break;
+				}
+			}
+		}
+		return res;
 	}
 
 	/**

@@ -228,12 +228,11 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 		/* titulo pantalla */
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(ViewDefinicionVersion.class));
 
-		/** Cargamos la entidad. **/
-		entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
-
 		String[] idComp = tramiteId.split("\\.");
 
-		Area area = tramiteService.getAreaByIdentificador(entidad.getIdentificador(), idComp[1]);
+		Area area = tramiteService.getAreaByIdentificador(idComp[0], idComp[1]);
+		/** Cargamos la entidad. **/
+		entidad = entidadService.loadEntidadByArea(area.getCodigo());
 
 		tramite = tramiteService.getTramiteByIdentificador(idComp[2], area.getCodigo(), null, null);
 

@@ -105,6 +105,8 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 
 	private String portapapeles;
 
+	private String errorCopiar;
+
 	/** Inicializacion. */
 	public void init() {
 
@@ -151,15 +153,32 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 	 * Copiado correctamente
 	 */
 	public void copiadoCorr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 	/**
 	 * Copiado error
 	 */
 	public void copiadoErr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 
 	/**
@@ -316,19 +335,26 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.alta.ok"));
 			} else {
 				String message = null;
-				ResultadoError re = this.refrescar();
-				if (re.getCodigo() != 1) {
-					message = UtilJSF.getLiteral("info.modificado.ok") + ". "
-							+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
+				if (respuesta.getMensaje() == null) {
+					ResultadoError re = this.refrescar();
+					if (re.getCodigo() != 1) {
+						message = UtilJSF.getLiteral("info.modificado.ok") + ". "
+								+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
+					} else {
+						message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+					}
+					UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 				} else {
-					message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+					ResultadoError re = this.refrescar();
+					if (re.getCodigo() != 1) {
+						message = UtilJSF.getLiteral("info.modificado.ok") + ". " + respuesta.getMensaje().getMensaje()
+								+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
+					} else {
+						message = UtilJSF.getLiteral("info.modificado.ok") + ". " + respuesta.getMensaje().getMensaje()
+								+ UtilJSF.getLiteral("info.cache.ok");
+					}
+					UtilJSF.addMessageContext(respuesta.getMensaje().getNivel(), message);
 				}
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-			}
-
-			// Mensaje dialogo
-			if (respuesta.getMensaje() != null) {
-				UtilJSF.addMessageContext(respuesta.getMensaje().getNivel(), respuesta.getMensaje().getMensaje());
 			}
 
 			// Refrescamos datos
@@ -367,6 +393,8 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 	 */
 	public void cambiarAccion() {
 		switch (accion) {
+		case "V":
+			UtilJSF.redirectJsfPage("/secure/app/viewVariablesArea.xhtml?id=" + id);
 		case "D":
 			UtilJSF.redirectJsfPage("/secure/app/viewDominios.xhtml?ambito=A&id=" + id + "&area=" + area);
 		case "F":
@@ -600,7 +628,7 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 		if (typeAmbito == TypeAmbito.ENTIDAD) {
 			params.put("ENTIDAD", id);
 		}
-		UtilJSF.openDialog(DialogEnvioRemoto.class, modoAccesoDlg, params, true, 650, 250);
+		UtilJSF.openDialog(DialogEnvioRemoto.class, modoAccesoDlg, params, true, 650, 307);
 	}
 
 	/**

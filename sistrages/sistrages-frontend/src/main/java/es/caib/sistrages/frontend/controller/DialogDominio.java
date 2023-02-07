@@ -31,6 +31,7 @@ import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
+import es.caib.sistrages.core.api.service.VariablesAreaService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.DialogResultMessage;
@@ -61,6 +62,9 @@ public class DialogDominio extends DialogControllerBase {
 
 	@Inject
 	private SystemService systemService;
+
+	@Inject
+	private VariablesAreaService vaService;
 
 	@Inject
 	private EntidadService entidadService;
@@ -138,6 +142,8 @@ public class DialogDominio extends DialogControllerBase {
 	private Boolean hayCambios = false;
 
 	private String portapapeles;
+
+	private String errorCopiar;
 
 	/**
 	 * Inicialización.
@@ -402,6 +408,29 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
+	 * Retorno dialogo de seleccionar variable area.
+	 *
+	 * @param event respuesta dialogo
+	 */
+	public void returnDialogoSeleccionVarArea(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled()) {
+			this.data.setUrl("{@@" + respuesta.getResult() + "@@}" + this.data.getUrl());
+		}
+	}
+
+	/**
+	 * Abre dialogo seleccionar variable área
+	 *
+	 * @param event respuesta dialogo
+	 */
+	public void seleccionarVariableArea() {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), this.idArea);
+		UtilJSF.openDialog(DialogSeleccionarVariableArea.class, TypeModoAcceso.CONSULTA, params, true, 800, 390);
+	}
+
+	/**
 	 * Crea nueva propiedad.
 	 */
 	public void nuevaPropiedad() {
@@ -647,6 +676,18 @@ public class DialogDominio extends DialogControllerBase {
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data.getIdentificador());
+		if (noExisteVarArea()) {
+			DialogResultMessage msg = new DialogResultMessage();
+			msg.setNivel(TypeNivelGravedad.WARNING);
+			msg.setMensaje(UtilJSF.getLiteral("variable.area.no.existe"));
+			result.setMensaje(msg);
+		} else if (data.getTipo().equals(TypeDominio.CONSULTA_REMOTA)
+				&& data.getUrl().matches(".*\\{@@[A-Za-z0-9\\_\\-]{1,}@@\\}.*")) {
+			DialogResultMessage msg = new DialogResultMessage();
+			msg.setNivel(TypeNivelGravedad.INFO);
+			msg.setMensaje(UtilJSF.getLiteral("variable.area.existe"));
+			result.setMensaje(msg);
+		}
 		/*
 		 * if (identificadorCambiado) { final DialogResultMessage dm = new
 		 * DialogResultMessage(); dm.setNivel(TypeNivelGravedad.WARNING);
@@ -658,6 +699,19 @@ public class DialogDominio extends DialogControllerBase {
 		 */
 
 		UtilJSF.closeDialog(result);
+	}
+
+	public boolean noExisteVarArea() {
+		if (data.getAmbito().equals(TypeAmbito.AREA) && data.getTipo().equals(TypeDominio.CONSULTA_REMOTA)
+				&& data.getUrl().matches(".*\\{@@[A-Za-z0-9\\_\\-]{1,}@@\\}.*")
+				&& vaService.loadVariableAreaByIdentificador(
+						data.getUrl().substring(this.data.getUrl().indexOf('{'), this.data.getUrl().indexOf('}') + 1)
+								.replace("{@@", "").replace("@@}", ""),
+						Long.valueOf(idArea)) == null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -955,6 +1009,14 @@ public class DialogDominio extends DialogControllerBase {
 		return true;
 	}
 
+	public boolean isAmbitoArea() {
+		if (TypeAmbito.AREA.toString().equals(ambito)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public Object[] mensaje() {
 		Long longIdArea = (idArea == null) ? null : Long.valueOf(idArea);
 		final Dominio dataNuevo = dominioService.loadDominioByIdentificador(this.data.getAmbito(),
@@ -982,15 +1044,33 @@ public class DialogDominio extends DialogControllerBase {
 	 * Copiado correctamente
 	 */
 	public void copiadoCorr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 	/**
 	 * Copiado error
 	 */
 	public void copiadoErr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 
 	public final String getPortapapeles() {

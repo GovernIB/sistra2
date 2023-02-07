@@ -170,4 +170,27 @@ public class Tramite extends ModelApi {
 		+ ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO + this.getIdentificadorArea()
 		+ ValorIdentificadorCompuesto.SEPARACION_IDENTIFICADOR_COMPUESTO + this.getIdentificador();
 	}
+
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "Tramit. ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           texto.append(tabulacion +"\t Identificador:" + identificador + "\n");
+           texto.append(tabulacion +"\t IdentificadorArea:" + identificadorArea + "\n");
+           texto.append(tabulacion +"\t IdentificadorEntitat:" + identificadorEntidad + "\n");
+           texto.append(tabulacion +"\t Descripcio:" + descripcion + "\n");
+           texto.append(tabulacion +"\t Actiu:" + activo + "\n");
+           texto.append(tabulacion +"\t IdArea:" + idArea + "\n");
+           texto.append(tabulacion +"\t IdEntitat:" + idEntidad + "\n");
+           return texto.toString();
+     }
 }

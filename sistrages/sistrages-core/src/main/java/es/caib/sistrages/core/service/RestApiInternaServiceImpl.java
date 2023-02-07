@@ -34,6 +34,7 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
+import es.caib.sistrages.core.api.model.VariableArea;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -61,6 +62,7 @@ import es.caib.sistrages.core.service.repository.dao.RolDao;
 import es.caib.sistrages.core.service.repository.dao.SeccionReutilizableDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
 import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
+import es.caib.sistrages.core.service.repository.dao.VariableAreaDao;
 
 @Service
 @Transactional
@@ -158,6 +160,10 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	/** DAO Secciones reutilizables. */
 	@Autowired
 	private SeccionReutilizableDao seccionReutilizableDao;
+
+	/** DAO Variables area. */
+	@Autowired
+	private VariableAreaDao vaDao;
 
 	@Override
 	@NegocioInterceptor
@@ -522,6 +528,50 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 			}
 		}
 		return scripts;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public VariableArea loadVariableArea(final Long codVa) {
+		VariableArea result = null;
+		result = vaDao.getByCodigo(codVa);
+		return result;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<VariableArea> listVariableArea(final Long idVa, final String filtro) {
+		return vaDao.getAllByFiltro(idVa, filtro);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public VariableArea loadVariableAreaByIdentificador(String identificador, Long codigoArea) {
+		return vaDao.getVariableAreaByIdentificador(identificador, codigoArea);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<Dominio> dominioByVariable(VariableArea va) {
+		return vaDao.dominioByVariable(va);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<GestorExternoFormularios> gfeByVariable(VariableArea va) {
+		return vaDao.gfeByVariable(va);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<EnvioRemoto> envioRemotoByVariable(VariableArea va) {
+		return vaDao.envioRemotoByVariable(va);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Area getAreaByIdentificador(final String identificadorEntidad, final String identificador) {
+		return areaDao.getAreaByIdentificador(identificadorEntidad, identificador);
 	}
 
 }

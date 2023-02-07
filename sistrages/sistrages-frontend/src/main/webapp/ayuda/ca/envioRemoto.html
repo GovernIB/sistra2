@@ -15,7 +15,8 @@
 	<ul>
 		<li><span class="nombreCampo">Identificador:</span> codi un&iacute;voc que identifica l'enviament i mitjan&ccedil;ant el qual es podr&agrave; invocar l'enviament </li>
 		<li><span class="nombreCampo">Descripci&oacute;:</span> text descriptiu de la funcionalitat prove&iuml;da per l'enviament</li>
-		<li><span class="nombreCampo">URL:</span> URL del servei al qual es vol realitzar l'enviament remot.</li>
+		<li><span class="nombreCampo">URL:</span> URL del servei al qual es vol realitzar l'enviament remot. Si existeix un placeholder (per haver seleccionat una variable d'&agrave;rea), aquest ser&agrave; substitu&iuml;t pel contingut d'aquesta variable, que ser&agrave; inserit al començament d'aquest camp. Per exemple, si en la variable VAR01 apareix la URL "https://se.caib.es" i la URL d'aquest camp ha de finalitzar amb "proyectoBase/services/dominios/", en aquest camp apareixer&agrave; el text "{@@VAR01@@}/proyectoBase/services/dominios/".</li>
+		<li><span class="nombreCampo">Selecció Variable &Agrave;rea:</span> aquest bot&oacute; obre una pantalla que permet seleccionar una variable d'&agrave;rea que afegir&agrave; un placeholder que ser&agrave; substitu&iuml;t per la url indicada en aquesta variable d'&agrave;rea a l'hora d'executar el tr&agrave;mit que utilitzi aquest enviament remot.</li>
 		<li><span class="nombreCampo">Configuraci&oacute; Autenticaci&oacute;:</span> Autenticaci&oacute; que s'enviar&agrave; al servei en cas d'estar securitzat. </li>
 		<li><span class="nombreCampo">Timeout (segons):</span> Temps que esperar&agrave; SISTRA2 en cas de no obtenir resposta del servei.</li>
 

@@ -24,6 +24,7 @@ import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSeccionReutiliz
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
+import es.caib.sistrages.core.api.model.ComponenteFormularioImagen;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
@@ -413,6 +414,12 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	}
 
 	private void vaciarIds(ComponenteFormulario componente) {
+		if (componente.getTexto() != null) {
+			componente.getTexto().limpiarIds();
+		}
+		if (componente.getAyuda() != null) {
+			componente.getAyuda().limpiarIds();
+		}
 		if (componente instanceof ComponenteFormularioCampo) {
 			if (((ComponenteFormularioCampo) componente).getScriptAutorrellenable() != null) {
 				((ComponenteFormularioCampo) componente).getScriptAutorrellenable().limpiarIds();
@@ -426,10 +433,11 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				((ComponenteFormularioCampo) componente).getScriptValidacion().limpiarIds();
 			}
 		}
-		if (componente instanceof ComponenteFormularioCampoSelector) {
-			if (((ComponenteFormularioCampoSelector) componente).getScriptValoresPosibles() != null) {
-				((ComponenteFormularioCampoSelector) componente).getScriptValoresPosibles().limpiarIds();
-			}
+		if (componente instanceof ComponenteFormularioCampoSelector && ((ComponenteFormularioCampoSelector) componente).getScriptValoresPosibles() != null) {
+			((ComponenteFormularioCampoSelector) componente).getScriptValoresPosibles().limpiarIds();
+		}
+		if (componente instanceof ComponenteFormularioImagen && ((ComponenteFormularioImagen) componente).getFichero() != null) {
+			((ComponenteFormularioImagen) componente).getFichero().setCodigo(null);
 		}
 	}
 
@@ -586,7 +594,8 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	}
 
 	/**
-	 * Método recursivo para obtener las lineas de una página.
+	 * Método recursivo para obtener las lineas de una página. <br />
+	 * Importante, si se pasa el parámetro, sinSeccionesReutilizables a true, hay que setear el orden de cada linea.
 	 * @param jPagina
 	 * @param sinSeccionesReutilizables
 	 * @return
@@ -594,13 +603,29 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	private List<LineaComponentesFormulario> getLineas(final JPaginaFormulario jPagina, final boolean sinSeccionesReutilizables) {
 
 		List<LineaComponentesFormulario> lineas = new ArrayList<>();
-		for (final JLineaFormulario jLinea : jPagina.getLineasFormulario()) {
+		int ordenLinea = 0;
+
+		List<JLineaFormulario> jlineas = new ArrayList<>(jPagina.getLineasFormulario());
+		Collections.sort(jlineas,
+				(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
+
+		for (final JLineaFormulario jLinea : jlineas) {
 			final LineaComponentesFormulario linea = jLinea.toModel();
 			boolean sinSeccionReutilizable = true;
 
-			for (final JElementoFormulario jComponente : jLinea.getElementoFormulario()) {
+			if (sinSeccionesReutilizables) {
+				linea.setOrden(ordenLinea);
+				ordenLinea ++;
+			}
+
+			List<JElementoFormulario> elementos = new ArrayList<>(jLinea.getElementoFormulario());
+			Collections.sort(elementos,
+					(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
+
+			for (final JElementoFormulario jComponente : elementos) {
 				final ComponenteFormulario componente = componenteFormularioToModel(jComponente);
 				if (componente != null) {
+
 					//Si es sin secciones reutilizables, hay que sustituir el componente seccion reutilizable por el disenyo asociado
 					if (componente.getTipo() == TypeObjetoFormulario.SECCION_REUTILIZABLE && sinSeccionesReutilizables && jComponente.getSeccionReutilizableFormulario() != null) {
 						//Si tiene seccion reutilizable y está activo, hay que obtener todas las lineas
@@ -609,10 +634,26 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 						JPaginaFormulario jpaginaSeccion = (JPaginaFormulario) jseccion.getFormularioAsociado().getPaginas().toArray()[0];
 						List<LineaComponentesFormulario> lineasSeccion = getLineas(jpaginaSeccion, false);
 
+
 						//Hay que reemplazar la sección que haya, por los datos almacenados (la letra y el texto).
 						if (lineasSeccion != null) {
+
+							Collections.sort(lineasSeccion,
+									(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
+
 							for(LineaComponentesFormulario lin : lineasSeccion) {
+
+								if (sinSeccionesReutilizables) {
+									lin.setOrden(ordenLinea);
+									ordenLinea ++;
+								}
+
+
 								if (lin.getComponentes() != null) {
+
+									Collections.sort(lin.getComponentes(),
+											(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
+
 									for(ComponenteFormulario comp : lin.getComponentes()) {
 										if (comp instanceof ComponenteFormularioSeccion) {
 											((ComponenteFormularioSeccion) comp).setLetra(jComponente.getSeccionReutilizableFormulario().getLetra());
@@ -650,6 +691,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 			if (sinSeccionReutilizable) {
 				lineas.add(linea);
 			}
+
 
 		}
 		return lineas;

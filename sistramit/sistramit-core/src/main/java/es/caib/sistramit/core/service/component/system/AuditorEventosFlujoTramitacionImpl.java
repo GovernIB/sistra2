@@ -46,9 +46,8 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 			final Object[] pArgumentos, final boolean debugEnabled) {
 		List<EventoAuditoria> eventosFlujoTramitacion = null;
 		// Auditamos invocaciones si debug esta habilitado
-		if (debugEnabled) {
-			eventosFlujoTramitacion = eventoFlujoTramitacionInvocacion(idSesionTramitacion, pMetodo, pArgumentos);
-		}
+		eventosFlujoTramitacion = eventoFlujoTramitacionInvocacion(idSesionTramitacion, pMetodo, pArgumentos,
+				debugEnabled);
 		return eventosFlujoTramitacion;
 	}
 
@@ -81,33 +80,61 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 	 *                                Metodo
 	 * @param pArgumentos
 	 *                                Argumentos
+	 * @param debugEnabled
+	 *                                Indica si debug está habilitadp
 	 * @return Eventos
 	 */
 	private List<EventoAuditoria> eventoFlujoTramitacionInvocacion(final String idSesionTramitacion,
-			final String pMetodo, final Object[] pArgumentos) {
+			final String pMetodo, final Object[] pArgumentos, final boolean debugEnabled) {
 
 		final List<EventoAuditoria> eventosFlujo = new ArrayList<>();
 
-		// Evento ir a paso
-		if ("irAPaso".equals(pMetodo)) {
-			final EventoAuditoria evento = crearEvento(TypeEvento.DEBUG_FLUJO, idSesionTramitacion);
-			evento.setDescripcion("irAPaso: " + TypePaso.fromString((String) pArgumentos[1]).name());
-			eventosFlujo.add(evento);
+		// Debug pasos tramite (solo si debug habilitado)
+		if (debugEnabled) {
+			// Evento ir a paso
+			if ("irAPaso".equals(pMetodo)) {
+				final EventoAuditoria evento = crearEvento(TypeEvento.DEBUG_FLUJO, idSesionTramitacion);
+				evento.setDescripcion("irAPaso: " + TypePaso.fromString((String) pArgumentos[1]).name());
+				eventosFlujo.add(evento);
+			}
+
+			// Evento ir a paso actual
+			if ("irAPasoActual".equals(pMetodo)) {
+				final EventoAuditoria evento = crearEvento(TypeEvento.DEBUG_FLUJO, idSesionTramitacion);
+				evento.setDescripcion("irAPasoActual");
+				eventosFlujo.add(evento);
+			}
+
+			// Evento accion paso
+			if ("accionPaso".equals(pMetodo)) {
+				final EventoAuditoria evento = crearEvento(TypeEvento.DEBUG_FLUJO, idSesionTramitacion);
+				evento.setDescripcion("accionPaso: " + TypePaso.fromString((String) pArgumentos[1]).name() + " / "
+						+ ((TypeAccionPaso) pArgumentos[2]).name());
+				eventosFlujo.add(evento);
+			}
 		}
 
-		// Evento ir a paso actual
-		if ("irAPasoActual".equals(pMetodo)) {
-			final EventoAuditoria evento = crearEvento(TypeEvento.DEBUG_FLUJO, idSesionTramitacion);
-			evento.setDescripcion("irAPasoActual");
-			eventosFlujo.add(evento);
-		}
-
-		// Evento accion paso
+		// Eventos accion paso
 		if ("accionPaso".equals(pMetodo)) {
-			final EventoAuditoria evento = crearEvento(TypeEvento.DEBUG_FLUJO, idSesionTramitacion);
-			evento.setDescripcion("accionPaso: " + TypePaso.fromString((String) pArgumentos[1]).name() + " / "
-					+ ((TypeAccionPaso) pArgumentos[2]).name());
-			eventosFlujo.add(evento);
+			final TypeAccionPaso accionPaso = (TypeAccionPaso) pArgumentos[ConstantesNumero.N2];
+			final ParametrosAccionPaso parametrosPaso = (ParametrosAccionPaso) pArgumentos[ConstantesNumero.N3];
+
+			// Evento inicio pago
+			if (accionPaso instanceof TypeAccionPasoPagar
+					&& ((TypeAccionPasoPagar) accionPaso) == TypeAccionPasoPagar.INICIAR_PAGO) {
+				final EventoAuditoria eventoFormulario = crearEvento(TypeEvento.PAGO_ELECTRONICO_INICIO,
+						idSesionTramitacion);
+				eventosFlujo.add(eventoFormulario);
+			}
+
+			// Evento inicio registro
+			if (accionPaso instanceof TypeAccionPasoRegistrar
+					&& ((TypeAccionPasoRegistrar) accionPaso) == TypeAccionPasoRegistrar.INICIAR_SESION_REGISTRO) {
+				final EventoAuditoria eventoFormulario = crearEvento(TypeEvento.REGISTRAR_TRAMITE_INICIO,
+						idSesionTramitacion);
+				eventosFlujo.add(eventoFormulario);
+			}
+
 		}
 
 		return eventosFlujo;
@@ -343,24 +370,27 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 			if (((TypeAccionPasoPagar) accionPaso) == TypeAccionPasoPagar.VERIFICAR_PAGO_PASARELA) {
 				final PagoVerificacion pv = (PagoVerificacion) respuestaAccionPaso.getParametroRetorno("verificacion");
 				final DatosSesionPago sp = (DatosSesionPago) respuestaAccionPaso.getParametroRetorno("sesionPago");
+				TypeEvento eventoPago = null;
 				if (pv.getRealizado() == TypeSiNo.SI) {
-					final EventoAuditoria eventoPagoTramite = crearEvento(TypeEvento.PAGO_ELECTRONICO,
-							idSesionTramitacion);
-					final ListaPropiedades propiedadesEvento = new ListaPropiedades();
-					eventoPagoTramite.setPropiedadesEvento(propiedadesEvento);
-					propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_PASARELA.toString(), sp.getPasarelaId());
-					propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_IMPORTE.toString(), sp.getImporte() + "");
-					eventos.add(eventoPagoTramite);
+					eventoPago = TypeEvento.PAGO_ELECTRONICO_VERIFICADO;
+				} else {
+					eventoPago = TypeEvento.PAGO_ELECTRONICO_NO_VERIFICADO;
 				}
+				final EventoAuditoria eventoPagoTramite = crearEventoPago(eventoPago, idSesionTramitacion, sp);
+				eventos.add(eventoPagoTramite);
 			}
 			// Pago presencial
 			if (((TypeAccionPasoPagar) accionPaso) == TypeAccionPasoPagar.CARTA_PAGO_PRESENCIAL) {
 				final DatosSesionPago sp = (DatosSesionPago) respuestaAccionPaso.getParametroRetorno("sesionPago");
-				final EventoAuditoria eventoPagoTramite = crearEvento(TypeEvento.PAGO_PRESENCIAL, idSesionTramitacion);
-				final ListaPropiedades propiedadesEvento = new ListaPropiedades();
-				eventoPagoTramite.setPropiedadesEvento(propiedadesEvento);
-				propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_PASARELA.toString(), sp.getPasarelaId());
-				propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_IMPORTE.toString(), sp.getImporte() + "");
+				final EventoAuditoria eventoPagoTramite = crearEventoPago(TypeEvento.PAGO_PRESENCIAL,
+						idSesionTramitacion, sp);
+				eventos.add(eventoPagoTramite);
+			}
+			// Cancelar pago
+			if (((TypeAccionPasoPagar) accionPaso) == TypeAccionPasoPagar.CANCELAR_PAGO_INICIADO) {
+				final DatosSesionPago sp = (DatosSesionPago) respuestaAccionPaso.getParametroRetorno("sesionPago");
+				final EventoAuditoria eventoPagoTramite = crearEventoPago(TypeEvento.PAGO_CANCELADO,
+						idSesionTramitacion, sp);
 				eventos.add(eventoPagoTramite);
 			}
 		}
@@ -371,6 +401,17 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 		}
 
 		return eventos;
+	}
+
+	protected EventoAuditoria crearEventoPago(final TypeEvento eventoPago, final String idSesionTramitacion,
+			final DatosSesionPago sp) {
+		final EventoAuditoria eventoPagoTramite = crearEvento(eventoPago, idSesionTramitacion);
+		final ListaPropiedades propiedadesEvento = new ListaPropiedades();
+		eventoPagoTramite.setPropiedadesEvento(propiedadesEvento);
+		propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_ID_SESION.toString(), sp.getIdentificadorPago());
+		propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_PASARELA.toString(), sp.getPasarelaId());
+		propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_IMPORTE.toString(), sp.getImporte() + "");
+		return eventoPagoTramite;
 	}
 
 }

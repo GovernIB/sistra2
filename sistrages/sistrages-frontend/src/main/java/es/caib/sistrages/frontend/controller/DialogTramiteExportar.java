@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -17,7 +18,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
-import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -25,9 +25,11 @@ import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.ContenidoFichero;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
+import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
@@ -36,6 +38,11 @@ import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramitePasoAnexar;
+import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
+import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
+import es.caib.sistrages.core.api.model.TramitePasoRellenar;
+import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
@@ -143,6 +150,8 @@ public class DialogTramiteExportar extends DialogControllerBase {
 
 	private String portapapeles;
 
+	private String errorCopiar;
+
 	/**
 	 * Inicialización.
 	 */
@@ -241,15 +250,33 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	 * Copiado correctamente
 	 */
 	public void copiadoCorr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 	/**
 	 * Copiado error
 	 */
 	public void copiadoErr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 
 	public final String getPortapapeles() {
@@ -263,6 +290,112 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	private boolean generandoFichero = false;
 
 	/**
+	 * Genera un resumen y descarga el fichero.
+	 *
+	 * @throws IOException
+	 *
+	 * @throws Exception
+	 ***/
+	public StreamedContent getFicheroResumen()  {
+
+
+		final String resumen = getResumen();
+		InputStream myInputStream = new ByteArrayInputStream(resumen.getBytes(Charset.forName("UTF-8")));
+		return new DefaultStreamedContent(myInputStream, "application/txt", getNombreZip() + ".txt");
+
+	}
+
+	/**
+	 * Generacion de un resumen. Pasos a realizar:<br />
+	 * 0. Preparar txt. <br />
+	 * 1. Incluir properties y un miniresumen <br />
+	 * 2. Incluir area <br />
+	 * 3. Incluir version <br />
+	 * 4. Incluir tramite <br />
+	 * 5. Incluir los dominios_ID <br />
+	 * 6. Incluir los formulario_ID <br />
+	 * 7. Incluir los ficheros_ID  <br />
+	 * 8. Incluir las fuenteDatos_ID <br />
+	 * 9. Incluir los formeteadores_ID<br />
+	 * 10. Incluir las gestoresExternosFormulario_ID<br />
+	 * 11. Incluir las seccionesReutilizables_ID<br />
+	 *
+	 * @throws IOException
+	 *
+	 * @throws Exception
+	 ***/
+	public String getResumen()  {
+
+
+		// 0. Preparar txt.
+		final StringBuilder result = new StringBuilder();
+
+		// 1. Incluir el fichero de propiedades y un miniresumen
+		result.append(prepararResumen());
+		result.append("\n\n");
+
+		// 2. Incluir el area.data
+		result.append(this.area.toString("", UtilJSF.getIdioma().toString()));
+		result.append("\n\n");
+
+		// 3. Incluir el version.data
+		result.append(this.tramiteVersion.toString("", UtilJSF.getIdioma().toString()));
+		result.append("\n\n");
+
+		// 4. Incluir el tramite.data
+		result.append(this.tramite.toString("", UtilJSF.getIdioma().toString()));
+		result.append("\n\n");
+
+		// 5. Incluir los dominios_ID.data
+		for (final Dominio dominio : dominios) {
+			result.append(dominio.toString("", UtilJSF.getIdioma().toString()));
+			result.append("\n\n");
+		}
+
+		// 6. Incluir los formularios_ID.data
+		for (final DisenyoFormulario formulario : formularios) {
+			result.append(formulario.toString("", UtilJSF.getIdioma().toString()));
+			result.append("\n\n");
+		}
+
+		// 7. Incluir los ficheros_ID.data y ficherosContent_ID.data
+		for (final Fichero fichero : ficheros) {
+			result.append(fichero.toString("", UtilJSF.getIdioma().toString()));
+			result.append("\n\n");
+		}
+
+		// 8. Incluir los dominios_ID.data
+		for (final FuenteDatos fuente : fuenteDatos) {
+			result.append(fuente.toString("", UtilJSF.getIdioma().toString()));
+
+			// 8. y fuenteDatos_ID.csv (se prepara manualmente el contenido)
+			final FuenteDatosValores fd = dominioService.loadFuenteDatoValores(fuente.getCodigo());
+			if (fd != null) {
+				result.append(fd.toString("", UtilJSF.getIdioma().toString()));
+			}
+			result.append("\n\n");
+		}
+
+		// 9. Incluir los formeateadores_ID.data
+		for (final FormateadorFormulario formateador : formateadores) {
+			result.append(formateador.toString("", UtilJSF.getIdioma().toString()));
+			result.append("\n\n");
+		}
+
+		// 10. Incluir los formulariosGestoresExternos_ID.data
+		for (final GestorExternoFormularios gestores : gestorExternoFormularios) {
+			result.append(gestores.toString("", UtilJSF.getIdioma().toString()));
+			result.append("\n\n");
+		}
+
+		// 11. Incluir los seccionesReutilizables_ID.data
+		for (final SeccionReutilizable seccion : seccionesReutilizables) {
+			result.append(seccion.toString("", UtilJSF.getIdioma().toString()));
+			result.append("\n\n");
+		}
+		return result.toString();
+	}
+	/**
 	 * Exportación de un tramite version a un zip. Pasos a realizar:<br />
 	 * 0. Preparar zip. <br />
 	 * 1. Incluir properties. <br />
@@ -274,7 +407,9 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	 * 7. Incluir los ficheros_ID.data y ficherosContent_ID.data <br />
 	 * 8. Incluir las fuenteDatos_ID.data y fuenteDatos_ID.csv <br />
 	 * 9. Incluir los formeteadores_ID.data<br />
-	 * 10. Descargar
+	 * 10. Incluir las gestoresExternosFormulario_ID.data<br />
+	 * 11. Incluir las seccionesReutilizables_ID.data<br />
+	 * 12. Descargar
 	 *
 	 * @throws IOException
 	 *
@@ -297,6 +432,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 
 		// 1. Incluir el fichero de propiedades
 		prepararProperties(zos);
+		prepararResumen(zos);
 
 		// 2. Incluir el version.data
 		incluirModelApi(zos, this.tramiteVersion, "version.data");
@@ -354,7 +490,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 			incluirModelApi(zos, gestores, "gestoresExternosFormulario_" + gestores.getCodigo() + LITERAL_SUFIJO_DATA);
 		}
 
-		// 10. Incluir los seccionesReutilizables_ID.data
+		// 11. Incluir los seccionesReutilizables_ID.data
 		for (final SeccionReutilizable seccion : seccionesReutilizables) {
 			// Primero hay que obtener los diseños.
 			final DisenyoFormulario disenyoFormulario = formularioInternoService
@@ -415,6 +551,175 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	}
 
 	/**
+	 * Perpara el resumen.
+	 *
+	 * @return
+	 * @throws IOException
+	 */
+	private String prepararResumen() {
+		StringBuilder texto = new StringBuilder();
+		texto.append("Entorno:"); texto.append(UtilJSF.getEntorno()); texto.append("\n");
+		texto.append("Version:"); texto.append(getVersion());texto.append("\n");
+		texto.append("Fecha:"); texto.append( Calendar.getInstance().getTime().toString());texto.append("\n");
+		texto.append("Usuario:"); texto.append( UtilJSF.getSessionBean().getUserName());texto.append("\n");
+		//texto.append("tipo:"); texto.append( TypeImportarTipo.TRAMITE.toString());texto.append("\n");
+		final String dir3entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad()).getCodigoDIR3();
+		texto.append("Entidad:"); texto.append( dir3entidad);texto.append("\n");
+		if (area != null) {
+			texto.append("Area:"); texto.append( area.getIdentificador());texto.append("\n");
+		}
+		//texto.append("modo:"); texto.append( modo);texto.append("\n");
+		texto.append("Revision:"); texto.append( UtilJSF.getRevision());texto.append("\n");
+		if (this.tramiteVersion.getHuella() == null) {
+			texto.append("Huella:"); texto.append( "SIN_HUELLA");texto.append("\n");
+		} else {
+			texto.append("Huella:"); texto.append( this.tramiteVersion.getHuella());texto.append("\n");
+		}
+
+		texto.append("Tramite : " + tramite.getIdentificadorCompuesto()+" Release "+ tramiteVersion.getRelease()+"\n");
+
+		if (tramiteVersion.getListaPasos() != null && !tramiteVersion.getListaPasos() .isEmpty()) {
+
+			StringBuilder resDebeSaber = new StringBuilder("");
+			StringBuilder resRellenar = new StringBuilder("");
+			StringBuilder resTasa = new StringBuilder("");
+			StringBuilder resAnexar = new StringBuilder("");
+			StringBuilder resRegistrar = new StringBuilder("");
+			for(TramitePaso paso : tramiteVersion.getListaPasos() ) {
+        		   if (paso instanceof TramitePasoDebeSaber) {
+        			   resDebeSaber.append(paso.getIdPasoTramitacion()+",");
+
+        		   } else if (paso instanceof TramitePasoRellenar) {
+        			   resRellenar.append(paso.getIdPasoTramitacion());
+
+        			   StringBuilder resForms= new StringBuilder();
+    				   if (( (TramitePasoRellenar)paso ).getFormulariosTramite() != null) {
+        				   for( FormularioTramite form : ( (TramitePasoRellenar)paso ).getFormulariosTramite()) {
+        					   resForms.append(form.getIdentificador()+",");
+        				   }
+        			   }
+    				   resRellenar.append(paso.getIdPasoTramitacion());
+        			   if (!resForms.toString().isEmpty()) {
+        				   resRellenar.append("[FORMULARIOS:"+resForms.toString()+"]");
+        			   }
+        			   resRellenar.append(",");
+
+        		   } else if (paso instanceof TramitePasoTasa) {
+        			   StringBuilder resTasas= new StringBuilder();
+    				   if (( (TramitePasoTasa)paso ).getTasas() != null) {
+        				   for(Tasa tasa : ( (TramitePasoTasa)paso ).getTasas()) {
+        					   resTasas.append(tasa.getIdentificador()+",");
+        				   }
+        			   }
+        			   resTasa.append(paso.getIdPasoTramitacion());
+        			   if (!resTasas.toString().isEmpty()) {
+        				   resTasa.append("[TASAS:"+resTasas.toString()+"]");
+        			   }
+        			   resTasa.append(",");
+        		   } else if (paso instanceof TramitePasoAnexar) {
+        			   StringBuilder resTasas= new StringBuilder();
+    				   if (( (TramitePasoAnexar)paso ).getDocumentos() != null) {
+        				   for(Documento doc : ( (TramitePasoAnexar)paso ).getDocumentos()) {
+        					   resTasas.append(doc.getIdentificador()+",");
+        				   }
+        			   }
+        			   resAnexar.append(paso.getIdPasoTramitacion());
+        			   if (!resTasas.toString().isEmpty()) {
+        				   resAnexar.append("[DOCS:"+resTasas.toString()+"]");
+        			   }
+        			   resAnexar.append(",");
+
+        		   } else if (paso instanceof TramitePasoRegistrar) {
+        			   resRegistrar.append(paso.getIdPasoTramitacion());
+        			   resRegistrar.append(",");
+        		   }
+        	   }
+
+			texto.append("PASOS. PASOS DEBE SABER --> " + resDebeSaber.toString()+
+							   " PASOS RELLENAR -->" + resRellenar.toString() +
+							   " PASOS TASA -->" + resTasa.toString() +
+							   " PASOS ANEXAR -->" + resAnexar.toString() +
+							   " PASOS REGISTAR -->" + resRegistrar.toString()+"\n");
+
+		}
+
+		if (dominios != null && !dominios.isEmpty()) {
+			StringBuilder res = new StringBuilder("Dominios:");
+			for (final Dominio dominio : dominios) {
+				res.append(dominio.getIdentificador() + " (tipus "+dominio.getTipo()+"),");
+			}
+			String resultado = res.toString();
+			if (resultado.endsWith(",")) {
+				resultado = resultado.substring(0, resultado.length()-1)+"\n";
+			}
+			texto.append(resultado+"\n");
+		}
+
+		if (formateadores != null && !formateadores.isEmpty()) {
+
+			StringBuilder res = new StringBuilder("Formateadores:");
+			for (final FormateadorFormulario formateador : formateadores) {
+				res.append(formateador.getIdentificador() + ",");
+			}
+			String resultado = res.toString();
+			if (resultado.endsWith(",")) {
+				resultado = resultado.substring(0, resultado.length()-1)+"\n";
+			}
+			texto.append(resultado+"\n");
+		}
+		if (gestorExternoFormularios != null && !gestorExternoFormularios.isEmpty()) {
+
+
+			StringBuilder res = new StringBuilder("Gestores:");
+			for (final GestorExternoFormularios gestores : gestorExternoFormularios) {
+				res.append(gestores.getIdentificador() + ",");
+			}
+			String resultado = res.toString();
+			if (resultado.endsWith(",")) {
+				resultado = resultado.substring(0, resultado.length()-1)+"\n";
+			}
+			texto.append(resultado+"\n");
+		}
+
+		if (seccionesReutilizables != null && !seccionesReutilizables.isEmpty()) {
+
+			StringBuilder res = new StringBuilder("SeccionesReutilizables:");
+			for (final SeccionReutilizable seccion : seccionesReutilizables) {
+				res.append(seccion.getIdentificador() + ",");
+			}
+			String resultado = res.toString();
+			if (resultado.endsWith(",")) {
+				resultado = resultado.substring(0, resultado.length()-1)+"\n";
+			}
+			texto.append(resultado+"\n");
+		}
+
+
+		return texto.toString();
+	}
+
+	/**
+	 * Perpara el fichero de properties.
+	 *
+	 * @return
+	 * @throws IOException
+	 */
+	private void prepararResumen(final ZipOutputStream zos) throws IOException {
+
+		final String resumen = getResumen();
+		final ByteArrayOutputStream output = new ByteArrayOutputStream();
+		output.write(resumen.getBytes());
+
+		final ZipEntry zeProperties = new ZipEntry("resumen.txt");
+		zos.putNextEntry(zeProperties);
+		zos.write(output.toByteArray());
+
+
+
+	}
+
+
+	/**
 	 * Perpara el fichero de properties.
 	 *
 	 * @return
@@ -443,6 +748,8 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		final ZipEntry zeProperties = new ZipEntry("info.properties");
 		zos.putNextEntry(zeProperties);
 		zos.write(output.toByteArray());
+
+
 
 	}
 

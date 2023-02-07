@@ -219,4 +219,49 @@ public final class LineaComponentesFormulario extends ObjetoFormulario
 
 		return res;
 	}
+
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "Linea. ");
+           texto.append(tabulacion +"\t Ordre:" + orden + "\n");
+
+           if (componentes != null && !componentes.isEmpty()) {
+        	   texto.append(tabulacion +"\t Components \n");
+
+        	   for (ComponenteFormulario componente : componentes) {
+        		   if (componente instanceof ComponenteFormularioCampoSelector) {
+        			   texto.append(tabulacion +"\t" + ( (ComponenteFormularioCampoSelector)componente).toString(tabulacion +"\t", idioma));
+        		   } else if (componente instanceof ComponenteFormularioCampoSeccionReutilizable) {
+        			   texto.append(tabulacion +"\t" + ( (ComponenteFormularioCampoSeccionReutilizable)componente).toString(tabulacion +"\t", idioma));
+        		   } else if (componente instanceof ComponenteFormularioSeccion) {
+        			   texto.append(tabulacion +"\t" + ( (ComponenteFormularioSeccion)componente).toString(tabulacion +"\t", idioma));
+        		   } else if (componente instanceof ComponenteFormularioCampoCaptcha) {
+        			   texto.append(tabulacion +"\t" + ( (ComponenteFormularioCampoCaptcha)componente).toString(tabulacion +"\t", idioma));
+        		   } else if (componente instanceof ComponenteFormularioCampoCheckbox) {
+        			   texto.append(tabulacion +"\t" + ( (ComponenteFormularioCampoCheckbox)componente).toString(tabulacion +"\t", idioma));
+        		   } else if (componente instanceof ComponenteFormularioCampoTexto) {
+        			   texto.append(tabulacion +"\t" + ( (ComponenteFormularioCampoTexto)componente).toString(tabulacion +"\t", idioma));
+        		   } else if (componente instanceof ComponenteFormularioCampoOculto) {
+        			   texto.append(tabulacion +"\t" + ( (ComponenteFormularioCampoOculto)componente).toString(tabulacion +"\t", idioma));
+        		   } else if (componente instanceof ComponenteFormularioEtiqueta) {
+        			   texto.append(tabulacion +"\t" + ( (ComponenteFormularioEtiqueta)componente).toString(tabulacion +"\t", idioma));
+        		   } else if (componente instanceof ComponenteFormularioImagen) {
+        			   texto.append(tabulacion +"\t" + ( (ComponenteFormularioImagen)componente).toString(tabulacion +"\t", idioma));
+        		   } else {
+        			   texto.append(tabulacion +"\t" + componente.toString(tabulacion +"\t", idioma));
+        		   }
+        	   }
+           }
+
+           return texto.toString();
+     }
 }

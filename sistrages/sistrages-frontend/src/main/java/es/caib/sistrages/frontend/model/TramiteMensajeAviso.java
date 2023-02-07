@@ -17,11 +17,30 @@ public class TramiteMensajeAviso {
 	/** Version tramite. **/
 	private String versionTramite;
 
+	/** Area tramite. **/
+	private String areaTramite;
+
 	/** Constructor. **/
-	public TramiteMensajeAviso(final String iTramite, final String iIdentificador, final String iVersionTramite) {
+	public TramiteMensajeAviso(final String iTramite, final String iIdentificador, final String iVersionTramite, final String iAreaTramite) {
 		this.tramite = iTramite;
 		this.identificador = iIdentificador;
 		this.versionTramite = iVersionTramite;
+		this.areaTramite = iAreaTramite;
+	}
+
+	/**
+	 * @return the areaTramite
+	 */
+	public String getAreaTramite() {
+		return areaTramite;
+	}
+
+	/**
+	 * @param areaTramite
+	 *            the areaTramite to set
+	 */
+	public void setAreaTramite(final String areaTramite) {
+		this.areaTramite = areaTramite;
 	}
 
 	/**

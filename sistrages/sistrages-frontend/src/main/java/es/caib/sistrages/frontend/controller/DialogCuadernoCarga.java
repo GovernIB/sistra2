@@ -435,6 +435,10 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 		setMostrarPanelInfo(true);
 
 		checkTodoCorrecto();
+
+		if (!dominios.isEmpty() || !gestores.isEmpty()) {
+			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("variable.area.asociada.tramite"));
+		}
 	}
 
 	/**
@@ -1151,7 +1155,6 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			final SeccionReutilizable seccionActual = seccionReutilizableService.getSeccionReutilizableByIdentificador(
 					TypeAmbito.ENTIDAD, seccion.getIdentificador(), UtilJSF.getIdEntidad(), idArea);
 
-
 			if (seccionActual == null) {
 
 				// Si no existe o está desactivado la personalización, dan info
@@ -1161,11 +1164,11 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			} else {
 				final String mensaje;
 				if (seccionActual.getRelease() > seccion.getRelease()) {
-					//Si la release es más vieja, hay que avisar (acciones reemplazar o nada)
-					 mensaje = UtilJSF.getLiteral("dialogTramiteImportar.info.existeseccionActualMasNueva");
+					// Si la release es más vieja, hay que avisar (acciones reemplazar o nada)
+					mensaje = UtilJSF.getLiteral("dialogTramiteImportar.info.existeseccionActualMasNueva");
 				} else {
-					//Si la release es más nueva, hay que avisar  (acciones reemplazar o nada)
-					 mensaje = UtilJSF.getLiteral("dialogTramiteImportar.info.existeseccionActualMenosNueva");
+					// Si la release es más nueva, hay que avisar (acciones reemplazar o nada)
+					mensaje = UtilJSF.getLiteral("dialogTramiteImportar.info.existeseccionActualMenosNueva");
 				}
 				filasSecciones.add(FilaImportarSeccion.crearITseccionExiste(seccion, seccionActual, mensaje));
 			}
@@ -1443,7 +1446,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			final SeccionReutilizable seccion = (SeccionReutilizable) UtilCoreApi.deserialize(contenidoFile);
 			secciones.put(codigo, seccion);
 
-		} else if (!nombreFichero.equals("info.properties")) {
+		} else if (!nombreFichero.equals("info.properties") && !nombreFichero.equals("resumen.txt")) {
 			addMessageContext(TypeNivelGravedad.ERROR, "Fichero desconocido.");
 			return false;
 		}

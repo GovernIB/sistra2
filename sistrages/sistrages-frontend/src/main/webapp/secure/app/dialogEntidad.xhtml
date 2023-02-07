@@ -137,20 +137,22 @@
 
 	               el.classList.add("resaltar");
 	                var aux = document.getElementById("dialogEntidad:auxCopiar");
-	                if(el.textContent!=''){
+	                if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 	                    aux.value = el.textContent;
-	                }else if(el.firstChild!=null){
+	                }else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 	                    aux.value = el.firstChild.value;
 	                }else if(el.value!=null &amp;&amp; el.value!=''){
 	                    aux.value = el.value;
-	                }
+	                }else{
+			          aux.value = '';
+			        }
 
 	             }
 
             </h:outputScript>
 
 		    <p:contextMenu id="mainCm" widgetVar="mainCm">
-                <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogEntidad:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+                <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :dialogEntidad:auxCopiar" update="growlDialog" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{dialogEntidad.copiadoCorr}" process="@this" update="@this growlDialog"/>

@@ -790,7 +790,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		// TODO Ver de establecer configuración por STG
 		String tipoDocumental = "TD99";
 		if (documento.getTipo() == TypeDocumento.FORMULARIO) {
-			tipoDocumental = "TD99";
+			tipoDocumental = "TD14";
 		}
 		return tipoDocumental;
 	}

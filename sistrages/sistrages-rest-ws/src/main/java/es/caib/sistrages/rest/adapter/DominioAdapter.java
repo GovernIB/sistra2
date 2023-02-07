@@ -28,7 +28,9 @@ public class DominioAdapter {
 		RDominio rDominio = null;
 		if (dominio != null) {
 			rDominio = new RDominio();
+			rDominio.setAmbito(dominio.getAmbito().toString());
 			rDominio.setIdentificadorEntidad(idEntidad);
+			rDominio.setIdentificadorArea(dominio.getArea().getIdentificadorCompuesto());
 			rDominio.setTipoCache(dominio.getCache().toString());
 			rDominio.setIdentificador(dominio.getIdentificadorCompuesto());
 			rDominio.setSql(dominio.getSql());

@@ -11,6 +11,12 @@
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogAuditoriaTramites.titulo']}"/></title>
+		<style>
+		.ui-growl {
+		    top: auto;
+		    bottom: 30px;
+		}
+	</style>
 </h:head>
 <h:body>
   	<f:facet name="last">
@@ -73,19 +79,21 @@
 
 				el.classList.add("resaltar");
 				var aux = document.getElementById("dialogAuditoriaTramites:auxCopiar");
-				if(el.textContent!=''){
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 					aux.value = el.textContent;
-				}else if(el.firstChild!=null){
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 					aux.value = el.firstChild.value;
 				}else if(el.value!=null &amp;&amp; el.value!=''){
 					aux.value = el.value;
-				}
+				}else{
+		          aux.value = '';
+		        }
 
 			 }
 
 			</h:outputScript>
 					    <p:contextMenu>
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogAuditoriaTramites:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogAuditoriaTramites:auxCopiar" update="growlDialog" />
 				<p:menuitem value="#{msg['botones.stg']}" icon="fa fa-paper-plane" styleClass="w90" actionListener="#{dialogAuditoriaTramites.sistrages()}" process="@this" rendered="{dialogAuditoriaTramites.dato.getIdTramite() != null}" style="margin-left:4px;width:200px;" />
 			</p:contextMenu>
 
@@ -138,7 +146,9 @@
 						<p:outputLabel for="btnSTG" value=""/>
 						<p:commandButton id="btnSTG"
 									 	value="#{msg['botones.stg']}" icon="fa fa-paper-plane"
-										actionListener="#{dialogAuditoriaTramites.sistrages()}" process="@this" style="margin-left:4px;width:200px;" />
+										actionListener="#{dialogAuditoriaTramites.sistrages()}" process="@this" style="margin-left:4px;width:200px;" >
+							<p:ajax event="dialogReturn" listener="#{dialogAuditoriaTramites.returnDialogo}" update="growlDialog"/>
+						</p:commandButton>
 					</h:panelGrid>
 				</p:fieldset>
 				<p:spacer height="5px"/>

@@ -173,4 +173,30 @@ public class Script extends ModelApi {
 		return this.contenido == null || contenido.trim().isEmpty();
 	}
 
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion +"\t Script. ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           if (contenido != null) {
+        	   	texto.append(tabulacion +"\t Contingut: \n\t\t" + tabulacion + contenido.replaceAll("\n", "\n\t\t"+tabulacion) + "\n");
+           }
+           texto.append(tabulacion +"\t MissatgeAlterat:" + mensajesAlterado + "\n");
+           if (mensajes != null && !mensajes.isEmpty()) {
+        	   texto.append(tabulacion +"\t Missatges \n");
+               for(LiteralScript mensaje : mensajes) {
+        		   texto.append(mensaje.toString(tabulacion+"\t", idioma));
+        	   }
+           }
+           return texto.toString();
+     }
+
 }

@@ -101,7 +101,7 @@ public class AvisoEntidadServiceImpl implements AvisoEntidadService {
 
 	@Override
 	@NegocioInterceptor
-	public AvisoEntidad getAvisoEntidadByTramite(final String identificadorTramite) {
+	public List<AvisoEntidad> getAvisoEntidadByTramite(final String identificadorTramite) {
 		return avisoEntidadDao.getAvisoEntidadByTramite(identificadorTramite);
 	}
 

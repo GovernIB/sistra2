@@ -1,5 +1,7 @@
 package es.caib.sistrages.rest.api.interna;
 
+import java.util.List;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -20,6 +22,10 @@ public class RArea {
 	/** Emails */
 	@ApiModelProperty(value = "Emails asociados al área (separados por ; )")
 	private String emails;
+
+	/** Variables Área- */
+	@ApiModelProperty(value = "Lista variables área")
+	private List<RVariableArea> variablesArea;
 
 	/**
 	 * @return the emails
@@ -47,6 +53,20 @@ public class RArea {
 	 */
 	public final void setId(String idCompuesto) {
 		this.id = idCompuesto;
+	}
+
+	/**
+	 * @return the variablesArea
+	 */
+	public final List<RVariableArea> getVariablesArea() {
+		return variablesArea;
+	}
+
+	/**
+	 * @param variablesArea the variablesArea to set
+	 */
+	public final void setVariablesArea(List<RVariableArea> variablesArea) {
+		this.variablesArea = variablesArea;
 	}
 
 }

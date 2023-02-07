@@ -271,6 +271,8 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 	private String portapapeles;
 
+	private String errorCopiar;
+
 	/**
 	 * Inicialización.
 	 */
@@ -407,6 +409,10 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 		setMostrarPanelInfo(true);
 		checkTodoCorrecto();
+
+		if (!dominios.isEmpty() || !gestores.isEmpty()) {
+			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("variable.area.asociada.tramite"));
+		}
 	}
 
 	/**
@@ -1477,7 +1483,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			final SeccionReutilizable seccion = (SeccionReutilizable) UtilCoreApi.deserialize(contenidoFile);
 			secciones.put(codigo, seccion);
 
-		} else if (!nombreFichero.equals("info.properties")) {
+		} else if (!nombreFichero.equals("info.properties") && !nombreFichero.equals("resumen.txt")) {
 			addMessageContext(TypeNivelGravedad.ERROR, "Fichero desconocido.");
 			return false;
 		}
@@ -1768,15 +1774,33 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 * Copiado correctamente
 	 */
 	public void copiadoCorr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 	/**
 	 * Copiado error
 	 */
 	public void copiadoErr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 
 	public final String getPortapapeles() {

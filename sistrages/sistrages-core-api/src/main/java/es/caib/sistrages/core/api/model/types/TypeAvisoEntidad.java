@@ -19,6 +19,8 @@ public enum TypeAvisoEntidad {
 	REGISTRO("REG"),
 	/** TRÁMITES CON FIRMA. **/
 	FIRMA("FIR"),
+	/** TRÁMITES CON ANEXO. **/
+	ANEXO("ANE"),
 	/** LISTA DE TRÁMITES. **/
 	LISTA("LIS"),
 	/** TRAMITE VERSION. **/

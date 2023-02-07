@@ -55,7 +55,11 @@ public class DialogPlugin extends DialogControllerBase {
 
 	private TypePlugin tipoInicialEdicion;
 
+	private boolean isReal;
+
 	private String portapapeles;
+
+	private String errorCopiar;
 
 	/**
 	 * Inicialización.
@@ -68,10 +72,12 @@ public class DialogPlugin extends DialogControllerBase {
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new Plugin();
 			data.setAmbito(TypeAmbito.fromString(ambito));
+			isReal = true;
 		} else {
 			data = pluginService.getPlugin(new Long(id));
 
 			tipoInicialEdicion = data.getTipo();
+			isReal = isRealClassname();
 		}
 		if (ambito == null) {
 			ambito = TypeAmbito.GLOBAL.toString();
@@ -161,6 +167,24 @@ public class DialogPlugin extends DialogControllerBase {
 				// No hay que hacer nada
 				break;
 			}
+		}
+	}
+
+	/**
+	 * Cambia el classname.
+	 */
+	public void switchClassname() {
+		isReal = !isReal;
+	}
+
+	/**
+	 * Devuelve si es realClassname.
+	 */
+	public boolean isRealClassname() {
+		if(data.getClassname()!=null && data.getClassname().equals(data.getRealClassname())) {
+			return true;
+		}else {
+			return false;
 		}
 	}
 
@@ -257,6 +281,17 @@ public class DialogPlugin extends DialogControllerBase {
 				return;
 			}
 
+			if(isReal && data.getRealClassname().isEmpty() || !isReal && data.getMockClassname().isEmpty()) {
+				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.plugin.faltaClase"));
+				return;
+			}
+
+			if(!isReal) {
+				data.setClassname(data.getMockClassname());
+			}else {
+				data.setClassname(data.getRealClassname());
+			}
+
 			// comprobamos si ya existe para que no haya duplicados
 			final List<Plugin> listaPlugin = pluginService.listPlugin(data.getAmbito(), UtilJSF.getIdEntidad(),
 					data.getTipo());
@@ -272,6 +307,18 @@ public class DialogPlugin extends DialogControllerBase {
 			if (!verificarGuardar()) {
 				return;
 			}
+
+			if(isReal && data.getRealClassname().isEmpty() || !isReal && data.getMockClassname().isEmpty()) {
+				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.plugin.faltaClase"));
+				return;
+			}
+
+			if(!isReal) {
+				data.setClassname(data.getMockClassname());
+			}else {
+				data.setClassname(data.getRealClassname());
+			}
+
 			// comprobamos si ya existe para que no haya duplicados
 			final List<Plugin> listaPluginEdicion = pluginService.listPlugin(data.getAmbito(), UtilJSF.getIdEntidad(),
 					data.getTipo());
@@ -415,15 +462,33 @@ public class DialogPlugin extends DialogControllerBase {
 	 * Copiado correctamente
 	 */
 	public void copiadoCorr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 	/**
 	 * Copiado error
 	 */
 	public void copiadoErr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 
 	public final String getPortapapeles() {
@@ -432,6 +497,14 @@ public class DialogPlugin extends DialogControllerBase {
 
 	public final void setPortapapeles(String portapapeles) {
 		this.portapapeles = portapapeles;
+	}
+
+	public final boolean getIsReal() {
+		return isReal;
+	}
+
+	public final void setIsReal(Boolean isReal) {
+		this.isReal = isReal;
 	}
 
 }

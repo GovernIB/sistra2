@@ -30,7 +30,7 @@ public final class PlgSesionTramitacion implements PlgSesionTramitacionInt {
 	 * Constructor.
 	 *
 	 * @param pVariablesFlujo
-	 *            Variables del flujo
+	 *                            Variables del flujo
 	 */
 	public PlgSesionTramitacion(final VariablesFlujo pVariablesFlujo) {
 		super();
@@ -94,6 +94,11 @@ public final class PlgSesionTramitacion implements PlgSesionTramitacionInt {
 	@Override
 	public ClzTramiteCPInt getTramiteCP() {
 		return new ClzTramiteCP(this.variablesFlujo.getDatosTramiteCP());
+	}
+
+	@Override
+	public String getEntorno() {
+		return variablesFlujo.getEntorno().toString();
 	}
 
 }

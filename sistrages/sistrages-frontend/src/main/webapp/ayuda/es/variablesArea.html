@@ -1,0 +1,32 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">VARIABLES DE ÁREA</h1>
+<p>
+	En la pantalla de '<i>Variables de Área</i>' se puede gestionar tanto el alta o baja de variables de área, como realizar consultas o modificaciones de las variables de área ya existentes.<br><br>
+	Esta pantalla permite la realización de búsquedas filtradas de variables de área.<br><br>
+	El mantenimiento de las variables de área lo ha de realizar un usuario que disponga del rol '<i>Administrador de entidad</i>' y adicionalmente del rol de la entidad correspondiente.
+</p>
+<h2 class="stgH2">CAMPOS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Identificador:</span> código único identificador de la fuente de datos. Este será el código a referenciar en un dominio si se desea consumir esta fuente de datos.</li>
+		<li><span class="nombreCampo">Descripción:</span> texto descriptivo de la fuente de datos. Debe ser un pequeño texto ilustrativo del objeto de la fuente de datos.</li>
+		<li><span class="nombreCampo">URL:</span> url de la variable de área.</li>
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Buscar</span>: introduciendo un texto en el campo '<i>Buscar</i>' y pulsando el botón con el icono de la lupa se llevará a cabo un filtrado de las variables de área que contengan el texto introducido. El criterio de búsqueda aplicará en cualquiera de los campos de la variable mostrados en el listado. Posteriormente se visualizarán los resultados de la búsqueda filtrándolos en el listado de variables de área.</li>
+		<li><span class="boton">Nuevo</span>: pulsando el botón se abrirá la <a href="AyudaServlet?lang=es&id=variablesAreaDialog">ficha</a> para dar de alta una nueva variable de área, en el que se tendrán que rellenar los campos mínimos solicitados.</li>
+		<li><span class="boton">Editar</span>: seleccionando una variable de área del listado y pulsando el botón se abrirá la ficha para poder realizar las modificaciones de los campos deseados.</li>
+		<li> <span class="boton">Eliminar</span>: seleccionando una variable de área del listado y pulsando el botón podrá suprimir una variable de área existente. De manera previa a la eliminación de la variable de área se mostrará un mensaje de confirmación de la acción.</li>
+	</ul>
+</p>
+</body>
+</html>

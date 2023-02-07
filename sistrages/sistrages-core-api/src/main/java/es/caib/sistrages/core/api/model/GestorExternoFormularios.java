@@ -178,4 +178,31 @@ public class GestorExternoFormularios extends ModelApi {
 		}
 		return true;
 	}
+
+
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "GestorExternFormulari. ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           texto.append(tabulacion +"\t Identificador:" + identificador + "\n");
+           texto.append(tabulacion +"\t IdentificadorCompost:" + identificadorCompuesto + "\n");
+           texto.append(tabulacion +"\t AreaIdentificador:" + areaIdentificador + "\n");
+           texto.append(tabulacion +"\t Descripcio:" + descripcion + "\n");
+           texto.append(tabulacion +"\t Url:" + url + "\n");
+           if (configuracionAutenticacion != null) {
+        	   texto.append(tabulacion +"\t Configuracio Autenticacio: \n");
+        	   texto.append(configuracionAutenticacion.toString(tabulacion, idioma)+ "\n");
+           }
+
+           return texto.toString();
+     }
 }

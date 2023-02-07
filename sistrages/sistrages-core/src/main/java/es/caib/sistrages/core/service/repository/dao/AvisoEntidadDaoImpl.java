@@ -180,12 +180,9 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 	/**
 	 * Listar avisos.
 	 *
-	 * @param pIdEntidad
-	 *            idEntidad
-	 * @param pIdioma
-	 *            idioma
-	 * @param pFiltro
-	 *            filtro
+	 * @param pIdEntidad idEntidad
+	 * @param pIdioma    idioma
+	 * @param pFiltro    filtro
 	 * @return Listado de avisos
 	 */
 	@SuppressWarnings("unchecked")
@@ -222,12 +219,9 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 	/**
 	 * Listar avisos por cod DIR3
 	 *
-	 * @param codDir3
-	 *            idEntidad
-	 * @param pIdioma
-	 *            idioma
-	 * @param pFiltro
-	 *            filtro
+	 * @param codDir3 idEntidad
+	 * @param pIdioma idioma
+	 * @param pFiltro filtro
 	 * @return Listado de avisos
 	 */
 	@SuppressWarnings("unchecked")
@@ -262,26 +256,27 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 	}
 
 	@Override
-	public AvisoEntidad getAvisoEntidadByTramite(final String identificadorTramite) {
+	public List<AvisoEntidad> getAvisoEntidadByTramite(final String identificadorTramite) {
+		final List<AvisoEntidad> listaAvisoEntidad = new ArrayList<>();
 
 		if (identificadorTramite == null || identificadorTramite.isEmpty()) {
 			throw new FaltanDatosException(FALTA_IDENTIFICADOR);
 		}
 
-		final String sql = "select a from JAvisoEntidad as a  where a.tipo = :tipoAviso and a.listaSerializadaTramites like :identificadorTramite ";
+		final String sql = "select a from JAvisoEntidad as a  where (a.tipo = 'TRV' or a.tipo = 'LIS') and a.listaSerializadaTramites like :identificadorTramite ";
 
 		final Query query = entityManager.createQuery(sql);
-		query.setParameter("tipoAviso", TypeAvisoEntidad.TRAMITE_VERSION.toString());
-		query.setParameter("identificadorTramite", identificadorTramite);
+		query.setParameter("identificadorTramite", "%" + identificadorTramite + "%");
 		AvisoEntidad avisoEntidad = null;
 
 		final List<JAvisoEntidad> results = query.getResultList();
 		if (!results.isEmpty()) {
-			final JAvisoEntidad javisoEntidad = results.get(0);
-			avisoEntidad = javisoEntidad.toModel();
+			for (final JAvisoEntidad jAvisoEntidad : results) {
+				listaAvisoEntidad.add(jAvisoEntidad.toModel());
+			}
 		}
 
-		return avisoEntidad;
+		return listaAvisoEntidad;
 	}
 
 	@Override

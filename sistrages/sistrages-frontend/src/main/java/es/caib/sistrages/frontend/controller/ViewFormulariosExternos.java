@@ -86,6 +86,8 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 
 	private String portapapeles;
 
+	private String errorCopiar;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -276,6 +278,8 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	 */
 	public void cambiarAccion() {
 		switch (accion) {
+		case "V":
+			UtilJSF.redirectJsfPage("/secure/app/viewVariablesArea.xhtml?id=" + id);
 		case "D":
 			UtilJSF.redirectJsfPage("/secure/app/viewDominios.xhtml?ambito=A&id=" + id + "&area=" + area);
 		case "F":
@@ -313,15 +317,27 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 				 */
 				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.alta.ok"));
 			} else {
-				ResultadoError re = this.refrescar();
 				String message = null;
-				if (re.getCodigo() != 1) {
-					message = UtilJSF.getLiteral("info.modificado.ok") + ". "
-							+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
+				if (respuesta.getMensaje() == null) {
+					ResultadoError re = this.refrescar();
+					if (re.getCodigo() != 1) {
+						message = UtilJSF.getLiteral("info.modificado.ok") + ". "
+								+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
+					} else {
+						message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+					}
+					UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 				} else {
-					message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+					ResultadoError re = this.refrescar();
+					if (re.getCodigo() != 1) {
+						message = UtilJSF.getLiteral("info.modificado.ok") + ". " + respuesta.getMensaje().getMensaje()
+								+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
+					} else {
+						message = UtilJSF.getLiteral("info.modificado.ok") + ". " + respuesta.getMensaje().getMensaje()
+								+ UtilJSF.getLiteral("info.cache.ok");
+					}
+					UtilJSF.addMessageContext(respuesta.getMensaje().getNivel(), message);
 				}
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 			}
 			// Refrescamos datos
 			buscar();
@@ -411,22 +427,39 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		}
 		params.put(TypeParametroVentana.AREA.toString(), this.id);
-		UtilJSF.openDialog(DialogFormularioExterno.class, modoAccesoDlg, params, true, 510, 215);
+		UtilJSF.openDialog(DialogFormularioExterno.class, modoAccesoDlg, params, true, 550, 250);
 	}
 
 	/**
 	 * Copiado correctamente
 	 */
 	public void copiadoCorr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 	/**
 	 * Copiado error
 	 */
 	public void copiadoErr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 
 	public final String getPortapapeles() {

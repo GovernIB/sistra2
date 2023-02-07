@@ -75,9 +75,9 @@
 
 		el.classList.add("resaltar");
 		var aux = document.getElementById("dialogAyuda:auxCopiar");
-		if(el.textContent!=''){
+		if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 			aux.value = el.textContent;
-		}else if(el.firstChild!=null){
+		}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 			aux.value = el.firstChild.value;
 		}else if(el.value!=null &amp;&amp; el.value!=''){
 			aux.value = el.value;

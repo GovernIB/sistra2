@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
+
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuModel;
@@ -106,6 +107,8 @@ public class ViewDominios extends ViewControllerBase {
 
 	private String portapapeles;
 
+	private String errorCopiar;
+
 	/** Inicializacion. */
 	public void init() {
 
@@ -194,6 +197,8 @@ public class ViewDominios extends ViewControllerBase {
 	 */
 	public void cambiarAccion() {
 		switch (accion) {
+		case "V":
+			UtilJSF.redirectJsfPage("/secure/app/viewVariablesArea.xhtml?id=" + id);
 		case "D":
 			break;
 		case "F":
@@ -304,6 +309,8 @@ public class ViewDominios extends ViewControllerBase {
 					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
 							UtilJSF.getLiteral("error.borrar.dependencias.fd"));
 				}
+			} else {
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 			}
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.borrar.dependencias"));
@@ -352,21 +359,27 @@ public class ViewDominios extends ViewControllerBase {
 				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.alta.ok"));
 			} else {
 				String message = null;
-				ResultadoError re = this.refrescar();
-				if (re.getCodigo() != 1) {
-					message = UtilJSF.getLiteral("info.modificado.ok") + ". "
-							+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
+				if (respuesta.getMensaje() == null) {
+					ResultadoError re = this.refrescar();
+					if (re.getCodigo() != 1) {
+						message = UtilJSF.getLiteral("info.modificado.ok") + ". "
+								+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
+					} else {
+						message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+					}
+					UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 				} else {
-					message = UtilJSF.getLiteral("info.modificado.ok") + ". " + UtilJSF.getLiteral("info.cache.ok");
+					ResultadoError re = this.refrescar();
+					if (re.getCodigo() != 1) {
+						message = UtilJSF.getLiteral("info.modificado.ok") + ". " + respuesta.getMensaje().getMensaje()
+								+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
+					} else {
+						message = UtilJSF.getLiteral("info.modificado.ok") + ". " + respuesta.getMensaje().getMensaje()
+								+ UtilJSF.getLiteral("info.cache.ok");
+					}
+					UtilJSF.addMessageContext(respuesta.getMensaje().getNivel(), message);
 				}
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 			}
-
-			// Mensaje dialogo
-			if (respuesta.getMensaje() != null) {
-				UtilJSF.addMessageContext(respuesta.getMensaje().getNivel(), respuesta.getMensaje().getMensaje());
-			}
-
 			// Refrescamos datos
 			buscar(filtro);
 		}
@@ -639,15 +652,32 @@ public class ViewDominios extends ViewControllerBase {
 	 * Copiado correctamente
 	 */
 	public void copiadoCorr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 	/**
 	 * Copiado error
 	 */
 	public void copiadoErr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 
 	// ------- GETTERS / SETTERS --------------------------------

@@ -207,4 +207,43 @@ public final class DisenyoFormulario extends ModelApi {
 		this.permitirGuardarSinFinalizar = permitirGuardarSinFinalizar;
 	}
 
+	@Override
+	public String toString() {
+        return toString("", "ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "DisenyFormulari. ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           if (scriptPlantilla != null) {
+        	   texto.append(tabulacion +"\t ScriptPlantilla: \n");
+        	   texto.append(scriptPlantilla.toString(tabulacion, idioma)+ "\n");
+           }
+           if (textoCabecera != null) {
+        	   texto.append(tabulacion +"\t TextoCabecera: \n");
+        	   texto.append(textoCabecera.toString(tabulacion, idioma)+ "\n");
+           }
+           texto.append(tabulacion +"\t PermitirAccionsPersonalitzades:" + permitirAccionesPersonalizadas + "\n");
+           texto.append(tabulacion +"\t PermetreEsmenaSenseFinalitzar:" + permitirGuardarSinFinalizar + "\n");
+           texto.append(tabulacion +"\t MostrarCabecera:" + mostrarCabecera + "\n");
+           if (plantillas != null && !plantillas.isEmpty()) {
+        	   texto.append(tabulacion +"\t Plantillas \n");
+        	   for(PlantillaFormulario plantilla : plantillas) {
+        		   texto.append(tabulacion +"\t" + plantilla.toString(tabulacion +"\t", idioma));
+        	   }
+           }
+           if (paginas != null && !paginas.isEmpty()) {
+        	   texto.append(tabulacion +"\t Paginas \n");
+        	   for(PaginaFormulario pagina : paginas) {
+        		   texto.append(tabulacion +"\t" + pagina.toString(tabulacion +"\t", idioma));
+        	   }
+           }
+           return texto.toString();
+     }
+
 }

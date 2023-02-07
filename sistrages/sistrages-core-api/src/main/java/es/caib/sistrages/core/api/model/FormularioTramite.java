@@ -381,4 +381,59 @@ public class FormularioTramite extends ModelApi {
 		this.formularioGestorExterno = formularioGestorExterno;
 	}
 
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "FormulariTramit. ");
+           texto.append(tabulacion +"\t Codi:" + getCodigo() + "\n");
+           texto.append(tabulacion +"\t Ordre:" + getOrden() + "\n");
+           texto.append(tabulacion +"\t Identificador:" + identificador + "\n");
+           if (descripcion != null) {
+        	   texto.append(tabulacion +"\t Descripcion:\n");
+        	   texto.append(getDescripcion().toString(tabulacion, idioma)+ "\n");
+           }
+           texto.append(tabulacion +"\t Tipus:" + tipo + "\n");
+           texto.append(tabulacion +"\t IdFormulariIntern:" + idFormularioInterno + "\n");
+           texto.append(tabulacion +"\t IdFormulariExtern:" + idFormularioExterno + "\n");
+           texto.append(tabulacion +"\t debeFirmarse:" + debeFirmarse + "\n");
+           texto.append(tabulacion +"\t Obligatorietat:" + obligatoriedad + "\n");
+           if (scriptObligatoriedad != null) {
+        	   texto.append(tabulacion +"\t ScriptObligatorietat:\n");
+        	   texto.append(scriptObligatoriedad.toString(tabulacion, idioma)+ "\n");
+           }
+           if (scriptFirma != null) {
+        	   texto.append(tabulacion +"\t ScriptFirma:\n");
+        	   texto.append(scriptFirma.toString(tabulacion, idioma)+ "\n");
+           }
+           if (scriptParametros != null) {
+        	   texto.append(tabulacion +"\t ScriptParametres:\n");
+        	   texto.append(scriptParametros.toString(tabulacion, idioma)+ "\n");
+           }
+           if (scriptDatosIniciales != null) {
+        	   texto.append(tabulacion +"\t ScriptDadesInicials:\n");
+        	   texto.append(scriptDatosIniciales.toString(tabulacion, idioma)+ "\n");
+           }
+           if (scriptRetorno != null) {
+        	   texto.append(tabulacion +"\t ScriptRetorn:\n");
+        	   texto.append(scriptRetorno.toString(tabulacion, idioma)+ "\n");
+           }
+           texto.append(tabulacion +"\t TipusFormulario:" + tipoFormulario + "\n");
+           if (formularioGestorExterno != null) {
+        	   texto.append(tabulacion +"\t FormulariGestorExtern:\n");
+        	   texto.append(formularioGestorExterno.toString(tabulacion, idioma)+ "\n");
+           }
+           if (disenyoFormulario != null) {
+        	   texto.append(tabulacion +"\t disenyFormulari:\n");
+        	   texto.append(disenyoFormulario.toString(tabulacion, idioma)+ "\n");
+           }
+           return texto.toString();
+     }
 }

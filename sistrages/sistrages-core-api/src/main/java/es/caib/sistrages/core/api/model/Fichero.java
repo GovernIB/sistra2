@@ -63,4 +63,23 @@ public class Fichero extends ModelApi {
 	public void setPublico(final boolean publico) {
 		this.publico = publico;
 	}
+
+	@Override
+	public String toString() {
+        return toString("", "ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "Fichero. ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           texto.append(tabulacion +"\t Nom:" + nombre + "\n");
+           texto.append(tabulacion +"\t Public:" + publico + "\n");
+
+           return texto.toString();
+     }
 }

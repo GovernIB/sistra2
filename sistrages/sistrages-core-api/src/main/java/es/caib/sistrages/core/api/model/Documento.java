@@ -481,4 +481,63 @@ public class Documento extends ModelApi {
 		this.tipoDocumental = tipoDocumental;
 	}
 
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     **/
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + " Document. ");
+           texto.append(tabulacion +"\t Codi:" + getCodigo() + "\n");
+           texto.append(tabulacion +"\t Ordre:" + getOrden() + "\n");
+           texto.append(tabulacion +"\t Identificador:" + identificador + "\n");
+           texto.append(tabulacion +"\t Tipus:" + tipo + "\n");
+           if (getDescripcion() != null) {
+        	   texto.append(tabulacion +"\t Descripció: \n");
+        	   texto.append(getDescripcion().toString(tabulacion, idioma)+ "\n");
+           }
+           texto.append(tabulacion +"\t Obligatorietat:" + obligatoriedad + "\n");
+           if (scriptObligatoriedad != null) {
+        	   texto.append(tabulacion +"\t ScriptObligatorietat: \n");
+        	   texto.append(scriptObligatoriedad.toString(tabulacion, idioma)+ "\n");
+           }
+
+           texto.append(tabulacion +"\t AjudaURL:" + ayudaURL + "\n");
+           if (ayudaTexto != null) {
+        	   texto.append(tabulacion +"\t AjudaText: \n");
+        	   texto.append(ayudaTexto.toString(tabulacion, idioma)+ "\n");
+           }
+           if (ayudaFichero != null) {
+        	   texto.append(tabulacion +"\t AjudaFtixer: \n");
+        	   texto.append(ayudaFichero.toString(tabulacion, idioma)+ "\n");
+           }
+           texto.append(tabulacion +"\t TipusPresentacio:" + tipoPresentacion + "\n");
+           texto.append(tabulacion +"\t NumeroInstancia:" + numeroInstancia + "\n");
+           texto.append(tabulacion +"\t Extensions:" + extensiones + "\n");
+           texto.append(tabulacion +"\t ExtensioSeleccio:" + extensionSeleccion + "\n");
+           texto.append(tabulacion +"\t TamanyMaxim:" + tamanyoMaximo + "\n");
+           texto.append(tabulacion +"\t TipusTamany:" + tipoTamanyo + "\n");
+           texto.append(tabulacion +"\t CalConvertirPDF:" + debeConvertirPDF + "\n");
+           texto.append(tabulacion +"\t CalFirmarDigitalmente:" + debeFirmarDigitalmente + "\n");
+           if (scriptFirmarDigitalmente != null) {
+        	   texto.append(tabulacion +"\t scriptFirmarDigitalment: \n");
+        	   texto.append(scriptFirmarDigitalmente.toString(tabulacion, idioma)+ "\n");
+           }
+           texto.append(tabulacion +"\t CalAnexarFirmat:" + debeAnexarFirmado + "\n");
+
+           if (scriptValidacion != null) {
+        	   texto.append(tabulacion +"\t ScriptValidacin: \n");
+        	   texto.append(scriptValidacion.toString(tabulacion, idioma)+ "\n");
+           }
+           texto.append(tabulacion +"\t CalCompulsar:" + debeCompulsar + "\n");
+           texto.append(tabulacion +"\t CalFotocopiar:" + debeFotocopiar + "\n");
+           texto.append(tabulacion +"\t TipusDocumental:" + tipoDocumental + "\n");
+           return texto.toString();
+     }
+
 }

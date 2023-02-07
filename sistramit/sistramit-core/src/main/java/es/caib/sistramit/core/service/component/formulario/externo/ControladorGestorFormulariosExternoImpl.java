@@ -27,6 +27,7 @@ import es.caib.sistramit.core.service.model.formulario.DatosInicioSesionFormular
 import es.caib.sistramit.core.service.model.formulario.ParametroAperturaFormulario;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FormularioDao;
+import es.caib.sistramit.core.service.util.UtilsFlujo;
 import es.caib.sistramit.core.service.util.UtilsSTG;
 
 /**
@@ -70,7 +71,12 @@ public final class ControladorGestorFormulariosExternoImpl implements Controlado
 		// Obtenemos datos conexión GFE
 		final RGestorFormularioExterno confGfe = UtilsSTG.obtenerConfiguracionGFE(confEntidad,
 				idGestorFormulariosExterno);
-		final String urlGestorFormulario = confGfe.getUrl();
+		String urlGestorFormulario = confGfe.getUrl();
+		// Reemplazamos vbles area
+		if (confGfe.getIdentificadorArea() != null) {
+			urlGestorFormulario = UtilsFlujo.replaceVariablesArea(urlGestorFormulario, confEntidad,
+					confGfe.getIdentificadorArea());
+		}
 		String usrGestorFormulario = null;
 		String pwdGestorFormulario = null;
 		if (confGfe.getIdentificadorConfAutenticacion() != null) {

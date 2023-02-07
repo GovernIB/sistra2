@@ -11,6 +11,8 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIViewRoot;
+import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +21,7 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
 import org.primefaces.component.datatable.DataTable;
+import org.primefaces.component.inputtext.InputText;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
@@ -140,6 +143,8 @@ public class ViewTramites extends ViewControllerBase {
 
 	private Boolean renderCmenu = true;
 
+	private String errorCopiar;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -171,8 +176,10 @@ public class ViewTramites extends ViewControllerBase {
 
 		idTramiteVersion = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest())
 				.getParameter("tramite_version");
+
 		pag = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest())
 				.getParameter("pag");
+
 		if (pag == null) {
 			pag = "0";
 		}
@@ -192,7 +199,6 @@ public class ViewTramites extends ViewControllerBase {
 			tramiteSeleccionada = null;
 			versionSeleccionada = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		}
-
 	}
 
 	public void asignarSeleccionado() {
@@ -284,6 +290,21 @@ public class ViewTramites extends ViewControllerBase {
 		final Area area = listaAreasSeleccionadas.get(0);
 		UtilJSF.redirectJsfPage(
 				"/secure/app/viewDominios.xhtml?ambito=A&id=" + area.getCodigo() + "&area=" + area.getIdentificador());
+	}
+
+	/**
+	 * Variables area
+	 */
+	public void varArea() {
+
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionadaArea()) {
+			return;
+		}
+
+		final Area area = listaAreasSeleccionadas.get(0);
+		UtilJSF.redirectJsfPage("/secure/app/viewVariablesArea.xhtml?id=" + area.getCodigo());
+
 	}
 
 	/**
@@ -488,19 +509,16 @@ public class ViewTramites extends ViewControllerBase {
 		// Verificamos si se ha modificado
 		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 			String message = "";
-			if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
-				ResultadoError re = null;
-				re = this.refrescar();
-				if (re != null && re.getCodigo() == 1) {
-					message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK) + ". "
-							+ UtilJSF.getLiteral("info.cache.ok");
-				} else {
-					message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK) + ". "
-							+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
-				}
+
+			ResultadoError re = null;
+			re = this.refrescar();
+			if (re != null && re.getCodigo() == 1) {
+				message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK) + ". " + UtilJSF.getLiteral("info.cache.ok");
 			} else {
-				message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
+				message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK) + ". "
+						+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje();
 			}
+
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
 			// Refrescamos datos
@@ -514,11 +532,12 @@ public class ViewTramites extends ViewControllerBase {
 	public void previsualizar() {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.versionSeleccionada.getCodigo()));
+
 		if (this.isPermiteDesbloquear() && this.getTienePermisosVersion()) {
-			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 950, 400);
+			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 950, 430);
 		} else {
 			UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.CONSULTA, params, true, 950,
-					400);
+					430);
 		}
 	}
 
@@ -528,7 +547,7 @@ public class ViewTramites extends ViewControllerBase {
 	public void previsualizarEdicion() {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.versionSeleccionada.getCodigo()));
-		UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 950, 400);
+		UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.EDICION, params, true, 950, 430);
 	}
 
 	/**
@@ -1070,7 +1089,7 @@ public class ViewTramites extends ViewControllerBase {
 					}
 					if (!pag.equals("0")) {
 						final int primero = Integer.parseInt(pag);
-						first = primero * 10;
+						first = primero * pageSize;
 
 						pag = "0";
 					}
@@ -2224,15 +2243,33 @@ public class ViewTramites extends ViewControllerBase {
 	 * Copiado correctamente
 	 */
 	public void copiadoCorr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 	/**
 	 * Copiado error
 	 */
 	public void copiadoErr() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-				UtilJSF.getLiteral("viewAuditoriaTramites.headError") + ' ' + UtilJSF.getLiteral("botones.copiar"));
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("viewTramites.copiar"));
 	}
 
 	public final String getPortapapeles() {

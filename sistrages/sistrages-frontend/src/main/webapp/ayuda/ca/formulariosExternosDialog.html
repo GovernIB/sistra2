@@ -15,7 +15,8 @@
 	<ul>
 		<li><span class="nombreCampo">Identificador:</span> codi único identificador del gestor.</li>
 		<li><span class="nombreCampo">Descripció:</span> text descriptiu del gestor.</li>
-		<li><span class="nombreCampo">URL:</span> text que indica la url del gestor extern.</li>
+		<li><span class="nombreCampo">URL:</span> text que indica la url del gestor extern. Si existeix un placeholder (per haver seleccionat una variable d'àrea), aquest serà substituït pel contingut d'aquesta variable, que serà inserit al començament d'aquest camp. Per exemple, si en la variable VAR01 apareix la URL "https://se.caib.es" i la URL d'aquest camp ha de finalitzar amb "proyectoBase/services/dominios/", en aquest camp apareixerà el text "{@@VAR01@@}/proyectoBase/services/dominios/".</li>
+		<li><span class="nombreCampo">Selecció Variable Àrea:</span> aquest botó obre una pantalla que permet seleccionar una variable d'àrea que afegirà un placeholder que serà substituït per la url indicada en aquesta variable d'àrea a l'hora d'executar el tràmit que utilitzi aquest gestor extern de formulari.</li>
 		</ul>
 		</li>
 	</ul>

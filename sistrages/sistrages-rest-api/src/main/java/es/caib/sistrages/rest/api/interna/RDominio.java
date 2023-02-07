@@ -28,9 +28,17 @@ public class RDominio {
 	@ApiModelProperty(value = "Identificador")
 	private String identificador;
 
+	/** Ámbito: GLOBAL("G"), ENTIDAD("E"), AREA("A"). */
+	@ApiModelProperty(value = "Ámmbito")
+	private String ambito;
+
 	/** Identificador entidad (nulo si global). */
 	@ApiModelProperty(value = "Identificador entidad (Código DIR3). Será nulo si ámbito global")
 	private String identificadorEntidad;
+
+	/** Identificador área (nulo si global). */
+	@ApiModelProperty(value = "Identificador área. Será nulo si ámbito global")
+	private String identificadorArea;
 
 	/** Cacheo implicito. */
 	@ApiModelProperty(value = "Tipo cacheo: explícito - 24 h (E) / implícito - 1 min (I) / no cache (N)")
@@ -248,6 +256,44 @@ public class RDominio {
 	 */
 	public void setParametros(final List<String> parametros) {
 		this.parametros = parametros;
+	}
+
+	/**
+	 * Método de acceso a ambito.
+	 *
+	 * @return ambito
+	 */
+	public String getAmbito() {
+		return ambito;
+	}
+
+	/**
+	 * Método para establecer ambito.
+	 *
+	 * @param ambito
+	 *                   ambito a establecer
+	 */
+	public void setAmbito(final String ambito) {
+		this.ambito = ambito;
+	}
+
+	/**
+	 * Método de acceso a identificadorArea.
+	 * 
+	 * @return identificadorArea
+	 */
+	public String getIdentificadorArea() {
+		return identificadorArea;
+	}
+
+	/**
+	 * Método para establecer identificadorArea.
+	 * 
+	 * @param identificadorArea
+	 *                              identificadorArea a establecer
+	 */
+	public void setIdentificadorArea(final String identificadorArea) {
+		this.identificadorArea = identificadorArea;
 	}
 
 }

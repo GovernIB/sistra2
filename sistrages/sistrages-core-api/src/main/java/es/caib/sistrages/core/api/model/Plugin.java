@@ -32,6 +32,12 @@ public class Plugin extends ModelApi {
 	/** Classname. */
 	private String classname;
 
+	/** realClassname. */
+	private String realClassname;
+
+	/** mockClassname. */
+	private String mockClassname;
+
 	/** Descripción. */
 	private String descripcion;
 
@@ -102,6 +108,36 @@ public class Plugin extends ModelApi {
 	}
 
 	/**
+	 * @return the realClassname
+	 */
+	public String getRealClassname() {
+		return realClassname;
+	}
+
+	/**
+	 * @param realClassname
+	 *            the realClassname to set
+	 */
+	public void setRealClassname(final String realClassname) {
+		this.realClassname = realClassname;
+	}
+
+	/**
+	 * @return the mockClassname
+	 */
+	public String getMockClassname() {
+		return mockClassname;
+	}
+
+	/**
+	 * @param mockClassname
+	 *            the mockClassname to set
+	 */
+	public void setMockClassname(final String mockClassname) {
+		this.mockClassname = mockClassname;
+	}
+
+	/**
 	 * @return the descripcion
 	 */
 	public String getDescripcion() {
@@ -149,5 +185,36 @@ public class Plugin extends ModelApi {
 	public void setPrefijoPropiedades(final String prefijoPropiedades) {
 		this.prefijoPropiedades = prefijoPropiedades;
 	}
+
+
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "Tasa. ");
+           texto.append(tabulacion +"\t Codi:" + getCodigo() + "\n");
+           if (descripcion != null) {
+        	   texto.append(tabulacion +"\t Descripcio:" + descripcion + "\n");
+           }
+           texto.append(tabulacion +"\t Ambit:" + ambito + "\n");
+           texto.append(tabulacion +"\t Tipus:" + tipo + "\n");
+           texto.append(tabulacion +"\t Classname:" + classname + "\n");
+           texto.append(tabulacion +"\t PrefijoPropietats:" + prefijoPropiedades + "\n");
+
+           if (propiedades != null) {
+        	   texto.append(tabulacion +"\t Propietats: \n");
+        	   for(Propiedad propiedad : propiedades) {
+        		   texto.append(propiedad.toString(tabulacion+"\t", idioma)+ "\n");
+        	   }
+           }
+           return texto.toString();
+     }
 
 }

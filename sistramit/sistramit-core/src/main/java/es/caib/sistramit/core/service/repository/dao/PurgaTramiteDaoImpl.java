@@ -90,10 +90,11 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 			// Marcamos tramites que quedan pendiente purga por pago realizado
 			// (del filtro de los que entran para purgar se quitan los
 			// finalizados)
-			final String sqlSelectTramitesPagoRealizado = "select distinct PTR_CODTRP FROM STT_PASTRP, STT_DOCPTR "
-					+ "WHERE DTP_CODPTR = PTR_CODIGO AND DTP_DOCTIP = '" + TypeDocumento.PAGO.toString()
-					+ "' AND DTP_ESTADO = '" + TypeEstadoDocumento.RELLENADO_CORRECTAMENTE.toString()
-					+ "' AND PTR_ESTADO <> '" + TypeEstadoTramite.FINALIZADO.toString() + "'";
+			final String sqlSelectTramitesPagoRealizado = "select distinct PTR_CODTRP FROM STT_TRAPER, STT_PASTRP, STT_DOCPTR "
+					+ "WHERE TRP_CODIGO = PTR_CODTRP AND DTP_CODPTR = PTR_CODIGO AND DTP_DOCTIP = '"
+					+ TypeDocumento.PAGO.toString() + "' AND DTP_ESTADO = '"
+					+ TypeEstadoDocumento.RELLENADO_CORRECTAMENTE.toString() + "' AND TRP_ESTADO <> '"
+					+ TypeEstadoTramite.FINALIZADO.toString() + "'";
 			final String sqlUpdatePdtePurgaPago = "update STT_TRAPER set TRP_PURPAG = 1 where "
 					+ sqlFiltroWherePendientesPurga + " and TRP_CODIGO in ( " + sqlSelectTramitesPagoRealizado + ")";
 			sqlQuery = entityManager.createNativeQuery(sqlUpdatePdtePurgaPago);

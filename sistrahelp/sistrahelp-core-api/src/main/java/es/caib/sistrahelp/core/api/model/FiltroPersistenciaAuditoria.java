@@ -1,9 +1,14 @@
 package es.caib.sistrahelp.core.api.model;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
+import es.caib.sistrahelp.core.api.exception.CargaConfiguracionException;
+import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrahelp.core.api.model.types.TypeTramitePersistencia;
 
 /**
@@ -14,6 +19,8 @@ import es.caib.sistrahelp.core.api.model.types.TypeTramitePersistencia;
  */
 public class FiltroPersistenciaAuditoria extends ModelApi {
 
+	/** Propiedades configuración especificadas en properties. */
+	private Properties propiedadesLocales = recuperarConfiguracionProperties();
 	private static final long serialVersionUID = 1L;
 	private List<String> listaAreas;
 	private String idSesionTramitacion;
@@ -60,7 +67,7 @@ public class FiltroPersistenciaAuditoria extends ModelApi {
 	public FiltroPersistenciaAuditoria(final List<String> listaAreas) {
 		super();
 		this.listaAreas = listaAreas;
-		this.fechaDesde = getToday();
+		this.fechaDesde = calcularFecha();
 	}
 
 	public List<String> getListaAreas() {
@@ -160,6 +167,20 @@ public class FiltroPersistenciaAuditoria extends ModelApi {
 		return calendar.getTime();
 	}
 
+	public Date calcularFecha() {
+		String propiedad = propiedadesLocales.getProperty(TypePropiedadConfiguracion.FILTRO_INICIAL.toString());
+		try {
+			int num = Integer.parseInt(propiedad);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(getToday()); // Configuramos la fecha que se recibe
+			calendar.add(Calendar.DAY_OF_YEAR, -num); // numero de días a añadir, o restar en caso de días<0
+			return calendar.getTime(); // Devuelve el objeto Date con los nuevos días añadidos
+		} catch (NumberFormatException e) {
+			return getToday();
+		}
+
+	}
+
 	public String getSortField() {
 		return sortField;
 	}
@@ -174,5 +195,17 @@ public class FiltroPersistenciaAuditoria extends ModelApi {
 
 	public void setSortOrder(final String sortOrder) {
 		this.sortOrder = sortOrder;
+	}
+
+	private Properties recuperarConfiguracionProperties() {
+		final String pathProperties = System.getProperty(TypePropiedadConfiguracion.PATH_PROPERTIES.toString());
+		try (FileInputStream fis = new FileInputStream(pathProperties);) {
+			final Properties props = new Properties();
+			props.load(fis);
+			return props;
+		} catch (final IOException e) {
+			throw new CargaConfiguracionException(
+					"Error al cargar la configuracion del properties '" + pathProperties + "' : " + e.getMessage(), e);
+		}
 	}
 }

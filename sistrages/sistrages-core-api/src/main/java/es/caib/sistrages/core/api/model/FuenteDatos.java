@@ -200,4 +200,36 @@ public class FuenteDatos extends ModelApi {
 		}
 	}
 
+		@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "FontDades. ");
+           texto.append(tabulacion +"\t Codi:" + codigo + "\n");
+           texto.append(tabulacion +"\t Identificador:" + identificador + "\n");
+           texto.append(tabulacion +"\t Descripcio:" + descripcion + "\n");
+           texto.append(tabulacion +"\t Ambito:" + ambito + "\n");
+           if (area != null) {
+        	   texto.append(tabulacion +"\t Area: \n");
+        	   texto.append(area.toString(tabulacion+"\t", idioma)+ "\n");
+           }
+           if (entidad != null) {
+        	   texto.append(entidad.toString(tabulacion+"\t", idioma)+ "\n");
+           }
+            if (campos != null) {
+        	   texto.append(tabulacion +"\t Campos: \n");
+        	   for(FuenteDatosCampo campo : campos) {
+        		   texto.append(campo.toString(tabulacion+"\t", idioma)+ "\n");
+        	   }
+           }
+           return texto.toString();
+     }
+
 }

@@ -34,6 +34,7 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
+import es.caib.sistrages.core.api.model.VariableArea;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeScriptSeccionReutilizable;
@@ -290,4 +291,45 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 		return restApiService.getScriptsSRUByIdFormulario(idFormulario, tipoScript);
 	}
 
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public VariableArea loadVariableArea(final Long codVa) {
+		return restApiService.loadVariableArea(codVa);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<VariableArea> listVariableArea(final Long area, final String filtro) {
+		return restApiService.listVariableArea(area, filtro);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public VariableArea loadVariableAreaByIdentificador(String identificador, Long codigoArea) {
+		return restApiService.loadVariableAreaByIdentificador(identificador, codigoArea);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<Dominio> dominioByVariable(final VariableArea va) {
+		return restApiService.dominioByVariable(va);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<GestorExternoFormularios> gfeByVariable(final VariableArea va) {
+		return restApiService.gfeByVariable(va);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<EnvioRemoto> envioRemotoByVariable(final VariableArea va) {
+		return restApiService.envioRemotoByVariable(va);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public Area getAreaByIdentificador(final String identificadorEntidad, final String identificador) {
+		return restApiService.getAreaByIdentificador(identificadorEntidad, identificador);
+	}
 }

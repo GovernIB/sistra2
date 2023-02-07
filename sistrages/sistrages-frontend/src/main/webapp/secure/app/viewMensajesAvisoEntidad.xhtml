@@ -25,6 +25,7 @@
 			    	getPos();
 			    	return false;
 				}, false);
+
 			  }
 
 				function eliminarResaltar(){
@@ -63,13 +64,15 @@
 
 				el.classList.add("resaltar");
 				var aux = document.getElementById("form:auxCopiar");
-				if(el.textContent!=''){
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 					aux.value = el.textContent;
-				}else if(el.firstChild!=null){
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 					aux.value = el.firstChild.value;
 				}else if(el.value!=null &amp;&amp; el.value!=''){
 					aux.value = el.value;
-				}
+				}else{
+		          aux.value = '';
+		        }
 
 			 }
 
@@ -151,7 +154,8 @@
 
 			</p:dataTable>
 			<p:contextMenu for=":form:dataTable">
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" />
+       			<p:separator/>
        			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this"  rendered="#{viewMensajesAvisoEntidad.permiteAlta}"/>
         		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewMensajesAvisoEntidad.permiteEditar or viewMensajesAvisoEntidad.permiteAlta}"/>
         		<p:menuitem id="mnuConsultarTabla" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this" rendered="#{not viewMensajesAvisoEntidad.permiteEditar and not viewMensajesAvisoEntidad.permiteAlta}" />
@@ -179,7 +183,8 @@
 				</p:outputPanel>
 		    </p:confirmDialog>
 			<p:contextMenu for=":work">
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :form:auxCopiar" update="growl" />
+       			<p:separator/>
        			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this"  rendered="#{viewMensajesAvisoEntidad.permiteAlta}"/>
         		<p:menuitem id="mnuEditarMain" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewMensajesAvisoEntidad.permiteEditar or viewMensajesAvisoEntidad.permiteAlta}"/>
         		<p:menuitem id="mnuConsultarMain" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this" rendered="#{not viewMensajesAvisoEntidad.permiteEditar and not viewMensajesAvisoEntidad.permiteAlta}" />
@@ -191,7 +196,7 @@
         	</pe:clipboard>
 
         	<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
-				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
 			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewMensajesAvisoEntidad.copiadoCorr}" process="@this" update="@this growl"/>
@@ -199,7 +204,7 @@
 			</pe:clipboard>
 
 			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
-				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
 			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewMensajesAvisoEntidad.copiadoCorr}" process="@this" update="@this growl"/>

@@ -1,0 +1,261 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="../layout/mainLayout.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{viewVariablesArea.init}" />
+		<f:viewParam name="id" value="#{viewVariablesArea.idArea}"/>
+		<f:viewParam name="filtro" value="#{viewVariablesArea.filtro}"/>
+	</f:metadata>
+
+	<f:facet name="last">
+  		<h:outputStylesheet library="default" name="css/yourstyles.css" />
+	</f:facet>
+
+	<ui:define name="content">
+
+		<h:form id="form" style="height: 100%">
+
+			<h:outputScript >
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+				function consultar(){
+					let elemento = document.getElementsByClassName('resaltar')[0];
+					elemento.click();
+					$('#form\\:btnEditarHidden').click();
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("form:auxCopiar");
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}else{
+		          aux.value = '';
+		        }
+			 }
+
+			</h:outputScript>
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"/>
+			<p:contextMenu  for=":work">
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :form:auxCopiar" update=":form:growl" />
+       			<p:separator/>
+       			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this"  rendered="#{viewVariablesArea.getPermiteEditar()}"/>
+        		<p:menuitem id="mnuEditarMain" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewVariablesArea.getPermiteEditar()}"/>
+        		<p:menuitem id="mnuConsultarMain" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this" rendered="#{viewVariablesArea.getPermiteConsultar()}" />
+        		<p:menuitem id="mnuEliminarMain" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('form:btnEliminar').click();" process="@this" rendered="#{viewVariablesArea.getPermiteEditar()}"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewVariablesArea.copiadoCorr}" process="@this" update="@this :form:growl"/>
+            	<p:ajax event="error" listener="#{viewVariablesArea.copiadoErr}" update="@this :form:growl"/>
+        	</pe:clipboard>
+
+        	<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
+				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update=":form:growl" />
+			</p:contextMenu>
+			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewVariablesArea.copiadoCorr}" process="@this" update="@this :form:growl"/>
+				<p:ajax event="error" listener="#{viewVariablesArea.copiadoErr}" update="@this :form:growl"/>
+			</pe:clipboard>
+
+			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
+				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update=":form:growl" />
+			</p:contextMenu>
+			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewVariablesArea.copiadoCorr}" process="@this" update="@this :form:growl"/>
+				<p:ajax event="error" listener="#{viewVariablesArea.copiadoErr}" update="@this :form:growl"/>
+			</pe:clipboard>
+
+			<p:column rendered="#{viewVariablesArea.mostrarBreadcrumb}" style="width:100%;">
+				<div style="display:grid; grid-template-columns: 1fr 1fr; height:25px !important; overflow:hidden;">
+					<div style="display:grid; grid-template-columns: 1fr;">
+						<p:breadCrumb homeDisplay="text" model="#{viewVariablesArea.breadCrumb}" style="border-right: none !important; border-top-right-radius: 0px;"/>
+					</div>
+					<div style="display:grid; grid-template-columns: 5fr 1fr; overflow:hidden; padding:5px 5px 7px 5px; background: #e9e9e9; border: 1px solid #dddddd;  border-left: none !important; color: #333333; font-size: 8pt !important; border-top-right-radius: 6px !important;">
+		                <p:outputLabel for="@next" value="" style="font-size: 8pt !important; font-weight: bold; text-align: right; margin-right: 1em;"/>
+		                <p:selectOneMenu id="option" value="#{viewVariablesArea.accion}" style="font-size: 7pt !important; font-weight: bold; height:75%; padding:0px !important; margin-top: 0px !important">
+			                <p:ajax event="change" listener="#{viewVariablesArea.cambiarAccion}" update="@form"/>
+		                   	<!--  <f:selectItems value="#{viewVariablesArea.listaAreas}" var="area" itemValue="#{area.codigo}" itemLabel="#{area.identificador}" style="padding-top: 0px !important;"/> -->
+		                    <f:selectItem itemLabel="#{msg['botones.variablesArea']}" itemValue="V"/>
+		                    <f:selectItem itemLabel="#{msg['botones.dominiosArea']}" itemValue="D"/>
+		                    <f:selectItem itemLabel="#{msg['botones.datosFuenteArea']}" itemValue="F"/>
+		                    <f:selectItem itemLabel="#{msg['botones.sgeArea']}" itemValue="S"/>
+		                    <f:selectItem itemLabel="#{msg['botones.configuracionAutenticacionArea']}" itemValue="C"/>
+  		                    <f:selectItem itemLabel="#{msg['botones.envioRemoto']}" itemValue="E"/>
+		                </p:selectOneMenu>
+	       		  	</div>
+	          	</div>
+			</p:column>
+
+			<!-- Toolbar -->
+			<p:toolbar id="toolbar">
+				<f:facet name=""></f:facet>
+		        <f:facet name="left">
+		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
+		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
+			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewVariablesArea.filtro}"/>
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewVariablesArea.filtrar()}" process="panelFiltro" update=":form:growl dataTable" />
+	           		</h:panelGrid>
+		        </f:facet>
+
+		        <f:facet name="right">
+		        	<h:panelGrid id="panelBotones" columns="10" cellspacing="5">
+		        		<p:commandButton value="#{msg['botones.nuevo']}" id="btnNuevo" icon="fa fa-file" actionListener="#{viewVariablesArea.nuevo()}" process="@this" update=":form:growl"  rendered="#{viewVariablesArea.getPermiteEditar()}">
+		        			<p:ajax event="dialogReturn" listener="#{viewVariablesArea.returnDialogo}" update=":form:growl dataTable"/>
+		        		</p:commandButton>
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewVariablesArea.editar()}" process="@this" update=":form:growl" rendered="#{viewVariablesArea.getPermiteEditar()}">
+		        			<p:ajax event="dialogReturn" listener="#{viewVariablesArea.returnDialogo}" update=":form:growl dataTable"/>
+		        		</p:commandButton>
+		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewVariablesArea.consultar()}" process="@this" update=":form:growl" rendered="#{viewVariablesArea.getPermiteConsultar()}" />
+						<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewVariablesArea.eliminar()}" process="@this" update=":form:growl dataTable"  rendered="#{viewVariablesArea.getPermiteEditar()}">
+		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+		        		</p:commandButton>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewVariablesArea.ayuda()}" process="@this" update=":form:growl"/>
+		        	</h:panelGrid>
+		        </f:facet>
+		    </p:toolbar>
+
+			<!-- Data table -->
+			<p:dataTable  id="dataTable" var="td" value="#{viewVariablesArea.listaDatos}"
+						 rows="#{viewVariablesArea.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
+						 scrollable="true" scrollHeight="90%"
+                         paginator="true" paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,30"
+			        	 selectionMode="single" selection="#{viewVariablesArea.datoSeleccionado}" rowKey="#{td.identificador}">
+
+
+				<!-- Necesario para actualizar en controlador la fila seleccionada -->
+				<p:ajax event="rowSelect" global="false" update=":form:panelBotones"/>
+				<p:ajax event="rowDblselect"
+		                  		oncomplete="triggerDblClick();"
+		                        update=":form:dataTable"
+		                        />
+		         <p:ajax event="page" update=":form:dataTable :form:toolbar"/>
+		         <p:ajax event="contextMenu" global="false" process="@this" update=":form:panelBotones"/>
+
+
+				<!-- Columnas -->
+			    <p:column headerText="#{msg['viewEntidades.headerIdentificador']}">
+			        <h:outputText value="#{td.identificador}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewDominios.headerDescripcion']}">
+			        <h:outputText value="#{td.descripcion}" />
+			    </p:column>
+
+ 				<p:column headerText="#{msg['dialogDominio.headerTipo.consultaRemota.url']}">
+			        <h:outputText value="#{td.url}" />
+			    </p:column>
+
+			</p:dataTable>
+
+			<p:contextMenu for=":form:dataTable">
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update=":form:growl" />
+       			<p:separator/>
+       			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this"  rendered="#{viewVariablesArea.getPermiteEditar()}"/>
+        		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewVariablesArea.getPermiteEditar()}"/>
+        		<p:menuitem id="mnuConsultarTabla" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this" rendered="#{viewVariablesArea.getPermiteConsultar()}" />
+        		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('form:btnEliminar').click();" process="@this" rendered="#{viewVariablesArea.getPermiteEditar()}"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewVariablesArea.copiadoCorr}" process="@this" update="@this :form:growl"/>
+            	<p:ajax event="error" listener="#{viewVariablesArea.copiadoErr}" update="@this :form:growl"/>
+        	</pe:clipboard>
+
+		    <p:inputText id="auxCopiar" value="#{viewVariablesArea.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+			<h:outputScript >
+		      function triggerDblClick() {
+		       	$('#form\\:btnEditarHidden').click();
+		      }
+		    </h:outputScript>
+
+			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewVariablesArea.rcDobleClick}" process="@this" update=":form:growl" style="display: none">
+		    	<p:ajax event="dialogReturn" listener="#{viewVariablesArea.returnDialogo}" update=":form:growl dataTable"/>
+		    </p:commandButton>
+
+		    <p:confirmDialog global="true" >
+				<p:outputPanel styleClass="confirmar_botonera">
+		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+				</p:outputPanel>
+		    </p:confirmDialog>
+
+			<!-- Dialogo confirmar cambios desde view a traves de boton oculto -->
+	    	<p:commandButton value="Confirmation" id="confirmationButton" widgetVar="confirmationButton" onclick="PF('dlgConfirmar').show();" styleClass="no-display" process="@this">
+	    	<p:ajax event="click" update="@form"/>
+
+	    	</p:commandButton>
+
+			<style>
+			  .ui-dialog-content > .ui-icon {
+				    display: none !important;
+				}
+
+
+			</style>
+
+			 <p:confirmDialog header="#{msg['confirm.componente.eliminar.titulo']}" global="true" id="dlgConfirmar" widgetVar="dlgConfirmar" message="#{viewVariablesArea.msg}" styleClass="confirmar_ancho">
+		    	<p:outputPanel styleClass="confirmar_botonera">
+	           	 	<p:commandButton value="#{msg['botones.si']}" actionListener="#{viewVariablesArea.eliminar}" styleClass="boton-azul" icon="ui-icon-check" onclick="PF('dlgConfirmar').hide();" process="@this"  update="@form" />
+	            	<p:commandButton value="#{msg['botones.no']}" icon="ui-icon-close" onclick="PF('dlgConfirmar').hide();" process="@this"  update="@form"  />
+	            </p:outputPanel>
+        	</p:confirmDialog>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

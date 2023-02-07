@@ -32,6 +32,8 @@ public class DialogDefinicionVersion extends DialogControllerBase {
 	/** version trámite a buscar */
 	private String version;
 
+	private String mensaje;
+
 	/**
 	 * Inicialización.
 	 */
@@ -46,6 +48,16 @@ public class DialogDefinicionVersion extends DialogControllerBase {
 	public void cancelar() {
 		final DialogResult result = new DialogResult();
 		result.setCanceled(true);
+		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Cancelar.
+	 */
+	public void closeDialog() {
+		final DialogResult result = new DialogResult();
+		result.setResult(mensaje);
+		result.setCanceled(false);
 		UtilJSF.closeDialog(result);
 	}
 
@@ -89,6 +101,20 @@ public class DialogDefinicionVersion extends DialogControllerBase {
 	 */
 	public final void setVersion(String version) {
 		this.version = version;
+	}
+
+	/**
+	 * @return the mensaje
+	 */
+	public final String getMensaje() {
+		return mensaje;
+	}
+
+	/**
+	 * @param mensaje the mensaje to set
+	 */
+	public final void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
 	}
 
 }

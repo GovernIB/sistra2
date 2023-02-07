@@ -79,13 +79,15 @@
 
 				el.classList.add("resaltar");
 				var aux = document.getElementById("dialogFuenteDatos:auxCopiar");
-				if(el.textContent!=''){
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 					aux.value = el.textContent;
-				}else if(el.firstChild!=null){
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 					aux.value = el.firstChild.value;
 				}else if(el.value!=null &amp;&amp; el.value!=''){
 					aux.value = el.value;
-				}
+				}else{
+		          aux.value = '';
+		        }
 			 }
 
 			</h:outputScript>
@@ -165,7 +167,8 @@
 			 </h:panelGrid>
 
 			<p:contextMenu for=":dialogFuenteDatos:dataTableDatos">
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyTabla"  process="@this :dialogFuenteDatos:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyTabla"  process="@this :dialogFuenteDatos:auxCopiar" update="growlDialog" />
+       			<p:separator/>
        			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('dialogFuenteDatos:btnNuevoDato').click();" process="@this"  rendered="#{dialogFuenteDatos.permiteEdicion}"/>
         		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('dialogFuenteDatos:btnEditarDato').click();" process="@this" rendered="#{dialogFuenteDatos.permiteEdicion}"/>
         		<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('dialogFuenteDatos:btnEliminarDato').click();" process="@this" rendered="#{dialogFuenteDatos.permiteEdicion}"/>
@@ -204,7 +207,7 @@
 				</p:outputPanel>
 		    </p:confirmDialog>
 		    <p:contextMenu>
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :dialogFuenteDatos:auxCopiar" update="growlDialog" url="javascript:void(0)"/>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :dialogFuenteDatos:auxCopiar" update="growlDialog" />
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{dialogFuenteDatos.copiadoCorr}" process="@this" update="@this growlDialog"/>

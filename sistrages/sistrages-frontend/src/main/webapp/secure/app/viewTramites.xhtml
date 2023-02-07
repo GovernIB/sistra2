@@ -57,7 +57,10 @@
 			return false;
         }, false);
 
-
+			var selecc = document.getElementById('form:dataTableTramites').getElementsByClassName('ui-state-highlight')[0];
+			if(selecc!=null){
+				$('#form\\:dataTableTramites > .ui-datatable-scrollable-body').scrollTop(selecc.getBoundingClientRect().y - $('#form\\:dataTableTramites > .ui-datatable-scrollable-body').height());
+			}
         }
 
         function eliminarResaltar(){
@@ -88,7 +91,7 @@
           var posX = e.clientX;
           var posY = e.clientY;
           var el = document.elementFromPoint(posX, posY);
-
+		  console.log(posY);
           let elementos = document.getElementsByClassName('resaltar');
             if(elementos.length &gt; 0){
             for(let i = 0; i &lt; elementos.length; i++){
@@ -98,12 +101,14 @@
 
         el.classList.add("resaltar");
         var aux = document.getElementById("form:auxCopiar");
-        if(el.textContent!=''){
+       if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
           aux.value = el.textContent;
-        }else if(el.firstChild!=null){
+        }else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
           aux.value = el.firstChild.value;
         }else if(el.value!=null &amp;&amp; el.value!=''){
           aux.value = el.value;
+        }else{
+          aux.value = '';
         }
 	}
 
@@ -140,11 +145,12 @@
          while(elAux!=null &amp;&amp; elAux!=document &amp;&amp; !elAux.classList.contains( 'ui-datatable' )){
 			elAux = elAux.parentNode;
 
-			if(elAux.id=="form:dataTableTramites_head"){
+			if(elAux.id=="form:dataTableTramites_head" || elAux.id=="form:dataTableTramites_paginator_bottom"){
 				break;
 			}
 		}
-		if(elAux.id=="form:dataTableTramites"){
+		if(elAux.id=="form:dataTableTramites" &amp;&amp; el.className!="ui-datatable-scrollable-body" &amp;&amp; el.id!="form:dataTableTramites_paginator_bottom"
+		){
 			while(el.tagName!="TR"){
 				el = el.parentNode;
 			}
@@ -159,7 +165,7 @@
 			command([{name:'param', value:text},{name:'x', value:posX},{name:'y', value:posY}]);
 		}else if(elAux.id=="form:areas"){
 			document.getElementById("form:mnuNuevoTramite").style.display='none';
-			if(document.getElementById("form:btnNuevaAr ea")!=null){
+			if(document.getElementById("form:btnNuevaArea")!=null){
 				document.getElementById("form:mnuNuevoAreaTramite").style.display='block';
 			}
 		}
@@ -170,7 +176,10 @@
 
             }
             }
+
+
 		hideOpcTram();
+		mostrarSeparador();
 
 	}
 
@@ -188,6 +197,7 @@
 	}
 
 	function hideOpcTram(){
+		document.getElementsByClassName("separadorTramite")[0].style.display='none';
 		document.getElementById("form:mnuNuevoTramite").style.display='none';
 		document.getElementById("form:mnuEditarTramite").style.display='none';
    		document.getElementById("form:mnuConsultarTramite").style.display='none';
@@ -205,12 +215,17 @@
 	}
 
 
-
+	function mostrarSeparador(){
+		if(document.getElementById("form:mnuNuevoAreas")!=null){
+			document.getElementsByClassName("separadorArea")[0].style.display='block';
+		}
+	}
       </h:outputScript>
 
 
         <p:contextMenu widgetVar="mainCm" id="mainCm" beforeShow="clickEl();" for=":work">
-             <p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+             <p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" />
+             <p:separator style="display:block;" styleClass="separadorTramite"/>
              <p:menuitem id="mnuNuevoTramite" value="#{msg['botones.nuevoTramite']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevoTramite').click();" process="@this" style="display:none;"/>
 			 <p:menuitem id="mnuNuevoAreaTramite" value="#{msg['botones.nuevo']} #{msg['dialogDominioTramites.headerArea']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevoArea').click();" style="display:none;"/>
 
@@ -227,7 +242,7 @@
         </pe:clipboard>
 
         <p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
-			<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+			<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 		</p:contextMenu>
 		<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
 			<p:ajax event="success" listener="#{viewTramites.copiadoCorr}" process="@this" update="@this growl"/>
@@ -235,7 +250,7 @@
 		</pe:clipboard>
 
 		 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
-			<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+			<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 		</p:contextMenu>
 		<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
 			<p:ajax event="success" listener="#{viewTramites.copiadoCorr}" process="@this" update="@this growl"/>
@@ -298,7 +313,8 @@
               </f:facet>
           </p:dataTable>
            <p:contextMenu for="areas" id="cMenuAreas" widgetVar="cMenuAreasWV" beforeShow="return true;">
-            	<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyAreas"  process="@this :form:auxCopiar" update=":form:growl" url="javascript:void(0)"/>
+            	<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyAreas"  process="@this :form:auxCopiar" update=":form:growl" />
+            	<p:separator styleClass="separadorArea"/>
             	<p:menuitem id="mnuNuevoArea" value="#{msg['botones.nuevo']} #{msg['dialogDominioTramites.headerArea']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevoArea').click();" />
             	<p:menuitem id="mnuConsultarArea" value="#{msg['botones.consultar']} #{msg['dialogDominioTramites.headerArea']}" icon="fa fa-eye" process="@this" onclick="document.getElementById('form:btnConsultarArea').click();" />
             	<p:menuitem id="mnuEditarArea" value="#{msg['botones.editar']} #{msg['dialogDominioTramites.headerArea']}" icon="fa fa-edit ui-btn-icon-bottom" onclick="document.getElementById('form:btnEditarArea').click();" process="@this"/>
@@ -349,7 +365,6 @@
 	          	}else{
 	          		document.getElementById("form:mnuEliminarArea").style.display='none';
 	          	}
-
 			}
 
           function refrescarHeight() {
@@ -381,6 +396,7 @@
           function opcTramites(){
 			if(document.getElementById("form:btnNuevoTramite")!=null){
           		document.getElementById("form:mnuNuevoTramite").style.display='block';
+          		document.getElementsByClassName("separadorTramite")[0].style.display='block';
           	}else{
           		document.getElementById("form:mnuNuevoTramite").style.display='none';
           	}
@@ -424,7 +440,6 @@
 				elAux = elAux.parentNode;
 			}
 			var nuevId = elAux.id.replace('dataTableVersiones','')
-
 
           	if(document.getElementById("form:btnNuevaVersion")!=null){
           		document.getElementById(nuevId+"mnuNuevaVersionVer").style.display='block';
@@ -610,12 +625,12 @@
                     <p:menuitem id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite}" process="@this" update="growl" rendered="#{(viewTramites.tramiteSeleccionada ne null or viewTramites.versionSeleccionada ne null) and viewTramites.tienePermisosAreaConsulta}" />
 
                 <p:separator rendered="#{viewTramites.tienePermisosAreaConsulta}"/>
+                    <p:menuitem id="btnVarArea" value="#{msg['botones.variablesArea']}" icon="fa fa-table" actionListener="#{viewTramites.varArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}" />
                     <p:menuitem id="btnDominioArea" value="#{msg['botones.dominiosArea']}" icon="fa fa-database" actionListener="#{viewTramites.dominioArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}"/>
                     <p:menuitem id="btnDatosArea" value="#{msg['botones.datosFuenteArea']}" icon="fa fa-table" actionListener="#{viewTramites.datosArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}" />
-                <p:menuitem id="btnSGEArea" value="#{msg['botones.sgeArea']}" icon="fa fa-database" actionListener="#{viewTramites.sgeArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}"/>
+                	<p:menuitem id="btnSGEArea" value="#{msg['botones.sgeArea']}" icon="fa fa-database" actionListener="#{viewTramites.sgeArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}"/>
                     <p:menuitem id="btnConfiguracionArea" value="#{msg['botones.configuracionAutenticacionArea']}" icon="fa fa-table" actionListener="#{viewTramites.confAutArea}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta}" />
-                <p:menuitem id="btnEnvioRem" value="#{msg['botones.envioRemoto']}" icon="fa fa-paper-plane" actionListener="#{viewTramites.envioRemoto}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta and viewTramites.isServicioActivado()}" />
-
+                	<p:menuitem id="btnEnvioRem" value="#{msg['botones.envioRemoto']}" icon="fa fa-paper-plane" actionListener="#{viewTramites.envioRemoto}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta and viewTramites.isServicioActivado()}" />
                 <p:separator rendered="#{viewTramites.tienePermisosArea}"/>
                 <p:menuitem id="btnImportar"  				value="#{msg['botones.importarTramite']}" 	icon="fa fa-download"  onclick="triggerImportarTramite(); return false;" 		rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosArea}"></p:menuitem>
                 <p:menuitem id="btnExportar" 				value="#{msg['botones.exportarVersion']}" 	icon="fa fa-upload" actionListener="#{viewTramites.exportarVersion}" 		rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.tienePermisosArea}"		 process="@this" update="growl"   />
@@ -740,21 +755,25 @@
 
                 </p:dataTable>
                  <p:contextMenu for="dataTableVersiones" id="cMenuVers" widgetVar="cMenuVersWV" beforeShow="return true;" class="contextMenuVersiones">
-		            <p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyVers"  process="@this :form:auxCopiar" update=":form:growl" url="javascript:void(0)"/>
+		            <p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyVers"  process="@this :form:auxCopiar" update=":form:growl" />
+		            <p:separator styleClass="separador"/>
 		            <p:menuitem id="mnuNuevaVersionVer" value="#{msg['botones.nuevaVersion']}" icon="fa fa-file" process="@this"  onclick="document.getElementById('form:btnNuevaVersionTramite').click();" />
 		            <p:menuitem id="mnuConsultarVersionVer" value="#{msg['botones.consultarVersion']}" icon="fa fa-edit" onclick="document.getElementById('form:btnConsultarVersion').click();" process="@this"  />
               		<p:menuitem id="mnuEditarVersionVer" value="#{msg['botones.editarVersion']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditarVersion').click();" process="@this"  />
                   	<p:menuitem id="mnuBloquearVer" value="#{msg['botones.bloquear']}" icon="fa fa-lock" onclick="document.getElementById('form:btnBloquear').click();" process="@this" />
                   	<p:menuitem id="mnuDesploquearVer" value="#{msg['botones.desbloquear']}" icon="fa fa-unlock" onclick="document.getElementById('form:btnDesploquear').click();" process="@this" />
 				  	<p:menuitem id="mnuPrevisualizarVer" value="#{msg['botones.previsualizarTramite']}" icon="fa fa-eye" onclick="document.getElementById('form:btnPrevisualizar').click();" process="@this" />
+				  	<p:separator style="display:block;" styleClass="separador"/>
 				   	<p:menuitem id="mnuControlAccesoVer" value="#{msg['botones.controlAcceso']}" icon="fa fa-edit" onclick="triggerControlAcceso();return false;"/>
                     <p:menuitem id="mnuHistorialVer" value="#{msg['botones.historial']}" icon="fa fa-history" onclick="document.getElementById('form:btnHistorial').click();" process="@this"  />
+                    <p:separator style="display:block;" styleClass="separador"/>
                     <p:menuitem id="mnuEliminarVersionVer" value="#{msg['botones.eliminarVersion']}" icon="fa fa-trash-o" onclick="document.getElementById('form:btnEliminarVersion').click();" process="@this"  />
                     <p:menuitem id="mnuBorrarScriptsVer" value="#{msg['botones.borrarScripts']}" icon="fa fa-trash-o" onclick="document.getElementById('form:btnBorrarScripts').click();" process="@this"  />
                     <p:menuitem id="mnuValidarVer" value="#{msg['botones.validarVersion']}" icon="fa fa-check-square-o" onclick="document.getElementById('form:btnValidar').click();" process="@this"  />
                     <p:menuitem id="mnuRefrescarVer" value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" onclick="document.getElementById('form:btnRefrescar').click();" process="@this" />
                     <p:menuitem id="mnuDuplicarVer" value="#{msg['botones.duplicarVersion']}" icon="fa fa-copy" onclick="triggerClonarTramite(); return false;" update=":form:growl"/>
                     <p:menuitem id="mnuProcedimientosTramiteVer" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" onclick="document.getElementById('form:btnProcedimientosTramite').click();" process="@this"   />
+                    <p:separator style="display:block;" styleClass="separador"/>
 					<p:menuitem id="mnuExportarVer" 				value="#{msg['botones.exportarVersion']}" 	icon="fa fa-upload" onclick="document.getElementById('form:btnExportar').click();"  process="@this"    />
                 	<p:menuitem id="mnuGenerarCuadernoCargaVer"  	value="#{msg['botones.generarCC']}" 		icon="fa fa-upload fa-rotate-270" onclick="document.getElementById('form:btnGenerarCuadernoCarga').click();" process="@this"  />
                		<p:menuitem id="mnuGenerarScriptsVer"  		value="#{msg['botones.generarScripts']}" 	icon="fa fa-bolt" onclick="document.getElementById('form:btnGenerarScripts').click();" process="@this" />

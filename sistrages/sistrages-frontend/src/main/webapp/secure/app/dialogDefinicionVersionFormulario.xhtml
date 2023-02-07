@@ -83,13 +83,15 @@
 
 		el.classList.add("resaltar");
 		var aux = document.getElementById("formDialogDefinicionVersionFormulario:auxCopiar");
-		if(el.textContent!=''){
+		if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 			aux.value = el.textContent;
-		}else if(el.firstChild!=null){
+		}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 			aux.value = el.firstChild.value;
 		}else if(el.value!=null &amp;&amp; el.value!=''){
 			aux.value = el.value;
-		}
+		}else{
+          aux.value = '';
+        }
 
 	 }
 
@@ -107,7 +109,7 @@
             <p:inputText id="identificador" required="true" styleClass="w25" maxlength="20" value="#{dialogDefinicionVersionFormulario.data.identificador}" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
 				<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 				<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
-				<p:ajax event="change" listener="#{dialogDefinicionVersionFormulario.setCambios}" process="@this" update="@this"/>
+				<p:ajax event="change" listener="#{dialogDefinicionVersionFormulario.setCambios}"/>
 	        </p:inputText>
 
             <p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionFormulario.descripcion']}" />
@@ -215,7 +217,7 @@
 			</p:toolbar>
 	 </p:outputPanel>
 	 <p:contextMenu>
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :formDialogDefinicionVersionFormulario:auxCopiar" update="growl" url="javascript:void(0)"/>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :formDialogDefinicionVersionFormulario:auxCopiar" update="growl" />
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{dialogDefinicionVersionFormulario.copiadoCorr}" process="@this" update="@this growl"/>

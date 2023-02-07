@@ -59,8 +59,7 @@ public final class UtilsSTG {
 	/**
 	 * Verifica si esta habilitado el debug.
 	 *
-	 * @param definicionTramite
-	 *                              Definicion trámite.
+	 * @param definicionTramite Definicion trámite.
 	 * @return debug habilitado
 	 */
 	public static boolean isDebugEnabled(final DefinicionTramiteSTG definicionTramite) {
@@ -70,10 +69,8 @@ public final class UtilsSTG {
 	/**
 	 * Devuelve definición paso tramitación
 	 *
-	 * @param pIdPaso
-	 *                              idPaso
-	 * @param definicionTramite
-	 *                              Definición trámite
+	 * @param pIdPaso           idPaso
+	 * @param definicionTramite Definición trámite
 	 * @return Paso tramitación
 	 */
 	public static RPasoTramitacion devuelveDefinicionPaso(final String pIdPaso,
@@ -92,8 +89,7 @@ public final class UtilsSTG {
 	 * Devuelve definición paso tramitación registrar (solo puede existir un paso
 	 * registrar).
 	 *
-	 * @param definicionTramite
-	 *                              Definición trámite
+	 * @param definicionTramite Definición trámite
 	 * @return Paso tramitación
 	 */
 	public static RPasoTramitacionRegistrar devuelveDefinicionPasoRegistrar(
@@ -111,12 +107,9 @@ public final class UtilsSTG {
 	/**
 	 * Obtiene literal para un idioma.
 	 *
-	 * @param descripcion
-	 *                        literal multiidioma
-	 * @param idioma
-	 *                        idioma
-	 * @param defecto
-	 *                        si no existe el idioma, devuelve uno por defecto
+	 * @param descripcion literal multiidioma
+	 * @param idioma      idioma
+	 * @param defecto     si no existe el idioma, devuelve uno por defecto
 	 * @return literal
 	 */
 	public static String obtenerLiteral(final RLiteral descripcion, final String idioma, final boolean defecto) {
@@ -141,10 +134,8 @@ public final class UtilsSTG {
 	/**
 	 * Obtiene literal para un idioma.
 	 *
-	 * @param descripcion
-	 *                        literal multiidioma
-	 * @param idioma
-	 *                        idioma
+	 * @param descripcion literal multiidioma
+	 * @param idioma      idioma
 	 * @return literal
 	 */
 	public static String obtenerLiteral(final RLiteral descripcion, final String idioma) {
@@ -154,14 +145,10 @@ public final class UtilsSTG {
 	/**
 	 * Obtiene avisos aplicables al trámite.
 	 *
-	 * @param definicionTramiteSTG
-	 *                                 definicion tramite
-	 * @param avisosPlataforma
-	 *                                 Avisos
-	 * @param string
-	 *                                 Idioma
-	 * @param bloqueantes
-	 *                                 Si solo recupera bloqueantes
+	 * @param definicionTramiteSTG definicion tramite
+	 * @param avisosPlataforma     Avisos
+	 * @param string               Idioma
+	 * @param bloqueantes          Si solo recupera bloqueantes
 	 * @return lista avisos
 	 */
 	public static List<AvisoPlataforma> obtenerAvisosTramite(final DefinicionTramiteSTG definicionTramiteSTG,
@@ -213,6 +200,9 @@ public final class UtilsSTG {
 							definicionTramiteSTG);
 					incluirAviso = !pasosRegistro.isEmpty();
 					break;
+				case ANEXO:
+					incluirAviso = UtilsSTG.requiereAnexo(definicionTramiteSTG);
+					break;
 				default:
 					throw new TipoNoControladoException("Tipús d'avís no controlat: " + avisoPlataforma.getTipo());
 				}
@@ -243,10 +233,8 @@ public final class UtilsSTG {
 	/**
 	 * Recupera pasos de un tipo.
 	 *
-	 * @param tipoPasoFiltro
-	 *                                 Tipo paso
-	 * @param definicionTramiteSTG
-	 *                                 Definición trámite
+	 * @param tipoPasoFiltro       Tipo paso
+	 * @param definicionTramiteSTG Definición trámite
 	 * @return pasos de un tipo
 	 */
 	private static List<RPasoTramitacion> devuelveDefinicionPasos(final TypePaso tipoPasoFiltro,
@@ -267,8 +255,7 @@ public final class UtilsSTG {
 	 * Verifica si el trámite requiere firma (tiene algún documento marcado para
 	 * firmar).
 	 *
-	 * @param definicionTramiteSTG
-	 *                                 Definición trámite
+	 * @param definicionTramiteSTG Definición trámite
 	 * @return boolean
 	 */
 	private static boolean requiereFirma(final DefinicionTramiteSTG definicionTramiteSTG) {
@@ -305,12 +292,34 @@ public final class UtilsSTG {
 	}
 
 	/**
+	 * Verifica si el trámite requiere anexos
+	 *
+	 * @param definicionTramiteSTG Definición trámite
+	 * @return boolean
+	 */
+	private static boolean requiereAnexo(final DefinicionTramiteSTG definicionTramiteSTG) {
+		boolean anexar = false;
+
+		for (final RPasoTramitacion paso : definicionTramiteSTG.getDefinicionVersion().getPasos()) {
+			final TypePaso tipoPaso = TypePaso.fromString(paso.getTipo());
+
+			if (tipoPaso.equals(TypePaso.ANEXAR)) {
+				final RPasoTramitacionAnexar pasoAnexar = (RPasoTramitacionAnexar) paso;
+				if (pasoAnexar.getAnexos().size() > 0 || (pasoAnexar.getScriptAnexosDinamicos() != null)
+						&& (!pasoAnexar.getScriptAnexosDinamicos().getScript().isEmpty())) {
+					anexar = true;
+				}
+			}
+		}
+
+		return anexar;
+	}
+
+	/**
 	 * Método para recuperar el indice de un paso.
 	 *
-	 * @param idPaso
-	 *                              Id Paso
-	 * @param definicionTramite
-	 *                              definicion tramite
+	 * @param idPaso            Id Paso
+	 * @param definicionTramite definicion tramite
 	 * @return Indice del paso (empieza en 0). Si no lo encuentra devuelve -1.
 	 */
 	public static int devuelveIndicePaso(final String idPaso, final DefinicionTramiteSTG definicionTramite) {
@@ -332,8 +341,7 @@ public final class UtilsSTG {
 	/**
 	 * Comprueba si existe script.
 	 *
-	 * @param script
-	 *                   Parámetro script
+	 * @param script Parámetro script
 	 * @return boolean
 	 */
 	public static boolean existeScript(final RScript script) {
@@ -347,8 +355,7 @@ public final class UtilsSTG {
 	/**
 	 * Convierte literales mensajes script a un map.
 	 *
-	 * @param mensajesScript
-	 *                           mensajes script
+	 * @param mensajesScript mensajes script
 	 * @return map
 	 */
 	public static Map<String, String> convertLiteralesToMap(final List<RLiteralScript> mensajesScript) {
@@ -365,10 +372,8 @@ public final class UtilsSTG {
 	/**
 	 * Método para recuperar la definición de un formulario de un paso rellenar.
 	 *
-	 * @param definicionPaso
-	 *                           Parámetro definicion paso
-	 * @param idFormulario
-	 *                           Parámetro id formulario
+	 * @param definicionPaso Parámetro definicion paso
+	 * @param idFormulario   Parámetro id formulario
 	 * @return Definición del paso
 	 */
 	public static RFormularioTramite devuelveDefinicionFormulario(final RPasoTramitacionRellenar definicionPaso,
@@ -390,10 +395,8 @@ public final class UtilsSTG {
 	/**
 	 * Método para recuperar la definición de un anexo de un paso anexar.
 	 *
-	 * @param definicionPaso
-	 *                           Parámetro definicion paso
-	 * @param idAnexo
-	 *                           Parámetro id anexo
+	 * @param definicionPaso Parámetro definicion paso
+	 * @param idAnexo        Parámetro id anexo
 	 * @return Definición del paso
 	 */
 	public static RAnexoTramite devuelveDefinicionAnexo(final RPasoTramitacionAnexar definicionPaso,
@@ -415,10 +418,8 @@ public final class UtilsSTG {
 	/**
 	 * Método para recuperar la definición de un pago de un paso pagar.
 	 *
-	 * @param definicionPaso
-	 *                           Parámetro definicion paso
-	 * @param idPago
-	 *                           Id Pago
+	 * @param definicionPaso Parámetro definicion paso
+	 * @param idPago         Id Pago
 	 * @return Definición del pago
 	 */
 	public static RPagoTramite devuelveDefinicionPago(final RPasoTramitacionPagar definicionPaso, final String id) {
@@ -439,12 +440,9 @@ public final class UtilsSTG {
 	/**
 	 * Indica si el pago es simulado.
 	 *
-	 * @param idPaso
-	 *                              id paso
-	 * @param idPago
-	 *                              id pago
-	 * @param definicionTramite
-	 *                              Definición trámite
+	 * @param idPaso            id paso
+	 * @param idPago            id pago
+	 * @param definicionTramite Definición trámite
 	 * @return indica si el pago es simulado.
 	 */
 	public static boolean isPagoSimulado(final String idPaso, final String idPago,
@@ -480,12 +478,9 @@ public final class UtilsSTG {
 	/**
 	 * Devuelve definición formulario.
 	 *
-	 * @param defTramite
-	 *                         Definición trámite
-	 * @param idPaso
-	 *                         id paso
-	 * @param idFormulario
-	 *                         id formulario
+	 * @param defTramite   Definición trámite
+	 * @param idPaso       id paso
+	 * @param idFormulario id formulario
 	 * @return definición formulario
 	 */
 	public static RFormularioTramite devuelveDefinicionFormulario(final String idPaso, final String idFormulario,
@@ -508,8 +503,7 @@ public final class UtilsSTG {
 	/**
 	 * Traduce tipo campo proveniente de STG.
 	 *
-	 * @param tipoComponente
-	 *                           tipo componente STG
+	 * @param tipoComponente tipo componente STG
 	 * @return tipo campo
 	 */
 	public static TypeCampo traduceTipoCampo(final String tipoComponente) {
@@ -531,8 +525,7 @@ public final class UtilsSTG {
 	/**
 	 * Traduce tipo texto proveniente de STG.
 	 *
-	 * @param tipoTexto
-	 *                      tipo texto STG
+	 * @param tipoTexto tipo texto STG
 	 * @return tipo texto
 	 */
 	public static TypeTexto traduceTipoTexto(final String tipoTexto) {
@@ -567,8 +560,7 @@ public final class UtilsSTG {
 	/**
 	 * Traduce tipo proveniente de STG.
 	 *
-	 * @param tipoSelector
-	 *                         tipo STG
+	 * @param tipoSelector tipo STG
 	 * @return tipo STT
 	 */
 	public static TypeSelector traduceTipoSelector(final String tipoSelector) {
@@ -588,8 +580,7 @@ public final class UtilsSTG {
 	/**
 	 * Traduce tipo proveniente de STG.
 	 *
-	 * @param tipoSeparador
-	 *                          tipo STG
+	 * @param tipoSeparador tipo STG
 	 * @return tipo STT
 	 */
 	public static TypeSeparador traduceTipoSeparador(final String tipoSeparador) {
@@ -605,8 +596,7 @@ public final class UtilsSTG {
 	/**
 	 * Traduce tipo proveniente de STG.
 	 *
-	 * @param tipoListaValores
-	 *                             tipo STG
+	 * @param tipoListaValores tipo STG
 	 * @return tipo STT
 	 */
 	public static TypeListaValores traduceTipoListaValores(final String tipoListaValores) {
@@ -624,8 +614,7 @@ public final class UtilsSTG {
 	/**
 	 * Traduce tipo proveniente de STG.
 	 *
-	 * @param tipoParametroDominio
-	 *                                 tipo STG
+	 * @param tipoParametroDominio tipo STG
 	 * @return tipo STT
 	 */
 	public static TypeParametroDominio traduceTipoParametroDominio(final String tipoParametroDominio) {
@@ -647,10 +636,8 @@ public final class UtilsSTG {
 	/**
 	 * Obtiene configuracion gestor formulario
 	 *
-	 * @param confEntidad
-	 *                                       configuracion entidad
-	 * @param idGestorFormulariosExterno
-	 *                                       id gestor formulario
+	 * @param confEntidad                configuracion entidad
+	 * @param idGestorFormulariosExterno id gestor formulario
 	 * @return configuracion gestor formulario
 	 */
 	public static RGestorFormularioExterno obtenerConfiguracionGFE(final RConfiguracionEntidad confEntidad,
@@ -673,8 +660,7 @@ public final class UtilsSTG {
 	/**
 	 * Convierte metodos autenticado.
 	 *
-	 * @param metodosAutenticacion
-	 *                                 Metodos autenticación
+	 * @param metodosAutenticacion Metodos autenticación
 	 * @return metodos autenticado.
 	 */
 	public static List<TypeMetodoAutenticacion> convertMetodosAutenticado(final String metodosAutenticacion) {

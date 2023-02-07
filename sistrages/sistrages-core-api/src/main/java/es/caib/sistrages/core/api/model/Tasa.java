@@ -200,4 +200,40 @@ public class Tasa extends ModelApi {
 		this.simulado = simulado;
 	}
 
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "Tasa. ");
+           texto.append(tabulacion +"\t Codi:" + getCodigo() + "\n");
+           texto.append(tabulacion +"\t Ordre:" + getOrden() + "\n");
+           texto.append(tabulacion +"\t Identificador:" + identificador + "\n");
+           if (descripcion != null) {
+        	   texto.append(tabulacion +"\t Descripcio:\n");
+        	   texto.append(descripcion.toString(tabulacion, idioma)+ "\n");
+           }
+           texto.append(tabulacion +"\t Obligatorietat:" + obligatoriedad + "\n");
+           texto.append(tabulacion +"\t Simulat:" + simulado + "\n");
+           if (scriptObligatoriedad != null) {
+        	   texto.append(tabulacion +"\t ScriptObligatorietat: \n");
+        	   texto.append(scriptObligatoriedad.toString(tabulacion, idioma)+ "\n");
+           }
+           if (scriptPago != null) {
+        	   texto.append(tabulacion +"\t ScriptPago: \n");
+        	   texto.append(scriptPago.toString(tabulacion, idioma)+ "\n");
+           }
+           if (tipoPlugin != null) {
+        	   texto.append(tabulacion +"\t TipusPlugin: \n");
+        	   texto.append(tipoPlugin.toString(tabulacion, idioma)+ "\n");
+           }
+           return texto.toString();
+     }
+
 }

@@ -33,6 +33,7 @@
 			    	getPos();
 			    	return false;
 				}, false);
+
 			  }
 
 				function eliminarResaltar(){
@@ -77,20 +78,23 @@
 
 				el.classList.add("resaltar");
 				var aux = document.getElementById("form:auxCopiar");
-				if(el.textContent!=''){
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
 					aux.value = el.textContent;
-				}else if(el.firstChild!=null){
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
 					aux.value = el.firstChild.value;
 				}else if(el.value!=null &amp;&amp; el.value!=''){
 					aux.value = el.value;
-				}
+				}else{
+		          aux.value = '';
+		        }
 			 }
 
 			</h:outputScript>
 			<!-- Growl mensajes -->
-			<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  for=":work"/>
+			<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 			<p:contextMenu  for=":work">
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :form:auxCopiar" update="growl" />
+       			<p:separator/>
        			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this"  rendered="#{viewDominios.getPermiteEditar()}"/>
         		<p:menuitem id="mnuEditarMain" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewDominios.getPermiteEditar()}"/>
         		<p:menuitem id="mnuConsultarMain" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this" rendered="#{viewDominios.getPermiteConsultar()}" />
@@ -107,7 +111,7 @@
         	</pe:clipboard>
 
         	<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
-				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
 			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewDominios.copiadoCorr}" process="@this" update="@this growl"/>
@@ -115,7 +119,7 @@
 			</pe:clipboard>
 
 			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
-				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
 			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewDominios.copiadoCorr}" process="@this" update="@this growl"/>
@@ -132,6 +136,7 @@
 		                <p:selectOneMenu id="option" value="#{viewDominios.accion}" style="font-size: 7pt !important; font-weight: bold; height:75%; padding:0px !important; margin-top: 0px !important">
 			                <p:ajax event="change" listener="#{viewDominios.cambiarAccion}" update="@form"/>
 		                   	<!--  <f:selectItems value="#{viewDominios.listaAreas}" var="area" itemValue="#{area.codigo}" itemLabel="#{area.identificador}" style="padding-top: 0px !important;"/> -->
+		                  	<f:selectItem itemLabel="#{msg['botones.variablesArea']}" itemValue="V"/>
 		                    <f:selectItem itemLabel="#{msg['botones.dominiosArea']}" itemValue="D"/>
 		                    <f:selectItem itemLabel="#{msg['botones.datosFuenteArea']}" itemValue="F"/>
 		                    <f:selectItem itemLabel="#{msg['botones.sgeArea']}" itemValue="S"/>
@@ -218,7 +223,8 @@
 			</p:dataTable>
 
 			<p:contextMenu for=":form:dataTable">
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" />
+       			<p:separator/>
        			<p:menuitem value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this"  rendered="#{viewDominios.getPermiteEditar()}"/>
         		<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditar').click();" process="@this" rendered="#{viewDominios.getPermiteEditar()}"/>
         		<p:menuitem id="mnuConsultarTabla" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this" rendered="#{viewDominios.getPermiteConsultar()}" />

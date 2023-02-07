@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+<h:head>
+	<title><h:outputText value="#{msg['dialogConfiguracionFormulario.titulo']}"/></title>
+
+  	<f:facet name="last">
+	    <h:outputStylesheet library="css" name="style.css" />
+  	</f:facet>
+
+  	<script type="text/javascript">
+		function copyClipBorad(txt){
+			  navigator.clipboard.writeText(txt);
+		}
+  	</script>
+</h:head>
+
+<h:body>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogVariablesAreaFormulariosExternos.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogVariablesAreaFormulariosExternos.id}"/>
+		<f:viewAction action="#{dialogVariablesAreaFormulariosExternos.init}" />
+	</f:metadata>
+	<h:form id="dialogFuenteDatos"  styleClass="margin-top-10">
+			<h:outputScript >
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("dialogFuenteDatos:auxCopiar");
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}else{
+		          aux.value = '';
+		        }
+
+			 }
+
+			</h:outputScript>
+  			<!-- Growl mensajes -->
+			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
+
+			<h:panelGrid styleClass="h100" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18, w25px, w10" columns = "1" cellpadding = "5" cellspacing = "0"  width="100%">
+
+			<p:dataTable  id="dataTableDatos"
+						  var="td"
+						  value="#{dialogVariablesAreaFormulariosExternos.campos}"
+						  rows="10"
+						  emptyMessage="#{msg['error.emptyRows']}"
+						  scrollable="true"
+						  scrollHeight="100%"
+						  styleClass="h100"
+						  style="margin-bottom:40px;"
+                          paginator="true"
+                          paginatorPosition="bottom"
+                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                          rowsPerPageTemplate="5,10,15,30"
+			        	  selectionMode="single"
+			        	  selection="#{dialogVariablesAreaFormulariosExternos.valorSeleccionado}"
+			        	  rowIndexVar="rowIndex"
+			        	  rowKey="#{td.identificadorCompuesto}">
+
+				<!-- Necesario para actualizar en controlador la fila seleccionada -->
+				<p:ajax event="rowSelect" global="false" />
+				<p:ajax event="rowUnselect" />
+
+			    <p:column headerText="#{msg['botones.sgeArea']}" style="width:25%">
+			        <h:outputText value="${td.identificadorCompuesto}"/>
+			    </p:column>
+
+				<p:column headerText="#{msg['viewDefinicionVersionDominios.headerDescripcion']}">
+			        <h:outputText value="${td.descripcion}" />
+			    </p:column>
+
+			     <p:column headerText="#{msg['dialogDominioTramites.headerArea']}">
+			        <h:outputText value="${td.areaIdentificador}" />
+			    </p:column>
+
+			</p:dataTable>
+			<!-- <p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{dialogDominioTramites.consultarTramite()}" process="@this" update="growlDialog"  /> -->
+
+		 </h:panelGrid>
+	  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogVariablesAreaFormulariosExternos.aceptar()}" process="@form" update="@form growlDialog" styleClass="boton-azul"  />
+					</f:facet>
+				</p:toolbar>
+		 </p:outputPanel>
+		<p:contextMenu>
+      		<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogFuenteDatos:auxCopiar" update="growlDialog" />
+	    </p:contextMenu>
+	    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+			<p:ajax event="success" listener="#{dialogVariablesAreaFormulariosExternos.copiadoCorr}" process="@this" update="@this growlDialog"/>
+           	<p:ajax event="error" listener="#{dialogVariablesAreaFormulariosExternos.copiadoErr}" update="@this growlDialog"/>
+       	</pe:clipboard>
+
+	    <p:inputText id="auxCopiar" value="#{dialogVariablesAreaFormulariosExternos.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

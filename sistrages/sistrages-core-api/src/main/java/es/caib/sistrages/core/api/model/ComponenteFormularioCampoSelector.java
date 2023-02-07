@@ -309,4 +309,71 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 		this.dominioEntidad = dominioEntidad;
 	}
 
+	@Override
+	public String toString() {
+        return toString("","ca");
+	}
+
+	/**
+     * Método to string
+     * @param tabulacion Indica el texto anterior de la linea para que haya tabulacion.
+     * @return El texto
+     */
+     public String toString(String tabulacion, String idioma) {
+           StringBuilder texto = new StringBuilder(tabulacion + "ComponenteFormularioSelector. ");
+           if (this.getIdComponente() != null) { texto.append(tabulacion +"\t IdComponente:" + this.getIdComponente() + "\n"); }
+           if (this.getTipo() != null) { texto.append(tabulacion +"\t Tipus:" + this.getTipo() + "\n");}
+           texto.append(tabulacion +"\t Ordre:" + this.getOrden() + "\n");
+           texto.append(tabulacion +"\t NumColumnas:" + this.getNumColumnas() + "\n");
+           texto.append(tabulacion +"\t NoMostrarText:" + this.isNoMostrarTexto() + "\n");
+           if (this.getAlineacionTexto() != null) { texto.append(tabulacion +"\t AlineacioText:" + this.getAlineacionTexto() + "\n");}
+           texto.append(tabulacion +"\t TipoSeccionReutilizable:" + this.isTipoSeccionReutilizable() + "\n");
+           if (this.getIdFormSeccion() != null) { texto.append(tabulacion +"\t IdFormSeccion:" + this.getIdFormSeccion() + "\n");}
+
+           if (this.getTexto() != null) {
+        	   texto.append(tabulacion +"\t Text: \n");
+        	   texto.append(this.getTexto().toString(tabulacion, idioma) + "\n");
+           }
+           if (this.getAyuda() != null) {
+        	   texto.append(tabulacion +"\t Ajuda: \n");
+        	   texto.append(this.getAyuda().toString(tabulacion, idioma) + "\n");
+           }
+           if (this.tipoCampoIndexado != null) { texto.append(tabulacion +"\t TipusCampIndexat:" + tipoCampoIndexado + "\n");}
+           if (this.tipoListaValores != null) { texto.append(tabulacion +"\t TipusLlistaValors:" + tipoListaValores + "\n");}
+           if (this.codDominio != null) { texto.append(tabulacion +"\t CodDominio:" + codDominio + "\n");}
+           if (scriptValoresPosibles != null) {
+        	   texto.append(tabulacion +"\t ScriptValorsPosibles: \n");
+        	   texto.append(scriptValoresPosibles.toString(tabulacion, idioma)+ "\n");
+           }
+
+
+           if (this.dominioAmbito != null) { texto.append(tabulacion +"\t DominiAmbito:" + dominioAmbito + "\n");}
+           if (this.dominioIdentificador != null) { texto.append(tabulacion +"\t DominiIdentificador:" + dominioIdentificador + "\n");}
+           if (this.dominioArea != null) { texto.append(tabulacion +"\t DominiArea:" + dominioArea + "\n");}
+           if (this.dominioEntidad != null) { texto.append(tabulacion +"\t DominiEntitat:" + dominioEntidad + "\n");}
+
+           if (this.campoDominioCodigo != null) { texto.append(tabulacion +"\t CampDominiCodi:" + campoDominioCodigo + "\n");}
+           if (this.campoDominioDescripcion != null) { texto.append(tabulacion +"\t CampDominiDescripcio:" + campoDominioDescripcion + "\n");}
+
+           texto.append(tabulacion +"\t OndiceAlfabetico:" + this.indiceAlfabetico + "\n");
+           texto.append(tabulacion +"\t Altura:" + this.altura + "\n");
+           texto.append(tabulacion +"\t Orientacion:" + this.orientacion + "\n");
+
+           if (listaParametrosDominio != null) {
+        	   texto.append(tabulacion +"\t ListaParametresDomini: \n");
+        	   for(ParametroDominio parametro : listaParametrosDominio) {
+        		   texto.append(parametro.toString(tabulacion, idioma)+ "\n");
+        	   }
+           }
+
+           if (listaValorListaFija != null) {
+        	   texto.append(tabulacion +"\t ListaValorListaFija: \n");
+        	   for(ValorListaFija valor : listaValorListaFija) {
+        		   texto.append(valor.toString(tabulacion, idioma)+ "\n");
+        	   }
+           }
+
+           return texto.toString();
+     }
+
 }
