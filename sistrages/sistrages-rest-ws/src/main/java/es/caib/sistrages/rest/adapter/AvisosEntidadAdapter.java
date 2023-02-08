@@ -86,7 +86,11 @@ public class AvisosEntidadAdapter {
 					final String numeroVersion = tram.split("#")[1];
 					final String identificador = restApiService
 							.getIdentificadorCompuestoByCodigoVersion(Long.valueOf(codigoVersion));
-					listaVersiones.append(identificador + "#" + numeroVersion);
+					if (listaVersiones.toString().isEmpty()) {
+						listaVersiones.append(identificador + "#" + numeroVersion);
+					} else {
+						listaVersiones.append(";" + identificador + "#" + numeroVersion);
+					}
 				}
 			}
 		}

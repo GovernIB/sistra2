@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.rest.api.interna.RDominio;
 
 /**
@@ -30,7 +31,9 @@ public class DominioAdapter {
 			rDominio = new RDominio();
 			rDominio.setAmbito(dominio.getAmbito().toString());
 			rDominio.setIdentificadorEntidad(idEntidad);
-			rDominio.setIdentificadorArea(dominio.getArea().getIdentificadorCompuesto());
+			if(TypeAmbito.AREA.equals(dominio.getAmbito())) {
+				rDominio.setIdentificadorArea(dominio.getArea().getIdentificadorCompuesto());
+			}
 			rDominio.setTipoCache(dominio.getCache().toString());
 			rDominio.setIdentificador(dominio.getIdentificadorCompuesto());
 			rDominio.setSql(dominio.getSql());

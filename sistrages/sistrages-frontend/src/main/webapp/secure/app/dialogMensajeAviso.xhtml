@@ -134,14 +134,14 @@
 										<p:selectOneMenu id="comboAreas" value="#{dialogMensajeAviso.areaSeleccionado}" styleClass="margin-right-10" filter="true" filterMatchMode="contains">
 												<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>
 										     	<f:selectItems value="#{dialogMensajeAviso.areas}" var="area" itemLabel="#{area.identificador}" itemValue="#{area.codigo}"  />
-			 							      	<p:ajax event="change" listener="#{dialogMensajeAviso.actualizarTramite()}" process="@this" update="@form" />
+			 							      	<p:ajax event="change" listener="#{dialogMensajeAviso.actualizarTramite()}" process="@this" update="@form:columnaListaTramites @form:listaTramites" />
 										</p:selectOneMenu>
 
 										<p:outputLabel value="#{msg['dialogMensajeAviso.headerTramite']}:" styleClass="margin-right-10" ></p:outputLabel>
 										<p:selectOneMenu id="comboTramites" value="#{dialogMensajeAviso.tramiteSeleccionado}" styleClass="margin-right-10" filter="true" filterMatchMode="contains">
 												<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>
 										     	<f:selectItems value="#{dialogMensajeAviso.tramites}" var="tramite" itemLabel="#{tramite.identificador}" itemValue="#{tramite.codigo}"  />
-			 							      	<p:ajax event="change" listener="#{dialogMensajeAviso.actualizarVersion()}" process="@this" update="@form" />
+			 							      	<p:ajax event="change" listener="#{dialogMensajeAviso.actualizarVersion()}" process="@this" update="@form:columnaListaTramites @form:listaTramites" />
 										</p:selectOneMenu>
 
 										<p:outputLabel value="#{msg['dialogMensajeAviso.headerVersion']}:" styleClass="margin-right-10"  ></p:outputLabel>
@@ -149,7 +149,7 @@
 										     <f:selectItem  itemLabel="" noSelectionOption="true"></f:selectItem>
 										     <f:selectItems value="#{dialogMensajeAviso.versiones}" var="version" itemLabel="#{version.numeroVersion}" itemValue="#{version.numeroVersion}"  />
 										</p:selectOneMenu>
-										<p:commandButton value="#{msg['botones.anyadir']}" actionListener="#{dialogMensajeAviso.anyadirTram()}" process="@form" update="@form"  styleClass="boton-azul" rendered="#{(dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()) and dialogMensajeAviso.isNotTipoTramite()}"   />
+										<p:commandButton value="#{msg['botones.anyadir']}" actionListener="#{dialogMensajeAviso.anyadirTram()}" process="@form" update="@form:columnaListaTramites @form:listaTramites"  styleClass="boton-azul" rendered="#{(dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()) and dialogMensajeAviso.isNotTipoTramite()}"   />
 
 								</h:panelGrid>
 
