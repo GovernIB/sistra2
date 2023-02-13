@@ -1,0 +1,53 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">EXPORTAR VERSI&Oacute; / GENERAR QUADERN VERSI&Oacute;</h1>
+<p>
+	En la pantalla es presenta la informaci&oacute; principal del tr&agrave;mit que s'exportar&agrave; o promocionar mitjan&ccedil;ant quadern de c&agrave;rrega. Per a aix&ograve; es poden realitzar les seg&uuml;ents operacions.<br>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Generar resum</span>: genera un arxiu de text i el descarrega, per a poder realitzar comparacions amb una altra versi&oacute;, mitjan&ccedil;ant programari que permeti comparar arxius. Aquest resum ofereix diversa informaci&oacute;, tant interna com externa (visible des de SISTRAGES). A continuaci&oacute; es detallen alguns camps que integren aquest informe.</li>
+		<li><span class="boton">Exportar</span>: genera un arxiu ZIP que cont&eacute; tota la informaci&oacute; de la versi&oacute; i que ser&agrave; utilitzada per a importar o processar quaderns, des de l'entorn destino on es vol promocionar el tr&agrave;mit. Aquest arxiu ZIP cont&eacute; l'informe resum en format text.</li>
+	</ul>
+</p>
+<p>
+	Alguns camps d'aquest informe s&oacute;n els seg&uuml;ents:
+</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">TramitVersio. Codi:1703</span> Codi intern de la versi&oacute; del tr&agrave;mit.</li>
+		<li><span class="nombreCampo">NumeroVersio:5 </span> Versió del tr&agrave;mit versi&oacute;.</li>
+		<li><span class="nombreCampo">CodigoUsuariBloqueo:null </span> Codi de l'usuari que bloqueja la versi&oacute;.</li>
+		<li><span class="nombreCampo">DadessUsuariBloqueo:null</span> Nick de l'usuari que bloqueja la versi&oacute;.</li>
+		<li><span class="nombreCampo">Release:34</span> Release de la versi&oacute; (cada vegada que es bloqueja i desbloqueja, s'augmenta en un la release.</li>
+		<li><span class="nombreCampo">Actiu:true </span> True indica que la versi&oacute; est&agrave; activa.</li>
+		<li><span class="nombreCampo">debug:false </span> Indica si est&agrave; actiu la manera debug.</li>
+		<li><span class="nombreCampo">Descripci&oacute;:Prova simple HELIUM (Jaume Oleza) </span> Descripci&oacute; de la versi&oacute;.</li>
+		<li><span class="nombreCampo">TipusTramit:T </span> T indica que &eacute;s tipus tr&agrave;mit (mentre que S indica que &eacute;s tipus servei).</li>
+		<li><span class="nombreCampo">IdTramit:66 </span> Codi intern del tr&agrave;mit.</li>
+		<li><span class="nombreCampo">IdArea:42 </span> Codi intern de l'&agrave;rea.</li>
+		<li><span class="nombreCampo">IdentificadorArea:TESTS </span> Identificador de l'&agrave;rea.</li>
+		<li><span class="nombreCampo">TipusFlux:N </span>  Indica que tipus de flux. Actualment, tots els tr&agrave;mits s&oacute;n de tipus normal (N) mentre que en un futur seran personalitzats (valor P).</li>
+		<li><span class="nombreCampo">Autenticat:true </span> indica si es permet accedir autenticat al tr&agrave;mit (true &eacute;s que si, false &eacute;s que no).</li>
+		<li><span class="nombreCampo">NoAutenticat:true </span> Indica si es permet accedir NO autenticat al tr&agrave;mit (true &eacute;s que s&iacute;, false &eacute;s que no).</li>
+		<li><span class="nombreCampo">NivellQAA:2 </span> Indica el nivell QAA, sent BAIX(1), MITJ&Agrave;(2) I ALT(3).</li>
+		<li><span class="nombreCampo">IdiomasSoportats:es;ca </span> Idiomes que suporta la versi&oacute; del tr&agrave;mit, sent es en espanyol i ca en catal&agrave;.</li>
+		<li><span class="nombreCampo">Persistencia:true </span>  Indica si la persist&egrave;ncia est&agrave; activa.</li>
+		<li><span class="nombreCampo">PersistenciaInfinita:true </span> Si est&agrave; a true, indica que la persist&egrave;ncia &eacute;s sense limitis.</li>
+		<li><span class="nombreCampo">PersistenciaDies:null  </span> En cas d'estar actiu per dies (perqu&egrave; persistenciainfinita est&agrave; a false), indica el nombre de dies que dura la persist&egrave;ncia.</li>
+		<li><span class="nombreCampo">LimiteTramitacio:false </span> En la finestra de control d'acc&eacute;s, indica si es limita la tramitaci&oacute;.</li>
+		<li><span class="nombreCampo">NumLimiteTramitacio:null </span> Numero de tramitacions que es permet (&eacute;s num&egrave;ric).</li>
+		<li><span class="nombreCampo">IntLimiteTramitacio:null  </span> Cada quants intervals (indicat en minuts).</li>
+		<li><span class="nombreCampo">Desactivacio:false </span> En la finestra de control d'acc&eacute;s, &eacute;s deshabilitar acc&eacute;s. &Eacute;s un missatge que et permetr&agrave; accedir al tr&agrave;mit per&ograve; estant actiu, sortir&agrave; un missatge (i depenent de les dates, indicar&agrave; el que dura aquest missatge de no acc&eacute;s).</li>
+		<li><span class="nombreCampo">TerminiIniciDesactivacio:null  </span> En la finestra de control d'acc&eacute;s, &eacute;s data d'inici.</li>
+		<li><span class="nombreCampo">TerminiFiDesactivacio:null  </span> En la finestra de control d'acc&eacute;s, &eacute;s data de fi.</li>
+	</ul>
+</p>
+</body>
+</html>

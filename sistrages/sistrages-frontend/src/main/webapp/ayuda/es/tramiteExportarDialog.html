@@ -1,0 +1,53 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">EXPORTAR VERSI&Oacute;N / GENERAR CUADERNO VERSI&Oacute;N</h1>
+<p>
+	En la pantalla se presenta la informaci&oacute;n principal del tr&aacute;mite que se va a exportar o promocionar mediante cuaderno de carga. Para ello se pueden realizar las siguientes operaciones.En la pantalla se presenta la informaci&oacute;n principal del trtr&aacute;mite que se va a exportar o promocionar mediante cuaderno de carga. Para ello se pueden realizar las siguientes operaciones.<br>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Generar resumen</span>: genera un archivo de texto y lo descarga, para poder realizar comparaciones con otra versi&oacute;n, mediante software que permita comparar archivos. Este resumen ofrece diversa informaci&oacute;n, tanto interna como externa (visible desde SISTRAGES). A continuaci&oacute;n se detallan algunos campos que integran este informe.</li>
+		<li><span class="boton">Exportar</span>: genera un archivo ZIP que contiene toda la información de la versi&oacute;n y que ser&aacute; utilizada para importar o procesar cuadernos, desde el entorno destino donde se quiere promocionar el tr&aacute;mite. Este archivo ZIP contiene el informe resumen en formato texto.</li>
+	</ul>
+</p>
+<p>
+	Algunos campos de este informe son los siguientes:
+</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">TramitVersio. Codi:1703</span> C&oacute;digo interno de la versión del tr&aacute;mite.</li>
+		<li><span class="nombreCampo">NumeroVersio:5 </span> Versi&oacute;n del tr&aacute;mite versi&oacute;n.</li>
+		<li><span class="nombreCampo">CodigoUsuariBloqueo:null </span> C&oacute;digo del usuario que bloquea la versi&oacute;n.</li>
+		<li><span class="nombreCampo">DadessUsuariBloqueo:null</span> Nick del usuario que bloquea la versi&oacute;n.</li>
+		<li><span class="nombreCampo">Release:34</span> Release de la versi&oacute;n (cada vez que se bloquea y desbloquea, se aumenta en uno la release.</li>
+		<li><span class="nombreCampo">Actiu:true </span> True indica que la versi&oacute;n est&aacute; activa.</li>
+		<li><span class="nombreCampo">debug:false </span> Indica si est&aacute; activo el modo debug.</li>
+		<li><span class="nombreCampo">Descripci&oacute;:Prova simple HELIUM (Jaume Oleza) </span> Descripci&oacute;n de la versi&oacute;n.</li>
+		<li><span class="nombreCampo">TipusTramit:T </span> T indica que es tipo tr&aacute;mite (mientras que S indica que es tipo servicio).</li>
+		<li><span class="nombreCampo">IdTramit:66 </span> C&oacute;digo interno del tr&aacute;mite.</li>
+		<li><span class="nombreCampo">IdArea:42 </span> C&oacute;digo interno del &aacute;rea.</li>
+		<li><span class="nombreCampo">IdentificadorArea:TESTS </span> Identificador del &aacute;rea.</li>
+		<li><span class="nombreCampo">TipusFlux:N </span>  Indica que tipo de flujo. Actualmente, todos los tr&aacute;mites son de tipo normal (N) mientras que en un futuro ser&aacute;n personalizados (valor P).</li>
+		<li><span class="nombreCampo">Autenticat:true </span> indica si se permite acceder autenticado al tr&aacute;mite (true es que si, false es que no).</li>
+		<li><span class="nombreCampo">NoAutenticat:true </span> Indica si se permite acceder NO autenticado al tr&aacute;mite (true es que s&iacute;, false es que no).</li>
+		<li><span class="nombreCampo">NivellQAA:2 </span> Indica el nivel QAA, siendo BAJO(1), MEDIO(2) Y ALTO(3).</li>
+		<li><span class="nombreCampo">IdiomasSoportats:es;ca </span> Idiomas que soporta la versi&oacute;n del tr&aacute;mite, siendo es en español y ca en catal&aacute;n.</li>
+		<li><span class="nombreCampo">Persistencia:true </span>  Indica si la persistencia est&aacute; activa.</li>
+		<li><span class="nombreCampo">PersistenciaInfinita:true </span> Si est&aacute; a true, indica que la persistencia es sin limites.</li>
+		<li><span class="nombreCampo">PersistenciaDies:null  </span> En caso de estar activo por d&iacute;as (porque persistenciainfinita está a false), indica el n&uacute;mero de días que dura la persistencia.</li>
+		<li><span class="nombreCampo">LimiteTramitacio:false </span> En la ventana de control de acceso, indica si se limita la tramitaci&oacute;n.</li>
+		<li><span class="nombreCampo">NumLimiteTramitacio:null </span> N&uacute;mero de tramitaciones que se permite (es num&eacute;rico).</li>
+		<li><span class="nombreCampo">IntLimiteTramitacio:null  </span> Cada cuantos intervalos (indicado en minutos).</li>
+		<li><span class="nombreCampo">Desactivacio:false </span> En la ventana de control de acceso, es deshabilitar acceso. Es un mensaje que permitir&aacute; acceder al tr&aacute;mite pero estando activo, saldr&aacute; un mensaje (y dependiendo de las fechas, indicar&aacute; lo que dura dicho mensaje de no acceso).</li>
+		<li><span class="nombreCampo">TerminiIniciDesactivacio:null  </span> En la ventana de control de acceso, es fecha de inicio.</li>
+		<li><span class="nombreCampo">TerminiFiDesactivacio:null  </span> En la ventana de control de acceso, es fecha de fin.</li>
+	</ul>
+</p>
+</body>
+</html>
