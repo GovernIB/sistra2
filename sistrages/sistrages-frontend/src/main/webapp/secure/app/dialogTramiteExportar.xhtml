@@ -15,10 +15,16 @@
 <h:head>
 	<title><h:outputText value="#{dialogTramiteExportar.cabecera}"/></title>
 	<script type="text/javascript" language="JavaScript">
-		function stop(){
+		function stopResumen(){
+				document.getElementById('dialogExportar:btnGenerarResumen').disabled = true;
+				document.getElementById('dialogExportar:btnGenerarResumen').classList.add("ui-state-disabled");
+				document.getElementById('dialogExportar:btnHiddenResumen').click();
+		}
+
+		function stopExportar(){
 				document.getElementById('dialogExportar:btnExportar').disabled = true;
 				document.getElementById('dialogExportar:btnExportar').classList.add("ui-state-disabled");
-				document.getElementById('dialogExportar:btnHidden').click();
+				document.getElementById('dialogExportar:btnHiddenExportar').click();
 		}
 	</script>
 	<style type="text/css">
@@ -110,7 +116,8 @@
 
 			</h:outputScript>
   			<p:outputPanel>
-  				<p:commandButton id="btnHidden" actionListener="#{dialogTramiteExportar.expOk}" process="@this" style="display:none"/>
+  				<p:commandButton id="btnHiddenResumen" actionListener="#{dialogTramiteExportar.resuOk}" process="@this" style="display:none"/>
+  				<p:commandButton id="btnHiddenExportar" actionListener="#{dialogTramiteExportar.expOk}" process="@this" style="display:none"/>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growldialog" widgetVar="growldialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
@@ -207,11 +214,11 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-						<p:commandButton id="btnGenerarResumen" widgetVar="btnGenerarResumen" value="#{msg['botones.generarResumen']}" ajax="false" onclick="PrimeFaces.monitorDownload(null, stop)" styleClass="boton-azul" rendered="#{dialogTramiteExportar.mostrarBotonExportar}" process="@this">
+						<p:commandButton id="btnGenerarResumen" widgetVar="btnGenerarResumen" value="#{msg['botones.generarResumen']}" ajax="false" onclick="PrimeFaces.monitorDownload(null, stopResumen)" styleClass="boton-azul" rendered="#{dialogTramiteExportar.mostrarBotonExportar}" process="@this">
 		        			<p:fileDownload value="#{dialogTramiteExportar.ficheroResumen}"></p:fileDownload>
 		        		</p:commandButton>
 
-						<p:commandButton id="btnExportar" widgetVar="btnExportar" value="#{msg['botones.exportar']}" ajax="false" onclick="PrimeFaces.monitorDownload(null, stop)" styleClass="boton-azul" rendered="#{dialogTramiteExportar.mostrarBotonExportar}" process="@this">
+						<p:commandButton id="btnExportar" widgetVar="btnExportar" value="#{msg['botones.exportar']}" ajax="false" onclick="PrimeFaces.monitorDownload(null, stopExportar)" styleClass="boton-azul" rendered="#{dialogTramiteExportar.mostrarBotonExportar}" process="@this">
 		        			<p:fileDownload value="#{dialogTramiteExportar.fichero}"></p:fileDownload>
 		        		</p:commandButton>
 

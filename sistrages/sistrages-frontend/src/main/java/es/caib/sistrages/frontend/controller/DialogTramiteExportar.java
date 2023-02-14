@@ -523,6 +523,10 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.exportar.ok"));
 	}
 
+	public void resuOk() {
+		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.generarResumen.ok"));
+	}
+
 	/**
 	 * Obtiene el nombre del fichero, que es tramit-versio-release-entorn.zip
 	 *
