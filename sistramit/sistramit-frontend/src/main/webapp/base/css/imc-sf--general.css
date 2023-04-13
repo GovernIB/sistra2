@@ -138,6 +138,10 @@ pre { font: normal 1.2em 'Bariol Regular', Arial, Helvetica, sans-serif; white-s
     background-image: url(../imgs/icones/ico_error.svg);
 }
 
+.imc-missatge[data-tipus="autenticacion"]::before {
+    background-image: url(../imgs/icones/ico_autenticacion.svg);
+}
+
 .imc-missatge h1 { margin-bottom: .5em; }
 .imc-missatge h1 span { font-size: 1.4em; }
 

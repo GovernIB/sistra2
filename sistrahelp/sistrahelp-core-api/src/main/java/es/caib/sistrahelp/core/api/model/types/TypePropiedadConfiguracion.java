@@ -20,8 +20,16 @@ public enum TypePropiedadConfiguracion {
 	SISTRAGES_VIEW_URL("sistrages.view.url"),
 	/** STG Url. */
 	SISTRAGES_USR("sistrages.rest.user"),
+	/** Prefijo plugin. */
+	PLUGINS_PREFIJO("plugins.prefix"),
 	/** STG Url. */
 	SISTRAGES_PWD("sistrages.rest.pwd"), SISTRAGES_AYUDA_PATH("ayuda.sistrahelp.path"),
+
+	/**
+	 * Tiempo (dias) tras su fecha de purgado tras el cual seran definitivamente
+	 * borrados los purgados.
+	 **/
+	PURGA_PURGADOS("sistramit.purga.purgados"),
 
 	PATH_FICHEROS_EXTERNOS("ficherosExternos.path"),
 

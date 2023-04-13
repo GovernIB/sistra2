@@ -1,8 +1,11 @@
 package es.caib.sistrahelp.core.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +22,9 @@ import es.caib.sistrahelp.core.api.model.PersistenciaAuditoria;
 import es.caib.sistrahelp.core.api.model.ResultadoAuditoriaDetallePago;
 import es.caib.sistrahelp.core.api.model.ResultadoAuditoriaPago;
 import es.caib.sistrahelp.core.api.model.ResultadoAuditoriaPersistencia;
+import es.caib.sistrahelp.core.api.model.ResultadoErroresPorTramiteCM;
 import es.caib.sistrahelp.core.api.model.ResultadoEventoAuditoria;
+import es.caib.sistrahelp.core.api.model.ResultadoEventoCM;
 import es.caib.sistrahelp.core.api.model.ResultadoPerdidaClave;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.core.interceptor.NegocioInterceptor;
@@ -178,5 +183,28 @@ public class HelpDeskServiceImpl implements HelpDeskService {
 	@NegocioInterceptor
 	public FicheroAuditoria obtenerAuditoriaFichero(final Long pIdFichero, final String pClave) {
 		return sistramitApiComponent.obtenerAuditoriaFichero(pIdFichero, pClave);
+	}
+
+	@Override
+	public ResultadoEventoCM obtenerCountEventoCM(FiltroAuditoriaTramitacion pFiltroBusqueda) {
+		return sistramitApiComponent.obtenerCountEventoCM(pFiltroBusqueda);
+	}
+
+	@Override
+	public ResultadoErroresPorTramiteCM obtenerErroresPorTramiteCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion) {
+		return sistramitApiComponent.obtenerErroresPorTramiteCM(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	public ResultadoEventoCM obtenerErroresPorTramiteCMExpansion(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion) {
+		return sistramitApiComponent.obtenerErroresPorTramiteCMExpansion(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	public ResultadoEventoCM obtenerErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion) {
+		return sistramitApiComponent.obtenerErroresPlataformaCM(pFiltroBusqueda, pFiltroPaginacion);
 	}
 }

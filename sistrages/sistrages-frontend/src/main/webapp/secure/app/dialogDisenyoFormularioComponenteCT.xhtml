@@ -48,10 +48,19 @@
 	   	</p:outputPanel>
    	</h:column>
 
-   	   	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.forzarMayusculas']}"/></h:column>
+   	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.forzarMayusculas']}"/></h:column>
    	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal}">
    		<p:outputPanel>
 	   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.forzarMayusculas}" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+	   			<p:ajax event="change" global="false" listener="#{dialogDisenyoFormulario.setCambios}"/>
+	   		</p:selectBooleanCheckbox>
+	   	</p:outputPanel>
+   	</h:column>
+
+	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.prevenirPegar']}"/></h:column>
+   	<h:column>
+   		<p:outputPanel>
+	   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.prevenirPegar}" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 	   			<p:ajax event="change" global="false" listener="#{dialogDisenyoFormulario.setCambios}"/>
 	   		</p:selectBooleanCheckbox>
 	   	</p:outputPanel>

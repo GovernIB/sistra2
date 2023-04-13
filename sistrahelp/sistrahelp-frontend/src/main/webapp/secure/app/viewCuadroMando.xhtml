@@ -1,0 +1,632 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	template="../layout/mainLayout.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{viewCuadroMando.init}" />
+	</f:metadata>
+
+
+
+	<ui:define name="content">
+		<h:outputScript library="primefaces-custom" name="calendar_es.js" />
+		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
+		<style>
+		.ui-panelgrid .ui-panelgrid-cell {
+			border-color: #f0f0f0;
+		}
+
+		.wpx16{
+			width:16px !important;"
+		}
+
+		.pad{
+			padding-right:10px;
+			padding-left:10px;
+		}
+
+		.white{
+			background-color:RGB(255,255,255);
+		}
+
+		.grey{
+			background-color:lightgrey;
+		}
+
+		.borde{
+			border:1px solid #c5c5c5;
+		}
+
+		.dEnd{
+			position: absolute;
+            right: 0px;
+            top:2%
+		}
+
+		.dCenter{
+			position: absolute;
+            right: 30%;
+            top:2%;
+		}
+
+		.etiqueta{
+			position: absolute;
+            right: 60%;
+            top:5%;
+		}
+
+		.ui-datatable thead th:has(span:not(:empty)){
+			background-color:lightgrey !important;
+			font-weight: bold;
+		}
+
+		.white:has(.grey){
+			background-color:lightgrey !important;
+		}
+
+		.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+    border: 1px solid #003eff;
+    background: #007fff !important;
+    font-weight: normal;
+
+}
+
+		</style>
+
+		<h:form id="form" style="height:88%;">
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000"
+				sticky="false" />
+
+			<!-- onblur="this.value = this.value.toUpperCase();" para pasar valor de strings a Uppercase -->
+			<!-- Toolbar -->
+			<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
+			<h:panelGrid id="panelFiltro"
+				styleClass="noBackground w100" columns="3" columnClasses=" ,dCenter, dEnd" style="height:90px;">
+				 <p:column>
+				 	<p:selectOneRadio id="tipoFecha" layout="custom" value="#{viewCuadroMando.tipoFecha}">
+				 		<p:ajax event="change" listener="#{viewCuadroMando.cambiar()}" process="@this" update="@form:panelFiltro"/>
+			            <f:selectItem itemLabel="Option1" itemValue="tr"/>
+			            <f:selectItem itemLabel="Option2" itemValue="iv"/>
+			        </p:selectOneRadio>
+				 </p:column>
+				<h:panelGrid
+				styleClass="noBackground w100 h10" columns="5" >
+						<p:outputLabel value="#{msg['viewCuadroMando.evaluarEn']}:" style="margin-right:20px; "/>
+
+						 <p:column>
+						<p:radioButton id="opt1" for="tipoFecha" itemIndex="0" style="margin-right:5px; "/>
+						<h:outputLabel for="opt1" value="#{msg['viewCuadroMando.tr']}" style="margin-right:20px"/>
+						</p:column>
+						 <p:column>
+						<p:outputLabel for="timeTiempoReal" value="#{msg['viewCuadroMando.horaDesde']}:" style="margin-right:10px"/>
+						<p:calendar id="timeTiempoReal" value="#{viewCuadroMando.horaDesde}" pattern="HH:mm" timeOnly="true" style="margin-right:20px" disabled="#{viewCuadroMando.tipoFecha != 'tr'}"/>
+						</p:column>
+						 <p:column>
+						<p:outputLabel for="minResTiempoReal" value="#{msg['viewCuadroMando.minutosRefresco']}:" style="margin-right:10px"/>
+						<p:inputNumber id="minResTiempoReal" value="#{viewCuadroMando.minutosRefresco}" thousandSeparator="" decimalSeparator="." decimalPlaces="0" style="margin-right:20px" disabled="#{viewCuadroMando.tipoFecha != 'tr'}"/>
+						</p:column>
+						<p:commandButton id="btnBuscarTiempoReal" icon="fa fa-refresh" value="#{msg['viewCuadroMando.refrescar']}" actionListener="#{viewCuadroMando.filtrar()}" process="panelFiltro" update="@form:tablaCuadroMando" styleClass="boton_derecha" disabled="#{viewCuadroMando.tipoFecha != 'tr'}"/>
+
+						<p:outputLabel value="" />
+						 <p:column>
+							<p:radioButton id="opt2" for="tipoFecha" itemIndex="1" style="margin-right:5px"/>
+							<h:outputLabel for="opt2" value="#{msg['viewCuadroMando.iv']}" style="margin-right:20px"/>
+						</p:column>
+						 <p:column>
+							<p:outputLabel for="filtroFechaInicio" value="#{msg['viewAuditoriaTramites.filtroFechaInicio']}:"/>
+			        		<p:calendar id="filtroFechaInicio" value="#{viewCuadroMando.fechaDesde}" size="14" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" mindate="#{viewCuadroMando.fechaMin}" showOn="button" showButtonPanel="true" required="true" disabled="#{viewCuadroMando.tipoFecha != 'iv'}"/>
+ 						</p:column>
+ 						<p:column>
+							<p:outputLabel for="filtroFechaFin" value="#{msg['viewAuditoriaTramites.filtroFechaFin']}:"/>
+			        		<p:calendar id="filtroFechaFin" value="#{viewCuadroMando.fechaHasta}" style="margin-left:15px" size="14" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" disabled="#{viewCuadroMando.tipoFecha != 'iv'}"/>
+						</p:column>
+						<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewCuadroMando.filtrar()}" process="panelFiltro" update="@form:tablaCuadroMando @form:growl" styleClass="boton_derecha" disabled="#{viewCuadroMando.tipoFecha != 'iv'}"/>
+				</h:panelGrid>
+				<p:column styleClass=" noPadding">
+			        	<h:panelGrid id="panelBotones" columns="1" cellspacing="5" styleClass="w100, noPadding, noMargin">
+		          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewCuadroMando.ayuda}"/>
+						</h:panelGrid>
+				</p:column>
+
+			</h:panelGrid>
+
+			<p:poll id="poll" interval="#{viewCuadroMando.minutosRefresco*60}" listener="#{viewCuadroMando.filtrar()}" widgetVar="currentTimePoller" process="@this" update=":form:tablaCuadroMando"/>
+
+
+			<!-- Tabla -->
+			<h:panelGrid id="tablaCuadroMando" columns="1" cellspacing="0" cellpadding="0" style="width:100% !important;  border-collapse: collapse !important; display:flex; padding:0px !important; justify-content:center; margin-top:10px;">
+
+				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses="wpx16 white borde pad grey" cellspacing = "1" columns="1">
+					<h:outputText value="#{msg['viewCuadroMando.evTot']}" style="font-weight: bold;"/>
+				</h:panelGrid>
+
+				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" columnClasses="white borde, white borde, white borde, white borde, white borde"  cellpadding = "5" cellspacing = "1" columns="5">
+					  <h:outputText></h:outputText>
+					  <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.ko']}" class="grey"/>
+		              <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.ok']}" class="grey"/>
+		              <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.porcError']}" class="grey"/>
+		              <h:outputText></h:outputText>
+
+					 <h:outputText style="font-weight: bold;" value="#{msg['typePaso.rf']}" class="grey"/>
+		              <h:outputText value="#{viewCuadroMando.formIni}"/>
+		              <h:outputText value="#{viewCuadroMando.formFin}"/>
+		               <c:choose>
+					    <c:when test="#{viewCuadroMando.formIni != 0}">
+					         <h:outputText value="#{viewCuadroMando.formatDouble(100-((viewCuadroMando.formFin * 100)/viewCuadroMando.formIni))}%"/>
+					         <h:outputText id="formularios" value="#{viewCuadroMando.calcularEtiquetaTram(((viewCuadroMando.formFin * 100)/viewCuadroMando.formIni),'formularios')}"/>
+					    </c:when>
+					    <c:otherwise>
+					    	<c:choose>
+							    <c:when test="#{viewCuadroMando.formFin == 0}">
+							         <h:outputText value="0,00%"/>
+							         <h:outputText id="formularios" value="#{viewCuadroMando.calcularEtiquetaTram(100,'formularios')}"/>
+
+							    </c:when>
+							    <c:otherwise>
+							         <h:outputText value="100,00%"/>
+							          <h:outputText id="formularios" value="#{viewCuadroMando.calcularEtiquetaTram(0,'formularios')}"/>
+
+							    </c:otherwise>
+							  </c:choose>
+					    </c:otherwise>
+					  </c:choose>
+
+					  <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.firma']}" class="grey"/>
+		              <h:outputText value="#{viewCuadroMando.firmaIni}"/>
+		              <h:outputText value="#{viewCuadroMando.firmaFin}"/>
+		               <c:choose>
+					    <c:when test="#{viewCuadroMando.firmaIni != 0}">
+					         <h:outputText value="#{viewCuadroMando.formatDouble(100-((viewCuadroMando.firmaFin * 100)/viewCuadroMando.firmaIni))}%"/>
+					         <h:outputText id="firma" value="#{viewCuadroMando.calcularEtiquetaTram(((viewCuadroMando.firmaFin * 100)/viewCuadroMando.firmaIni),'firma')}"/>
+					    </c:when>
+					    <c:otherwise>
+					    	<c:choose>
+							    <c:when test="#{viewCuadroMando.firmaFin == 0}">
+							         <h:outputText value="0,00%"/>
+							         <h:outputText id="firma" value="#{viewCuadroMando.calcularEtiquetaTram(100,'firma')}"/>
+
+							    </c:when>
+							    <c:otherwise>
+							         <h:outputText value="100,00%"/>
+							          <h:outputText id="firma" value="#{viewCuadroMando.calcularEtiquetaTram(0,'firma')}"/>
+
+							    </c:otherwise>
+							  </c:choose>
+					    </c:otherwise>
+					  </c:choose>
+
+					  <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.pagos']}" class="grey"/>
+		              <h:outputText value="#{viewCuadroMando.pagIni}"/>
+		              <h:outputText value="#{viewCuadroMando.pagFin}"/>
+		               <c:choose>
+					    <c:when test="#{viewCuadroMando.pagIni != 0}">
+					         <h:outputText value="#{viewCuadroMando.formatDouble(100-((viewCuadroMando.pagFin * 100)/viewCuadroMando.pagIni))}%"/>
+					         <h:outputText id="pagos" value="#{viewCuadroMando.calcularEtiquetaTram(((viewCuadroMando.pagFin * 100)/viewCuadroMando.pagIni),'pagos')}"/>
+					    </c:when>
+					    <c:otherwise>
+					    	<c:choose>
+							    <c:when test="#{viewCuadroMando.pagFin == 0}">
+							         <h:outputText value="0,00%"/>
+							         <h:outputText id="pagos" value="#{viewCuadroMando.calcularEtiquetaTram(100,'pagos')}"/>
+
+							    </c:when>
+							    <c:otherwise>
+							         <h:outputText value="100,00%"/>
+							          <h:outputText id="pagos" value="#{viewCuadroMando.calcularEtiquetaTram(0,'pagos')}"/>
+
+							    </c:otherwise>
+							  </c:choose>
+					    </c:otherwise>
+					  </c:choose>
+
+					  <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.registros']}" class="grey"/>
+		              <h:outputText value="#{viewCuadroMando.regIni}"/>
+		              <h:outputText value="#{viewCuadroMando.regFin}"/>
+		               <c:choose>
+					    <c:when test="#{viewCuadroMando.regIni != 0}">
+					         <h:outputText value="#{viewCuadroMando.formatDouble(100-((viewCuadroMando.regFin * 100)/viewCuadroMando.regIni))}%"/>
+					         <h:outputText id="registros" value="#{viewCuadroMando.calcularEtiquetaTram(((viewCuadroMando.regFin * 100)/viewCuadroMando.regIni),'registros')}"/>
+					    </c:when>
+					    <c:otherwise>
+					    	<c:choose>
+							    <c:when test="#{viewCuadroMando.regFin == 0}">
+							         <h:outputText value="0,00%"/>
+							         <h:outputText id="registros" value="#{viewCuadroMando.calcularEtiquetaTram(100,'registros')}"/>
+
+							    </c:when>
+							    <c:otherwise>
+							         <h:outputText value="100,00%"/>
+							          <h:outputText id="registros" value="#{viewCuadroMando.calcularEtiquetaTram(0,'registros')}"/>
+
+							    </c:otherwise>
+							  </c:choose>
+					    </c:otherwise>
+					  </c:choose>
+
+				</h:panelGrid>
+				<p:spacer width="20" height="20" />
+
+				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses="wpx16 white borde pad grey" cellspacing = "1" columns="1">
+							<h:outputText value="#{msg['viewCuadroMando.tramErrTot']}" style="font-weight: bold;"/>
+				</h:panelGrid>
+				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses="white borde, white borde, white borde, white borde, white borde" cellspacing = "1" columns="5">
+					  <h:outputText/>
+		              <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.inicio']}" class="grey"/>
+		              <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.fin']}" class="grey"/>
+		              <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.porcFin']}" class="grey"/>
+		              <h:outputText/>
+
+					  <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.tramites']}" class="grey"/>
+		              <h:outputText value="#{viewCuadroMando.tramIni}"/>
+		              <h:outputText value="#{viewCuadroMando.tramFin}"/>
+		              <c:choose>
+					    <c:when test="#{viewCuadroMando.tramIni != 0}">
+					         <h:outputText value="#{viewCuadroMando.formatDouble(100-(viewCuadroMando.tramFin * 100)/viewCuadroMando.tramIni)}%"/>
+					         <h:outputText id="tramites" value="#{viewCuadroMando.calcularEtiquetaTram(((viewCuadroMando.tramFin * 100)/viewCuadroMando.tramIni), 'tramites')}"/>
+					    </c:when>
+					    <c:otherwise>
+					    	<c:choose>
+							    <c:when test="#{viewCuadroMando.tramFin == 0}">
+							         <h:outputText value="0,00%"/>
+							         <h:outputText id="tramites" value="#{viewCuadroMando.calcularEtiquetaTram(100,'tramites')}"/>
+
+							    </c:when>
+							    <c:otherwise>
+							         <h:outputText value="100,00%"/>
+							          <h:outputText id="tramites" value="#{viewCuadroMando.calcularEtiquetaTram(0,'tramites')}"/>
+
+							    </c:otherwise>
+							  </c:choose>
+					    </c:otherwise>
+					  </c:choose>
+
+				</h:panelGrid>
+
+				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses=" grey borde ,wpx100 white borde pad" cellspacing = "1" columns="2">
+				            <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.errTot']}" class="grey"/>
+				            <h:outputText value="#{viewCuadroMando.errTot}"/>
+				</h:panelGrid>
+
+								<p:spacer width="20" height="20" />
+
+
+				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses="wpx16 white borde pad grey" cellspacing = "1" columns="1">
+					<h:outputText value="#{msg['viewCuadroMando.errTram']}" style="font-weight: bold;"/>
+				</h:panelGrid>
+
+
+					<p:dataTable id="dataTableTramites" var="td"
+						value="#{viewCuadroMando.listaErrores}" rowExpandMode="single"
+						scrollHeight="100%" emptyMessage="#{msg['error.emptyRows']}"
+						rowIndexVar="rowIndex" selectionMode="single"
+						paginator="true" paginatorPosition="bottom" lazy="true"
+								 scrollable="true"
+		                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		                         currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords}"
+		                         rowsPerPageTemplate="5,10,15,30"
+		                         rows="#{viewCuadroMando.paginacion}"
+                     	selection="#{viewCuadroMando.seleccionado}" rowKey="#{td.idTramite}"
+						widgetVar="myWidget" style="width:75%; margin:auto;">
+
+						<p:ajax event="rowSelect" global="false"  oncomplete="expandirContraer();"/>
+						<p:ajax event="rowToggle" listener="#{viewCuadroMando.loadExpansion(td)}"  />
+
+						<p:column style="width:16px !important; background-color:RGB(255,255,255);">
+				            <p:rowToggler />
+				        </p:column>
+
+						<p:column headerText="#{msg['viewInformacionPersistencia.headTramite']}" filterBy="#{td.idTramite}" filterMatchMode="contains" style="width:500px !important; word-wrap: break-word; font-weight:bold; text-align: left; padding-left:5px;"  sortBy="#{td.idTramite}">
+							<h:outputText value="#{td.idTramite}" />
+						</p:column>
+
+						<p:column headerText="#{msg['viewAuditoriaTramites.headVersion']}" style="width:100px !important; word-wrap: break-word; font-weight:bold; text-align: left; padding-left:5px;"  sortBy="#{td.version}">
+							<h:outputText value="#{td.version}" />
+						</p:column>
+
+						<p:column headerText="#{msg['viewCuadroMando.sesOk']}" style="width:100px !important; word-wrap: break-word; font-weight:bold; text-align: left; padding-left:5px;"  sortBy="#{td.sesionesFinalizadas}">
+							<h:outputText value="#{td.sesionesFinalizadas}" />
+						</p:column>
+
+						<p:column headerText="#{msg['viewCuadroMando.sesInac']}" style="width:100px !important; word-wrap: break-word; font-weight:bold; text-align: left; padding-left:5px;"  sortBy="#{td.sesionesInacabadas}">
+							<h:outputText value="#{td.sesionesInacabadas}" />
+						</p:column>
+
+						<p:column headerText="#{msg['viewCuadroMando.sesPorc']}" style="width:100px !important; word-wrap: break-word; font-weight:bold; text-align: left;"  sortBy="#{td.porcentage}">
+								<h:outputText value="#{viewCuadroMando.formatDouble(td.porcentage)}%" />
+						</p:column>
+						<p:column headerText="#{msg['viewCuadroMando.err']}" style="width:100px !important; word-wrap: break-word; font-weight:bold; text-align: left;"  sortBy="#{td.numeroErrores}">
+							<h:outputText value="#{td.numeroErrores}" />
+						</p:column>
+
+
+						<p:rowExpansion>
+							<!-- Data table -->
+							<p:dataTable id="dataTableErrores" var="tdErrores"
+								value="#{viewCuadroMando.listaErr}" rowIndexVar="rowIndexVer"
+								emptyMessage="#{msg['error.emptyRows']}" paginator="true" paginatorPosition="bottom"
+								 scrollable="true"
+		                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		                         currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords}"
+		                         rowsPerPageTemplate="5,10,15,30" lazy="true"
+		                         rows="#{viewCuadroMando.paginacionErrores}"
+								styleClass="w95 margin-left-25 margin-top-10 margin-bottom-10" rowKey="#{tdErrores.tipoEvento}"
+								selectionMode="single"
+								dblClickSelect="true">
+
+								<p:ajax event="rowDblselect" listener="#{viewCuadroMando.erroresAuditoriaTramites()}" global="false"/>
+								<!-- Columnas -->
+								<p:column
+									headerText="#{msg['viewAuditoriaTramites.headError']}" sortBy="#{tdErrores.tipoEvento}">
+									<h:outputText value="#{tdErrores.tipoEvento}" />
+								</p:column>
+
+								<p:column
+									headerText="#{msg['viewCuadroMando.numero']}" sortBy="#{tdErrores.concurrencias}">
+									<h:outputText
+										value="#{tdErrores.concurrencias}" />
+								</p:column>
+
+								<p:column
+									headerText="#{msg['viewCuadroMando.porcErrores']}" sortBy="#{tdErrores.porcentage}">
+									<h:outputText
+										value="#{viewCuadroMando.formatDouble(tdErrores.porc)}%" />
+								</p:column>
+
+							</p:dataTable>
+						</p:rowExpansion>
+					</p:dataTable>
+
+				<p:spacer width="20" height="20" />
+
+				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses="wpx16 white borde pad grey" cellspacing = "1" columns="1">
+					<h:outputText value="#{msg['viewCuadroMando.erroresPlataforma']}" style="font-weight: bold;"/>
+				</h:panelGrid>
+				<p:dataTable id="dataTablePlataforma" var="tdErroresPlat"
+						value="#{viewCuadroMando.listaErrPlat}" rowIndexVar="rowIndexVer"
+						emptyMessage="#{msg['error.emptyRows']}" paginator="true" paginatorPosition="bottom"
+						 scrollable="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords}"
+                         rowsPerPageTemplate="5,10,15,30" lazy="true"
+                         rows="#{viewCuadroMando.paginacionErroresPlat}"
+						 style="width:75%; margin:auto;" rowKey="#{tdErroresPlat.codigoError}">
+						<!-- Columnas -->
+						<p:column
+							headerText="#{msg['viewAuditoriaTramites.headError']}" sortBy="#{tdErroresPlat.tipoEvento}">
+							<h:outputText value="#{tdErroresPlat.tipoEvento}" />
+						</p:column>
+
+						<p:column
+							headerText="#{msg['viewCuadroMando.numero']}" sortBy="#{tdErroresPlat.concurrencias}">
+							<h:outputText
+								value="#{tdErroresPlat.concurrencias}" />
+						</p:column>
+
+						<p:column
+							headerText="#{msg['viewCuadroMando.porcErrores']}" sortBy="#{tdErroresPlat.porcentage}">
+							<h:outputText
+								value="#{viewCuadroMando.formatDouble(tdErroresPlat.porc)}%" />
+						</p:column>
+				</p:dataTable>
+
+				<p:spacer width="20" height="20" />
+
+
+				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses="wpx16 white borde pad grey" cellspacing = "1" columns="1">
+							<h:outputText value="#{msg['viewCuadroMando.histAlerta']}" style="font-weight: bold;"/>
+				</h:panelGrid>
+				<p:dataTable id="dataTableAlertas" var="tdAlerta"
+						value="#{viewCuadroMando.listaAlertas}"
+						rows="#{viewCuadroMando.paginacionAlertas}"
+						scrollHeight="100%" rowIndexVar="rowIndexAl" emptyMessage="#{msg['error.emptyRows']}"
+						paginator="true" paginatorPosition="bottom"
+						 scrollable="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords}"
+                         rowsPerPageTemplate="5,10,15,30" rowKey="#{tdAlerta.id}"
+						widgetVar="myWidgetAlert" style="width:75%; margin:auto;">
+
+						<p:column headerText="#{msg['viewCuadroMando.alerta']}" style="font-weight:bold; text-align: left; padding-left:5px;">
+				            <h:outputText value="#{tdAlerta.alerta.nombre} - #{tdAlerta.evento}" />
+				        </p:column>
+
+						<p:column headerText="#{msg['viewInformacionPersistencia.headFecha']}" style="font-weight:bold; text-align: left; padding-left:5px;">
+							<h:outputText value="#{viewCuadroMando.convertirFecha(tdAlerta.fecha)}" />
+						</p:column>
+				</p:dataTable>
+			</h:panelGrid>
+			<h:outputScript>
+
+			  var arrayCm = [];
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+
+								    console.log('9');
+			  }
+
+
+				function expandirContraer(){
+					var el = document.getElementById("form:dataTableTramites").getElementsByClassName('ui-state-highlight')[0];
+					if(el==null){
+						el = document.getElementById("form:dataTableTramites").getElementsByClassName('ui-expanded-row')[0];
+					}
+					var listaTd = el.getElementsByTagName('*');
+					for(var i=0; i&lt;listaTd.length; i++){
+						if(listaTd[i].getElementsByClassName('ui-row-toggler')[0]!=null){
+							listaTd[i].getElementsByClassName('ui-row-toggler')[0].click();
+						}
+					}
+				}
+
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+				function consultar(){
+					let elemento = document.getElementsByClassName('resaltar')[0];
+					elemento.click();
+					$('#form\\:btnEditarHidden').click();
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("form:auxCopiar");
+				if(el.textContent!=''){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}
+
+				if(aux.value!='' ){
+		            var multiple = false;
+		            var hijos = el.children;
+					if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR') &amp;&amp; hijos.length &gt; 1){
+				            multiple = true;
+				                  }else if(hijos.length &gt;= 1 ){
+				                  	if(hijos.length==1  &amp;&amp; hijos[0].tagName=='DIV'){
+				                  		hijos = hijos[0].children;
+				                  	}
+					                    for(i=0;i&lt;hijos.length;i++){
+							              if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+							                multiple=true;
+							              }
+					                    }
+
+				                  }
+		                  var listaCm = document.getElementsByClassName('ui-contextmenu');
+		                  if(multiple){
+		                    for(i=0;i&lt;listaCm.length;i++){
+		                    	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+		                    		arrayCm.push(listaCm[i]);
+		                    	}
+			                	listaCm[i].classList.add("d-none");
+							}
+		                  }else{
+		                  	for(i=0;i&lt;listaCm.length;i++){
+		                  		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+		                    		arrayCm.push(listaCm[i]);
+		                    	}
+			                	listaCm[i].classList.remove("d-none");
+							}
+							if(arrayCm.length&gt;1){
+								arrayCm.pop();
+								for(let i=0; i&lt;arrayCm.length; i++){
+									arrayCm[i].style.display='none';
+								}
+							}
+							arrayCm = [];
+		                  }
+
+		               }
+			 }
+		    </h:outputScript>
+
+			<p:inputText id="paginacion" value="#{viewCuadroMando.paginacion}"
+				style="opacity:0">
+				<p:ajax event="blur" update="@form" process="@this" />
+			</p:inputText>
+			<h:outputScript>
+		     function capitalize(element){
+				element.value = element.value.toUpperCase();
+			 }
+
+			 function trim(element){
+			 	element.value = element.value.trim();
+			 }
+
+		   </h:outputScript>
+
+			<p:contextMenu for=":work">
+				<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard"
+					styleClass="w90" id="mnuCopy" process="@this :form:auxCopiar"
+					update="growl" url="javascript:void(0)" />
+			</p:contextMenu>
+			<pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy"
+				target="auxCopiar">
+				<p:ajax event="success" listener="#{viewCuadroMando.copiadoCorr}"
+					process="@this" update="@this growl" />
+				<p:ajax event="error" listener="#{viewCuadroMando.copiadoErr}"
+					update="@this growl" />
+			</pe:clipboard>
+
+			<p:contextMenu id="mainCmH" widgetVar="mainCmH" for=":header">
+				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}"
+					icon="fa fa-clipboard" styleClass="w90"
+					process="@this :form:auxCopiar" update="growl"
+					url="javascript:void(0)" />
+			</p:contextMenu>
+			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy"
+				target="auxCopiar">
+				<p:ajax event="success" listener="#{viewCuadroMando.copiadoCorr}"
+					process="@this" update="@this growl" />
+				<p:ajax event="error" listener="#{viewCuadroMando.copiadoErr}"
+					update="@this growl" />
+			</pe:clipboard>
+
+			<p:contextMenu id="mainCmF" widgetVar="mainCmF" for=":footer">
+				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}"
+					icon="fa fa-clipboard" styleClass="w90"
+					process="@this :form:auxCopiar" update="growl"
+					url="javascript:void(0)" />
+			</p:contextMenu>
+			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy"
+				target="auxCopiar">
+				<p:ajax event="success" listener="#{viewCuadroMando.copiadoCorr}"
+					process="@this" update="@this growl" />
+				<p:ajax event="error" listener="#{viewCuadroMando.copiadoErr}"
+					update="@this growl" />
+			</pe:clipboard>
+
+			<p:inputText id="auxCopiar" value="#{viewCuadroMando.portapapeles}"
+				style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;" />
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

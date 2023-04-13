@@ -81,6 +81,12 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/** Propiedad plantilla que indica si se muestra título procedimiento. */
 	public static final String PROP_MOSTRAR_TITULO_PROCEDIMIENTO = "titulo.procedimiento";
 
+	/** Propiedad plantilla que indica si se muestra título trámite. */
+	public static final String PROP_MOSTRAR_TITULO_TRAMITE = "titulo.tramite";
+
+	/** Propiedad plantilla que indica si se muestra el subtítulo **/
+	public static final String PROP_MOSTAR_SUBTITULO = "subtitulo.mostrar";
+
 	/** Propiedad plantilla que indica si se muestra título en mayusculas. */
 	public static final String PROP_MOSTRAR_TITULO_MAYUSCULAS = "titulo.mayusculas";
 
@@ -120,8 +126,14 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/** Escalado ancho imagen. */
 	private Integer escaladoAnchoImagen;
 
-	/** Si se muestra procedimiento - titulo, sino solo el titulo. **/
+	/** Si se muestra procedimiento, sino solo el titulo. **/
 	private Boolean mostrarTituloConProcedimiento;
+
+	/** Si se muestra tramite, sino solo el titulo. **/
+	private Boolean mostrarTituloConTramite;
+
+	/** Si se muestra subtitulo en cabecera **/
+	private Boolean mostrarSubtitulo;
 
 	/** Si se muestra titulo en mayusculas. **/
 	private Boolean mostrarTituloMayusculas;
@@ -146,8 +158,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
 	@Override
 	public byte[] formatear(final byte[] ixml, final byte[] plantilla, final String idioma,
-			final RFormularioInterno defFormInterno, final String tituloProcedimiento, final String siaProcedimiento,
-			final String codigoDir3Responsable) {
+			final RFormularioInterno defFormInterno, final String tituloProcedimiento, final String tituloTramite,
+			final String siaProcedimiento, final String codigoDir3Responsable) {
 
 		final XmlFormulario xml = UtilsFormulario.xmlToValores(ixml);
 
@@ -163,10 +175,17 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 		// - Titulo
 		if (mostrarTituloConProcedimiento) {
 			cabecera.setTitulo(tituloProcedimiento);
-			cabecera.setSubtitulo(defFormInterno.getTitulo());
+		} else if (mostrarTituloConTramite) {
+			cabecera.setTitulo(tituloTramite);
 		} else {
 			cabecera.setTitulo(tituloProcedimiento);
 		}
+
+		if(mostrarSubtitulo) {
+			cabecera.setSubtitulo(defFormInterno.getTitulo());
+		}
+
+
 		// TODO PENDIENTE VERSALITAS
 		if (mostrarTituloMayusculas) {
 			cabecera.setTitulo(cabecera.getTitulo().toUpperCase());
@@ -259,7 +278,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/**
 	 * Obtiene url imagen
 	 *
-	 * @param url url imagen
+	 * @param url
+	 *                url imagen
 	 * @return bytes imagen (nulo si no puede recuperarla)
 	 */
 	private byte[] getImagen(final String url) {
@@ -281,7 +301,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/**
 	 * Stamp marca de agua.
 	 *
-	 * @param pdf PDF
+	 * @param pdf
+	 *                PDF
 	 * @return pdf con marca de agua
 	 */
 	private byte[] stampMarcaAgua(final byte[] pdf) {
@@ -341,6 +362,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 		visualizacionValorIndexado = TipoVisualizacionValorIndexado.DESCRIPCION_CODIGO_CON_PARENTESIS;
 		mostrarAviso = false;
 		mostrarTituloConProcedimiento = false;
+		mostrarTituloConTramite = false;
+		mostrarSubtitulo = false;
 		mostrarTituloMayusculas = false;
 		mostrarSubtituloMayusculas = false;
 		marcaAguaUrl = null;
@@ -374,6 +397,10 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
 				mostrarTituloConProcedimiento = Boolean
 						.valueOf(propiedades.getProperty(PROP_MOSTRAR_TITULO_PROCEDIMIENTO));
+
+				mostrarTituloConTramite = Boolean.valueOf(propiedades.getProperty(PROP_MOSTRAR_TITULO_TRAMITE));
+
+				mostrarSubtitulo = Boolean.valueOf(propiedades.getProperty(PROP_MOSTAR_SUBTITULO));
 
 				mostrarTituloMayusculas = Boolean.valueOf(propiedades.getProperty(PROP_MOSTRAR_TITULO_MAYUSCULAS));
 
@@ -427,7 +454,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/**
 	 * Convierte la fecha en formato YYYY-MM-DD a DD-MM-YYYY
 	 *
-	 * @param fecha Fecha en formato YYYY-MM-DD
+	 * @param fecha
+	 *                  Fecha en formato YYYY-MM-DD
 	 * @return Fecha en formato DD-MM-YYYY
 	 * @throws Exception
 	 */
@@ -503,7 +531,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/**
 	 * Indica si texto es multilínea.
 	 *
-	 * @param texto texto
+	 * @param texto
+	 *                  texto
 	 * @return boolean
 	 */
 	private boolean isMultilinea(final String texto) {

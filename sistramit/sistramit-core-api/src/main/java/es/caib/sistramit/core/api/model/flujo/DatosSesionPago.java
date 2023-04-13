@@ -64,6 +64,10 @@ public class DatosSesionPago implements ModelApi {
 	 */
 	private String metodosPago;
 
+	private String idTramite;
+
+	private int versionTramite;
+
 	/**
 	 * Método para establecer identificadorPago.
 	 *
@@ -351,7 +355,7 @@ public class DatosSesionPago implements ModelApi {
 
 	/**
 	 * Método de acceso a metodosPago.
-	 * 
+	 *
 	 * @return metodosPago
 	 */
 	public String getMetodosPago() {
@@ -360,11 +364,41 @@ public class DatosSesionPago implements ModelApi {
 
 	/**
 	 * Método para establecer metodosPago.
-	 * 
+	 *
 	 * @param metodosPago
 	 *                        metodosPago a establecer
 	 */
 	public void setMetodosPago(final String metodosPago) {
 		this.metodosPago = metodosPago;
 	}
+
+	/**
+	 * @return the idTramite
+	 */
+	public String getIdTramite() {
+		return idTramite;
+	}
+
+	/**
+	 * @param idTramite the idTramite to set
+	 */
+	public void setIdTramite(final String idTramite) {
+		this.idTramite = idTramite;
+	}
+
+	/**
+	 * @return the versionTramite
+	 */
+	public int getVersionTramite() {
+		return versionTramite;
+	}
+
+	/**
+	 * @param versionTramite the versionTramite to set
+	 */
+	public void setVersionTramite(final int versionTramite) {
+		this.versionTramite = versionTramite;
+	}
+
+
 }

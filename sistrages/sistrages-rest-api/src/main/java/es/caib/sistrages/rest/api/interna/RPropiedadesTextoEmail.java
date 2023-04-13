@@ -16,9 +16,26 @@ public class RPropiedadesTextoEmail {
 	@ApiModelProperty(value = "Texto normal: tamaño máximo")
 	private int tamanyoMax;
 
+	@ApiModelProperty(value = "Prevenir pegar")
+	private boolean prevenirPegar;
+
+	/**
+	 * @return the prevenirPegar
+	 */
+	public final boolean isPrevenirPegar() {
+		return prevenirPegar;
+	}
+
+	/**
+	 * @param prevenirPegar the prevenirPegar to set
+	 */
+	public final void setPrevenirPegar(boolean prevenirPegar) {
+		this.prevenirPegar = prevenirPegar;
+	}
+
 	/**
 	 * Método de acceso a tamanyoMax.
-	 * 
+	 *
 	 * @return tamanyoMax
 	 */
 	public int getTamanyoMax() {
@@ -27,9 +44,8 @@ public class RPropiedadesTextoEmail {
 
 	/**
 	 * Método para establecer tamanyoMax.
-	 * 
-	 * @param tamanyoMax
-	 *            tamanyoMax a establecer
+	 *
+	 * @param tamanyoMax tamanyoMax a establecer
 	 */
 	public void setTamanyoMax(final int tamanyoMax) {
 		this.tamanyoMax = tamanyoMax;

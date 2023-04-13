@@ -49,6 +49,27 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 		this.fechaDesde = calcularFecha();
 	}
 
+	public FiltroAuditoriaTramitacion(boolean aux) {
+		super();
+		if (!aux) {
+			this.fechaDesde = this.getToday();
+		} else {
+			this.fechaDesde = calcularFecha();
+		}
+	}
+
+	public FiltroAuditoriaTramitacion(final List<String> listaAreas, final boolean errorPlataforma, boolean aux) {
+		super();
+		this.listaAreas = listaAreas;
+		this.errorPlataforma = errorPlataforma;
+		if (!aux) {
+			this.fechaDesde = this.getToday();
+		} else {
+			this.fechaDesde = calcularFecha();
+		}
+
+	}
+
 	public FiltroAuditoriaTramitacion(final List<String> listaAreas) {
 		super();
 		this.listaAreas = listaAreas;
@@ -203,7 +224,7 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 		this.soloContar = soloContar;
 	}
 
-	private Date getToday() {
+	public Date getToday() {
 		final Calendar calendar = Calendar.getInstance();
 		final int year = calendar.get(Calendar.YEAR);
 		final int month = calendar.get(Calendar.MONTH);
@@ -252,5 +273,6 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 			throw new CargaConfiguracionException(
 					"Error al cargar la configuracion del properties '" + pathProperties + "' : " + e.getMessage(), e);
 		}
+
 	}
 }

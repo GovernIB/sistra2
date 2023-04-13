@@ -181,45 +181,6 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 		return dpp;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public DatosFicheroPersistencia recuperarFicheroPersistenciaNoBorrado(final ReferenciaFichero pRefFic) {
-
-		HFichero hFichero = null;
-		DatosFicheroPersistencia dfp = null;
-
-		final String sql = "SELECT f from HFichero f where f.codigo=:codigo and f.clave=:clave and f.borrar=0";
-		final Query query = entityManager.createQuery(sql);
-		query.setParameter("codigo", pRefFic.getId());
-		query.setParameter("clave", pRefFic.getClave());
-		final List<HFichero> results = query.getResultList();
-
-		if (!results.isEmpty()) {
-			hFichero = results.get(0);
-
-			if (hFichero != null) {
-				dfp = new DatosFicheroPersistencia();
-				dfp.setNombre(hFichero.getNombre());
-				dfp.setContenido(hFichero.getContenido());
-			}
-		}
-
-		return dfp;
-	}
-
-	@Override
-	public DocumentoPasoPersistencia obtenerDocumento(final Long pIdDoc) {
-		DocumentoPasoPersistencia documento = null;
-
-		final HDocumento hDoc = entityManager.find(HDocumento.class, pIdDoc);
-
-		if (hDoc != null) {
-			documento = HDocumento.toModel(hDoc, 0);
-		}
-
-		return documento;
-	}
-
 	@Override
 	public long calcularTamañoFicherosPaso(final String pIdSesionTramitacion, final String pIdPaso,
 			final boolean pIncluirFirmas) {
@@ -267,9 +228,9 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 	 * Busca paso tramite.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesion tramitacion
+	 *                                id sesion tramitacion
 	 * @param idPaso
-	 *            id paso
+	 *                                id paso
 	 * @return paso tramite
 	 */
 	private HPaso findHPaso(final String idSesionTramitacion, final String idPaso) {
@@ -293,9 +254,9 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 	 * Busca paso tramite y genera excepción si no lo encuentra.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesion tramitacion
+	 *                                id sesion tramitacion
 	 * @param idPaso
-	 *            id paso
+	 *                                id paso
 	 * @return paso tramite
 	 */
 	private HPaso getHPaso(final String idSesionTramitacion, final String idPaso) {
@@ -311,11 +272,11 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 	 * Busca documento de un paso tramite.
 	 *
 	 * @param codPaso
-	 *            codigo paso
+	 *                        codigo paso
 	 * @param idDocumento
-	 *            id documento
+	 *                        id documento
 	 * @param instancia
-	 *            instancia
+	 *                        instancia
 	 * @return documento
 	 */
 	private HDocumento findHDocumento(final Long codPaso, final String idDocumento, final int instancia) {
@@ -335,11 +296,11 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 	 * Busca documento de un paso tramite y da error si no lo encuentra.
 	 *
 	 * @param codPaso
-	 *            codigo paso
+	 *                        codigo paso
 	 * @param idDocumento
-	 *            id documento
+	 *                        id documento
 	 * @param instancia
-	 *            instancia
+	 *                        instancia
 	 * @return documento
 	 */
 	private HDocumento getHDocumento(final Long codPaso, final String idDocumento, final int instancia) {
@@ -355,7 +316,7 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 	 * Busca tramite.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesion tramitacion
+	 *                                id sesion tramitacion
 	 * @return sesion tramitacion
 	 */
 	private HTramite findHTramite(final String idSesionTramitacion) {
@@ -374,7 +335,7 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 	 * Busca tramite y genera excepcion si no lo encuentra.
 	 *
 	 * @param idSesionTramitacion
-	 *            id sesion tramitacion
+	 *                                id sesion tramitacion
 	 * @return sesion tramitacion
 	 */
 	private HTramite getHTramite(final String pIdSesionTramitacion) {
@@ -389,7 +350,7 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 	 * Busca fichero.
 	 *
 	 * @param referenciaFichero
-	 *            referenciaFichero
+	 *                              referenciaFichero
 	 * @return HFichero
 	 */
 	private HFichero findHFichero(final ReferenciaFichero referenciaFichero) {
@@ -409,7 +370,7 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 	 * Busca fichero y da error si no encuentra.
 	 *
 	 * @param referenciaFichero
-	 *            referenciaFichero
+	 *                              referenciaFichero
 	 * @return HFichero
 	 */
 	private HFichero getHFichero(final ReferenciaFichero referenciaFichero) {
@@ -440,11 +401,11 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 	 * Obtiene la lista de documentos de un paso.
 	 *
 	 * @param codigoPaso
-	 *            Codigo paso
+	 *                        Codigo paso
 	 * @param idDocumento
-	 *            Id documento
+	 *                        Id documento
 	 * @param instancia
-	 *            Instancia
+	 *                        Instancia
 	 * @return Documento
 	 */
 	/*

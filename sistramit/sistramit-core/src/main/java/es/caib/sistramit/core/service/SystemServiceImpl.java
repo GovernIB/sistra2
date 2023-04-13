@@ -130,6 +130,7 @@ public class SystemServiceImpl implements SystemService {
 					sistragesComponent.evictConfiguracionEntidad();
 					sistragesComponent.evictDefinicionTramite();
 					sistragesComponent.evictDefinicionDominio();
+					catalogoProcedimientosComponent.evictCatalogoProcedimientosEntidad();
 					break;
 				case CONFIGURACION:
 					sistragesComponent.evictConfiguracionGlobal();

@@ -32,7 +32,9 @@
 	<h:form id="dialogMensajeAviso" styleClass="margin-top-10">
 			<h:outputScript >
 
-			  window.onload=function(){
+			  var arrayCm = [];
+					
+				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
 
@@ -89,6 +91,47 @@
 		          aux.value = '';
 		        }
 
+				if(aux.value!='' ){
+            var multiple = false;
+            var hijos = el.children;
+			if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR') &amp;&amp; hijos.length &gt; 1){
+		            multiple = true;
+		                  }else if(hijos.length &gt;= 1 ){
+		                  	if(hijos.length==1  &amp;&amp; hijos[0].tagName=='DIV'){
+		                  		hijos = hijos[0].children;
+		                  	}
+			                    for(i=0;i&lt;hijos.length;i++){
+					              if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+					                multiple=true;
+					              }
+			                    }
+
+		                  }
+                  var listaCm = document.getElementsByClassName('ui-contextmenu');
+                  if(multiple){
+                    for(i=0;i&lt;listaCm.length;i++){
+                    	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+                    		arrayCm.push(listaCm[i]);
+                    	}
+	                	listaCm[i].classList.add("d-none");
+					}
+                  }else{
+                  	for(i=0;i&lt;listaCm.length;i++){
+                  		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+                    		arrayCm.push(listaCm[i]);
+                    	}
+	                	listaCm[i].classList.remove("d-none");
+					}
+					if(arrayCm.length&gt;1){
+						arrayCm.pop();
+						for(let i=0; i&lt;arrayCm.length; i++){
+							arrayCm[i].style.display='none';
+						}
+					}
+					arrayCm = [];
+                  }
+
+               }
 			 }
 
 			</h:outputScript>
@@ -109,8 +152,8 @@
 	        			</p:commandButton>
 					</p:column>
 
-					<p:outputLabel for="tipo" value="#{msg['dialogMensajeAviso.headerTipo']}" rendered="#{dialogMensajeAviso.isNotTipoTramite()}" />
-					<p:selectOneMenu id="tipo" value="#{dialogMensajeAviso.data.tipo}" style="width:200px" required="true" disabled="#{dialogMensajeAviso.isConsulta()}" rendered="#{dialogMensajeAviso.isNotTipoTramite()}" >
+					<p:outputLabel for="tipo" value="#{msg['dialogMensajeAviso.headerTipo']}" />
+					<p:selectOneMenu id="tipo" value="#{dialogMensajeAviso.data.tipo}" style="width:200px" required="true" disabled="#{dialogMensajeAviso.isConsulta()}" >
 					    <f:selectItems value="#{dialogMensajeAviso.tipos}" var="tipo" itemLabel="#{msg['typeMensajeAviso.' += tipo]}" />
 					    <p:ajax event="change" update="labelListaTramites columnaListaTramites" />
 					</p:selectOneMenu>
@@ -129,7 +172,7 @@
 					</h:panelGrid>
 					<h:panelGrid id="columnaListaTramites" style="margin-bottom:0px" columns="1" styleClass="w100">
 
-								<h:panelGrid  style="margin-bottom:0px" columns="7" styleClass="w100" rendered="#{dialogMensajeAviso.mostrarListaTramites() and dialogMensajeAviso.isNotTipoTramite()}">
+								<h:panelGrid  style="margin-bottom:0px" columns="7" styleClass="w100" rendered="#{dialogMensajeAviso.mostrarListaTramites()}">
 										<p:outputLabel value="#{msg['dialogMensajeAviso.headerArea']}:" styleClass="margin-right-10" ></p:outputLabel>
 										<p:selectOneMenu id="comboAreas" value="#{dialogMensajeAviso.areaSeleccionado}" styleClass="margin-right-10" filter="true" filterMatchMode="contains" style="width:150px">
 												<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>
@@ -149,7 +192,7 @@
 										     <f:selectItem  itemLabel="" noSelectionOption="true"></f:selectItem>
 										     <f:selectItems value="#{dialogMensajeAviso.versiones}" var="version" itemLabel="#{version.numeroVersion}" itemValue="#{version.numeroVersion}"  />
 										</p:selectOneMenu>
-										<p:commandButton value="#{msg['botones.anyadir']}" actionListener="#{dialogMensajeAviso.anyadirTram()}" process="@form" update="@form:columnaListaTramites @form:listaTramites"  styleClass="boton-azul" rendered="#{(dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()) and dialogMensajeAviso.isNotTipoTramite()}"   />
+										<p:commandButton value="#{msg['botones.anyadir']}" actionListener="#{dialogMensajeAviso.anyadirTram()}" process="@form" update="@form:columnaListaTramites @form:listaTramites"  styleClass="boton-azul" rendered="#{dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()}"   />
 
 								</h:panelGrid>
 
@@ -179,7 +222,7 @@
 											<h:outputText value="#{td.versionTramite}" />
 									    </p:column>
 
-										<p:column width="10%" style="text-align:center" rendered="#{(dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()) and dialogMensajeAviso.isNotTipoTramite()}" >
+										<p:column width="10%" style="text-align:center" rendered="#{dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()}" >
 									    	<p:commandButton id="btnEliminar" value=" " icon="fa fa-trash-o" actionListener="#{dialogMensajeAviso.borrarTramite(td)}" process="@this" update="listaTramites" style="width:32px;height:25px"></p:commandButton>
 										</p:column>
 

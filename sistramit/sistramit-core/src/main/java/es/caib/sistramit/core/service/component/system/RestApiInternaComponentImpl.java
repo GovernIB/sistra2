@@ -2,6 +2,7 @@ package es.caib.sistramit.core.service.component.system;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,8 +19,12 @@ import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
 import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.api.model.system.rest.interno.DetallePagoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.ErroresPorTramiteCM;
+import es.caib.sistramit.core.api.model.system.rest.interno.EventoAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.rest.interno.EventoCM;
 import es.caib.sistramit.core.api.model.system.rest.interno.FicheroAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FicheroPersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroEventoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPerdidaClave;
@@ -38,8 +43,7 @@ import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
 import es.caib.sistramit.core.service.model.integracion.PagoComponentVerificacion;
 import es.caib.sistramit.core.service.model.system.PerdidaClaveFichero;
-import es.caib.sistramit.core.service.repository.dao.FlujoPasoDao;
-import es.caib.sistramit.core.service.repository.dao.FlujoTramiteDao;
+import es.caib.sistramit.core.service.repository.dao.RestApiDao;
 import es.caib.sistramit.core.service.util.UtilsFormulario;
 
 @Component("restApiInternaComponen")
@@ -50,10 +54,7 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 	private ConfiguracionComponent configuracionComponent;
 
 	@Autowired
-	private FlujoTramiteDao flujoTramiteDao;
-
-	@Autowired
-	private FlujoPasoDao flujoPasoDao;
+	private RestApiDao restApiDao;
 
 	@Autowired
 	private PagoComponent pagoComponent;
@@ -66,19 +67,18 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 		final String numMax = configuracionComponent
 				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.PERDIDA_CLAVE_NUMMAXTRAMITES);
 
-		final Long ntramites = flujoTramiteDao.countTramitesPerdidaClave(pFiltroBusqueda);
+		final Long ntramites = restApiDao.countTramitesPerdidaClave(pFiltroBusqueda);
 
 		if (Long.valueOf(numMax) < ntramites) {
 			resPedidaClave.setResultado(-1);
 		} else {
 
-			final List<PerdidaClaveFichero> listaTramites = flujoTramiteDao
-					.obtenerTramitesPerdidaClave(pFiltroBusqueda);
+			final List<PerdidaClaveFichero> listaTramites = restApiDao.obtenerTramitesPerdidaClave(pFiltroBusqueda);
 
 			resPedidaClave.setListaClaves(new ArrayList<>());
 
 			for (final PerdidaClaveFichero perdidaClaveFichero : listaTramites) {
-				final DatosFicheroPersistencia fichero = flujoPasoDao
+				final DatosFicheroPersistencia fichero = restApiDao
 						.recuperarFicheroPersistencia(perdidaClaveFichero.getFichero());
 
 				final XmlFormulario xmlFormulario = UtilsFormulario.xmlToValores(fichero.getContenido());
@@ -131,7 +131,7 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 	public FicheroAuditoria recuperarFichero(final Long pIdFichero, final String pClave) {
 		FicheroAuditoria ficheroAuditoria = null;
 		final ReferenciaFichero rf = new ReferenciaFichero(pIdFichero, pClave);
-		final DatosFicheroPersistencia fichero = flujoPasoDao.recuperarFicheroPersistenciaNoBorrado(rf);
+		final DatosFicheroPersistencia fichero = restApiDao.recuperarFicheroPersistenciaNoBorrado(rf);
 
 		if (fichero != null) {
 			ficheroAuditoria = new FicheroAuditoria();
@@ -145,10 +145,10 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 	@Override
 	public List<PagoAuditoria> recuperarPagosArea(final FiltroPagoAuditoria pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion) {
-		final List<PagoAuditoria> listaPagos = flujoTramiteDao.obtenerPagos(pFiltroBusqueda, pFiltroPaginacion);
+		final List<PagoAuditoria> listaPagos = restApiDao.obtenerPagos(pFiltroBusqueda, pFiltroPaginacion);
 
 		for (final PagoAuditoria pagoAuditoria : listaPagos) {
-			final DatosFicheroPersistencia fichero = flujoPasoDao.recuperarFicheroPersistencia(
+			final DatosFicheroPersistencia fichero = restApiDao.recuperarFicheroPersistencia(
 					new ReferenciaFichero(pagoAuditoria.getFichero(), pagoAuditoria.getFicheroClave()));
 			if (fichero.getContenido() != null) {
 				final DatosSesionPago sesionPago = ControladorPasoPagarHelper.getInstance()
@@ -172,7 +172,7 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 
 	@Override
 	public Long contarPagosArea(final FiltroPagoAuditoria pFiltroBusqueda) {
-		return flujoTramiteDao.countPagos(pFiltroBusqueda);
+		return restApiDao.countPagos(pFiltroBusqueda);
 	}
 
 	@Override
@@ -180,10 +180,10 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 
 		final DetallePagoAuditoria detallePago = new DetallePagoAuditoria();
 
-		final DocumentoPasoPersistencia doc = flujoPasoDao.obtenerDocumento(pIdPago);
+		final DocumentoPasoPersistencia doc = restApiDao.obtenerDocumento(pIdPago);
 
 		if (doc != null) {
-			final DatosFicheroPersistencia fichero = flujoPasoDao.recuperarFicheroPersistencia(doc.getFichero());
+			final DatosFicheroPersistencia fichero = restApiDao.recuperarFicheroPersistencia(doc.getFichero());
 
 			if (fichero != null && fichero.getContenido() != null) {
 				detallePago.setDatos(ControladorPasoPagarHelper.getInstance().fromXML(fichero.getContenido()));
@@ -205,25 +205,80 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 
 	@Override
 	public Long contarPersistenciaArea(final FiltroPersistenciaAuditoria pFiltroBusqueda) {
-		return flujoTramiteDao.countTramitesPersistencia(pFiltroBusqueda);
+		return restApiDao.countTramitesPersistencia(pFiltroBusqueda);
 	}
 
 	@Override
 	public List<PersistenciaAuditoria> recuperarPersistenciaArea(final FiltroPersistenciaAuditoria pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion) {
-		return flujoTramiteDao.obtenerTramitesPersistencia(pFiltroBusqueda, pFiltroPaginacion);
+		return restApiDao.obtenerTramitesPersistencia(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 	@Override
 	public List<FicheroPersistenciaAuditoria> recuperarPersistenciaFicheros(final Long pIdTramite) {
-		return flujoTramiteDao.recuperarPersistenciaFicheros(pIdTramite);
+		return restApiDao.recuperarPersistenciaFicheros(pIdTramite);
 	}
+
+	@Override
+	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
+			final FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiDao.retrieveByAreas(pFiltroBusqueda);
+	}
+
+	@Override
+	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
+			final FiltroEventoAuditoria pFiltroBusqueda, final FiltroPaginacion pFiltroPaginacion) {
+		return restApiDao.retrieveByAreas(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	public Long contarLogSesionTramitacionArea(final FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiDao.countByAreas(pFiltroBusqueda);
+	}
+
+	@Override
+	public List<EventoCM> recuperarEventosCM(FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiDao.recuperarEventosCM(pFiltroBusqueda);
+	}
+
+	@Override
+	public List<ErroresPorTramiteCM> recuperarErroresPorTramiteCM(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		return restApiDao.recuperarErroresPorTramiteCM(pFiltroBusqueda, filtroPaginacion);
+	}
+
+	@Override
+	public Long contarErroresPorTramiteCM(FiltroEventoAuditoria filtroBusqueda) {
+		return restApiDao.contarErroresPorTramiteCM(filtroBusqueda);
+	}
+
+	@Override
+	public List<EventoCM> recuperarErroresPorTramiteCMExpansion(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		return restApiDao.recuperarErroresPorTramiteCMExpansion(pFiltroBusqueda, filtroPaginacion);
+	}
+
+	@Override
+	public Long contarErroresPorTramiteExpansionCM(FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiDao.contarErroresPorTramiteExpansionCM(pFiltroBusqueda);
+	}
+
+	@Override
+	public List<EventoCM> recuperarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		return restApiDao.recuperarErroresPlataformaCM(pFiltroBusqueda, filtroPaginacion);
+	}
+
+	@Override
+	public Long contarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiDao.contarErroresPlataformaCM(pFiltroBusqueda);
+	}
+	// ------------------ FUNCIONES INTERNAS ------------------
 
 	/**
 	 * Convert perdida clave.
 	 *
-	 * @param pPerdidaClaveFichero
-	 *            perdida clave fichero
+	 * @param pPerdidaClaveFichero perdida clave fichero
 	 * @return the perdida clave
 	 */
 	private PerdidaClave convertPerdidaClave(final PerdidaClaveFichero pPerdidaClaveFichero) {

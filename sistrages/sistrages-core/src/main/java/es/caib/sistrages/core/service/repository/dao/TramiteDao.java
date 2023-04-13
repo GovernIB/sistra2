@@ -265,6 +265,8 @@ public interface TramiteDao {
 	 */
 	List<DominioTramite> getTramiteVersionByDominio(Long idDominio);
 
+	List<DominioTramite> getTramiteVersionByDominio(Long idDominio, String filtro);
+
 	/**
 	 * Lista de tramite versión que tengan un Gfe.
 	 *
@@ -280,7 +282,11 @@ public interface TramiteDao {
 	 */
 	List<DominioTramite> getTramiteVersionByEnvioRemoto(Long idEnvioRemoto);
 
+	List<DominioTramite> getTramiteVersionByEnvioRemoto(Long idEnvioRemoto, String filtro);
+
 	List<DominioTramite> getTramiteVersionByGfe(Long idGfe);
+
+	List<DominioTramite> getTramiteVersionByGfe(Long idGfe, String filtro);
 
 	/**
 	 * Comprueba si el identificador está repetido.

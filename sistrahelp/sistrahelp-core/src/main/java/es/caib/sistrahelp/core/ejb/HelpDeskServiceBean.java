@@ -1,7 +1,9 @@
 package es.caib.sistrahelp.core.ejb;
 
 import java.util.List;
+import java.util.Map;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -22,9 +24,12 @@ import es.caib.sistrahelp.core.api.model.FiltroPersistenciaAuditoria;
 import es.caib.sistrahelp.core.api.model.PagoAuditoria;
 import es.caib.sistrahelp.core.api.model.PersistenciaAuditoria;
 import es.caib.sistrahelp.core.api.model.ResultadoAuditoriaDetallePago;
+import es.caib.sistrahelp.core.api.model.ResultadoErroresPorTramiteCM;
+import es.caib.sistrahelp.core.api.model.ResultadoEventoCM;
 import es.caib.sistrahelp.core.api.model.ResultadoPerdidaClave;
 import es.caib.sistrahelp.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
+import es.caib.sistrahelp.core.interceptor.NegocioInterceptor;
 
 /**
  * Servicio para verificar accesos de seguridad.
@@ -42,14 +47,14 @@ public class HelpDeskServiceBean implements HelpDeskService {
 	HelpDeskService helpdeskService;
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	@PermitAll
 	public List<EventoAuditoriaTramitacion> obtenerAuditoriaEvento(final FiltroAuditoriaTramitacion pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion) {
 		return helpdeskService.obtenerAuditoriaEvento(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	@PermitAll
 	public Long countAuditoriaEvento(final FiltroAuditoriaTramitacion pFiltroBusqueda) {
 		return helpdeskService.countAuditoriaEvento(pFiltroBusqueda);
 	}
@@ -102,6 +107,33 @@ public class HelpDeskServiceBean implements HelpDeskService {
 	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public FicheroAuditoria obtenerAuditoriaFichero(final Long pIdFichero, final String pClave) {
 		return helpdeskService.obtenerAuditoriaFichero(pIdFichero, pClave);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	public ResultadoEventoCM obtenerCountEventoCM(FiltroAuditoriaTramitacion pFiltroBusqueda) {
+		return helpdeskService.obtenerCountEventoCM(pFiltroBusqueda);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	public ResultadoErroresPorTramiteCM obtenerErroresPorTramiteCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion) {
+		return helpdeskService.obtenerErroresPorTramiteCM(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	public ResultadoEventoCM obtenerErroresPorTramiteCMExpansion(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion) {
+		return helpdeskService.obtenerErroresPorTramiteCMExpansion(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	public ResultadoEventoCM obtenerErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion) {
+		return helpdeskService.obtenerErroresPlataformaCM(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 }

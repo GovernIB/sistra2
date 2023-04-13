@@ -18,12 +18,53 @@
 	    http://www.springframework.org/schema/tx
 	    http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
-	<context:component-scan base-package="es.caib.sistrahelp.core.service" />
+	<context:component-scan base-package="es.caib.sistrahelp.core" />
+
 	<!-- Anotaciones AOP -->
 	<context:annotation-config />
 	<aop:aspectj-autoproxy />
 
+	<!-- Anotaciones para tx -->
+	<tx:annotation-driven transaction-manager="transactionManager" order="2" />
+
 	<context:property-placeholder location="file:#{systemProperties['es.caib.sistrahelp.properties.path']}"/>
+
+	<!-- Hibernate / JPA -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="persistenceUnitName" value="sistrahelp-PU" />
+		<property name="packagesToScan">
+			<list>
+				<value>es.caib.sistrahelp.core.service.repository.modeltest</value>
+				<value>es.caib.sistrahelp.core.service.repository.model</value>
+			</list>
+		</property>
+		<property name="jpaDialect">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+		</property>
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+		</property>
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+			</props>
+		</property>
+	</bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+
+    <bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:messages" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+
+	<!-- Configuracion -->
+	<jee:jndi-lookup id="dataSource" jndi-name="${jdbc.jndi}" resource-ref="true" />
 
 	<!-- Acceso a EJB para obtener contexto seguridad -->
 	<jee:local-slsb

@@ -1,0 +1,50 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_REGISTRO.setCodigoSia(SIA)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REGISTRO">DATOS_REGISTRO</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REGISTRO&metodo=setCodigoSia">setCodigoSIA</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setCodigoSIA(String SIA): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite establecer el código SIA de la entrada de registro. Si no se fija valor se tomará por defecto el código SIA del procedimiento asociado al trámite.</li>
+    </ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>SIA</b>: Código SIA del registro.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLO</b>
+</p>
+<p>Pongamos por caso que queremos establecer el código SIA de la entrada de registro. Para ello incorporaríamos la siguiente línea de código: </p>
+ <p class="codigoScript">
+DATOS_REGISTRO.setCodigoSIA('12345');
+</p>
+</body>
+</html>

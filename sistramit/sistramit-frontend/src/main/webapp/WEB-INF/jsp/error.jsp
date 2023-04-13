@@ -38,7 +38,7 @@
 <body>
 
 		<!-- missatge: error -->
-		<div id="imc-missatge" class="imc-missatge" data-tipus="error">
+		<div id="imc-missatge" class="imc-missatge" data-tipus="<c:out value="${error.mensaje.estiloError}"/>">
 			<h1>
 				<span><c:out value="${error.mensaje.titulo}"/></span>
 			</h1>
@@ -55,7 +55,7 @@
 
 			<c:if test="${not empty error.url}">
 			<div class="imc--botonera">
-				<a href="javascript:redireccion();"><span><spring:message code="error.continuar"/></span></a>
+				<a href="javascript:redireccion();"><span><c:out value="${error.mensaje.textoBoton}"/></span></a>
 			</div>
 			</c:if>
 		</div>

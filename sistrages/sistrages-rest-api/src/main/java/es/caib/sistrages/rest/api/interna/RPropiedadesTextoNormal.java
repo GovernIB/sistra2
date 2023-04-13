@@ -23,6 +23,23 @@ public class RPropiedadesTextoNormal {
 	@ApiModelProperty(value = "Texto normal: forzar mayúsculas")
 	private boolean forzarMayusculas;
 
+	@ApiModelProperty(value = "Prevenir pegar")
+	private boolean prevenirPegar;
+
+	/**
+	 * @return the prevenirPegar
+	 */
+	public final boolean isPrevenirPegar() {
+		return prevenirPegar;
+	}
+
+	/**
+	 * @param prevenirPegar the prevenirPegar to set
+	 */
+	public final void setPrevenirPegar(boolean prevenirPegar) {
+		this.prevenirPegar = prevenirPegar;
+	}
+
 	/**
 	 * Método de acceso a tamanyoMax.
 	 *
@@ -35,8 +52,7 @@ public class RPropiedadesTextoNormal {
 	/**
 	 * Método para establecer tamanyoMax.
 	 *
-	 * @param tamanyoMax
-	 *            tamanyoMax a establecer
+	 * @param tamanyoMax tamanyoMax a establecer
 	 */
 	public void setTamanyoMax(final int tamanyoMax) {
 		this.tamanyoMax = tamanyoMax;
@@ -44,7 +60,7 @@ public class RPropiedadesTextoNormal {
 
 	/**
 	 * Método de acceso a lineas.
-	 * 
+	 *
 	 * @return lineas
 	 */
 	public int getLineas() {
@@ -53,9 +69,8 @@ public class RPropiedadesTextoNormal {
 
 	/**
 	 * Método para establecer lineas.
-	 * 
-	 * @param lineas
-	 *            lineas a establecer
+	 *
+	 * @param lineas lineas a establecer
 	 */
 	public void setLineas(final int lineas) {
 		this.lineas = lineas;

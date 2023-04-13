@@ -15,7 +15,7 @@
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
 	<link rel="stylesheet" type="text/css" media="screen" href="css/debug.css" />
 
-	<script type="text/javascript" src="js/jquery-1.12.4.min"></script>
+	<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
 	<script type="text/javascript" src="js/jquery.imc.debug.js"></script>
 	<script type="text/javascript">
 

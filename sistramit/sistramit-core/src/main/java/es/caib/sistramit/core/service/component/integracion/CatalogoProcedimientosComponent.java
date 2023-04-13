@@ -40,10 +40,18 @@ public interface CatalogoProcedimientosComponent {
 
 	/**
 	 * Limpiar caché procedimientos de la entidad.
-	 * 
+	 *
 	 * @param idEntidad
 	 *                      Id entidad
 	 */
 	void evictCatalogoProcedimientosEntidad(String idEntidad);
+
+	/**
+	 * Limpiar caché procedimientos de todas las entidades.
+	 *
+	 * @param idEntidad
+	 *                      Id entidad
+	 */
+	void evictCatalogoProcedimientosEntidad();
 
 }

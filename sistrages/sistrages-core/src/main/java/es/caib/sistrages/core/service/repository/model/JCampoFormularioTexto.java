@@ -95,6 +95,9 @@ public class JCampoFormularioTexto implements IModelApi {
 	@Column(name = "CTX_NORMAY", nullable = false, precision = 1, scale = 0)
 	private boolean forzarMayusculas;
 
+	@Column(name = "CTX_PREVPEG", nullable = false, precision = 1, scale = 0)
+	private boolean prevenirPegar;
+
 	public JCampoFormularioTexto() {
 		super();
 	}
@@ -243,8 +246,7 @@ public class JCampoFormularioTexto implements IModelApi {
 	}
 
 	/**
-	 * @param identDni
-	 *            the identDni to set
+	 * @param identDni the identDni to set
 	 */
 	public void setIdentDni(final boolean identDni) {
 		this.identDni = identDni;
@@ -258,8 +260,7 @@ public class JCampoFormularioTexto implements IModelApi {
 	}
 
 	/**
-	 * @param identNifOtros
-	 *            the identNifOtros to set
+	 * @param identNifOtros the identNifOtros to set
 	 */
 	public void setIdentNifOtros(final boolean identNifOtros) {
 		this.identNifOtros = identNifOtros;
@@ -297,6 +298,14 @@ public class JCampoFormularioTexto implements IModelApi {
 		this.forzarMayusculas = forzarMayusculas;
 	}
 
+	public final boolean isPrevenirPegar() {
+		return prevenirPegar;
+	}
+
+	public final void setPrevenirPegar(boolean prevenirPegar) {
+		this.prevenirPegar = prevenirPegar;
+	}
+
 	public ComponenteFormularioCampoTexto toModel() {
 		ComponenteFormularioCampoTexto campoTexto = null;
 
@@ -326,6 +335,7 @@ public class JCampoFormularioTexto implements IModelApi {
 				campoTexto.setTelefonoFijo(telefonoFijo);
 				campoTexto.setPermiteRango(permiteRango);
 				campoTexto.setForzarMayusculas(forzarMayusculas);
+				campoTexto.setPrevenirPegar(prevenirPegar);
 			}
 
 		}
@@ -333,7 +343,8 @@ public class JCampoFormularioTexto implements IModelApi {
 		return campoTexto;
 	}
 
-	public static JCampoFormularioTexto createDefault(final int pOrden, final JLineaFormulario pJLinea, final boolean isTipoSeccion, final String identificadorSeccion) {
+	public static JCampoFormularioTexto createDefault(final int pOrden, final JLineaFormulario pJLinea,
+			final boolean isTipoSeccion, final String identificadorSeccion) {
 		final JCampoFormularioTexto jModel = new JCampoFormularioTexto();
 		jModel.setOculto(false);
 		jModel.setTipo(TypeCampoTexto.NORMAL.name());
@@ -347,10 +358,12 @@ public class JCampoFormularioTexto implements IModelApi {
 		jModel.setTelefonoFijo(false);
 		jModel.setTelefonoMovil(false);
 		jModel.setPermiteRango(false);
-		jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.CAMPO_TEXTO, pOrden, pJLinea, isTipoSeccion, identificadorSeccion));
+		jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.CAMPO_TEXTO, pOrden, pJLinea,
+				isTipoSeccion, identificadorSeccion));
 		jModel.setNumeroSeparador("PC"); // Punto y coma
 		jModel.setNormalTamanyo(50);
 		jModel.setForzarMayusculas(false);
+		jModel.setPrevenirPegar(false);
 		return jModel;
 	}
 
@@ -381,6 +394,7 @@ public class JCampoFormularioTexto implements IModelApi {
 			jcampoTexto.setTelefonoMovil(campoFormularioTexto.isTelefonoMovil());
 			jcampoTexto.setTipo(campoFormularioTexto.getTipo());
 			jcampoTexto.setForzarMayusculas(campoFormularioTexto.isForzarMayusculas());
+			jcampoTexto.setPrevenirPegar(campoFormularioTexto.isPrevenirPegar());
 		}
 		return jcampoTexto;
 	}

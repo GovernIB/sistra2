@@ -1,0 +1,36 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">DEFINICI&Oacute; D&#39;ALERTES</h1>
+<p>
+
+En aquesta pantalla, que apareix quan creeu o editeu una alerta, es poden configurar els diferents par&agrave;metres d&#39;una alerta. 
+</p>
+
+<h2 class="stgH2">CAMPS:</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Resum diari:</span> Si ja no existeix una alerta d&#39;aquest tipus, apareix aquest check que, en marcar-lo, defineix un tipus d&#39;alerta especial, que permet enviar un correu als remitents indicats a les 00:00 de l&#39;endem&agrave;, amb un resum de tot el que s&#39;ha produ&iuml;t a l&#39;assistent de tramitaci&oacute; i mostrat al quadre de comandaments del dia acabat de finalitzar. Si ja hi ha una alerta d&#39;aquest tipus, aquest check no apareixer&agrave; i nom&eacute;s es podr&agrave; definir una alerta convencional.</li>
+		<li><span class="nombreCampo">Nom:</span> En aquest camp, si heu indicat que l&#39;alerta &eacute;s de tipus &ldquo;Resum diari&rdquo;, es definir&agrave; el valor &ldquo;RESUM_DIARI&rdquo; de forma autom&agrave;tica i no podr&agrave; ser modificat. Si l&#39;alerta &eacute;s convencional, en aquest camp podeu definir un nom significatiu.</li>
+		<li><span class="nombreCampo">Llista de correus electr&ograve;nics:</span> Permet indicar els correus electr&ograve;nics dels remitents als quals s&#39;enviar&agrave; l&#39;av&iacute;s, separats per ;.</li>
+		<li><span class="nombreCampo">Interval d&#39;avaluaci&oacute;:</span> Si l&#39;alerta &eacute;s convencional es podr&agrave; indicar, en hores i minuts (de 5 a 5), cada quant de temps s&#39;avaluar&agrave; l&#39;alerta.</li>
+		<li><span class="nombreCampo">Per&iacute;ode d&#39;avaluaci&oacute;:</span> Si l&#39;alerta &eacute;s convencional es podr&agrave; definir des de fins a quina hora i minut s&#39;avalua l&#39;alerta.</li>
+		<li><span class="nombreCampo">Expressi&oacute; d&#39;avaluaci&oacute;:</span> Si l&#39;alerta &eacute;s convencional es podr&agrave; indicar l&#39;esdeveniment que cal avaluar, aix&iacute; com un operador matem&agrave;tic i el nombre de concurr&egrave;ncies que cal donar per llan&ccedil;ar l&#39;alerta. Per exemple, podeu indicar l&#39;expressi&oacute;: Error &gt; 5, de manera que quan a la plataforma s&#39;hagin assolit m&eacute;s de 5 errors, s&#39;enviar&agrave; un correu per indicar aquesta circumst&agrave;ncia.</li>
+		<li><span class="nombreCampo">Esdeveniments:</span> En aquest panell es mostraran les diferents expressions afegides i s&#39;aplicar&agrave; l&#39;operador l&ograve;gic O, de manera que si n&#39;&eacute;s certa alguna, s&#39;avaluar&agrave; a certa l&#39;alerta i s&#39;enviar&agrave; el correu i afegir&agrave; a l&#39;historial d&#39;alertes del quadre de comandaments.</li>
+	</ul>
+</p>
+
+<h2 class="stgH2">OPERATIVA:</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Desar:</span> Permet desar l&#39;alerta configurada.</li>
+		<li><span class="nombreCampo">Cancel&middot;lar:</span> Permet sortir de la pantalla sense desar els canvis.</li>
+	</ul>
+</p>
+
+</body>
+</html>

@@ -3,14 +3,17 @@ package es.caib.sistrahelp.core.service;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import org.apache.commons.digester.plugins.PluginException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.fundaciobit.pluginsib.core.IPlugin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.caib.sistrahelp.core.api.exception.FicheroExternoException;
 import es.caib.sistrahelp.core.api.model.ContenidoFichero;
 import es.caib.sistrahelp.core.api.model.Entidad;
+import es.caib.sistrahelp.core.api.model.types.TypePluginGlobal;
 import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 import es.caib.sistrahelp.core.interceptor.NegocioInterceptor;
@@ -30,6 +33,12 @@ public class ConfiguracionServiceImpl implements ConfiguracionService {
 	@NegocioInterceptor
 	public Entidad obtenerDatosEntidad(final String idEntidad) {
 		return sistragesApiComponent.obtenerDatosEntidad(idEntidad);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public IPlugin obtenerPluginGlobal(final TypePluginGlobal tipoPlugin) throws PluginException {
+		return sistragesApiComponent.obtenerPluginGlobal(tipoPlugin);
 	}
 
 	@Override
@@ -60,5 +69,11 @@ public class ConfiguracionServiceImpl implements ConfiguracionService {
 	@NegocioInterceptor
 	public String obtenerPropiedadConfiguracion(final TypePropiedadConfiguracion propiedad) {
 		return configuracionComponent.obtenerPropiedadConfiguracion(propiedad);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public String obtenerPropiedadConfiguracionSistrages(final TypePropiedadConfiguracion propiedad) {
+		return configuracionComponent.obtenerPropiedadConfiguracionSistrages(propiedad);
 	}
 }

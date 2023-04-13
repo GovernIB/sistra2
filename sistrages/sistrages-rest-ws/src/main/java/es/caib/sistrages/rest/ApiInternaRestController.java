@@ -207,7 +207,7 @@ public class ApiInternaRestController {
 		if (dominio.getAmbito() != TypeAmbito.GLOBAL) {
 			if (dominio.getAmbito().equals(TypeAmbito.ENTIDAD)) {
 				final Entidad entidad = restApiService.loadEntidad(dominio.getEntidad());
-				idEntidad = entidad.getIdentificador();
+				idEntidad = entidad.getCodigoDIR3();
 			} else if (dominio.getAmbito().equals(TypeAmbito.AREA)) {
 				final Entidad entidad = restApiService.loadEntidadByArea(dominio.getArea().getCodigo());
 				idEntidad = entidad.getCodigoDIR3();

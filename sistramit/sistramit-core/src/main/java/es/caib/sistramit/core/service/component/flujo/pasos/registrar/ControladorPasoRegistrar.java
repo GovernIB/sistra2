@@ -565,6 +565,15 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		} else {
 			datosRegistrales.setExtracto(pVariablesFlujo.getTituloTramite());
 		}
+
+		// - SIA
+		if (StringUtils.isNotBlank(resRegistro.getCodigoSIA())) {
+			datosRegistrales.setCodigoSIA(resRegistro.getCodigoSIA());
+		} else {
+			datosRegistrales
+					.setExtracto(pVariablesFlujo.getDatosTramiteCP().getProcedimiento().getIdProcedimientoSIA());
+		}
+
 		dr = datosRegistrales;
 		return dr;
 	}

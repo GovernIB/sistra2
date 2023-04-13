@@ -2,6 +2,8 @@ package es.caib.sistramit.core.api.model.formulario;
 
 import java.io.Serializable;
 
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+
 /**
  * Opciones de configuración de un campo del formulario de tipo texto email.
  *
@@ -17,8 +19,32 @@ public final class OpcionesCampoTextoEmail implements Serializable {
 	private int tamanyo;
 
 	/**
+	 * Prevenir pegar.
+	 */
+	private TypeSiNo pegar = TypeSiNo.SI;
+
+	/**
+	 * Método de acceso a prevenirPegar.
+	 *
+	 * @return prevenirPegar
+	 */
+	public TypeSiNo getPegar() {
+		return pegar;
+	}
+
+	/**
+	 * Método para establecer prevenirPegar.
+	 *
+	 * @param prevenirPegar
+	 *                          prevenirPegar a establecer
+	 */
+	public void setPegar(final TypeSiNo prevenirPegar) {
+		this.pegar = prevenirPegar;
+	}
+
+	/**
 	 * Método de acceso a tamanyo.
-	 * 
+	 *
 	 * @return tamanyo
 	 */
 	public int getTamanyo() {
@@ -27,9 +53,9 @@ public final class OpcionesCampoTextoEmail implements Serializable {
 
 	/**
 	 * Método para establecer tamanyo.
-	 * 
+	 *
 	 * @param tamanyo
-	 *            tamanyo a establecer
+	 *                    tamanyo a establecer
 	 */
 	public void setTamanyo(final int tamanyo) {
 		this.tamanyo = tamanyo;

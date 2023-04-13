@@ -12,49 +12,64 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RPropiedadesTextoTelefono", description = "Descripcion de RPropiedadesTextoTelefono")
 public class RPropiedadesTextoTelefono {
 
-    /** Texto teléfono: móvil. */
+	/** Texto teléfono: móvil. */
 	@ApiModelProperty(value = "Texto teléfono: móvil")
-    private boolean movil;
+	private boolean movil;
 
-    /** Texto teléfono: fijo. */
+	/** Texto teléfono: fijo. */
 	@ApiModelProperty(value = "Texto teléfono: fijo")
-    private boolean fijo;
+	private boolean fijo;
 
-    /**
-     * Método de acceso a movil.
-     *
-     * @return movil
-     */
-    public boolean isMovil() {
-        return movil;
-    }
+	@ApiModelProperty(value = "Prevenir pegar")
+	private boolean prevenirPegar;
 
-    /**
-     * Método para establecer movil.
-     *
-     * @param movil
-     *            movil a establecer
-     */
-    public void setMovil(boolean movil) {
-        this.movil = movil;
-    }
+	/**
+	 * @return the prevenirPegar
+	 */
+	public final boolean isPrevenirPegar() {
+		return prevenirPegar;
+	}
 
-    /**
-     * Método de acceso a fijo.
-     *
-     * @return fijo
-     */
-    public boolean isFijo() {
-        return fijo;
-    }
+	/**
+	 * @param prevenirPegar the prevenirPegar to set
+	 */
+	public final void setPrevenirPegar(boolean prevenirPegar) {
+		this.prevenirPegar = prevenirPegar;
+	}
 
-    /**
-     * Método para establecer fijo.
-     *
-     * @param fijo
-     *            fijo a establecer
-     */
-    public void setFijo(boolean fijo) {
-        this.fijo = fijo;
-    }
+	/**
+	 * Método de acceso a movil.
+	 *
+	 * @return movil
+	 */
+	public boolean isMovil() {
+		return movil;
+	}
+
+	/**
+	 * Método para establecer movil.
+	 *
+	 * @param movil movil a establecer
+	 */
+	public void setMovil(boolean movil) {
+		this.movil = movil;
+	}
+
+	/**
+	 * Método de acceso a fijo.
+	 *
+	 * @return fijo
+	 */
+	public boolean isFijo() {
+		return fijo;
+	}
+
+	/**
+	 * Método para establecer fijo.
+	 *
+	 * @param fijo fijo a establecer
+	 */
+	public void setFijo(boolean fijo) {
+		this.fijo = fijo;
+	}
 }

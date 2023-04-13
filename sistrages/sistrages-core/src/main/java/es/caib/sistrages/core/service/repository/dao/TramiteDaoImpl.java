@@ -1146,6 +1146,50 @@ public class TramiteDaoImpl implements TramiteDao {
 	}
 
 	@Override
+	public List<DominioTramite> getTramiteVersionByDominio(final Long idDominio, final String filtro) {
+		final List<DominioTramite> resultado = new ArrayList<>();
+
+		String sql = "Select vt from JDominio d"
+				+ " join d.versionesTramite vt"
+				+ " join vt.tramite t"
+				+ " join t.area a"
+				+ " where d.codigo = :idDominio";
+
+		if (StringUtils.isNotBlank(filtro)) {
+			sql += " AND (LOWER(t.identificador) LIKE :filtro";
+			sql += " OR LOWER(a.identificador) LIKE :filtro)";
+		}
+
+		final String sqlOrder = " order by vt.numeroVersion desc";
+
+		final Query query = entityManager.createQuery(sql + sqlOrder);
+		query.setParameter("idDominio", idDominio);
+
+		if (StringUtils.isNotBlank(filtro)) {
+			query.setParameter("filtro", "%" + filtro.toLowerCase() + "%");
+		}
+
+		@SuppressWarnings("unchecked")
+		final List<JVersionTramite> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JVersionTramite> iterator = results.iterator(); iterator.hasNext();) {
+				final JVersionTramite jTramiteVersion = iterator.next();
+				final DominioTramite dominioTramite = new DominioTramite();
+				dominioTramite.setArea(jTramiteVersion.getTramite().getArea().getIdentificador());
+				dominioTramite.setEntidad(jTramiteVersion.getTramite().getArea().getEntidad().getNombre().toModel());
+				dominioTramite.setIdTramiteVersion(jTramiteVersion.getCodigo());
+				dominioTramite.setNumVersion(jTramiteVersion.getNumeroVersion());
+				dominioTramite.setRelease(jTramiteVersion.getRelease());
+				dominioTramite.setTramite(jTramiteVersion.getTramite().getDescripcion());
+				resultado.add(dominioTramite);
+			}
+		}
+
+		return resultado;
+	}
+
+	@Override
 	public boolean existenTramiteVersionBySeccionReutilizable(Long idSeccionReutilizable) {
 
 		final Query query = getQueryBySeccionReutilizable(idSeccionReutilizable, true);
@@ -1285,6 +1329,52 @@ public class TramiteDaoImpl implements TramiteDao {
 	}
 
 	@Override
+	public List<DominioTramite> getTramiteVersionByEnvioRemoto(final Long idEnvioRemoto, final String filtro) {
+		final List<DominioTramite> resultado = new ArrayList<>();
+
+		String sql = "Select vt  From JPasoRegistrar pr"
+				+ " JOIN pr.pasoTramitacion pt"
+				+ " JOIN pt.versionTramite vt"
+				+ " join vt.tramite t"
+				+ " join t.area a"
+				+ " JOIN pr.envioRemoto fe"
+				+ " where fe.codigo=:idEnvioRemoto";
+
+		if (StringUtils.isNotBlank(filtro)) {
+			sql += " AND (LOWER(t.identificador) LIKE :filtro";
+			sql += " OR LOWER(a.identificador) LIKE :filtro)";
+		}
+
+		final String sqlOrder = " order by vt.numeroVersion desc";
+
+		final Query query = entityManager.createQuery(sql + sqlOrder);
+		query.setParameter("idEnvioRemoto", idEnvioRemoto);
+
+		if (StringUtils.isNotBlank(filtro)) {
+			query.setParameter("filtro", "%" + filtro.toLowerCase() + "%");
+		}
+
+		@SuppressWarnings("unchecked")
+		final List<JVersionTramite> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JVersionTramite> iterator = results.iterator(); iterator.hasNext();) {
+				final JVersionTramite jTramiteVersion = iterator.next();
+				final DominioTramite dominioTramite = new DominioTramite();
+				dominioTramite.setArea(jTramiteVersion.getTramite().getArea().getIdentificador());
+				dominioTramite.setEntidad(jTramiteVersion.getTramite().getArea().getEntidad().getNombre().toModel());
+				dominioTramite.setIdTramiteVersion(jTramiteVersion.getCodigo());
+				dominioTramite.setNumVersion(jTramiteVersion.getNumeroVersion());
+				dominioTramite.setRelease(jTramiteVersion.getRelease());
+				dominioTramite.setTramite(jTramiteVersion.getTramite().getDescripcion());
+				resultado.add(dominioTramite);
+			}
+		}
+
+		return resultado;
+	}
+
+	@Override
 	public boolean getCountTramiteVersionByGfe(Long id) {
 		Query query = getQueryTramiteVersionByGFE(id, true);
 		Long total = (Long) query.getSingleResult();
@@ -1310,6 +1400,53 @@ public class TramiteDaoImpl implements TramiteDao {
 		final List<DominioTramite> resultado = new ArrayList<>();
 
 		final Query query = getQueryTramiteVersionByGFE(idGfe, false);
+
+		@SuppressWarnings("unchecked")
+		final List<JVersionTramite> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JVersionTramite> iterator = results.iterator(); iterator.hasNext();) {
+				final JVersionTramite jTramiteVersion = iterator.next();
+				final DominioTramite dominioTramite = new DominioTramite();
+				dominioTramite.setArea(jTramiteVersion.getTramite().getArea().getIdentificador());
+				dominioTramite.setEntidad(jTramiteVersion.getTramite().getArea().getEntidad().getNombre().toModel());
+				dominioTramite.setIdTramiteVersion(jTramiteVersion.getCodigo());
+				dominioTramite.setNumVersion(jTramiteVersion.getNumeroVersion());
+				dominioTramite.setRelease(jTramiteVersion.getRelease());
+				dominioTramite.setTramite(jTramiteVersion.getTramite().getIdentificador());
+				resultado.add(dominioTramite);
+			}
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public List<DominioTramite> getTramiteVersionByGfe(final Long idGfe, final String filtro) {
+		final List<DominioTramite> resultado = new ArrayList<>();
+
+		String sql = "Select vt  From JPasoRellenar pr"
+				+ " JOIN pr.pasoTramitacion pt"
+				+ " JOIN pr.formulariosTramite ft"
+				+ " JOIN pt.versionTramite vt"
+				+ " join vt.tramite t"
+				+ " join t.area a"
+				+ " JOIN ft.formularioExterno fe"
+				+ " where fe.codigo=:idGfe";
+
+		if (StringUtils.isNotBlank(filtro)) {
+			sql += " AND (LOWER(t.identificador) LIKE :filtro";
+			sql += " OR LOWER(a.identificador) LIKE :filtro)";
+		}
+
+		final String sqlOrder = " order by vt.numeroVersion desc";
+
+		final Query query = entityManager.createQuery(sql + sqlOrder);
+		query.setParameter("idGfe", idGfe);
+
+		if (StringUtils.isNotBlank(filtro)) {
+			query.setParameter("filtro", "%" + filtro.toLowerCase() + "%");
+		}
 
 		@SuppressWarnings("unchecked")
 		final List<JVersionTramite> results = query.getResultList();

@@ -5,20 +5,8 @@ import java.util.List;
 
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
-import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramiteFinalizado;
-import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramitePersistencia;
-import es.caib.sistramit.core.api.model.system.rest.externo.TramiteFinalizado;
-import es.caib.sistramit.core.api.model.system.rest.externo.TramitePersistencia;
-import es.caib.sistramit.core.api.model.system.rest.interno.FicheroPersistenciaAuditoria;
-import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
-import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPagoAuditoria;
-import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPerdidaClave;
-import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPersistenciaAuditoria;
-import es.caib.sistramit.core.api.model.system.rest.interno.PagoAuditoria;
-import es.caib.sistramit.core.api.model.system.rest.interno.PersistenciaAuditoria;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
 import es.caib.sistramit.core.service.model.flujo.EstadoPersistenciaPasoTramite;
-import es.caib.sistramit.core.service.model.system.PerdidaClaveFichero;
 
 /**
  * Interfaz de acceso a base de datos para los datos generales del flujo de
@@ -161,91 +149,5 @@ public interface FlujoTramiteDao {
 	 */
 	Long contadorLimiteTramitacion(final String idTramite, final int version, int limiteIntervalo,
 			final Date finIntervalo);
-
-	/**
-	 * Obtener tramites perdida clave.
-	 *
-	 * @param pFiltroBusqueda
-	 *                            filtro busqueda
-	 * @return lista de tramites
-	 */
-	List<PerdidaClaveFichero> obtenerTramitesPerdidaClave(FiltroPerdidaClave pFiltroBusqueda);
-
-	/**
-	 * Obtener numero de tramites perdida clave.
-	 *
-	 * @param pFiltroBusqueda
-	 *                            filtro busqueda
-	 * @return Numero de tramites
-	 */
-	Long countTramitesPerdidaClave(FiltroPerdidaClave pFiltroBusqueda);
-
-	/**
-	 * Count pagos.
-	 *
-	 * @param pFiltroBusqueda
-	 *                            filtro busqueda
-	 * @return Numero de pagos
-	 */
-	Long countPagos(FiltroPagoAuditoria pFiltroBusqueda);
-
-	/**
-	 * Obtener pagos.
-	 *
-	 * @param pFiltroBusqueda
-	 *                             filtro busqueda
-	 * @param filtroPaginacion
-	 *                             filtro paginacion
-	 * @return lista de pagos
-	 */
-	List<PagoAuditoria> obtenerPagos(FiltroPagoAuditoria pFiltroBusqueda, FiltroPaginacion filtroPaginacion);
-
-	/**
-	 * Count tramites persistencia.
-	 *
-	 * @param pFiltroBusqueda
-	 *                            filtro busqueda
-	 * @return Numero de tramites
-	 */
-	Long countTramitesPersistencia(FiltroPersistenciaAuditoria pFiltroBusqueda);
-
-	/**
-	 * Obtener tramites persistencia.
-	 *
-	 * @param pFiltroBusqueda
-	 *                             filtro busqueda
-	 * @param filtroPaginacion
-	 *                             filtro paginacion
-	 * @return lista de persistencia
-	 */
-	List<PersistenciaAuditoria> obtenerTramitesPersistencia(FiltroPersistenciaAuditoria pFiltroBusqueda,
-			FiltroPaginacion filtroPaginacion);
-
-	/**
-	 * Recuperar persistencia ficheros.
-	 *
-	 * @param pIdTramite
-	 *                       id tramite
-	 * @return lista de ficheros
-	 */
-	List<FicheroPersistenciaAuditoria> recuperarPersistenciaFicheros(Long pIdTramite);
-
-	/**
-	 * Recuperar tramites persistencia.
-	 *
-	 * @param pFiltro
-	 *                    filtro
-	 * @return lista de tramites
-	 */
-	List<TramitePersistencia> recuperarTramitesPersistencia(FiltroTramitePersistencia pFiltro);
-
-	/**
-	 * Recuperar tramites finalizados.
-	 *
-	 * @param pFiltro
-	 *                    filtro
-	 * @return lista de tramites
-	 */
-	List<TramiteFinalizado> recuperarTramitesFinalizados(FiltroTramiteFinalizado pFiltro);
 
 }

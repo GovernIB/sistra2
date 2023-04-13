@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.DominioTramite;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -54,6 +55,9 @@ public class DialogDominioTramites extends DialogControllerBase {
 	private String portapapeles;
 
 	private String errorCopiar;
+
+	/** Filtro (puede venir por parametro). */
+	private String filtro;
 
 	/**
 	 * Inicialización.
@@ -102,6 +106,25 @@ public class DialogDominioTramites extends DialogControllerBase {
 		return tramiteService
 				.getTramiteByIdentificador(tramiteService.getIdentificadorByCodigoVersion(idTram), null, idArea, null)
 				.getIdentificador();
+	}
+
+	/**
+	 *
+	 * @param filtro
+	 */
+	public void buscar(final String filtro) {
+		campos = tramiteService.getTramiteVersionByDominio(Long.valueOf(id), filtro);
+	}
+
+	/**
+	 * Recuperacion de datos.
+	 */
+	public void filtrar() {
+
+		this.buscar(filtro);
+
+		// Quitamos seleccion de dato
+		valorSeleccionado = null;
 	}
 
 	/**
@@ -241,6 +264,20 @@ public class DialogDominioTramites extends DialogControllerBase {
 	 */
 	public void setArea(final String area) {
 		this.area = area;
+	}
+
+	/**
+	 * @return the filtro
+	 */
+	public String getFiltro() {
+		return filtro;
+	}
+
+	/**
+	 * @param filtro the filtro to set
+	 */
+	public void setFiltro(final String filtro) {
+		this.filtro = filtro;
 	}
 
 }

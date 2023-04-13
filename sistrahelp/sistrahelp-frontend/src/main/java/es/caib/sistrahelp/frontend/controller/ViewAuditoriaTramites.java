@@ -1,5 +1,6 @@
 package es.caib.sistrahelp.frontend.controller;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -78,6 +79,16 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 
 	private String errorCopiar;
 
+	private String idTramiteECM;
+
+	private String versionTramiteECM;
+
+	private String fechaDesdeECM;
+
+	private String fechaHastaECM;
+
+	private String horaDesdeECM;
+
 	/**
 	 * Inicializa.
 	 */
@@ -97,6 +108,43 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 			if (!TypeEvento.PROCESO_PURGA.equals(ev) && !TypeEvento.INV_EJE.equals(ev)
 					&& !TypeEvento.INV_REQ.equals(ev)) {
 				tiposEventos.add(ev);
+			}
+		}
+
+		if(idTramiteECM != null && !idTramiteECM.isEmpty() && versionTramiteECM != null && !versionTramiteECM.isEmpty()) {
+			filtros.setIdTramite(idTramiteECM);
+			filtros.setVersionTramite(Integer.parseInt(versionTramiteECM));
+			filtros.setEvento(TypeEvento.ERROR);
+
+			if(horaDesdeECM != null && !horaDesdeECM.isEmpty()) {
+				try {
+					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+					Date fecha = dateFormat.parse(horaDesdeECM);
+					filtros.setFechaDesde(fecha);
+				}catch (java.text.ParseException e) {
+
+		        }
+			} else {
+
+				if(fechaDesdeECM != null && !fechaDesdeECM.isEmpty()) {
+					try {
+						SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+						Date fecha = dateFormat.parse(fechaDesdeECM);
+						filtros.setFechaDesde(fecha);
+					}catch (java.text.ParseException e) {
+
+			        }
+				}
+
+				if(fechaHastaECM != null && !fechaHastaECM.isEmpty()) {
+					try {
+						SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+						Date fecha = dateFormat.parse(fechaHastaECM);
+						filtros.setFechaHasta(fecha);
+					}catch (java.text.ParseException e) {
+
+			        }
+				}
 			}
 		}
 	}
@@ -420,4 +468,75 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	public final void setPortapapeles(String portapapeles) {
 		this.portapapeles = portapapeles;
 	}
+
+	/**
+	 * @return the idTramiteECM
+	 */
+	public String getIdTramiteECM() {
+		return idTramiteECM;
+	}
+
+	/**
+	 * @param idTramiteECM the idTramiteECM to set
+	 */
+	public void setIdTramiteECM(String idTramiteECM) {
+		this.idTramiteECM = idTramiteECM;
+	}
+
+	/**
+	 * @return the versionTramiteECM
+	 */
+	public String getVersionTramiteECM() {
+		return versionTramiteECM;
+	}
+
+	/**
+	 * @param versionTramiteECM the versionTramiteECM to set
+	 */
+	public void setVersionTramiteECM(String versionTramiteECM) {
+		this.versionTramiteECM = versionTramiteECM;
+	}
+
+	/**
+	 * @return the fechaDesdeECM
+	 */
+	public String getFechaDesdeECM() {
+		return fechaDesdeECM;
+	}
+
+	/**
+	 * @param fechaDesdeECM the fechaDesdeECM to set
+	 */
+	public void setFechaDesdeECM(String fechaDesdeECM) {
+		this.fechaDesdeECM = fechaDesdeECM;
+	}
+
+	/**
+	 * @return the fechaHastaECM
+	 */
+	public String getFechaHastaECM() {
+		return fechaHastaECM;
+	}
+
+	/**
+	 * @param fechaHastaECM the fechaHastaECM to set
+	 */
+	public void setFechaHastaECM(String fechaHastaECM) {
+		this.fechaHastaECM = fechaHastaECM;
+	}
+
+	/**
+	 * @return the horaDesdeECM
+	 */
+	public String getHoraDesdeECM() {
+		return horaDesdeECM;
+	}
+
+	/**
+	 * @param horaDesdeECM the horaDesdeECM to set
+	 */
+	public void setHoraDesdeECM(String horaDesdeECM) {
+		this.horaDesdeECM = horaDesdeECM;
+	}
+
 }

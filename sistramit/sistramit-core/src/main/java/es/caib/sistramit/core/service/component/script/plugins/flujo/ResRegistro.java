@@ -36,6 +36,9 @@ public final class ResRegistro implements ResRegistroInt {
 	/** extracto del asiento . */
 	private String extracto;
 
+	/** código SIA . */
+	private String codigoSIA;
+
 	@Override
 	public String getPluginId() {
 		return ID;
@@ -200,6 +203,25 @@ public final class ResRegistro implements ResRegistroInt {
 	@Override
 	public void setCodigoEntidad(final String codigoEntidad) {
 		this.codigoEntidad = codigoEntidad;
+	}
+
+	/**
+	 * Método de acceso a codigoSIA.
+	 * 
+	 * @return codigoSIA
+	 */
+	public String getCodigoSIA() {
+		return codigoSIA;
+	}
+
+	/**
+	 * Método para establecer codigoSIA.
+	 * 
+	 * @param codigoSIA
+	 *                      codigoSIA a establecer
+	 */
+	public void setCodigoSIA(final String codigoSIA) {
+		this.codigoSIA = codigoSIA;
 	}
 
 }

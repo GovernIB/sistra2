@@ -102,6 +102,10 @@ public final class HFormulario implements IModelApi {
 	@Column(name = "SFR_TITPRO")
 	private String tituloProcedimiento;
 
+	/** Atributo titulo tramite. */
+	@Column(name = "SFR_TITTRA")
+	private String tituloTramite;
+
 	/** Atributo codigo sia procedimiento. */
 	@Column(name = "SFR_SIAPRO")
 	private String codigoSiaProcedimiento;
@@ -590,7 +594,7 @@ public final class HFormulario implements IModelApi {
 
 	/**
 	 * Método de acceso a dir3ResponsableProcedimiento.
-	 * 
+	 *
 	 * @return dir3ResponsableProcedimiento
 	 */
 	public String getDir3ResponsableProcedimiento() {
@@ -599,13 +603,32 @@ public final class HFormulario implements IModelApi {
 
 	/**
 	 * Método para establecer dir3ResponsableProcedimiento.
-	 * 
+	 *
 	 * @param dir3ResponsableProcedimiento
 	 *                                         dir3ResponsableProcedimiento a
 	 *                                         establecer
 	 */
 	public void setDir3ResponsableProcedimiento(final String dir3ResponsableProcedimiento) {
 		this.dir3ResponsableProcedimiento = dir3ResponsableProcedimiento;
+	}
+
+	/**
+	 * Método de acceso a tituloTramite.
+	 * 
+	 * @return tituloTramite
+	 */
+	public String getTituloTramite() {
+		return tituloTramite;
+	}
+
+	/**
+	 * Método para establecer tituloTramite.
+	 * 
+	 * @param tituloTramite
+	 *                          tituloTramite a establecer
+	 */
+	public void setTituloTramite(final String tituloTramite) {
+		this.tituloTramite = tituloTramite;
 	}
 
 }

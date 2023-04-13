@@ -1119,6 +1119,12 @@ public class TramiteServiceImpl implements TramiteService {
 
 	@Override
 	@NegocioInterceptor
+	public List<DominioTramite> getTramiteVersionByDominio(final Long idDominio, final String filtro) {
+		return tramiteDao.getTramiteVersionByDominio(idDominio, filtro);
+	}
+
+	@Override
+	@NegocioInterceptor
 	public List<SeccionReutilizableTramite> getTramiteVersionBySeccionReutilizable(Long idSeccionReutilizable) {
 		return tramiteDao.getTramiteVersionBySeccionReutilizable(idSeccionReutilizable);
 	}
@@ -1136,6 +1142,12 @@ public class TramiteServiceImpl implements TramiteService {
 		return tramiteDao.getTramiteVersionByEnvioRemoto(idEnvioRemoto);
 	}
 
+	@Override
+	@NegocioInterceptor
+	public List<DominioTramite> getTramiteVersionByEnvioRemoto(final Long idEnvioRemoto, final String filtro) {
+		return tramiteDao.getTramiteVersionByEnvioRemoto(idEnvioRemoto, filtro);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -1147,6 +1159,12 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public List<DominioTramite> getTramiteVersionByGfe(final Long idGfe) {
 		return tramiteDao.getTramiteVersionByGfe(idGfe);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<DominioTramite> getTramiteVersionByGfe(final Long idGfe, final String filtro) {
+		return tramiteDao.getTramiteVersionByGfe(idGfe, filtro);
 	}
 
 	@Override

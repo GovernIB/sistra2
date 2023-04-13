@@ -417,14 +417,32 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<DominioTramite> getTramiteVersionByDominio(final Long idDominio, final String filtro) {
+		return tramiteService.getTramiteVersionByDominio(idDominio, filtro);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<DominioTramite> getTramiteVersionByEnvioRemoto(final Long idEnvioRemoto) {
 		return tramiteService.getTramiteVersionByEnvioRemoto(idEnvioRemoto);
 	}
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<DominioTramite> getTramiteVersionByEnvioRemoto(final Long idEnvioRemoto, final String filtro) {
+		return tramiteService.getTramiteVersionByEnvioRemoto(idEnvioRemoto, filtro);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<DominioTramite> getTramiteVersionByGfe(final Long Gfe) {
 		return tramiteService.getTramiteVersionByGfe(Gfe);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<DominioTramite> getTramiteVersionByGfe(final Long Gfe, final String filtro) {
+		return tramiteService.getTramiteVersionByGfe(Gfe, filtro);
 	}
 
 	@Override

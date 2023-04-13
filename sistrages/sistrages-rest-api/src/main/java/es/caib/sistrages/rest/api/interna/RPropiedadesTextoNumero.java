@@ -43,6 +43,23 @@ public class RPropiedadesTextoNumero {
 	@ApiModelProperty(value = "Texto número: permite negativos")
 	private boolean negativos;
 
+	@ApiModelProperty(value = "Prevenir pegar")
+	private boolean prevenirPegar;
+
+	/**
+	 * @return the prevenirPegar
+	 */
+	public final boolean isPrevenirPegar() {
+		return prevenirPegar;
+	}
+
+	/**
+	 * @param prevenirPegar the prevenirPegar to set
+	 */
+	public final void setPrevenirPegar(boolean prevenirPegar) {
+		this.prevenirPegar = prevenirPegar;
+	}
+
 	/**
 	 * Método de acceso a precisionEntera.
 	 *
@@ -55,8 +72,7 @@ public class RPropiedadesTextoNumero {
 	/**
 	 * Método para establecer precisionEntera.
 	 *
-	 * @param precisionEntera
-	 *            precisionEntera a establecer
+	 * @param precisionEntera precisionEntera a establecer
 	 */
 	public void setPrecisionEntera(int precisionEntera) {
 		this.precisionEntera = precisionEntera;
@@ -74,8 +90,7 @@ public class RPropiedadesTextoNumero {
 	/**
 	 * Método para establecer precisionDecimal.
 	 *
-	 * @param precisionDecimal
-	 *            precisionDecimal a establecer
+	 * @param precisionDecimal precisionDecimal a establecer
 	 */
 	public void setPrecisionDecimal(int precisionDecimal) {
 		this.precisionDecimal = precisionDecimal;
@@ -93,8 +108,7 @@ public class RPropiedadesTextoNumero {
 	/**
 	 * Método para establecer formatoNumero.
 	 *
-	 * @param formatoNumero
-	 *            formatoNumero a establecer
+	 * @param formatoNumero formatoNumero a establecer
 	 */
 	public void setFormatoNumero(String formatoNumero) {
 		this.formatoNumero = formatoNumero;
@@ -112,8 +126,7 @@ public class RPropiedadesTextoNumero {
 	/**
 	 * Método para establecer rango.
 	 *
-	 * @param rango
-	 *            rango a establecer
+	 * @param rango rango a establecer
 	 */
 	public void setRango(boolean rango) {
 		this.rango = rango;
@@ -131,8 +144,7 @@ public class RPropiedadesTextoNumero {
 	/**
 	 * Método para establecer rangoDesde.
 	 *
-	 * @param rangoDesde
-	 *            rangoDesde a establecer
+	 * @param rangoDesde rangoDesde a establecer
 	 */
 	public void setRangoDesde(int rangoDesde) {
 		this.rangoDesde = rangoDesde;
@@ -150,8 +162,7 @@ public class RPropiedadesTextoNumero {
 	/**
 	 * Método para establecer rangoHasta.
 	 *
-	 * @param rangoHasta
-	 *            rangoHasta a establecer
+	 * @param rangoHasta rangoHasta a establecer
 	 */
 	public void setRangoHasta(int rangoHasta) {
 		this.rangoHasta = rangoHasta;
@@ -169,8 +180,7 @@ public class RPropiedadesTextoNumero {
 	/**
 	 * Método para establecer negativos.
 	 *
-	 * @param negativos
-	 *            negativos a establecer
+	 * @param negativos negativos a establecer
 	 */
 	public void setNegativos(boolean negativos) {
 		this.negativos = negativos;

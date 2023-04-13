@@ -177,6 +177,7 @@ public final class AccionAbrirFormulario implements AccionPaso {
 		difi.setInfoAutenticacion(pVariablesFlujo.getUsuarioAutenticado());
 		difi.setXmlDatosActuales(pDipa.getDatosFormulario(pDefinicionFormulario.getIdentificador()));
 		difi.setTituloProcedimiento(pVariablesFlujo.getDatosTramiteCP().getProcedimiento().getDescripcion());
+		difi.setTituloTramite(pVariablesFlujo.getDatosTramiteCP().getDescripcion());
 		difi.setCodigoSiaProcedimiento(pVariablesFlujo.getDatosTramiteCP().getProcedimiento().getIdProcedimientoSIA());
 		difi.setDir3ResponsableProcedimiento(
 				pVariablesFlujo.getDatosTramiteCP().getProcedimiento().getOrganoResponsableDir3());

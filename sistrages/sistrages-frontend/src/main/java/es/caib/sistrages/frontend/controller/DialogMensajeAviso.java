@@ -124,13 +124,10 @@ public class DialogMensajeAviso extends DialogControllerBase {
 
 		if (tramite == null) {
 			tipoTramite = false;
-			tipos = new LinkedList<>(Arrays.asList(TypeAvisoEntidad.values()));
-			tipos.remove(TypeAvisoEntidad.TRAMITE_VERSION);
 		} else {
 			tipoTramite = true;
-			tipos = new ArrayList<>();
-			tipos.add(TypeAvisoEntidad.TRAMITE_VERSION);
 		}
+		tipos = new LinkedList<>(Arrays.asList(TypeAvisoEntidad.values()));
 
 		// Modo acceso
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
@@ -147,11 +144,6 @@ public class DialogMensajeAviso extends DialogControllerBase {
 				data = avisoEntidadService.getAvisoEntidad(Long.valueOf(id));
 				if (data != null && data.getMensaje() != null) {
 					literal = data.getMensaje().getTraduccion(UtilJSF.getSessionBean().getLang());
-				}
-				if (data != null && data.getTipo() == TypeAvisoEntidad.TRAMITE_VERSION) {
-					setDisabledActivo(true);
-					tipos = new ArrayList<>();
-					tipos.add(TypeAvisoEntidad.TRAMITE_VERSION);
 				}
 			}
 			if (tramite != null) {
@@ -214,6 +206,10 @@ public class DialogMensajeAviso extends DialogControllerBase {
 			return;
 		}
 
+		if (data.getTipo().equals(TypeAvisoEntidad.TRAMITE_VERSION) && listaTramites.size() > 0) {
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("dialogMensajeAviso.error.versiones"));
+			return;
+		}
 		String codigoVersion = null;
 		for (final TramiteVersion version : versiones) {
 			if (version.getNumeroVersion() == Integer.parseInt(versionSeleccionado)) {
@@ -355,13 +351,18 @@ public class DialogMensajeAviso extends DialogControllerBase {
 			return;
 		}
 
-		if (data.getTipo() == TypeAvisoEntidad.LISTA) {
+		if (data.getTipo() == TypeAvisoEntidad.LISTA || data.getTipo() == TypeAvisoEntidad.TRAMITE_VERSION) {
 			this.data.setListaSerializadaTramites(getListaSerializada());
 		}
 
-		if ((data.getTipo() == TypeAvisoEntidad.LISTA || data.getTipo() == TypeAvisoEntidad.TRAMITE_VERSION)
-				&& data.getListaSerializadaTramites().isEmpty()) {
+		if (data.getTipo() == TypeAvisoEntidad.LISTA && data.getListaSerializadaTramites().isEmpty()) {
 			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("dialogMensajeAviso.error.tramitesvacios"));
+			return;
+		}
+
+		if (data.getTipo() == TypeAvisoEntidad.TRAMITE_VERSION && data.getListaSerializadaTramites().isEmpty()) {
+			addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("dialogMensajeAviso.error.tramitesvaciosversion"));
 			return;
 		}
 

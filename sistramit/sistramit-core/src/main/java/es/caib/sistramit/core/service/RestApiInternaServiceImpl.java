@@ -1,6 +1,7 @@
 package es.caib.sistramit.core.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistramit.core.api.model.system.rest.interno.DetallePagoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.ErroresPorTramiteCM;
 import es.caib.sistramit.core.api.model.system.rest.interno.EventoAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.rest.interno.EventoCM;
 import es.caib.sistramit.core.api.model.system.rest.interno.FicheroAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FicheroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroEventoAuditoria;
@@ -22,16 +25,11 @@ import es.caib.sistramit.core.api.model.system.rest.interno.PagoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.PersistenciaAuditoria;
 import es.caib.sistramit.core.api.service.RestApiInternaService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
-import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.component.system.RestApiInternaComponent;
 
 @Service
 @Transactional
 public class RestApiInternaServiceImpl implements RestApiInternaService {
-
-	/** Componente auditoria. */
-	@Autowired
-	private AuditoriaComponent auditoriaComponent;
 
 	@Autowired
 	private RestApiInternaComponent restApiInternaComponent;
@@ -42,20 +40,20 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Override
 	@NegocioInterceptor
 	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(final FiltroEventoAuditoria pFiltros) {
-		return auditoriaComponent.recuperarLogSesionTramitacionArea(pFiltros);
+		return restApiInternaComponent.recuperarLogSesionTramitacionArea(pFiltros);
 	}
 
 	@Override
 	@NegocioInterceptor
 	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
 			final FiltroEventoAuditoria pFiltroBusqueda, final FiltroPaginacion pFiltroPaginacion) {
-		return auditoriaComponent.recuperarLogSesionTramitacionArea(pFiltroBusqueda, pFiltroPaginacion);
+		return restApiInternaComponent.recuperarLogSesionTramitacionArea(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 	@Override
 	@NegocioInterceptor
 	public Long contarLogSesionTramitacionArea(final FiltroEventoAuditoria pFiltroBusqueda) {
-		return auditoriaComponent.contarLogSesionTramitacionArea(pFiltroBusqueda);
+		return restApiInternaComponent.contarLogSesionTramitacionArea(pFiltroBusqueda);
 	}
 
 	@Override
@@ -107,5 +105,46 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	public List<FicheroPersistenciaAuditoria> recuperarPersistenciaFicheros(final Long pIdTramite) {
 		return restApiInternaComponent.recuperarPersistenciaFicheros(pIdTramite);
 
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<EventoCM> recuperarEventosCM(FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiInternaComponent.recuperarEventosCM(pFiltroBusqueda);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<ErroresPorTramiteCM> recuperarErroresPorTramiteCM(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		return restApiInternaComponent.recuperarErroresPorTramiteCM(pFiltroBusqueda, filtroPaginacion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Long contarErroresPorTramiteCM(FiltroEventoAuditoria filtroBusqueda) {
+		return restApiInternaComponent.contarErroresPorTramiteCM(filtroBusqueda);
+	}
+
+	@Override
+	public List<EventoCM> recuperarErroresPorTramiteCMExpansion(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		return restApiInternaComponent.recuperarErroresPorTramiteCMExpansion(pFiltroBusqueda, filtroPaginacion);
+	}
+
+	@Override
+	public Long contarErroresPorTramiteExpansionCM(FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiInternaComponent.contarErroresPorTramiteExpansionCM(pFiltroBusqueda);
+	}
+
+	@Override
+	public List<EventoCM> recuperarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		return restApiInternaComponent.recuperarErroresPlataformaCM(pFiltroBusqueda, filtroPaginacion);
+	}
+
+	@Override
+	public Long contarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiInternaComponent.contarErroresPlataformaCM(pFiltroBusqueda);
 	}
 }

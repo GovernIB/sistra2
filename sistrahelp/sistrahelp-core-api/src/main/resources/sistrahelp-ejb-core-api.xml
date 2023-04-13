@@ -19,4 +19,24 @@
 			jndi-name="java:app//sistrahelp-core/EjemploServiceBean"
 			business-interface="es.caib.sistrahelp.core.api.service.EjemploService"/>
  -->
+
+ <jee:local-slsb
+			id="alertaService"
+			jndi-name="java:app/sistrahelp-core/AlertaServiceBean"
+			business-interface="es.caib.sistrahelp.core.api.service.AlertaService"/>
+
+ <jee:local-slsb
+			id="helpdeskService"
+			jndi-name="java:app/sistrahelp-core/HelpDeskServiceBean"
+			business-interface="es.caib.sistrahelp.core.api.service.HelpDeskService"/>
+
+ <jee:local-slsb
+			id="configuracionService"
+			jndi-name="java:app/sistrahelp-core/ConfiguracionServiceBean"
+			business-interface="es.caib.sistrahelp.core.api.service.ConfiguracionService"/>
+
+ <jee:local-slsb
+			id="historialAlertaService"
+			jndi-name="java:app/sistrahelp-core/HistorialAlertaServiceBean"
+			business-interface="es.caib.sistrahelp.core.api.service.HistorialAlertaService"/>
 </beans>

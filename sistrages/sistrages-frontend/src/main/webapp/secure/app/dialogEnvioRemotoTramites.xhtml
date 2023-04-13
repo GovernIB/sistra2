@@ -34,7 +34,9 @@
 	<h:form id="dialogFuenteDatos"  styleClass="margin-top-10">
 				<h:outputScript >
 
-			  window.onload=function(){
+			  var arrayCm = [];
+					
+				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
 
@@ -91,11 +93,62 @@
 		          aux.value = '';
 		        }
 
+		          if(aux.value!='' ){
+            var multiple = false;
+            var hijos = el.children;
+			if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR') &amp;&amp; hijos.length &gt; 1){
+		            multiple = true;
+		                  }else if(hijos.length &gt;= 1 ){
+		                  	if(hijos.length==1  &amp;&amp; hijos[0].tagName=='DIV'){
+		                  		hijos = hijos[0].children;
+		                  	}
+			                    for(i=0;i&lt;hijos.length;i++){
+					              if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+					                multiple=true;
+					              }
+			                    }
+
+		                  }
+                  var listaCm = document.getElementsByClassName('ui-contextmenu');
+                  if(multiple){
+                    for(i=0;i&lt;listaCm.length;i++){
+                    	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+                    		arrayCm.push(listaCm[i]);
+                    	}
+	                	listaCm[i].classList.add("d-none");
+					}
+                  }else{
+                  	for(i=0;i&lt;listaCm.length;i++){
+                  		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+                    		arrayCm.push(listaCm[i]);
+                    	}
+	                	listaCm[i].classList.remove("d-none");
+					}
+					if(arrayCm.length&gt;1){
+						arrayCm.pop();
+						for(let i=0; i&lt;arrayCm.length; i++){
+							arrayCm[i].style.display='none';
+						}
+					}
+					arrayCm = [];
+                  }
+
+               }
+
 			 }
 
 			</h:outputScript>
   			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
+
+			<p:toolbar id="toolbar">
+				<f:facet name="left">
+					<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
+						<p:inputText placeholder="#{msg['botones.buscar']}" value="#{dialogEnvioRemotoTramites.filtro}"/>
+						<p:commandButton icon="fa fa-search" actionListener="#{dialogEnvioRemotoTramites.filtrar()}" process="panelFiltro" update="growlDialog dataTableDatos" />
+					</h:panelGrid>
+				</f:facet>
+			</p:toolbar>
 
 			<h:panelGrid styleClass="h100" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18, w25px, w10" columns = "1" cellpadding = "5" cellspacing = "0"  width="100%">
 
@@ -120,23 +173,23 @@
 				<p:ajax event="rowSelect" global="false" />
 				<p:ajax event="rowUnselect" />
 
-			    <p:column headerText="#{msg['dialogDominioTramites.headerTramite']}" style="width:25%">
+			    <p:column headerText="#{msg['dialogDominioTramites.headerTramite']}" style="width:25%" sortBy="${dialogEnvioRemotoTramites.getIdCompuesto(td.idTramiteVersion, td.area)}">
 			        <h:outputText value="${dialogEnvioRemotoTramites.getIdCompuesto(td.idTramiteVersion, td.area)}"/>
 			    </p:column>
 
-			    <p:column headerText="#{msg['dialogDominioTramites.headerEntidad']}">
+			    <p:column headerText="#{msg['dialogDominioTramites.headerEntidad']}" sortBy="${td.entidad.getTraduccion(sessionBean.lang,sessionBean.idiomas)}">
 			        <h:outputText value="${td.entidad.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" />
 			    </p:column>
 
-			     <p:column headerText="#{msg['dialogDominioTramites.headerArea']}" style="width:10%">
+			     <p:column headerText="#{msg['dialogDominioTramites.headerArea']}" style="width:10%" sortBy="${td.area}">
 			        <h:outputText value="${td.area}" />
 			    </p:column>
 
-			     <p:column headerText="#{msg['dialogDominioTramites.headerNumVersion']}" style="width:10%">
+			     <p:column headerText="#{msg['dialogDominioTramites.headerNumVersion']}" style="width:10%" sortBy="${td.numVersion}">
 			        <h:outputText value="${td.numVersion}" />
 			    </p:column>
 
-			     <p:column headerText="#{msg['dialogDominioTramites.headerRelease']}"  style="width:10%">
+			     <p:column headerText="#{msg['dialogDominioTramites.headerRelease']}"  style="width:10%" sortBy="${td.release}">
 			        <h:outputText value="${td.release}" />
 			    </p:column>
 

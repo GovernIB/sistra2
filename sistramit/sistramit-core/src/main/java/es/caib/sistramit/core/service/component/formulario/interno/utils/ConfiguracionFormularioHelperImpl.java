@@ -372,19 +372,16 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 			confCampo = obtenerConfCampoTextoNumero(pCampoDef);
 			break;
 		case CODIGO_POSTAL: // Codigo postal
-			final ConfiguracionCampoTextoCP confCampoCP = new ConfiguracionCampoTextoCP();
-			confCampo = confCampoCP;
+			confCampo = obtenerConfCampoTextoCP(pCampoDef);
 			break;
 		case EMAIL: // Email
 			confCampo = obtenerConfCampoTextoEmail(pCampoDef);
 			break;
 		case FECHA: // Fecha
-			final ConfiguracionCampoTextoFecha confCampoFecha = new ConfiguracionCampoTextoFecha();
-			confCampo = confCampoFecha;
+			confCampo = obtenerConfCampoTextoFecha(pCampoDef);
 			break;
 		case HORA: // Fecha
-			final ConfiguracionCampoTextoHora confCampoHora = new ConfiguracionCampoTextoHora();
-			confCampo = confCampoHora;
+			confCampo = obtenerConfCampoTextoHora(pCampoDef);
 			break;
 		case IDENTIFICADOR: // Identificador
 			confCampo = obtenerConfCampoTextoIdentificador(pCampoDef);
@@ -396,10 +393,10 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 			confCampo = obtenerConfCampoTextoExpreg(pCampoDef);
 			break;
 		case PASSWORD: // Password
-			confCampo = new ConfiguracionCampoTextoPassword();
+			confCampo = obtenerConfCampoTextoPwd(pCampoDef);
 			break;
-		case IBAN:
-			confCampo = new ConfiguracionCampoTextoIban();
+		case IBAN: // IBAN
+			confCampo = obtenerConfCampoIban(pCampoDef);
 			break;
 		default:
 			throw new TipoNoControladoException("Tipus de camp texto no controlat: " + pCampoDef.getTipoTexto());
@@ -412,6 +409,70 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	}
 
 	/**
+	 * Config campo texto fecha.
+	 *
+	 * @param pCampoDef
+	 *                      Definicion campo
+	 * @return configuracion campo
+	 */
+	protected ConfiguracionCampoTextoFecha obtenerConfCampoTextoFecha(final RComponenteTextbox pCampoDef) {
+		final ConfiguracionCampoTextoFecha confCampoTextoFecha = new ConfiguracionCampoTextoFecha();
+		confCampoTextoFecha.getOpciones().setPegar(TypeSiNo.fromBoolean(!pCampoDef.getTextoFecha().isPrevenirPegar()));
+		return confCampoTextoFecha;
+	}
+
+	/**
+	 * Config campo texto pwd.
+	 *
+	 * @param pCampoDef
+	 *                      Definicion campo
+	 * @return configuracion campo
+	 */
+	protected ConfiguracionCampoTextoHora obtenerConfCampoTextoHora(final RComponenteTextbox pCampoDef) {
+		final ConfiguracionCampoTextoHora confCampoTextoHora = new ConfiguracionCampoTextoHora();
+		confCampoTextoHora.getOpciones().setPegar(TypeSiNo.fromBoolean(!pCampoDef.getTextoHora().isPrevenirPegar()));
+		return confCampoTextoHora;
+	}
+
+	/**
+	 * Config campo texto iban.
+	 *
+	 * @param pCampoDef
+	 *                      Definicion campo
+	 * @return configuracion campo
+	 */
+	protected ConfiguracionCampoTextoIban obtenerConfCampoIban(final RComponenteTextbox pCampoDef) {
+		final ConfiguracionCampoTextoIban confCampoTextoIban = new ConfiguracionCampoTextoIban();
+		confCampoTextoIban.getOpciones().setPegar(TypeSiNo.fromBoolean(!pCampoDef.getTextoIban().isPrevenirPegar()));
+		return confCampoTextoIban;
+	}
+
+	/**
+	 * Config campo texto pwd.
+	 *
+	 * @param pCampoDef
+	 *                      Definicion campo
+	 * @return configuracion campo
+	 */
+	protected ConfiguracionCampoTextoPassword obtenerConfCampoTextoPwd(final RComponenteTextbox pCampoDef) {
+		final ConfiguracionCampoTextoPassword confCampoPwd = new ConfiguracionCampoTextoPassword();
+		return confCampoPwd;
+	}
+
+	/**
+	 * Config campo texto CP.
+	 *
+	 * @param pCampoDef
+	 *                      Definicion campo
+	 * @return configuracion campo
+	 */
+	protected ConfiguracionCampoTextoCP obtenerConfCampoTextoCP(final RComponenteTextbox pCampoDef) {
+		final ConfiguracionCampoTextoCP confCampoCP = new ConfiguracionCampoTextoCP();
+		confCampoCP.getOpciones().setPegar(TypeSiNo.fromBoolean(!pCampoDef.getTextoCP().isPrevenirPegar()));
+		return confCampoCP;
+	}
+
+	/**
 	 * Configuracion campo texto exp regular.
 	 *
 	 * @param pCampoDef
@@ -421,6 +482,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	private ConfiguracionCampo obtenerConfCampoTextoExpreg(final RComponenteTextbox pCampoDef) {
 		final ConfiguracionCampoTextoExpReg confCampoExp = new ConfiguracionCampoTextoExpReg();
 		confCampoExp.getOpciones().setRegexp(pCampoDef.getTextoExpRegular().getExpresionRegular());
+		confCampoExp.getOpciones().setPegar(TypeSiNo.fromBoolean(!pCampoDef.getTextoExpRegular().isPrevenirPegar()));
 		return confCampoExp;
 	}
 
@@ -435,6 +497,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		final ConfiguracionCampoTextoTelefono confCampoTel = new ConfiguracionCampoTextoTelefono();
 		confCampoTel.getOpciones().setFijo(TypeSiNo.fromBoolean(pCampoDef.getTextoTelefono().isFijo()));
 		confCampoTel.getOpciones().setMovil(TypeSiNo.fromBoolean(pCampoDef.getTextoTelefono().isMovil()));
+		confCampoTel.getOpciones().setPegar(TypeSiNo.fromBoolean(!pCampoDef.getTextoTelefono().isPrevenirPegar()));
 		return confCampoTel;
 	}
 
@@ -453,6 +516,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		confCampoNormal.getOpciones().setTamanyo(pCampoDef.getTextoNormal().getTamanyoMax());
 		confCampoNormal.getOpciones()
 				.setMayusculas(TypeSiNo.fromBoolean(pCampoDef.getTextoNormal().isForzarMayusculas()));
+		confCampoNormal.getOpciones().setPegar(TypeSiNo.fromBoolean(!pCampoDef.getTextoNormal().isPrevenirPegar()));
 		return confCampo;
 	}
 
@@ -468,6 +532,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		final ConfiguracionCampoTextoEmail confCampoEmail = new ConfiguracionCampoTextoEmail();
 		confCampo = confCampoEmail;
 		confCampoEmail.getOpciones().setTamanyo(pCampoDef.getTextoEmail().getTamanyoMax());
+		confCampoEmail.getOpciones().setPegar(TypeSiNo.fromBoolean(!pCampoDef.getTextoEmail().isPrevenirPegar()));
 		return confCampo;
 	}
 
@@ -498,6 +563,8 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 			confCampoNumero.getOpciones().setRangoMax(pCampoDef.getTextoNumero().getRangoHasta());
 		}
 
+		confCampoNumero.getOpciones().setPegar(TypeSiNo.fromBoolean(!pCampoDef.getTextoNumero().isPrevenirPegar()));
+
 		return confCampoNumero;
 	}
 
@@ -515,6 +582,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		confCampoId.getOpciones().setNifOtros(TypeSiNo.fromBoolean(pCampoDef.getTextoIdentificacion().isNifOtros()));
 		confCampoId.getOpciones().setNifPJ(TypeSiNo.fromBoolean(pCampoDef.getTextoIdentificacion().isNif()));
 		confCampoId.getOpciones().setNss(TypeSiNo.fromBoolean(pCampoDef.getTextoIdentificacion().isNss()));
+		confCampoId.getOpciones().setPegar(TypeSiNo.fromBoolean(!pCampoDef.getTextoIdentificacion().isPrevenirPegar()));
 		return confCampoId;
 	}
 

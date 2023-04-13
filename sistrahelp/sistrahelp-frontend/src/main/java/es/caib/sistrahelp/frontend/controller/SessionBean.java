@@ -335,9 +335,12 @@ public class SessionBean {
 		}
 
 		for (final TypeOpcionMenu opcion : TypeOpcionMenu.values()) {
-			item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
-			item.setUrl(UtilJSF.getUrlOpcionMenu(opcion, idEntidad));
-			model.addElement(item);
+			if (!opcion.name().equals("alertas")
+					|| (opcion.name().equals("alertas") && this.activeRole.equals(TypeRoleAcceso.SUPERVISOR_ENTIDAD))) {
+				item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
+				item.setUrl(UtilJSF.getUrlOpcionMenu(opcion, idEntidad));
+				model.addElement(item);
+			}
 		}
 
 		model.generateUniqueIds();

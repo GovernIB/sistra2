@@ -40,6 +40,30 @@ public final class OpcionesCampoTextoId implements Serializable {
 	private TypeSiNo nss = TypeSiNo.NO;
 
 	/**
+	 * Prevenir pegar.
+	 */
+	private TypeSiNo pegar = TypeSiNo.SI;
+
+	/**
+	 * Método de acceso a prevenirPegar.
+	 *
+	 * @return prevenirPegar
+	 */
+	public TypeSiNo getPegar() {
+		return pegar;
+	}
+
+	/**
+	 * Método para establecer prevenirPegar.
+	 *
+	 * @param prevenirPegar
+	 *                          prevenirPegar a establecer
+	 */
+	public void setPegar(final TypeSiNo prevenirPegar) {
+		this.pegar = prevenirPegar;
+	}
+
+	/**
 	 * Método de acceso a nie.
 	 *
 	 * @return nie
@@ -52,7 +76,7 @@ public final class OpcionesCampoTextoId implements Serializable {
 	 * Método para establecer nie.
 	 *
 	 * @param pNie
-	 *            nie a establecer
+	 *                 nie a establecer
 	 */
 	public void setNie(final TypeSiNo pNie) {
 		nie = pNie;
@@ -71,7 +95,7 @@ public final class OpcionesCampoTextoId implements Serializable {
 	 * Método para establecer nss.
 	 *
 	 * @param pNss
-	 *            nss a establecer
+	 *                 nss a establecer
 	 */
 	public void setNss(final TypeSiNo pNss) {
 		nss = pNss;
@@ -86,7 +110,7 @@ public final class OpcionesCampoTextoId implements Serializable {
 
 	/**
 	 * @param dni
-	 *            the dni to set
+	 *                the dni to set
 	 */
 	public final void setDni(final TypeSiNo dni) {
 		this.dni = dni;
@@ -101,7 +125,7 @@ public final class OpcionesCampoTextoId implements Serializable {
 
 	/**
 	 * @param nifOtros
-	 *            the nifOtros to set
+	 *                     the nifOtros to set
 	 */
 	public final void setNifOtros(final TypeSiNo nifOtros) {
 		this.nifOtros = nifOtros;
@@ -116,7 +140,7 @@ public final class OpcionesCampoTextoId implements Serializable {
 
 	/**
 	 * @param nifPJ
-	 *            the nifPJ to set
+	 *                  the nifPJ to set
 	 */
 	public void setNifPJ(final TypeSiNo nifPJ) {
 		this.nifPJ = nifPJ;

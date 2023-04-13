@@ -32,6 +32,23 @@ public class RPropiedadesTextoIdentificacion {
 	@ApiModelProperty(value = "Texto identificación: nss")
 	private boolean nss;
 
+	@ApiModelProperty(value = "Prevenir pegar")
+	private boolean prevenirPegar;
+
+	/**
+	 * @return the prevenirPegar
+	 */
+	public final boolean isPrevenirPegar() {
+		return prevenirPegar;
+	}
+
+	/**
+	 * @param prevenirPegar the prevenirPegar to set
+	 */
+	public final void setPrevenirPegar(boolean prevenirPegar) {
+		this.prevenirPegar = prevenirPegar;
+	}
+
 	/**
 	 * Método de acceso a nif.
 	 *
@@ -44,8 +61,7 @@ public class RPropiedadesTextoIdentificacion {
 	/**
 	 * Método para establecer nif.
 	 *
-	 * @param nif
-	 *            nif a establecer
+	 * @param nif nif a establecer
 	 */
 	public void setNif(final boolean nif) {
 		this.nif = nif;
@@ -63,8 +79,7 @@ public class RPropiedadesTextoIdentificacion {
 	/**
 	 * Método para establecer nie.
 	 *
-	 * @param nie
-	 *            nie a establecer
+	 * @param nie nie a establecer
 	 */
 	public void setNie(final boolean nie) {
 		this.nie = nie;
@@ -82,8 +97,7 @@ public class RPropiedadesTextoIdentificacion {
 	/**
 	 * Método para establecer nss.
 	 *
-	 * @param nss
-	 *            nss a establecer
+	 * @param nss nss a establecer
 	 */
 	public void setNss(final boolean nss) {
 		this.nss = nss;
@@ -97,8 +111,7 @@ public class RPropiedadesTextoIdentificacion {
 	}
 
 	/**
-	 * @param dni
-	 *            the dni to set
+	 * @param dni the dni to set
 	 */
 	public final void setDni(final boolean dni) {
 		this.dni = dni;
@@ -112,8 +125,7 @@ public class RPropiedadesTextoIdentificacion {
 	}
 
 	/**
-	 * @param nifOtros
-	 *            the nifOtros to set
+	 * @param nifOtros the nifOtros to set
 	 */
 	public final void setNifOtros(final boolean nifOtros) {
 		this.nifOtros = nifOtros;

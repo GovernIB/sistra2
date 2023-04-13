@@ -80,6 +80,8 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties impl
 		rdatosPago.setSujetoPasivoNombre(datosPago.getSujetoPasivoNombre());
 		rdatosPago.setTasaId(datosPago.getTasaId());
 		rdatosPago.setMetodosPago(datosPago.getMetodosPago());
+		rdatosPago.setIdTramite(datosPago.getIdTramite());
+		rdatosPago.setVersionTramite(datosPago.getVersionTramite());
 
 		datos.setDatosPago(rdatosPago);
 		datos.setUrlCallback(urlCallback);

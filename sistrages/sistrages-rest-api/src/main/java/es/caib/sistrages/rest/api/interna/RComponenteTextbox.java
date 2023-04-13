@@ -47,6 +47,22 @@ public class RComponenteTextbox extends RComponente {
 	@ApiModelProperty(value = "Propiedades texto teléfono")
 	private RPropiedadesTextoTelefono textoTelefono;
 
+	/** Propiedades texto cp. */
+	@ApiModelProperty(value = "Propiedades texto código postal")
+	private RPropiedadesTextoCP textoCP;
+
+	/** Propiedades texto fecha. */
+	@ApiModelProperty(value = "Propiedades texto fecha")
+	private RPropiedadesTextoFecha textoFecha;
+
+	/** Propiedades texto hora. */
+	@ApiModelProperty(value = "Propiedades texto hora")
+	private RPropiedadesTextoHora textoHora;
+
+	/** Propiedades texto hora. */
+	@ApiModelProperty(value = "Propiedades texto iban")
+	private RPropiedadesTextoIban textoIban;
+
 	/**
 	 * Método de acceso a propiedadesCampo.
 	 *
@@ -59,8 +75,7 @@ public class RComponenteTextbox extends RComponente {
 	/**
 	 * Método para establecer propiedadesCampo.
 	 *
-	 * @param propiedadesCampo
-	 *            propiedadesCampo a establecer
+	 * @param propiedadesCampo propiedadesCampo a establecer
 	 */
 	public void setPropiedadesCampo(final RPropiedadesCampo propiedadesCampo) {
 		this.propiedadesCampo = propiedadesCampo;
@@ -78,8 +93,7 @@ public class RComponenteTextbox extends RComponente {
 	/**
 	 * Método para establecer tipoTexto.
 	 *
-	 * @param tipoTexto
-	 *            tipoTexto a establecer
+	 * @param tipoTexto tipoTexto a establecer
 	 */
 	public void setTipoTexto(final String tipoTexto) {
 		this.tipoTexto = tipoTexto;
@@ -97,8 +111,7 @@ public class RComponenteTextbox extends RComponente {
 	/**
 	 * Método para establecer textoNormal.
 	 *
-	 * @param textoNormal
-	 *            textoNormal a establecer
+	 * @param textoNormal textoNormal a establecer
 	 */
 	public void setTextoNormal(final RPropiedadesTextoNormal textoNormal) {
 		this.textoNormal = textoNormal;
@@ -116,8 +129,7 @@ public class RComponenteTextbox extends RComponente {
 	/**
 	 * Método para establecer textoNumero.
 	 *
-	 * @param textoNumero
-	 *            textoNumero a establecer
+	 * @param textoNumero textoNumero a establecer
 	 */
 	public void setTextoNumero(final RPropiedadesTextoNumero textoNumero) {
 		this.textoNumero = textoNumero;
@@ -135,8 +147,7 @@ public class RComponenteTextbox extends RComponente {
 	/**
 	 * Método para establecer textoIdentificacion.
 	 *
-	 * @param textoIdentificacion
-	 *            textoIdentificacion a establecer
+	 * @param textoIdentificacion textoIdentificacion a establecer
 	 */
 	public void setTextoIdentificacion(final RPropiedadesTextoIdentificacion textoIdentificacion) {
 		this.textoIdentificacion = textoIdentificacion;
@@ -154,8 +165,7 @@ public class RComponenteTextbox extends RComponente {
 	/**
 	 * Método para establecer textoExpRegular.
 	 *
-	 * @param textoExpRegular
-	 *            textoExpRegular a establecer
+	 * @param textoExpRegular textoExpRegular a establecer
 	 */
 	public void setTextoExpRegular(final RPropiedadesTextoExpRegular textoExpRegular) {
 		this.textoExpRegular = textoExpRegular;
@@ -173,8 +183,7 @@ public class RComponenteTextbox extends RComponente {
 	/**
 	 * Método para establecer textoTelefono.
 	 *
-	 * @param textoTelefono
-	 *            textoTelefono a establecer
+	 * @param textoTelefono textoTelefono a establecer
 	 */
 	public void setTextoTelefono(final RPropiedadesTextoTelefono textoTelefono) {
 		this.textoTelefono = textoTelefono;
@@ -182,7 +191,7 @@ public class RComponenteTextbox extends RComponente {
 
 	/**
 	 * Método de acceso a textoEmail.
-	 * 
+	 *
 	 * @return textoEmail
 	 */
 	public RPropiedadesTextoEmail getTextoEmail() {
@@ -191,12 +200,67 @@ public class RComponenteTextbox extends RComponente {
 
 	/**
 	 * Método para establecer textoEmail.
-	 * 
-	 * @param textoEmail
-	 *            textoEmail a establecer
+	 *
+	 * @param textoEmail textoEmail a establecer
 	 */
 	public void setTextoEmail(final RPropiedadesTextoEmail textoEmail) {
 		this.textoEmail = textoEmail;
+	}
+
+	/**
+	 * @return the textoCP
+	 */
+	public final RPropiedadesTextoCP getTextoCP() {
+		return textoCP;
+	}
+
+	/**
+	 * @param textoCP the textoCP to set
+	 */
+	public final void setTextoCP(RPropiedadesTextoCP textoCP) {
+		this.textoCP = textoCP;
+	}
+
+	/**
+	 * @return the textoFecha
+	 */
+	public final RPropiedadesTextoFecha getTextoFecha() {
+		return textoFecha;
+	}
+
+	/**
+	 * @param textoFecha the textoFecha to set
+	 */
+	public final void setTextoFecha(RPropiedadesTextoFecha textoFecha) {
+		this.textoFecha = textoFecha;
+	}
+
+	/**
+	 * @return the textoHora
+	 */
+	public final RPropiedadesTextoHora getTextoHora() {
+		return textoHora;
+	}
+
+	/**
+	 * @param textoHora the textoHora to set
+	 */
+	public final void setTextoHora(RPropiedadesTextoHora textoHora) {
+		this.textoHora = textoHora;
+	}
+
+	/**
+	 * @return the textoIban
+	 */
+	public final RPropiedadesTextoIban getTextoIban() {
+		return textoIban;
+	}
+
+	/**
+	 * @param textoIban the textoIban to set
+	 */
+	public final void setTextoIban(RPropiedadesTextoIban textoIban) {
+		this.textoIban = textoIban;
 	}
 
 }

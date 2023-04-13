@@ -116,7 +116,7 @@ $.fn.appEmplenaFormulari = function(options) {
 				form_nom = bt.find("strong:first").text();
 
 				imc_missatge
-					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtCarregantForm + form_nom, alMostrar: function() { carregant(); } });
+					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtCarregantForm, alMostrar: function() { carregant(); } });
 
 			},
 			carregant = function() {

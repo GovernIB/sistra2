@@ -1,0 +1,86 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">CUADRO DE MANDO</h1>
+<p>
+
+En la pantalla de '<i>Cuadro de mando</i>' se presenta el estado del proceso de tramitaci&oacute;n transcurrido en un periodo de tiempo determinado, desde los eventos y tr&aacute;mites que se han iniciado y finalizado, hasta la actividad producida en los tr&aacute;mites que hayan generado alg&uacute;n error, pasando por un historial de las alertas ejecutadas.
+</p>
+
+<p>Se presentan las siguientes zonas y paneles:</p>
+
+<h2 class="stgH2">Evaluaci&oacute;n en:</h2>
+<p>En esta zona puede indicarse el periodo de monitorización, con las siguientes opciones:</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Tiempo real:</span> Es la opci&oacute;n por defecto y donde puede indicarse, dentro del d&iacute;a actual, la hora desde la que se eval&uacute;a el estado de la tramitaci&oacute;n y los minutos de refresco, que permite determinar cada cu&aacute;ntos minutos se refrescar&aacute; la informaci&oacute;n. Adem&aacute;s, es posible refrescar manualmente, pulsando el bot&oacute;n &rdquo;Refrescar&rdquo;.</li>
+		<li><span class="nombreCampo">Intervalo de tiempo:</span> Es donde puede indicarse una fecha Desde (obligatoria) y una fecha Hasta, de forma que al pulsar &ldquo;Buscar&rdquo; se obtiene toda la informaci&oacute;n del proceso de tramitaci&oacute;n transcurrido en ese periodo. Debido al proceso de purgado de eventos que se realiza en funci&oacute;n de las propiedades globales relacionadas, la fecha Desde se limita la fecha resultante de restar a la fecha actual, los d&iacute;as definidos en la propiedad global &quot;sistramit.purga.purgados&quot; (actualmente 90 d&iacute;as), ya que, en los d&iacute;as anteriores ya no existen los eventos en la BBDD y las estad&iacute;sticas no ser&iacute;an reales.</li>
+	</ul>
+</p>
+
+<h2 class="stgH2">Acciones:</h2>
+<p>En este panel se presentan todas las acciones realizadas en el d&iacute;a actual o periodo temporal indicado, organizadas por tipos de acción.</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Rellenar formulario:</span> Se muestra el n&uacute;mero de veces que se ha iniciado y finalizado la acci&oacute;n de rellenar formularios, y el porcentaje de acciones de este tipo no finalizadas (con o sin errores), es decir, la proporci&oacute;n de no finalizadas respecto al total de veces que se ha iniciado la acci&oacute;n de rellenar el formulario.</li>
+		<li><span class="nombreCampo">Firmar:</span> Se muestra el n&uacute;mero de veces que se ha iniciado y finalizado la acci&oacute;n de firmar, y el porcentaje de acciones de este tipo no finalizadas (con o sin errores), es decir, la proporci&oacute;n de no finalizadas respecto al total de veces que se ha iniciado la acci&oacute;n de firmar.</li>
+		<li><span class="nombreCampo">Pagar:</span> Se muestra el n&uacute;mero de veces que se ha iniciado y finalizado la acci&oacute;n de pagar, y el porcentaje de acciones de este tipo no finalizadas (con o sin errores), es decir, la proporci&oacute;n de no finalizadas respecto al total de veces que se ha iniciado la acci&oacute;n de pagar.</li>
+		<li><span class="nombreCampo">Registrar:</span> Se muestra el n&uacute;mero de veces que se ha iniciado y finalizado la acci&oacute;n de registrar, y el porcentaje de acciones de este tipo no finalizadas (con o sin errores), es decir, la proporci&oacute;n de no finalizadas respecto al total de veces que se ha iniciado la acci&oacute;n de registrar.</li>
+	</ul>
+</p>
+<p>En la &uacute;ltima columna de este panel de muestran por colores, si se requiere atenci&oacute;n o no, en funci&oacute;n de un umbral (porcentaje de acciones no finalizadas) predeterminado:</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Normal:</span> No se ha alcanzado el 50% de acciones no finalizadas a partir de las iniciadas.</li>
+
+		<li><span class="nombreCampo">Atenci&oacute;n:</span> El porcentaje est&aacute; entre el 50% y el 85%.</li>
+
+		<li><span class="nombreCampo">Revisar:</span> Se ha alcanzado o superado el 85% de acciones no finalizadas a partir de las iniciadas.</li>
+
+	</ul>
+</p>
+
+<h2 class="stgH2">Tr&aacute;mites y errores totales:</h2>
+<p>En este panel se muestra, para el total de todos los tr&aacute;mites iniciados durante el d&iacute;a o periodo de monitorizaci&oacute;n:</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Tr&aacute;mites totales:</span> Se muestra la cantidad de los iniciados, los finalizados, el porcentaje de no finalizados respecto a los iniciados y, por colores, el estado de atenci&oacute;n requerida seg&uacute;n el umbral predeterminado, es decir: <i>Normal</i> (porcentaje de tr&aacute;mites no finalizados inferior o igual al 50%), <i>Atenci&oacute;n</i> (porcentaje entre el 50% y el 85%) y <i>Revisar</i> (porcentaje de tr&aacute;mites no finalizados superior o igual al 85%).</li>
+		<li><span class="nombreCampo">N&uacute;mero total de errores:</span> Se muestra el n&uacute;mero de errores que han sucedido en todas las sesiones de tramitaci&oacute;n del periodo de monitorizaci&oacute;n.</li>
+	</ul>
+</p>
+
+<h2 class="stgH2">Errores por tr&aacute;mite:</h2>
+<p>Este panel muestra, para cada tr&aacute;mite que haya tenido un error en alguna de sus sesiones, los errores que se han producido. Se distinguen dos niveles de informaci&oacute;n, sobre los que pueden ordenarse los datos de cualquier columna:</p>
+<p>- Un primer nivel '<i>Tr&aacute;mite</i>': Muestra informaci&oacute;n de cada tr&aacute;mite que tiene errores en alguna de sus sesiones. Se ofrece la siguiente informaci&oacute;n:</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Tr&aacute;mite:</span> El id compuesto del tr&aacute;mite que contiene errores en alguna de sus sesiones. Es posible buscar en este campo.</li>
+		<li><span class="nombreCampo">Versi&oacute;n:</span> La versi&oacute;n de ese tr&aacute;mite.</li>
+		<li><span class="nombreCampo">Sesiones Ok:</span> El n&uacute;mero de sesiones que se han iniciado (TR_INI - Inicio del tr&aacute;mite) y finalizado (TR_FIN - Fin de tr&aacute;mite), aunque se hayan producido errores durante la tramitaci&oacute;n que no hayan impedido su finalizaci&oacute;n.</li>
+		<li><span class="nombreCampo">Sesiones no finalizadas:</span> El n&uacute;mero de sesiones que se han iniciado pero no se han finalizado (con o sin errores).</li>
+		<li><span class="nombreCampo">Porcentaje de sesiones no finalizadas:</span> Proporci&oacute;n de las sesiones que no han finalizado (con o sin errores), respecto a las sesiones iniciadas en ese tr&aacute;mite y versi&oacute;n.</li>
+		<li><span class="nombreCampo">Frecuencia de errores:</span> N&uacute;mero total de errores sucedidos en todas las sesiones de ese tr&aacute;mite y versi&oacute;n, que son los que se detallan en el segundo nivel, al pulsar sobre un registro del nivel &ldquo;Tr&aacute;mite&rdquo;.</li>
+	</ul>
+</p>
+<p>- Un segundo nivel '<i>Error</i>': Muestra la estadística de cada tipo de error ocurrido en las distintas sesiones de tramitaci&oacute;n para el tr&aacute;mite y versi&oacute;n del nivel superior correspondiente. Se ofrece la siguiente informaci&oacute;n:</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Error:</span> El error o excepci&oacute;n que ha sucedido en la sesi&oacute;n de tramitaci&oacute;n.</li>
+		<li><span class="nombreCampo">Frecuencia:</span> El n&uacute;mero de errores de ese tipo sucedidos en el tr&aacute;mite y versi&oacute;n correspondiente.</li>
+		<li><span class="nombreCampo">Porcentaje de error:</span> La proporción de errores de ese tipo respecto a los errores totales en ese tr&aacute;mite y versi&oacute;n.</li>
+	</ul>
+</p>
+
+<h2 class="stgH2">Errores de plataforma:</h2>
+<p>En este panel se ofrece informaci&oacute;n de cuantos errores de plataforma (y su detalle) han sucedido a lo largo del uso del asistente de tramitaci&oacute;n en el periodo de evaluaci&oacute;n. Estos errores no son propios de un tr&aacute;mtie concreto, sino que son m&aacute;s gen&eacute;ricos, a nivel de SISTRAMIT.</p>
+
+<h2 class="stgH2">Historial de alertas:</h2>
+<p>Este panel, que pueden ver los administradores de entidad, muestra en orden cronol&oacute;gico descendente, las alertas ejecutadas y la fecha de ejecuci&oacute;n, dentro del periodo del d&iacute;a en curso. Las alertas mostradas son las que se han ejecutado y remitido correo, al haberse evaluado como cierto la condici&oacute;n o condiciones configuradas en la pantalla de &ldquo;Alertas&rdquo;.</p>
+
+</p>
+</body>
+</html>

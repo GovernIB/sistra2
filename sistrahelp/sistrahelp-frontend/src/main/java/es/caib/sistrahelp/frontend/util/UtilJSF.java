@@ -30,6 +30,8 @@ import es.caib.sistrahelp.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrahelp.frontend.controller.DialogAyuda;
 import es.caib.sistrahelp.frontend.controller.SessionBean;
 import es.caib.sistrahelp.frontend.controller.ViewAuditoriaTramites;
+import es.caib.sistrahelp.frontend.controller.ViewConfiguracionAlertas;
+import es.caib.sistrahelp.frontend.controller.ViewCuadroMando;
 import es.caib.sistrahelp.frontend.controller.ViewEventosPlataforma;
 import es.caib.sistrahelp.frontend.controller.ViewInformacionPagos;
 import es.caib.sistrahelp.frontend.controller.ViewInformacionPersistencia;
@@ -400,6 +402,12 @@ public final class UtilJSF {
 		case INFORMACION_PERSISTENCIA:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewInformacionPersistencia.class) + EXTENSION_XHTML;
 			break;
+		case CUADRO_MANDO:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewCuadroMando.class) + EXTENSION_XHTML;
+			break;
+		case ALERTAS:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewConfiguracionAlertas.class) + EXTENSION_XHTML;
+			break;
 		default:
 			url = URL_SIN_IMPLEMENTAR;
 			break;
@@ -519,11 +527,11 @@ public final class UtilJSF {
 	 * @return
 	 */
 	public static String getEntorno() {
-		String entorno =  FacesContext.getCurrentInstance().getApplication()
+		String entorno = FacesContext.getCurrentInstance().getApplication()
 				.evaluateExpressionGet(FacesContext.getCurrentInstance(), "#{frontModuleConfig}",
 						es.caib.sistrahelp.frontend.ModuleConfig.class)
 				.getEntorno();
-		if(entorno.equals("se")) {
+		if (entorno.equals("se")) {
 			return "des";
 		} else {
 			return entorno;

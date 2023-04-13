@@ -55,6 +55,9 @@ public class DialogEnvioRemotoTramites extends DialogControllerBase {
 
 	private String errorCopiar;
 
+	/** Filtro (puede venir por parametro). */
+	private String filtro;
+
 	/**
 	 * Inicialización.
 	 */
@@ -104,6 +107,25 @@ public class DialogEnvioRemotoTramites extends DialogControllerBase {
 		return tramiteService
 				.getTramiteByIdentificador(tramiteService.getIdentificadorByCodigoVersion(idTram), null, idArea, null)
 				.getIdentificadorCompuesto();
+	}
+
+	/**
+	 *
+	 * @param filtro
+	 */
+	public void buscar(final String filtro) {
+		campos = tramiteService.getTramiteVersionByEnvioRemoto(Long.valueOf(id), filtro);
+	}
+
+	/**
+	 * Recuperacion de datos.
+	 */
+	public void filtrar() {
+
+		this.buscar(filtro);
+
+		// Quitamos seleccion de dato
+		valorSeleccionado = null;
 	}
 
 	/**
@@ -243,6 +265,20 @@ public class DialogEnvioRemotoTramites extends DialogControllerBase {
 	 */
 	public void setArea(final String area) {
 		this.area = area;
+	}
+
+	/**
+	 * @return the filtro
+	 */
+	public String getFiltro() {
+		return filtro;
+	}
+
+	/**
+	 * @param filtro the filtro to set
+	 */
+	public void setFiltro(final String filtro) {
+		this.filtro = filtro;
 	}
 
 }

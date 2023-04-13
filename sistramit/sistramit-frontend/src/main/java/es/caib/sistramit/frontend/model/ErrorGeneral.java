@@ -9,6 +9,11 @@ package es.caib.sistramit.frontend.model;
 public final class ErrorGeneral {
 
 	/**
+	 * Estilo error.
+	 */
+	private String estilo;
+
+	/**
 	 * Idioma.
 	 */
 	private String idioma;
@@ -36,7 +41,7 @@ public final class ErrorGeneral {
 	 * Método para establecer idioma.
 	 *
 	 * @param pIdioma
-	 *            idioma a establecer
+	 *                    idioma a establecer
 	 */
 	public void setIdioma(final String pIdioma) {
 		idioma = pIdioma;
@@ -55,7 +60,7 @@ public final class ErrorGeneral {
 	 * Método para establecer mensaje.
 	 *
 	 * @param pMensaje
-	 *            mensaje a establecer
+	 *                     mensaje a establecer
 	 */
 	public void setMensaje(final MensajeUsuario pMensaje) {
 		mensaje = pMensaje;
@@ -74,10 +79,29 @@ public final class ErrorGeneral {
 	 * Método para establecer url.
 	 *
 	 * @param pUrl
-	 *            url a establecer
+	 *                 url a establecer
 	 */
 	public void setUrl(final String pUrl) {
 		url = pUrl;
+	}
+
+	/**
+	 * Método de acceso a estilo.
+	 * 
+	 * @return estilo
+	 */
+	public String getEstilo() {
+		return estilo;
+	}
+
+	/**
+	 * Método para establecer estilo.
+	 * 
+	 * @param estilo
+	 *                   estilo a establecer
+	 */
+	public void setEstilo(final String estilo) {
+		this.estilo = estilo;
 	}
 
 }

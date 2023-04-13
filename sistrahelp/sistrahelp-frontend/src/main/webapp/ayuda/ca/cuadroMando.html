@@ -1,0 +1,86 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">QUADRE DE COMANDAMENT</h1>
+<p>
+
+A la pantalla de '<i>Quadre de comandament</i>' es presenta l&#39;estat del proc&eacute;s de tramitaci&oacute; transcorregut en un per&iacute;ode de temps determinat, des dels esdeveniments i tr&agrave;mits que s&#39;han iniciat i finalitzat, fins a l&#39;activitat produ&iuml;da als tr&agrave;mits que hagin generat algun error, passant per un historial de les alertes executades.
+</p>
+
+<p>Es presenten les seg&uuml;ents zones i panells:</p>
+
+<h2 class="stgH2">Avaluaci&oacute; en:</h2>
+<p>En aquesta zona es pot indicar el per&iacute;ode de monitoritzaci&oacute;, amb les opcions seg&uuml;ents:</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Temps real:</span> &Eacute;s l&#39;opci&oacute; per defecte i on es pot indicar, dins del dia actual, l&#39;hora des d&#39;on s&#39;avalua l&#39;estat de la tramitaci&oacute; i els minuts de refresc, que permet determinar cada quants minuts es refrescar&agrave; la informaci&oacute;. A m&eacute;s, &eacute;s possible refrescar manualment, prement el bot&oacute; &rdquo;Refrescar&rdquo;.</li>
+		<li><span class="nombreCampo">Interval de temps:</span> &Eacute;s on es pot indicar una data Des (obligat&ograve;ria) i una data Fins, de manera que en pr&eacute;mer &ldquo;Cerca&rdquo; s&#39;obt&eacute; tota la informaci&oacute; del proc&eacute;s de tramitaci&oacute; transcorregut en aquest per&iacute;ode. A causa del proc&eacute;s de purgat d&#39;esdeveniments que es realitza en funci&oacute; de les propietats globals relacionades, la data Des es limita la data resultant de restar a la data actual, els dies definits a la propietat global &quot;sistramit.purga.purgados&quot; (actualment 90 dies), ja que, els dies anteriors ja no existeixen els esdeveniments a la BBDD i les estad&iacute;stiques no serien reals.</li>
+	</ul>
+</p>
+
+<h2 class="stgH2">Accions:</h2>
+<p>En aquest panell es presenten totes les accions ocorregudes en el dia actual o per&iacute;ode temporal indicat, organitzades per tipus d'acci&oacute;.</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Omplir formulari:</span> Es mostra el nombre de vegades que s&#39;ha iniciat i finalitzat l&#39;acci&oacute; d&#39;emplenar formularis, i el percentatge d&#39;accions d&#39;aquest tipus no finalitzades (amb o sense errors), es a dir, la proporci&oacute; de no finalitzades respecte al total de vegades que s&#39;ha iniciat l&#39;acci&oacute; d&#39;omplir formulari.</li>
+		<li><span class="nombreCampo">Signar:</span> Es mostra el nombre de vegades que s&#39;ha iniciat i finalitzat l&#39;acci&oacute; de signar, i el percentatge d&#39;accions d&#39;aquest tipus no finalitzades (amb o sense errors), es a dir, la proporci&oacute; de no finalitzades respecte al total de vegades que s&#39;ha iniciat l&#39;acci&oacute; de signar.</li>
+		<li><span class="nombreCampo">Pagar:</span> Es mostra el nombre de vegades que s&#39;ha iniciat i finalitzat l&#39;acci&oacute; de pagar, i el percentatge d&#39;accions d&#39;aquest tipus no finalitzades (amb o sense errors), es a dir, la proporci&oacute; de no finalitzades respecte al total de vegades que s&#39;ha iniciat l&#39;acci&oacute; de pagar.</li>
+		<li><span class="nombreCampo">Registrar:</span> Es mostra el nombre de vegades que s&#39;ha iniciat i finalitzat l&#39;acci&oacute; de registrar, i el percentatge d&#39;accions d&#39;aquest tipus no finalitzades (amb o sense errors), es a dir, la proporci&oacute; de no finalitzades respecte al total de vegades que s&#39;ha iniciat l&#39;acci&oacute; de registrar.</li>
+	</ul>
+</p>
+<p>A la darrera columna d&#39;aquest panell de mostren per colors, si cal o no atenci&oacute;, en funci&oacute; d&#39;un llindar (percentatge d&#39;accions no finalitzades) predeterminat:</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Normal:</span> No s&#39;han aconseguit el 50% d&#39;accions no finalitzades a partir de les iniciades.</li>
+
+		<li><span class="nombreCampo">Atenci&oacute;:</span> El percentatge &eacute;s entre el 50% i el 85%.</li>
+
+		<li><span class="nombreCampo">Revisar:</span> S&#39;ha aconseguit o superat el 85% d&#39;accions no finalitzades a partir de les iniciades.</li>
+
+	</ul>
+</p>
+
+<h2 class="stgH2">Tr&agrave;mits i errors totals:</h2>
+<p>En aquest panell es mostra, per al total de tots els tr&agrave;mits iniciats durant el dia o per&iacute;ode de monitoritzaci&oacute;:</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Tr&agrave;mits totals:</span> Es mostra la quantitat dels iniciats, els finalitzats, el percentatge de no finalitzats (amb o sense errors) respecte dels iniciats i, per colors, l&#39;estat d&#39;atenci&oacute; requerida segons el llindar predeterminat, &eacute;s a dir: Normal (percentatge de tr&agrave;mits no finalitzats inferior o igual al 50%), Atenci&oacute; (percentatge entre el 50% i el 85%) i Revisar (percentatge de tr&agrave;mits no finalitzats superior o igual al 85%).</li>
+		<li><span class="nombreCampo">Nombre total d&#39;errors:</span> Es mostra el nombre d&#39;errors que han succe&iuml;t a totes les sessions de tramitaci&oacute; del per&iacute;ode de monitoritzaci&oacute;.</li>
+	</ul>
+</p>
+
+<h2 class="stgH2">Errors per tr&agrave;mit:</h2>
+<p>Aquest panell mostra, per a cada tr&agrave;mit que hagi tingut un error en alguna de les sessions, els errors que s&#39;han produ&iuml;t. Es distingeixen dos nivells d&#39;informaci&oacute;, sobre els quals es poden ordenar les dades de qualsevol columna:</p>
+<p>- Un primer nivell &#39;Tr&agrave;mit&#39;: Mostra informaci&oacute; de cada tr&agrave;mit que t&eacute; errors en alguna de les sessions. S&#39;ofereix la seg&uuml;ent informaci&oacute;:</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Tr&agrave;mit:</span> L&#39;id compost del tr&agrave;mit que cont&eacute; errors en alguna de les sessions. &Eacute;s possible cercar en aquest camp.</li>
+		<li><span class="nombreCampo">Versi&oacute;:</span> La versi&oacute; del tr&agrave;mit.</li>
+		<li><span class="nombreCampo">Sessions Ok:</span> El nombre de sessions que s&#39;han iniciat (TR_INI - Inici del tr&agrave;mit) i finalitzat (TR_FIN - Final de tr&agrave;mit), encara que s&#39;hagin produ&iuml;t errors durant la tramitaci&oacute; que no n&#39;hagin impedit la finalitzaci&oacute;.</li>
+		<li><span class="nombreCampo">Sessions no finalitzades:</span> El nombre de sessions que s&#39;han iniciat per&ograve; no han finalitzat (amb o sense errors).</li>
+		<li><span class="nombreCampo">Percentatge de sessions no finalitzades:</span> Proporci&oacute; de les sessions no finalitzades (amb o sense errors), respecte de les sessions iniciades en aquest tr&agrave;mit i versi&oacute;.</li>
+		<li><span class="nombreCampo">Frecuencia d&#39;errors:</span> Nombre total d&#39;errors succe&iuml;ts a totes les sessions d&#39;aquest tr&agrave;mit i versi&oacute;, que s&oacute;n els que es detallen al segon nivell, en pr&eacute;mer sobre un registre del nivell Tr&agrave;mit.</li>
+	</ul>
+</p>
+<p>- Un segon nivell &#39;Error&#39;: Mostra la estadística de cada tipus d&#39;error ocorregut a les diferents sessions de tramitaci&oacute; per al tr&agrave;mit i versi&oacute; del nivell superior corresponent. S&#39;ofereix la informaci&oacute; seg&uuml;ent:</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Error:</span> L&#39;error o excepci&oacute; que ha succe&iuml;t a la sessi&oacute; de tramitaci&oacute;.</li>
+		<li><span class="nombreCampo">Frecuencia:</span> El nombre d&#39;errors d&#39;aquest tipus succe&iuml;ts al tr&agrave;mit y versi&oacute; corresponent.</li>
+		<li><span class="nombreCampo">Percentatge d&#39;error:</span> La proporci&oacute; d&#39;errors d&#39;aquest respecte als errors totals a aquest tr&agrave;mit y versi&oacute;.</li>
+	</ul>
+</p>
+
+<h2 class="stgH2">Errors de plataforma:</h2>
+<p>En aquest panell s&#39;ofereix informaci&oacute; de quants errors de plataforma (i el detall) han succe&iuml;t al llarg de l&#39;&uacute;s de l&#39;assistent de tramitaci&oacute; en el per&iacute;ode d&#39;avaluaci&oacute;. Aquests errors no s&oacute;n propis d&#8223;un tr&agrave;mit concret, sin&oacute; que s&oacute;n m&eacute;s gen&egrave;rics, a nivell de SISTRAMIT.</p>
+
+<h2 class="stgH2">Historial d&#39;alertes:</h2>
+<p>Aquest panell, que poden veure els administradors d&#39;entitat, mostra en ordre cronol&ograve;gic descendent, les alertes executades i la data d&#39;execuci&oacute; dins del per&iacute;ode del dia en curs. Les alertes mostrades s&oacute;n les que s&#39;han executat i rem&eacute;s correu, en haver-se avaluat com a cert la condici&oacute; o condicions configurades a la pantalla d&#39;&ldquo;Alertes&rdquo;.</p>
+
+</p>
+</body>
+</html>

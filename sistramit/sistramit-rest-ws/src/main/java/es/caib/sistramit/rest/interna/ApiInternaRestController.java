@@ -2,6 +2,7 @@ package es.caib.sistramit.rest.interna;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,9 @@ import es.caib.sistra2.commons.utils.JSONUtilException;
 import es.caib.sistramit.core.api.exception.ErrorJsonException;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.rest.interno.DetallePagoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.ErroresPorTramiteCM;
 import es.caib.sistramit.core.api.model.system.rest.interno.EventoAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.rest.interno.EventoCM;
 import es.caib.sistramit.core.api.model.system.rest.interno.FicheroAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FicheroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroEventoAuditoria;
@@ -36,7 +39,9 @@ import es.caib.sistramit.core.api.service.RestApiInternaService;
 import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.rest.api.interna.RDatosSesionPago;
 import es.caib.sistramit.rest.api.interna.RDetallePagoAuditoria;
+import es.caib.sistramit.rest.api.interna.RErroresPorTramiteCM;
 import es.caib.sistramit.rest.api.interna.REventoAuditoria;
+import es.caib.sistramit.rest.api.interna.REventoCM;
 import es.caib.sistramit.rest.api.interna.RFichero;
 import es.caib.sistramit.rest.api.interna.RFicheroPersistenciaAuditoria;
 import es.caib.sistramit.rest.api.interna.RFiltroEventoAuditoria;
@@ -48,7 +53,9 @@ import es.caib.sistramit.rest.api.interna.RINEventoAuditoria;
 import es.caib.sistramit.rest.api.interna.RINPagoAuditoria;
 import es.caib.sistramit.rest.api.interna.RINTramiteAuditoria;
 import es.caib.sistramit.rest.api.interna.RInvalidacion;
+import es.caib.sistramit.rest.api.interna.ROUTErroresPorTramiteCM;
 import es.caib.sistramit.rest.api.interna.ROUTEventoAuditoria;
+import es.caib.sistramit.rest.api.interna.ROUTEventoCM;
 import es.caib.sistramit.rest.api.interna.ROUTPagoAuditoria;
 import es.caib.sistramit.rest.api.interna.ROUTPerdidaClave;
 import es.caib.sistramit.rest.api.interna.ROUTTramiteAuditoria;
@@ -95,6 +102,110 @@ public class ApiInternaRestController {
 		systemService.invalidar(invalidacion);
 
 		return true;
+
+	}
+
+	@ApiOperation(value = "count evento", notes = "count evento", response = ROUTEventoCM.class)
+	@RequestMapping(value = "/auditoria/countEventoCM", method = RequestMethod.POST)
+	public ROUTEventoCM obtenerCountEventoCM(@RequestBody final RINEventoAuditoria pFiltros) {
+		final ROUTEventoCM resEvento = new ROUTEventoCM();
+		final FiltroEventoAuditoria filtroBusqueda = convierteFiltroEventoAuditoria(pFiltros.getFiltro());
+
+		final List<EventoCM> listaEventos = restApiInternaService.recuperarEventosCM(filtroBusqueda);
+
+		if (listaEventos != null && !listaEventos.isEmpty()) {
+			resEvento.setListaEventos(new ArrayList<>());
+
+			for (final EventoCM eventoCM : listaEventos) {
+				resEvento.getListaEventos().add(convierteEventoCM(eventoCM));
+			}
+
+		}
+		return resEvento;
+
+	}
+
+	@ApiOperation(value = "errores por tramite", notes = "errores por tramite", response = ROUTErroresPorTramiteCM.class)
+	@RequestMapping(value = "/auditoria/erroresTramiteCM", method = RequestMethod.POST)
+	public ROUTErroresPorTramiteCM obtenerErroresPorTramiteCM(@RequestBody final RINEventoAuditoria pFiltros) {
+		final ROUTErroresPorTramiteCM resEvento = new ROUTErroresPorTramiteCM();
+		final FiltroPaginacion filtroPaginacion = convierteFiltroPaginacion(pFiltros.getPaginacion());
+		final FiltroEventoAuditoria filtroBusqueda = convierteFiltroEventoAuditoria(pFiltros.getFiltro());
+
+		if (filtroBusqueda != null && filtroBusqueda.isSoloContar()) {
+			resEvento.setNumElementos(restApiInternaService.contarErroresPorTramiteCM(filtroBusqueda));
+		} else {
+			final List<ErroresPorTramiteCM> listaEventos = restApiInternaService
+					.recuperarErroresPorTramiteCM(filtroBusqueda, filtroPaginacion);
+
+			if (listaEventos != null && !listaEventos.isEmpty()) {
+				resEvento.setListaErrores(new ArrayList<>());
+
+				for (final ErroresPorTramiteCM errCM : listaEventos) {
+					resEvento.getListaErrores().add(convierteErroresPorTramiteCM(errCM));
+				}
+
+			}
+
+		}
+
+		return resEvento;
+
+	}
+
+	@ApiOperation(value = "errores por tramite row expansion", notes = "errores por tramite row expansion", response = ROUTEventoCM.class)
+	@RequestMapping(value = "/auditoria/erroresTramiteCMRe", method = RequestMethod.POST)
+	public ROUTEventoCM obtenerErroresPorTramiteCMRe(@RequestBody final RINEventoAuditoria pFiltros) {
+		final ROUTEventoCM resEvento = new ROUTEventoCM();
+		final FiltroPaginacion filtroPaginacion = convierteFiltroPaginacion(pFiltros.getPaginacion());
+		final FiltroEventoAuditoria filtroBusqueda = convierteFiltroEventoAuditoria(pFiltros.getFiltro());
+
+		if (filtroBusqueda != null && filtroBusqueda.isSoloContar()) {
+			resEvento.setNumElementos(restApiInternaService.contarErroresPorTramiteExpansionCM(filtroBusqueda));
+		} else {
+			final List<EventoCM> listaEventos = restApiInternaService
+					.recuperarErroresPorTramiteCMExpansion(filtroBusqueda, filtroPaginacion);
+
+			if (listaEventos != null && !listaEventos.isEmpty()) {
+				resEvento.setListaEventos(new ArrayList<>());
+
+				for (final EventoCM evCM : listaEventos) {
+					resEvento.getListaEventos().add(convierteEventoCM(evCM));
+				}
+
+			}
+
+		}
+
+		return resEvento;
+
+	}
+
+	@ApiOperation(value = "errores por tramite row expansion", notes = "errores por tramite row expansion", response = ROUTEventoCM.class)
+	@RequestMapping(value = "/auditoria/erroresPlataformaCM", method = RequestMethod.POST)
+	public ROUTEventoCM obtenerErroresPlataformaCM(@RequestBody final RINEventoAuditoria pFiltros) {
+		final ROUTEventoCM resEvento = new ROUTEventoCM();
+		final FiltroPaginacion filtroPaginacion = convierteFiltroPaginacion(pFiltros.getPaginacion());
+		final FiltroEventoAuditoria filtroBusqueda = convierteFiltroEventoAuditoria(pFiltros.getFiltro());
+
+		if (filtroBusqueda != null && filtroBusqueda.isSoloContar()) {
+			resEvento.setNumElementos(restApiInternaService.contarErroresPlataformaCM(filtroBusqueda));
+		} else {
+			final List<EventoCM> listaEventos = restApiInternaService.recuperarErroresPlataformaCM(filtroBusqueda,
+					filtroPaginacion);
+
+			if (listaEventos != null && !listaEventos.isEmpty()) {
+				resEvento.setListaEventos(new ArrayList<>());
+
+				for (final EventoCM evCM : listaEventos) {
+					resEvento.getListaEventos().add(convierteEventoCM(evCM));
+				}
+
+			}
+
+		}
+
+		return resEvento;
 
 	}
 
@@ -411,6 +522,56 @@ public class ApiInternaRestController {
 		}
 
 		return rEvento;
+	}
+
+	/**
+	 * Convierte evento cuadro mando.
+	 *
+	 * @param pEventoAuditoria EventoCM
+	 * @return REventoCM
+	 */
+	private REventoCM convierteEventoCM(final EventoCM pEventoCM) {
+		REventoCM rEvento = null;
+
+		if (pEventoCM != null) {
+
+			rEvento = new REventoCM();
+
+			rEvento.setTipoEvento(pEventoCM.getTipoEvento());
+			rEvento.setConcurrencias(pEventoCM.getConcurrencias());
+			rEvento.setPorc(pEventoCM.getPorc());
+
+		}
+
+		return rEvento;
+
+	}
+
+	/**
+	 * Convierte error por tramite cuadro mando.
+	 *
+	 * @param pEventoAuditoria EventoCM
+	 * @return REventoCM
+	 */
+	private RErroresPorTramiteCM convierteErroresPorTramiteCM(final ErroresPorTramiteCM pEventoCM) {
+		RErroresPorTramiteCM rEvento = null;
+
+		if (pEventoCM != null) {
+
+			rEvento = new RErroresPorTramiteCM();
+
+			rEvento.setIdTramite(pEventoCM.getIdTramite());
+			rEvento.setVersion(pEventoCM.getVersion());
+			rEvento.setNumeroErrores(pEventoCM.getNumeroErrores());
+			rEvento.setSesionesIniciadas(pEventoCM.getSesionesIniciadas());
+			rEvento.setSesionesFinalizadas(pEventoCM.getSesionesFinalizadas());
+			rEvento.setSesionesInacabadas(pEventoCM.getSesionesInacabadas());
+			rEvento.setPorcentage(pEventoCM.getPorcentage());
+
+		}
+
+		return rEvento;
+
 	}
 
 	/**

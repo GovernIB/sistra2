@@ -37,6 +37,8 @@
 
       <h:outputScript >
 
+		var arrayCm = [];
+
         window.onload=function(){
           let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
         onVisible(contextMenu, () => eliminarResaltar());
@@ -91,7 +93,6 @@
           var posX = e.clientX;
           var posY = e.clientY;
           var el = document.elementFromPoint(posX, posY);
-		  console.log(posY);
           let elementos = document.getElementsByClassName('resaltar');
             if(elementos.length &gt; 0){
             for(let i = 0; i &lt; elementos.length; i++){
@@ -110,6 +111,46 @@
         }else{
           aux.value = '';
         }
+
+        if(aux.value!='' ){
+            var multiple = false;
+            var hijos = el.children;
+			if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR') &amp;&amp; hijos.length &gt; 1){
+		    	multiple = true;
+		    }else if(hijos.length &gt;= 1 ){
+			    if(hijos.length==1  &amp;&amp; hijos[0].tagName=='DIV'){
+			    	hijos = hijos[0].children;
+			    }
+				for(i=0;i&lt;hijos.length;i++){
+					if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+						multiple=true;
+					}
+				}
+		    }
+            var listaCm = document.getElementsByClassName('ui-contextmenu');
+                  if(multiple){
+                    for(i=0;i&lt;listaCm.length;i++){
+                    	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+                    		arrayCm.push(listaCm[i]);
+                    	}
+	                	listaCm[i].classList.add("d-none");
+					}
+                  }else{
+                  	for(i=0;i&lt;listaCm.length;i++){
+                  		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+                    		arrayCm.push(listaCm[i]);
+                    	}
+	                	listaCm[i].classList.remove("d-none");
+					}
+					if(arrayCm.length&gt;1){
+						arrayCm.pop();
+						for(let i=0; i&lt;arrayCm.length; i++){
+							arrayCm[i].style.display='none';
+						}
+					}
+					arrayCm = [];
+                  }
+         }
 	}
 
 	/*function clickEl(){

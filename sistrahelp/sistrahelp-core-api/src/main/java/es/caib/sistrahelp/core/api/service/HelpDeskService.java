@@ -1,6 +1,7 @@
 package es.caib.sistrahelp.core.api.service;
 
 import java.util.List;
+import java.util.Map;
 
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.FicheroAuditoria;
@@ -13,6 +14,8 @@ import es.caib.sistrahelp.core.api.model.FiltroPersistenciaAuditoria;
 import es.caib.sistrahelp.core.api.model.PagoAuditoria;
 import es.caib.sistrahelp.core.api.model.PersistenciaAuditoria;
 import es.caib.sistrahelp.core.api.model.ResultadoAuditoriaDetallePago;
+import es.caib.sistrahelp.core.api.model.ResultadoErroresPorTramiteCM;
+import es.caib.sistrahelp.core.api.model.ResultadoEventoCM;
 import es.caib.sistrahelp.core.api.model.ResultadoPerdidaClave;
 
 /**
@@ -34,8 +37,7 @@ public interface HelpDeskService {
 	/**
 	 * Obtener numero de elementos de auditoria evento.
 	 *
-	 * @param pFiltroBusqueda
-	 *            filtro busqueda
+	 * @param pFiltroBusqueda filtro busqueda
 	 * @return numero de elementos
 	 */
 	public Long countAuditoriaEvento(final FiltroAuditoriaTramitacion pFiltroBusqueda);
@@ -43,8 +45,7 @@ public interface HelpDeskService {
 	/**
 	 * Obtener auditoria tramite.
 	 *
-	 * @param pFiltroBusqueda
-	 *            filtro busqueda
+	 * @param pFiltroBusqueda filtro busqueda
 	 * @return resultado perdida clave
 	 */
 	public ResultadoPerdidaClave obtenerClaveTramitacion(FiltroPerdidaClave pFiltroBusqueda);
@@ -52,10 +53,8 @@ public interface HelpDeskService {
 	/**
 	 * Obtener auditoria pago.
 	 *
-	 * @param pFiltroBusqueda
-	 *            filtro busqueda
-	 * @param pFiltroPaginacion
-	 *            filtro paginacion
+	 * @param pFiltroBusqueda   filtro busqueda
+	 * @param pFiltroPaginacion filtro paginacion
 	 * @return lista de Pagos
 	 */
 	public List<PagoAuditoria> obtenerAuditoriaPago(FiltroAuditoriaPago pFiltroBusqueda,
@@ -64,17 +63,24 @@ public interface HelpDeskService {
 	/**
 	 * Obtener numero de elementos de auditoria pago.
 	 *
-	 * @param pFiltroBusqueda
-	 *            filtro busqueda
+	 * @param pFiltroBusqueda filtro busqueda
 	 * @return numero de elementos
 	 */
 	public Long countAuditoriaPago(FiltroAuditoriaPago pFiltroBusqueda);
 
 	/**
+	 * Recupera el número de concurrencias de los eventos pago, registro, rellenar
+	 * formulario y firma
+	 *
+	 * @param pFiltro filtro busqueda
+	 * @return Numero de eventos
+	 */
+	public ResultadoEventoCM obtenerCountEventoCM(final FiltroAuditoriaTramitacion pFiltroBusqueda);
+
+	/**
 	 * Obtener auditoria detalle pago.
 	 *
-	 * @param pIdPago
-	 *            id pago
+	 * @param pIdPago id pago
 	 * @return resultado auditoria detalle pago
 	 */
 	public ResultadoAuditoriaDetallePago obtenerAuditoriaDetallePago(Long pIdPago);
@@ -82,8 +88,7 @@ public interface HelpDeskService {
 	/**
 	 * Contar persistencia area.
 	 *
-	 * @param pFiltroBusqueda
-	 *            filtro busqueda
+	 * @param pFiltroBusqueda filtro busqueda
 	 * @return numero de elementos
 	 */
 	public Long countAuditoriaPersistencia(final FiltroPersistenciaAuditoria pFiltroBusqueda);
@@ -91,10 +96,8 @@ public interface HelpDeskService {
 	/**
 	 * Recuperar persistencia area.
 	 *
-	 * @param pFiltroBusqueda
-	 *            filtro busqueda
-	 * @param pFiltroPaginacion
-	 *            filtro paginacion
+	 * @param pFiltroBusqueda   filtro busqueda
+	 * @param pFiltroPaginacion filtro paginacion
 	 * @return lista de persistencia
 	 */
 	public List<PersistenciaAuditoria> obtenerAuditoriaPersistencia(final FiltroPersistenciaAuditoria pFiltroBusqueda,
@@ -103,8 +106,7 @@ public interface HelpDeskService {
 	/**
 	 * Obtener auditoria persistencia fichero.
 	 *
-	 * @param pIdTramite
-	 *            id tramite
+	 * @param pIdTramite id tramite
 	 * @return lista de ficheros
 	 */
 	public List<FicheroPersistenciaAuditoria> obtenerAuditoriaPersistenciaFichero(final Long pIdTramite);
@@ -112,11 +114,18 @@ public interface HelpDeskService {
 	/**
 	 * Obtener auditoria fichero.
 	 *
-	 * @param pIdFichero
-	 *            id. fichero
-	 * @param pClave
-	 *            clave
+	 * @param pIdFichero id. fichero
+	 * @param pClave     clave
 	 * @return fichero
 	 */
 	public FicheroAuditoria obtenerAuditoriaFichero(Long pIdFichero, String pClave);
+
+	ResultadoErroresPorTramiteCM obtenerErroresPorTramiteCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion);
+
+	ResultadoEventoCM obtenerErroresPorTramiteCMExpansion(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion);
+
+	ResultadoEventoCM obtenerErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion);
 }

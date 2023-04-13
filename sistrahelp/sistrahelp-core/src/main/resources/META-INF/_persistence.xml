@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	 No hay que usarlo, lo tenemos para mapear automaticamente las tablas o poder probar sentencias hql desde eclipse
+	 Spring lo configura a través del XML.
+-->
+
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="sistrahelp-PU" transaction-type="RESOURCE_LOCAL">
+
+		<!--  Cambia provider para Hibernate 5-->
+		<!--  <provider>org.hibernate.ejb.HibernatePersistence</provider> -->
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+	</persistence-unit>
+</persistence>

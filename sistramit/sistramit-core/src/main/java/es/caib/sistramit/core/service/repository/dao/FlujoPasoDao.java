@@ -19,9 +19,9 @@ public interface FlujoPasoDao {
 	 * Obtiene datos del paso en persistencia.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesión tramitación
+	 *                                Id sesión tramitación
 	 * @param idPaso
-	 *            Id del paso
+	 *                                Id del paso
 	 * @return Datos de persistencia del paso.
 	 */
 	DatosPersistenciaPaso obtenerPasoPersistencia(String idSesionTramitacion, String idPaso);
@@ -30,11 +30,11 @@ public interface FlujoPasoDao {
 	 * Cambia el estado de un paso.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesión tramitación
+	 *                                Id sesión tramitación
 	 * @param idPaso
-	 *            Id paso
+	 *                                Id paso
 	 * @param estado
-	 *            Estado trámite
+	 *                                Estado trámite
 	 *
 	 */
 	void cambiarEstadoPaso(String idSesionTramitacion, String idPaso, TypeEstadoPaso estado);
@@ -45,11 +45,11 @@ public interface FlujoPasoDao {
 	 * actualizarán los datos.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesión tramitación
+	 *                                Id sesión tramitación
 	 * @param idPaso
-	 *            Id paso
+	 *                                Id paso
 	 * @param docPaso
-	 *            Datos del documento
+	 *                                Datos del documento
 	 */
 	void establecerDatosDocumento(String idSesionTramitacion, String idPaso, DocumentoPasoPersistencia docPaso);
 
@@ -57,13 +57,13 @@ public interface FlujoPasoDao {
 	 * Permite eliminar un documento del paso.
 	 *
 	 * @param idSesionTramitacion
-	 *            Id sesión tramitación
+	 *                                Id sesión tramitación
 	 * @param idPaso
-	 *            Id paso
+	 *                                Id paso
 	 * @param idDocumento
-	 *            Id documento
+	 *                                Id documento
 	 * @param instancia
-	 *            Parámetro instancia
+	 *                                Parámetro instancia
 	 */
 	void eliminarDocumento(String idSesionTramitacion, String idPaso, String idDocumento, int instancia);
 
@@ -72,12 +72,12 @@ public interface FlujoPasoDao {
 	 * enlazarse.
 	 *
 	 * @param nombre
-	 *            Nombre fichero con extensión.
+	 *                                Nombre fichero con extensión.
 	 * @param contenido
-	 *            Datos del fichero.
+	 *                                Datos del fichero.
 	 * @param idSesionTramitacion
-	 *            Sesión tramitación a la que pertenece el fichero (para optimizar
-	 *            purga).
+	 *                                Sesión tramitación a la que pertenece el
+	 *                                fichero (para optimizar purga).
 	 * @return Referencia del fichero.
 	 */
 	ReferenciaFichero insertarFicheroPersistencia(String nombre, byte[] contenido, String idSesionTramitacion);
@@ -86,7 +86,7 @@ public interface FlujoPasoDao {
 	 * Recupera un fichero almacenado en persistencia.
 	 *
 	 * @param refFic
-	 *            Parámetro ref fic
+	 *                   Parámetro ref fic
 	 * @return DatosFicheroPersistencia Datos del fichero.
 	 */
 	DatosFicheroPersistencia recuperarFicheroPersistencia(ReferenciaFichero refFic);
@@ -95,11 +95,11 @@ public interface FlujoPasoDao {
 	 * Actualiza contenido de un fichero almacenado en persistencia.
 	 *
 	 * @param refFic
-	 *            Parámetro ref fic
+	 *                      Parámetro ref fic
 	 * @param nombre
-	 *            Nombre fichero con extensión.
+	 *                      Nombre fichero con extensión.
 	 * @param contenido
-	 *            Datos del fichero.
+	 *                      Datos del fichero.
 	 */
 	void actualizarFicheroPersistencia(ReferenciaFichero refFic, String nombre, byte[] contenido);
 
@@ -107,7 +107,7 @@ public interface FlujoPasoDao {
 	 * Eliminar un fichero almacenado en persistencia.
 	 *
 	 * @param refFic
-	 *            Parámetro ref fic
+	 *                   Parámetro ref fic
 	 */
 	void eliminarFicheroPersistencia(ReferenciaFichero refFic);
 
@@ -115,46 +115,28 @@ public interface FlujoPasoDao {
 	 * Método para Obtener documento persistencia de la clase FlujoPasoDao.
 	 *
 	 * @param pIdSesionTramitacion
-	 *            Parámetro id sesion tramitacion
+	 *                                 Parámetro id sesion tramitacion
 	 * @param pIdPaso
-	 *            Parámetro id paso
+	 *                                 Parámetro id paso
 	 * @param idDocumento
-	 *            Parámetro id documento
+	 *                                 Parámetro id documento
 	 * @param instancia
-	 *            Parámetro instancia
+	 *                                 Parámetro instancia
 	 * @return el documento paso persistencia
 	 */
 	DocumentoPasoPersistencia obtenerDocumentoPersistencia(String pIdSesionTramitacion, String pIdPaso,
 			String idDocumento, int instancia);
 
 	/**
-	 * Recupera un fichero almacenado en persistencia no borrado.
-	 *
-	 * @param refFic
-	 *            Parámetro ref fic
-	 * @return DatosFicheroPersistencia Datos del fichero.
-	 */
-	DatosFicheroPersistencia recuperarFicheroPersistenciaNoBorrado(ReferenciaFichero pRefFic);
-
-	/**
-	 * Obtener documento.
-	 *
-	 * @param pIdDoc
-	 *            id doc
-	 * @return documento paso persistencia
-	 */
-	DocumentoPasoPersistencia obtenerDocumento(Long pIdDoc);
-
-	/**
 	 * Método para obtener el tamaño de todos los documentos de un paso.
 	 *
 	 * @param pIdSesionTramitacion
-	 *            Parámetro id sesion tramitacion
+	 *                                 Parámetro id sesion tramitacion
 	 * @param pIdPaso
-	 *            Parámetro id paso
+	 *                                 Parámetro id paso
 	 * @param pIncluirFirmas
-	 *            Parámetro que indica si en el cálculo se tienen en cuenta las
-	 *            firmas
+	 *                                 Parámetro que indica si en el cálculo se
+	 *                                 tienen en cuenta las firmas
 	 * @return Tamaño total documentos en bytes
 	 */
 	long calcularTamañoFicherosPaso(String pIdSesionTramitacion, String pIdPaso, boolean pIncluirFirmas);

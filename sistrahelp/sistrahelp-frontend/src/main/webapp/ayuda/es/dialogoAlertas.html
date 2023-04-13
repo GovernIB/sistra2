@@ -1,0 +1,36 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">DEFINICI&Oacute;N DE ALERTAS</h1>
+<p>
+
+En esta pantalla, que aparece al crear o editar una alerta, se pueden configurar los diferentes par&aacute;metros de una alerta. 
+</p>
+
+<h2 class="stgH2">CAMPOS:</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Resumen diario:</span> Si no existe ya una alerta de este tipo, aparece este check que, al marcarlo, define un tipo de alerta especial, que permite enviar un correo a los remitentes indicados a las 00:00 del d&iacute;a siguiente, con un resumen de todo lo que se ha producido en el asistente de tramitaci&oacute;n y mostrado en el cuadro de mandos del d&iacute;a reci&eacute;n finalizado. Si ya existe una alerta de este tipo, este check no aparecer&aacute; y s&oacute;lo se podr&aacute; definir una alerta convencional.</li>
+		<li><span class="nombreCampo">Nombre:</span> En este campo, si se ha indicado que la alerta es de tipo &ldquo;Resumen diario&rdquo;, se definir&aacute; el valor &ldquo;RESUMEN_DIARIO&rdquo; de forma autom&aacute;tica y no podr&aacute; ser modificado. Si la alerta es convencional, en este campo se puede definir un nombre significativo.</li>
+		<li><span class="nombreCampo">Lista de emails:</span> Permite indicar los correos electr&oacute;nicos de los remitentes a los que se enviar&aacute; el aviso, separados por ;.</li>
+		<li><span class="nombreCampo">Intervalo de evaluaci&oacute;n:</span> Si la alerta es convencional se podr&aacute; indicar, en horas y en minutos (de 5 en 5), cada cu&aacute;nto tiempo se evaluar&aacute; la alerta.</li>
+		<li><span class="nombreCampo">Periodo de evaluaci&oacute;n:</span> Si la alerta es convencional se podr&aacute; definir desde y hasta qu&eacute; hora y minuto se eval&uacute;a la alerta.</li>
+		<li><span class="nombreCampo">Expresi&oacute;n de evaluaci&oacute;n:</span> Si la alerta es convencional se podr&aacute; indicar el evento a evaluar, as&iacute; como un operador matem&aacute;tico y el n&uacute;mero de concurrencias que deben darse para lanzar la alerta. Por ejemplo, se puede indicar la expresi&oacute;n: Error &gt; 5, de forma que cuando en la plataforma se hayan alcanzado m&aacute;s de 5 errores, se enviar&aacute; un correo para indicar esa circunstancia.</li>
+		<li><span class="nombreCampo">Eventos:</span> En este panel se mostrar&aacute;n las distintas expresiones a&ntilde;adidas y se aplicar&aacute; le operador l&oacute;gico O, de forma que si es cierta alguna de ellas, se evaluar&aacute; a cierta la alerta y se enviar&aacute; el correo y a&ntilde;adir&aacute; al historial de alertas del cuadro de mandos.</li>
+	</ul>
+</p>
+
+<h2 class="stgH2">OPERATIVA:</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Guardar:</span> Permite guardar la alerta configurada.</li>
+		<li><span class="nombreCampo">Cancelar:</span> Permite salir de la pantalla sin guardar los cambios.</li>
+	</ul>
+</p>
+
+</body>
+</html>

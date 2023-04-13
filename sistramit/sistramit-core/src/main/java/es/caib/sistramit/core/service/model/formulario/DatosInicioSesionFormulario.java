@@ -61,6 +61,9 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	/** Título procedimiento. */
 	private String tituloProcedimiento;
 
+	/** Título tramite. */
+	private String tituloTramite;
+
 	/** Código sia procedimiento. */
 	private String codigoSiaProcedimiento;
 
@@ -392,7 +395,7 @@ public final class DatosInicioSesionFormulario implements Serializable {
 
 	/**
 	 * Método de acceso a dir3Responsable.
-	 * 
+	 *
 	 * @return dir3Responsable
 	 */
 	public String getDir3ResponsableProcedimiento() {
@@ -401,12 +404,31 @@ public final class DatosInicioSesionFormulario implements Serializable {
 
 	/**
 	 * Método para establecer dir3Responsable.
-	 * 
+	 *
 	 * @param dir3Responsable
 	 *                            dir3Responsable a establecer
 	 */
 	public void setDir3ResponsableProcedimiento(final String dir3Responsable) {
 		this.dir3ResponsableProcedimiento = dir3Responsable;
+	}
+
+	/**
+	 * Método de acceso a tituloTramite.
+	 * 
+	 * @return tituloTramite
+	 */
+	public String getTituloTramite() {
+		return tituloTramite;
+	}
+
+	/**
+	 * Método para establecer tituloTramite.
+	 * 
+	 * @param tituloTramite
+	 *                          tituloTramite a establecer
+	 */
+	public void setTituloTramite(final String tituloTramite) {
+		this.tituloTramite = tituloTramite;
 	}
 
 }

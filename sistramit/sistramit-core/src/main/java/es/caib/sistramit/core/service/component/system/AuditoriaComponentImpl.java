@@ -12,9 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.ServiceException;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
-import es.caib.sistramit.core.api.model.system.rest.interno.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.rest.interno.FiltroEventoAuditoria;
-import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.service.repository.dao.AuditoriaDao;
 
@@ -43,7 +40,7 @@ public class AuditoriaComponentImpl implements AuditoriaComponent {
 	}
 
 	@Override
-	public void auditarEventosAplicacion(List<EventoAuditoria> eventos) {
+	public void auditarEventosAplicacion(final List<EventoAuditoria> eventos) {
 		if (eventos != null) {
 			for (final EventoAuditoria evento : eventos) {
 				auditoriaDao.add(evento);
@@ -66,23 +63,6 @@ public class AuditoriaComponentImpl implements AuditoriaComponent {
 	public List<EventoAuditoria> recuperarLogSesionTramitacion(final String idSesionTramitacion, final Date fechaDesde,
 			final Date fechaHasta, final boolean ordenAsc) {
 		return auditoriaDao.retrieve(idSesionTramitacion, fechaDesde, fechaHasta, ordenAsc);
-	}
-
-	@Override
-	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
-			final FiltroEventoAuditoria pFiltroBusqueda) {
-		return auditoriaDao.retrieveByAreas(pFiltroBusqueda);
-	}
-
-	@Override
-	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
-			final FiltroEventoAuditoria pFiltroBusqueda, final FiltroPaginacion pFiltroPaginacion) {
-		return auditoriaDao.retrieveByAreas(pFiltroBusqueda, pFiltroPaginacion);
-	}
-
-	@Override
-	public Long contarLogSesionTramitacionArea(final FiltroEventoAuditoria pFiltroBusqueda) {
-		return auditoriaDao.countByAreas(pFiltroBusqueda);
 	}
 
 }

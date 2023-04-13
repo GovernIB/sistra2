@@ -36,6 +36,8 @@ body{
 	border-spacing: 0;
 }
 
+#dialogConfiguracionAlertas:peri_input{width:39% !important;}
+
 #header .ui-menu-parent .ui-submenu-link .ui-icon {background-image: url(#{resource["primefaces-custom:images/ui-icons_ffffff_256x240.png"]});}
 
 /* quitamos los iconos de los submenus del menu de la cabecera*/

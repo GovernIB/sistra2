@@ -23,6 +23,8 @@ public interface FormateadorPdfFormulario {
 	 *                                  idioma
 	 * @param tituloProcedimiento
 	 *                                  titulo del procedimiento
+	 * @param tituloTramite
+	 *                                  titulo del trámite
 	 * @param siaProcedimiento
 	 *                                  sia del procedimiento
 	 * @param codigoDir3Responsable
@@ -30,6 +32,6 @@ public interface FormateadorPdfFormulario {
 	 * @return PDF generado
 	 */
 	byte[] formatear(byte[] xml, byte[] plantilla, String idioma, RFormularioInterno defFormInterno,
-			String tituloProcedimiento, String siaProcedimiento, String codigoDir3Responsable);
+			String tituloProcedimiento, String tituloTramite, String siaProcedimiento, String codigoDir3Responsable);
 
 }

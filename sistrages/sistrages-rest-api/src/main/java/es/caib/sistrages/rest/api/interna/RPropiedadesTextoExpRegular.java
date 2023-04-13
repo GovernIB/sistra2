@@ -12,26 +12,42 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RPropiedadesTextoExpRegular", description = "Descripcion de RPropiedadesTextoExpRegular")
 public class RPropiedadesTextoExpRegular {
 
-    /** Texto exp regular: expresion. */
+	/** Texto exp regular: expresion. */
 	@ApiModelProperty(value = "Texto exp regular: expresion")
-    private String expresionRegular;
+	private String expresionRegular;
 
-    /**
-     * Método de acceso a expresionRegular.
-     *
-     * @return expresionRegular
-     */
-    public String getExpresionRegular() {
-        return expresionRegular;
-    }
+	@ApiModelProperty(value = "Prevenir pegar")
+	private boolean prevenirPegar;
 
-    /**
-     * Método para establecer expresionRegular.
-     *
-     * @param expresionRegular
-     *            expresionRegular a establecer
-     */
-    public void setExpresionRegular(String expresionRegular) {
-        this.expresionRegular = expresionRegular;
-    }
+	/**
+	 * @return the prevenirPegar
+	 */
+	public final boolean isPrevenirPegar() {
+		return prevenirPegar;
+	}
+
+	/**
+	 * @param prevenirPegar the prevenirPegar to set
+	 */
+	public final void setPrevenirPegar(boolean prevenirPegar) {
+		this.prevenirPegar = prevenirPegar;
+	}
+
+	/**
+	 * Método de acceso a expresionRegular.
+	 *
+	 * @return expresionRegular
+	 */
+	public String getExpresionRegular() {
+		return expresionRegular;
+	}
+
+	/**
+	 * Método para establecer expresionRegular.
+	 *
+	 * @param expresionRegular expresionRegular a establecer
+	 */
+	public void setExpresionRegular(String expresionRegular) {
+		this.expresionRegular = expresionRegular;
+	}
 }

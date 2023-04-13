@@ -481,6 +481,8 @@ public interface TramiteService {
 	 */
 	public List<DominioTramite> getTramiteVersionByDominio(Long idDominio);
 
+	public List<DominioTramite> getTramiteVersionByDominio(Long idDominio, String filtro);
+
 	/**
 	 * Obtiene la lista de tramite versión que tienen ese envio remoto.
 	 *
@@ -488,6 +490,8 @@ public interface TramiteService {
 	 * @return
 	 */
 	public List<DominioTramite> getTramiteVersionByEnvioRemoto(Long idEnvioRemoto);
+
+	public List<DominioTramite> getTramiteVersionByEnvioRemoto(Long idEnvioRemoto, String filtro);
 
 	/**
 	 * Obtiene la lista de tramite versión que tienen ese gestor de formulario
@@ -497,6 +501,8 @@ public interface TramiteService {
 	 * @return
 	 */
 	public List<DominioTramite> getTramiteVersionByGfe(Long idGfe);
+
+	public List<DominioTramite> getTramiteVersionByGfe(Long idGfe, String filtro);
 
 	/**
 	 * Mira si la tasa esta repetida.
@@ -749,7 +755,7 @@ public interface TramiteService {
 	/**
 	 * Actualiza la fecha del tramite versión (cuando se toca cualquier cosa del
 	 * trámite)
-	 * 
+	 *
 	 * @param idTramiteVersion
 	 * @param username
 	 * @param detalle
@@ -758,7 +764,7 @@ public interface TramiteService {
 
 	/**
 	 * Devueve los tramites que utilizan la seccion reutilizable
-	 * 
+	 *
 	 * @param valueOf
 	 * @return
 	 */
@@ -766,7 +772,7 @@ public interface TramiteService {
 
 	/**
 	 * Lista de secciones reutilizables del tramite.
-	 * 
+	 *
 	 * @param idTramiteVersion
 	 * @return
 	 */
@@ -774,7 +780,7 @@ public interface TramiteService {
 
 	/**
 	 * Indica si hay tramites asociados.
-	 * 
+	 *
 	 * @param codigo
 	 * @return
 	 */

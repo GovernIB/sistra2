@@ -1,6 +1,7 @@
 package es.caib.sistramit.core.ejb;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -11,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistramit.core.api.model.system.rest.interno.DetallePagoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.ErroresPorTramiteCM;
 import es.caib.sistramit.core.api.model.system.rest.interno.EventoAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.rest.interno.EventoCM;
 import es.caib.sistramit.core.api.model.system.rest.interno.FicheroAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FicheroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroEventoAuditoria;
@@ -91,4 +94,41 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 		return restApiInternaService.recuperarPersistenciaFicheros(pIdTramite);
 	}
 
+	@Override
+	public List<EventoCM> recuperarEventosCM(FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiInternaService.recuperarEventosCM(pFiltroBusqueda);
+	}
+
+	@Override
+	public List<ErroresPorTramiteCM> recuperarErroresPorTramiteCM(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		return restApiInternaService.recuperarErroresPorTramiteCM(pFiltroBusqueda, filtroPaginacion);
+	}
+
+	@Override
+	public Long contarErroresPorTramiteCM(FiltroEventoAuditoria filtroBusqueda) {
+		return restApiInternaService.contarErroresPorTramiteCM(filtroBusqueda);
+	}
+
+	@Override
+	public List<EventoCM> recuperarErroresPorTramiteCMExpansion(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		return restApiInternaService.recuperarErroresPorTramiteCMExpansion(pFiltroBusqueda, filtroPaginacion);
+	}
+
+	@Override
+	public Long contarErroresPorTramiteExpansionCM(FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiInternaService.contarErroresPorTramiteExpansionCM(pFiltroBusqueda);
+	}
+
+	@Override
+	public List<EventoCM> recuperarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		return restApiInternaService.recuperarErroresPlataformaCM(pFiltroBusqueda, filtroPaginacion);
+	}
+
+	@Override
+	public Long contarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiInternaService.contarErroresPlataformaCM(pFiltroBusqueda);
+	}
 }

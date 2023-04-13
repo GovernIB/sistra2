@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -48,7 +49,7 @@ public class DialogInformacionPersistencia extends DialogControllerBase {
 			setDato((PersistenciaAuditoria) UtilJSF.getSessionBean().getMochilaDatos()
 					.get(Constantes.CLAVE_MOCHILA_PERSISTENCIA));
 			UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_PERSISTENCIA);
-
+			Date now = new Date();
 			if (getDato() != null) {
 				setListaFicheros(helpDeskService.obtenerAuditoriaPersistenciaFichero(getDato().getId()));
 			}

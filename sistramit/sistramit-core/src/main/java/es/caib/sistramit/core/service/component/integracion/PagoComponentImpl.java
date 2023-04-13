@@ -211,6 +211,8 @@ public final class PagoComponentImpl implements PagoComponent {
 		datosPago.setSujetoPasivoNif(sesionPago.getSujetoPasivo().getNif());
 		datosPago.setSujetoPasivoNombre(sesionPago.getSujetoPasivo().getNombre());
 		datosPago.setMetodosPago(sesionPago.getMetodosPago());
+		datosPago.setIdTramite(sesionPago.getIdTramite());
+		datosPago.setVersionTramite(sesionPago.getVersionTramite());
 		return datosPago;
 	}
 

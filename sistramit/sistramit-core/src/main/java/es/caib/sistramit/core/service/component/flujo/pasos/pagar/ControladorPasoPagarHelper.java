@@ -239,6 +239,8 @@ public final class ControladorPasoPagarHelper {
 		datosSesionPago.setImporte(datosPago.getImporte());
 		datosSesionPago.setOrganismoId(datosPago.getOrganismo());
 		datosSesionPago.setMetodosPago(datosPago.getMetodosPago());
+		datosSesionPago.setIdTramite(pDefinicionTramite.getDefinicionVersion().getIdentificador());
+		datosSesionPago.setVersionTramite(pDefinicionTramite.getDefinicionVersion().getVersion());
 
 		return datosSesionPago;
 	}

@@ -29,6 +29,30 @@ public final class OpcionesCampoTextoNormal implements Serializable {
 	private TypeSiNo mayusculas = TypeSiNo.NO;
 
 	/**
+	 * Prevenir pegar.
+	 */
+	private TypeSiNo pegar = TypeSiNo.SI;
+
+	/**
+	 * Método de acceso a prevenirPegar.
+	 *
+	 * @return prevenirPegar
+	 */
+	public TypeSiNo getPegar() {
+		return pegar;
+	}
+
+	/**
+	 * Método para establecer prevenirPegar.
+	 *
+	 * @param prevenirPegar
+	 *                          prevenirPegar a establecer
+	 */
+	public void setPegar(final TypeSiNo prevenirPegar) {
+		this.pegar = prevenirPegar;
+	}
+
+	/**
 	 * Método de acceso a tamanyo.
 	 *
 	 * @return tamanyo
@@ -41,7 +65,7 @@ public final class OpcionesCampoTextoNormal implements Serializable {
 	 * Método para establecer tamanyo.
 	 *
 	 * @param pTamanyo
-	 *            tamanyo a establecer
+	 *                     tamanyo a establecer
 	 */
 	public void setTamanyo(final int pTamanyo) {
 		tamanyo = pTamanyo;
@@ -60,7 +84,7 @@ public final class OpcionesCampoTextoNormal implements Serializable {
 	 * Método para establecer lineas.
 	 *
 	 * @param pLineas
-	 *            lineas a establecer
+	 *                    lineas a establecer
 	 */
 	public void setLineas(final int pLineas) {
 		lineas = pLineas;
@@ -68,7 +92,7 @@ public final class OpcionesCampoTextoNormal implements Serializable {
 
 	/**
 	 * Método de acceso a mayusculas.
-	 * 
+	 *
 	 * @return mayusculas
 	 */
 	public TypeSiNo getMayusculas() {
@@ -77,9 +101,9 @@ public final class OpcionesCampoTextoNormal implements Serializable {
 
 	/**
 	 * Método para establecer mayusculas.
-	 * 
+	 *
 	 * @param mayusculas
-	 *            mayusculas a establecer
+	 *                       mayusculas a establecer
 	 */
 	public void setMayusculas(final TypeSiNo mayusculas) {
 		this.mayusculas = mayusculas;

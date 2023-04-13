@@ -1,0 +1,293 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+  xmlns:pe="http://primefaces.org/ui/extensions"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  template="../layout/mainLayout.xhtml">
+
+  <f:metadata>
+    <f:viewAction action="#{viewConfiguracionAlertas.init}" />
+  </f:metadata>
+
+
+
+  <ui:define name="content">
+    <h:outputScript library="primefaces-custom" name="calendar_es.js" />
+    <h:outputScript library="primefaces-custom" name="calendar_ca.js" />
+    <p:importEnum type="es.caib.sistrahelp.core.api.model.types.TypeEvento" var="TypeEvento"/>
+
+    <h:form id="form" style="height:91%;">
+      <h:outputScript>
+
+        var arrayCm = [];
+
+        window.onload=function(){
+          let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+        onVisible(contextMenu, () => eliminarResaltar());
+
+        document.addEventListener('contextmenu', function(ev) {
+            ev.preventDefault();
+            getPos();
+            return false;
+        }, false);
+        }
+
+        function eliminarResaltar(){
+          let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+            let elementos = document.getElementsByClassName('resaltar');
+            if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+            for(let i = 0; i &lt; elementos.length; i++){
+              elementos[i].classList.remove('resaltar');
+            }
+            }
+        }
+
+        function onVisible(element, callback) {
+          new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+              if(entry.intersectionRatio == 0) {
+                callback(element);
+              }
+            });
+          }).observe(element);
+        }
+
+        function consultar(){
+          let elemento = document.getElementsByClassName('resaltar')[0];
+          elemento.click();
+          $('#form\\:btnEditarHidden').click();
+        }
+
+        function getPos(){
+         var e = window.event;
+
+          var posX = e.clientX;
+          var posY = e.clientY;
+          var el = document.elementFromPoint(posX, posY);
+
+          let elementos = document.getElementsByClassName('resaltar');
+            if(elementos.length &gt; 0){
+            for(let i = 0; i &lt; elementos.length; i++){
+              elementos[i].classList.remove('resaltar');
+            }
+            }
+
+        el.classList.add("resaltar");
+        var aux = document.getElementById("form:auxCopiar");
+        if(el.textContent!=''){
+          aux.value = el.textContent;
+        }else if(el.firstChild!=null){
+          aux.value = el.firstChild.value;
+        }else if(el.value!=null &amp;&amp; el.value!=''){
+          aux.value = el.value;
+        }
+
+        var dataT = document.getElementsByClassName('ui-datatable-scrollable-body')[0];
+        var elEnDataT = dataT.getElementsByClassName('resaltar')[0];
+        if(elEnDataT!=null){
+          document.getElementById("form:detalle").classList.remove("d-none");
+          document.getElementById("form:detalle").classList.add("d-block");
+        }else{
+          document.getElementById("form:detalle").classList.remove("d-block");
+          document.getElementById("form:detalle").classList.add("d-none");
+        }
+
+        if(aux.value!='' ){
+            var multiple = false;
+            var hijos = el.children;
+			if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR') &amp;&amp; hijos.length &gt; 1){
+		            multiple = true;
+		                  }else if(hijos.length &gt;= 1 ){
+		                  	if(hijos.length==1  &amp;&amp; hijos[0].tagName=='DIV'){
+		                  		hijos = hijos[0].children;
+		                  	}
+			                    for(i=0;i&lt;hijos.length;i++){
+					              if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+					                multiple=true;
+					              }
+			                    }
+
+		                  }
+                  var listaCm = document.getElementsByClassName('ui-contextmenu');
+                  if(multiple){
+                    for(i=0;i&lt;listaCm.length;i++){
+                    	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+                    		arrayCm.push(listaCm[i]);
+                    	}
+	                	listaCm[i].classList.add("d-none");
+					}
+                  }else{
+                  	for(i=0;i&lt;listaCm.length;i++){
+                  		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+                    		arrayCm.push(listaCm[i]);
+                    	}
+	                	listaCm[i].classList.remove("d-none");
+					}
+					if(arrayCm.length&gt;1){
+						arrayCm.pop();
+						for(let i=0; i&lt;arrayCm.length; i++){
+							arrayCm[i].style.display='none';
+						}
+					}
+					arrayCm = [];
+                  }
+
+               }
+
+       }
+
+		 function opcVista(){
+			if(document.getElementById("form:btnNuevo")!=null){
+          		document.getElementById("form:mnuNuevo").style.display='block';
+          	}else{
+          		document.getElementById("form:mnuNuevo").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnEditar")!=null){
+          		document.getElementById("form:mnuEditar").style.display='block';
+          	}else{
+          		document.getElementById("form:mnuEditar").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnEliminar")!=null){
+          		document.getElementById("form:mnuEliminar").style.display='block';
+          	}else{
+          		document.getElementById("form:mnuEliminar").style.display='none';
+          	}
+          }
+      </h:outputScript>
+
+      <!-- Growl mensajes -->
+      <p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+      <!-- Toolbar -->
+
+
+          <!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
+          <p:panelGrid id="panelFiltro" style="border-color:#f0f0f0;" columnClasses="w50,w25,w25" styleClass="noBackground w100 h10">
+        <p:row style="border-color:#f0f0f0">
+
+
+        <p:column>
+            <h:panelGrid id="panelBotones" columns="6" cellspacing="5" styleClass="table-rightaligned">
+			<p:commandButton value="#{msg['botones.nuevo']}" id="btnNuevo" icon="fa fa-file" actionListener="#{viewConfiguracionAlertas.nuevo()}" process="@this" update="growl">
+    			<p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable"/>
+    		</p:commandButton>
+    		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewConfiguracionAlertas.editar()}" process="@this" update="growl">
+    			<p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable"/>
+    		</p:commandButton>
+    		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewConfiguracionAlertas.eliminar()}" process="@this" update="growl dataTable">
+    			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+    		</p:commandButton>
+                <p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewConfiguracionAlertas.ayuda}"/>
+        	</h:panelGrid>
+        </p:column>
+        </p:row>
+            </p:panelGrid>
+
+
+      <!-- Data table -->
+      <p:outputPanel  styleClass="h100">
+      <p:dataTable id="dataTable" var="dt" value="#{viewConfiguracionAlertas.listaDatos}" lazy="true"
+             rows="#{viewConfiguracionAlertas.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
+             scrollable="true" scrollHeight="100%"
+                         paginator="true" paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,30"
+                         currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords}"
+                 selectionMode="single" selection="#{viewConfiguracionAlertas.datoSeleccionado}" rowKey="#{dt.codigo}">
+
+
+        <!-- Necesario para actualizar en controlador la fila seleccionada -->
+        <p:ajax event="rowSelect" global="false"/>
+        <p:ajax event="rowDblselect" oncomplete="triggerDblClick();" update=":form:dataTable"/>
+        <p:ajax event="page" update=":form:dataTable"/>
+        <p:ajax event="contextMenu" global="false" process="@this" update="form:panelBotones" oncomplete="opcVista();"/>
+
+        <!-- Columnas -->
+         <p:column headerText="#{msg['viewConfiguracionAlertas.nombre']}" style="width:8% !important;" sortBy="#{dt.nombre}">
+              <h:outputText value="#{dt.nombre}" />
+          </p:column>
+         <p:column headerText="#{msg['viewConfiguracionAlertas.eventos']}" style="width:8% !important;" sortBy="#{dt.eventos}">
+              <h:outputText value="#{viewConfiguracionAlertas.convertirEventos(dt.eventos)}" />
+          </p:column>
+          <p:column headerText="#{msg['viewConfiguracionAlertas.intervalo']}" style="width:12% !important;" styleClass="grid-center" sortBy="#{dt.intervaloEvaluacion}">
+              <h:outputText value="#{dt.intervaloEvaluacion}"/>
+          </p:column>
+			<p:column headerText="#{msg['viewConfiguracionAlertas.periodo']}" style="width:20% !important;" sortBy="#{dt.periodoEvaluacion}">
+			<h:outputText value="#{viewConfiguracionAlertas.parseSecs(dt.periodoEvaluacion)}"/>
+          </p:column>
+
+      </p:dataTable></p:outputPanel>
+
+      <h:outputScript >
+          function triggerDblClick() {
+              $('#form\\:btnEditarHidden').click();
+          }
+        </h:outputScript>
+        <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewConfiguracionAlertas.rcDobleClick()}" process="@this" update=":form:growl" style="display:none">
+           <p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable"/>
+        </p:commandButton>
+        <h:outputScript >
+          document.getElementsByName("form:dataTable_rppDD")[0].addEventListener("change", refrescarPaginacion);
+          function refrescarPaginacion() {
+              document.getElementById("form:paginacion").focus();
+              document.getElementById("form:paginacion").value = document.getElementsByName("form:dataTable_rppDD")[0].value
+              document.getElementById("form:paginacion").blur();
+          }
+        </h:outputScript>
+      <p:inputText id="paginacion" value="#{viewConfiguracionAlertas.paginacion}" style="opacity:0">
+        <p:ajax event="blur" update="@form" process="@this"/>
+      </p:inputText>
+      <p:confirmDialog global="true" >
+				<p:outputPanel styleClass="confirmar_botonera">
+		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+				</p:outputPanel>
+		    </p:confirmDialog>
+	      <p:contextMenu for=":work">
+             <p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+             <p:menuitem id="detalle" icon="fa fa-window-maximize" onclick="consultar();" value="#{msg['dialogAuditoriaTramites.descripcion']}"  process="@this"/>
+        </p:contextMenu>
+        <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+        <p:ajax event="success" listener="#{viewConfiguracionAlertas.copiadoCorr}" process="@this" update="@this growl"/>
+              <p:ajax event="error" listener="#{viewConfiguracionAlertas.copiadoErr}" update="@this growl"/>
+          </pe:clipboard>
+
+		<p:contextMenu for=":form:dataTable" id="contextWork">
+			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyD"  process="@this :form:auxCopiar" update="growl" />
+			<p:separator/>
+	      	<p:menuitem id="mnuNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this" style="display:none;"/>
+	      	<p:menuitem id="mnuEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditar').click();" process="@this"  style="display:none;"/>
+	      	<p:menuitem id="mnuEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('form:btnEliminar').click();" process="@this" style="display:none;"/>
+	    </p:contextMenu>
+	    <pe:clipboard id="clipContextCopyD" trigger="mnuCopy" action="copy" target="auxCopiar">
+			<p:ajax event="success" listener="#{viewPagos.copiadoCorr}" process="@this" update="@this growl"/>
+	         <p:ajax event="error" listener="#{viewPagos.copiadoErr}" update="@this growl"/>
+	    </pe:clipboard>
+
+      <p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
+        <p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+      </p:contextMenu>
+      <pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
+        <p:ajax event="success" listener="#{viewConfiguracionAlertas.copiadoCorr}" process="@this" update="@this growl"/>
+        <p:ajax event="error" listener="#{viewConfiguracionAlertas.copiadoErr}" update="@this growl"/>
+      </pe:clipboard>
+
+       <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
+        <p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+      </p:contextMenu>
+      <pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
+        <p:ajax event="success" listener="#{viewConfiguracionAlertas.copiadoCorr}" process="@this" update="@this growl"/>
+        <p:ajax event="error" listener="#{viewConfiguracionAlertas.copiadoErr}" update="@this growl"/>
+      </pe:clipboard>
+
+        <p:inputText id="auxCopiar" value="#{viewConfiguracionAlertas.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+    </h:form>
+
+  </ui:define>
+
+</ui:composition>

@@ -204,7 +204,6 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		return jForm.getCodigo();
 	}
 
-
 	/*
 	 * (non-Javadoc)
 	 *
@@ -230,48 +229,45 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		jtradEsp.setTraduccion(jliteral);
 
 		traduccionLiterales.add(jtradEsp);
-		traduccionLiterales.add(jtradCat );
+		traduccionLiterales.add(jtradCat);
 
 		jliteral.setTraduccionLiterales(traduccionLiterales);
 		final JFormulario jForm = JFormulario.createDefault(jliteral);
-
 
 		final JPaginaFormulario jPagina = JPaginaFormulario.createDefault(jForm);
 
 		final Set<JPaginaFormulario> paginas = new HashSet<>();
 		paginas.add(jPagina);
 		jForm.setPaginas(paginas);
-
 
 		entityManager.persist(jForm);
 
 		return jForm.getCodigo();
 
 		/*
-
-		final JFormulario jForm = JFormulario.createDefault(null);
-		jForm.setMostrarCabecera(false);
-
-		final JPaginaFormulario jPagina = JPaginaFormulario.createDefault(jForm);
-
-		final Set<JPaginaFormulario> paginas = new HashSet<>();
-		paginas.add(jPagina);
-		jForm.setPaginas(paginas);
-
-		entityManager.persist(jForm);
-
-
-		ObjetoFormulario obj = this.addComponente(TypeObjetoFormulario.SECCION, jPagina.getCodigo(), null, 0, null, null, false, null);
-		ComponenteFormularioSeccion compSeccion = (ComponenteFormularioSeccion) ((LineaComponentesFormulario) obj).getComponentes().get(0);
-		compSeccion.setIdComponente("SEC_" + seccion.getIdentificador());
-		Literal texto = new Literal();
-		texto.add(new Traduccion("es", "Sección reutilizable"));
-		texto.add(new Traduccion("ca", "Secció reutilitzable"));
-		compSeccion.setTexto(texto);
-		compSeccion.setLetra("A");
-		this.updateComponente(compSeccion);
-		return jForm.getCodigo();
-		*/
+		 * 
+		 * final JFormulario jForm = JFormulario.createDefault(null);
+		 * jForm.setMostrarCabecera(false);
+		 * 
+		 * final JPaginaFormulario jPagina = JPaginaFormulario.createDefault(jForm);
+		 * 
+		 * final Set<JPaginaFormulario> paginas = new HashSet<>(); paginas.add(jPagina);
+		 * jForm.setPaginas(paginas);
+		 * 
+		 * entityManager.persist(jForm);
+		 * 
+		 * 
+		 * ObjetoFormulario obj = this.addComponente(TypeObjetoFormulario.SECCION,
+		 * jPagina.getCodigo(), null, 0, null, null, false, null);
+		 * ComponenteFormularioSeccion compSeccion = (ComponenteFormularioSeccion)
+		 * ((LineaComponentesFormulario) obj).getComponentes().get(0);
+		 * compSeccion.setIdComponente("SEC_" + seccion.getIdentificador()); Literal
+		 * texto = new Literal(); texto.add(new Traduccion("es",
+		 * "Sección reutilizable")); texto.add(new Traduccion("ca",
+		 * "Secció reutilitzable")); compSeccion.setTexto(texto);
+		 * compSeccion.setLetra("A"); this.updateComponente(compSeccion); return
+		 * jForm.getCodigo();
+		 */
 	}
 
 	/*
@@ -324,25 +320,23 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		entityManager.merge(jForm);
 		entityManager.flush();
 
-
 		if (pFormInt.getPaginas().get(0).getLineas() != null) {
 			Integer ordenLinea = 1;
-			//Reordenamos las lineas
+			// Reordenamos las lineas
 			Collections.sort(pFormInt.getPaginas().get(0).getLineas(),
 					(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
 
-			for( LineaComponentesFormulario linea : pFormInt.getPaginas().get(0).getLineas()) {
-
+			for (LineaComponentesFormulario linea : pFormInt.getPaginas().get(0).getLineas()) {
 
 				ObjetoFormulario jLinea = null;
 
 				if (crearLinea(linea)) {
-					jLinea = this.addComponente(TypeObjetoFormulario.LINEA, idPagina, null, ordenLinea, null, null, false, null);
+					jLinea = this.addComponente(TypeObjetoFormulario.LINEA, idPagina, null, ordenLinea, null, null,
+							false, null);
 				}
 
 				Collections.sort(linea.getComponentes(),
 						(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
-
 
 				if (linea.getComponentes() != null) {
 					Integer ordenComponente = 0;
@@ -350,22 +344,28 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 					if (jLinea != null) {
 						idLinea = jLinea.getCodigo();
 					}
-					for(ComponenteFormulario componente : linea.getComponentes()) {
+					for (ComponenteFormulario componente : linea.getComponentes()) {
 
-
-						ObjetoFormulario comp = this.addComponente(componente.getTipo(), idPagina, idLinea, idLinea == null ? ordenLinea : componente.getOrden(), null, componente, false, null);
+						ObjetoFormulario comp = this.addComponente(componente.getTipo(), idPagina, idLinea,
+								idLinea == null ? ordenLinea : componente.getOrden(), null, componente, false, null);
 						entityManager.flush();
 						if (componente instanceof ComponenteFormularioCampoSelector) {
-							if(((ComponenteFormularioCampoSelector) componente).getListaParametrosDominio() == null || !((ComponenteFormularioCampoSelector) componente).getListaParametrosDominio().isEmpty()) {
-								for(ParametroDominio param : ( (ComponenteFormularioCampoSelector) componente).getListaParametrosDominio()) {
+							if (((ComponenteFormularioCampoSelector) componente).getListaParametrosDominio() == null
+									|| !((ComponenteFormularioCampoSelector) componente).getListaParametrosDominio()
+											.isEmpty()) {
+								for (ParametroDominio param : ((ComponenteFormularioCampoSelector) componente)
+										.getListaParametrosDominio()) {
 									param.setCodigo(null);
 								}
 							}
 						}
 
 						if (componente instanceof ComponenteFormularioCampoSelector) {
-							if (((ComponenteFormularioCampoSelector) componente).getListaValorListaFija() == null || !((ComponenteFormularioCampoSelector) componente).getListaValorListaFija().isEmpty()) {
-								for(ValorListaFija param : ( (ComponenteFormularioCampoSelector) componente).getListaValorListaFija()) {
+							if (((ComponenteFormularioCampoSelector) componente).getListaValorListaFija() == null
+									|| !((ComponenteFormularioCampoSelector) componente).getListaValorListaFija()
+											.isEmpty()) {
+								for (ValorListaFija param : ((ComponenteFormularioCampoSelector) componente)
+										.getListaValorListaFija()) {
 									param.setCodigo(null);
 									if (param.getDescripcion() != null) {
 										param.getDescripcion().setCodigo(null);
@@ -375,11 +375,15 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 						}
 						componente.setCodigo(getCodigo(comp));
 						componente.setOrden(ordenComponente);
-						if (componente.getTipo() == TypeObjetoFormulario.SELECTOR && (componente instanceof ComponenteFormularioCampoSelector) && ((ComponenteFormularioCampoSelector)componente).getCodDominio() != null) {
-							ComponenteFormularioCampoSelector compSelector = ((ComponenteFormularioCampoSelector)componente);
-							Long idDominio = getDominio(compSelector.getDominioAmbito(), compSelector.getDominioIdentificador(), compSelector.getDominioEntidad(), compSelector.getDominioArea());
+						if (componente.getTipo() == TypeObjetoFormulario.SELECTOR
+								&& (componente instanceof ComponenteFormularioCampoSelector)
+								&& ((ComponenteFormularioCampoSelector) componente).getCodDominio() != null) {
+							ComponenteFormularioCampoSelector compSelector = ((ComponenteFormularioCampoSelector) componente);
+							Long idDominio = getDominio(compSelector.getDominioAmbito(),
+									compSelector.getDominioIdentificador(), compSelector.getDominioEntidad(),
+									compSelector.getDominioArea());
 							if (idDominio != null) {
-								((ComponenteFormularioCampoSelector)componente).setCodDominio(idDominio);
+								((ComponenteFormularioCampoSelector) componente).setCodDominio(idDominio);
 							}
 						}
 						this.vaciarIds(componente);
@@ -393,7 +397,6 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		}
 		entityManager.flush();
 		jForm = getJFormularioById(pFormInt.getCodigo());
-
 
 		final List<JPlantillaFormulario> borrar = JFormulario.listRemovePlantillasModel(jForm, pFormInt);
 
@@ -433,16 +436,19 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				((ComponenteFormularioCampo) componente).getScriptValidacion().limpiarIds();
 			}
 		}
-		if (componente instanceof ComponenteFormularioCampoSelector && ((ComponenteFormularioCampoSelector) componente).getScriptValoresPosibles() != null) {
+		if (componente instanceof ComponenteFormularioCampoSelector
+				&& ((ComponenteFormularioCampoSelector) componente).getScriptValoresPosibles() != null) {
 			((ComponenteFormularioCampoSelector) componente).getScriptValoresPosibles().limpiarIds();
 		}
-		if (componente instanceof ComponenteFormularioImagen && ((ComponenteFormularioImagen) componente).getFichero() != null) {
+		if (componente instanceof ComponenteFormularioImagen
+				&& ((ComponenteFormularioImagen) componente).getFichero() != null) {
 			((ComponenteFormularioImagen) componente).getFichero().setCodigo(null);
 		}
 	}
 
 	/**
 	 * Obtiene la id del dominio
+	 * 
 	 * @param dominioAmbito
 	 * @param dominioIdentificador
 	 * @param dominioEntidad
@@ -456,16 +462,19 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		TypeAmbito ambito = TypeAmbito.fromString(dominioAmbito);
 		switch (ambito) {
 		case AREA:
-			sql = "SELECT j.codigo FROM JDominio j WHERE j.ambito like '"+TypeAmbito.AREA.toString()+"' AND j.identificador LIKE :identificador AND j.area.identificador LIKE :idArea";
+			sql = "SELECT j.codigo FROM JDominio j WHERE j.ambito like '" + TypeAmbito.AREA.toString()
+					+ "' AND j.identificador LIKE :identificador AND j.area.identificador LIKE :idArea";
 			break;
 		case ENTIDAD:
-			sql = "SELECT j.codigo FROM JDominio j WHERE j.ambito like '"+TypeAmbito.ENTIDAD.toString()+"' AND j.identificador LIKE :identificador AND j.entidad.identificador LIKE :idEntidad";
+			sql = "SELECT j.codigo FROM JDominio j WHERE j.ambito like '" + TypeAmbito.ENTIDAD.toString()
+					+ "' AND j.identificador LIKE :identificador AND j.entidad.identificador LIKE :idEntidad";
 			break;
 		case GLOBAL:
-			sql = "SELECT j.codigo FROM JDominio j WHERE j.ambito like '"+TypeAmbito.GLOBAL.toString()+"' AND j.identificador LIKE :identificador";
+			sql = "SELECT j.codigo FROM JDominio j WHERE j.ambito like '" + TypeAmbito.GLOBAL.toString()
+					+ "' AND j.identificador LIKE :identificador";
 			break;
-			default:
-				sql = "";
+		default:
+			sql = "";
 		}
 		Query query = entityManager.createQuery(sql);
 		query.setParameter("identificador", dominioIdentificador);
@@ -486,16 +495,18 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	private boolean crearLinea(LineaComponentesFormulario linea) {
 		boolean crear = true;
 		if (linea.getComponentes() != null && !linea.getComponentes().isEmpty()) {
-			crear = ! ( linea.getComponentes().size() == 1 &&  (linea.getComponentes().get(0).getTipo() == TypeObjetoFormulario.CAPTCHA ||
-					linea.getComponentes().get(0).getTipo() == TypeObjetoFormulario.ETIQUETA ||
-					linea.getComponentes().get(0).getTipo() == TypeObjetoFormulario.SECCION ) );
+			crear = !(linea.getComponentes().size() == 1
+					&& (linea.getComponentes().get(0).getTipo() == TypeObjetoFormulario.CAPTCHA
+							|| linea.getComponentes().get(0).getTipo() == TypeObjetoFormulario.ETIQUETA
+							|| linea.getComponentes().get(0).getTipo() == TypeObjetoFormulario.SECCION));
 		}
 		return crear;
 	}
 
 	private Long getCodigo(ObjetoFormulario comp) {
 		if (comp instanceof LineaComponentesFormulario) {
-			if (((LineaComponentesFormulario) comp).getComponentes() == null || ((LineaComponentesFormulario) comp).getComponentes().isEmpty()) {
+			if (((LineaComponentesFormulario) comp).getComponentes() == null
+					|| ((LineaComponentesFormulario) comp).getComponentes().isEmpty()) {
 				return comp.getCodigo();
 			} else {
 				return ((LineaComponentesFormulario) comp).getComponentes().get(0).getCodigo();
@@ -595,19 +606,21 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 	/**
 	 * Método recursivo para obtener las lineas de una página. <br />
-	 * Importante, si se pasa el parámetro, sinSeccionesReutilizables a true, hay que setear el orden de cada linea.
+	 * Importante, si se pasa el parámetro, sinSeccionesReutilizables a true, hay
+	 * que setear el orden de cada linea.
+	 * 
 	 * @param jPagina
 	 * @param sinSeccionesReutilizables
 	 * @return
 	 */
-	private List<LineaComponentesFormulario> getLineas(final JPaginaFormulario jPagina, final boolean sinSeccionesReutilizables) {
+	private List<LineaComponentesFormulario> getLineas(final JPaginaFormulario jPagina,
+			final boolean sinSeccionesReutilizables) {
 
 		List<LineaComponentesFormulario> lineas = new ArrayList<>();
 		int ordenLinea = 0;
 
 		List<JLineaFormulario> jlineas = new ArrayList<>(jPagina.getLineasFormulario());
-		Collections.sort(jlineas,
-				(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
+		Collections.sort(jlineas, (o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
 
 		for (final JLineaFormulario jLinea : jlineas) {
 			final LineaComponentesFormulario linea = jLinea.toModel();
@@ -615,7 +628,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 			if (sinSeccionesReutilizables) {
 				linea.setOrden(ordenLinea);
-				ordenLinea ++;
+				ordenLinea++;
 			}
 
 			List<JElementoFormulario> elementos = new ArrayList<>(jLinea.getElementoFormulario());
@@ -626,41 +639,47 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				final ComponenteFormulario componente = componenteFormularioToModel(jComponente);
 				if (componente != null) {
 
-					//Si es sin secciones reutilizables, hay que sustituir el componente seccion reutilizable por el disenyo asociado
-					if (componente.getTipo() == TypeObjetoFormulario.SECCION_REUTILIZABLE && sinSeccionesReutilizables && jComponente.getSeccionReutilizableFormulario() != null) {
-						//Si tiene seccion reutilizable y está activo, hay que obtener todas las lineas
+					// Si es sin secciones reutilizables, hay que sustituir el componente seccion
+					// reutilizable por el disenyo asociado
+					if (componente.getTipo() == TypeObjetoFormulario.SECCION_REUTILIZABLE && sinSeccionesReutilizables
+							&& jComponente.getSeccionReutilizableFormulario() != null) {
+						// Si tiene seccion reutilizable y está activo, hay que obtener todas las lineas
 						sinSeccionReutilizable = false;
-						JSeccionReutilizable jseccion = entityManager.find(JSeccionReutilizable.class, jComponente.getSeccionReutilizableFormulario().getSeccionReutilizable().getCodigo());
-						JPaginaFormulario jpaginaSeccion = (JPaginaFormulario) jseccion.getFormularioAsociado().getPaginas().toArray()[0];
+						JSeccionReutilizable jseccion = entityManager.find(JSeccionReutilizable.class,
+								jComponente.getSeccionReutilizableFormulario().getSeccionReutilizable().getCodigo());
+						JPaginaFormulario jpaginaSeccion = (JPaginaFormulario) jseccion.getFormularioAsociado()
+								.getPaginas().toArray()[0];
 						List<LineaComponentesFormulario> lineasSeccion = getLineas(jpaginaSeccion, false);
 
-
-						//Hay que reemplazar la sección que haya, por los datos almacenados (la letra y el texto).
+						// Hay que reemplazar la sección que haya, por los datos almacenados (la letra y
+						// el texto).
 						if (lineasSeccion != null) {
 
-							Collections.sort(lineasSeccion,
-									(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
+							Collections.sort(lineasSeccion, (o1, o2) -> Integer.valueOf(o1.getOrden())
+									.compareTo(Integer.valueOf(o2.getOrden())));
 
-							for(LineaComponentesFormulario lin : lineasSeccion) {
+							for (LineaComponentesFormulario lin : lineasSeccion) {
 
 								if (sinSeccionesReutilizables) {
 									lin.setOrden(ordenLinea);
-									ordenLinea ++;
+									ordenLinea++;
 								}
-
 
 								if (lin.getComponentes() != null) {
 
-									Collections.sort(lin.getComponentes(),
-											(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
+									Collections.sort(lin.getComponentes(), (o1, o2) -> Integer.valueOf(o1.getOrden())
+											.compareTo(Integer.valueOf(o2.getOrden())));
 
-									for(ComponenteFormulario comp : lin.getComponentes()) {
+									for (ComponenteFormulario comp : lin.getComponentes()) {
 										if (comp instanceof ComponenteFormularioSeccion) {
-											((ComponenteFormularioSeccion) comp).setLetra(jComponente.getSeccionReutilizableFormulario().getLetra());
-											if (jComponente.getTexto() != null && jComponente.getTexto().getTraduccionLiterales() != null) {
+											((ComponenteFormularioSeccion) comp).setLetra(
+													jComponente.getSeccionReutilizableFormulario().getLetra());
+											if (jComponente.getTexto() != null
+													&& jComponente.getTexto().getTraduccionLiterales() != null) {
 												Literal literal = new Literal();
 												literal.setCodigo(jComponente.getCodigo());
-												for(  JTraduccionLiteral trad : jComponente.getTexto().getTraduccionLiterales()) {
+												for (JTraduccionLiteral trad : jComponente.getTexto()
+														.getTraduccionLiterales()) {
 													Traduccion traduccion = new Traduccion();
 													traduccion.setIdioma(trad.getIdioma().getIdentificador());
 													traduccion.setLiteral(trad.getLiteral());
@@ -692,7 +711,6 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				lineas.add(linea);
 			}
 
-
 		}
 		return lineas;
 	}
@@ -717,7 +735,8 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	 */
 	@Override
 	public ObjetoFormulario addComponente(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina,
-			final Long pIdLinea, final Integer pOrden, final String pPosicion, final Object objeto, boolean isTipoSeccion, String identificadorSeccion) {
+			final Long pIdLinea, final Integer pOrden, final String pPosicion, final Object objeto,
+			boolean isTipoSeccion, String identificadorSeccion) {
 		JLineaFormulario jLineaSeleccionada = null;
 		ObjetoFormulario objetoResultado = null;
 		Integer nuevoOrden = null;
@@ -770,8 +789,9 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				break;
 			case CAMPO_OCULTO:
 				nuevoOrden = creaHuecoEntreComponentes(jLineaSeleccionada, pOrden);
-				final JCampoFormulario jObjFormCampoOculto = JCampoFormulario
-						.createDefault(TypeObjetoFormulario.CAMPO_OCULTO, nuevoOrden, jLineaSeleccionada, isTipoSeccion, identificadorSeccion);
+				final JCampoFormulario jObjFormCampoOculto = JCampoFormulario.createDefault(
+						TypeObjetoFormulario.CAMPO_OCULTO, nuevoOrden, jLineaSeleccionada, isTipoSeccion,
+						identificadorSeccion);
 				jObjFormCampoOculto.getElementoFormulario().setCampoFormulario(jObjFormCampoOculto);
 				entityManager.persist(jObjFormCampoOculto);
 				entityManager.merge(jLineaSeleccionada);
@@ -794,7 +814,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				// creaHuecoEnComponentes(jLineaSeleccionada, pOrden);
 				nuevoOrden = creaHuecoEntreComponentes(jLineaSeleccionada, pOrden);
 				final JCampoFormularioIndexado jObjFormSelector = JCampoFormularioIndexado.createDefault(nuevoOrden,
-						jLineaSeleccionada, isTipoSeccion,  identificadorSeccion);
+						jLineaSeleccionada, isTipoSeccion, identificadorSeccion);
 				jObjFormSelector.getCampoFormulario().setCampoFormularioIndexado(jObjFormSelector);
 				jObjFormSelector.getCampoFormulario().getElementoFormulario()
 						.setCampoFormulario(jObjFormSelector.getCampoFormulario());
@@ -822,12 +842,14 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 			case SECCION_REUTILIZABLE:
 				// creaHuecoEnLineas(jPagina, pOrden);
 				nuevoOrden = creaHuecoEntreLineas(jPagina, pOrden);
-				final JLineaFormulario jLineaBloqueCreadaSeccionReutil = JLineaFormulario.createDefault(nuevoOrden, jPagina);
+				final JLineaFormulario jLineaBloqueCreadaSeccionReutil = JLineaFormulario.createDefault(nuevoOrden,
+						jPagina);
 				if (jLineaBloqueCreadaSeccionReutil != null) {
-					final JCampoFormularioSeccionReutilizable jObjFormSeccion = JCampoFormularioSeccionReutilizable.createDefault(1,
-							jLineaBloqueCreadaSeccionReutil, isTipoSeccion, identificadorSeccion);
-					Long idSeccionReutilizable = ((SeccionReutilizable)objeto).getCodigo();
-					JSeccionReutilizable jseccionReutilizable = entityManager.find(JSeccionReutilizable.class, idSeccionReutilizable);
+					final JCampoFormularioSeccionReutilizable jObjFormSeccion = JCampoFormularioSeccionReutilizable
+							.createDefault(1, jLineaBloqueCreadaSeccionReutil, isTipoSeccion, identificadorSeccion);
+					Long idSeccionReutilizable = ((SeccionReutilizable) objeto).getCodigo();
+					JSeccionReutilizable jseccionReutilizable = entityManager.find(JSeccionReutilizable.class,
+							idSeccionReutilizable);
 					jObjFormSeccion.setSeccionReutilizable(jseccionReutilizable);
 					jObjFormSeccion.setLetra(getLetraSRU(nuevoOrden));
 
@@ -861,10 +883,9 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 			case PAGINA:
 			case LISTA_ELEMENTOS:
 			case IMAGEN:
-				default:
+			default:
 				break;
 			}
-
 
 		}
 
@@ -1014,12 +1035,12 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				jCampo.setNoModificable(campo.isNoModificable());
 			}
 
-
 			switch (pComponente.getTipo()) {
 			case CAPTCHA:
 				final JCampoFormularioCaptcha jCaptcha = jElemento.getCaptchaFormulario();
-				//final ComponenteFormularioCampoCaptcha captcha = (ComponenteFormularioCampoCaptcha) pComponente;
-				//jSeccion.setLetra(captcha.getLetra());
+				// final ComponenteFormularioCampoCaptcha captcha =
+				// (ComponenteFormularioCampoCaptcha) pComponente;
+				// jSeccion.setLetra(captcha.getLetra());
 				entityManager.merge(jCaptcha);
 				objetoResultado = jCaptcha.toModel();
 				break;
@@ -1031,7 +1052,8 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				objetoResultado = jSeccion.toModel();
 				break;
 			case SECCION_REUTILIZABLE:
-				final JCampoFormularioSeccionReutilizable jSeccionReutilizable = jElemento.getSeccionReutilizableFormulario();
+				final JCampoFormularioSeccionReutilizable jSeccionReutilizable = jElemento
+						.getSeccionReutilizableFormulario();
 				final ComponenteFormularioCampoSeccionReutilizable seccionReutilizable = (ComponenteFormularioCampoSeccionReutilizable) pComponente;
 				jSeccionReutilizable.setLetra(seccionReutilizable.getLetra());
 				entityManager.merge(jSeccionReutilizable);
@@ -1057,7 +1079,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 				jCampoTexto.setOculto(campoTexto.isOculto());
 				jCampoTexto.setTipo(campoTexto.getTipoCampoTexto().name());
-
+				jCampoTexto.setPrevenirPegar(campoTexto.isPrevenirPegar());
 				switch (campoTexto.getTipoCampoTexto()) {
 				case NORMAL:
 					jCampoTexto.setNormalTamanyo(campoTexto.getNormalTamanyo());
@@ -1353,11 +1375,10 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 			componente = jComponente.getSeccionFormulario().toModel();
 		}
 
-		//miramos si es una seccion reutilizable
+		// miramos si es una seccion reutilizable
 		if (jComponente.getSeccionReutilizableFormulario() != null) {
 			componente = jComponente.getSeccionReutilizableFormulario().toModel();
 		}
-
 
 		// miramos si es seccion
 		if (jComponente.getCaptchaFormulario() != null) {
@@ -1560,8 +1581,9 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		if (jFormulario.getPaginas() != null) {
 			for (final JPaginaFormulario pagina : jFormulario.getPaginas()) {
 				if (pagina.getScriptNavegacion() != null) {
-					if (pagina.getScriptNavegacion().getLiterales() != null && !pagina.getScriptNavegacion().getLiterales().isEmpty()) {
-						for(JLiteralErrorScript literal : pagina.getScriptNavegacion().getLiterales()) {
+					if (pagina.getScriptNavegacion().getLiterales() != null
+							&& !pagina.getScriptNavegacion().getLiterales().isEmpty()) {
+						for (JLiteralErrorScript literal : pagina.getScriptNavegacion().getLiterales()) {
 							entityManager.remove(literal);
 						}
 					}
@@ -1570,8 +1592,9 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				}
 
 				if (pagina.getScriptValidacion() != null) {
-					if (pagina.getScriptValidacion().getLiterales() != null && !pagina.getScriptValidacion().getLiterales().isEmpty()) {
-						for(JLiteralErrorScript literal : pagina.getScriptValidacion().getLiterales()) {
+					if (pagina.getScriptValidacion().getLiterales() != null
+							&& !pagina.getScriptValidacion().getLiterales().isEmpty()) {
+						for (JLiteralErrorScript literal : pagina.getScriptValidacion().getLiterales()) {
 							entityManager.remove(literal);
 						}
 					}
@@ -1606,7 +1629,8 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 	@Override
 	public DisenyoFormularioSimple getFormularioInternoSimple(final Long idFormularioTramite, final Long idFormulario,
-			final String idComponente, final String idPaginaActual, final boolean cargarPaginasPosteriores, final boolean isSeccion, final String identificadorSeccion) {
+			final String idComponente, final String idPaginaActual, final boolean cargarPaginasPosteriores,
+			final boolean isSeccion, final String identificadorSeccion) {
 		final DisenyoFormularioSimple disenyo = new DisenyoFormularioSimple();
 		final String sqlPaginas;
 
@@ -1715,8 +1739,6 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 			disenyo.setIdentificador(identificador);
 		}
 
-
-
 		return disenyo;
 
 	}
@@ -1770,7 +1792,8 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		} else {
 			if (elem.getIdentificador().startsWith("SRE_")) {
 				int posicionGuion = elem.getIdentificador().indexOf('_', 4);
-				elem.setIdentificador(elem.getIdentificador().substring(0, posicionGuion+1) + System.currentTimeMillis());
+				elem.setIdentificador(
+						elem.getIdentificador().substring(0, posicionGuion + 1) + System.currentTimeMillis());
 			} else {
 				elem.setIdentificador("ID_" + System.currentTimeMillis());
 			}
@@ -1910,8 +1933,9 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 						&& selector.getDominio().getAmbito().equals(TypeAmbito.AREA.toString())
 						&& selector.getDominio().getArea() != null) {
 					boolean contieneArea = false;
-					if (selector.getDominio().getArea() != null && selector.getDominio().getArea().getCodigo().compareTo(idAreaAntigua) == 0) {
-							contieneArea = true;
+					if (selector.getDominio().getArea() != null
+							&& selector.getDominio().getArea().getCodigo().compareTo(idAreaAntigua) == 0) {
+						contieneArea = true;
 					}
 
 					if (contieneArea) {
@@ -2067,7 +2091,8 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	@Override
 	public Long importarFormularioSeccion(FilaImportarSeccion filaSeccion) {
 
-		if (filaSeccion.getAccion() == TypeImportarAccion.CREAR || filaSeccion.getAccion() == TypeImportarAccion.REEMPLAZAR) {
+		if (filaSeccion.getAccion() == TypeImportarAccion.CREAR
+				|| filaSeccion.getAccion() == TypeImportarAccion.REEMPLAZAR) {
 
 			Long idFormulario;
 			if (filaSeccion.getAccion() == TypeImportarAccion.CREAR) {
@@ -2076,11 +2101,12 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				idFormulario = filaSeccion.getSeccionActual().getIdFormularioAsociado();
 			}
 
-
-			//Importamos los nuevos datos.
+			// Importamos los nuevos datos.
 			filaSeccion.getSeccion().getDisenyoFormulario().setCodigo(idFormulario);
-			if (filaSeccion.getAccion() == TypeImportarAccion.CREAR || filaSeccion.getAccion() == TypeImportarAccion.IMPORTAR || filaSeccion.getAccion() == TypeImportarAccion.REEMPLAZAR ) {
-				//Vaciamos los datos.
+			if (filaSeccion.getAccion() == TypeImportarAccion.CREAR
+					|| filaSeccion.getAccion() == TypeImportarAccion.IMPORTAR
+					|| filaSeccion.getAccion() == TypeImportarAccion.REEMPLAZAR) {
+				// Vaciamos los datos.
 				vaciarFormulario(idFormulario);
 				this.createFormulario(filaSeccion.getSeccion().getDisenyoFormulario());
 			}
@@ -2099,10 +2125,11 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		entityManager.flush();
 		JFormulario jformulario = entityManager.find(JFormulario.class, idFormulario);
 		if (jformulario.getPaginas() != null) {
-			for(JPaginaFormulario jpagina : jformulario.getPaginas()) {
+			for (JPaginaFormulario jpagina : jformulario.getPaginas()) {
 				if (jpagina.getLineasFormulario() != null) {
 
-					for (Iterator<JLineaFormulario> iteratorLinea = jpagina.getLineasFormulario().iterator(); iteratorLinea.hasNext();) {
+					for (Iterator<JLineaFormulario> iteratorLinea = jpagina.getLineasFormulario()
+							.iterator(); iteratorLinea.hasNext();) {
 						JLineaFormulario jlinea = iteratorLinea.next();
 						if (jlinea.getElementoFormulario() != null && !jlinea.getElementoFormulario().isEmpty()) {
 
@@ -2114,7 +2141,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 							}
 							entityManager.flush();
 						}
-						//jlinea.setPaginaFormulario(null);
+						// jlinea.setPaginaFormulario(null);
 						entityManager.remove(jlinea);
 						entityManager.flush();
 					}

@@ -88,8 +88,12 @@ import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRellenar;
 import es.caib.sistrages.rest.api.interna.RPlantillaFormulario;
 import es.caib.sistrages.rest.api.interna.RPropiedadesCampo;
+import es.caib.sistrages.rest.api.interna.RPropiedadesTextoCP;
 import es.caib.sistrages.rest.api.interna.RPropiedadesTextoEmail;
 import es.caib.sistrages.rest.api.interna.RPropiedadesTextoExpRegular;
+import es.caib.sistrages.rest.api.interna.RPropiedadesTextoFecha;
+import es.caib.sistrages.rest.api.interna.RPropiedadesTextoHora;
+import es.caib.sistrages.rest.api.interna.RPropiedadesTextoIban;
 import es.caib.sistrages.rest.api.interna.RPropiedadesTextoIdentificacion;
 import es.caib.sistrages.rest.api.interna.RPropiedadesTextoNormal;
 import es.caib.sistrages.rest.api.interna.RPropiedadesTextoNumero;
@@ -703,8 +707,7 @@ public class VersionTramiteAdapter {
 	 * Genera componente campo oculto.
 	 *
 	 * @param cco
-	 * @param idioma
-	 *                   idioma
+	 * @param idioma idioma
 	 * @return RComponenteCampoOculto
 	 */
 	private RComponenteCampoOculto generaComponenteCampoOculto(final ComponenteFormularioCampoOculto cco,
@@ -844,10 +847,22 @@ public class VersionTramiteAdapter {
 			resTB.setTextoTelefono(generaTextoTelefono(ct));
 			break;
 		case EXPRESION:
-			resTB.setTextoExpRegular(generaExpresionRegular(ct.getExpresionRegular()));
+			resTB.setTextoExpRegular(generaExpresionRegular(ct));
 			break;
 		case EMAIL:
 			resTB.setTextoEmail(generaTextoEmail(ct));
+			break;
+		case CP:
+			resTB.setTextoCP(generaTextoCP(ct));
+			break;
+		case FECHA:
+			resTB.setTextoFecha(generaTextoFecha(ct));
+			break;
+		case HORA:
+			resTB.setTextoHora(generaTextoHora(ct));
+			break;
+		case IBAN:
+			resTB.setTextoIban(generaTextoIban(ct));
 			break;
 		default:
 			// No se genera props específicas
@@ -858,12 +873,9 @@ public class VersionTramiteAdapter {
 	/**
 	 * Genera props comunes campo.
 	 *
-	 * @param ct
-	 *                   ComponenteFormularioCampo
-	 * @param resTB
-	 *                   Def componente
-	 * @param idioma
-	 *                   idioma
+	 * @param ct     ComponenteFormularioCampo
+	 * @param resTB  Def componente
+	 * @param idioma idioma
 	 */
 	private void generaPropsComunesComponente(final ComponenteFormulario ct, final RComponente resTB,
 			final String idioma) {
@@ -877,6 +889,70 @@ public class VersionTramiteAdapter {
 	}
 
 	/**
+	 * Genera propiedades Texto CP
+	 *
+	 * @param ct
+	 * @return RPropiedadesTextoCP
+	 */
+	private RPropiedadesTextoCP generaTextoCP(final ComponenteFormularioCampoTexto ct) {
+		if (ct != null) {
+			final RPropiedadesTextoCP res = new RPropiedadesTextoCP();
+			res.setPrevenirPegar(ct.isPrevenirPegar());
+			return res;
+		}
+		return null;
+
+	}
+
+	/**
+	 * Genera propiedades Texto Fecha
+	 *
+	 * @param ct
+	 * @return RPropiedadesTextoFecha
+	 */
+	private RPropiedadesTextoFecha generaTextoFecha(final ComponenteFormularioCampoTexto ct) {
+		if (ct != null) {
+			final RPropiedadesTextoFecha res = new RPropiedadesTextoFecha();
+			res.setPrevenirPegar(ct.isPrevenirPegar());
+			return res;
+		}
+		return null;
+
+	}
+
+	/**
+	 * Genera propiedades Texto Iban
+	 *
+	 * @param ct
+	 * @return RPropiedadesTextoIban
+	 */
+	private RPropiedadesTextoIban generaTextoIban(final ComponenteFormularioCampoTexto ct) {
+		if (ct != null) {
+			final RPropiedadesTextoIban res = new RPropiedadesTextoIban();
+			res.setPrevenirPegar(ct.isPrevenirPegar());
+			return res;
+		}
+		return null;
+
+	}
+
+	/**
+	 * Genera propiedades Texto Hora
+	 *
+	 * @param ct
+	 * @return RPropiedadesTextoHora
+	 */
+	private RPropiedadesTextoHora generaTextoHora(final ComponenteFormularioCampoTexto ct) {
+		if (ct != null) {
+			final RPropiedadesTextoHora res = new RPropiedadesTextoHora();
+			res.setPrevenirPegar(ct.isPrevenirPegar());
+			return res;
+		}
+		return null;
+
+	}
+
+	/**
 	 * Genera propiedades Texto Email
 	 *
 	 * @param ct
@@ -886,6 +962,7 @@ public class VersionTramiteAdapter {
 		if (ct != null) {
 			final RPropiedadesTextoEmail res = new RPropiedadesTextoEmail();
 			res.setTamanyoMax(ct.getNormalTamanyo() == null ? 0 : ct.getNormalTamanyo());
+			res.setPrevenirPegar(ct.isPrevenirPegar());
 			return res;
 		}
 		return null;
@@ -895,14 +972,14 @@ public class VersionTramiteAdapter {
 	/**
 	 * Genera texto teléfono.
 	 *
-	 * @param ct
-	 *               campo texto
+	 * @param ct campo texto
 	 * @return Propiedades teléfono
 	 */
 	private RPropiedadesTextoTelefono generaTextoTelefono(final ComponenteFormularioCampoTexto ct) {
 		final RPropiedadesTextoTelefono props = new RPropiedadesTextoTelefono();
 		props.setFijo(ct.isTelefonoFijo());
 		props.setMovil(ct.isTelefonoMovil());
+		props.setPrevenirPegar(ct.isPrevenirPegar());
 		return props;
 	}
 
@@ -1016,6 +1093,8 @@ public class VersionTramiteAdapter {
 				ct.getNumeroRangoMinimo() == null ? 0 : Integer.parseInt(ct.getNumeroRangoMinimo().toString()));
 		res.setRangoHasta(
 				ct.getNumeroRangoMaximo() == null ? 0 : Integer.parseInt(ct.getNumeroRangoMaximo().toString()));
+		res.setPrevenirPegar(ct.isPrevenirPegar());
+
 		return res;
 	}
 
@@ -1036,6 +1115,8 @@ public class VersionTramiteAdapter {
 			res.setTamanyoMax(ct.getNormalTamanyo() == null ? 0 : ct.getNormalTamanyo());
 
 			res.setForzarMayusculas(ct.isForzarMayusculas());
+
+			res.setPrevenirPegar(ct.isPrevenirPegar());
 			return res;
 		}
 		return null;
@@ -1058,6 +1139,7 @@ public class VersionTramiteAdapter {
 			res.setNifOtros(componenteOrigen.isIdentNifOtros());
 			res.setNif(componenteOrigen.isIdentNif());
 			res.setNss(componenteOrigen.isIdentNss());
+			res.setPrevenirPegar(componenteOrigen.isPrevenirPegar());
 		}
 		return res;
 
@@ -1069,12 +1151,13 @@ public class VersionTramiteAdapter {
 	 * @param exp
 	 * @return RPropiedadesTextoExpRegular
 	 */
-	private RPropiedadesTextoExpRegular generaExpresionRegular(final String exp) {
-		if (StringUtils.isEmpty(exp)) {
+	private RPropiedadesTextoExpRegular generaExpresionRegular(ComponenteFormularioCampoTexto ct) {
+		if (StringUtils.isEmpty(ct.getExpresionRegular())) {
 			return null;
 		}
 		final RPropiedadesTextoExpRegular res = new RPropiedadesTextoExpRegular();
-		res.setExpresionRegular(exp);
+		res.setExpresionRegular(ct.getExpresionRegular());
+		res.setPrevenirPegar(ct.isPrevenirPegar());
 		return res;
 	}
 

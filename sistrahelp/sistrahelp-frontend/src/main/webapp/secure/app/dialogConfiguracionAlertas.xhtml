@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogConfiguracionAlertas.titulo']}"/></title>
+	<h:outputScript library="primefaces-custom" name="calendar_es.js" />
+	<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
+</h:head>
+
+<h:body>
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogConfiguracionAlertas.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogConfiguracionAlertas.id}"/>
+		<f:viewAction action="#{dialogConfiguracionAlertas.init}" />
+	</f:metadata>
+
+	<h:form id="dialogConfiguracionAlertas" styleClass="margin-top-10">
+			<h:outputScript >
+			  PrimeFaces.locales ['es'] = {
+			        timeOnlyTitle: ''
+			    };
+			     PrimeFaces.locales ['ca'] = {
+			        timeOnlyTitle: ''
+			    };
+
+
+				var arrayCm = [];
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("dialogConfiguracionAlertas:auxCopiar");
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}else{
+		          aux.value = '';
+		        }
+
+				if(aux.value!='' ){
+            var multiple = false;
+            var hijos = el.children;
+			if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR') &amp;&amp; hijos.length &gt; 1){
+		            multiple = true;
+		                  }else if(hijos.length &gt;= 1 ){
+		                  	if(hijos.length==1  &amp;&amp; hijos[0].tagName=='DIV'){
+		                  		hijos = hijos[0].children;
+		                  	}
+			                    for(i=0;i&lt;hijos.length;i++){
+					              if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+					                multiple=true;
+					              }
+			                    }
+
+		                  }
+                  var listaCm = document.getElementsByClassName('ui-contextmenu');
+                  if(multiple){
+                    for(i=0;i&lt;listaCm.length;i++){
+                    	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+                    		arrayCm.push(listaCm[i]);
+                    	}
+	                	listaCm[i].classList.add("d-none");
+					}
+                  }else{
+                  	for(i=0;i&lt;listaCm.length;i++){
+                  		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+                    		arrayCm.push(listaCm[i]);
+                    	}
+	                	listaCm[i].classList.remove("d-none");
+					}
+					if(arrayCm.length&gt;1){
+						arrayCm.pop();
+						for(let i=0; i&lt;arrayCm.length; i++){
+							arrayCm[i].style.display='none';
+						}
+					}
+					arrayCm = [];
+                  }
+
+               }
+			 }
+
+			</h:outputScript>
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" />
+
+				<p:outputLabel value="" style="margin-top:10px" />
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-10 w20," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+					<p:outputLabel for="check" value="#{msg['dialogConfiguracionAlertas.checkResumen']}" rendered="#{dialogConfiguracionAlertas.isResumenDiario() or dialogConfiguracionAlertas.noExisteResumen()}"/>
+					<p:selectBooleanCheckbox id="check" value="#{dialogConfiguracionAlertas.check}" rendered="#{dialogConfiguracionAlertas.isResumenDiario() or dialogConfiguracionAlertas.noExisteResumen()}">
+			            <p:ajax event="change" update="@form" process="@this" listener="#{dialogConfiguracionAlertas.hacerResumen()}" />
+			        </p:selectBooleanCheckbox>
+
+					<p:outputLabel for="nombre" value="#{msg['viewConfiguracionAlertas.nombre']}"/>
+					<p:inputText id="nombre" value="#{dialogConfiguracionAlertas.data.nombre}" maxlength="255" style="width:39%;" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}">
+						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
+				   		 <f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
+						<p:ajax event="change" process="@this"/>
+					</p:inputText>
+
+					<p:outputLabel for="email" value="#{msg['viewConfiguracionAlertas.emails']}" />
+					<h:panelGrid columns = "1" cellspacing = "0"  width="100%">
+						<p:inputText id="email" value="#{dialogConfiguracionAlertas.emails}" maxlength="1024" validatorMessage="#{msg['viewConfiguracionEntidad.emailIncorrecto']}" style="width:39%;">
+							<p:ajax event="change" process="@this"/>
+						</p:inputText>
+						<p:outputLabel for="aviso" value=" " />
+					 	<h:outputText id="aviso" value="#{msg['dialogConfiguracionAlertas.avisoCorreos']}" />
+					</h:panelGrid>
+					<p:outputLabel for="peri" value="#{msg['viewConfiguracionAlertas.periodo']}" />
+					<p:calendar id="peri" value="#{dialogConfiguracionAlertas.periodo}" pattern="HH:mm" stepMinute="5" timeOnly="true" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}">
+							<p:ajax event="change" process="@this"/>
+						</p:calendar>
+
+
+					<p:outputLabel for="interv" value="#{msg['viewConfiguracionAlertas.intervalo']}" />
+					<h:panelGrid columns = "5" cellspacing = "0"  width="100%" id="interv" columnClasses="wpx50,wpx200,wpx50," >
+						<p:outputLabel for="fDesde" value="#{msg['viewEventosPlataforma.filtroFechaInicio']}" />
+						<p:calendar id="fDesde" value="#{dialogConfiguracionAlertas.fDesde}" pattern="HH:mm" timeOnly="true" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}">
+							<p:ajax event="change" process="@this"/>
+						</p:calendar>
+						<p:outputLabel for="fHasta" value="#{msg['viewEventosPlataforma.filtroFechaFin']}"  />
+						<p:calendar id="fHasta" value="#{dialogConfiguracionAlertas.fHasta}" pattern="HH:mm"  timeOnly="true" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}">
+							<p:ajax event="change" process="@this"/>
+						</p:calendar>
+					</h:panelGrid>
+				</h:panelGrid>
+				<h:panelGrid id="columnaListaDisparadores" style="margin-bottom:0px" columns="2" styleClass="w100" columnClasses="padding-left-10 w20, ">
+								<p:outputLabel value="#{msg['dialogConfiguracionAlertas.expresion.evaluacion']}" />
+
+								<h:panelGrid  style="margin-bottom:0px" columns="7" styleClass="w70">
+									<p:outputLabel value="#{msg['dialogConfiguracionAlertas.evento']}:" styleClass="margin-right-10" ></p:outputLabel>
+									<p:selectOneMenu id="comboEventos" value="#{dialogConfiguracionAlertas.evSeleccionado}" styleClass="margin-right-10" filter="true" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" filterMatchMode="contains" style="width:150px">
+											<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>
+									     	<f:selectItems value="#{dialogConfiguracionAlertas.eventos}" var="evento" itemLabel="#{msg['typeEvento.'+=evento]}" itemValue="#{evento}"  />
+									</p:selectOneMenu>
+
+									<p:outputLabel value="#{msg['dialogConfiguracionAlertas.operador']}:" styleClass="margin-right-10" ></p:outputLabel>
+									<p:selectOneMenu id="comboOperador" value="#{dialogConfiguracionAlertas.operadorSeleccionado}" styleClass="margin-right-10" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" filter="true" filterMatchMode="contains" style="width:33px">
+											<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>
+									     	<f:selectItems value="#{dialogConfiguracionAlertas.operadores}" var="operador" itemLabel="#{operador}" itemValue="#{operador}"  />
+									</p:selectOneMenu>
+
+									<p:outputLabel value="#{msg['dialogConfiguracionAlertas.concurrecias']}:" styleClass="margin-right-10" style="width:150px"></p:outputLabel>
+									<p:inputText id="inputConcurrencias" value="#{dialogConfiguracionAlertas.concurrenciasSeleccionado}"  disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" />
+
+									<p:commandButton value="#{msg['botones.anyadir']}" actionListener="#{dialogConfiguracionAlertas.anyadirDisparador()}" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" process="@form:columnaListaDisparadores" update="@form:listaDisparadores growlDialog"  styleClass="boton-azul" />
+
+								</h:panelGrid>
+
+								<p:outputLabel value="#{msg['viewConfiguracionAlertas.eventos']}" />
+								<p:dataTable id="listaDisparadores"
+										 	var="td" emptyMessage="#{msg['error.emptyRows']}"
+										 	value="#{dialogConfiguracionAlertas.disparadores}"
+										 	scrollable="true"
+										 	scrollHeight="140"
+										 	style="margin-top:10px;width:100%"
+										 	selectionMode="single"
+										 	selection="#{dialogConfiguracionAlertas.disparadorSeleccionado}"
+										 	rowKey="#{td.ev}"
+										 	dblClickSelect="true">
+
+										<!-- Columnas -->
+										<p:column headerText="#{msg['dialogConfiguracionAlertas.evento']}" class="ui-panelgrid-cell" width="30%">
+											<h:outputText value="#{msg['typeEvento.'+=td.ev]}" />
+									    </p:column>
+										<p:column headerText="#{msg['dialogConfiguracionAlertas.operador']}" class="ui-panelgrid-cell" width="7%">
+											<h:outputText value="#{td.operador}" />
+									    </p:column>
+
+									    <p:column headerText="#{msg['dialogConfiguracionAlertas.concurrecias']}" class="ui-panelgrid-cell" width="10%">
+											<h:outputText value="#{td.concurrencias}" />
+									    </p:column>
+
+										<p:column width="10%" style="text-align:center" rendered="#{(dialogConfiguracionAlertas.isAlta() or dialogConfiguracionAlertas.isEdicion())}" >
+									    	<p:commandButton id="btnEliminar" value=" " icon="fa fa-trash-o" actionListener="#{dialogConfiguracionAlertas.borrarTramite(td)}" process="@this" update="listaDisparadores" style="width:32px;height:25px"></p:commandButton>
+										</p:column>
+
+				 				</p:dataTable>
+								<p:contextMenu>
+					       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogConfiguracionAlertas:auxCopiar" update="growlDialog" />
+							    </p:contextMenu>
+							    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+									<p:ajax event="success" listener="#{dialogConfiguracionAlertas.copiadoCorr}" process="@this" update="@this growlDialog"/>
+					            	<p:ajax event="error" listener="#{dialogConfiguracionAlertas.copiadoErr}" update="@this growlDialog"/>
+					        	</pe:clipboard>
+
+							    <p:inputText id="auxCopiar" value="#{dialogConfiguracionAlertas.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+					</h:panelGrid>
+
+
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogConfiguracionAlertas.aceptar()}" process="@this" update="@form"  styleClass="boton-azul" rendered="#{dialogConfiguracionAlertas.isAlta() or dialogConfiguracionAlertas.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogConfiguracionAlertas.cancelar()}" process="@this" rendered="#{dialogConfiguracionAlertas.isAlta() or dialogConfiguracionAlertas.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogConfiguracionAlertas.cancelar()}" process="@this"  rendered="#{dialogConfiguracionAlertas.isConsulta()}"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogConfiguracionAlertas.ayuda()}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

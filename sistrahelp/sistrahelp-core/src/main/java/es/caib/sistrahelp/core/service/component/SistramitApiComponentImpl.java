@@ -1,7 +1,10 @@
 package es.caib.sistrahelp.core.service.component;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -19,7 +22,9 @@ import es.caib.sistra2.commons.utils.JSONUtil;
 import es.caib.sistra2.commons.utils.JSONUtilException;
 import es.caib.sistrahelp.core.api.exception.ErrorJsonException;
 import es.caib.sistrahelp.core.api.model.DatosSesionPago;
+import es.caib.sistrahelp.core.api.model.ErroresPorTramiteCM;
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.EventoCM;
 import es.caib.sistrahelp.core.api.model.FicheroAuditoria;
 import es.caib.sistrahelp.core.api.model.FicheroPersistenciaAuditoria;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaPago;
@@ -34,7 +39,9 @@ import es.caib.sistrahelp.core.api.model.Persona;
 import es.caib.sistrahelp.core.api.model.ResultadoAuditoriaDetallePago;
 import es.caib.sistrahelp.core.api.model.ResultadoAuditoriaPago;
 import es.caib.sistrahelp.core.api.model.ResultadoAuditoriaPersistencia;
+import es.caib.sistrahelp.core.api.model.ResultadoErroresPorTramiteCM;
 import es.caib.sistrahelp.core.api.model.ResultadoEventoAuditoria;
+import es.caib.sistrahelp.core.api.model.ResultadoEventoCM;
 import es.caib.sistrahelp.core.api.model.ResultadoPerdidaClave;
 import es.caib.sistrahelp.core.api.model.VerificacionPago;
 import es.caib.sistrahelp.core.api.model.comun.ListaPropiedades;
@@ -44,7 +51,9 @@ import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 import es.caib.sistrahelp.core.api.model.types.TypePresentacion;
 import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.rest.api.interna.RDetallePagoAuditoria;
+import es.caib.sistramit.rest.api.interna.RErroresPorTramiteCM;
 import es.caib.sistramit.rest.api.interna.REventoAuditoria;
+import es.caib.sistramit.rest.api.interna.REventoCM;
 import es.caib.sistramit.rest.api.interna.RFichero;
 import es.caib.sistramit.rest.api.interna.RFicheroPersistenciaAuditoria;
 import es.caib.sistramit.rest.api.interna.RFiltroEventoAuditoria;
@@ -55,7 +64,9 @@ import es.caib.sistramit.rest.api.interna.RFiltroPersistenciaAuditoria;
 import es.caib.sistramit.rest.api.interna.RINEventoAuditoria;
 import es.caib.sistramit.rest.api.interna.RINPagoAuditoria;
 import es.caib.sistramit.rest.api.interna.RINTramiteAuditoria;
+import es.caib.sistramit.rest.api.interna.ROUTErroresPorTramiteCM;
 import es.caib.sistramit.rest.api.interna.ROUTEventoAuditoria;
+import es.caib.sistramit.rest.api.interna.ROUTEventoCM;
 import es.caib.sistramit.rest.api.interna.ROUTPagoAuditoria;
 import es.caib.sistramit.rest.api.interna.ROUTPerdidaClave;
 import es.caib.sistramit.rest.api.interna.ROUTTramiteAuditoria;
@@ -294,9 +305,12 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 			} else {
 				if (rResultado.getListaPersistencia() != null) {
 					resultado.setListaPersistencia(new ArrayList<>());
-
+					Date now = new Date();
 					for (final RPersistenciaAuditoria rPersistencia : rResultado.getListaPersistencia()) {
-						resultado.getListaPersistencia().add(conviertePersistencia(rPersistencia));
+						if (rPersistencia.getFechaCaducidad() == null
+								|| rPersistencia.getFechaCaducidad().getTime() - now.getTime() > 0) {
+							resultado.getListaPersistencia().add(conviertePersistencia(rPersistencia));
+						}
 					}
 				}
 			}
@@ -338,6 +352,199 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 
 		if (rFichero != null) {
 			resultado = convierteAuditoriaFichero(rFichero);
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public ResultadoEventoCM obtenerCountEventoCM(FiltroAuditoriaTramitacion pFiltroBusqueda) {
+		ResultadoEventoCM resultado = null;
+		ROUTEventoCM rResultado = null;
+		final RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+		final RINEventoAuditoria param = new RINEventoAuditoria();
+		param.setFiltro(convierteFiltroAuditoriaBusqueda(toCapital(pFiltroBusqueda)));
+
+		final HttpEntity<RINEventoAuditoria> request = new HttpEntity<>(param, headers);
+		ResponseEntity<ROUTEventoCM> response = null;
+		try {
+			response = restTemplate.postForEntity(getUrl() + "/auditoria/countEventoCM", request, ROUTEventoCM.class);
+		} catch (Exception e) {
+
+		}
+
+		if (response != null && response.getStatusCodeValue() == 200) {
+			rResultado = response.getBody();
+		}
+
+		if (rResultado != null) {
+			resultado = new ResultadoEventoCM();
+
+			if (pFiltroBusqueda != null && pFiltroBusqueda.isSoloContar()) {
+				resultado.setNumElementos(rResultado.getNumElementos());
+			} else {
+				if (rResultado.getListaEventos() != null) {
+					resultado.setListaEventosCM(new ArrayList<>());
+
+					for (final REventoCM rEvCM : rResultado.getListaEventos()) {
+						resultado.getListaEventosCM().add(convierteEventoCM(rEvCM));
+					}
+				}
+			}
+
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public ResultadoErroresPorTramiteCM obtenerErroresPorTramiteCM(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion) {
+		ResultadoErroresPorTramiteCM resultado = null;
+		ROUTErroresPorTramiteCM rResultado = null;
+		final RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+		final RINEventoAuditoria param = new RINEventoAuditoria();
+		param.setPaginacion(convierteFiltroPaginacion(pFiltroPaginacion));
+		param.setFiltro(convierteFiltroAuditoriaBusqueda(toCapital(pFiltroBusqueda)));
+
+		final HttpEntity<RINEventoAuditoria> request = new HttpEntity<>(param, headers);
+		ResponseEntity<ROUTErroresPorTramiteCM> response = null;
+		try {
+			response = restTemplate.postForEntity(getUrl() + "/auditoria/erroresTramiteCM", request,
+					ROUTErroresPorTramiteCM.class);
+		} catch (Exception e) {
+
+		}
+
+		if (response != null && response.getStatusCodeValue() == 200) {
+			rResultado = response.getBody();
+		}
+
+		if (rResultado != null) {
+			resultado = new ResultadoErroresPorTramiteCM();
+
+			if (pFiltroBusqueda != null && pFiltroBusqueda.isSoloContar()) {
+				resultado.setNumElementos(rResultado.getNumElementos());
+			} else {
+				if (rResultado.getListaErrores() != null) {
+					resultado.setListaErroresCM(new ArrayList<>());
+
+					for (final RErroresPorTramiteCM rErrCM : rResultado.getListaErrores()) {
+						resultado.getListaErroresCM().add(convierteErroresPorTramiteCM(rErrCM));
+					}
+				}
+			}
+
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public ResultadoEventoCM obtenerErroresPorTramiteCMExpansion(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion) {
+		ResultadoEventoCM resultado = null;
+		ROUTEventoCM rResultado = null;
+		final RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+		final RINEventoAuditoria param = new RINEventoAuditoria();
+		param.setPaginacion(convierteFiltroPaginacion(pFiltroPaginacion));
+		param.setFiltro(convierteFiltroAuditoriaBusqueda(toCapital(pFiltroBusqueda)));
+
+		final HttpEntity<RINEventoAuditoria> request = new HttpEntity<>(param, headers);
+		ResponseEntity<ROUTEventoCM> response = null;
+		try {
+			response = restTemplate.postForEntity(getUrl() + "/auditoria/erroresTramiteCMRe", request,
+					ROUTEventoCM.class);
+		} catch (Exception e) {
+
+		}
+
+		if (response != null && response.getStatusCodeValue() == 200) {
+			rResultado = response.getBody();
+		}
+
+		if (rResultado != null) {
+			resultado = new ResultadoEventoCM();
+
+			if (pFiltroBusqueda != null && pFiltroBusqueda.isSoloContar()) {
+				resultado.setNumElementos(rResultado.getNumElementos());
+			} else {
+				if (rResultado.getListaEventos() != null) {
+					resultado.setListaEventosCM(new ArrayList<>());
+
+					for (final REventoCM rErrCM : rResultado.getListaEventos()) {
+						resultado.getListaEventosCM().add(convierteEventoCM(rErrCM));
+					}
+				}
+			}
+
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public ResultadoEventoCM obtenerErroresPlataformaCM(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion) {
+		ResultadoEventoCM resultado = null;
+		ROUTEventoCM rResultado = null;
+		final RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+		final RINEventoAuditoria param = new RINEventoAuditoria();
+		param.setPaginacion(convierteFiltroPaginacion(pFiltroPaginacion));
+		param.setFiltro(convierteFiltroAuditoriaBusqueda(toCapital(pFiltroBusqueda)));
+
+		final HttpEntity<RINEventoAuditoria> request = new HttpEntity<>(param, headers);
+		ResponseEntity<ROUTEventoCM> response = null;
+		try {
+			response = restTemplate.postForEntity(getUrl() + "/auditoria/erroresPlataformaCM", request,
+					ROUTEventoCM.class);
+		} catch (Exception e) {
+
+		}
+
+		if (response != null && response.getStatusCodeValue() == 200) {
+			rResultado = response.getBody();
+		}
+
+		if (rResultado != null) {
+			resultado = new ResultadoEventoCM();
+
+			if (pFiltroBusqueda != null && pFiltroBusqueda.isSoloContar()) {
+				resultado.setNumElementos(rResultado.getNumElementos());
+			} else {
+				if (rResultado.getListaEventos() != null) {
+					resultado.setListaEventosCM(new ArrayList<>());
+
+					for (final REventoCM rErrCM : rResultado.getListaEventos()) {
+						resultado.getListaEventosCM().add(convierteEventoCM(rErrCM));
+					}
+				}
+			}
+
 		}
 
 		return resultado;
@@ -553,6 +760,42 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 		}
 
 		return pago;
+
+	}
+
+	private EventoCM convierteEventoCM(final REventoCM pREventoCM) {
+		EventoCM evento = null;
+
+		if (pREventoCM != null) {
+
+			evento = new EventoCM();
+
+			evento.setTipoEvento(pREventoCM.getTipoEvento());
+			evento.setConcurrencias(pREventoCM.getConcurrencias());
+			evento.setPorc(pREventoCM.getPorc());
+		}
+
+		return evento;
+
+	}
+
+	private ErroresPorTramiteCM convierteErroresPorTramiteCM(final RErroresPorTramiteCM pEventoCM) {
+		ErroresPorTramiteCM rEvento = null;
+
+		if (pEventoCM != null) {
+
+			rEvento = new ErroresPorTramiteCM();
+
+			rEvento.setIdTramite(pEventoCM.getIdTramite());
+			rEvento.setVersion(pEventoCM.getVersion());
+			rEvento.setNumeroErrores(pEventoCM.getNumeroErrores());
+			rEvento.setSesionesIniciadas(pEventoCM.getSesionesIniciadas());
+			rEvento.setSesionesFinalizadas(pEventoCM.getSesionesFinalizadas());
+			rEvento.setSesionesInacabadas(pEventoCM.getSesionesInacabadas());
+			rEvento.setPorcentage(pEventoCM.getPorcentage());
+		}
+
+		return rEvento;
 
 	}
 

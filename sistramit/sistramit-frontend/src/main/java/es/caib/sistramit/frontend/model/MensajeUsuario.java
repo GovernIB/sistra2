@@ -1,5 +1,7 @@
 package es.caib.sistramit.frontend.model;
 
+import es.caib.sistramit.frontend.model.types.TypeEstiloError;
+
 /**
  * Mensaje a mostrar al usuario.
  *
@@ -17,6 +19,16 @@ public final class MensajeUsuario {
 	 * Texto del mensaje al usuario.
 	 */
 	private String texto;
+
+	/**
+	 * Texto del botón continuar.
+	 */
+	private String textoBoton;
+
+	/**
+	 * Estilo error.
+	 */
+	private TypeEstiloError estiloError;
 
 	/**
 	 * Texto debug.
@@ -59,6 +71,23 @@ public final class MensajeUsuario {
 	}
 
 	/**
+	 * Constructor.
+	 *
+	 * @param titulo
+	 * @param texto
+	 * @param textoBoton
+	 * @param estiloError
+	 */
+	public MensajeUsuario(final String titulo, final String texto, final String textoBoton,
+			final TypeEstiloError estiloError) {
+		super();
+		this.titulo = titulo;
+		this.texto = texto;
+		this.textoBoton = textoBoton;
+		this.estiloError = estiloError;
+	}
+
+	/**
 	 * Título del mensaje al usuario.
 	 *
 	 * @return titulo
@@ -98,7 +127,7 @@ public final class MensajeUsuario {
 
 	/**
 	 * Método de acceso a debug.
-	 * 
+	 *
 	 * @return debug
 	 */
 	public String getDebug() {
@@ -107,12 +136,50 @@ public final class MensajeUsuario {
 
 	/**
 	 * Método para establecer debug.
-	 * 
+	 *
 	 * @param debug
 	 *                  debug a establecer
 	 */
 	public void setDebug(final String debug) {
 		this.debug = debug;
+	}
+
+	/**
+	 * Método de acceso a textoBoton.
+	 *
+	 * @return textoBoton
+	 */
+	public String getTextoBoton() {
+		return textoBoton;
+	}
+
+	/**
+	 * Método para establecer textoBoton.
+	 *
+	 * @param textoBoton
+	 *                       textoBoton a establecer
+	 */
+	public void setTextoBoton(final String textoBoton) {
+		this.textoBoton = textoBoton;
+	}
+
+	/**
+	 * Método de acceso a estiloError.
+	 *
+	 * @return estiloError
+	 */
+	public TypeEstiloError getEstiloError() {
+		return estiloError;
+	}
+
+	/**
+	 * Método para establecer estiloError.
+	 *
+	 * @param estiloError
+	 *                        estiloError a establecer
+	 */
+	public void setEstiloError(final TypeEstiloError estiloError) {
+		this.estiloError = estiloError;
 	}
 
 }

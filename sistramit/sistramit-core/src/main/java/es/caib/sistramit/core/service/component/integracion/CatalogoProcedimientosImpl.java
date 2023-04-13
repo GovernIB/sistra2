@@ -82,8 +82,7 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 
 		// Verificamos datos definicion
 		if (definicionTramite == null) {
-			throw new CatalogoProcedimientosException(
-					"Error obtenint la definició de tramits: torna nul la definició");
+			throw new CatalogoProcedimientosException("Error obtenint la definició de tramits: torna nul la definició");
 		}
 		if (definicionTramite.getProcedimiento() == null) {
 			throw new CatalogoProcedimientosException(
@@ -126,6 +125,12 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 			if (key.startsWith(idEntidad + "#"))
 				cache.remove(key);
 		}
+	}
+
+	@Override
+	public void evictCatalogoProcedimientosEntidad() {
+		final Cache cache = getCache();
+		cache.removeAll();
 	}
 
 	/**

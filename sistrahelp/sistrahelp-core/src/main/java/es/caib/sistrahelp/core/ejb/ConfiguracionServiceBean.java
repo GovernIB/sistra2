@@ -1,15 +1,19 @@
 package es.caib.sistrahelp.core.ejb;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 
+import org.apache.commons.digester.plugins.PluginException;
+import org.fundaciobit.pluginsib.core.IPlugin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistrahelp.core.api.model.ContenidoFichero;
 import es.caib.sistrahelp.core.api.model.Entidad;
 import es.caib.sistrahelp.core.api.model.comun.ConstantesRolesAcceso;
+import es.caib.sistrahelp.core.api.model.types.TypePluginGlobal;
 import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 
@@ -36,6 +40,19 @@ public class ConfiguracionServiceBean implements ConfiguracionService {
 	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public String obtenerPropiedadConfiguracion(TypePropiedadConfiguracion propiedad) {
 		return configuracionService.obtenerPropiedadConfiguracion(propiedad);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	public String obtenerPropiedadConfiguracionSistrages(TypePropiedadConfiguracion propiedad) {
+		return configuracionService.obtenerPropiedadConfiguracionSistrages(propiedad);
+	}
+
+	@Override
+	@PermitAll
+	public IPlugin obtenerPluginGlobal(TypePluginGlobal tipoPlugin) throws PluginException {
+
+		return configuracionService.obtenerPluginGlobal(tipoPlugin);
 	}
 
 }

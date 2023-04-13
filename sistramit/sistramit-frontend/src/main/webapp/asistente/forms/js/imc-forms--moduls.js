@@ -739,6 +739,16 @@ $.fn.appFormsConfiguracio = function(options) {
 
 								}
 
+								// tallar/pegar
+
+								if (conf_opcions.pegar && conf_opcions.pegar === "n") {
+
+									elm_input
+										.attr({ "data-pegar": conf_opcions.pegar })
+										.data("pegar", conf_opcions.pegar);
+
+								}
+
 								// mayúscules
 
 								if (conf_opcions.mayusculas && conf_opcions.mayusculas === "s") {
@@ -1685,6 +1695,7 @@ $.fn.appFormsConfiguracio = function(options) {
 
 						element // imc_forms_finestra
 							.appFormsAccions()
+							.appFormsCopiaPega()
 							.appFormsValida()
 							.appFormsAvalua();
 
@@ -1767,6 +1778,44 @@ $.fn.appFormsConfiguracio = function(options) {
 	});
 	return this;
 }
+
+
+// appFormsCopiaPega
+$.fn.appFormsCopiaPega = function(options) {
+
+	var settings = $.extend({
+			element: ""
+		}, options);
+
+	this.each(function(){
+
+		var element = $(this),
+			revisa = function(e) {
+
+				var camp_ = $(this)
+					,camp_val = camp_.val();
+
+				if (camp_.data("pegar") === "n" || camp_.attr("data-pegar") === "n") {
+
+					imc_forms_missatge
+						.appFormsMissatge({ accio: "warning", titol: txtCopiarPegarTitol, text: txtCopiarPegarText });
+
+					return false;
+				}
+
+			};
+
+		// events
+
+		element
+			.off(".appFormsCopiaPega")
+			.on("paste.appFormsCopiaPega", "div[data-tipus=texto] input, div[data-tipus=texto] textarea", revisa);
+
+	});
+
+	return this;
+}
+// appFormsCopiaPega
 
 
 // appFormsValida
@@ -1978,7 +2027,7 @@ $.fn.appFormsValida = function(options) {
 
 					var valor_iban = $.trim( input_val.toUpperCase().replace(/\s/g, "") );
 
-					esError = (IBAN.isValid(valor_iban) && validaCCC(valor_iban)) ? false : true;
+					esError = ( !IBAN.isValid( valor_iban ) && !validaCCC(valor_iban) ) ? true : false;
 
 					ERROR_TEXT = (esError) ? txtFormDinCampError_iban : false;
 
@@ -4363,7 +4412,7 @@ $.fn.appFormsIBAN = function(options) {
 				//var element = document.getElementById('selector');
 
 				var maskOptions = {
-					mask: 'aa00 **** **** **** **** **** **** **** **** **'
+					mask: 'aa00 0000 0000 0000 0000 0000 0000 0000 0000 00'
 				};
 
 				var mask = IMask(element.find("input[type=text]")[0], maskOptions);

@@ -35,6 +35,9 @@ public final class DatosRegistrales implements Serializable {
 	/** identificador envío remoto (para destino envío). */
 	private String idEnvioRemoto;
 
+	/** código SIA . */
+	private String codigoSIA;
+
 	/**
 	 * Método de acceso a libro.
 	 *
@@ -206,7 +209,7 @@ public final class DatosRegistrales implements Serializable {
 
 	/**
 	 * Método de acceso a idEnvioRemoto.
-	 * 
+	 *
 	 * @return idEnvioRemoto
 	 */
 	public String getIdEnvioRemoto() {
@@ -215,12 +218,31 @@ public final class DatosRegistrales implements Serializable {
 
 	/**
 	 * Método para establecer idEnvioRemoto.
-	 * 
+	 *
 	 * @param idEnvioRemoto
 	 *                          idEnvioRemoto a establecer
 	 */
 	public void setIdEnvioRemoto(final String idEnvioRemoto) {
 		this.idEnvioRemoto = idEnvioRemoto;
+	}
+
+	/**
+	 * Método de acceso a codigoSIA.
+	 * 
+	 * @return codigoSIA
+	 */
+	public String getCodigoSIA() {
+		return codigoSIA;
+	}
+
+	/**
+	 * Método para establecer codigoSIA.
+	 * 
+	 * @param codigoSIA
+	 *                      codigoSIA a establecer
+	 */
+	public void setCodigoSIA(final String codigoSIA) {
+		this.codigoSIA = codigoSIA;
 	}
 
 }

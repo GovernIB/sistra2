@@ -21,6 +21,7 @@ import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.frontend.literales.LiteralesFront;
 import es.caib.sistramit.frontend.model.MensajeUsuario;
 import es.caib.sistramit.frontend.model.RespuestaJSON;
+import es.caib.sistramit.frontend.model.types.TypeEstiloError;
 import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
 
 /**
@@ -63,8 +64,10 @@ public final class ErroresImpl implements Errores {
 		TypeRespuestaJSON tipoError;
 		String tituloMensaje;
 		String textoMensaje;
+		String textoBoton;
+		String estiloError;
 		String urlMensaje;
-		final String debug = null;
+		TypeEstiloError estilo;
 
 		// Establecemos nivel excepcion
 		TypeNivelExcepcion nivel;
@@ -79,18 +82,26 @@ public final class ErroresImpl implements Errores {
 		switch (nivel) {
 		case WARNING:
 			tipoError = TypeRespuestaJSON.WARNING;
+			estilo = TypeEstiloError.ALERTA;
 			break;
 		case ERROR:
 			tipoError = TypeRespuestaJSON.ERROR;
+			estilo = TypeEstiloError.ERROR;
 			break;
 		default: // FATAL
 			tipoError = TypeRespuestaJSON.FATAL;
+			estilo = TypeEstiloError.ERROR;
 		}
 
 		// Establecemos titulo / texto excepcion
 		tituloMensaje = devolverTituloExcepcion(pEx, idioma, tipoError);
-		textoMensaje = devolverMensajeError(pEx, idioma);
+		textoMensaje = obtenerPropiedadPersonalizadaError(pEx, idioma, "text");
+		textoBoton = obtenerPropiedadPersonalizadaError(pEx, idioma, "textLink");
 		urlMensaje = devolverUrlExcepcion(pEx, idioma, tipoError);
+		estiloError = obtenerPropiedadPersonalizadaError(pEx, idioma, "style");
+		if (StringUtils.isNotBlank(estiloError) && TypeEstiloError.fromString(estiloError) != null) {
+			estilo = TypeEstiloError.fromString(estiloError);
+		}
 
 		// Reemplazamos parametros especiales
 		tituloMensaje = reemplazarPropiedadesExcepcion(tituloMensaje, pEx);
@@ -101,7 +112,7 @@ public final class ErroresImpl implements Errores {
 		final RespuestaJSON res = new RespuestaJSON();
 		res.setEstado(tipoError);
 		res.setUrl(urlMensaje);
-		res.setMensaje(new MensajeUsuario(tituloMensaje, textoMensaje));
+		res.setMensaje(new MensajeUsuario(tituloMensaje, textoMensaje, textoBoton, estilo));
 
 		return res;
 	}
@@ -214,29 +225,20 @@ public final class ErroresImpl implements Errores {
 		return tituloMensaje;
 	}
 
-	/**
-	 * Método para devolver mensaje error de la clase TramitacionController.
-	 *
-	 * @param ex
-	 *                   Parámetro ex
-	 * @param idioma
-	 *                   Parámetro idioma
-	 * @return el string
-	 */
-	private String devolverMensajeError(final Exception ex, final String idioma) {
-
+	protected String obtenerPropiedadPersonalizadaError(final Exception ex, final String idioma,
+			final String propError) {
 		String mensaje = null;
 
 		final String nombreExcepcion = getNombreExcepcion(ex);
 
 		// Obtenemos texto general
-		mensaje = literales.getLiteralFront(LiteralesFront.EXCEPCIONES, "text.generica", idioma);
+		mensaje = literales.getLiteralFront(LiteralesFront.EXCEPCIONES, propError + ".generica", idioma);
 
 		// Buscamos si existe texto particularizado para la excepcion
-		mensaje = literales.getLiteralFront(LiteralesFront.EXCEPCIONES, "text." + nombreExcepcion, idioma, mensaje);
+		mensaje = literales.getLiteralFront(LiteralesFront.EXCEPCIONES, propError + "." + nombreExcepcion, idioma,
+				mensaje);
 
 		return mensaje;
-
 	}
 
 	/**

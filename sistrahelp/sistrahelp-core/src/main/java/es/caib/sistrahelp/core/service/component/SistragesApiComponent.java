@@ -2,8 +2,13 @@ package es.caib.sistrahelp.core.service.component;
 
 import java.util.List;
 
+import org.apache.commons.digester.plugins.PluginException;
+import org.fundaciobit.pluginsib.core.IPlugin;
+
+import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RPermisoHelpDesk;
 import es.caib.sistrahelp.core.api.model.Entidad;
+import es.caib.sistrahelp.core.api.model.types.TypePluginGlobal;
 
 /**
  * Acceso a componente SISTRAGES.
@@ -23,10 +28,20 @@ public interface SistragesApiComponent {
 	/**
 	 * Obtener datos de la entidad.
 	 *
-	 * @param idEntidad
-	 *            identificador de la entidad
+	 * @param idEntidad identificador de la entidad
 	 * @return entidad
 	 */
 	Entidad obtenerDatosEntidad(String idEntidad);
+
+	/**
+	 * Obtiene tipo plugin global.
+	 *
+	 * @param tipoPlugin tipo plugin
+	 * @return Plugin
+	 * @throws PluginException
+	 */
+	IPlugin obtenerPluginGlobal(TypePluginGlobal tipoPlugin) throws PluginException;
+
+	RConfiguracionGlobal obtenerConfiguracionGlobal();
 
 }

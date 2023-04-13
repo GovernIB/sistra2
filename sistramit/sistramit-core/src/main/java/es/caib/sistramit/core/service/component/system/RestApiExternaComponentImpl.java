@@ -18,8 +18,7 @@ import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
 import es.caib.sistramit.core.api.model.system.rest.externo.TramiteFinalizado;
 import es.caib.sistramit.core.api.model.system.rest.externo.TramitePersistencia;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
-import es.caib.sistramit.core.service.repository.dao.AuditoriaDao;
-import es.caib.sistramit.core.service.repository.dao.FlujoTramiteDao;
+import es.caib.sistramit.core.service.repository.dao.RestApiDao;
 import es.caib.sistramit.core.service.repository.dao.TicketCDCDao;
 
 @Component("restApiExternaComponent")
@@ -27,10 +26,7 @@ import es.caib.sistramit.core.service.repository.dao.TicketCDCDao;
 public class RestApiExternaComponentImpl implements RestApiExternaComponent {
 
 	@Autowired
-	private FlujoTramiteDao flujoTramiteDao;
-
-	@Autowired
-	private AuditoriaDao auditoriaDao;
+	private RestApiDao flujoTramiteDao;
 
 	@Autowired
 	private TicketCDCDao ticketCDCDao;
@@ -51,7 +47,7 @@ public class RestApiExternaComponentImpl implements RestApiExternaComponent {
 		if (pFiltro.getFecha() == null) {
 			throw new ErrorParametroObligatorioException("El paràmetre <Fecha evento> és obligatori");
 		}
-		return auditoriaDao.recuperarEventos(pFiltro);
+		return flujoTramiteDao.recuperarEventos(pFiltro);
 	}
 
 	@Override
