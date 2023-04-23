@@ -22,6 +22,7 @@ public class FiltroEventoAuditoria implements Serializable {
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private TypeEvento evento;
+	private String excepcion;
 	private String codSia;
 
 	private String idTramite;
@@ -37,6 +38,14 @@ public class FiltroEventoAuditoria implements Serializable {
 
 	public FiltroEventoAuditoria() {
 		super();
+	}
+
+	public String getExcepcion() {
+		return excepcion;
+	}
+
+	public void setExcepcion(String excepcion) {
+		this.excepcion = excepcion;
 	}
 
 	public FiltroEventoAuditoria(final List<String> listaAreas) {

@@ -31,6 +31,7 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private TypeEvento evento;
+	private String excepcion;
 
 	private String idTramite;
 	private String codSia;
@@ -100,6 +101,7 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 			this.idProcedimientoSIA = pFiltroAuditoriaTramitacion.idProcedimientoSIA;
 			this.errorPlataforma = pFiltroAuditoriaTramitacion.errorPlataforma;
 			this.soloContar = pFiltroAuditoriaTramitacion.soloContar;
+			this.excepcion = pFiltroAuditoriaTramitacion.excepcion;
 
 			this.sortField = pFiltroAuditoriaTramitacion.sortField;
 			this.sortOrder = pFiltroAuditoriaTramitacion.sortOrder;
@@ -126,6 +128,14 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 
 	public void setListaAreas(final List<String> listaAreas) {
 		this.listaAreas = listaAreas;
+	}
+
+	public String getExcepcion() {
+		return excepcion;
+	}
+
+	public void setExcepcion(String excepcion) {
+		this.excepcion = excepcion;
 	}
 
 	public String getIdSesionTramitacion() {

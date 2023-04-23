@@ -60,112 +60,112 @@ public class JAlerta implements IModelApi {
 	/**
 	 * @return the codigo
 	 */
-	public final Long getCodigo() {
+	public Long getCodigo() {
 		return codigo;
 	}
 
 	/**
 	 * @param codigo the codigo to set
 	 */
-	public final void setCodigo(Long codigo) {
+	public void setCodigo(Long codigo) {
 		this.codigo = codigo;
 	}
 
 	/**
 	 * @return the nombre
 	 */
-	public final String getNombre() {
+	public String getNombre() {
 		return nombre;
 	}
 
 	/**
 	 * @param nombre the nombre to set
 	 */
-	public final void setNombre(String nombre) {
+	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 
 	/**
 	 * @return the mail
 	 */
-	public final String getEmail() {
+	public String getEmail() {
 		return email;
 	}
 
 	/**
 	 * @param mail the mail to set
 	 */
-	public final void setEmail(String email) {
+	public void setEmail(String email) {
 		this.email = email;
 	}
 
 	/**
 	 * @return the periodoEvaluacion
 	 */
-	public final Integer getPeriodoEvaluacion() {
+	public Integer getPeriodoEvaluacion() {
 		return periodoEvaluacion;
 	}
 
 	/**
 	 * @param periodoEvaluacion the periodoEvaluacion to set
 	 */
-	public final void setPeriodoEvaluacion(Integer periodoEvaluacion) {
+	public void setPeriodoEvaluacion(Integer periodoEvaluacion) {
 		this.periodoEvaluacion = periodoEvaluacion;
 	}
 
 	/**
 	 * @return the intervaloEvaluacion
 	 */
-	public final String getIntervaloEvaluacion() {
+	public String getIntervaloEvaluacion() {
 		return intervaloEvaluacion;
 	}
 
 	/**
 	 * @param intervaloEvaluacion the intervaloEvaluacion to set
 	 */
-	public final void setIntervaloEvaluacion(String intervaloEvaluacion) {
+	public void setIntervaloEvaluacion(String intervaloEvaluacion) {
 		this.intervaloEvaluacion = intervaloEvaluacion;
 	}
 
 	/**
 	 * @return the eventos
 	 */
-	public final String getEventos() {
+	public String getEventos() {
 		return eventos;
 	}
 
 	/**
 	 * @param eventos the eventos to set
 	 */
-	public final void setEventos(String eventos) {
+	public void setEventos(String eventos) {
 		this.eventos = eventos;
 	}
 
 	/**
 	 * @return the listaAreas
 	 */
-	public final String getListaAreas() {
+	public String getListaAreas() {
 		return listaAreas;
 	}
 
 	/**
 	 * @param listaAreas the listaAreas to set
 	 */
-	public final void setListaAreas(String listaAreas) {
+	public void setListaAreas(String listaAreas) {
 		this.listaAreas = listaAreas;
 	}
 
 	/**
 	 * @return the eliminar
 	 */
-	public final String getEliminar() {
+	public String getEliminar() {
 		return eliminar;
 	}
 
 	/**
 	 * @param eliminar the eliminar to set
 	 */
-	public final void setEliminar(String eliminar) {
+	public void setEliminar(String eliminar) {
 		this.eliminar = eliminar;
 	}
 

@@ -51,56 +51,56 @@ public class JHistorialAlerta implements IModelApi {
 	/**
 	 * @return the codigo
 	 */
-	public final Long getCodigo() {
+	public Long getCodigo() {
 		return codigo;
 	}
 
 	/**
 	 * @param codigo the codigo to set
 	 */
-	public final void setCodigo(Long codigo) {
+	public void setCodigo(Long codigo) {
 		this.codigo = codigo;
 	}
 
 	/**
 	 * @return the codigoAviso
 	 */
-	public final JAlerta getAlerta() {
+	public JAlerta getAlerta() {
 		return alerta;
 	}
 
 	/**
 	 * @param codigoAviso the codigoAviso to set
 	 */
-	public final void setAlerta(JAlerta alerta) {
+	public void setAlerta(JAlerta alerta) {
 		this.alerta = alerta;
 	}
 
 	/**
 	 * @return the fecha
 	 */
-	public final Date getFecha() {
+	public Date getFecha() {
 		return fecha;
 	}
 
 	/**
 	 * @param fecha the fecha to set
 	 */
-	public final void setFecha(Date fecha) {
+	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
 
 	/**
 	 * @return the evento
 	 */
-	public final String getEvento() {
+	public String getEvento() {
 		return evento;
 	}
 
 	/**
 	 * @param evento the evento to set
 	 */
-	public final void setEvento(String evento) {
+	public void setEvento(String evento) {
 		this.evento = evento;
 	}
 

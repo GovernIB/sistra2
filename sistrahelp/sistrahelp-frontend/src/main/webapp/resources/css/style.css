@@ -711,3 +711,11 @@ label.ui-state-disabled {
 .d-block{
 	display:block !important;
 }
+
+/** Para que los input readonly, parezcan disabled **/
+input[readonly="readonly"] {
+	opacity: .65
+}
+textarea[readonly="readonly"] {
+	opacity: .65
+}

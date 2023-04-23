@@ -44,9 +44,11 @@ public class ErroresPorTramiteCMExpansionLazyDataModel extends LazyDataModel<Eve
 
 	@Override
 	public EventoCM getRowData(final String rowKey) {
-		for (final EventoCM evento : getLista()) {
-			if ((evento.getTipoEvento()).equals(rowKey))
-				return evento;
+		if (getLista() != null) {
+			for (final EventoCM evento : getLista()) {
+				if ((evento.getTipoEvento()).equals(rowKey))
+					return evento;
+			}
 		}
 
 		return null;

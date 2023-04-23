@@ -29,6 +29,7 @@ import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
+import es.caib.sistrahelp.frontend.model.DialogResult;
 import es.caib.sistrahelp.frontend.model.EventoAuditoriaTramitacionLazyDataModel;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
@@ -89,6 +90,12 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 
 	private String horaDesdeECM;
 
+	private String layout;
+
+	private String excepcionECM;
+
+	private Boolean esDialog;
+
 	/**
 	 * Inicializa.
 	 */
@@ -98,7 +105,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		paginacion = UtilJSF.getPaginacion("viewAuditoriaTramites");
 
 		// Titulo pantalla
-		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
+
+		esDialog = esDialog == null ? false : esDialog;
 
 		filtros = new FiltroAuditoriaTramitacion(convierteListaAreas(), false);
 
@@ -111,41 +119,50 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 			}
 		}
 
-		if(idTramiteECM != null && !idTramiteECM.isEmpty() && versionTramiteECM != null && !versionTramiteECM.isEmpty()) {
+		if (idTramiteECM != null && !idTramiteECM.isEmpty() && versionTramiteECM != null
+				&& !versionTramiteECM.isEmpty()) {
 			filtros.setIdTramite(idTramiteECM);
 			filtros.setVersionTramite(Integer.parseInt(versionTramiteECM));
 			filtros.setEvento(TypeEvento.ERROR);
 
-			if(horaDesdeECM != null && !horaDesdeECM.isEmpty()) {
+			if (horaDesdeECM != null && !horaDesdeECM.isEmpty()) {
 				try {
 					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 					Date fecha = dateFormat.parse(horaDesdeECM);
 					filtros.setFechaDesde(fecha);
-				}catch (java.text.ParseException e) {
+				} catch (java.text.ParseException e) {
 
-		        }
+				}
 			} else {
 
-				if(fechaDesdeECM != null && !fechaDesdeECM.isEmpty()) {
+				if (fechaDesdeECM != null && !fechaDesdeECM.isEmpty()) {
 					try {
 						SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 						Date fecha = dateFormat.parse(fechaDesdeECM);
 						filtros.setFechaDesde(fecha);
-					}catch (java.text.ParseException e) {
+					} catch (java.text.ParseException e) {
 
-			        }
+					}
 				}
 
-				if(fechaHastaECM != null && !fechaHastaECM.isEmpty()) {
+				if (fechaHastaECM != null && !fechaHastaECM.isEmpty()) {
 					try {
 						SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 						Date fecha = dateFormat.parse(fechaHastaECM);
 						filtros.setFechaHasta(fecha);
-					}catch (java.text.ParseException e) {
+					} catch (java.text.ParseException e) {
 
-			        }
+					}
 				}
 			}
+		}
+		if (esDialog) {
+			layout = "../layout/dialogViewLayout.xhtml";
+			setLiteralTituloPantalla(idTramiteECM + " / " + versionTramiteECM + " - " + excepcionECM);
+			filtros.setExcepcion(excepcionECM);
+		} else {
+			layout = "../layout/mainLayout.xhtml";
+			setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 		}
 	}
 
@@ -311,6 +328,22 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 */
 	public void ayuda() {
 		UtilJSF.openHelp("auditoriaTramites");
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayudaDialog() {
+		UtilJSF.openHelp("auditoriaTramitesDialog");
+	}
+
+	/**
+	 * Cancelar.
+	 */
+	public void cerrar() {
+		final DialogResult result = new DialogResult();
+		result.setCanceled(true);
+		UtilJSF.closeDialog(result);
 	}
 
 	/**
@@ -539,4 +572,45 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		this.horaDesdeECM = horaDesdeECM;
 	}
 
+	/**
+	 * @return the layout
+	 */
+	public final String getLayout() {
+		return layout;
+	}
+
+	/**
+	 * @param layout the layout to set
+	 */
+	public final void setLayout(String layout) {
+		this.layout = layout;
+	}
+
+	/**
+	 * @return the esDialog
+	 */
+	public final Boolean getEsDialog() {
+		return esDialog;
+	}
+
+	/**
+	 * @param esDialog the esDialog to set
+	 */
+	public final void setEsDialog(Boolean esDialog) {
+		this.esDialog = esDialog;
+	}
+
+	/**
+	 * @return the excepcion
+	 */
+	public final String getExcepcionECM() {
+		return excepcionECM;
+	}
+
+	/**
+	 * @param excepcion the excepcion to set
+	 */
+	public final void setExcepcionECM(String excepcionECM) {
+		this.excepcionECM = excepcionECM;
+	}
 }

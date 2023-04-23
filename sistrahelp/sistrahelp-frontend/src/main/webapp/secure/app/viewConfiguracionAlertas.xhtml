@@ -265,8 +265,8 @@
 	      	<p:menuitem id="mnuEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('form:btnEliminar').click();" process="@this" style="display:none;"/>
 	    </p:contextMenu>
 	    <pe:clipboard id="clipContextCopyD" trigger="mnuCopy" action="copy" target="auxCopiar">
-			<p:ajax event="success" listener="#{viewPagos.copiadoCorr}" process="@this" update="@this growl"/>
-	         <p:ajax event="error" listener="#{viewPagos.copiadoErr}" update="@this growl"/>
+			<p:ajax event="success" listener="#{viewConfiguracionAlertas.copiadoCorr}" process="@this" update="@this growl"/>
+	         <p:ajax event="error" listener="#{viewConfiguracionAlertas.copiadoErr}" update="@this growl"/>
 	    </pe:clipboard>
 
       <p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">

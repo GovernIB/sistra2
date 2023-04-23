@@ -298,11 +298,11 @@ public class JCampoFormularioTexto implements IModelApi {
 		this.forzarMayusculas = forzarMayusculas;
 	}
 
-	public final boolean isPrevenirPegar() {
+	public boolean isPrevenirPegar() {
 		return prevenirPegar;
 	}
 
-	public final void setPrevenirPegar(boolean prevenirPegar) {
+	public void setPrevenirPegar(boolean prevenirPegar) {
 		this.prevenirPegar = prevenirPegar;
 	}
 

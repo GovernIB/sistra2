@@ -437,6 +437,7 @@ public class ApiInternaRestController {
 			filtro.setFechaDesde(pRFiltro.getFechaDesde());
 			filtro.setFechaHasta(pRFiltro.getFechaHasta());
 			filtro.setCodSia(pRFiltro.getCodSia());
+			filtro.setExcepcion(pRFiltro.getExcepcion());
 
 			if (pRFiltro.getEvento() != null) {
 				filtro.setEvento(TypeEvento.valueOf(pRFiltro.getEvento()));

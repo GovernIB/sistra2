@@ -76,6 +76,10 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 		}
 	}
 
+	public String splitTramite(String idComp) {
+		return idComp.split("\\.")[2];
+	}
+
 	/**
 	 * @return the errorCopiar
 	 */

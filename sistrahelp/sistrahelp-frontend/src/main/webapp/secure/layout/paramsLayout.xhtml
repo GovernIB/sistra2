@@ -5,6 +5,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
   	xmlns:ui="http://java.sun.com/jsf/facelets"
+  	xmlns:c="http://java.sun.com/jsp/jstl/core"
   	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
@@ -30,9 +31,18 @@
 
   <p:layout fullPage="true" >
 
-    <p:layoutUnit id="work" position="center" header="#{msg[sessionBean.literalTituloPantalla]}" >
-      <ui:insert name="content" />
-    </p:layoutUnit>
+	<c:choose>
+	    <c:when test="#{msg[sessionBean.literalTituloPantalla] != null}">
+	        <p:layoutUnit id="work" position="center" header="#{msg[sessionBean.literalTituloPantalla]}" >
+	        	<ui:insert name="content" />
+    		</p:layoutUnit>
+	    </c:when>
+	    <c:otherwise>
+	    	<p:layoutUnit id="work" position="center" >
+	    		<ui:insert name="content" />
+    		</p:layoutUnit>
+	    </c:otherwise>
+	</c:choose>
 
   </p:layout>
 

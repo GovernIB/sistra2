@@ -67,14 +67,14 @@ public class JEnvioRemoto implements IModelApi {
 	/**
 	 * @return the codigo
 	 */
-	public final Long getCodigo() {
+	public Long getCodigo() {
 		return codigo;
 	}
 
 	/**
 	 * @param codigo the codigo to set
 	 */
-	public final void setCodigo(Long codigo) {
+	public void setCodigo(Long codigo) {
 		this.codigo = codigo;
 	}
 

@@ -111,7 +111,7 @@
 						<p:outputLabel for="minResTiempoReal" value="#{msg['viewCuadroMando.minutosRefresco']}:" style="margin-right:10px"/>
 						<p:inputNumber id="minResTiempoReal" value="#{viewCuadroMando.minutosRefresco}" thousandSeparator="" decimalSeparator="." decimalPlaces="0" style="margin-right:20px" disabled="#{viewCuadroMando.tipoFecha != 'tr'}"/>
 						</p:column>
-						<p:commandButton id="btnBuscarTiempoReal" icon="fa fa-refresh" value="#{msg['viewCuadroMando.refrescar']}" actionListener="#{viewCuadroMando.filtrar()}" process="panelFiltro" update="@form:tablaCuadroMando" styleClass="boton_derecha" disabled="#{viewCuadroMando.tipoFecha != 'tr'}"/>
+						<p:commandButton id="btnBuscarTiempoReal" icon="fa fa-refresh"  value="#{msg['viewCuadroMando.refrescar']}" actionListener="#{viewCuadroMando.filtrar()}" process="panelFiltro" update="@form:tablaCuadroMando" styleClass="boton_derecha" disabled="#{viewCuadroMando.tipoFecha != 'tr'}"/>
 
 						<p:outputLabel value="" />
 						 <p:column>
@@ -137,6 +137,8 @@
 			</h:panelGrid>
 
 			<p:poll id="poll" interval="#{viewCuadroMando.minutosRefresco*60}" listener="#{viewCuadroMando.filtrar()}" widgetVar="currentTimePoller" process="@this" update=":form:tablaCuadroMando"/>
+
+			 <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewCuadroMando.rcDobleClick()}" process="@this" update="growl" style="display:none"/>
 
 
 			<!-- Tabla -->
@@ -306,16 +308,16 @@
 						scrollHeight="100%" emptyMessage="#{msg['error.emptyRows']}"
 						rowIndexVar="rowIndex" selectionMode="single"
 						paginator="true" paginatorPosition="bottom" lazy="true"
-								 scrollable="true"
-		                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		                         currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords}"
-		                         rowsPerPageTemplate="5,10,15,30"
-		                         rows="#{viewCuadroMando.paginacion}"
-                     	selection="#{viewCuadroMando.seleccionado}" rowKey="#{td.idTramite}"
+					 	scrollable="true"
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                        currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords}"
+                        rowsPerPageTemplate="5,10,15,30"
+                        rows="#{viewCuadroMando.paginacion}" rowKey="#{td.idTramite}#{td.version}"
+                     	selection="#{viewCuadroMando.seleccionado}"
 						widgetVar="myWidget" style="width:75%; margin:auto;">
 
-						<p:ajax event="rowSelect" global="false"  oncomplete="expandirContraer();"/>
-						<p:ajax event="rowToggle" listener="#{viewCuadroMando.loadExpansion(td)}"  />
+						<p:ajax event="rowSelect" global="false" oncomplete="expandirContraer();"/>
+						<p:ajax event="rowToggle" listener="#{viewCuadroMando.loadExpansion(td)}" oncomplete="selectExpanded();"/>
 
 						<p:column style="width:16px !important; background-color:RGB(255,255,255);">
 				            <p:rowToggler />
@@ -355,11 +357,12 @@
 		                         currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords}"
 		                         rowsPerPageTemplate="5,10,15,30" lazy="true"
 		                         rows="#{viewCuadroMando.paginacionErrores}"
+		                         selection="#{viewCuadroMando.seleccionadoErr}"
 								styleClass="w95 margin-left-25 margin-top-10 margin-bottom-10" rowKey="#{tdErrores.tipoEvento}"
 								selectionMode="single"
-								dblClickSelect="true">
+								>
 
-								<p:ajax event="rowDblselect" listener="#{viewCuadroMando.erroresAuditoriaTramites()}" global="false"/>
+								<p:ajax event="rowDblselect" oncomplete="triggerDblClick();"/>
 								<!-- Columnas -->
 								<p:column
 									headerText="#{msg['viewAuditoriaTramites.headError']}" sortBy="#{tdErrores.tipoEvento}">
@@ -455,16 +458,23 @@
 			    	return false;
 				}, false);
 
-								    console.log('9');
 			  }
 
 
 				function expandirContraer(){
-					var el = document.getElementById("form:dataTableTramites").getElementsByClassName('ui-state-highlight')[0];
+					var lista = document.getElementById("form:dataTableTramites").getElementsByClassName('ui-state-highlight');
+					var el;
+					for(var i=0; i&lt;lista.length; i++){
+						if(lista[i].parentNode.id=='form:dataTableTramites_data'){
+							el = lista[i]
+						}
+					}
 					if(el==null){
 						el = document.getElementById("form:dataTableTramites").getElementsByClassName('ui-expanded-row')[0];
 					}
+
 					var listaTd = el.getElementsByTagName('*');
+
 					for(var i=0; i&lt;listaTd.length; i++){
 						if(listaTd[i].getElementsByClassName('ui-row-toggler')[0]!=null){
 							listaTd[i].getElementsByClassName('ui-row-toggler')[0].click();
@@ -565,6 +575,23 @@
 
 		               }
 			 }
+
+			  function triggerDblClick() {
+		        	$('#form\\:btnEditarHidden').click();
+		      }
+
+		      function selectExpanded(){
+		      	var selecc = document.getElementById('form:dataTableTramites').getElementsByClassName('ui-state-highlight');
+		      	var expanded = document.getElementById('form:dataTableTramites').getElementsByClassName('ui-expanded-row');
+		      	for(let i = 0; i &lt; selecc.length; i++){
+					selecc[i].classList.remove('ui-state-highlight');
+				}
+
+				for(let i = 0; i &lt; expanded.length; i++){
+					expanded[i].classList.add('ui-state-highlight');
+				}
+		      }
+
 		    </h:outputScript>
 
 			<p:inputText id="paginacion" value="#{viewCuadroMando.paginacion}"

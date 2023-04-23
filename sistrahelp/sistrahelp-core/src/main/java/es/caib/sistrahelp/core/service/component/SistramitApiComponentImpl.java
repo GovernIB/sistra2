@@ -600,6 +600,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 			rFiltro.setFechaDesde(pFiltro.getFechaDesde());
 			rFiltro.setFechaHasta(pFiltro.getFechaHasta());
 			rFiltro.setCodSia(pFiltro.getCodSia());
+			rFiltro.setExcepcion(pFiltro.getExcepcion());
 
 			if (pFiltro.getEvento() != null) {
 				rFiltro.setEvento(pFiltro.getEvento().name());

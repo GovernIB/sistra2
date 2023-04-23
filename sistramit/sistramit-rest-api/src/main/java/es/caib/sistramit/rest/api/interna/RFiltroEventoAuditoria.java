@@ -36,6 +36,9 @@ public class RFiltroEventoAuditoria {
 	@ApiModelProperty(value = "Tipo Evento")
 	private String evento;
 
+	@ApiModelProperty(value = "Excepcion")
+	private String excepcion;
+
 	@ApiModelProperty(value = "Id. Tramite")
 	private String idTramite;
 
@@ -180,12 +183,20 @@ public class RFiltroEventoAuditoria {
 		this.sortOrder = sortOrder;
 	}
 
-	public final String getCodSia() {
+	public String getCodSia() {
 		return codSia;
 	}
 
-	public final void setCodSia(String codSia) {
+	public void setCodSia(String codSia) {
 		this.codSia = codSia;
+	}
+
+	public String getExcepcion() {
+		return excepcion;
+	}
+
+	public void setExcepcion(String excepcion) {
+		this.excepcion = excepcion;
 	}
 
 }

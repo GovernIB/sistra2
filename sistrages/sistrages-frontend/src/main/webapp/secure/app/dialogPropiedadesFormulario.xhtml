@@ -16,6 +16,12 @@
     .ui-datatable-scrollable-body{
       height: 89% !important;
     }
+
+    body{
+    	height:89vh;
+    	overflow: hidden !important;
+    }
+
   </style>
 </h:head>
 
@@ -215,7 +221,7 @@
       <h:outputScript >
 
                var arrayCm = [];
-					
+
 				  window.onload=function(){
                   let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
                   onVisible(contextMenu, () => eliminarResaltar());

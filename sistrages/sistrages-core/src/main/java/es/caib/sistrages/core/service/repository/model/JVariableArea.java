@@ -58,35 +58,35 @@ public class JVariableArea implements IModelApi {
 		this.codigo = codigo;
 	}
 
-	public final JArea getArea() {
+	public JArea getArea() {
 		return area;
 	}
 
-	public final void setArea(JArea area) {
+	public void setArea(JArea area) {
 		this.area = area;
 	}
 
-	public final String getIdentificador() {
+	public String getIdentificador() {
 		return identificador;
 	}
 
-	public final void setIdentificador(String identificador) {
+	public  void setIdentificador(String identificador) {
 		this.identificador = identificador;
 	}
 
-	public final String getDescripcion() {
+	public  String getDescripcion() {
 		return descripcion;
 	}
 
-	public final void setDescripcion(String descripcion) {
+	public  void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
 
-	public final String getUrl() {
+	public  String getUrl() {
 		return url;
 	}
 
-	public final void setUrl(String url) {
+	public  void setUrl(String url) {
 		this.url = url;
 	}
 

@@ -41,6 +41,7 @@ import es.caib.sistrahelp.frontend.model.ErroresPorTramiteCMExpansionLazyDataMod
 import es.caib.sistrahelp.frontend.model.ErroresPorTramiteCMLazyDataModel;
 import es.caib.sistrahelp.frontend.model.ErroresPorTramiteCMPlataformaLazyDataModel;
 import es.caib.sistrahelp.frontend.model.EventoAuditoriaTramitacionLazyDataModel;
+import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
 
@@ -154,7 +155,9 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 	private String tipoFecha;
 
-	private ErroresCuadroMando seleccionado;
+	private ErroresPorTramiteCM seleccionado;
+
+	private EventoCM seleccionadoErr;
 
 	private Date fechaMin;
 
@@ -213,6 +216,7 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 	public void loadExpansion(ErroresPorTramiteCM errTram) {
 
+		seleccionado = errTram;
 		filtros.setIdTramite(errTram.getIdTramite());
 		filtros.setVersionTramite(errTram.getVersion());
 		Long rowCount = (long) 0;
@@ -239,37 +243,44 @@ public class ViewCuadroMando extends ViewControllerBase {
 	}
 
 	public void erroresAuditoriaTramites() {
-		final Map<String,List<String>> params = new HashMap<>();
+		final Map<String, String> params = new HashMap<>();
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-		String idTramite = listaErrores.getRowData().getIdTramite().split("\\.", 3)[2];
-		String versionTramite = listaErrores.getRowData().getVersion().toString();
+		String idTramite = seleccionado.getIdTramite().split("\\.", 3)[2];
+		String versionTramite = seleccionado.getVersion().toString();
 
-		List<String> idTramiteString = new ArrayList<>();
-		List<String> versionTramiteString = new ArrayList<>();
-		idTramiteString.add(idTramite);
-		versionTramiteString.add(versionTramite);
+		String idTramiteString = idTramite;
+		String versionTramiteString = versionTramite;
 		params.put("idTramite", idTramiteString);
 		params.put("versionTramite", versionTramiteString);
 
-		if(horaDesde != null) {
-			List<String> horaDesdeString = new ArrayList<>();
-			horaDesdeString.add(dateFormat.format(horaDesde));
+		if (horaDesde != null) {
+			String horaDesdeString = dateFormat.format(horaDesde);
 			params.put("horaDesde", horaDesdeString);
-		}else {
-			if(fechaDesde != null) {
-				List<String> fechaDesdeString = new ArrayList<>();
-				fechaDesdeString.add(dateFormat.format(fechaDesde));
+		} else {
+			if (fechaDesde != null) {
+				String fechaDesdeString = dateFormat.format(fechaDesde);
 				params.put("fechaDesde", fechaDesdeString);
 			}
-			if(fechaHasta != null) {
-				List<String> fechaHastaString = new ArrayList<>();
-				fechaHastaString.add(dateFormat.format(fechaHasta));
+			if (fechaHasta != null) {
+				String fechaHastaString = dateFormat.format(fechaHasta);
 				params.put("fechaHasta", fechaHastaString);
 			}
 		}
 
-		UtilJSF.redirectJsfPage("/secure/app/viewAuditoriaTramites.xhtml", params);
+		params.put("excepcion", seleccionadoErr.getTipoEvento());
+
+		params.put("esDialog", "true");
+
+		UtilJSF.openDialog(ViewAuditoriaTramites.class, TypeModoAcceso.CONSULTA, params, true, 1350, 750);
+
+	}
+
+	/**
+	 * Rc doble click.
+	 */
+	public void rcDobleClick() {
+		erroresAuditoriaTramites();
 	}
 
 	/** Genera texto a copiar **/
@@ -325,6 +336,11 @@ public class ViewCuadroMando extends ViewControllerBase {
 		formFin = 0;
 		firmaIni = 0;
 		firmaFin = 0;
+		PrimeFaces.current().executeScript(
+				"var selecc = document.getElementById('form:dataTableTramites').getElementsByClassName('ui-state-highlight');"
+						+ "		      	for(let i = 0; i < selecc.length; i++){"
+						+ "					selecc[i].classList.remove('ui-state-highlight');"
+						+ "					console.log(selecc[i]);" + "				}");
 		List<String> listaAux = new ArrayList<String>();
 		if (tipoFecha.equals("tr")) {
 			filtros.setFechaDesde(filtros.getToday());
@@ -640,30 +656,18 @@ public class ViewCuadroMando extends ViewControllerBase {
 		return regIni;
 	}
 
-	/**
-	 * @param regIni the regIni to set
-	 */
 	public final void setRegIni(int regIni) {
 		this.regIni = regIni;
 	}
 
-	/**
-	 * @return the regFin
-	 */
 	public final int getRegFin() {
 		return regFin;
 	}
 
-	/**
-	 * @param regFin the regFin to set
-	 */
 	public final void setRegFin(int regFin) {
 		this.regFin = regFin;
 	}
 
-	/**
-	 * @param filtroArea the filtroArea to set
-	 */
 	public final void setFiltroArea(String filtroArea) {
 		List<String> areasEnt = convierteListaAreas();
 		if (filtroArea != null && !filtroArea.isEmpty() && areasEnt != null) {
@@ -743,58 +747,34 @@ public class ViewCuadroMando extends ViewControllerBase {
 		this.listaAlertas = listaAlertas;
 	}
 
-	/**
-	 * @return the formIni
-	 */
 	public final int getFormIni() {
 		return formIni;
 	}
 
-	/**
-	 * @param formIni the formIni to set
-	 */
 	public final void setFormIni(int formIni) {
 		this.formIni = formIni;
 	}
 
-	/**
-	 * @return the formFin
-	 */
 	public final int getFormFin() {
 		return formFin;
 	}
 
-	/**
-	 * @param formFin the formFin to set
-	 */
 	public final void setFormFin(int formFin) {
 		this.formFin = formFin;
 	}
 
-	/**
-	 * @return the firmaIni
-	 */
 	public final int getFirmaIni() {
 		return firmaIni;
 	}
 
-	/**
-	 * @param firmaIni the firmaIni to set
-	 */
 	public final void setFirmaIni(int firmaIni) {
 		this.firmaIni = firmaIni;
 	}
 
-	/**
-	 * @return the firmaFin
-	 */
 	public final int getFirmaFin() {
 		return firmaFin;
 	}
 
-	/**
-	 * @param firmaFin the firmaFin to set
-	 */
 	public final void setFirmaFin(int firmaFin) {
 		this.firmaFin = firmaFin;
 	}
@@ -823,11 +803,11 @@ public class ViewCuadroMando extends ViewControllerBase {
 		this.tipoFecha = tipoFecha;
 	}
 
-	public final ErroresCuadroMando getSeleccionado() {
+	public final ErroresPorTramiteCM getSeleccionado() {
 		return seleccionado;
 	}
 
-	public final void setSeleccionado(ErroresCuadroMando seleccionado) {
+	public final void setSeleccionado(ErroresPorTramiteCM seleccionado) {
 		this.seleccionado = seleccionado;
 	}
 
@@ -893,6 +873,14 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 	public final void setListaErrPlat(LazyDataModel<EventoCM> listaErrPlat) {
 		this.listaErrPlat = listaErrPlat;
+	}
+
+	public final EventoCM getSeleccionadoErr() {
+		return seleccionadoErr;
+	}
+
+	public final void setSeleccionadoErr(EventoCM seleccionadoErr) {
+		this.seleccionadoErr = seleccionadoErr;
 	}
 
 }

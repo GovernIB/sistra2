@@ -750,6 +750,11 @@ public final class RestApiDaoImpl implements RestApiDao {
 					builder.equal(tableE.get("tipo"), pFiltroBusqueda.getEvento().toString()));
 		}
 
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getExcepcion())) {
+			predicate = builder.and(predicate,
+					builder.like(tableE.get("codigoError"), "%" + pFiltroBusqueda.getExcepcion() + "%"));
+		}
+
 		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdTramite())) {
 			predicate = builder.and(predicate,
 					builder.like(tableT.get("idTramite"), "%" + pFiltroBusqueda.getIdTramite() + "%"));
@@ -1107,7 +1112,7 @@ public final class RestApiDaoImpl implements RestApiDao {
 				+ "            p.TRP_VERTRA, " + "            f.log_evetip ," + "            count(f.log_evetip) as num"
 				+ "        from STT_LOGINT f "
 				+ "         JOIN STT_TRAPER p ON f.LOG_CODSES = p.TRP_CODSTR and p.trp_idetra is not NULL"
-				+ "        where" + "            f.log_evetip in ('ERROR', 'TR_INI', 'TR_FIN')";
+				+ "        where" + "            f.log_evetip in ('ERROR', 'TR_INI')";
 
 		if (pFiltroBusqueda.getIdTramite() != null) {
 
@@ -1140,7 +1145,9 @@ public final class RestApiDaoImpl implements RestApiDao {
 
 		sql += "        group by " + "            p.TRP_IDETRA, " + "            p.TRP_VERTRA, "
 				+ "            f.log_evetip) e" + "    group by  " + "        e.TRP_IDETRA, "
-				+ "        e.TRP_VERTRA     ";
+				+ "        e.TRP_VERTRA  having sum( CASE e.log_evetip WHEN 'ERROR' THEN e.num"
+				+ " ELSE 0  END) > 0 or (sum(CASE e.log_evetip" + " WHEN 'TR_INI' THEN e.num ELSE 0"
+				+ " END)>0 and sum(CASE e.log_evetip WHEN 'TR_FIN' " + "THEN e.num ELSE 0  END) = 0)";
 
 		if (StringUtils.isEmpty(pFiltroBusqueda.getSortField())) {
 			sql += " order by e.TRP_IDETRA DESC";
@@ -1409,33 +1416,51 @@ public final class RestApiDaoImpl implements RestApiDao {
 	@Override
 	public Long contarErroresPorTramiteCM(FiltroEventoAuditoria pFiltroBusqueda) {
 		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		final CriteriaQuery<ErroresPorTramiteCM> query = builder.createQuery(ErroresPorTramiteCM.class);
+		String sql = "select" + "    e.TRP_IDETRA, " + "    e.TRP_VERTRA" + "    from "
+				+ "        (select p.TRP_IDETRA, " + "            p.TRP_VERTRA, " + "            f.log_evetip ,"
+				+ "            count(f.log_evetip) as num" + "        from STT_LOGINT f "
+				+ "         JOIN STT_TRAPER p ON f.LOG_CODSES = p.TRP_CODSTR and p.trp_idetra is not NULL"
+				+ "        where" + "            f.log_evetip in ('ERROR', 'TR_INI')";
 
-		Root<HEventoAuditoria> tableE = query.from(HEventoAuditoria.class);
-		Root<HTramite> tableT = query.from(HTramite.class);
+		if (pFiltroBusqueda.getIdTramite() != null) {
 
-		final Join<HEventoAuditoria, HSesionTramitacion> p = tableE.join("sesionTramitacion", JoinType.LEFT);
-		Predicate predicate = builder.equal(tableE.get("sesionTramitacion"), tableT.get("sesionTramitacion"));
-		predicate = builder.and(predicate, builder.equal(tableE.get("tipo"), "ERROR"));
-		if (pFiltroBusqueda.getFechaDesde() != null) {
-			predicate = builder.and(predicate,
-					builder.greaterThanOrEqualTo(tableE.get("fecha"), pFiltroBusqueda.getFechaDesde()));
+			sql += " and p.TRP_IDETRA like '%" + pFiltroBusqueda.getIdTramite() + "%'";
 		}
+
+		if (pFiltroBusqueda.getFechaDesde() != null) {
+
+			sql += " and f.log_evefec >= TO_TIMESTAMP('" + Timestamp.from(pFiltroBusqueda.getFechaDesde().toInstant())
+					+ "', 'YYYY-MM-DD HH24:MI:SS.FF')";
+		}
+
 		if (pFiltroBusqueda.getFechaHasta() != null) {
-			predicate = builder.and(predicate,
-					builder.lessThanOrEqualTo(tableE.get("fecha"), pFiltroBusqueda.getFechaHasta()));
+			sql += " and f.log_evefec <= TO_TIMESTAMP('" + Timestamp.from(pFiltroBusqueda.getFechaHasta().toInstant())
+					+ "', 'YYYY-MM-DD HH24:MI:SS.FF')";
+
 		}
 		if (pFiltroBusqueda.getListaAreas() != null) {
-			predicate = builder.and(predicate, tableT.get("idArea").in(pFiltroBusqueda.getListaAreas()));
+			String areasString = "";
+			for (String area : pFiltroBusqueda.getListaAreas()) {
+				if (areasString.isEmpty()) {
+					areasString += "('" + area + "'";
+				} else {
+					areasString += ", '" + area + "'";
+				}
+			}
+			areasString += ")";
+			sql += " and p.TRP_IDEARE in " + areasString;
 		}
-		query.where(predicate);
 
-		query.multiselect(tableT.get("idTramite"), tableT.get("versionTramite"));
-		query.groupBy(tableT.get("idTramite"), tableT.get("versionTramite"));
+		sql += "        group by " + "            p.TRP_IDETRA, " + "            p.TRP_VERTRA, "
+				+ "            f.log_evetip) e" + "    group by  " + "        e.TRP_IDETRA, "
+				+ "        e.TRP_VERTRA  having sum( CASE e.log_evetip WHEN 'ERROR' THEN e.num"
+				+ " ELSE 0  END) > 0 or (sum(CASE e.log_evetip" + " WHEN 'TR_INI' THEN e.num ELSE 0"
+				+ " END)>0 and sum(CASE e.log_evetip WHEN 'TR_FIN' " + "THEN e.num ELSE 0  END) = 0)";
 
-		List<ErroresPorTramiteCM> resultList = entityManager.createQuery(query).getResultList();
+		Query query = entityManager.createNativeQuery(sql);
+		List<Object[]> lista = query.getResultList();
 
-		return Long.valueOf(resultList.size());
+		return Long.valueOf(lista.size());
 	}
 
 	@Override
