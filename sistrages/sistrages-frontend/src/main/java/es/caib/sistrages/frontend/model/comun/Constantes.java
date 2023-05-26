@@ -88,6 +88,8 @@ public final class Constantes {
 
 	public static final String CLAVE_MOCHILA_PARAMDOM = "PARAMDOM";
 
+	public static final String CLAVE_ES_IFRAME = "IFRAME";
+
 	/** Constante idiomas por defecto. **/
 	public static final String CLAVE_MOCHILA_IDIOMASXDEFECTO = "IDXDEF";
 

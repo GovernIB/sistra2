@@ -7,6 +7,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 
+import es.caib.sistramit.core.api.model.flujo.TramiteIniciado;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
@@ -93,6 +94,11 @@ public class SecurityServiceBean implements SecurityService {
 	@Override
 	public InfoTicketAcceso obtenerTicketAccesoCDC(final String ticket) {
 		return securityService.obtenerTicketAccesoCDC(ticket);
+	}
+
+	@Override
+	public List<TramiteIniciado> obtenerTramitacionesIniciadas(String nif, String tramite, int version, String idTramiteCatalogo, boolean servicioCatalogo) {
+		return securityService.obtenerTramitacionesIniciadas(nif, tramite, version, idTramiteCatalogo, servicioCatalogo);
 	}
 
 }

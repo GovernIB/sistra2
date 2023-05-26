@@ -60,23 +60,23 @@
 					<p:outputLabel value=""/>
 
 					<p:outputLabel for="valor" value="#{msg['dialogPlugin.headerClassname']}" style="padding-left: 2px; display: block;"/>
-					<p:inputText id="valor" value="#{dialogPlugin.data.realClassname}" readonly="#{dialogPlugin.isReal ? false : true}" required="false" style="width:98%;" maxlength="500">
+					<p:inputText id="valor" onblur="this.value = this.value.trim();" value="#{dialogPlugin.data.realClassname}" readonly="#{dialogPlugin.isReal ? false : true}" required="false" style="width:98%;" maxlength="500">
 						<p:ajax event="keyup" process="@this" />
 					</p:inputText>
 					<p:outputLabel value="" />
 
 					<p:outputLabel for="mockClassname" value="#{msg['dialogPlugin.headerMockClassname']}" style="padding-left: 2px; display: block;"/>
-					<p:inputText id="mockClassname" value="#{dialogPlugin.data.mockClassname}" readonly="#{dialogPlugin.isReal ? true : false}" required="false" style="width:98%;" maxlength="500">
+					<p:inputText id="mockClassname" onblur="this.value = this.value.trim();" value="#{dialogPlugin.data.mockClassname}" readonly="#{dialogPlugin.isReal ? true : false}" required="false" style="width:98%;" maxlength="500">
 						<p:ajax event="keyup" process="@this" />
 					</p:inputText>
 					<p:outputLabel value="" />
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogPlugin.headerDescripcion']}" style="padding-left: 2px; display: block;"/>
-					<p:inputText id="descripcion" value="#{dialogPlugin.data.descripcion}" readonly="#{dialogPlugin.isConsulta()}" required="true" style="width:98%;" maxlength="255"/>
+					<p:inputText id="descripcion" onblur="this.value = this.value.trim();" value="#{dialogPlugin.data.descripcion}" readonly="#{dialogPlugin.isConsulta()}" required="true" style="width:98%;" maxlength="255"/>
 					<p:outputLabel value="" />
 
 					<p:outputLabel for="prefijoPropiedades" value="#{msg['dialogPlugin.headerPrefijo']}" style="padding-left: 2px; display: block;"/>
-					<p:inputText id="prefijoPropiedades" value="#{dialogPlugin.data.prefijoPropiedades}" readonly="#{dialogPlugin.isConsulta()}" style="width:98%;" maxlength="100"/>
+					<p:inputText id="prefijoPropiedades" onblur="this.value = this.value.trim();" value="#{dialogPlugin.data.prefijoPropiedades}" readonly="#{dialogPlugin.isConsulta()}" style="width:98%;" maxlength="100"/>
 					<p:outputLabel value="" />
 
    					<p:outputLabel for="dataTablePropiedades" value="#{msg['dialogPlugin.headerPropiedad']}" style="padding-left: 2px; display: block;"/>
@@ -174,7 +174,7 @@
             <h:outputScript >
 
 	             var arrayCm = [];
-					
+
 				  window.onload=function(){
 	                let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 	                onVisible(contextMenu, () => eliminarResaltar());

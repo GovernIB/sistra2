@@ -262,4 +262,17 @@ public final class DatosFormularioInterno implements Serializable {
 	public void setValoresIniciales(final List<ValorCampo> valoresIniciales) {
 		this.valoresIniciales = valoresIniciales;
 	}
+
+	/**
+	 * Obtiene páginas rellenadas.
+	 *
+	 * @return Lista ids páginas rellenadas
+	 */
+	public List<String> getIdsPaginasRellenadas() {
+		final List<String> res = new ArrayList<>();
+		for (final PaginaFormularioData p : this.paginas) {
+			res.add(p.getIdentificador());
+		}
+		return res;
+	}
 }

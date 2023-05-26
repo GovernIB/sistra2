@@ -33,6 +33,9 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 	private TypeEvento evento;
 	private String excepcion;
 
+	private String tlf;
+	private String email;
+
 	private String idTramite;
 	private String codSia;
 	private Integer versionTramite;
@@ -41,6 +44,9 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 
 	private boolean errorPlataforma;
 	private boolean soloContar;
+
+	private String estado;
+	private String coment;
 
 	private String sortField;
 	private String sortOrder;
@@ -102,7 +108,10 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 			this.errorPlataforma = pFiltroAuditoriaTramitacion.errorPlataforma;
 			this.soloContar = pFiltroAuditoriaTramitacion.soloContar;
 			this.excepcion = pFiltroAuditoriaTramitacion.excepcion;
-
+			this.tlf = pFiltroAuditoriaTramitacion.tlf;
+			this.email = pFiltroAuditoriaTramitacion.email;
+			this.estado = pFiltroAuditoriaTramitacion.estado;
+			this.coment = pFiltroAuditoriaTramitacion.coment;
 			this.sortField = pFiltroAuditoriaTramitacion.sortField;
 			this.sortOrder = pFiltroAuditoriaTramitacion.sortOrder;
 		}
@@ -232,6 +241,38 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 
 	public void setSoloContar(final boolean soloContar) {
 		this.soloContar = soloContar;
+	}
+
+	public String getTlf() {
+		return tlf;
+	}
+
+	public void setTlf(String tlf) {
+		this.tlf = tlf;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public String getComent() {
+		return coment;
+	}
+
+	public void setComent(String coment) {
+		this.coment = coment;
 	}
 
 	public Date getToday() {

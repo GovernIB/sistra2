@@ -34,7 +34,7 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialogBusquedaDominio" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 				<h:panelGrid id="panelFiltro" columns="2" styleClass="padding-left-18" cellspacing="0">
-			        <p:inputText placeholder="#{msg['botones.buscar']}" value="#{dialogBusquedaDominio.filtro}"/>
+			        <p:inputText placeholder="#{msg['botones.buscar']}" value="#{dialogBusquedaDominio.filtro}" onblur="this.value = this.value.trim();"/>
 	           		<p:commandButton icon="fa fa-search" actionListener="#{dialogBusquedaDominio.filtrar()}" process="panelFiltro" update="growlDialogBusquedaDominio dataTable" />
 	           	</h:panelGrid>
 	           	<br/>
@@ -45,6 +45,7 @@
 								 scrollHeight="264" rows="10"
 								 paginator="true" paginatorPosition="bottom"
                          		 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
                          		 rowsPerPageTemplate="5,10,15,30"
 								 selectionMode="single"
 								 selection="#{dialogBusquedaDominio.valorSeleccionado}"
@@ -83,7 +84,7 @@
 		    <h:outputScript >
 
 	             var arrayCm = [];
-					
+
 				  window.onload=function(){
 	                let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 	                onVisible(contextMenu, () => eliminarResaltar());

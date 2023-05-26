@@ -33,12 +33,12 @@
 			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			  	<p:outputLabel value="#{msg['dialogFuente.headerCodigo']}" />
-			   	<p:inputText   value="#{dialogTramiteImportarFDE.data.identificador}" readonly="true" styleClass="w95" >
+			   	<p:inputText   value="#{dialogTramiteImportarFDE.data.identificador}" onblur="this.value = this.value.trim();" readonly="true" styleClass="w95" >
 			   		 <p:keyFilter regEx="/[a-z0-9_-]/i"/>
 			   	</p:inputText>
 
 				<p:outputLabel   value="#{msg['dialogFuente.headerDescripcion']}" />
-				<p:inputTextarea value="#{dialogTramiteImportarFDE.data.descripcion}" readonly="true" styleClass="w95" />
+				<p:inputTextarea value="#{dialogTramiteImportarFDE.data.descripcion}" onblur="this.value = this.value.trim();" readonly="true" styleClass="w95" />
 
 				<p:outputLabel value="#{msg['dialogFuente.headerCampos']}" />
 				<p:dataTable  id="dataTableParametros"

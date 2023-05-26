@@ -26,6 +26,7 @@ import es.caib.sistra2.commons.plugins.email.api.AnexoEmail;
 import es.caib.sistra2.commons.plugins.email.api.EmailPluginException;
 import es.caib.sistra2.commons.plugins.email.api.IEmailPlugin;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
 import es.caib.sistramit.core.api.exception.AutenticacionException;
@@ -52,6 +53,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDestino;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
+import es.caib.sistramit.core.api.model.flujo.types.TypeSoporteEstado;
 import es.caib.sistramit.core.api.model.flujo.types.TypeTramite;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
@@ -224,18 +226,31 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 				.obtenerConfiguracionEntidad(datosSesion.getDefinicionTramite().getDefinicionVersion().getIdEntidad());
 		final String area = datosSesion.getDefinicionTramite().getDefinicionVersion().getIdArea();
 
+		// Descripción tipo problema
+		final ROpcionFormularioSoporte opc = UtilsFormularioSoporte.obtenerOpcionFormularioSoporte(problemaTipo,
+				entidad);
+		final String problemaTipoDesc = UtilsSTG.obtenerLiteral(opc.getDescripcion(),
+				datosSesion.getDatosTramite().getIdioma());
+
 		// Obtiene detalle tramite
 		final DetalleTramite detalleTramite = controladorFlujo.detalleTramite(datosSesion);
 
 		// Datos form soporte
 		final DatosFormularioSoporte datosFormSoporte = new DatosFormularioSoporte();
+		datosFormSoporte.setEstado(TypeSoporteEstado.PENDIENTE);
+		datosFormSoporte.setFechaCreacion(new Date());
 		datosFormSoporte.setNif(nif);
 		datosFormSoporte.setNombre(nombre);
 		datosFormSoporte.setEmail(email);
 		datosFormSoporte.setTelefono(telefono);
 		datosFormSoporte.setProblemaTipo(problemaTipo);
+		datosFormSoporte.setProblemaTipoDesc(problemaTipoDesc);
 		datosFormSoporte.setProblemaDesc(problemaDesc);
 		datosFormSoporte.setHorarioContacto(horarioContacto);
+		if (anexo != null) {
+			datosFormSoporte.setNombreFichero(anexo.getFileName());
+			datosFormSoporte.setDatosFichero(anexo.getFileContent());
+		}
 
 		// Generamos destinatarios, asunto y mensaje
 		final List<String> destinatarios = UtilsFormularioSoporte
@@ -269,6 +284,9 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 			log.error("Error al enviar email", e);
 			throw new EmailException("Error al enviar mail", e);
 		}
+
+		// Almacenamos incidencia soporte
+		dao.registraFormularioSoporte(datosSesion.getDatosTramite().getIdSesionTramitacion(), datosFormSoporte);
 
 	}
 
@@ -424,7 +442,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		st.getDatosTramite().setTipoDestino(tipoDestino);
 		st.getDatosTramite().setTipoFlujo(tipoFlujo);
 		st.getDatosTramite()
-			.setTituloTramite(tramiteCP.getDescripcion() + " - " + tramiteCP.getProcedimiento().getDescripcion());
+				.setTituloTramite(tramiteCP.getDescripcion() + " - " + tramiteCP.getProcedimiento().getDescripcion());
 		st.getDatosTramite().setUrlInicio(pUrlInicio);
 		st.getDatosTramite().setParametrosInicio(pParametrosInicio);
 		st.getDatosTramite().setDefinicionTramiteCP(tramiteCP);

@@ -204,6 +204,9 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 
 	private String version;
 
+	/** Data. **/
+	private FormularioTramite data;
+
 	/**
 	 * Crea una nueva instancia de view definicion version.
 	 */
@@ -474,6 +477,9 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getCodigo()));
 		params.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(),
 				((OpcionArbol) this.selectedNode.getData()).getFormulario().getCodigo().toString());
+		params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(),
+				TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString());
+		params.put(Constantes.CLAVE_ES_IFRAME, "true");
 		Integer width = UtilJSF.getSessionBean().getWidth();
 		Integer height = UtilJSF.getSessionBean().getHeight() - 60;
 		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, width, height);
@@ -587,6 +593,27 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 		final Map<String, String> map = new HashMap<>();
 		map.put(TypeParametroVentana.TIPO_SCRIPT_FLUJO.toString(),
 				UtilJSON.toJSON(TypeScriptFlujo.fromString(tipoScript)));
+		map.put(TypeParametroVentana.TRAMITEVERSION.toString(), id.toString());
+		if (selectedNode != null && ((OpcionArbol) selectedNode.getData()).getTramitePaso() != null) {
+			Long codPaso = ((OpcionArbol) selectedNode.getData()).getTramitePaso().getCodigo();
+			String pasoTramitacion = ((OpcionArbol) selectedNode.getData()).getTramitePaso().getIdPasoTramitacion();
+			map.put(TypeParametroVentana.TRAMITEPASO.toString(), codPaso.toString());
+
+			switch (pasoTramitacion) {
+			case "ds":
+				String literal = "true";
+				map.put(TypeParametroVentana.LITERAL_HTML.toString(), literal);
+				break;
+			case "rf":
+				data = tramiteService.getFormulario(this.getFormularioTramiteSeleccionado().getCodigo());
+				if (TypeScriptFlujo.fromString(tipoScript) != TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO) {
+					map.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.data.getCodigo().toString());
+					map.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(),
+							this.data.getIdFormularioInterno().toString());
+				}
+				break;
+			}
+		}
 		if (idScript != null) {
 
 			final Script script = this.scriptService.getScript(idScript);
@@ -595,7 +622,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
 
 		}
-
+		map.put(Constantes.CLAVE_ES_IFRAME, "true");
 		map.put(TypeParametroVentana.MODO_ACCESO.toString(), TypeModoAcceso.CONSULTA.toString());
 		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.CONSULTA, map, true, 700);
 
@@ -660,7 +687,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), id.toString());
-		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 950, 550);
+		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 950, 470);
 	}
 
 	/**
@@ -784,6 +811,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 		params.put(TypeParametroVentana.ID.toString(), dominioSeleccionado.getCodigo().toString());
 		params.put(TypeParametroVentana.AMBITO.toString(), TypeAmbito.AREA.toString());
 		params.put("AREA", id.toString());
+		params.put(Constantes.CLAVE_ES_IFRAME, "true");
 		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 680);
 
 	}
@@ -797,63 +825,81 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 	 * Ayuda dominios empleados.
 	 */
 	public void ayudaDominio() {
-		UtilJSF.openHelp("definicionVersionDominios");
+		final Map<String, String> params = new HashMap<>();
+		params.put(Constantes.CLAVE_ES_IFRAME, "true");
+		UtilJSF.openHelp("definicionVersionDominios", params);
 	}
 
 	/**
 	 * Ayuda paso Rellenar formulario.
 	 */
 	public void ayudaRellenar() {
-		UtilJSF.openHelp("definicionVersionRellenar");
+		final Map<String, String> params = new HashMap<>();
+		params.put(Constantes.CLAVE_ES_IFRAME, "true");
+		UtilJSF.openHelp("definicionVersionRellenar", params);
 	}
 
 	/**
 	 * Ayuda paso Anexar documento.
 	 */
 	public void ayudaAnexos() {
-		UtilJSF.openHelp("definicionVersionAnexarDocumentos");
+		final Map<String, String> params = new HashMap<>();
+		params.put(Constantes.CLAVE_ES_IFRAME, "true");
+		UtilJSF.openHelp("definicionVersionAnexarDocumentos", params);
 	}
 
 	/**
 	 * Ayuda paso Pagar tasa.
 	 */
 	public void ayudaTasas() {
-		UtilJSF.openHelp("definicionVersionPagarTasas");
+		final Map<String, String> params = new HashMap<>();
+		params.put(Constantes.CLAVE_ES_IFRAME, "true");
+		UtilJSF.openHelp("definicionVersionPagarTasas", params);
 	}
 
 	/**
 	 * Ayuda.
 	 */
 	public void ayudaPropiedades() {
-		UtilJSF.openHelp("definicionVersionPropiedadesDialog");
+		final Map<String, String> params = new HashMap<>();
+		params.put(Constantes.CLAVE_ES_IFRAME, "true");
+		UtilJSF.openHelp("definicionVersionPropiedadesDialog", params);
 	}
 
 	/**
 	 * Ayuda.
 	 */
 	public void ayudaDebeSaber() {
-		UtilJSF.openHelp("definicionVersionDebeSaberDialog");
+		final Map<String, String> params = new HashMap<>();
+		params.put(Constantes.CLAVE_ES_IFRAME, "true");
+		UtilJSF.openHelp("definicionVersionDebeSaberDialog", params);
 	}
 
 	/**
 	 * Ayuda.
 	 */
 	public void ayudaFormulario() {
-		UtilJSF.openHelp("definicionVersionFormularioDialog");
+		final Map<String, String> params = new HashMap<>();
+		params.put(Constantes.CLAVE_ES_IFRAME, "true");
+		UtilJSF.openHelp("definicionVersionFormularioDialog", params);
 	}
 
 	/**
 	 * Ayuda.
 	 */
 	public void ayudaAnexo() {
-		UtilJSF.openHelp("definicionVersionAnexoDialog");
+		final Map<String, String> params = new HashMap<>();
+		params.put(Constantes.CLAVE_ES_IFRAME, "true");
+		UtilJSF.openHelp("definicionVersionAnexoDialog", params);
 	}
 
 	/**
 	 * Ayuda.
 	 */
 	public void ayudaRegistrar() {
-		UtilJSF.openHelp("definicionVersionRegistrarTramiteDialog");
+		final Map<String, String> params = new HashMap<>();
+		params.put(Constantes.CLAVE_ES_IFRAME, "true");
+		UtilJSF.openHelp("definicionVersionRegistrarTramiteDialog", params);
 	}
 
 	/**
@@ -2360,6 +2406,20 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 	 */
 	public final void setVersion(String version) {
 		this.version = version;
+	}
+
+	/**
+	 * @return the data
+	 */
+	public FormularioTramite getData() {
+		return data;
+	}
+
+	/**
+	 * @param data the data to set
+	 */
+	public void setData(FormularioTramite data) {
+		this.data = data;
 	}
 
 }

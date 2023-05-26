@@ -17,12 +17,12 @@
         <h:panelGrid rowClasses=", ui-datatable-odd" columns="2" columnClasses="w10 padding-left-18, w90 grid-left" styleClass="w100 h100" cellpadding = "5" cellspacing = "0">
 
             <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionFormulario.identificador']}" />
-            <p:inputText id="identificador" required="true" readonly="true" styleClass="w35" value="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.identificador}" />
+            <p:inputText id="identificador" onblur="this.value = this.value.trim();" required="true" readonly="true" styleClass="w35" value="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.identificador}" />
 
 
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionFormulario.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-               <p:inputText id="descripcion" required="true" readonly="true" styleClass="w85" value="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersionParams.idiomas)}" />
+               <p:inputText id="descripcion" required="true" onblur="this.value = this.value.trim();" readonly="true" styleClass="w85" value="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersionParams.idiomas)}" />
                <p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionParams.consultarTraduccion(viewDefinicionVersionParams.formularioTramiteSeleccionado.descripcion)}"	process="@this" update="growl" />
            </p:outputPanel>
 
@@ -91,10 +91,10 @@
             	  process="@this" update="growl" rendered="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.INTERNO}" />
 
 			<p:outputLabel for="gestorFormularioExterno" value="#{msg['dialogDefinicionVersionFormulario.gestorFormularioExterno']}" rendered="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.EXTERNO}" />
-			<p:inputText id="gestorFormularioExterno"  styleClass="w35" value="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.formularioGestorExterno.identificador}" readonly="true" rendered="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.EXTERNO}"/>
+			<p:inputText id="gestorFormularioExterno" onblur="this.value = this.value.trim();" styleClass="w35" value="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.formularioGestorExterno.identificador}" readonly="true" rendered="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.EXTERNO}"/>
 
             <p:outputLabel for="identificadorExt" value="#{msg['dialogDefinicionVersionFormulario.gestorFormularioExternoIDFormulario']}"  rendered="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.EXTERNO}"/>
-            <p:inputText id="identificadorExt"  styleClass="w35" value="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.idFormularioExterno}" readonly="true" rendered="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.EXTERNO}"/>
+            <p:inputText id="identificadorExt" onblur="this.value = this.value.trim();" styleClass="w35" value="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.idFormularioExterno}" readonly="true" rendered="#{viewDefinicionVersionParams.formularioTramiteSeleccionado.tipoFormulario == TypeFormularioGestor.EXTERNO}"/>
 
 
 

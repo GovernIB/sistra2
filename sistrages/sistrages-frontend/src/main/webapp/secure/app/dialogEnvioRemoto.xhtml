@@ -149,18 +149,18 @@
 
 
 					<p:outputLabel for="identificador" value="#{msg['viewDisenyoSelect.propiedades.identificador']}" />
-					<p:inputText id="identificador" value="#{dialogEnvioRemoto.data.identificador}" readonly="#{dialogEnvioRemoto.isConsulta()}" required="true" size="55" maxlength="20"  onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+					<p:inputText id="identificador" value="#{dialogEnvioRemoto.data.identificador}" readonly="#{dialogEnvioRemoto.isConsulta()}" required="true" size="55" maxlength="20"  onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 				   	</p:inputText>
 				   	<p:outputLabel value="" />
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogConfiguracionAutenticacion.headerDescripcion']}" />
-					<p:inputText id="descripcion" value="#{dialogEnvioRemoto.data.descripcion}" readonly="#{dialogEnvioRemoto.isConsulta()}" required="true" size="55" maxlength="255"/>
+					<p:inputText id="descripcion" value="#{dialogEnvioRemoto.data.descripcion}" onblur="this.value = this.value.trim();" readonly="#{dialogEnvioRemoto.isConsulta()}" required="true" size="55" maxlength="255"/>
 					<p:outputLabel value="" />
 
 					<p:outputLabel for="url" value="#{msg['dialogFormularioExterno.headerURL']}" />
-					<p:inputText id="url" value="#{dialogEnvioRemoto.data.url}" readonly="#{dialogEnvioRemoto.isConsulta()}" required="true" size="55" >
+					<p:inputText id="url" value="#{dialogEnvioRemoto.data.url}" readonly="#{dialogEnvioRemoto.isConsulta()}" onblur="this.value = this.value.trim();" required="true" size="55" >
 						<p:ajax event="keyup" process="@this"/>
 					</p:inputText>
 					<p:commandButton icon="fa fa-arrow-down" value="#{msg['dialogSeleccionVariableArea.titulo']}" disabled="#{dialogEnvioRemoto.isConsulta()}" actionListener="#{dialogEnvioRemoto.seleccionarVariableArea()}" process="@this" update="growlDialog " >
@@ -179,7 +179,7 @@
 						<p:outputLabel value="" />
 
 					<p:outputLabel for="timeout" value="#{msg['dialogDominio.headerTipo.consultaRemota.timeout']}" />
-					<p:inputText id="timeout" value="#{dialogEnvioRemoto.data.timeout}" readonly="#{dialogEnvioRemoto.isConsulta()}" size="55" maxlength="50"/>
+					<p:inputText id="timeout" value="#{dialogEnvioRemoto.data.timeout}" onblur="this.value = this.value.trim();" readonly="#{dialogEnvioRemoto.isConsulta()}" size="55" maxlength="50"/>
 					<p:outputLabel value="" />
 
 				</h:panelGrid>

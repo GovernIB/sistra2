@@ -32,7 +32,7 @@
 				<h:outputScript >
 
 					  var arrayCm = [];
-					
+
 				  window.onload=function(){
 					    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 						onVisible(contextMenu, () => eliminarResaltar());
@@ -145,16 +145,16 @@
 
 
 				 	<p:outputLabel for="codigo" value="#{msg['dialogArea.codigo']}" />
-				 	<p:inputText id="codigo" value="#{dialogArea.data.identificador}" required="true" size="40" maxlength="20" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+				 	<p:inputText id="codigo" value="#{dialogArea.data.identificador}" required="true" size="40" maxlength="20" onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
 				   		 <p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 				   		 <f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 				   	</p:inputText>
 
 				 	<p:outputLabel for="descripcion" value="#{msg['dialogArea.descripcion']}" />
-				 	<p:inputText id="descripcion" value="#{dialogArea.data.descripcion}" readonly="#{dialogArea.consulta}" required="true" size="40" maxlength="255" />
+				 	<p:inputText id="descripcion" value="#{dialogArea.data.descripcion}" onblur="this.value = this.value.trim();" readonly="#{dialogArea.consulta}" required="true" size="40" maxlength="255" />
 
 					<p:outputLabel for="email" value="#{msg['dialogArea.email']}" />
-				 	<p:inputText id="email" value="#{dialogArea.data.email}" readonly="#{dialogArea.consulta}" size="40" maxlength="255" />
+				 	<p:inputText id="email" value="#{dialogArea.data.email}" readonly="#{dialogArea.consulta}" size="40" maxlength="255" onblur="this.value = this.value.trim();"/>
 
 				 	<p:outputLabel for="aviso" value=" " />
 				 	<h:outputText id="aviso" value="#{msg['dialogArea.aviso']}" />

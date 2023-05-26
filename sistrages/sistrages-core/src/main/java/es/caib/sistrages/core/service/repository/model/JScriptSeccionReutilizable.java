@@ -54,8 +54,7 @@ public class JScriptSeccionReutilizable implements IModelApi {
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param codigo the codigo to set
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
@@ -130,7 +129,7 @@ public class JScriptSeccionReutilizable implements IModelApi {
 		final ScriptSeccionReutilizable mScript = new ScriptSeccionReutilizable();
 		mScript.setCodigo(this.getCodigo());
 		mScript.setScript(this.getScript().toModel());
-		//mScript.setSeccionReutilizable(this.getSeccionReutilizable().toModel());
+		// mScript.setSeccionReutilizable(this.getSeccionReutilizable().toModel());
 		mScript.setIdSeccionReutilizable(this.getSeccionReutilizable().getCodigo());
 		mScript.setTipoScript(TypeScriptSeccionReutilizable.fromString(this.getTipoScript()));
 		return mScript;

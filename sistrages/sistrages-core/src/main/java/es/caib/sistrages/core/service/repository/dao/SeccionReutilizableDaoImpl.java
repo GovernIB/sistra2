@@ -60,14 +60,15 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 	@Override
 	public List<SeccionReutilizable> listSeccionReutilizable(Long idEntidad, String filtro, Boolean activo) {
 		final List<SeccionReutilizable> listaSecciones = new ArrayList<>();
-		StringBuilder sql = new StringBuilder("select a.codigo, a.identificador, a.descripcion, a.release, a.bloqueado, a.bloqueadoUsuario, (select max(hist.fecha) from JHistorialSeccionReutilizable hist where hist.seccionReutilizable.codigo = a.codigo ) from JSeccionReutilizable as a");
+		StringBuilder sql = new StringBuilder(
+				"select a.codigo, a.identificador, a.descripcion, a.release, a.bloqueado, a.bloqueadoUsuario, (select max(hist.fecha) from JHistorialSeccionReutilizable hist where hist.seccionReutilizable.codigo = a.codigo ) from JSeccionReutilizable as a");
 
-		sql.append( " where a.entidad.codigo = :idEntidad ");
+		sql.append(" where a.entidad.codigo = :idEntidad ");
 		if (StringUtils.isNotBlank(filtro)) {
-			sql .append( "  AND (LOWER(a.descripcion) LIKE :filtro OR LOWER(a.identificador) LIKE :filtro) ");
+			sql.append("  AND (LOWER(a.descripcion) LIKE :filtro OR LOWER(a.identificador) LIKE :filtro) ");
 		}
 		if (activo != null) {
-			sql .append( " AND a.activa = :activo ");
+			sql.append(" AND a.activa = :activo ");
 		}
 		sql.append("  order by a.identificador, a.codigo");
 
@@ -91,7 +92,7 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 				seccion.setBloqueado((Boolean) jseccion[4]);
 				seccion.setBloqueadoUsuario((String) jseccion[5]);
 				seccion.setFecha((Date) jseccion[6]);
-				listaSecciones.add(seccion );
+				listaSecciones.add(seccion);
 			}
 		}
 		return listaSecciones;
@@ -115,7 +116,8 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 	}
 
 	@Override
-	public SeccionReutilizable addSeccion(Long idEntidad, SeccionReutilizable seccion, final Long idFormulario, final String username) {
+	public SeccionReutilizable addSeccion(Long idEntidad, SeccionReutilizable seccion, final Long idFormulario,
+			final String username) {
 		JSeccionReutilizable jseccion = JSeccionReutilizable.fromModel(seccion);
 		final JFormulario jformulario = entityManager.find(JFormulario.class, idFormulario);
 		final JEntidad jentidad = entityManager.find(JEntidad.class, idEntidad);
@@ -144,13 +146,11 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 		query.setParameter("idSeccionReutilizable", id);
 		query.executeUpdate();
 
-
 		// Borramos los scripts
 		final String sqlScripts = "delete From JScriptSeccionReutilizable t where t.seccionReutilizable.id = :idSeccionReutilizable";
 		final Query queryScripts = entityManager.createQuery(sqlScripts);
 		queryScripts.setParameter("idSeccionReutilizable", id);
 		queryScripts.executeUpdate();
-
 
 		final JSeccionReutilizable jSeccion = entityManager.find(JSeccionReutilizable.class, id);
 		if (jSeccion == null) {
@@ -172,20 +172,21 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 		updateScriptsSeccionReutilizable(scripts, jseccion);
 	}
 
-
 	private void updateScriptsSeccionReutilizable(List<ScriptSeccionReutilizable> scripts,
 			JSeccionReutilizable jseccion) {
-		//Primero hay que borrar las que se han borrado o no se utilizan
-		StringBuilder sql = new StringBuilder("select a from JScriptSeccionReutilizable as a where a.seccionReutilizable.codigo = :idSeccion ");
+		// Primero hay que borrar las que se han borrado o no se utilizan
+		StringBuilder sql = new StringBuilder(
+				"select a from JScriptSeccionReutilizable as a where a.seccionReutilizable.codigo = :idSeccion ");
 		final Query query = entityManager.createQuery(sql.toString());
 		query.setParameter("idSeccion", jseccion.getCodigo());
 		List<JScriptSeccionReutilizable> jscripts = query.getResultList();
 		List<JScriptSeccionReutilizable> jscriptsBorrar = new ArrayList<>();
 		if (jscripts != null) {
-			for(JScriptSeccionReutilizable jscript : jscripts) {
-				for(ScriptSeccionReutilizable script : scripts) {
+			for (JScriptSeccionReutilizable jscript : jscripts) {
+				for (ScriptSeccionReutilizable script : scripts) {
 					if (script.getTipoScript().toString().equalsIgnoreCase(jscript.getTipoScript())) {
-						if ( (script.getScript() == null) || (script.getScript() != null && script.getScript().estaVacio())) {
+						if ((script.getScript() == null)
+								|| (script.getScript() != null && script.getScript().estaVacio())) {
 							jscriptsBorrar.add(jscript);
 						}
 						break;
@@ -194,15 +195,15 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 			}
 		}
 
-		//Borramos los jscripts
-		for(JScriptSeccionReutilizable jscriptBorrar : jscriptsBorrar) {
+		// Borramos los jscripts
+		for (JScriptSeccionReutilizable jscriptBorrar : jscriptsBorrar) {
 			entityManager.remove(jscriptBorrar);
 			entityManager.flush();
 		}
 
 		if (scripts != null) {
-			for(ScriptSeccionReutilizable script : scripts) {
-				//Solo guardar si está relleno
+			for (ScriptSeccionReutilizable script : scripts) {
+				// Solo guardar si está relleno
 				if (script.getScript() != null && !script.getScript().estaVacio()) {
 					JScriptSeccionReutilizable jscript = JScriptSeccionReutilizable.fromModel(script);
 					jscript.setSeccionReutilizable(jseccion);
@@ -269,9 +270,9 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 		final List<HistorialSeccionReutilizable> listaHistorial = new ArrayList<>();
 		StringBuilder sql = new StringBuilder("select a from JHistorialSeccionReutilizable as a");
 
-		sql.append( " where a.seccionReutilizable.codigo = :idSeccion ");
+		sql.append(" where a.seccionReutilizable.codigo = :idSeccion ");
 		if (StringUtils.isNotBlank(filtro)) {
-			sql .append( "  AND (LOWER(a.descripcion) LIKE :filtro OR LOWER(a.identificador) LIKE :filtro) ");
+			sql.append("  AND (LOWER(a.descripcion) LIKE :filtro OR LOWER(a.identificador) LIKE :filtro) ");
 		}
 
 		sql.append("  order by a.codigo");
@@ -310,7 +311,8 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 	}
 
 	@Override
-	public void actualizarFechaSeccion(final Long id, final String username, final String literal, final TypeAccionHistorial accion) {
+	public void actualizarFechaSeccion(final Long id, final String username, final String literal,
+			final TypeAccionHistorial accion) {
 		if (id == null) {
 			throw new FaltanDatosException(this.LITERAL_FALTAIDENTIFICADOR);
 		}
@@ -331,7 +333,6 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 		entityManager.persist(historial);
 	}
 
-
 	@Override
 	public void borradoHistorial(final Long idSeccionReutilizable, final String username) {
 
@@ -342,7 +343,8 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 		query.executeUpdate();
 
 		// Ponemos la release a 1
-		final JSeccionReutilizable jseccionTramite = entityManager.find(JSeccionReutilizable.class, idSeccionReutilizable);
+		final JSeccionReutilizable jseccionTramite = entityManager.find(JSeccionReutilizable.class,
+				idSeccionReutilizable);
 		jseccionTramite.setRelease(1);
 		entityManager.persist(jseccionTramite);
 
@@ -358,8 +360,8 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 	 * lang.Long, es.caib.sistrages.core.api.model.Tramite)
 	 */
 	@Override
-	public void anyadirHistorial(final Long idSeccionReutilizable, final String username, final TypeAccionHistorial accion,
-			final String detalleCambio) {
+	public void anyadirHistorial(final Long idSeccionReutilizable, final String username,
+			final TypeAccionHistorial accion, final String detalleCambio) {
 		if (idSeccionReutilizable == null) {
 			throw new FaltanDatosException(LITERAL_FALTAIDENTIFICADOR);
 		}
@@ -384,12 +386,11 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 	public boolean existeIdentificador(Long idEntidad, String identificador) {
 
 		StringBuilder sql = new StringBuilder("select count(a) from JSeccionReutilizable as a");
-		sql.append( " where a.entidad.codigo = :idEntidad AND LOWER(a.identificador) LIKE :identificador escape '@' ");
-
+		sql.append(" where a.entidad.codigo = :idEntidad AND LOWER(a.identificador) LIKE :identificador escape '@' ");
 
 		final Query query = entityManager.createQuery(sql.toString());
 		query.setParameter("idEntidad", idEntidad);
-		query.setParameter("identificador", identificador.toLowerCase().replaceAll("_", "@_" ));
+		query.setParameter("identificador", identificador.toLowerCase().replaceAll("_", "@_"));
 
 		final Long total = (Long) query.getSingleResult();
 		return total > 0l;
@@ -399,7 +400,8 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 	public SeccionReutilizable getSeccionReutilizableByIdentificador(TypeAmbito ambito, String identificador,
 			Long idEntidad, Long idArea) {
 
-		final StringBuilder sql = new StringBuilder("select d from JSeccionReutilizable d where d.entidad.codigo = :idEntidad and d.identificador like :identificador");
+		final StringBuilder sql = new StringBuilder(
+				"select d from JSeccionReutilizable d where d.entidad.codigo = :idEntidad and d.identificador like :identificador");
 		final Query query = entityManager.createQuery(sql.toString());
 		query.setParameter("identificador", identificador);
 		query.setParameter("idEntidad", idEntidad);
@@ -423,8 +425,8 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 			seccionAlmacenar.setCodigo(null);
 			final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
 			seccionAlmacenar.setEntidad(jEntidad);
-			JFormulario formularioAsociado =  entityManager.find(JFormulario.class, idFormularioAsociado);
-			seccionAlmacenar.setFormularioAsociado(formularioAsociado );
+			JFormulario formularioAsociado = entityManager.find(JFormulario.class, idFormularioAsociado);
+			seccionAlmacenar.setFormularioAsociado(formularioAsociado);
 			entityManager.persist(seccionAlmacenar);
 			entityManager.flush();
 
@@ -436,7 +438,8 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 
 		} else if (filaSeccion.getAccion() == TypeImportarAccion.REEMPLAZAR) {
 
-			JSeccionReutilizable seccionAlmacenar = entityManager.find(JSeccionReutilizable.class, filaSeccion.getSeccionActual().getCodigo());
+			JSeccionReutilizable seccionAlmacenar = entityManager.find(JSeccionReutilizable.class,
+					filaSeccion.getSeccionActual().getCodigo());
 			seccionAlmacenar.setBloqueado(false);
 			seccionAlmacenar.setBloqueadoUsuario("");
 			seccionAlmacenar.setDescripcion(filaSeccion.getSeccion().getDescripcion());
@@ -445,16 +448,17 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 			entityManager.merge(seccionAlmacenar);
 			entityManager.flush();
 
-			//Borramos todos los scripts que tenga
+			// Borramos todos los scripts que tenga
 			final List<ScriptSeccionReutilizable> listaSecciones = new ArrayList<>();
-			StringBuilder sql = new StringBuilder("select a from JScriptSeccionReutilizable as a where a.seccionReutilizable.codigo = :idSeccionReutilizable order by a.codigo");
+			StringBuilder sql = new StringBuilder(
+					"select a from JScriptSeccionReutilizable as a where a.seccionReutilizable.codigo = :idSeccionReutilizable order by a.codigo");
 
 			final Query query = entityManager.createQuery(sql.toString());
 			query.setParameter("idSeccionReutilizable", seccionAlmacenar.getCodigo());
 
 			final List<JScriptSeccionReutilizable> results = query.getResultList();
 			if (results != null && !results.isEmpty()) {
-				for(JScriptSeccionReutilizable jscript : results) {
+				for (JScriptSeccionReutilizable jscript : results) {
 					entityManager.remove(jscript);
 				}
 			}
@@ -469,14 +473,13 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 		}
 	}
 
-	private void importarSeccionesScripts(JSeccionReutilizable jseccion,
-			List<ScriptSeccionReutilizable> scripts) {
-		for(ScriptSeccionReutilizable script : scripts) {
+	private void importarSeccionesScripts(JSeccionReutilizable jseccion, List<ScriptSeccionReutilizable> scripts) {
+		for (ScriptSeccionReutilizable script : scripts) {
 			JScriptSeccionReutilizable jscript = JScriptSeccionReutilizable.fromModel(script);
 			jscript.setSeccionReutilizable(jseccion);
 			jscript.setCodigo(null);
 			jscript.getScript().setCodigo(null);
-			entityManager.persist(jscript);
+			entityManager.merge(jscript);
 			entityManager.flush();
 		}
 	}
@@ -484,7 +487,8 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 	@Override
 	public List<ScriptSeccionReutilizable> getScriptsByIdSeccionReutilizable(Long idSeccionReutilizable) {
 		final List<ScriptSeccionReutilizable> listaSecciones = new ArrayList<>();
-		StringBuilder sql = new StringBuilder("select a from JScriptSeccionReutilizable as a where a.seccionReutilizable.codigo = :idSeccionReutilizable order by a.codigo");
+		StringBuilder sql = new StringBuilder(
+				"select a from JScriptSeccionReutilizable as a where a.seccionReutilizable.codigo = :idSeccionReutilizable order by a.codigo");
 
 		final Query query = entityManager.createQuery(sql.toString());
 		query.setParameter("idSeccionReutilizable", idSeccionReutilizable);
@@ -514,20 +518,20 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 	public List<Dominio> getDominiosByIdentificadorSeccion(String identificadorSeccion) {
 		List<Dominio> dominios = new ArrayList<>();
 		JFormulario formularioAsociado = getJFormularioByIdentificadorSeccion(identificadorSeccion);
-		//Recorremos los elementos de un formulario asociado a una seccion reutilizable
+		// Recorremos los elementos de un formulario asociado a una seccion reutilizable
 		if (formularioAsociado != null && formularioAsociado.getPaginas() != null) {
-			for( JPaginaFormulario pagina : formularioAsociado.getPaginas()) {
+			for (JPaginaFormulario pagina : formularioAsociado.getPaginas()) {
 				if (pagina.getLineasFormulario() != null) {
-					for(JLineaFormulario linea : pagina.getLineasFormulario()) {
+					for (JLineaFormulario linea : pagina.getLineasFormulario()) {
 						if (linea.getElementoFormulario() != null) {
-							for(JElementoFormulario elemento : linea.getElementoFormulario()) {
+							for (JElementoFormulario elemento : linea.getElementoFormulario()) {
 
-								//Obtenemos los posibles dominios del elemento
+								// Obtenemos los posibles dominios del elemento
 								List<Dominio> dominiosElemento = getDominiosByElemento(elemento);
 
-								//Miramos de asignar dominio si no lo tenemos asignado
+								// Miramos de asignar dominio si no lo tenemos asignado
 								if (dominiosElemento != null && !dominiosElemento.isEmpty()) {
-									for(Dominio dominioElemento : dominiosElemento) {
+									for (Dominio dominioElemento : dominiosElemento) {
 										if (!dominios.contains(dominioElemento)) {
 											dominios.add(dominioElemento);
 										}
@@ -549,53 +553,64 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 		if (tipo != null) {
 
 			switch (tipo) {
-				case SELECTOR:
-					if (elemento != null && elemento.getCampoFormulario() != null && elemento.getCampoFormulario().getCampoFormularioIndexado() != null && elemento.getCampoFormulario().getCampoFormularioIndexado().getDominio() != null) {
-						final JDominio jdom = elemento.getCampoFormulario().getCampoFormularioIndexado().getDominio();
-						idDominios.add(jdom.toModel());
-					}
+			case SELECTOR:
+				if (elemento != null && elemento.getCampoFormulario() != null
+						&& elemento.getCampoFormulario().getCampoFormularioIndexado() != null
+						&& elemento.getCampoFormulario().getCampoFormularioIndexado().getDominio() != null) {
+					final JDominio jdom = elemento.getCampoFormulario().getCampoFormularioIndexado().getDominio();
+					idDominios.add(jdom.toModel());
+				}
 
-					if (elemento.getCampoFormulario().getCampoFormularioIndexado().getScriptValoresPosibles() != null) {
-						List<Dominio> dominiosScript = getDominiosByScript(elemento.getCampoFormulario().getCampoFormularioIndexado().getScriptValoresPosibles().getScript());
-						for(Dominio dominio : dominiosScript) {
-								if (!idDominios.contains(dominio)) {
-									idDominios.add(dominio);
-								}
+				if (elemento.getCampoFormulario().getCampoFormularioIndexado().getScriptValoresPosibles() != null) {
+					List<Dominio> dominiosScript = getDominiosByScript(elemento.getCampoFormulario()
+							.getCampoFormularioIndexado().getScriptValoresPosibles().getScript());
+					for (Dominio dominio : dominiosScript) {
+						if (!idDominios.contains(dominio)) {
+							idDominios.add(dominio);
 						}
 					}
+				}
 
-					break;
-				case CAMPO_OCULTO:
-				case CAMPO_TEXTO:
-				default:
-					break;
+				break;
+			case CAMPO_OCULTO:
+			case CAMPO_TEXTO:
+			default:
+				break;
 			}
 		}
 		if (elemento != null && elemento.getCampoFormulario() != null) {
-			if (elemento.getCampoFormulario().getScriptAutocalculado() != null && elemento.getCampoFormulario().getScriptAutocalculado().getScript() != null && ! elemento.getCampoFormulario().getScriptAutocalculado().getScript() .isEmpty()) {
-				List<Dominio> dominiosScript = getDominiosByScript(elemento.getCampoFormulario().getScriptAutocalculado().getScript());
-				for(Dominio dominio : dominiosScript) {
-						if (!idDominios.contains(dominio)) {
-							idDominios.add(dominio);
-						}
+			if (elemento.getCampoFormulario().getScriptAutocalculado() != null
+					&& elemento.getCampoFormulario().getScriptAutocalculado().getScript() != null
+					&& !elemento.getCampoFormulario().getScriptAutocalculado().getScript().isEmpty()) {
+				List<Dominio> dominiosScript = getDominiosByScript(
+						elemento.getCampoFormulario().getScriptAutocalculado().getScript());
+				for (Dominio dominio : dominiosScript) {
+					if (!idDominios.contains(dominio)) {
+						idDominios.add(dominio);
+					}
 				}
 			}
 
-			if (elemento.getCampoFormulario().getScriptSoloLectura() != null && elemento.getCampoFormulario().getScriptSoloLectura().getScript() != null && ! elemento.getCampoFormulario().getScriptSoloLectura().getScript() .isEmpty()) {
-				List<Dominio> dominiosScript = getDominiosByScript(elemento.getCampoFormulario().getScriptSoloLectura().getScript());
-				for(Dominio dominio : dominiosScript) {
-						if (!idDominios.contains(dominio)) {
-							idDominios.add(dominio);
-						}
+			if (elemento.getCampoFormulario().getScriptSoloLectura() != null
+					&& elemento.getCampoFormulario().getScriptSoloLectura().getScript() != null
+					&& !elemento.getCampoFormulario().getScriptSoloLectura().getScript().isEmpty()) {
+				List<Dominio> dominiosScript = getDominiosByScript(
+						elemento.getCampoFormulario().getScriptSoloLectura().getScript());
+				for (Dominio dominio : dominiosScript) {
+					if (!idDominios.contains(dominio)) {
+						idDominios.add(dominio);
+					}
 				}
 			}
 
-
-			if (elemento.getCampoFormulario().getScriptValidaciones() != null && elemento.getCampoFormulario().getScriptValidaciones().getScript() != null && ! elemento.getCampoFormulario().getScriptValidaciones().getScript() .isEmpty()) {
-				List<Dominio> dominiosScript = getDominiosByScript(elemento.getCampoFormulario().getScriptValidaciones().getScript());
-				for(Dominio dominio : dominiosScript) {
-						if (!idDominios.contains(dominio)) {
-							idDominios.add(dominio);
+			if (elemento.getCampoFormulario().getScriptValidaciones() != null
+					&& elemento.getCampoFormulario().getScriptValidaciones().getScript() != null
+					&& !elemento.getCampoFormulario().getScriptValidaciones().getScript().isEmpty()) {
+				List<Dominio> dominiosScript = getDominiosByScript(
+						elemento.getCampoFormulario().getScriptValidaciones().getScript());
+				for (Dominio dominio : dominiosScript) {
+					if (!idDominios.contains(dominio)) {
+						idDominios.add(dominio);
 					}
 				}
 			}
@@ -603,13 +618,11 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 		return idDominios;
 	}
 
-
-
 	private List<Dominio> getDominiosByScript(String script) {
 		List<Dominio> dominios = new ArrayList<>();
 		if (script != null && !script.isEmpty()) {
 			List<String> idDominios = validadorComponent.buscarInvocacionesDominios(script);
-			for(String idenDominio : idDominios) {
+			for (String idenDominio : idDominios) {
 				ValorIdentificadorCompuesto valor = new ValorIdentificadorCompuesto(idenDominio);
 				Dominio dom = getDominioByIdentificador(valor.getIdentificador(), valor.getAmbito(),
 						valor.getIdentificadorEntidad(), valor.getIdentificadorArea());
@@ -653,7 +666,8 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 	}
 
 	private JFormulario getJFormularioByIdentificadorSeccion(String identificadorSeccion) {
-		StringBuilder sql = new StringBuilder("select a.formularioAsociado from JSeccionReutilizable as a where a.identificador like :identificadorSeccion order by a.codigo");
+		StringBuilder sql = new StringBuilder(
+				"select a.formularioAsociado from JSeccionReutilizable as a where a.identificador like :identificadorSeccion order by a.codigo");
 		Query query = entityManager.createQuery(sql.toString());
 		query.setParameter("identificadorSeccion", identificadorSeccion);
 		List<JFormulario> jformularios = query.getResultList();

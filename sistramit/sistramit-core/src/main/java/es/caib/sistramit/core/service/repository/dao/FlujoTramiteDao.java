@@ -3,8 +3,10 @@ package es.caib.sistramit.core.service.repository.dao;
 import java.util.Date;
 import java.util.List;
 
+import es.caib.sistramit.core.api.model.flujo.TramiteIniciado;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
+import es.caib.sistramit.core.service.model.flujo.DatosFormularioSoporte;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
 import es.caib.sistramit.core.service.model.flujo.EstadoPersistenciaPasoTramite;
 
@@ -149,5 +151,26 @@ public interface FlujoTramiteDao {
 	 */
 	Long contadorLimiteTramitacion(final String idTramite, final int version, int limiteIntervalo,
 			final Date finIntervalo);
+
+	/**
+	 * Registra formulario soporte.
+	 *
+	 * @param idSesionTramitacion
+	 *                                   Id sesión tramitación
+	 * @param datosFormularioSoporte
+	 *                                   Datos formulario soporte
+	 */
+	void registraFormularioSoporte(final String idSesionTramitacion, DatosFormularioSoporte datosFormularioSoporte);
+
+	/**
+	 * Obtiene tramitaciones iniciadas del usuario.
+	 * @param nif nif
+	 * @param tramite Trámite
+	 * @param version Versión
+	 * @param idTramiteCatalogo Id Trámite Catálogo
+	 * @param servicioCatalogo Indica si es servicio
+	 * @return Lista tramitaciones iniciadas
+	 */
+	List<TramiteIniciado> obtenerTramitacionesIniciadas(String nif, String tramite, int version, String idTramiteCatalogo, boolean servicioCatalogo);
 
 }

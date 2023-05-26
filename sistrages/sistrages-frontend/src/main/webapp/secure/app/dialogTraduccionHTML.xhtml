@@ -211,16 +211,16 @@
         				</div>
 
         				<div style="margin:10px" rendered="#{dialogTraduccionHTML.visibleCa}" >
-							<p:inputTextarea id="traduccion_ca" value="#{dialogTraduccionHTML.textoCa}" readonly="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false" maxlength="4000" style="height:600px"  />
+							<p:inputTextarea onblur="this.value = this.value.trim();" id="traduccion_ca" value="#{dialogTraduccionHTML.textoCa}" readonly="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false" maxlength="4000" style="height:600px"  />
 						</div>
 						<div style="margin:10px" rendered="#{dialogTraduccionHTML.visibleEs}" >
-							<p:inputTextarea id="traduccion_es" value="#{dialogTraduccionHTML.textoEs}" readonly="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false"  maxlength="4000" style="height:600px"  />
+							<p:inputTextarea onblur="this.value = this.value.trim();" id="traduccion_es" value="#{dialogTraduccionHTML.textoEs}" readonly="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false"  maxlength="4000" style="height:600px"  />
 						</div>
 						<div style="margin:10px" rendered="#{dialogTraduccionHTML.visibleEn}" >
-							<p:inputTextarea id="traduccion_en" value="#{dialogTraduccionHTML.textoEn}" readonly="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false"  maxlength="4000" style="height:600px"  />
+							<p:inputTextarea onblur="this.value = this.value.trim();" id="traduccion_en" value="#{dialogTraduccionHTML.textoEn}" readonly="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false"  maxlength="4000" style="height:600px"  />
 						</div>
 						<div style="margin:10px" rendered="#{dialogTraduccionHTML.visibleDe}" >
-							<p:inputTextarea id="traduccion_de" value="#{dialogTraduccionHTML.textoDe}" readonly="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false"  maxlength="4000" style="height:600px" />
+							<p:inputTextarea onblur="this.value = this.value.trim();" id="traduccion_de" value="#{dialogTraduccionHTML.textoDe}" readonly="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false"  maxlength="4000" style="height:600px" />
 						</div>
 
 		  	 <p:outputPanel styleClass="botonera">

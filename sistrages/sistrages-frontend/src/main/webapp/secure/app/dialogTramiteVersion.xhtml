@@ -35,7 +35,7 @@
 			<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -157,7 +157,7 @@
                 	<p:inputNumber id="version" value="#{dialogTramiteVersion.dataVersion.numeroVersion}" decimalPlaces="0" readonly="#{!dialogTramiteVersion.alta}" required="true" size="35" maxValue="99" minValue="0" />
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogTramiteVersion.descripcion']}" />
-                	<p:inputText id="descripcion" value="#{dialogTramiteVersion.dataVersion.descripcion}"   readonly="#{!dialogTramiteVersion.alta}" size="35" maxlength="255"  />
+                	<p:inputText id="descripcion" value="#{dialogTramiteVersion.dataVersion.descripcion}" onblur="this.value = this.value.trim();" readonly="#{!dialogTramiteVersion.alta}" size="35" maxlength="255"  />
 
 					<p:outputLabel for="tipo" value="#{msg['dialogTramiteVersion.tipo']}" />
 				 	<p:selectOneMenu id="tipo" value="#{dialogTramiteVersion.dataVersion.tipoFlujo}" style="width:255px" required="true">

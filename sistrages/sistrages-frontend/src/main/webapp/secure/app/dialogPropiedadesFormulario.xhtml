@@ -18,7 +18,7 @@
     }
 
     body{
-    	height:89vh;
+    	height:90vh;
     	overflow: hidden !important;
     }
 
@@ -56,29 +56,24 @@
         <p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
         <h:panelGrid rowClasses=",ui-datatable-odd" columnClasses="w25 padding-left-18,w75" styleClass="w100" columns="2" cellpadding="5">
-          <p:outputLabel for="permitirAccionesPersonalizadas" value="#{msg['dialogPropiedadesFormulario.permitirAccionesPersonalizadas']}" rendered="false"/>
-           <p:selectBooleanCheckbox id="permitirAccionesPersonalizadas" value="#{dialogPropiedadesFormulario.data.permitirAccionesPersonalizadas}" disabled="#{dialogPropiedadesFormulario.consulta}"  rendered="false"/>
 
-          <p:outputLabel for="cabeceraFormulario" value="#{msg['dialogPropiedadesFormulario.cabeceraFormulario']}" />
+          <p:outputLabel for="textoCabecera" value="#{msg['dialogPropiedadesFormulario.cabeceraFormulario']}" />
           <p:outputPanel>
-             <p:selectBooleanCheckbox id="cabeceraFormulario" value="#{dialogPropiedadesFormulario.data.mostrarCabecera}" styleClass="margin-right-10" disabled="#{dialogPropiedadesFormulario.consulta}">
-               <p:ajax update="@form" event="change"/>
-             </p:selectBooleanCheckbox>
 
             <p:outputLabel for="textoCabeceraHidden" value="#{msg['dialogPropiedadesFormulario.textoCabecera']}" styleClass="no-display"/>
-            <p:inputText id="textoCabecera" value="#{dialogPropiedadesFormulario.literal}" readonly="true" required="true" size="80" styleClass="margin-right-10 #{not textoCabeceraComponent.valid ? 'ui-state-error' : ''}"/>
-            <p:inputText id="textoCabeceraHidden" value="#{dialogPropiedadesFormulario.literal}" type="hidden" required="#{dialogPropiedadesFormulario.data.mostrarCabecera}" binding="#{textoCabeceraComponent}"/>
-            <p:commandButton id="btnNombre" icon="fa fa-language" actionListener="#{dialogPropiedadesFormulario.editarTextoCabecera}" process="@this" update="growlDialog" styleClass="va-top" disabled="#{!dialogPropiedadesFormulario.data.mostrarCabecera}" >
-                    <p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogo}" update="growlDialog textoCabecera textoCabeceraHidden" />
-                </p:commandButton>
+            <p:inputText id="textoCabecera" onblur="this.value = this.value.trim();" value="#{dialogPropiedadesFormulario.literal}" readonly="true" required="true" size="88" styleClass="margin-right-10 #{not textoCabeceraComponent.valid ? 'ui-state-error' : ''}"/>
+            <p:inputText id="textoCabeceraHidden" onblur="this.value = this.value.trim();" value="#{dialogPropiedadesFormulario.literal}" type="hidden" required="#{dialogPropiedadesFormulario.data.mostrarCabecera}" binding="#{textoCabeceraComponent}"/>
+			<p:commandButton id="btnNombre" icon="fa fa-language" actionListener="#{dialogPropiedadesFormulario.editarTextoCabecera}" process="@this" update="growlDialog" styleClass="va-top" disabled="#{!dialogPropiedadesFormulario.data.mostrarCabecera}" >
+                <p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogo}" update="growlDialog textoCabecera textoCabeceraHidden" />
+            </p:commandButton>
           </p:outputPanel>
 
           <p:outputLabel value="#{msg['dialogPropiedadesFormulario.admPagina']}"/>
           <h:panelGrid columns="3" columnClasses="w30, w30, w60 va-top">
             <p:dataTable  id="dataTablePaginas" var="td" value="#{dialogPropiedadesFormulario.data.paginas}"
                       rows="0" emptyMessage="#{msg['error.emptyRows']}"
-                      scrollable="true" scrollHeight="98%"
-                                  paginator="false" style="height:162px;width:620px"
+                      scrollable="true"
+                                  paginator="false" style="height:162px; width:620px"
                                   selectionMode="single" selection="#{dialogPropiedadesFormulario.paginaSeleccionada}" rowKey="#{td.orden}">
 
               <!-- Necesario para actualizar en controlador la fila seleccionada -->

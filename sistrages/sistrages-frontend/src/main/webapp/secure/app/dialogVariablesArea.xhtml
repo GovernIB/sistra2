@@ -32,7 +32,7 @@
 			<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -143,7 +143,7 @@
 
 
 					<p:outputLabel for="identificador" value="#{msg['viewEntidades.headerIdentificador']}" />
-					<p:inputText id="identificador" value="#{dialogVariablesArea.data.identificador}" readonly="#{dialogVariablesArea.isConsulta()}" required="true" size="55" maxlength="20"  onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+					<p:inputText id="identificador" value="#{dialogVariablesArea.data.identificador}" readonly="#{dialogVariablesArea.isConsulta()}" required="true" size="55" maxlength="20"  onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 						<p:ajax event="keyup" process="@this" update="@form:botonera" />
@@ -151,12 +151,12 @@
 				   	<p:outputLabel value="" />
 
 					<p:outputLabel for="descripcion" value="#{msg['viewDominios.headerDescripcion']}" />
-					<p:inputText id="descripcion" value="#{dialogVariablesArea.data.descripcion}" readonly="#{dialogVariablesArea.isConsulta()}" required="true" size="55" maxlength="256">
+					<p:inputText id="descripcion" onblur="this.value = this.value.trim();" value="#{dialogVariablesArea.data.descripcion}" readonly="#{dialogVariablesArea.isConsulta()}" required="true" size="55" maxlength="256">
 					</p:inputText>
 					<p:outputLabel value="" />
 
 					<p:outputLabel for="url" value="#{msg['dialogDominio.headerTipo.consultaRemota.url']}" />
-					<p:inputText id="url" value="#{dialogVariablesArea.data.url}" readonly="#{dialogVariablesArea.isConsulta()}" required="true" size="55" maxlength="512">
+					<p:inputText id="url" value="#{dialogVariablesArea.data.url}" onblur="this.value = this.value.trim();" readonly="#{dialogVariablesArea.isConsulta()}" required="true" size="55" maxlength="512">
 					</p:inputText>
 					<p:outputLabel value="" />
 

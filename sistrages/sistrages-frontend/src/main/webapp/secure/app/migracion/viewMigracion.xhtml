@@ -17,7 +17,7 @@
 			<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -156,7 +156,7 @@
 							<p:ajax event="change" listener="#{viewMigracion.setDisabled(false)}" process="@this" update="btnMigrar"/>
 						</p:selectOneMenu>
 						<p:outputLabel value="#{msg['viewMigracion.version']}:" styleClass="va-middle margin-right-3" for="vesion"/>
-						<p:inputText id="vesion" required="true" styleClass="wpx75 va-middle" value="#{viewMigracion.version}" maxlength="4">
+						<p:inputText id="vesion" required="true" styleClass="wpx75 va-middle" value="#{viewMigracion.version}" maxlength="4" onblur="this.value = this.value.trim();">
 							<p:keyFilter regEx="/^[0-9]{1,4}$/" preventPaste="true"/>
 							<f:validateRegex pattern="^[0-9]{1,4}$" />
 							<p:ajax event="change" listener="#{viewMigracion.setDisabled(false)}" process="@this" update="btnMigrar"/>
@@ -204,7 +204,7 @@
             	<p:ajax event="error" listener="#{viewMigracion.copiadoErr}" update="@this growl"/>
         	</pe:clipboard>
 
-		    <p:inputText id="auxCopiar" value="#{viewMigracion.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+		    <p:inputText id="auxCopiar" onblur="this.value = this.value.trim();" value="#{viewMigracion.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 		<h:outputScript>
 		$("#comboTramitesSistra_filter").on('paste.ui-selectonemenu', function() {
 		setTimeout(function(){

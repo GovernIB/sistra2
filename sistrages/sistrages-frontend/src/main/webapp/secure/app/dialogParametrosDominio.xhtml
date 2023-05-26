@@ -46,7 +46,7 @@
 						<p:outputLabel for="valor" value="#{msg['dialogParametrosDominioCIN.valor']}"  />
 					</h:column>
 					<h:column rendered="#{dialogParametrosDominio.data.tipo != TypeParametroDominio.BUSQUEDA}">
-				 		<p:inputText id="valor" value="#{dialogParametrosDominio.data.valor}" readonly="#{dialogParametrosDominio.isConsulta()}" required="#{dialogParametrosDominio.data.tipo != TypeParametroDominio.SESION and dialogParametrosDominio.data.tipo != TypeParametroDominio.BUSQUEDA}" maxlength="100" size="30" rendered="#{dialogParametrosDominio.data.tipo != TypeParametroDominio.SESION and dialogParametrosDominio.data.tipo != TypeParametroDominio.BUSQUEDA}" styleClass="w90" />
+				 		<p:inputText id="valor" onblur="this.value = this.value.trim();" value="#{dialogParametrosDominio.data.valor}" readonly="#{dialogParametrosDominio.isConsulta()}" required="#{dialogParametrosDominio.data.tipo != TypeParametroDominio.SESION and dialogParametrosDominio.data.tipo != TypeParametroDominio.BUSQUEDA}" maxlength="100" size="30" rendered="#{dialogParametrosDominio.data.tipo != TypeParametroDominio.SESION and dialogParametrosDominio.data.tipo != TypeParametroDominio.BUSQUEDA}" styleClass="w90" />
 				 		<p:selectOneMenu id="valorSesion" value="#{dialogParametrosDominio.data.valor}" rendered="#{dialogParametrosDominio.data.tipo == TypeParametroDominio.SESION}" styleClass="w90">
 						    <f:selectItems value="#{TypeParametroSesion.ALL_VALUES}" var="tipoParametroSesion" itemLabel="#{msg['typeSesion.' += tipoParametroSesion]}" itemValue="#{tipoParametroSesion.toString()}" />
 						</p:selectOneMenu>
@@ -77,7 +77,7 @@
 
 
                 var arrayCm = [];
-					
+
 				  window.onload=function(){
                     let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
                     onVisible(contextMenu, () => eliminarResaltar());

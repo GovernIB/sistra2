@@ -35,7 +35,7 @@
 			<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -145,7 +145,7 @@
 			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionTasa.identificador']}" />
-	          	<p:inputText id="identificador" value="#{dialogDefinicionVersionTasa.data.identificador}" required="true" styleClass="w35" onblur="this.value = this.value.toUpperCase();" maxlength="20" validatorMessage="#{msg['error.validacion.identificador']}">
+	          	<p:inputText id="identificador" value="#{dialogDefinicionVersionTasa.data.identificador}" required="true" styleClass="w35" onblur="this.value = this.value.toUpperCase().trim();" maxlength="20" validatorMessage="#{msg['error.validacion.identificador']}">
 					<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 					<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 					<p:ajax event="change" listener="#{dialogDefinicionVersionTasa.setCambios}" process="@this" update="@this"/>
@@ -153,7 +153,7 @@
 
 	            <p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionTasa.descripcion']}" />
 	            <p:outputPanel styleClass="ui-inputgroup">
-	           		<p:inputText id="descripcion" value="#{dialogDefinicionVersionTasa.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionTasa.idiomas)}" required="true" readonly="true" styleClass="w85"/>
+	           		<p:inputText id="descripcion" value="#{dialogDefinicionVersionTasa.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionTasa.idiomas)}" required="true" onblur="this.value = this.value.trim();" readonly="true" styleClass="w85"/>
 	           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionTasa.editarDescripcion()}"
 							process="@this" update="growl">
 								<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionTasa.returnDialogoDescripcion}" update="growl descripcion" />

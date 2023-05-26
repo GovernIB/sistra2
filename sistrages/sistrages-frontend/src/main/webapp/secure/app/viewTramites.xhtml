@@ -612,7 +612,7 @@
         <p:toolbar id="toolbarTramites" onchange="opcTramites();">
           <f:facet name="left">
                     <p:remoteCommand name="search" actionListener="#{viewTramites.filtrar}" update="growl @form" />
-                    <p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewTramites.filtro}" styleClass="margin-right-10" onkeypress="if (event.keyCode == 13) { triggerSearch(); return false; }"/>
+                    <p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewTramites.filtro}" styleClass="margin-right-10" onblur="this.value = this.value.trim();" onkeypress="if (event.keyCode == 13) { triggerSearch(); return false; }"/>
                        <p:commandButton id="btnSearch" icon="fa fa-search" actionListener="#{viewTramites.filtrar}" process="@form" update="growl @form" styleClass="va-top"/>
           </f:facet>
               <f:facet name="right">
@@ -699,6 +699,7 @@
                          scrollable="true" scrollHeight="#{viewTramites.height}" rowIndexVar="rowIndex"
                                      paginator="#{viewTramites.mostrarPaginacion()}" paginatorPosition="bottom"
                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
                                      rowsPerPageTemplate="5,10,15,30"
                          expandedRow="#{viewTramites.expandir(td)}" widgetVar="myWidget"
                              selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}"  lazy="true" height="100%">

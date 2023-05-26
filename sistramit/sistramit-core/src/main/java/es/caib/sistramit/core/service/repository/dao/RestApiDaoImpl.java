@@ -1,9 +1,12 @@
 package es.caib.sistramit.core.service.repository.dao;
 
 import java.math.BigDecimal;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -30,6 +33,7 @@ import org.springframework.stereotype.Repository;
 
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
+import es.caib.sistramit.core.api.model.flujo.types.TypeSoporteEstado;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.rest.externo.Evento;
 import es.caib.sistramit.core.api.model.system.rest.externo.FiltroEvento;
@@ -47,6 +51,7 @@ import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPerdidaClave;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FormularioSoporte;
 import es.caib.sistramit.core.api.model.system.rest.interno.PagoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.PersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
@@ -62,6 +67,7 @@ import es.caib.sistramit.core.service.repository.model.HFichero;
 import es.caib.sistramit.core.service.repository.model.HFirma;
 import es.caib.sistramit.core.service.repository.model.HPaso;
 import es.caib.sistramit.core.service.repository.model.HSesionTramitacion;
+import es.caib.sistramit.core.service.repository.model.HSoporte;
 import es.caib.sistramit.core.service.repository.model.HTramite;
 import es.caib.sistramit.core.service.repository.model.HTramiteFinalizado;
 
@@ -1097,107 +1103,118 @@ public final class RestApiDaoImpl implements RestApiDao {
 			final FiltroPaginacion filtroPaginacion) {
 
 		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		String sql = "select" + "    e.TRP_IDETRA, " + "    e.TRP_VERTRA," + "    sum(" + "        CASE e.log_evetip"
-				+ "            WHEN 'TR_INI' " + "            THEN e.num" + "            ELSE 0"
-				+ "          END) evetoini," + "     sum(CASE e.log_evetip" + "            WHEN 'TR_FIN' "
-				+ "            THEN e.num" + "            ELSE 0" + "          END) evetofin,"
-				+ "      sum(    CASE e.log_evetip" + "            WHEN 'ERROR' " + "            THEN e.num"
-				+ "            ELSE 0" + "          END) eventoerror,          " + "      sum( CASE e.log_evetip"
-				+ "            WHEN 'TR_INI'            " + "            THEN e.num" + "            WHEN 'TR_FIN' "
-				+ "            THEN -e.num" + "            ELSE 0" + "          END) resta,         "
-				+ "		((100.0 - sum(CASE e.log_evetip" + "            WHEN 'TR_FIN' " + "            THEN e.num"
-				+ "            ELSE 0" + "          END)/sum(" + "        CASE e.log_evetip"
-				+ "            WHEN 'TR_INI' " + "            THEN e.num" + "            ELSE 0"
-				+ "          END)*100)) div " + "    from " + "        (select p.TRP_IDETRA, "
-				+ "            p.TRP_VERTRA, " + "            f.log_evetip ," + "            count(f.log_evetip) as num"
-				+ "        from STT_LOGINT f "
-				+ "         JOIN STT_TRAPER p ON f.LOG_CODSES = p.TRP_CODSTR and p.trp_idetra is not NULL"
-				+ "        where" + "            f.log_evetip in ('ERROR', 'TR_INI')";
+		Boolean acotarEventos = true; // si queremos buscar por todos los eventos del trámite (evntos anexar, guardar
+										// formulario, etc) o solo los
+		// de inicio fin y error
+		final StringBuilder sql = new StringBuilder("select");
+		sql.append(" e.TRP_IDETRA, ");
+		sql.append(" e.TRP_VERTRA, ");
+		sql.append("  sum( CASE e.log_evetip WHEN 'TR_INI' THEN e.num ELSE 0 END) evetoini, ");
+		sql.append(" sum(CASE e.log_evetip WHEN 'TR_FIN' THEN e.num ELSE 0 END) evetofin, ");
+		sql.append(" sum( CASE e.log_evetip WHEN 'ERROR' THEN e.num ELSE 0 END) eventoerror, ");
+		sql.append(" sum( CASE e.log_evetip WHEN 'TR_INI' THEN e.num WHEN 'TR_FIN' THEN -e.num ELSE 0 END) resta, ");
+		sql.append(" CASE sum( CASE e.log_evetip WHEN 'TR_INI' THEN e.num ELSE 0 END) WHEN 0 THEN 0 ELSE ");
+		sql.append(
+				" ((100.0 - sum(CASE e.log_evetip WHEN 'TR_FIN' THEN e.num ELSE 0 END) / sum( CASE e.log_evetip WHEN 'TR_INI' THEN e.num ELSE 0 END) * 100)) ");
+		sql.append(" END ");
+		sql.append(" div ");
+		sql.append(" from ( ");
+		sql.append(" select p.TRP_IDETRA, p.TRP_VERTRA, f.log_evetip, count(f.log_evetip) as num ");
+		sql.append(" from STT_LOGINT f ");
+		sql.append(" JOIN STT_TRAPER p ON f.LOG_CODSES = p.TRP_CODSTR ");
+		sql.append(" and p.trp_idetra is not NULL ");
+		sql.append(" where ");
+		sql.append(" f.log_evetip in ('ERROR', 'TR_INI','TR_FIN') ");
 
 		if (pFiltroBusqueda.getIdTramite() != null) {
-
-			sql += " and p.TRP_IDETRA like '%" + pFiltroBusqueda.getIdTramite() + "%'";
+			sql.append(" and p.TRP_IDETRA like '%").append(pFiltroBusqueda.getIdTramite()).append("%'");
 		}
 
 		if (pFiltroBusqueda.getFechaDesde() != null) {
-
-			sql += " and f.log_evefec >= TO_TIMESTAMP('" + Timestamp.from(pFiltroBusqueda.getFechaDesde().toInstant())
-					+ "', 'YYYY-MM-DD HH24:MI:SS.FF')";
+			sql.append(" and f.LOG_EVEFEC >= TO_TIMESTAMP('")
+					.append(Timestamp.from(pFiltroBusqueda.getFechaDesde().toInstant()))
+					.append("', 'YYYY-MM-DD HH24:MI:SS.FF') ");
 		}
-
 		if (pFiltroBusqueda.getFechaHasta() != null) {
-			sql += " and f.log_evefec <= TO_TIMESTAMP('" + Timestamp.from(pFiltroBusqueda.getFechaHasta().toInstant())
-					+ "', 'YYYY-MM-DD HH24:MI:SS.FF')";
-
+			sql.append(" and f.LOG_EVEFEC <= TO_TIMESTAMP('")
+					.append(Timestamp.from(pFiltroBusqueda.getFechaHasta().toInstant()))
+					.append("', 'YYYY-MM-DD HH24:MI:SS.FF') ");
 		}
+
 		if (pFiltroBusqueda.getListaAreas() != null) {
-			String areasString = "";
+			StringBuilder areasString = new StringBuilder("");
 			for (String area : pFiltroBusqueda.getListaAreas()) {
-				if (areasString.isEmpty()) {
-					areasString += "('" + area + "'";
+				if (areasString.toString().isEmpty()) {
+					areasString.append("('").append(area).append("'");
 				} else {
-					areasString += ", '" + area + "'";
+					areasString.append(", '").append(area).append("'");
 				}
 			}
-			areasString += ")";
-			sql += " and p.TRP_IDEARE in " + areasString;
+			areasString.append(")");
+			sql.append(" and p.TRP_IDEARE in ").append(areasString.toString());
 		}
 
-		sql += "        group by " + "            p.TRP_IDETRA, " + "            p.TRP_VERTRA, "
-				+ "            f.log_evetip) e" + "    group by  " + "        e.TRP_IDETRA, "
-				+ "        e.TRP_VERTRA  having sum( CASE e.log_evetip WHEN 'ERROR' THEN e.num"
-				+ " ELSE 0  END) > 0 or (sum(CASE e.log_evetip" + " WHEN 'TR_INI' THEN e.num ELSE 0"
-				+ " END)>0 and sum(CASE e.log_evetip WHEN 'TR_FIN' " + "THEN e.num ELSE 0  END) = 0)";
+		sql.append(" group by p.TRP_IDETRA, p.TRP_VERTRA, f.log_evetip ");
+		sql.append(" ) e ");
+		sql.append(" group by e.TRP_IDETRA, e.TRP_VERTRA ");
+		if (pFiltroBusqueda.isErrorPlataforma()) {
+			sql.append(" having sum( CASE e.log_evetip WHEN 'ERROR' THEN e.num ELSE 0 END) > 0 ");
+		} else {
+			sql.append(" having (sum(CASE e.log_evetip WHEN 'TR_INI' THEN e.num ELSE 0 END)>0 ");
+			sql.append(" and ");
+			sql.append(" sum(CASE e.log_evetip WHEN 'TR_FIN' THEN e.num ELSE 0 END) = 0 ");
+			sql.append(" and ");
+			sql.append(" sum(CASE e.log_evetip WHEN 'ERROR' THEN e.num ELSE 0 END) = 0) ");
+		}
 
 		if (StringUtils.isEmpty(pFiltroBusqueda.getSortField())) {
-			sql += " order by e.TRP_IDETRA DESC";
+			sql.append(" order by e.TRP_IDETRA DESC ");
 		} else {
 			if ("idTramite".equals(pFiltroBusqueda.getSortField())) {
 				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
-					sql += " order by e.TRP_IDETRA ASC";
+					sql.append(" order by e.TRP_IDETRA ASC ");
 				} else {
-					sql += " order by e.TRP_IDETRA DESC";
+					sql.append(" order by e.TRP_IDETRA DESC ");
 				}
 			} else if ("version".equals(pFiltroBusqueda.getSortField())) {
 				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
-					sql += " order by e.TRP_VERTRA ASC";
+					sql.append(" order by e.TRP_VERTRA ASC ");
 				} else {
-					sql += " order by e.TRP_VERTRA DESC";
+					sql.append(" order by e.TRP_VERTRA DESC ");
 				}
 			} else if ("sesionesInacabadas".equals(pFiltroBusqueda.getSortField())) {
 				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
-					sql += " order by resta ASC";
+					sql.append(" order by resta ASC ");
 
 				} else {
-					sql += " order by resta DESC";
+					sql.append(" order by resta DESC ");
 
 				}
 			} else if ("sesionesFinalizadas".equals(pFiltroBusqueda.getSortField())) {
 				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
-					sql += " order by evetofin ASC";
+					sql.append(" order by evetofin ASC ");
 				} else {
-					sql += " order by evetofin DESC";
+					sql.append(" order by evetofin DESC ");
 				}
 			} else if ("numeroErrores".equals(pFiltroBusqueda.getSortField())) {
 				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
-					sql += " order by eventoerror ASC";
+					sql.append(" order by eventoerror ASC ");
 
 				} else {
-					sql += " order by eventoerror DESC";
+					sql.append(" order by eventoerror DESC ");
 
 				}
 			} else if ("porcentage".equals(pFiltroBusqueda.getSortField())) {
 				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
-					sql += " order by div ASC";
+					sql.append(" order by div ASC ");
 
 				} else {
-					sql += " order by div DESC";
+					sql.append(" order by div DESC ");
 
 				}
 			}
 		}
-
-		Query query = entityManager.createNativeQuery(sql);
+		Query query = entityManager.createNativeQuery(sql.toString());
 		List<Object[]> lista;
 		if (filtroPaginacion == null) {
 			lista = query.getResultList();
@@ -1416,48 +1433,61 @@ public final class RestApiDaoImpl implements RestApiDao {
 	@Override
 	public Long contarErroresPorTramiteCM(FiltroEventoAuditoria pFiltroBusqueda) {
 		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		String sql = "select" + "    e.TRP_IDETRA, " + "    e.TRP_VERTRA" + "    from "
-				+ "        (select p.TRP_IDETRA, " + "            p.TRP_VERTRA, " + "            f.log_evetip ,"
-				+ "            count(f.log_evetip) as num" + "        from STT_LOGINT f "
-				+ "         JOIN STT_TRAPER p ON f.LOG_CODSES = p.TRP_CODSTR and p.trp_idetra is not NULL"
-				+ "        where" + "            f.log_evetip in ('ERROR', 'TR_INI')";
+		Boolean acotarEventos = true; // si queremos buscar por todos los eventos del trámite (evntos anexar, guardar
+										// formulario, etc) o solo los
+		// de inicio fin y error
+		final StringBuilder sql = new StringBuilder("select");
 
+		sql.append(" e.TRP_IDETRA, ");
+		sql.append(" e.TRP_VERTRA ");
+		sql.append(" from ( ");
+		sql.append(" select p.TRP_IDETRA, p.TRP_VERTRA, f.log_evetip, count(f.log_evetip) as num ");
+		sql.append(" from STT_LOGINT f ");
+		sql.append(" JOIN STT_TRAPER p ON f.LOG_CODSES = p.TRP_CODSTR ");
+		sql.append(" and p.trp_idetra is not NULL ");
+		sql.append(" where ");
+		sql.append(" f.log_evetip in ('ERROR', 'TR_INI','TR_FIN') ");
 		if (pFiltroBusqueda.getIdTramite() != null) {
-
-			sql += " and p.TRP_IDETRA like '%" + pFiltroBusqueda.getIdTramite() + "%'";
+			sql.append(" and p.TRP_IDETRA like '%").append(pFiltroBusqueda.getIdTramite()).append("%'");
 		}
 
 		if (pFiltroBusqueda.getFechaDesde() != null) {
-
-			sql += " and f.log_evefec >= TO_TIMESTAMP('" + Timestamp.from(pFiltroBusqueda.getFechaDesde().toInstant())
-					+ "', 'YYYY-MM-DD HH24:MI:SS.FF')";
+			sql.append(" and f.LOG_EVEFEC >= TO_TIMESTAMP('")
+					.append(Timestamp.from(pFiltroBusqueda.getFechaDesde().toInstant()))
+					.append("', 'YYYY-MM-DD HH24:MI:SS.FF') ");
 		}
-
 		if (pFiltroBusqueda.getFechaHasta() != null) {
-			sql += " and f.log_evefec <= TO_TIMESTAMP('" + Timestamp.from(pFiltroBusqueda.getFechaHasta().toInstant())
-					+ "', 'YYYY-MM-DD HH24:MI:SS.FF')";
-
+			sql.append(" and f.LOG_EVEFEC <= TO_TIMESTAMP('")
+					.append(Timestamp.from(pFiltroBusqueda.getFechaHasta().toInstant()))
+					.append("', 'YYYY-MM-DD HH24:MI:SS.FF') ");
 		}
+
 		if (pFiltroBusqueda.getListaAreas() != null) {
-			String areasString = "";
+			StringBuilder areasString = new StringBuilder("");
 			for (String area : pFiltroBusqueda.getListaAreas()) {
-				if (areasString.isEmpty()) {
-					areasString += "('" + area + "'";
+				if (areasString.toString().isEmpty()) {
+					areasString.append("('").append(area).append("'");
 				} else {
-					areasString += ", '" + area + "'";
+					areasString.append(", '").append(area).append("'");
 				}
 			}
-			areasString += ")";
-			sql += " and p.TRP_IDEARE in " + areasString;
+			areasString.append(")");
+			sql.append(" and p.TRP_IDEARE in ").append(areasString.toString());
 		}
 
-		sql += "        group by " + "            p.TRP_IDETRA, " + "            p.TRP_VERTRA, "
-				+ "            f.log_evetip) e" + "    group by  " + "        e.TRP_IDETRA, "
-				+ "        e.TRP_VERTRA  having sum( CASE e.log_evetip WHEN 'ERROR' THEN e.num"
-				+ " ELSE 0  END) > 0 or (sum(CASE e.log_evetip" + " WHEN 'TR_INI' THEN e.num ELSE 0"
-				+ " END)>0 and sum(CASE e.log_evetip WHEN 'TR_FIN' " + "THEN e.num ELSE 0  END) = 0)";
-
-		Query query = entityManager.createNativeQuery(sql);
+		sql.append(" group by p.TRP_IDETRA, p.TRP_VERTRA, f.log_evetip ");
+		sql.append(" ) e ");
+		sql.append(" group by e.TRP_IDETRA, e.TRP_VERTRA ");
+		if (pFiltroBusqueda.isErrorPlataforma()) {
+			sql.append(" having sum( CASE e.log_evetip WHEN 'ERROR' THEN e.num ELSE 0 END) > 0 ");
+		} else {
+			sql.append(" having (sum(CASE e.log_evetip WHEN 'TR_INI' THEN e.num ELSE 0 END)>0 ");
+			sql.append(" and ");
+			sql.append(" sum(CASE e.log_evetip WHEN 'TR_FIN' THEN e.num ELSE 0 END) = 0 ");
+			sql.append(" and ");
+			sql.append(" sum(CASE e.log_evetip WHEN 'ERROR' THEN e.num ELSE 0 END) = 0) ");
+		}
+		Query query = entityManager.createNativeQuery(sql.toString());
 		List<Object[]> lista = query.getResultList();
 
 		return Long.valueOf(lista.size());
@@ -1705,4 +1735,263 @@ public final class RestApiDaoImpl implements RestApiDao {
 		return Long.valueOf(entityManager.createQuery(query).getResultList().size());
 	}
 
+	@Override
+	public List<FormularioSoporte> recuperarFormularioSoporte(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		String sql = "select e.SOP_CODIGO, e.SOP_FCCREA, s.SES_IDESTR, e.SOP_NIF, e.SOP_NOMBRE, e.SOP_TELEFO, e.SOP_EMAIL, e.SOP_HORARI, e.SOP_PRODES, e.SOP_PROTIP, e.SOP_PROTID, t.TRP_IDETRA, t.TRP_VERTRA, e.SOP_FICNOM, e.SOP_FICDAT, e.SOP_ESTADO, e.SOP_COMENT from STT_SOPORT e left join STT_SESION s on e.SOP_CODSTR = s.SES_CODIGO left join STT_TRAPER t on e.SOP_CODSTR = t.TRP_CODSTR where 1 = 1 ";
+
+		if (pFiltroBusqueda.getFechaDesde() != null) {
+			sql += " and e.SOP_FCCREA >= TO_TIMESTAMP('" + Timestamp.from(pFiltroBusqueda.getFechaDesde().toInstant())
+					+ "', 'YYYY-MM-DD HH24:MI:SS.FF')";
+		}
+
+		if (pFiltroBusqueda.getFechaHasta() != null) {
+			sql += " and e.SOP_FCCREA <= TO_TIMESTAMP('" + Timestamp.from(pFiltroBusqueda.getFechaHasta().toInstant())
+					+ "', 'YYYY-MM-DD HH24:MI:SS.FF')";
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdSesionTramitacion())) {
+			sql += " and s.SES_IDESTR like '%" + pFiltroBusqueda.getIdSesionTramitacion() + "%'";
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getNif())) {
+			sql += " and e.SOP_NIF like '%" + pFiltroBusqueda.getNif() + "%'";
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getNombre())) {
+			sql += " and e.SOP_NOMBRE like '%" + pFiltroBusqueda.getNombre() + "%'";
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getTlf())) {
+			sql += " and e.SOP_TELEFO like '%" + pFiltroBusqueda.getTlf() + "%'";
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getEmail())) {
+			sql += " and e.SOP_EMAIL like '%" + pFiltroBusqueda.getEmail() + "%'";
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdTramite())) {
+			sql += " and t.TRP_IDETRA like '%" + pFiltroBusqueda.getIdTramite() + "%'";
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getEmail())) {
+			sql += " and e.SOP_EMAIL like '%" + pFiltroBusqueda.getEmail() + "%'";
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getTlf())) {
+			sql += " and e.SOP_TELEFO like '%" + pFiltroBusqueda.getTlf() + "%'";
+		}
+
+		if (pFiltroBusqueda.getVersionTramite() != null) {
+			sql += " and t.TRP_VERTRA = " + pFiltroBusqueda.getVersionTramite();
+		}
+
+		if (pFiltroBusqueda.getEstado() != null) {
+			sql += " and e.SOP_ESTADO = '" + pFiltroBusqueda.getEstado() + "'";
+		}
+
+		if (pFiltroBusqueda.getListaAreas() != null) {
+			StringBuilder areasString = new StringBuilder("");
+			for (String area : pFiltroBusqueda.getListaAreas()) {
+				if (areasString.toString().isEmpty()) {
+					areasString.append("('").append(area).append("'");
+				} else {
+					areasString.append(", '").append(area).append("'");
+				}
+			}
+			areasString.append(")");
+			sql += (" and t.TRP_IDEARE in " + areasString.toString());
+		}
+
+		if (StringUtils.isEmpty(pFiltroBusqueda.getSortField())) {
+			sql += " order by e.SOP_CODIGO DESC";
+		} else {
+			if ("idTramite".equals(pFiltroBusqueda.getSortField())) {
+				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+					sql += " order by t.TRP_IDETRA ASC";
+				} else {
+					sql += " order by t.TRP_IDETRA DESC";
+				}
+			} else if ("version".equals(pFiltroBusqueda.getSortField())) {
+				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+					sql += " order by t.TRP_VERTRA ASC";
+				} else {
+					sql += " order by t.TRP_VERTRA DESC";
+				}
+			} else if ("fechaCreacion".equals(pFiltroBusqueda.getSortField())) {
+				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+					sql += " order by e.SOP_FCCREA ASC";
+				} else {
+					sql += " order by e.SOP_FCCREA DESC";
+				}
+			} else if ("sesion".equals(pFiltroBusqueda.getSortField())) {
+				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+					sql += " order by s.SES_IDESTR ASC";
+				} else {
+					sql += " order by s.SES_IDESTR DESC";
+				}
+			} else if ("nif".equals(pFiltroBusqueda.getSortField())) {
+				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+					sql += " order by e.SOP_NIF ASC";
+				} else {
+					sql += " order by e.SOP_NIF DESC";
+				}
+			} else if ("nombre".equals(pFiltroBusqueda.getSortField())) {
+				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+					sql += " order by e.SOP_NOMBRE ASC";
+				} else {
+					sql += " order by e.SOP_NOMBRE DESC";
+				}
+			} else if ("telefono".equals(pFiltroBusqueda.getSortField())) {
+				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+					sql += " order by e.SOP_TELEFO ASC";
+
+				} else {
+					sql += " order by e.SOP_TELEFO DESC";
+				}
+			} else if ("email".equals(pFiltroBusqueda.getSortField())) {
+				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+					sql += " order by e.SOP_EMAIL ASC";
+				} else {
+					sql += " order by e.SOP_EMAIL DESC";
+				}
+			} else if ("horario".equals(pFiltroBusqueda.getSortField())) {
+				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+					sql += " order by e.SOP_HORARI ASC";
+				} else {
+					sql += " order by e.SOP_HORARI DESC";
+				}
+			} else if ("tipoProblema".equals(pFiltroBusqueda.getSortField())) {
+				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+					sql += " order by e.SOP_PROTIP ASC";
+				} else {
+					sql += " order by e.SOP_PROTIP DESC";
+				}
+			} else if ("descripcionProblema".equals(pFiltroBusqueda.getSortField())) {
+				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+					sql += " order by e.SOP_PRODES ASC";
+				} else {
+					sql += " order by e.SOP_PRODES DESC";
+				}
+			} else if ("estado".equals(pFiltroBusqueda.getSortField())) {
+				if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+					sql += " order by e.SOP_ESTADO ASC";
+				} else {
+					sql += " order by e.SOP_ESTADO DESC";
+				}
+			}
+		}
+		Query query = entityManager.createNativeQuery(sql);
+		List<Object[]> lista;
+		if (filtroPaginacion == null) {
+			lista = query.getResultList();
+		} else {
+			lista = query.setFirstResult(filtroPaginacion.getFirst()).setMaxResults(filtroPaginacion.getPageSize())
+					.getResultList();
+		}
+
+		List<FormularioSoporte> listCast = new ArrayList<FormularioSoporte>();
+		for (Object[] obj : lista) {
+			FormularioSoporte temp = new FormularioSoporte();
+			temp.setCodigo(((BigDecimal) obj[0]).longValue());
+			temp.setFechaCreacion((Date) obj[1]);
+			temp.setSesionTramitacion((String) obj[2]);
+			temp.setNif((String) obj[3]);
+			temp.setNombre((String) obj[4]);
+			temp.setTelefono((String) obj[5]);
+			temp.setEmail((String) obj[6]);
+			temp.setHorario((String) obj[7]);
+			temp.setDescripcionProblema((String) obj[8]);
+			temp.setTipoProblema((String) obj[9]);
+			temp.setTipoProblemaDesc((String) obj[10]);
+			temp.setIdTramite((String) obj[11]);
+			if (obj[12] != null) {
+				temp.setVersion(((BigDecimal) obj[12]).intValue());
+			}
+			temp.setNombreFichero((String) obj[13]);
+			if (obj[14] != null) {
+				try {
+					temp.setDatosFichero(((Blob) obj[14]).getBytes(1, ((int) ((Blob) obj[14]).length())));
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			temp.setEstado((String) obj[15]);
+			temp.setComentario((String) obj[16]);
+			listCast.add(temp);
+		}
+		return listCast;
+	}
+
+	@Override
+	public Long contarFormularioSoporte(FiltroEventoAuditoria pFiltroBusqueda) {
+		String sql = "select e.SOP_CODIGO, e.SOP_FCCREA, s.SES_IDESTR, e.SOP_NIF, e.SOP_NOMBRE, e.SOP_TELEFO, e.SOP_EMAIL, e.SOP_HORARI, e.SOP_PRODES, e.SOP_PROTIP, e.SOP_PROTID, t.TRP_IDETRA, t.TRP_VERTRA, e.SOP_FICNOM, e.SOP_FICDAT, e.SOP_ESTADO, e.SOP_COMENT from STT_SOPORT e left join STT_SESION s on e.SOP_CODSTR = s.SES_CODIGO left join STT_TRAPER t on e.SOP_CODSTR = t.TRP_CODSTR where 1=1 ";
+
+		if (pFiltroBusqueda.getFechaDesde() != null) {
+			sql += " and e.SOP_FCCREA >= TO_TIMESTAMP('" + Timestamp.from(pFiltroBusqueda.getFechaDesde().toInstant())
+					+ "', 'YYYY-MM-DD HH24:MI:SS.FF')";
+		}
+
+		if (pFiltroBusqueda.getFechaHasta() != null) {
+			sql += " and e.SOP_FCCREA <= TO_TIMESTAMP('" + Timestamp.from(pFiltroBusqueda.getFechaHasta().toInstant())
+					+ "', 'YYYY-MM-DD HH24:MI:SS.FF')";
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdSesionTramitacion())) {
+			sql += " and s.SES_IDESTR like '%" + pFiltroBusqueda.getIdSesionTramitacion() + "%'";
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getNif())) {
+			sql += " and e.SOP_NIF like '%" + pFiltroBusqueda.getNif() + "%'";
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getNombre())) {
+			sql += " and e.SOP_NOMBRE like '%" + pFiltroBusqueda.getNombre() + "%'";
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdTramite())) {
+			sql += " and t.TRP_IDETRA like '%" + pFiltroBusqueda.getIdTramite() + "%'";
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getEmail())) {
+			sql += " and e.SOP_EMAIL like '%" + pFiltroBusqueda.getEmail() + "%'";
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getTlf())) {
+			sql += " and e.SOP_TELEFO like '%" + pFiltroBusqueda.getTlf() + "%'";
+		}
+
+		if (pFiltroBusqueda.getVersionTramite() != null) {
+			sql += " and t.TRP_VERTRA = " + pFiltroBusqueda.getVersionTramite();
+		}
+
+		if (pFiltroBusqueda.getEstado() != null) {
+			sql += " and e.SOP_ESTADO = '" + pFiltroBusqueda.getEstado() + "'";
+		}
+
+		if (pFiltroBusqueda.getListaAreas() != null) {
+			StringBuilder areasString = new StringBuilder("");
+			for (String area : pFiltroBusqueda.getListaAreas()) {
+				if (areasString.toString().isEmpty()) {
+					areasString.append("('").append(area).append("'");
+				} else {
+					areasString.append(", '").append(area).append("'");
+				}
+			}
+			areasString.append(")");
+			sql += (" and t.TRP_IDEARE in " + areasString.toString());
+		}
+
+		Query query = entityManager.createNativeQuery(sql);
+
+		return Long.valueOf(query.getResultList().size());
+	}
+
+	@Override
+	public void updateEstadoIncidencia(Long idSoporte, TypeSoporteEstado estado, String comentarios) {
+		final HSoporte hsoporte = entityManager.find(HSoporte.class, idSoporte);
+		hsoporte.setEstado(estado.toString());
+		hsoporte.setComentarios(comentarios);
+		entityManager.merge(hsoporte);
+	}
 }

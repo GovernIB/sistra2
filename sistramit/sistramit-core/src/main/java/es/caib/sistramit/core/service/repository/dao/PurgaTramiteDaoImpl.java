@@ -220,6 +220,9 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 		// error
 		borrarEventoAuditoriaTramitesPurgados(pFechaLimitePurga);
 
+		// Borramos incidencias soporte
+		borrarSoporteTramitesPurgados(pFechaLimitePurga);
+
 		// Borramos sesiones
 		return borrarSesionesTramitesPurgados(pFechaLimitePurga);
 
@@ -308,9 +311,23 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 	 * @return Número de auditorias borradas
 	 */
 	private int borrarEventoAuditoriaTramitesPurgados(final Date pFechaLimitePurga) {
-
 		// Eliminamos sesiones por HQL
 		final String deleteTramite = "delete from HEventoAuditoria e where e.sesionTramitacion in (select s from HSesionTramitacion s where s.fecha < :fechaLimite and s not in (select t.sesionTramitacion from HTramite t) )";
+		final Query query = entityManager.createQuery(deleteTramite);
+		query.setParameter("fechaLimite", pFechaLimitePurga);
+		return query.executeUpdate();
+	}
+
+	/**
+	 * Borra incidencias soporte de sesiones de tramites purgados.
+	 *
+	 * @param pFechaLimitePurga
+	 *                              Fecha limite purga
+	 * @return Número de auditorias borradas
+	 */
+
+	private int borrarSoporteTramitesPurgados(final Date pFechaLimitePurga) {
+		final String deleteTramite = "delete from HSoporte e where e.sesionTramitacion in (select s from HSesionTramitacion s where s.fecha < :fechaLimite and s not in (select t.sesionTramitacion from HTramite t) )";
 		final Query query = entityManager.createQuery(deleteTramite);
 		query.setParameter("fechaLimite", pFechaLimitePurga);
 		return query.executeUpdate();

@@ -44,25 +44,26 @@ A la pantalla de '<i>Quadre de comandament</i>' es presenta l&#39;estat del proc
 	</ul>
 </p>
 
-<h2 class="stgH2">Tr&agrave;mits i errors totals:</h2>
-<p>En aquest panell es mostra, per al total de tots els tr&agrave;mits iniciats durant el dia o per&iacute;ode de monitoritzaci&oacute;:</p>
+<h2 class="stgH2">Tr&agrave;mits:</h2>
+<p>Aquest panell mostra la mateixa informació que el panell "Accions", pero a nivell de tràmit.</p>
 <p>
 	<ul>
-		<li><span class="nombreCampo">Tr&agrave;mits totals:</span> Es mostra la quantitat dels iniciats, els finalitzats, el percentatge de no finalitzats (amb o sense errors) respecte dels iniciats i, per colors, l&#39;estat d&#39;atenci&oacute; requerida segons el llindar predeterminat, &eacute;s a dir: Normal (percentatge de tr&agrave;mits no finalitzats inferior o igual al 50%), Atenci&oacute; (percentatge entre el 50% i el 85%) i Revisar (percentatge de tr&agrave;mits no finalitzats superior o igual al 85%).</li>
-		<li><span class="nombreCampo">Nombre total d&#39;errors:</span> Es mostra el nombre d&#39;errors que han succe&iuml;t a totes les sessions de tramitaci&oacute; del per&iacute;ode de monitoritzaci&oacute;.</li>
+		<li><span class="nombreCampo">Tr&agrave;mits:</span> Es mostra la quantitat dels iniciats, els finalitzats, el percentatge de no finalitzats (amb o sense errors) respecte dels iniciats i, per colors, l&#39;estat d&#39;atenci&oacute; requerida segons el llindar predeterminat, &eacute;s a dir: Normal (percentatge de tr&agrave;mits no finalitzats inferior o igual al 50%), Atenci&oacute; (percentatge entre el 50% i el 85%) i Revisar (percentatge de tr&agrave;mits no finalitzats superior o igual al 85%).</li>
 	</ul>
 </p>
 
-<h2 class="stgH2">Errors per tr&agrave;mit i tr&agrave;mits inacabats:</h2>
-<p>Aquest panell mostra els tr&agrave;mits amb sessions inacabades i, per a cada tr&agrave;mit que hagi tingut un error en alguna de les sessions, els errors que s&#39;han produ&iuml;t. Es distingeixen dos nivells d&#39;informaci&oacute;, sobre els quals es poden ordenar les dades de qualsevol columna:</p>
+<h2 class="stgH2">Múmero total d'errors:</h2>
+<p>En aquest panell es mostra el total de errors, considerant els errors de tramitació (associats a una sessió concreta) i els de plataforma (que no tenen una sessió de tramitació associada).</p>
+<h2 class="stgH2">Errors de tramitació:</h2>
+<p>Aquest panell mostra els tr&agrave;mits amb sessions que contenen errors i els errors que s&#39;han produ&iuml;t. Es distingeixen dos nivells d&#39;informaci&oacute;, sobre els quals es poden ordenar les dades de qualsevol columna:</p>
 <p>- Un primer nivell &#39;Tr&agrave;mit&#39;: Mostra informaci&oacute; de cada tr&agrave;mit que t&eacute; errors en alguna de les sessions. S&#39;ofereix la seg&uuml;ent informaci&oacute;:</p>
 <p>
 	<ul>
 		<li><span class="nombreCampo">Tr&agrave;mit:</span> L&#39;id compost del tr&agrave;mit que cont&eacute; errors en alguna de les sessions. &Eacute;s possible cercar en aquest camp.</li>
 		<li><span class="nombreCampo">Versi&oacute;:</span> La versi&oacute; del tr&agrave;mit.</li>
 		<li><span class="nombreCampo">Sessions Ok:</span> El nombre de sessions que s&#39;han iniciat (TR_INI - Inici del tr&agrave;mit) i finalitzat (TR_FIN - Final de tr&agrave;mit), encara que s&#39;hagin produ&iuml;t errors durant la tramitaci&oacute; que no n&#39;hagin impedit la finalitzaci&oacute;.</li>
-		<li><span class="nombreCampo">Sessions no finalitzades:</span> El nombre de sessions que s&#39;han iniciat per&ograve; no han finalitzat (amb o sense errors).</li>
-		<li><span class="nombreCampo">Percentatge de sessions no finalitzades:</span> Proporci&oacute; de les sessions no finalitzades (amb o sense errors), respecte de les sessions iniciades en aquest tr&agrave;mit i versi&oacute;.</li>
+		<li><span class="nombreCampo">Sessions no finalitzades:</span> El nombre de sessions que s&#39;han iniciat per&ograve; no han finalitzat (amb errors).</li>
+		<li><span class="nombreCampo">Percentatge de sessions no finalitzades:</span> Proporci&oacute; de les sessions no finalitzades (amb errors), respecte de les sessions iniciades en aquest tr&agrave;mit i versi&oacute;.</li>
 		<li><span class="nombreCampo">Frecuencia d&#39;errors:</span> Nombre total d&#39;errors succe&iuml;ts a totes les sessions d&#39;aquest tr&agrave;mit i versi&oacute;, que s&oacute;n els que es detallen al segon nivell, en pr&eacute;mer sobre un registre del nivell Tr&agrave;mit.</li>
 	</ul>
 </p>
@@ -77,6 +78,16 @@ A la pantalla de '<i>Quadre de comandament</i>' es presenta l&#39;estat del proc
 
 <h2 class="stgH2">Errors de plataforma:</h2>
 <p>En aquest panell s&#39;ofereix informaci&oacute; de quants errors de plataforma (i el detall) han succe&iuml;t al llarg de l&#39;&uacute;s de l&#39;assistent de tramitaci&oacute; en el per&iacute;ode d&#39;avaluaci&oacute;. Aquests errors no s&oacute;n propis d&#8223;un tr&agrave;mit concret, sin&oacute; que s&oacute;n m&eacute;s gen&egrave;rics, a nivell de SISTRAMIT.</p>
+
+<h2 class="stgH2">Tràmits inacabats sense errors:</h2>
+<p>Aquest panell mostra els tr&agrave;mits amb sessions inacabades i sense errors (es possible ordenar per totes les columnes):</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Tr&agrave;mit:</span> L&#39;id compost del tr&agrave;mit que cont&eacute; sessions no finalitzades i sense errors. &Eacute;s possible cercar en aquest camp.</li>
+		<li><span class="nombreCampo">Versi&oacute;:</span> La versi&oacute; del tr&agrave;mit.</li>
+		<li><span class="nombreCampo">Sessions no finalitzades:</span> El nombre de sessions que s&#39;han iniciat per&ograve; no han finalitzat (sense errors).</li>
+	</ul>
+</p>
 
 <h2 class="stgH2">Historial d&#39;alertes:</h2>
 <p>Aquest panell, que poden veure els administradors d&#39;entitat, mostra en ordre cronol&ograve;gic descendent, les alertes executades i la data d&#39;execuci&oacute; dins del per&iacute;ode del dia en curs. Les alertes mostrades s&oacute;n les que s&#39;han executat i rem&eacute;s correu, en haver-se avaluat com a cert la condici&oacute; o condicions configurades a la pantalla d&#39;&ldquo;Alertes&rdquo;.</p>

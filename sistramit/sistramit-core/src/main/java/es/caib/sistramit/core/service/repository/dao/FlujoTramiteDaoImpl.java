@@ -10,14 +10,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistra2.commons.utils.GeneradorId;
 import es.caib.sistramit.core.api.exception.RepositoryException;
+import es.caib.sistramit.core.api.model.flujo.TramiteIniciado;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
+import es.caib.sistramit.core.service.model.flujo.DatosFormularioSoporte;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
 import es.caib.sistramit.core.service.model.flujo.EstadoPersistenciaPasoTramite;
 import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
@@ -27,6 +30,7 @@ import es.caib.sistramit.core.service.repository.model.HDocumento;
 import es.caib.sistramit.core.service.repository.model.HFirma;
 import es.caib.sistramit.core.service.repository.model.HPaso;
 import es.caib.sistramit.core.service.repository.model.HSesionTramitacion;
+import es.caib.sistramit.core.service.repository.model.HSoporte;
 import es.caib.sistramit.core.service.repository.model.HTramite;
 import es.caib.sistramit.core.service.repository.model.HTramiteFinalizado;
 
@@ -278,6 +282,58 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		return res;
 	}
 
+	@Override
+	public void registraFormularioSoporte(final String idSesionTramitacion,
+			final DatosFormularioSoporte datosFormularioSoporte) {
+
+		final HSoporte hSoporte = HSoporte.fromModel(datosFormularioSoporte);
+
+		// Establecemos sesion tramitacion
+		final HSesionTramitacion hSesionTramitacion = findHSesionTramitacion(idSesionTramitacion);
+		if (hSesionTramitacion == null) {
+			throw new RepositoryException("No existeix tràmit: " + idSesionTramitacion);
+		}
+		hSoporte.setSesionTramitacion(hSesionTramitacion);
+
+		// Persistimos
+		entityManager.persist(hSoporte);
+
+	}
+
+	@Override
+	public List<TramiteIniciado> obtenerTramitacionesIniciadas(final String nif, final String idTramite,
+			final int versionTramite, final String idTramiteCatalogo, final boolean servicioCatalogo) {
+		final String hql = "SELECT t FROM HTramite t "
+		 		+ " WHERE t.nifIniciador = :nif AND t.autenticacion = '" + TypeAutenticacion.AUTENTICADO + "' "
+				+ " AND t.idTramite = :idTramite AND t.versionTramite = :versionTramite "
+				+ " AND t.idProcedimientoCP = :idTramiteCatalogo AND t.servicioCP = :servicioCatalogo"
+				+ " AND t.cancelado is false AND t.estado <> '" + TypeEstadoTramite.FINALIZADO.toString() + "' "
+				+ " AND (t.fechaCaducidad is null OR t.fechaCaducidad > CURRENT_DATE) "
+				+ " AND t.purgar is false AND t.purgaPendientePorPagoRealizado is false AND t.purgado is false "
+				+ " ORDER BY t.fechaUltimoAcceso DESC ";
+		final Query query = entityManager.createQuery(hql);
+		query.setParameter("nif", nif);
+		query.setParameter("idTramite", idTramite);
+		query.setParameter("versionTramite", versionTramite);
+		query.setParameter("idTramiteCatalogo", idTramiteCatalogo);
+		query.setParameter("servicioCatalogo", servicioCatalogo);
+		final List<HTramite> tramitesIniciados = query.getResultList();
+
+		final List<TramiteIniciado> res = new ArrayList<>();
+		if (tramitesIniciados != null && !tramitesIniciados.isEmpty()) {
+			for (final HTramite t : tramitesIniciados) {
+				final TramiteIniciado ti = new TramiteIniciado();
+				ti.setIdSesion(t.getSesionTramitacion().getIdSesionTramitacion());
+				ti.setIdioma(t.getIdioma());
+				ti.setFechaInicio(t.getFechaInicio());
+				ti.setFechaUltimoAcceso(t.getFechaUltimoAcceso());
+				ti.setFechaCaducidad(t.getFechaCaducidad());
+				res.add(ti);
+			}
+		}
+		return res;
+	}
+
 	// ------------ FUNCIONES PRIVADAS --------------------------------------
 
 	/**
@@ -321,8 +377,8 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	/**
 	 * Busca tramite y genera excepcion si no lo encuentra.
 	 *
-	 * @param idSesionTramitacion
-	 *                                id sesion tramitacion
+	 * @param pIdSesionTramitacion
+	 *                                 id sesion tramitacion
 	 * @return sesion tramitacion
 	 */
 	private HTramite getHTramite(final String pIdSesionTramitacion) {

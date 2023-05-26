@@ -68,7 +68,7 @@
 					<p:outputLabel   value="" />
 
 					<p:outputLabel   for="codigo" value="#{msg['dialogTramiteVersionPrevisualizar.identificador']}" />
-                	<p:inputText 	 id="codigo" value="#{dialogTramiteVersionPrevisualizar.tramite.getIdentificadorCompuesto()}" style="width:417px;" readonly="true" />
+                	<p:inputText onblur="this.value = this.value.trim();" id="codigo" value="#{dialogTramiteVersionPrevisualizar.tramite.getIdentificadorCompuesto()}" style="width:417px;" readonly="true" />
 					<p:outputLabel   value="" />
 
 					<p:outputLabel for="procedimiento" value="#{msg['dialogTramiteVersionPrevisualizar.tramite']}" />
@@ -178,7 +178,7 @@
 		  	 <p:outputPanel styleClass="botonera" id="botonera">
 		     	<p:toolbar>
 		     		<f:facet name="left">
-		     			<p:inputText id="txtCopy" value="#{dialogTramiteVersionPrevisualizar.urlTramite}" style="display:none" />
+		     			<p:inputText id="txtCopy" value="#{dialogTramiteVersionPrevisualizar.urlTramite}" onblur="this.value = this.value.trim();" style="display:none" />
 						<p:commandButton id="btnCopiar" value="#{msg['botones.copiar']}" icon="fa fa-copy" onclick="copiarClipboard();" process="@this" disabled="#{dialogTramiteVersionPrevisualizar.disableTramites and not dialogTramiteVersionPrevisualizar.simularCatalogo}"/>
 						<p:commandButton id="hiddenCommandGrowl" styleClass="button" process="@this"  action="#{dialogTramiteVersionPrevisualizar.avisarGrowl()}"  style="display:none" />
 		     		</f:facet>
@@ -240,7 +240,7 @@
                     document.getElementById("dialogTramite:getProcedimientosRecargar").click();
                 }
 	             var arrayCm = [];
-					
+
 				  window.onload=function(){
 
 	             	setTimeout(() => {

@@ -24,6 +24,8 @@ public class FiltroEventoAuditoria implements Serializable {
 	private TypeEvento evento;
 	private String excepcion;
 	private String codSia;
+	private String estado;
+	private String coment;
 
 	private String idTramite;
 	private Integer versionTramite;
@@ -32,6 +34,9 @@ public class FiltroEventoAuditoria implements Serializable {
 
 	private boolean errorPlataforma;
 	private boolean soloContar;
+
+	private String tlf;
+	private String email;
 
 	private String sortField;
 	private String sortOrder;
@@ -179,6 +184,38 @@ public class FiltroEventoAuditoria implements Serializable {
 
 	public final void setCodSia(String codSia) {
 		this.codSia = codSia;
+	}
+
+	public String getTlf() {
+		return tlf;
+	}
+
+	public void setTlf(String tlf) {
+		this.tlf = tlf;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public String getComent() {
+		return coment;
+	}
+
+	public void setComent(String coment) {
+		this.coment = coment;
 	}
 
 }

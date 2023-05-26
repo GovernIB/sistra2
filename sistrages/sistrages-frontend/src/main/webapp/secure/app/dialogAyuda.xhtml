@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 <p:importConstants type="es.caib.sistrages.core.api.model.comun.ConstantesDisenyo" var="Constantes" />
@@ -21,6 +22,7 @@
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogAyuda.modoAcceso}"/>
 		<f:viewParam name="ID" value="#{dialogAyuda.id}"/>
+		<f:viewParam name="IFRAME" value="#{dialogAyuda.esIframe}" />
 		<f:viewAction action="#{dialogAyuda.init}" />
 	</f:metadata>
 
@@ -43,7 +45,14 @@
 			<p:toolbar>
 				<f:facet name="right">
 					<p:outputPanel styleClass="confirmar_botonera">
-						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogAyuda.cancelar}" process="@this"/>
+						<c:choose>
+						    <c:when test="#{dialogAyuda.esIframe}">
+								<p:commandButton value="#{msg['botones.cerrar']}" onclick="parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all')[parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all').length-1].click()" process="@this"/>
+						    </c:when>
+						    <c:otherwise>
+								<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogAyuda.cancelar}" process="@this"/>
+						    </c:otherwise>
+						</c:choose>
 					</p:outputPanel>
 				</f:facet>
 			</p:toolbar>

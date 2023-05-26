@@ -19,7 +19,7 @@
 	         <h:panelGrid columns="2" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}"  columnClasses="w30,w70" >
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.identificador']}" /></h:column>
 	         	<h:column>
-	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}" maxlength="50" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}" validatorMessage="#{msg['error.validacion.identificador']}">
+	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}" maxlength="50" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}" onblur="this.value = this.value.trim();" validatorMessage="#{msg['error.validacion.identificador']}">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,50}$" />
 	         			<p:ajax event="blur" process="@this" />
@@ -29,7 +29,7 @@
 
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.etiqueta']}" /></h:column>
 	         	<h:column>
-	         		<p:inputText id="texto" value="#{dialogDisenyoFormulario.objetoFormularioEdit.texto.getTraduccion(sessionBean.lang,dialogDisenyoFormulario.idiomas)}" styleClass="margin-right-10" readonly="true"/>
+	         		<p:inputText id="texto" value="#{dialogDisenyoFormulario.objetoFormularioEdit.texto.getTraduccion(sessionBean.lang,dialogDisenyoFormulario.idiomas)}" onblur="this.value = this.value.trim();" styleClass="margin-right-10" readonly="true"/>
 	         		<p:commandButton id="btnEtiqueta" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesHTML}" process="@this" styleClass="va-top">
 	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraduccionesTexto}" update="texto" />
 	        		</p:commandButton>

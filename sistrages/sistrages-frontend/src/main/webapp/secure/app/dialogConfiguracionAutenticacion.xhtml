@@ -39,7 +39,7 @@
 			<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -149,22 +149,22 @@
 
 
 					<p:outputLabel for="identificador" value="#{msg['dialogConfiguracionAutenticacion.headerIdentificador']}" />
-					<p:inputText id="identificador" value="#{dialogConfiguracionAutenticacion.data.identificador}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="20"  onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+					<p:inputText id="identificador" value="#{dialogConfiguracionAutenticacion.data.identificador}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="20"  onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 				   	</p:inputText>
 				   	<p:outputLabel value="" />
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogConfiguracionAutenticacion.headerDescripcion']}" />
-					<p:inputText id="descripcion" value="#{dialogConfiguracionAutenticacion.data.descripcion}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="255"/>
+					<p:inputText id="descripcion" value="#{dialogConfiguracionAutenticacion.data.descripcion}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" onblur="this.value = this.value.trim();" required="true" size="55" maxlength="255"/>
 					<p:outputLabel value="" />
 
 					<p:outputLabel for="usuario" value="#{msg['dialogConfiguracionAutenticacion.headerUsuario']}" />
-					<p:inputText id="usuario" value="#{dialogConfiguracionAutenticacion.data.usuario}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="50"/>
+					<p:inputText id="usuario" value="#{dialogConfiguracionAutenticacion.data.usuario}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" onblur="this.value = this.value.trim();" required="true" size="55" maxlength="50"/>
 					<p:outputLabel value="" />
 
 					<p:outputLabel for="password" value="#{msg['dialogConfiguracionAutenticacion.headerPass']}" />
-					<p:inputText id="password" value="#{dialogConfiguracionAutenticacion.data.password}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" required="true" size="55" maxlength="50"/>
+					<p:inputText id="password" value="#{dialogConfiguracionAutenticacion.data.password}" readonly="#{dialogConfiguracionAutenticacion.isConsulta()}" onblur="this.value = this.value.trim();" required="true" size="55" maxlength="50"/>
 					<p:outputLabel value="" />
 
 

@@ -131,7 +131,12 @@ public abstract class DialogControllerBase {
 	 * @return boolean
 	 */
 	public boolean isConsulta() {
-		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+		final TypeModoAcceso modo;
+		if (modoAcceso != null) {
+			modo = TypeModoAcceso.valueOf(modoAcceso);
+		} else {
+			modo = null;
+		}
 		return (modo == TypeModoAcceso.CONSULTA);
 	}
 

@@ -40,7 +40,7 @@
 	<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -151,14 +151,14 @@
     <h:panelGrid rowClasses=", ui-datatable-odd" columns="2" columnClasses="w20 padding-left-18, w80 grid-left" styleClass="w100 h100" cellpadding = "5" cellspacing = "0" style="padding-bottom: 26px !important;">
 
             <p:outputLabel for="identificador" value="#{msg['dialogSeccionesReutilizables.identificador']}" />
-            <p:inputText id="identificador" required="true" styleClass="w20" maxlength="3" value="#{dialogSeccionReutilizable.data.identificador}" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}" readonly="#{!empty dialogSeccionReutilizable.data.codigo or dialogSeccionReutilizable.isConsulta()}" >
+            <p:inputText id="identificador" required="true" styleClass="w20" maxlength="3" value="#{dialogSeccionReutilizable.data.identificador}" onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}" readonly="#{!empty dialogSeccionReutilizable.data.codigo or dialogSeccionReutilizable.isConsulta()}" >
 				<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 				<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 				<!-- <p:ajax event="change" listener="#{dialogSeccionReutilizable.setCambios()}" process="@this" update="@this"/> -->
 	        </p:inputText>
 
             <p:outputLabel for="descripcion" value="#{msg['dialogSeccionesReutilizables.descripcion']}" />
-            <p:inputText id="descripcion" required="true" styleClass="w90" maxlength="255" value="#{dialogSeccionReutilizable.data.descripcion}" readonly="#{dialogSeccionReutilizable.isConsulta() }" />
+            <p:inputText id="descripcion" required="true" styleClass="w90" maxlength="255" value="#{dialogSeccionReutilizable.data.descripcion}" onblur="this.value = this.value.trim();" readonly="#{dialogSeccionReutilizable.isConsulta() }" />
 
 			<p:outputLabel value="#{msg['dialogSeccionesReutilizables.checkActivada']}" />
             <p:selectBooleanCheckbox id="firmardigitalmente" value="#{dialogSeccionReutilizable.data.activado}"  disabled="#{dialogSeccionReutilizable.isConsulta() }"  />

@@ -35,12 +35,12 @@ public final class AutoLogoutFilter implements Filter {
 			// Forzamos logout eliminando la sesion
 			final HttpSession session = ((HttpServletRequest) request).getSession(false);
 			if (session != null) {
-				// Comprobamos si venimos del login
-				if (session.getAttribute(ConstantesSeguridad.AUTOLOGOUT_FROMLOGIN) != null) {
+				// Comprobamos si se debe mantener sesion
+				if (session.getAttribute(ConstantesSeguridad.AUTOLOGOUT_NOINVALIDAR) != null) {
 					// Eliminamos atributo para futuros accesos
-					session.removeAttribute(ConstantesSeguridad.AUTOLOGOUT_FROMLOGIN);
+					session.removeAttribute(ConstantesSeguridad.AUTOLOGOUT_NOINVALIDAR);
 				} else {
-					// Si no venimos del login cerramos sesion para forzar login
+					// Invalidamos sesion para forzar login
 					session.invalidate();
 				}
 			}

@@ -154,7 +154,7 @@
 			        </p:selectBooleanCheckbox>
 
 					<p:outputLabel for="nombre" value="#{msg['viewConfiguracionAlertas.nombre']}"/>
-					<p:inputText id="nombre" value="#{dialogConfiguracionAlertas.data.nombre}" maxlength="255" style="width:39%;" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}">
+					<p:inputText id="nombre" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConfiguracionAlertas.data.nombre}" maxlength="255" style="width:39%;" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 				   		 <f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 						<p:ajax event="change" process="@this"/>
@@ -162,7 +162,7 @@
 
 					<p:outputLabel for="email" value="#{msg['viewConfiguracionAlertas.emails']}" />
 					<h:panelGrid columns = "1" cellspacing = "0"  width="100%">
-						<p:inputText id="email" value="#{dialogConfiguracionAlertas.emails}" maxlength="1024" validatorMessage="#{msg['viewConfiguracionEntidad.emailIncorrecto']}" style="width:39%;">
+						<p:inputText id="email" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConfiguracionAlertas.emails}" maxlength="1024" validatorMessage="#{msg['viewConfiguracionEntidad.emailIncorrecto']}" style="width:39%;">
 							<p:ajax event="change" process="@this"/>
 						</p:inputText>
 						<p:outputLabel for="aviso" value=" " />
@@ -203,7 +203,7 @@
 									</p:selectOneMenu>
 
 									<p:outputLabel value="#{msg['dialogConfiguracionAlertas.concurrecias']}:" styleClass="margin-right-10" style="width:150px"></p:outputLabel>
-									<p:inputText id="inputConcurrencias" value="#{dialogConfiguracionAlertas.concurrenciasSeleccionado}"  disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" />
+									<p:inputText id="inputConcurrencias" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConfiguracionAlertas.concurrenciasSeleccionado}"  disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" />
 
 									<p:commandButton value="#{msg['botones.anyadir']}" actionListener="#{dialogConfiguracionAlertas.anyadirDisparador()}" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" process="@form:columnaListaDisparadores" update="@form:listaDisparadores growlDialog"  styleClass="boton-azul" />
 

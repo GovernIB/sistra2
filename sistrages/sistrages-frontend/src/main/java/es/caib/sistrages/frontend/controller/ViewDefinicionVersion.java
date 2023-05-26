@@ -204,6 +204,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	private String errorCopiar;
 
+	/** Data. **/
+	private FormularioTramite data;
+
 	/**
 	 * Crea una nueva instancia de view definicion version.
 	 */
@@ -608,6 +611,28 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final Map<String, String> map = new HashMap<>();
 		map.put(TypeParametroVentana.TIPO_SCRIPT_FLUJO.toString(),
 				UtilJSON.toJSON(TypeScriptFlujo.fromString(tipoScript)));
+		map.put(TypeParametroVentana.TRAMITEVERSION.toString(), id.toString());
+		if (selectedNode != null && ((OpcionArbol) selectedNode.getData()).getTramitePaso() != null) {
+			Long codPaso = ((OpcionArbol) selectedNode.getData()).getTramitePaso().getCodigo();
+			String pasoTramitacion = ((OpcionArbol) selectedNode.getData()).getTramitePaso().getIdPasoTramitacion();
+			map.put(TypeParametroVentana.TRAMITEPASO.toString(), codPaso.toString());
+
+			switch (pasoTramitacion) {
+			case "ds":
+				String literal = "true";
+				map.put(TypeParametroVentana.LITERAL_HTML.toString(), literal);
+				break;
+			case "rf":
+				data = tramiteService.getFormulario(this.getFormularioTramiteSeleccionado().getCodigo());
+				if (TypeScriptFlujo.fromString(tipoScript) != TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO) {
+					map.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.data.getCodigo().toString());
+					map.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(),
+							this.data.getIdFormularioInterno().toString());
+				}
+				break;
+			}
+		}
+
 		if (idScript != null) {
 
 			final Script script = this.scriptService.getScript(idScript);
@@ -681,7 +706,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), id.toString());
-		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 950, 550);
+		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 950, 470);
 	}
 
 	/**
@@ -2401,5 +2426,19 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	public boolean isServicioActivado() {
 		return UtilJSF.isServicioActivado();
+	}
+
+	/**
+	 * @return the data
+	 */
+	public FormularioTramite getData() {
+		return data;
+	}
+
+	/**
+	 * @param data the data to set
+	 */
+	public void setData(FormularioTramite data) {
+		this.data = data;
 	}
 }

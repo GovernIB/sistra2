@@ -155,40 +155,40 @@
 				<p:fieldset legend="#{msg['dialogAuditoriaTramites.informacionGeneral']}" styleClass="margin-left-10 margin-right-10  noPadding" rendered="#{dialogAuditoriaTramites.dato.idSesionTramitacion ne null}">
 			 		<h:panelGrid rowClasses=",ui-datatable-odd" columnClasses="padding-left-18 w25 grid-right,padding-right-18 w75" columns="2" styleClass="w100">
 				 		<p:outputLabel for="evento" value="#{msg['dialogAuditoriaTramites.nombreEvento']}:" />
-						<p:inputText id="evento" value="#{dialogAuditoriaTramites.dato.tipoEvento}" readonly="true" size="100"/>
+						<p:inputText id="evento" value="#{dialogAuditoriaTramites.dato.tipoEvento}" onblur="this.value = this.value.toUpperCase().trim();" readonly="true" size="100"/>
 
 				 		<p:outputLabel for="nomTramite" value="#{msg['dialogAuditoriaTramites.nomTramite']}:" />
-						<p:inputText id="nomTramite" value="#{dialogAuditoriaTramites.dato.descripcionTramite}" readonly="true" size="100"/>
+						<p:inputText id="nomTramite" value="#{dialogAuditoriaTramites.dato.descripcionTramite}" onblur="this.value = this.value.toUpperCase().trim();" readonly="true" size="100"/>
 
 						<p:outputLabel for="area" value="#{msg['viewAuditoriaTramites.headArea']}:" />
-						<p:inputText id="area" value="#{dialogAuditoriaTramites.dato.area}" readonly="true" size="100"/>
+						<p:inputText id="area" value="#{dialogAuditoriaTramites.dato.area}" onblur="this.value = this.value.toUpperCase().trim();" readonly="true" size="100"/>
 
 						<p:outputLabel for="idTramite" value="#{msg['dialogAuditoriaTramites.idTramite']}:" />
-						<p:inputText id="idTramite" value="#{dialogAuditoriaTramites.splitTramite(dialogAuditoriaTramites.dato.idTramite)}" readonly="true" size="100"/>
+						<p:inputText id="idTramite" value="#{dialogAuditoriaTramites.splitTramite(dialogAuditoriaTramites.dato.idTramite)}" onblur="this.value = this.value.toUpperCase().trim();" readonly="true" size="100"/>
 
 				 		<p:outputLabel for="idProcedimientoCP" value="#{msg['dialogAuditoriaTramites.idProcedimiento']}:" />
-						<p:inputText id="idProcedimientoCP" value="#{dialogAuditoriaTramites.dato.idProcedimientoCP}" readonly="true" size="100"/>
+						<p:inputText id="idProcedimientoCP" value="#{dialogAuditoriaTramites.dato.idProcedimientoCP}" onblur="this.value = this.value.toUpperCase().trim();" readonly="true" size="100"/>
 
 				 		<p:outputLabel for="idProcedimientoSIA" value="#{msg['dialogAuditoriaTramites.sia']}:" />
-						<p:inputText id="idProcedimientoSIA" value="#{dialogAuditoriaTramites.dato.idProcedimientoSIA}" readonly="true" size="100"/>
+						<p:inputText id="idProcedimientoSIA" value="#{dialogAuditoriaTramites.dato.idProcedimientoSIA}" onblur="this.value = this.value.toUpperCase().trim();" readonly="true" size="100"/>
 
 				 		<p:outputLabel for="idSesionTramitacion" value="#{msg['dialogAuditoriaTramites.idSesion']}:" />
-						<p:inputText id="idSesionTramitacion" value="#{dialogAuditoriaTramites.dato.idSesionTramitacion}" readonly="true" size="100"/>
+						<p:inputText id="idSesionTramitacion" value="#{dialogAuditoriaTramites.dato.idSesionTramitacion}" onblur="this.value = this.value.toUpperCase().trim();" readonly="true" size="100"/>
 
 				 		<p:outputLabel for="fecha" value="#{msg['dialogAuditoriaTramites.fecha']}:" />
 				 		<p:calendar id="fecha" value="#{dialogAuditoriaTramites.dato.fecha}" size="100" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showButtonPanel="false" readonly="true"/>
 
 						<p:outputLabel for="nombreUsu" value="#{msg['dialogAuditoriaTramites.nombreUsu']}:" />
-						<p:inputText id="nombreUsu" value="#{dialogAuditoriaTramites.dato.nombre.concat(' ').concat(dialogAuditoriaTramites.dato.apellido1).concat(' ').concat(dialogAuditoriaTramites.dato.apellido2)}" readonly="true" size="100"/>
+						<p:inputText id="nombreUsu" value="#{dialogAuditoriaTramites.dato.nombre.concat(' ').concat(dialogAuditoriaTramites.dato.apellido1).concat(' ').concat(dialogAuditoriaTramites.dato.apellido2)}" onblur="this.value = this.value.toUpperCase().trim();" readonly="true" size="100"/>
 
 						<p:outputLabel for="nifUsu" value="#{msg['dialogAuditoriaTramites.nifUsu']}:" />
-						<p:inputText id="nifUsu" value="#{dialogAuditoriaTramites.dato.nif}" readonly="true" size="100"/>
+						<p:inputText id="nifUsu" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogAuditoriaTramites.dato.nif}" readonly="true" size="100"/>
 
 				 		<p:outputLabel for="descripcion" value="#{msg['dialogAuditoriaTramites.descripcion']}:" />
-						<p:inputTextarea id="descripcion" value="#{dialogAuditoriaTramites.dato.descripcion}" readonly="true" rows="3" cols="100"/>
+						<p:inputTextarea id="descripcion" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogAuditoriaTramites.dato.descripcion}" readonly="true" rows="3" cols="100"/>
 
 				 		<p:outputLabel for="resultado" value="#{msg['dialogAuditoriaTramites.resultado']}:" />
-						<p:inputText id="resultado" value="#{dialogAuditoriaTramites.dato.resultado}" readonly="true" size="100"/>
+						<p:inputText id="resultado" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogAuditoriaTramites.dato.resultado}" readonly="true" size="100"/>
 
 						<p:outputLabel for="btnSTG" value=""/>
 						<p:commandButton id="btnSTG"
@@ -203,13 +203,13 @@
 			 		<h:panelGrid rowClasses=",ui-datatable-odd" columnClasses="padding-left-18 w18 grid-right,padding-right-18 w75, w5" columns="3" styleClass="w100 h100">
 				 	 	<p:outputLabel for="codigoError" value="#{msg['dialogAuditoriaTramites.codigoError']}:" rendered="#{dialogAuditoriaTramites.dato.codigoError != null and not empty dialogAuditoriaTramites.dato.codigoError}" />
 				 		<h:panelGroup rendered="#{dialogAuditoriaTramites.dato.codigoError != null and not empty dialogAuditoriaTramites.dato.codigoError}" >
-							<p:inputText id="codigoError" value="#{dialogAuditoriaTramites.dato.codigoError}" readonly="true" size="70"/>
+							<p:inputText id="codigoError" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogAuditoriaTramites.dato.codigoError}" readonly="true" size="70"/>
 							<p:spacer width="5px"/>
 							<p:commandButton value="#{msg['dialogAuditoriaTramites.trazaError']}" id="trazaErrorBtn" onclick="PF('dlgTraza').show();" rendered="#{dialogAuditoriaTramites.dato.trazaError ne null}" process="@this"/>
 
 							<p:dialog header="#{msg['dialogAuditoriaTramites.tituloTraza']}" widgetVar="dlgTraza"  modal="true" resizable="true" height="605" width="900" >
 								<p:outputPanel styleClass="w100 h100" style="overflow: hidden !important">
-							    	<p:inputTextarea value="#{dialogAuditoriaTramites.dato.trazaError}" rows="33" cols="120"  autoResize="true" readonly="true" styleClass="h90" style="width:99%"/>
+							    	<p:inputTextarea value="#{dialogAuditoriaTramites.dato.trazaError}" onblur="this.value = this.value.toUpperCase().trim();" rows="33" cols="120"  autoResize="true" readonly="true" styleClass="h90" style="width:99%"/>
 							    	<p:spacer height="5px"/>
 									<p:outputPanel styleClass="confirmar_botonera w100">
 										<p:toolbar>

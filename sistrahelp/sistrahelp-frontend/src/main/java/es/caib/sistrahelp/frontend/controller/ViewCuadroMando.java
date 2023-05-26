@@ -109,7 +109,7 @@ public class ViewCuadroMando extends ViewControllerBase {
 	 */
 	private FiltroAuditoriaTramitacion filtros;
 
-	private FiltroAuditoriaTramitacion filtrosPlataforma;
+	private FiltroAuditoriaTramitacion filtrosInacabados;
 
 	private List<TypeEvento> tiposEventos;
 
@@ -140,6 +140,8 @@ public class ViewCuadroMando extends ViewControllerBase {
 	private int firmaFin;
 
 	private LazyDataModel<ErroresPorTramiteCM> listaErrores;
+
+	private LazyDataModel<ErroresPorTramiteCM> listaInacabados;
 
 	private LazyDataModel<EventoCM> listaErr;
 
@@ -188,8 +190,8 @@ public class ViewCuadroMando extends ViewControllerBase {
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		filtros = new FiltroAuditoriaTramitacion(convierteListaAreas(), false, false);
-		filtrosPlataforma = new FiltroAuditoriaTramitacion(convierteListaAreas(), true, false);
+		filtros = new FiltroAuditoriaTramitacion(convierteListaAreas(), true, false);
+		filtrosInacabados = new FiltroAuditoriaTramitacion(convierteListaAreas(), false, false);
 
 		tipoFecha = "tr";
 		this.horaDesde = filtros.getToday();
@@ -236,10 +238,12 @@ public class ViewCuadroMando extends ViewControllerBase {
 		filtros.setIdTramite(StringUtils.trim(filtros.getIdTramite()));
 		filtros.setIdProcedimientoCP(StringUtils.trim(filtros.getIdProcedimientoCP()));
 		filtros.setCodSia(filtros.getCodSia());
-		filtrosPlataforma.setIdSesionTramitacion(StringUtils.trim(filtros.getIdSesionTramitacion()));
-		filtrosPlataforma.setNif(StringUtils.trim(filtros.getNif()));
-		filtrosPlataforma.setIdTramite(StringUtils.trim(filtros.getIdTramite()));
-		filtrosPlataforma.setIdProcedimientoCP(StringUtils.trim(filtros.getIdProcedimientoCP()));
+		filtrosInacabados.setIdSesionTramitacion(StringUtils.trim(filtros.getIdSesionTramitacion()));
+		filtrosInacabados.setNif(StringUtils.trim(filtros.getNif()));
+		filtrosInacabados.setNombre(StringUtils.trim(filtros.getNombre()));
+		filtrosInacabados.setIdTramite(StringUtils.trim(filtros.getIdTramite()));
+		filtrosInacabados.setIdProcedimientoCP(StringUtils.trim(filtros.getIdProcedimientoCP()));
+		filtrosInacabados.setCodSia(filtros.getCodSia());
 	}
 
 	public void erroresAuditoriaTramites() {
@@ -346,17 +350,21 @@ public class ViewCuadroMando extends ViewControllerBase {
 			filtros.setFechaDesde(filtros.getToday());
 			filtros.getFechaDesde().setHours(horaDesde.getHours());
 			filtros.getFechaDesde().setMinutes(horaDesde.getMinutes());
-			filtrosPlataforma.setFechaDesde(filtros.getToday());
-			filtrosPlataforma.getFechaDesde().setHours(horaDesde.getHours());
-			filtrosPlataforma.getFechaDesde().setMinutes(horaDesde.getMinutes());
+			filtrosInacabados.setFechaDesde(filtros.getToday());
+			filtrosInacabados.getFechaDesde().setHours(horaDesde.getHours());
+			filtrosInacabados.getFechaDesde().setMinutes(horaDesde.getMinutes());
 		} else if (tipoFecha.equals("iv")) {
 			filtros.setFechaDesde(fechaDesde);
 			filtros.setFechaHasta(fechaHasta);
-			filtrosPlataforma.setFechaDesde(fechaDesde);
-			filtrosPlataforma.setFechaHasta(fechaHasta);
+			filtrosInacabados.setFechaDesde(fechaDesde);
+			filtrosInacabados.setFechaHasta(fechaHasta);
 		}
 		filtros.setIdTramite(null);
 		filtros.setVersionTramite(null);
+		filtros.setErrorPlataforma(true);
+		filtrosInacabados.setIdTramite(null);
+		filtrosInacabados.setVersionTramite(null);
+		filtrosInacabados.setErrorPlataforma(false);
 		ResultadoEventoCM resEventoCM = helpDeskService.obtenerCountEventoCM(filtros);
 
 		if (resEventoCM != null && resEventoCM.getListaEventosCM() != null
@@ -371,6 +379,17 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 		filtros.setSoloContar(false);
 		listaErrores = new ErroresPorTramiteCMLazyDataModel(helpDeskService, rowCount, filtros);
+
+		// Filtra
+		Long rowCountI = (long) 0;
+		FiltroAuditoriaTramitacion filAux = new FiltroAuditoriaTramitacion();
+		filtrosInacabados.setErrorPlataforma(false);
+		filtrosInacabados.setSoloContar(true);
+		ResultadoErroresPorTramiteCM resultI = helpDeskService.obtenerErroresPorTramiteCM(filtrosInacabados, null);
+		rowCountI = resultI.getNumElementos();
+
+		filtrosInacabados.setSoloContar(false);
+		listaInacabados = new ErroresPorTramiteCMLazyDataModel(helpDeskService, rowCountI, filtrosInacabados);
 
 		Long rowCountPlat = (long) 0;
 		filtros.setSoloContar(true);
@@ -883,4 +902,19 @@ public class ViewCuadroMando extends ViewControllerBase {
 		this.seleccionadoErr = seleccionadoErr;
 	}
 
+	public final LazyDataModel<ErroresPorTramiteCM> getListaInacabados() {
+		return listaInacabados;
+	}
+
+	public final void setListaInacabados(LazyDataModel<ErroresPorTramiteCM> listaInacabados) {
+		this.listaInacabados = listaInacabados;
+	}
+
+	public FiltroAuditoriaTramitacion getFiltrosInacabados() {
+		return filtrosInacabados;
+	}
+
+	public void setFiltrosInacabados(FiltroAuditoriaTramitacion filtrosInacabados) {
+		this.filtrosInacabados = filtrosInacabados;
+	}
 }

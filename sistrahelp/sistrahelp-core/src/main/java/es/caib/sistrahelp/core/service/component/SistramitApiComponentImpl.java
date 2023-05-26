@@ -43,6 +43,8 @@ import es.caib.sistrahelp.core.api.model.ResultadoErroresPorTramiteCM;
 import es.caib.sistrahelp.core.api.model.ResultadoEventoAuditoria;
 import es.caib.sistrahelp.core.api.model.ResultadoEventoCM;
 import es.caib.sistrahelp.core.api.model.ResultadoPerdidaClave;
+import es.caib.sistrahelp.core.api.model.ResultadoSoporte;
+import es.caib.sistrahelp.core.api.model.Soporte;
 import es.caib.sistrahelp.core.api.model.VerificacionPago;
 import es.caib.sistrahelp.core.api.model.comun.ListaPropiedades;
 import es.caib.sistrahelp.core.api.model.types.TypeDocumentoPersistencia;
@@ -69,10 +71,12 @@ import es.caib.sistramit.rest.api.interna.ROUTEventoAuditoria;
 import es.caib.sistramit.rest.api.interna.ROUTEventoCM;
 import es.caib.sistramit.rest.api.interna.ROUTPagoAuditoria;
 import es.caib.sistramit.rest.api.interna.ROUTPerdidaClave;
+import es.caib.sistramit.rest.api.interna.ROUTSoporte;
 import es.caib.sistramit.rest.api.interna.ROUTTramiteAuditoria;
 import es.caib.sistramit.rest.api.interna.RPagoAuditoria;
 import es.caib.sistramit.rest.api.interna.RPerdidaClave;
 import es.caib.sistramit.rest.api.interna.RPersistenciaAuditoria;
+import es.caib.sistramit.rest.api.interna.RSoporte;
 
 /**
  * Implementación acceso SISTRAMIT
@@ -138,6 +142,63 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 					// auditoria
 					for (final REventoAuditoria rEventoAuditoria : listaREventos) {
 						resultado.getListaEventos().add(convierteEventoAuditoria(rEventoAuditoria));
+					}
+
+				}
+			}
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public ResultadoSoporte obtenerFormularioSoporte(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion) {
+
+		ResultadoSoporte resultado = null;
+		ROUTSoporte rResultado = null;
+		List<RSoporte> listaREventos = null;
+
+		final RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+		final RINEventoAuditoria param = new RINEventoAuditoria();
+		param.setPaginacion(convierteFiltroPaginacion(pFiltroPaginacion));
+		param.setFiltro(convierteFiltroAuditoriaBusqueda(toCapital(pFiltroBusqueda)));
+
+		final HttpEntity<RINEventoAuditoria> request = new HttpEntity<>(param, headers);
+		ResponseEntity<ROUTSoporte> response = null;
+		try {
+			response = restTemplate.postForEntity(getUrl() + "/auditoria/soporte", request, ROUTSoporte.class);
+		} catch (Exception e) {
+
+		}
+
+		if (response != null && response.getStatusCodeValue() == 200) {
+			rResultado = response.getBody();
+		} else {
+			rResultado = new ROUTSoporte();
+			rResultado.setListaFormularios(null);
+			rResultado.setNumElementos((long) 0);
+		}
+
+		if (rResultado != null) {
+			resultado = new ResultadoSoporte();
+
+			if (pFiltroBusqueda != null && pFiltroBusqueda.isSoloContar()) {
+				resultado.setNumElementos(rResultado.getNumElementos());
+			} else {
+				listaREventos = rResultado.getListaFormularios();
+
+				if (listaREventos != null) {
+					resultado.setListaFormularios(new ArrayList<>());
+					// auditoria
+					for (final RSoporte rForm : listaREventos) {
+						resultado.getListaFormularios().add(convierteSoporte(rForm));
 					}
 
 				}
@@ -550,6 +611,31 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 		return resultado;
 	}
 
+	@Override
+	public void updateFormularioSoporte(Soporte soporte) {
+		List<RSoporte> listaREventos = null;
+
+		final RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+		final Map<String, Object> param = new HashMap<String, Object>();
+		param.put("codigo", soporte.getCodigo());
+		param.put("estado", soporte.getEstado());
+		param.put("comentarios", soporte.getComent());
+
+		final HttpEntity<Map<String, Object>> request = new HttpEntity<>(param, headers);
+		ResponseEntity<ROUTSoporte> response = null;
+		try {
+			response = restTemplate.postForEntity(getUrl() + "/auditoria/soporte/update", request, ROUTSoporte.class);
+		} catch (Exception e) {
+
+		}
+	}
+
 	private String getPassword() {
 		return configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_PWD);
 	}
@@ -597,10 +683,14 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 			rFiltro.setIdSesionTramitacion(pFiltro.getIdSesionTramitacion());
 			rFiltro.setNif(pFiltro.getNif());
 			rFiltro.setNombre(pFiltro.getNombre());
+			rFiltro.setTlf(pFiltro.getTlf());
+			rFiltro.setEmail(pFiltro.getEmail());
 			rFiltro.setFechaDesde(pFiltro.getFechaDesde());
 			rFiltro.setFechaHasta(pFiltro.getFechaHasta());
 			rFiltro.setCodSia(pFiltro.getCodSia());
 			rFiltro.setExcepcion(pFiltro.getExcepcion());
+			rFiltro.setEstado(pFiltro.getEstado());
+			rFiltro.setComent(pFiltro.getComent());
 
 			if (pFiltro.getEvento() != null) {
 				rFiltro.setEvento(pFiltro.getEvento().name());
@@ -661,6 +751,72 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 		}
 
 		return evento;
+	}
+
+	/**
+	 * Convierte evento auditoria.
+	 *
+	 * @param pREventoAuditoria evento auditoria
+	 * @return EventoAuditoriaTramitacion
+	 */
+	private Soporte convierteSoporte(final RSoporte pRSoporte) {
+		Soporte soporte = null;
+
+		if (pRSoporte != null) {
+			soporte = new Soporte();
+
+			soporte.setCodigo(pRSoporte.getCodigo());
+			soporte.setIdTramite(pRSoporte.getIdTramite());
+			soporte.setVersion(pRSoporte.getVersion());
+			soporte.setFechaCreacion(pRSoporte.getFechaCreacion());
+			soporte.setSesionTramitacion(pRSoporte.getSesionTramitacion());
+			soporte.setNif(pRSoporte.getNif());
+			soporte.setNombre(pRSoporte.getNombre());
+			soporte.setTelefono(pRSoporte.getTelefono());
+			soporte.setEmail(pRSoporte.getEmail());
+			soporte.setHorario(pRSoporte.getHorario());
+			soporte.setTipoProblema(pRSoporte.getTipoProblema());
+			soporte.setDescripcionProblema(pRSoporte.getDescripcionProblema());
+			soporte.setNombreFichero(pRSoporte.getNombreFichero());
+			soporte.setDatosFichero(pRSoporte.getDatosFichero());
+			soporte.setEstado(pRSoporte.getEstado());
+			soporte.setComent(pRSoporte.getComentario());
+		}
+
+		return soporte;
+	}
+
+	/**
+	 * Convierte evento auditoria.
+	 *
+	 * @param pREventoAuditoria evento auditoria
+	 * @return EventoAuditoriaTramitacion
+	 */
+	private RSoporte convierteRSoporte(final Soporte soporte) {
+		RSoporte rsoporte = null;
+
+		if (soporte != null) {
+			rsoporte = new RSoporte();
+
+			rsoporte.setCodigo(soporte.getCodigo());
+			rsoporte.setIdTramite(soporte.getIdTramite());
+			rsoporte.setVersion(soporte.getVersion());
+			rsoporte.setFechaCreacion(soporte.getFechaCreacion());
+			rsoporte.setSesionTramitacion(soporte.getSesionTramitacion());
+			rsoporte.setNif(soporte.getNif());
+			rsoporte.setNombre(soporte.getNombre());
+			rsoporte.setTelefono(soporte.getTelefono());
+			rsoporte.setEmail(soporte.getEmail());
+			rsoporte.setHorario(soporte.getHorario());
+			rsoporte.setTipoProblema(soporte.getTipoProblema());
+			rsoporte.setDescripcionProblema(soporte.getDescripcionProblema());
+			rsoporte.setNombreFichero(soporte.getNombreFichero());
+			rsoporte.setDatosFichero(soporte.getDatosFichero());
+			rsoporte.setEstado(soporte.getEstado());
+			rsoporte.setComentario(soporte.getComent());
+		}
+
+		return rsoporte;
 	}
 
 	/**

@@ -34,13 +34,13 @@
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "15" cellspacing = "0" width="100%">
 
 				 	<p:outputLabel for="codigo" value="#{msg['dialogPropiedadConfiguracion.headerCodigo']}" />
-				 	<p:inputText id="codigo" value="#{dialogPropiedadConfiguracion.data.propiedad}" readonly="#{!dialogPropiedadConfiguracion.alta}" required="true" size="40" />
+				 	<p:inputText id="codigo" onblur="this.value = this.value.trim();" value="#{dialogPropiedadConfiguracion.data.propiedad}" readonly="#{!dialogPropiedadConfiguracion.alta}" required="true" size="40" />
 
 				 	<p:outputLabel for="valor" value="#{msg['dialogPropiedadConfiguracion.headerValor']}" />
-				 	<p:inputText id="valor" value="#{dialogPropiedadConfiguracion.data.valor}" readonly="#{dialogPropiedadConfiguracion.data.noModificable or dialogPropiedadConfiguracion.consulta}" required="true" size="40" maxlength="500" />
+				 	<p:inputText id="valor" onblur="this.value = this.value.trim();" value="#{dialogPropiedadConfiguracion.data.valor}" readonly="#{dialogPropiedadConfiguracion.data.noModificable or dialogPropiedadConfiguracion.consulta}" required="true" size="40" maxlength="500" />
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogPropiedadConfiguracion.headerDescripcion']}" />
-				 	<p:inputTextarea id="descripcion" value="#{dialogPropiedadConfiguracion.descripcion}" readonly="#{!dialogPropiedadConfiguracion.alta}" required="true" rows="10" cols="40"  />
+				 	<p:inputTextarea id="descripcion" value="#{dialogPropiedadConfiguracion.descripcion}" onblur="this.value = this.value.trim();" readonly="#{!dialogPropiedadConfiguracion.alta}" required="true" rows="10" cols="40"  />
 
 				</h:panelGrid>
 			</p:outputPanel>
@@ -57,7 +57,7 @@
 		    <h:outputScript >
 
 	             var arrayCm = [];
-					
+
 				  window.onload=function(){
 	                let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 	                onVisible(contextMenu, () => eliminarResaltar());

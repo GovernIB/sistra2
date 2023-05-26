@@ -51,13 +51,14 @@
 		<f:viewParam name="AMBITO" value="#{dialogDominio.ambito}"/>
 		<f:viewParam name="AREA" value="#{dialogDominio.idArea}"/>
 		<f:viewParam name="ENTIDAD" value="#{dialogDominio.idEntidad}"/>
+		<f:viewParam name="IFRAME" value="#{dialogDominio.esIframe}" />
 		<f:viewAction action="#{dialogDominio.init}" />
 	</f:metadata>
 	<h:form id="dialogDominio" styleClass="margin-top-10">
 		<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -168,14 +169,14 @@
 			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w30 padding-left-18, w65" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="codigo" value="#{msg['dialogDominio.headerCodigo']}" />
-				<p:inputText id="codigo" value="#{dialogDominio.data.identificador}" readonly="#{dialogDominio.isConsulta()}"  required="true" maxlength="50"  onblur="this.value = this.value.toUpperCase();" styleClass="w95" validatorMessage="#{msg['error.validacion.identificador']}">
+				<p:inputText id="codigo" value="#{dialogDominio.data.identificador}" readonly="#{dialogDominio.isConsulta()}"  required="true" maxlength="50"  onblur="this.value = this.value.toUpperCase().trim();" styleClass="w95" validatorMessage="#{msg['error.validacion.identificador']}">
 					<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 					<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,50}$" />
 					<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
 			   	</p:inputText>
 
 				<p:outputLabel for="descripcion" value="#{msg['dialogDominio.headerDescripcion']}" />
-				<p:inputTextarea id="descripcion" value="#{dialogDominio.data.descripcion}" readonly="#{dialogDominio.isConsulta()}" required="true" rows="4" cols="40" maxlength="255" styleClass="w95" />
+				<p:inputTextarea id="descripcion" value="#{dialogDominio.data.descripcion}" readonly="#{dialogDominio.isConsulta()}" onblur="this.value = this.value.trim();" required="true" rows="4" cols="40" maxlength="255" styleClass="w95" />
 
 				<p:outputLabel for="cacheo" value="#{msg['dialogDominio.headerCachear']}" />
 				<h:panelGrid id="panelCacheo" columns="2">
@@ -201,7 +202,7 @@
 
 						<p:column id="columnaBBDD1" colspan="1" rendered="#{dialogDominio.visibleJNDI}" >
 							<p:outputLabel for="jndi" value="#{msg['dialogDominio.headerTipo.consultaBD.jndi']}" style="margin-right:20px" />
-							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" readonly="#{dialogDominio.isConsulta()}" size="43" maxlength="500" >
+							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" readonly="#{dialogDominio.isConsulta()}" onblur="this.value = this.value.trim();" size="43" maxlength="500" >
 								<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
 							</p:inputText>
 						</p:column>
@@ -215,7 +216,7 @@
 								<textarea disabled="disabled" id="sqlDecoded" cols="49" rows="8" maxlength="2000" class="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable ui-state-disabled" role="textbox" aria-disabled="true" aria-readonly="false" aria-multiline="true" style="overflow: auto;"><h:outputText value="#{dialogDominio.data.sqlDecoded}" /></textarea>
 							</c:when>
 							<c:otherwise>
-								<p:inputTextarea id="sqlDecoded" value="#{dialogDominio.data.sqlDecoded}" autoResize="false" rows="8" cols="50" maxlength="2000" styleClass="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable" role="textbox" aria-disabled="false" aria-readonly="false" aria-multiline="true">
+								<p:inputTextarea id="sqlDecoded" value="#{dialogDominio.data.sqlDecoded}" onblur="this.value = this.value.trim();" autoResize="false" rows="8" cols="50" maxlength="2000" styleClass="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable" role="textbox" aria-disabled="false" aria-readonly="false" aria-multiline="true">
 									<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
 								</p:inputTextarea>
 							</c:otherwise>
@@ -302,7 +303,7 @@
 								<p:outputLabel for="urlRemoto" value="#{msg['dialogDominio.headerTipo.consultaRemota.url']}"  />
 							</p>
 							<p>
-								<p:inputText id="urlRemoto" value="#{dialogDominio.data.url}" readonly="#{dialogDominio.isConsulta()}" size="45"  maxlength="500">
+								<p:inputText id="urlRemoto" value="#{dialogDominio.data.url}" readonly="#{dialogDominio.isConsulta()}" onblur="this.value = this.value.trim();" size="45"  maxlength="500">
 									<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
 								</p:inputText>
 								<p:commandButton icon="fa fa-arrow-down" value="#{msg['dialogSeleccionVariableArea.titulo']}" disabled="#{dialogDominio.isConsulta()}" actionListener="#{dialogDominio.seleccionarVariableArea()}" process="@this" update="growlDialog " rendered="#{dialogDominio.isAmbitoArea()}">
@@ -362,12 +363,12 @@
 							</c:when>
 							<c:otherwise>
 
-								<p:inputTextarea id="fuenteQueryDecoded" value="#{dialogDominio.data.sqlDecoded}" autoResize="false" rows="4" cols="40" maxlength="2000" styleClass="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable" role="textbox" aria-disabled="false" aria-readonly="false" aria-multiline="true">
+								<p:inputTextarea id="fuenteQueryDecoded" onblur="this.value = this.value.trim();" value="#{dialogDominio.data.sqlDecoded}" autoResize="false" rows="4" cols="40" maxlength="2000" styleClass="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable" role="textbox" aria-disabled="false" aria-readonly="false" aria-multiline="true">
 									<p:ajax event="change" listener="#{dialogDominio.setHayCambios(true)}"/>
 								</p:inputTextarea>
 							</c:otherwise>
 							</c:choose>
-							<p:inputTextarea id="fuenteQuery" value="#{dialogDominio.data.sql}" autoResize="false" rows="4" cols="40" maxlength="2000" styleClass="no-display"/>
+							<p:inputTextarea id="fuenteQuery" onblur="this.value = this.value.trim();" value="#{dialogDominio.data.sql}" autoResize="false" rows="4" cols="40" maxlength="2000" styleClass="no-display"/>
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleFuente}"  value="" />
 				</h:panelGrid>
@@ -457,7 +458,14 @@
 				<f:facet name="right">
 	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptar()}" process="@form" update="growlDialog"  rendered="#{dialogDominio.permiteGuardar()}" styleClass="boton-azul" onclick="cambioValorB64(null);" />
 					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominio.cancelar()}" process="@this" rendered="#{dialogDominio.permiteGuardar()}"/>
-					<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominio.cancelar()}" process="@this"  rendered="#{dialogDominio.permiteGuardar() == false}"/>
+					<c:choose>
+					    <c:when test="#{dialogDominio.esIframe}">
+							<p:commandButton value="#{msg['botones.cerrar']}" onclick="parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all')[parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all').length-1].click()" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogDominio.permiteGuardar() == false}" />
+					    </c:when>
+					    <c:otherwise>
+							<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominio.cancelar()}" process="@this"  rendered="#{dialogDominio.permiteGuardar() == false}"/>
+					    </c:otherwise>
+					</c:choose>
 					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDominio.ayuda}" process="@this"/>
 				</f:facet>
 			</p:toolbar>

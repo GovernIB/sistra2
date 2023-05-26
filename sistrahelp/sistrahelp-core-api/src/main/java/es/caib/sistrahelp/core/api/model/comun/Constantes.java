@@ -23,6 +23,8 @@ public final class Constantes {
 
 	public static final String CLAVE_MOCHILA_PAGO = "CLAVE_MOCHILA_PAGO";
 
+	public static final String CLAVE_MOCHILA_SOPORTE = "CLAVE_MOCHILA_SOPORTE";
+
 	public static final String CLAVE_MOCHILA_PERSISTENCIA = "CLAVE_MOCHILA_PERSISTENCIA";
 
 }

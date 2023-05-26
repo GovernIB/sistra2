@@ -32,7 +32,7 @@
 		<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -142,8 +142,8 @@
 
 			<p:outputLabel for="inputTipoIncidenciaHidden" value="#{msg['dialogFormularioSoporte.headerTipoIncidencia']}"/>
 			<p:column>
-				<p:inputText  id="inputTipoIncidencia" value="#{dialogFormularioSoporte.tipoIncidencia}" readonly="true" required="true" style="width:80%;" styleClass="margin-right-10 #{not tipoIncidenciaComponent.valid ? 'ui-state-error' : ''}"/>
-				<p:inputText id="inputTipoIncidenciaHidden" value="#{dialogFormularioSoporte.tipoIncidencia}" type="hidden" required="true" binding="#{tipoIncidenciaComponent}" />
+				<p:inputText  id="inputTipoIncidencia" value="#{dialogFormularioSoporte.tipoIncidencia}" readonly="true" required="true" style="width:80%;" onblur="this.value = this.value.trim();" styleClass="margin-right-10 #{not tipoIncidenciaComponent.valid ? 'ui-state-error' : ''}"/>
+				<p:inputText id="inputTipoIncidenciaHidden" onblur="this.value = this.value.trim();" value="#{dialogFormularioSoporte.tipoIncidencia}" type="hidden" required="true" binding="#{tipoIncidenciaComponent}" />
 				<p:commandButton id="btnTipoIncidencia" icon="fa fa-language" actionListener="#{dialogFormularioSoporte.editarTipoIncidencia}" process="@this" update="growlDialogFormularioSoporte" style="margin-right:5px">
             		<p:ajax event="dialogReturn" listener="#{dialogFormularioSoporte.returnDialogoTipoIncidencia}" update="growlDialogFormularioSoporte inputTipoIncidencia inputTipoIncidenciaHidden" />
         		</p:commandButton>
@@ -152,8 +152,8 @@
 
 			<p:outputLabel for="inputDescripcionHidden" value="#{msg['dialogFormularioSoporte.headerDescripcion']}" />
 			<p:column>
-				<p:inputText id="inputDescripcion"  value="#{dialogFormularioSoporte.descripcion}" readonly="true" required="true" style="width:80%;" styleClass="margin-right-10 #{not descripcionComponent.valid ? 'ui-state-error' : ''}"/>
-				<p:inputText id="inputDescripcionHidden" value="#{dialogFormularioSoporte.descripcion}" type="hidden" required="true" binding="#{descripcionComponent}"/>
+				<p:inputText id="inputDescripcion" onblur="this.value = this.value.trim();" value="#{dialogFormularioSoporte.descripcion}" readonly="true" required="true" style="width:80%;" styleClass="margin-right-10 #{not descripcionComponent.valid ? 'ui-state-error' : ''}"/>
+				<p:inputText id="inputDescripcionHidden" onblur="this.value = this.value.trim();" value="#{dialogFormularioSoporte.descripcion}" type="hidden" required="true" binding="#{descripcionComponent}"/>
 				<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogFormularioSoporte.editarDescripcion}" process="@this" update="growlDialogFormularioSoporte" style="margin-right:5px">
             		<p:ajax event="dialogReturn" listener="#{dialogFormularioSoporte.returnDialogoDescripcion}" update="growlDialogFormularioSoporte inputDescripcion inputDescripcionHidden" />
         		</p:commandButton>
@@ -169,7 +169,7 @@
 			</p:column>
 
 			<p:outputLabel id="labelEmails" value="#{msg['dialogFormularioSoporte.headerEmails']}" rendered="#{dialogFormularioSoporte.listaCorr}"/>
-			<p:inputText   id="inputEmails" value="#{dialogFormularioSoporte.data.listaEmails}" style="width:80%;" maxlength="4000" rendered="#{dialogFormularioSoporte.listaCorr}" />
+			<p:inputText   id="inputEmails" value="#{dialogFormularioSoporte.data.listaEmails}" onblur="this.value = this.value.trim();" style="width:80%;" maxlength="4000" rendered="#{dialogFormularioSoporte.listaCorr}" />
 
 			<p:spacer 	   id="tabEmailsInfo" width="5" height="1" rendered="#{dialogFormularioSoporte.listaCorr}" />
 			<p:outputLabel id="labelEmailsInfo"  styleClass="outputlabel-nota" value="#{msg['dialogFormularioSoporte.headerEmailsNota']}" rendered="#{dialogFormularioSoporte.listaCorr}" />

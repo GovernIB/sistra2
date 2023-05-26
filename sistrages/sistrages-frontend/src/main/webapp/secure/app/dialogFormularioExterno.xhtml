@@ -32,7 +32,7 @@
 			<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -143,18 +143,18 @@
 
 
 					<p:outputLabel for="identificador" value="#{msg['dialogFormularioExterno.headerIdentificador']}" />
-					<p:inputText id="identificador" value="#{dialogFormularioExterno.data.identificador}" readonly="#{dialogFormularioExterno.isConsulta()}" required="true" size="40" maxlength="20"  onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+					<p:inputText id="identificador" value="#{dialogFormularioExterno.data.identificador}" readonly="#{dialogFormularioExterno.isConsulta()}" required="true" size="40" maxlength="20"  onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 				   	</p:inputText>
 				   	<p:outputLabel value="" />
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogFormularioExterno.headerDescripcion']}" />
-					<p:inputText id="descripcion" value="#{dialogFormularioExterno.data.descripcion}" readonly="#{dialogFormularioExterno.isConsulta()}" required="true" size="40" maxlength="255"/>
+					<p:inputText id="descripcion" onblur="this.value = this.value.trim();" value="#{dialogFormularioExterno.data.descripcion}" readonly="#{dialogFormularioExterno.isConsulta()}" required="true" size="40" maxlength="255"/>
 					<p:outputLabel value="" />
 
 					<p:outputLabel for="url" value="#{msg['dialogFormularioExterno.headerURL']}" />
-					<p:inputText id="url" value="#{dialogFormularioExterno.data.url}" readonly="#{dialogFormularioExterno.isConsulta()}" required="true" size="40" maxlength="100">
+					<p:inputText id="url" value="#{dialogFormularioExterno.data.url}" readonly="#{dialogFormularioExterno.isConsulta()}" onblur="this.value = this.value.trim();" required="true" size="40" maxlength="100">
 						<p:ajax event="keyup" process="@this"/>
 					</p:inputText>
 					<p:commandButton icon="fa fa-arrow-down" value="#{msg['dialogSeleccionVariableArea.titulo']}" disabled="#{dialogFormularioExterno.isConsulta()}" actionListener="#{dialogFormularioExterno.seleccionarVariableArea()}" process="@this" update="growlDialog" >

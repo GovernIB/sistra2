@@ -29,7 +29,7 @@
 			<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -154,13 +154,13 @@
 					</p:selectOneMenu>
 
 					<p:outputLabel 	value="#{msg['dialogTramiteImportarAR.headerIdentificador']}:" rendered="#{dialogTramiteImportarAR.accion == TypeImportarAccion.CREAR.toString()}" />
-					<p:inputText 	value="#{dialogTramiteImportarAR.identificador}"     		  rendered="#{dialogTramiteImportarAR.accion == TypeImportarAccion.CREAR.toString()}" style="background:white" validatorMessage="#{msg['error.validacion.identificador']}" onblur="this.value = this.value.toUpperCase();" >
+					<p:inputText 	value="#{dialogTramiteImportarAR.identificador}"     		  rendered="#{dialogTramiteImportarAR.accion == TypeImportarAccion.CREAR.toString()}" style="background:white" validatorMessage="#{msg['error.validacion.identificador']}" onblur="this.value = this.value.toUpperCase().trim();" >
 							<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 				   		 	<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 					</p:inputText>
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarAR.headerDescripcion']}:" rendered="#{dialogTramiteImportarAR.accion == TypeImportarAccion.CREAR.toString()}"  />
-					<p:inputTextarea value="#{dialogTramiteImportarAR.descripcion}"      		rendered="#{dialogTramiteImportarAR.accion == TypeImportarAccion.CREAR.toString()}"  rows="5" cols="70" style="background:white" />
+					<p:inputTextarea value="#{dialogTramiteImportarAR.descripcion}" onblur="this.value = this.value.trim();" rendered="#{dialogTramiteImportarAR.accion == TypeImportarAccion.CREAR.toString()}"  rows="5" cols="70" style="background:white" />
 
 
 				</h:panelGrid>

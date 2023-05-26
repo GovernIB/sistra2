@@ -1,13 +1,16 @@
 package es.caib.sistramit.frontend.controller.asistente;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,11 +36,13 @@ import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.RetornoFormularioExterno;
 import es.caib.sistramit.core.api.model.flujo.RetornoPago;
+import es.caib.sistramit.core.api.model.flujo.TramiteIniciado;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoPagar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRellenar;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
+import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
@@ -72,6 +77,9 @@ public class AsistenteTramitacionController extends TramitacionController {
 	/** Url redireccion asistente. */
 	private static final String URL_REDIRIGIR_ASISTENTE = "asistente/redirigirAsistente";
 
+	/** Url redireccion asistente. */
+	private static final String URL_REDIRIGIR_PERSISTENCIA = "asistente/persistencia";
+
 	/**
 	 * Inicia trámite.
 	 *
@@ -99,7 +107,10 @@ public class AsistenteTramitacionController extends TramitacionController {
 			@RequestParam("idTramiteCatalogo") final String idTramiteCatalogo,
 			@RequestParam(value = "servicioCatalogo", required = false, defaultValue = "false") final boolean servicioCatalogo,
 			@RequestParam(value = "parametros", required = false) final String parametros,
+			@RequestParam(value = "forzarNuevo", required = false, defaultValue = "false") final boolean forzarNuevo,
 			final HttpServletRequest request) {
+
+		ModelAndView mav = null;
 
 		// Url inicio
 		final String urlInicio = getUrlAsistente() + "/asistente/iniciarTramite.html?" + request.getQueryString();
@@ -127,16 +138,62 @@ public class AsistenteTramitacionController extends TramitacionController {
 		// Intentamos crear trámite con el idioma será con el que se ha autenticado
 		final String idiomaInicio = usuarioAutenticado.getUsuario().getSesionInfo().getIdioma();
 
-		// Inicia tramite
-		final String idSesionTramitacion = getFlujoTramitacionService().iniciarTramite(usuarioAutenticado.getUsuario(),
-				tramite, version, idiomaInicio, idTramiteCatalogo, servicioCatalogo, urlInicio, parametrosInicio);
+		// Verifica si tiene tramitaciones iniciadas
+		List<TramiteIniciado> tramitacionesIniciadas = new ArrayList<>();
+		if (!forzarNuevo) {
+			tramitacionesIniciadas = securityService.obtenerTramitacionesIniciadas(
+					usuarioAutenticado.getUsuario().getNif(), tramite, version, idTramiteCatalogo, servicioCatalogo);
+		}
 
-		// Almacena en la sesion (si no se puede iniciar con el idioma establecido, se
-		// cambiará al del trámite)
-		final DetalleTramite dt = getFlujoTramitacionService().obtenerDetalleTramite(idSesionTramitacion);
-		registraSesionTramitacion(dt);
+		if (!tramitacionesIniciadas.isEmpty()) {
 
-		final ModelAndView mav = new ModelAndView(URL_REDIRIGIR_ASISTENTE);
+			// Obtenemos info trámite
+			final InfoLoginTramite tramiteInfo = securityService.obtenerInfoLoginTramite(tramite, version,
+					idTramiteCatalogo, servicioCatalogo, idioma, urlInicio);
+
+			// Literales pagina
+			final Map<String, String> literales = new HashMap<>();
+			final Properties literalesProps = getLiteralesFront().getLiteralesSeccion("persistencia", idioma);
+			final Set<String> keys = literalesProps.stringPropertyNames();
+			for (final String key : keys) {
+				literales.put(key, literalesProps.getProperty(key));
+			}
+
+			// Marcamos sesión para indicar que no se invalide al iniciar trámite
+			request.getSession().setAttribute(ConstantesSeguridad.AUTOLOGOUT_NOINVALIDAR,
+					ConstantesSeguridad.AUTOLOGOUT_NOINVALIDAR);
+
+			// Redirige a vista
+			final Map<String, Object> model = new HashMap<>();
+			model.put("idioma", idioma);
+			model.put("entidad", tramiteInfo.getEntidad());
+			model.put("tramite", tramiteInfo.getTitulo());
+			model.put("literales", literales);
+			model.put("usuario", usuarioAutenticado.getUsuario());
+			model.put("tramitacionesIniciadas", tramitacionesIniciadas);
+			model.put("urlIniciarTramiteNuevo", generarUrlIniciarTramiteNuevo(urlInicio));
+			model.put("urlReanudarTramiteNuevo",
+					getUrlAsistente() + "/asistente/cargarTramite.html?idSesionTramitacion=");
+			mav = new ModelAndView(URL_REDIRIGIR_PERSISTENCIA, model);
+
+		} else {
+			// Si no tiene tramitaciones iniciadas, inciamos trámite
+
+			// Inicia tramite
+			final String idSesionTramitacion = getFlujoTramitacionService().iniciarTramite(
+					usuarioAutenticado.getUsuario(), tramite, version, idiomaInicio, idTramiteCatalogo,
+					servicioCatalogo, urlInicio, parametrosInicio);
+
+			// Almacena en la sesion (si no se puede iniciar con el idioma establecido, se
+			// cambiará al del trámite)
+			final DetalleTramite dt = getFlujoTramitacionService().obtenerDetalleTramite(idSesionTramitacion);
+			registraSesionTramitacion(dt);
+
+			// Redirigimos a asistente
+			mav = new ModelAndView(URL_REDIRIGIR_ASISTENTE);
+
+		}
+
 		return mav;
 	}
 
@@ -659,7 +716,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 			final String idSesionTramitacion = getIdSesionTramitacionActiva();
 			try {
 				AnexoFichero anexo = null;
-				if (fic != null) {
+				if (fic != null && fic.getBytes() != null && fic.getBytes().length > 0) {
 					anexo = new AnexoFichero();
 					anexo.setFileName(fic.getOriginalFilename());
 					anexo.setFileContent(fic.getBytes());
@@ -733,6 +790,20 @@ public class AsistenteTramitacionController extends TramitacionController {
 			}
 		}
 
+	}
+
+	/**
+	 * Genera url inicio forzando nuevo trámite.
+	 * 
+	 * @param urlInicio
+	 *                      Url inicio
+	 * @return url inicio forzando nuevo trámite.
+	 */
+	private static String generarUrlIniciarTramiteNuevo(final String urlInicio) {
+		// Quitamos parametro forzarNuevo anterior
+		String res = StringUtils.replace(urlInicio, "&forzarNuevo=false", "");
+		res = StringUtils.replace(res, "&forzarNuevo=true", "");
+		return res + "&forzarNuevo=true";
 	}
 
 }

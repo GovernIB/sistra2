@@ -35,13 +35,13 @@
 						<p:outputLabel for="valor" value="#{msg['dialogListaValoresFija.valor']}"  />
 					</h:column>
 					<h:column>
-				 		<p:inputText id="valor" value="#{dialogListaValoresFija.data.valor}" readonly="#{dialogListaValoresFija.isConsulta()}" required="true" maxlength="100" size="30" />
+				 		<p:inputText id="valor" onblur="this.value = this.value.trim();" value="#{dialogListaValoresFija.data.valor}" readonly="#{dialogListaValoresFija.isConsulta()}" required="true" maxlength="100" size="30" />
 					</h:column>
 	         		<h:column>
 	         			<p:outputLabel for="descripcion" value="#{msg['dialogListaValoresFija.descripcion']}" />
 	         		</h:column>
 	         		<h:column>
-	         			<p:inputText id="descripcion" value="#{dialogListaValoresFija.data.descripcion.getTraduccion(sessionBean.lang,dialogListaValoresFija.idiomas)}" readonly="true"  required="true" styleClass="margin-right-10" size="30" />
+	         			<p:inputText id="descripcion" value="#{dialogListaValoresFija.data.descripcion.getTraduccion(sessionBean.lang,dialogListaValoresFija.idiomas)}" readonly="true" onblur="this.value = this.value.trim();" required="true" styleClass="margin-right-10" size="30" />
 	         			<p:commandButton id="btnEtiqueta" icon="fa fa-language" actionListener="#{dialogListaValoresFija.editarTraducciones}" process="@this" styleClass="va-top">
 	            			<p:ajax event="dialogReturn" listener="#{dialogListaValoresFija.returnDialogoTraducciones}" update="descripcion" />
 	        			</p:commandButton>
@@ -68,7 +68,7 @@
 
 
                 var arrayCm = [];
-					
+
 				  window.onload=function(){
                     let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
                     onVisible(contextMenu, () => eliminarResaltar());

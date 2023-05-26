@@ -26,6 +26,8 @@ import es.caib.sistrahelp.core.api.model.ResultadoErroresPorTramiteCM;
 import es.caib.sistrahelp.core.api.model.ResultadoEventoAuditoria;
 import es.caib.sistrahelp.core.api.model.ResultadoEventoCM;
 import es.caib.sistrahelp.core.api.model.ResultadoPerdidaClave;
+import es.caib.sistrahelp.core.api.model.ResultadoSoporte;
+import es.caib.sistrahelp.core.api.model.Soporte;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.core.interceptor.NegocioInterceptor;
 import es.caib.sistrahelp.core.service.component.SistramitApiComponent;
@@ -86,6 +88,13 @@ public class HelpDeskServiceImpl implements HelpDeskService {
 	@NegocioInterceptor
 	public ResultadoPerdidaClave obtenerClaveTramitacion(final FiltroPerdidaClave pFiltroBusqueda) {
 		return sistramitApiComponent.obtenerClaveTramitacion(pFiltroBusqueda);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public ResultadoSoporte obtenerFormularioSoporte(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion) {
+		return sistramitApiComponent.obtenerFormularioSoporte(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 	@Override
@@ -206,5 +215,10 @@ public class HelpDeskServiceImpl implements HelpDeskService {
 	public ResultadoEventoCM obtenerErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion) {
 		return sistramitApiComponent.obtenerErroresPlataformaCM(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	public void updateFormularioSoporte(Soporte soporte) {
+		sistramitApiComponent.updateFormularioSoporte(soporte);
 	}
 }

@@ -37,7 +37,7 @@
   <h:form id="formDialogDefinicionVersionFormulario" styleClass="h100, margin-top-10">
 	<h:outputScript >
 	  var arrayCm = [];
-					
+
 				  window.onload=function(){
 	    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 		onVisible(contextMenu, () => eliminarResaltar());
@@ -149,7 +149,7 @@
     <h:panelGrid rowClasses=", ui-datatable-odd" columns="2" columnClasses="w10 padding-left-18, w90 grid-left" styleClass="w100 h100" cellpadding = "5" cellspacing = "0">
 
             <p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionFormulario.identificador']}" />
-            <p:inputText id="identificador" required="true" styleClass="w25" maxlength="20" value="#{dialogDefinicionVersionFormulario.data.identificador}" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+            <p:inputText id="identificador" required="true" styleClass="w25" maxlength="20" value="#{dialogDefinicionVersionFormulario.data.identificador}" onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
 				<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 				<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 				<p:ajax event="change" listener="#{dialogDefinicionVersionFormulario.setCambios}"/>
@@ -157,7 +157,7 @@
 
             <p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionFormulario.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-               <p:inputText id="descripcion" required="true" readonly="true" styleClass="w85" value="#{dialogDefinicionVersionFormulario.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionFormulario.idiomas)}" />
+               <p:inputText id="descripcion" required="true" readonly="true" onblur="this.value = this.value.trim();" styleClass="w85" value="#{dialogDefinicionVersionFormulario.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionFormulario.idiomas)}" />
                <p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionFormulario.editarDescripcion()}"	process="@this" update="growl">
                  <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogo}" update="growl descripcion" />
             </p:commandButton>
@@ -243,7 +243,7 @@
 			</p:selectOneMenu >
 
             <p:outputLabel for="identificadorExt" value="#{msg['dialogDefinicionVersionFormulario.gestorFormularioExternoIDFormulario']}" rendered="#{dialogDefinicionVersionFormulario.data.tipoFormulario == TypeFormularioGestor.EXTERNO}"/>
-            <p:inputText id="identificadorExt"  styleClass="w25" value="#{dialogDefinicionVersionFormulario.data.idFormularioExterno}"  required="true" rendered="#{dialogDefinicionVersionFormulario.data.tipoFormulario == TypeFormularioGestor.EXTERNO}"/>
+            <p:inputText id="identificadorExt" onblur="this.value = this.value.trim();" styleClass="w25" value="#{dialogDefinicionVersionFormulario.data.idFormularioExterno}"  required="true" rendered="#{dialogDefinicionVersionFormulario.data.tipoFormulario == TypeFormularioGestor.EXTERNO}"/>
 
 
 

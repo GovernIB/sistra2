@@ -37,14 +37,14 @@
 		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionAnexarDocumentos.headerIdentificador']}" />
-				<p:inputText  id="identificador" required="true" value="#{dialogDefinicionVersionAnexarDocumentos.data.identificador}" size="25" onblur="this.value = this.value.toUpperCase();" maxlength="20" validatorMessage="#{msg['error.validacion.identificador']}">
+				<p:inputText  id="identificador" required="true" value="#{dialogDefinicionVersionAnexarDocumentos.data.identificador}" size="25" onblur="this.value = this.value.toUpperCase().trim();" maxlength="20" validatorMessage="#{msg['error.validacion.identificador']}">
 					<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 					<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 	          	</p:inputText>
 
 				<p:outputLabel for="inputDescripcion" value="#{msg['dialogDefinicionVersionAnexarDocumentos.headerDescripcion']}" />
 				<p:column>
-					<p:inputText id="inputDescripcion" required="true" value="#{dialogDefinicionVersionAnexarDocumentos.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionAnexarDocumentos.idiomas)}" readonly="true" size="40" style="margin-right:10px" />
+					<p:inputText id="inputDescripcion" required="true" value="#{dialogDefinicionVersionAnexarDocumentos.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionAnexarDocumentos.idiomas)}" onblur="this.value = this.value.trim();" readonly="true" size="40" style="margin-right:10px" />
 					<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogDefinicionVersionAnexarDocumentos.editarDescripcion()}" process="@this" update="growldialogDefinicionRellenar" style="margin-right:5px">
 	            		<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexarDocumentos.returnDialogoDescripcion}" update="growldialogDefinicionRellenar inputDescripcion" />
 	        		</p:commandButton>

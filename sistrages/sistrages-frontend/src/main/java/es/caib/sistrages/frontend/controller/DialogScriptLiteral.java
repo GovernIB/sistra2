@@ -100,10 +100,27 @@ public class DialogScriptLiteral extends DialogControllerBase {
 	 */
 	public void editarDescripcion() {
 		if (literalHTML == null || !literalHTML.equals("true")) {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getLiteral(), idiomas, idiomas);
+			if(!modoConsulta()) {
+				UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getLiteral(), idiomas, idiomas);
+			}else {
+				UtilTraducciones.openDialogTraduccion(TypeModoAcceso.CONSULTA, data.getLiteral(), idiomas, idiomas);
+			}
 		} else {
-			UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.EDICION, data.getLiteral(), idiomas, idiomas,
-					false);
+			if(!modoConsulta()) {
+				UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.EDICION, data.getLiteral(), idiomas, idiomas,
+						false);
+			}else {
+				UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.CONSULTA, data.getLiteral(), idiomas, idiomas,
+						false);
+			}
+		}
+	}
+
+	public Boolean modoConsulta() {
+		if(modoAcceso.equals("CONSULTA")) {
+			return true;
+		}else {
+			return false;
 		}
 	}
 

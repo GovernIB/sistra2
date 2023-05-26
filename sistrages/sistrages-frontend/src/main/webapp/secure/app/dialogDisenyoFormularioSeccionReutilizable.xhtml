@@ -18,7 +18,7 @@
 	         <h:panelGrid columns="2" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}"  columnClasses="w30,w70" styleClass="w100">
 	         	<h:column rendered="#{!empty dialogDisenyoFormulario.objetoFormularioEdit.letra}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.letra']}" /></h:column>
 	         	<h:column rendered="#{!empty dialogDisenyoFormulario.objetoFormularioEdit.letra}">
-	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.letra}" maxlength="2" readonly="#{dialogDisenyoFormulario.consulta}">
+	         		<p:inputText onblur="this.value = this.value.trim();" value="#{dialogDisenyoFormulario.objetoFormularioEdit.letra}" maxlength="2" readonly="#{dialogDisenyoFormulario.consulta}">
 	         			<p:ajax event="blur" process="@this" />
 	         			<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 	         		</p:inputText>
@@ -26,7 +26,7 @@
 
 	         	<h:column rendered="#{!empty dialogDisenyoFormulario.objetoFormularioEdit.texto}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.etiqueta']}" /></h:column>
 	         	<h:column rendered="#{!empty dialogDisenyoFormulario.objetoFormularioEdit.texto}">
-	         		<p:inputText id="texto" value="#{dialogDisenyoFormulario.objetoFormularioEdit.texto.getTraduccion(sessionBean.lang,dialogDisenyoFormulario.idiomas)}" styleClass="margin-right-10"  readonly="true"/>
+	         		<p:inputText onblur="this.value = this.value.trim();" id="texto" value="#{dialogDisenyoFormulario.objetoFormularioEdit.texto.getTraduccion(sessionBean.lang,dialogDisenyoFormulario.idiomas)}" styleClass="margin-right-10"  readonly="true"/>
 	         		<p:commandButton id="btnEtiqueta" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.consultarTraduccionesTextoOpcional}" process="@this" styleClass="va-top">
 	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraduccionesTexto}" update="texto" />
 	        		</p:commandButton>
@@ -35,7 +35,7 @@
 
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.identificadorSRU']}" /></h:column>
 	         	<h:column>
-	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.identificadorSeccionReutilizable}" readonly="true">
+	         		<p:inputText onblur="this.value = this.value.trim();" value="#{dialogDisenyoFormulario.objetoFormularioEdit.identificadorSeccionReutilizable}" readonly="true">
 	         		</p:inputText>
 	         	</h:column>
 			</h:panelGrid>

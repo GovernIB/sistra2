@@ -51,7 +51,7 @@
 			<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -159,14 +159,14 @@
 			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w30, w65" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			  	<p:outputLabel for="codigo" value="#{msg['dialogFuente.headerCodigo']}" />
-			   	<p:inputText id="codigo" value="#{dialogFuente.data.identificador}" readonly="#{dialogFuente.isConsulta()}" style="width:98%;" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+			   	<p:inputText id="codigo" value="#{dialogFuente.data.identificador}" readonly="#{dialogFuente.isConsulta()}" style="width:98%;" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
 					<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 					<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 			   	</p:inputText>
 				<p:outputLabel value="" />
 
 				<p:outputLabel for="descripcion" value="#{msg['dialogFuente.headerDescripcion']}" />
-				<p:inputTextarea id="descripcion" value="#{dialogFuente.data.descripcion}" style="width:98%;" readonly="#{dialogFuente.isConsulta()}" required="true" rows="4" cols="40" maxlength="255"  />
+				<p:inputTextarea id="descripcion" value="#{dialogFuente.data.descripcion}" style="width:98%;" onblur="this.value = this.value.trim();" readonly="#{dialogFuente.isConsulta()}" required="true" rows="4" cols="40" maxlength="255"  />
 				<p:outputLabel value="" />
 
 				<p:outputLabel value="#{msg['dialogFuente.headerCampos']}" />

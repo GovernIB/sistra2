@@ -145,6 +145,8 @@ public class DialogDominio extends DialogControllerBase {
 
 	private String errorCopiar;
 
+	private boolean esIframe = false;
+
 	/**
 	 * Inicialización.
 	 */
@@ -1348,6 +1350,14 @@ public class DialogDominio extends DialogControllerBase {
 		this.hayCambios = hayCambios;
 		RequestContext requestContext = RequestContext.getCurrentInstance();
 		requestContext.update("dialogDominio:inputEscondida");
+	}
+
+	public boolean isEsIframe() {
+		return esIframe;
+	}
+
+	public void setEsIframe(boolean esIframe) {
+		this.esIframe = esIframe;
 	}
 
 }

@@ -47,12 +47,9 @@ public final class UtilsFormularioSoporte {
 	public static String obtenerAsuntoFormularioSoporte(final Literales literales,
 			final DatosFormularioSoporte datosFormSoporte, final RConfiguracionEntidad entidad,
 			final DatosSesionTramitacion sesion) {
-		final ROpcionFormularioSoporte opc = obtenerOpcionFormularioSoporte(datosFormSoporte.getProblemaTipo(),
-				entidad);
 		final String idioma = sesion.getDatosTramite().getIdioma();
 		final String asunto = literales.getLiteral(Literales.SOPORTE_INCIDENCIAS, "asunto", idioma) + " - "
-				+ UtilsSTG.obtenerLiteral(opc.getDescripcion(), idioma) + " - "
-				+ sesion.getDatosTramite().getIdSesionTramitacion();
+				+ datosFormSoporte.getProblemaTipoDesc() + " - " + sesion.getDatosTramite().getIdSesionTramitacion();
 		return asunto;
 	}
 
@@ -109,9 +106,9 @@ public final class UtilsFormularioSoporte {
 		// Si no hay ningun destinatario generamos error
 		if (destinatarios.isEmpty()) {
 			throw new ErrorFormularioSoporteException("Tipus destinatari no suportat: " + opc.getDestinatario());
-	}
+		}
 
-	return destinatarios;
+		return destinatarios;
 
 	}
 
@@ -145,7 +142,7 @@ public final class UtilsFormularioSoporte {
 	 *                         datos entidad
 	 * @return opcion
 	 */
-	private static ROpcionFormularioSoporte obtenerOpcionFormularioSoporte(final String problemaTipo,
+	public static ROpcionFormularioSoporte obtenerOpcionFormularioSoporte(final String problemaTipo,
 			final RConfiguracionEntidad entidad) {
 		ROpcionFormularioSoporte opc = null;
 		if (entidad.getAyudaFormulario() != null) {
@@ -179,8 +176,6 @@ public final class UtilsFormularioSoporte {
 			final DatosFormularioSoporte datosFormSoporte, final RConfiguracionEntidad entidad,
 			final DatosSesionTramitacion datosSesion) {
 
-		final ROpcionFormularioSoporte opc = obtenerOpcionFormularioSoporte(datosFormSoporte.getProblemaTipo(),
-				entidad);
 		final String idioma = datosSesion.getDatosTramite().getIdioma();
 
 		String listaCampos = "";
@@ -213,7 +208,7 @@ public final class UtilsFormularioSoporte {
 		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "horarioContacto"),
 				datosFormSoporte.getHorarioContacto());
 		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "problemaTipo"),
-				UtilsSTG.obtenerLiteral(opc.getDescripcion(), idioma));
+				datosFormSoporte.getProblemaTipoDesc());
 		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "problemaDesc"),
 				datosFormSoporte.getProblemaDesc());
 

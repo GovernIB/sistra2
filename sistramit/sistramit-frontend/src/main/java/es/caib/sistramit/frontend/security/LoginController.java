@@ -179,8 +179,8 @@ public final class LoginController {
 
 		// Metemos atributo en la session para que el filtro de autologout no
 		// cierre la sesion
-		request.getSession().setAttribute(ConstantesSeguridad.AUTOLOGOUT_FROMLOGIN,
-				ConstantesSeguridad.AUTOLOGOUT_FROMLOGIN);
+		request.getSession().setAttribute(ConstantesSeguridad.AUTOLOGOUT_NOINVALIDAR,
+				ConstantesSeguridad.AUTOLOGOUT_NOINVALIDAR);
 
 		// Redirigimos a vista para realizar el login
 		return login;

@@ -539,7 +539,8 @@ public class TramiteDaoImpl implements TramiteDao {
 		for (final JDominio jdominio : jdominios) {
 			if (jdominio.getAmbito().equals(TypeAmbito.AREA.toString())) {
 
-				//Si el ambito es de tipo AREA, hay que buscar el que toca al area destino y asociarlo si existe (por si hay un error).
+				// Si el ambito es de tipo AREA, hay que buscar el que toca al area destino y
+				// asociarlo si existe (por si hay un error).
 				JDominio jdom = getDominioByAreaIdentificador(jdominio.getIdentificador(), idArea);
 				if (jdom != null) {
 
@@ -547,13 +548,13 @@ public class TramiteDaoImpl implements TramiteDao {
 						jdom.setVersionesTramite(new HashSet<>());
 					}
 
-					//Si el ambito es de tipo GLOBAL o ENTIDAD, se asocia directamente
+					// Si el ambito es de tipo GLOBAL o ENTIDAD, se asocia directamente
 					jdom.getVersionesTramite().add(jVersionTramite);
 					entityManager.merge(jdom);
 				}
 			} else {
 
-				//Si el ambito es de tipo GLOBAL o ENTIDAD, se asocia directamente
+				// Si el ambito es de tipo GLOBAL o ENTIDAD, se asocia directamente
 				jdominio.getVersionesTramite().add(jVersionTramite);
 				entityManager.merge(jdominio);
 			}
@@ -1149,11 +1150,8 @@ public class TramiteDaoImpl implements TramiteDao {
 	public List<DominioTramite> getTramiteVersionByDominio(final Long idDominio, final String filtro) {
 		final List<DominioTramite> resultado = new ArrayList<>();
 
-		String sql = "Select vt from JDominio d"
-				+ " join d.versionesTramite vt"
-				+ " join vt.tramite t"
-				+ " join t.area a"
-				+ " where d.codigo = :idDominio";
+		String sql = "Select vt from JDominio d" + " join d.versionesTramite vt" + " join vt.tramite t"
+				+ " join t.area a" + " where d.codigo = :idDominio";
 
 		if (StringUtils.isNotBlank(filtro)) {
 			sql += " AND (LOWER(t.identificador) LIKE :filtro";
@@ -1332,12 +1330,8 @@ public class TramiteDaoImpl implements TramiteDao {
 	public List<DominioTramite> getTramiteVersionByEnvioRemoto(final Long idEnvioRemoto, final String filtro) {
 		final List<DominioTramite> resultado = new ArrayList<>();
 
-		String sql = "Select vt  From JPasoRegistrar pr"
-				+ " JOIN pr.pasoTramitacion pt"
-				+ " JOIN pt.versionTramite vt"
-				+ " join vt.tramite t"
-				+ " join t.area a"
-				+ " JOIN pr.envioRemoto fe"
+		String sql = "Select vt  From JPasoRegistrar pr" + " JOIN pr.pasoTramitacion pt" + " JOIN pt.versionTramite vt"
+				+ " join vt.tramite t" + " join t.area a" + " JOIN pr.envioRemoto fe"
 				+ " where fe.codigo=:idEnvioRemoto";
 
 		if (StringUtils.isNotBlank(filtro)) {
@@ -1425,14 +1419,9 @@ public class TramiteDaoImpl implements TramiteDao {
 	public List<DominioTramite> getTramiteVersionByGfe(final Long idGfe, final String filtro) {
 		final List<DominioTramite> resultado = new ArrayList<>();
 
-		String sql = "Select vt  From JPasoRellenar pr"
-				+ " JOIN pr.pasoTramitacion pt"
-				+ " JOIN pr.formulariosTramite ft"
-				+ " JOIN pt.versionTramite vt"
-				+ " join vt.tramite t"
-				+ " join t.area a"
-				+ " JOIN ft.formularioExterno fe"
-				+ " where fe.codigo=:idGfe";
+		String sql = "Select vt  From JPasoRellenar pr" + " JOIN pr.pasoTramitacion pt"
+				+ " JOIN pr.formulariosTramite ft" + " JOIN pt.versionTramite vt" + " join vt.tramite t"
+				+ " join t.area a" + " JOIN ft.formularioExterno fe" + " where fe.codigo=:idGfe";
 
 		if (StringUtils.isNotBlank(filtro)) {
 			sql += " AND (LOWER(t.identificador) LIKE :filtro";
@@ -1691,6 +1680,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		final String sqlTramite = "Select v.idiomasSoportados From JVersionTramite v where v.codigo = :idTramiteVersion ";
 		final Query queryTramite = entityManager.createQuery(sqlTramite);
 		queryTramite.setParameter("idTramiteVersion", Long.valueOf(idTramiteVersion));
+		@SuppressWarnings("unchecked")
 		final List<Object> objectIdiomas = queryTramite.getResultList();
 		if (objectIdiomas.size() == 1) {
 			final String oIdiomas = objectIdiomas.get(0).toString();

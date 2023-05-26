@@ -217,7 +217,7 @@
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"
-                         currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords}"
+                         currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
 			        	 selectionMode="single" selection="#{viewEventosPlataforma.datoSeleccionado}" rowKey="#{dt.id}">
 
 
@@ -259,7 +259,7 @@
 		        	document.getElementById("form:paginacion").blur();
 		      }
 		    </h:outputScript>
-			<p:inputText id="paginacion" value="#{viewEventosPlataforma.paginacion}" style="opacity:0">
+			<p:inputText id="paginacion" value="#{viewEventosPlataforma.paginacion}" style="opacity:0" onblur="this.value = this.value.toUpperCase().trim();">
 				<p:ajax event="blur" update="@form" process="@this"/>
 			</p:inputText>
 		</h:form>

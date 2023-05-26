@@ -491,10 +491,11 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		// Generamos pdf
 		byte[] pdf = null;
 		if (!salirSinFinalizar) {
+			final List<String> pagsRellenadas = pDatosSesion.getDatosFormulario().getIdsPaginasRellenadas();
 			final RPlantillaFormulario plantillaPdf = configuracionFormularioHelper
 					.obtenerPlantillaPdfVisualizacion(pDatosSesion);
 			pdf = generarPdfFormulario(pDatosSesion.getDefinicionTramite(), pDatosSesion.getDatosInicioSesion(),
-					plantillaPdf, xml);
+					plantillaPdf, xml, pagsRellenadas);
 		}
 		// Retornamos al flujo de tramitacion
 		final DatosFinalizacionFormulario datosFinSesion = new DatosFinalizacionFormulario();
@@ -520,11 +521,13 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 *                                        Plantilla PDF
 	 * @param xml
 	 *                                        XML Formulario
+	 * @param pagsRellenadas
+	 *                                        Páginas rellenadas
 	 * @return PDF
 	 */
 	private byte[] generarPdfFormulario(final DefinicionTramiteSTG definicionTramiteSTG,
 			final DatosInicioSesionFormulario datosInicioSesionFormulario, final RPlantillaFormulario plantillaPdf,
-			final byte[] xml) {
+			final byte[] xml, final List<String> pagsRellenadas) {
 
 		// Obtenemos plantilla
 		byte[] plantilla = null;
@@ -551,9 +554,10 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 
 		// Formateamos a PDF
 		final RFormularioTramite defFormulario = UtilsFormularioInterno.obtenerDefinicionFormulario(datosSesion);
-		return formateador.formatear(xml, plantilla, definicionTramiteSTG.getDefinicionVersion().getIdioma(),
-				defFormulario.getFormularioInterno(), datosInicioSesionFormulario.getTituloProcedimiento(),
-				datosInicioSesionFormulario.getTituloTramite(), datosInicioSesionFormulario.getCodigoSiaProcedimiento(),
+		return formateador.formatear(xml, pagsRellenadas, plantilla,
+				definicionTramiteSTG.getDefinicionVersion().getIdioma(), defFormulario.getFormularioInterno(),
+				datosInicioSesionFormulario.getTituloProcedimiento(), datosInicioSesionFormulario.getTituloTramite(),
+				datosInicioSesionFormulario.getCodigoSiaProcedimiento(),
 				datosInicioSesionFormulario.getDir3ResponsableProcedimiento());
 
 	}

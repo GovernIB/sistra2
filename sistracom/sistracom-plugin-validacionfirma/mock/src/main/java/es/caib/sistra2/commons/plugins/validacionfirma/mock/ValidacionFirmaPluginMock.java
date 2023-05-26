@@ -2,7 +2,7 @@ package es.caib.sistra2.commons.plugins.validacionfirma.mock;
 
 import java.util.Properties;
 
-import org.fundaciobit.plugins.certificate.InformacioCertificat;
+
 import org.fundaciobit.plugins.validatesignature.api.IValidateSignaturePlugin;
 import org.fundaciobit.plugins.validatesignature.api.SignatureDetailInfo;
 import org.fundaciobit.plugins.validatesignature.api.SignatureRequestedInformation;
@@ -10,6 +10,7 @@ import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureRequest;
 import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureResponse;
 import org.fundaciobit.plugins.validatesignature.api.ValidationStatus;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
+import org.fundaciobit.pluginsib.validatecertificate.InformacioCertificat;
 
 /**
  * Plugin mock de validacion de firma.
@@ -45,11 +46,7 @@ public class ValidacionFirmaPluginMock extends AbstractPluginProperties implemen
 	public ValidateSignatureResponse validateSignature(final ValidateSignatureRequest firmaAValidar) throws Exception {
 
 		// Obtiene del fichero firmado el nif
-
-		// TODO QUITAR TRAS PROBAR ANEXAR FIRMADO
-		// final String nifFirmante = new String(firmaAValidar.getSignatureData());
-		final String nifFirmante = "33456299Q";
-		// final String nifFirmante = "00000000T";
+		final String nifFirmante = new String(firmaAValidar.getSignatureData());
 
 		final ValidateSignatureResponse res = new ValidateSignatureResponse();
 		final ValidationStatus estadoFirma = new ValidationStatus();

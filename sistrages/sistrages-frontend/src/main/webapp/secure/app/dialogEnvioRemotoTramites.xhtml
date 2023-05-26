@@ -35,7 +35,7 @@
 				<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -144,7 +144,7 @@
 			<p:toolbar id="toolbar">
 				<f:facet name="left">
 					<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
-						<p:inputText placeholder="#{msg['botones.buscar']}" value="#{dialogEnvioRemotoTramites.filtro}"/>
+						<p:inputText placeholder="#{msg['botones.buscar']}" value="#{dialogEnvioRemotoTramites.filtro}" onblur="this.value = this.value.trim();"/>
 						<p:commandButton icon="fa fa-search" actionListener="#{dialogEnvioRemotoTramites.filtrar()}" process="panelFiltro" update="growlDialog dataTableDatos" />
 					</h:panelGrid>
 				</f:facet>
@@ -163,6 +163,7 @@
                           paginator="true"
                           paginatorPosition="bottom"
                           paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                          currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
                           rowsPerPageTemplate="5,10,15,30"
 			        	  selectionMode="single"
 			        	  selection="#{dialogEnvioRemotoTramites.valorSeleccionado}"

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>sistracom-plugin-validacionfirma</artifactId>
         <groupId>es.caib.sistra2</groupId>
-        <version>1.5.0</version>
+        <version>1.5.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,13 +15,13 @@
 	    <dependency>
 	      <groupId>org.fundaciobit.pluginsib.validatesignature</groupId>
 	      <artifactId>pluginsib-validatesignature-api</artifactId>
-	      <version>${plugins-ib.version}</version>
+	      <version>${plugins-ib-validatesignature.version}</version>
 		</dependency>
 
 		<dependency>
       	  <groupId>org.fundaciobit.pluginsib.validatecertificate</groupId>
           <artifactId>pluginsib-validatecertificate-api</artifactId>
-          <version>${plugins-ib.version}</version>
+          <version>${plugins-ib-validatecertificate.version}</version>
         </dependency>
 
 	    <dependency>

@@ -102,7 +102,7 @@ public abstract class TramitacionController {
 	 *
 	 * @return sesionFormulario
 	 */
-	protected final String getIdSesionFormuarioActiva() {
+	protected final String getIdSesionFormularioActiva() {
 		final String ft = getIdSesionFormulario();
 		if (ft == null) {
 			throw new WarningFrontException("No existeix instància sessió de formulari en sessió");

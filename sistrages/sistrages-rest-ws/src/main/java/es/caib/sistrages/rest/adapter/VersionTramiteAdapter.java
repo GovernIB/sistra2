@@ -248,10 +248,12 @@ public class VersionTramiteAdapter {
 		final RVersionTramitePropiedades res = new RVersionTramitePropiedades();
 		res.setAutenticado(tv.isAutenticado());
 
-		res.setPersistente(tv.isPersistencia());
-		if (tv.isPersistencia() && !tv.isPersistenciaInfinita()) {
-			res.setDiasPersistencia(tv.getPersistenciaDias());
-		}
+//		res.setPersistente(tv.isPersistencia());
+//		if (tv.isPersistencia() && !tv.isPersistenciaInfinita()) {
+//			res.setDiasPersistencia(tv.getPersistenciaDias());
+//		}
+
+		res.setPersistente(true);
 
 		if (tv.getIdiomasSoportados() != null) {
 			res.setIdiomas(Arrays.asList(tv.getIdiomasSoportados().split(AdapterUtils.SEPARADOR_IDIOMAS)));
@@ -461,7 +463,7 @@ public class VersionTramiteAdapter {
 				formularioTramite.setFirmar(f.isDebeFirmarse());
 				formularioTramite.setInterno(f.getTipoFormulario() == TypeFormularioGestor.INTERNO);
 				formularioTramite.setFormularioExterno(generaFormularioExterno(f.getFormularioGestorExterno()));
-				formularioTramite.setFormularioInterno(generaFormularioInterno(f.getIdFormularioInterno(), idioma));
+				formularioTramite.setFormularioInterno(generaFormularioInterno(f, idioma));
 				formularioTramite.setIdentificador(f.getIdentificador());
 				formularioTramite.setObligatoriedad(generaObligatoriedad(f.getObligatoriedad()));
 				final List<Script> scripts = restApiService.getScriptsSRUByIdFormulario(f.getIdFormularioInterno(),
@@ -511,13 +513,14 @@ public class VersionTramiteAdapter {
 	 * @param idioma
 	 * @return RFormularioInterno
 	 */
-	private RFormularioInterno generaFormularioInterno(final Long idFormularioInterno, final String idioma) {
+	private RFormularioInterno generaFormularioInterno(final FormularioTramite f, final String idioma) {
 		RFormularioInterno formInterno = null;
-		if (idFormularioInterno != null) {
-			final DisenyoFormulario d = restApiService.getDisenyoFormularioById(idFormularioInterno, true);
+		if (f != null && f.getIdFormularioInterno() != null) {
+			final DisenyoFormulario d = restApiService.getDisenyoFormularioById(f.getIdFormularioInterno(), true);
 			if (d != null) {
 				formInterno = new RFormularioInterno();
-				formInterno.setMostrarTitulo(d.isMostrarCabecera());
+//				formInterno.setMostrarTitulo(d.isMostrarCabecera());
+				formInterno.setMostrarTitulo(true);
 				formInterno.setPermitirGuardarSinFinalizar(d.isPermitirGuardarSinFinalizar());
 
 				// TODO: verificar que se obtienen las plantillas y páginas,
@@ -526,7 +529,8 @@ public class VersionTramiteAdapter {
 				formInterno.setPlantillas(generarPlantillas(d.getPlantillas(), idioma));
 
 				formInterno.setScriptPlantillas(AdapterUtils.generaScript(d.getScriptPlantilla(), idioma));
-				formInterno.setTitulo(AdapterUtils.generarLiteralIdioma(d.getTextoCabecera(), idioma));
+//				formInterno.setTitulo(AdapterUtils.generarLiteralIdioma(d.getTextoCabecera(), idioma));
+				formInterno.setTitulo(AdapterUtils.generarLiteralIdioma(f.getDescripcion(), idioma));
 
 			}
 		}

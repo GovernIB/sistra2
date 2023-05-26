@@ -35,7 +35,7 @@
 			<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -154,6 +154,7 @@
                           paginator="true"
                           paginatorPosition="bottom"
                           paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                          currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
                           rowsPerPageTemplate="5,10,15,30"
 			        	  selectionMode="single"
 			        	  selection="#{dialogVariablesAreaEnviosRemotos.valorSeleccionado}"

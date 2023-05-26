@@ -68,7 +68,7 @@
 
    	<h:column rendered="#{dialogDisenyoFormulario.campoExprRegular}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.exprRegular']}" /></h:column>
    	<h:column rendered="#{dialogDisenyoFormulario.campoExprRegular}">
-   		<p:inputTextarea value="#{dialogDisenyoFormulario.objetoFormularioEdit.expresionRegular}" rows="1" cols="25" autoResize="true" maxlength="4000" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+   		<p:inputTextarea value="#{dialogDisenyoFormulario.objetoFormularioEdit.expresionRegular}" onblur="this.value = this.value.trim();" rows="1" cols="25" autoResize="true" maxlength="4000" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
    			<p:ajax event="blur" process="@this" />
 		    <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
    		</p:inputTextarea>

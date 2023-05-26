@@ -66,7 +66,7 @@ public final class FormularioController extends TramitacionController {
 	 */
 	@RequestMapping("/cargarPaginaActual.json")
 	public ModelAndView cargarPaginaActual() {
-		final String idSesionFormulario = getIdSesionFormuarioActiva();
+		final String idSesionFormulario = getIdSesionFormularioActiva();
 		final PaginaFormulario pagina = formService.cargarPaginaActual(idSesionFormulario);
 		final RespuestaJSON res = new RespuestaJSON();
 		res.setDatos(pagina);
@@ -80,7 +80,7 @@ public final class FormularioController extends TramitacionController {
 	 */
 	@RequestMapping("/cargarPaginaAnterior.json")
 	public ModelAndView cargarPaginaAnterior(final HttpServletRequest request) {
-		final String idSesionFormulario = getIdSesionFormuarioActiva();
+		final String idSesionFormulario = getIdSesionFormularioActiva();
 
 		// Recuperamos valores pagina
 		final Map<String, String> valoresRequest = extraerValoresCampo(request);
@@ -110,7 +110,7 @@ public final class FormularioController extends TramitacionController {
 	public ModelAndView evaluarCambioCampoPagina(@RequestParam("idCampo") final String idCampo,
 			final HttpServletRequest request) {
 
-		final String idSesionFormulario = getIdSesionFormuarioActiva();
+		final String idSesionFormulario = getIdSesionFormularioActiva();
 
 		// Recuperamos valores pagina
 		final Map<String, String> valoresRequest = extraerValoresCampo(request);
@@ -135,7 +135,7 @@ public final class FormularioController extends TramitacionController {
 	public ModelAndView buscadorDinamico(@RequestParam("idCampo") final String idCampo,
 			@RequestParam("textoCampo") final String textoCampo, final HttpServletRequest request) {
 
-		final String idSesionFormulario = getIdSesionFormuarioActiva();
+		final String idSesionFormulario = getIdSesionFormularioActiva();
 
 		// Recuperamos valores pagina
 		final Map<String, String> valoresRequest = extraerValoresCampo(request);
@@ -170,7 +170,7 @@ public final class FormularioController extends TramitacionController {
 	@RequestMapping("/guardarPagina.json")
 	public ModelAndView guardarPagina(final HttpServletRequest request) {
 
-		final String idSesionFormulario = getIdSesionFormuarioActiva();
+		final String idSesionFormulario = getIdSesionFormularioActiva();
 
 		// Recuperamos valores pagina
 		final Map<String, String> valoresRequest = extraerValoresCampo(request);
@@ -198,7 +198,7 @@ public final class FormularioController extends TramitacionController {
 	@RequestMapping("/guardarSalirPagina.json")
 	public ModelAndView guardarSalirPagina(final HttpServletRequest request) {
 
-		final String idSesionFormulario = getIdSesionFormuarioActiva();
+		final String idSesionFormulario = getIdSesionFormularioActiva();
 
 		// Recuperamos valores pagina
 		final Map<String, String> valoresRequest = extraerValoresCampo(request);
@@ -223,7 +223,7 @@ public final class FormularioController extends TramitacionController {
 	 */
 	@RequestMapping("/cancelar.json")
 	public ModelAndView cancelar() {
-		final String idSesionFormulario = getIdSesionFormuarioActiva();
+		final String idSesionFormulario = getIdSesionFormularioActiva();
 		final ResultadoGuardarPagina rgp = formService.cancelarFormulario(idSesionFormulario);
 		final RespuestaJSON res = new RespuestaJSON();
 		res.setDatos(rgp);
@@ -239,7 +239,7 @@ public final class FormularioController extends TramitacionController {
 	 */
 	@RequestMapping("/generarImagenCaptcha.html")
 	public ModelAndView generarImagenCaptcha(@RequestParam("id") final String idCampo) {
-		final String idSesionFormulario = getIdSesionFormuarioActiva();
+		final String idSesionFormulario = getIdSesionFormularioActiva();
 		final Captcha captcha = formService.generarImagenCaptcha(idSesionFormulario, idCampo);
 		return generarDownloadView(captcha.getFichero(), captcha.getContenido());
 	}
@@ -253,7 +253,7 @@ public final class FormularioController extends TramitacionController {
 	 */
 	@RequestMapping("/generarSonidoCaptcha.html")
 	public ModelAndView generarSonidoCaptcha(@RequestParam("id") final String idCampo) {
-		final String idSesionFormulario = getIdSesionFormuarioActiva();
+		final String idSesionFormulario = getIdSesionFormularioActiva();
 		final Captcha captcha = formService.generarSonidoCaptcha(idSesionFormulario, idCampo);
 		return generarDownloadView(captcha.getFichero(), captcha.getContenido());
 	}
@@ -267,7 +267,7 @@ public final class FormularioController extends TramitacionController {
 	 */
 	@RequestMapping("/regenerarCaptcha.html")
 	public ModelAndView regenerarCaptcha(@RequestParam("id") final String idCampo) {
-		final String idSesionFormulario = getIdSesionFormuarioActiva();
+		final String idSesionFormulario = getIdSesionFormularioActiva();
 		formService.regenerarCaptcha(idSesionFormulario, idCampo);
 		final RespuestaJSON res = new RespuestaJSON();
 		res.setEstado(TypeRespuestaJSON.SUCCESS);

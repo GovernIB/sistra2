@@ -3,6 +3,7 @@ package es.caib.sistramit.core.service.component.system;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.flujo.types.TypeSoporteEstado;
 import es.caib.sistramit.core.api.model.system.rest.interno.DetallePagoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.ErroresPorTramiteCM;
 import es.caib.sistramit.core.api.model.system.rest.interno.EventoAuditoriaTramitacion;
@@ -14,6 +15,7 @@ import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPerdidaClave;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FormularioSoporte;
 import es.caib.sistramit.core.api.model.system.rest.interno.OUTPerdidaClave;
 import es.caib.sistramit.core.api.model.system.rest.interno.PagoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.PersistenciaAuditoria;
@@ -133,6 +135,8 @@ public interface RestApiInternaComponent {
 	 */
 	Long contarLogSesionTramitacionArea(final FiltroEventoAuditoria pFiltroBusqueda);
 
+	Long contarFormularioSoporte(final FiltroEventoAuditoria pFiltroBusqueda);
+
 	List<ErroresPorTramiteCM> recuperarErroresPorTramiteCM(FiltroEventoAuditoria pFiltroBusqueda,
 			FiltroPaginacion filtroPaginacion);
 
@@ -147,5 +151,10 @@ public interface RestApiInternaComponent {
 			FiltroPaginacion filtroPaginacion);
 
 	public Long contarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda);
+
+	List<FormularioSoporte> recuperarFormularioSoporte(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion);
+
+	void updateEstadoIncidencia(Long idSoporte, TypeSoporteEstado estado, String comentarios);
 
 }

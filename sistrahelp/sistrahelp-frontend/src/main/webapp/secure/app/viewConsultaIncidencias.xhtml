@@ -1,0 +1,361 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+  xmlns:pe="http://primefaces.org/ui/extensions"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  template="../layout/mainLayout.xhtml">
+
+  <f:metadata>
+    <f:viewAction action="#{viewConsultaIncidencias.init}" />
+  </f:metadata>
+
+
+
+  <ui:define name="content">
+    <h:outputScript library="primefaces-custom" name="calendar_es.js" />
+    <h:outputScript library="primefaces-custom" name="calendar_ca.js" />
+    <p:importEnum type="es.caib.sistrahelp.core.api.model.types.TypeEvento" var="TypeEvento"/>
+
+    <h:form id="form" style="height:91%;">
+      <h:outputScript>
+
+        var arrayCm = [];
+
+        window.onload=function(){
+          let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+        onVisible(contextMenu, () => eliminarResaltar());
+
+        document.addEventListener('contextmenu', function(ev) {
+            ev.preventDefault();
+            getPos();
+            return false;
+        }, false);
+        }
+
+        function eliminarResaltar(){
+          let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+            let elementos = document.getElementsByClassName('resaltar');
+            if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+            for(let i = 0; i &lt; elementos.length; i++){
+              elementos[i].classList.remove('resaltar');
+            }
+            }
+        }
+
+        function onVisible(element, callback) {
+          new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+              if(entry.intersectionRatio == 0) {
+                callback(element);
+              }
+            });
+          }).observe(element);
+        }
+
+        function consultar(){
+          let elemento = document.getElementsByClassName('resaltar')[0];
+          elemento.click();
+          $('#form\\:btnEditarHidden').click();
+        }
+
+		function consultarSesion(){
+          let elemento = document.getElementsByClassName('resaltar')[0];
+          elemento.click();
+          $('#form\\:btnSesionHidden').click();
+        }
+
+
+        function getPos(){
+         var e = window.event;
+
+          var posX = e.clientX;
+          var posY = e.clientY;
+          var el = document.elementFromPoint(posX, posY);
+
+          let elementos = document.getElementsByClassName('resaltar');
+            if(elementos.length &gt; 0){
+            for(let i = 0; i &lt; elementos.length; i++){
+              elementos[i].classList.remove('resaltar');
+            }
+            }
+
+        el.classList.add("resaltar");
+        var aux = document.getElementById("form:auxCopiar");
+        if(el.textContent!=''){
+          aux.value = el.textContent;
+        }else if(el.firstChild!=null){
+          aux.value = el.firstChild.value;
+        }else if(el.value!=null &amp;&amp; el.value!=''){
+          aux.value = el.value;
+        }
+
+        var dataT = document.getElementsByClassName('ui-datatable-scrollable-body')[0];
+        var elEnDataT = dataT.getElementsByClassName('resaltar')[0];
+        if(elEnDataT!=null){
+          document.getElementById("form:detalle").classList.remove("d-none");
+          document.getElementById("form:detalle").classList.add("d-block");
+			if(elEnDataT.classList.contains( 'idSesion' )){
+				document.getElementById("form:consultaSesion").classList.remove("d-none");
+          		document.getElementById("form:consultaSesion").classList.add("d-block");
+			}else{
+				document.getElementById("form:consultaSesion").classList.remove("d-block");
+          		document.getElementById("form:consultaSesion").classList.add("d-none")
+			}
+        }else{
+          document.getElementById("form:detalle").classList.remove("d-block");
+          document.getElementById("form:detalle").classList.add("d-none");
+        }
+
+        if(aux.value!='' ){
+            var multiple = false;
+            var hijos = el.children;
+			if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR') &amp;&amp; hijos.length &gt; 1){
+		            multiple = true;
+		                  }else if(hijos.length &gt;= 1 ){
+		                  	if(hijos.length==1  &amp;&amp; hijos[0].tagName=='DIV'){
+		                  		hijos = hijos[0].children;
+		                  	}
+			                    for(i=0;i&lt;hijos.length;i++){
+					              if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+					                multiple=true;
+					              }
+			                    }
+
+		                  }
+                  var listaCm = document.getElementsByClassName('ui-contextmenu');
+                  if(multiple){
+                    for(i=0;i&lt;listaCm.length;i++){
+                    	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+                    		arrayCm.push(listaCm[i]);
+                    	}
+	                	listaCm[i].classList.add("d-none");
+					}
+                  }else{
+                  	for(i=0;i&lt;listaCm.length;i++){
+                  		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+                    		arrayCm.push(listaCm[i]);
+                    	}
+	                	listaCm[i].classList.remove("d-none");
+					}
+					if(arrayCm.length&gt;1){
+						arrayCm.pop();
+						for(let i=0; i&lt;arrayCm.length; i++){
+							arrayCm[i].style.display='none';
+						}
+					}
+					arrayCm = [];
+                  }
+
+               }
+
+       }
+
+      </h:outputScript>
+
+      <!-- Growl mensajes -->
+      <p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+      <!-- Toolbar -->
+
+
+          <!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
+         <p:panelGrid id="panelFiltro" styleClass="noBackground w100 h10 ,showcase-text-align-center">
+				       <p:column styleClass=" noPadding "  style="border-style:inherit !important;">
+			        		<h:panelGrid columns="2" styleClass="w100, noPadding" >
+				        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewAuditoriaTramites.filtroIdSesion']}:"/>
+					        	<p:inputText id="filtroIdSesion" value="#{viewConsultaIncidencias.filtros.idSesionTramitacion}" size="20" maxlength="30" onkeyup="capitalize(this)" onblur="trim(this)"/>
+				        	</h:panelGrid>
+
+				        	<h:panelGrid columns="2" styleClass="w100, noPadding" >
+					        	<p:outputLabel for="filtroNombre" value="#{msg['viewAuditoriaTramites.filtroNombre']}:"/>
+					        	<p:inputText id="filtroNombre" value="#{viewConsultaIncidencias.filtros.nombre}" size="20" maxlength="12" style="margin-left:12px"  onkeyup="capitalize(this)" onblur="trim(this)"/>
+				        	</h:panelGrid>
+			        	</p:column>
+			        	<p:column styleClass=" noPadding p-justify-start"  style="border-style:inherit  !important;;">
+				        	<h:panelGrid columns="2" styleClass="w100, noPadding">
+					        	<p:outputLabel for="filtroNif" value="#{msg['viewAuditoriaTramites.filtroNif']}:"/>
+					        	<p:inputText id="filtroNif" value="#{viewConsultaIncidencias.filtros.nif}" size="22" maxlength="12" style="margin-left: 70px;"  onkeyup="capitalize(this)" onblur="trim(this)"/>
+				        	</h:panelGrid>
+
+				        	<h:panelGrid columns="2" styleClass="w100, noPadding" style="border-style:none !important;">
+				        		<p:outputLabel for="filtroTramite" value="#{msg['viewAuditoriaTramites.filtroTramite']}:"/>
+				        		<h:panelGroup>
+					        		<p:inputText id="filtroTramite" value="#{viewConsultaIncidencias.filtros.idTramite}" size="15" maxlength="20"  onkeyup="capitalize(this)" onblur="trim(this)">
+					        			<p:keyFilter preventPaste="false" regEx="/[a-z0-9_-]/i"/>
+					        		</p:inputText>
+					        		<p:outputLabel value=" / "/>
+					        		<p:inputText id="filtroVersion" value="#{viewConsultaIncidencias.filtros.versionTramite}" size="1" maxlength="2"  onkeyup="capitalize(this)" onblur="trim(this)">
+					        			<p:keyFilter preventPaste="false" regEx="/[0-9]/i"/>
+					        		</p:inputText>
+				        		</h:panelGroup>
+				        	</h:panelGrid>
+			        	</p:column>
+
+			        	<p:column styleClass=" noPadding " style="border-style:inherit  !important;;">
+			        		<h:panelGrid columns="2" styleClass="w100, noPadding" >
+				        		<p:outputLabel for="filtroTelefono" value="#{msg['viewConsultaIncidencias.tlf']}:"/>
+					        	<p:inputText id="filtroTelefono" value="#{viewConsultaIncidencias.filtros.tlf}" size="20" maxlength="9" onkeyup="capitalize(this)" onblur="trim(this)">
+					        		<p:keyFilter preventPaste="false" regEx="/[0-9]/i"/>
+					        	</p:inputText>
+				        	</h:panelGrid>
+
+				        	<h:panelGrid columns="2" styleClass="w100, noPadding" >
+					        	<p:outputLabel for="filtroMail" value="#{msg['viewConsultaIncidencias.correo']}:"/>
+					        	<p:inputText id="filtroMail" value="#{viewConsultaIncidencias.filtros.email}" size="20" maxlength="12" style="margin-left:12px"  onkeyup="capitalize(this)" onblur="trim(this)"/>
+				        	</h:panelGrid>
+			        	</p:column>
+
+						<p:column styleClass=" noPadding p-justify-start" style="border-style:inherit  !important;;">
+						<h:panelGrid columns="2" styleClass="w100, noPadding">
+							<p:outputLabel for="filtroFechaInicio" value="#{msg['viewAuditoriaTramites.filtroFechaInicio']}:"/>
+				        	<p:calendar id="filtroFechaInicio" value="#{viewConsultaIncidencias.filtros.fechaDesde}" size="14" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" />
+						</h:panelGrid>
+						<h:panelGrid columns="2" styleClass="w100, noPadding">
+				        	<p:outputLabel for="filtroFechaFin" value="#{msg['viewAuditoriaTramites.filtroFechaFin']}:"/>
+				        	<p:calendar id="filtroFechaFin" value="#{viewConsultaIncidencias.filtros.fechaHasta}" style="margin-left:15px" size="14" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+						</h:panelGrid>
+						</p:column>
+						<p:column styleClass=" noPadding p-align-start" style="border-style:inherit  !important;;">
+							<h:panelGrid columns="2" cellspacing="5" styleClass="w100, noPadding, noMargin">
+								<p:outputLabel for="filtroEstado" value="#{msg['dialogInformacionPersistencia.estado']}" />
+								<p:selectOneMenu id="filtroEstado" value="#{viewConsultaIncidencias.filtros.estado}" style="width:144px; margin-left:5px;">
+								 	<f:selectItem itemLabel="#{msg['selectItem.Todos']}" itemValue="" />
+			    					<f:selectItems value="#{viewConsultaIncidencias.tiposEstados}" var="estado" itemLabel="#{msg['typeEstado.' += estado]}" itemValue="#{estado.toString()}"/>
+								</p:selectOneMenu >
+							</h:panelGrid>
+				        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="w100, noPadding, noMargin">
+			          			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewConsultaIncidencias.filtrar()}" process="@form:panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+			          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewConsultaIncidencias.ayuda()}"/>
+							</h:panelGrid>
+						</p:column>
+	          	</p:panelGrid>
+
+
+
+
+      <!-- Data table -->
+      <p:outputPanel  styleClass="h100">
+      <p:dataTable id="dataTable" var="dt" value="#{viewConsultaIncidencias.listaDatos}" lazy="true"
+             rows="#{viewConsultaIncidencias.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
+             scrollable="true" scrollHeight="100%"
+                  paginator="true" paginatorPosition="bottom"
+                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                  rowsPerPageTemplate="5,10,15,30"
+                  currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
+                 selectionMode="single" selection="#{viewConsultaIncidencias.datoSeleccionado}" rowKey="#{dt.codigo}">
+
+
+        <!-- Necesario para actualizar en controlador la fila seleccionada -->
+        <p:ajax event="rowSelect" global="false"/>
+        <p:ajax event="page" update=":form:dataTable"/>
+        <p:ajax event="contextMenu" global="false" process="@this" oncomplete="opcIdSesion();"/>
+		<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" update=":form:dataTable"/>
+
+        <!-- Columnas -->
+       	  <p:column headerText="#{msg['dialogInformacionPersistencia.estado']}" style="width:20% !important;" sortBy="#{dt.estado}">
+			   <h:outputText value="#{msg['typeEstado.' += dt.estado]}"/>
+          </p:column>
+          <p:column class="idSesion" headerText="#{msg['viewAuditoriaTramites.filtroIdSesion']}" style="width:20% !important;" sortBy="#{dt.idTramite}">
+			   <h:outputText value="#{dt.sesionTramitacion}"/>
+          </p:column>
+          <p:column headerText="#{msg['viewInformacionPersistencia.headTramite']}" style="width:20% !important;" sortBy="#{dt.idTramite}">
+			   <h:outputText value="#{dt.idTramite}"/>
+          </p:column>
+          <p:column headerText="#{msg['viewInformacionPersistencia.headVersion']}" style="width:20% !important;" sortBy="#{dt.version}">
+			   <h:outputText value="#{dt.version}"/>
+          </p:column>
+          <p:column headerText="#{msg['viewConsultaIncidencias.prob']}" style="width:20% !important;" sortBy="#{dt.tipoProblema}">
+			   <h:outputText value="#{dt.tipoProblema}"/>
+          </p:column>
+          <p:column headerText="#{msg['viewConsultaIncidencias.desc.prob']}" style="width:20% !important;" sortBy="#{dt.descripcionProblema}">
+			   <h:outputText value="#{dt.descripcionProblema}"/>
+          </p:column>
+         <p:column headerText="#{msg['dialogAuditoriaTramites.nifUsu']}" style="width:8% !important;" sortBy="#{dt.nif}">
+              <h:outputText value="#{dt.nif}" />
+          </p:column>
+         <p:column headerText="#{msg['dialogAuditoriaTramites.nombreUsu']}" style="width:8% !important;" sortBy="#{dt.nombre}">
+              <h:outputText value="#{dt.nombre}" />
+          </p:column>
+          <p:column headerText="#{msg['viewConsultaIncidencias.tlf']}" style="width:12% !important;" styleClass="grid-center" sortBy="#{dt.telefono}">
+              <h:outputText value="#{dt.telefono}"/>
+          </p:column>
+		  <p:column headerText="#{msg['viewConsultaIncidencias.correo']}" style="width:20% !important;" sortBy="#{dt.email}">
+			<h:outputText value="#{dt.email}"/>
+          </p:column>
+          <p:column headerText="#{msg['viewConsultaIncidencias.fecha.creacion']}" style="width:20% !important;" sortBy="#{dt.fechaCreacion}">
+			<h:outputText value="#{dt.fechaCreacion}">
+		        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
+			</h:outputText>
+          </p:column>
+
+      </p:dataTable></p:outputPanel>
+
+      <h:outputScript >
+          function triggerDblClick() {
+              $('#form\\:btnEditarHidden').click();
+          }
+        </h:outputScript>
+        <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewConsultaIncidencias.rcDobleClick()}" process="@this" update=":form:growl" style="display:none">
+           <p:ajax event="dialogReturn" listener="#{viewConsultaIncidencias.returnDialogo}" update="@form:growl @form:dataTable"/>
+        </p:commandButton>
+        <p:commandButton id="btnSesionHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewConsultaIncidencias.abrirDlgSesion()}" process="@this" update=":form:growl" style="display:none">
+           <p:ajax event="dialogReturn" listener="#{viewConsultaIncidencias.returnDialogo}" update="@form:growl @form:dataTable"/>
+        </p:commandButton>
+        <h:outputScript >
+          document.getElementsByName("form:dataTable_rppDD")[0].addEventListener("change", refrescarPaginacion);
+          function refrescarPaginacion() {
+              document.getElementById("form:paginacion").focus();
+              document.getElementById("form:paginacion").value = document.getElementsByName("form:dataTable_rppDD")[0].value
+              document.getElementById("form:paginacion").blur();
+          }
+        </h:outputScript>
+      <p:inputText id="paginacion" value="#{viewConsultaIncidencias.paginacion}" style="opacity:0">
+        <p:ajax event="blur" update="@form" process="@this"/>
+      </p:inputText>
+      <p:confirmDialog global="true" >
+				<p:outputPanel styleClass="confirmar_botonera">
+		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+				</p:outputPanel>
+		    </p:confirmDialog>
+	      <p:contextMenu for=":work">
+             <p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+             <p:menuitem id="detalle" icon="fa fa-window-maximize" onclick="consultar();" value="#{msg['dialogAuditoriaTramites.descripcion']}"  process="@this"/>
+             <p:menuitem id="consultaSesion" icon="fa fa-window-maximize" onclick="consultarSesion();" value="#{msg['viewConsultaIncidencias.eventos.sesion']}"  process="@this"/>
+        </p:contextMenu>
+        <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+        <p:ajax event="success" listener="#{viewConsultaIncidencias.copiadoCorr}" process="@this" update="@this growl"/>
+              <p:ajax event="error" listener="#{viewConsultaIncidencias.copiadoErr}" update="@this growl"/>
+          </pe:clipboard>
+
+	    <pe:clipboard id="clipContextCopyD" trigger="mnuCopy" action="copy" target="auxCopiar">
+			<p:ajax event="success" listener="#{viewConsultaIncidencias.copiadoCorr}" process="@this" update="@this growl"/>
+	         <p:ajax event="error" listener="#{viewConsultaIncidencias.copiadoErr}" update="@this growl"/>
+	    </pe:clipboard>
+
+      <p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
+        <p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+      </p:contextMenu>
+
+      <pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
+        <p:ajax event="success" listener="#{viewConsultaIncidencias.copiadoCorr}" process="@this" update="@this growl"/>
+        <p:ajax event="error" listener="#{viewConsultaIncidencias.copiadoErr}" update="@this growl"/>
+      </pe:clipboard>
+
+       <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
+        <p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
+      </p:contextMenu>
+      <pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
+        <p:ajax event="success" listener="#{viewConsultaIncidencias.copiadoCorr}" process="@this" update="@this growl"/>
+        <p:ajax event="error" listener="#{viewConsultaIncidencias.copiadoErr}" update="@this growl"/>
+      </pe:clipboard>
+
+        <p:inputText id="auxCopiar" value="#{viewConsultaIncidencias.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+    </h:form>
+
+  </ui:define>
+
+</ui:composition>

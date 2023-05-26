@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import es.caib.sistra2.commons.utils.JSONUtil;
 import es.caib.sistra2.commons.utils.JSONUtilException;
 import es.caib.sistramit.core.api.exception.ErrorJsonException;
+import es.caib.sistramit.core.api.model.flujo.types.TypeSoporteEstado;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.rest.interno.DetallePagoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.ErroresPorTramiteCM;
@@ -27,6 +28,7 @@ import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPerdidaClave;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FormularioSoporte;
 import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
 import es.caib.sistramit.core.api.model.system.rest.interno.OUTPerdidaClave;
 import es.caib.sistramit.core.api.model.system.rest.interno.PagoAuditoria;
@@ -58,10 +60,12 @@ import es.caib.sistramit.rest.api.interna.ROUTEventoAuditoria;
 import es.caib.sistramit.rest.api.interna.ROUTEventoCM;
 import es.caib.sistramit.rest.api.interna.ROUTPagoAuditoria;
 import es.caib.sistramit.rest.api.interna.ROUTPerdidaClave;
+import es.caib.sistramit.rest.api.interna.ROUTSoporte;
 import es.caib.sistramit.rest.api.interna.ROUTTramiteAuditoria;
 import es.caib.sistramit.rest.api.interna.RPagoAuditoria;
 import es.caib.sistramit.rest.api.interna.RPerdidaClave;
 import es.caib.sistramit.rest.api.interna.RPersistenciaAuditoria;
+import es.caib.sistramit.rest.api.interna.RSoporte;
 import es.caib.sistramit.rest.api.interna.RVerificacionPago;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -150,6 +154,48 @@ public class ApiInternaRestController {
 		}
 
 		return resEvento;
+
+	}
+
+	@ApiOperation(value = "formularios incidencia", notes = "formularios incidencia", response = ROUTEventoCM.class)
+	@RequestMapping(value = "/auditoria/soporte", method = RequestMethod.POST)
+	public ROUTSoporte obtenerFormulariosSoporte(@RequestBody final RINEventoAuditoria pFiltros) {
+		final ROUTSoporte resForm = new ROUTSoporte();
+		final FiltroPaginacion filtroPaginacion = convierteFiltroPaginacion(pFiltros.getPaginacion());
+		final FiltroEventoAuditoria filtroBusqueda = convierteFiltroEventoAuditoria(pFiltros.getFiltro());
+
+		if (filtroBusqueda != null && filtroBusqueda.isSoloContar()) {
+			resForm.setNumElementos(restApiInternaService.contarFormularioSoporte(filtroBusqueda));
+		} else {
+			final List<FormularioSoporte> listaFormularios = restApiInternaService
+					.recuperarFormularioSoporte(filtroBusqueda, filtroPaginacion);
+
+			if (listaFormularios != null && !listaFormularios.isEmpty()) {
+				resForm.setListaFormularios(new ArrayList<>());
+
+				for (final FormularioSoporte form : listaFormularios) {
+					resForm.getListaFormularios().add(convierteSoporte(form));
+				}
+
+			}
+
+		}
+
+		return resForm;
+
+	}
+
+	@ApiOperation(value = "formularios incidencia update", notes = "formularios incidencia", response = ROUTEventoCM.class)
+	@RequestMapping(value = "/auditoria/soporte/update", method = RequestMethod.POST)
+	public ROUTSoporte obtenerFormulariosSoporte(@RequestBody final Map<String, Object> params) {
+		final ROUTSoporte resForm = new ROUTSoporte();
+
+		if (params != null) {
+			restApiInternaService.updateEstadoIncidencia(new Long((Integer) params.get("codigo")),
+					TypeSoporteEstado.fromString((String) params.get("estado")), (String) params.get("comentarios"));
+		}
+
+		return resForm;
 
 	}
 
@@ -434,11 +480,14 @@ public class ApiInternaRestController {
 			filtro.setIdSesionTramitacion(pRFiltro.getIdSesionTramitacion());
 			filtro.setNif(pRFiltro.getNif());
 			filtro.setNombre(pRFiltro.getNombre());
+			filtro.setTlf(pRFiltro.getTlf());
+			filtro.setEmail(pRFiltro.getEmail());
 			filtro.setFechaDesde(pRFiltro.getFechaDesde());
 			filtro.setFechaHasta(pRFiltro.getFechaHasta());
 			filtro.setCodSia(pRFiltro.getCodSia());
 			filtro.setExcepcion(pRFiltro.getExcepcion());
-
+			filtro.setEstado(pRFiltro.getEstado());
+			filtro.setComent(pRFiltro.getComent());
 			if (pRFiltro.getEvento() != null) {
 				filtro.setEvento(TypeEvento.valueOf(pRFiltro.getEvento()));
 			}
@@ -572,6 +621,76 @@ public class ApiInternaRestController {
 		}
 
 		return rEvento;
+
+	}
+
+	/**
+	 * Convierte formulario soporte
+	 *
+	 * @param pEventoAuditoria EventoCM
+	 * @return REventoCM
+	 */
+	private RSoporte convierteSoporte(final FormularioSoporte pForm) {
+		RSoporte rForm = null;
+
+		if (pForm != null) {
+
+			rForm = new RSoporte();
+
+			rForm.setCodigo(pForm.getCodigo());
+			rForm.setIdTramite(pForm.getIdTramite());
+			rForm.setVersion(pForm.getVersion());
+			rForm.setFechaCreacion(pForm.getFechaCreacion());
+			rForm.setSesionTramitacion(pForm.getSesionTramitacion());
+			rForm.setNif(pForm.getNif());
+			rForm.setNombre(pForm.getNombre());
+			rForm.setTelefono(pForm.getTelefono());
+			rForm.setEmail(pForm.getEmail());
+			rForm.setHorario(pForm.getHorario());
+			rForm.setTipoProblema(pForm.getTipoProblemaDesc());
+			rForm.setDescripcionProblema(pForm.getDescripcionProblema());
+			rForm.setNombreFichero(pForm.getNombreFichero());
+			rForm.setDatosFichero(pForm.getDatosFichero());
+			rForm.setEstado(pForm.getEstado());
+			rForm.setComentario(pForm.getComentario());
+		}
+
+		return rForm;
+
+	}
+
+	/**
+	 * Convierte formulario soporte
+	 *
+	 * @param pEventoAuditoria EventoCM
+	 * @return REventoCM
+	 */
+	private FormularioSoporte convierteRSoporte(final RSoporte rsoporte) {
+		FormularioSoporte form = null;
+
+		if (rsoporte != null) {
+
+			form = new FormularioSoporte();
+
+			form.setCodigo(rsoporte.getCodigo());
+			form.setIdTramite(rsoporte.getIdTramite());
+			form.setVersion(rsoporte.getVersion());
+			form.setFechaCreacion(rsoporte.getFechaCreacion());
+			form.setSesionTramitacion(rsoporte.getSesionTramitacion());
+			form.setNif(rsoporte.getNif());
+			form.setNombre(rsoporte.getNombre());
+			form.setTelefono(rsoporte.getTelefono());
+			form.setEmail(rsoporte.getEmail());
+			form.setHorario(rsoporte.getHorario());
+			form.setTipoProblema(rsoporte.getTipoProblema());
+			form.setDescripcionProblema(rsoporte.getDescripcionProblema());
+			form.setNombreFichero(rsoporte.getNombreFichero());
+			form.setDatosFichero(rsoporte.getDatosFichero());
+			form.setEstado(rsoporte.getEstado());
+			form.setComentario(rsoporte.getComentario());
+		}
+
+		return form;
 
 	}
 

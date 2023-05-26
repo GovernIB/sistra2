@@ -28,7 +28,7 @@
 			<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -158,7 +158,7 @@
 				 	<p:outputLabel value="#{dialogTramiteDesbloquear.usuario}" />
 
 					<p:outputLabel for="detalleCambio" value="#{msg['dialogTramiteDesbloquear.headerDetalle']}" />
-				 	<p:inputTextarea cols="50" rows="5" id="detalleCambio" value="#{dialogTramiteDesbloquear.detalle}" required="true" size="60" maxlength="255"  />
+				 	<p:inputTextarea onblur="this.value = this.value.trim();" cols="50" rows="5" id="detalleCambio" value="#{dialogTramiteDesbloquear.detalle}" required="true" size="60" maxlength="255"  />
 
 				</h:panelGrid>
 			</p:outputPanel>

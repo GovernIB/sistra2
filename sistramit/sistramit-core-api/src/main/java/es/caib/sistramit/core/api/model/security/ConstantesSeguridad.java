@@ -48,10 +48,9 @@ public final class ConstantesSeguridad {
 	public static final String PUNTOENTRADA_RETORNO_CARPETA = "/asistente/retornoCarpetaCiudadano.html";
 
 	/**
-	 * Atributo que indica que la sesion viene del login para que el autologout no
-	 * haga logout.
+	 * Atributo que indica que la sesion no se debe invalidar en el autologout.
 	 */
-	public static final String AUTOLOGOUT_FROMLOGIN = "AUTOLOGOUT_FROMLOGIN";
+	public static final String AUTOLOGOUT_NOINVALIDAR = "AUTOLOGOUT_FROMLOGIN";
 	/**
 	 * Usuario interno de acceso anonimo.
 	 */

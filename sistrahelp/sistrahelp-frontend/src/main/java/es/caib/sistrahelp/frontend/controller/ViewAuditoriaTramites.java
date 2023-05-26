@@ -80,6 +80,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 
 	private String errorCopiar;
 
+	private String idSesionParam;
+
 	private String idTramiteECM;
 
 	private String versionTramiteECM;
@@ -96,6 +98,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 
 	private Boolean esDialog;
 
+	private Boolean esDialogParams;
+
 	/**
 	 * Inicializa.
 	 */
@@ -107,6 +111,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		// Titulo pantalla
 
 		esDialog = esDialog == null ? false : esDialog;
+		esDialogParams = esDialogParams == null ? false : esDialogParams;
 
 		filtros = new FiltroAuditoriaTramitacion(convierteListaAreas(), false);
 
@@ -117,6 +122,11 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 					&& !TypeEvento.INV_REQ.equals(ev)) {
 				tiposEventos.add(ev);
 			}
+		}
+
+		if (idSesionParam != null && !idSesionParam.isEmpty()) {
+			filtros.setIdSesionTramitacion(idSesionParam);
+			filtros.setFechaDesde(null);
 		}
 
 		if (idTramiteECM != null && !idTramiteECM.isEmpty() && versionTramiteECM != null
@@ -156,9 +166,13 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 				}
 			}
 		}
-		if (esDialog) {
+		if (esDialog || esDialogParams) {
 			layout = "../layout/dialogViewLayout.xhtml";
-			setLiteralTituloPantalla(idTramiteECM + " / " + versionTramiteECM + " - " + excepcionECM);
+			if (esDialog) {
+				setLiteralTituloPantalla(idTramiteECM + " / " + versionTramiteECM + " - " + excepcionECM);
+			} else if (esDialogParams) {
+				setLiteralTituloPantalla(idSesionParam);
+			}
 			filtros.setExcepcion(excepcionECM);
 		} else {
 			layout = "../layout/mainLayout.xhtml";
@@ -334,7 +348,11 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 * Ayuda.
 	 */
 	public void ayudaDialog() {
-		UtilJSF.openHelp("auditoriaTramitesDialog");
+		if (esDialogParams) {
+			UtilJSF.openHelp("auditoriaTramitesIncidencias");
+		} else {
+			UtilJSF.openHelp("auditoriaTramitesDialog");
+		}
 	}
 
 	/**
@@ -600,6 +618,14 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		this.esDialog = esDialog;
 	}
 
+	public Boolean getEsDialogParams() {
+		return esDialogParams;
+	}
+
+	public void setEsDialogParams(Boolean esDialogParams) {
+		this.esDialogParams = esDialogParams;
+	}
+
 	/**
 	 * @return the excepcion
 	 */
@@ -612,5 +638,13 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 */
 	public final void setExcepcionECM(String excepcionECM) {
 		this.excepcionECM = excepcionECM;
+	}
+
+	public String getIdSesionParam() {
+		return idSesionParam;
+	}
+
+	public void setIdSesionParam(String idSesionParam) {
+		this.idSesionParam = idSesionParam;
 	}
 }

@@ -157,9 +157,9 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	private Integer marcaAguaPosicionY;
 
 	@Override
-	public byte[] formatear(final byte[] ixml, final byte[] plantilla, final String idioma,
-			final RFormularioInterno defFormInterno, final String tituloProcedimiento, final String tituloTramite,
-			final String siaProcedimiento, final String codigoDir3Responsable) {
+	public byte[] formatear(final byte[] ixml, final List<String> paginasRellenadas, final byte[] plantilla,
+			final String idioma, final RFormularioInterno defFormInterno, final String tituloProcedimiento,
+			final String tituloTramite, final String siaProcedimiento, final String codigoDir3Responsable) {
 
 		final XmlFormulario xml = UtilsFormulario.xmlToValores(ixml);
 
@@ -181,10 +181,9 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 			cabecera.setTitulo(tituloProcedimiento);
 		}
 
-		if(mostrarSubtitulo) {
+		if (mostrarSubtitulo) {
 			cabecera.setSubtitulo(defFormInterno.getTitulo());
 		}
-
 
 		// TODO PENDIENTE VERSALITAS
 		if (mostrarTituloMayusculas) {
@@ -223,40 +222,45 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
 		for (final RPaginaFormulario pagina : defFormInterno.getPaginas()) {
 
-			for (final RLineaComponentes rLinea : pagina.getLineas()) {
+			// Si la pagina no esta rellenada, no se trata
+			if (paginasRellenadas.contains(pagina.getIdentificador())) {
 
-				for (final RComponente componente : rLinea.getComponentes()) {
+				for (final RLineaComponentes rLinea : pagina.getLineas()) {
 
-					// Una linea para cada campo
-					final Linea linea = new Linea();
-					lineas.add(linea);
+					for (final RComponente componente : rLinea.getComponentes()) {
 
-					// Añadir segun componente
-					if (componente instanceof RComponenteSeccion) {
-						// - Componente seccion
-						final RComponenteSeccion componenteSeccion = (RComponenteSeccion) componente;
-						linea.getObjetosLinea().add(
-								new Seccion(/* componenteSeccion.getLetra() */"", componenteSeccion.getEtiqueta()));
-					} else if (componente instanceof RComponenteAviso) {
-						// - Componente aviso (si está activo la variable)
-						if (mostrarAviso != null && mostrarAviso) {
-							// Creamos texto aviso
-							final RComponenteAviso componenteAviso = (RComponenteAviso) componente;
-							final PersonalizacionTexto personalizacicionTexto = new PersonalizacionTexto(false, true,
-									TypeFuente.NOTOSANS, 10);
-							// Texto aviso puede contener html, por lo q limpiamos
-							final String textoAviso = Jsoup.parse(componenteAviso.getEtiqueta()).text();
-							final Texto texto = new Texto(personalizacicionTexto, textoAviso, 6);
-							linea.getObjetosLinea().add(texto);
+						// Una linea para cada campo
+						final Linea linea = new Linea();
+						lineas.add(linea);
+
+						// Añadir segun componente
+						if (componente instanceof RComponenteSeccion) {
+							// - Componente seccion
+							final RComponenteSeccion componenteSeccion = (RComponenteSeccion) componente;
+							linea.getObjetosLinea().add(
+									new Seccion(/* componenteSeccion.getLetra() */"", componenteSeccion.getEtiqueta()));
+						} else if (componente instanceof RComponenteAviso) {
+							// - Componente aviso (si está activo la variable)
+							if (mostrarAviso != null && mostrarAviso) {
+								// Creamos texto aviso
+								final RComponenteAviso componenteAviso = (RComponenteAviso) componente;
+								final PersonalizacionTexto personalizacicionTexto = new PersonalizacionTexto(false,
+										true, TypeFuente.NOTOSANS, 10);
+								// Texto aviso puede contener html, por lo q limpiamos
+								final String textoAviso = Jsoup.parse(componenteAviso.getEtiqueta()).text();
+								final Texto texto = new Texto(personalizacicionTexto, textoAviso, 6);
+								linea.getObjetosLinea().add(texto);
+							}
+						} else {
+							// - Campos
+							if (xml.getValores() != null && componente.getIdentificador() != null) {
+								anyadirDato(componente, linea, xml);
+							}
 						}
-					} else {
-						// - Campos
-						if (xml.getValores() != null && componente.getIdentificador() != null) {
-							anyadirDato(componente, linea, xml);
-						}
+
 					}
-
 				}
+
 			}
 
 		}

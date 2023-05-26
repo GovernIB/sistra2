@@ -37,15 +37,15 @@
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				 	<p:outputLabel for="identificador" value="#{msg['dialogScriptLiteral.codigo']}" />
-				 	<p:inputText id="identificador" value="#{dialogScriptLiteral.data.identificador}" required="true" size="30" maxlength="20" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+				 	<p:inputText id="identificador" value="#{dialogScriptLiteral.data.identificador}" readonly="#{dialogScriptLiteral.modoConsulta()}" required="true" size="30" maxlength="20" onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 				   	</p:inputText>
 
 				 	<p:outputLabel for="nombreHidden" value="#{msg['dialogScriptLiteral.descripcion']}" />
 				 	<p:column>
-						<p:inputText id="nombre" value="#{dialogScriptLiteral.literal}" readonly="true" required="true" size="40" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}"/>
-						<p:inputText id="nombreHidden" value="#{dialogScriptLiteral.literal}" type="hidden" required="true" binding="#{mensajesComponent}" />
+						<p:inputText id="nombre" value="#{dialogScriptLiteral.literal}" onblur="this.value = this.value.trim();" readonly="true" required="true" size="40" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}"/>
+						<p:inputText id="nombreHidden" value="#{dialogScriptLiteral.literal}" onblur="this.value = this.value.trim();" type="hidden" required="true" binding="#{mensajesComponent}" />
 						<p:commandButton id="btnNombre" icon="fa fa-language" actionListener="#{dialogScriptLiteral.editarDescripcion()}" process="@this" update="growlDialog" style="margin-right:5px">
 		            		<p:ajax event="dialogReturn" listener="#{dialogScriptLiteral.returnDialogo}" update="growlDialog nombre nombreHidden" />
 		        		</p:commandButton>

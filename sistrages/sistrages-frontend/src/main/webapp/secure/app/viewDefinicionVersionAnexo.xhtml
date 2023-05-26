@@ -19,18 +19,18 @@
        	<h:panelGrid columns="2"  rowClasses=", ui-datatable-odd"  columnClasses="w15 grid-left, w85 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="0">
 
             <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionAnexo.identificador']}" />
-          	<p:inputText id="identificador" required="true" readonly="true" styleClass="w35" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.identificador}"  />
+          	<p:inputText id="identificador" required="true" readonly="true" onblur="this.value = this.value.trim();" styleClass="w35" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.identificador}"  />
 
 
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionAnexo.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="descripcion" required="true" readonly="true" styleClass="w85" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
+           		<p:inputText id="descripcion" required="true" onblur="this.value = this.value.trim();" readonly="true" styleClass="w85" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
            		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.documentoTramiteSeleccionado.descripcion)}"
 						process="@this" update="growl"/>
        		</p:outputPanel>
 
 			<p:outputLabel 	for="tipoDocumental" value="#{msg['viewDefinicionVersionAnexo.tipoDocumental']}" />
-            <p:inputText 	id="tipoDocumental" required="true" readonly="true" styleClass="w35" value="#{msg['typeTipoDocumental.' += viewDefinicionVersion.documentoTramiteSeleccionado.tipoDocumental]}"  />
+            <p:inputText 	id="tipoDocumental" onblur="this.value = this.value.trim();" required="true" readonly="true" styleClass="w35" value="#{msg['typeTipoDocumental.' += viewDefinicionVersion.documentoTramiteSeleccionado.tipoDocumental]}"  />
 
          	<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.obligatoriedad']}" />
          	<p:panelGrid styleClass="noBorders" columns="2" columnClasses="noPadding-left,">
@@ -54,11 +54,11 @@
 		           	</p:column>
 
 					<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.ayuda.url']}" />
-					<p:inputText id="url_input"  readonly="true" styleClass="w85" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.ayudaURL}" />
+					<p:inputText id="url_input" onblur="this.value = this.value.trim();" readonly="true" styleClass="w85" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.ayudaURL}" />
 
 					<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.ayuda.mensaje']}" />
 					<p:outputPanel styleClass="ui-inputgroup">
-	           			<p:inputText id="mensaje_input" readonly="true" styleClass="w85" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.ayudaTexto.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
+	           			<p:inputText id="mensaje_input" onblur="this.value = this.value.trim();" readonly="true" styleClass="w85" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.ayudaTexto.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
 	           			<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccionHTML(viewDefinicionVersion.documentoTramiteSeleccionado.ayudaTexto)}"
 							process="@this" update="growl"/>
 	       			</p:outputPanel>
@@ -80,7 +80,7 @@
 					<h:panelGrid columns="2" columnClasses="wpx120 grid-right, padding-left-4" styleClass="panel_izq w100">
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.numinstancias']}" for="numinstancias"/>
 						<p:panelGrid styleClass="noBorders" columns="2" columnClasses="noPadding-left,">
-							<p:inputText id="numinstancias" readonly="true" size="3" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.numeroInstancia}" />
+							<p:inputText id="numinstancias" onblur="this.value = this.value.trim();" readonly="true" size="3" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.numeroInstancia}" />
 
 						</p:panelGrid>
 
@@ -90,12 +90,12 @@
 						        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.todas']}" itemValue="#{TypeExtension.TODAS}"/>
 						        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.personalizadas']}" itemValue="#{TypeExtension.PERSONALIZADAS}"/>
 					        	</p:selectOneRadio>
-					        	<p:inputText id="personalizadas_input" readonly="true" size="15" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.extensiones}"/>
+					        	<p:inputText id="personalizadas_input" onblur="this.value = this.value.trim();" readonly="true" size="15" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.extensiones}"/>
 						 </p:panelGrid>
 
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.tammaximo']}" for="tammaximo" />
 						<p:panelGrid styleClass="noBorders" columns="4" columnClasses="noPadding-left,noPadding-left">
-							<p:inputText id="tammaximo" readonly="true" size="3" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.tamanyoMaximo}"  />
+							<p:inputText id="tammaximo" onblur="this.value = this.value.trim();" readonly="true" size="3" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.tamanyoMaximo}"  />
 							<p:selectOneRadio id="tipotam" disabled="true" columns="1" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.tipoTamanyo}">
 						        	<f:selectItems value="#{TypeTamanyo.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeTamanyo.' += tipo]}" />
 					        </p:selectOneRadio>

@@ -43,9 +43,9 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 	private TipoVisualizacionValorIndexado listadoVisualizacion = TipoVisualizacionValorIndexado.DESCRIPCION;
 
 	@Override
-	public byte[] formatear(final byte[] ixml, final byte[] plantilla, final String idioma,
-			final RFormularioInterno defFormInterno, final String tituloProcedimiento, final String tituloTramite,
-			final String siaProcedimiento, final String codigoDir3Responsable) {
+	public byte[] formatear(final byte[] ixml, final List<String> paginasRellenadas, final byte[] plantilla,
+			final String idioma, final RFormularioInterno defFormInterno, final String tituloProcedimiento,
+			final String tituloTramite, final String siaProcedimiento, final String codigoDir3Responsable) {
 
 		try {
 

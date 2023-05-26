@@ -17,6 +17,8 @@ import es.caib.sistrahelp.core.api.model.ResultadoErroresPorTramiteCM;
 import es.caib.sistrahelp.core.api.model.ResultadoEventoAuditoria;
 import es.caib.sistrahelp.core.api.model.ResultadoEventoCM;
 import es.caib.sistrahelp.core.api.model.ResultadoPerdidaClave;
+import es.caib.sistrahelp.core.api.model.ResultadoSoporte;
+import es.caib.sistrahelp.core.api.model.Soporte;
 
 /**
  * Acceso a componente SISTRAGES.
@@ -107,5 +109,10 @@ public interface SistramitApiComponent {
 
 	public ResultadoEventoCM obtenerErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion);
+
+	ResultadoSoporte obtenerFormularioSoporte(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion);
+
+	void updateFormularioSoporte(Soporte soporte);
 
 }

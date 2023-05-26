@@ -49,7 +49,7 @@
 		<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -224,7 +224,7 @@
 
 			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.instruccionesTramitacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="tramitacion" required="true" readonly="true" value="#{dialogDefinicionVersionRegistrarTramite.data.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,dialogDefinicionVersionRegistrarTramite.idiomas)}"  styleClass="w85">
+           		<p:inputText id="tramitacion" required="true" readonly="true" onblur="this.value = this.value.trim();" value="#{dialogDefinicionVersionRegistrarTramite.data.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,dialogDefinicionVersionRegistrarTramite.idiomas)}"  styleClass="w85">
            			<p:ajax event="change" listener="#{dialogDefinicionVersionRegistrarTramite.setCambios}" process="@this" update="@this"/>
            		</p:inputText>
            		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarInstTramitacion()}"

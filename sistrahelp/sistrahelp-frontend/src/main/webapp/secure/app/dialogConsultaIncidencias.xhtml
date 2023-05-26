@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogConsultaIncidencias.titulo']}"/></title>
+	<h:outputScript library="primefaces-custom" name="calendar_es.js" />
+	<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
+</h:head>
+
+<h:body>
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogConsultaIncidencias.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogConsultaIncidencias.id}"/>
+		<f:viewAction action="#{dialogConsultaIncidencias.init}" />
+	</f:metadata>
+
+	<h:form id="dialogConsultaIncidencias" styleClass="margin-top-10" style="margin-bottom:26px">
+			<h:outputScript >
+			  PrimeFaces.locales ['es'] = {
+			        timeOnlyTitle: ''
+			    };
+			     PrimeFaces.locales ['ca'] = {
+			        timeOnlyTitle: ''
+			    };
+
+
+				var arrayCm = [];
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+				function consultarSesion(){
+		          $('#dialogConsultaIncidencias\\:btnSesionHidden').click();
+		        }
+
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("dialogConsultaIncidencias:auxCopiar");
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}else{
+		          aux.value = '';
+		        }
+
+		        var elEnDataT = document.getElementsByClassName('resaltar')[0];
+		        if(elEnDataT!=null &amp;&amp; elEnDataT.id=='dialogConsultaIncidencias:sesion'){
+		          document.getElementById("dialogConsultaIncidencias:consultaSesion").classList.remove("d-none");
+		          document.getElementById("dialogConsultaIncidencias:consultaSesion").classList.add("d-block");
+		        }else{
+		          document.getElementById("dialogConsultaIncidencias:consultaSesion").classList.remove("d-block");
+		          document.getElementById("dialogConsultaIncidencias:consultaSesion").classList.add("d-none")
+		        }
+
+				if(aux.value!='' ){
+            var multiple = false;
+            var hijos = el.children;
+			if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR') &amp;&amp; hijos.length &gt; 1){
+		            multiple = true;
+		                  }else if(hijos.length &gt;= 1 ){
+		                  	if(hijos.length==1  &amp;&amp; hijos[0].tagName=='DIV'){
+		                  		hijos = hijos[0].children;
+		                  	}
+			                    for(i=0;i&lt;hijos.length;i++){
+					              if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+					                multiple=true;
+					              }
+			                    }
+
+		                  }
+                  var listaCm = document.getElementsByClassName('ui-contextmenu');
+                  if(multiple){
+                    for(i=0;i&lt;listaCm.length;i++){
+                    	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+                    		arrayCm.push(listaCm[i]);
+                    	}
+	                	listaCm[i].classList.add("d-none");
+					}
+                  }else{
+                  	for(i=0;i&lt;listaCm.length;i++){
+                  		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+                    		arrayCm.push(listaCm[i]);
+                    	}
+	                	listaCm[i].classList.remove("d-none");
+					}
+					if(arrayCm.length&gt;1){
+						arrayCm.pop();
+						for(let i=0; i&lt;arrayCm.length; i++){
+							arrayCm[i].style.display='none';
+						}
+					}
+					arrayCm = [];
+                  }
+
+               }
+			 }
+
+			</h:outputScript>
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" />
+
+				<p:outputLabel value="" style="margin-top:10px" />
+				<h:panelGrid styleClass="h100" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25 grid-right,padding-right-18 w75" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+					<p:outputLabel for="nif" value="#{msg['dialogAuditoriaTramites.nifUsu']}:"/>
+					<p:inputText id="nif" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.nif}" style="width:100%;" readonly="true" />
+
+					<p:outputLabel for="nombre" value="#{msg['viewConfiguracionAlertas.nombre']}:"/>
+					<p:inputText id="nombre" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.nombre}" style="width:100%;" readonly="true" />
+
+					<p:outputLabel for="tlf" value="#{msg['viewConsultaIncidencias.tlf']}:"/>
+					<p:inputText id="tlf" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.telefono}" style="width:100%;" readonly="true" />
+
+					<p:outputLabel for="email" value="#{msg['viewConsultaIncidencias.correo']}:" />
+					<p:inputText id="email" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.email}" readonly="true" style="width:100%;"/>
+
+					<p:outputLabel for="horari" value="#{msg['dialogConsultaIncidencias.horario']}:" />
+					<p:inputText id="horari" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.horario}" readonly="true" style="width:100%;"/>
+
+					<p:outputLabel for="tipoProblema" value="#{msg['viewConsultaIncidencias.prob']}:" />
+					<p:inputText id="tipoProblema" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.tipoProblema}" readonly="true" style="width:100%;"/>
+
+					<p:outputLabel for="desc" value="#{msg['viewAuditoriaTramites.headDescripcionEvento']}:" />
+					<p:inputTextarea id="desc" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.descripcionProblema}" readonly="true" style="width:100%;" rows="7" autoResize="false"/>
+
+					<p:outputLabel for="sesion" value="#{msg['viewAuditoriaTramites.filtroIdSesion']}:" />
+					<p:inputText id="sesion" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.sesionTramitacion}" readonly="true" style="width:100%;"/>
+
+					<p:outputLabel for="idTramite" value="#{msg['viewInformacionPersistencia.headTramite']}:" />
+					<p:inputText id="idTramite" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.idTramite}" readonly="true" style="width:100%;"/>
+
+					<p:outputLabel for="version" value="#{msg['viewInformacionPersistencia.headVersion']}:" />
+					<p:inputText id="version" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.version}" readonly="true" style="width:100%;"/>
+
+					<p:outputLabel for="fecha" value="#{msg['viewConsultaIncidencias.fecha.creacion']}:" />
+					<p:inputText id="fecha" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.fechaCreacion}" readonly="true" style="width:100%;">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
+					</p:inputText>
+
+					<p:outputLabel for="anexo" value="#{msg['typeDocumentoPersistencia.a']}:" />
+					<h:panelGroup id="anexo">
+	           			<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty dialogConsultaIncidencias.data.datosFichero}"/>
+	           			<p:commandLink  value="#{dialogConsultaIncidencias.data.nombreFichero}" rendered="#{!empty dialogConsultaIncidencias.data.datosFichero}" ajax="false" onstart="PF('pageBlocker').show()" oncomplete="PF('pageBlocker').hide()">
+	           				 <p:fileDownload value="#{dialogConsultaIncidencias.montarFichero()}"/>
+	           			</p:commandLink>
+	           		</h:panelGroup>
+
+	           		<p:outputLabel for="estado" value="#{msg['dialogInformacionPersistencia.estado']}:" />
+         			<p:selectOneMenu id="estado" value="#{dialogConsultaIncidencias.data.estado}" style="width:97%;">
+   						<f:selectItems value="#{dialogConsultaIncidencias.tiposEstados}" var="estado" itemLabel="#{msg['typeEstado.' += estado]}" itemValue="#{estado.toString()}"/>
+					</p:selectOneMenu >
+
+					<p:outputLabel for="coment" value="#{msg['dialogConsultaIncidencias.comentario']}:" />
+					<p:inputTextarea id="coment" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.coment}" style="width:100%;" maxlength="400" rows="7" autoResize="false"/>
+
+				</h:panelGrid>
+			</p:outputPanel>
+
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+						<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogConsultaIncidencias.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogConsultaIncidencias.cancelar()}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogConsultaIncidencias.ayuda()}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+
+			<p:commandButton id="btnSesionHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogConsultaIncidencias.abrirDlgSesion()}" process="@this" update="@form:growlDialog" style="display:none">
+	           <p:ajax event="dialogReturn" listener="#{dialogConsultaIncidencias.returnDialogo}" update="@form:growlDialog"/>
+	        </p:commandButton>
+
+			<p:contextMenu>
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this @form:auxCopiar" update="growlDialog" />
+       			<p:menuitem id="consultaSesion" icon="fa fa-window-maximize" onclick="consultarSesion();" value="#{msg['viewConsultaIncidencias.eventos.sesion']}"  process="@this"/>
+			</p:contextMenu>
+
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{dialogConsultaIncidencias.copiadoCorr}" process="@this" update="@this growlDialog"/>
+            	<p:ajax event="error" listener="#{dialogConsultaIncidencias.copiadoErr}" update="@this growlDialog"/>
+        	</pe:clipboard>
+
+		    <p:inputText id="auxCopiar" value="#{dialogConsultaIncidencias.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

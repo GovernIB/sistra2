@@ -33,7 +33,7 @@
 			<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -145,8 +145,8 @@
 
 					<p:outputLabel for="mensajeHidden" value="#{msg['dialogMensajeAviso.headerDescripcion']}*" />
 					<p:column>
-						<p:inputTextarea id="mensaje" value="#{dialogMensajeAviso.literal}" readonly="true" style="width:90%;" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}" rows="4" cols="60" />
-						<p:inputText id="mensajeHidden" value="#{dialogMensajeAviso.literal}" type="hidden" binding="#{mensajesComponent}"/>
+						<p:inputTextarea id="mensaje" value="#{dialogMensajeAviso.literal}" readonly="true" style="width:90%;" onblur="this.value = this.value.trim();" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}" rows="4" cols="60" />
+						<p:inputText id="mensajeHidden" onblur="this.value = this.value.trim();" value="#{dialogMensajeAviso.literal}" type="hidden" binding="#{mensajesComponent}"/>
 						<p:commandButton id="btnMensaje" icon="fa fa-language" actionListener="#{dialogMensajeAviso.editarMensaje()}" process="@this" update="growlDialog" style="margin-bottom: 15px;" >
 	            			<p:ajax event="dialogReturn" listener="#{dialogMensajeAviso.returnDialogo}" update="growlDialog mensaje mensajeHidden" />
 	        			</p:commandButton>
@@ -162,10 +162,10 @@
 					<p:selectBooleanCheckbox id="activo" value="#{dialogMensajeAviso.data.bloqueado}" disabled="#{dialogMensajeAviso.isConsulta()}" required="false" size="40" />
 
 					<p:outputLabel for="fechaInicio" value="#{msg['dialogMensajeAviso.headerFechaInicio']}" />
-					<p:calendar id="fechaInicio" value="#{dialogMensajeAviso.data.fechaInicio}" readonly="#{dialogMensajeAviso.isConsulta()}" size="22" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"  />
+					<p:calendar id="fechaInicio" value="#{dialogMensajeAviso.data.fechaInicio}" readonly="#{dialogMensajeAviso.isConsulta()}" onblur="this.value = this.value.trim();" size="22" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"  />
 
 					<p:outputLabel for="fechaFin" value="#{msg['dialogMensajeAviso.headerFechaFin']}" />
-					<p:calendar id="fechaFin" value="#{dialogMensajeAviso.data.fechaFin}" readonly="#{dialogMensajeAviso.isConsulta()}" size="22" locale="#{sessionBean.locale}"  pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" />
+					<p:calendar id="fechaFin" value="#{dialogMensajeAviso.data.fechaFin}" readonly="#{dialogMensajeAviso.isConsulta()}" onblur="this.value = this.value.trim();" size="22" locale="#{sessionBean.locale}"  pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" />
 
 					<h:panelGrid id="labelListaTramites" columns="1" styleClass="w100">
 						<p:outputLabel value="#{msg['dialogMensajeAviso.headerListaTramites']}" rendered="#{dialogMensajeAviso.mostrarListaTramites() }"  />

@@ -15,11 +15,11 @@
         <h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left" rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="12" cellspacing="0">
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.identificador']}" />
-			<p:inputText 	 id="codigo" value="#{viewDefinicionVersion.tramite.getIdentificadorCompuesto()}" size="107" readonly="true" />
+			<p:inputText onblur="this.value = this.value.trim();" id="codigo" value="#{viewDefinicionVersion.tramite.getIdentificadorCompuesto()}" size="107" readonly="true" />
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.descripcion']}" />
 			<p:panelGrid styleClass="noBorders" columns="1" columnClasses="noPadding-left,,">
-				<p:inputText value="#{viewDefinicionVersion.tramiteVersion.descripcion}" readonly="true"  size="107"    />
+				<p:inputText onblur="this.value = this.value.trim();" value="#{viewDefinicionVersion.tramiteVersion.descripcion}" readonly="true"  size="107"    />
 			</p:panelGrid>
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.tipo']} *" />
@@ -39,7 +39,7 @@
 					<p:column>
 						<p:outputLabel for="nivelQAA" value="#{msg['viewDefinicionVersionPropiedades.nivelQAA']}" />
 						<p:spacer width="8" height="1"/>
-						<p:inputText id="nivelQAA" readonly="true" value="#{msg['typeQAA.' += viewDefinicionVersion.tramiteVersion.nivelQAA]}"/>
+						<p:inputText id="nivelQAA" onblur="this.value = this.value.trim();" readonly="true" value="#{msg['typeQAA.' += viewDefinicionVersion.tramiteVersion.nivelQAA]}"/>
 					</p:column>
 					<p:column>
 						<p:selectBooleanCheckbox itemLabel="#{msg['tiposAutenticacion.CER']}" value="#{viewDefinicionVersion.tramiteVersion.tieneTipoAutenticacion('CER')}" disabled="true" />
@@ -61,26 +61,6 @@
 				</ui:repeat>
 			</p:panelGrid>
 
-         	<p:outputLabel for="persistencia" value="#{msg['viewDefinicionVersionPropiedades.persistencia']}" />
-			<p:panelGrid styleClass="noBorders">
-				<p:row>
-					<p:column styleClass="noPadding-left">
-						<p:selectBooleanCheckbox id="persistencia" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.persistencia}"/>
-						<p:spacer width="40" height="1"/>
-					</p:column>
-					<p:column>
-						<p:selectOneRadio id="tipopersistencia" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.persistenciaInfinita}">
-				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.sinlimite']}" itemValue="true" />
-				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.pordias']}" itemValue="false" />
-		     		   </p:selectOneRadio>
-		     		 </p:column>
-					<p:column>
-							<p:outputLabel for="numdias" value="#{msg['viewDefinicionVersionPropiedades.numdias']}" />
-							<p:spacer width="8"/>
-							<p:inputText id="numdias" size="3"  readonly="true" value="#{viewDefinicionVersion.tramiteVersion.persistenciaDias}"/>
-					</p:column>
-				</p:row>
-			</p:panelGrid>
 
 			<p:outputLabel for="scriptpersonalizacion" value="#{msg['script.SCRIPT_PERSONALIZACION_TRAMITE.titulo']}" />
 			<p:commandButton id="scriptpersonalizacion" icon="fa fa-bolt" disabled="#{viewDefinicionVersion.tramiteVersion.scriptPersonalizacion eq null}" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PERSONALIZACION_TRAMITE.name() ,viewDefinicionVersion.tramiteVersion.scriptPersonalizacion.codigo)}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramiteVersion.scriptPersonalizacion)}"
@@ -105,6 +85,27 @@
 
 		</h:panelGrid>
 
+
+         	<!-- <p:outputLabel for="persistencia" value="#{msg['viewDefinicionVersionPropiedades.persistencia']}" />
+			<p:panelGrid styleClass="noBorders">
+				<p:row>
+					<p:column styleClass="noPadding-left">
+						<p:selectBooleanCheckbox id="persistencia" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.persistencia}"/>
+						<p:spacer width="40" height="1"/>
+					</p:column>
+					<p:column>
+						<p:selectOneRadio id="tipopersistencia" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.persistenciaInfinita}">
+				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.sinlimite']}" itemValue="true" />
+				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.pordias']}" itemValue="false" />
+		     		   </p:selectOneRadio>
+		     		 </p:column>
+					<p:column>
+							<p:outputLabel for="numdias" value="#{msg['viewDefinicionVersionPropiedades.numdias']}" />
+							<p:spacer width="8"/>
+							<p:inputText id="numdias" size="3"  readonly="true" value="#{viewDefinicionVersion.tramiteVersion.persistenciaDias}"/>
+					</p:column>
+				</p:row>
+			</p:panelGrid>-->
 	</h:form>
 
 </ui:composition>

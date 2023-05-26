@@ -27,6 +27,12 @@ public class RFiltroEventoAuditoria {
 	@ApiModelProperty(value = "Nombre")
 	private String nombre;
 
+	@ApiModelProperty(value = "Telefono")
+	private String tlf;
+
+	@ApiModelProperty(value = "email")
+	private String email;
+
 	@ApiModelProperty(value = "Fecha desde")
 	private Date fechaDesde;
 
@@ -59,6 +65,12 @@ public class RFiltroEventoAuditoria {
 
 	@ApiModelProperty(value = "Solo contar numero de elementos")
 	private boolean soloContar;
+
+	@ApiModelProperty(value = "Estado")
+	private String estado;
+
+	@ApiModelProperty(value = "Comentario")
+	private String coment;
 
 	private String sortField;
 	private String sortOrder;
@@ -199,4 +211,35 @@ public class RFiltroEventoAuditoria {
 		this.excepcion = excepcion;
 	}
 
+	public String getTlf() {
+		return tlf;
+	}
+
+	public void setTlf(String tlf) {
+		this.tlf = tlf;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public String getComent() {
+		return coment;
+	}
+
+	public void setComent(String coment) {
+		this.coment = coment;
+	}
 }

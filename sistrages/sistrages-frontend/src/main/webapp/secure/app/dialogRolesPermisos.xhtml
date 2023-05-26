@@ -32,7 +32,7 @@
 			<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -147,7 +147,7 @@
 					</p:selectOneMenu >
 
 					<p:outputLabel for="codigo" value="#{msg['dialogRolesPermisos.headerCodigo']}" />
-					<p:inputText id="codigo" value="#{dialogRolesPermisos.data.valor}" readonly="#{dialogRolesPermisos.consulta}" required="true" style="width:95%" maxlength="100"/>
+					<p:inputText id="codigo" value="#{dialogRolesPermisos.data.valor}" onblur="this.value = this.value.trim();" readonly="#{dialogRolesPermisos.consulta}" required="true" style="width:95%" maxlength="100"/>
 
 					<p:outputLabel for="area" value="#{msg['dialogRolesPermisos.headerArea']}" />
 					<p:selectOneMenu id="area" value="#{dialogRolesPermisos.data.area}" style="width:90%"  converter="#{areaConverter}" required="true" disabled="#{dialogRolesPermisos.consulta}">
@@ -155,7 +155,7 @@
         			</p:selectOneMenu>
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogRolesPermisos.headerDescripcion']}" />
-					<p:inputText id="descripcion" value="#{dialogRolesPermisos.data.descripcion}" required="true" style="width:95%" maxlength="255" readonly="#{dialogRolesPermisos.consulta}"/>
+					<p:inputText id="descripcion" value="#{dialogRolesPermisos.data.descripcion}" onblur="this.value = this.value.trim();" required="true" style="width:95%" maxlength="255" readonly="#{dialogRolesPermisos.consulta}"/>
 
 					<p:outputLabel value="#{msg['dialogRolesPermisos.headerPermisos']}:"/>
 					<p:outputLabel value=" " />

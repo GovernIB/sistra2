@@ -4,13 +4,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>es.caib.sistra2</groupId>
 	<artifactId>sistra2</artifactId>
-	<version>1.5.0</version>
+	<version>1.5.1</version>
 	<packaging>pom</packaging>
 	<name>Sistra2</name>
 
 	<properties>
 		<!-- Version aplicacion y propiedades -->
-		<sistra2.version>1.5.0</sistra2.version>
+		<sistra2.version>1.5.1</sistra2.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<schema.generate.databaseProductName>Oracle</schema.generate.databaseProductName>
@@ -69,9 +69,11 @@
 		<h2.database.version>1.4.179</h2.database.version>
 		<swagger.version>2.7.0</swagger.version>
 		<plugins-ib.version>2.0.0</plugins-ib.version>
+		<plugins-ib-validatesignature.version>2.1.0-SNAPSHOT</plugins-ib-validatesignature.version>
+		<plugins-ib-validatecertificate.version>2.1.1-SNAPSHOT</plugins-ib-validatecertificate.version>
 		<xmlbeans.version>2.6.0</xmlbeans.version>
 		<loginib.version>2.0.0</loginib.version>
-		<paymentib.version>1.1.7</paymentib.version>
+		<paymentib.version>1.1.1-SNAPSHOT</paymentib.version>
 		<firmasimple.version>1.0.3</firmasimple.version>
 		<firmasimple.jersey.version>1.0.2</firmasimple.jersey.version>
 		<itext.version>2.1.7</itext.version>

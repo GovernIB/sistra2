@@ -70,7 +70,7 @@
 		        <f:facet name="left">
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
 		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
-			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewPropiedadesConfiguracion.filtro}"/>
+			        	<p:inputText placeholder="#{msg['botones.buscar']}" onblur="this.value = this.value.trim();" value="#{viewPropiedadesConfiguracion.filtro}"/>
 	           			<p:commandButton icon="fa fa-search" actionListener="#{viewPropiedadesConfiguracion.filtrar()}" process="panelFiltro" update="dataTable growl" />
 	           		</h:panelGrid>
 		        </f:facet>
@@ -95,6 +95,7 @@
 						 scrollable="true"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
                          rowsPerPageTemplate="5,10,15,30"
 			        	 selectionMode="single" selection="#{viewPropiedadesConfiguracion.datoSeleccionado}" rowKey="#{td.codigo}">
 
@@ -145,7 +146,7 @@
 			<h:outputScript >
 
              var arrayCm = [];
-					
+
 				  window.onload=function(){
                 let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
                 onVisible(contextMenu, () => eliminarResaltar());

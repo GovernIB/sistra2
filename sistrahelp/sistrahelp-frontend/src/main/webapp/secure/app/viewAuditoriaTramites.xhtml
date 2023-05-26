@@ -11,6 +11,8 @@
 		<f:viewAction action="#{viewAuditoriaTramites.init}" />
 		<f:viewParam name="idTramite" value="#{viewAuditoriaTramites.idTramiteECM}"/>
 		<f:viewParam name="esDialog" value="#{viewAuditoriaTramites.esDialog}"/>
+		<f:viewParam name="esDialogParams" value="#{viewAuditoriaTramites.esDialogParams}"/>
+		<f:viewParam name="idSesionParam" value="#{viewAuditoriaTramites.idSesionParam}"/>
 		<f:viewParam name="versionTramite" value="#{viewAuditoriaTramites.versionTramiteECM}"/>
 		<f:viewParam name="fechaDesde" value="#{viewAuditoriaTramites.fechaDesdeECM}"/>
 		<f:viewParam name="fechaHasta" value="#{viewAuditoriaTramites.fechaHastaECM}"/>
@@ -20,7 +22,7 @@
 	</f:metadata>
 
 	<c:choose>
-		    <c:when test="#{viewAuditoriaTramites.esDialog}">
+		    <c:when test="#{viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogParams}">
 		         <title><h:outputText value = "a" /></title>
 
 		    </c:when>
@@ -35,7 +37,7 @@
 
 
 		<c:choose>
-		    <c:when test="#{viewAuditoriaTramites.esDialog}">
+		    <c:when test="#{viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogParams}">
 		        <style>
 					.ui-panelgrid .ui-panelgrid-cell{
 						border-color:#f0f0f0;
@@ -81,7 +83,7 @@
 			<!-- Toolbar -->
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
         	<c:choose>
-			    <c:when test="#{!viewAuditoriaTramites.esDialog}">
+			    <c:when test="#{!(viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogParams)}">
 			       <p:panelGrid id="panelFiltro"  styleClass="noBackground w100 h10 ,showcase-text-align-center">
 				       <p:column styleClass=" noPadding ">
 			        		<h:panelGrid columns="2" styleClass="w100, noPadding" >
@@ -231,7 +233,7 @@
 					<p:column styleClass=" noPadding p-justify-start">
 					<h:panelGrid columns="2" styleClass="w100, noPadding">
 						<p:outputLabel for="filtroFechaInicio" value="#{msg['viewAuditoriaTramites.filtroFechaInicio']}:"/>
-			        	<p:calendar id="filtroFechaInicio" value="#{viewAuditoriaTramites.filtros.fechaDesde}" size="14" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" />
+			        	<p:calendar id="filtroFechaInicio" value="#{viewAuditoriaTramites.filtros.fechaDesde}" size="14" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"  />
 					</h:panelGrid>
 					<h:panelGrid columns="2" styleClass="w100, noPadding">
 			        	<p:outputLabel for="filtroFechaFin" value="#{msg['viewAuditoriaTramites.filtroFechaFin']}:"/>
@@ -282,7 +284,7 @@
 			        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
 			        </h:outputText>
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headIdSesion']}" style="width:12% !important;" sortBy="#{dt.idSesionTramitacion}">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headIdSesion']}" style="width:12% !important;" sortBy="#{dt.idSesionTramitacion}" rendered="#{viewAuditoriaTramites.idSesionParam == null}">
 			        <h:outputText value="#{dt.idSesionTramitacion}" />
 			    </p:column>
 			    <p:column headerText="#{msg['viewAuditoriaTramites.headNif']}" style="width:5% !important;" sortBy="#{dt.nif}">
@@ -472,25 +474,25 @@
             	<p:ajax event="error" listener="#{viewAuditoriaTramites.copiadoErr}" update="@this growl"/>
         	</pe:clipboard>
 
-			<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header" rendered="#{!viewAuditoriaTramites.esDialog}">
+			<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header" rendered="#{!(viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogParams)}">
 				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
-			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar" rendered="#{!viewAuditoriaTramites.esDialog}">
+			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar" rendered="#{!(viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogParams)}">
 				<p:ajax event="success" listener="#{viewAuditoriaTramites.copiadoCorr}" process="@this" update="@this growl"/>
 				<p:ajax event="error" listener="#{viewAuditoriaTramites.copiadoErr}" update="@this growl"/>
 			</pe:clipboard>
 
-			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer" rendered="#{!viewAuditoriaTramites.esDialog}">
+			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer" rendered="#{!(viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogParams)}">
 				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
-			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar" rendered="#{!viewAuditoriaTramites.esDialog}">
+			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar" rendered="#{!(viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogParams)}">
 				<p:ajax event="success" listener="#{viewAuditoriaTramites.copiadoCorr}" process="@this" update="@this growl"/>
 				<p:ajax event="error" listener="#{viewAuditoriaTramites.copiadoErr}" update="@this growl"/>
 			</pe:clipboard>
 
 		    <p:inputText id="auxCopiar" value="#{viewAuditoriaTramites.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 
-		     <p:outputPanel styleClass="botonera" rendered="#{viewAuditoriaTramites.esDialog}">
+		     <p:outputPanel styleClass="botonera" rendered="#{viewAuditoriaTramites.esDialog or viewAuditoriaTramites.esDialogParams}">
 		     	<p:toolbar>
 					<f:facet name="right">
 						<p:commandButton id="btnHelpDialog" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" actionListener="#{viewAuditoriaTramites.ayudaDialog()}" />

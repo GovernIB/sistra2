@@ -41,7 +41,7 @@
 				<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -154,16 +154,16 @@
 				 <h:panelGrid  style="width: 100%;" styleClass="hide-table-header" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 padding-right-18 wpx25,padding-right-18" columns="2" >
 
 		  			<p:outputLabel   for="traduccion_ca" id="labelCa" value="#{msg['ca']}" rendered="#{dialogTraduccion.visibleCa}" />
-		  			<p:inputTextarea id="traduccion_ca" value="#{dialogTraduccion.textoCa}" style="width:98%;" required="#{dialogTraduccion.requiredCa}" rendered="#{dialogTraduccion.visibleCa}" readonly="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false" maxlength="4000"  />
+		  			<p:inputTextarea id="traduccion_ca" onblur="this.value = this.value.trim();" value="#{dialogTraduccion.textoCa}" style="width:98%;" required="#{dialogTraduccion.requiredCa}" rendered="#{dialogTraduccion.visibleCa}" readonly="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false" maxlength="4000"  />
 
 					<p:outputLabel   for="traduccion_es"  id="labelEs"  value="#{msg['es']}" rendered="#{dialogTraduccion.visibleEs}" />
-					<p:inputTextarea id="traduccion_es" value="#{dialogTraduccion.textoEs}" style="width:98%;" required="#{dialogTraduccion.requiredEs}" rendered="#{dialogTraduccion.visibleEs}" readonly="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false"  maxlength="4000"/>
+					<p:inputTextarea id="traduccion_es" onblur="this.value = this.value.trim();" value="#{dialogTraduccion.textoEs}" style="width:98%;" required="#{dialogTraduccion.requiredEs}" rendered="#{dialogTraduccion.visibleEs}" readonly="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false"  maxlength="4000"/>
 
 					<p:outputLabel   for="traduccion_en"  id="labelEn"  value="#{msg['en']}" rendered="#{dialogTraduccion.visibleEn}" />
-					<p:inputTextarea id="traduccion_en" value="#{dialogTraduccion.textoEn}" style="width:98%;" required="#{dialogTraduccion.requiredEn}" rendered="#{dialogTraduccion.visibleEn}" readonly="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false"  maxlength="4000"/>
+					<p:inputTextarea id="traduccion_en" onblur="this.value = this.value.trim();" value="#{dialogTraduccion.textoEn}" style="width:98%;" required="#{dialogTraduccion.requiredEn}" rendered="#{dialogTraduccion.visibleEn}" readonly="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false"  maxlength="4000"/>
 
 		  			<p:outputLabel   for="traduccion_de"  id="labelDe"  value="#{msg['de']}"  rendered="#{dialogTraduccion.visibleDe}" />
-		  			<p:inputTextarea id="traduccion_de" value="#{dialogTraduccion.textoDe}" style="width:98%;" required="#{dialogTraduccion.requiredDe}" rendered="#{dialogTraduccion.visibleDe}" readonly="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false"  maxlength="4000"/>
+		  			<p:inputTextarea id="traduccion_de" onblur="this.value = this.value.trim();" value="#{dialogTraduccion.textoDe}" style="width:98%;" required="#{dialogTraduccion.requiredDe}" rendered="#{dialogTraduccion.visibleDe}" readonly="#{dialogTraduccion.isConsulta()}" rows="#{dialogTraduccion.filas}" cols="#{dialogTraduccion.columnas}" autoResize="false"  maxlength="4000"/>
   			 </h:panelGrid>
 
   			 <p:contextMenu for=":formTraduccion">

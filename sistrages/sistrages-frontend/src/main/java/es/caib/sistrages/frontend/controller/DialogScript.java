@@ -172,6 +172,10 @@ public class DialogScript extends DialogControllerBase {
 	/** Lista secciones reut. **/
 	private List<ComponenteFormularioCampoSeccionReutilizable> srL = new ArrayList<>();
 
+	private boolean colorEditorOscuro = false;
+
+	private boolean esIframe = false;
+
 	/**
 	 * Constructor vacio.
 	 */
@@ -191,6 +195,7 @@ public class DialogScript extends DialogControllerBase {
 		} else {
 			data = (Script) UtilJSON.fromJSON(json.toString(), Script.class);
 		}
+
 		mostrarLateralAyuda = false;
 		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_SCRIPT);
 
@@ -202,120 +207,117 @@ public class DialogScript extends DialogControllerBase {
 
 		if (tipoScriptFormulario != null) {
 			tipoScript = (TypeScriptFormulario) UtilJSON.fromJSON(tipoScriptFormulario, TypeScriptFormulario.class);
-			if (permiteEditar) {
-				setPlugins(UtilScripts.getPluginsScript((TypeScriptFormulario) tipoScript));
-			}
+			setPlugins(UtilScripts.getPluginsScript((TypeScriptFormulario) tipoScript));
 		}
 		if (tipoScriptFlujo != null) {
 			tipoScript = (TypeScriptFlujo) UtilJSON.fromJSON(tipoScriptFlujo, TypeScriptFlujo.class);
-			if (permiteEditar) {
-				setPlugins(UtilScripts.getPluginsScript((TypeScriptFlujo) tipoScript));
-			}
+			setPlugins(UtilScripts.getPluginsScript((TypeScriptFlujo) tipoScript));
 		}
 
 		if (tipoScriptSeccionReutilizable != null) {
 			tipoScript = (TypeScriptSeccionReutilizable) UtilJSON.fromJSON(tipoScriptSeccionReutilizable,
 					TypeScriptSeccionReutilizable.class);
-			if (permiteEditar) {
-				setPlugins(UtilScripts.getPluginsScript((TypeScriptSeccionReutilizable) tipoScript));
-			}
+			setPlugins(UtilScripts.getPluginsScript((TypeScriptSeccionReutilizable) tipoScript));
 		}
 
 		dominios = new ArrayList<>();
-		if (permiteEditar) {
 
-			if (idTramiteVersion != null) {
-				dominios = tramiteService.getDominioSimpleByTramiteId(Long.valueOf(idTramiteVersion));
-			} else if (tipoDisenyo != null
-					&& tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString())) {
-				dominios = seccionReutilizableService.getDominiosByIdentificadorSeccion(identificadorSeccion);
-			}
+		if (idTramiteVersion != null) {
+			dominios = tramiteService.getDominioSimpleByTramiteId(Long.valueOf(idTramiteVersion));
+		} else if (tipoDisenyo != null
+				&& tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString())) {
+			dominios = seccionReutilizableService.getDominiosByIdentificadorSeccion(identificadorSeccion);
 		}
 
 		/* inicializa arbol */
 		treeFormularios = new DefaultTreeNode("Root", null);
 
-		if (permiteEditar) {
+		if (tipoScript instanceof TypeScriptFlujo) {
 
-			if (tipoScript instanceof TypeScriptFlujo) {
+			final TramiteSimple tramiteSimple = tramiteService.getTramiteSimple(idTramiteVersion);
+			idiomas = UtilTraducciones.getIdiomas(tramiteSimple.getIdiomasSoportados());
+			final List<Long> idFormularios = UtilScripts.getFormulariosFlujo(tramiteSimple, idFormularioActual,
+					idPasoActual, (TypeScriptFlujo) tipoScript, idFormularioInternoActual);
 
-				final TramiteSimple tramiteSimple = tramiteService.getTramiteSimple(idTramiteVersion);
-				idiomas = UtilTraducciones.getIdiomas(tramiteSimple.getIdiomasSoportados());
-				final List<Long> idFormularios = UtilScripts.getFormulariosFlujo(tramiteSimple, idFormularioActual,
-						idPasoActual, (TypeScriptFlujo) tipoScript, idFormularioInternoActual);
+			for (final Long idFormularioInterno : idFormularios) {
+				final String identificadorFormulario = formularioInternoService
+						.getIdentificadorFormularioInterno(idFormularioInterno);
+				final DisenyoFormularioSimple formulario = formularioInternoService.getFormularioInternoSimple(null,
+						idFormularioInterno, null, null, obtenerCargarPaginasPosteriores(), false, null);
 
-				for (final Long idFormularioInterno : idFormularios) {
-					final String identificadorFormulario = formularioInternoService
-							.getIdentificadorFormularioInterno(idFormularioInterno);
-					final DisenyoFormularioSimple formulario = formularioInternoService.getFormularioInternoSimple(null,
-							idFormularioInterno, null, null, obtenerCargarPaginasPosteriores(), false, null);
+				cargarArbol(formulario, identificadorFormulario);
+			}
+		}
 
-					cargarArbol(formulario, identificadorFormulario);
+		if (tipoScript instanceof TypeScriptFormulario) {
+			final DisenyoFormularioSimple disenyoFormulario;
+			if (tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString())) {
+				disenyoFormulario = this.formularioInternoService.getFormularioInternoSimple(
+						Long.valueOf(idFormularioActual), null, idComponente, idPagina,
+						obtenerCargarPaginasPosteriores(), false, null);
+			} else {
+				disenyoFormulario = this.formularioInternoService.getFormularioInternoSimple(null,
+						Long.valueOf(idFormularioActual), idComponente, idPagina, obtenerCargarPaginasPosteriores(),
+						true, identificadorSeccion);
+			}
+			if (disenyoFormulario != null) {
+					cargarArbol(disenyoFormulario, disenyoFormulario.getIdentificador());
 				}
+
+
+			if (idTramiteVersion != null) {
+				idiomas = UtilTraducciones.getIdiomas(tramiteService.getIdiomasDisponibles(idTramiteVersion));
+			} else {
+				idiomas = new ArrayList<>();
+				idiomas.add(TypeIdioma.CASTELLANO.toString());
+				idiomas.add(TypeIdioma.CATALAN.toString());
 			}
 
-			if (tipoScript instanceof TypeScriptFormulario) {
-				final DisenyoFormularioSimple disenyoFormulario;
-				if (tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString())) {
-					disenyoFormulario = this.formularioInternoService.getFormularioInternoSimple(
-							Long.valueOf(idFormularioActual), null, idComponente, idPagina,
-							obtenerCargarPaginasPosteriores(), false, null);
-				} else {
-					disenyoFormulario = this.formularioInternoService.getFormularioInternoSimple(null,
-							Long.valueOf(idFormularioActual), idComponente, idPagina, obtenerCargarPaginasPosteriores(),
-							true, identificadorSeccion);
-				}
+		}
 
-				if (idTramiteVersion != null) {
-					idiomas = UtilTraducciones.getIdiomas(tramiteService.getIdiomasDisponibles(idTramiteVersion));
-				} else {
-					idiomas = new ArrayList<>();
-					idiomas.add(TypeIdioma.CASTELLANO.toString());
-					idiomas.add(TypeIdioma.CATALAN.toString());
-				}
+		if (tipoScript.name().equals("SCRIPT_DATOS_INICIALES_FORMULARIO")) {
+			DisenyoFormulario formulario = this.formularioInternoService
+					.getFormularioInternoCompleto(Long.parseLong(idFormularioInternoActual));
 
-			}
+			if (formulario != null) {
 
-			if (tipoScript.name().equals("SCRIPT_DATOS_INICIALES_FORMULARIO")) {
-				DisenyoFormulario formulario = this.formularioInternoService
-						.getFormularioInternoCompleto(Long.parseLong(idFormularioInternoActual));
+				// recorremos paginas
+				for (final PaginaFormulario pagina : formulario.getPaginas()) {
 
-				if (formulario != null) {
+					for (final LineaComponentesFormulario linea : pagina.getLineas()) {
 
-					// recorremos paginas
-					for (final PaginaFormulario pagina : formulario.getPaginas()) {
-
-						for (final LineaComponentesFormulario linea : pagina.getLineas()) {
-
-							for (final ComponenteFormulario componente : linea.getComponentes()) {
-								if (componente instanceof ComponenteFormularioCampoSeccionReutilizable) {
-									SeccionReutilizable sr = srService.getSeccionReutilizable(
-											((ComponenteFormularioCampoSeccionReutilizable) componente)
-													.getIdSeccionReutilizable());
-									this.tieneSR = true;
-									componente.setIdComponente(sr.getIdentificador());
-									srL.add((ComponenteFormularioCampoSeccionReutilizable) componente);
-								}
+						for (final ComponenteFormulario componente : linea.getComponentes()) {
+							if (componente instanceof ComponenteFormularioCampoSeccionReutilizable) {
+								SeccionReutilizable sr = srService.getSeccionReutilizable(
+										((ComponenteFormularioCampoSeccionReutilizable) componente)
+												.getIdSeccionReutilizable());
+								this.tieneSR = true;
+								componente.setIdComponente(sr.getIdentificador());
+								srL.add((ComponenteFormularioCampoSeccionReutilizable) componente);
 							}
 						}
 					}
-
 				}
+
 			}
+		}
 
-			if (tipoScript instanceof TypeScriptSeccionReutilizable) {
+		if (tipoScript instanceof TypeScriptSeccionReutilizable) {
 
+			if (idFormularioActual != null) {
 				final DisenyoFormularioSimple disenyoFormulario = this.formularioInternoService
 						.getFormularioInternoSimple(null, Long.valueOf(idFormularioActual), idComponente, idPagina,
 								obtenerCargarPaginasPosteriores(), true, identificadorSeccion);
+
 				if (disenyoFormulario != null) {
 					cargarArbol(disenyoFormulario, disenyoFormulario.getIdentificador());
 				}
-				idiomas = new ArrayList<>();
-				idiomas.add(TypeIdioma.CATALAN.toString());
-				idiomas.add(TypeIdioma.CASTELLANO.toString());
-
 			}
+
+			idiomas = new ArrayList<>();
+			idiomas.add(TypeIdioma.CATALAN.toString());
+			idiomas.add(TypeIdioma.CASTELLANO.toString());
+
 		}
 
 	}
@@ -508,7 +510,8 @@ public class DialogScript extends DialogControllerBase {
 			if (!validoScript()) {
 				return;
 			}
-		} else if (tipoDisenyo != null && tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString())) {
+		} else if (tipoDisenyo != null
+				&& tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString())) {
 			if (!revisarDominioNoarea()) {
 				return;
 			}
@@ -531,6 +534,13 @@ public class DialogScript extends DialogControllerBase {
 			result.setResult(this.data);
 		}
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Cambia el classname.
+	 */
+	public void switchColorEditor() {
+		colorEditorOscuro = !colorEditorOscuro;
 	}
 
 	private boolean funcionGetValorIncorrecta() {
@@ -942,7 +952,12 @@ public class DialogScript extends DialogControllerBase {
 		params.put(TypeParametroVentana.IDIOMAS.toString(), UtilJSON.toJSON(idiomas));
 		params.put(TypeParametroVentana.LITERAL_HTML.toString(), literalHTML);
 
-		UtilJSF.openDialog(DialogScriptLiteral.class, TypeModoAcceso.EDICION, params, true, 650, 200);
+		if (permiteEditar) {
+			UtilJSF.openDialog(DialogScriptLiteral.class, TypeModoAcceso.EDICION, params, true, 650, 200);
+		} else {
+			UtilJSF.openDialog(DialogScriptLiteral.class, TypeModoAcceso.CONSULTA, params, true, 650, 200);
+		}
+
 	}
 
 	/**
@@ -1018,7 +1033,7 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void mostrarAyuda(final TypePluginScript plugin) {
 		this.urlIframe = "AyudaServlet?ts=" + System.currentTimeMillis() + "&lang=" + UtilJSF.getIdioma().toString()
-				+ "&plugin=" + plugin.name();
+				+ "&plugin=" + plugin.name() + "&boton=AYUDA";
 		this.mostrarLateralAyuda = true;
 	}
 
@@ -1562,4 +1577,25 @@ public class DialogScript extends DialogControllerBase {
 		this.tieneSR = tieneSR;
 	}
 
+	/**
+	 * @return the colorEditorOscuro
+	 */
+	public boolean getColorEditorOscuro() {
+		return colorEditorOscuro;
+	}
+
+	/**
+	 * @param colorEditorOscuro the colorEditorOscuro to set
+	 */
+	public void setColorEditorOscuro(boolean colorEditorOscuro) {
+		this.colorEditorOscuro = colorEditorOscuro;
+	}
+
+	public boolean isEsIframe() {
+		return esIframe;
+	}
+
+	public void setEsIframe(boolean esIframe) {
+		this.esIframe = esIframe;
+	}
 }

@@ -33,7 +33,7 @@
 				</p>
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 , padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 					<p:outputLabel value="#{msg['dialogCuadernoCargaAR.headerDescripcion']}:" />
-					<p:inputTextarea value="#{dialogCuadernoCargaAR.data.areaResultado}" required="true" rows="5" cols="70" style="background:white" requiredMessage="#{msg['error.obligatorio']}" />
+					<p:inputTextarea value="#{dialogCuadernoCargaAR.data.areaResultado}" required="true" rows="5" cols="70" onblur="this.value = this.value.trim();" style="background:white" requiredMessage="#{msg['error.obligatorio']}" />
 
 				</h:panelGrid>
 			</p:outputPanel>

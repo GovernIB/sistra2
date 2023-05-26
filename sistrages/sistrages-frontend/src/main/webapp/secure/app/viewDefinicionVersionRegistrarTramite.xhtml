@@ -24,17 +24,17 @@
 					</p:column>
 					<p:column style="display:flex" >
 						<p:inputText id="oficina" readonly="true" size="7"
-							value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoOficinaRegistro}" />
+							value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoOficinaRegistro}" onblur="this.value = this.value.trim();"/>
 						<p:inputText id="oficinaTexto" readonly="true" size="15"
-							value="#{viewDefinicionVersion.textoOficinaRegistro}" style="margin-left:4px" />
+							value="#{viewDefinicionVersion.textoOficinaRegistro}" style="margin-left:4px" onblur="this.value = this.value.trim();"/>
 					</p:column>
 					<p:column>
 						<p:outputLabel for="libro"
 							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.libro']}" />
 					</p:column>
 					<p:column>
-						<p:inputText id="libro" readonly="true" size="7" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoLibroRegistro}" />
-						<p:inputText id="libroTexto" readonly="true" size="15" value="#{viewDefinicionVersion.textoLibroRegistro}"  style="margin-left:4px" />
+						<p:inputText id="libro" readonly="true" size="7" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoLibroRegistro}" onblur="this.value = this.value.trim();"/>
+						<p:inputText id="libroTexto" readonly="true" size="15" value="#{viewDefinicionVersion.textoLibroRegistro}"  style="margin-left:4px" onblur="this.value = this.value.trim();"/>
 					</p:column>
 				</p:row>
 				<p:row>
@@ -69,7 +69,7 @@
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.instruccionesTramitacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="tramitacion" required="true" readonly="true" styleClass="w85" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}"  />
+           		<p:inputText id="tramitacion" onblur="this.value = this.value.trim();" required="true" readonly="true" styleClass="w85" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}"  />
            		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccionHTML(viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion)}"
 						process="@this" update="growl" style="margin-left:2px;margin-bottom:1px" />
        		</p:outputPanel>

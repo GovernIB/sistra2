@@ -39,7 +39,7 @@
 	</f:metadata>
 	<h:form id="dialogDefinicionVersion" styleClass="w100 h100">
 		<p:commandButton id="cerrar" action="#{dialogDefinicionVersion.closeDialog()}" process="@this @form:msg" style="display:none;"/>
-		<p:inputText id="msg" value="#{dialogDefinicionVersion.mensaje}" style="display:none;"/>
+		<p:inputText id="msg" value="#{dialogDefinicionVersion.mensaje}" style="display:none;" onblur="this.value = this.value.toUpperCase().trim();"/>
   		<p:outputPanel styleClass="w100 h100">
   			<!-- Workpanel: Iframe HTML -->
 			<p:outputPanel id="formulario-panel" styleClass="w100 h100">
@@ -60,6 +60,7 @@
 			</p:toolbar>
 		</p:outputPanel>
 	</h:form>
+
 </h:body>
 </f:view>
 

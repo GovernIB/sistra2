@@ -27,6 +27,8 @@ import es.caib.sistrahelp.core.api.model.ResultadoAuditoriaDetallePago;
 import es.caib.sistrahelp.core.api.model.ResultadoErroresPorTramiteCM;
 import es.caib.sistrahelp.core.api.model.ResultadoEventoCM;
 import es.caib.sistrahelp.core.api.model.ResultadoPerdidaClave;
+import es.caib.sistrahelp.core.api.model.ResultadoSoporte;
+import es.caib.sistrahelp.core.api.model.Soporte;
 import es.caib.sistrahelp.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.core.interceptor.NegocioInterceptor;
@@ -134,6 +136,19 @@ public class HelpDeskServiceBean implements HelpDeskService {
 	public ResultadoEventoCM obtenerErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion) {
 		return helpdeskService.obtenerErroresPlataformaCM(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	public ResultadoSoporte obtenerFormularioSoporte(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion) {
+		return helpdeskService.obtenerFormularioSoporte(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	public void updateFormularioSoporte(Soporte soporte) {
+		helpdeskService.updateFormularioSoporte(soporte);
 	}
 
 }

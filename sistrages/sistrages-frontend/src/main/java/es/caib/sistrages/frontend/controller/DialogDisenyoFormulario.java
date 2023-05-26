@@ -26,6 +26,7 @@ import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCaptcha;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
@@ -192,6 +193,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	private String portapapeles;
 
 	private String errorCopiar;
+
+	private boolean esIframe = false;
 
 	/**
 	 * Inicializacion.
@@ -710,12 +713,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				}
 
 				if (!linea.cabenComponentes((ComponenteFormulario) objetoFormularioEdit, false)) {
-					if(objetoFormularioEdit instanceof ComponenteFormularioCampoTexto && TypeCampoTexto.IBAN.equals(((ComponenteFormularioCampoTexto) objetoFormularioEdit).getTipoCampoTexto())) {
+					if (objetoFormularioEdit instanceof ComponenteFormularioCampoTexto && TypeCampoTexto.IBAN
+							.equals(((ComponenteFormularioCampoTexto) objetoFormularioEdit).getTipoCampoTexto())) {
 						addMessageContext(TypeNivelGravedad.ERROR,
 								UtilJSF.getLiteral("dialogDisenyoFormulario.iban.errorNumColumnas"));
-					}else {
-					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"),
-							true);
+					} else {
+						addMessageContext(TypeNivelGravedad.WARNING,
+								UtilJSF.getLiteral("warning.componente.sinespacio"), true);
 					}
 					return false;
 				}
@@ -825,6 +829,22 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 						}
 					}
 
+				}
+
+				if (objetoFormularioEdit instanceof ComponenteFormularioCampoCheckbox) {
+					final ComponenteFormularioCampoCheckbox campo = (ComponenteFormularioCampoCheckbox) objetoFormularioEdit;
+
+					if (campo.getValorChecked() == null || campo.getValorChecked().isEmpty()) {
+						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+								UtilJSF.getLiteral("error.validacion.valorChecked.vacio"), true);
+						return false;
+					}
+
+					if (campo.getValorNoChecked() == null || campo.getValorNoChecked().isEmpty()) {
+						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+								UtilJSF.getLiteral("error.validacion.valorNoChecked.vacio"), true);
+						return false;
+					}
 				}
 
 				final boolean isDuplicado = formIntService.isIdElementoFormularioDuplicated(Long.valueOf(id),
@@ -3254,4 +3274,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
 	}
+
+	public boolean isEsIframe() {
+		return esIframe;
+	}
+
+	public void setEsIframe(boolean esIframe) {
+		this.esIframe = esIframe;
+	}
+
 }

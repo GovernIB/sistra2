@@ -25,6 +25,7 @@ import es.caib.sistramit.core.api.exception.TicketFormularioException;
 import es.caib.sistramit.core.api.model.flujo.AvisoPlataforma;
 import es.caib.sistramit.core.api.model.flujo.RetornoFormularioExterno;
 import es.caib.sistramit.core.api.model.flujo.RetornoPago;
+import es.caib.sistramit.core.api.model.flujo.TramiteIniciado;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
@@ -318,8 +319,17 @@ public class SecurityServiceImpl implements SecurityService {
 	}
 
 	@Override
+	@NegocioInterceptor
 	public InfoTicketAcceso obtenerTicketAccesoCDC(final String ticket) {
 		return ticketCDCDao.obtieneTicketAcceso(ticket);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<TramiteIniciado> obtenerTramitacionesIniciadas(final String nif, final String tramite,
+			final int version, final String idTramiteCatalogo, final boolean servicioCatalogo) {
+		return flujoTramiteDao.obtenerTramitacionesIniciadas(nif, tramite, version, idTramiteCatalogo,
+				servicioCatalogo);
 	}
 
 	// ------------------------------------------------------------------------

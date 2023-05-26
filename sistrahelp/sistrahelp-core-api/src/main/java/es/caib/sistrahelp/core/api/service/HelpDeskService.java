@@ -17,6 +17,8 @@ import es.caib.sistrahelp.core.api.model.ResultadoAuditoriaDetallePago;
 import es.caib.sistrahelp.core.api.model.ResultadoErroresPorTramiteCM;
 import es.caib.sistrahelp.core.api.model.ResultadoEventoCM;
 import es.caib.sistrahelp.core.api.model.ResultadoPerdidaClave;
+import es.caib.sistrahelp.core.api.model.ResultadoSoporte;
+import es.caib.sistrahelp.core.api.model.Soporte;
 
 /**
  * Servicio para auditoria de tramites.
@@ -128,4 +130,10 @@ public interface HelpDeskService {
 
 	ResultadoEventoCM obtenerErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion);
+
+	ResultadoSoporte obtenerFormularioSoporte(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion);
+
+	void updateFormularioSoporte(Soporte soporte);
+
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.caib.sistramit.core.api.model.flujo.RetornoFormularioExterno;
 import es.caib.sistramit.core.api.model.flujo.RetornoPago;
+import es.caib.sistramit.core.api.model.flujo.TramiteIniciado;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
@@ -164,4 +165,14 @@ public interface SecurityService {
 	 */
 	InfoTicketAcceso obtenerTicketAccesoCDC(String ticket);
 
+	/**
+	 * Obtiene tramitaciones iniciadas del usuario.
+	 *  @param nif nif
+	 * @param tramite Trámite
+	 * @param version Versión
+	 * @param idTramiteCatalogo Id Trámite Catálogo
+	 * @param servicioCatalogo Indica si es servicio
+	 * @return Lista tramitaciones iniciadas
+	 */
+	List<TramiteIniciado> obtenerTramitacionesIniciadas(String nif, String tramite, int version, String idTramiteCatalogo, boolean servicioCatalogo);
 }

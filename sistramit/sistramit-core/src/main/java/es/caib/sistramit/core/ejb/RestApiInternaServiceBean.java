@@ -11,6 +11,7 @@ import javax.interceptor.Interceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import es.caib.sistramit.core.api.model.flujo.types.TypeSoporteEstado;
 import es.caib.sistramit.core.api.model.system.rest.interno.DetallePagoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.ErroresPorTramiteCM;
 import es.caib.sistramit.core.api.model.system.rest.interno.EventoAuditoriaTramitacion;
@@ -22,6 +23,7 @@ import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPerdidaClave;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FormularioSoporte;
 import es.caib.sistramit.core.api.model.system.rest.interno.OUTPerdidaClave;
 import es.caib.sistramit.core.api.model.system.rest.interno.PagoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.PersistenciaAuditoria;
@@ -130,5 +132,22 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 	@Override
 	public Long contarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda) {
 		return restApiInternaService.contarErroresPlataformaCM(pFiltroBusqueda);
+	}
+
+	@Override
+	public List<FormularioSoporte> recuperarFormularioSoporte(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		return restApiInternaService.recuperarFormularioSoporte(pFiltroBusqueda, filtroPaginacion);
+	}
+
+	@Override
+	public Long contarFormularioSoporte(FiltroEventoAuditoria filtroBusqueda) {
+		return restApiInternaService.contarFormularioSoporte(filtroBusqueda);
+	}
+
+	@Override
+	public void updateEstadoIncidencia(Long idSoporte, TypeSoporteEstado estado, String comentarios) {
+		restApiInternaService.updateEstadoIncidencia(idSoporte, estado, comentarios);
+
 	}
 }

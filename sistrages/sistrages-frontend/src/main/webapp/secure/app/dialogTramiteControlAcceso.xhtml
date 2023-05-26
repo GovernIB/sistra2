@@ -32,7 +32,7 @@
 			<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -149,7 +149,7 @@
 					<p:column styleClass="ui-inputgroup noPadding-left">
 			           		<p:outputLabel for="mensajedesactivacion" value="#{msg['dialogTramiteControlAcceso.mensajedesactivacion']}" styleClass="center-vertical" />
 			           		<p:spacer width="8" height="1" />
-			           		<p:inputTextarea  id="mensajedesactivacion" readonly="true" styleClass="w75 va-middle" value="#{dialogTramiteControlAcceso.avisoEntidad.mensaje.getTraduccion(sessionBean.lang,dialogTramiteControlAcceso.idiomas)}"/>
+			           		<p:inputTextarea  id="mensajedesactivacion" onblur="this.value = this.value.trim();" readonly="true" styleClass="w75 va-middle" value="#{dialogTramiteControlAcceso.avisoEntidad.mensaje.getTraduccion(sessionBean.lang,dialogTramiteControlAcceso.idiomas)}"/>
 
 			           		<p:commandButton id="buttonMensajeDesactivacion" icon="fa fa-language" actionListener="#{dialogTramiteControlAcceso.editarMensajeDesactivacion()}" styleClass="va-top margin-left-3"
 									process="@this" update="growlDialog">

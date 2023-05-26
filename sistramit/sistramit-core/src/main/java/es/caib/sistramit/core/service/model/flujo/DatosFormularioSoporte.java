@@ -1,6 +1,13 @@
 package es.caib.sistramit.core.service.model.flujo;
 
+import java.util.Date;
+
+import es.caib.sistramit.core.api.model.flujo.types.TypeSoporteEstado;
+
 public class DatosFormularioSoporte {
+
+	/** Fecha creación. */
+	private Date fechaCreacion;
 
 	/** Nif. */
 	private String nif;
@@ -17,11 +24,26 @@ public class DatosFormularioSoporte {
 	/** Tipo problema. */
 	private String problemaTipo;
 
+	/** Tipo problema (descripción). */
+	private String problemaTipoDesc;
+
 	/** Descripción problema. */
 	private String problemaDesc;
 
 	/** Horario soporte. */
 	private String horarioContacto;
+
+	/** Nombre fichero. */
+	private String nombreFichero;
+
+	/** Datos fichero. */
+	private byte[] datosFichero;
+
+	/** Estado. */
+	private TypeSoporteEstado estado;
+
+	/** Comentarios. */
+	private String comentarios;
 
 	/**
 	 * Método de acceso a nif.
@@ -139,7 +161,7 @@ public class DatosFormularioSoporte {
 
 	/**
 	 * Método de acceso a horarioContacto.
-	 * 
+	 *
 	 * @return horarioContacto
 	 */
 	public String getHorarioContacto() {
@@ -148,12 +170,104 @@ public class DatosFormularioSoporte {
 
 	/**
 	 * Método para establecer horarioContacto.
-	 * 
+	 *
 	 * @param horarioContacto
 	 *                            horarioContacto a establecer
 	 */
 	public void setHorarioContacto(final String horarioContacto) {
 		this.horarioContacto = horarioContacto;
+	}
+
+	/**
+	 * Método de acceso a fechaCreacion.
+	 *
+	 * @return fechaCreacion
+	 */
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	/**
+	 * Método para establecer fechaCreacion.
+	 *
+	 * @param fechaCreacion
+	 *                          fechaCreacion a establecer
+	 */
+	public void setFechaCreacion(final Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	/**
+	 * Método de acceso a nombreFichero.
+	 *
+	 * @return nombreFichero
+	 */
+	public String getNombreFichero() {
+		return nombreFichero;
+	}
+
+	/**
+	 * Método para establecer nombreFichero.
+	 *
+	 * @param nombreFichero
+	 *                          nombreFichero a establecer
+	 */
+	public void setNombreFichero(final String nombreFichero) {
+		this.nombreFichero = nombreFichero;
+	}
+
+	/**
+	 * Método de acceso a datosFichero.
+	 *
+	 * @return datosFichero
+	 */
+	public byte[] getDatosFichero() {
+		return datosFichero;
+	}
+
+	/**
+	 * Método para establecer datosFichero.
+	 *
+	 * @param datosFichero
+	 *                         datosFichero a establecer
+	 */
+	public void setDatosFichero(final byte[] datosFichero) {
+		this.datosFichero = datosFichero;
+	}
+
+	public TypeSoporteEstado getEstado() {
+		return estado;
+	}
+
+	public void setEstado(final TypeSoporteEstado estado) {
+		this.estado = estado;
+	}
+
+	public String getComentarios() {
+		return comentarios;
+	}
+
+	public void setComentarios(final String comentarios) {
+		this.comentarios = comentarios;
+	}
+
+	/**
+	 * Método de acceso a problemaTipoDesc.
+	 * 
+	 * @return problemaTipoDesc
+	 */
+	public String getProblemaTipoDesc() {
+		return problemaTipoDesc;
+	}
+
+	/**
+	 * Método para establecer problemaTipoDesc.
+	 * 
+	 * @param problemaTipoDesc
+	 *                             problemaTipoDesc a establecer
+	 */
+	public void setProblemaTipoDesc(final String problemaTipoDesc) {
+		this.problemaTipoDesc = problemaTipoDesc;
 	}
 
 }

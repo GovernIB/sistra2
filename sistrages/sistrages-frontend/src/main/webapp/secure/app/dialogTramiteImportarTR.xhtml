@@ -26,7 +26,7 @@
 			<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -153,13 +153,13 @@
 					</p:selectOneMenu>
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarTR.headerIdentificador']}:" rendered="#{dialogTramiteImportarTR.accion == 'C'}" />
-					<p:inputText   value="#{dialogTramiteImportarTR.data.identificador}"   size="70" rendered="#{dialogTramiteImportarTR.accion == 'C'}" validatorMessage="#{msg['error.validacion.identificador']}" onblur="this.value = this.value.toUpperCase();"  >
+					<p:inputText   value="#{dialogTramiteImportarTR.data.identificador}"   size="70" rendered="#{dialogTramiteImportarTR.accion == 'C'}" validatorMessage="#{msg['error.validacion.identificador']}" onblur="this.value = this.value.toUpperCase().trim();"  >
 							<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 				   		 	<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,50}$" />
 					</p:inputText>
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarTR.headerDescripcion']}:" rendered="#{dialogTramiteImportarTR.accion == 'C'}" />
-					<p:inputTextarea value="#{dialogTramiteImportarTR.data.descripcion}" rows="5" cols="70" rendered="#{dialogTramiteImportarTR.accion == 'C'}"  />
+					<p:inputTextarea value="#{dialogTramiteImportarTR.data.descripcion}" onblur="this.value = this.value.trim();" rows="5" cols="70" rendered="#{dialogTramiteImportarTR.accion == 'C'}"  />
 
 				</h:panelGrid>
 			</p:outputPanel>

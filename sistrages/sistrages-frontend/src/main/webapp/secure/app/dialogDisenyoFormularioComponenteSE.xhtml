@@ -57,7 +57,7 @@
 
 	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio() and not dialogDisenyoFormulario.isDominioLF()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.dominioCodigo']}" /></h:column>
 	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio() and not dialogDisenyoFormulario.isDominioLF()}">
-		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.campoDominioCodigo}" onblur="this.value = this.value.toUpperCase();"  maxlength="100" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.campoDominioCodigo}" onblur="this.value = this.value.toUpperCase().trim();"  maxlength="100" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 			<p:ajax event="blur" process="@this" />
 			<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 		</p:inputText>
@@ -65,7 +65,7 @@
 
 	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio() and not dialogDisenyoFormulario.isDominioLF()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.dominioDescripcion']}" /></h:column>
 	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio() and not dialogDisenyoFormulario.isDominioLF()}">
-		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.campoDominioDescripcion}" onblur="this.value = this.value.toUpperCase();"  maxlength="100" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.campoDominioDescripcion}" onblur="this.value = this.value.toUpperCase().trim();"  maxlength="100" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 			<p:ajax event="blur" process="@this" />
 			<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 		</p:inputText>

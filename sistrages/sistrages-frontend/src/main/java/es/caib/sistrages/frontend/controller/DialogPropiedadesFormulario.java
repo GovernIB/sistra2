@@ -97,9 +97,12 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		} else {
 			dataI = formIntService.getFormularioInternoPaginas(Long.valueOf(id));
 			data = formIntService.getFormularioInternoPaginas(Long.valueOf(id));
-			literal = data.getTextoCabecera() != null
-					? data.getTextoCabecera().getTraduccion(UtilJSF.getSessionBean().getLang(), idiomas)
-					: null;
+
+			literal = tramiteService.getFormulario(Long.valueOf(idFormularioTramite)).getDescripcion()
+					.getTraduccion(UtilJSF.getSessionBean().getLang(), idiomas) != null
+							? tramiteService.getFormulario(Long.valueOf(idFormularioTramite)).getDescripcion()
+									.getTraduccion(UtilJSF.getSessionBean().getLang(), idiomas)
+							: null;
 		}
 
 		if (data.getPaginas().size() < 2) {
@@ -231,7 +234,8 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	 *
 	 */
 	public void editarTextoCabecera() {
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso), data.getTextoCabecera(), getIdiomas(),
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.CONSULTA,
+				tramiteService.getFormulario(Long.valueOf(idFormularioTramite)).getDescripcion(), getIdiomas(),
 				getIdiomas());
 	}
 

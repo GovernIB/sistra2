@@ -14,11 +14,11 @@
         <h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left" rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="12" cellspacing="0">
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.identificador']}" />
-			<p:inputText 	 id="codigo" value="#{viewDefinicionVersionParams.tramite.getIdentificadorCompuesto()}" size="107"  readonly="true" />
+			<p:inputText onblur="this.value = this.value.trim();" id="codigo" value="#{viewDefinicionVersionParams.tramite.getIdentificadorCompuesto()}" size="107"  readonly="true" />
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.descripcion']}" />
 			<p:panelGrid styleClass="noBorders" columns="1" columnClasses="noPadding-left,,">
-				<p:inputText value="#{viewDefinicionVersionParams.tramiteVersion.descripcion}"  readonly="true"  size="107"    />
+				<p:inputText onblur="this.value = this.value.trim();" value="#{viewDefinicionVersionParams.tramiteVersion.descripcion}"  readonly="true"  size="107"    />
 			</p:panelGrid>
 
 			<p:outputLabel value="#{msg['dialogDominioExportar.tipo']} *" />
@@ -38,7 +38,7 @@
 					<p:column>
 						<p:outputLabel for="nivelQAA" value="#{msg['viewDefinicionVersionPropiedades.nivelQAA']}" />
 						<p:spacer width="8" height="1"/>
-						<p:inputText id="nivelQAA"  readonly="true" value="#{msg['typeQAA.' += viewDefinicionVersionParams.tramiteVersion.nivelQAA]}"/>
+						<p:inputText id="nivelQAA" onblur="this.value = this.value.trim();" readonly="true" value="#{msg['typeQAA.' += viewDefinicionVersionParams.tramiteVersion.nivelQAA]}"/>
 					</p:column>
 					<p:column>
 						<p:selectBooleanCheckbox itemLabel="#{msg['tiposAutenticacion.CER']}" value="#{viewDefinicionVersionParams.tramiteVersion.tieneTipoAutenticacion('CER')}" disabled="true" />
@@ -58,27 +58,6 @@
 				<ui:repeat var="idioma" value="#{sessionBean.idiomas}">
 					<p:selectBooleanCheckbox disabled="true" value="#{viewDefinicionVersionParams.idiomas.contains(idioma)}"  itemLabel="#{msg[idioma]}" required="true"/>
 				</ui:repeat>
-			</p:panelGrid>
-
-         	<p:outputLabel for="persistencia" value="#{msg['viewDefinicionVersionPropiedades.persistencia']}" />
-			<p:panelGrid styleClass="noBorders">
-				<p:row>
-					<p:column styleClass="noPadding-left">
-						<p:selectBooleanCheckbox id="persistencia" disabled="true" value="#{viewDefinicionVersionParams.tramiteVersion.persistencia}"/>
-						<p:spacer width="40" height="1"/>
-					</p:column>
-					<p:column>
-						<p:selectOneRadio id="tipopersistencia" disabled="true" value="#{viewDefinicionVersionParams.tramiteVersion.persistenciaInfinita}">
-				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.sinlimite']}" itemValue="true" />
-				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.pordias']}" itemValue="false" />
-		     		   </p:selectOneRadio>
-		     		 </p:column>
-					<p:column>
-							<p:outputLabel for="numdias" value="#{msg['viewDefinicionVersionPropiedades.numdias']}" />
-							<p:spacer width="8"/>
-							<p:inputText id="numdias" size="3"  readonly="true" value="#{viewDefinicionVersionParams.tramiteVersion.persistenciaDias}"/>
-					</p:column>
-				</p:row>
 			</p:panelGrid>
 
 			<p:outputLabel for="scriptpersonalizacion" value="#{msg['script.SCRIPT_PERSONALIZACION_TRAMITE.titulo']}" />
@@ -104,6 +83,27 @@
 
 		</h:panelGrid>
 
+
+         <!--	<p:outputLabel for="persistencia" value="#{msg['viewDefinicionVersionPropiedades.persistencia']}" />
+			<p:panelGrid styleClass="noBorders">
+				<p:row>
+					<p:column styleClass="noPadding-left">
+						<p:selectBooleanCheckbox id="persistencia" disabled="true" value="#{viewDefinicionVersionParams.tramiteVersion.persistencia}"/>
+						<p:spacer width="40" height="1"/>
+					</p:column>
+					 <p:column>
+						<p:selectOneRadio id="tipopersistencia" disabled="true" value="#{viewDefinicionVersionParams.tramiteVersion.persistenciaInfinita}">
+				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.sinlimite']}" itemValue="true" />
+				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.pordias']}" itemValue="false" />
+		     		   </p:selectOneRadio>
+		     		 </p:column>
+					<p:column>
+							<p:outputLabel for="numdias" value="#{msg['viewDefinicionVersionPropiedades.numdias']}" />
+							<p:spacer width="8"/>
+							<p:inputText id="numdias" size="3"  readonly="true" value="#{viewDefinicionVersionParams.tramiteVersion.persistenciaDias}"/>
+					</p:column>
+				</p:row>
+			</p:panelGrid> -->
 	</h:form>
 
 </ui:composition>

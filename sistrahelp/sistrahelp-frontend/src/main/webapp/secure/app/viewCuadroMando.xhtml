@@ -70,11 +70,17 @@
 		}
 
 		.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
-    border: 1px solid #003eff;
-    background: #007fff !important;
-    font-weight: normal;
+		    border: 1px solid #003eff;
+		    background: #007fff !important;
+		    font-weight: normal;
 
-}
+		}
+
+		.ui-datatable .ui-paginator {
+		    background-color:lightgrey !important;
+			border:1px solid #c5c5c5 !important;
+			border-bottom-left-radius:0px !important;
+		}
 
 		</style>
 
@@ -148,7 +154,7 @@
 					<h:outputText value="#{msg['viewCuadroMando.evTot']}" style="font-weight: bold;"/>
 				</h:panelGrid>
 
-				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" columnClasses="white borde, white borde, white borde, white borde, white borde"  cellpadding = "5" cellspacing = "1" columns="5">
+				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" columnClasses="w20 white borde, white borde, white borde, white borde, white borde"  cellpadding = "5" cellspacing = "1" columns="5">
 					  <h:outputText></h:outputText>
 					  <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.ko']}" class="grey"/>
 		              <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.ok']}" class="grey"/>
@@ -252,12 +258,11 @@
 					  </c:choose>
 
 				</h:panelGrid>
-				<p:spacer width="20" height="20" />
 
 				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses="wpx16 white borde pad grey" cellspacing = "1" columns="1">
 							<h:outputText value="#{msg['viewCuadroMando.tramErrTot']}" style="font-weight: bold;"/>
 				</h:panelGrid>
-				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses="white borde, white borde, white borde, white borde, white borde" cellspacing = "1" columns="5">
+				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses="w20 white borde, white borde, white borde, white borde, white borde" cellspacing = "1" columns="5">
 					  <h:outputText/>
 		              <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.inicio']}" class="grey"/>
 		              <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.fin']}" class="grey"/>
@@ -290,16 +295,25 @@
 
 				</h:panelGrid>
 
+				<p:spacer width="20" height="20" />
+
 				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses=" grey borde ,wpx100 white borde pad" cellspacing = "1" columns="2">
 				            <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.errTot']}" class="grey"/>
 				            <h:outputText value="#{viewCuadroMando.errTot}"/>
 				</h:panelGrid>
 
-								<p:spacer width="20" height="20" />
 
 
-				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses="wpx16 white borde pad grey" cellspacing = "1" columns="1">
-					<h:outputText value="#{msg['viewCuadroMando.errTram']}" style="font-weight: bold;"/>
+				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "0" columnClasses="grey borde ,wpx100 white borde" cellspacing = "1" columns="2">
+					<h:outputText value="#{msg['viewCuadroMando.clasificacion']}:" style="font-weight: bold; padding-left: 5px;"/>
+					 <p:selectOneMenu id="filtroClasificacion" value="#{viewCuadroMando.filtros.errorPlataforma}" style="border-radius: 0px !important;">
+			            <f:selectItem itemLabel="#{msg['viewCuadroMando.errTram']}" itemValue="true" />
+			            <f:facet name="footer">
+			               <p:separator />
+			               <h:outputText value="3 consoles" style="font-weight:bold;"/>
+			            </f:facet>
+			             <p:ajax event="change" actionListener="#{viewCuadroMando.filtrar()}" process="@form:panelFiltro @form:filtroClasificacion" update="@form:tablaCuadroMando @form:growl" />
+			        </p:selectOneMenu>
 				</h:panelGrid>
 
 
@@ -310,7 +324,7 @@
 						paginator="true" paginatorPosition="bottom" lazy="true"
 					 	scrollable="true"
                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                        currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords}"
+                        currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
                         rowsPerPageTemplate="5,10,15,30"
                         rows="#{viewCuadroMando.paginacion}" rowKey="#{td.idTramite}#{td.version}"
                      	selection="#{viewCuadroMando.seleccionado}"
@@ -354,7 +368,7 @@
 								emptyMessage="#{msg['error.emptyRows']}" paginator="true" paginatorPosition="bottom"
 								 scrollable="true"
 		                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		                         currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords}"
+		                         currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
 		                         rowsPerPageTemplate="5,10,15,30" lazy="true"
 		                         rows="#{viewCuadroMando.paginacionErrores}"
 		                         selection="#{viewCuadroMando.seleccionadoErr}"
@@ -385,8 +399,6 @@
 						</p:rowExpansion>
 					</p:dataTable>
 
-				<p:spacer width="20" height="20" />
-
 				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses="wpx16 white borde pad grey" cellspacing = "1" columns="1">
 					<h:outputText value="#{msg['viewCuadroMando.erroresPlataforma']}" style="font-weight: bold;"/>
 				</h:panelGrid>
@@ -395,7 +407,7 @@
 						emptyMessage="#{msg['error.emptyRows']}" paginator="true" paginatorPosition="bottom"
 						 scrollable="true"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords}"
+                         currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
                          rowsPerPageTemplate="5,10,15,30" lazy="true"
                          rows="#{viewCuadroMando.paginacionErroresPlat}"
 						 style="width:75%; margin:auto;" rowKey="#{tdErroresPlat.codigoError}">
@@ -420,6 +432,37 @@
 
 				<p:spacer width="20" height="20" />
 
+				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses="wpx16 white borde pad grey" cellspacing = "1" columns="1">
+					<h:outputText value="#{msg['viewCuadroMando.tramitesInacabados']}" style="font-weight: bold;"/>
+				</h:panelGrid>
+
+					<p:dataTable id="dataTableTramitesInacabados" var="tdInacabado"
+						value="#{viewCuadroMando.listaInacabados}"
+						scrollHeight="100%" emptyMessage="#{msg['error.emptyRows']}"
+						rowIndexVar="rowIndexInacabadas"
+						paginator="true" paginatorPosition="bottom" lazy="true"
+					 	scrollable="true"
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                        currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
+                        rowsPerPageTemplate="5,10,15,30"
+                        rows="#{viewCuadroMando.paginacion}" rowKey="#{tdInacabado.idTramite}#{tdInacabado.version}"
+						widgetVar="myWidgetInacabadas" style="width:75%; margin:auto;">
+
+						<p:column headerText="#{msg['viewInformacionPersistencia.headTramite']}" filterBy="#{tdInacabado.idTramite}" filterMatchMode="contains" style="width:500px !important; word-wrap: break-word; font-weight:bold; text-align: left; padding-left:5px;"  sortBy="#{tdInacabado.idTramite}">
+							<h:outputText value="#{tdInacabado.idTramite}" />
+						</p:column>
+
+						<p:column headerText="#{msg['viewAuditoriaTramites.headVersion']}" style="width:100px !important; word-wrap: break-word; font-weight:bold; text-align: left; padding-left:5px;"  sortBy="#{tdInacabado.version}">
+							<h:outputText value="#{tdInacabado.version}" />
+						</p:column>
+
+						<p:column headerText="#{msg['viewCuadroMando.sesInac']}" style="width:100px !important; word-wrap: break-word; font-weight:bold; text-align: left; padding-left:5px;"  sortBy="#{tdInacabado.sesionesInacabadas}">
+							<h:outputText value="#{tdInacabado.sesionesInacabadas}" />
+						</p:column>
+
+					</p:dataTable>
+
+				<p:spacer width="20" height="20" />
 
 				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses="wpx16 white borde pad grey" cellspacing = "1" columns="1">
 							<h:outputText value="#{msg['viewCuadroMando.histAlerta']}" style="font-weight: bold;"/>
@@ -431,7 +474,7 @@
 						paginator="true" paginatorPosition="bottom"
 						 scrollable="true"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords}"
+                         currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
                          rowsPerPageTemplate="5,10,15,30" rowKey="#{tdAlerta.id}"
 						widgetVar="myWidgetAlert" style="width:75%; margin:auto;">
 
@@ -595,7 +638,7 @@
 		    </h:outputScript>
 
 			<p:inputText id="paginacion" value="#{viewCuadroMando.paginacion}"
-				style="opacity:0">
+				style="opacity:0" onblur="this.value = this.value.toUpperCase().trim();">
 				<p:ajax event="blur" update="@form" process="@this" />
 			</p:inputText>
 			<h:outputScript>

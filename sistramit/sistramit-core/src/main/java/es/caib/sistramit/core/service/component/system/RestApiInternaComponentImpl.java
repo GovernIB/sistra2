@@ -13,6 +13,7 @@ import es.caib.sistramit.core.api.model.flujo.DatosSesionPago;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoPagoIncorrecto;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
+import es.caib.sistramit.core.api.model.flujo.types.TypeSoporteEstado;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
@@ -29,6 +30,7 @@ import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPerdidaClave;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FormularioSoporte;
 import es.caib.sistramit.core.api.model.system.rest.interno.OUTPerdidaClave;
 import es.caib.sistramit.core.api.model.system.rest.interno.PagoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.PerdidaClave;
@@ -272,6 +274,23 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 	@Override
 	public Long contarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda) {
 		return restApiDao.contarErroresPlataformaCM(pFiltroBusqueda);
+	}
+
+	@Override
+	public List<FormularioSoporte> recuperarFormularioSoporte(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		return restApiDao.recuperarFormularioSoporte(pFiltroBusqueda, filtroPaginacion);
+	}
+
+	@Override
+	public Long contarFormularioSoporte(FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiDao.contarFormularioSoporte(pFiltroBusqueda);
+	}
+
+	@Override
+	public void updateEstadoIncidencia(Long idSoporte, TypeSoporteEstado estado, String comentarios) {
+		restApiDao.updateEstadoIncidencia(idSoporte, estado, comentarios);
+		;
 	}
 	// ------------------ FUNCIONES INTERNAS ------------------
 

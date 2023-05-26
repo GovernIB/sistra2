@@ -1,0 +1,52 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">MANTENIMIENTO DE INCIDENCIAS</h1>
+<p>
+
+En esta pantalla se pueden consultar y gestionar las incidencias que el usuario crea mediante el formulario de incidencias en el asistente de tramitación.
+</p>
+
+<h2 class="stgH2">FILTROS DE BUSQUEDA:</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Id. Sesion:</span> Identificador de la sesión de tramitación. Este identificador es facilitado por el asistente de tramitación al ciudadano cuando se inicia un trámite sin autenticación.</li>
+		<li><span class="nombreCampo">NIF:</span> Número de identificación fiscal del usuario autenticado. Este filtro de búsqueda aplica a tramitaciones autenticadas.  </li>
+		<li><span class="nombreCampo">Nombre:</span> Nombre del usuario.</li>
+		<li><span class="nombreCampo">Teléfono:</span> Teléfono del usuario.</li>
+		<li><span class="nombreCampo">Correo electrónico:</span> Email del usuario.</li>
+		<li><span class="nombreCampo">Trámite/Versión:</span> Identificador del trámite de SISTRAGES, código de trámite y su versión correspondiente. Este filtro permite restringir las búsquedas, filtrando por trámite versión.</li>
+		<li><span class="nombreCampo">Fecha inicio (Desde / Hasta):</span> Los campos "Desde" y "Hasta" permiten acotar la búsqueda a los elementos que cumplan que su fecha de inicio esté entre estos dos valores. Es obligatorio establecer una fecha inicial, y en el caso de no indicar una fecha final, se considerará la fecha actual como fecha final. </li>
+	</ul>
+</p>
+
+<h2 class="stgH2">OPERATIVA:</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Buscar:</span> Busca según los criterios indicados en los filtros.</li>
+	</ul>
+</p>
+
+<h2 class="stgH2">CAMPOS:</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Estado:</span> Estado en el que se encuentra la incidencia, indicado por el administrador de entidad o de área.</li>
+		<li><span class="nombreCampo">Id. sesión:</span> Identificador de la sesión de tramitación asociada a la incidencia. Si se pulsa el botón secundario del mouse se pueden consultar los eventos por sesión.</li>
+		<li><span class="nombreCampo">Trámite:</span> Trámite asociado a la incidencia.</li>
+		<li><span class="nombreCampo">Versión:</span> Versión del trámite.</li>
+		<li><span class="nombreCampo">Tipo de problema:</span> Tipo de problema seleccionado por el usuario.</li>
+		<li><span class="nombreCampo">Descripción:</span> Descripción del problema indicado por el usuario.</li>
+		<li><span class="nombreCampo">NIF:</span> Número de identificación fiscal del usuario que crea la incidencia.</li>
+		<li><span class="nombreCampo">Nombre:</span> Nombre del usuario.</li>
+		<li><span class="nombreCampo">Teléfono:</span> Teléfono del usuario.</li>
+		<li><span class="nombreCampo">Correo electrónico:</span> Email del usuario.</li>
+		<li><span class="nombreCampo">Fecha creación:</span> Fecha de creación de la incidencia.</li>
+	</ul>
+</p>
+
+</body>
+</html>

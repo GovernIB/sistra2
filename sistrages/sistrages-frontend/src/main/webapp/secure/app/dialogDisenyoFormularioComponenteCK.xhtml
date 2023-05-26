@@ -7,7 +7,7 @@
 
    	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.checked']}" /></h:column>
    	<h:column>
-   		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.valorChecked}" readonly="#{dialogDisenyoFormulario.consulta}">
+   		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.valorChecked}" onblur="this.value = this.value.trim();" readonly="#{dialogDisenyoFormulario.consulta}">
    			<p:ajax event="blur" process="@this" />
 	        <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
    		</p:inputText>
@@ -15,7 +15,7 @@
 
    	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.noChecked']}" /></h:column>
    	<h:column>
-   		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.valorNoChecked}" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+   		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.valorNoChecked}" onblur="this.value = this.value.trim();" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
    			<p:ajax event="blur" process="@this" />
 	        <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
    		</p:inputText>

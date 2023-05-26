@@ -33,20 +33,20 @@
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%" style="padding-bottom: 38px;">
 
 					<p:outputLabel for="identificador" value="#{msg['dialogEntidad.headerIdentificador']}" />
-					<p:inputText id="identificador" value="#{dialogEntidad.data.identificador}" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase();" styleClass="w95" validatorMessage="#{msg['error.validacion.identificador']}">
+					<p:inputText id="identificador" value="#{dialogEntidad.data.identificador}" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase().trim();" styleClass="w95" validatorMessage="#{msg['error.validacion.identificador']}">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 				   	</p:inputText>
 
 					<p:outputLabel for="codigo" value="#{msg['dialogEntidad.headerCodigoDIR3']}" />
-					<p:inputText id="codigo" value="#{dialogEntidad.data.codigoDIR3}" required="true" size="40" maxlength="10" onblur="this.value = this.value.toUpperCase();">
+					<p:inputText id="codigo" value="#{dialogEntidad.data.codigoDIR3}" required="true" size="40" maxlength="10" onblur="this.value = this.value.toUpperCase().trim();">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<f:validator validatorId="CodigoValidator" />
 					</p:inputText>
 
 					<p:outputLabel for="nombreHidden" value="#{msg['dialogEntidad.headerDescripcion']}" />
 					<p:column>
-						<p:inputText id="nombre" value="#{dialogEntidad.literal}" readonly="true" required="true" size="40" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}"/>
+						<p:inputText id="nombre" value="#{dialogEntidad.literal}" readonly="true" required="true" size="40" onblur="this.value = this.value.trim();" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}"/>
 						<p:inputText id="nombreHidden" value="#{dialogEntidad.literal}" type="hidden" required="true" binding="#{mensajesComponent}"/>
 						<p:commandButton id="btnNombre" icon="fa fa-language" actionListener="#{dialogEntidad.editarNombre()}" process="@this" update="growlDialog" style="margin-right:5px">
 		            		<p:ajax event="dialogReturn" listener="#{dialogEntidad.returnDialogo}" update="growlDialog nombre nombreHidden" />
@@ -54,10 +54,10 @@
 					</p:column>
 
 					<p:outputLabel for="rol" value="#{msg['dialogEntidad.headerRol']}" />
-					<p:inputText id="rol" value="#{dialogEntidad.data.rol}" readonly="#{dialogEntidad.isConsulta()}" required="true" size="40" maxlength="100"/>
+					<p:inputText id="rol" onblur="this.value = this.value.trim();" value="#{dialogEntidad.data.rol}" readonly="#{dialogEntidad.isConsulta()}" required="true" size="40" maxlength="100"/>
 
 					<p:outputLabel for="rolSup" value="#{msg['dialogEntidad.headerRolSup']}" />
-					<p:inputText id="rolSup" value="#{dialogEntidad.data.rolSup}" readonly="#{dialogEntidad.isConsulta()}" required="true" size="40" maxlength="100"/>
+					<p:inputText id="rolSup" onblur="this.value = this.value.trim();" value="#{dialogEntidad.data.rolSup}" readonly="#{dialogEntidad.isConsulta()}" required="true" size="40" maxlength="100"/>
 
 
 					<p:outputLabel for="activo" value="#{msg['dialogEntidad.headerActivo']}" />
@@ -78,7 +78,7 @@
 		    <h:outputScript >
 
 	             var arrayCm = [];
-					
+
 				  window.onload=function(){
 	                let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 	                onVisible(contextMenu, () => eliminarResaltar());

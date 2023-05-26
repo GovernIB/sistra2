@@ -38,7 +38,7 @@
 
 			  	<c:forEach items="#{dialogFuenteFila.data.datos}" var="dato">
 			  			<p:outputLabel value="#{dato.idCampo}" />
-			  			<p:inputTextarea value="#{dato.valor}" rows="4" cols="40" required="true" />
+			  			<p:inputTextarea value="#{dato.valor}" rows="4" cols="40" required="true" onblur="this.value = this.value.trim();"/>
 				</c:forEach>
 
 			 </h:panelGrid>

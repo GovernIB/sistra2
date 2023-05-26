@@ -44,25 +44,26 @@ En la pantalla de '<i>Cuadro de mando</i>' se presenta el estado del proceso de 
 	</ul>
 </p>
 
-<h2 class="stgH2">Tr&aacute;mites y errores totales:</h2>
-<p>En este panel se muestra, para el total de todos los tr&aacute;mites iniciados durante el d&iacute;a o periodo de monitorizaci&oacute;n:</p>
+<h2 class="stgH2">Tr&aacute;mites:</h2>
+<p>Este panel muestra la misma información que en el panel "Acciones", pero a nivel de trámite.</p>
 <p>
 	<ul>
 		<li><span class="nombreCampo">Tr&aacute;mites totales:</span> Se muestra la cantidad de los iniciados, los finalizados, el porcentaje de no finalizados respecto a los iniciados y, por colores, el estado de atenci&oacute;n requerida seg&uacute;n el umbral predeterminado, es decir: <i>Normal</i> (porcentaje de tr&aacute;mites no finalizados inferior o igual al 50%), <i>Atenci&oacute;n</i> (porcentaje entre el 50% y el 85%) y <i>Revisar</i> (porcentaje de tr&aacute;mites no finalizados superior o igual al 85%).</li>
-		<li><span class="nombreCampo">N&uacute;mero total de errores:</span> Se muestra el n&uacute;mero de errores que han sucedido en todas las sesiones de tramitaci&oacute;n del periodo de monitorizaci&oacute;n.</li>
 	</ul>
 </p>
 
-<h2 class="stgH2">Errores por tr&aacute;mite y tr&aacute;mites inacabados:</h2>
-<p>Este panel muestra los tr&aacute;mites con sesiones inacabadas y, para cada tr&aacute;mite que haya tenido un error en alguna de sus sesiones, los errores que se han producido. Se distinguen dos niveles de informaci&oacute;n, sobre los que pueden ordenarse los datos de cualquier columna:</p>
+<h2 class="stgH2">Número total de errores:</h2>
+<p>En este panel se muestra el total de errores, considerando los errores de tramitación (associados a una sesión concreta) y los de plataforma (que no tienen una sesión de tramitación asociada).</p>
+<h2 class="stgH2">Errores de tramitación:</h2>
+<p>Este panel muestra los tr&aacute;mites con sesiones que contienen errores y los errores que se han producido. Se distinguen dos niveles de informaci&oacute;n, sobre los que pueden ordenarse los datos de cualquier columna:</p>
 <p>- Un primer nivel '<i>Tr&aacute;mite</i>': Muestra informaci&oacute;n de cada tr&aacute;mite que tiene errores en alguna de sus sesiones. Se ofrece la siguiente informaci&oacute;n:</p>
 <p>
 	<ul>
 		<li><span class="nombreCampo">Tr&aacute;mite:</span> El id compuesto del tr&aacute;mite que contiene errores en alguna de sus sesiones. Es posible buscar en este campo.</li>
 		<li><span class="nombreCampo">Versi&oacute;n:</span> La versi&oacute;n de ese tr&aacute;mite.</li>
 		<li><span class="nombreCampo">Sesiones Ok:</span> El n&uacute;mero de sesiones que se han iniciado (TR_INI - Inicio del tr&aacute;mite) y finalizado (TR_FIN - Fin de tr&aacute;mite), aunque se hayan producido errores durante la tramitaci&oacute;n que no hayan impedido su finalizaci&oacute;n.</li>
-		<li><span class="nombreCampo">Sesiones no finalizadas:</span> El n&uacute;mero de sesiones que se han iniciado pero no se han finalizado (con o sin errores).</li>
-		<li><span class="nombreCampo">Porcentaje de sesiones no finalizadas:</span> Proporci&oacute;n de las sesiones que no han finalizado (con o sin errores), respecto a las sesiones iniciadas en ese tr&aacute;mite y versi&oacute;n.</li>
+		<li><span class="nombreCampo">Sesiones no finalizadas:</span> El n&uacute;mero de sesiones que se han iniciado pero no se han finalizado (con errores).</li>
+		<li><span class="nombreCampo">Porcentaje de sesiones no finalizadas:</span> Proporci&oacute;n de las sesiones que no han finalizado (con errores), respecto a las sesiones iniciadas en ese tr&aacute;mite y versi&oacute;n.</li>
 		<li><span class="nombreCampo">Frecuencia de errores:</span> N&uacute;mero total de errores sucedidos en todas las sesiones de ese tr&aacute;mite y versi&oacute;n, que son los que se detallan en el segundo nivel, al pulsar sobre un registro del nivel &ldquo;Tr&aacute;mite&rdquo;.</li>
 	</ul>
 </p>
@@ -77,6 +78,16 @@ En la pantalla de '<i>Cuadro de mando</i>' se presenta el estado del proceso de 
 
 <h2 class="stgH2">Errores de plataforma:</h2>
 <p>En este panel se ofrece informaci&oacute;n de cuantos errores de plataforma (y su detalle) han sucedido a lo largo del uso del asistente de tramitaci&oacute;n en el periodo de evaluaci&oacute;n. Estos errores no son propios de un tr&aacute;mtie concreto, sino que son m&aacute;s gen&eacute;ricos, a nivel de SISTRAMIT.</p>
+
+<h2 class="stgH2">Trámites inacabados sin errores:</h2>
+<p>Este panel muestra los trámites con sesiones inacabadas y sin errores (es posible ordenar por todas les columnas):</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Trámite:</span> El id compuesto del trámite que conti sesiones no finalitzadas y sin errores. Es posible buscar en este campo.</li>
+		<li><span class="nombreCampo">Versión:</span> La versión del trámite.</li>
+		<li><span class="nombreCampo">Sesiones no finalizadas:</span> El número de sesiones que se han iniciado pero no han finalitzado (sin errores).</li>
+	</ul>
+</p>
 
 <h2 class="stgH2">Historial de alertas:</h2>
 <p>Este panel, que pueden ver los administradores de entidad, muestra en orden cronol&oacute;gico descendente, las alertas ejecutadas y la fecha de ejecuci&oacute;n, dentro del periodo del d&iacute;a en curso. Las alertas mostradas son las que se han ejecutado y remitido correo, al haberse evaluado como cierto la condici&oacute;n o condiciones configuradas en la pantalla de &ldquo;Alertas&rdquo;.</p>

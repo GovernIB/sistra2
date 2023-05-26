@@ -114,7 +114,7 @@
 						 scrollable="true" scrollHeight="100%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords}"
+                         currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
                          rowsPerPageTemplate="5,10,15,30"
 			        	 selectionMode="single" selection="#{viewAuditoriaTramitesParams.datoSeleccionado}" rowKey="#{dt.id}">
 

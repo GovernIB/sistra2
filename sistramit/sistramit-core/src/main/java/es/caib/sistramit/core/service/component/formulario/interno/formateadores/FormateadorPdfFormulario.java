@@ -1,5 +1,7 @@
 package es.caib.sistramit.core.service.component.formulario.interno.formateadores;
 
+import java.util.List;
+
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
 
 /**
@@ -15,6 +17,8 @@ public interface FormateadorPdfFormulario {
 	 *
 	 * @param xml
 	 *                                  XML datos formulario
+	 * @param paginasRellenadas
+	 *                                  Páginas rellenadas
 	 * @param defFormInterno
 	 *                                  Definición formulario interno
 	 * @param plantilla
@@ -31,7 +35,8 @@ public interface FormateadorPdfFormulario {
 	 *                                  código dir3 responsable
 	 * @return PDF generado
 	 */
-	byte[] formatear(byte[] xml, byte[] plantilla, String idioma, RFormularioInterno defFormInterno,
-			String tituloProcedimiento, String tituloTramite, String siaProcedimiento, String codigoDir3Responsable);
+	byte[] formatear(byte[] xml, List<String> paginasRellenadas, byte[] plantilla, String idioma,
+			RFormularioInterno defFormInterno, String tituloProcedimiento, String tituloTramite,
+			String siaProcedimiento, String codigoDir3Responsable);
 
 }

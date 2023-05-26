@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.ServletConfig;
@@ -31,6 +33,12 @@ public class AyudaServlet extends HttpServlet {
 	@Inject
 	private SystemService systemService;
 
+	private List<String> listaPlugin;
+
+	private List<String> listaMetodo;
+
+	private boolean volver;
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -52,13 +60,34 @@ public class AyudaServlet extends HttpServlet {
 		final String id = request.getParameter("id");
 
 		// Parametros ayudas scripts
-		final String plugin = request.getParameter("plugin");
-		final String metodo = request.getParameter("metodo");
+		String plugin = request.getParameter("plugin");
+		String metodo = request.getParameter("metodo");
 
 		// Parametros ficheros css, js, imagenes
 		final String css = request.getParameter("css");
 		final String js = request.getParameter("js");
 		final String jpg = request.getParameter("jpg");
+
+		final String boton = request.getParameter("boton");
+		volver = false;
+
+		if(StringUtils.isNotEmpty(boton) && boton.equals("AYUDA")) {
+			listaPlugin = new ArrayList<>();
+			listaMetodo = new ArrayList<>();
+		}
+
+		if(StringUtils.isNotEmpty(boton) && boton.equals("VOLVER")) {
+			if(listaPlugin.size()==1) {
+				plugin = listaPlugin.get(listaPlugin.size()-1);
+				metodo = listaMetodo.get(listaMetodo.size()-1);
+			}else {
+				listaPlugin.remove(listaPlugin.size()-1);
+				listaMetodo.remove(listaMetodo.size()-1);
+				plugin = listaPlugin.get(listaPlugin.size()-1);
+				metodo = listaMetodo.get(listaMetodo.size()-1);
+				volver = true;
+			}
+		}
 
 		// Obtenemos url pagina ayuda
 		String url = null;
@@ -69,8 +98,16 @@ public class AyudaServlet extends HttpServlet {
 		} else if (StringUtils.isNotEmpty(plugin)) {
 			if (StringUtils.isEmpty(metodo)) {
 				url = lang + "/plugins/" + plugin + "/index.html";
+				if(!volver) {
+					listaPlugin.add(plugin);
+					listaMetodo.add("index");
+				}
 			} else {
 				url = lang + "/plugins/" + plugin + "/" + metodo + ".html";
+				if(!volver) {
+					listaPlugin.add(plugin);
+					listaMetodo.add(metodo);
+				}
 			}
 			mimeType = "text/html";
 		} else if (StringUtils.isNotEmpty(css)) {

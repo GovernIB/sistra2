@@ -23,6 +23,8 @@ public class DialogAyuda extends DialogControllerBase {
 	/** Url iframe. **/
 	private String urlIframe;
 
+	private boolean esIframe = false;
+
 	/**
 	 * Inicializacion.
 	 **/
@@ -49,8 +51,7 @@ public class DialogAyuda extends DialogControllerBase {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public final void setId(final String id) {
 		this.id = id;
@@ -64,11 +65,17 @@ public class DialogAyuda extends DialogControllerBase {
 	}
 
 	/**
-	 * @param urlIframe
-	 *            the urlIframe to set
+	 * @param urlIframe the urlIframe to set
 	 */
 	public final void setUrlIframe(final String urlIframe) {
 		this.urlIframe = urlIframe;
 	}
 
+	public boolean isEsIframe() {
+		return esIframe;
+	}
+
+	public void setEsIframe(boolean esIframe) {
+		this.esIframe = esIframe;
+	}
 }

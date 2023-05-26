@@ -6,6 +6,7 @@ import javax.script.ScriptException;
 
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistra2.commons.utils.XssFilter;
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.model.comun.Constantes;
 import es.caib.sistramit.core.service.model.script.flujo.ResPersonalizacionTramiteInt;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
@@ -42,6 +43,7 @@ public final class ResPersonalizacionTramite implements ResPersonalizacionTramit
 
 	@Override
 	public void setTituloTramite(final String pTituloTramite) throws ScriptException {
+
 		if (!XssFilter.filtroXss(pTituloTramite)) {
 			throw new ScriptException("El títol del tràmit té caràcters no permesos");
 		}
@@ -68,6 +70,12 @@ public final class ResPersonalizacionTramite implements ResPersonalizacionTramit
 
 	@Override
 	public void setPlazoInicio(final String pPlazoInicio) throws ScriptException {
+
+		// DESHABILITAMOS YA QUE NO SE QUIERE USAR ESTA FUNCIONALIDAD
+		if (true) {
+			throw new ErrorConfiguracionException("Funcionalitat deshabilitada");
+		}
+
 		if (!ValidacionesTipo.getInstance().esFecha(pPlazoInicio, Constantes.FORMATO_FECHAHORA_FRONTAL)) {
 			throw new ScriptException("La data no té un format correcte: " + Constantes.FORMATO_FECHAHORA_FRONTAL);
 		}
@@ -85,6 +93,12 @@ public final class ResPersonalizacionTramite implements ResPersonalizacionTramit
 
 	@Override
 	public void setPlazoFin(final String pPlazoFin) throws ScriptException {
+
+		// DESHABILITAMOS YA QUE NO SE QUIERE USAR ESTA FUNCIONALIDAD
+		if (true) {
+			throw new ErrorConfiguracionException("Funcionalitat deshabilitada");
+		}
+
 		if (!ValidacionesTipo.getInstance().esFecha(pPlazoFin, Constantes.FORMATO_FECHAHORA_FRONTAL)) {
 			throw new ScriptException("La data no té un format correcte: " + Constantes.FORMATO_FECHAHORA_FRONTAL);
 		}

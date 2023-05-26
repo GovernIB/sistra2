@@ -3,6 +3,7 @@ package es.caib.sistramit.core.service.repository.dao;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.flujo.types.TypeSoporteEstado;
 import es.caib.sistramit.core.api.model.system.rest.externo.Evento;
 import es.caib.sistramit.core.api.model.system.rest.externo.FiltroEvento;
 import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramiteFinalizado;
@@ -18,9 +19,11 @@ import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPerdidaClave;
 import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FormularioSoporte;
 import es.caib.sistramit.core.api.model.system.rest.interno.PagoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.PersistenciaAuditoria;
 import es.caib.sistramit.core.service.model.flujo.DatosFicheroPersistencia;
+import es.caib.sistramit.core.service.model.flujo.DatosFormularioSoporte;
 import es.caib.sistramit.core.service.model.flujo.DocumentoPasoPersistencia;
 import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
 import es.caib.sistramit.core.service.model.system.PerdidaClaveFichero;
@@ -192,5 +195,19 @@ public interface RestApiDao {
 			FiltroPaginacion filtroPaginacion);
 
 	Long contarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda);
+
+	/**
+	 * Recupera formularios de soporte
+	 *
+	 * @param pFiltro filtro busqueda
+	 * @return Numero de eventos
+	 */
+
+	List<FormularioSoporte> recuperarFormularioSoporte(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion);
+
+	Long contarFormularioSoporte(FiltroEventoAuditoria pFiltroBusqueda);
+
+	void updateEstadoIncidencia(Long idSoporte, TypeSoporteEstado estado, String comentarios);
 
 }

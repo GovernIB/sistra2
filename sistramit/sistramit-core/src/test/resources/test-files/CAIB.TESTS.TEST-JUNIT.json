@@ -124,7 +124,8 @@
                         "textoNormal": {
                           "tamanyoMax": 50,
                           "lineas": 1,
-                          "forzarMayusculas": false
+                          "forzarMayusculas": false,
+                           "prevenirPegar": false
                         },
                         "textoEmail": null,
                         "textoNumero": null,
@@ -155,7 +156,11 @@
                         "textoNumero": null,
                         "textoIdentificacion": null,
                         "textoExpRegular": null,
-                        "textoTelefono": null
+                        "textoTelefono": null,
+                        "textoFecha": {
+                          "prevenirPegar": false
+                        },
+                        "textoHora": null
                       },
                       {
                         "type": "RComponenteTextbox",
@@ -180,7 +185,11 @@
                         "textoNumero": null,
                         "textoIdentificacion": null,
                         "textoExpRegular": null,
-                        "textoTelefono": null
+                        "textoTelefono": null,
+                        "textoHora": {
+                          "prevenirPegar": false
+                        },
+                        "textoFecha": null
                       }
                     ]
                   },

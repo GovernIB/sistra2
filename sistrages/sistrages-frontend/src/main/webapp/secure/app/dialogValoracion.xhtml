@@ -32,7 +32,7 @@
 		<h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());
@@ -140,15 +140,15 @@
 		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			<p:outputLabel for="inputIdentificador" value="#{msg['dialogValoracion.headerIdentificador']}" />
-			<p:inputText id="inputIdentificador" value="#{dialogValoracion.data.identificador}" size="40" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+			<p:inputText id="inputIdentificador" value="#{dialogValoracion.data.identificador}" size="40" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
 					<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 					<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 			</p:inputText>
 
 			<p:outputLabel for="inputDescripcionHidden" value="#{msg['dialogValoracion.headerDescripcion']}" />
 			<p:column>
-				<p:inputText id="inputDescripcion"  value="#{dialogValoracion.descripcion}" readonly="true" required="true" size="40" styleClass="margin-right-10 #{not descripcionComponent.valid ? 'ui-state-error' : ''}"/>
-				<p:inputText id="inputDescripcionHidden" value="#{dialogValoracion.descripcion}" type="hidden" required="true" binding="#{descripcionComponent}"/>
+				<p:inputText id="inputDescripcion"  value="#{dialogValoracion.descripcion}" onblur="this.value = this.value.trim();" readonly="true" required="true" size="40" styleClass="margin-right-10 #{not descripcionComponent.valid ? 'ui-state-error' : ''}"/>
+				<p:inputText id="inputDescripcionHidden" value="#{dialogValoracion.descripcion}" onblur="this.value = this.value.trim();" type="hidden" required="true" binding="#{descripcionComponent}"/>
 				<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogValoracion.editarDescripcion}" process="@this" update="growlDialogValoracion" style="margin-right:5px">
             		<p:ajax event="dialogReturn" listener="#{dialogValoracion.returnDialogoDescripcion}" update="growlDialogValoracion inputDescripcion inputDescripcionHidden" />
         		</p:commandButton>

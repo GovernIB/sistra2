@@ -35,16 +35,16 @@
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 wpx25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="identificador" value="#{msg['dialogFormateadorFormulario.identificador']}" />
-					<p:inputText id="identificador" value="#{dialogFormateadorFormulario.data.identificador}" readonly="#{dialogFormateadorFormulario.isConsulta()}"  required="true" style="width:95%;" maxlength="20" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+					<p:inputText id="identificador" value="#{dialogFormateadorFormulario.data.identificador}" readonly="#{dialogFormateadorFormulario.isConsulta()}"  required="true" style="width:95%;" maxlength="20" onblur="this.value = this.value.toUpperCase().trim();" validatorMessage="#{msg['error.validacion.identificador']}">
 						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
 						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 				   	</p:inputText>
 
 					<p:outputLabel  for="classname" value="#{msg['dialogFormateadorFormulario.classname']}" />
-					<p:inputText 	id="classname" value="#{dialogFormateadorFormulario.data.classname}" readonly="#{dialogFormateadorFormulario.isConsulta()}" required="true" style="width:95%;" maxlength="500"/>
+					<p:inputText 	id="classname" onblur="this.value = this.value.trim();" value="#{dialogFormateadorFormulario.data.classname}" readonly="#{dialogFormateadorFormulario.isConsulta()}" required="true" style="width:95%;" maxlength="500"/>
 
 					<p:outputLabel  for="descripcion" value="#{msg['dialogFormateadorFormulario.descripcion']}" />
-					<p:inputText 	id="descripcion" value="#{dialogFormateadorFormulario.data.descripcion}" readonly="#{dialogFormateadorFormulario.isConsulta()}" required="true" style="width:95%;" maxlength="255"/>
+					<p:inputText 	id="descripcion" onblur="this.value = this.value.trim();" value="#{dialogFormateadorFormulario.data.descripcion}" readonly="#{dialogFormateadorFormulario.isConsulta()}" required="true" style="width:95%;" maxlength="255"/>
 
 					<p:outputLabel for="generico" value="#{msg['dialogFormateadorFormulario.generico']}"  />
 					<p:column>
@@ -73,7 +73,7 @@
 		    <h:outputScript >
 
 			  var arrayCm = [];
-					
+
 				  window.onload=function(){
 			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 				onVisible(contextMenu, () => eliminarResaltar());

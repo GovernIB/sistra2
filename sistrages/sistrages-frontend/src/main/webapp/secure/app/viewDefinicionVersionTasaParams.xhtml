@@ -17,12 +17,12 @@
         <h:panelGrid columns="2" columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="10">
 
             <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionTasa.identificador']}" />
-          	<p:inputText id="identificador" value="#{viewDefinicionVersionParams.tasaTramiteSeleccionado.identificador}" required="true" readonly="true" styleClass="w35"/>
+          	<p:inputText id="identificador" onblur="this.value = this.value.trim();" value="#{viewDefinicionVersionParams.tasaTramiteSeleccionado.identificador}" required="true" readonly="true" styleClass="w35"/>
 
 
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionTasa.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="descripcion" value="#{viewDefinicionVersionParams.tasaTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersionParams.idiomas)}" required="true" readonly="true" styleClass="w85"/>
+           		<p:inputText id="descripcion" onblur="this.value = this.value.trim();" value="#{viewDefinicionVersionParams.tasaTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersionParams.idiomas)}" required="true" readonly="true" styleClass="w85"/>
            		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionParams.consultarTraduccion(viewDefinicionVersionParams.tasaTramiteSeleccionado.descripcion)}"
 						process="@this" update="growl"/>
        		</p:outputPanel>

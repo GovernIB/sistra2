@@ -31,6 +31,7 @@ import es.caib.sistrahelp.frontend.controller.DialogAyuda;
 import es.caib.sistrahelp.frontend.controller.SessionBean;
 import es.caib.sistrahelp.frontend.controller.ViewAuditoriaTramites;
 import es.caib.sistrahelp.frontend.controller.ViewConfiguracionAlertas;
+import es.caib.sistrahelp.frontend.controller.ViewConsultaIncidencias;
 import es.caib.sistrahelp.frontend.controller.ViewCuadroMando;
 import es.caib.sistrahelp.frontend.controller.ViewEventosPlataforma;
 import es.caib.sistrahelp.frontend.controller.ViewInformacionPagos;
@@ -404,6 +405,9 @@ public final class UtilJSF {
 			break;
 		case CUADRO_MANDO:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewCuadroMando.class) + EXTENSION_XHTML;
+			break;
+		case CONSULTA_INCIDENCIAS:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewConsultaIncidencias.class) + EXTENSION_XHTML;
 			break;
 		case ALERTAS:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewConfiguracionAlertas.class) + EXTENSION_XHTML;
