@@ -7,13 +7,13 @@ import java.net.URL;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
-import org.fundaciobit.plugins.certificate.InformacioCertificat;
 import org.fundaciobit.plugins.validatesignature.api.IValidateSignaturePlugin;
 import org.fundaciobit.plugins.validatesignature.api.SignatureDetailInfo;
 import org.fundaciobit.plugins.validatesignature.api.SignatureRequestedInformation;
 import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureRequest;
 import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureResponse;
 import org.fundaciobit.pluginsib.core.utils.PluginsManager;
+import org.fundaciobit.pluginsib.validatecertificate.InformacioCertificat;
 
 public class TestPluginFirmaServidor {
 

@@ -57,7 +57,7 @@ public class TestFormateadorPlantilla1 {
 		final byte[] plantilla = IOUtils.toByteArray(Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream("formateador/template/plantillaFormateador1.pdf"));
 		final FormateadorPlantilla formateador = new FormateadorPlantilla();
-		final byte[] resultado = formateador.formatear(UtilsFormulario.valoresToXml(formulario), plantilla, "es",
+		final byte[] resultado = formateador.formatear(UtilsFormulario.valoresToXml(formulario), null, plantilla, "es",
 				formularioInterno, "Tit. proced", "Título del trámite", "1234", "1234");
 		final Path path = Paths.get("/formateadorTemplate1.pdf");
 		Files.write(path, resultado);

@@ -96,7 +96,7 @@ public class TestFormateadorGenerico {
 		properties.load(inputpropiedad);
 
 		final FormateadorGenerico formateador = new FormateadorGenerico();
-		final byte[] resultado = formateador.formatear(UtilsFormulario.valoresToXml(formulario), plantilla, "es",
+		final byte[] resultado = formateador.formatear(UtilsFormulario.valoresToXml(formulario), null, plantilla, "es",
 				formularioInterno, "Título del procedimiento", "Título del trámite", "1234", "1234");
 		final Path path = Paths.get("/formateador.pdf");
 		Files.write(path, resultado);
