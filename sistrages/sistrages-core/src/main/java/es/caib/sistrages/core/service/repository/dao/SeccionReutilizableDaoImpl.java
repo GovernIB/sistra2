@@ -544,7 +544,30 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 				}
 			}
 		}
+
+		List<ScriptSeccionReutilizable> scripts = getScriptsByIdentificadorSeccionReutilizable(identificadorSeccion);
+		for (ScriptSeccionReutilizable script : scripts) {
+			List<Dominio> dominiosScript = getDominiosByScript(script.getScript().getContenido());
+			dominios.addAll(dominiosScript);
+		}
 		return dominios;
+	}
+
+	private List<ScriptSeccionReutilizable> getScriptsByIdentificadorSeccionReutilizable(String identificadorSeccion) {
+		final List<ScriptSeccionReutilizable> listaSecciones = new ArrayList<>();
+		StringBuilder sql = new StringBuilder(
+				"select a from JScriptSeccionReutilizable as a where a.seccionReutilizable.identificador = :identificadorSeccion order by a.codigo");
+
+		final Query query = entityManager.createQuery(sql.toString());
+		query.setParameter("identificadorSeccion", identificadorSeccion);
+
+		final List<JScriptSeccionReutilizable> results = query.getResultList();
+		if (results != null && !results.isEmpty()) {
+			for (final JScriptSeccionReutilizable jscript : results) {
+				listaSecciones.add(jscript.toModel());
+			}
+		}
+		return listaSecciones;
 	}
 
 	private List<Dominio> getDominiosByElemento(JElementoFormulario elemento) {

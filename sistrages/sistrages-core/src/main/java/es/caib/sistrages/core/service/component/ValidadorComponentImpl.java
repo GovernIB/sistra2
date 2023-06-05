@@ -42,6 +42,7 @@ import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.ScriptSeccionReutilizable;
 import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -467,12 +468,24 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 
 		List<DisenyoFormulario> disenyos = new ArrayList<>();
 		disenyos.add(formulario.getDisenyoFormulario());
+		List<ScriptSeccionReutilizable> scripts = new ArrayList<>();
 		List<SeccionReutilizable> seccionesReutilizables = tramiteDao
 				.getSeccionesReutilizableByTramite(pTramiteVersion.getCodigo());
 		if (seccionesReutilizables != null && !seccionesReutilizables.isEmpty()) {
 			for (SeccionReutilizable seccion : seccionesReutilizables) {
+				scripts.addAll(seccionReutilizableDao.getScriptsByIdSeccionReutilizable(seccion.getCodigo()));
 				disenyos.add(formularioInternoDao.getFormularioCompletoById(seccion.getIdFormularioAsociado(), true));
 			}
+		}
+
+		for (ScriptSeccionReutilizable script : scripts) {
+			comprobarScript(script.getScript(), "tramitePasoRellenar.disenyoFormulario.scriptValidacion",
+					new String[] {
+							literales.getLiteral("validador", "tramitePasoRellenar.disenyoFormulario.pagina", pIdioma),
+							formulario.getIdentificador() },
+					"literal.script.mensaje.formulario.pagina", "compilar.script.formulario.pagina",
+					"dominio.script.formulario.pagina", "script.comentario", pTramiteVersion.getListaAuxDominios(),
+					pIdiomasTramiteVersion, pIdioma, pListaDominiosNoUsados, listaErrores, UtilJSON.toJSON(params));
 		}
 
 		for (DisenyoFormulario disenyo : disenyos) {

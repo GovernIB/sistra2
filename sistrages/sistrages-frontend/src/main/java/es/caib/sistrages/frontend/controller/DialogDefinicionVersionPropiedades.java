@@ -571,6 +571,11 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		this.tiposAutenticacionPER = tiposAutenticacionPER;
 	}
 
+	public void setCambiosTrim() {
+		tramiteVersion.setDescripcion(tramiteVersion.getDescripcion().trim());
+		setCambios();
+	}
+
 	public void setCambios() {
 		this.cambios = true;
 		/*

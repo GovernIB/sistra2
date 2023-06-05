@@ -163,12 +163,12 @@
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
 			<!-- Contenido dialogo -->
-			<h:panelGrid columns="2" onblur="this.value = this.value.trim();" columnClasses="w20 grid-left, w80 grid-left"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="20" cellspacing="0">
+			<h:panelGrid columns="2" columnClasses="w20 grid-left, w80 grid-left"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="20" cellspacing="0">
 
 				<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.descripcion']}" />
 				<p:panelGrid styleClass="noBorders" columns="1" columnClasses="noPadding-left">
 					<p:inputText value="#{dialogDefinicionVersionPropiedades.tramiteVersion.descripcion}" size="90" maxlength="255"   >
-						<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios()}" process="@this" update="@this"/>
+						<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambiosTrim()}" process="@this" update="@this"/>
 					</p:inputText>
 				</p:panelGrid>
 

@@ -162,37 +162,37 @@
 				<p:outputLabel value="" style="margin-top:10px" />
 				<h:panelGrid styleClass="h100" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25 grid-right,padding-right-18 w75" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 					<p:outputLabel for="nif" value="#{msg['dialogAuditoriaTramites.nifUsu']}:"/>
-					<p:inputText id="nif" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.nif}" style="width:100%;" readonly="true" />
+					<p:inputText id="nif" value="#{dialogConsultaIncidencias.data.nif}" style="width:100%;" readonly="true" />
 
 					<p:outputLabel for="nombre" value="#{msg['viewConfiguracionAlertas.nombre']}:"/>
-					<p:inputText id="nombre" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.nombre}" style="width:100%;" readonly="true" />
+					<p:inputText id="nombre" value="#{dialogConsultaIncidencias.data.nombre}" style="width:100%;" readonly="true" />
 
 					<p:outputLabel for="tlf" value="#{msg['viewConsultaIncidencias.tlf']}:"/>
-					<p:inputText id="tlf" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.telefono}" style="width:100%;" readonly="true" />
+					<p:inputText id="tlf" value="#{dialogConsultaIncidencias.data.telefono}" style="width:100%;" readonly="true" />
 
 					<p:outputLabel for="email" value="#{msg['viewConsultaIncidencias.correo']}:" />
-					<p:inputText id="email" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.email}" readonly="true" style="width:100%;"/>
+					<p:inputText id="email" value="#{dialogConsultaIncidencias.data.email}" readonly="true" style="width:100%;"/>
 
 					<p:outputLabel for="horari" value="#{msg['dialogConsultaIncidencias.horario']}:" />
-					<p:inputText id="horari" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.horario}" readonly="true" style="width:100%;"/>
+					<p:inputText id="horari" value="#{dialogConsultaIncidencias.data.horario}" readonly="true" style="width:100%;"/>
 
 					<p:outputLabel for="tipoProblema" value="#{msg['viewConsultaIncidencias.prob']}:" />
-					<p:inputText id="tipoProblema" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.tipoProblema}" readonly="true" style="width:100%;"/>
+					<p:inputText id="tipoProblema" value="#{dialogConsultaIncidencias.data.tipoProblema}" readonly="true" style="width:100%;"/>
 
 					<p:outputLabel for="desc" value="#{msg['viewAuditoriaTramites.headDescripcionEvento']}:" />
-					<p:inputTextarea id="desc" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.descripcionProblema}" readonly="true" style="width:100%;" rows="7" autoResize="false"/>
+					<p:inputTextarea id="desc" value="#{dialogConsultaIncidencias.data.descripcionProblema}" readonly="true" style="width:100%;" rows="7" autoResize="false"/>
 
 					<p:outputLabel for="sesion" value="#{msg['viewAuditoriaTramites.filtroIdSesion']}:" />
-					<p:inputText id="sesion" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.sesionTramitacion}" readonly="true" style="width:100%;"/>
+					<p:inputText id="sesion" value="#{dialogConsultaIncidencias.data.sesionTramitacion}" readonly="true" style="width:100%;"/>
 
 					<p:outputLabel for="idTramite" value="#{msg['viewInformacionPersistencia.headTramite']}:" />
-					<p:inputText id="idTramite" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.idTramite}" readonly="true" style="width:100%;"/>
+					<p:inputText id="idTramite" value="#{dialogConsultaIncidencias.data.idTramite}" readonly="true" style="width:100%;"/>
 
 					<p:outputLabel for="version" value="#{msg['viewInformacionPersistencia.headVersion']}:" />
-					<p:inputText id="version" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.version}" readonly="true" style="width:100%;"/>
+					<p:inputText id="version" value="#{dialogConsultaIncidencias.data.version}" readonly="true" style="width:100%;"/>
 
 					<p:outputLabel for="fecha" value="#{msg['viewConsultaIncidencias.fecha.creacion']}:" />
-					<p:inputText id="fecha" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.fechaCreacion}" readonly="true" style="width:100%;">
+					<p:inputText id="fecha" value="#{dialogConsultaIncidencias.data.fechaCreacion}" readonly="true" style="width:100%;">
 						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
 					</p:inputText>
 
@@ -210,7 +210,7 @@
 					</p:selectOneMenu >
 
 					<p:outputLabel for="coment" value="#{msg['dialogConsultaIncidencias.comentario']}:" />
-					<p:inputTextarea id="coment" onblur="this.value = this.value.toUpperCase().trim();" value="#{dialogConsultaIncidencias.data.coment}" style="width:100%;" maxlength="400" rows="7" autoResize="false"/>
+					<p:inputTextarea id="coment" onblur="this.value = this.value.trim();" value="#{dialogConsultaIncidencias.data.coment}" style="width:100%;" maxlength="400" rows="7" autoResize="false"/>
 
 				</h:panelGrid>
 			</p:outputPanel>

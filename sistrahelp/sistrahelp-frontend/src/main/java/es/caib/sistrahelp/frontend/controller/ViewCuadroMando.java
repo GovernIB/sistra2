@@ -407,21 +407,21 @@ public class ViewCuadroMando extends ViewControllerBase {
 	public String calcularEtiquetaTram(Long porcentage, String id) {
 		String texto = "";
 		if (porcentage <= 15) {
-			texto = "Revisar";
+			texto = UtilJSF.getLiteral("viewCuadroMando.revisar");
 			PrimeFaces.current()
 					.executeScript("document.getElementById('form:" + id
 							+ "').style.backgroundColor='red'; document.getElementById('form:" + id
 							+ "').parentNode.style.backgroundColor='red'; document.getElementById('form:" + id
 							+ "').style.color='white';");
 		} else if (porcentage > 15 && porcentage <= 50) {
-			texto = "Atención";
+			texto = UtilJSF.getLiteral("viewCuadroMando.atencion");
 			PrimeFaces.current()
 					.executeScript("document.getElementById('form:" + id
 							+ "').style.backgroundColor='yellow'; document.getElementById('form:" + id
 							+ "').parentNode.style.backgroundColor='yellow';");
 
 		} else if (porcentage > 50) {
-			texto = "Normal";
+			texto = UtilJSF.getLiteral("viewCuadroMando.normal");
 			PrimeFaces.current()
 					.executeScript("document.getElementById('form:" + id
 							+ "').style.backgroundColor='#40D95E';  document.getElementById('form:" + id

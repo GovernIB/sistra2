@@ -261,9 +261,8 @@ public class DialogScript extends DialogControllerBase {
 						true, identificadorSeccion);
 			}
 			if (disenyoFormulario != null) {
-					cargarArbol(disenyoFormulario, disenyoFormulario.getIdentificador());
-				}
-
+				cargarArbol(disenyoFormulario, disenyoFormulario.getIdentificador());
+			}
 
 			if (idTramiteVersion != null) {
 				idiomas = UtilTraducciones.getIdiomas(tramiteService.getIdiomasDisponibles(idTramiteVersion));

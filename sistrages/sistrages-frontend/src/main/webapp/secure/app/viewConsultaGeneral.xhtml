@@ -173,21 +173,21 @@
 			         <p:ajax event="page" update=":form:dataTable :form:toolbar"/>
 
 					<!-- Columnas -->
-					<p:column headerText="AMBITO" width="15%">
+					<p:column headerText="#{msg['viewConsultaGeneral.headerAmbito']}" width="15%">
 				        <h:outputText value="#{td.ambito}" />
 				        <h:outputText value=" ( #{td.area} )" rendered="#{td.ambito.toString() == 'A'}"  />
 				    </p:column>
 
-					<p:column headerText="TIPO" width="25%">
+					<p:column headerText="#{msg['viewConsultaGeneral.headerTipo']}" width="25%">
 				        <h:outputText value="#{td.tipo}" />
 				        <h:outputText value=" - #{msg['typeDominio.' += td.subtipo]}"  rendered="${!empty td.subtipo}" />
 				    </p:column>
 
-					<p:column headerText="IDENTIFICADOR" width="35%">
+					<p:column headerText="#{msg['viewConsultaGeneral.headerIdentificador']}" width="35%">
 				        <h:outputText value="#{td.identificador}" />
 				    </p:column>
 
-				    <p:column headerText="DESCRIPCION" width="25%">
+				    <p:column headerText="#{msg['viewConsultaGeneral.headerDescripcion']}" width="25%">
 				    		<h:outputText value="#{td.descripcion}" />
 				       		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit ui-btn-icon-bottom" process="@this" rendered="false" />
 			        		<p:commandButton id="btnPing" value="#{msg['botones.ping']}" icon="fa fa-arrow-up" process="@this" rendered="#{td.tipo.toString() == 'DX'}" style="margin-left:10px"/>

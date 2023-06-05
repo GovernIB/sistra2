@@ -638,7 +638,7 @@
 		    </h:outputScript>
 
 			<p:inputText id="paginacion" value="#{viewCuadroMando.paginacion}"
-				style="opacity:0" onblur="this.value = this.value.toUpperCase().trim();">
+				style="opacity:0" onblur="this.value = this.value.trim();">
 				<p:ajax event="blur" update="@form" process="@this" />
 			</p:inputText>
 			<h:outputScript>

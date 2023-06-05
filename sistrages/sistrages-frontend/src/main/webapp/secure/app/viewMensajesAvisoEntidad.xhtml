@@ -10,6 +10,27 @@
 		<f:viewAction action="#{viewMensajesAvisoEntidad.init}" />
 	</f:metadata>
 
+	<ui:define name="icerick">
+		<script type="text/javascript">
+		function setHeight(){
+	    	var altura = window.innerHeight - 50;
+	    	var alturaMensajes = altura - 250;
+            var alturaMensajesBody = altura - 278;
+
+            $('#form\\:dataTable').height(alturaMensajes);
+            $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaMensajesBody);
+	    }
+
+		jQuery(document).ready(function() {
+
+	      $(window).resize(function() {
+              setTimeout(function(){  setHeight(); }, 100);
+  			});
+
+	      setHeight();
+	  });
+	    </script>
+	</ui:define>
 
 	<ui:define name="content">
 

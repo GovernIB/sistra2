@@ -690,6 +690,12 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					return false;
 				}
 
+				if (identificador.contains("IBAN")) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+							UtilJSF.getLiteral("error.validacion.identificador.contieneIban"), true, ID_TEXT_IDENTIFICADOR);
+					return false;
+				}
+
 				if (this.isTipoSeccion() && !identificador.startsWith("SRE_" + this.getIdentificadorSeccion())) {
 					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 							UtilJSF.getLiteral("error.validacion.identificador.formatoSRE") + " " + "SRE_"

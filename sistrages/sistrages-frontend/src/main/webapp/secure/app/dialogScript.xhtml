@@ -128,7 +128,7 @@
 								<p:column  id="columnaRight">
 									<p:column id="columnaIframe" rendered="#{dialogScript.mostrarLateralAyuda}" style="text-align:center">
 										<iframe src="#{dialogScript.urlIframe}" width="100%" height="400px" />
-										<p:commandButton id="commandOcultarAyuda" value="#{msg['botones.ocultarAyuda']}"   styleClass="button" process="@form"  action="#{dialogScript.ocultarAyuda()}"  update="@form" style="margin-left:4px;" icon="fa fa-eye-slash" />
+										<p:commandButton id="commandOcultarAyuda" value="#{msg['botones.ocultarAyuda']}"   styleClass="button" process="@form"  action="#{dialogScript.ocultarAyuda()}"  update="@form" style="margin-left:4px;" icon="fa fa-eye-slash" oncomplete="invertirColores()"/>
 
 									</p:column>
 
@@ -140,7 +140,7 @@
 										        <h:outputText value="#{plugin.name()}"/>
 										    </h:column>
 										    <h:column>
-										    	<p:commandButton icon="fa fa-question" actionListener="#{dialogScript.mostrarAyuda(plugin)}" process="@form" update="@form:columnaIframe @form:panelLeft @form:panelDominios @form:panelFormularios @form:columnaRight" style="color:#c4bc20;" />
+										    	<p:commandButton icon="fa fa-question" actionListener="#{dialogScript.mostrarAyuda(plugin)}" process="@form" update="@form:columnaIframe @form:panelLeft @form:panelDominios @form:panelFormularios @form:columnaRight" style="color:#c4bc20;" oncomplete="invertirColores()"/>
 										    </h:column>
 										</h:dataTable>
 									</p:panel>
@@ -186,7 +186,7 @@
 
 											<p:commandButton value="#{msg['botones.anyadir']}" icon="fa fa-plus"
 												actionListener="#{dialogScript.anyadirDominio()}" process="@this"
-												rendered="#{dialogScript.isPermiteEditar() and not dialogScript.isScriptSeccionReutilizable()}" style="margin-bottom:10px;margin-top:10px"
+												rendered="#{dialogScript.isPermiteEditar() and not dialogScript.tipoDisenyo.equals('PARAMETRO_DISENYO_SECCION') }" style="margin-bottom:10px;margin-top:10px"
 												update="growlScript">
 													<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoDominio}" update="growlScript tableDominios"/>
 											</p:commandButton>

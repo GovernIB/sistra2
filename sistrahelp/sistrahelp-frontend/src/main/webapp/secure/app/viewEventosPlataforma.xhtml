@@ -259,7 +259,7 @@
 		        	document.getElementById("form:paginacion").blur();
 		      }
 		    </h:outputScript>
-			<p:inputText id="paginacion" value="#{viewEventosPlataforma.paginacion}" style="opacity:0" onblur="this.value = this.value.toUpperCase().trim();">
+			<p:inputText id="paginacion" value="#{viewEventosPlataforma.paginacion}" style="opacity:0" onblur="this.value = this.value.trim();">
 				<p:ajax event="blur" update="@form" process="@this"/>
 			</p:inputText>
 		</h:form>

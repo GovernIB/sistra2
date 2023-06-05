@@ -122,9 +122,9 @@ pre { font: normal 1.2em 'Bariol Regular', Arial, Helvetica, sans-serif; white-s
 
 /* missatge */
 
-.imc-missatge { display: block; position: fixed; z-index: 2; top: calc(50% - 10em); left: 50%; width: 40em; padding: 1em 1em 1em 6em; background-color: #fff; transform: translateX(-50%); }
+.imc-missatge { display: block; overflow: auto; position: fixed; z-index: 2; top: 50%; left: 50%; width: 95%; max-width: 45em; max-height: 100%; padding: 2em 2em 2em 6em; background-color: #fff; transform: translate(-50%, -50%); }
 
-.imc-missatge::before { content: ""; display: block; position: absolute; top: 1em; left: 1.5em; width: 3em; height: 3em; background: transparent url() no-repeat center center / auto 3em; }
+.imc-missatge::before { content: ""; display: block; position: absolute; top: 1.3em; left: 1.5em; width: 3em; height: 3em; background: transparent url() no-repeat center center / auto 3em; }
 
 .imc-missatge[data-tipus="info"]::before {
 	background-image: url(../imgs/icones/ico_info.svg);
@@ -138,27 +138,40 @@ pre { font: normal 1.2em 'Bariol Regular', Arial, Helvetica, sans-serif; white-s
     background-image: url(../imgs/icones/ico_error.svg);
 }
 
-.imc-missatge[data-tipus="autenticacion"]::before {
-    background-image: url(../imgs/icones/ico_autenticacion.svg);
-}
-
 .imc-missatge h1 { margin-bottom: .5em; }
 .imc-missatge h1 span { font-size: 1.4em; }
 
 .imc-missatge div { margin-bottom: 1.5em; }
 
-.imc-missatge .imc--botonera { text-align: right; margin-bottom: 0; }
+.imc-missatge .imc--botonera { text-align: right; padding-top: 1em; margin-bottom: 0; }
 
-.imc-missatge a { display: inline-block; font: normal 100% 'Bariol Regular',Arial,Helvetica,sans-serif; color: #fff; vertical-align: middle; padding: .4em .7em; background-color: #4dba79; border:none; cursor: pointer; will-change: background-color; }
+.imc-missatge .imc--botonera a { display: inline-block; font: normal 100% 'Bariol Regular',Arial,Helvetica,sans-serif; color: #fff; vertical-align: middle; padding: .4em .7em; background-color: #4dba79; border:none; cursor: pointer; will-change: background-color; }
 
-.imc-missatge a:hover,
-.imc-missatge a:focus,
-.imc-missatge a:active { background-color: #000; }
+.imc-missatge .imc--botonera a:hover,
+.imc-missatge .imc--botonera a:focus,
+.imc-missatge .imc--botonera a:active { background-color: #000; }
 
-.imc-missatge a {
+.imc-missatge .imc--botonera a {
 	-webkit-transition: background-color .2s ease-out;
 	-moz-transition: background-color .2s ease-out;
 	-ms-transition: background-color .2s ease-out;
 	-o-transition: background-color .2s ease-out;
 	transition: background-color .2s ease-out;
+}
+
+
+/* error */
+
+div.imc--desenvolupadors { color: #666; font-size: .9em; }
+div.imc--desenvolupadors h2 { font-weight: normal; }
+div.imc--desenvolupadors p { color: #666; }
+
+
+/* @media */
+
+@media only screen and (max-width : 450px) {
+
+	.imc-missatge { padding: 1em 1em 1em 1em; }
+	.imc-missatge::before { content: ""; display: inline-block; position: static; top: 0; left: 0; width: 2em; height: 2em; margin: 0 0 1em 0; background: transparent url() no-repeat center center / auto 2em; }
+
 }
