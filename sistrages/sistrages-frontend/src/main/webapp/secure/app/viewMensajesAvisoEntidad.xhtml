@@ -157,13 +157,15 @@
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
 		        		<p:commandButton  id="btnNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewMensajesAvisoEntidad.nuevo()}" process="@this" update="growl" rendered="#{viewMensajesAvisoEntidad.permiteAlta}">
-		        			<p:ajax event="dialogReturn" listener="#{viewMensajesAvisoEntidad.returnDialogo}" update="growl dataTable"/>
+		        			<p:ajax event="dialogReturn" listener="#{viewMensajesAvisoEntidad.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewMensajesAvisoEntidad.editar()}" process="@this" update="growl" rendered="#{viewMensajesAvisoEntidad.permiteEditar or viewMensajesAvisoEntidad.permiteAlta}">
-		        			<p:ajax event="dialogReturn" listener="#{viewMensajesAvisoEntidad.returnDialogo}" update="growl dataTable"/>
+		        			<p:ajax event="dialogReturn" listener="#{viewMensajesAvisoEntidad.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewMensajesAvisoEntidad.consultar()}" process="@this" update="growl" rendered="#{not viewMensajesAvisoEntidad.permiteEditar and not viewMensajesAvisoEntidad.permiteAlta}" />
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewMensajesAvisoEntidad.eliminar()}" process="@this" update="growl dataTable" rendered="#{viewMensajesAvisoEntidad.permiteAlta}">
+		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewMensajesAvisoEntidad.consultar()}" process="@this" update="growl" rendered="#{not viewMensajesAvisoEntidad.permiteEditar and not viewMensajesAvisoEntidad.permiteAlta}" >
+		        			<p:ajax event="dialogReturn" oncomplete="setHeight()"/>
+		        		</p:commandButton>
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewMensajesAvisoEntidad.eliminar()}" process="@this" update="growl dataTable" rendered="#{viewMensajesAvisoEntidad.permiteAlta}" oncomplete="setHeight()">
 		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewMensajesAvisoEntidad.ayuda()}" process="@this" update="growl"/>
@@ -187,7 +189,6 @@
 				<p:ajax event="rowSelect" global="false"/>
 				<p:ajax event="rowDblselect"
 		                  		oncomplete="triggerDblClick();"
-		                        update=":form:dataTable"
 		                        />
 		        <p:ajax event="page" update=":form:dataTable :form:toolbar"/>
 		        <p:ajax event="contextMenu" global="false" process="@this"/>
@@ -236,7 +237,7 @@
 		      }
 		    </h:outputScript>
 		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewMensajesAvisoEntidad.rcDobleClick()}" process="@this" update="growl" style="display:none">
-       			<p:ajax event="dialogReturn" listener="#{viewMensajesAvisoEntidad.returnDialogo}" update="growl dataTable"/>
+       			<p:ajax event="dialogReturn" listener="#{viewMensajesAvisoEntidad.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
        		</p:commandButton>
 
 
