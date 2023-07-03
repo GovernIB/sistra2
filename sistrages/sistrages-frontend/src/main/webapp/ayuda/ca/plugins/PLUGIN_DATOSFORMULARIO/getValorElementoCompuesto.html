@@ -1,0 +1,73 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_DATOSFORMULARIO.getValorElementoCompuesto(listaElementos,numElemento,campo)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_DATOSFORMULARIO">PLUGIN_DATOSFORMULARIO</a></li>
+		  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_DATOSFORMULARIO&metodo=getValorElementoCompuesto">getValorElementoCompuesto</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	getValorElementoCompuesto(listaElementos,numElemento,campo): ValorCampoCompuesto
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que retorna el valor compost d'un camp d'una llista d'elements.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>listaElementos</b>: Identificador del camp de la llista d'elements. </li>
+		<li><b>numElemento</b>: Número d'element (comença en 0). </li>
+		<li><b>campo</b>: Nombre del campo en la lista de elementos. </li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>ValorCampoCompuesto</b>: Recupera el valor del camp. </li>
+	</ul>
+</p>
+ <p>
+	<b>Exemple</b>
+ </p>
+<p>Si es desitja obtenir el valor compost del camp del primer element, utilitzarem la funció de la següent forma:</p>
+ <p class="codigoScript">
+	var valorCompuesto = PLUGIN_DATOSFORMULARIO.getValorElementoCompuesto('ID_LISTAELEMENTOS1',0,'campoProvincia'); <br />
+ </p>
+ <p>
+	La funció getValorElementoCompuesto retornarà l'objecte valorCompuesto. Per a obtenir les dades del valor compost podem demanar el seu codi o descripció tal com es mostra a continuació:
+ </p>
+ <p class="codigoScript">
+	var descripcion = valorCompuesto.getDescripcion(); <br />
+	var codigo = valorCompuesto.getCodigo();
+ </p>
+ <p>
+	En aquest cas la funció getCodigo retornarà la cadena '07' i la funció getDescripcion retornarà la cadena 'Illes Balears'.
+ </p>
+<br />
+
+</body>
+</html>

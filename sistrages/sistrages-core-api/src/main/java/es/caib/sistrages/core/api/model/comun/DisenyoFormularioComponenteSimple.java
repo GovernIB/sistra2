@@ -1,5 +1,7 @@
 package es.caib.sistrages.core.api.model.comun;
 
+import java.util.List;
+
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
@@ -18,6 +20,9 @@ public class DisenyoFormularioComponenteSimple {
 
 	/** Tipo. **/
 	private TypeObjetoFormulario tipo;
+
+	/** Hijos **/
+	private List<DisenyoFormularioComponenteSimple> hijos;
 
 	/** Constructor. **/
 	public DisenyoFormularioComponenteSimple() {
@@ -69,4 +74,24 @@ public class DisenyoFormularioComponenteSimple {
 		this.tipo = tipo;
 	}
 
+	/**
+	 * @return the hijos
+	 */
+	public List<DisenyoFormularioComponenteSimple> getHijos() {
+		return hijos;
+	}
+
+	/**
+	 * @param hijos the hijos to set
+	 */
+	public void setHijos(List<DisenyoFormularioComponenteSimple> hijos) {
+		this.hijos = hijos;
+	}
+
+	/**
+	 * Comprueba si tiene hijos.
+	 */
+	public boolean tieneHijos() {
+		return hijos != null && !hijos.isEmpty();
+	}
 }

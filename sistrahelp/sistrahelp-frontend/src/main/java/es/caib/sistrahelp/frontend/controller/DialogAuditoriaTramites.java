@@ -65,6 +65,34 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 	}
 
 	/**
+	 * Abre dialogo sesión
+	 */
+	public void pantallaSesion() {
+		final Map<String, String> params = new HashMap<>();
+
+		String idSesion = dato.getIdSesionTramitacion();
+
+		params.put("idSesionParam", idSesion);
+		params.put("esDialogParams", "true");
+
+		UtilJSF.openDialog(ViewAuditoriaTramites.class, TypeModoAcceso.CONSULTA, params, true, 1500, 703);
+	}
+
+	/**
+	 * Abre dialogo nif
+	 */
+	public void pantallaNif() {
+		final Map<String, String> params = new HashMap<>();
+
+		String nif = dato.getNif();
+
+		params.put("nifParam", nif);
+		params.put("esDialogParams", "true");
+
+		UtilJSF.openDialog(ViewAuditoriaTramites.class, TypeModoAcceso.CONSULTA, params, true, 1500, 703);
+	}
+
+	/**
 	 * Copiado correctamente
 	 */
 	public void copiadoCorr() {

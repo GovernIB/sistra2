@@ -2,6 +2,7 @@ package es.caib.sistramit.core.service.model.script.flujo;
 
 import javax.script.ScriptException;
 
+import es.caib.sistramit.core.service.model.script.ClzValorCampoListaElementosInt;
 import es.caib.sistramit.core.service.model.script.ClzValorCampoMultipleInt;
 import es.caib.sistramit.core.service.model.script.PluginScriptRes;
 
@@ -22,11 +23,11 @@ public interface ResDatosInicialesFormularioInt extends PluginScriptRes {
 	 * Inicializa el valor de un campo simple.
 	 *
 	 * @param campo
-	 *            Id campo
+	 *                  Id campo
 	 * @param valor
-	 *            Valor formulario
+	 *                  Valor formulario
 	 * @throws ScriptException
-	 *             Excepcion
+	 *                             Excepcion
 	 */
 	void setValor(final String campo, final String valor) throws ScriptException;
 
@@ -34,13 +35,13 @@ public interface ResDatosInicialesFormularioInt extends PluginScriptRes {
 	 * Inicializa el valor de un campo compuesto.
 	 *
 	 * @param campo
-	 *            Campo
+	 *                        Campo
 	 * @param codigo
-	 *            Código
+	 *                        Código
 	 * @param descripcion
-	 *            Descripción
+	 *                        Descripción
 	 * @throws ScriptException
-	 *             Excepcion
+	 *                             Excepcion
 	 */
 	void setValorCompuesto(final String campo, final String codigo, final String descripcion) throws ScriptException;
 
@@ -48,11 +49,11 @@ public interface ResDatosInicialesFormularioInt extends PluginScriptRes {
 	 * Inicializa el valor de un campo multiple.
 	 *
 	 * @param campo
-	 *            Id campo.
+	 *                    Id campo.
 	 * @param valores
-	 *            Valores seleccionados.
+	 *                    Valores seleccionados.
 	 * @throws ScriptException
-	 *             Excepcion
+	 *                             Excepcion
 	 */
 	void setValorMultiple(final String campo, final ClzValorCampoMultipleInt valores) throws ScriptException;
 
@@ -63,5 +64,25 @@ public interface ResDatosInicialesFormularioInt extends PluginScriptRes {
 	 * @return Valor múltiple para ser alimentado.
 	 */
 	ClzValorCampoMultipleInt crearValorMultiple();
+
+	/**
+	 * Crea valor lista elementos para alimentarlo y después poder establecerlo
+	 * mediante setValorMultiple.
+	 *
+	 * @return Valor múltiple para ser alimentado.
+	 */
+	ClzValorCampoListaElementosInt crearValorListaElementos();
+
+	/**
+	 * Inicializa el valor de un campo lista elementos.
+	 *
+	 * @param campo
+	 *                    Id campo.
+	 * @param valores
+	 *                    Valores seleccionados.
+	 * @throws ScriptException
+	 *                             Excepcion
+	 */
+	void setValorListaElementos(String campo, ClzValorCampoListaElementosInt valores) throws ScriptException;
 
 }

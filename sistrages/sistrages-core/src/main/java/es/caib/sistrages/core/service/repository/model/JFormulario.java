@@ -348,7 +348,7 @@ public class JFormulario implements IModelApi {
 	 * @return
 	 */
 	public static JFormulario clonar(final JFormulario formulario,
-			final Map<String, JFormateadorFormulario> formateadores, final boolean cambioArea) {
+			final Map<String, JFormateadorFormulario> formateadores, final boolean cambioArea, final Map<Long, JFormulario> mapLE) {
 		JFormulario jformulario = null;
 
 		if (formulario != null) {
@@ -372,7 +372,7 @@ public class JFormulario implements IModelApi {
 
 				});
 				for (final JPaginaFormulario jpagina : jpaginas) {
-					final JPaginaFormulario jpag = JPaginaFormulario.clonar(jpagina, jformulario, cambioArea);
+					final JPaginaFormulario jpag = JPaginaFormulario.clonar(jpagina, jformulario, cambioArea, mapLE);
 					jpag.setOrden(ordenPaginas);
 					paginas.add(jpag);
 					ordenPaginas++;

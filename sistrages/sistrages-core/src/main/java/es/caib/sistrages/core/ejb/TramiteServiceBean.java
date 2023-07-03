@@ -661,4 +661,10 @@ public class TramiteServiceBean implements TramiteService {
 	public boolean existenTramitesBySeccionReutilizable(Long codigo) {
 		return tramiteService.existenTramitesBySeccionReutilizable(codigo);
 	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<Long> getDisenyosLEByTramite(Long codigo) {
+		return tramiteService.getDisenyosLEByTramite(codigo);
+	}
 }

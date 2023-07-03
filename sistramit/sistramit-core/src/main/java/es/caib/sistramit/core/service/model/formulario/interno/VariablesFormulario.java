@@ -6,6 +6,7 @@ import java.util.List;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
+import es.caib.sistramit.core.api.model.formulario.types.TypeEdicion;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
@@ -60,12 +61,17 @@ public final class VariablesFormulario implements Serializable {
 	 * Indica si se debe debugear el trámite.
 	 */
 	private boolean debugEnabled;
+	/**
+	 * Indica desde donde se están generando las variables del formulario: pantalla
+	 * principal o pantalla elemento (nuevo/edicion).
+	 */
+	private TypeEdicion edicion = TypeEdicion.PRINCIPAL;
 
 	/**
 	 * Método para establecer idSesionTramitacion.
 	 *
 	 * @param pIdSesionTramitacion
-	 *            idSesionTramitacion a establecer
+	 *                                 idSesionTramitacion a establecer
 	 */
 	public void setIdSesionTramitacion(final String pIdSesionTramitacion) {
 		idSesionTramitacion = pIdSesionTramitacion;
@@ -84,7 +90,7 @@ public final class VariablesFormulario implements Serializable {
 	 * Método para establecer parametrosApertura.
 	 *
 	 * @param pParametrosApertura
-	 *            parametrosApertura a establecer
+	 *                                parametrosApertura a establecer
 	 */
 	public void setParametrosApertura(final ParametrosAperturaFormulario pParametrosApertura) {
 		parametrosApertura = pParametrosApertura;
@@ -112,7 +118,7 @@ public final class VariablesFormulario implements Serializable {
 	 * Método para establecer idioma.
 	 *
 	 * @param pIdioma
-	 *            idioma a establecer
+	 *                    idioma a establecer
 	 */
 	public void setIdioma(final String pIdioma) {
 		idioma = pIdioma;
@@ -131,7 +137,7 @@ public final class VariablesFormulario implements Serializable {
 	 * Método para establecer nivelAutenticacion.
 	 *
 	 * @param pNivelAutenticacion
-	 *            nivelAutenticacion a establecer
+	 *                                nivelAutenticacion a establecer
 	 */
 	public void setNivelAutenticacion(final TypeAutenticacion pNivelAutenticacion) {
 		nivelAutenticacion = pNivelAutenticacion;
@@ -150,7 +156,7 @@ public final class VariablesFormulario implements Serializable {
 	 * Método para establecer usuario.
 	 *
 	 * @param pUsuario
-	 *            usuario a establecer
+	 *                     usuario a establecer
 	 */
 	public void setUsuario(final DatosUsuario pUsuario) {
 		usuario = pUsuario;
@@ -169,7 +175,7 @@ public final class VariablesFormulario implements Serializable {
 	 * Método para establecer valoresCampo.
 	 *
 	 * @param pValoresCampo
-	 *            valoresCampo a establecer
+	 *                          valoresCampo a establecer
 	 */
 	public void setValoresCampo(final List<ValorCampo> pValoresCampo) {
 		valoresCampo = pValoresCampo;
@@ -188,7 +194,7 @@ public final class VariablesFormulario implements Serializable {
 	 * Método para establecer entorno.
 	 *
 	 * @param pEntorno
-	 *            entorno a establecer
+	 *                     entorno a establecer
 	 */
 	public void setEntorno(final TypeEntorno pEntorno) {
 		entorno = pEntorno;
@@ -207,7 +213,7 @@ public final class VariablesFormulario implements Serializable {
 	 * Método para establecer debugEnabled.
 	 *
 	 * @param pDebugEnabled
-	 *            debugEnabled a establecer
+	 *                          debugEnabled a establecer
 	 */
 	public void setDebugEnabled(final boolean pDebugEnabled) {
 		debugEnabled = pDebugEnabled;
@@ -226,7 +232,7 @@ public final class VariablesFormulario implements Serializable {
 	 * Método para establecer metodoAutenticacion.
 	 *
 	 * @param metodoAutenticacion
-	 *            metodoAutenticacion a establecer
+	 *                                metodoAutenticacion a establecer
 	 */
 	public void setMetodoAutenticacion(final TypeMetodoAutenticacion metodoAutenticacion) {
 		this.metodoAutenticacion = metodoAutenticacion;
@@ -234,7 +240,7 @@ public final class VariablesFormulario implements Serializable {
 
 	/**
 	 * Método de acceso a usuarioAutenticado.
-	 * 
+	 *
 	 * @return usuarioAutenticado
 	 */
 	public UsuarioAutenticadoInfo getUsuarioAutenticado() {
@@ -243,12 +249,31 @@ public final class VariablesFormulario implements Serializable {
 
 	/**
 	 * Método para establecer usuarioAutenticado.
-	 * 
+	 *
 	 * @param usuarioAutenticado
-	 *            usuarioAutenticado a establecer
+	 *                               usuarioAutenticado a establecer
 	 */
 	public void setUsuarioAutenticado(final UsuarioAutenticadoInfo usuarioAutenticado) {
 		this.usuarioAutenticado = usuarioAutenticado;
+	}
+
+	/**
+	 * Método de acceso a edicion.
+	 * 
+	 * @return edicion
+	 */
+	public TypeEdicion getEdicion() {
+		return edicion;
+	}
+
+	/**
+	 * Método para establecer edicion.
+	 * 
+	 * @param edicion
+	 *                    edicion a establecer
+	 */
+	public void setEdicion(final TypeEdicion edicion) {
+		this.edicion = edicion;
 	}
 
 }

@@ -76,6 +76,28 @@ public final class SeccionReutilizable  extends ModelApi {
 		this.codigo = codigo;
 	}
 
+	/**
+	 * @return the codigo
+	 */
+	public String getIdString() {
+		if (codigo == null) {
+			return null;
+		} else {
+			return String.valueOf(codigo);
+		}
+	}
+
+	/**
+	 * @param idString the codigo to set
+	 */
+	public void setIdString(final String idString) {
+		if (idString == null) {
+			this.codigo = null;
+		} else {
+			this.codigo = Long.valueOf(idString);
+		}
+	}
+
 
 	/**
 	 * @return the idEntidad

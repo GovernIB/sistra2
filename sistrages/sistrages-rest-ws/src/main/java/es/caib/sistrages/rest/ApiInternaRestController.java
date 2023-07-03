@@ -45,9 +45,11 @@ import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RDominio;
 import es.caib.sistrages.rest.api.interna.RListaParametros;
 import es.caib.sistrages.rest.api.interna.RPermisoHelpDesk;
+import es.caib.sistrages.rest.api.interna.RTramitesPorArea;
 import es.caib.sistrages.rest.api.interna.RValorParametro;
 import es.caib.sistrages.rest.api.interna.RValoresDominio;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
+import es.caib.sistrages.rest.api.interna.RVersionesPorTramite;
 import es.caib.sistrages.rest.exception.NoExisteException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -129,8 +131,7 @@ public class ApiInternaRestController {
 	/**
 	 * Recupera configuración entidad.
 	 *
-	 * @param codigoDIR3
-	 *                       id entidad
+	 * @param codigoDIR3 id entidad
 	 * @return Entidad
 	 */
 	@ApiOperation(value = "Lista de Propiedades de configuracion de entidad", notes = "Lista de Propiedades de configuracion de entidad", response = RConfiguracionEntidad.class)
@@ -164,14 +165,57 @@ public class ApiInternaRestController {
 	}
 
 	/**
+	 * Recupera configuración entidad por área.
+	 *
+	 * @param codigoDIR3 id entidad
+	 * @return Entidad
+	 */
+	@ApiOperation(value = "Lista de Propiedades de configuracion de entidad by area", notes = "Lista de Propiedades de configuracion de entidad", response = RConfiguracionEntidad.class)
+	@RequestMapping(value = "/entidadByArea/{idEntidad}/{idArea}", method = RequestMethod.GET)
+	public RConfiguracionEntidad obtenerConfiguracionEntidadByArea(@PathVariable("idEntidad") final String idEntidad,
+			@PathVariable("idArea") final String idArea) {
+		return this.obtenerConfiguracionEntidad(
+				restApiService.getAreaByIdentificador(idEntidad, idArea).getCodigoDIR3Entidad());
+	}
+
+	/**
+	 * Recupera configuración entidad por área.
+	 *
+	 * @param codigoDIR3 id entidad
+	 * @return Entidad
+	 */
+	@ApiOperation(value = "Lista de tramites by area", notes = "Lista de tramites por area", response = RTramitesPorArea.class)
+	@RequestMapping(value = "/tramitesPorArea/{idEntidad}/{idArea}", method = RequestMethod.GET)
+	public RTramitesPorArea obtenerTramitesPorArea(@PathVariable("idEntidad") final String idEntidad,
+			@PathVariable("idArea") final String idArea) {
+		RTramitesPorArea tramArea = new RTramitesPorArea();
+		tramArea.setListaTramites(restApiService.listTramitesByArea(idEntidad,idArea));
+		return tramArea;
+	}
+
+	/**
+	 * Recupera configuración entidad por área.
+	 *
+	 * @param codigoDIR3 id entidad
+	 * @return Entidad
+	 */
+	@ApiOperation(value = "Lista de tramites by area", notes = "Lista de tramites por area", response = RTramitesPorArea.class)
+	@RequestMapping(value = "/versionesPorTramite/{idEntidad}/{idArea}/{idTramite}", method = RequestMethod.GET)
+	public RVersionesPorTramite obtenerTramitesPorArea(@PathVariable("idEntidad") final String idEntidad,
+			@PathVariable("idArea") final String idArea, @PathVariable("idTramite") final String idTramite) {
+		RVersionesPorTramite versiones = new RVersionesPorTramite();
+		versiones.setListaVersiones(restApiService.listVersionesByTramite(idEntidad,idArea,idTramite));
+		return versiones;
+	}
+
+
+
+	/**
 	 * Recupera definición versión de trámite.
 	 *
-	 * @param idioma
-	 *                      Idioma
-	 * @param idtramite
-	 *                      Id Trámite
-	 * @param version
-	 *                      Versión trámite
+	 * @param idioma    Idioma
+	 * @param idtramite Id Trámite
+	 * @param version   Versión trámite
 	 * @return versión de trámite
 	 * @throws Exception
 	 */
@@ -219,8 +263,7 @@ public class ApiInternaRestController {
 	/**
 	 * Obtiene avisos activos entidad.
 	 *
-	 * @param idEntidad
-	 *                      Id entidad
+	 * @param idEntidad Id entidad
 	 * @return avisos
 	 */
 	@ApiOperation(value = "Obtiene los avisos de una entidad", notes = "Obtiene los avisos de una entidad", response = RAvisosEntidad.class)
@@ -232,10 +275,8 @@ public class ApiInternaRestController {
 	/**
 	 * Recupera valores de un dominio de fuente de datos.
 	 *
-	 * @param idDominio
-	 *                           id dominio
-	 * @param parametrosJSON
-	 *                           parametros (en formato JSON)
+	 * @param idDominio      id dominio
+	 * @param parametrosJSON parametros (en formato JSON)
 	 * @return Valores dominio
 	 */
 	@ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores FD de un dominio", response = RValoresDominio.class)
@@ -265,10 +306,8 @@ public class ApiInternaRestController {
 	/**
 	 * Recupera valores de un dominio de fuente de datos.
 	 *
-	 * @param idDominio
-	 *                           id dominio
-	 * @param parametrosJSON
-	 *                           parametros (en formato JSON)
+	 * @param idDominio      id dominio
+	 * @param parametrosJSON parametros (en formato JSON)
 	 * @return Valores dominio
 	 */
 	@ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores LF de un dominio", response = RValoresDominio.class)

@@ -2,6 +2,7 @@ package es.caib.sistramit.core.service.model.script.formulario;
 
 import javax.script.ScriptException;
 
+import es.caib.sistramit.core.service.model.script.ClzValorCampoListaElementosInt;
 import es.caib.sistramit.core.service.model.script.ClzValorCampoMultipleInt;
 import es.caib.sistramit.core.service.model.script.PluginScriptRes;
 
@@ -27,10 +28,10 @@ public interface ResValorCampoInt extends PluginScriptRes {
 	 * Establece el valor de un campo simple.
 	 *
 	 * @param valor
-	 *            Valor formulario
+	 *                  Valor formulario
 	 * @throws ScriptException
-	 *             Se lanzará una excepción si no se puede modificar el formulario
-	 *             en este script.
+	 *                             Se lanzará una excepción si no se puede modificar
+	 *                             el formulario en este script.
 	 */
 	void setValor(final String valor) throws ScriptException;
 
@@ -38,9 +39,9 @@ public interface ResValorCampoInt extends PluginScriptRes {
 	 * Establece el valor de un campo compuesto.
 	 *
 	 * @param codigo
-	 *            Código
+	 *                        Código
 	 * @param descripcion
-	 *            Descripción
+	 *                        Descripción
 	 */
 	void setValorCompuesto(final String codigo, final String descripcion);
 
@@ -48,7 +49,7 @@ public interface ResValorCampoInt extends PluginScriptRes {
 	 * Establece un valor a la lista de valores de un campo de selección múltiple.
 	 *
 	 * @param valores
-	 *            Valores seleccionados.
+	 *                    Valores seleccionados.
 	 */
 	void setValorMultiple(final ClzValorCampoMultipleInt valores);
 
@@ -59,5 +60,25 @@ public interface ResValorCampoInt extends PluginScriptRes {
 	 * @return Valor múltiple para ser alimentado.
 	 */
 	ClzValorCampoMultipleInt crearValorMultiple();
+
+	/**
+	 * Crea valor lista elementos para alimentarlo y después poder establecerlo
+	 * mediante setValorMultiple.
+	 *
+	 * @return Valor múltiple para ser alimentado.
+	 */
+	ClzValorCampoListaElementosInt crearValorListaElementos();
+
+	/**
+	 * Establece valor de un campo lista elementos.
+	 *
+	 * @param campo
+	 *                    Id campo.
+	 * @param valores
+	 *                    Valores seleccionados.
+	 * @throws ScriptException
+	 *                             Excepcion
+	 */
+	void setValorListaElementos(final ClzValorCampoListaElementosInt valores);
 
 }

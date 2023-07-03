@@ -1,0 +1,58 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_VALOR.setValorListaElementos(valor)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_VALOR">DATOS_VALOR</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_VALOR&metodo=setValorListaElementos">setValorListaElementos</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setValorListaElementos(valor): void
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que estableix un valor llista elements a un camp del formulari actual.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>valorCampoListaElementos </b>: Objecte de tipus ValorListaElementos el qual conté els diferents valors a assignar al camp.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>S'inicialitza una variable per a assignar-la a un camp multiregistre del formulari actual i anar afegint valors mitjançant la funció addValor: </p>
+ <p class="codigoScript">
+var datos = DATOS_VALOR.crearValorListaElementos();<br />
+var valorElemento=datos.addElemento();<br />
+valorElemento.addValor('codigo', '07073');<br />
+valorElemento.addValor('descripcion', 'Mallorca');<br />
+</p>
+<p>Una vegada creada la variable, creat l'element i assignats els valors, es podrà assignar al camp:</p>
+<p class="codigoScript">
+DATOS_VALOR.setValorListaElementos(datos);
+</p>
+</body>
+</html>

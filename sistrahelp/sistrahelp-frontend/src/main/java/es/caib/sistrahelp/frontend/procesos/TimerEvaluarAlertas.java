@@ -16,6 +16,7 @@ import org.apache.commons.digester.plugins.PluginException;
 import es.caib.sistra2.commons.plugins.email.api.EmailPluginException;
 import es.caib.sistra2.commons.plugins.email.api.IEmailPlugin;
 import es.caib.sistrahelp.core.api.model.Alerta;
+import es.caib.sistrahelp.core.api.model.Entidad;
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.HistorialAlerta;
@@ -25,6 +26,7 @@ import es.caib.sistrahelp.core.api.service.AlertaService;
 import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.core.api.service.HistorialAlertaService;
+import es.caib.sistrahelp.frontend.util.UtilJSF;
 
 public class TimerEvaluarAlertas implements Runnable {
 
@@ -129,13 +131,25 @@ public class TimerEvaluarAlertas implements Runnable {
 	private void enviarEmail(String ev, String simbolo, String veces, FiltroAuditoriaTramitacion faut) {
 
 		try {
+			Alerta alert = aService.loadAlerta(alCod);
+			String nombre = "";
+			String logo = "";
+			if (alert.getListaAreas() != null && !alert.getListaAreas().isEmpty()
+					&& alert.getListaAreas().get(0) != null) {
+				Entidad entidad = confServ.obtenerDatosEntidadByArea(alert.getListaAreas().get(0));
+				logo = hService.urlLogoEntidad(entidad.getCodigoDIR3());
+				if (entidad.getNombre() != null) {
+					nombre = entidad.getNombre().getTraduccion("ca");
+				}
+			}
 			final IEmailPlugin plgEmail = (IEmailPlugin) confServ.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
 			plgEmail.envioEmail(aService.loadAlerta(alCod).getEmail(),
-					"SISTRAHELP: AVÍS - " + aService.loadAlerta(alCod).getNombre(),
+					"SISTRAHELP: AVÍS - " + aService.loadAlerta(alCod).getNombre() + " - "
+							+ UtilJSF.getEntorno().toUpperCase(),
 					"<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"ca\" lang=\"ca\">\r\n" + "\r\n"
 							+ "<head>\r\n" + "\r\n"
 							+ "	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r\n"
-							+ "	<title>GOVERN DE LES ILLES BALEARS</title>\r\n" + "\r\n" + "	<!-- css -->\r\n"
+							+ "	<title>" + nombre + "</title>\r\n" + "\r\n" + "	<!-- css -->\r\n"
 							+ "	<style type=\"text/css\">\r\n"
 							+ "		#contenidor { width:90%; font:normal 80% 'TrebuchetMS', 'Trebuchet MS', Arial, Helvetica, sans-serif; color:#000; margin:1em auto; background-color:#fff; }\r\n"
 							+ "		#cap { font-size:1.2em; font-weight:bold; text-align:center; margin-bottom:1em; }\r\n"
@@ -154,8 +168,8 @@ public class TimerEvaluarAlertas implements Runnable {
 							+ "	</style>\r\n" + "	<!-- /css -->\r\n" + "\r\n" + "</head>\r\n" + "\r\n" + "<body>\r\n"
 							+ "\r\n" + "	<!-- contenidor -->\r\n" + "	<div id=\"contenidor\">\r\n" + "\r\n"
 							+ "		<!-- logo illes balears -->\r\n" + "		<div id=\"cap\">\r\n"
-							+ "			<img src=\"https://www.caib.es/webcaib/sistra2_logos/goib-05.png\" alt=\"Logo CAIB\" width=\"100\" height=\"100\"/>\r\n"
-							+ "			<h1>GOVERN DE LES ILLES BALEARS</h1>\r\n" + "		</div>\r\n"
+							+ "			<img src=\"" + logo + "\" alt=\"Logo CAIB\" width=\"100\" height=\"100\"/>\r\n"
+							+ "			<h1>" + nombre.toUpperCase() + "</h1>\r\n" + "		</div>\r\n"
 							+ "		<!-- /logo illes balears -->\r\n" + "\r\n" + "		<!-- continguts -->\r\n"
 							+ "	  <div id=\"continguts\">\r\n" + "\r\n" + "			<!-- titol -->\r\n"
 							+ "			<h1>\r\n"

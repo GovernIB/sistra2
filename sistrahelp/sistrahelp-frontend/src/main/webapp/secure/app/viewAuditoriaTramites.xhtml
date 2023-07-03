@@ -13,6 +13,7 @@
 		<f:viewParam name="esDialog" value="#{viewAuditoriaTramites.esDialog}"/>
 		<f:viewParam name="esDialogParams" value="#{viewAuditoriaTramites.esDialogParams}"/>
 		<f:viewParam name="idSesionParam" value="#{viewAuditoriaTramites.idSesionParam}"/>
+		<f:viewParam name="nifParam" value="#{viewAuditoriaTramites.nifParam}"/>
 		<f:viewParam name="versionTramite" value="#{viewAuditoriaTramites.versionTramiteECM}"/>
 		<f:viewParam name="fechaDesde" value="#{viewAuditoriaTramites.fechaDesdeECM}"/>
 		<f:viewParam name="fechaHasta" value="#{viewAuditoriaTramites.fechaHastaECM}"/>
@@ -48,7 +49,7 @@
 					}
 
 					 .ui-datatable-scrollable-body{
-					 	height:99%;
+					 	height:95%;
 					 }
 
 					 .ui-datatable-scrollable {
@@ -162,6 +163,8 @@
 			          			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
 			          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.ayuda}"/>
 			          			<p:commandButton id="btnDetalle" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.consultar}" style="display:none;"/>
+			          			<p:commandButton id="btnSesion" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.pantallaSesion}" style="display:none;"/>
+			          			<p:commandButton id="btnNif" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.pantallaNif}" style="display:none;"/>
 							</h:panelGrid>
 						</p:column>
 	          	</p:panelGrid>
@@ -245,6 +248,8 @@
 		          			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
 		          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.ayuda}"/>
 		          			<p:commandButton id="btnDetalle" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.consultar}"/>
+		          			<p:commandButton id="btnSesion" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.pantallaSesion}"/>
+		          			<p:commandButton id="btnNif" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.pantallaNif}" style="display:none;"/>
 						</h:panelGrid>
 					</p:column>
           	</p:panelGrid>
@@ -284,10 +289,10 @@
 			        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
 			        </h:outputText>
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headIdSesion']}" style="width:12% !important;" sortBy="#{dt.idSesionTramitacion}" rendered="#{viewAuditoriaTramites.idSesionParam == null}">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headIdSesion']}" class="sesion" style="width:12% !important;" sortBy="#{dt.idSesionTramitacion}" rendered="#{viewAuditoriaTramites.idSesionParam == null}">
 			        <h:outputText value="#{dt.idSesionTramitacion}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headNif']}" style="width:5% !important;" sortBy="#{dt.nif}">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headNif']}" class="nif" style="width:5% !important;" sortBy="#{dt.nif}" rendered="#{viewAuditoriaTramites.nifParam == null}">
 			        <h:outputText value="#{dt.nif}" />
 			    </p:column>
 			    <p:column headerText="#{msg['viewAuditoriaTramites.headNombre']}" style="width:8% !important;" sortBy="#{dt.nombre}">
@@ -358,6 +363,18 @@
 					$('#form\\:btnDetalle').click();
 				}
 
+				function pantallaSesion(){
+					let elemento = document.getElementsByClassName('resaltar')[0];
+					elemento.click();
+					$('#form\\:btnSesion').click();
+				}
+
+				function pantallaNif(){
+					let elemento = document.getElementsByClassName('resaltar')[0];
+					elemento.click();
+					$('#form\\:btnNif').click();
+				}
+
 			  function getPos(){
 			 	var e = window.event;
 
@@ -389,9 +406,27 @@
 				if(elEnDataT!=null){
 					document.getElementById("form:detalle").classList.remove("d-none");
 					document.getElementById("form:detalle").classList.add("d-block");
+					if(elEnDataT.classList.contains('sesion')){
+						document.getElementById("form:sesion").classList.remove("d-none");
+						document.getElementById("form:sesion").classList.add("d-block");
+					}else{
+						document.getElementById("form:sesion").classList.remove("d-block");
+						document.getElementById("form:sesion").classList.add("d-none");
+					}
+
+					if(elEnDataT.classList.contains('nif') &amp;&amp; elEnDataT.childNodes.length>0){
+						document.getElementById("form:nif").classList.remove("d-none");
+						document.getElementById("form:nif").classList.add("d-block");
+					}else{
+						document.getElementById("form:nif").classList.remove("d-block");
+						document.getElementById("form:nif").classList.add("d-none");
+					}
+
 				}else{
 					document.getElementById("form:detalle").classList.remove("d-block");
 					document.getElementById("form:detalle").classList.add("d-none");
+					document.getElementById("form:sesion").classList.remove("d-block");
+					document.getElementById("form:sesion").classList.add("d-none");
 				}
 
 				if(aux.value!='' ){
@@ -468,6 +503,8 @@
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" />
        			<p:separator/>
        			<p:menuitem id="detalle" icon="fa fa-window-maximize" onclick="consultar();" value="#{msg['dialogAuditoriaTramites.descripcion']}"  process="@this"/>
+       			<p:menuitem id="sesion" icon="fa fa-window-maximize" onclick="pantallaSesion();" value="#{msg['viewConsultaIncidencias.eventos.sesion']}"  process="@this"/>
+       			<p:menuitem id="nif" icon="fa fa-window-maximize" onclick="pantallaNif();" value="#{msg['viewConsultaIncidencias.eventos.nif']}"  process="@this"/>
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewAuditoriaTramites.copiadoCorr}" process="@this" update="@this growl"/>

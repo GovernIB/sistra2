@@ -14,6 +14,7 @@ import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteRegistro;
+import es.caib.sistrages.core.service.repository.model.JFormularioTramite;
 
 /**
  * La interface TramitePasoDao.
@@ -229,7 +230,7 @@ public interface TramitePasoDao {
 			final Map<Long, byte[]> ficherosContent,
 			final Map<Long, FormateadorFormulario> idFormateadores, final Map<Long, Long> mapFormateadores,
 			final Map<Long, GestorExternoFormularios> gestores, final Map<Long, Long> mapGestores, final Map<Long, Long> idDominiosEquivalencia, Long idArea,
-			final Map<Long, Long> mapSecciones, final Map<Long, SeccionReutilizable> secciones);
+			final Map<Long, Long> mapSecciones, final Map<Long, SeccionReutilizable> secciones, final Map<Long, Long> mapDisenyosLE);
 
 	/**
 	 * Comprueba si un formulario se repite.
@@ -286,5 +287,27 @@ public interface TramitePasoDao {
 	 */
 	void borrarScriptsPropiedades(Long idTramiteVersion);
 
+	/**
+	 * Importar disenyo.
+	 * @param formulariosId
+	 * @param formulario
+	 * @param idJFormulario
+	 * @param formularios
+	 * @param ficherosContent
+	 * @param idDominiosEquivalencia
+	 * @param idEntidad
+	 * @param secciones
+	 * @param mapSecciones
+	 * @param formateadores
+	 * @param mapFormateadores
+	 * @param mapDisenyosLE
+	 * @param isTramite
+	 * @param formularioInternoLE
+	 */
+	void importarDisenyoFormulario(Map<String, Long> formulariosId, JFormularioTramite formulario,
+			Long idJFormulario, Map<Long, DisenyoFormulario> formularios, Map<Long, byte[]> ficherosContent,
+			Map<Long, Long> idDominiosEquivalencia, Long idEntidad, Map<Long, SeccionReutilizable> secciones,
+			Map<Long, Long> mapSecciones, Map<Long, FormateadorFormulario> formateadores,
+			Map<Long, Long> mapFormateadores, final Map<Long, Long> mapDisenyosLE, boolean isTramite,  DisenyoFormulario formularioInternoLE);
 
 }

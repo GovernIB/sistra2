@@ -112,13 +112,13 @@ public class HelpDeskServiceBean implements HelpDeskService {
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	@PermitAll
 	public ResultadoEventoCM obtenerCountEventoCM(FiltroAuditoriaTramitacion pFiltroBusqueda) {
 		return helpdeskService.obtenerCountEventoCM(pFiltroBusqueda);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	@PermitAll
 	public ResultadoErroresPorTramiteCM obtenerErroresPorTramiteCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion) {
 		return helpdeskService.obtenerErroresPorTramiteCM(pFiltroBusqueda, pFiltroPaginacion);
@@ -132,7 +132,7 @@ public class HelpDeskServiceBean implements HelpDeskService {
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	@PermitAll
 	public ResultadoEventoCM obtenerErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion) {
 		return helpdeskService.obtenerErroresPlataformaCM(pFiltroBusqueda, pFiltroPaginacion);
@@ -149,6 +149,12 @@ public class HelpDeskServiceBean implements HelpDeskService {
 	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public void updateFormularioSoporte(Soporte soporte) {
 		helpdeskService.updateFormularioSoporte(soporte);
+	}
+
+	@Override
+	@PermitAll
+	public String urlLogoEntidad(String codDir3) {
+		return helpdeskService.urlLogoEntidad(codDir3);
 	}
 
 }

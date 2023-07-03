@@ -7,6 +7,7 @@ import es.caib.sistramit.core.api.model.formulario.Captcha;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
 import es.caib.sistramit.core.api.model.formulario.ResultadoBuscadorDinamico;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
+import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarElemento;
 import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
@@ -169,6 +170,81 @@ public interface FlujoFormularioInternoService {
 	 *                               Imagen
 	 */
 	void regenerarCaptcha(final String idSesionFormulario, final String idCampo);
+
+	/**
+	 * Añade elemento a componente lista de elementos.
+	 *
+	 * @param idSesionFormulario
+	 *                                  idSesionFormulario
+	 * @param idCampoListaElementos
+	 *                                  id campo lista elementos
+	 * @param valoresPagina
+	 *                                  valores página
+	 * @return Datos de la página para editar elemento
+	 */
+	PaginaFormulario anyadirElemento(final String idSesionFormulario, String idCampoListaElementos,
+			List<ValorCampo> valoresPagina);
+
+	/**
+	 * Añade elemento a componente lista de elementos.
+	 *
+	 * @param idSesionFormulario
+	 *                                  idSesionFormulario
+	 * @param idCampoListaElementos
+	 *                                  id campo lista elementos
+	 * @param valoresPagina
+	 *                                  valores página
+	 * @param indiceElemento
+	 *                                  índice elemento
+	 * @return Datos de la página para editar elemento
+	 */
+	PaginaFormulario modificarElemento(final String idSesionFormulario, String idCampoListaElementos,
+			int indiceElemento, List<ValorCampo> valoresPagina);
+
+	/**
+	 * Consulta elemento a componente lista de elementos.
+	 *
+	 * @param idSesionFormulario
+	 *                                  idSesionFormulario
+	 * @param idCampoListaElementos
+	 *                                  id campo lista elementos
+	 * @param valoresPagina
+	 *                                  valores página
+	 * @param indiceElemento
+	 *                                  índice elemento
+	 * @return Datos de la página para editar elemento
+	 */
+	PaginaFormulario consultarElemento(final String idSesionFormulario, String idCampoListaElementos,
+			int indiceElemento, List<ValorCampo> valoresPagina);
+
+	/**
+	 * Evalua el cambio de una página de un elemento de una lista de elementos y
+	 * calcula el valor los campos según los scripts del formulario.
+	 *
+	 * @param idSesionFormulario
+	 *                               idSesionFormulario
+	 * @param idCampo
+	 *                               Id campo que se esta modificando
+	 * @param valoresPagina
+	 *                               Datos actuales de la página en el cliente
+	 * @return Datos de la página resultantes que deben refrescarse en el cliente
+	 */
+	ResultadoEvaluarCambioCampo evaluarCambioCampoElemento(final String idSesionFormulario,
+			String idCampoListaElementos, String idCampo, List<ValorCampo> valoresPagina);
+
+	/**
+	 * Guarda elemento en lista de elementos.
+	 *
+	 * @param idSesionFormulario
+	 *                                  idSesionFormulario
+	 * @param idCampoListaElementos
+	 *                                  id campo lista elementos
+	 * @param valoresPagina
+	 *                                  valores página
+	 * @return Resultado guardar elemento
+	 */
+	ResultadoGuardarElemento guardarElemento(final String idSesionFormulario, String idCampoListaElementos,
+			List<ValorCampo> valoresElemento);
 
 	// -------------------------------------------------------------------------------------------
 	// - Métodos especiales invocados desde el interceptor. No pasan por

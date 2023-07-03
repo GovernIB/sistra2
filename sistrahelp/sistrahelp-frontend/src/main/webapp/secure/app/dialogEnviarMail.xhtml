@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogEnviarMail.header']}"/></title>
+</h:head>
+
+<h:body>
+    <f:facet name="last">
+    	<h:outputStylesheet library="css" name="style.css" />
+    </f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogEnviarMail.modoAcceso}"/>
+		<f:viewParam name="fechaDesde" value="#{dialogEnviarMail.fechaDesde}"/>
+		<f:viewParam name="fechaHasta" value="#{dialogEnviarMail.fechaHasta}"/>
+		<f:viewParam name="horaDesde" value="#{dialogEnviarMail.horaDesde}"/>
+		<f:viewAction action="#{dialogEnviarMail.init}" />
+	</f:metadata>
+	<h:form id="formdialogEnviarMail" styleClass="margin-top-10">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growldialogEnviarMailData" widgetVar="growldialogEnviarMailData" />
+				<h:outputScript >
+
+					  var arrayCm = [];
+
+				  window.onload=function(){
+					    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+						onVisible(contextMenu, () => eliminarResaltar());
+
+						document.addEventListener('contextmenu', function(ev) {
+					    	ev.preventDefault();
+					    	getPos();
+					    	return false;
+						}, false);
+					  }
+
+						function eliminarResaltar(){
+							let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+					  		let elementos = document.getElementsByClassName('resaltar');
+					  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+								for(let i = 0; i &lt; elementos.length; i++){
+									elementos[i].classList.remove('resaltar');
+								}
+					  		}
+						}
+
+						function onVisible(element, callback) {
+						  new IntersectionObserver((entries, observer) => {
+						    entries.forEach(entry => {
+						      if(entry.intersectionRatio == 0) {
+						        callback(element);
+						      }
+						    });
+						  }).observe(element);
+						}
+
+						function consultar(){
+							let elemento = document.getElementsByClassName('resaltar')[0];
+							elemento.click();
+							$('#formdialogEnviarMail\\:btnEditarHidden').click();
+						}
+
+					  function getPos(){
+					 	var e = window.event;
+
+					    var posX = e.clientX;
+					    var posY = e.clientY;
+					    var el = document.elementFromPoint(posX, posY);
+
+					    let elementos = document.getElementsByClassName('resaltar');
+					  		if(elementos.length &gt; 0){
+								for(let i = 0; i &lt; elementos.length; i++){
+									elementos[i].classList.remove('resaltar');
+								}
+					  		}
+
+						el.classList.add("resaltar");
+						var aux = document.getElementById("formdialogEnviarMail:auxCopiar");
+						if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
+							aux.value = el.textContent;
+						}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
+							aux.value = el.firstChild.value;
+						}else if(el.value!=null &amp;&amp; el.value!=''){
+							aux.value = el.value;
+						}else{
+				          aux.value = '';
+				        }
+
+						  if(aux.value!='' ){
+				            var multiple = false;
+				            var hijos = el.children;
+							if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR') &amp;&amp; hijos.length &gt; 1){
+						            multiple = true;
+						                  }else if(hijos.length &gt;= 1 ){
+						                  	if(hijos.length==1  &amp;&amp; hijos[0].tagName=='DIV'){
+						                  		hijos = hijos[0].children;
+						                  	}
+							                    for(i=0;i&lt;hijos.length;i++){
+									              if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+									                multiple=true;
+									              }
+							                    }
+
+						                  }
+				                  var listaCm = document.getElementsByClassName('ui-contextmenu');
+				                  if(multiple){
+				                    for(i=0;i&lt;listaCm.length;i++){
+				                    	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+				                    		arrayCm.push(listaCm[i]);
+				                    	}
+					                	listaCm[i].classList.add("d-none");
+									}
+				                  }else{
+				                  	for(i=0;i&lt;listaCm.length;i++){
+				                  		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+				                    		arrayCm.push(listaCm[i]);
+				                    	}
+					                	listaCm[i].classList.remove("d-none");
+									}
+									if(arrayCm.length&gt;1){
+										arrayCm.pop();
+										for(let i=0; i&lt;arrayCm.length; i++){
+											arrayCm[i].style.display='none';
+										}
+									}
+									arrayCm = [];
+				                  }
+
+				               }
+					 }
+
+					</h:outputScript>
+			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+					<p:outputLabel for="email" value="#{msg['viewConfiguracionAlertas.emails']}" />
+				 	<p:inputText id="email" value="#{dialogEnviarMail.listaEmails}" size="40" maxlength="255" onblur="this.value = this.value.trim();"/>
+
+				</h:panelGrid>
+
+
+					<p:contextMenu>
+		       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :formdialogEnviarMail:auxCopiar" update="growldialogEnviarMailData" />
+				    </p:contextMenu>
+				    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+						<p:ajax event="success" listener="#{dialogEnviarMail.copiadoCorr}" process="@this" update="@this growldialogEnviarMailData"/>
+		            	<p:ajax event="error" listener="#{dialogEnviarMail.copiadoErr}" update="@this growldialogEnviarMailData"/>
+		        	</pe:clipboard>
+
+				    <p:inputText id="auxCopiar" value="#{dialogEnviarMail.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.enviar']}" actionListener="#{dialogEnviarMail.aceptar}" process="@form" update="@form growldialogEnviarMailData"  styleClass="boton-azul" rendered="#{dialogEnviarMail.alta or dialogEnviarMail.edicion}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogEnviarMail.cancelar}" process="@this" rendered="#{dialogEnviarMail.alta or dialogEnviarMail.edicion}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogEnviarMail.cancelar}" process="@this"  rendered="#{dialogEnviarMail.consulta}"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

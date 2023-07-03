@@ -1,0 +1,66 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_FORMULARIOS.getNumeroValoresValorElementoMultiple(idFormulario,campoListaElementos,campo)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_FORMULARIOS">PLUGIN_FORMULARIOS</a></li>
+		  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_FORMULARIOS&metodo=getNumeroValoresValorElementoMultiple">getNumeroValoresValorElementoMultiple</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	getNumeroValoresValorElementoMultiple(idFormulario,campoListaElementos,campo): int
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;N</b>
+</p>
+<p>
+	<ul>
+		<li>Método que retorna el número de valores de un campo con valor múltiple asociado a una lista de elementos a partir del identificador de la lista de elementos y del identificador del campo.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idFormulario</b>: Identificador del formulario. </li>
+		<li><b>campoListaElementos</b>: Identificador del campo lista de elementos. </li>
+		<li><b>campo</b>: Identificador del campo dentro del formulario de la lista de elementos. </li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>int</b>: Recupera la cantidad de valores del campo. </li>
+	</ul>
+</p>
+ <p>
+	<b>Ejemplo</b>
+ </p>
+<p> Si se desea obtener el número de elementos que tiene internamente un campo asociado a una lista de elementos en un formulario concreto, utilizaremos la función de la siguiente forma (suponiendo que el identificador de la lista de elementos es 'LISTA_ELEM1' y que dentro tiene un componente selector con el identificador 'SELECT1'):</p>
+ <p class="codigoScript">
+	var numeroElementos = PLUGIN_FORMULARIOS.getNumeroValoresValorElementoMultiple('FORM1','LISTA_ELEM1', 'SELECT1'); <br />
+ </p>
+ <p>
+  La función getNumeroValoresValorElementoMultiple() devolverá el total de elementos que tiene dicho campo dentro de la lista de elementos. En caso de no tener ninguno, devolverá 'null'.
+ </p>
+<br />
+
+</body>
+</html>

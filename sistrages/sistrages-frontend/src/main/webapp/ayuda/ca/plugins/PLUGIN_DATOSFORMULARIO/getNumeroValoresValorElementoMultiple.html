@@ -1,0 +1,65 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_DATOSFORMULARIO.getNumeroValoresValorElementoMultiple(campoListaElementos,campo)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_DATOSFORMULARIO">PLUGIN_DATOSFORMULARIO</a></li>
+		  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_DATOSFORMULARIO&metodo=getNumeroValoresValorElementoMultiple">getNumeroValoresValorElementoMultiple</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	getNumeroValoresValorElementoMultiple(campoListaElementos,campo): int
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que retorna el nombre de valors d'un camp amb valor múltiple asociat a una llista d'elements a partir de l'identificador de la llista d'elements i de l'identificador del camp.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>campoListaElementos</b>: Identificador del camp llista d'elements. </li>
+		<li><b>campo</b>: Identificador del camp dins del formulari de la llista d'elements. </li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>int</b>: Recupera la quantitat de valors del camp. </li>
+	</ul>
+</p>
+ <p>
+	<b>Ejemplo</b>
+ </p>
+<p> Si es desitja obtenir el nombre d'elements que te internament un camp associat a una llista d'elements utilitzarem la funció de la següent forma (suposant que l'identificador de la llista d'elements és 'LLISTA_ELEM1' i que dins té un component selector amb l'identificador 'SELECT1'):</p>
+ <p class="codigoScript">
+	var numeroElementos = PLUGIN_DATOSFORMULARIO.getNumeroValoresValorElementoMultiple('LISTA_ELEM1', 'SELECT1'); <br />
+ </p>
+ <p>
+  La funció getNumeroValoresValorElementoMultiple() retornarà el total d'elements que té aquest camp dins de la llista d'elements. En cas de no tenir cap, retornarà 'null'.
+ </p>
+<br />
+
+</body>
+</html>

@@ -216,4 +216,11 @@ public class SystemServiceImpl implements SystemService {
 		return entidad;
 	}
 
+	@Override
+	public String obtenerUrlLogoEntidad(final String identificador, final String idioma) {
+		Entidad entidad = obtenerInfoEntidad(identificador, idioma);
+		System.out.println("entidad: "+entidad);
+		return entidad.getLogo();
+	}
+
 }

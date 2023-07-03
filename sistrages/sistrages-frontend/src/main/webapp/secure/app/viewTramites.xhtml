@@ -169,7 +169,7 @@
 			el.click();
 		}else if(elAux.id=="form:areas"){
 			document.getElementById("form:mnuNuevoTramite").style.display='none';
-			if(document.getElementById("form:btnNuevaArea")!=null){
+			if(document.getElementById("form:btnNuevoArea")!=null){
 				document.getElementById("form:mnuNuevoAreaTramite").style.display='block';
 			}
 		}
@@ -206,7 +206,7 @@
 			command([{name:'param', value:text},{name:'x', value:posX},{name:'y', value:posY}]);
 		}else if(elAux.id=="form:areas"){
 			document.getElementById("form:mnuNuevoTramite").style.display='none';
-			if(document.getElementById("form:btnNuevaArea")!=null){
+			if(document.getElementById("form:btnNuevoArea")!=null){
 				document.getElementById("form:mnuNuevoAreaTramite").style.display='block';
 			}
 		}
@@ -257,7 +257,7 @@
 
 
 	function mostrarSeparador(){
-		if(document.getElementById("form:mnuNuevoAreas")!=null){
+		if(document.getElementById("form:mnuNuevoArea")!=null){
 			document.getElementsByClassName("separadorArea")[0].style.display='block';
 		}
 	}
@@ -391,6 +391,11 @@
              });
 
 			function opcAreas(){
+				if(document.getElementById("form:btnNuevoArea")!=null){
+	          		document.getElementById("form:mnuNuevoArea").style.display='block';
+	          	}else{
+	          		document.getElementById("form:mnuNuevoArea").style.display='none';
+	          	}
 				if(document.getElementById("form:btnConsultarArea")!=null){
 	          		document.getElementById("form:mnuConsultarArea").style.display='block';
 	          	}else{
@@ -674,7 +679,7 @@
                 	<p:menuitem id="btnEnvioRem" value="#{msg['botones.envioRemoto']}" icon="fa fa-paper-plane" actionListener="#{viewTramites.envioRemoto}" process="@this" update="growl" rendered="#{viewTramites.seleccionadaArea and viewTramites.tienePermisosAreaConsulta and viewTramites.isServicioActivado()}" />
                 <p:separator rendered="#{viewTramites.tienePermisosArea}"/>
                 <p:menuitem id="btnImportar"  				value="#{msg['botones.importarTramite']}" 	icon="fa fa-download"  onclick="triggerImportarTramite(); return false;" 		rendered="#{viewTramites.isDesarrollo() and viewTramites.tienePermisosArea}"></p:menuitem>
-                <p:menuitem id="btnExportar" 				value="#{msg['botones.exportarVersion']}" 	icon="fa fa-upload" actionListener="#{viewTramites.exportarVersion}" 		rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.tienePermisosArea}"		 process="@this" update="growl"   />
+                <p:menuitem id="btnExportar" 				value="#{msg['botones.exportarVersion']}" 	icon="fa fa-upload" actionListener="#{viewTramites.exportarVersion}" 		rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.tienePermisosAreaConsulta}"		 process="@this" update="growl"   />
                     <p:menuitem id="btnProcesarCuadernoCarga"   value="#{msg['botones.procesarCC']}" 		icon="fa fa-download fa-rotate-90"  onclick="triggerProcesarCC(); return false;"	   		rendered="#{!viewTramites.isDesarrollo() and viewTramites.tienePermisosArea}"></p:menuitem>
                 <p:menuitem id="btnGenerarCuadernoCarga"  	value="#{msg['botones.generarCC']}" 		icon="fa fa-upload fa-rotate-270" actionListener="#{viewTramites.generarCuadernoCarga}" rendered="#{viewTramites.versionSeleccionada ne null and (viewTramites.isDesarrollo() or viewTramites.isPreproduccion()) and viewTramites.tienePermisosArea}" process="@this" update="growl" />
                 <p:menuitem id="btnGenerarScripts"  		value="#{msg['botones.generarScripts']}" 	icon="fa fa-bolt" actionListener="#{viewTramites.generarScript}" rendered="#{viewTramites.versionSeleccionada ne null and viewTramites.isDesarrollo() and viewTramites.tienePermisosArea}" process="@this" update="growl" />

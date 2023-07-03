@@ -30,7 +30,7 @@
 
 				<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.columnasOcupadas']}" /></h:column>
 	         	<h:column>
-	         		<p:selectOneMenu id="columnas" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numColumnas}" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+	         		<p:selectOneMenu id="columnas" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numColumnas}" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios or dialogDisenyoFormulario.isLE()}">
 	         				<p:ajax event="blur" process="@this" />
 	         				<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 							<f:selectItems value="#{dialogDisenyoFormulario.ncolumnas}" var="n" itemValue="#{n}" itemLabel="#{n}"/>
@@ -91,6 +91,20 @@
 
 				<ui:include src="#{dialogDisenyoFormulario.detalleComponenteUrl}" />
 
+				<h:column rendered="#{dialogDisenyoFormulario.isTipoListaElementos()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.saleEnListaElementos']}"/></h:column>
+	         	<h:column rendered="#{dialogDisenyoFormulario.isTipoListaElementos()}">
+	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.listaElementosVisible}" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+	         			<p:ajax event="change" global="false" update="anchoColumnaLE" />
+	         		</p:selectBooleanCheckbox>
+				</h:column>
+
+				<h:column rendered="#{dialogDisenyoFormulario.isTipoListaElementos()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.anchoColumnaListaElementos']}"/></h:column>
+	         	<h:column rendered="#{dialogDisenyoFormulario.isTipoListaElementos()}">
+	         		<p:spinner id="anchoColumnaLE" size="3" value="#{dialogDisenyoFormulario.objetoFormularioEdit.listaElementosAnchoColumna}" min="1" max="100" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios or !dialogDisenyoFormulario.objetoFormularioEdit.listaElementosVisible}">
+						<p:ajax event="blur" process="@this" />
+		    			<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
+					</p:spinner>
+				</h:column>
 
 	        </h:panelGrid>
 

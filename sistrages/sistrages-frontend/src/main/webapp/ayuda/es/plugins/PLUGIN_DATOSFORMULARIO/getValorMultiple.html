@@ -38,6 +38,7 @@
 <p>
 	<ul>
 		<li><b>campo</b>: Cadena que contiene el identificador del campo. </li>
+		<li><b>indice</b>: Valor del índice dentro del campo múltiple. Tener en cuenta que los índices comienzan por 0. </li>
 	</ul>
 </p>
 
@@ -60,7 +61,7 @@
 	La función getNumeroValoresValorMultiple retornará 8 (total de valores de ese campo). Con este valor podemos calcular el índice del último elemento de la siguiente manera:
 </p>
 <p class="codigoScript">
-	if (numero > 0) {
+	if (total > 0) {
 		var valorCompuesto = PLUGIN_DATOSFORMULARIO.getValorMultiple('campoTitulaciones', total -1);
 	}
  </p>

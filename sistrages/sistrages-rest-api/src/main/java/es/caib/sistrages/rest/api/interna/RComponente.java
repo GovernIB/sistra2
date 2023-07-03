@@ -20,7 +20,8 @@ import io.swagger.annotations.ApiModelProperty;
 		@Type(value = RComponenteCampoOculto.class, name = "RComponenteCampoOculto"),
 		@Type(value = RComponenteSelector.class, name = "RComponenteSelector"),
 		@Type(value = RComponenteCaptcha.class, name = "RComponenteCaptcha"),
-		@Type(value = RComponenteCheckbox.class, name = "RComponenteCheckbox") })
+		@Type(value = RComponenteCheckbox.class, name = "RComponenteCheckbox"),
+		@Type(value = RComponenteListaElementos.class, name = "RComponenteListaElementos") })
 @ApiModel(value = "RComponente", description = "Descripcion de RComponente")
 public abstract class RComponente {
 
@@ -64,7 +65,8 @@ public abstract class RComponente {
 	/**
 	 * Método para establecer identificador.
 	 *
-	 * @param identificador identificador a establecer
+	 * @param identificador
+	 *                          identificador a establecer
 	 */
 	public void setIdentificador(final String identificador) {
 		this.identificador = identificador;
@@ -82,7 +84,8 @@ public abstract class RComponente {
 	/**
 	 * Método para establecer tipo.
 	 *
-	 * @param tipo tipo a establecer
+	 * @param tipo
+	 *                 tipo a establecer
 	 */
 	public void setTipo(final String tipo) {
 		this.tipo = tipo;
@@ -100,7 +103,8 @@ public abstract class RComponente {
 	/**
 	 * Método para establecer etiqueta.
 	 *
-	 * @param etiqueta etiqueta a establecer
+	 * @param etiqueta
+	 *                     etiqueta a establecer
 	 */
 	public void setEtiqueta(final String etiqueta) {
 		this.etiqueta = etiqueta;
@@ -118,7 +122,8 @@ public abstract class RComponente {
 	/**
 	 * Método para establecer mostrarEtiqueta.
 	 *
-	 * @param mostrarEtiqueta mostrarEtiqueta a establecer
+	 * @param mostrarEtiqueta
+	 *                            mostrarEtiqueta a establecer
 	 */
 	public void setMostrarEtiqueta(final boolean mostrarEtiqueta) {
 		this.mostrarEtiqueta = mostrarEtiqueta;
@@ -136,7 +141,8 @@ public abstract class RComponente {
 	/**
 	 * Método para establecer alineacion.
 	 *
-	 * @param alineacion alineacion a establecer
+	 * @param alineacion
+	 *                       alineacion a establecer
 	 */
 	public void setAlineacion(final String alineacion) {
 		this.alineacion = alineacion;
@@ -154,7 +160,8 @@ public abstract class RComponente {
 	/**
 	 * Método para establecer columnas.
 	 *
-	 * @param columnas columnas a establecer
+	 * @param columnas
+	 *                     columnas a establecer
 	 */
 	public void setColumnas(final int columnas) {
 		this.columnas = columnas;
@@ -172,7 +179,8 @@ public abstract class RComponente {
 	/**
 	 * Método para establecer ayuda.
 	 *
-	 * @param ayuda ayuda a establecer
+	 * @param ayuda
+	 *                  ayuda a establecer
 	 */
 	public void setAyuda(final String ayuda) {
 		this.ayuda = ayuda;

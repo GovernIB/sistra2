@@ -1,0 +1,83 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_FORMULARIOS.getValorElementoMultiple(idFormulario,listaElementos,numElemento,campo,indice)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_FORMULARIOS">PLUGIN_FORMULARIOS</a></li>
+		  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_FORMULARIOS&metodo=getValorElementoMultiple">getValorElementoMultiple</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	getValorElementoMultiple(idFormulario,listaElementos,numElemento,campo,indice): ValorCampoCompuesto
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;N</b>
+</p>
+<p>
+	<ul>
+		<li>Método que retorna el valor de un campo multiple de una lista de elementos.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idFormulario</b>: Identificador del formulario. </li>
+		<li><b>listaElementos</b>: Identificador del campo de la lista de elementos. </li>
+		<li><b>numElemento</b>: Número de elemento (empieza en 0). </li>
+		<li><b>campo</b>: Nombre del campo en la lista de elementos. </li>
+		<li><b>indice</b>: Valor del índice dentro del campo múltiple. Tener en cuenta que los índices empiezan por 0. </li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>ValorCampoCompuesto</b>: Recupera el valor compuesto de un índice del campo múltiple. </li>
+	</ul>
+</p>
+ <p>
+	<b>Ejemplo</b>
+ </p>
+<p> Obtener el último valor del campo múltiple 'campoTitulaciones' del primer elemento de la lista de elementos de un formulario concreto. Para eso, primero se ha de obtener el total de valores:</p>
+<p class="codigoScript">
+	var total = PLUGIN_FORMULARIOS.getNumeroValoresValorElementoMultiple('FORM1','LISTA_ELEM1', 'campoTitulaciones'); 
+</p>
+<p>
+	La función getNumeroValoresValorElementoMultiple retornará 8 (total de valores de este campo). Con este valor podemos calcular el índex del último elemento de la siguiente manera:
+</p>
+<p class="codigoScript">
+	if (total > 0) {
+		var valorCompuesto = PLUGIN_FORMULARIOS.getValorElementoMultiple('FORM1','LISTA_ELEM1', 0, 'campoTitulaciones', total -1);
+	}
+ </p>
+ <p>
+  La función getValorElementoMultiple retornará el objeto valorCompuesto situado en la posición indicada. Para obtener los datos del valor compuesto podemos obtener su código o descripción tal como se muestra a continuación:
+ </p>
+ <p class="codigoScript">
+	var descripcion = valorCompuesto.getDescripcion();<br />
+	var codigo = valorCompuesto.getCodigo();
+ </p>
+ <p>
+	En este caso la función getCodigo retornarà la cadena 'GRAD.SUP.INFOR' y la función getDescripcion retornarà la cadena 'Grau superior en informàtica'.
+ </p>
+<br />
+
+</body>
+</html>

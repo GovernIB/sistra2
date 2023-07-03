@@ -72,4 +72,9 @@ public class SystemServiceBean implements SystemService {
 	public Entidad obtenerInfoEntidad(final String identificador, final String idioma) {
 		return systemService.obtenerInfoEntidad(identificador, idioma);
 	}
+
+	@Override
+	public String obtenerUrlLogoEntidad(String identificador, String idioma) {
+		return systemService.obtenerUrlLogoEntidad(identificador, idioma);
+	}
 }

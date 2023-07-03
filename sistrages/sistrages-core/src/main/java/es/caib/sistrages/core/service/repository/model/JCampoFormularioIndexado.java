@@ -216,7 +216,6 @@ public class JCampoFormularioIndexado implements IModelApi {
 					if (dominio.getEntidad() != null) {
 						campoSelector.setDominioEntidad(dominio.getEntidad().getIdentificador());
 					}
-
 				}
 
 				campoSelector.setCampoDominioCodigo(campoDominioCodigo);
@@ -224,6 +223,7 @@ public class JCampoFormularioIndexado implements IModelApi {
 				campoSelector.setIndiceAlfabetico(indiceAlfabetico);
 				campoSelector.setAltura(altura);
 				campoSelector.setOrientacion(orientacion);
+
 				if (parametrosDominio != null) {
 					if (campoSelector.getListaParametrosDominio() == null) {
 						campoSelector.setListaParametrosDominio(new ArrayList<>());

@@ -32,6 +32,10 @@ public class RPaginaFormulario {
 	@ApiModelProperty(value = "Líneas de componentes")
 	private List<RLineaComponentes> lineas;
 
+	/** Indica si pagina es una lista de elementos. */
+	@ApiModelProperty(value = "Indica si pagina es una lista de elementos")
+	private boolean paginaListaElementos;
+
 	/**
 	 * Método de acceso a htmlB64.
 	 *
@@ -125,7 +129,7 @@ public class RPaginaFormulario {
 
 	/**
 	 * Método de acceso a identificador.
-	 * 
+	 *
 	 * @return identificador
 	 */
 	public String getIdentificador() {
@@ -134,12 +138,31 @@ public class RPaginaFormulario {
 
 	/**
 	 * Método para establecer identificador.
-	 * 
+	 *
 	 * @param identificador
 	 *                          identificador a establecer
 	 */
 	public void setIdentificador(final String identificador) {
 		this.identificador = identificador;
+	}
+
+	/**
+	 * Método de acceso a paginaListaElementos.
+	 * 
+	 * @return paginaListaElementos
+	 */
+	public boolean isPaginaListaElementos() {
+		return paginaListaElementos;
+	}
+
+	/**
+	 * Método para establecer paginaListaElementos.
+	 * 
+	 * @param paginaListaElementos
+	 *                                 paginaListaElementos a establecer
+	 */
+	public void setPaginaListaElementos(final boolean paginaListaElementos) {
+		this.paginaListaElementos = paginaListaElementos;
 	}
 
 }

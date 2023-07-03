@@ -294,12 +294,12 @@ $.fn.appValida = function(opcions) {
 
 	}
 
-
 	if (format === "iban" && valor !== "") {
 
 		var valor_iban = $.trim( valor.toUpperCase().replace(/\s/g, "") );
 
-		esCorrecte = IBAN.isValid( valor_iban ) && validaCCC(valor_iban);
+		esCorrecte = IBAN.isValid( valor_iban );
+		esCorrecte = validaCCC(valor_iban);
 
 	}
 

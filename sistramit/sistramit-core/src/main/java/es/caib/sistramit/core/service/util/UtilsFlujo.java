@@ -12,6 +12,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistrages.rest.api.interna.*;
+import es.caib.sistramit.core.api.exception.*;
+import es.caib.sistramit.core.api.model.formulario.*;
+import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
+import es.caib.sistramit.core.service.component.formulario.interno.utils.UtilsFormularioInterno;
+import es.caib.sistramit.core.service.model.formulario.ParametrosAperturaFormulario;
+import es.caib.sistramit.core.service.model.formulario.interno.types.TypeParametroDominio;
+import es.caib.sistramit.core.service.model.integracion.ParametrosDominio;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,21 +35,6 @@ import com.lowagie.text.pdf.PdfReader;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistra2.commons.utils.ValidacionTipoException;
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
-import es.caib.sistrages.rest.api.interna.RArea;
-import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
-import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
-import es.caib.sistrages.rest.api.interna.RScript;
-import es.caib.sistrages.rest.api.interna.RVariableArea;
-import es.caib.sistramit.core.api.exception.EncodeException;
-import es.caib.sistramit.core.api.exception.ErrorNoControladoException;
-import es.caib.sistramit.core.api.exception.ErrorScriptException;
-import es.caib.sistramit.core.api.exception.FormatoInvalidoFechaFrontException;
-import es.caib.sistramit.core.api.exception.JsonException;
-import es.caib.sistramit.core.api.exception.ParametrosEntradaIncorrectosException;
-import es.caib.sistramit.core.api.exception.TamanyoMaximoAnexoException;
-import es.caib.sistramit.core.api.exception.TramiteFinalizadoException;
-import es.caib.sistramit.core.api.exception.UsuarioNoPermitidoException;
-import es.caib.sistramit.core.api.exception.VariableAreaNoExisteException;
 import es.caib.sistramit.core.api.model.comun.Constantes;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.comun.types.TypeValidacion;
@@ -64,7 +57,6 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoFirma;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedad;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
-import es.caib.sistramit.core.api.model.formulario.MensajeValidacion;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -328,7 +320,9 @@ public final class UtilsFlujo {
 		e.setId(entidad.getIdentificador());
 		e.setCodigo(entidad.getCodigo());
 		e.setNombre(UtilsSTG.obtenerLiteral(entidad.getDescripcion(), idioma));
-		e.setLogo(obtenerUrlPublica(urlResources, entidad.getLogo()));
+		if(entidad.getLogo()!=null) {
+			e.setLogo(obtenerUrlPublica(urlResources, entidad.getLogo()));
+		}
 		e.setTituloApp(UtilsSTG.obtenerLiteral(entidad.getTitulo(), idioma));
 		e.setFavicon(obtenerUrlPublica(urlResources, entidad.getIcono()));
 		e.setCss(obtenerUrlPublica(urlResources, entidad.getCss()));
@@ -761,7 +755,7 @@ public final class UtilsFlujo {
 	 */
 	public static String obtenerUrlPublica(final String urlResources, String resourcePublico) {
 		String url = "";
-		if (StringUtils.isNotBlank(resourcePublico)) {
+		if (StringUtils.isNotBlank(resourcePublico) && StringUtils.isNotBlank(urlResources)) {
 			// Eliminamos de la ruta el directorio publico
 			final String directorioPublico = "/publico/";
 			if (resourcePublico.startsWith(directorioPublico)) {
@@ -939,5 +933,7 @@ public final class UtilsFlujo {
 
 		return resultado;
 	}
+
+
 
 }

@@ -115,4 +115,6 @@ public interface SistramitApiComponent {
 
 	void updateFormularioSoporte(Soporte soporte);
 
+	String urlLogoEntidad(String codDir3);
+
 }

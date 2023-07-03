@@ -17,19 +17,23 @@ public interface ValidacionesFormularioHelper {
 	 *
 	 * @param datosSesion
 	 *                        Datos sesion formulario
-	 *
+	 * @param elemento
+	 *                        Indica si existe elemento
 	 */
-	void validarConfiguracionCampos(final DatosSesionFormularioInterno datosSesion);
+	void validarConfiguracionCampos(final DatosSesionFormularioInterno datosSesion, final boolean elemento);
 
 	/**
 	 * Valida página al guardar.
 	 *
 	 * @param datosSesion
 	 *                        Datos sesion
+	 * @param elemento
+	 *                        Indica si existe elemento
 	 * @return En caso de encontrar error de validación devuelve mensaje (null si no
 	 *         hay error de validación).
 	 */
-	MensajeValidacion validarScriptValidacionPagina(final DatosSesionFormularioInterno datosSesion);
+	MensajeValidacion validarScriptValidacionPagina(final DatosSesionFormularioInterno datosSesion,
+			final boolean elemento);
 
 	/**
 	 * Realiza validacion de los campos de la pagina segun el script de validacion
@@ -37,9 +41,12 @@ public interface ValidacionesFormularioHelper {
 	 *
 	 * @param datosSesion
 	 *                        Datos sesion
+	 * @param elemento
+	 *                        Indica si existe elemento
 	 * @return En caso de error devuelve error de validación (se detiene en el
 	 *         primer error de validación encontrado).
 	 */
-	MensajeValidacion validarScriptValidacionCampos(final DatosSesionFormularioInterno datosSesion);
+	MensajeValidacion validarScriptValidacionCampos(final DatosSesionFormularioInterno datosSesion,
+			final boolean elemento);
 
 }

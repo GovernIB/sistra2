@@ -137,6 +137,9 @@
 				<p:column styleClass=" noPadding">
 			        	<h:panelGrid id="panelBotones" columns="1" cellspacing="5" styleClass="w100, noPadding, noMargin">
 		          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewCuadroMando.ayuda}"/>
+		          			<p:commandButton id="btnMail" value="#{msg['botones.mail']}" icon="fa fa-envelope-o" process="@this" update="growl" actionListener="#{viewCuadroMando.mail}">
+		          				<p:ajax event="dialogReturn" listener="#{viewCuadroMando.returnDialogoEmail}" update="growl"/>
+		          			</p:commandButton>
 						</h:panelGrid>
 				</p:column>
 

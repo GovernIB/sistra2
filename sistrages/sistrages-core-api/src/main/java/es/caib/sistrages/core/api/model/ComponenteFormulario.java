@@ -60,6 +60,22 @@ public abstract class ComponenteFormulario extends ObjetoFormulario implements C
 	 * Indica cuando el componente es de tipo seccion reutilizable, el id del form (disenyo formulario)
 	 */
 	private Long idFormSeccion;
+
+	/**
+	 * Indica el número máximo de elementos en la lista de elementos.
+	 */
+	private int numeroMaximoElementos = 0;
+
+	/**
+	 * Para campos de un componente lista de elementos, indica si sale en la lista
+	 */
+	private boolean listaElementosVisible;
+
+	/**
+	 * Para campos de un componente lista de elementos, si sale en la lista indica el ancho de columna
+	 */
+	private Integer listaElementosAnchoColumna;
+
 	/**
 	 * Obtiene el valor de idComponente.
 	 *
@@ -240,6 +256,51 @@ public abstract class ComponenteFormulario extends ObjetoFormulario implements C
 		this.idFormSeccion = idFormSeccion;
 	}
 
+
+
+	/**
+	 * @return the numeroMaximoElementos
+	 */
+	public int getNumeroMaximoElementos() {
+		return numeroMaximoElementos;
+	}
+
+	/**
+	 * @param numeroMaximoElementos the numeroMaximoElementos to set
+	 */
+	public void setNumeroMaximoElementos(int numeroMaximoElementos) {
+		this.numeroMaximoElementos = numeroMaximoElementos;
+	}
+
+
+	/**
+	 * @return the listaElementosVisible
+	 */
+	public boolean isListaElementosVisible() {
+		return listaElementosVisible;
+	}
+
+	/**
+	 * @param listaElementosVisible the listaElementosVisible to set
+	 */
+	public void setListaElementosVisible(boolean listaElementosVisible) {
+		this.listaElementosVisible = listaElementosVisible;
+	}
+
+	/**
+	 * @return the listaElementosAnchoColumna
+	 */
+	public Integer getListaElementosAnchoColumna() {
+		return listaElementosAnchoColumna;
+	}
+
+	/**
+	 * @param listaElementosAnchoColumna the listaElementosAnchoColumna to set
+	 */
+	public void setListaElementosAnchoColumna(Integer listaElementosAnchoColumna) {
+		this.listaElementosAnchoColumna = listaElementosAnchoColumna;
+	}
+
 	@Override
 	public int compareTo(final ComponenteFormulario arg0) {
 		return Integer.compare(this.getOrden(), arg0.getOrden());
@@ -265,6 +326,9 @@ public abstract class ComponenteFormulario extends ObjetoFormulario implements C
            texto.append(tabulacion +"\t AlineacioText:" + alineacionTexto + "\n");
            texto.append(tabulacion +"\t TipoSeccionReutilizable:" + tipoSeccionReutilizable + "\n");
            texto.append(tabulacion +"\t IdFormSeccion:" + idFormSeccion + "\n");
+           texto.append(tabulacion +"\t NumeroMaximoElementos:" + numeroMaximoElementos + "\n");
+           texto.append(tabulacion +"\t ListaElementosVisible:" + listaElementosVisible + "\n");
+           texto.append(tabulacion +"\t ListaElementosAnchoColumna:" + listaElementosAnchoColumna + "\n");
            if (this.texto != null) {
         	   texto.append(tabulacion +"\t Text: \n");
         	   texto.append(this.texto.toString(tabulacion, idioma) + "\n");

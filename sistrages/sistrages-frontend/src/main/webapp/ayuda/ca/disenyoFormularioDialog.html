@@ -7,7 +7,7 @@
 <body>
 	<h1 class="stgH1">DISSENY DEL FORMULARI</h1>
 	<p>
-		En la pantalla de<i>' Disseny del formulari</i>' es pot dissenyar i
+		En la pantalla de '<i>Disseny del formulari</i>' es pot dissenyar i
 		previsualizar formularis associats a la versi&oacute; del
 		tr&agrave;mit.<br> Aquesta pantalla es compon d'una
 		cap&ccedil;alera, en la qual es presenten les propietats del formulari
@@ -91,7 +91,13 @@
 				prev&eacute; que bots o automatismes puguin dur a terme tramitacions
 				completes. Per a completar aquest camp s'haur&agrave; d'emplenar amb
 				els car&agrave;cters de la imatge o del dictat per veu.</li>
-			<li><span class="boton">Camp secci&oacute;</span>: aquest
+			<li><span class="boton">Camp llista eleemnts</span>: aquest botó permet 
+				incloure al formulari un camp de tipus llista d'elements. Un cop feu 
+				clic al botó, apareixerà un nou component que permetrà afegir una 
+				llista d'elements al formulari. Per completar el disseny dels diferents 
+				elements de la llista, caldrà accedir a la "Pantalla detall component", 
+				on es podrà dissenyar cada element a mostrar a la llista.</li>
+			<li><span class="boton">Camp secci&oacute; reutilitzable</span>: aquest
 				bot&oacute; permet incloure en el formulari un camp de tipus
 				secci&oacute; reutilitzable. Una vegada es premi el bot&oacute;,
 				apareixer&agrave; una finestra on es podr&agrave; seleccionar la
@@ -192,6 +198,20 @@
 				qual extreure els valors, i "Script", que requerir&agrave;
 				l'emplenament del script "Valors possibles" de la secci&oacute;
 				"Scripts".</li>
+			<li><span class="boton">Grandària:</span> <i>camp</i> que
+				permet establir la grandària màxima que pot tindre un component tipus text.</li>
+			<li><span class="boton">Multilínia:</span> <i>check</i> que
+				permet establir si un component tipus text permet multilínia i cuantes com a màxim.</li>
+			<li><span class="boton">Forçar majúscules:</span> <i>check</i> que
+				permet establir que a un component tipus text, tot el text es forci a posar en majúscula 
+				automàticament.</li>
+			<li><span class="boton">Prohibir enganxar:</span> <i>check</i> que
+				permet establir si un component tipus text permet o no enganxar text copiat previament.</li>
+			<li><span class="boton">Nº màxim d'elements:</span> <i>camp</i> que
+				permet establir el màxim nombre d'elements que es permeten a un component tipus llista d'elements.</li>
+			<li><span class="boton">Detall component llista elements:</span> <i>Botó</i> que
+				permet establir el diseny dels elements que apareixerà dins d'una llista d'elements.</li>
+				
 		</ul>
 		<li><span class="nombreCampo">Scripts:</span> secci&oacute; que
 			presenta els scripts del camp. Els scripts disponibles s&oacute;n:</li>

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
+import es.caib.sistrages.core.api.model.ComponenteFormularioListaElementos;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
@@ -131,7 +132,13 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	@NegocioInterceptor
 	public ObjetoFormulario addComponenteFormulario(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina,
 			final Long pIdLinea, final Integer pOrden, final String pPosicion, final Object objeto, boolean isTipoSeccion, String identificadorSeccion, String idTramiteVersion) {
-		ObjetoFormulario retorno = formIntDao.addComponente(pTipoObjeto, pIdPagina, pIdLinea, pOrden, pPosicion, objeto, isTipoSeccion, identificadorSeccion);
+		Long idFormulario = null;
+		if (pTipoObjeto == TypeObjetoFormulario.LISTA_ELEMENTOS) {
+			ComponenteFormularioListaElementos comp = null;
+			idFormulario = formIntDao.addFormulario( comp);
+
+		}
+		ObjetoFormulario retorno = formIntDao.addComponente(pTipoObjeto, pIdPagina, pIdLinea, pOrden, pPosicion, objeto, isTipoSeccion, identificadorSeccion, idFormulario);
 		if (pTipoObjeto == TypeObjetoFormulario.SECCION_REUTILIZABLE) {
 			LOG.debug("Extraemos los dominos");
 			List<Dominio> dominios = seccionReutilizableDao.getDominiosByIdentificadorSeccion(((SeccionReutilizable)objeto).getIdentificador());
@@ -165,6 +172,7 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	public void removeComponenteFormulario(final Long pId) {
 		formIntDao.removeComponenteFormulario(pId);
 	}
+
 
 	@Override
 	@NegocioInterceptor

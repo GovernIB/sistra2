@@ -19,6 +19,14 @@ public interface ConfiguracionService {
 	public Entidad obtenerDatosEntidad(final String idEntidad);
 
 	/**
+	 * Obtener datos by Area.
+	 *
+	 * @param idEntidad id de la entidad
+	 * @return entidad
+	 */
+	public Entidad obtenerDatosEntidadByArea(final String idArea);
+
+	/**
 	 * Obtiene el contenido del fichero
 	 *
 	 * @param fichero fichero

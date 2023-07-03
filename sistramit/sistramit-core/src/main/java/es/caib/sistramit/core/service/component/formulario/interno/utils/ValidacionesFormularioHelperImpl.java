@@ -20,6 +20,7 @@ import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.Constantes;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
+import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoListaElementos;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTexto;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoEmail;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoExpReg;
@@ -37,6 +38,7 @@ import es.caib.sistramit.core.api.model.formulario.OpcionesCampoTextoNormal;
 import es.caib.sistramit.core.api.model.formulario.OpcionesCampoTextoNumero;
 import es.caib.sistramit.core.api.model.formulario.OpcionesCampoTextoPassword;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
+import es.caib.sistramit.core.api.model.formulario.ValorCampoListaElementos;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
 import es.caib.sistramit.core.api.model.formulario.ValoresCampoVerificacion;
 import es.caib.sistramit.core.api.model.formulario.types.TypeSeparador;
@@ -44,6 +46,7 @@ import es.caib.sistramit.core.service.component.literales.Literales;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
 import es.caib.sistramit.core.service.component.script.ScriptExec;
 import es.caib.sistramit.core.service.model.formulario.interno.DatosSesionFormularioInterno;
+import es.caib.sistramit.core.service.model.formulario.interno.PaginaData;
 import es.caib.sistramit.core.service.model.formulario.interno.VariablesFormulario;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFormulario;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
@@ -62,17 +65,17 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	private Literales literales;
 
 	@Override
-	public void validarConfiguracionCampos(final DatosSesionFormularioInterno pDatosSesion) {
+	public void validarConfiguracionCampos(final DatosSesionFormularioInterno pDatosSesion, final boolean elemento) {
 
 		boolean validacionCorrecta = true;
 		String idCampoError = null;
 
-		for (final ConfiguracionCampo configuracion : pDatosSesion.getDatosFormulario().getPaginaActualFormulario()
-				.getConfiguracion()) {
+		final PaginaData paginaActual = pDatosSesion.getDatosFormulario().obtenerPaginaDataActual(elemento);
+
+		for (final ConfiguracionCampo configuracion : paginaActual.getConfiguracion()) {
 
 			// Obtenemos valor campo
-			final ValorCampo vc = pDatosSesion.getDatosFormulario().getPaginaActualFormulario()
-					.getValorCampo(configuracion.getId());
+			final ValorCampo vc = paginaActual.getValorCampo(configuracion.getId());
 
 			// Comprobamos si esta vacio el campo
 			if (vc.esVacio()) {
@@ -102,8 +105,8 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 						// No hay comprobaciones posibles
 						break;
 					case LISTA_ELEMENTOS:
-						throw new TipoNoControladoException(
-								"Tipus de camp NO ESTÀ IMPLEMENTAT: " + configuracion.getTipo());
+						validacionCorrecta = validacionConfiguracionCampoListaElementos(configuracion, vc);
+						break;
 					default:
 						// Tipo no permitido
 						throw new TipoNoControladoException("Tipus de camp no controlat: " + configuracion.getTipo());
@@ -131,25 +134,25 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	}
 
 	@Override
-	public MensajeValidacion validarScriptValidacionPagina(final DatosSesionFormularioInterno datosSesion) {
+	public MensajeValidacion validarScriptValidacionPagina(final DatosSesionFormularioInterno datosSesion,
+			final boolean elemento) {
 
 		MensajeValidacion mensaje = null;
 
 		// - Definicion pagina actual
-		final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
+		final RPaginaFormulario paginaDef = datosSesion.obtenerDefinicionPaginaActual( elemento);
+
+		// - Página actual
+		final PaginaData paginaActual = datosSesion.getDatosFormulario().obtenerPaginaDataActual(elemento);
 
 		// Ejecutamos script validacion pagina
 		if (UtilsSTG.existeScript(paginaDef.getScriptValidacion())) {
 			final Map<String, String> codigosError = UtilsSTG
 					.convertLiteralesToMap(paginaDef.getScriptValidacion().getLiterales());
-			final VariablesFormulario variablesFormulario = UtilsFormularioInterno
-					.generarVariablesFormulario(datosSesion, null);
-
-			// Id pagina
-			final String idPagina = datosSesion.getDatosFormulario().getPaginaActualFormulario().getIdentificador();
-
+			final VariablesFormulario variablesFormulario = datosSesion
+					.generarVariablesFormulario(null, elemento);
 			final RespuestaScript rs = scriptFormulario.executeScriptFormulario(
-					TypeScriptFormulario.SCRIPT_VALIDACION_PAGINA, idPagina,
+					TypeScriptFormulario.SCRIPT_VALIDACION_PAGINA, paginaActual.getIdentificador(),
 					paginaDef.getScriptValidacion().getScript(), variablesFormulario, codigosError,
 					datosSesion.getDefinicionTramite());
 			mensaje = rs.getMensajeValidacion();
@@ -160,12 +163,13 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	}
 
 	@Override
-	public MensajeValidacion validarScriptValidacionCampos(final DatosSesionFormularioInterno datosSesion) {
+	public MensajeValidacion validarScriptValidacionCampos(final DatosSesionFormularioInterno datosSesion,
+			final boolean elemento) {
 
 		MensajeValidacion mensaje = null;
 
 		// - Definicion pagina actual
-		final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
+		final RPaginaFormulario paginaDef = datosSesion.obtenerDefinicionPaginaActual( elemento);
 
 		for (final RComponente campo : UtilsFormularioInterno.devuelveListaCampos(paginaDef)) {
 			final RPropiedadesCampo propsCampo = UtilsFormularioInterno.obtenerPropiedadesCampo(campo);
@@ -173,8 +177,7 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 				// Ejecutamos script validacion
 				final Map<String, String> codigosError = UtilsSTG
 						.convertLiteralesToMap(propsCampo.getScriptValidacion().getLiterales());
-				final VariablesFormulario variablesFormulario = UtilsFormularioInterno
-						.generarVariablesFormulario(datosSesion, campo.getIdentificador());
+				final VariablesFormulario variablesFormulario = datosSesion.generarVariablesFormulario(campo.getIdentificador(), elemento);
 				final RespuestaScript rs = scriptFormulario.executeScriptFormulario(
 						TypeScriptFormulario.SCRIPT_VALIDACION_CAMPO, campo.getIdentificador(),
 						propsCampo.getScriptValidacion().getScript(), variablesFormulario, codigosError,
@@ -621,6 +624,27 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 
 		if (!valorCampoVerificacion.getValor().equals(valores.getChecked())
 				&& !valorCampoVerificacion.getValor().equals(valores.getNoChecked())) {
+			validacion = false;
+		}
+		return validacion;
+	}
+
+	/**
+	 * Validación campo Lista elementos.
+	 *
+	 * @param configuracion
+	 *                          configuracion
+	 * @param vc
+	 *                          valor campo
+	 * @return boolean
+	 */
+	private boolean validacionConfiguracionCampoListaElementos(final ConfiguracionCampo configuracion,
+			final ValorCampo vc) {
+		boolean validacion = true;
+		final ValorCampoListaElementos vcl = (ValorCampoListaElementos) vc;
+		final ConfiguracionCampoListaElementos ccl = (ConfiguracionCampoListaElementos) configuracion;
+		// Verifica que no sobrepase número máximo elementos
+		if (vcl.getValor() != null && vcl.getValor().size() > ccl.getOpciones().getMaxElementos()) {
 			validacion = false;
 		}
 		return validacion;

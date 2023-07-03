@@ -31,6 +31,12 @@ public class ConfiguracionServiceBean implements ConfiguracionService {
 	}
 
 	@Override
+	@PermitAll
+	public Entidad obtenerDatosEntidadByArea(final String idArea) {
+		return configuracionService.obtenerDatosEntidadByArea(idArea);
+	}
+
+	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public ContenidoFichero getContentFicheroByPath(final String fichero) {
 		return configuracionService.getContentFicheroByPath(fichero);

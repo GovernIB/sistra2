@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -15,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.swing.SortOrder;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
@@ -82,6 +84,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 
 	private String idSesionParam;
 
+	private String nifParam;
+
 	private String idTramiteECM;
 
 	private String versionTramiteECM;
@@ -127,6 +131,15 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		if (idSesionParam != null && !idSesionParam.isEmpty()) {
 			filtros.setIdSesionTramitacion(idSesionParam);
 			filtros.setFechaDesde(null);
+			filtros.setSortField("fecha");
+			filtros.setSortOrder("ASCENDING");
+		}
+
+		if (nifParam != null && !nifParam.isEmpty()) {
+			filtros.setNif(nifParam);
+			filtros.setFechaDesde(null);
+			filtros.setSortField("fecha");
+			filtros.setSortOrder("ASCENDING");
 		}
 
 		if (idTramiteECM != null && !idTramiteECM.isEmpty() && versionTramiteECM != null
@@ -170,8 +183,10 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 			layout = "../layout/dialogViewLayout.xhtml";
 			if (esDialog) {
 				setLiteralTituloPantalla(idTramiteECM + " / " + versionTramiteECM + " - " + excepcionECM);
-			} else if (esDialogParams) {
+			} else if (idSesionParam != null) {
 				setLiteralTituloPantalla(idSesionParam);
+			} else if (nifParam != null) {
+				setLiteralTituloPantalla(nifParam);
 			}
 			filtros.setExcepcion(excepcionECM);
 		} else {
@@ -255,6 +270,34 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 */
 	public final String getErrorCopiar() {
 		return errorCopiar;
+	}
+
+	/**
+	 * Abre dialogo sesión
+	 */
+	public void pantallaSesion() {
+		final Map<String, String> params = new HashMap<>();
+
+		String idSesion = datoSeleccionado.getIdSesionTramitacion();
+
+		params.put("idSesionParam", idSesion);
+		params.put("esDialogParams", "true");
+
+		UtilJSF.openDialog(ViewAuditoriaTramites.class, TypeModoAcceso.CONSULTA, params, true, 1500, 703);
+	}
+
+	/**
+	 * Abre dialogo nif
+	 */
+	public void pantallaNif() {
+		final Map<String, String> params = new HashMap<>();
+
+		String nif = datoSeleccionado.getNif();
+
+		params.put("nifParam", nif);
+		params.put("esDialogParams", "true");
+
+		UtilJSF.openDialog(ViewAuditoriaTramites.class, TypeModoAcceso.CONSULTA, params, true, 1500, 703);
 	}
 
 	/**
@@ -646,5 +689,13 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 
 	public void setIdSesionParam(String idSesionParam) {
 		this.idSesionParam = idSesionParam;
+	}
+
+	public String getNifParam() {
+		return nifParam;
+	}
+
+	public void setNifParam(String nifParam) {
+		this.nifParam = nifParam;
 	}
 }

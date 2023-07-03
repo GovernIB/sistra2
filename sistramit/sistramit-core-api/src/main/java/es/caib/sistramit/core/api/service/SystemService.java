@@ -21,8 +21,7 @@ public interface SystemService {
 	/**
 	 * Obtiene configuración.
 	 *
-	 * @param propiedad
-	 *                      Propiedad configuración
+	 * @param propiedad Propiedad configuración
 	 *
 	 * @return configuración
 	 */
@@ -31,10 +30,8 @@ public interface SystemService {
 	/**
 	 * Audita error en front.
 	 *
-	 * @param idSesionTramitacion
-	 *                                id sesión tramitación
-	 * @param error
-	 *                                error frontal
+	 * @param idSesionTramitacion id sesión tramitación
+	 * @param error               error frontal
 	 */
 	void auditarErrorFront(String idSesionTramitacion, ErrorFrontException error);
 
@@ -42,15 +39,11 @@ public interface SystemService {
 	 * Permite recuperar la lista de eventos internos parametrizada por fecha e
 	 * identificador de sesión.
 	 *
-	 * @param fechaDesde
-	 *                                Fecha inicio (opcional)
-	 * @param fechaHasta
-	 *                                Fecha fin (opcional)
-	 * @param idSesionTramitacion
-	 *                                Id sesion tramitacion
-	 * @param ordenAsc
-	 *                                Indica si orden ascendente de fecha evento
-	 *                                (true) o descendente (false).
+	 * @param fechaDesde          Fecha inicio (opcional)
+	 * @param fechaHasta          Fecha fin (opcional)
+	 * @param idSesionTramitacion Id sesion tramitacion
+	 * @param ordenAsc            Indica si orden ascendente de fecha evento (true)
+	 *                            o descendente (false).
 	 *
 	 * @return Lista de eventos asociados a la sesión.
 	 */
@@ -60,8 +53,7 @@ public interface SystemService {
 	/**
 	 * Invalida caché.
 	 *
-	 * @param invalidacion
-	 *                         datos invalidación caché
+	 * @param invalidacion datos invalidación caché
 	 */
 	void invalidar(Invalidacion invalidacion);
 
@@ -75,8 +67,7 @@ public interface SystemService {
 	/**
 	 * Verifica si es maestro
 	 *
-	 * @param instancia
-	 *                      instancia
+	 * @param instancia instancia
 	 * @return si es maestro
 	 */
 	boolean verificarMaestro(String instancia);
@@ -94,12 +85,12 @@ public interface SystemService {
 	/**
 	 * Obtiene identificador entidad.
 	 *
-	 * @param identificador
-	 *                          identificador entidad.
-	 * @param idioma
-	 *                          Idioma
+	 * @param identificador identificador entidad.
+	 * @param idioma        Idioma
 	 * @return info entidad
 	 */
 	Entidad obtenerInfoEntidad(String identificador, String idioma);
+
+	String obtenerUrlLogoEntidad(String identificador, String idioma);
 
 }

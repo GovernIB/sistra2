@@ -44,4 +44,6 @@ public interface SistragesApiComponent {
 
 	RConfiguracionGlobal obtenerConfiguracionGlobal();
 
+	Entidad obtenerDatosEntidadByArea(String idArea);
+
 }

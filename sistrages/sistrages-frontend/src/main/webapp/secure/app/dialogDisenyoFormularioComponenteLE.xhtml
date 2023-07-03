@@ -1,0 +1,21 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.maximoElementosComponenteListaElementos']}" /></h:column>
+   	<h:column>
+ 		   	<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroMaximoElementos}" decimalPlaces="0" minValue="1" maxValue="99" inputStyleClass="w8" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+		   		<p:ajax event="blur" process="@this" />
+		    	<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
+		   	</p:inputNumber>
+   	</h:column>
+
+	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.detalleComponenteListaElementos']}" /></h:column>
+   	<h:column>
+   		<p:commandButton id="btnAbrirDisenyoListaElementos" value="#{msg['dialogDisenyoFormulario.componente.irApantallaDetalleComponente']}" icon="fa fa-edit ui-btn-icon-bottom"  process="@this" oncomplete="document.getElementById('dialogDisenyoFormulario:btnAbrirLE').click();"    />
+   	</h:column>
+</ui:composition>
+

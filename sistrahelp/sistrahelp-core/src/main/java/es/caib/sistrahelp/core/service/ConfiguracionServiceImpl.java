@@ -37,6 +37,12 @@ public class ConfiguracionServiceImpl implements ConfiguracionService {
 
 	@Override
 	@NegocioInterceptor
+	public Entidad obtenerDatosEntidadByArea(final String idArea) {
+		return sistragesApiComponent.obtenerDatosEntidadByArea(idArea);
+	}
+
+	@Override
+	@NegocioInterceptor
 	public IPlugin obtenerPluginGlobal(final TypePluginGlobal tipoPlugin) throws PluginException {
 		return sistragesApiComponent.obtenerPluginGlobal(tipoPlugin);
 	}

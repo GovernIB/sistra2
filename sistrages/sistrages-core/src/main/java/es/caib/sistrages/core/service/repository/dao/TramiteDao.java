@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
@@ -439,5 +440,19 @@ public interface TramiteDao {
 	 * @return
 	 */
 	List<SeccionReutilizable> getSeccionesReutilizableByFormulario(Long idFormulario);
+
+	/**
+	 * Devuelve la lista de diseños de un tramite version.
+	 * @param codigo
+	 * @return
+	 */
+	List<Long> getDisenyosLEByTramite(Long codigo);
+
+	/**
+	 * Devuelve la lista de diseños de un formulario.
+	 * @param codigo
+	 * @return
+	 */
+	List<Long> getDisenyosLEByFormulario(Long codigo);
 
 }

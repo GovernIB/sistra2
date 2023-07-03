@@ -54,6 +54,17 @@
     <h:outputStylesheet library="css" name="style.css" />
   </f:facet>
 
+  		<p:idleMonitor id="idleMonitor" timeout="#{sessionBean.maxInactiveInterval}" onidle="PF('sesionDialog').show()">
+        </p:idleMonitor>
+
+        <p:dialog id="sesionDialog" widgetVar="sesionDialog"
+                   responsive="true" width="400" height="200" showHeader="false" resizable="false" modal="true">
+            <div class="session-cont">
+                <p class="text-justify">#{msg['warning.sesion']} </p>
+                <p:link outcome="/index" value="#{msg['botones.inicio']}" styleClass="btn-session"></p:link>
+            </div>
+  		</p:dialog>
+
   <p:layout fullPage="true" >
     <p:layoutUnit id="header" position="north" size="95" styleClass="noPadding sin-bordes">
       <ui:include src="./header.xhtml"/>

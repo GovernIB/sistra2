@@ -129,6 +129,14 @@ public class ApiInternaRestController {
 
 	}
 
+	@ApiOperation(value = "obtener url logo", notes = "obtener url logo", response = String.class)
+	@RequestMapping(value = "/auditoria/urlLogoEntidad", method = RequestMethod.POST)
+	public String obtenerUrlLogoEntidad(@RequestBody final String codDir3) {
+
+		return systemService.obtenerUrlLogoEntidad(codDir3, "ca");
+
+	}
+
 	@ApiOperation(value = "errores por tramite", notes = "errores por tramite", response = ROUTErroresPorTramiteCM.class)
 	@RequestMapping(value = "/auditoria/erroresTramiteCM", method = RequestMethod.POST)
 	public ROUTErroresPorTramiteCM obtenerErroresPorTramiteCM(@RequestBody final RINEventoAuditoria pFiltros) {
@@ -738,6 +746,27 @@ public class ApiInternaRestController {
 			rClave.setIdProcedimientoCP(pPerdidaClave.getIdProcedimientoCP());
 		}
 		return rClave;
+	}
+
+	/**
+	 * Calcula url recurso publico.
+	 *
+	 * @param urlResources    url recurso
+	 * @param resourcePublico recurso publico (empezando con / )
+	 * @return url
+	 */
+	private static String obtenerUrlPublica(final String urlResources, String resourcePublico) {
+		String url = "";
+		if (resourcePublico != null && !resourcePublico.isEmpty()) {
+			// Eliminamos de la ruta el directorio publico
+			final String directorioPublico = "/publico/";
+			if (resourcePublico.startsWith(directorioPublico)) {
+				resourcePublico = resourcePublico.substring(directorioPublico.length() - 1);
+			}
+			// Concatenamos
+			url = urlResources + resourcePublico;
+		}
+		return url;
 	}
 
 	/**

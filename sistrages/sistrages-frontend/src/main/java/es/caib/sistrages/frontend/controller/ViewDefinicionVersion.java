@@ -37,6 +37,7 @@ import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Rol;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -125,6 +126,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/** Dominios. */
 	private List<Dominio> dominios = new ArrayList<>();
 
+	/** Secciones reutilizables **/
+	private List<SeccionReutilizable> seccionesReutilizables = new ArrayList<>();
+
 	/** Arbol */
 	private TreeNode root;
 
@@ -151,6 +155,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	/** Documento seleccionado. **/
 	private Documento documentoSeleccionado;
+
+	/** Documento seleccionado. **/
+	private SeccionReutilizable seccionesSeleccionado;
 
 	/** Documento akta. **/
 	private Documento documentoAlta;
@@ -529,6 +536,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final List<TramitePaso> pasos = tramiteService.getTramitePasos(id);
 		tramiteVersion.setListaPasos(pasos);
 		dominios = tramiteService.getDominioSimpleByTramiteId(id);
+		seccionesReutilizables = tramiteService.getSeccionesTramite(id);
 
 		preparamosRegistro();
 	}
@@ -839,6 +847,18 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	}
 
+	/**
+	 * Abre un di&aacute;logo para consultar SR.
+	 */
+	public void consultarSR() {
+		if (!verificarFilaSRSeleccionada()) {
+			return;
+		}
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), seccionesSeleccionado.getCodigo().toString());
+		UtilJSF.openDialog(DialogSeccionReutilizable.class, TypeModoAcceso.CONSULTA, params, true, 770, 230);
+	}
+
 	/** Edita documento a través del doble click. **/
 	public void consultarDominioDblClick() {
 		this.consultarDominio();
@@ -849,6 +869,13 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void ayudaDominio() {
 		UtilJSF.openHelp("definicionVersionDominios");
+	}
+
+	/**
+	 * Ayuda dominios empleados.
+	 */
+	public void ayudaSR() {
+		UtilJSF.openHelp("definicionVersionSR");
 	}
 
 	/**
@@ -915,6 +942,20 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private boolean verificarFilaSeleccionada() {
 		boolean filaSeleccionada = true;
 		if (this.dominioSeleccionado == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_NOSELECCIONADOFILA));
+			filaSeleccionada = false;
+		}
+		return filaSeleccionada;
+	}
+
+	/**
+	 * Verifica si hay fila seleccionada.
+	 *
+	 * @return
+	 */
+	private boolean verificarFilaSRSeleccionada() {
+		boolean filaSeleccionada = true;
+		if (this.seccionesSeleccionado == null) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_NOSELECCIONADOFILA));
 			filaSeleccionada = false;
 		}
@@ -1639,6 +1680,15 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		marcarNodoComoSeleccionado(nodoDominios, null, "viewDefinicionVersionDominios", nodoSeleccionado,
 				idNodoSeleccionado, tipoNodoSeleccionado, "VDM");
 		root.getChildren().add(nodoDominios);
+
+		/** Nodo SR. **/
+		final DefaultTreeNode nodoSR = new DefaultTreeNode(
+				new OpcionArbol(UtilJSF.getLiteral("viewDefinicionVersion.indice.srEmpleados"),
+						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionSR")));
+		marcarNodoComoSeleccionado(nodoSR, null, "viewDefinicionVersionSR", nodoSeleccionado,
+				idNodoSeleccionado, tipoNodoSeleccionado, "VDM");
+		root.getChildren().add(nodoSR);
+
 
 		final TreeNode nodePasosTramitacion = new DefaultTreeNode(
 				new OpcionArbol(UtilJSF.getLiteral("viewDefinicionVersion.indice.pasosTramitacion"),
@@ -2441,4 +2491,34 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	public void setData(FormularioTramite data) {
 		this.data = data;
 	}
+
+	/**
+	 * @return the seccionesReutilizables
+	 */
+	public List<SeccionReutilizable> getSeccionesReutilizables() {
+		return seccionesReutilizables;
+	}
+
+	/**
+	 * @param seccionesReutilizables the seccionesReutilizables to set
+	 */
+	public void setSeccionesReutilizables(List<SeccionReutilizable> seccionesReutilizables) {
+		this.seccionesReutilizables = seccionesReutilizables;
+	}
+
+	/**
+	 * @return the seccionesSeleccionado
+	 */
+	public SeccionReutilizable getSeccionesSeleccionado() {
+		return seccionesSeleccionado;
+	}
+
+	/**
+	 * @param seccionesSeleccionado the seccionesSeleccionado to set
+	 */
+	public void setSeccionesSeleccionado(SeccionReutilizable seccionesSeleccionado) {
+		this.seccionesSeleccionado = seccionesSeleccionado;
+	}
+
+
 }

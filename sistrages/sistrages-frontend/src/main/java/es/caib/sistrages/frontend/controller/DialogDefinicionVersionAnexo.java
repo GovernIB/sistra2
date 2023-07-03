@@ -643,6 +643,11 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		this.idiomas = idiomas;
 	}
 
+	public void setCambiosExtensionesPersonalizadas() {
+		data.setExtensiones(data.getExtensiones().toLowerCase().trim());
+		setCambios();
+	}
+
 	public void setCambios() {
 		this.cambios = true;
 

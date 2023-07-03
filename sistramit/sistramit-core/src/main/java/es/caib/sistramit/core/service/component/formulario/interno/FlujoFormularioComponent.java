@@ -7,6 +7,7 @@ import es.caib.sistramit.core.api.model.formulario.Captcha;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
 import es.caib.sistramit.core.api.model.formulario.ResultadoBuscadorDinamico;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
+import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarElemento;
 import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
@@ -40,7 +41,7 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 	 *
 	 * @return Página formulario (html, configuracion y datos)
 	 */
-	PaginaFormulario cargarPaginaActual();
+	PaginaFormulario cargarPaginaFormularioActual();
 
 	/**
 	 * Pasa a página anterior.
@@ -49,7 +50,7 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 	 *                    valores actuales pagina
 	 *
 	 */
-	PaginaFormulario cargarPaginaAnterior(List<ValorCampo> valores);
+	PaginaFormulario cargarPaginaFormularioAnterior(List<ValorCampo> valores);
 
 	/**
 	 * Evalua el cambio de una página de un formulario y calcula el valor los campos
@@ -61,7 +62,7 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 	 *                          Datos actuales de la página en el cliente
 	 * @return Datos de la página resultantes que deben refrescarse en el cliente
 	 */
-	ResultadoEvaluarCambioCampo evaluarCambioCampoPagina(String idCampo, List<ValorCampo> valoresPagina);
+	ResultadoEvaluarCambioCampo evaluarCambioCampoPaginaFormulario(String idCampo, List<ValorCampo> valoresPagina);
 
 	/**
 	 * Guarda los datos de la página.
@@ -76,7 +77,7 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 	 *         llegar al fin del formulario se indicará el ticket de acceso al XML y
 	 *         PDF generados.
 	 */
-	ResultadoGuardarPagina guardarPagina(List<ValorCampo> valoresPagina, final String accionPersonalizada);
+	ResultadoGuardarPagina guardarPaginaFormulario(List<ValorCampo> valoresPagina, final String accionPersonalizada);
 
 	/**
 	 * Guarda los datos de la página y sale del formulario sin acabar.
@@ -86,7 +87,7 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 	 * @return Resultado de guardar la página: se indicará el ticket de acceso al
 	 *         XML.
 	 */
-	ResultadoGuardarPagina guardarSalirPagina(List<ValorCampo> valoresPagina);
+	ResultadoGuardarPagina salirGuardandoPaginaFormulario(List<ValorCampo> valoresPagina);
 
 	/**
 	 * Cancela el rellenado del formulario.
@@ -122,7 +123,24 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 	 *                       valores actuales
 	 * @return valores posibles selector
 	 */
-	ResultadoBuscadorDinamico buscadorDinamico(String idCampo, String textoCampo, List<ValorCampo> valores);
+	ResultadoBuscadorDinamico buscadorDinamicoPaginaFormulario(String idCampo, String textoCampo, List<ValorCampo> valores);
+
+	/**
+	 * Realiza búsqueda sobre selector dinámico (campo detalle de un elemento de una
+	 * LEL)..
+	 *
+	 * @param idCampoListaElementos
+	 *                                  id campo lista elementos
+	 * @param idCampo
+	 *                                  idCampo
+	 * @param textoCampo
+	 *                                  texto a buscar
+	 * @param valores
+	 *                                  valores actuales
+	 * @return valores posibles selector
+	 */
+	ResultadoBuscadorDinamico buscadorDinamicoElemento(String idCampoListaElementos, String idCampo,
+													   String textoCampo, List<ValorCampo> valores);
 
 	/**
 	 * Genera imagen de captcha.
@@ -131,7 +149,7 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 	 *                    idCampo
 	 * @return imagen de captcha
 	 */
-	Captcha generarImagenCaptcha(String idCampo);
+	Captcha generarImagenCaptchaPaginaFormulario(String idCampo);
 
 	/**
 	 * Genera imagen de captcha.
@@ -140,7 +158,7 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 	 *                    idCampo
 	 * @return imagen de captcha
 	 */
-	Captcha generarSonidoCaptcha(String idCampo);
+	Captcha generarSonidoCaptchaPaginaFormulario(String idCampo);
 
 	/**
 	 * Regenerar imagen de captcha.
@@ -148,6 +166,71 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 	 * @param pIdImagen
 	 *                      Imagen
 	 */
-	void regenerarCaptcha(String idCampo);
+	void regenerarCaptchaPaginaFormulario(String idCampo);
+
+	/**
+	 * Añade elemento a componente lista de elementos.
+	 *
+	 * @param datosSesion
+	 *                                  Datos sesion
+	 * @param idCampoListaElementos
+	 *                                  id campo lista elementos
+	 * @param valoresPagina
+	 *                                  valores página
+	 * @return Datos de la página para editar elemento
+	 */
+	PaginaFormulario anyadirElemento(String idCampoListaElementos, List<ValorCampo> valoresPagina);
+
+	/**
+	 * Añade elemento a componente lista de elementos.
+	 *
+	 * @param idCampoListaElementos
+	 *                                  id campo lista elementos
+	 * @param valoresPagina
+	 *                                  valores página
+	 * @param indiceElemento
+	 *                                  índice elemento
+	 * @return Datos de la página para editar elemento
+	 */
+	PaginaFormulario modificarElemento(String idCampoListaElementos, int indiceElemento,
+									   List<ValorCampo> valoresPagina);
+
+	/**
+	 * Consulta elemento a componente lista de elementos.
+	 *
+	 * @param idCampoListaElementos
+	 *                                  id campo lista elementos
+	 * @param valoresPagina
+	 *                                  valores página
+	 * @param indiceElemento
+	 *                                  índice elemento
+	 * @return Datos de la página para editar elemento
+	 */
+	PaginaFormulario consultarElemento(String idCampoListaElementos, int indiceElemento,
+			List<ValorCampo> valoresPagina);
+
+	/**
+	 * Evalua el cambio de una página de un elemento de una lista de elementos y
+	 * calcula el valor los campos según los scripts del formulario.
+	 *
+	 * @param idCampo
+	 *                          Id campo que se esta modificando
+	 * @param valoresPagina
+	 *                          Datos actuales de la página en el cliente
+	 * @return Datos de la página resultantes que deben refrescarse en el cliente
+	 */
+	ResultadoEvaluarCambioCampo evaluarCambioCampoElemento(String idCampoListaElementos, String idCampo,
+			List<ValorCampo> valoresPagina);
+
+	/**
+	 * Guarda elemento en lista de elementos.
+	 *
+	 * @param idCampoListaElementos
+	 *                                  id campo lista elementos
+	 * @param valoresElemento
+	 *                                  valores elemento
+	 * @return Resultado guardar elemento
+	 */
+	ResultadoGuardarElemento guardarElemento(String idCampoListaElementos, List<ValorCampo> valoresElemento);
 
 }

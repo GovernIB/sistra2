@@ -252,7 +252,7 @@ public class SecurityServiceImpl implements SecurityService {
 	public RetornoFormularioExterno obtenerTicketFormularioExterno(final String ticket) {
 		final DatosInicioSesionFormulario dif = formularioDao.obtenerDatosInicioSesionGestorFormularios(ticket, false);
 		final RetornoFormularioExterno res = new RetornoFormularioExterno();
-		res.setTicket(dif.getTicket());
+		res.setTicket(dif.getIdSesionFormulario());
 		res.setIdSesionTramitacion(dif.getIdSesionTramitacion());
 		res.setIdFormulario(dif.getIdFormulario());
 		res.setIdPaso(dif.getIdPaso());

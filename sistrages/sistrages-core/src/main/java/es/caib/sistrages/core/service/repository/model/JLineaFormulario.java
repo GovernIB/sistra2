@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -178,7 +179,7 @@ public class JLineaFormulario implements IModelApi {
 	}
 
 	public static JLineaFormulario clonar(final JLineaFormulario linea, final JPaginaFormulario jpagina,
-			final boolean cambioArea) {
+			final boolean cambioArea, final Map<Long, JFormulario> mapLE) {
 		JLineaFormulario jlineaFormulario = null;
 		if (linea != null) {
 			jlineaFormulario = new JLineaFormulario();
@@ -198,7 +199,7 @@ public class JLineaFormulario implements IModelApi {
 				int ordenElementos = 1;
 				for (final JElementoFormulario elemento : jelementos) {
 					elemento.setOrden(ordenElementos);
-					elementoFormulario.add(JElementoFormulario.clonar(elemento, jlineaFormulario, jpagina, cambioArea));
+					elementoFormulario.add(JElementoFormulario.clonar(elemento, jlineaFormulario, jpagina, cambioArea, mapLE));
 					ordenElementos++;
 				}
 				jlineaFormulario.setElementoFormulario(elementoFormulario);

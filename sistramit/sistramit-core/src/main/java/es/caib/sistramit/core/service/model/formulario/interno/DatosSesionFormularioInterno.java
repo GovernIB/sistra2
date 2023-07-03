@@ -1,7 +1,13 @@
 package es.caib.sistramit.core.service.model.formulario.interno;
 
+import es.caib.sistrages.rest.api.interna.*;
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
+import es.caib.sistramit.core.api.model.formulario.types.TypeEdicion;
+import es.caib.sistramit.core.service.component.formulario.interno.utils.UtilsFormularioInterno;
 import es.caib.sistramit.core.service.model.formulario.DatosInicioSesionFormulario;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
+import es.caib.sistramit.core.service.util.UtilsFlujo;
+import es.caib.sistramit.core.service.util.UtilsSTG;
 
 /**
  * Datos de la sesión del formulario que se mantienen en memoria (datos páginas,
@@ -11,16 +17,6 @@ import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
  *
  */
 public final class DatosSesionFormularioInterno {
-
-	/**
-	 * Id formulario.
-	 */
-	private String idFormulario;
-
-	/**
-	 * Ticket de sesion de formulario.
-	 */
-	private String ticket;
 
 	/**
 	 * Definicion del tramite.
@@ -38,51 +34,19 @@ public final class DatosSesionFormularioInterno {
 	private DatosFormularioInterno datosFormulario;
 
 	/**
-	 * Debug habilitado.
-	 */
-	private boolean debugEnabled;
-
-	/**
 	 * Indica si el formulario se ha finalizado.
 	 */
 	private boolean finalizada;
 
 	/**
-	 * Método de acceso a idFormulario.
-	 * 
-	 * @return idFormulario
+	 * Constructor.
+	 *
+	 * @param dis Datos inicio sesión
+	 * @param defTramite Definición trámite
 	 */
-	public String getIdFormulario() {
-		return idFormulario;
-	}
-
-	/**
-	 * Método para establecer idFormulario.
-	 * 
-	 * @param idFormulario
-	 *            idFormulario a establecer
-	 */
-	public void setIdFormulario(String idFormulario) {
-		this.idFormulario = idFormulario;
-	}
-
-	/**
-	 * Método de acceso a ticket.
-	 * 
-	 * @return ticket
-	 */
-	public String getTicket() {
-		return ticket;
-	}
-
-	/**
-	 * Método para establecer ticket.
-	 * 
-	 * @param ticket
-	 *            ticket a establecer
-	 */
-	public void setTicket(String ticket) {
-		this.ticket = ticket;
+	public DatosSesionFormularioInterno(DatosInicioSesionFormulario dis, DefinicionTramiteSTG defTramite) {
+		this.datosInicioSesion = dis;
+		this.definicionTramite = defTramite;
 	}
 
 	/**
@@ -95,16 +59,6 @@ public final class DatosSesionFormularioInterno {
 	}
 
 	/**
-	 * Método para establecer definicionTramite.
-	 * 
-	 * @param definicionTramite
-	 *            definicionTramite a establecer
-	 */
-	public void setDefinicionTramite(DefinicionTramiteSTG definicionTramite) {
-		this.definicionTramite = definicionTramite;
-	}
-
-	/**
 	 * Método de acceso a datosInicioSesion.
 	 * 
 	 * @return datosInicioSesion
@@ -114,21 +68,12 @@ public final class DatosSesionFormularioInterno {
 	}
 
 	/**
-	 * Método para establecer datosInicioSesion.
-	 * 
-	 * @param datosInicioSesion
-	 *            datosInicioSesion a establecer
-	 */
-	public void setDatosInicioSesion(DatosInicioSesionFormulario datosInicioSesion) {
-		this.datosInicioSesion = datosInicioSesion;
-	}
-
-	/**
 	 * Método de acceso a datosFormulario.
 	 * 
 	 * @return datosFormulario
 	 */
 	public DatosFormularioInterno getDatosFormulario() {
+		// TODO LEL EL ACCESO A DATOS FORMULARIO DEBE HACERSE A TRAVES DE DATOS SESION PARA NO ACCEDER DIRECTO
 		return datosFormulario;
 	}
 
@@ -138,27 +83,20 @@ public final class DatosSesionFormularioInterno {
 	 * @param datosFormulario
 	 *            datosFormulario a establecer
 	 */
-	public void setDatosFormulario(DatosFormularioInterno datosFormulario) {
+	public void inicializarDatosFormulario(DatosFormularioInterno datosFormulario) {
+		if (this.datosFormulario != null) {
+			throw new ErrorConfiguracionException("Los datos del formulario ya están inicializados");
+		}
 		this.datosFormulario = datosFormulario;
 	}
 
 	/**
-	 * Método de acceso a debugEnabled.
+	 * Indica si esta activo debug para sesion formulario.
 	 * 
 	 * @return debugEnabled
 	 */
 	public boolean isDebugEnabled() {
-		return debugEnabled;
-	}
-
-	/**
-	 * Método para establecer debugEnabled.
-	 * 
-	 * @param debugEnabled
-	 *            debugEnabled a establecer
-	 */
-	public void setDebugEnabled(boolean debugEnabled) {
-		this.debugEnabled = debugEnabled;
+		return UtilsSTG.isDebugEnabled(definicionTramite);
 	}
 
 	/**
@@ -172,12 +110,97 @@ public final class DatosSesionFormularioInterno {
 
 	/**
 	 * Método para establecer finalizada.
-	 * 
-	 * @param finalizada
-	 *            finalizada a establecer
+	 *
 	 */
-	public void setFinalizada(boolean finalizada) {
+	public void finalizarSesion() {
 		this.finalizada = finalizada;
 	}
+
+	/**
+	 * Genera variables accesibles desde el script.
+	 *
+	 * @param pIdCampo
+	 *                         Si el script es de un campo se indicara el id campo.
+	 *                         Si es de la pagina sera null.
+	 * @param pElemento
+	 *                         Indica si es elemento
+	 * @return Variables accesibles desde el script.
+	 */
+	public VariablesFormulario generarVariablesFormulario(final String pIdCampo, final boolean pElemento) {
+		final VariablesFormulario res = new VariablesFormulario();
+		res.setIdSesionTramitacion(getDatosInicioSesion().getIdSesionTramitacion());
+		res.setIdioma(getDatosInicioSesion().getIdioma());
+		res.setParametrosApertura(getDatosInicioSesion().getParametros());
+		res.setNivelAutenticacion(getDatosInicioSesion().getInfoAutenticacion().getAutenticacion());
+		res.setMetodoAutenticacion(getDatosInicioSesion().getInfoAutenticacion().getMetodoAutenticacion());
+		res.setUsuario(UtilsFlujo.getDatosUsuario(getDatosInicioSesion().getInfoAutenticacion()));
+		res.setUsuarioAutenticado(getDatosInicioSesion().getInfoAutenticacion());
+		res.setDebugEnabled(isDebugEnabled());
+
+		if (!pElemento) {
+			// Página de formulario
+			res.setEdicion(TypeEdicion.PRINCIPAL);
+			if (pIdCampo != null) {
+				res.setValoresCampo(getDatosFormulario().obtenerValoresAccesiblesCampoPaginaFormulario(pIdCampo));
+			} else {
+				res.setValoresCampo(getDatosFormulario().obtenerValoresAccesiblesPaginaFormularioActual());
+			}
+		} else {
+			// Página de elemento
+			final String idCampoListaElementos = getDatosFormulario().obtenerEdicionElementoIdCampoListaElementos();
+			// Edición: nuevo / detalle
+			res.setEdicion(getDatosFormulario().isEdicionElementoElementoNuevo()
+					? TypeEdicion.ELEMENTO_NUEVO
+					: TypeEdicion.ELEMENTO_MODIFICACION);
+			// Campos accesibles elemento
+			if (pIdCampo != null) {
+				res.setValoresCampo(getDatosFormulario().obtenerEdicionElementoValoresAccesiblesCampo(pIdCampo));
+			} else {
+				res.setValoresCampo(getDatosFormulario().obtenerEdicionElementoValoresAccesiblesPagina());
+			}
+		}
+
+		return res;
+	}
+
+	/**
+	 * Obtener definición formulario.
+	 *
+	 * @return definición formulario
+	 */
+	public RFormularioInterno obtenerDefinicionFormularioInterno() {
+		final RFormularioTramite defFormulario = UtilsSTG.devuelveDefinicionFormulario(
+				getDatosInicioSesion().getIdPaso(), getDatosInicioSesion().getIdFormulario(),
+				getDefinicionTramite());
+		return defFormulario.getFormularioInterno();
+	}
+
+	/**
+	 * Obtiene definición página actual.
+	 *
+	 * @param elemento
+	 *                         Indica si es elemento
+	 * @return definición página
+	 */
+	public RPaginaFormulario obtenerDefinicionPaginaActual(final boolean elemento) {
+
+		RPaginaFormulario paginaDef;
+
+		// Obtenemos definición formulario y pagina
+		final RFormularioInterno defFormularioInterno = obtenerDefinicionFormularioInterno();
+		final PaginaData paginaActual = getDatosFormulario().obtenerPaginaDataActual(false);
+
+		// Obtenemos definicion pagina principal o detalle elemento
+		if (!elemento) {
+			paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaFormulario(defFormularioInterno, paginaActual.getIdentificador());
+		} else {
+			// Pagina elemento
+			paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaElemento(defFormularioInterno, paginaActual.getIdentificador(),
+					getDatosFormulario().obtenerEdicionElementoIdCampoListaElementos());
+		}
+
+		return paginaDef;
+	}
+
 
 }

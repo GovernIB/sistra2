@@ -26,6 +26,9 @@ public class Alerta extends ModelApi {
 	/** Nombre. **/
 	private String nombre;
 
+	/** Dir3Ent. **/
+	private String idEntidad;
+
 	/** Emails. */
 	private List<String> email;
 
@@ -41,6 +44,14 @@ public class Alerta extends ModelApi {
 	/** Eliminar. **/
 	private boolean eliminar;
 
+	/** Tipo. **/
+	private String tipo;
+
+	/** Tramite. **/
+	private String tramite;
+
+	/** Tramite. **/
+	private Integer version;
 	/**
 	 * Crea una nueva instancia de Dominio.
 	 */
@@ -158,6 +169,38 @@ public class Alerta extends ModelApi {
 	 */
 	public final void setEliminar(boolean eliminar) {
 		this.eliminar = eliminar;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public String getTramite() {
+		return tramite;
+	}
+
+	public void setTramite(String tramite) {
+		this.tramite = tramite;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	public String getIdEntidad() {
+		return idEntidad;
+	}
+
+	public void setIdEntidad(String idEntidad) {
+		this.idEntidad = idEntidad;
 	}
 
 }

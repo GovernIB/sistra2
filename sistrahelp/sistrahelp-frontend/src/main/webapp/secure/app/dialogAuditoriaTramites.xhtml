@@ -91,6 +91,23 @@
 		          aux.value = '';
 		        }
 
+				 var elEnDataT = document.getElementsByClassName('resaltar')[0];
+		        if(elEnDataT!=null &amp;&amp; elEnDataT.id=='dialogAuditoriaTramites:idSesionTramitacion'){
+		          document.getElementById("dialogAuditoriaTramites:sesion").classList.remove("d-none");
+		          document.getElementById("dialogAuditoriaTramites:sesion").classList.add("d-block");
+		        }else{
+		          document.getElementById("dialogAuditoriaTramites:sesion").classList.remove("d-block");
+		          document.getElementById("dialogAuditoriaTramites:sesion").classList.add("d-none")
+		        }
+
+		         if(elEnDataT!=null &amp;&amp; elEnDataT.id=='dialogAuditoriaTramites:nifUsu' &amp;&amp; elEnDataT.childNodes.length>0){
+		          document.getElementById("dialogAuditoriaTramites:nif").classList.remove("d-none");
+		          document.getElementById("dialogAuditoriaTramites:nif").classList.add("d-block");
+		        }else{
+		          document.getElementById("dialogAuditoriaTramites:nif").classList.remove("d-block");
+		          document.getElementById("dialogAuditoriaTramites:nif").classList.add("d-none")
+		        }
+
 		        if(aux.value!='' ){
             var multiple = false;
             var hijos = el.children;
@@ -139,6 +156,8 @@
 					    <p:contextMenu>
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogAuditoriaTramites:auxCopiar" update="growlDialog" />
 				<p:menuitem value="#{msg['botones.stg']}" icon="fa fa-paper-plane" styleClass="w90" actionListener="#{dialogAuditoriaTramites.sistrages()}" process="@this" rendered="{dialogAuditoriaTramites.dato.getIdTramite() != null}" style="margin-left:4px;width:200px;" />
+				<p:menuitem id="sesion" icon="fa fa-window-maximize" process="@this" update="growlDialog" actionListener="#{dialogAuditoriaTramites.pantallaSesion}" value="#{msg['viewConsultaIncidencias.eventos.sesion']}"/>
+       			<p:menuitem id="nif" icon="fa fa-window-maximize" process="@this" update="growlDialog" actionListener="#{dialogAuditoriaTramites.pantallaNif}" value="#{msg['viewConsultaIncidencias.eventos.nif']}" />
 			</p:contextMenu>
 
 		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">

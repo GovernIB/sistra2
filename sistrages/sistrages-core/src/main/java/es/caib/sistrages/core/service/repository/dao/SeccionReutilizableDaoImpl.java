@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,7 +25,6 @@ import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
-import es.caib.sistrages.core.api.util.UtilScripts;
 import es.caib.sistrages.core.service.component.ValidadorComponent;
 import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JElementoFormulario;
@@ -544,7 +541,6 @@ public class SeccionReutilizableDaoImpl implements SeccionReutilizableDao {
 				}
 			}
 		}
-
 		List<ScriptSeccionReutilizable> scripts = getScriptsByIdentificadorSeccionReutilizable(identificadorSeccion);
 		for (ScriptSeccionReutilizable script : scripts) {
 			List<Dominio> dominiosScript = getDominiosByScript(script.getScript().getContenido());

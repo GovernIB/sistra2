@@ -256,8 +256,8 @@
 					        	<p:spacer width="8" height="1"/>
 				        	</p:panelGrid>
 				        	<p:panelGrid columns="1">
-				        		<p:inputText id="personalizadas_input" size="15" value="#{dialogDefinicionVersionAnexo.data.extensiones}" onblur="this.value = this.value.trim();" readonly="#{(dialogDefinicionVersionAnexo.data.debeAnexarFirmado and !dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente)  or (dialogDefinicionVersionAnexo.data.extensionSeleccion eq TypeExtension.TODAS)}">
-				        			<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this" />
+				        		<p:inputText id="personalizadas_input" size="15" value="#{dialogDefinicionVersionAnexo.data.extensiones}" readonly="#{(dialogDefinicionVersionAnexo.data.debeAnexarFirmado and !dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente)  or (dialogDefinicionVersionAnexo.data.extensionSeleccion eq TypeExtension.TODAS)}">
+				        			<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambiosExtensionesPersonalizadas}" process="@this" update="@this" />
 				        		</p:inputText>
 				        		<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.formato']}" escape="true"/>
 				        	</p:panelGrid>

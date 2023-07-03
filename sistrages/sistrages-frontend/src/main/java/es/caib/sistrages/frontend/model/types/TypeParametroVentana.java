@@ -171,6 +171,10 @@ public enum TypeParametroVentana {
 	 */
 	PARAMETRO_DISENYO_SECCION,
 	/**
+	 * Indica si el parámetro que se pasa es de tipo lista elementos
+	 */
+	PARAMETRO_DISENYO_LISTA_ELEMENTOS,
+	/**
 	 * Indica si el parámetro que se pasa es de tipo trámite
 	 */
 	PARAMETRO_DISENYO_TRAMITE,

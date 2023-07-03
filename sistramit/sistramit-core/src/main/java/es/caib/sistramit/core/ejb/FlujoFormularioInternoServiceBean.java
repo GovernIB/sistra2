@@ -15,6 +15,7 @@ import es.caib.sistramit.core.api.model.formulario.Captcha;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
 import es.caib.sistramit.core.api.model.formulario.ResultadoBuscadorDinamico;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
+import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarElemento;
 import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
@@ -101,6 +102,40 @@ public class FlujoFormularioInternoServiceBean implements FlujoFormularioInterno
 	@Override
 	public void regenerarCaptcha(final String idSesionFormulario, final String idCampo) {
 		flujoFormularioInternoService.regenerarCaptcha(idSesionFormulario, idCampo);
+	}
+
+	@Override
+	public PaginaFormulario anyadirElemento(final String idSesionFormulario, final String idCampoListaElementos,
+			final List<ValorCampo> valoresPagina) {
+		return flujoFormularioInternoService.anyadirElemento(idSesionFormulario, idCampoListaElementos, valoresPagina);
+	}
+
+	@Override
+	public PaginaFormulario modificarElemento(final String idSesionFormulario, final String idCampoListaElementos,
+			final int indiceElemento, final List<ValorCampo> valoresPagina) {
+		return flujoFormularioInternoService.modificarElemento(idSesionFormulario, idCampoListaElementos,
+				indiceElemento, valoresPagina);
+	}
+
+	@Override
+	public PaginaFormulario consultarElemento(final String idSesionFormulario, final String idCampoListaElementos,
+			final int indiceElemento, final List<ValorCampo> valoresPagina) {
+		return flujoFormularioInternoService.consultarElemento(idSesionFormulario, idCampoListaElementos,
+				indiceElemento, valoresPagina);
+	}
+
+	@Override
+	public ResultadoEvaluarCambioCampo evaluarCambioCampoElemento(final String idSesionFormulario,
+			final String idCampoListaElementos, final String idCampo, final List<ValorCampo> valoresPagina) {
+		return flujoFormularioInternoService.evaluarCambioCampoElemento(idSesionFormulario, idCampoListaElementos,
+				idCampo, valoresPagina);
+	}
+
+	@Override
+	public ResultadoGuardarElemento guardarElemento(final String idSesionFormulario, final String idCampoListaElementos,
+			final List<ValorCampo> valoresElemento) {
+		return flujoFormularioInternoService.guardarElemento(idSesionFormulario, idCampoListaElementos,
+				valoresElemento);
 	}
 
 }

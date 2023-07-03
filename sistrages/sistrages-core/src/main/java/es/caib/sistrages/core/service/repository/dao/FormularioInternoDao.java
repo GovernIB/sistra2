@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
+import es.caib.sistrages.core.api.model.ComponenteFormularioListaElementos;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
@@ -77,6 +78,13 @@ public interface FormularioInternoDao {
 	Long addFormulario(FormularioTramite pFormTra);
 
 	/**
+	 * Crea un formulario con una pagina por defecto.
+	 * @param componente
+	 * @return
+	 */
+	Long addFormulario(ComponenteFormularioListaElementos componente);
+
+	/**
 	 * Crea una página pudiendo elegir si se pone página por defecto o no.
 	 *
 	 * @param pFormTra
@@ -103,7 +111,7 @@ public interface FormularioInternoDao {
 	 * @return El elemento añadido
 	 */
 	ObjetoFormulario addComponente(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina, final Long pIdLinea,
-			final Integer pOrden, final String pPosicion, final Object objeto, boolean isTipoSeccion, String identificadorSeccion);
+			final Integer pOrden, final String pPosicion, final Object objeto, boolean isTipoSeccion, String identificadorSeccion, Long idFormulario);
 
 	/**
 	 * Actualiza un componente de formulario.
@@ -259,5 +267,7 @@ public interface FormularioInternoDao {
 	 * @return
 	 */
 	Long importarFormularioSeccion(FilaImportarSeccion filaSeccion);
+
+
 
 }

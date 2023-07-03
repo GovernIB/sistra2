@@ -10,10 +10,15 @@ import org.apache.commons.lang3.StringUtils;
 import es.caib.sistra2.commons.utils.NifUtils;
 import es.caib.sistra2.commons.utils.XssFilter;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
+import es.caib.sistramit.core.api.model.formulario.ValorCampoListaElementos;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
+import es.caib.sistramit.core.api.model.formulario.ValorElemento;
 import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.service.component.script.plugins.ClzValorCampoCompuesto;
+import es.caib.sistramit.core.service.component.script.plugins.ClzValorCampoListaElementos;
+import es.caib.sistramit.core.service.component.script.plugins.ClzValorElemento;
 import es.caib.sistramit.core.service.model.script.ClzValorCampoCompuestoInt;
+import es.caib.sistramit.core.service.model.script.ClzValorCampoListaElementosInt;
 import es.caib.sistramit.core.service.model.script.ClzValorCampoMultipleInt;
 
 /**
@@ -80,18 +85,15 @@ public final class ScriptUtils {
 		}
 
 		if (StringUtils.isEmpty(pNombre) || !XssFilter.filtroXss(pNombre)) {
-			throw new ScriptException(
-					"La dada proporcionada com nom persona està buit o conté caràcters no permesos");
+			throw new ScriptException("La dada proporcionada com nom persona està buit o conté caràcters no permesos");
 		}
 
 		if (!StringUtils.isBlank(pApellido1) && !XssFilter.filtroXss(pApellido1)) {
-			throw new ScriptException(
-					"La dada proporcionada com cognom 1 persona conté caràcters no permesos");
+			throw new ScriptException("La dada proporcionada com cognom 1 persona conté caràcters no permesos");
 		}
 
 		if (!StringUtils.isBlank(pApellido2) && !XssFilter.filtroXss(pApellido2)) {
-			throw new ScriptException(
-					"La dada proporcionada com cognom 2 persona conté caràcters no permesos");
+			throw new ScriptException("La dada proporcionada com cognom 2 persona conté caràcters no permesos");
 		}
 	}
 
@@ -158,6 +160,30 @@ public final class ScriptUtils {
 			textoMensajeError = "";
 		}
 		return textoMensajeError;
+	}
+
+	/**
+	 * Crea valor lista elementos.
+	 * 
+	 * @param campo
+	 *                    campo
+	 * @param valores
+	 *                    elementos
+	 * @return valor lista elementos.
+	 */
+	public static ValorCampoListaElementos crearValorListaElementos(final String campo,
+			final ClzValorCampoListaElementosInt valores) {
+		final ValorCampoListaElementos vle = new ValorCampoListaElementos();
+		vle.setId(campo);
+		if (valores != null) {
+			for (int i = 0; i < valores.getNumeroElementos(); i++) {
+				final ClzValorElemento ve = ((ClzValorCampoListaElementos) valores).getElemento(i);
+				final ValorElemento elemento = new ValorElemento();
+				elemento.setElemento(ve.getValores());
+				vle.addElemento(elemento);
+			}
+		}
+		return vle;
 	}
 
 }

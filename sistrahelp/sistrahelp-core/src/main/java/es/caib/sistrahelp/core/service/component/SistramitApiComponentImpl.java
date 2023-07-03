@@ -465,6 +465,31 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 	}
 
 	@Override
+	public String urlLogoEntidad(String codDir3) {
+
+		final RestTemplate restTemplate = new RestTemplate();
+		String resultado = "";
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+		final HttpEntity<String> request = new HttpEntity<>(codDir3, headers);
+		ResponseEntity<String> response = null;
+		try {
+			response = restTemplate.postForEntity(getUrl() + "/auditoria/urlLogoEntidad", request, String.class);
+		} catch (Exception e) {
+
+		}
+
+		if (response != null && response.getStatusCodeValue() == 200) {
+			resultado = response.getBody();
+		}
+
+		return resultado;
+	}
+
+	@Override
 	public ResultadoErroresPorTramiteCM obtenerErroresPorTramiteCM(final FiltroAuditoriaTramitacion pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion) {
 		ResultadoErroresPorTramiteCM resultado = null;

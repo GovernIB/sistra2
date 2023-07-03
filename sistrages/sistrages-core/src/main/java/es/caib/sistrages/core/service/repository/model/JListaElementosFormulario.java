@@ -1,5 +1,8 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import es.caib.sistrages.core.api.model.ComponenteFormularioListaElementos;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
  * JListaElementosFormulario
@@ -28,9 +34,17 @@ public class JListaElementosFormulario implements IModelApi {
 	@JoinColumn(name = "LEL_CODIGO")
 	private JElementoFormulario elementoFormulario;
 
+	@OneToOne(fetch = FetchType.LAZY)
+	@MapsId
+	@JoinColumn(name = "LEL_CODIGO")
+	private JCampoFormulario campoFormulario;
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "LEL_CODPAF", nullable = false)
-	private JPaginaFormulario paginaFormulario;
+	@JoinColumn(name = "LEL_CODFOR", nullable = false)
+	private JFormulario  formularioAsociado;
+
+	@Column(name = "LEL_MAXELE", nullable = false, precision = 3, scale = 0)
+	private int numeroMaximoElementos;
 
 	/** Constructor. **/
 	public JListaElementosFormulario() {
@@ -53,34 +67,91 @@ public class JListaElementosFormulario implements IModelApi {
 		this.elementoFormulario = elementoFormulario;
 	}
 
-	public JPaginaFormulario getPaginaFormulario() {
-		return this.paginaFormulario;
+	/**
+	 * @return the formularioAsociado
+	 */
+	public JFormulario getFormularioAsociado() {
+		return formularioAsociado;
 	}
 
-	public void setPaginaFormulario(final JPaginaFormulario paginaFormulario) {
-		this.paginaFormulario = paginaFormulario;
+	/**
+	 * @return the campoFormulario
+	 */
+	public JCampoFormulario getCampoFormulario() {
+		return campoFormulario;
+	}
+
+	/**
+	 * @param campoFormulario the campoFormulario to set
+	 */
+	public void setCampoFormulario(JCampoFormulario campoFormulario) {
+		this.campoFormulario = campoFormulario;
+	}
+
+	/**
+	 * @param formularioAsociado the formularioAsociado to set
+	 */
+	public void setFormularioAsociado(JFormulario formularioAsociado) {
+		this.formularioAsociado = formularioAsociado;
+	}
+
+
+
+	/**
+	 * @return the numeroMaximoElementos
+	 */
+	public int getNumeroMaximoElementos() {
+		return numeroMaximoElementos;
+	}
+
+	/**
+	 * @param numeroMaximoElementos the numeroMaximoElementos to set
+	 */
+	public void setNumeroMaximoElementos(int numeroMaximoElementos) {
+		this.numeroMaximoElementos = numeroMaximoElementos;
 	}
 
 	public static JListaElementosFormulario clonar(final JListaElementosFormulario listaElementosFormulario,
-			final JElementoFormulario jelemento, final JPaginaFormulario jpagina) {
+			final JLineaFormulario jlinea, JPaginaFormulario jpagina, final JElementoFormulario jelem, boolean cambioArea, final Map<Long, JFormulario> mapLE) {
 		JListaElementosFormulario jlista = null;
 		if (listaElementosFormulario != null) {
 			jlista = new JListaElementosFormulario();
-			jlista.setElementoFormulario(jelemento);
-			jlista.setPaginaFormulario(jpagina);
+			jlista.setElementoFormulario(jelem);
+			if (mapLE != null && listaElementosFormulario.getFormularioAsociado() != null && mapLE.get(listaElementosFormulario.getFormularioAsociado().getCodigo()) != null) {
+				jlista.setFormularioAsociado(mapLE.get(listaElementosFormulario.getFormularioAsociado().getCodigo()) );
+			}
+			jlista.setNumeroMaximoElementos(listaElementosFormulario.getNumeroMaximoElementos());
 		}
 		return jlista;
 	}
 
-	public static JListaElementosFormulario clonar(final JListaElementosFormulario listaElementos,
-			final JPaginaFormulario jpagina) {
-		JListaElementosFormulario jlista = null;
-		if (listaElementos != null) {
-			jlista = new JListaElementosFormulario();
-			jlista.setElementoFormulario(listaElementos.getElementoFormulario());
-			jlista.setPaginaFormulario(jpagina);
+	public static JListaElementosFormulario createDefault(final int pOrden, final JLineaFormulario pJLinea, final boolean isTipoSeccion, final String identificadorSeccion) {
+		final JListaElementosFormulario jModel = new JListaElementosFormulario();
+		jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.LISTA_ELEMENTOS, pOrden, pJLinea, isTipoSeccion, identificadorSeccion));
+		jModel.setNumeroMaximoElementos(10);
+		return jModel;
+	}
+
+
+	public ComponenteFormularioListaElementos toModel() {
+		ComponenteFormularioListaElementos campoLE = null;
+
+		if (elementoFormulario != null) {
+			if (elementoFormulario.getCampoFormulario() != null) {
+				campoLE = (ComponenteFormularioListaElementos) elementoFormulario.getCampoFormulario().toModel(ComponenteFormularioListaElementos.class);
+			} else {
+				campoLE = (ComponenteFormularioListaElementos) elementoFormulario.getListaElementosFormulario().getCampoFormulario().toModel(ComponenteFormularioListaElementos.class);
+			}
+			if (campoLE != null) {
+				campoLE.setTexto(campoLE.getTexto());
+			}
+			campoLE.setNumeroMaximoElementos(numeroMaximoElementos);
+			if (elementoFormulario.getListaElementosFormulario().getFormularioAsociado() != null) {
+				campoLE.setIdFormulario(elementoFormulario.getListaElementosFormulario().getFormularioAsociado().getCodigo());
+			}
 		}
-		return jlista;
+
+		return campoLE;
 	}
 
 }

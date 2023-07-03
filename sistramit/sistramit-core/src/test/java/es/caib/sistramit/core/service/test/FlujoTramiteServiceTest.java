@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.formulario.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.BeforeClass;
@@ -44,16 +45,6 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeFormulario;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
-import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
-import es.caib.sistramit.core.api.model.formulario.ResultadoBuscadorDinamico;
-import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
-import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
-import es.caib.sistramit.core.api.model.formulario.ValorCampo;
-import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
-import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
-import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
-import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
-import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
@@ -254,8 +245,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 *
 	 * @param idSesionTramitacion
 	 *                                id sesión
-	 * @param presentacion
-	 *                                presentacion
+	 * @param registro
+	 *                                si se registra
 	 * @throws UnsupportedEncodingException
 	 */
 	private void flujoTramitacion_rellenar(final String idSesionTramitacion, final boolean registro)
@@ -298,6 +289,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		byte[] datosFichero;
 		XmlFormulario xmlForm;
 		PaginaFormulario paginaData;
+		PaginaFormulario paginaDataElemento;
 		ResultadoGuardarPagina resGuardar;
 		List<ValorCampo> valoresIniciales;
 		List<ValorCampo> valoresActuales;
@@ -387,7 +379,50 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 			vcActual.reemplazaValor(vcModif);
 		}
 
-		// -- Guardar pagina 1
+		// -- Nuevo elemento formulario
+		List<ValorCampo> valoresElemento;
+		paginaDataElemento = flujoFormularioInternoService.anyadirElemento(idSesionFormulario, "LEL_1",
+				valoresActuales);
+		//  * Evaluar campo: modificamos campo 1 y se debe alimentar el campo 2
+		ValorCampoSimple valorCampo1LEL = new ValorCampoSimple("LE1_TXT1", "XXX");
+		valoresElemento = new ArrayList<>();
+		valoresElemento.add(valorCampo1LEL);
+		ResultadoEvaluarCambioCampo ree = flujoFormularioInternoService.evaluarCambioCampoElemento(idSesionFormulario, "LEL_1", "LE1_TXT1", valoresElemento);
+		ValorCampo valorCampo2LEL = (ree.getValores() != null && ree.getValores().size() == 1) ? ree.getValores().get(0) : null;
+		Assert.isTrue(valorCampo2LEL != null && valorCampo1LEL.esValorIgual (valorCampo2LEL),
+				"No se ha calculado el valor de LE1_TXT2 al cambiar LE1_TXT1");
+		//  * Guardamos elemento
+		valoresElemento = new ArrayList<>();
+		valoresElemento.add(valorCampo1LEL);
+		valoresElemento.add(valorCampo2LEL);
+		ResultadoGuardarElemento rge = flujoFormularioInternoService.guardarElemento(idSesionFormulario, "LEL_1", valoresElemento);
+		// * Verificamos que la lista de valores es igual
+		esIgualListaValores(valoresElemento, rge.getValor());
+		// * Añadimos elemento LEL a valores actuales
+		addElementoLEL("LEL_1", valoresActuales,  valoresElemento);
+
+		// -- Editar elemento formulario
+		//	 * Cargamos primer elemento
+		paginaDataElemento = flujoFormularioInternoService.modificarElemento(idSesionFormulario, "LEL_1", 0, valoresActuales);
+		//   * Verificamos que coinciden valores
+		esIgualListaValores(valoresElemento, paginaDataElemento.getValores());
+		//   * Modificamos campo 2
+		valoresElemento.get(1).reemplazaValor(new ValorCampoSimple("LE1_TXT2","YYY"));
+		//  * Guardamos elemento
+		rge = flujoFormularioInternoService.guardarElemento(idSesionFormulario, "LEL_1", valoresElemento);
+		// * Verificamos que la lista de valores es igual
+		esIgualListaValores(valoresElemento, rge.getValor());
+		// * Reemplazamos elemento LEL a valores actuales
+		replaceElementoLEL("LEL_1", 0, valoresActuales,  valoresElemento);
+
+		// -- Consultar elemento formulario
+		//	 * Cargamos primer elemento
+		paginaDataElemento = flujoFormularioInternoService.consultarElemento(idSesionFormulario, "LEL_1", 0, valoresActuales);
+		//   * Verificamos que coinciden valores
+		esIgualListaValores(valoresElemento, paginaDataElemento.getValores());
+
+
+		// -- Guardar pagina 1 (modificamos algunos valores)
 		// * Metemos valores campos textos
 		((ValorCampoSimple) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_NORMAL"))
 				.setValor("Valor modificado");
@@ -407,6 +442,9 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		((ValorCampoIndexado) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "SEL_UNICA")).setValor(vci3);
 		// * Metemos valor campo validación
 		((ValorCampoSimple) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_VAL")).setValor("PRUEBA");
+		// * Lista Elementos
+		// Ya se metido en valores actuales
+
 
 		// * Guardar pagina
 		final List<ValorCampo> valoresPagina1 = duplicarListaValores(valoresActuales);
@@ -492,6 +530,26 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		datosFichero = (byte[]) resPaso.getParametroRetorno("datosFichero");
 		Assert.isTrue(nombreFichero.endsWith(".pdf"), "El fichero no es pdf");
 		Assert.isTrue(datosFichero.length > 0, "El fichero no tiene contenido");
+	}
+
+	private static void addElementoLEL(String idListaElementos, List<ValorCampo> valoresPagina, List<ValorCampo> valoresElemento) {
+		final ValorCampoListaElementos vcLEL = ((ValorCampoListaElementos) UtilsFormularioInterno
+				.buscarValorCampo(valoresPagina, idListaElementos));
+		ValorElemento ve;
+		ve = new ValorElemento();
+		ve.setElemento(valoresElemento);
+		vcLEL.addElemento(ve);
+	}
+
+	private static void replaceElementoLEL(String idListaElementos, int indice, List<ValorCampo> valoresPagina, List<ValorCampo> valoresElemento) {
+		final ValorCampoListaElementos vcLEL = ((ValorCampoListaElementos) UtilsFormularioInterno
+				.buscarValorCampo(valoresPagina, idListaElementos));
+
+		ValorElemento ve;
+		ve = new ValorElemento();
+		ve.setElemento(valoresElemento);
+
+		vcLEL.getValor().set(indice, ve);
 	}
 
 	protected void flujoTramitacion_rellenar_formInterno_simple(final String idSesionTramitacion)

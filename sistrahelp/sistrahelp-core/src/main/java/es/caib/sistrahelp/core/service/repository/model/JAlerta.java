@@ -53,6 +53,18 @@ public class JAlerta implements IModelApi {
 	@Column(name = "AVI_ELIMINAR")
 	private String eliminar;
 
+	@Column(name = "AVI_TIPO")
+	private String tipo;
+
+	@Column(name = "AVI_TRAMITE")
+	private String tramite;
+
+	@Column(name = "AVI_VERSION")
+	private Integer version;
+
+	@Column(name = "AVI_ENTIDAD")
+	private String idEntidad;
+
 	public JAlerta() {
 		super();
 	}
@@ -169,6 +181,38 @@ public class JAlerta implements IModelApi {
 		this.eliminar = eliminar;
 	}
 
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public String getTramite() {
+		return tramite;
+	}
+
+	public void setTramite(String tramite) {
+		this.tramite = tramite;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	public String getIdEntidad() {
+		return idEntidad;
+	}
+
+	public void setIdEntidad(String idEntidad) {
+		this.idEntidad = idEntidad;
+	}
+
 	public Alerta toModel() {
 		final Alerta alerta = new Alerta();
 		alerta.setCodigo(codigo);
@@ -183,6 +227,10 @@ public class JAlerta implements IModelApi {
 			alerta.setEventos(null);
 		}
 		alerta.setNombre(nombre);
+		alerta.setTipo(tipo);
+		alerta.setTramite(tramite);
+		alerta.setVersion(version);
+		alerta.setIdEntidad(idEntidad);
 		if (email != null) {
 			String[] aEm = email.split(";");
 			List<String> lEm = new ArrayList<String>();
@@ -230,6 +278,10 @@ public class JAlerta implements IModelApi {
 			}
 			jModel.setEventos(aux);
 			jModel.setNombre(model.getNombre());
+			jModel.setTipo(model.getTipo());
+			jModel.setTramite(model.getTramite());
+			jModel.setVersion(model.getVersion());
+			jModel.setIdEntidad(model.getIdEntidad());
 			aux = "";
 			if (model.getEmail() != null) {
 

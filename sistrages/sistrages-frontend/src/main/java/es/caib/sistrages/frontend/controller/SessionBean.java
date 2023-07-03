@@ -11,6 +11,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.menu.DefaultMenuItem;
@@ -131,6 +132,7 @@ public class SessionBean {
 	private Boolean growlSticky = false;
 	private Integer growlLife = 4000;
 
+	private Integer maxInactiveInterval = ((HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true)).getMaxInactiveInterval()*1000;
 	/** Datos que obtienen el ancho y alto de la pantalla. **/
 	private Integer height;
 	private Integer width;
@@ -800,5 +802,19 @@ public class SessionBean {
 		if (tipo != null) {
 			UtilJSF.loggearErrorFront("Error en el front. " + tipo + " " + mensaje, exception);
 		}
+	}
+
+	/**
+	 * @return the maxInactiveInterval
+	 */
+	public Integer getMaxInactiveInterval() {
+		return maxInactiveInterval;
+	}
+
+	/**
+	 * @param maxInactiveInterval the maxInactiveInterval to set
+	 */
+	public void setMaxInactiveInterval(Integer maxInactiveInterval) {
+		this.maxInactiveInterval = maxInactiveInterval;
 	}
 }

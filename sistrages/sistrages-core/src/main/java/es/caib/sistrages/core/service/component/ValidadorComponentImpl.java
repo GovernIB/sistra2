@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import es.caib.sistrages.core.api.exception.VariableAreaNoExisteException;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
@@ -66,7 +65,6 @@ import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
 import es.caib.sistrages.core.api.model.types.TypeTamanyo;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
-import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.core.api.util.UtilScripts;
 import es.caib.sistrages.core.service.component.literales.Literales;
@@ -79,6 +77,7 @@ import es.caib.sistrages.core.service.repository.dao.SeccionReutilizableDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
 import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
 import es.caib.sistrages.core.service.repository.dao.VariableAreaDao;
+
 
 @Component("validadorComponent")
 public class ValidadorComponentImpl implements ValidadorComponent {
@@ -478,6 +477,17 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 			}
 		}
 
+		List<Long> idFormulariosLE = tramiteDao.getDisenyosLEByFormulario(formulario.getCodigo());
+		if (idFormulariosLE != null && !idFormulariosLE.isEmpty()) {
+			for (Long idFormulario : idFormulariosLE) {
+				final DisenyoFormulario disenyoFormulario = formularioInternoDao.getFormularioCompletoById(idFormulario,
+						false);
+				comprobarLE(disenyoFormulario, pIdioma, listaErrores);
+				disenyos.add(disenyoFormulario);
+			}
+		}
+
+
 		for (ScriptSeccionReutilizable script : scripts) {
 			comprobarScript(script.getScript(), "tramitePasoRellenar.disenyoFormulario.scriptValidacion",
 					new String[] {
@@ -770,7 +780,6 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 				}
 			}
 		}
-
 	}
 
 	/**
@@ -1778,6 +1787,15 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 				disenyos.add(formularioInternoDao.getFormularioCompletoById(seccion.getIdFormularioAsociado(), true));
 			}
 		}
+		List<Long> idFormulariosLE = tramiteDao.getDisenyosLEByTramite(pTramiteVersion.getCodigo());
+		if (idFormulariosLE != null && !idFormulariosLE.isEmpty()) {
+			for (Long idFormulario : idFormulariosLE) {
+				final DisenyoFormulario disenyoFormulario = formularioInternoDao.getFormularioCompletoById(idFormulario,
+						false);
+				comprobarLE(disenyoFormulario, pIdioma, listaErrores);
+				disenyos.add(disenyoFormulario);
+			}
+		}
 
 		for (DisenyoFormulario disenyo : disenyos) {
 			if (disenyo.getPaginas() != null) {
@@ -1908,6 +1926,63 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 					}
 				}
 			}
+		}
+	}
+
+	/**
+	 * Comprueba que cumple los mínimos de Lista Elementos:
+	 * <ul>
+	 * 	<li>Al menos tiene un elemento para mostrar</li>
+	 *  <li>Suman el 100% </li>
+	 * </ul>
+	 * @param disenyoFormulario
+	 * @param pIdioma
+	 * @param listaErrores
+	 */
+	private void comprobarLE(DisenyoFormulario disenyoFormulario, String pIdioma, List<ErrorValidacion> listaErrores) {
+
+		if (disenyoFormulario.getPaginas() == null || disenyoFormulario.getPaginas().get(0) == null) {
+			//No debería entrar por aqui pero por si acaso.
+			final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) disenyoFormulario,
+					"LE.vacio", null,
+					pIdioma, false, "");
+			error.setTipo(TypeErrorValidacion.LISTA_ELEMENTOS);
+			listaErrores.add(error);
+			return;
+		}
+
+		int total = 0;
+		boolean tiene = false;
+		for(LineaComponentesFormulario linea : disenyoFormulario.getPaginas().get(0).getLineas()) {
+			if (linea != null && linea.getComponentes() != null) {
+				for(ComponenteFormulario comp : linea.getComponentes()) {
+					if (comp.isListaElementosVisible()) {
+						tiene = true;
+						if (comp.getListaElementosAnchoColumna() != null) {
+							total += comp.getListaElementosAnchoColumna();
+						}
+					}
+				}
+			}
+		}
+
+		if (!tiene) {
+			 //No tiene al menos un elemento
+			final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) disenyoFormulario,
+					"LE.noTieneCampoMarcado", null,
+					pIdioma, false, "");
+			error.setTipo(TypeErrorValidacion.LISTA_ELEMENTOS);
+			listaErrores.add(error);
+			return ;
+		}
+
+		if (total != 100) {
+			//Deben sumar entre todos los elementos el 100%
+			final ErrorValidacion error = getInstanceErrorValidacion((ModelApi) disenyoFormulario,
+					"LE.noSuma100", null,
+					pIdioma, false, "");
+			error.setTipo(TypeErrorValidacion.LISTA_ELEMENTOS);
+			listaErrores.add(error);
 		}
 	}
 

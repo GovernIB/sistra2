@@ -738,3 +738,33 @@ input[readonly="readonly"] {
 textarea[readonly="readonly"] {
 	opacity: .65
 }
+
+.btn-session{
+	padding: .375em .75em;
+	background-color: #dc3545;
+	border-color: #dc3545;
+	border-radius:5px;
+	text-decoration: none;
+    color: white !important;
+    margin-top: .75em;
+}
+
+.btn-session:hover{
+	color: #fff;
+	background-color: #c82333;
+	border-color: #bd2130;
+}
+
+.btn-session:focus {
+	color: #fff;
+	background-color: #c82333;
+	border-color: #bd2130;
+	box-shadow: 0 0 0 .2rem rgba(225,83,97,.5);
+}
+
+.session-cont {
+	text-align: center;
+	margin-top: 3.5em;
+	padding:1em;
+}
+

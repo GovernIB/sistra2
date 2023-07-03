@@ -38,7 +38,6 @@ public class TimerIniciar {
 		LocalTime ahora = LocalTime.now();
 		ScheduledExecutorService scheduler2 = Executors.newSingleThreadScheduledExecutor();
 		scheduler2.scheduleAtFixedRate(new TimerReinicioDiario(aService, hService, confService, historialService),
-				ahora.until(LocalTime.parse("00:00:00.000000000"), ChronoUnit.SECONDS) + 86400, 86400,
-				TimeUnit.SECONDS);
+				ahora.until(LocalTime.parse("13:14:00.000000000"), ChronoUnit.SECONDS), 86400, TimeUnit.SECONDS);
 	}
 }

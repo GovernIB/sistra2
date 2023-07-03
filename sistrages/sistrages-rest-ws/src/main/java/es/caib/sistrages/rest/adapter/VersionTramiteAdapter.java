@@ -23,6 +23,7 @@ import es.caib.sistrages.core.api.model.ComponenteFormularioCampoOculto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
+import es.caib.sistrages.core.api.model.ComponenteFormularioListaElementos;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
@@ -68,6 +69,7 @@ import es.caib.sistrages.rest.api.interna.RComponenteAviso;
 import es.caib.sistrages.rest.api.interna.RComponenteCampoOculto;
 import es.caib.sistrages.rest.api.interna.RComponenteCaptcha;
 import es.caib.sistrages.rest.api.interna.RComponenteCheckbox;
+import es.caib.sistrages.rest.api.interna.RComponenteListaElementos;
 import es.caib.sistrages.rest.api.interna.RComponenteSeccion;
 import es.caib.sistrages.rest.api.interna.RComponenteSelector;
 import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
@@ -248,12 +250,12 @@ public class VersionTramiteAdapter {
 		final RVersionTramitePropiedades res = new RVersionTramitePropiedades();
 		res.setAutenticado(tv.isAutenticado());
 
-//		res.setPersistente(tv.isPersistencia());
-//		if (tv.isPersistencia() && !tv.isPersistenciaInfinita()) {
-//			res.setDiasPersistencia(tv.getPersistenciaDias());
-//		}
-
-		res.setPersistente(true);
+		// TODO LEL VERIFICAR QUE EN STG SE HA GESTIONADO ESTABLECER VALOR X DEFECTO
+		// TRUE
+		res.setPersistente(tv.isPersistencia());
+		if (tv.isPersistencia() && !tv.isPersistenciaInfinita()) {
+			res.setDiasPersistencia(tv.getPersistenciaDias());
+		}
 
 		if (tv.getIdiomasSoportados() != null) {
 			res.setIdiomas(Arrays.asList(tv.getIdiomasSoportados().split(AdapterUtils.SEPARADOR_IDIOMAS)));
@@ -509,18 +511,17 @@ public class VersionTramiteAdapter {
 	/**
 	 * Genera el formulario interno
 	 *
-	 * @param idFormularioInterno
+	 * @param f
 	 * @param idioma
 	 * @return RFormularioInterno
 	 */
 	private RFormularioInterno generaFormularioInterno(final FormularioTramite f, final String idioma) {
 		RFormularioInterno formInterno = null;
-		if (f != null && f.getIdFormularioInterno() != null) {
+		if (f != null) {
 			final DisenyoFormulario d = restApiService.getDisenyoFormularioById(f.getIdFormularioInterno(), true);
 			if (d != null) {
 				formInterno = new RFormularioInterno();
-//				formInterno.setMostrarTitulo(d.isMostrarCabecera());
-				formInterno.setMostrarTitulo(true);
+				formInterno.setMostrarTitulo(d.isMostrarCabecera());
 				formInterno.setPermitirGuardarSinFinalizar(d.isPermitirGuardarSinFinalizar());
 
 				// TODO: verificar que se obtienen las plantillas y páginas,
@@ -529,8 +530,15 @@ public class VersionTramiteAdapter {
 				formInterno.setPlantillas(generarPlantillas(d.getPlantillas(), idioma));
 
 				formInterno.setScriptPlantillas(AdapterUtils.generaScript(d.getScriptPlantilla(), idioma));
-//				formInterno.setTitulo(AdapterUtils.generarLiteralIdioma(d.getTextoCabecera(), idioma));
-				formInterno.setTitulo(AdapterUtils.generarLiteralIdioma(f.getDescripcion(), idioma));
+
+				// TODO LEL VERIFICAR QUE EN STG SE HA GESTIONADO ESTABLECER VALOR X DEFECTO
+				// VACIO
+				final String textoCabeceraCustom = AdapterUtils.generarLiteralIdioma(d.getTextoCabecera(), idioma);
+				if (StringUtils.isBlank(textoCabeceraCustom)) {
+					formInterno.setTitulo(AdapterUtils.generarLiteralIdioma(f.getDescripcion(), idioma));
+				} else {
+					formInterno.setTitulo(textoCabeceraCustom);
+				}
 
 			}
 		}
@@ -610,22 +618,27 @@ public class VersionTramiteAdapter {
 		if (paginas != null) {
 			lpf = new ArrayList<>();
 			for (final PaginaFormulario p : paginas) {
-				final RPaginaFormulario res = new RPaginaFormulario();
-				final String html = restApiService.getPaginaFormularioHTMLAsistente(p.getCodigo(), idioma);
-				try {
-					res.setHtmlB64(Base64.encodeBase64String(html.getBytes("UTF-8")));
-				} catch (final UnsupportedEncodingException e) {
-					throw new EncodeException(e);
-				}
-				res.setLineas(generarLineas(p.getLineas(), idioma));
-				res.setPaginaFinal(p.isPaginaFinal());
-				res.setIdentificador(p.getIdentificador());
-				res.setScriptValidacion(AdapterUtils.generaScript(p.getScriptValidacion(), idioma));
-				res.setScriptNavegacion(AdapterUtils.generaScript(p.getScriptNavegacion(), idioma));
+				final RPaginaFormulario res = generarPagina(p, idioma);
 				lpf.add(res);
 			}
 		}
 		return lpf;
+	}
+
+	private RPaginaFormulario generarPagina(final PaginaFormulario p, final String idioma) {
+		final RPaginaFormulario res = new RPaginaFormulario();
+		final String html = restApiService.getPaginaFormularioHTMLAsistente(p.getCodigo(), idioma);
+		try {
+			res.setHtmlB64(Base64.encodeBase64String(html.getBytes("UTF-8")));
+		} catch (final UnsupportedEncodingException e) {
+			throw new EncodeException(e);
+		}
+		res.setLineas(generarLineas(p.getLineas(), idioma));
+		res.setPaginaFinal(p.isPaginaFinal());
+		res.setIdentificador(p.getIdentificador());
+		res.setScriptValidacion(AdapterUtils.generaScript(p.getScriptValidacion(), idioma));
+		res.setScriptNavegacion(AdapterUtils.generaScript(p.getScriptNavegacion(), idioma));
+		return res;
 	}
 
 	/**
@@ -697,6 +710,11 @@ public class VersionTramiteAdapter {
 					final RComponenteAviso resET = generaComponenteAviso(ca, idioma);
 					lc.add(resET);
 					break;
+				case LISTA_ELEMENTOS:
+					final ComponenteFormularioListaElementos cl = (ComponenteFormularioListaElementos) c;
+					final RComponenteListaElementos resLEL = generaComponenteListaElementos(cl, idioma);
+					lc.add(resLEL);
+					break;
 				default:
 					lc = null;
 					return lc;
@@ -708,10 +726,35 @@ public class VersionTramiteAdapter {
 	}
 
 	/**
+	 * Genera componente LEL en versión rest.
+	 *
+	 * @param cl
+	 *                   Componente LEL (MODEL)
+	 * @param idioma
+	 *                   idioma
+	 * @return Componente LEL (REST)
+	 */
+	private RComponenteListaElementos generaComponenteListaElementos(final ComponenteFormularioListaElementos cl,
+			final String idioma) {
+		final RComponenteListaElementos rcl = new RComponenteListaElementos();
+		// Props comunes
+		generaPropsComunesComponente(cl, rcl, idioma);
+		rcl.setPropiedadesCampo(generarPropiedadesComunesCampo(cl, idioma));
+		// Props específicas
+		rcl.setMaxElementos(cl.getNumeroMaximoElementos());
+		final DisenyoFormulario dis = this.restApiService.getDisenyoFormularioById(cl.getIdFormulario(), false);
+		final PaginaFormulario pe = dis.getPaginas().get(0);
+		final RPaginaFormulario rpe = generarPagina(pe, idioma);
+		rcl.setPaginaElemento(rpe);
+		return rcl;
+	}
+
+	/**
 	 * Genera componente campo oculto.
 	 *
 	 * @param cco
-	 * @param idioma idioma
+	 * @param idioma
+	 *                   idioma
 	 * @return RComponenteCampoOculto
 	 */
 	private RComponenteCampoOculto generaComponenteCampoOculto(final ComponenteFormularioCampoOculto cco,
@@ -877,9 +920,12 @@ public class VersionTramiteAdapter {
 	/**
 	 * Genera props comunes campo.
 	 *
-	 * @param ct     ComponenteFormularioCampo
-	 * @param resTB  Def componente
-	 * @param idioma idioma
+	 * @param ct
+	 *                   ComponenteFormularioCampo
+	 * @param resTB
+	 *                   Def componente
+	 * @param idioma
+	 *                   idioma
 	 */
 	private void generaPropsComunesComponente(final ComponenteFormulario ct, final RComponente resTB,
 			final String idioma) {
@@ -976,7 +1022,8 @@ public class VersionTramiteAdapter {
 	/**
 	 * Genera texto teléfono.
 	 *
-	 * @param ct campo texto
+	 * @param ct
+	 *               campo texto
 	 * @return Propiedades teléfono
 	 */
 	private RPropiedadesTextoTelefono generaTextoTelefono(final ComponenteFormularioCampoTexto ct) {
@@ -1077,6 +1124,8 @@ public class VersionTramiteAdapter {
 		res.setScriptEstado((AdapterUtils.generaScript(ori.getScriptSoloLectura(), idioma)));
 		res.setScriptValidacion((AdapterUtils.generaScript(ori.getScriptValidacion(), idioma)));
 		res.setSoloLectura(ori.isSoloLectura());
+		res.setListaElementosMostrar(ori.isListaElementosVisible());
+		res.setListaElementosAnchura(ori.getListaElementosAnchoColumna());
 		return res;
 	}
 
@@ -1155,7 +1204,7 @@ public class VersionTramiteAdapter {
 	 * @param exp
 	 * @return RPropiedadesTextoExpRegular
 	 */
-	private RPropiedadesTextoExpRegular generaExpresionRegular(ComponenteFormularioCampoTexto ct) {
+	private RPropiedadesTextoExpRegular generaExpresionRegular(final ComponenteFormularioCampoTexto ct) {
 		if (StringUtils.isEmpty(ct.getExpresionRegular())) {
 			return null;
 		}

@@ -520,6 +520,11 @@
 
 	    <p:inputText id="auxCopiar" value="#{dialogTramiteImportar.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 	</h:form>
+	<p:confirmDialog widgetVar="avisoDlg" header="#{msg['warning.titulo']}" message="#{msg['variable.area.asociada.tramite']}">
+		<p:outputPanel styleClass="confirmar_botonera">
+			<p:commandButton value="#{msg['botones.aceptar']}" type="button" onclick="PF('avisoDlg').hide();" process="@this"/>
+		</p:outputPanel>
+	</p:confirmDialog>
 </h:body>
 
 </f:view>

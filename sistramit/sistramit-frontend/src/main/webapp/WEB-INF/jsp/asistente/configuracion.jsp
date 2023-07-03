@@ -98,7 +98,13 @@ var APP_FORMS_URL_DINAMICA = "s"
 	,APP_FORM_PAG_ANTERIOR = APP_SERVIDOR + "fm/cargarPaginaAnterior.json"
 	,APP_FORM_DESAR_SORTIR = APP_SERVIDOR + "fm/guardarSalirPagina.json"
 	,APP_FORM_SELECTOR_AJAX = APP_SERVIDOR + "fm/buscadorDinamico.json"
-	,APP_FORM_SELECTOR_DIN_NUM = ${configuracion.formularioNumCharsBusqueda};
+	,APP_FORM_SELECTOR_DIN_NUM = ${configuracion.formularioNumCharsBusqueda}
+	,APP_FORM_LE_AFEGIX = APP_SERVIDOR + "fm/anyadirElemento.json"
+	,APP_FORM_LE_MODIFICA = APP_SERVIDOR + "fm/modificarElemento.json"
+	,APP_FORM_LE_AVALUA = APP_SERVIDOR + "fm/evaluarCambioCampoElemento.json"
+	,APP_FORM_LE_DESA = APP_SERVIDOR + "fm/guardarElemento.json"
+	,APP_FORM_LE_CONSULTA = APP_SERVIDOR + "fm/consultarElemento.json";
+
 
 
 /* configuracion iframe firma */

@@ -18,9 +18,12 @@ public interface ValoresPosiblesFormularioHelper {
 	 *
 	 * @param pDatosSesion
 	 *                         Datos sesion formulario
+	 * @param elemento
+	 *                         Indica si existe elemento
 	 * @return Lista valores posibles campos
 	 */
-	List<ValoresPosiblesCampo> calcularValoresPosiblesPaginaActual(final DatosSesionFormularioInterno pDatosSesion);
+	List<ValoresPosiblesCampo> calcularValoresPosiblesPaginaActual(final DatosSesionFormularioInterno pDatosSesion,
+			final boolean elemento);
 
 	/**
 	 * Calcula valores posibles para un campo de tipo selector.
@@ -29,10 +32,12 @@ public interface ValoresPosiblesFormularioHelper {
 	 *                         Datos sesión formulario
 	 * @param pCampoDef
 	 *                         Identificador campo
+	 * @param elemento
+	 *                         Indica si existe elemento
 	 * @return Valores posibles
 	 */
 	ValoresPosiblesCampo calcularValoresPosiblesCampoSelector(final DatosSesionFormularioInterno pDatosSesion,
-			final RComponenteSelector pCampoDef);
+			final RComponenteSelector pCampoDef, final boolean elemento);
 
 	/**
 	 * Calcula valores posibles para un campo de tipo selector.
@@ -43,9 +48,11 @@ public interface ValoresPosiblesFormularioHelper {
 	 *                          Identificador campo
 	 * @param textoBusqueda
 	 *                          Texto búsqueda
+	 * @param elemento
+	 *                          Indica si existe elemento
 	 * @return Valores posibles
 	 */
 	List<ValorIndexado> calcularValoresPosiblesCampoSelectorDinamico(final DatosSesionFormularioInterno pDatosSesion,
-			final RComponenteSelector pCampoDef, String textoBusqueda);
+			final RComponenteSelector pCampoDef, final String textoBusqueda, final boolean elemento);
 
 }

@@ -28,18 +28,22 @@ public interface CalculoDatosFormularioHelper {
 	 * @param valoresPagina
 	 *                          Valores pagina actuales con el campo modificado y el
 	 *                          resto
+	 * @param elemento
+	 *                          Indica si existe elemento
 	 * @return Resultado del calculo de datos
 	 */
 	ResultadoEvaluarCambioCampo calcularDatosPaginaCambioCampo(final DatosSesionFormularioInterno datosSesion,
-			final String idCampo, final List<ValorCampo> valoresPagina);
+			final String idCampo, final List<ValorCampo> valoresPagina, final boolean elemento);
 
 	/**
 	 * Recalcula datos pagina actual (campos autorrellenables).
 	 *
 	 * @param datosSesion
 	 *                        Datos sesión
+	 * @param elemento
+	 *                        Indica si existe elemento
 	 */
-	void recalcularDatosPagina(DatosSesionFormularioInterno datosSesion);
+	void recalcularDatosPagina(DatosSesionFormularioInterno datosSesion, final boolean elemento);
 
 	/**
 	 * Calcula valores posibles de un selector dinámico.
@@ -52,9 +56,20 @@ public interface CalculoDatosFormularioHelper {
 	 *                          texto a buscar
 	 * @param valoresPagina
 	 *                          valores actuales página
+	 * @param elemento
+	 *                          Indica si existe elemento
 	 * @return
 	 */
 	ResultadoBuscadorDinamico calcularValoresPosiblesSelectorDinamico(DatosSesionFormularioInterno datosSesion,
-			String idCampo, String textoCampo, List<ValorCampo> valoresPagina);
+			String idCampo, String textoCampo, List<ValorCampo> valoresPagina, final boolean elemento);
+
+	/**
+	 * Revisa campos autorrellenable con dependencias del formulario principal (se
+	 * calcularan los marcados como solo lectura y los que no tengan valor).
+	 *
+	 * @param datosSesion
+	 *                        Datos sesion
+	 */
+	void revisarCamposAutorrellenablesElemento(DatosSesionFormularioInterno datosSesion);
 
 }

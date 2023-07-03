@@ -13,8 +13,8 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 @SuppressWarnings("serial")
 public final class DatosInicioSesionFormulario implements Serializable {
 
-	/** Ticket sesion formulario. */
-	private String ticket;
+	/** Id sesion formulario. */
+	private String idSesionFormulario;
 
 	/** Id sesión de tramitación. */
 	private String idSesionTramitacion;
@@ -341,18 +341,18 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	 *
 	 * @return ticket
 	 */
-	public String getTicket() {
-		return ticket;
+	public String getIdSesionFormulario() {
+		return idSesionFormulario;
 	}
 
 	/**
 	 * Método para establecer ticket.
 	 *
-	 * @param ticket
+	 * @param idSesionFormulario
 	 *                   ticket a establecer
 	 */
-	public void setTicket(final String ticket) {
-		this.ticket = ticket;
+	public void setIdSesionFormulario(final String idSesionFormulario) {
+		this.idSesionFormulario = idSesionFormulario;
 	}
 
 	/**

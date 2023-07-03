@@ -113,6 +113,8 @@ public class SessionBean {
 	/** URL DEL USUARIO SIN ROL. **/
 	private static final String URL_ERROR_USUARIO_SIN_ROL = "/error/errorUsuarioSinRol.xhtml";
 
+	private Integer maxInactiveInterval = ((HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true)).getMaxInactiveInterval()*1000;;
+
 	/** Inicio sesión. */
 	@PostConstruct
 	public void init() {
@@ -413,9 +415,13 @@ public class SessionBean {
 		if (entidad != null && entidad.getLogoGestor() != null) {
 			logo = Constantes.DESCARGA_FICHEROS_URL;
 
-			final HttpSession sessionHttp = (HttpSession) FacesContext.getCurrentInstance().getExternalContext()
+			HttpSession sessionHttp = (HttpSession) FacesContext.getCurrentInstance().getExternalContext()
 					.getSession(false);
 			if (sessionHttp != null) {
+				sessionHttp.setAttribute("LOGO_ENTIDAD_ACTIVA", entidad.getLogoGestor());
+			}else {
+				sessionHttp = (HttpSession) FacesContext.getCurrentInstance().getExternalContext()
+						.getSession(true);
 				sessionHttp.setAttribute("LOGO_ENTIDAD_ACTIVA", entidad.getLogoGestor());
 			}
 		} else {
@@ -566,4 +572,17 @@ public class SessionBean {
 		this.paginacion = paginacion;
 	}
 
+	/**
+	 * @return the maxInactiveInterval
+	 */
+	public Integer getMaxInactiveInterval() {
+		return maxInactiveInterval;
+	}
+
+	/**
+	 * @param maxInactiveInterval the maxInactiveInterval to set
+	 */
+	public void setMaxInactiveInterval(Integer maxInactiveInterval) {
+		this.maxInactiveInterval = maxInactiveInterval;
+	}
 }

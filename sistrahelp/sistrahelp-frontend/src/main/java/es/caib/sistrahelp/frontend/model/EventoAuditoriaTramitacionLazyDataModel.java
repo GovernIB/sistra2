@@ -32,8 +32,13 @@ public class EventoAuditoriaTramitacionLazyDataModel extends LazyDataModel<Event
 	@Override
 	public List<EventoAuditoriaTramitacion> load(final int first, final int pageSize, final String sortField,
 			final SortOrder sortOrder, final Map<String, Object> filters) {
-		filtros.setSortField(sortField);
-		filtros.setSortOrder(sortOrder.name());
+		if (sortField != null) {
+			filtros.setSortField(sortField);
+
+		}
+		if (sortOrder != null) {
+			filtros.setSortOrder(sortOrder.name());
+		}
 		setLista(helpDeskService.obtenerAuditoriaEvento(filtros, new FiltroPaginacion(first, pageSize)));
 
 		return getLista();

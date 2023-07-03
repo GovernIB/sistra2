@@ -4,12 +4,17 @@ import javax.script.ScriptException;
 
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
+import es.caib.sistramit.core.api.model.formulario.ValorCampoListaElementos;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
+import es.caib.sistramit.core.api.model.formulario.ValorElemento;
 import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValorResetCampos;
+import es.caib.sistramit.core.service.component.script.plugins.ClzValorCampoListaElementos;
 import es.caib.sistramit.core.service.component.script.plugins.ClzValorCampoMultiple;
+import es.caib.sistramit.core.service.component.script.plugins.ClzValorElemento;
 import es.caib.sistramit.core.service.model.script.ClzValorCampoCompuestoInt;
+import es.caib.sistramit.core.service.model.script.ClzValorCampoListaElementosInt;
 import es.caib.sistramit.core.service.model.script.ClzValorCampoMultipleInt;
 import es.caib.sistramit.core.service.model.script.formulario.ResValorCampoInt;
 
@@ -75,6 +80,25 @@ public final class ResValorCampo implements ResValorCampoInt {
 	@Override
 	public ClzValorCampoMultipleInt crearValorMultiple() {
 		return new ClzValorCampoMultiple();
+	}
+
+	@Override
+	public ClzValorCampoListaElementosInt crearValorListaElementos() {
+		return new ClzValorCampoListaElementos();
+	}
+
+	@Override
+	public void setValorListaElementos(final ClzValorCampoListaElementosInt valor) {
+		final ValorCampoListaElementos vcl = new ValorCampoListaElementos();
+		if (valor != null) {
+			for (int i = 0; i < valor.getNumeroElementos(); i++) {
+				final ClzValorElemento v = ((ClzValorCampoListaElementos) valor).getElemento(i);
+				final ValorElemento ve = new ValorElemento();
+				ve.setElemento(v.getValores());
+				vcl.addElemento(ve);
+			}
+		}
+		valorCampo = vcl;
 	}
 
 	/**

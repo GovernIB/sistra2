@@ -574,4 +574,30 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 		return areaDao.getAreaByIdentificador(identificadorEntidad, identificador);
 	}
 
+	@Override
+	@NegocioInterceptor
+	public List<String> listTramitesByArea(String idEntidad ,String idArea) {
+		Area area = areaDao.getAreaByIdentificador(idEntidad, idArea);
+		List<Long> ids = new ArrayList<Long>();
+		ids.add(area.getCodigo());
+		Entidad entidad = entidadDao.getByArea(area.getCodigo());
+		List<String> aux = new ArrayList<String>();
+		for(Tramite tram : tramiteDao.getAllByFiltro(entidad.getCodigo(), ids, null)) {
+			aux.add(tram.getIdentificador());
+		}
+		return aux;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<Integer> listVersionesByTramite(String idEntidad ,String idArea, String idTramite) {
+		Area area = areaDao.getAreaByIdentificador(idEntidad, idArea);
+		Tramite tram = tramiteDao.getTramiteByIdentificador(idTramite, area.getCodigo(), null, null);
+		List<Integer> aux = new ArrayList<Integer>();
+		for(TramiteVersion ver : tramiteDao.getTramitesVersion(tram.getCodigo(), null)) {
+			aux.add((Integer)ver.getNumeroVersion());
+		}
+		return aux;
+	}
+
 }

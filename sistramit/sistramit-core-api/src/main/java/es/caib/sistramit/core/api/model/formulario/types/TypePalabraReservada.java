@@ -19,7 +19,15 @@ public enum TypePalabraReservada {
 	/**
 	 * Texto campo para buscador dinámico (Código String: textoCampo).
 	 */
-	TEXTO_CAMPO("textoCampo");
+	TEXTO_CAMPO("textoCampo"),
+	/**
+	 * Id campo lista elementos (Código String: idCampoListaElementos).
+	 */
+	ID_CAMPO_LISTA_ELEMENTOS("idCampoListaElementos"),
+	/**
+	 * Indice elemento (Código String: indiceElemento).
+	 */
+	INDICE_ELEMENTO("indiceElemento");
 
 	/**
 	 * Valor como string.

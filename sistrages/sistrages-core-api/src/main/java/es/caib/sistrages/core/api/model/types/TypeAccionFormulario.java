@@ -32,6 +32,8 @@ public enum TypeAccionFormulario {
 	ADD_CAPTCHA,
 	/** Agregar seccion reutilizable **/
 	ADD_SECCION_REUTILIZABLE,
+	/** Agregar lista elementos **/
+	ADD_LISTA_ELEMENTOS,
 	/** Copiar componente **/
 	COPIAR,
 	/** Cortar componente **/

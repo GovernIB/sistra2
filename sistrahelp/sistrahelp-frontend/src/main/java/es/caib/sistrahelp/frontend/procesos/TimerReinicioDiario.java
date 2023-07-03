@@ -24,17 +24,25 @@ import es.caib.sistra2.commons.plugins.email.api.EmailPluginException;
 import es.caib.sistra2.commons.plugins.email.api.IEmailPlugin;
 import es.caib.sistrahelp.core.api.model.Alerta;
 import es.caib.sistrahelp.core.api.model.Area;
+import es.caib.sistrahelp.core.api.model.Entidad;
 import es.caib.sistrahelp.core.api.model.ErroresCuadroMando;
+import es.caib.sistrahelp.core.api.model.ErroresPorTramiteCM;
 import es.caib.sistrahelp.core.api.model.ErroresTramites;
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.EventoCM;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
 import es.caib.sistrahelp.core.api.model.HistorialAlerta;
+import es.caib.sistrahelp.core.api.model.ResultadoErroresPorTramiteCM;
+import es.caib.sistrahelp.core.api.model.ResultadoEventoCM;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 import es.caib.sistrahelp.core.api.model.types.TypePluginGlobal;
 import es.caib.sistrahelp.core.api.service.AlertaService;
 import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.core.api.service.HistorialAlertaService;
+import es.caib.sistrahelp.frontend.model.ErroresPorTramiteCMLazyDataModel;
+import es.caib.sistrahelp.frontend.model.ErroresPorTramiteCMPlataformaLazyDataModel;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
 
 public class TimerReinicioDiario implements Runnable {
@@ -68,7 +76,9 @@ public class TimerReinicioDiario implements Runnable {
 
 	private Alerta alert;
 
-	private List<ErroresCuadroMando> listaErrores;
+	private List<ErroresPorTramiteCM> listaErrores;
+
+	private List<ErroresPorTramiteCM> listaInacabados;
 
 	private FiltroAuditoriaTramitacion filtros;
 
@@ -76,7 +86,11 @@ public class TimerReinicioDiario implements Runnable {
 
 	private List<EventoAuditoriaTramitacion> listaDatosEventosPlataforma;
 
-	private FiltroAuditoriaTramitacion filtrosPlataforma;
+	private List<EventoCM> listaErrPlat;
+
+	private List<HistorialAlerta> listaAlertas;
+
+	private FiltroAuditoriaTramitacion filtrosInacabados;
 
 	public TimerReinicioDiario(AlertaService aService, HelpDeskService hService, ConfiguracionService confService,
 			HistorialAlertaService historialService) {
@@ -91,8 +105,16 @@ public class TimerReinicioDiario implements Runnable {
 	public void run() {
 
 		System.out.println("entra en reinicio");
-		List<HistorialAlerta> lHal = historialService.listHistorialAlerta(getYesterday(), getNow());
 		alert = aService.loadAlertaByNombre("RESUMEN_DIARIO");
+		String nombre = "";
+		String logo = "";
+		if (alert.getListaAreas() != null && !alert.getListaAreas().isEmpty() && alert.getListaAreas().get(0) != null) {
+			Entidad entidad = confService.obtenerDatosEntidadByArea(alert.getListaAreas().get(0));
+			logo = hService.urlLogoEntidad(entidad.getCodigoDIR3());
+			if (entidad.getNombre() != null) {
+				nombre = entidad.getNombre().getTraduccion("ca");
+			}
+		}
 		System.out.println("hoy es: " + getYesterday().toString());
 		if (alert != null) {
 			buscar();
@@ -140,98 +162,269 @@ public class TimerReinicioDiario implements Runnable {
 			if (tramIni != 0) {
 				tramPor = formatDouble(100 - ((Double.valueOf(tramFin) * 100) / Double.valueOf(tramIni)));
 			} else {
-				tramPor = "100";
+				tramPor = "0";
 			}
-			String msg = "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"ca\" lang=\"ca\">\r\n" + "\r\n"
-					+ "<head>\r\n" + "\r\n"
-					+ "	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r\n"
-					+ "	<title>GOVERN DE LES ILLES BALEARS</title>\r\n" + "\r\n" + "	<!-- css -->\r\n"
-					+ "	<style type=\"text/css\">\r\n"
-					+ "		#contenidor { width:90%; font:normal 80% 'TrebuchetMS', 'Trebuchet MS', Arial, Helvetica, sans-serif; color:#000; margin:1em auto; background-color:#fff; }\r\n"
-					+ "		#cap { font-size:1.2em; font-weight:bold; text-align:center; margin-bottom:1em; }\r\n"
-					+ "		#continguts { padding:1em 2em; border:1em solid #f2f2f2; }\r\n"
-					+ "		#continguts h1 { font-size:1.4em; margin-top:0; margin-bottom:1em; }\r\n"
-					+ "		#continguts table { margin-bottom:1.5em; border:0; empty-cells:hide; border-collapse:collapse; }\r\n"
-					+ "		#continguts table th { float:left; width:10em; font-size:1.1em; font-variant:small-caps; font-weight:normal; text-align:right; padding-right:.8em; }\r\n"
-					+ "		#continguts table td { font-weight:bold; padding-bottom:.5em; }\r\n"
-					+ "		#continguts h2 { font-size:1.1em; margin:.8em 0; }\r\n"
-					+ "		#continguts p { margin:.8em 0; }\r\n"
-					+ "		#contenidor p.peu { margin:1.5em 0; padding:1em; border:1px solid #ccc; }\r\n"
-					+ "		#contenidor div.accedir { padding:1em; background-color:#f7f7f7; }\r\n"
-					+ "		#contenidor a.accedirCertificado { display:block; font-size:1.5em; text-align:center; padding:1em; background-color:#f7f7f7; }\r\n"
-					+ "		#contenidor a.accedirClave { display:block; font-size:1.5em; text-align:center; padding:1em; background-color:#f7f7f7; }\r\n"
-					+ "		#contenidor p.auto { margin:1.5em 0; padding:1em;  font-size:0.9em; font-style: italic;}\r\n"
-					+ "	</style>\r\n" + "	<!-- /css -->\r\n" + "\r\n" + "</head>\r\n" + "\r\n" + "<body>\r\n" + "\r\n"
-					+ "	<!-- contenidor -->\r\n" + "	<div id=\"contenidor\">\r\n" + "\r\n"
-					+ "		<!-- logo illes balears -->\r\n" + "		<div id=\"cap\">\r\n"
-					+ "			<img src=\"https://www.caib.es/webcaib/sistra2_logos/goib-05.png\" alt=\"Logo CAIB\" width=\"100\" height=\"100\"/>\r\n"
-					+ "			<h1>GOVERN DE LES ILLES BALEARS</h1>\r\n" + "		</div>\r\n"
-					+ "		<!-- /logo illes balears -->\r\n" + "\r\n" + "		<!-- continguts -->\r\n"
-					+ "	  <div id=\"continguts\">\r\n" + "\r\n" + "			<!-- titol -->\r\n" + "			<h1>\r\n"
-					+ "				Aquest missatge ha estat generat pel sistema d'alertes de SISTRAHELP y ofereix un resum dels events recogits al Cuadre de comandament de SISTRAHELP, pel "
-					+ parseFecha(getYesterday()) + ":" + "			</h1>";
-			msg += "<p>" + "Emplenar Formulari:" + "</p>" + "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Iniciats: " + formIni
-					+ "</p>" + "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Finalitzats: " + formFin + "</p>"
-					+ "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Percentatge no finalitzats: " + formPor + "%</p>"
-					+ "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nivell Gravetat: " + nivelGravedad(formPor) + "</p>";
-			msg += "<p>" + "Firmar:" + "</p>" + "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Iniciats: " + firmaIni + "</p>"
-					+ "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Finalitzats: " + firmaFin + "</p>"
-					+ "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Percentatge no finalitzats: " + firmaPor + "%</p>"
-					+ "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nivell Gravetat: " + nivelGravedad(firmaPor) + "</p>";
-			msg += "<p>" + "Pagaments:" + "</p>" + "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Iniciats: " + pagIni + "</p>"
-					+ "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Finalitzats: " + pagFin + "</p>"
-					+ "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Percentatge no finalitzats: " + pagosPor + "%</p>"
-					+ "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nivell Gravetat: " + nivelGravedad(pagosPor) + "</p>";
-			msg += "<p>" + "Registres:" + "</p>" + "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Iniciats: " + regIni + "</p>"
-					+ "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Finalitzats: " + regFin + "</p>"
-					+ "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Percentatge no finalitzats: " + registrosPor + "%</p>"
-					+ "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nivell Gravetat: " + nivelGravedad(registrosPor) + "</p>";
-			msg += "<p>" + "Tr&#224;mits:" + "</p>" + "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Iniciades: " + tramIni + "</p>"
-					+ "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Finalitzades: " + tramFin + "</p>"
-					+ "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Percentatge no finalitzades: " + tramPor + "%</p>"
-					+ "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nivell Gravetat: " + nivelGravedad(100 + tramPor) + "</p>";
 
-			msg += "<p>Nombre total d'Errors: " + errTot + "</p>";
-
-			for (ErroresCuadroMando lerr : listaErrores) {
-				if (lerr.getVersion() != null) {
-					msg += "<p>*Tr&#224;mit: " + lerr.getIdentificadorTramite() + " versi&#243; " + lerr.getVersion()
-							+ "</p>";
-				} else {
-					msg += "<p>*Tr&#224;mit: " + lerr.getIdentificadorTramite() + "</p>";
-				}
-				if (lerr.getSesOk() != null) {
-					msg += "<p>&nbsp;Sessions OK:  " + lerr.getSesOk() + "</p>" + "<p>&nbsp;Sessions no finalitzades:  "
-							+ lerr.getSesInac() + "</p>" + "<p>&nbsp;Porcentatge de sessions no finalitzades:  "
-							+ formatDouble(lerr.getSesPor()) + "%</p>" + "<p>&nbsp;Freq&#252;&#232;ncia d&#39;errors: "
-							+ lerr.getErrTram();
-				} else {
-					msg += "<p>&nbsp;Sessions OK: </p>" + "<p>&nbsp;Sessions no finalitzades: </p>"
-							+ "<p>&nbsp;Porcentatge de sessions no finalitzades: </p>"
-							+ "<p>&nbsp;Porcentatge de sessions no finalitzades: </p>";
-				}
-				for (ErroresTramites terr : lerr.getListaErr()) {
-					msg += "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-" + terr.getIdentificadorError() + "<p/>"
-							+ "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Freq&#252;&#232;ncia: " + terr.getErrNum()
-							+ "<p/>" + "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Percentatge d&#39;errors: "
-							+ formatDouble((Double.valueOf(terr.getErrNum()) / Double.valueOf(lerr.getErrTram())) * 100)
-							+ "%<p/>";
-
-				}
-			}
-			if (listaErrores.isEmpty()) {
-				msg += "</br></br>";
-			}
-			if (lHal != null && !lHal.isEmpty()) {
-				msg += "<p>Historial d&#39;Alertes:</p>";
-				for (HistorialAlerta hAl : lHal) {
-					msg += "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Alerta: " + hAl.getAlerta().getNombre() + " - "
-							+ hAl.getEvento().toString() + ". Data : " + parseFechaHistorial(hAl.getFecha()) + "<p/>";
+			String msg = "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"ca\" lang=\"ca\">" + "   <head>"
+					+ "      <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">" + "      <title>"
+					+ nombre + "</title>" + "      <!-- css -->" + "   </head>" + "   <body>"
+					+ "      <!-- contenidor --> 	"
+					+ "      <div id=\"contenidor\" style=\"width: 90%;font: normal 80% 'TrebuchetMS', 'Trebuchet MS', Arial, Helvetica, sans-serif;color: #000;margin: 1em auto;background-color: #fff;\">"
+					+ "         <!-- logo illes balears --> 		"
+					+ "         <div id=\"cap\" style=\"font-size: 1.2em;font-weight: bold;text-align: center;margin-bottom: 1em;\">"
+					+ "            <img src=\"" + logo + "\" alt=\"Logo CAIB\" width=\"100\" height=\"100\">"
+					+ "            <h1>" + nombre.toUpperCase() + "</h1>" + "         </div>"
+					+ "         <!-- /logo illes balears -->  		<!-- continguts -->"
+					+ "         <div id=\"continguts\" style=\"padding: 1em 2em;border: 1em solid #f2f2f2;\">"
+					+ "            <!-- titol --> 			"
+					+ "            <h1 style=\"font-size: 1.4em;margin-top: 0;margin-bottom: 1em;\">"
+					+ "               Aquest missatge ha estat generat pel sistema d'alertes de SISTRAHELP y ofereix un resum dels events recogits al Quadre de comandament de SISTRAHELP, pel "
+					+ "               " + parseFecha(getYesterday()) + ": 			" + "            </h1>"
+					+ "            <div style=\"height:20px;\"></div>"
+					+ "            <table id=\"form:tablaCuadroMando\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100% !important;border-collapse: collapse !important;display: flex;padding: 0px !important;justify-content: center;margin-top: 10px;margin-bottom: 1.5em;border: 0;empty-cells: hide;\">"
+					+ "               <tbody>" + "                  <tr>"
+					+ "                     <td style=\"font-weight: bold;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                           <tbody>" + "                              <tr>"
+					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;padding-left: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;width: 16px !important;\"><span style=\"font-weight: bold;\">Accions</span></td>"
+					+ "                              </tr>" + "                           </tbody>"
+					+ "                        </table>" + "                     </td>" + "                  </tr>"
+					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                           <tbody>" + "                              <tr>"
+					+ "                                 <td class=\"w20 white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"></td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: lightgrey; border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Iniciats</span></td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Finalitzats</span></td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Percentatge d&#39;accions no finalizades</span></td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"></td>"
+					+ "                              </tr>" + "                              <tr>"
+					+ "                                 <td class=\"w20 white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Emplenar formulari</span></td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ formIni + "</td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ formFin + "</td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ formPor + "%</td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ nivelGravedad(formPor) + "</td>" + "                              </tr>"
+					+ "                              <tr>"
+					+ "                                 <td class=\"w20 white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Firmar</span></td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ firmaIni + "</td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ firmaFin + "</td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ firmaPor + "%</td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ nivelGravedad(firmaPor) + "</td>" + "                              </tr>"
+					+ "                              <tr>"
+					+ "                                 <td class=\"w20 white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Pagar</span></td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ pagIni + "</td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ pagFin + "</td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ pagosPor + "%</td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ nivelGravedad(pagosPor) + "</td>" + "                              </tr>"
+					+ "                              <tr>"
+					+ "                                 <td class=\"w20 white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Registrar</span></td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ regIni + "</td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ regIni + "</td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ registrosPor + "%</td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ nivelGravedad(registrosPor) + "</td>" + "                              </tr>"
+					+ "                           </tbody>" + "                        </table>"
+					+ "                     </td>" + "                  </tr>" + "                  <tr>"
+					+ "                     <td style=\"font-weight: bold;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                           <tbody>" + "                              <tr>"
+					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;width: 16px !important;\"><span style=\"font-weight: bold;\">Tr&#224;mits</span></td>"
+					+ "                              </tr>" + "                           </tbody>"
+					+ "                        </table>" + "                     </td>" + "                  </tr>"
+					+ "                  <tr>"
+					+ "                     <td style=\"font-weight: bold;padding-bottom: .5em;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                           <tbody>" + "                              <tr>"
+					+ "                                 <td class=\"w20 white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"></td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Iniciades</span></td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Finalitzades</span></td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Percentatge de tr&#224;mits no finalitzats</span></td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"></td>"
+					+ "                              </tr>" + "                              <tr>"
+					+ "                                 <td class=\"w20 white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Tr&#224;mits</span></td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ tramIni + "</td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ tramFin + "</td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ tramPor + "%</td>"
+					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ nivelGravedad(100 + tramPor) + "</td>" + "                              </tr>"
+					+ "                           </tbody>" + "                        </table>"
+					+ "                     </td>" + "                  </tr>" + "                  <tr>"
+					+ "                     <td style=\"font-weight: bold;padding-bottom: .5em;\">"
+					+ "                        <div style=\"height:20px;\"></div>" + "                     </td>"
+					+ "                  </tr>" + "                  <tr>"
+					+ "                     <td style=\"font-weight: bold;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                           <tbody>" + "                              <tr>"
+					+ "                                 <td class=\"grey borde \" style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Nombre total d&#39;errors</span></td>"
+					+ "                                 <td class=\"wpx100 white borde pad\" style=\"padding-right: 10px;padding-left: 10px;background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ errTot + "</td>" + "                              </tr>" + "                           </tbody>"
+					+ "                        </table>" + "                     </td>" + "                  </tr>"
+					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
+					+ "                        <table border=\"1\" cellpadding=\"0\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                           <tbody>" + "                              <tr>"
+					+ "                                 <td class=\"grey borde \" style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;padding-top: .5em;\"><span style=\"font-weight: bold; padding-left: 5px;\">Errors de tramitaci&#243;:</span></td>"
+					+ "                              </tr>" + "                           </tbody>"
+					+ "                        </table>" + "                     </td>" + "                  </tr>"
+					+ "                  <tr>" + "                    <td style=\"font-weight: bold;\">"
+					+ "                       <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                          <tbody>" + "                             <tr>"
+					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Tr&#224;mit</span></td>"
+					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Versi&#243;</span></td>"
+					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Sessions Ok</span></td>"
+					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Sessions no finalitzades</span></td>"
+					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Percentatge de sessions no finalitzades</span></td>"
+					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Freq&#252;&#232;ncia d&#39;errors</span></td>"
+					+ "                             </tr>";
+			if (listaErrores != null && !listaErrores.isEmpty()) {
+				for (ErroresPorTramiteCM lerr : listaErrores) {
+					msg += "                             <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
+							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 1000px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ lerr.getIdTramite() + "</td>"
+							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 100px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ lerr.getVersion() + "</td>"
+							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ lerr.getSesionesFinalizadas() + "</td>"
+							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 500px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ lerr.getSesionesInacabadas() + "</td>"
+							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 500px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ formatDouble(lerr.getPorcentage()) + "%</td>"
+							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 500px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ lerr.getNumeroErrores() + "</td>" + "                             </tr>";
 				}
 			} else {
-				msg += "No s'ha produït cap alerta avui.";
+				msg += "                             <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
+						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 1000px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"> No hi ha registres al dia de avui</td>"
+						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 100px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
+						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
+						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 500px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
+						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 500px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
+						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 500px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
+						+ "                             </tr>";
 			}
-			msg += "</div><p class=\"auto\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p></html>";
+			msg += "                          </tbody>" + "                       </table>"
+					+ "                    </td>" + "                 </tr>" + "                  "
+					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                           <tbody>" + "                              <tr>"
+					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;padding-left: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;width: 16px !important;\"><span style=\"font-weight: bold;\">Errors de Plataforma</span></td>"
+					+ "                              </tr>" + "                           </tbody>"
+					+ "                        </table>" + "                     </td>" + "                  </tr>"
+					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                            <tbody>" + "                               <tr>"
+					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Error</span></td>"
+					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Freq&#252;&#232;ncia</span></td>"
+					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Percentatge d&#39;errors</span></td>"
+					+ "                               </tr>";
+			if (listaErrores != null && !listaErrores.isEmpty()) {
+				for (EventoCM lerrp : listaErrPlat) {
+					msg += "                               <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
+							+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ lerrp.getTipoEvento() + "</td>"
+							+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ lerrp.getConcurrencias() + "</td>"
+							+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ formatDouble(lerrp.getPorc()) + "%</td>  " + "                               </tr>";
+				}
+			} else {
+				msg += "                               <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
+						+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"> No hi ha registres al dia de avui</td>"
+						+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
+						+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>  "
+						+ "                               </tr>";
+			}
+			msg += "                            </tbody>" + "                         </table>"
+					+ "                     </td>" + "                  </tr>" + "                  <tr>"
+					+ "                     <td style=\"font-weight: bold;padding-bottom: .5em;\">"
+					+ "                        <div style=\"height:20px;\"></div>" + "                     </td>"
+					+ "                  </tr>" + "                  <tr>"
+					+ "                     <td style=\"font-weight: bold;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                           <tbody>" + "                              <tr>"
+					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;padding-left: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;width: 16px !important;\"><span style=\"font-weight: bold;\">Tr&#224;mits no finalitzats sense errors</span></td>"
+					+ "                              </tr>" + "                           </tbody>"
+					+ "                        </table>" + "                     </td>" + "                  </tr>"
+					+ "                  <tr>"
+					+ "                     <td style=\"font-weight: bold;padding-bottom: .5em;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                            <tbody>" + "                               <tr>"
+					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Tr&#224;mit</span></td>"
+					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Versi&#243;</span></td>"
+					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Sessions no finalitzades</span></td>"
+					+ "                               </tr>";
+			if (listaInacabados != null && !listaInacabados.isEmpty()) {
+				for (ErroresPorTramiteCM lerri : listaInacabados) {
+					msg += "                               <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
+							+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ lerri.getIdTramite() + "</td>"
+							+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ lerri.getVersion() + "</td>"
+							+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ lerri.getSesionesInacabadas() + "</td>  " + "                               </tr>";
+				}
+			} else {
+				msg += "                               <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
+						+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"> No hi ha registres al dia de avui</td>"
+						+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
+						+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>  "
+						+ "                               </tr>";
+			}
+			msg += "                            </tbody>" + "                         </table>"
+					+ "                     </td>" + "                  </tr>"
+//					+ "                  <tr>"
+//					+ "                    <td style=\"font-weight: bold;padding-bottom: .5em;\">"
+//					+ "                       <div style=\"height:20px;\"></div>" + "                    </td>"
+//					+ "                 </tr>" + "                 <tr>"
+//					+ "                    <td style=\"font-weight: bold;\">"
+//					+ "                       <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+//					+ "                          <tbody>" + "                             <tr>"
+//					+ "                                <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;padding-left: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;width: 16px !important;\"><span style=\"font-weight: bold;\">Historial d&#39;alertes</span></td>"
+//					+ "                             </tr>" + "                          </tbody>"
+//					+ "                       </table>" + "                    </td>" + "                 </tr>"
+//					+ "                 <tr>"
+//					+ "                    <td style=\"font-weight: bold;padding-bottom: .5em;\">"
+//					+ "                       <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+//					+ "                           <tbody>" + "                              <tr>"
+//					+ "                                 <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Alerta</span></td>"
+//					+ "                                 <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Data</span></td>"
+//					+ "                              </tr>";
+//			if (listaAlertas != null && !listaAlertas.isEmpty()) {
+//				for (HistorialAlerta lerra : listaAlertas) {
+//					msg += "                              <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
+//							+ "                                 <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+//							+ lerra.getAlerta().getNombre() + " - " + lerra.getEvento() + "</td>"
+//							+ "                                 <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+//							+ convertirFecha(lerra.getFecha()) + "</td>" + "                              </tr>";
+//				}
+//			} else {
+//				msg += "                              <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
+//						+ "                                 <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"> No hi ha registres al dia de avui</td>"
+//						+ "                                 <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
+//						+ "                              </tr>";
+//			}
+//			msg += "                           </tbody>" + "                        </table>"
+//					+ "                    </td>" + "                 </tr>" + "               </tbody>"
+//					+ "            </table>" + "            "
+					+ "         </div>"
+					+ "         <p class=\"auto\" style=\"margin: 1.5em 0;padding: 1em;font-size: 0.9em;font-style: italic;\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p>"
+					+ "      </div>" + "   </body>" + "</html>";
 			System.out.println("Resumen diario enviado");
 			enviarEmail(msg);
 			purgarHistorial(historialService.listHistorialAlerta(null, null));
@@ -244,7 +437,9 @@ public class TimerReinicioDiario implements Runnable {
 	}
 
 	private Date getYesterday() {
-		return new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+		// return new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+		return Date.from(LocalDate.now().minusMonths(3).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
 	}
 
 	private Date getNow() {
@@ -292,173 +487,39 @@ public class TimerReinicioDiario implements Runnable {
 		formFin = 0;
 		firmaIni = 0;
 		firmaFin = 0;
-		listaErrores = new ArrayList<ErroresCuadroMando>();
-		List<String> listaAux = new ArrayList<String>();
+		listaErrores = new ArrayList<ErroresPorTramiteCM>();
 		filtros = new FiltroAuditoriaTramitacion(alert.getListaAreas(), false, false);
-		filtrosPlataforma = new FiltroAuditoriaTramitacion(alert.getListaAreas(), true, false);
+		filtrosInacabados = new FiltroAuditoriaTramitacion(alert.getListaAreas(), false, false);
 
 		filtros.setFechaDesde(getYesterday());
-		filtrosPlataforma.setFechaDesde(getYesterday());
+		filtrosInacabados.setFechaDesde(getYesterday());
 
-		listaDatos = hService.obtenerAuditoriaEvento(filtros, null);
-		// Quitamos seleccion de dato
-		if (listaDatos != null && !listaDatos.isEmpty()) {
-			for (EventoAuditoriaTramitacion ea : listaDatos) {
-				if (ea.getTipoEvento().equals(TypeEvento.REGISTRAR_TRAMITE_INICIO)) {
-					regIni++;
-				} else if (ea.getTipoEvento().equals(TypeEvento.REGISTRAR_TRAMITE)) {
-					regFin++;
-				} else if (ea.getTipoEvento().equals(TypeEvento.FORMULARIO_INICIO)) {
-					formIni++;
-				} else if (ea.getTipoEvento().equals(TypeEvento.FORMULARIO_FIN)) {
-					formFin++;
-				} else if (ea.getTipoEvento().equals(TypeEvento.FIRMA_INICIO)) {
-					firmaIni++;
-				} else if (ea.getTipoEvento().equals(TypeEvento.FIRMA_FIN) && ea.getResultado() != null
-						&& ea.getResultado().equals("Ok")) {
-					firmaFin++;
-				} else if (ea.getTipoEvento().equals(TypeEvento.PAGO_ELECTRONICO_INICIO)) {
-					pagIni++;
-				} else if (ea.getTipoEvento().equals(TypeEvento.PAGO_ELECTRONICO_VERIFICADO)
-						|| ea.getTipoEvento().equals(TypeEvento.PAGO_PRESENCIAL)) {
-					pagFin++;
-				} else if (ea.getTipoEvento().equals(TypeEvento.INICIAR_TRAMITE)) {
-					tramIni++;
-				} else if (ea.getTipoEvento().equals(TypeEvento.FIN_TRAMITE)) {
-					tramFin++;
-				} else if (ea.getTipoEvento().equals(TypeEvento.ERROR)) {
-					errTot++;
-					if (listaAux.contains(ea.getIdTramite() + ea.getVersionTramite())) {
-						for (ErroresCuadroMando erCmando : listaErrores) {
-							if (erCmando.getIdentificadorTramite().equals(ea.getIdTramite())
-									&& erCmando.getVersion() == ea.getVersionTramite()) {
-								erCmando.setErrTram(erCmando.getErrTram() + 1);
-								boolean encontrado = false;
-								for (ErroresTramites er : erCmando.getListaErr()) {
-									if (er.getIdentificadorError().equals(ea.getCodigoError())) {
-										encontrado = true;
-										er.setErrNum(er.getErrNum() + 1);
-										break;
-									}
-								}
-								if (!encontrado) {
-									ErroresTramites err = new ErroresTramites();
-									err.setErrNum(1);
-									err.setIdentificadorError(ea.getCodigoError());
-									erCmando.getListaErr().add(err);
-								}
-								break;
-							}
-						}
-					} else {
-						listaAux.add(ea.getIdTramite() + ea.getVersionTramite());
-						ErroresCuadroMando erC = new ErroresCuadroMando();
-						erC.setIdentificadorTramite(ea.getIdTramite());
-						erC.setVersion(ea.getVersionTramite());
-						List<ErroresTramites> listaErroresTram = new ArrayList<ErroresTramites>();
-						ErroresTramites err = new ErroresTramites();
-						err.setErrNum(1);
-						err.setIdentificadorError(ea.getCodigoError());
-						listaErroresTram.add(err);
-						erC.setListaErr(listaErroresTram);
-						erC.setErrTram(1);
-						listaErrores.add(erC);
-					}
-				}
+		filtros.setIdTramite(null);
+		filtros.setVersionTramite(null);
+		filtros.setErrorPlataforma(true);
+		filtrosInacabados.setIdTramite(null);
+		filtrosInacabados.setVersionTramite(null);
+		filtrosInacabados.setErrorPlataforma(false);
+		ResultadoEventoCM resEventoCM = hService.obtenerCountEventoCM(filtros);
 
-			}
+		if (resEventoCM != null && resEventoCM.getListaEventosCM() != null
+				&& !resEventoCM.getListaEventosCM().isEmpty()) {
+			ponerEventos(resEventoCM.getListaEventosCM());
 		}
-		listaDatosEventosPlataforma = hService.obtenerAuditoriaEvento(filtrosPlataforma, null);
-		if (listaDatosEventosPlataforma != null && !listaDatosEventosPlataforma.isEmpty()) {
-			for (EventoAuditoriaTramitacion ea : listaDatosEventosPlataforma) {
-				if (ea.getTipoEvento().equals(TypeEvento.ERROR)) {
-					errTot++;
-					if (listaAux.contains("Errors Plataforma")) {
-						for (ErroresCuadroMando erCmando : listaErrores) {
-							if (erCmando.getIdentificadorTramite().equals("Errors Plataforma")) {
-								erCmando.setErrTram(erCmando.getErrTram() + 1);
-								boolean encontrado = false;
-								for (ErroresTramites er : erCmando.getListaErr()) {
-									if (er.getIdentificadorError().equals(ea.getCodigoError())) {
-										encontrado = true;
-										er.setErrNum(er.getErrNum() + 1);
-										break;
-									}
-								}
-								if (!encontrado) {
-									ErroresTramites err = new ErroresTramites();
-									err.setErrNum(1);
-									err.setIdentificadorError(ea.getCodigoError());
-									erCmando.getListaErr().add(err);
-								}
-								break;
-							}
-						}
-					} else {
-						listaAux.add("Errors Plataforma");
-						ErroresCuadroMando erC = new ErroresCuadroMando();
-						erC.setIdentificadorTramite("Errors Plataforma");
-						List<ErroresTramites> listaErroresTram = new ArrayList<ErroresTramites>();
-						ErroresTramites err = new ErroresTramites();
-						err.setErrNum(1);
-						err.setIdentificadorError(ea.getCodigoError());
-						listaErroresTram.add(err);
-						erC.setListaErr(listaErroresTram);
-						erC.setErrTram(1);
-						listaErrores.add(erC);
-					}
-				}
-			}
-		}
-		List<String> listaIniciados;
-		List<String> listaFinalizados;
-		List<String> listaErrados;
-		for (ErroresCuadroMando ec : listaErrores) {
-			if (!ec.getIdentificadorTramite().equals("Errors Plataforma")) {
-				listaIniciados = new ArrayList<String>();
-				listaFinalizados = new ArrayList<String>();
-				listaErrados = new ArrayList<String>();
-				for (EventoAuditoriaTramitacion eAut : listaDatos) {
-					if (eAut.getIdTramite().equals(ec.getIdentificadorTramite())
-							&& eAut.getVersionTramite() == ec.getVersion()) {
-						if (eAut.getTipoEvento().equals(TypeEvento.INICIAR_TRAMITE)) {
-							listaIniciados.add(eAut.getIdSesionTramitacion());
-						} else if (eAut.getTipoEvento().equals(TypeEvento.FIN_TRAMITE)) {
-							listaFinalizados.add(eAut.getIdSesionTramitacion());
-						} else if (eAut.getTipoEvento().equals(TypeEvento.ERROR)
-								&& !listaErrados.contains(eAut.getIdSesionTramitacion())) {
-							listaErrados.add(eAut.getIdSesionTramitacion());
-						}
-					}
-				}
-				int ko = 0;
-				int ok = 0;
-				int inac = 0;
-				for (String sesion : listaIniciados) {
-					if (listaFinalizados.contains(sesion)) {
-						ok++;
-					} else if (!listaFinalizados.contains(sesion) && listaErrados.contains(sesion)) {
-						ko++;
-					} else if (!listaFinalizados.contains(sesion) && !listaErrados.contains(sesion)) {
-						inac++;
-					}
-				}
-				ec.setSesOk(ok);
-				ec.setSesKo(ko);
-				ec.setSesInac(inac + ko);
-				int iniciados = listaIniciados.size();
-				if (iniciados != 0) {
-					ec.setSesPor(Math.floor(((Double.valueOf(ko + inac) / Double.valueOf(iniciados)) * 100) * 10) / 10);
-				} else {
-					ec.setSesPor(Double.valueOf(0));
-				}
-			} else {
-				ec.setSesInac(null);
-				ec.setSesOk(null);
-				ec.setSesKo(null);
-				ec.setSesPor(null);
-			}
-		}
+
+		filtros.setSoloContar(false);
+		listaErrores = hService.obtenerErroresPorTramiteCM(filtros, null).getListaErroresCM();
+
+		// Filtra
+
+		filtrosInacabados.setSoloContar(false);
+		filtros.setErrorPlataforma(false);
+		listaInacabados = hService.obtenerErroresPorTramiteCM(filtros, null).getListaErroresCM();
+
+		filtros.setSoloContar(false);
+		listaErrPlat = hService.obtenerErroresPlataformaCM(filtros, null).getListaEventosCM();
+
+		listaAlertas = historialService.listHistorialAlerta(getYesterday(), getNow());
 	}
 
 	private String txtHacer(EventoAuditoriaTramitacion terr, String tipo) {
@@ -482,6 +543,55 @@ public class TimerReinicioDiario implements Runnable {
 
 	}
 
+	private String convertirFecha(Date fecha) {
+		return new SimpleDateFormat("dd-MM-YYYY HH:mm:ss").format(fecha);
+	}
+
+	private void ponerEventos(List<EventoCM> listaEventos) {
+		for (EventoCM ev : listaEventos) {
+			switch (TypeEvento.fromString(ev.getTipoEvento())) {
+			case REGISTRAR_TRAMITE_INICIO:
+				regIni = ev.getConcurrencias().intValue();
+				break;
+			case REGISTRAR_TRAMITE:
+				regFin = ev.getConcurrencias().intValue();
+				break;
+			case FORMULARIO_INICIO:
+				formIni = ev.getConcurrencias().intValue();
+				break;
+			case FORMULARIO_FIN:
+				formFin = ev.getConcurrencias().intValue();
+				break;
+			case FIRMA_INICIO:
+				firmaIni = ev.getConcurrencias().intValue();
+				break;
+			case FIRMA_FIN:
+				firmaFin = ev.getConcurrencias().intValue();
+				break;
+			case PAGO_ELECTRONICO_INICIO:
+				pagIni = ev.getConcurrencias().intValue();
+				break;
+			case PAGO_ELECTRONICO_VERIFICADO:
+				pagFin += ev.getConcurrencias();
+				break;
+			case PAGO_PRESENCIAL:
+				pagFin += ev.getConcurrencias();
+				break;
+			case INICIAR_TRAMITE:
+				tramIni = ev.getConcurrencias().intValue();
+				break;
+			case FIN_TRAMITE:
+				tramFin = ev.getConcurrencias().intValue();
+				break;
+			case ERROR:
+				errTot = ev.getConcurrencias().intValue();
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
 	private void purgarHistorial(List<HistorialAlerta> lHal) {
 		if (lHal != null && !lHal.isEmpty()) {
 			for (HistorialAlerta h : lHal) {
@@ -493,7 +603,8 @@ public class TimerReinicioDiario implements Runnable {
 	private void enviarEmail(String msg) {
 		try {
 			final IEmailPlugin plgEmail = (IEmailPlugin) confService.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
-			plgEmail.envioEmail(alert.getEmail(), "SISTRAHELP: Resumen Diario", msg, null);
+			plgEmail.envioEmail(alert.getEmail(), "SISTRAHELP: Resumen Diario - " + UtilJSF.getEntorno().toUpperCase(),
+					msg, null);
 		} catch (EmailPluginException e) {
 			e.printStackTrace();
 		} catch (PluginException e) {
@@ -502,10 +613,9 @@ public class TimerReinicioDiario implements Runnable {
 	}
 
 	private String parseFecha(Date fecha) {
-		Locale spanishLocale = new Locale("es", "ES");
+		Locale spanishLocale = new Locale("ca", "ES");
 		LocalDateTime fechaL = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-		String dateInSpanish = fechaL
-				.format(DateTimeFormatter.ofPattern("EEEE, dd 'de' MMMM 'de' yyyy", spanishLocale));
+		String dateInSpanish = fechaL.format(DateTimeFormatter.ofPattern("EEEE, dd  MMMM 'de' yyyy", spanishLocale));
 		return dateInSpanish;
 	}
 
@@ -615,14 +725,14 @@ public class TimerReinicioDiario implements Runnable {
 	/**
 	 * @return the listaErrores
 	 */
-	public final List<ErroresCuadroMando> getListaErrores() {
+	public final List<ErroresPorTramiteCM> getListaErrores() {
 		return listaErrores;
 	}
 
 	/**
 	 * @param listaErrores the listaErrores to set
 	 */
-	public final void setListaErrores(List<ErroresCuadroMando> listaErrores) {
+	public final void setListaErrores(List<ErroresPorTramiteCM> listaErrores) {
 		this.listaErrores = listaErrores;
 	}
 

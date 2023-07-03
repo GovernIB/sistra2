@@ -39,6 +39,7 @@ public abstract class ComponenteFormularioCampo extends ComponenteFormulario {
 	 */
 	private Script scriptValidacion;
 
+
 	/**
 	 * Verifica si es obligatorio.
 	 *
@@ -152,5 +153,7 @@ public abstract class ComponenteFormularioCampo extends ComponenteFormulario {
 	public void setScriptValidacion(final Script scriptValidacion) {
 		this.scriptValidacion = scriptValidacion;
 	}
+
+
 
 }

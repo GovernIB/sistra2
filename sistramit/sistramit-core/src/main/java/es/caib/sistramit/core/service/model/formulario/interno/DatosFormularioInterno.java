@@ -9,7 +9,6 @@ import java.util.Stack;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 
 /**
@@ -18,6 +17,9 @@ import es.caib.sistramit.core.api.model.formulario.ValorCampo;
  * @author Indra
  *
  */
+
+// TODO LEL VER COMO ENCAPSULAR ACCESO PAG FOR Y PAG ELE
+
 @SuppressWarnings("serial")
 public final class DatosFormularioInterno implements Serializable {
 
@@ -30,62 +32,57 @@ public final class DatosFormularioInterno implements Serializable {
 	 * Páginas del formulario rellenadas actual y anteriores (configuración y
 	 * datos).
 	 */
-	private final Stack<PaginaFormularioData> paginas = new Stack<>();
+	private final Stack<PaginaData> paginas = new Stack<>();
 
 	/**
 	 * Páginas del formulario descartadas, posterior a la actual (configuración y
 	 * datos).
 	 */
-	private final Map<String, PaginaFormularioData> paginasPosteriores = new LinkedHashMap<>();
+	private final Map<String, PaginaData> paginasPosteriores = new LinkedHashMap<>();
 
 	/**
-	 * Obtiene una página por identificador.
+	 * Datos de elemento de un componente lista de elementos que se está editando
+	 * (cada vez que se edite un elemento se cambiará).
+	 */
+	private DatosEdicionElemento datosEdicionElemento = null;
+
+	public DatosFormularioInterno(List<ValorCampo> valoresIniciales, PaginaData paginaData) {
+		// Establece valores iniciales
+		this.valoresIniciales = valoresIniciales;
+		// Añadimos pagina a datos formulario
+		pushPaginaFormulario(paginaData);
+	}
+
+
+	/**
+	 * Obtiene una página formulario por identificador de la lista de paginas posteriores.
 	 *
 	 * @param identificadorPagina
 	 *                                identificadorPagina
 	 * @return pagina
 	 */
-	public PaginaFormularioData getPaginaFormulario(final String identificadorPagina) {
-		PaginaFormularioData res = null;
-		for (final PaginaFormularioData p : paginas) {
-			if (p.getIdentificador().equals(identificadorPagina)) {
-				res = p;
-				break;
-			}
-		}
+	public PaginaData obtenerPaginaFormularioDataPosterior(final String identificadorPagina) {
+		final PaginaData res = paginasPosteriores.get(identificadorPagina);
 		return res;
 	}
 
 	/**
-	 * Obtiene una página por identificador de la lista de paginas posteriores.
+	 * Obtiene página actual (página formulario o elemento).
 	 *
-	 * @param identificadorPagina
-	 *                                identificadorPagina
-	 * @return pagina
-	 */
-	public PaginaFormularioData getPaginaPosteriorFormulario(final String identificadorPagina) {
-		final PaginaFormularioData res = paginasPosteriores.get(identificadorPagina);
-		return res;
-	}
-
-	/**
-	 * Obtiene una página.
-	 *
-	 * @param indicePagina
-	 *                         indice pagina
-	 * @return pagina
-	 */
-	public PaginaFormularioData getPaginaFormulario(final int indicePagina) {
-		return paginas.get(indicePagina - ConstantesNumero.N1);
-	}
-
-	/**
-	 * Obtiene página actual.
+	 * @param elemento
+	 *                   si se accede a la página principal o al detalle de un
+	 *                   elemento
 	 *
 	 * @return paginas
 	 */
-	public PaginaFormularioData getPaginaActualFormulario() {
-		return paginas.get(getIndicePaginaActual() - ConstantesNumero.N1);
+	public PaginaData obtenerPaginaDataActual(final boolean elemento) {
+		PaginaData paginaActual;
+		if (!elemento) {
+			paginaActual = paginas.get(obtenerIndicePaginaFormularioActual() - ConstantesNumero.N1);
+		} else {
+			paginaActual = datosEdicionElemento.getPaginaElemento();
+		}
+		return paginaActual;
 	}
 
 	/**
@@ -94,7 +91,7 @@ public final class DatosFormularioInterno implements Serializable {
 	 * @param pagina
 	 *                   Pagina
 	 */
-	public void pushPaginaFormulario(final PaginaFormularioData pagina) {
+	public void pushPaginaFormulario(final PaginaData pagina) {
 		paginas.push(pagina);
 		if (paginasPosteriores.containsKey(pagina.getIdentificador())) {
 			paginasPosteriores.remove(pagina.getIdentificador());
@@ -107,7 +104,7 @@ public final class DatosFormularioInterno implements Serializable {
 	 * pagina luego.
 	 */
 	public void popPaginaFormulario() {
-		final PaginaFormularioData p = paginas.pop();
+		final PaginaData p = paginas.pop();
 		paginasPosteriores.put(p.getIdentificador(), p);
 	}
 
@@ -116,27 +113,8 @@ public final class DatosFormularioInterno implements Serializable {
 	 *
 	 * @return paginaActual
 	 */
-	public int getIndicePaginaActual() {
+	public int obtenerIndicePaginaFormularioActual() {
 		// Ultima pagina cargada
-		return paginas.size();
-	}
-
-	/**
-	 * Método de acceso a paginaActual.
-	 *
-	 * @return id paginaActual
-	 */
-	public String getIdentificadorPaginaActual() {
-		final PaginaFormularioData pag = paginas.get(paginas.size() - ConstantesNumero.N1);
-		return pag.getIdentificador();
-	}
-
-	/**
-	 * Obtiene número de páginas del formulario.
-	 *
-	 * @return Número de páginas.
-	 */
-	public int getNumeroPaginas() {
 		return paginas.size();
 	}
 
@@ -144,12 +122,215 @@ public final class DatosFormularioInterno implements Serializable {
 	 * Obtiene las dependencias de un campo.
 	 *
 	 * @param idCampo
-	 *                    Id campo
+	 *                     Id campo
+	 * @param elemento
+	 *                     Indica si es elemento
 	 * @return lista de id campo para los cuales tiene dependencia
 	 */
-	public DependenciaCampo getDependenciaCampo(final String idCampo) {
+	public DependenciaCampo obtenerDependenciaCampo(final String idCampo, final boolean elemento) {
+		DependenciaCampo res;
+		if (!elemento) {
+			res = getDependenciaCampoPaginaFormulario(idCampo);
+		} else {
+			res = getDependenciaCampoPaginaElemento(idCampo);
+		}
+		return res;
+	}
+
+	/**
+	 * Devuelve los valores de los campos accesibles desde el script de un campo de
+	 * la pagina actual.
+	 *
+	 * @param idCampo
+	 *                    id campo
+	 * @return Valores de los campos.
+	 */
+	public List<ValorCampo> obtenerValoresAccesiblesCampoPaginaFormulario(final String idCampo) {
+		final List<ValorCampo> res = new ArrayList<>();
+
+		// Podra tener accesibles los valores de las paginas anteriores
+		for (int i = ConstantesNumero.N1; i < obtenerIndicePaginaFormularioActual(); i++) {
+			res.addAll(obtenerPaginaFormularioData(i).getValores());
+		}
+
+		// Podra tener accesibles los valores de los campos anteriores en la
+		// pagina actual
+		for (final ValorCampo vc : obtenerPaginaDataActual(false).getValores()) {
+			if (vc.getId().equals(idCampo)) {
+				res.add(vc);
+				break;
+			} else {
+				res.add(vc);
+			}
+		}
+
+		return res;
+	}
+
+
+	/**
+	 * Devuelve los valores de los campos accesibles del formulario desde la página
+	 * actual.
+	 *
+	 * @return Valores de los campos.
+	 */
+	public List<ValorCampo> obtenerValoresAccesiblesPaginaFormularioActual() {
+		final List<ValorCampo> res = new ArrayList<>();
+		for (int i = ConstantesNumero.N1; i <= obtenerIndicePaginaFormularioActual(); i++) {
+			res.addAll(obtenerPaginaFormularioData(i).getValores());
+		}
+		return res;
+	}
+
+	/**
+	 * Devuelve los valores de los campos páginas posteriores a la página actual
+	 * (páginas formulario descartadas).
+	 *
+	 * @return Valores de los campos.
+	 */
+	public List<ValorCampo> obtenerValoresPosterioresPaginaFormularioActual() {
+		final List<ValorCampo> res = new ArrayList<>();
+		for (final String id : paginasPosteriores.keySet()) {
+			res.addAll(paginasPosteriores.get(id).getValores());
+		}
+		return res;
+	}
+
+	/**
+	 * Método de acceso a valoresIniciales.
+	 *
+	 * @return valoresIniciales
+	 */
+	public List<ValorCampo> obtenerValoresIniciales() {
+		return valoresIniciales;
+	}
+
+
+	/**
+	 * Obtiene páginas rellenadas.
+	 *
+	 * @return Lista ids páginas rellenadas
+	 */
+	public List<String> obtenerIdsPaginasFormularioRellenadas() {
+		final List<String> res = new ArrayList<>();
+		for (final PaginaData p : this.paginas) {
+			res.add(p.getIdentificador());
+		}
+		return res;
+	}
+
+	/**
+	 * Devuelve los valores de los campos accesibles desde el script de un campo de
+	 * la pagina de elemento que se está editando.
+	 *
+	 * @param idCampo
+	 *                    id campo
+	 * @return Valores de los campos.
+	 */
+	public List<ValorCampo> obtenerEdicionElementoValoresAccesiblesCampo(final String idCampo) {
+
+
+		chekEdicionElemento();
+
+		// Valores accesibles en página principal desde campo LEL
+		final List<ValorCampo> valoresPaginaPrincipal = obtenerValoresAccesiblesCampoPaginaFormulario(datosEdicionElemento.getIdCampoListaElementos());
+
+		// Valores accesibles en página elemento desde el campo que se está evaluando
+		final List<ValorCampo> valoresPaginaElemento = new ArrayList<ValorCampo>();
+		for (final ValorCampo vc : datosEdicionElemento.getPaginaElemento().getValores()) {
+			if (vc.getId().equals(idCampo)) {
+				valoresPaginaElemento.add(vc);
+				break;
+			} else {
+				valoresPaginaElemento.add(vc);
+			}
+		}
+
+		// Retornamos valores
+		final List<ValorCampo> res = new ArrayList<ValorCampo>();
+		res.addAll(valoresPaginaPrincipal);
+		res.addAll(valoresPaginaElemento);
+		return res;
+	}
+
+
+	/**
+	 * Obtiene valores accesibles desde página elemento.
+	 * @return valores accesibles
+	 */
+	public List<ValorCampo> obtenerEdicionElementoValoresAccesiblesPagina() {
+
+		chekEdicionElemento();
+
+		// Valores accesibles en página principal desde campo LEL
+		final List<ValorCampo> valoresPaginaPrincipal = obtenerValoresAccesiblesCampoPaginaFormulario(datosEdicionElemento.getIdCampoListaElementos());
+
+		// Valores accesibles en página elemento (todos los de la página)
+		final List<ValorCampo> valoresPaginaElemento = new ArrayList<ValorCampo>();
+		for (final ValorCampo vc : datosEdicionElemento.getPaginaElemento().getValores()) {
+			valoresPaginaElemento.add(vc);
+		}
+
+		// Retornamos valores
+		final List<ValorCampo> res = new ArrayList<ValorCampo>();
+		res.addAll(valoresPaginaPrincipal);
+		res.addAll(valoresPaginaElemento);
+		return res;
+
+	}
+
+	/**
+	 * Devuelve id lista elementos que se está editando.
+	 * @return id
+	 */
+	public String obtenerEdicionElementoIdCampoListaElementos() {
+		chekEdicionElemento();
+		return datosEdicionElemento.getIdCampoListaElementos();
+	}
+
+	// ------------------ FUNCIONES INTERNAS -------------------------
+	/**
+	 * Dependencia campo pagina elemento.
+	 *
+	 * @param idCampo
+	 *                    id Campo
+	 * @return Dependencia campo
+	 */
+	private DependenciaCampo getDependenciaCampoPaginaElemento(final String idCampo) {
 		DependenciaCampo res = null;
-		for (final PaginaFormularioData pagina : paginas) {
+		chekEdicionElemento();
+		for (final DependenciaCampo config : datosEdicionElemento.getPaginaElemento().getDependencias()) {
+			if (config.getIdCampo().equals(idCampo)) {
+				res = config;
+				break;
+			}
+		}
+		if (res == null) {
+			throw new ErrorConfiguracionException("No existeix camp amb id: " + idCampo);
+		}
+		return res;
+	}
+
+	/**
+	 * Verifica si se está editando un elemento.
+	 */
+	private void chekEdicionElemento() {
+		if (datosEdicionElemento == null) {
+			throw new ErrorConfiguracionException("No existen datos de edición de elemento");
+		}
+	}
+
+	/**
+	 * Dependencia campo pagina formulario.
+	 *
+	 * @param idCampo
+	 *                    id Campo
+	 * @return Dependencia campo
+	 */
+	private DependenciaCampo getDependenciaCampoPaginaFormulario(final String idCampo) {
+		// Obtiene dependencias paginas anteriores
+		DependenciaCampo res = null;
+		for (final PaginaData pagina : paginas) {
 			for (final DependenciaCampo config : pagina.getDependencias()) {
 				if (config.getIdCampo().equals(idCampo)) {
 					res = config;
@@ -164,115 +345,59 @@ public final class DatosFormularioInterno implements Serializable {
 	}
 
 	/**
-	 * Devuelve los valores de los campos accesibles desde el script de un campo de
-	 * la pagina actual.
+	 * Indica que se va a editar un elemento.
 	 *
-	 * @param idCampo
-	 *                    id campo
-	 * @return Valores de los campos.
+	 * @param datosEdicionElemento
+	 *                                 datosEdicionElemento a establecer
 	 */
-	public List<ValorCampo> getValoresAccesiblesCampo(final String idCampo) {
-		final List<ValorCampo> res = new ArrayList<>();
-
-		// Podra tener accesibles los valores de las paginas anteriores
-		for (int i = ConstantesNumero.N1; i < getIndicePaginaActual(); i++) {
-			res.addAll(getPaginaFormulario(i).getValores());
-		}
-
-		// Podra tener accesibles los valores de los campos anteriores en la
-		// pagina actual
-		for (final ValorCampo vc : getPaginaActualFormulario().getValores()) {
-			if (vc.getId().equals(idCampo)) {
-				res.add(vc);
-				break;
-			} else {
-				res.add(vc);
-			}
-		}
-
-		return res;
+	public void inicializarEdicionElemento(final DatosEdicionElemento datosEdicionElemento) {
+		this.datosEdicionElemento = datosEdicionElemento;
+		chekEdicionElemento();
 	}
 
 	/**
-	 * Obtiene la configuración de un campo.
+	 * Indica que se finaliza edición elemento.
 	 *
-	 * @param idCampo
-	 *                    id campo
-	 * @return Configuración de un campo.
 	 */
-	public ConfiguracionCampo getConfiguracionCampo(final String idCampo) {
-		ConfiguracionCampo res = null;
-		for (final PaginaFormularioData pagina : paginas) {
-			for (final ConfiguracionCampo config : pagina.getConfiguracion()) {
-				if (config.getId().equals(idCampo)) {
-					res = config;
-					break;
-				}
-			}
-		}
-		if (res == null) {
-			throw new ErrorConfiguracionException("No existeix camp amb id: " + idCampo);
-		}
-		return res;
+	public void resetearEdicionElemento() {
+		this.datosEdicionElemento = null;
 	}
 
 	/**
-	 * Devuelve los valores de los campos accesibles del formulario desde la página
-	 * actual.
-	 *
-	 * @return Valores de los campos.
+	 * Verifica si se está editando un elemento.
+	 * @return indica si se está editando elemento nuevo
 	 */
-	public List<ValorCampo> getValoresAccesiblesPaginaActual() {
-		final List<ValorCampo> res = new ArrayList<>();
-		for (int i = ConstantesNumero.N1; i <= getIndicePaginaActual(); i++) {
-			res.addAll(getPaginaFormulario(i).getValores());
-		}
-		return res;
+	public boolean isEdicionElementoElementoNuevo() {
+		chekEdicionElemento();
+		// Indica si es nuevo (no tiene asignado indice)
+		return datosEdicionElemento.getIndiceElemento() == null;
 	}
 
 	/**
-	 * Devuelve los valores de los campos páginas posteriores a la página actual
-	 * (páginas formulario descartadas).
-	 *
-	 * @return Valores de los campos.
+	 * Obtiene índice elemento que se esta modificando.
+	 * @return indice
 	 */
-	public List<ValorCampo> getValoresPosterioresPaginaActual() {
-		final List<ValorCampo> res = new ArrayList<>();
-		for (final String id : paginasPosteriores.keySet()) {
-			res.addAll(paginasPosteriores.get(id).getValores());
-		}
-		return res;
+	public Integer obtenerEdicionElementoIndiceElemento() {
+		return datosEdicionElemento.getIndiceElemento();
 	}
 
-	/**
-	 * Método de acceso a valoresIniciales.
-	 *
-	 * @return valoresIniciales
-	 */
-	public List<ValorCampo> getValoresIniciales() {
-		return valoresIniciales;
-	}
+
+
+
+	// ----------------------------------------------------------------------------------------
+	//	FUNCIONES PRIVADAS
+	// ----------------------------------------------------------------------------------------
 
 	/**
-	 * Método para establecer valoresIniciales.
+	 * Obtiene una página.
 	 *
-	 * @param valoresIniciales
-	 *                             valoresIniciales a establecer
+	 * @param indicePagina
+	 *                         indice pagina
+	 * @return pagina
 	 */
-	public void setValoresIniciales(final List<ValorCampo> valoresIniciales) {
-		this.valoresIniciales = valoresIniciales;
+	private PaginaData obtenerPaginaFormularioData(final int indicePagina) {
+		return paginas.get(indicePagina - ConstantesNumero.N1);
 	}
 
-	/**
-	 * Obtiene páginas rellenadas.
-	 *
-	 * @return Lista ids páginas rellenadas
-	 */
-	public List<String> getIdsPaginasRellenadas() {
-		final List<String> res = new ArrayList<>();
-		for (final PaginaFormularioData p : this.paginas) {
-			res.add(p.getIdentificador());
-		}
-		return res;
-	}
+
 }

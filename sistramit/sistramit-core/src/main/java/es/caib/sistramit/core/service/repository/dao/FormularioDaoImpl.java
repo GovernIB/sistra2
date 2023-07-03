@@ -80,7 +80,7 @@ public final class FormularioDaoImpl implements FormularioDao {
 
 		// Establecemos datos
 		final DatosInicioSesionFormulario dis = new DatosInicioSesionFormulario();
-		dis.setTicket(h.getTicket());
+		dis.setIdSesionFormulario(h.getTicket());
 		dis.setIdioma(h.getIdioma());
 		dis.setIdSesionTramitacion(h.getIdSesionTramitacion());
 		dis.setIdPaso(h.getIdPaso());

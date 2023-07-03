@@ -1,6 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypePluginScript;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeScript;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
@@ -48,6 +50,7 @@ import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.service.SeccionReutilizableService;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.core.api.util.UtilScripts;
@@ -65,6 +68,10 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 public class DialogScript extends DialogControllerBase {
 
 	private static final long serialVersionUID = 20111020L;
+
+	/** System service */
+	@Inject
+	private SystemService systemService;
 
 	/** Script service. */
 	@Inject
@@ -260,8 +267,9 @@ public class DialogScript extends DialogControllerBase {
 						Long.valueOf(idFormularioActual), idComponente, idPagina, obtenerCargarPaginasPosteriores(),
 						true, identificadorSeccion);
 			}
+
 			if (disenyoFormulario != null) {
-				cargarArbol(disenyoFormulario, disenyoFormulario.getIdentificador());
+					cargarArbol(disenyoFormulario, disenyoFormulario.getIdentificador());
 			}
 
 			if (idTramiteVersion != null) {
@@ -402,6 +410,16 @@ public class DialogScript extends DialogControllerBase {
 			for (final DisenyoFormularioComponenteSimple componente : pagina.getComponentes()) {
 				final DefaultTreeNode nodoComponente = new DefaultTreeNode(
 						new OpcionArbol(componente.getIdentificador(), componente.getTipo()));
+
+				//Si tiene hijos, es porque es una Lista elementos
+				if (componente.tieneHijos()) {
+					for(DisenyoFormularioComponenteSimple hijo : componente.getHijos()) {
+						final DefaultTreeNode nodoHijo = new DefaultTreeNode(
+								new OpcionArbol(hijo.getIdentificador(), hijo.getTipo()));
+						nodoComponente.getChildren().add(nodoHijo);
+					}
+				}
+
 				nodoPagina.getChildren().add(nodoComponente);
 			}
 			nodoFormulario.getChildren().add(nodoPagina);
@@ -476,6 +494,10 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void aceptar() {
 
+		if(verificarExtensionesAnexos()) {
+			return;
+		}
+
 		boolean comentariosWarning = UtilScripts.buscarComentariosScript(data.getContenido());
 		if (comentariosWarning) {
 			addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
@@ -533,6 +555,75 @@ public class DialogScript extends DialogControllerBase {
 			result.setResult(this.data);
 		}
 		UtilJSF.closeDialog(result);
+	}
+
+	public boolean verificarExtensionesAnexos() {
+		boolean warn = false;
+		convertirExtensionesAMinusculas();
+
+		String contenido = UtilScripts.extraerContenido(data.getContenido());
+		if (contenido.contains("setExtensiones")) {
+			List<String> extensionesAnexos = new ArrayList<>();
+			Matcher matcher = Pattern.compile("setExtensiones\\(\\'(.*?)\\'").matcher(contenido);
+
+			Integer totalCoincidencias = 0;
+			while (matcher.find()) {
+				totalCoincidencias++;
+				String[] extensiones = matcher.group(1).split(Constantes.LISTAS_SEPARADOR);
+				for (final String extension : extensiones) {
+					if (!extensionesAnexos.contains(extension)) {
+						extensionesAnexos.add(extension);
+					}
+				}
+			}
+
+			// Vamos a comprobar si alguna no tiene las comillas simples
+			Matcher matcherComprobarIncorrectas = Pattern.compile("setExtensiones\\((.*?)\\)").matcher(contenido);
+
+			Integer totalCoincidenciasGenerico = 0;
+			while (matcherComprobarIncorrectas.find()) {
+				totalCoincidenciasGenerico++;
+				// EN JDK9 o superiores, existe un macher.result.count, que es más eficiente
+			}
+
+			if (totalCoincidenciasGenerico.compareTo(totalCoincidencias) != 0) {
+				addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+						UtilJSF.getLiteral("dialogScript.error.setExtensionesErroneo"));
+				return true;
+			}
+
+			if(!extensionesAnexos.isEmpty()) {
+				for (final String cadena : extensionesAnexos) {
+					if (!cadena.matches("^\\w{3,4}$")) {
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.extensiones.formato"));
+						return true;
+					}
+
+					String[] listaExtensionesPermitidas = {};
+
+					if (systemService.obtenerPropiedadConfiguracion(
+							TypePropiedadConfiguracion.ANEXOS_EXTENSIONES_PERMITIDAS.toString()) != null) {
+						listaExtensionesPermitidas = systemService.obtenerPropiedadConfiguracion(
+								TypePropiedadConfiguracion.ANEXOS_EXTENSIONES_PERMITIDAS.toString()).split(",");
+					}
+					if (!Arrays.asList(listaExtensionesPermitidas).contains(cadena)) {
+						addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+								UtilJSF.getLiteral("error.extensionNoPermitida", new Object[] { cadena }));
+						return true;
+					}
+				}
+			}
+		}
+
+		return warn;
+	}
+
+	public void convertirExtensionesAMinusculas() {
+		Matcher matcher = Pattern.compile("setExtensiones\\(\\'(.*?)\\'").matcher(data.getContenido());
+
+		if(matcher.find()) {
+			data.setContenido(data.getContenido().replaceAll("setExtensiones\\(\\'(.*?)\\'", "setExtensiones('"+matcher.group(1).toLowerCase()+"'"));
+		}
 	}
 
 	/**

@@ -33,9 +33,12 @@ public interface ConfiguracionFormularioHelper {
 	 *
 	 * @param pDatosSesion
 	 *                         Datos sesion
+	 * @param elemento
+	 *                         Indica si existe elemento
 	 * @return Configuracion dinamica de campos
 	 */
-	List<ConfiguracionModificadaCampo> evaluarEstadoCamposPagina(DatosSesionFormularioInterno pDatosSesion);
+	List<ConfiguracionModificadaCampo> evaluarEstadoCamposPagina(DatosSesionFormularioInterno pDatosSesion,
+			boolean elemento);
 
 	/**
 	 * Evalua estado dinamico de un campo.
@@ -44,9 +47,12 @@ public interface ConfiguracionFormularioHelper {
 	 *                         Datos sesion formulario
 	 * @param campoDef
 	 *                         Definicion campo
+	 * @param elemento
+	 *                         Indica si existe elemento
 	 * @return Estado campo (nulo si no tiene estado dinamico)
 	 */
-	ResEstadoCampo evaluarEstadoCampo(final DatosSesionFormularioInterno pDatosSesion, final RComponente campoDef);
+	ResEstadoCampo evaluarEstadoCampo(final DatosSesionFormularioInterno pDatosSesion, final RComponente campoDef,
+			boolean elemento);
 
 	/**
 	 * Evalua acciones a mostrar en pagina actual.
@@ -66,6 +72,13 @@ public interface ConfiguracionFormularioHelper {
 	 */
 	RPlantillaFormulario obtenerPlantillaPdfVisualizacion(DatosSesionFormularioInterno pDatosSesion);
 
+	/**
+	 * Evaluar script navegación página actual.
+	 *
+	 * @param pDatosSesion
+	 *                         Datos sesión.
+	 * @return Id página siguiente
+	 */
 	String evaluarScriptNavegacionPaginaActual(DatosSesionFormularioInterno pDatosSesion);
 
 }

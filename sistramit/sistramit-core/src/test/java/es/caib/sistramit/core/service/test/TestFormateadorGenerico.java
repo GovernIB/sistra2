@@ -14,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
+import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
@@ -45,6 +46,10 @@ public class TestFormateadorGenerico {
 		final ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		final RFormularioInterno formularioInterno = mapper.readValue(formularioInternoJSON, RFormularioInterno.class);
+		final List<String> paginasFormulario = new ArrayList<>();
+		for (final RPaginaFormulario rpg : formularioInterno.getPaginas()) {
+			paginasFormulario.add(rpg.getIdentificador());
+		}
 
 		/** Para generar el formulario. **/
 		final XmlFormulario formulario = new XmlFormulario();
@@ -96,8 +101,8 @@ public class TestFormateadorGenerico {
 		properties.load(inputpropiedad);
 
 		final FormateadorGenerico formateador = new FormateadorGenerico();
-		final byte[] resultado = formateador.formatear(UtilsFormulario.valoresToXml(formulario), null, plantilla, "es",
-				formularioInterno, "Título del procedimiento", "Título del trámite", "1234", "1234");
+		final byte[] resultado = formateador.formatear(UtilsFormulario.valoresToXml(formulario), paginasFormulario,
+				plantilla, "es", formularioInterno, "Título del procedimiento", "Título del trámite", "1234", "1234");
 		final Path path = Paths.get("/formateador.pdf");
 		Files.write(path, resultado);
 	}

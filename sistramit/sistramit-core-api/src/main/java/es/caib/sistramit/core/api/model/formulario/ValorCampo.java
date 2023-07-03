@@ -23,7 +23,8 @@ import es.caib.sistramit.core.api.model.formulario.types.TypeValor;
 	@JsonSubTypes({
 	    @Type(value = ValorCampoSimple.class, name = "s"),
 	    @Type(value = ValorCampoIndexado.class, name = "i"),
-	    @Type(value = ValorCampoListaIndexados.class, name = "l")
+	    @Type(value = ValorCampoListaIndexados.class, name = "l"),
+	    @Type(value = ValorCampoListaElementos.class, name = "e")
 	    })
 @SuppressWarnings("serial")
 public abstract class ValorCampo implements Serializable {

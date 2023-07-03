@@ -18,7 +18,7 @@ public final class ValorCampoListaElementos extends ValorCampo {
 	/**
 	 * Valor del campo.
 	 */
-	private List<ValorElemento> valor = new ArrayList<ValorElemento>();
+	private List<ValorElemento> valor = new ArrayList<>();
 
 	/**
 	 * Constructor.
@@ -61,7 +61,8 @@ public final class ValorCampoListaElementos extends ValorCampo {
 	public static ValorCampo createValorVacio(final String pIdentificador) {
 		final ValorCampoListaElementos vcl = new ValorCampoListaElementos();
 		vcl.setId(pIdentificador);
-		vcl.setValor(null);
+		vcl.setValor(new ArrayList<ValorElemento>());
+		// vcl.setValor(null);
 		return vcl;
 	}
 

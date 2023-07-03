@@ -129,4 +129,8 @@ public interface RestApiInternaService {
 
 	Area getAreaByIdentificador(String identificadorEntidad, String identificador);
 
+	List<String> listTramitesByArea(String idEntidad, String idArea);
+
+	List<Integer> listVersionesByTramite(String idEntidad, String idArea, String idTramite);
+
 }

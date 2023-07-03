@@ -62,6 +62,12 @@ public class JCampoFormulario implements IModelApi {
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "campoFormulario", cascade = CascadeType.ALL)
 	private JCampoFormularioTexto campoFormularioTexto;
 
+	@Column(name = "FCA_LELMOS", nullable = false, precision = 1, scale = 0)
+	private boolean listaElementosVisible;
+
+	@Column(name = "FCA_LELCOL", nullable = true, precision = 3, scale = 0)
+	private Integer listaElementosAnchoColumna;
+
 	public JCampoFormulario() {
 		super();
 	}
@@ -155,6 +161,34 @@ public class JCampoFormulario implements IModelApi {
 		this.campoFormularioTexto = campoFormularioTexto;
 	}
 
+	/**
+	 * @return the listaElementosVisible
+	 */
+	public boolean isListaElementosVisible() {
+		return listaElementosVisible;
+	}
+
+	/**
+	 * @param listaElementosVisible the listaElementosVisible to set
+	 */
+	public void setListaElementosVisible(boolean listaElementosVisible) {
+		this.listaElementosVisible = listaElementosVisible;
+	}
+
+	/**
+	 * @return the listaElementosAnchoColumna
+	 */
+	public Integer getListaElementosAnchoColumna() {
+		return listaElementosAnchoColumna;
+	}
+
+	/**
+	 * @param listaElementosAnchoColumna the listaElementosAnchoColumna to set
+	 */
+	public void setListaElementosAnchoColumna(Integer listaElementosAnchoColumna) {
+		this.listaElementosAnchoColumna = listaElementosAnchoColumna;
+	}
+
 	public <T> ComponenteFormularioCampo toModel(final Class<T> model) {
 		ComponenteFormularioCampo newModel = null;
 
@@ -164,6 +198,8 @@ public class JCampoFormulario implements IModelApi {
 				newModel.setObligatorio(obligatorio);
 				newModel.setSoloLectura(soloLectura);
 				newModel.setNoModificable(noModificable);
+				newModel.setListaElementosAnchoColumna(listaElementosAnchoColumna);
+				newModel.setListaElementosVisible(listaElementosVisible);
 
 				if (scriptAutocalculado != null) {
 					newModel.setScriptAutorrellenable(scriptAutocalculado.toModel());
@@ -189,6 +225,8 @@ public class JCampoFormulario implements IModelApi {
 		jModel.setObligatorio(false);
 		jModel.setSoloLectura(false);
 		jModel.setNoModificable(false);
+		jModel.setListaElementosVisible(false);
+		jModel.setListaElementosAnchoColumna(0);
 		jModel.setElementoFormulario(JElementoFormulario.createDefault(pTipoObjeto, pOrden, pJLinea, isTipoSeccion, identificadorSeccion));
 		return jModel;
 	}
@@ -205,6 +243,8 @@ public class JCampoFormulario implements IModelApi {
 			jcampo.setObligatorio(campoFormulario.isObligatorio());
 			jcampo.setSoloLectura(campoFormulario.isSoloLectura());
 			jcampo.setNoModificable(campoFormulario.isNoModificable());
+			jcampo.setListaElementosAnchoColumna(campoFormulario.getListaElementosAnchoColumna());
+			jcampo.setListaElementosVisible(campoFormulario.isListaElementosVisible());
 			jcampo.setCampoFormularioCasillaVerificacion(JCampoFormularioCasillaVerificacion
 					.clonar(campoFormulario.getCampoFormularioCasillaVerificacion(), jcampo));
 			jcampo.setCampoFormularioIndexado(

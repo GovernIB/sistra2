@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
+import es.caib.sistrages.core.api.model.ComponenteFormularioListaElementos;
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
@@ -82,6 +84,7 @@ import es.caib.sistrages.core.service.repository.dao.ScriptDao;
 import es.caib.sistrages.core.service.repository.dao.SeccionReutilizableDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
 import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
+import es.caib.sistrages.core.service.repository.model.JFormularioTramite;
 import es.caib.sistrages.core.service.repository.model.JFuenteDatos;
 
 /**
@@ -413,6 +416,14 @@ public class TramiteServiceImpl implements TramiteService {
 	@Override
 	@NegocioInterceptor
 	public void removeTramiteVersion(final Long idTramiteVersion, final int numVersion) {
+		// Borrar un disenyoFormulario asociado a la Lista Elementos
+		List<Long> idFormulariosLE = tramiteDao.getDisenyosLEByTramite(idTramiteVersion);
+		if (idFormulariosLE != null && !idFormulariosLE.isEmpty()) {
+			for(Long idLE : idFormulariosLE) {
+				formularioInternoDao.removeFormulario(idLE);
+			}
+		}
+
 		tramiteDao.removeTramiteVersion(idTramiteVersion);
 		avisoEntidadDao.removeMensajes(idTramiteVersion, numVersion);
 	}
@@ -1300,6 +1311,24 @@ public class TramiteServiceImpl implements TramiteService {
 			}
 		}
 
+
+		// Paso 6. Importamos los diseños de la LE.
+		final Map<Long, Long> mapDisenyosLE = new HashMap<>();
+		if (filaImportar.getDisenyosLE() != null && !filaImportar.getDisenyosLE().isEmpty()) {
+			for(Entry<Long, DisenyoFormulario> dato : filaImportar.getDisenyosLE().entrySet()) {
+				ComponenteFormularioListaElementos componente = new ComponenteFormularioListaElementos();
+				//Introducimos el diseño de la LE: dato.getValue()
+				Long idNuevo = formularioInternoDao.addFormulario(componente );
+				Map<String,Long> formulariosId = null;
+				Long idJFormulario = idNuevo;
+				JFormularioTramite formulario = null;
+				tramitePasoDao.importarDisenyoFormulario(formulariosId, formulario, idJFormulario, filaImportar.getFormularios(), filaImportar.getFicherosContent(),
+						idDominiosEquivalencia, filaImportar.getIdEntidad(), secciones, mapSecciones, formateadores,
+						mapFormateadores, mapDisenyosLE, false, dato.getValue());
+				mapDisenyosLE.put(dato.getKey(), idNuevo);
+			}
+		}
+
 		// Importamos la version de trámite
 		final Long idTramiteVersion = tramiteDao.importar(filaImportar.getFilaTramiteVersion(), idTramite, idDominios,
 				filaImportar.getUsuario(), filaImportar.isModoIM());
@@ -1325,7 +1354,7 @@ public class TramiteServiceImpl implements TramiteService {
 			tramitePasoDao.importar(filaImportar.getFilaTramiteRegistro(), tramitePaso, idTramiteVersion,
 					filaImportar.getIdEntidad(), filaImportar.getFormularios(), filaImportar.getFicheros(),
 					filaImportar.getFicherosContent(), formateadores, mapFormateadores, gestores, mapGestores,
-					idDominiosEquivalencia, idArea, mapSecciones, secciones);
+					idDominiosEquivalencia, idArea, mapSecciones, secciones, mapDisenyosLE);
 			ordenPaso++;
 		}
 
@@ -1740,8 +1769,15 @@ public class TramiteServiceImpl implements TramiteService {
 	}
 
 	@Override
+	@NegocioInterceptor
 	public boolean existenTramitesBySeccionReutilizable(Long idSeccionReutilizable) {
 		return tramiteDao.existenTramiteVersionBySeccionReutilizable(idSeccionReutilizable);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<Long> getDisenyosLEByTramite(Long codigo) {
+		return tramiteDao.getDisenyosLEByTramite(codigo);
 	}
 
 }

@@ -12,6 +12,7 @@ import es.caib.sistramit.core.api.model.formulario.Captcha;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
 import es.caib.sistramit.core.api.model.formulario.ResultadoBuscadorDinamico;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
+import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarElemento;
 import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
@@ -53,14 +54,14 @@ public class FlujoFormularioInternoServiceImpl implements FlujoFormularioInterno
 	@NegocioInterceptor
 	public PaginaFormulario cargarPaginaActual(final String idSesionFormulario) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
-		return ff.cargarPaginaActual();
+		return ff.cargarPaginaFormularioActual();
 	}
 
 	@Override
 	@NegocioInterceptor
 	public PaginaFormulario cargarPaginaAnterior(final String idSesionFormulario, final List<ValorCampo> valores) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
-		return ff.cargarPaginaAnterior(valores);
+		return ff.cargarPaginaFormularioAnterior(valores);
 	}
 
 	@Override
@@ -68,7 +69,7 @@ public class FlujoFormularioInternoServiceImpl implements FlujoFormularioInterno
 	public ResultadoEvaluarCambioCampo evaluarCambioCampoPagina(final String idSesionFormulario, final String idCampo,
 			final List<ValorCampo> valoresPagina) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
-		return ff.evaluarCambioCampoPagina(idCampo, valoresPagina);
+		return ff.evaluarCambioCampoPaginaFormulario(idCampo, valoresPagina);
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public class FlujoFormularioInternoServiceImpl implements FlujoFormularioInterno
 	public ResultadoGuardarPagina guardarPagina(final String idSesionFormulario, final List<ValorCampo> valoresPagina,
 			final String accionPersonalizada) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
-		return ff.guardarPagina(valoresPagina, accionPersonalizada);
+		return ff.guardarPaginaFormulario(valoresPagina, accionPersonalizada);
 	}
 
 	@Override
@@ -84,7 +85,7 @@ public class FlujoFormularioInternoServiceImpl implements FlujoFormularioInterno
 	public ResultadoGuardarPagina guardarSalirPagina(final String idSesionFormulario,
 			final List<ValorCampo> valoresPagina) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
-		return ff.guardarSalirPagina(valoresPagina);
+		return ff.salirGuardandoPaginaFormulario(valoresPagina);
 	}
 
 	@Override
@@ -107,28 +108,68 @@ public class FlujoFormularioInternoServiceImpl implements FlujoFormularioInterno
 	public ResultadoBuscadorDinamico buscadorDinamico(final String idSesionFormulario, final String idCampo,
 			final String textoCampo, final List<ValorCampo> valores) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
-		return ff.buscadorDinamico(idCampo, textoCampo, valores);
+		return ff.buscadorDinamicoPaginaFormulario(idCampo, textoCampo, valores);
 	}
 
 	@Override
 	@NegocioInterceptor
 	public Captcha generarImagenCaptcha(final String idSesionFormulario, final String idCampo) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
-		return ff.generarImagenCaptcha(idCampo);
+		return ff.generarImagenCaptchaPaginaFormulario(idCampo);
 	}
 
 	@Override
 	@NegocioInterceptor
 	public Captcha generarSonidoCaptcha(final String idSesionFormulario, final String idCampo) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
-		return ff.generarSonidoCaptcha(idCampo);
+		return ff.generarSonidoCaptchaPaginaFormulario(idCampo);
 	}
 
 	@Override
 	@NegocioInterceptor
 	public void regenerarCaptcha(final String idSesionFormulario, final String idCampo) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
-		ff.regenerarCaptcha(idCampo);
+		ff.regenerarCaptchaPaginaFormulario(idCampo);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public PaginaFormulario anyadirElemento(final String idSesionFormulario, final String idCampoListaElementos,
+			final List<ValorCampo> valoresPagina) {
+		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
+		return ff.anyadirElemento(idCampoListaElementos, valoresPagina);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public PaginaFormulario modificarElemento(final String idSesionFormulario, final String idCampoListaElementos,
+			final int indiceElemento, final List<ValorCampo> valoresPagina) {
+		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
+		return ff.modificarElemento(idCampoListaElementos, indiceElemento, valoresPagina);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public PaginaFormulario consultarElemento(final String idSesionFormulario, final String idCampoListaElementos,
+			final int indiceElemento, final List<ValorCampo> valoresPagina) {
+		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
+		return ff.consultarElemento(idCampoListaElementos, indiceElemento, valoresPagina);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public ResultadoEvaluarCambioCampo evaluarCambioCampoElemento(final String idSesionFormulario,
+			final String idCampoListaElementos, final String idCampo, final List<ValorCampo> valoresPagina) {
+		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
+		return ff.evaluarCambioCampoElemento(idCampoListaElementos, idCampo, valoresPagina);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public ResultadoGuardarElemento guardarElemento(final String idSesionFormulario, final String idCampoListaElementos,
+			final List<ValorCampo> valoresElemento) {
+		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
+		return ff.guardarElemento(idCampoListaElementos, valoresElemento);
 	}
 
 	// -------------------------------------------------------------------------------------------

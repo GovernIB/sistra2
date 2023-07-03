@@ -17,6 +17,7 @@ import es.caib.sistramit.core.api.model.formulario.Captcha;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
 import es.caib.sistramit.core.api.model.formulario.ResultadoBuscadorDinamico;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
+import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarElemento;
 import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypePalabraReservada;
@@ -272,6 +273,183 @@ public final class FormularioController extends TramitacionController {
 		final RespuestaJSON res = new RespuestaJSON();
 		res.setEstado(TypeRespuestaJSON.SUCCESS);
 		return generarJsonView(res);
+	}
+
+	/**
+	 * Añade elemento a componente lista elementos.
+	 *
+	 * @param idCampoListaElementos
+	 *                                  id campo lista elementos
+	 * @param request
+	 *                                  request
+	 * @return Página para editar elemento
+	 */
+	@RequestMapping("/anyadirElemento.json")
+	public ModelAndView anyadirElemento(@RequestParam("idCampoListaElementos") final String idCampoListaElementos,
+			final HttpServletRequest request) {
+
+		final String idSesionFormulario = getIdSesionFormularioActiva();
+
+		// Recuperamos valores pagina
+		final Map<String, String> valoresRequest = extraerValoresCampo(request);
+
+		// Deserializamos valores
+		final List<ValorCampo> valoresCampos = formService.deserializarValoresCampos(idSesionFormulario,
+				valoresRequest);
+
+		// Añade elemento
+		final PaginaFormulario pf = formService.anyadirElemento(idSesionFormulario, idCampoListaElementos,
+				valoresCampos);
+
+		// Devuelve página elemento
+		final RespuestaJSON res = new RespuestaJSON();
+		res.setDatos(pf);
+		res.setMensaje(new MensajeUsuario("", ""));
+		res.setEstado(TypeRespuestaJSON.SUCCESS);
+		return generarJsonView(res);
+	}
+
+	/**
+	 * Añade elemento a componente lista elementos.
+	 *
+	 * @param idCampoListaElementos
+	 *                                  id campo lista elementos
+	 * @param request
+	 *                                  request
+	 * @return Página para editar elemento
+	 */
+	@RequestMapping("/modificarElemento.json")
+	public ModelAndView modificarElemento(@RequestParam("idCampoListaElementos") final String idCampoListaElementos,
+			@RequestParam("indiceElemento") final int indiceElemento, final HttpServletRequest request) {
+
+		final String idSesionFormulario = getIdSesionFormularioActiva();
+
+		// Recuperamos valores pagina
+		final Map<String, String> valoresRequest = extraerValoresCampo(request);
+
+		// Deserializamos valores
+		final List<ValorCampo> valoresCampos = formService.deserializarValoresCampos(idSesionFormulario,
+				valoresRequest);
+
+		// Añade elemento
+		final PaginaFormulario pf = formService.modificarElemento(idSesionFormulario, idCampoListaElementos,
+				indiceElemento, valoresCampos);
+
+		// Devuelve página elemento
+		final RespuestaJSON res = new RespuestaJSON();
+		res.setDatos(pf);
+		res.setMensaje(new MensajeUsuario("", ""));
+		res.setEstado(TypeRespuestaJSON.SUCCESS);
+		return generarJsonView(res);
+	}
+
+	/**
+	 * Evalua el cambio de una página de un elemento y calcula el valor los campos
+	 * según los scripts del formulario.
+	 *
+	 * @param idCampoListaElementos
+	 *                                  Id campo lista de elementos
+	 * @param idCampo
+	 *                                  Id campo que se esta modificando
+	 * @param request
+	 *                                  Request para obtener los datos actuales de
+	 *                                  la página en el cliente
+	 * @return Datos de la página resultantes que deben refrescarse en el cliente .
+	 */
+	@RequestMapping("/evaluarCambioCampoElemento.json")
+	public ModelAndView evaluarCambioCampoElemento(
+			@RequestParam("idCampoListaElementos") final String idCampoListaElementos,
+			@RequestParam("idCampo") final String idCampo, final HttpServletRequest request) {
+
+		final String idSesionFormulario = getIdSesionFormularioActiva();
+
+		/// Recuperamos valores pagina
+		final Map<String, String> valoresRequest = extraerValoresCampo(request);
+
+		// Deserializamos valores
+		final List<ValorCampo> valoresCampos = formService.deserializarValoresCampos(idSesionFormulario,
+				valoresRequest);
+
+		// Invocamos al controlador para evaluar el cambio
+		final ResultadoEvaluarCambioCampo re = formService.evaluarCambioCampoElemento(idSesionFormulario,
+				idCampoListaElementos, idCampo, valoresCampos);
+
+		// Devolvemos respuesta
+		final RespuestaJSON resp = new RespuestaJSON();
+		resp.setDatos(re);
+
+		return generarJsonView(resp);
+	}
+
+	/**
+	 * Guarda elemento.
+	 *
+	 * @param request
+	 *                    Datos de la página
+	 * @return Resultado de guardar la página: indica si se ha guardado bien, si se
+	 *         ha llegado al fin del formulario, si no ha pasado la validación y se
+	 *         ha generado un mensaje, etc. En caso de llegar al fin del formulario
+	 *         se indicará el ticket de acceso al XML y PDF generados .
+	 */
+	@RequestMapping("/guardarElemento.json")
+	public ModelAndView guardarElemento(@RequestParam("idCampoListaElementos") final String idCampoListaElementos,
+			final HttpServletRequest request) {
+
+		final String idSesionFormulario = getIdSesionFormularioActiva();
+
+		// Recuperamos valores pagina
+		final Map<String, String> valoresRequest = extraerValoresCampo(request);
+
+		// Deserializamos valores
+		final List<ValorCampo> valoresCampos = formService.deserializarValoresCampos(idSesionFormulario,
+				valoresRequest);
+
+		// Invocamos a controlador para guardar elemento
+		final ResultadoGuardarElemento re = formService.guardarElemento(idSesionFormulario, idCampoListaElementos,
+				valoresCampos);
+
+		// Devolvemos respuesta
+		final RespuestaJSON resp = new RespuestaJSON();
+		resp.setDatos(re);
+
+		return generarJsonView(resp);
+	}
+
+	/**
+	 * Abre elemento en modo consulta.
+	 *
+	 * @param idCampoListaElementos
+	 *                                  id componente LEL
+	 * @param indiceElemento
+	 *                                  índice elemento
+	 * @param request
+	 *                                  Request
+	 * @return Página para consultar elemento
+	 */
+	@RequestMapping("/consultarElemento.json")
+	public ModelAndView consultarElemento(@RequestParam("idCampoListaElementos") final String idCampoListaElementos,
+			@RequestParam("indiceElemento") final int indiceElemento, final HttpServletRequest request) {
+
+		final String idSesionFormulario = getIdSesionFormularioActiva();
+
+		// Recuperamos valores pagina
+		final Map<String, String> valoresRequest = extraerValoresCampo(request);
+
+		// Deserializamos valores
+		final List<ValorCampo> valoresCampos = formService.deserializarValoresCampos(idSesionFormulario,
+				valoresRequest);
+
+		// Añade elemento
+		final PaginaFormulario pf = formService.consultarElemento(idSesionFormulario, idCampoListaElementos,
+				indiceElemento, valoresCampos);
+
+		// Devuelve página elemento
+		final RespuestaJSON res = new RespuestaJSON();
+		res.setDatos(pf);
+		res.setMensaje(new MensajeUsuario("", ""));
+		res.setEstado(TypeRespuestaJSON.SUCCESS);
+		return generarJsonView(res);
+
 	}
 
 	// ----------------------------------------------------

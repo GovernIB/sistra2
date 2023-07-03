@@ -61,7 +61,6 @@ import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeImportarTipo;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -325,6 +324,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	 * 9. Incluir los formeteadores_ID<br />
 	 * 10. Incluir las gestoresExternosFormulario_ID<br />
 	 * 11. Incluir las seccionesReutilizables_ID<br />
+	 * 12. Incluir los diseños de la lista de elementos.
 	 *
 	 * @throws IOException
 	 *
@@ -398,6 +398,19 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		for (final SeccionReutilizable seccion : seccionesReutilizables) {
 			result.append(seccion.toString("", UtilJSF.getIdioma().toString()));
 			result.append("\n\n");
+		}
+
+		// 12. Incluir los disenyoListaElemento_ID.data
+		List<Long> idFormulariosLE = tramiteService.getDisenyosLEByTramite(this.tramiteVersion.getCodigo());
+		if (idFormulariosLE != null) {
+			for (final Long idLE : idFormulariosLE) {
+				// Primero hay que obtener los diseños.
+				result.append("Disenyo de Lista de Elementos : " + idLE +" \n");
+				final DisenyoFormulario disenyoFormulario = formularioInternoService
+						.getFormularioInternoCompleto(idLE);
+				result.append(disenyoFormulario.toString("", UtilJSF.getIdioma().toString()));
+				result.append("\n\n");
+			}
 		}
 		return result.toString();
 	}
@@ -500,9 +513,20 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		for (final SeccionReutilizable seccion : seccionesReutilizables) {
 			// Primero hay que obtener los diseños.
 			final DisenyoFormulario disenyoFormulario = formularioInternoService
-					.getFormularioInterno(seccion.getIdFormularioAsociado());
+					.getFormularioInternoCompleto(seccion.getIdFormularioAsociado());
 			seccion.setDisenyoFormulario(disenyoFormulario);
 			incluirModelApi(zos, seccion, "seccionesReutilizables_" + seccion.getCodigo() + LITERAL_SUFIJO_DATA);
+		}
+
+		// 12. Incluir los disenyoListaElemento_ID.data
+		List<Long> idFormulariosLE = tramiteService.getDisenyosLEByTramite(this.tramiteVersion.getCodigo());
+		if (idFormulariosLE != null) {
+			for (final Long idLE : idFormulariosLE) {
+				// Primero hay que obtener los diseños.
+				final DisenyoFormulario disenyoFormulario = formularioInternoService
+						.getFormularioInternoCompleto(idLE);
+				incluirModelApi(zos, disenyoFormulario, "disenyoListaElemento_" + disenyoFormulario.getCodigo() + LITERAL_SUFIJO_DATA);
+			}
 		}
 
 		zos.closeEntry();

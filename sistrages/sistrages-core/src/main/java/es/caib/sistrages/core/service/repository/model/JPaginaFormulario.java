@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -22,6 +23,7 @@ import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoOculto;
+import es.caib.sistrages.core.api.model.ComponenteFormularioListaElementos;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
@@ -68,8 +70,9 @@ public class JPaginaFormulario implements IModelApi {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "paginaFormulario", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<JLineaFormulario> lineasFormulario = new HashSet<>(0);
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "paginaFormulario")
-	private Set<JListaElementosFormulario> listasElementosFormulario = new HashSet<>(0);
+	//Ya no se mapea por paginas sino por disenyo
+	//@OneToMany(fetch = FetchType.LAZY, mappedBy = "paginaFormulario")
+	//private Set<JListaElementosFormulario> listasElementosFormulario = new HashSet<>(0);
 
 	public JPaginaFormulario() {
 		super();
@@ -153,14 +156,6 @@ public class JPaginaFormulario implements IModelApi {
 		this.paginaAsociadaListaElementos = paginaAsociadaListaElementos;
 	}
 
-	public Set<JListaElementosFormulario> getListasElementosFormulario() {
-		return this.listasElementosFormulario;
-	}
-
-	public void setListasElementosFormulario(final Set<JListaElementosFormulario> listasElementosFormulario) {
-		this.listasElementosFormulario = listasElementosFormulario;
-	}
-
 	public Set<JLineaFormulario> getLineasFormulario() {
 		return lineasFormulario;
 	}
@@ -232,7 +227,7 @@ public class JPaginaFormulario implements IModelApi {
 							componentes.add(elemento.getImagenFormulario().toModel());
 							break;
 						case LISTA_ELEMENTOS:
-							componentes.add(elemento.getCampoFormulario().toModel(ComponenteFormulario.class));
+							componentes.add(elemento.getListaElementosFormulario().toModel());
 							break;
 						case SECCION:
 							componentes.add(elemento.getSeccionFormulario().toModel());
@@ -262,18 +257,6 @@ public class JPaginaFormulario implements IModelApi {
 			}
 		}
 
-		if (this.listasElementosFormulario != null) {
-			for (final JListaElementosFormulario elementoForm : listasElementosFormulario) {
-				final LineaComponentesFormulario comp = new LineaComponentesFormulario();
-				comp.setCodigo(elementoForm.getCodigo());
-				final List<ComponenteFormulario> componentes = new ArrayList<>(0);
-				if (elementoForm.getElementoFormulario() != null) {
-					componentes.add(elementoForm.getElementoFormulario().toModel(JElementoFormulario.class));
-				}
-				comp.setComponentes(componentes);
-				lineas.add(comp);
-			}
-		}
 		pagina.setLineas(lineas);
 
 		return pagina;
@@ -306,7 +289,7 @@ public class JPaginaFormulario implements IModelApi {
 	}
 
 	public static JPaginaFormulario clonar(final JPaginaFormulario pagina, final JFormulario jformulario,
-			final boolean cambioArea) {
+			final boolean cambioArea, final Map<Long, JFormulario> mapLE) {
 		JPaginaFormulario jpagina = null;
 		if (pagina != null) {
 			jpagina = new JPaginaFormulario();
@@ -333,19 +316,12 @@ public class JPaginaFormulario implements IModelApi {
 				int ordenLinea = 1;
 				for (final JLineaFormulario jlinea : jlineas) {
 					jlinea.setOrden(ordenLinea);
-					lineasFormulario.add(JLineaFormulario.clonar(jlinea, jpagina, cambioArea));
+					lineasFormulario.add(JLineaFormulario.clonar(jlinea, jpagina, cambioArea, mapLE));
 					ordenLinea++;
 				}
 				jpagina.setLineasFormulario(lineasFormulario);
 			}
 
-			if (pagina.getListasElementosFormulario() != null) {
-				final Set<JListaElementosFormulario> listasElementosFormulario = new HashSet<>(0);
-				for (final JListaElementosFormulario listaElementos : pagina.getListasElementosFormulario()) {
-					listasElementosFormulario.add(JListaElementosFormulario.clonar(listaElementos, jpagina));
-				}
-				jpagina.setListasElementosFormulario(listasElementosFormulario);
-			}
 		}
 		return jpagina;
 	}

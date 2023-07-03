@@ -22,6 +22,7 @@ import es.caib.sistrages.core.api.exception.ImportacionError;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.exception.TramiteVersionException;
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
@@ -54,13 +55,13 @@ import es.caib.sistrages.core.service.repository.model.JFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormularioTramite;
 import es.caib.sistrages.core.service.repository.model.JGestorExternoFormularios;
 import es.caib.sistrages.core.service.repository.model.JHistorialVersion;
+import es.caib.sistrages.core.service.repository.model.JListaElementosFormulario;
 import es.caib.sistrages.core.service.repository.model.JLiteral;
 import es.caib.sistrages.core.service.repository.model.JPasoRellenar;
 import es.caib.sistrages.core.service.repository.model.JPasoTramitacion;
 import es.caib.sistrages.core.service.repository.model.JPlantillaFormulario;
 import es.caib.sistrages.core.service.repository.model.JPlantillaIdiomaFormulario;
 import es.caib.sistrages.core.service.repository.model.JScript;
-import es.caib.sistrages.core.service.repository.model.JSeccionReutilizable;
 import es.caib.sistrages.core.service.repository.model.JTramite;
 import es.caib.sistrages.core.service.repository.model.JVersionTramite;
 
@@ -577,23 +578,39 @@ public class TramiteDaoImpl implements TramiteDao {
 			final JPasoTramitacion jpaso = JPasoTramitacion.clonar(origPaso, jVersionTramite);
 			jpaso.setOrden(ordenPaso);
 
+			Map<Long, JFormulario> mapLE = new HashMap<>();
+
 			// Si el paso es de tipo rellenar
 			if (origPaso.getPasoRellenar() != null && origPaso.getPasoRellenar().getFormulariosTramite() != null
 					&& !origPaso.getPasoRellenar().getFormulariosTramite().isEmpty()) {
+
 				// Habria que guardarse los diseños.
 				for (final JFormularioTramite formulario : origPaso.getPasoRellenar().getFormulariosTramite()) {
 					forms.put(formulario.getIdentificador(), formulario.getFormulario());
+
+					//Por cada formulario, vemos si hay Disenyos de LE asociados al formulario
+					List<Long> idFormulariosLE = this.getDisenyosLEByFormulario(formulario.getCodigo());
+					if (idFormulariosLE != null && !idFormulariosLE.isEmpty()) {
+						for(Long idFormularioLE : idFormulariosLE) {
+							JFormulario jformOriginal = entityManager.find(JFormulario.class, idFormularioLE);
+							final JFormulario jform = JFormulario.clonar(jformOriginal, formateadores, cambioArea, null);
+							entityManager.persist(jform);
+							entityManager.flush();
+							mapLE.put(idFormularioLE, jform);
+						}
+					}
 				}
 			}
 
 			entityManager.persist(jpaso);
 			entityManager.flush();
 
+
 			// Después de guardar los pasos se encarga de clonar los formularios
 			if (!forms.isEmpty()) {
 				for (final Map.Entry<String, JFormulario> entry : forms.entrySet()) {
 					if (entry.getValue() != null) {
-						final JFormulario jform = JFormulario.clonar(entry.getValue(), formateadores, cambioArea);
+						final JFormulario jform = JFormulario.clonar(entry.getValue(), formateadores, cambioArea, mapLE);
 						entityManager.persist(jform);
 						entityManager.flush();
 						for (final JFormularioTramite formTramite : jpaso.getPasoRellenar().getFormulariosTramite()) {
@@ -1939,6 +1956,59 @@ public class TramiteDaoImpl implements TramiteDao {
 			result = list.get(0);
 		}
 		return result;
+	}
+
+	@Override
+	public List<Long> getDisenyosLEByTramite(Long idTramiteVersion) {
+		final List<Long> resultado = new ArrayList<>();
+
+		final String sql = "Select ELEM.listaElementosFormulario From JPasoRellenar pr JOIN pr.pasoTramitacion pt JOIN pt.versionTramite t JOIN pr.formulariosTramite FORMS JOIN FORMS.formulario FORMU JOIN FORMU.paginas PAGS JOIN PAGS.lineasFormulario LIN JOIN LIN.elementoFormulario ELEM where ELEM.tipo = '"
+				+ TypeObjetoFormulario.LISTA_ELEMENTOS.toString() + "' and t.codigo = :idTramiteVersion ";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idTramiteVersion", idTramiteVersion);
+
+		@SuppressWarnings("unchecked")
+		final List<JListaElementosFormulario> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JListaElementosFormulario> iterator = results.iterator(); iterator
+					.hasNext();) {
+				final JListaElementosFormulario jlista = iterator.next();
+				if (jlista.getFormularioAsociado() != null) {
+					resultado.add(jlista.getFormularioAsociado().getCodigo());
+				}
+			}
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public List<Long> getDisenyosLEByFormulario(Long idFormulario) {
+		final List<Long> resultado = new ArrayList<>();
+
+		final String sql = "Select ELEM.listaElementosFormulario From JFormularioTramite FORMS JOIN FORMS.formulario FORMU JOIN FORMU.paginas PAGS JOIN PAGS.lineasFormulario LIN JOIN LIN.elementoFormulario ELEM where ELEM.tipo = '"
+				+ TypeObjetoFormulario.LISTA_ELEMENTOS.toString() + "' and FORMS.codigo = :idFormulario ";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idFormulario", idFormulario);
+
+		@SuppressWarnings("unchecked")
+		final List<JListaElementosFormulario> results = query.getResultList();
+
+		List<Long> idIncluidas = new ArrayList<>();
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JListaElementosFormulario> iterator = results.iterator(); iterator
+					.hasNext();) {
+				final JListaElementosFormulario jlista = iterator.next();
+				if (jlista.getFormularioAsociado() != null) {
+					resultado.add(jlista.getFormularioAsociado().getCodigo());
+				}
+			}
+		}
+
+		return resultado;
 	}
 
 }

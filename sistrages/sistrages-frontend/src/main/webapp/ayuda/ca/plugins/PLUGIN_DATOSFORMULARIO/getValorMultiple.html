@@ -38,6 +38,7 @@
 <p>
 	<ul>
 		<li><b>campo</b>:Cadena que conté l'identificador del camp. </li>
+		<li><b>indice</b>: Valor de l'índex dins del camp múltiple. Tenir en compte que els índexs comencen per 0. </li>
 	</ul>
 </p>
 
@@ -50,7 +51,7 @@
 	</ul>
 </p>
  <p>
-	<b>Exemple</b>
+	<b>EXEMPLE</b>
  </p>
    <p> Obtenir l'últim valor del camp múltiple 'campoTitulaciones', per a això primer s'ha d'obtenir el total de valors:</p>
 	<p class="codigoScript">
@@ -60,7 +61,7 @@
 	La funció getNumeroValoresValorMultiple retornarà 8 (total de valors d'aquest camp). Amb aquest valor podem calcular l'índex de l'últim element de la següent manera:
 </p>
 <p class="codigoScript">
-	if (numero > 0) {
+	if (total > 0) {
 		var valorCompuesto = PLUGIN_DATOSFORMULARIO.getValorMultiple('campoTitulaciones', total -1);
 	}
  </p>

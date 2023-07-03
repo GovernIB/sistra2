@@ -136,4 +136,6 @@ public interface HelpDeskService {
 
 	void updateFormularioSoporte(Soporte soporte);
 
+	String urlLogoEntidad(String codDir3);
+
 }

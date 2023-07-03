@@ -31,7 +31,7 @@ import es.caib.sistramit.core.service.component.script.plugins.formulario.ResEst
 import es.caib.sistramit.core.service.component.script.plugins.formulario.ResValorCampo;
 import es.caib.sistramit.core.service.model.formulario.interno.DatosSesionFormularioInterno;
 import es.caib.sistramit.core.service.model.formulario.interno.DependenciaCampo;
-import es.caib.sistramit.core.service.model.formulario.interno.PaginaFormularioData;
+import es.caib.sistramit.core.service.model.formulario.interno.PaginaData;
 import es.caib.sistramit.core.service.model.formulario.interno.VariablesFormulario;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFormulario;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
@@ -55,10 +55,11 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 
 	@Override
 	public ResultadoEvaluarCambioCampo calcularDatosPaginaCambioCampo(final DatosSesionFormularioInterno datosSesion,
-			final String idCampo, final List<ValorCampo> valoresPagina) {
+			final String idCampo, final List<ValorCampo> valoresPagina, final boolean elemento) {
+
 		// Debe existir un campo que se modifique
 		if (idCampo == null) {
-			throw new CampoFormularioNoExisteException(datosSesion.getIdFormulario(), null);
+			throw new CampoFormularioNoExisteException(datosSesion.getDatosInicioSesion().getIdFormulario(), null);
 		}
 
 		// Creamos objeto resultado para indicar los cambios que se han
@@ -66,23 +67,23 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 		final ResultadoEvaluarCambioCampo res = new ResultadoEvaluarCambioCampo();
 
 		// Actualizamos datos de la pagina actual con los nuevos datos
-		final PaginaFormularioData paginaActual = datosSesion.getDatosFormulario().getPaginaActualFormulario();
+		final PaginaData paginaActual = datosSesion.getDatosFormulario().obtenerPaginaDataActual(elemento);
 		if (valoresPagina != null) {
 			paginaActual.actualizarValoresPagina(valoresPagina);
 		}
 
 		// Ejecutamos scripts campos pantalla
 		// - Script de validacion campo
-		calcularDatosPaginaValidacionCampo(datosSesion, idCampo, res);
+		calcularDatosPaginaValidacionCampo(datosSesion, idCampo, elemento, res);
 
 		// Ejecutamos resto de scripts solo si se pasa el script de validacion
 		if (!UtilsFlujo.isErrorValidacion(res.getValidacion())) {
 			// - Script autorrellenable
-			calcularDatosPaginaAutorrellenable(datosSesion, idCampo, res);
+			calcularDatosPaginaAutorrellenable(datosSesion, idCampo, elemento, res);
 			// - Script valores posibles para selectores
-			calcularDatosPaginaValoresPosibles(datosSesion, idCampo, res);
+			calcularDatosPaginaValoresPosibles(datosSesion, elemento, idCampo, res);
 			// - Script estado
-			calcularDatosPaginaEstado(datosSesion, idCampo, res);
+			calcularDatosPaginaEstado(datosSesion, idCampo, elemento, res);
 		}
 
 		// Devolvemos cambios realizados
@@ -90,12 +91,15 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	}
 
 	@Override
-	public void recalcularDatosPagina(final DatosSesionFormularioInterno datosSesion) {
+	public void recalcularDatosPagina(final DatosSesionFormularioInterno datosSesion, final boolean elemento) {
+
+		// Pagina actual
+		final PaginaData pag = datosSesion.getDatosFormulario().obtenerPaginaDataActual(elemento);
+		// Definición página actual
+		final RPaginaFormulario pagDef = datosSesion.obtenerDefinicionPaginaActual( elemento);
+
 		// Recorrer todos los campos de la pagina que tienen script autorrellenable y
 		// ejecutar si son solo lectura o no tienen valor
-		final PaginaFormularioData pag = datosSesion.getDatosFormulario().getPaginaActualFormulario();
-		final RPaginaFormulario pagDef = UtilsFormularioInterno.obtenerDefinicionPagina(datosSesion,
-				pag.getIndiceDef());
 		final List<RComponente> campos = UtilsFormularioInterno.devuelveListaCampos(pagDef);
 		for (final RComponente rc : campos) {
 			final RPropiedadesCampo pc = UtilsFormularioInterno.obtenerPropiedadesCampo(rc);
@@ -104,7 +108,7 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 			if (UtilsSTG.existeScript(pc.getScriptAutorrellenable())
 					&& (pc.isSoloLectura() || (vc == null || vc.esVacio()))) {
 				// Ejecutar script autorrellenable y actualiza valor campo
-				ValorCampo vca = ejecutarScriptAutorrellenable(datosSesion, rc);
+				ValorCampo vca = ejecutarScriptAutorrellenable(datosSesion, rc, elemento);
 				// Si se ha reseteado campo, creamos valor vacio dependiendo del campo
 				if (vca instanceof ValorResetCampos) {
 					vca = UtilsFormularioInterno.crearValorVacio(rc);
@@ -114,7 +118,7 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 				if (!vca.esValorIgual(vc)) {
 					// Calcula cambios (actualiza valores modificados pagina)
 					final ResultadoEvaluarCambioCampo res = new ResultadoEvaluarCambioCampo();
-					calcularDatosPaginaAutorrellenable(datosSesion, rc.getIdentificador(), res);
+					calcularDatosPaginaAutorrellenable(datosSesion, rc.getIdentificador(), elemento, res);
 				}
 			}
 		}
@@ -123,10 +127,10 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	@Override
 	public ResultadoBuscadorDinamico calcularValoresPosiblesSelectorDinamico(
 			final DatosSesionFormularioInterno datosSesion, final String idCampo, final String textoCampo,
-			final List<ValorCampo> valoresPagina) {
+			final List<ValorCampo> valoresPagina, final boolean elemento) {
 
 		// Recupera pagina actual
-		final PaginaFormularioData paginaActual = datosSesion.getDatosFormulario().getPaginaActualFormulario();
+		final PaginaData paginaActual = datosSesion.getDatosFormulario().obtenerPaginaDataActual(elemento);
 
 		// Recupera definicion campo selector
 		final ConfiguracionCampo confCampo = paginaActual.getConfiguracionCampo(idCampo);
@@ -141,11 +145,11 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 		}
 
 		// Recuperamos valores posibles
-		final RPaginaFormulario pagDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
+		final RPaginaFormulario pagDef = datosSesion.obtenerDefinicionPaginaActual( elemento);
 		final RComponenteSelector campoDef = (RComponenteSelector) UtilsFormularioInterno
 				.devuelveComponentePagina(pagDef, idCampo);
 		final List<ValorIndexado> vpc = valoresPosiblesHelper.calcularValoresPosiblesCampoSelectorDinamico(datosSesion,
-				campoDef, textoCampo);
+				campoDef, textoCampo, elemento);
 
 		// Devuelve resultado
 		final ResultadoBuscadorDinamico res = new ResultadoBuscadorDinamico();
@@ -153,6 +157,76 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 		return res;
 
 	}
+
+	@Override
+	public void revisarCamposAutorrellenablesElemento(final DatosSesionFormularioInterno datosSesion) {
+
+		// Obtiene definición página formulario detalle
+		final RPaginaFormulario paginaDetalleDef = datosSesion.obtenerDefinicionPaginaActual(
+				true);
+
+		// Obtiene pagina formulario detalle
+		final PaginaData paginaDetalle = datosSesion.getDatosFormulario().obtenerPaginaDataActual(true);
+
+		// Lista campos pagina detalle
+		final List<RComponente> campos = UtilsFormularioInterno.devuelveListaCampos(paginaDetalleDef);
+
+		// Revisa campos autorrellenable con dependencias del formulario principal (se
+		// calcularan los marcados como solo lectura y los que no tengan valor).
+
+		for (final RComponente wc : campos) {
+
+			// Obtiene valor actual campo
+			final ValorCampo valorCampo = paginaDetalle.getValorCampo(wc.getIdentificador());
+
+			// Verifica si existe dependencia externa
+			// - Debe existir script autorrellenable
+			// - Debe estar marcado como solo lectura o estar vacio
+			boolean dependenciaExterna = false;
+			final RPropiedadesCampo pc = UtilsFormularioInterno.obtenerPropiedadesCampo(wc);
+			if (UtilsSTG.existeScript(pc.getScriptAutorrellenable())
+					&& (pc.isNoModificable() || valorCampo == null || valorCampo.esVacio())) {
+				// Verificamos si tiene dependencias campos que no pertenecen al detalle
+				final DependenciaCampo dc = datosSesion.getDatosFormulario().obtenerDependenciaCampo(wc.getIdentificador(),
+						true);
+				if (dc != null && !dc.getDependenciasAutorrellenable().isEmpty()) {
+					for (final String idCampoDep : dc.getDependenciasAutorrellenable()) {
+						dependenciaExterna = !UtilsFormularioInterno.existeCampo(idCampoDep, campos);
+						if (dependenciaExterna) {
+							break;
+						}
+					}
+				}
+			}
+
+			// Si tiene dependencia externa, evaluamos cambio campo
+			if (dependenciaExterna) {
+				// Ejecutar script autorrellenable y actualiza valor campo
+				ValorCampo vca = ejecutarScriptAutorrellenable(datosSesion, wc, true);
+				if (vca != null) {
+
+					// Si se ha reseteado campo, creamos valor vacio dependiendo
+					// del campo
+					if (vca instanceof ValorResetCampos) {
+						vca = UtilsFormularioInterno.crearValorVacio(wc);
+					}
+
+					final boolean valorModificado = !vca.esValorIgual(valorCampo);
+					paginaDetalle.actualizarValorCampo(vca);
+					// Evalua cambios a realizar tras modificar campo
+					if (valorModificado) {
+						// Calcula cambios (actualiza valores modificados pagina)
+						final ResultadoEvaluarCambioCampo res = new ResultadoEvaluarCambioCampo();
+						calcularDatosPaginaAutorrellenable(datosSesion, wc.getIdentificador(), true, res);
+					}
+				}
+			}
+
+		}
+
+	}
+
+
 
 	// --------------------------------------------------------------------------------
 	// Funciones auxiliares
@@ -165,14 +239,16 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	 *                        Datos sesion formulario
 	 * @param idCampo
 	 *                        Id campo modificado
+	 * @param elemento
+	 *                        Indica si es elemento
 	 * @param res
 	 *                        Resumen de los datos y configuracion modificada
 	 */
 	private void calcularDatosPaginaValidacionCampo(final DatosSesionFormularioInterno datosSesion,
-			final String idCampo, final ResultadoEvaluarCambioCampo res) {
+			final String idCampo, final boolean elemento, final ResultadoEvaluarCambioCampo res) {
 
 		// Definicion campo
-		final RPaginaFormulario pagDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
+		final RPaginaFormulario pagDef = datosSesion.obtenerDefinicionPaginaActual( elemento);
 		final RComponente campoDef = UtilsFormularioInterno.devuelveComponentePagina(pagDef, idCampo);
 		final RPropiedadesCampo propsDef = UtilsFormularioInterno.obtenerPropiedadesCampo(campoDef);
 
@@ -181,8 +257,7 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 			// Ejecutamos script
 			final Map<String, String> codigosError = UtilsSTG
 					.convertLiteralesToMap(propsDef.getScriptValidacion().getLiterales());
-			final VariablesFormulario variablesFormulario = UtilsFormularioInterno
-					.generarVariablesFormulario(datosSesion, campoDef.getIdentificador());
+			final VariablesFormulario variablesFormulario = datosSesion.generarVariablesFormulario(campoDef.getIdentificador(), elemento);
 			final RespuestaScript rs = scriptFormulario.executeScriptFormulario(
 					TypeScriptFormulario.SCRIPT_VALIDACION_CAMPO, campoDef.getIdentificador(),
 					propsDef.getScriptValidacion().getScript(), variablesFormulario, codigosError,
@@ -201,14 +276,19 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	 *                        Datos sesion formulario
 	 * @param idCampo
 	 *                        Id campo modificado
+	 * @param elemento
+	 *                        Indica si es elemento
 	 * @param res
 	 *                        Resumen de los datos y configuracion modificada
 	 */
 	private void calcularDatosPaginaAutorrellenable(final DatosSesionFormularioInterno datosSesion,
-			final String idCampo, final ResultadoEvaluarCambioCampo res) {
+			final String idCampo, final boolean elemento, final ResultadoEvaluarCambioCampo res) {
 
 		// Definicion página
-		final RPaginaFormulario pagDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
+		final RPaginaFormulario pagDef = datosSesion.obtenerDefinicionPaginaActual( elemento);
+
+		// Página actual
+		final PaginaData paginaActual = datosSesion.getDatosFormulario().obtenerPaginaDataActual(elemento);
 
 		// Creamos lista de campos modificados (inicialmente el campo
 		// modificado)
@@ -236,14 +316,14 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 			}
 			// Obtenemos dependencias campo
 			final DependenciaCampo dependenciasCampo = datosSesion.getDatosFormulario()
-					.getDependenciaCampo(campoDefAuto.getIdentificador());
+					.obtenerDependenciaCampo(campoDefAuto.getIdentificador(), elemento);
 			// Si hay que evaluar campo se ejecutara script auto si:
 			// - tiene script auto, esta vacio y es la carga de la pagina
 			// - tiene script auto y tiene dependencias con campos modificados
 			boolean dependenciaAutorrellenable = false;
+
 			if (UtilsSTG.existeScript(propsAutoDef.getScriptAutorrellenable())) {
-				if (datosSesion.getDatosFormulario().getPaginaActualFormulario()
-						.getValorCampo(campoDefAuto.getIdentificador()).esVacio()) {
+				if (paginaActual.getValorCampo(campoDefAuto.getIdentificador()).esVacio()) {
 					dependenciaAutorrellenable = true;
 				} else if (UtilsFormularioInterno.existeDependencia(modificados,
 						dependenciasCampo.getDependenciasAutorrellenable())) {
@@ -269,18 +349,18 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 				ValorCampo vc = ValorResetCampos.createNewValorResetCampos();
 				// Si dependencia autorrellenable ejecutamos script
 				if (dependenciaAutorrellenable) {
-					vc = ejecutarScriptAutorrellenable(datosSesion, campoDefAuto);
+					vc = ejecutarScriptAutorrellenable(datosSesion, campoDefAuto, elemento);
 				}
 
 				// En caso de que se haya reseteado el valor desde el script o
 				// si no tiene dependencia autorrellenable pero es un selector,
 				// reseteamos valor campo
 				if (vc instanceof ValorResetCampos) {
-					vc = calcularValorVacio(datosSesion, campoDefAuto);
+					vc = calcularValorVacio(campoDefAuto);
 				}
 
 				// Establecemos valor en formulario
-				datosSesion.getDatosFormulario().getPaginaActualFormulario().actualizarValorCampo(vc);
+				paginaActual.actualizarValorCampo(vc);
 
 				// Marcamos como modificado
 				res.getValores().add(vc);
@@ -292,13 +372,10 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	/**
 	 * Calcular valor vacío.
 	 *
-	 * @param pagAct
-	 *                   Datos página
-	 * @param ccs
-	 *                   Componente selector
+	 * @param campoDefAuto
+	 *                   Campo
 	 */
-	private ValorCampo calcularValorVacio(final DatosSesionFormularioInterno datosSesion,
-			final RComponente campoDefAuto) {
+	private ValorCampo calcularValorVacio(final RComponente campoDefAuto) {
 
 		final ValorCampo vc = UtilsFormularioInterno.crearValorVacio(campoDefAuto);
 
@@ -316,16 +393,17 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	 *                        Datos sesion
 	 * @param campoDef
 	 *                        Definicion campo
+	 * @param elemento
+	 *                        Indica si es elemento
 	 * @return Valor campo
 	 */
 	private ValorCampo ejecutarScriptAutorrellenable(final DatosSesionFormularioInterno datosSesion,
-			final RComponente campoDef) {
+			final RComponente campoDef, final boolean elemento) {
 		ValorCampo vcAuto = null;
 		final RPropiedadesCampo propsCampoDef = UtilsFormularioInterno.obtenerPropiedadesCampo(campoDef);
 		final Map<String, String> codigosError = UtilsSTG
 				.convertLiteralesToMap(propsCampoDef.getScriptAutorrellenable().getLiterales());
-		final VariablesFormulario variablesFormulario = UtilsFormularioInterno.generarVariablesFormulario(datosSesion,
-				campoDef.getIdentificador());
+		final VariablesFormulario variablesFormulario = datosSesion.generarVariablesFormulario(campoDef.getIdentificador(), elemento);
 		final RespuestaScript rs = scriptFormulario.executeScriptFormulario(TypeScriptFormulario.SCRIPT_AUTORELLENABLE,
 				campoDef.getIdentificador(), propsCampoDef.getScriptAutorrellenable().getScript(), variablesFormulario,
 				codigosError, datosSesion.getDefinicionTramite());
@@ -352,13 +430,19 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	 *                        Datos sesion formulario
 	 * @param idCampo
 	 *                        Id campo modificado
+	 * @param elemento
+	 *                        Indica si es elemento
 	 * @param res
 	 *                        Resumen de los datos y configuracion modificada
 	 */
 	private void calcularDatosPaginaEstado(final DatosSesionFormularioInterno datosSesion, final String idCampo,
-			final ResultadoEvaluarCambioCampo res) {
+			final boolean elemento, final ResultadoEvaluarCambioCampo res) {
+
 		// Definicion pagina actual
-		final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
+		final RPaginaFormulario paginaDef = datosSesion.obtenerDefinicionPaginaActual( elemento);
+
+		// Página actual
+		final PaginaData paginaActual = datosSesion.getDatosFormulario().obtenerPaginaDataActual(elemento);
 
 		// Creamos lista de campos modificados (el campo modificado más los que
 		// aparecen en resultado evaluar campo)
@@ -371,13 +455,13 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 
 		// Revisa script de cambio de estado
 		final List<String> estadosModificado = revisarScriptEstadoCampos(datosSesion, idCampo, camposModificados,
-				paginaDef);
+				paginaDef, elemento);
 
 		// Evaluamos que configuracion de campos debemos pasar:
 		// - estado modificado
 		for (final RComponente campoDefAuto : UtilsFormularioInterno.devuelveListaCampos(paginaDef)) {
 			if (estadosModificado.contains(campoDefAuto.getIdentificador())) {
-				final ConfiguracionCampo confCampo = datosSesion.getDatosFormulario().getPaginaActualFormulario()
+				final ConfiguracionCampo confCampo = paginaActual
 						.getConfiguracionCampo(campoDefAuto.getIdentificador());
 				final ConfiguracionModificadaCampo cm = ConfiguracionModificadaCampo
 						.createNewConfiguracionModificadaCampo();
@@ -403,10 +487,14 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	 * @return Lista de campos modificados
 	 */
 	private List<String> revisarScriptEstadoCampos(final DatosSesionFormularioInterno datosSesion, final String idCampo,
-			final List<String> camposModificados, final RPaginaFormulario paginaDef) {
+			final List<String> camposModificados, final RPaginaFormulario paginaDef, final boolean elemento) {
+
 		// Creamos lista de campos para los que se modifica o hay que refrescar
 		// su estado
 		final List<String> estadosModificado = new ArrayList<>();
+
+		// Pagina actual
+		final PaginaData paginaActual = datosSesion.getDatosFormulario().obtenerPaginaDataActual(elemento);
 
 		// Evaluamos script de dependencia
 		boolean evaluarCampo;
@@ -427,15 +515,16 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 			// - tiene script estado
 			// - tiene dependencias con algun campo modificado
 			final DependenciaCampo dependenciasCampo = datosSesion.getDatosFormulario()
-					.getDependenciaCampo(campoDefAuto.getIdentificador());
+					.obtenerDependenciaCampo(campoDefAuto.getIdentificador(), elemento);
 			if (evaluarCampo && (UtilsFormularioInterno.existeDependencia(camposModificados,
 					dependenciasCampo.getDependenciasEstado()))) {
 				// Evaluamos script estado
-				final ResEstadoCampo rse = configuracionFormularioHelper.evaluarEstadoCampo(datosSesion, campoDefAuto);
+				final ResEstadoCampo rse = configuracionFormularioHelper.evaluarEstadoCampo(datosSesion, campoDefAuto,
+						elemento);
 				// Actualizamos configuracion campo
 				if (rse != null) {
 					boolean modifConf = false;
-					final ConfiguracionCampo confCampo = datosSesion.getDatosFormulario().getPaginaActualFormulario()
+					final ConfiguracionCampo confCampo = paginaActual
 							.getConfiguracionCampo(campoDefAuto.getIdentificador());
 					if (rse.getEstadoCampo().getSoloLectura() != null) {
 						modifConf = true;
@@ -456,15 +545,17 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	 *
 	 * @param datosSesion
 	 *                        Datos sesion formulario
+	 * @param elemento
+	 *                        Indica si es elemento
 	 * @param idCampo
 	 *                        Id campo modificado
 	 * @param res
 	 *                        Resumen de los datos y configuracion modificada
 	 */
 	private void calcularDatosPaginaValoresPosibles(final DatosSesionFormularioInterno datosSesion,
-			final String idCampo, final ResultadoEvaluarCambioCampo res) {
+			final boolean elemento, final String idCampo, final ResultadoEvaluarCambioCampo res) {
 		// Definicion pagina actual
-		final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
+		final RPaginaFormulario paginaDef = datosSesion.obtenerDefinicionPaginaActual( elemento);
 
 		// Creamos lista de campos modificados (el campo modificado más los que aparecen
 		// en resumen)
@@ -494,12 +585,12 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 			// Si hay que evaluar campo comprobamos si es selector basado en dominio y tiene
 			// dependencias con algun campo modificado
 			final DependenciaCampo dependenciasCampo = datosSesion.getDatosFormulario()
-					.getDependenciaCampo(campoDefSel.getIdentificador());
+					.obtenerDependenciaCampo(campoDefSel.getIdentificador(), elemento);
 			if (evaluarCampo && UtilsFormularioInterno.existeDependencia(modificados,
 					dependenciasCampo.getDependenciasSelector())) {
 				// Calculamos lista de valores posibles
 				final ValoresPosiblesCampo vpc = valoresPosiblesHelper.calcularValoresPosiblesCampoSelector(datosSesion,
-						(RComponenteSelector) campoDefSel);
+						(RComponenteSelector) campoDefSel, elemento);
 
 				// Marcamos que se han modificado los valores posibles para el campo
 				res.getValoresPosibles().add(vpc);

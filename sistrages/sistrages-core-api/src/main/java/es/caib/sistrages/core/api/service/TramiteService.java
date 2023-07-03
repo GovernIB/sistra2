@@ -786,4 +786,11 @@ public interface TramiteService {
 	 */
 	public boolean existenTramitesBySeccionReutilizable(Long codigo);
 
+	/**
+	 * Devuelve el identificador de los diseños que tienen un tramite version
+	 * @param codigo
+	 * @return
+	 */
+	public List<Long> getDisenyosLEByTramite(Long codigo);
+
 }

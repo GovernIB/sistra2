@@ -37,6 +37,20 @@ public class RPropiedadesCampo {
 	private RScript scriptValidacion;
 
 	/**
+	 * Si el campo pertenece a una página de lista de elementos indica si se debe
+	 * mostrar o no.
+	 */
+	@ApiModelProperty(value = "Si el campo pertenece a una página de lista de elementos indica si se debe mostrar o no.")
+	private boolean listaElementosMostrar;
+
+	/**
+	 * Si el campo pertenece a una página de lista de elementos indica la anchura al
+	 * mostrarse.
+	 */
+	@ApiModelProperty(value = "Si el campo pertenece a una página de lista de elementos indica la anchura al mostrarse.")
+	private Integer listaElementosAnchura;
+
+	/**
 	 * Método de acceso a obligatorio.
 	 *
 	 * @return obligatorio
@@ -48,9 +62,10 @@ public class RPropiedadesCampo {
 	/**
 	 * Método para establecer obligatorio.
 	 *
-	 * @param obligatorio obligatorio a establecer
+	 * @param obligatorio
+	 *                        obligatorio a establecer
 	 */
-	public void setObligatorio(boolean obligatorio) {
+	public void setObligatorio(final boolean obligatorio) {
 		this.obligatorio = obligatorio;
 	}
 
@@ -66,9 +81,10 @@ public class RPropiedadesCampo {
 	/**
 	 * Método para establecer soloLectura.
 	 *
-	 * @param soloLectura soloLectura a establecer
+	 * @param soloLectura
+	 *                        soloLectura a establecer
 	 */
-	public void setSoloLectura(boolean soloLectura) {
+	public void setSoloLectura(final boolean soloLectura) {
 		this.soloLectura = soloLectura;
 	}
 
@@ -84,9 +100,10 @@ public class RPropiedadesCampo {
 	/**
 	 * Método para establecer noModificable.
 	 *
-	 * @param noModificable noModificable a establecer
+	 * @param noModificable
+	 *                          noModificable a establecer
 	 */
-	public void setNoModificable(boolean noModificable) {
+	public void setNoModificable(final boolean noModificable) {
 		this.noModificable = noModificable;
 	}
 
@@ -102,9 +119,10 @@ public class RPropiedadesCampo {
 	/**
 	 * Método para establecer scriptAutorrellenable.
 	 *
-	 * @param scriptAutorrellenable scriptAutorrellenable a establecer
+	 * @param scriptAutorrellenable
+	 *                                  scriptAutorrellenable a establecer
 	 */
-	public void setScriptAutorrellenable(RScript scriptAutorrellenable) {
+	public void setScriptAutorrellenable(final RScript scriptAutorrellenable) {
 		this.scriptAutorrellenable = scriptAutorrellenable;
 	}
 
@@ -120,9 +138,10 @@ public class RPropiedadesCampo {
 	/**
 	 * Método para establecer scriptEstado.
 	 *
-	 * @param scriptEstado scriptEstado a establecer
+	 * @param scriptEstado
+	 *                         scriptEstado a establecer
 	 */
-	public void setScriptEstado(RScript scriptEstado) {
+	public void setScriptEstado(final RScript scriptEstado) {
 		this.scriptEstado = scriptEstado;
 	}
 
@@ -138,10 +157,49 @@ public class RPropiedadesCampo {
 	/**
 	 * Método para establecer scriptValidacion.
 	 *
-	 * @param scriptValidacion scriptValidacion a establecer
+	 * @param scriptValidacion
+	 *                             scriptValidacion a establecer
 	 */
-	public void setScriptValidacion(RScript scriptValidacion) {
+	public void setScriptValidacion(final RScript scriptValidacion) {
 		this.scriptValidacion = scriptValidacion;
+	}
+
+	/**
+	 * Método de acceso a listaElementosAnchura.
+	 *
+	 * @return listaElementosAnchura
+	 */
+	public Integer getListaElementosAnchura() {
+		return listaElementosAnchura;
+	}
+
+	/**
+	 * Método para establecer listaElementosAnchura.
+	 *
+	 * @param listaElementosAnchura
+	 *                                  listaElementosAnchura a establecer
+	 */
+	public void setListaElementosAnchura(final Integer listaElementosAnchura) {
+		this.listaElementosAnchura = listaElementosAnchura;
+	}
+
+	/**
+	 * Método de acceso a listaElementosMostrar.
+	 * 
+	 * @return listaElementosMostrar
+	 */
+	public boolean isListaElementosMostrar() {
+		return listaElementosMostrar;
+	}
+
+	/**
+	 * Método para establecer listaElementosMostrar.
+	 * 
+	 * @param listaElementosMostrar
+	 *                                  listaElementosMostrar a establecer
+	 */
+	public void setListaElementosMostrar(final boolean listaElementosMostrar) {
+		this.listaElementosMostrar = listaElementosMostrar;
 	}
 
 }

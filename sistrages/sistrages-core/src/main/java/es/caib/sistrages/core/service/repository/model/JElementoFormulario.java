@@ -1,5 +1,7 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import java.util.Map;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -64,12 +66,6 @@ public class JElementoFormulario implements IModelApi {
 
 	@Column(name = "FEL_TEXTAL", nullable = false, length = 1)
 	private String alineacionTexto;
-
-	@Column(name = "FEL_LELMOS", nullable = false, precision = 1, scale = 0)
-	private boolean mostrarEnListaElementos;
-
-	@Column(name = "FEL_LELCOL", precision = 1, scale = 0)
-	private Boolean listaElementosAnchoColumna;
 
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "elementoFormulario", cascade = CascadeType.ALL)
 	private JListaElementosFormulario listaElementosFormulario;
@@ -174,22 +170,6 @@ public class JElementoFormulario implements IModelApi {
 
 	public void setAlineacionTexto(final String alineacionTexto) {
 		this.alineacionTexto = alineacionTexto;
-	}
-
-	public boolean isMostrarEnListaElementos() {
-		return this.mostrarEnListaElementos;
-	}
-
-	public void setMostrarEnListaElementos(final boolean mostrarEnListaElementos) {
-		this.mostrarEnListaElementos = mostrarEnListaElementos;
-	}
-
-	public Boolean getListaElementosAnchoColumna() {
-		return this.listaElementosAnchoColumna;
-	}
-
-	public void setListaElementosAnchoColumna(final Boolean listaElementosAnchoColumna) {
-		this.listaElementosAnchoColumna = listaElementosAnchoColumna;
 	}
 
 	public JListaElementosFormulario getListaElementosFormulario() {
@@ -302,7 +282,7 @@ public class JElementoFormulario implements IModelApi {
 		jModel.setOrden(pOrden);
 
 		jModel.setAlineacionTexto(TypeAlineacionTexto.IZQUIERDA.toString());
-		jModel.setMostrarEnListaElementos(false);
+
 		pJLinea.addElemento(jModel);
 
 		// ponemos texto segun componente
@@ -362,6 +342,15 @@ public class JElementoFormulario implements IModelApi {
 			jModel.setNoMostrarTexto(false);
 			jModel.setTexto(JLiteral.fromModel(texto));
 			break;
+		case LISTA_ELEMENTOS:
+			texto.add(new Traduccion("es", "Lista de elementos"));
+			texto.add(new Traduccion("ca", "Llista d'elements"));
+			texto.add(new Traduccion("en", "List of elements"));
+			jModel.setNumeroColumnas(1);
+			jModel.setNoMostrarTexto(false);
+			jModel.setTexto(JLiteral.fromModel(texto));
+			jModel.setNumeroColumnas(6);
+			break;
 		default:
 			jModel.setNoMostrarTexto(true);
 			jModel.setNumeroColumnas(1);
@@ -371,7 +360,7 @@ public class JElementoFormulario implements IModelApi {
 	}
 
 	public static JElementoFormulario clonar(final JElementoFormulario elemento,
-			final JLineaFormulario jlineaFormulario, final JPaginaFormulario jpagina, final boolean cambioArea) {
+			final JLineaFormulario jlineaFormulario, final JPaginaFormulario jpagina, final boolean cambioArea,  final Map<Long, JFormulario> mapLE) {
 		JElementoFormulario jelemento = null;
 		if (elemento != null) {
 			jelemento = new JElementoFormulario();
@@ -384,16 +373,14 @@ public class JElementoFormulario implements IModelApi {
 			jelemento.setNumeroColumnas(elemento.getNumeroColumnas());
 			jelemento.setNoMostrarTexto(elemento.isNoMostrarTexto());
 			jelemento.setAlineacionTexto(elemento.getAlineacionTexto());
-			jelemento.setMostrarEnListaElementos(elemento.isMostrarEnListaElementos());
-			jelemento.setListaElementosAnchoColumna(elemento.getListaElementosAnchoColumna());
-			jelemento.setListaElementosFormulario(
-					JListaElementosFormulario.clonar(elemento.getListaElementosFormulario(), jelemento, jpagina));
 			jelemento.setEtiquetaFormulario(JEtiquetaFormulario.clonar(elemento.getEtiquetaFormulario(), jelemento));
 			jelemento.setSeccionFormulario(JSeccionFormulario.clonar(elemento.getSeccionFormulario(), jelemento));
 			jelemento.setCaptchaFormulario(JCampoFormularioCaptcha.clonar(elemento.getCaptchaFormulario(), jelemento));
 			jelemento.setCampoFormulario(JCampoFormulario.clonar(elemento.getCampoFormulario(), jelemento, cambioArea));
 			jelemento.setImagenFormulario(JImagenFormulario.clonar(elemento.getImagenFormulario(), jelemento));
 			jelemento.setSeccionReutilizableFormulario(JCampoFormularioSeccionReutilizable.clonar(elemento.getSeccionReutilizableFormulario(), jelemento));
+			jelemento.setListaElementosFormulario(
+					JListaElementosFormulario.clonar(elemento.getListaElementosFormulario(), jlineaFormulario, jpagina, jelemento, cambioArea, mapLE));
 		}
 		return jelemento;
 	}

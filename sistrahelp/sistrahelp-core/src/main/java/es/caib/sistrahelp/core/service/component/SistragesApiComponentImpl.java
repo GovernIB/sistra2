@@ -93,6 +93,41 @@ public final class SistragesApiComponentImpl implements SistragesApiComponent {
 	}
 
 	@Override
+	public Entidad obtenerDatosEntidadByArea(final String identificador) {
+
+		final RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		final RConfiguracionEntidad configuracionEntidad = restTemplate.getForObject(
+				getUrl() + "/entidadByArea/" + identificador.split("\\.")[0] + "/" + identificador.split("\\.")[1],
+				RConfiguracionEntidad.class);
+
+		Entidad entidad = null;
+
+		if (configuracionEntidad != null) {
+			entidad = new Entidad();
+
+			entidad.setCodigoDIR3(configuracionEntidad.getIdentificador());
+
+			if (configuracionEntidad.getDescripcion() != null) {
+				final Literal literal = new Literal();
+
+				for (final RLiteralIdioma rLiteral : configuracionEntidad.getDescripcion().getLiterales()) {
+					final Traduccion trad = new Traduccion(rLiteral.getIdioma(), rLiteral.getDescripcion());
+					literal.add(trad);
+				}
+
+				entidad.setNombre(literal);
+			}
+
+			entidad.setLogoGestor(configuracionEntidad.getLogoGestor());
+			entidad.setLogoAsistente(configuracionEntidad.getLogo());
+
+		}
+		return entidad;
+
+	}
+
+	@Override
 	public IPlugin obtenerPluginGlobal(final TypePluginGlobal tipoPlugin) throws PluginException {
 		final RConfiguracionGlobal confGlobal = obtenerConfiguracionGlobal();
 		return createPlugin(confGlobal.getPlugins(), tipoPlugin.toString());

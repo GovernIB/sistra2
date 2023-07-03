@@ -19,6 +19,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.UploadedFile;
@@ -195,6 +196,9 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 	/** Sectores reutilizables **/
 	Map<Long, SeccionReutilizable> secciones = new HashMap<>();
+
+	/** Sectores reutilizables **/
+	Map<Long, DisenyoFormulario> disenyosLE = new HashMap<>();
 
 	/** Fila entidad. **/
 	private FilaImportarEntidad filaEntidad = new FilaImportarEntidad();
@@ -411,7 +415,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		checkTodoCorrecto();
 
 		if (!dominios.isEmpty() || !gestores.isEmpty()) {
-			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("variable.area.asociada.tramite"));
+			RequestContext.getCurrentInstance().execute("PF('avisoDlg').show();");
 		}
 	}
 
@@ -1483,6 +1487,12 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			final SeccionReutilizable seccion = (SeccionReutilizable) UtilCoreApi.deserialize(contenidoFile);
 			secciones.put(codigo, seccion);
 
+		} else if (nombreFichero.startsWith("disenyoListaElemento_")) {
+
+			final Long codigo = obtenerId(nombreFichero);
+			final DisenyoFormulario disenyo = (DisenyoFormulario) UtilCoreApi.deserialize(contenidoFile);
+			disenyosLE.put(codigo, disenyo);
+
 		} else if (!nombreFichero.equals("info.properties") && !nombreFichero.equals("resumen.txt")) {
 			addMessageContext(TypeNivelGravedad.ERROR, "Fichero desconocido.");
 			return false;
@@ -1586,6 +1596,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		filaImportar.setFilaTramiteVersion(filaTramiteVersion);
 		filaImportar.setFilaTramiteRegistro(filaTramiteRegistro);
 		filaImportar.setFilaSecciones(filasSecciones);
+		filaImportar.setDisenyosLE(disenyosLE);
 		final List<FilaImportarDominio> flsDominio = new ArrayList<>();
 		for (final FilaImportarDominio filaDominio : filasDominios) {
 			// Las info se ignoran y se quitan de los formularios

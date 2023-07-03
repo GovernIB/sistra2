@@ -13,6 +13,7 @@ import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSeccionReutiliz
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
+import es.caib.sistrages.core.api.model.ComponenteFormularioListaElementos;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
@@ -191,6 +192,10 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 						campoCaptcha(pOut, cf, pLang,   pModoEdicion, isTipoSeccionReutilizable, dataSeccionReutilizable);
 						ultimoCampoEsOculto = false;
 						break;
+					case LISTA_ELEMENTOS:
+						campoListaElementos(pOut, cf, pLang,   pModoEdicion, isTipoSeccionReutilizable, dataSeccionReutilizable);
+						ultimoCampoEsOculto = false;
+						break;
 					case SECCION_REUTILIZABLE:
 						campoSeccionReutilizable(pOut, cf, pLang,   pModoEdicion, pMostrarOcultos);
 						ultimoCampoEsOculto = false;
@@ -333,6 +338,69 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		escribeLinea(pOut, "<div class=\"imc-el-control\">", elemento.toString(), "</div>", 6);
 
 		escribeLinea(pOut, "</div>", 5);
+
+	}
+
+
+	/**
+	 * Para pintar una captcha
+	 *
+	 * @param pOut
+	 * @param pCF
+	 * @param pLang
+	 * @param pModoEdicion
+	 */
+	private void campoListaElementos(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang,
+			final boolean pModoEdicion, final boolean isTipoSeccionReutilizable, final String dataSeccionReutilizable) {
+		final ComponenteFormularioListaElementos campo = (ComponenteFormularioListaElementos) pCF;
+
+
+		 escribeLinea(pOut, " <fieldset", escribeId(campo.getIdComponente())+ " " +dataSeccionReutilizable, escribeCodigo(pCF.getCodigo(), pModoEdicion),
+	                escribeObligatorio(campo, pModoEdicion), escribeTieneScripts(campo, pModoEdicion),
+	                "class=\"imc-element imc-el-taula\" data-type=\"table\">", 5);
+
+        String textoEtiqueta = null;
+        if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
+            textoEtiqueta = trataLiteral(campo.getTexto().getTraduccion(pLang));
+        } else {
+            textoEtiqueta = "&nbsp;";
+        }
+
+        escribeLinea(pOut, "<legend>", textoEtiqueta, "</legend>", 6);
+
+        escribeLinea(pOut, "<div class=\"imc-el-taula-botonera\">", 6);
+        escribeLinea(pOut, "<div class=\"imc--controls\">", 7);
+        escribeLinea(pOut, "<button type=\"button\" class=\"imc-bt-afegix\"><span>"
+                +literales.getLiteral("componente", "listaelementos.botones.anyadir", pLang)+"</span></button>", 8);
+        escribeLinea(pOut, "<button type=\"button\" class=\"imc-bt-modifica\"><span>"
+                +literales.getLiteral("componente", "listaelementos.botones.modificar", pLang)+"</span></button>", 8);
+        if (!pModoEdicion) {
+               escribeLinea(pOut, "<button type=\"button\" class=\"imc-bt-consulta\"><span>"
+              +literales.getLiteral("componente", "listaelementos.botones.consultar", pLang)+"</span></button>", 8);
+        }
+        escribeLinea(pOut, "<button type=\"button\" class=\"imc-bt-elimina\"><span>"
+                +literales.getLiteral("componente", "listaelementos.botones.eliminar", pLang)+"</span></button>", 8);
+        escribeLinea(pOut, "</div>", 7);
+
+        escribeLinea(pOut, "<div class=\"imc--posicio\">", 7);
+        escribeLinea(pOut, "<button type=\"button\" class=\"imc-bt-puja\"><span>"
+                +literales.getLiteral("componente", "listaelementos.botones.subir", pLang)+"</span></button>", 8);
+        escribeLinea(pOut, "<button type=\"button\" class=\"imc-bt-baixa\"><span>"
+                +literales.getLiteral("componente", "listaelementos.botones.bajar", pLang)+"</span></button>", 8);
+        escribeLinea(pOut, "</div>", 7);
+
+        escribeLinea(pOut, "</div>", 6);
+
+
+
+        if (!pModoEdicion) {
+               escribeLinea(pOut, "<div class=\"imc-el-taula-cerca\">", 6);
+               escribeLinea(pOut, "<button type=\"button\" class=\"imc-bt-cerca\"><span>Cerca</span></button>", 7);
+               escribeLinea(pOut, "</div>", 6);
+        }
+
+        escribeLinea(pOut, "<div class=\"imc-el-taula-elements\"></div>", 6);
+        escribeLinea(pOut, "</fieldset>", 5);
 
 	}
 

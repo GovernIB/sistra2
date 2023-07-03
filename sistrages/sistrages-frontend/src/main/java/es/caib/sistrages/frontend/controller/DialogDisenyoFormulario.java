@@ -25,10 +25,11 @@ import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
-import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCaptcha;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCaptcha;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
+import es.caib.sistrages.core.api.model.ComponenteFormularioListaElementos;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Dominio;
@@ -93,6 +94,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	/** Id formulario **/
 	private String id;
+	private String idAnterior;
 
 	/** Id. formulario paso. **/
 	private String idFormulario;
@@ -104,17 +106,22 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/** id tramite. */
 	private String idTramiteVersion;
 
-	/** Tipo de diseño: trámite o seccion **/
+	/** Tipo de diseño: trámite o seccion o lista elementos **/
 	private String tipoDisenyo;
+	private String tipoDisenyoAnterior;
 
-	/** Formulario. **/
+	/** Formulario (formulario sería el que se está visualizando), mientras que el formulario anterior sería el formulario de tramite/seccionReutilizable
+	 *  mientras el map son los diseño asociados a las lista de elementos. **/
 	private DisenyoFormulario formulario;
+	private DisenyoFormulario formularioAnterior;
+	Map<Long , DisenyoFormulario> formulariosListaElementos = new HashMap<>();
 
 	/** Formulario. **/
 	private Map<Long, DisenyoFormulario> formularioSeccion;
 
 	/** Pag. actual. **/
 	private int paginaActual;
+	private int paginaActualAnterior;
 
 	private Boolean cambios = false;
 
@@ -123,15 +130,18 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	/** Componente editado (copia original). **/
 	private ObjetoFormulario objetoFormularioEdit;
+	private ObjetoFormulario objetoFormularioEditAnterior;
 
 	/** Traducciones editado (cuando se llama a editar traducciones). **/
 	private Literal traduccionesEdit;
 
 	/** Url ventana propiedades **/
 	private String panelPropiedadesUrl;
+	private String 	panelPropiedadesUrlAnterior;
 
 	/** Url detalle componente. **/
 	private String detalleComponenteUrl;
+	private String detalleComponenteUrlAnterior;
 
 	/** Url iframe. **/
 	private String urlIframe;
@@ -188,6 +198,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		return tipoDisenyo != null && tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());
 	}
 
+	public boolean isTipoListaElementos() {
+		return tipoDisenyo != null && tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_LISTA_ELEMENTOS.toString());
+	}
+
 	private String titulo;
 
 	private String portapapeles;
@@ -197,13 +211,116 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	private boolean esIframe = false;
 
 	/**
+	 * Abre una lista de elementos
+	 */
+	public void abrirListaElementos() {
+		//Paso 1. Copiar el disenyo de formulario tramite/seccionreutilizable a la copia
+		if (isTipoTramite()) {
+			formularioAnterior = formulario;
+			idAnterior = id;
+			objetoFormularioEditAnterior = objetoFormularioEdit;
+			panelPropiedadesUrlAnterior = panelPropiedadesUrl;
+			tipoDisenyoAnterior = TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString();
+			paginaActualAnterior = paginaActual;
+			detalleComponenteUrlAnterior = detalleComponenteUrl;
+		}
+		if (isTipoSeccion()) {
+			formularioAnterior = formulario;
+			idAnterior = id;
+			objetoFormularioEditAnterior = objetoFormularioEdit;
+			panelPropiedadesUrlAnterior = panelPropiedadesUrl;
+			tipoDisenyoAnterior = TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString();
+			paginaActualAnterior = paginaActual;
+			detalleComponenteUrlAnterior = detalleComponenteUrl;
+		}
+		//Paso 2. Obtener el diseño formulario de la lista elementos (en modo debug, será el elemento 2082)
+		Long idFormularioListaElementos = ((ComponenteFormularioListaElementos)objetoFormularioEdit).getIdFormulario();
+		//Paso 2.1. Comprobar primero si ya lo habíamso cargado, en caso contrario, obtenerlo de base de datos y meterlo en el MAP de formulariosListaElementos
+		if (!formulariosListaElementos.containsKey(idFormularioListaElementos)) {
+			DisenyoFormulario dis = formIntService.getFormularioInternoCompleto(idFormularioListaElementos);
+			formulariosListaElementos.put(idFormularioListaElementos, dis);
+		}
+
+		//Asign
+		formulario = formulariosListaElementos.get(idFormularioListaElementos);
+		id = idFormularioListaElementos.toString();
+		tipoDisenyo = TypeParametroVentana.PARAMETRO_DISENYO_LISTA_ELEMENTOS.toString();
+		panelPropiedadesUrl = URL_FORMULARIO_VACIO;
+		objetoFormularioEdit = null;
+		paginaActual = 1;
+		posicionamiento = "D";
+		detalleComponenteUrl = null;
+	}
+
+	/**
+	 * Cierra una lista de elementos
+	 */
+	public void cerrarListaElementos() {
+
+		if (!this.isConsulta() && !isCorrectoFormularioLE()) {
+			return;
+		}
+
+		formulario = formularioAnterior;
+		id = idAnterior;
+		tipoDisenyo = tipoDisenyoAnterior;
+		panelPropiedadesUrl = panelPropiedadesUrlAnterior;
+		objetoFormularioEdit = objetoFormularioEditAnterior;
+		paginaActual = paginaActualAnterior;
+		detalleComponenteUrl = detalleComponenteUrlAnterior;
+	}
+
+	/**
+	 * Comprueba si es correcto la LE.
+	 * Es correcto si al menos uno se muestra y suma entre todo 100%.
+	 * @return
+	 */
+	private boolean isCorrectoFormularioLE() {
+		if (formulario.getPaginas() == null || formulario.getPaginas().get(0) == null) {
+			//No debería entrar por aqui pero por si acaso.
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("error.validacion.LE.vacio"), true, ID_TEXT_IDENTIFICADOR);
+			return false;
+		}
+
+		int total = 0;
+		boolean tiene = false;
+		for(LineaComponentesFormulario linea : formulario.getPaginas().get(0).getLineas()) {
+			if (linea != null && linea.getComponentes() != null) {
+				for(ComponenteFormulario comp : linea.getComponentes()) {
+					if (comp.isListaElementosVisible()) {
+						tiene = true;
+						if (comp.getListaElementosAnchoColumna() != null) {
+							total += comp.getListaElementosAnchoColumna();
+						}
+					}
+				}
+			}
+		}
+
+		if (!tiene) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("error.validacion.LE.noTieneCampoMarcado"), true, ID_TEXT_IDENTIFICADOR);
+			return false;
+		}
+
+		if (total != 100) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("error.validacion.LE.noSuma100"), true, ID_TEXT_IDENTIFICADOR);
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Inicializacion.
 	 **/
 	public void init() {
 
 		if (isTipoSeccion()) {
 			titulo = UtilJSF.getLiteral("dialogDisenyoFormulario.titulo.seccion");
-		} else {
+		} else { //Tipo Tramite y Lista Elementos
 			titulo = UtilJSF.getLiteral("dialogDisenyoFormulario.titulo.tramite");
 		}
 
@@ -233,6 +350,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			} else {
 				idioma = idiomas.get(0);
 			}
+		}
+
+		if (isTipoTramite()) {
+			//Nada, ya que se entra por tipo tramite, está claro los idiomas
 		}
 
 		panelPropiedadesUrl = URL_FORMULARIO_VACIO;
@@ -317,7 +438,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			break;
 		case ADD_CAPTCHA:
 			insertaLineaComponenteBloque(TypeObjetoFormulario.CAPTCHA, null);
-			// insertaCampo(TypeObjetoFormulario.CAPTCHA);
+			break;
+		case ADD_LISTA_ELEMENTOS:
+			insertaLineaComponenteBloque(TypeObjetoFormulario.LISTA_ELEMENTOS, null);
 			break;
 		case ADD_SECCION_REUTILIZABLE:
 			final Map<String, String> params = new HashMap<>();
@@ -541,6 +664,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		return habilitadoObjetoAccion;
 	}
 
+	public boolean getHabilitadoBtnLE() {
+		return habilitadoObjetoAccion;
+	}
+
 	public boolean getHabilitadoBtnSR() {
 		return habilitadoObjetoAccion;
 	}
@@ -634,7 +761,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		case CAPTCHA:
 			pagina = "/secure/app/dialogDisenyoFormularioComponenteCP.xhtml";
 			break;
-		// TODO PENDIENTE
+		case LISTA_ELEMENTOS:
+			pagina = "/secure/app/dialogDisenyoFormularioComponente.xhtml";
+			break;
 		default:
 			pagina = null;
 			break;
@@ -719,13 +848,12 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				}
 
 				if (!linea.cabenComponentes((ComponenteFormulario) objetoFormularioEdit, false)) {
-					if (objetoFormularioEdit instanceof ComponenteFormularioCampoTexto && TypeCampoTexto.IBAN
-							.equals(((ComponenteFormularioCampoTexto) objetoFormularioEdit).getTipoCampoTexto())) {
+					if(objetoFormularioEdit instanceof ComponenteFormularioCampoTexto && TypeCampoTexto.IBAN.equals(((ComponenteFormularioCampoTexto) objetoFormularioEdit).getTipoCampoTexto())) {
 						addMessageContext(TypeNivelGravedad.ERROR,
 								UtilJSF.getLiteral("dialogDisenyoFormulario.iban.errorNumColumnas"));
-					} else {
-						addMessageContext(TypeNivelGravedad.WARNING,
-								UtilJSF.getLiteral("warning.componente.sinespacio"), true);
+					}else {
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"),
+							true);
 					}
 					return false;
 				}
@@ -953,7 +1081,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				// empleados no lo está ya
 				if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
 					final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
-					if (this.isTipoTramite() && TypeListaValores.DOMINIO.equals(campo.getTipoListaValores())
+					if ((this.isTipoTramite() || this.isTipoListaElementos()) && TypeListaValores.DOMINIO.equals(campo.getTipoListaValores())
 							&& campo.getCodDominio() != null
 							&& !dominioService.tieneTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo())) {
 						dominioService.addTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo());
@@ -1778,6 +1906,15 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		insertaLineaComponenteBloque(TypeObjetoFormulario.CAPTCHA, null);
 	}
 
+	/** Inserta un componente de tipo seccion. **/
+	public void insertaListaElementos() {
+		if (isModificadoSinGuardar(TypeAccionFormulario.ADD_LISTA_ELEMENTOS)) {
+			return;
+		}
+		insertaLineaComponenteBloque(TypeObjetoFormulario.LISTA_ELEMENTOS, null);
+	}
+
+
 	public void insertaSeccionReutilizable() {
 
 		if (isModificadoSinGuardar(TypeAccionFormulario.ADD_SECCION_REUTILIZABLE)) {
@@ -1881,6 +2018,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			case SECCION_REUTILIZABLE:
 				seleccionaComponente(componente);
 				break;
+			case LISTA_ELEMENTOS:
+				seleccionaComponente(componente);
+				break;
 			default:
 				break;
 			}
@@ -1917,7 +2057,11 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			}
 
 		} else if (objetoFormularioEdit instanceof ComponenteFormulario) {
-			formIntService.removeComponenteFormulario(objetoFormularioEdit.getCodigo());
+			//if (objetoFormularioEdit instanceof ComponenteFormularioListaElementos) {
+			//	formIntService.removeComponenteFormularioLE(objetoFormularioEdit.getCodigo());
+			//} else {
+				formIntService.removeComponenteFormulario(objetoFormularioEdit.getCodigo());
+			//}
 
 			// actualizamos modelo
 			final ComponenteFormulario componenteSeleccionado = (ComponenteFormulario) objetoFormularioEdit;
@@ -2134,8 +2278,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public void ayuda() {
 		if (isTipoTramite()) {
 			UtilJSF.openHelp("disenyoFormularioDialog");
-		} else {
+		} else if (isTipoSeccion()) {
 			UtilJSF.openHelp("disenyoFormularioDialogSeccion");
+		} else {
+			UtilJSF.openHelp("disenyoFormularioDialogDetalleLEL");
 		}
 
 	}
@@ -2990,6 +3136,14 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	}
 
 	/**
+	 * Comprueba si el objeto editable es de tipo Lista Elemento
+	 * @return
+	 */
+	public boolean isLE() {
+		return objetoFormularioEdit != null &&  objetoFormularioEdit instanceof ComponenteFormularioListaElementos;
+	}
+
+	/**
 	 * Comprueba si es un tipo de campo texto de tipo Lista variable Dominio
 	 *
 	 * @return
@@ -3166,7 +3320,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
 				numObj = pagina.getLineas().size();
 			} else if (objetoFormularioEdit instanceof ComponenteFormulario) {
-				numObj = pagina.getLineaComponente(objetoFormularioEdit.getCodigo()).getComponentes().size();
+					numObj = pagina.getLineaComponente(objetoFormularioEdit.getCodigo()).getComponentes().size();
 			}
 
 		}
@@ -3288,5 +3442,4 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public void setEsIframe(boolean esIframe) {
 		this.esIframe = esIframe;
 	}
-
 }

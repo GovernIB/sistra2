@@ -3,6 +3,8 @@ package es.caib.sistramit.core.service.test;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
@@ -22,6 +24,11 @@ import junit.framework.TestCase;
  *
  */
 public class TestXmlFormularios extends TestCase {
+
+	/**
+	 * Logger available to subclasses.
+	 */
+	protected final Log logger = LogFactory.getLog(getClass());
 
 	@Test
 	public void testXml() throws Exception {
@@ -55,13 +62,18 @@ public class TestXmlFormularios extends TestCase {
 		final XmlFormulario form = new XmlFormulario(valores, null);
 		final byte[] xml = UtilsFormulario.valoresToXml(form);
 
-		// System.out.println(new String(xml, "UTF-8"));
+		final String xmlAntes = new String(xml, "UTF-8");
+
+		logger.debug("XML ANTES: " + xmlAntes);
 
 		final XmlFormulario formNew = UtilsFormulario.xmlToValores(xml);
 		final byte[] xmlNew = UtilsFormulario.valoresToXml(form);
 
+		final String xmlDespues = new String(xmlNew, "UTF-8");
+		logger.debug("XML DESPUES: " + xmlDespues);
+
 		// Xml generado es el mismo
-		assertEquals(new String(xml, "UTF-8"), new String(xmlNew, "UTF-8"));
+		assertEquals(xmlAntes, xmlDespues);
 
 		// Coinciden los valores de campo
 		for (int i = 0; i < form.getValores().size(); i++) {

@@ -19,6 +19,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.UploadedFile;
@@ -437,7 +438,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 		checkTodoCorrecto();
 
 		if (!dominios.isEmpty() || !gestores.isEmpty()) {
-			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("variable.area.asociada.tramite"));
+			RequestContext.getCurrentInstance().execute("PF('avisoDlg').show();");
 		}
 	}
 

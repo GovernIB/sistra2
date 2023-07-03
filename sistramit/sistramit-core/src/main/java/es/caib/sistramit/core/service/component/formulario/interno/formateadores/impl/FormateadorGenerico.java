@@ -20,30 +20,40 @@ import es.caib.sistra2.commons.pdf.UtilPDF;
 import es.caib.sistra2.commons.pdfcaib.GeneradorPdf;
 import es.caib.sistra2.commons.pdfcaib.model.Cabecera;
 import es.caib.sistra2.commons.pdfcaib.model.CampoTexto;
+import es.caib.sistra2.commons.pdfcaib.model.ColumnaTabla;
+import es.caib.sistra2.commons.pdfcaib.model.FilaTabla;
 import es.caib.sistra2.commons.pdfcaib.model.FormularioPdf;
+import es.caib.sistra2.commons.pdfcaib.model.HeaderTabla;
 import es.caib.sistra2.commons.pdfcaib.model.Linea;
 import es.caib.sistra2.commons.pdfcaib.model.PersonalizacionTexto;
 import es.caib.sistra2.commons.pdfcaib.model.Seccion;
+import es.caib.sistra2.commons.pdfcaib.model.Tabla;
 import es.caib.sistra2.commons.pdfcaib.model.Texto;
 import es.caib.sistra2.commons.pdfcaib.types.TypeFuente;
 import es.caib.sistra2.commons.utils.ValidacionTipoException;
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistrages.rest.api.interna.RComponente;
 import es.caib.sistrages.rest.api.interna.RComponenteAviso;
+import es.caib.sistrages.rest.api.interna.RComponenteListaElementos;
 import es.caib.sistrages.rest.api.interna.RComponenteSeccion;
 import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
 import es.caib.sistrages.rest.api.interna.RLineaComponentes;
 import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
 import es.caib.sistramit.core.api.exception.FormateadorException;
+import es.caib.sistramit.core.api.exception.TipoNoControladoException;
+import es.caib.sistramit.core.api.model.formulario.ListaElementosColumna;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
+import es.caib.sistramit.core.api.model.formulario.ValorCampoListaElementos;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
+import es.caib.sistramit.core.api.model.formulario.ValorElemento;
 import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeTexto;
 import es.caib.sistramit.core.service.component.formulario.interno.formateadores.FormateadorPdfFormulario;
+import es.caib.sistramit.core.service.component.formulario.interno.utils.UtilsFormularioInterno;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
 import es.caib.sistramit.core.service.model.formulario.types.TipoVisualizacionValorIndexado;
 import es.caib.sistramit.core.service.util.UtilsFormulario;
@@ -236,28 +246,14 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 						// Añadir segun componente
 						if (componente instanceof RComponenteSeccion) {
 							// - Componente seccion
-							final RComponenteSeccion componenteSeccion = (RComponenteSeccion) componente;
-							linea.getObjetosLinea().add(
-									new Seccion(/* componenteSeccion.getLetra() */"", componenteSeccion.getEtiqueta()));
+							anyadirSeccion(linea, (RComponenteSeccion) componente);
 						} else if (componente instanceof RComponenteAviso) {
 							// - Componente aviso (si está activo la variable)
-							if (mostrarAviso != null && mostrarAviso) {
-								// Creamos texto aviso
-								final RComponenteAviso componenteAviso = (RComponenteAviso) componente;
-								final PersonalizacionTexto personalizacicionTexto = new PersonalizacionTexto(false,
-										true, TypeFuente.NOTOSANS, 10);
-								// Texto aviso puede contener html, por lo q limpiamos
-								final String textoAviso = Jsoup.parse(componenteAviso.getEtiqueta()).text();
-								final Texto texto = new Texto(personalizacicionTexto, textoAviso, 6);
-								linea.getObjetosLinea().add(texto);
-							}
+							anyadirAviso((RComponenteAviso) componente, linea);
 						} else {
 							// - Campos
-							if (xml.getValores() != null && componente.getIdentificador() != null) {
-								anyadirDato(componente, linea, xml);
-							}
+							anyadirCampo(componente, linea, xml);
 						}
-
 					}
 				}
 
@@ -275,6 +271,97 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 			return pdf;
 		} catch (final Exception e) {
 			throw new FormateadorException("Error convertint el document a bytes", e);
+		}
+
+	}
+
+	/**
+	 * Añade campo a la linea.
+	 *
+	 * @param componente
+	 *                       Componente
+	 * @param linea
+	 *                       Línea
+	 * @param xml
+	 *                       Valores
+	 */
+	private void anyadirCampo(final RComponente componente, final Linea linea, final XmlFormulario xml) {
+
+		// Obtiene valor campo
+		final ValorCampo valorCampo = UtilsFormularioInterno.obtenerValorCampo(componente.getIdentificador(), xml);
+
+		// Añade campo
+		if (componente instanceof RComponenteListaElementos) {
+			// - Componente Lista Elementos
+			anyadirListaElementos((RComponenteListaElementos) componente, linea, valorCampo);
+		} else {
+			// - Campos (que no son lista elementos)
+			anyadirDato(componente, linea, valorCampo);
+		}
+
+	}
+
+	protected void anyadirSeccion(final Linea linea, final RComponenteSeccion componenteSeccion) {
+		linea.getObjetosLinea().add(new Seccion(/* componenteSeccion.getLetra() */"", componenteSeccion.getEtiqueta()));
+	}
+
+	protected void anyadirAviso(final RComponenteAviso componenteAviso, final Linea linea) {
+		if (mostrarAviso != null && mostrarAviso) {
+			// Creamos texto aviso
+			final PersonalizacionTexto personalizacicionTexto = new PersonalizacionTexto(false, true,
+					TypeFuente.NOTOSANS, 10);
+			// Texto aviso puede contener html, por lo q limpiamos
+			final String textoAviso = Jsoup.parse(componenteAviso.getEtiqueta()).text();
+			final Texto texto = new Texto(personalizacicionTexto, textoAviso, 6);
+			linea.getObjetosLinea().add(texto);
+		}
+	}
+
+	protected void anyadirListaElementos(final RComponenteListaElementos componenteLEL, final Linea linea,
+			final ValorCampo valorCampo) {
+
+		if (valorCampo != null) {
+
+			// Formato tabla: se muestran los campos indicados
+			final RPaginaFormulario paginaElemento = componenteLEL.getPaginaElemento();
+
+			// Columnas a mostrar
+			final List<ListaElementosColumna> colsMostrar = UtilsFormularioInterno
+					.obtenerColumnasMostrarListaElementos(componenteLEL);
+
+			// Si no hay columnas a mostrar, no se muestra campo
+			if (!colsMostrar.isEmpty()) {
+
+				// Header
+				final List<ColumnaTabla> columnaTablas = new ArrayList<ColumnaTabla>();
+				for (final ListaElementosColumna dc : colsMostrar) {
+					final ColumnaTabla col = new ColumnaTabla(dc.getDescripcion(), dc.getAncho());
+					columnaTablas.add(col);
+				}
+
+				// Filas
+				final List<FilaTabla> filaTablas = new ArrayList<FilaTabla>();
+				final ValorCampoListaElementos vle = (ValorCampoListaElementos) valorCampo;
+				if (vle != null && vle.getValor() != null) {
+					for (final ValorElemento ve : vle.getValor()) {
+						final List<String> valoresFila = new ArrayList<String>();
+						for (final ListaElementosColumna dc : colsMostrar) {
+							final ValorCampo vcf = UtilsFormularioInterno.buscarValorCampo(ve.getElemento(),
+									dc.getId());
+							final RComponente ce = UtilsFormularioInterno.devuelveComponentePagina(paginaElemento,
+									dc.getId());
+							final String vcfStr = obtenerValorPresentacion(vcf, ce);
+							valoresFila.add(vcfStr);
+						}
+						filaTablas.add(new FilaTabla(valoresFila));
+					}
+				}
+
+				linea.getObjetosLinea()
+						.add(new Tabla(6, new HeaderTabla(columnaTablas), filaTablas, componenteLEL.getEtiqueta()));
+
+			}
+
 		}
 
 	}
@@ -493,43 +580,13 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	 * @param xml
 	 * @throws Exception
 	 */
-	private void anyadirDato(final RComponente componente, final Linea linea, final XmlFormulario xml) {
-
-		boolean encontrado = false;
-		for (final ValorCampo valor : xml.getValores()) {
-			if (valor.getId() != null && componente.getIdentificador().equals(valor.getId())) {
-				encontrado = true;
-				final TypeCampo tipoCampo = UtilsSTG.traduceTipoCampo(componente.getTipo());
-				if (tipoCampo != TypeCampo.OCULTO && tipoCampo != TypeCampo.CAPTCHA) {
-					if (valor instanceof ValorCampoSimple) {
-						String valorCampoSimple = ((ValorCampoSimple) valor).getValor();
-						// Conversión fecha
-						if (isComponenteTipoFecha(componente)) {
-							valorCampoSimple = getConversionFecha(valorCampoSimple);
-						}
-						// Si es multilinea nos aseguramos que exista un salto de línea
-						if (isComponenteTipoMultilinea(componente) && valorCampoSimple != null
-								&& valorCampoSimple.indexOf("\n") == -1) {
-							valorCampoSimple = valorCampoSimple + "\r\n";
-						}
-						// Establece valor en pdf
-						linea.getObjetosLinea().add(new CampoTexto(6, isMultilinea(valorCampoSimple),
-								componente.getEtiqueta(), valorCampoSimple));
-					} else if (valor instanceof ValorCampoIndexado) {
-						linea.getObjetosLinea().add(new CampoTexto(6, false, componente.getEtiqueta(),
-								getValorCampoIndexado((ValorCampoIndexado) valor)));
-					} else if (valor instanceof ValorCampoListaIndexados) {
-						final String valorStr = getValorCampoListaIndexados((ValorCampoListaIndexados) valor);
-						linea.getObjetosLinea()
-								.add(new CampoTexto(6, isMultilinea(valorStr), componente.getEtiqueta(), valorStr));
-					}
-				}
-			}
-		}
-		if (!encontrado) {
+	private void anyadirDato(final RComponente componente, final Linea linea, final ValorCampo valor) {
+		if (valor == null) {
 			linea.getObjetosLinea().add(new CampoTexto(6, false, componente.getEtiqueta(), ""));
+		} else {
+			final String vcfStr = obtenerValorPresentacion(valor, componente);
+			linea.getObjetosLinea().add(new CampoTexto(6, isMultilinea(vcfStr), componente.getEtiqueta(), vcfStr));
 		}
-
 	}
 
 	/**
@@ -550,7 +607,7 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	 * @param valor
 	 * @return
 	 */
-	private String getValorCampoIndexado(final ValorCampoIndexado valor) {
+	private String obtenerValorPresentacionCampoIndexado(final ValorCampoIndexado valor) {
 		String valorCampoIndexado = "";
 		if (valor != null && valor.getValor() != null) {
 			if (visualizacionValorIndexado == TipoVisualizacionValorIndexado.DESCRIPCION) {
@@ -569,7 +626,7 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	 * @param valor
 	 * @return
 	 */
-	private String getValorCampoListaIndexados(final ValorCampoListaIndexados valor) {
+	private String obtenerValorPresentacionCampoListaIndexados(final ValorCampoListaIndexados valor) {
 		final ValorCampoListaIndexados valorLista = valor;
 		final StringBuilder valorListaSimple = new StringBuilder("");
 		final String separador = "\n";
@@ -631,6 +688,66 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
 		return texto.toString();
 
+	}
+
+	/**
+	 * Obtiene valor presentación.
+	 *
+	 * @param vcf
+	 *                Valor campo
+	 * @param dc
+	 *                Definición campo
+	 * @return valor presentación
+	 */
+	private String obtenerValorPresentacion(final ValorCampo vcf, final RComponente dc) {
+
+		String vcfStr = "";
+		if (vcf != null) {
+			switch (vcf.getTipo()) {
+			case SIMPLE:
+				vcfStr = obtenerValorPresentacionCampoSimple((ValorCampoSimple) vcf, dc);
+				break;
+			case INDEXADO:
+				vcfStr = obtenerValorPresentacionCampoIndexado((ValorCampoIndexado) vcf);
+				break;
+			case LISTA_INDEXADOS:
+				vcfStr = obtenerValorPresentacionCampoListaIndexados((ValorCampoListaIndexados) vcf);
+				break;
+			default:
+				throw new TipoNoControladoException(
+						"Tipo campo no soportado para obtener valor como String: " + vcf.getTipo());
+			}
+		}
+		return vcfStr;
+	}
+
+	/**
+	 * Obtiene valor presentación campo simple.
+	 *
+	 * @param vcf
+	 *                Valor campo
+	 * @param dc
+	 *                Conf campo
+	 * @return Valor presentacion
+	 */
+	protected String obtenerValorPresentacionCampoSimple(final ValorCampoSimple vcf, final RComponente dc) {
+		String vcfStr;
+		vcfStr = vcf.getValor();
+		final TypeCampo tipoCampo = UtilsSTG.traduceTipoCampo(dc.getTipo());
+		// Conversión fecha
+		if (isComponenteTipoFecha(dc)) {
+			vcfStr = getConversionFecha(vcfStr);
+		}
+		// Si es campo texto de tipo passw no mostramos valor
+		if (tipoCampo == TypeCampo.TEXTO
+				&& UtilsSTG.traduceTipoTexto(((RComponenteTextbox) dc).getTipoTexto()) == TypeTexto.PASSWORD) {
+			vcfStr = "*******";
+		}
+		// Si es multilinea nos aseguramos que exista un salto de línea
+		if (isComponenteTipoMultilinea(dc) && vcfStr != null && vcfStr.indexOf("\n") == -1) {
+			vcfStr = vcfStr + "\r\n";
+		}
+		return vcfStr;
 	}
 
 }

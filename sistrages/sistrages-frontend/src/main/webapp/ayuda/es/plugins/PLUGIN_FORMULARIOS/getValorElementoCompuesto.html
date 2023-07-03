@@ -1,0 +1,74 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_FORMULARIOS.getValorElementoCompuesto(idFormulario,listaElementos,numElemento,campo)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_FORMULARIOS">PLUGIN_FORMULARIOS</a></li>
+		  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_FORMULARIOS&metodo=getValorElementoCompuesto">getValorElementoCompuesto</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	getValorElementoCompuesto(idFormulario,listaElementos,numElemento,campo): ValorCampoCompuesto
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;N</b>
+</p>
+<p>
+	<ul>
+		<li>Método que retorna el valor compuesto de un campo de una lista de elementos.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idFormulario</b>: Identificador del formulario. </li>
+		<li><b>listaElementos</b>: Identificador del campo de la lista de elementos. </li>
+		<li><b>numElemento</b>: Número de elemento (empieza en 0). </li>
+		<li><b>campo</b>: Nombre del campo en la lista de elementos. </li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>ValorCampoCompuesto</b>: Recupera el valor del campo. </li>
+	</ul>
+</p>
+ <p>
+	<b>Ejemplo</b>
+ </p>
+<p> Si se desea obtener el valor del campo compuesto del primer elemento de una lista de elementos de un formulario concreto, utilizaremos la función de la siguiente forma:</p>
+ <p class="codigoScript">
+	var valorCompuesto = PLUGIN_FORMULARIOS.getValorElementoCompuesto('FORM1','ID_LISTAELEMENTOS1',0,'campoProvincia'); <br />
+ </p>
+ <p>
+	La función getValorElementoCompuesto retornará el objeto valorCompuesto. Para obtener los datos del valor compuesto podemos pedir su código o descripción tal como se muestra a continuación:
+ </p>
+ <p class="codigoScript">
+	var descripcion = valorCompuesto.getDescripcion(); <br />
+	var codigo = valorCompuesto.getCodigo();
+ </p>
+ <p>
+	En este caso la función getCodigo retornará la cadena '07' y la función getDescripcion retornará la cadena 'Illes Balears'.
+ </p>
+<br />
+
+</body>
+</html>

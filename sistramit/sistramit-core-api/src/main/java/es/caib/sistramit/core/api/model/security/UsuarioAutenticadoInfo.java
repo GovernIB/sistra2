@@ -5,6 +5,7 @@ import java.io.Serializable;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeQAA;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Info usuario autenticado.
@@ -189,6 +190,24 @@ public final class UsuarioAutenticadoInfo implements Serializable {
 	 */
 	public void setQaa(final TypeQAA qaa) {
 		this.qaa = qaa;
+	}
+
+	/**
+	 * Retorna nombre y apellidos concatenados.
+	 * @return nombre y apellidos concatenados
+	 */
+	public String getNombreApellidos() {
+		final StringBuffer res = new StringBuffer(100);
+		if (this.getNombre() != null) {
+			res.append(this.getNombre());
+		}
+		if (StringUtils.isNotBlank(this.getApellido1())) {
+			res.append(" ").append(this.getApellido1());
+		}
+		if (StringUtils.isNotBlank(this.getApellido2())) {
+			res.append(" ").append(this.getApellido2());
+		}
+		return res.toString();
 	}
 
 }

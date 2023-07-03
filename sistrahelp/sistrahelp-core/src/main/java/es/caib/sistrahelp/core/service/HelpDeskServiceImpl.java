@@ -221,4 +221,9 @@ public class HelpDeskServiceImpl implements HelpDeskService {
 	public void updateFormularioSoporte(Soporte soporte) {
 		sistramitApiComponent.updateFormularioSoporte(soporte);
 	}
+
+	@Override
+	public String urlLogoEntidad(String codDir3) {
+		return sistramitApiComponent.urlLogoEntidad(codDir3);
+	}
 }

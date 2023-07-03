@@ -51,6 +51,9 @@ public class FilaImportar {
 	/** Ficheros content. **/
 	private Map<Long, byte[]> ficherosContent = new HashMap<>();
 
+	/** Disenyos Lista Elementos **/
+	private Map<Long, DisenyoFormulario> disenyosLE = new HashMap<>();
+
 	/** Usuario . **/
 	private String usuario;
 
@@ -287,5 +290,20 @@ public class FilaImportar {
 	public void setFilaSecciones(List<FilaImportarSeccion> filaSecciones) {
 		this.filaSecciones = filaSecciones;
 	}
+
+	/**
+	 * @return the disenyosLE
+	 */
+	public Map<Long, DisenyoFormulario> getDisenyosLE() {
+		return disenyosLE;
+	}
+
+	/**
+	 * @param disenyosLE the disenyosLE to set
+	 */
+	public void setDisenyosLE(Map<Long, DisenyoFormulario> disenyosLE) {
+		this.disenyosLE = disenyosLE;
+	}
+
 
 }

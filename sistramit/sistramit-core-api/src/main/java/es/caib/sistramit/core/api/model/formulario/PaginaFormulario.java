@@ -8,7 +8,7 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 
 /**
  *
- * Página formulario: datos necesarios para la carga de la página.
+ * Página formulario: datos necesarios para la carga de la página en asistente.
  *
  *
  * @author Indra
@@ -293,7 +293,7 @@ public final class PaginaFormulario implements Serializable {
 
 	/**
 	 * Método de acceso a idPagina.
-	 * 
+	 *
 	 * @return idPagina
 	 */
 	public String getIdPagina() {
@@ -302,7 +302,7 @@ public final class PaginaFormulario implements Serializable {
 
 	/**
 	 * Método para establecer idPagina.
-	 * 
+	 *
 	 * @param idPagina
 	 *                     idPagina a establecer
 	 */

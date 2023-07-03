@@ -332,4 +332,16 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 	public Area getAreaByIdentificador(final String identificadorEntidad, final String identificador) {
 		return restApiService.getAreaByIdentificador(identificadorEntidad, identificador);
 	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<String> listTramitesByArea(String idEntidad, String idArea) {
+		return restApiService.listTramitesByArea(idEntidad, idArea);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<Integer> listVersionesByTramite(String idEntidad, String idArea, String idTramite) {
+		return restApiService.listVersionesByTramite(idEntidad, idArea, idTramite);
+	}
 }

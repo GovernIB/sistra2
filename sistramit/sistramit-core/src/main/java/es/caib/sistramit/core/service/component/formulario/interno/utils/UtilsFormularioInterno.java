@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import es.caib.sistramit.core.service.model.formulario.ParametrosAperturaFormulario;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,10 +13,10 @@ import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistrages.rest.api.interna.RComponente;
 import es.caib.sistrages.rest.api.interna.RComponenteCampoOculto;
 import es.caib.sistrages.rest.api.interna.RComponenteCheckbox;
+import es.caib.sistrages.rest.api.interna.RComponenteListaElementos;
 import es.caib.sistrages.rest.api.interna.RComponenteSelector;
 import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
-import es.caib.sistrages.rest.api.interna.RFormularioTramite;
 import es.caib.sistrages.rest.api.interna.RLineaComponentes;
 import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
 import es.caib.sistrages.rest.api.interna.RParametroDominio;
@@ -26,9 +27,11 @@ import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.exception.ValorCampoFormularioNoValidoException;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
+import es.caib.sistramit.core.api.model.formulario.ListaElementosColumna;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
+import es.caib.sistramit.core.api.model.formulario.ValorCampoListaElementos;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
 import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
@@ -36,10 +39,9 @@ import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
 import es.caib.sistramit.core.api.model.formulario.types.TypeValor;
-import es.caib.sistramit.core.service.model.formulario.interno.DatosSesionFormularioInterno;
+import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
 import es.caib.sistramit.core.service.model.formulario.interno.DependenciaCampo;
-import es.caib.sistramit.core.service.model.formulario.interno.PaginaFormularioData;
-import es.caib.sistramit.core.service.model.formulario.interno.VariablesFormulario;
+import es.caib.sistramit.core.service.model.formulario.interno.PaginaData;
 import es.caib.sistramit.core.service.model.formulario.interno.types.TypeListaValores;
 import es.caib.sistramit.core.service.model.formulario.interno.types.TypeParametroDominio;
 import es.caib.sistramit.core.service.model.integracion.ParametrosDominio;
@@ -64,8 +66,8 @@ public class UtilsFormularioInterno {
 	/**
 	 * Devuelve lista de campos formulario.
 	 *
-	 * @param defPagina
-	 *                      Definición página
+	 * @param defFormulario
+	 *                      Definición formulario
 	 * @return Lista campos
 	 */
 	public static List<RComponente> devuelveListaCampos(final RFormularioInterno defFormulario) {
@@ -74,6 +76,29 @@ public class UtilsFormularioInterno {
 			campos.addAll(devuelveListaCampos(defPagina));
 		}
 		return campos;
+	}
+
+	/**
+	 * Devuelve lista de campos de un tipo.
+	 *
+	 * @param pagForDef
+	 *                      Definición página.
+	 * @param tipoCampo
+	 *                      Tipo campo
+	 * @return Lista ids campos de ese tipo
+	 */
+	public static List<String> devuelveCamposTipo(final RPaginaFormulario pagForDef, final TypeCampo tipoCampo) {
+
+		// TODO LEL CAMBIAR ESTOS DEVUELVE POR OBTENER?? O POR BUSCAR??
+
+		final List<String> camposTipo = new ArrayList<>();
+		final List<RComponente> camposPagFor = UtilsFormularioInterno.devuelveListaCampos(pagForDef);
+		for (final RComponente c : camposPagFor) {
+			if (UtilsSTG.traduceTipoCampo(c.getTipo()) == tipoCampo) {
+				camposTipo.add(c.getIdentificador());
+			}
+		}
+		return camposTipo;
 	}
 
 	/**
@@ -137,7 +162,7 @@ public class UtilsFormularioInterno {
 	/**
 	 * Verifica si el componente es un campo de datos.
 	 *
-	 * @param componente
+	 * @param pCampoDef Definición campo
 	 * @return boolean
 	 */
 	public static boolean esCampo(final RComponente pCampoDef) {
@@ -174,6 +199,9 @@ public class UtilsFormularioInterno {
 		case CAPTCHA:
 			// No tiene props especificas, retornamos propiedades por defecto
 			res = new RPropiedadesCampo();
+			break;
+		case LISTA_ELEMENTOS:
+			res = ((RComponenteListaElementos) pCampoDef).getPropiedadesCampo();
 			break;
 		default:
 			throw new TipoNoControladoException("Tipus campo no controlat: " + tipoCampo);
@@ -234,37 +262,21 @@ public class UtilsFormularioInterno {
 		return res;
 	}
 
-	/**
-	 * Obtiene definición página actual.
-	 *
-	 * @param pDatosSesion
-	 *                         Datos sesión
-	 * @return definición página
-	 */
-	public static RPaginaFormulario obtenerDefinicionPaginaActual(final DatosSesionFormularioInterno pDatosSesion) {
-		final RFormularioTramite defFormulario = UtilsSTG.devuelveDefinicionFormulario(
-				pDatosSesion.getDatosInicioSesion().getIdPaso(), pDatosSesion.getDatosInicioSesion().getIdFormulario(),
-				pDatosSesion.getDefinicionTramite());
-		final RPaginaFormulario paginaDef = defFormulario.getFormularioInterno().getPaginas().get(
-				pDatosSesion.getDatosFormulario().getPaginaActualFormulario().getIndiceDef() - ConstantesNumero.N1);
-		return paginaDef;
-	}
 
 	/**
 	 * Obtiene definición página a partir identificador.
 	 *
-	 * @param pDatosSesion
-	 *                         Datos sesión
+	 * @param defFormulario
+	 *                         Definición formulario
+	 * @param identificadorPagina
+	 * 	 *                         Id página
 	 * @return definición página
 	 */
-	public static RPaginaFormulario obtenerDefinicionPagina(final DatosSesionFormularioInterno pDatosSesion,
+	public static RPaginaFormulario obtenerDefinicionPaginaFormulario(final RFormularioInterno defFormulario,
 			final String identificadorPagina) {
 		RPaginaFormulario res = null;
-		if (StringUtils.isNotBlank(identificadorPagina)) {
-			final RFormularioTramite defFormulario = UtilsSTG.devuelveDefinicionFormulario(
-					pDatosSesion.getDatosInicioSesion().getIdPaso(),
-					pDatosSesion.getDatosInicioSesion().getIdFormulario(), pDatosSesion.getDefinicionTramite());
-			for (final RPaginaFormulario paginaDef : defFormulario.getFormularioInterno().getPaginas()) {
+		if (defFormulario != null && StringUtils.isNotBlank(identificadorPagina)) {
+			for (final RPaginaFormulario paginaDef : defFormulario.getPaginas()) {
 				if (identificadorPagina.equals(paginaDef.getIdentificador())) {
 					res = paginaDef;
 					break;
@@ -277,24 +289,51 @@ public class UtilsFormularioInterno {
 		return res;
 	}
 
+
+	/**
+	 * Obtiene definición página a partir identificador.
+	 *
+	 * @param defFormulario
+	 *                         Definición formulario
+	 * @param identificadorPagina  Id pagina (si es nulo, se devuelve la siguiente página será la primera página).
+	 * @return definición página siguiente a id página
+	 */
+	public static RPaginaFormulario obtenerDefinicionSiguientePaginaFormulario(final RFormularioInterno defFormulario,
+																	  final String identificadorPagina) {
+		RPaginaFormulario res = null;
+		boolean siguiente = false;
+		if (defFormulario != null) {
+			if (StringUtils.isBlank(identificadorPagina)) {
+				// Si id pagina = null, coge la primera pagina
+				siguiente = true;
+			}
+			for (final RPaginaFormulario paginaDef : defFormulario.getPaginas()) {
+				if (siguiente) {
+					res = paginaDef;
+					break;
+				} else if (identificadorPagina.equals(paginaDef.getIdentificador())) {
+					siguiente = true;
+				}
+			}
+		}
+		if (res == null) {
+			throw new ErrorConfiguracionException("No existeix pàgina següent a: " + identificadorPagina);
+		}
+		return res;
+	}
+
 	/**
 	 * Obtiene indice definición página.
-	 *
-	 * @param pDatosSesion
-	 *                                Datos sesión
-	 * @param identificadorPagina
-	 *                                identificador página
+	 * @param defFormulario Definición formulario
+	 * @param identificadorPagina identificador página
 	 * @return indice definición página.
 	 */
-	public static int obtenerIndiceDefinicionPagina(final DatosSesionFormularioInterno pDatosSesion,
-			final String identificadorPagina) {
+	public static int obtenerIndiceDefinicionPaginaFormulario(final RFormularioInterno defFormulario,
+													final String identificadorPagina) {
 		Integer res = null;
 		if (StringUtils.isNotBlank(identificadorPagina)) {
-			final RFormularioTramite defFormulario = UtilsSTG.devuelveDefinicionFormulario(
-					pDatosSesion.getDatosInicioSesion().getIdPaso(),
-					pDatosSesion.getDatosInicioSesion().getIdFormulario(), pDatosSesion.getDefinicionTramite());
 			int index = 0;
-			for (final RPaginaFormulario paginaDef : defFormulario.getFormularioInterno().getPaginas()) {
+			for (final RPaginaFormulario paginaDef : defFormulario.getPaginas()) {
 				index++;
 				if (identificadorPagina.equals(paginaDef.getIdentificador())) {
 					res = index;
@@ -308,56 +347,6 @@ public class UtilsFormularioInterno {
 		return res;
 	}
 
-	/**
-	 * Obtiene definición página a partir indice definicion.
-	 *
-	 * @param pDatosSesion
-	 *                         Datos sesión
-	 * @param indiceDef
-	 *                         indice página en la definición trámite
-	 * @return definición página
-	 */
-	public static RPaginaFormulario obtenerDefinicionPagina(final DatosSesionFormularioInterno pDatosSesion,
-			final int indiceDef) {
-		final RFormularioTramite defFormulario = UtilsSTG.devuelveDefinicionFormulario(
-				pDatosSesion.getDatosInicioSesion().getIdPaso(), pDatosSesion.getDatosInicioSesion().getIdFormulario(),
-				pDatosSesion.getDefinicionTramite());
-		if (indiceDef > defFormulario.getFormularioInterno().getPaginas().size()) {
-			throw new ErrorConfiguracionException("No existeix pàgina amb índex: " + indiceDef);
-		}
-		final RPaginaFormulario res = defFormulario.getFormularioInterno().getPaginas()
-				.get(indiceDef - ConstantesNumero.N1);
-		return res;
-	}
-
-	/**
-	 * Genera variables accesibles desde el script.
-	 *
-	 * @param pDatosSesion
-	 *                         Datos sesion formulario
-	 * @param pIdCampo
-	 *                         Si el script es de un campo se indicara el id campo.
-	 *                         Si es de la pagina sera null.
-	 * @return Variables accesibles desde el script.
-	 */
-	public static VariablesFormulario generarVariablesFormulario(final DatosSesionFormularioInterno pDatosSesion,
-			final String pIdCampo) {
-		final VariablesFormulario res = new VariablesFormulario();
-		res.setIdSesionTramitacion(pDatosSesion.getDatosInicioSesion().getIdSesionTramitacion());
-		res.setIdioma(pDatosSesion.getDatosInicioSesion().getIdioma());
-		res.setParametrosApertura(pDatosSesion.getDatosInicioSesion().getParametros());
-		res.setNivelAutenticacion(pDatosSesion.getDatosInicioSesion().getInfoAutenticacion().getAutenticacion());
-		res.setMetodoAutenticacion(pDatosSesion.getDatosInicioSesion().getInfoAutenticacion().getMetodoAutenticacion());
-		res.setUsuario(UtilsFlujo.getDatosUsuario(pDatosSesion.getDatosInicioSesion().getInfoAutenticacion()));
-		res.setUsuarioAutenticado(pDatosSesion.getDatosInicioSesion().getInfoAutenticacion());
-		res.setDebugEnabled(pDatosSesion.isDebugEnabled());
-		if (pIdCampo != null) {
-			res.setValoresCampo(pDatosSesion.getDatosFormulario().getValoresAccesiblesCampo(pIdCampo));
-		} else {
-			res.setValoresCampo(pDatosSesion.getDatosFormulario().getValoresAccesiblesPaginaActual());
-		}
-		return res;
-	}
 
 	/**
 	 * Verifica si existe filtrado por texto busqueda.
@@ -382,123 +371,6 @@ public class UtilsFormularioInterno {
 		return res;
 	}
 
-	/**
-	 * Obtiene parametros dominio.
-	 *
-	 * @param pDatosSesion
-	 *                          Datos sesion formulario
-	 * @param pCampoDef
-	 *                          Definicion campo selector
-	 * @param textoBusqueda
-	 *                          Texto búsqueda (para selectores dinámicos)
-	 * @return parametros
-	 */
-	public static ParametrosDominio obtenerParametrosDominio(final DatosSesionFormularioInterno pDatosSesion,
-			final RComponenteSelector pCampoDef, final String textoBusqueda) {
-
-		final ParametrosDominio parametros = new ParametrosDominio();
-
-		final List<RParametroDominio> parametrosDef = pCampoDef.getListaDominio().getParametros();
-		if (parametrosDef != null) {
-			for (final RParametroDominio parDef : parametrosDef) {
-
-				final TypeParametroDominio tipoParametro = UtilsSTG.traduceTipoParametroDominio(parDef.getTipo());
-				if (tipoParametro == null) {
-					throw new ErrorConfiguracionException("Tipus paràmetre " + parDef.getTipo()
-							+ " no suportat en camp " + pCampoDef.getIdentificador());
-				}
-
-				switch (tipoParametro) {
-				case CAMPO:
-					final List<ValorCampo> camposAccesibles = pDatosSesion.getDatosFormulario()
-							.getValoresAccesiblesCampo(pCampoDef.getIdentificador());
-					final ValorCampo vc = UtilsFormularioInterno.buscarValorCampo(camposAccesibles, parDef.getValor());
-					parametros.addParametro(parDef.getIdentificador(), valorCampoParametroDominio(vc));
-					break;
-				case CONSTANTE:
-					parametros.addParametro(parDef.getIdentificador(), parDef.getValor());
-					break;
-				case PARAMETRO:
-					if (!pDatosSesion.getDatosInicioSesion().getParametros().existeParametro(parDef.getValor())) {
-						throw new TipoNoControladoException(
-								"No existeix paràmetre apertura formulari usat com per paràmetre domini: "
-										+ parDef.getValor());
-					}
-					final String paramForm = pDatosSesion.getDatosInicioSesion().getParametros()
-							.getParametro(parDef.getValor());
-					parametros.addParametro(parDef.getIdentificador(), paramForm);
-					break;
-				case SESION:
-					if (StringUtils.equalsIgnoreCase("idioma", parDef.getValor())) {
-						parametros.addParametro(parDef.getIdentificador(),
-								pDatosSesion.getDatosInicioSesion().getIdioma());
-					} else {
-						throw new TipoNoControladoException(
-								"Propietat per paràmetre domini de tipus sessió no controlat: " + parDef.getValor());
-					}
-					break;
-				case BUSQUEDA:
-					if (UtilsSTG.traduceTipoSelector(pCampoDef.getTipoSelector()) != TypeSelector.DINAMICO) {
-						throw new TipoNoControladoException(
-								"Paràmetre text de cerca només permès per a selector dinàmic");
-					}
-					parametros.addParametro(parDef.getIdentificador(), textoBusqueda);
-					break;
-				default:
-					throw new TipoNoControladoException("Tipus de paràmetre domini no controlat: " + parDef.getTipo());
-				}
-			}
-		}
-		return parametros;
-	}
-
-	/**
-	 * Obtiene el valor campo para ser pasaso a un dominio. Los valores simples será
-	 * el valor, para los indexados sera el código, y para la lista de indexados se
-	 * pasará la lista de códigos separadas por coma. En caso de que el valor del
-	 * campo sea nulo se devolverá la cadena vacía.
-	 *
-	 * @param valorCampo
-	 *                       Valor campo
-	 *
-	 * @return Valor campo para pasarlo como dominio.
-	 */
-	public static String valorCampoParametroDominio(final ValorCampo valorCampo) {
-		String res = null;
-		if (valorCampo != null) {
-			switch (valorCampo.getTipo()) {
-			case SIMPLE:
-				final ValorCampoSimple vcs = (ValorCampoSimple) valorCampo;
-				res = vcs.getValor();
-				break;
-			case INDEXADO:
-				final ValorCampoIndexado vci = (ValorCampoIndexado) valorCampo;
-				if (vci.getValor() != null) {
-					res = vci.getValor().getValor();
-				}
-				break;
-			case LISTA_INDEXADOS:
-				final ValorCampoListaIndexados vcl = (ValorCampoListaIndexados) valorCampo;
-				if (vcl.getValor() != null && !vcl.getValor().isEmpty()) {
-					final StringBuffer sb = new StringBuffer(vcl.getValor().size() * 100);
-					for (int i = 0; i < vcl.getValor().size(); i++) {
-						if (i > 0) {
-							sb.append(",");
-						}
-						sb.append(vcl.getValor().get(i).getValor());
-					}
-					res = sb.toString();
-				}
-				break;
-			default:
-				throw new TipoNoControladoException("Tipus de camp no controlat: " + valorCampo.getTipo());
-			}
-		}
-		if (res == null) {
-			res = "";
-		}
-		return res;
-	}
 
 	/**
 	 * Extrae los valores posibles a partir de los valores del dominio.
@@ -529,7 +401,7 @@ public class UtilsFormularioInterno {
 	 *
 	 * @param idCampo
 	 *                                  Id campo
-	 * @param valorSerializadoCampo
+	 * @param valorCampo
 	 *                                  Valor serializado campo
 	 * @return ValorCampo
 	 */
@@ -589,6 +461,31 @@ public class UtilsFormularioInterno {
 			}
 		}
 		return res;
+	}
+
+	/**
+	 * Busca valor elemento.
+	 *
+	 * @param idCampoListaElementos
+	 *                                   id campo lista elementos
+	 * @param indiceElemento
+	 *                                   indice elemento
+	 * @param valoresPaginaPrincipal
+	 *                                   valores pagina
+	 * @return valor elemento
+	 */
+	public static List<ValorCampo> buscarValorElemento(final String idCampoListaElementos, final Integer indiceElemento,
+			final List<ValorCampo> valoresPaginaPrincipal) {
+		List<ValorCampo> ve = new ArrayList<ValorCampo>();
+		if (indiceElemento != null) {
+			final ValorCampoListaElementos vcle = (ValorCampoListaElementos) buscarValorCampo(valoresPaginaPrincipal,
+					idCampoListaElementos);
+			if (vcle.getValor() != null && vcle.getValor().get(indiceElemento) != null
+					&& vcle.getValor().get(indiceElemento).getElemento() != null) {
+				ve = vcle.getValor().get(indiceElemento).getElemento();
+			}
+		}
+		return ve;
 	}
 
 	/**
@@ -657,11 +554,11 @@ public class UtilsFormularioInterno {
 	/**
 	 * Crea PaginaFormulario.
 	 *
-	 * @param paginaData
+	 * @param pagData
 	 *                       datos página
 	 * @return PaginaFormulario
 	 */
-	public static PaginaFormulario convertToPaginaFormulario(final PaginaFormularioData pagData) {
+	public static PaginaFormulario convertToPaginaFormulario(final PaginaData pagData) {
 		// Establece datos página creando una copia para evitar modificación
 		final PaginaFormulario p = new PaginaFormulario(pagData.getIdFormulario());
 		p.setIdFormulario(pagData.getIdFormulario());
@@ -680,19 +577,149 @@ public class UtilsFormularioInterno {
 		return p;
 	}
 
+
 	/**
-	 * Obtener definición formulario.
+	 * Obtiene columnas a mostrar en tabla lista elementos.
 	 *
-	 * @param datosSesion
-	 *                        Datos sesión
-	 * @return definición formulario
+	 * @param pCampoDef
+	 *                      Definición campo
+	 * @return columnas a mostrar
 	 */
-	public static RFormularioTramite obtenerDefinicionFormulario(final DatosSesionFormularioInterno datosSesion) {
-		final RFormularioTramite defFormulario = UtilsSTG.devuelveDefinicionFormulario(
-				datosSesion.getDatosInicioSesion().getIdPaso(), datosSesion.getDatosInicioSesion().getIdFormulario(),
-				datosSesion.getDefinicionTramite());
-		return defFormulario;
+	public static List<ListaElementosColumna> obtenerColumnasMostrarListaElementos(
+			final RComponenteListaElementos pCampoDef) {
+		final List<ListaElementosColumna> columnas = new ArrayList<ListaElementosColumna>();
+		final List<RComponente> campos = UtilsFormularioInterno.devuelveListaCampos(pCampoDef.getPaginaElemento());
+		for (final RComponente c : campos) {
+			final RPropiedadesCampo propsGenerales = UtilsFormularioInterno.obtenerPropiedadesCampo(c);
+			if (propsGenerales.isListaElementosMostrar()) {
+				final ListaElementosColumna lec = new ListaElementosColumna();
+				lec.setId(c.getIdentificador());
+				lec.setDescripcion(c.getEtiqueta());
+				lec.setAncho(propsGenerales.getListaElementosAnchura());
+				columnas.add(lec);
+			}
+		}
+		return columnas;
 	}
+
+	/**
+	 * OBtiene valor campo.
+	 *
+	 * @param identificador
+	 *                          id
+	 * @param xml
+	 *                          xml
+	 * @return valor
+	 */
+	public static ValorCampo obtenerValorCampo(final String identificador, final XmlFormulario xml) {
+		ValorCampo res = null;
+
+		// Obtiene valor campo
+		if (xml.getValores() != null && identificador != null) {
+			for (final ValorCampo valor : xml.getValores()) {
+				if (valor.getId() != null && identificador.equals(valor.getId())) {
+					res = valor;
+				}
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Obtiene definición página elemento.
+	 *
+	 * @param definicionFormulario
+	 *                                  Definición formulario
+	 * @param idPagina
+	 *                                  id Pagina
+	 * @param idCampoListaElementos
+	 *                                  id campo lista elementos
+	 * @return definición página elemento.
+	 */
+	public static RPaginaFormulario obtenerDefinicionPaginaElemento(final RFormularioInterno definicionFormulario,
+			final String idPagina, final String idCampoListaElementos) {
+		RPaginaFormulario rpf = null;
+		final RPaginaFormulario pf = obtenerDefinicionPaginaFormulario(definicionFormulario, idPagina);
+		final List<RComponente> listaCampos = devuelveListaCampos(pf);
+		for (final RComponente rc : listaCampos) {
+			if (rc.getIdentificador().equals(idCampoListaElementos)) {
+				final RComponenteListaElementos rcl = (RComponenteListaElementos) rc;
+				rpf = rcl.getPaginaElemento();
+				break;
+			}
+		}
+		return rpf;
+	}
+
+	/**
+	 * Obtiene parametros dominio.
+	 *
+	 * @param pCampoDef
+	 *                          Definicion campo selector
+	 * @param textoBusqueda
+	 *                          Texto búsqueda (para selectores dinámicos)
+	 * @return parametros
+	 */
+	public static ParametrosDominio obtenerParametrosDominio(final RComponenteSelector pCampoDef, final String textoBusqueda,
+															 final List<ValorCampo> camposAccesibles,
+															 final ParametrosAperturaFormulario parametrosAperturaFormulario,
+															 final String idioma) {
+
+
+		final ParametrosDominio parametros = new ParametrosDominio();
+
+		final List<RParametroDominio> parametrosDef = pCampoDef.getListaDominio().getParametros();
+		if (parametrosDef != null) {
+			for (final RParametroDominio parDef : parametrosDef) {
+
+				final TypeParametroDominio tipoParametro = UtilsSTG.traduceTipoParametroDominio(parDef.getTipo());
+				if (tipoParametro == null) {
+					throw new ErrorConfiguracionException("Tipus paràmetre " + parDef.getTipo()
+							+ " no suportat en camp " + pCampoDef.getIdentificador());
+				}
+
+				switch (tipoParametro) {
+					case CAMPO:
+						final ValorCampo vc = UtilsFormularioInterno.buscarValorCampo(camposAccesibles, parDef.getValor());
+						parametros.addParametro(parDef.getIdentificador(), valorCampoParametroDominio(vc));
+						break;
+					case CONSTANTE:
+						parametros.addParametro(parDef.getIdentificador(), parDef.getValor());
+						break;
+					case PARAMETRO:
+						if (!parametrosAperturaFormulario.existeParametro(parDef.getValor())) {
+							throw new TipoNoControladoException(
+									"No existeix paràmetre apertura formulari usat com per paràmetre domini: "
+											+ parDef.getValor());
+						}
+						final String paramForm = parametrosAperturaFormulario
+								.getParametro(parDef.getValor());
+						parametros.addParametro(parDef.getIdentificador(), paramForm);
+						break;
+					case SESION:
+						if (StringUtils.equalsIgnoreCase("idioma", parDef.getValor())) {
+							parametros.addParametro(parDef.getIdentificador(), idioma);
+						} else {
+							throw new TipoNoControladoException(
+									"Propietat per paràmetre domini de tipus sessió no controlat: " + parDef.getValor());
+						}
+						break;
+					case BUSQUEDA:
+						if (UtilsSTG.traduceTipoSelector(pCampoDef.getTipoSelector()) != TypeSelector.DINAMICO) {
+							throw new TipoNoControladoException(
+									"Paràmetre text de cerca només permès per a selector dinàmic");
+						}
+						parametros.addParametro(parDef.getIdentificador(), textoBusqueda);
+						break;
+					default:
+						throw new TipoNoControladoException("Tipus de paràmetre domini no controlat: " + parDef.getTipo());
+				}
+			}
+		}
+		return parametros;
+	}
+
+
 
 	// ---------------------------------------------------------------------------------------------------
 	// Funciones auxiliares
@@ -701,7 +728,7 @@ public class UtilsFormularioInterno {
 	/**
 	 * Busca dependencias con otros campos dentro de un script.
 	 *
-	 * @param script
+	 * @param rScript
 	 *                   Script SCript
 	 * @return Lista de dependencias con otros campos
 	 */
@@ -797,110 +824,74 @@ public class UtilsFormularioInterno {
 	}
 
 	/**
-	 * Deserializa valor de campo simple.
+	 * Comprueba si existe campo en la lista.
 	 *
-	 * @param idCampo
-	 *                       Id campo
-	 * @param valorCampo
-	 *                       Valor campo simple serializado
-	 * @param values
-	 *                       Lista valores deserializada
-	 * @return Valor campo simple
+	 * @param idCampoDep
+	 *                       id campo
+	 * @param campos
+	 *                       lista campos
+	 * @return true si existe
 	 */
-	private static ValorCampo deserializarValorCampoSimple(final String idCampo, final String valorCampo,
-			final String[] values) {
-		ValorCampo res = null;
-		switch (values.length) {
-		case ConstantesNumero.N1: // Valor vacio
-			res = ValorCampoSimple.createValorVacio(idCampo);
-			break;
-		case ConstantesNumero.N2: // Valor
-			res = new ValorCampoSimple(idCampo, values[ConstantesNumero.N1]);
-			break;
-		default: // Formato incorrecto
-			throw new ValorCampoFormularioNoValidoException(idCampo, valorCampo);
+	public static boolean existeCampo(final String idCampoDep, final List<RComponente> campos) {
+		boolean res = false;
+		if (campos != null) {
+			for (final RComponente rc : campos) {
+				res = rc.getIdentificador().equals(idCampoDep);
+				if (res) {
+					break;
+				}
+			}
 		}
 		return res;
 	}
 
 	/**
-	 * Deserializa valor de campo indexado.
+	 * Obtiene el valor campo para ser pasaso a un dominio. Los valores simples será
+	 * el valor, para los indexados sera el código, y para la lista de indexados se
+	 * pasará la lista de códigos separadas por coma. En caso de que el valor del
+	 * campo sea nulo se devolverá la cadena vacía.
 	 *
-	 * @param idCampo
-	 *                       Id campo
 	 * @param valorCampo
-	 *                       Valor campo indexado serializado
-	 * @param values
-	 *                       Lista valores deserializada
-	 * @return Valor campo indexado
+	 *                       Valor campo
+	 *
+	 * @return Valor campo para pasarlo como dominio.
 	 */
-	private static ValorCampo deserializarValorCampoIndexado(final String idCampo, final String valorCampo,
-			final String[] values) {
-		ValorCampo res = null;
-		switch (values.length) {
-		case ConstantesNumero.N1: // Valor vacio
-			res = ValorCampoIndexado.createValorVacio(idCampo);
-			break;
-		case ConstantesNumero.N2: // Valor vacio
-			if ("".equals(values[ConstantesNumero.N1])) {
-				res = ValorCampoIndexado.createValorVacio(idCampo);
-			} else {
-				throw new ValorCampoFormularioNoValidoException(idCampo, valorCampo);
+	private static String valorCampoParametroDominio(final ValorCampo valorCampo) {
+		String res = null;
+		if (valorCampo != null) {
+			switch (valorCampo.getTipo()) {
+				case SIMPLE:
+					final ValorCampoSimple vcs = (ValorCampoSimple) valorCampo;
+					res = vcs.getValor();
+					break;
+				case INDEXADO:
+					final ValorCampoIndexado vci = (ValorCampoIndexado) valorCampo;
+					if (vci.getValor() != null) {
+						res = vci.getValor().getValor();
+					}
+					break;
+				case LISTA_INDEXADOS:
+					final ValorCampoListaIndexados vcl = (ValorCampoListaIndexados) valorCampo;
+					if (vcl.getValor() != null && !vcl.getValor().isEmpty()) {
+						final StringBuffer sb = new StringBuffer(vcl.getValor().size() * 100);
+						for (int i = 0; i < vcl.getValor().size(); i++) {
+							if (i > 0) {
+								sb.append(",");
+							}
+							sb.append(vcl.getValor().get(i).getValor());
+						}
+						res = sb.toString();
+					}
+					break;
+				default:
+					throw new TipoNoControladoException("Tipus de camp no controlat: " + valorCampo.getTipo());
 			}
-			break;
-		case ConstantesNumero.N3: // Valor
-			if ("".equals(values[ConstantesNumero.N1])) {
-				res = ValorCampoIndexado.createValorVacio(idCampo);
-			} else {
-				res = new ValorCampoIndexado(idCampo, values[ConstantesNumero.N1], values[ConstantesNumero.N2]);
-			}
-			break;
-		default: // Formato incorrecto
-			throw new ValorCampoFormularioNoValidoException(idCampo, valorCampo);
+		}
+		if (res == null) {
+			res = "";
 		}
 		return res;
 	}
 
-	/**
-	 * Deserializa valor de campo lista indexados.
-	 *
-	 * @param idCampo
-	 *                       Id campo
-	 * @param valorCampo
-	 *                       Valor campo lista indexados serializado
-	 * @param values
-	 *                       Lista valores deserializada
-	 * @return Valor campo lista indexado
-	 */
-	private static ValorCampo deserializarValorCampoListaIndexados(final String idCampo, final String valorCampo,
-			final String[] values) {
-		ValorCampo res = null;
-		switch (values.length) {
-		case ConstantesNumero.N1: // Valor vacio
-			res = ValorCampoListaIndexados.createValorVacio(idCampo);
-			break;
-		case ConstantesNumero.N2: // Valor vacio
-			if ("".equals(values[ConstantesNumero.N1])) {
-				res = ValorCampoListaIndexados.createValorVacio(idCampo);
-			} else {
-				throw new ValorCampoFormularioNoValidoException(idCampo, valorCampo);
-			}
-			break;
-		default:
-			// El numero de elementos debe ser impar
-			if (values.length % ConstantesNumero.N2 == 0) {
-				throw new ValorCampoFormularioNoValidoException(idCampo, valorCampo);
-			}
-			// Establecemos valor campo lista (cada dos valores montamos un
-			// valor)
-			final ValorCampoListaIndexados vcli = new ValorCampoListaIndexados();
-			vcli.setId(idCampo);
-			for (int i = ConstantesNumero.N1; i <= (values.length - ConstantesNumero.N2); i = i + ConstantesNumero.N2) {
-				vcli.addValorIndexado(values[i], values[i + ConstantesNumero.N1]);
-			}
-			res = vcli;
-		}
-		return res;
-	}
 
 }

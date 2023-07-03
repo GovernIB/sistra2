@@ -23,11 +23,15 @@ import es.caib.sistra2.commons.pdf.UtilPDF;
 import es.caib.sistra2.commons.pdfcaib.GeneradorPdf;
 import es.caib.sistra2.commons.pdfcaib.model.Cabecera;
 import es.caib.sistra2.commons.pdfcaib.model.CampoTexto;
+import es.caib.sistra2.commons.pdfcaib.model.ColumnaTabla;
+import es.caib.sistra2.commons.pdfcaib.model.FilaTabla;
 import es.caib.sistra2.commons.pdfcaib.model.FormularioPdf;
+import es.caib.sistra2.commons.pdfcaib.model.HeaderTabla;
 import es.caib.sistra2.commons.pdfcaib.model.Linea;
 import es.caib.sistra2.commons.pdfcaib.model.PersonalizacionTexto;
 import es.caib.sistra2.commons.pdfcaib.model.Pie;
 import es.caib.sistra2.commons.pdfcaib.model.Seccion;
+import es.caib.sistra2.commons.pdfcaib.model.Tabla;
 import es.caib.sistra2.commons.pdfcaib.model.Texto;
 import es.caib.sistra2.commons.pdfcaib.types.TypeFuente;
 
@@ -205,6 +209,26 @@ public class TestPdfCaib {
 		linea.getObjetosLinea().add(texto);
 		lineas.add(linea);
 
+		// -- Lista elementos
+		linea = new Linea();
+		final List<ColumnaTabla> columnaTablas = new ArrayList<ColumnaTabla>();
+		columnaTablas.add(new ColumnaTabla("DNI", 20));
+		columnaTablas.add(new ColumnaTabla("NOMBRE", 80));
+		final List<FilaTabla> filaTablas = new ArrayList<FilaTabla>();
+		List<String> valoresFila;
+		valoresFila = new ArrayList<String>();
+		valoresFila.add("11111111H");
+		valoresFila.add("JOSE PEREZ GARCIA");
+		filaTablas.add(new FilaTabla(valoresFila));
+		valoresFila = new ArrayList<String>();
+		valoresFila.add("00000001R");
+		valoresFila.add("JAVIER MARTINEZ GUTIERREZ");
+		filaTablas.add(new FilaTabla(valoresFila));
+		final Tabla campoLEL = new Tabla(6, new HeaderTabla(columnaTablas), filaTablas, "Lista personas");
+		linea.getObjetosLinea().add(campoLEL);
+		lineas.add(linea);
+
+		// Generamos pdf
 		formularioPdf.setLineas(lineas);
 		final GeneradorPdf generadorPdf = new GeneradorPdf();
 		byte[] pdf;

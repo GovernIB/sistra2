@@ -16,9 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistrages.rest.api.interna.RComponente;
-import es.caib.sistrages.rest.api.interna.RFormularioTramite;
+import es.caib.sistrages.rest.api.interna.RFormularioInterno;
 import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
 import es.caib.sistrages.rest.api.interna.RPlantillaFormulario;
 import es.caib.sistramit.core.api.exception.AccionPersonalizadaNoExisteException;
@@ -32,6 +31,7 @@ import es.caib.sistramit.core.api.model.formulario.AccionFormulario;
 import es.caib.sistramit.core.api.model.formulario.AccionFormularioPersonalizada;
 import es.caib.sistramit.core.api.model.formulario.Captcha;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
+import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoListaElementos;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelector;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
 import es.caib.sistramit.core.api.model.formulario.MensajeValidacion;
@@ -39,6 +39,7 @@ import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
 import es.caib.sistramit.core.api.model.formulario.RecursosFormulario;
 import es.caib.sistramit.core.api.model.formulario.ResultadoBuscadorDinamico;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
+import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarElemento;
 import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
@@ -61,10 +62,11 @@ import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.formulario.DatosFinalizacionFormulario;
 import es.caib.sistramit.core.service.model.formulario.DatosInicioSesionFormulario;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
+import es.caib.sistramit.core.service.model.formulario.interno.DatosEdicionElemento;
 import es.caib.sistramit.core.service.model.formulario.interno.DatosFormularioInterno;
 import es.caib.sistramit.core.service.model.formulario.interno.DatosSesionFormularioInterno;
 import es.caib.sistramit.core.service.model.formulario.interno.DependenciaCampo;
-import es.caib.sistramit.core.service.model.formulario.interno.PaginaFormularioData;
+import es.caib.sistramit.core.service.model.formulario.interno.PaginaData;
 import es.caib.sistramit.core.service.model.formulario.types.TipoFinalizacionFormulario;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FormularioDao;
@@ -128,12 +130,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		}
 
 		// Generamos datos sesion en memoria
-		datosSesion = new DatosSesionFormularioInterno();
-		datosSesion.setIdFormulario(dis.getIdFormulario());
-		datosSesion.setTicket(ticket);
-		datosSesion.setDefinicionTramite(defTramite);
-		datosSesion.setDatosInicioSesion(dis);
-		datosSesion.setDebugEnabled(UtilsSTG.isDebugEnabled(defTramite));
+		datosSesion = new DatosSesionFormularioInterno(dis, defTramite);
 
 		// Devolvemos id sesion (usamos ticket)
 		// TODO id sesion formulario?? separamos en campo nuevo??
@@ -145,95 +142,60 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	public void inicializarSesion() {
 		// Inicializamos datos formulario y los almacenamos en sesion
 		final DatosInicioSesionFormulario dis = datosSesion.getDatosInicioSesion();
-		final RFormularioTramite defFormulario = UtilsFormularioInterno.obtenerDefinicionFormulario(datosSesion);
-		final DatosFormularioInterno datForm = inicializarConfiguracionFormulario(defFormulario,
-				dis.getXmlDatosActuales());
-		datosSesion.setDatosFormulario(datForm);
+		final RFormularioInterno defFormulario = datosSesion.obtenerDefinicionFormularioInterno();
+		final DatosFormularioInterno datForm = inicializarConfiguracionFormulario(
+				datosSesion.getDatosInicioSesion().getIdFormulario(), defFormulario, dis.getXmlDatosActuales());
+		datosSesion.inicializarDatosFormulario(datForm);
 	}
 
 	@Override
-	public PaginaFormulario cargarPaginaActual() {
-
-		// Obtenemos definicion formulario pagina actual
-		final RFormularioTramite formDef = UtilsFormularioInterno.obtenerDefinicionFormulario(datosSesion);
-		final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
-
-		// Obtenemos datos página actual
-		final PaginaFormularioData pagData = datosSesion.getDatosFormulario().getPaginaActualFormulario();
-
-		// Calculamos valores posibles campos selectores
-		final List<ValoresPosiblesCampo> vpp = valoresPosiblesFormularioHelper
-				.calcularValoresPosiblesPaginaActual(datosSesion);
+	public PaginaFormulario cargarPaginaFormularioActual() {
 
 		// Calculamos estado dinámico de los campos y actualizamos configuración campos
-		final List<ConfiguracionModificadaCampo> confDinamica = configuracionFormularioHelper
-				.evaluarEstadoCamposPagina(datosSesion);
-		for (final ConfiguracionModificadaCampo confDinamicaCampo : confDinamica) {
-			final ConfiguracionCampo confCampo = pagData.getConfiguracionCampo(confDinamicaCampo.getId());
-			confCampo.setSoloLectura(confDinamicaCampo.getSoloLectura());
-		}
+		actualizarEstadoCamposPagina(datosSesion, false, false);
 
-		// Calculamos acciones a mostrar
-		final List<AccionFormulario> acciones = configuracionFormularioHelper.evaluarAccionesPaginaActual(datosSesion);
-
-		// Html pagina
-		String html = null;
-		try {
-			html = new String(Base64.decodeBase64(paginaDef.getHtmlB64()), "UTF-8");
-		} catch (final UnsupportedEncodingException e) {
-			throw new EncodeException(e);
-		}
-
-		// Devolvemos información página actual
-		final PaginaFormulario pagAct = UtilsFormularioInterno.convertToPaginaFormulario(pagData);
-		pagAct.setPermitirGuardar(TypeSiNo.fromBoolean(formDef.getFormularioInterno().isPermitirGuardarSinFinalizar()));
-		pagAct.setValoresPosibles(vpp);
-		pagAct.setHtml(html);
-		pagAct.setAcciones(acciones);
-		final RecursosFormulario recursos = calcularRecursosEstaticos(paginaDef, pagData);
-		pagAct.setRecursos(recursos);
-
-		// Ajuste valores selectores (no obligatorios, radios,...)
-		ajustarSelectoresPagina(pagAct);
+		// Genera pagina formulario
+		final PaginaFormulario pagAct = generarPaginaFormularioAsistente(false);
 
 		return pagAct;
 	}
 
 	@Override
-	public PaginaFormulario cargarPaginaAnterior(final List<ValorCampo> valores) {
+	public PaginaFormulario cargarPaginaFormularioAnterior(final List<ValorCampo> valores) {
 		// Actualizamos valores actuales
-		final PaginaFormularioData paginaActual = datosSesion.getDatosFormulario().getPaginaActualFormulario();
+		final PaginaData paginaActual = datosSesion.getDatosFormulario().obtenerPaginaDataActual(false);
 		paginaActual.actualizarValoresPagina(valores);
 		// Pop página actual
 		// - Pasamos a posteriores, cargando página anterior como actual
 		datosSesion.getDatosFormulario().popPaginaFormulario();
 		// Carga pagina actual
-		return this.cargarPaginaActual();
+		return this.cargarPaginaFormularioActual();
 	}
 
 	@Override
-	public ResultadoEvaluarCambioCampo evaluarCambioCampoPagina(final String idCampo,
+	public ResultadoEvaluarCambioCampo evaluarCambioCampoPaginaFormulario(final String idCampo,
 			final List<ValorCampo> valoresPagina) {
 		// Calculamos como se quedan los datos tras el cambio del campo
-		return calculoDatosFormularioHelper.calcularDatosPaginaCambioCampo(datosSesion, idCampo, valoresPagina);
+		return calculoDatosFormularioHelper.calcularDatosPaginaCambioCampo(datosSesion, idCampo, valoresPagina, false);
 	}
 
 	@Override
-	public ResultadoGuardarPagina guardarPagina(final List<ValorCampo> valoresPagina,
+	public ResultadoGuardarPagina guardarPaginaFormulario(final List<ValorCampo> valoresPagina,
 			final String accionPersonalizada) {
-		return guardarPaginaImpl(valoresPagina, accionPersonalizada, false);
+		return guardarPaginaFormularioImpl(valoresPagina, accionPersonalizada, false);
 	}
 
 	@Override
-	public ResultadoGuardarPagina guardarSalirPagina(final List<ValorCampo> valoresPagina) {
-		return guardarPaginaImpl(valoresPagina, null, true);
+	public ResultadoGuardarPagina salirGuardandoPaginaFormulario(final List<ValorCampo> valoresPagina) {
+		return guardarPaginaFormularioImpl(valoresPagina, null, true);
 	}
 
 	@Override
 	public ResultadoGuardarPagina cancelarFormulario() {
 		final DatosFinalizacionFormulario datosFinSesion = new DatosFinalizacionFormulario();
 		datosFinSesion.setEstadoFinalizacion(TipoFinalizacionFormulario.CANCELADO);
-		dao.finalizarSesionGestorFormularios(datosSesion.getTicket(), datosFinSesion);
+		dao.finalizarSesionGestorFormularios(datosSesion.getDatosInicioSesion().getIdSesionFormulario(),
+				datosFinSesion);
 
 		// Retornamos indicando que esta finalizado y url redireccion
 		final ResultadoGuardarPagina res = new ResultadoGuardarPagina();
@@ -241,7 +203,8 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		res.setUrl(this.configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
 				+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_FORMULARIO_INTERNO + "?idPaso="
 				+ datosSesion.getDatosInicioSesion().getIdPaso() + "&idFormulario="
-				+ datosSesion.getDatosInicioSesion().getIdFormulario() + "&ticket=" + datosSesion.getTicket());
+				+ datosSesion.getDatosInicioSesion().getIdFormulario() + "&ticket="
+				+ datosSesion.getDatosInicioSesion().getIdSesionFormulario());
 		return res;
 	}
 
@@ -268,34 +231,124 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	}
 
 	@Override
-	public ResultadoBuscadorDinamico buscadorDinamico(final String idCampo, final String textoCampo,
+	public ResultadoBuscadorDinamico buscadorDinamicoPaginaFormulario(final String idCampo, final String textoCampo,
 			final List<ValorCampo> valoresPagina) {
 		return calculoDatosFormularioHelper.calcularValoresPosiblesSelectorDinamico(datosSesion, idCampo, textoCampo,
-				valoresPagina);
+				valoresPagina, false);
 	}
 
 	@Override
-	public Captcha generarImagenCaptcha(final String idCampo) {
-		return generarCaptchaCampo(idCampo, datosSesion.getDatosInicioSesion().getIdioma(), TypeCaptcha.IMAGEN);
+	public Captcha generarImagenCaptchaPaginaFormulario(final String idCampo) {
+		return generarCaptchaCampoPaginaFormulario(idCampo, datosSesion.getDatosInicioSesion().getIdioma(),
+				TypeCaptcha.IMAGEN);
 	}
 
 	@Override
-	public Captcha generarSonidoCaptcha(final String idCampo) {
-		return generarCaptchaCampo(idCampo, datosSesion.getDatosInicioSesion().getIdioma(), TypeCaptcha.SONIDO);
+	public Captcha generarSonidoCaptchaPaginaFormulario(final String idCampo) {
+		return generarCaptchaCampoPaginaFormulario(idCampo, datosSesion.getDatosInicioSesion().getIdioma(),
+				TypeCaptcha.SONIDO);
 	}
 
 	@Override
-	public void regenerarCaptcha(final String idCampo) {
+	public void regenerarCaptchaPaginaFormulario(final String idCampo) {
 		// Generamos nuevo texto de captcha
 		final String textCaptcha = UtilsCaptcha.generarKeyCaptcha();
 		// Obtenemos datos página actual
-		final PaginaFormularioData pagData = datosSesion.getDatosFormulario().getPaginaActualFormulario();
+		final PaginaData pagData = datosSesion.getDatosFormulario().obtenerPaginaDataActual(false);
 		// Establecemos nuevo valor
 		if (pagData.getConfiguracionCampo(idCampo).getTipo() != TypeCampo.CAPTCHA) {
 			throw new ErrorConfiguracionException("Camp " + idCampo + " no es captcha");
 		}
 		final ValorCampoSimple vc = new ValorCampoSimple(idCampo, textCaptcha);
 		pagData.reinicializarValorCampo(vc);
+	}
+
+	@Override
+	public PaginaFormulario anyadirElemento(final String idCampoListaElementos, final List<ValorCampo> valoresPagina) {
+		// Inicializa página elemento
+		final PaginaFormulario res = inicializaPaginaElemento(datosSesion, idCampoListaElementos, null, valoresPagina,
+				false);
+		return res;
+	}
+
+	@Override
+	public PaginaFormulario modificarElemento(final String idCampoListaElementos, final int indiceElemento,
+			final List<ValorCampo> valoresPagina) {
+		// Inicializa pagina elemento
+		return inicializaPaginaElemento(datosSesion, idCampoListaElementos, indiceElemento, valoresPagina, false);
+	}
+
+	@Override
+	public PaginaFormulario consultarElemento(final String idCampoListaElementos, final int indiceElemento,
+			final List<ValorCampo> valoresPagina) {
+		// Inicializa pagina elemento
+		return inicializaPaginaElemento(datosSesion, idCampoListaElementos, indiceElemento, valoresPagina, true);
+	}
+
+	@Override
+	public ResultadoEvaluarCambioCampo evaluarCambioCampoElemento(final String idCampoListaElementos,
+			final String idCampo, final List<ValorCampo> valoresPagina) {
+		checkIdListaElementos(idCampoListaElementos);
+		return calculoDatosFormularioHelper.calcularDatosPaginaCambioCampo(datosSesion, idCampo, valoresPagina, true);
+	}
+
+	@Override
+	public ResultadoGuardarElemento guardarElemento(final String idCampoListaElementos,
+			final List<ValorCampo> valoresElemento) {
+
+		// Verificamos si se está editando elemento
+		checkIdListaElementos(idCampoListaElementos);
+
+		// Obtenemos pagina formulario y pagina elemento
+		final PaginaData pagForm = datosSesion.getDatosFormulario().obtenerPaginaDataActual(false);
+		// TODO LEL CAMBIAR A PAGELE
+		final PaginaData pagEle = datosSesion.getDatosFormulario().obtenerPaginaDataActual(true);
+
+		// Obtenemos indice elemento que se esta modificando (nulo si nuevo)
+		final Integer indiceElemento = datosSesion.getDatosFormulario().obtenerEdicionElementoIndiceElemento();
+
+		// Obtenemos configuración campo elementos
+		final ConfiguracionCampoListaElementos cc = (ConfiguracionCampoListaElementos) pagForm
+				.getConfiguracionCampo(idCampoListaElementos);
+
+		// Verificamos si es solo lectura
+		if (cc.getSoloLectura() == TypeSiNo.SI) {
+			throw new ErrorConfiguracionException("No es permet modificar element en camp " + idCampoListaElementos);
+		}
+
+		// Almacenamos valores campos elemento
+		pagEle.actualizarValoresPagina(valoresElemento);
+
+		// Actualiza estado campos (solo lectura / visible)
+		actualizarEstadoCamposPagina(datosSesion, true, false);
+
+		// Realizamos validaciones pagina
+		final MensajeValidacion mv = validarGuardarPagina(datosSesion, null, true);
+
+		// Retornamos resultado
+		final ResultadoGuardarElemento res = new ResultadoGuardarElemento();
+		res.setValidacion(mv);
+
+		if (!UtilsFlujo.isErrorValidacion(mv)) {
+			// Establecemos indice elemento a modificar (null si nuevo) y datos elemento
+			res.setIndice(indiceElemento);
+			res.setValor(pagEle.getValores());
+			// Reseteamos datos edicion documento
+			datosSesion.getDatosFormulario().resetearEdicionElemento();
+		}
+
+		return res;
+	}
+
+	@Override
+	public ResultadoBuscadorDinamico buscadorDinamicoElemento(final String idCampoListaElementos, final String idCampo,
+			final String textoCampo, final List<ValorCampo> valoresPagina) {
+		// Verificamos si se está editando elemento
+		checkIdListaElementos(idCampoListaElementos);
+		// Calcula valores posibles
+		final ResultadoBuscadorDinamico resultadoBuscadorDinamico = calculoDatosFormularioHelper
+				.calcularValoresPosiblesSelectorDinamico(datosSesion, idCampo, textoCampo, valoresPagina, true);
+		return resultadoBuscadorDinamico;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -311,25 +364,22 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 *                              xml datos iniciales
 	 * @return Genera datos formulario interno
 	 */
-	private DatosFormularioInterno inicializarConfiguracionFormulario(final RFormularioTramite defForm,
-			final byte[] xmlDatosIniciales) {
+	private DatosFormularioInterno inicializarConfiguracionFormulario(final String idFormulario,
+			final RFormularioInterno defForm, final byte[] xmlDatosIniciales) {
 
 		// Parseamos datos iniciales
 		final XmlFormulario xmlForm = UtilsFormulario.xmlToValores(xmlDatosIniciales);
 		final List<ValorCampo> valoresIniciales = xmlForm.getValores();
 
-		// Datos formulario interno: configuracion y datos.
-		final DatosFormularioInterno df = new DatosFormularioInterno();
-		df.setValoresIniciales(valoresIniciales);
-
 		// Inicializamos página inicial (las siguiente paginas se inicializaran conforme
 		// se acceda)
-		final PaginaFormularioData ip = inicializarPagina(defForm.getIdentificador(), ConstantesNumero.N1, defForm,
+		final RPaginaFormulario paginaDefInicial = UtilsFormularioInterno
+				.obtenerDefinicionSiguientePaginaFormulario(defForm, null);
+		final PaginaData paginaDataInicial = inicializarPagina(idFormulario, defForm, paginaDefInicial,
 				valoresIniciales);
 
-		// Añadimos pagina a datos formulario
-		df.pushPaginaFormulario(ip);
-
+		// Datos formulario interno: configuracion y datos.
+		final DatosFormularioInterno df = new DatosFormularioInterno(valoresIniciales, paginaDataInicial);
 		return df;
 	}
 
@@ -338,26 +388,20 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 *
 	 * @param idFormulario
 	 *                         id formulario
-	 * @param indiceDef
-	 *                         indice definición
 	 * @param defForm
 	 *                         definición formulario
 	 * @param valoresCampo
 	 *                         valores campo
+	 * @param modoConsulta
 	 * @return
 	 */
-	private PaginaFormularioData inicializarPagina(final String idFormulario, final int indiceDef,
-			final RFormularioTramite defForm, final List<ValorCampo> valoresCampo) {
-
-		// Definicion pagina
-		final RPaginaFormulario defPagina = defForm.getFormularioInterno().getPaginas()
-				.get(indiceDef - ConstantesNumero.N1);
+	private PaginaData inicializarPagina(final String idFormulario, final RFormularioInterno defForm,
+			final RPaginaFormulario defPagina, final List<ValorCampo> valoresCampo) {
 
 		// Añadimos pagina
-		final PaginaFormularioData paginaForm = new PaginaFormularioData(idFormulario, indiceDef);
-		paginaForm.setIdentificador(defPagina.getIdentificador());
-		paginaForm.setMostrarTitulo(TypeSiNo.fromBoolean(defForm.getFormularioInterno().isMostrarTitulo()));
-		paginaForm.setTitulo(defForm.getFormularioInterno().getTitulo());
+		final PaginaData paginaForm = new PaginaData(idFormulario, defPagina.getIdentificador());
+		paginaForm.setMostrarTitulo(TypeSiNo.fromBoolean(defForm.isMostrarTitulo()));
+		paginaForm.setTitulo(defForm.getTitulo());
 
 		// Establecemos campos página
 		final List<DependenciaCampo> dependenciasPagina = new ArrayList<>();
@@ -424,37 +468,65 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 *                                Datos sesion formulario
 	 * @param accionPersonalizada
 	 *                                Accion personalizada
+	 * @param elemento
+	 *                                Indica si existe elemento
 	 * @return Mensaje validación en caso de que exista
 	 */
 	private MensajeValidacion validarGuardarPagina(final DatosSesionFormularioInterno datosSesion,
-			final String accionPersonalizada) {
-		// - Si se ejecuta una accion personalizada comprobamos si debemos validar
+			final String accionPersonalizada, final boolean elemento) {
+
+		// Comprobamos si debemos validar página
+		final boolean validar = isValidar(datosSesion, accionPersonalizada, elemento);
+
+		// Validacion pagina
+		MensajeValidacion mensaje = null;
+		if (validar) {
+			// Formato campos (mismas validaciones que en js). Si no pasa formato se genera
+			// excepción.
+			validacionesFormularioHelper.validarConfiguracionCampos(datosSesion, elemento);
+			// Validacion script campos
+			mensaje = validacionesFormularioHelper.validarScriptValidacionCampos(datosSesion, elemento);
+			// Script validacion de la pagina
+			if (mensaje == null) {
+				mensaje = validacionesFormularioHelper.validarScriptValidacionPagina(datosSesion, elemento);
+			}
+		}
+
+		return mensaje;
+	}
+
+	/**
+	 * Verifica si se debe guardar página.
+	 *
+	 * @param datosSesion
+	 *                                Datos sesión
+	 * @param accionPersonalizada
+	 *                                Acción personalizada
+	 * @param elemento
+	 *                                Indica si es elemento
+	 * @return
+	 */
+	private static boolean isValidar(final DatosSesionFormularioInterno datosSesion, final String accionPersonalizada,
+			final boolean elemento) {
 		boolean validar = true;
 		if (StringUtils.isNotBlank(accionPersonalizada)) {
-			final AccionFormularioPersonalizada accion = datosSesion.getDatosFormulario().getPaginaActualFormulario()
+
+			if (elemento) {
+				throw new ErrorConfiguracionException(
+						"No se permiten acciones personalizadas en página detalle elemento");
+			}
+
+			final AccionFormularioPersonalizada accion = datosSesion.getDatosFormulario().obtenerPaginaDataActual(false)
 					.buscarAccion(accionPersonalizada);
 			if (accion == null) {
-				throw new AccionPersonalizadaNoExisteException(datosSesion.getIdFormulario(), accionPersonalizada);
+				throw new AccionPersonalizadaNoExisteException(datosSesion.getDatosInicioSesion().getIdFormulario(),
+						accionPersonalizada);
 			}
 			if (accion.getValidar() == TypeSiNo.NO) {
 				validar = false;
 			}
 		}
-
-		MensajeValidacion mensaje = null;
-		if (validar) {
-			// Formato campos (mismas validaciones que en js). Si no pasa formato se genera
-			// excepción.
-			validacionesFormularioHelper.validarConfiguracionCampos(datosSesion);
-			// Validacion script campos
-			mensaje = validacionesFormularioHelper.validarScriptValidacionCampos(datosSesion);
-			// Script validacion de la pagina
-			if (mensaje == null) {
-				mensaje = validacionesFormularioHelper.validarScriptValidacionPagina(datosSesion);
-			}
-		}
-
-		return mensaje;
+		return validar;
 	}
 
 	/**
@@ -472,13 +544,15 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 
 		// Obtenemos valores página
 		// - Valores hasta página actual (será la final si se sale finalizando)
-		final List<ValorCampo> valoresFormulario = pDatosSesion.getDatosFormulario().getValoresAccesiblesPaginaActual();
+		final List<ValorCampo> valoresFormulario = pDatosSesion.getDatosFormulario()
+				.obtenerValoresAccesiblesPaginaFormularioActual();
 		// - Si se sale sin finalizar cogemos también las páginas posteriores
 		if (salirSinFinalizar) {
 			// Resto pagina posteriores rellenadas
-			valoresFormulario.addAll(pDatosSesion.getDatosFormulario().getValoresPosterioresPaginaActual());
+			valoresFormulario
+					.addAll(pDatosSesion.getDatosFormulario().obtenerValoresPosterioresPaginaFormularioActual());
 			// Resto valores que aparecen en valores iniciales y no están
-			for (final ValorCampo vc : pDatosSesion.getDatosFormulario().getValoresIniciales()) {
+			for (final ValorCampo vc : pDatosSesion.getDatosFormulario().obtenerValoresIniciales()) {
 				if (UtilsFormularioInterno.buscarValorCampo(valoresFormulario, vc.getId()) == null) {
 					valoresFormulario.add(vc);
 				}
@@ -491,7 +565,8 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		// Generamos pdf
 		byte[] pdf = null;
 		if (!salirSinFinalizar) {
-			final List<String> pagsRellenadas = pDatosSesion.getDatosFormulario().getIdsPaginasRellenadas();
+			final List<String> pagsRellenadas = pDatosSesion.getDatosFormulario()
+					.obtenerIdsPaginasFormularioRellenadas();
 			final RPlantillaFormulario plantillaPdf = configuracionFormularioHelper
 					.obtenerPlantillaPdfVisualizacion(pDatosSesion);
 			pdf = generarPdfFormulario(pDatosSesion.getDefinicionTramite(), pDatosSesion.getDatosInicioSesion(),
@@ -506,7 +581,8 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		} else {
 			datosFinSesion.setEstadoFinalizacion(TipoFinalizacionFormulario.FINALIZADO);
 		}
-		dao.finalizarSesionGestorFormularios(pDatosSesion.getTicket(), datosFinSesion);
+		dao.finalizarSesionGestorFormularios(pDatosSesion.getDatosInicioSesion().getIdSesionFormulario(),
+				datosFinSesion);
 	}
 
 	/**
@@ -553,9 +629,9 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		}
 
 		// Formateamos a PDF
-		final RFormularioTramite defFormulario = UtilsFormularioInterno.obtenerDefinicionFormulario(datosSesion);
+		final RFormularioInterno defFormulario = datosSesion.obtenerDefinicionFormularioInterno();
 		return formateador.formatear(xml, pagsRellenadas, plantilla,
-				definicionTramiteSTG.getDefinicionVersion().getIdioma(), defFormulario.getFormularioInterno(),
+				definicionTramiteSTG.getDefinicionVersion().getIdioma(), defFormulario,
 				datosInicioSesionFormulario.getTituloProcedimiento(), datosInicioSesionFormulario.getTituloTramite(),
 				datosInicioSesionFormulario.getCodigoSiaProcedimiento(),
 				datosInicioSesionFormulario.getDir3ResponsableProcedimiento());
@@ -568,8 +644,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 * @param pagAct
 	 *                   Datos página
 	 */
-	private void ajustarSelectoresPagina(final PaginaFormulario pagAct) {
-
+	private void ajustarSelectores(final PaginaFormulario pagAct) {
 		for (final ConfiguracionCampo cc : pagAct.getConfiguracion()) {
 			if (cc.getTipo() == TypeCampo.SELECTOR) {
 				final ConfiguracionCampoSelector ccs = (ConfiguracionCampoSelector) cc;
@@ -613,7 +688,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 *
 	 * @return
 	 */
-	protected ResultadoGuardarPagina guardarPaginaImpl(final List<ValorCampo> valoresPagina,
+	protected ResultadoGuardarPagina guardarPaginaFormularioImpl(final List<ValorCampo> valoresPagina,
 			final String accionPersonalizada, final boolean salirSinFinalizar) {
 
 		MensajeValidacion mensaje = null;
@@ -623,19 +698,25 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 			throw new FormularioFinalizadoException("No es pot guardar pàgina: sessió formulari finalitzada");
 		}
 
+		// Definición formulario y página actual.
+		final RFormularioInterno defFormulario = datosSesion.obtenerDefinicionFormularioInterno();
+		final RPaginaFormulario paginaDef = datosSesion.obtenerDefinicionPaginaActual(false);
+
+		// Datos página actual
+		final PaginaData paginaActual = datosSesion.getDatosFormulario().obtenerPaginaDataActual(false);
+
 		// Validación captchas
 		if (!salirSinFinalizar) {
-			final PaginaFormularioData pagData = datosSesion.getDatosFormulario().getPaginaActualFormulario();
-			mensaje = validarCapthas(pagData, valoresPagina);
+			mensaje = validarCapthas(paginaActual, valoresPagina);
 		}
 
 		// Guardamos valores pagina
 		if (mensaje == null) {
 			// Almacenamos valores campos (excepto captchas)
-			datosSesion.getDatosFormulario().getPaginaActualFormulario().actualizarValoresPagina(valoresPagina);
+			paginaActual.actualizarValoresPagina(valoresPagina);
 			// Realizamos validaciones
 			if (!salirSinFinalizar) {
-				mensaje = validarGuardarPagina(datosSesion, accionPersonalizada);
+				mensaje = validarGuardarPagina(datosSesion, accionPersonalizada, false);
 			}
 		}
 
@@ -647,47 +728,41 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		// Si ha pasado la validacion guardamos pagina
 		if (!UtilsFlujo.isErrorValidacion(mensaje)) {
 			// Si no es pagina final, pasamos a la siguiente
-			final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
 			if (!salirSinFinalizar && !paginaDef.isPaginaFinal()) {
 				// Evaluar cual es la siguiente pagina
 				final String idPaginaSiguiente = configuracionFormularioHelper
 						.evaluarScriptNavegacionPaginaActual(datosSesion);
-				// Debe ser posterior a la actual
-				final int indiceDefSiguiente = UtilsFormularioInterno.obtenerIndiceDefinicionPagina(datosSesion,
-						idPaginaSiguiente);
-				if (indiceDefSiguiente <= datosSesion.getDatosFormulario().getPaginaActualFormulario().getIndiceDef()) {
-					throw new ErrorConfiguracionException(
-							"El script de navegació de pàgina ha d'indicar una pàgina posterior (pàgina actual: "
-									+ paginaDef.getIdentificador() + " - pàgina següent: " + idPaginaSiguiente);
-				}
+				// Recuperamos definición siguiente página
+				final RPaginaFormulario paginaSiguienteDef = UtilsFormularioInterno
+						.obtenerDefinicionPaginaFormulario(defFormulario, idPaginaSiguiente);
 				// Si pagina siguiente ya se ha rellenado antes, la obtenemos
-				PaginaFormularioData paginaSiguiente = datosSesion.getDatosFormulario()
-						.getPaginaPosteriorFormulario(idPaginaSiguiente);
+				PaginaData paginaSiguiente = datosSesion.getDatosFormulario()
+						.obtenerPaginaFormularioDataPosterior(idPaginaSiguiente);
 				if (paginaSiguiente == null) {
 					// Si no se ha rellenado todavía la inicializamos
-					final RFormularioTramite defFormulario = UtilsFormularioInterno
-							.obtenerDefinicionFormulario(datosSesion);
-					paginaSiguiente = inicializarPagina(datosSesion.getIdFormulario(), indiceDefSiguiente,
-							defFormulario, datosSesion.getDatosFormulario().getValoresIniciales());
+					paginaSiguiente = inicializarPagina(datosSesion.getDatosInicioSesion().getIdFormulario(),
+							defFormulario, paginaSiguienteDef,
+							datosSesion.getDatosFormulario().obtenerValoresIniciales());
 				}
-				// Establecemos como pagina actual
+				// Establecemos pagina siguietne como pagina actual
 				datosSesion.getDatosFormulario().pushPaginaFormulario(paginaSiguiente);
-				// Recalculo autorellenables pagina (actualiza valores)
-				calculoDatosFormularioHelper.recalcularDatosPagina(datosSesion);
+				// Recalculo autorellenables pagina siguiente (actualiza valores)
+				calculoDatosFormularioHelper.recalcularDatosPagina(datosSesion, false);
 				// Retornamos indicando que no esta finalizado para que recargue pagina
 				res.setRecargar(TypeSiNo.SI);
 			} else {
 				// Si es la ultima pagina o saliamos a mitad, finalizamos formulario
 				finalizarFormulario(datosSesion, accionPersonalizada, salirSinFinalizar);
 				// Marcamos sesion formulario como finalizada
-				datosSesion.setFinalizada(true);
+				datosSesion.finalizarSesion();
 				// Retornamos indicando que esta finalizado y url redireccion
 				res.setFinalizado(TypeSiNo.SI);
 				res.setUrl(this.configuracionComponent
 						.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
 						+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_FORMULARIO_INTERNO + "?idPaso="
 						+ datosSesion.getDatosInicioSesion().getIdPaso() + "&idFormulario="
-						+ datosSesion.getDatosInicioSesion().getIdFormulario() + "&ticket=" + datosSesion.getTicket());
+						+ datosSesion.getDatosInicioSesion().getIdFormulario() + "&ticket="
+						+ datosSesion.getDatosInicioSesion().getIdSesionFormulario());
 			}
 		}
 
@@ -702,8 +777,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 * @param valoresPagina
 	 * @return valores actuales campos captcha.
 	 */
-	private MensajeValidacion validarCapthas(final PaginaFormularioData paginaActual,
-			final List<ValorCampo> valoresPagina) {
+	private MensajeValidacion validarCapthas(final PaginaData paginaActual, final List<ValorCampo> valoresPagina) {
 
 		MensajeValidacion mensaje = null;
 
@@ -754,8 +828,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 *                      Datos página
 	 * @return recursos estáticos página
 	 */
-	private RecursosFormulario calcularRecursosEstaticos(final RPaginaFormulario paginaDef,
-			final PaginaFormularioData pagData) {
+	private RecursosFormulario calcularRecursosEstaticos(final RPaginaFormulario paginaDef, final PaginaData pagData) {
 		final RecursosFormulario recursos = new RecursosFormulario();
 		// TODO PENDIENTE RECURSOS
 		return recursos;
@@ -770,9 +843,10 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 *                    Tipo captcja
 	 * @return captcha
 	 */
-	private Captcha generarCaptchaCampo(final String idCampo, final String idioma, final TypeCaptcha tipo) {
+	private Captcha generarCaptchaCampoPaginaFormulario(final String idCampo, final String idioma,
+			final TypeCaptcha tipo) {
 		// Obtenemos datos página actual
-		final PaginaFormularioData pagData = datosSesion.getDatosFormulario().getPaginaActualFormulario();
+		final PaginaData pagData = datosSesion.getDatosFormulario().obtenerPaginaDataActual(false);
 		// Generamos captcha a partir valor
 		if (pagData.getConfiguracionCampo(idCampo).getTipo() != TypeCampo.CAPTCHA) {
 			throw new ErrorConfiguracionException("Camp " + idCampo + " no es captcha");
@@ -780,6 +854,196 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		final ValorCampoSimple vc = (ValorCampoSimple) pagData.getValorCampo(idCampo);
 		final Captcha captcha = UtilsCaptcha.generaCaptcha(vc.getValor(), idioma, tipo);
 		return captcha;
+	}
+
+	/**
+	 * Inicializar página elemento.
+	 *
+	 * @param datosSesion
+	 *                                  Datos sesión
+	 * @param idCampoListaElementos
+	 *                                  id campo lista elementos
+	 * @param indiceElemento
+	 *                                  indice elemento (nulo si nuevo)
+	 * @param valoresPagina
+	 *                                  valores actuales página principal
+	 * @param forzarSoloLectura
+	 *                                  Indica si se abre en modo consulta
+	 * @return página elemento
+	 */
+	private PaginaFormulario inicializaPaginaElemento(final DatosSesionFormularioInterno datosSesion,
+			final String idCampoListaElementos, final Integer indiceElemento, final List<ValorCampo> valoresPagina,
+			final boolean forzarSoloLectura) {
+
+		// Reseteamos datos elemento
+		datosSesion.getDatosFormulario().resetearEdicionElemento();
+
+		// Actualizamos valores pagina formulario
+		final PaginaData pagFor = datosSesion.getDatosFormulario().obtenerPaginaDataActual(false);
+		if (valoresPagina != null) {
+			pagFor.actualizarValoresPagina(valoresPagina);
+		}
+
+		// Inicializar datos pagina elemento y almacena en sesion
+		final DatosEdicionElemento dee = inicializarDatosEdicionElemento(datosSesion, idCampoListaElementos,
+				indiceElemento, valoresPagina, forzarSoloLectura);
+		datosSesion.getDatosFormulario().inicializarEdicionElemento(dee);
+
+		// Recalcula campos autorrellenable con dependencias del formulario principal
+		if (!forzarSoloLectura) {
+			calculoDatosFormularioHelper.revisarCamposAutorrellenablesElemento(datosSesion);
+		}
+
+		// Calculamos estado dinámico de los campos y actualizamos configuración campos
+		actualizarEstadoCamposPagina(datosSesion, true, forzarSoloLectura);
+
+		// Genera pagina formulario
+		final PaginaFormulario pagElemento = generarPaginaFormularioAsistente(true);
+
+		return pagElemento;
+	}
+
+	/**
+	 * Inicializa pagina edicion elemento.
+	 *
+	 * @param datosSesion
+	 *                                   datos sesion formulario
+	 * @param idCampoListaElementos
+	 *                                   id campo lista elementos
+	 * @param indiceElemento
+	 *                                   indiceElemento elemento (nulo si nuevo)
+	 * @param valoresPaginaPrincipal
+	 *                                   valores actuales página formulario
+	 * @param modoConsulta
+	 *                                   Indica si el elemento se abre en modo
+	 *                                   consulta
+	 *
+	 * @return pagina edicion elemento
+	 */
+	private DatosEdicionElemento inicializarDatosEdicionElemento(final DatosSesionFormularioInterno datosSesion,
+			final String idCampoListaElementos, final Integer indiceElemento,
+			final List<ValorCampo> valoresPaginaPrincipal, final boolean modoConsulta) {
+
+		// Recupera pagina formulario actual
+		final RPaginaFormulario paginaActualFormulario = datosSesion.obtenerDefinicionPaginaActual(false);
+
+		// Recupera definicion formulario y pagina elemento
+		final RFormularioInterno formDef = datosSesion.obtenerDefinicionFormularioInterno();
+		final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaElemento(formDef,
+				paginaActualFormulario.getIdentificador(), idCampoListaElementos);
+
+		// Recupera valor actual elemento
+		final List<ValorCampo> ve = UtilsFormularioInterno.buscarValorElemento(idCampoListaElementos, indiceElemento,
+				valoresPaginaPrincipal);
+
+		// Inicializa pagina
+		final PaginaData pe = inicializarPagina(datosSesion.getDatosInicioSesion().getIdFormulario(), formDef,
+				paginaDef, ve);
+
+		// Retorna datos edicion elemento (pagina elemento y dependencias)
+		final DatosEdicionElemento dee = new DatosEdicionElemento();
+		dee.setIdCampoListaElementos(idCampoListaElementos);
+		dee.setIndiceElemento(indiceElemento);
+		dee.setPaginaElemento(pe);
+		return dee;
+	}
+
+	/**
+	 * Actualiza estado campos pagina.
+	 *
+	 * @param datosSesion
+	 *                        Datos sesion
+	 * @param elemento
+	 *                        Si es pagina elemento
+	 */
+	private void actualizarEstadoCamposPagina(final DatosSesionFormularioInterno datosSesion, final boolean elemento,
+			final boolean forzarSoloLectura) {
+		// Obtenemos pagina actual
+		final PaginaData pagAct = datosSesion.getDatosFormulario().obtenerPaginaDataActual(elemento);
+
+		if (forzarSoloLectura) {
+			// Si se fuerza solo lectura, marcamos como solo lectura
+			for (final ConfiguracionCampo confCampo : pagAct.getConfiguracion()) {
+				confCampo.setSoloLectura(TypeSiNo.SI);
+			}
+		} else {
+			// Calculamos estado dinamico de los campos y actualizamos configuracion
+			final List<ConfiguracionModificadaCampo> confDinamica = configuracionFormularioHelper
+					.evaluarEstadoCamposPagina(datosSesion, elemento);
+			for (final ConfiguracionModificadaCampo confDinamicaCampo : confDinamica) {
+				final ConfiguracionCampo confCampo = pagAct.getConfiguracionCampo(confDinamicaCampo.getId());
+				confCampo.setSoloLectura(confDinamicaCampo.getSoloLectura());
+			}
+		}
+	}
+
+	/**
+	 * Genera pagina formulario para mostrar en asistente.
+	 *
+	 * @param elemento
+	 *                     Indica si es un elemento
+	 * @return Pagina formulario para mostrar en asistente
+	 */
+	private PaginaFormulario generarPaginaFormularioAsistente(final boolean elemento) {
+
+		// Obtenemos definicion formulario pagina actual
+		final RFormularioInterno formDef = datosSesion.obtenerDefinicionFormularioInterno();
+		final RPaginaFormulario paginaDef = datosSesion.obtenerDefinicionPaginaActual(elemento);
+
+		// Obtenemos datos página actual
+		final PaginaData pagData = datosSesion.getDatosFormulario().obtenerPaginaDataActual(elemento);
+
+		// Calculamos valores posibles campos selectores
+		final List<ValoresPosiblesCampo> vpp = valoresPosiblesFormularioHelper
+				.calcularValoresPosiblesPaginaActual(datosSesion, elemento);
+
+		// Calculamos acciones a mostrar
+		List<AccionFormulario> acciones = null;
+		if (!elemento) {
+			acciones = configuracionFormularioHelper.evaluarAccionesPaginaActual(datosSesion);
+		}
+
+		// Html pagina
+		String html = null;
+		try {
+			html = new String(Base64.decodeBase64(paginaDef.getHtmlB64()), "UTF-8");
+		} catch (final UnsupportedEncodingException e) {
+			throw new EncodeException(e);
+		}
+
+		// Guardar sin finalizar
+		TypeSiNo guardarSinFinalizar = TypeSiNo.NO;
+		if (!elemento) {
+			guardarSinFinalizar = TypeSiNo.fromBoolean(formDef.isPermitirGuardarSinFinalizar());
+		}
+
+		// Recursos estáticos
+		final RecursosFormulario recursos = calcularRecursosEstaticos(paginaDef, pagData);
+
+		// Devolvemos información página actual
+		final PaginaFormulario pagAct = UtilsFormularioInterno.convertToPaginaFormulario(pagData);
+		pagAct.setPermitirGuardar(guardarSinFinalizar);
+		pagAct.setValoresPosibles(vpp);
+		pagAct.setHtml(html);
+		pagAct.setAcciones(acciones);
+		pagAct.setRecursos(recursos);
+
+		// Ajuste valores selectores (no obligatorios, radios,...)
+		ajustarSelectores(pagAct);
+		return pagAct;
+	}
+
+	/**
+	 * Verifica si concuerda lista elementos.
+	 *
+	 * @param idCampoListaElementos
+	 *                                  id lista elementos
+	 */
+	private void checkIdListaElementos(final String idCampoListaElementos) {
+		if (!datosSesion.getDatosFormulario().obtenerEdicionElementoIdCampoListaElementos()
+				.equals(idCampoListaElementos)) {
+			throw new ErrorConfiguracionException("No concuerda id lista elementos");
+		}
 	}
 
 }

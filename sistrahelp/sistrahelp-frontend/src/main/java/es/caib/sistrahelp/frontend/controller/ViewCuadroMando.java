@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.primefaces.PrimeFaces;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 
 import es.caib.sistrahelp.core.api.model.Area;
@@ -37,6 +38,7 @@ import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.core.api.service.HistorialAlertaService;
+import es.caib.sistrahelp.frontend.model.DialogResult;
 import es.caib.sistrahelp.frontend.model.ErroresPorTramiteCMExpansionLazyDataModel;
 import es.caib.sistrahelp.frontend.model.ErroresPorTramiteCMLazyDataModel;
 import es.caib.sistrahelp.frontend.model.ErroresPorTramiteCMPlataformaLazyDataModel;
@@ -402,6 +404,40 @@ public class ViewCuadroMando extends ViewControllerBase {
 		datoSeleccionado = null;
 
 		listaAlertas = historialAlertaService.listHistorialAlerta(filtros.getToday(), null);
+	}
+
+	public void mail() {
+		final Map<String, String> params = new HashMap<>();
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+		if (horaDesde != null) {
+			String horaDesdeString = dateFormat.format(horaDesde);
+			params.put("horaDesde", horaDesdeString);
+		} else {
+			if (fechaDesde != null) {
+				String fechaDesdeString = dateFormat.format(fechaDesde);
+				params.put("fechaDesde", fechaDesdeString);
+			}
+			if (fechaHasta != null) {
+				String fechaHastaString = dateFormat.format(fechaHasta);
+				params.put("fechaHasta", fechaHastaString);
+			}
+		}
+
+		UtilJSF.openDialog(DialogEnviarMail.class, TypeModoAcceso.EDICION, params, true, 500, 100);
+
+	}
+
+	/**
+	 * Retorno dialogo del retorno dialogo area.
+	 *
+	 * @param event respuesta dialogo
+	 */
+	public void returnDialogoEmail(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.enviado.ok"));
+		}
 	}
 
 	public String calcularEtiquetaTram(Long porcentage, String id) {
