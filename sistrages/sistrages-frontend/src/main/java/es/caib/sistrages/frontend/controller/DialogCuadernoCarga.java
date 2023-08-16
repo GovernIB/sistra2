@@ -190,6 +190,9 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 	/** Sectores reutilizables **/
 	Map<Long, SeccionReutilizable> secciones = new HashMap<>();
 
+	/** Sectores reutilizables **/
+	Map<Long, DisenyoFormulario> disenyosLE = new HashMap<>();
+
 	/**
 	 * @return the gestores
 	 */
@@ -1447,6 +1450,12 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			final SeccionReutilizable seccion = (SeccionReutilizable) UtilCoreApi.deserialize(contenidoFile);
 			secciones.put(codigo, seccion);
 
+		} else if (nombreFichero.startsWith("disenyoListaElemento_")) {
+
+			final Long codigo = obtenerId(nombreFichero);
+			final DisenyoFormulario disenyo = (DisenyoFormulario) UtilCoreApi.deserialize(contenidoFile);
+			disenyosLE.put(codigo, disenyo);
+
 		} else if (!nombreFichero.equals("info.properties") && !nombreFichero.equals("resumen.txt")) {
 			addMessageContext(TypeNivelGravedad.ERROR, "Fichero desconocido.");
 			return false;
@@ -1563,6 +1572,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 		filaImportar.setFormularios(formularios);
 		filaImportar.setFilaGestor(filasGestores);
 		filaImportar.setFilaSecciones(filasSecciones);
+		filaImportar.setDisenyosLE(disenyosLE);
 
 		filaImportar.setIdEntidad(UtilJSF.getIdEntidad());
 		filaImportar.setFicheros(ficheros);
