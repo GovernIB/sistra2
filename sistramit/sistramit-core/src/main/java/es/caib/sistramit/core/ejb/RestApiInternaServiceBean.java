@@ -119,8 +119,30 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 	}
 
 	@Override
+	public Long contarTramitesPorErrorCM(FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiInternaService.contarTramitesPorErrorCM(pFiltroBusqueda);
+	}
+
+	@Override
+	public List<EventoCM> recuperarTramitesPorErrorCM(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		return restApiInternaService.recuperarTramitesPorErrorCM(pFiltroBusqueda, filtroPaginacion);
+	}
+
+	@Override
 	public Long contarErroresPorTramiteExpansionCM(FiltroEventoAuditoria pFiltroBusqueda) {
 		return restApiInternaService.contarErroresPorTramiteExpansionCM(pFiltroBusqueda);
+	}
+
+	@Override
+	public List<ErroresPorTramiteCM> recuperarTramitesPorErrorCMExpansion(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		return restApiInternaService.recuperarTramitesPorErrorCMExpansion(pFiltroBusqueda, filtroPaginacion);
+	}
+
+	@Override
+	public Long contarTramitesPorErrorExpansionCM(FiltroEventoAuditoria filtroBusqueda) {
+		return restApiInternaService.contarTramitesPorErrorExpansionCM(filtroBusqueda);
 	}
 
 	@Override

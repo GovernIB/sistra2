@@ -130,6 +130,7 @@ public final class Constantes {
 
 	public static final String EXTENSIONES_TODAS = "*";
 	public static final String LISTAS_SEPARADOR = ";";
+	public static final String LISTAS_SEPARADOR_COMA = ",";
 
 	/** Literal info modificado ok. **/
 	public static final String LITERAL_INFO_MODIFICADO_OK = "info.modificado.ok";

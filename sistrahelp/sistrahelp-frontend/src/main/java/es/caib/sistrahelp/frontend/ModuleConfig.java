@@ -21,6 +21,12 @@ public final class ModuleConfig {
 	/** Filtro inicial. **/
 	private String filtroInicial;
 
+	/** Hora desde. **/
+	private String horaDesde;
+
+	/** Minutos refresco. **/
+	private String minutosRefresco;
+
 	/**
 	 * @return the entorno
 	 */
@@ -76,6 +82,34 @@ public final class ModuleConfig {
 
 	public final void setFiltroInicial(String filtroInicial) {
 		this.filtroInicial = filtroInicial;
+	}
+
+	/**
+	 * @return the horaDesde
+	 */
+	public String getHoraDesde() {
+		return horaDesde;
+	}
+
+	/**
+	 * @param horaDesde the horaDesde to set
+	 */
+	public void setHoraDesde(String horaDesde) {
+		this.horaDesde = horaDesde;
+	}
+
+	/**
+	 * @return the minutosRefresco
+	 */
+	public String getMinutosRefresco() {
+		return minutosRefresco;
+	}
+
+	/**
+	 * @param minutosRefresco the minutosRefresco to set
+	 */
+	public void setMinutosRefresco(String minutosRefresco) {
+		this.minutosRefresco = minutosRefresco;
 	}
 
 }

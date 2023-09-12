@@ -1,8 +1,11 @@
 package es.caib.sistrahelp.frontend.controller;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -16,6 +19,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.digester.plugins.PluginException;
 import org.apache.commons.lang3.StringUtils;
@@ -91,6 +95,8 @@ public class DialogEnviarMail extends DialogControllerBase {
 
 	private List<ErroresPorTramiteCM> listaErrores;
 
+	private List<EventoCM> listaTramErrores;
+
 	private List<ErroresPorTramiteCM> listaInacabados;
 
 	private FiltroAuditoriaTramitacion filtros;
@@ -144,8 +150,25 @@ public class DialogEnviarMail extends DialogControllerBase {
 
 			String nombre = "";
 			String logo = "";
+		    byte[] imageBytes = new byte[0];
 			Entidad entidad = sb.getEntidad();
 			logo = hService.urlLogoEntidad(entidad.getCodigoDIR3());
+			 String urltext = logo;
+			 try {
+			    URL url = new URL(urltext);
+			    BufferedInputStream bis = new BufferedInputStream(url.openStream());
+			    for(byte[] ba = new byte[bis.available()];
+			        bis.read(ba) != -1;) {
+			        byte[] baTmp = new byte[imageBytes.length + ba.length];
+			        System.arraycopy(imageBytes, 0, baTmp, 0, imageBytes.length);
+			        System.arraycopy(ba, 0, baTmp, imageBytes.length, ba.length);
+			        imageBytes = baTmp;
+			    }
+			 }catch(MalformedURLException e) {
+					e.printStackTrace();
+			 }catch(IOException e) {
+					e.printStackTrace();
+			 }
 			if (entidad.getNombre() != null) {
 				nombre = entidad.getNombre().getTraduccion("ca");
 			}
@@ -205,7 +228,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 					+ "      <div id=\"contenidor\" style=\"width: 90%;font: normal 80% 'TrebuchetMS', 'Trebuchet MS', Arial, Helvetica, sans-serif;color: #000;margin: 1em auto;background-color: #fff;\">"
 					+ "         <!-- logo illes balears --> 		"
 					+ "         <div id=\"cap\" style=\"font-size: 1.2em;font-weight: bold;text-align: center;margin-bottom: 1em;\">"
-					+ "            <img src=\"" + logo + "\" alt=\"Logo CAIB\" width=\"100\" height=\"100\">"
+					+ "            <img  src=\"cid:logo\" alt=\"logo\" width=\"100\" height=\"100\"/>"
 					+ "            <h1>" + nombre.toUpperCase() + "</h1>" + "         </div>"
 					+ "         <!-- /logo illes balears -->  		<!-- continguts -->"
 					+ "         <div id=\"continguts\" style=\"padding: 1em 2em;border: 1em solid #f2f2f2;\">"
@@ -222,7 +245,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 					+ "                     <td style=\"font-weight: bold;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;padding-left: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;width: 16px !important;\"><span style=\"font-weight: bold;\">Accions</span></td>"
+					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;width: 16px !important;\"><span style=\"font-weight: bold; font-size: 1.2em !important;\">Accions</span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
@@ -308,14 +331,14 @@ public class DialogEnviarMail extends DialogControllerBase {
 					+ "                     <td style=\"font-weight: bold;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td class=\"grey borde \" style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Nombre total d&#39;errors</span></td>"
+					+ "                                 <td class=\"grey borde \" style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey; font-size: 1.2em !important;\">Nombre total d&#39;errors</span></td>"
 					+ "                                 <td class=\"wpx100 white borde pad\" style=\"padding-right: 10px;padding-left: 10px;background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
 					+ errTot + "</td>" + "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
-					+ "                        <table border=\"1\" cellpadding=\"0\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td class=\"grey borde \" style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;padding-top: .5em;\"><span style=\"font-weight: bold; padding-left: 5px;\">Errors de tramitaci&#243;:</span></td>"
+					+ "                                 <td class=\"grey borde \" style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;padding-top: .5em;\"><span style=\"font-weight: bold; padding-left: 5px;\"><u>Errors de tramitaci&#243; (Errors per Tr&#224;mit):</u></span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>" + "                    <td style=\"font-weight: bold;\">"
@@ -355,11 +378,43 @@ public class DialogEnviarMail extends DialogControllerBase {
 						+ "                             </tr>";
 			}
 			msg += "                          </tbody>" + "                       </table>"
+					+ "                    </td>" + "                 </tr>" + "                  ";
+			msg += " <tr>" + "                     <td style=\"font-weight: bold;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                           <tbody>" + "                              <tr>"
+					+ "                                 <td class=\"grey borde \" style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;padding-top: .5em;\"><span style=\"font-weight: bold; padding-left: 5px;\"><u>Errors de tramitaci&#243; (Tr&#224;mits per Error):</u></span></td>"
+					+ "                              </tr>" + "                           </tbody>"
+					+ "                        </table>" + "                     </td>" + "                  </tr>"
+					+ "                  <tr>" + "                    <td style=\"font-weight: bold;\">"
+					+ "                       <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                          <tbody>" + "                             <tr>"
+					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Error</span></td>"
+					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Freq&#252;&#232;ncia</span></td>"
+					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Percentatge d&#39;error</span></td>"
+					+ "                             </tr>";
+			if (listaTramErrores != null && !listaTramErrores.isEmpty()) {
+				for (EventoCM ltrerr : listaTramErrores) {
+					msg += "                             <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
+							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 2000px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ ltrerr.getTipoEvento() + "</td>"
+							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 400px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ ltrerr.getConcurrencias() + "</td>"
+							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 400px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ formatDouble(ltrerr.getPorc()) + "%</td>        </tr>";
+				}
+			} else {
+				msg += "                             <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
+						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 2000px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"> No hi ha registres al dia de avui</td>"
+						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 400px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
+						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 400px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
+						+ "                             </tr>";
+			}
+			msg += "                          </tbody>" + "                       </table>"
 					+ "                    </td>" + "                 </tr>" + "                  "
 					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;padding-left: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;width: 16px !important;\"><span style=\"font-weight: bold;\">Errors de Plataforma</span></td>"
+					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;width: 16px !important;\"><span style=\"font-weight: bold;\"><u>Errors de Plataforma</u></span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
@@ -369,7 +424,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Freq&#252;&#232;ncia</span></td>"
 					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Percentatge d&#39;errors</span></td>"
 					+ "                               </tr>";
-			if (listaErrores != null && !listaErrores.isEmpty()) {
+			if (listaErrPlat != null && !listaErrPlat.isEmpty()) {
 				for (EventoCM lerrp : listaErrPlat) {
 					msg += "                               <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
 							+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
@@ -394,11 +449,10 @@ public class DialogEnviarMail extends DialogControllerBase {
 					+ "                     <td style=\"font-weight: bold;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;padding-left: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;width: 16px !important;\"><span style=\"font-weight: bold;\">Tr&#224;mits no finalitzats sense errors</span></td>"
+					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;width: 16px !important;\"><span style=\"font-weight: bold; font-size: 1.2em !important;\">Tr&#224;mits no finalitzats sense errors</span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
-					+ "                  <tr>"
-					+ "                     <td style=\"font-weight: bold;padding-bottom: .5em;\">"
+					+ "                  <tr>" + "                     <td style=\"font-weight: bold;padding-bottom: .5em;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
 					+ "                            <tbody>" + "                               <tr>"
 					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Tr&#224;mit</span></td>"
@@ -423,11 +477,11 @@ public class DialogEnviarMail extends DialogControllerBase {
 						+ "                               </tr>";
 			}
 			msg += "                            </tbody>" + "                         </table>"
-					+ "                     </td>" + "                  </tr>"
-//						+ "                  <tr>"
-//						+ "                    <td style=\"font-weight: bold;padding-bottom: .5em;\">"
-//						+ "                       <div style=\"height:20px;\"></div>" + "                    </td>"
-//						+ "                 </tr>" + "                 <tr>"
+					+ "                     </td>" + "                  </tr>" + "                  <tr>"
+					+ "                     <td style=\"font-weight: bold;padding-bottom: .5em;\">"
+					+ "                       <div style=\"height:20px;\"></div>" + "                    </td>"
+					+ "                 </tr>"
+//					+ "                 <tr>"
 //						+ "                    <td style=\"font-weight: bold;\">"
 //						+ "                       <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
 //						+ "                          <tbody>" + "                             <tr>"
@@ -462,12 +516,15 @@ public class DialogEnviarMail extends DialogControllerBase {
 					+ "         <p class=\"auto\" style=\"margin: 1.5em 0;padding: 1em;font-size: 0.9em;font-style: italic;\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p>"
 					+ "      </div>" + "   </body>" + "</html>";
 			System.out.println("Informe enviado");
-			enviarEmail(msg);
+			enviarEmail(msg,DatatypeConverter.printBase64Binary(imageBytes));
 
 			// Retornamos resultado
 			final DialogResult result = new DialogResult();
 			result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 			UtilJSF.closeDialog(result);
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.email.vacio"));
+			return;
 		}
 	}
 
@@ -487,6 +544,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 		firmaIni = 0;
 		firmaFin = 0;
 		listaErrores = new ArrayList<ErroresPorTramiteCM>();
+		listaTramErrores = new ArrayList<EventoCM>();
 		filtros = new FiltroAuditoriaTramitacion(listarIdArea(sb.getListaAreasEntidad()), false, false);
 		filtrosInacabados = new FiltroAuditoriaTramitacion(listarIdArea(sb.getListaAreasEntidad()), false, false);
 
@@ -514,6 +572,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 
 		filtros.setSoloContar(false);
 		listaErrores = hService.obtenerErroresPorTramiteCM(filtros, null).getListaErroresCM();
+		listaTramErrores = hService.obtenerTramitesPorErrorCM(filtros, null).getListaEventosCM();
 
 		// Filtra
 
@@ -530,11 +589,11 @@ public class DialogEnviarMail extends DialogControllerBase {
 		return new DecimalFormat("0.00").format(dbl);
 	}
 
-	private void enviarEmail(String msg) {
+	private void enviarEmail(String msg, String imgBase64) {
 		try {
 			final IEmailPlugin plgEmail = (IEmailPlugin) confService.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
 			plgEmail.envioEmail(Arrays.asList(listaEmails.split(Constantes.LISTAS_SEPARADOR)),
-					"SISTRAHELP: Informe Quadre Comandament - " + UtilJSF.getEntorno().toUpperCase(), msg, null);
+					"SISTRAHELP: Informe Quadre Comandament - " + UtilJSF.getEntorno().toUpperCase(), msg, null, imgBase64);
 		} catch (EmailPluginException e) {
 			e.printStackTrace();
 		} catch (PluginException e) {

@@ -564,12 +564,16 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		confCampoNumero.getOpciones().setSeparador(typeSeparador);
 
 		confCampoNumero.getOpciones().setEnteros(pCampoDef.getTextoNumero().getPrecisionEntera());
-		confCampoNumero.getOpciones().setDecimales(pCampoDef.getTextoNumero().getPrecisionDecimal());
+
+		if (typeSeparador != null) {
+			confCampoNumero.getOpciones().setDecimales(pCampoDef.getTextoNumero().getPrecisionDecimal());
+		}
+
 		if (pCampoDef.getTextoNumero().isNegativos()) {
 			confCampoNumero.getOpciones().setNegativo(TypeSiNo.SI);
 		}
 
-		if (pCampoDef.getTextoNumero().getRangoDesde() >= 0 && pCampoDef.getTextoNumero().getRangoHasta() > 0) {
+		if (pCampoDef.getTextoNumero().isRango() && pCampoDef.getTextoNumero().getRangoDesde() >= 0 && pCampoDef.getTextoNumero().getRangoHasta() > 0) {
 			confCampoNumero.getOpciones().setRangoMin(pCampoDef.getTextoNumero().getRangoDesde());
 			confCampoNumero.getOpciones().setRangoMax(pCampoDef.getTextoNumero().getRangoHasta());
 		}

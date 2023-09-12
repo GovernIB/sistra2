@@ -25,6 +25,8 @@
 		<property name="commitSvn" value="${commitSvn}" />
 		<property name="commitGit" value="${commitGit}" />
 		<property name="filtroInicial" value="${filtroInicial}" />
+		<property name="horaDesde" value="${horaDesde}" />
+		<property name="minutosRefresco" value="${minutosRefresco}" />
 	</bean>
 
 	<!-- Scope view para spring beans usados como backbeans de JSF: @Scope(view) -->

@@ -330,7 +330,7 @@
 
 						<p:toolbar id="toolbarScript" style="position:fixed;bottom:0px;width:99%;">
 										<f:facet name="right">
-											<p:commandButton id="btnInvCol" value="#{msg['botones.invertirColores']}" actionListener="#{dialogScript.switchColorEditor()}" process="@this" update="@form growlScript" oncomplete="invertirColores()"/>
+											<p:commandButton id="btnInvCol" value="#{msg['botones.invertirColores']}" actionListener="#{dialogScript.switchColorEditor()}" process="@form" update="@form growlScript" oncomplete="invertirColores()" />
 											<c:choose>
 											    <c:when test="#{dialogScript.esIframe}">
 													<p:commandButton value="#{msg['botones.cerrar']}" onclick="parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all')[parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all').length-1].click()" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{!dialogScript.isEdicion()}" />
@@ -339,7 +339,7 @@
 													<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogScript.cancelar()}" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{!dialogScript.isEdicion()}" />
 											    </c:otherwise>
 											</c:choose>
-											<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogScript.aceptar()}" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{dialogScript.isEdicion()}">
+											<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogScript.aceptar()}" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{dialogScript.isEdicion()}" oncomplete="invertirColores()">
 												<p:ajax event="dialogReturn" listener="#{dialogScript.cerrar}"/>
 											</p:commandButton>
 											<p:commandButton id="btnEliminar" value="#{msg['botones.borrar']}" icon="fa fa-trash-o" actionListener="#{dialogScript.borrar()}" process="@this" update="growlScript" styleClass="boton-rojo" rendered="#{dialogScript.isEdicion()}" >

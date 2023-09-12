@@ -1,8 +1,11 @@
 package es.caib.sistrahelp.frontend.controller;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -10,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.faces.bean.ManagedBean;
@@ -22,6 +26,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 
+import es.caib.sistrahelp.core.api.exception.CargaConfiguracionException;
 import es.caib.sistrahelp.core.api.model.Area;
 import es.caib.sistrahelp.core.api.model.ErroresCuadroMando;
 import es.caib.sistrahelp.core.api.model.ErroresPorTramiteCM;
@@ -43,6 +48,8 @@ import es.caib.sistrahelp.frontend.model.ErroresPorTramiteCMExpansionLazyDataMod
 import es.caib.sistrahelp.frontend.model.ErroresPorTramiteCMLazyDataModel;
 import es.caib.sistrahelp.frontend.model.ErroresPorTramiteCMPlataformaLazyDataModel;
 import es.caib.sistrahelp.frontend.model.EventoAuditoriaTramitacionLazyDataModel;
+import es.caib.sistrahelp.frontend.model.TramitesPorErrorCMExpansionLazyDataModel;
+import es.caib.sistrahelp.frontend.model.TramitesPorErrorCMLazyDataModel;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
@@ -145,13 +152,27 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 	private LazyDataModel<ErroresPorTramiteCM> listaInacabados;
 
+	private LazyDataModel<ErroresPorTramiteCM> listaTramErrEx;
+
 	private LazyDataModel<EventoCM> listaErr;
 
 	private LazyDataModel<EventoCM> listaErrPlat;
 
+	private LazyDataModel<EventoCM> listaTramErr;
+
 	private Integer minutosRefresco;
 
+	private String hoursMinutes;
+
+	private Integer hours;
+
+	private Integer minutes;
+
 	private Date horaDesde;
+
+	private LocalDateTime localDate;
+
+	private Date ultimoRefresco;
 
 	private Date fechaHasta;
 
@@ -164,6 +185,9 @@ public class ViewCuadroMando extends ViewControllerBase {
 	private EventoCM seleccionadoErr;
 
 	private Date fechaMin;
+
+	/** Propiedades configuración especificadas en properties. */
+	private Properties propiedadesLocales = recuperarConfiguracionProperties();
 
 	/**
 	 * Inicializa.
@@ -180,7 +204,8 @@ public class ViewCuadroMando extends ViewControllerBase {
 			fechaMin = new Date();
 		}
 
-		minutosRefresco = 1;
+		minutosRefresco = Integer.valueOf(propiedadesLocales.getProperty(TypePropiedadConfiguracion.MINUTOS_REFRESCO.toString()));
+
 
 		UtilJSF.verificarAcceso();
 
@@ -196,8 +221,20 @@ public class ViewCuadroMando extends ViewControllerBase {
 		filtrosInacabados = new FiltroAuditoriaTramitacion(convierteListaAreas(), false, false);
 
 		tipoFecha = "tr";
-		this.horaDesde = filtros.getToday();
+		horaDesde = filtros.getToday();
+		actualizarHoraDesde();
+		//localDate = LocalDateTime.now();
+		ultimoRefresco = new Date();
+		filtros.setClasificacionSeleccionada("et");
 		filtrar();
+	}
+
+	private void actualizarHoraDesde() {
+		hoursMinutes = propiedadesLocales.getProperty(TypePropiedadConfiguracion.HORA_DESDE.toString());
+		hours = Integer.valueOf(hoursMinutes.substring(0, 2));
+		minutes = Integer.valueOf(hoursMinutes.substring(3, 5));
+		horaDesde.setHours(hours);
+		horaDesde.setMinutes(minutes);
 	}
 
 	/**
@@ -216,6 +253,11 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 		// Buscar
 		this.buscar();
+		if (tipoFecha.equals("tr")) {
+			ultimoRefresco = new Date();
+		} else {
+			ultimoRefresco = null;
+		}
 	}
 
 	public void loadExpansion(ErroresPorTramiteCM errTram) {
@@ -230,6 +272,20 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 		filtros.setSoloContar(false);
 		listaErr = new ErroresPorTramiteCMExpansionLazyDataModel(helpDeskService, rowCount, filtros);
+
+	}
+
+	public void loadExpansionTe(EventoCM errTram) {
+
+		seleccionadoErr = errTram;
+		filtros.setErrorTipo(errTram.getTipoEvento());
+		Long rowCount = (long) 0;
+		filtros.setSoloContar(true);
+		ResultadoErroresPorTramiteCM result = helpDeskService.obtenerTramitesPorErrorCMExpansion(filtros, null);
+		rowCount = result.getNumElementos();
+
+		filtros.setSoloContar(false);
+		listaTramErrEx = new TramitesPorErrorCMExpansionLazyDataModel(helpDeskService, rowCount, filtros);
 
 	}
 
@@ -313,15 +369,18 @@ public class ViewCuadroMando extends ViewControllerBase {
 		if (tipoFecha.equals("tr")) {
 			fechaDesde = null;
 			fechaHasta = null;
-			minutosRefresco = 1;
+			minutosRefresco = Integer.valueOf(propiedadesLocales.getProperty(TypePropiedadConfiguracion.MINUTOS_REFRESCO.toString()));
 			horaDesde = filtros.getToday();
+			actualizarHoraDesde();
 			PrimeFaces.current()
 					.executeScript("var currentTimePoller = PF('currentTimePoller'); currentTimePoller.start();");
+			filtrar();
 		} else {
 			fechaDesde = filtros.calcularFecha();
 			fechaHasta = null;
 			minutosRefresco = null;
 			horaDesde = null;
+			ultimoRefresco = null;
 			PrimeFaces.current()
 					.executeScript("var currentTimePoller = PF('currentTimePoller'); currentTimePoller.stop();");
 		}
@@ -355,6 +414,7 @@ public class ViewCuadroMando extends ViewControllerBase {
 			filtrosInacabados.setFechaDesde(filtros.getToday());
 			filtrosInacabados.getFechaDesde().setHours(horaDesde.getHours());
 			filtrosInacabados.getFechaDesde().setMinutes(horaDesde.getMinutes());
+			ultimoRefresco = new Date();
 		} else if (tipoFecha.equals("iv")) {
 			filtros.setFechaDesde(fechaDesde);
 			filtros.setFechaHasta(fechaHasta);
@@ -375,12 +435,16 @@ public class ViewCuadroMando extends ViewControllerBase {
 		}
 		// Filtra
 		Long rowCount = (long) 0;
+		Long rowCountTe = (long) 0;
 		filtros.setSoloContar(true);
 		ResultadoErroresPorTramiteCM result = helpDeskService.obtenerErroresPorTramiteCM(filtros, null);
 		rowCount = result.getNumElementos();
+		ResultadoEventoCM resultTe = helpDeskService.obtenerTramitesPorErrorCM(filtros, null);
+		rowCountTe = resultTe.getNumElementos();
 
 		filtros.setSoloContar(false);
 		listaErrores = new ErroresPorTramiteCMLazyDataModel(helpDeskService, rowCount, filtros);
+		listaTramErr = new TramitesPorErrorCMLazyDataModel(helpDeskService, rowCountTe, filtros);
 
 		// Filtra
 		Long rowCountI = (long) 0;
@@ -424,7 +488,7 @@ public class ViewCuadroMando extends ViewControllerBase {
 			}
 		}
 
-		UtilJSF.openDialog(DialogEnviarMail.class, TypeModoAcceso.EDICION, params, true, 500, 100);
+		UtilJSF.openDialog(DialogEnviarMail.class, TypeModoAcceso.EDICION, params, true, 500, 110);
 
 	}
 
@@ -532,6 +596,19 @@ public class ViewCuadroMando extends ViewControllerBase {
 	 */
 	public void ayuda() {
 		UtilJSF.openHelp("cuadroMando");
+	}
+
+	private Properties recuperarConfiguracionProperties() {
+		final String pathProperties = System.getProperty(TypePropiedadConfiguracion.PATH_PROPERTIES.toString());
+		try (FileInputStream fis = new FileInputStream(pathProperties);) {
+			final Properties props = new Properties();
+			props.load(fis);
+			return props;
+		} catch (final IOException e) {
+			throw new CargaConfiguracionException(
+					"Error al cargar la configuracion del properties '" + pathProperties + "' : " + e.getMessage(), e);
+		}
+
 	}
 
 	/**
@@ -953,4 +1030,49 @@ public class ViewCuadroMando extends ViewControllerBase {
 	public void setFiltrosInacabados(FiltroAuditoriaTramitacion filtrosInacabados) {
 		this.filtrosInacabados = filtrosInacabados;
 	}
+
+	public LazyDataModel<EventoCM> getListaTramErr() {
+		return listaTramErr;
+	}
+
+	public void setListaTramErr(LazyDataModel<EventoCM> listaTramErr) {
+		this.listaTramErr = listaTramErr;
+	}
+
+	public LazyDataModel<ErroresPorTramiteCM> getListaTramErrEx() {
+		return listaTramErrEx;
+	}
+
+	public void setListaTramErrEx(LazyDataModel<ErroresPorTramiteCM> listaTramErrEx) {
+		this.listaTramErrEx = listaTramErrEx;
+	}
+
+	/**
+	 * @return the ultimoRefresco
+	 */
+	public Date getUltimoRefresco() {
+		return ultimoRefresco;
+	}
+
+	/**
+	 * @param ultimoRefresco the ultimoRefresco to set
+	 */
+	public void setUltimoRefresco(Date ultimoRefresco) {
+		this.ultimoRefresco = ultimoRefresco;
+	}
+
+	/**
+	 * @return the localDate
+	 */
+	public LocalDateTime getLocalDate() {
+		return localDate;
+	}
+
+	/**
+	 * @param localDate the localDate to set
+	 */
+	public void setLocalDate(LocalDateTime localDate) {
+		this.localDate = localDate;
+	}
+
 }

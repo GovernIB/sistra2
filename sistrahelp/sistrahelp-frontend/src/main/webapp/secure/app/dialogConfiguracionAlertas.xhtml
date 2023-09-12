@@ -160,6 +160,46 @@
 						<p:ajax event="change" process="@this"/>
 					</p:inputText>
 
+					<p:outputLabel for="comboTipo" value="#{msg['viewInformacionPersistencia.filtroTipo']}" rendered="#{!dialogConfiguracionAlertas.isResumenDiario()}"/>
+					<p:selectOneMenu id="comboTipo" value="#{dialogConfiguracionAlertas.tipo}" rendered="#{!dialogConfiguracionAlertas.isResumenDiario()}" styleClass="margin-right-10" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" required="true" style="width:150px">
+					     	<f:selectItem itemLabel="#{msg['dialogInformacionPagos.entidadId']}" itemValue="E"  />
+					     	<f:selectItem itemLabel="#{msg['viewAuditoriaTramites.headArea']}" itemValue="A"  />
+					     	<f:selectItem itemLabel="#{msg['viewPerdidaClave.headTramite']}" itemValue="T"  />
+					     	<f:selectItem itemLabel="#{msg['viewAuditoriaTramites.headVersion']}" itemValue="V"  />
+					     	<p:ajax event="change" process="@this" update="@form:scope"/>
+					</p:selectOneMenu>
+
+					<p:outputLabel for="scope" value="#{msg['viewConfiguracionAlertas.ambito']}" rendered="#{!dialogConfiguracionAlertas.isResumenDiario()}"/>
+					<h:panelGrid id="scope" columns = "4" cellspacing = "0"  width="100%" rendered="#{!dialogConfiguracionAlertas.isResumenDiario()}">
+						<p:outputLabel for="comboEntidad" value="#{msg['dialogInformacionPagos.entidadId']}" rendered="#{!dialogConfiguracionAlertas.isResumenDiario()}" style="width:50px"/>
+						<p:selectOneMenu id="comboEntidad" value="#{dialogConfiguracionAlertas.entidad}" rendered="#{!dialogConfiguracionAlertas.isResumenDiario()}" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" style="width:150px">
+						     	<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>
+								<f:selectItems value="#{dialogConfiguracionAlertas.listaEntidad}" var="entidad" itemLabel="#{entidad}" itemValue="#{entidad}"  />
+								<p:ajax event="change" listener="#{dialogConfiguracionAlertas.valoresArea}" process="@this" update="@form:comboArea @form:comboTramite @form:comboVersion"/>
+						</p:selectOneMenu>
+
+						<p:outputLabel for="comboArea" value="#{msg['viewAuditoriaTramites.headArea']}" style="width:50px" rendered="#{!dialogConfiguracionAlertas.isResumenDiario() and (dialogConfiguracionAlertas.tipo == 'A' or dialogConfiguracionAlertas.tipo == 'T' or dialogConfiguracionAlertas.tipo == 'V')}"/>
+						<p:selectOneMenu id="comboArea" value="#{dialogConfiguracionAlertas.area}" disabled="#{dialogConfiguracionAlertas.isResumenDiario() or dialogConfiguracionAlertas.entidad == null}" style="width:150px" rendered="#{!dialogConfiguracionAlertas.isResumenDiario() and (dialogConfiguracionAlertas.tipo == 'A' or dialogConfiguracionAlertas.tipo == 'T' or dialogConfiguracionAlertas.tipo == 'V')}">
+								<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>
+								<f:selectItems value="#{dialogConfiguracionAlertas.listaArea}" var="area" itemLabel="#{area}" itemValue="#{area}"  />
+								<p:ajax event="change" listener="#{dialogConfiguracionAlertas.valoresTramite}" process="@this" update="@form:comboTramite @form:comboVersion"/>
+						</p:selectOneMenu>
+
+						<p:outputLabel for="comboTramite" value="#{msg['viewPerdidaClave.headTramite']}" style="width:50px" rendered="#{!dialogConfiguracionAlertas.isResumenDiario() and (dialogConfiguracionAlertas.tipo == 'T' or dialogConfiguracionAlertas.tipo == 'V')}"/>
+						<p:selectOneMenu id="comboTramite" value="#{dialogConfiguracionAlertas.tramite}" rendered="#{!dialogConfiguracionAlertas.isResumenDiario() and (dialogConfiguracionAlertas.tipo == 'T' or dialogConfiguracionAlertas.tipo == 'V')}" disabled="#{dialogConfiguracionAlertas.isResumenDiario() or dialogConfiguracionAlertas.area == null}" style="width:150px">
+								<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>
+								<f:selectItems value="#{dialogConfiguracionAlertas.listaTramite}" var="tramite" itemLabel="#{tramite}" itemValue="#{tramite}"  />
+								<p:ajax event="change" listener="#{dialogConfiguracionAlertas.valoresVersion}" process="@this" update="@form:comboVersion"/>
+						</p:selectOneMenu>
+
+						<p:outputLabel for="comboVersion" value="#{msg['viewAuditoriaTramites.headVersion']}" style="width:50px" rendered="#{!dialogConfiguracionAlertas.isResumenDiario() and dialogConfiguracionAlertas.tipo == 'V'}"/>
+						<p:selectOneMenu id="comboVersion" value="#{dialogConfiguracionAlertas.version}" rendered="#{!dialogConfiguracionAlertas.isResumenDiario() and dialogConfiguracionAlertas.tipo == 'V'}" disabled="#{dialogConfiguracionAlertas.isResumenDiario() or dialogConfiguracionAlertas.tramite == null}" style="width:150px">
+								<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>
+								<f:selectItems value="#{dialogConfiguracionAlertas.listaVersion}" var="version" itemLabel="#{version}" itemValue="#{version}"  />
+								<p:ajax event="change" process="@this"/>
+						</p:selectOneMenu>
+					</h:panelGrid>
+
 					<p:outputLabel for="email" value="#{msg['viewConfiguracionAlertas.emails']}" />
 					<h:panelGrid columns = "1" cellspacing = "0"  width="100%">
 						<p:inputText id="email" onblur="this.value = this.value.trim();" value="#{dialogConfiguracionAlertas.emails}" maxlength="1024" validatorMessage="#{msg['viewConfiguracionEntidad.emailIncorrecto']}" style="width:39%;">
@@ -254,7 +294,7 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogConfiguracionAlertas.aceptar()}" process="@this" update="@form"  styleClass="boton-azul" rendered="#{dialogConfiguracionAlertas.isAlta() or dialogConfiguracionAlertas.isEdicion()}"/>
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogConfiguracionAlertas.aceptar()}" process="@form" update="@form"  styleClass="boton-azul" rendered="#{dialogConfiguracionAlertas.isAlta() or dialogConfiguracionAlertas.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogConfiguracionAlertas.cancelar()}" process="@this" rendered="#{dialogConfiguracionAlertas.isAlta() or dialogConfiguracionAlertas.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogConfiguracionAlertas.cancelar()}" process="@this"  rendered="#{dialogConfiguracionAlertas.isConsulta()}"/>
 						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogConfiguracionAlertas.ayuda()}" process="@this"/>

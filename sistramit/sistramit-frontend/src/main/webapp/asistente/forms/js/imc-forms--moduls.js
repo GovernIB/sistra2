@@ -753,7 +753,12 @@ $.fn.appFormsConfiguracio = function(options) {
 
 								if (conf_opcions.mayusculas && conf_opcions.mayusculas === "s") {
 
+									// RAFA: Hay que revisar si se genera a nivel elemento o a nivel input
+									// 	-- Hay que mantenerlo a nivel input pq parece que el CSS tira a nivel input
 									elm_input
+										.attr({ "data-mayuscules": conf_opcions.mayusculas });
+									// -- Metemos tb a nivel elemento pq al serializar se mira el elemento
+									elm
 										.attr({ "data-mayuscules": conf_opcions.mayusculas });
 
 								}

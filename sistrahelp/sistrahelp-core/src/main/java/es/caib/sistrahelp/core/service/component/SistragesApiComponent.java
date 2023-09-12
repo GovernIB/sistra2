@@ -46,4 +46,8 @@ public interface SistragesApiComponent {
 
 	Entidad obtenerDatosEntidadByArea(String idArea);
 
+	List<String> obtenerTramitesPorArea(String idArea);
+
+	List<Integer> obtenerVersionTramite(String identificador, String tramite);
+
 }

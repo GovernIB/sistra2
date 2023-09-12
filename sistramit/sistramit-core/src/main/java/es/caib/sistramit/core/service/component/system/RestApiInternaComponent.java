@@ -147,6 +147,16 @@ public interface RestApiInternaComponent {
 
 	Long contarErroresPorTramiteExpansionCM(FiltroEventoAuditoria pFiltroBusqueda);
 
+	List<EventoCM> recuperarTramitesPorErrorCM(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion);
+
+	Long contarTramitesPorErrorCM(FiltroEventoAuditoria pFiltroBusqueda);
+
+	List<ErroresPorTramiteCM> recuperarTramitesPorErrorCMExpansion(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion);
+
+	Long contarTramitesPorErrorExpansionCM(FiltroEventoAuditoria filtroBusqueda);
+
 	public List<EventoCM> recuperarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda,
 			FiltroPaginacion filtroPaginacion);
 

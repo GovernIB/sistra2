@@ -85,8 +85,8 @@
 		    	<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 		   	</p:inputNumber>
 
-		   	<p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numDigDecimales']}" styleClass="padding-left-18"/>
-	   		<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroDigitosDecimales}" decimalPlaces="0" minValue="0" maxValue="9" styleClass="padding-left-4" inputStyleClass="w8" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+		   	<p:outputLabel rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroSeparador != TypeSeparadorNumero.SIN_FORMATO}" value="#{msg['dialogDisenyoFormulario.componente.numDigDecimales']}" styleClass="padding-left-18"/>
+	   		<p:inputNumber rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroSeparador != TypeSeparadorNumero.SIN_FORMATO}" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroDigitosDecimales}" decimalPlaces="0" minValue="0" maxValue="9" styleClass="padding-left-4" inputStyleClass="w8" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 		   		<p:ajax event="blur" process="@this" />
 		    	<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 		   	</p:inputNumber>
@@ -98,7 +98,7 @@
 	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}">
 		<p:selectOneMenu id="tipoSeparadorNum" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroSeparador}" required="true" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 		    <p:ajax event="blur" process="@this"/>
-		    <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
+		    <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambiosFormatoSeparador}" process="@this" update="growlDisenyoFormulario, panelPropietats"/>
 		    <f:selectItems value="#{TypeSeparadorNumero.ALL_VALUES}" var="tipoSeparadorNum" itemLabel="#{msg['typeSeparadorNumero.' += tipoSeparadorNum]}" />
 		</p:selectOneMenu>
 	</h:column>
@@ -107,7 +107,7 @@
 	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}">
 		<p:outputPanel>
 			   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
-			   			<p:ajax event="change" global="false" update="growlDisenyoFormulario, panelPropietats" listener="#{dialogDisenyoFormulario.setCambios}"/>
+			   			<p:ajax event="change" global="false" update="growlDisenyoFormulario, panelPropietats" listener="#{dialogDisenyoFormulario.setCambiosPermiteRangoCB}"/>
 			   		</p:selectBooleanCheckbox>
 
 		    		<p:outputLabel rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{msg['dialogDisenyoFormulario.componente.numRangoMin']}" styleClass="padding-left-4"/>

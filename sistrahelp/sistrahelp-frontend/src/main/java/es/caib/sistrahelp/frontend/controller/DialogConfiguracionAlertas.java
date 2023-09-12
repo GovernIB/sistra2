@@ -31,6 +31,7 @@ import es.caib.sistrahelp.core.api.model.Alerta;
 import es.caib.sistrahelp.core.api.model.Area;
 import es.caib.sistrahelp.core.api.model.DisparadorAlerta;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
+import es.caib.sistrahelp.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrahelp.core.api.service.AlertaService;
 import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
@@ -56,6 +57,8 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 	 */
 	private String id;
 
+	private String tipo;
+
 	/**
 	 * lista datos.
 	 */
@@ -67,6 +70,14 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 	private Alerta data;
 
 	private DisparadorAlerta disparadorSeleccionado;
+
+	private List<String> listaEntidad;
+
+	private List<String> listaArea;
+
+	private List<String> listaTramite;
+
+	private List<Integer> listaVersion;
 
 	private List<DisparadorAlerta> disparadores;
 
@@ -94,6 +105,14 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 
 	private Date periodo;
 
+	private String entidad;
+
+	private String area;
+
+	private String tramite;
+
+	private Integer version;
+
 	@Inject
 	private AlertaService aService;
 
@@ -112,14 +131,26 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 	public void init() {
 
 		// Modo acceso
+		listaEntidad = new ArrayList<String>();
+		listaArea = new ArrayList<String>();
+		listaTramite = new ArrayList<String>();
+		listaVersion = new ArrayList<Integer>();
 		operadores = new ArrayList<String>();
 		disparadores = new ArrayList<DisparadorAlerta>();
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		UtilJSF.checkSecOpenDialog(modo, id);
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		SimpleDateFormat sdfS = new SimpleDateFormat("HH:mm:ss");
+
+		for (Area area : UtilJSF.getSessionBean().getListaAreasEntidad()) {
+			if(!listaEntidad.contains(area.getIdentificador().split("\\.")[0])) {
+				listaEntidad.add(area.getIdentificador().split("\\.")[0]);
+			}
+		}
+
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new Alerta();
+
 			try {
 				fDesde = sdf.parse("00:00");
 				fHasta = sdf.parse("00:00");
@@ -141,6 +172,38 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 					periodo = null;
 				} else {
 					check = false;
+					if (!isResumenDiario()) {
+						tipo = data.getTipo();
+						switch(tipo) {
+						case "E":
+							entidad = data.getListaAreas().get(0).split("\\.")[0];
+							break;
+
+						case "A":
+							entidad = data.getListaAreas().get(0).split("\\.")[0];
+							area = data.getListaAreas().get(0).split("\\.")[1];
+							break;
+
+						case "T":
+							entidad = data.getListaAreas().get(0).split("\\.")[0];
+							area = data.getListaAreas().get(0).split("\\.")[1];
+							tramite = data.getTramite();
+							break;
+
+						case "V":
+							entidad = data.getListaAreas().get(0).split("\\.")[0];
+							area = data.getListaAreas().get(0).split("\\.")[1];
+							tramite = data.getTramite();
+							version = data.getVersion();
+							break;
+
+						}
+
+						valoresArea();
+						valoresTramite();
+						valoresVersion();
+
+					}
 					for (String evento : data.getEventos()) {
 						String[] partes = evento.split(":");
 						DisparadorAlerta disparador = new DisparadorAlerta();
@@ -168,6 +231,51 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 		operadores.add("=");
 		emails = emailString(data.getEmail());
 
+
+	}
+
+	public void valoresArea() {
+		if(this.entidad != null) {
+			listaArea.clear();
+			for (Area area : UtilJSF.getSessionBean().getListaAreasEntidad()) {
+				if(area.getIdentificador().split("\\.")[0].equals(this.entidad)) {
+					listaArea.add(area.getIdentificador().split("\\.")[1]);
+				}
+			}
+		}else {
+			this.area=null;
+			this.tramite=null;
+			this.version = null;
+		}
+	}
+
+	public void valoresTramite() {
+		if(this.area != null) {
+			listaTramite.clear();
+			for (Area area : UtilJSF.getSessionBean().getListaAreasEntidad()) {
+				if(area.getIdentificador().split("\\.")[0].equals(this.entidad) && area.getIdentificador().split("\\.")[1].equals(this.area)) {
+					listaTramite.addAll(confService.obtenerTramitesPorArea(area.getIdentificador()));
+					break;
+				}
+			}
+		}else {
+			this.tramite=null;
+			this.version = null;
+		}
+	}
+
+	public void valoresVersion() {
+		if(this.tramite != null) {
+			listaVersion.clear();
+			for (Area area : UtilJSF.getSessionBean().getListaAreasEntidad()) {
+				if(area.getIdentificador().split("\\.")[0].equals(this.entidad) && area.getIdentificador().split("\\.")[1].equals(this.area)) {					listaVersion.clear();
+					listaVersion.addAll(confService.obtenerVersionTramite(area.getIdentificador(),tramite));
+					break;
+				}
+			}
+		}else {
+			this.version = null;
+		}
 	}
 
 	private static String formatSeconds(int timeInSeconds) {
@@ -311,7 +419,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 		}
 
 		if (aService.loadAlertaByNombre(data.getNombre()) != null
-				&& aService.loadAlertaByNombre(data.getNombre()).getCodigo() != data.getCodigo()) {
+				&& !aService.loadAlertaByNombre(data.getNombre()).getCodigo().equals(data.getCodigo())) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 					UtilJSF.getLiteral("dialogConfiguracionAlertas.error.nombreRepetido"));
 			return false;
@@ -351,6 +459,25 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 				return false;
 			}
 
+			if(tipo.equals("E") && (entidad == null || entidad.isEmpty())) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.combo.ambito.vacio"));
+				return false;
+			}
+
+			if(tipo.equals("A") && ((entidad == null || entidad.isEmpty()) || (area == null || area.isEmpty()))) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.combo.ambito.vacio"));
+				return false;
+			}
+
+			if(tipo.equals("T") && ((entidad == null || entidad.isEmpty()) || (area == null || area.isEmpty()) || (tramite == null || tramite.isEmpty()))) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.combo.ambito.vacio"));
+				return false;
+			}
+
+			if(tipo.equals("V") && ((entidad == null || entidad.isEmpty()) || (area == null || area.isEmpty()) || (tramite == null || tramite.isEmpty()) || (version == null))) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.combo.ambito.vacio"));
+				return false;
+			}
 		}
 
 		for (final String cadena : Arrays.asList(emails.split(";"))) {
@@ -401,14 +528,59 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 			for (DisparadorAlerta dA : disparadores) {
 				eventos.add(dA.getEv().toString() + ":" + dA.getOperador() + ":" + dA.getConcurrencias());
 			}
+
 			data.setEventos(eventos);
-			List<String> lisAreasAux = new ArrayList<String>();
-			for (Area area : UtilJSF.getSessionBean().getListaAreasEntidad()) {
-				lisAreasAux.add(area.getIdentificador());
-			}
-			data.setListaAreas(lisAreasAux);
 			data.setEmail(Arrays.asList(emails.split(";")));
+			data.setTipo(tipo);
+			data.setIdEntidad(UtilJSF.getSessionBean().getEntidad().getCodigoDIR3());
 			if (!isResumenDiario()) {
+				switch(tipo) {
+				case "E":
+					if(this.entidad!=null) {
+						List<String> lisAreasAux = new ArrayList<String>();
+						for (Area area : UtilJSF.getSessionBean().getListaAreasEntidad()) {
+							if(area.getIdentificador().split("\\.")[0].equals(this.entidad)) {
+								lisAreasAux.add(area.getIdentificador());
+							}
+						}
+						data.setListaAreas(lisAreasAux);
+						data.setTramite(null);
+						data.setVersion(null);
+					}
+					break;
+
+				case "A":
+					if(this.entidad!=null && this.area!=null) {
+						List<String> lisAreasAux = new ArrayList<String>();
+						lisAreasAux.add(this.entidad+"."+this.area);
+						data.setListaAreas(lisAreasAux);
+						data.setTramite(null);
+						data.setVersion(null);
+					}
+					break;
+
+				case "T":
+					if(this.entidad!=null && this.area!=null && this.tramite!=null) {
+						List<String> lisAreasAux = new ArrayList<String>();
+						lisAreasAux.add(this.entidad+"."+this.area);
+						data.setListaAreas(lisAreasAux);
+						data.setTramite(this.tramite);
+						data.setVersion(null);
+					}
+					break;
+
+				case "V":
+					if(this.entidad!=null && this.area!=null && this.tramite!=null && this.version!=null) {
+						List<String> lisAreasAux = new ArrayList<String>();
+						lisAreasAux.add(this.entidad+"."+this.area);
+						data.setListaAreas(lisAreasAux);
+						data.setTramite(this.tramite);
+						data.setVersion(this.version);
+					}
+					break;
+
+				}
+
 				SimpleDateFormat sdfS = new SimpleDateFormat("HH:mm");
 				Date f0 = null;
 				try {
@@ -424,6 +596,15 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 			} else {
 				data.setIntervaloEvaluacion(null);
 				data.setPeriodoEvaluacion(null);
+				data.setTipo("E");
+				List<String> lisAreasAux = new ArrayList<String>();
+				for (Area area : UtilJSF.getSessionBean().getListaAreasEntidad()) {
+						lisAreasAux.add(area.getIdentificador());
+
+				}
+				data.setListaAreas(lisAreasAux);
+				data.setTramite(null);
+				data.setVersion(null);
 			}
 			Long codigo = alertaService.addAlerta(data);
 			if (codigo != null) {
@@ -438,9 +619,58 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 			for (DisparadorAlerta dA : disparadores) {
 				eventosE.add(dA.getEv().toString() + ":" + dA.getOperador() + ":" + dA.getConcurrencias());
 			}
+
 			data.setEventos(eventosE);
 			data.setEmail(Arrays.asList(emails.split(";")));
+			data.setTipo(tipo);
+			data.setIdEntidad(UtilJSF.getSessionBean().getEntidad().getCodigoDIR3());
+
 			if (!isResumenDiario()) {
+				switch(tipo) {
+				case "E":
+					if(this.entidad!=null) {
+						List<String> lisAreasAux = new ArrayList<String>();
+						for (Area area : UtilJSF.getSessionBean().getListaAreasEntidad()) {
+							if(area.getIdentificador().split("\\.")[0].equals(this.entidad)) {
+								lisAreasAux.add(area.getIdentificador());
+							}
+						}
+						data.setListaAreas(lisAreasAux);
+						data.setTramite(null);
+						data.setVersion(null);
+					}
+					break;
+
+				case "A":
+					if(this.entidad!=null && this.area!=null) {
+						List<String> lisAreasAux = new ArrayList<String>();
+						lisAreasAux.add(this.entidad+"."+this.area);
+						data.setListaAreas(lisAreasAux);
+						data.setTramite(null);
+						data.setVersion(null);
+					}
+					break;
+
+				case "T":
+					if(this.entidad!=null && this.area!=null && this.tramite!=null) {
+						List<String> lisAreasAux = new ArrayList<String>();
+						lisAreasAux.add(this.entidad+"."+this.area);
+						data.setListaAreas(lisAreasAux);
+						data.setTramite(this.tramite);
+						data.setVersion(null);
+					}
+					break;
+
+				case "V":
+					if(this.entidad!=null && this.area!=null && this.tramite!=null && this.version!=null) {
+						List<String> lisAreasAux = new ArrayList<String>();
+						lisAreasAux.add(this.entidad+"."+this.area);
+						data.setListaAreas(lisAreasAux);
+						data.setTramite(this.tramite);
+						data.setVersion(this.version);
+					}
+					break;
+				}
 				SimpleDateFormat sdfS = new SimpleDateFormat("HH:mm");
 				Date f0 = null;
 				try {
@@ -456,6 +686,16 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 			} else {
 				data.setIntervaloEvaluacion(null);
 				data.setPeriodoEvaluacion(null);
+				data.setTipo("E");
+				List<String> lisAreasAux = new ArrayList<String>();
+				for (Area area : UtilJSF.getSessionBean().getListaAreasEntidad()) {
+					if(area.getIdentificador().split("\\.")[0].equals(this.entidad)) {
+						lisAreasAux.add(area.getIdentificador());
+					}
+				}
+				data.setListaAreas(lisAreasAux);
+				data.setTramite(null);
+				data.setVersion(null);
 			}
 			alertaService.updateAlerta(data);
 
@@ -781,6 +1021,78 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 	 */
 	public final void setPeriodo(Date periodo) {
 		this.periodo = periodo;
+	}
+
+	public List<String> getListaEntidad() {
+		return listaEntidad;
+	}
+
+	public void setListaEntidad(List<String> listaEntidad) {
+		this.listaEntidad = listaEntidad;
+	}
+
+	public List<String> getListaArea() {
+		return listaArea;
+	}
+
+	public void setListaArea(List<String> listaArea) {
+		this.listaArea = listaArea;
+	}
+
+	public List<String> getListaTramite() {
+		return listaTramite;
+	}
+
+	public void setListaTramite(List<String> listaTramite) {
+		this.listaTramite = listaTramite;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public String getEntidad() {
+		return entidad;
+	}
+
+	public void setEntidad(String entidad) {
+		this.entidad = entidad;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+
+	public String getTramite() {
+		return tramite;
+	}
+
+	public void setTramite(String tramite) {
+		this.tramite = tramite;
+	}
+
+	public List<Integer> getListaVersion() {
+		return listaVersion;
+	}
+
+	public void setListaVersion(List<Integer> listaVersion) {
+		this.listaVersion = listaVersion;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
 	}
 
 }

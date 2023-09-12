@@ -1,5 +1,8 @@
 package es.caib.sistrahelp.core.api.service;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.apache.commons.digester.plugins.PluginException;
 import org.fundaciobit.pluginsib.core.IPlugin;
 
@@ -46,5 +49,9 @@ public interface ConfiguracionService {
 	IPlugin obtenerPluginGlobal(TypePluginGlobal tipoPlugin) throws PluginException;
 
 	String obtenerPropiedadConfiguracionSistrages(TypePropiedadConfiguracion purgaPurgados);
+
+	List<String> obtenerTramitesPorArea(String idArea);
+
+	List<Integer> obtenerVersionTramite(String identificador, String tramite);
 
 }

@@ -146,6 +146,8 @@
 
 					<p:outputLabel for="email" value="#{msg['viewConfiguracionAlertas.emails']}" />
 				 	<p:inputText id="email" value="#{dialogEnviarMail.listaEmails}" size="40" maxlength="255" onblur="this.value = this.value.trim();"/>
+				 	<p:outputLabel for="aviso" value=" " />
+				 	<h:outputText id="aviso" value="#{msg['dialogConfiguracionAlertas.avisoCorreos']}"/>
 
 				</h:panelGrid>
 
@@ -164,9 +166,9 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.enviar']}" actionListener="#{dialogEnviarMail.aceptar}" process="@form" update="@form growldialogEnviarMailData"  styleClass="boton-azul" rendered="#{dialogEnviarMail.alta or dialogEnviarMail.edicion}"/>
-						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogEnviarMail.cancelar}" process="@this" rendered="#{dialogEnviarMail.alta or dialogEnviarMail.edicion}"/>
-						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogEnviarMail.cancelar}" process="@this"  rendered="#{dialogEnviarMail.consulta}"/>
+		        		<p:commandButton value="#{msg['botones.enviar']}" actionListener="#{dialogEnviarMail.aceptar}" process="@form" update="@form"  styleClass="boton-azul" rendered="#{dialogEnviarMail.alta or dialogEnviarMail.edicion}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogEnviarMail.cerrar}" process="@this" rendered="#{dialogEnviarMail.alta or dialogEnviarMail.edicion}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogEnviarMail.cerrar}" process="@this"  rendered="#{dialogEnviarMail.consulta}"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

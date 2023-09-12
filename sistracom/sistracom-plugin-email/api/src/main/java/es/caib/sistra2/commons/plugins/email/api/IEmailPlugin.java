@@ -32,4 +32,8 @@ public interface IEmailPlugin extends IPlugin {
             String mensaje, List<AnexoEmail> anexos)
             throws EmailPluginException;
 
+    boolean envioEmail(List<String> destinatarios, String asunto,
+            String mensaje, List<AnexoEmail> anexos, String base64Image)
+            throws EmailPluginException;
+
 }

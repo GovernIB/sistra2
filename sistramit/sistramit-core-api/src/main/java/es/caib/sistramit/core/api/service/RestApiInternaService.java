@@ -145,6 +145,16 @@ public interface RestApiInternaService {
 	List<EventoCM> recuperarErroresPorTramiteCMExpansion(FiltroEventoAuditoria pFiltroBusqueda,
 			FiltroPaginacion filtroPaginacion);
 
+	List<EventoCM> recuperarTramitesPorErrorCM(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion);
+
+	Long contarTramitesPorErrorCM(FiltroEventoAuditoria pFiltroBusqueda);
+
+	List<ErroresPorTramiteCM> recuperarTramitesPorErrorCMExpansion(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion);
+
+	Long contarTramitesPorErrorExpansionCM(FiltroEventoAuditoria filtroBusqueda);
+
 	List<FormularioSoporte> recuperarFormularioSoporte(FiltroEventoAuditoria pFiltroBusqueda,
 			FiltroPaginacion filtroPaginacion);
 

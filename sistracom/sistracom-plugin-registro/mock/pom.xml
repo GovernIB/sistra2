@@ -5,7 +5,7 @@
     <parent>
         <artifactId>sistracom-plugin-registro</artifactId>
         <groupId>es.caib.sistra2</groupId>
-        <version>1.6.0</version>
+        <version>1.6.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,7 +15,7 @@
 	 	<dependency>
             <artifactId>sistracom-plugin-registro-api</artifactId>
     		<groupId>es.caib.sistra2</groupId>
-            <version>1.6.0</version>
+            <version>1.6.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

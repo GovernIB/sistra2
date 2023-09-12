@@ -140,6 +140,30 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	}
 
 	@Override
+	public List<EventoCM> recuperarTramitesPorErrorCM(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		return restApiInternaComponent.recuperarTramitesPorErrorCM(pFiltroBusqueda, filtroPaginacion);
+	}
+
+	@Override
+	public Long contarTramitesPorErrorCM(FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiInternaComponent.contarTramitesPorErrorCM(pFiltroBusqueda);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<ErroresPorTramiteCM> recuperarTramitesPorErrorCMExpansion(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		return restApiInternaComponent.recuperarTramitesPorErrorCMExpansion(pFiltroBusqueda, filtroPaginacion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Long contarTramitesPorErrorExpansionCM(FiltroEventoAuditoria filtroBusqueda) {
+		return restApiInternaComponent.contarTramitesPorErrorExpansionCM(filtroBusqueda);
+	}
+
+	@Override
 	public List<EventoCM> recuperarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda,
 			FiltroPaginacion filtroPaginacion) {
 		return restApiInternaComponent.recuperarErroresPlataformaCM(pFiltroBusqueda, filtroPaginacion);

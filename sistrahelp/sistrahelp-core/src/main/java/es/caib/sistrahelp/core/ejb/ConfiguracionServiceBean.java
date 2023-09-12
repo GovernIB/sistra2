@@ -1,5 +1,7 @@
 package es.caib.sistrahelp.core.ejb;
 
+import java.util.List;
+
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
@@ -25,7 +27,7 @@ public class ConfiguracionServiceBean implements ConfiguracionService {
 	ConfiguracionService configuracionService;
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	@PermitAll
 	public Entidad obtenerDatosEntidad(final String idEntidad) {
 		return configuracionService.obtenerDatosEntidad(idEntidad);
 	}
@@ -37,7 +39,7 @@ public class ConfiguracionServiceBean implements ConfiguracionService {
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	@PermitAll
 	public ContenidoFichero getContentFicheroByPath(final String fichero) {
 		return configuracionService.getContentFicheroByPath(fichero);
 	}
@@ -57,8 +59,19 @@ public class ConfiguracionServiceBean implements ConfiguracionService {
 	@Override
 	@PermitAll
 	public IPlugin obtenerPluginGlobal(TypePluginGlobal tipoPlugin) throws PluginException {
-
 		return configuracionService.obtenerPluginGlobal(tipoPlugin);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	public List<String> obtenerTramitesPorArea(String idArea) {
+		return configuracionService.obtenerTramitesPorArea(idArea);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	public List<Integer> obtenerVersionTramite(String identificador, String tramite) {
+		return configuracionService.obtenerVersionTramite(identificador,tramite);
 	}
 
 }

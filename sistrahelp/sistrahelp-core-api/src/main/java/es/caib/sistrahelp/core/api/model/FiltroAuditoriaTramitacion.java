@@ -51,6 +51,9 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 	private String sortField;
 	private String sortOrder;
 
+	private String clasificacionSeleccionada;
+	private String errorTipo;
+
 	public FiltroAuditoriaTramitacion() {
 		super();
 		this.fechaDesde = calcularFecha();
@@ -114,6 +117,8 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 			this.coment = pFiltroAuditoriaTramitacion.coment;
 			this.sortField = pFiltroAuditoriaTramitacion.sortField;
 			this.sortOrder = pFiltroAuditoriaTramitacion.sortOrder;
+			this.clasificacionSeleccionada = pFiltroAuditoriaTramitacion.clasificacionSeleccionada;
+			this.errorTipo = pFiltroAuditoriaTramitacion.errorTipo;
 		}
 	}
 
@@ -326,4 +331,33 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 		}
 
 	}
+
+	/**
+	 * @return the clasificacionSeleccionada
+	 */
+	public String getClasificacionSeleccionada() {
+		return clasificacionSeleccionada;
+	}
+
+	/**
+	 * @param clasificacionSeleccionada the clasificacionSeleccionada to set
+	 */
+	public void setClasificacionSeleccionada(String clasificacionSeleccionada) {
+		this.clasificacionSeleccionada = clasificacionSeleccionada;
+	}
+
+	/**
+	 * @return the errorTipo
+	 */
+	public String getErrorTipo() {
+		return errorTipo;
+	}
+
+	/**
+	 * @param errorTipo the errorTipo to set
+	 */
+	public void setErrorTipo(String errorTipo) {
+		this.errorTipo = errorTipo;
+	}
+
 }

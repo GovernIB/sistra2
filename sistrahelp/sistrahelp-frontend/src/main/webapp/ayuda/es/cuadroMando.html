@@ -55,24 +55,43 @@ En la pantalla de '<i>Cuadro de mando</i>' se presenta el estado del proceso de 
 <h2 class="stgH2">Número total de errores:</h2>
 <p>En este panel se muestra el total de errores, considerando los errores de tramitación (associados a una sesión concreta) y los de plataforma (que no tienen una sesión de tramitación asociada).</p>
 <h2 class="stgH2">Errores de tramitación:</h2>
-<p>Este panel muestra los tr&aacute;mites con sesiones que contienen errores y los errores que se han producido. Se distinguen dos niveles de informaci&oacute;n, sobre los que pueden ordenarse los datos de cualquier columna:</p>
-<p>- Un primer nivel '<i>Tr&aacute;mite</i>': Muestra informaci&oacute;n de cada tr&aacute;mite que tiene errores en alguna de sus sesiones. Se ofrece la siguiente informaci&oacute;n:</p>
+<p>Este panel muestra (dependiendo del valor indicado en el selector de la derecha):</p>
 <p>
 	<ul>
-		<li><span class="nombreCampo">Tr&aacute;mite:</span> El id compuesto del tr&aacute;mite que contiene errores en alguna de sus sesiones. Es posible buscar en este campo.</li>
-		<li><span class="nombreCampo">Versi&oacute;n:</span> La versi&oacute;n de ese tr&aacute;mite.</li>
-		<li><span class="nombreCampo">Sesiones Ok:</span> El n&uacute;mero de sesiones que se han iniciado (TR_INI - Inicio del tr&aacute;mite) y finalizado (TR_FIN - Fin de tr&aacute;mite), aunque se hayan producido errores durante la tramitaci&oacute;n que no hayan impedido su finalizaci&oacute;n.</li>
-		<li><span class="nombreCampo">Sesiones no finalizadas:</span> El n&uacute;mero de sesiones que se han iniciado pero no se han finalizado (con errores).</li>
-		<li><span class="nombreCampo">Porcentaje de sesiones no finalizadas:</span> Proporci&oacute;n de las sesiones que no han finalizado (con errores), respecto a las sesiones iniciadas en ese tr&aacute;mite y versi&oacute;n.</li>
-		<li><span class="nombreCampo">Frecuencia de errores:</span> N&uacute;mero total de errores sucedidos en todas las sesiones de ese tr&aacute;mite y versi&oacute;n, que son los que se detallan en el segundo nivel, al pulsar sobre un registro del nivel &ldquo;Tr&aacute;mite&rdquo;.</li>
+		<li><p><span class="nombreCampo">Errores por tr&aacute;mite:</span> Si se selecciona esta clasificación, el panel muestra los tr&aacute;mites en los que existen sesiones que contienen errores y los errores que se han producido. Se distinguen dos niveles de informaci&oacute;n, sobre los que pueden ordenarse los datos de cualquier columna:</p>
+		<p>- Un primer nivel '<i>Tr&aacute;mite</i>': Muestra informaci&oacute;n de cada tr&aacute;mite que tiene errores en alguna de sus sesiones en el periodo indicado. Se ofrece la siguiente informaci&oacute;n, que al ser filtrada por trámite y versión, proporciona una visión global sobre la situación del mismo:</p>
+		<ul>
+			<li><span class="nombreCampo">Tr&aacute;mite:</span> El id compuesto de cada uno de los tr&aacute;mites que contienen errores en alguna de sus sesiones. Es posible buscar en este campo.</li>
+			<li><span class="nombreCampo">Versi&oacute;n:</span> La versi&oacute;n de ese tr&aacute;mite.</li>
+			<li><span class="nombreCampo">Sesiones Ok:</span> El n&uacute;mero de sesiones que se han iniciado (TR_INI - Inicio del tr&aacute;mite) y finalizado (TR_FIN - Fin de tr&aacute;mite). En estas sesiones aparecen las que, para ese trámite y versiòn, no existen errores o sí, errores que no han impedido su finalizaci&oacute;n.</li>
+			<li><span class="nombreCampo">Sesiones no finalizadas:</span> El n&uacute;mero de sesiones que se han iniciado pero no se han finalizado (con y sin errores).</li>
+			<li><span class="nombreCampo">Porcentaje de sesiones no finalizadas:</span> Proporci&oacute;n de las sesiones que no han finalizado (con y sin errores), respecto a las sesiones iniciadas en ese tr&aacute;mite y versi&oacute;n.</li>
+			<li><span class="nombreCampo">Suma de errores:</span> N&uacute;mero total de errores sucedidos en las sesiones de ese tr&aacute;mite y versi&oacute;n que contienen errores. Estos errores son la suma de los que se detallan en el segundo nivel (&ldquo;Error&rdquo;), al pulsar sobre un registro de este nivel (&ldquo;Tr&aacute;mite&rdquo;).</li>
+		</ul>
+		<p>- Un segundo nivel '<i>Error</i>': Muestra la estadística de cada tipo de error ocurrido en las distintas sesiones de tramitaci&oacute;n para el tr&aacute;mite y versi&oacute;n del nivel superior correspondiente y, al hacer doble click sobre un registro, el detalle de cada error de ese tipo. Se ofrece la siguiente informaci&oacute;n:</p>
+		<ul>
+			<li><span class="nombreCampo">Error:</span> El error o excepci&oacute;n que ha sucedido en la sesi&oacute;n de tramitaci&oacute;n.</li>
+			<li><span class="nombreCampo">Número de errores:</span> El n&uacute;mero de errores de ese tipo sucedidos en el tr&aacute;mite y versi&oacute;n correspondiente.</li>
+			<li><span class="nombreCampo">Porcentaje de error:</span> La proporción de errores de ese tipo respecto a los errores totales en ese tr&aacute;mite y versi&oacute;n.</li>
+		</ul>
 	</ul>
-</p>
-<p>- Un segundo nivel '<i>Error</i>': Muestra la estadística de cada tipo de error ocurrido en las distintas sesiones de tramitaci&oacute;n para el tr&aacute;mite y versi&oacute;n del nivel superior correspondiente y, al hacer doble click sobre un registro, el detalle de cada error de ese tipo. Se ofrece la siguiente informaci&oacute;n:</p>
-<p>
 	<ul>
-		<li><span class="nombreCampo">Error:</span> El error o excepci&oacute;n que ha sucedido en la sesi&oacute;n de tramitaci&oacute;n.</li>
-		<li><span class="nombreCampo">Frecuencia:</span> El n&uacute;mero de errores de ese tipo sucedidos en el tr&aacute;mite y versi&oacute;n correspondiente.</li>
-		<li><span class="nombreCampo">Porcentaje de error:</span> La proporción de errores de ese tipo respecto a los errores totales en ese tr&aacute;mite y versi&oacute;n.</li>
+		<li><p><span class="nombreCampo">Tr&aacute;mites por error:</span> Si se selecciona esta clasificación, el panel muestra los tipos de error que se han producido y los trámites en cuyas sesiones se han producido. Se distinguen dos niveles de informaci&oacute;n, sobre los que pueden ordenarse los datos de cualquier columna:</p>
+		<p>- Un primer nivel '<i>Error</i>': Muestra informaci&oacute;n de cada tipo de error que ha sucedido en el periodo indicado. Se ofrece la siguiente informaci&oacute;n, que al ser filtrada por tipo de error, proporciona una visión más concreta sobre la situación del mismo:</p>
+		<ul>
+			<li><span class="nombreCampo">Error:</span> Cada uno de los errores o excepciones que han sucedido en las sesiones de tramitación.</li>
+			<li><span class="nombreCampo">Suma de errores:</span> La suma de los errores de ese tipo sucedidos en las sesiones de tramitación, que son los que se detallan en el segundo nivel (&ldquo;Tr&aacute;mite&rdquo;), al pulsar sobre un registro de este nivel (&ldquo;Error&rdquo;).</li>
+			<li><span class="nombreCampo">Porcentaje de error:</span> La proporción de errores de ese tipo respecto a los errores totales sucedidos en las sesiones de tramitación.</li>
+		</ul>
+		<p>- Un segundo nivel '<i>Trámite</i>': Muestra la estadística de cada trámite en el que ha sucedido ese tipo de error en las distintas sesiones de tramitaci&oacute;n para el tipo de error del nivel superior correspondiente y, al hacer doble click sobre un registro, el detalle de cada error de ese tipo. Se ofrece la siguiente informaci&oacute;n:</p>
+		<ul>
+			<li><span class="nombreCampo">Tr&aacute;mite:</span> El id compuesto del tr&aacute;mite en el que existe alguna sesión en la que se ha producido el tipo de error. Es posible buscar en este campo.</li>
+			<li><span class="nombreCampo">Versi&oacute;n:</span> La versi&oacute;n de ese tr&aacute;mite.</li>
+			<li><span class="nombreCampo">Sesiones Ok:</span> El n&uacute;mero de sesiones que se han iniciado (TR_INI - Inicio del tr&aacute;mite) y finalizado (TR_FIN - Fin de tr&aacute;mite), en las que existan errores de este tipo, que no hayan impedido su finalización. En este caso, como se filtra por tipo de error, no se cuentan las sesiones sin errores de ese trámite y versión.</li>
+			<li><span class="nombreCampo">Sesiones no finalizadas:</span> El n&uacute;mero de sesiones que se han iniciado pero no se han finalizado (con errores de este tipo).</li>
+			<li><span class="nombreCampo">Porcentaje de sesiones no finalizadas:</span> Proporci&oacute;n de las sesiones que no han finalizado (con errores de este tipo), respecto a las sesiones iniciadas en ese tr&aacute;mite y versi&oacute;n.</li>
+			<li><span class="nombreCampo">Número de errores:</span> N&uacute;mero total de errores de ese tipo sucedidos en las sesiones de ese tr&aacute;mite y versi&oacute;n.</li>
+		</ul>
 	</ul>
 </p>
 
@@ -80,10 +99,10 @@ En la pantalla de '<i>Cuadro de mando</i>' se presenta el estado del proceso de 
 <p>En este panel se ofrece informaci&oacute;n de cuantos errores de plataforma (y su detalle) han sucedido a lo largo del uso del asistente de tramitaci&oacute;n en el periodo de evaluaci&oacute;n. Estos errores no son propios de un tr&aacute;mtie concreto, sino que son m&aacute;s gen&eacute;ricos, a nivel de SISTRAMIT.</p>
 
 <h2 class="stgH2">Trámites inacabados sin errores:</h2>
-<p>Este panel muestra los trámites con sesiones inacabadas y sin errores (es posible ordenar por todas les columnas):</p>
+<p>Este panel muestra los trámites que sólo tienen sesiones inacabadas y sin errores, por lo que no aparecerán aquellos trámites que tienen alguna sesión con errores, inacabada o finalizada. Es posible ordenar por todas les columnas:</p>
 <p>
 	<ul>
-		<li><span class="nombreCampo">Trámite:</span> El id compuesto del trámite que conti sesiones no finalitzadas y sin errores. Es posible buscar en este campo.</li>
+		<li><span class="nombreCampo">Trámite:</span> El id compuesto del trámite que contiene sesiones no finalitzadas y sin errores. Es posible buscar en este campo.</li>
 		<li><span class="nombreCampo">Versión:</span> La versión del trámite.</li>
 		<li><span class="nombreCampo">Sesiones no finalizadas:</span> El número de sesiones que se han iniciado pero no han finalitzado (sin errores).</li>
 	</ul>

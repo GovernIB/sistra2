@@ -96,7 +96,7 @@
 				styleClass="noBackground w100" columns="3" columnClasses=" ,dCenter, dEnd" style="height:90px;">
 				 <p:column>
 				 	<p:selectOneRadio id="tipoFecha" layout="custom" value="#{viewCuadroMando.tipoFecha}">
-				 		<p:ajax event="change" listener="#{viewCuadroMando.cambiar()}" process="@this" update="@form:panelFiltro"/>
+				 		<p:ajax event="change" listener="#{viewCuadroMando.cambiar()}" process="@this" update="@form:panelFiltro @form:tablaCuadroMando"/>
 			            <f:selectItem itemLabel="Option1" itemValue="tr"/>
 			            <f:selectItem itemLabel="Option2" itemValue="iv"/>
 			        </p:selectOneRadio>
@@ -104,23 +104,24 @@
 				<h:panelGrid
 				styleClass="noBackground w100 h10" columns="5" >
 						<p:outputLabel value="#{msg['viewCuadroMando.evaluarEn']}:" style="margin-right:20px; "/>
-
-						 <p:column>
-						<p:radioButton id="opt1" for="tipoFecha" itemIndex="0" style="margin-right:5px; "/>
-						<h:outputLabel for="opt1" value="#{msg['viewCuadroMando.tr']}" style="margin-right:20px"/>
+						<p:column>
+							<p:radioButton id="opt1" for="tipoFecha" itemIndex="0" style="margin-right:5px; " />
+							<h:outputLabel for="opt1" value="#{msg['viewCuadroMando.tr']}" style="margin-right:20px"/>
 						</p:column>
-						 <p:column>
-						<p:outputLabel for="timeTiempoReal" value="#{msg['viewCuadroMando.horaDesde']}:" style="margin-right:10px"/>
-						<p:calendar id="timeTiempoReal" value="#{viewCuadroMando.horaDesde}" pattern="HH:mm" timeOnly="true" style="margin-right:20px" disabled="#{viewCuadroMando.tipoFecha != 'tr'}"/>
+						<p:column>
+							<p:outputLabel for="timeTiempoReal" value="#{msg['viewCuadroMando.horaDesde']}:" style="margin-right:10px"/>
+							<p:calendar id="timeTiempoReal" value="#{viewCuadroMando.horaDesde}" pattern="HH:mm" timeOnly="true" style="margin-right:20px" disabled="true"/>
 						</p:column>
-						 <p:column>
-						<p:outputLabel for="minResTiempoReal" value="#{msg['viewCuadroMando.minutosRefresco']}:" style="margin-right:10px"/>
-						<p:inputNumber id="minResTiempoReal" value="#{viewCuadroMando.minutosRefresco}" thousandSeparator="" decimalSeparator="." decimalPlaces="0" style="margin-right:20px" disabled="#{viewCuadroMando.tipoFecha != 'tr'}"/>
+						<p:column>
+							<p:outputLabel for="minResTiempoReal" value="#{msg['viewCuadroMando.minutosRefresco']}:" style="margin-right:10px"/>
+							<p:inputNumber id="minResTiempoReal" value="#{viewCuadroMando.minutosRefresco}" thousandSeparator="" decimalSeparator="." decimalPlaces="0" style="margin-right:20px" disabled="true"/>
+							<p:outputLabel for="ultimoRefresco" value="#{msg['viewCuadroMando.ultimoRefresco']}:" style="margin-right:10px"/>
+							<p:calendar id="ultimoRefresco" value="#{viewCuadroMando.ultimoRefresco}" pattern="HH:mm:ss" timeOnly="true" style="margin-right:20px" disabled="true"/>
 						</p:column>
-						<p:commandButton id="btnBuscarTiempoReal" icon="fa fa-refresh"  value="#{msg['viewCuadroMando.refrescar']}" actionListener="#{viewCuadroMando.filtrar()}" process="panelFiltro" update="@form:tablaCuadroMando" styleClass="boton_derecha" disabled="#{viewCuadroMando.tipoFecha != 'tr'}"/>
+						<p:commandButton id="btnBuscarTiempoReal" icon="fa fa-refresh"  value="#{msg['viewCuadroMando.refrescar']}" actionListener="#{viewCuadroMando.filtrar()}" process="panelFiltro" update="@form:panelFiltro @form:tablaCuadroMando" styleClass="boton_derecha" disabled="#{viewCuadroMando.tipoFecha != 'tr'}"/>
 
 						<p:outputLabel value="" />
-						 <p:column>
+						<p:column>
 							<p:radioButton id="opt2" for="tipoFecha" itemIndex="1" style="margin-right:5px"/>
 							<h:outputLabel for="opt2" value="#{msg['viewCuadroMando.iv']}" style="margin-right:20px"/>
 						</p:column>
@@ -138,14 +139,14 @@
 			        	<h:panelGrid id="panelBotones" columns="1" cellspacing="5" styleClass="w100, noPadding, noMargin">
 		          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewCuadroMando.ayuda}"/>
 		          			<p:commandButton id="btnMail" value="#{msg['botones.mail']}" icon="fa fa-envelope-o" process="@this" update="growl" actionListener="#{viewCuadroMando.mail}">
-		          				<p:ajax event="dialogReturn" listener="#{viewCuadroMando.returnDialogoEmail}" update="growl"/>
+		          				<p:ajax event="dialogReturn" listener="#{viewCuadroMando.returnDialogoEmail}" update="@form:growl"/>
 		          			</p:commandButton>
 						</h:panelGrid>
 				</p:column>
 
 			</h:panelGrid>
 
-			<p:poll id="poll" interval="#{viewCuadroMando.minutosRefresco*60}" listener="#{viewCuadroMando.filtrar()}" widgetVar="currentTimePoller" process="@this" update=":form:tablaCuadroMando"/>
+			<p:poll id="poll" interval="#{viewCuadroMando.minutosRefresco * 60}" listener="#{viewCuadroMando.filtrar()}" widgetVar="currentTimePoller" process="@this" update="@form:panelFiltro @form:tablaCuadroMando"/>
 
 			 <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewCuadroMando.rcDobleClick()}" process="@this" update="growl" style="display:none"/>
 
@@ -309,8 +310,9 @@
 
 				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "0" columnClasses="grey borde ,wpx100 white borde" cellspacing = "1" columns="2">
 					<h:outputText value="#{msg['viewCuadroMando.clasificacion']}:" style="font-weight: bold; padding-left: 5px;"/>
-					 <p:selectOneMenu id="filtroClasificacion" value="#{viewCuadroMando.filtros.errorPlataforma}" style="border-radius: 0px !important;">
-			            <f:selectItem itemLabel="#{msg['viewCuadroMando.errTram']}" itemValue="true" />
+					 <p:selectOneMenu id="filtroClasificacion" value="#{viewCuadroMando.filtros.clasificacionSeleccionada}" style="border-radius: 0px !important;">
+			            <f:selectItem itemLabel="#{msg['viewCuadroMando.errTram']}" itemValue="et" />
+			            <f:selectItem itemLabel="#{msg['viewCuadroMando.tramErr']}" itemValue="te" />
 			            <f:facet name="footer">
 			               <p:separator />
 			               <h:outputText value="3 consoles" style="font-weight:bold;"/>
@@ -331,7 +333,7 @@
                         rowsPerPageTemplate="5,10,15,30"
                         rows="#{viewCuadroMando.paginacion}" rowKey="#{td.idTramite}#{td.version}"
                      	selection="#{viewCuadroMando.seleccionado}"
-						widgetVar="myWidget" style="width:75%; margin:auto;">
+						widgetVar="myWidget" style="width:75%; margin:auto;" rendered="#{viewCuadroMando.filtros.clasificacionSeleccionada eq 'et'}">
 
 						<p:ajax event="rowSelect" global="false" oncomplete="expandirContraer();"/>
 						<p:ajax event="rowToggle" listener="#{viewCuadroMando.loadExpansion(td)}" oncomplete="selectExpanded();"/>
@@ -366,7 +368,7 @@
 
 						<p:rowExpansion>
 							<!-- Data table -->
-							<p:dataTable id="dataTableErrores" var="tdErrores"
+							<p:dataTable id="dataTableErroresEx" var="tdErrores"
 								value="#{viewCuadroMando.listaErr}" rowIndexVar="rowIndexVer"
 								emptyMessage="#{msg['error.emptyRows']}" paginator="true" paginatorPosition="bottom"
 								 scrollable="true"
@@ -401,6 +403,88 @@
 							</p:dataTable>
 						</p:rowExpansion>
 					</p:dataTable>
+
+					<p:dataTable id="dataTableErrores" var="tdErrores"
+								value="#{viewCuadroMando.listaTramErr}" rowIndexVar="rowIndexVer" rowExpandMode="single"
+								emptyMessage="#{msg['error.emptyRows']}" paginator="true" paginatorPosition="bottom"
+								 scrollable="true"
+		                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		                         currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
+		                         rowsPerPageTemplate="5,10,15,30" lazy="true"
+		                         rows="#{viewCuadroMando.paginacionErrores}"
+		                         selection="#{viewCuadroMando.seleccionadoErr}"
+								style="width:75%; margin:auto;" rowKey="#{tdErrores.tipoEvento}"
+								selectionMode="single" rendered="#{viewCuadroMando.filtros.clasificacionSeleccionada eq 'te'}"
+								>
+
+								<p:ajax event="rowSelect" global="false" oncomplete="expandirContraerTe();"/>
+								<p:ajax event="rowToggle" listener="#{viewCuadroMando.loadExpansionTe(tdErrores)}" oncomplete="selectExpandedTe();"/>
+								<!-- Columnas -->
+								<p:column style="width:16px !important; background-color:RGB(255,255,255);">
+						            <p:rowToggler />
+						        </p:column>
+
+								<p:column
+									headerText="#{msg['viewAuditoriaTramites.headError']}" filterBy="#{tdErrores.tipoEvento}" filterMatchMode="contains" style="width:500px !important; word-wrap: break-word; font-weight:bold; text-align: left; padding-left:5px;" sortBy="#{tdErrores.tipoEvento}">
+									<h:outputText value="#{tdErrores.tipoEvento}" />
+								</p:column>
+
+								<p:column
+									headerText="#{msg['viewCuadroMando.err']}" style="width:250px !important; word-wrap: break-word; font-weight:bold; text-align: left; padding-left:5px;" sortBy="#{tdErrores.concurrencias}">
+									<h:outputText
+										value="#{tdErrores.concurrencias}" />
+								</p:column>
+
+								<p:column
+									headerText="#{msg['viewCuadroMando.porcErrores']}" style="width:250px !important; word-wrap: break-word; font-weight:bold; text-align: left; padding-left:5px;" sortBy="#{tdErrores.porcentage}">
+									<h:outputText
+										value="#{viewCuadroMando.formatDouble(tdErrores.porc)}%" />
+								</p:column>
+
+
+								<p:rowExpansion>
+									<!-- Data table -->
+									<p:dataTable id="dataTableTramitesEx" var="td"
+										value="#{viewCuadroMando.listaTramErrEx}"
+										scrollHeight="100%" emptyMessage="#{msg['error.emptyRows']}"
+										rowIndexVar="rowIndex" selectionMode="single"
+										paginator="true" paginatorPosition="bottom" lazy="true"
+									 	scrollable="true"
+				                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				                        currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
+				                        rowsPerPageTemplate="5,10,15,30"
+				                        rows="#{viewCuadroMando.paginacion}" rowKey="#{td.idTramite}#{td.version}"
+				                     	selection="#{viewCuadroMando.seleccionado}"
+										styleClass="w95 margin-left-25 margin-top-10 margin-bottom-10">
+
+										<p:ajax event="rowDblselect" oncomplete="triggerDblClick();"/>
+
+										<p:column headerText="#{msg['viewInformacionPersistencia.headTramite']}" sortBy="#{td.idTramite}">
+											<h:outputText value="#{td.idTramite}" />
+										</p:column>
+
+										<p:column headerText="#{msg['viewAuditoriaTramites.headVersion']}" sortBy="#{td.version}">
+											<h:outputText value="#{td.version}" />
+										</p:column>
+
+										<p:column headerText="#{msg['viewCuadroMando.sesOk']}" sortBy="#{td.sesionesFinalizadas}">
+											<h:outputText value="#{td.sesionesFinalizadas}" />
+										</p:column>
+
+										<p:column headerText="#{msg['viewCuadroMando.sesInac']}" sortBy="#{td.sesionesInacabadas}">
+											<h:outputText value="#{td.sesionesInacabadas}" />
+										</p:column>
+
+										<p:column headerText="#{msg['viewCuadroMando.sesPorc']}" sortBy="#{td.porcentage}">
+												<h:outputText value="#{viewCuadroMando.formatDouble(td.porcentage)}%" />
+										</p:column>
+										<p:column headerText="#{msg['viewCuadroMando.numero']}" sortBy="#{td.numeroErrores}">
+											<h:outputText value="#{td.numeroErrores}" />
+										</p:column>
+
+									</p:dataTable>
+								</p:rowExpansion>
+							</p:dataTable>
 
 				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "5" columnClasses="wpx16 white borde pad grey" cellspacing = "1" columns="1">
 					<h:outputText value="#{msg['viewCuadroMando.erroresPlataforma']}" style="font-weight: bold;"/>
@@ -528,6 +612,27 @@
 					}
 				}
 
+				function expandirContraerTe(){
+					var lista = document.getElementById("form:dataTableErrores").getElementsByClassName('ui-state-highlight');
+					var el;
+					for(var i=0; i&lt;lista.length; i++){
+						if(lista[i].parentNode.id=='form:dataTableErrores_data'){
+							el = lista[i]
+						}
+					}
+					if(el==null){
+						el = document.getElementById("form:dataTableErrores").getElementsByClassName('ui-expanded-row')[0];
+					}
+
+					var listaTd = el.getElementsByTagName('*');
+
+					for(var i=0; i&lt;listaTd.length; i++){
+						if(listaTd[i].getElementsByClassName('ui-row-toggler')[0]!=null){
+							listaTd[i].getElementsByClassName('ui-row-toggler')[0].click();
+						}
+					}
+				}
+
 
 				function eliminarResaltar(){
 					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
@@ -629,6 +734,18 @@
 		      function selectExpanded(){
 		      	var selecc = document.getElementById('form:dataTableTramites').getElementsByClassName('ui-state-highlight');
 		      	var expanded = document.getElementById('form:dataTableTramites').getElementsByClassName('ui-expanded-row');
+		      	for(let i = 0; i &lt; selecc.length; i++){
+					selecc[i].classList.remove('ui-state-highlight');
+				}
+
+				for(let i = 0; i &lt; expanded.length; i++){
+					expanded[i].classList.add('ui-state-highlight');
+				}
+		      }
+
+		      function selectExpandedTe(){
+	      		var selecc = document.getElementById('form:dataTableErrores').getElementsByClassName('ui-state-highlight');
+		      	var expanded = document.getElementById('form:dataTableErrores').getElementsByClassName('ui-expanded-row');
 		      	for(let i = 0; i &lt; selecc.length; i++){
 					selecc[i].classList.remove('ui-state-highlight');
 				}

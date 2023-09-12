@@ -1,5 +1,6 @@
 package es.caib.sistrahelp.core.service.component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -19,7 +20,9 @@ import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RLiteralIdioma;
 import es.caib.sistrages.rest.api.interna.RPermisoHelpDesk;
 import es.caib.sistrages.rest.api.interna.RPlugin;
+import es.caib.sistrages.rest.api.interna.RTramitesPorArea;
 import es.caib.sistrages.rest.api.interna.RValorParametro;
+import es.caib.sistrages.rest.api.interna.RVersionesPorTramite;
 import es.caib.sistrahelp.core.api.model.Entidad;
 import es.caib.sistrahelp.core.api.model.Literal;
 import es.caib.sistrahelp.core.api.model.Traduccion;
@@ -228,6 +231,36 @@ public final class SistragesApiComponentImpl implements SistragesApiComponent {
 
 	private String getUrl() {
 		return configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAGES_URL);
+	}
+
+	@Override
+	public List<String> obtenerTramitesPorArea(String idArea) {
+		final RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		final RTramitesPorArea tramites = restTemplate.getForObject(getUrl() + "/tramitesPorArea/" + idArea.split("\\.")[0] + "/" + idArea.split("\\.")[1],
+				RTramitesPorArea.class);
+
+		List<String> tramitesAux = new ArrayList<String>();
+
+		if (tramitesAux != null) {
+			tramitesAux = tramites.getListaTramites();
+		}
+		return tramitesAux;
+	}
+
+	@Override
+	public List<Integer> obtenerVersionTramite(String identificador, String tramite) {
+		final RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		final RVersionesPorTramite versiones = restTemplate.getForObject(getUrl() + "/versionesPorTramite/" + identificador.split("\\.")[0] + "/" + identificador.split("\\.")[1] + "/" + tramite,
+				RVersionesPorTramite.class);
+
+		List<Integer> versionesAux = new ArrayList<Integer>();
+
+		if (versionesAux != null) {
+			versionesAux = versiones.getListaVersiones();
+		}
+		return versionesAux;
 	}
 
 }

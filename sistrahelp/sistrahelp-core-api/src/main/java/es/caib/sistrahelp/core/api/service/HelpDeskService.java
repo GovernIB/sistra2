@@ -128,6 +128,12 @@ public interface HelpDeskService {
 	ResultadoEventoCM obtenerErroresPorTramiteCMExpansion(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion);
 
+	ResultadoEventoCM obtenerTramitesPorErrorCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion);
+
+	ResultadoErroresPorTramiteCM obtenerTramitesPorErrorCMExpansion(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion);
+
 	ResultadoEventoCM obtenerErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion);
 

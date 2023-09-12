@@ -181,6 +181,22 @@
 				        	</h:panelGrid>
 
 				        	<h:panelGrid columns="2" styleClass="w100, noPadding" style="border-style:none !important;">
+				        		<p:outputLabel for="filtroArea" value="#{msg['viewAuditoriaTramites.headArea']}:"/>
+				        		<p:inputText id="filtroArea" value="#{viewConsultaIncidencias.filtroArea}" size="19" maxlength="20" style="margin-left:27px"  onkeyup="capitalize(this)" onblur="trim(this)">
+				        			<p:keyFilter preventPaste="false" regEx="/[a-z0-9_-]/i"/>
+				        		</p:inputText>
+				        	</h:panelGrid>
+			        	</p:column>
+
+						<p:column styleClass=" noPadding p-justify-start"  style="border-style:inherit  !important;;">
+							<h:panelGrid columns="2" cellspacing="5" styleClass="w100, noPadding, noMargin">
+								<p:outputLabel for="filtroEstado" value="#{msg['dialogInformacionPersistencia.estado']}" />
+								<p:selectOneMenu id="filtroEstado" value="#{viewConsultaIncidencias.filtros.estado}" style="width:144px; margin-left:5px;">
+								 	<f:selectItem itemLabel="#{msg['selectItem.Todos']}" itemValue="" />
+			    					<f:selectItems value="#{viewConsultaIncidencias.tiposEstados}" var="estado" itemLabel="#{msg['typeEstado.' += estado]}" itemValue="#{estado.toString()}"/>
+								</p:selectOneMenu>
+							</h:panelGrid>
+							<h:panelGrid columns="2" styleClass="w100, noPadding" style="border-style:none !important;">
 				        		<p:outputLabel for="filtroTramite" value="#{msg['viewAuditoriaTramites.filtroTramite']}:"/>
 				        		<h:panelGroup>
 					        		<p:inputText id="filtroTramite" value="#{viewConsultaIncidencias.filtros.idTramite}" size="15" maxlength="20"  onkeyup="capitalize(this)" onblur="trim(this)">
@@ -192,7 +208,7 @@
 					        		</p:inputText>
 				        		</h:panelGroup>
 				        	</h:panelGrid>
-			        	</p:column>
+						</p:column>
 
 			        	<p:column styleClass=" noPadding " style="border-style:inherit  !important;;">
 			        		<h:panelGrid columns="2" styleClass="w100, noPadding" >
@@ -219,13 +235,6 @@
 						</h:panelGrid>
 						</p:column>
 						<p:column styleClass=" noPadding p-align-start" style="border-style:inherit  !important;;">
-							<h:panelGrid columns="2" cellspacing="5" styleClass="w100, noPadding, noMargin">
-								<p:outputLabel for="filtroEstado" value="#{msg['dialogInformacionPersistencia.estado']}" />
-								<p:selectOneMenu id="filtroEstado" value="#{viewConsultaIncidencias.filtros.estado}" style="width:144px; margin-left:5px;">
-								 	<f:selectItem itemLabel="#{msg['selectItem.Todos']}" itemValue="" />
-			    					<f:selectItems value="#{viewConsultaIncidencias.tiposEstados}" var="estado" itemLabel="#{msg['typeEstado.' += estado]}" itemValue="#{estado.toString()}"/>
-								</p:selectOneMenu >
-							</h:panelGrid>
 				        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="w100, noPadding, noMargin">
 			          			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewConsultaIncidencias.filtrar()}" process="@form:panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
 			          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewConsultaIncidencias.ayuda()}"/>

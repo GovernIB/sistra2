@@ -132,6 +132,20 @@ public class HelpDeskServiceBean implements HelpDeskService {
 	}
 
 	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	public ResultadoEventoCM obtenerTramitesPorErrorCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion) {
+		return helpdeskService.obtenerTramitesPorErrorCM(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	@PermitAll
+	public ResultadoErroresPorTramiteCM obtenerTramitesPorErrorCMExpansion(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion) {
+		return helpdeskService.obtenerTramitesPorErrorCMExpansion(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
 	@PermitAll
 	public ResultadoEventoCM obtenerErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion) {

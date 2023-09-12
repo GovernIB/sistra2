@@ -266,6 +266,28 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 	}
 
 	@Override
+	public List<EventoCM> recuperarTramitesPorErrorCM(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		return restApiDao.recuperarTramitesPorErrorCM(pFiltroBusqueda, filtroPaginacion);
+	}
+
+	@Override
+	public Long contarTramitesPorErrorCM(FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiDao.contarTramitesPorErrorCM(pFiltroBusqueda);
+	}
+
+	@Override
+	public List<ErroresPorTramiteCM> recuperarTramitesPorErrorCMExpansion(FiltroEventoAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion) {
+		return restApiDao.recuperarTramitesPorErrorCMExpansion(pFiltroBusqueda, filtroPaginacion);
+	}
+
+	@Override
+	public Long contarTramitesPorErrorExpansionCM(FiltroEventoAuditoria filtroBusqueda) {
+		return restApiDao.contarTramitesPorErrorExpansionCM(filtroBusqueda);
+	}
+
+	@Override
 	public List<EventoCM> recuperarErroresPlataformaCM(FiltroEventoAuditoria pFiltroBusqueda,
 			FiltroPaginacion filtroPaginacion) {
 		return restApiDao.recuperarErroresPlataformaCM(pFiltroBusqueda, filtroPaginacion);

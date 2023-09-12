@@ -2,6 +2,7 @@ package es.caib.sistrahelp.core.service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.commons.digester.plugins.PluginException;
 import org.apache.commons.io.FilenameUtils;
@@ -81,5 +82,17 @@ public class ConfiguracionServiceImpl implements ConfiguracionService {
 	@NegocioInterceptor
 	public String obtenerPropiedadConfiguracionSistrages(final TypePropiedadConfiguracion propiedad) {
 		return configuracionComponent.obtenerPropiedadConfiguracionSistrages(propiedad);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<String> obtenerTramitesPorArea(String idArea) {
+		return sistragesApiComponent.obtenerTramitesPorArea(idArea);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<Integer> obtenerVersionTramite(String identificador, String tramite) {
+		return sistragesApiComponent.obtenerVersionTramite(identificador,tramite);
 	}
 }

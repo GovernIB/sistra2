@@ -165,6 +165,62 @@ public class ApiInternaRestController {
 
 	}
 
+	@ApiOperation(value = "tramites por error", notes = "tramites por error", response = ROUTEventoCM.class)
+	@RequestMapping(value = "/auditoria/tramitesErrorCM", method = RequestMethod.POST)
+	public ROUTEventoCM obtenerTramitesPorErrorCM(@RequestBody final RINEventoAuditoria pFiltros) {
+		final ROUTEventoCM resEvento = new ROUTEventoCM();
+		final FiltroPaginacion filtroPaginacion = convierteFiltroPaginacion(pFiltros.getPaginacion());
+		final FiltroEventoAuditoria filtroBusqueda = convierteFiltroEventoAuditoria(pFiltros.getFiltro());
+
+		if (filtroBusqueda != null && filtroBusqueda.isSoloContar()) {
+			resEvento.setNumElementos(restApiInternaService.contarTramitesPorErrorCM(filtroBusqueda));
+		} else {
+			final List<EventoCM> listaEventos = restApiInternaService
+					.recuperarTramitesPorErrorCM(filtroBusqueda, filtroPaginacion);
+
+			if (listaEventos != null && !listaEventos.isEmpty()) {
+				resEvento.setListaEventos(new ArrayList<>());
+
+				for (final EventoCM evCM : listaEventos) {
+					resEvento.getListaEventos().add(convierteEventoCM(evCM));
+				}
+
+			}
+
+		}
+
+		return resEvento;
+
+	}
+
+	@ApiOperation(value = "tramites por error row expansion", notes = "tramites por error row expansion", response = ROUTErroresPorTramiteCM.class)
+	@RequestMapping(value = "/auditoria/tramitesErrorCMRe", method = RequestMethod.POST)
+	public ROUTErroresPorTramiteCM obtenerTramitesPorErrorCMRe(@RequestBody final RINEventoAuditoria pFiltros) {
+		final ROUTErroresPorTramiteCM resEvento = new ROUTErroresPorTramiteCM();
+		final FiltroPaginacion filtroPaginacion = convierteFiltroPaginacion(pFiltros.getPaginacion());
+		final FiltroEventoAuditoria filtroBusqueda = convierteFiltroEventoAuditoria(pFiltros.getFiltro());
+
+		if (filtroBusqueda != null && filtroBusqueda.isSoloContar()) {
+			resEvento.setNumElementos(restApiInternaService.contarTramitesPorErrorExpansionCM(filtroBusqueda));
+		} else {
+			final List<ErroresPorTramiteCM> listaEventos = restApiInternaService
+					.recuperarTramitesPorErrorCMExpansion(filtroBusqueda, filtroPaginacion);
+
+			if (listaEventos != null && !listaEventos.isEmpty()) {
+				resEvento.setListaErrores(new ArrayList<>());
+
+				for (final ErroresPorTramiteCM errCM : listaEventos) {
+					resEvento.getListaErrores().add(convierteErroresPorTramiteCM(errCM));
+				}
+
+			}
+
+		}
+
+		return resEvento;
+
+	}
+
 	@ApiOperation(value = "formularios incidencia", notes = "formularios incidencia", response = ROUTEventoCM.class)
 	@RequestMapping(value = "/auditoria/soporte", method = RequestMethod.POST)
 	public ROUTSoporte obtenerFormulariosSoporte(@RequestBody final RINEventoAuditoria pFiltros) {
@@ -510,6 +566,9 @@ public class ApiInternaRestController {
 
 			filtro.setSortField(pRFiltro.getSortField());
 			filtro.setSortOrder(pRFiltro.getSortOrder());
+
+			filtro.setClasificacionSeleccionada(pRFiltro.getClasificacionSeleccionada());
+			filtro.setErrorTipo(pRFiltro.getErrorTipo());
 		}
 
 		return filtro;

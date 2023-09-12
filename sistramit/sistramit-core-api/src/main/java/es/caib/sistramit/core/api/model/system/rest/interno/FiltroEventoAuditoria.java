@@ -41,6 +41,9 @@ public class FiltroEventoAuditoria implements Serializable {
 	private String sortField;
 	private String sortOrder;
 
+	private String clasificacionSeleccionada;
+	private String errorTipo;
+
 	public FiltroEventoAuditoria() {
 		super();
 	}
@@ -216,6 +219,22 @@ public class FiltroEventoAuditoria implements Serializable {
 
 	public void setComent(String coment) {
 		this.coment = coment;
+	}
+
+	public String getClasificacionSeleccionada() {
+		return clasificacionSeleccionada;
+	}
+
+	public void setClasificacionSeleccionada(String clasificacionSeleccionada) {
+		this.clasificacionSeleccionada = clasificacionSeleccionada;
+	}
+
+	public String getErrorTipo() {
+		return errorTipo;
+	}
+
+	public void setErrorTipo(String errorTipo) {
+		this.errorTipo = errorTipo;
 	}
 
 }

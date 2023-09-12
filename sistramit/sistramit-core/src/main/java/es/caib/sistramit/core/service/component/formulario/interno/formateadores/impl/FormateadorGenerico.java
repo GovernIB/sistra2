@@ -118,6 +118,9 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	/** Propiedad plantilla que indica posicion y. */
 	public static final String PROP_MARCA_AGUA_POSITION_Y = "marcaAgua.position.Y";
 
+	/** Propiedad plantilla que indica si se muestran los campos ocultos. */
+	public static final String PROP_MOSTRAR_CAMPOS_OCULTOS = "mostrar.campos.ocultos";
+
 	/** Visualización campos indexados. **/
 	private TipoVisualizacionValorIndexado visualizacionValorIndexado;
 
@@ -165,6 +168,9 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
 	/** Marca agua: posicion Y. */
 	private Integer marcaAguaPosicionY;
+
+	/** Si se muestran los campos ocultos. */
+	private Boolean mostrarCamposOcultos;
 
 	@Override
 	public byte[] formatear(final byte[] ixml, final List<String> paginasRellenadas, final byte[] plantilla,
@@ -462,6 +468,7 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 		marcaAguaEscalaY = null;
 		marcaAguaPosicionX = null;
 		marcaAguaPosicionY = null;
+		mostrarCamposOcultos = false;
 
 		if (plantilla != null) {
 			try (ByteArrayInputStream bis = new ByteArrayInputStream(plantilla)) {
@@ -511,6 +518,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 				if (StringUtils.isNotBlank(propiedades.getProperty(PROP_MARCA_AGUA_POSITION_Y))) {
 					marcaAguaPosicionY = Integer.valueOf(propiedades.getProperty(PROP_MARCA_AGUA_POSITION_Y));
 				}
+
+				mostrarCamposOcultos = Boolean.valueOf(propiedades.getProperty(PROP_MOSTRAR_CAMPOS_OCULTOS,"false"));
 
 			} catch (final Exception e) {
 				throw new FormateadorException("Error obtenint propietat formatetjador", e);
@@ -581,13 +590,16 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	 * @throws Exception
 	 */
 	private void anyadirDato(final RComponente componente, final Linea linea, final ValorCampo valor) {
-		if (valor == null) {
-			linea.getObjetosLinea().add(new CampoTexto(6, false, componente.getEtiqueta(), ""));
-		} else {
-			final String vcfStr = obtenerValorPresentacion(valor, componente);
-			linea.getObjetosLinea().add(new CampoTexto(6, isMultilinea(vcfStr), componente.getEtiqueta(), vcfStr));
+		if (mostrarCamposOcultos || (!mostrarCamposOcultos && !componente.getTipo().equals("OC"))) {
+			if (valor == null) {
+				linea.getObjetosLinea().add(new CampoTexto(6, false, componente.getEtiqueta(), ""));
+			} else {
+				final String vcfStr = obtenerValorPresentacion(valor, componente);
+				linea.getObjetosLinea().add(new CampoTexto(6, isMultilinea(vcfStr), componente.getEtiqueta(), vcfStr));
+			}
 		}
 	}
+
 
 	/**
 	 * Indica si texto es multilínea.

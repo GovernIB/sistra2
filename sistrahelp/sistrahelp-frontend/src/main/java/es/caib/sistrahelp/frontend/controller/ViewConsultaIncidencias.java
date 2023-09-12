@@ -7,6 +7,8 @@ import java.util.HashMap;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -62,6 +64,8 @@ public class ViewConsultaIncidencias extends ViewControllerBase {
 	private FiltroAuditoriaTramitacion filtros;
 
 	private List<TypeEstadoIncidencia> tiposEstados;
+
+	private String filtroArea;
 
 	/**
 	 * Inicializa.
@@ -413,6 +417,33 @@ public class ViewConsultaIncidencias extends ViewControllerBase {
 	 */
 	public final void setPortapapeles(String portapapeles) {
 		this.portapapeles = portapapeles;
+	}
+
+	/**
+	 * @return the filtroArea
+	 */
+	public String getFiltroArea() {
+		return filtroArea;
+	}
+
+	/**
+	 * @param filtroArea the filtroArea to set
+	 */
+	public void setFiltroArea(String filtroArea) {
+		List<String> areasEnt = convierteListaAreas();
+		if (filtroArea != null && !filtroArea.isEmpty() && areasEnt != null) {
+			filtros.getListaAreas().clear();
+			for (String ar : areasEnt) {
+				Pattern pattern = Pattern.compile(filtroArea, Pattern.CASE_INSENSITIVE);
+				Matcher matcher = pattern.matcher(ar.split("\\.")[1]);
+				boolean matchFound = matcher.find();
+				if (matchFound) {
+					filtros.getListaAreas().add(ar);
+				}
+			}
+		} else {
+			filtros.setListaAreas(areasEnt);
+		}
 	}
 
 }

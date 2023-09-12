@@ -212,6 +212,18 @@ public class HelpDeskServiceImpl implements HelpDeskService {
 	}
 
 	@Override
+	public ResultadoEventoCM obtenerTramitesPorErrorCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion) {
+		return sistramitApiComponent.obtenerTramitesPorErrorCM(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	public ResultadoErroresPorTramiteCM obtenerTramitesPorErrorCMExpansion(FiltroAuditoriaTramitacion pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion) {
+		return sistramitApiComponent.obtenerTramitesPorErrorCMExpansion(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
 	public ResultadoEventoCM obtenerErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion) {
 		return sistramitApiComponent.obtenerErroresPlataformaCM(pFiltroBusqueda, pFiltroPaginacion);

@@ -569,7 +569,7 @@ public class DialogScript extends DialogControllerBase {
 			Integer totalCoincidencias = 0;
 			while (matcher.find()) {
 				totalCoincidencias++;
-				String[] extensiones = matcher.group(1).split(Constantes.LISTAS_SEPARADOR);
+				String[] extensiones = matcher.group(1).split(Constantes.LISTAS_SEPARADOR_COMA);
 				for (final String extension : extensiones) {
 					if (!extensionesAnexos.contains(extension)) {
 						extensionesAnexos.add(extension);
@@ -593,19 +593,19 @@ public class DialogScript extends DialogControllerBase {
 			}
 
 			if(!extensionesAnexos.isEmpty()) {
+				String[] listaExtensionesPermitidas = {};
+
+				if (systemService.obtenerPropiedadConfiguracion(
+						TypePropiedadConfiguracion.ANEXOS_EXTENSIONES_PERMITIDAS.toString()) != null) {
+					listaExtensionesPermitidas = systemService.obtenerPropiedadConfiguracion(
+							TypePropiedadConfiguracion.ANEXOS_EXTENSIONES_PERMITIDAS.toString()).split(",");
+				}
 				for (final String cadena : extensionesAnexos) {
 					if (!cadena.matches("^\\w{3,4}$")) {
 						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.extensiones.formato"));
 						return true;
 					}
 
-					String[] listaExtensionesPermitidas = {};
-
-					if (systemService.obtenerPropiedadConfiguracion(
-							TypePropiedadConfiguracion.ANEXOS_EXTENSIONES_PERMITIDAS.toString()) != null) {
-						listaExtensionesPermitidas = systemService.obtenerPropiedadConfiguracion(
-								TypePropiedadConfiguracion.ANEXOS_EXTENSIONES_PERMITIDAS.toString()).split(",");
-					}
 					if (!Arrays.asList(listaExtensionesPermitidas).contains(cadena)) {
 						addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
 								UtilJSF.getLiteral("error.extensionNoPermitida", new Object[] { cadena }));

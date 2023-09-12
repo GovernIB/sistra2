@@ -52,6 +52,7 @@ import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypeListaValores;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
+import es.caib.sistrages.core.api.model.types.TypeSeparadorNumero;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.SeccionReutilizableService;
@@ -891,6 +892,14 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 							&& (campo.getNumeroDigitosEnteros() == null || campo.getNumeroDigitosEnteros() <= 0)
 							&& (campo.getNumeroDigitosDecimales() == null || campo.getNumeroDigitosDecimales() <= 0)) {
 						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.numero"),
+								true);
+						return false;
+					}
+
+					if (TypeCampoTexto.NUMERO.equals(campo.getTipoCampoTexto())
+							&& campo.isPermiteRango() && (campo.getNumeroRangoMinimo() == null || campo.getNumeroRangoMinimo() <= 0)
+							&& (campo.getNumeroRangoMaximo() == null || campo.getNumeroRangoMaximo() <= 0)) {
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.numero.rango"),
 								true);
 						return false;
 					}
@@ -3345,6 +3354,23 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public void setCambios() {
 		this.cambios = true;
+	}
+
+	public void setCambiosFormatoSeparador() {
+		this.cambios = true;
+		if(this.objetoFormularioEdit != null && this.objetoFormularioEdit instanceof ComponenteFormulario
+				&& ((ComponenteFormularioCampoTexto) objetoFormularioEdit).getNumeroSeparador() == TypeSeparadorNumero.SIN_FORMATO) {
+			((ComponenteFormularioCampoTexto) objetoFormularioEdit).setNumeroDigitosDecimales(null);
+		}
+	}
+
+	public void setCambiosPermiteRangoCB() {
+		this.cambios = true;
+		if(this.objetoFormularioEdit != null && this.objetoFormularioEdit instanceof ComponenteFormulario
+				&& !((ComponenteFormularioCampoTexto) objetoFormularioEdit).isPermiteRango()) {
+			((ComponenteFormularioCampoTexto) objetoFormularioEdit).setNumeroRangoMinimo(null);
+			((ComponenteFormularioCampoTexto) objetoFormularioEdit).setNumeroRangoMaximo(null);
+		}
 	}
 
 	public void setCambiosTipoTexto() {

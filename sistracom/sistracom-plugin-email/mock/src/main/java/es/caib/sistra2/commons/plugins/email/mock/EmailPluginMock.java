@@ -43,4 +43,17 @@ public class EmailPluginMock extends AbstractPluginProperties
         return true;
     }
 
+    @Override
+    public boolean envioEmail(List<String> destinatarios, String asunto,
+            String mensaje, List<AnexoEmail> anexos, String imgBase64)
+            throws EmailPluginException {
+        String dest = "";
+        for (final String d : destinatarios) {
+            dest += d + " ";
+        }
+        log.info("Simular envio mail. \nDestinatarios:" + dest + "\nAsunto: "
+                + asunto + "\nCuerpo:" + mensaje + "\nImagen:" + imgBase64);
+
+        return true;
+    }
 }

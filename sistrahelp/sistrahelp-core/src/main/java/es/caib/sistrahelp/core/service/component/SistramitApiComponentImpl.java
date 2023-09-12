@@ -588,6 +588,104 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 	}
 
 	@Override
+	public ResultadoEventoCM obtenerTramitesPorErrorCM(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion) {
+		ResultadoEventoCM resultado = null;
+		ROUTEventoCM rResultado = null;
+		final RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+		final RINEventoAuditoria param = new RINEventoAuditoria();
+		param.setPaginacion(convierteFiltroPaginacion(pFiltroPaginacion));
+		param.setFiltro(convierteFiltroAuditoriaBusqueda(toCapital(pFiltroBusqueda)));
+
+		final HttpEntity<RINEventoAuditoria> request = new HttpEntity<>(param, headers);
+		ResponseEntity<ROUTEventoCM> response = null;
+		try {
+			response = restTemplate.postForEntity(getUrl() + "/auditoria/tramitesErrorCM", request,
+					ROUTEventoCM.class);
+		} catch (Exception e) {
+
+		}
+
+		if (response != null && response.getStatusCodeValue() == 200) {
+			rResultado = response.getBody();
+		}
+
+		if (rResultado != null) {
+			resultado = new ResultadoEventoCM();
+
+			if (pFiltroBusqueda != null && pFiltroBusqueda.isSoloContar()) {
+				resultado.setNumElementos(rResultado.getNumElementos());
+			} else {
+				if (rResultado.getListaEventos() != null) {
+					resultado.setListaEventosCM(new ArrayList<>());
+
+					for (final REventoCM rErrCM : rResultado.getListaEventos()) {
+						resultado.getListaEventosCM().add(convierteEventoCM(rErrCM));
+					}
+				}
+			}
+
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public ResultadoErroresPorTramiteCM obtenerTramitesPorErrorCMExpansion(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion) {
+		ResultadoErroresPorTramiteCM resultado = null;
+		ROUTErroresPorTramiteCM rResultado = null;
+		final RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+		final RINEventoAuditoria param = new RINEventoAuditoria();
+		param.setPaginacion(convierteFiltroPaginacion(pFiltroPaginacion));
+		param.setFiltro(convierteFiltroAuditoriaBusqueda(toCapital(pFiltroBusqueda)));
+
+		final HttpEntity<RINEventoAuditoria> request = new HttpEntity<>(param, headers);
+		ResponseEntity<ROUTErroresPorTramiteCM> response = null;
+		try {
+			response = restTemplate.postForEntity(getUrl() + "/auditoria/tramitesErrorCMRe", request,
+					ROUTErroresPorTramiteCM.class);
+		} catch (Exception e) {
+
+		}
+
+		if (response != null && response.getStatusCodeValue() == 200) {
+			rResultado = response.getBody();
+		}
+
+		if (rResultado != null) {
+			resultado = new ResultadoErroresPorTramiteCM();
+
+			if (pFiltroBusqueda != null && pFiltroBusqueda.isSoloContar()) {
+				resultado.setNumElementos(rResultado.getNumElementos());
+			} else {
+				if (rResultado.getListaErrores() != null) {
+					resultado.setListaErroresCM(new ArrayList<>());
+
+					for (final RErroresPorTramiteCM rErrCM : rResultado.getListaErrores()) {
+						resultado.getListaErroresCM().add(convierteErroresPorTramiteCM(rErrCM));
+					}
+				}
+			}
+
+		}
+
+		return resultado;
+	}
+
+	@Override
 	public ResultadoEventoCM obtenerErroresPlataformaCM(final FiltroAuditoriaTramitacion pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion) {
 		ResultadoEventoCM resultado = null;
@@ -730,6 +828,9 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 
 			rFiltro.setSortField(pFiltro.getSortField());
 			rFiltro.setSortOrder(pFiltro.getSortOrder());
+
+			rFiltro.setClasificacionSeleccionada(pFiltro.getClasificacionSeleccionada());
+			rFiltro.setErrorTipo(pFiltro.getErrorTipo());
 		}
 
 		return rFiltro;
