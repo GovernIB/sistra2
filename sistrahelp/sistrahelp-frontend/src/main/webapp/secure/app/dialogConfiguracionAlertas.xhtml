@@ -155,13 +155,11 @@
 
 					<p:outputLabel for="nombre" value="#{msg['viewConfiguracionAlertas.nombre']}"/>
 					<p:inputText id="nombre" onblur="this.value = this.value.trim();" value="#{dialogConfiguracionAlertas.data.nombre}" maxlength="255" style="width:39%;" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}">
-						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
-				   		 <f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 						<p:ajax event="change" process="@this"/>
 					</p:inputText>
 
-					<p:outputLabel for="comboTipo" value="#{msg['viewInformacionPersistencia.filtroTipo']}" rendered="#{!dialogConfiguracionAlertas.isResumenDiario()}"/>
-					<p:selectOneMenu id="comboTipo" value="#{dialogConfiguracionAlertas.tipo}" rendered="#{!dialogConfiguracionAlertas.isResumenDiario()}" styleClass="margin-right-10" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" required="true" style="width:150px">
+					<p:outputLabel for="comboTipo" value="#{msg['viewInformacionPersistencia.filtroTipo']}" disabled="#{!dialogConfiguracionAlertas.isResumenDiario()}"/>
+					<p:selectOneMenu id="comboTipo" value="#{dialogConfiguracionAlertas.tipo}" styleClass="margin-right-10" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" required="true" style="width:150px">
 					     	<f:selectItem itemLabel="#{msg['dialogInformacionPagos.entidadId']}" itemValue="E"  />
 					     	<f:selectItem itemLabel="#{msg['viewAuditoriaTramites.headArea']}" itemValue="A"  />
 					     	<f:selectItem itemLabel="#{msg['viewPerdidaClave.headTramite']}" itemValue="T"  />
@@ -169,8 +167,8 @@
 					     	<p:ajax event="change" process="@this" update="@form:scope"/>
 					</p:selectOneMenu>
 
-					<p:outputLabel for="scope" value="#{msg['viewConfiguracionAlertas.ambito']}" rendered="#{!dialogConfiguracionAlertas.isResumenDiario()}"/>
-					<h:panelGrid id="scope" columns = "4" cellspacing = "0"  width="100%" rendered="#{!dialogConfiguracionAlertas.isResumenDiario()}">
+					<p:outputLabel for="scope" value="#{msg['viewConfiguracionAlertas.ambito']}" disabled="#{!dialogConfiguracionAlertas.isResumenDiario()}"/>
+					<h:panelGrid id="scope" columns = "4" cellspacing = "0"  width="100%" disabled="#{!dialogConfiguracionAlertas.isResumenDiario()}">
 						<p:outputLabel for="comboEntidad" value="#{msg['dialogInformacionPagos.entidadId']}" rendered="#{!dialogConfiguracionAlertas.isResumenDiario()}" style="width:50px"/>
 						<p:selectOneMenu id="comboEntidad" value="#{dialogConfiguracionAlertas.entidad}" rendered="#{!dialogConfiguracionAlertas.isResumenDiario()}" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" style="width:150px">
 						     	<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>

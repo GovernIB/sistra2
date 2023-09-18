@@ -533,12 +533,15 @@ public class VersionTramiteAdapter {
 
 				// TODO LEL VERIFICAR QUE EN STG SE HA GESTIONADO ESTABLECER VALOR X DEFECTO
 				// VACIO
+				//Se dio prioridad a la descripción de formulario tramite
+				formInterno.setTitulo(AdapterUtils.generarLiteralIdioma(f.getDescripcion(), idioma));
+				/*
 				final String textoCabeceraCustom = AdapterUtils.generarLiteralIdioma(d.getTextoCabecera(), idioma);
 				if (StringUtils.isBlank(textoCabeceraCustom)) {
 					formInterno.setTitulo(AdapterUtils.generarLiteralIdioma(f.getDescripcion(), idioma));
 				} else {
 					formInterno.setTitulo(textoCabeceraCustom);
-				}
+				}*/
 
 			}
 		}

@@ -559,7 +559,7 @@ public class DialogScript extends DialogControllerBase {
 
 	public boolean verificarExtensionesAnexos() {
 		boolean warn = false;
-		convertirExtensionesAMinusculas();
+		//convertirExtensionesAMinusculas();
 
 		String contenido = UtilScripts.extraerContenido(data.getContenido());
 		if (contenido.contains("setExtensiones")) {
@@ -622,7 +622,7 @@ public class DialogScript extends DialogControllerBase {
 		Matcher matcher = Pattern.compile("setExtensiones\\(\\'(.*?)\\'").matcher(data.getContenido());
 
 		if(matcher.find()) {
-			data.setContenido(data.getContenido().replaceAll("setExtensiones\\(\\'(.*?)\\'", "setExtensiones('"+matcher.group(1).toLowerCase()+"'"));
+			data.setContenido(data.getContenido().replaceAll("setExtensiones\\(\\'(.*?)\\)'", "setExtensiones('"+matcher.group(1).toLowerCase()+"'"));
 		}
 	}
 

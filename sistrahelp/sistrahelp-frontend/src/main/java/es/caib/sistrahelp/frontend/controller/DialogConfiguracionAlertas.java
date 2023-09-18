@@ -689,9 +689,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 				data.setTipo("E");
 				List<String> lisAreasAux = new ArrayList<String>();
 				for (Area area : UtilJSF.getSessionBean().getListaAreasEntidad()) {
-					if(area.getIdentificador().split("\\.")[0].equals(this.entidad)) {
 						lisAreasAux.add(area.getIdentificador());
-					}
 				}
 				data.setListaAreas(lisAreasAux);
 				data.setTramite(null);

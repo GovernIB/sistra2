@@ -16,7 +16,9 @@ import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
 import es.caib.sistrages.core.api.model.ComponenteFormularioListaElementos;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
+import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.types.TypeAlineacionTexto;
@@ -25,6 +27,7 @@ import es.caib.sistrages.core.api.model.types.TypeOrientacion;
 import es.caib.sistrages.core.service.component.literales.Literales;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 import es.caib.sistrages.core.service.repository.dao.SeccionReutilizableDao;
+import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
 
 @Component("formRenderComponent")
 public class FormRenderComponentImpl implements FormRenderComponent {
@@ -34,6 +37,9 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 	@Autowired
 	FormularioInternoDao formIntDao;
+
+	@Autowired
+	TramitePasoDao tramitePasoDao;
 
 	@Autowired
 	SeccionReutilizableDao seccionDao;
@@ -85,7 +91,13 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		}
 
 		if (formulario != null && formulario.isMostrarCabecera()) {
-			cabeceraFormulario(html, trataLiteral(formulario.getTextoCabecera().getTraduccion(pLang)));
+			Literal descripcion = tramitePasoDao.getDescripcionByFormularioInterno(pIdForm);
+			if (descripcion == null) {
+				//En los Lista de elementos, no hay formulario
+				descripcion = formulario.getTextoCabecera();
+			}
+			cabeceraFormulario(html, trataLiteral(descripcion.getTraduccion(pLang)));
+			//cabeceraFormulario(html, trataLiteral(formulario.getTextoCabecera().getTraduccion(pLang)));
 		}
 
 		escribeLinea(html, "<form>", 2);

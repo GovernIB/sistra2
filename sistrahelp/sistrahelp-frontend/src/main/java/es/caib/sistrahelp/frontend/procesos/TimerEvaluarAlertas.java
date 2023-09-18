@@ -146,23 +146,23 @@ public class TimerEvaluarAlertas implements Runnable {
 		try {
 			Alerta alert = aService.loadAlerta(alCod);
 			String nombre = "";
-			String logo = "";
-		    byte[] imageBytes = new byte[0];
+//			String logo = "";
+//		    byte[] imageBytes = new byte[0];
 			if (alert.getListaAreas() != null && !alert.getListaAreas().isEmpty()
 					&& alert.getListaAreas().get(0) != null) {
 				//Entidad entidad = confServ.obtenerDatosEntidadByArea(alert.getListaAreas().get(0));
-				logo = hService.urlLogoEntidad(alert.getIdEntidad());
-				 String urltext = logo;
-				    URL url = new URL(urltext);
-				    BufferedInputStream bis = new BufferedInputStream(url.openStream());
-				    for(byte[] ba = new byte[bis.available()];
-				        bis.read(ba) != -1;) {
-				        byte[] baTmp = new byte[imageBytes.length + ba.length];
-				        System.arraycopy(imageBytes, 0, baTmp, 0, imageBytes.length);
-				        System.arraycopy(ba, 0, baTmp, imageBytes.length, ba.length);
-				        imageBytes = baTmp;
-				    }
-				System.out.println("LOGO: "+logo);
+//				logo = hService.urlLogoEntidad(alert.getIdEntidad());
+//				 String urltext = logo;
+//				    URL url = new URL(urltext);
+//				    BufferedInputStream bis = new BufferedInputStream(url.openStream());
+//				    for(byte[] ba = new byte[bis.available()];
+//				        bis.read(ba) != -1;) {
+//				        byte[] baTmp = new byte[imageBytes.length + ba.length];
+//				        System.arraycopy(imageBytes, 0, baTmp, 0, imageBytes.length);
+//				        System.arraycopy(ba, 0, baTmp, imageBytes.length, ba.length);
+//				        imageBytes = baTmp;
+//				    }
+//				System.out.println("LOGO: "+logo);
 				Entidad entidad = confServ.obtenerDatosEntidad(alert.getIdEntidad());
 				if (entidad.getNombre() != null) {
 					nombre = entidad.getNombre().getTraduccion("ca");
@@ -201,7 +201,8 @@ public class TimerEvaluarAlertas implements Runnable {
 					+ "	</style>\r\n" + "	<!-- /css -->\r\n" + "\r\n" + "</head>\r\n" + "\r\n" + "<body>\r\n"
 					+ "\r\n" + "	<!-- contenidor -->\r\n" + "	<div id=\"contenidor\">\r\n" + "\r\n"
 					+ "		<!-- logo illes balears -->\r\n" + "		<div id=\"cap\">\r\n"
-					+ "			<img  src=\"cid:logo\" alt=\"logo\" width=\"100\" height=\"100\"/>\r\n"
+//					+ "			<img  src=\"cid:logo\" alt=\"logo\" width=\"100\" height=\"100\"/>\r\n"
+					+ "			<h3> LOGO </h3>\r\n"
 					+ "			<h1>" + nombre.toUpperCase() + "</h1>\r\n" + "		</div>\r\n"
 					+ "		<!-- /logo illes balears -->\r\n" + "\r\n" + "		<!-- continguts -->\r\n"
 					+ "	  <div id=\"continguts\">\r\n" + "\r\n" + "			<!-- titol -->\r\n"
@@ -221,17 +222,19 @@ public class TimerEvaluarAlertas implements Runnable {
 					+ "	<p class=\"auto\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p>\r\n"
 					+ "\r\n" + "	</div>\r\n" + "	<!-- /contenidor -->\r\n" + "\r\n" + "</body>\r\n"
 					+ "</html>";
-			plgEmail.envioEmail(aService.loadAlerta(alCod).getEmail(), "SISTRAHELP: AVÍS - " + aService.loadAlerta(alCod).getNombre() + " - "
-					+ entorno, msg, null, DatatypeConverter.printBase64Binary(imageBytes));
+			//plgEmail.envioEmail(aService.loadAlerta(alCod).getEmail(), "SISTRAHELP: AVÍS - " + aService.loadAlerta(alCod).getNombre() + " - "
+			//		+ entorno, msg, null, DatatypeConverter.printBase64Binary(imageBytes));
+				plgEmail.envioEmail(aService.loadAlerta(alCod).getEmail(), "SISTRAHELP: AVÍS - " + aService.loadAlerta(alCod).getNombre() + " - "
+						+ entorno, msg, null);
 		} catch (EmailPluginException e) {
 			e.printStackTrace();
 		} catch (PluginException e) {
 			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} //catch (MalformedURLException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 }

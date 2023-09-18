@@ -870,7 +870,7 @@ public class MigracionServiceImpl implements MigracionService {
 		final Integer orden = UtilDisenyo.ordenInsercionComponente(linea, null, posicionamiento);
 
 		final ObjetoFormulario componente = formIntDao.addComponente(tipoCampo, pagina.getCodigo(), linea.getCodigo(),
-				orden, posicionamiento, null, false, null, null);
+				orden, posicionamiento, null, false, null, null, null);
 
 		// actualizamos modelo
 		pagina.getLineas().get(linea.getOrden() - 1).addComponente((ComponenteFormulario) componente);
@@ -892,7 +892,7 @@ public class MigracionServiceImpl implements MigracionService {
 		final Integer ordenLinea = UtilDisenyo.ordenInsercionLinea(pagina, null, posicionamiento);
 
 		final ObjetoFormulario componente = formIntDao.addComponente(tipoCampo, pagina.getCodigo(), null, ordenLinea,
-				posicionamiento, null, false, null, null);
+				posicionamiento, null, false, null, null, null);
 
 		// actualizamos modelo (si habia saltos en el orden de linea puede que el orden
 		// inicial no sea el que toca)

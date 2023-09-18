@@ -354,7 +354,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
                 if (crearLinea(linea)) {
                     jLinea = this.addComponente(TypeObjetoFormulario.LINEA, idPagina, null, ordenLinea, null, null,
-                            false, null, null);
+                            false, null, null, null);
                 }
 
                 Collections.sort(linea.getComponentes(),
@@ -369,7 +369,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
                     for (ComponenteFormulario componente : linea.getComponentes()) {
 
                         ObjetoFormulario comp = this.addComponente(componente.getTipo(), idPagina, idLinea,
-                                idLinea == null ? ordenLinea : componente.getOrden(), null, componente, false, null, null);
+                                idLinea == null ? ordenLinea : componente.getOrden(), null, componente, false, null, null, null);
                         entityManager.flush();
                         if (componente instanceof ComponenteFormularioCampoSelector) {
                             if (((ComponenteFormularioCampoSelector) componente).getListaParametrosDominio() == null
@@ -758,7 +758,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
     @Override
     public ObjetoFormulario addComponente(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina,
             final Long pIdLinea, final Integer pOrden, final String pPosicion, final Object objeto,
-            boolean isTipoSeccion, String identificadorSeccion, final Long idFormulario) {
+            boolean isTipoSeccion, String identificadorSeccion, final Long idFormulario, final Integer numeroMaximoElementosLE) {
         JLineaFormulario jLineaSeleccionada = null;
         ObjetoFormulario objetoResultado = null;
         Integer nuevoOrden = null;
@@ -904,18 +904,17 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
             case LISTA_ELEMENTOS:
 
-                nuevoOrden = creaHuecoEntreLineas(jPagina, pOrden);
+            	nuevoOrden = creaHuecoEntreLineas(jPagina, pOrden);
                 final JLineaFormulario jLineaBloqueCreadaListaElementos = JLineaFormulario.createDefault(nuevoOrden, jPagina);
                 if (jLineaBloqueCreadaListaElementos != null) {
                     final JListaElementosFormulario jListaElementos = JListaElementosFormulario.createDefault(1,
                             jLineaBloqueCreadaListaElementos, isTipoSeccion, identificadorSeccion);
-                    final JFormulario jformulario = entityManager.find(JFormulario.class, idFormulario);
-                    //jListaElementos.getCampoFormulario().getElementoFormulario().setListaElementosFormulario(jListaElementos);
-                    jListaElementos.setFormularioAsociado(jformulario);
-                    entityManager.persist(jLineaBloqueCreadaListaElementos);
-                    //jListaElementos.getElementoFormulario().setListaElementosFormulario(jListaElementos);
+                   	final JFormulario jformulario = entityManager.find(JFormulario.class, idFormulario);
+                   	jListaElementos.setFormularioAsociado(jformulario);
+                   	entityManager.persist(jLineaBloqueCreadaListaElementos);
                     jListaElementos.setElementoFormulario(jListaElementos.getCampoFormulario().getElementoFormulario());
-                    jListaElementos.getElementoFormulario().setListaElementosFormulario(jListaElementos);;
+                    jListaElementos.getElementoFormulario().setListaElementosFormulario(jListaElementos);
+                    jListaElementos.setNumeroMaximoElementos(numeroMaximoElementosLE);
                     entityManager.persist(jListaElementos);
                     entityManager.merge(jPagina);
 

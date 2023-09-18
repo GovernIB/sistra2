@@ -1324,7 +1324,7 @@ public class TramiteServiceImpl implements TramiteService {
 				JFormularioTramite formulario = null;
 				tramitePasoDao.importarDisenyoFormulario(formulariosId, formulario, idJFormulario, filaImportar.getFormularios(), filaImportar.getFicherosContent(),
 						idDominiosEquivalencia, filaImportar.getIdEntidad(), secciones, mapSecciones, formateadores,
-						mapFormateadores, mapDisenyosLE, false, dato.getValue());
+						mapFormateadores, mapDisenyosLE, false, dato.getValue(), true);
 				mapDisenyosLE.put(dato.getKey(), idNuevo);
 			}
 		}

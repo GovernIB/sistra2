@@ -111,7 +111,7 @@ public interface FormularioInternoDao {
 	 * @return El elemento añadido
 	 */
 	ObjetoFormulario addComponente(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina, final Long pIdLinea,
-			final Integer pOrden, final String pPosicion, final Object objeto, boolean isTipoSeccion, String identificadorSeccion, Long idFormulario);
+			final Integer pOrden, final String pPosicion, final Object objeto, boolean isTipoSeccion, String identificadorSeccion, Long idFormulario, Integer numeroMaximoElementosLE);
 
 	/**
 	 * Actualiza un componente de formulario.

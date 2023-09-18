@@ -1,6 +1,5 @@
 package es.caib.sistrages.core.service.repository.dao;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +9,7 @@ import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -308,6 +308,14 @@ public interface TramitePasoDao {
 			Long idJFormulario, Map<Long, DisenyoFormulario> formularios, Map<Long, byte[]> ficherosContent,
 			Map<Long, Long> idDominiosEquivalencia, Long idEntidad, Map<Long, SeccionReutilizable> secciones,
 			Map<Long, Long> mapSecciones, Map<Long, FormateadorFormulario> formateadores,
-			Map<Long, Long> mapFormateadores, final Map<Long, Long> mapDisenyosLE, boolean isTramite,  DisenyoFormulario formularioInternoLE);
+			Map<Long, Long> mapFormateadores, final Map<Long, Long> mapDisenyosLE, boolean isTramite,  DisenyoFormulario formularioInternoLE,
+			boolean bloquearImportarLE);
+
+	/**
+	 * Obtener la descripcion de un formulario
+	 * @param pIdForm
+	 * @return
+	 */
+	Literal getDescripcionByFormularioInterno(Long pIdForm);
 
 }

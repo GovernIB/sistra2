@@ -114,27 +114,27 @@ public class TimerReinicioDiario implements Runnable {
 		System.out.println("entra en reinicio");
 		alert = aService.loadAlertaByNombre("RESUMEN_DIARIO");
 		String nombre = "";
-		String logo = "";
-	    byte[] imageBytes = new byte[0];
+//		String logo = "";
+//	    byte[] imageBytes = new byte[0];
 		if (alert.getListaAreas() != null && !alert.getListaAreas().isEmpty() && alert.getListaAreas().get(0) != null) {
 			Entidad entidad = confService.obtenerDatosEntidadByArea(alert.getListaAreas().get(0));
-			logo = hService.urlLogoEntidad(alert.getIdEntidad());
-			 String urltext = logo;
-			 try {
-			    URL url = new URL(urltext);
-			    BufferedInputStream bis = new BufferedInputStream(url.openStream());
-			    for(byte[] ba = new byte[bis.available()];
-			        bis.read(ba) != -1;) {
-			        byte[] baTmp = new byte[imageBytes.length + ba.length];
-			        System.arraycopy(imageBytes, 0, baTmp, 0, imageBytes.length);
-			        System.arraycopy(ba, 0, baTmp, imageBytes.length, ba.length);
-			        imageBytes = baTmp;
-			    }
-			 }catch(MalformedURLException e) {
-					e.printStackTrace();
-			 }catch(IOException e) {
-					e.printStackTrace();
-			 }
+//			logo = hService.urlLogoEntidad(alert.getIdEntidad());
+//			 String urltext = logo;
+//			 try {
+//			    URL url = new URL(urltext);
+//			    BufferedInputStream bis = new BufferedInputStream(url.openStream());
+//			    for(byte[] ba = new byte[bis.available()];
+//			        bis.read(ba) != -1;) {
+//			        byte[] baTmp = new byte[imageBytes.length + ba.length];
+//			        System.arraycopy(imageBytes, 0, baTmp, 0, imageBytes.length);
+//			        System.arraycopy(ba, 0, baTmp, imageBytes.length, ba.length);
+//			        imageBytes = baTmp;
+//			    }
+//			 }catch(MalformedURLException e) {
+//					e.printStackTrace();
+//			 }catch(IOException e) {
+//					e.printStackTrace();
+//			 }
 			if (entidad.getNombre() != null) {
 				nombre = entidad.getNombre().getTraduccion("ca");
 			}
@@ -196,7 +196,8 @@ public class TimerReinicioDiario implements Runnable {
 					+ "      <div id=\"contenidor\" style=\"width: 90%;font: normal 80% 'TrebuchetMS', 'Trebuchet MS', Arial, Helvetica, sans-serif;color: #000;margin: 1em auto;background-color: #fff;\">"
 					+ "         <!-- logo illes balears --> 		"
 					+ "         <div id=\"cap\" style=\"font-size: 1.2em;font-weight: bold;text-align: center;margin-bottom: 1em;\">"
-					+ "            <img  src=\"cid:logo\" alt=\"logo\" width=\"100\" height=\"100\"/>"
+//					+ "            <img  src=\"cid:logo\" alt=\"logo\" width=\"100\" height=\"100\"/>"
+					+ "			   <h3> LOGO </h3>"
 					+ "            <h1>" + nombre.toUpperCase() + "</h1>" + "         </div>"
 					+ "         <!-- /logo illes balears -->  		<!-- continguts -->"
 					+ "         <div id=\"continguts\" style=\"padding: 1em 2em;border: 1em solid #f2f2f2;\">"
@@ -482,7 +483,8 @@ public class TimerReinicioDiario implements Runnable {
 					+ "         <p class=\"auto\" style=\"margin: 1.5em 0;padding: 1em;font-size: 0.9em;font-style: italic;\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p>"
 					+ "      </div>" + "   </body>" + "</html>";
 			System.out.println("Resumen diario enviado");
-			enviarEmail(msg, DatatypeConverter.printBase64Binary(imageBytes));
+			//enviarEmail(msg, DatatypeConverter.printBase64Binary(imageBytes));
+			enviarEmail(msg, null);
 			purgarHistorial(historialService.listHistorialAlerta(null, null));
 			purgarAlertas();
 			TimerHilosAlertas tAl = new TimerHilosAlertas();
@@ -661,8 +663,10 @@ public class TimerReinicioDiario implements Runnable {
 	private void enviarEmail(String msg, String img64) {
 		try {
 			final IEmailPlugin plgEmail = (IEmailPlugin) confService.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
+//			plgEmail.envioEmail(alert.getEmail(), "SISTRAHELP: Resumen Diario - " + UtilJSF.getEntorno().toUpperCase(),
+//					msg, null, img64);
 			plgEmail.envioEmail(alert.getEmail(), "SISTRAHELP: Resumen Diario - " + UtilJSF.getEntorno().toUpperCase(),
-					msg, null, img64);
+					msg, null);
 		} catch (EmailPluginException e) {
 			e.printStackTrace();
 		} catch (PluginException e) {
