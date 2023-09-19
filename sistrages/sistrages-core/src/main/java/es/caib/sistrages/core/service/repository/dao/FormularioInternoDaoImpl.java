@@ -914,7 +914,12 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
                    	entityManager.persist(jLineaBloqueCreadaListaElementos);
                     jListaElementos.setElementoFormulario(jListaElementos.getCampoFormulario().getElementoFormulario());
                     jListaElementos.getElementoFormulario().setListaElementosFormulario(jListaElementos);
-                    jListaElementos.setNumeroMaximoElementos(numeroMaximoElementosLE);
+                    if (numeroMaximoElementosLE != null) {
+                    	jListaElementos.setNumeroMaximoElementos(numeroMaximoElementosLE);
+                    } else {
+                    	//Se hace para evitar que ponga 0 si el valor es nulo aunque debería de poner el valor de bbdd
+                    	jListaElementos.setNumeroMaximoElementos(10);
+                    }
                     entityManager.persist(jListaElementos);
                     entityManager.merge(jPagina);
 

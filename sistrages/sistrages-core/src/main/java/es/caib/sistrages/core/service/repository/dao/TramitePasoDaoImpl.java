@@ -1117,8 +1117,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	 */
 	private boolean isTipoListaElementos(final LineaComponentesFormulario mlinea) {
 		boolean tipoEtiqueta = false;
-		if (mlinea != null && mlinea.getComponentes() != null && mlinea.getComponentes().size() > 0
-				&& (mlinea.getComponentes().get(0) instanceof ComponenteFormularioListaElementos)) {
+		if (mlinea != null && mlinea.getComponentes() != null && mlinea.getComponentes().size() > 0) {
 			for(ComponenteFormulario componente : mlinea.getComponentes() ) {
 				if (componente instanceof ComponenteFormularioListaElementos) {
 					return true;
