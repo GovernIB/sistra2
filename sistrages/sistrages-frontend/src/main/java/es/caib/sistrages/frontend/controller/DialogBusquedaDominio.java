@@ -93,7 +93,8 @@ public class DialogBusquedaDominio extends DialogControllerBase {
 	}
 
 	public void filtrar() {
-		if (tipo.equals(TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString())) {
+		if (tipo.equals(TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString()) ||
+				tipo.equals(TypeParametroVentana.PARAMETRO_DISENYO_LISTA_ELEMENTOS.toString())) {
 			data = dominioService.listDominio(Long.valueOf(idTramite), filtro);
 		} else {
 			List<TypeAmbito> ambitos = new ArrayList<>();

@@ -1,4 +1,4 @@
-﻿// VALIDACIONS
+﻿﻿// VALIDACIONS
 
 
 $.fn.appValida = function(opcions) {
@@ -298,8 +298,7 @@ $.fn.appValida = function(opcions) {
 
 		var valor_iban = $.trim( valor.toUpperCase().replace(/\s/g, "") );
 
-		esCorrecte = IBAN.isValid( valor_iban );
-		esCorrecte = validaCCC(valor_iban);
+		esCorrecte = IBAN.isValid( valor_iban ) && validaCCC(valor_iban);
 
 	}
 

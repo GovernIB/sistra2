@@ -2426,6 +2426,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(),
 					TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString());
 			params.put(TypeParametroVentana.TRAMITE.toString(), String.valueOf(tramiteVersion.getIdTramite()));
+		} else if (this.tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_LISTA_ELEMENTOS.toString())) {
+			params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(),
+					TypeParametroVentana.PARAMETRO_DISENYO_LISTA_ELEMENTOS.toString());
+			params.put(TypeParametroVentana.TRAMITE.toString(), String.valueOf(tramiteVersion.getIdTramite()));
 		} else {
 			params.put(TypeParametroVentana.PARAMETRO_DISENYO.toString(),
 					TypeParametroVentana.PARAMETRO_DISENYO_SECCION.toString());

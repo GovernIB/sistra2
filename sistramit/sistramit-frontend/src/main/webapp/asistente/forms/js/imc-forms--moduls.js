@@ -2032,7 +2032,7 @@ $.fn.appFormsValida = function(options) {
 
 					var valor_iban = $.trim( input_val.toUpperCase().replace(/\s/g, "") );
 
-					esError = ( !IBAN.isValid( valor_iban ) && !validaCCC(valor_iban) ) ? true : false;
+					esError = ( !IBAN.isValid( valor_iban ) || !validaCCC(valor_iban) ) ? true : false;
 
 					ERROR_TEXT = (esError) ? txtFormDinCampError_iban : false;
 
@@ -4417,7 +4417,7 @@ $.fn.appFormsIBAN = function(options) {
 				//var element = document.getElementById('selector');
 
 				var maskOptions = {
-					mask: 'aa00 0000 0000 0000 0000 0000 0000 0000 0000 00'
+					mask: 'aa00 **** **** **** **** **** **** **** **'
 				};
 
 				var mask = IMask(element.find("input[type=text]")[0], maskOptions);

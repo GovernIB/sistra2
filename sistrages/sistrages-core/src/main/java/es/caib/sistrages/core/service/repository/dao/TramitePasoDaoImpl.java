@@ -1519,6 +1519,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		comp.setListaElementosAnchoColumna(componente.getListaElementosAnchoColumna());
 		comp.setListaElementosVisible(componente.isListaElementosVisible());
 		comp.setForzarMayusculas(componente.isForzarMayusculas());
+		comp.setPrevenirPegar(componente.isPrevenirPegar());
 		formularioInternoDao.updateComponente(comp);
 	}
 

@@ -211,7 +211,7 @@ $.fn.appSerialitza = function(opcions) {
 					}
 
 					form_id_i_valors[el_id] = JSON.stringify( form_el_json[el_id] );
-					
+
 				}
 
 				// verifica?
@@ -326,7 +326,7 @@ $.fn.appSerialitza = function(opcions) {
 						}
 
 						// data
-						
+
 						if (input_el.attr("data-contingut") === "data") {
 
 							esError = ( !input_el.appValida({ format: "data", valor: input_val }) ) ? true : false;
@@ -340,7 +340,7 @@ $.fn.appSerialitza = function(opcions) {
 
 							var valor_iban = $.trim( input_val.toUpperCase().replace(/\s/g, "") );
 
-							esError = ( !IBAN.isValid( valor_iban ) && !validaCCC(valor_iban) ) ? true : false;
+							esError = ( !IBAN.isValid( valor_iban ) || !validaCCC(valor_iban) ) ? true : false;
 							ERROR_TEXT = (esError) ? txtFormDinCampError_iban : false;
 
 						}
