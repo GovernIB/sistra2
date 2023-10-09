@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>es.caib.sistra2</groupId>
 		<artifactId>sistramit</artifactId>
-		<version>1.6.2</version>
+		<version>1.7.0</version>
 	</parent>
 
 	<artifactId>sistramit-core-api</artifactId>
@@ -16,7 +16,7 @@
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-utils</artifactId>
-			<version>1.6.2</version>
+			<version>1.7.0</version>
 		</dependency>
 
 		<!-- JSON -->

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>es.caib.sistra2</groupId>
 		<artifactId>sistrages</artifactId>
-		<version>1.6.2</version>
+		<version>1.7.0</version>
 	</parent>
 	<artifactId>sistrages-lib</artifactId>
 	<name>sistrages-lib</name>
@@ -16,14 +16,14 @@
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistrages-core-api</artifactId>
-			<version>1.6.2</version>
+			<version>1.7.0</version>
 		</dependency>
 
 		<!-- API Rest Sistramit -->
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistramit-rest-api</artifactId>
-			<version>1.6.2</version>
+			<version>1.7.0</version>
 			<exclusions>
 				<exclusion>
 		          <groupId>io.springfox</groupId>
@@ -36,45 +36,45 @@
 		<dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-dominio-api</artifactId>
-            <version>1.6.2</version>
+            <version>1.7.0</version>
         </dependency>
 
         <dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-registro-api</artifactId>
-            <version>1.6.2</version>
+            <version>1.7.0</version>
         </dependency>
 
 		<dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-catalogoprocedimientos-api</artifactId>
-            <version>1.6.2</version>
+            <version>1.7.0</version>
         </dependency>
 
 		<dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-dominio-rest</artifactId>
-            <version>1.6.2</version>
+            <version>1.7.0</version>
         </dependency>
 
         <!-- Plugins MOCK -->
 		<dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-registro-mock</artifactId>
-            <version>1.6.2</version>
+            <version>1.7.0</version>
         </dependency>
 
          <dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-catalogoprocedimientos-mock</artifactId>
-            <version>1.6.2</version>
+            <version>1.7.0</version>
         </dependency>
 
         <!-- Plugins REGWEB3 -->
         <dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-registro-regweb3</artifactId>
-            <version>1.6.2</version>
+            <version>1.7.0</version>
         </dependency>
 
 		<!-- Plugins IB -->
@@ -88,7 +88,14 @@
          <dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-catalogoprocedimientos-rolsac</artifactId>
-            <version>1.6.2</version>
+            <version>1.7.0</version>
+        </dependency>
+
+         <!--  Plugins ROLSAC2 -->
+         <dependency>
+            <groupId>es.caib.sistra2</groupId>
+            <artifactId>sistracom-plugin-catalogoprocedimientos-rolsac2</artifactId>
+            <version>1.7.0</version>
         </dependency>
 
         <!--  Plugin PDF -->
