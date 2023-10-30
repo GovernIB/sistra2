@@ -383,6 +383,7 @@ public class ViewCuadroMando extends ViewControllerBase {
 			ultimoRefresco = null;
 			PrimeFaces.current()
 					.executeScript("var currentTimePoller = PF('currentTimePoller'); currentTimePoller.stop();");
+			filtrar();
 		}
 	}
 

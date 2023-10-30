@@ -722,7 +722,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 					filaArea = FilaImportarArea.crearCCerrorSinPermisos(area, areaActual,
 							UtilJSF.getLiteral("dialogTramiteImportar.error.sinpermisopromocionar"));
 
-				} else if (area.getDescripcion().equals(areaActual.getDescripcion())) {
+				} else if (area.getIdentificador().equals(areaActual.getIdentificador())) {
 
 					// Si es adm. entidad, puede seleccionarlo sin problema
 					filaArea = FilaImportarArea.crearCCseleccionOK(area, areaActual);

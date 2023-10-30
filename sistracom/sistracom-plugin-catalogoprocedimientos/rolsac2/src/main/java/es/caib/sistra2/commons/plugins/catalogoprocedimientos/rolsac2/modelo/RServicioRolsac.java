@@ -42,6 +42,12 @@ public class RServicioRolsac {
 
     private String lopdDerechos;
 
+	private String lopdCabecera;
+
+	private RLink linkLopdInfoAdicional;
+
+	private RLegitimacion lopdLegitimacion;
+
     private Long codigoWF;
 
     private String tipo;
@@ -55,8 +61,6 @@ public class RServicioRolsac {
     private boolean publicado;
 
     private Calendar fechaCaducidad;
-
-    private Long datosPersonalesLegitimacion;
 
     private Long uaResponsable;
 
@@ -278,13 +282,6 @@ public class RServicioRolsac {
 		this.fechaCaducidad = fechaCaducidad;
 	}
 
-	public Long getDatosPersonalesLegitimacion() {
-		return datosPersonalesLegitimacion;
-	}
-
-	public void setDatosPersonalesLegitimacion(Long datosPersonalesLegitimacion) {
-		this.datosPersonalesLegitimacion = datosPersonalesLegitimacion;
-	}
 
 	public Long getUaResponsable() {
 		return uaResponsable;
@@ -428,5 +425,29 @@ public class RServicioRolsac {
 
 	public void setPlantillaSel(Long plantillaSel) {
 		this.plantillaSel = plantillaSel;
+	}
+
+	public RLegitimacion getLopdLegitimacion() {
+		return lopdLegitimacion;
+	}
+
+	public void setLopdLegitimacion(RLegitimacion lopdLegitimacion) {
+		this.lopdLegitimacion = lopdLegitimacion;
+	}
+
+	public String getLopdCabecera() {
+		return lopdCabecera;
+	}
+
+	public void setLopdCabecera(String lopdCabecera) {
+		this.lopdCabecera = lopdCabecera;
+	}
+
+	public RLink getLinkLopdInfoAdicional() {
+		return linkLopdInfoAdicional;
+	}
+
+	public void setLinkLopdInfoAdicional(RLink linkLopdInfoAdicional) {
+		this.linkLopdInfoAdicional = linkLopdInfoAdicional;
 	}
 }

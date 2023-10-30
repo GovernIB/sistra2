@@ -66,7 +66,7 @@ public class RProcedimientoRolsac {
 	/** Info Adicional **/
 	private RLink linkLopdInfoAdicional;
 
-	private Long lopdInfoAdicional;
+	private String lopdCabecera;
 
 	private String lopdResponsable;
 
@@ -75,6 +75,8 @@ public class RProcedimientoRolsac {
 	private String lopdDestinatario;
 
 	private String lopdDerechos;
+
+	private RLegitimacion lopdLegitimacion;
 
 	private String objeto;
 
@@ -90,7 +92,7 @@ public class RProcedimientoRolsac {
 
     private boolean publicado;
 
-    private Long datosPersonalesLegitimacion;
+
 
     private RInicio iniciacion;
 
@@ -112,9 +114,7 @@ public class RProcedimientoRolsac {
 
     private String nombreProcedimientoWorkFlow;
 
-    private String datosPersonalesFinalidad;
 
-    private String datosPersonalesDestinatario;
 
     private String terminoResolucion;
 
@@ -392,19 +392,6 @@ public class RProcedimientoRolsac {
 		this.linkLopdInfoAdicional = linkLopdInfoAdicional;
 	}
 
-	/**
-	 * @return the lopdInfoAdicional
-	 */
-	public Long getLopdInfoAdicional() {
-		return lopdInfoAdicional;
-	}
-
-	/**
-	 * @param lopdInfoAdicional the lopdInfoAdicional to set
-	 */
-	public void setLopdInfoAdicional(Long lopdInfoAdicional) {
-		this.lopdInfoAdicional = lopdInfoAdicional;
-	}
 
 	/**
 	 * @return the lopdResponsable
@@ -560,19 +547,7 @@ public class RProcedimientoRolsac {
 		this.publicado = publicado;
 	}
 
-	/**
-	 * @return the datosPersonalesLegitimacion
-	 */
-	public Long getDatosPersonalesLegitimacion() {
-		return datosPersonalesLegitimacion;
-	}
 
-	/**
-	 * @param datosPersonalesLegitimacion the datosPersonalesLegitimacion to set
-	 */
-	public void setDatosPersonalesLegitimacion(Long datosPersonalesLegitimacion) {
-		this.datosPersonalesLegitimacion = datosPersonalesLegitimacion;
-	}
 
 	/**
 	 * @return the iniciacion
@@ -714,33 +689,6 @@ public class RProcedimientoRolsac {
 		this.nombreProcedimientoWorkFlow = nombreProcedimientoWorkFlow;
 	}
 
-	/**
-	 * @return the datosPersonalesFinalidad
-	 */
-	public String getDatosPersonalesFinalidad() {
-		return datosPersonalesFinalidad;
-	}
-
-	/**
-	 * @param datosPersonalesFinalidad the datosPersonalesFinalidad to set
-	 */
-	public void setDatosPersonalesFinalidad(String datosPersonalesFinalidad) {
-		this.datosPersonalesFinalidad = datosPersonalesFinalidad;
-	}
-
-	/**
-	 * @return the datosPersonalesDestinatario
-	 */
-	public String getDatosPersonalesDestinatario() {
-		return datosPersonalesDestinatario;
-	}
-
-	/**
-	 * @param datosPersonalesDestinatario the datosPersonalesDestinatario to set
-	 */
-	public void setDatosPersonalesDestinatario(String datosPersonalesDestinatario) {
-		this.datosPersonalesDestinatario = datosPersonalesDestinatario;
-	}
 
 	/**
 	 * @return the terminoResolucion
@@ -810,5 +758,21 @@ public class RProcedimientoRolsac {
 	 */
 	public void setActivoLOPD(boolean activoLOPD) {
 		this.activoLOPD = activoLOPD;
+	}
+
+	public RLegitimacion getLopdLegitimacion() {
+		return lopdLegitimacion;
+	}
+
+	public void setLopdLegitimacion(RLegitimacion lopdLegitimacion) {
+		this.lopdLegitimacion = lopdLegitimacion;
+	}
+
+	public String getLopdCabecera() {
+		return lopdCabecera;
+	}
+
+	public void setLopdCabecera(String lopdCabecera) {
+		this.lopdCabecera = lopdCabecera;
 	}
 }

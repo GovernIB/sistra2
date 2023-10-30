@@ -1,13 +1,8 @@
 package es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
+import es.caib.sistra2.commons.plugins.autenticacion.api.AutenticacionPluginException;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.*;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 import org.slf4j.Logger;
@@ -22,28 +17,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import es.caib.sistra2.commons.plugins.autenticacion.api.AutenticacionPluginException;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.ArchivoCP;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CampoLOPD;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CatalogoPluginException;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionLOPD;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionProcedimientoCP;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteTelematico;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.ICatalogoProcedimientosPlugin;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo.RPlatTramitElectronica;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo.RProcedimientoDocumento;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo.RProcedimientoRolsac;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo.RRespuestaPlatTramitElectronica;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo.RRespuestaProcedimientoDocumento;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo.RRespuestaProcedimientos;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo.RRespuestaServicios;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo.RRespuestaSimple;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo.RRespuestaTipoTramitacion;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo.RRespuestaTramites;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo.RServicioRolsac;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo.RTipoTramitacion;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac2.modelo.RTramiteRolsac;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Plugin catálogo procedimientos.
@@ -72,6 +47,28 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 	/** Literales campos LOPD. */
 	private Properties literalesCamposLOPD;
+
+/**
+ *  función que retorna json con las propiedades que permite el plugin.
+ *  propiedades permitidas:
+ *
+ * 		"url": "url de acceso al api ROLSAC2"
+ * 		"usr": "usuario de acceso al api de rolsac2"
+ * 		"pwd": "pw de acceso al api de rolsac2"
+ * 		"identificadorPlataformaSistra2": "identificado de la plataforma SISTRA2 en ROLSAC2"
+ * 		"reintentos": "numero de reintentos"
+ * 		"urlSeucaibArchivos": "URL de descarga de archivos, acepta estos placeholder {{IDIOMA}} y {{IDARCHIVO}}"
+*/
+	private String getJsonPropiedades(){
+        return "{\"url\": \"url de acceso al api ROLSAC2\"" +
+				",\"usr\":\"usuario de acceso al api de rolsac2\"" +
+				",\"pwd\":\"pw de acceso al api de rolsac2\"" +
+				",\"identificadorPlataformaSistra2\": \"identificado de la plataforma SISTRA2 en ROLSAC2\"" +
+				",\"reintentos\":\"numero de reintentos\"" +
+				",\"urlSeucaibArchivos\":\"URL de descarga de archivos, acepta estos placeholder {{IDIOMA}} y {{IDARCHIVO}}\"" +
+				"}";
+	}
+
 
 	public CatalogoProcedimientosRolsacPlugin(final String prefijoPropiedades, final Properties properties) {
 		super(prefijoPropiedades, properties);
@@ -254,12 +251,13 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 		// Codigo DIR3 destintario tramite
 		String dir3organoDestinatario = "";
-		//TODO: pendiente revisar cuando los servicios tengan link.
-//		if (tramiteRolsac.getLink_organCompetent() == null) {
-//			log.error("El link de organo competente es nulo con el proc: " + procRolsac.getCodigo());
-//		} else {
-//			dir3organoDestinatario = getCodigoDir3UA(tramiteRolsac.getLink_organCompetent().getCodigo());
-//		}
+
+		if (tramiteRolsac.getLink_unidadAdministrativa() == null) {
+			log.error("El link de organo competente es nulo con el proc: " + procRolsac.getCodigo());
+		} else {
+			dir3organoDestinatario = getCodigoDir3UA(tramiteRolsac.getLink_unidadAdministrativa().getCodigo());
+		}
+
 
 		final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
 		dp.setIdentificador(tramiteRolsac.getLink_procedimiento().getCodigo());
@@ -356,8 +354,6 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Obtiene el tramite con reintentos.
 	 *
-	 * @param idTramiteCP
-	 * @param map
 	 * @return
 	 * @throws CatalogoPluginException
 	 */
@@ -467,7 +463,6 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	/**
 	 * Obtiene el código DIR3 de la UA
 	 *
-	 * @param linkUA
 	 * @return
 	 * @throws CatalogoPluginException
 	 * @throws RestClientException
@@ -812,6 +807,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		throw new CatalogoPluginException(LITERAL_ERROR_NO_CONECTAR);
 	}
 
+
+
 	@Override
 	public ArchivoCP descargarArchivo(final String referenciaArchivo) throws CatalogoPluginException {
 
@@ -848,7 +845,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 			lopd = new DefinicionLOPD();
 			// - Cabecera
-//			lopd.setTextoCabecera(procRolsac.getLopdCabecera());
+			lopd.setTextoCabecera(procRolsac.getLopdCabecera());
 			// - Campos
 			final List<CampoLOPD> campos = new ArrayList<>();
 			// - Responsable
@@ -866,13 +863,13 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 				campos.add(c);
 			}
 			// - Legitimación
-//			if (procRolsac.getLopdLegitimacion() != null
-//					&& StringUtils.isNotBlank(procRolsac.getLopdLegitimacion().getNombre())) {
-//				final CampoLOPD c = new CampoLOPD();
-//				c.setTitulo(obtenTituloCampoLOPD("legitimacion", idioma));
-//				c.setDescripcion(procRolsac.getLopdLegitimacion().getNombre());
-//				campos.add(c);
-//			}
+			if (procRolsac.getLopdLegitimacion() != null
+					&& StringUtils.isNotBlank(procRolsac.getLopdLegitimacion().getDescripcion())) {
+				final CampoLOPD c = new CampoLOPD();
+				c.setTitulo(obtenTituloCampoLOPD("legitimacion", idioma));
+				c.setDescripcion(procRolsac.getLopdLegitimacion().getDescripcion());
+				campos.add(c);
+			}
 			// - Destinatario
 			if (StringUtils.isNotBlank(procRolsac.getLopdDestinatario())) {
 				final CampoLOPD c = new CampoLOPD();
@@ -895,9 +892,10 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 				c.setDescripcion(obtenDescripcionCampoLOPD("infoAdicional", idioma));
 				// Devolvemos enlace seucaib
 				// c.setReferenciaArchivo(procRolsac.getLink_lopdInfoAdicional().getCodigo());
-				final String urlSeucaibDescarga = getPropiedad("urlSeucaib") + "/" + ("es".equals(idioma) ? "es" : "ca")
-						+ "/arxiuServlet?id=" + procRolsac.getLinkLopdInfoAdicional().getCodigo();
-				c.setEnlace(urlSeucaibDescarga);
+				/*final String urlSeucaibDescarga = getPropiedad("urlSeucaib") + "/" + ("es".equals(idioma) ? "es" : "ca")
+						+ "/arxiuServlet?id=" + procRolsac.getLinkLopdInfoAdicional().getCodigo();*/
+				c.setEnlace(getUrlDescarga(idioma,procRolsac.getLinkLopdInfoAdicional().getCodigo()));
+				c.setEnlace(getUrlDescarga(idioma,procRolsac.getLinkLopdInfoAdicional().getCodigo()));
 				campos.add(c);
 			}
 
@@ -922,7 +920,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		if (procRolsac.isActivoLOPD()) {
 			lopd = new DefinicionLOPD();
 			// - Cabecera
-//			lopd.setTextoCabecera(procRolsac.getLopdCabecera());
+			lopd.setTextoCabecera(procRolsac.getLopdCabecera());
 			// - Campos
 			final List<CampoLOPD> campos = new ArrayList<>();
 			// - Responsable
@@ -940,13 +938,13 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 				campos.add(c);
 			}
 			// - Legitimación
-//			if (procRolsac.getLopdLegitimacion() != null
-//					&& StringUtils.isNotBlank(procRolsac.getLopdLegitimacion().getNombre())) {
-//				final CampoLOPD c = new CampoLOPD();
-//				c.setTitulo(obtenTituloCampoLOPD("legitimacion", idioma));
-//				c.setDescripcion(procRolsac.getLopdLegitimacion().getNombre());
-//				campos.add(c);
-//			}
+			if (procRolsac.getLopdLegitimacion() != null
+					&& StringUtils.isNotBlank(procRolsac.getLopdLegitimacion().getDescripcion())) {
+				final CampoLOPD c = new CampoLOPD();
+				c.setTitulo(obtenTituloCampoLOPD("legitimacion", idioma));
+				c.setDescripcion(procRolsac.getLopdLegitimacion().getDescripcion());
+				campos.add(c);
+			}
 			// - Destinatario
 			if (StringUtils.isNotBlank(procRolsac.getLopdDestinatario())) {
 				final CampoLOPD c = new CampoLOPD();
@@ -962,22 +960,31 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 				campos.add(c);
 			}
 			// - InfoAdicional (archivo)
-//			if (procRolsac.getLink_lopdInfoAdicional() != null
-//					&& procRolsac.getLink_lopdInfoAdicional().getCodigo() != null) {
-//				final CampoLOPD c = new CampoLOPD();
-//				c.setTitulo(obtenTituloCampoLOPD("infoAdicional", idioma));
-//				c.setDescripcion(obtenDescripcionCampoLOPD("infoAdicional", idioma));
-//				// Devolvemos enlace seucaib
-//				// c.setReferenciaArchivo(procRolsac.getLink_lopdInfoAdicional().getCodigo());
-//				final String urlSeucaibDescarga = getPropiedad("urlSeucaib") + "/" + ("es".equals(idioma) ? "es" : "ca")
-//						+ "/arxiuServlet?id=" + procRolsac.getLink_lopdInfoAdicional().getCodigo();
-//				c.setEnlace(urlSeucaibDescarga);
-//				campos.add(c);
-//			}
+
+			// obtenemos código de archivo
+			if (procRolsac.getLinkLopdInfoAdicional() != null
+					&& procRolsac.getLinkLopdInfoAdicional().getCodigo() != null) {
+				final CampoLOPD c = new CampoLOPD();
+				c.setTitulo(obtenTituloCampoLOPD("infoAdicional", idioma));
+				c.setDescripcion(obtenDescripcionCampoLOPD("infoAdicional", idioma));
+				// Devolvemos enlace seucaib
+				// c.setReferenciaArchivo(procRolsac.getLink_lopdInfoAdicional().getCodigo());
+				/*	final String urlSeucaibDescarga = getPropiedad("urlSeucaib") + "/" + ("es".equals(idioma) ? "es" : "ca")
+						+ "/arxiuServlet?id=" + procRolsac.getLinkLopdInfoAdicional().getCodigo();*/
+				c.setEnlace(getUrlDescarga(idioma,procRolsac.getLinkLopdInfoAdicional().getCodigo()));
+				campos.add(c);
+			}
 
 			lopd.setCampos(campos);
 		}
 		return lopd;
+	}
+
+	private String getUrlDescarga(String idioma, String idFichero) throws CatalogoPluginException {
+		String res="";
+		res = getPropiedad("urlSeucaibArchivos").replace ("{{IDIOMA}}","es".equals(idioma) ? "es" : "ca").replace(
+				"{{IDARCHIVO}}",idFichero);
+		return res;
 	}
 
 	/**

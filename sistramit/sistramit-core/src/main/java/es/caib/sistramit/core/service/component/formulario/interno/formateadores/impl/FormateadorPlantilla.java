@@ -1,10 +1,8 @@
 package es.caib.sistramit.core.service.component.formulario.interno.formateadores.impl;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import es.caib.sistramit.core.api.model.formulario.*;
 import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistra2.commons.pdf.PdfUtil;
@@ -14,11 +12,6 @@ import es.caib.sistrages.rest.api.interna.RComponente;
 import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
 import es.caib.sistramit.core.api.exception.FormateadorException;
-import es.caib.sistramit.core.api.model.formulario.ValorCampo;
-import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
-import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
-import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
-import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeTexto;
 import es.caib.sistramit.core.service.component.formulario.interno.formateadores.FormateadorPdfFormulario;
@@ -51,39 +44,20 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 
 			final XmlFormulario xml = UtilsFormulario.xmlToValores(ixml);
 			final PdfUtil pdf = new PdfUtil(plantilla);
-			final Map<String, String> datos = new HashMap<>();
+			//final Map<String, String> datos = new HashMap<>();
+			Map<String, String> datos = new HashMap<>();
 			List<RComponente> componentes = null;
 			if (defFormInterno != null && defFormInterno.getPaginas() != null) {
 				componentes = UtilsFormularioInterno.devuelveListaCampos(defFormInterno);
 			}
 			if (xml != null && xml.getValores() != null) {
 				for (final ValorCampo valor : xml.getValores()) {
-					if (valor instanceof ValorCampoSimple) {
-						if (isComponenteTipoFecha(componentes, valor.getId())) {
-							datos.put(valor.getId(), getConversionFecha(((ValorCampoSimple) valor).getValor()));
-						} else {
-							datos.put(valor.getId(), ((ValorCampoSimple) valor).getValor());
-						}
-					} else if (valor instanceof ValorCampoIndexado && ((ValorCampoIndexado) valor).getValor() != null) {
-
-						datos.put(valor.getId(), ((ValorCampoIndexado) valor).getValor().getDescripcion());
-						datos.put(valor.getId() + ".DESCRIPCION",
-								((ValorCampoIndexado) valor).getValor().getDescripcion());
-						datos.put(valor.getId() + ".CODIGO", ((ValorCampoIndexado) valor).getValor().getValor());
-
-					} else if (valor instanceof ValorCampoListaIndexados) {
-						datos.put(valor.getId(), getDescripcion((ValorCampoListaIndexados) valor));
-						datos.put(valor.getId() + ".ELEMENTOS",
-								String.valueOf(((ValorCampoListaIndexados) valor).getValor().size()));
-						for (int i = 0; i < ((ValorCampoListaIndexados) valor).getValor().size(); i++) {
-							datos.put(valor.getId() + "[" + (i + 1) + "].DESCRIPCION",
-									((ValorCampoListaIndexados) valor).getValor().get(i).getDescripcion());
-							datos.put(valor.getId() + "[" + (i + 1) + "].CODIGO",
-									((ValorCampoListaIndexados) valor).getValor().get(i).getValor());
-						}
-					}
+					setDatos("", datos, valor, componentes);
 				}
 			}
+
+			datos.put("[DEBUG]", getTodosLosDatos(datos));
+
 			pdf.ponerValor(datos);
 			return pdf.guardarEnMemoria(true);
 
@@ -91,6 +65,58 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 			throw new FormateadorException("Error convertint el document a bytes", e);
 		}
 	}
+
+	private String getTodosLosDatos(Map<String, String> datos) {
+		StringBuilder sb = new StringBuilder();
+		Map<String, String> treeMap = new TreeMap<String, String>(datos);
+		//usamos treemap para que aparezca ordenado por key
+		for (Map.Entry<String, String> dato : treeMap.entrySet()) {
+			sb.append(dato.getKey());
+			sb.append("=");
+			sb.append(dato.getValue());
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
+
+
+	private void setDatos(String prefijo, Map<String, String> datos, ValorCampo valor, List<RComponente> componentes ){
+
+		if (valor instanceof ValorCampoSimple) {
+			if (isComponenteTipoFecha(componentes, valor.getId())) {
+				datos.put(prefijo+valor.getId(), getConversionFecha(((ValorCampoSimple) valor).getValor()));
+			} else {
+				datos.put(prefijo+valor.getId(), ((ValorCampoSimple) valor).getValor());
+			}
+		} else if (valor instanceof ValorCampoIndexado && ((ValorCampoIndexado) valor).getValor() != null) {
+
+			datos.put(prefijo+valor.getId(), ((ValorCampoIndexado) valor).getValor().getDescripcion());
+			datos.put(prefijo+valor.getId() + ".DESCRIPCION",
+					((ValorCampoIndexado) valor).getValor().getDescripcion());
+			datos.put(prefijo+valor.getId() + ".CODIGO", ((ValorCampoIndexado) valor).getValor().getValor());
+
+		} else if (valor instanceof ValorCampoListaIndexados) {
+			datos.put(prefijo+valor.getId(), getDescripcion((ValorCampoListaIndexados) valor));
+			datos.put(prefijo+valor.getId() + ".ELEMENTOS",
+					String.valueOf(((ValorCampoListaIndexados) valor).getValor().size()));
+			for (int i = 0; i < ((ValorCampoListaIndexados) valor).getValor().size(); i++) {
+				datos.put(prefijo+valor.getId() + "[" + (i + 1) + "].DESCRIPCION",
+						((ValorCampoListaIndexados) valor).getValor().get(i).getDescripcion());
+				datos.put(prefijo+valor.getId() + "[" + (i + 1) + "].CODIGO",
+						((ValorCampoListaIndexados) valor).getValor().get(i).getValor());
+			}
+		} else if (valor instanceof ValorCampoListaElementos) {
+			datos.put(prefijo + valor.getId() + ".ELEMENTOS",
+					String.valueOf(((ValorCampoListaElementos) valor).getValor().size()));
+			for (int i = 0; i < ((ValorCampoListaElementos) valor).getValor().size(); i++) {
+				for (final ValorCampo valorElemeto : ((ValorCampoListaElementos) valor).getValor().get(i).getElemento()) {
+					//llamamos de manera recursiva a setDatos.
+					setDatos(prefijo + valor.getId() + "[" + (i + 1) + "].", datos, valorElemeto, componentes);
+				}
+			}
+		}
+	}
+
 
 	/**
 	 * Convierte la fecha en formato YYYY-MM-DD a DD-MM-YYYY

@@ -148,8 +148,7 @@
 
 			<p:poll id="poll" interval="#{viewCuadroMando.minutosRefresco * 60}" listener="#{viewCuadroMando.filtrar()}" widgetVar="currentTimePoller" process="@this" update="@form:panelFiltro @form:tablaCuadroMando"/>
 
-			 <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewCuadroMando.rcDobleClick()}" process="@this" update="growl" style="display:none"/>
-
+			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewCuadroMando.rcDobleClick()}" process="@this" update="growl" style="display:none"/>
 
 			<!-- Tabla -->
 			<h:panelGrid id="tablaCuadroMando" columns="1" cellspacing="0" cellpadding="0" style="width:100% !important;  border-collapse: collapse !important; display:flex; padding:0px !important; justify-content:center; margin-top:10px;">
@@ -159,43 +158,41 @@
 				</h:panelGrid>
 
 				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" columnClasses="w20 white borde, white borde, white borde, white borde, white borde"  cellpadding = "5" cellspacing = "1" columns="5">
-					  <h:outputText></h:outputText>
-					  <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.ko']}" class="grey"/>
-		              <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.ok']}" class="grey"/>
-		              <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.porcError']}" class="grey"/>
-		              <h:outputText></h:outputText>
+					<h:outputText></h:outputText>
+					<h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.ko']}" class="grey"/>
+		            <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.ok']}" class="grey"/>
+		            <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.porcError']}" class="grey"/>
+		            <h:outputText></h:outputText>
 
-					 <h:outputText style="font-weight: bold;" value="#{msg['typePaso.rf']}" class="grey"/>
-		              <h:outputText value="#{viewCuadroMando.formIni}"/>
-		              <h:outputText value="#{viewCuadroMando.formFin}"/>
-		               <c:choose>
-					    <c:when test="#{viewCuadroMando.formIni != 0}">
-					         <h:outputText value="#{viewCuadroMando.formatDouble(100-((viewCuadroMando.formFin * 100)/viewCuadroMando.formIni))}%"/>
-					         <h:outputText id="formularios" value="#{viewCuadroMando.calcularEtiquetaTram(((viewCuadroMando.formFin * 100)/viewCuadroMando.formIni),'formularios')}"/>
-					    </c:when>
-					    <c:otherwise>
+					<h:outputText style="font-weight: bold;" value="#{msg['typePaso.rf']}" class="grey"/>
+		            <h:outputText value="#{viewCuadroMando.formIni}"/>
+		            <h:outputText value="#{viewCuadroMando.formFin}"/>
+		            <c:choose>
+						<c:when test="#{viewCuadroMando.formIni != 0}">
+					       	<h:outputText value="#{viewCuadroMando.formatDouble(100-((viewCuadroMando.formFin * 100)/viewCuadroMando.formIni))}%"/>
+					       	<h:outputText id="formularios" value="#{viewCuadroMando.calcularEtiquetaTram(((viewCuadroMando.formFin * 100)/viewCuadroMando.formIni),'formularios')}"/>
+					   	</c:when>
+						<c:otherwise>
 					    	<c:choose>
 							    <c:when test="#{viewCuadroMando.formFin == 0}">
 							         <h:outputText value="0,00%"/>
 							         <h:outputText id="formularios" value="#{viewCuadroMando.calcularEtiquetaTram(100,'formularios')}"/>
-
-							    </c:when>
+								</c:when>
 							    <c:otherwise>
-							         <h:outputText value="100,00%"/>
-							          <h:outputText id="formularios" value="#{viewCuadroMando.calcularEtiquetaTram(0,'formularios')}"/>
-
+							        <h:outputText value="100,00%"/>
+									<h:outputText id="formularios" value="#{viewCuadroMando.calcularEtiquetaTram(0,'formularios')}"/>
 							    </c:otherwise>
-							  </c:choose>
-					    </c:otherwise>
-					  </c:choose>
+							</c:choose>
+						</c:otherwise>
+					</c:choose>
 
-					  <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.firma']}" class="grey"/>
-		              <h:outputText value="#{viewCuadroMando.firmaIni}"/>
-		              <h:outputText value="#{viewCuadroMando.firmaFin}"/>
-		               <c:choose>
-					    <c:when test="#{viewCuadroMando.firmaIni != 0}">
-					         <h:outputText value="#{viewCuadroMando.formatDouble(100-((viewCuadroMando.firmaFin * 100)/viewCuadroMando.firmaIni))}%"/>
-					         <h:outputText id="firma" value="#{viewCuadroMando.calcularEtiquetaTram(((viewCuadroMando.firmaFin * 100)/viewCuadroMando.firmaIni),'firma')}"/>
+					<h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.firma']}" class="grey"/>
+		            <h:outputText value="#{viewCuadroMando.firmaIni}"/>
+		            <h:outputText value="#{viewCuadroMando.firmaFin}"/>
+		            <c:choose>
+						<c:when test="#{viewCuadroMando.firmaIni != 0}">
+					    	<h:outputText value="#{viewCuadroMando.formatDouble(100-((viewCuadroMando.firmaFin * 100)/viewCuadroMando.firmaIni))}%"/>
+					    	<h:outputText id="firma" value="#{viewCuadroMando.calcularEtiquetaTram(((viewCuadroMando.firmaFin * 100)/viewCuadroMando.firmaIni),'firma')}"/>
 					    </c:when>
 					    <c:otherwise>
 					    	<c:choose>
@@ -211,12 +208,12 @@
 							    </c:otherwise>
 							  </c:choose>
 					    </c:otherwise>
-					  </c:choose>
+					</c:choose>
 
-					  <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.pagos']}" class="grey"/>
-		              <h:outputText value="#{viewCuadroMando.pagIni}"/>
-		              <h:outputText value="#{viewCuadroMando.pagFin}"/>
-		               <c:choose>
+					<h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.pagos']}" class="grey"/>
+		            <h:outputText value="#{viewCuadroMando.pagIni}"/>
+		            <h:outputText value="#{viewCuadroMando.pagFin}"/>
+		            <c:choose>
 					    <c:when test="#{viewCuadroMando.pagIni != 0}">
 					         <h:outputText value="#{viewCuadroMando.formatDouble(100-((viewCuadroMando.pagFin * 100)/viewCuadroMando.pagIni))}%"/>
 					         <h:outputText id="pagos" value="#{viewCuadroMando.calcularEtiquetaTram(((viewCuadroMando.pagFin * 100)/viewCuadroMando.pagIni),'pagos')}"/>
@@ -235,12 +232,12 @@
 							    </c:otherwise>
 							  </c:choose>
 					    </c:otherwise>
-					  </c:choose>
+					</c:choose>
 
-					  <h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.registros']}" class="grey"/>
-		              <h:outputText value="#{viewCuadroMando.regIni}"/>
-		              <h:outputText value="#{viewCuadroMando.regFin}"/>
-		               <c:choose>
+					<h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.registros']}" class="grey"/>
+		            <h:outputText value="#{viewCuadroMando.regIni}"/>
+		            <h:outputText value="#{viewCuadroMando.regFin}"/>
+		            <c:choose>
 					    <c:when test="#{viewCuadroMando.regIni != 0}">
 					         <h:outputText value="#{viewCuadroMando.formatDouble(100-((viewCuadroMando.regFin * 100)/viewCuadroMando.regIni))}%"/>
 					         <h:outputText id="registros" value="#{viewCuadroMando.calcularEtiquetaTram(((viewCuadroMando.regFin * 100)/viewCuadroMando.regIni),'registros')}"/>
@@ -258,8 +255,8 @@
 
 							    </c:otherwise>
 							  </c:choose>
-					    </c:otherwise>
-					  </c:choose>
+						</c:otherwise>
+					</c:choose>
 
 				</h:panelGrid>
 
@@ -310,14 +307,14 @@
 
 				<h:panelGrid style="width:75%; margin:auto; border-collapse: collapse !important;" border = "1" cellpadding = "0" columnClasses="grey borde ,wpx100 white borde" cellspacing = "1" columns="2">
 					<h:outputText value="#{msg['viewCuadroMando.clasificacion']}:" style="font-weight: bold; padding-left: 5px;"/>
-					 <p:selectOneMenu id="filtroClasificacion" value="#{viewCuadroMando.filtros.clasificacionSeleccionada}" style="border-radius: 0px !important;">
-			            <f:selectItem itemLabel="#{msg['viewCuadroMando.errTram']}" itemValue="et" />
+					<p:selectOneMenu id="filtroClasificacion" value="#{viewCuadroMando.filtros.clasificacionSeleccionada}" style="border-radius: 0px !important;">
+			        	<f:selectItem itemLabel="#{msg['viewCuadroMando.errTram']}" itemValue="et" />
 			            <f:selectItem itemLabel="#{msg['viewCuadroMando.tramErr']}" itemValue="te" />
 			            <f:facet name="footer">
 			               <p:separator />
 			               <h:outputText value="3 consoles" style="font-weight:bold;"/>
 			            </f:facet>
-			             <p:ajax event="change" actionListener="#{viewCuadroMando.filtrar()}" process="@form:panelFiltro @form:filtroClasificacion" update="@form:tablaCuadroMando @form:growl" />
+			            <p:ajax event="change" actionListener="#{viewCuadroMando.filtrar()}" process="@form:panelFiltro @form:filtroClasificacion" update="@form:tablaCuadroMando @form:growl" />
 			        </p:selectOneMenu>
 				</h:panelGrid>
 
