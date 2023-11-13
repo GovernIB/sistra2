@@ -623,7 +623,7 @@
               <f:facet name="right">
                  <h:panelGroup rendered="#{viewTramites.seleccionadasAreas}">
 
-                   <p:commandButton id="btnNuevoTramite" value="#{msg['botones.nuevoTramite']}" icon="fa fa-file" actionListener="#{viewTramites.nuevoTramite}" process="@this" update="growl"  rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionadaArea and viewTramites.versionSeleccionada eq null and !viewTramites.isNotDesarrollo()}">
+                   <p:commandButton id="btnNuevoTramite" value="#{msg['botones.nuevoTramite']}" icon="fa fa-file" actionListener="#{viewTramites.nuevoTramite}" process="@this" update="growl"  rendered="#{viewTramites.tienePermisosArea and viewTramites.seleccionada1Area and viewTramites.versionSeleccionada eq null and !viewTramites.isNotDesarrollo()}">
                       <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl @form"/>
                      </p:commandButton>
 

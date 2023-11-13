@@ -896,6 +896,19 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
+	 * Verifica si hay 1 sola fila seleccionada de area.
+	 *
+	 * @return
+	 */
+	private boolean verificar1FilaSeleccionadaArea() {
+		boolean filaSeleccionada = false;
+		if (this.listaAreasSeleccionadas != null && !listaAreasSeleccionadas.isEmpty() && listaAreasSeleccionadas.size() == 1) {
+			filaSeleccionada = true;
+		}
+		return filaSeleccionada;
+	}
+
+	/**
 	 * Verifica si hay fila seleccionada de tramite.
 	 *
 	 * @return
@@ -2140,6 +2153,15 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public boolean getSeleccionadaArea() {
 		return verificarFilaSeleccionadaArea();
+	}
+
+	/**
+	 * Get seleccionada 1 area.
+	 *
+	 * @return
+	 */
+	public boolean getSeleccionada1Area() {
+		return verificar1FilaSeleccionadaArea();
 	}
 
 	public boolean isMostrarTodasAreas() {

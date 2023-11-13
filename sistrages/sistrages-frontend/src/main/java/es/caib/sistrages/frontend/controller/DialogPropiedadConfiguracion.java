@@ -63,6 +63,10 @@ public class DialogPropiedadConfiguracion extends DialogControllerBase {
 	public void aceptar() {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
+		if (data != null && data.getValor() != null && data.getValor().contains(" ")) {
+			String valor = data.getValor().replace(" ", "");
+			data.setValor(valor);
+		}
 		switch (acceso) {
 		case ALTA:
 			if (configuracionGlobalService.getConfiguracionGlobal(data.getPropiedad()) != null) {

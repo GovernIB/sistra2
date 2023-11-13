@@ -101,6 +101,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 
 	/** Tramites. **/
 	private List<DefinicionTramiteCP> tramites;
+	private List<DefinicionTramiteCP> tramitesSinFiltrar;
 
 	/** Url Tramite. **/
 	private String urlTramite;
@@ -269,8 +270,15 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 			iplugin = (ICatalogoProcedimientosPlugin) componenteService
 					.obtenerPluginEntidad(TypePlugin.CATALOGO_PROCEDIMIENTOS, UtilJSF.getIdEntidad());
 
-			tramites = iplugin.obtenerTramites(tramite.getIdentificadorCompuesto(), this.data.getNumeroVersion(),
-					idioma);
+			if (tramitesSinFiltrar == null || tramitesSinFiltrar.isEmpty()) {
+				//Solo se llama si está vacío (es decir, no se ha llamado o bien la busqueda daba 0 pero en ese caso, no es un problema volver a llamarlo)
+				tramitesSinFiltrar = iplugin.obtenerTramites(tramite.getIdentificadorCompuesto(), this.data.getNumeroVersion(),
+						idioma);
+				tramites = new ArrayList<>(tramitesSinFiltrar);
+			} else {
+				tramites = new ArrayList<>(tramitesSinFiltrar);
+				//tramites = iplugin.obtenerTramites(tramite.getIdentificadorCompuesto(), this.data.getNumeroVersion(), idioma);
+			}
 			for (DefinicionTramiteCP tramite : tramites) {
 				if (tramite == null) {
 					tramites.remove(tramite);

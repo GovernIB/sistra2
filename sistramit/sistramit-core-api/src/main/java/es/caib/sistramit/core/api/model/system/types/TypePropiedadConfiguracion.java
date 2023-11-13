@@ -76,11 +76,11 @@ public enum TypePropiedadConfiguracion {
 	 * la sesion de formulario no esta finalizada
 	 */
 	PURGA_SESION_FORMULARIOS_NO_FINALIZADOS("sistramit.purga.formulario.nofin"),
-	/** Tiempo (minutos) tras el cual seran borradas los pagos */
+	/** Tiempo (minutos) tras el cual seran borradas las sesiones de pagos tras su finalización */
 	PURGA_PAGOS_FINALIZADOS("sistramit.purga.pago.fin"),
 	/**
-	 * Tiempo (minutos) tras el cual seran borradas los pagos, si la sesion de
-	 * formulario no esta finalizada
+	 * Tiempo (minutos) tras el cual seran borradas las sesiones de pagos, si la sesion de
+	 * pago no esta finalizada
 	 */
 	PURGA_PAGOS_NO_FINALIZADOS("sistramit.purga.pago.nofin"),
 	/**

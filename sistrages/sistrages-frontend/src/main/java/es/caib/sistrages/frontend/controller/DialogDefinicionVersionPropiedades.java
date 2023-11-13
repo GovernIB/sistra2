@@ -81,6 +81,8 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 	private int valMin;
 
+	private String tipoTramite;
+
 	/**
 	 * Inicialización.
 	 */
@@ -108,6 +110,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		tiposAutenticacionCER = tramiteVersion.tieneTipoAutenticacion(TypeAutenticacion.CERTIFICADO.toString());
 		tiposAutenticacionPIN = tramiteVersion.tieneTipoAutenticacion(TypeAutenticacion.CLAVE_PIN.toString());
 		tiposAutenticacionPER = tramiteVersion.tieneTipoAutenticacion(TypeAutenticacion.CLAVE_PERMANENTE.toString());
+		tipoTramite = tramiteVersion.getTipoTramite();
 	}
 
 	/**
@@ -179,6 +182,9 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 				tipos.add(TypeAutenticacion.CLAVE_PERMANENTE);
 			}
 			tramiteVersion.setTiposAutenticacion(tipos);
+			if (tramiteVersion.getTipoTramite() == null) {
+				tramiteVersion.setTipoTramite(tipoTramite);
+			}
 			if (tramiteVersion.getTipoTramite().equals("T")) {
 
 				List<TramitePaso> pasos = tramiteService.getTramitePasos(tramiteVersion.getCodigo());

@@ -872,6 +872,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				if (objetoFormularioEdit instanceof ComponenteFormularioCampoTexto) {
 					final ComponenteFormularioCampoTexto campo = (ComponenteFormularioCampoTexto) objetoFormularioEdit;
 
+					if (TypeCampoTexto.NORMAL.equals(campo.getTipoCampoTexto())
+							&& campo.isForzarMayusculas() && campo.isNoModificable()) {
+						addMessageContext(TypeNivelGravedad.WARNING,
+								UtilJSF.getLiteral("warning.componente.normal.noModificableMayusculas"), true);
+						return false;
+					}
+
 					if ((TypeCampoTexto.NORMAL.equals(campo.getTipoCampoTexto())
 							|| TypeCampoTexto.EMAIL.equals(campo.getTipoCampoTexto()))
 							&& (campo.getNormalTamanyo() == null || campo.getNormalTamanyo() <= 0)) {
@@ -1038,7 +1045,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				formulario.getPaginas().get(paginaActual - 1).setCodigo(pagina.getCodigo());
 				formulario.getPaginas().get(paginaActual - 1).setPaginaFinal(pagina.isPaginaFinal());
 				formulario.getPaginas().get(paginaActual - 1).setScriptNavegacion(pagina.getScriptNavegacion());
-				formulario.getPaginas().get(paginaActual - 1).setScriptNavegacion(pagina.getScriptValidacion());
+				formulario.getPaginas().get(paginaActual - 1).setScriptValidacion(pagina.getScriptValidacion());
 				if ((boolean) obj[1]) {
 					cambios = (boolean) obj[1];
 				}
