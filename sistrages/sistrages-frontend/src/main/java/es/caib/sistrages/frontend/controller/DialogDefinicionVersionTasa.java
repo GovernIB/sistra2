@@ -251,6 +251,11 @@ public class DialogDefinicionVersionTasa extends DialogControllerBase {
 			return false;
 		}
 
+		if (!this.data.isSimulado() && this.data.getScriptPago() == null) {
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noSimulado.sinScript"));
+			return false;
+		}
+
 		return true;
 	}
 

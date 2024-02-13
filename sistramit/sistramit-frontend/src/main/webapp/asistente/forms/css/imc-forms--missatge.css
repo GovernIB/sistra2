@@ -229,7 +229,7 @@
 
 .imc-forms--missatge[data-accio='warning'] .imc--text { background: #fff url(forms/imgs/ico_alerta.svg) no-repeat 1.5em 1em / auto 3em; }
 
-.imc-forms--missatge[data-accio='warning'] button[data-tipus="accepta"] { display: inline-block; }
+.imc-forms--missatge[data-accio='warning'] button[data-tipus="tanca"] { display: inline-block; }
 
 
 .imc-forms--missatge[data-accio='formSurt'] .imc--text { background: #fff url(forms/imgs/ico_alerta.svg) no-repeat 1.5em 1em / auto 3em; }

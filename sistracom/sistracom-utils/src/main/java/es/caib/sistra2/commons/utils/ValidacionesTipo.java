@@ -2,6 +2,7 @@ package es.caib.sistra2.commons.utils;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -25,6 +26,9 @@ public final class ValidacionesTipo {
 
 	/** Atributo formato fecha. */
 	public static final String FORMATO_FECHA = "dd/MM/yyyy";
+
+	/** Atributo formato hora. */
+	public static final String FORMATO_HORA = "HH:mm";
 
 	/** Atributo formato fecha-hora. */
 	public static final String FORMATO_FECHAHORA = "dd/MM/yyyy HH:mm:ss";
@@ -52,6 +56,9 @@ public final class ValidacionesTipo {
 
 	/** Literal de error. **/
 	private static final String FORMATO_FECHA_INCORRECTO = "El formato de la fecha introducida es incorrecto";
+
+	/** Literal de error. **/
+	private static final String FORMATO_HORA_INCORRECTO = "El formato de la hora introducida es incorrecto";
 
 	/** Instancia. */
 	private static ValidacionesTipo instance;
@@ -418,6 +425,28 @@ public final class ValidacionesTipo {
 		return res;
 	}
 
+	public boolean esHora(final String hora, final String formato) {
+		boolean res;
+		if (esCadenaVacia(hora)) {
+			res = false;
+		} else {
+			try {
+				final SimpleDateFormat formatoHora = new SimpleDateFormat(formato);
+				formatoHora.setLenient(false);
+				final Date horaDate = formatoHora.parse(hora);
+
+				if (horaDate == null) {
+					res = false;
+				} else {
+					res = true;
+				}
+			} catch (final ParseException e) {
+				res = false;
+			}
+		}
+		return res;
+	}
+
 	public boolean esImporte(final String importe) {
 		return (!esCadenaVacia(importe) && compruebaRegExp(importe, patronImporte));
 	}
@@ -737,6 +766,44 @@ public final class ValidacionesTipo {
 		return formatter.format(pNumero);
 	}
 
+	public int formateaCadenaAInt(final String pNumero, final String pSeparadorMiles) throws ValidacionTipoException {
+		validarSeparadorFormatearInt(pSeparadorMiles);
+		String numeroFormateado = "0";
+		if (!StringUtils.isEmpty(pNumero)) {
+			// Quitamos espacios y separador miles
+			numeroFormateado = StringUtils.replace(pNumero, " ", "");
+			if (StringUtils.isNotEmpty(pSeparadorMiles)) {
+				numeroFormateado = StringUtils.replace(numeroFormateado, pSeparadorMiles, "");
+			}
+			// Validamos formato numero
+			final String pattern = "^[-]?[0-9]+(\\.[0-9]+)?$";
+			final Pattern p = Pattern.compile(pattern);
+			if (!p.matcher(numeroFormateado).find()) {
+				throw new ValidacionTipoException("Numero no valido: " + pNumero);
+			}
+		}
+		try {
+			return Integer.parseInt(numeroFormateado);
+		} catch (final NumberFormatException nfe) {
+			throw new ValidacionTipoException("Numero no valido: " + pNumero);
+		}
+	}
+
+	public String formateaIntACadena(final int pNumero, final String pSeparadorMiles) throws ValidacionTipoException {
+		validarSeparadorFormatearInt(pSeparadorMiles);
+		NumberFormat nf = null;
+		String pattern = "";
+		if (!StringUtils.isEmpty(pSeparadorMiles)) {
+			pattern = "###,###,###.##";
+		} else {
+			pattern = "#########.##";
+		}
+		final DecimalFormat formatter = (DecimalFormat) nf;
+		formatter.applyPattern(pattern);
+		formatter.setGroupingUsed(true);
+		return formatter.format(pNumero);
+	}
+
 	/**
 	 * Valida los separadores usados en la conversion de double a cadena y
 	 * viceversa.
@@ -764,6 +831,23 @@ public final class ValidacionesTipo {
 		if (StringUtils.equals(pSeparadorMiles, pSeparadorDecimales)) {
 			throw new ValidacionTipoException("El separador de miles es igual al separador de decimales: '"
 					+ pSeparadorMiles + "' - '" + pSeparadorDecimales + "'");
+		}
+	}
+
+	/**
+	 * Valida el separador usado en la conversion de int a cadena y
+	 * viceversa.
+	 *
+	 * @param pSeparadorMiles
+	 *                                Separador miles
+	 * @throws ValidacionTipoException
+	 */
+	private void validarSeparadorFormatearInt(final String pSeparadorMiles)
+			throws ValidacionTipoException {
+		if (StringUtils.isNotEmpty(pSeparadorMiles) && !StringUtils.equals(".", pSeparadorMiles)
+				&& !StringUtils.equals(",", pSeparadorMiles)) {
+			throw new ValidacionTipoException(
+					"No se ha especificado un separador de miles valido: '" + pSeparadorMiles + "'");
 		}
 	}
 
@@ -889,6 +973,36 @@ public final class ValidacionesTipo {
 	}
 
 	/**
+	 * Parsea hora de string. Si es nulo, coge el formato por defecto.
+	 *
+	 * @param hora
+	 *                    fecha
+	 * @param formato
+	 *                    formato
+	 * @return hora
+	 * @throws ValidacionTipoException
+	 */
+	public Date parseHora(final String hora, final String formato) throws ValidacionTipoException {
+		Date res = null;
+		try {
+			if (hora != null) {
+				String formatoHora;
+				if (formato == null || formato.isEmpty()) {
+					formatoHora = ValidacionesTipo.FORMATO_HORA;
+				} else {
+					formatoHora = formato;
+				}
+				final DateFormat df = new SimpleDateFormat(formatoHora);
+				df.setLenient(false);
+				res = df.parse(hora);
+			}
+			return res;
+		} catch (final ParseException e) {
+			throw new ValidacionTipoException(FORMATO_HORA_INCORRECTO, e);
+		}
+	}
+
+	/**
 	 * Parsea fecha de string.
 	 *
 	 * @param fecha
@@ -936,6 +1050,29 @@ public final class ValidacionesTipo {
 	}
 
 	/**
+	 * Calcula distancia horas.
+	 *
+	 * @param pFecha1
+	 *                    Fecha inicio
+	 * @param pHora1
+	 *                    Hora inicio
+	 * @param pFecha2
+	 *                    Fecha fin
+	 * @param pHora2
+	 *                    Hora fin
+	 * @param formatoF
+	 *                    Formato fecha
+	 * @param formatoH
+	 *                    Formato hora
+	 * @return
+	 * @throws ValidacionTipoException
+	 */
+	public String distanciaHoras(final String pFecha1, final String pHora1, final String pFecha2, final String pHora2, final String formatoF, final String formatoH)
+			throws ValidacionTipoException {
+		return distanciaHorasImpl(pFecha1, pHora1, pFecha2, pHora2, formatoF, formatoH);
+	}
+
+	/**
 	 * Calcula distancia dias.
 	 *
 	 * @param pFecha1
@@ -955,6 +1092,111 @@ public final class ValidacionesTipo {
 	public int distanciaDiasHabiles(final String pFecha1, final String pFecha2, final String formato)
 			throws ValidacionTipoException {
 		return distanciaDiasImpl(pFecha1, pFecha2, true, formato);
+	}
+
+	/**
+	 * Calcula distancia entre horas.
+	 *
+	 * @param pFecha1
+	 *                   Parámetro fecha1
+	 * @param pHora1
+	 *                   Parámetro hora1
+	 * @param pFecha2
+	 *                   Parámetro fecha2
+	 * @param pHora2
+	 *                   Parámetro hora2
+	 * @param formatoFecha
+	 *                   Parámetro formato fecha
+	 * @param formatoHora
+	 *                   Parámetro formato hora
+	 * @return distancia entre horas
+	 * @throws ValidacionTipoException
+	 */
+	private String distanciaHorasImpl(final String pFecha1, final String pHora1, final String pFecha2, final String pHora2, final String formatoF, final String formatoH)
+			throws ValidacionTipoException {
+		String distancia = "";
+		String fecha1 = pFecha1;
+		String hora1 = pHora1;
+		String fecha2 = pFecha2;
+		String hora2 = pHora2;
+
+		if ((fecha1 != "" && fecha2 != "") || (hora1 != "" && hora2 != "" )) {
+			if (fecha1 == "" || fecha2 == "") {
+				fecha1 = "01/01/1970";
+				fecha2 = "01/01/1970";
+			}
+			if (hora1 == "") {
+				hora1 = "00:00:00";
+			}
+			if (hora2 == "") {
+				hora2 = "00:00:00";
+			}
+			final Date h1 = parseHora(hora1, formatoH);
+			if (h1 == null) {
+				distancia = "00:00:00";
+			} else {
+				final Date d1 = parseFecha(fecha1, formatoF);
+				if (d1 == null) {
+					distancia = "00:00:00";
+				} else {
+					final Date h2 = parseHora(hora2, formatoH);
+					if (h2 == null) {
+						distancia = "00:00:00";
+					} else {
+						final Date d2 = parseFecha(fecha2, formatoF);
+						if (d2 == null) {
+							distancia = "00:00:00";
+						} else {
+							distancia = getDistanciaHoras(d1, h1, d2, h2);
+						}
+					}
+				}
+			}
+		}
+		return distancia;
+	}
+
+	/**
+	 * Metodo principal para calcular distancia de dias, que se quejaba el
+	 * checkstyle por ser demasiado complejo el método.
+	 **/
+	private String getDistanciaHoras(final Date d1, final Date h1, final Date d2, final Date h2) {
+		String distancia = "";
+		long f, h = 0;
+		Date date1 = d1;
+		date1.setHours(h1.getHours());
+		date1.setMinutes(h1.getMinutes());
+		date1.setSeconds(h1.getSeconds());
+		Date date2 = d2;
+		date2.setHours(h2.getHours());
+		date2.setMinutes(h2.getMinutes());
+		date2.setSeconds(h2.getSeconds());
+
+		if (date2.compareTo(date1) >= 0) {
+			f = date2.getTime()-date1.getTime();
+		} else {
+			f = date1.getTime()-date2.getTime();
+		}
+		long day=f/(24*60*60*1000);
+		long hour=(f/(60*60*1000)-day*24);
+		long min=((f/(60*1000))-day*24*60-hour*60);
+		long sec=(f/1000-day*24*60*60-hour*60*60-min*60);
+		distancia = day*24+hour + ":" + min + ":" + sec;
+		StringBuffer stringBuffer = new StringBuffer(distancia);
+		int index = stringBuffer.indexOf(":");
+		int lastIndex = stringBuffer.lastIndexOf(":");
+		if (stringBuffer.indexOf(":") == 1) {
+			stringBuffer.insert(0, "0");
+		}
+		if (lastIndex == index + 2) {
+			stringBuffer.insert(lastIndex - 1, "0");
+			lastIndex = lastIndex + 1;
+		}
+		if (stringBuffer.length() == lastIndex + 2) {
+			stringBuffer.insert(lastIndex + 1, "0");
+		}
+		distancia = stringBuffer.toString();
+		return distancia;
 	}
 
 	/**

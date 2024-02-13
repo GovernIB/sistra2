@@ -1,0 +1,64 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.formateaIntACadena(numero,separadorMiles)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS&metodo=formateaIntACadena">formateaIntACadena</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	formateaIntACadena(int numero, String separadorMiles): String
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode per a convertir un número de tipus int en un string</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>numero</b>: Número int a convertir en String.</li>
+		<li><b>separadorMiles</b>:Caràcter amb el qual s'identifica el separador de milers.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>:Cadena de caràcters que representa el número introduït.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+
+<p><b>Exemple 1</b> Convertir el número 123110544434 en una cadena de caràcters</p>
+ <p class="codigoScript">
+	var pCadena = PLUGIN_UTILS.formateaIntACadena(123110544434, '.');
+</p>
+<p>La funció formateaIntACadena retorna la cadena '123.110.544.434'.</p>
+<br />
+
+</body>
+</html>

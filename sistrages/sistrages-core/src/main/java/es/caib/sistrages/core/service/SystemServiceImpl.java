@@ -113,6 +113,12 @@ public class SystemServiceImpl implements SystemService {
 		sesionDao.updateEntidad(pUserName, pIdEntidad);
 	}
 
+	@Override
+	@NegocioInterceptor
+	public void updateSesionPropiedades(final String pUserName, final String pPropiedades) {
+		sesionDao.updatePropiedades(pUserName, pPropiedades);
+	}
+
 	// ----------------------------------------------------------------------
 	// FUNCIONES PRIVADAS
 	// ----------------------------------------------------------------------

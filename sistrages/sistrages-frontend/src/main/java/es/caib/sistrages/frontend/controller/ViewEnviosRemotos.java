@@ -64,9 +64,6 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 	/** Filtro (puede venir por parametro). */
 	private String filtro;
 
-	/** Paginacion */
-	private Integer paginacion;
-
 	/** Id. **/
 	private String id;
 
@@ -114,7 +111,6 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 			return;
 		}
 		setAccion("E");
-		paginacion = UtilJSF.getPaginacion("viewEnviosRemotos");
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
 		checkPermisos();
 		buscar(null);
@@ -803,21 +799,6 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 	 */
 	public final void setListaAreas(List<Area> listaAreas) {
 		this.listaAreas = listaAreas;
-	}
-
-	/**
-	 * @return the paginacion
-	 */
-	public final Integer getPaginacion() {
-		return paginacion;
-	}
-
-	/**
-	 * @param paginacion the paginacion to set
-	 */
-	public final void setPaginacion(Integer paginacion) {
-		this.paginacion = paginacion;
-		UtilJSF.setPaginacion(paginacion, "viewEnviosRemotos");
 	}
 
 	/**

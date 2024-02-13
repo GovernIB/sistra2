@@ -18,6 +18,7 @@ import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.EnvioRemoto;
+import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
@@ -598,6 +599,14 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 			aux.add((Integer)ver.getNumeroVersion());
 		}
 		return aux;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public byte[] getLogoEntidad(String pIdEntidad) {
+		Entidad entidad = entidadDao.getByCodigoDIR3(pIdEntidad);
+		Fichero fichero = entidad.getLogoGestor();
+		return ficheroExternoDao.getContentById(fichero.getCodigo()).getContent();
 	}
 
 }

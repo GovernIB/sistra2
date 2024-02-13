@@ -1,6 +1,6 @@
 package es.caib.sistramit.core.api.model.formulario;
 
-import es.caib.sistramit.core.api.model.formulario.types.TypeCaptcha;
+import es.caib.sistramit.core.api.model.formulario.types.TypeFormatoCaptcha;
 
 /**
  *
@@ -17,7 +17,7 @@ public final class Captcha {
 	 * @param tipo
 	 * @param contenido
 	 */
-	public Captcha(final TypeCaptcha tipo, final byte[] contenido) {
+	public Captcha(final TypeFormatoCaptcha tipo, final byte[] contenido) {
 		super();
 		this.tipo = tipo;
 		this.contenido = contenido;
@@ -43,7 +43,7 @@ public final class Captcha {
 	/**
 	 * Tipo captcha.
 	 */
-	private TypeCaptcha tipo;
+	private TypeFormatoCaptcha tipo;
 
 	/**
 	 * Fichero.
@@ -98,7 +98,7 @@ public final class Captcha {
 	 *
 	 * @return tipo
 	 */
-	public TypeCaptcha getTipo() {
+	public TypeFormatoCaptcha getTipo() {
 		return tipo;
 	}
 
@@ -108,7 +108,7 @@ public final class Captcha {
 	 * @param tipo
 	 *                 tipo a establecer
 	 */
-	public void setTipo(final TypeCaptcha tipo) {
+	public void setTipo(final TypeFormatoCaptcha tipo) {
 		this.tipo = tipo;
 	}
 

@@ -7,6 +7,7 @@ package es.caib.sistrages.core.api.model.types;
  * <li>Certificado (CER)</li>
  * <li>Clave Pin (PIN)</li>
  * <li>Clave Permanente (PER)</li>
+ * <li>Clave Movil (MOV)</li>
  * </ul>
  *
  * @author Indra
@@ -15,7 +16,7 @@ package es.caib.sistrages.core.api.model.types;
 public enum TypeAutenticacion {
 
 	/** Propiedades del formulario **/
-	CERTIFICADO("CER"), CLAVE_PIN("PIN"), CLAVE_PERMANENTE("PER");
+	CERTIFICADO("CER"), CLAVE_PIN("PIN"), CLAVE_PERMANENTE("PER"), CLAVE_MOVIL("MOV");
 
 	private String valor;
 

@@ -913,7 +913,7 @@ public final class UtilJSF {
 	/**
 	 * Método que actualiza la paginación
 	 */
-	public static void setPaginacion(Integer paginacion, String pagina) {
+	public static void setPaginacion(Integer paginacion) {
 		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionBean");
 		sb.setPaginacion(paginacion);
@@ -922,7 +922,7 @@ public final class UtilJSF {
 	/**
 	 * Método que devuelve la paginación
 	 */
-	public static Integer getPaginacion(String pagina) {
+	public static Integer getPaginacion() {
 		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionBean");
 		return sb.getPaginacion();

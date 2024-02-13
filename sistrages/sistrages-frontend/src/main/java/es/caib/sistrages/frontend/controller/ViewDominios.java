@@ -102,9 +102,6 @@ public class ViewDominios extends ViewControllerBase {
 	/** miga de pan */
 	private MenuModel breadCrumb;
 
-	/** Paginacion */
-	private Integer paginacion;
-
 	private String portapapeles;
 
 	private String errorCopiar;
@@ -116,7 +113,6 @@ public class ViewDominios extends ViewControllerBase {
 			return;
 		}
 		setAccion("D");
-		paginacion = UtilJSF.getPaginacion("viewDominios");
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
 		checkPermisos();
 		buscar(null);
@@ -841,21 +837,6 @@ public class ViewDominios extends ViewControllerBase {
 	 */
 	public final void setListaAreas(List<Area> listaAreas) {
 		this.listaAreas = listaAreas;
-	}
-
-	/**
-	 * @return the paginacion
-	 */
-	public final Integer getPaginacion() {
-		return paginacion;
-	}
-
-	/**
-	 * @param paginacion the paginacion to set
-	 */
-	public final void setPaginacion(Integer paginacion) {
-		this.paginacion = paginacion;
-		UtilJSF.setPaginacion(paginacion, "viewDominios");
 	}
 
 	/**

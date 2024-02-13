@@ -64,12 +64,13 @@
 
 
 	<!-- càrrega -->
-	<div id="imc-carrega-inicial" class="imc-carrega-inicial">
-		<h1>
-			<span><spring:message code="login.cargando"/></span>
-		</h1>
-	</div>
-
+	<c:if test="${ (empty param.error) and (empty login.avisos) }">
+		<div id="imc-carrega-inicial" class="imc-carrega-inicial">
+			<h1>
+				<span><spring:message code="login.cargando"/></span>
+			</h1>
+		</div>
+	</c:if>
 	<!-- Revisar gestion error: ¿si sale error no hacer nada mas? -->
 	<c:if test="${not empty param.error}">
 			<!-- missatge: error -->

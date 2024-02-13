@@ -132,7 +132,11 @@ public enum TypePropiedadConfiguracion {
 	/** Iframe firma heigth. */
 	IFRAME_FIRMA_HEIGHT("iframeFirmaHeight"),
 	/** Formulario: carácteres búsqueda.. */
-	FORM_NUMCHARS_BUSQUEDA("formularioNumCharsBusqueda");
+	FORM_NUMCHARS_BUSQUEDA("formularioNumCharsBusqueda"),
+
+
+	/** Sistrahelp view url. **/
+	SISTRAHELP_VIEW_URL("sistrahelp.view.url");
 
 	/**
 	 * Valor como string.

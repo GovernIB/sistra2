@@ -69,4 +69,14 @@ public interface SystemService {
 	 */
 	public void updateSesionEntidad(String pUserName, Long pIdEntidad);
 
+	/**
+	 * Actualiza la lista de propiedades de la sesion de usuario.
+	 *
+	 * @param pUserName
+	 *            usuario
+	 * @param pPropiedades
+	 *            propiedades de la sesión
+	 */
+	public void updateSesionPropiedades(String pUserName, String pPropiedades);
+
 }

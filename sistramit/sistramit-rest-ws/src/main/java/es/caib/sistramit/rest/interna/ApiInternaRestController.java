@@ -249,6 +249,14 @@ public class ApiInternaRestController {
 
 	}
 
+	@ApiOperation(value = "listar tipos de problema", notes = "listar tipos de problema", response = String.class, responseContainer = "List")
+	@RequestMapping(value = "/auditoria/soporte/listarTiposProblema", method = RequestMethod.GET)
+	public List<String> obtenerTiposProblemaSoporte() {
+		final List<String> res = restApiInternaService.listarTiposProblema();
+
+		return res;
+	}
+
 	@ApiOperation(value = "formularios incidencia update", notes = "formularios incidencia", response = ROUTEventoCM.class)
 	@RequestMapping(value = "/auditoria/soporte/update", method = RequestMethod.POST)
 	public ROUTSoporte obtenerFormulariosSoporte(@RequestBody final Map<String, Object> params) {

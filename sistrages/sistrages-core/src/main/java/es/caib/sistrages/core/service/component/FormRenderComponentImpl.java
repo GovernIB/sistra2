@@ -16,7 +16,6 @@ import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
 import es.caib.sistrages.core.api.model.ComponenteFormularioListaElementos;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
-import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
@@ -532,7 +531,11 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 		escribeLinea(pOut, texto, 6);
 
-		escribeLinea(pOut, "<div class=\"imc-el-control\">", 6);
+		if (pModoEdicion) {
+			escribeLinea(pOut, "<div class=\"imc-selector-dinamico imc-el-control \">", 6);
+		} else {
+			escribeLinea(pOut, "<div class=\"imc-el-control\">", 6);
+		}
 
 		// Importate, la siguiente linea no cambia por dos razones:
 		// - Se deja así para que parezca en el editor un desplegable

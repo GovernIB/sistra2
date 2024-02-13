@@ -1,0 +1,5 @@
+ALTER table STT_FORMUL ADD SFR_TITTRA VARCHAR2(2000 CHAR);
+
+comment on column STT_FORMUL.SFR_TITTRA is 'Título trámite';
+
+COMMIT;

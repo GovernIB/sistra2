@@ -46,14 +46,14 @@
 </p>
 <p>S'inicialitza una variable per a assignar-la a un camp multiregistre del formulari actual i anar afegint valors mitjançant la funció addValor: </p>
  <p class="codigoScript">
-var datos = DATOS_VALOR.crearValorListaElementos();
+var datos = DATOS_VALORESINICIALES.crearValorListaElementos();
 var valorElemento=datos.addElemento();
 valorElemento.addValor('codigo', '07073');
 valorElemento.addValor('descripcion', 'Mallorca');
 </p>
 <p>Una vegada creada la variable, creat l'element i assignats els valors, es podrà assignar al camp corresponent.</p>
 <p class="codigoScript">
-DATOS_VALOR.setValorListaElementos('TABLA_MUNICIPIOS',datos);
+DATOS_VALORESINICIALES.setValorListaElementos('TABLA_MUNICIPIOS',datos);
 </p>
 </body>
 </html>

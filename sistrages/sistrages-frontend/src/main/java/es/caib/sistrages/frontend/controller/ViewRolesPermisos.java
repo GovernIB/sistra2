@@ -52,9 +52,6 @@ public class ViewRolesPermisos extends ViewControllerBase {
 	 */
 	private Rol datoSeleccionado;
 
-	/** Paginacion */
-	private Integer paginacion;
-
 	private String portapapeles;
 
 	private String errorCopiar;
@@ -69,7 +66,6 @@ public class ViewRolesPermisos extends ViewControllerBase {
 		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(idEntidad);
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
-		paginacion = UtilJSF.getPaginacion("viewConfiguracionAutenticacion");
 		// Recupera datos
 		buscar();
 	}
@@ -329,20 +325,4 @@ public class ViewRolesPermisos extends ViewControllerBase {
 	public void setDatoSeleccionado(final Rol datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
 	}
-
-	/**
-	 * @return the paginacion
-	 */
-	public final Integer getPaginacion() {
-		return paginacion;
-	}
-
-	/**
-	 * @param paginacion the paginacion to set
-	 */
-	public final void setPaginacion(Integer paginacion) {
-		this.paginacion = paginacion;
-		UtilJSF.setPaginacion(paginacion, "viewConfiguracionAurenticacion");
-	}
-
 }

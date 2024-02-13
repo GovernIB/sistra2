@@ -327,13 +327,14 @@
 					 	scrollable="true"
                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                         currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-                        rowsPerPageTemplate="5,10,15,30"
-                        rows="#{viewCuadroMando.paginacion}" rowKey="#{td.idTramite}#{td.version}"
+                        rowsPerPageTemplate="5,10,15,30,50,75,100"
+                        rows="#{sessionBean.paginacion}" rowKey="#{td.idTramite}#{td.version}"
                      	selection="#{viewCuadroMando.seleccionado}"
 						widgetVar="myWidget" style="width:75%; margin:auto;" rendered="#{viewCuadroMando.filtros.clasificacionSeleccionada eq 'et'}">
 
 						<p:ajax event="rowSelect" global="false" oncomplete="expandirContraer();"/>
 						<p:ajax event="rowToggle" listener="#{viewCuadroMando.loadExpansion(td)}" oncomplete="selectExpanded();"/>
+						<p:ajax event="page" listener="#{sessionBean.setPaginacionCm(true)}" />
 
 						<p:column style="width:16px !important; background-color:RGB(255,255,255);">
 				            <p:rowToggler />
@@ -371,14 +372,16 @@
 								 scrollable="true"
 		                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		                         currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-		                         rowsPerPageTemplate="5,10,15,30" lazy="true"
-		                         rows="#{viewCuadroMando.paginacionErrores}"
+		                         rowsPerPageTemplate="5,10,15,30,50,75,100" lazy="true"
+		                         rows="#{sessionBean.paginacion}"
 		                         selection="#{viewCuadroMando.seleccionadoErr}"
 								styleClass="w95 margin-left-25 margin-top-10 margin-bottom-10" rowKey="#{tdErrores.tipoEvento}"
 								selectionMode="single"
 								>
 
 								<p:ajax event="rowDblselect" oncomplete="triggerDblClick();"/>
+								<p:ajax event="page" listener="#{sessionBean.setPaginacionCm(true)}" />
+
 								<!-- Columnas -->
 								<p:column
 									headerText="#{msg['viewAuditoriaTramites.headError']}" sortBy="#{tdErrores.tipoEvento}">
@@ -407,8 +410,8 @@
 								 scrollable="true"
 		                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		                         currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-		                         rowsPerPageTemplate="5,10,15,30" lazy="true"
-		                         rows="#{viewCuadroMando.paginacionErrores}"
+		                         rowsPerPageTemplate="5,10,15,30,50,75,100" lazy="true"
+		                         rows="#{sessionBean.paginacion}"
 		                         selection="#{viewCuadroMando.seleccionadoErr}"
 								style="width:75%; margin:auto;" rowKey="#{tdErrores.tipoEvento}"
 								selectionMode="single" rendered="#{viewCuadroMando.filtros.clasificacionSeleccionada eq 'te'}"
@@ -416,6 +419,8 @@
 
 								<p:ajax event="rowSelect" global="false" oncomplete="expandirContraerTe();"/>
 								<p:ajax event="rowToggle" listener="#{viewCuadroMando.loadExpansionTe(tdErrores)}" oncomplete="selectExpandedTe();"/>
+								<p:ajax event="page" listener="#{sessionBean.setPaginacionCm(true)}" />
+
 								<!-- Columnas -->
 								<p:column style="width:16px !important; background-color:RGB(255,255,255);">
 						            <p:rowToggler />
@@ -449,12 +454,13 @@
 									 	scrollable="true"
 				                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				                        currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-				                        rowsPerPageTemplate="5,10,15,30"
-				                        rows="#{viewCuadroMando.paginacion}" rowKey="#{td.idTramite}#{td.version}"
+				                        rowsPerPageTemplate="5,10,15,30,50,75,100"
+				                        rows="#{sessionBean.paginacion}" rowKey="#{td.idTramite}#{td.version}"
 				                     	selection="#{viewCuadroMando.seleccionado}"
 										styleClass="w95 margin-left-25 margin-top-10 margin-bottom-10">
 
 										<p:ajax event="rowDblselect" oncomplete="triggerDblClick();"/>
+										<p:ajax event="page" listener="#{sessionBean.setPaginacionCm(true)}" />
 
 										<p:column headerText="#{msg['viewInformacionPersistencia.headTramite']}" sortBy="#{td.idTramite}">
 											<h:outputText value="#{td.idTramite}" />
@@ -492,9 +498,12 @@
 						 scrollable="true"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-                         rowsPerPageTemplate="5,10,15,30" lazy="true"
-                         rows="#{viewCuadroMando.paginacionErroresPlat}"
+                         rowsPerPageTemplate="5,10,15,30,50,75,100" lazy="true"
+                         rows="#{sessionBean.paginacion}"
 						 style="width:75%; margin:auto;" rowKey="#{tdErroresPlat.codigoError}">
+
+						 <p:ajax event="page" listener="#{sessionBean.setPaginacionCm(true)}" />
+
 						<!-- Columnas -->
 						<p:column
 							headerText="#{msg['viewAuditoriaTramites.headError']}" sortBy="#{tdErroresPlat.tipoEvento}">
@@ -528,9 +537,11 @@
 					 	scrollable="true"
                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                         currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-                        rowsPerPageTemplate="5,10,15,30"
-                        rows="#{viewCuadroMando.paginacion}" rowKey="#{tdInacabado.idTramite}#{tdInacabado.version}"
+                        rowsPerPageTemplate="5,10,15,30,50,75,100"
+                        rows="#{sessionBean.paginacion}" rowKey="#{tdInacabado.idTramite}#{tdInacabado.version}"
 						widgetVar="myWidgetInacabadas" style="width:75%; margin:auto;">
+
+						<p:ajax event="page" listener="#{sessionBean.setPaginacionCm(true)}" />
 
 						<p:column headerText="#{msg['viewInformacionPersistencia.headTramite']}" filterBy="#{tdInacabado.idTramite}" filterMatchMode="contains" style="width:500px !important; word-wrap: break-word; font-weight:bold; text-align: left; padding-left:5px;"  sortBy="#{tdInacabado.idTramite}">
 							<h:outputText value="#{tdInacabado.idTramite}" />
@@ -553,14 +564,16 @@
 				</h:panelGrid>
 				<p:dataTable id="dataTableAlertas" var="tdAlerta"
 						value="#{viewCuadroMando.listaAlertas}"
-						rows="#{viewCuadroMando.paginacionAlertas}"
+						rows="#{sessionBean.paginacion}"
 						scrollHeight="100%" rowIndexVar="rowIndexAl" emptyMessage="#{msg['error.emptyRows']}"
 						paginator="true" paginatorPosition="bottom"
 						 scrollable="true"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-                         rowsPerPageTemplate="5,10,15,30" rowKey="#{tdAlerta.id}"
+                         rowsPerPageTemplate="5,10,15,30,50,75,100" rowKey="#{tdAlerta.id}"
 						widgetVar="myWidgetAlert" style="width:75%; margin:auto;">
+
+						<p:ajax event="page" listener="#{sessionBean.setPaginacionCm(true)}" />
 
 						<p:column headerText="#{msg['viewCuadroMando.alerta']}" style="font-weight:bold; text-align: left; padding-left:5px;">
 				            <h:outputText value="#{tdAlerta.alerta.nombre} - #{tdAlerta.evento}" />

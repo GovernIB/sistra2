@@ -29,6 +29,13 @@
 
 	      setHeight();
 	  });
+
+		function cerrarDialog(){
+	      var iconX = parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all')
+	              [parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all').length-1];
+
+	      iconX.addEventListener("click", setHeight);
+	    }
 	    </script>
 	</ui:define>
 
@@ -156,17 +163,19 @@
 
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
-		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewRolesPermisos.nuevo()}" process="@this" update="growl" rendered="#{viewRolesPermisos.permiteAlta}">
-		        			<p:ajax event="dialogReturn" listener="#{viewRolesPermisos.returnDialogo}" update="growl dataTable"/>
+		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewRolesPermisos.nuevo()}" process="@this" update="growl" rendered="#{viewRolesPermisos.permiteAlta}" oncomplete="cerrarDialog()">
+		        			<p:ajax event="dialogReturn" listener="#{viewRolesPermisos.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
 
-		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewRolesPermisos.consultar()}" process="@this" update="growl" rendered="#{not viewRolesPermisos.permiteEditar and not viewRolesPermisos.permiteAlta}" />
-
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewRolesPermisos.editar()}" process="@this" update="growl" rendered="#{viewRolesPermisos.permiteEditar or viewRolesPermisos.permiteAlta}">
-		        			<p:ajax event="dialogReturn" listener="#{viewRolesPermisos.returnDialogo}" update="growl dataTable"/>
+		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewRolesPermisos.consultar()}" process="@this" update="growl" rendered="#{not viewRolesPermisos.permiteEditar and not viewRolesPermisos.permiteAlta}" oncomplete="cerrarDialog()">
+		        			<p:ajax event="dialogReturn" oncomplete="setHeight()"/>
 		        		</p:commandButton>
 
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" actionListener="#{viewRolesPermisos.eliminar()}" icon="fa fa-trash-o"  update="growl dataTable" rendered="#{viewRolesPermisos.permiteAlta}" process="@this">
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewRolesPermisos.editar()}" process="@this" update="growl" rendered="#{viewRolesPermisos.permiteEditar or viewRolesPermisos.permiteAlta}" oncomplete="cerrarDialog()">
+		        			<p:ajax event="dialogReturn" listener="#{viewRolesPermisos.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
+		        		</p:commandButton>
+
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" actionListener="#{viewRolesPermisos.eliminar()}" icon="fa fa-trash-o"  update="growl dataTable" rendered="#{viewRolesPermisos.permiteAlta}" process="@this" oncomplete="setHeight()">
 							<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono" />
 		        		</p:commandButton>
 
@@ -178,12 +187,12 @@
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewRolesPermisos.listaDatos}"
-						 rows="#{viewRolesPermisos.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
+						 rows="#{sessionBean.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-                         rowsPerPageTemplate="5,10,15,30"
+                         rowsPerPageTemplate="5,10,15,30,50,75,100"
 			        	 selectionMode="single" selection="#{viewRolesPermisos.datoSeleccionado}" rowKey="#{td.codigo}">
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
@@ -240,8 +249,8 @@
 		    }
 		    </h:outputScript>
 
-		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewRolesPermisos.rcDobleClick()}" process="@this" update="growl" style="display:none">
-        			<p:ajax event="dialogReturn" listener="#{viewRolesPermisos.returnDialogo}" update="growl dataTable"/>
+		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewRolesPermisos.rcDobleClick()}" process="@this" update="growl" style="display:none" oncomplete="cerrarDialog()">
+        			<p:ajax event="dialogReturn" listener="#{viewRolesPermisos.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
        		</p:commandButton>
 
 

@@ -469,7 +469,6 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 				cm.setSoloLectura(confCampo.getSoloLectura());
 				res.getConfiguracion().add(cm);
 			}
-
 		}
 	}
 

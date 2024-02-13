@@ -153,7 +153,7 @@ public class ViewTramites extends ViewControllerBase {
 		scriptsProblematicos = new ArrayList<>();
 		height = "100%";
 		width = "100%";
-		paginacion = UtilJSF.getPaginacion("viewTramites");
+		paginacion = UtilJSF.getPaginacion();
 		// Id entidad
 		final Long idEntidad = UtilJSF.getIdEntidad();
 		// Control acceso
@@ -1084,7 +1084,6 @@ public class ViewTramites extends ViewControllerBase {
 			public List<TramiteVersiones> load(int first, final int pageSize, final String sortField,
 					final SortOrder sortOrder, final Map<String, Object> filters) {
 				String filtroNuevo = null;
-				UtilJSF.setPaginacion(pageSize, "viewTramites");
 				listaTramiteVersiones.clear();
 				setRowCount(tramiteService.listTramiteTotal(UtilJSF.getSessionBean().getEntidad().getCodigo(),
 						convertirAreas(), filtro));
@@ -2256,6 +2255,7 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public final void setPaginacion(Integer paginacion) {
 		this.paginacion = paginacion;
+		UtilJSF.setPaginacion(paginacion);
 	}
 
 	/**

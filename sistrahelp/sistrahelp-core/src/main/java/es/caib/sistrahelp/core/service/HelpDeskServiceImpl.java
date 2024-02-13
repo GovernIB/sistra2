@@ -1,11 +1,8 @@
 package es.caib.sistrahelp.core.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,11 +27,15 @@ import es.caib.sistrahelp.core.api.model.ResultadoSoporte;
 import es.caib.sistrahelp.core.api.model.Soporte;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.core.interceptor.NegocioInterceptor;
+import es.caib.sistrahelp.core.service.component.SistragesApiComponent;
 import es.caib.sistrahelp.core.service.component.SistramitApiComponent;
 
 @Service
 @Transactional
 public class HelpDeskServiceImpl implements HelpDeskService {
+
+	@Autowired
+	private SistragesApiComponent sistragesApiComponent;
 
 	@Autowired
 	private SistramitApiComponent sistramitApiComponent;
@@ -95,6 +96,12 @@ public class HelpDeskServiceImpl implements HelpDeskService {
 	public ResultadoSoporte obtenerFormularioSoporte(final FiltroAuditoriaTramitacion pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion) {
 		return sistramitApiComponent.obtenerFormularioSoporte(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<String> obtenerTiposProblemaSoporte() {
+		return sistramitApiComponent.obtenerTiposProblemaSoporte();
 	}
 
 	@Override
@@ -195,47 +202,61 @@ public class HelpDeskServiceImpl implements HelpDeskService {
 	}
 
 	@Override
+	@NegocioInterceptor
 	public ResultadoEventoCM obtenerCountEventoCM(FiltroAuditoriaTramitacion pFiltroBusqueda) {
 		return sistramitApiComponent.obtenerCountEventoCM(pFiltroBusqueda);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public ResultadoErroresPorTramiteCM obtenerErroresPorTramiteCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion) {
 		return sistramitApiComponent.obtenerErroresPorTramiteCM(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public ResultadoEventoCM obtenerErroresPorTramiteCMExpansion(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion) {
 		return sistramitApiComponent.obtenerErroresPorTramiteCMExpansion(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public ResultadoEventoCM obtenerTramitesPorErrorCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion) {
 		return sistramitApiComponent.obtenerTramitesPorErrorCM(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public ResultadoErroresPorTramiteCM obtenerTramitesPorErrorCMExpansion(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion) {
 		return sistramitApiComponent.obtenerTramitesPorErrorCMExpansion(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public ResultadoEventoCM obtenerErroresPlataformaCM(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion) {
 		return sistramitApiComponent.obtenerErroresPlataformaCM(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void updateFormularioSoporte(Soporte soporte) {
 		sistramitApiComponent.updateFormularioSoporte(soporte);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public String urlLogoEntidad(String codDir3) {
 		return sistramitApiComponent.urlLogoEntidad(codDir3);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public byte[] contenidoLogoEntidad(String codDir3) {
+		return sistragesApiComponent.urlLogoEntidad(codDir3);
 	}
 }

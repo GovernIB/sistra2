@@ -119,6 +119,8 @@ public interface SistramitApiComponent {
 	ResultadoSoporte obtenerFormularioSoporte(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion);
 
+	List<String> obtenerTiposProblemaSoporte();
+
 	void updateFormularioSoporte(Soporte soporte);
 
 	String urlLogoEntidad(String codDir3);

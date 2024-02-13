@@ -720,7 +720,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), id.toString());
-		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 950, 470);
+		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 1100, 570);
 	}
 
 	/**

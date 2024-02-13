@@ -5,7 +5,7 @@
 	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
 </head>
 <body>
-<h1 class="stgH1">AUDITORIA DE TRAMITS</h1>
+<h1 class="stgH1">AUDITORIA DE TRAMITS DIALOG</h1>
 <p>
 
 A la finestra <i>' Auditoria de Tràmits</i>' es poden consultar els esdeveniments emmagatzemats, podent així determinar les accions realitzades per un usuari o sobre un tràmit en concret.
@@ -16,10 +16,13 @@ A la finestra <i>' Auditoria de Tràmits</i>' es poden consultar els esdevenimen
 	<ul>
 		<li><span class="nombreCampo">Id. Sessió:</span> Identificador de la sessió de tramitació. Aquest identificador és facilitat per l'assistent de tramitació al ciutadà quan s'inicia un tràmit sense autenticació.</li>
 		<li><span class="nombreCampo">NIF:</span> Número d'identificació fiscal de l'usuari autenticat. Aquest filtre de cerca aplica a tramitacions autenticades. </li>
+		<li><span class="nombreCampo">Àrea:</span> Àrea del tràmite. Es l'àrea a la que pertany el tràmit.</li>
+		<li><span class="nombreCampo">Cod. Proc. Catàlog.:</span> Codi del procediment en el catàleg. Aquest codi representa l'identificador intern del procediment/servei al que està vinculat el tràmit en el catàleg de procediments de la entitat.</li>
+		<li><span class="nombreCampo">Nom:</span> Nom de l'usuari autenticat. Aquest filtre de búsqueda aplica a tramitacions autenticades.  </li>
 		<li><span class="nombreCampo">Tràmit/Versió:</span> Identificador del tràmit de SISTRAGES, codi de tràmit i la seva versió corresponent. Aquest filtre permet restringir les cerques, filtrant per tràmit versió.</li>
-		<li><span class="nombreCampo">Data inici (Des de / Fins a):</span> Els camps "Des de" i "Fins a" permeten fitar la cerca als elements que compleixin que la seva data d'inici estigui entre aquests dos valors. És obligatori establir una data inicial, i en el cas de no indicar una data final, es considerarà la data actual com a data final. </li>
-		<li><span class="nombreCampo">Cod. Proc. Catàleg.:</span> Codi del procediment en el catàleg. Aquest codi representa l'identificador intern del procediment/servei al qual està vinculat el tràmit en el catàleg de procediments de l'entitat.</li>
 		<li><span class="nombreCampo">Esdeveniment:</span> Tipus d'esdeveniment a cercar. Els esdeveniments representen estats possibles pels quals passa la tramitació. (Ex: Inici del tràmit, càrrega del tràmit des de la carpeta, Registre del tràmit, ..." ). </li>
+		<li><span class="nombreCampo">Cod. SIA.:</span> Codi SIA en el catàleg. Aquest codi representa l'identificador SIA del procediment/servei al qual està vinculat el tràmit en el catàleg de procediments de l'entitat.</li>
+		<li><span class="nombreCampo">Data inici (Des de / Fins a):</span> Els camps "Des de" i "Fins a" permeten fitar la cerca als elements que compleixin que la seva data d'inici estigui entre aquests dos valors. És obligatori establir una data inicial, i en el cas de no indicar una data final, es considerarà la data actual com a data final. </li>
 	</ul>
 </p>
 
@@ -36,8 +39,8 @@ A la finestra <i>' Auditoria de Tràmits</i>' es poden consultar els esdevenimen
 		<ul>
 			<li><span class="nombreCampo">Esdeveniment:</span> Tipus d'esdeveniment</li>
 			<li><span class="nombreCampo">Data inici:</span> Data en la qual va tenir lloc l'esdeveniment</li>
-			<li><span class="nombreCampo">Id. Sessió:</span> Identificador de la sessió de tramitació</li>
-			<li><span class="nombreCampo">NIF:</span> Número d'identificació fiscal del tramitador</li>
+			<li><span class="nombreCampo">Id. Sessió:</span> Identificador de la sessió de tramitació. Si feu clic amb el botó secundari del ratolí sobre una dada d'aquesta columna, és possible cercar els esdeveniments associats</li>
+			<li><span class="nombreCampo">NIF:</span> Número d'identificació fiscal del tramitador. Si feu clic amb el botó secundari del ratolí sobre una dada d'aquesta columna, és possible cercar els esdeveniments associats</li>
 			<li><span class="nombreCampo">Tràmit:</span> Identificador del tràmit de SISTRAGES</li>
 			<li><span class="nombreCampo">Versió:</span> Versió del tràmit</li>
 			<li><span class="nombreCampo">Cod. Proc. Cat.:</span> Codi del procediment en el catàleg</li>

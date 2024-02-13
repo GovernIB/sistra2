@@ -84,9 +84,6 @@ public class ViewVariablesArea extends ViewControllerBase {
 	/** miga de pan */
 	private MenuModel breadCrumb;
 
-	/** Paginacion */
-	private Integer paginacion;
-
 	private String portapapeles;
 
 	private String errorCopiar;
@@ -95,7 +92,6 @@ public class ViewVariablesArea extends ViewControllerBase {
 	public void init() {
 
 		setAccion("V");
-		paginacion = UtilJSF.getPaginacion("viewVariablesArea");
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 		checkPermisosArea();
 		buscar(null);
@@ -586,21 +582,6 @@ public class ViewVariablesArea extends ViewControllerBase {
 	 */
 	public void setBreadCrumb(final MenuModel breadCrumb) {
 		this.breadCrumb = breadCrumb;
-	}
-
-	/**
-	 * @return the paginacion
-	 */
-	public final Integer getPaginacion() {
-		return paginacion;
-	}
-
-	/**
-	 * @param paginacion the paginacion to set
-	 */
-	public final void setPaginacion(Integer paginacion) {
-		this.paginacion = paginacion;
-		UtilJSF.setPaginacion(paginacion, "viewDominios");
 	}
 
 	/**

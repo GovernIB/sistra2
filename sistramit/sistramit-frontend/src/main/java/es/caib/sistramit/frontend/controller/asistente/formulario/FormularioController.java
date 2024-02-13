@@ -158,6 +158,35 @@ public final class FormularioController extends TramitacionController {
 
 	}
 
+
+	@RequestMapping("/buscadorDinamicoElemento.json")
+	public ModelAndView buscadorDinamicoElemento(
+										 @RequestParam("idCampoListaElementos") final String idCampoListaElementos,
+										 @RequestParam("idCampo") final String idCampo,
+										 @RequestParam("textoCampo") final String textoCampo, final HttpServletRequest request) {
+
+		final String idSesionFormulario = getIdSesionFormularioActiva();
+
+		// Recuperamos valores pagina
+		final Map<String, String> valoresRequest = extraerValoresCampo(request);
+
+		// Deserializamos valores
+		final List<ValorCampo> lista = formService.deserializarValoresCampos(idSesionFormulario, valoresRequest);
+
+		// Invocamos al controlador para evaluar el cambio
+		final ResultadoBuscadorDinamico re = formService.buscadorDinamicoElemento(idSesionFormulario, idCampoListaElementos, idCampo, textoCampo,
+				lista);
+
+		// Devolvemos respuesta
+		final RespuestaJSON resp = new RespuestaJSON();
+		resp.setDatos(re);
+		resp.setMensaje(new MensajeUsuario("", ""));
+		resp.setEstado(TypeRespuestaJSON.SUCCESS);
+
+		return generarJsonView(resp);
+
+	}
+
 	/**
 	 * Guarda los datos de la página.
 	 *
@@ -257,22 +286,6 @@ public final class FormularioController extends TramitacionController {
 		final String idSesionFormulario = getIdSesionFormularioActiva();
 		final Captcha captcha = formService.generarSonidoCaptcha(idSesionFormulario, idCampo);
 		return generarDownloadView(captcha.getFichero(), captcha.getContenido());
-	}
-
-	/**
-	 * Método para regenerar captcha.
-	 *
-	 * @param idCampo
-	 *                    idCampo
-	 * @return Indica que se ha regenerado para que se vuelva a cargar
-	 */
-	@RequestMapping("/regenerarCaptcha.html")
-	public ModelAndView regenerarCaptcha(@RequestParam("id") final String idCampo) {
-		final String idSesionFormulario = getIdSesionFormularioActiva();
-		formService.regenerarCaptcha(idSesionFormulario, idCampo);
-		final RespuestaJSON res = new RespuestaJSON();
-		res.setEstado(TypeRespuestaJSON.SUCCESS);
-		return generarJsonView(res);
 	}
 
 	/**

@@ -113,6 +113,14 @@ public class FlujoFormularioInternoServiceImpl implements FlujoFormularioInterno
 
 	@Override
 	@NegocioInterceptor
+	public ResultadoBuscadorDinamico buscadorDinamicoElemento(final String idSesionFormulario, final String  idCampoListaElementos, final String idCampo,
+															  final String textoCampo, final List<ValorCampo> valores) {
+		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
+		return ff.buscadorDinamicoElemento(idCampoListaElementos, idCampo, textoCampo, valores);
+	}
+
+	@Override
+	@NegocioInterceptor
 	public Captcha generarImagenCaptcha(final String idSesionFormulario, final String idCampo) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
 		return ff.generarImagenCaptchaPaginaFormulario(idCampo);
@@ -123,13 +131,6 @@ public class FlujoFormularioInternoServiceImpl implements FlujoFormularioInterno
 	public Captcha generarSonidoCaptcha(final String idSesionFormulario, final String idCampo) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
 		return ff.generarSonidoCaptchaPaginaFormulario(idCampo);
-	}
-
-	@Override
-	@NegocioInterceptor
-	public void regenerarCaptcha(final String idSesionFormulario, final String idCampo) {
-		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
-		ff.regenerarCaptchaPaginaFormulario(idCampo);
 	}
 
 	@Override

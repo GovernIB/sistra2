@@ -273,5 +273,4 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	public final void setPortapapeles(String portapapeles) {
 		this.portapapeles = portapapeles;
 	}
-
 }

@@ -119,6 +119,16 @@ public final class PlgUtils implements PlgUtilsInt {
 	}
 
 	@Override
+	public boolean esHora(final String hora) {
+		return ValidacionesTipo.getInstance().esHora(hora, Constantes.FORMATO_HORA_FRONTAL);
+	}
+
+	@Override
+	public boolean esHora(final String hora, final String formato) {
+		return ValidacionesTipo.getInstance().esHora(hora, getFormatoHora(formato));
+	}
+
+	@Override
 	public boolean esImporte(final String importe) {
 		return ValidacionesTipo.getInstance().esImporte(importe);
 	}
@@ -176,6 +186,23 @@ public final class PlgUtils implements PlgUtilsInt {
 			formato = Constantes.FORMATO_FECHA_FRONTAL;
 		} else {
 			formato = formatoFecha;
+		}
+		return formato;
+	}
+
+	/**
+	 * Obtiene el formato hora, si es nulo el formato internacional o sino el
+	 * parámetro de entrada.
+	 *
+	 * @param formatoHora
+	 * @return
+	 */
+	private String getFormatoHora(final String formatoHora) {
+		String formato;
+		if (formatoHora == null || formatoHora.isEmpty()) {
+			formato = Constantes.FORMATO_HORA_FRONTAL;
+		} else {
+			formato = formatoHora;
 		}
 		return formato;
 	}
@@ -245,6 +272,16 @@ public final class PlgUtils implements PlgUtilsInt {
 	}
 
 	@Override
+	public int formateaCadenaAInt(final String numero, final String separadorMiles) throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().formateaCadenaAInt(numero, separadorMiles);
+	}
+
+	@Override
+	public String formateaIntACadena(final int numero, final String separadorMiles) throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().formateaIntACadena(numero, separadorMiles);
+	}
+
+	@Override
 	public int obtenerAnyo(final String fecha, final String formatoFecha) throws ValidacionTipoException {
 		return ValidacionesTipo.getInstance().obtenerAnyo(fecha, getFormatoFecha(formatoFecha));
 	}
@@ -275,6 +312,12 @@ public final class PlgUtils implements PlgUtilsInt {
 	public String sumaAnyos(final String fecha, final int anyos, final String formatoFecha)
 			throws ValidacionTipoException {
 		return ValidacionesTipo.getInstance().sumaAnyos(fecha, anyos, getFormatoFecha(formatoFecha));
+	}
+
+	@Override
+	public String distanciaHoras(final String fecha1, final String hora1, final String fecha2, final String hora2, final String formatoFecha, final String formatoHora)
+			throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().distanciaHoras(fecha1, hora1, fecha2, hora2, getFormatoFecha(formatoFecha), getFormatoHora(formatoHora));
 	}
 
 	@Override

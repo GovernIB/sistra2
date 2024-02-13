@@ -12,4 +12,5 @@ public interface SesionDao {
 
 	void updateEntidad(String pUsername, Long pIdEntidad);
 
+	void updatePropiedades(String pUsername, String pPropiedades);
 }

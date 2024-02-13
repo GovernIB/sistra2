@@ -13,7 +13,8 @@
 		<f:viewParam name="esDialog" value="#{viewAuditoriaTramites.esDialog}"/>
 		<f:viewParam name="esDialogParams" value="#{viewAuditoriaTramites.esDialogParams}"/>
 		<f:viewParam name="idSesionParam" value="#{viewAuditoriaTramites.idSesionParam}"/>
-		<f:viewParam name="nifParam" value="#{viewAuditoriaTramites.nifParam}"/>
+		<f:viewParam name="idSesion" value="#{viewAuditoriaTramites.idSesionCorreoIncidencia}"/>
+    	<f:viewParam name="nifParam" value="#{viewAuditoriaTramites.nifParam}"/>
 		<f:viewParam name="versionTramite" value="#{viewAuditoriaTramites.versionTramiteECM}"/>
 		<f:viewParam name="fechaDesde" value="#{viewAuditoriaTramites.fechaDesdeECM}"/>
 		<f:viewParam name="fechaHasta" value="#{viewAuditoriaTramites.fechaHastaECM}"/>
@@ -94,7 +95,7 @@
 
 				        	<h:panelGrid columns="2" styleClass="w100, noPadding" >
 					        	<p:outputLabel for="filtroNombre" value="#{msg['viewAuditoriaTramites.filtroNombre']}:"/>
-					        	<p:inputText id="filtroNombre" value="#{viewAuditoriaTramites.filtros.nombre}" size="20" maxlength="12" style="margin-left:12px"  onkeyup="capitalize(this)" onblur="trim(this)"/>
+					        	<p:inputText id="filtroNombre" value="#{viewAuditoriaTramites.filtros.nombre}" size="50" maxlength="50" style="margin-left:12px"  onkeyup="capitalize(this)" onblur="trim(this)"/>
 				        	</h:panelGrid>
 			        	</p:column>
 			        	<p:column styleClass=" noPadding p-justify-start">
@@ -179,7 +180,7 @@
 
 			        	<h:panelGrid columns="2" styleClass="w100, noPadding" >
 				        	<p:outputLabel for="filtroNombre" value="#{msg['viewAuditoriaTramites.filtroNombre']}:"/>
-				        	<p:inputText id="filtroNombre" value="#{viewAuditoriaTramites.filtros.nombre}" size="20" maxlength="12" style="margin-left:12px"  onkeyup="capitalize(this)" onblur="trim(this)"/>
+				        	<p:inputText id="filtroNombre" value="#{viewAuditoriaTramites.filtros.nombre}" size="50" maxlength="50" style="margin-left:12px"  onkeyup="capitalize(this)" onblur="trim(this)"/>
 			        	</h:panelGrid>
 		        	</p:column>
 		        	<p:column styleClass=" noPadding p-justify-start">
@@ -259,12 +260,12 @@
 			<!-- Data table -->
 			<p:outputPanel  styleClass="h100">
 			<p:dataTable id="dataTable" var="dt" value="#{viewAuditoriaTramites.listaDatos}" lazy="true"
-						 rows="#{viewAuditoriaTramites.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
+						 rows="#{sessionBean.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true" scrollHeight="100%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-                         rowsPerPageTemplate="5,10,15,30"
+                         rowsPerPageTemplate="5,10,15,30,50,75,100"
 			        	 selectionMode="single" selection="#{viewAuditoriaTramites.datoSeleccionado}" rowKey="#{dt.id}">
 
 

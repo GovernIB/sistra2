@@ -42,6 +42,27 @@ var imc_bt_desconecta
 	,imc_bt_equip_suport;
 
 
+// ajax SETUP
+
+$.ajaxSetup({
+	beforeSend: function(xhr, s) {
+
+		if (s.type !== "POST") {
+			return;
+		}
+
+		if (typeof tokenCSRF !== "undefined") {
+			xhr.setRequestHeader(headerCSRF, tokenCSRF);
+		}
+
+		if (typeof headerIdSessioVal !== "undefined") {
+			xhr.setRequestHeader(headerIdSessio, headerIdSessioVal);
+		}
+		
+	}
+});
+
+
 // onReady
 
 $(function(){
@@ -113,10 +134,7 @@ $.fn.carregaInfoTramit = function(options) {
 						data: pag_dades,
 						method: "post",
 						dataType: "json",
-						timeout: APP_TIMEOUT,
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
+						timeout: APP_TIMEOUT
 					})
 					.done(function( data ) {
 						
@@ -331,6 +349,31 @@ function carregaHTML() {
 
 			imc_contenidor
 				.prepend( html_cap );
+
+
+			// nivell autenticació?
+
+			var jsonNivellAutenticacio = APP_JSON_TRAMIT_T.nivelAutenticacion;
+
+			if (jsonNivellAutenticacio && jsonNivellAutenticacio !== null && jsonNivellAutenticacio !== "") {
+
+				var nivellAutent_txt =  eval( "txtNivellAutent" + jsonNivellAutenticacio )
+					,nivellAutent_codi = $("<span>").addClass("imc--nivell-autent");
+
+				$("<strong>")
+					.text( txtNivellAutent + ": " )
+					.appendTo( nivellAutent_codi );
+
+				$("<span>")
+					.text( nivellAutent_txt )
+					.appendTo( nivellAutent_codi );
+
+				$("#imc-cap")
+					.find(".imc--usuari:first")
+						.append( nivellAutent_codi );
+
+			}
+
 
 			// contacte
 

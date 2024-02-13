@@ -1,7 +1,6 @@
 package es.caib.sistrahelp.core.api.service;
 
 import java.util.List;
-import java.util.Map;
 
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.FicheroAuditoria;
@@ -140,8 +139,12 @@ public interface HelpDeskService {
 	ResultadoSoporte obtenerFormularioSoporte(FiltroAuditoriaTramitacion pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion);
 
+	List<String> obtenerTiposProblemaSoporte();
+
 	void updateFormularioSoporte(Soporte soporte);
 
+
 	String urlLogoEntidad(String codDir3);
+	byte[] contenidoLogoEntidad(String codDir3);
 
 }

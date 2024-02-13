@@ -42,9 +42,6 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	/** Id entidad. */
 	private Long idEntidad;
 
-	/** Paginacion */
-	private Integer paginacion;
-
 	/** FormateadorFormularioService. */
 	@Inject
 	private FormateadorFormularioService fmtService;
@@ -57,7 +54,6 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	 * Inicializacion.
 	 */
 	public void init() {
-		paginacion = UtilJSF.getPaginacion("viewFormateadorFormulario");
 		// Entidad activa
 		idEntidad = UtilJSF.getIdEntidad();
 		// Control acceso
@@ -333,20 +329,5 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	 */
 	public void setDatoSeleccionado(final FormateadorFormulario datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
-	}
-
-	/**
-	 * @return the paginacion
-	 */
-	public final Integer getPaginacion() {
-		return paginacion;
-	}
-
-	/**
-	 * @param paginacion the paginacion to set
-	 */
-	public final void setPaginacion(Integer paginacion) {
-		this.paginacion = paginacion;
-		UtilJSF.setPaginacion(paginacion, "viewFormateadorFormulario");
 	}
 }

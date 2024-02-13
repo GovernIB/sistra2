@@ -40,7 +40,8 @@ $.fn.appSerialitza = function(opcions) {
 
 					var input_el = el.find("input:first, textarea:first")
 						,esData = (input_el.attr("type") === "date") ? true : false
-						,input_val = input_el.val();
+						,enMayuscules = (input_el.attr("data-mayuscules") === "s") ? true : false
+						,input_val = $.trim( input_el.val() );
 
 					var data_format = (typeof APP_FORM_DATA_FORMAT !== "undefined" && APP_FORM_DATA_FORMAT === "es") ? "es" : "in";
 
@@ -52,7 +53,7 @@ $.fn.appSerialitza = function(opcions) {
 
 					input_val = (el_contingut === "nu") ? input_val : input_val.replace(/#-@/g, "").replace(/</g, "").replace(/>/g, "");
 
-					if (el_tipus === "texto" && (el_contingut === "id" || formEnMayuscules || enMayuscules)) {
+					if ((el_tipus === "texto" || el_contingut === "id") && (formEnMayuscules || enMayuscules)) {
 
 						input_val = input_val.toUpperCase();
 
@@ -176,12 +177,66 @@ $.fn.appSerialitza = function(opcions) {
 
 				} else if (el_tipus === "captcha") {
 
-					var input_el = el.find("input:first")
-						,input_val = input_el.val();
 
-					form_el_json[el_id] = { id: el_id, tipo: "s", valor: input_val };
+					if (el.attr("data-tipo") === "s") {
+
+						// tipo selector
+
+						// visual o auditiu ("data-reproduccio" === "prepara")?
+
+						var esAuditiu = (el.attr("data-reproduccio") === "prepara") ? true : false;
+
+						var selecc_elms = (esAuditiu) ? el.find(".imc--grid-inputs:first > input") : el.find(".imc--grid:first > button")
+							,selecc_elms_size = selecc_elms.length;
+
+						form_el_json[el_id] = { id: el_id, tipo: "s", valor: null };
+
+						if (selecc_elms_size) {
+
+							form_el_json[el_id]["valor"] = "";
+
+							selecc_elms
+								.each(function(j) {
+
+									var sel_el = $(this);
+
+									if (esAuditiu && sel_el.val() !== "") {
+
+										form_el_json[el_id]["valor"] += sel_el.val() + ",";
+
+									} else {
+
+										var sel_el_checked = (sel_el.attr("aria-checked") === "true") ? true : false
+
+										if (sel_el_checked) {
+
+											var sel_el_ids = sel_el.attr("data-id");
+
+											form_el_json[el_id]["valor"] += sel_el_ids + ",";
+
+										}
+
+									}
+								
+								});
+
+							form_el_json[el_id]["valor"] = form_el_json[el_id]["valor"].substr(0, form_el_json[el_id]["valor"].length - 1);
+
+						}
+
+					} else {
+
+						// normal
+
+						var input_el = el.find("input:first")
+							,input_val = input_el.val();
+
+						form_el_json[el_id] = { id: el_id, tipo: "s", valor: input_val };
+
+					}
 
 					form_id_i_valors[el_id] = JSON.stringify( form_el_json[el_id] );
+
 
 				} else if (el_tipus === "listaElementos") {
 
@@ -211,7 +266,7 @@ $.fn.appSerialitza = function(opcions) {
 					}
 
 					form_id_i_valors[el_id] = JSON.stringify( form_el_json[el_id] );
-
+					
 				}
 
 				// verifica?
@@ -326,7 +381,7 @@ $.fn.appSerialitza = function(opcions) {
 						}
 
 						// data
-
+						
 						if (input_el.attr("data-contingut") === "data") {
 
 							esError = ( !input_el.appValida({ format: "data", valor: input_val }) ) ? true : false;
@@ -372,8 +427,45 @@ $.fn.appSerialitza = function(opcions) {
 
 					} else if (el_tipus === "captcha") {
 
-						esError = (input_el.is(":required") && input_val === "") ? true : false;
-						ERROR_TEXT = (esError) ? txtFormDinCampError_captcha : false;
+
+						// si és text, no pot estar buit
+						
+						if (el.attr("data-tipo") !== "s") {
+							esError = (esObligatori && input_val === "") ? true : false;
+							ERROR_TEXT = (esError) ? txtFormDinCampError_captcha : false;
+						}
+
+						// si és imatge, i hi ha grup de imatges, has de seleccionar al menys una
+
+						if (el.attr("data-tipo") === "s" && el.find(".imc--grid:first").is(":visible")) {
+
+							esError = (esObligatori && !el.find(".imc--grid:first button[aria-checked='true']").length) ? true : false;
+							ERROR_TEXT = (esError) ? txtFormDinCampError_captchaImgs : false;
+
+						}
+
+						// si és imatge, i té camps de so, has d'omplir al menys un
+
+						if (el.attr("data-tipo") === "s" && el.find(".imc--grid-inputs:first").is(":visible")) {
+
+							var str = "";
+
+							el
+								.find(".imc--grid-inputs:first input")
+									.each(function() {
+
+										var input_ = $(this)
+											,input_val = input_.val();
+
+										str += input_val;
+
+									});
+
+							esError = (esObligatori && $.trim( str ) === "") ? true : false;
+							ERROR_TEXT = (esError) ? txtFormDinCampError_captchaSo : false;
+
+						}
+
 
 					} else if (el_tipus === "listaElementos") {
 

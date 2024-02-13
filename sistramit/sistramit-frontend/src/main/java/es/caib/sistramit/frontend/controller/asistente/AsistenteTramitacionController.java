@@ -485,6 +485,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 		conf.setIframeFirmaHeight(iframeFirmaHeight);
 		conf.setIframeFirmaWidth(iframeFirmaWidth);
 		conf.setFormularioNumCharsBusqueda(formularioNumCharsBusqueda);
+		conf.setIdSesion(this.getIdSesionTramitacionActiva());
 
 		return new ModelAndView("asistente/configuracion", "configuracion", conf);
 	}

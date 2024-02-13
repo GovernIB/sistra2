@@ -1,44 +1,33 @@
 package es.caib.sistrahelp.frontend.procesos;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
-import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.digester.plugins.PluginException;
-import org.primefaces.PrimeFaces;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.caib.sistra2.commons.plugins.email.api.EmailPluginException;
 import es.caib.sistra2.commons.plugins.email.api.IEmailPlugin;
 import es.caib.sistrahelp.core.api.model.Alerta;
-import es.caib.sistrahelp.core.api.model.Area;
 import es.caib.sistrahelp.core.api.model.Entidad;
-import es.caib.sistrahelp.core.api.model.ErroresCuadroMando;
 import es.caib.sistrahelp.core.api.model.ErroresPorTramiteCM;
-import es.caib.sistrahelp.core.api.model.ErroresTramites;
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.EventoCM;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
 import es.caib.sistrahelp.core.api.model.HistorialAlerta;
-import es.caib.sistrahelp.core.api.model.ResultadoErroresPorTramiteCM;
 import es.caib.sistrahelp.core.api.model.ResultadoEventoCM;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 import es.caib.sistrahelp.core.api.model.types.TypePluginGlobal;
@@ -46,8 +35,6 @@ import es.caib.sistrahelp.core.api.service.AlertaService;
 import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.core.api.service.HistorialAlertaService;
-import es.caib.sistrahelp.frontend.model.ErroresPorTramiteCMLazyDataModel;
-import es.caib.sistrahelp.frontend.model.ErroresPorTramiteCMPlataformaLazyDataModel;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
 
 public class TimerReinicioDiario implements Runnable {
@@ -99,6 +86,13 @@ public class TimerReinicioDiario implements Runnable {
 
 	private FiltroAuditoriaTramitacion filtrosInacabados;
 
+
+	/**
+	 * Log.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(TimerReinicioDiario.class);
+
+
 	public TimerReinicioDiario(AlertaService aService, HelpDeskService hService, ConfiguracionService confService,
 			HistorialAlertaService historialService) {
 		this.aService = aService;
@@ -111,14 +105,16 @@ public class TimerReinicioDiario implements Runnable {
 	@PostConstruct
 	public void run() {
 
+		LOGGER.error("ENTRA EN EL TIMERREINICIODIARIO");
 		System.out.println("entra en reinicio");
 		alert = aService.loadAlertaByNombre("RESUMEN_DIARIO");
 		String nombre = "";
-//		String logo = "";
-//	    byte[] imageBytes = new byte[0];
+		String logo = "";
+		byte[] imageBytes = null;
 		if (alert.getListaAreas() != null && !alert.getListaAreas().isEmpty() && alert.getListaAreas().get(0) != null) {
 			Entidad entidad = confService.obtenerDatosEntidadByArea(alert.getListaAreas().get(0));
-//			logo = hService.urlLogoEntidad(alert.getIdEntidad());
+			logo = hService.urlLogoEntidad(alert.getIdEntidad());
+			imageBytes = hService.contenidoLogoEntidad(entidad.getCodigoDIR3());
 //			 String urltext = logo;
 //			 try {
 //			    URL url = new URL(urltext);
@@ -195,10 +191,17 @@ public class TimerReinicioDiario implements Runnable {
 					+ "      <!-- contenidor --> 	"
 					+ "      <div id=\"contenidor\" style=\"width: 90%;font: normal 80% 'TrebuchetMS', 'Trebuchet MS', Arial, Helvetica, sans-serif;color: #000;margin: 1em auto;background-color: #fff;\">"
 					+ "         <!-- logo illes balears --> 		"
-					+ "         <div id=\"cap\" style=\"font-size: 1.2em;font-weight: bold;text-align: center;margin-bottom: 1em;\">"
-//					+ "            <img  src=\"cid:logo\" alt=\"logo\" width=\"100\" height=\"100\"/>"
-					+ "			   <h3> LOGO </h3>"
-					+ "            <h1>" + nombre.toUpperCase() + "</h1>" + "         </div>"
+					+ "         <div id=\"cap\" style=\"font-size: 1.2em;font-weight: bold;text-align: center;margin-bottom: 1em;\">";
+
+			if (imageBytes != null && imageBytes.length > 0) {
+				String encoded = Base64.getEncoder().encodeToString(imageBytes);
+				msg += "            <img  src=\"data:image/jpeg;base64," + encoded + "\" alt=\"logo\" width=\"100\" height=\"100\" style=\"width: 100px;height:100px;\"/>";
+			} else if( logo != null && !logo.isEmpty()) {
+				msg += "            <img  src=\"" + logo + "\" alt=\"logo\" width=\"100\" height=\"100\"/>";
+			}
+
+//					+ "			   <h3> LOGO </h3>"
+					msg += "            <h1>" + nombre.toUpperCase() + "</h1>" + "         </div>"
 					+ "         <!-- /logo illes balears -->  		<!-- continguts -->"
 					+ "         <div id=\"continguts\" style=\"padding: 1em 2em;border: 1em solid #f2f2f2;\">"
 					+ "            <!-- titol --> 			"
@@ -211,7 +214,7 @@ public class TimerReinicioDiario implements Runnable {
 					+ "                     <td style=\"font-weight: bold;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;padding-left: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;width: 16px !important;\"><span style=\"font-weight: bold; font-size: 1.2em !important;\">Accions</span></td>"
+					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;width: 16px !important;\"><span style=\"font-weight: bold; font-size: 1.2em !important;\">Accions</span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
@@ -302,7 +305,7 @@ public class TimerReinicioDiario implements Runnable {
 					+ errTot + "</td>" + "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
-					+ "                        <table border=\"1\" cellpadding=\"0\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
 					+ "                           <tbody>" + "                              <tr>"
 					+ "                                 <td class=\"grey borde \" style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;padding-top: .5em;\"><span style=\"font-weight: bold; padding-left: 5px;\"><u>Errors de tramitaci&#243; (Errors per Tr&#224;mit):</u></span></td>"
 					+ "                              </tr>" + "                           </tbody>"
@@ -380,7 +383,7 @@ public class TimerReinicioDiario implements Runnable {
 					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;padding-left: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;width: 16px !important;\"><span style=\"font-weight: bold;\"><u>Errors de Plataforma</u></span></td>"
+					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;width: 16px !important;\"><span style=\"font-weight: bold;\"><u>Errors de Plataforma</u></span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
@@ -415,7 +418,7 @@ public class TimerReinicioDiario implements Runnable {
 					+ "                     <td style=\"font-weight: bold;\">"
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;padding-left: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;width: 16px !important;\"><span style=\"font-weight: bold; font-size: 1.2em !important;\">Tr&#224;mits no finalitzats sense errors</span></td>"
+					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;width: 16px !important;\"><span style=\"font-weight: bold; font-size: 1.2em !important;\">Tr&#224;mits no finalitzats sense errors</span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>"
@@ -495,18 +498,21 @@ public class TimerReinicioDiario implements Runnable {
 	}
 
 	private Date getYesterday() {
-		Date date = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+		return Date.from(LocalDate.now().minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+		/*Date date = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000/);
 		date.setHours(0);
 		date.setMinutes(0);
 		date.setSeconds(0);
-		return date;
+		return date;*/
 	}
 
 	private Date getNow() {
-		Date date = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+		/*Date date = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000/);
 		date.setHours(23);
 		date.setMinutes(59);
-		date.setSeconds(59);
+		date.setSeconds(59);*/
+		Date date = new Date();
 		return date;
 	}
 
@@ -557,8 +563,8 @@ public class TimerReinicioDiario implements Runnable {
 
 		filtros.setFechaDesde(getYesterday());
 		filtrosInacabados.setFechaDesde(getYesterday());
-		filtros.setFechaHasta(getNow());
-		filtrosInacabados.setFechaHasta(getNow());
+		//filtros.setFechaHasta(getNow());
+		//filtrosInacabados.setFechaHasta(getNow());
 
 		filtros.setIdTramite(null);
 		filtros.setVersionTramite(null);
@@ -670,15 +676,30 @@ public class TimerReinicioDiario implements Runnable {
 	private void enviarEmail(String msg, String img64) {
 		try {
 			final IEmailPlugin plgEmail = (IEmailPlugin) confService.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
-//			plgEmail.envioEmail(alert.getEmail(), "SISTRAHELP: Resumen Diario - " + UtilJSF.getEntorno().toUpperCase(),
-//					msg, null, img64);
-			plgEmail.envioEmail(alert.getEmail(), "SISTRAHELP: Resumen Diario - " + UtilJSF.getEntorno().toUpperCase(),
+			LOGGER.debug("ENTRA EN EL email TIMERREINICIODIARIO");
+			LOGGER.debug("MSG:" + msg);
+			LOGGER.debug("EMAILS:" + alert.getEmail());
+			LOGGER.debug("Entorno:" + getEntorno());
+			boolean mailEnviado = plgEmail.envioEmail(alert.getEmail(), "SISTRAHELP: Resumen Diario - " + getEntorno(),
 					msg, null);
+			LOGGER.debug("SALE EN EL email TIMERREINICIODIARIO");
+
 		} catch (EmailPluginException e) {
-			e.printStackTrace();
+			LOGGER.error("Error enviando el email TimerReinicioDiario" , e);
 		} catch (PluginException e) {
-			e.printStackTrace();
+			LOGGER.error("Error en el plugin el email TimerReinicioDiario" , e);
+		}catch (Exception e) {
+			LOGGER.error("Error general TimerReinicioDiario" , e);
 		}
+	}
+
+	private String getEntorno() {
+		try {
+			return UtilJSF.getEntorno().toUpperCase();
+		} catch (Exception e) {
+			LOGGER.error("Error obteniendo entorno" , e);
+		}
+		return "";
 	}
 
 	private String parseFecha(Date fecha) {

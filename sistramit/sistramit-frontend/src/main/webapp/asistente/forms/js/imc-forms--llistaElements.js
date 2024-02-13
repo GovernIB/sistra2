@@ -11,17 +11,23 @@ var imc_forms_taula
 	,imc_forms_taula_form;
 
 
+
 // events annexats a la llista d'elements (taula)
 
 $.fn.appFormsLlistaElements = function(options) {
 
 	var settings = $.extend({
 			columnes: 0
+			,avaluaEsborrar: false
 			,cerca : false
 			,filesMax: 0
 			,filesNum: 0
 			,operacions: false
 			,autoOrdre: false
+			,enllasId: false
+			,enllasColumnaPare: false
+			,enllasColumnaFilla: false
+			,enllasIndex: false
 			,desDe: false
 			,dades: false
 		}, options);
@@ -29,11 +35,16 @@ $.fn.appFormsLlistaElements = function(options) {
 	this.each(function(){
 		var element = $(this)
 			,columnes = settings.columnes
+			,avaluaEsborrar = settings.avaluaEsborrar
 			,cerca = settings.cerca
 			,filesMax = parseInt( settings.filesMax, 10)
 			,filesNum = parseInt( settings.filesNum, 10)
 			,operacions = settings.operacions
 			,autoOrdre = settings.autoOrdre
+			,enllasId = settings.enllasId
+			,enllasColumnaPare = settings.enllasColumnaPare
+			,enllasColumnaFilla = settings.enllasColumnaFilla
+			,enllasIndex = settings.enllasIndex
 			,desDe = settings.desDe
 			,filesActuals = 0
 			,dades = settings.dades
@@ -58,6 +69,17 @@ $.fn.appFormsLlistaElements = function(options) {
 				element
 					.find(".imc-el-taula-elements:first")
 						.attr("data-desde", desDe);
+
+				// avalua esborrar?
+
+				if (avaluaEsborrar) {
+
+					avaluaEsborrar = true;
+
+					element
+						.attr("data-avaluaEsborrar", filesMax);
+
+				}
 
 				// files màximes?
 
@@ -105,6 +127,25 @@ $.fn.appFormsLlistaElements = function(options) {
 
 					element
 						.removeAttr("data-autoordre");
+
+				}
+
+				// es filla de una llista pare? (enllasId)
+
+				if (enllasId) {
+
+					enllasIndex = (enllasIndex) ? enllasIndex : "0";
+
+					// taula filla
+
+					element
+						.attr({"data-enllas-id": enllasId, "data-columna-pare": enllasColumnaPare, "data-columna-filla": enllasColumnaFilla, "data-enllas-index": enllasIndex });
+
+					// taula pare
+
+					imc_forms_body
+						.find("fieldset[data-id='" + enllasId + "']")
+							.attr("data-enllas", elm_id);
 
 				}
 
@@ -278,17 +319,39 @@ $.fn.appFormsLlistaElements = function(options) {
 				}
 
 
+				// es pare de una llista filla?
+
+				var esPare = (element.attr("data-enllas")) ? true : false;
+
+
 				// pintem dades
 
 				$(dades)
 					.each(function(i) {
 
-						var fila = this.elemento;
+						var fila = this.elemento
+							,fila_enllas = (this.enlace) ? this.enlace : false;
 
 						$("<tr>")
 							.attr("data-id", i+1)
 							.attr("data-dades", JSON.stringify(this))
 							.appendTo( tbody_elm );
+
+						if (esPare) {
+
+							tbody_elm
+								.find("tr:last")
+									.attr("data-pare-id", i + 1);
+
+						}
+
+						if (fila_enllas) {
+
+							tbody_elm
+								.find("tr:last")
+									.attr("data-pare-enllas", parseInt(fila_enllas.indiceLista, 10) + 1);
+
+						}
 
 						var thead_taula_el = element.find(".imc-el-taula-elements:first thead:first")
 							,tr_elm = element.find(".imc-el-taula-elements:first tbody:first tr:last");
@@ -376,6 +439,20 @@ $.fn.appFormsLlistaElements = function(options) {
 				element
 					.appFormsLlistaElementsFilesRevisa();
 
+				// es filla de una llista pare? (enllasId)
+
+				enllasId = element.attr("data-enllas-id");
+				enllasIndex = parseInt( element.attr("data-enllas-index"), 10) + 1;
+
+				if (enllasId) {
+
+					// SELECCIONEM LA FILA DE L'INDEX QUE VINGA (enllasIndex)
+
+					imc_forms_body
+						.find("fieldset[data-id='" + enllasId + "'] tbody:first tr[data-id='" + enllasIndex + "']")
+							.trigger("click");
+
+				}
 
 				// mostrem resultat si es una cerca
 
@@ -394,7 +471,8 @@ $.fn.appFormsLlistaElements = function(options) {
 
 				var fila_el = $(this)
 					,fila_id = fila_el.attr("data-id")
-					,fila_class = fila_el.hasClass("imc--seleccionada");
+					,fila_class = fila_el.hasClass("imc--seleccionada")
+					,fila_pare_id = fila_el.attr("data-pare-id");
 
 				// llevem la selecció si hi haguera
 
@@ -424,6 +502,46 @@ $.fn.appFormsLlistaElements = function(options) {
 					.find("button:not(.imc-bt-afegix)")
 						.removeAttr("disabled");
 
+				// es filla de una llista pare? (enllasId)
+
+				var esPare = (element.attr("data-enllas")) ? true : false;
+
+				if (esPare) {
+
+					var llista_filla_id = element.attr("data-enllas");
+
+					var llista_filla_ = imc_forms_body.find("fieldset[data-id='" + llista_filla_id + "']:first")
+						,llista_filla_col_pare = llista_filla_.attr("data-columna-pare")
+						,llista_filla_col_filla = llista_filla_.attr("data-columna-filla")
+						,llista_filla_trs_ = llista_filla_.find("tbody:first tr");
+
+					var valor_fila_pare_ = fila_el.find("td[data-id='" + llista_filla_col_pare + "']:first").text();
+
+					llista_filla_trs_
+						.each(function() {
+
+							var tr_ = $(this)
+								,tr_pare_enllas = tr_.attr("data-pare-enllas")
+								,valor_fila_ = tr_.find("td[data-id='" + llista_filla_col_filla + "']:first").text();
+
+							//if (tr_pare_enllas === fila_pare_id) {
+							if (valor_fila_pare_ === valor_fila_) {
+
+								tr_
+									.show();
+
+							} else {
+
+								tr_
+									.hide();
+
+							}
+
+						});
+
+				}
+
+
 				// revisem tabulació
 
 				$("#imc-forms-contenidor")
@@ -444,6 +562,23 @@ $.fn.appFormsLlistaElements = function(options) {
 
 				valorsSerialitzats["idCampoListaElementos"] = elm_id;
 
+				// es una llista filla?
+
+				if (enllasId && enllasIndex) {
+
+					valorsSerialitzats["idListaPadre"] = enllasId;
+
+					var llista_pare_ = imc_forms_body.find("fieldset[data-id='" + enllasId + "']:first")
+						,llista_filla_ = imc_forms_body.find("fieldset[data-id='" + elm_id + "']:first")
+						,indexLlistaPare = parseInt( llista_pare_.find("tbody:first input:checked:first").closest("tr").attr("data-id"), 10) - 1;
+					
+					valorsSerialitzats["indiceSeleccionadoListaPadre"] = indexLlistaPare;
+
+					valorsSerialitzats["columnaListaPadre"] = llista_filla_.attr("data-columna-pare");
+					valorsSerialitzats["columnaListaHija"] = llista_filla_.attr("data-columna-filla");
+
+				}
+
 				// dades ajax
 
 				var pag_url = APP_FORM_LE_AFEGIX,
@@ -463,10 +598,7 @@ $.fn.appFormsLlistaElements = function(options) {
 						url: pag_url,
 						data: pag_dades,
 						method: "post",
-						dataType: "json",
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
+						dataType: "json"
 					})
 					.done(function( data ) {
 
@@ -482,7 +614,7 @@ $.fn.appFormsLlistaElements = function(options) {
 							if (json.estado === "WARNING") {
 
 								imc_forms_missatge
-									.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { mostra(); } });
+									.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { afegixObri(json); } });
 
 								return;
 
@@ -536,41 +668,228 @@ $.fn.appFormsLlistaElements = function(options) {
 
 				imc_forms_taula
 					.attr("aria-hidden", "false")
-					.appFormsLlistaElementsForm({ element_id: elm_id, titol: elm_label, desDe: "afegix" });
+					.appFormsLlistaElementsForm({ element_id: elm_id, titol: elm_label, desDe: "afegix", idLlistaPare: enllasId });
 
 				imc_forms_taula
 					.appFormsConfiguracio({ forms_json: json, desDe: "taula" });
 
 				imc_forms_taula
-				.attr("data-mayuscules", imc_forms_finestra.attr("data-mayuscules"))
-					.appFormsPopupTabula();
-					//.focus();
+					.attr("data-mayuscules", imc_forms_finestra.attr("data-mayuscules"))
+						.appFormsPopupTabula();
 
 			},
 			elimina = function(e) {
 
-				var bt = $(this);
+				var bt = $(this)
+					,fieldset_ = bt.closest("fieldset")
+					,fieldset_enllas = fieldset_.attr("data-enllas")
+					,fieldset_enllas_num = (fieldset_enllas) ? imc_forms_body.find("fieldset[data-id='" + fieldset_enllas + "'] tbody:first tr:visible").length : 0;
+
+				if (fieldset_enllas && fieldset_enllas_num) {
+
+					var titol_taula = imc_forms_body.find("fieldset[data-id='" + fieldset_enllas + "'] legend:first").text();
+
+					var remarcaACC = function() {
+						
+							imc_forms_body
+								.find("fieldset[data-id='" + fieldset_enllas + "']:first tbody:first")
+									.appDestaca({ referent: imc_forms_body.find(".imc--form:first") });
+
+						};
+
+					imc_forms_missatge
+						.appFormsMissatge({ accio: "error", titol: txtFormDinTaulaEsborraFillaTitol, text: txtFormDinTaulaEsborraFillaText1 + " " + titol_taula + ". " + txtFormDinTaulaEsborraFillaText2, bt: bt, alTancar: function() { remarcaACC(); } });
+
+					return;
+
+				}
 
 				imc_forms_missatge
-					.appFormsMissatge({ accio: "esborra", titol: txtFormDinTaulaEsborraElementTitol, text: txtFormDinTaulaEsborraElementText, bt: bt, alAcceptar: function() { eliminem(); } });
+					.appFormsMissatge({ accio: "esborra", titol: txtFormDinTaulaEsborraElementTitol, text: txtFormDinTaulaEsborraElementText, bt: bt, alAcceptar: function() { eliminaAvalua(); } });
+
+			},
+			eliminaAvalua = function() {
+
+				if (!avaluaEsborrar) {
+
+					eliminem();
+
+				} else {
+
+					imc_forms_missatge
+						.appFormsMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtFormDinLEEsborraAvalua, alMostrar: function() { eliminaAvaluem(); } });
+
+				}
+
+			},
+			eliminaAvaluem = function() {
+				
+				// serialitza
+
+				var valorsSerialitzats = imc_forms_finestra.appSerialitza({ verifica: false });
+
+				valorsSerialitzats["idCampoListaElementos"] = elm_id;
+
+				// index element
+
+				var indexElement = taula_body.find("input:checked").closest("tr").attr("data-id");
+
+				valorsSerialitzats["indiceElemento"] = parseInt(indexElement, 10) - 1;
+
+				// dades ajax
+
+				var pag_url = APP_FORM_LE_AVALUA_ESBORRA,
+					pag_dades = valorsSerialitzats;
+
+				// ajax
+
+				if (envia_ajax) {
+
+					envia_ajax
+						.abort();
+
+				}
+
+				envia_ajax =
+					$.ajax({
+						url: pag_url,
+						data: pag_dades,
+						method: "post",
+						dataType: "json"
+					})
+					.done(function( data ) {
+
+						envia_ajax = false;
+
+						imc_forms_contenidor
+							.removeAttr("data-preevalua");
+
+						json = data;
+
+						if (json.estado === "SUCCESS" || json.estado === "WARNING") {
+
+							if (json.estado === "WARNING") {
+
+								imc_forms_missatge
+									.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { eliminaVerifiquem(json); } });
+
+								return;
+
+							}
+
+							eliminaVerifiquem(json);
+
+						} else {
+
+							envia_ajax = false;
+
+							imc_forms_contenidor
+								.removeAttr("data-preevalua");
+
+							consola("Element llista, avalua esborra: error des de JSON");
+
+							imc_forms_body
+								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
+
+						}
+
+					})
+					.fail(function(dades, tipus, errorThrown) {
+
+						envia_ajax = false;
+
+						imc_forms_contenidor
+							.removeAttr("data-preevalua");
+
+						if (tipus === "abort") {
+							return false;
+						}
+
+						consola("Element llista, avalua esborra: error des de FAIL");
+
+						imc_forms_body
+							.appFormsErrorsGeneral({ estat: "fail" });
+
+					});
+
+			},
+			eliminaVerifiquem = function(json) {
+
+				// verifiquem les dades de validar
+
+				var validem_ = json.datos.validacion;
+
+				if (validem_) {
+
+					var validacio_estat = json.datos.validacion.estado
+						,validacio_missatge = json.datos.validacion.mensaje
+						,camp_id = json.datos.validacion.campo;
+
+					if (validacio_estat === "error" && camp_id && camp_id !== "" && camp_id !== null) {
+
+						imc_forms_missatge
+							.appFormsMissatge({ accio: validacio_estat, titol: validacio_missatge, text: txtFormDinErrorText, amagaDesdeFons: false, alTancar: function() { remarca(camp_id); } });
+
+					} else if (validacio_estat === "error" && (!camp_id || camp_id === "" || camp_id === null)) {
+
+						imc_forms_missatge
+							.appFormsMissatge({ accio: validacio_estat, titol: validacio_missatge, text: txtFormDinErrorText, amagaDesdeFons: false });
+
+					} else {
+
+						imc_forms_missatge
+							.appFormsMissatge({ accio: validacio_estat, titol: validacio_missatge, text: "", amagaDesdeFons: false });
+
+						eliminem();
+
+					}
+
+				} else {
+
+					// amaguem la capa missatge i eliminem
+
+					imc_forms_missatge
+						.appFormsMissatge({ araAmaga: true });
+
+					eliminem();
+
+				}
 
 			},
 			eliminem = function() {
+
+				// verifiquem que es pot esborrar
+
+				if (json.datos.borrar !== "s") {
+					return;
+				}
+
+
+				// esborrem
 
 				var fila_el = taula_body.find("input:checked").closest("tr");
 
 				fila_el
 					.remove();
 
-				imc_forms_missatge
-					.appFormsMissatge({ araAmaga: true });
+				
+				// reordenem índex llistat
 
 				reordena();
+
 
 				// revisem número de files
 
 				element
 					.appFormsLlistaElementsFilesRevisa();
+
+			},
+			remarca = function(camp_id) {
+
+				element
+					.closest(".imc--form")
+						.find("*[data-id='"+camp_id+"']")
+							.appDestaca({ referent: element.closest(".imc--form") });
 
 			},
 			modifica = function(e) {
@@ -605,6 +924,23 @@ $.fn.appFormsLlistaElements = function(options) {
 
 				valorsSerialitzats["indiceElemento"] = parseInt(indexElement, 10) - 1;
 
+				// es una llista filla?
+
+				if (enllasId && enllasIndex) {
+
+					valorsSerialitzats["idListaPadre"] = enllasId;
+
+					var llista_pare_ = imc_forms_body.find("fieldset[data-id='" + enllasId + "']:first")
+						,llista_filla_ = imc_forms_body.find("fieldset[data-id='" + elm_id + "']:first")
+						,enllasIndex_ = parseInt( llista_pare_.find("tbody:first input:checked:first").closest("tr").attr("data-id"), 10) - 1;
+					
+					valorsSerialitzats["indiceSeleccionadoListaPadre"] = enllasIndex_;
+
+					valorsSerialitzats["columnaListaPadre"] = llista_filla_.attr("data-columna-pare");
+					valorsSerialitzats["columnaListaHija"] = llista_filla_.attr("data-columna-filla");
+
+				}
+
 				// dades ajax
 
 				var pag_url = APP_FORM_LE_MODIFICA,
@@ -624,10 +960,7 @@ $.fn.appFormsLlistaElements = function(options) {
 						url: pag_url,
 						data: pag_dades,
 						method: "post",
-						dataType: "json",
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
+						dataType: "json"
 					})
 					.done(function( data ) {
 
@@ -643,7 +976,7 @@ $.fn.appFormsLlistaElements = function(options) {
 							if (json.estado === "WARNING") {
 
 								imc_forms_missatge
-									.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { mostra(); } });
+									.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { modificaObri(json); } });
 
 								return;
 
@@ -697,7 +1030,7 @@ $.fn.appFormsLlistaElements = function(options) {
 
 				imc_forms_taula
 					.attr("aria-hidden", "false")
-					.appFormsLlistaElementsForm({ element_id: elm_id, titol: elm_label, desDe: "modifica" });
+					.appFormsLlistaElementsForm({ element_id: elm_id, titol: elm_label, desDe: "modifica", idLlistaPare: enllasId });
 
 				imc_forms_taula
 					.appFormsConfiguracio({ forms_json: json, desDe: "taula" });
@@ -756,10 +1089,7 @@ $.fn.appFormsLlistaElements = function(options) {
 						url: pag_url,
 						data: pag_dades,
 						method: "post",
-						dataType: "json",
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
+						dataType: "json"
 					})
 					.done(function( data ) {
 
@@ -775,7 +1105,7 @@ $.fn.appFormsLlistaElements = function(options) {
 							if (json.estado === "WARNING") {
 
 								imc_forms_missatge
-									.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { mostra(); } });
+									.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { consultaObri(json); } });
 
 								return;
 
@@ -929,10 +1259,7 @@ $.fn.appFormsLlistaElements = function(options) {
 						url: pag_url,
 						data: pag_dades,
 						method: "post",
-						dataType: "json",
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
+						dataType: "json"
 					})
 					.done(function( data ) {
 
@@ -948,7 +1275,7 @@ $.fn.appFormsLlistaElements = function(options) {
 							if (json.estado === "WARNING") {
 
 								imc_forms_missatge
-									.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { mostra(); } });
+									.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { cercaPinta(json); } });
 
 								return;
 
@@ -1043,17 +1370,21 @@ $.fn.appFormsLlistaElements = function(options) {
 // events i accion del popuop detall de la llista d'elements (taula)
 
 $.fn.appFormsLlistaElementsForm = function(options) {
+
 	var settings = $.extend({
-		element_id: false
-		,titol: false
-		,desDe: false // afegix, modifica
-		,fila_id: false
-	}, options);
+			element_id: false
+			,titol: false
+			,desDe: false // afegix, modifica
+			,fila_id: false
+			,idLlistaPare: false
+		}, options);
+
 	this.each(function(){
 		var element = $(this)
 			,element_id = settings.element_id
 			,titol = settings.titol
 			,desDe = settings.desDe
+			,idLlistaPare = settings.idLlistaPare
 			,envia_url = false
 			,envia_ajax = false
 			,json = false
@@ -1153,6 +1484,23 @@ $.fn.appFormsLlistaElementsForm = function(options) {
 
 				valorsSerialitzats["idCampoListaElementos"] = element_id;
 
+				// depen d'una llista pare?
+
+				if (idLlistaPare) {
+
+					valorsSerialitzats["idListaPadre"] = idLlistaPare;
+
+					var llista_pare_ = imc_forms_body.find("fieldset[data-id='" + idLlistaPare + "']:first")
+						,llista_filla_ = imc_forms_body.find("fieldset[data-id='" + element_id + "']:first")
+						,indexLlistaPare = parseInt( llista_pare_.find("tbody:first input:checked:first").closest("tr").attr("data-id"), 10) - 1;
+					
+					valorsSerialitzats["indiceSeleccionadoListaPadre"] = indexLlistaPare;
+
+					valorsSerialitzats["columnaListaPadre"] = llista_filla_.attr("data-columna-pare");
+					valorsSerialitzats["columnaListaHija"] = llista_filla_.attr("data-columna-filla");
+
+				}
+
 				// dades ajax
 
 				var pag_url = APP_FORM_LE_DESA,
@@ -1172,10 +1520,7 @@ $.fn.appFormsLlistaElementsForm = function(options) {
 						url: pag_url,
 						data: pag_dades,
 						method: "post",
-						dataType: "json",
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
+						dataType: "json"
 					})
 					.done(function( data ) {
 
@@ -1188,7 +1533,7 @@ $.fn.appFormsLlistaElementsForm = function(options) {
 							if (json.estado === "WARNING") {
 
 								imc_forms_missatge
-									.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { mostra(); } });
+									.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { desaAcaba(json); } });
 
 								return;
 
@@ -1258,7 +1603,7 @@ $.fn.appFormsLlistaElementsForm = function(options) {
 				if (validacio_missatge) {
 
 					imc_forms_missatge
-						.appFormsMissatge({ accio: validacio_estat, titol: validacio_missatge, text: "", amagaDesdeFons: false, alAcceptar: function() { finalitza(fila_valors, fila_index, fila_ordre); } })
+						.appFormsMissatge({ accio: validacio_estat, titol: validacio_missatge, text: "", amagaDesdeFons: false, alTancar: function() { finalitza(fila_valors, fila_index, fila_ordre); } })
 						.appMissatgeFormAccions();
 
 					return;
@@ -1273,7 +1618,8 @@ $.fn.appFormsLlistaElementsForm = function(options) {
 				element
 					.find("*[data-id='"+camp_id+"']")
 						.addClass("imc-el-error")
-						.appDestaca({ referent: element.find(".imc--contingut:first") }); // imc_forms_contenidor.find(".imc--contingut:first")
+						.appDestaca({ referent: element.find(".imc--form:first") });
+						//.appDestaca({ referent: element.find(".imc--contingut:first") }); // imc_forms_contenidor.find(".imc--contingut:first")
 
 			},
 			finalitza = function(fila_valors, fila_index, fila_ordre) {

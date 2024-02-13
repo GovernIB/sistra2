@@ -87,6 +87,57 @@
 
 
 
+/* form recuperació */
+
+
+.imc--persistencia.imc--recuperacio > .imc--c { max-width: 26em; }
+
+
+.imc--recuperacio .imc--form { padding-bottom: 2em; border-bottom: 2px dashed #ccc; background-color: #fff; }
+
+.imc--form .imc--f-els { display: flex; flex-direction: column; }
+
+.imc--form .imc--f-el { padding-bottom: 1em; }
+
+.imc--form .imc--f-el label,
+.imc--form .imc--f-el legend { display: block; padding-bottom: .3em; }
+
+
+
+.imc--form input {
+  display: inline-block; font: normal 120% 'Bariol Regular',Arial,Helvetica,sans-serif; height: 2.2em; vertical-align: middle; padding: .2em .3em; background-color: #fff; border: 3px solid #cecdcd; transition: background-color .2s ease-out, border-color .2s ease-out; will-change: border;
+}
+
+.imc--form input:hover { border-color: #5687a8; }
+.imc--form input:focus { background-color: #f9f9e8; border-color: #29404f; }
+
+
+.imc--form button { display: flex; align-items: center; gap: 0 .5em; min-height: 2.2em; }
+
+.imc--form button.imc--ico::before { content: ""; display: block; width: 1.2em; height: 1.2em; margin-left: auto; background: transparent url() no-repeat center center / auto 95%; }
+
+.imc--form button.imc--ico.imc--reproduix::before { background-image: url(../imgs/icones/ico_so_fff.svg); }
+.imc--form button.imc--ico.imc--refresca::before { background-image: url(../imgs/icones/ico_reintenta.svg); }
+
+
+
+.imc--captcha { display: grid; grid-template-columns: auto 1fr; gap:.5em; }
+.imc--captcha button { font-size: .7em; margin-bottom: 1px; }
+.imc--captcha .imc--ca-camp { grid-area: 2 / 1 / 2 / span 2; }
+
+
+.imc--form .imc--envia { display: flex; align-items: center; gap: 0 .5em; font-size: 1.2em; }
+.imc--form .imc--envia::after { content: ""; display: block; width: .8em; height: .8em; background: transparent url(../imgs/icones/ico_nav.svg) no-repeat center center / auto 100%; opacity: .5; }
+
+
+.imc--rec-opcions { padding-top: 2em; }
+.imc--rec-opcions p { margin-bottom: 1.5em; }
+.imc--rec-opcions a { font-size: 1.2em; }
+
+
+
+
+
 /* media - mòbil */
 
 @media only screen and (max-width : 550px) {
@@ -107,5 +158,9 @@
   .imc--taula table tbody tr { margin-bottom: 1em; border: 2px solid #eee; }
 
   .imc--taula table tbody tr td::before { content: attr(data-etiqueta); display: block; font-size: .8em; font-weight: bold; padding-bottom: .3em; }
+
+  .imc-bt.imc--ico::before { margin-right: .5em; }
+
+  .imc--form .imc--f-els { padding-left: 1em; }
 
 }

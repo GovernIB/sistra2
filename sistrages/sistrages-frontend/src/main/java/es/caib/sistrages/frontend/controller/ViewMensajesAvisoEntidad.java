@@ -47,9 +47,6 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	/** Id entidad. */
 	private Long idEntidad;
 
-	/** Paginacion */
-	private Integer paginacion;
-
 	/** Filtro (puede venir por parametro). */
 	private String filtro;
 
@@ -73,7 +70,6 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(idEntidad);
 		// Titulo
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
-		paginacion = UtilJSF.getPaginacion("viewMensajesAvisoEntidad");
 		// Recupera datos
 		buscar();
 	}
@@ -96,6 +92,7 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		listaDatos = avisoEntidadService.listAvisoEntidad(idEntidad, UtilJSF.getIdioma(), filtro);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
+		//setPaginacion(paginacion);
 	}
 
 	/**
@@ -315,21 +312,6 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	 */
 	public AvisoEntidad getDatoSeleccionado() {
 		return datoSeleccionado;
-	}
-
-	/**
-	 * @return the paginacion
-	 */
-	public final Integer getPaginacion() {
-		return paginacion;
-	}
-
-	/**
-	 * @param paginacion the paginacion to set
-	 */
-	public final void setPaginacion(Integer paginacion) {
-		this.paginacion = paginacion;
-		UtilJSF.setPaginacion(paginacion, "viewMensajesAvisoEntidad");
 	}
 
 	/**

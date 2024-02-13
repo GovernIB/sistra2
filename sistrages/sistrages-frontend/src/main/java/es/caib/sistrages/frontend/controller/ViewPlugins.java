@@ -43,9 +43,6 @@ public class ViewPlugins extends ViewControllerBase {
 	/** Id entidad activa. */
 	private Long idEntidad;
 
-	/** Paginacion */
-	private Integer paginacion;
-
 	private Entidad entidad;
 
 	/** Filtro. */
@@ -79,8 +76,6 @@ public class ViewPlugins extends ViewControllerBase {
 		if (ambito == null) {
 			throw new FrontException("No se ha indicado ambito");
 		}
-		paginacion = UtilJSF.getPaginacion("viewPlugins");
-
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
 
 		final TypeAmbito ambitoType = TypeAmbito.fromString(ambito);
@@ -362,21 +357,6 @@ public class ViewPlugins extends ViewControllerBase {
 
 	public void setEntidad(final Entidad entidad) {
 		this.entidad = entidad;
-	}
-
-	/**
-	 * @return the paginacion
-	 */
-	public final Integer getPaginacion() {
-		return paginacion;
-	}
-
-	/**
-	 * @param paginacion the paginacion to set
-	 */
-	public final void setPaginacion(Integer paginacion) {
-		this.paginacion = paginacion;
-		UtilJSF.setPaginacion(paginacion, "viewPlugins");
 	}
 
 	/**

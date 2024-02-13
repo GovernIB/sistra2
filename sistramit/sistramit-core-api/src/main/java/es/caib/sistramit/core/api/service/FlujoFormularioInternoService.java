@@ -140,6 +140,24 @@ public interface FlujoFormularioInternoService {
 			List<ValorCampo> valores);
 
 	/**
+	 * Realiza búsqueda sobre selector dinámico.
+	 *
+	 * @param idSesionFormulario
+	 *                               idSesionFormulario
+	 * @param idCampoListaElementos
+	 * 							 idCampoListaElementos
+	 * @param idCampo
+	 *                               idCampo
+	 * @param textoCampo
+	 *                               texto a buscar
+	 * @param valores
+	 *                               valores actuales
+	 * @return valores posibles selector
+	 */
+	ResultadoBuscadorDinamico buscadorDinamicoElemento(String idSesionFormulario, String idCampoListaElementos, String idCampo, String textoCampo,
+											   List<ValorCampo> valores);
+
+	/**
 	 * Genera imagen de captcha.
 	 *
 	 * @param idSesionFormulario
@@ -160,16 +178,6 @@ public interface FlujoFormularioInternoService {
 	 * @return sonido de captcha
 	 */
 	Captcha generarSonidoCaptcha(final String idSesionFormulario, final String idCampo);
-
-	/**
-	 * Regenerar imagen de captcha.
-	 *
-	 * @param idSesionFormulario
-	 *                               idSesionFormulario
-	 * @param pIdImagen
-	 *                               Imagen
-	 */
-	void regenerarCaptcha(final String idSesionFormulario, final String idCampo);
 
 	/**
 	 * Añade elemento a componente lista de elementos.

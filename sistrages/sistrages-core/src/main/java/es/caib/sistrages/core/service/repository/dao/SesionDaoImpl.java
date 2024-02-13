@@ -84,4 +84,21 @@ public class SesionDaoImpl implements SesionDao {
 		}
 	}
 
+	@Override
+	public void updatePropiedades(final String pUsername, final String pPropiedades) {
+		JSesion jSesion = entityManager.find(JSesion.class, pUsername);
+
+		if (jSesion == null) {
+			jSesion = new JSesion();
+			jSesion.setUsuario(pUsername);
+			jSesion.setFecha(new Date());
+			jSesion.setPropiedades(pPropiedades);
+			entityManager.persist(jSesion);
+		} else {
+			jSesion.setPropiedades(pPropiedades);
+			jSesion.setFecha(new Date());
+			entityManager.merge(jSesion);
+		}
+	}
+
 }

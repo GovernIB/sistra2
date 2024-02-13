@@ -1,0 +1,73 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.distanciaHoras(fecha1, hora1, fecha2, hora2, formatoFecha, formatoHora)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=distanciaHoras">distanciaHoras</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	distanciaHoras(String fecha1, String hora1, String fecha2, String hora2, String formatoFecha, String formatoHora): String
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que devuelve el número de horas, minutos y segundos que hay entre dos fechas y/o dos horas.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>fecha1</b>: Cadena que contiene la fecha inicial.</li>
+		<li><b>hora2</b>: Cadena que contiene la hora inicial.</li>
+		<li><b>fecha2</b>: Cadena que contiene la fecha final.</li>
+		<li><b>hora2</b>: Cadena que contiene la hora final.</li>
+		<li><b>formatoFecha</b>: Formato de las fechas. Es opcional y el formato por defecto es dd/MM/yyyy.</li>
+		<li><b>formatoHora</b>: Formato de las horas. Es opcional y el formato por defecto es HH:mm.</li>
+	</ul>
+	Debe indicarse al menos dos fechas o dos horas. Si se indican fechas sin horas, la hora a considerar será 00:00:00.
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: Número de horas, minutos y segundos que hay de distancia entre las fechas y/o las horas, con el formato HH:mm:ss.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p><b>Ejemplo 1</b> Si queremos averiguar el número de horas, minutos y segundos que hay entre 2 fechas (se deben especificar usando los siguientes formatos yyyy-MM-dd y HH:mm:ss), por ejemplo, entre el 23/04/2012 y 13/06/2012 a las 2 de la madrugada, 2 minutos y 2 segundos, podemos usar la siguiente sentencia, con lo que se obtendrá 1226:02:02:</p>
+ <p class="codigoScript">
+	var horas = PLUGIN_UTILS.distanciaHoras('2012-04-23', '', '2012-06-13', '02:02:02', 'yyyy-MM-dd', 'HH:mm:ss');
+</p>
+<p><b>Ejemplo 2</b> Si queremos averiguar el número de horas, minutos y segundos que hay entre 2 fechas (especificando el formato dd/MM/yyyy y HH:mm), por ejemplo, entre el 23/04/2012 y 13/06/2012 podemos usar la siguiente sentencia, obteniendo 1224:00:00:</p>
+ <p class="codigoScript">
+	var horas = PLUGIN_UTILS.distanciaDias('23/04/2012', '', '13/06/2012', '', 'dd/MM/yyyy', '');
+</p>
+<p><b>Ejemplo 3</b> Si queremos averiguar el número de horas, minutos y segundos que hay entre 2 horas (especificando el formato HH:mm:ss), por ejemplo, entre las 19:20:05 y 23:58:42 podemos usar la siguiente sentencia, obteniendo 04:38:37:</p>
+ <p class="codigoScript">
+	var horas = PLUGIN_UTILS.distanciaDias('', '19:20:05', '', '23:58:42', '', 'HH:mm:ss');
+</p>
+</body>
+</html>

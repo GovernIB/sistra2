@@ -1,0 +1,78 @@
+/* imc DESTACA */
+
+.imc-destacat {  }
+.imc-destacat div { position: absolute; z-index: 30; background-color: #000; opacity: 0; }
+
+.imc-destacat .imc--dalt { top: 0; left: 0; width: 100%; }
+.imc-destacat .imc--baix { left: 0; width: 100%; }
+.imc-destacat .imc--esquerre { left: 0; }
+.imc-destacat .imc--dreta { }
+
+.imc--parpadeja div {
+	-moz-animation-name: parpadeja;
+	-moz-animation-duration: 1.5s;
+	-moz-animation-iteration-count: 1;
+	-moz-animation-timing-function: linear;
+	-webkit-animation-name: parpadeja;
+	-webkit-animation-duration: 1.5s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-timing-function: linear;
+	-o-animation-name: parpadeja;
+	-o-animation-duration: 1.5s;
+	-o-animation-iteration-count: 1;
+	-o-animation-timing-function: linear;
+	animation-name: parpadeja;
+	animation-duration: 1.5s;
+	animation-iteration-count: 1;
+	animation-timing-function: linear;
+}
+
+@-moz-keyframes parpadeja {
+	0% { opacity: 0; }
+	20% { opacity: .7; }
+	60% { opacity: .7; }
+	100% { opacity: 0; }
+}
+@-webkit-keyframes parpadeja {
+	0% { opacity: 0; }
+	20% { opacity: .7; }
+	60% { opacity: .7; }
+	100% { opacity: 0; }
+}
+@-o-keyframes parpadeja {
+	0% { opacity: 0; }
+	20% { opacity: .7; }
+	60% { opacity: .7; }
+	100% { opacity: 0; }
+}
+@keyframes parpadeja {
+	0% { opacity: 0; }
+	20% { opacity: .7; }
+	60% { opacity: .7; }
+	100% { opacity: 0; }
+}
+
+
+.imc-destaca--enmarca { position: absolute; z-index: 30; top: 0; left: 0; width: 100%; border: .4em solid #c00 !important; }
+
+
+
+.imc-preevalua {  }
+.imc-preevalua div { position: absolute; z-index: 30; }
+
+.imc-preevalua .imc--dalt { top: 0; left: 0; width: 100%; }
+.imc-preevalua .imc--baix { left: 0; width: 100%; }
+.imc-preevalua .imc--esquerre { left: 0; }
+.imc-preevalua .imc--dreta { }
+
+
+/* destaca secció */
+
+.imc--secc-destaca svg { 
+  position: absolute; z-index: -3; top: 0; left: 0; width: 100%; height: 100%;
+  stroke-dasharray: 140 540; stroke-dashoffset: -474; stroke-width: 0px; fill: transparent; stroke: #4dba79; transition: stroke-width 1s, stroke-dashoffset 1s, stroke-dasharray 1s;
+}
+
+.imc--secc-destacat svg {  z-index: 1; 
+	stroke-width: 10px; stroke-dashoffset: 0; stroke-dasharray: 2960;
+}

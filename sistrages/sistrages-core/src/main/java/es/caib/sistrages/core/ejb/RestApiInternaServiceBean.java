@@ -344,4 +344,10 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 	public List<Integer> listVersionesByTramite(String idEntidad, String idArea, String idTramite) {
 		return restApiService.listVersionesByTramite(idEntidad, idArea, idTramite);
 	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public byte[] getLogoEntidad(String pIdEntidad) {
+		return restApiService.getLogoEntidad(pIdEntidad);
+	}
 }

@@ -72,6 +72,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	private boolean tiposAutenticacionCER;
 	private boolean tiposAutenticacionPIN;
 	private boolean tiposAutenticacionPER;
+	private boolean tiposAutenticacionMOV;
 
 	private boolean cambios = false;
 
@@ -110,6 +111,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		tiposAutenticacionCER = tramiteVersion.tieneTipoAutenticacion(TypeAutenticacion.CERTIFICADO.toString());
 		tiposAutenticacionPIN = tramiteVersion.tieneTipoAutenticacion(TypeAutenticacion.CLAVE_PIN.toString());
 		tiposAutenticacionPER = tramiteVersion.tieneTipoAutenticacion(TypeAutenticacion.CLAVE_PERMANENTE.toString());
+		tiposAutenticacionMOV = tramiteVersion.tieneTipoAutenticacion(TypeAutenticacion.CLAVE_MOVIL.toString());
 		tipoTramite = tramiteVersion.getTipoTramite();
 	}
 
@@ -147,7 +149,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 			}
 
 			if (this.getTramiteVersion().isAutenticado() && !tiposAutenticacionCER && !tiposAutenticacionPIN
-					&& !tiposAutenticacionPER) {
+					&& !tiposAutenticacionPER && !tiposAutenticacionMOV) {
 				addMessageContext(TypeNivelGravedad.WARNING,
 						UtilJSF.getLiteral("warning.tipoautenticacion.obligatorio"));
 				return;
@@ -180,6 +182,9 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 			}
 			if (tiposAutenticacionPER) {
 				tipos.add(TypeAutenticacion.CLAVE_PERMANENTE);
+			}
+			if (tiposAutenticacionMOV) {
+				tipos.add(TypeAutenticacion.CLAVE_MOVIL);
 			}
 			tramiteVersion.setTiposAutenticacion(tipos);
 			if (tramiteVersion.getTipoTramite() == null) {
@@ -328,7 +333,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	}
 
 	public void check() {
-		tiposAutenticacionCER = tiposAutenticacionPIN = tiposAutenticacionPER = tramiteVersion.isAutenticado();
+		tiposAutenticacionCER = tiposAutenticacionPIN = tiposAutenticacionPER = tiposAutenticacionMOV = tramiteVersion.isAutenticado();
 	}
 
 	// ------- FUNCIONES PRIVADAS ------------------------------
@@ -575,6 +580,20 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	 */
 	public final void setTiposAutenticacionPER(final boolean tiposAutenticacionPER) {
 		this.tiposAutenticacionPER = tiposAutenticacionPER;
+	}
+
+	/**
+	 * @return the tiposAutenticacionMOV
+	 */
+	public final boolean isTiposAutenticacionMOV() {
+		return tiposAutenticacionMOV;
+	}
+
+	/**
+	 * @param tiposAutenticacionMOV the tiposAutenticacionMOV to set
+	 */
+	public final void setTiposAutenticacionMOV(final boolean tiposAutenticacionMOV) {
+		this.tiposAutenticacionMOV = tiposAutenticacionMOV;
 	}
 
 	public void setCambiosTrim() {

@@ -42,6 +42,16 @@ public final class PlgSesionFormulario implements PlgSesionFormularioInt {
 	}
 
 	@Override
+	public String getIdTramite() {
+		return variablesFormulario.getIdTramite();
+	}
+
+	@Override
+	public int getVersionTramite() {
+		return variablesFormulario.getVersionTramite();
+	}
+
+	@Override
 	public String getIdioma() {
 		return variablesFormulario.getIdioma();
 	}

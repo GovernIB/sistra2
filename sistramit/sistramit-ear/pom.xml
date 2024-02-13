@@ -4,18 +4,19 @@
 	<parent>
 		<groupId>es.caib.sistra2</groupId>
 		<artifactId>sistramit</artifactId>
-		<version>1.7.0</version>
+		<version>1.7.1</version>
 	</parent>
 	<artifactId>sistramit-ear</artifactId>
 	<packaging>ear</packaging>
 	<name>sistramit-ear</name>
+
 	<dependencies>
 
 		<!-- Librerias comunes -->
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistramit-lib</artifactId>
-			<version>1.7.0</version>
+			<version>1.7.1</version>
 			<type>pom</type>
 		</dependency>
 
@@ -23,7 +24,7 @@
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistramit-core</artifactId>
-			<version>1.7.0</version>
+			<version>1.7.1</version>
 			<type>ejb</type>
 		</dependency>
 
@@ -31,14 +32,14 @@
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistramit-frontend</artifactId>
-			<version>1.7.0</version>
+			<version>1.7.1</version>
 			<type>war</type>
 		</dependency>
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistramit-rest-ws</artifactId>
-			<version>1.7.0</version>
+			<version>1.7.1</version>
 			<type>war</type>
 		</dependency>
 
@@ -99,4 +100,44 @@
 		</plugins>
 		<finalName>sistramit</finalName>
 	</build>
+
+
+	<profiles>
+		<profile>
+			<id>local</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-ear-plugin</artifactId>
+						<version>${maven.ear.version}</version>
+						<configuration>
+							<unpackTypes>war</unpackTypes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<dependencies>
+				<!-- JPA : para ejecutar con IntelliJ -->
+				<dependency>
+					<groupId>org.hibernate.javax.persistence</groupId>
+					<artifactId>hibernate-jpa-2.1-api</artifactId>
+					<version>${hibernate-jpa-2.1-api.version}</version>
+					<scope>compile</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate-entitymanager</artifactId>
+					<version>${hibernate.version}</version>
+					<scope>compile</scope>
+					<exclusions>
+						<exclusion>
+							<artifactId>antlr</artifactId>
+							<groupId>antlr</groupId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
+
 </project>

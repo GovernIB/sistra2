@@ -8,6 +8,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.flujo.types.TypeTramite;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeQAA;
 
 /**
  * Detalle tramite info.
@@ -47,6 +48,9 @@ public class DetalleTramiteInfo implements ModelApi {
 
 	/** Metodo Autenticacion. */
 	private TypeMetodoAutenticacion metodoAutenticacion;
+
+	/** Nivel Autenticacion. */
+	private TypeQAA nivelAutenticacion;
 
 	/** Indica si es nuevo o se ha cargado de persistencia. */
 	private TypeSiNo nuevo;
@@ -368,6 +372,25 @@ public class DetalleTramiteInfo implements ModelApi {
 	 */
 	public void setDestino(final TypeDestino tipoDestino) {
 		this.destino = tipoDestino;
+	}
+
+	/**
+	 * Método de acceso a nivelAutenticacion.
+	 *
+	 * @return nivelAutenticacion
+	 */
+	public TypeQAA getNivelAutenticacion() {
+		return nivelAutenticacion;
+	}
+
+	/**
+	 * Método para establecer nivelAutenticacion.
+	 *
+	 * @param nivelAutenticacion
+	 *                               nivelAutenticacion a establecer
+	 */
+	public void setNivelAutenticacion(TypeQAA nivelAutenticacion) {
+		this.nivelAutenticacion = nivelAutenticacion;
 	}
 
 }

@@ -6,7 +6,7 @@
 .imc-forms-cap,
 .imc-navegacio,
 aside { display: none; }
-*/
+*/	
 .imc-iframe-botonera { position: fixed; z-index: 2; top: 0; left: 0; width: 100%; height: 2.5em; text-align: right; padding: .3em 0 0 0; background-color: #d0d0d0; }
 .imc-iframe-botonera ul { list-style: none; margin-right: 1em; }
 .imc-iframe-botonera li { display: inline; }

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>es.caib.sistra2</groupId>
 		<artifactId>sistramit</artifactId>
-		<version>1.7.0</version>
+		<version>1.7.1</version>
 	</parent>
 	<artifactId>sistramit-core</artifactId>
 	<name>sistramit-core</name>
@@ -15,7 +15,7 @@
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistramit-lib</artifactId>
-			<version>1.7.0</version>
+			<version>1.7.1</version>
 			<type>pom</type>
 		</dependency>
 
@@ -77,10 +77,17 @@
 
 		<!-- JPA -->
 		<dependency>
-		    <groupId>org.hibernate.javax.persistence</groupId>
-		    <artifactId>hibernate-jpa-2.1-api</artifactId>
-		    <version>${hibernate-jpa-2.1-api.version}</version>
-		    <scope>provided</scope>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.1-api</artifactId>
+			<version>${hibernate-jpa-2.1-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Testing -->
@@ -117,7 +124,10 @@
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
             <scope>test</scope>
-        </dependency>
+		 </dependency>
+
+
+		<!-- NO COMITEAR
 
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -125,6 +135,7 @@
             <version>${hibernate.version}</version>
             <scope>test</scope>
         </dependency>
+        -->
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -140,7 +151,6 @@
 		    <scope>test</scope>
 		</dependency>
 
-		<!-- CXF -->
 		 <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
@@ -161,16 +171,6 @@
 		    <version>${cxf.version}</version>
             <scope>test</scope>
 		</dependency>
-
-		<!--
-		<dependency>
-		    <groupId>org.apache.wss4j</groupId>
-   			 <artifactId>wss4j</artifactId>
-   			 <version>2.1.11</version>
-   			 <type>pom</type>
-		     <scope>test</scope>
-		</dependency>
-		 -->
 
 		<dependency>
          <groupId>org.apache.wss4j</groupId>
@@ -257,7 +257,7 @@
 					<dependency>
 						<groupId>es.caib.sistra2</groupId>
 						<artifactId>sistramit-lib</artifactId>
-						<version>1.7.0</version>
+						<version>1.7.1</version>
 						<type>pom</type>
 					</dependency>
 				</dependencies>

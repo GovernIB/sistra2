@@ -23,6 +23,9 @@ public final class Constantes {
 	/** Formato fecha frontal. */
 	public static final String FORMATO_FECHA_FRONTAL = "dd/MM/yyyy";
 
+	/** Formato hora frontal. */
+	public static final String FORMATO_HORA_FRONTAL = "HH:mm";
+
 	/** Formato fecha hora frontal. */
 	public static final String FORMATO_FECHAHORA_FRONTAL = "dd/MM/yyyy HH:mm:ss";
 

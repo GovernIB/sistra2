@@ -42,11 +42,11 @@
 								 var="td" emptyMessage="#{msg['error.emptyRows']}"
 								 value="#{dialogBusquedaDominio.data}"
 								 scrollable="true"
-								 scrollHeight="264" rows="10"
+								 scrollHeight="264" rows="#{sessionBean.paginacion}"
 								 paginator="true" paginatorPosition="bottom"
                          		 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                  currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-                         		 rowsPerPageTemplate="5,10,15,30"
+                         		 rowsPerPageTemplate="5,10,15,30,50,75,100"
 								 selectionMode="single"
 								 selection="#{dialogBusquedaDominio.valorSeleccionado}"
 								 rowKey="#{td.codigo}">

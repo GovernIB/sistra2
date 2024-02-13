@@ -25,6 +25,13 @@ public final class VariablesFormulario implements Serializable {
 	 * Sesión de tramitación desde la que se ha lanzado el formulario.
 	 */
 	private String idSesionTramitacion;
+
+	/**  Id del trámite. */
+	private String idTramite;
+
+	/**  Versión del trámite. */
+	private int versionTramite;
+
 	/**
 	 * Metodo autenticación iniciador.
 	 */
@@ -274,6 +281,44 @@ public final class VariablesFormulario implements Serializable {
 	 */
 	public void setEdicion(final TypeEdicion edicion) {
 		this.edicion = edicion;
+	}
+
+	/**
+	 * Método de acceso a idTramite.
+	 *
+	 * @return idTramite
+	 */
+	public String getIdTramite() {
+		return idTramite;
+	}
+
+	/**
+	 * Método para establecer idTramite.
+	 *
+	 * @param idTramite
+	 *                     idTramite a establecer
+	 */
+	public void setIdTramite(String idTramite) {
+		this.idTramite = idTramite;
+	}
+
+	/**
+	 * Método de acceso a versionTramite.
+	 *
+	 * @return versionTramite
+	 */
+	public int getVersionTramite() {
+		return versionTramite;
+	}
+
+	/**
+	 * Método para establecer versionTramite.
+	 *
+	 * @param versionTramite
+	 *                           versionTramite a establecer
+	 */
+	public void setVersionTramite(int versionTramite) {
+		this.versionTramite = versionTramite;
 	}
 
 }

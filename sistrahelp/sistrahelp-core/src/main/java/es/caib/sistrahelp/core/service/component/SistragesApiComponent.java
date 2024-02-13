@@ -50,4 +50,11 @@ public interface SistragesApiComponent {
 
 	List<Integer> obtenerVersionTramite(String identificador, String tramite);
 
+	/**
+	 * Obtiene el logo
+	 * @param codDir3
+	 * @return
+	 */
+	byte[] urlLogoEntidad(String codDir3);
+
 }

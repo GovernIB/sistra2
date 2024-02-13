@@ -325,10 +325,7 @@ $.fn.appSigna = function(options) {
 						data: pag_dades,
 						method: "post",
 						dataType: "json",
-						timeout: APP_TIMEOUT,
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
+						timeout: APP_TIMEOUT
 					})
 					.done(function( data ) {
 
@@ -656,10 +653,7 @@ $.fn.appRegistra = function(options) {
 						data: pag_dades,
 						method: "post",
 						dataType: "json",
-						timeout: APP_TIMEOUT_RT,
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
+						timeout: APP_TIMEOUT_RT
 					})
 					.done(function( data ) {
 

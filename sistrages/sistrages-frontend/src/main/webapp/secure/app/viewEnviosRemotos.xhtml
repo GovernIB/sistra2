@@ -14,6 +14,35 @@
 		<f:viewParam name="area" value="#{viewEnviosRemotos.area}"/>
 	</f:metadata>
 
+	<ui:define name="icerick">
+		<script type="text/javascript">
+		function setHeight(){
+	    	var altura = window.innerHeight - 50;
+	    	var alturaDatatable = altura - 250;
+            var alturaScrollableBody = altura - 293;
+
+            $('#form\\:dataTable').height(alturaDatatable);
+            $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
+	    }
+
+		jQuery(document).ready(function() {
+
+	      $(window).resize(function() {
+              setTimeout(function(){  setHeight(); }, 100);
+  			});
+
+	      setHeight();
+	  });
+
+		function cerrarDialog(){
+	      var iconX = parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all')
+	              [parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all').length-1];
+
+	      iconX.addEventListener("click", setHeight);
+	    }
+	    </script>
+	</ui:define>
+
 	<ui:define name="content">
 
 		<h:form id="form" style="height: 100%">
@@ -160,14 +189,16 @@
 
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="10" cellspacing="5">
-		        		<p:commandButton value="#{msg['botones.nuevo']}" id="btnNuevo" icon="fa fa-file" actionListener="#{viewEnviosRemotos.nuevo()}" process="@this" update="growl"  rendered="#{viewEnviosRemotos.getPermiteEditar()}">
-		        			<p:ajax event="dialogReturn" listener="#{viewEnviosRemotos.returnDialogo}" update="growl dataTable"/>
+		        		<p:commandButton value="#{msg['botones.nuevo']}" id="btnNuevo" icon="fa fa-file" actionListener="#{viewEnviosRemotos.nuevo()}" process="@this" update="growl"  rendered="#{viewEnviosRemotos.getPermiteEditar()}" oncomplete="cerrarDialog()">
+		        			<p:ajax event="dialogReturn" listener="#{viewEnviosRemotos.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEnviosRemotos.editar()}" process="@this" update="growl" rendered="#{viewEnviosRemotos.getPermiteEditar()}">
-		        			<p:ajax event="dialogReturn" listener="#{viewEnviosRemotos.returnDialogo}" update="growl dataTable"/>
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEnviosRemotos.editar()}" process="@this" update="growl" rendered="#{viewEnviosRemotos.getPermiteEditar()}" oncomplete="cerrarDialog()">
+		        			<p:ajax event="dialogReturn" listener="#{viewEnviosRemotos.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewEnviosRemotos.consultar()}" process="@this" update="growl" rendered="#{viewEnviosRemotos.getPermiteConsultar()}" />
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewEnviosRemotos.eliminar()}" process="@this" update="growl dataTable"  rendered="#{viewEnviosRemotos.getPermiteEditar()}">
+		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewEnviosRemotos.consultar()}" process="@this" update="growl" rendered="#{viewEnviosRemotos.getPermiteConsultar()}" oncomplete="cerrarDialog()">
+		        			<p:ajax event="dialogReturn" oncomplete="setHeight()"/>
+		        		</p:commandButton>
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewEnviosRemotos.eliminar()}" process="@this" update="growl dataTable"  rendered="#{viewEnviosRemotos.getPermiteEditar()}" oncomplete="setHeight()">
 		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" actionListener="#{viewEnviosRemotos.tramites()}" process="@this" update="growl dataTable" rendered="#{viewEnviosRemotos.getPermiteConsultar()}"/>
@@ -178,12 +209,12 @@
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewEnviosRemotos.listaDatos}"
-						 rows="#{viewEnviosRemotos.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
+						 rows="#{sessionBean.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-                         rowsPerPageTemplate="5,10,15,30"
+                         rowsPerPageTemplate="5,10,15,30,50,75,100"
 			        	 selectionMode="single" selection="#{viewEnviosRemotos.datoSeleccionado}" rowKey="#{td.identificador}">
 
 
@@ -226,8 +257,8 @@
 		      }
 		    </h:outputScript>
 
-			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEnviosRemotos.rcDobleClick}" process="@this" update="growl" style="display: none">
-		    	<p:ajax event="dialogReturn" listener="#{viewEnviosRemotos.returnDialogo}" update="growl dataTable"/>
+			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEnviosRemotos.rcDobleClick}" process="@this" update="growl" style="display: none" oncomplete="cerrarDialog()">
+		    	<p:ajax event="dialogReturn" listener="#{viewEnviosRemotos.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		    </p:commandButton>
 
 		    <p:confirmDialog global="true" >

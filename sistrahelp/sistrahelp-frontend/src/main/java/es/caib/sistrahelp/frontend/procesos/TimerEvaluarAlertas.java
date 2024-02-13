@@ -1,30 +1,27 @@
 package es.caib.sistrahelp.frontend.procesos;
 
-import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import javax.xml.bind.DatatypeConverter;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 import org.apache.commons.digester.plugins.PluginException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.caib.sistra2.commons.plugins.email.api.EmailPluginException;
 import es.caib.sistra2.commons.plugins.email.api.IEmailPlugin;
 import es.caib.sistrahelp.core.api.model.Alerta;
 import es.caib.sistrahelp.core.api.model.Entidad;
-import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.HistorialAlerta;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
@@ -33,7 +30,6 @@ import es.caib.sistrahelp.core.api.service.AlertaService;
 import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.core.api.service.HistorialAlertaService;
-import es.caib.sistrahelp.frontend.util.UtilJSF;
 
 public class TimerEvaluarAlertas implements Runnable {
 
@@ -43,6 +39,13 @@ public class TimerEvaluarAlertas implements Runnable {
 	private HistorialAlertaService historialService;
 	private AlertaService aService;
 	private boolean parar;
+
+    ScriptEngineManager manager = new ScriptEngineManager();
+    ScriptEngine interprete = manager.getEngineByName("js");
+    /**
+	 * Log.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(TimerEvaluarAlertas.class);
 
 	public TimerEvaluarAlertas(Long alCod, HelpDeskService hService, ConfiguracionService confServ,
 			HistorialAlertaService historialService, AlertaService aService) {
@@ -57,6 +60,7 @@ public class TimerEvaluarAlertas implements Runnable {
 	@Override
 	public void run() {
 		while (!parar) {
+			String grupoAnterior = "1";
 			Alerta al = aService.loadAlerta(alCod);
 			if (al != null && !al.isEliminar()
 					&& LocalTime.now().until(
@@ -67,7 +71,7 @@ public class TimerEvaluarAlertas implements Runnable {
 							ChronoUnit.SECONDS) < 0) {
 
 				List<String> eventos = al.getEventos();
-				String[] partes;
+				String[] partes = null;
 				FiltroAuditoriaTramitacion faut = new FiltroAuditoriaTramitacion(al.getListaAreas(), false, false);
 				if(al.getTipo().equals("T")) {
 					faut.setIdTramite(al.getTramite());
@@ -75,42 +79,90 @@ public class TimerEvaluarAlertas implements Runnable {
 					faut.setIdTramite(al.getTramite());
 					faut.setVersionTramite(al.getVersion());
 				}
-				for (String evento : eventos) {
-					partes = evento.split(":");
-					switch (partes[1]) {
-					case "<":
-						faut.setEvento(TypeEvento.fromString(partes[0]));
-						if (hService.countAuditoriaEvento(faut) < Long.parseLong(partes[2])) {
-							System.out
-									.println("Evento: " + partes[0] + " Cont: " + hService.countAuditoriaEvento(faut));
-							enviarEmail(partes[0], partes[1], partes[2], faut);
-							anadirHistorial(partes[0] + partes[1] + partes[2]);
+			    String condicion = "";
+			    String expresionCorreoHistorial = "";
+
+				for (int i=0; i<eventos.size(); i++) {
+					partes = eventos.get(i).split(":");
+				    boolean cambioGrupo = false;
+					String grupo = partes[0];
+					if (i > 0) {
+						if (!grupoAnterior.equals(grupo)) {
+							grupoAnterior = grupo;
+							cambioGrupo = true;
 						}
-						break;
-					case ">":
-						faut.setEvento(TypeEvento.fromString(partes[0]));
-						if (hService.countAuditoriaEvento(faut) > Long.parseLong(partes[2])) {
-							System.out
-									.println("Evento: " + partes[0] + " Cont: " + hService.countAuditoriaEvento(faut));
-							enviarEmail(partes[0], partes[1], partes[2], faut);
-							anadirHistorial(partes[0] + partes[1] + partes[2]);
-						}
-						break;
-					case "=":
-						faut.setEvento(TypeEvento.fromString(partes[0]));
-						if (hService.countAuditoriaEvento(faut) == Long.parseLong(partes[2])) {
-							System.out
-									.println("Evento: " + partes[0] + " Cont: " + hService.countAuditoriaEvento(faut));
-							enviarEmail(partes[0], partes[1], partes[2], faut);
-							anadirHistorial(partes[0] + partes[1] + partes[2]);
-						}
-						break;
 					}
+					String and_or = "";
+					String not = "";
+					String and_orStr = "";
+					String notStr = "";
+					faut.setEvento(TypeEvento.fromString(partes[3]));
+					Long eventoLong = hService.countAuditoriaEvento(faut);
+					String evento = String.valueOf(eventoLong);
+					String eventoStr = TypeEvento.fromString(partes[3]).name();
+					String operador = partes[4];
+					String operadorStr = partes[4];
+					String concurrencia = partes[5];
+
+					if (!partes[1].equals("null")) {
+						if (partes[1].equals("AND")) {
+							and_or = "&&";
+							and_orStr = "AND";
+						} else {
+							and_or = "||";
+							and_orStr = "OR";
+						}
+					}
+
+					if (partes[2].equals("false")) {
+						not = "";
+						notStr = "";
+					} else {
+						not = "!";
+						notStr = " NOT";
+					}
+
+					if (partes[4].equals("=")) {
+						operador = "==";
+						operadorStr = "=";
+					}
+
+					if (i == 0) {
+						condicion += "(" + not + evento + operador + concurrencia;
+						expresionCorreoHistorial += "(" + notStr + " " + eventoStr + " " + operadorStr + " " + concurrencia;
+						if (eventos.size() == 1) {
+							condicion += " )";
+							expresionCorreoHistorial += " )";
+						}
+					} else {
+						if (cambioGrupo) {
+							condicion += ")" + and_or + "(" + not + evento + operador + concurrencia;
+							expresionCorreoHistorial += " )" + " " + and_orStr + " " + "(" + notStr + " " + eventoStr + " " + operadorStr + " " + concurrencia;
+						} else {
+							condicion += and_or + not + evento + operador + concurrencia;
+							expresionCorreoHistorial += " " + and_orStr + " " + notStr + " " + eventoStr + " " + operadorStr + " " + concurrencia;
+						}
+						if (i == eventos.size() - 1) {
+							condicion += ")";
+							expresionCorreoHistorial += " )";
+						}
+					}
+				}
+				Boolean evaluacion = null;
+				try {
+					evaluacion = (Boolean)interprete.eval(condicion);
+				} catch (ScriptException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				if (evaluacion) {
+					enviarEmail(expresionCorreoHistorial, faut);
+					anadirHistorial(expresionCorreoHistorial);
 				}
 				try {
 					TimeUnit.SECONDS.sleep(al.getPeriodoEvaluacion());
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					LOGGER.error("Error mandando a dormir IF " ,e);
 				}
 			} else if (LocalTime.now().until(
 					LocalTime.parse(al.getIntervaloEvaluacion().split("-")[0] + ":00.000000000"),
@@ -120,7 +172,7 @@ public class TimerEvaluarAlertas implements Runnable {
 							LocalTime.parse(al.getIntervaloEvaluacion().split("-")[0] + ":00.000000000"),
 							ChronoUnit.SECONDS));
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					LOGGER.error("Error mandando a dormir ELSEIF " ,e);
 				}
 			} else {
 				stop();
@@ -129,29 +181,36 @@ public class TimerEvaluarAlertas implements Runnable {
 	}
 
 	public void stop() {
-		System.out.println("PARA");
+		LOGGER.debug("PARA");
 		this.parar = true;
 	}
 
-	private void anadirHistorial(String evento) {
+	private void anadirHistorial(String expresionCorreoHistorial) {
 		HistorialAlerta hA = new HistorialAlerta();
 		hA.setAlerta(aService.loadAlerta(alCod));
-		hA.setEvento(evento);
+		hA.setEvento(expresionCorreoHistorial);
 		hA.setFecha(new Date());
 		historialService.addHistorialAlerta(hA);
 	}
 
-	private void enviarEmail(String ev, String simbolo, String veces, FiltroAuditoriaTramitacion faut) {
+	private void enviarEmail(String expresionCorreoHistorial, FiltroAuditoriaTramitacion faut) {
 
 		try {
 			Alerta alert = aService.loadAlerta(alCod);
 			String nombre = "";
-//			String logo = "";
-//		    byte[] imageBytes = new byte[0];
+			String logo = "";
+		    byte[] imageBytes = null;
 			if (alert.getListaAreas() != null && !alert.getListaAreas().isEmpty()
 					&& alert.getListaAreas().get(0) != null) {
 				//Entidad entidad = confServ.obtenerDatosEntidadByArea(alert.getListaAreas().get(0));
-//				logo = hService.urlLogoEntidad(alert.getIdEntidad());
+				logo = hService.urlLogoEntidad(alert.getIdEntidad());
+				try {
+					imageBytes = hService.contenidoLogoEntidad(alert.getIdEntidad());
+				} catch (Exception e) {
+					LOGGER.error("Revisar porque puede que la id entidad esté mal (tiene que ser dir3, no id): " + alert.getIdEntidad());
+					LOGGER.error("Error obteniendo la imagen" , e);
+				}
+//
 //				 String urltext = logo;
 //				    URL url = new URL(urltext);
 //				    BufferedInputStream bis = new BufferedInputStream(url.openStream());
@@ -200,15 +259,20 @@ public class TimerEvaluarAlertas implements Runnable {
 					+ "		#contenidor p.auto { margin:1.5em 0; padding:1em;  font-size:0.9em; font-style: italic;}\r\n"
 					+ "	</style>\r\n" + "	<!-- /css -->\r\n" + "\r\n" + "</head>\r\n" + "\r\n" + "<body>\r\n"
 					+ "\r\n" + "	<!-- contenidor -->\r\n" + "	<div id=\"contenidor\">\r\n" + "\r\n"
-					+ "		<!-- logo illes balears -->\r\n" + "		<div id=\"cap\">\r\n"
-//					+ "			<img  src=\"cid:logo\" alt=\"logo\" width=\"100\" height=\"100\"/>\r\n"
-					+ "			<h3> LOGO </h3>\r\n"
-					+ "			<h1>" + nombre.toUpperCase() + "</h1>\r\n" + "		</div>\r\n"
+					+ "		<!-- logo illes balears -->\r\n" + "		<div id=\"cap\">\r\n";
+					if (imageBytes != null && imageBytes.length > 0) {
+						String encoded = Base64.getEncoder().encodeToString(imageBytes);
+						msg += "            <img  src=\"data:image/jpeg;base64," + encoded + "\" alt=\"logo\" width=\"100\" height=\"100\" style=\"width: 100px;height:100px;\"/>";
+					} else if( logo != null && !logo.isEmpty()) {
+						msg += "            <img  src=\"" + logo + "\" alt=\"logo\" width=\"100\" height=\"100\"/>";
+					}
+//					+ "			<h3> LOGO </h3>\r\n"
+					msg += "			<h1>" + nombre.toUpperCase() + "</h1>\r\n" + "		</div>\r\n"
 					+ "		<!-- /logo illes balears -->\r\n" + "\r\n" + "		<!-- continguts -->\r\n"
 					+ "	  <div id=\"continguts\">\r\n" + "\r\n" + "			<!-- titol -->\r\n"
 					+ "			<h1>\r\n"
 					+ "				Aquest missatge ha estat generat pel sistema d'alertes de SISTRAHELP"
-					+ "</h1>" + "<h2>L&#39;event: \"" + ev + simbolo + veces + "\" de l&#39;Alerta: \""
+					+ "</h1>" + "<h2>L&#39;expressi&#243;: \"" + expresionCorreoHistorial + "\" de l&#39;Alerta: \""
 					+ aService.loadAlerta(alCod).getNombre() + "\" (configurat per l&#39;entitat: "+aService.loadAlerta(alCod).getListaAreas().get(0).split("\\.")[0];
 						if(aService.loadAlerta(alCod).getTipo().equals("A")) {
 							msg += ", &#224;rea: " + aService.loadAlerta(alCod).getListaAreas().get(0).split("\\.")[1];
@@ -217,7 +281,7 @@ public class TimerEvaluarAlertas implements Runnable {
 						}else if(aService.loadAlerta(alCod).getTipo().equals("V")) {
 							msg += ", &#224;rea: " + aService.loadAlerta(alCod).getListaAreas().get(0).split("\\.")[1] + ", tr&#224;mit: "+ aService.loadAlerta(alCod).getTramite() + " i versi&#243;: "+ aService.loadAlerta(alCod).getVersion();
 						}
-					msg += ") s&#39;ha produ&iuml;t " + hService.countAuditoriaEvento(faut) + " vegades." + "			</h2>\r\n" + "\r\n"
+					msg += ") s&#39;ha avaluat com a certa " + hService.countAuditoriaEvento(faut) + " vegades." + "			</h2>\r\n" + "\r\n"
 					+ "		<!-- /continguts -->\r\n" + "\r\n" + "\r\n" + "</div>"
 					+ "	<p class=\"auto\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p>\r\n"
 					+ "\r\n" + "	</div>\r\n" + "	<!-- /contenidor -->\r\n" + "\r\n" + "</body>\r\n"
@@ -227,14 +291,12 @@ public class TimerEvaluarAlertas implements Runnable {
 				plgEmail.envioEmail(aService.loadAlerta(alCod).getEmail(), "SISTRAHELP: AVÍS - " + aService.loadAlerta(alCod).getNombre() + " - "
 						+ entorno, msg, null);
 		} catch (EmailPluginException e) {
-			e.printStackTrace();
+			LOGGER.error("Error en el plugin de email " , e);
 		} catch (PluginException e) {
-			e.printStackTrace();
-		} //catch (MalformedURLException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+			LOGGER.error("Error de plugin " , e);
+		} catch (Exception e) {
+			LOGGER.error("Error general enviando el email " , e);
+		}
 	}
 
 }

@@ -1,6 +1,10 @@
 package es.caib.sistrages.core.api.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import es.caib.sistrages.core.api.model.comun.Propiedad;
 
 /**
  * La clase Sesion.
@@ -36,6 +40,9 @@ public class Sesion extends ModelApi {
 	 * codigo Entidad.
 	 */
 	private Long entidad;
+
+	/** Propiedades */
+	private List<Propiedad> propiedades = new ArrayList<>();
 
 	/**
 	 * Obtiene el valor de usuario.
@@ -130,6 +137,20 @@ public class Sesion extends ModelApi {
 	 */
 	public void setEntidad(final Long entidad) {
 		this.entidad = entidad;
+	}
+
+	/**
+	 * @return the propiedades
+	 */
+	public List<Propiedad> getPropiedades() {
+		return propiedades;
+	}
+
+	/**
+	 * @param propiedades the propiedades to set
+	 */
+	public void setPropiedades(List<Propiedad> propiedades) {
+		this.propiedades = propiedades;
 	}
 
 }

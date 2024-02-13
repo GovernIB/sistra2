@@ -230,6 +230,28 @@ public interface PlgValidacionesTipoInt {
 	boolean esFecha(final String fecha, String formato);
 
 	/**
+	 * Verifica que el String sea tranformable a hora (formato HH:mm).
+	 *
+	 * @param hora
+	 *                  Hora a Validar
+	 * @return true, si es satisfactorio true Si es una hora valida false Si no es
+	 *         una hora valida
+	 */
+	boolean esHora(final String hora);
+
+	/**
+	 * Verifica que el String sea tranformable a hora.
+	 *
+	 * @param hora
+	 *                    Hora a Validar
+	 * @param formato
+	 *                    Formato hora a Validar
+	 * @return true, si es satisfactorio true Si es una hora valida false Si no es
+	 *         una hora valida
+	 */
+	boolean esHora(final String hora, String formato);
+
+	/**
 	 * Verifica que el String sea un importe valido.
 	 *
 	 * @param importe
@@ -462,6 +484,32 @@ public interface PlgValidacionesTipoInt {
 			throws ValidacionTipoException;
 
 	/**
+	 * Método para formatear una cadena a tipo int.
+	 *
+	 * @param numero
+	 *                               Parámetro numero
+	 * @param separadorMiles
+	 *                               Parámetro separador miles (. o ,). Opcional.
+	 * @return el double
+	 * @throws ValidacionTipoException
+	 */
+	int formateaCadenaAInt(String numero, String separadorMiles)
+			throws ValidacionTipoException;
+
+	/**
+	 * Método para formatear un número de tipo int a cadena.
+	 *
+	 * @param numero
+	 *                               Parámetro numero
+	 * @param separadorMiles
+	 *                               Parámetro separador miles (. o ,). Opcional.
+	 * @return el string
+	 * @throws ValidacionTipoException
+	 */
+	String formateaIntACadena(int numero, String separadorMiles)
+			throws ValidacionTipoException;
+
+	/**
 	 * Método para Obtener el año de una fecha (yyyy-MM-dd).
 	 *
 	 * @param fecha
@@ -535,6 +583,26 @@ public interface PlgValidacionesTipoInt {
 	 * @throws ValidacionTipoException
 	 */
 	String sumaAnyos(String fecha, int anyos, String formatoFecha) throws ValidacionTipoException;
+
+	/**
+	 * Método para sacar la diferencia de horas entre 2 fechas
+	 *
+	 * @param fecha1
+	 *                   Parámetro fecha1
+	 * @param hora1
+	 *                   Parámetro hora1
+	 * @param fecha2
+	 *                   Parámetro fecha2
+	 * @param hora2
+	 *                   Parámetro hora2
+	 * @param formatoFecha
+	 *                   Parámetro formato fecha
+	 * @param formatoHora
+	 *                   Parámetro formato hora
+	 * @return el string
+	 * @throws ValidacionTipoException
+	 */
+	String distanciaHoras(String fecha1, String hora1, String fecha2, String hora2, String formatoFecha, String formatoHora) throws ValidacionTipoException;
 
 	/**
 	 * Método para sacar la diferencia de días entre 2 fechas

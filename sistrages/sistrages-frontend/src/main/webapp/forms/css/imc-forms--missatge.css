@@ -1,0 +1,293 @@
+
+/* FORMS MISSATGE */
+
+.imc-forms--missatge form
+, .imc-forms--missatge table
+, .imc-forms--missatge caption
+, .imc-forms--missatge tr
+, .imc-forms--missatge th
+, .imc-forms--missatge td
+, .imc-forms--missatge ul
+, .imc-forms--missatge ol
+, .imc-forms--missatge li
+, .imc-forms--missatge p
+, .imc-forms--missatge header
+, .imc-forms--missatge h1
+, .imc-forms--missatge h2
+, .imc-forms--missatge h3
+, .imc-forms--missatge h4
+, .imc-forms--missatge h5
+, .imc-forms--missatge h6
+, .imc-forms--missatge legend
+, .imc-forms--missatge fieldset { font-size: 1em; list-style: none; margin: 0; padding: 0; outline: none; border: none; }
+
+.imc-forms--missatge *, .imc-forms--missatge *::before, .imc-forms--missatge *::after {
+  -webkit-box-sizing: border-box; 
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.imc-forms--missatge { position: fixed; z-index: -1; top: 0; left: 0; width: 100%; height: 100%; visibility: hidden; opacity: 0; }
+.imc-forms--missatge .imc--c { position: fixed; z-index: 21; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,.7); }
+
+.imc-forms--missatge.imc--on {
+	z-index: 20;
+	visibility: visible;
+	opacity: 1;
+	-webkit-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-moz-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-ms-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-o-transition: visibility 0 ease-out, opacity .3s ease-out;
+	transition: visibility 0 ease-out, opacity .3s ease-out;
+}
+
+.imc-forms--missatge.imc--off {
+	z-index: 20;
+	opacity: 0;
+	-webkit-transition: opacity .3s ease-out;
+	-moz-transition: opacity .3s ease-out;
+	-ms-transition: opacity .3s ease-out;
+	-o-transition: opacity .3s ease-out;
+	transition: opacity .3s ease-out;
+}
+
+.imc-forms--missatge-anim { position: fixed; z-index: 23; background: #fff url(../imgs/icones/ico_form.svg) no-repeat center center / auto 1.7em; }
+
+.imc-forms--missatge-anim.imc--off {
+	opacity: 0 !important;
+	-webkit-transition: opacity .3s ease-out;
+	-moz-transition: opacity .3s ease-out;
+	-ms-transition: opacity .3s ease-out;
+	-o-transition: opacity .3s ease-out;
+	transition: opacity .3s ease-out;
+}
+
+.imc-forms--missatge .imc--text { position: fixed; z-index: 22; top: 50%; left: 50%; width: 100%; max-width: 40em; min-height: 10em; padding: 1.5em 1em .5em 1em; background-color: #fff; transform: translate(-50%, -50%); visibility: hidden; opacity: 0; }
+
+.imc-forms--missatge .imc--text.imc--on {
+	visibility: visible;
+	opacity: 1;
+	-webkit-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-moz-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-ms-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-o-transition: visibility 0 ease-out, opacity .3s ease-out;
+	transition: visibility 0 ease-out, opacity .3s ease-out;
+}
+
+
+.imc-forms--missatge .imc--text { /*border: .5em solid #4dba79;*/ /* outline: .5em solid #4dba79; */ outline: none; transition: outline .2s ease-out; }
+.imc-forms--missatge:focus .imc--text { outline-color: #294233; }
+
+.imc-forms--missatge .imc--text h2 { margin-bottom: .5em; margin-left: 5em; }
+.imc-forms--missatge .imc--text h2 span { font-size: 1.4em; }
+.imc-forms--missatge .imc--text .imc--explicacio { margin-bottom: 2em; margin-left: 5em; }
+
+
+.imc-forms--missatge .imc--text .imc--desenvolupadors { color: #666; margin-bottom: 2em; margin-left: 5em; }
+.imc-forms--missatge .imc--text .imc--desenvolupadors[aria-hidden="true"] { display: none; }
+
+.imc-forms--missatge .imc--text .imc--desenvolupadors h3,
+.imc-forms--missatge .imc--text .imc--desenvolupadors p { font-size: .9em; }
+
+
+.imc-forms--missatge .imc--text .imc--botonera { text-align: right; }
+.imc-forms--missatge .imc--text .imc--botonera button { margin-left: .5em; }
+
+.imc-forms--missatge .imc--text .imc--principal { background-color: #265d3c; }
+.imc-forms--missatge .imc--text .imc--principal span { color: #fff; }
+.imc-forms--missatge .imc--text .imc--principal:hover,
+.imc-forms--missatge .imc--text .imc--principal:focus,
+.imc-forms--missatge .imc--text .imc--principal:active { color: #fff; background-color: #000; }
+
+.imc-forms--missatge .imc--text .imc--principal::before { background: transparent url(../imgs/icones/ico_correcte.svg) no-repeat center center / auto 1em; }
+
+.imc-forms--missatge .imc--text .imc--cancela:hover,
+.imc-forms--missatge .imc--text .imc--cancela:focus,
+.imc-forms--missatge .imc--text .imc--cancela:active { background-color: #000; }
+
+.imc-forms--missatge .imc--text .imc--cancela:hover span,
+.imc-forms--missatge .imc--text .imc--cancela:focus span,
+.imc-forms--missatge .imc--text .imc--cancela:active span { color: #fff; }
+
+.imc-forms--missatge button { display: none; }
+
+
+/* button */
+
+.imc-forms--missatge button { display: none; color: #fff; vertical-align: middle; padding: .4em .7em; margin-bottom: .5em; background-color: #4dba79; border:none; cursor: pointer; will-change: background-color; }
+
+.imc-forms--missatge button:hover,
+.imc-forms--missatge button:focus,
+.imc-forms--missatge button:active { background-color: #000; }
+
+.imc-forms--missatge button {
+	-webkit-transition: background-color .2s ease-out;
+	-moz-transition: background-color .2s ease-out;
+	-ms-transition: background-color .2s ease-out;
+	-o-transition: background-color .2s ease-out;
+	transition: background-color .2s ease-out;
+}
+
+
+/* missatge tipus */
+
+.imc-forms--missatge[data-accio='carregant'] .imc--text::before {
+	content: "";
+	display: block;
+	position: absolute;
+	z-index: 1;
+	top: 1em;
+	left: 1.5em;
+	width: 3em;
+	height: 3em;
+	vertical-align: middle;
+	border: .3em solid transparent;
+	border-top-color: #4dba79;
+	border-bottom-color: #4dba79;
+	-moz-border-radius: 50%;
+	-webkit-border-radius: 50%;
+	-ms-border-radius: 50%;
+	-o-border-radius: 50%;
+	border-radius: 50%;
+	-moz-animation-name: carregant;
+	-moz-animation-duration: 1s;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-timing-function: linear;
+	-webkit-animation-name: carregant;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+	-o-animation-name: carregant;
+	-o-animation-duration: 1s;
+	-o-animation-iteration-count: infinite;
+	-o-animation-timing-function: linear;
+	animation-name: carregant;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
+.imc-forms--missatge[data-accio='carregant'] .imc--text { min-height: 4em; }
+.imc-forms--missatge[data-accio='carregant'] .imc--text div { margin-bottom: 0; }
+.imc-forms--missatge[data-accio='carregant'] .imc--text .imc--botonera { display: none; }
+
+.imc-forms--missatge[data-accio='carregant'] .imc--text { padding: 1.5em 1em; }
+
+
+.imc-forms--missatge[data-accio='esborra'] .imc--text { background: #fff url(../imgs/icones/ico_eliminau.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-forms--missatge[data-accio='esborra'] button[data-tipus="accepta"],
+.imc-forms--missatge[data-accio='esborra'] button[data-tipus="cancela"] { display: inline-block; }
+
+
+.imc-forms--missatge[data-accio='informa'] .imc--text,
+.imc-forms--missatge[data-accio='info'] .imc--text { background: #fff url(../imgs/icones/ico_info.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-forms--missatge[data-accio='informa'] button[data-tipus="tanca"],
+.imc-forms--missatge[data-accio='info'] button[data-tipus="tanca"] { display: inline-block; }
+
+
+.imc-forms--missatge[data-accio='alerta'] .imc--text { background: #fff url(../imgs/icones/ico_alerta.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-forms--missatge[data-accio='alerta'] button[data-tipus="accepta"],
+.imc-forms--missatge[data-accio='alerta'] button[data-tipus="cancela"] { display: inline-block; }
+
+
+.imc-forms--missatge[data-accio='desconecta'] .imc--text { background: #fff url(../imgs/icones/ico_desconecta_cc073c.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-forms--missatge[data-accio='desconecta'] button[data-tipus="accepta"],
+.imc-forms--missatge[data-accio='desconecta'] button[data-tipus="cancela"] { display: inline-block; }
+
+
+.imc-forms--missatge[data-accio='registra'] .imc--text { background: #fff url(../imgs/icones/ico_correcte_4dba79.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-forms--missatge[data-accio='registra'] button[data-tipus="accepta"],
+.imc-forms--missatge[data-accio='registra'] button[data-tipus="cancela"] { display: inline-block; }
+
+
+.imc-forms--missatge[data-accio='reintenta'] .imc--text { background: #fff url(../imgs/icones/ico_reintenta_f00.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-forms--missatge[data-accio='reintenta'] button[data-tipus="accepta"],
+.imc-forms--missatge[data-accio='reintenta'] button[data-tipus="cancela"] { display: inline-block; }
+
+
+.imc-forms--missatge[data-accio='error'] .imc--text { background: #fff url(../imgs/icones/ico_error.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-forms--missatge[data-accio='error'] button[data-tipus="tanca"] { display: inline-block; }
+
+
+.imc-forms--missatge[data-accio='signa'] .imc--text { background: #fff url(../imgs/icones/ico_signa_4dba79.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-forms--missatge[data-accio='signa'] button[data-tipus="accepta"],
+.imc-forms--missatge[data-accio='signa'] button[data-tipus="cancela"] { display: inline-block; }
+
+
+.imc-forms--missatge[data-accio='tramitat'] .imc--text { background: #fff url(../imgs/icones/ico_tramitat_4dba79.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-forms--missatge[data-accio='tramitat'] button[data-tipus="accepta"] { display: inline-block; }
+
+
+.imc-forms--missatge[data-accio='warning'] .imc--text { background: #fff url(../imgs/icones/ico_alerta.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-forms--missatge[data-accio='warning'] button[data-tipus="tanca"] { display: inline-block; }
+
+
+.imc-forms--missatge[data-accio='formSurt'] .imc--text { background: #fff url(../imgs/icones/ico_alerta.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-forms--missatge[data-accio='formSurt'] button[data-tipus="desa"],
+.imc-forms--missatge[data-accio='formSurt'] button[data-tipus="surt"],
+.imc-forms--missatge[data-accio='formSurt'] button[data-tipus="cancela"] { display: inline-block; }
+
+
+.imc-forms--missatge.imc--no-pot-guardar[data-accio='formSurt'] button[data-tipus="desa"] { display: none; }
+
+
+.imc-forms--missatge[data-accio='correcte'] .imc--text { background: #fff url(../imgs/icones/ico_correcte_4dba79.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-forms--missatge[data-accio='correcte'] button[data-tipus="accepta"] { display: inline-block; }
+
+
+
+.imc-forms--missatge[data-accio='formSurt'] button[data-tipus="desa"]::before,
+.imc-forms--missatge[data-accio='formSurt'] button[data-tipus="surt"]::before { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1.5em; height: 1.5em; background: transparent url() no-repeat 50% 50% / auto 90%; }
+
+.imc-forms--missatge[data-accio='formSurt'] button[data-tipus="desa"]::before { background-image: url(../imgs/icones/ico_desa_fff.svg); }
+.imc-forms--missatge[data-accio='formSurt'] button[data-tipus="surt"]::before { background-image: url(../imgs/icones/ico_eixir_fff.svg); }
+
+
+.imc-forms--missatge[data-accio='formSurt'] button[data-tipus="cancela"] { background-color: #fff }
+.imc-forms--missatge[data-accio='formSurt'] button[data-tipus="cancela"] span { color: #333; }
+
+.imc-forms--missatge[data-accio='error'] button[data-tipus="tanca"] { background-color: #fff }
+.imc-forms--missatge[data-accio='error'] button[data-tipus="tanca"] span { color: #333; }
+.imc-forms--missatge[data-accio='error'] button[data-tipus="tanca"]:hover span,
+.imc-forms--missatge[data-accio='error'] button[data-tipus="tanca"]:focus span { color: #fff; }
+
+
+
+
+.imc-forms--missatge[data-accio='formCancela'] .imc--text { background: #fff url(../imgs/icones/ico_alerta.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-forms--missatge[data-accio='formCancela'] button[data-tipus="surt"],
+.imc-forms--missatge[data-accio='formCancela'] button[data-tipus="cancela"] { display: inline-block; }
+
+.imc-forms--missatge[data-accio='formCancela'] button[data-tipus="surt"]::before { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1.5em; height: 1.5em; margin-right: .4em; background: transparent url(../imgs/icones/ico_eixir_fff.svg) no-repeat 50% 50% / auto 90%; }
+
+
+/* media */
+
+@media only screen and (max-width : 450px) {
+
+	.imc-forms--missatge .imc--text {
+    width: 90%;
+  }
+
+  .imc-forms--missatge button::before {
+  	margin-right: .5em;
+  }
+
+  .imc-forms--missatge .imc--text .imc--botonera button::before {
+		margin-right: .5em;
+	}
+
+}

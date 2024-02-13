@@ -165,6 +165,8 @@ public interface RestApiInternaComponent {
 	List<FormularioSoporte> recuperarFormularioSoporte(FiltroEventoAuditoria pFiltroBusqueda,
 			FiltroPaginacion filtroPaginacion);
 
+	List<String> listarTiposProblema();
+
 	void updateEstadoIncidencia(Long idSoporte, TypeSoporteEstado estado, String comentarios);
 
 }

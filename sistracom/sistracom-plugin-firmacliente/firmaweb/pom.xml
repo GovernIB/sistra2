@@ -5,7 +5,7 @@
     <parent>
         <artifactId>sistracom-plugin-firmacliente</artifactId>
         <groupId>es.caib.sistra2</groupId>
-        <version>1.7.0</version>
+        <version>1.7.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
@@ -33,14 +33,14 @@
         <dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-autenticacion-api</artifactId>
-            <version>1.7.0</version>
+            <version>1.7.1</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>es.caib.sistra2</groupId>
             <artifactId>sistracom-plugin-firmacliente-api</artifactId>
-            <version>1.7.0</version>
+            <version>1.7.1</version>
             <scope>compile</scope>
         </dependency>
 

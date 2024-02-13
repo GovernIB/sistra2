@@ -129,6 +129,8 @@ public final class DatosSesionFormularioInterno {
 	public VariablesFormulario generarVariablesFormulario(final String pIdCampo, final boolean pElemento) {
 		final VariablesFormulario res = new VariablesFormulario();
 		res.setIdSesionTramitacion(getDatosInicioSesion().getIdSesionTramitacion());
+		res.setIdTramite(getDatosInicioSesion().getIdTramite());
+		res.setVersionTramite(getDatosInicioSesion().getVersionTramite());
 		res.setIdioma(getDatosInicioSesion().getIdioma());
 		res.setParametrosApertura(getDatosInicioSesion().getParametros());
 		res.setNivelAutenticacion(getDatosInicioSesion().getInfoAutenticacion().getAutenticacion());

@@ -33,7 +33,7 @@ public final class RTramiteFinalizado {
 	private Date fechaFin;
 	@ApiModelProperty(value = "Tipo autenticación: Autenticado (c) / Anónimo (a).")
 	private String autenticacion;
-	@ApiModelProperty(value = "Metodo Autenticacion (ANONIMO / CLAVE_CERTIFICADO / CLAVE_PIN / CLAVE_PERMANENTE)")
+	@ApiModelProperty(value = "Metodo Autenticacion (ANONIMO / CLAVE_CERTIFICADO / CLAVE_PIN / CLAVE_PERMANENTE / CLAVE_MOVIL)")
 	private String metodoAutenticacion;
 	@ApiModelProperty(value = "Nif")
 	private String nif;

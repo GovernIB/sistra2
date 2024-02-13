@@ -67,6 +67,12 @@ public class ViewConsultaIncidencias extends ViewControllerBase {
 
 	private String filtroArea;
 
+	private String filtroTipoProblema;
+
+	private List<String> listaTiposProblema;
+
+	private List<String> listaAreas;
+
 	/**
 	 * Inicializa.
 	 *
@@ -81,6 +87,18 @@ public class ViewConsultaIncidencias extends ViewControllerBase {
 		tiposEstados = new ArrayList<>();
 		for (final TypeEstadoIncidencia ev : TypeEstadoIncidencia.values()) {
 			tiposEstados.add(ev);
+		}
+
+		listaTiposProblema = hService.obtenerTiposProblemaSoporte();
+
+		listaAreas = new ArrayList<>();
+
+		for (String area : convierteListaAreas()) {
+			listaAreas.add(area.split("\\.", 2)[1]);
+		}
+
+		if(listaAreas != null) {
+			listaAreas.sort(null);
 		}
 
 		this.buscar();
@@ -149,6 +167,24 @@ public class ViewConsultaIncidencias extends ViewControllerBase {
 		String idSesion = datoSeleccionado.getSesionTramitacion();
 
 		params.put("idSesionParam", idSesion);
+		params.put("esDialogParams", "true");
+
+		UtilJSF.openDialog(ViewAuditoriaTramites.class, TypeModoAcceso.CONSULTA, params, true, 1500, 717);
+
+	}
+
+	/**
+	 * Abre dialogo.
+	 *
+	 * @param modoAccesoDlg Modo acceso
+	 */
+	public void abrirDlgNif() {
+
+		final Map<String, String> params = new HashMap<>();
+
+		String nif = datoSeleccionado.getNif();
+
+		params.put("nifParam", nif);
 		params.put("esDialogParams", "true");
 
 		UtilJSF.openDialog(ViewAuditoriaTramites.class, TypeModoAcceso.CONSULTA, params, true, 1500, 717);
@@ -434,9 +470,10 @@ public class ViewConsultaIncidencias extends ViewControllerBase {
 		if (filtroArea != null && !filtroArea.isEmpty() && areasEnt != null) {
 			filtros.getListaAreas().clear();
 			for (String ar : areasEnt) {
-				Pattern pattern = Pattern.compile(filtroArea, Pattern.CASE_INSENSITIVE);
-				Matcher matcher = pattern.matcher(ar.split("\\.")[1]);
-				boolean matchFound = matcher.find();
+//				Pattern pattern = Pattern.compile(filtroArea, Pattern.CASE_INSENSITIVE);
+//				Matcher matcher = pattern.matcher(ar.split("\\.")[1]);
+//				boolean matchFound = matcher.find();
+				boolean matchFound = ar.split("\\.")[1].equals(filtroArea);
 				if (matchFound) {
 					filtros.getListaAreas().add(ar);
 				}
@@ -446,4 +483,45 @@ public class ViewConsultaIncidencias extends ViewControllerBase {
 		}
 	}
 
+	/**
+	 * @return the filtroTipoProblema
+	 */
+	public String getFiltroTipoProblema() {
+		return filtroTipoProblema;
+	}
+
+	/**
+	 * @param filtroTipoProblema the filtroTipoProblema to set
+	 */
+	public void setFiltroTipoProblema(String filtroTipoProblema) {
+		this.filtroTipoProblema = filtroTipoProblema;
+	}
+
+	/**
+	 * @return the listaTiposProblema
+	 */
+	public List<String> getListaTiposProblema() {
+		return listaTiposProblema;
+	}
+
+	/**
+	 * @param listaTiposProblema the listaTiposProblema to set
+	 */
+	public void setListaTiposProblema(List<String> listaTiposProblema) {
+		this.listaTiposProblema = listaTiposProblema;
+	}
+
+	/**
+	 * @return the listaAreas
+	 */
+	public List<String> getListaAreas() {
+		return listaAreas;
+	}
+
+	/**
+	 * @param listaAreas the listaAreas to set
+	 */
+	public void setListaAreas(List<String> listaAreas) {
+		this.listaAreas = listaAreas;
+	}
 }

@@ -87,11 +87,30 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 
 	private String operadorSeleccionado;
 
+	private Integer grupoSeleccionado;
+
+	private String opLogicoAND_ORSeleccionado;
+
+	private String condicion;
+
 	private Integer concurrenciasSeleccionado;
 
 	private List<TypeEvento> eventos;
 
+	private boolean modoEditarDisp;
+	private boolean modoInsertarDisp;
+	private boolean modoAnyadirDisp;
+	private int indexDisp;
+	private boolean clickEdicion;
+	private boolean clickBotonAnyadir;
+
 	private List<String> operadores;
+
+	private List<Integer> grupos;
+
+	private List<String> opLogicoAND_OR;
+
+	private boolean opLogicoNOT;
 
 	private String errorCopiar;
 
@@ -135,6 +154,9 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 		listaArea = new ArrayList<String>();
 		listaTramite = new ArrayList<String>();
 		listaVersion = new ArrayList<Integer>();
+		limpiarModos();
+		grupos = new ArrayList<Integer>();
+		opLogicoAND_OR = new ArrayList<String>();
 		operadores = new ArrayList<String>();
 		disparadores = new ArrayList<DisparadorAlerta>();
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
@@ -172,6 +194,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 					periodo = null;
 				} else {
 					check = false;
+					String grupoAnterior = "1";
 					if (!isResumenDiario()) {
 						tipo = data.getTipo();
 						switch(tipo) {
@@ -204,13 +227,61 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 						valoresVersion();
 
 					}
-					for (String evento : data.getEventos()) {
-						String[] partes = evento.split(":");
+					condicion="";
+					for (int i=0; i<data.getEventos().size(); i++) {
+						String[] partes = data.getEventos().get(i).split(":");
 						DisparadorAlerta disparador = new DisparadorAlerta();
-						disparador.setEv(TypeEvento.fromString(partes[0]));
-						disparador.setOperador(partes[1]);
-						disparador.setConcurrencias(Integer.parseInt(partes[2]));
+						disparador.setGrupo(Integer.parseInt(partes[0]));
+						disparador.setOpLogicoAND_OR(partes[1]);
+						disparador.setOpLogicoNOT(Boolean.parseBoolean(partes[2]));
+						disparador.setEv(TypeEvento.fromString(partes[3]));
+						disparador.setOperador(partes[4]);
+						disparador.setConcurrencias(Integer.parseInt(partes[5]));
 						disparadores.add(disparador);
+						boolean cambioGrupo = false;
+						String grupo = partes[0];
+						if (i > 0) {
+							if (!grupoAnterior.equals(grupo)) {
+								grupoAnterior = grupo;
+								cambioGrupo = true;
+							}
+						}
+						String and_or = "";
+						String not = "";
+
+						if (!partes[1].equals("null")) {
+							if (partes[1].equals("AND")) {
+								and_or = "AND";
+							} else {
+								and_or = "OR";
+							}
+						}
+
+						if (partes[2].equals("false")) {
+							not = "";
+						} else {
+							not = " NOT";
+						}
+
+						String evento = TypeEvento.fromString(partes[3]).name();
+						String operador = partes[4];
+						String concurrencia = partes[5];
+
+						if (i == 0) {
+							condicion += "(" + not + " " + evento + " " + operador + " " + concurrencia;
+							if (data.getEventos().size() == 1) {
+								condicion += " )";
+							}
+						} else {
+							if (cambioGrupo) {
+								condicion += " )" + " " + and_or + " " + "(" + not + " " + evento + " " + operador + " " + concurrencia;
+							} else {
+								condicion += " " + and_or + " " + not + " " + evento + " " + operador + " " + concurrencia;
+							}
+							if (i == data.getEventos().size() - 1) {
+								condicion += " )";
+							}
+						}
 					}
 					try {
 						fDesde = sdf.parse(data.getIntervaloEvaluacion().split("-")[0]);
@@ -223,15 +294,25 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 			}
 		}
 		if (!isResumenDiario()) {
-			concurrenciasSeleccionado = 0;
+			concurrenciasSeleccionado = null;
 		}
 		eventos = Arrays.asList(TypeEvento.values());
+		opLogicoNOT = false;
+		opLogicoAND_OR.add("AND");
+		opLogicoAND_OR.add("OR");
+		grupos.add(1);
+		grupos.add(2);
+		grupos.add(3);
+		grupos.add(4);
+		grupos.add(5);
 		operadores.add("<");
 		operadores.add(">");
+		operadores.add("<=");
+		operadores.add(">=");
 		operadores.add("=");
+		operadores.add("!=");
 		emails = emailString(data.getEmail());
-
-
+		clickBotonAnyadir = false;
 	}
 
 	public void valoresArea() {
@@ -319,9 +400,12 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 			data.setIntervaloEvaluacion("");
 			data.setPeriodoEvaluacion(null);
 			data.setNombre("RESUMEN_DIARIO");
+			grupoSeleccionado = null;
+			opLogicoNOT = false;
 			evSeleccionado = null;
 			operadorSeleccionado = null;
 			concurrenciasSeleccionado = null;
+			opLogicoAND_ORSeleccionado = null;
 			disparadores = new ArrayList<DisparadorAlerta>();
 			fDesde = null;
 			fHasta = null;
@@ -341,69 +425,580 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 		}
 	}
 
-	/**
-	 * Añade un disparador a la lista
-	 */
-	public void anyadirDisparador() {
+	private boolean existenErroresIniciales() {
+		if (grupoSeleccionado == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("dialogConfiguracionAlertas.error.grupoSeleccionado"));
+			limpiarModos();
+			return true;
+		}
+
+		if (grupoSeleccionado != 1 && (disparadores.size() == 0 || indexDisp == 0)) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("dialogConfiguracionAlertas.error.primerGrupo"));
+			limpiarModos();
+			return true;
+		}
+
+		if (opLogicoAND_ORSeleccionado == null && ((modoAnyadirDisp && disparadores.size() > 0) || (modoEditarDisp && indexDisp == 0))) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("dialogConfiguracionAlertas.error.opLogicoAND_ORSeleccionadoNoExiste"));
+			limpiarModos();
+			return true;
+		}
+
+		if (!modoEditarDisp && disparadores.isEmpty() && opLogicoAND_ORSeleccionado != null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("dialogConfiguracionAlertas.error.opLogicoAND_ORSeleccionadoExiste"));
+			limpiarModos();
+			return true;
+		}
+
 		if (evSeleccionado == null) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 					UtilJSF.getLiteral("dialogConfiguracionAlertas.error.evSeleccionado"));
-			return;
+			limpiarModos();
+			return true;
 		}
 
 		if (operadorSeleccionado == null) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 					UtilJSF.getLiteral("dialogConfiguracionAlertas.error.operadorSeleccionado"));
-			return;
+			limpiarModos();
+			return true;
 		}
 
 		if (concurrenciasSeleccionado == null) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 					UtilJSF.getLiteral("dialogConfiguracionAlertas.error.concurrenciasSeleccionado"));
-			return;
+			limpiarModos();
+			return true;
 		}
 
-		for (DisparadorAlerta dAl : disparadores) {
-			if (dAl.getEv().equals(evSeleccionado) && dAl.getOperador().equals(operadorSeleccionado)) {
+		if (modoAnyadirDisp || modoInsertarDisp) {
+			for (DisparadorAlerta dAl : disparadores) {
+				if (dAl.getGrupo().equals(grupoSeleccionado) && dAl.getEv().equals(evSeleccionado) && dAl.getOperador().equals(operadorSeleccionado)) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+							UtilJSF.getLiteral("dialogConfiguracionAlertas.error.disparadorRepetido"));
+					limpiarModos();
+					return true;
+				}
+			}
+		} else {
+			for (DisparadorAlerta dAl : disparadores) {
+				if (disparadores.indexOf(dAl) != indexDisp && dAl.getGrupo().equals(grupoSeleccionado) && dAl.getEv().equals(evSeleccionado) && dAl.getOperador().equals(operadorSeleccionado)) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+							UtilJSF.getLiteral("dialogConfiguracionAlertas.error.disparadorRepetido"));
+					limpiarModos();
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	private void limpiarModos() {
+		modoEditarDisp = false;
+		modoInsertarDisp = false;
+		modoAnyadirDisp = false;
+	}
+
+	private void editarDisparador(DisparadorAlerta disp) {
+
+		boolean cambioGrupo = false;
+		String grupoAnterior = "";
+		String eventosStr = "";
+		String condicion = "";
+
+		DisparadorAlerta copiaDisp = disp;
+		disparadores.set(indexDisp, disp);
+
+		//String grupo = String.valueOf(disp.getGrupo());
+		String and_or = "";
+		String not = "";
+
+		if (!disp.getOpLogicoAND_OR().equals("null")) {
+			if (disp.getOpLogicoAND_OR().equals("AND")) {
+				and_or = "AND";
+			} else {
+				and_or = "OR";
+			}
+		}
+
+		if (String.valueOf(disp.isOpLogicoNOT()).equals("false")) {
+			not = "";
+		} else {
+			not = "NOT ";
+		}
+
+		String evento = disp.getEv().name();
+		String operador = disp.getOperador();
+		String concurrencia = String.valueOf(disp.getConcurrencias());
+
+		if (disparadores.size() == 0) {
+			eventosStr += disp.getGrupo() + ":" + disp.getOpLogicoAND_OR() + ":" + disp.isOpLogicoNOT() + ":" + disp.getEv().toString() + ":" + disp.getOperador() + ":" + disp.getConcurrencias();
+			condicion += "( " + not + evento + " " + operador + " " + concurrencia + " )";
+		} else {
+			for (int i=0; i<disparadores.size(); i++) {
+				and_or = "";
+				not = "";
+
+				if (!disparadores.get(i).getOpLogicoAND_OR().equals("null")) {
+					if (disparadores.get(i).getOpLogicoAND_OR().equals("AND")) {
+						and_or = "AND";
+					} else {
+						and_or = "OR";
+					}
+				}
+
+				if (String.valueOf(disparadores.get(i).isOpLogicoNOT()).equals("false")) {
+					not = "";
+				} else {
+					not = "NOT ";
+				}
+
+				evento = disparadores.get(i).getEv().name();
+				operador = disparadores.get(i).getOperador();
+				concurrencia = String.valueOf(disparadores.get(i).getConcurrencias());
+
+				cambioGrupo = false;
+
+				if (i == 0) {
+					eventosStr += disp.getGrupo() + ":" + disp.getOpLogicoAND_OR() + ":" + disp.isOpLogicoNOT() + ":" + disp.getEv().toString() + ":" + disp.getOperador() + ":" + disp.getConcurrencias();
+					condicion += "( " + not + evento + " " + operador + " " + concurrencia;
+				} else {
+					if (disparadores.size() > 0) {
+						grupoAnterior = String.valueOf(disparadores.get(i-1).getGrupo());
+						if (!grupoAnterior.equals(String.valueOf(disparadores.get(i).getGrupo()))) {
+							if (Integer.parseInt(String.valueOf(disparadores.get(i).getGrupo())) - Integer.parseInt(grupoAnterior) > 1 || Integer.parseInt(String.valueOf(disparadores.get(i).getGrupo())) - Integer.parseInt(grupoAnterior) < 0) {
+								UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+										UtilJSF.getLiteral("dialogConfiguracionAlertas.error.grupoIncorrecto"));
+								disparadores.set(indexDisp, copiaDisp);
+								modoEditarDisp = false;
+								clickBotonAnyadir = false;
+								return;
+							} else {
+								grupoAnterior = String.valueOf(disparadores.get(i).getGrupo());
+								cambioGrupo = true;
+							}
+						}
+					}
+					eventosStr += ";" + disparadores.get(i).getGrupo() + ":" + and_or + ":" + not + ":" + evento + ":" + operador + ":" + concurrencia;
+					if (cambioGrupo) {
+						condicion += " )" + " " + and_or + " " + "( " + not + evento + " " + operador + " " + concurrencia;
+					} else {
+						condicion += " " + and_or + " " + not + evento + " " + operador + " " + concurrencia;
+					}
+				}
+				if (i == disparadores.size() - 1) {
+					condicion += " )";
+				}
+			}
+		}
+		modoEditarDisp = false;
+		this.setCondicion(condicion);
+		this.setGrupoSeleccionado(null);
+		this.setOpLogicoAND_ORSeleccionado("");
+		this.setOpLogicoNOT(false);
+		this.setEvSeleccionado(null);
+		this.setOperadorSeleccionado("");
+		this.setConcurrenciasSeleccionado(null);
+		this.setDisparadorSeleccionado(null);
+		this.setClickBotonAnyadir(false);
+	}
+
+	private void insertarDisparador(DisparadorAlerta disp) {
+
+		boolean cambioGrupo = false;
+		String grupoAnterior = "";
+		String grupoPosterior = "";
+		String eventosStr = "";
+		String condicion = "";
+
+		if (disparadorSeleccionado.getOpLogicoAND_OR().equals("null")) {
+			disparadorSeleccionado.setOpLogicoAND_OR("OR");
+		}
+
+		disparadores.add(indexDisp, disp);
+
+		grupoPosterior = String.valueOf(disparadorSeleccionado.getGrupo());
+		if (!grupoPosterior.equals(String.valueOf(disp.getGrupo()))) {
+			if (Integer.parseInt(grupoPosterior) - Integer.parseInt(String.valueOf(disp.getGrupo())) > 1 || Integer.parseInt(grupoPosterior) - Integer.parseInt(String.valueOf(disp.getGrupo())) < 0) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+						UtilJSF.getLiteral("dialogConfiguracionAlertas.error.grupoIncorrecto"));
+				disparadores.remove(indexDisp);
+				if (indexDisp == 0) {
+					disparadores.get(indexDisp).setOpLogicoAND_OR("null");
+				}
+				modoInsertarDisp = false;
+				clickBotonAnyadir = false;
 				return;
 			}
 		}
+
+		for (int i=0; i<disparadores.size(); i++) {
+			String and_or = "";
+			String not = "";
+
+			if (!disparadores.get(i).getOpLogicoAND_OR().equals("null")) {
+				if (disparadores.get(i).getOpLogicoAND_OR().equals("AND")) {
+					and_or = "AND";
+				} else {
+					and_or = "OR";
+				}
+			}
+
+			if (String.valueOf(disparadores.get(i).isOpLogicoNOT()).equals("false")) {
+				not = "";
+			} else {
+				not = "NOT ";
+			}
+
+			String evento = disparadores.get(i).getEv().name();
+			String operador = disparadores.get(i).getOperador();
+			String concurrencia = String.valueOf(disparadores.get(i).getConcurrencias());
+
+			cambioGrupo = false;
+
+			if (i == 0) {
+				grupoAnterior = "1";
+				eventosStr += disparadores.get(i).getGrupo() + ":" + disparadores.get(i).getOpLogicoAND_OR() + ":" + disparadores.get(i).isOpLogicoNOT() + ":"
+						+ disparadores.get(i).getEv().toString() + ":" + disparadores.get(i).getOperador() + ":" + disparadores.get(i).getConcurrencias();
+				condicion += "( " + not + evento + " " + operador + " " + concurrencia;
+			} else {
+				if (disparadores.size() > 0) {
+					grupoAnterior = String.valueOf(disparadores.get(i-1).getGrupo());
+					if (!grupoAnterior.equals(String.valueOf(disparadores.get(i).getGrupo()))) {
+						grupoAnterior = String.valueOf(disparadores.get(i).getGrupo());
+						cambioGrupo = true;
+					}
+				}
+				eventosStr += ";" + disparadores.get(i).getGrupo() + ":" + disparadores.get(i).getOpLogicoAND_OR() + ":" + disparadores.get(i).isOpLogicoNOT() + ":"
+						+ disparadores.get(i).getEv().toString() + ":" + disparadores.get(i).getOperador() + ":" + disparadores.get(i).getConcurrencias();
+				if (cambioGrupo) {
+					condicion += " )" + " " + and_or + " " + "( " + not + evento + " " + operador + " " + concurrencia;
+				} else {
+					condicion += " " + and_or + " " + not + evento + " " + operador + " " + concurrencia;
+				}
+			}
+			if (i == disparadores.size() - 1) {
+				condicion += " )";
+			}
+		}
+
+		if (eventosStr.length() > 1024) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("dialogMensajeAviso.error.eventoLargo"));
+			disparadores.remove(indexDisp);
+			if (indexDisp == 0) {
+				disparadores.get(indexDisp).setOpLogicoAND_OR("null");
+			}
+			clickBotonAnyadir = false;
+			return;
+		}
+		modoInsertarDisp = false;
+		this.setCondicion(condicion);
+		this.setGrupoSeleccionado(null);
+		this.setOpLogicoAND_ORSeleccionado("");
+		this.setOpLogicoNOT(false);
+		this.setEvSeleccionado(null);
+		this.setOperadorSeleccionado("");
+		this.setConcurrenciasSeleccionado(null);
+		this.setClickBotonAnyadir(false);
+		this.setDisparadorSeleccionado(null);
+	}
+
+	private void anyadirDisparador(DisparadorAlerta disp) {
+
+		boolean cambioGrupo = false;
+		String grupoAnterior = "";
+		String eventosStr = "";
+		String condicion = "";
+
+		if (disparadores.size() > 0) {
+			grupoAnterior = String.valueOf(disparadores.get(disparadores.size()-1).getGrupo());
+			if (!grupoAnterior.equals(disp.getGrupo())) {
+				if (Integer.parseInt(String.valueOf(disp.getGrupo())) - Integer.parseInt(grupoAnterior) > 1 || Integer.parseInt(String.valueOf(disp.getGrupo())) - Integer.parseInt(grupoAnterior) < 0) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+							UtilJSF.getLiteral("dialogConfiguracionAlertas.error.grupoIncorrecto"));
+					modoAnyadirDisp = false;
+					clickBotonAnyadir = false;
+					return;
+				}
+			}
+		}
+
+		String and_or = "";
+		String not = "";
+
+		if (!disp.getOpLogicoAND_OR().equals("null")) {
+			if (disp.getOpLogicoAND_OR().equals("AND")) {
+				and_or = "AND";
+			} else {
+				and_or = "OR";
+			}
+		}
+
+		if (String.valueOf(disp.isOpLogicoNOT()).equals("false")) {
+			not = "";
+		} else {
+			not = "NOT ";
+		}
+
+		String evento = disp.getEv().name();
+		String operador = disp.getOperador();
+		String concurrencia = String.valueOf(disp.getConcurrencias());
+
+		if (disparadores.size() == 0) {
+			eventosStr += disp.getGrupo() + ":" + disp.getOpLogicoAND_OR() + ":" + disp.isOpLogicoNOT() + ":" + disp.getEv().toString() + ":" + disp.getOperador() + ":" + disp.getConcurrencias();
+			condicion += "( " + not + evento + " " + operador + " " + concurrencia + " )";
+			disparadores.add(disp);
+		} else {
+			for (int i=0; i<disparadores.size(); i++) {
+				and_or = "";
+				not = "";
+
+				if (!disparadores.get(i).getOpLogicoAND_OR().equals("null")) {
+					if (disparadores.get(i).getOpLogicoAND_OR().equals("AND")) {
+						and_or = "AND";
+					} else {
+						and_or = "OR";
+					}
+				}
+
+				if (String.valueOf(disparadores.get(i).isOpLogicoNOT()).equals("false")) {
+					not = "";
+				} else {
+					not = "NOT ";
+				}
+
+				evento = disparadores.get(i).getEv().name();
+				operador = disparadores.get(i).getOperador();
+				concurrencia = String.valueOf(disparadores.get(i).getConcurrencias());
+
+				if (i == 0) {
+					grupoAnterior = "1";
+					eventosStr += disparadores.get(i).getGrupo() + ":" + disparadores.get(i).getOpLogicoAND_OR() + ":" + disparadores.get(i).isOpLogicoNOT() + ":"
+							+ disparadores.get(i).getEv().toString() + ":" + disparadores.get(i).getOperador() + ":" + disparadores.get(i).getConcurrencias();
+					condicion += "( " + not + evento + " " + operador + " " + concurrencia;
+				} else {
+					grupoAnterior = String.valueOf(disparadores.get(i-1).getGrupo());
+					if (!grupoAnterior.equals(String.valueOf(disparadores.get(i).getGrupo()))) {
+						grupoAnterior = String.valueOf(disparadores.get(i).getGrupo());
+						cambioGrupo = true;
+					}
+					eventosStr += ";" + disparadores.get(i).getGrupo() + ":" + disparadores.get(i).getOpLogicoAND_OR() + ":" + disparadores.get(i).isOpLogicoNOT() + ":"
+							+ disparadores.get(i).getEv().toString() + ":" + disparadores.get(i).getOperador() + ":" + disparadores.get(i).getConcurrencias();
+					if (cambioGrupo) {
+						condicion += " )" + " " + and_or + " " + "( " + not + evento + " " + operador + " " + concurrencia;
+					} else {
+						condicion += " " + and_or + " " + not + " " + evento + " " + operador + " " + concurrencia;
+					}
+				}
+			}
+			if (eventosStr.length() <= 1024) {
+				eventosStr += ";" + disp.getGrupo() + ":" + disp.getOpLogicoAND_OR() + ":" + disp.isOpLogicoNOT() + ":" + disp.getEv().toString() + ":" + disp.getOperador() + ":" + disp.getConcurrencias();
+				and_or = "";
+				not = "";
+
+				if (!disp.getOpLogicoAND_OR().equals("null")) {
+					if (disp.getOpLogicoAND_OR().equals("AND")) {
+						and_or = "AND";
+					} else {
+						and_or = "OR";
+					}
+				}
+
+				if (String.valueOf(disp.isOpLogicoNOT()).equals("false")) {
+					not = "";
+				} else {
+					not = "NOT ";
+				}
+
+				evento = disp.getEv().name();
+				operador = disp.getOperador();
+				concurrencia = String.valueOf(disp.getConcurrencias());
+
+				grupoAnterior = String.valueOf(disparadores.get(disparadores.size()-1).getGrupo());
+				if (!grupoAnterior.equals(String.valueOf(disp.getGrupo()))) {
+					cambioGrupo = true;
+				}
+				if (cambioGrupo) {
+					condicion += " )" + " " + and_or + " " + "( " + not + evento + " " + operador + " " + concurrencia + " )";
+				} else {
+					condicion += " " + and_or + " " + not + " " + evento + " " + operador + " " + concurrencia + " )";
+				}
+				disparadores.add(disp);
+			} else {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+						UtilJSF.getLiteral("dialogMensajeAviso.error.eventoLargo"));
+				modoAnyadirDisp = false;
+				clickBotonAnyadir = false;
+				return;
+			}
+		}
+		modoAnyadirDisp = false;
+		this.setCondicion(condicion);
+		this.setGrupoSeleccionado(null);
+		this.setOpLogicoAND_ORSeleccionado("");
+		this.setOpLogicoNOT(false);
+		this.setEvSeleccionado(null);
+		this.setOperadorSeleccionado("");
+		this.setConcurrenciasSeleccionado(null);
+		this.setDisparadorSeleccionado(null);
+		this.setClickBotonAnyadir(false);
+	}
+
+	/**
+	 * Procesa un disparador para añadirlo al final de la lista, insertarlo sobre el seleccionado de la lista o editar el seleccionado de la lista
+	 */
+	public void procesarDisparador() {
+
+		if (existenErroresIniciales()) {
+			clickBotonAnyadir = false;
+			return;
+		}
+
 		DisparadorAlerta disp = new DisparadorAlerta();
+		disp.setGrupo(grupoSeleccionado);
+		if (opLogicoAND_ORSeleccionado == null) {
+			disp.setOpLogicoAND_OR("null");
+		} else {
+			disp.setOpLogicoAND_OR(opLogicoAND_ORSeleccionado);
+		}
+		disp.setOpLogicoNOT(opLogicoNOT);
 		disp.setEv(evSeleccionado);
 		disp.setOperador(operadorSeleccionado);
 		disp.setConcurrencias(concurrenciasSeleccionado);
 
-		String eventos = "";
-		for (DisparadorAlerta dA : disparadores) {
-			if (eventos.isEmpty()) {
-				eventos += dA.getEv().toString() + ":" + dA.getOperador() + ":" + dA.getConcurrencias();
-			} else {
-				eventos += ";" + dA.getEv().toString() + ":" + dA.getOperador() + ":" + dA.getConcurrencias();
-			}
+		if (modoEditarDisp) {
+			editarDisparador(disp);
 		}
-		if (eventos.isEmpty()) {
-			eventos += disp.getEv().toString() + ":" + disp.getOperador() + ":" + disp.getConcurrencias();
-		} else {
-			eventos += ";" + disp.getEv().toString() + ":" + disp.getOperador() + ":" + disp.getConcurrencias();
+		if (modoInsertarDisp) {
+			insertarDisparador(disp);
 		}
-
-		if (eventos.length() <= 255) {
-			disparadores.add(disp);
-		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-					UtilJSF.getLiteral("dialogMensajeAviso.error.seleccioneVersion"));
+		if (modoAnyadirDisp) {
+			anyadirDisparador(disp);
 		}
-
 	}
 
 	/**
-	 * Borra un trámite seleccinado.
+	 * Edita un disparador seleccinado.
 	 *
-	 * @param tram
+	 * @param disp
 	 *
 	 */
-	public void borrarTramite(final DisparadorAlerta disp) {
+	public void clickEditarDisparador(final DisparadorAlerta disp) {
+		if (!clickEdicion) {
+			clickEdicion = true;
+		}
+
+		this.setDisparadorSeleccionado(disp);
+		this.setGrupoSeleccionado(disp.getGrupo());
+		this.setOpLogicoAND_ORSeleccionado(disp.getOpLogicoAND_OR());
+		this.setOpLogicoAND_ORSeleccionado(disp.getOpLogicoAND_OR());
+		this.setOpLogicoNOT(disp.isOpLogicoNOT());
+		this.setEvSeleccionado(disp.getEv());
+		this.setOperadorSeleccionado(disp.getOperador());
+		this.setConcurrenciasSeleccionado(disp.getConcurrencias());
+
+		indexDisp = disparadores.indexOf(disp);
+		if (!modoEditarDisp) {
+			modoEditarDisp = true;
+		}
+	}
+
+	/**
+	 * Borra un disparador seleccinado.
+	 *
+	 * @param disp
+	 *
+	 */
+	public void clickBorrarDisparador(final DisparadorAlerta disp) {
+		int index = disparadores.indexOf(disp);
+		String grupoAnterior = "";
+		// Si el elemento a eliminar es el primero, se borra en AND u OR del siguiente, que quedará como primero.
+		if (disparadores.size() > 1) {
+			if (index == 0) {
+				disparadores.get(1).setOpLogicoAND_OR("null");
+			}
+			// Recorremos todos los elementos desde el elemento a eliminar para dejar los grupos adecuados tras su borrado.
+			for (int i=index; i<disparadores.size()-1; i++) {
+				// Si el elemento a eliminar es el primero y el siguiente es del mismo grupo, no se cambia nada,
+				// pero si es de un gruo en el que está sólo, se mueven al grupo anterior los sigueintes elementos para dejarlos correctamente tras su eliminación.
+				if (i == 0) {
+					if (disparadores.get(i+1).getGrupo().equals(disp.getGrupo())) {
+						break;
+					} else {
+						for (int j=index+1; j<disparadores.size(); j++) {
+							disparadores.get(j).setGrupo(disparadores.get(j).getGrupo()-1);
+						}
+					}
+				// Si el elemento a eliminar no es el primero y el anterior o el siguiente es del mismo grupo, no se cambia nada,
+				// pero si es de un grupo en el que está sólo, se mueven al grupo anterior los siguientes elementos para dejarlos correctamente tras su eliminación.
+				} else {
+					if (disparadores.get(i-1).getGrupo().equals(disp.getGrupo()) || disparadores.get(i+1).getGrupo().equals(disp.getGrupo())) {
+						break;
+					} else {
+						for (int j=index+1; j<disparadores.size(); j++) {
+							disparadores.get(j).setGrupo(disparadores.get(j).getGrupo()-1);
+						}
+					}
+				}
+			}
+		}
 		disparadores.remove(disp);
+		condicion="";
+		for (int i=0; i<disparadores.size(); i++) {
+			boolean cambioGrupo = false;
+			String grupo = String.valueOf(disparadores.get(i).getGrupo());
+			if (i == 0) {
+				grupoAnterior = "1";
+			} else {
+				if (!grupoAnterior.equals(grupo)) {
+					grupoAnterior = grupo;
+					cambioGrupo = true;
+				}
+			}
+			String and_or = "";
+			String not = "";
+
+			if (!disparadores.get(i).getOpLogicoAND_OR().equals("null")) {
+				if (disparadores.get(i).getOpLogicoAND_OR().equals("AND")) {
+					and_or = "AND";
+				} else {
+					and_or = "OR";
+				}
+			}
+
+			if (String.valueOf(disparadores.get(i).isOpLogicoNOT()).equals("false")) {
+				not = "";
+			} else {
+				not = " NOT";
+			}
+
+			String evento = disparadores.get(i).getEv().name();
+			String operador = disparadores.get(i).getOperador();
+			String concurrencia = String.valueOf(disparadores.get(i).getConcurrencias());
+
+			if (i == 0) {
+				condicion += "(" + not + " " + evento + " " + operador + " " + concurrencia;
+				if (i == disparadores.size() - 1) {
+					condicion += " )";
+				}
+			} else {
+				if (cambioGrupo) {
+					condicion += " )" + " " + and_or + " " + "(" + not + " " + evento + " " + operador + " " + concurrencia;
+				} else {
+					condicion += " " + and_or + " " + not + " " + evento + " " + operador + " " + concurrencia;
+				}
+				if (i == disparadores.size() - 1) {
+					condicion += " )";
+				}
+			}
+		}
+		this.setCondicion(condicion);
 	}
 
 	/**
@@ -526,7 +1121,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 		case ALTA:
 			List<String> eventos = new ArrayList<String>();
 			for (DisparadorAlerta dA : disparadores) {
-				eventos.add(dA.getEv().toString() + ":" + dA.getOperador() + ":" + dA.getConcurrencias());
+				eventos.add(dA.getGrupo() + ":" + dA.getOpLogicoAND_OR() + ":" + dA.isOpLogicoNOT() + ":" + dA.getEv().toString() + ":" + dA.getOperador() + ":" + dA.getConcurrencias());
 			}
 
 			data.setEventos(eventos);
@@ -617,7 +1212,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 		case EDICION:
 			List<String> eventosE = new ArrayList<String>();
 			for (DisparadorAlerta dA : disparadores) {
-				eventosE.add(dA.getEv().toString() + ":" + dA.getOperador() + ":" + dA.getConcurrencias());
+				eventosE.add(dA.getGrupo() + ":" + dA.getOpLogicoAND_OR() + ":" + dA.isOpLogicoNOT() + ":" + dA.getEv().toString() + ":" + dA.getOperador() + ":" + dA.getConcurrencias());
 			}
 
 			data.setEventos(eventosE);
@@ -864,7 +1459,30 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 	 * @param disparadorSeleccionado the disparadorSeleccionado to set
 	 */
 	public final void setDisparadorSeleccionado(DisparadorAlerta disparadorSeleccionado) {
-		this.disparadorSeleccionado = disparadorSeleccionado;
+		if (!clickBotonAnyadir) {
+			if (clickEdicion) {
+				this.disparadorSeleccionado = disparadorSeleccionado;
+				modoEditarDisp = true;
+				modoInsertarDisp = false;
+				modoAnyadirDisp = false;
+				clickEdicion = false;
+			} else {
+				if (this.disparadorSeleccionado == disparadorSeleccionado) {
+					this.disparadorSeleccionado = null;
+					indexDisp = disparadores.size();
+					modoEditarDisp = false;
+					modoInsertarDisp = false;
+					modoAnyadirDisp = true;
+				} else {
+					this.disparadorSeleccionado = disparadorSeleccionado;
+					indexDisp = disparadores.indexOf(disparadorSeleccionado);
+					modoEditarDisp = false;
+					modoInsertarDisp = true;
+					modoAnyadirDisp = false;
+				}
+				modoEditarDisp = false;
+			}
+		}
 	}
 
 	/**
@@ -1091,6 +1709,174 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 
 	public void setVersion(Integer version) {
 		this.version = version;
+	}
+
+	/**
+	 * @return the grupo
+	 */
+	public List<Integer> getGrupos() {
+		return grupos;
+	}
+
+	/**
+	 * @param grupo the grupo to set
+	 */
+	public void setGrupos(List<Integer> grupos) {
+		this.grupos = grupos;
+	}
+
+	/**
+	 * @return the grupoSeleccionado
+	 */
+	public Integer getGrupoSeleccionado() {
+		return grupoSeleccionado;
+	}
+
+	/**
+	 * @param grupoSeleccionado the grupoSeleccionado to set
+	 */
+	public void setGrupoSeleccionado(Integer grupoSeleccionado) {
+		this.grupoSeleccionado = grupoSeleccionado;
+	}
+
+	/**
+	 * @return the opLogicoNOT
+	 */
+	public boolean isOpLogicoNOT() {
+		return opLogicoNOT;
+	}
+
+	/**
+	 * @param opLogicoNOT the opLogicoNOT to set
+	 */
+	public void setOpLogicoNOT(boolean opLogicoNOT) {
+		this.opLogicoNOT = opLogicoNOT;
+	}
+
+	/**
+	 * @return the opLogicoAND_OR
+	 */
+	public List<String> getOpLogicoAND_OR() {
+		return opLogicoAND_OR;
+	}
+
+	/**
+	 * @param opLogicoAND_OR the opLogicoAND_OR to set
+	 */
+	public void setOpLogicoAND_OR(List<String> opLogicoAND_OR) {
+		this.opLogicoAND_OR = opLogicoAND_OR;
+	}
+
+	/**
+	 * @return the opLogicoAND_ORSeleccionado
+	 */
+	public String getOpLogicoAND_ORSeleccionado() {
+		return opLogicoAND_ORSeleccionado;
+	}
+
+	/**
+	 * @param opLogicoAND_ORSeleccionado the opLogicoAND_ORSeleccionado to set
+	 */
+	public void setOpLogicoAND_ORSeleccionado(String opLogicoAND_ORSeleccionado) {
+		this.opLogicoAND_ORSeleccionado = opLogicoAND_ORSeleccionado;
+	}
+
+	/**
+	 * @return the expresion_logica
+	 */
+	public String getCondicion() {
+		return condicion;
+	}
+
+	/**
+	 * @param expresion_logica the expresion_logica to set
+	 */
+	public void setCondicion(String condicion) {
+		this.condicion = condicion;
+	}
+
+	/**
+	 * @return the indexDisp
+	 */
+	public int getIndexDisp() {
+		return indexDisp;
+	}
+
+	/**
+	 * @param indexDisp the indexDisp to set
+	 */
+	public void setIndexDisp(int indexDisp) {
+		this.indexDisp = indexDisp;
+	}
+
+	/**
+	 * @return the clickEdicion
+	 */
+	public boolean isClickEdicion() {
+		return clickEdicion;
+	}
+
+	/**
+	 * @param clickEdicion the clickEdicion to set
+	 */
+	public void setClickEdicion(boolean clickEdicion) {
+		this.clickEdicion = clickEdicion;
+	}
+
+	/**
+	 * @return the modoEditarDisp
+	 */
+	public boolean isModoEditarDisp() {
+		return modoEditarDisp;
+	}
+
+	/**
+	 * @param modoEditarDisp the modoEditarDisp to set
+	 */
+	public void setModoEditarDisp(boolean modoEditarDisp) {
+		this.modoEditarDisp = modoEditarDisp;
+	}
+
+	/**
+	 * @return the modoInsertarDisp
+	 */
+	public boolean isModoInsertarDisp() {
+		return modoInsertarDisp;
+	}
+
+	/**
+	 * @param modoInsertarDisp the modoInsertarDisp to set
+	 */
+	public void setModoInsertarDisp(boolean modoInsertarDisp) {
+		this.modoInsertarDisp = modoInsertarDisp;
+	}
+
+	/**
+	 * @return the modoAnyadirDisp
+	 */
+	public boolean isModoAnyadirDisp() {
+		return modoAnyadirDisp;
+	}
+
+	/**
+	 * @param modoAnyadirDisp the modoAnyadirDisp to set
+	 */
+	public void setModoAnyadirDisp(boolean modoAnyadirDisp) {
+		this.modoAnyadirDisp = modoAnyadirDisp;
+	}
+
+	/**
+	 * @return the clickBotonAnyadir
+	 */
+	public boolean isClickBotonAnyadir() {
+		return clickBotonAnyadir;
+	}
+
+	/**
+	 * @param clickBotonAnyadir the clickBotonAnyadir to set
+	 */
+	public void setClickBotonAnyadir(boolean clickBotonAnyadir) {
+		this.clickBotonAnyadir = clickBotonAnyadir;
 	}
 
 }

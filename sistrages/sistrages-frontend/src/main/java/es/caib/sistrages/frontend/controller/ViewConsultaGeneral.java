@@ -56,9 +56,6 @@ public class ViewConsultaGeneral extends ViewControllerBase {
 	@Inject
 	private SecurityService securityService;
 
-	/** Paginacion */
-	private Integer paginacion;
-
 	private String portapapeles;
 
 	private String errorCopiar;
@@ -67,7 +64,6 @@ public class ViewConsultaGeneral extends ViewControllerBase {
 	 * Inicializacion.
 	 */
 	public void init() {
-		paginacion = UtilJSF.getPaginacion("viewConsultaGeneral");
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 		filtrar();
 	}
@@ -457,21 +453,6 @@ public class ViewConsultaGeneral extends ViewControllerBase {
 	 */
 	public void setCheckAmbitoArea(boolean checkAmbitoArea) {
 		this.checkAmbitoArea = checkAmbitoArea;
-	}
-
-	/**
-	 * @return the paginacion
-	 */
-	public final Integer getPaginacion() {
-		return paginacion;
-	}
-
-	/**
-	 * @param paginacion the paginacion to set
-	 */
-	public final void setPaginacion(Integer paginacion) {
-		this.paginacion = paginacion;
-		UtilJSF.setPaginacion(paginacion, "viewConsultaGeneral");
 	}
 
 }

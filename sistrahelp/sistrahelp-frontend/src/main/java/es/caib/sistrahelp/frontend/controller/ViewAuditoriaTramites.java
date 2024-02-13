@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -104,6 +105,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 
 	private Boolean esDialogParams;
 
+	private String idSesionCorreoIncidencia;
+
 	/**
 	 * Inicializa.
 	 */
@@ -192,6 +195,11 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		} else {
 			layout = "../layout/mainLayout.xhtml";
 			setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
+		}
+		if(idSesionCorreoIncidencia != null && !idSesionCorreoIncidencia.isEmpty()) {
+			filtros.setIdSesionTramitacion(idSesionCorreoIncidencia);
+			filtros.setSortField("fecha");
+			filtros.setSortOrder("DESCENDING");
 		}
 	}
 
@@ -698,4 +706,18 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	public void setNifParam(String nifParam) {
 		this.nifParam = nifParam;
 	}
+	/**
+	 * @return the idSesionCorreoIncidencia
+	 */
+	public String getIdSesionCorreoIncidencia() {
+		return idSesionCorreoIncidencia;
+	}
+
+	/**
+	 * @param idSesionCorreoIncidencia the idSesionCorreoIncidencia to set
+	 */
+	public void setIdSesionCorreoIncidencia(String idSesionCorreoIncidencia) {
+		this.idSesionCorreoIncidencia = idSesionCorreoIncidencia;
+	}
+
 }

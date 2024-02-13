@@ -62,9 +62,6 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	/** Dato seleccionado en la lista. */
 	private ConfiguracionAutenticacion datoSeleccionado;
 
-	/** Paginacion */
-	private Integer paginacion;
-
 	/** Accion. **/
 	private String accion;
 
@@ -102,8 +99,6 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 		// Titulo
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 		setAccion("C");
-
-		paginacion = UtilJSF.getPaginacion("viewConfiguracionAutenticacion");
 
 		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 			final List<TypeRolePermisos> permisos = securityService
@@ -534,21 +529,6 @@ public class ViewConfiguracionAutenticacion extends ViewControllerBase {
 	 */
 	public final void setListaAreas(List<Area> listaAreas) {
 		this.listaAreas = listaAreas;
-	}
-
-	/**
-	 * @return the paginacion
-	 */
-	public final Integer getPaginacion() {
-		return paginacion;
-	}
-
-	/**
-	 * @param paginacion the paginacion to set
-	 */
-	public final void setPaginacion(Integer paginacion) {
-		this.paginacion = paginacion;
-		UtilJSF.setPaginacion(paginacion, "viewConfiguracionAurenticacion");
 	}
 
 	/**

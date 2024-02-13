@@ -140,6 +140,7 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		} else {
 			mostrarBreadcrumb = false;
 		}
+
 	}
 
 	/**
@@ -513,4 +514,5 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	public final void setAccion(String accion) {
 		this.accion = accion;
 	}
+
 }

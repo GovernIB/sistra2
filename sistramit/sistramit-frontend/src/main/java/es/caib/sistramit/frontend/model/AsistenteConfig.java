@@ -11,6 +11,9 @@ public final class AsistenteConfig {
 	/** Versión aplicación. */
 	private String version;
 
+	/** Id sesión. */
+	private String idSesion;
+
 	/** Url asistente. */
 	private String url;
 
@@ -182,6 +185,25 @@ public final class AsistenteConfig {
 	 */
 	public void setFormularioNumCharsBusqueda(final String formularioNumCharsBusqueda) {
 		this.formularioNumCharsBusqueda = formularioNumCharsBusqueda;
+	}
+
+	/**
+	 * Método de acceso a idSesion.
+	 *
+	 * @return idSesion
+	 */
+	public String getIdSesion() {
+		return idSesion;
+	}
+
+	/**
+	 * Método para establecer idSesion.
+	 *
+	 * @param idSesion
+	 *                    idSesion a establecer
+	 */
+	public void setIdSesion(String idSesion) {
+		this.idSesion = idSesion;
 	}
 
 }

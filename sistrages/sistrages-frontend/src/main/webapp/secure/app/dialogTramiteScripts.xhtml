@@ -135,13 +135,13 @@
 
 				<!-- Data table -->
 				<p:dataTable  id="dataTable" var="td" value="#{dialogTramiteScripts.data}"
-							 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+							 rows="#{sessionBean.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
 							 scrollable="true" scrollHeight="850px"
 							 style="width:90%;margin:auto;"
 							 paginator="true" paginatorPosition="bottom"
 	                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                              currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-	                         rowsPerPageTemplate="5,10,15,30"
+	                         rowsPerPageTemplate="5,10,15,30,50,75,100"
 				        	 >
 
 					<!-- Columnas -->

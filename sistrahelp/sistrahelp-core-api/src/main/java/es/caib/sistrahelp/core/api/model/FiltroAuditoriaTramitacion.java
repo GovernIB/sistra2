@@ -54,6 +54,8 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 	private String clasificacionSeleccionada;
 	private String errorTipo;
 
+	private String tipoProblemaIncidencia;
+
 	public FiltroAuditoriaTramitacion() {
 		super();
 		this.fechaDesde = calcularFecha();
@@ -119,6 +121,7 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 			this.sortOrder = pFiltroAuditoriaTramitacion.sortOrder;
 			this.clasificacionSeleccionada = pFiltroAuditoriaTramitacion.clasificacionSeleccionada;
 			this.errorTipo = pFiltroAuditoriaTramitacion.errorTipo;
+			this.tipoProblemaIncidencia = pFiltroAuditoriaTramitacion.tipoProblemaIncidencia;
 		}
 	}
 
@@ -358,6 +361,20 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 	 */
 	public void setErrorTipo(String errorTipo) {
 		this.errorTipo = errorTipo;
+	}
+
+	/**
+	 * @return the tipoProblemaIncidencia
+	 */
+	public String getTipoProblemaIncidencia() {
+		return tipoProblemaIncidencia;
+	}
+
+	/**
+	 * @param tipoProblemaIncidencia the tipoProblemaIncidencia to set
+	 */
+	public void setTipoProblemaIncidencia(String tipoProblemaIncidencia) {
+		this.tipoProblemaIncidencia = tipoProblemaIncidencia;
 	}
 
 }

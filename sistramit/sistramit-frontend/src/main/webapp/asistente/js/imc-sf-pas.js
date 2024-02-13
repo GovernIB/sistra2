@@ -262,10 +262,7 @@ $.fn.appPas = function(options) {
 						url: pag_url,
 						data: pag_dades,
 						method: "post",
-						dataType: "json",
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
+						dataType: "json"
 					})
 					.done(function( data ) {
 						

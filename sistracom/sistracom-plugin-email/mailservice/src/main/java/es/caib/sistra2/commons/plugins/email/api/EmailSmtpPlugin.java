@@ -6,8 +6,10 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.activation.CommandMap;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
+import javax.activation.MailcapCommandMap;
 import javax.mail.BodyPart;
 import javax.mail.Multipart;
 import javax.mail.Session;
@@ -188,6 +190,14 @@ public class EmailSmtpPlugin extends AbstractPluginProperties implements IEmailP
 
 				msg.setContent(multipart);
 			}
+
+			//No está totalmente validado pero es posible que el envío de datos adjunto, se solucione con lo siguiente.
+			//MailcapCommandMap mc = (MailcapCommandMap) CommandMap.getDefaultCommandMap();
+			//mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
+			//mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
+			//mc.addMailcap("text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
+			//mc.addMailcap("multipart/*;; x-java-content-handler=com.sun.mail.handlers.multipart_mixed");
+			//mc.addMailcap("message/rfc822;; x-java-content- handler=com.sun.mail.handlers.message_rfc822");
 
 			Transport.send(msg);
 

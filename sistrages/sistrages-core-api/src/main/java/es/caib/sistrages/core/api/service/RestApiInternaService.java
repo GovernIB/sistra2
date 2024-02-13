@@ -75,6 +75,8 @@ public interface RestApiInternaService {
 
 	List<AvisoEntidad> getAvisosEntidad(String pIdEntidad);
 
+	byte[] getLogoEntidad(String pIdEntidad);
+
 	ValoresDominio realizarConsultaFuenteDatos(String idDominio, List<ValorParametroDominio> listaParams);
 
 	Area loadArea(Long idArea);

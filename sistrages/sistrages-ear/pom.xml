@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>es.caib.sistra2</groupId>
 		<artifactId>sistrages</artifactId>
-		<version>1.7.0</version>
+		<version>1.7.1</version>
 	</parent>
 	<artifactId>sistrages-ear</artifactId>
 	<packaging>ear</packaging>
@@ -13,25 +13,25 @@
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistrages-lib</artifactId>
-			<version>1.7.0</version>
+			<version>1.7.1</version>
 			<type>pom</type>
 		</dependency>
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistrages-core</artifactId>
-			<version>1.7.0</version>
+			<version>1.7.1</version>
 			<type>ejb</type>
 		</dependency>
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistrages-frontend</artifactId>
-			<version>1.7.0</version>
+			<version>1.7.1</version>
 			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistrages-rest-ws</artifactId>
-			<version>1.7.0</version>
+			<version>1.7.1</version>
 			<type>war</type>
 		</dependency>
 	</dependencies>
@@ -90,4 +90,45 @@
 		</plugins>
 		<finalName>sistrages</finalName>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>local</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-ear-plugin</artifactId>
+						<version>${maven.ear.version}</version>
+						<configuration>
+							<unpackTypes>war</unpackTypes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+
+			<dependencies>
+				<!-- JPA : para ejecutar con IntelliJ -->
+				<dependency>
+					<groupId>org.hibernate.javax.persistence</groupId>
+					<artifactId>hibernate-jpa-2.1-api</artifactId>
+					<version>${hibernate-jpa-2.1-api.version}</version>
+					<scope>compile</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate-entitymanager</artifactId>
+					<version>${hibernate.version}</version>
+					<scope>compile</scope>
+					<exclusions>
+						<exclusion>
+							<artifactId>antlr</artifactId>
+							<groupId>antlr</groupId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+			</dependencies>
+
+		</profile>
+	</profiles>
+
 </project>

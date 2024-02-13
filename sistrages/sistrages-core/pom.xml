@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>es.caib.sistra2</groupId>
 		<artifactId>sistrages</artifactId>
-		<version>1.7.0</version>
+		<version>1.7.1</version>
 	</parent>
 	<artifactId>sistrages-core</artifactId>
 	<name>sistrages-core</name>
@@ -15,7 +15,7 @@
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistrages-lib</artifactId>
-			<version>1.7.0</version>
+			<version>1.7.1</version>
 			<type>pom</type>
 		</dependency>
 
@@ -52,26 +52,35 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- JPA -->
+
+		<!-- JSOUP -->
 		<dependency>
-		    <groupId>org.hibernate.javax.persistence</groupId>
-		    <artifactId>hibernate-jpa-2.1-api</artifactId>
-		    <version>${hibernate-jpa-2.1-api.version}</version>
-		    <scope>provided</scope>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>${jsoup.version}</version>
 		</dependency>
 
+		<!-- JPA -->
 		<dependency>
-		    <groupId>junit</groupId>
-		    <artifactId>junit</artifactId>
-		    <version>${junit.version}</version>
-		    <scope>test</scope>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.1-api</artifactId>
+			<version>${hibernate-jpa-2.1-api.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>${hibernate.version}</version>
-			<scope>test</scope>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- TEST -->
+		<dependency>
+		    <groupId>junit</groupId>
+		    <artifactId>junit</artifactId>
+		    <version>${junit.version}</version>
+		    <scope>test</scope>
 		</dependency>
 
    		<dependency>
@@ -94,19 +103,6 @@
 		    <version>1.4</version>
 		    <scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>org.jsoup</groupId>
-			<artifactId>jsoup</artifactId>
-			<version>${jsoup.version}</version>
-		</dependency>
-
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.fasterxml.jackson.core</groupId> -->
-<!-- 		    <artifactId>jackson-databind</artifactId> -->
-<!-- 		    <version>${jackson.version}</version> -->
-<!-- 		     <scope>test</scope> -->
-<!-- 		</dependency> -->
 
 	</dependencies>
 
@@ -228,7 +224,7 @@
 					<dependency>
 						<groupId>es.caib.sistra2</groupId>
 						<artifactId>sistrages-lib</artifactId>
-						<version>1.7.0</version>
+						<version>1.7.1</version>
 						<type>pom</type>
 					</dependency>
 				</dependencies>

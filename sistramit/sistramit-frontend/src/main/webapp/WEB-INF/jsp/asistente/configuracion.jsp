@@ -2,6 +2,11 @@
 <%@page contentType="application/x-javascript" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+// HEADER SESION
+
+var headerIdSessio = "sesion-id";
+var tokenIdSessio = "${configuracion.idSesion}";
+
 // CSRF
 
 // var tokenCSRF = $("meta[name='_csrf']").attr("content");
@@ -13,7 +18,7 @@ if (headerCSRF == "") {
 	 headerCSRF = "X-CSRF-TOKEN";
 }
 
-// versió
+// version
 
 var APP_VERSIO = "version=${configuracion.version}";
 
@@ -22,7 +27,7 @@ var APP_VERSIO = "version=${configuracion.version}";
 var APP_TIMEOUT = ${configuracion.timeoutAjaxGeneral};
 var APP_TIMEOUT_RT = ${configuracion.timeoutAjaxRegistro};
 
-// configuració de URLs
+// configuraciï¿½ de URLs
 
 var	APP_ = "${configuracion.url}/asistente/"
 	,APP_SERVIDOR = "${configuracion.url}/asistente/";
@@ -91,13 +96,16 @@ var APP_FORMS_URL_DINAMICA = "s"
 	,APP_FORM_GUARDA = APP_SERVIDOR + "fm/guardarPagina.json"
 	,APP_FORM_CANCELAR = APP_SERVIDOR + "fm/cancelar.json"
 	,APP_FORM_AVALUA_CAMP = APP_SERVIDOR + "fm/evaluarCambioCampo.json"
-	,APP_FORMS_CAPTCHA = APP_SERVIDOR + "fm/generarImagenCaptcha.html"
-	,APP_FORMS_CAPTCHA_REGENERA = APP_SERVIDOR + "fm/regenerarCaptcha.html"
-	,APP_FORMS_CAPTCHA_REPRODUIX = APP_SERVIDOR + "fm/generarSonidoCaptcha.html"
+	,APP_FORMS_CAPTCHA_TXT_GENERA = APP_SERVIDOR + "fm/generarImagenCaptcha.html"
+	,APP_FORMS_CAPTCHA_TXT_REPRODUIX = APP_SERVIDOR + "fm/generarSonidoCaptcha.html"
+	,APP_FORMS_CAPTCHA_SEL_GENERA = ""
+	,APP_FORMS_CAPTCHA_SEL_REPRODUEIX = ""
+	,APP_FORMS_CAPTCHA_SEL_DESCARREGA = ""
 	,APP_FORM_PAG_ACTUAL = APP_SERVIDOR + "fm/cargarPaginaActual.json"
 	,APP_FORM_PAG_ANTERIOR = APP_SERVIDOR + "fm/cargarPaginaAnterior.json"
 	,APP_FORM_DESAR_SORTIR = APP_SERVIDOR + "fm/guardarSalirPagina.json"
 	,APP_FORM_SELECTOR_AJAX = APP_SERVIDOR + "fm/buscadorDinamico.json"
+	,APP_FORM_SELECTOR_AJAX_LE = APP_SERVIDOR + "fm/buscadorDinamicoElemento.json"
 	,APP_FORM_SELECTOR_DIN_NUM = ${configuracion.formularioNumCharsBusqueda}
 	,APP_FORM_LE_AFEGIX = APP_SERVIDOR + "fm/anyadirElemento.json"
 	,APP_FORM_LE_MODIFICA = APP_SERVIDOR + "fm/modificarElemento.json"

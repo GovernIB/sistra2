@@ -20,7 +20,7 @@ import com.github.cage.GCage;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.formulario.Captcha;
-import es.caib.sistramit.core.api.model.formulario.types.TypeCaptcha;
+import es.caib.sistramit.core.api.model.formulario.types.TypeFormatoCaptcha;
 import es.caib.sistramit.core.service.util.mixer.Mixer;
 
 public class UtilsCaptcha {
@@ -59,7 +59,7 @@ public class UtilsCaptcha {
 	 *                  Tipo
 	 * @return captcha
 	 */
-	public static Captcha generaCaptcha(final String valor, final String idioma, final TypeCaptcha tipo) {
+	public static Captcha generaCaptcha(final String valor, final String idioma, final TypeFormatoCaptcha tipo) {
 		Captcha captcha = null;
 		switch (tipo) {
 		case IMAGEN:
@@ -104,7 +104,7 @@ public class UtilsCaptcha {
 			LOGGER.error("Error al generar captcha audio: " + valor, e);
 		}
 		// Retorna captcha
-		final Captcha captcha = new Captcha(TypeCaptcha.SONIDO, audioContent);
+		final Captcha captcha = new Captcha(TypeFormatoCaptcha.SONIDO, audioContent);
 		return captcha;
 	}
 
@@ -128,7 +128,7 @@ public class UtilsCaptcha {
 		} finally {
 			IOUtils.closeQuietly(bos);
 		}
-		final Captcha captcha = new Captcha(TypeCaptcha.IMAGEN, datosFichero);
+		final Captcha captcha = new Captcha(TypeFormatoCaptcha.IMAGEN, datosFichero);
 		return captcha;
 	}
 

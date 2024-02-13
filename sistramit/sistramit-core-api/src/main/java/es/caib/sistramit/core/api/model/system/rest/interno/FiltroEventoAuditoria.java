@@ -44,6 +44,8 @@ public class FiltroEventoAuditoria implements Serializable {
 	private String clasificacionSeleccionada;
 	private String errorTipo;
 
+	private String tipoProblemaIncidencia;
+
 	public FiltroEventoAuditoria() {
 		super();
 	}
@@ -235,6 +237,14 @@ public class FiltroEventoAuditoria implements Serializable {
 
 	public void setErrorTipo(String errorTipo) {
 		this.errorTipo = errorTipo;
+	}
+
+	public String getTipoProblemaIncidencia() {
+		return tipoProblemaIncidencia;
+	}
+
+	public void setTipoProblemaIncidencia(String tipoProblemaIncidencia) {
+		this.tipoProblemaIncidencia = tipoProblemaIncidencia;
 	}
 
 }

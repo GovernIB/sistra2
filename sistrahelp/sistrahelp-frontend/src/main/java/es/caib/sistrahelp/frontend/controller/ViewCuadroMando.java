@@ -402,11 +402,13 @@ public class ViewCuadroMando extends ViewControllerBase {
 		formFin = 0;
 		firmaIni = 0;
 		firmaFin = 0;
-		PrimeFaces.current().executeScript(
-				"var selecc = document.getElementById('form:dataTableTramites').getElementsByClassName('ui-state-highlight');"
-						+ "		      	for(let i = 0; i < selecc.length; i++){"
-						+ "					selecc[i].classList.remove('ui-state-highlight');"
-						+ "					console.log(selecc[i]);" + "				}");
+		if(filtros.getClasificacionSeleccionada().equals("et")) {
+			PrimeFaces.current().executeScript(
+					"var selecc = document.getElementById('form:dataTableTramites').getElementsByClassName('ui-state-highlight');"
+							+ "		      	for(let i = 0; i < selecc.length; i++){"
+							+ "					selecc[i].classList.remove('ui-state-highlight');"
+							+ "					console.log(selecc[i]);" + "				}");
+		}
 		List<String> listaAux = new ArrayList<String>();
 		if (tipoFecha.equals("tr")) {
 			filtros.setFechaDesde(filtros.getToday());

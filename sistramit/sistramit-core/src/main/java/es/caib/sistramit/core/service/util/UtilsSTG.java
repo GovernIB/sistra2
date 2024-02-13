@@ -720,6 +720,9 @@ public final class UtilsSTG {
 			if (list.contains("PER")) {
 				res.add(TypeMetodoAutenticacion.CLAVE_PERMANENTE);
 			}
+			if (list.contains("MOV")) {
+				res.add(TypeMetodoAutenticacion.CLAVE_MOVIL);
+			}
 		}
 		return res;
 	}

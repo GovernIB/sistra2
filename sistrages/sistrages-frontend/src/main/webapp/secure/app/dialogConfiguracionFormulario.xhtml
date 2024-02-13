@@ -140,7 +140,7 @@
 			<p:dataTable  id="dataTableDatos"
 						  var="td"
 						  value="#{dialogConfiguracionFormulario.campos}"
-						  rows="10"
+						  rows="#{sessionBean.paginacion}"
 						  emptyMessage="#{msg['error.emptyRows']}"
 						  scrollable="true"
 						  scrollHeight="100%"
@@ -149,7 +149,7 @@
                           paginatorPosition="bottom"
                           paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                           currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-                          rowsPerPageTemplate="5,10,15,30"
+                          rowsPerPageTemplate="5,10,15,30,50,75,100"
 			        	  selectionMode="single"
 			        	  rowIndexVar="rowIndex"
 			        	  rowKey="#{td.identificador}">

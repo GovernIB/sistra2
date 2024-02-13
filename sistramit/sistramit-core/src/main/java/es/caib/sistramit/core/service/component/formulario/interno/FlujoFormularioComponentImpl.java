@@ -47,7 +47,7 @@ import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
 import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
-import es.caib.sistramit.core.api.model.formulario.types.TypeCaptcha;
+import es.caib.sistramit.core.api.model.formulario.types.TypeFormatoCaptcha;
 import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -239,18 +239,6 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 
 	@Override
 	public Captcha generarImagenCaptchaPaginaFormulario(final String idCampo) {
-		return generarCaptchaCampoPaginaFormulario(idCampo, datosSesion.getDatosInicioSesion().getIdioma(),
-				TypeCaptcha.IMAGEN);
-	}
-
-	@Override
-	public Captcha generarSonidoCaptchaPaginaFormulario(final String idCampo) {
-		return generarCaptchaCampoPaginaFormulario(idCampo, datosSesion.getDatosInicioSesion().getIdioma(),
-				TypeCaptcha.SONIDO);
-	}
-
-	@Override
-	public void regenerarCaptchaPaginaFormulario(final String idCampo) {
 		// Generamos nuevo texto de captcha
 		final String textCaptcha = UtilsCaptcha.generarKeyCaptcha();
 		// Obtenemos datos página actual
@@ -261,6 +249,25 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		}
 		final ValorCampoSimple vc = new ValorCampoSimple(idCampo, textCaptcha);
 		pagData.reinicializarValorCampo(vc);
+		// Generamos imagen para el texto del captcha
+		final Captcha captcha = UtilsCaptcha.generaCaptcha(vc.getValor(), datosSesion.getDatosInicioSesion().getIdioma(),
+				TypeFormatoCaptcha.IMAGEN);
+		return captcha;
+	}
+
+	@Override
+	public Captcha generarSonidoCaptchaPaginaFormulario(final String idCampo) {
+		// Obtenemos datos página actual
+		final PaginaData pagData = datosSesion.getDatosFormulario().obtenerPaginaDataActual(false);
+		// Obtenemos valor captcha actual
+		if (pagData.getConfiguracionCampo(idCampo).getTipo() != TypeCampo.CAPTCHA) {
+			throw new ErrorConfiguracionException("Camp " + idCampo + " no es captcha");
+		}
+		final ValorCampoSimple vc = (ValorCampoSimple) pagData.getValorCampo(idCampo);
+		// Generamos sonido para el texto del captcha
+		final Captcha captcha = UtilsCaptcha.generaCaptcha(vc.getValor(), datosSesion.getDatosInicioSesion().getIdioma(),
+				TypeFormatoCaptcha.SONIDO);
+		return captcha;
 	}
 
 	@Override
@@ -392,7 +399,6 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 *                         definición formulario
 	 * @param valoresCampo
 	 *                         valores campo
-	 * @param modoConsulta
 	 * @return
 	 */
 	private PaginaData inicializarPagina(final String idFormulario, final RFormularioInterno defForm,
@@ -832,28 +838,6 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		final RecursosFormulario recursos = new RecursosFormulario();
 		// TODO PENDIENTE RECURSOS
 		return recursos;
-	}
-
-	/**
-	 * Genera captcha campo
-	 *
-	 * @param idCampo
-	 *                    id campo
-	 * @param tipo
-	 *                    Tipo captcja
-	 * @return captcha
-	 */
-	private Captcha generarCaptchaCampoPaginaFormulario(final String idCampo, final String idioma,
-			final TypeCaptcha tipo) {
-		// Obtenemos datos página actual
-		final PaginaData pagData = datosSesion.getDatosFormulario().obtenerPaginaDataActual(false);
-		// Generamos captcha a partir valor
-		if (pagData.getConfiguracionCampo(idCampo).getTipo() != TypeCampo.CAPTCHA) {
-			throw new ErrorConfiguracionException("Camp " + idCampo + " no es captcha");
-		}
-		final ValorCampoSimple vc = (ValorCampoSimple) pagData.getValorCampo(idCampo);
-		final Captcha captcha = UtilsCaptcha.generaCaptcha(vc.getValor(), idioma, tipo);
-		return captcha;
 	}
 
 	/**

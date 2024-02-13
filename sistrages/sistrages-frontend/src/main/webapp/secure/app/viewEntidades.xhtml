@@ -10,6 +10,34 @@
 		<f:viewAction action="#{viewEntidades.init}" />
 	</f:metadata>
 
+	<ui:define name="icerick">
+		<script type="text/javascript">
+		function setHeight(){
+	    	var altura = window.innerHeight - 50;
+	    	var alturaDatatable = altura - 250;
+            var alturaScrollableBody = altura - 293;
+
+            $('#form\\:dataTable').height(alturaDatatable);
+            $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
+	    }
+
+		jQuery(document).ready(function() {
+
+	      $(window).resize(function() {
+              setTimeout(function(){  setHeight(); }, 100);
+  			});
+
+	      setHeight();
+	  });
+
+		function cerrarDialog(){
+	      var iconX = parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all')
+	              [parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all').length-1];
+
+	      iconX.addEventListener("click", setHeight);
+	    }
+	    </script>
+	</ui:define>
 
 	<ui:define name="content">
 
@@ -56,11 +84,11 @@
 
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
-		        		<p:commandButton id="btnNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewEntidades.nuevo()}" process="@this" update="growl">
-		        			<p:ajax event="dialogReturn" listener="#{viewEntidades.returnDialogo}" update="growl dataTable"/>
+		        		<p:commandButton id="btnNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewEntidades.nuevo()}" process="@this" update="growl" oncomplete="cerrarDialog()">
+		        			<p:ajax event="dialogReturn" listener="#{viewEntidades.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEntidades.editar()}" process="@this" update="growl">
-		        			<p:ajax event="dialogReturn" listener="#{viewEntidades.returnDialogo}" update="growl dataTable"/>
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEntidades.editar()}" process="@this" update="growl" oncomplete="cerrarDialog()">
+		        			<p:ajax event="dialogReturn" listener="#{viewEntidades.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewEntidades.eliminar()}" process="@this" update="growl dataTable">
 		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
@@ -77,12 +105,12 @@
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewEntidades.listaDatos}"
-						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+						 rows="#{sessionBean.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-                         rowsPerPageTemplate="5,10,15,30"
+                         rowsPerPageTemplate="5,10,15,30,50,75,100"
 			        	 selectionMode="single" selection="#{viewEntidades.datoSeleccionado}" rowKey="#{td.codigo}">
 
 
@@ -127,8 +155,8 @@
 		        	$('#form\\:btnEditarHidden').click();
 		      }
 		    </h:outputScript>
-		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEntidades.rcDobleClick()}" process="@this" update="growl" style="display:none">
-       			<p:ajax event="dialogReturn" listener="#{viewEntidades.returnDialogo}" update="growl dataTable"/>
+		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEntidades.rcDobleClick()}" process="@this" update="growl" style="display:none" oncomplete="cerrarDialog()">
+       			<p:ajax event="dialogReturn" listener="#{viewEntidades.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
        		</p:commandButton>
 
 

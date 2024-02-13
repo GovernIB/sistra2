@@ -24,9 +24,11 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import es.caib.sistrahelp.core.api.model.Alerta;
 import es.caib.sistrahelp.core.api.model.Area;
+import es.caib.sistrahelp.core.api.model.DisparadorAlerta;
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.comun.Constantes;
+import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 import es.caib.sistrahelp.core.api.service.AlertaService;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.frontend.model.DialogResult;
@@ -127,7 +129,7 @@ public class ViewConfiguracionAlertas extends ViewControllerBase {
 			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		}
 
-		UtilJSF.openDialog(DialogConfiguracionAlertas.class, modoAccesoDlg, params, true, 970, 470);
+		UtilJSF.openDialog(DialogConfiguracionAlertas.class, modoAccesoDlg, params, true, 1000, 550);
 	}
 
 	/**
@@ -261,13 +263,52 @@ public class ViewConfiguracionAlertas extends ViewControllerBase {
 	public String convertirEventos(List<String> lista) {
 		String resultado = "";
 		if (lista != null) {
-			for (final String ev : lista) {
-				String[] arr = ev.split(":");
-				if (resultado.isEmpty()) {
-					resultado += UtilJSF.getLiteral("typeEvento." + arr[0]) + arr[1] + arr[2];
+			String grupoAnterior = "1";
+			for (int i=0; i<lista.size(); i++) {
+				String[] partes = lista.get(i).split(":");
+				boolean cambioGrupo = false;
+				String grupo = partes[0];
+				if (i > 0) {
+					if (!grupoAnterior.equals(grupo)) {
+						grupoAnterior = grupo;
+						cambioGrupo = true;
+					}
+				}
+				String and_or = "";
+				String not = "";
+
+				if (!partes[1].equals("null")) {
+					if (partes[1].equals("AND")) {
+						and_or = "AND";
+					} else {
+						and_or = "OR";
+					}
+				}
+
+				if (partes[2].equals("false")) {
+					not = "";
 				} else {
-					resultado += ", " + UtilJSF.getLiteral("typeEvento." + arr[0]) + arr[1] + arr[2];
-					;
+					not = " NOT";
+				}
+
+				String evento = TypeEvento.fromString(partes[3]).name();
+				String operador = partes[4];
+				String concurrencia = partes[5];
+
+				if (i == 0) {
+					resultado += "(" + not + " " + evento + " " + operador + " " + concurrencia;
+					if (lista.size() == 1) {
+						resultado += " )";
+					}
+				} else {
+					if (cambioGrupo) {
+						resultado += " )" + " " + and_or + " " + "(" + not + " " + evento + " " + operador + " " + concurrencia;
+					} else {
+						resultado += " " + and_or + " " + not + " " + evento + " " + operador + " " + concurrencia;
+					}
+					if (i == lista.size() - 1) {
+						resultado += " )";
+					}
 				}
 			}
 		}

@@ -1,0 +1,78 @@
+create table STT_SOPORT
+(
+   SOP_CODIGO NUMBER(19) not null,
+   SOP_FCCREA TIMESTAMP not null,
+   SOP_CODSTR NUMBER(19)           not null,
+   SOP_NIF VARCHAR2(10 CHAR),
+   SOP_NOMBRE VARCHAR2(1000 CHAR),
+   SOP_TELEFO VARCHAR2(10 CHAR),
+   SOP_EMAIL VARCHAR2(255 CHAR),
+   SOP_HORARI VARCHAR2(255 CHAR),
+   SOP_PROTIP VARCHAR2(255 CHAR),
+   SOP_PRODES VARCHAR2(1000 CHAR),
+   SOP_FICNOM VARCHAR2(1000 CHAR),
+   SOP_FICDAT BLOB,
+   SOP_ESTADO VARCHAR2 (1 CHAR) not null,
+   SOP_COMENT VARCHAR2 (4000 CHAR),
+   SOP_PROTID VARCHAR2 (255 CHAR)
+);
+
+comment on table STT_SOPORT is
+'INCIDENCIAS SOPORTE';
+
+comment on column STT_SOPORT.SOP_CODIGO is
+'CODIGO INTERNO';
+
+comment on column STT_SOPORT.SOP_FCCREA is
+'FECHA CREACIÓN';
+
+comment on column STT_SOPORT.SOP_CODSTR is
+'CODIGO SESION TRAMITACION';
+
+comment on column STT_SOPORT.SOP_NIF is
+'NIF';
+
+comment on column STT_SOPORT.SOP_NOMBRE is
+'NOMBRE';
+
+comment on column STT_SOPORT.SOP_TELEFO is
+'TELEFONO';
+
+comment on column STT_SOPORT.SOP_EMAIL is
+'EMAIL';
+
+comment on column STT_SOPORT.SOP_HORARI is
+'HORARIO CONTACTO';
+
+comment on column STT_SOPORT.SOP_PROTIP is
+'PROBLEMA TIPO';
+
+comment on column STT_SOPORT.SOP_PRODES is
+'PROBLEMA DESCRIPCIÓN';
+
+comment on column STT_SOPORT.SOP_FICNOM is
+'FICHERO ANEXO: NOMBRE';
+
+comment on column STT_SOPORT.SOP_FICDAT is
+'FICHERO ANEXO: DATOS';
+
+comment on column STT_SOPORT.SOP_ESTADO is
+'ESTADO';
+
+comment on column STT_SOPORT.SOP_COMENT is
+'COMENTARIOS';
+
+comment on column STT_SOPORT.SOP_PROTID is
+'PROBLEMA TIPO DESCRIPCION';
+
+alter table STT_SOPORT
+   add constraint STT_SOPORT_PK primary key (SOP_CODIGO);
+
+alter table STT_SOPORT
+   add constraint STT_SOPORT_SESION_FK foreign key (SOP_CODSTR)
+      references STT_SESION (SES_CODIGO);
+
+
+create sequence STT_SOPORT_SEQ;
+
+COMMIT;

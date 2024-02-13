@@ -1,6 +1,7 @@
 package es.caib.sistrages.core.service.repository.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import es.caib.sistrages.core.api.model.Sesion;
+import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.util.UtilJSON;
 
 /**
  * JSesion
@@ -36,6 +39,10 @@ public class JSesion implements IModelApi {
 
 	@Column(name = "SESI_ENTIDA", nullable = true, precision = 18, scale = 0)
 	private Long entidad;
+
+	/** Lista serializada propiedades (codigo - valor) */
+	@Column(name = "SESI_PROPS", nullable = true, length = 4000)
+	private String propiedades;
 
 	public JSesion() {
 		super();
@@ -81,6 +88,21 @@ public class JSesion implements IModelApi {
 		this.entidad = entidad;
 	}
 
+	/**
+	 * @return the propiedades
+	 */
+	public String getPropiedades() {
+		return propiedades;
+	}
+
+	/**
+	 * @param propiedades the propiedades to set
+	 */
+	public void setPropiedades(String propiedades) {
+		this.propiedades = propiedades;
+	}
+
+	@SuppressWarnings("unchecked")
 	public Sesion toModel() {
 		final Sesion sesion = new Sesion();
 		sesion.setUsuario(usuario);
@@ -88,6 +110,7 @@ public class JSesion implements IModelApi {
 		sesion.setPerfil(perfil);
 		sesion.setIdioma(idioma);
 		sesion.setEntidad(entidad);
+		sesion.setPropiedades((List<Propiedad>) UtilJSON.fromListJSON(propiedades, Propiedad.class));
 		return sesion;
 	}
 
@@ -100,6 +123,7 @@ public class JSesion implements IModelApi {
 			jModel.setPerfil(model.getPerfil());
 			jModel.setIdioma(model.getIdioma());
 			jModel.setEntidad(model.getEntidad());
+			jModel.setPropiedades(UtilJSON.toJSON(model.getPropiedades()));
 		}
 		return jModel;
 	}

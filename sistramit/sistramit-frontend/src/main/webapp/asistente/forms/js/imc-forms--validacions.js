@@ -1,4 +1,4 @@
-﻿﻿// VALIDACIONS
+﻿// VALIDACIONS
 
 
 $.fn.appValida = function(opcions) {
@@ -14,6 +14,7 @@ $.fn.appValida = function(opcions) {
 		,format = settings.format
 		,valor = settings.valor
 		,esCorrecte = false;
+		
 
 	// validacions
 
@@ -54,72 +55,183 @@ $.fn.appValida = function(opcions) {
 			,el_rangMin = element.attr("data-rangMin") || false
 			,el_rangMax = element.attr("data-rangMax") || false;
 
-		var validacions_arr = [];
+		var validacions_arr = []
+			,validacions_txt = [];
 
 
-		// si no té separador, revisem si hi ha . o ,
+		// llevem els ceros de l'esquerre
 
 		if (!el_separador) {
+		
+			valor = valor.replace(/^0+/, '');
 
-			if (valor.indexOf(".") === -1 && valor.indexOf(",") === -1) {
+			valor = (!valor.length) ? "0" : valor;
 
-				validacions_arr
-					.push("c");
+			element
+				.val( valor );
 
-			} else {
+			if ( valor.charAt(0) === "." || valor.charAt(0) === "," ) {
 
-				validacions_arr
-					.push("e");
+				valor = "0" + valor;
+
+				element
+					.val( valor );
 
 			}
 
 		}
+
+		var valor_natiu = valor;
+
+
+		// si no té separador, revisem si hi ha . o ,
+
+		if (!el_separador && (valor.indexOf(".") !== -1 || valor.indexOf(",") !== -1)  ) {
+
+			validacions_arr
+				.push("e");
+
+			validacions_txt
+				.push("separador ERR");
+
+		}
+
 
 		// si tens separador, transformem a número natiu js (decimals amb punt)
 
 		if (el_separador) {
 
+			var separadorsCorrecte = true;
+
+			var hihaPunt = (valor.indexOf(".") !== -1) ? true : false
+				,hihaComa = (valor.indexOf(",") !== -1) ? true : false
+				,nomPunts = valor.split(/\./).length -1
+				,nomComes = valor.split(/,/).length -1
+				,posPunt = valor.lastIndexOf(".")
+				,posComa = valor.lastIndexOf(",");
+			
+
+			// separador decimals, només 1 separador o cap
+
+			if (el_separador === "pc" && nomComes > 1) {
+
+				separadorsCorrecte = false;
+
+			}
+
+			if (el_separador === "cp" && nomPunts > 1) {
+
+				separadorsCorrecte = false;
+
+			}
+
+
+			// última posició
+
+			if (el_separador === "pc" && hihaPunt && hihaComa && posComa < posPunt) {
+
+				separadorsCorrecte = false;
+
+			}
+
+			if (el_separador === "cp" && hihaPunt && hihaComa && posComa > posPunt) {
+
+				separadorsCorrecte = false;
+
+			}
+
+
+			// darrere de separador té que haber 3 cifres
+
+			var darrere_deparador_ = valor_natiu.split(".").pop();
+			
+			if (el_separador === "pc" && hihaPunt && !hihaComa && (darrere_deparador_.length > 3 || darrere_deparador_.length < 3)) {
+
+				separadorsCorrecte = false;
+
+			} else if (el_separador === "pc" && hihaPunt && darrere_deparador_.length === 3 && darrere_deparador_.indexOf(",") !== -1) {
+
+				separadorsCorrecte = false;
+
+			} else if (el_separador === "pc" && hihaPunt && hihaComa && (darrere_deparador_.split(",")[0].length > 3 || darrere_deparador_.split(",")[0].length < 3)) {
+
+				separadorsCorrecte = false;
+
+			}
+
+
+			var darrere_deparador_ = valor_natiu.split(",").pop();
+
+			if (el_separador === "cp" && hihaComa && !hihaPunt && (darrere_deparador_.length > 3 || darrere_deparador_.length < 3)) {
+
+				separadorsCorrecte = false;
+
+			} else if (el_separador === "cp" && hihaComa && darrere_deparador_.length === 3 && darrere_deparador_.indexOf(".") !== -1) {
+
+				separadorsCorrecte = false;
+
+			} else if (el_separador === "cp" && hihaPunt && hihaComa && (darrere_deparador_.split(".")[0].length > 3 || darrere_deparador_.split(".")[0].length < 3)) {
+
+				separadorsCorrecte = false;
+
+			}
+
+
+			// separadors correcte?
+
+			if (!separadorsCorrecte) {
+
+				validacions_arr
+					.push("e");
+
+				//console.log("separadorsCorrecte ERR");
+
+			}
+
+
+			// convertim a natiu JS
+
 			if (el_separador === "pc") {
 
-				valor = valor.replace(/\./g, '');
-				valor = valor.replace(",", ".");
+				valor_natiu = valor_natiu.replace(/\./g, '');
+				valor_natiu = valor_natiu.replace(/,/g, ".");
 
-			} else {
+			} else if (el_separador === "cp") {
 
-				valor = valor.replace(/,/g, '');
+				valor_natiu = valor.replace(/,/g, '');
 
 			}
 
 		}
 
+		//console.log("Transformem a número natiu js: " + valor_natiu);
+
+
 		// verifiquem que s'usen caracters numèrics
 
 		var numberExpReg = /^\s*(\+|-)?((\d+(\.\d+)?)|(\.\d+))\s*$/;
 
-		if ( !numberExpReg.test(valor) ) {
+		if ( !numberExpReg.test(valor_natiu) ) {
 
 			validacions_arr
 				.push("e");
 
+			//console.log("numberExpReg ERR");
+
 		}
+
 
 		// que és un número correcte
 
-		if ( isNaN(parseFloat(valor)) || !isFinite(valor) ) {
+		if ( isNaN(parseFloat(valor_natiu)) || !isFinite(valor_natiu) ) {
 
 			validacions_arr
 				.push("e");
 
-		}
-
-		// validem decimals
-
-		if (el_decimals === 0 && valor.indexOf(".") !== -1) {
-
-			validacions_arr
-				.push("e");
+			//console.log("que és un número correcte ERR");
 
 		}
+		
 
 		// permitix negatius?
 
@@ -128,58 +240,77 @@ $.fn.appValida = function(opcions) {
 			validacions_arr
 				.push("e");
 
-		}
-
-		// si no té separador, llevem els ceros de l'esquerre
-
-		if (!el_separador && numberExpReg.test(valor)) {
-
-			element
-				.val(parseInt(valor, 10));
-
-			valor = element.val();
+			//console.log("permitix negatius? ERR");
 
 		}
+
 
 		// validem enters
 
-		var valor_enter = valor.replace("-", "").split(".")[0];
+		var valor_enter = valor_natiu.replace("-", "").split(".")[0];
 
 		if ( valor_enter.length > el_enters ) {
 
 			validacions_arr
 				.push("e");
 
+			//console.log("validem enters ERR");
+
 		}
+
 
 		// validem decimals
 
-		var valor_decimal = valor.replace("-", "").split(".")[1];
+		if (el_separador) {
 
-		if (valor_decimal && valor_decimal.length > el_decimals) {
+			var valor_decimal = (el_separador === "pc") ? valor_natiu.replace("-", "").split(",")[1] : valor_natiu.replace("-", "").split(".")[1];
 
-			validacions_arr
-				.push("e");
+			if (valor_decimal && valor_decimal.length > el_decimals) {
+
+				validacions_arr
+					.push("e");
+
+				//console.log("validem decimals ERR");
+
+			}
+
+			if (el_decimals === 0 && valor.indexOf(".") !== -1) {
+
+				validacions_arr
+					.push("e");
+
+				//console.log("validem decimals ERR");
+
+			}
 
 		}
+
 
 		// rang mínim
 
-		if (el_rangMin && parseFloat(valor) < parseFloat(el_rangMin)) {
+		if (el_rangMin && parseFloat(valor_natiu) < parseFloat(el_rangMin)) {
 
 			validacions_arr
 				.push("e");
 
+			//console.log("rang mínim ERR");
+
 		}
+
 
 		// rang màxim
 
-		if (el_rangMax && parseFloat(valor) > parseFloat(el_rangMax)) {
+		if (el_rangMax && parseFloat(valor_natiu) > parseFloat(el_rangMax)) {
 
 			validacions_arr
 				.push("e");
 
+			//console.log("rang màxim ERR");
+
 		}
+
+
+		// revisem que tot estiga correcte
 
 		$(validacions_arr)
 			.each(function() {
@@ -191,6 +322,44 @@ $.fn.appValida = function(opcions) {
 				}
 
 			});
+
+
+		// formategem si està tot correcte i hi ha separador
+
+		if (esCorrecte && el_separador) {
+
+			var format_val = '0,0';
+
+			if (el_decimals) {
+
+				var str_decimales = "";
+
+				for(i=0; i<el_decimals; i++) {
+					str_decimales += "0";
+				}
+
+				var format_val = '0,0.' + str_decimales;
+
+			}
+
+			if (el_separador === "cp") {
+
+				numeral
+					.locale('en');
+
+			} else {
+
+				numeral
+					.locale('es-es');
+
+			}
+
+			var input_val_format = numeral( valor ).format( format_val );
+
+			element
+				.val( input_val_format );
+
+		}
 
 	}
 

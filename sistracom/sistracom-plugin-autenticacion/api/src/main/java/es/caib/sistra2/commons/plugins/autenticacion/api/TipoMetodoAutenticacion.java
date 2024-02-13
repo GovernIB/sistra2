@@ -22,7 +22,11 @@ public enum TipoMetodoAutenticacion {
     /**
      * CLAVE_PERMANENTE.
      */
-    CLAVE_PERMANENTE("CLAVE_PERMANENTE");
+    CLAVE_PERMANENTE("CLAVE_PERMANENTE"),
+	/**
+     * CLAVE_MOVIL.
+     */
+    CLAVE_MOVIL("CLAVE_MOVIL");
 
     /**
      * Valor como string.
@@ -77,7 +81,7 @@ public enum TipoMetodoAutenticacion {
      */
     public boolean isClave() {
         return (this == CLAVE_CERTIFICADO || this == CLAVE_PERMANENTE
-                || this == CLAVE_PIN);
+                || this == CLAVE_PIN || this == CLAVE_MOVIL);
     }
 
 }

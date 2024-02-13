@@ -161,14 +161,6 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 	Captcha generarSonidoCaptchaPaginaFormulario(String idCampo);
 
 	/**
-	 * Regenerar imagen de captcha.
-	 *
-	 * @param pIdImagen
-	 *                      Imagen
-	 */
-	void regenerarCaptchaPaginaFormulario(String idCampo);
-
-	/**
 	 * Añade elemento a componente lista de elementos.
 	 *
 	 * @param datosSesion

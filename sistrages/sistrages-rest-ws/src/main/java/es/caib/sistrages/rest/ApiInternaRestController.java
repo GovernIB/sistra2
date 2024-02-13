@@ -44,6 +44,7 @@ import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RDominio;
 import es.caib.sistrages.rest.api.interna.RListaParametros;
+import es.caib.sistrages.rest.api.interna.RLogoEntidad;
 import es.caib.sistrages.rest.api.interna.RPermisoHelpDesk;
 import es.caib.sistrages.rest.api.interna.RTramitesPorArea;
 import es.caib.sistrages.rest.api.interna.RValorParametro;
@@ -270,6 +271,21 @@ public class ApiInternaRestController {
 	@RequestMapping(value = "/entidad/{id}/avisos", method = RequestMethod.GET)
 	public RAvisosEntidad obtenerAvisosEntidad(@PathVariable("id") final String idEntidad) {
 		return avisosEntidadAdapter.convertir(idEntidad);
+	}
+
+	/**
+	 * Obtiene avisos activos entidad.
+	 *
+	 * @param idEntidad Id entidad
+	 * @return avisos
+	 */
+	@ApiOperation(value = "Obtiene el logo de una entidad", notes = "Obtiene el logo de una entidad", response = RLogoEntidad.class)
+	@RequestMapping(value = "/entidad/{id}/logo", method = RequestMethod.GET)
+	public RLogoEntidad obtenerLogo(@PathVariable("id") final String idEntidad) {
+		byte[] blogo = restApiService.getLogoEntidad(idEntidad);
+		RLogoEntidad logo = new RLogoEntidad();
+		logo.setLogo(blogo);
+		return logo;
 	}
 
 	/**

@@ -1,7 +1,6 @@
 package es.caib.sistrahelp.core.ejb;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -31,7 +30,6 @@ import es.caib.sistrahelp.core.api.model.ResultadoSoporte;
 import es.caib.sistrahelp.core.api.model.Soporte;
 import es.caib.sistrahelp.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
-import es.caib.sistrahelp.core.interceptor.NegocioInterceptor;
 
 /**
  * Servicio para verificar accesos de seguridad.
@@ -161,6 +159,12 @@ public class HelpDeskServiceBean implements HelpDeskService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	public List<String> obtenerTiposProblemaSoporte() {
+		return helpdeskService.obtenerTiposProblemaSoporte();
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public void updateFormularioSoporte(Soporte soporte) {
 		helpdeskService.updateFormularioSoporte(soporte);
 	}
@@ -169,6 +173,12 @@ public class HelpDeskServiceBean implements HelpDeskService {
 	@PermitAll
 	public String urlLogoEntidad(String codDir3) {
 		return helpdeskService.urlLogoEntidad(codDir3);
+	}
+
+	@Override
+	@PermitAll
+	public byte[] contenidoLogoEntidad(String codDir3) {
+		return helpdeskService.contenidoLogoEntidad(codDir3);
 	}
 
 }

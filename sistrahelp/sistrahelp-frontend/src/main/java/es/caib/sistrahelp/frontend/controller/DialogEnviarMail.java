@@ -1,18 +1,12 @@
 package es.caib.sistrahelp.frontend.controller;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -22,10 +16,8 @@ import javax.inject.Inject;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.digester.plugins.PluginException;
-import org.apache.commons.lang3.StringUtils;
-import org.primefaces.PrimeFaces;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.caib.sistra2.commons.plugins.email.api.EmailPluginException;
 import es.caib.sistra2.commons.plugins.email.api.IEmailPlugin;
@@ -34,11 +26,8 @@ import es.caib.sistrahelp.core.api.model.Entidad;
 import es.caib.sistrahelp.core.api.model.ErroresPorTramiteCM;
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.EventoCM;
-import es.caib.sistrahelp.core.api.model.FicheroAuditoria;
-import es.caib.sistrahelp.core.api.model.FicheroPersistenciaAuditoria;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.HistorialAlerta;
-import es.caib.sistrahelp.core.api.model.PersistenciaAuditoria;
 import es.caib.sistrahelp.core.api.model.ResultadoEventoCM;
 import es.caib.sistrahelp.core.api.model.comun.Constantes;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
@@ -48,7 +37,6 @@ import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.frontend.model.DialogResult;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrahelp.frontend.procesos.TimerHilosAlertas;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -112,6 +100,11 @@ public class DialogEnviarMail extends DialogControllerBase {
 	private FiltroAuditoriaTramitacion filtrosInacabados;
 
 	/**
+	 * Log.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(DialogEnviarMail.class);
+
+	/**
 	 * Inicialización.
 	 */
 	public void init() {
@@ -149,10 +142,13 @@ public class DialogEnviarMail extends DialogControllerBase {
 			}
 
 			String nombre = "";
-			//String logo = "";
+			String logo = "";
 //		    byte[] imageBytes = new byte[0];
 			Entidad entidad = sb.getEntidad();
-			//logo = hService.urlLogoEntidad(entidad.getCodigoDIR3());
+			logo = hService.urlLogoEntidad(entidad.getCodigoDIR3());
+			LOGGER.error("DialogEnviarMAIL INI");
+			byte[] imageBytes = hService.contenidoLogoEntidad(entidad.getCodigoDIR3());
+			LOGGER.error("DialogEnviarMAIL P1 " + imageBytes);
 			 //String urltext = logo;
 //			 try {
 //			    URL url = new URL(urltext);
@@ -227,10 +223,20 @@ public class DialogEnviarMail extends DialogControllerBase {
 					+ "      <!-- contenidor --> 	"
 					+ "      <div id=\"contenidor\" style=\"width: 90%;font: normal 80% 'TrebuchetMS', 'Trebuchet MS', Arial, Helvetica, sans-serif;color: #000;margin: 1em auto;background-color: #fff;\">"
 					+ "         <!-- logo illes balears --> 		"
-					+ "         <div id=\"cap\" style=\"font-size: 1.2em;font-weight: bold;text-align: center;margin-bottom: 1em;\">"
-//					+ "            <img  src=\"cid:logo\" alt=\"logo\" width=\"100\" height=\"100\"/>"
-					+ "			   <h3> LOGO </h3>"
-					+ "            <h1>" + nombre.toUpperCase() + "</h1>" + "         </div>"
+					+ "         <div id=\"cap\" style=\"font-size: 1.2em;font-weight: bold;text-align: center;margin-bottom: 1em;\">";
+					/*if(logo != null && !logo.isEmpty()) {
+						msg += "            <img  src=\"" + logo + "\" alt=\"logo\" width=\"100\" height=\"100\"/>";
+					}*/
+
+			if (imageBytes != null && imageBytes.length > 0) {
+				//msg += "			   <h3> LOGO </h3>";
+				String encoded = Base64.getEncoder().encodeToString(imageBytes);
+				LOGGER.error("Codificiado : " + encoded);
+				msg += "            <img  src=\"data:image/jpeg;base64," + encoded + "\" alt=\"logo\" width=\"100\" height=\"100\" style=\"width: 100px;height:100px;\"/>";
+			} else if( logo != null && !logo.isEmpty()) {
+				msg += "            <img  src=\"" + logo + "\" alt=\"logo\" width=\"100\" height=\"100\"/>";
+			}
+			msg += "            <h1>" + nombre.toUpperCase() + "</h1>" + "         </div>"
 					+ "         <!-- /logo illes balears -->  		<!-- continguts -->"
 					+ "         <div id=\"continguts\" style=\"padding: 1em 2em;border: 1em solid #f2f2f2;\">"
 					+ "            <!-- titol --> 			"
@@ -518,8 +524,12 @@ public class DialogEnviarMail extends DialogControllerBase {
 					+ "      </div>" + "   </body>" + "</html>";
 			System.out.println("Informe enviado");
 			//enviarEmail(msg,DatatypeConverter.printBase64Binary(imageBytes));
-			enviarEmail(msg,null);
-
+			LOGGER.error("DialogEnviarMAIL P2 ");
+			LOGGER.error(msg);
+			LOGGER.error("------- BYTES: ------");
+			LOGGER.error(DatatypeConverter.printBase64Binary(imageBytes));
+			enviarEmail(msg, null); //DatatypeConverter.printBase64Binary(imageBytes));
+			LOGGER.error("DialogEnviarMAIL P3");
 			// Retornamos resultado
 			final DialogResult result = new DialogResult();
 			result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
@@ -594,14 +604,17 @@ public class DialogEnviarMail extends DialogControllerBase {
 	private void enviarEmail(String msg, String imgBase64) {
 		try {
 			final IEmailPlugin plgEmail = (IEmailPlugin) confService.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
-//			plgEmail.envioEmail(Arrays.asList(listaEmails.split(Constantes.LISTAS_SEPARADOR)),
-//					"SISTRAHELP: Informe Quadre Comandament - " + UtilJSF.getEntorno().toUpperCase(), msg, null, imgBase64);
-			plgEmail.envioEmail(Arrays.asList(listaEmails.split(Constantes.LISTAS_SEPARADOR)),
-					"SISTRAHELP: Informe Quadre Comandament - " + UtilJSF.getEntorno().toUpperCase(), msg, null);
+			if (imgBase64 == null) {
+				plgEmail.envioEmail(Arrays.asList(listaEmails.split(Constantes.LISTAS_SEPARADOR)),
+						"SISTRAHELP: Informe Quadre Comandament - " + UtilJSF.getEntorno().toUpperCase(), msg, null);
+			} else {
+				plgEmail.envioEmail(Arrays.asList(listaEmails.split(Constantes.LISTAS_SEPARADOR)),
+					"SISTRAHELP: Informe Quadre Comandament - " + UtilJSF.getEntorno().toUpperCase(), msg, null, imgBase64);
+			}
 		} catch (EmailPluginException e) {
-			e.printStackTrace();
+			LOGGER.error("Error de excepción enviando el email " , e);
 		} catch (PluginException e) {
-			e.printStackTrace();
+			LOGGER.error("Error de excepción plugin el email " , e);
 		}
 	}
 

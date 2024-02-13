@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import org.apache.commons.io.IOUtils;
 
 import es.caib.sistramit.core.api.model.formulario.Captcha;
-import es.caib.sistramit.core.api.model.formulario.types.TypeCaptcha;
+import es.caib.sistramit.core.api.model.formulario.types.TypeFormatoCaptcha;
 import es.caib.sistramit.core.service.util.UtilsCaptcha;
 
 public class TestCaptcha {
@@ -18,11 +18,11 @@ public class TestCaptcha {
 		Captcha c = null;
 
 		// Sonido
-		c = UtilsCaptcha.generaCaptcha(captchaValor, idioma, TypeCaptcha.SONIDO);
+		c = UtilsCaptcha.generaCaptcha(captchaValor, idioma, TypeFormatoCaptcha.SONIDO);
 		IOUtils.copy(new ByteArrayInputStream(c.getContenido()), new FileOutputStream("/temp/captcha.wav"));
 
 		// Sonido
-		c = UtilsCaptcha.generaCaptcha(captchaValor, idioma, TypeCaptcha.IMAGEN);
+		c = UtilsCaptcha.generaCaptcha(captchaValor, idioma, TypeFormatoCaptcha.IMAGEN);
 		IOUtils.copy(new ByteArrayInputStream(c.getContenido()), new FileOutputStream("/temp/captcha.png"));
 
 	}

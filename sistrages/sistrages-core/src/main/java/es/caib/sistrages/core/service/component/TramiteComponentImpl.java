@@ -77,6 +77,7 @@ public class TramiteComponentImpl implements TramiteComponent {
 		tiposAutenticacion.add(TypeAutenticacion.CERTIFICADO);
 		tiposAutenticacion.add(TypeAutenticacion.CLAVE_PIN);
 		tiposAutenticacion.add(TypeAutenticacion.CLAVE_PERMANENTE);
+		tiposAutenticacion.add(TypeAutenticacion.CLAVE_MOVIL);
 		tramiteVersion.setTiposAutenticacion(tiposAutenticacion);
 		tramiteVersion.setTipoTramite(TypeTramite.TRAMITE.toString());
 		return tramiteVersion;
@@ -103,6 +104,7 @@ public class TramiteComponentImpl implements TramiteComponent {
 		tiposAutenticacion.add(TypeAutenticacion.CERTIFICADO);
 		tiposAutenticacion.add(TypeAutenticacion.CLAVE_PIN);
 		tiposAutenticacion.add(TypeAutenticacion.CLAVE_PERMANENTE);
+		tiposAutenticacion.add(TypeAutenticacion.CLAVE_MOVIL);
 		tramiteVersion.setTiposAutenticacion(tiposAutenticacion);
 		tramiteVersion.setTipoTramite(TypeTramite.TRAMITE.toString());
 		return tramiteVersion;

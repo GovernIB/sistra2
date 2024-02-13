@@ -73,9 +73,6 @@ public class ViewFuentes extends ViewControllerBase {
 	/** Dato seleccionado en la lista. */
 	private FuenteDatos datoSeleccionado;
 
-	/** Paginacion */
-	private Integer paginacion;
-
 	/** Permite editar. **/
 	private Boolean permiteEditar = false;
 
@@ -113,8 +110,6 @@ public class ViewFuentes extends ViewControllerBase {
 			return;
 		}
 		setAccion("F");
-
-		paginacion = UtilJSF.getPaginacion("viewFuentes");
 
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
 		checkPermisos();
@@ -661,21 +656,6 @@ public class ViewFuentes extends ViewControllerBase {
 	 */
 	public final void setListaAreas(List<Area> listaAreas) {
 		this.listaAreas = listaAreas;
-	}
-
-	/**
-	 * @return the paginacion
-	 */
-	public final Integer getPaginacion() {
-		return paginacion;
-	}
-
-	/**
-	 * @param paginacion the paginacion to set
-	 */
-	public final void setPaginacion(Integer paginacion) {
-		this.paginacion = paginacion;
-		UtilJSF.setPaginacion(paginacion, "viewFuentes");
 	}
 
 	/**

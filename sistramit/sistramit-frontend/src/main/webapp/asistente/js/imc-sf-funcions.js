@@ -201,10 +201,7 @@ $.fn.appTramitacioElimina = function(options) {
 						data: pag_dades,
 						method: "post",
 						dataType: "json",
-						timeout: APP_TIMEOUT,
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
+						timeout: APP_TIMEOUT
 					})
 					.done(function( data ) {
 
@@ -1178,10 +1175,7 @@ $.fn.appSuport = function(options) {
 						processData: false,
 						cache: false,
 						contentType: false,
-						timeout: APP_TIMEOUT,
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
+						timeout: APP_TIMEOUT
 					})
 					.done(function( data ) {
 						

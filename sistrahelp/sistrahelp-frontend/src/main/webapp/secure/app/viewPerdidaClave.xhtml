@@ -219,12 +219,12 @@
 			<!-- Data table -->
 			<p:outputPanel  styleClass="h100">
 				<p:dataTable id="dataTable" var="dt" value="#{viewPerdidaClave.listaDatos}" liveResize="true"
-							 rows="#{viewPerdidaClave.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
+							 rows="#{sessionBean.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
 							 scrollable="true" scrollHeight="100%"
 	                         paginator="true" paginatorPosition="bottom"
 	                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 	                         currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-	                         rowsPerPageTemplate="5,10,15,30"
+	                         rowsPerPageTemplate="5,10,15,30,50,75,100"
 				        	 selectionMode="single" selection="#{viewPerdidaClave.datoSeleccionado}" rowKey="#{dt.idSesionTramitacion}">
 
 

@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RLiteralIdioma;
+import es.caib.sistrages.rest.api.interna.RLogoEntidad;
 import es.caib.sistrages.rest.api.interna.RPermisoHelpDesk;
 import es.caib.sistrages.rest.api.interna.RPlugin;
 import es.caib.sistrages.rest.api.interna.RTramitesPorArea;
@@ -93,6 +94,16 @@ public final class SistragesApiComponentImpl implements SistragesApiComponent {
 		}
 		return entidad;
 
+	}
+
+
+	@Override
+	public byte[] urlLogoEntidad(String idEntidad) {
+		final RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		final RLogoEntidad configuracionEntidad = restTemplate.getForObject(getUrl() + "/entidad/" + idEntidad + "/logo",
+				RLogoEntidad.class);
+		return configuracionEntidad.getLogo();
 	}
 
 	@Override
@@ -262,5 +273,6 @@ public final class SistragesApiComponentImpl implements SistragesApiComponent {
 		}
 		return versionesAux;
 	}
+
 
 }

@@ -12,7 +12,7 @@
   "propiedades": {
     "autenticado": true,
     "nivelQAA": 2,
-    "metodosAutenticacion": "CER;PIN;PER",
+    "metodosAutenticacion": "CER;PIN;PER;MOV",
     "noAutenticado": true,
     "idiomas": [
       "es",

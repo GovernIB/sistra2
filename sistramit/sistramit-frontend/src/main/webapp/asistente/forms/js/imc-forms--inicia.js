@@ -16,6 +16,31 @@ var APP_FORMS_ = ""
 	,APP_FORMS_VERSIO = "0.1";
 
 
+// ajax SETUP
+
+$.ajaxSetup({
+	beforeSend: function(xhr, s) {
+
+		if (s.type !== "POST") {
+			return;
+		}
+
+		if (typeof tokenCSRF !== "undefined") {
+			xhr.setRequestHeader(headerCSRF, tokenCSRF);
+		}
+
+		if (typeof headerIdSessioVal !== "undefined") {
+			xhr.setRequestHeader(headerIdSessio, headerIdSessioVal);
+		}
+
+		if (typeof headerIdFormulariVal !== "undefined") {
+			xhr.setRequestHeader(headerIdFormulari, headerIdFormulariVal);
+		}
+		
+	}
+});
+
+
 // consola
 
 function consola(text) {
@@ -115,9 +140,14 @@ function appFormsCarregaScripts() {
 		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--validacions.js?" + APP_FORMS_VERSIO)
 		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--captcha.js?" + APP_FORMS_VERSIO)
 		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--llistaElements.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--validaNumero.js?" + APP_FORMS_VERSIO)
 		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--serialitza.js?" + APP_FORMS_VERSIO)
 		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--missatge.js?" + APP_FORMS_VERSIO)
 		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--moduls.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--ajuda.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--avalua.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--iframe.js?" + APP_FORMS_VERSIO)
+		,$.getScript(APP_FORMS_ + "forms/js/imc-forms--elementImatge.js?" + APP_FORMS_VERSIO)
 
 	).then(
 

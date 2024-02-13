@@ -16,10 +16,13 @@ En la pantalla de '<i>Auditoría de Tramites</i>' se pueden consultar los evento
 	<ul>
 		<li><span class="nombreCampo">Id. Sesion:</span> Identificador de la sesión de tramitación. Este identificador es facilitado por el asistente de tramitación al ciudadano cuando se inicia un trámite sin autenticación.</li>
 		<li><span class="nombreCampo">NIF:</span> Número de identificación fiscal del usuario autenticado. Este filtro de búsqueda aplica a tramitaciones autenticadas.  </li>
-		<li><span class="nombreCampo">Trámite/Versión:</span> Identificador del trámite de SISTRAGES, código de trámite y su versión correspondiente. Este filtro permite restringir las búsquedas, filtrando por trámite versión.</li>
-		<li><span class="nombreCampo">Fecha inicio (Desde / Hasta):</span> Los campos "Desde" y "Hasta" permiten acotar la búsqueda a los elementos que cumplan que su fecha de inicio esté entre estos dos valores. Es obligatorio establecer una fecha inicial, y en el caso de no indicar una fecha final, se considerará la fecha actual como fecha final. </li>
+		<li><span class="nombreCampo">Àrea:</span> Área del trámite. Es el área a la que pertenece el trámite.</li>
 		<li><span class="nombreCampo">Cod. Proc. Catálogo.:</span> Código del procedimiento en el catálogo. Este código representa el identificador interno del procedimiento/servicio al que está vinculado el trámite en el catálogo de procedimientos de la entidad.</li>
+		<li><span class="nombreCampo">Nombre:</span> Nombre del usuario autenticado. Este filtro de búsqueda aplica a tramitaciones autenticadas.  </li>
+		<li><span class="nombreCampo">Trámite/Versión:</span> Identificador del trámite de SISTRAGES, código de trámite y su versión correspondiente. Este filtro permite restringir las búsquedas, filtrando por trámite versión.</li>
 		<li><span class="nombreCampo">Evento:</span> Tipo de evento a buscar. Los eventos representan estados posibles por los que pasa la tramitación. (ej: Inicio del trámite, carga del trámite desde la carpeta, Registro del trámite, ..."  ). </li>
+		<li><span class="nombreCampo">Cod. SIA.:</span> Código SIA en el catálogo. Este código representa el identificador SIA del procedimiento/servicio al que está vinculado el trámite en el catálogo de procedimientos de la entidad.</li>
+		<li><span class="nombreCampo">Fecha inicio (Desde / Hasta):</span> Los campos "Desde" y "Hasta" permiten acotar la búsqueda a los elementos que cumplan que su fecha de inicio esté entre estos dos valores. Es obligatorio establecer una fecha inicial, y en el caso de no indicar una fecha final, se considerará la fecha actual como fecha final. </li>
 	</ul>
 </p>
 
@@ -36,8 +39,8 @@ En la pantalla de '<i>Auditoría de Tramites</i>' se pueden consultar los evento
 		<ul>
 			<li><span class="nombreCampo">Evento:</span> Tipo de evento</li>
 			<li><span class="nombreCampo">Fecha inicio:</span> Fecha en la que tuvo lugar el evento</li>
-			<li><span class="nombreCampo">Id. Sesión:</span> Identificador de la sesión de tramitación</li>
-			<li><span class="nombreCampo">Nif:</span> Número de identificación fiscal del tramitador</li>
+			<li><span class="nombreCampo">Id. Sesión:</span> Identificador de la sesión de tramitación. Si se pulsa con el botón secundario del ratón sobre un dato de esta columna, es posible buscar los eventos asociados</li>
+			<li><span class="nombreCampo">NIF:</span> Número de identificación fiscal del tramitador. Si se pulsa con el botón secundario del ratón sobre un dato de esta columna, es posible buscar los eventos asociados</li>
 			<li><span class="nombreCampo">Trámite:</span> Identificador del trámite de SISTRAGES</li>
 			<li><span class="nombreCampo">Versión:</span> Versión del trámite</li>
 			<li><span class="nombreCampo">Cod. Proc. Cat.:</span> Código del procedimiento en el catálogo</li>

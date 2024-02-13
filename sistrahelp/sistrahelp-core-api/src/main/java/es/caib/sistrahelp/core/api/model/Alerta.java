@@ -1,9 +1,6 @@
 package es.caib.sistrahelp.core.api.model;
 
-import java.util.Date;
 import java.util.List;
-
-import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 
 /**
  * Dominio.

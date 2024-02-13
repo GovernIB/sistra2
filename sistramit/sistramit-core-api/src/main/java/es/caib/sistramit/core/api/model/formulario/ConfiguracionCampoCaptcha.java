@@ -12,6 +12,9 @@ import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
 @SuppressWarnings("serial")
 public final class ConfiguracionCampoCaptcha extends ConfiguracionCampo {
 
+	/** Opciones particularizadas. */
+	private OpcionesCampoCaptcha opciones = new OpcionesCampoCaptcha();
+
 	/**
 	 * Constructor.
 	 *
@@ -34,6 +37,25 @@ public final class ConfiguracionCampoCaptcha extends ConfiguracionCampo {
 	 */
 	public static ConfiguracionCampoCaptcha createNewConfiguracionCampoCaptcha(final String idCampo) {
 		return new ConfiguracionCampoCaptcha(idCampo);
+	}
+
+	/**
+	 * Método de acceso a opciones.
+	 *
+	 * @return opciones
+	 */
+	public OpcionesCampoCaptcha getOpciones() {
+		return opciones;
+	}
+
+	/**
+	 * Método para establecer opciones.
+	 *
+	 * @param opciones
+	 *                     opciones a establecer
+	 */
+	public void setOpciones(OpcionesCampoCaptcha opciones) {
+		this.opciones = opciones;
 	}
 
 }

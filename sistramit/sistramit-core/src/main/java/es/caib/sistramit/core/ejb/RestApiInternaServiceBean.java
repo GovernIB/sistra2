@@ -163,6 +163,11 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 	}
 
 	@Override
+	public List<String> listarTiposProblema() {
+		return restApiInternaService.listarTiposProblema();
+	}
+
+	@Override
 	public Long contarFormularioSoporte(FiltroEventoAuditoria filtroBusqueda) {
 		return restApiInternaService.contarFormularioSoporte(filtroBusqueda);
 	}

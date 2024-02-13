@@ -146,7 +146,7 @@
 				<p:growl id="growlDialog" widgetVar="growlDialog" />
 
 				<p:outputLabel value="" style="margin-top:10px" />
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-10 w20," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-5 w15," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="check" value="#{msg['dialogConfiguracionAlertas.checkResumen']}" rendered="#{dialogConfiguracionAlertas.isResumenDiario() or dialogConfiguracionAlertas.noExisteResumen()}"/>
 					<p:selectBooleanCheckbox id="check" value="#{dialogConfiguracionAlertas.check}" rendered="#{dialogConfiguracionAlertas.isResumenDiario() or dialogConfiguracionAlertas.noExisteResumen()}">
@@ -211,7 +211,6 @@
 							<p:ajax event="change" process="@this"/>
 						</p:calendar>
 
-
 					<p:outputLabel for="interv" value="#{msg['viewConfiguracionAlertas.intervalo']}" />
 					<h:panelGrid columns = "5" cellspacing = "0"  width="100%" id="interv" columnClasses="wpx50,wpx200,wpx50," >
 						<p:outputLabel for="fDesde" value="#{msg['viewEventosPlataforma.filtroFechaInicio']}" />
@@ -223,73 +222,103 @@
 							<p:ajax event="change" process="@this"/>
 						</p:calendar>
 					</h:panelGrid>
+
+ 					<p:outputLabel for="condicion" value="#{msg['dialogConfiguracionAlertas.condicion']}:" styleClass="margin-right-10" ></p:outputLabel>
+ 					<p:outputLabel id="condicion" value="#{dialogConfiguracionAlertas.condicion}" maxlength="255" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" style="width:100px" ></p:outputLabel>
+
 				</h:panelGrid>
-				<h:panelGrid id="columnaListaDisparadores" style="margin-bottom:0px" columns="2" styleClass="w100" columnClasses="padding-left-10 w20, ">
-								<p:outputLabel value="#{msg['dialogConfiguracionAlertas.expresion.evaluacion']}" />
+				<h:panelGrid id="columnaListaDisparadores" rowClasses=", ui-datatable-odd" columnClasses="padding-left-5 w15," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+					<p:outputLabel value="#{msg['dialogConfiguracionAlertas.expresion.evaluacion']}" />
+					<h:panelGrid columns="13" cellspacing="0" width="100%">
+						<p:outputLabel for="comboGrupo" value="#{msg['dialogConfiguracionAlertas.grupo']}:" styleClass="margin-right-10" ></p:outputLabel>
+						<p:selectOneMenu id="comboGrupo" value="#{dialogConfiguracionAlertas.grupoSeleccionado}" styleClass="margin-right-10" filter="true" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" filterMatchMode="contains" style="width:20px">
+								<f:selectItem itemLabel="" noSelectionOption="true"></f:selectItem>
+						     	<f:selectItems value="#{dialogConfiguracionAlertas.grupos}" var="grupo" itemLabel="#{grupo}" itemValue="#{grupo}" />
+						</p:selectOneMenu>
 
-								<h:panelGrid  style="margin-bottom:0px" columns="7" styleClass="w70">
-									<p:outputLabel value="#{msg['dialogConfiguracionAlertas.evento']}:" styleClass="margin-right-10" ></p:outputLabel>
-									<p:selectOneMenu id="comboEventos" value="#{dialogConfiguracionAlertas.evSeleccionado}" styleClass="margin-right-10" filter="true" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" filterMatchMode="contains" style="width:150px">
-											<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>
-									     	<f:selectItems value="#{dialogConfiguracionAlertas.eventos}" var="evento" itemLabel="#{msg['typeEvento.'+=evento]}" itemValue="#{evento}"  />
-									</p:selectOneMenu>
+						<p:outputLabel for="comboAND_OR" value="#{msg['dialogConfiguracionAlertas.opLogicoAND_OR']}:" styleClass="margin-right-10" ></p:outputLabel>
+						<p:selectOneMenu id="comboAND_OR" value="#{dialogConfiguracionAlertas.opLogicoAND_ORSeleccionado}" styleClass="margin-right-10" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" filter="true" filterMatchMode="contains" style="width:30px">
+								<f:selectItem itemLabel="" noSelectionOption="true"></f:selectItem>
+						     	<f:selectItems value="#{dialogConfiguracionAlertas.opLogicoAND_OR}" var="y_o" itemLabel="#{y_o}" itemValue="#{y_o}" />
+						</p:selectOneMenu>
 
-									<p:outputLabel value="#{msg['dialogConfiguracionAlertas.operador']}:" styleClass="margin-right-10" ></p:outputLabel>
-									<p:selectOneMenu id="comboOperador" value="#{dialogConfiguracionAlertas.operadorSeleccionado}" styleClass="margin-right-10" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" filter="true" filterMatchMode="contains" style="width:33px">
-											<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>
-									     	<f:selectItems value="#{dialogConfiguracionAlertas.operadores}" var="operador" itemLabel="#{operador}" itemValue="#{operador}"  />
-									</p:selectOneMenu>
+						<p:outputLabel for="checkNOT" value="#{msg['dialogConfiguracionAlertas.opLogicoNOT']}"/>
+						<p:selectBooleanCheckbox id="checkNOT" value="#{dialogConfiguracionAlertas.opLogicoNOT}" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" style="width:25px">
+				        </p:selectBooleanCheckbox>
 
-									<p:outputLabel value="#{msg['dialogConfiguracionAlertas.concurrecias']}:" styleClass="margin-right-10" style="width:150px"></p:outputLabel>
-									<p:inputText id="inputConcurrencias" onblur="this.value = this.value.trim();" value="#{dialogConfiguracionAlertas.concurrenciasSeleccionado}"  disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" />
+						<p:outputLabel for="comboEventos" value="#{msg['dialogConfiguracionAlertas.evento']}:" styleClass="margin-right-10" ></p:outputLabel>
+						<p:selectOneMenu id="comboEventos" value="#{dialogConfiguracionAlertas.evSeleccionado}" styleClass="margin-right-10" filter="true" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" filterMatchMode="contains" style="width:100px">
+								<f:selectItem itemLabel="" noSelectionOption="true"></f:selectItem>
+						     	<f:selectItems value="#{dialogConfiguracionAlertas.eventos}" var="evento" itemLabel="#{msg['typeEvento.'+=evento]}" itemValue="#{evento}"  />
+						</p:selectOneMenu>
 
-									<p:commandButton value="#{msg['botones.anyadir']}" actionListener="#{dialogConfiguracionAlertas.anyadirDisparador()}" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" process="@form:columnaListaDisparadores" update="@form:listaDisparadores growlDialog"  styleClass="boton-azul" />
+						<p:outputLabel for="comboOperador" value="#{msg['dialogConfiguracionAlertas.operador']}:" styleClass="margin-right-10" ></p:outputLabel>
+						<p:selectOneMenu id="comboOperador" value="#{dialogConfiguracionAlertas.operadorSeleccionado}" styleClass="margin-right-10" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" filter="true" filterMatchMode="contains" style="width:20px">
+								<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>
+						     	<f:selectItems value="#{dialogConfiguracionAlertas.operadores}" var="operador" itemLabel="#{operador}" itemValue="#{operador}"  />
+						</p:selectOneMenu>
 
-								</h:panelGrid>
+						<p:outputLabel for="inputConcurrencias" value="#{msg['dialogConfiguracionAlertas.concurrecias']}:" styleClass="margin-right-10" style="width:15px"></p:outputLabel>
+						<p:inputText id="inputConcurrencias" onblur="this.value = this.value.trim();" value="#{dialogConfiguracionAlertas.concurrenciasSeleccionado}" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" style="width:30px"/>
 
-								<p:outputLabel value="#{msg['viewConfiguracionAlertas.eventos']}" />
-								<p:dataTable id="listaDisparadores"
-										 	var="td" emptyMessage="#{msg['error.emptyRows']}"
-										 	value="#{dialogConfiguracionAlertas.disparadores}"
-										 	scrollable="true"
-										 	scrollHeight="140"
-										 	style="margin-top:10px;width:100%"
-										 	selectionMode="single"
-										 	selection="#{dialogConfiguracionAlertas.disparadorSeleccionado}"
-										 	rowKey="#{td.ev}"
-										 	dblClickSelect="true">
+						<p:commandButton id="botonAnyadir" value="#{dialogConfiguracionAlertas.getDisparadorSeleccionado() == null ? msg['botones.anyadir'] : (dialogConfiguracionAlertas.modoEditarDisp ? msg['botones.editar'] : msg['botones.insertar'])}" actionListener="#{dialogConfiguracionAlertas.procesarDisparador()}" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" process="@form:columnaListaDisparadores" update="@form:columnaListaDisparadores @form:listaDisparadores @form:condicion growlDialog" styleClass="boton-azul" >
+							<p:ajax event="click" listener="#{dialogConfiguracionAlertas.setClickBotonAnyadir(true)}" />
+						</p:commandButton>
 
-										<!-- Columnas -->
-										<p:column headerText="#{msg['dialogConfiguracionAlertas.evento']}" class="ui-panelgrid-cell" width="30%">
-											<h:outputText value="#{msg['typeEvento.'+=td.ev]}" />
-									    </p:column>
-										<p:column headerText="#{msg['dialogConfiguracionAlertas.operador']}" class="ui-panelgrid-cell" width="7%">
-											<h:outputText value="#{td.operador}" />
-									    </p:column>
-
-									    <p:column headerText="#{msg['dialogConfiguracionAlertas.concurrecias']}" class="ui-panelgrid-cell" width="10%">
-											<h:outputText value="#{td.concurrencias}" />
-									    </p:column>
-
-										<p:column width="10%" style="text-align:center" rendered="#{(dialogConfiguracionAlertas.isAlta() or dialogConfiguracionAlertas.isEdicion())}" >
-									    	<p:commandButton id="btnEliminar" value=" " icon="fa fa-trash-o" actionListener="#{dialogConfiguracionAlertas.borrarTramite(td)}" process="@this" update="listaDisparadores" style="width:32px;height:25px"></p:commandButton>
-										</p:column>
-
-				 				</p:dataTable>
-								<p:contextMenu>
-					       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogConfiguracionAlertas:auxCopiar" update="growlDialog" />
-							    </p:contextMenu>
-							    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
-									<p:ajax event="success" listener="#{dialogConfiguracionAlertas.copiadoCorr}" process="@this" update="@this growlDialog"/>
-					            	<p:ajax event="error" listener="#{dialogConfiguracionAlertas.copiadoErr}" update="@this growlDialog"/>
-					        	</pe:clipboard>
-
-							    <p:inputText id="auxCopiar" value="#{dialogConfiguracionAlertas.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 					</h:panelGrid>
+					<p:outputLabel value="#{msg['viewConfiguracionAlertas.eventos']}" />
+					<p:dataTable id="listaDisparadores"
+						 	var="td" emptyMessage="#{msg['error.emptyRows']}"
+						 	value="#{dialogConfiguracionAlertas.disparadores}"
+						 	scrollable="true"
+						 	scrollHeight="140"
+						 	style="margin-top:10px;width:100%"
+						 	selectionMode="single"
+						 	selection="#{dialogConfiguracionAlertas.disparadorSeleccionado}"
+						 	rowKey="#{td.ev}"
+						 	dblClickSelect="true">
 
+						 	<!-- Necesario para actualizar en controlador la fila seleccionada -->
+        					<p:ajax event="rowSelect" global="false" process="@this" update="@form:listaDisparadores @form:botonAnyadir"/>
+
+						<!-- Columnas -->
+						<p:column headerText="#{msg['dialogConfiguracionAlertas.grupo']}" class="ui-panelgrid-cell" width="5%">
+							<h:outputText value="#{td.grupo}" />
+					    </p:column>
+					    <p:column headerText="#{msg['dialogConfiguracionAlertas.opLogicoAND_OR']}" class="ui-panelgrid-cell" width="10%">
+							<h:outputText value="#{td.opLogicoAND_OR eq 'null' ? '': td.opLogicoAND_OR}" />
+					    </p:column>
+					    <p:column headerText="#{msg['dialogConfiguracionAlertas.opLogicoNOT']}" class="ui-panelgrid-cell" width="10%">
+							<h:outputText value="#{td.opLogicoNOT eq false ? '': msg['dialogConfiguracionAlertas.opLogicoNOT']}" />
+					    </p:column>
+					    <p:column headerText="#{msg['dialogConfiguracionAlertas.evento']}" class="ui-panelgrid-cell" width="30%">
+							<h:outputText value="#{msg['typeEvento.'+=td.ev]}" />
+					    </p:column>
+						<p:column headerText="#{msg['dialogConfiguracionAlertas.operador']}" class="ui-panelgrid-cell" width="10%">
+							<h:outputText value="#{td.operador}" />
+					    </p:column>
+					    <p:column headerText="#{msg['dialogConfiguracionAlertas.concurrecias']}" class="ui-panelgrid-cell" width="10%">
+							<h:outputText value="#{td.concurrencias}" />
+					    </p:column>
+						<p:column style="text-align:center" rendered="#{(dialogConfiguracionAlertas.isAlta() or dialogConfiguracionAlertas.isEdicion())}" class="ui-panelgrid-cell" width="15%">
+					    	<p:commandButton id="btnEditar" value=" " icon="fa fa-edit" actionListener="#{dialogConfiguracionAlertas.clickEditarDisparador(td)}" process="@this" update="@form:columnaListaDisparadores @form:listaDisparadores @form:condicion @form:botonAnyadir" style="width:32px;height:25px"></p:commandButton>
+					    	<p:commandButton id="btnEliminar" value=" " icon="fa fa-trash-o" actionListener="#{dialogConfiguracionAlertas.clickBorrarDisparador(td)}" process="@this" update="@form:listaDisparadores @form:condicion" style="width:32px;height:25px"></p:commandButton>
+					    </p:column>
+
+	 				</p:dataTable>
+					<p:contextMenu>
+		       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :dialogConfiguracionAlertas:auxCopiar" update="growlDialog" />
+				    </p:contextMenu>
+				    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+						<p:ajax event="success" listener="#{dialogConfiguracionAlertas.copiadoCorr}" process="@this" update="@this growlDialog"/>
+		            	<p:ajax event="error" listener="#{dialogConfiguracionAlertas.copiadoErr}" update="@this growlDialog"/>
+		        	</pe:clipboard>
+
+				    <p:inputText id="auxCopiar" value="#{dialogConfiguracionAlertas.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+				</h:panelGrid>
 
 			</p:outputPanel>
-		  	 <p:outputPanel styleClass="botonera">
+			<p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogConfiguracionAlertas.aceptar()}" process="@form" update="@form"  styleClass="boton-azul" rendered="#{dialogConfiguracionAlertas.isAlta() or dialogConfiguracionAlertas.isEdicion()}"/>

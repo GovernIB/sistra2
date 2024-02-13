@@ -74,6 +74,9 @@
 		          $('#dialogConsultaIncidencias\\:btnSesionHidden').click();
 		        }
 
+				function consultarNif(){
+		          $('#dialogConsultaIncidencias\\:btnNifHidden').click();
+		        }
 
 			  function getPos(){
 			 	var e = window.event;
@@ -108,6 +111,13 @@
 		        }else{
 		          document.getElementById("dialogConsultaIncidencias:consultaSesion").classList.remove("d-block");
 		          document.getElementById("dialogConsultaIncidencias:consultaSesion").classList.add("d-none")
+		        }
+				if(elEnDataT!=null &amp;&amp; elEnDataT.id=='dialogConsultaIncidencias:nif'){
+		          document.getElementById("dialogConsultaIncidencias:consultaNif").classList.remove("d-none");
+		          document.getElementById("dialogConsultaIncidencias:consultaNif").classList.add("d-block");
+		        }else{
+		          document.getElementById("dialogConsultaIncidencias:consultaNif").classList.remove("d-block");
+		          document.getElementById("dialogConsultaIncidencias:consultaNif").classList.add("d-none")
 		        }
 
 				if(aux.value!='' ){
@@ -228,10 +238,14 @@
 			<p:commandButton id="btnSesionHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogConsultaIncidencias.abrirDlgSesion()}" process="@this" update="@form:growlDialog" style="display:none">
 	           <p:ajax event="dialogReturn" listener="#{dialogConsultaIncidencias.returnDialogo}" update="@form:growlDialog"/>
 	        </p:commandButton>
+			<p:commandButton id="btnNifHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogConsultaIncidencias.abrirDlgNif()}" process="@this" update="@form:growlDialog" style="display:none">
+	           <p:ajax event="dialogReturn" listener="#{dialogConsultaIncidencias.returnDialogo}" update="@form:growlDialog"/>
+	        </p:commandButton>
 
 			<p:contextMenu>
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this @form:auxCopiar" update="growlDialog" />
        			<p:menuitem id="consultaSesion" icon="fa fa-window-maximize" onclick="consultarSesion();" value="#{msg['viewConsultaIncidencias.eventos.sesion']}"  process="@this"/>
+				<p:menuitem id="consultaNif" icon="fa fa-window-maximize" onclick="consultarNif();" value="#{msg['viewConsultaIncidencias.eventos.nif']}" process="@this" />
 			</p:contextMenu>
 
 		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">

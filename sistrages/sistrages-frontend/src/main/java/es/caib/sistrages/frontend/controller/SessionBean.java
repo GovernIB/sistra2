@@ -1,5 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -21,13 +22,16 @@ import org.primefaces.model.menu.MenuModel;
 
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.Sesion;
+import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -139,6 +143,20 @@ public class SessionBean {
 
 	/** Paginación */
 	private Integer paginacion;
+	private int indexPaginacion = -1;
+
+	/** Paginación */
+	private String colorFondoScript = "Blanco";
+	private int indexColorFondoScript = -1;
+
+	/** Propiedad */
+	private Propiedad propiedad;
+
+	/** Propiedades */
+	private List<Propiedad> propiedades;
+
+	/** Datos elemento. */
+	private Sesion data;
 
 	public void submitAspect() {
 
@@ -176,10 +194,15 @@ public class SessionBean {
 			FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale(sesion.getIdioma()));
 		}
 
-		// asignamos paginación por defecto si no tiene
-		if (getPaginacion() == null) {
-			setPaginacion(10);
+		// Obtenemos las propiedades
+		if (sesion != null && sesion.getPropiedades() != null && !sesion.getPropiedades().isEmpty()) {
+			propiedades = sesion.getPropiedades();
+			obtenerPaginacion(propiedades);
+
+			// Obtenemos el color del editor de script
+			obtenerColorEditorScript(propiedades);
 		}
+
 		lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
 		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 		rolesList = securityService.getRoles();
@@ -267,6 +290,28 @@ public class SessionBean {
 		mochilaDatos = new HashMap<>();
 
 		prepararGrowl(configuracionGlobalService.getConfiguracionGlobal("growl.propiedades").getValor());
+	}
+
+	private void obtenerPaginacion(List<Propiedad> list) {
+		// recuperamos la paginación
+		for (final Propiedad prop : list) {
+			if (prop.getCodigo().equals("paginacion")) {
+				paginacion = Integer.valueOf(prop.getValor());
+				indexPaginacion = list.indexOf(prop);
+				break;
+			}
+		}
+	}
+
+	private void obtenerColorEditorScript(List<Propiedad> list) {
+		// recuperamos el color de editor de script
+		for (final Propiedad prop : list) {
+			if (prop.getCodigo().equals("colorFondoScript")) {
+				colorFondoScript = prop.getValor();
+				indexColorFondoScript = list.indexOf(prop);
+				break;
+			}
+		}
 	}
 
 	/**
@@ -795,7 +840,25 @@ public class SessionBean {
 	 * @param paginacion the paginacion to set
 	 */
 	public final void setPaginacion(Integer paginacion) {
-		this.paginacion = paginacion;
+		// Si se ha cambiado la paginación se actualiza en la sesión
+		if (!paginacion.equals(this.paginacion)) {
+			// Cambia paginación
+			this.paginacion = paginacion;
+
+			// actualizamos propiedades de sesión
+			propiedad = new Propiedad();
+			propiedad.setCodigo("paginacion");
+			propiedad.setValor(Integer.toString(paginacion));
+
+			if (UtilJSON.toJSON(propiedades).contains(propiedad.getCodigo())) {
+				propiedades.remove(indexPaginacion);
+			}
+			propiedades.add(propiedad);
+			String pPropiedades = (UtilJSON.toJSON(propiedades));
+
+			// actualizamos sesion usuario
+			systemService.updateSesionPropiedades(userName, pPropiedades);
+		}
 	}
 
 	public void loggerErrorFront(Object tipo, Object mensaje, Object traza, Exception exception) {
@@ -816,5 +879,106 @@ public class SessionBean {
 	 */
 	public void setMaxInactiveInterval(Integer maxInactiveInterval) {
 		this.maxInactiveInterval = maxInactiveInterval;
+	}
+
+	/**
+	 * @return the data
+	 */
+	public Sesion getData() {
+		return data;
+	}
+
+	/**
+	 * @param data the data to set
+	 */
+	public void setData(Sesion data) {
+		this.data = data;
+	}
+
+	/**
+	 * @return the propiedad
+	 */
+	public Propiedad getPropiedad() {
+		return propiedad;
+	}
+
+	/**
+	 * @param propiedad the propiedad to set
+	 */
+	public void setPropiedad(Propiedad propiedad) {
+		this.propiedad = propiedad;
+	}
+
+	/**
+	 * @return the propiedades
+	 */
+	public List<Propiedad> getPropiedades() {
+		return propiedades;
+	}
+
+	/**
+	 * @param propiedades the propiedades to set
+	 */
+	public void setPropiedades(List<Propiedad> propiedades) {
+		this.propiedades = propiedades;
+	}
+
+
+	/**
+	 * @return the colorFondoScript
+	 */
+	public String getColorFondoScript() {
+		return colorFondoScript;
+	}
+
+	/**
+	 * @param colorFondoScript the colorFondoScript to set
+	 */
+	public void setColorFondoScript(String colorFondoScript) {
+		// Cambia color fondo script
+		this.colorFondoScript = colorFondoScript;
+
+		// actualizamos propiedades de sesión
+		propiedad = new Propiedad();
+		propiedad.setCodigo("colorFondoScript");
+		propiedad.setValor(colorFondoScript);
+
+		if (UtilJSON.toJSON(propiedades).contains(propiedad.getCodigo())) {
+			propiedades.remove(indexColorFondoScript);
+		}
+		propiedades.add(propiedad);
+		String pPropiedades = (UtilJSON.toJSON(propiedades));
+
+		// actualizamos sesion usuario
+		systemService.updateSesionPropiedades(userName, pPropiedades);
+		indexColorFondoScript = propiedades.indexOf(propiedad);
+	}
+
+	/**
+	 * @return the indexPaginacion
+	 */
+	public int getIndexPaginacion() {
+		return indexPaginacion;
+	}
+
+	/**
+	 * @param indexPaginacion the indexPaginacion to set
+	 */
+	public void setIndexPaginacion(int indexPaginacion) {
+		this.indexPaginacion = indexPaginacion;
+	}
+
+	/**
+	 * @return the indexColorFondoScript
+	 */
+	public Integer getIndexColorFondoScript() {
+		return indexColorFondoScript;
+	}
+
+	/**
+	 * @param indexColorFondoScript the indexColorFondoScript to set
+	 */
+	public void setIndexColorFondoScript(Integer indexColorFondoScript) {
+		this.indexColorFondoScript = indexColorFondoScript;
 	}
 }

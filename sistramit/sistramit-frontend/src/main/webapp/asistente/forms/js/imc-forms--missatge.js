@@ -59,7 +59,7 @@ $.fn.appFormsMissatge = function(options) {
 
 	var settings = $.extend({
 			boto: false
-			,accio: "informa"
+			,accio: "informa" // informa, carregant, etc
 			,titol: ""
 			,text: ""
 			,debug: false
@@ -228,6 +228,14 @@ $.fn.appFormsMissatge = function(options) {
 						.on('click.appFormsMissatge', amagaFons);
 
 				}
+
+				// si l'acció és carregant no fa falta el tabulador
+
+				if (accio === "carregant") {
+					return;
+				}
+
+				// apliquem tabulació a la capa
 
 				element
 					.appFormsPopupTabula();

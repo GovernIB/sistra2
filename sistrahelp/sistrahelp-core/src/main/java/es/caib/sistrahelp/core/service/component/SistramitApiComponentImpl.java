@@ -1,6 +1,7 @@
 package es.caib.sistrahelp.core.service.component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -204,6 +205,27 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 				}
 			}
 		}
+
+		return resultado;
+	}
+
+	@Override
+	public List<String> obtenerTiposProblemaSoporte() {
+		List<String> resultado = null;
+		final RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		try {
+			final String[] response = restTemplate.getForObject(getUrl() + "/auditoria/soporte/listarTiposProblema", String[].class);
+
+			if (response != null) {
+				resultado = Arrays.asList(response);
+			}
+		} catch (Exception e) {
+
+		}
+
 
 		return resultado;
 	}

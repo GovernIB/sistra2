@@ -409,6 +409,7 @@ public final class UtilsFlujo {
 		detalleTramiteInfo.setTipoFlujo(pDatosSesion.getDatosTramite().getTipoFlujo());
 		detalleTramiteInfo.setAutenticacion(pDatosSesion.getDatosTramite().getNivelAutenticacion());
 		detalleTramiteInfo.setMetodoAutenticacion(pDatosSesion.getDatosTramite().getMetodoAutenticacionInicio());
+		detalleTramiteInfo.setNivelAutenticacion(pDatosSesion.getDatosTramite().getUsuarioAutenticado().getQaa());
 		return detalleTramiteInfo;
 	}
 

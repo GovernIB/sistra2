@@ -218,6 +218,8 @@ public interface RestApiDao {
 
 	Long contarFormularioSoporte(FiltroEventoAuditoria pFiltroBusqueda);
 
+	List<String> listarTiposProblema();
+
 	void updateEstadoIncidencia(Long idSoporte, TypeSoporteEstado estado, String comentarios);
 
 }

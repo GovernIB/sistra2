@@ -91,10 +91,7 @@ $.fn.appEmplenaFormulariCaptura = function(options) {
 						data: pag_dades,
 						method: "post",
 						dataType: "json",
-						timeout: APP_TIMEOUT,
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
+						timeout: APP_TIMEOUT
 					})
 					.done(function( data ) {
 

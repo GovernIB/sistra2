@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
+import es.caib.sistramit.core.api.service.SystemService;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.rest.api.interna.RArea;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
@@ -174,7 +176,7 @@ public final class UtilsFormularioSoporte {
 	 */
 	public static String construyeMensajeSoporteIncidencias(final Literales literales,
 			final DatosFormularioSoporte datosFormSoporte, final RConfiguracionEntidad entidad,
-			final DatosSesionTramitacion datosSesion) {
+			final DatosSesionTramitacion datosSesion, final String urlSth) {
 
 		final String idioma = datosSesion.getDatosTramite().getIdioma();
 
@@ -212,10 +214,14 @@ public final class UtilsFormularioSoporte {
 		listaCampos += addParameterMensaje(getLiteral(literales, idioma, "problemaDesc"),
 				datosFormSoporte.getProblemaDesc());
 
+		String urlIdSesionMensaje = literales.getLiteral(Literales.SOPORTE_INCIDENCIAS, "urlIdSesion",
+				new String[] { urlSth + "/viewAuditoriaTramites.xhtml?idSesion=" + datosSesion.getDatosTramite().getIdSesionTramitacion() }, idioma);
+
 		String mensaje = getPlantilla();
 		mensaje = StringUtils.replace(mensaje, "[#TITULO#]",
 				StringEscapeUtils.escapeHtml4(getLiteral(literales, idioma, "titulo")));
 		mensaje = StringUtils.replace(mensaje, "[#CONTENIDO#]", listaCampos);
+		mensaje = StringUtils.replace(mensaje, "[#TEXTO.URL.IDSESION#]", urlIdSesionMensaje);
 
 		return mensaje;
 	}

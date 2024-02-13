@@ -13,6 +13,10 @@
 .imc-cap .imc--dades h1 span { font-size: 1.5em; }
 .imc-cap .imc--dades div { display: inline-block; vertical-align: middle; margin-right: 1em; }
 
+
+.imc-cap .imc--dades .imc--nivell-autent { padding-left: 1em; }
+
+
 .imc-cap .imc--opcions { width: calc(100% - 60% - 4em); text-align: right; }
 .imc-cap .imc--opcions li { display: inline-block; vertical-align: middle; padding-left: .4em; }
 
@@ -982,35 +986,7 @@ html[data-estil="ac"] .imc-cap .imc--opcions .imc-bt {
 
 	body { overflow: auto; font-size: 90%; }
 
-	/*.imc-contenidor { overflow: auto; position: fixed; top: 0; left: 0; width: 100%; min-width: 100%; height: 100%; }
-	.imc-contenidor > .imc-co { min-width: 50em; }
-
-	.imc-cap .imc--dades {
-		display: grid;
-		grid-template-columns: 35% 65%;
-	}
-
-	.imc-cap .imc--dades div.imc--usuari {
-		grid-column: 1 / 2;
-		grid-row: 1 / 2;
-	}
-
-	.imc-cap .imc--dades div.imc--desconecta {
-		grid-column: 1 / 2;
-		grid-row: 2 / 3;
-	}
-
-	.imc-cap .imc--dades div.imc--clau {
-		grid-column: 2 / 3;
-		grid-row: 1 / 2;
-	}
-
-	.imc-cap .imc--dades div.imc--desa {
-		grid-column: 2 / 3;
-		grid-row: 2 / 3;
-	}
-*/
-
+	.imc-cap .imc--dades .imc--nivell-autent { display: block; padding-left: 0; }
 
 }
 

@@ -14,11 +14,11 @@
 		<script type="text/javascript">
 		function setHeight(){
 	    	var altura = window.innerHeight - 50;
-	    	var alturaPropiedades = altura - 250;
-            var alturaPropiedadesBody = altura - 278;
+	    	var alturaDatatable = altura - 250;
+            var alturaScrollableBody = altura - 293;
 
-            $('#form\\:dataTable').height(alturaPropiedades);
-            $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaPropiedadesBody);
+            $('#form\\:dataTable').height(alturaDatatable);
+            $('#form\\:dataTable .ui-datatable-scrollable-body').height(alturaScrollableBody);
 	    }
 
 		jQuery(document).ready(function() {
@@ -29,6 +29,14 @@
 
 	      setHeight();
 	  });
+
+		function cerrarDialog(){
+			var iconX = parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all')
+							[parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all').length-1];
+
+			iconX.addEventListener("click", setHeight);
+		}
+
 	    </script>
 	</ui:define>
 
@@ -78,8 +86,8 @@
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
 
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewPropiedadesConfiguracion.editar()}" process="@this" update="growl">
-		        			<p:ajax event="dialogReturn" listener="#{viewPropiedadesConfiguracion.returnDialogo}" update="growl dataTable"/>
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewPropiedadesConfiguracion.editar()}" process="@this" update="growl" oncomplete="cerrarDialog()">
+		        			<p:ajax event="dialogReturn" listener="#{viewPropiedadesConfiguracion.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
 
 		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewPropiedadesConfiguracion.ayuda}" process="@this" update="growl dataTable"/>
@@ -91,12 +99,12 @@
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewPropiedadesConfiguracion.listaDatos}"
-						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+						 rows="#{sessionBean.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-                         rowsPerPageTemplate="5,10,15,30"
+                         rowsPerPageTemplate="5,10,15,30,50,75,100"
 			        	 selectionMode="single" selection="#{viewPropiedadesConfiguracion.datoSeleccionado}" rowKey="#{td.codigo}">
 
 				<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
@@ -129,8 +137,8 @@
 		       		$('#form\\:btnEditarHidden').click();
 		      }
 		    </h:outputScript>
-		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewPropiedadesConfiguracion.rcDobleClick()}" process="@this" update="growl" style="display:none">
-       			<p:ajax event="dialogReturn" listener="#{viewPropiedadesConfiguracion.returnDialogo}" update="growl dataTable"/>
+		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewPropiedadesConfiguracion.rcDobleClick()}" process="@this" update="growl" style="display:none" oncomplete="cerrarDialog()">
+       			<p:ajax event="dialogReturn" listener="#{viewPropiedadesConfiguracion.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
        		</p:commandButton>
 
 			<p:contextMenu for="dataTable" id="cMenuPropiedades" widgetVar="cMenuPropiedadesWV" beforeShow="return true;">

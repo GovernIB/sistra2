@@ -700,12 +700,12 @@
 
 
         <p:dataTable id="dataTableTramites" var="td" value="#{viewTramites.dataModel}"
-                         rows="#{viewTramites.paginacion}" emptyMessage="#{msg['error.emptyRows']}" rowExpandMode="single"
+                         rows="#{sessionBean.paginacion}" emptyMessage="#{msg['error.emptyRows']}" rowExpandMode="single"
                          scrollable="true" scrollHeight="#{viewTramites.height}" rowIndexVar="rowIndex"
                                      paginator="#{viewTramites.mostrarPaginacion()}" paginatorPosition="bottom"
                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                      currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-                                     rowsPerPageTemplate="5,10,15,30"
+                                     rowsPerPageTemplate="5,10,15,30,50,75,100"
                          expandedRow="#{viewTramites.expandir(td)}" widgetVar="myWidget"
                              selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}"  lazy="true" height="100%">
 

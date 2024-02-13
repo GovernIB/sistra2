@@ -186,6 +186,11 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	}
 
 	@Override
+	public List<String> listarTiposProblema() {
+		return restApiInternaComponent.listarTiposProblema();
+	}
+
+	@Override
 	public void updateEstadoIncidencia(Long idSoporte, TypeSoporteEstado estado, String comentarios) {
 		restApiInternaComponent.updateEstadoIncidencia(idSoporte, estado, comentarios);
 	}

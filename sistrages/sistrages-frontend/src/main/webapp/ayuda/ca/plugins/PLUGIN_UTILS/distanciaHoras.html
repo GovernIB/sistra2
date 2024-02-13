@@ -1,0 +1,72 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.distanciaHoras(fecha1, hora1, fecha2, hora2, formatoFecha, formatoHora)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS&metodo=distanciaHoras">distanciaHoras</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	distanciaHoras(String fecha1, String hora1, String fecha2, String hora2, String formatoFecha, String formatoHora): String
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que retorna el nombre d'hores, minuts i segons que hi ha entre dues dates i/o dues hores.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>fecha1</b>: Cadena que conté la data inicial.</li>
+		<li><b>hora1</b>: Cadena que conté l'hora inicial.</li>
+		<li><b>fecha2</b>: Cadena que conté la data final.</li>
+		<li><b>hora2</b>: Cadena que conté l'hora final.</li>
+		<li><b>formatoFecha</b>: Format de les dates. És opcional i el format per defecte és dd/MM/yyyy.</li>
+		<li><b>formatoFecha</b>: Format de les hores. És opcional i el format per defecte és HH:mm.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: Nombre d'hores, minuts i segons que hi ha de distància entre les dates i/o les hores, amb el format HH:mm:ss.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p><b>Exemple 1</b> Si volem esbrinar el nombre d'hores, minuts i segons que hi ha entre 2 dates (s'han d'especificar usant el següent format yyyy-MM-dd i HH:mm:ss), per exemple, entre el 23/04/2012 i 13/06/2012 a les 2 de la matinada, 2 minuts i 2 segons, podem usar la següent sentència, de manera que s'obtindrà 1226:02:02:</p>
+<p class="codigoScript">
+	var horas = PLUGIN_UTILS.distanciaHoras('2012-04-23', '', '2012-06-13', '02:02:02', 'yyyy-MM-dd', 'HH:mm:ss');
+</p>
+<p><b>Exemple 2</b> Si volem esbrinar el nombre d'hores, minuts i segons que hi ha entre 2 dates (especificant el format dd/MM/yyyy i HH:mm), per exemple, entre el 23/04/2012 i 13/06/2012 podem usar la següent sentència, obtenint 1224:00:00:</p>
+<p class="codigoScript">
+	var horas = PLUGIN_UTILS.distanciaDias('23/04/2012', '', '13/06/2012', '', 'dd/MM/yyyy', '');
+</p>
+<p><b>Exemple 3</b> Si volem esbrinar el nombre d'hores, minuts i segons que hi ha entre 2 hores (especificant el format HH:mm:ss), per exemple, entre les 19:20:05 i 23:58:42 podem usar la següent sentència, obtenint 04:38:37:</p>
+ <p class="codigoScript">
+	var horas = PLUGIN_UTILS.distanciaDias('', '19:20:05', '', '23:58:42', '', 'HH:mm:ss');
+</p>
+</body>
+</html>

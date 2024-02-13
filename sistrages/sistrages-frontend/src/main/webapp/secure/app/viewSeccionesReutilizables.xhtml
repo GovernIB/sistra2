@@ -37,6 +37,13 @@
 			      setHeight();
 			  });
 
+			  function cerrarDialog(){
+			      var iconX = parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all')
+			              [parent.document.getElementsByClassName('ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all').length-1];
+
+			      iconX.addEventListener("click", setHeight);
+			    }
+
 			  var arrayCm = [];
 
 				  window.onload=function(){
@@ -176,30 +183,32 @@
 
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="8" cellspacing="5">
-		        		<p:commandButton value="#{msg['botones.nuevo']}" id="btnNuevo" icon="fa fa-file" actionListener="#{viewSeccionesReutilizables.nuevo()}" process="@this" update="growl" rendered="#{viewSeccionesReutilizables.permiteAlta}">
-		        			<p:ajax event="dialogReturn" listener="#{viewSeccionesReutilizables.returnDialogo}" update="growl dataTable"/>
+		        		<p:commandButton value="#{msg['botones.nuevo']}" id="btnNuevo" icon="fa fa-file" actionListener="#{viewSeccionesReutilizables.nuevo()}" process="@this" update="growl" rendered="#{viewSeccionesReutilizables.permiteAlta}" oncomplete="cerrarDialog()">
+		        			<p:ajax event="dialogReturn" listener="#{viewSeccionesReutilizables.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnBloquear" value="#{msg['botones.bloquear']}" icon="fa fa-lock" actionListener="#{viewSeccionesReutilizables.bloquear}" process="@this" update="growl @form"  rendered="#{viewSeccionesReutilizables.isPermiteBloquear()}">
+		        		<p:commandButton id="btnBloquear" value="#{msg['botones.bloquear']}" icon="fa fa-lock" actionListener="#{viewSeccionesReutilizables.bloquear}" process="@this" update="growl @form"  rendered="#{viewSeccionesReutilizables.isPermiteBloquear()}" oncomplete="setHeight()">
 			        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['viewSeccionesReutilizables.bloquear.aviso']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 			        	</p:commandButton>
-			        	<p:commandButton id="btnDesploquear" value="#{msg['botones.desbloquear']}" icon="fa fa-unlock" actionListener="#{viewSeccionesReutilizables.desbloquear}" process="@this" update="growl" rendered="#{viewSeccionesReutilizables.isPermiteDesbloquear()}">
-		        			<p:ajax event="dialogReturn" listener="#{viewSeccionesReutilizables.returnDialogoDesbloquear}" update="growl @form" />
+			        	<p:commandButton id="btnDesploquear" value="#{msg['botones.desbloquear']}" icon="fa fa-unlock" actionListener="#{viewSeccionesReutilizables.desbloquear}" process="@this" update="growl" rendered="#{viewSeccionesReutilizables.isPermiteDesbloquear()}" oncomplete="cerrarDialog()">
+		        			<p:ajax event="dialogReturn" listener="#{viewSeccionesReutilizables.returnDialogoDesbloquear}" update="growl @form" oncomplete="setHeight()"/>
 		        		</p:commandButton>
 
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewSeccionesReutilizables.editar()}" process="@this" update="growl"  rendered="#{viewSeccionesReutilizables.getTienePermisosEditarSeccion()}">
-		        			<p:ajax event="dialogReturn" listener="#{viewSeccionesReutilizables.returnDialogo}" update="growl dataTable"/>
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewSeccionesReutilizables.editar()}" process="@this" update="growl"  rendered="#{viewSeccionesReutilizables.getTienePermisosEditarSeccion()}" oncomplete="cerrarDialog()">
+		        			<p:ajax event="dialogReturn" listener="#{viewSeccionesReutilizables.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewSeccionesReutilizables.consultar()}" process="@this" update="growl"  rendered="#{viewSeccionesReutilizables.getTienePermisosConsultarSeccion()}"/>
+		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewSeccionesReutilizables.consultar()}" process="@this" update="growl"  rendered="#{viewSeccionesReutilizables.getTienePermisosConsultarSeccion()}" oncomplete="cerrarDialog()">
+		        			<p:ajax event="dialogReturn" oncomplete="setHeight()"/>
+		        		</p:commandButton>
 
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewSeccionesReutilizables.eliminar()}" process="@this" update="growl dataTable"  rendered="#{viewSeccionesReutilizables.permiteAlta}">
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewSeccionesReutilizables.eliminar()}" process="@this" update="growl dataTable"  rendered="#{viewSeccionesReutilizables.permiteAlta}" oncomplete="setHeight()">
 	       		   			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 						</p:commandButton>
 
-						<p:commandButton id="btnImportar"  value="#{msg['botones.importar']}" icon="fa fa-download"  actionListener="#{viewSeccionesReutilizables.importar()}"  process="@this" update="growl @form" rendered="#{viewSeccionesReutilizables.permiteImportar}">
-		        			<p:ajax event="dialogReturn" listener="#{viewSeccionesReutilizables.returnDialogoImportar}" update="growl dataTable"/>
+						<p:commandButton id="btnImportar"  value="#{msg['botones.importar']}" icon="fa fa-download"  actionListener="#{viewSeccionesReutilizables.importar()}"  process="@this" update="growl @form" rendered="#{viewSeccionesReutilizables.permiteImportar}" oncomplete="cerrarDialog()">
+		        			<p:ajax event="dialogReturn" listener="#{viewSeccionesReutilizables.returnDialogoImportar}" update="growl dataTable" oncomplete="setHeight()"/>
 		        		</p:commandButton>
-						<p:commandButton id="btnExportar" value="#{msg['botones.exportar']}" icon="fa fa-upload" actionListener="#{viewSeccionesReutilizables.exportar()}" process="@this" update="growl @form"  rendered="#{viewSeccionesReutilizables.permiteExportar}">
-							<p:ajax event="dialogReturn" listener="#{viewSeccionesReutilizables.returnDialogoExportar}" update="growl dataTable"/>
+						<p:commandButton id="btnExportar" value="#{msg['botones.exportar']}" icon="fa fa-upload" actionListener="#{viewSeccionesReutilizables.exportar()}" process="@this" update="growl @form"  rendered="#{viewSeccionesReutilizables.permiteExportar}" oncomplete="cerrarDialog()">
+							<p:ajax event="dialogReturn" listener="#{viewSeccionesReutilizables.returnDialogoExportar}" update="growl dataTable" oncomplete="setHeight()"/>
 						</p:commandButton>
 	        			<p:commandButton id="btnHistorial" value="#{msg['botones.historial']}" icon="fa fa-history" actionListener="#{viewSeccionesReutilizables.historialVersion}" process="@this" update="growl" />
 
@@ -213,12 +222,12 @@
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewSeccionesReutilizables.listaDatos}"
-						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+						 rows="#{sessionBean.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
-                         rowsPerPageTemplate="5,10,15,30"
+                         rowsPerPageTemplate="5,10,15,30,50,75,100"
 			        	 selectionMode="single" selection="#{viewSeccionesReutilizables.datoSeleccionado}" rowKey="#{td.codigo}">
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
@@ -276,8 +285,8 @@
 		      }
 		    </h:outputScript>
 
-			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewSeccionesReutilizables.rcDobleClick()}" process="@this" update="growl" style="display:none" >
-       			<p:ajax event="dialogReturn" listener="#{viewSeccionesReutilizables.returnDialogo}" update="growl dataTable"/>
+			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewSeccionesReutilizables.rcDobleClick()}" process="@this" update="growl" style="display:none" oncomplete="cerrarDialog()">
+       			<p:ajax event="dialogReturn" listener="#{viewSeccionesReutilizables.returnDialogo}" update="growl dataTable" oncomplete="setHeight()"/>
        		</p:commandButton>
 
 			<!-- dialogo para confirmar -->

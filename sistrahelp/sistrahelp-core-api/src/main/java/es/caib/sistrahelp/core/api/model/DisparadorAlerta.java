@@ -16,6 +16,12 @@ public class DisparadorAlerta extends ModelApi {
 	/** Serial version UID. **/
 	private static final long serialVersionUID = 1L;
 
+	private Integer grupo;
+
+	private String opLogicoAND_OR;
+
+	private boolean opLogicoNOT;
+
 	private TypeEvento ev;
 
 	private String operador;
@@ -62,6 +68,48 @@ public class DisparadorAlerta extends ModelApi {
 	 */
 	public final void setConcurrencias(int concurrencias) {
 		this.concurrencias = concurrencias;
+	}
+
+	/**
+	 * @return the grupo
+	 */
+	public Integer getGrupo() {
+		return grupo;
+	}
+
+	/**
+	 * @param grupo the grupo to set
+	 */
+	public void setGrupo(Integer grupo) {
+		this.grupo = grupo;
+	}
+
+	/**
+	 * @return the opLogicoAND_OR
+	 */
+	public String getOpLogicoAND_OR() {
+		return opLogicoAND_OR;
+	}
+
+	/**
+	 * @param opLogicoAND_OR the opLogicoAND_OR to set
+	 */
+	public void setOpLogicoAND_OR(String opLogicoAND_OR) {
+		this.opLogicoAND_OR = opLogicoAND_OR;
+	}
+
+	/**
+	 * @return the opLogicoNOT
+	 */
+	public boolean isOpLogicoNOT() {
+		return opLogicoNOT;
+	}
+
+	/**
+	 * @param opLogicoNOT the opLogicoNOT to set
+	 */
+	public void setOpLogicoNOT(boolean opLogicoNOT) {
+		this.opLogicoNOT = opLogicoNOT;
 	}
 
 }

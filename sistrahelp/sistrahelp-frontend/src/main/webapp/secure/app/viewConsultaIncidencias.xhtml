@@ -9,7 +9,7 @@
   template="../layout/mainLayout.xhtml">
 
   <f:metadata>
-    <f:viewAction action="#{viewConsultaIncidencias.init}" />
+  	<f:viewAction action="#{viewConsultaIncidencias.init}" />
   </f:metadata>
 
 
@@ -67,6 +67,11 @@
           $('#form\\:btnSesionHidden').click();
         }
 
+		function consultarNif(){
+          let elemento = document.getElementsByClassName('resaltar')[0];
+          elemento.click();
+          $('#form\\:btnNifHidden').click();
+        }
 
         function getPos(){
          var e = window.event;
@@ -104,7 +109,13 @@
 				document.getElementById("form:consultaSesion").classList.remove("d-block");
           		document.getElementById("form:consultaSesion").classList.add("d-none")
 			}
-        }else{
+			if(elEnDataT.classList.contains( 'nifUsu' )){
+				document.getElementById("form:consultaNif").classList.remove("d-none");
+          		document.getElementById("form:consultaNif").classList.add("d-block");
+			}else{
+				document.getElementById("form:consultaNif").classList.remove("d-block");
+          		document.getElementById("form:consultaNif").classList.add("d-none")
+			}
           document.getElementById("form:detalle").classList.remove("d-block");
           document.getElementById("form:detalle").classList.add("d-none");
         }
@@ -171,7 +182,7 @@
 
 				        	<h:panelGrid columns="2" styleClass="w100, noPadding" >
 					        	<p:outputLabel for="filtroNombre" value="#{msg['viewAuditoriaTramites.filtroNombre']}:"/>
-					        	<p:inputText id="filtroNombre" value="#{viewConsultaIncidencias.filtros.nombre}" size="20" maxlength="12" style="margin-left:12px"  onkeyup="capitalize(this)" onblur="trim(this)"/>
+					        	<p:inputText id="filtroNombre" value="#{viewConsultaIncidencias.filtros.nombre}" size="50" maxlength="50" style="margin-left:12px"  onkeyup="capitalize(this)" onblur="trim(this)"/>
 				        	</h:panelGrid>
 			        	</p:column>
 			        	<p:column styleClass=" noPadding p-justify-start"  style="border-style:inherit  !important;;">
@@ -182,9 +193,13 @@
 
 				        	<h:panelGrid columns="2" styleClass="w100, noPadding" style="border-style:none !important;">
 				        		<p:outputLabel for="filtroArea" value="#{msg['viewAuditoriaTramites.headArea']}:"/>
-				        		<p:inputText id="filtroArea" value="#{viewConsultaIncidencias.filtroArea}" size="19" maxlength="20" style="margin-left:27px"  onkeyup="capitalize(this)" onblur="trim(this)">
+				        		<p:selectOneMenu id="filtroArea" value="#{viewConsultaIncidencias.filtroArea}">
+			           				<f:selectItem itemLabel=""  noSelectionOption="true"/>
+			           				<f:selectItems value="#{viewConsultaIncidencias.listaAreas}" var="area" itemLabel="#{area}" itemValue="#{area}"/>
+								</p:selectOneMenu >
+				        		<!-- <p:inputText id="filtroArea" value="#{viewConsultaIncidencias.filtroArea}" size="19" maxlength="20" style="margin-left:27px"  onkeyup="capitalize(this)" onblur="trim(this)">
 				        			<p:keyFilter preventPaste="false" regEx="/[a-z0-9_-]/i"/>
-				        		</p:inputText>
+				        		</p:inputText> -->
 				        	</h:panelGrid>
 			        	</p:column>
 
@@ -211,11 +226,20 @@
 						</p:column>
 
 			        	<p:column styleClass=" noPadding " style="border-style:inherit  !important;;">
-			        		<h:panelGrid columns="2" styleClass="w100, noPadding" >
+			        		<h:panelGrid columns="3" styleClass="w100, noPadding" >
 				        		<p:outputLabel for="filtroTelefono" value="#{msg['viewConsultaIncidencias.tlf']}:"/>
 					        	<p:inputText id="filtroTelefono" value="#{viewConsultaIncidencias.filtros.tlf}" size="20" maxlength="9" onkeyup="capitalize(this)" onblur="trim(this)">
 					        		<p:keyFilter preventPaste="false" regEx="/[0-9]/i"/>
 					        	</p:inputText>
+					        	<p:column styleClass=" noPadding " style="border-style:inherit  !important;">
+					        		<h:panelGrid columns="2" styleClass="w100, noPadding" style="margin-left: 85px">
+										<p:outputLabel for="filtroTipoProblema" value="#{msg['viewConsultaIncidencias.desc.prob']}:" />
+					           			<p:selectOneMenu id="filtroTipoProblema" value="#{viewConsultaIncidencias.filtros.tipoProblemaIncidencia}">
+					           				<f:selectItem itemLabel=""  noSelectionOption="true"/>
+					           				<f:selectItems value="#{viewConsultaIncidencias.listaTiposProblema}" var="tipo" itemLabel="#{tipo}" itemValue="#{tipo}"/>
+										</p:selectOneMenu >
+									</h:panelGrid>
+					        	</p:column>
 				        	</h:panelGrid>
 
 				        	<h:panelGrid columns="2" styleClass="w100, noPadding" >
@@ -235,7 +259,7 @@
 						</h:panelGrid>
 						</p:column>
 						<p:column styleClass=" noPadding p-align-start" style="border-style:inherit  !important;;">
-				        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="w100, noPadding, noMargin">
+				        	<h:panelGrid id="panelBotones" columns="1" cellspacing="5" styleClass="w100, noPadding, noMargin">
 			          			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewConsultaIncidencias.filtrar()}" process="@form:panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
 			          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewConsultaIncidencias.ayuda()}"/>
 							</h:panelGrid>
@@ -248,11 +272,11 @@
       <!-- Data table -->
       <p:outputPanel  styleClass="h100">
       <p:dataTable id="dataTable" var="dt" value="#{viewConsultaIncidencias.listaDatos}" lazy="true"
-             rows="#{viewConsultaIncidencias.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
+             rows="#{sessionBean.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
              scrollable="true" scrollHeight="100%"
                   paginator="true" paginatorPosition="bottom"
                   paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                  rowsPerPageTemplate="5,10,15,30"
+                  rowsPerPageTemplate="5,10,15,30,50,75,100"
                   currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
                  selectionMode="single" selection="#{viewConsultaIncidencias.datoSeleccionado}" rowKey="#{dt.codigo}">
 
@@ -261,6 +285,7 @@
         <p:ajax event="rowSelect" global="false"/>
         <p:ajax event="page" update=":form:dataTable"/>
         <p:ajax event="contextMenu" global="false" process="@this" oncomplete="opcIdSesion();"/>
+		<p:ajax event="contextMenu" global="false" process="@this" oncomplete="opcNifUsu();"/>
 		<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" update=":form:dataTable"/>
 
         <!-- Columnas -->
@@ -282,7 +307,7 @@
           <p:column headerText="#{msg['viewConsultaIncidencias.desc.prob']}" style="width:20% !important;" sortBy="#{dt.descripcionProblema}">
 			   <h:outputText value="#{dt.descripcionProblema}"/>
           </p:column>
-         <p:column headerText="#{msg['dialogAuditoriaTramites.nifUsu']}" style="width:8% !important;" sortBy="#{dt.nif}">
+         <p:column class="nifUsu" headerText="#{msg['dialogAuditoriaTramites.nifUsu']}" style="width:8% !important;" sortBy="#{dt.nif}">
               <h:outputText value="#{dt.nif}" />
           </p:column>
          <p:column headerText="#{msg['dialogAuditoriaTramites.nombreUsu']}" style="width:8% !important;" sortBy="#{dt.nombre}">
@@ -313,6 +338,9 @@
         <p:commandButton id="btnSesionHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewConsultaIncidencias.abrirDlgSesion()}" process="@this" update=":form:growl" style="display:none">
            <p:ajax event="dialogReturn" listener="#{viewConsultaIncidencias.returnDialogo}" update="@form:growl @form:dataTable"/>
         </p:commandButton>
+        <p:commandButton id="btnNifHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewConsultaIncidencias.abrirDlgNif()}" process="@this" update=":form:growl" style="display:none">
+           <p:ajax event="dialogReturn" listener="#{viewConsultaIncidencias.returnDialogo}" update="@form:growl @form:dataTable"/>
+        </p:commandButton>
         <h:outputScript >
           document.getElementsByName("form:dataTable_rppDD")[0].addEventListener("change", refrescarPaginacion);
           function refrescarPaginacion() {
@@ -333,8 +361,9 @@
 	      <p:contextMenu for=":work">
              <p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" url="javascript:void(0)"/>
              <p:menuitem id="detalle" icon="fa fa-window-maximize" onclick="consultar();" value="#{msg['dialogAuditoriaTramites.descripcion']}"  process="@this"/>
-             <p:menuitem id="consultaSesion" icon="fa fa-window-maximize" onclick="consultarSesion();" value="#{msg['viewConsultaIncidencias.eventos.sesion']}"  process="@this"/>
-        </p:contextMenu>
+             <p:menuitem id="consultaSesion" icon="fa fa-window-maximize" onclick="consultarSesion();" value="#{msg['viewConsultaIncidencias.eventos.sesion']}" process="@this"/>
+        	 <p:menuitem id="consultaNif" icon="fa fa-window-maximize" onclick="consultarNif();" value="#{msg['viewConsultaIncidencias.eventos.nif']}" process="@this"/>
+		</p:contextMenu>
         <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
         <p:ajax event="success" listener="#{viewConsultaIncidencias.copiadoCorr}" process="@this" update="@this growl"/>
               <p:ajax event="error" listener="#{viewConsultaIncidencias.copiadoErr}" update="@this growl"/>

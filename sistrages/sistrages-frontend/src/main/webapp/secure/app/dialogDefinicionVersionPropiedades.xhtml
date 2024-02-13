@@ -163,7 +163,7 @@
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
 			<!-- Contenido dialogo -->
-			<h:panelGrid columns="2" columnClasses="w20 grid-left, w80 grid-left"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="20" cellspacing="0">
+			<h:panelGrid columns="2" columnClasses="w20 grid-left, w80 grid-left"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="30" cellspacing="0">
 
 				<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.descripcion']}" />
 				<p:panelGrid styleClass="noBorders" columns="1" columnClasses="noPadding-left">
@@ -188,7 +188,7 @@
 					<p:row>
 						<p:column styleClass="noPadding-left">
 							<p:selectBooleanCheckbox id="autenticado"  value="#{dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.autenticado']}" required="true" onChange="desmarcar(this);">
-							 		<p:ajax event="change" update="tipoCER tipoPIN tipoPER nivelQAA" listener="#{dialogDefinicionVersionPropiedades.check}"/>
+							 		<p:ajax event="change" update="tipoCER tipoPIN tipoPER tipoMOV nivelQAA" listener="#{dialogDefinicionVersionPropiedades.check}"/>
 							 		<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios()}" process="@this" update="@this"/>
 							</p:selectBooleanCheckbox>
 						</p:column>
@@ -214,6 +214,9 @@
 										<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios()}" process="@this" update="@this"/>
 									</p:selectBooleanCheckbox>
 									<p:selectBooleanCheckbox id="tipoPER" itemLabel="#{msg['tiposAutenticacion.PER']}"  value="#{dialogDefinicionVersionPropiedades.tiposAutenticacionPER}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" >
+										<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios()}" process="@this" update="@this"/>
+									</p:selectBooleanCheckbox>
+									<p:selectBooleanCheckbox id="tipoMOV" itemLabel="#{msg['tiposAutenticacion.MOV']}"  value="#{dialogDefinicionVersionPropiedades.tiposAutenticacionMOV}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" >
 										<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios()}" process="@this" update="@this"/>
 									</p:selectBooleanCheckbox>
 								</p:column>

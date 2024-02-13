@@ -1,0 +1,72 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.formateaCadenaAInt(numero,separadorMiles)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS&metodo=formateaCadenaAInt">formateaCadenaAInt</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	formateaCadenaAInt(String numero, String separadorMiles): int
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode per a convertir un string en un número int.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>numero</b>: Cadena a convertir a int.</li>
+		<li><b>separadorMiles</b>: Caràcter amb el qual s'identifica el separador de milers.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>int</b>: Número en format int. Si no es pot convertir, llança un error.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+
+<p><b>Exemple 1</b> Convertir la cadena '123.110.544.434' a int. </p>
+ <p class="codigoScript">
+	var nInt = PLUGIN_UTILS.formateaCadenaAInt('123.110.544.434', '.')
+</p>
+<p> La funció formateaCadenaAInt retorna el número 123110544434 en format int</p>
+<br />
+
+<p><b>Exemple 2</b> Convertir la cadena '123,110,544,434' a int. </p>
+ <p class="codigoScript">
+	var nInt = PLUGIN_UTILS.formateaCadenaAInt('123,110,544,434', ',')
+</p>
+<p> La funció formateaCadenaAInt retorna el número 123110544434 en format int.</p>
+<br />
+
+
+</body>
+</html>

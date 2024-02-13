@@ -85,9 +85,16 @@ public class FlujoFormularioInternoServiceBean implements FlujoFormularioInterno
 
 	@Override
 	public ResultadoBuscadorDinamico buscadorDinamico(final String idSesionFormulario, final String idCampo,
-			final String textoCampo, final List<ValorCampo> valores) {
+													  final String textoCampo, final List<ValorCampo> valores) {
 		return flujoFormularioInternoService.buscadorDinamico(idSesionFormulario, idCampo, textoCampo, valores);
 	}
+
+	@Override
+	public ResultadoBuscadorDinamico buscadorDinamicoElemento(final String idSesionFormulario, final String  idCampoListaElementos, final String idCampo,
+			final String textoCampo, final List<ValorCampo> valores) {
+		return flujoFormularioInternoService.buscadorDinamicoElemento(idSesionFormulario, idCampoListaElementos, idCampo, textoCampo, valores);
+	}
+
 
 	@Override
 	public Captcha generarImagenCaptcha(final String idSesionFormulario, final String idCampo) {
@@ -97,11 +104,6 @@ public class FlujoFormularioInternoServiceBean implements FlujoFormularioInterno
 	@Override
 	public Captcha generarSonidoCaptcha(final String idSesionFormulario, final String idCampo) {
 		return flujoFormularioInternoService.generarSonidoCaptcha(idSesionFormulario, idCampo);
-	}
-
-	@Override
-	public void regenerarCaptcha(final String idSesionFormulario, final String idCampo) {
-		flujoFormularioInternoService.regenerarCaptcha(idSesionFormulario, idCampo);
 	}
 
 	@Override

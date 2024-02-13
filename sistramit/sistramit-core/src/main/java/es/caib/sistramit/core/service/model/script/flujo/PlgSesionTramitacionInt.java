@@ -25,6 +25,20 @@ public interface PlgSesionTramitacionInt extends PluginScriptPlg {
 	String getIdSesionTramitacion();
 
 	/**
+	 * Devuelve id tramite.
+	 *
+	 * @return Id tramite
+	 */
+	String getIdTramite();
+
+	/**
+	 * Devuelve versión tramite.
+	 *
+	 * @return Versión tramite
+	 */
+	int getVersionTramite();
+
+	/**
 	 * Devuelve url inicio del trámite.
 	 *
 	 * @return url inicio del trámite

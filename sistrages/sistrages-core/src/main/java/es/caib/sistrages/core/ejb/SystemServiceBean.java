@@ -70,4 +70,10 @@ public class SystemServiceBean implements SystemService {
 		systemService.updateSesionEntidad(pUserName, pIdEntidad);
 	}
 
+	@Override
+	@PermitAll
+	public void updateSesionPropiedades(String pUserName, String pPropiedades) {
+		systemService.updateSesionPropiedades(pUserName, pPropiedades);
+	}
+
 }

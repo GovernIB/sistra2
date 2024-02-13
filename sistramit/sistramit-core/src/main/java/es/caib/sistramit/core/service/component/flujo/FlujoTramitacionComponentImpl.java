@@ -252,13 +252,16 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 			datosFormSoporte.setDatosFichero(anexo.getFileContent());
 		}
 
+		// Obtenemos la url de sth
+		final String urlSth = configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAHELP_VIEW_URL);
+
 		// Generamos destinatarios, asunto y mensaje
 		final List<String> destinatarios = UtilsFormularioSoporte
 				.obtenerDestinatariosFormularioSoporte(datosFormSoporte, entidad, area, datosSesion);
 		final String asunto = UtilsFormularioSoporte.obtenerAsuntoFormularioSoporte(literalesComponent,
 				datosFormSoporte, entidad, datosSesion);
 		final String mensaje = UtilsFormularioSoporte.construyeMensajeSoporteIncidencias(literalesComponent,
-				datosFormSoporte, entidad, datosSesion);
+				datosFormSoporte, entidad, datosSesion, urlSth);
 
 		// Anexo
 		final List<AnexoEmail> anexos = new ArrayList<>();

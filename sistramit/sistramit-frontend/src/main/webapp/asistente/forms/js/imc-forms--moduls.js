@@ -20,7 +20,8 @@ $.fn.appFormsAjuda = function(opcions) {
 				if (!imc_forms_ajuda.hasClass("imc--desactivada")) {
 
 					imc_forms_contenidor
-						.appFormsAjudaCamp({ referent: imc_forms_finestra.find(".imc--contingut:first") });
+						.appFormsAjudaCamp({ referent: imc_forms_finestra.find(".imc--contingut:first") })
+						.attr("ajuda-activada", "si");
 
 					imc_forms_ajuda
 						.data("ajuda", "on");
@@ -44,7 +45,8 @@ $.fn.appFormsAjuda = function(opcions) {
 						.removeClass("imc--desactivada");
 
 					imc_forms_contenidor
-						.appFormsAjudaCamp({ referent: imc_forms_finestra.find(".imc--contingut:first") });
+						.appFormsAjudaCamp({ referent: imc_forms_finestra.find(".imc--contingut:first") })
+						.attr("ajuda-activada", "si");
 
 					txtAjudaInfo = txtFormDinAjuda + " " + txtFormDinActivada;
 					txtAjudaBoto = txtFormDinDesactiva;
@@ -56,7 +58,8 @@ $.fn.appFormsAjuda = function(opcions) {
 						.addClass("imc--desactivada");
 
 					imc_forms_contenidor
-						.off('.appFormsAjudaCamp');
+						.off('.appFormsAjudaCamp')
+						.attr("ajuda-activada", "no");
 
 					txtAjudaInfo = txtFormDinAjuda + " " + txtFormDinDesctivada;
 					txtAjudaBoto = txtFormDinActiva;
@@ -99,6 +102,7 @@ $.fn.appFormsAjuda = function(opcions) {
 
 
 // appFormsAjudaCamp
+/*
 
 $.fn.appFormsAjudaCamp = function(options) {
 	var settings = $.extend({
@@ -204,6 +208,7 @@ $.fn.appFormsAjudaCamp = function(options) {
 	});
 	return this;
 }
+*/
 // /appFormsAjudaCamp
 
 
@@ -232,6 +237,8 @@ $.fn.appFormsErrors = function(options) {
 
 				setTimeout(
 					function() {
+
+						console.log("appFormsErrors");
 
 						camp_el
 							.focus();
@@ -369,7 +376,7 @@ $.fn.appDestaca = function(options) {
 
 			},
 			elimina = function() {
-
+				
 				$("#imc-destacat")
 					.remove();
 
@@ -753,12 +760,7 @@ $.fn.appFormsConfiguracio = function(options) {
 
 								if (conf_opcions.mayusculas && conf_opcions.mayusculas === "s") {
 
-									// RAFA: Hay que revisar si se genera a nivel elemento o a nivel input
-									// 	-- Hay que mantenerlo a nivel input pq parece que el CSS tira a nivel input
 									elm_input
-										.attr({ "data-mayuscules": conf_opcions.mayusculas });
-									// -- Metemos tb a nivel elemento pq al serializar se mira el elemento
-									elm
 										.attr({ "data-mayuscules": conf_opcions.mayusculas });
 
 								}
@@ -867,6 +869,13 @@ $.fn.appFormsConfiguracio = function(options) {
 
 								}
 
+								if (conf_opcions.placeholder && conf_opcions.placeholder === "s") {
+
+									elm_input
+										.attr({ "data-placeholder": conf_opcions.placeholder });
+
+								}
+
 								// telèfon
 
 								if (conf_opcions.fijo) {
@@ -931,7 +940,10 @@ $.fn.appFormsConfiguracio = function(options) {
 							if (conf_tipus === "captcha") {
 
 								elm
-									.appFormsCaptcha();
+									.attr({ "data-tipo": conf_opcions.tipo, "data-columnes": conf_opcions.s_columnas, "data-titol": conf_opcions.instrucciones, "data-so": conf_opcions.sonido })
+									.appFormsCaptcha({ tipo: conf_opcions.tipo, columnes: conf_opcions.s_columnas, titol: conf_opcions.instrucciones, so: conf_opcions.sonido });
+									//.attr({ "data-tipo": conf_opcions.tipo, "data-columnes": conf_opcions.s_columnas, "data-titol": conf_opcions.instrucciones, "data-so": conf_opcions.sonido, "data-ids": conf_opcions.s_imgs })
+									//.appFormsCaptcha({ tipo: conf_opcions.tipo, columnes: conf_opcions.s_columnas, titol: conf_opcions.instrucciones, so: conf_opcions.sonido, ids: conf_opcions.s_imgs });
 
 							}
 
@@ -939,8 +951,26 @@ $.fn.appFormsConfiguracio = function(options) {
 
 							if (conf_tipus === "listaElementos") {
 
+								var enllasId = (conf_opcions.enlace) ? conf_opcions.enlace.idLista : false
+									,enllasColumnaPare = (conf_opcions.enlace) ? conf_opcions.enlace.columnaListaPadre : false
+									,enllasColumnaFilla = (conf_opcions.enlace) ? conf_opcions.enlace.columnaListaHija : false
+									,enllasIndex = (conf_opcions.enlace) ? conf_opcions.enlace.indiceSeleccionadoLista : false;
+
 								elm
-									.appFormsLlistaElements({ columnes: conf_opcions.columnas, cerca: conf_opcions.busqueda, filesMax: conf_opcions.maxElementos, filesNum: conf_opcions.numElementos, operacions: conf_opcions.operaciones, autoOrdre: conf_opcions.autoorden, desDe: desDe });
+									.appFormsLlistaElements({
+										columnes: conf_opcions.columnas
+										, avaluaEsborrar: conf_opcions.evaluarBorrado
+										, cerca: conf_opcions.busqueda
+										, filesMax: conf_opcions.maxElementos
+										, filesNum: conf_opcions.numElementos
+										, operacions: conf_opcions.operaciones
+										, autoOrdre: conf_opcions.autoorden
+										, enllasId: enllasId
+										, enllasColumnaPare: enllasColumnaPare
+										, enllasColumnaFilla: enllasColumnaFilla
+										, enllasIndex: enllasIndex
+										, desDe: desDe
+									});
 
 							}
 
@@ -964,6 +994,25 @@ $.fn.appFormsConfiguracio = function(options) {
 
 								elm
 									.appFormsIBAN();
+
+							}
+
+							// número (nu)
+
+							if (conf_contingut === "nu") {
+
+								elm
+									.appFormsValidaNumero();
+
+							}
+
+							// imagen
+
+							if (conf_tipus === "imagen") {
+
+								elm
+									.attr({ "data-aliniar": conf_opcions.alinear, "data-altura": conf_opcions.altura, "data-amplaria": conf_opcions.anchura, "data-posicio": conf_opcions.posicion })
+									.appFormsElementImatge();
 
 							}
 
@@ -1693,6 +1742,7 @@ $.fn.appFormsConfiguracio = function(options) {
 					.find("input, textarea")
 						.attr("autocomplete", "nope");
 
+
 				// events
 
 				setTimeout(
@@ -1741,6 +1791,8 @@ $.fn.appFormsConfiguracio = function(options) {
 						element
 							.appFormsFormateig();
 
+						
+
 						// ve de avaluar i vol repintar?
 
 						if (element.attr("data-repinta") === "s") {
@@ -1751,6 +1803,19 @@ $.fn.appFormsConfiguracio = function(options) {
 							return;
 
 						}
+
+						// confirmem que ve d'avaluar i no cal enfocar
+
+						if (desDe === "avalua") {
+							return;
+						}
+
+
+						// element clicat
+
+						element
+							.appFormsCampClicat();
+							
 
 						// primera vegada
 
@@ -1772,7 +1837,7 @@ $.fn.appFormsConfiguracio = function(options) {
 									}
 								);
 
-					},300
+					},250
 				);
 
 			};
@@ -1803,7 +1868,7 @@ $.fn.appFormsCopiaPega = function(options) {
 				if (camp_.data("pegar") === "n" || camp_.attr("data-pegar") === "n") {
 
 					imc_forms_missatge
-						.appFormsMissatge({ accio: "warning", titol: txtCopiarPegarTitol, text: txtCopiarPegarText });
+						.appFormsMissatge({ accio: "warning", titol: txtFormDinCopiarPegarTitol, text: txtFormDinCopiarPegarText });
 
 					return false;
 				}
@@ -1811,7 +1876,7 @@ $.fn.appFormsCopiaPega = function(options) {
 			};
 
 		// events
-
+		
 		element
 			.off(".appFormsCopiaPega")
 			.on("paste.appFormsCopiaPega", "div[data-tipus=texto] input, div[data-tipus=texto] textarea", revisa);
@@ -1836,59 +1901,7 @@ $.fn.appFormsValida = function(options) {
 				element
 					.off(".appFormsValida")
 					.on("focus.appFormsValida", "input, textarea", valora)
-					.on("blur.appFormsValida", "input, textarea", valida)
-					.on("blur.appFormsValida", "div[data-contingut='nu'] input, div[data-contingut='nu'] textarea", formateja);
-
-			},
-			formateja = function(e) {
-
-				var input = $(this)
-					,input_val = input.val()
-					,input_pare = input.closest(".imc-element");
-
-				if (input_val !== "") {
-
-					var elm_negatiu = input.attr("data-negatiu") || false
-						,elm_enters = parseInt( input.attr("data-enters"), 10) || false
-						,elm_decimals = parseInt( input.attr("data-decimals"), 10) || false
-						,elm_separador = input.attr("data-separador") || false;
-
-					if (elm_separador) {
-
-						var format_val = '0,0';
-
-						if (elm_decimals) {
-
-							var str_decimales = "";
-
-							for(i=0; i<elm_decimals; i++) {
-								str_decimales += "0";
-							}
-
-							var format_val = '0,0.' + str_decimales;
-
-						}
-
-						if (elm_separador === "cp") {
-
-							numeral
-								.locale('en');
-
-    					} else {
-
-							numeral
-								.locale('es-es');
-
-    					}
-
-						var input_val_format = numeral( input_val ).format( format_val );
-
-						input
-							.val( input_val_format );
-
-					}
-
-				}
+					.on("blur.appFormsValida", "input, textarea", valida);
 
 			},
 			valora = function(e) {
@@ -1984,7 +1997,7 @@ $.fn.appFormsValida = function(options) {
 
 					if (!idValid && input.attr("data-nss") === "s") {
 
-						idValid = ( appValidaIdentificador.nss(input_val) ) ? true : false;
+						idValid = ( appValidaIdentificador.nss(input_val) ) ? true : false;	
 
 					}
 
@@ -2061,486 +2074,6 @@ $.fn.appFormsValida = function(options) {
 	return this;
 }
 // appFormsValida
-
-
-// appFormsAvalua
-$.fn.appFormsAvalua = function(options) {
-	var settings = $.extend({
-		element: ""
-	}, options);
-	this.each(function(){
-		var element = $(this),
-			input = false,
-			input_element = false,
-			input_id = false,
-			envia_ajax = false,
-			desDeTaula = false,
-			avalua_json = false,
-			valor_inicial_txt = false,
-			inicia = function() {
-
-				element
-					.off(".appFormsAvalua")
-					.on("focus.appFormsAvalua", "div[data-tipus='texto'] input, div[data-tipus='texto'] textarea", preevalua)
-					.on("blur.appFormsAvalua", "div[data-tipus='texto'] input, div[data-tipus='texto'] textarea", selecciona)
-					.on("click.appFormsAvalua", "div[data-tipus='selector'][data-contingut='d'] .imc-select-submenu ul a", selecciona)
-					.on("click.appFormsAvalua", "fieldset[data-tipus='selector'] label", selecciona)
-					.on("click.appFormsAvalua", "div[data-type='check'] .imc-input-check", selecciona)
-					.on("click.appFormsAvalua", "button[data-accio=seleccio-elimina], .imc--selector-opcions-ajax button", selecciona);
-
-				// revisem si hi ha llista d'elements (taula) al form per aplicar l'observació de qualsevol canvi a la taula
-
-				observa();
-
-			},
-			preevalua = function(e) {
-
-				input = $(this);
-				input_element = input.closest(".imc-element");
-
-				var esAvaluable = (input_element.attr("data-avalua") === "s") ? true : false
-					,esLectura = (input_element.attr("data-lectura") === "s") ? true : false;
-
-
-				// si és lectura no fem res
-
-				if (esLectura) {
-					return;
-				}
-
-
-				// si és avaluable i no lectura
-
-				if (esAvaluable && !esLectura) {
-
-					valor_inicial_txt = input.val();
-
-					element
-						.attr("data-preevalua", "s");
-
-					// posar capa invisible
-
-					var imc_finestra_H = element.height() // imc_forms_contenidor.height()
-						,imc_finestra_scroll_T = element.scrollTop() // imc_forms_contenidor.scrollTop()
-						,imc_document_H = element[0].scrollHeight // imc_forms_contenidor[0].scrollHeight
-						,imc_document_W = element.outerWidth(true); // imc_forms_contenidor.outerWidth(true);
-
-					var el_T = input_element.position().top + imc_finestra_scroll_T
-						,el_L = input_element.position().left
-						,el_W = input_element.outerWidth(true)
-						,el_H = input_element.outerHeight(true);
-
-					var preevaluaAmaga = function() {
-
-							$("#imc-preevalua")
-								.remove();
-
-							$(window)
-								.off(".preevalua");
-
-						};
-
-					if ($("#imc-preevalua").length) {
-
-						preevaluaAmaga();
-
-					}
-
-					var preevalua_el_T = $("<div>").addClass("imc--dalt").css({ height: el_T+"px" })
-						,preevalua_el_B = $("<div>").addClass("imc--baix").css({ top: (el_T+el_H)+"px", height: (imc_document_H - el_T - el_H)+"px" })
-						,preevalua_el_L = $("<div>").addClass("imc--esquerre").css({ top: el_T+"px", width: el_L+"px", height: el_H+"px" })
-						,preevalua_el_R = $("<div>").addClass("imc--dreta").css({ top: el_T+"px", left: (el_L+el_W)+"px", width: (imc_document_W - (el_L + el_W))+"px", height: el_H+"px" });
-
-					$("<div>")
-						.addClass("imc-preevalua")
-						.attr("id", "imc-preevalua")
-						.append( preevalua_el_T )
-						.append( preevalua_el_B )
-						.append( preevalua_el_L )
-						.append( preevalua_el_R )
-						.on("click", preevaluaAmaga)
-						.appendTo( element ); // imc_forms_contenidor
-
-					$(window)
-						.on("click.preevalua", preevaluaAmaga);
-
-				}
-
-			},
-			selecciona = function(e) {
-
-				input = $(this);
-
-				var esAvaluable = (input.closest(".imc-element").attr("data-avalua") === "s") ? true : false
-					,esLectura = (input.closest(".imc-element").attr("data-lectura") === "s") ? true : false;
-
-				var esCampDeText = (input.closest(".imc-element").attr("data-tipus") === "texto") ? true : false;
-
-
-				// és avaluable, no es lectura i ha canviat el valor en camp de text (data-tipus=texto)
-
-				if (esCampDeText && esAvaluable && !esLectura && valor_inicial_txt !== input.val()) {
-
-					avalua();
-
-				} else if (!esCampDeText && esAvaluable && !esLectura) {
-
-					avalua();
-
-				} else {
-
-					element
-						.removeAttr("data-preevalua");
-
-				}
-
-			},
-			observa = function() {
-
-				element
-					.find("fieldset[data-tipus='listaElementos']")
-						.each(function(i) {
-
-							var llista_elms = $(this)
-								,teObservador = (llista_elms.attr("data-observer") === "s") ? true : false;
-
-							if (!teObservador) {
-
-								const targetNode = llista_elms.find(".imc-el-taula-elements:first tbody:first")[0];
-
-								//const config = { characterData: false, attributes: false, childList: true, subtree: true };
-								const config = { childList: true };
-
-								const callback = function(mutationsList, observer) {
-
-									var mutationsList_size = mutationsList.length; // v.ie11
-
-									//for (const mutation of mutationsList) {
-
-									for (var i = 0; i < mutationsList_size; i++) {
-
-										mutation = mutationsList[i];
-
-										if (mutation.type === 'childList') {
-
-											var esAvaluable = (llista_elms.attr("data-avalua") === "s") ? true : false;
-
-											if (esAvaluable) {
-
-												input = llista_elms.find(".imc-el-taula-elements:first tbody:first");
-
-												setTimeout(
-													function() {
-
-														avalua();
-
-													}
-													,330
-												);
-
-											}
-
-										}
-
-									}
-
-								};
-
-								const observer = new MutationObserver(callback);
-
-								observer
-									.observe(targetNode, config);
-
-								llista_elms
-									.attr("data-observer", "s");
-
-							}
-
-						});
-
-			},
-			avalua = function(e) {
-
-				input_element = input.closest(".imc-element");
-				input_id = input_element.attr("data-id");
-				input_tipus = input_element.attr("data-tipus");
-
-				// preevalua?
-
-				if (input_tipus !== "texto" && element.attr("data-preevalua") === "s") { // imc_forms_contenidor.attr("data-preevalua") === "s"
-					return;
-				}
-
-				// missatge enviant
-
-				imc_forms_missatge
-					.attr("tabindex", "-1")
-					.appFormsMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtFormDinAvaluantTitol, alMostrar: function() { enviaRetarda(); } })
-					.focus();
-
-			},
-			enviaRetarda = function(e) {
-
-				// el selector múltiple necessita un petit retard per agafar correctament els valors
-
-				setTimeout(
-					function() {
-
-						envia();
-
-					},50
-				);
-
-			},
-			envia = function(e) {
-
-				// l'avaluació pot vindre del form principal y del detall de la taula (llista d'elements)
-
-				desDeTaula = (input_element.closest(".imc-forms--taula").length) ? true : false;
-
-				// serialitza
-
-				//var valorsSerialitzats = (desDeTaula) ? $("#imc-forms--taula").appSerialitza({ verifica: false }) : imc_forms_finestra.appSerialitza({ verifica: false });
-
-				var valorsSerialitzats = element.appSerialitza({ verifica: false });
-
-				valorsSerialitzats["idCampo"] = input_id;
-
-				if (desDeTaula) {
-
-					valorsSerialitzats["idCampoListaElementos"] = $("#imc-forms--taula").attr("data-id");
-
-				}
-
-				// dades ajax
-
-				var pag_url = (desDeTaula) ? APP_FORM_LE_AVALUA : APP_FORM_AVALUA_CAMP
-					,pag_dades = valorsSerialitzats;
-
-				// ajax
-
-				if (envia_ajax) {
-
-					envia_ajax
-						.abort();
-
-				}
-
-				envia_ajax =
-					$.ajax({
-						url: pag_url,
-						data: pag_dades,
-						method: "post",
-						dataType: "json",
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
-					})
-					.done(function( data ) {
-
-						envia_ajax = false;
-
-						element // imc_forms_contenidor
-							.removeAttr("data-preevalua");
-
-						json = data;
-
-						if (json.estado === "SUCCESS" || json.estado === "WARNING") {
-
-							if (json.estado === "WARNING") {
-
-								imc_forms_missatge
-									.appFormsMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { mostra(); } });
-
-								return;
-
-							}
-
-							avalua_json = json;
-
-							resultat();
-
-						} else {
-
-							envia_ajax = false;
-
-							element // imc_forms_contenidor
-								.removeAttr("data-preevalua");
-
-							consola("Avalua dada del formulari: error des de JSON");
-
-							imc_forms_body
-								.appFormsErrorsGeneral({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, debug: data.mensaje.debug, url: json.url });
-
-						}
-
-					})
-					.fail(function(dades, tipus, errorThrown) {
-
-						envia_ajax = false;
-
-						element // imc_forms_contenidor
-							.removeAttr("data-preevalua");
-
-						if (tipus === "abort") {
-							return false;
-						}
-
-						consola("Avalua dada del formulari: error des de FAIL");
-
-						imc_forms_body
-							.appFormsErrorsGeneral({ estat: "fail" });
-
-					});
-
-			},
-			resultat = function() {
-
-				var validacio = avalua_json.datos.validacion
-					,validacio_estat = (validacio !== null && validacio.estado) ? validacio.estado : false
-					,validacio_missatge = (validacio !== null && validacio.mensaje) ? validacio.mensaje : false
-					,camp_id = (validacio !== null && validacio.campo !== null && validacio.campo !== "") ? validacio.campo : false;
-
-				// llevem "error", per si estiguera correcte
-
-				if (camp_id && camp_id !== "" && camp_id !== null) {
-
-					element
-						.find("*[data-id='"+camp_id+"']")
-							.removeClass("imc-el-error");
-
-				}
-
-				// si hi ha error, el marquem
-
-				if (validacio_estat === "error") {
-
-					if (camp_id && camp_id !== "" && camp_id !== null) {
-
-						imc_forms_missatge
-							.appFormsMissatge({ accio: "error", titol: validacio_missatge, text: txtFormDinErrorText, amagaDesdeFons: false, alTancar: function() { remarca(camp_id); enfocaAlSeguent(); } });
-
-					} else {
-
-						imc_forms_missatge
-							.appFormsMissatge({ accio: "error", titol: validacio_missatge, text: "", amagaDesdeFons: false, alTancar: function() { enfocaAlSeguent(); } });
-
-					}
-
-					return;
-
-				}
-
-				// si hi ha missatge, el mostrem
-
-				if (validacio_missatge && validacio_missatge !== null && validacio_missatge !== "") {
-
-					var destacaCamp = function() {
-
-							if (validacio_estat === "error") {
-
-								input_element
-									.appDestaca({ referent: element.find(".imc--form:first") });
-
-							}
-
-						};
-
-					imc_forms_missatge
-						.appFormsMissatge({ accio: validacio_estat, titol: validacio_missatge, text: "", alTancar: function() { destacaCamp(); }, alAcceptar: function() { destacaCamp(); imc_forms_missatge.appFormsMissatge({ araAmaga: true }); enfocaAlSeguent(); } });
-
-				} else {
-
-					imc_forms_missatge
-						.appFormsMissatge({ araAmaga: true });
-
-					// esperem una miqueta al enfocar
-
-					setTimeout(
-						function() {
-
-							enfocaAlSeguent();
-
-						}
-						,100
-					);
-
-				}
-
-				// configuració
-
-				element
-					.attr("data-repinta", "s")
-					.appFormsConfiguracio({ forms_json: avalua_json, desDe: "avalua" });
-
-
-				// formateig de dades
-
-				element
-					.appFormsFormateig();
-
-			},
-			remarca = function(camp_id) {
-
-				element
-					.find("*[data-id="+camp_id+"]:first") // .find("div[data-id="+camp_id+"]:first")
-						.addClass("imc-el-error")
-						.appDestaca({ referent: element.find(".imc--form:first") });
-
-			},
-			enfocaAlSeguent = function() {
-
-				if (input_element.attr("data-tipus") === "selector" && input_element.attr("data-contingut") === "d") {
-
-					// si es selector desplegable ens quedem al mateix element
-
-					input_element
-						.find("a.imc-select:first")
-							.focus();
-
-				} else if (input_element.attr("data-tipus") === "selector" && (input_element.attr("data-contingut") === "m" || input_element.attr("data-contingut") === "u")) {
-
-					var el_div = input.closest("div");
-
-					el_div
-						.addClass("imc--focus")
-						.find("label:first")
-							.focus();
-
-					el_div
-						.removeClass("imc--focus");
-
-				} else {
-
-					// si no es selector passem a un altre
-
-					var el_seguent = input_element.nextAll(".imc-element[data-id]:first");
-
-					if (el_seguent.length) {
-
-						el_seguent
-							.find("input:first, textarea:first, a.imc-select:first")
-								.focus();
-
-					} else {
-
-						imc_forms_finestra
-							.find("li.imc--finalitza:first button")
-								.focus();
-
-					}
-
-				}
-
-			};
-
-		// inicia
-		inicia();
-
-	});
-	return this;
-}
-// appFormsAvalua
 
 
 // appFormsFormateig
@@ -2837,10 +2370,7 @@ $.fn.appFormsAccions = function(options) {
 						url: pag_url,
 						data: pag_dades,
 						method: "post",
-						dataType: "json",
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
+						dataType: "json"
 					})
 					.done(function( data ) {
 
@@ -3081,10 +2611,7 @@ $.fn.appFormsAccions = function(options) {
 						url: pag_url,
 						data: pag_dades,
 						method: "post",
-						dataType: "json",
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
+						dataType: "json"
 					})
 					.done(function( data ) {
 
@@ -3170,9 +2697,9 @@ $.fn.appFormsAccions = function(options) {
 
 					// repintem tots els captcha
 
-					element // imc_forms_finestra
+					element
 						.find(".imc-element[data-tipus=captcha]")
-							.appFormsCaptcha({ regenera: true });
+							.appFormsCaptcha({ genera: true });
 
 					return;
 
@@ -3232,7 +2759,7 @@ $.fn.appFormsAccions = function(options) {
 			actualCarrega = function() {
 
 				$.when(
-
+					
 					$.getJSON( APP_FORM_PAG_ACTUAL )
 
 				).then(
@@ -3242,7 +2769,7 @@ $.fn.appFormsAccions = function(options) {
 						FORMS_JSON = jsonForm;
 
 						if (FORMS_JSON.estado === "SUCCESS" || FORMS_JSON.estado === "WARNING") {
-
+							
 							// carregat
 
 							actualCarregat();
@@ -3257,7 +2784,7 @@ $.fn.appFormsAccions = function(options) {
 						} else {
 
 							consola("Formulari (carrega pàg. actual): error des de JSON");
-
+							
 							imc_contenidor
 								.errors({ estat: FORMS_JSON.estado, titol: FORMS_JSON.mensaje.titulo, text: FORMS_JSON.mensaje.texto, url: FORMS_JSON.url });
 
@@ -3305,7 +2832,7 @@ $.fn.appFormsAccions = function(options) {
 					,200
 				);
 
-
+				
 
 			},
 			actualMostra = function() {
@@ -3409,10 +2936,7 @@ $.fn.appMissatgeFormAccions = function(options) {
 						url: pag_url,
 						data: pag_dades,
 						method: "post",
-						dataType: "json",
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
+						dataType: "json"
 					})
 					.done(function( data ) {
 
@@ -3524,7 +3048,7 @@ $.fn.appMissatgeFormAccions = function(options) {
 						.focus();
 
 				}
-
+				
 			},*/
 			desaSurt = function() {
 
@@ -3547,7 +3071,7 @@ $.fn.appMissatgeFormAccions = function(options) {
 					},
 					200
 				);
-
+		
 			},
 			enviament = function(valorsSerialitzats) {
 
@@ -3568,10 +3092,7 @@ $.fn.appMissatgeFormAccions = function(options) {
 						url: pag_url,
 						data: pag_dades,
 						method: "post",
-						dataType: "json",
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
+						dataType: "json"
 					})
 					.done(function( data ) {
 
@@ -3633,10 +3154,10 @@ $.fn.appMissatgeFormAccions = function(options) {
 				document.location = url;
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -3864,7 +3385,7 @@ $.fn.appFormsPopupTabula = function(options) {
 
 							el
 								.attr("data-tabpos", i+1);
-
+							
 						});
 
 					elems_tab
@@ -3925,7 +3446,7 @@ $.fn.appFormsPopupTabula = function(options) {
 						.focus();
 
 				} else if ( !esShift && tecla === 9){
-
+				
 					e.preventDefault();
 
 					el_num++;
@@ -3940,10 +3461,10 @@ $.fn.appFormsPopupTabula = function(options) {
 				}
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 
 	return this;
@@ -4003,15 +3524,26 @@ $.fn.appFormsSelectorAjax = function(options) {
 				// activem nav per teclat
 
 				var input_ = $(this)
-					,control_el = input_.closest(".imc-el-control");
+					,control_el = input_.closest(".imc-el-control")
+					,contenidor_el = imc_forms_finestra;
 
 				control_el
 					.off(".appFormsSelectorAjax")
 					.on("keyup.appFormsSelectorAjax", navega);
 
+
+				// dins de un popup de taula?
+
+				var dinsDePopUpTaula = (input_.closest(".imc-forms--taula").length) ? true : false;
+
+				if (dinsDePopUpTaula) {
+					contenidor_el = $("#imc-forms--taula");
+				}
+
+
 				// serialitzem
 
-				valorsSerialitzats = imc_forms_finestra.appSerialitza({ verifica: false });
+				valorsSerialitzats = contenidor_el.appSerialitza({ verifica: false });
 
 			}
 			,crida = function(input_el) {
@@ -4031,9 +3563,21 @@ $.fn.appFormsSelectorAjax = function(options) {
 				valorsSerialitzats["idCampo"] = input_el.attr("id");
 				valorsSerialitzats["textoCampo"] = input_el.val();
 
+				// dins de llista d'elements?
+
+				var dinsLlistaElements = (input_el.closest(".imc-forms--taula").length) ? true : false;
+
+				// serialitza, llista d'elements
+
+				if (dinsLlistaElements) {
+
+					valorsSerialitzats["idCampoListaElementos"] = input_el.closest(".imc-forms--taula").attr("data-id");
+					
+				}
+
 				// dades ajax
 
-				var pag_url = APP_FORM_SELECTOR_AJAX
+				var pag_url = (dinsLlistaElements) ? APP_FORM_SELECTOR_AJAX_LE : APP_FORM_SELECTOR_AJAX
 					,pag_dades = valorsSerialitzats;
 
 				// ajax
@@ -4050,10 +3594,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 						url: pag_url,
 						data: pag_dades,
 						method: "post",
-						dataType: "json",
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(headerCSRF, tokenCSRF);
-						}
+						dataType: "json"
 					})
 					.done(function( data ) {
 
@@ -4209,7 +3750,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 
 					},100
 				);
-
+				
 			}
 			,navega = function(e) {
 
@@ -4241,7 +3782,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 							.find("button:first")
 								.addClass("imc--seleccionada")
 								.focus();
-
+						
 					}
 
 					e.preventDefault();
@@ -4273,7 +3814,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 							.find("button:last")
 								.addClass("imc--seleccionada")
 								.focus();
-
+						
 					}
 
 					e.preventDefault();
@@ -4306,7 +3847,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 						}
 
 					}, 100
-
+					
 				);
 
 			}
@@ -4349,7 +3890,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 								.remove();
 
 					}, 50
-
+					
 				);
 
 			};
@@ -4357,7 +3898,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 		// prepara
 
 		prepara();
-
+		
 		// events
 
 		element
@@ -4367,7 +3908,7 @@ $.fn.appFormsSelectorAjax = function(options) {
 			.on("blur.appFormsSelectorAjax", "input[type=text], textarea, .imc--selector-opcions-ajax li button", revisa)
 			.on("click.appFormsSelectorAjax", ".imc--selector-opcions-ajax li button", selecciona)
 			.on("click.appFormsSelectorAjax", "button[data-accio=seleccio-elimina]", elimina);
-
+		
 	});
 
 	return this;
@@ -4408,7 +3949,7 @@ $.fn.appFormsIBAN = function(options) {
 
 		var element = $(this)
 			,enmascara = function(e) {
-
+				
 				/*
 				element
 					.find("input[type=text]")
@@ -4423,7 +3964,7 @@ $.fn.appFormsIBAN = function(options) {
 				var mask = IMask(element.find("input[type=text]")[0], maskOptions);
 
 			};
-
+		
 		// revisem
 
 		if (typeof iMaskLoad === "undefined") {
@@ -4451,7 +3992,7 @@ $.fn.appFormsIBAN = function(options) {
 			);
 
 		}
-
+		
 	});
 
 	return this;

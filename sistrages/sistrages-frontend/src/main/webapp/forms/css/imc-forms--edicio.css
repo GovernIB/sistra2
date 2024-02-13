@@ -342,3 +342,10 @@ fieldset[data-script="s"]::before { content: ""; display: block; position: absol
 .imc-form div.imc-element[data-type="captcha"] div.imc--img {
 	background-image: url(../imgs/captcha.png)
 }
+
+.imc-selector-dinamico::after{
+	transform: none;
+    background-image: url(../imgs/ico_cerca_4dba79.svg) !important;
+    opacity: 1 !important;
+    filter: grayscale(100%);
+}

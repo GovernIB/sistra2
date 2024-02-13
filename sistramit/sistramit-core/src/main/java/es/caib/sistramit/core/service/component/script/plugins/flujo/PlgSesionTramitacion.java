@@ -48,6 +48,16 @@ public final class PlgSesionTramitacion implements PlgSesionTramitacionInt {
 	}
 
 	@Override
+	public String getIdTramite() {
+		return variablesFlujo.getIdTramite();
+	}
+
+	@Override
+	public int getVersionTramite() {
+		return variablesFlujo.getVersionTramite();
+	}
+
+	@Override
 	public boolean isAutenticado() {
 		return (variablesFlujo.getNivelAutenticacion() == TypeAutenticacion.AUTENTICADO);
 	}

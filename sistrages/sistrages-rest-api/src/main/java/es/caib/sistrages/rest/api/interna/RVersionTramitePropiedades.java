@@ -23,7 +23,7 @@ public class RVersionTramitePropiedades {
 	private int nivelQAA;
 
 	/** Métodos de autenticación permitidos. */
-	@ApiModelProperty(value = "Métodos autenticación permitidos separados por ; (CER:Certificado / PIN: ClavePin / PER: ClavePermanente)")
+	@ApiModelProperty(value = "Métodos autenticación permitidos separados por ; (CER:Certificado / PIN: ClavePin / PER: ClavePermanente / MOV: ClaveMovil)")
 	private String metodosAutenticacion;
 
 	/** Autenticado. */

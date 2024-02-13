@@ -132,6 +132,24 @@ public class DialogConsultaIncidencias extends DialogControllerBase {
 	}
 
 	/**
+	 * Abre dialogo.
+	 *
+	 * @param modoAccesoDlg Modo acceso
+	 */
+	public void abrirDlgNif() {
+
+		final Map<String, String> params = new HashMap<>();
+
+		String nif = data.getNif();
+
+		params.put("nifParam", nif);
+		params.put("esDialogParams", "true");
+
+		UtilJSF.openDialog(ViewAuditoriaTramites.class, TypeModoAcceso.CONSULTA, params, true, 1500, 717);
+
+	}
+
+	/**
 	 * Retorno dialogo.
 	 *
 	 * @param event respuesta dialogo

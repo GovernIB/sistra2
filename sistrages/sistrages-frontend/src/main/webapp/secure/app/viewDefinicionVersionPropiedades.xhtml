@@ -12,7 +12,7 @@
 		<!-- Growl mensajes -->
 		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-        <h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left" rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="12" cellspacing="0">
+        <h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left" rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="12" cellspacing="0" width="70%">
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.identificador']}" />
 			<p:inputText onblur="this.value = this.value.trim();" id="codigo" value="#{viewDefinicionVersion.tramite.getIdentificadorCompuesto()}" size="107" readonly="true" />
@@ -45,6 +45,7 @@
 						<p:selectBooleanCheckbox itemLabel="#{msg['tiposAutenticacion.CER']}" value="#{viewDefinicionVersion.tramiteVersion.tieneTipoAutenticacion('CER')}" disabled="true" />
 						<p:selectBooleanCheckbox itemLabel="#{msg['tiposAutenticacion.PIN']}" value="#{viewDefinicionVersion.tramiteVersion.tieneTipoAutenticacion('PIN')}" disabled="true" />
 						<p:selectBooleanCheckbox itemLabel="#{msg['tiposAutenticacion.PER']}" value="#{viewDefinicionVersion.tramiteVersion.tieneTipoAutenticacion('PER')}" disabled="true" />
+						<p:selectBooleanCheckbox itemLabel="#{msg['tiposAutenticacion.MOV']}" value="#{viewDefinicionVersion.tramiteVersion.tieneTipoAutenticacion('MOV')}" disabled="true" />
 					</p:column>
 				</p:row>
 				<p:row>

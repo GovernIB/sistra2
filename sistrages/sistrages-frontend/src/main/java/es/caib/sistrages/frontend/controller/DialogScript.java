@@ -15,12 +15,14 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.SerializationUtils;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleEvent;
 import org.primefaces.extensions.event.ClipboardSuccessEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSeccionReutilizable;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
@@ -28,6 +30,7 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.LiteralScript;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.ScriptSeccionReutilizable;
 import es.caib.sistrages.core.api.model.SeccionReutilizable;
@@ -36,6 +39,7 @@ import es.caib.sistrages.core.api.model.comun.DisenyoFormularioComponenteSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioPaginaSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
+import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.model.comun.ValorIdentificadorCompuesto;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -48,6 +52,7 @@ import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
 import es.caib.sistrages.core.api.model.types.TypeScriptSeccionReutilizable;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
+import es.caib.sistrages.core.api.service.PluginService;
 import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.service.SeccionReutilizableService;
 import es.caib.sistrages.core.api.service.SystemService;
@@ -96,6 +101,10 @@ public class DialogScript extends DialogControllerBase {
 	/** dominio service. */
 	@Inject
 	private DominioService dominioService;
+
+	/** Servicio. */
+	@Inject
+	private PluginService pluginService;
 
 	/** Id tramite version. **/
 	private String idTramiteVersion;
@@ -179,9 +188,11 @@ public class DialogScript extends DialogControllerBase {
 	/** Lista secciones reut. **/
 	private List<ComponenteFormularioCampoSeccionReutilizable> srL = new ArrayList<>();
 
-	private boolean colorEditorOscuro = false;
+	private Boolean colorEditorOscuro;
 
 	private boolean esIframe = false;
+
+	private SessionBean sb;
 
 	/**
 	 * Constructor vacio.
@@ -327,6 +338,13 @@ public class DialogScript extends DialogControllerBase {
 
 		}
 
+		// Obtenemos el color
+		if (UtilJSF.getSessionBean().getColorFondoScript().contains("Blanco")) {
+			colorEditorOscuro = false;
+		} else {
+			colorEditorOscuro = true;
+		}
+		PrimeFaces.current().executeScript("invertirColores()");
 	}
 
 	public ScriptSeccionReutilizable getScriptSR(ComponenteFormulario cf) {
@@ -439,6 +457,19 @@ public class DialogScript extends DialogControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), dominio.getCodigo().toString());
 		params.put(TypeParametroVentana.AMBITO.toString(), dominio.getAmbito().toString());
+
+		TramiteVersion tramiteVersion = tramiteService.getTramiteVersion(Long.parseLong(idTramiteVersion));
+		Long idArea = tramiteVersion.getIdArea();
+
+		TypeAmbito typeAmbitoDom = dominio.getAmbito();
+
+		if (typeAmbitoDom == TypeAmbito.AREA) {
+			params.put("AREA", idArea.toString());
+		}
+		if (typeAmbitoDom == TypeAmbito.ENTIDAD) {
+			params.put("ENTIDAD", UtilJSF.getIdEntidad().toString());
+		}
+
 		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 670);
 	}
 
@@ -546,6 +577,10 @@ public class DialogScript extends DialogControllerBase {
 			}
 		}
 
+		if (tipoScript.name().equals("SCRIPT_DATOS_PAGO") && verificarPasarelaPago()) {
+			return;
+		}
+
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
@@ -618,6 +653,38 @@ public class DialogScript extends DialogControllerBase {
 		return warn;
 	}
 
+	public boolean verificarPasarelaPago() {
+		boolean warn = false;
+
+		List<Plugin> plugin = pluginService.listPlugin(TypeAmbito.ENTIDAD, UtilJSF.getSessionBean().getEntidad().getCodigo(), "Pago");
+
+		String[] pasarelas = null;
+
+		for (Propiedad propiedad : plugin.get(0).getPropiedades()) {
+			if (propiedad.getCodigo().equals("pasarelas")) {
+				pasarelas = propiedad.getValor().split(Constantes.LISTAS_SEPARADOR);
+			}
+		}
+
+		String contenido = UtilScripts.extraerContenido(data.getContenido());
+		if (contenido.contains("setPasarela")) {
+			String pasarela = null;
+			Matcher matcher = Pattern.compile("setPasarela\\(\\s*\\'(.*?)\\'").matcher(contenido);
+
+			while (matcher.find()) {
+				pasarela = matcher.group(1);
+			}
+
+			if(pasarelas != null && pasarela != null && !Arrays.asList(pasarelas).contains(pasarela)) {
+				addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+						UtilJSF.getLiteral("dialogScript.error.pasarelaNoValida"));
+				return true;
+			}
+		}
+
+		return warn;
+	}
+
 	public void convertirExtensionesAMinusculas() {
 		Matcher matcher = Pattern.compile("setExtensiones\\(\\'(.*?)\\'").matcher(data.getContenido());
 
@@ -631,6 +698,12 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void switchColorEditor() {
 		colorEditorOscuro = !colorEditorOscuro;
+		if (!colorEditorOscuro) {
+			UtilJSF.getSessionBean().setColorFondoScript("Blanco");
+		} else {
+			UtilJSF.getSessionBean().setColorFondoScript("Negro");
+		}
+
 	}
 
 	private boolean funcionGetValorIncorrecta() {
@@ -1687,5 +1760,19 @@ public class DialogScript extends DialogControllerBase {
 
 	public void setEsIframe(boolean esIframe) {
 		this.esIframe = esIframe;
+	}
+
+	/**
+	 * @return the sb
+	 */
+	public SessionBean getSb() {
+		return sb;
+	}
+
+	/**
+	 * @param sb the sb to set
+	 */
+	public void setSb(SessionBean sb) {
+		this.sb = sb;
 	}
 }

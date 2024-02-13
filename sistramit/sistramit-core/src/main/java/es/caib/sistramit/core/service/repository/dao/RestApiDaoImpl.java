@@ -2355,6 +2355,10 @@ public final class RestApiDaoImpl implements RestApiDao {
 			sql += " and e.SOP_ESTADO = '" + pFiltroBusqueda.getEstado() + "'";
 		}
 
+		if (pFiltroBusqueda.getTipoProblemaIncidencia() != null) {
+			sql += " and e.SOP_PROTID = '" + pFiltroBusqueda.getTipoProblemaIncidencia() + "'";
+		}
+
 		if (pFiltroBusqueda.getListaAreas() != null) {
 			StringBuilder areasString = new StringBuilder("");
 			for (String area : pFiltroBusqueda.getListaAreas()) {
@@ -2371,6 +2375,16 @@ public final class RestApiDaoImpl implements RestApiDao {
 		Query query = entityManager.createNativeQuery(sql);
 
 		return Long.valueOf(query.getResultList().size());
+	}
+
+	@Override
+	public List<String> listarTiposProblema() {
+		String sql = "select distinct(e.SOP_PROTID) from STT_SOPORT e order by e.SOP_PROTID ASC";
+
+		Query query = entityManager.createNativeQuery(sql);
+		List<String> lista = query.getResultList();
+
+		return lista;
 	}
 
 	@Override

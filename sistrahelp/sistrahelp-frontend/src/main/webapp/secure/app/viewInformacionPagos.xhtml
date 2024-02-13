@@ -227,11 +227,11 @@
 			<!-- Data table -->
 			<p:outputPanel  styleClass="h100">
 			<p:dataTable id="dataTable" var="dt" value="#{viewInformacionPagos.listaDatos}"  lazy="true"
-						 rows="#{viewInformacionPagos.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
+						 rows="#{sessionBean.paginacion}" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true" scrollHeight="100%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         rowsPerPageTemplate="5,10,15,30"
+                         rowsPerPageTemplate="5,10,15,30,50,75,100"
                          currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
 			        	 selectionMode="single" selection="#{viewInformacionPagos.datoSeleccionado}" rowKey="#{dt.codigoPago}">
 

@@ -754,5 +754,4 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 	public final void setPortapapeles(String portapapeles) {
 		this.portapapeles = portapapeles;
 	}
-
 }

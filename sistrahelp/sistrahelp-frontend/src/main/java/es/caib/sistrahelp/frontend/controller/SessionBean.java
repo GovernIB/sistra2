@@ -1,9 +1,12 @@
 package es.caib.sistrahelp.frontend.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -16,11 +19,17 @@ import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 
+import es.caib.sistrahelp.core.api.model.comun.Propiedad;
+import es.caib.sistrahelp.core.api.service.SystemService;
+import es.caib.sistrahelp.core.api.util.UtilJSON;
+import es.caib.sistrahelp.core.api.model.Sesion;
 import es.caib.sistrahelp.core.api.model.Area;
 import es.caib.sistrahelp.core.api.model.Entidad;
 import es.caib.sistrahelp.core.api.model.comun.Constantes;
@@ -49,6 +58,7 @@ public class SessionBean {
 	 * Role activo principal.
 	 */
 	private TypeRoleAcceso activeRole;
+	private int indexPerfil = -1;
 
 	/**
 	 * Roles del usuario.
@@ -59,9 +69,7 @@ public class SessionBean {
 	 * Idioma actual.
 	 */
 	private String lang;
-
-	/** Paginación */
-	private Integer paginacion;
+	private int indexIdioma = -1;
 
 	/**
 	 * Locale actual.
@@ -72,6 +80,7 @@ public class SessionBean {
 	 * Entidad actual.
 	 */
 	private Entidad entidad;
+	private int indexEntidad = -1;
 
 	/** Lista de areas de cada perfil. **/
 	private List<Area> listaAreasHelpDesk = new ArrayList<>();
@@ -96,6 +105,9 @@ public class SessionBean {
 	private SecurityService securityService;
 
 	@Inject
+	private SystemService systemService;
+
+	@Inject
 	private ConfiguracionService configuracionService;
 
 	/**
@@ -115,13 +127,54 @@ public class SessionBean {
 
 	private Integer maxInactiveInterval = ((HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true)).getMaxInactiveInterval()*1000;;
 
+	/** Paginación */
+	private Integer paginacion;
+	private int indexPaginacion = -1;
+
+	/** Propiedad */
+	private Propiedad propiedad;
+
+	/** Propiedades */
+	private List<Propiedad> propiedades = new ArrayList<>();
+
+	private boolean paginacionCm = false;
+
+
 	/** Inicio sesión. */
 	@PostConstruct
 	public void init() {
 
+		Sesion sesion = null;
+
 		// Recupera info usuario
 		userName = securityService.getUsername();
-		lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
+		// recuperamos datos por defecto del usuario
+		if (StringUtils.isNotEmpty(userName)) {
+			sesion = systemService.getSesion(userName);
+		}
+
+		if (sesion == null) {
+			// asignamos paginación por defecto si no tiene
+			setPaginacion(10);
+		} else {
+			// Obtenemos las propiedades
+			propiedades = sesion.getPropiedades();
+			obtenerPaginacion(propiedades);
+
+			obtenerPerfil(propiedades);
+			obtenerIdioma(propiedades);
+			obtenerEntidad(propiedades);
+		}
+
+		// asignamos idioma por defecto si lo tiene
+		if (sesion != null && StringUtils.isNotEmpty(lang)
+				&& ("es".equals(lang) || "ca".equals(lang))) {
+			FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale(lang));
+		}
+
+		if(lang == null) {
+			lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
+		}
 		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
 		rolesList = securityService.getRoles();
@@ -139,11 +192,6 @@ public class SessionBean {
 			if (listaAreasHelpSupervisor.isEmpty()) {
 				rolesList.remove(TypeRoleAcceso.SUPERVISOR_ENTIDAD);
 			}
-		}
-
-		// asignamos paginación por defecto si no tiene
-		if (getPaginacion() == null) {
-			setPaginacion(10);
 		}
 
 		// Lista de entidades según cada rol
@@ -177,17 +225,68 @@ public class SessionBean {
 
 		// Por defecto, se activa el rol supervisor por defecto y luego el operador
 		// helpdesk
-		if (rolesList.contains(TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
-			activeRole = TypeRoleAcceso.SUPERVISOR_ENTIDAD;
-		} else if (rolesList.contains(TypeRoleAcceso.HELPDESK)) {
-			activeRole = TypeRoleAcceso.HELPDESK;
-		} else {
-			UtilJSF.redirectJsfPage(URL_ERROR_USUARIO_SIN_ROL, null);
-			return;
+		if(activeRole == null) {
+			if (rolesList.contains(TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
+				activeRole = TypeRoleAcceso.SUPERVISOR_ENTIDAD;
+			} else if (rolesList.contains(TypeRoleAcceso.HELPDESK)) {
+				activeRole = TypeRoleAcceso.HELPDESK;
+			} else {
+				UtilJSF.redirectJsfPage(URL_ERROR_USUARIO_SIN_ROL, null);
+				return;
+			}
 		}
 
 		cargarDatos();
 
+	}
+
+
+	private void obtenerPerfil(List<Propiedad> list) {
+		// recuperamos el perfil
+		for (final Propiedad prop : list) {
+			if (prop.getCodigo().equals("perfil")) {
+				activeRole = TypeRoleAcceso.fromString(prop.getValor());
+				indexPerfil = list.indexOf(prop);
+				break;
+			}
+		}
+	}
+
+	private void obtenerIdioma(List<Propiedad> list) {
+		// recuperamos el idioma
+		for (final Propiedad prop : list) {
+			if (prop.getCodigo().equals("idioma")) {
+				lang = prop.getValor();
+				indexIdioma = list.indexOf(prop);
+				break;
+			}
+		}
+	}
+
+	private void obtenerEntidad(List<Propiedad> list) {
+		// recuperamos el idioma
+		for (final Propiedad prop : list) {
+			if (prop.getCodigo().equals("entidad")) {
+				for (final Entidad e : listaEntidades) {
+					if (e.getCodigo().toString() == prop.getValor()) {
+						entidad = e;
+					}
+				}
+				indexEntidad = list.indexOf(prop);
+				break;
+			}
+		}
+	}
+
+	private void obtenerPaginacion(List<Propiedad> list) {
+		// recuperamos la paginación
+		for (final Propiedad prop : list) {
+			if (prop.getCodigo().equals("paginacion")) {
+				paginacion = Integer.valueOf(prop.getValor());
+				indexPaginacion = list.indexOf(prop);
+				break;
+			}
+		}
 	}
 
 	/** Método que carga las entidades ya las areas. **/
@@ -202,7 +301,9 @@ public class SessionBean {
 		}
 
 		if (!listaEntidades.isEmpty()) {
-			entidad = listaEntidades.get(0);
+			if(entidad == null) {
+				entidad = listaEntidades.get(0);
+			}
 			if (activeRole == TypeRoleAcceso.SUPERVISOR_ENTIDAD) {
 				listaAreasEntidad = obtenerAreasEntidad(listaAreasHelpSupervisor, entidad);
 			} else {
@@ -230,6 +331,9 @@ public class SessionBean {
 		// Cargamos los datos según el rol
 		cargarDatos();
 
+		// actualizamos sesion usuario
+		setActiveRole(roleChange);
+
 		// Recarga pagina principal segun role
 		UtilJSF.redirectJsfDefaultPageRole(activeRole, obtenerIdEntidad());
 
@@ -241,6 +345,10 @@ public class SessionBean {
 		FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale(idioma));
 		lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
 		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+
+		// actualizamos sesion usuario
+		setLang(idioma);
+
 		// Recarga pagina principal
 		UtilJSF.redirectJsfDefaultPageRole(activeRole, obtenerIdEntidad());
 	}
@@ -321,6 +429,10 @@ public class SessionBean {
 		}
 		// Cambio logo
 		cambiarLogo();
+
+		// actualizamos sesion usuario
+		setEntidad(entidad);
+
 		// Recarga pagina principal
 		UtilJSF.redirectJsfDefaultPageRole(activeRole, obtenerIdEntidad());
 	}
@@ -508,6 +620,21 @@ public class SessionBean {
 
 	public void setActiveRole(final TypeRoleAcceso activeRole) {
 		this.activeRole = activeRole;
+
+		// actualizamos propiedades de sesión
+		propiedad = new Propiedad();
+		propiedad.setCodigo("perfil");
+		propiedad.setValor(activeRole.toString());
+
+		if (UtilJSON.toJSON(propiedades).contains(propiedad.getCodigo())) {
+			propiedades.removeIf(prop -> prop.getCodigo().equals("perfil"));
+		}
+		propiedades.add(propiedad);
+		String pPropiedades = (UtilJSON.toJSON(propiedades));
+
+		// actualizamos sesion usuario
+		systemService.updateSesionPropiedades(userName, pPropiedades);
+		indexPerfil = propiedades.indexOf(propiedad);
 	}
 
 	public String getLang() {
@@ -516,6 +643,21 @@ public class SessionBean {
 
 	public void setLang(final String lang) {
 		this.lang = lang;
+
+		// actualizamos propiedades de sesión
+		propiedad = new Propiedad();
+		propiedad.setCodigo("idioma");
+		propiedad.setValor(lang);
+
+		if (UtilJSON.toJSON(propiedades).contains(propiedad.getCodigo())) {
+			propiedades.removeIf(prop -> prop.getCodigo().equals("idioma"));
+		}
+		propiedades.add(propiedad);
+		String pPropiedades = (UtilJSON.toJSON(propiedades));
+
+		// actualizamos sesion usuario
+		systemService.updateSesionPropiedades(userName, pPropiedades);
+		indexIdioma = propiedades.indexOf(propiedad);
 	}
 
 	public Locale getLocale() {
@@ -532,6 +674,21 @@ public class SessionBean {
 
 	public void setEntidad(final Entidad entidad) {
 		this.entidad = entidad;
+
+		// actualizamos propiedades de sesión
+		propiedad = new Propiedad();
+		propiedad.setCodigo("entidad");
+		propiedad.setValor(entidad.getCodigo().toString());
+
+		if (UtilJSON.toJSON(propiedades).contains(propiedad.getCodigo())) {
+			propiedades.removeIf(prop -> prop.getCodigo().equals("entidad"));
+		}
+		propiedades.add(propiedad);
+		String pPropiedades = (UtilJSON.toJSON(propiedades));
+
+		// actualizamos sesion usuario
+		systemService.updateSesionPropiedades(userName, pPropiedades);
+		indexEntidad = propiedades.indexOf(propiedad);
 	}
 
 	public List<TypeRoleAcceso> getRolesList() {
@@ -569,7 +726,31 @@ public class SessionBean {
 	 * @param paginacion the paginacion to set
 	 */
 	public final void setPaginacion(Integer paginacion) {
-		this.paginacion = paginacion;
+		// Si se ha cambiado la paginación se actualiza en la sesión
+		if (!paginacion.equals(this.paginacion)) {
+			// Cambia paginación
+			this.paginacion = paginacion;
+
+			// actualizamos propiedades de sesión
+			propiedad = new Propiedad();
+			propiedad.setCodigo("paginacion");
+			propiedad.setValor(Integer.toString(paginacion));
+
+			if (UtilJSON.toJSON(propiedades).contains(propiedad.getCodigo())) {
+				propiedades.removeIf(prop -> prop.getCodigo().equals("paginacion"));
+			}
+			propiedades.add(propiedad);
+			String pPropiedades = (UtilJSON.toJSON(propiedades));
+
+			// actualizamos sesion usuario
+			systemService.updateSesionPropiedades(userName, pPropiedades);
+			indexPaginacion = propiedades.indexOf(propiedad);
+
+			if(isPaginacionCm()) {
+				setPaginacionCm(false);
+				PrimeFaces.current().executeScript("document.getElementById('form:btnBuscar').click()");
+			}
+		}
 	}
 
 	/**
@@ -584,5 +765,106 @@ public class SessionBean {
 	 */
 	public void setMaxInactiveInterval(Integer maxInactiveInterval) {
 		this.maxInactiveInterval = maxInactiveInterval;
+	}
+
+	/**
+	 * @return the indexPaginacion
+	 */
+	public int getIndexPaginacion() {
+		return indexPaginacion;
+	}
+
+	/**
+	 * @param indexPaginacion the indexPaginacion to set
+	 */
+	public void setIndexPaginacion(int indexPaginacion) {
+		this.indexPaginacion = indexPaginacion;
+	}
+
+	/**
+	 * @return the propiedad
+	 */
+	public Propiedad getPropiedad() {
+		return propiedad;
+	}
+
+	/**
+	 * @param propiedad the propiedad to set
+	 */
+	public void setPropiedad(Propiedad propiedad) {
+		this.propiedad = propiedad;
+	}
+
+	/**
+	 * @return the propiedades
+	 */
+	public List<Propiedad> getPropiedades() {
+		return propiedades;
+	}
+
+	/**
+	 * @param propiedades the propiedades to set
+	 */
+	public void setPropiedades(List<Propiedad> propiedades) {
+		this.propiedades = propiedades;
+	}
+
+	/**
+	 * @return the indexPerfil
+	 */
+	public int getIndexPerfil() {
+		return indexPerfil;
+	}
+
+	/**
+	 * @param indexPerfil the indexPerfil to set
+	 */
+	public void setIndexPerfil(int indexPerfil) {
+		this.indexPerfil = indexPerfil;
+	}
+
+	/**
+	 * @return the indexIdioma
+	 */
+	public int getIndexIdioma() {
+		return indexIdioma;
+	}
+
+
+	/**
+	 * @param indexIdioma the indexIdioma to set
+	 */
+	public void setIndexIdioma(int indexIdioma) {
+		this.indexIdioma = indexIdioma;
+	}
+
+	/**
+	 * @return the indexEntidad
+	 */
+	public int getIndexEntidad() {
+		return indexEntidad;
+	}
+
+
+	/**
+	 * @param indexEntidad the indexEntidad to set
+	 */
+	public void setIndexEntidad(int indexEntidad) {
+		this.indexEntidad = indexEntidad;
+	}
+
+	/**
+	 * @return the paginacionCm
+	 */
+	public boolean isPaginacionCm() {
+		return paginacionCm;
+	}
+
+
+	/**
+	 * @param paginacionCm the paginacionCm to set
+	 */
+	public void setPaginacionCm(boolean paginacionCm) {
+		this.paginacionCm = paginacionCm;
 	}
 }
