@@ -85,7 +85,7 @@ public class TimerEvaluarAlertas implements Runnable {
 				for (int i=0; i<eventos.size(); i++) {
 					partes = eventos.get(i).split(":");
 				    boolean cambioGrupo = false;
-					String grupo = partes[0];
+					String grupo = partes[1];
 					if (i > 0) {
 						if (!grupoAnterior.equals(grupo)) {
 							grupoAnterior = grupo;
@@ -96,13 +96,13 @@ public class TimerEvaluarAlertas implements Runnable {
 					String not = "";
 					String and_orStr = "";
 					String notStr = "";
-					faut.setEvento(TypeEvento.fromString(partes[3]));
+					faut.setEvento(TypeEvento.fromString(partes[4]));
 					Long eventoLong = hService.countAuditoriaEvento(faut);
 					String evento = String.valueOf(eventoLong);
-					String eventoStr = TypeEvento.fromString(partes[3]).name();
-					String operador = partes[4];
-					String operadorStr = partes[4];
-					String concurrencia = partes[5];
+					String eventoStr = TypeEvento.fromString(partes[4]).name();
+					String operador = partes[5];
+					String operadorStr = partes[5];
+					String concurrencia = partes[6];
 
 					if (!partes[1].equals("null")) {
 						if (partes[1].equals("AND")) {
@@ -114,7 +114,7 @@ public class TimerEvaluarAlertas implements Runnable {
 						}
 					}
 
-					if (partes[2].equals("false")) {
+					if (partes[3].equals("false")) {
 						not = "";
 						notStr = "";
 					} else {
@@ -122,14 +122,14 @@ public class TimerEvaluarAlertas implements Runnable {
 						notStr = " NOT";
 					}
 
-					if (partes[4].equals("=")) {
+					if (partes[5].equals("=")) {
 						operador = "==";
 						operadorStr = "=";
 					}
 
 					if (i == 0) {
 						condicion += "(" + not + evento + operador + concurrencia;
-						expresionCorreoHistorial += "(" + notStr + " " + eventoStr + " " + operadorStr + " " + concurrencia;
+						expresionCorreoHistorial += "(" + notStr + " " + eventoStr + " [" + evento + "] " + operadorStr + " " + concurrencia;
 						if (eventos.size() == 1) {
 							condicion += " )";
 							expresionCorreoHistorial += " )";
@@ -137,10 +137,10 @@ public class TimerEvaluarAlertas implements Runnable {
 					} else {
 						if (cambioGrupo) {
 							condicion += ")" + and_or + "(" + not + evento + operador + concurrencia;
-							expresionCorreoHistorial += " )" + " " + and_orStr + " " + "(" + notStr + " " + eventoStr + " " + operadorStr + " " + concurrencia;
+							expresionCorreoHistorial += " )" + " " + and_orStr + " " + "(" + notStr + " " + eventoStr + " [" + evento + "] " + operadorStr + " " + concurrencia;
 						} else {
 							condicion += and_or + not + evento + operador + concurrencia;
-							expresionCorreoHistorial += " " + and_orStr + " " + notStr + " " + eventoStr + " " + operadorStr + " " + concurrencia;
+							expresionCorreoHistorial += " " + and_orStr + " " + notStr + " " + eventoStr + " [" + evento + "] " + operadorStr + " " + concurrencia;
 						}
 						if (i == eventos.size() - 1) {
 							condicion += ")";
@@ -156,7 +156,7 @@ public class TimerEvaluarAlertas implements Runnable {
 					e1.printStackTrace();
 				}
 				if (evaluacion) {
-					enviarEmail(expresionCorreoHistorial, faut);
+					enviarEmail(expresionCorreoHistorial);
 					anadirHistorial(expresionCorreoHistorial);
 				}
 				try {
@@ -193,7 +193,7 @@ public class TimerEvaluarAlertas implements Runnable {
 		historialService.addHistorialAlerta(hA);
 	}
 
-	private void enviarEmail(String expresionCorreoHistorial, FiltroAuditoriaTramitacion faut) {
+	private void enviarEmail(String expresionCorreoHistorial) {
 
 		try {
 			Alerta alert = aService.loadAlerta(alCod);
@@ -235,7 +235,7 @@ public class TimerEvaluarAlertas implements Runnable {
 				props.load(fis);
 				entorno = props.getProperty("entorno").toUpperCase();
 			} catch (final IOException e) {
-				System.out.println(e);
+				LOGGER.error("Error obteniendo entorno" , e);
 			}
 			String msg =
 			"<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"ca\" lang=\"ca\">\r\n" + "\r\n"
@@ -273,7 +273,7 @@ public class TimerEvaluarAlertas implements Runnable {
 					+ "			<h1>\r\n"
 					+ "				Aquest missatge ha estat generat pel sistema d'alertes de SISTRAHELP"
 					+ "</h1>" + "<h2>L&#39;expressi&#243;: \"" + expresionCorreoHistorial + "\" de l&#39;Alerta: \""
-					+ aService.loadAlerta(alCod).getNombre() + "\" (configurat per l&#39;entitat: "+aService.loadAlerta(alCod).getListaAreas().get(0).split("\\.")[0];
+					+ aService.loadAlerta(alCod).getNombre() + "\" (configurada per l&#39;entitat: "+aService.loadAlerta(alCod).getListaAreas().get(0).split("\\.")[0];
 						if(aService.loadAlerta(alCod).getTipo().equals("A")) {
 							msg += ", &#224;rea: " + aService.loadAlerta(alCod).getListaAreas().get(0).split("\\.")[1];
 						}else if(aService.loadAlerta(alCod).getTipo().equals("T")) {
@@ -281,7 +281,8 @@ public class TimerEvaluarAlertas implements Runnable {
 						}else if(aService.loadAlerta(alCod).getTipo().equals("V")) {
 							msg += ", &#224;rea: " + aService.loadAlerta(alCod).getListaAreas().get(0).split("\\.")[1] + ", tr&#224;mit: "+ aService.loadAlerta(alCod).getTramite() + " i versi&#243;: "+ aService.loadAlerta(alCod).getVersion();
 						}
-					msg += ") s&#39;ha avaluat com a certa " + hService.countAuditoriaEvento(faut) + " vegades." + "			</h2>\r\n" + "\r\n"
+					msg += ") s&#39;ha avaluat com a certa."
+					+ " En aquesta expressió apareixen entre claudàtors el nombre de vegades que s'ha produït l'esdeveniment corresponent durant el dia d'avui."// + hService.countAuditoriaEvento(faut) + " vegades." + "			</h2>\r\n" + "\r\n"
 					+ "		<!-- /continguts -->\r\n" + "\r\n" + "\r\n" + "</div>"
 					+ "	<p class=\"auto\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p>\r\n"
 					+ "\r\n" + "	</div>\r\n" + "	<!-- /contenidor -->\r\n" + "\r\n" + "</body>\r\n"

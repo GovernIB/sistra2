@@ -146,9 +146,9 @@ public class DialogEnviarMail extends DialogControllerBase {
 //		    byte[] imageBytes = new byte[0];
 			Entidad entidad = sb.getEntidad();
 			logo = hService.urlLogoEntidad(entidad.getCodigoDIR3());
-			LOGGER.error("DialogEnviarMAIL INI");
+			LOGGER.debug("DialogEnviarMAIL INI");
 			byte[] imageBytes = hService.contenidoLogoEntidad(entidad.getCodigoDIR3());
-			LOGGER.error("DialogEnviarMAIL P1 " + imageBytes);
+			LOGGER.debug("DialogEnviarMAIL P1 " + imageBytes);
 			 //String urltext = logo;
 //			 try {
 //			    URL url = new URL(urltext);
@@ -231,7 +231,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 			if (imageBytes != null && imageBytes.length > 0) {
 				//msg += "			   <h3> LOGO </h3>";
 				String encoded = Base64.getEncoder().encodeToString(imageBytes);
-				LOGGER.error("Codificiado : " + encoded);
+				LOGGER.debug("Codificiado : " + encoded);
 				msg += "            <img  src=\"data:image/jpeg;base64," + encoded + "\" alt=\"logo\" width=\"100\" height=\"100\" style=\"width: 100px;height:100px;\"/>";
 			} else if( logo != null && !logo.isEmpty()) {
 				msg += "            <img  src=\"" + logo + "\" alt=\"logo\" width=\"100\" height=\"100\"/>";
@@ -522,14 +522,14 @@ public class DialogEnviarMail extends DialogControllerBase {
 					+ "         </div>"
 					+ "         <p class=\"auto\" style=\"margin: 1.5em 0;padding: 1em;font-size: 0.9em;font-style: italic;\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p>"
 					+ "      </div>" + "   </body>" + "</html>";
-			System.out.println("Informe enviado");
+			LOGGER.debug("Informe enviado");
 			//enviarEmail(msg,DatatypeConverter.printBase64Binary(imageBytes));
-			LOGGER.error("DialogEnviarMAIL P2 ");
-			LOGGER.error(msg);
-			LOGGER.error("------- BYTES: ------");
-			LOGGER.error(DatatypeConverter.printBase64Binary(imageBytes));
+			LOGGER.debug("DialogEnviarMAIL P2 ");
+			LOGGER.debug(msg);
+			LOGGER.debug("------- BYTES: ------");
+			LOGGER.debug(DatatypeConverter.printBase64Binary(imageBytes));
 			enviarEmail(msg, null); //DatatypeConverter.printBase64Binary(imageBytes));
-			LOGGER.error("DialogEnviarMAIL P3");
+			LOGGER.debug("DialogEnviarMAIL P3");
 			// Retornamos resultado
 			final DialogResult result = new DialogResult();
 			result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));

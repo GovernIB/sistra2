@@ -152,16 +152,16 @@
 						<p:column styleClass=" noPadding p-justify-start">
 						<h:panelGrid columns="2" styleClass="w100, noPadding">
 							<p:outputLabel for="filtroFechaInicio" value="#{msg['viewAuditoriaTramites.filtroFechaInicio']}:"/>
-				        	<p:calendar id="filtroFechaInicio" value="#{viewAuditoriaTramites.filtros.fechaDesde}" size="14" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" />
+				        	<p:calendar id="filtroFechaInicio" value="#{viewAuditoriaTramites.filtros.fechaDesde}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" />
 						</h:panelGrid>
 						<h:panelGrid columns="2" styleClass="w100, noPadding">
 				        	<p:outputLabel for="filtroFechaFin" value="#{msg['viewAuditoriaTramites.filtroFechaFin']}:"/>
-				        	<p:calendar id="filtroFechaFin" value="#{viewAuditoriaTramites.filtros.fechaHasta}" style="margin-left:15px" size="14" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+				        	<p:calendar id="filtroFechaFin" value="#{viewAuditoriaTramites.filtros.fechaHasta}" style="margin-left:15px" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
 						</h:panelGrid>
 						</p:column>
-						<p:column styleClass=" noPadding p-align-start">
-				        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="w100, noPadding, noMargin">
-			          			<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+						<p:column styleClass=" noPadding " style="border-style:inherit  !important;">
+	        				<h:panelGrid id="panelBotones" columns="1" styleClass="w100, noPadding">
+	       						<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
 			          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.ayuda}"/>
 			          			<p:commandButton id="btnDetalle" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.consultar}" style="display:none;"/>
 			          			<p:commandButton id="btnSesion" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.pantallaSesion}" style="display:none;"/>

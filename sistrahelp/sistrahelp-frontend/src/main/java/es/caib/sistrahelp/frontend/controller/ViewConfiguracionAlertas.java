@@ -129,7 +129,7 @@ public class ViewConfiguracionAlertas extends ViewControllerBase {
 			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		}
 
-		UtilJSF.openDialog(DialogConfiguracionAlertas.class, modoAccesoDlg, params, true, 1000, 550);
+		UtilJSF.openDialog(DialogConfiguracionAlertas.class, modoAccesoDlg, params, true, 1000, 600);
 	}
 
 	/**
@@ -267,7 +267,7 @@ public class ViewConfiguracionAlertas extends ViewControllerBase {
 			for (int i=0; i<lista.size(); i++) {
 				String[] partes = lista.get(i).split(":");
 				boolean cambioGrupo = false;
-				String grupo = partes[0];
+				String grupo = partes[1];
 				if (i > 0) {
 					if (!grupoAnterior.equals(grupo)) {
 						grupoAnterior = grupo;
@@ -277,23 +277,23 @@ public class ViewConfiguracionAlertas extends ViewControllerBase {
 				String and_or = "";
 				String not = "";
 
-				if (!partes[1].equals("null")) {
-					if (partes[1].equals("AND")) {
+				if (!partes[2].equals("null")) {
+					if (partes[2].equals("AND")) {
 						and_or = "AND";
 					} else {
 						and_or = "OR";
 					}
 				}
 
-				if (partes[2].equals("false")) {
+				if (partes[3].equals("false")) {
 					not = "";
 				} else {
 					not = " NOT";
 				}
 
-				String evento = TypeEvento.fromString(partes[3]).name();
-				String operador = partes[4];
-				String concurrencia = partes[5];
+				String evento = UtilJSF.getLiteral("typeEvento."+TypeEvento.fromString(partes[4]));
+				String operador = partes[5];
+				String concurrencia = partes[6];
 
 				if (i == 0) {
 					resultado += "(" + not + " " + evento + " " + operador + " " + concurrencia;

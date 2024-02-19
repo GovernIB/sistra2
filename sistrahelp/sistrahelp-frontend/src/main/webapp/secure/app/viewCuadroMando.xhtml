@@ -127,11 +127,11 @@
 						</p:column>
 						 <p:column>
 							<p:outputLabel for="filtroFechaInicio" value="#{msg['viewAuditoriaTramites.filtroFechaInicio']}:"/>
-			        		<p:calendar id="filtroFechaInicio" value="#{viewCuadroMando.fechaDesde}" size="14" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" mindate="#{viewCuadroMando.fechaMin}" showOn="button" showButtonPanel="true" required="true" disabled="#{viewCuadroMando.tipoFecha != 'iv'}"/>
+			        		<p:calendar id="filtroFechaInicio" value="#{viewCuadroMando.fechaDesde}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" mindate="#{viewCuadroMando.fechaMin}" showOn="button" showButtonPanel="true" required="true" disabled="#{viewCuadroMando.tipoFecha != 'iv'}"/>
  						</p:column>
  						<p:column>
 							<p:outputLabel for="filtroFechaFin" value="#{msg['viewAuditoriaTramites.filtroFechaFin']}:"/>
-			        		<p:calendar id="filtroFechaFin" value="#{viewCuadroMando.fechaHasta}" style="margin-left:15px" size="14" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" disabled="#{viewCuadroMando.tipoFecha != 'iv'}"/>
+			        		<p:calendar id="filtroFechaFin" value="#{viewCuadroMando.fechaHasta}" style="margin-left:15px" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" disabled="#{viewCuadroMando.tipoFecha != 'iv'}"/>
 						</p:column>
 						<p:commandButton id="btnBuscar" icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewCuadroMando.filtrar()}" process="panelFiltro" update="@form:tablaCuadroMando @form:growl" styleClass="boton_derecha" disabled="#{viewCuadroMando.tipoFecha != 'iv'}"/>
 				</h:panelGrid>

@@ -184,9 +184,9 @@
 						<p:outputLabel value="#{msg['viewInformacionPersistencia.filtroFecha']}:" styleClass="padding-right-2pct"/>
 
 		        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewInformacionPersistencia.filtroFechaInicio']}:" styleClass="padding-right-4"/>
-		        		<p:calendar id="filtroFechaInicio" value="#{viewInformacionPersistencia.filtros.fechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
+		        		<p:calendar id="filtroFechaInicio" value="#{viewInformacionPersistencia.filtros.fechaDesde}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
 		        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewInformacionPersistencia.filtroFechaFin']}:" styleClass="padding-right-4"/>
-		        		<p:calendar id="filtroFechaFin" value="#{viewInformacionPersistencia.filtros.fechaHasta}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+		        		<p:calendar id="filtroFechaFin" value="#{viewInformacionPersistencia.filtros.fechaHasta}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
 		        	</p:column>
 		        	<p:column>
 			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">

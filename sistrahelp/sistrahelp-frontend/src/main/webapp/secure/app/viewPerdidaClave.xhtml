@@ -190,10 +190,10 @@
 							<p:outputLabel value="#{msg['viewPerdidaClave.filtroFecha']}:" />
 
 			        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewPerdidaClave.filtroFechaInicio']}:" styleClass="padding-right-4"/>
-			        		<p:calendar id="filtroFechaInicio" value="#{viewPerdidaClave.filtros.fechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
+			        		<p:calendar id="filtroFechaInicio" value="#{viewPerdidaClave.filtros.fechaDesde}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
 
 			        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewPerdidaClave.filtroFechaFin']}:" styleClass="padding-right-4"/>
-			        		<p:calendar id="filtroFechaFin" value="#{viewPerdidaClave.filtros.fechaHasta}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true"/>
+			        		<p:calendar id="filtroFechaFin" value="#{viewPerdidaClave.filtros.fechaHasta}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true"/>
 						</h:panelGrid>
 					</p:column>
 

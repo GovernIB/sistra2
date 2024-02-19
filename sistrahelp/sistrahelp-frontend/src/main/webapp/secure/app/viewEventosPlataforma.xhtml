@@ -181,10 +181,10 @@
 	        		<p:outputLabel value="#{msg['viewEventosPlataforma.filtroFecha']}:" styleClass="padding-right-2pct"/>
 
 	        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewEventosPlataforma.filtroFechaInicio']}:" styleClass="padding-right-4"/>
-	        		<p:calendar id="filtroFechaInicio" value="#{viewEventosPlataforma.filtros.fechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
+	        		<p:calendar id="filtroFechaInicio" value="#{viewEventosPlataforma.filtros.fechaDesde}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
 
 	        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewEventosPlataforma.filtroFechaFin']}:" styleClass="padding-right-4"/>
-	        		<p:calendar id="filtroFechaFin" value="#{viewEventosPlataforma.filtros.fechaHasta}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+	        		<p:calendar id="filtroFechaFin" value="#{viewEventosPlataforma.filtros.fechaHasta}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
 	        	</p:column>
 
 	        	<p:column columns="2" styleClass="w25" columnClasses="w31,w69" style="border-color:#f0f0f0" >

@@ -105,8 +105,7 @@ public class TimerReinicioDiario implements Runnable {
 	@PostConstruct
 	public void run() {
 
-		LOGGER.error("ENTRA EN EL TIMERREINICIODIARIO");
-		System.out.println("entra en reinicio");
+		LOGGER.debug("ENTRA EN EL TIMERREINICIODIARIO");
 		alert = aService.loadAlertaByNombre("RESUMEN_DIARIO");
 		String nombre = "";
 		String logo = "";
@@ -135,7 +134,7 @@ public class TimerReinicioDiario implements Runnable {
 				nombre = entidad.getNombre().getTraduccion("ca");
 			}
 		}
-		System.out.println("hoy es: " + getYesterday().toString());
+		LOGGER.debug("hoy es: " + getYesterday().toString());
 		if (alert != null) {
 			buscar();
 			String formPor;
@@ -485,7 +484,7 @@ public class TimerReinicioDiario implements Runnable {
 					+ "         </div>"
 					+ "         <p class=\"auto\" style=\"margin: 1.5em 0;padding: 1em;font-size: 0.9em;font-style: italic;\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p>"
 					+ "      </div>" + "   </body>" + "</html>";
-			System.out.println("Resumen diario enviado");
+			LOGGER.debug("Resumen diario enviado");
 			//enviarEmail(msg, DatatypeConverter.printBase64Binary(imageBytes));
 			enviarEmail(msg, null);
 			purgarHistorial(historialService.listHistorialAlerta(null, null));
@@ -493,7 +492,7 @@ public class TimerReinicioDiario implements Runnable {
 			TimerHilosAlertas tAl = new TimerHilosAlertas();
 			tAl.run(aService, hService, confService, historialService);
 		} else {
-			System.out.println("L'alerta RESUMEN_DIARIO no és creada.");
+			LOGGER.error("L'alerta RESUMEN_DIARIO no és creada.");
 		}
 	}
 

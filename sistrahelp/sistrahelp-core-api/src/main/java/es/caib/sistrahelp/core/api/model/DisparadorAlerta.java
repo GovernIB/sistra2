@@ -16,6 +16,8 @@ public class DisparadorAlerta extends ModelApi {
 	/** Serial version UID. **/
 	private static final long serialVersionUID = 1L;
 
+	private Integer id;
+
 	private Integer grupo;
 
 	private String opLogicoAND_OR;
@@ -110,6 +112,20 @@ public class DisparadorAlerta extends ModelApi {
 	 */
 	public void setOpLogicoNOT(boolean opLogicoNOT) {
 		this.opLogicoNOT = opLogicoNOT;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 }
