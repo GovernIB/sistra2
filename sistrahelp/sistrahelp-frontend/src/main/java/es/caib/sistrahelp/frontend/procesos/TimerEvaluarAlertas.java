@@ -104,8 +104,8 @@ public class TimerEvaluarAlertas implements Runnable {
 					String operadorStr = partes[5];
 					String concurrencia = partes[6];
 
-					if (!partes[1].equals("null")) {
-						if (partes[1].equals("AND")) {
+					if (!partes[2].equals("null")) {
+						if (partes[2].equals("AND")) {
 							and_or = "&&";
 							and_orStr = "AND";
 						} else {
