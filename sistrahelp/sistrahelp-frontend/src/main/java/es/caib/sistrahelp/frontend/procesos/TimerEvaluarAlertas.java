@@ -70,6 +70,7 @@ public class TimerEvaluarAlertas implements Runnable {
 							LocalTime.parse(al.getIntervaloEvaluacion().split("-")[0] + ":00.000000000"),
 							ChronoUnit.SECONDS) < 0) {
 
+				LOGGER.error("Se inicia el hilo para evaluar la alerta: " + al.getNombre());
 				List<String> eventos = al.getEventos();
 				String[] partes = null;
 				FiltroAuditoriaTramitacion faut = new FiltroAuditoriaTramitacion(al.getListaAreas(), false, false);
@@ -155,6 +156,7 @@ public class TimerEvaluarAlertas implements Runnable {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				LOGGER.error("La condición " + condicion + " de la alerta " + al.getNombre() + " se evalua como " + evaluacion);
 				if (evaluacion) {
 					enviarEmail(expresionCorreoHistorial);
 					anadirHistorial(expresionCorreoHistorial);
