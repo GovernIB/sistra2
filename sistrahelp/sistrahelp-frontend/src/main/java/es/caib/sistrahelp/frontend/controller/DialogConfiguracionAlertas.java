@@ -1284,6 +1284,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 				String strDateHasta = dateFormat.format(fHasta);
 				data.setIntervaloEvaluacion(strDateDesd + "-" + strDateHasta);
 				data.setPeriodoEvaluacion((int) ((periodo.getTime() - f0.getTime()) / 1000));
+				inicializarHilo(data);
 			} else {
 				data.setIntervaloEvaluacion(null);
 				data.setPeriodoEvaluacion(null);
