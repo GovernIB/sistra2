@@ -154,7 +154,7 @@
 			        </p:selectBooleanCheckbox>
 
 					<p:outputLabel for="nombre" value="#{msg['viewConfiguracionAlertas.nombre']}"/>
-					<p:inputText id="nombre" onblur="this.value = this.value.trim();" value="#{dialogConfiguracionAlertas.data.nombre}" maxlength="255" style="width:39%;" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}">
+					<p:inputText id="nombre" onblur="this.value = this.value.trim();" value="#{dialogConfiguracionAlertas.data.nombre}"  size="20" maxlength="20" style="width:39%;" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}">
 						<p:ajax event="change" process="@this"/>
 					</p:inputText>
 
@@ -230,16 +230,16 @@
 				<h:panelGrid id="columnaListaDisparadores" rowClasses=", ui-datatable-odd" columnClasses="padding-left-5 w15," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 					<p:outputLabel value="#{msg['dialogConfiguracionAlertas.expresion.evaluacion']}" />
 					<h:panelGrid columns="13" cellspacing="0" width="100%">
-						<p:outputLabel for="comboGrupo" value="#{msg['dialogConfiguracionAlertas.grupo']}:" styleClass="margin-right-10" ></p:outputLabel>
-						<p:selectOneMenu id="comboGrupo" value="#{dialogConfiguracionAlertas.grupoSeleccionado}" styleClass="margin-right-10" filter="true" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" filterMatchMode="contains" style="width:20px">
-								<f:selectItem itemLabel="" noSelectionOption="true"></f:selectItem>
-						     	<f:selectItems value="#{dialogConfiguracionAlertas.grupos}" var="grupo" itemLabel="#{grupo}" itemValue="#{grupo}" />
-						</p:selectOneMenu>
-
 						<p:outputLabel for="comboAND_OR" value="#{msg['dialogConfiguracionAlertas.opLogicoAND_OR']}:" styleClass="margin-right-10" ></p:outputLabel>
 						<p:selectOneMenu id="comboAND_OR" value="#{dialogConfiguracionAlertas.opLogicoAND_ORSeleccionado}" styleClass="margin-right-10" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" filter="true" filterMatchMode="contains" style="width:30px">
 								<f:selectItem itemLabel="" noSelectionOption="true"></f:selectItem>
 						     	<f:selectItems value="#{dialogConfiguracionAlertas.opLogicoAND_OR}" var="y_o" itemLabel="#{y_o}" itemValue="#{y_o}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel for="comboGrupo" value="#{msg['dialogConfiguracionAlertas.grupo']}:" styleClass="margin-right-10" ></p:outputLabel>
+						<p:selectOneMenu id="comboGrupo" value="#{dialogConfiguracionAlertas.grupoSeleccionado}" styleClass="margin-right-10" filter="true" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" filterMatchMode="contains" style="width:20px">
+								<f:selectItem itemLabel="" noSelectionOption="true"></f:selectItem>
+						     	<f:selectItems value="#{dialogConfiguracionAlertas.grupos}" var="grupo" itemLabel="#{grupo}" itemValue="#{grupo}" />
 						</p:selectOneMenu>
 
 						<p:outputLabel for="checkNOT" value="#{msg['dialogConfiguracionAlertas.opLogicoNOT']}"/>
@@ -271,8 +271,8 @@
 						 	var="td" emptyMessage="#{msg['error.emptyRows']}"
 						 	value="#{dialogConfiguracionAlertas.disparadores}"
 						 	scrollable="true"
-						 	scrollHeight="140"
-						 	style="margin-top:10px;width:100%"
+						 	scrollHeight="210"
+						 	style="margin-top:2px;width:100%"
 						 	selectionMode="single"
 						 	selection="#{dialogConfiguracionAlertas.disparadorSeleccionado}"
 						 	rowKey="#{td.id}"
@@ -282,11 +282,11 @@
         					<p:ajax event="rowSelect" global="false" process="@this" update="@form:listaDisparadores @form:botonAnyadir"/>
 
 						<!-- Columnas -->
-						<p:column headerText="#{msg['dialogConfiguracionAlertas.grupo']}" class="ui-panelgrid-cell" width="5%">
-							<h:outputText value="#{td.grupo}" />
-					    </p:column>
-					    <p:column headerText="#{msg['dialogConfiguracionAlertas.opLogicoAND_OR']}" class="ui-panelgrid-cell" width="10%">
+						<p:column headerText="#{msg['dialogConfiguracionAlertas.opLogicoAND_OR']}" class="ui-panelgrid-cell" width="8%">
 							<h:outputText value="#{td.opLogicoAND_OR eq 'null' ? '': td.opLogicoAND_OR}" />
+					    </p:column>
+					    <p:column headerText="#{msg['dialogConfiguracionAlertas.grupo']}" class="ui-panelgrid-cell" width="7%">
+							<h:outputText value="#{td.grupo}" />
 					    </p:column>
 					    <p:column headerText="#{msg['dialogConfiguracionAlertas.opLogicoNOT']}" class="ui-panelgrid-cell" width="10%">
 							<h:outputText value="#{td.opLogicoNOT eq false ? '': msg['dialogConfiguracionAlertas.opLogicoNOT']}" />

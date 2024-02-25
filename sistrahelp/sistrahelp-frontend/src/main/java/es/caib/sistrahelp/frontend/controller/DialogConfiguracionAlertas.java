@@ -23,6 +23,8 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sun.mail.iap.Literal;
@@ -143,6 +145,11 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 
 	@Inject
 	private HistorialAlertaService histAvis;
+
+	/**
+	 * Log.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(DialogConfiguracionAlertas.class);
 
 	/**
 	 * Inicializacion.
@@ -1284,7 +1291,6 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 				String strDateHasta = dateFormat.format(fHasta);
 				data.setIntervaloEvaluacion(strDateDesd + "-" + strDateHasta);
 				data.setPeriodoEvaluacion((int) ((periodo.getTime() - f0.getTime()) / 1000));
-				inicializarHilo(data);
 			} else {
 				data.setIntervaloEvaluacion(null);
 				data.setPeriodoEvaluacion(null);
@@ -1339,6 +1345,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 	}
 
 	private void inicializarHilo(Alerta al) {
+		LOGGER.debug("ALERTAS STH: Entra en DialogConfiguracionAertas.inicializarHilo: " + al.getNombre());
 		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 		String[] horas = al.getIntervaloEvaluacion().split("-");
 		LocalTime ahora = LocalTime.now();

@@ -105,7 +105,7 @@ public class TimerReinicioDiario implements Runnable {
 	@PostConstruct
 	public void run() {
 
-		LOGGER.debug("ENTRA EN EL TIMERREINICIODIARIO");
+		LOGGER.debug("ALERTAS STH: Entra en TimerReinicioDiario.run");
 		alert = aService.loadAlertaByNombre("RESUMEN_DIARIO");
 		String nombre = "";
 		String logo = "";
@@ -134,7 +134,7 @@ public class TimerReinicioDiario implements Runnable {
 				nombre = entidad.getNombre().getTraduccion("ca");
 			}
 		}
-		LOGGER.debug("hoy es: " + getYesterday().toString());
+		LOGGER.debug("ALERTAS STH: Entra en TimerReinicioDiario.run. Día de los datos a mostrar: " + getYesterday().toString());
 		if (alert != null) {
 			buscar();
 			String formPor;
@@ -484,7 +484,7 @@ public class TimerReinicioDiario implements Runnable {
 					+ "         </div>"
 					+ "         <p class=\"auto\" style=\"margin: 1.5em 0;padding: 1em;font-size: 0.9em;font-style: italic;\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p>"
 					+ "      </div>" + "   </body>" + "</html>";
-			LOGGER.debug("Resumen diario enviado");
+			LOGGER.debug("ALERTAS STH: Resumen diario enviado");
 			//enviarEmail(msg, DatatypeConverter.printBase64Binary(imageBytes));
 			enviarEmail(msg, null);
 			purgarHistorial(historialService.listHistorialAlerta(null, null));
@@ -492,7 +492,7 @@ public class TimerReinicioDiario implements Runnable {
 			TimerHilosAlertas tAl = new TimerHilosAlertas();
 			tAl.run(aService, hService, confService, historialService);
 		} else {
-			LOGGER.error("L'alerta RESUMEN_DIARIO no és creada.");
+			LOGGER.error("ALERTAS STH: L'alerta RESUMEN_DIARIO no és creada.");
 		}
 	}
 
@@ -675,20 +675,20 @@ public class TimerReinicioDiario implements Runnable {
 	private void enviarEmail(String msg, String img64) {
 		try {
 			final IEmailPlugin plgEmail = (IEmailPlugin) confService.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
-			LOGGER.debug("ENTRA EN EL email TIMERREINICIODIARIO");
-			LOGGER.debug("MSG:" + msg);
-			LOGGER.debug("EMAILS:" + alert.getEmail());
-			LOGGER.debug("Entorno:" + getEntorno());
+			LOGGER.debug("ALERTAS STH: ENTRA EN EL email TIMERREINICIODIARIO");
+			LOGGER.debug("ALERTAS STH: MSG:" + msg);
+			LOGGER.debug("ALERTAS STH: EMAILS:" + alert.getEmail());
+			LOGGER.debug("ALERTAS STH: Entorno:" + getEntorno());
 			boolean mailEnviado = plgEmail.envioEmail(alert.getEmail(), "SISTRAHELP: Resumen Diario - " + getEntorno(),
 					msg, null);
-			LOGGER.debug("SALE EN EL email TIMERREINICIODIARIO");
+			LOGGER.debug("ALERTAS STH: SALE EN EL email TIMERREINICIODIARIO");
 
 		} catch (EmailPluginException e) {
-			LOGGER.error("Error enviando el email TimerReinicioDiario" , e);
+			LOGGER.error("ALERTAS STH: Error enviando el email TimerReinicioDiario" , e);
 		} catch (PluginException e) {
-			LOGGER.error("Error en el plugin el email TimerReinicioDiario" , e);
+			LOGGER.error("ALERTAS STH: Error en el plugin el email TimerReinicioDiario" , e);
 		}catch (Exception e) {
-			LOGGER.error("Error general TimerReinicioDiario" , e);
+			LOGGER.error("ALERTAS STH: Error general TimerReinicioDiario" , e);
 		}
 	}
 
@@ -696,7 +696,7 @@ public class TimerReinicioDiario implements Runnable {
 		try {
 			return UtilJSF.getEntorno().toUpperCase();
 		} catch (Exception e) {
-			LOGGER.error("Error obteniendo entorno" , e);
+			LOGGER.error("ALERTAS STH: Error obteniendo entorno" , e);
 		}
 		return "";
 	}

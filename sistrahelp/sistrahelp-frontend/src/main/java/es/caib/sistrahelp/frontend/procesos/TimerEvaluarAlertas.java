@@ -49,6 +49,7 @@ public class TimerEvaluarAlertas implements Runnable {
 
 	public TimerEvaluarAlertas(Long alCod, HelpDeskService hService, ConfiguracionService confServ,
 			HistorialAlertaService historialService, AlertaService aService) {
+		LOGGER.debug("ALERTAS STH: Entra en TimerEvaluarAlertas: " + alCod.toString());
 		this.alCod = alCod;
 		this.hService = hService;
 		this.confServ = confServ;
@@ -59,6 +60,7 @@ public class TimerEvaluarAlertas implements Runnable {
 
 	@Override
 	public void run() {
+		LOGGER.debug("ALERTAS STH: Entra en TimerEvaluarAlertas.run");
 		while (!parar) {
 			String grupoAnterior = "1";
 			Alerta al = aService.loadAlerta(alCod);
@@ -70,7 +72,7 @@ public class TimerEvaluarAlertas implements Runnable {
 							LocalTime.parse(al.getIntervaloEvaluacion().split("-")[0] + ":00.000000000"),
 							ChronoUnit.SECONDS) < 0) {
 
-				LOGGER.error("Se inicia el hilo para evaluar la alerta: " + al.getNombre());
+				LOGGER.debug("ALERTAS STH: Inicia el hilo para evaluar la alerta: " + al.getNombre());
 				List<String> eventos = al.getEventos();
 				String[] partes = null;
 				FiltroAuditoriaTramitacion faut = new FiltroAuditoriaTramitacion(al.getListaAreas(), false, false);
@@ -156,7 +158,7 @@ public class TimerEvaluarAlertas implements Runnable {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				LOGGER.error("La condición " + condicion + " de la alerta " + al.getNombre() + " se evalua como " + evaluacion);
+				LOGGER.debug("ALERTAS STH: La condición " + condicion + " de la alerta " + al.getNombre() + " se evalua como " + evaluacion);
 				if (evaluacion) {
 					enviarEmail(expresionCorreoHistorial);
 					anadirHistorial(expresionCorreoHistorial);
@@ -164,7 +166,7 @@ public class TimerEvaluarAlertas implements Runnable {
 				try {
 					TimeUnit.SECONDS.sleep(al.getPeriodoEvaluacion());
 				} catch (InterruptedException e) {
-					LOGGER.error("Error mandando a dormir IF " ,e);
+					LOGGER.error("ALERTAS STH: Error mandando a dormir IF " ,e);
 				}
 			} else if (LocalTime.now().until(
 					LocalTime.parse(al.getIntervaloEvaluacion().split("-")[0] + ":00.000000000"),
@@ -174,7 +176,7 @@ public class TimerEvaluarAlertas implements Runnable {
 							LocalTime.parse(al.getIntervaloEvaluacion().split("-")[0] + ":00.000000000"),
 							ChronoUnit.SECONDS));
 				} catch (InterruptedException e) {
-					LOGGER.error("Error mandando a dormir ELSEIF " ,e);
+					LOGGER.error("ALERTAS STH: Error mandando a dormir ELSEIF " ,e);
 				}
 			} else {
 				stop();
@@ -183,7 +185,7 @@ public class TimerEvaluarAlertas implements Runnable {
 	}
 
 	public void stop() {
-		LOGGER.debug("PARA");
+		LOGGER.debug("ALERTAS STH: PARA");
 		this.parar = true;
 	}
 
@@ -209,8 +211,8 @@ public class TimerEvaluarAlertas implements Runnable {
 				try {
 					imageBytes = hService.contenidoLogoEntidad(alert.getIdEntidad());
 				} catch (Exception e) {
-					LOGGER.error("Revisar porque puede que la id entidad esté mal (tiene que ser dir3, no id): " + alert.getIdEntidad());
-					LOGGER.error("Error obteniendo la imagen" , e);
+					LOGGER.error("ALERTAS STH: Revisar porque puede que la id entidad esté mal (tiene que ser dir3, no id): " + alert.getIdEntidad());
+					LOGGER.error("ALERTAS STH: Error obteniendo la imagen" , e);
 				}
 //
 //				 String urltext = logo;
@@ -237,7 +239,7 @@ public class TimerEvaluarAlertas implements Runnable {
 				props.load(fis);
 				entorno = props.getProperty("entorno").toUpperCase();
 			} catch (final IOException e) {
-				LOGGER.error("Error obteniendo entorno" , e);
+				LOGGER.error("ALERTAS STH: Error obteniendo entorno" , e);
 			}
 			String msg =
 			"<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"ca\" lang=\"ca\">\r\n" + "\r\n"
@@ -294,11 +296,11 @@ public class TimerEvaluarAlertas implements Runnable {
 				plgEmail.envioEmail(aService.loadAlerta(alCod).getEmail(), "SISTRAHELP: AVÍS - " + aService.loadAlerta(alCod).getNombre() + " - "
 						+ entorno, msg, null);
 		} catch (EmailPluginException e) {
-			LOGGER.error("Error en el plugin de email " , e);
+			LOGGER.error("ALERTAS STH: Error en el plugin de email " , e);
 		} catch (PluginException e) {
-			LOGGER.error("Error de plugin " , e);
+			LOGGER.error("ALERTAS STH: Error de plugin " , e);
 		} catch (Exception e) {
-			LOGGER.error("Error general enviando el email " , e);
+			LOGGER.error("ALERTAS STH: Error general enviando el email " , e);
 		}
 	}
 

@@ -50,14 +50,14 @@ public class TimerIniciar {
 		//Se calcula la distancia hasta la media noche (1440 es 24 horas = 60 minutos x 24)
 		Long medianoche=LocalDateTime.now().until(LocalDate.now().plusDays(1).atStartOfDay(), ChronoUnit.MINUTES);
 
-		LOGGER.debug("Tiempo hasta media noche " + medianoche);
+		LOGGER.debug("ALERTAS STH: Entra en TimerIniciar. Tiempo hasta media noche " + medianoche);
 
 		/*scheduler2.scheduleAtFixedRate(new TimerReinicioDiario(aService, hService, confService, historialService),
 				1, 60, TimeUnit.MINUTES);*/
 		scheduler2.scheduleAtFixedRate(new TimerReinicioDiario(aService, hService, confService, historialService),
 				medianoche, 1440, TimeUnit.MINUTES);
 
-		LOGGER.debug("TimerIniciar postConstruct");
+		LOGGER.debug("ALERTAS STH: TimerIniciar postConstruct");
 	}
 
 }
