@@ -206,11 +206,13 @@ public class ViewTramites extends ViewControllerBase {
 		// TramiteVersiones tv = new
 		// TramiteVersiones(tramiteService.getTramite(Long.parseLong(codigo)),
 		// tramiteService.listTramiteVersion(Long.parseLong(codigo), null));
-		Tramite tr = new Tramite();
 		try {
-			tr.setCodigo(Long.parseLong(codigo));
-			List<TramiteVersion> ltv = new ArrayList<TramiteVersion>();
-			TramiteVersiones tv = new TramiteVersiones(tr, ltv);
+			TramiteVersiones tv = this.dataModel.getRowData(codigo);
+			if (tv == null) {
+				Tramite tr = tramiteService.getTramite(Long.parseLong(codigo));
+				List<TramiteVersion> ltv = new ArrayList<TramiteVersion>();
+				tv = new TramiteVersiones(tr, ltv);
+			}
 			this.setTramiteSeleccionada(tv);
 		} catch (NumberFormatException e) {
 			this.setTramiteSeleccionada(null);
