@@ -2,6 +2,7 @@ package es.caib.sistrahelp.frontend.procesos;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -47,15 +48,12 @@ public class TimerIniciar {
 		tAl.run(aService, hService, confService, historialService);
 		ScheduledExecutorService scheduler2 = Executors.newSingleThreadScheduledExecutor();
 
-		//Se calcula la distancia hasta la media noche (1440 es 24 horas = 60 minutos x 24)
-		Long medianoche=LocalDateTime.now().until(LocalDate.now().plusDays(1).atStartOfDay(), ChronoUnit.MINUTES);
+		//Se calcula la distancia hasta las 4 de la madrugada (1440 es 24 horas = 60 minutos x 24)
+		Long madrugada=LocalDateTime.now().until(LocalDate.now().plusDays(1).atStartOfDay().plusHours(4), ChronoUnit.MINUTES);
+		LOGGER.debug("ALERTAS STH: Entra en TimerIniciar. Tiempo hasta las 4 de la madrugada " + madrugada);
 
-		LOGGER.debug("ALERTAS STH: Entra en TimerIniciar. Tiempo hasta media noche " + medianoche);
-
-		/*scheduler2.scheduleAtFixedRate(new TimerReinicioDiario(aService, hService, confService, historialService),
-				1, 60, TimeUnit.MINUTES);*/
 		scheduler2.scheduleAtFixedRate(new TimerReinicioDiario(aService, hService, confService, historialService),
-				medianoche, 1440, TimeUnit.MINUTES);
+				madrugada, 1440, TimeUnit.MINUTES);
 
 		LOGGER.debug("ALERTAS STH: TimerIniciar postConstruct");
 	}

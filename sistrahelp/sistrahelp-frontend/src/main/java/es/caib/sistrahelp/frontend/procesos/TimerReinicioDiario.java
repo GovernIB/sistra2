@@ -1,5 +1,7 @@
 package es.caib.sistrahelp.frontend.procesos;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -12,6 +14,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 
@@ -138,7 +141,7 @@ public class TimerReinicioDiario implements Runnable {
 		if (alert != null) {
 			buscar();
 			String formPor;
-			if (pagIni != 0) {
+			if (formIni != 0) {
 				formPor = formatDouble((100 - ((Double.valueOf(formFin) * 100) / Double.valueOf(formIni))));
 			} else {
 				if (formFin == 0) {
@@ -317,7 +320,7 @@ public class TimerReinicioDiario implements Runnable {
 					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Sessions Ok</span></td>"
 					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Sessions no finalitzades</span></td>"
 					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Percentatge de sessions no finalitzades</span></td>"
-					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Freq&#252;&#232;ncia d&#39;errors</span></td>"
+					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Suma d&#39;errors</span></td>"
 					+ "                             </tr>";
 			if (listaErrores != null && !listaErrores.isEmpty()) {
 				for (ErroresPorTramiteCM lerr : listaErrores) {
@@ -357,8 +360,8 @@ public class TimerReinicioDiario implements Runnable {
 					+ "                       <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
 					+ "                          <tbody>" + "                             <tr>"
 					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Error</span></td>"
-					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Freq&#252;&#232;ncia</span></td>"
-					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Percentatge d&#39;error</span></td>"
+					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Suma d&#39;errors</span></td>"
+					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Percentatge d&#39;errors</span></td>"
 					+ "                             </tr>";
 			if (listaTramErrores != null && !listaTramErrores.isEmpty()) {
 				for (EventoCM ltrerr : listaTramErrores) {
@@ -389,7 +392,7 @@ public class TimerReinicioDiario implements Runnable {
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
 					+ "                            <tbody>" + "                               <tr>"
 					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Error</span></td>"
-					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Freq&#252;&#232;ncia</span></td>"
+					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Suma d&#39;errors</span></td>"
 					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Percentatge d&#39;errors</span></td>"
 					+ "                               </tr>";
 			if (listaErrPlat != null && !listaErrPlat.isEmpty()) {
@@ -497,21 +500,21 @@ public class TimerReinicioDiario implements Runnable {
 	}
 
 	private Date getYesterday() {
-		return Date.from(LocalDate.now().minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+		//return Date.from(LocalDate.now().minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-		/*Date date = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000/);
+		Date date = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
 		date.setHours(0);
 		date.setMinutes(0);
 		date.setSeconds(0);
-		return date;*/
+		return date;
 	}
 
 	private Date getNow() {
-		/*Date date = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000/);
+		Date date = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
 		date.setHours(23);
 		date.setMinutes(59);
-		date.setSeconds(59);*/
-		Date date = new Date();
+		date.setSeconds(59);
+		//Date date = new Date();
 		return date;
 	}
 
@@ -562,8 +565,8 @@ public class TimerReinicioDiario implements Runnable {
 
 		filtros.setFechaDesde(getYesterday());
 		filtrosInacabados.setFechaDesde(getYesterday());
-		//filtros.setFechaHasta(getNow());
-		//filtrosInacabados.setFechaHasta(getNow());
+		filtros.setFechaHasta(getNow());
+		filtrosInacabados.setFechaHasta(getNow());
 
 		filtros.setIdTramite(null);
 		filtros.setVersionTramite(null);
@@ -693,8 +696,11 @@ public class TimerReinicioDiario implements Runnable {
 	}
 
 	private String getEntorno() {
-		try {
-			return UtilJSF.getEntorno().toUpperCase();
+		final String pathProperties = System.getProperty("es.caib.sistrahelp.properties.path");
+		try (FileInputStream fis = new FileInputStream(pathProperties);) {
+			final Properties props = new Properties();
+			props.load(fis);
+			return props.getProperty("entorno").toUpperCase();
 		} catch (Exception e) {
 			LOGGER.error("ALERTAS STH: Error obteniendo entorno" , e);
 		}

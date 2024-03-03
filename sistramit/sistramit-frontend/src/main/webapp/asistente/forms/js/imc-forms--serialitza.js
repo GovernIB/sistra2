@@ -41,7 +41,7 @@ $.fn.appSerialitza = function(opcions) {
 					var input_el = el.find("input:first, textarea:first")
 						,esData = (input_el.attr("type") === "date") ? true : false
 						,enMayuscules = (input_el.attr("data-mayuscules") === "s") ? true : false
-						,input_val = $.trim( input_el.val() );
+						,input_val = input_el.val();
 
 					var data_format = (typeof APP_FORM_DATA_FORMAT !== "undefined" && APP_FORM_DATA_FORMAT === "es") ? "es" : "in";
 
@@ -51,7 +51,7 @@ $.fn.appSerialitza = function(opcions) {
 
 					}
 
-					input_val = (el_contingut === "nu") ? input_val : input_val.replace(/#-@/g, "").replace(/</g, "").replace(/>/g, "");
+					input_val = (el_contingut === "nu") ? $.trim( input_val) : input_val.replace(/#-@/g, "").replace(/</g, "").replace(/>/g, "");
 
 					if ((el_tipus === "texto" || el_contingut === "id") && (formEnMayuscules || enMayuscules)) {
 
@@ -64,6 +64,14 @@ $.fn.appSerialitza = function(opcions) {
 					if (el_contingut === "ib" && input_val !== "") {
 
 						input_val = $.trim( input_val.toUpperCase().replace(/\s/g, "") );
+
+					}
+
+					// nif, dni, nie, ...
+
+					if (el_contingut === "id" && input_val !== "") {
+
+						input_val = $.trim( input_val.toUpperCase() );
 
 					}
 

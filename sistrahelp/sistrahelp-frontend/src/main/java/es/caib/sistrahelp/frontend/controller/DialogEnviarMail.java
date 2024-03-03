@@ -1,5 +1,6 @@
 package es.caib.sistrahelp.frontend.controller;
 
+import java.io.FileInputStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -9,6 +10,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -171,7 +173,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 
 			buscar();
 			String formPor;
-			if (pagIni != 0) {
+			if (formIni != 0) {
 				formPor = formatDouble((100 - ((Double.valueOf(formFin) * 100) / Double.valueOf(formIni))));
 			} else {
 				if (formFin == 0) {
@@ -241,12 +243,12 @@ public class DialogEnviarMail extends DialogControllerBase {
 					+ "         <div id=\"continguts\" style=\"padding: 1em 2em;border: 1em solid #f2f2f2;\">"
 					+ "            <!-- titol --> 			"
 					+ "            <h1 style=\"font-size: 1.4em;margin-top: 0;margin-bottom: 1em;\">"
-					+ "               Aquest missatge ha estat generat pel sistema d'alertes de SISTRAHELP y ofereix un resum dels events recogits al Quadre de comandament de SISTRAHELP, pel "
+					+ "               Aquest missatge ha estat generat pel sistema d'alertes de SISTRAHELP y ofereix un resum dels events recogits al Quadre de comandament de SISTRAHELP, des del "
 					+ "               " + fechaDesde;
 			if (fechaHasta != null && !fechaHasta.isEmpty()) {
 				msg += " fins al " + fechaHasta;
 			}
-			msg += " : 			" + "            </h1>" + "            <div style=\"height:20px;\"></div>"
+			msg += ": 			" + "            </h1>" + "            <div style=\"height:20px;\"></div>"
 					+ "            <table id=\"form:tablaCuadroMando\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100% !important;border-collapse: collapse !important;display: flex;padding: 0px !important;justify-content: center;margin-top: 10px;margin-bottom: 1.5em;border: 0;empty-cells: hide;\">"
 					+ "               <tbody>" + "                  <tr>"
 					+ "                     <td style=\"font-weight: bold;\">"
@@ -356,7 +358,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Sessions Ok</span></td>"
 					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Sessions no finalitzades</span></td>"
 					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Percentatge de sessions no finalitzades</span></td>"
-					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Freq&#252;&#232;ncia d&#39;errors</span></td>"
+					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Suma d&#39;errors</span></td>"
 					+ "                             </tr>";
 			if (listaErrores != null && !listaErrores.isEmpty()) {
 				for (ErroresPorTramiteCM lerr : listaErrores) {
@@ -396,8 +398,8 @@ public class DialogEnviarMail extends DialogControllerBase {
 					+ "                       <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
 					+ "                          <tbody>" + "                             <tr>"
 					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Error</span></td>"
-					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Freq&#252;&#232;ncia</span></td>"
-					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Percentatge d&#39;error</span></td>"
+					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Suma d&#39;errors</span></td>"
+					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Percentatge d&#39;errors</span></td>"
 					+ "                             </tr>";
 			if (listaTramErrores != null && !listaTramErrores.isEmpty()) {
 				for (EventoCM ltrerr : listaTramErrores) {
@@ -428,7 +430,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
 					+ "                            <tbody>" + "                               <tr>"
 					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Error</span></td>"
-					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Freq&#252;&#232;ncia</span></td>"
+					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Suma d&#39;errors</span></td>"
 					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Percentatge d&#39;errors</span></td>"
 					+ "                               </tr>";
 			if (listaErrPlat != null && !listaErrPlat.isEmpty()) {
@@ -561,10 +563,10 @@ public class DialogEnviarMail extends DialogControllerBase {
 		filtrosInacabados = new FiltroAuditoriaTramitacion(listarIdArea(sb.getListaAreasEntidad()), false, false);
 
 		try {
-			filtros.setFechaDesde(new SimpleDateFormat("dd/MM/yyyy").parse(fechaDesde));
-			filtros.setFechaHasta(new SimpleDateFormat("dd/MM/yyyy").parse(fechaHasta));
-			filtrosInacabados.setFechaDesde(new SimpleDateFormat("dd/MM/yyyy").parse(fechaDesde));
-			filtrosInacabados.setFechaHasta(new SimpleDateFormat("dd/MM/yyyy").parse(fechaHasta));
+			filtros.setFechaDesde(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(fechaDesde));
+			filtros.setFechaHasta(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(fechaHasta));
+			filtrosInacabados.setFechaDesde(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(fechaDesde));
+			filtrosInacabados.setFechaHasta(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(fechaHasta));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -606,10 +608,10 @@ public class DialogEnviarMail extends DialogControllerBase {
 			final IEmailPlugin plgEmail = (IEmailPlugin) confService.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
 			if (imgBase64 == null) {
 				plgEmail.envioEmail(Arrays.asList(listaEmails.split(Constantes.LISTAS_SEPARADOR)),
-						"SISTRAHELP: Informe Quadre Comandament - " + UtilJSF.getEntorno().toUpperCase(), msg, null);
+						"SISTRAHELP: Informe Quadre Comandament - " + getEntorno().toUpperCase(), msg, null);
 			} else {
 				plgEmail.envioEmail(Arrays.asList(listaEmails.split(Constantes.LISTAS_SEPARADOR)),
-					"SISTRAHELP: Informe Quadre Comandament - " + UtilJSF.getEntorno().toUpperCase(), msg, null, imgBase64);
+					"SISTRAHELP: Informe Quadre Comandament - " + getEntorno().toUpperCase(), msg, null, imgBase64);
 			}
 		} catch (EmailPluginException e) {
 			LOGGER.error("Error de excepción enviando el email " , e);
@@ -703,6 +705,18 @@ public class DialogEnviarMail extends DialogControllerBase {
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
 		}
+	}
+
+	private String getEntorno() {
+		final String pathProperties = System.getProperty("es.caib.sistrahelp.properties.path");
+		try (FileInputStream fis = new FileInputStream(pathProperties);) {
+			final Properties props = new Properties();
+			props.load(fis);
+			return props.getProperty("entorno").toUpperCase();
+		} catch (Exception e) {
+			LOGGER.error("ALERTAS STH: Error obteniendo entorno" , e);
+		}
+		return "";
 	}
 
 	/**
