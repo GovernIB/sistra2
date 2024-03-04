@@ -23,6 +23,8 @@ public class JSesion implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
+	public static String PROPIEDAD_DEFECTO = "[{\"codigo\":\"paginacion\",\"valor\":\"10\",\"orden\":null}]";
+
 	@Id
 	@Column(name = "SESI_USUA", unique = true, nullable = false, length = 100)
 	private String usuario;
@@ -41,7 +43,7 @@ public class JSesion implements IModelApi {
 	private Long entidad;
 
 	/** Lista serializada propiedades (codigo - valor) */
-	@Column(name = "SESI_PROPS", nullable = true, length = 4000)
+	@Column(name = "SESI_PROPS", nullable = false, length = 4000)
 	private String propiedades;
 
 	public JSesion() {

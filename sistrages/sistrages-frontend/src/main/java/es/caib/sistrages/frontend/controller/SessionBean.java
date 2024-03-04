@@ -194,15 +194,6 @@ public class SessionBean {
 			FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale(sesion.getIdioma()));
 		}
 
-		// Obtenemos las propiedades
-		if (sesion != null && sesion.getPropiedades() != null && !sesion.getPropiedades().isEmpty()) {
-			propiedades = sesion.getPropiedades();
-			obtenerPaginacion(propiedades);
-
-			// Obtenemos el color del editor de script
-			obtenerColorEditorScript(propiedades);
-		}
-
 		lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
 		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 		rolesList = securityService.getRoles();
@@ -279,6 +270,17 @@ public class SessionBean {
 			UtilJSF.redirectJsfPage("/error/errorUsuarioSinRol.xhtml", null);
 			return;
 		}
+
+		// Obtenemos las propiedades
+		if (sesion == null && StringUtils.isNotEmpty(userName)) {
+			sesion = systemService.getSesion(userName);
+		}
+
+		propiedades = sesion.getPropiedades();
+		obtenerPaginacion(propiedades);
+
+		// Obtenemos el color del editor de script
+		obtenerColorEditorScript(propiedades);
 
 		idiomas = UtilTraducciones
 				.getIdiomas(configuracionGlobalService.getConfiguracionGlobal("sistramit.idiomas").getValor());

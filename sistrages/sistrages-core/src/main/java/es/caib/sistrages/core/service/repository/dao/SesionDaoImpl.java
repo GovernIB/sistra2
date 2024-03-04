@@ -42,6 +42,7 @@ public class SesionDaoImpl implements SesionDao {
 			jSesion.setUsuario(pUsername);
 			jSesion.setFecha(new Date());
 			jSesion.setPerfil(pPerfil);
+			jSesion.setPropiedades(JSesion.PROPIEDAD_DEFECTO);
 			entityManager.persist(jSesion);
 		} else {
 			jSesion.setPerfil(pPerfil);
@@ -59,6 +60,7 @@ public class SesionDaoImpl implements SesionDao {
 			jSesion.setUsuario(pUsername);
 			jSesion.setFecha(new Date());
 			jSesion.setIdioma(pIdioma);
+			jSesion.setPropiedades(JSesion.PROPIEDAD_DEFECTO);
 			entityManager.persist(jSesion);
 		} else {
 			jSesion.setIdioma(pIdioma);
@@ -76,6 +78,7 @@ public class SesionDaoImpl implements SesionDao {
 			jSesion.setUsuario(pUsername);
 			jSesion.setFecha(new Date());
 			jSesion.setEntidad(pIdEntidad);
+			jSesion.setPropiedades(JSesion.PROPIEDAD_DEFECTO);
 			entityManager.persist(jSesion);
 		} else {
 			jSesion.setEntidad(pIdEntidad);
