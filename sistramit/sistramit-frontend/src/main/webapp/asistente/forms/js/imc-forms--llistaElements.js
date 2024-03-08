@@ -860,7 +860,7 @@ $.fn.appFormsLlistaElements = function(options) {
 
 				// verifiquem que es pot esborrar
 
-				if (json.datos.borrar !== "s") {
+				if (avaluaEsborrar && json.datos.borrar !== "s") {
 					return;
 				}
 
