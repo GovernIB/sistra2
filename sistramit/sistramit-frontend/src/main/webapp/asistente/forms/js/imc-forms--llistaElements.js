@@ -840,29 +840,34 @@ $.fn.appFormsLlistaElements = function(options) {
 						imc_forms_missatge
 							.appFormsMissatge({ accio: validacio_estat, titol: validacio_missatge, text: "", amagaDesdeFons: false });
 
-						eliminem();
+						eliminaReVerifiquem(json);
 
 					}
 
 				} else {
 
-					// amaguem la capa missatge i eliminem
-
-					imc_forms_missatge
-						.appFormsMissatge({ araAmaga: true });
-
-					eliminem();
+					eliminaReVerifiquem(json);
 
 				}
 
 			},
-			eliminem = function() {
+			eliminaReVerifiquem = function(json) {
 
-				// verifiquem que es pot esborrar
+				// verifiquem que realment es pot esborrar
 
-				if (avaluaEsborrar && json.datos.borrar !== "s") {
+				if (json.datos.borrar !== "s") {
 					return;
 				}
+
+				eliminem();
+
+			},
+			eliminem = function() {
+
+				// amaguem la capa missatge i eliminem
+
+				imc_forms_missatge
+					.appFormsMissatge({ araAmaga: true });
 
 
 				// esborrem
