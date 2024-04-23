@@ -148,7 +148,7 @@ $.fn.appFormsValidaNumero = function(options) {
 
 				// negatius
 
-				if (negatiu_ && (tecla_ == 109 || tecla_ == 173)) {
+				if (negatiu_ && (tecla_ == 109 || tecla_ == 189 || tecla_ == 173)) {
 
 					esCorrecte = true;
 
