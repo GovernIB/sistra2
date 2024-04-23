@@ -2,6 +2,7 @@ package es.caib.sistra2.commons.plugins.registro.envio;
 
 import java.util.Properties;
 
+import es.caib.sistra2.commons.plugins.registro.api.*;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,13 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.support.BasicAuthorizationInterceptor;
 import org.springframework.web.client.RestTemplate;
-
-import es.caib.sistra2.commons.plugins.registro.api.AsientoRegistral;
-import es.caib.sistra2.commons.plugins.registro.api.DestinoEnvio;
-import es.caib.sistra2.commons.plugins.registro.api.EnvioRemotoPluginException;
-import es.caib.sistra2.commons.plugins.registro.api.IEnvioRemotoPlugin;
-import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
-import es.caib.sistra2.commons.plugins.registro.api.VerificacionRegistro;
 
 /**
  * Implementacion REST del plugin de envio remoto.
@@ -52,7 +46,6 @@ public class EnvioRemotoPlugin extends AbstractPluginProperties implements IEnvi
 		/*Creamos objeto inicio sesion que se pasa al servicio*/
 		RInicioSesion inicioSesion = new RInicioSesion();
 		inicioSesion.setIdEntidad(destinoEnvio.getIdEntidad());
-		inicioSesion.setIdEnvioRemoto(destinoEnvio.getIdEnvioRemoto());
 
 		if (user != null && pass != null) {
 			restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(user, pass));
@@ -80,12 +73,18 @@ public class EnvioRemotoPlugin extends AbstractPluginProperties implements IEnvi
 
 	@Override
 	public ResultadoRegistro realizarEnvio(final DestinoEnvio destinoEnvio, final String idSesionEnvio,
-			final AsientoRegistral asientoRegistral) throws EnvioRemotoPluginException {
+										   final DatosTramitacion datosTramitacion, final AsientoRegistral asientoRegistral) throws EnvioRemotoPluginException {
 		final RestTemplate restTemplate = new RestTemplate(
 				getClientHttpRequestFactory((int) (destinoEnvio.getTimeoutSecs() * 1000L)));
 		final String user = destinoEnvio.getUsuario();
 		final String pass = destinoEnvio.getPassword();
 		final String url = destinoEnvio.getUrl();
+
+		RDatosTramitacion rdt = new RDatosTramitacion();
+		rdt.setIdSesionTramitacion(datosTramitacion.getIdSesionTramitacion());
+		rdt.setIdTramite(datosTramitacion.getIdTramite());
+		rdt.setVersionTramite(datosTramitacion.getVersionTramite());
+		rdt.setIdProcedimiento(datosTramitacion.getIdProcedimiento());
 
 		RAsientoRegistral ras = new RAsientoRegistral();
 		ras.setDatosAsunto(asientoRegistral.getDatosAsunto());
@@ -103,6 +102,7 @@ public class EnvioRemotoPlugin extends AbstractPluginProperties implements IEnvi
 		final REnvioRemoto envio = new REnvioRemoto();
 		envio.setIdEnvio(idSesionEnvio);
 		envio.setAsiento(ras);
+		envio.setDatosTramitacion(rdt);
 
 		final HttpEntity<REnvioRemoto> request = new HttpEntity<>(envio, headers);
 
@@ -136,19 +136,19 @@ public class EnvioRemotoPlugin extends AbstractPluginProperties implements IEnvi
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		final HttpEntity<String> request = new HttpEntity<>(idSesionEnvio, headers);
 
-		ResponseEntity<RVerificacionRegistro> response = null;
-
+		RVerificacionRegistro datosAutenticacion = null;
+		String urlVerificacion = url + URL_VERIFICAR_ENVIO + "/" + idSesionEnvio;
 		try {
-			response = restTemplate.postForEntity(url + URL_VERIFICAR_ENVIO, request, RVerificacionRegistro.class);
+			datosAutenticacion = restTemplate.getForObject(urlVerificacion, RVerificacionRegistro.class);
 		} catch (final Exception e) {
-			throw new EnvioRemotoPluginException("Error realizando conexión con " + url + ": " + e.getMessage(), e);
+			throw new EnvioRemotoPluginException("Error realizando conexión con " + urlVerificacion + ": " + e.getMessage(), e);
 		}
 
-		if (response == null) {
+		if (datosAutenticacion == null) {
 			throw new EnvioRemotoPluginException("Respuesta vacía.");
 		}
 
-		return Utilidades.getValidacion(response.getBody());
+		return Utilidades.getValidacion(datosAutenticacion);
 	}
 
 	private HttpComponentsClientHttpRequestFactory getClientHttpRequestFactory(final int timeout) {

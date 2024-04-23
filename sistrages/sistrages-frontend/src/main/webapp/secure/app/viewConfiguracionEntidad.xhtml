@@ -299,23 +299,30 @@
 	        			</p:tab>
 						<p:tab id="tabRegistro" title="#{msg['viewConfiguracionEntidad.tabRegistro']}">
 	        				<h:panelGrid id="panelResgistro" columns="2" cellpadding="5" >
-			        					<h:outputText value="#{msg['viewConfiguracionEntidad.registro.headerRegistroCentralizado']}:" />
-			        					<p:selectBooleanCheckbox id="checkRegistroCentralizado" value="#{viewConfiguracionEntidad.data.registroCentralizado}" disabled="#{!viewConfiguracionEntidad.permiteEditar}">
-			        						<p:ajax event="change" global="false"  update="oficina panelResgistro"  />
-	   									</p:selectBooleanCheckbox>
+	        					<h:outputText value="#{msg['viewConfiguracionEntidad.registro.headerRegistroCentralizado']}:" />
+	        					<p:selectBooleanCheckbox id="checkRegistroCentralizado" value="#{viewConfiguracionEntidad.data.registroCentralizado}" disabled="#{!viewConfiguracionEntidad.permiteEditar}">
+	        						<p:ajax event="change" global="false"  update="oficina panelResgistro"  />
+  									</p:selectBooleanCheckbox>
 
-	   									<h:outputText value="#{msg['viewConfiguracionEntidad.registro.headerOficinaRegistro']}:" rendered="#{viewConfiguracionEntidad.data.registroCentralizado}" />
-			        					<p:selectOneMenu id="oficina" styleClass="w90" value="#{viewConfiguracionEntidad.data.oficinaRegistroCentralizado}"  rendered="#{viewConfiguracionEntidad.data.registroCentralizado}" required="#{viewConfiguracionEntidad.data.registroCentralizado}" requiredMessage="#{msg['viewConfiguracionEntidad.registro.oficinaRegistroObligatoria']}" >
-						    				<f:selectItem noSelectionOption="true" itemLabel=" " itemValue=""></f:selectItem>
-						    				<f:selectItems value="#{viewConfiguracionEntidad.oficinas}"  itemLabel="#{oficina.nombre}" itemValue="#{oficina.codigo}" var="oficina"  />
-										</p:selectOneMenu>
+  									<h:outputText value="#{msg['viewConfiguracionEntidad.registro.headerOficinaRegistro']}:" rendered="#{viewConfiguracionEntidad.data.registroCentralizado}" />
+	        					<p:selectOneMenu id="oficina" styleClass="w90" value="#{viewConfiguracionEntidad.data.oficinaRegistroCentralizado}"  rendered="#{viewConfiguracionEntidad.data.registroCentralizado}" required="#{viewConfiguracionEntidad.data.registroCentralizado}" requiredMessage="#{msg['viewConfiguracionEntidad.registro.oficinaRegistroObligatoria']}" >
+				    				<f:selectItem noSelectionOption="true" itemLabel=" " itemValue=""></f:selectItem>
+				    				<f:selectItems value="#{viewConfiguracionEntidad.oficinas}"  itemLabel="#{oficina.nombre}" itemValue="#{oficina.codigo}" var="oficina"  />
+								</p:selectOneMenu>
 
-										<h:outputText value="#{msg['viewConfiguracionEntidad.registro.headerOcultarDescargaDoc']}:" />
-			        					<p:selectBooleanCheckbox id="checkOcultarDescargaDocumentos" value="#{viewConfiguracionEntidad.data.registroOcultarDescargaDocumentos}" disabled="#{!viewConfiguracionEntidad.permiteEditar}" />
+								<h:outputText value="#{msg['viewConfiguracionEntidad.registro.headerOcultarDescargaDoc']}:" />
+	        					<p:selectBooleanCheckbox id="checkOcultarDescargaDocumentos" value="#{viewConfiguracionEntidad.data.registroOcultarDescargaDocumentos}" disabled="#{!viewConfiguracionEntidad.permiteEditar}" />
 
-										<h:outputText value="#{msg['viewConfiguracionEntidad.registro.plantillaMailFinRegistro']}:" />
-			        					<p:commandButton id="btnPlantillaMail" icon="fa fa-cog" actionListener="#{viewConfiguracionEntidad.explorarPlantillaMail}" process="@this" update=":form:growl" styleClass="va-top" />
+								<h:outputText value="#{msg['viewConfiguracionEntidad.registro.plantillaMailFinRegistro']}:" />
+	        					<p:commandButton id="btnPlantillaMail" icon="fa fa-cog" actionListener="#{viewConfiguracionEntidad.explorarPlantillaMail}" process="@this" update=":form:growl" styleClass="va-top" />
 
+								<h:outputText value="#{msg['viewConfiguracionEntidad.registro.modoEntrega']}:" rendered="#{viewConfiguracionEntidad.permiteModoEntrega}"  />
+	        					<p:column>
+					        		<p:selectBooleanCheckbox id="checkModoEntrega" value="#{viewConfiguracionEntidad.data.habilitarModoEntrega}" disabled="#{!viewConfiguracionEntidad.permiteEditar}" rendered="#{viewConfiguracionEntidad.permiteModoEntrega}" style="margin-right:10px">
+										<p:ajax event="change" global="false" update="btnConfiguracionEntrega gridPropiedades" />
+	   								</p:selectBooleanCheckbox>
+	   								<p:commandButton id="btnConfiguracionEntrega" icon="fa fa-cog" actionListener="#{viewConfiguracionEntidad.abrirConfiguracionComponenteEntrega}" process="@this" update=":form:growl" disabled="#{!viewConfiguracionEntidad.data.habilitarModoEntrega or !viewConfiguracionEntidad.permiteEditar}" rendered="#{viewConfiguracionEntidad.permiteModoEntrega}" styleClass="va-top" />
+								</p:column>
 							</h:panelGrid>
 	        			</p:tab>
 	        			<p:tab title="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerDeclaracionAccesibilidad']}">

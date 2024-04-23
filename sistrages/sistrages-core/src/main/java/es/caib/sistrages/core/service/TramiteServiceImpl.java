@@ -1412,8 +1412,8 @@ public class TramiteServiceImpl implements TramiteService {
 	@Override
 	@NegocioInterceptor
 	public List<ErrorValidacion> validarScript(final Script pScript, final List<Dominio> pListaDominios,
-			final List<String> pIdiomasTramiteVersion, final String pIdioma) {
-		return validadorComponent.comprobarScript(pScript, pListaDominios, pIdiomasTramiteVersion, pIdioma);
+			final List<String> pIdiomasTramiteVersion, final String pIdioma, final String[] pOpciones) {
+		return validadorComponent.comprobarScript(pScript, pListaDominios, pIdiomasTramiteVersion, pIdioma, pOpciones);
 	}
 
 	@Override

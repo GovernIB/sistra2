@@ -727,4 +727,36 @@ public final class UtilsSTG {
 		return res;
 	}
 
+	/**
+	 * Verifica si esta habilitado modo entrega.
+	 * @param pDefinicionTramite Definicion trámite
+	 * @return Indica si esta habilitado modo entrega.
+	 */
+	public static boolean isModoEntregaHabilitado(DefinicionTramiteSTG pDefinicionTramite) {
+		boolean res = false;
+		RPasoTramitacionRegistrar defPasoRegistrar = devuelveDefinicionPasoRegistrar(pDefinicionTramite);
+		if (defPasoRegistrar != null) {
+			final RPasoTramitacionRegistrar pasoRegistrar = (RPasoTramitacionRegistrar) UtilsSTG
+					.devuelveDefinicionPaso(defPasoRegistrar.getIdentificador(), pDefinicionTramite);
+			res = pasoRegistrar.isModoEntregaHabilitar();
+		}
+		return res;
+	}
+
+	/**
+	 * Verifica si esta habilitado modo entrega inmediato.
+	 * @param pDefinicionTramite Definicion trámite
+	 * @return Indica si esta habilitado modo entrega inmediato.
+	 */
+	public static boolean isModoEntregaInmediato(DefinicionTramiteSTG pDefinicionTramite) {
+		boolean res = false;
+		RPasoTramitacionRegistrar defPasoRegistrar = devuelveDefinicionPasoRegistrar(pDefinicionTramite);
+		if (defPasoRegistrar != null) {
+			final RPasoTramitacionRegistrar pasoRegistrar = (RPasoTramitacionRegistrar) UtilsSTG
+					.devuelveDefinicionPaso(defPasoRegistrar.getIdentificador(), pDefinicionTramite);
+			res = pasoRegistrar.isModoEntregaHabilitarInmediato();
+		}
+		return res;
+	}
+
 }

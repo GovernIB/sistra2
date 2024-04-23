@@ -2,6 +2,7 @@ package es.caib.sistramit.core.api.model.formulario;
 
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.model.formulario.types.TypeValor;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Valor de un campo normal.
@@ -28,8 +29,8 @@ public final class ValorCampoSimple extends ValorCampo {
 	public ValorCampoSimple(final String pId, final String pValor) {
 		super();
 		this.setTipo(TypeValor.SIMPLE);
-		this.setId(pId);
-		valor = pValor;
+		this.setId(StringUtils.trim(pId));
+		valor = StringUtils.trim(pValor);
 	}
 
 	/**
@@ -56,7 +57,7 @@ public final class ValorCampoSimple extends ValorCampo {
 	 *            valor a establecer
 	 */
 	public void setValor(final String pValor) {
-		valor = pValor;
+		valor = StringUtils.trim(pValor);
 	}
 
 	/**
@@ -90,7 +91,7 @@ public final class ValorCampoSimple extends ValorCampo {
 	 */
 	public static ValorCampoSimple createValorVacio(final String idCampo) {
 		final ValorCampoSimple vcs = new ValorCampoSimple();
-		vcs.setId(idCampo);
+		vcs.setId(StringUtils.trim(idCampo));
 		vcs.setValor(null);
 		return vcs;
 	}

@@ -23,6 +23,8 @@ public enum TypePropiedadConfiguracion {
 	SISTRAGES_USR("sistrages.usr"),
 	/** STG Url. */
 	SISTRAGES_PWD("sistrages.pwd"),
+	/** STG Timeout. */
+	SISTRAGES_TIMEOUT("sistrages.timeout"),
 
 	/** Url asistente. */
 	SISTRAMIT_URL("sistramit.url"),

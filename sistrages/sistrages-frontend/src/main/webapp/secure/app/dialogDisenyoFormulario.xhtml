@@ -312,8 +312,18 @@
         	</pe:clipboard>
 
 		    <p:inputText id="auxCopiar" value="#{dialogDisenyoFormulario.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+
+			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogDisenyoFormulario.aceptarAlertaSinEspacio()}"  process="@this" update="growlDisenyoFormulario" style="display:none" oncomplete="if (!args.validationFailed) {updateUI();}"  />
+
 	</h:form>
 
+
+		<p:confirmDialog widgetVar="avisoDlg" header="#{msg['warning.titulo']}" message="#{msg['warning.componente.sinespacioSig']}">
+				<p:outputPanel styleClass="confirmar_botonera">
+					<p:commandButton value="#{msg['botones.aceptar']}" type="button"  onclick="PF('avisoDlg').hide();$('#dialogDisenyoFormulario\\:btnEditarHidden').click();" process="@this" styleClass="boton-azul"/>
+					<p:commandButton value="#{msg['botones.cancelar']}" type="button" onclick="PF('avisoDlg').hide();" process="@this" />
+				</p:outputPanel>
+		</p:confirmDialog>
 
 </h:body>
 

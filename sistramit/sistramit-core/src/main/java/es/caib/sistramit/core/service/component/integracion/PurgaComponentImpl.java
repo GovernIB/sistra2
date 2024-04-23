@@ -2,16 +2,13 @@ package es.caib.sistramit.core.service.component.integracion;
 
 import java.util.Date;
 
+import es.caib.sistramit.core.service.repository.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
-import es.caib.sistramit.core.service.repository.dao.AuditoriaDao;
-import es.caib.sistramit.core.service.repository.dao.InvalidacionDao;
-import es.caib.sistramit.core.service.repository.dao.PagoExternoDao;
-import es.caib.sistramit.core.service.repository.dao.PurgaTramiteDao;
 
 /**
  * Implementación purga component.
@@ -23,27 +20,25 @@ import es.caib.sistramit.core.service.repository.dao.PurgaTramiteDao;
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 public final class PurgaComponentImpl implements PurgaComponent {
 
-	/**
-	 * Atributo purga dao de PurgaComponentImpl.
-	 */
+	/** Atributo purga dao de PurgaComponentImpl.*/
 	@Autowired
 	private PurgaTramiteDao purgaDao;
 
-	/**
-	 * Atributo ticket dao de PurgaComponentImpl.
-	 */
+	/** Atributo ticket dao de PurgaComponentImpl.	 */
 	@Autowired
 	private PagoExternoDao pagoExternoDao;
 
-	/**
-	 * Atributo auditoria dao de PurgaComponentImpl.
-	 */
+	/** Atributo auditoria dao de PurgaComponentImpl. */
 	@Autowired
 	private AuditoriaDao auditoriaDao;
 
 	/** Atributo invalidacionDao. */
 	@Autowired
 	private InvalidacionDao invalidacionDao;
+
+	/** Atributo EntregaTramiteDAO. */
+	@Autowired
+	private EntregaTramiteDao entregaTramiteDao;
 
 	@Override
 	public int purgaErroresInternos(final Date fechaCaducidad) {
@@ -99,6 +94,11 @@ public final class PurgaComponentImpl implements PurgaComponent {
 	@Override
 	public int eliminarTramitesPurgados(final Date pFechaLimitePurga) {
 		return purgaDao.eliminarTramitesPurgados(pFechaLimitePurga);
+	}
+
+	@Override
+	public int procesoPurgarEntregasTramites() {
+		return entregaTramiteDao.purgarEntregasTramites();
 	}
 
 }

@@ -14,7 +14,6 @@ import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.IncidenciaValoracion;
 import es.caib.sistrages.core.api.model.PlantillaEntidad;
-import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;

@@ -27,6 +27,9 @@
 		<property name="filtroInicial" value="${filtroInicial}" />
 		<property name="horaDesde" value="${horaDesde}" />
 		<property name="minutosRefresco" value="${minutosRefresco}" />
+		<property name="permitirPersonalizarUmbralesCM" value="${permitirPersonalizarUmbralesCM}" />
+		<property name="umbralNormalAtencion" value="${umbralNormalAtencion}" />
+		<property name="umbralAtencionRevisar" value="${umbralAtencionRevisar}" />
 	</bean>
 
 	<!-- Scope view para spring beans usados como backbeans de JSF: @Scope(view) -->

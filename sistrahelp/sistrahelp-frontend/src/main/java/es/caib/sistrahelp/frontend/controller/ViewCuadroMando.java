@@ -38,8 +38,10 @@ import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.HistorialAlerta;
 import es.caib.sistrahelp.core.api.model.ResultadoErroresPorTramiteCM;
 import es.caib.sistrahelp.core.api.model.ResultadoEventoCM;
+import es.caib.sistrahelp.core.api.model.comun.Propiedad;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
+import es.caib.sistrahelp.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.core.api.service.HistorialAlertaService;
@@ -162,6 +164,15 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 	private Integer minutosRefresco;
 
+	private String permitirPersonalizarUmbralesCM;
+	private Integer umbralNormalAtencionProperties;
+	private Integer umbralAtencionRevisarProperties;
+	private Integer umbralNormalAtencionUsuario;
+	private Integer umbralAtencionRevisarUsuario;
+	private Integer umbralNormalAtencion;
+	private Integer umbralAtencionRevisar;
+	private TypeRoleAcceso rolUsuario;
+
 	private String hoursMinutes;
 
 	private Integer hours;
@@ -188,6 +199,8 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 	/** Propiedades configuración especificadas en properties. */
 	private Properties propiedadesLocales = recuperarConfiguracionProperties();
+	/** Propiedades */
+	private List<Propiedad> propiedades = new ArrayList<>();
 
 	/**
 	 * Inicializa.
@@ -205,7 +218,23 @@ public class ViewCuadroMando extends ViewControllerBase {
 		}
 
 		minutosRefresco = Integer.valueOf(propiedadesLocales.getProperty(TypePropiedadConfiguracion.MINUTOS_REFRESCO.toString()));
-
+		permitirPersonalizarUmbralesCM = propiedadesLocales.getProperty(TypePropiedadConfiguracion.PERMITIR_PERSONALIZAR_UMBRALES_CM.toString());
+		umbralNormalAtencionProperties = Integer.valueOf(propiedadesLocales.getProperty(TypePropiedadConfiguracion.UMBRAL_NORMAL_ATENCION.toString()));
+		umbralAtencionRevisarProperties = Integer.valueOf(propiedadesLocales.getProperty(TypePropiedadConfiguracion.UMBRAL_ATENCION_REVISAR.toString()));
+		if (permitirPersonalizarUmbralesCM.equals("false")) {
+			UtilJSF.getSessionBean().eliminarUmbrales();
+		}
+		propiedades = UtilJSF.getSessionBean().getPropiedades();
+		UtilJSF.getSessionBean().obtenerUmbrales(propiedades);
+		umbralNormalAtencion = umbralNormalAtencionProperties;
+		umbralAtencionRevisar = umbralAtencionRevisarProperties;
+		if (UtilJSF.getSessionBean().getUmbralNAUsuario() != null || UtilJSF.getSessionBean().getUmbralARUsuario() != null) {
+			umbralNormalAtencionUsuario = Integer.parseInt(UtilJSF.getSessionBean().getUmbralNAUsuario());
+			umbralAtencionRevisarUsuario = Integer.parseInt(UtilJSF.getSessionBean().getUmbralARUsuario());
+			umbralNormalAtencion = umbralNormalAtencionUsuario;
+			umbralAtencionRevisar = umbralAtencionRevisarUsuario;
+		}
+		setRolUsuario(UtilJSF.getSessionBean().getActiveRole());
 
 		UtilJSF.verificarAcceso();
 
@@ -427,6 +456,7 @@ public class ViewCuadroMando extends ViewControllerBase {
 		filtros.setIdTramite(null);
 		filtros.setVersionTramite(null);
 		filtros.setErrorPlataforma(true);
+		filtros.setRolAcceso(rolUsuario.toString());
 		filtrosInacabados.setIdTramite(null);
 		filtrosInacabados.setVersionTramite(null);
 		filtrosInacabados.setErrorPlataforma(false);
@@ -491,6 +521,16 @@ public class ViewCuadroMando extends ViewControllerBase {
 			}
 		}
 
+		propiedades = UtilJSF.getSessionBean().getPropiedades();
+		UtilJSF.getSessionBean().obtenerUmbrales(propiedades);
+
+		if (UtilJSF.getSessionBean().getUmbralNAUsuario() != null && UtilJSF.getSessionBean().getUmbralARUsuario() != null) {
+			params.put("umbralNormalAtencionString", umbralNormalAtencionUsuario.toString());
+			params.put("umbralAtencionRevisarString", umbralAtencionRevisarUsuario.toString());
+		}
+		params.put("umbralNormalAtencionPropertiesString", umbralNormalAtencionProperties.toString());
+		params.put("umbralAtencionRevisarPropertiesString", umbralAtencionRevisarProperties.toString());
+
 		UtilJSF.openDialog(DialogEnviarMail.class, TypeModoAcceso.EDICION, params, true, 500, 110);
 
 	}
@@ -507,28 +547,79 @@ public class ViewCuadroMando extends ViewControllerBase {
 		}
 	}
 
+	public void umbralesAviso() {
+		final Map<String, String> params = new HashMap<>();
+
+		propiedades = UtilJSF.getSessionBean().getPropiedades();
+		UtilJSF.getSessionBean().obtenerUmbrales(propiedades);
+
+		//params.put("permitirPersonalizarUmbralesCM", permitirPersonalizarUmbralesCM);
+		if (permitirPersonalizarUmbralesCM.equals("true") && rolUsuario == TypeRoleAcceso.HELPDESK && (UtilJSF.getSessionBean().getUmbralNAUsuario() != null && UtilJSF.getSessionBean().getUmbralARUsuario() != null)) {
+			params.put("umbralNormalAtencionString", UtilJSF.getSessionBean().getUmbralNAUsuario());
+			params.put("umbralAtencionRevisarString", UtilJSF.getSessionBean().getUmbralARUsuario());
+		}
+		params.put("umbralNormalAtencionPropertiesString", umbralNormalAtencionProperties.toString());
+		params.put("umbralAtencionRevisarPropertiesString", umbralAtencionRevisarProperties.toString());
+		//params.put("rolUsuarioString", UtilJSF.getSessionBean().getActiveRole().toString());
+
+		if (permitirPersonalizarUmbralesCM.equals("true")) {
+			UtilJSF.openDialog(DialogUmbralesAviso.class, TypeModoAcceso.EDICION, params, true, 600, 160);
+		} else {
+			UtilJSF.openDialog(DialogUmbralesAviso.class, TypeModoAcceso.CONSULTA, params, true, 600, 160);
+		}
+	}
+
+	/**
+	 * Retorno dialogo del retorno dialogo umbrales aviso.
+	 *
+	 * @param event respuesta dialogo
+	 */
+	public void returnDialogoUmbralesAviso(final SelectEvent event) {
+		propiedades = UtilJSF.getSessionBean().getPropiedades();
+		UtilJSF.getSessionBean().obtenerUmbrales(propiedades);
+		String umbralNAUsuario = UtilJSF.getSessionBean().getUmbralNAUsuario();
+		String umbralARUsuario = UtilJSF.getSessionBean().getUmbralARUsuario();
+		if (umbralNAUsuario != null || umbralARUsuario != null) {
+			umbralNormalAtencion = Integer.parseInt(umbralNAUsuario);
+			umbralAtencionRevisar = Integer.parseInt(umbralARUsuario);
+		} else {
+			umbralNormalAtencion = Integer.parseInt(umbralNormalAtencionProperties.toString());
+			umbralAtencionRevisar = Integer.parseInt(umbralAtencionRevisarProperties.toString());
+		}
+		this.filtrar();
+	}
+
 	public String calcularEtiquetaTram(Long porcentage, String id) {
 		String texto = "";
-		if (porcentage <= 15) {
+		if (porcentage > 0) {
+			if (100 - porcentage >= this.umbralAtencionRevisar) {
+				texto = UtilJSF.getLiteral("viewCuadroMando.revisar");
+				PrimeFaces.current()
+						.executeScript("document.getElementById('form:" + id
+								+ "').style.backgroundColor='red'; document.getElementById('form:" + id
+								+ "').parentNode.style.backgroundColor='red'; document.getElementById('form:" + id
+								+ "').style.color='white';");
+			} else if (100 - porcentage < this.umbralAtencionRevisar && 100 - porcentage >= this.umbralNormalAtencion) {
+				texto = UtilJSF.getLiteral("viewCuadroMando.atencion");
+				PrimeFaces.current()
+						.executeScript("document.getElementById('form:" + id
+								+ "').style.backgroundColor='yellow'; document.getElementById('form:" + id
+								+ "').parentNode.style.backgroundColor='yellow';");
+
+			} else if (100 - porcentage < this.umbralNormalAtencion) {
+				texto = UtilJSF.getLiteral("viewCuadroMando.normal");
+				PrimeFaces.current()
+						.executeScript("document.getElementById('form:" + id
+								+ "').style.backgroundColor='#40D95E';  document.getElementById('form:" + id
+								+ "').parentNode.style.backgroundColor='#40D95E'; document.getElementById('form:" + id
+								+ "').style.color='white';");
+			}
+		} else {
 			texto = UtilJSF.getLiteral("viewCuadroMando.revisar");
 			PrimeFaces.current()
 					.executeScript("document.getElementById('form:" + id
 							+ "').style.backgroundColor='red'; document.getElementById('form:" + id
 							+ "').parentNode.style.backgroundColor='red'; document.getElementById('form:" + id
-							+ "').style.color='white';");
-		} else if (porcentage > 15 && porcentage <= 50) {
-			texto = UtilJSF.getLiteral("viewCuadroMando.atencion");
-			PrimeFaces.current()
-					.executeScript("document.getElementById('form:" + id
-							+ "').style.backgroundColor='yellow'; document.getElementById('form:" + id
-							+ "').parentNode.style.backgroundColor='yellow';");
-
-		} else if (porcentage > 50) {
-			texto = UtilJSF.getLiteral("viewCuadroMando.normal");
-			PrimeFaces.current()
-					.executeScript("document.getElementById('form:" + id
-							+ "').style.backgroundColor='#40D95E';  document.getElementById('form:" + id
-							+ "').parentNode.style.backgroundColor='#40D95E'; document.getElementById('form:" + id
 							+ "').style.color='white';");
 		}
 		return texto;
@@ -656,6 +747,10 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 		return resultado;
 
+	}
+
+	public boolean isSupervisor() {
+		return rolUsuario.equals(TypeRoleAcceso.SUPERVISOR_ENTIDAD) ? true : false;
 	}
 
 	/**
@@ -1076,6 +1171,118 @@ public class ViewCuadroMando extends ViewControllerBase {
 	 */
 	public void setLocalDate(LocalDateTime localDate) {
 		this.localDate = localDate;
+	}
+
+	/**
+	 * @return the permitirPersonalizarUmbralesCM
+	 */
+	public String getPermitirPersonalizarUmbralesCM() {
+		return permitirPersonalizarUmbralesCM;
+	}
+
+	/**
+	 * @param permitirPersonalizarUmbralesCM the permitirPersonalizarUmbralesCM to set
+	 */
+	public void setPermitirPersonalizarUmbralesCM(String permitirPersonalizarUmbralesCM) {
+		this.permitirPersonalizarUmbralesCM = permitirPersonalizarUmbralesCM;
+	}
+
+	/**
+	 * @return the umbralNormalAtencion
+	 */
+	public Integer getUmbralNormalAtencion() {
+		return umbralNormalAtencion;
+	}
+
+	/**
+	 * @param umbralNormalAtencion the umbralNormalAtencion to set
+	 */
+	public void setUmbralNormalAtencion(Integer umbralNormalAtencion) {
+		this.umbralNormalAtencion = umbralNormalAtencion;
+	}
+
+	/**
+	 * @return the umbralAtencionRevisar
+	 */
+	public Integer getUmbralAtencionRevisar() {
+		return umbralAtencionRevisar;
+	}
+
+	/**
+	 * @param umbralAtencionRevisar the umbralAtencionRevisar to set
+	 */
+	public void setUmbralAtencionRevisar(Integer umbralAtencionRevisar) {
+		this.umbralAtencionRevisar = umbralAtencionRevisar;
+	}
+
+	/**
+	 * @return the umbralNormalAtencionProperties
+	 */
+	public Integer getUmbralNormalAtencionProperties() {
+		return umbralNormalAtencionProperties;
+	}
+
+	/**
+	 * @param umbralNormalAtencionProperties the umbralNormalAtencionProperties to set
+	 */
+	public void setUmbralNormalAtencionProperties(Integer umbralNormalAtencionProperties) {
+		this.umbralNormalAtencionProperties = umbralNormalAtencionProperties;
+	}
+
+	/**
+	 * @return the umbralAtencionRevisarProperties
+	 */
+	public Integer getUmbralAtencionRevisarProperties() {
+		return umbralAtencionRevisarProperties;
+	}
+
+	/**
+	 * @param umbralAtencionRevisarProperties the umbralAtencionRevisarProperties to set
+	 */
+	public void setUmbralAtencionRevisarProperties(Integer umbralAtencionRevisarProperties) {
+		this.umbralAtencionRevisarProperties = umbralAtencionRevisarProperties;
+	}
+
+	/**
+	 * @return the umbralNormalAtencionUsuario
+	 */
+	public Integer getUmbralNormalAtencionUsuario() {
+		return umbralNormalAtencionUsuario;
+	}
+
+	/**
+	 * @param umbralNormalAtencionUsuario the umbralNormalAtencionUsuario to set
+	 */
+	public void setUmbralNormalAtencionUsuario(Integer umbralNormalAtencionUsuario) {
+		this.umbralNormalAtencionUsuario = umbralNormalAtencionUsuario;
+	}
+
+	/**
+	 * @return the umbralAtencionRevisarUsuario
+	 */
+	public Integer getUmbralAtencionRevisarUsuario() {
+		return umbralAtencionRevisarUsuario;
+	}
+
+	/**
+	 * @param umbralAtencionRevisarUsuario the umbralAtencionRevisarUsuario to set
+	 */
+	public void setUmbralAtencionRevisarUsuario(Integer umbralAtencionRevisarUsuario) {
+		this.umbralAtencionRevisarUsuario = umbralAtencionRevisarUsuario;
+	}
+
+	/**
+	 * @return the rolUsuario
+	 */
+	public TypeRoleAcceso getRolUsuario() {
+		return rolUsuario;
+	}
+
+	/**
+	 * @param rolUsuario the rolUsuario to set
+	 */
+	public void setRolUsuario(TypeRoleAcceso rolUsuario) {
+		this.rolUsuario = rolUsuario;
 	}
 
 }

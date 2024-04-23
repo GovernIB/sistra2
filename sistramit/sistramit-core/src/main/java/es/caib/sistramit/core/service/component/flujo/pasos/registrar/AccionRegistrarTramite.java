@@ -6,17 +6,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import es.caib.sistra2.commons.plugins.registro.api.*;
+import es.caib.sistramit.core.service.model.flujo.*;
+import es.caib.sistramit.core.service.model.flujo.ResultadoRegistro;
+import es.caib.sistramit.core.service.repository.dao.EntregaTramiteDao;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.caib.sistra2.commons.plugins.registro.api.AsientoRegistral;
-import es.caib.sistra2.commons.plugins.registro.api.DatosAsunto;
-import es.caib.sistra2.commons.plugins.registro.api.DatosOrigen;
-import es.caib.sistra2.commons.plugins.registro.api.DocumentoAsiento;
-import es.caib.sistra2.commons.plugins.registro.api.Interesado;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumental;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumentoIdentificacion;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaAsiento;
@@ -63,22 +62,6 @@ import es.caib.sistramit.core.service.component.integracion.RegistroComponent;
 import es.caib.sistramit.core.service.component.literales.Literales;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
-import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
-import es.caib.sistramit.core.service.model.flujo.DatosDocumentoAnexo;
-import es.caib.sistramit.core.service.model.flujo.DatosDocumentoFormulario;
-import es.caib.sistramit.core.service.model.flujo.DatosDocumentoPago;
-import es.caib.sistramit.core.service.model.flujo.DatosFicheroPersistencia;
-import es.caib.sistramit.core.service.model.flujo.DatosInternosPasoRegistrar;
-import es.caib.sistramit.core.service.model.flujo.DatosPaso;
-import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaPaso;
-import es.caib.sistramit.core.service.model.flujo.DocumentoPasoPersistencia;
-import es.caib.sistramit.core.service.model.flujo.FirmaDocumentoPersistencia;
-import es.caib.sistramit.core.service.model.flujo.ParametrosRegistro;
-import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
-import es.caib.sistramit.core.service.model.flujo.RespuestaAccionPaso;
-import es.caib.sistramit.core.service.model.flujo.RespuestaEjecutarAccionPaso;
-import es.caib.sistramit.core.service.model.flujo.ResultadoRegistro;
-import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
 import es.caib.sistramit.core.service.model.flujo.types.TypeEstadoPaso;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.model.system.EnvioAviso;
@@ -122,6 +105,9 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/** Envio aviso. */
 	@Autowired
 	private EnvioAvisoComponent envioAvisoComponent;
+	/** DAO entrega. */
+	@Autowired
+	private EntregaTramiteDao entregaTramiteDao;
 
 	@Override
 	public RespuestaEjecutarAccionPaso ejecutarAccionPaso(final DatosPaso pDatosPaso, final DatosPersistenciaPaso pDpp,
@@ -139,15 +125,20 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		// Obtenemos datos internos del paso
 		final DatosInternosPasoRegistrar pDipa = (DatosInternosPasoRegistrar) pDatosPaso.internalData();
 
+		// Verificamos si esta habilitado modo entrega
+		String idPaso = pDipa.getIdPaso();
+
 		// Valida si se puede registrar el tramite
 		validacionesRegistrar(pDipa, pDpp, pVariablesFlujo, pDefinicionTramite);
 
+		// Generamos asiento registral
+		final AsientoRegistral asiento = generarAsiento(pDipa, pVariablesFlujo, pDefinicionTramite, true);
+
 		// Realizamos proceso de registro
-		final ResultadoRegistrar resReg = registrarTramite(pDipa, pDpp, pVariablesFlujo, pDefinicionTramite,
-				reintentar);
+		final ResultadoRegistrar resReg = registrarTramite(pDipa, pDpp, pVariablesFlujo, pDefinicionTramite, reintentar, asiento);
 
 		// Actualizamos persistencia
-		actualizarPersistencia(pVariablesFlujo.getIdSesionTramitacion(), pDipa, pDpp, resReg);
+		actualizarPersistencia(pVariablesFlujo.getIdSesionTramitacion(), pDipa, pDpp, resReg, pDefinicionTramite, asiento);
 
 		// Actualizamos detalle
 		actualizarDetalleRegistrar(pDipa, pVariablesFlujo, pDpp, resReg);
@@ -284,37 +275,32 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Registra el tramite.
 	 *
-	 * @param pDipa
-	 *                               Datos internos tramite
-	 * @param pDpp
-	 *                               Datos persistencia paso
-	 * @param pVariablesFlujo
-	 *                               Variables flujo
-	 * @param pDefinicionTramite
-	 *                               Definición trámite
-	 * @param reintentar
-	 *                               Indica si reintentar
+	 * @param pDipa              Datos internos tramite
+	 * @param pDpp               Datos persistencia paso
+	 * @param pVariablesFlujo    Variables flujo
+	 * @param pDefinicionTramite Definición trámite
+	 * @param reintentar         Indica si reintentar
+	 * @param asiento
 	 * @return Resultado registro
 	 */
 	private ResultadoRegistrar registrarTramite(final DatosInternosPasoRegistrar pDipa,
-			final DatosPersistenciaPaso pDpp, final VariablesFlujo pVariablesFlujo,
-			final DefinicionTramiteSTG pDefinicionTramite, final boolean reintentar) {
+												final DatosPersistenciaPaso pDpp, final VariablesFlujo pVariablesFlujo,
+												final DefinicionTramiteSTG pDefinicionTramite, final boolean reintentar, AsientoRegistral asiento) {
 		// Obtenemos documento de asiento para obtener id sesion registro
 		final DocumentoPasoPersistencia docAsientoDpp = pDpp
 				.getDocumentoPasoPersistencia(ConstantesFlujo.ID_ASIENTO_REGISTRO, ConstantesNumero.N1);
 		final String idSesionRegistro = docAsientoDpp.getRegistroIdSesion();
 
+		// Realizamos registro
 		ResultadoRegistrar resReg = null;
 		if (reintentar) {
 			// Reintentar registro
-			resReg = reintentarRegistrar(idSesionRegistro, pDipa.getParametrosRegistro(), pVariablesFlujo);
+			resReg = reintentarRegistrar(idSesionRegistro, pDipa.getParametrosRegistro(), pVariablesFlujo, pDefinicionTramite);
 		} else {
-			// Generar asiento con info asiento
-			final AsientoRegistral asiento = generarAsiento(pDipa, pVariablesFlujo, pDefinicionTramite, true);
 			// Audita registro
 			auditarRegistro(pDipa, pDefinicionTramite, pVariablesFlujo);
 			// Invoca a registrar
-			resReg = realizarRegistro(idSesionRegistro, pDipa.getParametrosRegistro(), asiento, pVariablesFlujo);
+			resReg = realizarRegistro(idSesionRegistro, pDipa.getParametrosRegistro(), asiento, pDefinicionTramite, pVariablesFlujo);
 		}
 		return resReg;
 	}
@@ -341,6 +327,9 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			}
 			final ListaPropiedades listaPropiedades = new ListaPropiedades();
 			listaPropiedades.addPropiedad(TypeParametroEvento.REGISTRO_ASIENTOREGISTRO.toString(), asientoStr);
+			if (UtilsSTG.isModoEntregaHabilitado(pDefinicionTramite)) {
+				listaPropiedades.addPropiedad(TypeParametroEvento.REGISTRO_MODOENTREGA.toString(), UtilsSTG.isModoEntregaInmediato(pDefinicionTramite) ? "Inmediato" : "Periódico");
+			}
 			final EventoAuditoria evento = new EventoAuditoria();
 			evento.setIdSesionTramitacion(pVariablesFlujo.getIdSesionTramitacion());
 			evento.setFecha(new Date());
@@ -354,29 +343,41 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Realiza registro.
 	 *
-	 * @param idSesionRegistro
-	 *                               id sesion
-	 * @param parametrosRegistro
-	 *                               Parámetros registro
-	 * @param asiento
-	 *                               asiento
-	 * @param pVariablesFlujo
-	 *                               Variables flujo
+	 * @param idSesionRegistro   id sesion
+	 * @param parametrosRegistro Parámetros registro
+	 * @param asiento            asiento
+	 * @param pDefinicionTramite Definición trámite
+	 * @param pVariablesFlujo    Variables flujo
 	 * @return resultado registro
 	 */
 	protected ResultadoRegistrar realizarRegistro(final String idSesionRegistro,
-			final ParametrosRegistro parametrosRegistro, final AsientoRegistral asiento,
-			final VariablesFlujo pVariablesFlujo) {
+												  final ParametrosRegistro parametrosRegistro, final AsientoRegistral asiento,
+												  DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo) {
 		ResultadoRegistrar resReg;
 		if (pVariablesFlujo.getTipoDestino() == TypeDestino.REGISTRO) {
 			resReg = registroComponent.registrar(parametrosRegistro.getDatosRegistrales().getCodigoEntidad(),
 					pVariablesFlujo.getIdSesionTramitacion(), idSesionRegistro, asiento,
 					pVariablesFlujo.isDebugEnabled());
 		} else {
-			resReg = envioRemotoComponent.realizarEnvio(parametrosRegistro.getDatosRegistrales().getCodigoEntidad(),
-					parametrosRegistro.getDatosRegistrales().getIdEnvioRemoto(),
-					pVariablesFlujo.getIdSesionTramitacion(), idSesionRegistro, asiento,
-					pVariablesFlujo.isDebugEnabled());
+			// Verificamos si esta habilitado modo entrega
+			if (UtilsSTG.isModoEntregaHabilitado(pDefinicionTramite)) {
+				// Si esta habilitado modo entrega no realizamos envio, se realiza offline. Devolvemos id sesion tramitacion como id envio.
+				resReg = new ResultadoRegistrar();
+				resReg.setResultado(TypeResultadoRegistro.CORRECTO);
+				resReg.setNumeroRegistro(idSesionRegistro);
+				resReg.setFechaRegistro(new Date());
+			} else {
+				// Si no esta habilitado modo entrega, realizamos envio remoto
+				DatosTramitacion datosTramitacion = new DatosTramitacion();
+				datosTramitacion.setIdSesionTramitacion(pVariablesFlujo.getIdSesionTramitacion());
+				datosTramitacion.setIdTramite(pVariablesFlujo.getIdTramite());
+				datosTramitacion.setVersionTramite(pVariablesFlujo.getVersionTramite());
+				datosTramitacion.setIdProcedimiento(pVariablesFlujo.getDatosTramiteCP().getProcedimiento().getIdentificador());
+				resReg = envioRemotoComponent.realizarEnvio(parametrosRegistro.getDatosRegistrales().getCodigoEntidad(),
+						parametrosRegistro.getDatosRegistrales().getIdEnvioRemoto(),
+						pVariablesFlujo.getIdSesionTramitacion(), idSesionRegistro, datosTramitacion, asiento,
+						pVariablesFlujo.isDebugEnabled());
+			}
 		}
 		return resReg;
 	}
@@ -384,23 +385,26 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Reintentar registrar.
 	 *
-	 * @param idSesionRegistro
-	 *                               id sesión
-	 * @param parametrosRegistro
-	 *                               parametrosRegistro
-	 * @param pVariablesFlujo
+	 * @param idSesionRegistro   id sesión
+	 * @param parametrosRegistro parametrosRegistro
+	 * @param pVariablesFlujo   Variables flujo
+	 * @param pDefinicionTramite Definición trámite
 	 * @return
 	 */
 	protected ResultadoRegistrar reintentarRegistrar(final String idSesionRegistro,
-			final ParametrosRegistro parametrosRegistro, final VariablesFlujo pVariablesFlujo) {
+													 final ParametrosRegistro parametrosRegistro, final VariablesFlujo pVariablesFlujo, DefinicionTramiteSTG pDefinicionTramite) {
 		ResultadoRegistrar resReg;
 		if (pVariablesFlujo.getTipoDestino() == TypeDestino.REGISTRO) {
 			resReg = registroComponent.reintentarRegistro(parametrosRegistro.getDatosRegistrales().getCodigoEntidad(),
 					idSesionRegistro, pVariablesFlujo.isDebugEnabled());
 		} else {
-			resReg = envioRemotoComponent.reintentarEnvio(parametrosRegistro.getDatosRegistrales().getCodigoEntidad(),
-					parametrosRegistro.getDatosRegistrales().getIdEnvioRemoto(), idSesionRegistro,
-					pVariablesFlujo.isDebugEnabled());
+			if (UtilsSTG.isModoEntregaHabilitado(pDefinicionTramite)) {
+				throw new ErrorConfiguracionException("Reintento no permitido si es modo entrega");
+			} else{
+				resReg = envioRemotoComponent.reintentarEnvio(parametrosRegistro.getDatosRegistrales().getCodigoEntidad(),
+						parametrosRegistro.getDatosRegistrales().getIdEnvioRemoto(), idSesionRegistro,
+						pVariablesFlujo.isDebugEnabled());
+			}
 		}
 		return resReg;
 	}
@@ -459,17 +463,15 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/**
 	 * Actualiza paso tras registrar.
 	 *
-	 * @param pIdSesionTramitacion
-	 *                                 Id sesion tramitacion
-	 * @param pDipa
-	 *                                 Datos internos paso
-	 * @param pDpp
-	 *                                 Datos persistencia
-	 * @param resReg
-	 *                                 Resultado registro
+	 * @param pIdSesionTramitacion Id sesion tramitacion
+	 * @param pDipa                Datos internos paso
+	 * @param pDpp                 Datos persistencia
+	 * @param resReg               Resultado registro
+	 * @param pDefinicionTramite   Definición trámite
+	 * @param asientoRegitral	 Asiento registral
 	 */
 	private void actualizarPersistencia(final String pIdSesionTramitacion, final DatosInternosPasoRegistrar pDipa,
-			final DatosPersistenciaPaso pDpp, final ResultadoRegistrar resReg) {
+										final DatosPersistenciaPaso pDpp, final ResultadoRegistrar resReg, DefinicionTramiteSTG pDefinicionTramite, AsientoRegistral asientoRegitral) {
 
 		// Obtenemos documento de asientO
 		final DocumentoPasoPersistencia docAsientoDpp = pDpp
@@ -491,6 +493,10 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			docAsientoDpp.setRegistroNombrePresentador(
 					pDipa.getParametrosRegistro().getDatosPresentacion().getPresentador().getNombreApellidos());
 			dao.establecerDatosDocumento(pDipa.getIdSesionTramitacion(), pDipa.getIdPaso(), docAsientoDpp);
+			// - Si es correcto y esta habilitado entrega, persistimos entrega para que se procese offline
+			if (UtilsSTG.isModoEntregaHabilitado(pDefinicionTramite)) {
+				entregaTramiteDao.crearEntrega(pIdSesionTramitacion, resReg.getFechaRegistro(), pDefinicionTramite.getDefinicionVersion().getIdEntidad(), asientoRegitral, UtilsSTG.isModoEntregaInmediato(pDefinicionTramite));
+			}
 			break;
 		case ERROR:
 			// Error al registrar:

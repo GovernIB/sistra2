@@ -8,8 +8,10 @@ import org.springframework.stereotype.Component;
 
 import es.caib.sistramit.core.api.service.SystemService;
 
+import javax.servlet.ServletContext;
+
 /**
- * Proceso que realiza envios avisos. Debe ejecutarse en todos los nodos.
+ * Proceso que realiza envios avisos. Debe ejecutarse en nodo maestro.
  */
 @Component
 public final class EnvioAvisoProcess {
@@ -20,15 +22,19 @@ public final class EnvioAvisoProcess {
 	@Autowired
 	private SystemService systemService;
 
+	@Autowired
+	private ServletContext servletContext;
+
 	/**
 	 * Process. Cada 1 minutos
 	 */
 	@Scheduled(cron = "${procesos.envios.inmediatos.cron}")
 	public void processInmediatos() {
-
-		log.debug("Proceso envio - inicio");
-		systemService.procesarEnviosInmediatos();
-		log.debug("Proceso envio - fin");
+		log.debug("Proceso envio avisos - inicio");
+		if (UtilProcess.checkMaestro("envio avisos", servletContext, systemService)) {
+			systemService.procesarEnviosInmediatos();
+		}
+		log.debug("Proceso envio avisos - fin");
 	}
 
 	/**
@@ -36,10 +42,11 @@ public final class EnvioAvisoProcess {
 	 */
 	@Scheduled(cron = "${procesos.envios.reintentos.cron}")
 	public void process() {
-
-		log.debug("Proceso envio - inicio");
-		systemService.procesarEnviosReintentos();
-		log.debug("Proceso envio - fin");
+		log.debug("Proceso envio avisos  reintento - inicio");
+		if (UtilProcess.checkMaestro("envio avisos reintento", servletContext, systemService)) {
+			systemService.procesarEnviosReintentos();
+		}
+		log.debug("Proceso envio avisos reintento - fin");
 	}
 
 }

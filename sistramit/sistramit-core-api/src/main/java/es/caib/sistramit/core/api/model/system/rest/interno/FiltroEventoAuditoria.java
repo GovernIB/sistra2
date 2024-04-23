@@ -46,6 +46,8 @@ public class FiltroEventoAuditoria implements Serializable {
 
 	private String tipoProblemaIncidencia;
 
+	private String rolAcceso;
+
 	public FiltroEventoAuditoria() {
 		super();
 	}
@@ -245,6 +247,14 @@ public class FiltroEventoAuditoria implements Serializable {
 
 	public void setTipoProblemaIncidencia(String tipoProblemaIncidencia) {
 		this.tipoProblemaIncidencia = tipoProblemaIncidencia;
+	}
+
+	public String getRolAcceso() {
+		return rolAcceso;
+	}
+
+	public void setRolAcceso(String rolAcceso) {
+		this.rolAcceso = rolAcceso;
 	}
 
 }

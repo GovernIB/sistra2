@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.api.model;
 
+
 /**
  *
  * Tramite Paso Registrar.
@@ -60,6 +61,12 @@ public class TramitePasoRegistrar extends TramitePaso {
 
 	/** En caso de habilitar aviso, se indica mecanismo aviso **/
 	private Script scriptAlFinalizar;
+
+	/** Indica si se habilita el modo entrega. **/
+	private boolean modoEntregaHabilitar;
+
+	/** Indica si es inmedito (si se ha habilitado el modo entrega). **/
+	private boolean modoEntregaHabilitarInmediato;
 
 	/**
 	 * @return the scriptDestinoRegistro
@@ -285,6 +292,34 @@ public class TramitePasoRegistrar extends TramitePaso {
 		this.envioRemoto = envioRemoto;
 	}
 
+	/**
+	 * @return the modoEntregaHabilitar
+	 */
+	public boolean isModoEntregaHabilitar() {
+		return modoEntregaHabilitar;
+	}
+
+	/**
+	 * @param modoEntregaHabilitar the modoEntregaHabilitar to set
+	 */
+	public void setModoEntregaHabilitar(boolean modoEntregaHabilitar) {
+		this.modoEntregaHabilitar = modoEntregaHabilitar;
+	}
+
+	/**
+	 * @return the modoEntregaHabilitarInmediato
+	 */
+	public boolean isModoEntregaHabilitarInmediato() {
+		return modoEntregaHabilitarInmediato;
+	}
+
+	/**
+	 * @param modoEntregaHabilitarInmediato the modoEntregaHabilitarInmediato to set
+	 */
+	public void setModoEntregaHabilitarInmediato(boolean modoEntregaHabilitarInmediato) {
+		this.modoEntregaHabilitarInmediato = modoEntregaHabilitarInmediato;
+	}
+
 	@Override
 	public String toString() {
         return toString("","ca");
@@ -350,6 +385,7 @@ public class TramitePasoRegistrar extends TramitePaso {
         	   texto.append(tabulacion +"\t InstruccionsSubsanacio: \n");
         	   texto.append(instruccionesSubsanacion.toString(tabulacion+"\t", idioma)+ "\n");
            }
+
            texto.append(tabulacion +"\t Desti:" + destino + "\n");
            texto.append(tabulacion +"\t CodiOficinaRegistre:" + codigoOficinaRegistro + "\n");
            texto.append(tabulacion +"\t CodiLlibreRegistre:" + codigoLibroRegistro + "\n");
@@ -357,6 +393,8 @@ public class TramitePasoRegistrar extends TramitePaso {
            texto.append(tabulacion +"\t ValidaRepresentacio:" + validaRepresentacion + "\n");
            texto.append(tabulacion +"\t PermetSubsanar:" + permiteSubsanar + "\n");
            texto.append(tabulacion +"\t AvisAlFinalitzar:" + avisoAlFinalizar + "\n");
+           texto.append(tabulacion +"\t ModeEntregaHabilitar:" + modoEntregaHabilitar + "\n");
+           texto.append(tabulacion +"\t ModeEntregaHabilitarInmediato:" + modoEntregaHabilitarInmediato + "\n");
            return texto.toString();
      }
 }

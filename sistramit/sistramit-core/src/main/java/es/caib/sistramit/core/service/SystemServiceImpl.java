@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import es.caib.sistramit.core.service.repository.dao.EntregaTramiteDao;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +71,10 @@ public class SystemServiceImpl implements SystemService {
 	/** Envio avisos. */
 	@Autowired
 	private EnvioAvisoComponent envioAvisoComponent;
+
+	/** Entrega trámites DAO. */
+	@Autowired
+	private EntregaTramiteDao entregaTramiteDao;
 
 	/** Fecha revision invalidaciones. */
 	private Date fcRevisionInvalidaciones;
@@ -200,16 +205,19 @@ public class SystemServiceImpl implements SystemService {
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void procesarEnviosInmediatos() {
 		envioAvisoComponent.procesarEnviosInmediatos();
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void procesarEnviosReintentos() {
 		envioAvisoComponent.procesarEnviosReintentos();
 	}
 
 	@Override
+	@NegocioInterceptor
 	public Entidad obtenerInfoEntidad(final String identificador, final String idioma) {
 		final RConfiguracionEntidad re = configuracionComponent.obtenerConfiguracionEntidad(identificador);
 		final Entidad entidad = UtilsFlujo.detalleTramiteEntidad(re, idioma, configuracionComponent);
@@ -217,6 +225,7 @@ public class SystemServiceImpl implements SystemService {
 	}
 
 	@Override
+	@NegocioInterceptor
 	public String obtenerUrlLogoEntidad(final String identificador, final String idioma) {
 		Entidad entidad = obtenerInfoEntidad(identificador, idioma);
 		System.out.println("entidad: "+entidad);

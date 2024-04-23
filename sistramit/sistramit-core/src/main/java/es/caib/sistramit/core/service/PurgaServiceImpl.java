@@ -17,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.comun.ResultadoProcesoProgramado;
-import es.caib.sistramit.core.api.model.system.EventoAuditoria;
-import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.PurgaService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
@@ -45,10 +43,6 @@ public class PurgaServiceImpl implements PurgaService {
 	@Autowired
 	private ConfiguracionComponent config;
 
-	/** Acceso configuración. */
-	@Autowired
-	private AuditoriaComponent auditoriaComponent;
-
 	/** Caché con con los flujos de tramitacion. */
 	@Autowired
 	private FlujoTramitacionCacheComponent flujoTramitacionCache;
@@ -66,6 +60,10 @@ public class PurgaServiceImpl implements PurgaService {
 
 		final long inicio = System.currentTimeMillis();
 		ResultadoProcesoProgramado res = null;
+
+		// Purgar entregas trámites
+		log.info("Procés purga: purgant les entregues de tràmits...");
+		procesoPurgarEntregasTramites(lp);
 
 		// Marcamos para purgar los tramites finalizados, no persistentes sin
 		// terminar y persistentes caducados
@@ -109,14 +107,6 @@ public class PurgaServiceImpl implements PurgaService {
 		res = new ResultadoProcesoProgramado();
 		res.setFinalizadoOk(true);
 		res.setDetalles(lp);
-
-		final EventoAuditoria evento = new EventoAuditoria();
-		evento.setTipoEvento(TypeEvento.PROCESO_PURGA);
-		evento.setIdSesionTramitacion(null);
-		evento.setPropiedadesEvento(lp);
-		evento.setFecha(new Date());
-		evento.setDescripcion("Procés de purga");
-		auditoriaComponent.auditarEventoAplicacion(evento);
 
 		return res;
 	}
@@ -229,6 +219,18 @@ public class PurgaServiceImpl implements PurgaService {
 			final int num = this.purgaComponent.eliminarTramitesPurgados(fechaCaducidadPurgados);
 			lp.addPropiedad("Tràmits purgats eliminats", Integer.toString(num));
 		}
+	}
+
+
+	/**
+	 * Purga entregas trámites realizadas.
+	 *
+	 * @param lp
+	 *               Lista propiedades
+	 */
+	private void procesoPurgarEntregasTramites(final ListaPropiedades lp) {
+		final int num = this.purgaComponent.procesoPurgarEntregasTramites();
+		lp.addPropiedad("Entrega tràmits eliminats", Integer.toString(num));
 	}
 
 	/**

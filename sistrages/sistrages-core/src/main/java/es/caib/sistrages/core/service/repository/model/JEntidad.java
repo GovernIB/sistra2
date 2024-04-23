@@ -49,6 +49,10 @@ public class JEntidad implements IModelApi {
 	@Column(name = "ENT_ACTIVA", nullable = false, precision = 1, scale = 0)
 	private boolean activa;
 
+	/** Para habilitar / deshabilitar modo entrega (CES2). Por defecto deshabilitado. */
+	@Column(name = "ENT_MODENT", nullable = false, precision = 1, scale = 0)
+	private boolean habilitarModoEntrega;
+
 	/** Role asociado al administrador de la entidad */
 	@Column(name = "ENT_ROLADM", nullable = false, length = 100)
 	private String roleAdministrador;
@@ -303,6 +307,21 @@ public class JEntidad implements IModelApi {
 	 */
 	public void setCodigoDir3(final String codigoDir3) {
 		this.codigoDir3 = codigoDir3;
+	}
+
+
+	/**
+	 * @return the habilitarModoEntrega
+	 */
+	public boolean isHabilitarModoEntrega() {
+		return habilitarModoEntrega;
+	}
+
+	/**
+	 * @param habilitarModoEntrega the habilitarModoEntrega to set
+	 */
+	public void setHabilitarModoEntrega(boolean habilitarModoEntrega) {
+		this.habilitarModoEntrega = habilitarModoEntrega;
 	}
 
 	/**
@@ -834,6 +853,7 @@ public class JEntidad implements IModelApi {
 		entidad.setOficinaRegistroCentralizado(oficinaRegistroCentralizado);
 		entidad.setValorarTramite(valorarTramite);
 		entidad.setRegistroOcultarDescargaDocumentos(registroOcultarDescargaDocumentos);
+		entidad.setHabilitarModoEntrega(habilitarModoEntrega);
 //		List<PlantillaEntidad> plantillas = new ArrayList<>();
 //		if (this.getPlantillaEntidad() != null) {
 //			for(JPlantillaEntidad jplantilla : this.getPlantillaEntidad()) {

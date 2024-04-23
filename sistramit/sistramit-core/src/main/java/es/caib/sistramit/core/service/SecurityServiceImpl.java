@@ -343,9 +343,6 @@ public class SecurityServiceImpl implements SecurityService {
 				.obtenerConfiguracionEntidad(defTramite.getDefinicionVersion().getIdEntidad());
 		final RAvisosEntidad avisosEntidad = configuracionComponent
 				.obtenerAvisosEntidad(defTramite.getDefinicionVersion().getIdEntidad());
-		final DefinicionTramiteCP defTramiteCP = catalogoProcedimientosComponent
-				.obtenerDefinicionTramite(entidad.getIdentificador(), idTramiteCatalogo, servicioCatalogo, idioma);
-
 		final List<AvisoPlataforma> avisos = UtilsSTG.obtenerAvisosTramite(defTramite, avisosEntidad, idioma, false);
 		boolean avisosBloqueantes = false;
 		for (final AvisoPlataforma a : avisos) {
@@ -363,11 +360,20 @@ public class SecurityServiceImpl implements SecurityService {
 			niveles.add(TypeAutenticacion.ANONIMO);
 		}
 
+		// Obtenemos descripción trámite
+		// En caso de que hayan avisos bloqueantes, no accedemos para no enmascarar error acceso a CP
+		String descripcionTramite = "";
+		if (!avisosBloqueantes) {
+			final DefinicionTramiteCP defTramiteCP = catalogoProcedimientosComponent
+					.obtenerDefinicionTramite(entidad.getIdentificador(), idTramiteCatalogo, servicioCatalogo, idioma);
+			descripcionTramite = defTramiteCP.getDescripcion();
+		}
+
 		final InfoLoginTramite res = new InfoLoginTramite();
 		res.setIdTramite(codigoTramite);
 		res.setVersion(versionTramite);
 		res.setIdioma(idioma);
-		res.setTitulo(defTramiteCP.getDescripcion());
+		res.setTitulo(descripcionTramite);
 		res.setNiveles(niveles);
 		res.setMetodosAutenticado(UtilsSTG.convertMetodosAutenticado(
 				defTramite.getDefinicionVersion().getPropiedades().getMetodosAutenticacion()));

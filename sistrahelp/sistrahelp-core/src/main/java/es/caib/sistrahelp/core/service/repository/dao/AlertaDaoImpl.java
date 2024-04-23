@@ -1,6 +1,7 @@
 package es.caib.sistrahelp.core.service.repository.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import es.caib.sistrahelp.core.api.model.Alerta;
 import es.caib.sistrahelp.core.service.repository.model.JAlerta;
+import es.caib.sistrahelp.core.service.repository.model.JProceso;
 
 /**
  * La clase VariableAreaDaoImpl.
@@ -156,5 +158,36 @@ public class AlertaDaoImpl implements AlertaDao {
 		}
 		return resultado;
 	}
+
+	@Override
+    public void updateUltimaVerificacion(final Long codigoAlerta) {
+    	final Date fechaActual = new Date();
+
+        // Recuperamos info actual (debe existir siempre)
+        final JAlerta jAlerta = entityManager.find(JAlerta.class,
+                codigoAlerta);
+
+        if(jAlerta != null) {
+        	final String sql = "UPDATE JAlerta p SET p.fecha = :fechaActual WHERE p.codigo = :codigo";
+            final Query query = entityManager.createQuery(sql);
+            query.setParameter("fechaActual", fechaActual);
+            query.setParameter("codigo", jAlerta.getCodigo());
+            query.executeUpdate();
+        }
+    }
+
+    @Override
+    public Date getUltimaVerificacion(final Long codigoAlerta) {
+    	final StringBuilder sql = new StringBuilder("select p.fecha from JAlerta p where p.codigo = :codigo");
+
+		final Query query = entityManager.createQuery(sql.toString());
+		query.setParameter("codigo", codigoAlerta);
+
+		if(!query.getResultList().isEmpty()) {
+			return (Date) query.getSingleResult();
+		}
+
+		return null;
+    }
 
 }

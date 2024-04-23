@@ -853,6 +853,10 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 
 			rFiltro.setClasificacionSeleccionada(pFiltro.getClasificacionSeleccionada());
 			rFiltro.setErrorTipo(pFiltro.getErrorTipo());
+
+			if(pFiltro.getRolAcceso() != null) {
+				rFiltro.setRolAcceso(pFiltro.getRolAcceso());
+			}
 		}
 
 		return rFiltro;

@@ -26,10 +26,12 @@ import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.EnvioRemotoService;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -68,6 +70,10 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	/** Entidad service. */
 	@Inject
 	private EnvioRemotoService envioRemotoService;
+
+	/** Componente systemservice **/
+	@Inject
+	private SystemService systemService;
 
 	/** Id. **/
 	private String id;
@@ -111,6 +117,8 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 
 	private String errorCopiar;
 
+	private boolean activoModoEntrega;
+
 	/**
 	 * Init.
 	 */
@@ -123,12 +131,34 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 		enviosRemotos = new HashMap<>();
 		addToList(envioRemotoService.listEnvio(TypeAmbito.AREA, tramiteVersion.getIdArea(), ""));
 		addToList(envioRemotoService.listEnvio(TypeAmbito.ENTIDAD, entidad.getCodigo(), ""));
+		checkModoEntrega();
+
+	}
+
+	/**
+	 * Comprueba si se puede ver campos del modo entrega.
+	 * Tiene que estar activo a modo global y a nivle entidad.
+	 */
+	private void checkModoEntrega() {
+		final String modoEntrega = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAGES_MODOENTREGA_HABILITAR.toString());
+		boolean permiteModoEntrega = modoEntrega != null && "true".equalsIgnoreCase(modoEntrega);
+		if (permiteModoEntrega) {
+			activoModoEntrega  = entidad.isHabilitarModoEntrega();
+		} else {
+			activoModoEntrega = false;
+		}
+
+		if (!activoModoEntrega) {
+			data.setModoEntregaHabilitar(false);
+			data.setModoEntregaHabilitarInmediato(false);
+		}
 	}
 
 	private void addToList(final List<EnvioRemoto> eoL) {
 		if (eoL != null) {
 			for (final EnvioRemoto er : eoL) {
-				if (data.getEnvioRemoto() == null || (!data.getEnvioRemoto().getCodigo().equals(er.getCodigo()))) {
+				if (!Constantes.COMPONENTE_ENTREGA.equals(er.getIdentificador()) && (data.getEnvioRemoto() == null || (!data.getEnvioRemoto().getCodigo().equals(er.getCodigo())))) {
 					enviosRemotos.put(er.getIdentificador(), er.getCodigo().toString());
 				}
 			}
@@ -204,6 +234,11 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 							UtilJSF.getSessionBean().getUserName(), "Modificación registro");
 				}
 				this.cambios = false;
+
+				if (!data.isModoEntregaHabilitar()) {
+					//Si no está habilitado entregar, es inmediato false
+					data.setModoEntregaHabilitarInmediato(false);
+				}
 				tramiteService.updateTramitePaso(data);
 
 				final DialogResult result = new DialogResult();
@@ -696,5 +731,21 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	public boolean isServicioActivado() {
 		return UtilJSF.isServicioActivado();
 	}
+
+	/**
+	 * @return the activoModoEntrega
+	 */
+	public boolean isActivoModoEntrega() {
+		return activoModoEntrega;
+	}
+
+	/**
+	 * @param activoModoEntrega the activoModoEntrega to set
+	 */
+	public void setActivoModoEntrega(boolean activoModoEntrega) {
+		this.activoModoEntrega = activoModoEntrega;
+	}
+
+
 
 }

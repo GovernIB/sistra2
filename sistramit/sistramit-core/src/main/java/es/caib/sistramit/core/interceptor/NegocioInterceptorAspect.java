@@ -3,6 +3,7 @@ package es.caib.sistramit.core.interceptor;
 import java.util.Date;
 import java.util.List;
 
+import es.caib.sistramit.core.api.service.*;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
@@ -30,10 +31,6 @@ import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
-import es.caib.sistramit.core.api.service.FlujoFormularioInternoService;
-import es.caib.sistramit.core.api.service.FlujoTramitacionService;
-import es.caib.sistramit.core.api.service.PurgaService;
-import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.core.service.component.system.AuditorEventosFlujoTramitacion;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.model.system.EventoFlujoInfo;
@@ -135,7 +132,6 @@ public final class NegocioInterceptorAspect {
 
 		// Audita eventos purga
 		if (isPurgaService(jp)) {
-
 			// Purgar persistencia
 			if ("purgarPersistencia".equals(jp.getSignature().getName())) {
 				final ResultadoProcesoProgramado rp = (ResultadoProcesoProgramado) retVal;
@@ -148,12 +144,25 @@ public final class NegocioInterceptorAspect {
 					auditoriaComponent.auditarEventoAplicacion(ev);
 				}
 			}
-
 		}
+
+		// Audita eventos entrega
+		 if (isEntregaService(jp)) {
+			if ("procesarEntregaFinalizadosInmediatos".equals(jp.getSignature().getName()) || "procesarEntregaFinalizadosPeriodicos".equals(jp.getSignature().getName())) {
+				final ResultadoProcesoProgramado rp = (ResultadoProcesoProgramado) retVal;
+				if (rp != null) {
+					final EventoAuditoria ev = new EventoAuditoria();
+					ev.setTipoEvento(TypeEvento.PROCESO_ENTREGA);
+					ev.setFecha(new Date());
+					ev.setResultado(Boolean.toString(rp.isFinalizadoOk()));
+					ev.setPropiedadesEvento(rp.getDetalles());
+					auditoriaComponent.auditarEventoAplicacion(ev);
+				}
+			}
+		 }
 
 		// Audita eventos sistema
 		if (isSystemService(jp)) {
-
 			// Invalidaciones
 			if ("revisarInvalidaciones".equals(jp.getSignature().getName())) {
 				final ListaPropiedades rp = (ListaPropiedades) retVal;
@@ -170,6 +179,7 @@ public final class NegocioInterceptorAspect {
 		}
 
 	}
+
 
 	/**
 	 * Intercepta excepcion y realiza auditoria.
@@ -368,6 +378,17 @@ public final class NegocioInterceptorAspect {
 	 */
 	private boolean isSystemService(final JoinPoint jp) {
 		return jp.getTarget() instanceof SystemService;
+	}
+
+	/**
+	 * Verifica si llamada es al service de entrega.
+	 *
+	 * @param jp
+	 *               JointPoint
+	 * @return boolean
+	 */
+	private boolean isEntregaService(JoinPoint jp) {
+		return jp.getTarget() instanceof EntregaService;
 	}
 
 }

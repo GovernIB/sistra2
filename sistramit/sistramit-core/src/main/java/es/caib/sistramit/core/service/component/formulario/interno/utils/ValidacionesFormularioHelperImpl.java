@@ -306,9 +306,9 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 
 		boolean validacion = true;
 		if (opcionesCampo.getRangoMin() != null) {
-			final BigDecimal bd = new BigDecimal(valorCampo);
-			if (!ValidacionesTipo.getInstance().validaRango(bd.intValue(), opcionesCampo.getRangoMin(),
-					opcionesCampo.getRangoMax())) {
+			final Double bd = new Double(valorCampo);
+			if (!ValidacionesTipo.getInstance().validaRangoD(bd.doubleValue(), opcionesCampo.getRangoMin().doubleValue(),
+					opcionesCampo.getRangoMax().doubleValue())) {
 				validacion = false;
 			}
 		}

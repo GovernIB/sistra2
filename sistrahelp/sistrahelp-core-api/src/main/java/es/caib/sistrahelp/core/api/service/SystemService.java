@@ -1,5 +1,8 @@
 package es.caib.sistrahelp.core.api.service;
 
+import java.util.List;
+
+import es.caib.sistrahelp.core.api.model.Alerta;
 import es.caib.sistrahelp.core.api.model.Sesion;
 
 /**
@@ -25,5 +28,15 @@ public interface SystemService {
 	 *            propiedades de la sesión
 	 */
 	public void updateSesionPropiedades(String pUserName, String pPropiedades);
+
+	/**
+	 * Verifica si es maestro
+	 *
+	 * @param instancia instancia
+	 * @return si es maestro
+	 */
+	boolean verificarMaestro(String instancia);
+
+	public List<Alerta> calcularAlertasEjecucion();
 
 }

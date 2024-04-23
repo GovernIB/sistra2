@@ -205,7 +205,7 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setOficinaRegistroCentralizado(entidad.getOficinaRegistroCentralizado());
 		jEntidad.setValorarTramite(entidad.isValorarTramite());
 		jEntidad.setRegistroOcultarDescargaDocumentos(entidad.isRegistroOcultarDescargaDocumentos());
-
+		jEntidad.setHabilitarModoEntrega(entidad.isHabilitarModoEntrega());
 		entityManager.merge(jEntidad);
 	}
 

@@ -27,6 +27,7 @@ import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSeccionReutilizable;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.LiteralScript;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
@@ -918,6 +919,13 @@ public class DialogScript extends DialogControllerBase {
 
 				ValorIdentificadorCompuesto identificador = new ValorIdentificadorCompuesto(identificadorDominio);
 				dominiosDelScript.add(identificador);
+
+				if(identificador.isError()) {
+					addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
+							UtilJSF.getLiteral("dialogScript.error.identificador.ambitoErroneo"));
+					return false;
+				}
+
 				if (identificador.getAmbito() == TypeAmbito.ENTIDAD
 						&& !UtilJSF.getIdentificadorEntidad().equals(identificador.getIdentificadorEntidad())) {
 					String[] params = new String[1];
@@ -1669,8 +1677,20 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	private boolean validoScript() {
-		final List<ErrorValidacion> listaErrores = tramiteService.validarScript(data, dominios, idiomas,
-				UtilJSF.getSessionBean().getLang());
+		List<ErrorValidacion> listaErrores = null;
+
+		if(idFormularioActual != null) {
+			FormularioTramite form = tramiteService.getFormulario(Long.parseLong(idFormularioActual));
+			String[] params = new String[] { nombreComponente, UtilJSF.getLiteral("dialogTramiteScripts.typeComponente.PAGINA") + " "
+													+ Integer.toString(form.getOrden()), form.getIdentificador() };
+
+			listaErrores = tramiteService.validarScript(data, dominios, idiomas,
+					UtilJSF.getSessionBean().getLang(), params);
+		} else {
+			listaErrores = tramiteService.validarScript(data, dominios, idiomas,
+					UtilJSF.getSessionBean().getLang(), null);
+		}
+
 		if (!listaErrores.isEmpty()) {
 			final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
 

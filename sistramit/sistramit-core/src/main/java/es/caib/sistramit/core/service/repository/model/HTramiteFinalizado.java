@@ -57,6 +57,10 @@ public final class HTramiteFinalizado implements IModelApi {
 	@Column(name = "TRF_DESTRA")
 	private String descripcionTramite;
 
+	/** Código Procedimiento catálogo procedimientos. */
+	@Column(name = "TRF_PROCP")
+	private String idProcedimientoCP;
+
 	/** Atributo procedimiento SIA. */
 	@Column(name = "TRF_PROSIA")
 	private String idProcedimientoSIA;
@@ -85,9 +89,17 @@ public final class HTramiteFinalizado implements IModelApi {
 	@Column(name = "TRF_NOMFIN")
 	private String nombrePresentador;
 
-	/** Atributo numero registro. */
+	/** Atributo numero registro (en caso registro). */
 	@Column(name = "TRF_NUMREG")
 	private String numeroRegistro;
+
+	/** Fecha registro (en caso registro). */
+	@Column(name = "TRF_FECREG")
+	private Date fechaRegistro;
+
+	/** Atributo numero entrega (si modo CES2). */
+	@Column(name = "TRF_NUMENV")
+	private String numeroEntrega;
 
 	/**
 	 * Método de acceso a codigo.
@@ -375,6 +387,63 @@ public final class HTramiteFinalizado implements IModelApi {
 	}
 
 	/**
+	 * Método de acceso a numeroEntrega.
+	 *
+	 * @return numeroEntrega
+	 */
+	public String getNumeroEntrega() {
+		return numeroEntrega;
+	}
+
+	/**
+	 * Método para establecer numeroEntrega.
+	 *
+	 * @param numeroEntrega
+	 *                           numeroEntrega a establecer
+	 */
+	public void setNumeroEntrega(String numeroEntrega) {
+		this.numeroEntrega = numeroEntrega;
+	}
+
+	/**
+	 * Método de acceso a idProcedimientoCP.
+	 *
+	 * @return idProcedimientoCP
+	 */
+	public String getIdProcedimientoCP() {
+		return idProcedimientoCP;
+	}
+
+	/**
+	 * Método para establecer idProcedimientoCP.
+	 *
+	 * @param idProcedimientoCP
+	 *                           idProcedimientoCP a establecer
+	 */
+	public void setIdProcedimientoCP(String idProcedimientoCP) {
+		this.idProcedimientoCP = idProcedimientoCP;
+	}
+
+	/**
+	 * Método de acceso a fechaRegistro.
+	 *
+	 * @return fechaRegistro
+	 */
+	public Date getFechaRegistro() {
+		return fechaRegistro;
+	}
+
+	/**
+	 * Método para establecer fechaRegistro.
+	 *
+	 * @param fechaRegistro
+	 *                           fechaRegistro a establecer
+	 */
+	public void setFechaRegistro(Date fechaRegistro) {
+		this.fechaRegistro = fechaRegistro;
+	}
+
+	/**
 	 * Convierte a model.
 	 * 
 	 * @param h
@@ -390,6 +459,7 @@ public final class HTramiteFinalizado implements IModelApi {
 			m.setIdTramite(h.getIdTramite());
 			m.setVersionTramite(h.getVersionTramite());
 			m.setDescripcionTramite(h.getDescripcionTramite());
+			m.setIdProcedimientoCP(h.getIdProcedimientoCP());
 			m.setIdProcedimientoSIA(h.getIdProcedimientoSIA());
 			m.setAutenticacion(TypeAutenticacion.fromString(h.getAutenticacion()));
 			m.setMetodoAutenticacion(TypeMetodoAutenticacion.fromString(h.getMetodoAutenticacion()));
@@ -397,6 +467,8 @@ public final class HTramiteFinalizado implements IModelApi {
 			m.setNombreApellidos(h.getNombrePresentador());
 			m.setIdioma(h.getIdioma());
 			m.setNumeroRegistro(h.getNumeroRegistro());
+			m.setFechaRegistro(h.getFechaRegistro());
+			m.setNumeroEntrega(h.getNumeroEntrega());
 		}
 		return m;
 	}

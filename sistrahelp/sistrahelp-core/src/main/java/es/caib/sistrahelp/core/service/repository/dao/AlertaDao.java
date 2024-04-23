@@ -1,5 +1,6 @@
 package es.caib.sistrahelp.core.service.repository.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import es.caib.sistrahelp.core.api.model.Alerta;
@@ -55,5 +56,9 @@ public interface AlertaDao {
 	boolean remove(final Long idAlerta);
 
 	List<Alerta> listarAlertaActivo(final String filtro, final boolean activo);
+
+	void updateUltimaVerificacion(Long codigoAlerta);
+
+    Date getUltimaVerificacion(Long codigoAlerta);
 
 }

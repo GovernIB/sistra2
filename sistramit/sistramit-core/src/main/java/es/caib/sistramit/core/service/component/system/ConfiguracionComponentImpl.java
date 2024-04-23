@@ -42,6 +42,9 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 	@Autowired
 	private SistragesComponent sistragesComponent;
 
+	/** Indica que se ha inicializado la configuración global. */
+	private boolean configuracionGlobalInicializada = false;
+
 	@PostConstruct
 	public void init() {
 		// Recupera propiedades configuracion especificadas en properties
@@ -91,7 +94,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 
 	@Override
 	public IPlugin obtenerPluginGlobal(final TypePluginGlobal tipoPlugin) {
-		final RConfiguracionGlobal confGlobal = sistragesComponent.obtenerConfiguracionGlobal();
+		final RConfiguracionGlobal confGlobal = recuperarConfiguracionGlobal();
 		return createPlugin(confGlobal.getPlugins(), tipoPlugin.toString());
 	}
 
@@ -117,7 +120,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 			configuracionesAutenticacion = confEntidad.getConfiguracionesAutenticacion();
 
 		} else {
-			final RConfiguracionGlobal confGlobal = sistragesComponent.obtenerConfiguracionGlobal();
+			final RConfiguracionGlobal confGlobal = recuperarConfiguracionGlobal();
 			configuracionesAutenticacion = confGlobal.getConfiguracionesAutenticacion();
 		}
 
@@ -166,7 +169,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 	 */
 	private String getPropiedadGlobal(final TypePropiedadConfiguracion propiedad) {
 		String res = null;
-		final RConfiguracionGlobal configuracionGlobal = sistragesComponent.obtenerConfiguracionGlobal();
+		final RConfiguracionGlobal configuracionGlobal = recuperarConfiguracionGlobal();
 		if (configuracionGlobal != null && configuracionGlobal.getPropiedades() != null
 				&& configuracionGlobal.getPropiedades().getParametros() != null) {
 			for (final RValorParametro vp : configuracionGlobal.getPropiedades().getParametros()) {
@@ -179,6 +182,15 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 		return res;
 	}
 
+	/**
+	 * Crea plugin a partir de configuración.
+	 *
+	 * @param plugins
+	 *                    plugins
+	 * @param plgTipo
+	 *                    tipo plugin
+	 * @return plugin
+	 */
 	private IPlugin createPlugin(final List<RPlugin> plugins, final String plgTipo) {
 
 		String prefijoGlobal = this.getPropiedadGlobal(TypePropiedadConfiguracion.PLUGINS_PREFIJO);
@@ -285,5 +297,23 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 		}
 		return StringUtils.trim(prop);
 	}
+
+	/**
+	 * Recupera configuración global.
+	 *
+	 * @return configuración global
+	 */
+	private RConfiguracionGlobal recuperarConfiguracionGlobal() {
+		RConfiguracionGlobal confGlobal = null;
+		if (!configuracionGlobalInicializada) {
+			confGlobal = sistragesComponent.obtenerConfiguracionGlobal();
+		} else {
+			confGlobal = sistragesComponent.obtenerConfiguracionGlobal();
+		}
+		configuracionGlobalInicializada = true;
+		return confGlobal;
+	}
+
+
 
 }

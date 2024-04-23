@@ -38,10 +38,10 @@ import es.caib.sistrahelp.core.api.service.AlertaService;
 import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.core.api.service.HistorialAlertaService;
+import es.caib.sistrahelp.core.api.service.ProcesoAlertaService;
 import es.caib.sistrahelp.frontend.model.DialogResult;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrahelp.frontend.procesos.TimerEvaluarAlertas;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -126,6 +126,8 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 
 	private Date periodo;
 
+	private Date horaEnvioRD;
+
 	private String entidad;
 
 	private String area;
@@ -133,6 +135,8 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 	private String tramite;
 
 	private Integer version;
+
+	private boolean checkActivo;
 
 	@Inject
 	private AlertaService aService;
@@ -146,6 +150,9 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 	@Inject
 	private HistorialAlertaService histAvis;
 
+	@Inject
+	private ProcesoAlertaService procesoAlertaService;
+
 	/**
 	 * Log.
 	 */
@@ -153,6 +160,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 
 	/**
 	 * Inicializacion.
+	 * @throws ParseException
 	 */
 	public void init() {
 
@@ -183,12 +191,15 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 				fDesde = sdf.parse("00:00");
 				fHasta = sdf.parse("00:00");
 				periodo = sdfS.parse("00:00:01");
+				setCheckActivo(true);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 		} else {
 			if (id != null) {
 				data = alertaService.loadAlerta(Long.valueOf(id));
+
+				setCheckActivo(data.isActivo());
 
 				if (isResumenDiario()) {
 					check = true;
@@ -198,6 +209,11 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 					fDesde = null;
 					fHasta = null;
 					periodo = null;
+					try {
+						horaEnvioRD = sdf.parse(data.getHoraResumen());
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
 				} else {
 					check = false;
 					String grupoAnterior = "1";
@@ -409,6 +425,15 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 			data.setIntervaloEvaluacion("");
 			data.setPeriodoEvaluacion(null);
 			data.setNombre("RESUMEN_DIARIO");
+			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+			if (horaEnvioRD == null) {
+				try {
+					horaEnvioRD = sdf.parse("00:00");
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+			data.setHoraResumen(sdf.format(horaEnvioRD));
 			grupoSeleccionado = null;
 			opLogicoNOT = false;
 			evSeleccionado = null;
@@ -1086,6 +1111,11 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.combo.ambito.vacio"));
 				return false;
 			}
+		} else {
+			if (horaEnvioRD == null) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.horaEnvioRD.vacio"));
+				return false;
+			}
 		}
 
 		for (final String cadena : Arrays.asList(emails.split(";"))) {
@@ -1141,7 +1171,9 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 			data.setEmail(Arrays.asList(emails.split(";")));
 			data.setTipo(tipo);
 			data.setIdEntidad(UtilJSF.getSessionBean().getEntidad().getCodigoDIR3());
+			data.setActivo(checkActivo);
 			if (!isResumenDiario()) {
+				data.setFecha(new Date());
 				switch(tipo) {
 				case "E":
 					if(this.entidad!=null) {
@@ -1202,6 +1234,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 				data.setIntervaloEvaluacion(strDateDesd + "-" + strDateHasta);
 				data.setPeriodoEvaluacion((int) ((periodo.getTime() - f0.getTime()) / 1000));
 			} else {
+				DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 				data.setIntervaloEvaluacion(null);
 				data.setPeriodoEvaluacion(null);
 				data.setTipo("E");
@@ -1213,13 +1246,14 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 				data.setListaAreas(lisAreasAux);
 				data.setTramite(null);
 				data.setVersion(null);
+				data.setHoraResumen(dateFormat.format(horaEnvioRD));
 			}
 			Long codigo = alertaService.addAlerta(data);
 			if (codigo != null) {
 				data.setCodigo(codigo);
 			}
 			if (!isResumenDiario()) {
-				inicializarHilo(data);
+				procesoAlertaService.procesarAlertas(data);
 			}
 			break;
 		case EDICION:
@@ -1232,6 +1266,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 			data.setEmail(Arrays.asList(emails.split(";")));
 			data.setTipo(tipo);
 			data.setIdEntidad(UtilJSF.getSessionBean().getEntidad().getCodigoDIR3());
+			data.setActivo(checkActivo);
 
 			if (!isResumenDiario()) {
 				switch(tipo) {
@@ -1292,6 +1327,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 				data.setIntervaloEvaluacion(strDateDesd + "-" + strDateHasta);
 				data.setPeriodoEvaluacion((int) ((periodo.getTime() - f0.getTime()) / 1000));
 			} else {
+				DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 				data.setIntervaloEvaluacion(null);
 				data.setPeriodoEvaluacion(null);
 				data.setTipo("E");
@@ -1302,6 +1338,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 				data.setListaAreas(lisAreasAux);
 				data.setTramite(null);
 				data.setVersion(null);
+				data.setHoraResumen(dateFormat.format(horaEnvioRD));
 			}
 			alertaService.updateAlerta(data);
 
@@ -1341,44 +1378,6 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 			copiadoErr();
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
-		}
-	}
-
-	private void inicializarHilo(Alerta al) {
-		LOGGER.debug("ALERTAS STH: Entra en DialogConfiguracionAertas.inicializarHilo: " + al.getNombre());
-		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-		String[] horas = al.getIntervaloEvaluacion().split("-");
-		LocalTime ahora = LocalTime.now();
-		Boolean targetInZone = (ahora.isAfter(LocalTime.parse(horas[0] + ":00.000000000"))
-				&& ahora.isBefore(LocalTime.parse(horas[1] + ":59.999999999")));
-		if (targetInZone) {
-			final ScheduledFuture<?> promise = scheduler.schedule(
-					new TimerEvaluarAlertas(al.getCodigo(), hService, confService, histAvis, aService), 0,
-					TimeUnit.SECONDS);
-			final ScheduledFuture<Boolean> canceller = scheduler.schedule(() -> promise.cancel(false),
-					ahora.until(LocalTime.parse(horas[1] + ":59.999999999"), ChronoUnit.SECONDS), TimeUnit.SECONDS);
-			if (ahora.until(LocalTime.parse("23:59:59.999999999"), ChronoUnit.SECONDS) > 0) {
-				final ScheduledFuture<Boolean> cancellerDia = scheduler.schedule(() -> promise.cancel(false),
-						ahora.until(LocalTime.parse("23:59:59.999999999"), ChronoUnit.SECONDS), TimeUnit.SECONDS);
-			} else {
-				final ScheduledFuture<Boolean> cancellerDia = scheduler.schedule(() -> promise.cancel(false),
-						ahora.until(LocalTime.parse("23:59:59.999999999"), ChronoUnit.SECONDS) + 86400,
-						TimeUnit.SECONDS);
-			}
-		} else if (ahora.isBefore(LocalTime.parse(horas[0] + ":00.000000000"))) {
-			final ScheduledFuture<?> promise = scheduler.schedule(
-					new TimerEvaluarAlertas(al.getCodigo(), hService, confService, histAvis, aService),
-					ahora.until(LocalTime.parse(horas[0] + ":00.000000000"), ChronoUnit.SECONDS), TimeUnit.SECONDS);
-			final ScheduledFuture<Boolean> canceller = scheduler.schedule(() -> promise.cancel(false),
-					ahora.until(LocalTime.parse(horas[1] + ":59.999999999"), ChronoUnit.SECONDS), TimeUnit.SECONDS);
-			if (ahora.until(LocalTime.parse("23:59:59.999999999"), ChronoUnit.SECONDS) > 0) {
-				final ScheduledFuture<Boolean> cancellerDia = scheduler.schedule(() -> promise.cancel(false),
-						ahora.until(LocalTime.parse("23:59:59.999999999"), ChronoUnit.SECONDS), TimeUnit.SECONDS);
-			} else {
-				final ScheduledFuture<Boolean> cancellerDia = scheduler.schedule(() -> promise.cancel(false),
-						ahora.until(LocalTime.parse("23:59:59.999999999"), ChronoUnit.SECONDS) + 86400,
-						TimeUnit.SECONDS);
-			}
 		}
 	}
 
@@ -1891,6 +1890,34 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 	 */
 	public void setClickBotonAnyadir(boolean clickBotonAnyadir) {
 		this.clickBotonAnyadir = clickBotonAnyadir;
+	}
+
+	/**
+	 * @return the checkActivo
+	 */
+	public boolean isCheckActivo() {
+		return checkActivo;
+	}
+
+	/**
+	 * @param checkActivo the checkActivo to set
+	 */
+	public void setCheckActivo(boolean checkActivo) {
+		this.checkActivo = checkActivo;
+	}
+
+	/**
+	 * @return the horaEnvioRD
+	 */
+	public Date getHoraEnvioRD() {
+		return horaEnvioRD;
+	}
+
+	/**
+	 * @param horaEnvioRD the horaEnvioRD to set
+	 */
+	public void setHoraEnvioRD(Date horaEnvioRD) {
+		this.horaEnvioRD = horaEnvioRD;
 	}
 
 }

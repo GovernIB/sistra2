@@ -26,6 +26,9 @@ public class Entidad extends ModelApi {
 	/** activo. */
 	private boolean activo;
 
+	/** Para habilitar / deshabilitar modo entrega (CES2). Por defecto deshabilitado. */
+	private boolean habilitarModoEntrega;
+
 	/** rol. */
 	private String rol;
 
@@ -224,6 +227,23 @@ public class Entidad extends ModelApi {
 	 */
 	public void setActivo(final boolean activo) {
 		this.activo = activo;
+	}
+
+	/**
+	 * Establece el valor de habilitar modo entrega
+	 *
+	 * @return the habilitarModoEntrega
+	 */
+	public boolean isHabilitarModoEntrega() {
+		return habilitarModoEntrega;
+	}
+
+	/**
+	 * Establece el modo entrega
+	 * @param habilitarModoEntrega the habilitarModoEntrega to set
+	 */
+	public void setHabilitarModoEntrega(boolean habilitarModoEntrega) {
+		this.habilitarModoEntrega = habilitarModoEntrega;
 	}
 
 	/**

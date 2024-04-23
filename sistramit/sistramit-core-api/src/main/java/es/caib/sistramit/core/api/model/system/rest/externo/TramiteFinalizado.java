@@ -25,6 +25,8 @@ public final class TramiteFinalizado implements Serializable {
 	private int versionTramite;
 	/** Descripcion Tramite */
 	private String descripcionTramite;
+	/** Código Procedimiento catálogo procedimientos. */
+	private String idProcedimientoCP;
 	/** Id procedimiento SIA */
 	private String idProcedimientoSIA;
 	/** Fecha finalización. */
@@ -37,8 +39,13 @@ public final class TramiteFinalizado implements Serializable {
 	private String nif;
 	/** Nombre y apellidos. */
 	private String nombreApellidos;
-	/** Número registro. */
+	/** Número registro  (en caso registro). */
 	private String numeroRegistro;
+	/** Fecha registro (en caso registro). */
+	private Date fechaRegistro;
+	/** Número entrega (si modo CES2). */
+	private String numeroEntrega;
+
 
 	/**
 	 * Método de acceso a idSesionTramitacion.
@@ -268,4 +275,59 @@ public final class TramiteFinalizado implements Serializable {
 		this.numeroRegistro = numeroRegistro;
 	}
 
+	/**
+	 * Método de acceso a numeroEntrega.
+	 *
+	 * @return numeroEntrega
+	 */
+	public String getNumeroEntrega() {
+		return numeroEntrega;
+	}
+	/**
+	 * Método para establecer numeroEntrega.
+	 *
+	 * @param numeroEntrega
+	 *                           numeroEntrega a establecer
+	 */
+	public void setNumeroEntrega(String numeroEntrega) {
+		this.numeroEntrega = numeroEntrega;
+	}
+
+	/**
+	 * Método de acceso a idProcedimientoCP.
+	 *
+	 * @return idProcedimientoCP
+	 */
+	public String getIdProcedimientoCP() {
+		return idProcedimientoCP;
+	}
+
+	/**
+	 * Método para establecer idProcedimientoCP.
+	 *
+	 * @param idProcedimientoCP
+	 *                           idProcedimientoCP a establecer
+	 */
+	public void setIdProcedimientoCP(String idProcedimientoCP) {
+		this.idProcedimientoCP = idProcedimientoCP;
+	}
+
+	/**
+	 * Método de acceso a fechaRegistro.
+	 *
+	 * @return fechaRegistro
+	 */
+	public Date getFechaRegistro() {
+		return fechaRegistro;
+	}
+
+	/**
+	 * Método para establecer fechaRegistro.
+	 *
+	 * @param fechaRegistro
+	 *                           fechaRegistro a establecer
+	 */
+	public void setFechaRegistro(Date fechaRegistro) {
+		this.fechaRegistro = fechaRegistro;
+	}
 }

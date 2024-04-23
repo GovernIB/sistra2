@@ -34,6 +34,7 @@ import es.caib.sistrahelp.core.api.model.ResultadoEventoCM;
 import es.caib.sistrahelp.core.api.model.comun.Constantes;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 import es.caib.sistrahelp.core.api.model.types.TypePluginGlobal;
+import es.caib.sistrahelp.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.frontend.model.DialogResult;
@@ -101,6 +102,17 @@ public class DialogEnviarMail extends DialogControllerBase {
 
 	private FiltroAuditoriaTramitacion filtrosInacabados;
 
+	private String umbralNormalAtencionPropertiesString;
+	private String umbralAtencionRevisarPropertiesString;
+	private String umbralNormalAtencionUsuarioString;
+	private String umbralAtencionRevisarUsuarioString;
+	private String umbralNormalAtencionString;
+	private String umbralAtencionRevisarString;
+	private Integer umbralNormalAtencion;
+	private Integer umbralAtencionRevisar;
+	private Integer umbralNormalAtencionProperties;
+	private Integer umbralAtencionRevisarProperties;
+
 	/**
 	 * Log.
 	 */
@@ -118,6 +130,15 @@ public class DialogEnviarMail extends DialogControllerBase {
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			fechaHasta = dateFormat.format(new Date());
 		}
+
+		if (umbralNormalAtencionString != null || umbralAtencionRevisarString != null) {
+			umbralNormalAtencion = Integer.parseInt(umbralNormalAtencionString);
+			umbralAtencionRevisar = Integer.parseInt(umbralAtencionRevisarString);
+		} else {
+			umbralNormalAtencion = umbralNormalAtencionProperties = Integer.parseInt(umbralNormalAtencionPropertiesString);
+			umbralAtencionRevisar = umbralAtencionRevisarProperties = Integer.parseInt(umbralAtencionRevisarPropertiesString);
+		}
+
 	}
 
 	/**
@@ -216,14 +237,18 @@ public class DialogEnviarMail extends DialogControllerBase {
 			if (tramIni != 0) {
 				tramPor = formatDouble(100 - ((Double.valueOf(tramFin) * 100) / Double.valueOf(tramIni)));
 			} else {
-				tramPor = "0";
+				if (tramFin == 0) {
+					tramPor = "0,00";
+				} else {
+					tramPor = "100,00";
+				}
 			}
 
 			String msg = "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"ca\" lang=\"ca\">" + "   <head>"
 					+ "      <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">" + "      <title>"
 					+ nombre + "</title>" + "      <!-- css -->" + "   </head>" + "   <body>"
 					+ "      <!-- contenidor --> 	"
-					+ "      <div id=\"contenidor\" style=\"width: 90%;font: normal 80% 'TrebuchetMS', 'Trebuchet MS', Arial, Helvetica, sans-serif;color: #000;margin: 1em auto;background-color: #fff;\">"
+					+ "      <div id=\"contenidor\" style=\"width: 100%;font: normal 80% 'TrebuchetMS', 'Trebuchet MS', Arial, Helvetica, sans-serif;color: #000;background-color: #fff;\">"
 					+ "         <!-- logo illes balears --> 		"
 					+ "         <div id=\"cap\" style=\"font-size: 1.2em;font-weight: bold;text-align: center;margin-bottom: 1em;\">";
 					/*if(logo != null && !logo.isEmpty()) {
@@ -240,7 +265,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 			}
 			msg += "            <h1>" + nombre.toUpperCase() + "</h1>" + "         </div>"
 					+ "         <!-- /logo illes balears -->  		<!-- continguts -->"
-					+ "         <div id=\"continguts\" style=\"padding: 1em 2em;border: 1em solid #f2f2f2;\">"
+					+ "         <div id=\"continguts\" style=\"padding: 1em;border: 1em solid #f2f2f2;\">"
 					+ "            <!-- titol --> 			"
 					+ "            <h1 style=\"font-size: 1.4em;margin-top: 0;margin-bottom: 1em;\">"
 					+ "               Aquest missatge ha estat generat pel sistema d'alertes de SISTRAHELP y ofereix un resum dels events recogits al Quadre de comandament de SISTRAHELP, des del "
@@ -248,281 +273,255 @@ public class DialogEnviarMail extends DialogControllerBase {
 			if (fechaHasta != null && !fechaHasta.isEmpty()) {
 				msg += " fins al " + fechaHasta;
 			}
-			msg += ": 			" + "            </h1>" + "            <div style=\"height:20px;\"></div>"
-					+ "            <table id=\"form:tablaCuadroMando\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100% !important;border-collapse: collapse !important;display: flex;padding: 0px !important;justify-content: center;margin-top: 10px;margin-bottom: 1.5em;border: 0;empty-cells: hide;\">"
+			msg += ": 			" + "            </h1>" + "            </div><div style=\"height:20px;\"></div>"
+					+ "            <table id=\"form:tablaCuadroMando\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">"
 					+ "               <tbody>" + "                  <tr>"
 					+ "                     <td style=\"font-weight: bold;\">"
-					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;width: 16px !important;\"><span style=\"font-weight: bold; font-size: 1.2em !important;\">Accions</span></td>"
+					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold; font-size: 1.2em !important;\">ACCIONS</span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
-					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td class=\"w20 white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"></td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: lightgrey; border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Iniciats</span></td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Finalitzats</span></td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Percentatge d&#39;accions no finalizades</span></td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"></td>"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\"></td>"
+					+ "                                 <td style=\"background-color: lightgrey; border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Iniciats</span></td>"
+					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Finalitzats</span></td>"
+					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Percen&shy;tatge d&#39;accions<wbr> no<wbr> finali&shy;zades</span></td>"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\"></td>"
 					+ "                              </tr>" + "                              <tr>"
-					+ "                                 <td class=\"w20 white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Emplenar formulari</span></td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Emplenar formulari</span></td>"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ formIni + "</td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ formFin + "</td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ formPor + "%</td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ nivelGravedad(formPor) + "</td>" + "                              </tr>"
 					+ "                              <tr>"
-					+ "                                 <td class=\"w20 white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Firmar</span></td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Firmar</span></td>"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ firmaIni + "</td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ firmaFin + "</td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ firmaPor + "%</td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ nivelGravedad(firmaPor) + "</td>" + "                              </tr>"
 					+ "                              <tr>"
-					+ "                                 <td class=\"w20 white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Pagar</span></td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Pagar</span></td>"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ pagIni + "</td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ pagFin + "</td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ pagosPor + "%</td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ nivelGravedad(pagosPor) + "</td>" + "                              </tr>"
 					+ "                              <tr>"
-					+ "                                 <td class=\"w20 white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Registrar</span></td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Registrar</span></td>"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ regIni + "</td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ regIni + "</td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ registrosPor + "%</td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ nivelGravedad(registrosPor) + "</td>" + "                              </tr>"
 					+ "                           </tbody>" + "                        </table>"
 					+ "                     </td>" + "                  </tr>" + "                  <tr>"
 					+ "                     <td style=\"font-weight: bold;\">"
-					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;width: 16px !important;\"><span style=\"font-weight: bold;\">Tr&#224;mits</span></td>"
+					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;\">Tr&#224;mits</span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>"
-					+ "                     <td style=\"font-weight: bold;padding-bottom: .5em;\">"
-					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                     <td style=\"font-weight: bold;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td class=\"w20 white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"></td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Iniciades</span></td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Finalitzades</span></td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Percentatge de tr&#224;mits no finalitzats</span></td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"></td>"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\"></td>"
+					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Iniciades</span></td>"
+					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Finalitzades</span></td>"
+					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Percen&shy;tatge de tr&#224;mits<wbr> no<wbr> finali&shy;tzats</span></td>"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\"></td>"
 					+ "                              </tr>" + "                              <tr>"
-					+ "                                 <td class=\"w20 white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey;\">Tr&#224;mits</span></td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey;\">Tr&#224;mits</span></td>"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ tramIni + "</td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ tramFin + "</td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ tramPor + "%</td>"
-					+ "                                 <td class=\" white borde\" style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
-					+ nivelGravedad(100 + tramPor) + "</td>" + "                              </tr>"
+					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
+					+ nivelGravedad(tramPor) + "</td>" + "                              </tr>"
 					+ "                           </tbody>" + "                        </table>"
 					+ "                     </td>" + "                  </tr>" + "                  <tr>"
-					+ "                     <td style=\"font-weight: bold;padding-bottom: .5em;\">"
+					+ "                     <td style=\"font-weight: bold;\">"
 					+ "                        <div style=\"height:20px;\"></div>" + "                     </td>"
 					+ "                  </tr>" + "                  <tr>"
 					+ "                     <td style=\"font-weight: bold;\">"
-					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
-					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td class=\"grey borde \" style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"grey\" style=\"font-weight: bold;background-color: lightgrey; font-size: 1.2em !important;\">Nombre total d&#39;errors</span></td>"
-					+ "                                 <td class=\"wpx100 white borde pad\" style=\"padding-right: 10px;padding-left: 10px;background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
+					+ "                           <tbody>" + "                              <tr>";
+				if(UtilJSF.getSessionBean().getActiveRole().equals(TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
+					msg += "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey; font-size: 1.2em !important;\">NOMBRE TOTAL D&#39;ERRORS (TRAMITACI&#211; + PLATAFORMA)</span></td>";
+				}else {
+					msg += "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;background-color: lightgrey; font-size: 1.2em !important;\">NOMBRE TOTAL D&#39;ERRORS (TRAMITACI&#211;)</span></td>";
+				}
+				msg += "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ errTot + "</td>" + "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
-					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td class=\"grey borde \" style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;padding-top: .5em;\"><span style=\"font-weight: bold; padding-left: 5px;\"><u>Errors de tramitaci&#243; (Errors per Tr&#224;mit):</u></span></td>"
+					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;\"><u>Errors de tramitaci&#243; (Errors per Tr&#224;mit):</u></span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>" + "                    <td style=\"font-weight: bold;\">"
-					+ "                       <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                       <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                          <tbody>" + "                             <tr>"
-					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Tr&#224;mit</span></td>"
-					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Versi&#243;</span></td>"
-					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Sessions Ok</span></td>"
-					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Sessions no finalitzades</span></td>"
-					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Percentatge de sessions no finalitzades</span></td>"
-					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Suma d&#39;errors</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Tr&#224;mit</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Versi&#243;</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Sessions Ok</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Sessions<wbr> no<wbr> finalitzades</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Percen&shy;tatge de sessions<wbr> no<wbr> finali&shy;tzades</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Suma d&#39;errors</span></td>"
 					+ "                             </tr>";
 			if (listaErrores != null && !listaErrores.isEmpty()) {
 				for (ErroresPorTramiteCM lerr : listaErrores) {
-					msg += "                             <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
-							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 1000px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
-							+ lerr.getIdTramite() + "</td>"
-							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 100px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+					String [] idTramite = lerr.getIdTramite().split("\\.");
+					msg += "                             <tr data-ri=\"0\" role=\"row\" aria-selected=\"false\">"
+							+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\">"
+							+ idTramite[0]+".<wbr>"+ idTramite[1]+".<wbr>"+ idTramite[2] + "</td>"
+							+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\">"
 							+ lerr.getVersion() + "</td>"
-							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\">"
 							+ lerr.getSesionesFinalizadas() + "</td>"
-							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 500px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\">"
 							+ lerr.getSesionesInacabadas() + "</td>"
-							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 500px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\">"
 							+ formatDouble(lerr.getPorcentage()) + "%</td>"
-							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 500px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\">"
 							+ lerr.getNumeroErrores() + "</td>" + "                             </tr>";
 				}
 			} else {
-				msg += "                             <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
-						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 1000px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"> No hi ha registres al període de temps</td>"
-						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 100px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
-						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
-						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 500px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
-						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 500px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
-						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 500px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
+				msg += "                             <tr data-ri=\"0\" role=\"row\" aria-selected=\"false\">"
+						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"> No hi ha registres al període de temps</td>"
+						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
+						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
+						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
+						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
+						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
 						+ "                             </tr>";
 			}
 			msg += "                          </tbody>" + "                       </table>"
 					+ "                    </td>" + "                 </tr>" + "                  ";
 			msg += " <tr>" + "                     <td style=\"font-weight: bold;\">"
-					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td class=\"grey borde \" style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;padding-top: .5em;\"><span style=\"font-weight: bold; padding-left: 5px;\"><u>Errors de tramitaci&#243; (Tr&#224;mits per Error):</u></span></td>"
+					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;\"><u>Errors de tramitaci&#243; (Tr&#224;mits per Error):</u></span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>" + "                    <td style=\"font-weight: bold;\">"
-					+ "                       <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                       <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                          <tbody>" + "                             <tr>"
-					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Error</span></td>"
-					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Suma d&#39;errors</span></td>"
-					+ "                                <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Percentatge d&#39;errors</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Error</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Suma d&#39;errors</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Percen&shy;tatge d&#39;errors</span></td>"
 					+ "                             </tr>";
 			if (listaTramErrores != null && !listaTramErrores.isEmpty()) {
 				for (EventoCM ltrerr : listaTramErrores) {
-					msg += "                             <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
-							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 2000px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+					msg += "                             <tr data-ri=\"0\" role=\"row\" aria-selected=\"false\">"
+							+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\">"
 							+ ltrerr.getTipoEvento() + "</td>"
-							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 400px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\">"
 							+ ltrerr.getConcurrencias() + "</td>"
-							+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 400px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\">"
 							+ formatDouble(ltrerr.getPorc()) + "%</td>        </tr>";
 				}
 			} else {
-				msg += "                             <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
-						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 2000px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"> No hi ha registres al període de temps</td>"
-						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 400px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
-						+ "                                <td role=\"gridcell\" class=\"borde\" style=\"width: 400px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
+				msg += "                             <tr data-ri=\"0\" role=\"row\" aria-selected=\"false\">"
+						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"> No hi ha registres al període de temps</td>"
+						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
+						+ "                                <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
 						+ "                             </tr>";
 			}
 			msg += "                          </tbody>" + "                       </table>"
 					+ "                    </td>" + "                 </tr>" + "                  "
 					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
-					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;width: 16px !important;\"><span style=\"font-weight: bold;\"><u>Errors de Plataforma</u></span></td>"
+					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold;\"><u>Errors de Plataforma</u></span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
 					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
-					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                            <tbody>" + "                               <tr>"
-					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Error</span></td>"
-					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Suma d&#39;errors</span></td>"
-					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Percentatge d&#39;errors</span></td>"
+					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Error</span></td>"
+					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Suma d&#39;errors</span></td>"
+					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Percen&shy;tatge d&#39;errors</span></td>"
 					+ "                               </tr>";
 			if (listaErrPlat != null && !listaErrPlat.isEmpty()) {
 				for (EventoCM lerrp : listaErrPlat) {
-					msg += "                               <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
-							+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+					msg += "                               <tr data-ri=\"0\" role=\"row\" aria-selected=\"false\">"
+							+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\">"
 							+ lerrp.getTipoEvento() + "</td>"
-							+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\">"
 							+ lerrp.getConcurrencias() + "</td>"
-							+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\">"
 							+ formatDouble(lerrp.getPorc()) + "%</td>  " + "                               </tr>";
 				}
 			} else {
-				msg += "                               <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
-						+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"> No hi ha registres al període de temps</td>"
-						+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
-						+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>  "
+				msg += "                               <tr data-ri=\"0\" role=\"row\" aria-selected=\"false\">"
+						+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"> No hi ha registres al període de temps</td>"
+						+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
+						+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>  "
 						+ "                               </tr>";
 			}
 			msg += "                            </tbody>" + "                         </table>"
 					+ "                     </td>" + "                  </tr>" + "                  <tr>"
-					+ "                     <td style=\"font-weight: bold;padding-bottom: .5em;\">"
+					+ "                     <td style=\"font-weight: bold;\">"
 					+ "                        <div style=\"height:20px;\"></div>" + "                     </td>"
 					+ "                  </tr>" + "                  <tr>"
 					+ "                     <td style=\"font-weight: bold;\">"
-					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                           <tbody>" + "                              <tr>"
-					+ "                                 <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;width: 16px !important;\"><span style=\"font-weight: bold; font-size: 1.2em !important;\">Tr&#224;mits no finalitzats sense errors</span></td>"
+					+ "                                 <td style=\"background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span style=\"font-weight: bold; font-size: 1.2em !important;\">TR&#192;MITS<wbr> NO<wbr> FINALI&shy;TZATS<wbr> SENSE<wbr> ERRORS</span></td>"
 					+ "                              </tr>" + "                           </tbody>"
 					+ "                        </table>" + "                     </td>" + "                  </tr>"
-					+ "                  <tr>" + "                     <td style=\"font-weight: bold;padding-bottom: .5em;\">"
-					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
+					+ "                  <tr>" + "                     <td style=\"font-weight: bold;\">"
+					+ "                        <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">"
 					+ "                            <tbody>" + "                               <tr>"
-					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Tr&#224;mit</span></td>"
-					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Versi&#243;</span></td>"
-					+ "                                  <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Sessions no finalitzades</span></td>"
+					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Tr&#224;mit</span></td>"
+					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Versi&#243;</span></td>"
+					+ "                                  <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Sessions<wbr> no<wbr> finali&shy;tzades</span></td>"
 					+ "                               </tr>";
 			if (listaInacabados != null && !listaInacabados.isEmpty()) {
 				for (ErroresPorTramiteCM lerri : listaInacabados) {
-					msg += "                               <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
-							+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+					msg += "                               <tr data-ri=\"0\" role=\"row\" aria-selected=\"false\">"
+							+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\">"
 							+ lerri.getIdTramite() + "</td>"
-							+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\">"
 							+ lerri.getVersion() + "</td>"
-							+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
+							+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\">"
 							+ lerri.getSesionesInacabadas() + "</td>  " + "                               </tr>";
 				}
 			} else {
-				msg += "                               <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
-						+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"> No hi ha registres al període de temps</td>"
-						+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
-						+ "                                  <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>  "
+				msg += "                               <tr data-ri=\"0\" role=\"row\" aria-selected=\"false\">"
+						+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"> No hi ha registres al període de temps</td>"
+						+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>"
+						+ "                                  <td role=\"gridcell\" style=\"word-wrap: break-word;font-weight: bold;text-align: left;border: 1px solid #c5c5c5;\"></td>  "
 						+ "                               </tr>";
 			}
 			msg += "                            </tbody>" + "                         </table>"
 					+ "                     </td>" + "                  </tr>" + "                  <tr>"
-					+ "                     <td style=\"font-weight: bold;padding-bottom: .5em;\">"
+					+ "                     <td style=\"font-weight: bold;\">"
 					+ "                       <div style=\"height:20px;\"></div>" + "                    </td>"
 					+ "                 </tr>"
-//					+ "                 <tr>"
-//						+ "                    <td style=\"font-weight: bold;\">"
-//						+ "                       <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
-//						+ "                          <tbody>" + "                             <tr>"
-//						+ "                                <td class=\"wpx16 white borde pad grey\" style=\"padding-right: 10px;padding-left: 10px;background-color: lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;width: 16px !important;\"><span style=\"font-weight: bold;\">Historial d&#39;alertes</span></td>"
-//						+ "                             </tr>" + "                          </tbody>"
-//						+ "                       </table>" + "                    </td>" + "                 </tr>"
-//						+ "                 <tr>"
-//						+ "                    <td style=\"font-weight: bold;padding-bottom: .5em;\">"
-//						+ "                       <table border=\"1\" cellpadding=\"5\" cellspacing=\"1\" style=\"width: 75%;margin: auto;border-collapse: collapse !important;border: 0;empty-cells: hide;\">"
-//						+ "                           <tbody>" + "                              <tr>"
-//						+ "                                 <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Alerta</span></td>"
-//						+ "                                 <td class=\" white borde\" style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;padding-bottom: .5em;\"><span class=\"ui-column-title\">Data</span></td>"
-//						+ "                              </tr>";
-//				if (listaAlertas != null && !listaAlertas.isEmpty()) {
-//					for (HistorialAlerta lerra : listaAlertas) {
-//						msg += "                              <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
-//								+ "                                 <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
-//								+ lerra.getAlerta().getNombre() + " - " + lerra.getEvento() + "</td>"
-//								+ "                                 <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\">"
-//								+ convertirFecha(lerra.getFecha()) + "</td>" + "                              </tr>";
-//					}
-//				} else {
-//					msg += "                              <tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even ui-datatable-selectable\" role=\"row\" aria-selected=\"false\">"
-//							+ "                                 <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"> No hi ha registres al període de temps</td>"
-//							+ "                                 <td role=\"gridcell\" class=\"borde\" style=\"width: 200px !important;word-wrap: break-word;font-weight: bold;text-align: left;padding-left: 5px;border: 1px solid #c5c5c5;padding-bottom: .5em;\"></td>"
-//							+ "                              </tr>";
-//				}
-//				msg += "                           </tbody>" + "                        </table>"
-//						+ "                    </td>" + "                 </tr>" + "               </tbody>"
-//						+ "            </table>" + "            "
 					+ "         </div>"
-					+ "         <p class=\"auto\" style=\"margin: 1.5em 0;padding: 1em;font-size: 0.9em;font-style: italic;\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p>"
+					+ "         <p style=\"margin: 1.5em 0;padding: 1em;font-size: 0.9em;font-style: italic;\">MOLT IMPORTANT: Aquest correu s&#39;ha generat de forma autom&#224;tica. Si us plau no s&#39;ha de respondre a aquest correu.</p>"
 					+ "      </div>" + "   </body>" + "</html>";
 			LOGGER.debug("Informe enviado");
 			//enviarEmail(msg,DatatypeConverter.printBase64Binary(imageBytes));
@@ -574,6 +573,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 		filtros.setIdTramite(null);
 		filtros.setVersionTramite(null);
 		filtros.setErrorPlataforma(true);
+		filtros.setRolAcceso(UtilJSF.getSessionBean().getActiveRole().toString());
 		filtrosInacabados.setIdTramite(null);
 		filtrosInacabados.setVersionTramite(null);
 		filtrosInacabados.setErrorPlataforma(false);
@@ -668,12 +668,16 @@ public class DialogEnviarMail extends DialogControllerBase {
 	private String nivelGravedad(String porcentageStr) {
 		String texto = "";
 		String porcentageParsed = porcentageStr.replace(",", ".");
-		Double porcentage = 100 - Double.parseDouble(porcentageParsed);
-		if (porcentage <= 15) {
-			texto = "Revisar";
-		} else if (porcentage > 15 && porcentage <= 50) {
-			texto = "Atenció";
-		} else if (porcentage > 50) {
+		Double porcentage = Double.parseDouble(porcentageParsed);
+		if (porcentage > 0) {
+			if (porcentage >= umbralAtencionRevisar) {
+				texto = "Revisar";
+			} else if (porcentage < umbralAtencionRevisar && porcentage >= umbralNormalAtencion) {
+				texto = "Atenció";
+			} else if (porcentage < umbralNormalAtencion) {
+				texto = "Normal";
+			}
+		} else {
 			texto = "Normal";
 		}
 		return texto;
@@ -784,6 +788,147 @@ public class DialogEnviarMail extends DialogControllerBase {
 
 	public void setHoraDesde(String horaDesde) {
 		this.horaDesde = horaDesde;
+	}
+
+	/**
+	 * @return the umbralNormalAtencion
+	 */
+	public Integer getUmbralNormalAtencion() {
+		return umbralNormalAtencion;
+	}
+
+	/**
+	 * @param umbralNormalAtencion the umbralNormalAtencion to set
+	 */
+	public void setUmbralNormalAtencion(Integer umbralNormalAtencion) {
+		this.umbralNormalAtencion = umbralNormalAtencion;
+	}
+
+	/**
+	 * @return the umbralAtencionRevisar
+	 */
+	public Integer getUmbralAtencionRevisar() {
+		return umbralAtencionRevisar;
+	}
+
+	/**
+	 * @param umbralAtencionRevisar the umbralAtencionRevisar to set
+	 */
+	public void setUmbralAtencionRevisar(Integer umbralAtencionRevisar) {
+		this.umbralAtencionRevisar = umbralAtencionRevisar;
+	}
+
+	/**
+	 * @return the umbralNormalAtencionUsuarioString
+	 */
+	public String getUmbralNormalAtencionUsuarioString() {
+		return umbralNormalAtencionUsuarioString;
+	}
+
+	/**
+	 * @param umbralNormalAtencionUsuarioString the umbralNormalAtencionUsuarioString to set
+	 */
+	public void setUmbralNormalAtencionUsuarioString(String umbralNormalAtencionUsuarioString) {
+		this.umbralNormalAtencionUsuarioString = umbralNormalAtencionUsuarioString;
+	}
+
+	/**
+	 * @return the umbralAtencionRevisarUsuarioString
+	 */
+	public String getUmbralAtencionRevisarUsuarioString() {
+		return umbralAtencionRevisarUsuarioString;
+	}
+
+	/**
+	 * @param umbralAtencionRevisarUsuarioString the umbralAtencionRevisarUsuarioString to set
+	 */
+	public void setUmbralAtencionRevisarUsuarioString(String umbralAtencionRevisarUsuarioString) {
+		this.umbralAtencionRevisarUsuarioString = umbralAtencionRevisarUsuarioString;
+	}
+
+	/**
+	 * @return the umbralNormalAtencionString
+	 */
+	public String getUmbralNormalAtencionString() {
+		return umbralNormalAtencionString;
+	}
+
+	/**
+	 * @param umbralNormalAtencionString the umbralNormalAtencionString to set
+	 */
+	public void setUmbralNormalAtencionString(String umbralNormalAtencionString) {
+		this.umbralNormalAtencionString = umbralNormalAtencionString;
+	}
+
+	/**
+	 * @return the umbralAtencionRevisarString
+	 */
+	public String getUmbralAtencionRevisarString() {
+		return umbralAtencionRevisarString;
+	}
+
+	/**
+	 * @param umbralAtencionRevisarString the umbralAtencionRevisarString to set
+	 */
+	public void setUmbralAtencionRevisarString(String umbralAtencionRevisarString) {
+		this.umbralAtencionRevisarString = umbralAtencionRevisarString;
+	}
+
+
+	/**
+	 * @return the umbralNormalAtencionPropertiesString
+	 */
+	public String getUmbralNormalAtencionPropertiesString() {
+		return umbralNormalAtencionPropertiesString;
+	}
+
+	/**
+	 * @param umbralNormalAtencionPropertiesString the umbralNormalAtencionPropertiesString to set
+	 */
+	public void setUmbralNormalAtencionPropertiesString(String umbralNormalAtencionPropertiesString) {
+		this.umbralNormalAtencionPropertiesString = umbralNormalAtencionPropertiesString;
+	}
+
+	/**
+	 * @return the umbralAtencionRevisarPropertiesString
+	 */
+	public String getUmbralAtencionRevisarPropertiesString() {
+		return umbralAtencionRevisarPropertiesString;
+	}
+
+	/**
+	 * @param umbralAtencionRevisarPropertiesString the umbralAtencionRevisarPropertiesString to set
+	 */
+	public void setUmbralAtencionRevisarPropertiesString(String umbralAtencionRevisarPropertiesString) {
+		this.umbralAtencionRevisarPropertiesString = umbralAtencionRevisarPropertiesString;
+	}
+
+	/**
+	 * @return the umbralNormalAtencionProperties
+	 */
+	public Integer getUmbralNormalAtencionProperties() {
+		return umbralNormalAtencionProperties;
+	}
+
+	/**
+	 * @param umbralNormalAtencionProperties the umbralNormalAtencionProperties to set
+	 */
+	public void setUmbralNormalAtencionProperties(Integer umbralNormalAtencionProperties) {
+		this.umbralNormalAtencionProperties = umbralNormalAtencionProperties;
+	}
+
+	/**
+	 * @return the umbralAtencionRevisarProperties
+	 */
+	public Integer getUmbralAtencionRevisarProperties() {
+		return umbralAtencionRevisarProperties;
+	}
+
+	/**
+	 * @param umbralAtencionRevisarProperties the umbralAtencionRevisarProperties to set
+	 */
+	public void setUmbralAtencionRevisarProperties(Integer umbralAtencionRevisarProperties) {
+		this.umbralAtencionRevisarProperties = umbralAtencionRevisarProperties;
 	}
 
 }

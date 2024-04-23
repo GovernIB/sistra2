@@ -3,6 +3,7 @@ package es.caib.sistrages.frontend.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -205,6 +206,9 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 			lId = Long.valueOf(id);
 		}
 		listaDatos = envioService.listEnvio(typeAmbito, lId, filtro);
+		Predicate<EnvioRemoto> condicion = listaDatos -> listaDatos.getIdentificador().equals(Constantes.COMPONENTE_ENTREGA);
+
+		listaDatos.removeIf(condicion);
 	}
 
 	/**
@@ -624,7 +628,7 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 		if (typeAmbito == TypeAmbito.ENTIDAD) {
 			params.put("ENTIDAD", id);
 		}
-		UtilJSF.openDialog(DialogEnvioRemoto.class, modoAccesoDlg, params, true, 650, 307);
+		UtilJSF.openDialog(DialogEnvioRemoto.class, modoAccesoDlg, params, true, 670, 307);
 	}
 
 	/**

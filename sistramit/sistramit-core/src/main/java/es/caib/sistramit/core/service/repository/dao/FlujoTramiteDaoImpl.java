@@ -126,6 +126,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 			hTramiteFin.setIdTramite(hTramite.getIdTramite());
 			hTramiteFin.setVersionTramite(hTramite.getVersionTramite());
 			hTramiteFin.setDescripcionTramite(hTramite.getDescripcionTramite());
+			hTramiteFin.setIdProcedimientoCP(hTramite.getIdProcedimientoCP());
 			hTramiteFin.setIdProcedimientoSIA(hTramite.getIdProcedimientoSIA());
 			hTramiteFin.setIdioma(hTramite.getIdioma());
 			hTramiteFin.setAutenticacion(hTramite.getAutenticacion());
@@ -144,6 +145,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 						if (TypeDocumentoPersistencia
 								.fromString(hdoc.getTipo()) == TypeDocumentoPersistencia.REGISTRO) {
 							hTramiteFin.setNumeroRegistro(hdoc.getRegistroNumeroRegistro());
+							hTramiteFin.setFechaRegistro(hdoc.getRegistroFechaRegistro());
 							hTramiteFin.setNifPresentador(hdoc.getRegistroNifPresentador());
 							hTramiteFin.setNombrePresentador(hdoc.getRegistroNombrePresentador());
 							break;
@@ -154,8 +156,8 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 			}
 			// Si no existe paso registro, presentador será el iniciador
 			if (hTramiteFin.getNumeroRegistro() == null) {
-				hTramiteFin.setNumeroRegistro(hTramiteFin.getNumeroRegistro());
 				hTramiteFin.setNifPresentador(hTramiteFin.getNifIniciador());
+				hTramiteFin.setNombrePresentador(hTramiteFin.getNombreIniciador());
 			}
 
 			entityManager.persist(hTramiteFin);

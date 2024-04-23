@@ -48,7 +48,7 @@
 
 			<c:if test="${not empty error.mensaje.debug}">
 			<div class="imc--desenvolupadors">
-				<h2><span><spring:message code="error.txtCodiDebugDesenv"/></span></h2>
+				<h2><span>${error.mensaje.debugTitulo}</span></h2>
 				<p>${error.mensaje.debug}</p>
 			</div>
 			</c:if>

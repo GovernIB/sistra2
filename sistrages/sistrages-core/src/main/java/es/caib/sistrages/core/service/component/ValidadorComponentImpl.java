@@ -165,11 +165,11 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 
 	@Override
 	public List<ErrorValidacion> comprobarScript(final Script pScript, final List<Dominio> pListaDominios,
-			final List<String> pIdiomasTramiteVersion, final String pIdioma) {
+			final List<String> pIdiomasTramiteVersion, final String pIdioma, final String[] pOpciones) {
 		final List<ErrorValidacion> listaErrores = new ArrayList<>();
 		final List<Dominio> dominiosNoUsados = new ArrayList<>();
 		if (pScript != null) {
-			comprobarScript(pScript, "script", null, "script.literal.script.mensaje", "script.compilar.script",
+			comprobarScript(pScript, "script", pOpciones, "script.literal.script.mensaje", "script.compilar.script",
 					"script.dominio.script", "script.comentario", pListaDominios, pIdiomasTramiteVersion, pIdioma,
 					dominiosNoUsados, listaErrores, null);
 		}

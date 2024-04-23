@@ -1,5 +1,6 @@
 package es.caib.sistrahelp.core.api.model;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,6 +50,16 @@ public class Alerta extends ModelApi {
 
 	/** Tramite. **/
 	private Integer version;
+
+	/** Fecha última verificación. **/
+	private Date fecha;
+
+	/** Alerta activa. **/
+	private boolean activo;
+
+	/** horaResumen. **/
+	private String horaResumen;
+
 	/**
 	 * Crea una nueva instancia de Dominio.
 	 */
@@ -198,6 +209,30 @@ public class Alerta extends ModelApi {
 
 	public void setIdEntidad(String idEntidad) {
 		this.idEntidad = idEntidad;
+	}
+
+	public Date getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
+
+	public boolean isActivo() {
+		return activo;
+	}
+
+	public void setActivo(boolean activo) {
+		this.activo = activo;
+	}
+
+	public String getHoraResumen() {
+		return horaResumen;
+	}
+
+	public void setHoraResumen(String horaResumen) {
+		this.horaResumen = horaResumen;
 	}
 
 }

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogUmbralesAviso.header']}"/></title>
+</h:head>
+
+<h:body>
+    <f:facet name="last">
+    	<h:outputStylesheet library="css" name="style.css" />
+    </f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogUmbralesAviso.modoAcceso}"/>
+		<f:viewParam name="umbralNormalAtencionString" value="#{dialogUmbralesAviso.umbralNormalAtencionString}"/>
+		<f:viewParam name="umbralAtencionRevisarString" value="#{dialogUmbralesAviso.umbralAtencionRevisarString}"/>
+		<f:viewParam name="umbralNormalAtencionPropertiesString" value="#{dialogUmbralesAviso.umbralNormalAtencionPropertiesString}"/>
+		<f:viewParam name="umbralAtencionRevisarPropertiesString" value="#{dialogUmbralesAviso.umbralAtencionRevisarPropertiesString}"/>
+		<f:viewAction action="#{dialogUmbralesAviso.init}" />
+	</f:metadata>
+	<h:form id="formdialogUmbralesAviso" styleClass="margin-top-10">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growldialogUmbralesAvisoData" widgetVar="growldialogUmbralesAvisoData" />
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "1" width="100%">
+					<h:outputText value="#{msg['viewCuadroMando.umbralesAviso']}" rendered="#{dialogUmbralesAviso.alta or dialogUmbralesAviso.edicion}"/>
+					<h:outputText value="#{msg['viewCuadroMando.umbralesAvisoSinPermiso']}" rendered="#{dialogUmbralesAviso.consulta}"/>
+				</h:panelGrid>
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "11" cellpadding = "5" cellspacing = "0"  width="100%">
+					<p:outputLabel value="0% &gt;= " />
+				 	<p:outputLabel value="#{msg['viewCuadroMando.normal']}" />
+				 	<p:outputLabel value=" &lt; " />
+					<p:spinner id="umbralNormalAtencion" size="2" value="#{dialogUmbralesAviso.umbralNormalAtencion}" min="1" max="#{dialogUmbralesAviso.umbralAtencionRevisar}" disabled="#{dialogUmbralesAviso.consulta}">
+						<p:ajax event="blur" process="@this" />
+		    			<p:ajax event="change" listener="#{dialogUmbralesAviso.actualizarUmbralNA()}" update="btnVD btnGR umbralAtencionRevisar"/>
+					</p:spinner>
+				 	<p:outputLabel value="% &gt;= " />
+				 	<p:outputLabel value="#{msg['viewCuadroMando.atencion']}" />
+				 	<p:outputLabel value=" &lt; " />
+					<p:spinner id="umbralAtencionRevisar" size="2" value="#{dialogUmbralesAviso.umbralAtencionRevisar}" min="#{dialogUmbralesAviso.umbralNormalAtencion}" max="99" disabled="#{dialogUmbralesAviso.consulta}">
+						<p:ajax event="blur" process="@this" />
+		    			<p:ajax event="change" listener="#{dialogUmbralesAviso.actualizarUmbralAR()}" update="btnVD btnGR umbralNormalAtencion"/>
+					</p:spinner>
+				 	<p:outputLabel value="% &gt;= " />
+				 	<p:outputLabel value="#{msg['viewCuadroMando.revisar']}" />
+				 	<p:outputLabel value=" &lt;= 100%" />
+				</h:panelGrid>
+
+				<p:contextMenu>
+	       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :formdialogUmbralesAviso:auxCopiar" update="growldialogUmbralesAvisoData" />
+			    </p:contextMenu>
+			    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+					<p:ajax event="success" listener="#{dialogUmbralesAviso.copiadoCorr}" process="@this" update="@this growldialogUmbralesAvisoData"/>
+	            	<p:ajax event="error" listener="#{dialogUmbralesAviso.copiadoErr}" update="@this growldialogUmbralesAvisoData"/>
+	        	</pe:clipboard>
+
+			    <p:inputText id="auxCopiar" value="#{dialogUmbralesAviso.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
+
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton id="btnVD" value="#{msg['botones.valoresDefecto']}" actionListener="#{dialogUmbralesAviso.valoresDefecto}" process="@form" update="@form growldialogUmbralesAvisoData" disabled="#{dialogUmbralesAviso.umbralNormalAtencion eq dialogUmbralesAviso.umbralNormalAtencionProperties and dialogUmbralesAviso.umbralAtencionRevisar eq dialogUmbralesAviso.umbralAtencionRevisarProperties}" rendered="#{dialogUmbralesAviso.alta or dialogUmbralesAviso.edicion}"/>
+						<p:commandButton id="btnGR" value="#{msg['botones.guardar']}" actionListener="#{dialogUmbralesAviso.aceptar}" process="@form" update="@form" styleClass="boton-azul" disabled="#{dialogUmbralesAviso.umbralNormalAtencion eq dialogUmbralesAviso.umbralNormalAtencionProperties and dialogUmbralesAviso.umbralAtencionRevisar eq dialogUmbralesAviso.umbralAtencionRevisarProperties}" rendered="#{dialogUmbralesAviso.alta or dialogUmbralesAviso.edicion}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogUmbralesAviso.cerrar}" process="@this" rendered="#{dialogUmbralesAviso.alta or dialogUmbralesAviso.edicion}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogUmbralesAviso.cerrar}" styleClass="boton-azul" process="@this" rendered="#{dialogUmbralesAviso.consulta}"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

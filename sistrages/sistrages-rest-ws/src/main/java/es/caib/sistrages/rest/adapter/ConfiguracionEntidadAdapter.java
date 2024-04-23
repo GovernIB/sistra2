@@ -77,6 +77,7 @@ public class ConfiguracionEntidadAdapter {
 		rConfiguracionEntidad.setUrlSede(AdapterUtils.generarLiteral(entidad.getUrlSede()));
 		rConfiguracionEntidad.setEmail(entidad.getEmail());
 		rConfiguracionEntidad.setAyudaEmail(entidad.isEmailHabilitado());
+		rConfiguracionEntidad.setHabilitarModoEntrega(entidad.isHabilitarModoEntrega());
 		if (entidad.isTelefonoHabilitado()) {
 			rConfiguracionEntidad.setAyudaTelefono(entidad.getTelefono());
 		}
@@ -108,6 +109,8 @@ public class ConfiguracionEntidadAdapter {
 				.setInstruccionesSubsanacion(AdapterUtils.generarLiteral(entidad.getInstruccionesSubsanacion()));
 		rConfiguracionEntidad.setOficinaRegistroCentralizado(entidad.getOficinaRegistroCentralizado());
 		rConfiguracionEntidad.setRegistroCentralizado(entidad.isRegistroCentralizado());
+
+
 
 		if (plantillas != null && !plantillas.isEmpty()) {
 			final List<RPlantillaIdioma> plantillasDefecto = new ArrayList<>();

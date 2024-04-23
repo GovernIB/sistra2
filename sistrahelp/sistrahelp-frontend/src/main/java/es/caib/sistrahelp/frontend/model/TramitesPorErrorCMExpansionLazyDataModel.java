@@ -48,9 +48,11 @@ public class TramitesPorErrorCMExpansionLazyDataModel extends LazyDataModel<Erro
 
 	@Override
 	public ErroresPorTramiteCM getRowData(final String rowKey) {
-		for (final ErroresPorTramiteCM evento : getLista()) {
-			if ((evento.getIdTramite() + evento.getVersion().toString()).equals(rowKey))
-				return evento;
+		if (getLista() != null) {
+			for (final ErroresPorTramiteCM evento : getLista()) {
+				if ((evento.getIdTramite() + evento.getVersion().toString()).equals(rowKey))
+					return evento;
+			}
 		}
 
 		return null;

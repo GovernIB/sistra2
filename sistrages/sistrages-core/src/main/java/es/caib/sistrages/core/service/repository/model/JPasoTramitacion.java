@@ -325,6 +325,8 @@ public class JPasoTramitacion implements IModelApi {
 		if (this.getPasoRegistrar().getScriptAlFinalizar() != null) {
 			paso.setScriptAlFinalizar(this.getPasoRegistrar().getScriptAlFinalizar().toModel());
 		}
+		paso.setModoEntregaHabilitar(this.getPasoRegistrar().isModoEntregaHabilitar());
+		paso.setModoEntregaHabilitarInmediato(this.getPasoRegistrar().isModoEntregaHabilitarInmediato());
 		return paso;
 	}
 

@@ -509,8 +509,8 @@ public class TramiteServiceBean implements TramiteService {
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<ErrorValidacion> validarScript(final Script pScript, final List<Dominio> pListaDominios,
-			final List<String> pIdiomasTramiteVersion, final String pIdioma) {
-		return tramiteService.validarScript(pScript, pListaDominios, pIdiomasTramiteVersion, pIdioma);
+			final List<String> pIdiomasTramiteVersion, final String pIdioma, final String[] pOpciones) {
+		return tramiteService.validarScript(pScript, pListaDominios, pIdiomasTramiteVersion, pIdioma, pOpciones);
 	}
 
 	@Override

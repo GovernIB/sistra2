@@ -30,7 +30,7 @@
 <p>
 	<ul>
 		<li>Mètode que permet realitzar la invocació d'un domini i recupera les dades que retorna. S'utilitza aquest mètode per aquells dominis que requereixin el pas de paràmetres.</li>
-    	<li>El nombre de paràmetres que necessita un domini es pot identificar a la pantalla d'edició del domini.</li>
+    	<li>El nombre de paràmetres que necessita un domini es pot identificar a la pantalla d'edició del domini. Si el domini es global, ha d'indicar-se la paraula 'GLOBAL' i un punt abans de l'identificador del domini i si es d'entitat o d'àrea, ha d'indicar-se l'identificador de l'entitat i/o àrea, separats per punt.</li>
 	</ul>
 </p>
 <p>
@@ -62,10 +62,10 @@ Per exemple, en el suposit que necessitem recuperar les localitats de la provín
 	parametrosDominio.addParametro('1', '07');
 </p>
 <p>
- Posteriorment s'invocarà el domini Localitats afegint la llista de paràmetres al mètodo d'invocació:
+ Posteriorment s'invocarà el domini Localitats afegint la llista de paràmetres al mètodo d'invocació (suposem que es un domini d'àrea):
 </p>
 <p class="codigoScript">
-var dLocalitats = PLUGIN_DOMINIOS.invocarDominio('Localitats', parametrosDominio);
+var dLocalitats = PLUGIN_DOMINIOS.invocarDominio('CAIB.TESTS.LOCALIDADES', parametrosDominio);
 </p>
 </body>
 </html>

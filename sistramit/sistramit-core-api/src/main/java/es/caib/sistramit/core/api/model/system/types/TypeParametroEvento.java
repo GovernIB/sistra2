@@ -73,6 +73,10 @@ public enum TypeParametroEvento {
 	 */
 	REGISTRO_ASIENTOREGISTRO("REGASIENTO"),
 	/**
+	 * Registro: indica si es modo entrega.
+	 */
+	REGISTRO_MODOENTREGA("REGMODOENTREGA"),
+	/**
 	 * Documento: identificador.
 	 */
 	DOCUMENTO_ID("DOCIDE"),

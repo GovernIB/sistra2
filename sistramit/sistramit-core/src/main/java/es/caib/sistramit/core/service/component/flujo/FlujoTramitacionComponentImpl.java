@@ -368,9 +368,9 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 				.fromString(defTramSTG.getDefinicionVersion().getTipoTramite().toLowerCase());
 		TypeDestino tipoDestino = TypeDestino.REGISTRO;
 		final RPasoTramitacionRegistrar pasoReg = UtilsSTG.devuelveDefinicionPasoRegistrar(defTramSTG);
-		if (pasoReg != null && "e".equals(pasoReg.getTipoDestino().toLowerCase())) {
+		if (pasoReg != null) {
 			// Tipo destino vendrá informado si existe paso registro
-			tipoDestino = TypeDestino.ENVIO;
+			tipoDestino = "e".equals(pasoReg.getTipoDestino().toLowerCase()) ? TypeDestino.ENVIO : TypeDestino.REGISTRO;
 		}
 		final TypeFlujoTramitacion tipoFlujo = TypeFlujoTramitacion
 				.fromString(defTramSTG.getDefinicionVersion().getTipoFlujo());

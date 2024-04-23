@@ -37,12 +37,12 @@ public final class OpcionesCampoTextoNumero implements Serializable {
 	/**
 	 * Rango minimo. Si no existe null.
 	 */
-	private Integer rangoMin;
+	private Double rangoMin;
 
 	/**
 	 * Rango máximo. Si no existe null.
 	 */
-	private Integer rangoMax;
+	private Double rangoMax;
 
 	/**
 	 * Prevenir pegar.
@@ -149,7 +149,7 @@ public final class OpcionesCampoTextoNumero implements Serializable {
 	 *
 	 * @return rangoMin
 	 */
-	public Integer getRangoMin() {
+	public Double getRangoMin() {
 		return rangoMin;
 	}
 
@@ -159,7 +159,7 @@ public final class OpcionesCampoTextoNumero implements Serializable {
 	 * @param pRangoMin
 	 *                      rangoMin a establecer
 	 */
-	public void setRangoMin(final Integer pRangoMin) {
+	public void setRangoMin(final Double pRangoMin) {
 		rangoMin = pRangoMin;
 	}
 
@@ -168,7 +168,7 @@ public final class OpcionesCampoTextoNumero implements Serializable {
 	 *
 	 * @return rangoMax
 	 */
-	public Integer getRangoMax() {
+	public Double getRangoMax() {
 		return rangoMax;
 	}
 
@@ -178,7 +178,7 @@ public final class OpcionesCampoTextoNumero implements Serializable {
 	 * @param pRangoMax
 	 *                      rangoMax a establecer
 	 */
-	public void setRangoMax(final Integer pRangoMax) {
+	public void setRangoMax(final Double pRangoMax) {
 		rangoMax = pRangoMax;
 	}
 

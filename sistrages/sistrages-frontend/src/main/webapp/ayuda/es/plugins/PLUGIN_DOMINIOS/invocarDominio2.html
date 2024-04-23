@@ -30,7 +30,7 @@
 <p>
 	<ul>
 		<li>Método que realiza la invocación de un dominio y recupera los datos que retorna. Se utiliza este método para aquellos dominios que requieran el paso de parámetros.</li>
-    	<li>El número de parámetros que necesita un dominio se puede identificar en la pantalla de edición del dominio.</li>
+    	<li>El número de parámetros que necesita un dominio se puede identificar en la pantalla de edición del dominio. Si el dominio es global, ha de indicarse la palabra 'GLOBAL' y un punto antes del identificador del dominio y si es de entidad o área, debe indicarse el identificador de la entidad y/o área, separados por punto.</li>
 	</ul>
 </p>
 <p>
@@ -62,10 +62,10 @@ Per ejemplo, en el supuesto que necesitemos recuperar las localidades de la prov
 	parametrosDominio.addParametro('1', '07');
 </p>
 <p>
- Posteriormente se invocará el dominio Localidades añadiendo la lista de parámetros al método de invocación:
+ Posteriormente se invocará el dominio LOCALIDADES añadiendo la lista de parámetros al método de invocación (supongamos que es un dominio de área):
 </p>
 <p class="codigoScript">
-var dLocalidades = PLUGIN_DOMINIOS.invocarDominio('Localidades', parametrosDominio);
+var dLocalidades = PLUGIN_DOMINIOS.invocarDominio('CAIB.TESTS.LOCALIDADES', parametrosDominio);
 </p>
 </body>
 </html>

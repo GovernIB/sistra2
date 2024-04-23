@@ -17,7 +17,7 @@ import es.caib.sistramit.core.service.model.integracion.ParametrosDominio;
 public interface SistragesApiComponent {
 
 	/**
-	 * Recupera configuración global.
+	 * Recupera configuración global (se accede siempre con timeout fijo de 60 segs).
 	 */
 	RConfiguracionGlobal obtenerConfiguracionGlobal();
 

@@ -65,12 +65,12 @@ public final class ComponenteFormularioCampoTexto extends ComponenteFormularioCa
 	/**
 	 * numero rango minimo.
 	 */
-	private Long numeroRangoMinimo;
+	private Double numeroRangoMinimo;
 
 	/**
 	 * numero rango maximo.
 	 */
-	private Long numeroRangoMaximo;
+	private Double numeroRangoMaximo;
 
 	/**
 	 * numero con signo.
@@ -296,7 +296,7 @@ public final class ComponenteFormularioCampoTexto extends ComponenteFormularioCa
 	 *
 	 * @return el valor de numeroRangoMinimo
 	 */
-	public Long getNumeroRangoMinimo() {
+	public Double getNumeroRangoMinimo() {
 		return numeroRangoMinimo;
 	}
 
@@ -305,7 +305,7 @@ public final class ComponenteFormularioCampoTexto extends ComponenteFormularioCa
 	 *
 	 * @param numeroRangoMinimo el nuevo valor de numeroRangoMinimo
 	 */
-	public void setNumeroRangoMinimo(final Long numeroRangoMinimo) {
+	public void setNumeroRangoMinimo(final Double numeroRangoMinimo) {
 		this.numeroRangoMinimo = numeroRangoMinimo;
 	}
 
@@ -314,7 +314,7 @@ public final class ComponenteFormularioCampoTexto extends ComponenteFormularioCa
 	 *
 	 * @return el valor de numeroRangoMaximo
 	 */
-	public Long getNumeroRangoMaximo() {
+	public Double getNumeroRangoMaximo() {
 		return numeroRangoMaximo;
 	}
 
@@ -323,7 +323,7 @@ public final class ComponenteFormularioCampoTexto extends ComponenteFormularioCa
 	 *
 	 * @param numeroRangoMaximo el nuevo valor de numeroRangoMaximo
 	 */
-	public void setNumeroRangoMaximo(final Long numeroRangoMaximo) {
+	public void setNumeroRangoMaximo(final Double numeroRangoMaximo) {
 		this.numeroRangoMaximo = numeroRangoMaximo;
 	}
 

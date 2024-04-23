@@ -3,6 +3,7 @@ package es.caib.sistramit.core.service.component.integracion;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.support.BasicAuthorizationInterceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -44,37 +46,32 @@ public final class SistragesApiComponentImpl implements SistragesApiComponent {
 
 	@Override
 	public RConfiguracionGlobal obtenerConfiguracionGlobal() {
-		final RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		final RestTemplate restTemplate = getRestTemplate(true);
 		return restTemplate.getForObject(getUrl() + "/configuracionGlobal", RConfiguracionGlobal.class);
 	}
 
 	@Override
 	public RConfiguracionEntidad obtenerConfiguracionEntidad(final String idEntidad) {
-		final RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		final RestTemplate restTemplate = getRestTemplate(false);
 		return restTemplate.getForObject(getUrl() + "/entidad/" + idEntidad, RConfiguracionEntidad.class);
 	}
 
 	@Override
 	public RVersionTramite recuperarDefinicionTramite(final String idTramite, final int version, final String idioma) {
-		final RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		final RestTemplate restTemplate = getRestTemplate(false);
 		return restTemplate.getForObject(getUrl() + "/tramite/" + idTramite + "/" + version + "/" + idioma,
 				RVersionTramite.class);
 	}
 
 	@Override
 	public RDominio recuperarDefinicionDominio(final String idDominio) {
-		final RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		final RestTemplate restTemplate = getRestTemplate(false);
 		return restTemplate.getForObject(getUrl() + "/dominio/" + idDominio, RDominio.class);
 	}
 
 	@Override
 	public RAvisosEntidad obtenerAvisosEntidad(final String idEntidad) {
-		final RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		final RestTemplate restTemplate = getRestTemplate(false);
 		return restTemplate.getForObject(getUrl() + "/entidad/" + idEntidad + "/avisos", RAvisosEntidad.class);
 	}
 
@@ -113,12 +110,9 @@ public final class SistragesApiComponentImpl implements SistragesApiComponent {
 
 	@Override
 	public RValoresDominio resuelveDominioListaFija(final RDominio dominio) {
-
-		final RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		final RestTemplate restTemplate = getRestTemplate(false);
 		return restTemplate.getForObject(getUrl() + "/dominioListaFija/" + dominio.getIdentificador(),
 				RValoresDominio.class);
-
 	}
 
 	/**** Private functions. **/
@@ -147,6 +141,36 @@ public final class SistragesApiComponentImpl implements SistragesApiComponent {
 	 */
 	private String getUrl() {
 		return configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAGES_URL);
+	}
+
+	/**
+	 * Obtiene timeout (millis).
+	 *
+	 * @return timeout (millis)
+	 */
+	private int getTimeout() {
+		String timeoutStr = configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAGES_TIMEOUT);
+		if (StringUtils.isBlank(timeoutStr)) {
+			timeoutStr = "60";
+		}
+		return Integer.parseInt(timeoutStr) * 1000;
+	}
+
+	/**
+	 * Obtiene rest template aplicando timeout.
+	 * @return rest template.
+	 */
+	private RestTemplate getRestTemplate(boolean timeoutFijo) {
+		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+		int timeinMillis = 60000; // 60 secs
+		if (!timeoutFijo) {
+			timeinMillis = getTimeout();
+		}
+		factory.setReadTimeout(timeinMillis);
+		factory.setConnectTimeout(timeinMillis);
+		final RestTemplate restTemplate = new RestTemplate(factory);
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		return restTemplate;
 	}
 
 }

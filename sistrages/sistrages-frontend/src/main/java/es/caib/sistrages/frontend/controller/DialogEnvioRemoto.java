@@ -24,6 +24,7 @@ import es.caib.sistrages.core.api.service.VariablesAreaService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.DialogResultMessage;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -97,6 +98,10 @@ public class DialogEnvioRemoto extends DialogControllerBase {
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new EnvioRemoto();
 			data.setAmbito(TypeAmbito.fromString(ambito));
+			if (iData != null && iData.equals(Constantes.COMPONENTE_ENTREGA)) {
+				data.setIdentificador(Constantes.COMPONENTE_ENTREGA);
+				data.setDescripcion(UtilJSF.getLiteral("viewConfiguracionEntidad.componenteEntrega.descripcion", UtilJSF.getSessionBean().getLang()));
+			}
 		} else {
 			if (id != null) {
 				data = envioRemotoService.loadEnvio(Long.valueOf(id));
@@ -130,7 +135,8 @@ public class DialogEnvioRemoto extends DialogControllerBase {
 
 	public void actualizarConf() {
 		desactivarConsulta = false;
-		if (this.data.getConfiguracionAutenticacion() == null) {
+		if (this.data.getConfiguracionAutenticacion() == null
+				|| this.data.getConfiguracionAutenticacion().getIdentificadorCompuesto() == null) {
 			desactivarConsulta = true;
 		}
 	}

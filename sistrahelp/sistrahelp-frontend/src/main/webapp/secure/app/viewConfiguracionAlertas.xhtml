@@ -140,6 +140,12 @@
        }
 
 		 function opcVista(){
+		 	if(document.getElementById("form:btnProbarAlerta")!=null){
+          		document.getElementById("form:mnuProbarAlerta").style.display='block';
+          	}else{
+          		document.getElementById("form:mnuProbarAlerta").style.display='none';
+          	}
+
 			if(document.getElementById("form:btnNuevo")!=null){
           		document.getElementById("form:mnuNuevo").style.display='block';
           	}else{
@@ -173,6 +179,7 @@
 
         <p:column>
             <h:panelGrid id="panelBotones" columns="6" cellspacing="5" styleClass="table-rightaligned">
+            <p:commandButton value="#{msg['viewConfiguracionAlertas.probarAlerta']}" id="btnProbarAlerta" actionListener="#{viewConfiguracionAlertas.probarAlerta()}" process="@this" update="growl"/>
 			<p:commandButton value="#{msg['botones.nuevo']}" id="btnNuevo" icon="fa fa-file" actionListener="#{viewConfiguracionAlertas.nuevo()}" process="@this" update="growl">
     			<p:ajax event="dialogReturn" listener="#{viewConfiguracionAlertas.returnDialogo}" update="@form:growl @form:dataTable"/>
     		</p:commandButton>
@@ -260,6 +267,7 @@
 		<p:contextMenu for=":form:dataTable" id="contextWork">
 			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyD"  process="@this :form:auxCopiar" update="growl" />
 			<p:separator/>
+			<p:menuitem id="mnuProbarAlerta" value="#{msg['viewConfiguracionAlertas.probarAlerta']}" onclick="document.getElementById('form:btnProbarAlerta').click();" process="@this" style="display:none;"/>
 	      	<p:menuitem id="mnuNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file" onclick="document.getElementById('form:btnNuevo').click();" process="@this" style="display:none;"/>
 	      	<p:menuitem id="mnuEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" onclick="document.getElementById('form:btnEditar').click();" process="@this"  style="display:none;"/>
 	      	<p:menuitem id="mnuEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="document.getElementById('form:btnEliminar').click();" process="@this" style="display:none;"/>

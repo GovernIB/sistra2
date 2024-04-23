@@ -33,4 +33,5 @@ public interface PurgaComponent {
 
 	public int eliminarTramitesPurgados(final Date pFechaLimitePurga);
 
+	int procesoPurgarEntregasTramites();
 }

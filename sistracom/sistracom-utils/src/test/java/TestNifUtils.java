@@ -89,5 +89,8 @@ public class TestNifUtils {
 		System.out.println("NSSCorrecto . EsNSS:" + NifUtils.esNSS(nssCorrecto));
 		System.out.println("NSSInorrecto. EsNSS:" + NifUtils.esNSS(nssIncorrecto));
 
+
+//		System.out.println("CIF " + NifUtils.esNifPersonaJuridica("B0393516J"));
+
 	}
 }

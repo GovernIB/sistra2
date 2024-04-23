@@ -75,8 +75,8 @@ public abstract class TramitacionController {
 	/**
 	 * Guarda en la sesión http la referencia al flujo de tramitación.
 	 *
-	 * @param pidSesionTramitacion
-	 *                                 Id sesión
+	 * @param dt
+	 *                                 Detalle trámite
 	 */
 	protected final void registraSesionTramitacion(final DetalleTramite dt) {
 		sesionHttp.setIdSesionTramitacion(dt.getTramite().getIdSesion());
@@ -290,8 +290,6 @@ public abstract class TramitacionController {
 	 *
 	 * @param message
 	 *                      Mensaje a mostrar.
-	 * @param exception
-	 *                      Excepcion.
 	 */
 	protected final void debug(final String message) {
 		String idSesion = null;
@@ -355,6 +353,7 @@ public abstract class TramitacionController {
 			if (getIdSesionTramitacion() != null) {
 				debug += " - " + getIdSesionTramitacion();
 			}
+			res.getMensaje().setDebugTitulo(literalesFront.getLiteralFront(LiteralesFront.EXCEPCIONES,"txtCodiDebugDesenv", getIdioma()));
 			res.getMensaje().setDebug(debug);
 		}
 
@@ -449,10 +448,8 @@ public abstract class TramitacionController {
 	 * @param mensajeIncorrecto
 	 *                              Detalle mensaje error
 	 * @param tipoRespuesta
-	 *                              Tipo respuesta
-	 * @param recargarTramite
-	 *                              Si se recarga el trámite
-	 * @return
+	 *                              Tipo respuestae
+	 * @return mensaje asistente
 	 */
 	protected final MensajeAsistente generarMensajeErrorAsistente(final String literalTitulo,
 			final String literalMensaje, final String mensajeIncorrecto, final TypeRespuestaJSON tipoRespuesta) {
@@ -481,11 +478,7 @@ public abstract class TramitacionController {
 	 *                              Literal titulo
 	 * @param literalMensaje
 	 *                              Literal mensaje
-	 * @param mensajeIncorrecto
-	 *                              Detalle mensaje error
-	 * @param tipoRespuesta
-	 *                              Tipo respuesta
-	 * @return
+	 * @return mensaje asistente
 	 */
 	protected final MensajeUsuario generarMensajeUsuario(final String literalTitulo, final String literalMensaje) {
 		final String tituloMsg = getLiteralesFront().getLiteralFront(LiteralesFront.MENSAJES, literalTitulo,

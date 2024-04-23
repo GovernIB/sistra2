@@ -112,6 +112,13 @@
 							process="@this" update="growl" value="#{msg['script.SCRIPT_AVISO.titulo']}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptAlFinalizar)}" />
 			</p:outputPanel>
 
+			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.modoEntrega']}" rendered="#{viewDefinicionVersion.activoModoEntrega}" />
+			<p:outputPanel styleClass="ui-inputgroup" rendered="#{viewDefinicionVersion.activoModoEntrega}">
+	            <p:selectBooleanCheckbox id="modoEntregaHabilitar" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.modoEntregaHabilitar}"  disabled="true" itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.modoEntrega.habilitar']}"/>
+	            <p:spacer width="30" height="1"/>
+	           	<p:selectBooleanCheckbox id="modoEntregaHabilitarInmediata" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.modoEntregaHabilitarInmediato}" disabled="true"   itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.modoEntrega.habilitarInmediato']}"/>
+			</p:outputPanel>
+
 			<f:facet name = "footer">
 				<p:outputPanel id="toolbar" styleClass="grid-right">
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"

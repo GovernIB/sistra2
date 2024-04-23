@@ -2,6 +2,7 @@ package es.caib.sistramit.frontend.procesos;
 
 import javax.servlet.ServletContext;
 
+import es.caib.sistramit.core.api.service.EntregaService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,35 +39,12 @@ public final class PurgaPersistenciaProcess {
 	 */
 	@Scheduled(cron = "${procesos.purga.cron}")
 	public void process() {
-		log.debug("Proceso purga persistencia");
-		final String instancia = getIdServletContext();
-		if (StringUtils.isNotBlank(instancia)) {
-			if (systemService.verificarMaestro(instancia)) {
-				log.debug("Es maestro, lanza proceso purga");
-				purgaService.purgarPersistencia();
-			} else {
-				log.debug("No es maestro, no lanza proceso purga");
-			}
-		} else {
-			log.warn("No se ha podido obtener id instancia.");
+		log.debug("Proceso purga persistencia - inicio");
+		if (UtilProcess.checkMaestro("purga persistencia", servletContext, systemService)) {
+			purgaService.purgarPersistencia();
 		}
+		log.debug("Proceso purga persistencia - inicio");
 	}
 
-	/**
-	 * Obtiene id instancia.
-	 *
-	 * @return id instancia
-	 */
-	private String getIdServletContext() {
-		String id = null;
-		if (servletContext != null) {
-			id = (String) servletContext.getAttribute(Constantes.SERVLET_CONTEXT_ID);
-			if (id == null) {
-				id = GeneradorId.generarId();
-				servletContext.setAttribute(Constantes.SERVLET_CONTEXT_ID, id);
-			}
-		}
-		return id;
-	}
 
 }

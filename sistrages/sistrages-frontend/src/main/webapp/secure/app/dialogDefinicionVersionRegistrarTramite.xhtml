@@ -284,6 +284,15 @@
 				</p:commandButton>
 			</p:outputPanel>
 
+			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.modoEntrega']}" rendered="#{dialogDefinicionVersionRegistrarTramite.activoModoEntrega}" />
+			<p:outputPanel styleClass="ui-inputgroup" rendered="#{dialogDefinicionVersionRegistrarTramite.activoModoEntrega}">
+	            <p:selectBooleanCheckbox id="modoEntregaHabilitar" value="#{dialogDefinicionVersionRegistrarTramite.data.modoEntregaHabilitar}"  itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.modoEntrega.habilitar']}">
+	            	<p:ajax event="change" global="false" process="@form:modoEntregaHabilitar" update="formdialogDefinicionVersionRegistrarTramite:modoEntregaHabilitarInmediata @form:modoEntregaHabilitarInmediata" />
+	            </p:selectBooleanCheckbox>
+	            <p:spacer width="30" height="1"/>
+	           	<p:selectBooleanCheckbox id="modoEntregaHabilitarInmediata" value="#{dialogDefinicionVersionRegistrarTramite.data.modoEntregaHabilitarInmediato}" disabled="#{!dialogDefinicionVersionRegistrarTramite.data.modoEntregaHabilitar}"   itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.modoEntrega.habilitarInmediato']}"/>
+			</p:outputPanel>
+
 
 		</h:panelGrid>
 		</p:outputPanel>

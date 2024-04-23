@@ -604,7 +604,7 @@ public interface TramiteService {
 	 * @return lista de errores de validacion
 	 */
 	public List<ErrorValidacion> validarScript(Script pScript, List<Dominio> pListaDominios,
-			List<String> pIdiomasTramiteVersion, String pIdioma);
+			List<String> pIdiomasTramiteVersion, String pIdioma, String[] pOpciones);
 
 	/**
 	 * Lista de trámites de la entidad.

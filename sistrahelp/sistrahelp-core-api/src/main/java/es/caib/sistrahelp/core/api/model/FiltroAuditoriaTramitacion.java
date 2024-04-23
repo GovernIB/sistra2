@@ -56,6 +56,8 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 
 	private String tipoProblemaIncidencia;
 
+	private String rolAcceso;
+
 	public FiltroAuditoriaTramitacion() {
 		super();
 		this.fechaDesde = calcularFecha();
@@ -122,6 +124,7 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 			this.clasificacionSeleccionada = pFiltroAuditoriaTramitacion.clasificacionSeleccionada;
 			this.errorTipo = pFiltroAuditoriaTramitacion.errorTipo;
 			this.tipoProblemaIncidencia = pFiltroAuditoriaTramitacion.tipoProblemaIncidencia;
+			this.rolAcceso = pFiltroAuditoriaTramitacion.rolAcceso;
 		}
 	}
 
@@ -375,6 +378,20 @@ public class FiltroAuditoriaTramitacion extends ModelApi {
 	 */
 	public void setTipoProblemaIncidencia(String tipoProblemaIncidencia) {
 		this.tipoProblemaIncidencia = tipoProblemaIncidencia;
+	}
+
+	/**
+	 * @return the rolAcceso
+	 */
+	public String getRolAcceso() {
+		return rolAcceso;
+	}
+
+	/**
+	 * @param rolAcceso the rolAcceso to set
+	 */
+	public void setRolAcceso(String rolAcceso) {
+		this.rolAcceso = rolAcceso;
 	}
 
 }

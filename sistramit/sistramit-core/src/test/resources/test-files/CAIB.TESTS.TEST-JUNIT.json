@@ -948,7 +948,9 @@
       "scriptAlFinalizar": {
         "script": "DATOS_AVISO.setEmail(\"soportecaib@indra.es\");",
         "literales": []
-      }
+      },
+      "modoEntregaHabilitar": false,
+      "modoEntregaHabilitarInmediato": false
     }
   ]
 }

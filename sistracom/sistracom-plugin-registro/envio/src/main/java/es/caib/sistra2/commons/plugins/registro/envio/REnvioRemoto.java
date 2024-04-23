@@ -2,34 +2,76 @@ package es.caib.sistra2.commons.plugins.registro.envio;
 
 public class REnvioRemoto {
 
-	public REnvioRemoto() {
-		// Constructor vacio
-	}
+    public REnvioRemoto() {
+        // Constructor vacio
+    }
 
-	/**
-	 * Asiento registral
-	 */
-	private RAsientoRegistral asiento;
+    /**
+     * Id de sesion de envio
+     */
+    private String idEnvio;
 
-	/**
-	 * Id de sesion de envio
-	 */
-	private String idEnvio;
+    /**
+     * Datos tramitación.
+     */
+    private RDatosTramitacion datosTramitacion;
 
-	public String getIdEnvio() {
-		return idEnvio;
-	}
+    /**
+     * Asiento registral
+     */
+    private RAsientoRegistral asiento;
 
-	public void setIdEnvio(final String idEnvio) {
-		this.idEnvio = idEnvio;
-	}
+    /**
+     * Obtiene el id de la sesión de envío
+     *
+     * @return idEnvio
+     */
+    public String getIdEnvio() {
+        return idEnvio;
+    }
 
-	public final RAsientoRegistral getAsiento() {
-		return asiento;
-	}
+    /**
+     * Establece el id de la sesión de envío
+     *
+     * @param idEnvio el id de la sesión de envío
+     */
+    public void setIdEnvio(final String idEnvio) {
+        this.idEnvio = idEnvio;
+    }
 
-	public final void setAsiento(RAsientoRegistral asiento) {
-		this.asiento = asiento;
-	}
+    /**
+     * Obtiene el asiento registral
+     *
+     * @return asiento
+     */
+    public final RAsientoRegistral getAsiento() {
+        return asiento;
+    }
 
+    /**
+     * Establece el asiento registral
+     *
+     * @param asiento el asiento registral
+     */
+    public final void setAsiento(RAsientoRegistral asiento) {
+        this.asiento = asiento;
+    }
+
+    /**
+     * Obtiene los datos de tramitación
+     *
+     * @return datosTramitacion
+     */
+    public RDatosTramitacion getDatosTramitacion() {
+        return datosTramitacion;
+    }
+
+    /**
+     * Establece los datos de tramitación
+     *
+     * @param datosTramitacion los datos de tramitación
+     */
+    public void setDatosTramitacion(RDatosTramitacion datosTramitacion) {
+        this.datosTramitacion = datosTramitacion;
+    }
 }

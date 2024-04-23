@@ -163,7 +163,7 @@ public class VersionTramiteAdapter {
 			final List<TramitePaso> ltp = restApiService.getTramitePasos(tv.getCodigo());
 			if (ltp != null) {
 				for (final TramitePaso tp : ltp) {
-					final RPasoTramitacion pt = creaPaso(tp, idiRes);
+					final RPasoTramitacion pt = creaPaso(tv.getIdTramite(), tp, idiRes);
 					if (pt != null) {
 						pasos.add(pt);
 						if (tp.getTipo() == TypePaso.RELLENAR) {
@@ -189,8 +189,8 @@ public class VersionTramiteAdapter {
 			rVersionTramite.setIdioma(idiRes);
 			rVersionTramite.setTipoFlujo(tv.getTipoFlujo().toString());
 			rVersionTramite.setControlAcceso(generaControlAcceso(tv));
-			final String idEntidad = generaidEntidadfromTramite(tv.getIdTramite());
-			rVersionTramite.setIdEntidad(idEntidad);
+			final Entidad entidad = recuperaEntidadfromTramite(tv.getIdTramite());
+			rVersionTramite.setIdEntidad(entidad.getCodigoDIR3());
 			rVersionTramite.setIdArea(generaidAreafromTramite(tv.getIdTramite()));
 			rVersionTramite.setPropiedades(generaPropiedades(tv, idioma));
 		}
@@ -205,15 +205,12 @@ public class VersionTramiteAdapter {
 	 * @param idTramite
 	 * @return id de entidad
 	 */
-	private String generaidEntidadfromTramite(final Long idTramite) {
-		String res = null;
+	private Entidad recuperaEntidadfromTramite(final Long idTramite) {
+		Entidad res = null;
 		if (idTramite != null) {
 			final Tramite t = restApiService.loadTramite(idTramite);
 			if (t != null && t.getIdEntidad() != null) {
-				final Entidad e = restApiService.loadEntidad(t.getIdEntidad());
-				if (e != null) {
-					res = e.getCodigoDIR3();
-				}
+				res = restApiService.loadEntidad(t.getIdEntidad());
 			}
 		}
 		return res;
@@ -304,12 +301,13 @@ public class VersionTramiteAdapter {
 	/**
 	 * Genera un paso para un idioma
 	 *
+	 * @param codigoTramite
 	 * @param paso
 	 * @param idioma
 	 * @return RPasoTramitacion
 	 */
 
-	private RPasoTramitacion creaPaso(final TramitePaso paso, final String idioma) {
+	private RPasoTramitacion creaPaso(Long codigoTramite, final TramitePaso paso, final String idioma) {
 		RPasoTramitacion res = null;
 		if (paso instanceof TramitePasoRellenar) {
 			res = crearPasoRellenar((TramitePasoRellenar) paso, idioma);
@@ -320,7 +318,7 @@ public class VersionTramiteAdapter {
 		} else if (paso instanceof TramitePasoAnexar) {
 			res = crearPasoAnexar((TramitePasoAnexar) paso, idioma);
 		} else if (paso instanceof TramitePasoRegistrar) {
-			res = crearPasoRegistrar((TramitePasoRegistrar) paso, idioma);
+			res = crearPasoRegistrar(codigoTramite, (TramitePasoRegistrar) paso, idioma);
 		}
 		return res;
 	}
@@ -328,11 +326,12 @@ public class VersionTramiteAdapter {
 	/**
 	 * Crea un paso registrar
 	 *
+	 * @param codigoTramite
 	 * @param paso
 	 * @param idioma
 	 * @return RPasoTramitacion
 	 */
-	private RPasoTramitacion crearPasoRegistrar(final TramitePasoRegistrar paso, final String idioma) {
+	private RPasoTramitacion crearPasoRegistrar(Long codigoTramite, final TramitePasoRegistrar paso, final String idioma) {
 		final RPasoTramitacionRegistrar resPaso = new RPasoTramitacionRegistrar();
 		resPaso.setIdentificador(paso.getIdPasoTramitacion());
 		resPaso.setTipo(paso.getTipo().toString());
@@ -363,6 +362,13 @@ public class VersionTramiteAdapter {
 				AdapterUtils.generarLiteralIdioma(paso.getInstruccionesSubsanacion(), idioma));
 		resPaso.setAvisoAlFinalizar(paso.isAvisoAlFinalizar());
 		resPaso.setScriptAlFinalizar(AdapterUtils.generaScript(paso.getScriptAlFinalizar(), idioma));
+
+		// Solo si entidad permite modo entrega
+		Entidad entidad = recuperaEntidadfromTramite(codigoTramite);
+		if (entidad.isHabilitarModoEntrega()) {
+			resPaso.setModoEntregaHabilitar(paso.isModoEntregaHabilitar());
+			resPaso.setModoEntregaHabilitarInmediato(paso.isModoEntregaHabilitarInmediato());
+		}
 		return resPaso;
 	}
 
@@ -1145,12 +1151,11 @@ public class VersionTramiteAdapter {
 		res.setPrecisionDecimal(ct.getNumeroDigitosDecimales() == null ? 0 : ct.getNumeroDigitosDecimales());
 		res.setPrecisionEntera(ct.getNumeroDigitosEnteros() == null ? 0 : ct.getNumeroDigitosEnteros());
 		res.setRango(ct.isPermiteRango());
-		res.setRangoDesde(
-				ct.getNumeroRangoMinimo() == null ? 0 : Integer.parseInt(ct.getNumeroRangoMinimo().toString()));
-		res.setRangoHasta(
-				ct.getNumeroRangoMaximo() == null ? 0 : Integer.parseInt(ct.getNumeroRangoMaximo().toString()));
+		if (ct.isPermiteRango()) {
+			res.setRangoDesde(ct.getNumeroRangoMinimo());
+			res.setRangoHasta(ct.getNumeroRangoMaximo());
+		}
 		res.setPrevenirPegar(ct.isPrevenirPegar());
-
 		return res;
 	}
 

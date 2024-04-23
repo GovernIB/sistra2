@@ -349,6 +349,12 @@ public final class LoginController {
 		}
 		final String ticket = tickets[0];
 
+		// Establecemos idioma sesión (viene en ticket)
+		final String idiomaTicket = ticket.substring(ticket.lastIndexOf("-") + 1);
+		final String idiomasSoportados = systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IDIOMAS_SOPORTADOS);
+		final String idioma = sanitizeIdioma(idiomaTicket, idiomasSoportados);
+		sesionHttp.setIdioma(idioma);
+
 		// Autenticamos automaticamente
 		final LoginTicketInfo li = new LoginTicketInfo();
 		li.setTicketName(pTicketUser);

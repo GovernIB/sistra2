@@ -107,6 +107,14 @@ public class JPasoRegistrar implements IModelApi {
 	@JoinColumn(name = "PRG_AVISCR")
 	private JScript scriptAlFinalizar;
 
+	/** Indica si se habilita el modo entrega. **/
+	@Column(name = "PRG_HABENT", nullable = false, precision = 1, scale = 0)
+	private boolean modoEntregaHabilitar;
+
+	/** Indica si es inmedito (si se ha habilitado el modo entrega). **/
+	@Column(name = "PRG_HABINM", nullable = false, precision = 1, scale = 0)
+	private boolean modoEntregaHabilitarInmediato;
+
 	/**
 	 * Constructor.
 	 */
@@ -325,6 +333,34 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
+	 * @return the modoEntregaHabilitar
+	 */
+	public boolean isModoEntregaHabilitar() {
+		return modoEntregaHabilitar;
+	}
+
+	/**
+	 * @param modoEntregaHabilitar the modoEntregaHabilitar to set
+	 */
+	public void setModoEntregaHabilitar(boolean modoEntregaHabilitar) {
+		this.modoEntregaHabilitar = modoEntregaHabilitar;
+	}
+
+	/**
+	 * @return the modoEntregaHabilitarInmediato
+	 */
+	public boolean isModoEntregaHabilitarInmediato() {
+		return modoEntregaHabilitarInmediato;
+	}
+
+	/**
+	 * @param modoEntregaHabilitarInmediato the modoEntregaHabilitarInmediato to set
+	 */
+	public void setModoEntregaHabilitarInmediato(boolean modoEntregaHabilitarInmediato) {
+		this.modoEntregaHabilitarInmediato = modoEntregaHabilitarInmediato;
+	}
+
+	/**
 	 * @return the scriptAlFinalizar
 	 */
 	public JScript getScriptAlFinalizar() {
@@ -393,6 +429,10 @@ public class JPasoRegistrar implements IModelApi {
 			jpaso.setAvisoAlFinalizar(paso.isAvisoAlFinalizar());
 			jpaso.setDestino(paso.getDestino());
 			jpaso.setEnvioRemoto(JEnvioRemoto.fromModelStatic(paso.getEnvioRemoto()));
+			jpaso.setAdmiteRepresentacion(paso.isAdmiteRepresentacion());
+			jpaso.setValidaRepresentacion(paso.isValidaRepresentacion());
+			jpaso.setModoEntregaHabilitarInmediato(paso.isModoEntregaHabilitarInmediato());
+			jpaso.setModoEntregaHabilitar(paso.isModoEntregaHabilitar());
 		}
 		return jpaso;
 	}
@@ -428,6 +468,8 @@ public class JPasoRegistrar implements IModelApi {
 			jpasoRegistrar.setScriptAlFinalizar(JScript.clonar(origPasoRegistrar.getScriptAlFinalizar()));
 			jpasoRegistrar.setAvisoAlFinalizar(origPasoRegistrar.isAvisoAlFinalizar());
 			jpasoRegistrar.setDestino(origPasoRegistrar.getDestino());
+			jpasoRegistrar.setAdmiteRepresentacion(origPasoRegistrar.isAdmiteRepresentacion());
+			jpasoRegistrar.setValidaRepresentacion(origPasoRegistrar.isValidaRepresentacion());
 			if (origPasoRegistrar.getEnvioRemoto() != null) {
 				jpasoRegistrar.setEnvioRemoto(JEnvioRemoto.clonar(origPasoRegistrar.getEnvioRemoto(),
 						origPasoRegistrar.getEnvioRemoto().getIdentificador(),
@@ -435,6 +477,8 @@ public class JPasoRegistrar implements IModelApi {
 			} else {
 				jpasoRegistrar.setEnvioRemoto(null);
 			}
+			jpasoRegistrar.setModoEntregaHabilitarInmediato(origPasoRegistrar.isModoEntregaHabilitarInmediato());
+			jpasoRegistrar.setModoEntregaHabilitar(origPasoRegistrar.isModoEntregaHabilitar());
 		}
 		return jpasoRegistrar;
 	}

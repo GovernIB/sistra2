@@ -18,7 +18,7 @@ public interface IEnvioRemotoPlugin extends IPlugin {
 	 * trazabilidad posterior del resultado del envío en caso de que haya habido
 	 * problemas.
 	 *
-	 * @param DestinoEnvio
+	 * @param destinoEnvio
 	 *                         destino envio
 	 *
 	 * @return Id sesión envío
@@ -30,7 +30,7 @@ public interface IEnvioRemotoPlugin extends IPlugin {
 	/**
 	 * Realiza un envío.
 	 *
-	 * @param DestinoEnvio
+	 * @param destinoEnvio
 	 *                             destino envio
 	 *
 	 * @param idSesionEnvio
@@ -40,13 +40,13 @@ public interface IEnvioRemotoPlugin extends IPlugin {
 	 *                             Asiento con los datos requeridos para el envío
 	 * @throws EnvioRemotoPluginException
 	 */
-	ResultadoRegistro realizarEnvio(DestinoEnvio destinoEnvio, String idSesionEnvio, AsientoRegistral asientoRegistral)
+	ResultadoRegistro realizarEnvio(DestinoEnvio destinoEnvio, String idSesionEnvio, DatosTramitacion datosTramitacion, AsientoRegistral asientoRegistral)
 			throws EnvioRemotoPluginException;
 
 	/**
 	 * Verifica si se ha realizado envío.
 	 *
-	 * @param DestinoEnvio
+	 * @param destinoEnvio
 	 *                          destino envio
 	 *
 	 * @param idSesionEnvio

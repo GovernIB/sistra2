@@ -29,7 +29,7 @@
 </p>
 <p>
 	<ul>
-		<li>Aquest mètode permet la invocació d'un domini, associat a la versió del tràmit, a partir del seu identificador.</li>
+		<li>Aquest mètode permet la invocació d'un domini, associat a la versió del tràmit, a partir del seu identificador. Si el domini es global, ha d'indicar-se la paraula 'GLOBAL' i un punt abans de l'identificador del domini i si es d'entitat o d'àrea, ha d'indicar-se l'identificador de l'entitat i/o àrea, separats per punt.</li>
 		<li>Aquest mètode retorna un objecte que modelitza els valors de domini.</li>
 	</ul>
 </p>
@@ -53,17 +53,17 @@
 	<b>EXEMPLES</b>
 </p>
 <p>
-Invocació d'un domini, amb identificador Provincias, que retorna el valor de les províncies d'Espanya:
+Invocació d'un domini global, amb identificador PROVINCIAS, que retorna el valor de les províncies d'Espanya:
 </p>
 <p class="codigoScript">
-	var dProvincies = PLUGIN_DOMINIOS.invocarDominio('Provincias');
+	var dProvincies = PLUGIN_DOMINIOS.invocarDominio('GLOBAL.PROVINCIAS');
 </p>
 <p>
-Un altre exemple podria ser la invocació d'un domini que retorni el llistat de països:
+Un altre exemple podria ser la invocació d'un domini d'àrea que retorni el llistat de països:
 </p>
 
 <p class="codigoScript">
-var dPaisos = PLUGIN_DOMINIOS.invocarDominio('Paises');
+var dPaisos = PLUGIN_DOMINIOS.invocarDominio('CAIB.TESTS.PAISES');
 </p>
 </body>
 </html>

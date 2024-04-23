@@ -35,7 +35,6 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Literal;
-import es.caib.sistrages.core.api.model.Rol;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.SeccionReutilizable;
 import es.caib.sistrages.core.api.model.Tasa;
@@ -53,6 +52,7 @@ import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeExtension;
 import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
@@ -62,6 +62,7 @@ import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.RolService;
 import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.service.SecurityService;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.core.api.util.UtilScripts;
@@ -96,10 +97,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	@Inject
 	private SecurityService securityService;
 
-	/** Rol service. */
-	@Inject
-	private RolService rolService;
-
 	/** Tramite service. */
 	@Inject
 	private TramiteService tramiteService;
@@ -111,6 +108,10 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/** Componente service. */
 	@Inject
 	private ComponenteService componenteService;
+
+	/** Componente systemservice **/
+	@Inject
+	private SystemService systemService;
 
 	/** id. */
 	private Long id;
@@ -213,6 +214,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	/** Data. **/
 	private FormularioTramite data;
+	private boolean activoModoEntrega;
 
 	/**
 	 * Crea una nueva instancia de view definicion version.
@@ -282,6 +284,23 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		checkPermiteEditar();
 		checkPermiteConsultar();
 		checkPermiteBloquear();
+		checkModoEntrega();
+
+	}
+
+	/**
+	 * Comprueba si se puede ver campos del modo entrega.
+	 * Tiene que estar activo a modo global y a nivle entidad.
+	 */
+	private void checkModoEntrega() {
+		final String modoEntrega = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAGES_MODOENTREGA_HABILITAR.toString());
+		boolean permiteModoEntrega = modoEntrega != null && "true".equalsIgnoreCase(modoEntrega);
+		if (permiteModoEntrega) {
+			activoModoEntrega  = entidad.isHabilitarModoEntrega();
+		} else {
+			activoModoEntrega = false;
+		}
 	}
 
 	/**
@@ -2524,6 +2543,20 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void setSeccionesSeleccionado(SeccionReutilizable seccionesSeleccionado) {
 		this.seccionesSeleccionado = seccionesSeleccionado;
+	}
+
+	/**
+	 * @return the activoModoEntrega
+	 */
+	public boolean isActivoModoEntrega() {
+		return activoModoEntrega;
+	}
+
+	/**
+	 * @param activoModoEntrega the activoModoEntrega to set
+	 */
+	public void setActivoModoEntrega(boolean activoModoEntrega) {
+		this.activoModoEntrega = activoModoEntrega;
 	}
 
 

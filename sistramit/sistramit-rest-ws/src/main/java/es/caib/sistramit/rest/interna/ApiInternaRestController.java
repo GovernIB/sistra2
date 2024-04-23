@@ -577,6 +577,10 @@ public class ApiInternaRestController {
 
 			filtro.setClasificacionSeleccionada(pRFiltro.getClasificacionSeleccionada());
 			filtro.setErrorTipo(pRFiltro.getErrorTipo());
+
+			if (pRFiltro.getRolAcceso() != null) {
+				filtro.setRolAcceso(pRFiltro.getRolAcceso());
+			}
 		}
 
 		return filtro;

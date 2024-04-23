@@ -76,6 +76,7 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
  */
 @ManagedBean
 @ViewScoped
+@SuppressWarnings("deprecation")
 public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	@Inject
@@ -853,7 +854,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 						addMessageContext(TypeNivelGravedad.ERROR,
 								UtilJSF.getLiteral("dialogDisenyoFormulario.iban.errorNumColumnas"));
 					}else {
-					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"),
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"),
 							true);
 					}
 					return false;
@@ -1554,7 +1555,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			}
 
 			if (!linea.cabenComponentes((ComponenteFormulario) objetoCopy, true)) {
-				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"));
+				//addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"));
+				alertarSinEspacio("paste");
 				return;
 			}
 
@@ -1564,7 +1566,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				orden = UtilDisenyo.ordenInsercionComponente(linea, ordenSeleccionado, posicionamiento);
 			}
 			if (orden == null) {
-				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"));
+				//addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"));
+				alertarSinEspacio("paste");
 				return;
 			} else {
 
@@ -1635,7 +1638,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			final Integer orden = UtilDisenyo.ordenInsercionLinea(pagina, lineaDestino, posicionamiento);
 
 			if (orden == null) {
-				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"));
+				//addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"));
+				alertarSinEspacio("paste");
 				return;
 			} else {
 
@@ -1778,7 +1782,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 			Object[] obj = (Object[]) respuesta.getResult();
 
-			final DisenyoFormulario formularioNuevo = (DisenyoFormulario) obj[0];
+			//final DisenyoFormulario formularioNuevo = (DisenyoFormulario) obj[0];
 
 			recuperarFormulario(id);
 
@@ -1872,7 +1876,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				seleccionaComponente(componente);
 				generaNumColumnas();
 			} else {
-				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"), true);
+				//addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"), true);
+				alertarSinEspacio("insertaCampo", tipoCampo);
 			}
 
 		}
@@ -3478,5 +3483,56 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public void setEsIframe(boolean esIframe) {
 		this.esIframe = esIframe;
+	}
+
+	/**** METODOS PARA PODER PREGUNTAR AL USUARIO Y SEGUIR CON LA ACCION PENDIENTE CUANDO NO HAY ESPACIO. ****/
+	private String metodoAlertaSinEspacio;
+	public void alertarSinEspacio (String metodo) {
+		//addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"));
+		metodoAlertaSinEspacio = metodo;
+		RequestContext.getCurrentInstance().execute("PF('avisoDlg').show();");
+	}
+
+	private TypeObjetoFormulario objetoPdt;
+	public void alertarSinEspacio (String metodo, TypeObjetoFormulario objeto) {
+		metodoAlertaSinEspacio = metodo;
+		objetoPdt = objeto;
+		RequestContext.getCurrentInstance().execute("PF('avisoDlg').show();");
+	}
+
+	String componentePdt;
+	public void alertarSinEspacio (String metodo, String objeto) {
+		metodoAlertaSinEspacio = metodo;
+		componentePdt = objeto;
+		RequestContext.getCurrentInstance().execute("PF('avisoDlg').show();");
+	}
+
+	public void aceptarAlertaSinEspacio () {
+		if (metodoAlertaSinEspacio == null || metodoAlertaSinEspacio.isEmpty()) {
+			return ;
+		}
+
+		insertaLineaComponenteBloque(TypeObjetoFormulario.LINEA, null);
+		switch (metodoAlertaSinEspacio) {
+			case "paste":
+				paste();
+				break;
+			/** EN_ESTE_CASO_NO_SE_METE_UN_COMPONENTE_NUEVO case "aplicarCambios":
+				aplicarCambios();
+				break;**/
+			case "insertaCampo":
+				insertaCampo(objetoPdt);
+				break;
+			/** EN_ESTE_CASO_NO_SE_METE_UN_COMPONENTE_NUEVO  case "cambiarCampoTextoMultilinea":
+				cambiarCampoTextoMultilinea();
+				break;
+			    EN_ESTE_CASO_NO_SE_METE_UN_COMPONENTE_NUEVO case "moverComponente":
+				moverComponente(componentePdt);
+				break; **/
+			default:
+				break;
+
+		}
+
 	}
 }

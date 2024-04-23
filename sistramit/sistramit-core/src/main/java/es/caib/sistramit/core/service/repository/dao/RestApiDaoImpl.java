@@ -1057,6 +1057,10 @@ public final class RestApiDaoImpl implements RestApiDao {
 
 	@Override
 	public List<EventoCM> recuperarEventosCM(FiltroEventoAuditoria pFiltroBusqueda) {
+		Boolean rolOperador = null;
+		if(pFiltroBusqueda.getRolAcceso() != null) {
+			rolOperador = pFiltroBusqueda.getRolAcceso().equals("STH_OPE");
+		}
 		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		final CriteriaQuery<EventoCM> query = builder.createQuery(EventoCM.class);
 		List<TypeEvento> eventos = new ArrayList<>();
@@ -1074,11 +1078,23 @@ public final class RestApiDaoImpl implements RestApiDao {
 
 		Root<HEventoAuditoria> tableE = query.from(HEventoAuditoria.class);
 		query.multiselect(tableE.get("tipo").alias("tipoEvento"), builder.count(tableE).alias("concurrencias"));
+		Root<HTramite> tableT = null;
+		if(rolOperador != null && rolOperador) {
+			tableT = query.from(HTramite.class);
+		}
 
 		Predicate predicate = tableE.get("tipo").in(getListaEventosToString(eventos));
 		Predicate predicateFirma = builder.equal(tableE.get("tipo"), TypeEvento.FIRMA_FIN.toString());
 		predicateFirma = builder.and(predicateFirma, builder.equal(tableE.get("resultado"), "OK"));
 		predicate = builder.or(predicate, predicateFirma);
+		if(tableT != null) {
+			predicate = builder.and(predicate,
+					builder.equal(tableE.get("sesionTramitacion"), tableT.get("sesionTramitacion")));
+
+			if (pFiltroBusqueda.getListaAreas() != null) {
+				predicate = builder.and(predicate, tableT.get("idArea").in(pFiltroBusqueda.getListaAreas()));
+			}
+		}
 
 		if (pFiltroBusqueda.getFechaDesde() != null) {
 			predicate = builder.and(predicate,
@@ -1131,14 +1147,29 @@ public final class RestApiDaoImpl implements RestApiDao {
 		}
 
 		if (pFiltroBusqueda.getFechaDesde() != null) {
-			sql.append(" and f.LOG_EVEFEC >= TO_TIMESTAMP('")
+			sql.append(" and p.trp_codstr IN ( SELECT DISTINCT ( trp_codstr ) FROM stt_traper tp WHERE (");
+
+			sql.append(" tp.trp_fecini >= TO_TIMESTAMP('")
 					.append(Timestamp.from(pFiltroBusqueda.getFechaDesde().toInstant()))
 					.append("', 'YYYY-MM-DD HH24:MI:SS.FF') ");
-		}
-		if (pFiltroBusqueda.getFechaHasta() != null) {
-			sql.append(" and f.LOG_EVEFEC <= TO_TIMESTAMP('")
-					.append(Timestamp.from(pFiltroBusqueda.getFechaHasta().toInstant()))
+
+			if(pFiltroBusqueda.getFechaHasta() != null) {
+				sql.append(" and tp.trp_fecini <= TO_TIMESTAMP('")
+						.append(Timestamp.from(pFiltroBusqueda.getFechaHasta().toInstant()))
+						.append("', 'YYYY-MM-DD HH24:MI:SS.FF') ");
+			}
+
+			sql.append(" ) or ( tp.trp_fecacc >= TO_TIMESTAMP('")
+					.append(Timestamp.from(pFiltroBusqueda.getFechaDesde().toInstant()))
 					.append("', 'YYYY-MM-DD HH24:MI:SS.FF') ");
+
+			if(pFiltroBusqueda.getFechaHasta() != null) {
+				sql.append(" and tp.trp_fecacc <= TO_TIMESTAMP('")
+						.append(Timestamp.from(pFiltroBusqueda.getFechaHasta().toInstant()))
+						.append("', 'YYYY-MM-DD HH24:MI:SS.FF') ");
+			}
+
+			sql.append(" ) )");
 		}
 
 		if (pFiltroBusqueda.getListaAreas() != null) {
@@ -1452,14 +1483,29 @@ public final class RestApiDaoImpl implements RestApiDao {
 		}
 
 		if (pFiltroBusqueda.getFechaDesde() != null) {
-			sql.append(" and f.LOG_EVEFEC >= TO_TIMESTAMP('")
+			sql.append(" and p.trp_codstr IN ( SELECT DISTINCT ( trp_codstr ) FROM stt_traper tp WHERE (");
+
+			sql.append(" tp.trp_fecini >= TO_TIMESTAMP('")
 					.append(Timestamp.from(pFiltroBusqueda.getFechaDesde().toInstant()))
 					.append("', 'YYYY-MM-DD HH24:MI:SS.FF') ");
-		}
-		if (pFiltroBusqueda.getFechaHasta() != null) {
-			sql.append(" and f.LOG_EVEFEC <= TO_TIMESTAMP('")
-					.append(Timestamp.from(pFiltroBusqueda.getFechaHasta().toInstant()))
+
+			if(pFiltroBusqueda.getFechaHasta() != null) {
+				sql.append(" and tp.trp_fecini <= TO_TIMESTAMP('")
+						.append(Timestamp.from(pFiltroBusqueda.getFechaHasta().toInstant()))
+						.append("', 'YYYY-MM-DD HH24:MI:SS.FF') ");
+			}
+
+			sql.append(" ) or ( tp.trp_fecacc >= TO_TIMESTAMP('")
+					.append(Timestamp.from(pFiltroBusqueda.getFechaDesde().toInstant()))
 					.append("', 'YYYY-MM-DD HH24:MI:SS.FF') ");
+
+			if(pFiltroBusqueda.getFechaHasta() != null) {
+				sql.append(" and tp.trp_fecacc <= TO_TIMESTAMP('")
+						.append(Timestamp.from(pFiltroBusqueda.getFechaHasta().toInstant()))
+						.append("', 'YYYY-MM-DD HH24:MI:SS.FF') ");
+			}
+
+			sql.append(" ) )");
 		}
 
 		if (pFiltroBusqueda.getListaAreas() != null) {
@@ -1640,13 +1686,16 @@ public final class RestApiDaoImpl implements RestApiDao {
 		final CriteriaQuery<EventoCM> query = builder.createQuery(EventoCM.class);
 
 		Root<HEventoAuditoria> tableE = query.from(HEventoAuditoria.class);
-		Predicate predicate;
+		Predicate predicate = builder.equal(tableE.get("tipo"), "ERROR");
 		Root<HTramite> tableT = query.from(HTramite.class);
 
 		final Join<HEventoAuditoria, HSesionTramitacion> p = tableE.join("sesionTramitacion");
+		predicate = builder.and(predicate,
+				builder.equal(tableE.get("sesionTramitacion"), tableT.get("sesionTramitacion")));
 
-		predicate = builder.equal(tableE.get("sesionTramitacion"), tableT.get("sesionTramitacion"));
-		predicate = builder.and(predicate, builder.equal(tableE.get("tipo"), "ERROR"));
+		if (pFiltroBusqueda.getListaAreas() != null) {
+			predicate = builder.and(predicate, tableT.get("idArea").in(pFiltroBusqueda.getListaAreas()));
+		}
 
 		if (pFiltroBusqueda.getErrorTipo() != null) {
 			predicate = builder.and(predicate, builder.like(builder.lower(tableE.get("codigoError")), "%"+pFiltroBusqueda.getErrorTipo().toLowerCase()+"%"));
@@ -1668,12 +1717,16 @@ public final class RestApiDaoImpl implements RestApiDao {
 
 		Subquery<Long> subPorc = query.subquery(Long.class);
 		Root<HEventoAuditoria> subPorcE = subPorc.from(HEventoAuditoria.class);
-		Predicate subPorcPred;
+		Predicate subPorcPred = builder.equal(subPorcE.get("tipo"), "ERROR");
 		Root<HTramite> subPorcT = subPorc.from(HTramite.class);
 
 		final Join<HEventoAuditoria, HSesionTramitacion> subPorcJoin = subPorcE.join("sesionTramitacion");
-		subPorcPred = builder.equal(subPorcE.get("sesionTramitacion"), subPorcT.get("sesionTramitacion"));
-		subPorcPred = builder.and(subPorcPred, builder.equal(subPorcE.get("tipo"), "ERROR"));
+		subPorcPred = builder.and(subPorcPred,
+				builder.equal(subPorcE.get("sesionTramitacion"), subPorcT.get("sesionTramitacion")));
+
+		if (pFiltroBusqueda.getListaAreas() != null) {
+			subPorcPred = builder.and(subPorcPred, subPorcT.get("idArea").in(pFiltroBusqueda.getListaAreas()));
+		}
 
 		if (pFiltroBusqueda.getErrorTipo() != null) {
 			subPorcPred = builder.and(subPorcPred, builder.like(builder.lower(subPorcE.get("codigoError")), "%"+pFiltroBusqueda.getErrorTipo().toLowerCase()+"%"));

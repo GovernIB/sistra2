@@ -78,6 +78,8 @@ public class RFiltroEventoAuditoria {
 	private String clasificacionSeleccionada;
 	private String errorTipo;
 
+	private String rolAcceso;
+
 	public List<String> getListaAreas() {
 		return listaAreas;
 	}
@@ -260,6 +262,14 @@ public class RFiltroEventoAuditoria {
 
 	public void setErrorTipo(String errorTipo) {
 		this.errorTipo = errorTipo;
+	}
+
+	public String getRolAcceso() {
+		return rolAcceso;
+	}
+
+	public void setRolAcceso(String rolAcceso) {
+		this.rolAcceso = rolAcceso;
 	}
 
 }

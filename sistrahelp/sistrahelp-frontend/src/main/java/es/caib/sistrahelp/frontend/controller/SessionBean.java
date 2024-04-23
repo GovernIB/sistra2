@@ -82,6 +82,14 @@ public class SessionBean {
 	private Entidad entidad;
 	private int indexEntidad = -1;
 
+	/**
+	 * Umbrales actuales.
+	 */
+	private String umbralNAUsuario;
+	private String umbralARUsuario;
+	private int indexUmbralNA = -1;
+	private int indexUmbralAR = -1;
+
 	/** Lista de areas de cada perfil. **/
 	private List<Area> listaAreasHelpDesk = new ArrayList<>();
 	private List<Area> listaAreasHelpSupervisor = new ArrayList<>();
@@ -164,6 +172,7 @@ public class SessionBean {
 			obtenerPerfil(propiedades);
 			obtenerIdioma(propiedades);
 			obtenerEntidad(propiedades);
+			obtenerUmbrales(propiedades);
 		}
 
 		// asignamos idioma por defecto si lo tiene
@@ -285,6 +294,24 @@ public class SessionBean {
 				paginacion = Integer.valueOf(prop.getValor());
 				indexPaginacion = list.indexOf(prop);
 				break;
+			}
+		}
+	}
+
+	public void obtenerUmbrales(List<Propiedad> list) {
+		// recuperamos los umbrales de aviso del CM
+		umbralNAUsuario = null;
+		umbralARUsuario = null;
+		for (final Propiedad prop : list) {
+			if (prop.getCodigo().equals("umbralNA") || prop.getCodigo().equals("umbralAR")) {
+				if (prop.getCodigo().equals("umbralNA")) {
+					umbralNAUsuario = prop.getValor();
+					indexUmbralNA = list.indexOf(prop);
+				}
+				if (prop.getCodigo().equals("umbralAR")) {
+					umbralARUsuario = prop.getValor();
+					indexUmbralAR = list.indexOf(prop);
+				}
 			}
 		}
 	}
@@ -449,8 +476,8 @@ public class SessionBean {
 		}
 
 		for (final TypeOpcionMenu opcion : TypeOpcionMenu.values()) {
-			if (!opcion.name().equals("alertas")
-					|| (opcion.name().equals("alertas") && this.activeRole.equals(TypeRoleAcceso.SUPERVISOR_ENTIDAD))) {
+			if (!opcion.name().equals("ALERTAS")
+					|| (opcion.name().equals("ALERTAS") && this.activeRole == TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
 				item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
 				item.setUrl(UtilJSF.getUrlOpcionMenu(opcion, idEntidad));
 				model.addElement(item);
@@ -754,6 +781,18 @@ public class SessionBean {
 	}
 
 	/**
+	 * @param umbralNA and umbralAR to delete
+	 */
+	public void eliminarUmbrales() {
+		propiedades.removeIf(prop -> prop.getCodigo().equals("umbralNA"));
+		propiedades.removeIf(prop -> prop.getCodigo().equals("umbralAR"));
+		String pPropiedades = (UtilJSON.toJSON(propiedades));
+
+		// actualizamos sesion usuario
+		systemService.updateSesionPropiedades(userName, pPropiedades);
+	}
+
+	/**
 	 * @return the maxInactiveInterval
 	 */
 	public Integer getMaxInactiveInterval() {
@@ -866,5 +905,99 @@ public class SessionBean {
 	 */
 	public void setPaginacionCm(boolean paginacionCm) {
 		this.paginacionCm = paginacionCm;
+	}
+
+
+	/**
+	 * @return the umbralNAUsuario
+	 */
+	public String getUmbralNAUsuario() {
+		return umbralNAUsuario;
+	}
+
+
+	/**
+	 * @param umbralNA the umbralNAUsuario to set
+	 */
+	public void setUmbralNAUsuario(String umbralNAUsuario) {
+		this.umbralNAUsuario = umbralNAUsuario;
+
+		// actualizamos propiedades de sesión
+		propiedad = new Propiedad();
+		propiedad.setCodigo("umbralNA");
+		propiedad.setValor(umbralNAUsuario);
+
+		if (UtilJSON.toJSON(propiedades).contains(propiedad.getCodigo())) {
+			propiedades.removeIf(prop -> prop.getCodigo().equals("umbralNA"));
+		}
+		propiedades.add(propiedad);
+		String pPropiedades = (UtilJSON.toJSON(propiedades));
+
+		// actualizamos sesion usuario
+		systemService.updateSesionPropiedades(userName, pPropiedades);
+		indexUmbralNA = propiedades.indexOf(propiedad);
+	}
+
+
+	/**
+	 * @return the umbralARUsuario
+	 */
+	public String getUmbralARUsuario() {
+		return umbralARUsuario;
+	}
+
+
+	/**
+	 * @param umbralAR the umbralARUsuario to set
+	 */
+	public void setUmbralARUsuario(String umbralARUsuario) {
+		this.umbralARUsuario = umbralARUsuario;
+
+		// actualizamos propiedades de sesión
+		propiedad = new Propiedad();
+		propiedad.setCodigo("umbralAR");
+		propiedad.setValor(umbralARUsuario);
+
+		if (UtilJSON.toJSON(propiedades).contains(propiedad.getCodigo())) {
+			propiedades.removeIf(prop -> prop.getCodigo().equals("umbralAR"));
+		}
+		propiedades.add(propiedad);
+		String pPropiedades = (UtilJSON.toJSON(propiedades));
+
+		// actualizamos sesion usuario
+		systemService.updateSesionPropiedades(userName, pPropiedades);
+		indexUmbralNA = propiedades.indexOf(propiedad);
+	}
+
+
+	/**
+	 * @return the indexUmbralNA
+	 */
+	public int getIndexUmbralNA() {
+		return indexUmbralNA;
+	}
+
+
+	/**
+	 * @param indexUmbralNA the indexUmbralNA to set
+	 */
+	public void setIndexUmbralNA(int indexUmbralNA) {
+		this.indexUmbralNA = indexUmbralNA;
+	}
+
+
+	/**
+	 * @return the indexUmbralAR
+	 */
+	public int getIndexUmbralAR() {
+		return indexUmbralAR;
+	}
+
+
+	/**
+	 * @param indexUmbralAR the indexUmbralAR to set
+	 */
+	public void setIndexUmbralAR(int indexUmbralAR) {
+		this.indexUmbralAR = indexUmbralAR;
 	}
 }

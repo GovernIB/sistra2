@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import es.caib.sistramit.core.service.model.flujo.types.TypeEntregaEstado;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -280,6 +281,9 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 		final StringBuffer sbFiltroWhere = new StringBuffer(ConstantesNumero.N500);
 		// - No este purgado, ni marcado purgar, ni pendiente purga por pago
 		sbFiltroWhere.append(" TRP_PURCHK=0 and TRP_PURGA=0 AND TRP_PURPAG=0 ");
+		// Filtro pendiente entrega
+		sbFiltroWhere.append(" AND TRP_CODSTR NOT IN ( SELECT SES_CODIGO FROM STT_SESION, STT_TRAETG WHERE SES_IDESTR = ETG_IDESTR AND ETG_ESTADO <> '" + TypeEntregaEstado.ENTREGADO.toString() + "' ) ");
+		// Filtros caducidad
 		if (pFinalizadosHasta != null || pSinCaducidadHasta != null || pSinFinalizarHasta != null
 				|| pCaducadosHasta != null) {
 			sbFiltroWhere.append("and ( ");
@@ -299,6 +303,9 @@ public class PurgaTramiteDaoImpl implements PurgaTramiteDao {
 			sbFiltroWhere.append(") ");
 		}
 
+
+
+		// Generamos filtro excluyente purga
 		final String sqlFiltroWherePendientesPurga = sbFiltroWhere.toString();
 		return sqlFiltroWherePendientesPurga;
 	}

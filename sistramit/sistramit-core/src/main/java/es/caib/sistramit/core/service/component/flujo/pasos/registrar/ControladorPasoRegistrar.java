@@ -594,6 +594,7 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		final DatosRegistrales dr;
 		final DatosRegistrales datosRegistrales = new DatosRegistrales();
 		datosRegistrales.setCodigoEntidad(pDefinicionTramite.getDefinicionVersion().getIdEntidad());
+		datosRegistrales.setCodigoOrganoDestino(pVariablesFlujo.getDatosTramiteCP().getOrganoDestinoDir3());
 		datosRegistrales.setExtracto(pVariablesFlujo.getTituloTramite());
 		datosRegistrales.setIdEnvioRemoto(pasoRegistrar.getDestino().getIdentificadorEnvioRemoto());
 		dr = datosRegistrales;

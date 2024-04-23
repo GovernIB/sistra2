@@ -20,7 +20,7 @@ public final class ResultadoProcesoProgramado implements Serializable {
 	/**
 	 * Detalles de la ejecución del proceso.
 	 */
-	private ListaPropiedades detalles;
+	private ListaPropiedades detalles = new ListaPropiedades();
 
 	/**
 	 * Método de acceso a resultado.

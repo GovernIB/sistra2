@@ -39,4 +39,14 @@
 			id="historialAlertaService"
 			jndi-name="java:app/sistrahelp-core/HistorialAlertaServiceBean"
 			business-interface="es.caib.sistrahelp.core.api.service.HistorialAlertaService"/>
+
+  <jee:local-slsb
+			id="systemService"
+			jndi-name="java:app/sistrahelp-core/SystemServiceBean"
+			business-interface="es.caib.sistrahelp.core.api.service.SystemService"/>
+
+  <jee:local-slsb
+			id="procesoAlertaService"
+			jndi-name="java:app/sistrahelp-core/ProcesoAlertaServiceBean"
+			business-interface="es.caib.sistrahelp.core.api.service.ProcesoAlertaService"/>
 </beans>

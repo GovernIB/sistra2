@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import es.caib.sistramit.core.api.model.formulario.*;
+import es.caib.sistramit.core.api.service.EntregaService;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.BeforeClass;
@@ -81,6 +82,10 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	/** Servicio seguridad. */
 	@Autowired
 	private SecurityService securityService;
+
+	/** Entrega service. */
+	@Autowired
+	private EntregaService entregaService;
 
 	/** Url inicio. */
 	private static final String URL_INICIO = "localhost:8080/sistramitfront/asistente/iniciarTramite.html?tramite="
@@ -238,6 +243,10 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
 		// Pasamos a paso siguiente: registrar
 		flujoTramitacion_registro_electronico(idSesionTramitacion, usuarioAutenticadoInfo, registro);
+
+		// Entrega CES2 -- no se xq no guarda los datos en tabla entregas al finalizar tx
+		// entregaService.procesarEntregaFinalizadosInmediatos();
+
 	}
 
 	/**
@@ -337,6 +346,10 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 						"No concuerda valor inicial campo " + valorInicial.getId());
 			}
 		}
+		// * Valor por defecto para lista fija SEL_LISTA
+		ValorCampoIndexado valorDefecto_SEL_LISTA = new ValorCampoIndexado("SEL_LISTA", "V1", "Valor 1 es");
+		ValorCampoIndexado valorActual_SEL_LISTA = (ValorCampoIndexado) UtilsFormularioInterno.buscarValorCampo(paginaData.getValores(), "SEL_LISTA");
+		Assert.isTrue(valorDefecto_SEL_LISTA.esValorIgual(valorActual_SEL_LISTA));
 		// * Estado campo
 		Assert.isTrue(paginaData.getConfiguracion("TXT_CALC").getSoloLectura() == TypeSiNo.SI,
 				"El campo no está como solo lectura");

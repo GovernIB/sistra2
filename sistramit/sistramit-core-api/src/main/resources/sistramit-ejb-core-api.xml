@@ -47,6 +47,11 @@
 			business-interface="es.caib.sistramit.core.api.service.PurgaService"/>
 
 	<jee:local-slsb
+			id="entregaService"
+			jndi-name="java:app/sistramit-core/EntregaServiceBean"
+			business-interface="es.caib.sistramit.core.api.service.EntregaService"/>
+
+	<jee:local-slsb
 			id="restApiExternaService"
 			jndi-name="java:app/sistramit-core/RestApiExternaServiceBean"
 			business-interface="es.caib.sistramit.core.api.service.RestApiExternaService"/>

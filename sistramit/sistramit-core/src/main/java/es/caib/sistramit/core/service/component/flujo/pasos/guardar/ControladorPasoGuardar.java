@@ -176,8 +176,7 @@ public final class ControladorPasoGuardar extends ControladorPasoReferenciaImpl 
 		// Documentos registro
 		final List<DocumentosRegistroPorTipo> docsRegPorTipo = UtilsFlujo.buscarDocumentosParaRegistrar(getDao(),
 				pVariablesFlujo);
-		// Revisamos descarga documentos firmados en función de tipo de firma y número
-		// firmantes.
+		// Revisamos descarga documentos firmados en función de tipo de firma y número firmantes.
 		revisarDescargaDocumentosFirmados(docsRegPorTipo);
 
 		// Datos justificante

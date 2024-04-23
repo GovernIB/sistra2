@@ -3,6 +3,7 @@ package es.caib.sistramit.core.api.model.formulario;
 import java.io.Serializable;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Valor compuesto por codigo / descripción.
@@ -31,8 +32,8 @@ public final class ValorIndexado implements Serializable {
      */
     public ValorIndexado(final String pCodigo, final String pDescripcion) {
         super();
-        valor = pCodigo;
-        descripcion = pDescripcion;
+        valor = StringUtils.trim(pCodigo);
+        descripcion = StringUtils.trim(pDescripcion);
     }
 
     /**

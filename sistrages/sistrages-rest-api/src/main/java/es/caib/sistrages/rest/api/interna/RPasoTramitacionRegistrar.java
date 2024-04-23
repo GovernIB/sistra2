@@ -68,6 +68,15 @@ public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 	@ApiModelProperty(value = "En caso de habilitar aviso, se indica mecanismo aviso")
 	private RScript scriptAlFinalizar;
 
+	/** Indica si se habilita el modo entrega. **/
+	@ApiModelProperty(value = "Si activa entrega (CES2)")
+	private boolean modoEntregaHabilitar;
+
+	/** Indica si es inmedito (si se ha habilitado el modo entrega). **/
+	@ApiModelProperty(value = "Si activa entrega (CES2) inmediata")
+	private boolean modoEntregaHabilitarInmediato;
+
+
 	/**
 	 * @return the permiteSubsanar
 	 */
@@ -319,5 +328,35 @@ public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 	public void setTipoDestino(final String tipoDestino) {
 		this.tipoDestino = tipoDestino;
 	}
+
+	/**
+	 * @return the modoEntregaHabilitar
+	 */
+	public boolean isModoEntregaHabilitar() {
+		return modoEntregaHabilitar;
+	}
+
+	/**
+	 * @param modoEntregaHabilitar the modoEntregaHabilitar to set
+	 */
+	public void setModoEntregaHabilitar(boolean modoEntregaHabilitar) {
+		this.modoEntregaHabilitar = modoEntregaHabilitar;
+	}
+
+	/**
+	 * @return the modoEntregaHabilitarInmediato
+	 */
+	public boolean isModoEntregaHabilitarInmediato() {
+		return modoEntregaHabilitarInmediato;
+	}
+
+	/**
+	 * @param modoEntregaHabilitarInmediato the modoEntregaHabilitarInmediato to set
+	 */
+	public void setModoEntregaHabilitarInmediato(boolean modoEntregaHabilitarInmediato) {
+		this.modoEntregaHabilitarInmediato = modoEntregaHabilitarInmediato;
+	}
+
+
 
 }

@@ -573,7 +573,9 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 			confCampoNumero.getOpciones().setNegativo(TypeSiNo.SI);
 		}
 
-		if (pCampoDef.getTextoNumero().isRango() && pCampoDef.getTextoNumero().getRangoDesde() >= 0 && pCampoDef.getTextoNumero().getRangoHasta() > 0) {
+		if (pCampoDef.getTextoNumero().isRango() &&
+				pCampoDef.getTextoNumero().getRangoDesde() != null && pCampoDef.getTextoNumero().getRangoHasta() != null &&
+				pCampoDef.getTextoNumero().getRangoDesde() <= pCampoDef.getTextoNumero().getRangoHasta()) {
 			confCampoNumero.getOpciones().setRangoMin(pCampoDef.getTextoNumero().getRangoDesde());
 			confCampoNumero.getOpciones().setRangoMax(pCampoDef.getTextoNumero().getRangoHasta());
 		}

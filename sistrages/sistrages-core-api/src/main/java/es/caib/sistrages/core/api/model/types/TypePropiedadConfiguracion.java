@@ -21,6 +21,8 @@ public enum TypePropiedadConfiguracion {
 	TINYMCE_CODE("tinymce.code"),
 	/** Sistrages ayuda externa. */
 	SISTRAGES_AYUDA_PATH("ayuda.sistrages.path"),
+	/** Sistrages habilitar modo entrega. */
+	SISTRAGES_MODOENTREGA_HABILITAR("sistrages.modoEntrega.habilitar"),
 	/** Sistramit rest password. **/
 	SISTRAMIT_REST_PWD("sistramit.rest.pwd"),
 	/** Sistramit rest usuario. **/

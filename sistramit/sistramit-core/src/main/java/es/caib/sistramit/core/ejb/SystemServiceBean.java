@@ -77,4 +77,5 @@ public class SystemServiceBean implements SystemService {
 	public String obtenerUrlLogoEntidad(String identificador, String idioma) {
 		return systemService.obtenerUrlLogoEntidad(identificador, idioma);
 	}
+
 }

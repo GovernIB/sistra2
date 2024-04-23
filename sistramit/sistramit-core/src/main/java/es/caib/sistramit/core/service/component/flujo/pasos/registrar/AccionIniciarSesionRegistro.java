@@ -73,9 +73,14 @@ public final class AccionIniciarSesionRegistro implements AccionPaso {
 		// Valida si se puede registrar el tramite
 		validacionesRegistrar(pDipa, pDpp, pVariablesFlujo, pDefinicionTramite);
 
+		// Verificamos si esta habilitado modo entrega
+		final RPasoTramitacionRegistrar pasoRegistrar = (RPasoTramitacionRegistrar) UtilsSTG
+				.devuelveDefinicionPaso(pDipa.getIdPaso(), pDefinicionTramite);
+
 		// Iniciamos sesión registro
-		final String idSesionRegistro = iniciarSesionRegistro(pVariablesFlujo.getTipoDestino(),
-				pDipa.getParametrosRegistro(), pVariablesFlujo.isDebugEnabled());
+		final String idSesionRegistro = iniciarSesionRegistro(pVariablesFlujo.getIdSesionTramitacion(),
+				pVariablesFlujo.getTipoDestino(), pDipa.getParametrosRegistro(), pDefinicionTramite,
+				pVariablesFlujo.isDebugEnabled());
 
 		// Actualizamos persistencia
 		actualizarPersistencia(pDipa, pDpp, idSesionRegistro);
@@ -94,25 +99,34 @@ public final class AccionIniciarSesionRegistro implements AccionPaso {
 	/**
 	 * Inicia sesión registro.
 	 *
-	 * @param tipoDestino
-	 *                               Tipo destino
-	 *
-	 * @param parametrosRegistro
-	 *                               parametrosRegistro
-	 * @param debugEnabled
-	 *                               debug
+	 * @param idSesionTramitacion
+	 * @param tipoDestino           Tipo destino
+	 * @param parametrosRegistro    parametrosRegistro
+	 * @param definicionTramite 	definicionTramite
+	 * @param debugEnabled          debug
 	 * @return Id sesión
 	 */
-	protected String iniciarSesionRegistro(final TypeDestino tipoDestino, final ParametrosRegistro parametrosRegistro,
-			final boolean debugEnabled) {
+	protected String iniciarSesionRegistro(String idSesionTramitacion, final TypeDestino tipoDestino, final ParametrosRegistro parametrosRegistro,
+										   DefinicionTramiteSTG definicionTramite, final boolean debugEnabled) {
 		String idSesionRegistro;
 		if (tipoDestino == TypeDestino.REGISTRO) {
+			// Tipo destino REGISTRO
 			idSesionRegistro = registroComponent
 					.iniciarSesionRegistro(parametrosRegistro.getDatosRegistrales().getCodigoEntidad(), debugEnabled);
 		} else {
-			idSesionRegistro = envioRemotoComponent.iniciarSesionEnvio(
-					parametrosRegistro.getDatosRegistrales().getCodigoEntidad(),
-					parametrosRegistro.getDatosRegistrales().getIdEnvioRemoto(), debugEnabled);
+			// Tipo destino ENVIO REMOTO
+			// Verificamos si esta habilitado modo entrega
+			boolean modoEntregaHabilitado = UtilsSTG.isModoEntregaHabilitado(definicionTramite);
+			if (modoEntregaHabilitado) {
+				// Si esta habilitado modo entrega, no debe iniciar sesion (devolvemos id sesion tramitacion).
+				// Este id solo se guarda en paso registro (tabla finalizados solo se guarda numero registro)
+				idSesionRegistro = idSesionTramitacion;
+			 } else {
+				// Si no esta habilitado modo entrega, realizamos envio remoto
+				idSesionRegistro = envioRemotoComponent.iniciarSesionEnvio(
+						parametrosRegistro.getDatosRegistrales().getCodigoEntidad(),
+						parametrosRegistro.getDatosRegistrales().getIdEnvioRemoto(), debugEnabled);
+			}
 		}
 		return idSesionRegistro;
 	}
@@ -124,8 +138,6 @@ public final class AccionIniciarSesionRegistro implements AccionPaso {
 	 *                               Datos internos paso
 	 * @param pDpp
 	 *                               Datos persistencia paso
-	 * @param pReintentar
-	 *                               Indica si se debe reintentar registro
 	 * @param pVariablesFlujo
 	 *                               Variables flujo
 	 * @param pDefinicionTramite

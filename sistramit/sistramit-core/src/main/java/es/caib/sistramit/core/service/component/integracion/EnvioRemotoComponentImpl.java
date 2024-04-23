@@ -1,17 +1,12 @@
 package es.caib.sistramit.core.service.component.integracion;
 
+import es.caib.sistra2.commons.plugins.registro.api.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.caib.sistra2.commons.plugins.registro.api.AsientoRegistral;
-import es.caib.sistra2.commons.plugins.registro.api.DestinoEnvio;
-import es.caib.sistra2.commons.plugins.registro.api.EnvioRemotoPluginException;
-import es.caib.sistra2.commons.plugins.registro.api.IEnvioRemotoPlugin;
-import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
-import es.caib.sistra2.commons.plugins.registro.api.VerificacionRegistro;
 import es.caib.sistrages.rest.api.interna.RConfiguracionAutenticacion;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.REnvioRemoto;
@@ -47,11 +42,11 @@ public final class EnvioRemotoComponentImpl implements EnvioRemotoComponent {
 	@Override
 	public String iniciarSesionEnvio(final String codigoEntidad, final String idEnvioRemoto,
 			final boolean debugEnabled) {
-		final IEnvioRemotoPlugin plgRegistro = (IEnvioRemotoPlugin) configuracionComponent
+		final IEnvioRemotoPlugin plgEnvioRemoto = (IEnvioRemotoPlugin) configuracionComponent
 				.obtenerPluginEntidad(TypePluginEntidad.ENVIO_REMOTO, codigoEntidad);
 		final DestinoEnvio destinoEnvio = obtenerDestinoEnvio(codigoEntidad, idEnvioRemoto);
 		try {
-			final String idSesionRegistro = plgRegistro.iniciarSesionEnvio(destinoEnvio);
+			final String idSesionRegistro = plgEnvioRemoto.iniciarSesionEnvio(destinoEnvio);
 			return idSesionRegistro;
 		} catch (final EnvioRemotoPluginException e) {
 			throw new RegistroSolicitudException("Error iniciant sessió enviament per : " + idEnvioRemoto, e);
@@ -60,14 +55,16 @@ public final class EnvioRemotoComponentImpl implements EnvioRemotoComponent {
 
 	@Override
 	public ResultadoRegistrar realizarEnvio(final String codigoEntidad, final String idEnvioRemoto,
-			final String idSesionTramitacion, final String idSesionEnvio, final AsientoRegistral asientoRegistral,
-			final boolean debugEnabled) {
-		final IEnvioRemotoPlugin plgRegistro = (IEnvioRemotoPlugin) configuracionComponent
+											final String idSesionTramitacion, final String idSesionEnvio,
+											final DatosTramitacion datosTramitacion,
+											final AsientoRegistral asientoRegistral,
+											final boolean debugEnabled) {
+		final IEnvioRemotoPlugin plgEnvioRemoto = (IEnvioRemotoPlugin) configuracionComponent
 				.obtenerPluginEntidad(TypePluginEntidad.ENVIO_REMOTO, codigoEntidad);
 		final DestinoEnvio destinoEnvio = obtenerDestinoEnvio(codigoEntidad, idEnvioRemoto);
 		final ResultadoRegistrar resultado = new ResultadoRegistrar();
 		try {
-			final ResultadoRegistro res = plgRegistro.realizarEnvio(destinoEnvio, idEnvioRemoto, asientoRegistral);
+			final ResultadoRegistro res = plgEnvioRemoto.realizarEnvio(destinoEnvio, idSesionEnvio, datosTramitacion, asientoRegistral);
 			resultado.setResultado(TypeResultadoRegistro.CORRECTO);
 			resultado.setNumeroRegistro(res.getNumeroRegistro());
 			resultado.setFechaRegistro(res.getFechaRegistro());
@@ -84,11 +81,11 @@ public final class EnvioRemotoComponentImpl implements EnvioRemotoComponent {
 	@Override
 	public ResultadoRegistrar reintentarEnvio(final String codigoEntidad, final String idEnvioRemoto,
 			final String idSesionEnvio, final boolean debugEnabled) {
-		final IEnvioRemotoPlugin plgRegistro = (IEnvioRemotoPlugin) configuracionComponent
+		final IEnvioRemotoPlugin plgEnvioRemoto = (IEnvioRemotoPlugin) configuracionComponent
 				.obtenerPluginEntidad(TypePluginEntidad.ENVIO_REMOTO, codigoEntidad);
 		final DestinoEnvio destinoEnvio = obtenerDestinoEnvio(codigoEntidad, idEnvioRemoto);
 		try {
-			final VerificacionRegistro verificacion = plgRegistro.verificarEnvio(destinoEnvio, idSesionEnvio);
+			final VerificacionRegistro verificacion = plgEnvioRemoto.verificarEnvio(destinoEnvio, idSesionEnvio);
 			final ResultadoRegistrar res = new ResultadoRegistrar();
 			switch (verificacion.getEstado()) {
 			case REALIZADO:

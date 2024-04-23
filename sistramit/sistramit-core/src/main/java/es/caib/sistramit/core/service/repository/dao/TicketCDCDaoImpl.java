@@ -1,21 +1,19 @@
 package es.caib.sistramit.core.service.repository.dao;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
-import org.springframework.stereotype.Repository;
-
 import es.caib.sistra2.commons.utils.GeneradorId;
 import es.caib.sistra2.commons.utils.Serializador;
 import es.caib.sistramit.core.api.exception.TicketCarpetaCiudadanaException;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
 import es.caib.sistramit.core.service.repository.model.HTicketCDC;
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Proceso DAO.
@@ -30,20 +28,30 @@ public class TicketCDCDaoImpl implements TicketCDCDao {
 	@Override
 	public String generarTicketAcceso(final InfoTicketAcceso pInfoTicketAcceso) {
 
-		final String ticket = GeneradorId.generarId();
+		// Obtiene idioma de la sesion tramitacion
+		final String sql = "SELECT t.idioma from HTramite t where t.sesionTramitacion.idSesionTramitacion = :idSesionTramitacion";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idSesionTramitacion", pInfoTicketAcceso.getIdSesionTramitacion());
+		final List<?> results = query.getResultList();
+		if (results.isEmpty()) {
+			throw new TicketCarpetaCiudadanaException("No s'ha trobat la sessió de tramitació");
+		}
+		String idioma = (String) results.get(0);
 
+		// Genera ticket añadiendo idioma
+		final String ticket = GeneradorId.generarId() + "-" + idioma;
+
+		// Guarda ticket
 		final HTicketCDC hTck = new HTicketCDC();
 		hTck.setTicket(ticket);
 		hTck.setFechaInicio(new Date());
 		hTck.setIdSesionTramitacion(pInfoTicketAcceso.getIdSesionTramitacion());
 		hTck.setUrlCallbackError(pInfoTicketAcceso.getUrlCallbackError());
-
 		try {
 			hTck.setInfoAutenticacion(Serializador.serialize(pInfoTicketAcceso.getUsuarioAutenticadoInfo()));
 		} catch (final IOException e) {
 			throw new TicketCarpetaCiudadanaException("Error serialitzant informació usuari");
 		}
-
 		entityManager.persist(hTck);
 
 		return ticket;

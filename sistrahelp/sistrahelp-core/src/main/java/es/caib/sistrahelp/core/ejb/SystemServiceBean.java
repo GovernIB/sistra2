@@ -1,5 +1,7 @@
 package es.caib.sistrahelp.core.ejb;
 
+import java.util.List;
+
 import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -9,8 +11,10 @@ import javax.interceptor.Interceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import es.caib.sistrahelp.core.api.model.Alerta;
 import es.caib.sistrahelp.core.api.model.Sesion;
 import es.caib.sistrahelp.core.api.service.SystemService;
+import es.caib.sistrahelp.core.interceptor.NegocioInterceptor;
 
 /**
  * Servicios de sistema.
@@ -39,4 +43,15 @@ public class SystemServiceBean implements SystemService {
 		systemService.updateSesionPropiedades(pUserName, pPropiedades);
 	}
 
+	@Override
+	@PermitAll
+	public boolean verificarMaestro(final String instancia) {
+		return systemService.verificarMaestro(instancia);
+	}
+
+	@Override
+	@PermitAll
+	public List<Alerta> calcularAlertasEjecucion(){
+		return systemService.calcularAlertasEjecucion();
+	}
 }

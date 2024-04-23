@@ -18,6 +18,12 @@ public enum TypePropiedadConfiguracion {
 	HORA_DESDE("horaDesde"),
 	/** Minutos refresco. */
 	MINUTOS_REFRESCO("minutosRefresco"),
+	/** Permite personalizar los umbrales de aviso en CM ( true / false ) */
+	PERMITIR_PERSONALIZAR_UMBRALES_CM("permitirPersonalizarUmbralesCM"),
+	/** Porcentajes de los umbrales que separan los valores de aviso "Normal", "Atención" y "Revisar" en el cuadro de mando */
+	/** 0% >= "Normal" < [umbralNormalAtencion]% >= "Atencion" < [umbralAtencionRevisar]% < "Revisar" >= 100% */
+	UMBRAL_NORMAL_ATENCION("umbralNormalAtencion"),
+	UMBRAL_ATENCION_REVISAR("umbralAtencionRevisar"),
 	/** STG Url. */
 	SISTRAGES_URL("sistrages.rest.url"),
 	/** STG Url. */
@@ -27,8 +33,8 @@ public enum TypePropiedadConfiguracion {
 	/** Prefijo plugin. */
 	PLUGINS_PREFIJO("plugins.prefix"),
 	/** STG Url. */
-	SISTRAGES_PWD("sistrages.rest.pwd"), SISTRAGES_AYUDA_PATH("ayuda.sistrahelp.path"),
-
+	SISTRAGES_PWD("sistrages.rest.pwd"),
+	SISTRAGES_AYUDA_PATH("ayuda.sistrahelp.path"),
 	/**
 	 * Tiempo (dias) tras su fecha de purgado tras el cual seran definitivamente
 	 * borrados los purgados.

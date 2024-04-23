@@ -20,12 +20,17 @@ import es.caib.sistra2.commons.plugins.registro.api.IRegistroPlugin;
 import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.EnvioRemoto;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.EntidadService;
+import es.caib.sistrages.core.api.service.EnvioRemotoService;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -57,6 +62,14 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	@Inject
 	private ComponenteService componenteService;
 
+	/** Enlace servicio. */
+	@Inject
+	private EnvioRemotoService envioService;
+
+	/** Componente systemservice **/
+	@Inject
+	private SystemService systemService;
+
 	/** Datos elemento. */
 	private Entidad data;
 
@@ -69,6 +82,9 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	private String portapapeles;
 
 	private String errorCopiar;
+
+	/** Habilitado solo si lo está a nivel global. */
+	private boolean permiteModoEntrega;
 
 	/**
 	 * Inicializacion.
@@ -95,6 +111,13 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 					UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.registro.error"));
 		}
 
+		/** Para habilitar el modo entrega **/
+		final String modoEntrega = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAGES_MODOENTREGA_HABILITAR.toString());
+		permiteModoEntrega = modoEntrega != null && "true".equalsIgnoreCase(modoEntrega);
+		if (!permiteModoEntrega) {
+			data.setHabilitarModoEntrega(false);
+		}
 	}
 
 	/**
@@ -469,6 +492,26 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		UtilJSF.openDialog(DialogValoraciones.class, modo, null, true, 850, 350);
 	}
 
+	/** Abre el dialog para configurar el envío al componente de entrega. */
+	public void abrirConfiguracionComponenteEntrega() {
+		// Muestra dialogo
+		TypeModoAcceso modo = null;
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.AMBITO.toString(), TypeAmbito.ENTIDAD.toString());
+		params.put(TypeParametroVentana.ENTIDAD.toString(), idEntidad.toString());
+		params.put(TypeParametroVentana.DESACTIVAR_BOTONERA.toString(), "true");
+		params.put(TypeParametroVentana.DATO.toString(), Constantes.COMPONENTE_ENTREGA);
+		EnvioRemoto er = envioService.getEnvioByIdentificador(TypeAmbito.ENTIDAD, "CES2", idEntidad, null, null);
+		if (er == null) {
+			modo = TypeModoAcceso.ALTA;
+		} else {
+			modo = TypeModoAcceso.EDICION;
+			params.put(TypeParametroVentana.ID.toString(), er.getCodigo().toString());
+		}
+		UtilJSF.openDialog(DialogEnvioRemoto.class, modo, params, true, 730, 300);
+	}
+
 	/**
 	 * Descarga fichero
 	 *
@@ -593,5 +636,35 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	public final void setPortapapeles(String portapapeles) {
 		this.portapapeles = portapapeles;
 	}
+
+	/**
+	 * @return the permiteModoEntrega
+	 */
+	public boolean isPermiteModoEntrega() {
+		return permiteModoEntrega;
+	}
+
+	/**
+	 * @param permiteModoEntrega the permiteModoEntrega to set
+	 */
+	public void setPermiteModoEntrega(boolean permiteModoEntrega) {
+		this.permiteModoEntrega = permiteModoEntrega;
+	}
+
+	/**
+	 * @return the envioService
+	 */
+	public EnvioRemotoService getEnvioService() {
+		return envioService;
+	}
+
+	/**
+	 * @param envioService the envioService to set
+	 */
+	public void setEnvioService(EnvioRemotoService envioService) {
+		this.envioService = envioService;
+	}
+
+
 
 }

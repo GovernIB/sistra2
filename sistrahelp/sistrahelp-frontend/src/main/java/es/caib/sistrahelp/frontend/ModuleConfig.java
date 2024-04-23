@@ -27,6 +27,15 @@ public final class ModuleConfig {
 	/** Minutos refresco. **/
 	private String minutosRefresco;
 
+	/** Permitir Personalizar Umbrales CM. **/
+	private String permitirPersonalizarUmbralesCM;
+
+	/** Umbral Normal Atencion. **/
+	private String umbralNormalAtencion;
+
+	/** Umbral Atencion Revisar. **/
+	private String umbralAtencionRevisar;
+
 	/**
 	 * @return the entorno
 	 */
@@ -110,6 +119,48 @@ public final class ModuleConfig {
 	 */
 	public void setMinutosRefresco(String minutosRefresco) {
 		this.minutosRefresco = minutosRefresco;
+	}
+
+	/**
+	 * @return the permitirPersonalizarUmbralesCM
+	 */
+	public String getPermitirPersonalizarUmbralesCM() {
+		return permitirPersonalizarUmbralesCM;
+	}
+
+	/**
+	 * @param permitirPersonalizarUmbralesCM the permitirPersonalizarUmbralesCM to set
+	 */
+	public void setPermitirPersonalizarUmbralesCM(String permitirPersonalizarUmbralesCM) {
+		this.permitirPersonalizarUmbralesCM = permitirPersonalizarUmbralesCM;
+	}
+
+	/**
+	 * @return the umbralNormalAtencion
+	 */
+	public String getUmbralNormalAtencion() {
+		return umbralNormalAtencion;
+	}
+
+	/**
+	 * @param umbralNormalAtencion the umbralNormalAtencion to set
+	 */
+	public void setUmbralNormalAtencion(String umbralNormalAtencion) {
+		this.umbralNormalAtencion = umbralNormalAtencion;
+	}
+
+	/**
+	 * @return the umbralAtencionRevisar
+	 */
+	public String getUmbralAtencionRevisar() {
+		return umbralAtencionRevisar;
+	}
+
+	/**
+	 * @param umbralAtencionRevisar the umbralAtencionRevisar to set
+	 */
+	public void setUmbralAtencionRevisar(String umbralAtencionRevisar) {
+		this.umbralAtencionRevisar = umbralAtencionRevisar;
 	}
 
 }

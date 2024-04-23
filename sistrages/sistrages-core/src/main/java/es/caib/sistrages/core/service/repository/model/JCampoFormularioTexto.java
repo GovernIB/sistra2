@@ -59,11 +59,11 @@ public class JCampoFormularioTexto implements IModelApi {
 	@Column(name = "CTX_NUMSEP", length = 2)
 	private String numeroSeparador;
 
-	@Column(name = "CTX_NUMRMI", precision = 10, scale = 0)
-	private Long numeroRangoMinimo;
+	@Column(name = "CTX_NUMRMI", precision = 10, scale = 2)
+	private Double numeroRangoMinimo;
 
-	@Column(name = "CTX_NUMRMX", precision = 10, scale = 0)
-	private Long numeroRangoMaximo;
+	@Column(name = "CTX_NUMRMX", precision = 10, scale = 2)
+	private Double numeroRangoMaximo;
 
 	@Column(name = "CTX_NUMSIG", nullable = false, precision = 1, scale = 0)
 	private boolean numeroConSigno;
@@ -190,19 +190,19 @@ public class JCampoFormularioTexto implements IModelApi {
 		this.numeroSeparador = numeroSeparador;
 	}
 
-	public Long getNumeroRangoMinimo() {
+	public Double getNumeroRangoMinimo() {
 		return this.numeroRangoMinimo;
 	}
 
-	public void setNumeroRangoMinimo(final Long numeroRangoMinimo) {
+	public void setNumeroRangoMinimo(final Double numeroRangoMinimo) {
 		this.numeroRangoMinimo = numeroRangoMinimo;
 	}
 
-	public Long getNumeroRangoMaximo() {
+	public Double getNumeroRangoMaximo() {
 		return this.numeroRangoMaximo;
 	}
 
-	public void setNumeroRangoMaximo(final Long numeroRangoMaximo) {
+	public void setNumeroRangoMaximo(final Double numeroRangoMaximo) {
 		this.numeroRangoMaximo = numeroRangoMaximo;
 	}
 

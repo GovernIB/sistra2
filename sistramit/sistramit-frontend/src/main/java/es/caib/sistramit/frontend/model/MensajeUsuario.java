@@ -31,6 +31,10 @@ public final class MensajeUsuario {
 	private TypeEstiloError estiloError;
 
 	/**
+	 * Titulo debug.
+	 */
+	private String debugTitulo;
+	/**
 	 * Texto debug.
 	 */
 	private String debug;
@@ -63,11 +67,12 @@ public final class MensajeUsuario {
 	 * @param pTexto
 	 *                    Texto
 	 */
-	public MensajeUsuario(final String pTitulo, final String pTexto, final String pDebug) {
+	public MensajeUsuario(final String pTitulo, final String pTexto, final String pDebugTitulo, final String pDebugTexto) {
 		super();
 		titulo = pTitulo;
 		texto = pTexto;
-		debug = pDebug;
+		debug = pDebugTexto;
+		debugTitulo = pDebugTitulo;
 	}
 
 	/**
@@ -182,4 +187,22 @@ public final class MensajeUsuario {
 		this.estiloError = estiloError;
 	}
 
+	/**
+	 * Método de acceso a debugTitulo.
+	 *
+	 * @return debugTitulo
+	 */
+	public String getDebugTitulo() {
+		return debugTitulo;
+	}
+
+	/**
+	 * Método para establecer debugTitulo.
+	 *
+	 * @param debugTitulo
+	 *                    debugTitulo a establecer
+	 */
+	public void setDebugTitulo(String debugTitulo) {
+		this.debugTitulo = debugTitulo;
+	}
 }

@@ -514,6 +514,22 @@ public final class ValidacionesTipo {
 		return resultado;
 	}
 
+	public boolean validaRangoD(final double pvalor, final double pminimo, final double pmaximo) {
+		final Double valor = Double.valueOf(pvalor);
+		final Double minimo = Double.valueOf(pminimo);
+		final Double maximo = Double.valueOf(pmaximo);
+		boolean resultado = false;
+		if (isNull(valor) || (isNull(maximo) && isNull(minimo))) {
+			resultado = false;
+		} else {
+			// Verifica maximo
+			resultado = isNull(maximo) || (isNotNull(maximo) && (valor.compareTo(maximo) <= 0));
+			// Verifica minimo
+			resultado = resultado && (isNull(minimo) || (isNotNull(minimo) && (valor.compareTo(minimo) >= 0)));
+		}
+		return resultado;
+	}
+
 	public boolean esEmail(final String email) {
 		boolean resultado = false;
 		if (!esCadenaVacia(email)) {

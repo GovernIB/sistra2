@@ -65,6 +65,16 @@ public class JAlerta implements IModelApi {
 	@Column(name = "AVI_ENTIDAD")
 	private String idEntidad;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "AVI_FECHA")
+	private Date fecha;
+
+	@Column(name = "AVI_ACTIVO", nullable = false, precision = 1, scale = 0)
+	private Integer activo;
+
+	@Column(name = "AVI_HORA_RESUMEN")
+	private String horaResumen;
+
 	public JAlerta() {
 		super();
 	}
@@ -213,6 +223,30 @@ public class JAlerta implements IModelApi {
 		this.idEntidad = idEntidad;
 	}
 
+	public Date getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
+
+	public Integer getActivo() {
+		return activo;
+	}
+
+	public void setActivo(Integer activo) {
+		this.activo = activo;
+	}
+
+	public String getHoraResumen() {
+		return horaResumen;
+	}
+
+	public void setHoraResumen(String horaResumen) {
+		this.horaResumen = horaResumen;
+	}
+
 	public Alerta toModel() {
 		final Alerta alerta = new Alerta();
 		alerta.setCodigo(codigo);
@@ -258,6 +292,9 @@ public class JAlerta implements IModelApi {
 		} else {
 			alerta.setEliminar(false);
 		}
+		alerta.setFecha(fecha);
+		alerta.setActivo(activo.equals(1) ? true : false);
+		alerta.setHoraResumen(horaResumen);
 		return alerta;
 	}
 
@@ -313,6 +350,9 @@ public class JAlerta implements IModelApi {
 			} else {
 				jModel.setEliminar("F");
 			}
+			jModel.setFecha(model.getFecha());
+			jModel.setActivo(model.isActivo() ? 1 : 0);
+			jModel.setHoraResumen(model.getHoraResumen());
 		}
 		return jModel;
 	}

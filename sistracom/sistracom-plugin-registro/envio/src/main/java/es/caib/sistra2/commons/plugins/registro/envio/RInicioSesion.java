@@ -8,11 +8,6 @@ public class RInicioSesion {
 	private String idEntidad;
 
 	/**
-	 * Id del envio remoto
-	 */
-	private String idEnvioRemoto;
-
-	/**
 	 * @return  idEntidad
 	 */
 	public final String getIdEntidad() {
@@ -25,21 +20,5 @@ public class RInicioSesion {
 	public final void setIdEntidad(String idEntidad) {
 		this.idEntidad = idEntidad;
 	}
-
-	/**
-	 * @return idEnvioRemoto
-	 */
-	public final String getIdEnvioRemoto() {
-		return idEnvioRemoto;
-	}
-
-	/**
-	 * @param para establecer el idEnvioRemoto
-	 */
-	public final void setIdEnvioRemoto(String idEnvioRemoto) {
-		this.idEnvioRemoto = idEnvioRemoto;
-	}
-
-
 
 }

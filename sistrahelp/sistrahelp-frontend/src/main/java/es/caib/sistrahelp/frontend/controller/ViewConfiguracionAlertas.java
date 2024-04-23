@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
@@ -31,6 +32,7 @@ import es.caib.sistrahelp.core.api.model.comun.Constantes;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 import es.caib.sistrahelp.core.api.service.AlertaService;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
+import es.caib.sistrahelp.core.api.service.ProcesoAlertaService;
 import es.caib.sistrahelp.frontend.model.DialogResult;
 import es.caib.sistrahelp.frontend.model.EventoAuditoriaTramitacionLazyDataModel;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
@@ -50,6 +52,9 @@ public class ViewConfiguracionAlertas extends ViewControllerBase {
 	 */
 	@Inject
 	private AlertaService alertaService;
+
+	@Inject
+	private ProcesoAlertaService procesoAlertaService;
 
 	/** Paginacion */
 	private Integer paginacion;
@@ -314,6 +319,30 @@ public class ViewConfiguracionAlertas extends ViewControllerBase {
 		}
 		return resultado;
 
+	}
+
+	public void probarAlerta() {
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionada()) {
+			return;
+		}
+
+		if(!this.datoSeleccionado.isActivo()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.alertaInactiva"));
+			return;
+		}
+
+		if (this.datoSeleccionado.getNombre().equals("RESUMEN_DIARIO")) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.probarResumenDiario"));
+			return;
+		}
+
+		boolean evaluarAlerta = procesoAlertaService.procesarAlertas(this.datoSeleccionado);
+		if(evaluarAlerta){
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.evaluarAlerta.true"));
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.evaluarAlerta.false"));
+		}
 	}
 
 	/**

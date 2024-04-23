@@ -99,7 +99,12 @@ public enum TypeEvento {
 	/**
 	 * INVALIDACIONES: EJECUCIÓN INVALIDACIÓN.   
 	 */
-	INV_EJE("IV_EJE");
+	INV_EJE("IV_EJE"),
+	/**
+	 * PROCESO ENTREGA
+	 */
+	PROCESO_ENTREGA("TR_ETG")
+	;
 
 	/**
 	 * Valor como string.

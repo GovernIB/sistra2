@@ -154,4 +154,7 @@ public final class Constantes {
 	public static final String CACHE_ENTIDAD = "E";
 	public static final String CACHE_COMPLETA = "X";
 
+	/** Componente entrega. **/
+	public static final String COMPONENTE_ENTREGA = "CES2";
+
 }

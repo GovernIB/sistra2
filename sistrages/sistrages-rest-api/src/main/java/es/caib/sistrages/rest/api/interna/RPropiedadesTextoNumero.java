@@ -33,11 +33,11 @@ public class RPropiedadesTextoNumero {
 
 	/** Texto número: rango desde. */
 	@ApiModelProperty(value = "Texto número: rango desde (mayor o igual que cero)")
-	private int rangoDesde;
+	private Double rangoDesde;
 
 	/** Texto número: rango hasta. */
 	@ApiModelProperty(value = "Texto número: rango hasta (mayor que cero)")
-	private int rangoHasta;
+	private Double rangoHasta;
 
 	/** Texto número: permite negativos. */
 	@ApiModelProperty(value = "Texto número: permite negativos")
@@ -137,7 +137,7 @@ public class RPropiedadesTextoNumero {
 	 *
 	 * @return rangoDesde
 	 */
-	public int getRangoDesde() {
+	public Double getRangoDesde() {
 		return rangoDesde;
 	}
 
@@ -146,7 +146,7 @@ public class RPropiedadesTextoNumero {
 	 *
 	 * @param rangoDesde rangoDesde a establecer
 	 */
-	public void setRangoDesde(int rangoDesde) {
+	public void setRangoDesde(Double rangoDesde) {
 		this.rangoDesde = rangoDesde;
 	}
 
@@ -155,7 +155,7 @@ public class RPropiedadesTextoNumero {
 	 *
 	 * @return rangoHasta
 	 */
-	public int getRangoHasta() {
+	public Double getRangoHasta() {
 		return rangoHasta;
 	}
 
@@ -164,7 +164,7 @@ public class RPropiedadesTextoNumero {
 	 *
 	 * @param rangoHasta rangoHasta a establecer
 	 */
-	public void setRangoHasta(int rangoHasta) {
+	public void setRangoHasta(Double rangoHasta) {
 		this.rangoHasta = rangoHasta;
 	}
 

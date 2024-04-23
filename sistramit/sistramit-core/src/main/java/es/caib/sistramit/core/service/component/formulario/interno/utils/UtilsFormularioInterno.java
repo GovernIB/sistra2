@@ -5,23 +5,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import es.caib.sistrages.rest.api.interna.*;
 import es.caib.sistramit.core.service.model.formulario.ParametrosAperturaFormulario;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
-import es.caib.sistrages.rest.api.interna.RComponente;
-import es.caib.sistrages.rest.api.interna.RComponenteCampoOculto;
-import es.caib.sistrages.rest.api.interna.RComponenteCheckbox;
-import es.caib.sistrages.rest.api.interna.RComponenteListaElementos;
-import es.caib.sistrages.rest.api.interna.RComponenteSelector;
-import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
-import es.caib.sistrages.rest.api.interna.RFormularioInterno;
-import es.caib.sistrages.rest.api.interna.RLineaComponentes;
-import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
-import es.caib.sistrages.rest.api.interna.RParametroDominio;
-import es.caib.sistrages.rest.api.interna.RPropiedadesCampo;
-import es.caib.sistrages.rest.api.interna.RScript;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.exception.ValorCampoFormularioNoValidoException;
@@ -217,13 +206,33 @@ public class UtilsFormularioInterno {
 	 * @return Valor campo vacio
 	 */
 	public static ValorCampo crearValorVacio(final RComponente pCampoDef) {
+		ValorCampo res = null;
+		// Obtenemos tipo campo
+		TypeCampo tipoCampo = UtilsSTG.traduceTipoCampo(pCampoDef.getTipo());
+		// Obtenemos tipo valor campo
 		final TypeValor tipoValor = obtenerTipoValorCampo(pCampoDef);
-		ValorCampo res;
-		if (UtilsSTG.traduceTipoCampo(pCampoDef.getTipo()) == TypeCampo.VERIFICACION) {
-			// Si es check, valor vacío es no seleccionado
+		// Si es check, valor vacío es no seleccionado
+		if (tipoCampo == TypeCampo.VERIFICACION) {
 			res = new ValorCampoSimple(pCampoDef.getIdentificador(),
 					((RComponenteCheckbox) pCampoDef).getValorNoChecked());
-		} else {
+		}
+		// Si es un selector, vemos si es una lista fija que tiene un valor por defecto
+		if (tipoCampo == TypeCampo.SELECTOR) {
+			final RComponenteSelector pCampoDefSelector = (RComponenteSelector) pCampoDef;
+			if (UtilsSTG.traduceTipoListaValores(pCampoDefSelector.getTipoListaValores()) == TypeListaValores.FIJA) {
+				// Obtenemos valor por defecto de la lista fija
+				if (pCampoDefSelector.getListaFija() != null) {
+					for (final RValorListaFija valor : pCampoDefSelector.getListaFija()) {
+						if (valor.isPorDefecto()) {
+							res = new ValorCampoIndexado(pCampoDef.getIdentificador(), valor.getCodigo(), valor.getDescripcion());
+							break;
+						}
+					}
+				}
+			}
+		}
+		// Si no se ha creado valor, se crea vacío
+		if (res == null) {
 			// Creamos valor vacío
 			res = UtilsFormulario.crearValorVacio(pCampoDef.getIdentificador(), tipoValor);
 		}

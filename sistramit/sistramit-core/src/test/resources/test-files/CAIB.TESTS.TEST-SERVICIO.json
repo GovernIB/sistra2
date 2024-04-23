@@ -134,7 +134,7 @@
       "tipo": "rt",
       "pasoFinal": false,
       "scriptNavegacion": null,
-      "tipoDestino": "R",
+      "tipoDestino": "E",
       "destino": {
         "oficinaRegistro": null,
         "libroRegistro": null,

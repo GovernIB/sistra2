@@ -165,6 +165,10 @@ public class RConfiguracionEntidad {
 	@ApiModelProperty(value = "Registro centralizado")
 	private boolean registroCentralizado;
 
+	/** Para habilitar / deshabilitar modo entrega (CES2). Por defecto deshabilitado. */
+	@ApiModelProperty(value = "Habilitar modo entrega")
+	private boolean habilitarModoEntrega;
+
 	/** Registro ocultar descarga documentos. */
 	@ApiModelProperty(value = "Ocultar descarga documentos en paso Guardar")
 	private boolean registroOcultarDescargaDocumentos;
@@ -700,6 +704,20 @@ public class RConfiguracionEntidad {
 	}
 
 	/**
+	 * @return the habilitarModoEntrega
+	 */
+	public boolean isHabilitarModoEntrega() {
+		return habilitarModoEntrega;
+	}
+
+	/**
+	 * @param habilitarModoEntrega the habilitarModoEntrega to set
+	 */
+	public void setHabilitarModoEntrega(boolean habilitarModoEntrega) {
+		this.habilitarModoEntrega = habilitarModoEntrega;
+	}
+
+	/**
 	 * @return the oficinaRegistroCentralizado
 	 */
 	public final String getOficinaRegistroCentralizado() {
@@ -908,7 +926,7 @@ public class RConfiguracionEntidad {
 
 	/**
 	 * Método de acceso a codigo.
-	 * 
+	 *
 	 * @return codigo
 	 */
 	public String getCodigo() {
@@ -917,7 +935,7 @@ public class RConfiguracionEntidad {
 
 	/**
 	 * Método para establecer codigo.
-	 * 
+	 *
 	 * @param codigo
 	 *                   codigo a establecer
 	 */
