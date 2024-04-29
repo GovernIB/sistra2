@@ -1,9 +1,17 @@
 package es.caib.sistramit.core.service.component.integracion;
 
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
+import es.caib.sistramit.core.api.exception.ErrorNoControladoException;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +35,8 @@ import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.integracion.ParametrosDominio;
+
+import javax.net.ssl.SSLContext;
 
 /**
  * Implementación acceso SISTRAGES.
@@ -157,19 +167,48 @@ public final class SistragesApiComponentImpl implements SistragesApiComponent {
 	}
 
 	/**
+	 * Obtiene si esta habilitado timeout.
+	 *
+	 * @return true si esta habilitado timeout.
+	 */
+	private boolean isTimeoutEnabled() {
+		String timeout = configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAGES_TIMEOUT_HABILITAR);
+		return (BooleanUtils.toBoolean(timeout));
+	}
+
+	/**
 	 * Obtiene rest template aplicando timeout.
 	 * @return rest template.
 	 */
 	private RestTemplate getRestTemplate(boolean timeoutFijo) {
-		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-		int timeinMillis = 60000; // 60 secs
-		if (!timeoutFijo) {
-			timeinMillis = getTimeout();
+		RestTemplate restTemplate = null;
+		if (!timeoutFijo && isTimeoutEnabled()) {
+			// Acceso con timeout especifico
+			HttpComponentsClientHttpRequestFactory factory = null;
+			try {
+				// Deshabilitamos verificacion SSL
+				TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
+				SSLContext sslContext = org.apache.http.conn.ssl.SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy).build();
+				SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
+				CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
+				factory = new HttpComponentsClientHttpRequestFactory();
+				factory.setHttpClient(httpClient);
+			} catch (Exception e) {
+				throw new ErrorNoControladoException(e);
+			}
+			int timeinMillis = 60000; // 60 secs
+			if (!timeoutFijo) {
+				timeinMillis = getTimeout();
+			}
+			factory.setReadTimeout(timeinMillis);
+			factory.setConnectTimeout(timeinMillis);
+			restTemplate = new RestTemplate(factory);
+			restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		} else {
+			// Acceso sin timeout especifico
+			restTemplate = new RestTemplate();
+			restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
 		}
-		factory.setReadTimeout(timeinMillis);
-		factory.setConnectTimeout(timeinMillis);
-		final RestTemplate restTemplate = new RestTemplate(factory);
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
 		return restTemplate;
 	}
 

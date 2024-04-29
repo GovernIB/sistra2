@@ -23,6 +23,8 @@ public enum TypePropiedadConfiguracion {
 	SISTRAGES_USR("sistrages.usr"),
 	/** STG Url. */
 	SISTRAGES_PWD("sistrages.pwd"),
+	/** STG Timeout habilitado. */
+	SISTRAGES_TIMEOUT_HABILITAR("sistrages.timeoutHabilitar"),
 	/** STG Timeout. */
 	SISTRAGES_TIMEOUT("sistrages.timeout"),
 
