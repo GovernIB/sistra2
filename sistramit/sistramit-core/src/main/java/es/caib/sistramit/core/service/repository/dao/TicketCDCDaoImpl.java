@@ -3,6 +3,7 @@ package es.caib.sistramit.core.service.repository.dao;
 import es.caib.sistra2.commons.utils.GeneradorId;
 import es.caib.sistra2.commons.utils.Serializador;
 import es.caib.sistramit.core.api.exception.TicketCarpetaCiudadanaException;
+import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
 import es.caib.sistramit.core.service.repository.model.HTicketCDC;
@@ -38,8 +39,8 @@ public class TicketCDCDaoImpl implements TicketCDCDao {
 		}
 		String idioma = (String) results.get(0);
 
-		// Genera ticket añadiendo idioma
-		final String ticket = GeneradorId.generarId() + "-" + idioma;
+		// Genera ticket añadiendo opción para cambiar idioma
+		final String ticket = GeneradorId.generarId() + ConstantesSeguridad.PARAM_TICKET_LANG + idioma;
 
 		// Guarda ticket
 		final HTicketCDC hTck = new HTicketCDC();

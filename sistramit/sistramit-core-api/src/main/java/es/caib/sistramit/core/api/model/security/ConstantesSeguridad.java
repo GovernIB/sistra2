@@ -83,7 +83,10 @@ public final class ConstantesSeguridad {
 	 * Parámetro de acceso para carga de trámite anónimo.
 	 */
 	public static final String PARAM_IDSESION = "idSesionTramitacion";
-
+	/**
+	 * Parámetro de lenguage en ticket autenticación.
+	 */
+	public static final String PARAM_TICKET_LANG = "-lang:";
 	/**
 	 * Constructor.
 	 */

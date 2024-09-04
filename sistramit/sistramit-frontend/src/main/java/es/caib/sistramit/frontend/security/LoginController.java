@@ -3,13 +3,12 @@ package es.caib.sistramit.frontend.security;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import es.caib.sistramit.frontend.literales.LiteralesFront;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +77,7 @@ public final class LoginController {
 
 	/** Log. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+
 
 	/** Configuracion. */
 	@Autowired
@@ -349,18 +349,27 @@ public final class LoginController {
 		}
 		final String ticket = tickets[0];
 
-		// Establecemos idioma sesión (viene en ticket)
-		final String idiomaTicket = ticket.substring(ticket.lastIndexOf("-") + 1);
-		final String idiomasSoportados = systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IDIOMAS_SOPORTADOS);
-		final String idioma = sanitizeIdioma(idiomaTicket, idiomasSoportados);
-		sesionHttp.setIdioma(idioma);
+		// Verificamos si ticket tiene opción de cambio idioma sesion (acaba en "-lang:idioma")
+		int sizeParamLangTicket =  ConstantesSeguridad.PARAM_TICKET_LANG.length() + 2;
+		if (ticket.length() > sizeParamLangTicket) {
+			final String paramIdiomaTicket = ticket.substring(ticket.length() - sizeParamLangTicket);
+			if (paramIdiomaTicket.startsWith(ConstantesSeguridad.PARAM_TICKET_LANG)) {
+				String idiomaTicket = paramIdiomaTicket.substring(ConstantesSeguridad.PARAM_TICKET_LANG.length());
+				final String idiomasSoportados = systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IDIOMAS_SOPORTADOS);
+				final String idioma = sanitizeIdioma(idiomaTicket, idiomasSoportados);
+				sesionHttp.setIdioma(idioma);
+			}
+		}
 
 		// Autenticamos automaticamente
 		final LoginTicketInfo li = new LoginTicketInfo();
 		li.setTicketName(pTicketUser);
 		li.setTicketValue(ticket);
 		li.setIdioma(sesionHttp.getIdioma());
-		return new ModelAndView(VIEW_LOGINTICKET, VIEW_LOGINMODEL, li);
+
+		ModelAndView view = new ModelAndView(VIEW_LOGINTICKET);
+		view.addObject(VIEW_LOGINMODEL, li);
+		return view;
 	}
 
 	/**
@@ -418,7 +427,9 @@ public final class LoginController {
 		}
 
 		// Devolvemos formulario de login
-		return new ModelAndView(VIEW_LOGIN, VIEW_LOGINMODEL, infoLoginTramite);
+		ModelAndView view = new ModelAndView(VIEW_LOGIN);
+		view.addObject(VIEW_LOGINMODEL, infoLoginTramite);
+		return view;
 	}
 
 	/**

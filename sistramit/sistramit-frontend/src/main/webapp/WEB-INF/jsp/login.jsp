@@ -6,6 +6,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+<fmt:setLocale value = "${login.idioma}" scope="page"/>
+
 <!doctype html>
 <html lang="<c:out value="${login.idioma}"/>">
 <head>
@@ -17,7 +19,7 @@
 	<meta http-equiv="Pragma" content="no-cache">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title><spring:message code="login.titulo"/></title>
+	<title><fmt:message key="login.titulo"/></title>
 
 	<!--[if IE]><link rel="shortcut icon" href="imgs/favicon/favicon.ico" type="image/x-icon" /><![endif]-->
 	<link rel="apple-touch-icon-precomposed" href="base/imgs/favicon/favicon-apple.png" />
@@ -67,7 +69,7 @@
 	<c:if test="${ (empty param.error) and (empty login.avisos) }">
 		<div id="imc-carrega-inicial" class="imc-carrega-inicial">
 			<h1>
-				<span><spring:message code="login.cargando"/></span>
+				<span><fmt:message key="login.cargando"/></span>
 			</h1>
 		</div>
 	</c:if>
@@ -76,7 +78,7 @@
 			<!-- missatge: error -->
 			<div id="imc-missatge" class="imc-missatge" data-tipus="error">
 				<h1>
-					<span><spring:message code="login.error"/></span>
+					<span><fmt:message key="login.error"/></span>
 				</h1>
 				<div>
 					<c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />
@@ -106,7 +108,7 @@
 					</c:forEach>
 				</div>
 				<div class="imc--botonera">
-					<a href="javascript:redireccion()"><span><spring:message code="login.continuar"/></span></a>
+					<a href="javascript:redireccion()"><span><fmt:message key="login.continuar"/></span></a>
 				</div>
 			</div>
 		</c:if>

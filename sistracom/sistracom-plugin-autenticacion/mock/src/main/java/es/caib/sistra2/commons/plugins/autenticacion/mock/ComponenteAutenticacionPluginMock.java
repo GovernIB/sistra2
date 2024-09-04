@@ -47,7 +47,12 @@ public class ComponenteAutenticacionPluginMock extends AbstractPluginProperties
 			prefix = TipoAutenticacion.AUTENTICADO.toString();
 		}
 		lastQaa = qaa;
+
 		return PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN + "?ticket=" + prefix + "12345";
+
+		// Para probar opción de cambio idioma (usado para carpeta)
+		//return PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN + "?ticket=" + prefix + "12345-lang:ca";
+
 	}
 
 	@Override
