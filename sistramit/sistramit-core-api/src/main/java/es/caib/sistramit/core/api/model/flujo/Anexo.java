@@ -21,6 +21,9 @@ public final class Anexo extends DocumentoFirmado {
 	/** Anexar firmado. */
 	private TypeSiNo anexarfirmado = TypeSiNo.NO;
 
+	/** Validar anexar firmado. */
+	private TypeSiNo validarAnexarfirmado = TypeSiNo.NO;
+
 	/** Indica si se ha anexado firmado. */
 	private TypeSiNo anexadofirmado = TypeSiNo.NO;
 
@@ -296,4 +299,12 @@ public final class Anexo extends DocumentoFirmado {
 		this.anexadofirmado = anexadofirmado;
 	}
 
+	public TypeSiNo getValidarAnexarfirmado() {
+		return validarAnexarfirmado;
+	}
+
+
+	public void setValidarAnexarfirmado(TypeSiNo validarAnexarfirmado) {
+		this.validarAnexarfirmado = validarAnexarfirmado;
+	}
 }

@@ -324,6 +324,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 				if (a.getPresentacion() == TypePresentacion.ELECTRONICA) {
 					a.setPresentacion(TypePresentacion.PRESENCIAL);
 					a.setAnexarfirmado(TypeSiNo.NO);
+					a.setValidarAnexarfirmado(TypeSiNo.NO);
 					a.setConvertirPDF(TypeSiNo.NO);
 					a.setExtensiones(null);
 					a.setFirmantes(null);
@@ -399,8 +400,8 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 				anexo.setDinamico(TypeSiNo.SI);
 				anexo.setId(anexd.getIdentificador());
 				anexo.setTitulo(anexd.getDescripcion());
+				anexo.setAyuda(anexd.getAyuda());
 				anexo.setTipoENI("TD99");
-				anexo.setAyuda("");
 				anexo.setPresentacion(TypePresentacion.ELECTRONICA);
 				anexo.setExtensiones(calcularExtensionesPermitidas(anexd.getExtensiones()));
 				if (StringUtils.isNotBlank(anexd.getTamanyoMaximo())
@@ -530,11 +531,12 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 				anexoDetalle.setFirmar(TypeSiNo.fromBoolean(anexoDef.getPresentacionElectronica().isFirmar()));
 				anexoDetalle.setAnexarfirmado(
 						TypeSiNo.fromBoolean(anexoDef.getPresentacionElectronica().isAnexarFirmado()));
+				anexoDetalle.setValidarAnexarfirmado(
+						TypeSiNo.fromBoolean(anexoDef.getPresentacionElectronica().isValidarFirmantes()));
 				if (anexoDef.getPresentacionElectronica().isFirmar()
-						|| anexoDef.getPresentacionElectronica().isAnexarFirmado()) {
+						|| ( anexoDef.getPresentacionElectronica().isAnexarFirmado() && anexoDef.getPresentacionElectronica().isValidarFirmantes())) {
 					calcularFirmantes(anexoDef, anexoDetalle, pDefinicionTramite, pVariablesFlujo);
 				}
-
 			}
 
 			// Añadimos a lista anexos
@@ -599,7 +601,6 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 						"No s'han especificat signants");
 			}
 			anexoDetalle.setFirmantes(firmantes);
-
 		} else {
 			// Si no tiene script de firmantes, el único firmante sería el
 			// iniciador. En caso de que el acceso sea no autenticado generamos

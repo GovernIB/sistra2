@@ -552,7 +552,7 @@ public class ViewEnviosRemotos extends ViewControllerBase {
 			if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)) {
 				permiteEditar = true;
 			} else if (permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)) {
-				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString()) || UtilJSF.getEntorno().equals(TypeEntorno.SERVICIOS_ESTABLES.toString())) {
 					permiteEditar = true;
 				} else {
 					permiteConsultar = true;

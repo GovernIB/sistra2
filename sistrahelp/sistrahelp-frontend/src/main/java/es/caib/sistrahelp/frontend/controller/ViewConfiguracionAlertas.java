@@ -134,7 +134,7 @@ public class ViewConfiguracionAlertas extends ViewControllerBase {
 			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		}
 
-		UtilJSF.openDialog(DialogConfiguracionAlertas.class, modoAccesoDlg, params, true, 1030, 610);
+		UtilJSF.openDialog(DialogConfiguracionAlertas.class, modoAccesoDlg, params, true, 1030, 620);
 	}
 
 	/**
@@ -332,7 +332,7 @@ public class ViewConfiguracionAlertas extends ViewControllerBase {
 			return;
 		}
 
-		if (this.datoSeleccionado.getNombre().equals("RESUMEN_DIARIO")) {
+		if (this.datoSeleccionado.getNombre().equals("RESUMEN_DIARIO") || this.datoSeleccionado.getNombre().equals("RESUM_DIARI")) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.probarResumenDiario"));
 			return;
 		}

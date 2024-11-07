@@ -150,6 +150,13 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 						break;
 					}
 				}
+				if(data.getConfiguracionAutenticacionActual() == null && data.getDominio().getConfiguracionAutenticacion() != null) {
+					data.setConfiguracionAutenticacionActual(data.getDominio().getConfiguracionAutenticacion());
+					configuraciones.add(data.getConfiguracionAutenticacionActual());
+				}
+			} else if (data.getConfiguracionAutenticacionActual() != null && data.getDominio().getConfiguracionAutenticacion() != null
+							&& configuraciones.stream().noneMatch(config -> config.getIdentificador().equals(data.getConfiguracionAutenticacionActual().getIdentificador()))) {
+				configuraciones.add(data.getConfiguracionAutenticacionActual());
 			}
 			break;
 		case FUENTE_DATOS:
@@ -307,6 +314,18 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	 */
 	public void cancelar() {
 		final DialogResult result = new DialogResult();
+
+		if(data.getAccion() != null) {
+			data.setAccion(TypeImportarAccion.fromString(accion));
+
+			// Cambiamos el importar por reemplazar
+			if (data.getAccion() == TypeImportarAccion.IMPORTAR) {
+				this.data.setAccion(TypeImportarAccion.REEMPLAZAR);
+				this.data.getAcciones().remove(0);
+				this.data.getAcciones().add(TypeImportarAccion.REEMPLAZAR);
+			}
+		}
+
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		result.setResult(data);

@@ -136,6 +136,12 @@ public class DialogTramiteScripts extends DialogControllerBase {
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
 		map.put(TypeParametroVentana.MODO_ACCESO.toString(), TypeModoAcceso.CONSULTA.toString());
+
+		map.put(TypeParametroVentana.TRAMITEVERSION.toString(), id);
+		if (scriptInfo.getFormulario() != null) {
+			map.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), scriptInfo.getFormulario().getIdFormularioInterno().toString());
+		}
+
 		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.CONSULTA, map, true, 700);
 
 	}

@@ -12,6 +12,10 @@ public enum TypeEntorno {
 	 */
 	DESARROLLO("des"),
 	/**
+	 * Servicios estables.
+	 */
+	SERVICIOS_ESTABLES("se"),
+	/**
 	 * Preproduccion
 	 */
 	PREPRODUCCION("pre"),

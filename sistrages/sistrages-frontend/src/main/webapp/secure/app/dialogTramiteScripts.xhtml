@@ -174,7 +174,7 @@
 		  	<p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-						<p:commandButton id="botonGenerar" widgetVar="btnGenerar" value="#{msg['botones.generarScripts']}" ajax="false" styleClass="boton-azul" rendered="#{dialogTramiteScripts.isDesarrollo()}" process="@this">
+						<p:commandButton id="botonGenerar" widgetVar="btnGenerar" value="#{msg['botones.generarScripts']}" ajax="false" styleClass="boton-azul" rendered="#{dialogTramiteScripts.isDesarrollo() or dialogTramiteScripts.isServiciosEstables()}" process="@this">
 		        			<p:fileDownload value="#{dialogTramiteScripts.fichero}"></p:fileDownload>
 		        		</p:commandButton>
 		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTramiteScripts.cancelar}" process="@this" />

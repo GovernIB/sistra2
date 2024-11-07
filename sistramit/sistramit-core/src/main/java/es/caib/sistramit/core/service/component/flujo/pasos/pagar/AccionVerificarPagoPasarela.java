@@ -166,6 +166,7 @@ public final class AccionVerificarPagoPasarela implements AccionPaso {
 				// Actualizamos sesion pago con datos del pago realizado
 				datosSesionPago.setFechaPago(pResPasarela.getFechaPago());
 				datosSesionPago.setLocalizador(pResPasarela.getLocalizador());
+				datosSesionPago.setMetodoPagoSeleccionado(pResPasarela.getMetodoPago());
 
 				// Documento pago persistencia
 				docPagoPersistencia.setEstado(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);

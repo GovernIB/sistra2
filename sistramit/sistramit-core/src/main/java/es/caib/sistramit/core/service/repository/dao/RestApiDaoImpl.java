@@ -531,6 +531,10 @@ public final class RestApiDaoImpl implements RestApiDao {
 					builder.like(tableD.get("pagoNifSujetoPasivo"), "%" + pFiltroBusqueda.getNif() + "%"));
 		}
 
+		if (pFiltroBusqueda.isMostrarErrores()) {
+			predicate = builder.and(predicate, builder.isNotNull(tableD.get("pagoMensajeErrorPasarela")));
+		}
+
 		if (pFiltroBusqueda.getFechaDesde() != null) {
 			predicate = builder.and(predicate,
 					builder.greaterThanOrEqualTo(tableT.get("fechaInicio"), pFiltroBusqueda.getFechaDesde()));
@@ -590,7 +594,7 @@ public final class RestApiDaoImpl implements RestApiDao {
 			query.multiselect(tableS.get("idSesionTramitacion"), tableT.get("fechaInicio"), tableT.get("idTramite"),
 					tableT.get("versionTramite"), tableT.get("idProcedimientoCP"), tableD.get("fichero"),
 					tableD.get("ficheroClave"), tableD.get("codigo"), tableD.get("estado"),
-					tableD.get("pagoEstadoIncorrecto"));
+					tableD.get("pagoEstadoIncorrecto"), tableD.get("pagoMensajeErrorPasarela"));
 		}
 
 		return query;
@@ -1070,6 +1074,7 @@ public final class RestApiDaoImpl implements RestApiDao {
 		eventos.add(TypeEvento.PAGO_ELECTRONICO_VERIFICADO);
 		eventos.add(TypeEvento.PAGO_PRESENCIAL);
 		eventos.add(TypeEvento.FIRMA_INICIO);
+		eventos.add(TypeEvento.FIRMA_FIN_OK);
 		eventos.add(TypeEvento.REGISTRAR_TRAMITE_INICIO);
 		eventos.add(TypeEvento.REGISTRAR_TRAMITE);
 		eventos.add(TypeEvento.INICIAR_TRAMITE);

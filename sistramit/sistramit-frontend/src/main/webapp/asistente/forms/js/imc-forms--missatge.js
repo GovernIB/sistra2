@@ -116,9 +116,17 @@ $.fn.appFormsMissatge = function(options) {
 					.off('.appFormsMissatge')
 					.on('click.appFormsMissatge', tanca);
 
+				// titol HTML
+
+				if (titol_txt !== "") {
+
+					titol_txt = titol_txt.replace("script", "");
+
+				}
+
 				element
 					.find("h2 span")
-						.text( titol_txt )
+						.html( titol_txt )
 						.end()
 					.attr("data-accio", accio);
 

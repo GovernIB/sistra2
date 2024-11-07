@@ -232,9 +232,19 @@ public abstract class ViewControllerBase {
 		return UtilJSF.checkEntorno(TypeEntorno.DESARROLLO);
 	}
 
-	/** Es desarrollo? **/
+	/** No es desarrollo? **/
 	public boolean isNotDesarrollo() {
 		return !UtilJSF.checkEntorno(TypeEntorno.DESARROLLO);
+	}
+
+	/** Es servicios estables? **/
+	public boolean isServiciosEstables() {
+		return UtilJSF.checkEntorno(TypeEntorno.SERVICIOS_ESTABLES);
+	}
+
+	/** No es servicios estables? **/
+	public boolean isNotServiciosEstables() {
+		return !UtilJSF.checkEntorno(TypeEntorno.SERVICIOS_ESTABLES);
 	}
 
 	/** Es preproduccion? **/

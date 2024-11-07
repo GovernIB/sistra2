@@ -218,6 +218,13 @@
 
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
+					<f:facet name="left">
+						<p:commandButton id="btnPIB"
+										 value="#{msg['botones.pib']}" icon="fa fa-paper-plane"
+										 actionListener="#{dialogInformacionPagos.paymentib()}" process="@this" style="margin-left:4px;width:200px;" >
+							<p:ajax event="dialogReturn" listener="#{dialogInformacionPagos.returnDialogo}" update="growl"/>
+						</p:commandButton>
+					</f:facet>
 					<f:facet name="right">
 					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" actionListener="#{dialogInformacionPagos.ayuda}"/>
 					<p:commandButton value="#{msg['botones.volver']}" actionListener="#{dialogInformacionPagos.cerrar}" process="@this" styleClass="boton-azul"/>

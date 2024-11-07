@@ -3,6 +3,7 @@ package es.caib.sistramit.core.service.component.formulario.interno.utils;
 import java.math.BigDecimal;
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.formulario.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,28 +20,6 @@ import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.Constantes;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoListaElementos;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTexto;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoEmail;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoExpReg;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoId;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoNormal;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoNumero;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoPassword;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoTelefono;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoVerificacion;
-import es.caib.sistramit.core.api.model.formulario.MensajeValidacion;
-import es.caib.sistramit.core.api.model.formulario.OpcionesCampoTextoEmail;
-import es.caib.sistramit.core.api.model.formulario.OpcionesCampoTextoExpReg;
-import es.caib.sistramit.core.api.model.formulario.OpcionesCampoTextoId;
-import es.caib.sistramit.core.api.model.formulario.OpcionesCampoTextoNormal;
-import es.caib.sistramit.core.api.model.formulario.OpcionesCampoTextoNumero;
-import es.caib.sistramit.core.api.model.formulario.OpcionesCampoTextoPassword;
-import es.caib.sistramit.core.api.model.formulario.ValorCampo;
-import es.caib.sistramit.core.api.model.formulario.ValorCampoListaElementos;
-import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
-import es.caib.sistramit.core.api.model.formulario.ValoresCampoVerificacion;
 import es.caib.sistramit.core.api.model.formulario.types.TypeSeparador;
 import es.caib.sistramit.core.service.component.literales.Literales;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
@@ -234,6 +213,10 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 			validacionCorrecta = validacionConfiguracionCampoTextoTelefono(vcs,
 					(ConfiguracionCampoTextoTelefono) confTexto);
 			break;
+		case TELEFONO_INTERNACIONAL:
+			validacionCorrecta = validacionConfiguracionCampoTextoTelefonoInternacional(vcs,
+					(ConfiguracionCampoTextoTelefonoInternacional) confTexto);
+			break;
 		case FECHA:
 			if (!ValidacionesTipo.getInstance().esFecha(vcs.getValor(), Constantes.FORMATO_FECHA_FRONTAL)) {
 				validacionCorrecta = false;
@@ -265,6 +248,19 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 		}
 
 		return validacionCorrecta;
+	}
+
+	/**
+	 * Validacion campo texto telefono internacional.
+	 *
+	 * @param vcs
+	 *                                          Valor campo
+	 * @param confTexto
+	 *                                          Configuracion campo
+	 * @return boolean indicando si la validacion es correcta
+	 */
+	private boolean validacionConfiguracionCampoTextoTelefonoInternacional(ValorCampoSimple vcs, ConfiguracionCampoTextoTelefonoInternacional confTexto) {
+		return ValidacionesTipo.getInstance().esTelefonoInternacional(vcs.getValor(), confTexto.getOpciones().getValidacionPrecisa().toBoolean());
 	}
 
 	/**

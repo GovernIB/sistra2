@@ -189,15 +189,15 @@
 
 					<h:outputText style="font-weight: bold;" value="#{msg['viewCuadroMando.firma']}" class="grey"/>
 		            <h:outputText value="#{viewCuadroMando.firmaIni}"/>
-		            <h:outputText value="#{viewCuadroMando.firmaFin}"/>
+		            <h:outputText value="#{viewCuadroMando.firmaFin + viewCuadroMando.firmaFinOk}"/>
 		            <c:choose>
 						<c:when test="#{viewCuadroMando.firmaIni != 0}">
-					    	<h:outputText value="#{viewCuadroMando.formatDouble(100-((viewCuadroMando.firmaFin * 100)/viewCuadroMando.firmaIni))}%"/>
-					    	<h:outputText id="firma" value="#{viewCuadroMando.calcularEtiquetaTram(((viewCuadroMando.firmaFin * 100)/viewCuadroMando.firmaIni),'firma')}"/>
+					    	<h:outputText value="#{viewCuadroMando.formatDouble(100-(((viewCuadroMando.firmaFin + viewCuadroMando.firmaFinOk) * 100)/viewCuadroMando.firmaIni))}%"/>
+					    	<h:outputText id="firma" value="#{viewCuadroMando.calcularEtiquetaTram((((viewCuadroMando.firmaFin + viewCuadroMando.firmaFinOk) * 100)/viewCuadroMando.firmaIni),'firma')}"/>
 					    </c:when>
 					    <c:otherwise>
 					    	<c:choose>
-							    <c:when test="#{viewCuadroMando.firmaFin == 0}">
+							    <c:when test="#{(viewCuadroMando.firmaFin + viewCuadroMando.firmaFinOk) == 0}">
 							         <h:outputText value="0,00%"/>
 							         <h:outputText id="firma" value="#{viewCuadroMando.calcularEtiquetaTram(100,'firma')}"/>
 

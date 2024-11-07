@@ -38,7 +38,7 @@ $.fn.appSerialitza = function(opcions) {
 
 				if (el_tipus === "texto" || el_tipus === "oculto") {
 
-					var input_el = el.find("input:first, textarea:first")
+					var input_el = (el_contingut === "ti") ? el.find("input:last") : el.find("input:first, textarea:first")
 						,esData = (input_el.attr("type") === "date") ? true : false
 						,enMayuscules = (input_el.attr("data-mayuscules") === "s") ? true : false
 						,input_val = input_el.val();
@@ -51,7 +51,7 @@ $.fn.appSerialitza = function(opcions) {
 
 					}
 
-					input_val = (el_contingut === "nu") ? $.trim( input_val) : input_val.replace(/#-@/g, "").replace(/</g, "").replace(/>/g, "");
+					input_val = (el_contingut === "nu") ? $.trim( input_el.val() ) : input_val.replace(/#-@/g, "").replace(/</g, "").replace(/>/g, "");
 
 					if ((el_tipus === "texto" || el_contingut === "id") && (formEnMayuscules || enMayuscules)) {
 
@@ -72,6 +72,22 @@ $.fn.appSerialitza = function(opcions) {
 					if (el_contingut === "id" && input_val !== "") {
 
 						input_val = $.trim( input_val.toUpperCase() );
+
+					}
+
+					// telèfon internacional
+
+					if (el_contingut === "ti" && input_val !== "") {
+
+						var bt_title = el.find("button:first").attr("title")
+							,prefix = bt_title.substr( bt_title.indexOf("+") )
+							,input_val = $.trim( input_val.replace(/ /g, "") );
+
+						if ( input_val.indexOf(prefix) === -1 ) {
+
+							input_val = prefix + input_val;
+
+						}
 
 					}
 
@@ -405,6 +421,15 @@ $.fn.appSerialitza = function(opcions) {
 
 							esError = ( !IBAN.isValid( valor_iban ) || !validaCCC(valor_iban) ) ? true : false;
 							ERROR_TEXT = (esError) ? txtFormDinCampError_iban : false;
+
+						}
+
+						// telèfon internacional
+						
+						if (el.attr("data-contingut") === "ti" && input_val !== "") {
+
+							esError = ( !input_el.appValida({ format: "telefonInternacional", valor: input_val }) ) ? true : false;
+							ERROR_TEXT = (esError) ? txtFormDinCampError_telf : false;
 
 						}
 

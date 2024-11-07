@@ -83,6 +83,9 @@ public class Documento extends ModelApi {
 	/** Indica si se debe anexar firmado */
 	private boolean debeAnexarFirmado;
 
+	/** Indica si se debe validar los firmantes */
+	private boolean debeValidarFirmantes;
+
 	/**
 	 * Permite establecer una validación sobre el documento anexado. En este script
 	 * estará disponible un plugin que permita acceder a datos de formularios PDF.
@@ -418,6 +421,20 @@ public class Documento extends ModelApi {
 	}
 
 	/**
+	 * @return the debeValidarFirmantes
+	 */
+	public boolean isDebeValidarFirmantes() {
+		return debeValidarFirmantes;
+	}
+
+	/**
+	 * @param debeValidarFirmantes the debeValidarFirmantes to set
+	 */
+	public void setDebeValidarFirmantes(boolean debeValidarFirmantes) {
+		this.debeValidarFirmantes = debeValidarFirmantes;
+	}
+
+	/**
 	 * @return the scriptValidacion
 	 */
 	public Script getScriptValidacion() {
@@ -529,6 +546,8 @@ public class Documento extends ModelApi {
         	   texto.append(scriptFirmarDigitalmente.toString(tabulacion, idioma)+ "\n");
            }
            texto.append(tabulacion +"\t CalAnexarFirmat:" + debeAnexarFirmado + "\n");
+
+		   texto.append(tabulacion +"\t CalValidarFirmants:" + debeValidarFirmantes + "\n");
 
            if (scriptValidacion != null) {
         	   texto.append(tabulacion +"\t ScriptValidacin: \n");

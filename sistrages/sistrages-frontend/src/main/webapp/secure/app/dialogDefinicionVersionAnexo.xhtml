@@ -281,19 +281,23 @@
 						</p:panelGrid>
 
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firma']}"  />
-						<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,noPadding-left">
+						<p:panelGrid id="panelChecksFirma" styleClass="noBorders" columns="4" columnClasses="noPadding-left,noPadding-left">
 
-						    <p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" id="debeAnexarFirmado" value="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado}" >
-						    	<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input :formDialogDefinicionVersionAnexo:convertirpdf"/>
+						    <p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" id="debeAnexarFirmado" value="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado}">
+						    	<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.updateDebeValidarFirmantes}" process="@this" update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input :formDialogDefinicionVersionAnexo:convertirpdf :formDialogDefinicionVersionAnexo:panelChecksFirma"/>
 						    </p:selectBooleanCheckbox>
 
-						    <p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.firmar']}" id="debeFirmarDigitalmente" value="#{dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente}" >
-						    	<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input :formDialogDefinicionVersionAnexo:convertirpdf"/>
+							<p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.validarFirma']}" id="debeValidarFirmantes" value="#{dialogDefinicionVersionAnexo.data.debeValidarFirmantes}" disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado ? false : true}">
+								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.updateDebeFirmarDigitalmente}" process="@this" update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input :formDialogDefinicionVersionAnexo:convertirpdf :formDialogDefinicionVersionAnexo:panelChecksFirma"/>
+							</p:selectBooleanCheckbox>
+
+						    <p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.firmar']}" id="debeFirmarDigitalmente" value="#{dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente}" disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado and not dialogDefinicionVersionAnexo.data.debeValidarFirmantes}">
+						    	<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input :formDialogDefinicionVersionAnexo:convertirpdf :formDialogDefinicionVersionAnexo:panelChecksFirma"/>
 						    </p:selectBooleanCheckbox>
 
 							<p:commandButton id="btnScriptFirma" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), dialogDefinicionVersionAnexo.data.scriptFirmarDigitalmente)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
 									styleClass="#{dialogDefinicionVersionAnexo.getColorScript(dialogDefinicionVersionAnexo.data.scriptFirmarDigitalmente)}"
-									process="@this" update="growl">
+									process="@this" update="growl" disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado and not dialogDefinicionVersionAnexo.data.debeValidarFirmantes}">
 										<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoFirmarDigitalmente}" update="growl btnScriptFirma" />
 							</p:commandButton>
 						</p:panelGrid>

@@ -263,6 +263,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 		PrimeFaces.current().ajax().update("dialogTramite:btnEditarValor");
 		PrimeFaces.current().ajax().update("dialogTramite:btnEliminarValor");
 		PrimeFaces.current().ajax().update("dialogTramite:idioma");
+		seleccionarTramite();
 	}
 
 	public void getProcedimientos() {
@@ -449,6 +450,20 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 			return UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.sinseleccionartramite");
 		}
 		return "";
+	}
+
+	/**
+	 * Selecciona el trámite si solo hay uno disponible.
+	 */
+	public void seleccionarTramite() {
+		if (tramites != null && tramites.size() == 1) {
+			tramiteSeleccionado = tramites.get(0).getIdentificador();
+			calcularUrl(false);
+		}
+		if (tramiteSeleccionado != null && (tramites == null || tramites.isEmpty())) {
+			tramiteSeleccionado = null;
+			calcularUrl(false);
+		}
 	}
 
 	/**

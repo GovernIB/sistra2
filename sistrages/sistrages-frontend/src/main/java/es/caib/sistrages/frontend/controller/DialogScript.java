@@ -270,18 +270,21 @@ public class DialogScript extends DialogControllerBase {
 
 		if (tipoScript instanceof TypeScriptFormulario) {
 			final DisenyoFormularioSimple disenyoFormulario;
-			if (tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString())) {
-				disenyoFormulario = this.formularioInternoService.getFormularioInternoSimple(
-						Long.valueOf(idFormularioActual), null, idComponente, idPagina,
-						obtenerCargarPaginasPosteriores(), false, null);
-			} else {
-				disenyoFormulario = this.formularioInternoService.getFormularioInternoSimple(null,
-						Long.valueOf(idFormularioActual), idComponente, idPagina, obtenerCargarPaginasPosteriores(),
-						true, identificadorSeccion);
-			}
 
-			if (disenyoFormulario != null) {
+			if(tipoDisenyo != null) {
+				if (tipoDisenyo.equals(TypeParametroVentana.PARAMETRO_DISENYO_TRAMITE.toString())) {
+					disenyoFormulario = this.formularioInternoService.getFormularioInternoSimple(
+							Long.valueOf(idFormularioActual), null, idComponente, idPagina,
+							obtenerCargarPaginasPosteriores(), false, null);
+				} else {
+					disenyoFormulario = this.formularioInternoService.getFormularioInternoSimple(null,
+							Long.valueOf(idFormularioActual), idComponente, idPagina, obtenerCargarPaginasPosteriores(),
+							true, identificadorSeccion);
+				}
+
+				if (disenyoFormulario != null) {
 					cargarArbol(disenyoFormulario, disenyoFormulario.getIdentificador());
+				}
 			}
 
 			if (idTramiteVersion != null) {

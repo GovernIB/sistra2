@@ -378,6 +378,21 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		}
 	}
 
+	public void updateDebeValidarFirmantes() {
+		this.data.setDebeValidarFirmantes(this.data.isDebeAnexarFirmado());
+		if (this.data.isDebeAnexarFirmado() && !this.data.isDebeValidarFirmantes()) {
+			this.data.setDebeFirmarDigitalmente(false);
+		}
+		setCambios();
+	}
+
+	public void updateDebeFirmarDigitalmente() {
+		if (this.data.isDebeAnexarFirmado() && !this.data.isDebeValidarFirmantes()) {
+			this.data.setDebeFirmarDigitalmente(false);
+		}
+		setCambios();
+	}
+
 	/**
 	 * Aceptar.
 	 */

@@ -51,12 +51,12 @@ public class DialogHistorialSeccion extends DialogControllerBase {
 
 	/**
 	 * Permite borrar
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isPermiteBorrar() {
-		// Solo se puede bloquear/desbloquear en desarrollo
-		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+		// Solo se puede bloquear/desbloquear en desarrollo y servicios estables
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO) && !UtilJSF.checkEntorno(TypeEntorno.SERVICIOS_ESTABLES)) {
 			return false;
 		}
 

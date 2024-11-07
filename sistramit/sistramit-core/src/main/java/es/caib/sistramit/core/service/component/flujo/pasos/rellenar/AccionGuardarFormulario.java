@@ -445,8 +445,7 @@ public final class AccionGuardarFormulario implements AccionPaso {
 
 		final List<ReferenciaFichero> ficherosBorrar = new ArrayList<>();
 
-		// Comprobamos si el formulario actual se ha modificado en el script de
-		// postguardar
+		// Comprobamos si el formulario actual se ha modificado en el script de postguardar
 		if (rs != null) {
 			final ResModificacionFormularios rsp = (ResModificacionFormularios) rs.getResultado();
 			if (rsp.getFormulariosModificados().contains(idFormulario)) {

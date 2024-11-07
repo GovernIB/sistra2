@@ -38,6 +38,10 @@ public class RAnexoTramitePresentacionElectronica {
 	@ApiModelProperty(value = "Anexar firmado")
     private boolean anexarFirmado;
 
+    /** Validar firmantes. */
+    @ApiModelProperty(value = "Validar firmantes")
+    private boolean validarFirmantes;
+
     /** Firmar electrónicamente. */
 	@ApiModelProperty(value = "Firmar electrónicamente")
     private boolean firmar;
@@ -162,6 +166,25 @@ public class RAnexoTramitePresentacionElectronica {
      */
     public void setAnexarFirmado(boolean anexarFirmado) {
         this.anexarFirmado = anexarFirmado;
+    }
+
+    /**
+     * Método de acceso a validarFirmantes.
+     *
+     * @return validarFirmantes
+     */
+    public boolean isValidarFirmantes() {
+        return validarFirmantes;
+    }
+
+    /**
+     * Método para establecer validarFirmantes.
+     *
+     * @param validarFirmantes
+     *            validarFirmantes a establecer
+     */
+    public void setValidarFirmantes(boolean validarFirmantes) {
+        this.validarFirmantes = validarFirmantes;
     }
 
     /**

@@ -80,6 +80,7 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 		// Devolvemos respuesta
 		final RespuestaAccionPaso rp = new RespuestaAccionPaso();
 		final FirmaVerificacion fv = new FirmaVerificacion();
+		fv.setSesionFirma(resFirma.getSesionFirma());
 		fv.setRealizada(TypeSiNo.fromBoolean(resFirma.isFinalizada()));
 		fv.setVerificada(TypeSiNo.fromBoolean(resFirma.isValida()));
 		fv.setCancelada(TypeSiNo.fromBoolean(resFirma.isCancelada()));
@@ -226,8 +227,7 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 		// Realiza validación de la firma
 		final String idioma = pDefinicionTramite.getDefinicionVersion().getIdioma();
 
-		// Si está activado la verificación de firma: validamos firma y verificar nif
-		// firmante concuerda
+		// Si está activado la verificación de firma: validamos firma y verificar nif firmante concuerda
 		if (resFirma.isFinalizada() && resFirma.isVerificar()) {
 			final ValidacionFirmante validacionFirmante = firmaComponent.validarFirmante(idEntidad, idioma,
 					signedDocument, resFirma.getFirmaContenido(), nifFirmante);

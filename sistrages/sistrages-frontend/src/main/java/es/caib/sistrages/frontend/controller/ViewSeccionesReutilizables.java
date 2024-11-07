@@ -215,7 +215,7 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 	 * <ul>
 	 * <li>Revisar si el tramite versión está bloqueado.</li>
 	 * <li>Revisar si tiene permiso de edición.</li>
-	 * <li>Sólo se puede bloquear en el entorno de desarrollo.</li>
+	 * <li>Sólo se puede bloquear en el entorno de desarrollo y servicios estables.</li>
 	 * </ul>
 	 */
 	public void bloquear() {
@@ -227,7 +227,7 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 			return;
 		}
 
-		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO) && !UtilJSF.checkEntorno(TypeEntorno.SERVICIOS_ESTABLES)) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
 					UtilJSF.getLiteral("viewTramitesVersion.entorno.noDesarrollo"));
 			return;
@@ -357,11 +357,13 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 	 * @return el valor de tienePermisosTramite
 	 */
 	public boolean getTienePermisosEditarSeccion() {
+		boolean puedeEditar = false;
 		if (this.datoSeleccionado == null || !this.datoSeleccionado.isBloqueado()) {
-			return false;
+			return puedeEditar;
 		} else {
-			return UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
-					|| UtilJSF.getSessionBean().getUserName().equals(this.datoSeleccionado.getBloqueadoUsuario());
+			puedeEditar = UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+					&& UtilJSF.getSessionBean().getUserName().equals(this.datoSeleccionado.getBloqueadoUsuario());
+			return puedeEditar;
 		}
 	}
 
@@ -375,10 +377,12 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 	 * @return el valor de tienePermisosTramite
 	 */
 	public boolean getTienePermisosConsultarSeccion() {
+		boolean puedeConsultar = false;
 		if (this.datoSeleccionado == null) {
-			return false;
+			return puedeConsultar;
 		} else {
-			return !getTienePermisosEditarSeccion();
+			puedeConsultar = !getTienePermisosEditarSeccion();
+			return puedeConsultar;
 		}
 	}
 
@@ -419,8 +423,8 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 			return false;
 		}
 
-		// Solo se puede bloquear/desbloquear en desarrollo
-		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+		// Solo se puede bloquear/desbloquear en desarrollo y servicios estables
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO) && !UtilJSF.checkEntorno(TypeEntorno.SERVICIOS_ESTABLES)) {
 			return false;
 		}
 
@@ -439,8 +443,8 @@ public class ViewSeccionesReutilizables extends ViewControllerBase {
 			return false;
 		}
 
-		// Solo se puede bloquear/desbloquear en desarrollo
-		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+		// Solo se puede bloquear/desbloquear en desarrollo y servicios estables
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO) && !UtilJSF.checkEntorno(TypeEntorno.SERVICIOS_ESTABLES)) {
 			return false;
 		}
 

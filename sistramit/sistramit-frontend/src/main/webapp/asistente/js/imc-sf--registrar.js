@@ -333,9 +333,11 @@ $.fn.appSigna = function(options) {
 
 							var continua = function() {
 
-									var form_tipus = data.datos.tipo
-										,form_url = data.datos.url;
+									var form_url = data.datos.url
+										,form_iframe = data.datos.iframe;
 
+								if (form_iframe === "s") {
+									// Apertura en iframe
 									imc_signatura_iframe
 										.off("")
 										.on("load", carregat);
@@ -350,9 +352,16 @@ $.fn.appSigna = function(options) {
 										}
 
 										imc_signatura_iframe
-											.css({ width: APP_SIGNATURA_IFRAME_WIDTH+"px", height: APP_SIGNATURA_IFRAME_HEIGHT+"px" });
-										
+											.css({
+												width: APP_SIGNATURA_IFRAME_WIDTH + "px",
+												height: APP_SIGNATURA_IFRAME_HEIGHT + "px"
+											});
+
 									}
+								} else {
+									// Cambiamos url página
+									top.location.href = form_url;
+								}
 
 								};
 

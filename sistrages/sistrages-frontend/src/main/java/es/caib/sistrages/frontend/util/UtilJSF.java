@@ -802,7 +802,7 @@ public final class UtilJSF {
 	}
 
 	/**
-	 * Comprueba si el entorno es el mismo (desarrollo, preproduccion y produccion).
+	 * Comprueba si el entorno es el mismo (desarrollo, preproduccion, produccion y servicios estables).
 	 *
 	 * @return
 	 */
@@ -821,19 +821,14 @@ public final class UtilJSF {
 	 * @return
 	 */
 	public static String getEntorno() {
-		String entorno = FacesContext.getCurrentInstance().getApplication()
+		return FacesContext.getCurrentInstance().getApplication()
 				.evaluateExpressionGet(FacesContext.getCurrentInstance(), "#{frontModuleConfig}",
 						es.caib.sistrages.frontend.ModuleConfig.class)
 				.getEntorno();
-		if (entorno.equals("se")) {
-			return "des";
-		} else {
-			return entorno;
-		}
 	}
 
 	/**
-	 * Devuelve el entorno.
+	 * Devuelve si esta activada la propiedad promocionSe2Pro.
 	 *
 	 * @return
 	 */

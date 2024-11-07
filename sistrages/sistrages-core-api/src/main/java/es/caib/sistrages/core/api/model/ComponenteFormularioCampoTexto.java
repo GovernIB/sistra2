@@ -113,6 +113,11 @@ public final class ComponenteFormularioCampoTexto extends ComponenteFormularioCa
 	private boolean telefonoFijo;
 
 	/**
+	 * telefono internacional: validación precisa.
+	 */
+	private boolean telefonoInternacionalValidacionPrecisa;
+
+	/**
 	 * permite rango.
 	 */
 	private boolean permiteRango;
@@ -503,6 +508,16 @@ public final class ComponenteFormularioCampoTexto extends ComponenteFormularioCa
 		this.prevenirPegar = prevenirPegar;
 	}
 
+	/** Indica si realiza validación precisa. */
+	public boolean isTelefonoInternacionalValidacionPrecisa() {
+		return telefonoInternacionalValidacionPrecisa;
+	}
+
+	/** Indica si realiza validación precisa. */
+	public void setTelefonoInternacionalValidacionPrecisa(boolean telefonoInternacionalValidacionPrecisa) {
+		this.telefonoInternacionalValidacionPrecisa = telefonoInternacionalValidacionPrecisa;
+	}
+
 	@Override
 	public String toString() {
 		return toString("", "ca");
@@ -510,7 +525,7 @@ public final class ComponenteFormularioCampoTexto extends ComponenteFormularioCa
 
 	/**
 	 * Método to string
-	 * 
+	 *
 	 * @param tabulacion Indica el texto anterior de la linea para que haya
 	 *                   tabulacion.
 	 * @return El texto
@@ -574,6 +589,7 @@ public final class ComponenteFormularioCampoTexto extends ComponenteFormularioCa
 		texto.append(tabulacion + "\t IdentNss:" + identNss + "\n");
 		texto.append(tabulacion + "\t TelefonoMovil:" + telefonoMovil + "\n");
 		texto.append(tabulacion + "\t TelefonoFijo:" + telefonoFijo + "\n");
+		texto.append(tabulacion + "\t TelefonoInternacionalValidacionPrecisa:" + telefonoInternacionalValidacionPrecisa + "\n");
 		texto.append(tabulacion + "\t PermetRango:" + permiteRango + "\n");
 		texto.append(tabulacion + "\t ForzarMayusculas:" + forzarMayusculas + "\n");
 		texto.append(tabulacion + "\t PrevenirAferrar:" + prevenirPegar + "\n");

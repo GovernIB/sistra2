@@ -194,7 +194,7 @@
 						<p:inputText id="idSesionTramitacion" value="#{dialogAuditoriaTramites.dato.idSesionTramitacion}" readonly="true" size="100"/>
 
 				 		<p:outputLabel for="fecha" value="#{msg['dialogAuditoriaTramites.fecha']}:" />
-				 		<p:calendar id="fecha" value="#{dialogAuditoriaTramites.dato.fecha}" size="100" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showButtonPanel="false" readonly="true"/>
+				 		<p:calendar id="fecha" value="#{dialogAuditoriaTramites.dato.fecha}" readonly="true" size="100" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="false"/>
 
 						<p:outputLabel for="nombreUsu" value="#{msg['dialogAuditoriaTramites.nombreUsu']}:" />
 						<p:inputText id="nombreUsu" value="#{dialogAuditoriaTramites.dato.nombre.concat(' ').concat(dialogAuditoriaTramites.dato.apellido1).concat(' ').concat(dialogAuditoriaTramites.dato.apellido2)}" readonly="true" size="100"/>
@@ -257,7 +257,7 @@
 							        <h:outputText value="#{td.key}" />
 							    </p:column>
 
-							    <p:column headerText="#{msg['dialogAuditoriaTramites.headerPropiedades.valor']}" style="width:70%;word-break: break-all;" class="ui-panelgrid-cell">
+							    <p:column headerText="#{msg['dialogAuditoriaTramites.headerPropiedades.valor']}" style="width:70%;word-break: break-word;" class="ui-panelgrid-cell">
 							        <h:outputText value="#{td.value}" />
 							    </p:column>
 

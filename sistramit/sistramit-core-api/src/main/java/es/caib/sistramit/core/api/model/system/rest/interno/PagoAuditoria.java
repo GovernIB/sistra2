@@ -14,7 +14,7 @@ public final class PagoAuditoria implements Serializable {
 
 	public PagoAuditoria(final String idSesionTramitacion, final Date fecha, final String idTramite,
 			final Integer versionTramite, final String idProcedimientoCP, final Long fichero, final String ficheroClave,
-			final Long codigoPago, final String estado, final String pagoEstadoIncorrecto) {
+			final Long codigoPago, final String estado, final String pagoEstadoIncorrecto, final String mensajeError) {
 		super();
 		this.idSesionTramitacion = idSesionTramitacion;
 		this.fecha = fecha;
@@ -26,6 +26,7 @@ public final class PagoAuditoria implements Serializable {
 		this.codigoPago = codigoPago;
 		this.estado = estado;
 		this.pagoEstadoIncorrecto = pagoEstadoIncorrecto;
+		this.mensajeError = mensajeError;
 	}
 
 	/**
@@ -69,6 +70,7 @@ public final class PagoAuditoria implements Serializable {
 	private String localizador;
 	private Date fechaPago;
 	private String pagoEstadoIncorrecto;
+	private String mensajeError;
 
 	public String getIdSesionTramitacion() {
 		return idSesionTramitacion;
@@ -206,4 +208,11 @@ public final class PagoAuditoria implements Serializable {
 		this.pagoEstadoIncorrecto = pagoEstadoIncorrecto;
 	}
 
+	public String getMensajeError() {
+		return mensajeError;
+	}
+
+	public void setMensajeError(String mensajeError) {
+		this.mensajeError = mensajeError;
+	}
 }

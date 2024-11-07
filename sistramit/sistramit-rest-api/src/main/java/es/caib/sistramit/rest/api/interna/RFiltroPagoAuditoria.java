@@ -33,6 +33,9 @@ public class RFiltroPagoAuditoria {
 	@ApiModelProperty(value = "Tipo Acceso")
 	private String acceso;
 
+	@ApiModelProperty(value = "Mostrar errores")
+	private boolean mostrarErrores;
+
 	@ApiModelProperty(value = "Solo contar numero de elementos")
 	private boolean soloContar;
 
@@ -93,6 +96,14 @@ public class RFiltroPagoAuditoria {
 
 	public void setAcceso(final String acceso) {
 		this.acceso = acceso;
+	}
+
+	public boolean isMostrarErrores() {
+		return mostrarErrores;
+	}
+
+	public void setMostrarErrores(boolean mostrarErrores) {
+		this.mostrarErrores = mostrarErrores;
 	}
 
 	public String getSortField() {

@@ -33,6 +33,9 @@ public final class PagoComponentVerificacion implements Serializable {
     /** PDF Justificante. */
     private byte[] justificantePDF;
 
+    /** Método de pago seleccionado (depende de la pasarela). */
+    private String metodoPago;
+
     /**
      * Método de acceso a verificado.
      * 
@@ -166,4 +169,19 @@ public final class PagoComponentVerificacion implements Serializable {
         this.justificantePDF = justificantePDF;
     }
 
+    /**
+     * Método para establecer el valor de metodoPago.
+     * @param metodoPago el valor a establecer
+     */
+    public void setMetodoPago(String metodoPago) {
+        this.metodoPago = metodoPago;
+    }
+
+    /**
+     * Método para obtener el valor de metodoPago.
+     * @return metodoPago
+     */
+    public String getMetodoPago() {
+        return metodoPago;
+    }
 }

@@ -127,10 +127,14 @@
 		        <h:panelGrid columns="2" cellpadding="5">
 		            <h:outputText value="#{msg['viewConfiguracionEntidad.gestorTramits.headerLog']}" />
 		           	<p:column>
-          				<p:inputText  id="inputUrlCarpetaCiudadana" onblur="this.value = this.value.trim();" size="70" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.urlCarpetaCiudadana.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" readonly="true" styleClass="margin-right-10"/>
-		            	<p:commandButton id="btnUrlCarpetaCiudadana" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarUrlCarpetaCiudadana}" process="@this" update=":form:growl" styleClass="va-top">
-		            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoUrlCarpetaCiudadana}" update=":form:growl inputUrlCarpetaCiudadana"/>
-		        		</p:commandButton>
+		           		<h:panelGroup id="btnIconoSistragesTxt">
+		           			<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty viewConfiguracionEntidad.data.logoGestor}"/>
+		           			<p:commandLink action="#{viewConfiguracionEntidad.descargaFichero(viewConfiguracionEntidad.data.logoGestor)}" target="_blank" value="#{viewConfiguracionEntidad.data.logoGestor.nombre}" rendered="#{!empty viewConfiguracionEntidad.data.logoGestor}"/>
+		           		</h:panelGroup>
+	            		<p:spacer width="20" height="1"/>
+		           		<p:commandButton id="btnIconoSistrages" icon="fa fa-cog" process="@this" update=":form:growl" actionListener="#{viewConfiguracionEntidad.gestionFicheroLogoGestor()}" disabled="#{!viewConfiguracionEntidad.permiteEditar}" >
+		           			<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoFichero}" update=":form:btnIconoSistragesTxt :form:growl"/>
+		           		</p:commandButton>
 		        	</p:column>
 		        </h:panelGrid>
 		    </p:panel>

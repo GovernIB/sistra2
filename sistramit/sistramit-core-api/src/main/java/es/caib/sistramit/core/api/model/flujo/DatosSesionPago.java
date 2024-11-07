@@ -58,6 +58,10 @@ public class DatosSesionPago implements ModelApi {
 	/** Detalle pago (info debug a pasar a pasarela pago). */
 	private String detallePago;
 
+	/** Método pago seleccionado (depende de la pasarela). */
+	private String metodoPagoSeleccionado;
+
+
 	/**
 	 * Indica si se filtran los métodos de pago (lista separada por ; ). Si no se
 	 * establece, se mostarán los activos por defecto.
@@ -400,5 +404,19 @@ public class DatosSesionPago implements ModelApi {
 		this.versionTramite = versionTramite;
 	}
 
+	/**
+	 * Devuelve el método de pago seleccionado.
+	 * @return Método de pago seleccionado.
+	 */
+	public String getMetodoPagoSeleccionado() {
+		return metodoPagoSeleccionado;
+	}
 
+	/**
+	 * Establece el método de pago seleccionado.
+	 * @param metodoPagoSeleccionado Método de pago seleccionado.
+	 */
+	public void setMetodoPagoSeleccionado(String metodoPagoSeleccionado) {
+		this.metodoPagoSeleccionado = metodoPagoSeleccionado;
+	}
 }

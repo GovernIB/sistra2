@@ -209,7 +209,7 @@
 			<p:contextMenu>
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :formHistorial:auxCopiar" update="growlHistorial" />
        			<p:separator/>
-       			<p:menuitem value="#{msg['botones.borradoHistorial']}" icon="fa fa-trash" onclick="document.getElementById('formHistorial:botonLimpiar').click();" process="@this" rendered="#{dialogHistorialVersion.isDesarrollo()}" />
+       			<p:menuitem value="#{msg['botones.borradoHistorial']}" icon="fa fa-trash" onclick="document.getElementById('formHistorial:botonLimpiar').click();" process="@this" rendered="#{dialogHistorialVersion.isDesarrollo() or dialogHistorialVersion.isServiciosEstables()}" />
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{dialogHistorialSeccion.copiadoCorr}" process="@this" update="@this growlHistorial"/>

@@ -2,6 +2,7 @@ package es.caib.sistra2.commons.plugins.firmacliente.firmaweb;
 
 import java.util.Properties;
 
+import es.caib.sistra2.commons.plugins.firmacliente.api.*;
 import org.fundaciobit.apisib.apifirmasimple.v1.ApiFirmaWebSimple;
 import org.fundaciobit.apisib.apifirmasimple.v1.beans.FirmaSimpleAddFileToSignRequest;
 import org.fundaciobit.apisib.apifirmasimple.v1.beans.FirmaSimpleCommonInfo;
@@ -14,15 +15,6 @@ import org.fundaciobit.apisib.apifirmasimple.v1.beans.FirmaSimpleStartTransactio
 import org.fundaciobit.apisib.apifirmasimple.v1.beans.FirmaSimpleStatus;
 import org.fundaciobit.apisib.apifirmasimple.v1.jersey.ApiFirmaWebSimpleJersey;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
-
-import es.caib.sistra2.commons.plugins.firmacliente.api.FicheroAFirmar;
-import es.caib.sistra2.commons.plugins.firmacliente.api.FicheroFirmado;
-import es.caib.sistra2.commons.plugins.firmacliente.api.FirmaPluginException;
-import es.caib.sistra2.commons.plugins.firmacliente.api.IFirmaPlugin;
-import es.caib.sistra2.commons.plugins.firmacliente.api.InfoSesionFirma;
-import es.caib.sistra2.commons.plugins.firmacliente.api.TypeEstadoFirmado;
-import es.caib.sistra2.commons.plugins.firmacliente.api.TypeFirmaDigital;
-import es.caib.sistra2.commons.plugins.firmacliente.api.TypeTipoDocumental;
 
 /**
  * Plugin mock componente firma.
@@ -152,7 +144,7 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 	}
 
 	@Override
-	public TypeEstadoFirmado obtenerEstadoSesionFirma(final String idSesionFirma) throws FirmaPluginException {
+	public EstadoFirma obtenerEstadoSesionFirma(final String idSesionFirma) throws FirmaPluginException {
 		final ApiFirmaWebSimple api = generarApi();
 		FirmaSimpleGetTransactionStatusResponse fullTransactionStatus;
 		try {
@@ -162,8 +154,12 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 		}
 		final FirmaSimpleStatus transactionStatus = fullTransactionStatus.getTransactionStatus();
 		final int status = transactionStatus.getStatus();
+		final String errorMessage = transactionStatus.getErrorMessage();
 
-		return TypeEstadoFirmado.fromInt(status);
+		EstadoFirma estado = new EstadoFirma();
+		estado.setEstadoFirmado(TypeEstadoFirmado.fromInt(status));
+		estado.setMensajeError(errorMessage);
+		return estado;
 	}
 
 	@Override
@@ -250,6 +246,11 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 	@Override
 	public boolean isVerificarFirma() throws FirmaPluginException {
 		return new Boolean(getPropiedad("verificarFirma"));
+	}
+
+	@Override
+	public boolean isIframe() throws FirmaPluginException {
+		return new Boolean(getPropiedad("iframe"));
 	}
 
 }

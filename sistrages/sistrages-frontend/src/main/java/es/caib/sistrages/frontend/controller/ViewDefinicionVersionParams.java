@@ -212,7 +212,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 	 */
 	public ViewDefinicionVersionParams() {
 		super();
-		if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+		if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString()) || UtilJSF.getEntorno().equals(TypeEntorno.SERVICIOS_ESTABLES.toString())) {
 			setPermiteRefrescar(false);
 		} else {
 			setPermiteRefrescar(true);
@@ -268,7 +268,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 	 * Comprueba si se puede bloquear
 	 */
 	private void checkPermiteBloquear() {
-		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO) && !UtilJSF.checkEntorno(TypeEntorno.SERVICIOS_ESTABLES)) {
 			permiteBloquear = false;
 			return;
 		}
@@ -302,7 +302,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 	 */
 	public void bloquear() throws IOException {
 
-		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO) && !UtilJSF.checkEntorno(TypeEntorno.SERVICIOS_ESTABLES)) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
 					UtilJSF.getLiteral("viewTramitesVersion.entorno.noDesarrollo"));
 			return;
@@ -359,7 +359,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 
 			final List<TypeRolePermisos> permisos = securityService
 					.getPermisosDesarrolladorEntidadByArea(this.area.getCodigo());
-			if (UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+			if (UtilJSF.checkEntorno(TypeEntorno.DESARROLLO) || UtilJSF.checkEntorno(TypeEntorno.SERVICIOS_ESTABLES)) {
 
 				return permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
 						|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA);
@@ -1219,7 +1219,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
 		params.put(TypeParametroVentana.ENTIDAD.toString(),
 				entidadService.loadEntidadByArea(area.getCodigo()).getCodigo().toString());
-		UtilJSF.openDialog(DialogDefinicionVersionAnexo.class, TypeModoAcceso.EDICION, params, true, 950, 685);
+		UtilJSF.openDialog(DialogDefinicionVersionAnexo.class, TypeModoAcceso.EDICION, params, true, 1050, 685);
 	}
 
 	/**
@@ -2056,7 +2056,7 @@ public class ViewDefinicionVersionParams extends ViewControllerBase {
 
 	public String simular() {
 		String estilo = "";
-		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO) && !UtilJSF.checkEntorno(TypeEntorno.SERVICIOS_ESTABLES)) {
 			((OpcionArbol) this.selectedNode.getData()).getTasa().setSimulado(false);
 			estilo = "display:none";
 		}

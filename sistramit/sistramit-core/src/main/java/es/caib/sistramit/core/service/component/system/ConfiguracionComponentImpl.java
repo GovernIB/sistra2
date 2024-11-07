@@ -66,7 +66,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 			final String idioma) {
 		RVersionTramite definicionVersion = null;
 		final TypeEntorno entorno = TypeEntorno.fromString(readPropiedad(TypePropiedadConfiguracion.ENTORNO, false));
-		if (entorno == TypeEntorno.DESARROLLO) {
+		if (entorno == TypeEntorno.DESARROLLO || entorno == TypeEntorno.SERVICIOS_ESTABLES) {
 			definicionVersion = sistragesComponent.recuperarDefinicionTramiteNoCache(idTramite, version, idioma);
 		} else {
 			definicionVersion = sistragesComponent.recuperarDefinicionTramite(idTramite, version, idioma);

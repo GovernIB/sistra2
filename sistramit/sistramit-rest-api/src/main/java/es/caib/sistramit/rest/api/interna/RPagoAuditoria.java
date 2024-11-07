@@ -79,6 +79,9 @@ public class RPagoAuditoria {
 	@ApiModelProperty(value = "Estado Pago")
 	private String pagoEstadoIncorrecto;
 
+	@ApiModelProperty(value = "Mensaje error")
+	private String mensajeError;
+
 	public String getIdSesionTramitacion() {
 		return idSesionTramitacion;
 	}
@@ -213,5 +216,13 @@ public class RPagoAuditoria {
 
 	public void setPagoEstadoIncorrecto(final String pagoEstadoIncorrecto) {
 		this.pagoEstadoIncorrecto = pagoEstadoIncorrecto;
+	}
+
+	public String getMensajeError() {
+		return mensajeError;
+	}
+
+	public void setMensajeError(String mensajeError) {
+		this.mensajeError = mensajeError;
 	}
 }

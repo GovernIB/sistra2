@@ -1537,7 +1537,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 
 	private boolean isEntornoCorrecto(TypeEntorno entornoActual, TypeEntorno entornoFicheroZip) {
 		boolean entornoCorrecto = (entornoActual == TypeEntorno.PREPRODUCCION
-				&& entornoFicheroZip == TypeEntorno.DESARROLLO)
+				&& (entornoFicheroZip == TypeEntorno.DESARROLLO || entornoFicheroZip == TypeEntorno.SERVICIOS_ESTABLES))
 				|| (entornoActual == TypeEntorno.PRODUCCION && entornoFicheroZip == TypeEntorno.PREPRODUCCION);
 
 		if (entornoActual == TypeEntorno.PRODUCCION && UtilJSF.isPromocionSe2Pro()) {

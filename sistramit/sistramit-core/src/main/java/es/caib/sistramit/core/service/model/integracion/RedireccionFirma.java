@@ -15,8 +15,12 @@ public final class RedireccionFirma implements Serializable {
 	/** Url redireccion firma. */
 	private String url;
 
+	/** Indica si se abre en iframe. */
+	private boolean iframe;
+
 	/** Id sesion firma. */
 	private String idSesion;
+
 
 	/**
 	 * Método de acceso a url.
@@ -54,6 +58,25 @@ public final class RedireccionFirma implements Serializable {
 	 */
 	public void setIdSesion(String idSesion) {
 		this.idSesion = idSesion;
+	}
+
+	/**
+	 * Método de acceso a iframe.
+	 *
+	 * @return iframe
+	 */
+	public boolean isIframe() {
+		return iframe;
+	}
+
+	/**
+	 * Método para establecer iframe.
+	 *
+	 * @param iframe
+	 *            iframe a establecer
+	 */
+	public void setIframe(boolean iframe) {
+		this.iframe = iframe;
 	}
 
 }

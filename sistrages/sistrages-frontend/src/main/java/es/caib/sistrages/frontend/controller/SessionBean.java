@@ -534,9 +534,9 @@ public class SessionBean {
 			}
 
 			// Como es una opción del desplegable, solo se tiene que ver para adm de entidad
-			// y en entorno de desarrollo
+			// y en entorno de desarrollo o servicios estables
 			if (activeRole == TypeRoleAcceso.ADMIN_ENT
-					&& UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+					&& (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString()) || UtilJSF.getEntorno().equals(TypeEntorno.SERVICIOS_ESTABLES.toString()))) {
 				item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones.migracion"));
 				item.setUrl(UtilJSF.getUrlArbolDefinicionVersion("migracion/viewMigracion"));
 				model.addElement(item);

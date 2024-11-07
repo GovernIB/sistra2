@@ -64,7 +64,7 @@ public abstract class ComponenteFormulario extends ObjetoFormulario implements C
 	/**
 	 * Indica el número máximo de elementos en la lista de elementos.
 	 */
-	private int numeroMaximoElementos = 0;
+	private Integer numeroMaximoElementos;
 
 	/**
 	 * Para campos de un componente lista de elementos, indica si sale en la lista
@@ -261,14 +261,14 @@ public abstract class ComponenteFormulario extends ObjetoFormulario implements C
 	/**
 	 * @return the numeroMaximoElementos
 	 */
-	public int getNumeroMaximoElementos() {
+	public Integer getNumeroMaximoElementos() {
 		return numeroMaximoElementos;
 	}
 
 	/**
 	 * @param numeroMaximoElementos the numeroMaximoElementos to set
 	 */
-	public void setNumeroMaximoElementos(int numeroMaximoElementos) {
+	public void setNumeroMaximoElementos(Integer numeroMaximoElementos) {
 		this.numeroMaximoElementos = numeroMaximoElementos;
 	}
 

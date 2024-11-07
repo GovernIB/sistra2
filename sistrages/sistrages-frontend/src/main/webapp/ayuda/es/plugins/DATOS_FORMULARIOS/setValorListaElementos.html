@@ -1,0 +1,76 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_FORMULARIOS.setValorListaElementos(idFormulario, campo,valorCampoListaElementos)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_FORMULARIOS">DATOS_FORMULARIOS</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_FORMULARIOS&metodo=setValorListaElementos">setValorListaElementos</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setValorListaElementos(idFormulario, campo,valorCampoListaElementos): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que establece un valor lista elemento a un campo del formulario actual o posterior.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idFormulario</b>: Identificador del formulario en el que quiere modificar el valor del campo.</li>
+		<li><b>campo </b>: Identificador del campo del formulario.</li>
+		<li><b>valorCampoListaElementos </b>: Objeto de tipo ValorListaElementos el cual contiene los diferentes valores a asignar al campo.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Se inicializa una variable para asignarla a un campo multirregistro del formulario actual e ir añadiendo valores mediante la función addValor: </p>
+ <p class="codigoScript">
+var datos = DATOS_FORMULARIOS.crearValorListaElementos();
+var valorElemento=datos.addElemento();
+valorElemento.addValor('codigo', '07073');
+valorElemento.addValor('descripcion', 'Mallorca');
+</p>
+<p>Una vez creada la variable, creado el elemento y asignados los valores, se podrá asignar al campo correspondiente.</p>
+<p class="codigoScript">
+DATOS_FORMULARIOS.setValorListaElementos('FORM2','TABLA_MUNICIPIOS',datos);
+</p>
+<p>El siguiente script sirve para llenar la lista de elementos 'LEL2' de un formulario 'FORM-2' con los valores de otra lista de elementos 'LEL1' del formulario 'FORM-1' teniendo en cuenta que ambas listas cuentan con dos campos 'LTX1' y 'LTX2'.</p>
+<p class="codigoScript">
+var numeroElementos = PLUGIN_FORMULARIOS.getNumeroElementos('FORM-1','LEL1');<br>
+var lel = DATOS_FORMULARIOS.crearValorListaElementos();<br>
+var i = 0;<br>
+<br>
+if (numeroElementos != null) {<br>
+&emsp;while(i < numeroElementos){<br>
+&emsp;&emsp;var e = lel.addElemento();<br>
+&emsp;&emsp;e.addValor('LTX1', PLUGIN_FORMULARIOS.getValorElemento('FORM-1','LEL1',i,'LTX1'));<br>
+&emsp;&emsp;e.addValor('LTX2', PLUGIN_FORMULARIOS.getValorElemento('FORM-1','LEL1',i,'LTX2'));<br>
+&emsp;&emsp;i++;<br>
+&emsp;}<br>
+&emsp;DATOS_FORMULARIOS.setValorListaElementos('FORM-2', 'LEL2', lel);<br>
+}
+</p>
+</body>
+</html>

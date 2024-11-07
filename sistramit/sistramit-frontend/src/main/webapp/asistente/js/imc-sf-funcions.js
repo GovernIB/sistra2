@@ -1112,6 +1112,42 @@ $.fn.appSuport = function(options) {
 					.removeClass("imc--f-suport-error");
 
 
+				// revisa desc problema
+
+				var problemaDesc_val = $("#problemaDesc").val();
+
+				var esProblemaDescCorrecte = problemaDesc_val.length <= 4000 ? true : false;;
+
+				if (!esProblemaDescCorrecte) {
+
+					var problemaDesc_error = function() {
+
+						$("#problemaDesc")
+							.addClass("imc--f-suport-error")
+							.focus()
+							.off(".problemaDescError")
+							.on("keyup.problemaDescError", function() {
+
+								$(this)
+									.removeClass("imc--f-suport-error");
+
+							});
+
+					};
+
+					imc_missatge
+						.appMissatge({ accio: "error", titol: txtProblemaDesc_errorTitol, text: txtProblemaDesc_errorText, alTancar: function() { problemaDesc_error(); } });
+
+					return;
+
+				}
+
+				$("#problemaDesc")
+					.removeClass("imc--f-suport-error");
+
+
+
+
 				// missatge
 
 				el_suport_form

@@ -22,6 +22,9 @@ public final class FirmaVerificacion {
 	/** Mensaje error. */
 	private String detalleError;
 
+	/** Sesión de firma. */
+	private String sesionFirma;
+
 	/**
 	 * Método de acceso a realizada.
 	 *
@@ -98,4 +101,17 @@ public final class FirmaVerificacion {
 		this.detalleError = mensajeError;
 	}
 
+	/**
+	 * Método de acceso a sesionFirma.
+	 */
+	public String getSesionFirma() {
+		return sesionFirma;
+	}
+
+	/**
+	 * Método para establecer sesionFirma.
+	 */
+	public void setSesionFirma(final String sesionFirma) {
+		this.sesionFirma = sesionFirma;
+	}
 }

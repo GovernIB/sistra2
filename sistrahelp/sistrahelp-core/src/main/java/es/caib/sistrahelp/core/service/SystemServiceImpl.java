@@ -94,7 +94,7 @@ public class SystemServiceImpl implements SystemService {
 				ultimaVerificacionMinutos = a.getFecha().getTime() / 60000;
 			}
 			long distanciaFechas = ahoraMinutos - ultimaVerificacionMinutos;
-			if (!a.getNombre().equals("RESUMEN_DIARIO")) {
+			if (!a.getNombre().equals("RESUMEN_DIARIO") && !a.getNombre().equals("RESUM_DIARI")) {
 				Long intervaloAlertaMinutos = a.getPeriodoEvaluacion().longValue() / 60;
 				boolean tocaEjecutar = distanciaFechas >= intervaloAlertaMinutos;
 				log.debug("ALERTAS STH: tocaEjecutar? La condición " + (ahoraMinutos - ultimaVerificacionMinutos) + " >= " + intervaloAlertaMinutos + " es " + tocaEjecutar);

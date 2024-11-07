@@ -47,7 +47,9 @@ public enum TypePropiedadConfiguracion {
 	/** STG Url. */
 	SISTRAMIT_USR("sistramit.rest.user"),
 	/** STG Url. */
-	SISTRAMIT_PWD("sistramit.rest.pwd");
+	SISTRAMIT_PWD("sistramit.rest.pwd"),
+	/** PIB Url. */
+	PAYMENTIB_VIEW_URL("paymentib.view.url");
 
 	/**
 	 * Valor como string.

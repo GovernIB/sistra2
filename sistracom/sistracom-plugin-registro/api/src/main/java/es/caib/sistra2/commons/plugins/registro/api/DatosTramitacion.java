@@ -27,6 +27,11 @@ public class DatosTramitacion {
     private String idProcedimiento;
 
     /**
+     * Identificador procedimiento.
+     */
+    private String idProcedimientoSIA;
+
+    /**
      * Obtiene el id de la sesión de tramitación.
      */
     public String getIdSesionTramitacion() {
@@ -93,4 +98,20 @@ public class DatosTramitacion {
     public void setIdProcedimiento(String idProcedimiento) {
         this.idProcedimiento = idProcedimiento;
     }
+
+	/**
+	 * @return the idProcedimientoSIA
+	 */
+	public String getIdProcedimientoSIA() {
+		return idProcedimientoSIA;
+	}
+
+	/**
+	 * @param idProcedimientoSIA the idProcedimientoSIA to set
+	 */
+	public void setIdProcedimientoSIA(String idProcedimientoSIA) {
+		this.idProcedimientoSIA = idProcedimientoSIA;
+	}
+
+
 }

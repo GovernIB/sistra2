@@ -1505,6 +1505,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		comp.setSoloLectura(componente.isSoloLectura());
 		comp.setTelefonoFijo(componente.isTelefonoFijo());
 		comp.setTelefonoMovil(componente.isTelefonoMovil());
+		comp.setTelefonoInternacionalValidacionPrecisa(componente.isTelefonoInternacionalValidacionPrecisa());
 		if (componente.getTexto() != null) {
 			componente.getTexto().setCodigo(null);
 			if (componente.getTexto().getTraducciones() != null) {

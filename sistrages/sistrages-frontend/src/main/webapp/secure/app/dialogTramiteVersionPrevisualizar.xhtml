@@ -111,7 +111,7 @@
 								</p>
 							</div>
 						</div>
-						<p:selectBooleanCheckbox value="#{dialogTramiteVersionPrevisualizar.simularCatalogo}" itemLabel="#{msg['dialogTramiteVersionPrevisualizar.simularCatalogo']}" rendered="#{dialogTramiteVersionPrevisualizar.isDesarrollo()}" >
+						<p:selectBooleanCheckbox value="#{dialogTramiteVersionPrevisualizar.simularCatalogo}" itemLabel="#{msg['dialogTramiteVersionPrevisualizar.simularCatalogo']}" rendered="#{dialogTramiteVersionPrevisualizar.isDesarrollo() or dialogTramiteVersionPrevisualizar.isServiciosEstables()}" >
 							<p:ajax event="change" update="dialogTramite:txtCopy dialogTramite:procedimiento dialogTramite:botonera dialogTramite:btnNuevoValor dialogTramite:btnEditarValor dialogTramite:btnEliminarValor dialogTramite:idioma dialogTramite:procedimiento dialogTramite:checkSoloSia dialogTramite:checkSoloVigentes dialogTramite:checkSoloPublicas" listener="#{dialogTramiteVersionPrevisualizar.recalcularURL()}" />
 						</p:selectBooleanCheckbox>
 					</p:column>
@@ -231,21 +231,22 @@
 
             <h:outputScript >
             	function llamarBoton() {
-                    //Habría que crear un botón de buscar
-                    document.getElementById("dialogTramite:getProcedimientosEnd").click();
-                }
+					// Habría que crear un botón de buscar
+					document.getElementById("dialogTramite:getProcedimientosEnd").click();
+				}
 
 				function llamarBotonRecargar() {
-                    //Habría que crear un botón de buscar
-                    document.getElementById("dialogTramite:getProcedimientosRecargar").click();
-                }
+					//Habría que crear un botón de buscar
+					document.getElementById("dialogTramite:getProcedimientosRecargar").click();
+				}
+
 	             var arrayCm = [];
 
 				  window.onload=function(){
 
 	             	setTimeout(() => {
-                          llamarBoton();
-                    }, "1000")
+						llamarBoton();
+					}, "1000")
 
 	                let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
 	                onVisible(contextMenu, () => eliminarResaltar());
@@ -338,14 +339,14 @@
                     	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
                     		arrayCm.push(listaCm[i]);
                     	}
-	                	listaCm[i].classList.add("d-none");
+						listaCm[i].classList.add("d-none");
 					}
                   }else{
                   	for(i=0;i&lt;listaCm.length;i++){
                   		if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
                     		arrayCm.push(listaCm[i]);
                     	}
-	                	listaCm[i].classList.remove("d-none");
+						listaCm[i].classList.remove("d-none");
 					}
 					if(arrayCm.length&gt;1){
 						arrayCm.pop();

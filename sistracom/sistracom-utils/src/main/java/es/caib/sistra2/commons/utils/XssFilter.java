@@ -3,6 +3,7 @@ package es.caib.sistra2.commons.utils;
 import java.text.Normalizer;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Detecta si se usan valores no permitidos en los literales.
@@ -73,10 +74,15 @@ public final class XssFilter {
 				.replaceAll("'", "´");
 		// Eliminamos chars no permitidos en RW3
 		final String[] charsNoPermitidos = { "\\+", ">", "%", "\\*", "&", ":", ";", "¿", "\\?", "/", "\\|", "!", "<",
-				"¡", "\"", "'" };
+				"¡", "\"", "'"," ","´","`" };
 		for (final String cnp : charsNoPermitidos) {
 			nombreFicheroNormalizado = nombreFicheroNormalizado.replaceAll(cnp, "_");
 		}
+		// Quitamos puntos excepto el de la extension
+		final String extension = FilenameUtils.getExtension(nombreFicheroNormalizado);
+		final String filenameSinExtension = FilenameUtils.removeExtension(nombreFicheroNormalizado);
+		nombreFicheroNormalizado = filenameSinExtension.replaceAll("\\.", "_") + "." + extension;
+
 		return nombreFicheroNormalizado;
 	}
 

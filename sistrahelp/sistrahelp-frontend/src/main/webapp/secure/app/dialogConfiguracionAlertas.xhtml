@@ -259,7 +259,7 @@
 						<p:outputLabel for="comboEventos" value="#{msg['dialogConfiguracionAlertas.evento']}:" styleClass="margin-right-10" ></p:outputLabel>
 						<p:selectOneMenu id="comboEventos" value="#{dialogConfiguracionAlertas.evSeleccionado}" styleClass="margin-right-10" filter="true" disabled="#{dialogConfiguracionAlertas.isResumenDiario()}" filterMatchMode="contains" style="width:100px">
 								<f:selectItem itemLabel="" noSelectionOption="true"></f:selectItem>
-						     	<f:selectItems value="#{dialogConfiguracionAlertas.eventos}" var="evento" itemLabel="#{msg['typeEvento.'+=evento]}" itemValue="#{evento}"  />
+						     	<f:selectItems value="#{dialogConfiguracionAlertas.eventosFiltrados()}" var="evento" itemLabel="#{msg['typeEvento.'+=evento]}" itemValue="#{evento}"  />
 						</p:selectOneMenu>
 
 						<p:outputLabel for="comboOperador" value="#{msg['dialogConfiguracionAlertas.operador']}:" styleClass="margin-right-10" ></p:outputLabel>

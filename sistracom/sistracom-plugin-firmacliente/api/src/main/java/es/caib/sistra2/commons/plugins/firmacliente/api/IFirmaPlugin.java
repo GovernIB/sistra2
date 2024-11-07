@@ -59,7 +59,7 @@ public interface IFirmaPlugin extends IPlugin {
 	 *                          identificador de la sesión de firma
 	 * @return estado de la sesión de firma
 	 */
-	TypeEstadoFirmado obtenerEstadoSesionFirma(String idSesionFirma) throws FirmaPluginException;
+	EstadoFirma obtenerEstadoSesionFirma(String idSesionFirma) throws FirmaPluginException;
 
 	/**
 	 * Permite obtener la firma de un fichero firmado.
@@ -87,4 +87,6 @@ public interface IFirmaPlugin extends IPlugin {
 	 * @return boolean
 	 */
 	boolean isVerificarFirma() throws FirmaPluginException;
+
+    boolean isIframe() throws FirmaPluginException;
 }

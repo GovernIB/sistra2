@@ -97,6 +97,8 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 
 	private int firmaFin;
 
+	private int firmaFinOk;
+
 	private Alerta alert;
 
 	private List<ErroresPorTramiteCM> listaErrores;
@@ -131,7 +133,7 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 		boolean evaluacion = false;
 		String expEv = evaluarAlerta(al);
 		if(expEv != null) {
-			if (!expEv.equals("RESUMEN_DIARIO")) {
+			if (!expEv.equals("RESUMEN_DIARIO") && !expEv.equals("RESUM_DIARI")) {
 				enviarEmail(al,expEv);
 				anadirHistorial(al,expEv);
 				evaluacion = true;
@@ -145,7 +147,7 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
     }
 
 	private String evaluarAlerta(Alerta al) {
-		if (!al.getNombre().equals("RESUMEN_DIARIO")) {
+		if (!al.getNombre().equals("RESUMEN_DIARIO") && !al.getNombre().equals("RESUM_DIARI")) {
 			String grupoAnterior = "1";
 
 			log.debug("ALERTAS STH: Inicia el hilo para evaluar la alerta: " + al.getNombre());
@@ -398,9 +400,9 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 			}
 			String firmaPor;
 			if (firmaIni != 0) {
-				firmaPor = formatDouble((100 - ((Double.valueOf(firmaFin) * 100) / Double.valueOf(firmaIni))));
+				firmaPor = formatDouble((100 - (((Double.valueOf(firmaFin) + Double.valueOf(firmaFinOk)) * 100) / Double.valueOf(firmaIni))));
 			} else {
-				if (firmaFin == 0) {
+				if ((firmaFin + firmaFinOk) == 0) {
 					firmaPor = "0,00";
 				} else {
 					firmaPor = "100,00";
@@ -492,7 +494,7 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ firmaIni + "</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
-					+ firmaFin + "</td>"
+					+ (firmaFin + firmaFinOk) + "</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ firmaPor + "%</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
@@ -567,7 +569,7 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 					+ "                          <tbody>" + "                             <tr>"
 					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Tr&#224;mit</span></td>"
 					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Versi&#243;</span></td>"
-					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Sessions Ok</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Sessions finalitzades</span></td>"
 					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Sessions<wbr> no<wbr> finalitzades</span></td>"
 					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Percen&shy;tatge de sessions<wbr> no<wbr> finali&shy;tzades</span></td>"
 					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Suma d&#39;errors</span></td>"
@@ -813,6 +815,7 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 		formFin = 0;
 		firmaIni = 0;
 		firmaFin = 0;
+		firmaFinOk = 0;
 		listaErrores = new ArrayList<ErroresPorTramiteCM>();
 		listaTramErrores = new ArrayList<EventoCM>();
 		filtros = new FiltroAuditoriaTramitacion(alert.getListaAreas(), false, false);
@@ -897,6 +900,9 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 				break;
 			case FIRMA_FIN:
 				firmaFin = ev.getConcurrencias().intValue();
+				break;
+			case FIRMA_FIN_OK:
+				firmaFinOk = ev.getConcurrencias().intValue();
 				break;
 			case PAGO_ELECTRONICO_INICIO:
 				pagIni = ev.getConcurrencias().intValue();
@@ -1195,5 +1201,13 @@ public class ProcesoAlertaServiceImpl implements ProcesoAlertaService {
 	 */
 	public final void setFirmaFin(int firmaFin) {
 		this.firmaFin = firmaFin;
+	}
+
+	public int getFirmaFinOk() {
+		return firmaFinOk;
+	}
+
+	public void setFirmaFinOk(int firmaFinOk) {
+		this.firmaFinOk = firmaFinOk;
 	}
 }

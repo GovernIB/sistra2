@@ -63,6 +63,8 @@ public class PagoAuditoria extends ModelApi {
 
 	private String pagoEstadoIncorrecto;
 
+	private String mensajeError;
+
 	public String getIdSesionTramitacion() {
 		return idSesionTramitacion;
 	}
@@ -214,5 +216,13 @@ public class PagoAuditoria extends ModelApi {
 
 		return resultado;
 
+	}
+
+	public String getMensajeError() {
+		return mensajeError;
+	}
+
+	public void setMensajeError(String mensajeError) {
+		this.mensajeError = mensajeError;
 	}
 }

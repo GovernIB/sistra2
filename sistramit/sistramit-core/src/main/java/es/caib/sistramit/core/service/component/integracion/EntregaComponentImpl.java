@@ -139,6 +139,7 @@ public final class EntregaComponentImpl implements EntregaComponent {
 				datosTramitacion.setIdTramite(tramiteFinalizado.getIdTramite());
 				datosTramitacion.setVersionTramite(tramiteFinalizado.getVersionTramite());
 				datosTramitacion.setIdProcedimiento(tramiteFinalizado.getIdProcedimientoCP());
+				datosTramitacion.setIdProcedimientoSIA(tramiteFinalizado.getIdProcedimientoSIA());
 				ResultadoRegistrar resReg = envioRemotoComponent.realizarEnvio(tramEntrega.getIdEntidad(),
 						idEnvioRemoto,
 						tramEntrega.getIdSesionTramitacion(),

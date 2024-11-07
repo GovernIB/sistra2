@@ -488,6 +488,14 @@ public class ViewTramites extends ViewControllerBase {
 		}
 	}
 
+	public boolean isServiciosEstables() {
+		if (UtilJSF.checkEntorno(TypeEntorno.SERVICIOS_ESTABLES)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public boolean isPreproduccion() {
 		if (UtilJSF.checkEntorno(TypeEntorno.PREPRODUCCION)) {
 			return true;
@@ -671,6 +679,12 @@ public class ViewTramites extends ViewControllerBase {
 		return TypeEntorno.fromString(UtilJSF.getEntorno()) != TypeEntorno.DESARROLLO;
 	}
 
+	/** Comprueba que el entorno no es servicios estables. **/
+	@Override
+	public boolean isNotServiciosEstables() {
+		return TypeEntorno.fromString(UtilJSF.getEntorno()) != TypeEntorno.SERVICIOS_ESTABLES;
+	}
+
 	/**
 	 * Obtiene el valor de tienePermisosTramite, se tiene que cumplir que:
 	 * <ul>
@@ -692,9 +706,9 @@ public class ViewTramites extends ViewControllerBase {
 		else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
 			res = true;
 		}
-		// Admin area o Desarrollador (solo funciona en entorno de desarrollo)
+		// Admin area o Desarrollador (solo funciona en entorno de desarrollo o servicios estables)
 		else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
-				&& TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.DESARROLLO) {
+				&& (TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.DESARROLLO || TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.SERVICIOS_ESTABLES)) {
 
 			if (tramiteSeleccionada != null) {
 				actualizarPermisosCacheados(tramiteSeleccionada.getTramite().getIdArea());
@@ -724,7 +738,7 @@ public class ViewTramites extends ViewControllerBase {
 		if ((UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
 				&& TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.PREPRODUCCION)
 				|| (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
-						&& TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.DESARROLLO)) {
+						&& (TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.DESARROLLO || TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.SERVICIOS_ESTABLES))) {
 			return true;
 		} else {
 			return false;
@@ -960,7 +974,7 @@ public class ViewTramites extends ViewControllerBase {
 				final List<TypeRolePermisos> permisos = securityService
 						.getPermisosDesarrolladorEntidadByArea(area.getCodigo());
 
-				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString()) || UtilJSF.getEntorno().equals(TypeEntorno.SERVICIOS_ESTABLES.toString())) {
 
 					if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
 							|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
@@ -1547,7 +1561,7 @@ public class ViewTramites extends ViewControllerBase {
 				this.versionSeleccionada.getNumeroVersion());
 
 		// Invalidaciones
-		if (!UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+		if (!UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString()) && !UtilJSF.getEntorno().equals(TypeEntorno.SERVICIOS_ESTABLES.toString())) {
 			this.refrescar();
 		}
 
@@ -1567,7 +1581,7 @@ public class ViewTramites extends ViewControllerBase {
 	 * <ul>
 	 * <li>Revisar si el tramite versión está bloqueado.</li>
 	 * <li>Revisar si tiene permiso de edición.</li>
-	 * <li>Sólo se puede bloquear en el entorno de desarrollo.</li>
+	 * <li>Sólo se puede bloquear en el entorno de desarrollo o servicios estables.</li>
 	 * </ul>
 	 */
 	public void bloquear() {
@@ -1576,7 +1590,7 @@ public class ViewTramites extends ViewControllerBase {
 			return;
 		}
 
-		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO) && !UtilJSF.checkEntorno(TypeEntorno.SERVICIOS_ESTABLES)) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
 					UtilJSF.getLiteral("viewTramitesVersion.entorno.noDesarrollo"));
 			return;
@@ -1717,8 +1731,8 @@ public class ViewTramites extends ViewControllerBase {
 			return false;
 		}
 
-		// Solo se puede bloquear/desbloquear en desarrollo
-		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+		// Solo se puede bloquear/desbloquear en desarrollo o servicios estables
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO) && !UtilJSF.checkEntorno(TypeEntorno.SERVICIOS_ESTABLES)) {
 			return false;
 		}
 
@@ -1758,8 +1772,8 @@ public class ViewTramites extends ViewControllerBase {
 			return false;
 		}
 
-		// Solo se puede bloquear/desbloquear en desarrollo
-		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+		// Solo se puede bloquear/desbloquear en desarrollo o servicios estables
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO) && !UtilJSF.checkEntorno(TypeEntorno.SERVICIOS_ESTABLES)) {
 			return false;
 		}
 

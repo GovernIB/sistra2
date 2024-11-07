@@ -2,6 +2,7 @@ package es.caib.sistramit.core.service.model.script.flujo;
 
 import javax.script.ScriptException;
 
+import es.caib.sistramit.core.service.model.script.ClzValorCampoListaElementosInt;
 import es.caib.sistramit.core.service.model.script.ClzValorCampoMultipleInt;
 import es.caib.sistramit.core.service.model.script.PluginScriptRes;
 
@@ -102,4 +103,8 @@ public interface ResModificacionFormulariosInt extends PluginScriptRes {
      */
     void resetValores(final String idFormulario) throws ScriptException;
 
+    ClzValorCampoListaElementosInt crearValorListaElementos();
+
+    void setValorListaElementos(String idFormulario, String campo,
+                                ClzValorCampoListaElementosInt valor)  throws ScriptException;
 }

@@ -17,6 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -33,6 +34,7 @@ import es.caib.sistrahelp.core.api.model.Alerta;
 import es.caib.sistrahelp.core.api.model.Area;
 import es.caib.sistrahelp.core.api.model.DisparadorAlerta;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
+import es.caib.sistrahelp.core.api.model.types.TypeIdioma;
 import es.caib.sistrahelp.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrahelp.core.api.service.AlertaService;
 import es.caib.sistrahelp.core.api.service.ConfiguracionService;
@@ -214,6 +216,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
+					data.setNombre(UtilJSF.getLiteral("viewConfiguracionAlertas.resumenDiario"));
 				} else {
 					check = false;
 					String grupoAnterior = "1";
@@ -420,11 +423,17 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 		return str;
 	}
 
+	public List<TypeEvento> eventosFiltrados(){
+		return eventos.stream()
+				.filter(e -> !e.equals(TypeEvento.FIRMA_FIN))
+				.collect(Collectors.toList());
+	}
+
 	public void hacerResumen() {
 		if (check) {
 			data.setIntervaloEvaluacion("");
 			data.setPeriodoEvaluacion(null);
-			data.setNombre("RESUMEN_DIARIO");
+			data.setNombre(UtilJSF.getLiteral("viewConfiguracionAlertas.resumenDiario"));
 			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 			if (horaEnvioRD == null) {
 				try {
@@ -451,7 +460,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 	}
 
 	public boolean noExisteResumen() {
-		Alerta a = aService.loadAlertaByNombre("RESUMEN_DIARIO");
+		Alerta a = aService.loadAlertaByNombre(UtilJSF.getLiteral("viewConfiguracionAlertas.resumenDiario"));
 		if (a != null && a.getCodigo() != data.getCodigo()) {
 			return false;
 		} else {
@@ -1383,7 +1392,7 @@ public class DialogConfiguracionAlertas extends DialogControllerBase {
 
 	public boolean isResumenDiario() {
 		if (data.getNombre() != null) {
-			return data.getNombre().equals("RESUMEN_DIARIO");
+			return data.getNombre().equals("RESUMEN_DIARIO") || data.getNombre().equals("RESUM_DIARI");
 		} else {
 			return false;
 

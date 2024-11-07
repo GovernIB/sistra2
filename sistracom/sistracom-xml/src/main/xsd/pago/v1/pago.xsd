@@ -34,6 +34,7 @@
 		<xs:sequence>
 			<xs:element name="FECHA_PAGO" type="xs:string"/>
 			<xs:element name="LOCALIZADOR" type="xs:string"/>
+			<xs:element name="METODO_PAGO" minOccurs="0" type="xs:string"/>
 		</xs:sequence>
 	</xs:complexType>
 

@@ -17,6 +17,9 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
+
 /**
  * Validaciones de tipo.
  *
@@ -41,6 +44,9 @@ public final class ValidacionesTipo {
 
 	/** Atributo constante PATRON_TELEFONO. */
 	private final Pattern patronTelefono;
+
+	/** Atributo constante PATRON_TELEFONO_INTERNACIONAL. */
+	private final Pattern patronTelefonoInternacional;
 
 	/** Atributo constante PATRON_IMPORTE. */
 	private final Pattern patronImporte;
@@ -106,6 +112,7 @@ public final class ValidacionesTipo {
 	private ValidacionesTipo() {
 		super();
 		patronTelefono = Pattern.compile("^\\d{9}$");
+		patronTelefonoInternacional = Pattern.compile("^\\+[1-9]\\d{10,14}$");
 		patronImporte = Pattern.compile("^[0-9]+(,[0-9]{1,2})?$");
 		patronEmail = Pattern.compile(
 				"^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,4}$");
@@ -549,6 +556,27 @@ public final class ValidacionesTipo {
 		}
 		return resultado;
 	}
+
+	public boolean esTelefonoInternacional(final String pTelefono, final boolean validacionPrecisa) {
+		boolean respuesta = false;
+		// Validación básica: exp regular
+		if (!esCadenaVacia(pTelefono) && compruebaRegExp(pTelefono, patronTelefonoInternacional)) {
+			respuesta = true;
+		}
+		// Validación prescisa: google lib number
+		if (respuesta && validacionPrecisa) {
+			try {
+				final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+				Phonenumber.PhoneNumber phone = phoneNumberUtil.parse(pTelefono,
+						Phonenumber.PhoneNumber.CountryCodeSource.UNSPECIFIED.name());
+				respuesta = phoneNumberUtil.isValidNumber(phone);
+			} catch (final Exception e) {
+				respuesta = false;
+			}
+		}
+		return respuesta;
+	}
+
 
 	public boolean esTelefono(final String telefono) {
 		boolean respuesta = false;

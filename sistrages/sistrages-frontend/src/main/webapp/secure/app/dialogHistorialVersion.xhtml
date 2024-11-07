@@ -193,7 +193,7 @@
 		  	<p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton id="botonLimpiar" value="#{msg['botones.borradoHistorial']}" actionListener="#{dialogHistorialVersion.borradoHistorial()}" process="@this" styleClass="boton-azul" update="@form" rendered="#{dialogHistorialVersion.isDesarrollo()}" >
+		        		<p:commandButton id="botonLimpiar" value="#{msg['botones.borradoHistorial']}" actionListener="#{dialogHistorialVersion.borradoHistorial()}" process="@this" styleClass="boton-azul" update="@form" rendered="#{dialogHistorialVersion.isDesarrollo() or dialogHistorialVersion.isServiciosEstables()}" >
 		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borradoHistorial']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        		</p:commandButton>
 
@@ -214,7 +214,7 @@
 			<p:contextMenu>
        			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :formHistorial:auxCopiar" update="growlHistorial" />
        			<p:separator/>
-       			<p:menuitem value="#{msg['botones.borradoHistorial']}" icon="fa fa-trash" onclick="document.getElementById('formHistorial:botonLimpiar').click();" process="@this" rendered="#{dialogHistorialVersion.isDesarrollo()}" />
+       			<p:menuitem value="#{msg['botones.borradoHistorial']}" icon="fa fa-trash" onclick="document.getElementById('formHistorial:botonLimpiar').click();" process="@this" rendered="#{dialogHistorialVersion.isDesarrollo() or dialogHistorialVersion.isServiciosEstables()}" />
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{dialogHistorialVersion.copiadoCorr}" process="@this" update="@this growlHistorial"/>

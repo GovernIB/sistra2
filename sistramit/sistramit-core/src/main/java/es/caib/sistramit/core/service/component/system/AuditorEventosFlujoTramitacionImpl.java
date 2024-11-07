@@ -325,26 +325,37 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 						false);
 				final String nifFirmante = (String) UtilsFlujo.recuperaParametroAccionPaso(parametrosPaso, "firmante",
 						true);
-				final TypeEvento tipoEventoFirma = (accionPasoRegistrar == TypeAccionPasoRegistrar.INICIAR_FIRMA_DOCUMENTO
-						? TypeEvento.FIRMA_INICIO
-						: TypeEvento.FIRMA_FIN);
-				final EventoAuditoria eventoFirma = crearEvento(tipoEventoFirma, idSesionTramitacion);
+
 				final ListaPropiedades propiedadesEvento = new ListaPropiedades();
 				propiedadesEvento.addPropiedad(TypeParametroEvento.DOCUMENTO_ID.toString(), idDocumento);
 				propiedadesEvento.addPropiedad(TypeParametroEvento.DOCUMENTO_INSTANCIA.toString(), instanciaStr);
 				propiedadesEvento.addPropiedad(TypeParametroEvento.NIF.toString(), nifFirmante);
-				if (accionPasoRegistrar == TypeAccionPasoRegistrar.VERIFICAR_FIRMA_DOCUMENTO) {
+
+				TypeEvento typeEvento = null;
+
+				switch (accionPasoRegistrar) {
+				case INICIAR_FIRMA_DOCUMENTO:
+					propiedadesEvento.addPropiedad(TypeParametroEvento.FIRMA_SESION.toString(), (String) respuestaAccionPaso.getParametroRetorno("idSesionFirma"));
+					typeEvento = TypeEvento.FIRMA_INICIO;
+					break;
+				case VERIFICAR_FIRMA_DOCUMENTO:
 					final FirmaVerificacion fv = ((FirmaVerificacion) respuestaAccionPaso
 							.getParametroRetorno("resultado"));
-					eventoFirma.setResultado(
-							fv.getRealizada() == TypeSiNo.SI && fv.getVerificada() == TypeSiNo.SI ? "OK" : "KO");
+					boolean resultadoFirma = (fv.getRealizada() == TypeSiNo.SI && fv.getVerificada() == TypeSiNo.SI);
 					if (StringUtils.isNotBlank(fv.getDetalleError())) {
-						propiedadesEvento.addPropiedad(TypeParametroEvento.FIRMA_ERROR.toString(),
-								fv.getDetalleError());
+						propiedadesEvento.addPropiedad(TypeParametroEvento.FIRMA_ERROR.toString(), fv.getDetalleError());
 					}
+					propiedadesEvento.addPropiedad(TypeParametroEvento.FIRMA_SESION.toString(), fv.getSesionFirma());
+					typeEvento = resultadoFirma ? TypeEvento.FIRMA_FIN_OK : TypeEvento.FIRMA_FIN_KO;
+					break;
 				}
-				eventoFirma.setPropiedadesEvento(propiedadesEvento);
-				eventos.add(eventoFirma);
+
+				if (typeEvento != null) {
+					EventoAuditoria eventoFirma = crearEvento(typeEvento, idSesionTramitacion);
+					eventoFirma.setPropiedadesEvento(propiedadesEvento);
+					eventos.add(eventoFirma);
+				}
+
 			}
 
 			// Registro tramite
@@ -377,6 +388,10 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 					eventoPago = TypeEvento.PAGO_ELECTRONICO_NO_VERIFICADO;
 				}
 				final EventoAuditoria eventoPagoTramite = crearEventoPago(eventoPago, idSesionTramitacion, sp);
+				// Añade mensaje error pasarela
+				if (pv.getEstadoIncorrecto() != null) {
+					eventoPagoTramite.getPropiedadesEvento().addPropiedad(TypeParametroEvento.PAGO_ERROR.toString(), pv.getEstadoIncorrecto().getCodigoErrorPasarela() + "-" + pv.getEstadoIncorrecto().getMensajeErrorPasarela());
+				}
 				eventos.add(eventoPagoTramite);
 			}
 			// Pago presencial
@@ -411,6 +426,9 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 		propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_ID_SESION.toString(), sp.getIdentificadorPago());
 		propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_PASARELA.toString(), sp.getPasarelaId());
 		propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_IMPORTE.toString(), sp.getImporte() + "");
+		if (StringUtils.isNotBlank(sp.getMetodoPagoSeleccionado())) {
+			propiedadesEvento.addPropiedad(TypeParametroEvento.PAGO_METODO.toString(), sp.getMetodoPagoSeleccionado());
+		}
 		return eventoPagoTramite;
 	}
 

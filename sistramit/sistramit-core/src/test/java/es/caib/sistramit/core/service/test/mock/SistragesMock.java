@@ -269,8 +269,13 @@ public class SistragesMock {
 		plugin = new RPlugin();
 		plugin.setTipo(TypePluginEntidad.FIRMA.toString());
 		plugin.setClassname("es.caib.sistra2.commons.plugins.firmacliente.mock.ComponenteFirmaPluginMock");
-		plugin.setPrefijoPropiedades("prefijo");
-		plugin.setPropiedades(crearListaParametros());
+		plugin.setPrefijoPropiedades("pluginsib.firmacliente.mock.");
+		RListaParametros parametros = crearListaParametros();
+		RValorParametro vp = new RValorParametro();
+		vp.setCodigo("iframe");
+		vp.setValor("true");
+		parametros.getParametros().add(vp);
+		plugin.setPropiedades(parametros);
 		plugins.add(plugin);
 
 		plugin = new RPlugin();
@@ -283,8 +288,13 @@ public class SistragesMock {
 		plugin = new RPlugin();
 		plugin.setTipo(TypePluginEntidad.VALIDACION_FIRMA_SERVIDOR.toString());
 		plugin.setClassname("es.caib.sistra2.commons.plugins.validacionfirma.mock.ValidacionFirmaPluginMock");
-		plugin.setPrefijoPropiedades("prefijo");
-		plugin.setPropiedades(crearListaParametros());
+		plugin.setPrefijoPropiedades("plugins.validatesignature.mock.");
+		parametros = crearListaParametros();
+		vp = new RValorParametro();
+		vp.setCodigo("firmanteMock");
+		vp.setValor("00000000T");
+		parametros.getParametros().add(vp);
+		plugin.setPropiedades(parametros);
 		plugins.add(plugin);
 
 		plugin = new RPlugin();

@@ -1026,6 +1026,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 			rFiltro.setListaAreas(pFiltro.getListaAreas());
 			rFiltro.setIdSesionTramitacion(pFiltro.getIdSesionTramitacion());
 			rFiltro.setNif(pFiltro.getNif());
+			rFiltro.setMostrarErrores(pFiltro.isMostrarErrores());
 			rFiltro.setFechaDesde(pFiltro.getFechaDesde());
 			rFiltro.setFechaHasta(pFiltro.getFechaHasta());
 
@@ -1066,6 +1067,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 			pago.setLocalizador(pRPagoAuditoria.getLocalizador());
 			pago.setFechaPago(pRPagoAuditoria.getFechaPago());
 			pago.setPagoEstadoIncorrecto(pRPagoAuditoria.getPagoEstadoIncorrecto());
+			pago.setMensajeError(pRPagoAuditoria.getMensajeError());
 		}
 
 		return pago;

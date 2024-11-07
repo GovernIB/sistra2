@@ -65,7 +65,7 @@ public class AvisoEntidadServiceBean implements AvisoEntidadService {
 	 * java.lang.Long)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public boolean removeAvisoEntidad(final Long id) {
 		return avisoEntidadService.removeAvisoEntidad(id);
 

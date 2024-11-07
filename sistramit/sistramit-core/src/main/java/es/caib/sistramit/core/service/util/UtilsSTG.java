@@ -581,7 +581,9 @@ public final class UtilsSTG {
 			res = TypeTexto.CODIGO_POSTAL;
 		} else if ("TELEFONO".equals(tipoTexto)) {
 			res = TypeTexto.TELEFONO;
-		} else if ("FECHA".equals(tipoTexto)) {
+		}else if ("TFNOFINT".equals(tipoTexto)) {
+			res = TypeTexto.TELEFONO_INTERNACIONAL;
+		}else if ("FECHA".equals(tipoTexto)) {
 			res = TypeTexto.FECHA;
 		} else if ("HORA".equals(tipoTexto)) {
 			res = TypeTexto.HORA;

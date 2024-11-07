@@ -13,6 +13,9 @@ public class EstadoPago {
     /** Localizador pago, en caso de estar pagado. */
     private String localizador;
 
+    /** Método pago seleccionado (depende de la pasarela). */
+    private String metodoPago;
+
     /** Código error pasarela, opcional en caso de estado desconocido. */
     private String codigoErrorPasarela;
 
@@ -114,4 +117,22 @@ public class EstadoPago {
         this.localizador = localizador;
     }
 
+    /**
+     * Método de acceso a metodoPago.
+     *
+     * @return metodoPago
+     */
+    public String getMetodoPago() {
+        return metodoPago;
+    }
+
+    /**
+     * Método para establecer metodoPago.
+     *
+     * @param metodoPago
+     *            metodoPago a establecer
+     */
+    public void setMetodoPago(String metodoPago) {
+        this.metodoPago = metodoPago;
+    }
 }

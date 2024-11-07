@@ -18,7 +18,11 @@ public enum TypeEntorno {
 	/**
 	 * Produccion
 	 */
-	PRODUCCION("pro");
+	PRODUCCION("pro"),
+	/**
+	 * Servicios estables.
+	 */
+	SERVICIOS_ESTABLES("se");
 
 	/** Valor. **/
 	private String valor;

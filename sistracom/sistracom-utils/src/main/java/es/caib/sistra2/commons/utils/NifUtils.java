@@ -53,24 +53,21 @@ public final class NifUtils {
 	 * @return
 	 */
 	public static boolean esIdentificacion(final String identificacion, final boolean esDni, final boolean esNie,
-			final boolean esOtrosNif, final boolean esNif, final boolean esNss) {
-		boolean resultado = false;
-		if (esDni) {
-			resultado = esDni(identificacion);
+			   final boolean esOtrosNif, final boolean esNif, final boolean esNss) {
+		String identificacionUpper = identificacion.toUpperCase();
+		if (esDni && esDni(identificacionUpper)) {
+			return true;
 		}
-		if (!resultado && esNie) {
-			resultado = esNie(identificacion);
+		if (esNie && esNie(identificacionUpper)) {
+			return true;
 		}
-		if (!resultado && esOtrosNif) {
-			resultado = esNifOtros(identificacion);
+		if (esOtrosNif && esNifOtros(identificacionUpper)) {
+			return true;
 		}
-		if (!resultado && esNif) {
-			resultado = esNifPersonaJuridica(identificacion);
+		if (esNif && esNifPersonaJuridica(identificacionUpper)) {
+			return true;
 		}
-		if (!resultado && esNss) {
-			resultado = esNSS(identificacion);
-		}
-		return resultado;
+		return esNss && esNSS(identificacionUpper);
 	}
 
 	/**
@@ -84,7 +81,8 @@ public final class NifUtils {
 	 * @return
 	 */
 	public static boolean esNifPersonaFisica(final String identificacion) {
-		return esDni(identificacion) || esNie(identificacion) || esNifOtros(identificacion);
+		String identificacionUpper = identificacion.toUpperCase();
+		return esDni(identificacionUpper) || esNie(identificacionUpper) || esNifOtros(identificacionUpper);
 	}
 
 	/**

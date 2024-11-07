@@ -856,6 +856,7 @@ public class ApiInternaRestController {
 			filtro.setListaAreas(pRFiltro.getListaAreas());
 			filtro.setIdSesionTramitacion(pRFiltro.getIdSesionTramitacion());
 			filtro.setNif(pRFiltro.getNif());
+			filtro.setMostrarErrores(pRFiltro.isMostrarErrores());
 			filtro.setFechaDesde(pRFiltro.getFechaDesde());
 			filtro.setFechaHasta(pRFiltro.getFechaHasta());
 
@@ -902,6 +903,7 @@ public class ApiInternaRestController {
 			rPago.setLocalizador(pPagoAuditoria.getLocalizador());
 			rPago.setFechaPago(pPagoAuditoria.getFechaPago());
 			rPago.setPagoEstadoIncorrecto(pPagoAuditoria.getPagoEstadoIncorrecto());
+			rPago.setMensajeError(pPagoAuditoria.getMensajeError());
 		}
 
 		return rPago;

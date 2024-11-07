@@ -919,6 +919,12 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 						return false;
 					}
 
+					if (TypeCampoTexto.TELEFONO_INTERNACIONAL.equals(campo.getTipoCampoTexto()) && campo.getNumColumnas() < 2) {
+						addMessageContext(TypeNivelGravedad.ERROR,
+								UtilJSF.getLiteral("dialogDisenyoFormulario.telefonoInternacional.errorNumColumnas"));
+						return false;
+					}
+
 					if (TypeCampoTexto.IBAN.equals(campo.getTipoCampoTexto()) && campo.getNumColumnas() <= 2) {
 						addMessageContext(TypeNivelGravedad.ERROR,
 								UtilJSF.getLiteral("dialogDisenyoFormulario.iban.errorNumColumnas"));
@@ -994,6 +1000,16 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					if (campo.getValorNoChecked() == null || campo.getValorNoChecked().isEmpty()) {
 						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 								UtilJSF.getLiteral("error.validacion.valorNoChecked.vacio"), true);
+						return false;
+					}
+				}
+
+				if (objetoFormularioEdit instanceof ComponenteFormularioListaElementos) {
+					final ComponenteFormularioListaElementos campo = (ComponenteFormularioListaElementos) objetoFormularioEdit;
+
+					if (campo.getNumeroMaximoElementos() == null || campo.getNumeroMaximoElementos() <= 0) {
+						addMessageContext(TypeNivelGravedad.WARNING,
+								UtilJSF.getLiteral("warning.componente.lel.maximoElementos"), true);
 						return false;
 					}
 				}
@@ -3151,6 +3167,16 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	}
 
 	/**
+	 * Comprueba si es un tipo de campo texto de tipo teléfono internacional.
+	 *
+	 * @return
+	 */
+	public boolean isCampoTelefonoInternacional() {
+		final ComponenteFormularioCampoTexto campo = (ComponenteFormularioCampoTexto) objetoFormularioEdit;
+		return TypeCampoTexto.TELEFONO_INTERNACIONAL.equals(campo.getTipoCampoTexto());
+	}
+
+	/**
 	 * Comprueba si es un tipo de campo texto de tipo Lista Variable Fija
 	 *
 	 * @return
@@ -3352,6 +3378,18 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		return numObj;
 	}
 
+	public void rangoTieneNumeroNegativo() {
+		setCambios();
+		if(this.objetoFormularioEdit instanceof ComponenteFormulario) {
+			ComponenteFormularioCampoTexto campoTexto = ((ComponenteFormularioCampoTexto) objetoFormularioEdit);
+			if (campoTexto.getNumeroRangoMinimo() != null && campoTexto.getNumeroRangoMinimo() < 0 || campoTexto.getNumeroRangoMaximo() != null && campoTexto.getNumeroRangoMaximo() < 0) {
+				campoTexto.setNumeroConSigno(true);
+			} else {
+				campoTexto.setNumeroConSigno(false);
+			}
+		}
+	}
+
 	public boolean isMostrarOcultos() {
 		return mostrarOcultos;
 	}
@@ -3391,10 +3429,16 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public void setCambiosTipoTexto() {
 		this.cambios = true;
-		if (this.objetoFormularioEdit != null && this.objetoFormularioEdit instanceof ComponenteFormulario
-				&& isCampoTextoIBAN()
-				&& ((ComponenteFormularioCampoTexto) objetoFormularioEdit).getNumColumnas() <= 2) {
-			((ComponenteFormularioCampoTexto) objetoFormularioEdit).setNumColumnas(3);
+		if (this.objetoFormularioEdit != null && this.objetoFormularioEdit instanceof ComponenteFormulario) {
+			if(isCampoTextoIBAN() && ((ComponenteFormularioCampoTexto) objetoFormularioEdit).getNumColumnas() <= 2) {
+				((ComponenteFormularioCampoTexto) objetoFormularioEdit).setNumColumnas(3);
+			}
+			if(isCampoTelefonoInternacional()) {
+				((ComponenteFormularioCampoTexto) objetoFormularioEdit).setTelefonoInternacionalValidacionPrecisa(true);
+				if(((ComponenteFormularioCampoTexto) objetoFormularioEdit).getNumColumnas() < 2) {
+					((ComponenteFormularioCampoTexto) objetoFormularioEdit).setNumColumnas(2);
+				}
+			}
 		}
 	}
 

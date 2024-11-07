@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import es.caib.sistra2.commons.plugins.firmacliente.api.*;
 import org.apache.commons.io.FilenameUtils;
 
 import org.fundaciobit.plugins.validatesignature.api.IValidateSignaturePlugin;
@@ -18,13 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.caib.sistra2.commons.plugins.firmacliente.api.FicheroAFirmar;
-import es.caib.sistra2.commons.plugins.firmacliente.api.FicheroFirmado;
-import es.caib.sistra2.commons.plugins.firmacliente.api.FirmaPluginException;
-import es.caib.sistra2.commons.plugins.firmacliente.api.IFirmaPlugin;
-import es.caib.sistra2.commons.plugins.firmacliente.api.InfoSesionFirma;
-import es.caib.sistra2.commons.plugins.firmacliente.api.TypeEstadoFirmado;
-import es.caib.sistra2.commons.plugins.firmacliente.api.TypeTipoDocumental;
 import es.caib.sistramit.core.api.exception.SesionFirmaClienteException;
 import es.caib.sistramit.core.api.exception.ValidacionFirmaException;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
@@ -113,8 +107,10 @@ public final class FirmaComponentImpl implements FirmaComponent {
 
 		// Iniciar sesion firma
 		String urlRedireccion = null;
+		boolean iframe;
 		try {
 			urlRedireccion = plgFirma.iniciarSesionFirma(sf, urlCallBack, null);
+			iframe = plgFirma.isIframe();
 		} catch (final FirmaPluginException e) {
 			final ListaPropiedades lp = new ListaPropiedades();
 			lp.addPropiedad("fileId", fileId);
@@ -125,6 +121,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 		final RedireccionFirma res = new RedireccionFirma();
 		res.setIdSesion(sf);
 		res.setUrl(urlRedireccion);
+		res.setIframe(iframe);
 		return res;
 	}
 
@@ -132,6 +129,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 	public FirmaClienteRespuesta recuperarResultadoFirmaExterna(final String idEntidad, final String sesionFirma,
 			final String fileId) {
 		final FirmaClienteRespuesta resFirma = new FirmaClienteRespuesta();
+		resFirma.setSesionFirma(sesionFirma);
 		resFirma.setFecha(new Date());
 
 		// Instancia plugin
@@ -139,27 +137,44 @@ public final class FirmaComponentImpl implements FirmaComponent {
 
 		// Verifica estado sesion firma y recupera fichero firmado
 		try {
-			final TypeEstadoFirmado estado = plgFirma.obtenerEstadoSesionFirma(sesionFirma);
+			final EstadoFirma estado = plgFirma.obtenerEstadoSesionFirma(sesionFirma);
 			if (estado == null) {
 				throw new SesionFirmaClienteException("No s'ha recuperat estat signatura");
 			}
-			if (estado == TypeEstadoFirmado.FINALIZADO_OK) {
-				// Recoge firma
-				final FicheroFirmado fic = plgFirma.obtenerFirmaFichero(sesionFirma, fileId);
-				final TypeFirmaDigital tipoFirma = TypeFirmaDigital.fromString(fic.getFirmaTipo().toString());
-				if (tipoFirma == null) {
-					throw new SesionFirmaClienteException(
-							"Tipus signatura no reconeguda: " + fic.getFirmaTipo().toString());
-				}
-				// Establece datos firma
-				resFirma.setFinalizada(true);
-				resFirma.setFirmaContenido(fic.getFirmaFichero());
-				resFirma.setFirmaTipo(tipoFirma);
-				resFirma.setValida(true);
-				resFirma.setVerificar(plgFirma.isVerificarFirma());
-			} else if (estado == TypeEstadoFirmado.CANCELADO) {
-				resFirma.setCancelada(true);
-			}
+			switch (estado.getEstadoFirmado()) {
+				case FINALIZADO_OK:
+					// Recoge firma
+					final FicheroFirmado fic = plgFirma.obtenerFirmaFichero(sesionFirma, fileId);
+					final TypeFirmaDigital tipoFirma = TypeFirmaDigital.fromString(fic.getFirmaTipo().toString());
+					if (tipoFirma == null) {
+						throw new SesionFirmaClienteException(
+								"Tipus signatura no reconeguda: " + fic.getFirmaTipo().toString());
+					}
+					// Establece datos firma
+					resFirma.setFinalizada(true);
+					resFirma.setFirmaContenido(fic.getFirmaFichero());
+					resFirma.setFirmaTipo(tipoFirma);
+					resFirma.setValida(true);
+					resFirma.setVerificar(plgFirma.isVerificarFirma());
+					break;
+
+				case CANCELADO:
+					// Indica que está cancelada
+					resFirma.setCancelada(true);
+					resFirma.setDetalleError("Signatura cancel·lada");
+					break;
+
+				case FINALIZADO_CON_ERROR:
+					// Indica que ha finalizado con error
+					resFirma.setDetalleError(estado.getMensajeError());
+					break;
+
+				default:
+					// Indica que se recibe un estado no esperado
+					resFirma.setDetalleError("Estat signatura no esperat: " + estado.toString());
+
+		}
+
 		} catch (final FirmaPluginException ex) {
 			throw new SesionFirmaClienteException("Error accedint a plugin firma client: " + ex.getMessage(), ex);
 		}
@@ -246,7 +261,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 			detalleError = validateResponse.getValidationStatus().getErrorMsg();
 		} else {
 			final SignatureDetailInfo[] detalleFirmas = validateResponse.getSignatureDetailInfo();
-			detalleError = literalesComponent.getLiteral(Literales.PASO_REGISTRAR, "firma.firmanteNoValido", idioma);
+
 			final List<String> nifFirmados = new ArrayList<String>();
 			for (int i = 0; i < detalleFirmas.length; i++) {
 				final SignatureDetailInfo detalleFirma = detalleFirmas[i];
@@ -281,6 +296,11 @@ public final class FirmaComponentImpl implements FirmaComponent {
 						break;
 					}
 				}
+			}
+
+			// Si la firma no es válida, indicamos texto error
+			if (!firmaValida) {
+				detalleError = literalesComponent.getLiteral(Literales.PASO_REGISTRAR, "firma.firmanteNoValido", idioma);
 			}
 
 		}

@@ -1142,7 +1142,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
                 final ComponenteFormularioCampoTexto campoTexto = (ComponenteFormularioCampoTexto) pComponente;
 
                 jCampoTexto.setOculto(campoTexto.isOculto());
-                jCampoTexto.setTipo(campoTexto.getTipoCampoTexto().name());
+                jCampoTexto.setTipo(campoTexto.getTipoCampoTexto().toString());
                 jCampoTexto.setPrevenirPegar(campoTexto.isPrevenirPegar());
                 switch (campoTexto.getTipoCampoTexto()) {
                 case NORMAL:
@@ -1171,6 +1171,8 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
                     jCampoTexto.setTelefonoFijo(campoTexto.isTelefonoFijo());
                     jCampoTexto.setTelefonoMovil(campoTexto.isTelefonoMovil());
                     break;
+                case TELEFONO_INTERNACIONAL:
+                	jCampoTexto.setTelefonoInternacionalValidacionPrecisa(campoTexto.isTelefonoInternacionalValidacionPrecisa());
                 case EXPRESION:
                     jCampoTexto.setNormalExpresionRegular(campoTexto.getExpresionRegular());
                     break;

@@ -52,13 +52,13 @@ $.fn.appFormsCaptcha = function(options) {
 							.text( txtFormDinIntroduiuText_captcha );
 
 					var captcha_html = "<div class=\"imc--img\"><img src=\"\" alt=\"\"></div>"
-										+ "<input id=\"" + camp_id + "\" name=\"" + camp_id + "\" type=\"text\">"
-										+ "<button type=\"button\"><span>" + txtFormDinCampRefresca_captcha + "</span></button>";
+										+ "<input id=\"" + camp_id + "\" name=\"" + camp_id + "\" type=\"text\" data-tabula=\"si\">"
+										+ "<button type=\"button\" data-tabula=\"si\"><span>" + txtFormDinCampRefresca_captcha + "</span></button>";
 
 				} else {
 
 					var captcha_html = "<div class=\"imc--img\"></div>"
-										+ "<button type=\"button\"><span>" + txtFormDinCampRefresca_captcha + "</span></button>";
+										+ "<button type=\"button\" data-tabula=\"si\"><span>" + txtFormDinCampRefresca_captcha + "</span></button>";
 
 				}
 
@@ -88,13 +88,21 @@ $.fn.appFormsCaptcha = function(options) {
 			,reproduccioPrepara = function() {
 
 				element
-					.find(".imc--grid-inputs:first input:first")
-						.focus()
-						.end()
 					.find("label")
 						.text( txtFormDinIntroduiuNum_captcha )
 						.end()
 					.attr("data-reproduccio", "prepara");
+
+				setTimeout(
+					function() {
+
+						element
+							.find(".imc--grid-inputs:first input:first")
+								.focus();
+
+					}
+					,100
+				);
 
 			}
 			,reproduccioTanca = function() {
@@ -123,9 +131,9 @@ $.fn.appFormsCaptcha = function(options) {
 
 				if (esSelecc && so_acc === "s" ) {
 
-					var bt_prepara = $("<button>").attr({ type: "button", "data-accio": "prepara-reproduccio", "title": txtFormDinCampPreparaRepr_captcha })
-						,bt_tanca = $("<button>").attr({ type: "button", "data-accio": "tanca-reproduccio", "title": txtFormDinCampTanca_captcha })
-						,bt_sona = $("<button>").attr({ type: "button", "data-accio": "reproduix", "title": txtFormDinCampReproduix_captcha });
+					var bt_prepara = $("<button>").attr({ type: "button", "data-tabula": "si", "data-accio": "prepara-reproduccio", "title": txtFormDinCampPreparaRepr_captcha })
+						,bt_tanca = $("<button>").attr({ type: "button", "data-tabula": "si", "data-accio": "tanca-reproduccio", "title": txtFormDinCampTanca_captcha })
+						,bt_sona = $("<button>").attr({ type: "button", "data-tabula": "si", "data-accio": "reproduix", "title": txtFormDinCampReproduix_captcha });
 
 					element
 						.find(".imc--img:first")
@@ -137,7 +145,7 @@ $.fn.appFormsCaptcha = function(options) {
 
 				if (!esSelecc) {
 
-					var bt_sona = $("<button>").attr({ type: "button", "data-accio": "reproduix", "title": txtFormDinCampReproduix_captcha });
+					var bt_sona = $("<button>").attr({ type: "button", "data-tabula": "si", "data-accio": "reproduix", "title": txtFormDinCampReproduix_captcha });
 
 					element
 						.find("input:first")
@@ -317,7 +325,7 @@ $.fn.appFormsCaptcha = function(options) {
 				for (var i = 0; i <= ids_num-1; i++) {
 
 					$("<button>")
-						.attr({ "type": "button", "role": "option", "aria-checked": "false", "data-id": ids_[i], "style": "background-image: url(" + app_json_captcha_sel_ids + "?id=" + camp_id + "&imagen_id=" + ids_[i] + "&ts=" + timestamp + "&" + headerIdSessio + "=" + tokenIdSessio + ");" })
+						.attr({ "type": "button", "role": "option", "aria-checked": "false", "data-tabula": "si", "data-id": ids_[i], "style": "background-image: url(" + app_json_captcha_sel_ids + "?id=" + camp_id + "&imagen_id=" + ids_[i] + "&ts=" + timestamp + "&" + headerIdSessio + "=" + tokenIdSessio + ");" })
 							.appendTo( imc_grid );
 
 				}
@@ -327,7 +335,7 @@ $.fn.appFormsCaptcha = function(options) {
 				for (var i = 0; i <= 3; i++) {
 
 					$("<input>")
-						.attr({ "type": "text", "maxlength": "2", "data-id": "id_" + i, "data-tipus": "so" })
+						.attr({ "type": "text", "maxlength": "2", "data-id": "id_" + i, "data-tipus": "so", "data-tabula": "si" })
 							.appendTo( imc_grid_inputs );
 
 				}

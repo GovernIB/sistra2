@@ -5,39 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import es.caib.sistrages.rest.api.interna.*;
+import es.caib.sistramit.core.api.model.formulario.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
-import es.caib.sistramit.core.api.model.formulario.AccionFormulario;
-import es.caib.sistramit.core.api.model.formulario.AccionFormularioNormalizada;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoCaptcha;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoListaElementos;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoOculto;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelector;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelectorDesplegable;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelectorDinamico;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelectorMultiple;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelectorUnico;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoCP;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoEmail;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoExpReg;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoFecha;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoHora;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoIban;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoId;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoNormal;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoNumero;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoPassword;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoTelefono;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoVerificacion;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
-import es.caib.sistramit.core.api.model.formulario.OpcionesCampoListaElementos;
-import es.caib.sistramit.core.api.model.formulario.OpcionesSelectorDesplegable;
-import es.caib.sistramit.core.api.model.formulario.ValoresCampoVerificacion;
 import es.caib.sistramit.core.api.model.formulario.types.TypeAccionFormularioNormalizado;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
@@ -400,6 +374,9 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		case TELEFONO: // Telefono
 			confCampo = obtenerConfCampoTextoTelefono(pCampoDef);
 			break;
+		case TELEFONO_INTERNACIONAL:
+			confCampo = obtenerConfCampoTextoTelefonoInternacional(pCampoDef);
+			break;
 		case EXPRESION_REGULAR: // Expresion regular
 			confCampo = obtenerConfCampoTextoExpreg(pCampoDef);
 			break;
@@ -417,6 +394,18 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		establecerPropiedadesGenerales(pCampoDef, confCampo);
 
 		return confCampo;
+	}
+
+	/**
+	 * Obtiene configuración campo telefono internacional.
+	 * @param pCampoDef Definición campo
+	 * @return configuración campo
+	 */
+	private ConfiguracionCampo obtenerConfCampoTextoTelefonoInternacional(RComponenteTextbox pCampoDef) {
+		final ConfiguracionCampoTextoTelefonoInternacional confCampoTel = new ConfiguracionCampoTextoTelefonoInternacional();
+		confCampoTel.getOpciones().setPegar(TypeSiNo.fromBoolean(!pCampoDef.getTextoTelefonoInternacional().isPrevenirPegar()));
+		confCampoTel.getOpciones().setValidacionPrecisa(TypeSiNo.fromBoolean(pCampoDef.getTextoTelefonoInternacional().isValidacionPrecisa()));
+		return confCampoTel;
 	}
 
 	/**

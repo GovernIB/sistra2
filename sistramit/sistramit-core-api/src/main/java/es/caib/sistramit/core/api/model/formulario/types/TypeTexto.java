@@ -44,6 +44,10 @@ public enum TypeTexto {
 	 */
 	TELEFONO("te"),
 	/**
+	 * Texto teléfono internacional (Código String: ti).
+	 */
+	TELEFONO_INTERNACIONAL("ti"),
+	/**
 	 * Password.
 	 */
 	PASSWORD("pw"),

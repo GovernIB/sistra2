@@ -38,6 +38,9 @@ public final class FirmaClienteRespuesta implements Serializable {
 	/** Indica si se debe verificar (configurado en plugin firma). */
 	private boolean verificar;
 
+	/** Id sesión firma. */
+	private String sesionFirma;
+
 	/**
 	 * Método de acceso a finalizada.
 	 *
@@ -188,6 +191,20 @@ public final class FirmaClienteRespuesta implements Serializable {
 	 */
 	public void setVerificar(final boolean verificar) {
 		this.verificar = verificar;
+	}
+
+	/**
+	 * Método de acceso a sesionFirma.
+	 */
+	public String getSesionFirma() {
+		return sesionFirma;
+	}
+
+	/**
+	 * Método para establecer sesionFirma.
+	 */
+	public void setSesionFirma(final String sesionFirma) {
+		this.sesionFirma = sesionFirma;
 	}
 
 }

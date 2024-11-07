@@ -1,5 +1,6 @@
 package es.caib.sistramit.core.service.component.flujo.pasos.registrar;
 
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -78,6 +79,8 @@ public final class AccionIniciarFirmaDocumento implements AccionPaso {
 		// Devolvemos url componente firma
 		final RespuestaAccionPaso rp = new RespuestaAccionPaso();
 		rp.addParametroRetorno("url", res.getUrl());
+		rp.addParametroRetorno("iframe", TypeSiNo.fromBoolean(res.isIframe()));
+		rp.addParametroRetorno("idSesionFirma", res.getIdSesion());
 		final RespuestaEjecutarAccionPaso rep = new RespuestaEjecutarAccionPaso();
 		rep.setRespuestaAccionPaso(rp);
 		return rep;

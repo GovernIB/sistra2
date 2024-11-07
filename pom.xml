@@ -4,13 +4,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>es.caib.sistra2</groupId>
 	<artifactId>sistra2</artifactId>
-	<version>1.7.2</version>
+	<version>1.7.3</version>
 	<packaging>pom</packaging>
 	<name>Sistra2</name>
 
 	<properties>
 		<!-- Version aplicacion y propiedades -->
-		<sistra2.version>1.7.2</sistra2.version>
+		<sistra2.version>1.7.3</sistra2.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<schema.generate.databaseProductName>Oracle</schema.generate.databaseProductName>
@@ -42,7 +42,7 @@
 		<jstl.version>1.2</jstl.version>
 		<primefaces.version>6.2</primefaces.version>
 		<primefacesExtensions.version>6.1.1</primefacesExtensions.version>
-		<primefaces.allThemes.version>1.0.8</primefaces.allThemes.version>
+		<primefaces.allThemes.version>1.1.0</primefaces.allThemes.version>
 		<jersey.version>2.27</jersey.version>
 		<!-- Da error en listas la version que viene con jersey 2.8.4 (con 2.9.4
 			devuelve list bien) -->
@@ -72,12 +72,12 @@
 		<plugins-ib-validatesignature.version>2.1.0-SNAPSHOT</plugins-ib-validatesignature.version>
 		<plugins-ib-validatecertificate.version>2.1.1-SNAPSHOT</plugins-ib-validatecertificate.version>
 		<xmlbeans.version>2.6.0</xmlbeans.version>
-		<loginib.version>2.0.0</loginib.version>
-		<paymentib.version>1.1.7</paymentib.version>
+		<loginib.version>2.5.0</loginib.version>
+		<paymentib.version>1.2.0</paymentib.version>
 		<firmasimple.version>1.0.3</firmasimple.version>
 		<firmasimple.jersey.version>1.0.2</firmasimple.jersey.version>
 		<itext.version>2.1.7</itext.version>
-		<regweb3-ws.version>3.1.2</regweb3-ws.version>
+		<regweb3-ws.version>3.2.5</regweb3-ws.version>
 
 		<!-- Mantenemos misma versión que tiene JBoss -->
 		<cxf.version>3.2.5</cxf.version>
@@ -90,6 +90,7 @@
 		<cagecaptcha.version>1.0</cagecaptcha.version>
 		<jersey-http.version>1.19.4</jersey-http.version>
 		<aopalliance.version>1.0</aopalliance.version>
+		<libphonenumber.version>8.13.40</libphonenumber.version>
 	</properties>
 
 	<!-- Repositorio GOIB: https://github.com/GovernIB/maven/tree/gh-pages -->

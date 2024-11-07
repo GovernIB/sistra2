@@ -94,9 +94,13 @@ public final class ControladorPasoPagarHelper {
 			}
 
 			res = literales.getLiteral(Literales.PASO_PAGAR, literalError, idioma);
+
+			// TODO Evitamos mostrar error pasarela para no mostrar info técnica. Una mejora sería mostrar mensajes personalizados en función del código de error de la pasarela
+			/*
 			if (codErrorPasarela != null || msgErrorPasarela != null) {
 				res += " [" + codErrorPasarela + " - " + msgErrorPasarela + "]";
 			}
+			 */
 
 		}
 		return res;
@@ -134,6 +138,7 @@ public final class ControladorPasoPagarHelper {
 			if (doc.getPAGO().getCONFIRMACIONPAGO() != null) {
 				res.setFechaPago(stringToDate(doc.getPAGO().getCONFIRMACIONPAGO().getFECHAPAGO()));
 				res.setLocalizador(doc.getPAGO().getCONFIRMACIONPAGO().getLOCALIZADOR());
+				res.setMetodoPagoSeleccionado(doc.getPAGO().getCONFIRMACIONPAGO().getMETODOPAGO());
 			}
 
 			return res;
@@ -178,6 +183,7 @@ public final class ControladorPasoPagarHelper {
 				final CONFIRMACIONPAGO confirmacionPago = pago.addNewCONFIRMACIONPAGO();
 				confirmacionPago.setFECHAPAGO(dateToString(datosSesionPago.getFechaPago()));
 				confirmacionPago.setLOCALIZADOR(datosSesionPago.getLocalizador());
+				confirmacionPago.setMETODOPAGO(datosSesionPago.getMetodoPagoSeleccionado());
 			}
 			byte[] xml = null;
 			final XmlOptions xmlOptions = new XmlOptions();

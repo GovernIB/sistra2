@@ -244,6 +244,7 @@ public final class PagoComponentImpl implements PagoComponent {
 			res.setPagado(resPlg.getEstado() == TypeEstadoPago.PAGADO);
 			res.setFechaPago(resPlg.getFechaPago());
 			res.setLocalizador(resPlg.getLocalizador());
+			res.setMetodoPago(resPlg.getMetodoPago());
 			res.setJustificantePDF(justif);
 			res.setCodigoError(resPlg.getCodigoErrorPasarela());
 			res.setMensajeError(resPlg.getMensajeErrorPasarela());
@@ -271,10 +272,12 @@ public final class PagoComponentImpl implements PagoComponent {
 
 		if (verificado && realizado) {
 			res.setLocalizador(System.currentTimeMillis() + "");
+			res.setMetodoPago("TJ");
 			res.setJustificantePDF(generaPdfMock(sesionPago));
 		}
 
 		if (verificado && !realizado) {
+			res.setMetodoPago("TJ");
 			res.setCodigoError("ERR");
 			res.setMensajeError("Error simulado");
 		}

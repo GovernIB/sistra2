@@ -17,7 +17,14 @@ A continuación se indican las propiedades a indicar en los ficheros plantilla y
 <p>
 	<ul>
 		<li><span class="nombreCampo">logo.url:</span> propiedad en la que se indica la ruta del logo a plasmar en la plantilla de visualización del formulario. En caso de no tener valor no se incluirá logo.</li>
-		<li><span class="nombreCampo">titulo.procedimiento:</span> propiedad que permite indicar si se muestra el título del procedimiento, obtenido del catálogo de procedimientos y servicios, junto con el título del formulario. Esta propiedad tomar los valores true o false.</li>
+		<li><span class="nombreCampo">logo.escalado.alto:</span> propiedad en la que se indica el escalado del alto del logo (en %). Por defecto está en 100%.</li>
+		<li><span class="nombreCampo">logo.escalado.ancho:</span> propiedad en la que se indica el escalado del ancho del logo (en %). Por defecto está en 100%.</li>
+		<li><span class="nombreCampo">logo.dinamico.url:</span> propiedad en la que se indica la ruta del logo a plasmar en la plantilla de visualización del formulario, segun el código DIR3 asociado a la tramitación. En caso de no tener valor no se incluirá logo.</li>
+		<li><span class="nombreCampo">marcaAgua.url:</span> propiedad en la que se indica la ruta de la marca de agua a plasmar en la plantilla de visualización del formulario. En caso de no tener valor no se incluirá la marca de agua.</li>
+		<li><span class="nombreCampo">marcaAgua.scale.percentX:</span> propiedad en la que se indica el porcentaje de escalado horizontal de la marca de agua.</li>
+		<li><span class="nombreCampo">marcaAgua.scale.percentY:</span> propiedad en la que se indica el porcentaje de escalado vertical de la marca de agua.</li>
+		<li><span class="nombreCampo">marcaAgua.position.X:</span> propiedad en la que se indica la posición horizontal de la marca de agua.</li>
+		<li><span class="nombreCampo">marcaAgua.position.Y:</span> propiedad en la que se indica la posición vertical de la marca de agua.</li>
 		<li><span class="nombreCampo">campoIndexado.visualizacion:</span> propiedad que fija la manera de mostrar los valores asociados a campos indexados (campos de tipo selector). Los valores que admite esta propiedad son:</li>
 		<ul class="detalle">
 		<li><span class="boton">DESCRIPCION_CODIGO_CON_PARENTESIS:</span> Se mostrará la descripción del valor seleccionado seguido del código entre paréntesis (p.ej: ESPAÑA (34)).</li>
@@ -26,6 +33,12 @@ A continuación se indican las propiedades a indicar en los ficheros plantilla y
 		<li><span class="boton">CODIGO_DESCRIPCION_CON_GUION:</span> Se mostrará el código asociado al valor seleccionado seguido de un guión y la descripción (p.ej: 34 - ESPAÑA).</li>
 		<li><span class="boton">DESCRIPCION:</span> Se mostrará únicamente la descripción del valor seleccionado (p.ej: ESPAÑA).</li>
 		</ul>
+		<li><span class="nombreCampo">titulo.procedimiento:</span> propiedad que permite indicar si se muestra el título del procedimiento, obtenido del catálogo de procedimientos y servicios de ROLSAC. Esta propiedad tomar los valores true o false.</li>
+		<li><span class="nombreCampo">titulo.tramite:</span> propiedad que permite indicar si se muestra el título del trámite (en caso de no mostrar el del procedimiento), obtenido del trámite de ROLSAC. Esta propiedad tomar los valores true o false.</li>
+		<li><span class="nombreCampo">subtitulo.mostrar:</span> propiedad que permite indicar si se muestra la descripción del formulario del trámite de SISTRA2. Esta propiedad tomar los valores true o false.</li>
+		<li><span class="nombreCampo">titulo.mayusculas:</span> propiedad que permite indicar si se muestra el título en mayúsculas. Esta propiedad tomar los valores true o false.</li>
+		<li><span class="nombreCampo">subtítulo.mayusculas:</span> propiedad que permite indicar si se muestra el subttítulo, si existe, en mayúsculas. Esta propiedad tomar los valores true o false.</li>
+		<li><span class="nombreCampo">mostrar.campos.ocultos:</span> propiedad que permite indicar si se muestran los campos ocultos del formulario. Esta propiedad tomar los valores true o false.</li>
 		<li><span class="nombreCampo">aviso.mostrar:</span> propiedad que indica si se han de plasmar los campos del formulario del tipo "Aviso" en el PDF de visualización del formulario.</li>
 	</ul>
 </p>

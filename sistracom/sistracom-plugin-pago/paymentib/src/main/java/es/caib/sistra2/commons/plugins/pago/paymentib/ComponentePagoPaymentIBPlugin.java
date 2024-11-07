@@ -46,15 +46,6 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties impl
 		super(prefijoPropiedades, properties);
 	}
 
-	/**
-	 * Inicia pago electrónico.
-	 *
-	 * @param datosPago
-	 *                        Datos pago.
-	 * @param urlCallback
-	 *                        Url callback.
-	 * @return Redirección al pago (identificador pago + url)
-	 */
 	@Override
 	public RedireccionPago iniciarPagoElectronico(final DatosPago datosPago, final String urlCallback)
 			throws PagoPluginException {
@@ -93,13 +84,6 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties impl
 		return response.getBody();
 	}
 
-	/**
-	 * Verifica estado pago contra pasarela de pago.
-	 *
-	 * @param identificador
-	 *                          identificador pago
-	 * @return estado pago
-	 */
 	@Override
 	public EstadoPago verificarPagoElectronico(final String identificador) throws PagoPluginException {
 
@@ -114,19 +98,13 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties impl
 		res.setEstado(TypeEstadoPago.fromString(resRest.getEstado()));
 		res.setFechaPago(deformateaFecha(resRest.getFechaPago()));
 		res.setLocalizador(resRest.getLocalizador());
+		res.setMetodoPago(resRest.getMetodoPago());
 		res.setCodigoErrorPasarela(resRest.getCodigoErrorPasarela());
 		res.setMensajeErrorPasarela(resRest.getMensajeErrorPasarela());
 		return res;
 
 	}
 
-	/**
-	 * Obtiene justificante de pago
-	 *
-	 * @param identificador
-	 *                          identificador pago
-	 * @return Justificante de pago (nulo si la pasarela no genera justificante).
-	 */
 	@Override
 	public byte[] obtenerJustificantePagoElectronico(final String identificador) throws PagoPluginException {
 
@@ -141,14 +119,6 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties impl
 
 	}
 
-	/**
-	 * Obtiene importe tasa.
-	 *
-	 * @param idTasa
-	 *                   id tasa
-	 * @return importe (en cents)
-	 * @throws PagoPluginException
-	 */
 	@Override
 	public int consultaTasa(final String idPasarela, final String idTasa) throws PagoPluginException {
 
@@ -174,13 +144,7 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties impl
 		return Boolean.parseBoolean(resRest);
 	}
 
-	/**
-	 * Obtiene carta de pago presencial (PDF).
-	 *
-	 * @param datosPago
-	 *                      Datos pago
-	 * @return carta de pago presencial
-	 */
+
 	@Override
 	public byte[] obtenerCartaPagoPresencial(final DatosPago datosPago) throws PagoPluginException {
 		final RestTemplate restTemplate = new RestTemplate();
@@ -217,7 +181,7 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties impl
 	 * @param propiedad
 	 *                      propiedad
 	 * @return valor
-	 * @throws FirmaPluginException
+	 * @throws PagoPluginException
 	 */
 	private String getPropiedad(final String propiedad) throws PagoPluginException {
 		final String res = getProperty(PAGO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + propiedad);
@@ -227,6 +191,14 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties impl
 		return res;
 	}
 
+	/**
+	 * Deformatea fecha.
+	 *
+	 * @param pFecha
+	 *                   fecha
+	 * @return fecha
+	 * @throws PagoPluginException
+	 */
 	private Date deformateaFecha(final String pFecha) throws PagoPluginException {
 		Date res = null;
 		if (pFecha != null) {

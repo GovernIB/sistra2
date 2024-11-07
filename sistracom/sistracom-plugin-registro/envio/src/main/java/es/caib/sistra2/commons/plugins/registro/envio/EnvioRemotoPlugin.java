@@ -85,6 +85,7 @@ public class EnvioRemotoPlugin extends AbstractPluginProperties implements IEnvi
 		rdt.setIdTramite(datosTramitacion.getIdTramite());
 		rdt.setVersionTramite(datosTramitacion.getVersionTramite());
 		rdt.setIdProcedimiento(datosTramitacion.getIdProcedimiento());
+		rdt.setIdProcedimientoSIA(datosTramitacion.getIdProcedimientoSIA());
 
 		RAsientoRegistral ras = new RAsientoRegistral();
 		ras.setDatosAsunto(asientoRegistral.getDatosAsunto());

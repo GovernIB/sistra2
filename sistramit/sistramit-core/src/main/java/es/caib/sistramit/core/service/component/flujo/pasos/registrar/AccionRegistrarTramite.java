@@ -372,6 +372,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 				datosTramitacion.setIdSesionTramitacion(pVariablesFlujo.getIdSesionTramitacion());
 				datosTramitacion.setIdTramite(pVariablesFlujo.getIdTramite());
 				datosTramitacion.setVersionTramite(pVariablesFlujo.getVersionTramite());
+				datosTramitacion.setIdProcedimientoSIA(pVariablesFlujo.getDatosTramiteCP().getProcedimiento().getIdProcedimientoSIA());
 				datosTramitacion.setIdProcedimiento(pVariablesFlujo.getDatosTramiteCP().getProcedimiento().getIdentificador());
 				resReg = envioRemotoComponent.realizarEnvio(parametrosRegistro.getDatosRegistrales().getCodigoEntidad(),
 						parametrosRegistro.getDatosRegistrales().getIdEnvioRemoto(),

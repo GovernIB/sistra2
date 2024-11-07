@@ -18,6 +18,10 @@ import es.caib.sistrahelp.frontend.model.DialogResult;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
+import org.primefaces.event.SelectEvent;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @ManagedBean
 @ViewScoped
@@ -54,6 +58,19 @@ public class DialogInformacionPagos extends DialogControllerBase {
 			}
 		}
 
+	}
+
+	public void paymentib() {
+		final Map<String, String> params = new HashMap<>();
+		params.put("IDENTIFICADOR", dato.getIdentificador());
+		UtilJSF.openDialog(DialogListadoPagos.class, TypeModoAcceso.CONSULTA, params, true, 1300, 550);
+	}
+
+	public void returnDialogo(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, (String) respuesta.getResult());
+		}
 	}
 
 	/**

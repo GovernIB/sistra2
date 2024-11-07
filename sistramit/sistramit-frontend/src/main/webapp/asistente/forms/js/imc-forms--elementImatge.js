@@ -37,7 +37,7 @@ $.fn.appFormsElementImatge = function(options) {
 						if (el_amplaria && el_amplaria !== "" && el_amplaria !== null) {
 
 							img_
-								.css("height", el_amplaria);
+								.css("width", el_amplaria);
 
 						}
 

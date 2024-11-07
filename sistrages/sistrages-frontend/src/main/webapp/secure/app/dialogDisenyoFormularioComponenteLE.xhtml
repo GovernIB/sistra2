@@ -7,7 +7,8 @@
 
 	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.maximoElementosComponenteListaElementos']}" /></h:column>
    	<h:column>
- 		   	<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroMaximoElementos}" decimalPlaces="0" minValue="1" maxValue="99" inputStyleClass="w8" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+ 		   	<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroMaximoElementos}" decimalPlaces="0" minValue="0" maxValue="99" inputStyleClass="w8" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+ 		   	<!--<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroMaximoElementos}" decimalPlaces="0" minValue="0" maxValue="999" inputStyleClass="w8" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">-->
 		   		<p:ajax event="blur" process="@this" />
 		    	<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 		   	</p:inputNumber>

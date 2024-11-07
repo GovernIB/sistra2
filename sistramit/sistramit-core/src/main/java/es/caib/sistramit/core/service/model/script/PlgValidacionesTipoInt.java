@@ -332,6 +332,14 @@ public interface PlgValidacionesTipoInt {
 	boolean esTelefono(final String telefono);
 
 	/**
+	 * Verifica si es teléfono internacional (formato E.164).
+	 * @param telefono Teléfono a validar
+	 * @param validacionPrecisa Indica si la validación es precisa (con google libphonenumber).
+	 * @return true en caso correcto
+	 */
+	boolean esTelefonoInternacional(String telefono, boolean validacionPrecisa);
+
+	/**
 	 * Comprueba si el telefono entregado es numérico simple (numero natural), tiene
 	 * un tamaño de 9 dígitos y que comienza por 9 u 8 (fijo).
 	 *

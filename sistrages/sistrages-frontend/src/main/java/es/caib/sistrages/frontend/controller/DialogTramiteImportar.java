@@ -1517,7 +1517,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/**
 	 * Comprueba por propiedades si cumple lo mínimo. Es decir: <br />
 	 * - Misma version. <br />
-	 * - Entorno correcto (sólo se puede saber fichero de des a pre y de pre a pro).
+	 * - Entorno correcto (sólo se puede saber fichero de des/se a pre y de pre a pro).
 	 *
 	 * Si devuelve
 	 *
@@ -1541,8 +1541,8 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		final TypeEntorno entornoFicheroZip = TypeEntorno.fromString(prop.getProperty("entorno"));
 
 		boolean correcto = true;
-		if (entornoActual == TypeEntorno.DESARROLLO
-				|| (entornoActual == TypeEntorno.PREPRODUCCION && entornoFicheroZip == TypeEntorno.DESARROLLO)
+		if ((entornoActual == TypeEntorno.DESARROLLO || entornoActual == TypeEntorno.SERVICIOS_ESTABLES)
+				|| (entornoActual == TypeEntorno.PREPRODUCCION && (entornoFicheroZip == TypeEntorno.DESARROLLO || entornoFicheroZip == TypeEntorno.SERVICIOS_ESTABLES))
 				|| (entornoActual == TypeEntorno.PRODUCCION && entornoFicheroZip == TypeEntorno.PREPRODUCCION)) {
 
 			final TypeImportarTipo tipo = TypeImportarTipo.fromString(prop.getProperty("tipo"));

@@ -20,6 +20,8 @@ public enum TypeCampoTexto {
 	CP("CP"),
 	/** Texto teléfono. */
 	TELEFONO("TELEFONO"),
+	/** Texto teléfono. */
+	TELEFONO_INTERNACIONAL("TFNOFINT"),
 	/** IBAN **/
 	IBAN("IBAN"),
 	/** Texto fecha. */

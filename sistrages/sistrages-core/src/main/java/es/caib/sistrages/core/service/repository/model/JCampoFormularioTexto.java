@@ -89,6 +89,9 @@ public class JCampoFormularioTexto implements IModelApi {
 	@Column(name = "CTX_TELFIJ", nullable = false, precision = 1, scale = 0)
 	private boolean telefonoFijo;
 
+	@Column(name = "CTX_TEIVAP", nullable = false, precision = 1, scale = 0)
+	private boolean telefonoInternacionalValidacionPrecisa;
+
 	@Column(name = "CTX_PERRAN", nullable = false, precision = 1, scale = 0)
 	private boolean permiteRango;
 
@@ -282,6 +285,20 @@ public class JCampoFormularioTexto implements IModelApi {
 		this.telefonoFijo = telefonoFijo;
 	}
 
+	/**
+	 * @return the telefonoInternacionalValidacionPrecisa
+	 */
+	public boolean isTelefonoInternacionalValidacionPrecisa() {
+		return telefonoInternacionalValidacionPrecisa;
+	}
+
+	/**
+	 * @param telefonoInternacionalValidacionPrecisa the telefonoInternacionalValidacionPrecisa to set
+	 */
+	public void setTelefonoInternacionalValidacionPrecisa(boolean telefonoInternacionalValidacionPrecisa) {
+		this.telefonoInternacionalValidacionPrecisa = telefonoInternacionalValidacionPrecisa;
+	}
+
 	public boolean isPermiteRango() {
 		return this.permiteRango;
 	}
@@ -313,7 +330,7 @@ public class JCampoFormularioTexto implements IModelApi {
 			campoTexto = (ComponenteFormularioCampoTexto) campoFormulario.toModel(ComponenteFormularioCampoTexto.class);
 			if (campoTexto != null) {
 				campoTexto.setOculto(oculto);
-				campoTexto.setTipoCampoTexto(TypeCampoTexto.valueOf(tipo));
+				campoTexto.setTipoCampoTexto(TypeCampoTexto.fromString(tipo));
 				campoTexto.setNormalTamanyo(normalTamanyo);
 				campoTexto.setNormalMultilinea(normalMultilinea);
 				campoTexto.setNormalNumeroLineas(normalNumeroLineas);
@@ -333,6 +350,7 @@ public class JCampoFormularioTexto implements IModelApi {
 				campoTexto.setIdentNss(identNss);
 				campoTexto.setTelefonoMovil(telefonoMovil);
 				campoTexto.setTelefonoFijo(telefonoFijo);
+				campoTexto.setTelefonoInternacionalValidacionPrecisa(telefonoInternacionalValidacionPrecisa);
 				campoTexto.setPermiteRango(permiteRango);
 				campoTexto.setForzarMayusculas(forzarMayusculas);
 				campoTexto.setPrevenirPegar(prevenirPegar);
@@ -357,6 +375,7 @@ public class JCampoFormularioTexto implements IModelApi {
 		jModel.setIdentNss(false);
 		jModel.setTelefonoFijo(false);
 		jModel.setTelefonoMovil(false);
+		jModel.setTelefonoInternacionalValidacionPrecisa(false);
 		jModel.setPermiteRango(false);
 		jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.CAMPO_TEXTO, pOrden, pJLinea,
 				isTipoSeccion, identificadorSeccion));
@@ -392,6 +411,7 @@ public class JCampoFormularioTexto implements IModelApi {
 			jcampoTexto.setPermiteRango(campoFormularioTexto.isPermiteRango());
 			jcampoTexto.setTelefonoFijo(campoFormularioTexto.isTelefonoFijo());
 			jcampoTexto.setTelefonoMovil(campoFormularioTexto.isTelefonoMovil());
+			jcampoTexto.setTelefonoInternacionalValidacionPrecisa(campoFormularioTexto.isTelefonoInternacionalValidacionPrecisa());
 			jcampoTexto.setTipo(campoFormularioTexto.getTipo());
 			jcampoTexto.setForzarMayusculas(campoFormularioTexto.isForzarMayusculas());
 			jcampoTexto.setPrevenirPegar(campoFormularioTexto.isPrevenirPegar());

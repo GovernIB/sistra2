@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -510,6 +511,47 @@ public class ConfiguracionAutenticacionDaoImpl implements ConfiguracionAutentica
 		entityManager.flush();
 
 		return ca.toModel();
+	}
+
+	/**
+	 * Importa una configuración de autenticación.
+	 *
+	 * @param filaDominio la fila del dominio que contiene la configuración de autenticación a importar
+	 * @param ambito el ámbito de la configuración de autenticación
+	 * @param idEntidad el identificador de la entidad
+	 * @param idArea el identificador del área
+	 * @return el identificador de la configuración de autenticación importada
+	 * @throws Exception si ocurre un error durante la importación
+	 */
+	@Override
+	public Long importarCA(final FilaImportarDominio filaDominio, final TypeAmbito ambito, final Long idEntidad,
+						   final Long idArea) throws Exception {
+
+		if(!this.existeConfiguracionAutenticacion(filaDominio.getConfiguracionAutenticacionActual().getAmbito(),
+					filaDominio.getConfiguracionAutenticacionActual().getIdentificador(), idEntidad, idArea, null)) {
+
+
+			final ConfiguracionAutenticacion ca = filaDominio.getConfiguracionAutenticacionActual();
+			ca.setCodigo(null);
+			final JConfiguracionAutenticacion jConfAuth = JConfiguracionAutenticacion.fromModel(ca);
+
+			if (ambito == TypeAmbito.ENTIDAD) {
+				final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
+				jConfAuth.setEntidad(jEntidad);
+			}
+			if (ambito == TypeAmbito.AREA) {
+				final JArea jArea = entityManager.find(JArea.class, idArea);
+				jConfAuth.setArea(jArea);
+			}
+			entityManager.persist(jConfAuth);
+
+			// Flusheamos los datos creados por si acaso
+			entityManager.flush();
+
+			return jConfAuth.getCodigo();
+
+		}
+		return null;
 	}
 
 }

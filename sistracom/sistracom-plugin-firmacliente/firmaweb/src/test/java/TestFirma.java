@@ -5,15 +5,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
+import es.caib.sistra2.commons.plugins.firmacliente.api.*;
 import org.fundaciobit.pluginsib.core.IPlugin;
 import org.fundaciobit.pluginsib.core.utils.FileUtils;
 import org.fundaciobit.pluginsib.core.utils.PluginsManager;
 
-import es.caib.sistra2.commons.plugins.firmacliente.api.FicheroAFirmar;
-import es.caib.sistra2.commons.plugins.firmacliente.api.FicheroFirmado;
-import es.caib.sistra2.commons.plugins.firmacliente.api.InfoSesionFirma;
-import es.caib.sistra2.commons.plugins.firmacliente.api.TypeEstadoFirmado;
-import es.caib.sistra2.commons.plugins.firmacliente.api.TypeTipoDocumental;
 import es.caib.sistra2.commons.plugins.firmacliente.firmaweb.ComponenteFirmaSimpleWebPlugin;
 
 /**
@@ -34,7 +30,6 @@ public class TestFirma {
 	 * </ul>
 	 *
 	 * @param args
-	 * @throws PagoPluginException
 	 */
 	public static void main(final String args[]) {
 		try {
@@ -97,7 +92,8 @@ public class TestFirma {
 			// Paso 3.5 Esperando a que se finalice el firmado (4 seg durmiendo)
 			TypeEstadoFirmado estado = TypeEstadoFirmado.INICIALIZADO;
 			while (estado != TypeEstadoFirmado.FINALIZADO_OK) {
-				estado = plugin.obtenerEstadoSesionFirma(idSession);
+				EstadoFirma estadoFirma = plugin.obtenerEstadoSesionFirma(idSession);
+				estado = estadoFirma.getEstadoFirmado();
 				System.out.println("estado: " + estado);
 				Thread.sleep(4000l);
 			}

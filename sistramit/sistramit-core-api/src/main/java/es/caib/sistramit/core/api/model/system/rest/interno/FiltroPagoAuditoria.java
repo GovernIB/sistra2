@@ -21,6 +21,7 @@ public class FiltroPagoAuditoria implements Serializable {
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private TypeAutenticacion acceso;
+	private boolean mostrarErrores;
 
 	private boolean soloContar;
 
@@ -82,6 +83,14 @@ public class FiltroPagoAuditoria implements Serializable {
 
 	public void setAcceso(final TypeAutenticacion acceso) {
 		this.acceso = acceso;
+	}
+
+	public boolean isMostrarErrores() {
+		return mostrarErrores;
+	}
+
+	public void setMostrarErrores(boolean mostrarErrores) {
+		this.mostrarErrores = mostrarErrores;
 	}
 
 	public boolean isSoloContar() {

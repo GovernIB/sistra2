@@ -19,7 +19,7 @@
 
    	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal or dialogDisenyoFormulario.campoTextoEmail}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.tamanyo']}" /></h:column>
    	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal or dialogDisenyoFormulario.campoTextoEmail}">
-   		<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.normalTamanyo}" decimalPlaces="0" minValue="1" maxValue="9999" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+   		<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.normalTamanyo}" decimalPlaces="0" minValue="0" maxValue="9999" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
    			<p:ajax event="blur" process="@this" />
 		    <p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
    		</p:inputNumber>
@@ -113,20 +113,20 @@
 		    		<p:outputLabel rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{msg['dialogDisenyoFormulario.componente.numRangoMin']}" styleClass="padding-left-4"/>
 					<p:inputNumber rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroRangoMinimo}" decimalPlaces="2" minValue="-9999999999" maxValue="9999999999" styleClass="padding-left-4" inputStyleClass="w20" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 						<p:ajax event="blur" process="@this" />
-						<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
+						<p:ajax event="change" listener="#{dialogDisenyoFormulario.rangoTieneNumeroNegativo}" process="@this" update="@this checkNumeroConSigno"/>
 					</p:inputNumber>
 
 		   			<p:outputLabel rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{msg['dialogDisenyoFormulario.componente.numRangoMax']}" styleClass="padding-left-4"/>
 		   			<p:inputNumber rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroRangoMaximo}" decimalPlaces="2" minValue="-9999999999" maxValue="9999999999" styleClass="padding-left-4" inputStyleClass="w20" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 		   				<p:ajax event="blur" process="@this" />
-						<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
+						<p:ajax event="change" listener="#{dialogDisenyoFormulario.rangoTieneNumeroNegativo}" process="@this" update="@this checkNumeroConSigno"/>
 		   			</p:inputNumber>
    	  	</p:outputPanel>
 	</h:column>
 
     <h:column rendered="#{dialogDisenyoFormulario.campoNumero}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numAdmiteSigno']}"/></h:column>
    	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}">
-   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroConSigno}" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+   		<p:selectBooleanCheckbox id="checkNumeroConSigno" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroConSigno}" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
    					<p:ajax event="change" global="false" listener="#{dialogDisenyoFormulario.setCambios}"/>
    		</p:selectBooleanCheckbox>
    	</h:column>
@@ -189,7 +189,13 @@
 		   		</p:outputPanel>
    	 </h:column>
 
-
-
+	 <h:column rendered="#{dialogDisenyoFormulario.campoTelefonoInternacional}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.validacionPrecisa']}"/></h:column>
+   	 <h:column rendered="#{dialogDisenyoFormulario.campoTelefonoInternacional}">
+		<p:outputPanel>
+	   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.telefonoInternacionalValidacionPrecisa}" disabled="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+		   		<p:ajax event="change" global="false" listener="#{dialogDisenyoFormulario.setCambios}"/>
+		   	</p:selectBooleanCheckbox>
+	   	</p:outputPanel>
+   	 </h:column>
 
 </ui:composition>

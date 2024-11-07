@@ -46,7 +46,7 @@ public class ValidacionFirmaPluginMock extends AbstractPluginProperties implemen
 	public ValidateSignatureResponse validateSignature(final ValidateSignatureRequest firmaAValidar) throws Exception {
 
 		// Obtiene del fichero firmado el nif
-		final String nifFirmante = new String(firmaAValidar.getSignatureData());
+		final String nifFirmante = getProperty(VALIDATE_SIGNATURE_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + "firmanteMock");
 
 		final ValidateSignatureResponse res = new ValidateSignatureResponse();
 		final ValidationStatus estadoFirma = new ValidationStatus();
@@ -65,5 +65,6 @@ public class ValidacionFirmaPluginMock extends AbstractPluginProperties implemen
 		res.setSignatureDetailInfo(detalleFirmas);
 		return res;
 	}
+
 
 }

@@ -328,9 +328,9 @@ public class DialogSeccionImportar extends DialogControllerBase {
 
 	private boolean isEntornoCorrecto(TypeEntorno entornoActual, TypeEntorno entornoFicheroZip) {
 		boolean entornoCorrecto = (entornoActual == TypeEntorno.PREPRODUCCION
-				&& entornoFicheroZip == TypeEntorno.DESARROLLO)
+				&& (entornoFicheroZip == TypeEntorno.DESARROLLO || entornoFicheroZip == TypeEntorno.SERVICIOS_ESTABLES)
 				|| (entornoActual == TypeEntorno.PRODUCCION && entornoFicheroZip == TypeEntorno.PREPRODUCCION)
-				|| entornoActual == TypeEntorno.DESARROLLO;
+				|| (entornoActual == TypeEntorno.DESARROLLO || entornoActual == TypeEntorno.SERVICIOS_ESTABLES));
 
 		if (entornoActual == TypeEntorno.PRODUCCION && UtilJSF.isPromocionSe2Pro()) {
 			entornoCorrecto = true;

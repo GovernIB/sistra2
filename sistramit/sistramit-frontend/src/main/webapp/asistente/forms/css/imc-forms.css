@@ -465,6 +465,9 @@
 
 /*.imc-form .imc-el-check[data-obligatori="s"] .imc-input-check label::after { margin-left: .3em; margin-right: 0; }*/
 
+.imc-form .imc-el-error[data-obligatori="s"] .imc-el-etiqueta label { color: #cc073c; }
+.imc-form .imc-el-error[data-obligatori="s"] .iti > input { border-color: #cc073c; }
+
 
 .imc-form .imc-el-check[data-obligatori="s"] .imc-input-check::before {
 	content: "";
@@ -543,31 +546,35 @@
 .imc-form span.imc-data-lectura { display: inline-block; width: 7em; font: italic 1em Arial, Helvetica, sans-serif; padding: .25em .5em .1em .5em; margin: 0 0 0 .2em; background: #e0e0e0 url(../imgs/ico-data.gif) no-repeat right center; border: 2px solid #ccc; }
 .imc-form span.imc-hora-lectura { display: inline-block; width: 3em; font: italic 1em Arial, Helvetica, sans-serif; padding: .25em .5em .1em .5em; margin: 0 .1em 0 .2em; background-color: #e0e0e0; border: 2px solid #ccc; }
 
+
+/* element columnes = 6 (per defecte) */
+
 .imc-form .imc-el-2 { width: 33.3% !important; }
-/*
-.imc-form .imc-el-2 a.imc-select,
-.imc-form .imc-el-2 a.imc-select span { width:14.4em; }
-*/
 .imc-form .imc-el-3 { width: 49.7% !important; }
-/*
-.imc-form .imc-el-3 a.imc-select,
-.imc-form .imc-el-3 a.imc-select span { width:23.8em !important; }
-*/
 .imc-form .imc-el-4 { width: 66.3% !important; }
-/*
-.imc-form .imc-el-4 a.imc-select,
-.imc-form .imc-el-4 a.imc-select span { width:33.2em !important; }
-*/
 .imc-form .imc-el-5 { width: 82.9% !important; }
-/*
-.imc-form .imc-el-5 a.imc-select,
-.imc-form .imc-el-5 a.imc-select span { width:42.5em !important;; }
-*/
 .imc-form .imc-el-6 { width: 99.5% !important; }
-/*
-.imc-form .imc-el-6 a.imc-select,
-.imc-form .imc-el-6 a.imc-select span { width:51.9em !important; }
-*/
+
+
+/* element columnes = 8 */
+
+.imc-forms-contenidor[data-columnes="8"] .imc-form .imc-element { width: 12.5%; }
+
+.imc-forms-contenidor[data-columnes="8"] .imc-form .imc-el-2 { width: 25% !important; }
+.imc-forms-contenidor[data-columnes="8"] .imc-form .imc-el-3 { width: 37.5% !important; }
+.imc-forms-contenidor[data-columnes="8"] .imc-form .imc-el-4 { width: 50% !important; }
+.imc-forms-contenidor[data-columnes="8"] .imc-form .imc-el-5 { width: 62.5% !important; }
+.imc-forms-contenidor[data-columnes="8"] .imc-form .imc-el-6 { width: 75% !important; }
+.imc-forms-contenidor[data-columnes="8"] .imc-form .imc-el-7 { width: 87.5% !important; }
+.imc-forms-contenidor[data-columnes="8"] .imc-form .imc-el-8 { width: 99.9% !important; }
+
+
+.imc-forms-contenidor[data-columnes="8"] .imc-form h4.imc-seccio { width: 99%; }
+
+.imc-forms-contenidor[data-columnes="8"] .imc-form fieldset.imc-element.imc-el-taula { width: 100%; }
+
+.imc-forms-contenidor[data-columnes="8"] .imc-form div.imc-element[data-type="captcha"] { width: 100%; }
+
 
 
 /* espaciador */
@@ -1264,14 +1271,7 @@ fieldset[data-cercat="s"] .imc-el-taula-elements { display: block; }
 .imc-form .imc-missatge-en-linia-error { color: #c00; border-color: rgba(204, 7, 60, .4); }
 
 .imc-form .imc-missatge-en-linia::before {
-	content: "";
-	display: block;
-	position: absolute;
-	top: .5em;
-	left: 1em;
-	width: 2em;
-	height: 2em;
-	background: transparent url() no-repeat center center / auto 2em;
+	content: ""; display: block; position: absolute; top: .5em; left: 1em; width: 2em; height: 2em; background: transparent url() no-repeat center center / auto 2em;
 }
 
 .imc-form .imc-missatge-en-linia-info::before { background-image: url(forms/imgs/ico_info.svg); }
@@ -1281,13 +1281,14 @@ fieldset[data-cercat="s"] .imc-el-taula-elements { display: block; }
 .imc-form .imc-element.imc-missatge-en-linia-etiqueta { padding-left: 1em; border: none; }
 .imc-form .imc-element.imc-missatge-en-linia-etiqueta::before { display: none; }
 
-.imc-form .imc-missatge-en-linia p { padding-bottom: .5em; }
-.imc-form .imc-missatge-en-linia ul { list-style: circle; padding-bottom: .5em; margin: .5em 0 0 2em; }
+.imc-form .imc-element.imc-missatge-en-linia p { padding-bottom: .5em; }
 
-.imc-form .imc-element.imc-missatge-en-linia ul li { list-style: circle; }
+.imc-form .imc-element.imc-missatge-en-linia ul { padding-bottom: 1em; margin: 0 0 0 2em; }
+.imc-form .imc-element.imc-missatge-en-linia ul li { list-style: circle; line-height: 1.2em; padding: 0 0 .3em 0; }
 
-.imc-form .imc-missatge-en-linia ol { padding-bottom: .5em; margin: .5em 0 0 2em; }
-.imc-form .imc-missatge-en-linia ol li { list-style: decimal; padding-bottom: .3em; }
+.imc-form .imc-element.imc-missatge-en-linia ol { padding-bottom: 1em; margin: 0 0 0 2em; }
+.imc-form .imc-element.imc-missatge-en-linia ol li { list-style: decimal; line-height: 1.2em; padding: 0 0 .3em 0; }
+
 
 /* nav */
 
@@ -1635,6 +1636,66 @@ body[data-fluix="p"] .imc-forms-contenidor .imc--forms-nav .imc--tanca { display
 .imc-form .imc-el-control input[data-contingut="iban"] { width: 24em; }
 
 
+/* telefon internacional */
+
+.imc-form button.iti__selected-country {
+  display: flex !important;
+  padding: 0 var(--iti-arrow-padding) 0 var(--iti-spacer-horizontal) !important;
+  background-color: #ccc;
+}
+
+.imc-form button.iti__selected-country[disabled]:hover,
+.imc-form button.iti__selected-country[disabled]:focus {
+  background-color: #ccc !important;
+  cursor: default !important;
+}
+
+.iti--allow-dropdown input.iti__tel-input[readonly],
+.iti--allow-dropdown input.iti__tel-input[type="text"][readonly],
+.iti--allow-dropdown input.iti__tel-input[type="tel"][readonly],
+.iti--show-selected-dial-code input.iti__tel-input[readonly],
+.iti--show-selected-dial-code input.iti__tel-input[type="text"][readonly],
+.iti--show-selected-dial-code input.iti__tel-input[type="tel"][readonly] {
+	background-color: #e2e2e2;
+  border-color: #e2e2e2;
+}
+
+.iti--inline-dropdown .iti__dropdown-content {
+  min-width: 15em;
+}
+
+.iti--inline-dropdown .iti__country-list {
+	width: calc(100% - .7em);
+  scrollbar-width: thin;
+}
+
+.imc--form .iti--inline-dropdown .iti__dropdown-content { z-index: 3; }
+
+
+
+/* placeholder */
+
+.imc-form input::placeholder { color: #000; opacity: .4; }
+
+
+
+/* check unitari */
+
+.imc-element.imc-el-check.imc--centrat .imc-el-control > .imc-input-check { display: flex; align-items: center; min-height: 3.5em; }
+.imc-element.imc-el-check.imc--baix .imc-el-control > .imc-input-check { display: flex; align-items: flex-end; min-height: 3em; }
+
+
+
+/* element etiqueta solitaria */
+
+.imc-element.imc--centrat > p { display: flex; align-items: center; min-height: 3.5em; }
+.imc-element.imc--baix > p { display: flex; align-items: flex-end; min-height: 3em; }
+
+
+
+
+
+
 
 
 /* media */
@@ -1760,6 +1821,14 @@ body[data-fluix="p"] .imc-forms-contenidor .imc--forms-nav .imc--tanca { display
 	.imc-form input[type="time"] {
 		width: 6.5em;
 	}
+
+
+
+
+
+
+
+
 
 	.imc--forms-nav {
 		height: auto; padding: .9em 0 .5em 0;

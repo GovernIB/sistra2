@@ -543,11 +543,11 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		// No se escribe lo siguiente escribeLinea(pOut, "<textarea id=\"" +
 		// pCampo.getIdComponente() + "\" cols=\"\" rows=\"\" />", 8);
 
-		// TODO De momento ñapa para poder mostrar en editor
 		if (pModoEdicion) {
+			// TODO De momento ñapa para poder mostrar en editor
 			escribeLinea(pOut, "<input id=\"" + pCampo.getIdComponente() + "\" cols=\"\" rows=\"\" "+dataSeccionReutilizable+" />", 8);
 		} else {
-			escribeLinea(pOut, "<textarea id=\"" + pCampo.getIdComponente() + "\" cols=\"\" rows=\"\" "+dataSeccionReutilizable+" />", 8);
+			escribeLinea(pOut, "<textarea id=\"" + pCampo.getIdComponente() + "\" cols=\"\" rows=\"\" "+dataSeccionReutilizable+" ></textarea>", 8);
 		}
 
 		// escribeLinea(pOut, "</div>", 7);

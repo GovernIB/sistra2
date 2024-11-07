@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistramit.core.api.exception.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,15 +24,6 @@ import es.caib.sistra2.commons.utils.XssFilter;
 import es.caib.sistrages.rest.api.interna.RAnexoTramite;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionAnexar;
 import es.caib.sistrages.rest.api.interna.RScript;
-import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
-import es.caib.sistramit.core.api.exception.AnexarFirmadoFirmaIncorrectaException;
-import es.caib.sistramit.core.api.exception.AnexarFirmadoFirmaNoPermitidaException;
-import es.caib.sistramit.core.api.exception.AnexoVacioException;
-import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
-import es.caib.sistramit.core.api.exception.ExtensionAnexoNoValidaException;
-import es.caib.sistramit.core.api.exception.ParametrosEntradaIncorrectosException;
-import es.caib.sistramit.core.api.exception.TamanyoMaximoAnexosAlcanzadoException;
-import es.caib.sistramit.core.api.exception.TransformacionPdfException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.Anexo;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoAnexar;
@@ -88,12 +80,6 @@ public final class AccionAnexarDocumento implements AccionPaso {
 	/** Firma. */
 	@Autowired
 	private FirmaComponent firmaComponent;
-
-	/**
-	 * Configuracion.
-	 */
-	// @Autowired
-	// private SystemService systemService;
 
 	@Autowired
 	private ConfiguracionComponent configuracionComponent;
@@ -478,17 +464,19 @@ public final class AccionAnexarDocumento implements AccionPaso {
 			}
 			// Si debe anexarse firmado y no se ha anexado firmado, generamos error
 			if (anexoFirmaAnexaObligatoria && !anexoFirmado) {
-				throw new AnexarFirmadoFirmaIncorrectaException("Es obligatorio anexar firmado el anexo");
+				throw new AnexarFirmadoFirmaNoFirmadoException("Es obligatorio anexar firmado el anexo");
 			}
 			// Si permite anexarse firmado y se anexa firmado, verificamos firmantes
 			if (anexoFirmadoPermitido && anexoFirmado) {
 				// Verificar si la firma es correcta y firmada por todos los firmantes
-				final ValidacionFirmante vf = firmaComponent.validarFirmante(idEntidad, pVariablesFlujo.getIdioma(),
-						datosFichero, datosFichero, anexoDetalle.getFirmantes());
-				if (!vf.isCorrecto()) {
-					throw new AnexarFirmadoFirmaIncorrectaException(
-							"La firma no es correcta o no ha sido firmada por todos los firmantes: "
-									+ vf.getDetalleError());
+				if (anexoDetalle.getValidarAnexarfirmado() == TypeSiNo.SI){
+					final ValidacionFirmante vf = firmaComponent.validarFirmante(idEntidad, pVariablesFlujo.getIdioma(),
+							datosFichero, datosFichero, anexoDetalle.getFirmantes());
+					if (!vf.isCorrecto()) {
+						throw new AnexarFirmadoFirmaIncorrectaException(
+								"La firma no es correcta o no ha sido firmada por todos los firmantes: "
+										+ vf.getDetalleError());
+					}
 				}
 				// Indicamos que se ha firmado correctamente
 				anexadoFirmado = true;

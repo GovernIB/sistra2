@@ -7,14 +7,11 @@ import java.util.Map;
 
 import javax.script.ScriptException;
 
-import es.caib.sistramit.core.api.model.formulario.ValorCampo;
-import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
-import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
-import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
-import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
-import es.caib.sistramit.core.api.model.formulario.ValorResetCampos;
+import es.caib.sistramit.core.api.model.formulario.*;
 import es.caib.sistramit.core.service.component.script.ScriptUtils;
+import es.caib.sistramit.core.service.component.script.plugins.ClzValorCampoListaElementos;
 import es.caib.sistramit.core.service.component.script.plugins.ClzValorCampoMultiple;
+import es.caib.sistramit.core.service.model.script.ClzValorCampoListaElementosInt;
 import es.caib.sistramit.core.service.model.script.ClzValorCampoMultipleInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResModificacionFormulariosInt;
 import es.caib.sistramit.core.service.util.UtilsFormulario;
@@ -128,6 +125,20 @@ public final class ResModificacionFormularios
     public List<ValorCampo> getDatosModificadosFormulario(
             final String idFormulario) {
         return this.datosModificadosFormularios.get(idFormulario);
+    }
+
+    @Override
+    public ClzValorCampoListaElementosInt crearValorListaElementos() {
+        return new ClzValorCampoListaElementos();
+    }
+
+    @Override
+    public void setValorListaElementos(final String idFormulario, final String campo,
+                                       final ClzValorCampoListaElementosInt valor)  throws ScriptException {
+        // Almacenamos modificación (se aplicará en el paso).
+        final ValorCampoListaElementos vci = ScriptUtils
+                .crearValorListaElementos(campo, valor);
+        addValorModificado(idFormulario, vci);
     }
 
     /**

@@ -74,10 +74,10 @@ $.fn.appFormsLlistaElements = function(options) {
 
 				if (avaluaEsborrar) {
 
-					avaluaEsborrar = true;
+					//avaluaEsborrar = true;
 
 					element
-						.attr("data-avaluaEsborrar", filesMax);
+						.attr("data-avaluaEsborrar", avaluaEsborrar);
 
 				}
 
@@ -390,7 +390,7 @@ $.fn.appFormsLlistaElements = function(options) {
 								var columna = this
 									,col_id = columna.id
 									,col_tipus = columna.tipo
-									,col_valor = columna.valor;
+									,col_valor = (columna.valor === null) ? "" : columna.valor;
 
 								if (col_valor !== "" && col_valor !== null && col_tipus === "i") {
 									col_valor = columna.valor.descripcion || "";
@@ -710,7 +710,7 @@ $.fn.appFormsLlistaElements = function(options) {
 			},
 			eliminaAvalua = function() {
 
-				if (!avaluaEsborrar) {
+				if (element.attr("data-avaluaEsborrar") === "n") {
 
 					eliminem();
 
@@ -838,9 +838,9 @@ $.fn.appFormsLlistaElements = function(options) {
 					} else {
 
 						imc_forms_missatge
-							.appFormsMissatge({ accio: validacio_estat, titol: validacio_missatge, text: "", amagaDesdeFons: false });
+							.appFormsMissatge({ accio: validacio_estat, titol: validacio_missatge, text: "", amagaDesdeFons: false, alMostrar: function() { eliminaReVerifiquem(json); }  });
 
-						eliminaReVerifiquem(json);
+						//
 
 					}
 
@@ -1646,7 +1646,7 @@ $.fn.appFormsLlistaElementsForm = function(options) {
 							var valor = this
 								,valor_id = valor.id
 								,valor_tipus = valor.tipo
-								,valor_valor = valor.valor;
+								,valor_valor = (valor.valor === null) ? "" : valor.valor;
 
 							if (valor_valor !== "" && valor_valor !== null && valor_tipus === "i") {
 								valor_valor = valor.valor.descripcion || "";

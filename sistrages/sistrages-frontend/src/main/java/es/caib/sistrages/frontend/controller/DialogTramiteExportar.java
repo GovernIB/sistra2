@@ -561,9 +561,9 @@ public class DialogTramiteExportar extends DialogControllerBase {
 				+ GUION + this.tramiteVersion.getRelease() + GUION + UtilJSF.getEntorno();
 		if (this.modo.equals(Constantes.IMPORTAR_TIPO_CC)) {
 
-			// Indica en que entorno se tiene que cargar (DES --> PRE y PRE --> PRO)
+			// Indica en que entorno se tiene que cargar (DES/SE --> PRE y PRE --> PRO)
 			String zipEntorno;
-			if (TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.DESARROLLO) {
+			if (TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.DESARROLLO || TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.SERVICIOS_ESTABLES) {
 				zipEntorno = "PRE";
 			} else {
 				zipEntorno = "PRO";

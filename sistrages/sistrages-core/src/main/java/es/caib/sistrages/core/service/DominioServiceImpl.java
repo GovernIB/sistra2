@@ -315,6 +315,14 @@ public class DominioServiceImpl implements DominioService {
 		} else {
 			jfuenteDatos = null;
 		}
+        Long codigoCA;
+		if (filaDominio.getDominio().getTipo() == TypeDominio.CONSULTA_REMOTA) {
+            codigoCA = configAutDao.importarCA(filaDominio, filaDominio.getDominio().getAmbito(), idEntidad,
+					idArea);
+            if(codigoCA != null) {
+                filaDominio.getConfiguracionAutenticacionActual().setCodigo(codigoCA);
+            }
+		}
 
 		dominioDao.importar(filaDominio, idEntidad, idArea, jfuenteDatos);
 	}

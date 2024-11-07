@@ -164,6 +164,11 @@ public final class PlgUtils implements PlgUtilsInt {
 	}
 
 	@Override
+	public boolean esTelefonoInternacional(final String telefono, final boolean validacionPrecisa) {
+		return ValidacionesTipo.getInstance().esTelefonoInternacional(telefono, validacionPrecisa);
+	}
+
+	@Override
 	public boolean esTelefonoFijo(final String telefono) {
 		return ValidacionesTipo.getInstance().esTelefonoFijo(telefono);
 	}

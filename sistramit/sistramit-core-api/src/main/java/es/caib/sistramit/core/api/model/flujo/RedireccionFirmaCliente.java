@@ -1,5 +1,7 @@
 package es.caib.sistramit.core.api.model.flujo;
 
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+
 /**
  *
  * Respuesta a la acción de iniciar una firma de un documento.
@@ -12,6 +14,9 @@ public final class RedireccionFirmaCliente implements ModelApi {
 
 	/** Url inicio pago. */
 	private String url;
+
+	/** Indica si se abre en iframe. */
+	private TypeSiNo iframe;
 
 	/**
 	 * Método de acceso a url.
@@ -32,4 +37,22 @@ public final class RedireccionFirmaCliente implements ModelApi {
 		this.url = url;
 	}
 
+	/**
+	 * Método de acceso a iframe.
+	 *
+	 * @return iframe
+	 */
+	public TypeSiNo getIframe() {
+		return iframe;
+	}
+
+	/**
+	 * Método para establecer iframe.
+	 *
+	 * @param iframe
+	 *            iframe a establecer
+	 */
+	public void setIframe(TypeSiNo iframe) {
+		this.iframe = iframe;
+	}
 }

@@ -1,0 +1,76 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_FORMULARIOS.setValorListaElementos(idFormulario, campo,valorCampoListaElementos)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_FORMULARIOS">DATOS_FORMULARIOS</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_FORMULARIOS&metodo=setValorListaElementos">setValorListaElementos</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setValorListaElementos(idFormulario, campo,valorCampoListaElementos): void
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que estableix un valor llista elements a un camp del formulari actual o posterior.</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&Aacute;METRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idFormulario</b>: Identificador del formulari en el qual vol modificar el valor del camp.</li>
+		<li><b>campo </b>: Identificador del camp del formulari.</li>
+		<li><b>valorCampoListaElementos </b>: Objecte de tipus ValorListaElementos el qual conté els diferents valors a assignar al camp.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>S'inicialitza una variable per a assignar-la a un camp multiregistre del formulari 'FORM2' i anar afegint valors mitjançant la funció addValor: </p>
+ <p class="codigoScript">
+var datos = DATOS_FORMULARIOS.crearValorListaElementos();
+var valorElemento=datos.addElemento();
+valorElemento.addValor('codigo', '07073');
+valorElemento.addValor('descripcion', 'Mallorca');
+</p>
+<p>Una vegada creada la variable, creat l'element i assignats els valors, es podrà assignar al camp corresponent.</p>
+<p class="codigoScript">
+DATOS_VALORESINICIALES.setValorListaElementos('FORM2','TABLA_MUNICIPIOS',datos);
+</p>
+<p>El següent script serveix per a omplir la llista d'elements 'LEL2' d'un formulari 'FORM-2' amb els valors d'una altra llista d'elements 'LEL1' del formulari 'FORM-1' tenint en compte que totes dues llistes compten amb dos camps 'LTX1' i 'LTX2'.</p>
+<p class="codigoScript">
+var numeroElementos = PLUGIN_FORMULARIOS.getNumeroElementos('FORM-1','LEL1');<br>
+var lel = DATOS_FORMULARIOS.crearValorListaElementos();<br>
+var i = 0;<br>
+<br>
+if (numeroElementos != null) {<br>
+&emsp;while(i < numeroElementos){<br>
+&emsp;&emsp;var e = lel.addElemento();<br>
+&emsp;&emsp;e.addValor('LTX1', PLUGIN_FORMULARIOS.getValorElemento('FORM-1','LEL1',i,'LTX1'));<br>
+&emsp;&emsp;e.addValor('LTX2', PLUGIN_FORMULARIOS.getValorElemento('FORM-1','LEL1',i,'LTX2'));<br>
+&emsp;&emsp;i++;<br>
+&emsp;}<br>
+&emsp;DATOS_FORMULARIOS.setValorListaElementos('FORM-2', 'LEL2', lel);<br>
+}
+</p>
+</body>
+</html>

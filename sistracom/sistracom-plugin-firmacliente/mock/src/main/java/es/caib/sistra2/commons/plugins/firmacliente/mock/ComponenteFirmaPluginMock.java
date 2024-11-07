@@ -6,15 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import es.caib.sistra2.commons.plugins.firmacliente.api.*;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
-
-import es.caib.sistra2.commons.plugins.firmacliente.api.FicheroAFirmar;
-import es.caib.sistra2.commons.plugins.firmacliente.api.FicheroFirmado;
-import es.caib.sistra2.commons.plugins.firmacliente.api.FirmaPluginException;
-import es.caib.sistra2.commons.plugins.firmacliente.api.IFirmaPlugin;
-import es.caib.sistra2.commons.plugins.firmacliente.api.InfoSesionFirma;
-import es.caib.sistra2.commons.plugins.firmacliente.api.TypeEstadoFirmado;
-import es.caib.sistra2.commons.plugins.firmacliente.api.TypeFirmaDigital;
 
 /**
  * Plugin mock componente firma.
@@ -26,12 +19,12 @@ public class ComponenteFirmaPluginMock extends AbstractPluginProperties implemen
 
 	private static Map<String, InfoSesionFirma> SESIONES_FIRMA = new HashMap<String, InfoSesionFirma>();
 
-	public ComponenteFirmaPluginMock() {
-	}
+	/** Prefix. */
+	public static final String IMPLEMENTATION_BASE_PROPERTY = "mock.";
 
 	public ComponenteFirmaPluginMock(final String prefijoPropiedades, final Properties properties) {
+		super(prefijoPropiedades, properties);
 	}
-
 	@Override
 	public String generarSesionFirma(final InfoSesionFirma infoSesionFirma) throws FirmaPluginException {
 		final String idSesionFirma = "SF" + System.currentTimeMillis();
@@ -47,18 +40,25 @@ public class ComponenteFirmaPluginMock extends AbstractPluginProperties implemen
 	@Override
 	public String iniciarSesionFirma(final String idSesionFirma, final String urlCallBack, final String paramAdic)
 			throws FirmaPluginException {
-
-		// Retornamos directamente al asistente como si se hubiese realizado la firma
 		try {
-			return "/sistramitfront/redirigirUrl.jsp?url=" + URLEncoder.encode(urlCallBack, "UTF-8");
+			if (isIframe()) {
+				// Iframe: Retornamos directamente al asistente como si se hubiese realizado la firma
+				return "/sistramitfront/redirigirUrl.jsp?url=" + URLEncoder.encode(urlCallBack, "UTF-8");
+			} else {
+				// Ventana completa: Redirigimos a página echo para copiar url callback y retornar
+				final String url = getProperty(FIRMACLIENTE_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + "url");
+				return url + "?url=" + URLEncoder.encode(urlCallBack, "UTF-8");
+			}
 		} catch (final UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public TypeEstadoFirmado obtenerEstadoSesionFirma(final String idSesionFirma) throws FirmaPluginException {
-		return TypeEstadoFirmado.FINALIZADO_OK;
+	public EstadoFirma obtenerEstadoSesionFirma(final String idSesionFirma) throws FirmaPluginException {
+		EstadoFirma estado = new EstadoFirma();
+		estado.setEstadoFirmado(TypeEstadoFirmado.FINALIZADO_OK);
+		return estado;
 	}
 
 	@Override
@@ -87,4 +87,24 @@ public class ComponenteFirmaPluginMock extends AbstractPluginProperties implemen
 		return true;
 	}
 
+	@Override
+	public boolean isIframe() throws FirmaPluginException {
+		return new Boolean(getPropiedad("iframe"));
+	}
+
+	/**
+	 * Obtiene propiedad.
+	 *
+	 * @param propiedad
+	 *                      propiedad
+	 * @return valor
+	 * @throws FirmaPluginException
+	 */
+	private String getPropiedad(final String propiedad) throws FirmaPluginException {
+		final String res = getProperty(FIRMACLIENTE_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + propiedad);
+		if (res == null) {
+			throw new FirmaPluginException("No se ha especificado parametro " + propiedad + " en propiedades");
+		}
+		return res;
+	}
 }

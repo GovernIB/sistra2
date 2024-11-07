@@ -334,7 +334,7 @@ public class DialogFuente extends DialogControllerBase {
 			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 
 				if (modo == TypeModoAcceso.EDICION && data != null && data.getArea() != null) {
-					if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+					if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString()) || UtilJSF.getEntorno().equals(TypeEntorno.SERVICIOS_ESTABLES.toString())) {
 						final List<TypeRolePermisos> permisos = securityService
 								.getPermisosDesarrolladorEntidadByArea(data.getArea().getCodigo());
 

@@ -22,6 +22,11 @@ public final class ClzAnexoDinamico implements Serializable {
 	private String descripcion;
 
 	/**
+	 * Ayuda.
+	 */
+	private String ayuda;
+
+	/**
 	 * Extensiones (lista separadas por coma).
 	 */
 	private String extensiones;
@@ -227,4 +232,22 @@ public final class ClzAnexoDinamico implements Serializable {
 		this.maxInstancias = instancias;
 	}
 
+	/**
+	 * Método de acceso a ayuda.
+	 *
+	 * @return ayuda
+	 */
+	public String getAyuda() {
+		return ayuda;
+	}
+
+	/**
+	 * Método para establecer ayuda.
+	 *
+	 * @param ayuda
+	 *                  ayuda a establecer
+	 */
+	public void setAyuda(String ayuda) {
+		this.ayuda = ayuda;
+	}
 }

@@ -459,6 +459,13 @@ $.fn.appFormsConfiguracio = function(options) {
 					element
 						.attr("data-guardar", poderGuardar);
 
+					// columnes
+
+					var formColumnes = forms_json.datos.columnas || "n";
+
+					element
+						.attr("data-columnes", formColumnes);
+
 					// índex a les seccions
 
 					var indexSeccions = forms_json.datos.indiceSecciones || "n";
@@ -609,7 +616,7 @@ $.fn.appFormsConfiguracio = function(options) {
 								,conf_opcions = conf.opciones || false
 								,conf_valors = conf.valores || false;
 
-							var elm = element.find("*[data-id="+conf_id+"]") // imc_forms_contenidor.find("*[data-id="+conf_id+"]")
+							var elm = element.find("*[data-id="+conf_id+"]")
 								,elm_input = elm.find("input:first, textarea:first");
 
 							elm
@@ -1016,6 +1023,16 @@ $.fn.appFormsConfiguracio = function(options) {
 
 							}
 
+							// telèfon internacional
+
+							if (conf_tipus === "texto" && conf_contingut === "ti") {
+
+								elm
+									.attr({ "data-telefon-internacional": "s", "data-validacio-precisa": conf_opcions.validacionPrecisa });
+									//.appFormsTelefonInternacional();
+
+							}
+
 						});
 
 				}
@@ -1161,26 +1178,25 @@ $.fn.appFormsConfiguracio = function(options) {
 
 									}
 
-									/*
 
-									ANTIC
+									// telf. internacional
 
-									var esData = (elm_input_contingut === "fe") ? true : false
-										,data_format = (typeof APP_FORM_DATA_FORMAT !== "undefined" && APP_FORM_DATA_FORMAT === "es") ? "es" : "in";
+									if (elm_input_contingut === "ti" && typeof elm.data("iti") !== "undefined") {
 
-									if (esData && data_format === "es") {
+										var el_iti = elm.data("iti");
 
-										var data_internacional = val_valor.split("/");
+										el_iti
+											.setNumber( val_valor );
 
-										val_valor = data_internacional[2] + "-" + data_internacional[1] + "-" + data_internacional[0];
+									} else {
 
-									}*/
+										// valor normal
 
+										elm_input
+											.val( val_valor );
 
-									// apliquem valor
+									}
 
-									elm_input
-										.val( val_valor );
 
 								} else if (elm_input_tipus === "selector" && elm_input_contingut === "d") {
 
@@ -1338,8 +1354,22 @@ $.fn.appFormsConfiguracio = function(options) {
 
 								if (elm_input_tipus === "texto") {
 
-									elm_input
-										.val( "" );
+
+									// telf. internacional
+
+									if (elm_input_contingut === "ti") {
+
+										elm
+											.find(".iti__tel-input:first")
+												.val( "" );
+
+									} else {
+
+										elm_input
+											.val( "" );
+
+									}
+
 
 								} else if (elm_input_tipus === "selector" && elm_input_contingut === "d") {
 
@@ -1542,7 +1572,8 @@ $.fn.appFormsConfiguracio = function(options) {
 								,conf_lectura = conf.soloLectura || false
 								,conf_tipus = conf.tipo || false
 								,conf_ocult = conf.oculto || false
-								,conf_modificable = conf.modificable || false;
+								,conf_modificable = conf.modificable || false
+								,conf_contingut = conf.contenido || false;
 
 							var elm = element.find("*[data-id="+conf_id+"]")
 								,elm_input = elm.find("input:first")
@@ -1629,11 +1660,24 @@ $.fn.appFormsConfiguracio = function(options) {
 
 									if (conf_tipus === "texto") {
 
-										elm_input
-											.attr("readonly", "readonly");
+										if (conf_contingut === "ti") {
 
-										elm_textarea
-											.attr("readonly", "readonly");
+											elm
+												.find("button:first")
+													.attr("disabled", "disabled")
+													.end()
+												.find(".iti__tel-input")
+													.attr("readonly", "readonly");
+
+										} else {
+
+											elm_input
+												.attr("readonly", "readonly");
+
+											elm_textarea
+												.attr("readonly", "readonly");
+
+										}
 
 									} else if (conf_tipus === "selector" && conf_contingut === "d") {
 
@@ -1663,11 +1707,24 @@ $.fn.appFormsConfiguracio = function(options) {
 
 									if (conf_tipus === "texto") {
 
-										elm_input
-											.removeAttr("readonly");
+										if (conf_contingut === "ti") {
 
-										elm_textarea
-											.removeAttr("readonly");
+											elm
+												.find("button:first")
+													.removeAttr("disabled")
+													.end()
+												.find(".iti__tel-input")
+													.removeAttr("readonly");
+
+										} else {
+
+											elm_input
+												.removeAttr("readonly");
+
+											elm_textarea
+												.removeAttr("readonly");
+
+										}
 
 									} else if (conf_tipus === "selector" && conf_contingut === "d") {
 
@@ -1740,7 +1797,19 @@ $.fn.appFormsConfiguracio = function(options) {
 
 				element
 					.find("input, textarea")
-						.attr("autocomplete", "nope");
+						.attr({ "autocomplete": "off", "aria-autocomplete": "none" });
+
+
+				// telèfon internacional
+
+				var elements_telf_int = element.find("div[data-telefon-internacional]");
+
+				if (elements_telf_int.length) {
+
+					element
+						.appFormsTelefonInternacional();
+
+				}
 
 
 				// events
@@ -2451,7 +2520,7 @@ $.fn.appFormsAccions = function(options) {
 			},
 			imprimir = function() {
 
-				document.location = APP_FORM_IMPRIMIR;
+				document.location = APP_FORM_IMPRIMIR + "?"+ headerIdSessio + "=" + tokenIdSessio;
 
 			},
 			personalitzada = function(bt) {
@@ -3244,8 +3313,8 @@ $.fn.appFormsPopupTabula = function(options) {
 					,100
 				);
 
-			},
-			pinta = function() {
+			}
+			,pinta = function() {
 
 				// revisem si és una capa amb formulari o una capa missatge
 
@@ -3369,9 +3438,11 @@ $.fn.appFormsPopupTabula = function(options) {
 				// activem
 
 				activa();
+				eventua();
+				enfoca();
 
-			},
-			activa = function() {
+			}
+			,activa = function() {
 
 				elems_tab = element.find("*[data-tabula=si]:visible:not(:disabled)");
 				elems_tab_size = elems_tab.length;
@@ -3392,13 +3463,27 @@ $.fn.appFormsPopupTabula = function(options) {
 						.splice(0, 0, element);
 
 					element
-						.off(".appFormsPopupTabula")
-						.on("focus.appFormsPopupTabula", "*[data-tabula]", reposiciona)
-						.on("focus.appFormsPopupTabula", reposiciona)
-						.on("keydown.appFormsPopupTabula", tabula)
 						.attr("data-tabpos", 0);
 
 				}
+
+				// observa
+
+				observa();
+
+			}
+			,eventua = function() {
+
+				// activem events de teclat
+
+				element
+					.off(".appFormsPopupTabula")
+					.on("focus.appFormsPopupTabula", "*[data-tabula]", reposiciona)
+					.on("focus.appFormsPopupTabula", reposiciona)
+					.on("keydown.appFormsPopupTabula", tabula);
+
+			}
+			,enfoca = function() {
 
 				// enfoquem en algun element?
 
@@ -3414,8 +3499,68 @@ $.fn.appFormsPopupTabula = function(options) {
 
 				}
 
-			},
-			reposiciona = function(e) {
+			}
+			,observa = function() {
+
+				// hi ha captcha?
+
+				var captcha_ = element.find(".imc-element.imc-el-captcha:first");
+
+				if (captcha_.length) {
+
+					setTimeout(
+						function() {
+
+							//alert("Sí!")
+
+							var elm_a_observar = element.find(".imc-element.imc-el-captcha:first");// .imc--img
+
+							observant(elm_a_observar);
+
+						}
+						,300
+					);
+
+				}
+
+			}
+			,observant = function(elm_a_observar) {
+
+				const targetNode = elm_a_observar[0];
+
+				const config = { attributes: true, childList: true };
+
+				const callback = function(mutationsList, observer) {
+
+					var mutationsList_size = mutationsList.length;
+
+					for (var i = 0; i < mutationsList_size; i++) {
+
+						mutation = mutationsList[i];
+
+						console.log(mutation)
+
+						if (mutation.type === 'attributes' || mutation.type === 'childList') {
+
+							observer
+								.disconnect();
+
+							activa();
+							return;
+
+						}
+
+					}
+
+				};
+
+				const observer = new MutationObserver(callback);
+
+				observer
+					.observe(targetNode, config);
+
+			}
+			,reposiciona = function(e) {
 
 				var inp_el = $(this)
 					,in_tabpos = parseInt( inp_el.attr("data-tabpos"), 10);
@@ -3424,8 +3569,8 @@ $.fn.appFormsPopupTabula = function(options) {
 
 				consola("reposiciona: " + el_num);
 
-			},
-			tabula = function(e) {
+			}
+			,tabula = function(e) {
 
 				//consola(el_num);
 

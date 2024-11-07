@@ -84,6 +84,8 @@ public class DialogEnviarMail extends DialogControllerBase {
 
 	private int firmaFin;
 
+	private int firmaFinOk;
+
 	private List<ErroresPorTramiteCM> listaErrores;
 
 	private List<EventoCM> listaTramErrores;
@@ -205,9 +207,9 @@ public class DialogEnviarMail extends DialogControllerBase {
 			}
 			String firmaPor;
 			if (firmaIni != 0) {
-				firmaPor = formatDouble((100 - ((Double.valueOf(firmaFin) * 100) / Double.valueOf(firmaIni))));
+				firmaPor = formatDouble((100 - (((Double.valueOf(firmaFin) + Double.valueOf(firmaFinOk)) * 100) / Double.valueOf(firmaIni))));
 			} else {
-				if (firmaFin == 0) {
+				if ((firmaFin + firmaFinOk) == 0) {
 					firmaPor = "0,00";
 				} else {
 					firmaPor = "100,00";
@@ -305,7 +307,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ firmaIni + "</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
-					+ firmaFin + "</td>"
+					+ (firmaFin + firmaFinOk) + "</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ firmaPor + "%</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
@@ -384,7 +386,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 					+ "                          <tbody>" + "                             <tr>"
 					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Tr&#224;mit</span></td>"
 					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Versi&#243;</span></td>"
-					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Sessions Ok</span></td>"
+					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Sessions finalitzades</span></td>"
 					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Sessions<wbr> no<wbr> finalitzades</span></td>"
 					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Percen&shy;tatge de sessions<wbr> no<wbr> finali&shy;tzades</span></td>"
 					+ "                                <td style=\"background-color:  lightgrey;border: 1px solid #c5c5c5;font-weight: bold;\"><span class=\"ui-column-title\">Suma d&#39;errors</span></td>"
@@ -556,6 +558,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 		formFin = 0;
 		firmaIni = 0;
 		firmaFin = 0;
+		firmaFinOk = 0;
 		listaErrores = new ArrayList<ErroresPorTramiteCM>();
 		listaTramErrores = new ArrayList<EventoCM>();
 		filtros = new FiltroAuditoriaTramitacion(listarIdArea(sb.getListaAreasEntidad()), false, false);
@@ -640,6 +643,9 @@ public class DialogEnviarMail extends DialogControllerBase {
 				break;
 			case FIRMA_FIN:
 				firmaFin = ev.getConcurrencias().intValue();
+				break;
+			case FIRMA_FIN_OK:
+				firmaFinOk = ev.getConcurrencias().intValue();
 				break;
 			case PAGO_ELECTRONICO_INICIO:
 				pagIni = ev.getConcurrencias().intValue();

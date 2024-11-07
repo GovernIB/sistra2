@@ -5,6 +5,7 @@ import java.util.List;
 
 import es.caib.sistrages.core.api.model.ConfiguracionAutenticacion;
 import es.caib.sistrages.core.api.model.ConsultaGeneral;
+import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeClonarAccion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
@@ -121,5 +122,18 @@ public interface ConfiguracionAutenticacionDao {
 	 */
 	ConfiguracionAutenticacion clonar(String dominioID, TypeClonarAccion accionCA, ConfiguracionAutenticacion confAut,
 			Long idEntidad, Long areaID);
+
+	/**
+	 * Importa una configuración de autenticación.
+	 *
+	 * @param filaDominio la fila del dominio que contiene la configuración de autenticación a importar
+	 * @param ambito el ámbito de la configuración de autenticación
+	 * @param idEntidad el identificador de la entidad
+	 * @param idArea el identificador del área
+	 * @return el identificador de la configuración de autenticación importada
+	 * @throws Exception si ocurre un error durante la importación
+	 */
+	Long importarCA(FilaImportarDominio filaDominio, TypeAmbito ambito, Long idEntidad, final Long idArea)
+			throws Exception;
 
 }

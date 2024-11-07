@@ -99,6 +99,9 @@ public class JAnexoTramite implements IModelApi {
 	@Column(name = "ANE_FIRMAD", nullable = false, precision = 1, scale = 0)
 	private boolean anexarFirmado;
 
+    @Column(name = "ANE_VALFIRM", nullable = false, precision = 1, scale = 0)
+    private boolean validarFirmantes;
+
 	@Column(name = "ANE_TIPENI", nullable = false, length = 2)
 	private String tipoDocumental;
 
@@ -269,7 +272,15 @@ public class JAnexoTramite implements IModelApi {
 		this.anexarFirmado = anexarFirmado;
 	}
 
-	/**
+    public boolean isValidarFirmantes() {
+        return validarFirmantes;
+    }
+
+    public void setValidarFirmantes(boolean validarFirmantes) {
+        this.validarFirmantes = validarFirmantes;
+    }
+
+    /**
 	 * @return the codigoClonado
 	 */
 	public Long getCodigoClonado() {
@@ -312,6 +323,7 @@ public class JAnexoTramite implements IModelApi {
 			}
 			janexo.setExtensionesPermitidas(doc.getExtensiones());
 			janexo.setFirmar(doc.isDebeFirmarDigitalmente());
+            janexo.setValidarFirmantes(doc.isDebeValidarFirmantes());
 			janexo.setIdentificadorDocumento(doc.getIdentificador());
 			janexo.setNumeroInstancia(doc.getNumeroInstancia());
 			janexo.setObligatorio(doc.getObligatoriedad().toString());
@@ -349,6 +361,7 @@ public class JAnexoTramite implements IModelApi {
 		}
 		mdoc.setExtensiones(this.getExtensionesPermitidas());
 		mdoc.setDebeFirmarDigitalmente(this.isFirmar());
+        mdoc.setDebeValidarFirmantes(this.isValidarFirmantes());
 		mdoc.setIdentificador(this.getIdentificadorDocumento());
 		mdoc.setNumeroInstancia(this.getNumeroInstancia());
 		mdoc.setObligatoriedad(TypeFormularioObligatoriedad.fromString(this.getObligatorio()));
@@ -385,6 +398,7 @@ public class JAnexoTramite implements IModelApi {
 			janexoTramite.setFicheroPlantilla(JFichero.clonar(origAnexo.getFicheroPlantilla()));
 			janexoTramite.setExtensionesPermitidas(origAnexo.getExtensionesPermitidas());
 			janexoTramite.setFirmar(origAnexo.isFirmar());
+            janexoTramite.setValidarFirmantes(origAnexo.isValidarFirmantes());
 			janexoTramite.setIdentificadorDocumento(origAnexo.getIdentificadorDocumento());
 			janexoTramite.setNumeroInstancia(origAnexo.getNumeroInstancia());
 			janexoTramite.setObligatorio(origAnexo.getObligatorio());

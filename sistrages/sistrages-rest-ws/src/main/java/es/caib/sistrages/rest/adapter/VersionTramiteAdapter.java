@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import es.caib.sistrages.rest.api.interna.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,50 +62,6 @@ import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeScriptSeccionReutilizable;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.core.api.service.SystemService;
-import es.caib.sistrages.rest.api.interna.RAnexoTramite;
-import es.caib.sistrages.rest.api.interna.RAnexoTramiteAyuda;
-import es.caib.sistrages.rest.api.interna.RAnexoTramitePresentacionElectronica;
-import es.caib.sistrages.rest.api.interna.RComponente;
-import es.caib.sistrages.rest.api.interna.RComponenteAviso;
-import es.caib.sistrages.rest.api.interna.RComponenteCampoOculto;
-import es.caib.sistrages.rest.api.interna.RComponenteCaptcha;
-import es.caib.sistrages.rest.api.interna.RComponenteCheckbox;
-import es.caib.sistrages.rest.api.interna.RComponenteListaElementos;
-import es.caib.sistrages.rest.api.interna.RComponenteSeccion;
-import es.caib.sistrages.rest.api.interna.RComponenteSelector;
-import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
-import es.caib.sistrages.rest.api.interna.RDestino;
-import es.caib.sistrages.rest.api.interna.RFormularioExterno;
-import es.caib.sistrages.rest.api.interna.RFormularioInterno;
-import es.caib.sistrages.rest.api.interna.RFormularioTramite;
-import es.caib.sistrages.rest.api.interna.RLineaComponentes;
-import es.caib.sistrages.rest.api.interna.RListaDominio;
-import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
-import es.caib.sistrages.rest.api.interna.RPagoTramite;
-import es.caib.sistrages.rest.api.interna.RParametroDominio;
-import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
-import es.caib.sistrages.rest.api.interna.RPasoTramitacionAnexar;
-import es.caib.sistrages.rest.api.interna.RPasoTramitacionDebeSaber;
-import es.caib.sistrages.rest.api.interna.RPasoTramitacionPagar;
-import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
-import es.caib.sistrages.rest.api.interna.RPasoTramitacionRellenar;
-import es.caib.sistrages.rest.api.interna.RPlantillaFormulario;
-import es.caib.sistrages.rest.api.interna.RPropiedadesCampo;
-import es.caib.sistrages.rest.api.interna.RPropiedadesTextoCP;
-import es.caib.sistrages.rest.api.interna.RPropiedadesTextoEmail;
-import es.caib.sistrages.rest.api.interna.RPropiedadesTextoExpRegular;
-import es.caib.sistrages.rest.api.interna.RPropiedadesTextoFecha;
-import es.caib.sistrages.rest.api.interna.RPropiedadesTextoHora;
-import es.caib.sistrages.rest.api.interna.RPropiedadesTextoIban;
-import es.caib.sistrages.rest.api.interna.RPropiedadesTextoIdentificacion;
-import es.caib.sistrages.rest.api.interna.RPropiedadesTextoNormal;
-import es.caib.sistrages.rest.api.interna.RPropiedadesTextoNumero;
-import es.caib.sistrages.rest.api.interna.RPropiedadesTextoTelefono;
-import es.caib.sistrages.rest.api.interna.RScript;
-import es.caib.sistrages.rest.api.interna.RValorListaFija;
-import es.caib.sistrages.rest.api.interna.RVersionTramite;
-import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
-import es.caib.sistrages.rest.api.interna.RVersionTramitePropiedades;
 import es.caib.sistrages.rest.utils.AdapterUtils;
 
 /**
@@ -499,8 +456,9 @@ public class VersionTramiteAdapter {
 	/**
 	 * Concatena ambos emails
 	 *
-	 * @param generaScript
-	 * @param scripts
+	 * @param script Script
+	 * @param scripts Lista scripts
+	 * @param idioma Idioma
 	 * @return
 	 */
 	private RScript getScriptDatosIniciales(final Script script, final List<Script> scripts, final String idioma) {
@@ -902,6 +860,9 @@ public class VersionTramiteAdapter {
 		case TELEFONO:
 			resTB.setTextoTelefono(generaTextoTelefono(ct));
 			break;
+		case TELEFONO_INTERNACIONAL:
+			resTB.setTextoTelefonoInternacional(generaTextoTelefonoInternacional(ct));
+			break;
 		case EXPRESION:
 			resTB.setTextoExpRegular(generaExpresionRegular(ct));
 			break;
@@ -1044,6 +1005,20 @@ public class VersionTramiteAdapter {
 	}
 
 	/**
+	 * Genera texto teléfono internacional.
+	 *
+	 * @param ct
+	 *               campo texto
+	 * @return Propiedades teléfono internacional
+	 */
+	private RPropiedadesTextoTelefonoInternacional generaTextoTelefonoInternacional(final ComponenteFormularioCampoTexto ct) {
+		final RPropiedadesTextoTelefonoInternacional props = new RPropiedadesTextoTelefonoInternacional();
+		props.setValidacionPrecisa(ct.isTelefonoInternacionalValidacionPrecisa());
+		props.setPrevenirPegar(ct.isPrevenirPegar());
+		return props;
+	}
+
+	/**
 	 * Genera Lista Fija
 	 *
 	 * @param ori
@@ -1115,6 +1090,9 @@ public class VersionTramiteAdapter {
 	 */
 	private RPropiedadesCampo generarPropiedadesCampo(final ComponenteFormularioCampoOculto ori, final String idioma) {
 		final RPropiedadesCampo res = new RPropiedadesCampo();
+		// Forzamos a solo lectura
+		res.setSoloLectura(true);
+		// Establecemos script autorrellenable
 		res.setScriptAutorrellenable(AdapterUtils.generaScript(ori.getScriptAutorrellenable(), idioma));
 		return res;
 	}
@@ -1141,7 +1119,7 @@ public class VersionTramiteAdapter {
 	/**
 	 * Genera propiedades Texto Numero
 	 *
-	 * @param ori
+	 * @param ct ComponenteFormularioCampoTexto
 	 * @return RPropiedadesTextoNumero
 	 */
 	private RPropiedadesTextoNumero generaTextoNumero(final ComponenteFormularioCampoTexto ct) {
@@ -1209,7 +1187,7 @@ public class VersionTramiteAdapter {
 	/**
 	 * Genera propiedades Expresión Regular
 	 *
-	 * @param exp
+	 * @param ct ComponenteFormularioCampoTexto
 	 * @return RPropiedadesTextoExpRegular
 	 */
 	private RPropiedadesTextoExpRegular generaExpresionRegular(final ComponenteFormularioCampoTexto ct) {
@@ -1317,6 +1295,7 @@ public class VersionTramiteAdapter {
 					resPE.setExtensiones(Arrays.asList(d.getExtensiones().split(AdapterUtils.SEPARADOR_EXTENSIONES)));
 				}
 				resPE.setFirmar(d.isDebeFirmarDigitalmente());
+				resPE.setValidarFirmantes(d.isDebeValidarFirmantes());
 				resPE.setInstancias(d.getNumeroInstancia());
 				resPE.setScriptFirmantes(AdapterUtils.generaScript(d.getScriptFirmarDigitalmente(), idioma));
 				resPE.setScriptValidacion(AdapterUtils.generaScript(d.getScriptValidacion(), idioma));

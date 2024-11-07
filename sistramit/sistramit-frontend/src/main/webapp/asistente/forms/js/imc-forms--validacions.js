@@ -471,6 +471,16 @@ $.fn.appValida = function(opcions) {
 
 	}
 
+	if (format === "telefonInternacional" && valor !== "") {
+
+		var el = element.closest(".imc-element")
+			,el_iti = el.data("iti")
+			,esPrecisa = (el.attr("data-validacio-precisa") === "s") ? true : false;
+
+		esCorrecte = (esPrecisa) ? el_iti.isValidNumberPrecise() : el_iti.isValidNumber();
+
+	}
+
 	// retorna si és correcte
 
 	return esCorrecte;

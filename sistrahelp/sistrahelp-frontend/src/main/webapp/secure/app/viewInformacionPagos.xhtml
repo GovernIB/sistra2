@@ -176,7 +176,7 @@
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
         	<p:panelGrid id="panelFiltro" styleClass="noBackground w100 h10" style="border-color:#f0f0f0">
         	<p:row style="border-color:#f0f0f0">
-        	<p:column styleClass="w40">
+        	<p:column styleClass="noPadding">
         		<h:panelGrid columns="2" styleClass="w100" columnClasses="w23 grid-right, w69">
 	        		<p:outputLabel for="filtroTipoAcceso" value="#{msg['viewInformacionPagos.filtroTipoAcceso']}:"/>
 					<p:selectOneMenu id="filtroTipoAcceso" value="#{viewInformacionPagos.filtros.tipoAcceso}" required="true" style="margin-left: 5%">
@@ -184,42 +184,45 @@
     					<p:ajax event="change" update="id1 id2" oncomplete="$('.ui-state-error').removeClass('ui-state-error');" />
 					</p:selectOneMenu >
 	        	</h:panelGrid>
+
+				<h:panelGrid columns="5" styleClass="w100" columnClasses="w15 grid-right,w10 grid-right,w10,w5 grid-right,w10">
+
+					<p:outputLabel value="#{msg['viewInformacionPagos.filtroFecha']}:" styleClass="padding-right-2pct"/>
+
+					<p:outputLabel for="filtroFechaInicio" value="#{msg['viewInformacionPagos.filtroFechaInicio']}:" styleClass="padding-right-4"/>
+					<p:calendar id="filtroFechaInicio" value="#{viewInformacionPagos.filtros.fechaDesde}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
+
+					<p:outputLabel for="filtroFechaFin" value="#{msg['viewInformacionPagos.filtroFechaFin']}:" styleClass="padding-right-4"/>
+					<p:calendar id="filtroFechaFin" value="#{viewInformacionPagos.filtros.fechaHasta}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+				</h:panelGrid>
 	        </p:column>
-	        <p:column styleClass="w33">
+
+	        <p:column styleClass="noPadding p-justify-start">
         		<h:panelGrid id="id1" columns="2" styleClass="w100" columnClasses="w45 grid-right,w74">
 	        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewInformacionPagos.filtroIdSesion']}:"/>
 		        	<p:inputText id="filtroIdSesion" value="#{viewInformacionPagos.filtros.idSesionTramitacion}" size="30" maxlength="30" required="#{viewInformacionPagos.filtros.tipoAcceso eq TypeAutenticacion.ANONIMO}" onkeyup="capitalize(this)" onblur="trim(this)"/>
 	        	</h:panelGrid>
-	        </p:column>
-	        <p:column styleClass="w34">
 
-	        </p:column>
-			</p:row>
-			<p:row style="border-color:#f0f0f0">
-			<p:column  styleClass="w40">
-				<h:panelGrid columns="5" styleClass="w100" columnClasses="w15 grid-right,w5 grid-right,w10,w5 grid-right,w10">
-
-					<p:outputLabel value="#{msg['viewInformacionPagos.filtroFecha']}:" styleClass="padding-right-2pct"/>
-
-	        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewInformacionPagos.filtroFechaInicio']}:" styleClass="padding-right-4"/>
-	        		<p:calendar id="filtroFechaInicio" value="#{viewInformacionPagos.filtros.fechaDesde}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
-
-	        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewInformacionPagos.filtroFechaFin']}:" styleClass="padding-right-4"/>
-	        		<p:calendar id="filtroFechaFin" value="#{viewInformacionPagos.filtros.fechaHasta}" size="16" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+				<h:panelGrid id="id2" columns="2" styleClass="w100" columnClasses="w45 grid-right,w75">
+					<p:outputLabel for="filtroNif" value="#{msg['viewInformacionPagos.filtroNif']}:"/>
+					<p:inputText id="filtroNif" value="#{viewInformacionPagos.filtros.nif}" size="30" maxlength="12" required="#{viewInformacionPagos.filtros.tipoAcceso eq null or viewInformacionPagos.filtros.tipoAcceso eq TypeAutenticacion.AUTENTICADO}" onkeyup="capitalize(this)" onblur="trim(this)"/>
 				</h:panelGrid>
 	        </p:column>
-	        <p:column>
-	        	<h:panelGrid id="id2" columns="2" styleClass="w100" columnClasses="w45 grid-right,w75">
-		        	<p:outputLabel for="filtroNif" value="#{msg['viewInformacionPagos.filtroNif']}:"/>
-		        	<p:inputText id="filtroNif" value="#{viewInformacionPagos.filtros.nif}" size="30" maxlength="12" required="#{viewInformacionPagos.filtros.tipoAcceso eq null or viewInformacionPagos.filtros.tipoAcceso eq TypeAutenticacion.AUTENTICADO}" onkeyup="capitalize(this)" onblur="trim(this)"/>
-	        	</h:panelGrid>
-	        </p:column>
-	        <p:column>
-	        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="table-rightaligned">
-          			<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewInformacionPagos.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
-          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewInformacionPagos.ayuda}"/>
+
+	        <p:column styleClass="noPadding p-justify-start">
+				<h:panelGrid columns="2" styleClass="w100" columnClasses="w90 grid-right,w75">
+					<p:outputLabel for="filtroMostrarErrores" value="#{msg['viewInformacionPagos.filtroMostarErrores']}:"/>
+					<p:selectBooleanCheckbox id="filtroMostrarErrores" value="#{viewInformacionPagos.filtros.mostrarErrores}" styleClass="fondoAzul">
+					</p:selectBooleanCheckbox>
 				</h:panelGrid>
-          	</p:column>
+	        </p:column>
+
+			<p:column>
+				<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="table-rightaligned">
+					<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewInformacionPagos.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewInformacionPagos.ayuda}"/>
+				</h:panelGrid>
+			</p:column>
 			</p:row>
           	</p:panelGrid>
 
@@ -271,6 +274,10 @@
 			    <p:column headerText="#{msg['viewInformacionPagos.headImporte']}" style="width:10% !important;" styleClass="grid-right">
 			        <h:outputText value="#{dt.importe/100}" />
 			    </p:column>
+
+				<p:column headerText="#{msg['viewInformacionPagos.mensajeError']}" style="width:20% !important;" styleClass="grid-center" sortBy="#{dt.mensajeError}">
+					<h:outputText value="#{dt.mensajeError}" />
+				</p:column>
 
 			</p:dataTable></p:outputPanel>
 

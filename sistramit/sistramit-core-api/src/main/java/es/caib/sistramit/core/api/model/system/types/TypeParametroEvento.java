@@ -57,6 +57,14 @@ public enum TypeParametroEvento {
 	 */
 	PAGO_IMPORTE("PAGIMP"),
 	/**
+	 * Pago: Error pasarela.
+	 */
+	PAGO_ERROR("PAGERR"),
+	/**
+	 * Pago: Método pago seleccionado (depende pasarela).
+	 */
+	PAGO_METODO("PAGMET"),
+	/**
 	 * Valoración trámite: puntuación.
 	 */
 	VALORACION_PUNTUACION("VALPUN"),
@@ -91,7 +99,12 @@ public enum TypeParametroEvento {
 	/**
 	 * PROBLEMA FIRMA.
 	 */
-	FIRMA_ERROR("FIRERROR");
+	FIRMA_ERROR("FIRERROR"),
+	/**
+	 * FIRMA SESION.
+	 */
+	FIRMA_SESION("FIRSESION");
+
 
 	/**
 	 * Valor como string.

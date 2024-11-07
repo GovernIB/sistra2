@@ -105,6 +105,11 @@ public abstract class DialogControllerBase {
 		return UtilJSF.checkEntorno(TypeEntorno.DESARROLLO);
 	}
 
+	/** Es servicios estables? **/
+	public boolean isServiciosEstables() {
+		return UtilJSF.checkEntorno(TypeEntorno.SERVICIOS_ESTABLES);
+	}
+
 	/**
 	 * Indica si el dialogo se abre en modo alta.
 	 *

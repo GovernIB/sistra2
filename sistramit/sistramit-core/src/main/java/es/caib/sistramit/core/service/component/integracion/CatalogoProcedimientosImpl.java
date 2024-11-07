@@ -144,9 +144,9 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 
 		final TypeEntorno entorno = TypeEntorno
 				.fromString(configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ENTORNO));
-		if (entorno != TypeEntorno.DESARROLLO) {
+		if (entorno != TypeEntorno.DESARROLLO && entorno != TypeEntorno.SERVICIOS_ESTABLES) {
 			throw new CatalogoProcedimientosException(
-					"Simulació de catàleg procediments només disponible per entorn desenvolupament");
+					"Simulació de catàleg procediments només disponible per entorn desenvolupament / serveis estables");
 		}
 
 		final DefinicionTramiteTelematico tt = new DefinicionTramiteTelematico();

@@ -47,9 +47,19 @@ public final class ResAnexosDinamicos implements ResAnexosDinamicosInt {
 		if (StringUtils.isBlank(anexo.getDescripcion())) {
 			throw new ScriptException("No s'ha indicat descripció annex " + anexo.getIdentificador());
 		}
-		if (!XssFilter.filtroXss(anexo.getIdentificador()) || !XssFilter.filtroXss(anexo.getDescripcion())) {
+		if (!XssFilter.filtroXss(anexo.getIdentificador())) {
 			throw new ScriptException(
-					"La dada proporcionada com identificador o descripció conté caràceters no permesos per annex "
+					"La dada proporcionada com identificador annex conté caràceters no permesos "
+							+ anexo.getIdentificador());
+		}
+		if (!XssFilter.filtroXss(anexo.getDescripcion())) {
+			throw new ScriptException(
+					"La dada proporcionada com descripció annex conté caràceters no permesos "
+							+ anexo.getIdentificador());
+		}
+		if (!XssFilter.filtroXss(anexo.getAyuda(),true)) {
+			throw new ScriptException(
+					"La dada proporcionada com ajuda annex conté caràceters no permesos "
 							+ anexo.getIdentificador());
 		}
 		if (StringUtils.isNotBlank(anexo.getTamanyoMaximo())) {

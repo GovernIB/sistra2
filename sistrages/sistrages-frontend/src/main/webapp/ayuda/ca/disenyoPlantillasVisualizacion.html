@@ -17,7 +17,14 @@ A continuació s'indiquen les propietats a incloure als fitxers plantilla i els 
 <p>
 	<ul>
 		<li><span class="nombreCampo">logo.url:</span> propietat en la qual s'indica la ruta del logo a plasmar en la plantilla de visualització del formulari. En cas de no tenir valor no s'inclourà logo.</li>
-		<li><span class="nombreCampo">titulo.procedimiento:</span> propietat que permet indicar si es mostra el títol del procediment, obtingut del catàleg de procediments i serveis, juntament amb el títol del formulari. Aquesta propietat pot prendre els valors true o false.</li>
+		<li><span class="nombreCampo">logo.escalado.alto:</span> propietat en la qual s'indica el escalat del alt del logo (en %). Per defecte està en 100%.</li>
+		<li><span class="nombreCampo">logo.escalado.ancho:</span> propietat en la qual s'indica el escalat del ample del logo (en %). Per defecte està en 100%.</li>
+		<li><span class="nombreCampo">logo.dinamico.url:</span> propietat en la qual s'indica la ruta del logo a plasmar en la plantilla de visualització del formulari, segons el codi DIR3 associat a la tramitació. En cas de no tenir valor no s'inclourà logo.</li>
+		<li><span class="nombreCampo">marcaAgua.url:</span> propietat en la qual s'indica la ruta de la marca d'aigua a plasmar en la plantilla de visualització del formulari. En cas de no tenir valor no s'inclourà marca d'aigua.</li>
+		<li><span class="nombreCampo">marcaAgua.scale.percentX:</span> propietat en la qual s'indica el percentatge d'escalt horitzontal de la marca d'aigua.</li>
+		<li><span class="nombreCampo">marcaAgua.scale.percentY:</span> propietat en la qual s'indica el percentatge d'escalt vertical de la marca d'aigua.</li>
+		<li><span class="nombreCampo">marcaAgua.position.X:</span> propietat en la qual s'indica la posició horitzontal de la marca d'aigua.</li>
+		<li><span class="nombreCampo">marcaAgua.position.Y:</span> propietat en la qual s'indica la posició vertical de la marca d'aigua.</li>
 		<li><span class="nombreCampo">campoIndexado.visualizacion:</span> propietat que fixa la manera de mostrar els valors associats a camps indexats (camps de tipus selector). Els valors que admet aquesta propietat són:</li>
 		<ul class="detalle">
 		<li><span class="boton">DESCRIPCION_CODIGO_CON_PARENTESIS:</span> Es mostrarà la descripció del valor seleccionat seguit del codi entre parèntesi (p.ej: ESPANYA (34)).</li>
@@ -26,6 +33,12 @@ A continuació s'indiquen les propietats a incloure als fitxers plantilla i els 
 		<li><span class="boton">CODIGO_DESCRIPCION_CON_GUION:</span> Es mostrarà el codi associat al valor seleccionat seguit d'un guió i la descripció (p.ej: 34 - ESPANYA).</li>
 		<li><span class="boton">DESCRIPCION:</span> Es mostrarà únicament la descripció del valor seleccionat (p.ej: ESPANYA).</li>
 		</ul>
+		<li><span class="nombreCampo">titulo.procedimiento:</span> propietat que permet indicar si es mostra el títol del procediment, obtingut del catàleg de procediments i serveis. Aquesta propietat pot prendre els valors true o false.</li>
+		<li><span class="nombreCampo">titulo.tramite:</span> propietat que permet indicar si es mostra el títol del tràmit (en cas de no mostrar el del procediment), obtingut del tràmit de ROLSAC. Aquesta propietat pot prendre els valors true o false.</li>
+		<li><span class="nombreCampo">subtitulo.mostrar:</span> propietat que permet indicar si es mostra la descripció del formulari del tràmit de SISTRA2. Aquesta propietat pot prendre els valors true o false.</li>
+		<li><span class="nombreCampo">titulo.mayusculas:</span> propietat que permet indicar si es mostra el títol en mayúscules. Aquesta propietat pot prendre els valors true o false.</li>
+		<li><span class="nombreCampo">subtítulo.mayusculas:</span> propietat que permet indicar si es mostra el subtítol en mayúscules. Aquesta propietat pot prendre els valors true o false.</li>
+		<li><span class="nombreCampo">mostrar.campos.ocultos:</span> propietat que permet indicar si es mostren els camps ocults del formulari. Aquesta propietat pot prendre els valors true o false.</li>
 		<li><span class="nombreCampo">aviso.mostrar:</span> propietat que indica si s'han de plasmar els camps del formulari del tipus "Avís" en el PDF de visualització del formulari.</li>
 	</ul>
 </p>

@@ -47,6 +47,10 @@ public class RComponenteTextbox extends RComponente {
 	@ApiModelProperty(value = "Propiedades texto teléfono")
 	private RPropiedadesTextoTelefono textoTelefono;
 
+	/** Propiedades texto teléfono internacional. */
+	@ApiModelProperty(value = "Propiedades texto teléfono internacional")
+	private RPropiedadesTextoTelefonoInternacional textoTelefonoInternacional;
+
 	/** Propiedades texto cp. */
 	@ApiModelProperty(value = "Propiedades texto código postal")
 	private RPropiedadesTextoCP textoCP;
@@ -263,4 +267,13 @@ public class RComponenteTextbox extends RComponente {
 		this.textoIban = textoIban;
 	}
 
+	/** Propiedades teléfono internacional. */
+	public RPropiedadesTextoTelefonoInternacional getTextoTelefonoInternacional() {
+		return textoTelefonoInternacional;
+	}
+
+	/** Propiedades teléfono internacional. */
+	public void setTextoTelefonoInternacional(RPropiedadesTextoTelefonoInternacional textoTelefonoInternacional) {
+		this.textoTelefonoInternacional = textoTelefonoInternacional;
+	}
 }

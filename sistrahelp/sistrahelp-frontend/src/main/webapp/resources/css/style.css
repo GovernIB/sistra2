@@ -748,3 +748,7 @@ textarea[readonly="readonly"] {
 	margin-top: 3.5em;
 	padding:1em;
 }
+
+.fondoAzul .ui-state-active {
+    background-color: #007fff !important;
+}

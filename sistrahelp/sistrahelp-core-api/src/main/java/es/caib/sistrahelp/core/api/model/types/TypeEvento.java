@@ -86,7 +86,14 @@ public enum TypeEvento {
 	 * FIRMA FIN.
 	 */
 	FIRMA_FIN("TR_SGF"),
-
+	/**
+	 * FIRMA FIN (OK).
+	 */
+	FIRMA_FIN_OK("TR_SGO"),
+	/**
+	 * FIRMA FIN (ERROR).
+	 */
+	FIRMA_FIN_KO("TR_SGX"),
 	/**
 	 * INVALIDACIONES: PETICIÓN INVALIDACIÓN
 	 */

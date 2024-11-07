@@ -150,6 +150,8 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 	private int firmaFin;
 
+	private int firmaFinOk;
+
 	private LazyDataModel<ErroresPorTramiteCM> listaErrores;
 
 	private LazyDataModel<ErroresPorTramiteCM> listaInacabados;
@@ -431,6 +433,7 @@ public class ViewCuadroMando extends ViewControllerBase {
 		formFin = 0;
 		firmaIni = 0;
 		firmaFin = 0;
+		firmaFinOk = 0;
 		if(filtros.getClasificacionSeleccionada().equals("et")) {
 			PrimeFaces.current().executeScript(
 					"var selecc = document.getElementById('form:dataTableTramites').getElementsByClassName('ui-state-highlight');"
@@ -645,6 +648,9 @@ public class ViewCuadroMando extends ViewControllerBase {
 				break;
 			case FIRMA_FIN:
 				firmaFin = ev.getConcurrencias().intValue();
+				break;
+			case FIRMA_FIN_OK:
+				firmaFinOk = ev.getConcurrencias().intValue();
 				break;
 			case PAGO_ELECTRONICO_INICIO:
 				pagIni = ev.getConcurrencias().intValue();
@@ -1003,6 +1009,14 @@ public class ViewCuadroMando extends ViewControllerBase {
 
 	public final int getFirmaFin() {
 		return firmaFin;
+	}
+
+	public int getFirmaFinOk() {
+		return firmaFinOk;
+	}
+
+	public void setFirmaFinOk(int firmaFinOk) {
+		this.firmaFinOk = firmaFinOk;
 	}
 
 	public final void setFirmaFin(int firmaFin) {

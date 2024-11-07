@@ -142,10 +142,13 @@ public class PasoRegistrarController extends TramitacionController {
 		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
 				TypeAccionPasoRegistrar.INICIAR_FIRMA_DOCUMENTO, pParametros);
 		final String url = (String) rap.getParametroRetorno("url");
+		final TypeSiNo iframe = (TypeSiNo) rap.getParametroRetorno("iframe");
 
 		debug("Iniciar firma electronico - redireccion url: " + url);
 		final RedireccionFirmaCliente redireccion = new RedireccionFirmaCliente();
 		redireccion.setUrl(url);
+		redireccion.setIframe(iframe);
+
 		final RespuestaJSON respuesta = new RespuestaJSON();
 		respuesta.setDatos(redireccion);
 		final String tituloMensaje = getLiteralesFront().getLiteralFront(LiteralesFront.MENSAJES, "atencion",
