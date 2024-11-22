@@ -656,7 +656,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		}
 
 		tramiteActual = tramiteService.getTramiteByIdentificador(tramite.getIdentificador(),
-				filaArea.getArea().getCodigo(), null, null);
+				filaArea.getAreaActual().getCodigo(), null, null);
 
 		if (filaArea.getResultado() == null || filaArea.getResultado() == TypeImportarResultado.WARNING) {
 			// Lo dejamos a error a la espera que realice una acción con
@@ -1632,21 +1632,9 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		filaImportar.setModo(Constantes.IMPORTAR_TIPO_IM);
 		final FilaImportarResultado resultado = tramiteService.importar(filaImportar);
 
-		ResultadoError re = null;
+		ResultadoError re = this.refrescar();
 
-		if (refrescarCacheDominio) {
-			for (final FilaImportarDominio dominio : filasDominios) {
-				if (dominio.getAccion() != TypeImportarAccion.MANTENER && dominio.getDominioActual() != null) {
-
-					re = this.refrescar();
-
-				}
-			}
-		}
-
-		if (re == null) {
-			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
-		} else if (re.getCodigo() != 1) {
+		if (re.getCodigo() != 1) {
 			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok") + ". "
 					+ UtilJSF.getLiteral("error.refrescarCache") + ": " + re.getMensaje());
 		} else {

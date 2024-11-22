@@ -94,8 +94,9 @@ public final class NifUtils {
 	 */
 	public static boolean esDni(final String valor) {
 		boolean res = false;
+		String dniToUpperCase = valor.toUpperCase();
 		try {
-			if (esCadenaVacia(valor) || !Pattern.matches(SIN_DNI, valor) || valor.length() != ConstantesNumero.N9) {
+			if (esCadenaVacia(valor) || !Pattern.matches(SIN_DNI, dniToUpperCase) || valor.length() != ConstantesNumero.N9) {
 				res = false;
 			} else {
 				/***
@@ -105,7 +106,7 @@ public final class NifUtils {
 				 * 3. Calculamos la letra de control a partir de los dígitos<br />
 				 * 4. Si son iguales, es dni correcto (true), sino false.
 				 */
-				final String letraNif = valor.substring(8);
+				final String letraNif = dniToUpperCase.substring(8);
 
 				final StringBuilder sb = new StringBuilder(20);
 				for (int i = 0; i < valor.length(); i++) {
@@ -141,8 +142,9 @@ public final class NifUtils {
 	 */
 	public static boolean esNie(final String nie) {
 		boolean res = false;
+		String nieToUpperCase = nie.toUpperCase();
 		try {
-			if (esCadenaVacia(nie) || !Pattern.matches(SIN_NIE, nie) || nie.length() != ConstantesNumero.N9) {
+			if (esCadenaVacia(nie) || !Pattern.matches(SIN_NIE, nieToUpperCase) || nie.length() != ConstantesNumero.N9) {
 				res = false;
 			} else {
 				/***
@@ -154,10 +156,10 @@ public final class NifUtils {
 				 * de los dígitos. <br />
 				 * 5. Si son iguales, es dni correcto (true), sino false.
 				 */
-				final String numero = nie.replaceAll("[a-zA-Z]", StringUtils.EMPTY);
-				final String inicio = getInicioNie(nie);
+				final String numero = nieToUpperCase.replaceAll("[a-zA-Z]", StringUtils.EMPTY);
+				final String inicio = getInicioNie(nieToUpperCase);
 
-				final String letra = nie.substring(ConstantesNumero.N1).replaceAll("[^a-z^A-Z]", StringUtils.EMPTY);
+				final String letra = nieToUpperCase.substring(ConstantesNumero.N1).replaceAll("[^a-z^A-Z]", StringUtils.EMPTY);
 				if (!letra.equals(getLetraNIF(inicio + numero))) {
 					res = false;
 				} else {
@@ -205,8 +207,9 @@ public final class NifUtils {
 	 */
 	public static boolean esNifOtros(final String nif) {
 		boolean res = false;
+		String nifToUpperCase = nif.toUpperCase();
 		try {
-			if (esCadenaVacia(nif) || !Pattern.matches(SIN_NIF_OTROS, nif) || nif.length() != ConstantesNumero.N9) {
+			if (esCadenaVacia(nif) || !Pattern.matches(SIN_NIF_OTROS, nifToUpperCase) || nif.length() != ConstantesNumero.N9) {
 				res = false;
 			} else {
 				/***
@@ -216,8 +219,8 @@ public final class NifUtils {
 				 * 3. Calculamos la letra de control a partir de los dígitos<br />
 				 * 4. Si son iguales, es dni correcto (true), sino false.
 				 */
-				final String numero = nif.replaceAll("[a-zA-Z]", StringUtils.EMPTY);
-				final String letra = nif.substring(ConstantesNumero.N1).replaceAll("[^a-z^A-Z]", StringUtils.EMPTY);
+				final String numero = nifToUpperCase.replaceAll("[a-zA-Z]", StringUtils.EMPTY);
+				final String letra = nifToUpperCase.substring(ConstantesNumero.N1).replaceAll("[^a-z^A-Z]", StringUtils.EMPTY);
 				if (!letra.equals(getLetraNIF(numero))) {
 					res = false;
 				} else {
@@ -240,22 +243,23 @@ public final class NifUtils {
 	 */
 	public static boolean esNifPersonaJuridica(final String valor) {
 		boolean res = false;
+		String nifPersonaJuridicaToUpperCase = valor.toUpperCase();
 		try {
-			if (esCadenaVacia(valor) || !Pattern.matches(SIN_NIF_PERSONA_JURIDICA, valor)
+			if (esCadenaVacia(valor) || !Pattern.matches(SIN_NIF_PERSONA_JURIDICA, nifPersonaJuridicaToUpperCase)
 					|| valor.length() != ConstantesNumero.N9) {
 				res = false;
 			} else {
-				final String codigoControl = valor.substring(valor.length() - ConstantesNumero.N1, valor.length());
+				final String codigoControl = nifPersonaJuridicaToUpperCase.substring(valor.length() - ConstantesNumero.N1, valor.length());
 				final int[] v1 = { 0, ConstantesNumero.N2, ConstantesNumero.N4, ConstantesNumero.N6,
 						ConstantesNumero.N8, ConstantesNumero.N1, ConstantesNumero.N3, ConstantesNumero.N5,
 						ConstantesNumero.N7, ConstantesNumero.N9 };
 				final String[] v2 = { "J", "A", "B", "C", "D", "E", "F", "G", "H", "I" };
 				int suma = 0;
 				for (int i = ConstantesNumero.N2; i <= ConstantesNumero.N6; i += ConstantesNumero.N2) {
-					suma += v1[Integer.parseInt(valor.substring(i - ConstantesNumero.N1, i))];
-					suma += Integer.parseInt(valor.substring(i, i + ConstantesNumero.N1));
+					suma += v1[Integer.parseInt(nifPersonaJuridicaToUpperCase.substring(i - ConstantesNumero.N1, i))];
+					suma += Integer.parseInt(nifPersonaJuridicaToUpperCase.substring(i, i + ConstantesNumero.N1));
 				}
-				suma += v1[Integer.parseInt(valor.substring(ConstantesNumero.N7, ConstantesNumero.N8))];
+				suma += v1[Integer.parseInt(nifPersonaJuridicaToUpperCase.substring(ConstantesNumero.N7, ConstantesNumero.N8))];
 				suma = (ConstantesNumero.N10 - (suma % ConstantesNumero.N10));
 				if (suma == ConstantesNumero.N10) {
 					suma = 0;
@@ -267,7 +271,7 @@ public final class NifUtils {
 				// Verificamos si DC debe ser una letra o numero
 				if (res) {
 					final boolean esEntero = ValidacionesTipo.getInstance().esEntero(codigoControl);
-					final String letraInicial = valor.substring(0, 1);
+					final String letraInicial = nifPersonaJuridicaToUpperCase.substring(0, 1);
 					res = (NIF_PJ_DC_LETRA.indexOf(letraInicial) != -1 && !esEntero)
 							|| (NIF_PJ_DC_LETRA.indexOf(letraInicial) == -1 && esEntero);
 				}

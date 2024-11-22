@@ -510,7 +510,11 @@ public final class RestApiDaoImpl implements RestApiDao {
 		final Root<HDocumento> tableD = query.from(HDocumento.class);
 		final Root<HSesionTramitacion> tableS = query.from(HSesionTramitacion.class);
 
-		Predicate predicate = builder.notEqual(tableD.get("estado"), TypeEstadoDocumento.SIN_RELLENAR.toString());
+		//Se añade este filtro pagoIdentificador para que no se muestren los pagos que no tienen identificador
+		//ya que al cancelar un pago se elimina el identificador del pago
+		//y el NIF del usuario por lo que se pierde la referencia al pago y no tiene sentido enviarlo
+		Predicate predicate = builder.isNotNull(tableD.get("pagoIdentificador"));
+
 		predicate = builder.and(predicate,
 				builder.equal(tableD.get("tipo"), TypeDocumentoPersistencia.PAGO.toString()));
 		predicate = builder.and(predicate, builder.equal(tableT.get("sesionTramitacion"), tableS));

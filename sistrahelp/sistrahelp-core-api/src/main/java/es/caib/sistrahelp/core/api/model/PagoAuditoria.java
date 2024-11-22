@@ -201,6 +201,11 @@ public class PagoAuditoria extends ModelApi {
 		this.pagoEstadoIncorrecto = pagoEstadoIncorrecto;
 	}
 
+	/**
+	 * Convierte el estado de pago de la clase TypeEstadoDocumento de STT
+	 *
+	 * @return el estado del pago como un valor del enum TypeEstadoPago.
+	 */
 	public TypeEstadoPago getEstadoPago() {
 		TypeEstadoPago resultado = null;
 		if ("c".equalsIgnoreCase(estado)) {
@@ -211,7 +216,8 @@ public class PagoAuditoria extends ModelApi {
 			} else if ("x".equalsIgnoreCase(pagoEstadoIncorrecto)) {
 				resultado = TypeEstadoPago.TIEMPO_EXCEDIDO;
 			}
-
+		} else if ("v".equalsIgnoreCase(estado)) {
+			resultado = TypeEstadoPago.EN_CURSO;
 		}
 
 		return resultado;

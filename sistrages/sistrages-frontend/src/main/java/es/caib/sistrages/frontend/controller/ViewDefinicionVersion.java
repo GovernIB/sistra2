@@ -216,6 +216,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private FormularioTramite data;
 	private boolean activoModoEntrega;
 
+	private boolean requiereFirma;
+
 	/**
 	 * Crea una nueva instancia de view definicion version.
 	 */
@@ -2559,5 +2561,14 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		this.activoModoEntrega = activoModoEntrega;
 	}
 
+	public boolean isRequiereFirma() {
+		return this.getDocumentoTramiteSeleccionado().isDebeAnexarFirmado() && this.getDocumentoTramiteSeleccionado().isDebeFirmarDigitalmente();
+	}
 
+	public void setRequiereFirma(boolean requiereFirma) {
+		this.requiereFirma = requiereFirma;
+		// Actualizamos los valores de debeAnexarFirmado y debeFirmarDigitalmente
+//		this.getDocumentoTramiteSeleccionado().setDebeAnexarFirmado(requiereFirma);
+//		this.getDocumentoTramiteSeleccionado().setDebeFirmarDigitalmente(requiereFirma);
+	}
 }

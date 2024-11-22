@@ -1,6 +1,7 @@
 package es.caib.sistra2.commons.pdf;
 
 import java.awt.Color;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -11,18 +12,14 @@ import com.lowagie.text.Element;
 import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.Barcode128;
-import com.lowagie.text.pdf.BarcodePDF417;
-import com.lowagie.text.pdf.BaseFont;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfCopyFields;
-import com.lowagie.text.pdf.PdfEncryptor;
-import com.lowagie.text.pdf.PdfGState;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfStamper;
-import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.pdf.*;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UtilPDF {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(UtilPDF.class);
 
 	/**
 	 * Concatena varios pdfs
@@ -64,7 +61,7 @@ public class UtilPDF {
 	 *
 	 * @param pdfOut
 	 * @param pdfIn
-	 * @param pagesToDelete
+	 * @param pages
 	 * @throws Exception
 	 */
 	public static void extractPages(final OutputStream pdfOut, final InputStream pdfIn, final int[] pages)
@@ -376,6 +373,54 @@ public class UtilPDF {
 		// Detectamos si existe la cadena "<pdfaid:conformance>A</pdfaid:conformance>"
 		return (xml.indexOf("<pdfaid:conformance>A</pdfaid:conformance>") != -1
 				|| xml.indexOf("<pdfaid:conformance>B</pdfaid:conformance>") != -1);
+	}
+
+
+	/**
+	 * Funcion para validar si un documento PDF esta firmado.
+	 *
+	 * @param pdf
+	 *                  pdf
+	 * @param isLtv
+	 *                  si es LTV
+	 * @return boolean
+	 */
+	public static boolean esPades(final byte[] pdf, final boolean isLtv) throws Exception{
+		boolean resultado = false;
+		PdfReader pdfReader = new PdfReader(pdf);
+		final AcroFields fields = pdfReader.getAcroFields();
+		final List<String> names = fields.getSignatureNames();
+		if (isLtv) {
+			// Se busca que exista un sello de tiempo
+			final PdfName pdfRFC3161 = new PdfName("ETSI.RFC3161");
+			for (int i = 0; i < names.size(); i++) {
+				final PdfDictionary pdfDictionary = fields.getSignatureDictionary(names.get(i));
+				final PdfName sub = pdfDictionary.getAsName(PdfName.SUBFILTER);
+				if (pdfRFC3161.equals(sub)) {
+					// Es PADES-LTV
+					resultado = true;
+					break;
+				}
+			}
+		} else {
+			// Se busca que exista al menos una firma
+			resultado = (names.size() > 0);
+		}
+
+		return resultado;
+	}
+
+
+	/**
+	 * Verifica si un pdf esta protegido por password.
+	 * @param pdf pdf
+	 * @return boolean true si esta protegido por password
+	 * @throws Exception
+	 */
+	public static boolean esProtegidoPwd(final byte[] pdf) throws Exception {
+		InputStream fis = new ByteArrayInputStream(pdf);
+		PDDocument doc = PDDocument.load(fis);
+		return doc.isEncrypted();
 	}
 
 }

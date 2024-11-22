@@ -179,7 +179,8 @@
         	<p:column styleClass="noPadding">
         		<h:panelGrid columns="2" styleClass="w100" columnClasses="w23 grid-right, w69">
 	        		<p:outputLabel for="filtroTipoAcceso" value="#{msg['viewInformacionPagos.filtroTipoAcceso']}:"/>
-					<p:selectOneMenu id="filtroTipoAcceso" value="#{viewInformacionPagos.filtros.tipoAcceso}" required="true" style="margin-left: 5%">
+					<p:selectOneMenu id="filtroTipoAcceso" value="#{viewInformacionPagos.filtros.tipoAcceso}" style="margin-left: 5%">
+						<f:selectItem itemLabel="" itemValue="" />
     					<f:selectItems value="#{TypeAutenticacion.ALL_VALUES}" var="tipoAcceso" itemLabel="#{msg['typeTipoAcceso.' += tipoAcceso]}"/>
     					<p:ajax event="change" update="id1 id2" oncomplete="$('.ui-state-error').removeClass('ui-state-error');" />
 					</p:selectOneMenu >
@@ -200,12 +201,12 @@
 	        <p:column styleClass="noPadding p-justify-start">
         		<h:panelGrid id="id1" columns="2" styleClass="w100" columnClasses="w45 grid-right,w74">
 	        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewInformacionPagos.filtroIdSesion']}:"/>
-		        	<p:inputText id="filtroIdSesion" value="#{viewInformacionPagos.filtros.idSesionTramitacion}" size="30" maxlength="30" required="#{viewInformacionPagos.filtros.tipoAcceso eq TypeAutenticacion.ANONIMO}" onkeyup="capitalize(this)" onblur="trim(this)"/>
+		        	<p:inputText id="filtroIdSesion" value="#{viewInformacionPagos.filtros.idSesionTramitacion}" size="30" maxlength="30" onkeyup="capitalize(this)" onblur="trim(this)"/>
 	        	</h:panelGrid>
 
 				<h:panelGrid id="id2" columns="2" styleClass="w100" columnClasses="w45 grid-right,w75">
 					<p:outputLabel for="filtroNif" value="#{msg['viewInformacionPagos.filtroNif']}:"/>
-					<p:inputText id="filtroNif" value="#{viewInformacionPagos.filtros.nif}" size="30" maxlength="12" required="#{viewInformacionPagos.filtros.tipoAcceso eq null or viewInformacionPagos.filtros.tipoAcceso eq TypeAutenticacion.AUTENTICADO}" onkeyup="capitalize(this)" onblur="trim(this)"/>
+					<p:inputText id="filtroNif" value="#{viewInformacionPagos.filtros.nif}" size="30" maxlength="12" disabled="#{viewInformacionPagos.filtros.tipoAcceso eq TypeAutenticacion.ANONIMO}" onkeyup="capitalize(this)" onblur="trim(this)"/>
 				</h:panelGrid>
 	        </p:column>
 

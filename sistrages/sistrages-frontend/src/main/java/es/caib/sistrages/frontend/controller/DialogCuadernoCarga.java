@@ -1097,7 +1097,7 @@ public class DialogCuadernoCarga extends DialogControllerBase {
 			final GestorExternoFormularios gestor = entry.getValue();
 
 			final GestorExternoFormularios gestorActual = gestorExternoService.getFormularioExternoByIdentificador(
-					TypeAmbito.AREA, gestor.getIdentificador(), UtilJSF.getIdEntidad(), filaArea.getArea().getCodigo(),
+					TypeAmbito.AREA, gestor.getIdentificador(), UtilJSF.getIdEntidad(), filaArea.getAreaActual().getCodigo(),
 					null);
 
 			String identificadorArea = null;

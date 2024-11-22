@@ -71,6 +71,8 @@ public class ViewInformacionPagos extends ViewControllerBase {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
 		filtros = new FiltroAuditoriaPago(convierteListaAreas());
+
+		filtrar();
 	}
 
 	/**

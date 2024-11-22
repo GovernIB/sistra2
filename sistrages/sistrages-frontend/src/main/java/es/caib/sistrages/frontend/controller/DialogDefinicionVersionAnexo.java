@@ -92,7 +92,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 
 	private String errorCopiar;
 
-	/**
+    /**
 	 * Obtiene el valor de permiteEditar.
 	 *
 	 * @return el valor de permiteEditar
@@ -378,21 +378,6 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		}
 	}
 
-	public void updateDebeValidarFirmantes() {
-		this.data.setDebeValidarFirmantes(this.data.isDebeAnexarFirmado());
-		if (this.data.isDebeAnexarFirmado() && !this.data.isDebeValidarFirmantes()) {
-			this.data.setDebeFirmarDigitalmente(false);
-		}
-		setCambios();
-	}
-
-	public void updateDebeFirmarDigitalmente() {
-		if (this.data.isDebeAnexarFirmado() && !this.data.isDebeValidarFirmantes()) {
-			this.data.setDebeFirmarDigitalmente(false);
-		}
-		setCambios();
-	}
-
 	/**
 	 * Aceptar.
 	 */
@@ -658,6 +643,16 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		this.idiomas = idiomas;
 	}
 
+	public void setCambiosNumeroInstancia() {
+		if(data.getNumeroInstancia() != 1) {
+			data.setDebeAnexarFirmado(false);
+			data.setDebeFirmarDigitalmente(false);
+			data.setDebeValidarFirmantes(false);
+		}
+
+		setCambios();
+	}
+
 	public void setCambiosExtensionesPersonalizadas() {
 		data.setExtensiones(data.getExtensiones().toLowerCase().trim());
 		setCambios();
@@ -673,4 +668,16 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		}
 	}
 
+	public boolean isRequiereFirma() {
+		return this.data.isDebeAnexarFirmado() && this.data.isDebeFirmarDigitalmente();
+	}
+
+	public void setRequiereFirma(boolean requiereFirma) {
+        // Actualizamos los valores de debeAnexarFirmado y debeFirmarDigitalmente
+		this.data.setDebeAnexarFirmado(requiereFirma);
+		this.data.setDebeFirmarDigitalmente(requiereFirma);
+		if(!isRequiereFirma()) {
+			this.data.setDebeValidarFirmantes(false);
+		}
+	}
 }

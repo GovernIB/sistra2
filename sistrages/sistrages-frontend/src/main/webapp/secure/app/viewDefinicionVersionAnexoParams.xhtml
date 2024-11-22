@@ -94,7 +94,7 @@
 						 </p:panelGrid>
 
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.tammaximo']}" for="tammaximo" />
-						<p:panelGrid styleClass="noBorders" columns="4" columnClasses="noPadding-left,noPadding-left">
+						<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,noPadding-left">
 							<p:inputText id="tammaximo" readonly="true" onblur="this.value = this.value.trim();" size="3" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.tamanyoMaximo}"  />
 							<p:selectOneRadio id="tipotam" disabled="true" columns="1" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.tipoTamanyo}">
 						        	<f:selectItems value="#{TypeTamanyo.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeTamanyo.' += tipo]}" />
@@ -108,9 +108,10 @@
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firma']}"  />
 						<p:panelGrid styleClass="noBorders" columns="4" columnClasses="noPadding-left,noPadding-left">
 
-						    <p:selectBooleanCheckbox disabled="true" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" id="debeAnexarFirmado" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.debeAnexarFirmado}" style="display:none;"/>
+							<p:selectBooleanCheckbox id="requiereFirma" value="#{viewDefinicionVersionParams.requiereFirma}"
+													 itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.requiereFirma']}"
+													 disabled="true" />
 							<p:selectBooleanCheckbox disabled="true" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.validarFirma']}" id="debeValidarFirmantes" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.debeValidarFirmantes}" />
-						    <p:selectBooleanCheckbox disabled="true" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firmar']}" id="debeFirmarDigitalmente" value="#{viewDefinicionVersionParams.documentoTramiteSeleccionado.debeFirmarDigitalmente}" />
 
 							<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionParams.consultarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptFirmarDigitalmente.codigo)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
 									styleClass="#{viewDefinicionVersionParams.getColorScript(viewDefinicionVersionParams.documentoTramiteSeleccionado.scriptFirmarDigitalmente)}"

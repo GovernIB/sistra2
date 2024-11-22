@@ -238,7 +238,7 @@
 						<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.numinstancias']}" for="numinstancias"/>
 						<p:panelGrid styleClass="noBorders" columns="2" columnClasses="noPadding-left,">
 							<p:inputText id="numinstancias" size="3" value="#{dialogDefinicionVersionAnexo.data.numeroInstancia}" maxlength="2" onblur="this.value = this.value.trim();">
-								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this"/>
+								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambiosNumeroInstancia}" process="@this" update="@this :formDialogDefinicionVersionAnexo:panelChecksFirma"/>
 							</p:inputText>
 						</p:panelGrid>
 
@@ -281,23 +281,22 @@
 						</p:panelGrid>
 
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firma']}"  />
-						<p:panelGrid id="panelChecksFirma" styleClass="noBorders" columns="4" columnClasses="noPadding-left,noPadding-left">
+						<p:panelGrid id="panelChecksFirma" styleClass="noBorders" columns="3" columnClasses="noPadding-left,noPadding-left">
 
-						    <p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" id="debeAnexarFirmado" value="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado}">
-						    	<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.updateDebeValidarFirmantes}" process="@this" update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input :formDialogDefinicionVersionAnexo:convertirpdf :formDialogDefinicionVersionAnexo:panelChecksFirma"/>
-						    </p:selectBooleanCheckbox>
-
-							<p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.validarFirma']}" id="debeValidarFirmantes" value="#{dialogDefinicionVersionAnexo.data.debeValidarFirmantes}" disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado ? false : true}">
-								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.updateDebeFirmarDigitalmente}" process="@this" update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input :formDialogDefinicionVersionAnexo:convertirpdf :formDialogDefinicionVersionAnexo:panelChecksFirma"/>
+							<p:selectBooleanCheckbox id="requiereFirma" value="#{dialogDefinicionVersionAnexo.requiereFirma}"
+													 itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.requiereFirma']}"
+													 disabled="#{dialogDefinicionVersionAnexo.data.numeroInstancia != 1}">
+								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios()}" process="@this"
+											update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input
+																:formDialogDefinicionVersionAnexo:convertirpdf :formDialogDefinicionVersionAnexo:panelChecksFirma"/>
 							</p:selectBooleanCheckbox>
-
-						    <p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.firmar']}" id="debeFirmarDigitalmente" value="#{dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente}" disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado and not dialogDefinicionVersionAnexo.data.debeValidarFirmantes}">
-						    	<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios}" process="@this" update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input :formDialogDefinicionVersionAnexo:convertirpdf :formDialogDefinicionVersionAnexo:panelChecksFirma"/>
-						    </p:selectBooleanCheckbox>
+							<p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.validarFirma']}" id="debeValidarFirmantes" value="#{dialogDefinicionVersionAnexo.data.debeValidarFirmantes}" disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado ? false : true}">
+								<p:ajax event="change" listener="#{dialogDefinicionVersionAnexo.setCambios()}" process="@this" update="@this :formDialogDefinicionVersionAnexo:extensiones :formDialogDefinicionVersionAnexo:personalizadas_input :formDialogDefinicionVersionAnexo:convertirpdf :formDialogDefinicionVersionAnexo:panelChecksFirma"/>
+							</p:selectBooleanCheckbox>
 
 							<p:commandButton id="btnScriptFirma" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), dialogDefinicionVersionAnexo.data.scriptFirmarDigitalmente)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
 									styleClass="#{dialogDefinicionVersionAnexo.getColorScript(dialogDefinicionVersionAnexo.data.scriptFirmarDigitalmente)}"
-									process="@this" update="growl" disabled="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado and not dialogDefinicionVersionAnexo.data.debeValidarFirmantes}">
+									process="@this" update="growl" disabled="#{!dialogDefinicionVersionAnexo.data.debeAnexarFirmado and !dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente}">
 										<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoFirmarDigitalmente}" update="growl btnScriptFirma" />
 							</p:commandButton>
 						</p:panelGrid>

@@ -80,7 +80,7 @@
 	   	<p:outputPanel>
 		   	<p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numDigEnteros']}" />
 
-		   	<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroDigitosEnteros}" decimalPlaces="0" minValue="0" maxValue="99" styleClass="padding-left-4" inputStyleClass="w8" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
+		   	<p:inputNumber id="precisionEntera" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroDigitosEnteros}" decimalPlaces="0" minValue="0" maxValue="99" styleClass="padding-left-4" inputStyleClass="w8" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios or dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}">
 		   		<p:ajax event="blur" process="@this" />
 		    	<p:ajax event="change" listener="#{dialogDisenyoFormulario.setCambios}" process="@this" update="@this"/>
 		   	</p:inputNumber>
@@ -113,13 +113,13 @@
 		    		<p:outputLabel rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{msg['dialogDisenyoFormulario.componente.numRangoMin']}" styleClass="padding-left-4"/>
 					<p:inputNumber rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroRangoMinimo}" decimalPlaces="2" minValue="-9999999999" maxValue="9999999999" styleClass="padding-left-4" inputStyleClass="w20" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 						<p:ajax event="blur" process="@this" />
-						<p:ajax event="change" listener="#{dialogDisenyoFormulario.rangoTieneNumeroNegativo}" process="@this" update="@this checkNumeroConSigno"/>
+						<p:ajax event="change" listener="#{dialogDisenyoFormulario.rangoActualizado}" process="@this" update="@this checkNumeroConSigno precisionEntera"/>
 					</p:inputNumber>
 
 		   			<p:outputLabel rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{msg['dialogDisenyoFormulario.componente.numRangoMax']}" styleClass="padding-left-4"/>
 		   			<p:inputNumber rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroRangoMaximo}" decimalPlaces="2" minValue="-9999999999" maxValue="9999999999" styleClass="padding-left-4" inputStyleClass="w20" readonly="#{dialogDisenyoFormulario.consulta or dialogDisenyoFormulario.desactivarAplicarCambios}">
 		   				<p:ajax event="blur" process="@this" />
-						<p:ajax event="change" listener="#{dialogDisenyoFormulario.rangoTieneNumeroNegativo}" process="@this" update="@this checkNumeroConSigno"/>
+						<p:ajax event="change" listener="#{dialogDisenyoFormulario.rangoActualizado}" process="@this" update="@this checkNumeroConSigno precisionEntera"/>
 		   			</p:inputNumber>
    	  	</p:outputPanel>
 	</h:column>

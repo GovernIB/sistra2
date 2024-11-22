@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistra2.commons.pdf.UtilPDF;
 import es.caib.sistramit.core.api.exception.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.BooleanUtils;
@@ -56,7 +57,6 @@ import es.caib.sistramit.core.service.model.script.types.TypeScriptFlujo;
 import es.caib.sistramit.core.service.repository.dao.FlujoPasoDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
 import es.caib.sistramit.core.service.util.UtilsSTG;
-import freemarker.template.utility.StringUtil;
 
 /**
  * Acción que permite descargar una plantilla en el paso Anexar.
@@ -446,11 +446,9 @@ public final class AccionAnexarDocumento implements AccionPaso {
 		final boolean validarFirmas = (anexoDetalle.getAnexarfirmado() == TypeSiNo.SI
 				|| anexoDetalle.getFirmar() == TypeSiNo.SI);
 		if (validarFirmas) {
-			// Anexo firmado (debe ser un PDF PADES)
-			final boolean padesLTV = BooleanUtils.toBoolean(configuracionComponent
-					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ANEXOS_ANEXOFIRMADO_LTV));
+			// Si es un anexo firmado, debe ser un PDF PADES
 			final boolean anexoFirmado = extensionFichero.equalsIgnoreCase("PDF")
-					&& UtilsFlujo.esPades(datosFichero, padesLTV);
+					&& esPades(datosFichero);
 			// Si se debe anexar obligatoriamente firmado
 			final boolean anexoFirmaAnexaObligatoria = (anexoDetalle.getAnexarfirmado() == TypeSiNo.SI
 					&& anexoDetalle.getFirmar() == TypeSiNo.NO);
@@ -483,6 +481,32 @@ public final class AccionAnexarDocumento implements AccionPaso {
 			}
 		}
 		return anexadoFirmado;
+	}
+
+	/**
+	 * Verifica si es un PDF PADES.
+	 * @param datosFichero Datos del fichero
+	 * @return true si es un PDF PADES
+	 */
+	private boolean esPades(byte[] datosFichero) {
+		// Verificamos si está protegido con contraseña
+		boolean isProtected = false;
+		try {
+			isProtected = UtilPDF.esProtegidoPwd(datosFichero);
+		} catch (Exception e) {
+			throw new AnexarVerificarPadesException(e);
+		}
+		if (isProtected) {
+			throw new AnexarPdfProtegidoException();
+		}
+		// Verificamos si es un PDF PADES
+		try {
+			final boolean padesLTV = BooleanUtils.toBoolean(configuracionComponent
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ANEXOS_ANEXOFIRMADO_LTV));
+			return UtilPDF.esPades(datosFichero, padesLTV);
+		} catch (Exception e) {
+			throw new AnexarVerificarPadesException(e);
+		}
 	}
 
 	/**

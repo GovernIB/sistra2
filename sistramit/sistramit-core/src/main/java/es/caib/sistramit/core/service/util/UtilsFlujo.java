@@ -1,81 +1,40 @@
 package es.caib.sistramit.core.service.util;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import es.caib.sistrages.rest.api.interna.*;
-import es.caib.sistramit.core.api.exception.*;
-import es.caib.sistramit.core.api.model.formulario.*;
-import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
-import es.caib.sistramit.core.service.component.formulario.interno.utils.UtilsFormularioInterno;
-import es.caib.sistramit.core.service.model.formulario.ParametrosAperturaFormulario;
-import es.caib.sistramit.core.service.model.formulario.interno.types.TypeParametroDominio;
-import es.caib.sistramit.core.service.model.integracion.ParametrosDominio;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.lowagie.text.pdf.AcroFields;
-import com.lowagie.text.pdf.PdfDictionary;
-import com.lowagie.text.pdf.PdfName;
-import com.lowagie.text.pdf.PdfReader;
-
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistra2.commons.utils.ValidacionTipoException;
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
+import es.caib.sistrages.rest.api.interna.*;
+import es.caib.sistramit.core.api.exception.*;
 import es.caib.sistramit.core.api.model.comun.Constantes;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.comun.types.TypeValidacion;
-import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
-import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
-import es.caib.sistramit.core.api.model.flujo.DetalleTramiteInfo;
-import es.caib.sistramit.core.api.model.flujo.DocumentoRegistro;
-import es.caib.sistramit.core.api.model.flujo.DocumentosRegistroPorTipo;
-import es.caib.sistramit.core.api.model.flujo.Entidad;
-import es.caib.sistramit.core.api.model.flujo.EntidadRedesSociales;
-import es.caib.sistramit.core.api.model.flujo.EntidadSoporte;
-import es.caib.sistramit.core.api.model.flujo.EntidadSoporteAnexo;
-import es.caib.sistramit.core.api.model.flujo.Firma;
-import es.caib.sistramit.core.api.model.flujo.Firmante;
-import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.Persona;
-import es.caib.sistramit.core.api.model.flujo.SoporteOpcion;
-import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
-import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoFirma;
-import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
-import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedad;
-import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
+import es.caib.sistramit.core.api.model.flujo.*;
+import es.caib.sistramit.core.api.model.flujo.types.*;
+import es.caib.sistramit.core.api.model.formulario.MensajeValidacion;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
 import es.caib.sistramit.core.service.component.script.ScriptExec;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
-import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
-import es.caib.sistramit.core.service.model.flujo.DatosDocumentoAnexo;
-import es.caib.sistramit.core.service.model.flujo.DatosDocumentoFormulario;
-import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
-import es.caib.sistramit.core.service.model.flujo.DatosSesionTramitacion;
-import es.caib.sistramit.core.service.model.flujo.DocumentoPasoPersistencia;
-import es.caib.sistramit.core.service.model.flujo.FirmaDocumentoPersistencia;
-import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
-import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
+import es.caib.sistramit.core.service.model.flujo.*;
 import es.caib.sistramit.core.service.model.flujo.types.TypeEstadoPaso;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFlujo;
 import es.caib.sistramit.core.service.repository.dao.FlujoPasoDao;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.UnsupportedEncodingException;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Clase de utilidades para flujo de tramitación.
@@ -856,43 +815,6 @@ public final class UtilsFlujo {
 		return finalWord;
 	}
 
-	/**
-	 * Funcion para validar si un documento PDF esta firmado.
-	 *
-	 * @param pdf
-	 *                  pdf
-	 * @param isLtv
-	 *                  si es LTV
-	 * @return boolean
-	 */
-	public static boolean esPades(final byte[] pdf, final boolean isLtv) {
-		boolean resultado = false;
-		PdfReader pdfReader;
-		try {
-			pdfReader = new PdfReader(pdf);
-			final AcroFields fields = pdfReader.getAcroFields();
-			final List<String> names = fields.getSignatureNames();
-			if (isLtv) {
-				// Se busca que exista un sello de tiempo
-				final PdfName pdfRFC3161 = new PdfName("ETSI.RFC3161");
-				for (int i = 0; i < names.size(); i++) {
-					final PdfDictionary pdfDictionary = fields.getSignatureDictionary(names.get(i));
-					final PdfName sub = pdfDictionary.getAsName(PdfName.SUBFILTER);
-					if (pdfRFC3161.equals(sub)) {
-						// Es PADES-LTV
-						resultado = true;
-						break;
-					}
-				}
-			} else {
-				// Se busca que exista al menos una firma
-				resultado = (names.size() > 0);
-			}
-		} catch (final IOException e) {
-			LOGGER.warn("No se puede verificar si es PADES: " + e.getMessage());
-		}
-		return resultado;
-	}
 
 	/**
 	 * Reemplaza variables de área.

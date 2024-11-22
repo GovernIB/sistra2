@@ -575,8 +575,10 @@ public class AsistenteTramitacionController extends TramitacionController {
 	 * Retorno componente de firma externo (no se gestiona con ticket, se presupone
 	 * dentro de la misma sesión).
 	 *
-	 * @param ticket
-	 *                   ticket
+	 * @param idPaso    id paso
+	 * @param idDocumento id documento
+	 * @param instancia  instancia
+	 * @param firmante   firmante
 	 * @return retorno de componente de firma externo recargando el trámite
 	 */
 	@RequestMapping(value = "/retornoFirmaExterno.html")
@@ -724,8 +726,9 @@ public class AsistenteTramitacionController extends TramitacionController {
 					anexo.setFileContentType(fic.getContentType());
 				}
 
+				// TODO METEMOS ÑAPA PARA LIMITAR A 3000 YA QUE EN CHROME LOS TEXTAREA NO CUENTAN LOS SALTOS DE LINEA
 				getFlujoTramitacionService().envioFormularioSoporte(idSesionTramitacion, nif, nombre, telefono, email,
-						problemaTipo, problemaDesc, horarioContacto, anexo);
+						problemaTipo, StringUtils.substring(problemaDesc,0, 3000), horarioContacto, anexo);
 
 			} catch (final ErrorFormularioSoporteException | IOException efs) {
 				res.setEstado(TypeRespuestaJSON.ERROR);

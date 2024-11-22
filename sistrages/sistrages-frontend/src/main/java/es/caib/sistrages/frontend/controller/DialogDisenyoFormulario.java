@@ -898,7 +898,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 					if (TypeCampoTexto.NUMERO.equals(campo.getTipoCampoTexto())
 							&& (campo.getNumeroDigitosEnteros() == null || campo.getNumeroDigitosEnteros() <= 0)
-							&& (campo.getNumeroDigitosDecimales() == null || campo.getNumeroDigitosDecimales() <= 0)) {
+							|| ((campo.isPermiteRango() && (campo.getNumeroDigitosDecimales() == null || campo.getNumeroDigitosDecimales() <= 0)))) {
 						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.numero"),
 								true);
 						return false;
@@ -3378,15 +3378,20 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		return numObj;
 	}
 
-	public void rangoTieneNumeroNegativo() {
+	/**
+	 * Método que se ejecuta al modificar el rango.
+	 */
+	public void rangoActualizado() {
 		setCambios();
 		if(this.objetoFormularioEdit instanceof ComponenteFormulario) {
 			ComponenteFormularioCampoTexto campoTexto = ((ComponenteFormularioCampoTexto) objetoFormularioEdit);
-			if (campoTexto.getNumeroRangoMinimo() != null && campoTexto.getNumeroRangoMinimo() < 0 || campoTexto.getNumeroRangoMaximo() != null && campoTexto.getNumeroRangoMaximo() < 0) {
-				campoTexto.setNumeroConSigno(true);
-			} else {
-				campoTexto.setNumeroConSigno(false);
-			}
+			// Si el rango contiene un numero negativo se marca el check de numero con signo
+            campoTexto.setNumeroConSigno(campoTexto.getNumeroRangoMinimo() != null && campoTexto.getNumeroRangoMinimo() < 0 || campoTexto.getNumeroRangoMaximo() != null && campoTexto.getNumeroRangoMaximo() < 0);
+			// Se actualiza la precisión entera de forma automática
+			campoTexto.setNumeroDigitosEnteros(Math.max(
+					campoTexto.getNumeroRangoMinimo() != null ? String.valueOf(campoTexto.getNumeroRangoMinimo()).replaceAll("\\..*", "").replaceAll("[^\\d]", "").length() : 0,
+					campoTexto.getNumeroRangoMaximo() != null ? String.valueOf(campoTexto.getNumeroRangoMaximo()).replaceAll("\\..*", "").replaceAll("[^\\d]", "").length() : 0
+			));
 		}
 	}
 

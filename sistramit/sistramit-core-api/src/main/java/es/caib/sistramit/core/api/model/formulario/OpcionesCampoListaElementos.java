@@ -1,5 +1,7 @@
 package es.caib.sistramit.core.api.model.formulario;
 
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -24,6 +26,9 @@ public final class OpcionesCampoListaElementos implements Serializable {
 
 	/** Columnas. */
 	private List<ListaElementosColumna> columnas;
+
+	/** Evaluar borrado. */
+	private TypeSiNo evaluarBorrado = TypeSiNo.NO;
 
 	/**
 	 * Método de acceso a maxElementos.
@@ -80,6 +85,25 @@ public final class OpcionesCampoListaElementos implements Serializable {
 	 */
 	public void setOperaciones(final String operaciones) {
 		this.operaciones = operaciones;
+	}
+
+	/**
+	 * Método de acceso a evaluarBorrado.
+	 *
+	 * @return evaluarBorrado
+	 */
+	public TypeSiNo getEvaluarBorrado() {
+		return evaluarBorrado;
+	}
+
+	/**
+	 * Método para establecer evaluarBorrado.
+	 *
+	 * @param evaluarBorrado
+	 *                        evaluarBorrado a establecer
+	 */
+	public void setEvaluarBorrado(final TypeSiNo evaluarBorrado) {
+		this.evaluarBorrado = evaluarBorrado;
 	}
 
 }
