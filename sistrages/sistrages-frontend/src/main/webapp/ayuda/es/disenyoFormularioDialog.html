@@ -62,31 +62,13 @@
 				permite incluir un campo selector. Este campo permite presentar
 				diferentes valores y permitir la selecci&oacute;n de uno o varios
 				valores al ciudadano, dependiendo del tipo de selector.
-				<ul class="detalle2">
-					<li><span class="nombreCampo" style="color: #C2385D;">Lista
-							desplegable:</span> elemento compuesto por un listado de opciones del
-						cual solo se puede seleccionar una opci&oacute;n. Es obligatorio
-						seleccionar un elemento</li>
-					<li><span class="nombreCampo" style="color: #C2385D;">Selecci&oacute;n
-							&uacute;nica:</span> elemento compuesto por un grupo de opciones de las
-						cuales solo se puede seleccionar una. Es obligatorio seleccionar
-						una opci&oacute;n. Si se utiliza este elemento se tienen que dejar
-						ocupadas las suficientes columnas para poder tener la vista en
-						horizontal. En caso de que no se dejen en la vista lo veremos en
-						vertical.</li>
-					<li><span class="nombreCampo" style="color: #C2385D;">Selecci&oacute;n
-							m&uacute;ltiple:</span> elemento compuesto por un grupo de opciones de
-						las cuales se puede seleccionar una, varias o ninguna.</li>
-					<li><span class="nombreCampo" style="color: #C2385D;">B&uacute;squeda
-							din&aacute;mica:</span> elemento compuesto por un grupo de opciones de
-						las cuales se puede seleccionar una, que filtra el resultado de un
-						dominio seg&uacute;n una cadena de c&aacute;racteres introducida.
-						Para que se muestren resultados esta cadena tiene que tener
-						m&iacute;nimo tres car&aacute;cteres.</li>
-				</ul></li>
 			<li><span class="boton">Campo checkbox</span>: este bot&oacute;n
 				permite incluir en el formulario un campo casilla de
 				verificaci&oacute;n.</li>
+			<li><span class="boton">Campo oculto</span>: este bot&oacute;n
+				permite incluir en el formulario un campo oculto que no será visible en el formulario,
+				pero puede ser utilizado para cálculos internos o para mostrar datos dependientes de otros campos
+				en una plantilla PDF.</li>
 			<li><span class="boton">Campo captcha</span>: este bot&oacute;n
 				permite incluir en el formulario un campo captcha, el cual previene
 				que bots o automatismos puedan llevar a cabo tramitaciones
@@ -118,18 +100,18 @@
 				por defecto.</li>
 		</ul>
 		<li><span class="nombreCampo">Mover:</span> secci&oacute;n
-			contiene los botones para mover un campo dentro de una l&iacute;nea.
+			contiene los botones para mover un campo dentro de una l&iacute;nea o una línea completa.
 			No se permite mover campos entre l&iacute;neas. Las opciones de
 			movimiento disponibles son:</li>
 		<ul class="detalle">
 			<li><span class="boton">Mover a la izquiera (<):</span> permite
-				mover hacia la izquierda un campo seleccionado. Este bot&oacute;n
+				mover hacia la izquierda un campo seleccionado o hacia arriba una línea seleccionada. Este bot&oacute;n
 				quedar&aacute; deshabilitado cuando no exista la posibilidad de
-				mover el componente m&aacute;s a la izquierda.</li>
+				mover el componente m&aacute;s a la izquierda o la línea más arriba.</li>
 			<li><span class="boton">Mover a la derecha (>):</span> permite
-				mover hacia la derecha un campo seleccionado. Este bot&oacute;n
+				mover hacia la derecha un campo seleccionado o hacia abajo una línea seleccionada. Este bot&oacute;n
 				quedar&aacute; deshabilitado cuando no exista la posibilidad de
-				mover el componente m&aacute;s a la derecha</li>
+				mover el componente m&aacute;s a la derecha o la lónea más abajo</li>
 		</ul>
 	</ul>
 	</p>
@@ -152,66 +134,177 @@
 			secci&oacute;n se configuran las propiedades del componente
 			seleccionado.</li>
 		<ul class="detalle">
-			<li><span class="boton">Identificador:</span> c&oacute;digo
-				&uacute;nivoco que identifica al componente dentro del formulario.
-				Este c&oacute;digo se deber&aacute; utilizar cuando se quiera
-				referenciar en campo en algun script, ya sea de formulario o de
-				flujo de tramitaci&oacute;n. Para mantener una convenci&oacute;n
-				respecto a los identificadores, se recomienda la utilizaci&oacute;n
-				de may&uacute;sculas.</li>
-			<li><span class="boton">Columnas ocupadas:</span> n&uacute;mero
-				de columnas que ocupa el componente en una l&iacute;nea. Cada
-				l&iacute;nea puede ocupar un m&aacute;ximo de 6 columnas.</li>
-			<li><span class="boton">Texto:</span> texto multiidioma que se
-				presentar&aacute; como etiqueta del componente.</li>
-			<li><span class="boton">No mostrar texto:</span> <i>check</i>
-				que en caso de estar marcado hace que no se muestre etiqueta para el
-				componente.</li>
-			<li><span class="boton">Ayuda contextual:</span> texto
-				multiidioma que se presentar&aacute; como ayuda del componente al
-				ciudadano. Este texto se mostrar&aacute; en el frontal siempre y
-				cuando el ciudadano mantenga las ayudas activas.</li>
-			<li><span class="boton">Obligatorio:</span> indica si la
-				cumplimentaci&oacute; del componente es requerida.</li>
-			<li><span class="boton">S&oacute;lo lectura:</span> <i>check</i>
-				que permite establecer el componente en modo s&oacute;lo lectura, a
-				nivel de HTML, de manera que el ciudadano no podr&aacute; introducir
-				ning&uacute;n valor en el mismo.</li>
-			<li><span class="boton">No modificable:</span> <i>check</i> que
-				permite establecer que se compruebe que un campo no var&acute;a su
-				valor respecto a los datos iniciales del formulario. Esta
-				comprobaci&oacute;n se realiza en servidor.</li>
-			<li><span class="boton">Tipo:</span> esta opci&oacute;n
-				est&aacute; disponible &uacute;nicamente para campos de texto y
-				selector. Para un campo de texto permite fijar el tipo de valor
-				esperado, de manera que se realicen unas validaciones acordes a
-				dicho tipo (p.ej. Identificaci&oacute;n permitir&iacute;a validar si
-				es un NIF de persona f&iacute;sica: DNI, NIE u otros [NIF de tipo K,
-				L y M]; jur&iacute;dica: NIF; u otros: NSS). En el caso de un
-				selector, permitir&aacute; fijar la manera en que se presentan los
-				valores y si se posibilita selecionar uno o m&aacute;s valores.</li>
-			<li><span class="boton">Tipo lista valores (selector):</span>
-				esta opci&oacute;n est&aacute; disponible &uacute;nicamente para
-				campos selector, y permite fijar de qu&acute; manera se
-				alimentar&aacute; los valores a mostrar en el campo. Las opciones
-				disponibles son "Fija", en la que se deber&aacute;n introducir los
-				valores a mostrar, "Dominio", en la que se deber&aacute; seleccionar
-				el dominio del que extraer los valores, y "Script", que
-				requerir&aacute; la cumplimentaci&oacute;n del script "Valores
-				posibles" de la secci&oacute;n "Scripts".</li>
-			<li><span class="boton">Tamaño:</span> <i>campo</i> que
-				permite establecer el tamaño máximo que puede tener un componente tipo texto.</li>
-			<li><span class="boton">Multilínea:</span> <i>check</i> que
-				permite establecer si un componente tipo texto permite multilínea y cuantas como màximo.</li>
-			<li><span class="boton">Forzar mayúsculas:</span> <i>check</i> que
-				permite establecer que en un componente tipo texto, todo el texto se fuerze a poner en mayúscula
-				automáticamente.</li>
-			<li><span class="boton">Prohibir pegar:</span> <i>check</i> que
-				permite establecer si un componente tipo texto permite o no pegar texto copiado previamente.</li>
-			<li><span class="boton">Nº máximo de elementos:</span> <i>camp</i> que
-				permite establecer el máximo número de elementos que se permiten en un componente tipo lista de elementos.</li>
-			<li><span class="boton">Detalle componente lista elementos:</span> <i>Botón</i> que
-				permite establecer el diseño de los elementos que aparecerán dentro de una lista de elementos.</li>
+			<li><span class="boton">Propiedades comunes a todos los componentes, menos Línea y Sección:</span>
+				<ul class="detalle2">
+					<li><span class="nombreCampo" style="color: #C2385D;">Identificador:</span> código unívoco que identifica al componente dentro del formulario. Este código se deberá utilizar cuando se quiera referenciar el campo en algun script, ya sea de formulario o de flujo de tramitación. Para mantener una convención respecto a los identificadores, se recomienda la utilización de mayúsculas.</li>
+					<li><span class="nombreCampo" style="color: #C2385D;">Columnas ocupadas:</span> n&uacute;mero
+					de columnas que ocupa el componente en una l&iacute;nea. Cada
+					l&iacute;nea puede ocupar un m&aacute;ximo de 6 columnas. En los componentes Línea, Sección y Aviso no aparecen, ya que ocupan todo el ancho del formulario.</li>
+					<li><span class="nombreCampo" style="color: #C2385D;">Texto:</span> texto multiidioma que se
+					presentar&aacute; como etiqueta del componente.</li>
+					<li><span class="nombreCampo" style="color: #C2385D;">No mostrar texto:</span> <i>check</i>
+					que en caso de estar marcado hace que no se muestre etiqueta para el
+					componente.</li>
+					<li><span class="nombreCampo" style="color: #C2385D;">Ayuda contextual:</span> texto
+					multiidioma que se presentar&aacute; como ayuda del componente al
+					ciudadano. Este texto se mostrar&aacute; en el frontal siempre y
+					cuando el ciudadano mantenga las ayudas activas.</li>
+					<li><span class="nombreCampo" style="color: #C2385D;">Obligatorio:</span> indica si la
+					cumplimentaci&oacute;n del componente es requerida.</li>
+					<li><span class="nombreCampo" style="color: #C2385D;">S&oacute;lo lectura:</span> <i>check</i>
+					que permite establecer el componente en modo s&oacute;lo lectura, a
+					nivel de HTML, de manera que el ciudadano no podr&aacute; introducir
+					ning&uacute;n valor en el mismo.</li>
+					<li><span class="nombreCampo" style="color: #C2385D;">No modificable:</span> <i>check</i> que
+					permite establecer que se compruebe que un campo no var&acute;a su
+					valor respecto a los datos iniciales del formulario. Esta
+					comprobaci&oacute;n se realiza en servidor.</li>
+				</ul>
+			</li>
+			<li><span class="boton">Propiedades específicas del componente Línea:</span> No contiene
+			</li>
+			<li><span class="boton">Propiedades específicas del componente Sección:</span>
+				<ul class="detalle2">
+					<li><span class="nombreCampo" style="color: #C2385D;">Letra:</span> letra que aparecerá en la sección que ayuda a estructurar
+					el contenido del formulario.</li>
+				</ul>
+			</li>
+			<li><span class="boton">Propiedades específicas del componente Aviso:</span>
+				<ul class="detalle2">
+					<li><span class="nombreCampo" style="color: #C2385D;">Tipo:</span> indica el tipo de aviso
+					que se mostrará en el formulario, que puede ser un campo de información, un aviso (warning),
+					un error o un texto en párrafos. Dependientdo del tipo aparecerá el texto con un icono o sin él.</li>
+				</ul>
+			</li>
+			<li><span class="boton">Propiedades específicas del componente Campo de texto:</span>
+				<ul class="detalle2">
+					<li><span class="nombreCampo" style="color: #C2385D;">Tipo:</span> permite fijar el tipo de valor
+					esperado, de manera que se realicen unas validaciones acordes a
+					dicho tipo. Los tipos disponibles y las propiedades relacionadas son:</li>
+					<ul class="detalle">
+						<li><span class="boton">Texto normal:</span> este tipo de campos de texto sirve para introducir un texto en el campos.
+							<ul class="detalle2">
+								<li><span class="nombreCampo" style="color: #C2385D;">Tamaño:</span> establece el tamaño máximo en caracteres que acepta el campo.</li>
+								<li><span class="nombreCampo" style="color: #C2385D;">Multilínea:</span> indica si el campo admite un texto con varias líneas
+								y, si se marca, permite especificar cuántas como máximo.</li>
+								<li><span class="nombreCampo" style="color: #C2385D;">Forzar mayúscula:</span> fija a mayúsculas todo el texto que se introduce.</li>
+							</ul>
+						</li>
+						<li><span class="boton">Número:</span> este tipo de campos de texto permite introducir sólo datos numéricos.
+							<ul class="detalle2">
+								<li><span class="nombreCampo" style="color: #C2385D;">Precisión:</span> establece la cantidad de cifras que se pueden introducir en la parte entera,
+								y, en su caso, decimal, del número.</li>
+								<li><span class="nombreCampo" style="color: #C2385D;">Formato:</span> establece el formato que adoptará el número de forma automática y puede ser con Punto y coma (1.234,123), Coma y punto (1,234.123) y Sin formato (1234123).</li>
+								<li><span class="nombreCampo" style="color: #C2385D;">Permite rango:</span> indica si el campo admite un rango de cifras, de forma que si se excede dará un aviso. Si se marca, se puede indicar el rango con números negativos y 2 decimales.</li>
+								<li><span class="nombreCampo" style="color: #C2385D;">Permite negativos:</span> indica si se pueden introducir número menores que 0.</li>
+							</ul>
+						</li>
+						<li><span class="boton">Email:</span> este tipo de campos de texto permite introducir direcciones de correo electrónico y hacer las validaciones pertinentes.
+							<ul class="detalle2">
+								<li><span class="nombreCampo" style="color: #C2385D;">Tamaño:</span> establece la cantidad de caracteres que admite el campo como máximo.</li>
+							</ul>
+						</li>
+						<li><span class="boton">Identificador:</span> este tipo de campos de texto ofrece una serie de validaciones y formatos automáticos, especiales para datos de identificación.
+							<ul class="detalle2">
+								<li><span class="nombreCampo" style="color: #C2385D;">NIF pers. f&iacute;sica:</span> permite indicar si es un DNI, un NIE u otros (NIF de tipo K, L y M).</li>
+								<li><span class="nombreCampo" style="color: #C2385D;">NIF pers. jur&iacute;dica:</span> permite indicar si es un NIF.</li>
+								<li><span class="nombreCampo" style="color: #C2385D;">Otros:</span> permite indicar si es un NSS.</li>
+							</ul>
+						</li>
+						<li><span class="boton">Código postal:</span> permite introducir códigos postales y no tiene propiedades, pero sí validadores.</li>
+						<li><span class="boton">Teléfono:</span> permite introducir teléfonos nacionales.
+							<ul class="detalle2">
+								<li><span class="nombreCampo" style="color: #C2385D;">Teléfono:</span> permite indicar si es un teléfono fijo y/o móvil.</li>
+							</ul>
+						</li>
+						<li><span class="boton">Teléfono internacional:</span> permite introducir teléfonos internacionales.
+							<ul class="detalle2">
+								<li><span class="nombreCampo" style="color: #C2385D;">Validación precisa:</span> marcada por defecto, permite realizar una validación por país,
+								como que un número de España empieza por 6 o 9. Si no se marca, se hace una validación básica, como que el dato sea numérico y tenga la longitud apropiada
+								según el país. En cualquier caso se formatea automáticamente.</li>
+							</ul>
+						</li>
+						<li><span class="boton">IBAN:</span> permite introducir este dato bancario y no tiene propiedades, pero sí validadores.</li>
+						<li><span class="boton">Fecha:</span> permite introducir fechas de forma manual o con los controles del formulario y no tiene propiedades, pero sí validadores.</li>
+						<li><span class="boton">Hora:</span> permite introducir horas de forma manual o con los controles del formulario y no tiene propiedades, pero sí validadores.</li>
+						<li><span class="boton">Expresión regular:</span> permite introducir expresiones regulares, que serán validadas y evaluadas.
+							<ul class="detalle2">
+								<li><span class="nombreCampo" style="color: #C2385D;">Expresión regular:</span> permite introducir un texto que representa una expresión regular, que servirá para
+								validar y evaluar el dato que se introduzca en ese campo.</li>
+							</ul>
+						</li>
+					</ul>
+					<li><span class="nombreCampo" style="color: #C2385D;">Prohibir pegar:</span> <i>check</i> que
+					permite establecer si un componente tipo texto permite o no pegar texto copiado previamente.</li>
+				</ul>
+			</li>
+			<li><span class="boton">Propiedades específicas del componente Campo selector:</span>
+				<ul class="detalle2">
+					<li><span class="nombreCampo" style="color: #C2385D;">Tipo:</span> permite fijar la manera en que se presentan los	valores y si se posibilita selecionar uno o más de forma simultánea. Los tipos disponibles y las propiedades relacionadas son:</li>
+					<ul class="detalle">
+						<li><span class="boton">Lista desplegable:</span> elemento compuesto por un listado de opciones del
+							cual solo se puede seleccionar una opci&oacute;n. Es obligatorio
+							seleccionar un elemento.
+							<ul class="detalle2">
+								<li><span class="nombreCampo" style="color: #C2385D;">Índice alfabético:</span> indica si se mostrará un panel con las letras por las que empiezan los valores, para facilitar su selección.</li>
+							</ul>
+						</li>
+						<li><span class="boton">Selecci&oacute;n &uacute;nica:</span> elemento compuesto por un grupo de opciones de las
+							cuales solo se puede seleccionar una. Es obligatorio seleccionar
+							una opci&oacute;n. Si se utiliza este elemento se tienen que dejar
+							ocupadas las suficientes columnas para poder tener la vista en
+							horizontal. En caso de que no se dejen en la vista lo veremos en
+							vertical.
+							<ul class="detalle2">
+								<li><span class="nombreCampo" style="color: #C2385D;">Orientación:</span> establece si los elementos se mostrarán en horizontal o vertical.</li>
+							</ul>
+						</li>
+						<li><span class="boton">Selecci&oacute;n m&uacute;ltiple:</span> elemento compuesto por un grupo de opciones de
+							las cuales se puede seleccionar una, varias o ninguna.</li>
+						<li><span class="boton">B&uacute;squeda din&aacute;mica:</span> elemento compuesto por un grupo de opciones de
+							las cuales se puede seleccionar una, que filtra el resultado de una lista de valores
+							seg&uacute;n una cadena de c&aacute;racteres introducida.</li>
+					</ul>
+					<li><span class="nombreCampo" style="color: #C2385D;">Tipo lista valores:</span> permite fijar de qu&acute; manera se
+					obtendrán los valores a mostrar en el campo. Las opciones disponibles son:</li>
+					<ul class="detalle">
+						<li><span class="boton">Fija:</span> en la que se deberán introducir los valores a mostrar en una lista fija.
+							<ul class="detalle2">
+								<li><span class="nombreCampo" style="color: #C2385D;">Lista valores:</span> abre un dialogo que permite introducir una lista de valores fija para mostrar en el campo,
+								mediante un código y un texto multiidioma.
+							</ul>
+						</li>
+						<li><span class="boton">Dominio:</span> en la que se deberá seleccionar el dominio del que extraer los valores.
+							<ul class="detalle2">
+								<li><span class="nombreCampo" style="color: #C2385D;">Dominio:</span> abre un dialogo que permite seleccionar un dominio del cual obtener los valores para mostrar en el campo.</li>
+								<li><span class="nombreCampo" style="color: #C2385D;">Campo código:</span> texto que especifica la columan del dominio que contiene el código de cada valor a mostrar.</li>
+								<li><span class="nombreCampo" style="color: #C2385D;">Campo descripción:</span> texto que especifica la columan del dominio que contiene la descripción de cada valor a mostrar.</li>
+								<li><span class="nombreCampo" style="color: #C2385D;">Parámetro dominio:</span> abre un dialogo que permite indicar un parámetro para utilizarse en el dominio y obtener los valores en función de ese parámetro.</li>
+							</ul>
+						</li>
+					</ul>
+				</ul>
+			</li>
+			<li><span class="boton">Propiedades específicas del componente Campo checkbox:</span>
+				<ul class="detalle2">
+					<li><span class="nombreCampo" style="color: #C2385D;">Valor checked:</span> indica el valor que se va a considerar para marcar el check. Debe ser "S".</li>
+					<li><span class="nombreCampo" style="color: #C2385D;">Valor no checked:</span> indica el valor que se va a considerar para desmarcar el check. Debe ser "N".</li>
+				</ul>
+			</li>
+			<li><span class="boton">Propiedades específicas del componente Campo oculto:</span> sólo "Identificador".</li>
+			<li><span class="boton">Propiedades específicas del componente Campo captcha:</span> sólo "Identificador".</li>
+			<li><span class="boton">Propiedades específicas del componente Campo Lista de elementos:</span>
+				<ul class="detalle2">
+					<li><span class="nombreCampo" style="color: #C2385D;">Nº máximo de elementos:</span> indica cuántos elementos se pueden introducir en la lista. Tiene un máximo de 99.</li>
+					<li><span class="nombreCampo" style="color: #C2385D;">Detalle componente lista elementos:</span> botón que permite establecer el diseño del subformulario para
+					los elementos que aparecerán dentro de una lista de elementos. Las propiedades específicas dentro de este subformulario aplican a los campos de texto, selectores y checkbox:</li>
+					<ul class="detalle">
+						<li><span class="boton">Mostrarse en la tabla de la lista de elementos:</span> check que al marcarse indica que ese componente será visible en la lista de elementos tras guardar el elemento.</li>
+						<li><span class="boton">Ancho de columna en la tabla de la lista de elementos (%):</span> indica, en caso de que el componente sea visible, el porcentaje que ocupará la columna que lo contenga,
+						dentro de la lista de elementos. Si la suma de los porcentajes de los elementos visibles no es 100% se lanzará un aviso al guardar cerrar el detalle del subformulario.</li>
+					</ul>
+				</ul>
+			</li>
 		</ul>
 		<li><span class="nombreCampo">Scripts:</span> secci&oacute;n que
 			presenta los scripts del campo. Los scripts disponibles son:</li>

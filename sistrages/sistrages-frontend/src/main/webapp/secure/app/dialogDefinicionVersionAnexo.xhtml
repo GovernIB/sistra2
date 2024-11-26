@@ -296,7 +296,7 @@
 
 							<p:commandButton id="btnScriptFirma" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), dialogDefinicionVersionAnexo.data.scriptFirmarDigitalmente)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
 									styleClass="#{dialogDefinicionVersionAnexo.getColorScript(dialogDefinicionVersionAnexo.data.scriptFirmarDigitalmente)}"
-									process="@this" update="growl" disabled="#{!dialogDefinicionVersionAnexo.data.debeAnexarFirmado and !dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente}">
+									process="@this" update="growl" disabled="#{!dialogDefinicionVersionAnexo.data.debeValidarFirmantes}">
 										<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoFirmarDigitalmente}" update="growl btnScriptFirma" />
 							</p:commandButton>
 						</p:panelGrid>
