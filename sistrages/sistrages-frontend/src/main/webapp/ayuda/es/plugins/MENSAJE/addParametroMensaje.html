@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_MENSAJES">PLUGIN_MENSAJES</a></li>
        	  <li>></li>
     	  <li><a href="AyudaServlet?lang=es&plugin=MENSAJE">MENSAJE</a></li>
@@ -33,7 +33,7 @@
 	<ul>
     	<li>Método que permite establecer el valor del parámetro a sustituir en el mensaje. Esta funcionalidad permite establecer contenido dinámico en los mensajes de validación.</li>
     	<li>Los mensajes se definen en la pestaña de mensajes de validación con un identificador.</li>
-    	<li>Dentro del mensaje se definen los parámetros mediante números entre llaves, pudiendo tener más de uno. P.e. {0} {1}...</li>
+    	<li>Dentro del mensaje se definen los parámetros mediante números entre llaves, pudiendo tener más de uno. P. ej.: {0} {1}...</li>
     	<li>Si el mensaje tiene más de un parámetro, se debe tener en cuenta que importa el orden de los mismos a la hora de sustituirlos.</li>
 	</ul>
 </p>
@@ -62,7 +62,7 @@ Desde el script se referencia dicho mensaje de la siguiente forma:
 var msg = PLUGIN_MENSAJES.crearMensaje('MENSAJE_001');
 </p>
 <p>
-posteriormente se le añaden los parámetros 0 y 1:
+Posteriormente, se le añaden los parámetros 0 y 1:
    </p>
  <p class="codigoScript">
 	msg.addParametroMensaje('param 0');

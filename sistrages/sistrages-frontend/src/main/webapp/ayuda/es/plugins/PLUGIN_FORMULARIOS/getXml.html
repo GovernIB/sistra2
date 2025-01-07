@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_FORMULARIOS">PLUGIN_FORMULARIOS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_FORMULARIOS&metodo=getXml">getXml</a></li>
@@ -58,7 +58,7 @@
  <p>
    La función getXml retornará una cadena de texto cuyo contendido será el XML del formulario con sus valores.
    <br />
-   De este XML se podría extraer el valor de un determinado campo, por ejemplo si sabemos que en el XML existe un campo dni con el siguiente xpath  '/xml/persona/dni' podríamos obtener el valor del campo DNI mediante:
+   De este XML se podría extraer el valor de un determinado campo, por ejemplo si sabemos que en el XML existe un campo DNI con el siguiente XPath '/xml/persona/dni' podríamos obtener el valor del campo DNI mediante:
  </p>
  <p class="codigoScript">
 	var dni = PLUGIN_VALIDACIONES.extraerValorXml(xml, '/xml/persona/dni');

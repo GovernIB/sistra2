@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS&metodo=esNumeroCuentaIbanValido2">esNumeroCuentaIbanValido</a></li>
@@ -25,19 +25,19 @@
 	esNumeroCuentaIbanValido(Strinbg iban, String entidad, String sucursal, String dc, String cuenta): boolean
 </h1>
 <p>
-	<b>DESCRIPCI&Oacute;</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-    	<li>Valida si els valors introduïts no són nuls, i compleix amb les regles de validació necessàries per a ser un IBAN (International Bank Account Number) Vàlid. Es considera vàlida tota aquella cadena que tingui 4 números IBAN, 4 números per a l'entitat, 4 números per a la sucursal, 2 números per als dígits de control i 10 números per al compte corrent i que compleixin amb les regles de validació corresponents a la combinació de codi IBAN (clau del país i codi de control), entitat, oficina, dígit de control i número de compte.</li>
+    	<li>Verifica si els valors introduïts no són nuls, i compleix amb les regles de validació necessàries per a ser un IBAN (International Bank Account Number) Vàlid. Es considera vàlida tota aquella cadena que tingui 4 números IBAN, 4 números per a l'entitat, 4 números per a la sucursal, 2 números per als dígits de control i 10 números per al compte corrent i que compleixin amb les regles de validació corresponents a la combinació de codi IBAN (clau del país i codi de control), entitat, oficina, dígit de control i número de compte.</li>
 	</ul>
 </p>
 <p>
-	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+	<b>PARÀMETRES D'ENTRADA</b>
 </p>
 <p>
 	<ul>
-		<li><b>iban</b>: Codi de 4 dígits del codi IBAN sent els 2 primers dígits el codi del país ('ÉS' per a Espanya) i els altres 2 són codi de control. </li>
+		<li><b>iban</b>: Codi de 4 dígits del codi IBAN sent els 2 primers dígits el codi del país ('ES' per a Espanya) i els altres 2 són codi de control. </li>
 		<li><b>entidad</b>: Codi de 4 dígits de l'entitat bancària.</li>
 		<li><b>sucursal</b>: Codi de 4 dígits de la sucursal.</li>
 		<li><b>dc</b>: Codi de 2 dígits per als dígits de control.</li>
@@ -45,7 +45,7 @@
 	</ul>
 </p>
 <p>
-	<b>PAR&#192;METRES DE SORTIDA</b>
+	<b>PARÀMETRES DE SORTIDA</b>
 </p>
 <p>
 	<ul>
@@ -59,7 +59,7 @@
  <p class="codigoScript">
 	var valido = PLUGIN_UTILS.esNumeroCuentaIbanValido('ES66', '2100', '0418', '46', '1234567891');
 </p>
-<p>La funció esNumeroCuentaIbanValido retorna 'false' ja que els paràmetres introduïts no formen un número de compte vàlid, el dígit de control no és correcte.</p>
+<p>La funció esNumeroCuentaIbanValido retorna 'false', ja que els paràmetres introduïts no formen un número de compte vàlid, el dígit de control no és correcte.</p>
 <br />
 
 <p><b>Exemple 2</b> Validar els següents valors: iban: 'ES66', entidad: '2100', sucursal: '0418', dc: '40', cuenta: '1234567891'. </p>

@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REGISTRO">DATOS_REGISTRO</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REGISTRO&metodo=setCodigoOrganoDestino">setCodigoOrganoDestino</a></li>
@@ -43,7 +43,7 @@
 <p>
 	<b>EJEMPLO</b>
 </p>
-<p>Pongamos por caso que queremos hacer el apunte registral en un órgano destino establecido en un campo (p.ej ORGANO_DESTINO) de un formulario (p. ej. FORM-1). Para ello estableceremos las siguientes líneas en el script:</p>
+<p>Pongamos por caso que queremos hacer el apunte registral en un órgano destino establecido en un campo (p. ej.: ORGANO_DESTINO) de un formulario (p. ej.: FORM-1). Para ello estableceremos las siguientes líneas en el script:</p>
  <p class="codigoScript">
 var codigoOrganoDestino = PLUGIN_FORMULARIOS.getValor('FORM-1', 'ORGANO_DESTINO');
 DATOS_REGISTRO.setCodigoOrganoDestino(codigoOrganoDestino);

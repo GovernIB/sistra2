@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS&metodo=esNumeroSeguridadSocial">esNumeroSeguridadSocial</a></li>
@@ -45,20 +45,20 @@
 </p>
 <p>
 	<ul>
-		<li><b>boolean</b>: true si la cadena introduïda és un NSS vàlid i false si la cadena introduïda no és un nss vàlid.</li>
+		<li><b>boolean</b>: true si la cadena introduïda és un NSS vàlid i false si la cadena introduïda no és un NSS vàlid.</li>
 	</ul>
 </p>
 <p>
-	<b>EJEMPLOS</b>
+	<b>EXEMPLES</b>
 </p>
-<p><b>Ejemplo 1</b> Validar la cadena '12/01234567/89'. </p>
+<p><b>Exemple 1</b> Validar la cadena '12/01234567/89'. </p>
  <p class="codigoScript">
 	var valido = PLUGIN_UTILS.esNumeroSeguridadSocial('12/01234567/89');
 </p>
 <p>La funció esNumeroSeguridadSocial retorna 'false', pel fet que la cadena no representa un número de seguretat social vàlid.</p>
 <br />
 
-<p><b>Ejemplo 2</b> Validar la cadena '120123456787. </p>
+<p><b>Exemple 2</b> Validar la cadena '120123456787. </p>
  <p class="codigoScript">
 	var valido = PLUGIN_UTILS.esNumeroSeguridadSocial('12/01234567/87');
 </p>

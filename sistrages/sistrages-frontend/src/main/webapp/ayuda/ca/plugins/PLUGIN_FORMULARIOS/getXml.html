@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_FORMULARIOS">PLUGIN_FORMULARIOS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_FORMULARIOS&metodo=getXml">getXml</a></li>
@@ -25,15 +25,15 @@
 	getXml(String idFormulario): String
 </h1>
 <p>
-	<b>DESCRIPCI&Oacute;</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-		<li>Mètode que retorna el XML amb els valors del formulari.</li>
+		<li>Mètode que retorna l'XML amb els valors del formulari.</li>
 	</ul>
 </p>
 <p>
-	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+	<b>PARÀMETRES D'ENTRADA</b>
 </p>
 <p>
 	<ul>
@@ -41,30 +41,30 @@
 	</ul>
 </p>
 <p>
-	<b>PAR&#192;METRES DE SORTIDA</b>
+	<b>PARÀMETRES DE SORTIDA</b>
 </p>
 <p>
 	<ul>
-		<li><b>string</b>:Cadena de caràcters que representa el XML amb els valors del formulari.</li>
+		<li><b>string</b>: Cadena de caràcters que representa l'XML amb els valors del formulari.</li>
 	</ul>
 </p>
  <p>
 	<b>Exemple</b>
  </p>
-   <p> Obtenir el XML del formulari amb identificador 'Form1':</p>
+   <p> Obtenir l'XML del formulari amb identificador 'Form1':</p>
  <p class="codigoScript">
 	var xml = PLUGIN_FORMULARIOS.getXml('Form1');
  </p>
  <p>
   La funció getXml retornarà una cadena de text on el contingut serà el XML del formulari amb els seus valors.
    <br />
-   D'aquest XML es podria extreure el valor d'un determinat camp, per Exemple si sabem que en el XML existeix un camp dni amb el següent xpath '/xml/persona/dni' podríem obtenir el valor del camp DNI mitjançant:
+   D'aquest XML es podria extreure el valor d'un determinat camp, per Exemple si sabem que en l'XML existeix un camp dni amb el següent xpath '/xml/persona/dni' podríem obtenir el valor del camp DNI mitjançant:
  </p>
  <p class="codigoScript">
 	var dni = PLUGIN_VALIDACIONES.extraerValorXml(xml, '/xml/persona/dni');
  </p>
  <p>
-	La funció extraerValorXml retornarà el valor del camp dni dins del XML, en aquest cas '11111111H'.
+	La funció extraerValorXml retornarà el valor del camp dni dins de l'XML, en aquest cas '11111111H'.
  </p>
 <br />
 

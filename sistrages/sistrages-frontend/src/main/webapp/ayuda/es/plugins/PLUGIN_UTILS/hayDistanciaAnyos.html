@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=hayDistanciaAnyos">hayDistanciaAnyos</a></li>
@@ -25,16 +25,16 @@
 	hayDistanciaAnyos(String fechaIni, String fechaFin, String formatoFecha, int distanciaAnyos): boolean
 </h1>
 <p>
-	<b>DESCRIPCI&Oacute;N</b>
+	<b>DESCRIPCIÓN</b>
 </p>
 <p>
 	<ul>
-    	<li>Valida que la distancia mínima entre dos fechas sea como mínimo del parámetro de distancia que se pasa por entrada.</li>
+    	<li>Verifica que la distancia mínima entre dos fechas sea como mínimo del parámetro de distancia que se pasa por entrada.</li>
 
 	</ul>
 </p>
 <p>
-	<b>PAR&#192;METROS DE ENTRADA</b>
+	<b>PARÁMETROS DE ENTRADA</b>
 </p>
 <p>
 	<ul>
@@ -45,11 +45,11 @@
 	</ul>
 </p>
 <p>
-	<b>PAR&#192;METROS DE SALIDA</b>
+	<b>PARÁMETROS DE SALIDA</b>
 </p>
 <p>
 	<ul>
-		<li><b>boolean</b>: true si la distancia en años entre ambas fechas es como mínimo el parámetro añosDistancia, false si no cumple el mínimo en anyos de distancia entre ambos.</li>
+		<li><b>boolean</b>: true si la distancia en años entre ambas fechas es como mínimo el parámetro añosDistancia, false si no cumple el mínimo en años de distancia entre ambos.</li>
 	</ul>
 </p>
 <p>
@@ -62,7 +62,7 @@
 <p>La función hayDistanciaAnyos devuelve 'true' porque la distancia de años entre ambas fechas es mayor o igual a 3 años.</p>
 <br />
 
-<p><b>Ejemplo 2</b> Validar si la distancia entre dos fechas es de al menos 5 años.  </p>
+<p><b>Ejemplo 2</b> Validar si la distancia entre dos fechas es de al menos 5 años. </p>
  <p class="codigoScript">
 	var valido = PLUGIN_UTILS.hayDistanciaAnyos('01/01/2018','05/07/2015','dd/MM/YYYY',5);
 </p>

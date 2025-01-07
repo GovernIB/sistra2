@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_FIRMANTES">DATOS_FIRMANTES</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_FIRMANTES&metodo=addFirmanteOpcional">addFirmanteOpcional</a></li>
@@ -37,14 +37,14 @@
 </p>
 <p>
 	<ul>
-		<li><b>nif</b>: String con el nif del firmante. Tiene que ser un NIF válido.</li>
+		<li><b>nif</b>: String con el NIF del firmante. Tiene que ser un NIF válido.</li>
 		<li><b>nombre</b>: String con el nombre del firmante. Dato obligatorio.</li>
 	</ul>
 </p>
 <p>
 	<b>EJEMPLOS</b>
 </p>
-<p>Ejemplo 1.- Pongamos por caso que queremos establecer dos firmantes para un formulario, uno obligatorio (A) y otro opcional (B). En este caso cumplimentariamos el script "Establecer firmantes" con el contenido siguiente: </p>
+<p>Ejemplo 1.- Pongamos por caso que queremos establecer dos firmantes para un formulario, uno obligatorio (A) y otro opcional (B). En este caso cumplimentaríamos el script "Establecer firmantes" con el contenido siguiente: </p>
  <p class="codigoScript">
 DATOS_FIRMANTES.addFirmante(dniA, nomA);
 DATOS_FIRMANTES.addFirmanteOpcional(dniA, nomA);  

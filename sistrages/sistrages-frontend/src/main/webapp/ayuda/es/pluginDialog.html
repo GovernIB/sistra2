@@ -12,45 +12,45 @@
 			console.log(lista);
 			if(ambito == 'E'){
 				lista.innerHTML += `
-				<li><a href="AyudaServlet?id=pluginCatalogoProcedimientos&lang=es"><span class="nombreCampo">Plugin de cat&aacute;logo de procedimientos</span></a></li>
-				<li><a href="AyudaServlet?id=pluginRegistro&lang=es"><span class="nombreCampo">Plugin de registro</span></a></li>
-				<li><a href="AyudaServlet?id=pluginFirma&lang=es"><span class="nombreCampo">Plugin de firma</span></a></li>
-				<li><a href="AyudaServlet?id=pluginFormExternos&lang=es"><span class="nombreCampo">Plugin de formularios externos</span></a></li>
-				<li><a href="AyudaServlet?id=pluginPagos&lang=es"><span class="nombreCampo">Plugin de pagos</span></a></li>
-				<li><a href="AyudaServlet?id=pluginValidacionFirma&lang=es"><span class="nombreCampo">Plugin de validaci&oacute;n de firma</span> </a></li>
-				<li><a href="AyudaServlet?id=pluginEnvioRemoto&lang=es"><span class="nombreCampo">Plugin env&iacute;o remoto</span> </a></li>
+				<li><a href="AyudaServlet?id=pluginCatalogoProcedimientos⟨=es"><span class="nombreCampo">Plug-in de catálogo de procedimientos</span></a></li>
+				<li><a href="AyudaServlet?id=pluginRegistro⟨=es"><span class="nombreCampo">Plug-in de registro</span></a></li>
+				<li><a href="AyudaServlet?id=pluginFirma⟨=es"><span class="nombreCampo">Plug-in de firma</span></a></li>
+				<li><a href="AyudaServlet?id=pluginFormExternos⟨=es"><span class="nombreCampo">Plug-in de formularios externos</span></a></li>
+				<li><a href="AyudaServlet?id=pluginPagos⟨=es"><span class="nombreCampo">Plug-in de pagos</span></a></li>
+				<li><a href="AyudaServlet?id=pluginValidacionFirma⟨=es"><span class="nombreCampo">Plug-in de validación de firma</span> </a></li>
+				<li><a href="AyudaServlet?id=pluginEnvioRemoto⟨=es"><span class="nombreCampo">Plug-in envío remoto</span> </a></li>
 									`
 			}else if(ambito == 'G'){
 				lista.innerHTML += `
-					<li><a href="AyudaServlet?id=pluginDomRemoto&lang=es"><span class="nombreCampo">Plugin de dominio remoto</span></a></li>
-					<li><a href="AyudaServlet?id=pluginLogin&lang=es"><span class="nombreCampo">Plugin de login</span></a></li>
-					<li><a href="AyudaServlet?id=pluginEmail&lang=es"><span class="nombreCampo">Plugin de email</span></a></li>
-					<li><a href="AyudaServlet?id=pluginConvPdf&lang=es"><span class="nombreCampo">Plugin de conversi&oacute;n pdf</span></a></li>
+					<li><a href="AyudaServlet?id=pluginDomRemoto⟨=es"><span class="nombreCampo">Plug-in de dominio remoto</span></a></li>
+					<li><a href="AyudaServlet?id=pluginLogin⟨=es"><span class="nombreCampo">Plug-in de login</span></a></li>
+					<li><a href="AyudaServlet?id=pluginEmail⟨=es"><span class="nombreCampo">Plug-in de email</span></a></li>
+					<li><a href="AyudaServlet?id=pluginConvPdf⟨=es"><span class="nombreCampo">Plug-in de conversión pdf</span></a></li>
 									`
 			}
 		}
 	</script>
 </head>
 <body onload="generarFilas();">
-<h1 class="stgH1">MANTENIMENTO PLUGIN</h1>
+<h1 class="stgH1">MANTENIMIENTO PLUG-IN</h1>
 <p>
-	En la pantalla de '<i>Matenimento plugin</i>' puede mantener los datos correspondientes a un plugin.<br>
+	En la pantalla de '<i>Mantenimiento plug-in</i>' puede mantener los datos correspondientes a un plug-in.<br>
 	Los campos obligatorios se presentan con un asterisco *
 </p>
 <h2 class="stgH2">CAMPS</h2>
 <p>
 	<ul>
-		<li><span class="nombreCampo">Tipos plugin:</span> tipo de plugin. Este desplegable permite seleccionar una serie de tipos seg&uacute;n el &aacute;mbito de aplicaci&oacute;n del plugin, global o entidad.</li>
-		<li><span class="nombreCampo">Classname:</span> classname de la clase Java que implementa el plugin a definir. Como ejemplo podemos tomar la implementaci&oacute;n de <i>mock</i> del Plugin de email, que tendr&iacute;a como classname <i>es.caib.sistra2.commons.plugins.mock.email.EmailPluginMock</i></li>
-		<li><span class="nombreCampo">Descripci&oacute;n plugin:</span> texto descriptivo de la implementaci&oacute;n del plugin.</li>
-		<li><span class="nombreCampo">Prefijo de propiedades:</span> prefijo requerido por el plugin para la recuperaci&oacute;n de sus propiedades. Este valor depender&acute; del tipo e implementaci&oacute;n del plugin</li>
-		<li><span class="nombreCampo">Propiedades plugin:</span> listado de propiedades requeridas para el correcto funcionamente de la implementaci&oacute;n del plugin. Las operaciones que se pueden realizar sobre este listado son:
+		<li><span class="nombreCampo">Tipos plug-in:</span> tipo de plug-in. Este desplegable permite seleccionar una serie de tipos según el ámbito de aplicación del plug-in, global o entidad.</li>
+		<li><span class="nombreCampo">Classname:</span> classname de la clase Java que implementa el plug-in a definir. Como ejemplo podemos tomar la implementación de <i>mock</i> del Plug-in de email, que tendría como classname <i>es.caib.sistra2.commons.plugins.mock.email.EmailPluginMock</i></li>
+		<li><span class="nombreCampo">Descripción plug-in:</span> texto descriptivo de la implementación del plug-in.</li>
+		<li><span class="nombreCampo">Prefijo de propiedades:</span> prefijo requerido por el plug-in para la recuperación de sus propiedades. Este valor dependerá del tipo e implementación del plug-in</li>
+		<li><span class="nombreCampo">Propiedades plug-in:</span> listado de propiedades requeridas para el correcto funcionamiento de la implementación del plug-in. Las operaciones que se pueden realizar sobre este listado son:
 		<ul class="detalle">
-		<li><span class="boton">Nuevo:</span> permite crear una nueva propiedad. Esta propiedad consta del c&oacute;digo de la propiedad y el valor de la misma</li>
-		<li><span class="boton">Editar:</span> permite editar una propiedad ya existente en el listado. Antes de pulsar el bot&oacute;n de edici&oacute;n tendr&acute; que seleccionar la propiedad a editar en el listado.</li>
-		<li><span class="boton">Eliminar:</span> permite eliminar una propiedad ya existente en el listado. Antes de pulsar el bot&oacute;n de eliminaci&oacute;n tendr&acute; que seleccionar la propiedad a eliminar en el listado.</li>
-		<li><span class="boton">Subir:</span> permite subir una propiedad en el orden del listado de propiedades. Para subir una propiedad previamente tendr&aacute; que haberla seleccionado en el listado de propiedades.</li>
-		<li><span class="boton">Bajar:</span> permite bajar una propiedad en el orden del listado de propiedades. Para bajar una propiedad previamente tendr&aacute; que haberla seleccionado en el listado de propiedades.</li>
+		<li><span class="boton">Nuevo:</span> permite crear una nueva propiedad. Esta propiedad consta del código de la propiedad y el valor de la misma</li>
+		<li><span class="boton">Editar:</span> permite editar una propiedad ya existente en el listado. Antes de pulsar el botón de edición tendrá que seleccionar la propiedad a editar en el listado.</li>
+		<li><span class="boton">Eliminar:</span> permite eliminar una propiedad ya existente en el listado. Antes de pulsar el botón de eliminación tendrá que seleccionar la propiedad a eliminar en el listado.</li>
+		<li><span class="boton">Subir:</span> permite subir una propiedad en el orden del listado de propiedades. Para subir una propiedad previamente tendrá que haberla seleccionado en el listado de propiedades.</li>
+		<li><span class="boton">Bajar:</span> permite bajar una propiedad en el orden del listado de propiedades. Para bajar una propiedad previamente tendrá que haberla seleccionado en el listado de propiedades.</li>
 		</ul>
 		En los valores de las propiedades es posible hacer uso de placeholders para asociar valores:
 		<ul class="detalle">
@@ -67,7 +67,7 @@
 		<li><span class="boton">Cancelar</span>: cierra la pantalla sin guardar los cambios.</li>
 	</ul>
 </p>
-<h2 class="stgH2">PROPIEDADES PLUGIN</h2>
+<h2 class="stgH2">PROPIEDADES PLUG-IN</h2>
 <p>
 	<ul id="lista">
 	</ul>

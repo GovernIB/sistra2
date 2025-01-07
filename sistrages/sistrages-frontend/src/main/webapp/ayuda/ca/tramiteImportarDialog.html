@@ -7,12 +7,12 @@
 <body>
 <h1 class="stgH1">IMPORTACIÓ DE TRÀMIT/VERSIÓ</h1>
 <p>
-	Aquesta funcionalitat d'importació únicament està disponible en entorns de desenvolupament, i possibilita importar una versió d'un tràmit independentment de qual sigui el seu entorn de procedència.</br>
-	En aquesta pantalla es presenten les característiques del tràmit/versió que es desitja importar, indicant, en cas necessari, els aspectes a revisar i accions a realitzar per part de l'usuari per a poder finalitzar satisfactòriament el procés d'importació. En cas de requerir-se una acció, es mostrarà un botó "..." que presentarà les accions que podrà realitzar l'usuari per a esmenar el <i>warning</i> presentat. At&egrave;s que cada versi&oacute; de la plataforma implementa noves funcionalitats, &eacute;s possible que hi hagi alguna incompatibilitat entre versions, per la qual cosa cal que les versions dels entorns origen i dest&iacute; siguin la mateixa.
+	Aquesta funcionalitat d'importació únicament està disponible en entorns de desenvolupament, i possibilita importar una versió d'un tràmit independentment de quin sigui el seu entorn de procedència.</br>
+	En aquesta pantalla es presenten les característiques del tràmit/versió que es desitja importar, indicant, en cas necessari, els aspectes a revisar i accions a realitzar per part de l'usuari per a poder finalitzar satisfactòriament el procés d'importació. En cas de requerir-se una acció, es mostrarà un botó "..." que presentarà les accions que podrà realitzar l'usuari per a esmenar el <i>warning</i> presentat. Atès que cada versió de la plataforma implementa noves funcionalitats, és possible que hi hagi alguna incompatibilitat entre versions, per la qual cosa cal que les versions dels entorns origen i destí siguin la mateixa.
 	La pantalla presenta dues seccions diferenciades, una titulada <b>Versió tràmit</b> que presenta les dades associades directament a la versió (entitat, àrea, tràmit i versió), i una segona titulada <b>Elements comuns</b> que presenta la informació relativa a elements comuns (dominis, formatadors, fonts de dades, etc.) associats a la versió que poden ser comunes a altres tràmits/versió.</br>
 	<b>Aspectes importants del procés d'importació a tenir en compte:</b>
 	<ul>
-		<li><b>Limitacions segons rol d'usuari</b>: alguna de les accions estan limitada pel rol de l'usuari. Per exemple, en cas d'importar un tràmit provinent d'una àrea que no existeix en l'entorn, es donarà l'opció a l'usuari de crear una àrea nova, però únicament el podrà fer si disposa del rol d'Administrador d'Entitat.</li>
+		<li><b>Limitacions segons rol d'usuari</b>: alguna de les accions estan limitades pel rol de l'usuari. Per exemple, en cas d'importar un tràmit provinent d'una àrea que no existeix en l'entorn, es donarà l'opció a l'usuari de crear una àrea nova, però únicament el podrà fer si disposa del rol d'Administrador d'Entitat.</li>
 		<li><b>Desassociació d'elements</b>: en determinades situacions es pot donar el cas que un element associat al tràmit no pugui ser importat. Això pot passar tant en dominis (p. ex. domini d'àmbit global no existent) com en formatadors (p. ex. utilització de formatador no existent). En aquest cas no s'impedirà la importació de la versió del tràmit, però es desassociarà l'element afectat de la versió del tràmit. Si l'element afectat és el formatador, s'eliminaran les plantilles de visualització definides. Si l'element afectat és un domini, s'eliminarà de "Dominis emprats" i si és utilitzat per un camp selector d'un formulari, aquest selector passarà a ser de llista fixa.
 </li>
 	</ul>
@@ -48,12 +48,12 @@
 <tr>
 	<th>Entitat</th>
 	<td align="center">ENTITAT DIFERENT</td>
-	<td>S'avisa a l'usuari que s'està important sobre una entitat diferent a l'origen, però no és una situació bloquejant, per la qual cosa es permet continuar.</td>
+	<td>S'avisa a l'usuari que s'està important sobre una entitat diferent de l'origen, però no és una situació bloquejant, per la qual cosa es permet continuar.</td>
 </tr>
 <tr>
 	<th rowspan="2">Àrea</th>
 	<td align="center">NO EXISTEIX</td>
-	<td>En aquest cas es mostrarà el botó d'acció, podent seleccionar una àrea existent sobre la qual importar o la possibilitat de crear una àrea nova. El creació d'una nova àrea requerirà permisos d'Administrador d'Entitat. La importació sobre una àrea requerirà de permisos sobre aquesta àrea.</td>
+	<td>En aquest cas es mostrarà el botó d'acció, podent seleccionar una àrea existent sobre la qual importar o la possibilitat de crear una àrea nova. La creació d'una nova àrea requerirà permisos d'Administrador d'Entitat. La importació sobre una àrea requerirà permisos sobre aquesta àrea.</td>
 </tr>
 <tr>
 	<td align="center">EXISTEIX</td>
@@ -62,20 +62,20 @@
 <tr>
 	<th rowspan="2">Tràmit</th>
 	<td align="center">NO EXISTEIX</td>
-	<td>Si el tràmit no existeix, es dóna d'alta automàticament. Previ a aquest alta es permet canviar el codi del tràmit.</td>
+	<td>Si el tràmit no existeix, es dona d'alta automàticament. Previ a aquesta alta es permet canviar el codi del tràmit.</td>
 </tr>
 <tr>
 	<td align="center">EXISTEIX</td>
-	<td>Si el tràmit existeix en l'àrea sobre la qual s'està important, se sobreescriurà la versió. En cas que el tràmit existeixi en una àrea diferent a la de destinació, no es permetrà importar (no es poden duplicar codis de tràmit). Es permet modificar el codi del tràmit a importar.</td>
+	<td>Si el tràmit existeix en l'àrea sobre la qual s'està important, se sobreescriurà la versió. En cas que el tràmit existeixi en una àrea diferent de la de destinació, no es permetrà importar (no es poden duplicar codis de tràmit). Es permet modificar el codi del tràmit a importar.</td>
 </tr>
 <tr>
 	<th rowspan="2">Versió</th>
 	<td align="center">NO EXISTEIX</td>
-	<td>Si la versió no existeix es permet crear-la o reemplaçar una existent, si n'hi hagués.</td>
+	<td>Si la versió no existeix, es permet crear-la o reemplaçar una existent, si n'hi hagués.</td>
 </tr>
 <tr>
 	<td align="center">EXISTEIX</td>
-	<td>Si la versió existeix es possibilita realitzar l'acció de sobreescriure existent, generant nova <i>release</i>, o canviar el número de versió</td>
+	<td>Si la versió existeix, es possibilita realitzar l'acció de sobreescriure existent, generant nova <i>release</i>, o canviar el número de versió</td>
 </tr>
 <tr>
 	<th>Dades registre</th>
@@ -85,7 +85,7 @@
 <tr>
 	<th rowspan="5">Domini</th>
 	<td rowspan="3" align="center">NO EXISTEIX</td>
-	<td>Si el domini és d'àmbit global, no s'importarà el domini i s'eliminarà l'associació a la versió del tràmit (es llevarà de dominis associats a la versió i els hi selectors de tipus domini que ho utilitzin passaran a llista fixa).</td>
+	<td>Si el domini és d'àmbit global, no s'importarà el domini i s'eliminarà l'associació a la versió del tràmit (es llevarà de dominis associats a la versió i els selectors de tipus domini que ho utilitzin passaran a llista fixa).</td>
 </tr>
 <tr>
 	<td>Si el domini és d'àmbit entitat, només es podrà crear si l'usuari és Administrador d'Entitat. En cas que l'usuari no sigui Administrador d'entitat, no s'importarà el domini i s'eliminarà l'associació a la versió del tràmit que s'està important.</td>
@@ -95,7 +95,7 @@
 </tr>
 <tr>
 	<td rowspan="2" align="center">EXISTEIX</td>
-	<td>Si el domini existeix però no té el mateix àmbit es mostrarà un missatge informatiu però es podrà continuar amb la importació</td>
+	<td>Si el domini existeix, però no té el mateix àmbit es mostrarà un missatge informatiu, però es podrà continuar amb la importació</td>
 </tr>
 <tr>
 	<td>Si el domini és d'àmbit entitat o àrea, est haurà de pertànyer a l'entitat o àrea sobre la qual s'importa. En cas contrari s'informarà l'usuari i s'eliminarà l'associació al domini en la versió del tràmit a importar. </td>
@@ -103,18 +103,18 @@
 <tr>
 	<th rowspan="2">Formatador</th>
 	<td align="center">NO EXISTEIX</td>
-	<td>Si el formatador no existeix es permetrà importar però s'eliminarà l'associació al formatador que hi hagi en la versió importada (plantilles de visualització).</td>
+	<td>Si el formatador no existeix, es permetrà importar, però s'eliminarà l'associació al formatador que hi hagi en la versió importada (plantilles de visualització).</td>
 </tr>
 <tr>
 	<td align="center">EXISTEIX</td>
-	<td>Si el formatador existeix en l'entitat, es mantindrà l'associació. Si en l'entitat destino el formatador existent està configurat com "Desactivar personalització", s'eliminarà l'associació del formatador al tràmit.</td>
+	<td>Si el formatador existeix en l'entitat, es mantindrà l'associació. Si en l'entitat destino el formatador existent ets configurat com "Desactivar personalització", s'eliminarà l'associació del formatador al tràmit.</td>
 </tr>
 </table>
 <h2 class="stgH2">OPERATIVA</h2>
 <p>
 	<ul>
-		<li><span class="boton">Importar</span>: Es durà a terme la importació de la versió. Aquest botó estarà deshabilitat mentre hi hagi accions requerides pendents.</li>
-		<li><span class="boton">Cancelar</span>: Tanca la pantalla d'importació i cancel·la el procés.</li>
+		<li><span class="boton">Importar</span>: Es durà a terme la importació de la versió. Aquest botó estarà deshabilitat mentre hi hagi accions requerits pendents.</li>
+		<li><span class="boton">Cancel·lar</span>: Tanca la pantalla d'importació i cancel·la el procés.</li>
 	</ul>
 </p>
 </body>

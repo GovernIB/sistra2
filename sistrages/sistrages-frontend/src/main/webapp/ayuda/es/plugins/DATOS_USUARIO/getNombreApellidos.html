@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_USUARIO">DATOS_USUARIO</a></li>
 		  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_USUARIO&metodo=getNombreApellidos">getNombreApellidos</a></li>
@@ -43,7 +43,7 @@
  <p>
 	<b>EJEMPLO</b>
  </p>
-<p>Si se desea obtener el nombre completo del usuario de la sesión actual, en este caso 'Jose Pérez Rodriguez', primero se debe comprobar si la sesión es autenticada, a continuación obtener el objeto DATOS_USUARIO mediante getUsuario. Una vez obtenido el usuario, podemos obtener el nombre completo mediante la función getNombreApellidos:</p>
+<p>Si se desea obtener el nombre completo del usuario de la sesión actual, en este caso 'Jose Pérez Rodríguez', primero se debe comprobar si la sesión es autenticada, a continuación obtener el objeto DATOS_USUARIO mediante getUsuario. Una vez obtenido el usuario, podemos obtener el nombre completo mediante la función getNombreApellidos:</p>
  <p class="codigoScript">
 	var autenticado = PLUGIN_SESIONFORMULARIO.isAutenticado(); <br />
 	if (autenticado == true) { <br />
@@ -52,7 +52,7 @@
 	}
  </p>
  <p>
- La función getNombreApellidos retornará la cadena  'Jose Pérez Rodríguez'.
+ La función getNombreApellidos retornará la cadena 'Jose Pérez Rodríguez'.
  </p>
 <br />
 

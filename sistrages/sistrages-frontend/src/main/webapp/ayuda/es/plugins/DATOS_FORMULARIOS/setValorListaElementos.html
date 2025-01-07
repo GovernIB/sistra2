@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_FORMULARIOS">DATOS_FORMULARIOS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_FORMULARIOS&metodo=setValorListaElementos">setValorListaElementos</a></li>
@@ -38,8 +38,8 @@
 <p>
 	<ul>
 		<li><b>idFormulario</b>: Identificador del formulario en el que quiere modificar el valor del campo.</li>
-		<li><b>campo </b>: Identificador del campo del formulario.</li>
-		<li><b>valorCampoListaElementos </b>: Objeto de tipo ValorListaElementos el cual contiene los diferentes valores a asignar al campo.</li>
+		<li><b>campo</b>: Identificador del campo del formulario.</li>
+		<li><b>valorCampoListaElementos</b>: Objeto de tipo ValorListaElementos el cual contiene los diferentes valores a asignar al campo.</li>
 	</ul>
 </p>
 <p>
@@ -63,13 +63,13 @@ var lel = DATOS_FORMULARIOS.crearValorListaElementos();<br>
 var i = 0;<br>
 <br>
 if (numeroElementos != null) {<br>
-&emsp;while(i < numeroElementos){<br>
-&emsp;&emsp;var e = lel.addElemento();<br>
-&emsp;&emsp;e.addValor('LTX1', PLUGIN_FORMULARIOS.getValorElemento('FORM-1','LEL1',i,'LTX1'));<br>
-&emsp;&emsp;e.addValor('LTX2', PLUGIN_FORMULARIOS.getValorElemento('FORM-1','LEL1',i,'LTX2'));<br>
-&emsp;&emsp;i++;<br>
-&emsp;}<br>
-&emsp;DATOS_FORMULARIOS.setValorListaElementos('FORM-2', 'LEL2', lel);<br>
+ while(i < numeroElementos){<br>
+  var e = lel.addElemento();<br>
+  e.addValor('LTX1', PLUGIN_FORMULARIOS.getValorElemento('FORM-1','LEL1',i,'LTX1'));<br>
+  e.addValor('LTX2', PLUGIN_FORMULARIOS.getValorElemento('FORM-1','LEL1',i,'LTX2'));<br>
+  i++;<br>
+ }<br>
+ DATOS_FORMULARIOS.setValorListaElementos('FORM-2', 'LEL2', lel);<br>
 }
 </p>
 </body>

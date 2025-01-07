@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_PROCEDIMIENTOCP">DATOS_PROCEDIMIENTOCP</a></li>
 		  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_PROCEDIMIENTOCP&metodo=getDescripcion">getDescripcion</a></li>
@@ -25,11 +25,11 @@
 	getDescripcion(): String
 </h1>
 <p>
-	<b>DESCRIPCI&Oacute;N</b>
+	<b>DESCRIPCIÓN</b>
 </p>
 <p>
 	<ul>
-		<li>Método que retorna la descripción del procedimento asociada al trámite en el catálogo de procedimentos.</li>
+		<li>Método que retorna la descripción del procedimiento asociada al trámite en el catálogo de procedimientos.</li>
 	</ul>
 </p>
 <p>
@@ -37,19 +37,19 @@
 </p>
 <p>
 	<ul>
-		<li><b>String</b>: Cadena de carácteres (de longitud máxima 230), con la descripción del procedimento asociada al trámite en el catálogo de procedimentos. </li>
+		<li><b>String</b>: Cadena de caracteres (de longitud máxima 230), con la descripción del procedimiento asociada al trámite en el catálogo de procedimientos. </li>
 	</ul>
 </p>
  <p>
 	<b>Ejemplo</b>
  </p>
-<p> Si se desea obtener la descripción del procedimento asociada al trámite en el catálogo de procedimentos, utilizaremos la función de la siguiente forma:</p>
+<p> Si se desea obtener la descripción del procedimiento asociada al trámite en el catálogo de procedimientos, utilizaremos la función de la siguiente forma:</p>
  <p class="codigoScript">
 	var procedimiento = PLUGIN_SESIONFORMULARIO.getTramiteCP().getProcedimiento(); <br />
 	var descripcion_procedimiento = procedimiento.getDescripcion();<br />
  </p>
  <p>
-  La función getDescripcion() devolverá la descripción del procedimento asociada al trámite en el catálogo de procedimentos. En caso de no tener ninguna, devolverá 'null'.
+  La función getDescripcion() devolverá la descripción del procedimiento asociada al trámite en el catálogo de procedimientos. En caso de no tener ninguna, devolverá 'null'.
  </p>
 <br />
 

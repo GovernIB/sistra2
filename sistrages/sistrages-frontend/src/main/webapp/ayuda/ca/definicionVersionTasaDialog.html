@@ -7,71 +7,67 @@
 <body>
 	<h1 class="stgH1">MANTENIMENT DE TAXA</h1>
 	<p>
-		A la pantalla de '<i>Manteniment de taxa</i>' podeu gestionar les
-		configuracions de la taxa.<br>
+		A la pantalla de '<i>Manteniment de taxa</i>' podeu gestionar les configuracions de la taxa.<br>
 	</p>
 	<h2 class="stgH2">CAMPS</h2>
 	<p>
 	<ul>
-		<li><span class="nombreCampo">Identificador:</span> codi un&iacute;voc que identifica la taxa a l'aplicaci&oacute;. Qualsevol refer&egrave;ncia a la taxa en els scripts de la versi&oacute; es
-			realitzar&agrave; utilitzant aquest codi.</li>
-		<li><span class="nombreCampo">Descripci&oacute;:</span> text multiidioma de presentaci&oacute; de la taxa a l'assistent de tramitaci&oacute;. Aquesta ser&agrave; la denominaci&oacute; de la
-			taxa que visualitzar&agrave; el tramitador a l'assistent de tramitaci&oacute;.</li>
-		<li><span class="nombreCampo">Obligatorietat:</span> permet configurar l'obligatorietat de paga la taxa a l'assistent de tramitaci&oacute;. Els valors possibles s&oacute;n:</li>
+		<li><span class="nombreCampo">Identificador:</span> codi unívoc que identifica la taxa a l'aplicació. Qualsevol referència a la taxa en els scripts de la versió es
+			realitzarà utilitzant aquest codi.</li>
+		<li><span class="nombreCampo">Descripció:</span> text multiidioma de presentació de la taxa a l'assistent de tramitació. Aquesta serà la denominació de la
+			taxa que visualitzarà el tramitador a l'assistent de tramitació.</li>
+		<li><span class="nombreCampo">Obligatorietat:</span> permet configurar l'obligatorietat de paga la taxa a l'assistent de tramitació. Els valors possibles són:</li>
 		<ul class="detalle">
-			<li><span class="boton">Obligatori:</span> si es marca aquesta opci&oacute; ser&agrave; obligatori el pagament de la taxa a l'assistent. En cas contrari no es podr&agrave; amb l'emplenament
-				del tr&agrave;mit.</li>
-			<li><span class="boton">Opcional:</span> si es marca aquesta opci&oacute; el pagament de la taxa ser&agrave; opcional.</li>
-			<li><span class="boton">Depenent:</span> si es marca aquesta opci&oacute; l'obligatorietat de realitzar el pagament de la taxa dependr&agrave; del script 'Establir depend&egrave;ncia'.</li>
-			<li><span class="boton">Establir depend&egrave;ncia:</span> script que permet establir l'obligatorietat del pagament de la taxa segons altres dades del tr&agrave;mit (dominis, dades d'un formulari
-				previ, dades de sessi&oacute;, etc.). &uacute;nicament es tindr&agrave; en compte el valor d'aquest script si s'ha fixat pr&egrave;viament l'obligatorietat 'Depenent'.</li>
+			<li><span class="boton">Obligatori:</span> si es marca aquesta opció serà obligatori el pagament de la taxa a l'assistent. En cas contrari no es podrà amb l'emplenament
+				del tràmit.</li>
+			<li><span class="boton">Opcional:</span> si es marca aquesta opció, el pagament de la taxa serà opcional.</li>
+			<li><span class="boton">Depenent:</span> si es marca aquesta opció, l'obligatorietat d'efectuar el pagament de la taxa dependrà del script 'Establir dependència'.</li>
+			<li><span class="boton">Establir dependència:</span> script que permet establir l'obligatorietat del pagament de la taxa segons altres dades del tràmit (dominis, dades d'un formulari
+				previ, dades de sessió, etc.). Únicament es tindrà en compte el valor d'aquest script si s'ha fixat prèviament l'obligatorietat 'Depenent'.</li>
 		</ul>
 		<li><span class="nombreCampo">Script de pagaments:</span> script que permet configurar els detalls del pagament (plataforma de pagament, codi de taxa, import, concepte, pagador, etc.). Actualment,
-			es poden configurar dos tipus de pagament depenent de la pasarel·la de pagaments que es configuri. A continuaci&oacute; es detalla cada un d'aquests pagaments:</li>
+			es poden configurar dos tipus de pagament depenent de la passarel·la de pagaments que es configuri. A continuació es detalla cada un d'aquests pagaments:</li>
 		<ul class="detalle">
-			<li><span class="boton">Pagaments mitjançant la pasarel·la
-					de pagaments de l'ATIB:</span> Els par&agrave;metres que s'han d'indicar per a configurar correctament el pagament per l'ATIB s&oacute;n els següents: </li>
+			<li><span class="boton">Pagaments mitjançant la passarel·la
+					de pagaments de l'ATIB:</span> Els paràmetres que s'han d'indicar per a configurar correctament el pagament per l'ATIB són els següents: </li>
 					<ul>
 						<li><span><b>DATOS_PAGO.setPasarela():</b></span> Passarel·la de pagament, en aquest cas ‘ATIB’.</li>
-						<li><span><b>DATOS_PAGO.setOrganismo():</b></span> Identificador de l’organisme. En el cas d’utilitzar la passarel·la de l’ATIB, aquets camp és opcional.</li>
-						<li><span><b>DATOS_PAGO.setDetallePago():</b></span> S'ha d'indicar el model de pagament, el concepte, la tasa i l'import.</li>
-						<li><span><b>DATOS_PAGO.setMetodosPago():</b></span> Es podran establir els diferents m&egrave;todes de pagament que es permetran. A l'ajuda de la funci&oacute; es detallen els m&egrave;todes configurables.</li>
+						<li><span><b>DATOS_PAGO.setOrganismo():</b></span> Identificador de l’organisme. En el cas d’utilitzar la passarel·la de l’ATIB, aquest camp és opcional.</li>
+						<li><span><b>DATOS_PAGO.setDetallePago():</b></span> S'ha d'indicar el model de pagament, el concepte, la tassa i l'import.</li>
+						<li><span><b>DATOS_PAGO.setMetodosPago():</b></span> Es podran establir els diferents mètodes de pagament que es permetran. A l'ajuda de la funció es detallen els mètodes configurables.</li>
 					</ul>
-			<li><span class="boton">Pagaments mitjançant la
-					pasarel·la de pagaments TPV:</span> Els par&agrave;metres que s'han d'indicar per a configurar correctament el pagament per TPV s&oacute;n els següents:</li>
+			<li><span class="boton">Pagaments mitjançant la passarel·la de pagaments TPV:</span> Els paràmetres que s'han d'indicar per a configurar correctament el pagament per TPV són els següents:</li>
 					<ul>
 						<li><span><b>DATOS_PAGO.setPasarela():</b></span> Passarel·la de pagament, en aquest cas ‘TPV’.</li>
-						<li><span><b>DATOS_PAGO.setOrganismo():</b></span> Identificador de l’organisme. En les properties de l’aplicac&oacute; de PaymentIB es poden donar d’alta els organismes que podran utilitzar aquest tipus de pagament.
-						Per tal de fer-ho, ser&agrave; necessari indicar als responsables de SISTRA2 i PAYMENTIB les seg&uuml;ents propietats</li>
+						<li><span><b>DATOS_PAGO.setOrganismo():</b></span> Identificador de l’organisme. En les properties de l’aplicació de PaymentIB es poden donar d’alta els organismes que podran utilitzar aquest tipus de pagament.
+						Per tal de fer-ho, serà necessari indicar als responsables de SISTRA2 i PAYMENTIB les següents propietats</li>
 							<ul>
-								<li><span><b>Merchant Name</b></span> Nom de l'organisme que utilitza TPV</li>
+								<li><span><b>Merchant Name</b></span> Nom de l'organisme que fa servir TPV</li>
 								<li><span><b>Merchant Code</b></span> Codi FUC assignat a l'organisme.</li>
-								<li><span><b>Merchant Terminal</b></span> N&oacute;mero de terminal que li assignar&agrave; el banc.</li>
+								<li><span><b>Merchant Terminal</b></span> Número de terminal que li assignarà el banc.</li>
 								<li><span><b>Merchant Password</b></span> Contrasenya de l'organisme.</li>
 							</ul>
-							<p> Actualment, hi ha configurats els seg&uuml;ents organismes: </p>
+							<p> Actualment, hi ha configurats els següents organismes: </p>
 							<ul>
-								<li><span><b>'ieb': </b></span>Institut d’estudis bale&agrave;rics.</li>
+								<li><span><b>'ieb': </b></span>Institut d’estudis baleàrics.</li>
 								<li><span><b>'ibavi': </b></span>Institut Balear de l’Habitatge.</li>
 								<li><span><b>'ports': </b></span>Ports de les Illes Balears.</li>
 								<li><span><b>'ibjove': </b></span>IB Jove.</li>
 							</ul>
-						<li><span><b>DATOS_PAGO.setDetallePago():</b></span> S'ha d'indicar el model de pagament, el concepte, la tasa i l'import.</li>
-						<li><span><b>DATOS_PAGO.setMetodosPago():</b></span> Es podran establir els diferents m&egrave;todes de pagament que es permetran. A l'ajuda de la funci&oacute; es detallen els m&egrave;todes configurables. </li>
+						<li><span><b>DATOS_PAGO.setDetallePago():</b></span> S'ha d'indicar el model de pagament, el concepte, la tassa i l'import.</li>
+						<li><span><b>DATOS_PAGO.setMetodosPago():</b></span> Es podran establir els diferents mètodes de pagament que es permetran. A l'ajuda de la funció es detallen els mètodes configurables. </li>
 					</ul>
-					<p> Per utilitzar aquesta pasarel·la,
+					<p> Per utilitzar aquesta passarel·la,
 		</ul>
-		<li><span class="nombreCampo">Simular pagament:</span> <i>check</i> que, en cas d'estar actiu, activa la simulaci&oacute; del pagament.
+		<li><span class="nombreCampo">Simular pagament:</span> <i>check</i> que, en cas d'estar actiu, activa la simulació del pagament.
 	</ul>
 	</ul>
 	</p>
 	<h2 class="stgH2">OPERATIVA</h2>
 	<p>
 	<ul>
-		<li><span class="boton">Desar</span>: tanca la pantalla desant
-			els canvis.</li>
-		<li><span class="boton">Cancel&middot;lar</span>: tanca la
-			pantalla sense desar els canvis.</li>
+		<li><span class="boton">Desar</span>: tanca la pantalla desant els canvis.</li>
+		<li><span class="boton">Cancel·lar</span>: tanca la pantalla sense desar els canvis.</li>
 	</ul>
 	</p>
 </body>

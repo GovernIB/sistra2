@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS&metodo=esEntero">esEntero</a></li>
@@ -45,7 +45,7 @@
 </p>
 <p>
 	<ul>
-		<li><b>boolean</b> : True si el número és un nombre enter i fals si no és un nombre enter.</li>
+		<li><b>boolean</b> : True si el número és un nombre enter i false si no és un nombre enter.</li>
 	</ul>
 </p>
 <p>
@@ -58,12 +58,12 @@
 <p>La funció esEntero retorna 'false', pel fet que el valor introduït no és un número.</p>
 <br />
 
-<p><b>Exemple 2</b> Validar una cadena de caràcters nula. </p>
+<p><b>Exemple 2</b> Validar una cadena de caràcters nul·la. </p>
  <p class="codigoScript">
 	var entero;
 	var valido = PLUGIN_UTILS.esEntero(entero);
 </p>
-<p>La funció esEntero retorna 'false', pel fet que el valor introduït es nul.</p>
+<p>La funció esEntero retorna 'false', pel fet que el valor introduït és nul.</p>
 <br />
 
 <p><b>Exemple 3</b> Validar la cadena de caràcters '3A'. </p>
@@ -73,14 +73,14 @@
 <p>La funció esEntero retorna 'false', pel fet que el valor introduït no és un nombre enter.</p>
 <br />
 
-<p><b>Exemple 4</b> Validar la cadena de caràcters  '12,45'. </p>
+<p><b>Exemple 4</b> Validar la cadena de caràcters '12,45'. </p>
  <p class="codigoScript">
 	var valido = PLUGIN_UTILS.esEntero('12,45');
 	</p>
 <p>La funció esEntero retorna 'false', pel fet que el valor introduït no és un nombre enter.</p>
 <br />
 
-<p><b>Exemple 5</b> Validar la cadena de caràcters  '12'. </p>
+<p><b>Exemple 5</b> Validar la cadena de caràcters '12'. </p>
  <p class="codigoScript">
 	var valido = PLUGIN_UTILS.esEntero('12');
 	</p>

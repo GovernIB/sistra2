@@ -5,6 +5,51 @@
 	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
 	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
 </head>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul id="luBreadCrumb">
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_ANEXOSDINAMICOS">DATOS_ANEXOSDINAMICOS</a></li>
+  	</ul>
+</div>
+<h1 class="cabeceraPlugin">DATOS_ANEXOSDINAMICOS</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Objeto que permite establecer los anexos de forma dinámica.</li>
+	</ul>
+</p>
+<p>
+	<b>MÉTODOS</b>
+</p>
+<p>
+	<div class="seccionMetodos">
+		<ul>
+			<li>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('DATOS_ANEXOSDINAMICOS.crearAnexo()'); return false;" />
+				<a href="AyudaServlet?lang=es&plugin=DATOS_ANEXOSDINAMICOS&metodo=crearAnexo">crearAnexo()</a>
+			</li>
+			<li>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('DATOS_ANEXOSDINAMICOS.addAnexo(anexo)'); return false;" />
+				<a href="AyudaServlet?lang=es&plugin=DATOS_ANEXOSDINAMICOS&metodo=addAnexo">addAnexo(anexo)</a>
+			</li>
+			<li>
+				<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiarPortapeles('DATOS_ANEXOSDINAMICOS.setPrecedenciaSobreAnexosFijos(true)');" />
+				<a href="AyudaServlet?lang=es&plugin=DATOS_ANEXOSDINAMICOS&metodo=setPrecedenciaSobreAnexosFijos">setPrecedenciaSobreAnexosFijos(true)</a>
+			</li>
+		</ul>
+	</div>
+</p>
+</body>
+</html><html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
 <script type="text/javascript">
 	function copiar () {
 		copiarPortapeles('DATOS_ANEXOSDINAMICOS.setPrecedenciaSobreAnexosFijos(true)');
@@ -13,7 +58,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_ANEXOSDINAMICOS">DATOS_ANEXOSDINAMICOS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_ANEXOSDINAMICOS&metodo=setPrecedenciaSobreAnexosFijos">setPrecedenciaSobreAnexosFijos</a></li>
@@ -30,9 +75,9 @@
 <p>
 	<ul>
     	<li>Método que permite establecer la precedencia de los anexos dinámicos sobre los anexos fijos.
-    	Por tanto, si esta propiedad se setea a true, los anexos dinámicos apareceran primero en el asistente
+    	Por tanto, si esta propiedad se setea a true, los anexos dinámicos aparecerán primero en el asistente
     	de tramitación. Indicar que existen dos niveles de ordenación en los anexos. <br>
-    	- El primer nivel no se puede canviar y da precedencia a los anexos obligatorios sobre los anexos opcionales.<br>
+    	- El primer nivel no se puede cambiar y da precedencia a los anexos obligatorios sobre los anexos opcionales.<br>
     	- El segundo nivel establece la precedencia de los anexos fijos o dinámicos dentro del primer nivel. </li>
     </ul>
 </p>

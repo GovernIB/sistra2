@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
     	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_DOMINIOS">PLUGIN_DOMINIO</a></li>
        	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_DOMINIOS&metodo=invocarDominio2">invocarDominio</a></li>
@@ -30,7 +30,7 @@
 <p>
 	<ul>
 		<li>Mètode que permet realitzar la invocació d'un domini i recupera les dades que retorna. S'utilitza aquest mètode per aquells dominis que requereixin el pas de paràmetres.</li>
-    	<li>El nombre de paràmetres que necessita un domini es pot identificar a la pantalla d'edició del domini. Si el domini es global, ha d'indicar-se la paraula 'GLOBAL' i un punt abans de l'identificador del domini i si es d'entitat o d'àrea, ha d'indicar-se l'identificador de l'entitat i/o àrea, separats per punt.</li>
+    	<li>El nombre de paràmetres que necessita un domini es pot identificar a la pantalla d'edició del domini. Si el domini és global, ha d'indicar-se la paraula 'GLOBAL' i un punt abans de l'identificador del domini i si és d'entitat o d'àrea, ha d'indicar-se l'identificador de l'entitat i/o àrea, separats per punt.</li>
 	</ul>
 </p>
 <p>
@@ -54,15 +54,15 @@
 	<b>EXEMPLES</b>
 </p>
 <p>
-De manera prèvia a la invocació d'un domini , s'ha de crear a l'script la llista de paràmetres necessaris per la invocació, per posteriorment afegir-se'ls al domini.
-Per exemple, en el suposit que necessitem recuperar les localitats de la província Illes Balears, s'identificaria la provincia amb el paràmetre corresponent, en aquest cas 07.
+De manera prèvia a la invocació d'un domini, s'ha de crear a l'script la llista de paràmetres necessaris per a la invocació, per posteriorment afegir-se'ls al domini.
+Per exemple, en el suposat que necessitem recuperar les localitats de la província Illes Balears, s'identificaria la província amb el paràmetre corresponent, en aquest cas 07.
 </p>
 <p class="codigoScript">
 	var parametrosDominio = PLUGIN_DOMINIOS.crearParametros();
 	parametrosDominio.addParametro('1', '07');
 </p>
 <p>
- Posteriorment s'invocarà el domini Localitats afegint la llista de paràmetres al mètodo d'invocació (suposem que es un domini d'àrea):
+ Posteriorment, s'invocarà el domini Localitats afegint la llista de paràmetres al mètode d'invocació (suposem que és un domini d'àrea):
 </p>
 <p class="codigoScript">
 var dLocalitats = PLUGIN_DOMINIOS.invocarDominio('CAIB.TESTS.LOCALIDADES', parametrosDominio);

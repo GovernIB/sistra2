@@ -5,56 +5,56 @@
 <link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
 </head>
 <body>
-	<h1 class="stgH1">TAULA SCRIPTS REPRESENTACI&Oacute;</h1>
-	<p>En aquesta taula s'expliquen les diferents casu&iacute;stiques
-		de representaci&oacute;.</p>
+	<h1 class="stgH1">TAULA SCRIPTS REPRESENTACIÓ</h1>
+	<p>En aquesta taula s'expliquen les diferents casuístiques
+		de representació.</p>
 	<h2 class="stgH2">TAULA</h2>
 	<table>
 		<tr>
 			<th><b>Login</b></th>
 			<th><b>¿Qui s'autentica a S2?</b></th>
 			<th><b>Script presentador</b></th>
-			<th><b>Script representaci&oacute;</b></th>
-			<th><b>Asiento</b></th>
+			<th><b>Script representació</b></th>
+			<th><b>Assentament</b></th>
 		</tr>
 		<tr>
 			<td>Certificat PF (Persona A)</td>
 			<td>Persona A</td>
 			<td>Persona A per defecte</td>
 			<td>Null per defecte</td>
-			<td>Es transllada a asiento: <br>- Interessat: Persona A <br>-
+			<td>Es trasllada a assentament: <br>- Interessat: Persona A <br>-
 				Representant: NO
 			</td>
 		</tr>
 		<tr>
-			<td>Certificat representaci&oacute; PJ ("Persona A" representa a
+			<td>Certificat representació PJ ("Persona A" representa a
 				"Empresa 1")</td>
 			<td>Empresa 1</td>
 			<td>Empresa 1 per defecte</td>
 			<td>El representant i el representat per defecte seran els que
-				apareixin a la informaci&oacute; del certificat. En cas de voler
+				apareguin a la informació del certificat. En cas de voler
 				indicar-ne uns altres, s'ha d'indicar a l'script.</td>
-			<td>Es transllada a asiento: <br> - Interessat: Empresa 1 <br>
+			<td>Es trasllada a assentament: <br> - Interessat: Empresa 1 <br>
 				- Representant: Persona A
 			</td>
 		</tr>
 		<tr>
-			<td>Certificat representaci&oacute; PJ ("Persona A" representa a
+			<td>Certificat representació PJ ("Persona A" representa a
 				"Empresa 1")</td>
 			<td>Empresa 1</td>
 			<td>Empresa 1 per defecte</td>
-			<td>A l'script indicam: <br> Representat = "Empresa 2" <br>
-				Representant per defecte es Empresa 1
+			<td>A l'script indiquem: <br> Representat = "Empresa 2" <br>
+				Representant per defecte és Empresa 1
 			</td>
-			<td>Es transllada a asiento: <br> - Interessat: Empresa 2 <br>
+			<td>Es trasllada a assentament: <br> - Interessat: Empresa 2 <br>
 				- Representant: Empresa 1
 			</td>
 		</tr>
 	</table>
-	<p>Si no s'indica res als scripts de "Establir presentador" ni de "Establir representaci&oacute;" (que es accessible si es marca el check "Admet representaci&oacute;"), les dades per defecte que es guarden en el asiento reflectit en REGWEB3 son les definides en el formulari amb les dades del certificat, que poden ser cargades amb l'script de "C&agrave;rrega de dades inicials". </p>
-	<p>Per exemple, com s'aprecia al tr&agrave;mit TEST-IDENT, el seu script de "C&agrave;rrega de dades inicials" carrega les dades del certificat de persona f&iacute;sica o de persona jur&iacute;dica amb representant, segons correspongui. Per aix&ograve;, utilitza les instruccions getUsuario() per al sol·licitant, interessat o representat i getRepresentante() per al representant de l'empresa o entitat sol·licitant, del PLUGIN_SESIONTRAMITACION.</p>
-	<p>Evidentment, si s'utilitza un certificat de persona f&iacute;sica, aquesta ser&agrave; qui s'autentica i el formulari no carregar&agrave; cap dada a “Representant” i, per defecte, el registre d'entrada mostrar&agrave; en el asiento l'interessat, sense cap representant. </p>
-	<p>En utilitzar un certificat de persona jur&iacute;dica amb representant, qui s'autentica es el representat (l'empresa o entitat sol·licitant o interessada) i el formulari carregar&agrave; les dades del representat y el seu representant, de manera que, per defecte, el registre d'entrada mostrar&agrave; en el asiento l'interessat (empresa o entitat sol·licitant), amb les dades del representant. </p>
-	<p>Si s'indiquen altres dades en els scripts de "Establir presentador" i/o de "Establir representaci&oacute;", les dades reflectides en el asiento ser&agrave;n les indicades als scripts. </p>
+	<p>Si no s'indica res als scripts d'"Establir presentador" ni d'"Establir representació" (que és accessible si es marca el check "Admet representació"), les dades per defecte que es guarden en l'assentament reflectit en REGWEB3 són les definides en el formulari amb les dades del certificat, que poden ser carregades amb l'script de "Càrrega de dades inicials". </p>
+	<p>Per exemple, com s'aprecia al tràmit TEST-IDENT, el seu script de "Càrrega de dades inicials" carrega les dades del certificat de persona física o de persona jurídica amb representant, segons correspongui. Per això, utilitza les instruccions getUsuario() per al sol·licitant, interessat o representat i getRepresentante() per al representant de l'empresa o entitat sol·licitant, del PLUGIN_SESIONTRAMITACION.</p>
+	<p>Evidentment, si s'usa un certificat de persona física, aquesta serà qui s'autentica i el formulari no carregarà cap dada a “Representant” i, per defecte, el registre d'entrada mostrarà en l'assentament l'interessat, sense cap representant. </p>
+	<p>En utilitzar un certificat de persona jurídica amb representant, qui s'autentica és el representat (l'empresa o entitat sol·licitant o interessada) i el formulari carregarà les dades del representat i el seu representant, de manera que, per defecte, el registre d'entrada mostrarà en l'assentament l'interessat (empresa o entitat sol·licitant), amb les dades del representant. </p>
+	<p>Si s'indiquen altres dades en els scripts d'"Establir presentador" i/o d'"Establir representació", les dades reflectides en l'assentament seran les indicades als scripts. </p>
 	
 </html>

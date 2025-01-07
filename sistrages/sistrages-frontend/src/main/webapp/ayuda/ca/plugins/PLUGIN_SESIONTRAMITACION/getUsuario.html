@@ -7,56 +7,49 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_SESIONTRAMITACION.getUsuario()');
+		copiarPortapeles('PLUGIN_SESIONTRAMITACION.getUrlInicioTramite()');
 	}
 </script>
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_SESIONTRAMITACION">PLUGIN_SESIONTRAMITACION</a></li>
       	  <li>></li>
-      	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_SESIONTRAMITACION&metodo=getUsuario">getUsuario</a></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_SESIONTRAMITACION&metodo=getUrlInicioTramite">getUrlInicioTramite</a></li>
   	</ul>
 </div>
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	getUsuario(): <a href="AyudaServlet?lang=ca&plugin=DATOS_USUARIO">: DATOS_USUARIO</a>
+	getUrlInicioTramite(): String
 </h1>
 <p>
-	<b>DESCRIPCI&Oacute;</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-		<li>Mètode que retorna l'objecte'<a href="AyudaServlet?lang=ca&plugin=DATOS_USUARIO">DATOS_USUARIO</a>' amb la informació de l'usuari autenticat.
-		</li>
-		<li>Només és possible el seu ús en tràmits autenticats.</li>
+		<li>Mètode que retorna l'URL amb la qual es va iniciar el tràmit.</li>
 	</ul>
 </p>
 <p>
-	<b>PAR&#192;METRES DE SORTIDA</b>
+	<b>PARÀMETRES DE SORTIDA</b>
 </p>
 <p>
 	<ul>
-		<li><b>DATOS_USUARIO</b>: Retorna l'objecte DATOS_USUARIO amb la informació de l'usuari. </li>
+		<li><b>string</b>: Cadena de caràcters que representa l'URL amb la qual es va començar el tràmit.</li>
 	</ul>
 </p>
  <p>
 	<b>Exemple</b>
  </p>
-<p> Suposem que desitgem obtenir el nom de l'usuari de la sessió actual (només per a tràmits autenticats)</p>
-<p class="codigoScript">
-	var autenticado = PLUGIN_SESIONTRAMITACION.isAutenticado();
-	if (autenticado == true) {
-		var usuario = PLUGIN_SESIONTRAMITACION.getUsuario();
-	}
+<p> Obtenir l'URL amb la qual es va començar el tràmit:</p>
+ <p class="codigoScript">
+	var url = PLUGIN_SESIONTRAMITACION.getUrlInicioTramite();
  </p>
  <p>
-   La funció getUsuario retorna l'objecte <a href="AyudaServlet?lang=ca&plugin=DATOS_USUARIO">DATOS_USUARIO</a> a partir del qual extreure la informació que ens interessa, per exemple, el nom, mitjançant la següent funció:
- </p>
-  <p class="codigoScript">
-	var nombre = usuario.getNombre();
+   La funció getUrlInicioTramite retorna un URL similar a:
+'www.caib.es/sistramitfront/asistente/iniciarTramite.html?tramite=ID_TRAMITE&version=1&idioma=es&idTramiteCatalogo=32'
  </p>
 <br />
 

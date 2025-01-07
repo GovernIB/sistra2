@@ -12,20 +12,20 @@
 			console.log(lista);
 			if(ambito == 'E'){
 				lista.innerHTML += `
-				<li><a href="AyudaServlet?id=pluginCatalogoProcedimientos&lang=ca"><span class="nombreCampo">Plugin de cat&agrave;leg de procediments</span></a></li>
-				<li><a href="AyudaServlet?id=pluginRegistro&lang=ca"><span class="nombreCampo">Plugin de registre</span></a></li>
-				<li><a href="AyudaServlet?id=pluginFirma&lang=ca"><span class="nombreCampo">Plugin de firma</span></a></li>
-				<li><a href="AyudaServlet?id=pluginFormExternos&lang=ca"><span class="nombreCampo">Plugin de formularis externs</span></a></li>
-				<li><a href="AyudaServlet?id=pluginPagos&lang=ca"><span class="nombreCampo">Plugin de pagaments</span></a></li>
-				<li><a href="AyudaServlet?id=pluginValidacionFirma&lang=ca"><span class="nombreCampo">Plugin de validaci&oacute; de firma</span> </a></li>
-				<li><a href="AyudaServlet?id=pluginEnvioRemoto&lang=ca"><span class="nombreCampo">Plugin enviament remot</span> </a></li>
+				<li><a href="AyudaServlet?id=pluginCatalogoProcedimientos⟨=ca"><span class="nombreCampo">Plug-in de catàleg de procediments</span></a></li>
+				<li><a href="AyudaServlet?id=pluginRegistro⟨=ca"><span class="nombreCampo">Plug-in de registre</span></a></li>
+				<li><a href="AyudaServlet?id=pluginFirma⟨=ca"><span class="nombreCampo">Plug-in de firma</span></a></li>
+				<li><a href="AyudaServlet?id=pluginFormExternos⟨=ca"><span class="nombreCampo">Plug-in de formularis externs</span></a></li>
+				<li><a href="AyudaServlet?id=pluginPagos⟨=ca"><span class="nombreCampo">Plug-in de pagaments</span></a></li>
+				<li><a href="AyudaServlet?id=pluginValidacionFirma⟨=ca"><span class="nombreCampo">Plug-in de validació de firma</span> </a></li>
+				<li><a href="AyudaServlet?id=pluginEnvioRemoto⟨=ca"><span class="nombreCampo">Plug-in enviament remot</span> </a></li>
 									`
 			}else if(ambito == 'G'){
 				lista.innerHTML += `
-					<li><a href="AyudaServlet?id=pluginDomRemoto&lang=ca"><span class="nombreCampo">Plugin de domini remot</span></a></li>
-					<li><a href="AyudaServlet?id=pluginLogin&lang=ca"><span class="nombreCampo">Plugin de login</span></a></li>
-					<li><a href="AyudaServlet?id=pluginEmail&lang=ca"><span class="nombreCampo">Plugin de email</span></a></li>
-					<li><a href="AyudaServlet?id=pluginConvPdf&lang=ca"><span class="nombreCampo">Plugin de conversi&oacute; pdf</span></a></li>
+					<li><a href="AyudaServlet?id=pluginDomRemoto⟨=ca"><span class="nombreCampo">Plug-in de domini remot</span></a></li>
+					<li><a href="AyudaServlet?id=pluginLogin⟨=ca"><span class="nombreCampo">Plug-in de login</span></a></li>
+					<li><a href="AyudaServlet?id=pluginEmail⟨=ca"><span class="nombreCampo">Plug-in d'email</span></a></li>
+					<li><a href="AyudaServlet?id=pluginConvPdf⟨=ca"><span class="nombreCampo">Plug-in de conversió pdf</span></a></li>
 									`
 			}
 		}
@@ -34,28 +34,28 @@
 <body onload="generarFilas();">
 <h1 class="stgH1">MANTENIMENT PLUGIN</h1>
 <p>
-	En la pantalla de '<i>Mateniment plugin</i>' pot mantenir les dades corresponents a un plugin.<br>
-	Els camps obligatoris es presenten amb un arterisc *
+	En la pantalla de '<i>Manteniment plug-in</i>' pot mantenir les dades corresponents a un plug-in.<br>
+	Els camps obligatoris es presenten amb un asterisc *
 </p>
 <h2 class="stgH2">CAMPS</h2>
 <p>
 	<ul>
-		<li><span class="nombreCampo">Tipus plugin:</span> tipus de plugin. Aquest desplegable permetr&agrave; seleccionar una s&egrave;rie de tipus segons l'&agrave;mbit d'aplicaci&oacute; del plugin, global o entitat</li>
-		<li><span class="nombreCampo">Classname:</span> classname de la classe que implementa el plugin a definir. Com exemple podem agafar la implementaci&oacute; de <i>mock</i> del Plugin de email, que tindr&iacute;a com a classname <i>es.caib.sistra2.commons.plugins.mock.email.EmailPluginMock</i></li>
-		<li><span class="nombreCampo">Descripci&oacute; plugin:</span> text descriptiu de la implementaci&oacute; del plugin.</li>
-		<li><span class="nombreCampo">Prefix de propietats:</span> prefix requerits pel plugin per la recuperaci&oacute; de les seve propietats. Aquest valor dependr&agrave; del tipus i implementaci&oacute; del plugin</li>
-		<li><span class="nombreCampo">Propietats plugin:</span> llistat de propietats requerides pel correcte funcionament de la implementaci&oacute; del plugin. Les operacions que es poden realitzar damunt aquest llistat s&oacute;n:
+		<li><span class="nombreCampo">Tipus plug-in:</span> tipus de plug-in. Aquest desplegable permetrà seleccionar una sèrie de tipus segons l'àmbit d'aplicació del plug-in, global o entitat</li>
+		<li><span class="nombreCampo">Classname:</span> classname de la classe que implementa el plug-in a definir. Com a exemple podem agafar la implementació de <i>mock</i> del Plug-in d'email, que tindria com a classname <i>es.caib.sistra2.commons.plugins.mock.email.EmailPluginMock</i></li>
+		<li><span class="nombreCampo">Descripció plug-in:</span> text descriptiu de la implementació del plug-in.</li>
+		<li><span class="nombreCampo">Prefix de propietats:</span> prefix requerit pel plug-in per la recuperació de les seves propietats. Aquest valor dependrà del tipus i implementació del plug-in</li>
+		<li><span class="nombreCampo">Propietats plug-in:</span> llistat de propietats requerides pel correcte funcionament de la implementació del plug-in. Les operacions que es poden realitzar damunt aquest llistat són:
 		<ul class="detalle">
 		<li><span class="boton">Nou:</span> permet crear una nova propietat. Aquesta propietat consta del codi de la propietat i el valor de la mateixa</li>
-		<li><span class="boton">Editar:</span> permet editar una propietat ja existent al llistat. Abans de pitjar el bot&oacute; d'edici&oacute; haureu de seleccionar la propietat a editar al llistat.</li>
-		<li><span class="boton">Eliminar:</span> permet eliminar una propietat existent al llistat. Abans de pitjar el bot&oacute; d'eliminaci&oacute; haureu de seleccionar la propietat a eliminar al llistat.</li>
-		<li><span class="boton">Pujar:</span> permet pujar una propietat a l'ordre del llistat de propietats. Per pujar una propietat previament ha d'estar seleccionada al llistat de propietats.</li>
-		<li><span class="boton">Baixar:</span> permet baixar una nova propietat a l'ordre del llistat de propietats. Per baixar una propietat previament ha d'estar seleccionada al llistat de propietats.</li>
+		<li><span class="boton">Editar:</span> permet editar una propietat ja existent al llistat. Abans de pitjar el botó d'edició haureu de seleccionar la propietat a editar al llistat.</li>
+		<li><span class="boton">Eliminar:</span> permet eliminar una propietat existent al llistat. Abans de pitjar el botó d'eliminació haureu de seleccionar la propietat a eliminar al llistat.</li>
+		<li><span class="boton">Pujar:</span> permet pujar una propietat a l'ordre del llistat de propietats. Per pujar una propietat prèviament ha d'estar seleccionada al llistat de propietats.</li>
+		<li><span class="boton">Baixar:</span> permet baixar una nova propietat a l'ordre del llistat de propietats. Per baixar una propietat prèviament ha d'estar seleccionada al llistat de propietats.</li>
 		</ul>
 		En els valors de les propietats és possible fer ús de placeholders per a associar valors:
 		<ul class="detalle">
 		<li><span class="boton">${system.<i>nom_propietat</i>}:</span> Per establir el valor a partir d'una propietat de sistema. Per exemple,  ${system.rolsac.user} obtindria el valor de la propietat de sistema rolsac.user</li>
-		<li><span class="boton">${config.<i>nom_propietat</i>}:</span> Per establir el valor a partir d'una propietat del fitxer de propietats de Sistrages (sistrages.properties).Per exemple,  ${config.rolsac.user} obtindria el valor de la propietat rolsac.user en el fitxer sistrages.properties</li>
+		<li><span class="boton">${config.<i>nom_propietat</i>}:</span> Per establir el valor a partir d'una propietat del fitxer de propietats de Sistrages (sistrages.properties). Per exemple,  ${config.rolsac.user} obtindria el valor de la propietat rolsac.user en el fitxer sistrages.properties</li>
 		</ul>
 		</li>
 	</ul>
@@ -64,7 +64,7 @@
 <p>
 	<ul>
 		<li><span class="boton">Desar</span>: tanca la pantalla guardant els canvis.</li>
-		<li><span class="boton">Cancel&middot;lar</span>: tanca la pantalla sense guardar els canvis.</li>
+		<li><span class="boton">Cancel·lar</span>: tanca la pantalla sense guardar els canvis.</li>
 	</ul>
 </p>
 <h2 class="stgH2">PROPIETATS PLUGIN</h2>

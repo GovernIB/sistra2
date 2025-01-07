@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS&metodo=esURL">esURL</a></li>
@@ -29,7 +29,7 @@
 </p>
 <p>
 	<ul>
-    	<li>Valida que el valor introduït no sigui nul i compleixi amb les regles de validació necessàries per a ser una URL vàlida. Es considera vàlida tota aquella cadena que compleixi amb les regles de validació corresponents a una URL.</li>
+    	<li>Valida que el valor introduït no sigui nul i compleixi amb les regles de validació necessàries per a ser un URL vàlid. Es considera vàlida tota aquella cadena que compleixi amb les regles de validació corresponents a un URL.</li>
 	</ul>
 </p>
 <p>
@@ -37,7 +37,7 @@
 </p>
 <p>
 	<ul>
-		<li><b>url</b>: Cadena que representa la URL (adreça d'internet).</li>
+		<li><b>url</b>: Cadena que representa l'URL (adreça d'internet).</li>
 	</ul>
 </p>
 <p>
@@ -45,7 +45,7 @@
 </p>
 <p>
 	<ul>
-		<li><b>boolean</b>: true si la cadena representa una URL vàlida i false si la cadena no representa una URL vàlida.</li>
+		<li><b>boolean</b>: true si la cadena representa un URL vàlid i false si la cadena no representa un URL vàlid.</li>
 	</ul>
 </p>
 <p>
@@ -56,14 +56,14 @@
  <p class="codigoScript">
 	var valida = PLUGIN_UTILS.esURL('http://www.caib.es/');
 </p>
-<p>La funció esUrl retorna 'true', pel fet que la cadena representa una URL vàlida.</p>
+<p>La funció esUrl retorna 'true', pel fet que la cadena representa un URL vàlid.</p>
 <br />
 
 <p><b>Exemple 2</b> Validar la cadena 'http://www.caib.sedeelectronica/' </p>
  <p class="codigoScript">
 	var valida = PLUGIN_UTILS.esURL('http://www.caib.sedeelectronica');
 </p>
-<p>La funció esUrl retorna 'false', pel fet que la cadena no representa una URL vàlida.</p>
+<p>La funció esUrl retorna 'false', pel fet que la cadena no representa un URL vàlid.</p>
 <br />
 
 </body>

@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_REGISTRO">DATOS_REGISTRO</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_REGISTRO&metodo=setSolicita">setSolicita</a></li>
@@ -29,21 +29,21 @@
 </p>
 <p>
 	<ul>
-    	<li>Método que permite establecer un texto del objeto de la solicitud. Este valor únicamente tiene sentido para solicitudes genéricas.</li>
+    	<li>Mètode que permet establir un text de l'objecte de la sol·licitud. Aquest valor únicament té sentit per a sol·licituds genèriques.</li>
     </ul>
 </p>
 <p>
-	<b>PARÁMETROS DE ENTRADA</b>
+	<b>PARÀMETRES D'ENTRADA</b>
 </p>
 <p>
 	<ul>
-		<li><b>textoSolicita</b>: cadena de texto del objeto de la solicitud.</li>
+		<li><b>textoSolicita</b>: cadena de text de l'objecte de la sol·licitud.</li>
 	</ul>
 </p>
 <p>
-	<b>EJEMPLOS</b>
+	<b>EXEMPLES</b>
 </p>
-<p>Pongamos por caso que estamos desarrollando una solicitud genérica y queremos enviar a registro el texto objeto de la solicitud. Para ello podríamos referenciar un campo (p.ej. SOLICITA) del formulario (p.ej. FORM1) en el que el ciudadano ha cumplimentado dicho texto: </p>
+<p>Posem per cas que estem desenvolupant una sol·licitud genèrica i volem enviar a registre el text objecte de la sol·licitud. Per a això podríem referenciar un camp (p. ex. SOLICITA) del formulari (p. ex. FORM1) en el que el ciutadà ha omplit eixe text: </p>
  <p class="codigoScript">
 var textoSolicita = PLUGIN_FORMULARIOS.getValor('FORM1','SOLICITA');
 DATOS_REGISTRO.setSolicita(textoSolicita);

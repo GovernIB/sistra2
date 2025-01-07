@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=trim">trim</a></li>
@@ -45,16 +45,16 @@
  </p>
  <p>
 	<ul>
-		<li><b>String</b>: cadena de carácteres sin espacios delante y detrás.</li>
+		<li><b>String</b>: cadena de caracteres sin espacios delante y detrás.</li>
 	</ul>
  </p>
  <p>
 	<b>EJEMPLOS</b>
  </p>
 
- <p>Tratar la cadena '&nbsp;&nbsp;cadena ejemplo&nbsp;&nbsp;&nbsp;&nbsp;', para eliminar los espacios en blanco tanto delante como detrás de la cadena </p>
+ <p>Tratar la cadena '  cadena ejemplo    ', para eliminar los espacios en blanco tanto delante como detrás de la cadena </p>
  <p class="codigoScript">
-	var pCadenaLimpia = PLUGIN_UTILS.trim('&nbsp;&nbsp;cadena ejemplo&nbsp;&nbsp;&nbsp;&nbsp;');
+	var pCadenaLimpia = PLUGIN_UTILS.trim('  cadena ejemplo    ');
  </p>
 La función trim retorna 'cadena ejemplo'.
 <br />

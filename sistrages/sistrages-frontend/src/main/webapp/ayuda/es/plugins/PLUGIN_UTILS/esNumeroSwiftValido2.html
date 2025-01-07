@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=esNumeroSwiftValido2">esNumeroSwiftValido</a></li>
@@ -29,7 +29,7 @@
 </p>
 <p>
 	<ul>
-    	<li>Valida que el valor introducido no sea nulo y cumpla con las reglas de validación necesarias para ser un SWIFT (código de identificación bancaria para realizar transferencias) Válido. Se considera válida toda aquella cadena que contenga 4 caracteres del banco, 2 caracteres para el pais, 2 caracteres para la localidad y 3 caracteres para la sucural (la sucursal puede ser nulo y en dicho caso, será sede central). El código del banco y del país debe ser sólo mayúsculas, el código de lugar debe ser sólo mayúsculas o sólo números mientras que el código de sucursal puede ser mayúsculas y números. </li>
+    	<li>Verifica que el valor introducido no sea nulo y cumpla con las reglas de validación necesarias para ser un SWIFT (código de identificación bancaria para realizar transferencias) Válido. Se considera válida toda aquella cadena que contenga 4 caracteres del banco, 2 caracteres para el país, 2 caracteres para la localidad y 3 caracteres para la sucursal (la sucursal puede ser nulo y en dicho caso, será sede central). El código del banco y del país debe ser solo mayúsculas, el código de lugar debe ser solo mayúsculas o solo números, mientras que el código de sucursal puede ser mayúsculas y números. </li>
 	</ul>
 </p>
 <p>
@@ -58,7 +58,7 @@
  <p class="codigoScript">
 	var valido = PLUGIN_UTILS.esNumeroSwiftValido('BBVA', 'ESP', '88', 'XXX');
 </p>
-<p>La función esNumeroSwiftValido retorna 'false' ya que los parámetros introducidos no forman un código SWIFT válido, el código de país debe tener longitud 2.</p>
+<p>La función esNumeroSwiftValido retorna 'false', ya que los parámetros introducidos no forman un código SWIFT válido, el código de país debe tener longitud 2.</p>
 <br />
 
 <p><b>Ejemplo 2</b> Validar los siguientes valores: banco: 'BBVA', pais: 'ES', localidad: '88', sucursal: 'XXX'.  </p>

@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
     	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_DOMINIOS">PLUGIN_DOMINIOS</a></li>
        	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_DOMINIOS&metodo=invocarDominio2">invocarDominio</a></li>
@@ -55,14 +55,14 @@
 </p>
 <p>
 De manera previa a la invocación de un dominio, se ha de crear en el script la lista de parámetros necesarios para la invocación, para posteriormente añadírselos al dominio.
-Per ejemplo, en el supuesto que necesitemos recuperar las localidades de la provincia Islas Baleares, se identificaría la provincia con el parámetro correspondiente, en este caso 07:
+Por ejemplo, en el supuesto que necesitemos recuperar las localidades de la provincia Islas Baleares, se identificaría la provincia con el parámetro correspondiente, en este caso 07:
 </p>
 <p class="codigoScript">
 	var parametrosDominio = PLUGIN_DOMINIOS.crearParametros();
 	parametrosDominio.addParametro('1', '07');
 </p>
 <p>
- Posteriormente se invocará el dominio LOCALIDADES añadiendo la lista de parámetros al método de invocación (supongamos que es un dominio de área):
+ Posteriormente, se invocará el dominio LOCALIDADES añadiendo la lista de parámetros al método de invocación (supongamos que es un dominio de área):
 </p>
 <p class="codigoScript">
 var dLocalidades = PLUGIN_DOMINIOS.invocarDominio('CAIB.TESTS.LOCALIDADES', parametrosDominio);

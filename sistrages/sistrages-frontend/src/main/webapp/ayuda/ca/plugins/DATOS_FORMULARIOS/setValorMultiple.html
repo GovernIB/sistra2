@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_FORMULARIOS&metodo=">DATOS_FORMULARIOS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_FORMULARIOS&metodo=setValorMultiple">setValorMultiple</a></li>
@@ -25,7 +25,7 @@
 	setValorMultiple(idFormulario, campo, valorMultiple): void
 </h1>
 <p>
-	<b>DESCRIPCI&Oacute;</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
@@ -35,7 +35,7 @@
 	</ul>
 </p>
 <p>
-	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+	<b>PARÀMETRES D'ENTRADA</b>
 </p>
 <p>
 	<ul>
@@ -47,11 +47,11 @@
 <p>
 	<b>EXEMPLES</b>
 </p>
-<p>Per exemple, suposem un camp que és una llista desplegable que conté informació sobre un municipi. Podem inicialitzar una variable múltiple amb diferents dades fixes sobre municipis dels Illes Balears de la manera següent:</p>
+<p>Per exemple, suposem un camp que és una llista desplegable que conté informació sobre un municipi. Podem inicialitzar una variable múltiple amb diferents dades fixes sobre municipis de les Illes Balears de la manera següent:</p>
  <p class="codigoScript">
 var municipios = DATOS_FORMULARIOS.crearValorMultiple();<br />
 municipios.addValor('0337','Manacor');<br />
-municipios.addValor('0407','Palma de Mallorca');<br />
+municipios.addValor('0407','Palma');<br />
 municipios.addValor('2060','Eivissa');<br />
 </p>
 <p>una vegada creada la variable, podríem assignar els valors al camp del formulari (FORM1):</p>

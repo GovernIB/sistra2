@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=extraerValorXml">extraerValorXml</a></li>
@@ -47,16 +47,16 @@
 </p>
 <p>
 	<ul>
-		<li><b>String</b>: Valor del nodo indicado en el parámetro xpath. Si la ruta indicada en el xpath no existe retorna un error</li>
+		<li><b>String</b>: Valor del nodo indicado en el parámetro xpath. Si la ruta indicada en el XPath no existe, retorna un error</li>
 	</ul>
 </p>
 <p>
 	<b>EJEMPLOS</b>
 </p>
 
-<p><b>Ejemplo 1</b> Extraer el valor del nodo 'dni' en el XML. Para ello, debemos revisar la estructura completa del XML, y obtener el xpath adecuado. En este caso el xpath será '/xml/persona/dni' </p>
+<p><b>Ejemplo 1</b> Extraer el valor del nodo 'dni' en el XML. Para ello, debemos revisar la estructura completa del XML, y obtener el XPath adecuado. En este caso el XPath será '/xml/persona/dni' </p>
  <p class="codigoScript">
-	var xml = '&lt;xml>&lt;persona>&lt;nombre>juan&lt;/nombre>&lt;dni>79865432D&lt;/dni>&lt;/persona>&lt;/xml>';<br />
+	var xml = '<xml><persona><nombre>juan</nombre><dni>79865432D</dni></persona></xml>';<br />
 	var dni = PLUGIN_UTILS.extraerValorXml(xml, '/xml/persona/dni');
 </p>
 <p>La función extraerValorXml retorna '79865432D', que es el valor del nodo dni.</p>
@@ -64,7 +64,7 @@
 
 <p><b>Ejemplo 2</b> Puede ocurrir que el nodo del que intentamos obtener el valor no exista en el XML. Por ejemplo, si intentamos usar el siguiente xpath '/xml/persona/apellido' usando el mismo XML del anterior ejemplo: </p>
  <p class="codigoScript">
-    var xml = '&lt;xml>&lt;persona>&lt;nombre>juan&lt;/nombre>&lt;dni>79865432D&lt;/dni>&lt;/persona>&lt;/xml>';<br />
+    var xml = '<xml><persona><nombre>juan</nombre><dni>79865432D</dni></persona></xml>';<br />
 	var persona = PLUGIN_UTILS.extraerValorXml(xml, '/xml/persona/apellido');
 </p>
 <p>La función extraerValorXml retorna un error, ya que '/xml/persona/apellido' no existe como nodo en el XML facilitado.</p>

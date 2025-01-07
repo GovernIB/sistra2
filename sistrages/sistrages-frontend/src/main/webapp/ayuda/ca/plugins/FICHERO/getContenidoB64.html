@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   	      <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_DOMINIOS">PLUGIN_DOMINIO</a></li>
        	  <li>></li>
     	  <li><a href="AyudaServlet?lang=ca&plugin=FICHERO">FICHERO</a></li>
@@ -45,16 +45,16 @@
 <p>
 	<b>EXEMPLES</b>
 </p>
-<p>Posam per cas que es vol recuperar el contingut d'un fitxer retornat per un domini 'DOMINIO'. Les passes a efectuar són les seg&uuml;ents:</p>
+<p>Posem per cas que es vol recuperar el contingut d'un fitxer retornat per un domini 'DOMINIO'. Les passes a efectuar són les següents:</p>
 <p>
-Primer es recupera el fitxer mitjan&ccedil;ant PLUGIN_DOMINIOS:
+Primer es recupera el fitxer mitjançant PLUGIN_DOMINIOS:
 </p>
 <p class="codigoScript">
 	var valors = PLUGIN_DOMINIOS.invocarDominio('DOMINIO'); <br />
 	var fitxer = valors.getFichero('PDF');
 </p>
 <p>
- i es recupera el seu contingut en Base64 de la manera seg&uuml;ent:
+ i es recupera el seu contingut en Base64 de la manera següent:
 </p>
 <p class="codigoScript">
 	var contingut = fitxer.getContenidoB64();

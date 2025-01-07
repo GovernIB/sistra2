@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
     	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_MENSAJES">PLUGIN_MENSAJES</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_MENSAJES&metodo=crearMensaje">crearMensaje</a></li>
@@ -52,15 +52,15 @@
 <p>
 	<b>EXEMPLES</b>
 </p>
-<p>Posam per cas que es vol emprar a un script un missatge de validació existent, però particularitzant el valor dels seus paràmetres. Les passes a seguir serien similars a les seg&uuml;ents: </p>
+<p>Posem per cas que es vol emprar a un script un missatge de validació existent, però particularitzant el valor dels seus paràmetres. Les passes a seguir serien similars a les següents: </p>
 <p>
-Prèviament a la pantalla de script, més concretament a la pipella de missatges de validació, s'ha de definir el missatge. Per exemple podriem definir un missatge de validació MENSAJE_001 amb valor seg&uuml;ent:
+Prèviament a la pantalla de script, més concretament a la pipella de missatges de validació, s'ha de definir el missatge. Per exemple podríem definir un missatge de validació MENSAJE_001 amb valor següent:
 </p>
 <p class="codigoScript">
 	És necessari que es dugui a terme un debug amb els paràmetres {0} i {1}.
 </p>
 <p>
-Des del script es referenciarà aquest missatge de la forma seg&uuml;ent:
+Des del script es referenciarà aquest missatge de la forma següent:
  </p>
  <p class="codigoScript">
 	var msg = PLUGIN_MENSAJES.crearMensaje('MENSAJE_001');
@@ -73,7 +73,7 @@ i es fixarà el valor pels paràmetres del missatge:
 	msg.addParametroMensaje('param 1');
 </p>
 <p>
- finalment es recuperarà el missatge a l'script de manera seg&uuml;ent:
+ finalment, es recuperarà el missatge a l'script de manera següent:
   </p>
  <p class="codigoScript">
 	var missatgeFormat = msg.getMensaje();

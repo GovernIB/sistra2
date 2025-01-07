@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS&metodo=validaFechaHoraActual">validaFechaHoraActual</a></li>
@@ -37,7 +37,7 @@
 </p>
 <p>
 	<ul>
-		<li><b>fecha</b>: Cadena de text que representa la data a comparar amb la data actual.  </li>
+		<li><b>fecha</b>: Cadena de text que representa la data a comparar amb la data actual. </li>
 		<li><b>formatoFecha</b>: Format de la data. És opcional i el format per defecte és dd/MM/yyyy HH:mm:ss.</li>
 	</ul>
 </p>
@@ -62,7 +62,7 @@
  <p class="codigoScript">
 var valida = PLUGIN_UTILS.validaFechaHoraActual('2019-01-09 09:53:03', null);
 </p>
-<p>La funció validaFechaHoraActual retorna 0, ja que la data indicada es correspon amb la data/hora actual.</p>
+<p>La funció validaFechaHoraActual en retorna 0, ja que la data indicada es correspon amb la data/hora actual.</p>
 <br />
 
 <p><b>Exemple 2</b> Comparar la cadena de text '02/01/2019 07:43:03' (amb el format especificat 'dd/MM/yyyy HH:mm:ss') amb la data/hora actual (suposant que avui és 9 de gener de 2019 09.53:03).</p>
@@ -76,7 +76,7 @@ var valida = PLUGIN_UTILS.validaFechaHoraActual('2019-01-09 09:53:03', null);
  <p class="codigoScript">
 	var valida = PLUGIN_UTILS.validaFechaHoraActual('2019-01-12 19:13:03', null);
 </p>
-<p>La funció validaFechaHoraActual retorna 1, ja que la data indicada és major que la data/hora actual.</p>
+<p>La funció validaFechaHoraActual en retorna 1, ja que la data indicada és major que la data/hora actual.</p>
 <br />
 
 </body>

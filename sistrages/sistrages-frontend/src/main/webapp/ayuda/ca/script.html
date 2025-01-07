@@ -15,7 +15,7 @@
 	<p>
 		<ul>
 			<li>
-				No s'han de deixar comentades línies de codi, ja que poden ser avaluades en el càlcul de dependències. Només es poden introduir comentaris a manera d'anotació de funcionament de el codi.
+				No s'han de deixar comentades línies de codi, ja que poden ser avaluades en el càlcul de dependències. Només es poden introduir comentaris a manera d'anotació de funcionament del codi.
 			</li>
 		</ul>
 	</p>
@@ -33,7 +33,7 @@
                     <ul class="detalle">
                         <li>No ha de retornar res</li>
                         <li>Ha de retornar un tipus bàsic: cadena, booleà, etc. mitjançant una sentència Javascript “return” (p. ex. return "resultado"" )</li>
-                        <li>Ha de retornar el resultat a través d'un plugin de dades (en la part de plugins començarà per “DADES_”)</li>
+                        <li>Ha de retornar el resultat a través d'un plug-in de dades (en la part de plugins començarà per “DADES_”)</li>
                     </ul>
                 </li>
             </ul>
@@ -41,12 +41,12 @@
             <li style="margin-top:10px"><span class="nombreCampo">Part inferior esquerra:</span> permet introduir el contingut del script que s'haurà d'establir en llenguatge Javascript.</li>
             <li style="margin-top:10px"><span class="nombreCampo">Part inferior dreta:</span> com a suport al script, es disposa de diferents utilitats:</li>
             <ul>
-                <li><span class="boton">Plugins:</span> indica què ha de retornar el script, contemplant bàsicament aquestes possibilitats:
+                <li><span class="boton">Plug-ins:</span> indica què ha de retornar el script, contemplant bàsicament aquestes possibilitats:
                     <ul class="detalle">
-                        <li>Retorn de resultat del script, si es retorna a través d'un plugin de dades (plugin comença per “DADES_”).</li>
-                        <li>Plugins d'utilitats: accés a dades de sessió, dominis, logs, etc. A continuació es llisten els plugins disponibles (per a major detall consultar l'ajuda específica de cada plugin).
+                        <li>Retorn de resultat del script, si es retorna a través d'un plug-in de dades (plugin comença per “DADES_”).</li>
+                        <li>Plug-ins d'utilitats: accés a dades de sessió, dominis, logs, etc. A continuació es llisten els plug-ins disponibles (per a major detall consultar l'ajuda específica de cada plug-in).
                             <ul class="detalle2">
-                                <li><span class="nombreCampo">Plugins generals:</span> accessibles des de tots els scripts:
+                                <li><span class="nombreCampo">Plug-ins generals:</span> accessibles des de tots els scripts:
                                     <ul>
                                         <li>PLUGIN_DOMINIS: permet l'accés als dominis associats a la versió del tràmit. </li>
                                         <li>PLUGIN_UTILS: permet realitzar diverses validacions. </li>
@@ -55,14 +55,14 @@
                                         <li>PLUGIN_ERROR: permet establir errors en l'execució d'un script.</li>
                                     </ul>
                                 </li>
-                                <li><span class="nombreCampo">Plugins retorn de dades:</span>: depenent del script es poden retornar les dades a través d'un plugin. Començaran per “DADES_” (p. ex. per al script que especifica signants es retornen les dades a través del plugin DADES_SIGNANTS).</li>
-                                <li><span class="nombreCampo">Plugins tramitació:</span>: depenent del script es poden retornar les dades a través d'un plugin. Començaran per “DADES_” (p. ex. per al script que especifica signants es retornen les dades a través del plugin DADES_SIGNANTS).
+                                <li><span class="nombreCampo">Plug-ins retorn de dades:</span>: depenent del script es poden retornar les dades a través d'un plug-in. Començaran per “DADES_” (p. ex. per al script que especifica signants es retornen les dades a través del plug-in DADES_SIGNANTS).</li>
+                                <li><span class="nombreCampo">Plug-ins tramitació:</span>: depenent del script es poden retornar les dades a través d'un plug-in. Començaran per “DADES_” (p. ex. per al script que especifica signants es retornen les dades a través del plug-in DADES_SIGNANTS).
                                     <ul>
                                         <li>PLUGIN_SESIONTRAMITACION: accés a les dades de la sessió de tramitació.</li>
                                         <li>PLUGIN_FORMULARIS: accés a dades de formularis emplenats anteriorment.</li>
                                     </ul>
                                 </li>
-                                <li><span class="nombreCampo">Plugins formulari:</span> accessibles des dels scripts en els passos de tramitació:
+                                <li><span class="nombreCampo">Plug-ins formulari:</span> accessibles des dels scripts en els passos de tramitació:
                                     <ul>
                                         <li>PLUGIN_SESIONFORMULARIO: accés a les dades de la sessió de formulari.</li>
                                         <li>PLUGIN_DATOSFORMULARIO: accés als camps del formulari previs a l'element (camp o pàgina) sobre el qual s'està emplenant el script.</li>
@@ -84,7 +84,7 @@
     <h2 class="stgH2">OPERATIVA</h2>
 	<p>
 		<ul>
-			<li><span class="boton">Invertir colors editor:</span> permet modificar els colors del editor de codi.</li>
+			<li><span class="boton">Invertir colors editor:</span> permet modificar els colors de l'editor de codi.</li>
 			<li><span class="boton">Acceptar:</span> permet guardar el script. En cas del script aquest buit, s'esborrarà automàticament.</li>
 			<li><span class="boton">Esborrar:</span> permet eliminar el script guardat.</li>
 			<li><span class="boton">Tancar</span>: tanca la pantalla de scripts.</li>

@@ -11,7 +11,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
     	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_VALIDACION">PLUGIN_VALIDACION</a></li>
        	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_VALIDACION&metodo=addParametroMensajeAviso">addParametroMensajeAviso</a></li>
@@ -27,7 +27,7 @@
 </p>
 <p>
 	<ul>
-		<li>Paràmetres a substuir al missatge que al que fa referència el codi d'avís.
+		<li>Paràmetres a substituir al missatge que al que fa referència el codi d'avís.
 	 * ({0} {1} ...).</li>
 	</ul>
 </p>
@@ -43,17 +43,17 @@
 	<b>EXEMPLE</b>
 </p>
 <p>
-	Suposem que tenim un missatge 'DNI_INCORRECTO' amb el text seg&uuml;ent 'El dni {0} per a la persona {1}, {2} {3} és incorrecte'. Si vulguéssim substituir els paràmetres, aleshores primer establiriem el missatge d'avís i després passaríem els paràmetres:
+	Suposem que tenim un missatge 'DNI_INCORRECTE' amb el text següent 'El DNI {0} per a la persona {1} {2} {3} és incorrecte'. Si volguéssim substituir els paràmetres, aleshores primer establiríem el missatge d'avís i després passaríem els paràmetres:
 </p>
 <p class="codigoScript">
-	 PLUGIN_VALIDACION.setCodigoMensajeAviso('DNI_INCORRECTO');
+	 PLUGIN_VALIDACION.setCodigoMensajeAviso('DNI_INCORRECTE');
 	 PLUGIN_VALIDACION.addParametroMensajeAviso(dni);
 	 PLUGIN_VALIDACION.addParametroMensajeAviso(nombre);
 	 PLUGIN_VALIDACION.addParametroMensajeAviso(apellido1);
 	 PLUGIN_VALIDACION.addParametroMensajeAviso(apellido2);
 </p>
 <p>
-	El paràmetre {0} faria referència al dni, el {1} al nombre, {2} al apellido1 i el {3} al apellido 2, quedant el missatge 'El dni per a la persona nombre, apellido1 apellido2 és incorrecte'. També hauríem d'especificar el grau del missatge:
+	El paràmetre {0} faria referència al dni, el {1} al nombre, {2} al apellido1 i el {3} al apellido 2, quedant el missatge 'El DNI per a la persona nombre apellido1 apellido2 és incorrecte'. També hauríem d'especificar el grau del missatge:
 </p>
 <p class="codigoScript">
 	PLUGIN_VALIDACION.setExisteAviso(true, 'ERROR');

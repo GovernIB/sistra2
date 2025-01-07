@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS&metodo=trim">trim</a></li>
@@ -52,9 +52,9 @@
 	<b>EXEMPLES</b>
  </p>
 
- <p>Tractar la cadena '&nbsp;&nbsp;cadena ejemplo&nbsp;&nbsp;&nbsp;&nbsp;', per a eliminar els espais en blanc tant davant com darrere de la cadena </p>
+ <p>Tractar la cadena '  cadena exemple    ', per a eliminar els espais en blanc tant davant com darrere de la cadena </p>
  <p class="codigoScript">
-	var pCadenaLimpia = PLUGIN_UTILS.trim('&nbsp;&nbsp;cadena ejemplo&nbsp;&nbsp;&nbsp;&nbsp;');
+	var pCadenaLimpia = PLUGIN_UTILS.trim('  cadena exemple    ');
  </p>
 La funció trim retorna 'cadena exemple'.
 <br />

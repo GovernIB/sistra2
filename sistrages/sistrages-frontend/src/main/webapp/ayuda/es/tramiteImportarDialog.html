@@ -7,14 +7,14 @@
 <body>
 <h1 class="stgH1">IMPORTACIÓN DE TRÁMITE/VERSIÓN</h1>
 <p>
-	Esta funcionalidad de importación únicamente está disponible en entornos de desarrollo, y posibilita importar una versión de un trámite independientemente de cual sea su entorno de procedencia.</br>
-	En esta pantalla se presentan las características del trámite/versión que se desea importar, indicando, en caso necesario, los aspectos a revisar y acciones a realizar por parte del usuario para poder finalizar satisfactoriamente el proceso de importación. En caso de requerirse una acción, se mostrará un botón "..." que presentará las acciones que podrá realizar el usuario para subsanar el <i>warning</i> presentado.
+	Esta funcionalidad de importación únicamente está disponible en entornos de desarrollo, y posibilita importar una versión de un trámite independientemente de cuál sea su entorno de procedencia.</br>
+	En esta pantalla se presentan las características del trámite/versión que se desea importar, indicando, en caso necesario, los aspectos a revisar y acciones a realizar por parte del usuario para poder finalizar satisfactoriamente el proceso de importación. En caso de requerirse una acción, se mostrará un botón “...”, que presentará las acciones que podrá realizar el usuario para subsanar el <i>warning</i> presentado.
 	Dado que cada versión de la plataforma implementa nuevas funcionalidades, es posible que exista alguna incompatibilidad entre versiones, por lo que es necesario que las versiones de los entornos origen y destino sean la misma.
 	La pantalla presenta dos secciones diferenciadas, una titulada <b>Versión trámite</b> que presenta los datos asociados directamente a la versión (entidad, área, trámite y versión), y una segunda titulada <b>Elementos comunes</b> que presenta la información relativa a elementos comunes (dominios, formateadores, fuentes de datos, etc.) asociados a la versión que pueden ser comunes a otros trámites/versión.</br>
 	<b>Aspectos importantes del proceso de importación a tener en cuenta:</b>
 	<ul>
 		<li><b>Limitaciones según rol de usuario</b>: alguna de las acciones están limitada por el rol del usuario. Por ejemplo, en caso de importar un trámite proveniente de un área que no existe en el entorno, se dará la opción al usuario de crear un área nueva, pero únicamente lo podrá hacer si dispone del rol de Administrador de Entidad.</li>
-		<li><b>Desasociación de elementos</b>: en determinadas situaciones se puede dar el caso de que un elemento asociado al trámite no pueda ser importado. Esto puede pasar tanto en dominios (p.ej. dominio de ámbito global no existente) como en formateadores (p.ej. utilización de formateador no existente). En este caso no se impedirá la importación de la versión del trámite, pero se desasociará el elemento afectado de la versión del trámite. Si el elemento afectado es el formateador, se eliminarán las plantillas de visualización definidas. Si el elemento afectado es un dominio, se eliminará de "Dominios empleados" y si es utilizado por un campo selector de un formulario, dicho selector pasará a ser de lista fija.</li>
+		<li><b>Desasociación de elementos</b>: en determinadas situaciones se puede dar el caso de que un elemento asociado al trámite no pueda ser importado. Esto puede pasar tanto en dominios (p. ej.: dominio de ámbito global no existente) como en formateadores (p. ej.: utilización de formateador no existente). En este caso no se impedirá la importación de la versión del trámite, pero se desasociará el elemento afectado de la versión del trámite. Si el elemento afectado es el formateador, se eliminarán las plantillas de visualización definidas. Si el elemento afectado es un dominio, se eliminará de “Dominios empleados” y si es utilizado por un campo selector de un formulario, dicho selector pasará a ser de lista fija.</li>
 	</ul>
 </p>
 <h2 class="stgH2">CAMPOS</h2>
@@ -24,7 +24,7 @@
 		<li><span class="nombreCampo">Descripción:</span> presenta el texto descriptivo del elemento referenciado.</li>
 		<li><span class="nombreCampo">Ámbito:</span> ámbito del elemento referenciado, puede ser Global, Entidad o Área.</li>
 		<li><span class="nombreCampo">Mensaje:</span> muestra mensaje informativo, en caso necesario, respecto a los elementos del trámite/versión.</li>
-		<li><span class="nombreCampo">Acción:</span> en caso de <i>warning</i> se presenta un botón que mostrará las posibles acciones a realizar por el usuario. Una vez ejecutada la acción, el elemento pasará a estado <i>checked</i></li>
+		<li><span class="nombreCampo">Acción:</span> en caso de <i>warning</i> se presenta un botón que mostrará las posibles acciones a realizar por el usuario. Una vez ejecutada la acción, el elemento pasará al estado <i>checked</i></li>
 	</ul>
 </p>
 <h2 class="stgH2">ICONOGRAFIA</h2>
@@ -48,12 +48,12 @@
 <tr>
 	<th>Entidad</th>
 	<td align="center">ENTIDAD DIFERENTE</td>
-	<td>Se avisa al usuario que se está importando sobre una entidad diferente a la origen, pero no es una situación bloqueante, por lo que se permite continuar.</td>
+	<td>Se avisa al usuario que se está importando sobre una entidad diferente al origen, pero no es una situación bloqueante, por lo que se permite continuar.</td>
 </tr>
 <tr>
 	<th rowspan="2">Área</th>
 	<td align="center">NO EXISTE</td>
-	<td>En este caso se mostrará el botón de acción, pudiendo seleccionar un área existente sobre la que importar o la posibilida de crear un área nueva. El creación de una nueva área requerirá permisos de Administrador de Entidad. La importación sobre un área requerirá de permisos sobre dicha área.</td>
+	<td>En este caso se mostrará el botón de acción, pudiendo seleccionar un área existente sobre la que importar o la posibilidad de crear un área nueva. La creación de una nueva área requerirá permisos de Administrador de Entidad. La importación sobre un área requerirá de permisos sobre dicha área.</td>
 </tr>
 <tr>
 	<td align="center">EXISTE</td>
@@ -62,7 +62,7 @@
 <tr>
 	<th rowspan="2">Trámite</th>
 	<td align="center">NO EXISTE</td>
-	<td>Si el trámite no existe, se da de alta automáticamente. Previo a este alta se permite cambiar el código del trámite.</td>
+	<td>Si el trámite no existe, se da de alta automáticamente. Previo a esta alta se permite cambiar el código del trámite.</td>
 </tr>
 <tr>
 	<td align="center">EXISTE</td>
@@ -71,11 +71,11 @@
 <tr>
 	<th rowspan="2">Versión</th>
 	<td align="center">NO EXISTE</td>
-	<td>Si la versión no existe se permite crearla o reemplazar una existente, si la hubiera.  </td>
+	<td>Si la versión no existe, se permite crearla o reemplazar una existente, si la hubiera.  </td>
 </tr>
 <tr>
 	<td align="center">EXISTE</td>
-	<td>Si la versión existe se posibilita realizar la acción de sobreescribir existente, generando nueva <i>release</i>, o cambiar el número de versión</td>
+	<td>Si la versión existe, se posibilita realizar la acción de sobreescribir existente, generando nueva <i>release</i>, o cambiar el número de versión</td>
 </tr>
 <tr>
 	<th>Datos registro</th>
@@ -85,29 +85,29 @@
 <tr>
 	<th rowspan="5">Dominio</th>
 	<td rowspan="3" align="center">NO EXISTE</td>
-	<td>Si el dominio es de ámbito global, no se importará el dominio y se eliminará la asociación a la versión del trámite (se quitará de dominios asociados a la versión y se los selectores de tipo dominio que lo utilicen pasarán a lista fija).</td>
+	<td>Si el dominio es de ámbito global, no se importará el dominio y se eliminará la asociación a la versión del trámite (se quitará de dominios asociados a la versión y de los selectores de tipo dominio que lo utilicen pasarán a lista fija).</td>
 </tr>
 <tr>
-	<td>Si el dominio es de ámbito entidad, solo se podrá crear si el usuario es Administrador de Entidad. En caso que el usuario no sea Administrador de entidad, no se importará el dominio y se eliminará la asociación a la versión del trámite que se está importando.</td>
+	<td>Si el dominio es de ámbito entidad, solo se podrá crear si el usuario es Administrador de Entidad. En caso de que el usuario no sea Administrador de entidad, no se importará el dominio y se eliminará la asociación a la versión del trámite que se está importando.</td>
 </tr>
 <tr>
 	<td>Si no hay restricción de creación, se deberá revisar los datos del dominio y se importará</td>
 </tr>
 <tr>
 	<td rowspan="2" align="center">EXISTE</td>
-	<td>Si el dominio existe pero no tiene el mismo ámbito se mostrará un mensaje informativo pero se podrá continuar con la importación</td>
+	<td>Si el dominio existe, pero no tiene el mismo ámbito, se mostrará un mensaje informativo, pero se podrá continuar con la importación</td>
 </tr>
 <tr>
-	<td>Si el dominio es de ámbito entidad o área, este deberá pertenecer a la entidad o área sobre la que se importa. En caso contrario se informará al usuario y se eliminará la asociación al dominio en la versión del trámite a importar. </td>
+	<td>Si el dominio es de ámbito, entidad o área, este deberá pertenecer a la entidad o área sobre la que se importa. En caso contrario, se informará al usuario y se eliminará la asociación al dominio en la versión del trámite a importar. </td>
 </tr>
 <tr>
 	<th rowspan="2">Formateador</th>
 	<td align="center">NO EXISTE</td>
-	<td>Si el formateador no existe se permitirá importar pero se eliminará la asociación al formatedor que haya en la versión importada (plantillas de visualización).</td>
+	<td>Si el formateador no existe se permitirá importar, pero se eliminará la asociación al formateador que haya en la versión importada (plantillas de visualización).</td>
 </tr>
 <tr>
 	<td align="center">EXISTE</td>
-	<td>Si el formateador existe en la entidad, se mantendrá la asociación. Si en la entidad destino el formateador existente está configurado como "Desactivar personalización", se eliminará la asociación del formateador al trámite.</td>
+	<td>Si el formateador existe en la entidad, se mantendrá la asociación. Si en la entidad destino el formateador existente está configurado como “Desactivar personalización”, se eliminará la asociación del formateador al trámite.</td>
 </tr>
 </table>
 <h2 class="stgH2">OPERATIVA</h2>

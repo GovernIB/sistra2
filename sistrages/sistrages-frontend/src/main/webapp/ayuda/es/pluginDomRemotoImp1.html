@@ -6,7 +6,7 @@
 </head>
 <body>
 	<h1 class="stgH1">dominio.rest.DominioPluginRest</h1>
-	<p>Este plugin no requiere de ninguna propiedad para su configuración.</p>
+	<p>Este plug-in no requiere de ninguna propiedad para su configuración.</p>
 	<br>
 	<h2>Configuración de dominios SOAP</h2>
 	<p>	Para configurar un dominio que siguen el contrato SOAP (utilizado en SISTRA1), hay que definir la URL del dominio especificando el prefijo [SOAP] (y sin que aparezca “?wsdl” al final).
@@ -16,16 +16,16 @@
 
 
 		Para configurar un dominio que siguen el contrato SOAP (utilizado en SISTRA1), pero que utiliza un WS contra SAP, usando el soap-action, debe anteponerse el prefijo [SOAP][SOAP-ACTION= =<URL-SOAP>]url.<br><br>
-		Por ejemplo: Si en SISTRA 1 se tiene un dominio con la siguiente URL: <b>https://geminis.caib.es:52001/sap/xi/engine?type=entry&amp;version=3.0&amp;Sender.Service=RHAPSODY_HERMES_SYSTRA&amp;Interface=urn:es:caib:sistra:ws:v2:model:SistraFacade^SI_Comunicaciones_Systra_SAP</b>,
+		Por ejemplo: Si en SISTRA 1 se tiene un dominio con la siguiente URL: <b>https://geminis.caib.es:52001/sap/xi/engine?type=entry&version=3.0&Sender.Service=RHAPSODY_HERMES_SYSTRA&Interface=urn:es:caib:sistra:ws:v2:model:SistraFacade^SI_Comunicaciones_Systra_SAP</b>,
 	  	en SISTRA2 se debe especificar la url de la siguiente forma:
-		<b>[SOAP][SOAP-ACTION=http://sap.com/xi/WebService/soap1.1]http://geminis:50800/sap/xi/engine?type=entry&amp;version=3.0&amp;Sender.Service=RHAPSODY_HERMES_SYSTRA&amp;Interface=urn:es:caib:sistra:ws:v2:model:SistraFacade%5ESI_Comunicaciones_Systra_SAP</b>
-		<br><br>Si el plugin no detecta estos prefijos, lo tomará como un servicio REST basado en el contrato para SISTRA2 que define el plugin.<br>
-		También hay que tener en cuenta la codificación de las URLs, sobre todo cuando se utilizan URLs complejas como las de los dominios resueltas por SAP. Estas URLs contienen caracteres especiales, como en el ejemplo indicado, el carácter ‘^’.
+		<b>[SOAP][SOAP-ACTION=http://sap.com/xi/WebService/soap1.1]http://geminis:50800/sap/xi/engine?type=entry&version=3.0&Sender.Service=RHAPSODY_HERMES_SYSTRA&Interface=urn:es:caib:sistra:ws:v2:model:SistraFacade%5ESI_Comunicaciones_Systra_SAP</b>
+		<br><br>Si el plug-in no detecta estos prefijos, lo tomará como un servicio REST basado en el contrato para SISTRA2 que define el plug-in.<br>
+		También hay que tener en cuenta la codificación de las URL, sobre todo cuando se utilizan URL complejas como las de los dominios resueltas por SAP. Estas URL contienen caracteres especiales, como en el ejemplo indicado, el carácter ‘^’.
 		Este carácter se tiene que sustituir por su codificación pertinente, que en este caso es ‘%5E’ (En el ejemplo que se ha añadido, ya se ha realizado el cambio).</p>
 
 
 	<h2>Configuración de dominios REST</h2>
-	<p>Estos dominios tienen que implementar una interfaz REST y ser capaces de mapear peticiones tipo POST para establecer una comunicación correcta.El contrato que han de implementar se especifica en el
-	<a href="https://github.com/GovernIB/sistra2/blob/sistra2-1.3/sistramit/doc/SISTRAMIT_Manual_Integracio_Aplicacions.odt" target="_blank">manual de integración de aplicaciones </a>.
+	<p>Estos dominios tienen que implementar una interfaz REST y ser capaces de mapear peticiones tipo POST para establecer una comunicación correcta. El contrato que han de implementar se especifica en el
+	<a href="https://github.com/GovernIB/sistra2/blob/sistra2-1.3/sistramit/doc/SISTRAMIT_Manual_Integracio_Aplicacions.odt" target="_blank">manual de integración de aplicaciones</a>.
 	</p>
 </html>

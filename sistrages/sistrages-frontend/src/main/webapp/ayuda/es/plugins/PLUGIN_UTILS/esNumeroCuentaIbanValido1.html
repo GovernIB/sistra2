@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=esNumeroCuentaIbanValido1">esNumeroCuentaIbanValido</a></li>
@@ -29,7 +29,7 @@
 </p>
 <p>
 	<ul>
-    	<li>Valida que el valor introducido no sea nulo, y posea el formato correspondiente a un número de cuenta iban, cumpliendo con las reglas de validación necesarias para ser un IBAN (International Bank Account Number) Válido. Se considera válida toda aquella cadena que tenga 24 números que cumplan con las reglas de validación correspondientes a clave del pais, código de control e identificador NCC (entidad, oficina, dígito de control y número de cuenta).</li>
+    	<li>Verifica que el valor introducido no sea nulo, y posea el formato correspondiente a un número de cuenta iban, cumpliendo con las reglas de validación necesarias para ser un IBAN (International Bank Account Number) Válido. Se considera válida toda aquella cadena que tenga 24 números que cumplan con las reglas de validación correspondientes a clave del país, código de control e identificador NCC (entidad, oficina, dígito de control y número de cuenta).</li>
 
 	</ul>
 </p>
@@ -52,14 +52,14 @@
 <p>
 	<b>EJEMPLOS</b>
 </p>
-<p><b>Ejemplo 1</b> Validar la cadena 'ES6621000418461234567891'.  </p>
+<p><b>Ejemplo 1</b> Validar la cadena 'ES6621000418461234567891'. </p>
  <p class="codigoScript">
 	var valido = PLUGIN_UTILS.esNumeroCuentaIbanValido('ES6621000418461234567891');
 </p>
 <p>La función esNumeroCuentaIbanValido retorna 'false' debido a que la cadena no cumple con las reglas de validación, el dígito de control no es válido (el CC es 40, no 46).</p>
 <br />
 
-<p><b>Ejemplo 2</b> Validar la cadena  'ES6621000418401234567891'. </p>
+<p><b>Ejemplo 2</b> Validar la cadena 'ES6621000418401234567891'. </p>
  <p class="codigoScript">
 	var valido = PLUGIN_UTILS.esNumeroCuentaIbanValido ('ES6621000418401234567891');
 </p>

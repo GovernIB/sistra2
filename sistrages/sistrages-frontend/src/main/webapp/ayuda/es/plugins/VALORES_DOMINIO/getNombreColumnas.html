@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_DOMINIOS">PLUGIN_DOMINIO</a></li>
        	  <li>></li>
     	  <li><a href="AyudaServlet?lang=es&plugin=VALORES_DOMINIO">VALORES_DOMINIO</a></li>
@@ -24,7 +24,7 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	getNombreColumnas(): List&#60;String&#62;
+	getNombreColumnas(): List<String>
 </h1>
 <p>
 	<b>DESCRIPCIÓN</b>
@@ -39,13 +39,13 @@
 </p>
 <p>
 	<ul>
-		<li><b>List&#60;String&#62;</b>: Retorna una lista de objetos String que representan los nombres de las columnas que retorna el dominio.</li>
+		<li><b>List<String></b>: Retorna una lista de objetos String que representan los nombres de las columnas que retorna el dominio.</li>
 	</ul>
 </p>
 <p>
 	<b>EJEMPLOS</b>
 </p>
-<p>Pongamos por caso que se quiere recuperar el nombre de las columnas que retorna el domini 'DOMINIO'. Los pasos a efectuar son los siguientes:</p>
+<p>Pongamos por caso que se quiere recuperar el nombre de las columnas que retorna el dominio 'DOMINIO'. Los pasos a efectuar son los siguientes:</p>
 <p>
 Primero se invoca el dominio mediante PLUGIN_DOMINIOS:
 </p>
@@ -63,9 +63,9 @@ var listColumns = valores.getNombreColumnas();
 Una vez obtenida la lista, se puede recuperar el nombre de cada columna como se indica a continuación:
 </p>
 <p class="codigoScript">
-   for (i=0; i&#60;listColumns.size(); i++) {<br/>
-   &#09;var nomcol = listColumns.get(i);<br/>
-   &#09;....<br/>}
+   for (i=0; i<listColumns.size(); i++) {<br/>
+   	var nomcol = listColumns.get(i);<br/>
+   	....<br/>}
 </p>
 </body>
 </html>

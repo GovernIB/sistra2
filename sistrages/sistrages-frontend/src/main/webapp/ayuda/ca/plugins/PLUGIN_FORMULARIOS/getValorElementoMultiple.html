@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_FORMULARIOS">PLUGIN_FORMULARIOS</a></li>
 		  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_FORMULARIOS&metodo=getValorElementoMultiple">getValorElementoMultiple</a></li>
@@ -25,7 +25,7 @@
 	getValorElementoMultiple(idFormulario,listaElementos,numElemento,campo,indice): ValorCampoCompuesto
 </h1>
 <p>
-	<b>DESCRIPCI&Oacute;</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
@@ -55,7 +55,7 @@
  <p>
 	<b>Exemple</b>
  </p>
-<p> Obtenir l'últim valor del camp múltiple 'campoTitulaciones' del primer element de la llista d'elements a un fomulari concret. Per a això, primer s'ha d'obtenir el total de valors:</p>
+<p> Obtenir l'últim valor del camp múltiple 'campoTitulaciones' del primer element de la llista d'elements a un formulari concret. Per a això, primer s'ha d'obtenir el total de valors:</p>
 <p class="codigoScript">
 	var total = PLUGIN_FORMULARIOS.getNumeroValoresValorElementoMultiple('FORM1','LISTA_ELEM1','campoTitulaciones'); 
 </p>
@@ -64,7 +64,7 @@
 </p>
 <p class="codigoScript">
 	if (total > 0) {
-		var valorCompuesto = PLUGIN_FORMULARIOS.getValorElementoMultiple('FORM1','LISTA_ELEM1', 0, 'campoTitulaciones', total -1);
+		var valorCompuesto = PLUGIN_FORMULARIOS.getValorElementoMultiple('FORM1','LISTA_ELEM1', 0, 'campoTitulaciones', total - 1);
 	}
  </p>
  <p>

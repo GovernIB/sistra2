@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
     	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_MENSAJES">PLUGIN_MENSAJES</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_MENSAJES&metodo=crearMensaje">crearMensaje</a></li>
@@ -46,7 +46,7 @@
 </p>
 <p>
 	<ul>
-		<li><b>Mensaje</b>: Objecto que modeliza los datos del mensaje de validación. </li>
+		<li><b>Mensaje</b>: Objeto que modeliza los datos del mensaje de validación. </li>
 	</ul>
 </p>
 <p>
@@ -54,7 +54,7 @@
 </p>
 <p>Pongamos por caso que se desea utilizar en un script un mensaje de validación existente pero particularizando el valor de sus parámetros. Los pasos a seguir serían similares a los siguientes: </p>
 <p>
-Previamente en la pantalla de script, más concretamente en la pestaña de mensajes validación, se ha de definir el mensaje. Por ejemplo podríamos definir un mensaje de validación MENSAJE_001 con el siguiente valor:
+Previamente en la pantalla de script, más concretamente en la pestaña de mensajes validación, se ha de definir el mensaje. Por ejemplo, podríamos definir un mensaje de validación MENSAJE_001 con el siguiente valor:
 </p>
 <p class="codigoScript">
 	Es necesario que se lleve a cabo un debug con los parámetros {0} y {1}.
@@ -73,7 +73,7 @@ y se fijará el valor para los parámetros de dicho mensaje:
 	msg.addParametroMensaje('param 1');
 </p>
 <p>
- finalmente se recuperará el mensaje en el script de la siguiente forma:
+ Finalmente, se recuperará el mensaje en el script de la siguiente forma:
   </p>
  <p class="codigoScript">
 	var mensajeFormado = msg.getMensaje();

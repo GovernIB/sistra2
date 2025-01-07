@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_USUARIO">DATOS_USUARIO</a></li>
 		  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_USUARIO&metodo=getApellidos">getApellidos</a></li>
@@ -43,7 +43,7 @@
  <p>
 	<b>EJEMPLO</b>
  </p>
-<p>Si se desean obtener los apellidos del usuario de la sesión actual, en este caso 'Jose Pérez Rodriguez', primero se debe comprobar si la sesión es autenticada, a continuación obtener el objeto DATOS_USUARIO mediante getUsuario. Una vez obtenido el usuario, podemos obtener los apellidos mediante la función getApellidos:</p>
+<p>Si se desean obtener los apellidos del usuario de la sesión actual, en este caso 'Jose Pérez Rodríguez', primero se debe comprobar si la sesión es autenticada, a continuación obtener el objeto DATOS_USUARIO mediante getUsuario. Una vez obtenido el usuario, podemos obtener los apellidos mediante la función getApellidos:</p>
  <p class="codigoScript">
 	var autenticado = PLUGIN_SESIONFORMULARIO.isAutenticado(); <br />
 	if (autenticado == true) { <br />
@@ -52,7 +52,7 @@
 	}
  </p>
  <p>
-La función getApellidos retornará la cadena 'Pérez Rodriguez'.
+La función getApellidos retornará la cadena 'Pérez Rodríguez'.
  </p>
 <br />
 

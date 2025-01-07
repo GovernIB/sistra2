@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REGISTRO">DATOS_REGISTRO</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REGISTRO&metodo=setExpone">setExpone</a></li>
@@ -43,7 +43,7 @@
 <p>
 	<b>EJEMPLOS</b>
 </p>
-<p>Pongamos por caso que estamos desarrollando una solicitud genérica y queremos enviar a registro el texto de exposición. Para ello podríamos referenciar un campo (p.ej. EXPONE) del formulario (p.ej. FORM1) en el que el ciudadano ha cumplimentado dicho texto: </p>
+<p>Pongamos por caso que estamos desarrollando una solicitud genérica y queremos enviar a registro el texto de exposición. Para ello podríamos referenciar un campo (p. ej.: EXPONE) del formulario (p. ej.: FORM1) en el que el ciudadano ha cumplimentado dicho texto: </p>
  <p class="codigoScript">
 var textoExpone = PLUGIN_FORMULARIOS.getValor('FORM1','EXPONE');
 DATOS_REGISTRO.setNumeroExpediente(textoExpone);

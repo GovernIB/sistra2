@@ -8,107 +8,107 @@
 <h1 class="stgH1">QUADRE DE COMANDAMENT</h1>
 <p>
 
-A la pantalla de '<i>Quadre de comandament</i>' es presenta l&#39;estat del proc&eacute;s de tramitaci&oacute; transcorregut en un per&iacute;ode de temps determinat, des dels esdeveniments i tr&agrave;mits que s&#39;han iniciat i finalitzat, fins a l&#39;activitat produ&iuml;da als tr&agrave;mits que hagin generat algun error, passant per un historial de les alertes executades.
+A la pantalla de '<i>Quadre de comandament</i>' es presenta l'estat del procés de tramitació transcorregut en un període de temps determinat, des dels esdeveniments i tràmits que s'han iniciat i finalitzat, fins a l'activitat produïda als tràmits que hagin generat algun error, passant per un historial de les alertes executades.
 </p>
 
-<p>Es presenten les seg&uuml;ents zones i panells:</p>
+<p>Es presenten les següents zones i panells:</p>
 
 <h2 class="stgH2">Botons d'acció:</h2>
 <p>En la zona superior dreta es poden realitzar certes accions:</p>
 <p>
 	<ul>
-		<li><span class="nombreCampo">Llindars d'avis:</span> Aquest botó apareix si l'usuari es Operador Helpdesk i, si el Supervisor Helpdesk ho permet, es poden personalitzar els llindars d'avis configurats previament per aquest. En cas de no estar permesa la personalització, es poden consultar els valors configutats.</li>
+		<li><span class="nombreCampo">Llindars d'avis:</span> Aquest botó apareix si l'usuari és Operador HelpDesk i, si el Supervisor HelpDesk ho permet, es poden personalitzar els llindars d'avis configurats prèviament per aquest. En cas de no estar permesa la personalització, es poden consultar els valors configurats.</li>
 		<li><span class="nombreCampo">Enviar Mail:</span> Permet enviar un informe de la cerca actual als correus indicats.</li>
 	</ul>
 </p>
 
-<h2 class="stgH2">Avaluaci&oacute; en:</h2>
-<p>En aquesta zona es pot indicar el per&iacute;ode de monitoritzaci&oacute;, amb les opcions seg&uuml;ents:</p>
+<h2 class="stgH2">Avaluació en:</h2>
+<p>En aquesta zona es pot indicar el període de monitoratge, amb les opcions següents:</p>
 <p>
 	<ul>
-		<li><span class="nombreCampo">Temps real:</span> &Eacute;s l&#39;opci&oacute; per defecte i on es pot indicar, dins del dia actual, l&#39;hora des d&#39;on s&#39;avalua l&#39;estat de la tramitaci&oacute; i els minuts de refresc, que permet determinar cada quants minuts es refrescar&agrave; la informaci&oacute;. A m&eacute;s, &eacute;s possible refrescar manualment, prement el bot&oacute; &rdquo;Refrescar&rdquo;.</li>
-		<li><span class="nombreCampo">Interval de temps:</span> &Eacute;s on es pot indicar una data Des (obligat&ograve;ria) i una data Fins, de manera que en pr&eacute;mer &ldquo;Cerca&rdquo; s&#39;obt&eacute; tota la informaci&oacute; del proc&eacute;s de tramitaci&oacute; transcorregut en aquest per&iacute;ode. A causa del proc&eacute;s de purgat d&#39;esdeveniments que es realitza en funci&oacute; de les propietats globals relacionades, la data Des es limita la data resultant de restar a la data actual, els dies definits a la propietat global &quot;sistramit.purga.purgados&quot; (actualment 90 dies), ja que, els dies anteriors ja no existeixen els esdeveniments a la BBDD i les estad&iacute;stiques no serien reals.</li>
+		<li><span class="nombreCampo">Temps real:</span> És l'opció per defecte i on es pot indicar, dins del dia actual, l'hora des d'on s'avalua l'estat de la tramitació i els minuts de refresc, que permet determinar cada quants minuts es refrescarà la informació. A més, és possible refrescar manualment, prement el botó ”Refrescar”.</li>
+		<li><span class="nombreCampo">Interval de temps:</span> És on es pot indicar una data Des de (obligatòria) i una data Fins, de manera que en prémer “Cerca” s'obté tota la informació del procés de tramitació transcorregut en aquest període. A causa del procés de purga d'esdeveniments que es realitza en funció de les propietats globals relacionades, la data Des de es limita la data resultant de restar a la data actual, els dies definits a la propietat global "sistramit.purga.purgados" (actualment 90 dies), ja que, els dies anteriors ja no existeixen els esdeveniments a la BBDD i les estadístiques no serien reals.</li>
 	</ul>
 </p>
 
 <h2 class="stgH2">Accions:</h2>
-<p>En aquest panell es presenten totes les accions ocorregudes en el dia actual o per&iacute;ode temporal indicat, organitzades per tipus d'acci&oacute;.</p>
+<p>En aquest panell es presenten totes les accions ocorregudes en el dia actual o període temporal indicat, organitzades per tipus d'acció.</p>
 <p>
 	<ul>
-		<li><span class="nombreCampo">Emplenar formulari:</span> Es mostra el nombre de vegades que s&#39;ha iniciat i finalitzat l&#39;acci&oacute; d&#39;emplenar formularis, i el percentatge d&#39;accions d&#39;aquest tipus no finalitzades (amb o sense errors), es a dir, la proporci&oacute; de no finalitzades respecte al total de vegades que s&#39;ha iniciat l&#39;acci&oacute; d&#39;omplir formulari.</li>
-		<li><span class="nombreCampo">Signar:</span> Es mostra el nombre de vegades que s&#39;ha iniciat i finalitzat l&#39;acci&oacute; de signar, i el percentatge d&#39;accions d&#39;aquest tipus no finalitzades (amb o sense errors), es a dir, la proporci&oacute; de no finalitzades respecte al total de vegades que s&#39;ha iniciat l&#39;acci&oacute; de signar.</li>
-		<li><span class="nombreCampo">Pagar:</span> Es mostra el nombre de vegades que s&#39;ha iniciat i finalitzat l&#39;acci&oacute; de pagar, i el percentatge d&#39;accions d&#39;aquest tipus no finalitzades (amb o sense errors), es a dir, la proporci&oacute; de no finalitzades respecte al total de vegades que s&#39;ha iniciat l&#39;acci&oacute; de pagar.</li>
-		<li><span class="nombreCampo">Registrar:</span> Es mostra el nombre de vegades que s&#39;ha iniciat i finalitzat l&#39;acci&oacute; de registrar, i el percentatge d&#39;accions d&#39;aquest tipus no finalitzades (amb o sense errors), es a dir, la proporci&oacute; de no finalitzades respecte al total de vegades que s&#39;ha iniciat l&#39;acci&oacute; de registrar.</li>
+		<li><span class="nombreCampo">Emplenar formulari:</span> Es mostra el nombre de vegades que s'ha iniciat i finalitzat l'acció d'emplenar formularis, i el percentatge d'accions d'aquest tipus no finalitzades (amb errors o sense), és a dir, la proporció de no finalitzades respecte al total de vegades que s'ha començat l'acció d'omplir formulari.</li>
+		<li><span class="nombreCampo">Signar:</span> Es mostra el nombre de vegades que s'ha començat i finalitzat l'acció de signar, i el percentatge d'accions d'aquest tipus no finalitzades (amb errors o sense), es a dir, la proporció de no finalitzades respecte al total de vegades que s'ha iniciat l'acció de signar.</li>
+		<li><span class="nombreCampo">Pagar:</span> Es mostra el nombre de vegades que s'ha començat i finalitzat l'acció de pagar, i el percentatge d'accions d'aquest tipus no finalitzades (amb errors o sense), es a dir, la proporció de no finalitzades respecte al total de vegades que s'ha iniciat l'acció de pagar.</li>
+		<li><span class="nombreCampo">Registrar:</span> Es mostra el nombre de vegades que s'ha començat i finalitzat l'acció de registrar, i el percentatge d'accions d'aquest tipus no finalitzades (amb errors o sense), és a dir, la proporció de no finalitzades respecte al total de vegades que s'ha iniciat l'acció de registrar.</li>
 	</ul>
 </p>
-<p>A la darrera columna d&#39;aquest panell de mostren per colors, si cal o no atenci&oacute;, en funci&oacute; d&#39;un llindar (percentatge d&#39;accions no finalitzades) predeterminat, que pot ser modificat per els Operadors Helpdesk, si el Sopervisor Helpdesk ho permet.</p>
+<p>A la darrera columna d'aquest panell es mostren per colors, si cal o no atenció, en funció d'un llindar (percentatge d'accions no finalitzades) predeterminat, que pot ser modificat pels Operadors HelpDesk, si el Supervisor HelpDesk ho permet.</p>
 
-<h2 class="stgH2">Tr&agrave;mits:</h2>
-<p>Aquest panell mostra la mateixa informació que el panell "Accions", pero a nivell de tràmit.</p>
+<h2 class="stgH2">Tràmits:</h2>
+<p>Aquest panell mostra la mateixa informació que el panell “Accions”, però en l'àmbit de tràmit.</p>
 <p>
 	<ul>
-		<li><span class="nombreCampo">Tr&agrave;mits:</span> Es mostra la quantitat dels iniciats, els finalitzats, el percentatge de no finalitzats (amb o sense errors) respecte dels iniciats i, per colors, el nivell d&#39;atenci&oacute; requerida segons el llindar predeterminat, que pot ser modificat per els Operadors Helpdesk, si el Sopervisor Helpdesk ho permet.</li>
+		<li><span class="nombreCampo">Tràmits:</span> Es mostra la quantitat dels iniciats, els finalitzats, el percentatge de no finalitzats (amb errors o sense) respecte dels començats i, per colors, el nivell d'atenció requerida segons el llindar predeterminat, que pot ser modificat pels Operadors HelpDesk, si el Supervisor HelpDesk ho permet.</li>
 	</ul>
 </p>
 
 <h2 class="stgH2">Número total d'errors:</h2>
-<p>En aquest panell es mostra el total de errors, considerant els errors de tramitació (associats a una sessió concreta) i els de plataforma (que no tenen una sessió de tramitació associada). El supervisor helpdesk veurà la suma dels errors de tramitació més els de plataforma i els operadors veuran la suma dels errors de tramitació de les seves àrees, encara que al panell inferior podran conèixer els errors de plataforma.</p>
+<p>En aquest panell es mostra el total d'errors, considerant els errors de tramitació (associats a una sessió concreta) i els de plataforma (que no tenen una sessió de tramitació associada). El supervisor helpDesk veurà la suma dels errors de tramitació més els de plataforma i els operadors veuran la suma dels errors de tramitació de les seves àrees, encara que al panell inferior podran conèixer els errors de plataforma.</p>
 <h2 class="stgH2">Errors de tramitació:</h2>
 <p>Aquest panell mostra (depenent del valor indicat al selector de la dreta):</p>
 <p>
 	<ul>
-		<li><p><span class="nombreCampo">Errors per tr&agrave;mit:</span> Si se selecciona aquesta classificació, el panell mostra els tr&agrave;mits en què existeixen sessions que contenen errors i els errors que s&#39;han produ&iuml;t. Es distingeixen dos nivells d&#39;informaci&oacute;, sobre els quals es poden ordenar les dades de qualsevol columna:</p>
-		<p>- Un primer nivell '<i>Tr&agrave;mit</i>': Mostra informaci&oacute; de cada tr&agrave;mit que t&eacute; errors en alguna de les sessions en el període indicat. S&#39;ofereix la seg&uuml;ent informaci&oacute;, que en ser filtrada per tràmit i versió, proporciona una visió global sobre la situació del mateix:</p>
+		<li><p><span class="nombreCampo">Errors per tràmit:</span> Si se selecciona aquesta classificació, el panell mostra els tràmits en què existeixen sessions que contenen errors i els errors que s'han produït. Es distingeixen dos nivells d'informació, sobre els quals es poden ordenar les dades de qualsevol columna:</p>
+		<p>- Un primer nivell '<i>Tràmit</i>': Mostra informació de cada tràmit que té errors en alguna de les sessions en el període indicat. S'ofereix la següent informació, que en ser filtrada per tràmit i versió, proporciona una visió global sobre la situació del mateix:</p>
 		<ul>
-			<li><span class="nombreCampo">Tr&agrave;mit:</span> L&#39;id compost de cada un dels tr&agrave;mits que contenen errors en alguna de les sessions. &Eacute;s possible cercar en aquest camp.</li>
-			<li><span class="nombreCampo">Versi&oacute;:</span> La versi&oacute; del tr&agrave;mit.</li>
-			<li><span class="nombreCampo">Sessions finalitzades:</span> El nombre de sessions que s&#39;han iniciat (TR_INI - Inici del tr&agrave;mit) i finalitzat (TR_FIN - Final de tr&agrave;mit). En aquestes sessions apareixen les que, per a aquest tràmit i versió, no hi ha errors o sí, errors que no n'han impedit la finalització.</li>
-			<li><span class="nombreCampo">Sessions no finalitzades:</span> El nombre de sessions que s&#39;han iniciat per&ograve; no han finalitzat (amb i sense errors).</li>
-			<li><span class="nombreCampo">Percentatge de sessions no finalitzades:</span> Proporci&oacute; de les sessions no finalitzades (amb i sense errors), respecte de les sessions iniciades en aquest tr&agrave;mit i versi&oacute;.</li>
-			<li><span class="nombreCampo">Suma d&#39;errors:</span> Número total d&#39;errors succe&iuml;ts a les sessions d&#39;aquest tr&agrave;mit i versi&oacute; que contenen errors. Aquests errors son la suma dels que es detallen al segon nivell (&ldquo;Error&rdquo;), en pr&eacute;mer sobre un registre d'aquest nivell &ldquo;Tr&agrave;mit&rdquo;.</li>
+			<li><span class="nombreCampo">Tràmit:</span> L'id compost de cada un dels tràmits que contenen errors en alguna de les sessions. És possible cercar en aquest camp.</li>
+			<li><span class="nombreCampo">Versió:</span> La versió del tràmit.</li>
+			<li><span class="nombreCampo">Sessions finalitzades:</span> El nombre de sessions que s'han iniciat (TR_INI - Inici del tràmit) i finalitzat (TR_FIN - Final de tràmit). En aquestes sessions apareixen les que, per a aquest tràmit i versió, no hi ha errors o sí, errors que no n'han impedit la finalització.</li>
+			<li><span class="nombreCampo">Sessions no finalitzades:</span> El nombre de sessions que s'han iniciat, però no han finalitzat (amb errors i sense).</li>
+			<li><span class="nombreCampo">Percentatge de sessions no finalitzades:</span> Proporció de les sessions no finalitzades (amb errors i sense), respecte de les sessions començades en aquest tràmit i versió.</li>
+			<li><span class="nombreCampo">Suma d'errors:</span> Número total d'errors succeïts a les sessions d'aquest tràmit i versió que contenen errors. Aquests errors són la suma dels que es detallen al segon nivell (“Error”), en prémer sobre un registre d'aquest nivell “Tràmit”.</li>
 		</ul>
-		<p>- Un segon nivell '<i>Error</i>': Mostra la estadística de cada tipus d&#39;error ocorregut a les diferents sessions de tramitaci&oacute; per al tr&agrave;mit i versi&oacute; del nivell superior corresponent i, en fer doble clic sobre un registre, el detall de cada error d&#39;aquest tipus. S&#39;ofereix la informaci&oacute; seg&uuml;ent:</p>
+		<p>- Un segon nivell '<i>Error</i>': Mostra l'estadística de cada tipus d'error ocorregut a les diferents sessions de tramitació per al tràmit i versió del nivell superior corresponent i, en fer doble clic sobre un registre, el detall de cada error d'aquest tipus. S'ofereix la informació següent:</p>
 		<ul>
-			<li><span class="nombreCampo">Error:</span> L&#39;error o excepci&oacute; que ha succe&iuml;t a la sessi&oacute; de tramitaci&oacute;.</li>
-			<li><span class="nombreCampo">Número d&#39;errors:</span> El número d&#39;errors d&#39;aquest tipus succe&iuml;ts al tr&agrave;mit y versi&oacute; corresponent.</li>
-			<li><span class="nombreCampo">Percentatge d&#39;error:</span> La proporci&oacute; d&#39;errors d&#39;aquest respecte als errors totals a aquest tr&agrave;mit y versi&oacute;.</li>
+			<li><span class="nombreCampo">Error:</span> L'error o excepció que ha succeït a la sessió de tramitació.</li>
+			<li><span class="nombreCampo">Número d'errors:</span> El número d'errors d'aquest tipus succeïts al tràmit i versió corresponent.</li>
+			<li><span class="nombreCampo">Percentatge d'error:</span> La proporció d'errors d'aquest respecte als errors totals a aquest tràmit i versió.</li>
 		</ul>
 	</ul>
 	<ul>
-		<li><p><span class="nombreCampo">Tr&agrave;mits per error:</span> Si se selecciona aquesta classificació, el panell mostra mostra els errors que s'han produït i els tràmits en les sessions dels quals s'han produït. Es distingeixen dos nivells d&#39;informaci&oacute;, sobre els quals es poden ordenar les dades de qualsevol columna:</p>
-		<p>- Un primer nivell '<i>Error</i>': Mostra informaci&oacute; de cada tipus d&#39;error que ha succeït en el període indicat. S&#39;ofereix la seg&uuml;ent informaci&oacute;, que en ser filtrada per tipus d&#39;error, proporciona una visió mes concreta sobre la situació del mateix:</p>
+		<li><p><span class="nombreCampo">Tràmits per error:</span> Si se selecciona aquesta classificació, el panell mostra els errors que s'han produït i els tràmits en les sessions dels quals s'han produït. Es distingeixen dos nivells d'informació, sobre els quals es poden ordenar les dades de qualsevol columna:</p>
+		<p>- Un primer nivell '<i>Error</i>': Mostra informació de cada tipus d'error que ha succeït en el període indicat. S'ofereix la següent informació, que en ser filtrada per tipus d'error, proporciona una visió més concreta sobre la situació del mateix:</p>
 		<ul>
-			<li><span class="nombreCampo">Error:</span> Cada un dels errors o excepcions que han succe&iuml;t a les sessions de tramitaci&oacute;.</li>
-			<li><span class="nombreCampo">Suma d&#39;errors:</span> La suma dels errors d&#39;aquest tipus succe&iuml;ts a les sessions de tramitaci&oacute;, que s&oacute;n els que es detallen al segon nivell (&ldquo;Tr&agrave;mit&rdquo;), en pr&eacute;mer sobre un registre d'aquest nivell (&ldquo;Error&rdquo;).</li>
-			<li><span class="nombreCampo">Percentatge d&#39;error:</span> La proporci&oacute; d&#39;errors d&#39;aquest tipus respecte als errors totals succe&iuml;ts a les sessions de tramitaci&oacute;.</li>
+			<li><span class="nombreCampo">Error:</span> Cada un dels errors o excepcions que han succeït a les sessions de tramitació.</li>
+			<li><span class="nombreCampo">Suma d'errors:</span> La suma dels errors d'aquest tipus succeïts a les sessions de tramitació, que són els que es detallen al segon nivell (“Tràmit”), en prémer sobre un registre d'aquest nivell (“Error”).</li>
+			<li><span class="nombreCampo">Percentatge d'error:</span> La proporció d'errors d'aquest tipus respecte als errors totals succeïts a les sessions de tramitació.</li>
 		</ul>
-		<p>- Un segon nivell '<i>Tr&agrave;mit</i>': Mostra la estadística de cada Tr&agrave;mit en què ha succeït aquest tipus d'error a les diferents sessions de tramitació per al tipus d'error del nivell superior corresponent i, en fer doble clic sobre un registre, el detall de cada error d'aquest tipus. S&#39;ofereix la informaci&oacute; seg&uuml;ent:</p>
+		<p>- Un segon nivell '<i>Tràmit</i>': Mostra l'estadística de cada Tràmit en què ha succeït aquest tipus d'error a les diferents sessions de tramitació per al tipus d'error del nivell superior corresponent i, en fer doble clic sobre un registre, el detall de cada error d'aquest tipus. S'ofereix la informació següent:</p>
 		<ul>
-			<li><span class="nombreCampo">Tr&agrave;mit:</span> L&#39;id compost del tr&agrave;mit en què hi ha alguna sessió en què s'ha produït el tipus d'error. &Eacute;s possible cercar en aquest camp.</li>
-			<li><span class="nombreCampo">Versi&oacute;:</span> La versi&oacute; del tr&agrave;mit.</li>
-			<li><span class="nombreCampo">Sessions finalitzades:</span> El nombre de sessions que s&#39;han iniciat (TR_INI - Inici del tr&agrave;mit) i finalitzat (TR_FIN - Final de tr&agrave;mit), en què hi hagi errors d'aquest tipus, que no n'hagin impedit la finalització. En aquest cas, com que es filtra per tipus d'error, les sessions no s'expliquen sense errors d'aquest tràmit i versió.</li>
-			<li><span class="nombreCampo">Sessions no finalitzades:</span> El nombre de sessions que s&#39;han iniciat per&ograve; no han finalitzat (amb errors d'aquest tipus).</li>
-			<li><span class="nombreCampo">Percentatge de sessions no finalitzades:</span> Proporci&oacute; de les sessions no finalitzades (amb errors d'aquest tipus), respecte de les sessions iniciades en aquest tr&agrave;mit i versi&oacute;.</li>
-			<li><span class="nombreCampo">Número d&#39;errors:</span> Número total d&#39;errors d'aquest tipus succe&iuml;ts a les sessions d&#39;aquest tr&agrave;mit i versi&oacute;.</li>
+			<li><span class="nombreCampo">Tràmit:</span> L'id compost del tràmit en què hi ha alguna sessió en què s'ha produït el tipus d'error. És possible cercar en aquest camp.</li>
+			<li><span class="nombreCampo">Versió:</span> La versió del tràmit.</li>
+			<li><span class="nombreCampo">Sessions finalitzades:</span> El nombre de sessions que s'han iniciat (TR_INI - Inici del tràmit) i finalitzat (TR_FIN - Final de tràmit), en què hi hagi errors d'aquest tipus, que no n'hagin impedit la finalització. En aquest cas, com que es filtra per tipus d'error, les sessions no s'expliquen sense errors d'aquest tràmit i versió.</li>
+			<li><span class="nombreCampo">Sessions no finalitzades:</span> El nombre de sessions que s'han iniciat, però no han finalitzat (amb errors d'aquest tipus).</li>
+			<li><span class="nombreCampo">Percentatge de sessions no finalitzades:</span> Proporció de les sessions no finalitzades (amb errors d'aquest tipus), respecte de les sessions començades en aquest tràmit i versió.</li>
+			<li><span class="nombreCampo">Número d'errors:</span> Número total d'errors d'aquest tipus succeïts a les sessions d'aquest tràmit i versió.</li>
 		</ul>
 	</ul>
 </p>
 
 <h2 class="stgH2">Errors de plataforma:</h2>
-<p>En aquest panell s&#39;ofereix informaci&oacute; de quants errors de plataforma (i el detall) han succe&iuml;t al llarg de l&#39;&uacute;s de l&#39;assistent de tramitaci&oacute; en el per&iacute;ode d&#39;avaluaci&oacute;. Aquests errors no s&oacute;n propis d&#8223;un tr&agrave;mit concret, sin&oacute; que s&oacute;n m&eacute;s gen&egrave;rics, a nivell de SISTRAMIT.</p>
+<p>En aquest panell s'ofereix informació de quants errors de plataforma (i el detall) han succeït al llarg de l'ús de l'assistent de tramitació en el període d'avaluació. Aquests errors no són propis d‟un tràmit concret, sinó que són més genèrics, en l'àmbit de SISTRAMIT.</p>
 
 <h2 class="stgH2">Tràmits inacabats sense errors:</h2>
-<p>Aquest panell mostra els tr&agrave;mits que només tenen sessions inacabades i sense errors, per tant, no apareixeran aquells tràmits que tenen alguna sessió amb errors, inacabada o finalitzada. Es possible ordenar per totes les columnes:</p>
+<p>Aquest panell mostra els tràmits que només tenen sessions inacabades i sense errors, per tant, no apareixeran aquells tràmits que tenen alguna sessió amb errors, inacabada o finalitzada. És possible ordenar per totes les columnes:</p>
 <p>
 	<ul>
-		<li><span class="nombreCampo">Tr&agrave;mit:</span> L&#39;id compost del tr&agrave;mit que cont&eacute; sessions no finalitzades i sense errors. &Eacute;s possible cercar en aquest camp.</li>
-		<li><span class="nombreCampo">Versi&oacute;:</span> La versi&oacute; del tr&agrave;mit.</li>
-		<li><span class="nombreCampo">Sessions no finalitzades:</span> El nombre de sessions que s&#39;han iniciat per&ograve; no han finalitzat (sense errors).</li>
+		<li><span class="nombreCampo">Tràmit:</span> L'id compost del tràmit que conté sessions no finalitzades i sense errors. És possible cercar en aquest camp.</li>
+		<li><span class="nombreCampo">Versió:</span> La versió del tràmit.</li>
+		<li><span class="nombreCampo">Sessions no finalitzades:</span> El nombre de sessions que s'han iniciat, però no han finalitzat (sense errors).</li>
 	</ul>
 </p>
 
-<h2 class="stgH2">Historial d&#39;alertes:</h2>
-<p>Aquest panell, que poden veure els administradors d&#39;entitat, mostra en ordre cronol&ograve;gic descendent, les alertes executades i la data d&#39;execuci&oacute; dins del per&iacute;ode del dia en curs. Les alertes mostrades s&oacute;n les que s&#39;han executat i rem&eacute;s correu, en haver-se avaluat com a cert la condici&oacute; o condicions configurades a la pantalla d&#39;&ldquo;Alertes&rdquo;.</p>
+<h2 class="stgH2">Historial d'alertes:</h2>
+<p>Aquest panell, que poden veure els administradors d'entitat, mostra en ordre cronològic descendent, les alertes executades i la data d'execució dins del període del dia en curs. Les alertes mostrades són les que s'han executat i remés correu, en haver-se avaluat com a cert la condició o condicions configurades a la pantalla d'“Alertes”.</p>
 
 </p>
 </body>

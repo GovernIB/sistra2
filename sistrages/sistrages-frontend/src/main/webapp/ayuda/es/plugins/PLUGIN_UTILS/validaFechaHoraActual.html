@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=validaFechaHoraActual">validaFechaHoraActual</a></li>
@@ -58,21 +58,21 @@
 <p>
 	<b>EJEMPLOS</b>
 </p>
-<p><b>Ejemplo 1</b> Comparar la cadena de texto '2019-01-09 09:53:03' (sin formato especificado) con la fecha/hora actual (suponiendo que hoy es 9 de enero de 2019  09:53:03). </p>
+<p><b>Ejemplo 1</b> Comparar la cadena de texto '2019-01-09 09:53:03' (sin formato especificado) con la fecha/hora actual (suponiendo que hoy es 9 de enero de 2019 09:53:03). </p>
  <p class="codigoScript">
 var valida = PLUGIN_UTILS.validaFechaHoraActual('2019-01-09 09:53:03', null);
 </p>
 <p>La función validaFechaHoraActual retorna 0, ya que la fecha indicada se corresponde con la fecha/hora actual.</p>
 <br />
 
-<p><b>Ejemplo 2</b> Comparar la cadena de texto '02/01/2019 07:43:03' (con el formato 'dd/MM/yyyy HH:mm:ss')  con la fecha/hora actual  (suponiendo que hoy es 9 de enero de 2019).   </p>
+<p><b>Ejemplo 2</b> Comparar la cadena de texto '02/01/2019 07:43:03' (con el formato 'dd/MM/yyyy HH:mm:ss') con la fecha/hora actual  (suponiendo que hoy es 9 de enero de 2019). </p>
  <p class="codigoScript">
 	var valida = PLUGIN_UTILS.validaFechaHoraActual('02/01/2019 07:43:03','dd/MM/yyyy HH:mm:ss');
 </p>
 <p>La función validaFechaHoraActual retorna -1, ya que la fecha indicada es menor que la fecha/hora actual.</p>
 <br />
 
-<p><b>Ejemplo 3</b> Comparar la cadena de texto '2019-01-12 19:13:03' (sin formato especificado)  con la fecha/hora actual  (suponiendo que hoy es 9 de enero de 2019).   </p>
+<p><b>Ejemplo 3</b> Comparar la cadena de texto '2019-01-12 19:13:03' (sin formato especificado) con la fecha/hora actual (suponiendo que hoy es 9 de enero de 2019). </p>
  <p class="codigoScript">
 	var valida = PLUGIN_UTILS.validaFechaHoraActual('2019-01-12 19:13:03'. null);
 </p>

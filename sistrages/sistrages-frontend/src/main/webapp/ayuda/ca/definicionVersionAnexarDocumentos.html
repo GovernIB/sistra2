@@ -5,39 +5,39 @@
 	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
 </head>
 <body>
-<h1 class="stgH1">PASSA ANNEXAR DOCUMENT</h1>
+<h1 class="stgH1">PAS ANNEXAR DOCUMENT</h1>
 <p>
-	En la pantalla de '<i>Passa Annexar Document</i>' es gestionen els documents annexes de la versi&oacute; del tr&agrave;mit. Es permet l'alta, baixa i edici&oacute; de documents annexes, aix&iacute; com l'ordenaci&oacute; dels mateixos per la seva presentaci&oacute; al ciutad&agrave; a l'assistent de tramitaci&oacute;.<br>
-	Aquesta pantalla permet establir els documents annexos a trav&eacute;s d'una llista fixa, o de manera din&agrave;mica utilitzant el script 'Llista din&agrave;mica annexos'.
+	En la pantalla de '<i>Pas Annexar Document</i>' es gestionen els documents annexos de la versió del tràmit. Es permet l'alta, baixa i edició de documents annexes, així com l'ordenació dels mateixos per la seva presentació al ciutadà a l'assistent de tramitació.<br>
+	Aquesta pantalla permet establir els documents annexos a través d'una llista fixa, o de manera dinàmica utilitzant el script 'Llista dinàmica annexos'.
 </p>
 <h2 class="stgH2">OPERATIVA</h2>
 <p>
 	<ul>
-		<li><span class="boton">Llista fixa</span>: taula que mostra la llista fixa de documents annexos definits. L'operacions permeses per a aquest llistat s&oacute;n:</li>
+		<li><span class="boton">Llista fixa</span>: taula que mostra la llista fixa de documents annexos definits. Les operacions permeses per a aquest llistat són:</li>
 		<ul class="detalle">
-		<li><span class="boton">Nou</span>: pitjant el bot&oacute; s'obrir&agrave; la <a href="AyudaServlet?lang=ca&id=definicionVersionAnexarDocumentosDialog">fitxa</a> que crear un document annex.</li>
-		<li><span class="boton">Editar</span>: pitjant aquest bot&oacute; s'obrir&agrave; la <a href="AyudaServlet?lang=ca&id=definicionVersionAnexarDocumentosDialog">fitxa</a> per a l'edici&oacute; de les configuracions de l'annex seleccionat.</li>
-		<li><span class="boton">Eliminar</span>: pitjant aquest bot&oacute; s'eliminar&agrave; l'annex que s'hagi seleccionat pr&egrave;viament en el llistat. Previ a l'eliminaci&oacute; es sol&middot;licitar&agrave; confirmaci&oacute; a l'usuari.</li>
-		<li><span class="boton">Pujar</span>: aquest bot&oacute; permet pujar la posici&oacute; de l'annex seleccionat en el llistat d'annexos presentats.</li>
-		<li><span class="boton">Baixar</span>: aquest bot&oacute; permet pujar la posici&oacute; de l'annex seleccionat en el llistat d'annexos presentats.</li>
+		<li><span class="boton">Nou</span>: pitjant el botó s'obrirà la <a href="AyudaServlet?lang=ca&id=definicionVersionAnexarDocumentosDialog">fitxa</a> que crear un document annex.</li>
+		<li><span class="boton">Editar</span>: pitjant aquest botó s'obrirà la <a href="AyudaServlet?lang=ca&id=definicionVersionAnexarDocumentosDialog">fitxa</a> per a l'edició de les configuracions de l'annex seleccionat.</li>
+		<li><span class="boton">Eliminar</span>: pitjant aquest botó s'eliminarà l'annex que s'hagi seleccionat prèviament en el llistat. Previ a l'eliminació se sol·licitarà confirmació a l'usuari.</li>
+		<li><span class="boton">Pujar</span>: aquest botó permet pujar la posició de l'annex seleccionat en el llistat d'annexos presentats.</li>
+		<li><span class="boton">Baixar</span>: aquest botó permet pujar la posició de l'annex seleccionat en el llistat d'annexos presentats.</li>
 		</ul>
-		<li><span class="boton">Lista din&agrave;mica annexos</span>: script que permet la definici&oacute; din&agrave;mica de documents annexos.</li>
+		<li><span class="boton">Llista dinàmica annexos</span>: script que permet la definició dinàmica de documents annexos.</li>
 	</ul>
 </p>
 <h2 class="stgH2">CAMPOS</h2>
 <p>
 	<ul>
-		<li><span class="nombreCampo">Identificador:</span> codi un&iacute;voc que identifica l'annex en l'aplicaci&oacute;. Qualsevol refer&egrave;ncia a l'annex en els scripts de la versi&oacute; es realitzar&agrave; utilitzant aquest codi.</li>
-		<li><span class="nombreCampo">Descripci&oacute;:</span> text multiidioma de presentaci&oacute; de l'annex en l'assistent de tramitaci&oacute;. Aquesta ser&agrave; la denominaci&oacute; de l'annex per al tramitador.</li>
+		<li><span class="nombreCampo">Identificador:</span> codi unívoc que identifica l'annex en l'aplicació. Qualsevol referència a l'annex en els scripts de la versió es realitzarà utilitzant aquest codi.</li>
+		<li><span class="nombreCampo">Descripció:</span> text multiidioma de presentació de l'annex en l'assistent de tramitació. Aquesta serà la denominació de l'annex per al tramitador.</li>
 		<li><span class="nombreCampo">Obligatorietat:</span> obligatorietat del document annex. El document pot ser obligatori, opcional o dependent de script.</li>
 	</ul>
 </p>
-<h2 class="stgH2">ORDRE ANNEXES</h2>
+<h2 class="stgH2">ORDRE ANNEXOS</h2>
 <p>
 	<ul>
-		<li><span class="nombreCampo">Primer nivell d'ordre:</span> El primer nivell d'ordre estableix que els annexes obligatoris tendran preced&#232;ncia sobre els annexes opcionals. Aquest primer nivell d'ordre no &#233;s editable.</li>
-		<li><span class="nombreCampo">Segon nivell d'ordre:</span> El segon nivell d'ordre estableix la preced&#232;ncia dels annexes fixes o els annexes din&#224;mics, sempre respectant el primer nivell d'ordre. Aquest nivell d'ordre s&#237;
-		&#233;s editable en el script d'annexes din&#224;mics, mitjan&#231;ant el Plugin y el m&#232;tode 'DATOS_ANEXOSDINAMICOS.setPrecedenciaSobreAnexosFijos(boolean). Per defecte, els annexes fixes son els que tenen preced&#232;ncia. </li>
+		<li><span class="nombreCampo">Primer nivell d'ordre:</span> El primer nivell d'ordre estableix que els annexos obligatoris tindran precedència sobre els annexos opcionals. Aquest primer nivell d'ordre no és editable.</li>
+		<li><span class="nombreCampo">Segon nivell d'ordre:</span> El segon nivell d'ordre estableix la precedència dels annexos fixes o els annexes dinàmics, sempre respectant el primer nivell d'ordre. Aquest nivell d'ordre sí
+		és editable en el script d'annexos dinàmics, mitjançant el plug-in i el mètode 'DATOS_ANEXOSDINAMICOS.setPrecedenciaSobreAnexosFijos(boolean). Per defecte, els annexos fixos són els que tenen precedència. </li>
 	</ul>
 </p>
 </body>

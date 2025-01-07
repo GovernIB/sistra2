@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS&metodo=lpad">lpad</a></li>
@@ -55,14 +55,14 @@
 	<b>EXEMPLES</b>
  </p>
 
- <p><b>Exemple 1</b> Suposem que desitjam forçar que una determinada cadena, tingui com a mínim 9 dígits. Per a aquest cas podem usar aquesta funció per a emplenar amb 0 a l'esquerra aquesta cadena i obtenir com a resultat 9 dígits. Per exemple, si tenim la cadena '963467' i afegim la següent sentència:   </p>
+ <p><b>Exemple 1</b> Suposem que desitgem forçar que una determinada cadena, tingui com a mínim 9 dígits. Per a aquest cas podem usar aquesta funció per a emplenar amb 0 a l'esquerra aquesta cadena i obtenir com a resultat 9 dígits. Per exemple, si tenim la cadena '963467' i afegim la següent sentència:   </p>
  <p class="codigoScript">
 	var pRelleno = PLUGIN_UTILS.lpad('963467', 9, '0');
  </p>
 <p> La funció lpad retornarà '000963467'.</p>
 <br />
 
- <p><b>Exemple 2</b> Suposem que es desitja que la cadena '12345' passi a tenir 10 caràcters, i s'empleni per l'esquerra amb la cadena 'aA'</p>
+ <p><b>Exemple 2</b> Suposem que es desitja que el string '12345' passi a tenir 10 caràcters, i s'empleni per l'esquerra amb el string 'aA'</p>
  <p class="codigoScript">
 	var pRelleno = PLUGIN_UTILS.lpad('12345', 10, 'aA');
  </p>

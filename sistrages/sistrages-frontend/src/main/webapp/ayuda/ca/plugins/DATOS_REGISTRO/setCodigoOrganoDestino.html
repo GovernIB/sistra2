@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_REGISTRO">DATOS_REGISTRO</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_REGISTRO&metodo=setOficina">setCodigoOrganoDestino</a></li>
@@ -25,7 +25,7 @@
 	setCodigoOrganoDestino(String codigoOrganoDestino): void
 </h1>
 <p>
-	<b>DESCRIPCI&Oacute;</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
@@ -33,17 +33,17 @@
     </ul>
 </p>
 <p>
-	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+	<b>PARÀMETRES D'ENTRADA</b>
 </p>
 <p>
 	<ul>
-		<li><b>codigoOrganoDestino</b>: Codi de l'òrgan destí. Dependrà de la sol·lució de registre, però típicament serà un codi DIR3.</li>
+		<li><b>codigoOrganoDestino</b>: Codi de l'òrgan destí. Dependrà de la solució de registre, però típicament serà un codi DIR3.</li>
 	</ul>
 </p>
 <p>
 	<b>EXEMPLES</b>
 </p>
-<p>Posam per cas que volem fer l'apunt registral a un òrgan destí establert a un camp (p. ex. ORGANO_DESTINO) d'un formulari (p. ex. FORM-1). Per fer això establirem les seg&uuml;ents línies a l'script:</p>
+<p>Posem per cas que volem fer l'apunt registral a un òrgan destí establert a un camp (p. ex. ORGANO_DESTINO) d'un formulari (p. ex. FORM-1). Per fer això establirem les següents línies a l'script:</p>
  <p class="codigoScript">
 var codigoOrganoDestino = PLUGIN_FORMULARIOS.getValor('FORM-1', 'ORGANO_DESTINO');
 DATOS_REGISTRO.setCodigoOrganoDestino(codigoOrganoDestino);

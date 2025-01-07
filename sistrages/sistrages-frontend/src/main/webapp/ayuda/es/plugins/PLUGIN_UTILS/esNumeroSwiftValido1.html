@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=esNumeroSwiftValido1">esNumeroSwiftValido</a></li>
@@ -29,7 +29,7 @@
 </p>
 <p>
 	<ul>
-    	<li>Valida que el valor introducido no sea nulo y cumpla con las reglas de validación necesarias para ser un SWIFT (código de identificación bancaria para realizar transferencias) Válido. Se considera válida toda aquella cadena que tenga 8-11 caracteres números que cumplan con las reglas de validación correspondientes a código del banco, clave del país, localidad y sucursal (la sucursal es opcional, en caso de no introducirse, será sede central). El código del banco y del país debe ser sólo mayúsculas, el código de lugar debe ser sólo mayúsculas o sólo números mientras que el código de sucursal puede ser mayúsculas y números. </li>
+    	<li>Verifica que el valor introducido no sea nulo y cumpla con las reglas de validación necesarias para ser un SWIFT (código de identificación bancaria para realizar transferencias) Válido. Se considera válida toda aquella cadena que tenga 8-11 caracteres números que cumplan con las reglas de validación correspondientes a código del banco, clave del país, localidad y sucursal (la sucursal es opcional, en caso de no introducirse, será sede central). El código del banco y del país debe ser solo mayúsculas, el código de lugar debe ser solo mayúsculas o solo números, mientras que el código de sucursal puede ser mayúsculas y números. </li>
 	</ul>
 </p>
 <p>
@@ -45,7 +45,7 @@
 </p>
 <p>
 	<ul>
-		<li><b>boolean</b>: true si la cadena introducida es un número de Swift válido y false si la cadena introducida no es un número swift válido</li>
+		<li><b>boolean</b>: true si la cadena introducida es un número de Swift válido y false si la cadena introducida no es un número SWIFT válido</li>
 	</ul>
 </p>
 <p>
@@ -58,7 +58,7 @@
 <p>La función esNumeroSwiftValido retorna 'false' debido a que la cadena no cumple con las reglas de validación, son 9 caracteres y no 8 o 11.</p>
 <br />
 
-<p><b>Ejemplo 2</b> Validar la cadena  'BBVAESMM'. </p>
+<p><b>Ejemplo 2</b> Validar la cadena 'BBVAESMM'. </p>
  <p class="codigoScript">
 	var valido = PLUGIN_UTILS.esNumeroSwiftValido ('BBVAESMM');
 </p>

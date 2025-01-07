@@ -11,7 +11,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
     	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_VALIDACION">PLUGIN_VALIDACION</a></li>
        	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_VALIDACION&metodo=addParametroMensajeAviso">addParametroMensajeAviso</a></li>
@@ -27,7 +27,7 @@
 </p>
 <p>
 	<ul>
-		<li>Parámetros a substuir en el mensaje que hace referencia el código de aviso.
+		<li>Parámetros a substituir en el mensaje que hace referencia el código de aviso.
 	 * ({0} {1} ...).</li>
 	</ul>
 </p>
@@ -36,7 +36,7 @@
 </p>
 <p>
 	<ul>
-		<li><b>parametro</b>: parametro a sustituir.</li>
+		<li><b>parametro</b>: parámetro a sustituir.</li>
 	</ul>
 </p>
 <p>
@@ -53,7 +53,7 @@
 	 PLUGIN_VALIDACION.addParametroMensajeAviso(apellido2);
 </p>
 <p>
-	El parámetro {0} pertenecería al dni, el {1} al nombre, {2} al apellido1 y el {3} al apellido 2, quedándonos el mensaje como 'El dni dni para la persona nombre, apellido1 apellido2 está incorrecto'. También deberíamos especificar el grado del mensaje:
+	El parámetro {0} pertenecería al DNI, el {1} al nombre, {2} al apellido1 y el {3} al apellido 2, quedándonos el mensaje como 'El DNI dni para la persona nombre apellido1 apellido2 está incorrecto'. También deberíamos especificar el grado del mensaje:
 </p>
 <p class="codigoScript">
 	PLUGIN_VALIDACION.setExisteAviso(true, 'ERROR');

@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=formateaDoubleACadena">formateaDoubleACadena</a></li>
@@ -37,7 +37,7 @@
 </p>
 <p>
 	<ul>
-		<li><b>numero</b>: Número double a convertir en String .</li>
+		<li><b>numero</b>: Número double a convertir en String.</li>
 		<li><b>separadorMiles</b>: Carácter con el que se identifica el separador de miles.</li>
 		<li><b>separadorDecimales</b>: Carácter con el que se identifica el separador de decimales. Dato obligatorio.</li>
 		<li><b>separadorDecimales</b>: Número de decimales.</li>
@@ -48,21 +48,21 @@
 </p>
 <p>
 	<ul>
-		<li><b>String</b>: Cadena de carácteres que representa el numero introducido.</li>
+		<li><b>String</b>: Cadena de caracteres que representa el número introducido.</li>
 	</ul>
 </p>
 <p>
 	<b>EJEMPLOS</b>
 </p>
 
-<p><b>Ejemplo 1</b> Convertir el número 123110544434.58 en una cadena de carácteres</p>
+<p><b>Ejemplo 1</b> Convertir el número 123110544434.58 en una cadena de caracteres</p>
  <p class="codigoScript">
 	var pCadena = PLUGIN_UTILS.formateaDoubleACadena(123110544434.58, '.', ',', 2);
 </p>
 <p>La función formateaDoubleACadena retorna la cadena '123.110.544.434,58'.</p>
 <br />
 
-<p><b>Ejemplo 2</b> Convertir el número 123110544434.58 en una cadena de carácteres sin incluir los decimales</p>
+<p><b>Ejemplo 2</b> Convertir el número 123110544434.58 en una cadena de caracteres sin incluir los decimales</p>
  <p class="codigoScript">
 	var pCadena = PLUGIN_UTILS.formateaDoubleACadena(123110544434.58, '.', ',', 0);
 </p>

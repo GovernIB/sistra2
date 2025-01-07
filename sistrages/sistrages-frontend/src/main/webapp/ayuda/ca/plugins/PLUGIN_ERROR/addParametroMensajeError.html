@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
     	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_ERROR">PLUGIN_ERROR</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_ERROR&metodo=addParametroMensajeError">addParametroMensajeError</a></li>
@@ -30,8 +30,8 @@
 <p>
 	<ul>
 		<li>Mètode que permet afegir el valor dels paràmetres a substituir en el missatge d'error. D'aquesta manera es pot dotar de dinamisme al missatge d'error.</li>
-    	<li>Els paràmetres s'identifiquen al missatge d'error mitjant&ccedil;ant claus ({0} {1} ...).</li>
-    	<li>Si el missatge té més d'un paràmetre, s'ha de tenir present que importa l'ordre en que s'hi afegeixin els paràmetres.</li>
+    	<li>Els paràmetres s'identifiquen al missatge d'error mitjançant claus ({0} {1} ...).</li>
+    	<li>Si el missatge té més d'un paràmetre, s'ha de tenir present que importa l'ordre en què s'afegeixin els paràmetres.</li>
 	</ul>
 </p>
 <p>
@@ -45,11 +45,11 @@
 <p>
 	<b>EXEMPLES</b>
 </p>
-<p>Posam per cas que es vol controlar la disponibilitat de dades per un determinat NIF a una data concreta. Aquesta operació es podria fer recuperant dades d'un domini i mostrant un missatge d'error en cas de no existir-hi dades. A continuació es descriu com s'hauria de procedir per parametritzar el missatge d'error.</p>
+<p>Posem per cas que es vol controlar la disponibilitat de dades per un determinat NIF a una data concreta. Aquesta operació es podria fer recuperant dades d'un domini i mostrant un missatge d'error en cas de no existir-hi dades. A continuació es descriu com s'hauria de procedir per parametritzar el missatge d'error.</p>
 <p>
-Prèviament, a la pantalla de script s'ha de definir un missatge d'error a la pipella de missatges validació, per l'exemple amb l'identificador CodErrFechas i el valor seg&uuml;ent: </br >
+Prèviament, a la pantalla de script s'ha de definir un missatge d'error a la pipella de missatges validació, per l'exemple amb l'identificador CodErrFechas i el valor següent: <br />
 <i>El DNI {0} no té dades associades a data {1}.</i><br />
-Des del script, es fa referència a aquest missatge de manera seg&uuml;ent: <br />
+Des del script, es fa referència a aquest missatge de manera següent: <br />
 </p>
 <p class="codigoScript">
 	PLUGIN_ERROR.setCodigoMensajeError('CodErrFechas'); <br />
@@ -57,7 +57,7 @@ Des del script, es fa referència a aquest missatge de manera seg&uuml;ent: <br 
 	PLUGIN_ERROR.addParametroMensajeError('10/09/2012'); <br />
 </p>
 <p>
- Com a resultat de l'execució del script s'obtindria el resultat seg&uuml;ent:<br />
+ Com a resultat de l'execució del script s'obtindria el resultat següent:<br />
    <b>El DNI 12345678T té dades associades a data 10/09/2012.</b>
  </p>
 </body>

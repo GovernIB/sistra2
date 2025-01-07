@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REGISTRO">DATOS_REGISTRO</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REGISTRO&metodo=setExtracto">setExtracto</a></li>
@@ -43,7 +43,7 @@
 <p>
 	<b>EJEMPLOS</b>
 </p>
-<p>Pongamos por caso que queremos fijar un extracto del asiento basado en la cumplimentación realizada por el ciudadano. Para ello podríamos referenciar un campo (p.ej. ASUNTO) del formulario (p.ej. FORM1) en el que el ciudadano ha cumplimentado dicho texto: </p>
+<p>Pongamos por caso que queremos fijar un extracto del asiento basado en la cumplimentación realizada por el ciudadano. Para ello podríamos referenciar un campo (p. ej.: ASUNTO) del formulario (p. ej.: FORM1) en el que el ciudadano ha cumplimentado dicho texto: </p>
  <p class="codigoScript">
 var textoExtracto = PLUGIN_FORMULARIOS.getValor('FORM1','ASUNTO');
 DATOS_REGISTRO.setExtracto(textoExtracto);

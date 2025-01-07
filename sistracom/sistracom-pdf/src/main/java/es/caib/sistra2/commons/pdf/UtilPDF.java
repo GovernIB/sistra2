@@ -14,6 +14,7 @@ import com.lowagie.text.PageSize;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.*;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -418,9 +419,16 @@ public class UtilPDF {
 	 * @throws Exception
 	 */
 	public static boolean esProtegidoPwd(final byte[] pdf) throws Exception {
-		InputStream fis = new ByteArrayInputStream(pdf);
-		PDDocument doc = PDDocument.load(fis);
-		return doc.isEncrypted();
+		boolean protegido = false;
+		try {
+			InputStream fis = new ByteArrayInputStream(pdf);
+			PDDocument doc = PDDocument.load(fis);
+			protegido = doc.isEncrypted();
+		} catch (InvalidPasswordException ipe) {
+			// Esta excepción se lanza cuando está protegido por password de apertura
+			protegido = true;
+		}
+		return protegido;
 	}
 
 }

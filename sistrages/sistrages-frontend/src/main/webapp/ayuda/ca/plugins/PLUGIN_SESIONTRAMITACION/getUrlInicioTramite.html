@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_SESIONTRAMITACION">PLUGIN_SESIONTRAMITACION</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_SESIONTRAMITACION&metodo=getUrlInicioTramite">getUrlInicioTramite</a></li>
@@ -25,30 +25,30 @@
 	getUrlInicioTramite(): String
 </h1>
 <p>
-	<b>DESCRIPCI&Oacute;</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-		<li>Mètode que retorna la URL amb la qual es va iniciar el tràmit.</li>
+		<li>Mètode que retorna l'URL amb la qual es va iniciar el tràmit.</li>
 	</ul>
 </p>
 <p>
-	<b>PAR&#192;METRES DE SORTIDA</b>
+	<b>PARÀMETRES DE SORTIDA</b>
 </p>
 <p>
 	<ul>
-		<li><b>string</b>: Cadena de caràcters que representa la URL amb la qual es va iniciar el tràmit.</li>
+		<li><b>string</b>: Cadena de caràcters que representa l'URL amb la qual es va començar el tràmit.</li>
 	</ul>
 </p>
  <p>
 	<b>Exemple</b>
  </p>
-<p> Obtenir la URL amb la qual es va iniciar el tràmit:</p>
+<p> Obtenir l'URL amb la qual es va començar el tràmit:</p>
  <p class="codigoScript">
 	var url = PLUGIN_SESIONTRAMITACION.getUrlInicioTramite();
  </p>
  <p>
-   La funció getUrlInicioTramite retorna una URL similar a:
+   La funció getUrlInicioTramite retorna un URL similar a:
 'www.caib.es/sistramitfront/asistente/iniciarTramite.html?tramite=ID_TRAMITE&version=1&idioma=es&idTramiteCatalogo=32'
  </p>
 <br />

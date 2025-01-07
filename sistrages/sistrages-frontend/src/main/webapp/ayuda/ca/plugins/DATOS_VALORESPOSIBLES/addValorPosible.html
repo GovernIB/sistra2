@@ -7,13 +7,72 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
+		copiarPortapeles('DATOS_VALORESINICIALES.setValorMultiple(codigo, valor)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_VALORESINICIALES">DATOS_VALORESINICIALES</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_VALORESINICIALES&metodo=setValorMultiple">setValorMultiple</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setValorMultiple(campo, valor): void
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet establir un valor múltiple a un camp del formulari actual.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>campo</b>: Camp al qual es desitja assignar el valor.</li>
+		<li><b>valor</b>: Valor que s'assigna al camp.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Per exemple, inicialitzem una variable múltiple amb diferents dades fixes sobre província, municipi i codi postal:</p>
+ <p class="codigoScript">
+var datos = DATOS_VALORESINICIALES.crearValorMultiple();
+datos.addValor('codProvincia', '07');
+datos.addValor('codMunicipio', '07073');
+datos.addValor('codPostal', '07406');
+</p>
+<p>Una vegada creada la variable es podrà assignar al camp corresponent</p>
+<p class="codigoScript">
+DATOS_VALORESINICIALES.setValorMultiple('datosGeografico', datos);
+</p>
+</body>
+</html>
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
 		copiarPortapeles('DATOS_VALORESPOSIBLES.addValorPosible(codigo, descripcion)');
 	}
 </script>
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_VALORESPOSIBLES">DATOS_VALORESPOSIBLES</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_VALORESPOSIBLES&metodo=addValorPosible">addValorPosible</a></li>
@@ -25,7 +84,7 @@
 	addValorPosible(String codigo, String descripcion): void
 </h1>
 <p>
-	<b>DESCRIPCI&Oacute;</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
@@ -33,7 +92,7 @@
 	</ul>
 </p>
 <p>
-	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+	<b>PARÀMETRES D'ENTRADA</b>
 </p>
 <p>
 	<ul>

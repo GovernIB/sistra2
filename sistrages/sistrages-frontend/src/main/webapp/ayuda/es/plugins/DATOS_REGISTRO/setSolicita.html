@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=es&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REGISTRO">DATOS_REGISTRO</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REGISTRO&metodo=setSolicita">setSolicita</a></li>
@@ -43,7 +43,7 @@
 <p>
 	<b>EJEMPLOS</b>
 </p>
-<p>Pongamos por caso que estamos desarrollando una solicitud genérica y queremos enviar a registro el texto objeto de la solicitud. Para ello podríamos referenciar un campo (p.ej. SOLICITA) del formulario (p.ej. FORM1) en el que el ciudadano ha cumplimentado dicho texto: </p>
+<p>Pongamos por caso que estamos desarrollando una solicitud genérica y queremos enviar a registro el texto objeto de la solicitud. Para ello podríamos referenciar un campo (p. ej.: SOLICITA) del formulario (p. ej.: FORM1) en el que el ciudadano ha cumplimentado dicho texto: </p>
  <p class="codigoScript">
 var textoSolicita = PLUGIN_FORMULARIOS.getValor('FORM1','SOLICITA');
 DATOS_REGISTRO.setSolicita(textoSolicita);

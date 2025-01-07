@@ -7,72 +7,72 @@
 <body>
 <h1 class="stgH1">MANTENIMENT DOMINI</h1>
 <p>
-	En la pantalla de '<i>Mateniment domini</i>' pot mantenir les dades corresponents a un domini.<br>
-	Els camps obligatoris es presenten amb un arterisc *
+	En la pantalla de '<i>Manteniment domini</i>' pot mantenir les dades corresponents a un domini.<br>
+	Els camps obligatoris es presenten amb un asterisc *
 </p>
 <h2 class="stgH2">CAMPS</h2>
 <p>
 	<ul>
-		<li><span class="nombreCampo">Identificador:</span> codi un&iacute;voc que identifica al domini dins l'aplicaci&oacute;. Aquest identificador s'emprar&agrave; a qualsevol script de l'aplicaci&oacute; per accedir al domini</li>
-		<li><span class="nombreCampo">Descripci&oacute;:</span> text descriptiu de l'objecte del domini.</li>
-		<li><span class="nombreCampo">Configuraci&oacute; desat en m. cau:</span> desplegable que permet seleccionar seleccionar entre 3 tipus de m. cau:
+		<li><span class="nombreCampo">Identificador:</span> codi unívoc que identifica al domini dins l'aplicació. Aquest identificador s'emprarà a qualsevol script de l'aplicació per accedir al domini</li>
+		<li><span class="nombreCampo">Descripció:</span> text descriptiu de l'objecte del domini.</li>
+		<li><span class="nombreCampo">Configuració desada en m. cau:</span> desplegable que permet seleccionar entre 3 tipus de m. cau:
 			<ul>
-				<li>M. cau habilitada:  indica que el domini és cacheable i es mantindran les dades durant 24 hores. En cas de voler forçar a refrescar les dades es pot invalidar la caixet per al domini.</li>
-				<li>M. cau deshabilitada (cacheo implícit): indica que el domini no és cacheable però existirà un escorcoll implícit durant 1 minut per a evitar repeticions de trucada a dominis per a millorar rendiment (sobretot en càrrega de formularis en els quals s'alimenten diversos camps en funció d'un domini). Aquesta opció haurà de ser la que s'hagi d'usar per defecte quan no es vol escorcollar un domini.</li>
-				<li>M. cau deshabilitada: indica que el domini no és cacheable i en cada invocació es força a invocar a un domini. Aquesta opció s'haurà d'usar quan es vol forçar quan es requereix que cada anomenada a domini forci la invocació al mateix (p.e. domini que realitzi un insert en BD).</li>
+				<li>M. cau habilitada: indica que el domini es pot encauar i es mantindran les dades durant 24 hores. En cas de voler forçar a refrescar les dades es pot invalidar la cau per al domini.</li>
+				<li>M. cau deshabilitada (encauament implícit): indica que el domini no es pot encauar, però existirà un escorcoll implícit durant 1 minut per a evitar repeticions de trucada a dominis per a millorar rendiment (sobretot en càrrega de formularis en els quals s'alimenten diversos camps en funció d'un domini). Aquesta opció haurà de ser la que s'hagi d'usar per defecte quan no es vol escorcollar un domini.</li>
+				<li>M. cau deshabilitada: indica que el domini no es pot encauar i en cada invocació es força a invocar a un domini. Aquesta opció s'haurà d'usar quan es vol forçar quan es requereix que cada anomenada a domini forci la invocació al mateix (p. ex. domini que realitzi un insert en BD).</li>
 		 	</ul>
 		</li>
 
-		<li><span class="nombreCampo">Configuraci&oacute; desat en m. cau:</span> el <i>checkbox</i> "Desar domini en m. cau" permet establir una mem&ograve;ria cau referida a la invocaci&oacute; del domini. Si es marca aquest <i>checkbox</i> es guardar&agrave; en mem&ograve;ria cau el resultat d'una invocaci&oacute; durant un temps m&agrave;xim d'una hora, si no hi ha noves invocacions, i es for&ccedil;ar&agrave; un refresc de la mem&ograve;ria cau transcorregudes 24 hores de de la primera invocaci&oacute;. En qualsevol cas es pot for&ccedil;ar explicitament el refresc de la mem&ograve;ria cau mitjan&ccedil;ant el bot&oacute; <span class="nombreCampo">Refrescar m. cau;</span></li>
-		<li><span class="nombreCampo">Tipus:</span> Tipologia del domini, que pot ser Consulta BBDD, Llista Fixa, Consulta Remota o Font Dades, aquesta darrera no disponible a dominis d'&agrave;mbit global. Segons el tipus de domini s'haur&agrave; de configurar:
+		<li><span class="nombreCampo">Configuració desada en m. cau:</span> el <i>checkbox</i> "Desar domini en m. cau" permet establir una memòria cau referida a la invocació del domini. Si es marca aquest <i>checkbox</i>, es desarà en memòria cau el resultat d'una invocació durant un temps màxim d'una hora, si no hi ha noves invocacions, i es forçarà un refresc de la memòria cau transcorregudes 24 hores de la primera invocació. En qualsevol cas es pot forçar explícitament el refresc de la memòria cau mitjançant el botó <span class="nombreCampo">Refrescar m. cau;</span></li>
+		<li><span class="nombreCampo">Tipus:</span> Tipologia del domini, que pot ser Consulta BBDD, Llista Fixa, Consulta Remota o Font Dades, aquesta darrera no disponible a dominis d'àmbit global. Segons el tipus de domini s'haurà de configurar:
 			<ul class="detalle">
 				<li><b>Consulta BBDD:</b> domini que consulta dades d'una base de dades:
 					<ul class="detalle2">
-						<li>JNDI Datasource: ha de contenir el JNDI del <i>datasource</i> que cont&eacute; la BBDD que consultar&agrave; el domini. S'ha de tenir en compte que aquest <i>datasource</i> ha d'estar desplegat al mateix servidor d'aplicacions que SISTRAGESBACK.</li>
-						<li>Query: consulta, en llenguatge SQL, a executar damunt la BBDD indicada al <i>datasource</i>. En cas que la consulta requereixi par&agrave;metres aquests es referenciaran mitjan&ccedil;ant el seu codi i precedit pel s&iacute;mbol dos punts (:). A continuaci&oacute; es presenta un exemple il&middot;lustratiu d'una query amb un par&agrave;metre <i>identificador</i>:<br><br>
+						<li>JNDI Datasource: ha de contenir el JNDI del <i>datasource</i> que conté la BBDD que consultarà el domini. S'ha de tenir en compte que aquest <i>datasource</i> ha d'estar desplegat al mateix servidor d'aplicacions que SISTRAGESBACK.</li>
+						<li>Query: consulta, en llenguatge SQL, a executar damunt la BBDD indicada al <i>datasource</i>. En cas que la consulta requereixi paràmetres aquests es referenciaran mitjançant el seu codi i precedit pel símbol dos punts (:). A continuació es presenta un exemple il·lustratiu d'una query amb un paràmetre <i>identificador</i>:<br><br>
 						<i>SELECT ID, DESC1, DESC2 FROM TAULA WHERE ID = :identificador</i>
 						</li>
 					</ul>
 				</li>
-				<li><b>Llista fixa:</b> domini que recupera dades d'una llista fixa de valors. El manteniment del llistat de valors permet les operacions seg&uuml;ents:
+				<li><b>Llista fixa:</b> domini que recupera dades d'una llista fixa de valors. El manteniment del llistat de valors permet les operacions següents:
 					<ul class="detalle2">
 						<li><span class="boton">Nou:</span> permet crear un nou element al llistat. Aquest element consta del codi de l'element i el valor del mateix</li>
-						<li><span class="boton">Editar:</span> permet editar un element ja existent al llistat. Abans de pitjar el bot&oacute; d'edici&oacute; haureu de seleccionar al llistat l'element a editar.</li>
-						<li><span class="boton">Eliminar:</span> permet eliminar un element existent al llistat. Abans de pitjar el bot&oacute; d'eliminaci&oacute; haureu de seleccionar al llistat l'element a eliminar.</li>
-						<li><span class="boton">Pujar:</span> permet pujar un element a l'ordre del llistat. Per pujar un element pr&egrave;viament ha d'estar seleccionat al llistat.</li>
-						<li><span class="boton">Baixar:</span> permet baixar un element a l'ordre del llistat. Per pujar un element pr&egrave;viament ha d'estar seleccionat al llistat.</li>
+						<li><span class="boton">Editar:</span> permet editar un element ja existent al llistat. Abans de pitjar el botó d'edició haureu de seleccionar al llistat l'element a editar.</li>
+						<li><span class="boton">Eliminar:</span> permet eliminar un element existent al llistat. Abans de pitjar el botó d'eliminació haureu de seleccionar al llistat l'element a eliminar.</li>
+						<li><span class="boton">Pujar:</span> permet pujar un element a l'ordre del llistat. Per pujar un element prèviament ha d'estar seleccionat al llistat.</li>
+						<li><span class="boton">Baixar:</span> permet baixar un element a l'ordre del llistat. Per pujar un element prèviament ha d'estar seleccionat al llistat.</li>
 					</ul>
 				</li>
-				<li><b>Consulta Remota:</b> domini que recupera valors d'una ubicaci&oacute; remota a partir del plugin de domini remot:
+				<li><b>Consulta Remota:</b> domini que recupera valors d'una ubicació remota a partir del plug-in de domini remot:
 					<ul class="detalle2">
-						<li>URL: URL contra la que es far&agrave; la consulta remota. Si existeix un placeholder (per haver seleccionat una variable d'&agrave;rea), aquest ser&agrave; substitu&iuml;t pel contingut d'aquesta variable, que ser&agrave; inserit al començament d'aquest camp. Per exemple, si en la variable VAR01 apareix la URL "https://se.caib.es" i la URL d'aquest camp ha de finalitzar amb "proyectoBase/services/dominios/", en aquest camp apareixer&agrave; el text "{@@VAR01@@}/proyectoBase/services/dominios/".</li>
-						<li>Selecció Variable &Agrave;rea: Aquest bot&oacute; obre una pantalla que permet seleccionar una variable d'&agrave;rea que afegir&agrave; un placeholder que ser&agrave; substitu&iuml;t per la url indicada en aquesta variable d'&agrave;rea a l'hora d'executar el tr&agrave;mit que utilitzi aquest domini.</li>
-						<li>Per a consultar com definir dominis SOAP (utilitzats a SISTRA1) i REST (utilitzats a SISTRA2), cliqueu <a href="AyudaServlet?id=pluginDomRemoto&lang=ca">aquí</a></li>
+						<li>URL: URL contra la que es farà la consulta remota. Si existeix un placeholder (per haver seleccionat una variable d'àrea), aquest serà substituït pel contingut d'aquesta variable, que serà inserit al començament d'aquest camp. Per exemple, si en la variable VAR01 apareix l'URL "https://se.caib.es" i l'URL d'aquest camp ha de finalitzar amb "proyectoBase/services/dominios/", en aquest camp apareixerà el text "{@@VAR01@@}/proyectoBase/services/dominios/".</li>
+						<li>Selecció Variable Àrea: Aquest botó obre una pantalla que permet seleccionar una variable d'àrea que afegirà un placeholder que serà substituït per l'URL indicada en aquesta variable d'àrea a l'hora d'executar el tràmit que utilitzi aquest domini.</li>
+						<li>Per a consultar com definir dominis SOAP (usats a SISTRA1) i REST (fets servir a SISTRA2), cliqueu <a href="AyudaServlet?id=pluginDomRemoto⟨=ca">aquí</a></li>
 					</ul>
 				</li>
 				<li><b>Font Dades:</b> domini que recupera dades d'una Font de Dades definida a SISTRAGESBACK:
 					<ul class="detalle2">
-						<li>Font: desplegable que permet seleccionar la font de dades a consultar. &Uacute;nicament es mostren les fonts de dades que pertanyin a l'&agrave;mbit del domini</li>
+						<li>Font: desplegable que permet seleccionar la font de dades a consultar. Únicament es mostren les fonts de dades que pertanyin a l'àmbit del domini</li>
 						<li>Query: consulta, en llenguatge pseudoSQL per consultar una font de dades. El format d'aquesta consulta ha de ser:
 							<p><i>SELECT campo (, campo)* FROM fuenteDatos WHERE expresion ( [AND | OR] expresion ] )* ORDER BY campo</i></p>
 							<p>on expresion: <i>campo [= | LIKE] :param</i>, on ":param" és el paràmetre que es passarà.</p>
-							<p>Les part&iacute;cules de la sent&egrave;ncia pseudoSQL (SELECT, FROM, WHERE, LIKE, AND, OR, ORDER BY) han d'estar en maj&uacute;scules.<br>
+							<p>Les partícules de la sentència pseudoSQL (SELECT, FROM, WHERE, LIKE, AND, OR, ORDER BY) han d'estar en majúscules.<br>
 							Respecte a las comparancions en el WHERE seran <i>ignorecase</i> ( = y LIKE ).<br>
-							Respecte al LIKE es realitzar&agrave; autom&agrave;ticament la comparaci&oacute; amb :param.<br>
-							Respecte al ORDER BY nom&eacute;s es pot indicar un camp. A m&eacute;s com tots els camps s&oacute;n de tipus cadena, l'ordenaci&oacute; &eacute;s literal pel que si es vol crear un camp en la font de dades que permeti ordenar seq&uuml;encialment, millor emprar lletres que n&uacute;meros.
+							Respecte al LIKE es realitzarà automàticament la comparació amb :param.<br>
+							Respecte al ORDER BY només es pot indicar un camp. A més com tots els camps són de tipus cadena, l'ordenació és literal pel que si es vol crear un camp en la font de dades que permeti ordenar seqüencialment, millor emprar lletres que números.
 							</p>
 						</li>
 					</ul>
 				</li>
 			</ul>
 		</li>
-		<li><span class="nombreCampo">Par&agrave;metres:</span> llistat de par&agrave;metres del domini. Les operacions que es poden realitzar damunt aquest llistat s&oacute;n:
+		<li><span class="nombreCampo">Paràmetres:</span> llistat de paràmetres del domini. Les operacions que es poden realitzar damunt aquest llistat són:
 			<ul class="detalle">
-				<li><span class="boton">Nou:</span> permet crear un par&agrave;metre. Aquest par&agrave;metre s'identifica a partir d'un codi.</li>
-				<li><span class="boton">Editar:</span> permet editar un par&agrave;metre ja existent al llistat. Abans de pitjar el bot&oacute; d'edici&oacute; haureu de seleccionar el par&agrave;metre a editar al llistat.</li>
-				<li><span class="boton">Eliminar:</span> permet eliminar un par&agrave;metre existent al llistat. Abans de pitjar el bot&oacute; d'eliminaci&oacute; haureu de seleccionar el par&agrave;metre a eliminar al llistat.</li>
-				<li><span class="boton">Pujar:</span> permet pujar un par&agrave;metre a l'ordre del llistat de par&agrave;metres. Per pujar un par&agrave;metre pr&egrave;viament ha d'estar seleccionat al llistat de par&agrave;metres.</li>
-				<li><span class="boton">Baixar:</span> permet baixar un par&agrave;metre a l'ordre del llistat de par&agrave;metres. Per baixar un par&agrave;metre pr&egrave;viament ha d'estar seleccionat al llistat de par&agrave;metres.</li>
+				<li><span class="boton">Nou:</span> permet crear un paràmetre. Aquest paràmetre s'identifica a partir d'un codi.</li>
+				<li><span class="boton">Editar:</span> permet editar un paràmetre ja existent al llistat. Abans de pitjar el botó d'edició haureu de seleccionar el paràmetre a editar al llistat.</li>
+				<li><span class="boton">Eliminar:</span> permet eliminar un paràmetre existent al llistat. Abans de pitjar el botó d'eliminació haureu de seleccionar el paràmetre a eliminar al llistat.</li>
+				<li><span class="boton">Pujar:</span> permet pujar un paràmetre a l'ordre del llistat de paràmetres. Per pujar un paràmetre prèviament ha d'estar seleccionat al llistat de paràmetres.</li>
+				<li><span class="boton">Baixar:</span> permet baixar un paràmetre a l'ordre del llistat de paràmetres. Per baixar un paràmetre prèviament ha d'estar seleccionat al llistat de paràmetres.</li>
 			</ul>
 		</li>
 	</ul>
@@ -81,7 +81,7 @@
 <p>
 	<ul>
 		<li><span class="boton">Desar</span>: tanca la pantalla guardant els canvis.</li>
-		<li><span class="boton">Cancel&middot;lar</span>: tanca la pantalla sense guardar els canvis.</li>
+		<li><span class="boton">Cancel·lar</span>: tanca la pantalla sense guardar els canvis.</li>
 	</ul>
 </p>
 </body>

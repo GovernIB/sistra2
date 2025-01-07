@@ -6,23 +6,23 @@
 </head>
 <body>
 	<h1 class="stgH1">dominio.rest.DominioPluginRest</h1>
-	<p>Aquest plugin no requereix de cap propietat per a la seva configuració.</p>
+	<p>Aquest plug-in no requereix cap propietat per a la seva configuració.</p>
 	<h2>Configuració de dominis SOAP</h2>
-	<p> Per a configurar un domini que segueixen el contracte SOAP (utilitzat en SISTRA1), cal definir la URL del domini especificant el prefix [SOAP] (i sense que aparegui “?wsdl” al final).
-	El plugin comprovarà si la URL va precedida del TAG “[SOAP]” i ho prendrà com un servei SOAP.<br><br>
+	<p> Per a configurar un domini que segueixen el contracte SOAP (utilitzat en SISTRA1), cal definir l'URL del domini especificant el prefix [SOAP] (i sense que aparegui “?wsdl” al final).
+	El plug-in comprovarà si l'URL va precedida del TAG “[SOAP]” i ho prendrà com un servei SOAP.<br><br>
 
 	Un altre punt a tenir en compte és que el camp identificador del domini definit, ha de tenir el mateix valor que l'identificador del backoffice al qual es realitza la consulta remota. En cas de no coincidir aquest camp, no funcionarà correctament la consulta remota. <br><br>
 
-	Per a configurar un domini que segueixen el contracte SOAP (utilitzat en SISTRA1), però que utilitza un W contra SAP, usant el soap-action, ha d'anteposar-se el prefix [SOAP][SOAP-ACTION= =<URL-SOAP>]url.<br><br>
-	Per exemple: Si en SISTRA 1 es té un domini amb la següent URL: <b>https://geminis.caib.es:52001/sap/xi/engine?type=entry&amp;version=3.0&amp;Sender.Service=RHAPSODY_HERMES_SYSTRA&amp;Interface=urn:és:caib:sistra:ws:v2:model:SistraFacade^SI_Comunicacions_Systra_SAP</b>,
-	en SISTRA2 s'ha d'especificar la url de la següent forma:
-	<b>[SOAP][SOAP-ACTION=http://sap.com/xi/webservice/soap1.1]http://geminis:50800/sap/xi/engine?type=entry&amp;version=3.0&amp;Sender.Service=RHAPSODY_HERMES_SYSTRA&amp;Interface=urn:és:caib:sistra:ws:v2:model:SistraFacade%5ESI_Comunicacions_Systra_SAP</b>
-	<br><br>Si el plugin no detecta aquests prefixos, ho prendrà com un servei REST basat en el contracte per a SISTRA2 que defineix el plugin.<br>
-	També cal tenir en compte la codificació de les URLs, sobretot quan s'utilitzen URLs complexes com les dels dominis resoltes per SAP. Aquestes URLs contenen caràcters especials, com en l'exemple indicat, el caràcter ‘^’.
+	Per a configurar un domini que segueixen el contracte SOAP (utilitzat en SISTRA1), però que fa servir un W contra SAP, usant el soap-action, ha d'anteposar-se el prefix [SOAP][SOAP-ACTION= =<URL-SOAP>]url.<br><br>
+	Per exemple: Si en SISTRA 1 es té un domini amb la següent URL: <b>https://geminis.caib.es:52001/sap/xi/engine?type=entry&version=3.0&Sender.Service=RHAPSODY_HERMES_SYSTRA&Interface=urn:és:caib:sistra:ws:v2:model:SistraFacade^SI_Comunicacions_Systra_SAP</b>,
+	en SISTRA2 s'ha d'especificar l'URL de la següent forma:
+	<b>[SOAP][SOAP-ACTION=http://sap.com/xi/webservice/soap1.1]http://geminis:50800/sap/xi/engine?type=entry&version=3.0&Sender.Service=RHAPSODY_HERMES_SYSTRA&Interface=urn:és:caib:sistra:ws:v2:model:SistraFacade%5ESI_Comunicacions_Systra_SAP</b>
+	<br><br>Si el plug-in no detecta aquests prefixos, ho prendrà com un servei REST basat en el contracte per a SISTRA2 que defineix el plug-in.<br>
+	També cal tenir en compte la codificació dels URL, sobretot quan s'utilitzen URL complex com les dels dominis resoltes per SAP. Aquests URL contenen caràcters especials, com en l'exemple indicat, el caràcter ‘^’.
 	Aquest caràcter s'ha de substituir per la seva codificació pertinent, que en aquest cas és ‘%5E’ (En l'exemple que s'ha afegit, ja s'ha fet el canvi).</p>
 
 	<h2>Configuració de dominis REST</h2>
-	<p>Aquests dominis han d'implementar una interfície REST i ser capaces de mapejar peticions tipus POST per establir una comunicació correcta. El contracte que han d'implementar està especificat en el
+	<p>Aquests dominis han d'implementar una interfície REST i ser capaç d'interpretar peticions tipus POST per establir una comunicació correcta. El contracte que han d'implementar està especificat en el
 	<a href="https://github.com/GovernIB/sistra2/blob/sistra2-1.3/sistramit/doc/SISTRAMIT_Manual_Integracio_Aplicacions.odt" target="_blank">manual d'integració d'aplicacions. </a>
 	</p>
 </html>

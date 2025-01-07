@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_USUARIO">DATOS_USUARIO</a></li>
 		  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_USUARIO&metodo=getApellidos">getApellidos</a></li>
@@ -25,7 +25,7 @@
 	getApellidos(): String
 </h1>
 <p>
-	<b>DESCRIPCI&Oacute;</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
@@ -33,7 +33,7 @@
 	</ul>
 </p>
 <p>
-	<b>PAR&#192;METRES DE SORTIDA</b>
+	<b>PARÀMETRES DE SORTIDA</b>
 </p>
 <p>
 	<ul>
@@ -43,7 +43,7 @@
  <p>
 	<b>Exemple</b>
  </p>
-<p>Si es desitja obtenir els cognoms de l'usuari de la sessió actual, en aquest cas 'Jose Pérez Rodriguez', primer s'ha de comprovar si la sessió és autenticada, a continuació obtenir l'objecte DADES_USUARI mitjançant getUsuario. Una vegada obtingut l'usuari, podem obtenir els cognoms mitjançant la funció getApellidos:</p>
+<p>Si es desitja obtenir els cognoms de l'usuari de la sessió actual, en aquest cas 'Jose Pérez Rodriguez', primer s'ha de comprovar si la sessió és autenticada, a continuació obtenir l'objecte DATOS_USUARIO mitjançant getUsuario. Una vegada obtingut l'usuari, podem obtenir els cognoms mitjançant la funció getApellidos:</p>
  <p class="codigoScript">
 	var autenticado = PLUGIN_SESIONFORMULARIO.isAutenticado(); <br />
 	if (autenticado == true) { <br />

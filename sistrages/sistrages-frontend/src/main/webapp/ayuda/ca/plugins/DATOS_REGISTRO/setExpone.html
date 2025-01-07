@@ -13,7 +13,7 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">&#8617;</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&boton=VOLVER">↩</a></li>
   		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_REGISTRO">DATOS_REGISTRO</a></li>
       	  <li>></li>
       	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_REGISTRO&metodo=setExpone">setExpone</a></li>
@@ -37,13 +37,13 @@
 </p>
 <p>
 	<ul>
-		<li><b>textoExpone</b>: cadena de text amb els fet a exposar.</li>
+		<li><b>textoExpone</b>: cadena de text amb el fet a exposar.</li>
 	</ul>
 </p>
 <p>
 	<b>EXEMPLES</b>
 </p>
-<p>Posam per cas que estam desenvolupant una sol·licitud genèrica i volem enviar a registre el text d'exposició. Per fer-ho podriem referenciar un camp (p.ex. EXPONE) del formulari (p.ej. FORM1) al que el ciutadà ha emplenat el text d'exposició dels fets: </p>
+<p>Posem per cas que estem desenvolupant una sol·licitud genèrica i volem enviar a registre el text d'exposició. Per fer-ho podríem referenciar un camp (p. ex. EXPONE) del formulari (p. ex. FORM1) al que el ciutadà ha emplenat el text d'exposició dels fets: </p>
  <p class="codigoScript">
 var textoExpone = PLUGIN_FORMULARIOS.getValor('FORM1','EXPONE');
 DATOS_REGISTRO.setNumeroExpediente(textoExpone);

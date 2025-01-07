@@ -5,71 +5,71 @@
 	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
 </head>
 <body>
-<h1 class="stgH1">MANTENIMENTO DOMINIO</h1>
+<h1 class="stgH1">MANTENIMIENTO DOMINIO</h1>
 <p>
-	En la pantalla de '<i>Matenimento dominio</i>' puede mantener los datos correspondientes a un dominio.<br>
-	Los campos obligatorios se presentan con un arterisco *.
+	En la pantalla de '<i>Mantenimiento dominio</i>' puede mantener los datos correspondientes a un dominio.<br>
+	Los campos obligatorios se presentan con un asterisco *.
 </p>
 <h2 class="stgH2">CAMPOS</h2>
 <p>
 	<ul>
-		<li><span class="nombreCampo">Identificador:</span> c&oacute;digo un&iacute;voco que identifica al dominio dentro de la aplicaci&oacute;n. Este identificador se utilizar&agrave; en cualquier script de la aplicaci&oacute;n para accedir al dominio</li>
-		<li><span class="nombreCampo">Descripci&oacute;n:</span> texto descriptivo del objeto del dominio.</li>
-		<li><span class="nombreCampo">Configuraci&oacute;n cacheo:</span> desplegable que permite seleccionar entre 3 tipos de cacheo:
+		<li><span class="nombreCampo">Identificador:</span> código unívoco que identifica al dominio dentro de la aplicación. Este identificador se utilizará en cualquier script de la aplicación para acceder al dominio</li>
+		<li><span class="nombreCampo">Descripción:</span> texto descriptivo del objeto del dominio.</li>
+		<li><span class="nombreCampo">Configuración cacheo:</span> desplegable que permite seleccionar entre 3 tipos de cacheo:
 			<ul>
-				<li>Caché habilitada:  indica que el dominio es cacheable y se mantendrán los datos durante 24 horas. En caso de querer forzar a refrescar los datos se puede invalidar la caché para el dominio.</li>
-				<li>Caché deshabilitada (cacheo implícito): indica que el domini no és cacheable però existirà un escorcoll implícit durant 1 minut per a evitar repeticions de trucada a dominis per a millorar rendiment (sobretot en càrrega de formularis en els quals s'alimenten diversos camps en funció d'un domini). Aquesta opció haurà de ser la que s'hagi d'usar per defecte quan no es vol escorcollar un domini.</li>
-				<li>Caché deshabilitada: indica que el dominio no es cacheable y en cada invocación se fuerza a invocar a un dominio. Esta opción se deberá usar cuando se quiere forzar cuando se requiere que cada llamada a dominio fuerce la invocación al mismo (p.e. dominio que realice un insert en BD).</li>
+				<li>Caché habilitada: indica que el dominio es cacheable y se mantendrán los datos durante 24 horas. En caso de querer forzar a refrescar los datos, se puede invalidar la caché para el dominio.</li>
+				<li>Caché deshabilitada (cacheo implícito): indica que el dominio no es cacheable, pero existirá un cacheo implícito durante 1 minuto para evitar repeticiones de llamadas a dominios, para mejorar el rendimiento (sobre todo en carga de formularios en los cuales se alimenten diversos campos en función de un dominio). Esta opción habrá de ser la que se use por defecto cuando no es quiere cachear un dominio.</li>
+				<li>Caché deshabilitada: indica que el dominio no es cacheable y en cada invocación se fuerza a invocar a un dominio. Esta opción se deberá usar cuando se quiere forzar cuando se requiere que cada llamada a dominio fuerce la invocación al mismo (p. ej.: dominio que realice un insert en BBDD).</li>
 		 	</ul>
 		</li>
-		<li><span class="nombreCampo">Tipo:</span> Tipolog&iacute;a del dominio, que puede ser Consulta BBDD, Lista Fija, Consulta Remota o Fuente Datos, esta &uacute;ltima no disponible en dominios de &aacute;mbit global. Seg&uacute;n el tipo de dominio se tendr&agrave; que configurar:
+		<li><span class="nombreCampo">Tipo:</span> Tipología del dominio, que puede ser Consulta BBDD, Lista Fija, Consulta Remota o Fuente Datos, esta última no disponible en dominios de ámbito global. Según el tipo de dominio se tendrá que configurar:
 		<ul class="detalle">
 			<li><b>Consulta BBDD:</b> dominio que consulta datos de una base de datos:
 		<ul class="detalle2">
-			<li>JNDI Datasource: ha de contener el JNDI del <i>datasource</i> que contiene la BBDD que consultar&aacute; el dominio. Se ha de tener en cuenta que este <i>datasource</i> ha de estar desplegado en el mismo servidor de aplicaciones que SISTRAGESBACK.</li>
-			<li>Query: consulta, en lenguaje SQL, a ejecutar sobre la BBDD indicada en el <i>datasource</i>. En caso que la consulta requiera par&aacute;metros estos se referenciar&aacute;n mediante su c&oacute;digo y precedido por el s&iacute;mbolo dos puntos (:). A continuaci&oacute;n se presenta un ejemplo ilustrativo de una consulta con un par&aacute;metro <i>identificador</i>:<br><br>
+			<li>JNDI Datasource: ha de contener el JNDI del <i>datasource</i> que contiene la BBDD que consultará el dominio. Se ha de tener en cuenta que este <i>datasource</i> ha de estar desplegado en el mismo servidor de aplicaciones que SISTRAGESBACK.</li>
+			<li>Query: consulta, en lenguaje SQL, a ejecutar sobre la BBDD indicada en el <i>datasource</i>. En caso de que la consulta requiera parámetros, estos se referenciarán mediante su código y precedido por el símbolo dos puntos (:). A continuación se presenta un ejemplo ilustrativo de una consulta con un parámetro <i>identificador</i>:<br><br>
 			<i>SELECT ID, DESC1, DESC2 FROM TAULA WHERE ID = :identificador</i></li>
 		</ul>
 		</li>
-		<li><b>Lista fija:</b> dominio que recupera datos de una lista fija de valores. El mantenimento del listado de valores permite las operaciones siguientes:
+		<li><b>Lista fija:</b> dominio que recupera datos de una lista fija de valores. El mantenimiento del listado de valores permite las operaciones siguientes:
 		<ul class="detalle2">
-			<li><span class="boton">Nuevo:</span> permite crear un nuevo elemento en el listado. Este elemento consta del c&oacute;di del elemento y del valor del mismo</li>
-			<li><span class="boton">Editar:</span> permite editar un elemento ya existente en el listado. Antes de pulsar el bot&oacute;n de edici&oacute;n tendr&aacute; que seleccionar en el listado el elemento a editar.</li>
-			<li><span class="boton">Eliminar:</span> permite eliminar un element existent al llistat. Abans de pitjar el bot&oacute; d'eliminaci&oacute; haureu de seleccionar al llistat l'element a eliminar.</li>
+			<li><span class="boton">Nuevo:</span> permite crear un nuevo elemento en el listado. Este elemento consta del código del elemento y del valor del mismo</li>
+			<li><span class="boton">Editar:</span> permite editar un elemento ya existente en el listado. Antes de pulsar el botón de edición tendrá que seleccionar en el listado el elemento a editar.</li>
+			<li><span class="boton">Eliminar:</span> permite eliminar un elemento existente en el listado. Antes de hacer clic en el botón de eliminación se ha de seleccionar en el listado el elemento a eliminar.</li>
 			<li><span class="boton">Subir:</span> permite subir un elemento en el orden del listado. Para subir un elemento previamente ha de estar seleccionado en el listado.</li>
-			<li><span class="boton">Bajar:</span> permite bajar un elemento en el orden del listado. Per subir un elemento previamente ha de estar seleccionado en el listado.</li>
+			<li><span class="boton">Bajar:</span> permite bajar un elemento en el orden del listado. Para subir un elemento previamente ha de estar seleccionado en el listado.</li>
 		</ul>
 		</li>
-		<li><b>Consulta Remota:</b> dominio que recupera valores de una ubicaci&oacute;n remota a partir del plugin de dominio remoto:
+		<li><b>Consulta Remota:</b> dominio que recupera valores de una ubicación remota a partir del plug-in de dominio remoto:
 		<ul class="detalle2">
-			<li>URL: URL contra la que se har&aacute; la consulta remota. Si existe un placeholder (por haber seleccionado una variable de &aacute;rea), &eacute;ste ser&aacute; sustituido por el contenido de esa variable, que ser&aacute; insertado al comienzo de este campo. Por ejemplo, si en la variable VAR01 aparece la URL "https://se.caib.es" y la URL de este campo ha de finalizar con "proyectoBase/services/dominios/", en este campo aparecer&aacute; el texto "{@@VAR01@@}/proyectoBase/services/dominios/".</li>
-			<li>Selección Variable &Aacute;rea: Este bot&oacute;n abre una pantalla que permite seleccionar una variable de &aacute;rea que añadir&aacute; un placeholder que ser&aacute; sustituido por la url indicada en esa variable de &aacute;rea a la hora de ejecutar el tr&aacute;mite que utilice este dominio.</li>
-			<li>Para consultar como definir dominios SOAP (utilizados en SISTRA1) y REST (utilizados en SISTRA2), clicad <a href="AyudaServlet?id=pluginDomRemoto&lang=es">aquí</a></li>
+			<li>URL: URL contra la que se hará la consulta remota. Si existe un placeholder (por haber seleccionado una variable de área), este será sustituido por el contenido de esa variable, que será insertado al comienzo de este campo. Por ejemplo, si en la variable VAR01 aparece la URL “https://se.caib.es” y la URL de este campo ha de finalizar con “proyectoBase/services/dominios/”, en este campo aparecerá el texto “{@@VAR01@@}/proyectoBase/services/dominios/”.</li>
+			<li>Selección Variable Área: Este botón abre una pantalla que permite seleccionar una variable de área que añadirá un placeholder que será sustituido por la URL indicada en esa variable de área a la hora de ejecutar el trámite que utilice este dominio.</li>
+			<li>Para consultar como definir dominios SOAP (utilizados en SISTRA1) y REST (utilizados en SISTRA2), clicad <a href="AyudaServlet?id=pluginDomRemoto⟨=es">aquí</a></li>
 		</ul>
 		</li>
 		<li><b>Fuente Datos:</b> dominio que recupera datos de una Fuente de Datos definida en SISTRAGESBACK:
 		<ul class="detalle2">
-		<li>Fuente: desplegable que permite seleccionar la fuente de datos a consultar. &Uacute;nicamente se muestran las fuentes de datos que pertenecen al &aacute;mbito del dominio</li>
+		<li>Fuente: desplegable que permite seleccionar la fuente de datos a consultar. Únicamente se muestran las fuentes de datos que pertenecen al ámbito del dominio</li>
 		<li>Query: consulta, en lenguaje pseudoSQL para consultar una fuente de datos. El formato de esta consulta tiene que ser:
 		<p><i>SELECT campo (, campo)* FROM fuenteDatos WHERE expresion ( [AND | OR] expresion ] )* ORDER BY campo</i></p>
-		<p>donde expresion: <i>campo [= | LIKE]:param</i>, donde ":param" equivale al parámetro que se pasará</p>
-		<p>Las part&iacute;culas de la sentencia pseudoSQL (SELECT, FROM, WHERE, LIKE, AND, OR, ORDER BY) han de estar en may&uacute;sculas.<br>
-		Respecto a las comparanciones en el WHERE ser&aacute;n <i>ignorecase</i> ( = y LIKE ).<br>
-		Respecto al LIKE se realizar&aacute; autom&aacute;ticamente la comparaci&oacute;.<br>
-		Respecto al ORDER BY solo se puede indicar un campo. Adem&aacute;s como todos los campos son de tipo cadena, la ordenaci&oacute;n es literal por lo que si se quiere crear un campo en la fuente de datos que permita ordenar secuencialmente, mejor utilizar letras que n&uacute;meros.
+		<p>donde expresion: <i>campo [= | LIKE]:param</i>, donde ":param” equivale al parámetro que se pasará</p>
+		<p>Las partículas de la sentencia pseudoSQL (SELECT, FROM, WHERE, LIKE, AND, OR, ORDER BY) han de estar en mayúsculas.<br>
+		Respecto a las comparanciones en el WHERE serán <i>ignorecase</i> ( = y LIKE ).<br>
+		Respecto al LIKE se realizará automáticamente la comparació.<br>
+		Respecto al ORDER BY solo se puede indicar un campo. Además, como todos los campos son de tipo cadena, la ordenación es literal, por lo que si se quiere crear un campo en la fuente de datos que permita ordenar secuencialmente, mejor utilizar letras que números.
 		</p>
 		</li>
 		</ul>
 		</li>
 		</ul>
 		</li>
-		<li><span class="nombreCampo">Par&aacute;metros:</span> listado de par&aacute;metros del dominio. Las operaciones que se pueden realizar sobre este listado son:
+		<li><span class="nombreCampo">Parámetros:</span> listado de parámetros del dominio. Las operaciones que se pueden realizar sobre este listado son:
 		<ul class="detalle">
-			<li><span class="boton">Nuevo:</span> permite crear un par&aacute;metro. Este par&aacute;metro se identifica a partir de un c&oacute;digo.</li>
-			<li><span class="boton">Editar:</span> permite editar un par&aacute;metro ya existente en el listado. Antes de pulsar el bot&oacute;n de edici&oacute;n tendr&aacute; que seleccionar el par&aacute;metro a editar en el listado.</li>
-			<li><span class="boton">Eliminar:</span> permite eliminar un par&aacute;metro existente en el listado. Antes de pulsar el bot&oacute;n de eliminaci&oacute;n tendr&aacute; que seleccionar el par&aacute;metro a eliminar en el listado.</li>
-			<li><span class="boton">Subir:</span> permite subir un par&aacute;metro en el orden del listado de par&aacute;metros. Per subir un par&aacute;metro previamente ha de estar seleccionado en el listado de par&aacute;metros.</li>
-			<li><span class="boton">Bajar:</span> permite bajar un par&aacute;metro en el orden del listado de par&aacute;metros. Per bajar un par&aacute;metro previamente ha de estar seleccionado en el listado de par&aacute;metros.</li>
+			<li><span class="boton">Nuevo:</span> permite crear un parámetro. Este parámetro se identifica a partir de un código.</li>
+			<li><span class="boton">Editar:</span> permite editar un parámetro ya existente en el listado. Antes de pulsar el botón de edición tendrá que seleccionar el parámetro a editar en el listado.</li>
+			<li><span class="boton">Eliminar:</span> permite eliminar un parámetro existente en el listado. Antes de pulsar el botón de eliminación tendrá que seleccionar el parámetro a eliminar en el listado.</li>
+			<li><span class="boton">Subir:</span> permite subir un parámetro en el orden del listado de parámetros. Para subir un parámetro previamente ha de estar seleccionado en el listado de parámetros.</li>
+			<li><span class="boton">Bajar:</span> permite bajar un parámetro en el orden del listado de parámetros. Para bajar un parámetro previamente ha de estar seleccionado en el listado de parámetros.</li>
 		</ul>
 		</li>
 	</ul>
