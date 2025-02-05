@@ -642,12 +642,33 @@ public final class UtilsFlujo {
 			final DocumentoPasoPersistencia docPersistencia, final ReferenciaFichero ficheroFirmado) {
 		final List<Firma> firmas = new ArrayList<>();
 		if (datosDocumento.getFirmar() == TypeSiNo.SI) {
-			for (final Firmante f : datosDocumento.getFirmantes()) {
+			// Se especifican firmantes (hay verificacion firmantes)
+			if (datosDocumento.getFirmantes() != null && !datosDocumento.getFirmantes().isEmpty()) {
+				// Se recorren los firmantes
+				for (final Firmante f : datosDocumento.getFirmantes()) {
+					final Firma fdr = new Firma();
+					fdr.setFirmante(new Persona(f.getNif(), f.getNombre()));
+					fdr.setObligatoriedad(f.getObligatorio());
+					final FirmaDocumentoPersistencia fdp = docPersistencia.obtenerFirmaFichero(ficheroFirmado.getId(),
+							f.getNif());
+					if (fdp != null) {
+						fdr.setEstadoFirma(TypeEstadoFirma.FIRMADO);
+						fdr.setFechaFirma(UtilsFlujo.formateaFechaFront(fdp.getFecha()));
+						fdr.setDescargable(TypeSiNo.SI);
+						fdr.setTipoFirma(fdp.getTipoFirma());
+					}
+					firmas.add(fdr);
+				}
+			} else {
+				// No se especifican firmantes (no hay verificacion firmantes). Debe existir 1 única firma.
+				FirmaDocumentoPersistencia fdp = null;
+				if (docPersistencia.getFirmas() != null && !docPersistencia.obtenerFirmasFichero(ficheroFirmado.getId()).isEmpty()) {
+					fdp = docPersistencia.obtenerFirmasFichero(ficheroFirmado.getId()).get(0);
+				}
 				final Firma fdr = new Firma();
-				fdr.setFirmante(new Persona(f.getNif(), f.getNombre()));
-				fdr.setObligatoriedad(f.getObligatorio());
-				final FirmaDocumentoPersistencia fdp = docPersistencia.obtenerFirmaFichero(ficheroFirmado.getId(),
-						f.getNif());
+				// Se devuelve firma existente con firmante nulo
+				fdr.setFirmante(null);
+				fdr.setObligatoriedad(TypeObligatoriedadFirmante.OBLIGATORIO);
 				if (fdp != null) {
 					fdr.setEstadoFirma(TypeEstadoFirma.FIRMADO);
 					fdr.setFechaFirma(UtilsFlujo.formateaFechaFront(fdp.getFecha()));

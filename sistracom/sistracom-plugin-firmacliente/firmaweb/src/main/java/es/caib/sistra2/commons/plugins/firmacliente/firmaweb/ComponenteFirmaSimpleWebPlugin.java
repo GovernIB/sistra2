@@ -49,34 +49,37 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 		try {
 			final ApiFirmaWebSimple api = generarApi();
 
-			final String profile = getPropiedad("profile");
+			// Seleccionar profile según si se valida firmante o no
+			final String profile = infoSesionFirma.isValidarFirmante() ? getPropiedad("profile") : getPropiedad("profileNoValidarFirmante");
+
 			final String email = infoSesionFirma.getEmail();
 			final String idioma = infoSesionFirma.getIdioma();
 
 			// En caso de firma con certificado representación se pasa nif empresa en
 			// parámetro organizationId (representante en administrationId / username)
-			String administrationId;
-			String username;
+			String administrationId = null;
+			String username = null;
 			String organizationId = null;
-			if (infoSesionFirma.getNifRepresentante() != null) {
-				organizationId = infoSesionFirma.getNif();
-				administrationId = infoSesionFirma.getNifRepresentante();
-				username = infoSesionFirma.getNombreRepresentante();
+
+			if (infoSesionFirma.isValidarFirmante()) {
+				if (infoSesionFirma.getNifRepresentante() != null) {
+					organizationId = infoSesionFirma.getNif();
+					administrationId = infoSesionFirma.getNifRepresentante();
+					username = infoSesionFirma.getNombreRepresentante();
+				} else {
+					administrationId = infoSesionFirma.getNif();
+					username = infoSesionFirma.getNombreUsuario();
+				}
 			} else {
-				administrationId = infoSesionFirma.getNif();
-				username = infoSesionFirma.getNombreUsuario();
+				// TODO FIRMA : VER SI ES NECESARIO FIRMANTE FAKE
+				if ("true".equals(getPropiedadOpcional("firmanteFake"))) {
+					administrationId = "00000000T";
+					username = "Firmante Fake";
+				}
 			}
 
 			final FirmaSimpleCommonInfo commonInfo = new FirmaSimpleCommonInfo(profile, idioma, username,
 					administrationId, organizationId, email);
-
-			/*
-			 * ANTES SE PASABA SOLO EL NIF DEL FIRMANTE (PARA S2 LA EMPRESA SI CERT 11 O 12)
-			 * final FirmaSimpleCommonInfo commonInfo = new
-			 * FirmaSimpleCommonInfo(getPropiedad("profile"), infoSesionFirma.getIdioma(),
-			 * infoSesionFirma.getNombreUsuario(), infoSesionFirma.getNif(),
-			 * infoSesionFirma.getEmail());
-			 */
 
 			return api.getTransactionID(commonInfo);
 		} catch (final Exception e) {
@@ -173,24 +176,34 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 			throw new FirmaPluginException("Error obtenido el resultado del fichero", e);
 		}
 
+		FicheroFirmado fic = null;
+
 		final TypeEstadoFirmado fst = TypeEstadoFirmado.fromInt(fssr.getStatus().getStatus());
 
 		if (fst == TypeEstadoFirmado.FINALIZADO_CON_ERROR) {
-			throw new FirmaPluginException(fssr.getStatus().getErrorMessage());
-		}
+			EstadoFirma estadoFirma = new EstadoFirma();
+			estadoFirma.setEstadoFirmado(TypeEstadoFirmado.FINALIZADO_CON_ERROR);
+			estadoFirma.setMensajeError(fssr.getStatus().getErrorMessage());
+			fic = new FicheroFirmado();
+			fic.setEstadoFirma(estadoFirma);
+		} else {
+			final TypeFirmaDigital tipoFirma = TypeFirmaDigital.fromString(fssr.getSignedFileInfo().getEniTipoFirma());
+			if (tipoFirma == null) {
+				throw new FirmaPluginException(
+						"No se reconoce tipo de firma " + fssr.getSignedFileInfo().getEniTipoFirma());
+			}
 
-		final TypeFirmaDigital tipoFirma = TypeFirmaDigital.fromString(fssr.getSignedFileInfo().getEniTipoFirma());
-		if (tipoFirma == null) {
-			throw new FirmaPluginException(
-					"No se reconoce tipo de firma " + fssr.getSignedFileInfo().getEniTipoFirma());
-		}
+			EstadoFirma estadoFirma = new EstadoFirma();
+			estadoFirma.setEstadoFirmado(TypeEstadoFirmado.FINALIZADO_OK);
 
-		final FirmaSimpleFile fsf = fssr.getSignedFile();
-		final FicheroFirmado fic = new FicheroFirmado();
-		fic.setFirmaFichero(fsf.getData());
-		fic.setMimetypeFichero(fsf.getMime());
-		fic.setNombreFichero(fsf.getNom());
-		fic.setFirmaTipo(tipoFirma);
+			final FirmaSimpleFile fsf = fssr.getSignedFile();
+			fic = new FicheroFirmado();
+			fic.setEstadoFirma(estadoFirma);
+			fic.setFirmaFichero(fsf.getData());
+			fic.setMimetypeFichero(fsf.getMime());
+			fic.setNombreFichero(fsf.getNom());
+			fic.setFirmaTipo(tipoFirma);
+		}
 
 		return fic;
 	}
@@ -206,7 +219,7 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 	}
 
 	/**
-	 * Obtiene propiedad.
+	 * Obtiene propiedad (obligatoria).
 	 *
 	 * @param propiedad
 	 *                      propiedad
@@ -218,6 +231,19 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 		if (res == null) {
 			throw new FirmaPluginException("No se ha especificado parametro " + propiedad + " en propiedades");
 		}
+		return res;
+	}
+
+	/**
+	 * Obtiene propiedad (opcional)
+	 .
+	 *
+	 * @param propiedad
+	 *                      propiedad
+	 * @return valor
+	 */
+	private String getPropiedadOpcional(final String propiedad) {
+		final String res = getProperty(FIRMACLIENTE_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + propiedad);
 		return res;
 	}
 

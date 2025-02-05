@@ -138,7 +138,11 @@
 									<li class="imc--signat" data-nif="{{firmante.nif}}">
 
 										<strong>
+											{{if firmante}}
 											{{firmante.nombre}} ({{firmante.nif}})
+											{{else}}
+											&nbsp;
+											{{/if}}
 										</strong>
 										<div class="imc--signatura-info">{{txtSignatEl}} {{fechaFirma}}</div>
 										{{if descargable|equals>s}}

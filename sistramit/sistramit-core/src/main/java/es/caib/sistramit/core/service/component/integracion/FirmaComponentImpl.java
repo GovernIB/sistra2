@@ -63,12 +63,19 @@ public final class FirmaComponentImpl implements FirmaComponent {
 		// Crea sesion de firma
 		final InfoSesionFirma infoSesionFirma = new InfoSesionFirma();
 		infoSesionFirma.setEntidad(idEntidad);
-		infoSesionFirma.setNif(firmante.getNif());
-		infoSesionFirma.setNombreUsuario(firmante.getNombre());
-		if (representante != null) {
-			infoSesionFirma.setNifRepresentante(representante.getNif());
-			infoSesionFirma.setNombreRepresentante(representante.getNombre());
+
+		if (firmante != null) {
+			infoSesionFirma.setValidarFirmante(true);
+			infoSesionFirma.setNif(firmante.getNif());
+			infoSesionFirma.setNombreUsuario(firmante.getNombre());
+			if (representante != null) {
+				infoSesionFirma.setNifRepresentante(representante.getNif());
+				infoSesionFirma.setNombreRepresentante(representante.getNombre());
+			}
+		} else {
+			infoSesionFirma.setValidarFirmante(false);
 		}
+
 		infoSesionFirma.setIdioma(idioma);
 		String sf;
 		try {
@@ -145,17 +152,23 @@ public final class FirmaComponentImpl implements FirmaComponent {
 				case FINALIZADO_OK:
 					// Recoge firma
 					final FicheroFirmado fic = plgFirma.obtenerFirmaFichero(sesionFirma, fileId);
-					final TypeFirmaDigital tipoFirma = TypeFirmaDigital.fromString(fic.getFirmaTipo().toString());
-					if (tipoFirma == null) {
-						throw new SesionFirmaClienteException(
-								"Tipus signatura no reconeguda: " + fic.getFirmaTipo().toString());
+					if (fic.getEstadoFirma().getEstadoFirmado() == TypeEstadoFirmado.FINALIZADO_OK) {
+						// Indica que ha finalizado correctamente
+						final TypeFirmaDigital tipoFirma = TypeFirmaDigital.fromString(fic.getFirmaTipo().toString());
+						if (tipoFirma == null) {
+							throw new SesionFirmaClienteException(
+									"Tipus signatura no reconeguda: " + fic.getFirmaTipo().toString());
+						}
+						// Establece datos firma
+						resFirma.setFinalizada(true);
+						resFirma.setFirmaContenido(fic.getFirmaFichero());
+						resFirma.setFirmaTipo(tipoFirma);
+						resFirma.setValida(true);
+						resFirma.setVerificar(plgFirma.isVerificarFirma());
+					} else {
+						// Indica que ha finalizado con error
+						resFirma.setDetalleError(estado.getMensajeError());
 					}
-					// Establece datos firma
-					resFirma.setFinalizada(true);
-					resFirma.setFirmaContenido(fic.getFirmaFichero());
-					resFirma.setFirmaTipo(tipoFirma);
-					resFirma.setValida(true);
-					resFirma.setVerificar(plgFirma.isVerificarFirma());
 					break;
 
 				case CANCELADO:
@@ -194,7 +207,9 @@ public final class FirmaComponentImpl implements FirmaComponent {
 		final List<String> nifFirmantesObligatorios = new ArrayList<>();
 		final List<String> nifFirmantesOpcionales = new ArrayList<>();
 		final List<String> nifFirmantesRequeridos = new ArrayList<>();
-		nifFirmantesObligatorios.add(nifFirmantes);
+		if (nifFirmantes != null) {
+			nifFirmantesObligatorios.add(nifFirmantes);
+		}
 		final ValidacionFirmante res = validarFirmanteImpl(idEntidad, idioma, signedDocument, signature,
 				nifFirmantesObligatorios, nifFirmantesOpcionales, nifFirmantesRequeridos);
 		return res;
@@ -207,17 +222,19 @@ public final class FirmaComponentImpl implements FirmaComponent {
 		final List<String> nifFirmantesObligatorios = new ArrayList<>();
 		final List<String> nifFirmantesOpcionales = new ArrayList<>();
 		final List<String> nifFirmantesRequeridos = new ArrayList<>();
-		for (final Firmante f : firmantes) {
-			switch (f.getObligatorio()) {
-			case OBLIGATORIO:
-				nifFirmantesObligatorios.add(f.getNif());
-				break;
-			case OPCIONAL:
-				nifFirmantesOpcionales.add(f.getNif());
-				break;
-			case OPCIONAL_REQUERIDO:
-				nifFirmantesRequeridos.add(f.getNif());
-				break;
+		if (firmantes != null) {
+			for (final Firmante f : firmantes) {
+				switch (f.getObligatorio()) {
+					case OBLIGATORIO:
+						nifFirmantesObligatorios.add(f.getNif());
+						break;
+					case OPCIONAL:
+						nifFirmantesOpcionales.add(f.getNif());
+						break;
+					case OPCIONAL_REQUERIDO:
+						nifFirmantesRequeridos.add(f.getNif());
+						break;
+				}
 			}
 		}
 		// Validamos firma y firmantes requeridos

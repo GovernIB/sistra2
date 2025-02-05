@@ -46,7 +46,7 @@ public class ComponenteFirmaPluginMock extends AbstractPluginProperties implemen
 				return "/sistramitfront/redirigirUrl.jsp?url=" + URLEncoder.encode(urlCallBack, "UTF-8");
 			} else {
 				// Ventana completa: Redirigimos a página echo para copiar url callback y retornar
-				final String url = getProperty(FIRMACLIENTE_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + "url");
+				final String url = getPropiedad("url");
 				return url + "?url=" + URLEncoder.encode(urlCallBack, "UTF-8");
 			}
 		} catch (final UnsupportedEncodingException e) {
@@ -67,10 +67,12 @@ public class ComponenteFirmaPluginMock extends AbstractPluginProperties implemen
 
 		final InfoSesionFirma sf = SESIONES_FIRMA.get(idSesionFirma);
 
+		EstadoFirma estado = new EstadoFirma();
+		estado.setEstadoFirmado(TypeEstadoFirmado.FINALIZADO_OK);
+
 		final FicheroFirmado fichero = new FicheroFirmado();
-		// Devuelve nif como firma para luego al validar firma se tenga el nif
-		final byte[] contenido = sf.getNif().getBytes();
-		fichero.setFirmaFichero(contenido);
+		fichero.setEstadoFirma(estado);
+		fichero.setFirmaFichero("<<contenido firma>>".getBytes());
 		fichero.setMimetypeFichero("application/octet-stream");
 		fichero.setNombreFichero("fichero.cades");
 		fichero.setFirmaTipo(TypeFirmaDigital.CADES_DETACHED);

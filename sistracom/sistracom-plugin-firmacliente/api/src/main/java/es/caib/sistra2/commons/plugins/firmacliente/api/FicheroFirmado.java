@@ -8,6 +8,9 @@ package es.caib.sistra2.commons.plugins.firmacliente.api;
  */
 public class FicheroFirmado {
 
+	/** Estado firma. */
+	private EstadoFirma estadoFirma;
+
 	/** Nombre del fichero firmado **/
 	private String nombreFichero;
 
@@ -83,5 +86,21 @@ public class FicheroFirmado {
 	public void setFirmaTipo(TypeFirmaDigital firmaTipo) {
 		this.firmaTipo = firmaTipo;
 	}
+
+	/**
+	 * Método de acceso a estadoFirma.
+	 *
+	 * @return estadoFirma
+	 */
+	public EstadoFirma getEstadoFirma() {return estadoFirma;}
+
+
+	/**
+	 * Método para establecer estadoFirma.
+	 *
+	 * @param estadoFirma
+	 *            estadoFirma a establecer
+	 */
+	public void setEstadoFirma(EstadoFirma estadoFirma) {this.estadoFirma = estadoFirma;}
 
 }

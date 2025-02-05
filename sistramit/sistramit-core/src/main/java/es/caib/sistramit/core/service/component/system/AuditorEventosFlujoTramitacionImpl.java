@@ -324,12 +324,16 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 				final String instanciaStr = (String) UtilsFlujo.recuperaParametroAccionPaso(parametrosPaso, "instancia",
 						false);
 				final String nifFirmante = (String) UtilsFlujo.recuperaParametroAccionPaso(parametrosPaso, "firmante",
-						true);
+						false);
 
 				final ListaPropiedades propiedadesEvento = new ListaPropiedades();
 				propiedadesEvento.addPropiedad(TypeParametroEvento.DOCUMENTO_ID.toString(), idDocumento);
 				propiedadesEvento.addPropiedad(TypeParametroEvento.DOCUMENTO_INSTANCIA.toString(), instanciaStr);
-				propiedadesEvento.addPropiedad(TypeParametroEvento.NIF.toString(), nifFirmante);
+
+				// TODO FIRMA - HAY QUE VER COMO ESPECIFICAR FIRMANTE CUANDO NO SE VERIFICA FIRMA (SOLO SE PODRA EN VERIFICARFIRMA)
+				if (StringUtils.isNotBlank(nifFirmante)) {
+					propiedadesEvento.addPropiedad(TypeParametroEvento.NIF.toString(), nifFirmante);
+				}
 
 				TypeEvento typeEvento = null;
 

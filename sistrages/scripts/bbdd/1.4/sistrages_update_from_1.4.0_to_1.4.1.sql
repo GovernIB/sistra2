@@ -1,0 +1,2 @@
+update STG_VERTRA set VTR_PERDIA = null where VTR_PERINF = 1 AND VTR_PERDIA is NOT null;
+COMMIT;

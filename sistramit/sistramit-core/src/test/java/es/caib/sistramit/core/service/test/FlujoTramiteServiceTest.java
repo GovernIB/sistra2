@@ -880,6 +880,15 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
 				TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
 
+		// - Anexamos anexo PDF firmado y validamos datos
+		params = new ParametrosAccionPaso();
+		params.addParametroEntrada("idAnexo", ((DetallePasoAnexar) dp.getActual()).getAnexos().get(4).getId());
+		params.addParametroEntrada("presentacion", TypePresentacion.ELECTRONICA);
+		params.addParametroEntrada("nombreFichero", "18KB_firmado.pdf");
+		params.addParametroEntrada("datosFichero", readResourceFromClasspath("test-files/18KB_firmado.pdf"));
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
+
 		// - Anexamos anexo DINAMICO (primera instancia)
 		params = new ParametrosAccionPaso();
 		params.addParametroEntrada("idAnexo", "DIN1");

@@ -84,26 +84,38 @@ public final class UtilsPasoRegistrar {
 			throw new AccionPasoNoPermitidaException(
 					"El document " + idDocumento + "-" + instancia + " no està configurat per firmar");
 		}
+
+		// Verificamos si el documento debe verificar firmantes, pero no se le ha especificado ningún firmante a validar
+		if (nifFirmante == null && !dd.getFirmantes().isEmpty()) {
+			throw new AccionPasoNoPermitidaException(
+					"El document " + idDocumento + "-" + instancia + " està configurat per firmar però no s'ha especificat cap firmant");
+		}
+
 		// Verificamos si la persona esta como firmante del documento
-		final Persona firmante = obtieneDatosFirmante(pVariablesFlujo, idDocumento, instancia, nifFirmante);
-		if (firmante == null) {
-			throw new AccionPasoNoPermitidaException("El document " + idDocumento + "-" + instancia
-					+ " no té configurat com signant a " + nifFirmante);
-		}
-		// Verificamos si la persona ya ha firmado el documento
-		final DocumentoRegistro docReg = dpr.buscarDocumentoRegistro(idDocumento, instancia);
-		if (docReg == null) {
-			throw new AccionPasoNoPermitidaException("El document " + idDocumento + "-" + instancia
-					+ " no està a la llista de documents per registre");
-		}
-		final Firma firma = docReg.getFirma(nifFirmante);
-		if (firma == null) {
-			throw new AccionPasoNoPermitidaException(
-					"No es troba informació de la firma pel document " + idDocumento + "-" + instancia);
-		}
-		if (firma.getEstadoFirma() == TypeEstadoFirma.FIRMADO) {
-			throw new AccionPasoNoPermitidaException(
-					"El document " + idDocumento + "-" + instancia + " ja ha estat signat per " + nifFirmante);
+		if (nifFirmante != null) {
+
+			final Persona firmante = obtieneDatosFirmante(pVariablesFlujo, idDocumento, instancia, nifFirmante);
+			if (firmante == null) {
+				throw new AccionPasoNoPermitidaException(
+						"La persona " + nifFirmante + " no està configurada com a firmant del document " + idDocumento + "-" + instancia);
+			}
+
+			// Verificamos si la persona ya ha firmado el documento
+			final DocumentoRegistro docReg = dpr.buscarDocumentoRegistro(idDocumento, instancia);
+			if (docReg == null) {
+				throw new AccionPasoNoPermitidaException("El document " + idDocumento + "-" + instancia
+						+ " no està a la llista de documents per registre");
+			}
+			final Firma firma = docReg.getFirma(nifFirmante);
+			if (firma == null) {
+				throw new AccionPasoNoPermitidaException(
+						"No es troba informació de la firma pel document " + idDocumento + "-" + instancia);
+			}
+			if (firma.getEstadoFirma() == TypeEstadoFirma.FIRMADO) {
+				throw new AccionPasoNoPermitidaException(
+						"El document " + idDocumento + "-" + instancia + " ja ha estat signat per " + nifFirmante);
+			}
+
 		}
 	}
 

@@ -593,6 +593,7 @@ $.fn.appPas = function(options) {
 								,jsonUsuariId: APP_USUARI_ID
 								,txtSignant: txtSignant
 								,txtSignants: txtSignants
+								,txtSignarSenseVerificar: txtSignarSenseVerificar
 								,txtSignatEl: txtSignatEl
 								,txtSignatura: txtSignatura
 								,txtSignaturaOgligatoria: txtSignaturaOgligatoria

@@ -14,14 +14,17 @@ public class InfoSesionFirma {
 	/** Código de la entidad. **/
 	private String entidad;
 
+	/** Código SIA del procedimento. **/
+	private String codigoSIA;
+
+	/** Indica si el plugin debe validar firmante (no se indicarán datos de firmante ni de representante). **/
+	private boolean validarFirmante;
+
 	/** NIF. **/
 	private String nif;
 
 	/** Nombre usuario. **/
 	private String nombreUsuario;
-
-	/** Código SIA del procedimento. **/
-	private String codigoSIA;
 
 	/** Email. **/
 	private String email;
@@ -162,5 +165,24 @@ public class InfoSesionFirma {
 	 */
 	public void setNombreRepresentante(final String nombreRepresentante) {
 		this.nombreRepresentante = nombreRepresentante;
+	}
+
+	/**
+	 * Método de acceso a validarFirmante.
+	 *
+	 * @return validarFirmante
+	 */
+	public boolean isValidarFirmante() {
+		return validarFirmante;
+	}
+
+	/**
+	 * Método para establecer validarFirmante.
+	 *
+	 * @param validarFirmante
+	 *                           validarFirmante a establecer
+	 */
+	public void setValidarFirmante(final boolean validarFirmante) {
+		this.validarFirmante = validarFirmante;
 	}
 }

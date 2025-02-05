@@ -308,7 +308,9 @@ $.fn.appSigna = function(options) {
 			carregant = function() {
 
 				var pag_url = APP_SIGNATURA_URL,
-					pag_dades = { idDocumento: document_id, instancia: document_instancia, firmante: document_signant_nif, idPaso: APP_TRAMIT_PAS_ID };
+					pag_dades = { idDocumento: document_id, instancia: document_instancia,
+										firmante: (document_signant_nif !== "null" ? document_signant_nif : ""),
+										idPaso: APP_TRAMIT_PAS_ID };
 
 				// ajax
 
@@ -550,7 +552,7 @@ $.fn.appSiganuraDescarrega = function(options) {
 					,url = APP_SIGNATURA_REGISTRAR_DESCARREGA
 					,id = "idDocumento";
 
-				document.location = url + "?" + id + "=" + elm_id + "&idPaso=" + APP_TRAMIT_PAS_ID + "&instancia=" + elm_instancia + "&firmante=" + elm_signant;
+				document.location = url + "?" + id + "=" + elm_id + "&idPaso=" + APP_TRAMIT_PAS_ID + "&instancia=" + elm_instancia + "&firmante=" + (elm_signant !== "null" ? elm_signant : "");
 
 			};
 		

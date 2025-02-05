@@ -805,6 +805,7 @@
             "convertirPDF": false,
             "anexarFirmado": false,
             "firmar": false,
+            "validarFirmantes" : false,
             "scriptFirmantes": null,
             "scriptValidacion": null
           }
@@ -832,6 +833,7 @@
             "convertirPDF": false,
             "anexarFirmado": false,
             "firmar": false,
+            "validarFirmantes" : false,
             "scriptFirmantes": null,
             "scriptValidacion": null
           }
@@ -858,6 +860,7 @@
             "convertirPDF": false,
             "anexarFirmado": false,
             "firmar": false,
+            "validarFirmantes" : false,
             "scriptFirmantes": null,
             "scriptValidacion": {
               "script": "var dni = PLUGIN_ANEXO.getValorXml('//xml/dni');\r\nPLUGIN_LOG.debug('VALOR XML: ' + dni);\r\nif (!PLUGIN_UTILS.esIgual(dni,'11111111H')) {\r\n PLUGIN_ERROR.setExisteError(true);\r\n PLUGIN_ERROR.setTextoMensajeError('No coincide valor XML');\t\r\n}",
@@ -887,11 +890,39 @@
             "convertirPDF": false,
             "anexarFirmado": false,
             "firmar": false,
+            "validarFirmantes" : false,
             "scriptFirmantes": null,
             "scriptValidacion": {
               "script": "var dni = PLUGIN_ANEXO.getValorPdf('SUJETOPASIVONIF');\r\nPLUGIN_LOG.debug('VALOR PDF: ' + dni);\r\nif (!PLUGIN_UTILS.esIgual(dni,'6666sq')) {\r\n  \tPLUGIN_ERROR.setExisteError(true);\r\n  \tPLUGIN_ERROR.setTextoMensajeError('No coincide valor PDF');\t\r\n}",
               "literales": []
             }
+          }
+        },
+        {
+          "identificador": "ANE-PDF-FIRMADO",
+          "descripcion": "Anexo PDF Firmado",
+          "obligatoriedad": "S",
+          "tipoDocumental": "TD99",
+          "scriptDependencia": null,
+          "ayuda": {
+            "fichero": null,
+            "url": null,
+            "mensajeHtml": ""
+          },
+          "presentacion": "E",
+          "presentacionElectronica": {
+            "instancias": 1,
+            "extensiones": [
+              "pdf"
+            ],
+            "tamanyoMax": 1024,
+            "tamanyoUnidad": "KB",
+            "convertirPDF": false,
+            "anexarFirmado": true,
+            "firmar": true,
+            "validarFirmantes" : false,
+            "scriptFirmantes": null,
+            "scriptValidacion":null
           }
         }
       ],

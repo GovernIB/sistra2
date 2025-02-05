@@ -48,7 +48,7 @@ public abstract class DatosDocumento implements Serializable {
 	 */
 	private TypeSiNo firmar = TypeSiNo.NO;
 	/**
-	 * Indica lista de firmantes del documento.
+	 * Indica lista de firmantes del documento (si no se indican firmantes, no se debe validar firmantes).
 	 */
 	private List<Firmante> firmantes = new ArrayList<>();
 

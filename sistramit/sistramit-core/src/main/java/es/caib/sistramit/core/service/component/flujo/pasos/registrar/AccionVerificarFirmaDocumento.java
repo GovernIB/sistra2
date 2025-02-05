@@ -1,5 +1,6 @@
 package es.caib.sistramit.core.service.component.flujo.pasos.registrar;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -116,8 +117,15 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 		if (resFirma.isFinalizada() && resFirma.isValida()) {
 
 			// Obtiene datos firmante
-			final Persona firmante = UtilsPasoRegistrar.getInstance().obtieneDatosFirmante(pVariablesFlujo, idDocumento,
-					instancia, nifFirmante);
+			Persona firmante = null;
+			// - Si hay verificacion firmante, se obtiene firmante asociado a la firma
+			if (nifFirmante != null) {
+				firmante = UtilsPasoRegistrar.getInstance().obtieneDatosFirmante(pVariablesFlujo, idDocumento, instancia,
+						nifFirmante);
+			} else {
+				// TODO FIRMA: SE NECESITARIA QUE PLGFIRMA DIERA ESTOS DATOS O BIEN VALIDAR FIRMAR TRAS VOLVER PLUGIN
+				firmante = new Persona("---", "SIGNANT SENSE VERIFICAR");
+			}
 
 			// Obtiene referencia fichero a firmar
 			final ReferenciaFichero refFicheroFirmar = UtilsPasoRegistrar.getInstance()
@@ -129,7 +137,7 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 					pVariablesFlujo.getIdSesionTramitacion(), dd.getIdPaso(), idDocumento, instancia);
 
 			// Insertamos fichero de firma
-			final String nombreFicheroFirma = "FIRMA-" + idDocumento + "-" + instancia + "-" + nifFirmante + "."
+			final String nombreFicheroFirma = "FIRMA-" + idDocumento + "-" + instancia + (StringUtils.isNotBlank(nifFirmante) ? "-" + nifFirmante : "") + "."
 					+ UtilsPasoRegistrar.getInstance().getExtensionFirma(resFirma.getFirmaTipo());
 			final ReferenciaFichero rfp = dao.insertarFicheroPersistencia(nombreFicheroFirma,
 					resFirma.getFirmaContenido(), pVariablesFlujo.getIdSesionTramitacion());
@@ -167,7 +175,15 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 		// Actualiza info firma
 		final DetallePasoRegistrar dpr = (DetallePasoRegistrar) dipa.getDetallePaso();
 		final DocumentoRegistro dr = dpr.buscarDocumentoRegistro(idDocumento, instancia);
-		final Firma f = dr.getFirma(nifFirmante);
+		// Actualizamos estado firma
+		Firma f = null;
+		if (nifFirmante != null) {
+			// - Verificacion firmantes: firma asociada a firmante
+			f = dr.getFirma(nifFirmante);
+		} else {
+			// - Única firma: firma asociada a documento
+			f = dr.getFirmas().get(0);
+		}
 		if (resFirma.isFinalizada() && resFirma.isValida()) {
 			f.setEstadoFirma(TypeEstadoFirma.FIRMADO);
 			f.setFechaFirma(UtilsFlujo.formateaFechaFront(resFirma.getFecha()));
@@ -227,7 +243,7 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 		// Realiza validación de la firma
 		final String idioma = pDefinicionTramite.getDefinicionVersion().getIdioma();
 
-		// Si está activado la verificación de firma: validamos firma y verificar nif firmante concuerda
+		// Si está activada la verificación de firma en el plugin: validamos firma y verificar nif firmante concuerda
 		if (resFirma.isFinalizada() && resFirma.isVerificar()) {
 			final ValidacionFirmante validacionFirmante = firmaComponent.validarFirmante(idEntidad, idioma,
 					signedDocument, resFirma.getFirmaContenido(), nifFirmante);

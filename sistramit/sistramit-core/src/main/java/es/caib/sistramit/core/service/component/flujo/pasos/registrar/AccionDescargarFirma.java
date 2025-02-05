@@ -43,7 +43,7 @@ public final class AccionDescargarFirma implements AccionPaso {
 		final String idDocumento = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "idDocumento", true);
 		final String instanciaStr = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "instancia", false);
 		final int instancia = UtilsFlujo.instanciaStrToInt(instanciaStr);
-		final String firmante = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "firmante", true);
+		final String firmante = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "firmante", false);
 
 		// Buscamos referencia fichero
 		final DatosDocumento dd = pVariablesFlujo.getDocumento(idDocumento, instancia);
@@ -59,10 +59,18 @@ public final class AccionDescargarFirma implements AccionPaso {
 		// Recupera firma asociada al fichero
 		final DocumentoPasoPersistencia docPersistencia = dao.obtenerDocumentoPersistencia(
 				pVariablesFlujo.getIdSesionTramitacion(), dd.getIdPaso(), idDocumento, instancia);
-		final FirmaDocumentoPersistencia fdp = docPersistencia.obtenerFirmaFichero(ficheroFirmar.getId(), firmante);
-		if (fdp == null) {
-			throw new AccionPasoNoPermitidaException("No existeix firma document registre amb id: " + idDocumento + " - "
-					+ instanciaStr + " per signant " + firmante);
+
+		FirmaDocumentoPersistencia fdp = null;
+		if (firmante != null) {
+			// Si se pide la firma de un firmante concreto, se recupera la firma de ese firmante (cuando se verifican firmantes)
+			fdp = docPersistencia.obtenerFirmaFichero(ficheroFirmar.getId(), firmante);
+			if (fdp == null) {
+				throw new AccionPasoNoPermitidaException("No existeix firma document registre amb id: " + idDocumento + " - "
+						+ instanciaStr + " per signant " + firmante);
+			}
+		} else {
+			// Si no se recupera la primera firma (cuando no se verifican firmantes)
+			fdp = docPersistencia.obtenerFirmasFicheros().get(0);
 		}
 
 		// Recuperamos datos firma

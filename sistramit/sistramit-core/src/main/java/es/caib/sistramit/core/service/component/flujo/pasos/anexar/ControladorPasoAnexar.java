@@ -324,7 +324,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 				if (a.getPresentacion() == TypePresentacion.ELECTRONICA) {
 					a.setPresentacion(TypePresentacion.PRESENCIAL);
 					a.setAnexarfirmado(TypeSiNo.NO);
-					a.setValidarAnexarfirmado(TypeSiNo.NO);
+					a.setValidarFirmantes(TypeSiNo.NO);
 					a.setConvertirPDF(TypeSiNo.NO);
 					a.setExtensiones(null);
 					a.setFirmantes(null);
@@ -526,17 +526,20 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 					}
 				}
 				anexoDetalle.setExtensiones(calcularExtensionesPermitidas(extensiones));
-				// Comprobamos si debe firmarse digitalmente (mediante asistente o anexar
-				// firmado)
+
+				// Si debe firmarse digitalmente mediante asistente
 				anexoDetalle.setFirmar(TypeSiNo.fromBoolean(anexoDef.getPresentacionElectronica().isFirmar()));
-				anexoDetalle.setAnexarfirmado(
-						TypeSiNo.fromBoolean(anexoDef.getPresentacionElectronica().isAnexarFirmado()));
-				anexoDetalle.setValidarAnexarfirmado(
-						TypeSiNo.fromBoolean(anexoDef.getPresentacionElectronica().isValidarFirmantes()));
-				if (anexoDef.getPresentacionElectronica().isFirmar()
-						|| ( anexoDef.getPresentacionElectronica().isAnexarFirmado() && anexoDef.getPresentacionElectronica().isValidarFirmantes())) {
+				// Si se debe anexarse firmado al anexar
+				anexoDetalle.setAnexarfirmado(TypeSiNo.fromBoolean(anexoDef.getPresentacionElectronica().isAnexarFirmado()));
+
+				// Comprobamos si se debe validar firmantes (anexado firmado o firma mediante asistente)
+				anexoDetalle.setValidarFirmantes(TypeSiNo.fromBoolean(anexoDef.getPresentacionElectronica().isValidarFirmantes()));
+
+				// Si hay que validar firmantes, calculamos los firmantes
+				if ((anexoDef.getPresentacionElectronica().isFirmar() || anexoDef.getPresentacionElectronica().isAnexarFirmado()) && anexoDef.getPresentacionElectronica().isValidarFirmantes()) {
 					calcularFirmantes(anexoDef, anexoDetalle, pDefinicionTramite, pVariablesFlujo);
 				}
+
 			}
 
 			// Añadimos a lista anexos
@@ -759,14 +762,13 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 			fichero.setFichero(docDpp.getAnexoNombreFichero());
 			fichero.setTitulo(docDpp.getAnexoDescripcionInstancia());
 
-			// Eliminamos firmas sobrantes
-			// - Recorremos firmas almacenadas y vemos si deben de estar
-			// o no
+
+			// - Recorremos firmas almacenadas y vemos si deben de estar o no
 			for (final FirmaDocumentoPersistencia fp : docDpp.obtenerFirmasFichero(docDpp.getFichero().getId())) {
-				// Si no hay que firmar el documento o el firmante no
-				// debe firmarlo eliminamos de persistencia firma y fichero
-				// asociado
-				if (docDpa.getFirmar() == TypeSiNo.NO || docDpa.esFirmante(fp.getNif()) == ConstantesNumero.N_1) {
+				// Eliminamos de persistencia en los siguientes casos:
+				//  - Si no hay que firmar el documento
+				//  - Debe verificarse la firmas y el firmante no debe firmarlo
+				if (docDpa.getFirmar() == TypeSiNo.NO || ( docDpa.getValidarFirmantes() == TypeSiNo.SI && docDpa.esFirmante(fp.getNif()) == ConstantesNumero.N_1)) {
 					// Indicamos que se ha de actualizar el doc en BBDD
 					updateBD = true;
 					// Eliminamos firma
@@ -777,6 +779,12 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 					}
 				}
 			}
+
+			// - Si hay que firmar sin verificar firmantes y hay más de 1 firma es un error de configuración
+			if (docDpa.getFirmar() == TypeSiNo.SI && docDpa.getValidarFirmantes() == TypeSiNo.NO && docDpp.getFirmas() != null && docDpp.getFirmas().size() > 1) {
+				throw new ErrorConfiguracionException("No es pot firmar un document amb més d'un signant sense verificar signants");
+			}
+
 		} else {
 			// Presentacion presencial: hay que borrar todos los documentos
 			// TODO PENDIENTE

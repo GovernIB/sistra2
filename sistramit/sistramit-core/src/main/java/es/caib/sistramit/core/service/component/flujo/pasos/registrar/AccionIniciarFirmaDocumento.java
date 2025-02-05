@@ -1,6 +1,7 @@
 package es.caib.sistramit.core.service.component.flujo.pasos.registrar;
 
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -58,15 +59,18 @@ public final class AccionIniciarFirmaDocumento implements AccionPaso {
 		final String idDocumento = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "idDocumento", true);
 		final String instanciaStr = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "instancia", false);
 		final int instancia = UtilsFlujo.instanciaStrToInt(instanciaStr);
-		final String nifFirmante = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "firmante", true);
+		final String nifFirmante = (String) UtilsFlujo.recuperaParametroAccionPaso(pParametros, "firmante", false);
 
 		// Validaciones
 		UtilsPasoRegistrar.getInstance().validacionesFirmaDocumento(pDatosPaso, pVariablesFlujo, idDocumento, instancia,
 				nifFirmante);
 
 		// Buscamos datos firmante
-		final Persona firmante = UtilsPasoRegistrar.getInstance().obtieneDatosFirmante(pVariablesFlujo, idDocumento,
-				instancia, nifFirmante);
+		Persona firmante = null;
+		if (nifFirmante != null) {
+			firmante = UtilsPasoRegistrar.getInstance().obtieneDatosFirmante(pVariablesFlujo, idDocumento,
+					instancia, nifFirmante);
+		}
 
 		// Envia fichero a firmar
 		final RedireccionFirma res = enviarFicheroFirmar(pDatosPaso, pDefinicionTramite, pVariablesFlujo, idDocumento,
@@ -119,30 +123,31 @@ public final class AccionIniciarFirmaDocumento implements AccionPaso {
 		final String urlCallBack = configuracionComponent
 				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
 				+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_FIRMA_EXTERNO + "?idPaso=" + pDatosPaso.getIdPaso()
-				+ "&idDocumento=" + idDocumento + "&instancia=" + instancia + "&firmante=" + firmante.getNif();
+				+ "&idDocumento=" + idDocumento + "&instancia=" + instancia + "&firmante=" + (firmante != null ? firmante.getNif() : "");
 
 		// Asociamos tipo documental
 		final DatosDocumento dd = pVariablesFlujo.getDocumento(idDocumento, instancia);
 		final String tipoDocumental = dd.getTipoENI();
 
-		// Si el firmante es una empresa, debe estar autenticado con certificado de
-		// representación de esa empresa
-		// TODO PENDIENTE PODER ESTABLECER FIRMANTE Y REPRESENTANTE POR SCRIPTS
-		final String nifAutenticado = (pVariablesFlujo.getUsuarioAutenticado() != null
-				? pVariablesFlujo.getUsuarioAutenticado().getNif()
-				: null);
-		final String nifRepresentante = (pVariablesFlujo.getUsuarioAutenticado() != null
-				&& pVariablesFlujo.getUsuarioAutenticado().getRepresentante() != null
-						? pVariablesFlujo.getUsuarioAutenticado().getRepresentante().getNif()
-						: null);
+		// Si el firmante es una empresa, debe estar autenticado con certificado de representación de esa empresa
 		Persona representante = null;
-		if (ValidacionesTipo.getInstance().esNifPersonaJuridica(firmante.getNif())) {
-			if (firmante.getNif().equals(nifAutenticado) && nifRepresentante != null) {
-				representante = new Persona(nifRepresentante,
-						pVariablesFlujo.getUsuarioAutenticado().getRepresentante().getNombreApellidos());
-			} else {
-				throw new ErrorConfiguracionException(
-						"No es pot establir com signant una persona jurídica si no s'autentica am certificat de representació");
+		if (firmante != null) {
+			// TODO PENDIENTE PODER ESTABLECER FIRMANTE Y REPRESENTANTE POR SCRIPTS
+			final String nifAutenticado = (pVariablesFlujo.getUsuarioAutenticado() != null
+					? pVariablesFlujo.getUsuarioAutenticado().getNif()
+					: null);
+			final String nifRepresentante = (pVariablesFlujo.getUsuarioAutenticado() != null
+					&& pVariablesFlujo.getUsuarioAutenticado().getRepresentante() != null
+					? pVariablesFlujo.getUsuarioAutenticado().getRepresentante().getNif()
+					: null);
+			if (ValidacionesTipo.getInstance().esNifPersonaJuridica(firmante.getNif())) {
+				if (firmante.getNif().equals(nifAutenticado) && nifRepresentante != null) {
+					representante = new Persona(nifRepresentante,
+							pVariablesFlujo.getUsuarioAutenticado().getRepresentante().getNombreApellidos());
+				} else {
+					throw new ErrorConfiguracionException(
+							"No es pot establir com signant una persona jurídica si no s'autentica am certificat de representació");
+				}
 			}
 		}
 

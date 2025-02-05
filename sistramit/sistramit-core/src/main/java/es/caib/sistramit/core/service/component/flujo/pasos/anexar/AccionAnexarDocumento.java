@@ -269,6 +269,9 @@ public final class AccionAnexarDocumento implements AccionPaso {
 			// - Validar extensiones y tamaño
 			validarExtensionTamanyo(dipa, pVariablesFlujo, anexoDetalle, datosFichero, nombreFichero);
 
+			// - Validacion protegido con contraseña
+			validarProteccionPassword(anexoDetalle, datosFichero, nombreFichero);
+
 			// - Validaciones de anexo firmado
 			final boolean anexadoFirmado = validacionAnexoFirmado(pDefinicionTramite, pVariablesFlujo, anexoDetalle,
 					datosFichero, nombreFichero);
@@ -282,6 +285,25 @@ public final class AccionAnexarDocumento implements AccionPaso {
 
 		return resultadoValidacion;
 
+	}
+
+	/**
+	 * Valida si se puede anexar un PDF protegido por contraseña
+	 *
+	 * @param anexoDetalle
+	 * @param datosFichero
+	 * @param nombreFichero
+	 */
+	private void validarProteccionPassword(Anexo anexoDetalle, byte[] datosFichero, String nombreFichero) {
+		if (FilenameUtils.getExtension(nombreFichero).equalsIgnoreCase("PDF")) {
+			try {
+				if (UtilPDF.esProtegidoPwd(datosFichero)) {
+					throw new AnexarPdfProtegidoException();
+				}
+			} catch (Exception e) {
+				throw new AnexarPdfNoVerificadoProtegidoException(e);
+			}
+		}
 	}
 
 	/**
@@ -420,7 +442,7 @@ public final class AccionAnexarDocumento implements AccionPaso {
 	}
 
 	/**
-	 * Realiza validaciones anexo firmado.
+	 * Realiza validaciones anexo firmado: en caso de que se haya anexado firmado se verifica firma.
 	 *
 	 * @param pDefinicionTramite
 	 *                               Definición trámite
@@ -437,37 +459,24 @@ public final class AccionAnexarDocumento implements AccionPaso {
 	protected boolean validacionAnexoFirmado(final DefinicionTramiteSTG pDefinicionTramite,
 			final VariablesFlujo pVariablesFlujo, final Anexo anexoDetalle, final byte[] datosFichero,
 			final String nombreFichero) {
+		// Indicará si se ha anexado firmado
 		boolean anexadoFirmado = false;
-		// Id entidad
-		final String idEntidad = pDefinicionTramite.getDefinicionVersion().getIdEntidad();
+
 		// Extensión
 		final String extensionFichero = FilenameUtils.getExtension(nombreFichero);
-		// Validar firmas
-		final boolean validarFirmas = (anexoDetalle.getAnexarfirmado() == TypeSiNo.SI
-				|| anexoDetalle.getFirmar() == TypeSiNo.SI);
-		if (validarFirmas) {
+
+		// En caso de que se permite anexar firmado validamos si se ha anexado firmado
+		if (anexoDetalle.getAnexarfirmado() == TypeSiNo.SI) {
+			// Id entidad
+			final String idEntidad = pDefinicionTramite.getDefinicionVersion().getIdEntidad();
 			// Si es un anexo firmado, debe ser un PDF PADES
-			final boolean anexoFirmado = extensionFichero.equalsIgnoreCase("PDF")
-					&& esPades(datosFichero);
-			// Si se debe anexar obligatoriamente firmado
-			final boolean anexoFirmaAnexaObligatoria = (anexoDetalle.getAnexarfirmado() == TypeSiNo.SI
-					&& anexoDetalle.getFirmar() == TypeSiNo.NO);
-			// Si no permite anexarse firmado
-			final boolean anexoFirmadoNoPermitido = (anexoDetalle.getAnexarfirmado() == TypeSiNo.NO);
-			// Si permite anexarse firmado
-			final boolean anexoFirmadoPermitido = (anexoDetalle.getAnexarfirmado() == TypeSiNo.SI);
-			// Si no permite anexarse firmado y está firmado, generamos error
-			if (anexoFirmadoNoPermitido && anexoFirmado) {
-				throw new AnexarFirmadoFirmaNoPermitidaException("No se permite anexar firmado");
-			}
-			// Si debe anexarse firmado y no se ha anexado firmado, generamos error
-			if (anexoFirmaAnexaObligatoria && !anexoFirmado) {
+			anexadoFirmado = extensionFichero.equalsIgnoreCase("PDF") && esPades(datosFichero);
+			// Verificamos si se debe anexar obligatoriamente firmado (no permite firma mediante asistente)
+			if (!anexadoFirmado && anexoDetalle.getFirmar() == TypeSiNo.NO) {
 				throw new AnexarFirmadoFirmaNoFirmadoException("Es obligatorio anexar firmado el anexo");
 			}
-			// Si permite anexarse firmado y se anexa firmado, verificamos firmantes
-			if (anexoFirmadoPermitido && anexoFirmado) {
-				// Verificar si la firma es correcta y firmada por todos los firmantes
-				if (anexoDetalle.getValidarAnexarfirmado() == TypeSiNo.SI){
+			// Verificamos firma (y firmantes en caso necesario)
+			if (anexadoFirmado) {
 					final ValidacionFirmante vf = firmaComponent.validarFirmante(idEntidad, pVariablesFlujo.getIdioma(),
 							datosFichero, datosFichero, anexoDetalle.getFirmantes());
 					if (!vf.isCorrecto()) {
@@ -476,9 +485,11 @@ public final class AccionAnexarDocumento implements AccionPaso {
 										+ vf.getDetalleError());
 					}
 				}
-				// Indicamos que se ha firmado correctamente
-				anexadoFirmado = true;
 			}
+
+		// En caso de que no se permita anexar firmado no puede ser un PADES
+		if (anexoDetalle.getAnexarfirmado() == TypeSiNo.NO && extensionFichero.equalsIgnoreCase("PDF") && esPades(datosFichero) ) {
+			throw new AnexarFirmadoFirmaNoPermitidaException("No se permite anexar firmado");
 		}
 		return anexadoFirmado;
 	}
@@ -489,16 +500,6 @@ public final class AccionAnexarDocumento implements AccionPaso {
 	 * @return true si es un PDF PADES
 	 */
 	private boolean esPades(byte[] datosFichero) {
-		// Verificamos si está protegido con contraseña
-		boolean isProtected = false;
-		try {
-			isProtected = UtilPDF.esProtegidoPwd(datosFichero);
-		} catch (Exception e) {
-			throw new AnexarVerificarPadesException(e);
-		}
-		if (isProtected) {
-			throw new AnexarPdfProtegidoException();
-		}
 		// Verificamos si es un PDF PADES
 		try {
 			final boolean padesLTV = BooleanUtils.toBoolean(configuracionComponent

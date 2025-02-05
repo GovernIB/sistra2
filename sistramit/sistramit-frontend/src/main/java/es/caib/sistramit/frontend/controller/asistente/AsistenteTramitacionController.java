@@ -584,7 +584,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 	@RequestMapping(value = "/retornoFirmaExterno.html")
 	public ModelAndView retornoFirmaExterno(@RequestParam("idPaso") final String idPaso,
 			@RequestParam("idDocumento") final String idDocumento, @RequestParam("instancia") final String instancia,
-			@RequestParam("firmante") final String firmante) {
+			@RequestParam(value = "firmante", required = false) final String firmante) {
 
 		// TODO Solo se usa firma en registro, si se usara en otro paso deberia añadirse
 		// logica para diferenciar el paso
@@ -600,7 +600,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 		pParametros = new ParametrosAccionPaso();
 		pParametros.addParametroEntrada("idDocumento", idDocumento);
 		pParametros.addParametroEntrada("instancia", instancia);
-		pParametros.addParametroEntrada("firmante", firmante);
+		pParametros.addParametroEntrada("firmante", StringUtils.isNotBlank(firmante) ? firmante : null);
 		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
 				TypeAccionPasoRegistrar.VERIFICAR_FIRMA_DOCUMENTO, pParametros);
 

@@ -722,6 +722,15 @@ $.fn.appAnnexaLlistat = function(opcions){
 
 				}
 
+				var signatures_codi = item_bt.find(".imc--signatures:first p:first").text();
+
+				if (typeof signatures_codi !== "undefined") {
+
+					el_doc_info
+						.append("<br/><br/>" +  signatures_codi);
+
+				}
+
 				el_input_file
 					.removeAttr("accept");
 
@@ -760,10 +769,10 @@ $.fn.appAnnexaLlistat = function(opcions){
 				var signants_ = item_bt.find(".imc--signants")
 					,hiHa_signants = (signants_.length) ? true : false;
 
+
 				if (hiHa_signants) { 
 
-					var signants_clone = signants_.clone()
-						,signatures_text = item_bt.find(".imc--signatures:first p:first").text() + " ";
+					var signants_clone = signants_.clone();
 
 					el_doc_info
 						.append( txt_annexar_signar_info )
@@ -811,10 +820,6 @@ $.fn.appAnnexaLlistat = function(opcions){
 							}
 
 						});
-
-					imc_document
-						.find(".imc--signans-info:first p:first span:first")
-							.prepend( signatures_text );
 
 				}
 
@@ -990,7 +995,7 @@ $.fn.appAnnexaLlistat = function(opcions){
 
 var txt_annexar_signar_info =
 		`<div class="imc--signans-info">
-			<p><span></span> ${txtSignatRevise}</p>
+			<p>${txtSignatRevise}</p>
 			<ul>
 				<li class="imc--ogligatori">
 					<span>${txtSignantsInfo_obligatori}</span>

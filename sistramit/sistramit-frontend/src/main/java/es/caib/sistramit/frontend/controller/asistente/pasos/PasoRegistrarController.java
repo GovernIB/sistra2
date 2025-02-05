@@ -1,5 +1,6 @@
 package es.caib.sistramit.frontend.controller.asistente.pasos;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -101,7 +102,7 @@ public class PasoRegistrarController extends TramitacionController {
 		pParametros = new ParametrosAccionPaso();
 		pParametros.addParametroEntrada(PARAM_ID_DOCUMENTO, idDocumento);
 		pParametros.addParametroEntrada(PARAM_INSTANCIA, instancia);
-		pParametros.addParametroEntrada(PARAM_FIRMANTE, firmante);
+		pParametros.addParametroEntrada(PARAM_FIRMANTE, StringUtils.defaultIfBlank(firmante, null));
 
 		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
 				TypeAccionPasoRegistrar.DESCARGAR_FIRMA, pParametros);
@@ -137,7 +138,7 @@ public class PasoRegistrarController extends TramitacionController {
 		pParametros = new ParametrosAccionPaso();
 		pParametros.addParametroEntrada(PARAM_ID_DOCUMENTO, idDocumento);
 		pParametros.addParametroEntrada(PARAM_INSTANCIA, instancia);
-		pParametros.addParametroEntrada(PARAM_FIRMANTE, firmante);
+		pParametros.addParametroEntrada(PARAM_FIRMANTE, StringUtils.isNotBlank(firmante) ? firmante : null);
 
 		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
 				TypeAccionPasoRegistrar.INICIAR_FIRMA_DOCUMENTO, pParametros);

@@ -566,7 +566,8 @@ create table STG_ENTIDA
    ENT_REGCEN           NUMBER(1)            default 0 not null,
    ENT_REGOFI           VARCHAR2(20 CHAR),
    ENT_REGDOC           NUMBER(1)            default 0 not null,
-   ENT_VALTRA           NUMBER(1)            default 0 not null
+   ENT_VALTRA           NUMBER(1)            default 0 not null,
+   ENT_MODENT           NUMBER(1)            default 0 not null
 );
 
 comment on table STG_ENTIDA is
@@ -583,6 +584,9 @@ comment on column STG_ENTIDA.ENT_NOMBRE is
 
 comment on column STG_ENTIDA.ENT_ACTIVA is
 'Indica si la entidad está activa';
+
+comment on column STG_ENTIDA.ENT_MODENT is
+'Indica si esta habilitado el modo entrega';
 
 comment on column STG_ENTIDA.ENT_ROLADM is
 'Role asociado al administrador de la entidad (STG)';
@@ -2017,7 +2021,9 @@ create table STG_PASREG
    PRG_SCRVAL           NUMBER(18),
    PRG_SUBSAN           NUMBER(1)            default 0 not null,
    PRG_AVIFIN           NUMBER(1)            default 0 not null,
-   PRG_AVISCR           NUMBER(18)
+   PRG_AVISCR           NUMBER(18),
+   PRG_HABENT			NUMBER(1)            default 0 not null,
+   PRG_HABINM			NUMBER(1)            default 0 not null
 );
 
 comment on table STG_PASREG is
@@ -2067,6 +2073,12 @@ comment on column STG_PASREG.PRG_AVIFIN is
 
 comment on column STG_PASREG.PRG_AVISCR is
 'En caso de habilitar aviso, se indica mecanismo aviso';
+
+comment on column STG_PASREG.PRG_HABENT is
+'Indica si el modo entrega esta habilitado';
+
+comment on column STG_PASREG.PRG_HABINM is
+'Indica si es inmediato cuando el modo entrega esta habilitado';
 
 alter table STG_PASREG
    add constraint STG_PASREG_PK primary key (PRG_CODIGO);

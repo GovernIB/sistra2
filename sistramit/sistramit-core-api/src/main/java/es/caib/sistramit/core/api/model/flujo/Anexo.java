@@ -18,11 +18,11 @@ public final class Anexo extends DocumentoFirmado {
 	/** Tipo presentación. */
 	private TypePresentacion presentacion;
 
-	/** Anexar firmado. */
+	/** Indica si se puede anexar firmado. */
 	private TypeSiNo anexarfirmado = TypeSiNo.NO;
 
-	/** Validar anexar firmado. */
-	private TypeSiNo validarAnexarfirmado = TypeSiNo.NO;
+	/** Indica si se debe validar firmantes (firma por asistente o anexar firmado). */
+	private TypeSiNo validarFirmantes = TypeSiNo.NO;
 
 	/** Indica si se ha anexado firmado. */
 	private TypeSiNo anexadofirmado = TypeSiNo.NO;
@@ -299,12 +299,23 @@ public final class Anexo extends DocumentoFirmado {
 		this.anexadofirmado = anexadofirmado;
 	}
 
-	public TypeSiNo getValidarAnexarfirmado() {
-		return validarAnexarfirmado;
+	/**
+	 * Método de acceso a validarFirmantes.
+	 *
+	 * @return validarFirmantes
+	 */
+	public TypeSiNo getValidarFirmantes() {
+		return validarFirmantes;
 	}
 
-
-	public void setValidarAnexarfirmado(TypeSiNo validarAnexarfirmado) {
-		this.validarAnexarfirmado = validarAnexarfirmado;
+	/**
+	 * Método para establecer validarFirmantes.
+	 *
+	 * @param validarFirmantes
+	 *                             validarFirmantes a establecer
+	 */
+	public void setValidarFirmantes(TypeSiNo validarFirmantes) {
+		this.validarFirmantes = validarFirmantes;
 	}
+
 }

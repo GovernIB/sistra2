@@ -16,7 +16,7 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 public abstract class DocumentoFirmado extends Documento {
 
 	/**
-	 * Indica si se debe firmar (si/no).
+	 * Indica si se debe firmar mediante el asistente (si/no).
 	 */
 	private TypeSiNo firmar = TypeSiNo.NO;
 
