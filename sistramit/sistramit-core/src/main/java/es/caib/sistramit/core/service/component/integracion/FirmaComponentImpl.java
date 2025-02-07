@@ -167,7 +167,7 @@ public final class FirmaComponentImpl implements FirmaComponent {
 						resFirma.setVerificar(plgFirma.isVerificarFirma());
 					} else {
 						// Indica que ha finalizado con error
-						resFirma.setDetalleError(estado.getMensajeError());
+						resFirma.setDetalleError(fic.getEstadoFirma().getMensajeError());
 					}
 					break;
 
