@@ -54,7 +54,7 @@ public final class NifUtils {
 	 */
 	public static boolean esIdentificacion(final String identificacion, final boolean esDni, final boolean esNie,
 			   final boolean esOtrosNif, final boolean esNif, final boolean esNss) {
-		String identificacionUpper = identificacion.toUpperCase();
+		String identificacionUpper = identificacion != null ? identificacion.toUpperCase() : null;
 		if (esDni && esDni(identificacionUpper)) {
 			return true;
 		}
@@ -81,7 +81,7 @@ public final class NifUtils {
 	 * @return
 	 */
 	public static boolean esNifPersonaFisica(final String identificacion) {
-		String identificacionUpper = identificacion.toUpperCase();
+		String identificacionUpper = identificacion != null ? identificacion.toUpperCase() : null;
 		return esDni(identificacionUpper) || esNie(identificacionUpper) || esNifOtros(identificacionUpper);
 	}
 
@@ -94,7 +94,7 @@ public final class NifUtils {
 	 */
 	public static boolean esDni(final String valor) {
 		boolean res = false;
-		String dniToUpperCase = valor.toUpperCase();
+		String dniToUpperCase = valor != null ? valor.toUpperCase() : null;
 		try {
 			if (esCadenaVacia(valor) || !Pattern.matches(SIN_DNI, dniToUpperCase) || valor.length() != ConstantesNumero.N9) {
 				res = false;
@@ -142,7 +142,7 @@ public final class NifUtils {
 	 */
 	public static boolean esNie(final String nie) {
 		boolean res = false;
-		String nieToUpperCase = nie.toUpperCase();
+		String nieToUpperCase = nie != null ? nie.toUpperCase() : null;
 		try {
 			if (esCadenaVacia(nie) || !Pattern.matches(SIN_NIE, nieToUpperCase) || nie.length() != ConstantesNumero.N9) {
 				res = false;
@@ -207,7 +207,7 @@ public final class NifUtils {
 	 */
 	public static boolean esNifOtros(final String nif) {
 		boolean res = false;
-		String nifToUpperCase = nif.toUpperCase();
+		String nifToUpperCase = nif != null ? nif.toUpperCase() : null;
 		try {
 			if (esCadenaVacia(nif) || !Pattern.matches(SIN_NIF_OTROS, nifToUpperCase) || nif.length() != ConstantesNumero.N9) {
 				res = false;
@@ -243,7 +243,7 @@ public final class NifUtils {
 	 */
 	public static boolean esNifPersonaJuridica(final String valor) {
 		boolean res = false;
-		String nifPersonaJuridicaToUpperCase = valor.toUpperCase();
+		String nifPersonaJuridicaToUpperCase = valor != null ? valor.toUpperCase() : null;
 		try {
 			if (esCadenaVacia(valor) || !Pattern.matches(SIN_NIF_PERSONA_JURIDICA, nifPersonaJuridicaToUpperCase)
 					|| valor.length() != ConstantesNumero.N9) {
@@ -335,7 +335,7 @@ public final class NifUtils {
 		String doc = null;
 		if (nif != null) {
 			// Quitamos espacios y otros caracteres
-			doc = nif.toUpperCase();
+			doc = nif != null ? nif.toUpperCase() : null;
 			doc = doc.replaceAll("[\\/\\s\\-]", "");
 			// Rellenamos con 0
 			if (doc.length() > 1) {

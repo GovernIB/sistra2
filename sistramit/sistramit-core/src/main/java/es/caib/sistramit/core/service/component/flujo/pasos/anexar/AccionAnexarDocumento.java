@@ -269,13 +269,16 @@ public final class AccionAnexarDocumento implements AccionPaso {
 			// - Validar extensiones y tamaño
 			validarExtensionTamanyo(dipa, pVariablesFlujo, anexoDetalle, datosFichero, nombreFichero);
 
-			// - Validacion protegido con contraseña
-			validarProteccionPassword(anexoDetalle, datosFichero, nombreFichero);
+			// Solo si se requiere firma (firma asistente o anexar firmado)
+			if (anexoDetalle.getFirmar() == TypeSiNo.SI || anexoDetalle. getAnexarfirmado() == TypeSiNo. SI) {
+				// - Validacion protegido con contraseña
+				validarProteccionPassword(anexoDetalle, datosFichero, nombreFichero);
 
-			// - Validaciones de anexo firmado
-			final boolean anexadoFirmado = validacionAnexoFirmado(pDefinicionTramite, pVariablesFlujo, anexoDetalle,
-					datosFichero, nombreFichero);
-			resultadoValidacion.setAnexadoFirmado(anexadoFirmado);
+				// - Validaciones de anexo firmado
+				final boolean anexadoFirmado = validacionAnexoFirmado(pDefinicionTramite, pVariablesFlujo, anexoDetalle,
+						datosFichero, nombreFichero);
+				resultadoValidacion.setAnexadoFirmado(anexadoFirmado);
+			}
 
 			// - Validacion script
 			validacionScriptValidacion(pDefinicionTramite, pVariablesFlujo, dipa, anexoDetalle, datosFichero,
@@ -477,20 +480,21 @@ public final class AccionAnexarDocumento implements AccionPaso {
 			}
 			// Verificamos firma (y firmantes en caso necesario)
 			if (anexadoFirmado) {
-					final ValidacionFirmante vf = firmaComponent.validarFirmante(idEntidad, pVariablesFlujo.getIdioma(),
-							datosFichero, datosFichero, anexoDetalle.getFirmantes());
-					if (!vf.isCorrecto()) {
-						throw new AnexarFirmadoFirmaIncorrectaException(
-								"La firma no es correcta o no ha sido firmada por todos los firmantes: "
-										+ vf.getDetalleError());
-					}
+				final ValidacionFirmante vf = firmaComponent.validarFirmante(idEntidad, pVariablesFlujo.getIdioma(),
+						datosFichero, datosFichero, anexoDetalle.getFirmantes());
+				if (!vf.isCorrecto()) {
+					throw new AnexarFirmadoFirmaIncorrectaException(
+							"La firma no es correcta o no ha sido firmada por todos los firmantes: "
+									+ vf.getDetalleError());
 				}
 			}
+		}
 
 		// En caso de que no se permita anexar firmado no puede ser un PADES
 		if (anexoDetalle.getAnexarfirmado() == TypeSiNo.NO && extensionFichero.equalsIgnoreCase("PDF") && esPades(datosFichero) ) {
 			throw new AnexarFirmadoFirmaNoPermitidaException("No se permite anexar firmado");
 		}
+
 		return anexadoFirmado;
 	}
 
@@ -509,6 +513,7 @@ public final class AccionAnexarDocumento implements AccionPaso {
 			throw new AnexarVerificarPadesException(e);
 		}
 	}
+
 
 	/**
 	 * Actualiza persistencia.
