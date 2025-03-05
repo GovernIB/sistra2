@@ -327,7 +327,7 @@ public class DialogEnviarMail extends DialogControllerBase {
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ regIni + "</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
-					+ regIni + "</td>"
+					+ regFin + "</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"
 					+ registrosPor + "%</td>"
 					+ "                                 <td style=\"background-color: RGB(255,255,255);border: 1px solid #c5c5c5;font-weight: bold;\">"

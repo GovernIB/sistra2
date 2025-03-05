@@ -188,7 +188,7 @@
 					<p:row>
 						<p:column styleClass="noPadding-left">
 							<p:selectBooleanCheckbox id="autenticado"  value="#{dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.autenticado']}" required="true" onChange="desmarcar(this);">
-							 		<p:ajax event="change" update="tipoCER tipoPIN tipoPER tipoMOV nivelQAA" listener="#{dialogDefinicionVersionPropiedades.check}"/>
+							 		<p:ajax event="change" update="tipoCER tipoPER tipoMOV nivelQAA" listener="#{dialogDefinicionVersionPropiedades.check}"/>
 							 		<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios()}" process="@this" update="@this"/>
 							</p:selectBooleanCheckbox>
 						</p:column>
@@ -210,9 +210,9 @@
 									<p:selectBooleanCheckbox id="tipoCER" itemLabel="#{msg['tiposAutenticacion.CER']}"  value="#{dialogDefinicionVersionPropiedades.tiposAutenticacionCER}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" >
 										<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios()}" process="@this" update="@this"/>
 									</p:selectBooleanCheckbox>
-									<p:selectBooleanCheckbox id="tipoPIN" itemLabel="#{msg['tiposAutenticacion.PIN']}"  value="#{dialogDefinicionVersionPropiedades.tiposAutenticacionPIN}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" >
-										<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios()}" process="@this" update="@this"/>
-									</p:selectBooleanCheckbox>
+<!-- 									<p:selectBooleanCheckbox id="tipoPIN" itemLabel="#{msg['tiposAutenticacion.PIN']}"  value="#{dialogDefinicionVersionPropiedades.tiposAutenticacionPIN}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" > -->
+<!-- 										<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios()}" process="@this" update="@this"/> -->
+<!-- 									</p:selectBooleanCheckbox> -->
 									<p:selectBooleanCheckbox id="tipoPER" itemLabel="#{msg['tiposAutenticacion.PER']}"  value="#{dialogDefinicionVersionPropiedades.tiposAutenticacionPER}" disabled="#{!dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" >
 										<p:ajax event="change" listener="#{dialogDefinicionVersionPropiedades.setCambios()}" process="@this" update="@this"/>
 									</p:selectBooleanCheckbox>
