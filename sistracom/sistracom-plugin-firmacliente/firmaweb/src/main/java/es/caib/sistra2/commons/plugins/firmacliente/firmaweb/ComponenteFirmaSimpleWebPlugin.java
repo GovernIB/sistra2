@@ -62,20 +62,20 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 			String organizationId = null;
 
 			if (infoSesionFirma.isValidarFirmante()) {
+				// Si es representante, pasamos nif empresa en organizationId
 				if (infoSesionFirma.getNifRepresentante() != null) {
 					organizationId = infoSesionFirma.getNif();
 					administrationId = infoSesionFirma.getNifRepresentante();
 					username = infoSesionFirma.getNombreRepresentante();
 				} else {
+					// Pasamos firmante indicado
 					administrationId = infoSesionFirma.getNif();
 					username = infoSesionFirma.getNombreUsuario();
 				}
 			} else {
-				// TODO FIRMA : VER SI ES NECESARIO FIRMANTE FAKE
-				if ("true".equals(getPropiedadOpcional("firmanteFake"))) {
-					administrationId = "00000000T";
-					username = "Firmante Fake";
-				}
+				// Si no hay que validar, vendrá el usuario autenticado
+				administrationId = infoSesionFirma.getNif();
+				username = infoSesionFirma.getNombreUsuario();
 			}
 
 			final FirmaSimpleCommonInfo commonInfo = new FirmaSimpleCommonInfo(profile, idioma, username,

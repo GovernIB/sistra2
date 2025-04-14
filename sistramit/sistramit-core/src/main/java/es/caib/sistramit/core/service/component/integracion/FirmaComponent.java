@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.caib.sistramit.core.api.model.flujo.Firmante;
 import es.caib.sistramit.core.api.model.flujo.Persona;
+import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.service.model.integracion.FirmaClienteRespuesta;
 import es.caib.sistramit.core.service.model.integracion.RedireccionFirma;
 import es.caib.sistramit.core.service.model.integracion.ValidacionFirmante;
@@ -21,6 +22,7 @@ public interface FirmaComponent {
 	 *
 	 * @param idEntidad
 	 *                           Entidad
+	 * @param usuarioAutenticado Usuario autenticado
 	 * @param firmante
 	 *                           Firmante
 	 * @param representante
@@ -41,9 +43,10 @@ public interface FirmaComponent {
 	 *                           idioma
 	 * @return Datos redirección firma
 	 */
-	RedireccionFirma redireccionFirmaExterna(String idEntidad, Persona firmante, final Persona representante,
-			String fileId, byte[] fileContent, String fileName, String tipoDocumental, String urlCallBack,
-			String idioma);
+	RedireccionFirma redireccionFirmaExterna(String idEntidad, UsuarioAutenticadoInfo usuarioAutenticado,
+											 Persona firmante, final Persona representante,
+											 String fileId, byte[] fileContent, String fileName, String tipoDocumental, String urlCallBack,
+											 String idioma);
 
 	/**
 	 * Recupera resultado firma externa.

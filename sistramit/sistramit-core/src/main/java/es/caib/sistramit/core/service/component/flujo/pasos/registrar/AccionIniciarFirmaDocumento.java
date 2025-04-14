@@ -153,7 +153,7 @@ public final class AccionIniciarFirmaDocumento implements AccionPaso {
 
 		// Invoca a componente para redirección firma
 		final RedireccionFirma redireccionFirma = firmaComponent.redireccionFirmaExterna(
-				pDefinicionTramite.getDefinicionVersion().getIdEntidad(), firmante, representante,
+				pDefinicionTramite.getDefinicionVersion().getIdEntidad(), pVariablesFlujo.getUsuarioAutenticado(), firmante, representante,
 				idDocumento + "-" + instancia, fileContent, fileName, tipoDocumental, urlCallBack,
 				pVariablesFlujo.getIdioma());
 		return redireccionFirma;

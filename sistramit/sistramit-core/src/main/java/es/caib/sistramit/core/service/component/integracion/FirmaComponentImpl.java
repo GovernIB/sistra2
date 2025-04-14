@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import es.caib.sistra2.commons.plugins.firmacliente.api.*;
+import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
+import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import org.apache.commons.io.FilenameUtils;
 
 import org.fundaciobit.plugins.validatesignature.api.IValidateSignaturePlugin;
@@ -53,8 +55,9 @@ public final class FirmaComponentImpl implements FirmaComponent {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FirmaComponentImpl.class);
 
 	@Override
-	public RedireccionFirma redireccionFirmaExterna(final String idEntidad, final Persona firmante,
-			final Persona representante, final String fileId, final byte[] fileContent, final String fileName,
+	public RedireccionFirma redireccionFirmaExterna(final String idEntidad, final UsuarioAutenticadoInfo usuarioAutenticado,
+													final Persona firmante, final Persona representante,
+													final String fileId, final byte[] fileContent, final String fileName,
 			final String tipoDocumental, final String urlCallBack, final String idioma) {
 
 		// Obtiene plugin
@@ -74,6 +77,11 @@ public final class FirmaComponentImpl implements FirmaComponent {
 			}
 		} else {
 			infoSesionFirma.setValidarFirmante(false);
+			// Se pasa usuario autenticado
+			if (usuarioAutenticado != null && usuarioAutenticado.getAutenticacion() == TypeAutenticacion.AUTENTICADO) {
+				infoSesionFirma.setNif(usuarioAutenticado.getNif());
+				infoSesionFirma.setNombreUsuario(usuarioAutenticado.getNombre());
+			}
 		}
 
 		infoSesionFirma.setIdioma(idioma);
